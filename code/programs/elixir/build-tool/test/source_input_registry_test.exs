@@ -5,7 +5,7 @@ defmodule BuildTool.SourceInputRegistryTest do
 
   @fixture_dir Path.expand("../../../../specs/fixtures/build-tool-v1", __DIR__)
   @checked_registry Path.join(@fixture_dir, "language-source-input-registry.json")
-  @registry_digest "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621"
+  @registry_digest "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
 
   test "the production projection is the complete checked registry" do
     checked_bytes = File.read!(@checked_registry)

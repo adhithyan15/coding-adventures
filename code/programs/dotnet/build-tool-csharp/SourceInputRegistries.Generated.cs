@@ -717,8 +717,8 @@ internal static class SourceInputRegistryProjection
         {
           "id": "rust-engram-wasm-build-inputs",
           "package_root": "code/packages/rust/engram-wasm",
-          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"],
-          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module and reads one exact checked-in WebAssembly artifact.",
+          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs"],
+          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module; the WebAssembly artifact it reads is built by the same BUILD and is not a source input.",
           "owner": "build-tool-engram-wasm-package-source-input-registry-repair"
         }
       ],
@@ -1024,7 +1024,7 @@ internal static class SourceInputRegistryProjection
     internal const string RepositoryBoundaryJson = """
 {
   "schema_version": 1,
-  "language_source_input_registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+  "language_source_input_registry_sha256": "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
   "boundaries": [
     {
       "id": "haskell-workspace-project",
@@ -1393,7 +1393,6 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/cas-substitution",
           "code/packages/rust/cas-summation",
           "code/packages/rust/cas-trig",
-          "code/packages/rust/gf256",
           "code/packages/rust/llm-cache",
           "code/packages/rust/llm-gateway",
           "code/packages/rust/llm-primitives",
@@ -1471,10 +1470,9 @@ internal static class SourceInputRegistryProjection
         "excluded_roots": []
       },
       "inputs": [
-        {"path": "code/programs/typescript/visicalc-html/index.html", "role": "cross_package_exact"},
-        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "role": "cross_package_exact"}
+        {"path": "code/programs/typescript/visicalc-html/index.html", "role": "cross_package_exact"}
       ],
-      "reason": "The Deno VisiCalc server text-imports these exact sibling HTML and reviewed WASM-wrapper inputs at compile time.",
+      "reason": "The Deno VisiCalc server text-imports this exact tracked sibling HTML input at compile time; its generated WASM-engine bundle is built, not committed, and is not a source input.",
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {
@@ -1622,6 +1620,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/forme-types",
           "code/packages/typescript/fp-arithmetic",
           "code/packages/typescript/fpga",
+          "code/packages/typescript/fuzz",
           "code/packages/typescript/garbage-collector",
           "code/packages/typescript/gfm-parser",
           "code/packages/typescript/gpu-core",
@@ -1701,6 +1700,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/os-kernel",
           "code/packages/typescript/parallel-execution-engine",
           "code/packages/typescript/parser",
+          "code/packages/typescript/pbt",
           "code/packages/typescript/pcm-audio",
           "code/packages/typescript/pipeline",
           "code/packages/typescript/pipeline-visualizer",
@@ -1718,6 +1718,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/rpc",
           "code/packages/typescript/ruby-lexer",
           "code/packages/typescript/ruby-parser",
+          "code/packages/typescript/sat-solver",
           "code/packages/typescript/simulator-protocol",
           "code/packages/typescript/sir-runtime-array",
           "code/packages/typescript/sir-runtime-core",
@@ -1752,6 +1753,8 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/store",
           "code/packages/typescript/symbolic-ir",
           "code/packages/typescript/system-board",
+          "code/packages/typescript/test-bootstrap",
+          "code/packages/typescript/test-matchers",
           "code/packages/typescript/tetrad-runtime",
           "code/packages/typescript/toml-lexer",
           "code/packages/typescript/toml-parser",
@@ -1773,6 +1776,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/virtual-machine",
           "code/packages/typescript/virtual-memory",
           "code/packages/typescript/vm-core",
+          "code/packages/typescript/warrant-compiler",
           "code/packages/typescript/wasm-module-encoder",
           "code/packages/typescript/wasm-simulator",
           "code/packages/typescript/wave",

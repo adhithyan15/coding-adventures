@@ -1,6 +1,6 @@
 -- Generated from the reviewed language source-input registry.
 -- Reviewed package-data projection; tests check the full registry and digest.
-return { digest = "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621", data = {
+return { digest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1", data = {
   ["languages"] = {
     {
       ["case_alias_groups"] = {
@@ -1329,9 +1329,8 @@ return { digest = "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f
           ["paths"] = {
             "js/engram-mosaic-host-wasm.mjs",
             "js/smoke.mjs",
-            "pkg/engram_engine.wasm",
           },
-          ["reason"] = "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module and reads one exact checked-in WebAssembly artifact.",
+          ["reason"] = "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module; the WebAssembly artifact it reads is built by the same BUILD and is not a source input.",
         },
       },
       ["recursive_exact_basenames"] = {},

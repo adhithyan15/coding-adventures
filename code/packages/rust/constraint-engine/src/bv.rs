@@ -99,7 +99,7 @@ impl BvTactic {
     /// `sort_env`, which must all be `Bool` or `BitVec`.
     pub fn solve(assertions: &[Predicate], sort_env: &SortEnv) -> SolverResult {
         match Lowering::new(sort_env).and_then(|mut l| l.lower_all(assertions).map(|edges| (l, edges))) {
-            Ok((l, edges)) => l.decide(&edges),
+            Ok((l, edges)) => l.decide(&edges, drat_check::Limits::default()),
             Err(reason) => SolverResult::Unknown(reason),
         }
     }
@@ -172,7 +172,12 @@ impl Lowering {
     }
 
     /// Encode, solve, and either read back a model or certify the UNSAT.
-    fn decide(&self, asserted: &[Edge]) -> SolverResult {
+    ///
+    /// `drat_limits` bounds the certificate check. [`BvTactic::solve`]
+    /// always passes `drat-check`'s defaults; only the test module passes a
+    /// larger, documented work budget for a few wide miters, so the public
+    /// tactic's limits are never raised.
+    fn decide(&self, asserted: &[Edge], drat_limits: drat_check::Limits) -> SolverResult {
         let mut cnf = Cnf::new(0);
         let mut t = Tseitin::new();
         for &e in asserted {
@@ -212,7 +217,7 @@ impl Lowering {
             }
             SolveResult::Unsat => {
                 let proof = solver.proof().expect("proof logging was enabled").to_drat_text();
-                match drat_check::check(&write_dimacs(&cnf), &proof) {
+                match drat_check::check_with_limits(&write_dimacs(&cnf), &proof, drat_limits) {
                     Ok(_) => SolverResult::Unsat,
                     Err(why) => SolverResult::Unknown(format!(
                         "UNSAT not certified: drat-check rejected the proof ({why})"
@@ -308,9 +313,81 @@ impl Lowering {
         Ok(t)
     }
 
+    /// Refuse before building a circuit whose estimated size would push the
+    /// query past [`MAX_AIG_NODES`]. [`Lowering::check_size`] only runs after
+    /// an operation finishes; a division at width 512 would first build
+    /// millions of gates.
+    fn reserve(&self, estimate: usize) -> Lowered<()> {
+        if self.aig.num_nodes().saturating_add(estimate) > MAX_AIG_NODES {
+            return Err(format!("bit-blasted circuit exceeds MAX_AIG_NODES ({MAX_AIG_NODES})"));
+        }
+        Ok(())
+    }
+
+    /// Indexed identifiers, `(_ name i…)`, with the operands (if any)
+    /// following the indices. `smt-lib-format` cannot yet read the head
+    /// `((_ extract 7 4) x)`, so the tactic accepts the flattened form
+    /// `Apply { f: "_", args: [Var("extract"), Int(7), Int(4), x] }`.
+    ///
+    /// | Form | Meaning |
+    /// |---|---|
+    /// | `(_ bvN w)` | constant `N` in `w` bits |
+    /// | `(_ extract hi lo) a` | bits `hi..=lo` of `a` |
+    /// | `(_ zero_extend k) a` | `a` with `k` zero bits above |
+    /// | `(_ sign_extend k) a` | `a` with `k` copies of its sign bit above |
+    fn indexed(&mut self, args: &[Predicate]) -> Lowered<BitVec> {
+        let Some(Predicate::Var(name)) = args.first() else {
+            return Err("indexed term other than `(_ bvN w)`".into());
+        };
+        let index = |p: &Predicate| match p {
+            Predicate::Int(i) if *i >= 0 => Ok(usize::try_from(*i).unwrap_or(usize::MAX)),
+            _ => Err(format!("`(_ {name} …)`: index must be a non-negative integer")),
+        };
+        match (name.as_str(), &args[1..]) {
+            ("extract", [hi, lo, a]) => {
+                let (hi, lo) = (index(hi)?, index(lo)?);
+                let a = self.bitvec(a)?;
+                if lo > hi || hi >= a.width() {
+                    return Err(format!(
+                        "`(_ extract {hi} {lo})` on a {}-bit vector (needs lo <= hi < width)",
+                        a.width()
+                    ));
+                }
+                Ok(bv::extract(&a, hi, lo))
+            }
+            ("zero_extend" | "sign_extend", [k, a]) => {
+                let k = index(k)?;
+                let a = self.bitvec(a)?;
+                width(a.width().saturating_add(k))?;
+                Ok(if name == "zero_extend" { bv::zext(&a, k) } else { bv::sext(&a, k) })
+            }
+            _ => indexed_literal(args),
+        }
+    }
+
     fn apply(&mut self, f: &str, args: &[Predicate]) -> Lowered<Term> {
         Ok(match f {
-            "_" => Term::Bv(indexed_literal(args)?),
+            "_" => Term::Bv(self.indexed(args)?),
+            "concat" => {
+                let [hi, lo] = args else {
+                    return Err(format!("`concat` takes 2 arguments, got {}", args.len()));
+                };
+                let (hi, lo) = (self.bitvec(hi)?, self.bitvec(lo)?);
+                width(hi.width() + lo.width())?;
+                Term::Bv(bv::concat(&hi, &lo))
+            }
+            "bvudiv" | "bvurem" | "bvsdiv" | "bvsrem" | "bvsmod" => {
+                let (a, b) = self.pair(f, args)?;
+                self.reserve(division_gate_estimate(a.width()))?;
+                let g = &mut self.aig;
+                Term::Bv(match f {
+                    "bvudiv" => bv::udiv(g, &a, &b),
+                    "bvurem" => bv::urem(g, &a, &b),
+                    "bvsdiv" => bv::sdiv(g, &a, &b),
+                    "bvsrem" => bv::srem(g, &a, &b),
+                    _ => smod(g, &a, &b),
+                })
+            }
             "bvnot" | "bvneg" => {
                 let [a] = args else {
                     return Err(format!("`{f}` takes 1 argument, got {}", args.len()));
@@ -370,6 +447,60 @@ impl Lowering {
     }
 }
 
+/// Conservative gates per bit² of a restoring divider (measured: see
+/// `division_cost_estimate_is_conservative`). Used to refuse a division
+/// before building it.
+const DIV_GATES_PER_BIT_SQUARED: usize = 16;
+
+/// The linear part: `bvsmod` also builds two negations, two selections, two
+/// additions and an equality on top of the divider (about 30 gates a bit).
+const DIV_GATES_PER_BIT: usize = 64;
+
+/// Upper bound on the gates a division-family operation builds at width `w`.
+fn division_gate_estimate(w: usize) -> usize {
+    DIV_GATES_PER_BIT_SQUARED * w * w + DIV_GATES_PER_BIT * w
+}
+
+/// SMT-LIB `bvsmod`: the remainder whose sign follows the **divisor**.
+///
+/// SMT-LIB defines it in terms of `bvurem` on magnitudes, then fixes the
+/// sign by cases (`s` dividend, `t` divisor, `u = |s| urem |t|`):
+///
+/// ```text
+///   u = 0                 →  0          (exact division: no sign to fix)
+///   s ≥ 0, t ≥ 0          →  u
+///   s <  0, t ≥ 0         →  t − u      (lands in [0, t): sign of t)
+///   s ≥ 0, t <  0         →  u + t      (lands in (t, 0]: sign of t)
+///   s <  0, t <  0        →  −u
+/// ```
+///
+/// Worked example, 4 bits, `s = −7`, `t = 3`: `u = 7 mod 3 = 1`, result
+/// `3 − 1 = 2`, and indeed `−7 = 3·(−3) + 2`. For `t = 0`, `|t| = 0` gives
+/// `u = |s|` (see [`bv::urem`]), so the result is `s` itself, as SMT-LIB
+/// requires.
+fn smod(aig: &mut Aig, s: &BitVec, t: &BitVec) -> BitVec {
+    let (neg_s, neg_t) = (s.msb(), t.msb());
+    let abs_s = {
+        let n = bv::neg(aig, s);
+        bv::ite(aig, neg_s, &n, s)
+    };
+    let abs_t = {
+        let n = bv::neg(aig, t);
+        bv::ite(aig, neg_t, &n, t)
+    };
+    let u = bv::urem(aig, &abs_s, &abs_t);
+    let neg_u = bv::neg(aig, &u);
+    let t_minus_u = bv::add(aig, &neg_u, t); // (−u) + t
+    let u_plus_t = bv::add(aig, &u, t);
+    let zero = BitVec::constant(s.width(), 0);
+    let u_is_zero = bv::eq(aig, &u, &zero);
+    // Fold the case split from the inside out.
+    let s_pos_t_neg = bv::ite(aig, neg_t, &u_plus_t, &u); // s ≥ 0
+    let s_neg_t = bv::ite(aig, neg_t, &neg_u, &t_minus_u); // s < 0
+    let by_sign = bv::ite(aig, neg_s, &s_neg_t, &s_pos_t_neg);
+    bv::ite(aig, u_is_zero, &zero, &by_sign)
+}
+
 /// Check a width against [`MAX_BV_WIDTH`].
 fn width(w: usize) -> Lowered<usize> {
     if w == 0 || w > MAX_BV_WIDTH {
@@ -420,6 +551,10 @@ fn indexed_literal(args: &[Predicate]) -> Lowered<BitVec> {
     }
     Ok(BitVec::constant(w, value))
 }
+
+#[cfg(test)]
+#[path = "bv_faithfulness.rs"]
+mod bv_faithfulness;
 
 #[cfg(test)]
 mod tests {

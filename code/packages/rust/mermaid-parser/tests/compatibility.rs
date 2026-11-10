@@ -321,6 +321,14 @@ const ER_NEO_SOURCE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-neo-source-11.16.1-visual-corpus.json"
 ));
+const ER_UNIFIED_UNICODE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unified-unicode-11.16.1-corpus.json"
+));
+const ER_UNIFIED_UNICODE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unified-unicode-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2813,6 +2821,31 @@ fn pinned_er_neo_sources_reach_semantic_ir() {
     assert_eq!(diagrams[6].relationships[0].to, "EMPLOYEE");
     assert!(diagrams[7].nodes.iter().any(|node| node.id == "ACTIVE_ENTITY"));
     assert_eq!(diagrams[8].nodes[0].compartments[0].entries.len(), 6);
+}
+
+#[test]
+fn pinned_er_unified_unicode_sources_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UNIFIED_UNICODE_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UNIFIED_UNICODE_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), 2);
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[0].nodes.len(), 1);
+    assert_eq!(diagrams[0].nodes[0].compartments[0].entries.len(), 5);
+    assert!(diagrams[0].nodes[0].compartments[0].entries[0].contains("driversLicense"));
+    assert_eq!(diagrams[1].nodes.len(), 2);
+    assert_eq!(diagrams[1].relationships[0].label.as_deref(), Some("__hẽ😀__"));
 }
 
 #[test]

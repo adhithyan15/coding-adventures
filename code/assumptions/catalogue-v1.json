@@ -1,0 +1,3870 @@
+{
+  "schema": "ver13-assumption-catalogue-v1",
+  "assumptions": [
+    {
+      "id": "spec.secret-labels.complete",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "spec",
+      "family": "spec",
+      "title": "The `secret` labels in `ct-compare.warrant` cover every input whose value must not influence the observation...",
+      "statement": "The `secret` labels in `ct-compare.warrant` cover every input whose value must not influence the observation (contents of `a`,`b`, `choice`; `a`,`b` of `eq_u64`). The vacuity check only rejects the case of *no* secret input; it cannot tell that one secret was left unlabelled.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "corpus-label-diff",
+          "negative-control"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ct-compare fixtures",
+          "warrant-grammar",
+          "VER04h manifests"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-004",
+        "plan": "Derive the label set from CT01's corpus table and compare; negative control that drops one label and must fail"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every `constant-time` obligation of ct-compare",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "spec.obs-model.complete",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "spec",
+      "family": "spec",
+      "title": "The observable event set of VER20 §2.1 (branch decision, memory provenance+offset, step count) contains...",
+      "statement": "The observable event set of VER20 §2.1 (branch decision, memory provenance+offset, step count) contains everything the attacker model for CWE-208 can see. Not in it: operand-dependent latency, store *values*, instruction-fetch addresses, indirect-call targets.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-trace-reproof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir ct_proof.rs",
+          "trace.rs"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Extend `ObsEvent` with fetch address and indirect-target events, re-prove; push the rest into `mc.*` / `uarch.*`"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all `constant-time` proofs",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "spec.obs-model.public-length",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "spec",
+      "family": "spec",
+      "title": "Lengths and widths are public (CT01: a length mismatch is observable)",
+      "statement": "Lengths and widths are public (CT01: a length mismatch is observable). The proof ties them equal across the two runs.",
+      "kind": "declared",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`eq`, `eq_fixed`, `select_bytes` proofs",
+      "tier": "floor",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "spec.platform.declared-none",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "spec",
+      "family": "spec",
+      "title": "`ct-compare.warrant` says `assume platform: none` and `assume environment: none`, yet the proofs rely on...",
+      "statement": "`ct-compare.warrant` says `assume platform: none` and `assume environment: none`, yet the proofs rely on platform assumptions (`compiler.preserves_timing`, ...). VER04 §7 says `none` cannot erase a relied-on assumption; the Warrant file and the report disagree.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "warrant-assume-sync"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-grammar",
+          "ca-assurance-report"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-001a",
+        "plan": "Make `assume platform:` cite catalogue ids; the report's list must equal the file's list"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "VER04 W0401/W0601 hygiene, pilot acceptance",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "spec.corpus.ct01-faithful",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "spec",
+      "family": "spec",
+      "title": "The Warrant claims formalise CT01's prose; CT01 itself disclaims compiled-code behaviour and...",
+      "statement": "The Warrant claims formalise CT01's prose; CT01 itself disclaims compiled-code behaviour and cache/speculation immunity.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "spec-sync-test",
+          "sabotage-corpus"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "code/specs/fixtures/ct-compare-v1/"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-004",
+        "plan": "Conformance corpus + sabotage controls exist (E1); add a spec-sync test mapping each CT01 normative sentence to a claim or a catalogue id"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every claim of ct-compare",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.rust.subset-conformance",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "The audited source stays inside the Rust subset VER25a lowers; constructs outside it are rejected, not...",
+      "statement": "The audited source stays inside the Rust subset VER25a lowers; constructs outside it are rejected, not mis-lowered.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "conformance-suite"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir/src/rust_subset",
+          "VER25a"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Subset conformance suite with negatives; make the lowering total-or-error"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`not-yet-provable` boundary, all WIR proofs",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.rust.int-semantics",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "`u8`/`u64` arithmetic wraps or panics as WIR models it (no debug-vs-release divergence in the audited code)",
+      "statement": "`u8`/`u64` arithmetic wraps or panics as WIR models it (no debug-vs-release divergence in the audited code).",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "differential-run"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir interpreter"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-002",
+        "plan": "Run the differential harness with overflow checks on and off; forbid implicit overflow in the subset"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "functional claims, `bounded(k)` proofs",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.rust.safe-bounds-checks",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "An out-of-range slice index panics instead of reading memory",
+      "statement": "An out-of-range slice index panics instead of reading memory. Used to *discharge* CWE-125/787 from bounded proofs (VER04h §9 check 7), i.e. at `bounded(k)`, not as a Miri result.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-memory-safety-proof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir",
+          "Miri"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Memory-safety obligation in WIR (index in range on all paths) at `proved`, not `bounded(k)`"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "weakness rows CWE-125, CWE-787",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.rust.unsafe-region.sound",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "The one audited `unsafe` region (`volatile_barrier`) does exactly a bounded, in-range volatile read/write of...",
+      "statement": "The one audited `unsafe` region (`volatile_barrier`) does exactly a bounded, in-range volatile read/write of one `u8` and violates no aliasing, lifetime or null rule.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "miri-run"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "Miri (code/scripts/miri-twig-vm.sh is the model)",
+          "ct-compare/tests"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Miri run on the region's tests, bound to the source digest (WD-008); later a WIR proof of the region"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "exemptions `EXEMPT-CWE-416/415/476/190-UNSAFE-EXCEPTION`",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.panic.paths-public",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Panic/unwind paths (length-mismatch `assert!`, bounds checks) branch only on public values",
+      "statement": "Panic/unwind paths (length-mismatch `assert!`, bounds checks) branch only on public values.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "wir.lowering.faithful"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-panic-branch-proof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir lowering"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Lowering keeps panics as explicit branches (see lesson on `assert_eq!` lowered to a no-op); prove they sit under public conditions"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`select_bytes`, `eq_fixed` proofs",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-1",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Names that do not resolve to `std`/`core`/`alloc` or the listed crates, including **third-party crates**, are...",
+      "statement": "Names that do not resolve to `std`/`core`/`alloc` or the listed crates, including **third-party crates**, are assumed pure.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "dependency-closure-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer",
+          "cargo metadata"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002b",
+        "plan": "ct-compare: assert the dependency closure is empty (`[dependencies]` is empty today) as a checked fact; in general analyse dependencies or require certificates for them"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every E0 capability label",
+      "tier": "O1",
+      "constrains_input_classes": [],
+      "notes": "Difficulty is S for ct-compare (empty dependency closure) and L in general; the worst case is recorded."
+    },
+    {
+      "id": "src.analyzer.G-2",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Implicit authority never named in source (hash-seed entropy, allocation, panic output) is not detected",
+      "statement": "Implicit authority never named in source (hash-seed entropy, allocation, panic output) is not detected.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "runtime-gate-observation"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "capability-runtime-conformance (branch)"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002b",
+        "plan": "Pair with the VER08b runtime gate's armed-phase observation; list expected implicit authority in the catalogue"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-3",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Capability `target` is documentation, not a verified bound",
+      "statement": "Capability `target` is documentation, not a verified bound.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "runtime-path-allowlist"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "VER08b"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002b",
+        "plan": "Runtime path allowlists (Landlock); static constant-argument analysis"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-4",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Manifest `package` is not matched to its directory/crate name",
+      "statement": "Manifest `package` is not matched to its directory/crate name.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "manifest-binding-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-002b",
+        "plan": "Trivial check in the analyzer"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0 manifest binding",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-5",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "`tests/`, `benches/`, `examples/`, `[dev-dependencies]` are not analysed though `cargo test` executes them...",
+      "statement": "`tests/`, `benches/`, `examples/`, `[dev-dependencies]` are not analysed though `cargo test` executes them (and tests produce trusted evidence).",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "build-time-authority-analysis"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002b",
+        "plan": "Analyse them under a separate \"build-time authority\" policy"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0; evidence production",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-6",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Macros are not expanded; authority produced only by another crate's macro expansion is invisible",
+      "statement": "Macros are not expanded; authority produced only by another crate's macro expansion is invisible.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "expanded-code-analysis"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "rustc",
+          "warrant-ir"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002b",
+        "plan": "Analyse expanded code / MIR (also feeds the WIR front end)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-7",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Dynamic behaviour (function pointers, trait objects, `dlopen` through any crate) is not tracked",
+      "statement": "Dynamic behaviour (function pointers, trait objects, `dlopen` through any crate) is not tracked.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "call-graph-proof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002b",
+        "plan": "Closed-world call-graph proof; ct-compare has no trait objects (checkable fact)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-8",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "Type-directed routes beyond the §3.3 method heuristic are missed",
+      "statement": "Type-directed routes beyond the §3.3 method heuristic are missed.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "type-resolved-analysis"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "rustc API / MIR"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002b",
+        "plan": "Resolve through rustc type information"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.G-9",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "`cfg` is ignored (conservative); compiler flags, `.cargo/config.toml`, `RUSTFLAGS` are not examined",
+      "statement": "`cfg` is ignored (conservative); compiler flags, `.cargo/config.toml`, `RUSTFLAGS` are not examined.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "build-config-pin"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-002b",
+        "plan": "Examine and pin build configuration; record it in the effect certificate"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "E0, and `cc.version-pinned`",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.analyzer.correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "The analyzer, and the small checker that re-reads the program, are themselves correct (VER00 §8.6.5...",
+      "statement": "The analyzer, and the small checker that re-reads the program, are themselves correct (VER00 §8.6.5: \"everything above rests on one assumption\").",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "checker-corpus",
+          "mechanised-checker"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer checker"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002",
+        "plan": "Proof-carrying checker already reduces it; next: checker corpus with negatives, then a mechanised checker"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`effect-certificate::proved`, every `capability-audit::*` id",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.effects.witness-token",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "The effect module's \"pure computation witness token\" (VER23a) is a witness only; the Rust compiler enforces...",
+      "statement": "The effect module's \"pure computation witness token\" (VER23a) is a witness only; the Rust compiler enforces nothing about it. Authority is established by the analyzer, not by types.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "type-level-enforcement"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "layout-effects",
+          "VER23a generator"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002b",
+        "plan": "Type-level enforcement (sealed capability traits), or keep as a declared non-enforcement; low value for ct-compare"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "VER23a labels",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.effects.certificate-binding",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "The effect certificate's `source_digest`/`manifest_digest` cover every file that determines behaviour; a...",
+      "statement": "The effect certificate's `source_digest`/`manifest_digest` cover every file that determines behaviour; a partial digest (e.g. omitting `build.rs`) would certify different code.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "src.analyzer.correct"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "digest-coverage-check",
+          "ci-regeneration-gate"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer",
+          "CI"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Digest all inputs incl. `Cargo.toml`, `build.rs`, lock file; CI regeneration gate (see the lesson on stale certificates)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`effect-certificate::proved`",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "src.registry.excluded-rows",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "src",
+      "title": "A weakness row marked `excluded` (e.g",
+      "statement": "A weakness row marked `excluded` (e.g. CWE-78) is excluded because capability evidence is empty, not because the class was proved absent.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability",
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "src.analyzer.G-1",
+        "src.analyzer.G-2",
+        "src.analyzer.G-3",
+        "src.analyzer.G-4",
+        "src.analyzer.G-5",
+        "src.analyzer.G-6",
+        "src.analyzer.G-7",
+        "src.analyzer.G-8",
+        "src.analyzer.G-9"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "catalogue-citation-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-assurance-report/src/matrix.rs"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Each exclusion cites the catalogue ids of the analyzer caveats it depends on (G-1..G-9)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "17 `excluded` rows of the ct-compare report",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.analyzer.name-allowlist-regex-free",
+      "aliases": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "The analyzer's name allowlist uses no regex-like matching that could over-match",
+      "statement": "The analyzer's name allowlist uses no regex-like matching that could over-match.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "matcher-property-test"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Property test of the matcher plus a code-level check"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-1333",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.ast-audit.no-compression-routines",
+      "aliases": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "No compression/decompression routine appears in the AST",
+      "statement": "No compression/decompression routine appears in the AST.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "banned-construct-scan"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-capability-analyzer"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Banned-construct scan bound to a digest"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-409",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.ast-audit.no-deserialization",
+      "aliases": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "No deserialization entry point appears",
+      "statement": "No deserialization entry point appears.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "banned-construct-scan"
+        ],
+        "rung": "R0+",
+        "tools": [],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "same"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-502",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.ast-audit.no-legacy-ciphers",
+      "aliases": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "No legacy cipher or hash is used",
+      "statement": "No legacy cipher or hash is used.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "banned-construct-scan"
+        ],
+        "rung": "R0+",
+        "tools": [],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "same"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-327",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.ast-audit.no-protocol-sinks",
+      "aliases": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "No protocol/network sink (ldap, xpath, ...) is reachable",
+      "statement": "No protocol/network sink (ldap, xpath, ...) is reachable.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "banned-construct-scan"
+        ],
+        "rung": "R0+",
+        "tools": [],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "same"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "rows CWE-90/91 family",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.ast-call-graph.acyclic",
+      "aliases": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "The call graph is acyclic, so there is no unbounded recursion",
+      "statement": "The call graph is acyclic, so there is no unbounded recursion.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-call-graph-acyclic"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Compute the call graph from WIR; assert acyclicity (also discharges `wir.bound.depth-unchecked`)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-674",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.language-type-system.no-prototype-pollution",
+      "aliases": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "The language has no prototype mutation",
+      "statement": "The language has no prototype mutation.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "language-property-fact"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "per-language catalogue"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Language-property fact in the per-language catalogue (VER00 §7.5.2); true by construction in Rust"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-1321",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.type-signatures.unconstrained-slices",
+      "aliases": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "No public signature accepts an unconstrained slice beyond what the `bound` rows cover",
+      "statement": "No public signature accepts an unconstrained slice beyond what the `bound` rows cover.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "signature-bound-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-grammar"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Check public signatures against `bound` rows"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-1333/400 family",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "att.warrant-ir.cost-semantics-linear",
+      "aliases": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "src",
+      "family": "att",
+      "title": "The WIR cost semantics gives linear cost for the audited operations",
+      "statement": "The WIR cost semantics gives linear cost for the audited operations.",
+      "kind": "attestation",
+      "status": "attested",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "weakness-row"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "wir.cost.step-model"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "steps-bound-obligation"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir BoundProver"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Cite the proved step-bound obligation (`steps <= c*n + d`, already produced) instead"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "row CWE-407",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.lowering.faithful",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "The Rust-to-WIR lowering preserves the observable behaviour *and the observable trace* of the Rust source",
+      "statement": "The Rust-to-WIR lowering preserves the observable behaviour *and the observable trace* of the Rust source. It has been wrong before (lesson: `assert_eq!` lowered to a no-op; `vec![0u8; n]` stored past a zero-length buffer).",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "src.rust.subset-conformance",
+        "src.rust.int-semantics"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "differential-run",
+          "mir-translation-validation"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir interpreter",
+          "rustc MIR dump"
+        ],
+        "difficulty": "L",
+        "backlog": "AS-002",
+        "plan": "Differential execution of WIR vs rustc on generated inputs (exists, partial), then translation validation against rustc's MIR for the audited functions"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every WIR proof",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.lowering.volatile-by-name",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "`volatile_barrier::accumulate/read`, `read_volatile`, `write_volatile`, `black_box` are lowered **by name**...",
+      "statement": "`volatile_barrier::accumulate/read`, `read_volatile`, `write_volatile`, `black_box` are lowered **by name** to plain loads/stores/identity (`lower.rs`). The unsafe body is never analysed; WIR is told what it does.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "src.rust.unsafe-region.sound"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "body-lowering",
+          "model-validation-test"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Lower the unsafe body for real (volatile as ordered load/store) or validate the name-matched model against the body"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "ct-compare `constant-time` proofs; `src.rust.unsafe-region.sound`",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.inline.sound",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "The WIR inliner (needed to expose `ct_eq` to the proof) preserves semantics",
+      "statement": "The WIR inliner (needed to expose `ct_eq` to the proof) preserves semantics.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "wir.lowering.faithful"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "differential-run",
+          "per-run-translation-validation"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir/src/inline.rs"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Differential test (exists), then per-run translation validation of inlined vs original"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`ct_eq` proof",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.interp.differential-only",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "Trust in the WIR front end rests on differential testing against the real runtime (VER00 §7.6.2), not proof",
+      "statement": "Trust in the WIR front end rests on differential testing against the real runtime (VER00 §7.6.2), not proof.",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "wir.lowering.faithful"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "differential-run"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "property engine"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "See `wir.lowering.faithful`"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all WIR proofs",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.cost.step-model",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "The cost schedule (ALU 1, branch 1, load/store 2, ...) gives equal cost to events that are equal under...",
+      "statement": "The cost schedule (ALU 1, branch 1, load/store 2, ...) gives equal cost to events that are equal under `spec.obs-model`. A step count is an abstract cost, not time.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "replacement-by-lower-layer-cost"
+        ],
+        "rung": "R2",
+        "tools": [
+          "warrant-ir/src/cost.rs"
+        ],
+        "difficulty": "N/A",
+        "backlog": "AS-004",
+        "plan": "Not dischargeable at WIR; discharged *by replacement*: at `mc` the step count becomes retired instructions, at `gate` clock cycles (§4)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every `steps-bound` and the `StepCount` event",
+      "tier": "via-ladder",
+      "constrains_input_classes": [],
+      "notes": "Discharged by replacement at lower layers rather than at WIR (spec section 4)."
+    },
+    {
+      "id": "memory.unaliased",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "The buffers passed to an operation occupy disjoint, in-bounds provenance regions and are not mutated during...",
+      "statement": "The buffers passed to an operation occupy disjoint, in-bounds provenance regions and are not mutated during the call. Emitted whenever an obligation has buffers and a label other than `proved`.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)"
+        ],
+        "claims": [
+          "constant-time",
+          "functional"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "wir.memory.provenance-model"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-alias-split-proof",
+          "miri-run"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir symbolic memory (sym.rs)"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-002",
+        "plan": "Prove 2-safety under both aliasing cases (alias / disjoint) or show the trace is alias-insensitive; for the `select_bytes` output prove freshness"
+      },
+      "since": "VER26",
+      "legacy": true,
+      "used_by": "`ct_eq_soundness`, `ct_eq_fixed_*`, `select_bytes` claims",
+      "tier": "O2",
+      "constrains_input_classes": [],
+      "notes": "Emitted today by ca-assurance-report evidence.rs whenever an obligation has buffers and label != proved."
+    },
+    {
+      "id": "wir.memory.provenance-model",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "WIR's `(provenance id, offset)` memory model matches what addresses mean on the target (no overlapping...",
+      "statement": "WIR's `(provenance id, offset)` memory model matches what addresses mean on the target (no overlapping allocations, no out-of-provenance arithmetic).",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "per-target-memory-model"
+        ],
+        "rung": "R2",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Instantiated per target at `mc` (rung R2)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "memory-address events",
+      "tier": "O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.loop.bounded-k",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "`bounded(k)` proofs unroll loops to depth `k` (128 for ct-compare); the claim says nothing for lengths above...",
+      "statement": "`bounded(k)` proofs unroll loops to depth `k` (128 for ct-compare); the claim says nothing for lengths above `k`.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "loop-invariant-proof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir BoundProver",
+          "cdcl-sat"
+        ],
+        "difficulty": "L",
+        "backlog": "AS-002",
+        "plan": "Loop invariants then induction: `proved` for all lengths (VER04h §10 follow-up)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "labels `bounded(128)`",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.bound.heap-unchecked",
+      "aliases": [
+        "heap-bound:unchecked"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "No bound on heap use is proved; `heap` rows are recorded `unchecked`",
+      "statement": "No bound on heap use is proved; `heap` rows are recorded `unchecked`.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-heap-bound-proof"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir cost semantics"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Heap bound from WIR allocation sites (`select_bytes` allocates `len`; `eq`, `eq_u64` allocate nothing)"
+      },
+      "since": "VER13",
+      "legacy": true,
+      "used_by": "all four ct-compare claims",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.bound.depth-unchecked",
+      "aliases": [
+        "depth-bound:unchecked"
+      ],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "No bound on call depth is proved",
+      "statement": "No bound on call depth is proved.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "wir-call-graph-acyclic"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Acyclic call graph (also retires `att.ast-call-graph.acyclic`)"
+      },
+      "since": "VER13",
+      "legacy": true,
+      "used_by": "all four ct-compare claims",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.proof.trivial-miter",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "A \"trivial-miter\" certificate is a DRAT refutation of a formula that collapsed to constant false before...",
+      "statement": "A \"trivial-miter\" certificate is a DRAT refutation of a formula that collapsed to constant false before search: valid, but weak evidence that the encoding is right. Marked `certificate_kind: \"trivial-miter\"` today.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "tcb.drat.checker-correct",
+        "tcb.bitblast.encoding-correct"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "non-collapsed-negative-control",
+          "independent-cnf-rederivation"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir",
+          "cdcl-sat",
+          "drat-check"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-001a",
+        "plan": "Non-collapsed negative controls (exist: `proofneg/*`) plus an independent re-derivation: compare the miter CNF with an independently built one"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "ct-compare `constant-time` claims",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "wir.proof.obligation-binding",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "wir",
+      "title": "The recorded `obligation_sha256` is only shape-checked (VER04h WD-009): a valid but unrelated refutation with...",
+      "statement": "The recorded `obligation_sha256` is only shape-checked (VER04h WD-009): a valid but unrelated refutation with a plausible hash is not detected.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "tcb.report.checker-correct"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "obligation-redigest"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-assurance-report",
+          "warrant-ir"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-001a",
+        "plan": "Re-parse, re-lower, re-inline, rebuild the obligation text, recompute digest and compare each certificate's CNF (WD-009)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every certificate-backed label",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.drat.checker-correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "`drat-check` accepts only valid RUP/RAT refutations",
+      "statement": "`drat-check` accepts only valid RUP/RAT refutations.",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "checker-corpus",
+          "independent-checker-cross-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "drat-check",
+          "TypeScript SAT lane"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-001",
+        "plan": "Corpus with negatives exists; next a smaller checker or a cross-check against an independent implementation (TypeScript solver, VER09a)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all UNSAT verdicts",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.bitblast.encoding-correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "Bit-blasting and Tseitin encodings (VER10) are equisatisfiable with the Boolean semantics of the operations",
+      "statement": "Bit-blasting and Tseitin encodings (VER10) are equisatisfiable with the Boolean semantics of the operations.",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "exhaustive-differential-test",
+          "gate-level-equivalence-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "arithmetic",
+          "logic-gates",
+          "bit-blaster"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-006",
+        "plan": "Exhaustive differential tests per small width; equivalence-check the encoder against `arithmetic` gate-level adders"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all SAT-backed proofs",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.symexec.engine-correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "The symbolic executor, miter construction and `TraceComparator` implement VER20 faithfully",
+      "statement": "The symbolic executor, miter construction and `TraceComparator` implement VER20 faithfully.",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "sabotage-control",
+          "concrete-two-run-cross-check"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-007",
+        "plan": "Sabotage controls exist (`proofneg/secret-branch`); add cross-checks by concrete two-run execution on the interpreter"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all CT and bound proofs",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.report.checker-correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "`ca-assurance-report --check` rejects what it claims to reject: JSON parsing, digest framing, manifest...",
+      "statement": "`ca-assurance-report --check` rejects what it claims to reject: JSON parsing, digest framing, manifest handling.",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "*"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "falsification-test",
+          "checker-fuzzing"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-assurance-report"
+        ],
+        "difficulty": "M",
+        "backlog": "WD-004",
+        "plan": "Falsification tests per rule exist; add property-based fuzzing of the checker"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every report",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.evidence.manifest-honesty",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "Evidence manifests are produced by the runs they describe, not hand-edited (lesson: a hard-coded report...",
+      "statement": "Evidence manifests are produced by the runs they describe, not hand-edited (lesson: a hard-coded report passes a gate that only checks consistency).",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "run-digest-binding",
+          "ci-regeneration-gate"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ct-compare/evidence",
+          "CI"
+        ],
+        "difficulty": "M",
+        "backlog": "WD-002",
+        "plan": "Bind manifests to the producing run's digest; CI regenerates and diffs"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all derived evidence",
+      "tier": "O1",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "tcb.rust-toolchain.trusted",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "wir",
+      "family": "tcb",
+      "title": "The `rustc`/`cargo`/linker that build the *verification tools* do not miscompile the prover (trusting trust)",
+      "statement": "The `rustc`/`cargo`/linker that build the *verification tools* do not miscompile the prover (trusting trust).",
+      "kind": "trust",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time",
+          "functional",
+          "bound"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "diverse-double-compilation"
+        ],
+        "rung": "R4",
+        "tools": [
+          "rustc",
+          "owned compiler"
+        ],
+        "difficulty": "XL",
+        "backlog": "AS-005",
+        "plan": "Diverse double compilation of the small checker; far future"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "the whole tool chain",
+      "tier": "O6",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "compiler.preserves_timing",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [
+        "cc.llvm-ir.no-secret-branch",
+        "cc.llvm-ir.addresses-public",
+        "cc.volatile-honoured",
+        "cc.version-pinned",
+        "cc.caller-context",
+        "mc.backend.no-secret-branch",
+        "mc.backend.addresses-public"
+      ],
+      "layer": "cc",
+      "family": "cc",
+      "title": "Refined by `cc.llvm-ir.no-secret-branch`, `cc.llvm-ir.addresses-public`, `cc.volatile-honoured`...",
+      "statement": "Refined by `cc.llvm-ir.no-secret-branch`, `cc.llvm-ir.addresses-public`, `cc.volatile-honoured`, `cc.version-pinned`, `cc.caller-context`, `mc.backend.no-secret-branch`, `mc.backend.addresses-public`. A report may keep citing the umbrella; it counts as discharged only when every refinement is.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "all-refinements-discharged"
+        ],
+        "rung": "R2",
+        "tools": [],
+        "difficulty": "N/A",
+        "backlog": "AS-003a",
+        "plan": "see refinements"
+      },
+      "since": "VER13",
+      "legacy": true,
+      "used_by": "all four ct-compare claims (always emitted)",
+      "tier": "",
+      "constrains_input_classes": [],
+      "notes": "Umbrella: counts as discharged only when every refined_by child is (spec section 3.5)."
+    },
+    {
+      "id": "cc.llvm-ir.no-secret-branch",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "cc",
+      "family": "cc",
+      "title": "In the optimised LLVM IR (`-C opt-level=3`) no `br`/`switch`/branch-lowered `select` condition is...",
+      "statement": "In the optimised LLVM IR (`-C opt-level=3`) no `br`/`switch`/branch-lowered `select` condition is data-dependent on secret input. Today *evidenced* by pattern checks of the loop CFG (`tests/optimized_ir.rs`: every cycle passes through the volatile block, no exit depends on volatile-derived values).",
+      "kind": "tool",
+      "status": "evidenced",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "cc.version-pinned"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "ir-taint-analysis",
+          "negative-control"
+        ],
+        "rung": "R1",
+        "tools": [
+          "new ir-taint checker",
+          "tests/optimized_ir.rs as seed"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-003a",
+        "plan": "Taint analysis over the whole IR CFG with secret roots = argument loads; negative controls (branchy select, early-exit loop)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`compiler.preserves_timing`",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "cc.llvm-ir.addresses-public",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "cc",
+      "family": "cc",
+      "title": "No GEP/load/store address is secret-dependent in the optimised IR",
+      "statement": "No GEP/load/store address is secret-dependent in the optimised IR.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "cc.version-pinned"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "ir-taint-analysis",
+          "negative-control"
+        ],
+        "rung": "R1",
+        "tools": [],
+        "difficulty": "M",
+        "backlog": "AS-003a",
+        "plan": "same taint pass over address operands"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "same",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "cc.volatile-honoured",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "cc",
+      "family": "cc",
+      "title": "LLVM keeps every volatile access and its order (what makes the accumulate loop non-elidable)",
+      "statement": "LLVM keeps every volatile access and its order (what makes the accumulate loop non-elidable).",
+      "kind": "tool",
+      "status": "evidenced",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "cc.version-pinned"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "ir-volatile-cycle-check"
+        ],
+        "rung": "R1",
+        "tools": [
+          "tests/optimized_ir.rs"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-003a",
+        "plan": "Part of the IR gate (volatile loads on every CFG cycle); exists"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "the `volatile_barrier` technique",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "cc.version-pinned",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "cc",
+      "family": "cc",
+      "title": "Evidence is for one `rustc` version (1.97.0 in this repo's environment), target, `opt-level`, codegen flags...",
+      "statement": "Evidence is for one `rustc` version (1.97.0 in this repo's environment), target, `opt-level`, codegen flags and `RUSTFLAGS`/`.cargo/config.toml`; another toolchain may behave differently.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "toolchain-tuple-manifest"
+        ],
+        "rung": "R1",
+        "tools": [
+          "rust-toolchain",
+          "CI"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-003a",
+        "plan": "Record the full tuple in the evidence manifest; checker rejects evidence whose tuple differs from the pinned build"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "all `cc.*` and `mc.*` evidence",
+      "tier": "O3",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "cc.caller-context",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "cc",
+      "family": "cc",
+      "title": "A caller may inline or const-propagate the callee and re-introduce a branch the compiler can prove one-sided...",
+      "statement": "A caller may inline or const-propagate the callee and re-introduce a branch the compiler can prove one-sided; the library cannot control this (CT01: \"optimisers and JIT compilers can reintroduce a branch\").",
+      "kind": "declared",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "any consumer of ct-compare",
+      "tier": "floor",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "mc.backend.no-secret-branch",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "mc",
+      "family": "mc",
+      "title": "Instruction selection and register allocation do not turn the IR's branch-free select/compare into a...",
+      "statement": "Instruction selection and register allocation do not turn the IR's branch-free select/compare into a secret-dependent branch (e.g. `cmov`/`setcc` to `jcc`). Invisible at LLVM IR level.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "cc.version-pinned"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "asm-taint-analysis",
+          "per-run-translation-validation"
+        ],
+        "rung": "R1",
+        "tools": [
+          "disassembly taint checker (new)",
+          "x86-simulator decode as a seed",
+          "for the owned lane riscv-simulator decode"
+        ],
+        "difficulty": "L",
+        "backlog": "AS-003a",
+        "plan": "Taint check on the assembly/ELF of the *shipped* artefact, or an owned back end whose output is validated (rung R2)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`compiler.preserves_timing`",
+      "tier": "O3/O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "mc.backend.addresses-public",
+      "aliases": [],
+      "refines": "compiler.preserves_timing",
+      "refined_by": [],
+      "layer": "mc",
+      "family": "mc",
+      "title": "Spills, stack slots and table addresses are public",
+      "statement": "Spills, stack slots and table addresses are public.",
+      "kind": "tool",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "cc.version-pinned"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "asm-taint-analysis",
+          "per-run-translation-validation"
+        ],
+        "rung": "R1",
+        "tools": [],
+        "difficulty": "L",
+        "backlog": "AS-003a",
+        "plan": "same"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "same",
+      "tier": "O3/O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "mc.isa.timing-data-independent",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "mc",
+      "family": "mc",
+      "title": "The latency of every executed instruction does not depend on operand data (no early-out multiplier...",
+      "statement": "The latency of every executed instruction does not depend on operand data (no early-out multiplier, variable-latency divide or data-dependent microcode).",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "gate.clocking.one-instruction-per-cycle"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "structural-netlist-proof"
+        ],
+        "rung": "R3",
+        "tools": [
+          "riscv-gatelevel",
+          "riscv-simulator"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Choose an ISA whose gate-level implementation has this by construction, and prove it structurally: RV32I base has no `mul`/`div`, and `riscv-gatelevel` advances one instruction per step (§4)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208 floor; VER26 §3",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "mc.isa.model-faithful",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "mc",
+      "family": "mc",
+      "title": "The ISA model used as semantics (`riscv-simulator`) matches the ISA specification",
+      "statement": "The ISA model used as semantics (`riscv-simulator`) matches the ISA specification.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "isa-conformance-vectors"
+        ],
+        "rung": "R2",
+        "tools": [
+          "riscv-simulator"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Python oracle vectors exist (`python_differential.rs`, `generate_python_oracle.py`); add riscv-arch-test style vectors"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "rungs R2, R3",
+      "tier": "O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "uarch.cache.address-trace-suffices",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "uarch",
+      "family": "uarch",
+      "title": "If the data-address trace is identical across secrets, cache-state evolution is identical (no...",
+      "statement": "If the data-address trace is identical across secrets, cache-state evolution is identical (no secret-dependent cache effect).",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "spec.obs-model.complete"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "cache-model-run",
+          "obs-model-extension"
+        ],
+        "rung": "R3",
+        "tools": [
+          "cpu-cache",
+          "cpu-pipeline"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Holds trivially on a cache-less machine; for modelled caches use `cpu-cache` and extend the observation model"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "cache-timing reading of CWE-208",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "uarch.fetch.pc-trace",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "uarch",
+      "family": "uarch",
+      "title": "The instruction-fetch (pc) sequence is attacker-visible and is covered by the trace equality",
+      "statement": "The instruction-fetch (pc) sequence is attacker-visible and is covered by the trace equality.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "spec.obs-model.complete"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "obs-event-extension"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "warrant-ir"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-002",
+        "plan": "Add the pc to `ObsEvent` (see `spec.obs-model.complete`)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208",
+      "tier": "O2",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "uarch.speculation.none",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "uarch",
+      "family": "uarch",
+      "title": "No speculative execution leaks secret-dependent state (Spectre class)",
+      "statement": "No speculative execution leaks secret-dependent state (Spectre class). CT01 disclaims it.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "structural-netlist-proof"
+        ],
+        "rung": "R3",
+        "tools": [
+          "riscv-gatelevel (structural)"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "By construction on an in-order non-speculative core (`riscv-gatelevel` has none); not dischargeable on a host CPU"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "uarch.predictor.no-state-leak",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "uarch",
+      "family": "uarch",
+      "title": "Branch-predictor state does not leak beyond the branch-decision trace",
+      "statement": "Branch-predictor state does not leak beyond the branch-decision trace.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "structural-netlist-proof"
+        ],
+        "rung": "R3",
+        "tools": [],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "No predictor in the in-order model; otherwise not dischargeable"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "uarch.shared-resources.none",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "uarch",
+      "family": "uarch",
+      "title": "No SMT/shared-cache/shared-bus neighbour observes the program",
+      "statement": "No SMT/shared-cache/shared-bus neighbour observes the program.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "single-core-machine-statement"
+        ],
+        "rung": "R3",
+        "tools": [
+          "riscv-gatelevel"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Single-core simulated machine; otherwise a deployment statement"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.model.is-netlist",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "The gate-level \"simulator\" is a *netlist*",
+      "statement": "The gate-level \"simulator\" is a *netlist*. Today `riscv-gatelevel` evaluates `logic_gates` primitive functions (`and_gate`, `mux2`, ...) from Rust code; there is no extractable netlist object a SAT solver can consume.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "gate.primitives.correct"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "netlist-extraction",
+          "step-function-differential-run"
+        ],
+        "rung": "R3",
+        "tools": [
+          "gate-netlist-format",
+          "logic-gates",
+          "riscv-gatelevel"
+        ],
+        "difficulty": "L",
+        "backlog": "AS-004",
+        "plan": "Extract a netlist (HNL, `gate-netlist-format`) from the engine; show by differential run that it computes the same step function"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "any `proved-to-gate-level` label",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.primitives.correct",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "`logic-gates`/`arithmetic` primitives implement the Boolean functions (AND, OR, NOT, XOR, MUX, adders)",
+      "statement": "`logic-gates`/`arithmetic` primitives implement the Boolean functions (AND, OR, NOT, XOR, MUX, adders).",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "exhaustive-truth-table",
+          "transistor-model-equivalence"
+        ],
+        "rung": "R4",
+        "tools": [
+          "transistors",
+          "logic-gates"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-005",
+        "plan": "Exhaustive truth tables (complete) down to the `transistors` CMOS model"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "netlist semantics",
+      "tier": "O6",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.sequential.ideal-dff",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "Flip-flops are ideal edge-triggered state elements: no metastability, setup/hold violation, glitch or...",
+      "statement": "Flip-flops are ideal edge-triggered state elements: no metastability, setup/hold violation, glitch or ambiguous reset.",
+      "kind": "declared",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "cycle semantics",
+      "tier": "floor",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.clocking.one-instruction-per-cycle",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "Every instruction retires in exactly one clock step whatever the operands (no multi-cycle FSM, no stall)",
+      "statement": "Every instruction retires in exactly one clock step whatever the operands (no multi-cycle FSM, no stall). This turns \"step count\" into \"cycle count\".",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "gate.model.is-netlist"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "structural-netlist-proof"
+        ],
+        "rung": "R3",
+        "tools": [
+          "riscv-gatelevel",
+          "HNL"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Structural proof on the netlist: no state encodes progress within an instruction; halt only on the explicit halt flag"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`StepCount` event at gate level",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.memory.abstraction",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "The 512 KiB `DffMemory` (4,194,304 flip-flops) is a flat byte array whose only data-dependent input is the...",
+      "statement": "The 512 KiB `DffMemory` (4,194,304 flip-flops) is a flat byte array whose only data-dependent input is the address bus, and access takes the same time for any address.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "gate.model.is-netlist"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "port-cut-proof"
+        ],
+        "rung": "R3",
+        "tools": [
+          "riscv-gatelevel"
+        ],
+        "difficulty": "M",
+        "backlog": "AS-004",
+        "plan": "Cut memory out of the netlist at the ports and prove the core exposes only `(addr, we, wdata)`"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "memory-address events",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gate.isa-equivalence",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gate",
+      "family": "gate",
+      "title": "The one-step gate-level next-state function equals the ISA model for **every** state and instruction, not...",
+      "statement": "The one-step gate-level next-state function equals the ISA model for **every** state and instruction, not only the sampled Python vectors.",
+      "kind": "model",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "bounded(k)",
+          "proved",
+          "proved-per-run",
+          "proved-to-isa"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [
+        "gate.model.is-netlist",
+        "mc.isa.model-faithful"
+      ],
+      "discharge": {
+        "evidence_kinds": [
+          "one-step-miter",
+          "drat-certificate"
+        ],
+        "rung": "R3",
+        "tools": [
+          "cdcl-sat",
+          "drat-check",
+          "riscv-simulator"
+        ],
+        "difficulty": "XL",
+        "backlog": "AS-004",
+        "plan": "VER18 one-step equivalence: a miter between the extracted netlist and a bit-blast encoding of the RV32I step, UNSAT with a DRAT certificate"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "composition R2 to R3",
+      "tier": "O5",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "phys.silicon.realization",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "phys",
+      "family": "phys",
+      "title": "A physical chip behaves as the netlist: same function and no data-dependent delay, glitching, power or EM...",
+      "statement": "A physical chip behaves as the netlist: same function and no data-dependent delay, glitching, power or EM visible to the attacker.",
+      "kind": "physical",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "the floor of every constant-time label",
+      "tier": "floor",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "phys.side-channels.out-of-scope",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "phys",
+      "family": "phys",
+      "title": "Power, EM, acoustic, thermal and fault-injection channels are outside the attacker model",
+      "statement": "Power, EM, acoustic, thermal and fault-injection channels are outside the attacker model.",
+      "kind": "declared",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "CWE-208",
+      "tier": "floor",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.allocator.size-only",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "`ct_select_bytes` allocates a `Vec`; allocator latency and address depend only on the public length, never on...",
+      "statement": "`ct_select_bytes` allocates a `Vec`; allocator latency and address depend only on the public length, never on secret contents (the allocator never sees them).",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "size-only-allocator-trace",
+          "no-allocator-owned-lane"
+        ],
+        "rung": "R2",
+        "tools": [
+          "VER16 allocator (planned)"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002",
+        "plan": "Owned lane: no allocator (caller-provided or static output buffer), or a checked allocator with a size-only trace (VER16)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`select_bytes` timing; `src.analyzer.G-2`",
+      "tier": "O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.std.runtime-benign",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "The `std`/`alloc` routines called (`Vec` drop, `memcpy`, panic machinery) do not branch on secret contents",
+      "statement": "The `std`/`alloc` routines called (`Vec` drop, `memcpy`, panic machinery) do not branch on secret contents.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "no-std-owned-lane"
+        ],
+        "rung": "R2",
+        "tools": [
+          "owned lane"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002",
+        "plan": "Owned lane is `core`-only (`no_std`)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "whole-binary timing",
+      "tier": "O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.time.vdso",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "`Instant::now()`/`clock_gettime` through the vDSO make no syscall and are invisible to the seccomp and strace...",
+      "statement": "`Instant::now()`/`clock_gettime` through the vDSO make no syscall and are invisible to the seccomp and strace rings (VER08b §14; CAP-RT-006).",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "vdso-unmapped-run"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "capability-runtime-conformance (branch)"
+        ],
+        "difficulty": "M",
+        "backlog": "LH-002",
+        "plan": "Detect by unmapping the vDSO in the box, or declare as residual"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "`time:read` capability evidence",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.env.memory-reads",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "Environment reads are memory reads, not syscalls; only an explicitly built environment makes undeclared...",
+      "statement": "Environment reads are memory reads, not syscalls; only an explicitly built environment makes undeclared variables absent.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "launch-env-allowlist"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "VER08b"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-002",
+        "plan": "Launch-time environment allowlist (exists)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "runtime E0 evidence",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.syscall.baseline",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "The armed-phase baseline `rcg-baseline-1` (observed `{write, exit_group, futex, mmap, munmap}`; `brk`...",
+      "statement": "The armed-phase baseline `rcg-baseline-1` (observed `{write, exit_group, futex, mmap, munmap}`; `brk` unobserved) is a measurement on glibc 2.39, not a proof.",
+      "kind": "environment",
+      "status": "evidenced",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "per-lane-baseline",
+          "spec-sync-test"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "VER08b"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-002",
+        "plan": "Per-lane baselines, version string, spec-sync test (exist)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "runtime capability gate",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.runtime-gate.exercised-paths-only",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "The runtime gate shows the *tested* execution made no undeclared syscall, not that no path can",
+      "statement": "The runtime gate shows the *tested* execution made no undeclared syscall, not that no path can.",
+      "kind": "declared",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "runtime evidence",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.kernel.trusted",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "The kernel, `strace`, Docker, seccomp and Landlock behave as documented",
+      "statement": "The kernel, `strace`, Docker, seccomp and Landlock behave as documented.",
+      "kind": "trust",
+      "status": "floor",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": null,
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "runtime gate",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.counters.not-live",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "Retired-instruction counters are host-dependent; the E2/microbenchmark rung is `not-live` and no...",
+      "statement": "Retired-instruction counters are host-dependent; the E2/microbenchmark rung is `not-live` and no instruction-count evidence is claimed.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "constant-time"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "host-counter-run",
+          "simulator-step-count"
+        ],
+        "rung": "R2",
+        "tools": [
+          "cpu-simulator",
+          "riscv-simulator"
+        ],
+        "difficulty": "S",
+        "backlog": "LH-002",
+        "plan": "Counters on a host that provides them; or replace by simulator step counts (owned lane: exact)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "microbenchmark row, CWE-208 exemption text",
+      "tier": "O4",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "os.platform.linux-only",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "os",
+      "family": "os",
+      "title": "Runtime evidence exists only for Linux; other platforms are not covered at all",
+      "statement": "Runtime evidence exists only for Linux; other platforms are not covered at all.",
+      "kind": "environment",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "capability"
+        ],
+        "packages": [
+          "rust/ct-compare"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "per-platform-gate"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "VER08b"
+        ],
+        "difficulty": "L",
+        "backlog": "LH-002",
+        "plan": "Per-platform gate"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "VER08b",
+      "tier": "P",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gov.approval.blocked",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gov",
+      "family": "gov",
+      "title": "Exemption approval is a hardware-token-backed step that VER00 §12.1 blocks; **every** exemption stays...",
+      "statement": "Exemption approval is a hardware-token-backed step that VER00 §12.1 blocks; **every** exemption stays `approved: false` and the verdict `report-only`.",
+      "kind": "governance",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "report"
+        ],
+        "packages": [
+          "*"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "hardware-key-approval"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "chief-of-staff-hardware-key-approval"
+        ],
+        "difficulty": "L",
+        "backlog": "AS-005",
+        "plan": "Settle trust-root findings, implement approval (VER00 §9.1)"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "verdict of every report",
+      "tier": "gov",
+      "constrains_input_classes": []
+    },
+    {
+      "id": "gov.catalogue.integrity",
+      "aliases": [],
+      "refines": null,
+      "refined_by": [],
+      "layer": "gov",
+      "family": "gov",
+      "title": "The catalogue (§5) is complete and honest: a tool-private assumption missing from it would not be seen",
+      "statement": "The catalogue (§5) is complete and honest: a tool-private assumption missing from it would not be seen.",
+      "kind": "governance",
+      "status": "assumed",
+      "applies_to": {
+        "labels": [
+          "proved",
+          "bounded(k)",
+          "proved-per-run",
+          "proved-to-isa",
+          "proved-to-gate-level"
+        ],
+        "claims": [
+          "report"
+        ],
+        "packages": [
+          "*"
+        ]
+      },
+      "depends_on": [],
+      "discharge": {
+        "evidence_kinds": [
+          "catalogue-hash-pin",
+          "spec-sync-test"
+        ],
+        "rung": "R0+",
+        "tools": [
+          "ca-assurance-report"
+        ],
+        "difficulty": "S",
+        "backlog": "AS-001a",
+        "plan": "Hash-pin the catalogue in the report; spec-sync test; review rule"
+      },
+      "since": "VER13",
+      "legacy": false,
+      "used_by": "every report",
+      "tier": "O1",
+      "constrains_input_classes": []
+    }
+  ]
+}

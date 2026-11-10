@@ -5,7 +5,8 @@ on:
     paths:
       - '.github/workflows/visicalc.yml'
       - 'code/programs/typescript/visicalc/**'
-      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/typescript/visicalc-html/**'
+      - 'code/packages/rust/spreadsheet-wasm/**'
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
       - 'code/packages/rust/mosaic-*/**'
@@ -19,7 +20,8 @@ on:
     paths:
       - '.github/workflows/visicalc.yml'
       - 'code/programs/typescript/visicalc/**'
-      - 'code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js'
+      - 'code/programs/typescript/visicalc-html/**'
+      - 'code/packages/rust/spreadsheet-wasm/**'
       - 'code/programs/mosaic/visicalc/**'
       - 'code/packages/mosaic/mosaic-pkg-grid/**'
       - 'code/packages/rust/mosaic-*/**'
@@ -76,8 +78,12 @@ jobs:
         run: |
           cargo test --manifest-path ../../../packages/rust/Cargo.toml -p mosaic-emit-webcomponent --test numeric_typography
           node --test scripts/webcomponent-typography.test.mjs
+      # The package's web-demo tests build the (uncommitted, BUILD-001) VisiCalc
+      # engine bundle, which compiles spreadsheet-wasm for the browser target.
       - name: Check the root Mosaic package
-        run: cargo test --manifest-path ../../mosaic/visicalc/Cargo.toml
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo test --manifest-path ../../mosaic/visicalc/Cargo.toml
       - name: Test the standard Rust application and native ABI
         run: cargo test --manifest-path ../../../packages/rust/Cargo.toml -p visicalc-mosaic-app
       - name: Build and exercise the standard WASM lifecycle bridge

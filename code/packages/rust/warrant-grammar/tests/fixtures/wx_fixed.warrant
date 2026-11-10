@@ -1,0 +1,112 @@
+-- VER04j WX-B / WX-C test fixture: a v1 document over fixed-width integers and
+-- bitwise operations.  It is NOT a package specification; it exists so the
+-- generator is tested by compiling and running what it emits against a tiny
+-- in-test subject (see tests/wx_evidence.rs).  Every model here is a claim's
+-- oracle written from VER04j, never from the subject.
+warrant wx_fixed v1
+  error WxError = OUT_OF_RANGE
+
+  op add32(a: U32, b: U32) -> U32
+  op sub8(a: U8, b: U8) -> U8
+  op mul16(a: U16, b: U16) -> U16
+  op lt_i32(a: I32, b: I32) -> Bool
+  op try_u8(x: I16) -> Option<U8>
+  op shl16(a: U16, n: Nat) -> U16
+  op sar8(a: I8, n: Nat) -> I8
+  op rotl32(a: U32, n: Nat) -> U32
+  op rotr16(a: U16, n: Nat) -> U16
+  op popcnt8(a: I8) -> Nat
+  op narrow8(x: I32) -> Result<I8, WxError>
+
+  labels add32:
+    a public
+    b public
+  labels sub8:
+    a public
+    b public
+  labels mul16:
+    a public
+    b public
+  labels lt_i32:
+    a public
+    b public
+  labels try_u8:
+    x public
+  labels shl16:
+    a public
+    n public
+  labels sar8:
+    a public
+    n public
+  labels rotl32:
+    a public
+    n public
+  labels rotr16:
+    a public
+    n public
+  labels popcnt8:
+    a public
+  labels narrow8:
+    x public
+
+  example add32_wraps:
+    add32(4294967295u32, 1u32) == 0u32
+  example sub8_wraps_below_zero:
+    sub8(0u8, 1u8) == 255u8
+  example lt_i32_is_signed:
+    lt_i32(-1i32, 0i32) == true
+  example try_u8_rejects_256:
+    try_u8(256i16) == None
+  example sar8_fills_with_the_sign:
+    sar8(-128i8, 8) == -1i8
+  example popcnt8_of_minus_one:
+    popcnt8(-1i8) == 8
+  example rotl32_wraps_the_count:
+    rotl32(0x80000001u32, 33) == 0x00000003u32
+  example narrow8_min:
+    narrow8(-128i32) == Ok(-128i8)
+  example narrow8_rejects_200:
+    narrow8(200i32) == Err(WxError.OUT_OF_RANGE)
+  example add32_carries_into_the_high_half:
+    add32(65535u32, 1u32) == 65536u32
+  example add32_overflows_by_two:
+    add32(4294967295u32, 2u32) == 1u32
+  example mul16_wraps:
+    mul16(65535u16, 2u16) == 65534u16
+  example rotr16_wraps_the_low_bits:
+    rotr16(3u16, 1) == 0x8001u16
+  example shl16_by_the_width_is_zero:
+    shl16(1u16, 16) == 0u16
+
+  claim add32_is_wrapping_add:
+    forall a: U32, b: U32. add32(a, b) == a + b
+  claim sub8_is_wrapping_sub:
+    forall a: U8, b: U8. sub8(a, b) == a - b
+  claim mul16_is_wrapping_mul:
+    forall a: U16, b: U16. mul16(a, b) == a * b
+  claim lt_i32_is_signed_order:
+    forall a: I32, b: I32. lt_i32(a, b) == (a < b)
+  claim try_u8_is_try:
+    forall x: I16 | x >= -300i16 and x <= 300i16. try_u8(x) == try<U8>(x)
+  claim shl16_is_total_shift:
+    forall a: U16, n: Nat. shl16(a, n) == shl(a, n)
+  claim sar8_is_arithmetic:
+    forall a: I8, n: Nat. sar8(a, n) == sar(a, n)
+  claim rotl32_is_rotate:
+    forall a: U32, n: Nat. rotl32(a, n) == rotl(a, n)
+  claim rotr16_is_rotate:
+    forall a: U16, n: Nat. rotr16(a, n) == rotr(a, n)
+  claim popcnt8_counts_the_pattern:
+    forall a: I8. popcnt8(a) == popcount(a)
+  claim narrow8_is_try_into_i8:
+    forall x: I32. narrow8(x) == (if try<I8>(x) == None then Err(WxError.OUT_OF_RANGE) else Ok(unwrap_or(try<I8>(x), 0i8)))
+  claim add32_checked_is_overflow_aware:
+    forall a: U32, b: U32. checked_add(a, b) == (if add32(a, b) < a then None else Some(add32(a, b)))
+  claim add32_matches_the_xor_carry_identity:
+    forall a: U32, b: U32. add32(a, b) == add32(bit_xor(a, b), shl(bit_and(a, b), 1))
+  claim add32_round_trips_through_big_endian:
+    forall a: U32. from_be<U32>(be_bytes(add32(a, 0u32))) == a
+  claim add32_round_trips_through_little_endian:
+    forall a: U32. from_le<U32>(le_bytes(a)) == add32(a, 0u32)
+  claim sub8_negation_is_complement_plus_one:
+    forall a: U8. sub8(0u8, a) == bit_not(a) + 1u8

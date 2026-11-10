@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - BUILD-001
+
+- `tests/web_demos_are_current.rs` no longer checks a committed engine bundle: it builds `spreadsheet-wasm` and the VisiCalc bundle, asserts the bundle embeds the wasm, and runs the infinite-grid smoke test. BUILD installs the wasm32 target.
+
 ## Unreleased
 
 - Depends on `mosaic-pkg-grid` 0.3.0, whose Cell and Column load on Qt again.

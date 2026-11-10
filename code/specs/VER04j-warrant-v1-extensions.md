@@ -1,8 +1,10 @@
 # VER04j — Warrant v1 Extensions (WX-B, WX-C, WX-A, WX-E, WX-H; sketches WX-F, WX-D)
 
-**Status:** Specification only. No parser, checker, evaluator, generator or
-binding change is delivered by this document. Each extension is a separately
-landable slice; none changes the meaning of a v0 document (section 1).
+**Status:** WX-B, WX-C and WX-A are **implemented** in `rust/warrant-grammar`
+(section 14 lists exactly where the implementation deviates from, or
+sharpens, the text below). WX-E, WX-H and the sketches WX-F and WX-D are
+specification only. Each extension is a separately landable slice; none
+changes the meaning of a v0 document (section 1).
 
 **Parent:** [VER04 §3–§8](VER04-warrant-language.md),
 [VER04c](VER04c-guarded-warrant-parser.md), [VER04d](VER04d-warrant-type-system.md),
@@ -101,6 +103,16 @@ text, fixed in the first slice (WX-B) and covered by the differential tests of
 section 10.3. A v0 document written to avoid wrapping means the same under the
 fixed evaluator; a v0 document that does wrap (none exists in the repository)
 meant what VER04 said all along.
+
+*Implementation note (section 14, item 1):* the fix is carried by the v1
+document type. In a v1 document every fixed-width value, `U8` and `U64`
+included, is a typed `V::Fixed` and wraps. The generated harness of a **v0**
+document keeps its `V::Nat` emission so that the checked-in evidence of
+`ct-compare` and `gf256` stays byte-identical (the instruction for the WX-B
+slice); the v0 oracle is therefore still non-wrapping, and a v0 `U8`
+expression that would wrap panics ("model arithmetic overflow") or silently
+exceeds 255 rather than wrapping. The ground evaluator used for examples
+(`codegen::Evaluator`) already wrapped `U8` and `U64`.
 
 ## 2. WX-B — fixed-width integers
 
@@ -269,8 +281,14 @@ checked arithmetic by this deterministic rule:
    v0 behaviour is unchanged.
 
 The manifest `domain` text states the outcome per binder, for example
-`a: U16 full(65536); b: U16 edge(281)`, plus `demoted: ["b"]`. The honest
-statement stays "exhaustive over <domain>", never "all inputs".
+`a: U16 edge(281); b: U16 full(65536)`, plus `demoted: ["a"]` (the rule demotes
+the *leftmost* full `U16`/`I16` binder first, so a `U16 x U16` claim at the
+raised budget `B = 2^26` demotes only `a`, and at the reference `B = 400,000`
+demotes `a` and then `b`: `65536*65536 -> 281*65536 -> 281*281 = 78,961`). The
+binder kinds are `full` (every value), `edge` (the biased boundary set),
+`count` (the shift-count domain of section 3.6) and `set` (the fixed finite
+sets of `Bool`, `Nat`, `Bytes`). The honest statement stays "exhaustive over
+<domain>", never "all inputs".
 
 ### 2.7 Sabotage implications (VER04h §6)
 
@@ -279,14 +297,29 @@ passes iff some suite for the operation fails under it:
 
 | Fault | Applies to | Models |
 |---|---|---|
-| `saturate` | `+ - *` shaped ops on `T ∈ F` | saturating instead of wrapping arithmetic |
-| `trap-as-zero` | same | overflow returns 0 |
+| `saturate-add` `saturate-sub` `saturate-mul` | `+ - *` shaped ops on `T ∈ F` | saturating instead of wrapping arithmetic |
+| `trap-as-zero-add` `-sub` `-mul` | same | overflow returns 0 |
 | `narrow-width` | ops whose native type is `U32`/`U16`/... | the adapter computes one width narrower |
 | `sign-confuse` | comparison/order ops on `S` | signed value compared as unsigned |
 | `off-by-one-range` | `try`-shaped ops | accepts `max+1` / `min-1` |
 
-The edge domains guarantee `max`, `max-1`, `min`, `min+1`, `-1`, `0`, `1` are
-present, so each fault above is catchable by construction.
+The fault names carry the operator because an adapter is told what the
+operation *is* only through its binding (an adapter cannot know whether an
+export is an addition or a subtraction); `saturate` and `trap-as-zero` without a
+suffix are not faults.
+
+The edge domains guarantee `0`, `1`, `max`, `min` and `-1` (signed), and
+`max-1` (unsigned), are present. (An earlier draft also promised `max-1` and
+`min+1` for signed types; the normative sets do not contain them, and
+`wrap_S(E_U(w))` cannot.) The `off-by-one-range` fault needs the *source*
+domain of a `try<T>` to contain `T.max + 1` and `T.min - 1`; every wider source
+of the same family does (`I32` holds `256` and `-1` for `try<U8>`, `I64` holds
+`2^32` and `-1` for `try<U32>`), so each fault above is catchable by the
+bounded-exhaustive suite by construction. The property and fuzz suites reach a
+boundary only with probability about `1/4 * 2/|edge|` per draw, so a
+`try`-shaped claim should carry a refinement that confines the source to the
+neighbourhood of the range (`| x >= -300i16 and x <= 300i16`) if its negative
+control must be caught by every suite kind.
 
 ### 2.8 Cross-language portability (VER04i corpus encoding)
 
@@ -422,7 +455,7 @@ node charges 1 work unit (shifts and `popcount` charge `ceil(w/8)`).
 |---|---|---|
 | `shift-mask` | `shl shr sar` ops | count reduced modulo `w` (x86 / `wrapping_shl`) |
 | `shift-ub` | same | count `>= w` returns the value unshifted (a C UB outcome) |
-| `rotate-as-shift` | `rotl rotr` | zero fill |
+| `rotate-as-shift-left` `rotate-as-shift-right` | `rotl` / `rotr` | zero fill |
 | `sar-as-shr` | `sar` | zero fill on negatives |
 | `popcount-off` | `popcount` | counts only the low `w-1` bits |
 | `endian-swap` | `be_bytes le_bytes from_*` | opposite byte order |
@@ -1015,8 +1048,9 @@ killed:** non-wrapping `U8` (the actual v0 defect), saturating add, arithmetic
 ### 10.4 Evidence-generator tests
 
 Domain sizes and first/last elements per 2.6 and 4.7; the demotion rule on
-`U16 x U16` (second binder demoted), `U16 x U8 x U8` (both demoted in order,
-then W0706 at the reference `B`) and `U8 x U8 x U8` unchanged (W0706 at the
+`U16 x U16` (both demoted, leftmost first, at the reference `B`; only the first
+at `B = 2^26`), `U16 x U8 x U8` (the one `U16` demoted, then W0706 at the
+reference `B`: `281 * 256 * 256` is over it) and `U8 x U8 x U8` unchanged (W0706 at the
 reference `B`, passing with the raised option as gf256 does); every fault of
 2.7/3.7/4.8/6.4 yields `not ok` under `WARRANT_EVIDENCE_FAULT`; manifest
 determinism; regeneration drift check; v0 evidence byte-identical (1.3). New
@@ -1129,3 +1163,213 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   survey and the `gf256` conversion's forced workarounds. No v0 text is changed;
   section 1.4 records the one evaluator conformance fix against existing v0 text
   (non-wrapping `U8` in the generated evaluator).
+- WX-A implemented (`rust/warrant-grammar` 0.3.0): see section 14.1 for the
+  deviations and clarifications this forced; section 4 itself is unchanged except
+  that nothing in it was found wrong.
+- WX-B and WX-C implemented (`rust/warrant-grammar` 0.2.0): see section 14 for the
+  deviations and clarifications this forced. Sections 1.4, 2.6, 2.7 and 3.7 were
+  corrected in place: the `U16 x U16` demotion example, the list of values the edge
+  domains guarantee, and the operator-qualified fault names.
+
+## 14. Implementation status and deviations (WX-B, WX-C, WX-A)
+
+Where the code departs from, or must decide something the text leaves open:
+
+1. **WD-013 and v0 evidence.** See the note under section 1.4: the typed,
+   wrapping `U8` exists for v1 documents; v0 generated evidence is frozen
+   byte-identical (`ct-compare`, `gf256` regenerate with no diff).
+2. **Diagnostics.** A v1 construct in a v0 document, a header word other than
+   `v1`, and an out-of-range suffixed literal are `ParserErrorKind::{V1ConstructInV0,
+   InvalidVersionHeader, LiteralOutOfRange}`, all with code `W0101`. A trailing
+   word after `v1` (`warrant x v1 extra`) is the ordinary `W0001` unexpected token.
+   In a **v0** document an out-of-range `u8`/`u64` literal keeps its v0 `W0001`.
+   An `Int` overflow in the ground evaluator is `W0703` in a v1 document (section
+   2.5) and `W0702` in a v0 document, as before.
+3. **Hex literals** are lexed as one token (`0x` followed by every alphanumeric) and
+   validated by the parser, so `0xFF` is `W0101`, not the token pair `0x` `FF`. An
+   unsuffixed hex literal must fit `u64` (it is an `Int` literal).
+4. **`-128i8`** is folded by the parser into a single negative literal when the
+   magnitude token is the direct operand of unary minus; `-(128i8)` is rejected.
+5. **Shift counts are `Nat` only.** The checker types `Nat + Nat` as `Int`
+   (VER04d), and v1 adds no `Int -> Nat` conversion, so `shl(a, n + 1)` is a type
+   error. This is a gap in the text (a count computed from another count cannot be
+   written); closing it needs either `Nat + Nat : Nat` (a v0 typing change) or a
+   `to_nat` on `Int`, and is left to the owner.
+6. **`div` on `Int`/`Nat`** is floor division in a v1 document everywhere (as
+   VER04 section 3 says); the v0 ground evaluator uses Euclidean division, which
+   differs for a negative divisor, and is left unchanged for v0 documents.
+   `rem` on `Int`/`Nat` is floor modulo.
+7. **Numeric equality** in a v1 document compares `Int` and `Nat` by value
+   (`popcount(x) == 8` compares a `Nat` with an `Int` literal), recursively
+   through `Option`, `Result` and `List`.
+8. **Fault names** carry the operator (`saturate-add`, `trap-as-zero-mul`,
+   `rotate-as-shift-left`); see sections 2.7 and 3.7. `endian-swap` is **not
+   implemented**: the adapter shapes that need it (a `T -> Bytes<N>` export and a
+   `Bytes<N> -> T` export) do not exist yet.
+9. **Generated v1 harness.** `V` gains `Int`, `Fixed(F, i128)` and `Opt`; a v1
+   document binds every fixed-width binder, `U8` and `U64` included, as `Ty::Fx`.
+   The prelude carries `//@if v0` / `//@if v1` regions (nested regions are
+   supported), and the v0 regions are the v0 text unchanged. The manifest gains
+   `warrant_version` (top level) and `demoted` (exhaustive entries), both v1 only;
+   `ca-assurance-report` does not read them yet.
+10. **Scalar adapter shape (v1).** Parameters are fixed-width integers or `Nat`;
+    the result is a fixed-width integer, `Bool`, `Nat`, `Option<T>` or
+    `Result<T, E>` (panic normalisation). `Bytes`-returning exports are not
+    adapted yet.
+11. **Syntax corpus.** The canonical `warrant.tokens`/`warrant.grammar` gain the new
+    literal tokens and the optional second header name additively (the compiled
+    artifacts regenerate with the v0 lexemes unchanged, and `warrant-syntax-v1` is
+    untouched and still passes). The version *gating* (W0101) lives in the
+    hand-written parser, which the grammar-driven corpus runner does not exercise,
+    so a `warrant-syntax-v2` fixture was **not** created; its cases are Rust tests
+    over the real parser (`tests/wx_syntax.rs`).
+12. **Differential tests (section 10.3).** The independent Python reference
+    evaluator was **not** written. Three-way equality is established as native
+    Rust <-> `fixed.rs` model <-> ground evaluator, and native Rust <-> `fixed.rs`
+    <-> the generated model code; the mutant evaluators of section 10.3 are
+    reproduced in the test suite and shown to be detected.
+
+### 14.1 WX-A (tuples, records, non-recursive sum types)
+
+The numbering continues from the WX-B/WX-C items above.
+
+13. **Gating and diagnostics.** In a v0 document every WX-A construct is W0101
+    (`ParserErrorKind::V1ConstructInV0`): a `record` or `variant` declaration, a
+    tuple type, tuple literal or tuple pattern, a projection (`t.0`, `f(x).0`,
+    `f(x).field`), `_`, a constructor or nested pattern, and a `true`/`false`
+    pattern.  The v0 pattern forms (`None`, `Some(x)`, `Ok(x)`, `Err(x)` with a bare
+    NAME) are unchanged and `_` there is still an ordinary binder.  A duplicate
+    field name inside one `record`, a duplicate field inside one constructor and a
+    duplicate constructor inside one `variant` are W0201 from the parser (they
+    are listed under the syntax corpus in section 4.11); duplicates *across*
+    declarations are W0201 from the checker.  More than 32 fields, more than 256
+    constructors, a tuple of arity above 8 and a pattern nested deeper than 8 are
+    W0001 syntax errors.
+14. **`PROJ` lexing.** A projection is a `.` with no whitespace on either side,
+    followed by a decimal INT with no leading zero and no suffix (`t.00` and `t.0u8`
+    are syntax errors) or a NAME.  Projection is also accepted after a literal; the
+    checker rejects it (W0301).  A `.` followed by whitespace is never a projection
+    (`t. 0` is a syntax error), which keeps the quantifier separator unaffected.
+15. **Patterns.** `Pattern` is recursive (`Some(Box<Pattern>)`).  `true` and
+    `false` are patterns of `Bool`; `Err(...)` accepts `E.CASE`, where `E` is the
+    scrutinee's error type, so error cases are matched like constructors.  A bare
+    NAME that is a constructor must be nullary; a constructor with fields is
+    matched as `C(p1, ..., pn)` with exactly one pattern per field, and `_` ignores
+    one.  A binder repeated inside one pattern, and a binder equal to a constructor
+    name, a model, an operation, an error type or a built-in, is W0203.  Integer,
+    byte and list scrutinees accept only `_` or a binder.
+16. **Exhaustiveness** is the matrix usefulness algorithm in `patterns.rs` over
+    `Bool`, `Option`, `Result`, error cases, tuples, records and variants.  A
+    non-exhaustive match and a redundant arm are both W0301
+    (`NonExhaustiveMatch`, `RedundantArm`).  Work is charged per
+    (arm x constructor) visited against the checker's work budget, a match has at
+    most 256 arms and a pattern nests at most 8 deep, and exhaustion of either is
+    W0602.  In a v1 document a match that repeats an arm of `Option`/`Result` is now
+    a redundancy error (v0 accepted it); the legacy check is kept for v0 documents
+    so their diagnostics do not change.
+17. **Typing.** As section 4.4.  A tuple, record and variant is invariant in its
+    components; `Option<Nat>` still widens to `Option<Int>` as in v0, but
+    `Option<(Nat, Nat)>` does not widen to `Option<(Int, Int)>`.  A constructor
+    name is a module symbol: it clashes (W0201) with every model, operation, error
+    type, type name and other constructor, and a record's name is both its type and
+    its single constructor.  Calling a constructor with parentheses but no
+    arguments (`Empty()`) and naming one that has fields without arguments are
+    arity errors.  `Name.field` where `Name` is a binder is projection, taking
+    priority over an error constructor of the same spelling.  The type graph must be
+    acyclic through tuples, records, variants, `List`, `Option`, `Result` and type
+    aliases (W0203).  `labels op: p.field public` accepts a field path of a record
+    parameter.
+18. **Evaluator.** `EvalValue` gains `Tuple(Vec<_>)` and
+    `Con { ty, index, ctor, fields }` (the constructor *name* is kept beside its
+    index because the corpus encoding keys on the name).  Construction,
+    projection and a match arm charge 1 unit plus one per field touched; a composite
+    larger than `max_value_bytes` leaves is W0703.
+19. **Corpus encoding.** `EvalValue::encode_portable` implements section 4.9:
+    tuples and records `L<n> ...`, variants `L2 S<ctor> L<k> ...`, `Option`
+    `L0`/`L1 x`.  For `Result` it uses the VER04i form (`M1 S<ok|err> v`, the
+    resolution proposed in section 12a item 1), not the `L2 S<Ok|Err> v` of
+    section 4.9.  Container nesting above 64 is W0709 (`encode_checked`).  The
+    legacy `encode_tfv` (an `Option` is its payload) is unchanged for the v0 value
+    shapes; composites always encode their children with `encode_portable`.
+20. **Domains** are as the table in 4.7.  Domain *bytes* are bounded by
+    `size x (maximum per-element cost)`, where a node costs `VALUE_OVERHEAD` and a
+    `Bytes` payload its maximum length: a safe over-estimate, not an exact sum.  A
+    `List` domain is `1 + d + d^2 + e^3` with `d = min(16, |D|)` and
+    `e = min(4, |D|)`.  The budget demotion rule of section 2.6 now applies to every
+    full `U16`/`I16` *leaf* of a composite binder (depth-first, left to right); the
+    manifest's `demoted` entry is the binder name followed by the component path:
+    the tuple component or field index, and for a variant the constructor name
+    before the field index (`p.0`, `r.1`, `a.Q.0`).  A binder whose domain is over
+    budget after demotion is W0706.  A composite binder's domain is one stored
+    vector, unlike the lazily iterated product of separate binders, so the 64 MiB
+    byte budget bounds the product *inside* a composite even when the case budget
+    is raised: `(U16, U16)` demotes both components at 2^26 too, and
+    `(U16, U8, U8)` is W0706 at every budget.  `List<T>` is the same size for
+    every `T` with at least 16 elements (337), so `List<List<U8>>` is 337.
+21. **Generators and shrinkers** are as 4.7.  `Result` draws `Ok` or `Err` with equal
+    probability and then an error case uniformly; a `List` draws a length in
+    `0..=3`.  Relation bias descends into one leaf: it perturbs one randomly chosen
+    component, keeping the constructor.
+22. **Bindings (section 4.6).** `evidence.bindings` gains
+    `struct T path=P fields=name:ht,...` and `enum T path=P ctors=C(name:ht,...),...`
+    lines and, on `op`, `ret=ht` and `errors=P/Variant=CASE,...` (the path and the
+    variants are separated by `/`, because a Rust path contains `::`).  A host type `ht` is
+    `u8..u64`, `i8..i64`, `usize`, `bool`, `bytes`, `(ht, ht, ...)`, `opt<ht>`,
+    `list<ht>` or a declared `struct`/`enum` name; `args=` is split on commas outside
+    brackets.  A host field name may be a decimal index, which reaches a tuple
+    struct or tuple variant (`P { 0: x }`).  An export returns its value directly
+    (a panic is normalised by `error=CASE`) or a host `Result` whose error variants
+    are listed in `errors=`.  Payload-carrying host errors are not supported (the
+    variant is matched with `{ .. }`).  A value a host integer cannot hold is
+    *unreachable by type*: the adapter raises a private panic that the claim wrapper
+    turns into a vacuous pass, counted as `unreachable_by_type` in the manifest;
+    nothing is narrowed.
+23. **Faults** (4.8) are rewrites of the adapter's result.  `off-by-one-consumed`
+    adds 1 to an even second component and subtracts 1 from an odd one (so both
+    directions of "`+ 1` / `- 1`" occur and a claim that pins `consumed` on every
+    input catches it); `wrong-ctor` of the first constructor is the last
+    (cyclic), and the predecessor's fields are the first element of each field's
+    domain; `field-zero` needs a numeric field and `swap-components` a homogeneous
+    pair or longer tuple, each checked at generation (W0701); `ok-as-err` needs a
+    `Result` whose payload is composite.  A fault rewrites the composite *inside* an
+    `Ok` or a `Some` (an `Option<(U8, U8)>` result can be attacked by
+    `swap-components`), and `drop-consumed` and `off-by-one-consumed` need a numeric
+    second component.  `swap-components` reverses a tuple, which exchanges a pair.
+    `missing-error` is also accepted on a composite `Result` operation (a panic is
+    reported as `Ok` of the first element of the payload's domain).  The fault
+    applies to the operation it is bound to only (the `scoped` mechanism of the
+    scalar adapters).
+24. **Evidence bodies.** `match`, tuples, constructors and projections are now
+    translated in model and claim bodies (a `match` was W0701 for v1 before WX-A, and
+    `tests/wx_generator.rs` was updated accordingly); list literals and
+    quantifiers inside a body remain W0701, as for v0.  `len` also accepts a list
+    value.  A claim binder may be an `Option`, `Result` or `List` (the domains of
+    section 4.7), but an operation that mentions no tuple, record or variant is still
+    adapted by the WX-B/WX-C shapes only: an `Option`/`Result`/`List` *parameter* of
+    such an operation has no adapter.
+25. **Prelude gating.** The WX-A part of the generated prelude (`//@if comp`) is
+    emitted only for a v1 document that declares a record or variant, writes a tuple,
+    a projection or a `match`, or quantifies over an `Option`, `Result`, `List` or
+    composite; every other document's generated output, v0 or v1, is byte-identical
+    to the WX-B/WX-C generator's (`tests/wx_regen.rs`, `tests/v0_compat.rs`).
+26. **Checker output.** `CheckedWarrantModule` is unchanged (its `Debug` rendering for
+    the two checked-in specifications is pinned by `tests/v0_compat.rs`); the
+    records and variants stay inside the checker, and `CheckedAdt`/`CheckedCtor` are
+    exported for a later consumer.  The canonical `warrant.tokens` and
+    `warrant.grammar` are *not* extended with WX-A productions: the hand-written
+    parser is the reference for tuples, records, variants, projections and
+    patterns, and `warrant-syntax-v1` is untouched (as in item 11, a
+    `warrant-syntax-v2` corpus remains unwritten; its cases are
+    `tests/wxa_syntax.rs`).
+27. **Not implemented in this slice:** list literals, list patterns and quantifiers
+    inside evidence bodies (item 24), payload-carrying host errors, a host `Result`
+    *parameter*, fixed-width `Bytes<N>` parameters and static widths on a composite
+    operation, and the `error_offset` second observer of section 4.2 (it is an
+    ordinary `op`).  The checked-in pilot for section 4.11 is a LEB128-shaped
+    fixture (`tests/fixtures/wxa.warrant`, decoding the first one or two bytes of a
+    stream) with an in-test subject, not the `wasm-leb128` package, which is
+    deliberately not converted here.  The exhaustiveness differential covers every
+    arm sequence up to four arms on `Bool x Option<Bool>`, every sequence up to
+    three arms plus a fixed-seed sample of four-arm sequences on the
+    three-component type of section 4.11, and every sequence up to four arms on
+    single-column types.

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Compose the separately authenticated original responder-revocation branch
+  with exact intermediate status by deriving the retained intermediate,
+  selected reviewed root, and original observation time through private
+  repository-owned evidence interfaces.
+- Retain both complete non-copyable branches with stable payload-free target,
+  issuer, and time failures, while leaving both added responders' revocation
+  policy, downstream projection, complete revocation, TLS, HTTP, and OAuth
+  readiness unresolved.
 - Bind a separate fully routed authenticated OCSP proof to the added
   intermediate-status proof's exact responder, selected reviewed root, and
   original observation time after reviewed-root DNS policy.

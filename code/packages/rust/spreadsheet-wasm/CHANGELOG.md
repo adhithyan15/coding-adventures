@@ -1,6 +1,21 @@
 # Changelog
 
+## Unreleased - BUILD-001
+
+- `pkg/spreadsheet_engine.wasm` and its `.inputs` stamp are no longer committed; `pkg/` is ignored and built by `build-wasm.sh`, `BUILD_mac_and_linux` and `code/scripts/build-demo-wasm.sh`. `build-wasm.sh --check` and `inputs-digest.py` are removed (nothing stored, nothing to go stale). `BUILD_mac_and_linux` now builds the wasm and runs both Node smoke tests against that fresh build. `build-wasm.sh` honours `CARGO_TARGET_DIR`.
+
 ## Unreleased
+
+**Rebuilt: the inputs digest drifted with no change to a repository source.**
+`build-wasm.sh --check` failed on `main` ("pkg/spreadsheet_engine.wasm is
+stale") although no crate in the engine's dependency tree changed in this
+repository since the stamp was written. The digest also covers the name and
+version of every crate `cargo tree` resolves, and `Cargo.lock` is gitignored,
+so registry crates (`autocfg`, `memchr`, `aho-corasick`, `num-*`, ...) float
+to whatever is newest and a new release alone flips the check. The `.wasm`, its
+`.inputs` stamp and the VisiCalc HTML bundle are regenerated with
+`bash build-wasm.sh` and `bundle-wasm-engine.sh`; `js/smoke.mjs` passes and
+both `--check` modes are green. The check can drift again for the same reason.
 
 **Rebuilt for the lexer's borrowed callback context (#17914).** The generic
 `lexer` crate changed (`LexerContext::previous_token` is borrowed, not
