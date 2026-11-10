@@ -153,6 +153,21 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.covered).toBe(209);
     expect(coverage.unmapped).toBe(49);
 
+    // The plural examples must be words the learner actually owns. The first
+    // reviewed draft used banna/bannagaḷu while citing the four colour-word
+    // atoms, even though none of those atoms teaches the noun "colour".
+    const pluralLesson = lessons.find(
+      (lesson) => lesson.realization.lessonId === "KA-C12-plural-galu",
+    );
+    expect(pluralLesson?.frontmatter["requires.knowledge"]).toEqual(
+      expect.arrayContaining(["KA-LEX-C02-HESARU-01", "KA-LEX-C05-MAADU-01"]),
+    );
+    expect(pluralLesson?.frontmatter["requires.knowledge"]).not.toEqual(
+      expect.arrayContaining(["KA-LEX-C11-BANNAGALU-01", "KA-LEX-C11-BANNAGALU-02"]),
+    );
+    expect(pluralLesson?.body).toContain("ಕೆಲಸ");
+    expect(pluralLesson?.body).not.toContain("ಬಣ್ಣ");
+
     const everything = loadEverything();
     const throughA1 = new Set(
       lessonsUpToLevel(

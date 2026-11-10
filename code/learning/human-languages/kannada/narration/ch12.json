@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d3a45ea3434947dc",
+  "sourceHash": "fnv1a64:b26fa3c152253474",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -891,17 +891,17 @@
     {
       "id": "KA-C12-plural-galu",
       "sequence": 408,
-      "title": "ಹೆಸರುಗಳು, ಬಣ್ಣಗಳು — more than one non-human thing",
-      "headword": "ಹೆಸರುಗಳು ಬಣ್ಣಗಳು",
-      "romanization": "hesarugaḷu bannagaḷu",
-      "gloss": "names and colours — the non-human plural ending -ಗಳು",
+      "title": "ಹೆಸರುಗಳು, ಕೆಲಸಗಳು — more than one non-human thing",
+      "headword": "ಹೆಸರುಗಳು ಕೆಲಸಗಳು",
+      "romanization": "hesarugaḷu kelasagaḷu",
+      "gloss": "names and kinds of work — the non-human plural ending -ಗಳು",
       "script": "kannada",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:303cec52160d3eb8",
+      "sourceHash": "fnv1a64:18ac081968dabbcb",
       "notice": null,
       "blocks": [
         {
@@ -917,7 +917,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ಹೆಸರು, “name”, then the four colours. These are non-human things, so their ordinary plural can use one ending."
+              "text": "Say ಹೆಸರು, “name”, then ಕೆಲಸ, “work”. These are non-human nouns, so their ordinary plural can use one ending."
             }
           ]
         },
@@ -932,7 +932,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಬಣ್ಣ (banna, colour) becomes ಬಣ್ಣಗಳು (bannagaḷu, colours)."
+              "text": "ಕೆಲಸ (kelasa, work) becomes ಕೆಲಸಗಳು (kelasagaḷu, kinds of work or tasks)."
             },
             {
               "kind": "speech",
@@ -963,11 +963,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“colours” — ಬಣ್ಣಗಳು",
+              "instruction": "“kinds of work” — ಕೆಲಸಗಳು",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “colours” — **ಬಣ್ಣಗಳು**]"
+              "source": "[YOU SAY: “kinds of work” — **ಕೆಲಸಗಳು**]"
             },
             {
               "kind": "prompt",
@@ -1002,7 +1002,7 @@
             },
             {
               "kind": "speech",
-              "text": "Make “name” and “colour” plural. Then say “Her mother works.” Which pronoun gives you “they” for people?"
+              "text": "Make “name” and “work” plural. Then say “Her mother works.” Which pronoun gives you “they” for people?"
             }
           ]
         }

@@ -209,22 +209,22 @@ Which number is ೪? (4 — nālku, ನಾಲ್ಕು.) Name every digit you ha
 
 
 Lesson 7 of 7.
-ಹೆಸರುಗಳು, ಬಣ್ಣಗಳು — more than one non-human thing.
+ಹೆಸರುಗಳು, ಕೆಲಸಗಳು — more than one non-human thing.
 
 Warm-up.
 [pause 2 seconds]
-Say ಹೆಸರು, “name”, then the four colours. These are non-human things, so their ordinary plural can use one ending.
+Say ಹೆಸರು, “name”, then ಕೆಲಸ, “work”. These are non-human nouns, so their ordinary plural can use one ending.
 
 Grammar Lens: add -ಗಳು.
 ಹೆಸರು (hesaru, name) becomes ಹೆಸರುಗಳು (hesarugaḷu, names).
-ಬಣ್ಣ (banna, colour) becomes ಬಣ್ಣಗಳು (bannagaḷu, colours).
+ಕೆಲಸ (kelasa, work) becomes ಕೆಲಸಗಳು (kelasagaḷu, kinds of work or tasks).
 The ending is -ಗಳು (-gaḷu). Use it here for ordinary non-human nouns. Do not force it onto the family words: human plurals have their own patterns, and avaru already gives you “they” for people.
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: “names” — ಹೆಸರುಗಳು]
 [pause 8 seconds for the answer]
-[your turn — say: “colours” — ಬಣ್ಣಗಳು]
+[your turn — say: “kinds of work” — ಕೆಲಸಗಳು]
 [pause 8 seconds for the answer]
 [your turn — say: “Her mother works” — avaḷa amma kelasa māḍuttāḷe]
 [pause 8 seconds for the answer]
@@ -233,4 +233,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Make “name” and “colour” plural. Then say “Her mother works.” Which pronoun gives you “they” for people?
+Make “name” and “work” plural. Then say “Her mother works.” Which pronoun gives you “they” for people?
