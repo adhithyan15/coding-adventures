@@ -877,7 +877,12 @@ fn parse_args_accepts_exactly_the_documented_forms() {
     assert!(parse_args(["--sabotage", "ALWAYS-PASS"]).is_err());
 }
 
-#[cfg(unix)]
+// Linux only: /dev/full is a Linux device (macOS has none). A read-only fd is
+// not a portable substitute, because Rust's std treats EBADF on stdout as a
+// successful write, so the child would exit 0 (logged as a known limit in
+// VER-BACKLOG LH-003c). The closed-pipe test below covers a failed report on every
+// platform.
+#[cfg(target_os = "linux")]
 #[test]
 fn a_report_that_cannot_be_written_is_not_a_pass() {
     // /dev/full accepts open() and fails every write with ENOSPC.
