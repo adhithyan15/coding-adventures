@@ -181,6 +181,7 @@ fn parse_with_asi_tracked(
         .expect("compiled JavaScript parser grammar missing supported version");
 
     normalize_member_access_keywords(&mut tokens);
+    normalize_statement_body_let(&mut tokens);
 
     // Phase 3 (restricted productions) runs FIRST, as a proactive pre-pass: the
     // offending streams parse successfully into the wrong tree, so the
@@ -379,6 +380,41 @@ fn force_restricted_semicolons(tokens: Vec<Token>) -> (Vec<Token>, Vec<bool>) {
     (out, original)
 }
 
+/// Is `tokens[i]` the whole body of a single-statement context: the `)` of an
+/// `if`/`for`/`while`/`with` header, `else`, `do` or `label:`?
+fn starts_statement_body(tokens: &[Token], i: usize, open_paren: &[usize]) -> bool {
+    let t = &tokens[i];
+    (t.value == ")" && !ends_expression_before(tokens, open_paren, i))
+        || (t.type_ == TokenType::Keyword && matches!(t.value.as_str(), "else" | "do"))
+        || (t.value == ":"
+            && i >= 1
+            && tokens[i - 1].type_ == TokenType::Name
+            && tokens[i - 1].type_name.is_none()
+            // `L:` starts a statement: after `;`, `{`, `}` or at the start.
+            && (i == 1 || matches!(tokens[i - 2].value.as_str(), ";" | "{" | "}")))
+}
+
+/// A single-statement body is a Statement, never a Declaration, and an
+/// ExpressionStatement only refuses `let [` as its first tokens (§14.5). So
+/// in `if (c) let⏎x = 1;` the `let` is an ordinary identifier. The lexer
+/// calls every `let` a keyword and the grammar has no identifier rule for
+/// one, so demote it to a name here, unless a `[` follows (`let [` stays an
+/// error). The newline-led `;` that ends it is added by
+/// [`speculate_line_semicolons`].
+fn normalize_statement_body_let(tokens: &mut [Token]) {
+    let open_paren = paren_table(tokens);
+    for i in 1..tokens.len().saturating_sub(1) {
+        if tokens[i].value == "let"
+            && tokens[i].type_ == TokenType::Keyword
+            && tokens[i + 1].value != "["
+            && starts_statement_body(tokens, i - 1, &open_paren)
+        {
+            tokens[i].type_ = TokenType::Name;
+            tokens[i].type_name = None;
+        }
+    }
+}
+
 /// In ECMAScript, property names after `.` or `?.` are IdentifierNames, which
 /// include all reserved words and keywords (§13.3.7). The lexer emits them as
 /// `Keyword` tokens, but the grammar productions specify `DOT NAME` and
@@ -563,9 +599,20 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
             flags.push(original[i]);
             continue;
         }
+        // `let` as the whole body of `if (c)`, `for (...)`, `while (c)`,
+        // `with (o)`, `else`, `do` or a label, then a line break and a `{` or
+        // an identifier: a single-statement body can't be a declaration
+        // (ExpressionStatement has no `let <identifier>` lookahead), so `let`
+        // is a plain identifier and ASI ends it (§14.5, test262
+        // `let-block-with-newline`, `let-identifier-with-newline`).
+        let let_is_statement_body = i >= 2
+            && tokens[i - 1].value == "let"
+            && tokens[i - 1].type_ != TokenType::String
+            && !is_member_access_dot(&tokens[i - 2])
+            && starts_statement_body(tokens, i - 2, &open_paren);
         if i > 0
             && tok.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0
-            && starts_statement_only(tok)
+            && (starts_statement_only(tok) || (let_is_statement_body && tok.value == "{"))
         {
             let prev = &tokens[i - 1];
             // A `}` ends an expression only when it closes an object literal:
@@ -597,10 +644,11 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
                     || tok.type_ == TokenType::Keyword
                     || tok.type_ == TokenType::Number
                     || tok.type_ == TokenType::String);
-            if ((prev.value != "}" && ends_expression_before(tokens, &open_paren, i - 1))
-                || ends_object_literal
-                || postfix_update)
-                && (!is_contextual || is_let_with_non_binding)
+            if let_is_statement_body
+                || ((prev.value != "}" && ends_expression_before(tokens, &open_paren, i - 1))
+                    || ends_object_literal
+                    || postfix_update)
+                    && (!is_contextual || is_let_with_non_binding)
             {
                 out.push(synthetic_semicolon(tok));
                 flags.push(false);
@@ -781,6 +829,37 @@ mod tests {
     fn tokenize(src: &str) -> Vec<Token> {
         coding_adventures_javascript_lexer::tokenize_javascript_typed(src, EsVersion::Es2025)
             .expect("tokenize")
+    }
+
+    /// `let` as a whole single-statement body is an identifier ended by ASI
+    /// (test262 `let-block-with-newline`, `let-identifier-with-newline`).
+    #[test]
+    fn let_as_a_single_statement_body_is_an_identifier() {
+        for src in [
+            "if (0) let // ASI\n{}",
+            "if (0) let\nx = 1;",
+            "if (0) ; else let\nx = 1;",
+            "do let\nwhile (0);",
+            "while (0) let\n{}",
+            "for (;0;) let\n{}",
+            "for (var x in null) let\nx = 1;",
+            "for (var x of []) let\n{}",
+            "with ({}) let\nx = 1;",
+            "L: let\n{}",
+        ] {
+            assert!(parses_with_asi(src), "{src:?}");
+        }
+    }
+
+    /// `let [` stays refused in a statement body, and a plain `let x = 1`
+    /// declaration at statement-list level is untouched.
+    #[test]
+    fn let_bracket_in_a_statement_body_is_still_refused() {
+        assert!(!parses_with_asi("if (0) let [a] = [1];"));
+        assert!(!parses_with_asi("if (0) let\n[a] = [1];"));
+        assert!(!parses_with_asi("if (0) let x = 1;"));
+        assert!(parses_with_asi("let\nx = 1;"));
+        assert!(parses_with_asi("{ let a = 1; let b = 2; }"));
     }
 
     /// Count how many SEMICOLON tokens ASI would add by diffing the stream the

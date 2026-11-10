@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.8] - 2026-11-10
+
+### Fixed
+
+- Restore the V8C test262 parse-level gate, red on main since #19048/#19068
+  (264 regressions, all listed negative tests that the grammar had only
+  "passed" by refusing to parse the construct):
+  - New `src/function_errors.rs`, one iterative CST pass with a small
+    strict/async/super context, adds the function-level early errors the
+    parser never had: duplicate parameters (strict code, non-simple lists,
+    arrows and methods), `"use strict"` with non-simple parameters, a rest
+    parameter that is not last or has a trailing comma, a parameter that
+    clashes with a top-level `let`/`const`/`class` of the body, `eval` and
+    `arguments` as strict binding and function names, strict-reserved words
+    (`public`, ...) as identifiers, `with` in strict code, legacy octal string
+    and number literals in strict code, `await` as an identifier, label,
+    parameter or function name inside an async function, `await` expressions
+    in async parameters, `super.x` outside a method (and its class-field and
+    static-block homes), `async` followed by a line break, invalid escapes in
+    untagged template literals (`\u{10FFFFF}`, `\07`, `\1`, bad `\x`/`\u`), a
+    template after an optional chain, a rest element that is not last in an
+    array binding pattern, and an initializer in a `for-of`/`for-in` head.
+  - `src/early_errors.rs`: `is_invalid_yield_target` became `invalid_target`, a
+    full assignment-target validator. It rejects methods, getters and setters
+    in object patterns, optional chains and literals as targets, function and
+    class expressions as targets, a rest element that is not last or has an
+    initializer, an object-rest target that is a pattern, and patterns on the
+    left of a compound assignment.
+  - `src/asi.rs`: `let` as the whole body of `if`/`for`/`while`/`with`/`else`/
+    `do`/a label, followed by a line break and a `{` or identifier, is an
+    identifier ended by ASI (`normalize_statement_body_let`). These forms had
+    parsed only while single-statement `let` was read as a declaration.
+  - Top-level `super.x` is still accepted: the grammar has no Script goal yet,
+    and `bridge` tests parse it bare.
+  - Added unit tests for every rule above, including the valid neighbours of
+    each.
+
 ## [0.67.7] - 2026-11-09
 
 ### Fixed

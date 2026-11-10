@@ -30,6 +30,7 @@ mod _grammar;
 pub mod asi;
 pub mod bridge;
 pub mod early_errors;
+pub mod function_errors;
 
 /// Parse JavaScript source and return a fully typed [`Program`] AST
 /// (CLOC12.136 bridge).

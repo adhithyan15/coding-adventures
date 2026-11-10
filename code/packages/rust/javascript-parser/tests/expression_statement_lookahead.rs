@@ -95,7 +95,6 @@ fn lexical_declarations_cannot_appear_in_single_statement_contexts() {
         for src in [
             "if (x) let a = 1;",
             "if (x) const a = 1;",
-            "if (1) let\nx = 1;",
             "while (x) let a = 1;",
             "while (x) const a = 1;",
             "for (;;) let a = 1;",
@@ -105,6 +104,18 @@ fn lexical_declarations_cannot_appear_in_single_statement_contexts() {
             "label: const a = 1;",
         ] {
             assert!(!parses(src, version), "{version:?}: {src:?} must not parse");
+        }
+
+        // A line break after `let` makes it an identifier ended by ASI, not a
+        // declaration: ExpressionStatement only refuses `let [` (§14.5;
+        // test262 `let-identifier-with-newline`, flagged noStrict).
+        for src in [
+            "if (1) let\nx = 1;",
+            "if (1) let\n{}",
+            "while (x) let\nx = 1;",
+            "label: let\nx = 1;",
+        ] {
+            assert!(parses(src, version), "{version:?}: {src:?} must parse");
         }
 
         // Inside a block, case clause, default clause, or top level, they parse.
