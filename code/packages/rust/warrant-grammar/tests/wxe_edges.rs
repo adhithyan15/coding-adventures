@@ -22,7 +22,7 @@ use coding_adventures_warrant_grammar::parser::{
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 use coding_adventures_warrant_grammar::vectors::{
-    self, check_value, expected_column, fixtures_root, is_constant_output, load_table, read_fixture,
+    self, check_value, expected_column, fixtures_root, is_constant_output, load_table,
     LoadedTable, Shape, FIXTURES_ROOT,
 };
 
@@ -182,7 +182,7 @@ fn a_hand_built_declaration_cannot_skip_the_parsers_rules() {
 fn a_file_that_reports_no_size_is_still_bounded_by_the_read_cap() {
     // /proc files claim a length of 0 but produce data: only the `take(max+1)`
     // and the length check after it stand between them and an unbounded read.
-    let e = read_fixture(std::path::Path::new("/proc/self"), "status", 10).unwrap_err();
+    let e = vectors::read_fixture(std::path::Path::new("/proc/self"), "status", 10).unwrap_err();
     assert!(e.contains("larger than 10 bytes"), "{e}");
 }
 
