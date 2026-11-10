@@ -276,14 +276,26 @@ instruction budget is still a Pass, §5.1 rule 3) but the TAP YAML
 (`unchecked_hard_budgets: [..]`) and JSON now say so. `bench()` with
 `max_steps: Some(1)` used to be indistinguishable from a budget that held.
 
-**`AllocCounter` is cooperative.** It counts what the benchmarked closure
-records with `record_alloc`; it does not observe the heap. A closure that
-allocates 4 KiB without recording passes `max_alloc_bytes: Some(0)`. Any
-"zero allocation" claim made through `AllocCounter` (including the
-`ct-compare` microbenchmarks, whose closures record nothing) is therefore
-unproven by the counter. Measuring real allocation needs a counting
-`#[global_allocator]` installed by the benchmark binary; this crate does not
-provide one.
+**`AllocCounter` measures the real heap (LH-003a; was cooperative).** The
+first `AllocCounter` counted only what a closure recorded with
+`record_alloc`, so a closure that allocated 4 KiB passed
+`max_alloc_bytes: Some(0)` and every "zero allocation" claim was vacuous.
+`record_alloc` is gone. `counting_alloc::CountingAllocator` is a
+`GlobalAlloc` wrapper that delegates to `System` and tallies allocations,
+frees and bytes per thread; a benchmark binary installs it with
+`install_counting_allocator!()` (only a final binary can choose the global
+allocator), and `AllocCounter` reads the calling thread's tally. Contracts:
+
+- `Vec::<u8>::with_capacity(1)` fails `max_alloc_bytes: Some(0)` with
+  `observed = 1`; `1 + 1` passes with `alloc_bytes_per_iter = 0.0`
+  (`tests/alloc_budget.rs`).
+- If the allocator is *not* installed, `AllocCounter` reports `NotLive`
+  (proved by probing with a real allocation, which leaves the tally
+  untouched) and `alloc_bytes` stays in `unchecked_hard_budgets`; a zero is
+  never fabricated.
+- Limits: allocations on threads the closure spawns, memory not obtained
+  through Rust's global allocator, and in-place `realloc` growth (counted
+  conservatively as free plus allocate) are not or only roughly counted.
 
 ### 8.3 Output
 

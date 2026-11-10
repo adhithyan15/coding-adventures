@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8025052497097eed",
+  "sourceHash": "fnv1a64:5c7c413ad8f252a1",
   "lessons": [
     {
       "id": "KA-C13-dehada-bhagagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f52fd5a22454034e",
+      "sourceHash": "fnv1a64:ebc7fc9a0f2067ef",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,10 @@
             {
               "kind": "speech",
               "text": "Three languages, nearly one word each — Kannada's basic body parts line up with Tamil and Malayalam almost perfectly."
+            },
+            {
+              "kind": "speech",
+              "text": "First retrieve the bridge: say avaḷa amma kelasa māḍuttāḷe, then say hesarugaḷu. Which word in the sentence is human, and which plural names non-human things?"
             }
           ]
         },
@@ -102,6 +106,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the match — nearly identical across Tamil, Malayalam, Kannada]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Her mother works” — avaḷa amma kelasa māḍuttāḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Her mother works” — *avaḷa amma kelasa māḍuttāḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“names” — hesarugaḷu; then “they” for people — avaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “names” — *hesarugaḷu*; then “they” for people — *avaru*]"
             },
             {
               "kind": "prompt",

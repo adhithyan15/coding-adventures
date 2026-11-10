@@ -1,0 +1,28 @@
+# VER04j WX-A test fixture: how the in-test subject (`wxa_subject`) implements
+# each operation of wxa.warrant, and which faults attack it (see section 14.1).
+package wxa_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxa.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxa_evidence.rs
+seed 0x5758415f45564944
+property_cases 2048
+fuzz_iterations 1200
+negctl_fuzz_iterations 800
+exhaustive_budget 400000
+struct Span path=wxa_subject::Span fields=start:u8,len:u8
+enum Shape path=wxa_subject::Shape ctors=Circle(r:u8),Rect(w:u8,h:u8),Empty
+struct Blob path=wxa_subject::Blob fields=tag:u8,data:bytes
+enum Tok path=wxa_subject::Tok ctors=Num(0:u8),Pair2(0:u8,1:u8),End
+op pick export=pick args=opt<(u8,bool)>,list<bool> ret=(u8,usize) faults=off-by-one-consumed
+op bsum export=bsum args=bytes ret=(u8,usize) faults=drop-consumed
+op blob export=blob ret=Blob faults=field-zero
+op tok export=tok ret=Tok faults=wrong-ctor
+op bits export=bits ret=(list<bool>,usize) faults=drop-consumed
+op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=wxa_subject::LebErr/Overlong=OVERLONG faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error
+op normalize export=normalize ret=Span faults=field-zero
+op classify export=classify ret=Shape faults=wrong-ctor
+op area export=area args=Shape ret=(bool,u64) faults=off-by-one-consumed
+op order export=order faults=swap-components
+op split export=split faults=swap-components,drop-consumed
+op try_pair export=try_pair error=OVERLONG faults=ok-as-err,missing-error,drop-consumed
+op sh export=sh args=u8,u8 ret=(u8,u8) faults=off-by-one-consumed

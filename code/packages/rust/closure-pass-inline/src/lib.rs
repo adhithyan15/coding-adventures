@@ -6412,7 +6412,7 @@ mod tests {
         // branch fails the restriction — declined (kept for a later slice).
         assert_eq!(
             inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
-            "function f(x){if(x){if(y)a();}}f(v);"
+            "function f(x){if(x)if(y)a();}f(v);"
         );
     }
 

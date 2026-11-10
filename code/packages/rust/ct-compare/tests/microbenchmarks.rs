@@ -9,7 +9,11 @@
 //! - Fixed-width equality: `ct_eq_fixed` for 16, 32, and 64 bytes
 //! - Branch-free selection: `ct_select_bytes` under `true` vs `false` choices
 //! - 64-bit integer equality: `ct_eq_u64`
-//! - Hard zero-heap-allocation budgets across all comparison operations
+//! - Hard zero-heap-allocation budgets across all comparison operations,
+//!   measured on the REAL heap by test-bootstrap's counting global allocator
+//!   (LH-003a: the previous counter was cooperative and these budgets were
+//!   vacuous). `ct_select_bytes` is deliberately NOT in that claim: it returns
+//!   a fresh `Vec`, so its allocation profile is pinned separately and exactly.
 //! - Sabotage detection: early-exit loops produce measurable instruction/timing divergence
 
 #![deny(unsafe_code)]
@@ -19,25 +23,55 @@ use std::time::Duration;
 
 use coding_adventures_ct_compare::{ct_eq, ct_eq_fixed, ct_eq_u64, ct_select_bytes};
 use coding_adventures_test_bootstrap::bench::{
-    AllocCounter, BenchmarkConfig, BenchmarkHarness, Budget, CounterSample, HardwarePerfCounter,
-    StepCounter,
+    AllocCounter, BenchmarkConfig, BenchmarkHarness, BenchmarkResult, Budget, BudgetVerdict,
+    CounterSample, HardwarePerfCounter, StepCounter,
 };
+use coding_adventures_test_bootstrap::counting_alloc;
 use coding_adventures_test_bootstrap::manifest::{self, Json};
 use coding_adventures_test_bootstrap::run::{self, Ctx, Outcome, Suite};
 use coding_adventures_test_bootstrap::Verdict;
 
 const FID_BENCH_FAIL: &str = "property-counterexample";
 
+// Every `max_alloc_bytes` budget below is checked against the real heap
+// because this binary's global allocator counts it (LH-003a).
+coding_adventures_test_bootstrap::install_counting_allocator!();
+
+/// A zero-allocation budget held AND was genuinely measured: the verdict is
+/// acceptable, the counter was live and read exactly 0.0 bytes per iteration,
+/// and the budget is not listed as unchecked. (`is_acceptable()` alone would
+/// also accept a counter that was never live.)
+fn zero_alloc_ok(result: &BenchmarkResult) -> bool {
+    result.budget_verdict.is_acceptable()
+        && result.alloc_bytes_per_iter == Some(0.0)
+        && !result.unchecked_hard_budgets.contains(&"alloc_bytes")
+}
+
 fn main() {
     let mut suite = Suite::new();
 
+    suite.add(
+        "bench/alloc/counting_allocator_is_live",
+        check_counting_allocator_is_live,
+    );
     suite.add("bench/ct_eq/16_bytes", check_ct_eq_16);
     suite.add("bench/ct_eq/256_bytes", check_ct_eq_256);
     suite.add("bench/ct_eq/4096_bytes", check_ct_eq_4096);
     suite.add("bench/ct_eq_fixed/fixed_widths", check_ct_eq_fixed_widths);
+    // Not `bench/ct_*`: ct_select_bytes allocates its output, so it must not
+    // be counted among the zero-allocation benchmarks the assurance report
+    // cites for CWE-400.
     suite.add(
-        "bench/ct_select_bytes/branchless_choice",
+        "bench/select_bytes/branchless_choice",
         check_ct_select_choice,
+    );
+    suite.add(
+        "bench/select_bytes/allocates_exactly_its_output",
+        check_select_allocation_profile,
+    );
+    suite.add(
+        "bench/sabotage/allocation_detected",
+        check_sabotage_allocation_detected,
     );
     suite.add("bench/ct_eq_u64/all_classes", check_ct_eq_u64_classes);
     suite.add(
@@ -132,7 +166,7 @@ fn check_ct_eq_16(_ctx: &Ctx) -> Verdict {
     let res_equal = harness.run_with_counter("ct_eq_16_equal", &budget, &alloc_counter, || {
         ct_eq(black_box(&a), black_box(&b_equal))
     });
-    if !res_equal.budget_verdict.is_acceptable() {
+    if !zero_alloc_ok(&res_equal) {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq 16 equal exceeded allocation budget");
     }
 
@@ -141,7 +175,7 @@ fn check_ct_eq_16(_ctx: &Ctx) -> Verdict {
         harness.run_with_counter("ct_eq_16_diff_first", &budget, &alloc_counter, || {
             ct_eq(black_box(&a), black_box(&b_diff_first))
         });
-    if !res_diff_first.budget_verdict.is_acceptable() {
+    if !zero_alloc_ok(&res_diff_first) {
         return Verdict::fail(
             FID_BENCH_FAIL,
             "ct_eq 16 diff first exceeded allocation budget",
@@ -153,7 +187,7 @@ fn check_ct_eq_16(_ctx: &Ctx) -> Verdict {
         harness.run_with_counter("ct_eq_16_diff_last", &budget, &alloc_counter, || {
             ct_eq(black_box(&a), black_box(&b_diff_last))
         });
-    if !res_diff_last.budget_verdict.is_acceptable() {
+    if !zero_alloc_ok(&res_diff_last) {
         return Verdict::fail(
             FID_BENCH_FAIL,
             "ct_eq 16 diff last exceeded allocation budget",
@@ -222,10 +256,10 @@ fn check_ct_eq_256(_ctx: &Ctx) -> Verdict {
         ct_eq(black_box(&a), black_box(&b_diff_middle))
     });
 
-    if !res1.budget_verdict.is_acceptable()
-        || !res2.budget_verdict.is_acceptable()
-        || !res3.budget_verdict.is_acceptable()
-        || !res4.budget_verdict.is_acceptable()
+    if !zero_alloc_ok(&res1)
+        || !zero_alloc_ok(&res2)
+        || !zero_alloc_ok(&res3)
+        || !zero_alloc_ok(&res4)
     {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq 256 allocated memory");
     }
@@ -254,7 +288,7 @@ fn check_ct_eq_4096(_ctx: &Ctx) -> Verdict {
         ct_eq(black_box(&a), black_box(&b_diff_last))
     });
 
-    if !res_eq.budget_verdict.is_acceptable() || !res_diff.budget_verdict.is_acceptable() {
+    if !zero_alloc_ok(&res_eq) || !zero_alloc_ok(&res_diff) {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq 4096 allocated memory");
     }
 
@@ -289,13 +323,88 @@ fn check_ct_eq_fixed_widths(_ctx: &Ctx) -> Verdict {
         ct_eq_fixed::<64>(black_box(&k64_a), black_box(&k64_b))
     });
 
-    if !r16.budget_verdict.is_acceptable()
-        || !r32.budget_verdict.is_acceptable()
-        || !r64.budget_verdict.is_acceptable()
+    if !zero_alloc_ok(&r16)
+        || !zero_alloc_ok(&r32)
+        || !zero_alloc_ok(&r64)
     {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq_fixed allocated memory");
     }
 
+    Verdict::Pass
+}
+
+/// The counting allocator must really be the global allocator, or every
+/// zero-allocation budget in this file would be unchecked.
+fn check_counting_allocator_is_live(_ctx: &Ctx) -> Verdict {
+    if !counting_alloc::is_installed() {
+        return Verdict::fail(FID_BENCH_FAIL, "counting allocator is not installed");
+    }
+    Verdict::Pass
+}
+
+/// Negative control (LH-003a): a closure that really allocates must FAIL a
+/// zero-byte budget, and a closure that does not must pass it, through the
+/// same harness and counter the ct benchmarks use. If the counter were blind,
+/// the first half would report a pass and this test would fail.
+fn check_sabotage_allocation_detected(_ctx: &Ctx) -> Verdict {
+    let harness = BenchmarkHarness::new(fast_bench_config(5));
+    let budget = Budget {
+        max_alloc_bytes: Some(0),
+        ..Default::default()
+    };
+    let counter = AllocCounter::new();
+    let leaky = harness.run_with_counter("sabotage_alloc", &budget, &counter, || {
+        black_box(Vec::<u8>::with_capacity(1))
+    });
+    if !matches!(
+        leaky.budget_verdict,
+        BudgetVerdict::Failed {
+            observed: 1,
+            limit: 0,
+            ..
+        }
+    ) {
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "a closure allocating one byte did not fail the zero-allocation budget",
+        );
+    }
+    let clean = harness.run_with_counter("clean_alloc", &budget, &counter, || {
+        black_box(1u64) ^ black_box(2u64)
+    });
+    if !zero_alloc_ok(&clean) {
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "a non-allocating closure did not pass the zero-allocation budget",
+        );
+    }
+    Verdict::Pass
+}
+
+/// `ct_select_bytes` returns a fresh `Vec`, so unlike the comparisons it DOES
+/// allocate. Pin the real profile exactly: one allocation of `a.len()` bytes
+/// per call, for either choice, and nothing else.
+fn check_select_allocation_profile(_ctx: &Ctx) -> Verdict {
+    let x = [0xaau8; 64];
+    let y = [0x55u8; 64];
+    for choice in [true, false] {
+        let (out, stats) = counting_alloc::measure(|| {
+            ct_select_bytes(black_box(&x), black_box(&y), black_box(choice))
+        });
+        black_box(out);
+        let Some(stats) = stats else {
+            return Verdict::fail(FID_BENCH_FAIL, "counting allocator is not installed");
+        };
+        if stats.allocations != 1 || stats.bytes_allocated != 64 {
+            return Verdict::fail(
+                FID_BENCH_FAIL,
+                format!(
+                    "ct_select_bytes expected 1 allocation of 64 bytes, saw {} of {} bytes",
+                    stats.allocations, stats.bytes_allocated
+                ),
+            );
+        }
+    }
     Verdict::Pass
 }
 
@@ -358,10 +467,10 @@ fn check_ct_eq_u64_classes(_ctx: &Ctx) -> Verdict {
         ct_eq_u64(black_box(val), black_box(!val))
     });
 
-    if !r_eq.budget_verdict.is_acceptable()
-        || !r_high_diff.budget_verdict.is_acceptable()
-        || !r_low_diff.budget_verdict.is_acceptable()
-        || !r_inv.budget_verdict.is_acceptable()
+    if !zero_alloc_ok(&r_eq)
+        || !zero_alloc_ok(&r_high_diff)
+        || !zero_alloc_ok(&r_low_diff)
+        || !zero_alloc_ok(&r_inv)
     {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq_u64 allocated memory");
     }

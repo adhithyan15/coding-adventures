@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
-## [0.33.1] - 2026-11-10
+## [0.33.2] - 2026-11-10
 
 ### Changed - tests only
 
@@ -12,6 +12,11 @@ All notable changes to the `coding-adventures-closure-pass-inline` crate will be
   grammar parser (`parse_javascript`, no early-error checks) through the new
   `inline_source_unchecked` helper. The pass's defence in depth is unchanged
   and still tested.
+
+## [0.33.1] - 2026-11-10
+
+### Fixed
+- Updated `does_not_inline_nested_if` test assertion to match unwrapped single-statement `if` body emitted by `closure-emitter` (#15861).
 
 ## [0.33.0] - 2026-11-07
 

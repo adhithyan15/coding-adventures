@@ -26,6 +26,203 @@ pub const LANE: &str = "rust";
 /// Exit status for a command line the harness does not understand.
 pub const USAGE_EXIT: i32 = 2;
 
+/// Exit status when the report has nowhere to go: file descriptor 1 is closed,
+/// read-only, or otherwise cannot carry the TAP stream (LH-003c).
+pub const STDOUT_UNUSABLE_EXIT: i32 = 1;
+
+// ---------------------------------------------------------------------------
+// Is standard output a place a report can actually go?
+//
+// Rust's `std::io::Stdout` treats the OS error EBADF ("bad file descriptor")
+// as success: a write to a closed or read-only fd 1 silently reports `Ok`, on
+// purpose, so that programs run without a stdout do not crash. For a test
+// harness that is the worst possible default: nothing is printed, nothing is
+// checked, the exit status is 0, and a supervisor reads that as a pass.
+//
+// std never tells us, so we ask the OS directly before running anything:
+//
+//   Unix     fcntl(1, F_GETFL) fails with EBADF when fd 1 is closed; when it
+//            succeeds, the low two bits of the flags are the access mode
+//            (O_RDONLY = 0, O_WRONLY = 1, O_RDWR = 2). Read-only is rejected.
+//   Windows  GetStdHandle(STD_OUTPUT_HANDLE) is NULL or INVALID_HANDLE_VALUE
+//            when there is no stdout; GetFileType reports an error for a
+//            handle that is not usable.
+//
+// What this does NOT detect is written down in TF01 section 8: a stdout that
+// accepts bytes and discards them (/dev/null, a pipe nobody reads yet), an fd 1
+// that is closed *after* this check, and (Windows) a read-only handle.
+// ---------------------------------------------------------------------------
+
+/// Verify that this process's standard output is open and writable.
+///
+/// Returns `Err` describing the problem when fd 1 (Unix) or the standard
+/// output handle (Windows) is closed, missing, or not open for writing.
+pub fn stdout_is_usable() -> io::Result<()> {
+    #[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))]
+    {
+        // Naming the static here keeps the object that holds the constructor
+        // table entry in the final link.
+        std::hint::black_box(&early::INIT);
+        // `None` (the constructor never ran) deliberately falls through to the
+        // in-`main` probe below rather than failing: Miri and other
+        // interpreters do not run loader constructors, and refusing there
+        // would make the harness unusable under them. On a real binary the
+        // entry is always linked (above) and always run, and the
+        // `a_closed_stdout_exits_one_not_zero` test proves it on every
+        // platform this block compiles for.
+        if early::stdout_flags_at_start() == Some(-1) {
+            return Err(io::Error::other(
+                "closed when the process started (std re-opens a closed fd 1 as /dev/null, \
+                 which would swallow the whole report)",
+            ));
+        }
+    }
+    #[cfg(unix)]
+    {
+        fd_is_writable(1)
+    }
+    #[cfg(windows)]
+    {
+        windows_stdout_is_usable()
+    }
+    #[cfg(not(any(unix, windows)))]
+    {
+        Ok(())
+    }
+}
+
+/// `fcntl(fd, F_GETFL)`: the open-file flags of `fd`, or the OS error
+/// (EBADF when `fd` is closed).
+#[cfg(unix)]
+fn get_fd_flags(fd: i32) -> io::Result<i32> {
+    use std::ffi::c_int;
+    extern "C" {
+        // POSIX: int fcntl(int fd, int cmd, ...). Declared variadic as in C.
+        fn fcntl(fd: c_int, cmd: c_int, ...) -> c_int;
+    }
+    // F_GETFL = 3 on both Linux and macOS.
+    const F_GETFL: c_int = 3;
+    // SAFETY: `fcntl(fd, F_GETFL)` takes no pointer arguments and only reads
+    // kernel state for `fd`; an invalid `fd` makes it return -1 with EBADF,
+    // which is exactly the condition being probed, never undefined behaviour.
+    let flags = unsafe { fcntl(fd as c_int, F_GETFL) };
+    if flags < 0 {
+        Err(io::Error::last_os_error())
+    } else {
+        Ok(flags)
+    }
+}
+
+/// Is file descriptor `fd` open for writing? (Unix.)
+#[cfg(unix)]
+pub fn fd_is_writable(fd: i32) -> io::Result<()> {
+    // O_ACCMODE = 3 and O_RDONLY = 0 on both Linux and macOS.
+    const O_ACCMODE: i32 = 3;
+    const O_RDONLY: i32 = 0;
+    // Linux only: an O_PATH descriptor reports access mode 0 but cannot be
+    // read or written at all.
+    #[cfg(any(target_os = "linux", target_os = "android"))]
+    const O_PATH: i32 = 0o10_000_000;
+
+    let flags = get_fd_flags(fd)?;
+    #[cfg(any(target_os = "linux", target_os = "android"))]
+    if flags & O_PATH != 0 {
+        return Err(io::Error::other("opened O_PATH, which cannot be written"));
+    }
+    if flags & O_ACCMODE == O_RDONLY {
+        return Err(io::Error::other("opened read-only"));
+    }
+    Ok(())
+}
+
+// A closed fd 1 is invisible by the time `main` runs. Rust's runtime start-up
+// (std's `sanitize_standard_fds`) opens /dev/null over any closed fd 0, 1 or
+// 2 before calling main, precisely so that a stray `open()` cannot be handed
+// fd 1 and have the program's output written into it. After that repair a
+// closed stdout looks exactly like `> /dev/null`, which is a working,
+// writable, discarding stdout.
+//
+// To see the original state we have to look *before* std's start-up code.
+// Every mainstream loader has a table of constructor functions that it runs
+// before `main` is entered, and std's repair happens inside `main`, so a
+// one-function entry in that table samples fd 1 first. It does nothing but
+// read the flags and store them in an atomic.
+//
+//   Platform         Constructor table                 Run by
+//   ---------------  --------------------------------  ----------------------
+//   Linux, Android   ELF section `.init_array`         ld.so / the libc start
+//   macOS            Mach-O `__DATA,__mod_init_func`   dyld
+//
+// The BSDs and illumos also use `.init_array`, and iOS has `__mod_init_func`,
+// but no CI job runs them, so they are left out rather than claimed untested.
+// On those, a closed fd 1 at start-up is a documented known limit (TF01
+// section 8.3).
+#[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))]
+mod early {
+    use std::sync::atomic::{AtomicI32, Ordering};
+
+    const UNSET: i32 = i32::MIN;
+    static STDOUT_FLAGS: AtomicI32 = AtomicI32::new(UNSET);
+
+    extern "C" fn sample_stdout_before_main() {
+        // -1 records "closed" (fcntl failed).
+        STDOUT_FLAGS.store(super::get_fd_flags(1).unwrap_or(-1), Ordering::Relaxed);
+    }
+
+    // The constructor table entry. `#[used]` stops the compiler discarding it.
+    // On ELF, `.init_array` is a KEEP section in the linker script, so
+    // --gc-sections keeps it too; on Mach-O, `ld64` never dead-strips
+    // `__mod_init_func`, whose section type (S_MOD_INIT_FUNC_POINTERS) dyld
+    // reads as "call each pointer before main". Its address is referenced
+    // from `stdout_is_usable` so the object file holding it is always linked in.
+    #[used]
+    #[cfg_attr(
+        any(target_os = "linux", target_os = "android"),
+        link_section = ".init_array"
+    )]
+    #[cfg_attr(target_os = "macos", link_section = "__DATA,__mod_init_func")]
+    pub static INIT: extern "C" fn() = sample_stdout_before_main;
+
+    /// The flags of fd 1 sampled before `main`; `Some(-1)` means it was
+    /// closed, `None` means the sample never ran (e.g. a static analysis
+    /// harness, or a loader that skips its constructor table).
+    pub fn stdout_flags_at_start() -> Option<i32> {
+        match STDOUT_FLAGS.load(Ordering::Relaxed) {
+            UNSET => None,
+            flags => Some(flags),
+        }
+    }
+}
+
+#[cfg(windows)]
+fn windows_stdout_is_usable() -> io::Result<()> {
+    use std::ffi::c_void;
+    extern "system" {
+        fn GetStdHandle(std_handle: u32) -> *mut c_void;
+        fn GetFileType(handle: *mut c_void) -> u32;
+        fn GetLastError() -> u32;
+    }
+    // (DWORD)-11, the documented STD_OUTPUT_HANDLE.
+    const STD_OUTPUT_HANDLE: u32 = -11i32 as u32;
+    const FILE_TYPE_UNKNOWN: u32 = 0;
+    const NO_ERROR: u32 = 0;
+
+    // SAFETY: GetStdHandle only reads the process's standard handle table.
+    let handle = unsafe { GetStdHandle(STD_OUTPUT_HANDLE) };
+    // NULL: the process has no standard output (e.g. a detached GUI process).
+    // INVALID_HANDLE_VALUE (-1): the lookup itself failed.
+    if handle.is_null() || handle as isize == -1 {
+        return Err(io::Error::other("no standard output handle"));
+    }
+    // SAFETY: GetFileType only inspects `handle`, which GetStdHandle returned
+    // and is not NULL or INVALID_HANDLE_VALUE; GetLastError reads thread state.
+    let (kind, error) = unsafe { (GetFileType(handle), GetLastError()) };
+    if kind == FILE_TYPE_UNKNOWN && error != NO_ERROR {
+        return Err(io::Error::from_raw_os_error(error as i32));
+    }
+    Ok(())
+}
+
 /// How to run a suite, from the command line.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Options {
@@ -218,7 +415,14 @@ impl Suite {
             .collect();
         let ids: Vec<&str> = self.tests.iter().map(|(id, _)| id.as_str()).collect();
         let order = shuffled(options.seed, &ids);
-        writeln!(out, "1..{}", order.len())?;
+        // The plan is written with an explicit write_all + flush, and its
+        // result is propagated, so a stdout that rejects the report (ENOSPC,
+        // EPIPE, ...) turns the whole run into a failure at the first line a
+        // supervisor relies on. Flushing here also puts the plan on the wire
+        // before any test runs, so a test that later calls process::exit(0)
+        // still leaves "1..N" behind for a supervisor to compare against.
+        out.write_all(format!("1..{}\n", order.len()).as_bytes())?;
+        out.flush()?;
         for (index, id) in order.iter().enumerate() {
             let body = bodies[id.as_str()];
             let ctx = Ctx {
@@ -304,6 +508,12 @@ pub fn main_recorded(suite: &Suite, finish: impl FnOnce(&[Outcome])) -> i32 {
             return USAGE_EXIT;
         }
     };
+    // Before anything runs: if fd 1 is closed or read-only, std would swallow
+    // every write and the run would exit 0 having reported nothing.
+    if let Err(problem) = stdout_is_usable() {
+        eprintln!("test-bootstrap: standard output is not writable ({problem}); refusing to run");
+        return STDOUT_UNUSABLE_EXIT;
+    }
     let stdout = io::stdout();
     let mut out = stdout.lock();
     match suite
@@ -680,6 +890,91 @@ mod tests {
             "\"\\u0000\\u007f\\u2028\""
         );
         assert_eq!(yaml_quote("héllo"), "\"héllo\"");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn fd_probe_accepts_writable_and_rejects_closed_or_read_only() {
+        use std::fs::{File, OpenOptions};
+        use std::os::fd::AsRawFd;
+
+        let write_only = OpenOptions::new().write(true).open("/dev/null").unwrap();
+        assert!(fd_is_writable(write_only.as_raw_fd()).is_ok());
+
+        let read_write = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .open("/dev/null")
+            .unwrap();
+        assert!(fd_is_writable(read_write.as_raw_fd()).is_ok());
+
+        let read_only = File::open("/dev/null").unwrap();
+        let err = fd_is_writable(read_only.as_raw_fd()).unwrap_err();
+        assert!(err.to_string().contains("read-only"), "{err}");
+
+        // An fd number far beyond anything this process has open: EBADF.
+        let err = fd_is_writable(987_654).unwrap_err();
+        assert_eq!(err.raw_os_error(), Some(9), "EBADF expected, got {err}");
+    }
+
+    #[cfg(any(target_os = "linux", target_os = "android"))]
+    #[test]
+    fn fd_probe_rejects_an_o_path_descriptor() {
+        use std::os::fd::AsRawFd;
+        use std::os::unix::fs::OpenOptionsExt;
+        const O_PATH: i32 = 0o10_000_000;
+        let path_only = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(O_PATH)
+            .open("/dev/null")
+            .unwrap();
+        let err = fd_is_writable(path_only.as_raw_fd()).unwrap_err();
+        assert!(err.to_string().contains("O_PATH"), "{err}");
+    }
+
+    #[test]
+    fn the_test_runners_own_stdout_is_usable() {
+        // libtest captures output by swapping Rust-level handles, but fd 1 is
+        // still the real descriptor the runner was given.
+        assert!(stdout_is_usable().is_ok());
+    }
+
+    #[test]
+    fn the_plan_write_error_propagates() {
+        // A writer that accepts the header lines but rejects the plan line
+        // (and everything after): the run must be an Err, not a quiet Ok.
+        struct RejectsPlan;
+        impl Write for RejectsPlan {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if bytes.starts_with(b"1..") {
+                    Err(io::Error::new(io::ErrorKind::StorageFull, "no space"))
+                } else {
+                    Ok(bytes.len())
+                }
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+        let mut suite = Suite::new();
+        suite.add("t", |_| Verdict::Pass);
+        assert!(suite.run(&Options::default(), &mut RejectsPlan).is_err());
+    }
+
+    #[test]
+    fn a_plan_that_cannot_be_flushed_is_an_error() {
+        struct FlushFails;
+        impl Write for FlushFails {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                Ok(bytes.len())
+            }
+            fn flush(&mut self) -> io::Result<()> {
+                Err(io::Error::new(io::ErrorKind::BrokenPipe, "gone"))
+            }
+        }
+        assert!(Suite::new()
+            .run(&Options::default(), &mut FlushFails)
+            .is_err());
     }
 
     #[test]

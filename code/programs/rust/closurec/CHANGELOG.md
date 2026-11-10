@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [0.247.7] - 2026-11-10
+## [0.247.8] - 2026-11-10
 
 ### Fixed - `if (1) let⏎x = 1;` compiles as an identifier statement (V8C09)
 
@@ -14,6 +14,15 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
   that asserted it must be refused (`regression_if_let_statement_18146`,
   `regression_expression_statement_lookahead`) now assert this instead; the
   same-line forms (`if (1) let x = 1;`, `const`) are still refused.
+
+## [0.247.7] - 2026-11-10
+
+### Fixed - unwrap single-statement bodies when safe (CCR-076, #15861)
+
+- In `src/whitespace_only.rs`, allow loop-in-loop single-statement flattening for nested `for`/`while` loops up to 8 iterations, resolving `ladder_t7_labeled_break_ws` to 100% byte-for-byte parity with upstream Closure Compiler.
+- In `closure-emitter`, omit braces when loop and conditional bodies contain a single statement, while retaining braces for lexical declarations (`let`, `const`, `class`, `function`), `do…while` statements, labeled statements, and dangling-else hazards.
+- Removed `ladder_t7_labeled_break_ws` from `tests/ladder/divergences.json` and decremented pinned divergence count from 50 to 49.
+- Updated ladder divergences for `ladder_t6_for_of_advanced`, `ladder_t6_for_of_simple`, `ladder_t7_labeled_break_advanced`, and `ladder_t7_labeled_break_simple`.
 
 ## [0.247.6] - 2026-11-10
 
