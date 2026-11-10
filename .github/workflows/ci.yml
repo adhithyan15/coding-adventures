@@ -4097,9 +4097,12 @@ jobs:
           version: '6.8.3'
           cache: true
 
-      # The binary is keyed on the pinned version and runner OS/arch only. PR
-      # caches are visible to that PR alone, so the scheduled/forced full builds
-      # on main are what warm it for everyone else.
+      # The binary is keyed on the pinned version and runner OS/arch only. A PR's
+      # cache is visible to that PR alone, so it is runs on main (which restore
+      # and save in main's own cache scope) that warm it for everyone else. The
+      # version check below is a sanity check for a wrong-version or corrupt
+      # entry, not an integrity control: only main-ref jobs can write the entry
+      # PRs read, and those run reviewed, merged code.
       - name: Restore cargo-tarpaulin cache
         id: tarpaulin-cache
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
