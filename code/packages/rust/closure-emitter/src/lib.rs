@@ -1285,8 +1285,9 @@ impl<'a> Emitter<'a> {
         self.write_str("function");
         if f.generator {
             self.write_str("*");
+        } else {
+            self.required_ws();
         }
-        self.required_ws();
         self.emit_identifier(&f.id);
         self.write_str("(");
         for (i, p) in f.params.iter().enumerate() {
@@ -1363,7 +1364,9 @@ impl<'a> Emitter<'a> {
             self.write_str("*");
         }
         if let Some(id) = &f.id {
-            self.required_ws();
+            if !f.generator {
+                self.required_ws();
+            }
             self.emit_identifier(id);
         }
         self.emit_param_list_and_body(&f.params, &f.body);
@@ -5936,6 +5939,30 @@ mod tests {
         )]);
         let out = emit_default(prog);
         assert_eq!(out.code, "function noop(){};");
+    }
+
+    #[test]
+    fn generator_declaration_no_space() {
+        let body = BlockStatement {
+            cv: None,
+            body: vec![],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: true,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function*g(){};");
     }
 
     // ---- arrays + objects -----------------------------------

@@ -2,7 +2,7 @@ cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
 cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
 cargo test -p coding_adventures_ct_compare -- --nocapture
 python3 ../../../scripts/ct_compare_tfv.py
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check ct-compare
 set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence
 set WARRANT_EVIDENCE_FAULT=invert&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=ignore-last-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "

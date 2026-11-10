@@ -384,24 +384,13 @@
   "ladder_t7_class_field_advanced": {
    "closurec_exit": 0,
    "closurec_stdout": "class A{x=1;}console.log((new A).x);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
    "level": "ADVANCED",
-   "reason": "At WHITESPACE_ONLY upstream retains the terminator after a class field and closurec drops it (CCR-077). At ADVANCED upstream additionally renames the class binding (CCR-022).",
+   "reason": "At ADVANCED upstream additionally renames the class binding (CCR-022).",
    "rung": "class_field",
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "class a{x=1;}console.log((new a).x);\n"
-  },
-  "ladder_t7_class_field_ws": {
-   "closurec_exit": 0,
-   "closurec_stdout": "class A{x=1}console.log((new A).x);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
-   "level": "WHITESPACE_ONLY",
-   "reason": "At WHITESPACE_ONLY upstream retains the terminator after a class field and closurec drops it (CCR-077). At ADVANCED upstream additionally renames the class binding (CCR-022).",
-   "rung": "class_field",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "class A{x=1;}console.log((new A).x);\n"
   },
   "ladder_t7_computed_key_advanced": {
    "closurec_exit": 0,
@@ -440,25 +429,14 @@
   },
   "ladder_t7_generator_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "function* g(){yield 1}console.log([...g()]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
+   "closurec_stdout": "function*g(){yield 1}console.log([...g()]);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15940",
    "level": "ADVANCED",
-   "reason": "At SIMPLE the only difference is a space: upstream emits `function*g`, closurec emits `function* g` (CCR-077). At ADVANCED upstream additionally inlines the single-use generator into its call site (CCR-068).",
+   "reason": "At ADVANCED upstream inlines the single-use generator into its call site (CCR-068).",
    "rung": "generator",
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "console.log([...function*(){yield 1}()]);\n"
-  },
-  "ladder_t7_generator_simple": {
-   "closurec_exit": 0,
-   "closurec_stdout": "function* g(){yield 1}console.log([...g()]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
-   "level": "SIMPLE",
-   "reason": "At SIMPLE the only difference is a space: upstream emits `function*g`, closurec emits `function* g` (CCR-077). At ADVANCED upstream additionally inlines the single-use generator into its call site (CCR-068).",
-   "rung": "generator",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "function*g(){yield 1}console.log([...g()]);\n"
   },
   "ladder_t7_getter_setter_advanced": {
    "closurec_exit": 0,

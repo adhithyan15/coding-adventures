@@ -1,0 +1,35 @@
+# Warrant binding manifest (VER04 section 6) for code/specs/gf256.warrant.
+#
+# One line per Warrant operation: the public export that implements it, the
+# deliberate faults the generated negative controls attack it with (VER04h
+# section 6) and, for the two operations whose Rust export panics, the declared
+# error the panic is normalised to.  `args=` gives the Rust parameter types of
+# an export whose Warrant parameter type is wider than the Rust one: power's
+# exponent is U64 in the Warrant document (v0 has no U32) and u32 in Rust.
+#
+# proofs_not_live=<reason> is the package's declaration that this operation's
+# constant-time and steps-bound obligations cannot be run: the Rust-subset front
+# end refuses src/lib.rs (a char literal).  Only an operation listed here may
+# have a `not-live` entry in evidence/proof-manifest.json; `ca-assurance-report
+# --check` rejects any other (VER04h section 9).
+#
+# exhaustive_budget is 2^24: the three-binder field-law claims (associativity,
+# distributivity) enumerate every (a, b, c) over U8.  The budget is raised from
+# the default 400000 for this package only; the measured wall-clock cost is
+# recorded in code/specs/MA01-gf256.md.
+package gf256
+revision 0.2.1
+spec code/specs/gf256.warrant
+output code/packages/rust/gf256/tests/generated/warrant_evidence.rs
+seed 0x4746_3235_365f_5741
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+op add export=add faults=or-for-xor,wrapping-sub proofs_not_live=frontend-refuses-lib
+op subtract export=subtract faults=or-for-xor,wrapping-sub proofs_not_live=frontend-refuses-lib
+op multiply export=multiply faults=mul-as-add,alt-poly,generator-shift proofs_not_live=frontend-refuses-lib
+op divide export=divide error=DIVIDE_BY_ZERO faults=missing-error,alt-poly,generator-shift proofs_not_live=frontend-refuses-lib
+op inverse export=inverse error=ZERO_HAS_NO_INVERSE faults=missing-error,alt-poly,generator-shift proofs_not_live=frontend-refuses-lib
+op power export=power args=u8,u32 faults=alt-poly,generator-shift,exp-mod-256 proofs_not_live=frontend-refuses-lib

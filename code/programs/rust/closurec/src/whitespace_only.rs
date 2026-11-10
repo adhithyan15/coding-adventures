@@ -3660,12 +3660,14 @@ pub fn whitespace_only_minify(
 
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
-        // upstream forces that one (CCR-084, `function f(){throw 1;}`).
+        // upstream forces that one (CCR-084, `function f(){throw 1;}`),
+        // or it sits directly in a class body (CCR-077, `class A{x=1;}`).
         if val == ";"
             && !body_position_next
             && !throw_terminator[idx]
             && !is_label_body(&kept, idx)
             && !is_with_body(&kept, &kept_open_paren, idx)
+            && !in_member_list[idx]
         {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
@@ -11979,10 +11981,11 @@ mod tests {
         // Reviewer edge case 1.4: top-level property access named export/import does not make file a module
         assert_eq!(minify("window.export=1;await(x);"), "window.export=1;await(x);");
         assert_eq!(minify("lib.import=fn;await(x);"), "lib.import=fn;await(x);");
-        // Reviewer edge case 1.5: class body inside async function is not async context
+        // Reviewer edge case 1.5: class body inside async function is not async context;
+        // class field retains its terminator (CCR-077, #15862).
         assert_eq!(
             minify("async function f(){class Foo{field=await(x)}}"),
-            "async function f(){class Foo{field=await(x)}};"
+            "async function f(){class Foo{field=await(x);}};"
         );
     }
 

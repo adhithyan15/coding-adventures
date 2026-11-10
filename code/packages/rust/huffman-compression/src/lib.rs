@@ -173,6 +173,11 @@ fn unpack_bits_lsb_first(data: &[u8]) -> String {
     bits
 }
 
+/// Longest code length accepted from an untrusted table. Huffman depth over
+/// u32 frequency totals is at most ~46, so 56 is generous and keeps the
+/// canonical-code arithmetic inside a u64.
+const MAX_CODE_LEN: usize = 56;
+
 // ─── Encoder ─────────────────────────────────────────────────────────────────
 
 /// Compress bytes using Huffman coding and return CMP04 wire-format bytes.
@@ -366,8 +371,18 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // 2 bytes: [symbol_value (u8), code_length (u8)].
     // The table is sorted by (code_length, symbol_value) — the same order the
     // encoder wrote it.
+    //
+    // SECURITY: symbols are single bytes, so a table can name at most 256 of
+    // them, each once. A larger or repeating table is hostile: Kraft alone
+    // would still admit ~2^56 long codes, each costing a String and a map slot.
+    if symbol_count > 256 {
+        return Err(format!("symbol_count {symbol_count} exceeds 256"));
+    }
     let table_start = 8;
-    let table_end = table_start + 2 * symbol_count;
+    let table_end = symbol_count
+        .checked_mul(2)
+        .and_then(|n| n.checked_add(table_start))
+        .ok_or_else(|| "code-lengths table size overflows".to_string())?;
     if data.len() < table_end {
         return Err(format!(
             "input too short: need {} bytes for code-lengths table, got {}",
@@ -377,10 +392,14 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     }
 
     let mut lengths: Vec<(u16, usize)> = Vec::with_capacity(symbol_count);
+    let mut seen = [false; 256];
     for i in 0..symbol_count {
         let off = table_start + 2 * i;
         let symbol = data[off] as u16;
         let length = data[off + 1] as usize;
+        if std::mem::replace(&mut seen[symbol as usize], true) {
+            return Err(format!("symbol {symbol} appears twice in code-lengths table"));
+        }
         lengths.push((symbol, length));
     }
 
@@ -402,18 +421,50 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // This guarantees prefix-free assignment: no code string is a prefix of another.
     let mut code_to_sym: HashMap<String, u16> = HashMap::with_capacity(symbol_count);
 
+    //
+    // SECURITY: the table is attacker-controlled. We reject lengths of 0 or
+    // above MAX_CODE_LEN, tables not sorted by length (the encoder always sorts),
+    // and any table that over-subscribes the code space (Kraft sum > 1). That
+    // last check is `code < 2^len` before each assignment: if the running code
+    // no longer fits in `len` bits, the table is impossible. Together these keep
+    // every shift below 64 bits, so no overflow can occur.
+    let mut max_len = 0usize;
     if !lengths.is_empty() {
-        let mut code: u32 = 0;
+        let mut code: u64 = 0;
         let mut prev_len = lengths[0].1;
         for (sym, len) in &lengths {
-            if *len > prev_len {
-                code <<= len - prev_len;
+            let len = *len;
+            if len == 0 || len > MAX_CODE_LEN {
+                return Err(format!("invalid code length {len} in table"));
+            }
+            if len < prev_len {
+                return Err("code-lengths table is not sorted by length".to_string());
+            }
+            code = code
+                .checked_shl((len - prev_len) as u32)
+                .ok_or_else(|| "code length shift overflow".to_string())?;
+            if code >> len != 0 {
+                return Err("code-lengths table over-subscribes the code space".to_string());
             }
             let bits = format!("{:0>width$b}", code, width = len);
             code_to_sym.insert(bits, *sym);
             code += 1;
-            prev_len = *len;
+            prev_len = len;
+            max_len = len;
         }
+    }
+
+    // SECURITY (SEC-002 prep): every code is at least 1 bit, so a valid stream
+    // of N payload bytes can hold at most 8*N symbols. A header that declares
+    // more is hostile (or corrupt); reject before allocating anything sized from
+    // it. This bounds output by the input size without any API change; the
+    // caller-facing `max_output` knob is still a pending API decision
+    // (WX-H / LP-003). Residual: output may still be up to 8x the input size.
+    let payload_bits = (data.len() - table_end).saturating_mul(8);
+    if original_length > payload_bits {
+        return Err(format!(
+            "declared length {original_length} exceeds the {payload_bits} bits available"
+        ));
     }
 
     // ── Step 4: Unpack the bit stream ─────────────────────────────────────────
@@ -431,6 +482,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     let mut output: Vec<u8> = Vec::with_capacity(original_length);
     let mut pos = 0usize;
     let mut accumulated = String::new();
+    let bit_bytes = bit_string.as_bytes();
 
     while output.len() < original_length {
         if pos >= bit_string.len() {
@@ -440,8 +492,13 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 original_length
             ));
         }
-        accumulated.push(bit_string.chars().nth(pos).unwrap());
+        accumulated.push(bit_bytes[pos] as char);
         pos += 1;
+        // SECURITY: no code is longer than max_len, so a longer accumulator can
+        // never match; stop instead of rehashing an ever-growing string.
+        if accumulated.len() > max_len {
+            return Err("invalid bit stream: no code matches".to_string());
+        }
         if let Some(&sym) = code_to_sym.get(&accumulated) {
             output.push(sym as u8);
             accumulated.clear();
@@ -703,6 +760,76 @@ mod tests {
     fn test_decompress_zero_length_header() {
         let header = [0u8; 8]; // original_length=0, symbol_count=0
         assert_eq!(decompress(&header).unwrap(), b"");
+    }
+
+    // ── Hostile input (SEC-003 / SEC-002 prep) ───────────────────────────────
+
+    fn hostile(entries: &[(u8, u8)], orig: u32, payload: &[u8]) -> Vec<u8> {
+        let mut v = orig.to_be_bytes().to_vec();
+        v.extend((entries.len() as u32).to_be_bytes());
+        for (s, l) in entries {
+            v.push(*s);
+            v.push(*l);
+        }
+        v.extend(payload);
+        v
+    }
+
+    /// Lengths 1 then 255 would shift a u32 by 254: must be an error, not a panic.
+    #[test]
+    fn test_hostile_huge_length_gap_rejected() {
+        let d = hostile(&[(0, 1), (1, 255)], 4, &[0xff; 8]);
+        assert!(decompress(&d).is_err());
+    }
+
+    #[test]
+    fn test_hostile_zero_length_rejected() {
+        assert!(decompress(&hostile(&[(0, 0)], 1, &[0])).is_err());
+    }
+
+    /// Three 1-bit codes over-subscribe the code space (Kraft sum 1.5).
+    #[test]
+    fn test_hostile_oversubscribed_rejected() {
+        assert!(decompress(&hostile(&[(0, 1), (1, 1), (2, 1)], 1, &[0])).is_err());
+    }
+
+    #[test]
+    fn test_hostile_unsorted_rejected() {
+        assert!(decompress(&hostile(&[(0, 2), (1, 1)], 1, &[0])).is_err());
+    }
+
+    /// Declared length of 4 billion from a tiny payload fails fast, no allocation.
+    #[test]
+    fn test_hostile_declared_length_rejected() {
+        let d = hostile(&[(0, 1), (1, 1)], u32::MAX, &[0; 4]);
+        assert!(decompress(&d).is_err());
+    }
+
+    /// Incomplete code (only "0" defined) fed all-ones: stops at max code length.
+    #[test]
+    fn test_hostile_unmatched_bits_fail_fast() {
+        let d = hostile(&[(0, 1)], 8, &vec![0xffu8; 100_000]);
+        assert!(decompress(&d).is_err());
+    }
+
+    /// Large valid input decodes in linear time (chars().nth was O(n^2)).
+    #[test]
+    fn test_large_roundtrip_is_linear() {
+        let data: Vec<u8> = (0..400_000u32).map(|i| (i % 7) as u8).collect();
+        let t = std::time::Instant::now();
+        assert_eq!(decompress(&compress(&data).unwrap()).unwrap(), data);
+        assert!(t.elapsed().as_secs() < 10);
+    }
+
+    #[test]
+    fn test_hostile_symbol_count_over_256_rejected() {
+        let entries: Vec<(u8, u8)> = (0..257u32).map(|i| (i as u8, 9)).collect();
+        assert!(decompress(&hostile(&entries, 1, &[0])).is_err());
+    }
+
+    #[test]
+    fn test_hostile_duplicate_symbol_rejected() {
+        assert!(decompress(&hostile(&[(0, 1), (0, 1)], 1, &[0])).is_err());
     }
 
     // ── Determinism ───────────────────────────────────────────────────────────
