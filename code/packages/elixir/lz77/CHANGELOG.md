@@ -5,12 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.1.1] - 2026-11-10
 
 ### Security
 
-- No code change: deserialisation is binary pattern matching that stops at the data present, so the header count cannot drive work or memory. Known, separate: decode builds the output with list appends and is O(n^2) in output size (not header-driven). NOT RUN locally (toolchain unavailable in the review environment).
-- Added test/hostile_headers_test.exs (ExUnit): hostile headers return only the data actually present, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
+- SEC-004: `decode/2` was O(n^2) (`list ++ [x]`, `Enum.at`). It now accumulates
+  into a binary with O(1) append and `:binary.at/2`; output is identical for
+  valid input. A token whose offset exceeds the output so far now raises
+  `ArgumentError` instead of reading from the wrong position.
+- A negative or non-integer copy length raises `ArgumentError`; before, it
+  never reached the copy loop's base case and grew the output forever.
+- SEC-001: deserialisation is binary pattern matching that stops at the data
+  present, so the header count cannot drive work or memory;
+  `test/hostile_headers_test.exs` pins that, plus round trips over every byte
+  string of length <= 2 and a seeded random sample.
 
 ## [0.1.0] - 2026-04-11
 

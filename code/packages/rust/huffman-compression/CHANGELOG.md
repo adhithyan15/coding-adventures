@@ -1,11 +1,23 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.1] - 2026-11-10
 
 ### Security
 
-- CWE-789: `decompress` no longer preallocates the output from the untrusted `original_length` header; the capacity hint is capped at the number of payload bits. The decode loop no longer uses `chars().nth(pos)` (quadratic time on large inputs); it indexes bytes directly.
-- Added `tests/hostile_headers.rs`.
+- SEC-003: `decompress` no longer overflows `code <<= len - prev_len` on a
+  hostile code-length table. Lengths of 0 or above 56, unsorted tables and
+  over-subscribed (Kraft sum > 1) tables now return `Err`; shifts are checked.
+- Decode loop stops once the accumulated bits exceed the table's longest code
+  (was O(bits^2) rehashing), and no longer uses `chars().nth(pos)` (also O(n^2)).
+- SEC-002 prep: a declared original length larger than the payload bit count
+  is rejected before allocation (every code is >= 1 bit). No API change.
+  Residual: output can still be up to 8x the input; a caller-set `max_output`
+  awaits the WX-H / LP-003 API decision.
+- `table_end` computed with checked arithmetic.
+- Tables with more than 256 entries or a repeated symbol return `Err`
+  (Kraft alone admits ~2^56 long codes, a memory amplification).
+- CWE-789 (SEC-001): the output capacity hint is also capped at the payload bit
+  count, and `tests/hostile_headers.rs` adds hostile-header regression tests.
 
 ## [0.1.0] - 2026-04-12
 

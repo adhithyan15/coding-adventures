@@ -4,7 +4,14 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
-### Fixed - parse adjacent class members and reserved-word property names (#17852)
+### Fixed - retain terminator after class field in WHITESPACE_ONLY (#15862)
+
+- In `src/whitespace_only.rs`, Rule A (which elides semicolons immediately preceding a closing brace `}`) now exempts semicolons directly located within a class body member list (`!in_member_list[idx]`), retaining class field terminators (e.g. `class A{x=1;}` instead of `class A{x=1}`).
+- Closed ladder rung `ladder_t7_class_field_ws` to 100% byte-for-byte parity with upstream Closure Compiler, reducing active ladder divergences to 51.
+- Updated `ladder_t7_generator_advanced` and closed `ladder_t7_generator_simple` following generator spacing parity in `closure-emitter`.
+- Added regression test suite in `tests/regression_emitter_spacing_class_field_15862.rs`.
+
+## [0.247.4] - 2026-11-09
 
 - In `SIMPLE` and `ADVANCED` compilation modes, class definitions with adjacent methods or constructor without semicolons (e.g. `class P { m() { a(); } n() { b(); } }`) previously failed to parse because the ECMAScript grammar required semicolons after method definitions.
 - Property access with reserved keywords (e.g. `a.throw(1); o.return(); x = { if: 1, default: 2 };` and optional chain `a?.throw()`) previously failed with grammar syntax errors because property access rules only matched bare identifier tokens instead of identifier names.
