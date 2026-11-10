@@ -38,7 +38,7 @@ predicates onto these circuits.
 |---|---|
 | `aig` | `Aig` and `Edge` (`2·node + complement`); `and` with constant folding and structural hashing; `or`/`xor`/`mux`; 64-pattern bit-parallel `simulate` |
 | `tseitin` | Incremental Tseitin encoding of an edge's cone into a `Solver` or a `Cnf`. Stack-based, so deep circuits cannot overflow |
-| `bv` | `BitVec` plus `not and or xor add sub neg mul`, shifts by constants and by bit-vectors (barrel shifter), `eq`, unsigned and signed comparisons, `ite`, all with exact SMT-LIB semantics |
+| `bv` | `BitVec` plus `not and or xor add sub neg mul`, `udiv urem sdiv srem` (restoring division, SMT-LIB division-by-zero), shifts by constants and by bit-vectors (barrel shifter), `eq`, unsigned and signed comparisons, `ite`, `extract concat zext sext`, all with exact SMT-LIB semantics |
 
 ## Usage
 
@@ -73,11 +73,21 @@ assert_eq!(s.solve(), SolveResult::Unsat);              // nowhere: all 2^64 pai
   commutativity, De Morgan, XOR cancellation, comparison dualities, and
   shift and multiply identities. Each is proved UNSAT, and `drat-check`
   accepts the proof. A false identity yields a real counterexample.
+- **Faithfulness through the solver** (`tests/faithfulness.rs`, VER10 §9):
+  every operator is encoded to CNF, its inputs fixed as units and solved
+  with `cdcl-sat`; the model's output bits must equal an independent Rust
+  reference, and adding "the output differs" must be UNSAT (certified by
+  `drat-check` on every assignment at widths 1–3 and a stride beyond).
+  Widths 1–4 and 5–6 are exhaustive, 7–8 use corner values plus samples.
+  Every expression tree of depth 2 (43 906 terms at widths 2 and 3, about
+  3.5 million assignments) is checked by the `--ignored` test; a 1-in-25
+  slice runs by default. Identities are proved with certified proofs and
+  non-identities refuted with verified counterexamples.
 - **End to end:** the QF_BV corpus and the random problems run through
   `constraint-vm`, in `constraint-vm/tests/qfbv.rs`.
 
 No external solver is a dependency or was needed as an oracle. Line
-coverage is 100%.
+coverage is 100% (measured with `cargo llvm-cov` on a standalone copy).
 
 ## Capabilities
 

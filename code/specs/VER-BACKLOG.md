@@ -603,7 +603,7 @@ Provisional decisions on VER04i §14 (coordinator defaults, pending owner review
 | P2 / OPS-004 | The package-parity loop (.claude/package-parity-loop-state.json) owns per-lane ct-compare items; coordinate so the two loops never pick the same item concurrently | ongoing |
 | P1 / OPS-005 | CI lesson: changing a crate's source invalidates its committed effect_certificate.json (`--verify-cert` source_digest mismatch); regenerate certificates for every changed crate before pushing | lesson to record with the #19054 fix |
 | done-local / WX-000 | VER04j Warrant v1 extensions spec: branch worktree-agent-ad69283a1344b3c11 (commit a809a22a915). `warrant x v1` header; WX-B fixed-width ints (wrapping), WX-C bitwise (named functions; shift >= width gives 0), WX-E pinned vector tables, WX-A tuples/records/variants, WX-H output bounds with allocation-capped observer; WX-F/WX-D sketched. Order B+C (6-9d), E (6-8d), A (10-15d), H (5-7d), F, D | queued for PR; reconcile its provisional corpus encodings with VER04i (it could not see the VER04i branch) |
-| P1 / WD-013 | BUG: the Rust evidence generator evaluates U8 arithmetic as non-wrapping, contradicting VER04 §3 (U8/U64 wrap). Claims using U8 arithmetic get a wrong oracle; gf256 worked around it. Fix with differential tests in the first WX slice | after #19054 |
+| P1 / WD-013 | BUG: the Rust evidence generator evaluates U8 arithmetic as non-wrapping, contradicting VER04 §3 (U8/U64 wrap). Claims using U8 arithmetic get a wrong oracle; gf256 worked around it. Fix with differential tests in the first WX slice | done-local for v1 documents (WX-B, `warrant-grammar` 0.2.0): in a v1 document `U8`/`U64` are typed `V::Fixed` and wrap, with native-Rust differential tests and a killed non-wrapping-U8 mutant. The **v0** generated harness still evaluates `U8` as `V::Nat`: it is frozen byte-identical so `ct-compare`/`gf256` evidence does not change; the gf256 conversion to a v1 document (backlog) retires it. Also on this branch: VER04j section 14 lists every deviation |
 
 Provisional decisions on VER04j §12 (coordinator defaults, pending owner review):
 1. `warrant x v1` header (not per-feature `use`). 2. Fixed-width `+ - *` wrap by default (keeps v0 meaning). 3. Signed div/rem rejected; `div_trunc`/`rem_trunc`; MIN / -1 -> None. 4. Shift counts >= width give 0 (mathematical), not hardware masking. 5. DER-TLV offset via a second observer op (no payload-carrying error types yet). 7. VER04i owns corpus encodings; VER04j defers to it. 8. Exhaustive budget stays a per-package option.
@@ -621,3 +621,33 @@ Provisional decisions on VER13 open questions (coordinator defaults, pending own
 | P2 / OPS-006 | A worktree-isolated agent switched the MAIN checkout's branch (to its own worktree branch); no work lost. Briefs must say never run `git checkout`/`switch` outside the agent's own worktree | apply in briefs |
 | ready / LP-001 | gf256 + package-agnostic report: branch worktree-agent-a6e1ded123339efdd (integration on main + security fixes M1/L1/L3/L4/L5; round 2 PASSED) | queued for PR |
 | P2 / WD-014 | Security INFO: `--check` step 6 doesn't re-derive CWE-125/787 discharge; proof `kind` not whitelisted; evidence.bindings not hash-bound; gen_evidence numeric options uncapped and file I/O uncapped/symlink-following | backlog |
+
+### Coordinator status, 2026-11-10 (parallel PR wave)
+
+Every queued branch above is now an open PR with auto-merge armed; the rows
+below map items to PRs and log what the wave discovered. Status `PR` means
+"open, auto-merge armed, babysat"; `open` means not started.
+
+| Priority / id | Item | Status |
+|---|---|---|
+| PR / SEC-001 | lz77/lz78/lzss/lzw decompression bounds in all lanes | PR #19059 |
+| PR / LH-003 | test-bootstrap audit (macOS: /dev/full test now Linux-only, see LH-003c) | PR #19075 |
+| PR / LH-001, LH-005 | drat-check + cdcl-sat soundness audits, strict DIMACS | PR #19076 |
+| PR / LP-001 | gf256 Warrant evidence + package-agnostic report | PR #19077 |
+| merged / WD-002, AS-000 | VER04i, VER04j, VER13 specs + backlog | PR #19078 (merged) |
+| PR / CAP-RT-001 | runtime capability conformance gate | PR #19079 |
+| PR / LH-002, LP-006 | analyzer hardening + 74 manifests (14 removed from the v1 invalid ledger) | PR #19080 |
+| PR / LH-006 | bit-blaster faithfulness audit | PR #19081 |
+| PR / CT01 ports | ct-compare in lua, perl, haskell, ocaml, dart, swift (OCaml corpus now embedded: tests need no fs capability) | PR #19082 |
+| PR / SEC-003, SEC-004 | Rust huffman table validation; Elixir lz77 linear decode | PR #19084 |
+| PR / OPS-012..014 | BUILD_windows parity (vitest, PERL5LIB, EndOfLine) + CI audit script | PR #19085 |
+| PR / BUILD-001 | stop committing generated wasm; build where used | PR #19086 |
+| PR / SEC-003b | huffman decoder hardening in 16 more lanes | PR #19087 |
+| PR / AS-001a(1) | VER13 catalogue data (84 entries) + AC-14 checker in CI | PR #19089 |
+| P1 / AS-001a(2) | ca-assurance-report side: pin `catalogue.sha256`; enforce AC-1..AC-13 report rules; migrate ct-compare report to catalogue ids; derived exemptions; `evidence-kinds.json` | after #19077 and #19089 |
+| P0 / CI-RED-001 | main fails `test_repository_source_input_boundary_is_closed_and_canonical` (six TypeScript packages missing from the TS workspace boundary); fix is open PR #19050 | watch; blocks #19086 |
+| P2 / LH-003c | Rust std treats EBADF on stdout as a successful write, so a harness whose fd 1 is closed or read-only prints nothing and exits 0. Detect at start (fstat fd 1) or document in TF01 §8 known limits; supervisors must require the plan line | open |
+| P2 / CI-001 | Playwright 1.58 cannot install Chromium on ubuntu-latest (26.04); `release-visicalc.yml` verify pinned to ubuntu-24.04 in #19086. Bump release-tests Playwright, then unpin | open |
+| P3 / SEC-003c | C and C++ huffman encoders hold codes in 32-bit integers; an extremely skewed distribution needs longer codes | open |
+| P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
+| P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |

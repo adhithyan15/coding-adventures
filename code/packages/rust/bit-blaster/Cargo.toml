@@ -1,6 +1,6 @@
 [package]
 name = "bit-blaster"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "VER10 — and-inverter graphs, Tseitin encoding and fixed-width bit-vector circuits (QF_BV semantics) over the cdcl-sat solver. The QF_BV tactic that uses them lives in constraint-engine."
 license = "MIT"

@@ -10,7 +10,34 @@
 use crate::tfv::{encode, values_equal, Value};
 
 /// The outcome of a check.
+///
+/// `#[must_use]`: a verdict that is computed and then dropped is a check that
+/// never happened, and the test around it passes vacuously. Before this
+/// attribute, `ctx.deep_equal(&a, &b); Verdict::Pass` compiled silently and
+/// reported a pass whatever `a` and `b` were. Now the compiler warns, and
+/// `clippy -D warnings` (the BUILD's gate) rejects it.
+///
+/// The doctest below is the regression test: dropping a verdict must not
+/// compile under `deny(unused_must_use)`, and using one must.
+///
+/// ```compile_fail
+/// #![deny(unused_must_use)]
+/// use coding_adventures_test_bootstrap::{tfv::Value, verdict::deep_equal};
+/// fn main() {
+///     deep_equal(&Value::Null, &Value::Bool(true)); // verdict dropped
+/// }
+/// ```
+///
+/// ```
+/// #![deny(unused_must_use)]
+/// use coding_adventures_test_bootstrap::{tfv::Value, verdict::deep_equal, Verdict};
+/// fn main() {
+///     let verdict = deep_equal(&Value::Null, &Value::Null);
+///     assert_eq!(verdict, Verdict::Pass);
+/// }
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[must_use = "a Verdict that is neither returned nor inspected is a check that never happened"]
 pub enum Verdict {
     Pass,
     /// `failure_id` is from a closed vocabulary (TF01 §5.3) so tools can

@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.2.0 — Warrant v1: WX-B (fixed-width integers) and WX-C (bitwise operations)
+
+Implements VER04j sections 1, 2 and 3 (see its section 14 for every deviation).
+A document whose header is `warrant name v1` enables the extensions; a v0
+document means exactly what it did before. The layout tokens, parsed
+declarations and checker output of `ct-compare.warrant` and `gf256.warrant`
+hash to the values the previous version produced (pinned in `tests/v0_compat.rs`),
+and `ct-compare`'s and `gf256`'s generated evidence regenerates byte-identically.
+
+- **Grammar, lexer, parser.** `warrant.tokens` gains `U16_LITERAL U32_LITERAL
+  I8_LITERAL I16_LITERAL I32_LITERAL I64_LITERAL HEX_LITERAL` and
+  `warrant.grammar` the optional second header word and the new literal
+  alternatives (additive; `warrant-syntax-v1` untouched and passing). The layout
+  lexer reads every suffix and `0x...` as one `Number` token; the parser gates
+  them on the header: `W0101` for a v1 construct in a v0 document
+  (`ParserErrorKind::V1ConstructInV0`), for a header word other than `v1`
+  (`InvalidVersionHeader`) and for an out-of-range suffixed literal
+  (`LiteralOutOfRange`). `-128i8` is folded into one literal. New AST pieces:
+  `Version`, `WarrantFile::version`, `Literal::Fixed`.
+- **`fixed` module (new).** `FixedTy` and the single host-independent definition
+  of wrapping arithmetic, checked arithmetic, truncating and floor division,
+  `wrap`/`try`/`widen` ranges, every bitwise function, endian conversion and the
+  evidence edge domains. Tested against native Rust on every pair of `U8`/`I8`
+  and large seeded sweeps of the other six types.
+- **Checker.** `Type::{U16,U32,I8,I16,I32,I64}`, version-scoped type and
+  built-in names (`widen wrap try to_int to_nat max_value min_value checked_*
+  rem div_trunc rem_trunc unwrap_or bit_* shl shr sar rotl rotr popcount clz ctz
+  bit be_bytes le_bytes from_be from_le`), no implicit conversion in either
+  direction, signed-only unary minus, `div`/`rem` unsigned-or-Int only.
+- **Evaluator (`codegen::Evaluator`).** `EvalValue::Fixed`, wrapping `+ - *`,
+  every built-in with the specification's total semantics, numeric equality by
+  value, bare `None`, `W0703` on `Int` overflow, shifts/popcount charge
+  `ceil(w/8)` work. `find_operation_in_expr` now also searches call arguments when
+  the shallow search finds nothing.
+- **Evidence generator.** v1 documents get a typed `V::Fixed` model in which `U8`
+  and `U64` wrap (WD-013 for v1; the v0 harness is unchanged), the domain
+  descriptors of VER04j 2.6 (`full` for `U8 I8 U16 I16`, `edge` sets of 281, 313,
+  377, 527, 559 and 623 values), the leftmost-first `U16`/`I16` demotion rule with
+  `W0706`, the count-aware `Nat` domain, a v1 scalar adapter shape (fixed-width
+  parameters; fixed-width, `Bool`, `Nat`, `Option` and `Result` results), fifteen
+  new faults (`saturate-*`, `trap-as-zero-*`, `narrow-width`, `sign-confuse`,
+  `off-by-one-range`, `shift-mask`, `shift-ub`, `rotate-as-shift-*`, `sar-as-shr`,
+  `popcount-off`) and manifest fields `warrant_version` and `demoted`. The
+  prelude's `//@if` regions now nest and select `v0` or `v1`.
+- **Tests.** `v0_compat`, `wx_syntax`, `wx_checker`, `wx_semantics`, `wx_generator`,
+  `wx_evidence` (compiles and runs a checked-in generated v1 harness, with every
+  negative control) and `wx_regen` (drift check for it).
+- Not delivered: the `endian-swap` fault and `Bytes` adapters, a
+  `warrant-syntax-v2` fixture, the independent Python reference evaluator.
+
 ## Unreleased
 
 - Security fixes (review of the gf256 / package-agnostic branch):

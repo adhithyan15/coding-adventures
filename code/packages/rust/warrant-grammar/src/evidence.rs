@@ -35,8 +35,9 @@ use crate::checker::CheckedWarrantModule;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
+use crate::fixed::{self, FixedTy};
 use crate::parser::{
-    BinaryOp, Declaration, Expression, Literal, OpDecl, Parameter, TypeExpr, UnaryOp,
+    BinaryOp, Declaration, Expression, Literal, OpDecl, Parameter, TypeExpr, UnaryOp, Version,
     WarrantFile, Width,
 };
 
@@ -129,11 +130,21 @@ enum Ty {
     Nat,
     Bytes,
     BytesN(u64),
+    /// v1: a fixed-width binder at its default domain (full for `U8 I8 U16
+    /// I16`, the edge set for the wider types).
+    Fx(FixedTy),
+    /// v1: a `U16`/`I16` binder demoted to its edge set by the budget rule.
+    FxEdge(FixedTy),
+    /// v1: a `Nat` that flows directly into a shift count or bit index.
+    NatCount,
 }
 
 impl Ty {
     fn rust(self) -> String {
         match self {
+            Ty::Fx(f) => format!("Ty::Fx(F::{})", f.name()),
+            Ty::FxEdge(f) => format!("Ty::FxEdge(F::{})", f.name()),
+            Ty::NatCount => "Ty::NatCount".into(),
             Ty::Bool => "Ty::Bool".into(),
             Ty::U8 => "Ty::U8".into(),
             Ty::U64 => "Ty::U64".into(),
@@ -155,6 +166,9 @@ impl Ty {
             Ty::U8 => Some(256),
             Ty::Nat => Some(65),
             Ty::U64 => Some(256 + 56 + 1 + 64),
+            Ty::NatCount => Some(65 + 8),
+            Ty::Fx(f) if f.bits() <= 16 => Some(1u64 << f.bits()),
+            Ty::Fx(f) | Ty::FxEdge(f) => Some(fixed::edge_domain(f).len() as u64),
             Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
             Ty::BytesN(n) if n > MAX_FIXED_WIDTH => None,
             Ty::BytesN(0) => Some(1),
@@ -188,7 +202,16 @@ fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
     Some((product, bytes))
 }
 
-fn ty_of(p: &Parameter<'_>) -> Result<Ty, CodegenError> {
+fn ty_of(p: &Parameter<'_>, v1: bool) -> Result<Ty, CodegenError> {
+    if v1 {
+        // In a v1 document every fixed-width binder, `U8` and `U64` included,
+        // is a `Ty::Fx`: one representation, one set of wrapping semantics.
+        if let TypeExpr::Named { name, .. } = &p.param_type {
+            if let Some(f) = FixedTy::from_name(name) {
+                return Ok(Ty::Fx(f));
+            }
+        }
+    }
     match &p.param_type {
         TypeExpr::Bytes { width: None, .. } => Ok(Ty::Bytes),
         TypeExpr::Bytes {
@@ -226,6 +249,8 @@ struct Cx<'c> {
     errors: &'c HashSet<String>,
     allow_ops: bool,
     widths: &'c mut BTreeMap<String, BTreeSet<u64>>,
+    /// The document is a v1 document (WX-B/WX-C built-ins and types).
+    v1: bool,
 }
 
 fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
@@ -234,6 +259,10 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
         Expression::Grouped { inner, .. } => emit(inner, cx)?,
         Expression::Literal { lit, .. } => match lit {
             Literal::Bool(b) => format!("V::Bool({b})"),
+            Literal::U64(n) if cx.v1 => format!("V::Fixed(F::U64, {n}i128)"),
+            Literal::U8(n) if cx.v1 => format!("V::Fixed(F::U8, {n}i128)"),
+            Literal::Int(n) if cx.v1 => format!("V::Int({n}i128)"),
+            Literal::Fixed(f, v) => format!("V::Fixed(F::{}, {v}i128)", f.name()),
             Literal::U64(n) => format!("V::U64({n}u64)"),
             Literal::U8(n) => format!("V::Nat({n}u64)"),
             Literal::Int(n) => format!("V::Nat({n}u64)"),
@@ -249,6 +278,7 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
         },
         Expression::Unary { op, operand, .. } => match op {
             UnaryOp::Not => format!("V::Bool(!{}.truthy())", emit(operand, cx)?),
+            UnaryOp::Neg if cx.v1 => format!("V::neg(&{})", emit(operand, cx)?),
             UnaryOp::Neg => return Err(unsupported("unary minus", sp)),
         },
         Expression::Binary {
@@ -297,6 +327,8 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                 None => {
                     if cx.binders.contains(n) {
                         format!("b_{n}.clone()")
+                    } else if cx.v1 && n == "None" {
+                        "V::Opt(None)".to_string()
                     } else {
                         return Err(unsupported(format!("unbound name `{n}`"), sp));
                     }
@@ -306,7 +338,13 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                     for a in list {
                         parts.push(emit(a, cx)?);
                     }
+                    let v1_call = if cx.v1 && !cx.models.contains(n) && !cx.ops.contains_key(n) {
+                        emit_v1_call(n, widths, &parts, sp)?
+                    } else {
+                        None
+                    };
                     match n {
+                        _ if v1_call.is_some() => v1_call.unwrap(),
                         "Ok" if parts.len() == 1 => format!("V::Ok(Box::new({}))", parts[0]),
                         "Err" if parts.len() == 1 => format!("V::err_of({})", parts[0]),
                         "len" if parts.len() == 1 => format!("{}.length()", parts[0]),
@@ -349,6 +387,159 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
 }
 
 // ---------------------------------------------------------------------------
+// WX-B / WX-C expression translation (v1 documents only)
+// ---------------------------------------------------------------------------
+
+/// The static type argument of `widen<T>(x)` and friends, as the prelude's
+/// `F::T` constant.
+fn static_fixed(widths: &[Width<'_>], span: (usize, usize)) -> Result<String, CodegenError> {
+    match widths {
+        [Width::Named(n)] if FixedTy::from_name(n).is_some() => Ok(format!("F::{n}")),
+        _ => Err(unsupported("static argument is not a fixed-width type", span)),
+    }
+}
+
+/// Translate a call to a v1 built-in over already translated operands, or
+/// `None` when `name` is not one (a user model or operation).
+fn emit_v1_call(
+    name: &str,
+    widths: &[Width<'_>],
+    p: &[String],
+    span: (usize, usize),
+) -> Result<Option<String>, CodegenError> {
+    let arity = match name {
+        "max_value" | "min_value" => 0,
+        "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz" | "ctz"
+        | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" => 1,
+        "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
+        | "rem_trunc" | "unwrap_or" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
+        | "rotl" | "rotr" | "bit" => 2,
+        _ => return Ok(None),
+    };
+    if p.len() != arity {
+        return Err(unsupported(format!("`{name}` expects {arity} operands"), span));
+    }
+    let t = || static_fixed(widths, span);
+    Ok(Some(match name {
+        "Some" => format!("V::Opt(Some(Box::new({})))", p[0]),
+        "max_value" => format!("V::max_value({})", t()?),
+        "min_value" => format!("V::min_value({})", t()?),
+        "widen" => format!("V::widen({}, &{})", t()?, p[0]),
+        "wrap" => format!("V::wrap({}, &{})", t()?, p[0]),
+        "try" => format!("V::try_({}, &{})", t()?, p[0]),
+        "to_int" => format!("V::to_int(&{})", p[0]),
+        "to_nat" => format!("V::to_nat(&{})", p[0]),
+        "checked_add" => format!("V::checked('+', &{}, &{})", p[0], p[1]),
+        "checked_sub" => format!("V::checked('-', &{}, &{})", p[0], p[1]),
+        "checked_mul" => format!("V::checked('*', &{}, &{})", p[0], p[1]),
+        "div" => format!("V::divrem(true, &{}, &{})", p[0], p[1]),
+        "rem" => format!("V::divrem(false, &{}, &{})", p[0], p[1]),
+        "div_trunc" => format!("V::divrem_trunc(true, &{}, &{})", p[0], p[1]),
+        "rem_trunc" => format!("V::divrem_trunc(false, &{}, &{})", p[0], p[1]),
+        "unwrap_or" => format!("V::unwrap_or(&{}, &{})", p[0], p[1]),
+        "bit_and" => format!("V::bitop('&', &{}, &{})", p[0], p[1]),
+        "bit_or" => format!("V::bitop('|', &{}, &{})", p[0], p[1]),
+        "bit_xor" => format!("V::bitop('^', &{}, &{})", p[0], p[1]),
+        "bit_not" => format!("V::bit_not(&{})", p[0]),
+        "shl" | "shr" | "sar" | "rotl" | "rotr" => {
+            format!("V::shift(\"{name}\", &{}, &{})", p[0], p[1])
+        }
+        "popcount" | "clz" | "ctz" => format!("V::bitcount(\"{name}\", &{})", p[0]),
+        "bit" => format!("V::bit(&{}, &{})", p[0], p[1]),
+        "be_bytes" => format!("V::endian_bytes(true, &{})", p[0]),
+        "le_bytes" => format!("V::endian_bytes(false, &{})", p[0]),
+        "from_be" => format!("V::from_endian(true, {}, &{})", t()?, p[0]),
+        _ => format!("V::from_endian(false, {}, &{})", t()?, p[0]),
+    }))
+}
+
+/// Names of binders that flow *directly* as the count (second) argument of a
+/// shift, rotate or `bit` call (VER04j section 3.6): those `Nat` binders get
+/// the count-aware domain.
+fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
+    match e {
+        Expression::Reference { name, args, .. } => {
+            if let Some(list) = args {
+                if name.segments.len() == 1
+                    && matches!(name.segments[0], "shl" | "shr" | "sar" | "rotl" | "rotr" | "bit")
+                {
+                    if let Some(Expression::Reference {
+                        name: n, args: None, ..
+                    }) = list.get(1)
+                    {
+                        if n.segments.len() == 1 {
+                            out.insert(n.segments[0].to_string());
+                        }
+                    }
+                }
+                for a in list {
+                    count_binders(a, out);
+                }
+            }
+        }
+        Expression::Binary { left, right, .. } => {
+            count_binders(left, out);
+            count_binders(right, out);
+        }
+        Expression::Unary { operand, .. } => count_binders(operand, out),
+        Expression::Grouped { inner, .. } => count_binders(inner, out),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            count_binders(condition, out);
+            count_binders(then_branch, out);
+            count_binders(else_branch, out);
+        }
+        Expression::Quantified { body, .. } => count_binders(body, out),
+        Expression::Match { target, arms, .. } => {
+            count_binders(target, out);
+            for a in arms {
+                count_binders(&a.body, out);
+            }
+        }
+        Expression::List { elements, .. } => {
+            for x in elements {
+                count_binders(x, out);
+            }
+        }
+        Expression::Literal { .. } => {}
+    }
+}
+
+/// VER04j section 2.6, the budget rule.  Every binder starts at its default
+/// domain (`full` where it has one); while the Cartesian product (or the byte
+/// budget) is over `budget`, demote the *leftmost* binder that is currently a
+/// `full` `U16`/`I16` to its edge set.  Returns the indexes demoted, in order.
+/// `U8`/`I8` binders are never demoted.  If nothing is left to demote and the
+/// claim is still over budget the caller reports W0706 -- no silent sampling.
+fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<usize> {
+    let mut demoted = Vec::new();
+    loop {
+        let over = match claim_domain(tys) {
+            Some((p, b)) => p > budget || b > DOMAIN_BYTES_BUDGET,
+            None => true,
+        };
+        if !over {
+            break;
+        }
+        let Some(i) = tys
+            .iter()
+            .position(|t| matches!(t, Ty::Fx(f) if f.bits() == 16))
+        else {
+            break;
+        };
+        if let Ty::Fx(f) = tys[i] {
+            tys[i] = Ty::FxEdge(f);
+            demoted.push(i);
+        }
+    }
+    demoted
+}
+
+// ---------------------------------------------------------------------------
 // Fault registry
 // ---------------------------------------------------------------------------
 
@@ -373,7 +564,16 @@ const FAULTS: &[(&str, &str)] = &[
 ];
 
 fn fault_variant(name: &str) -> Option<&'static str> {
-    FAULTS.iter().find(|(n, _)| *n == name).map(|(_, v)| *v)
+    FAULTS
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, v)| *v)
+        .or_else(|| {
+            V1_FAULTS
+                .iter()
+                .find(|(n, _, _)| *n == name)
+                .map(|(_, v, _)| *v)
+        })
 }
 
 /// How a scalar-adapter fault rewrites the call.  Templates are Rust source
@@ -427,6 +627,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
     let list: Vec<(&str, &str)> = FAULTS
         .iter()
         .copied()
+        .chain(V1_FAULTS.iter().map(|(n, v, _)| (*n, *v)))
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -453,20 +654,23 @@ fn fault_block(used: &BTreeSet<String>) -> String {
 
 /// Expand the prelude: `//@@FAULTS@@` becomes the generated fault block and
 /// `//@if <feature>` ... `//@endif` regions are kept only when the feature is
-/// enabled (marker lines never reach the output).
+/// enabled (marker lines never reach the output).  Regions nest: a line is kept
+/// only if every enclosing region is.  A document enables exactly one of the
+/// features `v0` and `v1`, so a v0 document's output is the v0 text unchanged.
 fn expand_prelude(faults: &str, features: &BTreeSet<&str>) -> String {
     let mut out = String::new();
-    let mut keep = true;
+    let mut stack: Vec<bool> = Vec::new();
     for line in PRELUDE.lines() {
         if let Some(f) = line.strip_prefix("//@if ") {
-            keep = features.contains(f.trim());
+            let outer = stack.last().copied().unwrap_or(true);
+            stack.push(outer && features.contains(f.trim()));
             continue;
         }
         if line == "//@endif" {
-            keep = true;
+            stack.pop();
             continue;
         }
-        if !keep {
+        if !stack.last().copied().unwrap_or(true) {
             continue;
         }
         if line == "//@@FAULTS@@" {
@@ -494,6 +698,9 @@ enum Shape {
     Scalar {
         fallible: bool,
     },
+    /// v1: scalar parameters (fixed-width integers, `Nat`) and a fixed-width,
+    /// `Bool`, `Nat`, `Option` or `Result` result.
+    ScalarV1(RetV1),
 }
 
 impl Shape {
@@ -501,7 +708,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -514,9 +721,20 @@ impl Shape {
     }
 }
 
-fn shape_of(op: &OpDecl<'_>) -> Result<Shape, CodegenError> {
-    let tys: Result<Vec<Ty>, _> = op.params.iter().map(ty_of_op_param).collect();
+fn shape_of(op: &OpDecl<'_>, v1: bool) -> Result<Shape, CodegenError> {
+    let tys: Result<Vec<Ty>, _> = op.params.iter().map(|p| ty_of_op_param(p, v1)).collect();
     let tys = tys?;
+    if v1 {
+        let scalar_params = !tys.is_empty()
+            && tys
+                .iter()
+                .all(|t| matches!(t, Ty::Fx(_) | Ty::Nat | Ty::NatCount));
+        if scalar_params && op.static_params.is_empty() && !op.is_fresh {
+            if let Some(ret) = v1_ret(&op.return_type) {
+                return Ok(Shape::ScalarV1(ret));
+            }
+        }
+    }
     let returns_bool = matches!(&op.return_type, TypeExpr::Named { name: "Bool", .. });
     let returns_result = matches!(&op.return_type, TypeExpr::Result { .. });
     match (op.static_params.len(), tys.as_slice(), returns_bool, returns_result) {
@@ -551,13 +769,13 @@ fn returns_result_u8(t: &TypeExpr<'_>) -> bool {
 
 /// Operation parameters may carry a *named* width (`Bytes<N>`); treat it as
 /// `BytesN(0)` for shape matching only.
-fn ty_of_op_param(p: &Parameter<'_>) -> Result<Ty, CodegenError> {
+fn ty_of_op_param(p: &Parameter<'_>, v1: bool) -> Result<Ty, CodegenError> {
     match &p.param_type {
         TypeExpr::Bytes {
             width: Some(Width::Named(_)),
             ..
         } => Ok(Ty::BytesN(0)),
-        _ => ty_of(p),
+        _ => ty_of(p, v1),
     }
 }
 
@@ -571,8 +789,8 @@ fn adapter(
     let n = op.name;
     let mut s = String::new();
     match shape {
-        // Scalar operations are emitted by `scalar_adapter`.
-        Shape::Scalar { .. } => {}
+        // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
+        Shape::Scalar { .. } | Shape::ScalarV1(_) => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -687,7 +905,7 @@ fn scalar_adapter(
     let tys: Vec<Ty> = op
         .params
         .iter()
-        .map(ty_of_op_param)
+        .map(|p| ty_of_op_param(p, false))
         .collect::<Result<_, _>>()?;
     let given = options.arg_types.get(n);
     if let Some(g) = given {
@@ -804,6 +1022,306 @@ fn scalar_adapter(
 }
 
 // ---------------------------------------------------------------------------
+// WX-B / WX-C scalar adapters and faults (v1 documents only)
+// ---------------------------------------------------------------------------
+
+/// What a v1 scalar export returns, as the Warrant return type declares it.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum RetV1 {
+    /// A fixed-width integer (`U32`, `I8`, ...).
+    Fixed(FixedTy),
+    Bool,
+    /// A `Nat` count (`popcount`, `clz`, `ctz`).
+    Nat,
+    /// `Option<T>` (the `try<T>` shape).
+    Opt(FixedTy),
+    /// `Result<T, E>` through panic normalisation.
+    Res(FixedTy),
+}
+
+/// How a v1 fault rewrites the adapter.  Templates are Rust source over:
+/// `{k}` the package crate, `{e}` the export, `{args}` the converted arguments
+/// `p0, p1, ...`, `{t}` the Rust type of the first argument, `{u}` its unsigned
+/// counterpart, `{w}` its width in bits, `{rt}`/`{ru}`/`{half}` the result type,
+/// its unsigned counterpart and the type one width narrower, and `{pt}` (only
+/// in [`V1Fault::PreAll`]) the Rust type of the argument being rewritten.
+#[derive(Clone, Copy)]
+enum V1Fault {
+    /// The call is replaced by the expression.
+    Replace(&'static str),
+    /// The result `r` is rewritten by the expression.
+    Post(&'static str),
+    /// The last argument `p` is rewritten.
+    PreLast(&'static str),
+    /// Every signed argument `p` is rewritten.
+    PreAll(&'static str),
+}
+
+/// The faults of VER04j sections 2.7 and 3.7.  The arithmetic-shaped ones
+/// carry the operator in their name (`saturate-add`), because an adapter is
+/// told what the operation *is* only through its binding; the rest need no
+/// operator.
+const V1_FAULTS: &[(&str, &str, V1Fault)] = &[
+    // saturating instead of wrapping arithmetic
+    ("saturate-add", "SaturateAdd", V1Fault::Replace("p0.saturating_add(p1)")),
+    ("saturate-sub", "SaturateSub", V1Fault::Replace("p0.saturating_sub(p1)")),
+    ("saturate-mul", "SaturateMul", V1Fault::Replace("p0.saturating_mul(p1)")),
+    // overflow returns 0
+    ("trap-as-zero-add", "TrapAsZeroAdd", V1Fault::Replace("p0.checked_add(p1).unwrap_or(0)")),
+    ("trap-as-zero-sub", "TrapAsZeroSub", V1Fault::Replace("p0.checked_sub(p1).unwrap_or(0)")),
+    ("trap-as-zero-mul", "TrapAsZeroMul", V1Fault::Replace("p0.checked_mul(p1).unwrap_or(0)")),
+    // the adapter computes one width narrower
+    ("narrow-width", "NarrowWidth", V1Fault::Post("{narrow}")),
+    // a signed value compared as unsigned: x ^ MIN maps signed order to
+    // unsigned order, so the honest export then orders the unsigned values
+    ("sign-confuse", "SignConfuse", V1Fault::PreAll("p ^ {pt}::MIN")),
+    // a `try`-shaped op accepts max + 1 and min - 1
+    (
+        "off-by-one-range",
+        "OffByOneRange",
+        V1Fault::Post("if r.is_none() && (p0 as i128 == {rt}::MAX as i128 + 1 || p0 as i128 == {rt}::MIN as i128 - 1) { Some(p0 as {rt}) } else { r }"),
+    ),
+    // shift count reduced modulo the width (x86, wrapping_shl)
+    ("shift-mask", "ShiftMask", V1Fault::PreLast("p % {w}")),
+    // a count >= w returns the value unshifted (a C undefined-behaviour outcome)
+    ("shift-ub", "ShiftUb", V1Fault::Replace("if p1 >= {w} { p0 } else { {e}({args}) }")),
+    // rotation computed as a shift: zero fill
+    ("rotate-as-shift-left", "RotateAsShiftLeft", V1Fault::Replace("if p1 >= {w} { 0 } else { p0 << p1 }")),
+    (
+        "rotate-as-shift-right",
+        "RotateAsShiftRight",
+        V1Fault::Replace("if p1 >= {w} { 0 } else { ((p0 as {u}) >> p1) as {t} }"),
+    ),
+    // arithmetic right shift computed as a logical one
+    ("sar-as-shr", "SarAsShr", V1Fault::Replace("if p1 >= {w} { 0 } else { ((p0 as {u}) >> p1) as {t} }")),
+    // popcount that counts only the low w - 1 bits
+    ("popcount-off", "PopcountOff", V1Fault::Replace("((p0 as {u}) & ({u}::MAX >> 1)).count_ones()")),
+];
+
+fn v1_fault(name: &str) -> Option<V1Fault> {
+    V1_FAULTS.iter().find(|(n, _, _)| *n == name).map(|(_, _, k)| *k)
+}
+
+/// The Rust name of a parameter's native type: the binding's `args=` entry, or
+/// the type matching the Warrant type (`Nat` is `u32`).
+fn rust_arg_type(t: Ty, given: Option<&str>) -> Result<String, String> {
+    let default = match t {
+        Ty::Fx(f) | Ty::FxEdge(f) => f.suffix(),
+        _ => "u32",
+    };
+    let rt = given.unwrap_or(default);
+    if FixedTy::from_suffix(rt).is_none() {
+        return Err(rt.to_string());
+    }
+    Ok(rt.to_string())
+}
+
+/// `{u}` for a Rust integer type name (`i16` becomes `u16`).
+fn unsigned_of(rt: &str) -> String {
+    format!("u{}", &rt[1..])
+}
+
+fn v1_ret(t: &TypeExpr<'_>) -> Option<RetV1> {
+    let fixed = |t: &TypeExpr<'_>| match t {
+        TypeExpr::Named { name, .. } => FixedTy::from_name(name),
+        _ => None,
+    };
+    match t {
+        TypeExpr::Named { name: "Bool", .. } => Some(RetV1::Bool),
+        TypeExpr::Named { name: "Nat", .. } => Some(RetV1::Nat),
+        TypeExpr::Option { inner, .. } => fixed(inner).map(RetV1::Opt),
+        TypeExpr::Result { ok_type, .. } => fixed(ok_type).map(RetV1::Res),
+        other => fixed(other).map(RetV1::Fixed),
+    }
+}
+
+/// Adapter for a scalar-parameter operation of a v1 document: parameters are
+/// fixed-width integers or `Nat`s, the result is a fixed-width integer, `Bool`,
+/// `Nat`, `Option<T>` or `Result<T, E>`.  Arguments are range-checked into the
+/// export's Rust types (a value that does not fit is a harness bug and panics
+/// outside any claim); every fault the binding lists adds one `match fault` arm,
+/// so with `Fault::None` the adapter is exactly `export(p0, p1, ...)`.
+fn scalar_adapter_v1(
+    op: &OpDecl<'_>,
+    ret: RetV1,
+    export: &str,
+    err_case: Option<&str>,
+    faults: &[String],
+    options: &EvidenceOptions,
+) -> Result<String, CodegenError> {
+    let n = op.name;
+    let tys: Vec<Ty> = op
+        .params
+        .iter()
+        .map(|p| ty_of_op_param(p, true))
+        .collect::<Result<_, _>>()?;
+    let given = options.arg_types.get(n);
+    if let Some(g) = given {
+        if g.len() != tys.len() {
+            return Err(unsupported(
+                format!("operation `{n}` arg_types has {} entries for {} parameters", g.len(), tys.len()),
+                op.span,
+            ));
+        }
+    }
+    let mut conv = String::new();
+    let mut names = Vec::new();
+    let mut rts = Vec::new();
+    for (i, t) in tys.iter().enumerate() {
+        let rt = rust_arg_type(*t, given.map(|g| g[i].as_str()))
+            .map_err(|bad| unsupported(format!("argument type `{bad}` of `{n}`"), op.span))?;
+        let _ = writeln!(
+            conv,
+            "    let p{i} = {rt}::try_from(args[{i}].int()).expect(\"argument {i} of {n} fits {rt}\");"
+        );
+        names.push(format!("p{i}"));
+        rts.push(rt);
+    }
+    let arglist = names.join(", ");
+    let t0 = rts[0].clone();
+    let result_rt = match ret {
+        RetV1::Fixed(f) | RetV1::Opt(f) | RetV1::Res(f) => f.suffix().to_string(),
+        RetV1::Nat | RetV1::Bool => "u32".to_string(),
+    };
+    let half = match result_rt.as_str() {
+        "u16" => "u8".to_string(),
+        "i16" => "i8".to_string(),
+        r if r.len() == 3 => format!("{}{}", &r[..1], r[1..].parse::<u32>().unwrap_or(8) / 2),
+        _ => "u8".to_string(),
+    };
+    let narrow = if result_rt.ends_with('8') {
+        "r & 0x0f".to_string()
+    } else {
+        format!("(r as {half}) as {result_rt}")
+    };
+    let subst = |t: &str| {
+        t.replace("{narrow}", &narrow)
+            .replace("{k}", &options.package_crate)
+            .replace("{e}", export)
+            .replace("{args}", &arglist)
+            .replace("{t}", &t0)
+            .replace("{u}", &unsigned_of(&t0))
+            .replace("{w}", &t0[1..])
+            .replace("{rt}", &result_rt)
+            .replace("{ru}", &unsigned_of(&result_rt))
+            .replace("{half}", &half)
+    };
+    let mut pre = String::new();
+    let mut replace_arms = String::new();
+    let mut post_arms = String::new();
+    let mut missing = false;
+    let last = tys.len() - 1;
+    for f in faults {
+        if f == "missing-error" {
+            if !matches!(ret, RetV1::Res(_)) {
+                return Err(unsupported(
+                    format!("fault `missing-error` needs a fallible operation, `{n}` is total"),
+                    op.span,
+                ));
+            }
+            missing = true;
+            continue;
+        }
+        let (Some(variant), Some(kind)) = (fault_variant(f), v1_fault(f)) else {
+            return Err(unsupported(
+                format!("operation `{n}` names unknown v1 fault `{f}`"),
+                op.span,
+            ));
+        };
+        match kind {
+            V1Fault::Replace(t) => {
+                let _ = writeln!(replace_arms, "            Fault::{variant} => {},", subst(t));
+            }
+            V1Fault::Post(t) => {
+                let _ = writeln!(post_arms, "            Fault::{variant} => {},", subst(t));
+            }
+            V1Fault::PreLast(t) => {
+                let _ = writeln!(
+                    pre,
+                    "    let p{last} = if fault == Fault::{variant} {{ let p = p{last}; {} }} else {{ p{last} }};",
+                    subst(t)
+                );
+            }
+            V1Fault::PreAll(t) => {
+                let mut any = false;
+                for (i, rt) in rts.iter().enumerate() {
+                    if !rt.starts_with('i') {
+                        continue;
+                    }
+                    any = true;
+                    let body = subst(t).replace("{pt}", rt);
+                    let _ = writeln!(
+                        pre,
+                        "    let p{i} = if fault == Fault::{variant} {{ let p = p{i}; {body} }} else {{ p{i} }};"
+                    );
+                }
+                if !any {
+                    return Err(unsupported(
+                        format!("fault `{f}` needs a signed argument, `{n}` has none"),
+                        op.span,
+                    ));
+                }
+            }
+        }
+    }
+    let mut compute = String::new();
+    let _ = write!(
+        compute,
+        "let r = match fault {{\n{replace_arms}            _ => {export}({arglist}),\n        }};\n"
+    );
+    if !post_arms.is_empty() {
+        let _ = write!(compute, "        let r = match fault {{\n{post_arms}            _ => r,\n        }};\n");
+    }
+    let _ = writeln!(conv, "    let fault = fault_for(\"{n}\", fault);");
+    let wrap = |expr: &str, fty: FixedTy| format!("V::Fixed(F::{}, {expr} as i128)", fty.name());
+    let mut s = String::new();
+    match ret {
+        RetV1::Res(f) => {
+            let case = err_case.ok_or_else(|| CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::MissingBinding(format!(
+                    "binding for `{n}` has no error normalization"
+                )),
+                span: op.span,
+            })?;
+            let _ = write!(
+                s,
+                "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{\n{conv}{pre}\
+                 \x20   match contained(|| {{\n        {compute}        r\n    }}) {{\n\
+                 \x20       Some(r) => V::Ok(Box::new({})),\n",
+                wrap("r", f)
+            );
+            if missing {
+                let _ = writeln!(
+                    s,
+                    "        None if fault == Fault::MissingError => V::Ok(Box::new({})),",
+                    wrap("0", f)
+                );
+            }
+            let _ = write!(s, "        None => V::Err(\"{case}\".into()),\n    }}\n}}\n\n");
+        }
+        _ => {
+            let result = match ret {
+                RetV1::Fixed(f) => wrap("r", f),
+                RetV1::Bool => "V::Bool(r)".to_string(),
+                RetV1::Nat => "V::Int(r as i128)".to_string(),
+                RetV1::Opt(f) => format!(
+                    "V::Opt(r.map(|x| Box::new(V::Fixed(F::{}, x as i128))))",
+                    f.name()
+                ),
+                RetV1::Res(_) => unreachable!(),
+            };
+            let _ = write!(
+                s,
+                "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{\n{conv}{pre}\
+                 \x20   {compute}    {result}\n}}\n\n"
+            );
+        }
+    }
+    Ok(s)
+}
+
+// ---------------------------------------------------------------------------
 // The generator
 // ---------------------------------------------------------------------------
 
@@ -874,6 +1392,7 @@ pub fn generate_evidence_harness(
         }
     }
     let module = file.name;
+    let v1 = file.version == Version::V1;
 
     let mut models = HashSet::new();
     let mut errors = HashSet::new();
@@ -899,6 +1418,7 @@ pub fn generate_evidence_harness(
     let mut widths: BTreeMap<String, BTreeSet<u64>> = BTreeMap::new();
     let mut body = String::new();
     let mut features: BTreeSet<&str> = BTreeSet::new();
+    features.insert(if v1 { "v1" } else { "v0" });
 
     // Model functions.
     for d in &file.declarations {
@@ -911,6 +1431,7 @@ pub fn generate_evidence_harness(
                     errors: &errors,
                     allow_ops: false,
                     widths: &mut widths,
+                    v1,
                 };
                 let params: Vec<String> =
                     m.params.iter().map(|p| format!("b_{}: V", p.name)).collect();
@@ -943,6 +1464,7 @@ pub fn generate_evidence_harness(
                 errors: &errors,
                 allow_ops: true,
                 widths: &mut widths,
+                v1,
             };
             let _ = write!(
                 body,
@@ -979,7 +1501,24 @@ pub fn generate_evidence_harness(
         };
         let op = find_operation_in_expr(cbody, &op_names)
             .ok_or_else(|| unsupported(format!("claim {} calls no operation", c.name), *span))?;
-        let tys: Vec<Ty> = binders.iter().map(ty_of).collect::<Result<_, _>>()?;
+        let mut tys: Vec<Ty> = binders
+            .iter()
+            .map(|b| ty_of(b, v1))
+            .collect::<Result<_, _>>()?;
+        let mut demoted: Vec<usize> = Vec::new();
+        if v1 {
+            // A Nat that flows directly into a shift count gets the
+            // count-aware domain (VER04j section 3.6).
+            let mut counts = HashSet::new();
+            count_binders(cbody, &mut counts);
+            for (t, b) in tys.iter_mut().zip(binders) {
+                if *t == Ty::Nat && counts.contains(b.name) {
+                    *t = Ty::NatCount;
+                }
+            }
+            // The budget rule of section 2.6.
+            demoted = demote_for_budget(&mut tys, options.exhaustive_budget);
+        }
         let (shown, over) = match claim_domain(&tys) {
             Some((p, b)) => (
                 format!("{p} ({b} bytes)"),
@@ -1000,6 +1539,11 @@ pub fn generate_evidence_harness(
         if tys.contains(&Ty::U8) {
             features.insert("u8");
         }
+        let names_src: Vec<String> = binders.iter().map(|b| format!("\"{}\"", b.name)).collect();
+        let demoted_src: Vec<String> = demoted
+            .iter()
+            .map(|i| format!("\"{}\"", binders[*i].name))
+            .collect();
         let mut cx = Cx {
             binders: binders.iter().map(|p| p.name.to_string()).collect(),
             models: &models,
@@ -1007,6 +1551,7 @@ pub fn generate_evidence_harness(
             errors: &errors,
             allow_ops: true,
             widths: &mut widths,
+            v1,
         };
         let binds: String = binders
             .iter()
@@ -1026,6 +1571,16 @@ pub fn generate_evidence_harness(
         cx.allow_ops = true;
         let holds = emit(cbody, &mut cx)?;
         let tys_src: Vec<String> = tys.iter().map(|t| t.rust()).collect();
+        if v1 {
+            let _ = write!(
+                body,
+                "const CLAIM_{up}_NAMES: &[&str] = &[{names}];\n\n\
+                 const CLAIM_{up}_DEMOTED: &[&str] = &[{dem}];\n\n",
+                up = c.name.to_uppercase(),
+                names = names_src.join(", "),
+                dem = demoted_src.join(", "),
+            );
+        }
         let _ = write!(
             body,
             "const CLAIM_{up}_TYS: &[Ty] = &[{tys}];\n\n\
@@ -1055,10 +1610,28 @@ pub fn generate_evidence_harness(
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
-        let shape = shape_of(op)?;
+        let shape = shape_of(op, v1)?;
         let empty = BTreeSet::new();
         let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
-        if let Shape::Scalar { fallible } = shape {
+        if let Shape::ScalarV1(ret) = shape {
+            features.insert("scoped");
+            adapters.push_str(&scalar_adapter_v1(
+                op,
+                ret,
+                &binding.export,
+                err_case,
+                &binding.negative_controls,
+                options,
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else if let Shape::Scalar { fallible } = shape {
             features.insert("scoped");
             adapters.push_str(&scalar_adapter(
                 op,
@@ -1115,12 +1688,24 @@ pub fn generate_evidence_harness(
     for c in &claims {
         let _ = write!(
             suite,
-            "    reg(&mut suite, Meta {{ domain: describe(CLAIM_{up}_TYS), ..Meta::new(\"{id1}\", \"exhaustive\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = exh_{n}(fault);\n        (v, s, String::new())\n    }});\n\
+            "    reg(&mut suite, Meta {{ domain: {describe}, {demoted}..Meta::new(\"{id1}\", \"exhaustive\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = exh_{n}(fault);\n        (v, s, String::new())\n    }});\n\
              \x20   reg(&mut suite, Meta {{ seed: seed_of(\"claim/{module}/{n}\").to_string(), ..Meta::new(\"{id2}\", \"property\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = prop_{n}(fault);\n        (v, s, String::new())\n    }});\n\
              \x20   reg(&mut suite, Meta {{ seed: seed_of(\"fuzz/{module}/{n}\").to_string(), ..Meta::new(\"{id3}\", \"fuzz\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = fuz_{n}(fault, FUZZ_ITERATIONS);\n        (v, s, String::new())\n    }});\n",
-            up = c.name.to_uppercase(),
             n = c.name,
             op = c.op,
+            describe = if v1 {
+                format!("describe(CLAIM_{}_TYS, CLAIM_{}_NAMES)", c.name.to_uppercase(), c.name.to_uppercase())
+            } else {
+                format!("describe(CLAIM_{}_TYS)", c.name.to_uppercase())
+            },
+            demoted = if v1 {
+                format!(
+                    "demoted: CLAIM_{}_DEMOTED.iter().map(|s| s.to_string()).collect(), ",
+                    c.name.to_uppercase()
+                )
+            } else {
+                String::new()
+            },
             id1 = id("exhaustive", &c.name),
             id2 = id("property", &c.name),
             id3 = id("fuzz", &c.name),
@@ -1167,7 +1752,7 @@ pub fn generate_evidence_harness(
             if members.is_empty() {
                 continue;
             }
-            let scoped = matches!(shapes[op], Shape::Scalar { .. });
+            let scoped = matches!(shapes[op], Shape::Scalar { .. } | Shape::ScalarV1(_));
             for (fname, frust) in &op_faults[op] {
                 if scoped {
                     // The fault attacks this operation only: another scalar

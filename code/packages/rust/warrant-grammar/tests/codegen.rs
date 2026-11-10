@@ -832,6 +832,7 @@ fn test_codegen_and_evaluator_deep_coverage() {
         // 1. Model without body
         let file_with_no_body = WarrantFile {
             name: "no_body_test",
+            version: coding_adventures_warrant_grammar::parser::Version::V0,
             declarations: vec![Declaration::Model(
                 coding_adventures_warrant_grammar::parser::ModelDecl {
                     name: "stub_no_body",

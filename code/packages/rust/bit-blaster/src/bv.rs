@@ -249,6 +249,7 @@ pub fn uge(aig: &mut Aig, a: &BitVec, b: &BitVec) -> Edge {
 /// Flip the sign bit. Signed order on `w` bits is unsigned order after
 /// adding 2^(w−1), which flips the top bit: −128..127 becomes 0..255.
 fn flip_sign(a: &BitVec) -> BitVec {
+    assert!(a.width() >= 1, "bit-vectors have width ≥ 1");
     let mut bits = a.bits.clone();
     let top = bits.len() - 1;
     bits[top] = !bits[top];
@@ -279,6 +280,122 @@ pub fn sge(aig: &mut Aig, a: &BitVec, b: &BitVec) -> Edge {
 pub fn ite(aig: &mut Aig, c: Edge, t: &BitVec, e: &BitVec) -> BitVec {
     same_width(t, e);
     BitVec { bits: t.bits.iter().zip(&e.bits).map(|(&x, &y)| aig.mux(c, x, y)).collect() }
+}
+
+/// Restoring long division: `(⌊a / b⌋, a mod b)` for unsigned `a`, `b`.
+///
+/// This is schoolbook division in binary. Walk the dividend from its top
+/// bit down, keeping a running remainder `r`. At each step shift the next
+/// dividend bit into `r`; if `r ≥ b`, subtract `b` and write a 1 in the
+/// quotient, otherwise write a 0.
+///
+/// ```text
+///   13 ÷ 3 in 4 bits (a = 1101, b = 0011):
+///   bit 3: r = 1          < 3  → q3 = 0
+///   bit 2: r = 11  (3)   ≥ 3  → q2 = 1, r = 0
+///   bit 1: r = 0          < 3  → q1 = 0
+///   bit 0: r = 1          < 3  → q0 = 0
+///   quotient 0100 (4), remainder 1
+/// ```
+///
+/// `r` is kept in `w + 1` bits because `2r + bit` can reach `2^(w+1) − 2`
+/// before the subtraction; after it, `r < b < 2^w` again.
+///
+/// **Division by zero** needs no special case and lands exactly on SMT-LIB's
+/// total definition: `r ≥ 0` always holds, so every quotient bit is 1
+/// (`bvudiv a 0 = 2^w − 1`) and nothing is ever subtracted, so the
+/// remainder is `a` itself (`bvurem a 0 = a`).
+fn udivrem(aig: &mut Aig, a: &BitVec, b: &BitVec) -> (BitVec, BitVec) {
+    same_width(a, b);
+    let w = a.width();
+    assert!(w >= 1, "bit-vectors have width ≥ 1");
+    let b_wide = zext(b, 1);
+    let mut r = BitVec::constant(w + 1, 0);
+    let mut q = vec![Edge::FALSE; w];
+    for i in (0..w).rev() {
+        // r ← (r << 1) | a[i]; the old top bit is always 0 (see above).
+        let mut bits = Vec::with_capacity(w + 1);
+        bits.push(a.bits[i]);
+        bits.extend_from_slice(&r.bits[..w]);
+        let shifted = BitVec { bits };
+        let ge = uge(aig, &shifted, &b_wide);
+        let diff = sub(aig, &shifted, &b_wide);
+        r = ite(aig, ge, &diff, &shifted);
+        q[i] = ge;
+    }
+    (BitVec { bits: q }, extract(&r, w - 1, 0))
+}
+
+/// Unsigned `a / b` (SMT-LIB `bvudiv`; `a / 0 = 2^w − 1`).
+pub fn udiv(aig: &mut Aig, a: &BitVec, b: &BitVec) -> BitVec {
+    udivrem(aig, a, b).0
+}
+
+/// Unsigned `a mod b` (SMT-LIB `bvurem`; `a mod 0 = a`).
+pub fn urem(aig: &mut Aig, a: &BitVec, b: &BitVec) -> BitVec {
+    udivrem(aig, a, b).1
+}
+
+/// `|a|` read as an unsigned value: `−a` if the sign bit is set. The most
+/// negative number maps to itself, which read unsigned is `2^(w−1)`: right.
+fn abs(aig: &mut Aig, a: &BitVec) -> BitVec {
+    negate_if(aig, a.msb(), a)
+}
+
+/// `if flip then −x else x`.
+fn negate_if(aig: &mut Aig, flip: Edge, x: &BitVec) -> BitVec {
+    let negated = neg(aig, x);
+    ite(aig, flip, &negated, x)
+}
+
+/// Signed `a / b`, truncating toward zero (SMT-LIB `bvsdiv`).
+///
+/// Divide the magnitudes, then negate when the signs differ. `a / 0` is
+/// `−1` for `a ≥ 0` and `1` for `a < 0`, which this construction yields
+/// without a special case (see [`udiv`]).
+pub fn sdiv(aig: &mut Aig, a: &BitVec, b: &BitVec) -> BitVec {
+    let (abs_a, abs_b) = (abs(aig, a), abs(aig, b));
+    let q = udiv(aig, &abs_a, &abs_b);
+    let differ = aig.xor(a.msb(), b.msb());
+    negate_if(aig, differ, &q)
+}
+
+/// Signed remainder; the sign follows the dividend (SMT-LIB `bvsrem`).
+pub fn srem(aig: &mut Aig, a: &BitVec, b: &BitVec) -> BitVec {
+    let (abs_a, abs_b) = (abs(aig, a), abs(aig, b));
+    let r = urem(aig, &abs_a, &abs_b);
+    negate_if(aig, a.msb(), &r)
+}
+
+/// Bits `hi` down to `lo` of `a` (SMT-LIB `(_ extract hi lo)`), width
+/// `hi − lo + 1`.
+///
+/// # Panics
+///
+/// Panics unless `lo ≤ hi < a.width()`.
+pub fn extract(a: &BitVec, hi: usize, lo: usize) -> BitVec {
+    assert!(lo <= hi && hi < a.width(), "extract needs lo ≤ hi < width");
+    BitVec { bits: a.bits[lo..=hi].to_vec() }
+}
+
+/// `hi · 2^w_lo + lo` (SMT-LIB `concat`): `lo` supplies the low bits.
+pub fn concat(hi: &BitVec, lo: &BitVec) -> BitVec {
+    BitVec { bits: lo.bits.iter().chain(&hi.bits).copied().collect() }
+}
+
+/// `a` widened by `extra` zero bits (SMT-LIB `zero_extend`).
+pub fn zext(a: &BitVec, extra: usize) -> BitVec {
+    let mut bits = a.bits.clone();
+    bits.extend(std::iter::repeat_n(Edge::FALSE, extra));
+    BitVec { bits }
+}
+
+/// `a` widened by `extra` copies of its sign bit (SMT-LIB `sign_extend`).
+pub fn sext(a: &BitVec, extra: usize) -> BitVec {
+    let sign = a.msb();
+    let mut bits = a.bits.clone();
+    bits.extend(std::iter::repeat_n(sign, extra));
+    BitVec { bits }
 }
 
 #[cfg(test)]

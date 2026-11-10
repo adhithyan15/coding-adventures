@@ -11,9 +11,11 @@ use std::fmt;
 use std::path::Path;
 
 use crate::binding::BindingManifest;
-use crate::checker::CheckedWarrantModule;
+use crate::checker::{CheckedWarrantModule, V1_FUNCTIONS};
+use crate::fixed::{self, FixedTy};
 use crate::parser::{
-    BinaryOp, Expression, Literal, MatchArm, ModelDecl, Pattern, UnaryOp, WarrantFile, Width,
+    BinaryOp, Expression, Literal, MatchArm, ModelDecl, Pattern, UnaryOp, Version, WarrantFile,
+    Width,
 };
 
 /// Diagnostic codes for codegen phase.
@@ -106,6 +108,11 @@ pub enum EvalValue {
     Nat(u64),
     U8(u8),
     U64(u64),
+    /// One of the six fixed-width types WX-B adds (`U16 U32 I8 I16 I32 I64`),
+    /// holding its canonical in-range value.  `U8` and `U64` keep their v0
+    /// variants; [`EvalValue::as_fixed`] and [`EvalValue::from_fixed`] map
+    /// between the two spellings so every operation sees one shape.
+    Fixed(FixedTy, i128),
     Bytes(Vec<u8>),
     List(Vec<EvalValue>),
     Option(Option<Box<EvalValue>>),
@@ -132,6 +139,7 @@ impl EvalValue {
             Self::Nat(n) | Self::U64(n) => Some(*n),
             Self::U8(n) => Some(*n as u64),
             Self::Int(i) if *i >= 0 => Some(*i as u64),
+            Self::Fixed(_, v) if *v >= 0 => Some(*v as u64),
             _ => None,
         }
     }
@@ -141,7 +149,28 @@ impl EvalValue {
             Self::Int(i) => Some(*i),
             Self::Nat(n) | Self::U64(n) => Some(*n as i128),
             Self::U8(n) => Some(*n as i128),
+            Self::Fixed(_, v) => Some(*v),
             _ => None,
+        }
+    }
+
+    /// The fixed-width type and canonical value of a `U8`, `U64` or
+    /// [`EvalValue::Fixed`] value.
+    pub fn as_fixed(&self) -> Option<(FixedTy, i128)> {
+        match self {
+            Self::U8(n) => Some((FixedTy::U8, i128::from(*n))),
+            Self::U64(n) => Some((FixedTy::U64, i128::from(*n))),
+            Self::Fixed(ty, v) => Some((*ty, *v)),
+            _ => None,
+        }
+    }
+
+    /// Build the canonical value of `ty` (`v` must already be in range).
+    pub fn from_fixed(ty: FixedTy, v: i128) -> Self {
+        match ty {
+            FixedTy::U8 => Self::U8(v as u8),
+            FixedTy::U64 => Self::U64(v as u64),
+            _ => Self::Fixed(ty, v),
         }
     }
 
@@ -153,6 +182,7 @@ impl EvalValue {
             Self::Int(i) => format!("I{i}"),
             Self::Nat(n) | Self::U64(n) => format!("I{n}"),
             Self::U8(n) => format!("I{n}"),
+            Self::Fixed(_, v) => format!("I{v}"),
             Self::Bytes(bytes) => format!("X{}", hex_encode(bytes)),
             Self::List(items) => {
                 let mut out = format!("L{}", items.len());
@@ -233,6 +263,9 @@ pub struct Evaluator<'a> {
     limits: CodegenLimits,
     depth: usize,
     work: usize,
+    /// The document is a v1 document: the WX-B/WX-C built-ins are in scope and
+    /// numeric equality compares by mathematical value.
+    v1: bool,
 }
 
 impl<'a> Evaluator<'a> {
@@ -248,6 +281,7 @@ impl<'a> Evaluator<'a> {
             limits,
             depth: 0,
             work: 0,
+            v1: file.version == Version::V1,
         }
     }
 
@@ -283,6 +317,17 @@ impl<'a> Evaluator<'a> {
         self.work = 0;
     }
 
+    /// The diagnostic for an `Int` operation whose exact result leaves `i128`.
+    /// VER04j section 2.5: in a v1 document that is W0703 (incomplete
+    /// checking, never a wrapped value); v0 keeps its W0702.
+    fn overflow_code(&self) -> DiagnosticCode {
+        if self.v1 {
+            DiagnosticCode::W0703
+        } else {
+            DiagnosticCode::W0702
+        }
+    }
+
     pub fn eval(
         &mut self,
         expr: &Expression<'a>,
@@ -305,6 +350,7 @@ impl<'a> Evaluator<'a> {
                 Literal::Bool(b) => Ok(EvalValue::Bool(*b)),
                 Literal::U64(n) => Ok(EvalValue::U64(*n)),
                 Literal::U8(n) => Ok(EvalValue::U8(*n)),
+                Literal::Fixed(ty, v) => Ok(EvalValue::Fixed(*ty, *v)),
                 Literal::Int(n) => Ok(EvalValue::Int(*n as i128)),
                 Literal::Bytes(hex_str) => {
                     let bytes = hex_decode(hex_str, *span)?;
@@ -342,6 +388,11 @@ impl<'a> Evaluator<'a> {
                     if let Some(arg_exprs) = args {
                         return self.eval_call(first, widths, arg_exprs, env, *span);
                     }
+                    // The checker types a bare `None` from its context; a v1
+                    // document may therefore write `f(x) == None`.
+                    if self.v1 && first == "None" {
+                        return Ok(EvalValue::Option(None));
+                    }
                     return Err(CodegenError {
                         code: DiagnosticCode::W0702,
                         kind: CodegenErrorKind::NonGroundTerm(format!("Unbound symbol {first}")),
@@ -374,6 +425,10 @@ impl<'a> Evaluator<'a> {
                         }),
                     },
                     UnaryOp::Neg => match v {
+                        // WX-B: wrapping negation of a signed fixed-width value.
+                        EvalValue::Fixed(ty, a) if ty.signed() => {
+                            Ok(EvalValue::Fixed(ty, fixed::neg(ty, a)))
+                        }
                         EvalValue::Int(i) => {
                             let neg = i.checked_neg().ok_or_else(|| CodegenError {
                                 code: DiagnosticCode::W0702,
@@ -456,6 +511,13 @@ impl<'a> Evaluator<'a> {
         let mut evaled_args = Vec::with_capacity(args.len());
         for a in args {
             evaled_args.push(self.eval(a, env)?);
+        }
+
+        // v1 built-ins cannot be shadowed (the checker reserves their names).
+        if self.v1 && (V1_FUNCTIONS.contains(&name) || name == "div") {
+            if let Some(v) = self.eval_v1_call(name, widths, &evaled_args, span)? {
+                return Ok(v);
+            }
         }
 
         match name {
@@ -713,8 +775,8 @@ impl<'a> Evaluator<'a> {
         span: (usize, usize),
     ) -> Result<EvalValue, CodegenError> {
         match op {
-            BinaryOp::Eq => Ok(EvalValue::Bool(left == right)),
-            BinaryOp::NotEq => Ok(EvalValue::Bool(left != right)),
+            BinaryOp::Eq => Ok(EvalValue::Bool(self.values_equal(&left, &right))),
+            BinaryOp::NotEq => Ok(EvalValue::Bool(!self.values_equal(&left, &right))),
             BinaryOp::And => {
                 let a = left.as_bool().ok_or_else(|| CodegenError {
                     code: DiagnosticCode::W0702,
@@ -781,6 +843,11 @@ impl<'a> Evaluator<'a> {
                 if let (EvalValue::U8(a), EvalValue::U8(b)) = (&left, &right) {
                     return Ok(EvalValue::U8(a.wrapping_add(*b)));
                 }
+                if let (Some((ta, a)), Some((tb, b))) = (left.as_fixed(), right.as_fixed()) {
+                    if ta == tb {
+                        return Ok(EvalValue::from_fixed(ta, fixed::add(ta, a, b)));
+                    }
+                }
                 let a = left.as_i128().ok_or_else(|| CodegenError {
                     code: DiagnosticCode::W0702,
                     kind: CodegenErrorKind::EvaluationError("Add expects integers".into()),
@@ -792,7 +859,7 @@ impl<'a> Evaluator<'a> {
                     span,
                 })?;
                 let sum = a.checked_add(b).ok_or_else(|| CodegenError {
-                    code: DiagnosticCode::W0702,
+                    code: self.overflow_code(),
                     kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Add".into()),
                     span,
                 })?;
@@ -805,6 +872,11 @@ impl<'a> Evaluator<'a> {
                 if let (EvalValue::U8(a), EvalValue::U8(b)) = (&left, &right) {
                     return Ok(EvalValue::U8(a.wrapping_sub(*b)));
                 }
+                if let (Some((ta, a)), Some((tb, b))) = (left.as_fixed(), right.as_fixed()) {
+                    if ta == tb {
+                        return Ok(EvalValue::from_fixed(ta, fixed::sub(ta, a, b)));
+                    }
+                }
                 let a = left.as_i128().ok_or_else(|| CodegenError {
                     code: DiagnosticCode::W0702,
                     kind: CodegenErrorKind::EvaluationError("Sub expects integers".into()),
@@ -816,7 +888,7 @@ impl<'a> Evaluator<'a> {
                     span,
                 })?;
                 let diff = a.checked_sub(b).ok_or_else(|| CodegenError {
-                    code: DiagnosticCode::W0702,
+                    code: self.overflow_code(),
                     kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Sub".into()),
                     span,
                 })?;
@@ -829,6 +901,11 @@ impl<'a> Evaluator<'a> {
                 if let (EvalValue::U8(a), EvalValue::U8(b)) = (&left, &right) {
                     return Ok(EvalValue::U8(a.wrapping_mul(*b)));
                 }
+                if let (Some((ta, a)), Some((tb, b))) = (left.as_fixed(), right.as_fixed()) {
+                    if ta == tb {
+                        return Ok(EvalValue::from_fixed(ta, fixed::mul(ta, a, b)));
+                    }
+                }
                 let a = left.as_i128().ok_or_else(|| CodegenError {
                     code: DiagnosticCode::W0702,
                     kind: CodegenErrorKind::EvaluationError("Mul expects integers".into()),
@@ -840,12 +917,243 @@ impl<'a> Evaluator<'a> {
                     span,
                 })?;
                 let prod = a.checked_mul(b).ok_or_else(|| CodegenError {
-                    code: DiagnosticCode::W0702,
+                    code: self.overflow_code(),
                     kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Mul".into()),
                     span,
                 })?;
                 Ok(EvalValue::Int(prod))
             }
+        }
+    }
+
+    // ── WX-B / WX-C built-ins (VER04j sections 2.5 and 3.5) ────────────────
+
+    /// Evaluate a v1 built-in on ground arguments.  `Ok(None)` means `name` is
+    /// not a v1 built-in (a user model, for instance).  The checker has
+    /// already enforced every typing rule, so a shape error here is a defect
+    /// reported as W0702 rather than a panic.
+    fn eval_v1_call(
+        &mut self,
+        name: &str,
+        widths: &[Width<'a>],
+        args: &[EvalValue],
+        span: (usize, usize),
+    ) -> Result<Option<EvalValue>, CodegenError> {
+        let bad = |msg: &str| CodegenError {
+            code: DiagnosticCode::W0702,
+            kind: CodegenErrorKind::EvaluationError(format!("{name}: {msg}")),
+            span,
+        };
+        let static_ty = || -> Result<FixedTy, CodegenError> {
+            match widths.first() {
+                Some(Width::Named(n)) => {
+                    FixedTy::from_name(n).ok_or_else(|| bad("unknown static type"))
+                }
+                _ => Err(bad("missing static type")),
+            }
+        };
+        let fx = |i: usize| -> Result<(FixedTy, i128), CodegenError> {
+            args.get(i)
+                .and_then(EvalValue::as_fixed)
+                .ok_or_else(|| bad("fixed-width operand expected"))
+        };
+        let int = |i: usize| -> Result<i128, CodegenError> {
+            args.get(i)
+                .and_then(EvalValue::as_i128)
+                .ok_or_else(|| bad("integer operand expected"))
+        };
+        let count = |i: usize| -> Result<u128, CodegenError> {
+            let n = int(i)?;
+            u128::try_from(n).map_err(|_| bad("count must be a natural number"))
+        };
+        let some = |v: EvalValue| EvalValue::Option(Some(Box::new(v)));
+        let opt = |v: Option<i128>, ty: FixedTy| match v {
+            Some(x) => some(EvalValue::from_fixed(ty, x)),
+            None => EvalValue::Option(None),
+        };
+        // Shifts, rotates and popcount charge ceil(w/8) work units in total;
+        // `eval` already charged one for the call node itself.
+        if matches!(name, "shl" | "shr" | "sar" | "rotl" | "rotr" | "popcount") {
+            if let Ok((ty, _)) = fx(0) {
+                self.charge_work(ty.bytes() as usize - 1, span)?;
+            }
+        }
+        Ok(Some(match name {
+            "max_value" => EvalValue::from_fixed(static_ty()?, static_ty()?.max()),
+            "min_value" => EvalValue::from_fixed(static_ty()?, static_ty()?.min()),
+            "widen" | "wrap" => {
+                let target = static_ty()?;
+                let v = int(0)?;
+                EvalValue::from_fixed(
+                    target,
+                    if name == "wrap" {
+                        target.wrap(v)
+                    } else if target.contains(v) {
+                        v
+                    } else {
+                        return Err(bad("operand outside the target range"));
+                    },
+                )
+            }
+            "try" => {
+                let target = static_ty()?;
+                opt(target.try_from_int(int(0)?), target)
+            }
+            "to_int" => EvalValue::Int(fx(0)?.1),
+            "to_nat" => {
+                let (ty, v) = fx(0)?;
+                if ty.signed() {
+                    return Err(bad("to_nat of a signed value"));
+                }
+                EvalValue::Nat(u64::try_from(v).map_err(|_| bad("value exceeds Nat"))?)
+            }
+            "checked_add" | "checked_sub" | "checked_mul" => {
+                let (ty, a) = fx(0)?;
+                let (_, b) = fx(1)?;
+                let op = match name {
+                    "checked_add" => '+',
+                    "checked_sub" => '-',
+                    _ => '*',
+                };
+                opt(fixed::checked(op, ty, a, b), ty)
+            }
+            "div" | "rem" => match (args.first().and_then(EvalValue::as_fixed), args.get(1)) {
+                (Some((ty, a)), Some(_)) => {
+                    let (_, b) = fx(1)?;
+                    if ty.signed() {
+                        return Err(bad("signed operands"));
+                    }
+                    opt(
+                        if name == "div" {
+                            fixed::div_unsigned(a, b)
+                        } else {
+                            fixed::rem_unsigned(a, b)
+                        },
+                        ty,
+                    )
+                }
+                _ => {
+                    let (a, b) = (int(0)?, int(1)?);
+                    let r = if name == "div" {
+                        fixed::floor_div(a, b)
+                    } else {
+                        fixed::floor_mod(a, b)
+                    };
+                    match r {
+                        Some(x) => some(EvalValue::Int(x)),
+                        None => EvalValue::Option(None),
+                    }
+                }
+            },
+            "div_trunc" | "rem_trunc" => {
+                let (ty, a) = fx(0)?;
+                let (_, b) = fx(1)?;
+                opt(
+                    if name == "div_trunc" {
+                        fixed::div_trunc(ty, a, b)
+                    } else {
+                        fixed::rem_trunc(ty, a, b)
+                    },
+                    ty,
+                )
+            }
+            "unwrap_or" => match args.first() {
+                Some(EvalValue::Option(Some(v))) => (**v).clone(),
+                Some(EvalValue::Option(None)) => args.get(1).cloned().ok_or_else(|| bad("arity"))?,
+                _ => return Err(bad("Option operand expected")),
+            },
+            "bit_and" | "bit_or" | "bit_xor" => {
+                let (ty, a) = fx(0)?;
+                let (_, b) = fx(1)?;
+                EvalValue::from_fixed(
+                    ty,
+                    match name {
+                        "bit_and" => fixed::bit_and(ty, a, b),
+                        "bit_or" => fixed::bit_or(ty, a, b),
+                        _ => fixed::bit_xor(ty, a, b),
+                    },
+                )
+            }
+            "bit_not" => {
+                let (ty, a) = fx(0)?;
+                EvalValue::from_fixed(ty, fixed::bit_not(ty, a))
+            }
+            "shl" | "shr" | "sar" | "rotl" | "rotr" => {
+                let (ty, a) = fx(0)?;
+                let n = count(1)?;
+                if name == "sar" && !ty.signed() {
+                    return Err(bad("sar of an unsigned value"));
+                }
+                EvalValue::from_fixed(
+                    ty,
+                    match name {
+                        "shl" => fixed::shl(ty, a, n),
+                        "shr" => fixed::shr(ty, a, n),
+                        "sar" => fixed::sar(ty, a, n),
+                        "rotl" => fixed::rotl(ty, a, n),
+                        _ => fixed::rotr(ty, a, n),
+                    },
+                )
+            }
+            "popcount" | "clz" | "ctz" => {
+                let (ty, a) = fx(0)?;
+                let n = match name {
+                    "popcount" => fixed::popcount(ty, a),
+                    "clz" => fixed::clz(ty, a),
+                    _ => fixed::ctz(ty, a),
+                };
+                EvalValue::Nat(n as u64)
+            }
+            "bit" => {
+                let (ty, a) = fx(0)?;
+                EvalValue::Bool(fixed::bit(ty, a, count(1)?))
+            }
+            "be_bytes" | "le_bytes" => {
+                let (ty, a) = fx(0)?;
+                EvalValue::Bytes(if name == "be_bytes" {
+                    fixed::be_bytes(ty, a)
+                } else {
+                    fixed::le_bytes(ty, a)
+                })
+            }
+            "from_be" | "from_le" => {
+                let ty = static_ty()?;
+                let Some(EvalValue::Bytes(b)) = args.first() else {
+                    return Err(bad("Bytes operand expected"));
+                };
+                let v = if name == "from_be" {
+                    fixed::from_be(ty, b)
+                } else {
+                    fixed::from_le(ty, b)
+                };
+                EvalValue::from_fixed(ty, v.ok_or_else(|| bad("wrong byte width"))?)
+            }
+            _ => return Ok(None),
+        }))
+    }
+
+    /// Value equality.  In a v1 document the numeric tower is compared by
+    /// mathematical value (`popcount(x) == 8` compares a `Nat` with the `Int`
+    /// literal `8`), recursively through `Option`, `Result` and `List`; every
+    /// other pair is structural.  v0 keeps its structural `==`.
+    fn values_equal(&self, l: &EvalValue, r: &EvalValue) -> bool {
+        if !self.v1 {
+            return l == r;
+        }
+        match (l, r) {
+            (EvalValue::Int(_) | EvalValue::Nat(_), EvalValue::Int(_) | EvalValue::Nat(_)) => {
+                l.as_i128() == r.as_i128()
+            }
+            (EvalValue::Option(a), EvalValue::Option(b)) => match (a, b) {
+                (Some(x), Some(y)) => self.values_equal(x, y),
+                (None, None) => true,
+                _ => false,
+            },
+            (EvalValue::Result(Ok(x)), EvalValue::Result(Ok(y))) => self.values_equal(x, y),
+            (EvalValue::List(a), EvalValue::List(b)) => {
+                a.len() == b.len() && a.iter().zip(b).all(|(x, y)| self.values_equal(x, y))
+            }
+            _ => l == r,
         }
     }
 
@@ -1100,6 +1408,41 @@ pub fn find_operation_in_expr<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
 ) -> Option<&'a str> {
+    // The shallow search is the v0 behaviour and keeps its answer whenever it
+    // has one; only when it finds nothing does the search look inside call
+    // arguments, so a v1 claim such as `popcount(op(a)) == 3` still names its
+    // subject operation.
+    find_operation_shallow(expr, op_names).or_else(|| find_operation_in_args(expr, op_names))
+}
+
+fn find_operation_in_args<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+) -> Option<&'a str> {
+    match expr {
+        Expression::Reference {
+            args: Some(args), ..
+        } => args.iter().find_map(|a| find_operation_in_expr(a, op_names)),
+        Expression::Binary { left, right, .. } => find_operation_in_args(left, op_names)
+            .or_else(|| find_operation_in_args(right, op_names)),
+        Expression::Unary { operand, .. } => find_operation_in_args(operand, op_names),
+        Expression::Grouped { inner, .. } => find_operation_in_args(inner, op_names),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => find_operation_in_args(condition, op_names)
+            .or_else(|| find_operation_in_args(then_branch, op_names))
+            .or_else(|| find_operation_in_args(else_branch, op_names)),
+        _ => None,
+    }
+}
+
+fn find_operation_shallow<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+) -> Option<&'a str> {
     match expr {
         Expression::Reference { name, .. } => {
             if let Some(first) = name.segments.first() {
@@ -1110,23 +1453,23 @@ pub fn find_operation_in_expr<'a>(
             None
         }
         Expression::Binary { left, right, .. } => {
-            find_operation_in_expr(left, op_names)
-                .or_else(|| find_operation_in_expr(right, op_names))
+            find_operation_shallow(left, op_names)
+                .or_else(|| find_operation_shallow(right, op_names))
         }
-        Expression::Unary { operand, .. } => find_operation_in_expr(operand, op_names),
+        Expression::Unary { operand, .. } => find_operation_shallow(operand, op_names),
         Expression::Conditional {
             condition,
             then_branch,
             else_branch,
             ..
-        } => find_operation_in_expr(condition, op_names)
-            .or_else(|| find_operation_in_expr(then_branch, op_names))
-            .or_else(|| find_operation_in_expr(else_branch, op_names)),
-        Expression::Grouped { inner, .. } => find_operation_in_expr(inner, op_names),
+        } => find_operation_shallow(condition, op_names)
+            .or_else(|| find_operation_shallow(then_branch, op_names))
+            .or_else(|| find_operation_shallow(else_branch, op_names)),
+        Expression::Grouped { inner, .. } => find_operation_shallow(inner, op_names),
         Expression::Match { target, arms, .. } => {
-            find_operation_in_expr(target, op_names).or_else(|| {
+            find_operation_shallow(target, op_names).or_else(|| {
                 arms.iter()
-                    .find_map(|arm| find_operation_in_expr(&arm.body, op_names))
+                    .find_map(|arm| find_operation_shallow(&arm.body, op_names))
             })
         }
         _ => None,

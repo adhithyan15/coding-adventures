@@ -1,0 +1,1 @@
+where swift >nul 2>nul && swift test --enable-code-coverage --verbose || echo Swift not available on this runner - skipping
