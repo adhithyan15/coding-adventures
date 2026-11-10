@@ -44,6 +44,7 @@ fn options(budget: u64, arg_types: BTreeMap<String, Vec<String>>) -> EvidenceOpt
         negctl_fuzz_iterations: 10,
         exhaustive_budget: budget,
         arg_types,
+        hosts: Default::default(),
     }
 }
 
@@ -517,10 +518,14 @@ fn count_binders_sees_through_every_expression_shape_and_the_budget_overflow_is_
         tys_of(&g("f(a, n) == (if true then shl(a, n) else a)").unwrap()),
         "Ty::Fx(F::U8), Ty::NatCount"
     );
-    // Match, list and nested quantifier bodies are walked too, then refused
-    // by the translator (W0701), never silently skipped.
+    // A match body is walked too (WX-A translates it, so the count is seen
+    // inside its arm), while list and nested quantifier bodies are walked and
+    // then refused by the translator (W0701), never silently skipped.
+    assert_eq!(
+        tys_of(&g("f(a, n) == (match try<U8>(1) with None -> shl(a, n) | Some(v) -> v)").unwrap()),
+        "Ty::Fx(F::U8), Ty::NatCount"
+    );
     for body in [
-        "f(a, n) == (match try<U8>(1) with None -> shl(a, n) | Some(v) -> v)",
         "f(a, n) == [shl(a, n)]",
         "f(a, n) == (forall m: Nat. shl(a, m) == a)",
     ] {

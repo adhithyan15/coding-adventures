@@ -51,6 +51,7 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
         negctl_fuzz_iterations: b.negctl_fuzz_iterations,
         exhaustive_budget: b.exhaustive_budget,
         arg_types: b.arg_types.clone(),
+        hosts: Default::default(),
     };
     let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
         .map_err(|e| format!("{e}"))?;
