@@ -119,6 +119,113 @@ static void hostile_tests(void) {
     }
 }
 
+/* Largest code length recorded in a compressed stream's lengths table
+ * (entries are [symbol, length] pairs after the 8-byte header). */
+static unsigned max_table_length(const uint8_t *packed, size_t packed_len) {
+    size_t n = ((size_t)packed[4] << 24) | ((size_t)packed[5] << 16) |
+               ((size_t)packed[6] << 8) | packed[7];
+    size_t i;
+    unsigned max_len = 0;
+    ISO_CHECK(packed_len >= 8 + 2 * n);
+    for (i = 0; i < n; i++) {
+        unsigned l = packed[8 + 2 * i + 1];
+        if (l > max_len) {
+            max_len = l;
+        }
+    }
+    return max_len;
+}
+
+/* SEC-003c: Fibonacci frequencies (1,1,2,3,5,8,...) are the worst case for
+ * Huffman depth: a tree of depth d needs total weight >= Fibonacci(d + 2). With
+ * 34 symbols the total is ~14.9 MB and the deepest code is 33 bits, which
+ * overflowed the old 32-bit code values. It must round-trip, and every emitted
+ * length must stay within the decoder's 1..56 limit. */
+static void fibonacci_depth_test(void) {
+    enum { SYMS = 34 };
+    size_t count[SYMS];
+    size_t total = 0, pos = 0, s;
+    uint8_t *input, *packed = NULL, *restored = NULL;
+    size_t packed_len = 0, restored_len = 0;
+    unsigned max_len;
+
+    count[0] = 1;
+    count[1] = 1;
+    for (s = 2; s < SYMS; s++) {
+        count[s] = count[s - 1] + count[s - 2];
+    }
+    for (s = 0; s < SYMS; s++) {
+        total += count[s];
+    }
+    input = (uint8_t *)malloc(total);
+    ISO_CHECK(input != NULL);
+    if (input == NULL) {
+        return;
+    }
+    /* Interleave symbols so the input is not trivially run-length ordered. */
+    while (pos < total) {
+        for (s = 0; s < SYMS; s++) {
+            if (count[s] > 0) {
+                input[pos++] = (uint8_t)s;
+                count[s]--;
+            }
+        }
+    }
+    ISO_CHECK(huffman_compress(input, total, &packed, &packed_len));
+    if (packed != NULL) {
+        max_len = max_table_length(packed, packed_len);
+        ISO_CHECK(max_len > 32); /* really exercises the >32-bit path */
+        ISO_CHECK(max_len <= 56);
+        ISO_CHECK(huffman_decompress(packed, packed_len, &restored, &restored_len));
+        ISO_CHECK_EQ_UINT(restored_len, total);
+        if (restored_len == total) {
+            ISO_CHECK_MEM_EQ(restored, input, total);
+        }
+    }
+    free(packed);
+    free(restored);
+    free(input);
+}
+
+/* All 256 symbols with equal counts: a flat tree, every code exactly 8 bits. */
+static void all_symbols_test(void) {
+    uint8_t buf[256 * 3];
+    uint8_t *packed = NULL;
+    size_t packed_len = 0, i;
+    for (i = 0; i < sizeof buf; i++) {
+        buf[i] = (uint8_t)(i & 0xff);
+    }
+    round_trip(buf, sizeof buf);
+    ISO_CHECK(huffman_compress(buf, sizeof buf, &packed, &packed_len));
+    if (packed != NULL) {
+        ISO_CHECK_EQ_UINT(max_table_length(packed, packed_len), 8);
+    }
+    free(packed);
+}
+
+/* Hand-built stream whose table uses the longest legal code (56 bits): the
+ * decoder must accept it and decode one symbol, and reject 57. */
+static void long_code_decode_test(void) {
+    static uint8_t buf[8 + 2 * 57 + 16];
+    uint8_t pairs[2 * 57];
+    uint8_t *o = NULL;
+    size_t ol = 0, n, i;
+    /* A degenerate "comb" tree: lengths 1,2,...,56,56 (57 symbols). */
+    for (i = 0; i < 57; i++) {
+        pairs[2 * i] = (uint8_t)i;
+        pairs[2 * i + 1] = (uint8_t)(i < 56 ? i + 1 : 56);
+    }
+    n = hostile(buf, pairs, 57, 1, 8, 0x00);
+    /* All-zero payload decodes the symbol with the code 0 (length 1). */
+    ISO_CHECK(huffman_decompress(buf, n, &o, &ol));
+    ISO_CHECK_EQ_UINT(ol, 1);
+    free(o);
+    pairs[2 * 56 + 1] = 57;
+    pairs[2 * 55 + 1] = 56;
+    n = hostile(buf, pairs, 57, 1, 8, 0x00);
+    expect_rejected(buf, n);
+}
+
 int main(void) {
     /* Empty input → 8-byte header, decodes to empty. */
     {
@@ -178,6 +285,9 @@ int main(void) {
     }
 
     hostile_tests();
+    all_symbols_test();
+    long_code_decode_test();
+    fibonacci_depth_test();
 
     /* Large input round-trips in linear time. */
     {

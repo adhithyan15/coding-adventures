@@ -1,5 +1,22 @@
 # Changelog — `constraint-vm`
 
+## Unreleased — 2026-11-10
+
+Test-only follow-up to `constraint-engine` 0.5.0, which lowers the
+division family, `bvsmod`, `concat`, `extract` and the extensions. No VM
+code changed.
+
+### Changed
+
+- `tests/qfbv.rs`: the "unsupported input is refused" case used `bvudiv`,
+  which is now supported; it uses `bvnand` (still outside the fragment).
+
+### Added
+
+- `division_family_follows_smt_lib_through_the_reader`: division by zero,
+  the sign rules of `bvsmod` versus `bvsrem`, and `MIN sdiv -1`, through
+  the SMT-LIB reader, the VM and the engine (UNSAT answers certified).
+
 ## Unreleased — 2026-11-02
 
 QF_BV (VER10) now runs through the VM: `constraint-engine` 0.3.0 adds a
