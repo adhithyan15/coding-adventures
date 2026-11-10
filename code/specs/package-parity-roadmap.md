@@ -20937,3 +20937,12 @@ build-tool suite, `cargo check`, Clippy with warnings denied, Rust formatting,
 strict state parsing, and diff hygiene pass after integration. Treat the
 result as a fresh exact-head review and hosted-CI rollup; guarded auto-merge
 remains disabled.
+
+Before that reconciled head could be published, protected main advanced again
+by two Warrant and Mermaid commits to
+`0470e0947e6f46ca0751b0dbe3b0d6de929d151e`. Both commits are exact-path-
+disjoint from the parity tranche and touch no workflow. Merge that current
+main normally and conflict-free as
+`ef9184d288890108164f6e2c5c5280fdc78063d0`. The same complete local
+validation remains green. This final reconciliation again requires fresh
+exact-head review and hosted CI before guarded auto-merge.
