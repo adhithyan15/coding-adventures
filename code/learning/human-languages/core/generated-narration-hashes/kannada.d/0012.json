@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 12,
-  "sourceHash": "fnv1a64:b26fa3c152253474",
+  "sourceHash": "fnv1a64:28f4cbabc30ce9e1",
   "lessonIds": [
     "KA-C12-kutumba",
     "KA-C12-third-person",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "kannada/narration/ch12.txt",
   "json": "kannada/narration/ch12.json",
-  "textHash": "fnv1a64:d3074e4774c2ecf4",
-  "jsonHash": "fnv1a64:f2ced62db854af1a",
+  "textHash": "fnv1a64:a667d53267ae6a96",
+  "jsonHash": "fnv1a64:23eebb0f6d860bc3",
   "findings": []
 }

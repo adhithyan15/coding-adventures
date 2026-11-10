@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01]
+  knowledge: [KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01]
 introduces:
   knowledge: [KA-GRAMMAR-C12-PLURAL-GALU-07]
 practises:
-  knowledge: [KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01]
+  knowledge: [KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,16 +50,17 @@ Do not force it onto the family words: human plurals have their own patterns,
 and *avaru* already gives you “they” for people.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C02-HESARU-01, KA-LEX-C05-MAADU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: “names” — **ಹೆಸರುಗಳು**]
 - [YOU SAY: “kinds of work” — **ಕೆಲಸಗಳು**]
 - [YOU SAY: “Her mother works” — *avaḷa amma kelasa māḍuttāḷe*]
+- [YOU SAY: “their older sister” — *avara akka*]
 - [YOU IDENTIFY: which pronoun means people in the plural? — *avaru*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C12-PLURAL-GALU-07, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
 
-[PAUSE 3s] Make “name” and “work” plural. Then say “Her mother works.”
-Which pronoun gives you “they” for people?
+[PAUSE 3s] Make “name” and “work” plural. Then say “Her mother works” and
+“their older sister.” Which pronoun gives you “they” for people?

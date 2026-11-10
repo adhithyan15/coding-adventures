@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { loadEverything, loadTrackLessons, loadExamInventory } from "../../src/loader.js";
+import {
+  loadEverything,
+  loadExamInventory,
+  loadTrackChapters,
+  loadTrackLessons,
+} from "../../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -167,6 +172,28 @@ describe("the committed Kannada A1 inventory", () => {
     );
     expect(pluralLesson?.body).toContain("ಕೆಲಸ");
     expect(pluralLesson?.body).not.toContain("ಬಣ್ಣ");
+
+    // The chapter payoff is a second public claim about the last lesson. Keep
+    // it exact too: stale colour atoms survived the first prose repair because
+    // only the lesson frontmatter and body were pinned.
+    const chapter12 = loadTrackChapters()
+      .find((track) => track.language === "kannada")
+      ?.chapters.find((chapter) => chapter.chapter === 12);
+    expect(chapter12?.payoff?.lesson).toBe("KA-C12-plural-galu");
+    expect(chapter12?.payoff?.assesses).toEqual([
+      "KA-ETYMON-C12-KUTUMBA-01",
+      "KA-ETYMON-C12-KUTUMBA-02",
+      "KA-GRAMMAR-C12-THIRD-PERSON-03",
+      "KA-GRAMMAR-C12-HUMAN-NONHUMAN-04",
+      "KA-GRAMMAR-C12-PRESENT-THIRD-05",
+      "KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06",
+      "KA-GRAMMAR-C12-PLURAL-GALU-07",
+      "KA-LEX-C02-HESARU-01",
+      "KA-LEX-C05-MAADU-01",
+    ]);
+    expect(new Set(chapter12?.payoff?.assesses)).toEqual(
+      new Set(pluralLesson?.frontmatter["practises.knowledge"]),
+    );
 
     const everything = loadEverything();
     const throughA1 = new Set(

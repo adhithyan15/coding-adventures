@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b26fa3c152253474",
+  "sourceHash": "fnv1a64:28f4cbabc30ce9e1",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -901,7 +901,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18ac081968dabbcb",
+      "sourceHash": "fnv1a64:06ac3da001ed6233",
       "notice": null,
       "blocks": [
         {
@@ -980,6 +980,15 @@
             },
             {
               "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“their older sister” — avara akka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “their older sister” — *avara akka*]"
+            },
+            {
+              "kind": "prompt",
               "action": "IDENTIFY",
               "instruction": "which pronoun means people in the plural? — avaru",
               "spoken": true,
@@ -1002,7 +1011,7 @@
             },
             {
               "kind": "speech",
-              "text": "Make “name” and “work” plural. Then say “Her mother works.” Which pronoun gives you “they” for people?"
+              "text": "Make “name” and “work” plural. Then say “Her mother works” and “their older sister.” Which pronoun gives you “they” for people?"
             }
           ]
         }
