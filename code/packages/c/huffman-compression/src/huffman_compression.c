@@ -191,11 +191,31 @@ static int cmp_sym_len(const void *pa, const void *pb) {
     return a->symbol < b->symbol ? -1 : (a->symbol > b->symbol ? 1 : 0);
 }
 
+/* Longest code length either side of the wire accepts.
+ *
+ * WHY 56 (and why the encoder never needs length-limiting):
+ *   A Huffman tree of depth d needs a total weight of at least Fibonacci(d + 2)
+ *   (the worst case is the "Fibonacci" frequency distribution 1,1,2,3,5,8,...).
+ *   The CMP04 header stores the input length in a u32, so the total weight is
+ *   at most 2^32 - 1, and Fibonacci(48) = 4,807,526,976 > 2^32 caps the depth at
+ *   46. 46 <= 56, so with `len <= UINT32_MAX` every code the encoder builds fits
+ *   in the 64-bit code accumulator with 8+ bits to spare, and the decoder's
+ *   1..56 limit can never reject encoder output. (A depth of 33..46 DOES occur,
+ *   for ~15 MB of Fibonacci-distributed bytes, and overflowed the previous
+ *   32-bit code values.) No package-merge or zlib-style length cap is needed,
+ *   and because nothing is capped the canonical codes (hence the output bytes)
+ *   are unchanged for every input the old encoder handled correctly. */
+#define HUFFMAN_MAX_CODE_LEN 56u
+
 /* Assign canonical codes (DEFLATE-style) to the sorted table. codes[i] is the
- * code for table[i], right-justified in the low `table[i].length` bits. */
-static void canonical_codes(const sym_len *table, size_t n, uint32_t *codes) {
+ * code for table[i], right-justified in the low `table[i].length` bits.
+ *
+ * Codes are 64-bit: a code longer than 32 bits does not fit in a uint32_t, and
+ * shifting a 32-bit value by >= 32 is undefined behaviour. Callers guarantee
+ * every length is in 1..HUFFMAN_MAX_CODE_LEN, so the code stays below 2^56. */
+static void canonical_codes(const sym_len *table, size_t n, uint64_t *codes) {
     size_t i;
-    uint32_t code = 0;
+    uint64_t code = 0;
     if (n == 0) {
         return;
     }
@@ -211,14 +231,23 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     uint32_t freq[256];
     uint8_t code_len[256];
     sym_len table[256];
-    uint32_t codes[256];
+    uint64_t codes[256];
     size_t n = 0;
     bytebuf bits; /* the LSB-first packed bit stream */
     unsigned bit_acc = 0, bit_cnt = 0;
     size_t i;
     /* Per-symbol code + length, indexed by byte value for fast encode lookup. */
-    uint32_t sym_code[256];
+    uint64_t sym_code[256];
     uint8_t sym_len_by_byte[256];
+
+#if SIZE_MAX > 0xFFFFFFFFu
+    /* The header's length field and the frequency counters are 32-bit. Refuse
+     * larger inputs instead of silently truncating (which would also void the
+     * depth bound documented at HUFFMAN_MAX_CODE_LEN). */
+    if (len > 0xFFFFFFFFu) {
+        return 0;
+    }
+#endif
 
     if (len == 0) {
         /* Empty input → an 8-byte header of zeros. */
@@ -238,6 +267,11 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     compute_code_lengths(freq, code_len);
 
     for (i = 0; i < 256; i++) {
+        /* Defence in depth: unreachable for len <= UINT32_MAX (depth <= 46),
+         * but never emit a table the decoder would reject. */
+        if (code_len[i] > HUFFMAN_MAX_CODE_LEN) {
+            return 0;
+        }
         if (code_len[i] > 0) {
             table[n].symbol = (uint16_t)i;
             table[n].length = code_len[i];
@@ -259,10 +293,10 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     bits.failed = 0;
     for (i = 0; i < len; i++) {
         uint8_t clen = sym_len_by_byte[data[i]];
-        uint32_t ccode = sym_code[data[i]];
+        uint64_t ccode = sym_code[data[i]];
         int j;
         for (j = clen - 1; j >= 0; j--) {
-            unsigned bit = (ccode >> j) & 1u;
+            unsigned bit = (unsigned)((ccode >> j) & 1u);
             bit_acc |= bit << bit_cnt;
             bit_cnt++;
             if (bit_cnt == 8) {
@@ -325,144 +359,119 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
 
 int huffman_decompress(const uint8_t *data, size_t len, uint8_t **out,
                        size_t *out_len) {
-    uint64_t original_length, symbol_count;
-    size_t table_end, payload_bytes, i;
-    uint8_t syms[HC_MAX_SYMBOLS];
-    unsigned char seen[256];
-    /* Canonical decode tables, indexed by code length. Codes of one length are
-     * consecutive integers starting at first_code[L]; the symbol for code c is
-     * syms[base[L] + (c - first_code[L])]. This makes each probe O(1) instead of
-     * scanning all symbols per bit. */
-    uint64_t first_code[HC_MAX_CODE_LEN + 1u];
-    size_t count[HC_MAX_CODE_LEN + 1u];
-    size_t base[HC_MAX_CODE_LEN + 1u];
+    size_t original_length, symbol_count, table_end, i, payload_bytes;
+    uint8_t syms[256];
+    uint8_t seen[256];
+    uint64_t first_code[HUFFMAN_MAX_CODE_LEN + 1];
+    size_t counts[HUFFMAN_MAX_CODE_LEN + 1];
+    size_t base[HUFFMAN_MAX_CODE_LEN + 1];
     uint64_t code = 0;
     unsigned prev_len = 0, max_len = 0;
-    uint8_t *output;
-    size_t produced = 0;
+    bytebuf output;
+    size_t bit_pos = 0, total_bits;
     uint64_t cur = 0;
     unsigned cur_len = 0;
-    size_t bit_pos = 0;
-    size_t total_bits;
+    size_t produced = 0;
+    int ok = 1;
 
     if (len < 8) {
         return 0;
     }
-    original_length = ((uint64_t)data[0] << 24) | ((uint64_t)data[1] << 16) |
-                      ((uint64_t)data[2] << 8) | (uint64_t)data[3];
-    symbol_count = ((uint64_t)data[4] << 24) | ((uint64_t)data[5] << 16) |
-                   ((uint64_t)data[6] << 8) | (uint64_t)data[7];
+    original_length = ((size_t)data[0] << 24) | ((size_t)data[1] << 16) |
+                      ((size_t)data[2] << 8) | data[3];
+    symbol_count = ((size_t)data[4] << 24) | ((size_t)data[5] << 16) |
+                   ((size_t)data[6] << 8) | data[7];
     if (original_length == 0) {
         *out = NULL;
         *out_len = 0;
         return 1; /* empty */
     }
-
-    /* SECURITY: the header is attacker-controlled. Symbols are single bytes, so
-     * a table can name at most 256 of them; checking first also bounds the
-     * table-size arithmetic below. */
-    if (symbol_count == 0 || symbol_count > HC_MAX_SYMBOLS) {
+    /* SECURITY: the header is attacker-controlled. */
+    if (symbol_count == 0 || symbol_count > 256) {
         return 0;
     }
-    table_end = 8u + 2u * (size_t)symbol_count;
+    table_end = 8 + 2 * symbol_count;
     if (len < table_end) {
         return 0;
     }
 
+    /* Rebuild canonical codes (DEFLATE style) while validating the hostile
+     * table: no repeated symbol, length in 1..56, sorted by length, and not
+     * over-subscribed (the running code must still fit in `length` bits).
+     * Codes of one length are consecutive integers from first_code[L]; the
+     * symbol for code c is syms[base[L] + (c - first_code[L])], so each probe is
+     * O(1) rather than a scan of the whole table per bit. */
     memset(seen, 0, sizeof seen);
     memset(first_code, 0, sizeof first_code);
-    memset(count, 0, sizeof count);
+    memset(counts, 0, sizeof counts);
     memset(base, 0, sizeof base);
-
-    /* Rebuild canonical codes (DEFLATE style):
-     *     code = 0
-     *     for each (symbol, length) in sorted order:
-     *         code <<= (length - previous length)
-     *         assign `code`; code += 1
-     *
-     * SECURITY: the table is hostile input, so each entry is checked before it
-     * is used:
-     *   - a repeated symbol makes the table ambiguous;
-     *   - a length of 0 matches nothing, and a length above HC_MAX_CODE_LEN
-     *     would overflow the 64-bit shift;
-     *   - a table not sorted by length breaks the "codes of a length are
-     *     consecutive" property (the encoder always sorts);
-     *   - an over-subscribed table (Kraft sum > 1) is detected by requiring the
-     *     running code to still fit in `length` bits (code >> length == 0). */
-    for (i = 0; i < (size_t)symbol_count; i++) {
-        unsigned length = data[8 + 2 * i + 1];
+    for (i = 0; i < symbol_count; i++) {
         uint8_t symbol = data[8 + 2 * i];
-        if (seen[symbol]) {
+        unsigned length = data[8 + 2 * i + 1];
+        if (seen[symbol] || length == 0 || length > HUFFMAN_MAX_CODE_LEN ||
+            (i > 0 && length < prev_len)) {
             return 0;
         }
         seen[symbol] = 1;
-        if (length == 0 || length > HC_MAX_CODE_LEN) {
-            return 0;
-        }
-        if (i > 0 && length < prev_len) {
-            return 0;
-        }
         if (i > 0) {
             code <<= (length - prev_len);
         }
         if ((code >> length) != 0) {
-            return 0;
+            return 0; /* over-subscribed */
         }
-        if (count[length] == 0) {
+        if (counts[length] == 0) {
             first_code[length] = code;
             base[length] = i;
         }
-        count[length]++;
+        counts[length]++;
         syms[i] = symbol;
         code++;
         prev_len = length;
         max_len = length;
     }
 
-    /* SECURITY: every code is at least one bit, so N payload bytes hold at most
-     * 8*N symbols. Reject a larger declared length BEFORE allocating anything
-     * sized from it. Written as ceil(original/8) > bytes to avoid overflow. */
+    /* SECURITY: every code is >= 1 bit, so N payload bytes hold at most 8N
+     * symbols. Reject a larger declared length BEFORE allocating from it. */
     payload_bytes = len - table_end;
-    if ((original_length + 7u) / 8u > (uint64_t)payload_bytes) {
-        return 0;
-    }
-    if (original_length > (uint64_t)SIZE_MAX) {
-        return 0;
-    }
-    output = (uint8_t *)malloc((size_t)original_length);
-    if (output == NULL) {
+    if (original_length / 8 + (original_length % 8 != 0) > payload_bytes) {
         return 0;
     }
 
-    /* Read the LSB-first bit stream, accumulating a code MSB-first. Probe the
-     * canonical tables for the current length; if the accumulated length reaches
-     * the longest code without a match, no later bit can ever match (an
-     * incomplete table fed unmatched bits), so fail immediately. */
-    total_bits = payload_bytes * 8u;
-    while (produced < (size_t)original_length) {
-        size_t byte_index;
+    output.data = NULL;
+    output.len = 0;
+    output.cap = 0;
+    output.failed = 0;
+
+    /* Read the LSB-first bit stream, accumulating a code MSB-first. Reaching
+     * the longest code length without a match means no later bit can match. */
+    total_bits = payload_bytes * 8;
+    while (produced < original_length) {
         unsigned bit;
         if (bit_pos >= total_bits) {
-            free(output);
-            return 0; /* bit stream exhausted */
+            ok = 0;
+            break;
         }
-        byte_index = table_end + bit_pos / 8u;
-        bit = ((unsigned)data[byte_index] >> (bit_pos % 8u)) & 1u;
+        bit = (data[table_end + bit_pos / 8] >> (bit_pos % 8)) & 1u;
         bit_pos++;
-        cur = (cur << 1) | (uint64_t)bit;
+        cur = (cur << 1) | bit;
         cur_len++;
-        if (count[cur_len] != 0 && cur >= first_code[cur_len] &&
-            cur - first_code[cur_len] < (uint64_t)count[cur_len]) {
-            output[produced++] =
-                syms[base[cur_len] + (size_t)(cur - first_code[cur_len])];
+        if (counts[cur_len] != 0 && cur >= first_code[cur_len] &&
+            cur - first_code[cur_len] < counts[cur_len]) {
+            bb_push(&output,
+                    syms[base[cur_len] + (size_t)(cur - first_code[cur_len])]);
+            produced++;
             cur = 0;
             cur_len = 0;
         } else if (cur_len >= max_len) {
-            free(output);
-            return 0; /* no valid code — malformed */
+            ok = 0; /* no valid code: malformed */
+            break;
         }
     }
-    *out = output;
-    *out_len = produced;
+    if (!ok || output.failed || produced != original_length) {
+        free(output.data);
+        return 0;
+    }
+    *out = output.data;
+    *out_len = output.len;
     return 1;
 }
