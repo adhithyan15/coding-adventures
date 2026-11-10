@@ -2,6 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.5] - 2026-11-09
+
+### Fixed — emit `function*` without trailing space (#15862)
+
+- In `src/lib.rs`, `emit_function_declaration` and `emit_function_expression` (when named) now omit the space after `function*` (e.g. `function*g(){}` instead of `function* g(){}`), matching Closure Compiler upstream output.
+- Added tests in `tests/upstream/code_printer_function_test.rs` and `src/lib.rs`.
+
 ## [0.63.4] - 2026-11-09
 
 ### Fixed — emit concise object method shorthand and getters/setters (#17941)
