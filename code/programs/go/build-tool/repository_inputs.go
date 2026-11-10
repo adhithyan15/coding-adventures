@@ -219,7 +219,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name:     "rust/warrant-grammar",
 		language: "rust",
-		inputs:   "canonical Warrant grammars, syntax corpus and transport gate",
+		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
 	},
 }
@@ -230,6 +230,9 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 func isWarrantGrammarInput(changed string) bool {
 	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
 		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		// WX-E: the pinned vector tables the package's tests load (the pin in
+		// the .warrant document fails closed when these bytes change).
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-vectors-synthetic-v1/") ||
 		changed == "code/scripts/warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tfv.py" ||

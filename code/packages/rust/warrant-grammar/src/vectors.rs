@@ -421,6 +421,9 @@ pub fn load_table(
         };
         err(code, format!("table {}: malformed TFV, {e}", decl.name), span)
     })?;
+    // `record_lines` counted exactly the lines `parse_file` turns into records,
+    // so this cannot differ; it is checked rather than assumed because a panic
+    // (or a silently wrong count) in the tool would be worse than dead code.
     if rows.len() as u64 != decl.rows {
         return Err(integrity(
             format!("table {}: the file has {} records, the document pins {}", decl.name, rows.len(), decl.rows),

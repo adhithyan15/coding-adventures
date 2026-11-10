@@ -1476,12 +1476,13 @@ The numbering continues from 14.1.
     `[A-Za-z0-9_./-]`, at most 256 bytes, no leading `/`, no `.`/`..`/empty segment)
     are W0708 from the parser.  The test plan's "uppercase" negative is read as an
     uppercase *hex digit in the `sha256` literal* (the path alphabet explicitly
-    allows `A-Z`); a `sha256` literal that is not exactly 32 bytes is W0708, a
-    non-decimal or suffixed `rows` is W0001.
+    allows `A-Z`); a `sha256` literal that is not exactly 32 bytes is W0708, an
+    unterminated one (`b"01`) and a non-decimal or suffixed `rows` are W0001.
 39. **Namespaces and checking.** A table name shares the test-name namespace
     (W0201 on a clash).  `holds` is typed as a Bool in the claim environment (columns
     bound to their declared types, operations allowed); a `holds` that calls no
-    operation is W0601 and a column it never mentions is W0710.  `rows` above 100,000,
+    operation is W0601 (as is `rows 0`: nothing to check) and a column it never
+    mentions is W0710.  `rows` above 100,000,
     and above 250,000 summed over a document, are W0602 from the checker; a duplicate
     column is W0201.  A column type with a symbolic width (`Bytes<n>`) is W0710.
 40. **Where fixtures live.** `code/specs/fixtures/` is the fixtures root (a tool
@@ -1500,8 +1501,13 @@ The numbering continues from 14.1.
     duplicate-id check is now linear) and every row checked: exactly `rows` records,
     exactly the declared columns (no missing, no extra), each value decoded by its
     column type (integers range-checked, `Bytes<N>` length-checked, constructor
-    names for variants, `Result` in the VER04i `M` form).  Nothing is ever fetched
-    from the network.
+    names for variants, `Result` in the VER04i `M` form).  A row-level mismatch is
+    W0710; a map with more than one entry has no Warrant type and is W0709 (it is
+    refused from a token scan *before* parsing, because the TFV parser's pairwise
+    key check is quadratic in the entries of one map); nesting beyond 64 is W0709;
+    the row budget (100,000 per table, 250,000 per document, summed with
+    saturating arithmetic) is checked before any file is read and is W0602.
+    Nothing is ever fetched from the network.
 42. **Materialisation.** `evidence_tables` returns, for each table, the verified bytes
     and digest; the `gen_evidence` driver writes `<dir of output>/tables/<name>.tfv`
     byte-identically and `--check` compares it.  The generated harness embeds the
@@ -1520,5 +1526,32 @@ The numbering continues from 14.1.
     discriminating": the subject cannot be told apart from a constant function, and no
     fault could fail a table that a constant function passes.  Other tables rely on the
     runtime control.
-45. **Not implemented.** Seeding the fuzz corpus from table rows (5.3 item 5, optional)
-    and the lane registry of VER04i.
+45. **Not implemented.** Seeding the fuzz corpus from table rows (5.3 item 5, optional),
+    the lane registry of VER04i, and every lane but Rust (the loader is language
+    independent data; the runner is the Rust prelude).
+46. **Faults for byte results.** VER04h section 6 has no fault for a digest-like
+    operation, so a pinned digest table would have nothing to fail.  Two composite
+    faults are added: `flip-result-bit` (the lowest bit of the first byte of a
+    `Bytes`/`Bytes<N>` result, inside an `Ok` or `Some`; an empty result gains a
+    byte) and `drop-last-result-byte`.  They apply to the operation they are bound
+    to only and are checked against the result type at generation (W0701).  A
+    `Bytes<N>` result (never a parameter) is now accepted by the composite adapter,
+    with the same host mapping as `Bytes`.
+47. **Rows are cases, a table is one test.**  The suite registers one test per table,
+    `warrant/<module>/table/<name>`; each row is a case named `vectors/<name>/<row id>`
+    in the failure message and in `failed_ids`.  A row whose `holds` panics, or
+    whose value the host integer cannot hold, fails (it is not skipped as
+    unreachable-by-type: a pinned datum the subject cannot take is a finding).  A
+    copy that no longer matches its pin, or whose rows no longer decode, fails the
+    whole table with `corpus-malformed`.
+48. **Build and capability plumbing.**  `coding_adventures_test_bootstrap` and
+    `coding_adventures_sha256` become regular dependencies of the crate;
+    `required_capabilities.json` declares `fs:read` (the crate already read a file in
+    `codegen::verify_regeneration` without declaring it, so the capability analyzer
+    failed on the previous slice too; the declaration needs the usual signed
+    approval); the Go build tool maps `code/specs/fixtures/warrant-vectors-synthetic-v1/`
+    to `rust/warrant-grammar`.
+49. **Pilot.** `tests/fixtures/wxv.warrant` pins two synthetic tables (SHA-256 of
+    made-up messages, `Result<U8, E>` answers) against an in-test subject; the
+    differential test recomputes every digest with Python `hashlib` over the same
+    rows and compares it with the pinned data and with the subject.

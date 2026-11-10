@@ -24,7 +24,12 @@ use coding_adventures_warrant_grammar::evidence::{
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
-use coding_adventures_warrant_grammar::vectors::FIXTURES_ROOT;
+use coding_adventures_warrant_grammar::vectors::{read_fixture, FIXTURES_ROOT, MAX_TABLE_FILE_BYTES};
+
+/// Every file this driver reads is read through the loader's capped, symlink-safe
+/// reader: at most 64 MiB (a generated harness is a few MiB), no symlinked
+/// component, a regular file.
+const MAX_DRIVER_READ: u64 = 4 * MAX_TABLE_FILE_BYTES;
 
 fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<(), Box<dyn std::error::Error>> {
     // The package name is joined into filesystem paths: refuse anything but a
@@ -33,13 +38,15 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
         return Err(format!("package `{package}` must match [A-Za-z0-9][A-Za-z0-9_-]*").into());
     }
     let bindings_path = root.join("code/packages/rust").join(package).join("evidence.bindings");
-    let b = parse_evidence_bindings(&fs::read_to_string(&bindings_path)?)
+    let bindings_rel = format!("code/packages/rust/{package}/evidence.bindings");
+    let bindings_text = read_fixture(root, &bindings_rel, MAX_DRIVER_READ)?;
+    let b = parse_evidence_bindings(std::str::from_utf8(&bindings_text)?)
         .map_err(|e| format!("{}: {e}", bindings_path.display()))?;
     // spec and output are pinned to this package: the file cannot redirect the
     // generator to another document or make it write elsewhere.
     b.validate_paths(package)
         .map_err(|e| format!("{}: {e}", bindings_path.display()))?;
-    let spec = fs::read(root.join(&b.spec))?;
+    let spec = read_fixture(root, &b.spec, MAX_DRIVER_READ)?;
     let doc = SourceDocument::admit(&spec, SourceLimits::default()).map_err(|e| format!("{e:?}"))?;
     let layout = capture_layout(&doc, LayoutLimits::default()).map_err(|e| format!("{e:?}"))?;
     let file = parse_document(&layout, &doc, ParserLimits::default()).map_err(|e| format!("{e:?}"))?;
@@ -71,7 +78,7 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
     for (rel, bytes) in set.files() {
         let copy = package_dir.join(&rel);
         if check {
-            if fs::read(&copy).ok().as_deref() != Some(bytes) {
+            if read_fixture(&package_dir, &rel, MAX_DRIVER_READ).ok().as_deref() != Some(bytes) {
                 return Err(format!(
                     "generated table copy drift: {rel} of {package} is stale; run gen_evidence {package}"
                 )
@@ -92,7 +99,7 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
     }
     let target = root.join(&b.output);
     if check {
-        if fs::read(&target)? != text.as_bytes() {
+        if read_fixture(root, &b.output, MAX_DRIVER_READ)? != text.as_bytes() {
             return Err(format!(
                 "generated evidence drift: {} is stale; run gen_evidence {package}",
                 b.output
