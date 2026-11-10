@@ -47,7 +47,7 @@ import {
 import type { TrackGentleRamp } from "./gentle-ramp.js";
 import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
-import { buildCurriculumGapReport } from "./report.js";
+import { buildCurriculumGapReport, type CurriculumGapReportInput } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import { lessonCacheFor, type LessonCache } from "./lesson-cache.js";
 import {
@@ -69,7 +69,10 @@ import {
   attachCurriculumLessonMemberships,
   type AuthoredLanguageCurriculum,
 } from "./curriculum-membership.js";
-import { readCurriculumMembershipOwners } from "./curriculum-membership-shards.js";
+import {
+  readCurriculumMembershipOwners,
+  readCurriculumMembershipOwnersBatchAsync,
+} from "./curriculum-membership-shards.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import { mergeScriptInventoryShards } from "./script-shards.js";
 import {
@@ -418,13 +421,7 @@ export function loadAuthoredLanguageCurricula(
   root = defaultCurriculumRoot(),
 ): AuthoredLanguageCurriculum[] {
   const out: AuthoredLanguageCurriculum[] = [];
-  for (const track of sortedEntries(root)) {
-    if (!track.isDirectory()) continue;
-    const path = join(root, track.name, "curriculum.json");
-    // `|| isSharded`, for the same load-bearing reason as `loadTrackChapters`:
-    // a migrated track's monolith may not be here, and `continue` means "this
-    // track has no authored curriculum", which would drop it from every gate.
-    if (!existsSync(path) && !isSharded(path)) continue;
+  for (const { path } of authoredCurriculumSources(root)) {
     out.push(
       readMaybeSharded<AuthoredLanguageCurriculum>(
         path,
@@ -435,6 +432,18 @@ export function loadAuthoredLanguageCurricula(
   return out.sort((left, right) => left.language.localeCompare(right.language));
 }
 
+function authoredCurriculumSources(root: string): Array<{ name: string; path: string }> {
+  const out: Array<{ name: string; path: string }> = [];
+  for (const track of sortedEntries(root)) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "curriculum.json");
+    // A migrated track may have only curriculum.d; never silently drop it.
+    if (!existsSync(path) && !isSharded(path)) continue;
+    out.push({ name: track.name, path });
+  }
+  return out;
+}
+
 /** Read each track's executable shared-spine map with derived lesson arrays. */
 export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
   return loadAuthoredLanguageCurricula(root).map((authored) =>
@@ -443,6 +452,35 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
       readCurriculumMembershipOwners(root, authored.language).owners,
     ),
   );
+}
+
+/** Read every canonical membership owner through bounded pinned directory handles. */
+export async function loadLanguageCurriculaAsync(
+  root = defaultCurriculumRoot(),
+): Promise<LanguageCurriculum[]> {
+  const sources = authoredCurriculumSources(root);
+  if (sources.length === 0) return [];
+  // Pin/read owner directories while authored shards are being parsed. These
+  // independent source sets are validated against each other before assembly.
+  const ownersPromise = readCurriculumMembershipOwnersBatchAsync(
+    root, sources.map((source) => source.name),
+  );
+  let authored: AuthoredLanguageCurriculum[];
+  try {
+    authored = loadAuthoredLanguageCurricula(root);
+  } catch (cause) {
+    await ownersPromise.catch(() => undefined);
+    throw cause;
+  }
+  const owners = await ownersPromise;
+  if (authored.length !== sources.length ||
+      authored.some((curriculum) => !owners.has(curriculum.language))) {
+    throw new Error("authored curriculum languages do not match owner directories");
+  }
+  return authored.map((curriculum) => attachCurriculumLessonMemberships(
+    curriculum,
+    owners.get(curriculum.language)!.owners,
+  ));
 }
 
 /** Read one track's curriculum without scanning every other track's owners. */
@@ -895,6 +933,17 @@ export function forEachTrackLessons(
   }
 }
 
+/** Bounded-source counterpart: visit and release one parsed track at a time. */
+export async function forEachTrackLessonsAsync(
+  root: string,
+  visit: (language: string, lessons: ParsedLesson[]) => void,
+  onCacheKey?: LessonCacheKeyObserver,
+): Promise<void> {
+  for (const language of lessonTrackNames(root)) {
+    visit(language, await loadTrackLessonsAsync(language, root, onCacheKey));
+  }
+}
+
 /** One guarded, lazy track walk shared by both loaders. */
 function* lessonTrackNames(root: string): Generator<string> {
   for (const track of sortedEntries(root)) {
@@ -995,8 +1044,9 @@ export function loadGentleRampSnapshotTracks(
   root = defaultCurriculumRoot(),
   registry = loadLanguageRegistry(root),
 ): TrackGentleRamp[] {
+  // Preserve the old refusal order before any canonical owner is opened.
   assertGentleRampSnapshotsRetired(root);
-  const report = buildCurriculumGapReport({
+  return deriveGentleRampSnapshotTracks(root, {
     registry,
     lessons: loadLessons(root),
     books: loadBookCorpus(root),
@@ -1004,7 +1054,24 @@ export function loadGentleRampSnapshotTracks(
     spine: loadCurriculumSpine(root),
     chapterPolicy: loadChapterPolicy(root),
     trackChapters: loadTrackChapters(root),
-  }).gentleRamp;
+  });
+}
+
+/**
+ * The source-derived part of the retired-snapshot compatibility contract.
+ *
+ * A caller that already loaded the same canonical inputs can reuse those
+ * arrays rather than traverse 63,000 source files again. This is still a fresh
+ * full report computation, and the retired artifact path is checked on every
+ * call. The historical loader above does not accept caller-supplied data: it
+ * continues to open every canonical owner itself.
+ */
+export function deriveGentleRampSnapshotTracks(
+  root: string,
+  input: CurriculumGapReportInput,
+): TrackGentleRamp[] {
+  assertGentleRampSnapshotsRetired(root);
+  const report = buildCurriculumGapReport(input).gentleRamp;
   if (report === undefined) {
     throw new Error("chapter policy was not loaded; cannot derive the gentle ramp");
   }
@@ -1159,6 +1226,41 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const curricula = loadLanguageCurricula(root);
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
+  const scripts = loadScripts(root);
+  const soundTags = loadSoundTagRegistry(root, registry);
+  const letterLedgers = loadLetterLedgers(root);
+  return {
+    taxonomy,
+    registry,
+    spine,
+    curricula,
+    books,
+    lessons,
+    scripts,
+    soundTags,
+    letterLedgers,
+    dataset: buildDataset(taxonomy, lessons),
+  };
+}
+
+/**
+ * Awaitable twin of `loadEverything` for whole-corpus consumers.
+ *
+ * The metadata order is deliberately the same as the synchronous function.
+ * Only lessons cross an await: `loadLessonsAsync` reads at most 16 source files
+ * at once inside a track, then parses and validates those exact bytes in the
+ * original sorted order. In particular, this does not trust a generated
+ * manifest or an mtime to shortcut a source edit.
+ */
+export async function loadEverythingAsync(
+  root = defaultCurriculumRoot(),
+): Promise<ReturnType<typeof loadEverything>> {
+  const taxonomy = loadTaxonomy(root);
+  const registry = loadLanguageRegistry(root);
+  const spine = loadCurriculumSpine(root);
+  const curricula = loadLanguageCurricula(root);
+  const books = loadBookCorpus(root);
+  const lessons = await loadLessonsAsync(root);
   const scripts = loadScripts(root);
   const soundTags = loadSoundTagRegistry(root, registry);
   const letterLedgers = loadLetterLedgers(root);

@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -27,7 +26,7 @@ import {
 // the second.
 // ---------------------------------------------------------------------------
 it("probes only Kannada atoms that EXIST, so a guessed id cannot under-report", () => {
-  const { lessons } = loadEverything();
+  const lessons = loadTrackLessons("kannada");
   const taught = trackIntroducedAtoms(lessons, "kannada");
   const unknown: string[] = [];
   for (const point of loadExamInventory("kannada", "A1").points) {

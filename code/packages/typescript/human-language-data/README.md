@@ -173,6 +173,8 @@ rank/slug/digest fragment instead.
 import {
   languagesForConcept,
   loadEverything,
+  loadEverythingAsync,
+  loadLanguageCurriculaAsync,
   mixedCurriculumFrontier,
   compileLessonActivities,
   validate,
@@ -180,6 +182,15 @@ import {
 } from "@coding-adventures/human-language-data";
 
 const { curricula, dataset, lessons, registry, scripts, soundTags, spine, taxonomy } = loadEverything();
+
+// An awaitable twin reads lesson sources in bounded groups of at most 16 per
+// track. It returns the same validated result and remains content-keyed when
+// the test-only lesson cache is configured:
+const asynchronousCorpus = await loadEverythingAsync();
+
+// Large curriculum-membership owner sets can also be read through bounded,
+// pinned directory handles without changing their canonical owner checks:
+const asynchronousCurricula = await loadLanguageCurriculaAsync();
 
 // Typed activities compile directly from block metadata, never from prose.
 const activities = compileLessonActivities(lessons[0].blocks);
@@ -367,6 +378,10 @@ belong to exactly one typed extension. Repeated visits to the same shared node
 remain legal through distinct ordered path segments.
 
 ## Completion-plan assessment readiness
+
+The direct `npm run plan` command awaits bounded canonical lesson and
+curriculum-membership reads. Its synchronous `runCompletionPlan` library API
+remains available; both paths use the same planner and output contract.
 
 The completion plan keeps a missing seven-rung `assessment.json` visible as
 debt, but does not put it in the actionable head while its task shapes or timed
