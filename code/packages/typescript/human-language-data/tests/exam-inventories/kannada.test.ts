@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  loadEverything,
+  loadCurriculumSpine,
   loadExamInventory,
+  loadTrackLanguageCurriculum,
   loadTrackChapters,
   loadTrackLessons,
 } from "../../src/loader.js";
@@ -195,12 +196,13 @@ describe("the committed Kannada A1 inventory", () => {
       new Set(pluralLesson?.frontmatter["practises.knowledge"]),
     );
 
-    const everything = loadEverything();
+    const curriculum = loadTrackLanguageCurriculum("kannada");
+    expect(curriculum).toBeDefined();
     const throughA1 = new Set(
       lessonsUpToLevel(
-        everything.lessons,
-        everything.curricula,
-        everything.spine,
+        lessons,
+        [curriculum!],
+        loadCurriculumSpine(),
         "A1",
       ).map((lesson) => lesson.realization.lessonId),
     );

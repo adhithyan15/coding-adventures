@@ -305,14 +305,27 @@ describe("corpus snapshot", () => {
   const committedSnapshot = () => {
     if (snapshot === undefined) {
       snapshot = (async () => {
-        const lessons = await loadLessonsAsync();
-        const report = runChapterGates({
-          books: loadBookCorpus(),
-          lessons,
-          trackChapters: loadTrackChapters(),
-          policy: loadChapterPolicy(),
-        });
-        return { lessons, report };
+        // These inputs are independent. Let bounded lesson reads overlap the
+        // synchronous book and chapter reads before constructing the report.
+        const lessonsPromise = loadLessonsAsync();
+        try {
+          const books = loadBookCorpus();
+          const trackChapters = loadTrackChapters();
+          const policy = loadChapterPolicy();
+          const lessons = await lessonsPromise;
+          const report = runChapterGates({
+            books,
+            lessons,
+            trackChapters,
+            policy,
+          });
+          return { lessons, report };
+        } catch (error) {
+          // A synchronous corpus failure must not leave lesson reads racing
+          // test teardown or surface a second, unhandled rejection.
+          await lessonsPromise.catch(() => undefined);
+          throw error;
+        }
       })();
     }
     return snapshot;
