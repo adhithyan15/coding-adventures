@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline via `emit_bare_stmts`, avoiding unnecessary `catch_unwind` closure wrappers when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block across backends (#18798)
+
+- **Closure arity & Hash#each 1-param block.** Emitted Rust `Closure` now tracks `arity: usize`. Emitted Hash block dispatch (`yield_hash_pair`) yields a 2-element array `[key, value]` when the block's arity is 1, and passes `key` and `value` separately when arity is 2 or more, matching Ruby semantics.
+
 ## Unreleased — Closure call default-padding sentinel (#18490)
 
 - **Closure adapter missing argument sentinel.** `MakeClosure` adapter generation in `emit.rs` now drains omitted arguments with `unwrap_or(__sir::Value::Missing)` instead of `Value::Nil`. This ensures callees with default parameters recognize missing arguments via `__sir::is_missing(&param)` and evaluate their default expressions.

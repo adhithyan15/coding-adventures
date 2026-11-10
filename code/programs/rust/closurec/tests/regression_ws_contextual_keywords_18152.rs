@@ -52,7 +52,7 @@ const CASES: &[(&str, &str)] = &[
     ("window.export=1;\nawait(x);", "window.export=1;await(x);"),
     (
         "async function f(){class Foo{field=await(x)}}",
-        "async function f(){class Foo{field=await(x)}};",
+        "async function f(){class Foo{field=await(x);}};",
     ),
     ("let f=async()=>fn(a,await(b));", "let f=async()=>fn(a,await b);"),
 ];

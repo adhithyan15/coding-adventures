@@ -74,16 +74,22 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         block_captures_enclosing: false,
         in_block_body: false,
         current_class: None,
+        current_module: None,
         current_method: None,
         current_method_params: Vec::new(),
         param_aliases: std::collections::HashMap::new(),
         top_level_methods: HashSet::new(),
         nested_methods: HashSet::new(),
+        class_instance_methods: std::collections::HashMap::new(),
+        class_superclasses: std::collections::HashMap::new(),
+        class_includes: std::collections::HashMap::new(),
+        module_instance_methods: std::collections::HashMap::new(),
         enclosing_visible: HashSet::new(),
         fresh_counter: 0,
         used_names: HashSet::new(),
         statement_puts: HashSet::new(),
         hoisted_kinds: std::collections::HashMap::new(),
+        cell_vars: std::collections::HashMap::new(),
     };
     // #18798 — the bare `puts` names that are whole statements; only those
     // print a newline (see `Lowerer::bare_puts_call`).
@@ -92,14 +98,18 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     // (`__for_<n>`, `__rescue_value_<n>`) can never be one of them, even
     // one assigned later in the program (see `Lowerer::fresh_name`).
     collect_source_names(program, &mut lw.used_names);
-    // #18778 — learn every method name before lowering any body, so a bare
-    // `g` can be told apart from a local (see `Lowerer::bare_name_call`).
-    collect_method_names(
-        program,
-        false,
-        &mut lw.top_level_methods,
-        &mut lw.nested_methods,
-    );
+    // #18778 / #18798 — learn every method name and class hierarchy before
+    // lowering any body, so a bare `g` can be dispatched to `self.g` or told
+    // apart from a local (see `Lowerer::bare_name_call`).
+    let mut collector = MethodCollector {
+        top: &mut lw.top_level_methods,
+        nested: &mut lw.nested_methods,
+        class_instance_methods: &mut lw.class_instance_methods,
+        class_superclasses: &mut lw.class_superclasses,
+        class_includes: &mut lw.class_includes,
+        module_instance_methods: &mut lw.module_instance_methods,
+    };
+    collector.collect(program, None, None);
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
     // the main-body lowerer knows which names resolve as
@@ -336,6 +346,122 @@ fn collect_loop_assigned_names(node: &GrammarASTNode, out: &mut Vec<String>) {
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
             collect_loop_assigned_names(n, out);
+        }
+    }
+}
+
+/// #18798 Item 5 — collect all names assigned inside blocks (or lambdas) under `node`.
+///
+/// Stops descending at method/class/module boundaries (`def_statement`,
+/// `endless_def_statement`, `class_statement`, `module_statement`),
+/// because Ruby methods and classes introduce disjoint scopes that do
+/// not close over outer locals.
+///
+/// For each block/lambda encountered:
+/// 1. Its parameters and block-local variables (names after `;`) are noted as
+///    shadowed within that block.
+/// 2. Any assignment to an unshadowed name within that block (or nested blocks)
+///    is added to `out`.
+fn collect_block_assigned_names(
+    node: &GrammarASTNode,
+    shadowed: &HashSet<String>,
+    in_block: bool,
+    out: &mut HashSet<String>,
+) {
+    let push = |name: &str, shadowed: &HashSet<String>, out: &mut HashSet<String>| {
+        if is_plain_local_name(name) && !shadowed.contains(name) {
+            out.insert(name.to_string());
+        }
+    };
+    let names = |n: &GrammarASTNode| -> Vec<String> {
+        n.children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                _ => None,
+            })
+            .collect()
+    };
+
+    match node.rule_name.as_str() {
+        "def_statement" | "endless_def_statement" | "class_statement" | "module_statement" => {
+            return;
+        }
+        "do_block" | "brace_block" => {
+            let mut block_shadowed = shadowed.clone();
+            if let Some(params_node) = node.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "block_params" => Some(n),
+                _ => None,
+            }) {
+                for c in &params_node.children {
+                    if let ASTNodeOrToken::Token(t) = c {
+                        if t.type_ == TokenType::Name && t.value != "|" {
+                            block_shadowed.insert(t.value.clone());
+                        }
+                    }
+                }
+            }
+            for c in &node.children {
+                if let ASTNodeOrToken::Node(n) = c {
+                    collect_block_assigned_names(n, &block_shadowed, true, out);
+                }
+            }
+            return;
+        }
+        "lambda_literal" => {
+            let mut block_shadowed = shadowed.clone();
+            if let Some(params_node) = node.children.iter().find_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "params" => Some(n),
+                _ => None,
+            }) {
+                for c in &params_node.children {
+                    if let ASTNodeOrToken::Node(pn) = c {
+                        for pc in &pn.children {
+                            if let ASTNodeOrToken::Token(t) = pc {
+                                if t.type_ == TokenType::Name && t.value != "*" && t.value != "**" {
+                                    block_shadowed.insert(t.value.clone());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for c in &node.children {
+                if let ASTNodeOrToken::Node(n) = c {
+                    collect_block_assigned_names(n, &block_shadowed, true, out);
+                }
+            }
+            return;
+        }
+        "assignment" if in_block => {
+            if let Some(ASTNodeOrToken::Token(t)) = node.children.first() {
+                if t.type_ == TokenType::Name {
+                    push(&t.value, shadowed, out);
+                }
+            }
+        }
+        "mlhs_target" if in_block => {
+            for n in names(node) {
+                push(&n, shadowed, out);
+            }
+        }
+        "rightward_assignment" if in_block => {
+            if let Some(ASTNodeOrToken::Token(t)) = node.children.last() {
+                if t.type_ == TokenType::Name {
+                    push(&t.value, shadowed, out);
+                }
+            }
+        }
+        "for_statement" if in_block => {
+            if let Some(n) = names(node).first() {
+                push(n, shadowed, out);
+            }
+        }
+        _ => {}
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            collect_block_assigned_names(n, shadowed, in_block, out);
         }
     }
 }
@@ -1043,6 +1169,13 @@ fn block_uses_implicit_it(inner: &GrammarASTNode) -> bool {
 // Lowerer
 // ---------------------------------------------------------------------------
 
+/// #18798 Item 5 — cell variable representation for variables mutated inside blocks.
+#[derive(Debug, Clone)]
+struct CellVar {
+    cell_name: String,
+    scope: Scope,
+}
+
 struct Lowerer {
     file_name: String,
     /// Names already bound by a prior `Stmt::LetBinding` in the
@@ -1131,6 +1264,9 @@ struct Lowerer {
     /// name).  Modules do NOT set this — `super` in a module method has no
     /// class to anchor and is out of the v0 OOP-production scope.
     current_class: Option<String>,
+    /// #18798 Item 21 — the name of the module whose body / method bodies are
+    /// currently being lowered, or `None` outside any module.
+    current_module: Option<String>,
     /// Milestone O2 — the name of the method (`def m`) whose body is
     /// currently being lowered, or `None` outside any method.  Threaded
     /// alongside [`Self::current_class`] so a bare/`super(args)` inside the
@@ -1155,6 +1291,14 @@ struct Lowerer {
     /// cannot yet tell from the top-level `m`, so such a name is never
     /// rewritten into a call there.
     nested_methods: HashSet<String>,
+    /// #18798 Item 21 — names of the instance methods defined on each class.
+    class_instance_methods: std::collections::HashMap<String, HashSet<String>>,
+    /// #18798 Item 21 — declared superclass for each class (`class Child < Parent`).
+    class_superclasses: std::collections::HashMap<String, String>,
+    /// #18798 Item 21 — modules included in each class (`include M`).
+    class_includes: std::collections::HashMap<String, Vec<String>>,
+    /// #18798 Item 21 — names of the instance methods defined on each module.
+    module_instance_methods: std::collections::HashMap<String, HashSet<String>>,
     /// #18778 — while a block or lambda body is lowered, the locals and
     /// parameters of the scopes around it.  `declared_locals` restarts empty
     /// for a block body (its captures are found afterwards), but Ruby lets a
@@ -1182,6 +1326,8 @@ struct Lowerer {
     /// different in each (see [`crate::jumps::Body`]); every other function
     /// is a method, except `main`, the script's top level.
     hoisted_kinds: std::collections::HashMap<String, crate::jumps::Body>,
+    /// #18798 Item 5 — cell variables for variables mutated inside blocks.
+    cell_vars: std::collections::HashMap<String, CellVar>,
 }
 
 /// #18798 — record where a bare `puts` is a whole statement: an
@@ -1238,54 +1384,187 @@ fn collect_source_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
     }
 }
 
-/// #18778 — collect the names of the `def`s among `node`'s statements: a
-/// top-level `def m` (no receiver) into `top`, and any `def` inside a
-/// `class`/`module`, at any depth, into `nested`.  A top-level `def self.m`
-/// goes into neither: it is a singleton method of the main object, not a
-/// method that every scope can call by a bare name.
-fn collect_method_names(
-    node: &GrammarASTNode,
-    in_decl: bool,
-    top: &mut HashSet<String>,
-    nested: &mut HashSet<String>,
-) {
-    for child in &node.children {
-        let ASTNodeOrToken::Node(stmt) = child else {
-            continue;
-        };
-        if stmt.rule_name != "statement" {
-            continue;
-        }
-        let Some(ASTNodeOrToken::Node(inner)) = stmt
-            .children
-            .iter()
-            .find(|c| matches!(c, ASTNodeOrToken::Node(_)))
-        else {
-            continue;
-        };
-        match inner.rule_name.as_str() {
-            "def_statement" | "endless_def_statement" => {
-                let has_receiver = inner.children.iter().any(
-                    |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "def_receiver"),
-                );
-                let name = inner.children.iter().find_map(|c| match c {
-                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
-                    _ => None,
-                });
-                if let Some(name) = name {
-                    if in_decl {
-                        nested.insert(name);
-                    } else if !has_receiver {
-                        top.insert(name);
+/// #18778 / #18798 Item 21 — collect the names of the `def`s among `node`'s statements:
+/// a top-level `def m` (no receiver) into `top`, any `def` inside a `class`/`module`,
+/// at any depth, into `nested`, and record per-class/per-module instance methods and
+/// inheritance hierarchy (`class_instance_methods`, `class_superclasses`, `class_includes`,
+/// `module_instance_methods`).
+struct MethodCollector<'a> {
+    top: &'a mut HashSet<String>,
+    nested: &'a mut HashSet<String>,
+    class_instance_methods: &'a mut std::collections::HashMap<String, HashSet<String>>,
+    class_superclasses: &'a mut std::collections::HashMap<String, String>,
+    class_includes: &'a mut std::collections::HashMap<String, Vec<String>>,
+    module_instance_methods: &'a mut std::collections::HashMap<String, HashSet<String>>,
+}
+
+impl<'a> MethodCollector<'a> {
+    fn collect(
+        &mut self,
+        node: &GrammarASTNode,
+        in_class: Option<&str>,
+        in_module: Option<&str>,
+    ) {
+        for child in &node.children {
+            let ASTNodeOrToken::Node(stmt) = child else {
+                continue;
+            };
+            if stmt.rule_name != "statement" {
+                continue;
+            }
+            let Some(ASTNodeOrToken::Node(inner)) = stmt
+                .children
+                .iter()
+                .find(|c| matches!(c, ASTNodeOrToken::Node(_)))
+            else {
+                continue;
+            };
+            match inner.rule_name.as_str() {
+                "def_statement" | "endless_def_statement" => {
+                    let has_receiver = inner.children.iter().any(
+                        |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "def_receiver"),
+                    );
+                    let name = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(name) = name {
+                        if in_class.is_some() || in_module.is_some() {
+                            self.nested.insert(name.clone());
+                            if !has_receiver {
+                                if let Some(c) = in_class {
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(name.clone());
+                                } else if let Some(m) = in_module {
+                                    self.module_instance_methods.entry(m.to_string()).or_default().insert(name.clone());
+                                }
+                            }
+                        } else if !has_receiver {
+                            self.top.insert(name);
+                        }
                     }
                 }
+                "class_statement" => {
+                    let name_token = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(cname) = name_token {
+                        let mut seen_lt = false;
+                        for c in &inner.children {
+                            if let ASTNodeOrToken::Token(t) = c {
+                                if seen_lt && matches!(t.type_, TokenType::Name) {
+                                    self.class_superclasses.insert(cname.clone(), t.value.clone());
+                                    break;
+                                }
+                                if t.value == "<" {
+                                    seen_lt = true;
+                                }
+                            }
+                        }
+                        self.collect(inner, Some(&cname), None);
+                    }
+                }
+                "module_statement" => {
+                    let name_token = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(mname) = name_token {
+                        self.collect(inner, None, Some(&mname));
+                    }
+                }
+                "method_call" | "method_call_no_paren" => {
+                    if let Some(c) = in_class {
+                        let callee = inner.children.iter().find_map(|c| match c {
+                            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
+                                Some(t.value.as_str())
+                            }
+                            _ => None,
+                        });
+                        match callee {
+                            Some("attr_reader") | Some("attr_accessor") => {
+                                for attr in extract_symbol_names_from_call(inner) {
+                                    self.nested.insert(attr.clone());
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(attr);
+                                }
+                            }
+                            Some("attr_writer") => {
+                                for attr in extract_symbol_names_from_call(inner) {
+                                    let setter = format!("{attr}=");
+                                    self.nested.insert(setter.clone());
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(setter);
+                                }
+                            }
+                            Some("include") => {
+                                if let Some(mod_name) = extract_first_const_name_arg(inner) {
+                                    self.class_includes.entry(c.to_string()).or_default().push(mod_name);
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+                _ => {}
             }
-            "class_statement" | "module_statement" => {
-                collect_method_names(inner, true, top, nested);
+        }
+    }
+}
+
+fn extract_symbol_names_from_call(node: &GrammarASTNode) -> Vec<String> {
+    let mut names = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "expression" || n.rule_name == "call_arg" {
+                if let Some(sym) = find_symbol_name_in_ast(n) {
+                    names.push(sym);
+                }
+            }
+        }
+    }
+    names
+}
+
+fn find_symbol_name_in_ast(node: &GrammarASTNode) -> Option<String> {
+    if node.rule_name == "symbol_literal" {
+        return node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(
+                    t.type_,
+                    TokenType::Name | TokenType::Keyword | TokenType::String
+                ) =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        });
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if let Some(name) = find_symbol_name_in_ast(n) {
+                return Some(name);
+            }
+        }
+    }
+    None
+}
+
+fn extract_first_const_name_arg(node: &GrammarASTNode) -> Option<String> {
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(t.type_, TokenType::Name) && is_constant_name(&t.value) =>
+            {
+                return Some(t.value.clone());
+            }
+            ASTNodeOrToken::Node(sub) => {
+                if let Some(found) = extract_first_const_name_arg(sub) {
+                    return Some(found);
+                }
             }
             _ => {}
         }
     }
+    None
 }
 
 /// Phase Q9e (FC) — the reserved name of the synthesized trailing block
@@ -1360,6 +1639,13 @@ impl Lowerer {
             });
         }
 
+        // #18798 Item 5 — box outer locals mutated in blocks into cells.
+        let mut outer_assigned: Vec<String> = Vec::new();
+        for s in &stmts_in {
+            collect_loop_assigned_names(s, &mut outer_assigned);
+        }
+        let cell_prologue = self.setup_cell_variables(&outer_assigned, program, &self.span_of(program));
+
         // The last statement node *may* be promoted to the block's
         // `value` slot — but only if it's an `expression_stmt` (a
         // bare expression with no side-effecting structure around
@@ -1414,6 +1700,7 @@ impl Lowerer {
         let value = value.unwrap_or(Expr::NilLit {
             span: self.span_of(program),
         });
+        stmts_out.splice(0..0, cell_prologue);
         // Ruby assignments are sequential: rewrite any `LetBinding` whose RHS
         // reads an earlier local to a `LetStarBinding` (see the fn's doc).
         sequentialize_let_bindings(&mut stmts_out);
@@ -1469,6 +1756,8 @@ impl Lowerer {
             "module_statement" => self.lower_module_statement_multi(node),
             // #18778 — a `for` may declare its loop variable before the loop.
             "for_statement" => self.lower_for_statement(node),
+            // #18798 — `while` and `until` do not open a scope in Ruby.
+            "while_statement" | "until_statement" => self.lower_while_or_until_multi(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -1603,7 +1892,17 @@ impl Lowerer {
                 // Phase 6c: SIR's `Stmt::While` is the canonical
                 // top-level loop — `until cond` lowers to
                 // `while !cond` (wrap the condition in `not`).
-                self.lower_while_or_until(node)
+                let mut stmts = self.lower_while_or_until_multi(node)?;
+                if stmts.len() == 1 {
+                    Ok(stmts.remove(0))
+                } else {
+                    Err(RubyLowerError {
+                        message: "unsupported: a loop with unhoisted declarations in a single-statement position"
+                            .to_string(),
+                        line: node.start_line.unwrap_or(0),
+                        column: node.start_column.unwrap_or(0),
+                    })
+                }
             }
             "for_statement" => {
                 // #18778 — every body path goes through
@@ -2113,6 +2412,7 @@ impl Lowerer {
                 self.lower_expression(expr_node)?
             }
             "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
+            "method_with_block" => self.lower_method_with_block(inner)?,
             "if_statement" | "unless_statement" => self.lower_if_or_unless(inner)?,
             // A `case` (both `case/when` value-matching and `case/in` pattern
             // matching) already lowers to a chained `Expr::If` whose arms are
@@ -2172,18 +2472,48 @@ impl Lowerer {
     // Phase 6c — `while cond … end` / `until cond … end`
     // -------------------------------------------------------------------
 
-    /// Lower a `while_statement` or `until_statement` into a
-    /// `Stmt::While`.  `until cond` lowers to `while !cond`
-    /// (condition wrapped in `BuiltinCall("not", ...)`).
-    fn lower_while_or_until(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
+    /// Lower a `while_statement` or `until_statement` into a sequence of
+    /// statements: pre-declarations for any locals first assigned in the
+    /// condition or body (since in Ruby loops open no scope), followed by
+    /// the canonical `Stmt::While` loop (`until cond` lowers to `while !cond`,
+    /// with condition wrapped in `BuiltinCall("not", ...)`).
+    fn lower_while_or_until_multi(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let span = self.span_of(node);
+        let err = |message: &str| RubyLowerError {
+            message: message.to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        };
+
+        // In Ruby, `while` and `until` do not open a scope. Any local variable
+        // first assigned in the condition or body is an ordinary local of the
+        // enclosing scope and is visible after the loop (or initialized to nil
+        // if the loop never ran).
+        let mut names: Vec<String> = Vec::new();
+        collect_loop_assigned_names(node, &mut names);
+        names.retain(|n| !self.current_params.contains(n) && !self.declared_locals.contains(n));
+
+        let mut out: Vec<Stmt> = Vec::new();
+        for name in names {
+            if self.cell_vars.contains_key(&name) {
+                continue;
+            }
+            self.declared_locals.insert(name.clone());
+            out.push(Stmt::LetBinding {
+                name,
+                sir_type: None,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            });
+        }
+
         let is_until = node.rule_name == "until_statement";
         let cond_node = self
             .find_node_child(node, "expression")
-            .ok_or_else(|| RubyLowerError {
-                message: format!("{} missing condition expression", node.rule_name),
-                line: node.start_line.unwrap_or(0),
-                column: node.start_column.unwrap_or(0),
-            })?;
+            .ok_or_else(|| err(&format!("{} missing condition expression", node.rule_name)))?;
         let mut cond = self.lower_expression(cond_node)?;
         if is_until {
             cond = Expr::BuiltinCall {
@@ -2199,11 +2529,12 @@ impl Lowerer {
         // declared whenever the module emits a `Stmt::While` /
         // `Stmt::ForRange` / `Stmt::ForEach`.
         self.features_used.insert(Feature::Loops);
-        Ok(Stmt::While {
+        out.push(Stmt::While {
             cond,
             body,
-            span: self.span_of(node),
-        })
+            span,
+        });
+        Ok(out)
     }
 
     // -------------------------------------------------------------------
@@ -2326,6 +2657,9 @@ impl Lowerer {
         }
         let mut out: Vec<Stmt> = Vec::new();
         for name in names {
+            if self.cell_vars.contains_key(&name) {
+                continue;
+            }
             self.declared_locals.insert(name.clone());
             out.push(Stmt::LetBinding {
                 name,
@@ -2336,15 +2670,36 @@ impl Lowerer {
         }
 
         let tmp = self.fresh_for_name();
-        let store = Stmt::Assign {
-            name: var.clone(),
-            scope: Scope::Local,
-            value: Expr::VarRef {
-                name: tmp.clone(),
-                scope: Scope::Local,
+        let store = if let Some(cell) = self.cell_vars.get(&var).cloned() {
+            self.features_used.insert(Feature::Sequences);
+            Stmt::SeqSet {
+                seq: Expr::VarRef {
+                    name: cell.cell_name,
+                    scope: cell.scope,
+                    span: span.clone(),
+                },
+                index: Expr::IntLit {
+                    value: 0,
+                    span: span.clone(),
+                },
+                value: Expr::VarRef {
+                    name: tmp.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                },
                 span: span.clone(),
-            },
-            span: span.clone(),
+            }
+        } else {
+            Stmt::Assign {
+                name: var.clone(),
+                scope: Scope::Local,
+                value: Expr::VarRef {
+                    name: tmp.clone(),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            }
         };
         let saved_locals = self.declared_locals.clone();
         self.declared_locals.insert(tmp.clone());
@@ -2489,6 +2844,62 @@ impl Lowerer {
         }
     }
 
+    /// #18798 Item 5 — scan `candidates` (outer assigned names or parameters) and for
+    /// each variable that is mutated inside any block/lambda under `body_node`, box it
+    /// into a 1-element sequence cell `__cell_<name>_<n> = [init_val]`.
+    fn setup_cell_variables(
+        &mut self,
+        candidates: &[String],
+        body_node: &GrammarASTNode,
+        span: &Span,
+    ) -> Vec<Stmt> {
+        let mut block_assigned = HashSet::new();
+        for c in &body_node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                collect_block_assigned_names(n, &HashSet::new(), false, &mut block_assigned);
+            }
+        }
+
+        let mut cell_prologue = Vec::new();
+        for name in candidates {
+            if block_assigned.contains(name) && !self.cell_vars.contains_key(name) {
+                let cell_name = self.fresh_name(&format!("__cell_{}_", name));
+                let is_param = self.current_params.contains(name);
+                self.cell_vars.insert(
+                    name.clone(),
+                    CellVar {
+                        cell_name: cell_name.clone(),
+                        scope: Scope::Local,
+                    },
+                );
+                self.declared_locals.insert(cell_name.clone());
+                self.features_used.insert(Feature::MutableBindings);
+                self.features_used.insert(Feature::Sequences);
+
+                let init_val = if is_param {
+                    Expr::VarRef {
+                        name: name.clone(),
+                        scope: Scope::Param,
+                        span: span.clone(),
+                    }
+                } else {
+                    Expr::NilLit { span: span.clone() }
+                };
+
+                cell_prologue.push(Stmt::LetStarBinding {
+                    name: cell_name,
+                    sir_type: None,
+                    value: Expr::SeqLit {
+                        items: vec![init_val],
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                });
+            }
+        }
+        cell_prologue
+    }
+
     /// #18798 Item 4 — scan `assigned_names` and for each parameter that is
     /// assigned in the callable body, mint a fresh local alias `__param_<name>_<n>`,
     /// register it in `self.param_aliases` and `self.declared_locals`, and
@@ -2501,6 +2912,9 @@ impl Lowerer {
         let mut prologue = Vec::new();
         for p in params {
             self.current_params.insert(p.name.clone());
+            if self.cell_vars.contains_key(&p.name) {
+                continue;
+            }
             if assigned_names.contains(&p.name) {
                 let alias = self.fresh_name(&format!("__param_{}_", p.name));
                 self.declared_locals.insert(alias.clone());
@@ -4089,7 +4503,10 @@ impl Lowerer {
         // use, keyed by the module name: method `def`s → `__def_method__` /
         // `__def_class_method__`, `include`/`extend` directives → their mixin
         // builtins, everything else preserved in `ModuleDef.body`.
+        let saved_module = self.current_module.take();
+        self.current_module = Some(name.clone());
         let (body, registrations) = self.lower_class_body(&name, node)?;
+        self.current_module = saved_module;
 
         let mut out: Vec<Stmt> = Vec::with_capacity(1 + registrations.len());
         out.push(Stmt::ModuleDef {
@@ -5631,6 +6048,129 @@ impl Lowerer {
         }
     }
 
+    /// #18798 Item 5 — check if a Block contains an `Expr::VarRef` referencing
+    /// capture `name`.
+    fn body_references_capture(block: &Block, name: &str) -> bool {
+        Self::block_references_capture(block, name)
+    }
+
+    fn block_references_capture(block: &Block, name: &str) -> bool {
+        block.stmts.iter().any(|s| Self::stmt_references_capture(s, name))
+            || Self::expr_references_capture(&block.value, name)
+    }
+
+    fn stmt_references_capture(stmt: &Stmt, name: &str) -> bool {
+        match stmt {
+            Stmt::LetBinding { value, .. }
+            | Stmt::LetStarBinding { value, .. }
+            | Stmt::Assign { value, .. }
+            | Stmt::ExprStmt { expr: value, .. } => Self::expr_references_capture(value, name),
+            Stmt::While { cond, body, .. } => {
+                Self::expr_references_capture(cond, name)
+                    || Self::block_references_capture(body, name)
+            }
+            Stmt::ForRange {
+                start,
+                stop,
+                step,
+                body,
+                ..
+            } => {
+                Self::expr_references_capture(start, name)
+                    || Self::expr_references_capture(stop, name)
+                    || Self::expr_references_capture(step, name)
+                    || Self::block_references_capture(body, name)
+            }
+            Stmt::ForEach { iter, body, .. } => {
+                Self::expr_references_capture(iter, name)
+                    || Self::block_references_capture(body, name)
+            }
+            Stmt::SeqSet {
+                seq, index, value, ..
+            } => {
+                Self::expr_references_capture(seq, name)
+                    || Self::expr_references_capture(index, name)
+                    || Self::expr_references_capture(value, name)
+            }
+            Stmt::MapSet {
+                map, key, value, ..
+            } => {
+                Self::expr_references_capture(map, name)
+                    || Self::expr_references_capture(key, name)
+                    || Self::expr_references_capture(value, name)
+            }
+            Stmt::Switch {
+                discriminant,
+                cases,
+                default,
+                ..
+            } => {
+                Self::expr_references_capture(discriminant, name)
+                    || cases.iter().any(|case| {
+                        Self::expr_references_capture(&case.value, name)
+                            || case.body.iter().any(|s| Self::stmt_references_capture(s, name))
+                    })
+                    || default
+                        .as_ref()
+                        .is_some_and(|def_stmts| def_stmts.iter().any(|s| Self::stmt_references_capture(s, name)))
+            }
+            _ => false,
+        }
+    }
+
+    fn expr_references_capture(expr: &Expr, name: &str) -> bool {
+        match expr {
+            Expr::VarRef { name: n, scope, .. } => n == name && *scope == Scope::Capture,
+            Expr::If {
+                cond,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                Self::expr_references_capture(cond, name)
+                    || Self::block_references_capture(then_branch, name)
+                    || Self::block_references_capture(else_branch, name)
+            }
+            Expr::Block(b) => Self::block_references_capture(b, name),
+            Expr::BuiltinCall { args, .. }
+            | Expr::DirectCall { args, .. }
+            | Expr::Intrinsic { args, .. } => {
+                args.iter().any(|a| Self::expr_references_capture(a, name))
+            }
+            Expr::IndirectCall { target, args, .. } => {
+                Self::expr_references_capture(target, name)
+                    || args.iter().any(|a| Self::expr_references_capture(a, name))
+            }
+            Expr::MakeClosure { captures, .. } => {
+                captures.iter().any(|cv| Self::expr_references_capture(&cv.value, name))
+            }
+            Expr::SeqLit { items, .. } => {
+                items.iter().any(|i| Self::expr_references_capture(i, name))
+            }
+            Expr::SeqIndex { seq, index, .. } => {
+                Self::expr_references_capture(seq, name)
+                    || Self::expr_references_capture(index, name)
+            }
+            Expr::SeqLen { seq, .. } => Self::expr_references_capture(seq, name),
+            Expr::MapLit { entries, .. } => entries.iter().any(|e| {
+                Self::expr_references_capture(&e.key, name)
+                    || Self::expr_references_capture(&e.value, name)
+            }),
+            Expr::MapGet { map, key, .. } => {
+                Self::expr_references_capture(map, name)
+                    || Self::expr_references_capture(key, name)
+            }
+            Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+                Self::expr_references_capture(lhs, name)
+                    || Self::expr_references_capture(rhs, name)
+            }
+            Expr::StrConcat { parts, .. } => {
+                parts.iter().any(|p| Self::expr_references_capture(p, name))
+            }
+            _ => false,
+        }
+    }
+
     // -------------------------------------------------------------------
     // Phase Q9f (FC) — explicit block-param ABI, part 2: call-site
     // normalization
@@ -6462,6 +7002,7 @@ impl Lowerer {
         let saved_method_params = std::mem::take(&mut self.current_method_params);
         self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
         let saved_param_aliases = std::mem::take(&mut self.param_aliases);
+        let saved_cell_vars = std::mem::take(&mut self.cell_vars);
 
         // The body is the single `expression` Node child.  PEG
         // guarantees exactly one such child (the grammar rule has it
@@ -6481,12 +7022,25 @@ impl Lowerer {
 
         let mut assigned_names: Vec<String> = Vec::new();
         collect_loop_assigned_names(expr_node, &mut assigned_names);
-        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
+        for p in &params {
+            self.current_params.insert(p.name.clone());
+        }
+        let mut candidates = assigned_names.clone();
+        for p in &params {
+            if !candidates.contains(&p.name) {
+                candidates.push(p.name.clone());
+            }
+        }
+        let cell_prologue = self.setup_cell_variables(&candidates, expr_node, &self.span_of(node));
+        let param_prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
+        let mut prologue = cell_prologue;
+        prologue.extend(param_prologue);
 
         let value = self.lower_expression(expr_node)?;
 
         // Restore the outer scope.
         self.param_aliases = saved_param_aliases;
+        self.cell_vars = saved_cell_vars;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -6592,6 +7146,7 @@ impl Lowerer {
         let saved_method_params = std::mem::take(&mut self.current_method_params);
         self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
         let saved_param_aliases = std::mem::take(&mut self.param_aliases);
+        let saved_cell_vars = std::mem::take(&mut self.cell_vars);
 
         let mut assigned_names: Vec<String> = Vec::new();
         for c in &node.children {
@@ -6604,7 +7159,17 @@ impl Lowerer {
                 }
             }
         }
-        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
+        for p in &params {
+            self.current_params.insert(p.name.clone());
+        }
+        let mut candidates = assigned_names.clone();
+        for p in &params {
+            if !candidates.contains(&p.name) {
+                candidates.push(p.name.clone());
+            }
+        }
+        let cell_prologue = self.setup_cell_variables(&candidates, node, &self.span_of(node));
+        let param_prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
 
         // The body is every `statement` child of the def_statement
         // that *isn't* the method's own def_statement (we already
@@ -6673,11 +7238,13 @@ impl Lowerer {
                 }),
             )
         };
-        stmts_out.splice(0..0, prologue);
+        stmts_out.splice(0..0, param_prologue);
+        stmts_out.splice(0..0, cell_prologue);
 
         // Restore the outer scope's locals + params so the rest of
         // the program lowers correctly.
         self.param_aliases = saved_param_aliases;
+        self.cell_vars = saved_cell_vars;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -6722,7 +7289,11 @@ impl Lowerer {
     fn lower_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         // Shape (post-6p): NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression
         let (raw_name, name_span) = self.expect_first_name_token(node)?;
-        let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
+        let name = self
+            .param_aliases
+            .get(&raw_name)
+            .cloned()
+            .unwrap_or_else(|| raw_name.clone());
         let expr_node = self
             .find_node_child(node, "expression")
             .ok_or_else(|| RubyLowerError {
@@ -6813,6 +7384,61 @@ impl Lowerer {
                 // statements don't re-binding-error.  Matches the
                 // bookkeeping the generic compound path does below.
                 self.features_used.insert(Feature::MutableBindings);
+
+                if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+                    self.features_used.insert(Feature::Sequences);
+                    let cond_ref = Expr::SeqIndex {
+                        seq: Box::new(Expr::VarRef {
+                            name: cell.cell_name.clone(),
+                            scope: cell.scope,
+                            span: span.clone(),
+                        }),
+                        index: Box::new(Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        }),
+                        span: span.clone(),
+                    };
+                    let result_ref = cond_ref.clone();
+                    let assign_stmt = Stmt::SeqSet {
+                        seq: Expr::VarRef {
+                            name: cell.cell_name.clone(),
+                            scope: cell.scope,
+                            span: span.clone(),
+                        },
+                        index: Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        },
+                        value: rhs,
+                        span: span.clone(),
+                    };
+                    let empty_block = Block {
+                        stmts: vec![],
+                        value: result_ref.clone(),
+                        span: span.clone(),
+                    };
+                    let assign_block = Block {
+                        stmts: vec![assign_stmt],
+                        value: result_ref,
+                        span: span.clone(),
+                    };
+                    let (then_branch, else_branch) = if op == "||=" {
+                        (empty_block, assign_block)
+                    } else {
+                        (assign_block, empty_block)
+                    };
+                    return Ok(Stmt::ExprStmt {
+                        expr: Expr::If {
+                            cond: Box::new(cond_ref),
+                            then_branch: Box::new(then_branch),
+                            else_branch: Box::new(else_branch),
+                            span: span.clone(),
+                        },
+                        span,
+                    });
+                }
+
                 self.declared_locals.insert(name.clone());
 
                 let cond_ref = Expr::VarRef {
@@ -6905,19 +7531,35 @@ impl Lowerer {
             // Phase 15a/15b/15c — a compound assign to a sigil var or a
             // constant (`@x += 1`, `@@x += 1`, `FOO += 1`) reads it back
             // with the matching scope.
-            let lhs_scope = if is_class_var_name(&name) {
-                Scope::ClassVar
-            } else if is_instance_var_name(&name) {
-                Scope::Instance
-            } else if is_constant_name(&name) {
-                Scope::Const
+            let lhs_ref = if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+                self.features_used.insert(Feature::Sequences);
+                Expr::SeqIndex {
+                    seq: Box::new(Expr::VarRef {
+                        name: cell.cell_name,
+                        scope: cell.scope,
+                        span: span.clone(),
+                    }),
+                    index: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    }),
+                    span: span.clone(),
+                }
             } else {
-                Scope::Local
-            };
-            let lhs_ref = Expr::VarRef {
-                name: name.clone(),
-                scope: lhs_scope,
-                span: span.clone(),
+                let lhs_scope = if is_class_var_name(&name) {
+                    Scope::ClassVar
+                } else if is_instance_var_name(&name) {
+                    Scope::Instance
+                } else if is_constant_name(&name) {
+                    Scope::Const
+                } else {
+                    Scope::Local
+                };
+                Expr::VarRef {
+                    name: name.clone(),
+                    scope: lhs_scope,
+                    span: span.clone(),
+                }
             };
             Expr::BuiltinCall {
                 name: builtin_name.to_string(),
@@ -6977,32 +7619,51 @@ impl Lowerer {
             });
         }
 
-        // A compound assignment ALWAYS reads then re-binds, so it
-        // must emit `Stmt::Assign` (never `LetBinding`).  Plain `=`
-        // keeps the original "first sighting → LetBinding, subsequent
-        // → Assign" behaviour.
-        let is_compound = op_token.is_some();
-        if is_compound || self.declared_locals.contains(&name) {
-            // Re-bind path: mutable-bindings feature required.
+        // #18798 Item 5 — if the variable is boxed in a cell, assign via SeqSet.
+        if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+            self.features_used.insert(Feature::Sequences);
             self.features_used.insert(Feature::MutableBindings);
-            // Compound `x ||= 1` without a prior `x = …` is still
-            // valid Ruby (treats `x` as nil), but we record it as a
-            // local so any subsequent `x = 1` doesn't re-binding-error.
-            self.declared_locals.insert(name.clone());
-            Ok(Stmt::Assign {
-                name,
-                scope: Scope::Local,
+            Ok(Stmt::SeqSet {
+                seq: Expr::VarRef {
+                    name: cell.cell_name,
+                    scope: cell.scope,
+                    span: span.clone(),
+                },
+                index: Expr::IntLit {
+                    value: 0,
+                    span: span.clone(),
+                },
                 value,
                 span,
             })
         } else {
-            self.declared_locals.insert(name.clone());
-            Ok(Stmt::LetBinding {
-                name,
-                sir_type: None,
-                value,
-                span,
-            })
+            // A compound assignment ALWAYS reads then re-binds, so it
+            // must emit `Stmt::Assign` (never `LetBinding`).  Plain `=`
+            // keeps the original "first sighting → LetBinding, subsequent
+            // → Assign" behaviour.
+            let is_compound = op_token.is_some();
+            if is_compound || self.declared_locals.contains(&name) {
+                // Re-bind path: mutable-bindings feature required.
+                self.features_used.insert(Feature::MutableBindings);
+                // Compound `x ||= 1` without a prior `x = …` is still
+                // valid Ruby (treats `x` as nil), but we record it as a
+                // local so any subsequent `x = 1` doesn't re-binding-error.
+                self.declared_locals.insert(name.clone());
+                Ok(Stmt::Assign {
+                    name,
+                    scope: Scope::Local,
+                    value,
+                    span,
+                })
+            } else {
+                self.declared_locals.insert(name.clone());
+                Ok(Stmt::LetBinding {
+                    name,
+                    sir_type: None,
+                    value,
+                    span,
+                })
+            }
         }
         // `name_span` is intentionally unused for now — the SIR Stmt
         // span covers the whole statement.  Keeping the binding so
@@ -7073,12 +7734,32 @@ impl Lowerer {
                 column: node.start_column.unwrap_or(0),
             })?;
         let raw_name = name_token.value.clone();
-        let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
+        let name = self
+            .param_aliases
+            .get(&raw_name)
+            .cloned()
+            .unwrap_or_else(|| raw_name.clone());
         let span = self.span_of(node);
 
         // Step 3: dispatch on whether the local is already declared —
         // same first-sighting / re-bind split as `lower_assignment`.
-        if self.declared_locals.contains(&name) {
+        if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+            self.features_used.insert(Feature::Sequences);
+            self.features_used.insert(Feature::MutableBindings);
+            Ok(Stmt::SeqSet {
+                seq: Expr::VarRef {
+                    name: cell.cell_name,
+                    scope: cell.scope,
+                    span: span.clone(),
+                },
+                index: Expr::IntLit {
+                    value: 0,
+                    span: span.clone(),
+                },
+                value,
+                span,
+            })
+        } else if self.declared_locals.contains(&name) {
             self.features_used.insert(Feature::MutableBindings);
             Ok(Stmt::Assign {
                 name,
@@ -7397,9 +8078,29 @@ impl Lowerer {
 
             // Pass 2: assign each LHS from its temp.
             for ((raw_name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
-                let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
+                let name = self
+                    .param_aliases
+                    .get(&raw_name)
+                    .cloned()
+                    .unwrap_or_else(|| raw_name.clone());
                 let span = name_span.clone();
-                let stmt = if self.declared_locals.contains(&name) {
+                let stmt = if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+                    self.features_used.insert(Feature::Sequences);
+                    self.features_used.insert(Feature::MutableBindings);
+                    Stmt::SeqSet {
+                        seq: Expr::VarRef {
+                            name: cell.cell_name,
+                            scope: cell.scope,
+                            span: span.clone(),
+                        },
+                        index: Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        },
+                        value: tmp_ref,
+                        span,
+                    }
+                } else if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
                     Stmt::Assign {
                         name: name.clone(),
@@ -7423,9 +8124,29 @@ impl Lowerer {
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
             for ((raw_name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
-                let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
+                let name = self
+                    .param_aliases
+                    .get(&raw_name)
+                    .cloned()
+                    .unwrap_or_else(|| raw_name.clone());
                 let span = name_span.clone();
-                let stmt = if self.declared_locals.contains(&name) {
+                let stmt = if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+                    self.features_used.insert(Feature::Sequences);
+                    self.features_used.insert(Feature::MutableBindings);
+                    Stmt::SeqSet {
+                        seq: Expr::VarRef {
+                            name: cell.cell_name,
+                            scope: cell.scope,
+                            span: span.clone(),
+                        },
+                        index: Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        },
+                        value,
+                        span,
+                    }
+                } else if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
                     Stmt::Assign {
                         name: name.clone(),
@@ -7522,7 +8243,11 @@ impl Lowerer {
 
         // Pass 2: bind each LHS from `temp[i]`.
         for (i, (raw_name, _is_splat, name_span)) in lhs_targets.into_iter().enumerate() {
-            let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
+            let name = self
+                .param_aliases
+                .get(&raw_name)
+                .cloned()
+                .unwrap_or_else(|| raw_name.clone());
             let span = name_span.clone();
             let index_expr = Expr::SeqIndex {
                 seq: Box::new(Expr::VarRef {
@@ -7536,7 +8261,23 @@ impl Lowerer {
                 }),
                 span: span.clone(),
             };
-            let stmt = if self.declared_locals.contains(&name) {
+            let stmt = if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+                self.features_used.insert(Feature::Sequences);
+                self.features_used.insert(Feature::MutableBindings);
+                Stmt::SeqSet {
+                    seq: Expr::VarRef {
+                        name: cell.cell_name,
+                        scope: cell.scope,
+                        span: span.clone(),
+                    },
+                    index: Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    },
+                    value: index_expr,
+                    span,
+                }
+            } else if self.declared_locals.contains(&name) {
                 self.features_used.insert(Feature::MutableBindings);
                 Stmt::Assign {
                     name: name.clone(),
@@ -7665,7 +8406,23 @@ impl Lowerer {
                 }
             };
 
-            let stmt = if self.declared_locals.contains(&name) {
+            let stmt = if let Some(cell) = self.cell_vars.get(raw_name.as_str()).cloned() {
+                self.features_used.insert(Feature::Sequences);
+                self.features_used.insert(Feature::MutableBindings);
+                Stmt::SeqSet {
+                    seq: Expr::VarRef {
+                        name: cell.cell_name,
+                        scope: cell.scope,
+                        span: span.clone(),
+                    },
+                    index: Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    },
+                    value,
+                    span,
+                }
+            } else if self.declared_locals.contains(&name) {
                 self.features_used.insert(Feature::MutableBindings);
                 Stmt::Assign {
                     name: name.clone(),
@@ -7740,6 +8497,29 @@ impl Lowerer {
     /// a one-element `Vec<Stmt>` (the `TryCatch`) so its call site — which
     /// flattens statement lists — stays uniform with the other
     /// multi-statement lowerings.
+    /// Collect the variable names bound by `rescue => e` clauses under `node`.
+    fn collect_rescue_binding_names(node: &GrammarASTNode, out: &mut Vec<String>) {
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "rescue_clause" {
+                    let mut saw_arrow = false;
+                    for cc in &n.children {
+                        if let ASTNodeOrToken::Token(t) = cc {
+                            if t.value == "=>" {
+                                saw_arrow = true;
+                            } else if saw_arrow && t.type_ == TokenType::Name {
+                                if is_plain_local_name(&t.value) && !out.contains(&t.value) {
+                                    out.push(t.value.clone());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fn lower_begin_statement(
         &mut self,
         node: &GrammarASTNode,
@@ -7751,14 +8531,41 @@ impl Lowerer {
         // them.
         let outer_span = self.span_of(node);
         self.features_used.insert(Feature::Exceptions);
+
+        // #18798 Comment 1 — In Ruby, `begin ... rescue => e ... end` does not
+        // open a scope; `e` is an ordinary local of the enclosing scope that
+        // persists after the rescue clause. If `e` is not yet declared, declare
+        // it as `nil` before the `TryCatch`.
+        let mut bindings = Vec::new();
+        Self::collect_rescue_binding_names(node, &mut bindings);
+        let mut prefix = Vec::new();
+        for b in bindings {
+            if !self.declared_locals.contains(&b)
+                && !self.current_params.contains(&b)
+                && !self.cell_vars.contains_key(&b)
+            {
+                self.declared_locals.insert(b.clone());
+                prefix.push(Stmt::LetBinding {
+                    name: b,
+                    sir_type: None,
+                    value: Expr::NilLit {
+                        span: outer_span.clone(),
+                    },
+                    span: outer_span.clone(),
+                });
+            }
+        }
+
         let body = self.lower_flat_statements(node)?;
         let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
-        Ok(vec![Stmt::TryCatch {
+        let mut out = prefix;
+        out.push(Stmt::TryCatch {
             body,
             rescues,
             ensure_body,
             span: outer_span,
-        }])
+        });
+        Ok(out)
     }
 
     /// Lower the direct `statement` children of `node` into a flat
@@ -7827,22 +8634,47 @@ impl Lowerer {
         self.features_used.insert(Feature::DynamicTyping);
         let result = self.fresh_name("__rescue_value_");
         self.declared_locals.insert(result.clone());
+
+        // #18798 Comment 1 — In Ruby, `rescue => e` binds into an ordinary local
+        // of the enclosing scope that persists after the rescue clause. If `e`
+        // is not yet declared, declare it as `nil` before the `TryCatch`.
+        let mut bindings = Vec::new();
+        Self::collect_rescue_binding_names(node, &mut bindings);
+        let mut prefix = Vec::new();
+        for b in bindings {
+            if !self.declared_locals.contains(&b)
+                && !self.current_params.contains(&b)
+                && !self.cell_vars.contains_key(&b)
+            {
+                self.declared_locals.insert(b.clone());
+                prefix.push(Stmt::LetBinding {
+                    name: b,
+                    sir_type: None,
+                    value: Expr::NilLit {
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                });
+            }
+        }
+
         let try_body = self.lower_statements_storing_last(node, &result)?;
         let (rescues, ensure_body) = self.rescue_ensure_clauses(node, Some(&result))?;
-        let stmts = vec![
+        let mut stmts = vec![
             Stmt::LetBinding {
                 name: result.clone(),
                 sir_type: None,
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             },
-            Stmt::TryCatch {
-                body: try_body,
-                rescues,
-                ensure_body,
-                span: span.clone(),
-            },
         ];
+        stmts.extend(prefix);
+        stmts.push(Stmt::TryCatch {
+            body: try_body,
+            rescues,
+            ensure_body,
+            span: span.clone(),
+        });
         let value = Expr::VarRef {
             name: result,
             scope: Scope::Local,
@@ -7954,28 +8786,66 @@ impl Lowerer {
                         }
                         found
                     };
-                    // #18778 — the binding is a local of the clause body, so
-                    // a bare `e` there reads it, even when a method `e`
-                    // exists (see `bare_name_call`).  `rescue => e` with no
-                    // class (Ruby's default `StandardError`) reaches here
-                    // too, now that the grammar parses it: the `=>` and the
-                    // name are direct children, and `exception_types` stays
-                    // empty — a catch-all clause, as every backend renders
-                    // an empty type list.
-                    let newly_bound = binding
-                        .as_ref()
-                        .filter(|b| self.declared_locals.insert((*b).clone()));
-                    let rescue_body = match result {
+                    // #18778 Comment 1 — in Ruby, `rescue => e` binds the exception
+                    // into an ordinary local of the enclosing scope that stays visible
+                    // after the clause and writes through to any existing local `e`.
+                    // To prevent backends (JS, Go, Rust, C) from creating a catch-block
+                    // local that shadows the outer `e`, we bind the clause to a fresh
+                    // internal name and assign into the outer `e` at the top of the clause.
+                    let (clause_binding, store_stmt) = if let Some(ref b) = binding {
+                        let fresh = self.fresh_name("__rescue_binding_");
+                        self.features_used.insert(Feature::MutableBindings);
+                        let store = if let Some(cell) = self.cell_vars.get(b).cloned() {
+                            self.features_used.insert(Feature::Sequences);
+                            Stmt::SeqSet {
+                                seq: Expr::VarRef {
+                                    name: cell.cell_name,
+                                    scope: cell.scope,
+                                    span: self.span_of(n),
+                                },
+                                index: Expr::IntLit {
+                                    value: 0,
+                                    span: self.span_of(n),
+                                },
+                                value: Expr::VarRef {
+                                    name: fresh.clone(),
+                                    scope: Scope::Local,
+                                    span: self.span_of(n),
+                                },
+                                span: self.span_of(n),
+                            }
+                        } else {
+                            let target = self
+                                .param_aliases
+                                .get(b)
+                                .cloned()
+                                .unwrap_or_else(|| b.clone());
+                            Stmt::Assign {
+                                name: target,
+                                scope: Scope::Local,
+                                value: Expr::VarRef {
+                                    name: fresh.clone(),
+                                    scope: Scope::Local,
+                                    span: self.span_of(n),
+                                },
+                                span: self.span_of(n),
+                            }
+                        };
+                        (Some(fresh), Some(store))
+                    } else {
+                        (None, None)
+                    };
+
+                    let mut rescue_body = match result {
                         Some(result) => self.lower_statements_storing_last(n, result),
                         None => self.lower_flat_statements(n),
-                    };
-                    if let Some(b) = newly_bound {
-                        self.declared_locals.remove(b);
+                    }?;
+                    if let Some(store) = store_stmt {
+                        rescue_body.insert(0, store);
                     }
-                    let rescue_body = rescue_body?;
                     rescues.push(RescueClause {
                         exception_types,
-                        binding,
+                        binding: clause_binding,
                         body: rescue_body,
                         span: self.span_of(n),
                     });
@@ -8050,6 +8920,27 @@ impl Lowerer {
         }
         let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
             self.builtin_call_or_sys_write(callee, args, effects, span)
+        } else if self.self_has_instance_method(&callee) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            let mut full_args = Vec::with_capacity(args.len() + 2);
+            full_args.push(Expr::BuiltinCall {
+                name: "__self__".to_string(),
+                args: Vec::new(),
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+            full_args.push(Expr::StrLit {
+                value: callee,
+                span: span.clone(),
+            });
+            full_args.extend(args);
+            Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: full_args,
+                effects: EffectSet::PURE,
+                span,
+            }
         } else {
             // Unrecognised name — fall back to DirectCall.  SIR
             // backends that can't resolve the name will surface a
@@ -8366,6 +9257,27 @@ impl Lowerer {
         let span = self.span_of(node);
         if let Some(effects) = ruby_builtin_effects(&callee) {
             Ok(self.builtin_call_or_sys_write(callee, all_args, effects, span))
+        } else if self.self_has_instance_method(&callee) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            let mut full_args = Vec::with_capacity(all_args.len() + 2);
+            full_args.push(Expr::BuiltinCall {
+                name: "__self__".to_string(),
+                args: Vec::new(),
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+            full_args.push(Expr::StrLit {
+                value: callee,
+                span: span.clone(),
+            });
+            full_args.extend(all_args);
+            Ok(Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: full_args,
+                effects: EffectSet::PURE,
+                span,
+            })
         } else {
             Ok(Expr::DirectCall {
                 fn_name: callee,
@@ -8514,6 +9426,19 @@ impl Lowerer {
             self.declared_locals.insert(name.clone());
         }
 
+        let saved_cell_vars = self.cell_vars.clone();
+        let mut block_shadowed: HashSet<String> = HashSet::new();
+        for p in &params {
+            block_shadowed.insert(p.name.clone());
+        }
+        for name in &block_locals {
+            block_shadowed.insert(name.clone());
+        }
+        self.cell_vars.retain(|k, _| !block_shadowed.contains(k));
+        for cv in self.cell_vars.values_mut() {
+            cv.scope = Scope::Capture;
+        }
+
         // Body statements: every direct `statement` child of the
         // inner do_block / brace_block, in source order.  Tail-
         // expression promotion follows the same rule as
@@ -8530,6 +9455,8 @@ impl Lowerer {
         for s in &body_stmts {
             collect_loop_assigned_names(s, &mut assigned_names);
         }
+        let block_cell_prologue =
+            self.setup_cell_variables(&assigned_names, inner, &self.span_of(inner));
         let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
         let mut stmts_out: Vec<Stmt> = Vec::new();
         let mut value: Option<Expr> = None;
@@ -8594,9 +9521,11 @@ impl Lowerer {
             stmts_out = prefix;
         }
         stmts_out.splice(0..0, prologue);
+        stmts_out.splice(0..0, block_cell_prologue);
 
         // Restore outer scope.
         self.param_aliases = saved_param_aliases;
+        self.cell_vars = saved_cell_vars.clone();
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -8656,6 +9585,30 @@ impl Lowerer {
             self.block_captures_enclosing = true;
             self.features_used.insert(Feature::Closures);
             self.features_used.insert(Feature::DynamicTyping);
+        }
+
+        // #18798 Item 5 — capture outer cell variables referenced in the block body.
+        let cap_span = self.span_of(block_node);
+        for (name, cv) in &saved_cell_vars {
+            if !block_shadowed.contains(name)
+                && Self::body_references_capture(&body, &cv.cell_name)
+            {
+                let outer_scope = cv.scope;
+                captures.push(Capture {
+                    name: cv.cell_name.clone(),
+                    sir_type: None,
+                });
+                capture_values.push(CaptureValue {
+                    name: cv.cell_name.clone(),
+                    value: Expr::VarRef {
+                        name: cv.cell_name.clone(),
+                        scope: outer_scope,
+                        span: cap_span.clone(),
+                    },
+                });
+                self.features_used.insert(Feature::Closures);
+                self.features_used.insert(Feature::DynamicTyping);
+            }
         }
 
         // M4 — capture free reads of the immediate enclosing scope's
@@ -8729,6 +9682,7 @@ impl Lowerer {
             span: self.span_of(block_node),
         });
 
+        self.cell_vars = saved_cell_vars;
         Ok((fn_name, capture_values))
     }
 
@@ -8786,7 +9740,7 @@ impl Lowerer {
         //    Reuse the same machinery as `hoist_block_to_function` but
         //    using OUR `params` (from the parens-list), not the inner
         //    block's `block_params` pipe form.
-        let fn_name = self.hoist_lambda_body(block_node, params)?;
+        let (fn_name, captures) = self.hoist_lambda_body(block_node, params)?;
 
         // 4. Emit BuiltinCall("lambda", [MakeClosure]).  Closures
         //    feature auto-set so the validator accepts MakeClosure.
@@ -8796,7 +9750,7 @@ impl Lowerer {
             name: "lambda".to_string(),
             args: vec![Expr::MakeClosure {
                 fn_name,
-                captures: Vec::new(),
+                captures,
                 span: span.clone(),
             }],
             effects: EffectSet::PURE,
@@ -8816,7 +9770,7 @@ impl Lowerer {
         &mut self,
         block_node: &GrammarASTNode,
         params: Vec<Param>,
-    ) -> Result<String, RubyLowerError> {
+    ) -> Result<(String, Vec<CaptureValue>), RubyLowerError> {
         let inner = self
             .first_node_child(block_node)
             .ok_or_else(|| RubyLowerError {
@@ -8833,9 +9787,21 @@ impl Lowerer {
         let saved_visible = self.enclosing_visible.clone();
         self.enclosing_visible.extend(saved_locals.iter().cloned());
         self.enclosing_visible.extend(saved_params.iter().cloned());
+        let enclosing_locals = saved_locals.clone();
+        let enclosing_params = saved_params.clone();
         let saved_param_aliases = self.param_aliases.clone();
         for p in &params {
             self.param_aliases.remove(&p.name);
+        }
+
+        let saved_cell_vars = self.cell_vars.clone();
+        let mut block_shadowed: HashSet<String> = HashSet::new();
+        for p in &params {
+            block_shadowed.insert(p.name.clone());
+        }
+        self.cell_vars.retain(|k, _| !block_shadowed.contains(k));
+        for cv in self.cell_vars.values_mut() {
+            cv.scope = Scope::Capture;
         }
 
         // Body statements (same tail-expression promotion rule as the
@@ -8852,6 +9818,8 @@ impl Lowerer {
         for s in &body_stmts {
             collect_loop_assigned_names(s, &mut assigned_names);
         }
+        let block_cell_prologue =
+            self.setup_cell_variables(&assigned_names, inner, &self.span_of(inner));
         let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
         let mut stmts_out: Vec<Stmt> = Vec::new();
         let mut value: Option<Expr> = None;
@@ -8894,9 +9862,11 @@ impl Lowerer {
             span: self.span_of(inner),
         });
         stmts_out.splice(0..0, prologue);
+        stmts_out.splice(0..0, block_cell_prologue);
 
         // Restore outer scope.
         self.param_aliases = saved_param_aliases;
+        self.cell_vars = saved_cell_vars.clone();
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -8904,6 +9874,84 @@ impl Lowerer {
         // Sequential-assignment fix-up for this block body (see
         // `sequentialize_let_bindings`).
         sequentialize_let_bindings(&mut stmts_out);
+
+        let mut body = Block {
+            stmts: stmts_out,
+            value,
+            span: self.span_of(inner),
+        };
+
+        let mut captures: Vec<Capture> = Vec::new();
+        let mut capture_values: Vec<CaptureValue> = Vec::new();
+        let cap_span = self.span_of(block_node);
+        let mut captured_names: HashSet<String> = HashSet::new();
+        for (name, cv) in &saved_cell_vars {
+            if !block_shadowed.contains(name)
+                && Self::body_references_capture(&body, &cv.cell_name)
+            {
+                let outer_scope = cv.scope;
+                captures.push(Capture {
+                    name: cv.cell_name.clone(),
+                    sir_type: None,
+                });
+                capture_values.push(CaptureValue {
+                    name: cv.cell_name.clone(),
+                    value: Expr::VarRef {
+                        name: cv.cell_name.clone(),
+                        scope: outer_scope,
+                        span: cap_span.clone(),
+                    },
+                });
+                captured_names.insert(name.clone());
+                captured_names.insert(cv.cell_name.clone());
+                self.features_used.insert(Feature::Closures);
+                self.features_used.insert(Feature::DynamicTyping);
+            }
+        }
+
+        // M4 / #18798 Item 3 — capture free reads of the immediate enclosing scope's
+        // locals/params. Compute the lambda's own bound names (params,
+        // and anything assigned inside the body — those shadow or rebind
+        // locally and are NOT captured), then rewrite every free read to
+        // `Scope::Capture` and thread the enclosing value in.
+        let mut lambda_bound: HashSet<String> = HashSet::new();
+        for p in &params {
+            lambda_bound.insert(p.name.clone());
+        }
+        Self::collect_bound_names_in_block(&body, &mut lambda_bound);
+
+        let is_free = |name: &str| {
+            !lambda_bound.contains(name)
+                && !captured_names.contains(name)
+                && (enclosing_params.contains(name) || enclosing_locals.contains(name))
+        };
+        let mut free: Vec<String> = Vec::new();
+        Self::recapture_reads_in_block(&mut body, &is_free, &mut free);
+        if !free.is_empty() {
+            self.features_used.insert(Feature::Closures);
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+        for name in free {
+            // The enclosing value-ref scope: an enclosing *param* reads back
+            // as `Param`, otherwise an enclosing *local* reads as `Local`.
+            let outer_scope = if enclosing_params.contains(&name) {
+                Scope::Param
+            } else {
+                Scope::Local
+            };
+            captures.push(Capture {
+                name: name.clone(),
+                sir_type: None,
+            });
+            capture_values.push(CaptureValue {
+                name: name.clone(),
+                value: Expr::VarRef {
+                    name,
+                    scope: outer_scope,
+                    span: cap_span.clone(),
+                },
+            });
+        }
 
         // Mint a synthetic function name (shares the same counter as
         // method_with_block-hoisted blocks).
@@ -8917,18 +9965,15 @@ impl Lowerer {
             name: fn_name.clone(),
             params,
             return_type: None,
-            captures: Vec::new(),
-            body: Block {
-                stmts: stmts_out,
-                value,
-                span: self.span_of(inner),
-            },
+            captures,
+            body,
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(block_node),
         });
 
-        Ok(fn_name)
+        self.cell_vars = saved_cell_vars;
+        Ok((fn_name, capture_values))
     }
 
     // -------------------------------------------------------------------
@@ -10503,6 +11548,21 @@ impl Lowerer {
             if let Some(call) = self.bare_name_call(trimmed, &span) {
                 return call;
             }
+            if let Some(cell) = self.cell_vars.get(trimmed) {
+                self.features_used.insert(Feature::Sequences);
+                return Expr::SeqIndex {
+                    seq: Box::new(Expr::VarRef {
+                        name: cell.cell_name.clone(),
+                        scope: cell.scope,
+                        span: span.clone(),
+                    }),
+                    index: Box::new(Expr::IntLit {
+                        value: 0,
+                        span: span.clone(),
+                    }),
+                    span,
+                };
+            }
             let (name, scope) = if let Some(alias) = self.param_aliases.get(trimmed) {
                 (alias.clone(), Scope::Local)
             } else if self.current_params.contains(trimmed) {
@@ -10884,6 +11944,20 @@ impl Lowerer {
                             } else if is_constant_name(&tok.value) {
                                 self.features_used.insert(Feature::Constants);
                                 Scope::Const
+                            } else if let Some(cell) = self.cell_vars.get(&tok.value) {
+                                self.features_used.insert(Feature::Sequences);
+                                return Ok(Expr::SeqIndex {
+                                    seq: Box::new(Expr::VarRef {
+                                        name: cell.cell_name.clone(),
+                                        scope: cell.scope,
+                                        span: span.clone(),
+                                    }),
+                                    index: Box::new(Expr::IntLit {
+                                        value: 0,
+                                        span: span.clone(),
+                                    }),
+                                    span,
+                                });
                             } else if let Some(alias) = self.param_aliases.get(&tok.value) {
                                 return Ok(Expr::VarRef {
                                     name: alias.clone(),
@@ -11002,13 +12076,121 @@ impl Lowerer {
     /// a bare `m` means `self.m`, which a `DirectCall` to the top-level `m`
     /// would get wrong, and refusing (the validator's unknown-name error) is
     /// better than a wrong answer.  The last two rows keep today's refusal.
-    fn bare_name_call(&self, name: &str, span: &Span) -> Option<Expr> {
+    /// Check whether a receiver class or module (by name) defines or inherits
+    /// an instance method with the given name, traversing its superclass chain
+    /// and any included module mixins.
+    fn receiver_has_instance_method(&self, target: &str, method: &str) -> bool {
+        let mut visited = HashSet::new();
+        let mut queue = vec![target.to_string()];
+        while let Some(curr) = queue.pop() {
+            if !visited.insert(curr.clone()) {
+                continue;
+            }
+            if let Some(methods) = self.class_instance_methods.get(&curr) {
+                if methods.contains(method) {
+                    return true;
+                }
+            }
+            if let Some(methods) = self.module_instance_methods.get(&curr) {
+                if methods.contains(method) {
+                    return true;
+                }
+            }
+            if let Some(super_name) = self.class_superclasses.get(&curr) {
+                queue.push(super_name.clone());
+            }
+            if let Some(included) = self.class_includes.get(&curr) {
+                for inc in included {
+                    queue.push(inc.clone());
+                }
+            }
+        }
+        false
+    }
+
+    /// #18798 Item 21 — Check whether `self` has an instance method named
+    /// `method` in the current lowerer scope.
+    ///
+    /// This is true only when:
+    /// 1. We are inside an instance method body (`self.current_method.is_some()`).
+    /// 2. We are within an enclosing `class` or `module` definition.
+    /// 3. That class or module (or an ancestor superclass or included module mixin)
+    ///    defines an instance method matching `method`.
+    fn self_has_instance_method(&self, method: &str) -> bool {
+        if self.current_method.is_none() {
+            return false;
+        }
+        if let Some(ref class_name) = self.current_class {
+            if self.receiver_has_instance_method(class_name, method) {
+                return true;
+            }
+        }
+        if let Some(ref mod_name) = self.current_module {
+            if self.receiver_has_instance_method(mod_name, method) {
+                return true;
+            }
+        }
+        false
+    }
+
+    /// #18778 / #18798 Item 21 — parse-order dispatch for bare identifiers.
+    ///
+    /// In Ruby, a bare name `m` with no receiver and no arguments can mean:
+    /// 1. A local variable or parameter (if assigned before this point).
+    /// 2. An instance method call on `self` (`self.m`) if inside a method of
+    ///    a class or module that defines/inherits `m`.
+    /// 3. A top-level method call (`DirectCall(m)`).
+    ///
+    /// The rule here:
+    ///
+    /// | `name` is …                                        | lowers to                          |
+    /// |----------------------------------------------------|------------------------------------|
+    /// | a local or parameter assigned before this point    | `VarRef` (caller)                  |
+    /// | a local of a scope around this block or lambda     | `VarRef` (caller)                  |
+    /// | an instance method of `self` (inside a class/mod)  | `__method__(__self__(), "name")`   |
+    /// | a top-level `def` only                             | `DirectCall(name)`                 |
+    /// | also a method of some other `class`/`module`       | `VarRef` (caller, validator error) |
+    /// | not a method at all                                | `VarRef` (caller, validator error) |
+    ///
+    /// "Before this point" is `declared_locals`, which grows as assignments
+    /// are lowered, in source order: the parse-order rule Ruby uses.
+    fn bare_name_call(&mut self, name: &str, span: &Span) -> Option<Expr> {
         let is_local = self.declared_locals.contains(name)
             || self.current_params.contains(name)
             || self.param_aliases.contains_key(name)
+            || self.cell_vars.contains_key(name)
             || self.enclosing_visible.contains(name);
-        if is_local || !self.top_level_methods.contains(name) || self.nested_methods.contains(name)
-        {
+        if is_local {
+            return None;
+        }
+
+        // #18798 Item 21 — Inside a class or module method, if the current
+        // target (class/module hierarchy) defines or inherits an instance method
+        // with this name, dispatch it as `self.m`:
+        // BuiltinCall("__method__", [__self__(), StrLit(name)]).
+        if self.self_has_instance_method(name) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            return Some(Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: vec![
+                    Expr::BuiltinCall {
+                        name: "__self__".to_string(),
+                        args: Vec::new(),
+                        effects: EffectSet::PURE,
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: name.to_string(),
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+        }
+
+        if !self.top_level_methods.contains(name) || self.nested_methods.contains(name) {
             return None;
         }
         Some(Expr::DirectCall {
@@ -11177,17 +12359,33 @@ impl Lowerer {
     /// than the statement's final value.
     fn lower_index_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         let (raw_name, name_span) = self.expect_first_name_token(node)?;
-        let (name, scope) = if let Some(alias) = self.param_aliases.get(&raw_name) {
-            (alias.clone(), Scope::Local)
-        } else if self.current_params.contains(&raw_name) {
-            (raw_name, Scope::Param)
+        let mut receiver = if let Some(cell) = self.cell_vars.get(&raw_name).cloned() {
+            self.features_used.insert(Feature::Sequences);
+            Expr::SeqIndex {
+                seq: Box::new(Expr::VarRef {
+                    name: cell.cell_name,
+                    scope: cell.scope,
+                    span: name_span.clone(),
+                }),
+                index: Box::new(Expr::IntLit {
+                    value: 0,
+                    span: name_span.clone(),
+                }),
+                span: name_span,
+            }
         } else {
-            (raw_name, Scope::Local)
-        };
-        let mut receiver = Expr::VarRef {
-            name,
-            scope,
-            span: name_span,
+            let (name, scope) = if let Some(alias) = self.param_aliases.get(&raw_name) {
+                (alias.clone(), Scope::Local)
+            } else if self.current_params.contains(&raw_name) {
+                (raw_name, Scope::Param)
+            } else {
+                (raw_name, Scope::Local)
+            };
+            Expr::VarRef {
+                name,
+                scope,
+                span: name_span,
+            }
         };
         for child in &node.children {
             let ASTNodeOrToken::Node(sub) = child else { continue };
@@ -11331,6 +12529,30 @@ impl Lowerer {
             .collect::<Result<Vec<_>, _>>()?;
 
         let span = self.span_of(dot_node);
+
+        // #18798 Item 3 — `recv.call(args)` on a callable/closure value.
+        // In Ruby, procs and lambdas are invoked via `.call(...)`. Lowering
+        // to `Expr::IndirectCall` bypasses OOP dynamic method dispatch and
+        // invokes the closure directly across all backends.
+        if method_name == "call" {
+            let mut final_args = args;
+            if let Some(block_node) = self.find_node_child(dot_node, "block") {
+                let (fn_name, capture_values) = self.hoist_block_to_function(block_node)?;
+                let bspan = self.span_of(block_node);
+                final_args.push(Expr::MakeClosure {
+                    fn_name,
+                    captures: capture_values,
+                    span: bspan,
+                });
+            }
+            self.features_used.insert(Feature::Closures);
+            return Ok(Expr::IndirectCall {
+                target: Box::new(receiver),
+                args: final_args,
+                effects: EffectSet::PURE,
+                span,
+            });
+        }
 
         // O2 (OOP production) — `Foo.new(args)` on a *constant* receiver is
         // object construction, not an ordinary method call.  It lowers to the

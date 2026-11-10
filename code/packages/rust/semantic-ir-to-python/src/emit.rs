@@ -1178,6 +1178,14 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emitting
+            // a bare `try:` without `except:` or `finally:` is a Python syntax
+            // error. Emit the body statements inline.
+            if rescues.is_empty() && ensure_body.is_none() {
+                emit_stmt_list(out, body, indent, env);
+                return;
+            }
             let _ = writeln!(out, "{}try:", pad);
             emit_stmt_list(out, body, indent + 1, env);
             if !rescues.is_empty() {

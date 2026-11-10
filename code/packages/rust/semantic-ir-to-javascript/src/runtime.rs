@@ -193,7 +193,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `applyClosure` invokes it.  Wrapping (rather than using a bare JS
   // function) keeps closures distinguishable from other callables.
   class Closure {
-    constructor(fn) { this.fn = fn; }
+    constructor(fn, arity) { this.fn = fn; this.arity = arity; }
   }
 
   // ── symbol interning ───────────────────────────────────────────
@@ -1082,7 +1082,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       // Native higher-order methods pass (element, index, array); the SIR
       // closure only binds the params it declared, so extra JS arguments
       // are harmlessly ignored by `applyClosure`'s spread.
-      return (...xs) => applyClosure(a, xs);
+      const fn = (...xs) => applyClosure(a, xs);
+      if (a.arity !== undefined) {
+        fn.arity = a.arity;
+      }
+      return fn;
     }
     return a;
   }
@@ -1644,6 +1648,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "to_h", "each_with_index", "each_with_object",
   ]);
   function hashMethod(recv, name, args) {
+    const yieldKV = (blk, k, v) => (blk && blk.arity === 1 ? blk([k, v]) : blk(k, v));
     switch (name) {
       case "keys": return [...recv.keys()];
       case "values": return [...recv.values()];
@@ -1716,16 +1721,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         return recv;
       }
       case "each": case "each_pair": {
-        // Yields (key, value); returns the receiver.
+        // Yields (key, value) or [key, value] for 1-param blocks; returns the receiver.
         const blk = args[args.length - 1];
-        if (typeof blk === "function") { for (const [k, v] of recv) { blk(k, v); } }
+        if (typeof blk === "function") { for (const [k, v] of recv) { yieldKV(blk, k, v); } }
         return recv;
       }
       case "map": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return []; }
         const out = [];
-        for (const [k, v] of recv) { out.push(blk(k, v)); }
+        for (const [k, v] of recv) { out.push(yieldKV(blk, k, v)); }
         return out;
       }
       case "select": case "filter": case "reject": {
@@ -1735,7 +1740,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const keepWhenTruthy = name !== "reject";
         const out = new Map();
         for (const [k, v] of recv) {
-          const t = truthy(blk(k, v));
+          const t = truthy(yieldKV(blk, k, v));
           if (keepWhenTruthy ? t : !t) { out.set(k, v); }
         }
         return out;
@@ -1772,32 +1777,32 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       case "find": case "detect": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return [k, v]; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return [k, v]; } }
         return null;
       }
       case "any?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size > 0; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return true; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return true; } }
         return false;
       }
       case "all?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return true; }
-        for (const [k, v] of recv) { if (!truthy(blk(k, v))) { return false; } }
+        for (const [k, v] of recv) { if (!truthy(yieldKV(blk, k, v))) { return false; } }
         return true;
       }
       case "none?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size === 0; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return false; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return false; } }
         return true;
       }
       case "count": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size; }
         let n = 0;
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { n++; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { n++; } }
         return n;
       }
       case "sort_by": {
@@ -1806,7 +1811,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
         const keyed = [];
-        for (const [k, v] of recv) { keyed.push([blk(k, v), [k, v]]); }
+        for (const [k, v] of recv) { keyed.push([yieldKV(blk, k, v), [k, v]]); }
         keyed.sort((a, b) => arrCmp(a[0], b[0]));
         return keyed.map((p) => p[1]);
       }
@@ -1820,7 +1825,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         let bestPair = null;
         let bestKey;
         for (const [k, v] of recv) {
-          const key = blk(k, v);
+          const key = yieldKV(blk, k, v);
           if (bestPair === null || (wantMin ? key < bestKey : key > bestKey)) {
             bestPair = [k, v];
             bestKey = key;
@@ -1841,7 +1846,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (typeof blk !== "function") { return HASH_MISS; }
         const groups = new Map();
         for (const [k, v] of recv) {
-          const gk = blk(k, v);
+          const gk = yieldKV(blk, k, v);
           const bucket = groups.get(gk);
           if (bucket) { bucket.push([k, v]); } else { groups.set(gk, [[k, v]]); }
         }
@@ -1854,7 +1859,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const yes = [];
         const no = [];
         for (const [k, v] of recv) {
-          if (truthy(blk(k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
+          if (truthy(yieldKV(blk, k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
         }
         return [yes, no];
       }
@@ -1865,7 +1870,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (typeof blk !== "function") { return HASH_MISS; }
         const out = [];
         for (const [k, v] of recv) {
-          const r = blk(k, v);
+          const r = yieldKV(blk, k, v);
           if (Array.isArray(r)) { out.push(...r); } else { out.push(r); }
         }
         return out;
@@ -1893,7 +1898,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
         let acc = args.length >= 2 ? args[0] : 0;
-        for (const [k, v] of recv) { acc = acc + blk(k, v); }
+        for (const [k, v] of recv) { acc = acc + yieldKV(blk, k, v); }
         return acc;
       }
       case "to_h": {

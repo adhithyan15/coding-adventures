@@ -1326,6 +1326,13 @@ function hashMethod(recv: Map<Val, Val>, name: string, args: Val[]): Val | typeo
   }
 }
 
+function yieldHashPair(block: Closure, key: Val, value: Val): Val {
+  if (block.arity === 1) {
+    return apply(block, [[key, value]]);
+  }
+  return apply(block, [key, value]);
+}
+
 /** Block-taking `Hash` methods; the block receives `[key, value]` (or a single
  * key/value for `each_key`/`each_value`). Returns `MISS` if not a block method. */
 function hashBlockMethod(
@@ -1337,7 +1344,7 @@ function hashBlockMethod(
   switch (name) {
     case "each":
     case "each_pair":
-      for (const [k, v] of [...recv]) apply(block, [k, v]);
+      for (const [k, v] of [...recv]) yieldHashPair(block, k, v);
       return recv;
     case "each_key":
       for (const k of [...recv.keys()]) apply(block, [k]);
@@ -1346,12 +1353,12 @@ function hashBlockMethod(
       for (const v of [...recv.values()]) apply(block, [v]);
       return recv;
     case "map":
-      return [...recv].map(([k, v]: [Val, Val]) => apply(block, [k, v]));
+      return [...recv].map(([k, v]: [Val, Val]) => yieldHashPair(block, k, v));
     case "select":
     case "filter":
-      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(apply(block, [k, v]))));
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => truthy(yieldHashPair(block, k, v))));
     case "reject":
-      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(apply(block, [k, v]))));
+      return new Map<Val, Val>([...recv].filter(([k, v]: [Val, Val]) => !truthy(yieldHashPair(block, k, v))));
     case "transform_values":
       // Ruby `Hash#transform_values { |v| … }`: a NEW hash whose keys are copied
       // verbatim and whose values are the block results.  The block yields ONE
@@ -1375,29 +1382,29 @@ function hashBlockMethod(
     case "find":
     case "detect":
       for (const [k, v] of recv) {
-        if (truthy(apply(block, [k, v]))) return [k, v];
+        if (truthy(yieldHashPair(block, k, v))) return [k, v];
       }
       return null;
     case "any?":
       for (const [k, v] of recv) {
-        if (truthy(apply(block, [k, v]))) return true;
+        if (truthy(yieldHashPair(block, k, v))) return true;
       }
       return false;
     case "all?":
       for (const [k, v] of recv) {
-        if (!truthy(apply(block, [k, v]))) return false;
+        if (!truthy(yieldHashPair(block, k, v))) return false;
       }
       return true;
     case "none?":
       for (const [k, v] of recv) {
-        if (truthy(apply(block, [k, v]))) return false;
+        if (truthy(yieldHashPair(block, k, v))) return false;
       }
       return true;
     case "count": {
       // `count { |k, v| pred }` — number of pairs with a truthy block result.
       let n = 0;
       for (const [k, v] of recv) {
-        if (truthy(apply(block, [k, v]))) n++;
+        if (truthy(yieldHashPair(block, k, v))) n++;
       }
       return n;
     }
@@ -1405,7 +1412,7 @@ function hashBlockMethod(
       // A NEW Array of `[k, v]` pairs sorted by the block key; `<`/`>` keeps
       // numbers numeric (matching Array#sort_by).  Keys computed once.
       const keyed = [...recv].map(([k, v]: [Val, Val]): [Val, Val] => [
-        apply(block, [k, v]),
+        yieldHashPair(block, k, v),
         [k, v],
       ]);
       keyed.sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
@@ -1419,10 +1426,10 @@ function hashBlockMethod(
       if (entries.length === 0) return null;
       const wantMin = name === "min_by";
       let bestPair: Val = [entries[0][0], entries[0][1]];
-      let bestKey = apply(block, [entries[0][0], entries[0][1]]);
+      let bestKey = yieldHashPair(block, entries[0][0], entries[0][1]);
       for (let i = 1; i < entries.length; i++) {
         const [k, v] = entries[i];
-        const key = apply(block, [k, v]);
+        const key = yieldHashPair(block, k, v);
         if (wantMin ? key! < bestKey! : key! > bestKey!) {
           bestPair = [k, v];
           bestKey = key;
@@ -1441,7 +1448,7 @@ function hashBlockMethod(
       // a Map).
       const groups = new Map<Val, Val>();
       for (const [k, v] of [...recv]) {
-        const key = apply(block, [k, v]);
+        const key = yieldHashPair(block, k, v);
         const bucket = groups.get(key);
         if (Array.isArray(bucket)) bucket.push([k, v]);
         else groups.set(key, [[k, v]]);
@@ -1453,7 +1460,7 @@ function hashBlockMethod(
       const yes: Val[] = [];
       const no: Val[] = [];
       for (const [k, v] of [...recv]) {
-        if (truthy(apply(block, [k, v]))) yes.push([k, v]);
+        if (truthy(yieldHashPair(block, k, v))) yes.push([k, v]);
         else no.push([k, v]);
       }
       return [yes, no];
@@ -1464,7 +1471,7 @@ function hashBlockMethod(
       // elements, a scalar is appended as-is.
       const out: Val[] = [];
       for (const [k, v] of [...recv]) {
-        const mapped = apply(block, [k, v]);
+        const mapped = yieldHashPair(block, k, v);
         if (Array.isArray(mapped)) out.push(...mapped);
         else out.push(mapped);
       }

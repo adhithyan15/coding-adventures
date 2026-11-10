@@ -99,6 +99,8 @@ class Closure:
         is_lambda: bool = False,
     ) -> None:
         self.fn = fn
+        if arity is None:
+            arity = _positional_arity(fn)
         self.arity = arity
         self.is_lambda = is_lambda
         self.exact_arity: int | None = None

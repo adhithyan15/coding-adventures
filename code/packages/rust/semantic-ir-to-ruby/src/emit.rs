@@ -1610,7 +1610,15 @@ fn emit_expr(e: &Expr) -> String {
             // parameter must be a name no user variable can have.  It was
             // `__sir_args`, which a user could spell — and then read the
             // argument array in place of their own variable.
-            fixed.push("*sir_args".to_string());
+            let arity = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied());
+            // #18798 (item 23): in Ruby, blocks discard surplus arguments.
+            // If the block function takes 0 parameters, forwarding `*sir_args`
+            // to a 0-parameter `def` raises ArgumentError at run time whenever
+            // the caller passes arguments (e.g. `[1].each { puts 42 }` or
+            // `yield 1` to a 0-parameter block).
+            if arity != Some(0) {
+                fixed.push("*sir_args".to_string());
+            }
             format!(
                 "->(*sir_args) {{ {}({}) }}",
                 function_emit_name(fn_name),

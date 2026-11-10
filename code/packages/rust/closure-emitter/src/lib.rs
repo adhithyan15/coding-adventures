@@ -1285,8 +1285,9 @@ impl<'a> Emitter<'a> {
         self.write_str("function");
         if f.generator {
             self.write_str("*");
+        } else {
+            self.required_ws();
         }
-        self.required_ws();
         self.emit_identifier(&f.id);
         self.write_str("(");
         for (i, p) in f.params.iter().enumerate() {
@@ -1363,7 +1364,9 @@ impl<'a> Emitter<'a> {
             self.write_str("*");
         }
         if let Some(id) = &f.id {
-            self.required_ws();
+            if !f.generator {
+                self.required_ws();
+            }
             self.emit_identifier(id);
         }
         self.emit_param_list_and_body(&f.params, &f.body);
@@ -2707,13 +2710,19 @@ impl<'a> Emitter<'a> {
                     return;
                 }
                 if p.method {
+                    if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                        if fe.is_async {
+                            self.write_str("async");
+                            self.required_ws();
+                        }
+                        if fe.generator {
+                            self.write_str("*");
+                        }
+                        self.emit_property_key(&p.key);
+                        self.emit_param_list_and_body(&fe.params, &fe.body);
+                        return;
+                    }
                     self.emit_property_key(&p.key);
-                    // Method value is a FunctionExpression (Phase
-                    // 2). For Phase 1 we conservatively emit the
-                    // value expression which may be a function
-                    // literal or any expression — Phase 1 doesn't
-                    // emit FunctionExpression yet, so any non-
-                    // function value just gets emitted as-is.
                     self.emit_expression(&p.value);
                     return;
                 }
@@ -2726,13 +2735,21 @@ impl<'a> Emitter<'a> {
                 self.write_str("get");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
             PropertyKind::Set => {
                 self.write_str("set");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
         }
     }
@@ -5922,6 +5939,30 @@ mod tests {
         )]);
         let out = emit_default(prog);
         assert_eq!(out.code, "function noop(){};");
+    }
+
+    #[test]
+    fn generator_declaration_no_space() {
+        let body = BlockStatement {
+            cv: None,
+            body: vec![],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: true,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function*g(){};");
     }
 
     // ---- arrays + objects -----------------------------------
