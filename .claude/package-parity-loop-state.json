@@ -16,14 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 19107,
+  "active_prs": [
+    19107
+  ],
   "last_ci_action": {
-    "observed_at": "2026-11-10T06:01:11Z",
-    "pr_number": 18899,
-    "head_revision": "c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7",
-    "action": "Exact reviewed head c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7 completed all 42 hosted checks acceptably: 30 successes, 11 expected skips, and one neutral CodeQL aggregate. GitHub squash-merged PR #18899 at 2026-11-05T01:59:10Z as 11290878781e7e1c7881476572a487e9f0a0c9f6. No auto-merge-enable event exists in GitHub's timeline, so the receipt is recorded as a manual squash merge without claiming guarded auto-merge. The merge is an ancestor of current origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980; the remote branch was deleted and the clean completed worktree and local branch were removed safely.",
-    "manual_merge": true
+    "observed_at": "2026-11-10T06:28:55Z",
+    "pr_number": 19107,
+    "head_revision": "28084f0362df7a6ee87a82db65825a99d7b4e8aa",
+    "action": "Draft PR #19107 was opened by normal first push from exact independently reviewed head 28084f0362df7a6ee87a82db65825a99d7b4e8aa against exact main 57bfc809e3eb440317c5ae59552c74b2ae64b980. GitHub reports the draft mergeable. This lifecycle receipt must be pushed and independently reviewed before the PR is marked ready; guarded auto-merge remains disabled while exact-head hosted checks are queued."
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -3048,18 +3049,23 @@
     {
       "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
       "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
       ],
       "branch": "codex/rust-cargo-trigger-crate-closure-snapshot",
-      "pr_number": null,
+      "pr_number": 19107,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/19107",
       "registered_at": "2026-11-03T06:22:44Z",
       "selected_at": "2026-11-10T06:01:11Z",
       "selection_revision": "57bfc809e3eb440317c5ae59552c74b2ae64b980",
       "selection_notes": "Selected after verified merge receipt and cleanup for PR #18899. Its neutral manifest-snapshot prerequisite is merged, it directly unlocks the exact-identity native adapter and then CLI integration, and all 22 live open PRs are exact-path-disjoint from the planned Rust build-tool source, tests, README, changelog, state, roadmap, and conformance-spec scope. The fresh dedicated worktree starts at exact origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980. Keep this tranche authority-free: consume already captured immutable package, crate, config, and exemption snapshots; do not read files, resolve host paths or symlinks, consult environment state, run processes, or integrate the CLI.",
       "implementation_revision": "3de7922caf26a633787c7c4be16188008c1b15be",
       "validation_revision": "3de7922caf26a633787c7c4be16188008c1b15be",
+      "pr_opened_at": "2026-11-10T06:28:55Z",
+      "base_revision": "57bfc809e3eb440317c5ae59552c74b2ae64b980",
+      "publication_head": "28084f0362df7a6ee87a82db65825a99d7b4e8aa",
+      "publication_notes": "Draft PR #19107 was opened from the independently reviewed exact head after a normal first push. GitHub reports it mergeable against the exact reviewed base. The draft exists to obtain its durable PR identity; this lifecycle-only receipt requires independent delta review before readiness, and guarded auto-merge remains disabled until every exact-head hosted check is terminal acceptable and GitHub still reports the PR mergeable.",
       "validation_notes": "The authority-free Rust resolver accepts only caller-supplied immutable package, crate, redirect, and exact exemption snapshots. It performs byte-exact lexical reduction, deepest segment-trie ownership, nested and exempt-orphan traversal, transitive normal/build closure, stable cycle and 16-level depth refusal, compact package-ID bitset memoization, deterministic validation, and sorted unique self-free relations. Inclusive ceilings cover 4,096 packages, 16,384 crates and references, 4,096 exemptions, and 16,384 output relations; the 16,385th unique relation fails before string materialization. Full cargo test (271 tests), cargo check, clippy with warnings denied, rustfmt check, and diff hygiene pass. Independent correctness, security, and adversarial reviews issued SHIP at exact head 3de7922caf26a633787c7c4be16188008c1b15be after relation, memory, owner-lookup, validation-order, and reduced drive-prefix findings were closed. The worktree remains clean and authority-empty.",
       "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
     },
