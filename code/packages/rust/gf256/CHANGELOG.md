@@ -5,6 +5,62 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased
+
+- `evidence.bindings`: every operation declares `proofs_not_live=frontend-refuses-lib`, the explicit opt-in `ca-assurance-report --check` now requires for the `not-live` proof entries (VER04h section 9). No change to the library or to the generated harness.
+
+## 0.2.1 — 2026-11-09
+
+No change to the public API or to any operation's behaviour.
+
+### Added
+
+- Integrated with the hardened evidence pipeline: the manifests record
+  `source_sha256` over every `src/**/*.rs` (framing `warrant-src-v1`, shared
+  with the proof manifest and `ca-assurance-report --check`); the shim passes
+  `src/` to `run_main` and the crate has a dev-dependency on
+  `coding_adventures_sha256`. The 2^24 exhaustive budget is the explicit
+  per-package `exhaustive_budget` in `evidence.bindings` and passes the checked
+  budget logic (W0706 element and byte budgets, W0707 width caps). BUILD runs
+  `--check assurance_report.json --allow-unverified` because the report cites the
+  same nine `unverified::` static attestations as ct-compare (WD-008). The
+  effect certificate is not verified in BUILD (no `src/capabilities.rs`
+  witness); this is unchanged and deliberately not hidden.
+- Warrant-derived evidence (VER04h): `code/specs/gf256.warrant` states the
+  contract of the six public operations (known vectors, field laws, and
+  independent bit-level models of XOR and shift-and-add multiplication, the
+  latter pinning the reduction polynomial 0x11D); `evidence.bindings` binds each
+  operation to its export and its sabotage faults. `tests/generated/
+  warrant_evidence.rs` is generated from them (BUILD fails on drift) and run by
+  `tests/warrant_evidence.rs`: 35 examples, 38 claims each with an exhaustive,
+  property and fuzz suite (51,472,354 exhaustive cases, including every one of
+  the 2^24 byte triples for associativity and distributivity) and 64 negative
+  controls (wrong reduction polynomial, off-by-one antilog index, multiplication
+  returning the sum, OR for XOR, exponent modulo 256, missing division-by-zero
+  error, ...), every one failing as it must.
+- `evidence/test-manifest.json` and `evidence/proof-manifest.json` written by real
+  runs, and `assurance_report.json` derived from them (report-only: CWE-208 is
+  applicable and unaddressed, no constant-time or step-bound proof is live, rungs
+  E2/E5 `not-live`).
+- `effect_certificate.json` (analyzer `--emit-cert`), `BUILD_windows`.
+
+### Fixed
+
+- README: `multiply(0x53, 0xca) == 1` and `inverse(0x53) == 0xca` are false under
+  0x11D; the pair is `0x53` and `0x8C`. The `power` doc comment no longer claims an
+  overflow risk that a `u32` exponent cannot have.
+- Version: `Cargo.toml` said `0.1.0` while the `Field` release below was recorded
+  as `0.2.0`; set to `0.2.1`.
+- `required_capabilities.json` now mentions the process-global `OnceLock` tables.
+
+### Known gaps (documented, not fixed)
+
+- `Field::new` accepts any `u16` polynomial without validation, and `Field` is
+  outside the Warrant document.
+- Not constant time (secret-indexed table lookups, branches on zero).
+
+---
+
 ## 0.2.0 — 2026-04-11
 
 ### Added
