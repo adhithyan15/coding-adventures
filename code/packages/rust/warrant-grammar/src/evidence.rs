@@ -30,15 +30,17 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::Write as _;
 
-use crate::binding::{is_rust_identifier, validate_bindings, BindingManifest};
+use crate::binding::{
+    is_rust_identifier, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
+};
 use crate::checker::CheckedWarrantModule;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
 use crate::parser::{
-    BinaryOp, Declaration, Expression, Literal, OpDecl, Parameter, TypeExpr, UnaryOp, Version,
-    WarrantFile, Width,
+    BinaryOp, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey, TypeExpr,
+    UnaryOp, Version, WarrantFile, Width,
 };
 
 /// The runtime prelude embedded verbatim in every generated harness.
@@ -83,6 +85,9 @@ pub struct EvidenceOptions {
     /// absent entry means the Rust type matching the Warrant type (`U8` is
     /// `u8`, `U64` is `u64`, `Nat` is `u32`).
     pub arg_types: BTreeMap<String, Vec<String>>,
+    /// WX-A host composites (`struct`/`enum` lines, `ret=`, `errors=`); empty
+    /// for a package with no composite operation.
+    pub hosts: HostSpec,
 }
 
 fn unsupported(msg: impl Into<String>, span: (usize, usize)) -> CodegenError {
@@ -113,7 +118,9 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
         | Expression::Literal { span, .. }
         | Expression::List { span, .. }
         | Expression::Reference { span, .. }
-        | Expression::Grouped { span, .. } => *span,
+        | Expression::Grouped { span, .. }
+        | Expression::Tuple { span, .. }
+        | Expression::Project { span, .. } => *span,
     }
 }
 
@@ -122,7 +129,10 @@ fn span_of(e: &Expression<'_>) -> (usize, usize) {
 // ---------------------------------------------------------------------------
 
 /// Generator-side binder type (mirrors `Ty` in the prelude).
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+///
+/// The first nine variants are the scalar types of WX-B; the rest are the WX-A
+/// composites, built from component types (VER04j section 4.7).
+#[derive(Clone, Debug, PartialEq, Eq)]
 enum Ty {
     Bool,
     U8,
@@ -137,10 +147,26 @@ enum Ty {
     FxEdge(FixedTy),
     /// v1: a `Nat` that flows directly into a shift count or bit index.
     NatCount,
+    /// WX-A: `(T1, ..., Tn)`.
+    Tuple(Vec<Ty>),
+    /// WX-A: a record (one constructor named like the type) or a variant: the
+    /// constructors and their field types, in declaration order.
+    Data {
+        name: String,
+        ctors: Vec<(String, Vec<Ty>)>,
+    },
+    /// WX-A: `Option<T>`.
+    Opt(Box<Ty>),
+    /// WX-A: `Result<T, E>` with the error cases of `E` in declaration order.
+    Res(Box<Ty>, Vec<String>),
+    /// WX-A: `List<T>`.
+    List(Box<Ty>),
 }
 
 impl Ty {
-    fn rust(self) -> String {
+    /// The prelude's `Ty` value as Rust source.  Composites borrow `'static`
+    /// slices, which constant promotion allows in a `const`.
+    fn rust(&self) -> String {
         match self {
             Ty::Fx(f) => format!("Ty::Fx(F::{})", f.name()),
             Ty::FxEdge(f) => format!("Ty::FxEdge(F::{})", f.name()),
@@ -151,16 +177,45 @@ impl Ty {
             Ty::Nat => "Ty::Nat".into(),
             Ty::Bytes => "Ty::Bytes".into(),
             Ty::BytesN(n) => format!("Ty::BytesN({n})"),
+            Ty::Tuple(cs) => {
+                let items: Vec<String> = cs.iter().map(Ty::rust).collect();
+                format!("Ty::Tuple(&[{}])", items.join(", "))
+            }
+            Ty::Data { name, ctors } => {
+                let items: Vec<String> = ctors
+                    .iter()
+                    .map(|(c, fs)| {
+                        let fields: Vec<String> = fs.iter().map(Ty::rust).collect();
+                        format!("(\"{c}\", &[{}])", fields.join(", "))
+                    })
+                    .collect();
+                format!("Ty::Data(\"{name}\", &[{}])", items.join(", "))
+            }
+            Ty::Opt(t) => format!("Ty::Opt(&{})", t.rust()),
+            Ty::Res(t, cases) => {
+                let items: Vec<String> = cases.iter().map(|c| format!("\"{c}\"")).collect();
+                format!("Ty::Res(&{}, &[{}])", t.rust(), items.join(", "))
+            }
+            Ty::List(t) => format!("Ty::List(&{})", t.rust()),
         }
     }
 
-    /// Closed-form size of the domain the prelude enumerates (VER04h section 3).
+    /// Closed-form size of the domain the prelude enumerates (VER04h section 3
+    /// and, for composites, VER04j section 4.7).
     ///
     /// `None` means "does not fit in a `u64`" and callers must treat it as
     /// over budget.  (Arithmetic here is checked on purpose: a wrapped
     /// product of eight `U8` binders is `2^64 = 0`, which used to pass the
     /// budget and send the enumeration into an effectively endless loop.)
-    fn domain_size(self) -> Option<u64> {
+    ///
+    /// ```text
+    /// (U64, Nat)            377 * 65 = 24,505     product, lexicographic
+    /// variant A(Bool)|B     2 + 1 = 3             concatenation of products
+    /// Option<T>             1 + |T|
+    /// Result<T, E>          |T| + #cases
+    /// List<T>               1 + d + d^2 + e^3     d = min(16,|T|), e = min(4,|T|)
+    /// ```
+    fn domain_size(&self) -> Option<u64> {
         match self {
             Ty::Bool => Some(2),
             Ty::U8 => Some(256),
@@ -168,26 +223,77 @@ impl Ty {
             Ty::U64 => Some(256 + 56 + 1 + 64),
             Ty::NatCount => Some(65 + 8),
             Ty::Fx(f) if f.bits() <= 16 => Some(1u64 << f.bits()),
-            Ty::Fx(f) | Ty::FxEdge(f) => Some(fixed::edge_domain(f).len() as u64),
+            Ty::Fx(f) | Ty::FxEdge(f) => Some(fixed::edge_domain(*f).len() as u64),
             Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
-            Ty::BytesN(n) if n > MAX_FIXED_WIDTH => None,
+            Ty::BytesN(n) if *n > MAX_FIXED_WIDTH => None,
             Ty::BytesN(0) => Some(1),
             Ty::BytesN(1) => Some(256),
-            Ty::BytesN(n) if n <= 3 => 4u64.checked_pow(n as u32),
-            Ty::BytesN(n) => 3u64.checked_mul(n)?.checked_add(4),
+            Ty::BytesN(n) if *n <= 3 => 4u64.checked_pow(*n as u32),
+            Ty::BytesN(n) => 3u64.checked_mul(*n)?.checked_add(4),
+            Ty::Tuple(cs) => product_size(cs),
+            Ty::Data { ctors, .. } => {
+                let mut total = 0u64;
+                for (_, fields) in ctors {
+                    total = total.checked_add(product_size(fields)?)?;
+                }
+                Some(total)
+            }
+            Ty::Opt(t) => t.domain_size()?.checked_add(1),
+            Ty::Res(t, cases) => t.domain_size()?.checked_add(cases.len() as u64),
+            Ty::List(t) => {
+                let n = t.domain_size()?;
+                let (d, e) = (n.min(16), n.min(4));
+                1u64.checked_add(d)?.checked_add(d * d)?.checked_add(e * e * e)
+            }
         }
     }
 
-    /// Upper bound on the bytes the enumerated domain occupies: every element
-    /// costs [`VALUE_OVERHEAD`] plus its payload.
-    fn domain_bytes(self) -> Option<u64> {
-        let payload = match self {
-            Ty::Bytes => 8,
-            Ty::BytesN(n) => n,
-            _ => 0,
-        };
-        self.domain_size()?.checked_mul(payload.checked_add(VALUE_OVERHEAD)?)
+    /// The most bytes one element of the domain can occupy: every node costs
+    /// [`VALUE_OVERHEAD`] plus, for `Bytes`, its payload (VER04j section 14.1,
+    /// item 20).  For a scalar this is the exact `payload + overhead` of VER04h.
+    fn elem_cost(&self) -> Option<u64> {
+        let node = VALUE_OVERHEAD;
+        match self {
+            Ty::Bytes => node.checked_add(8),
+            Ty::BytesN(n) => node.checked_add(*n),
+            Ty::Tuple(cs) => {
+                let mut c = node;
+                for t in cs {
+                    c = c.checked_add(t.elem_cost()?)?;
+                }
+                Some(c)
+            }
+            Ty::Data { ctors, .. } => {
+                let mut worst = 0u64;
+                for (_, fields) in ctors {
+                    let mut c = 0u64;
+                    for t in fields {
+                        c = c.checked_add(t.elem_cost()?)?;
+                    }
+                    worst = worst.max(c);
+                }
+                node.checked_add(worst)
+            }
+            Ty::Opt(t) => node.checked_add(t.elem_cost()?),
+            Ty::Res(t, _) => node.checked_add(t.elem_cost()?.max(2 * node)),
+            Ty::List(t) => node.checked_add(t.elem_cost()?.checked_mul(3)?),
+            _ => Some(node),
+        }
     }
+
+    /// Upper bound on the bytes the enumerated domain occupies.
+    fn domain_bytes(&self) -> Option<u64> {
+        self.domain_size()?.checked_mul(self.elem_cost()?)
+    }
+}
+
+/// Size of the Cartesian product of component domains (`None` on overflow).
+fn product_size(cs: &[Ty]) -> Option<u64> {
+    let mut n = 1u64;
+    for c in cs {
+        n = n.checked_mul(c.domain_size()?)?;
+    }
+    Some(n)
 }
 
 /// Cartesian-product size and total domain bytes of a binder list, or `None`
@@ -202,40 +308,198 @@ fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
     Some((product, bytes))
 }
 
-fn ty_of(p: &Parameter<'_>, v1: bool) -> Result<Ty, CodegenError> {
-    if v1 {
-        // In a v1 document every fixed-width binder, `U8` and `U64` included,
-        // is a `Ty::Fx`: one representation, one set of wrapping semantics.
-        if let TypeExpr::Named { name, .. } = &p.param_type {
-            if let Some(f) = FixedTy::from_name(name) {
-                return Ok(Ty::Fx(f));
+/// What the generator needs to know about the document's type declarations to
+/// turn a `TypeExpr` into a [`Ty`]: aliases, records, variants, error types
+/// and the constructor table.
+#[derive(Default)]
+struct TyEnv<'a> {
+    aliases: HashMap<&'a str, TypeExpr<'a>>,
+    records: HashMap<&'a str, Vec<(&'a str, TypeExpr<'a>)>>,
+    variants: HashMap<&'a str, Vec<(&'a str, Vec<(&'a str, TypeExpr<'a>)>)>>,
+    errors: HashMap<&'a str, Vec<&'a str>>,
+    /// constructor name -> (type name, index, arity)
+    ctors: HashMap<String, (String, usize, usize)>,
+    /// record type name -> field names in order
+    fields: BTreeMap<String, Vec<String>>,
+}
+
+impl<'a> TyEnv<'a> {
+    fn new(file: &WarrantFile<'a>) -> TyEnv<'a> {
+        let mut env = TyEnv {
+            aliases: HashMap::new(),
+            records: HashMap::new(),
+            variants: HashMap::new(),
+            errors: HashMap::new(),
+            ctors: HashMap::new(),
+            fields: BTreeMap::new(),
+        };
+        for d in &file.declarations {
+            match d {
+                Declaration::Model(m) if m.body.is_none() => {
+                    env.aliases.insert(m.name, m.target_type.clone());
+                }
+                Declaration::Error(e) => {
+                    env.errors.insert(e.name, e.variants.clone());
+                }
+                Declaration::Record(r) => {
+                    env.ctors
+                        .insert(r.name.to_string(), (r.name.to_string(), 0, r.fields.len()));
+                    env.fields.insert(
+                        r.name.to_string(),
+                        r.fields.iter().map(|f| f.name.to_string()).collect(),
+                    );
+                    env.records.insert(
+                        r.name,
+                        r.fields.iter().map(|f| (f.name, f.ty.clone())).collect(),
+                    );
+                }
+                Declaration::Variant(v) => {
+                    let mut list = Vec::new();
+                    for (i, c) in v.ctors.iter().enumerate() {
+                        env.ctors
+                            .insert(c.name.to_string(), (v.name.to_string(), i, c.fields.len()));
+                        list.push((
+                            c.name,
+                            c.fields.iter().map(|f| (f.name, f.ty.clone())).collect(),
+                        ));
+                    }
+                    env.variants.insert(v.name, list);
+                }
+                _ => {}
             }
         }
+        env
     }
-    match &p.param_type {
+
+    /// Does the declared type mention a composite (tuple, record, variant)?
+    fn has_composite(&self, t: &TypeExpr<'_>, depth: usize) -> bool {
+        if depth > 64 {
+            return false;
+        }
+        match t {
+            TypeExpr::Tuple { .. } => true,
+            TypeExpr::Named { name, .. } => {
+                self.records.contains_key(name)
+                    || self.variants.contains_key(name)
+                    || self
+                        .aliases
+                        .get(name)
+                        .is_some_and(|a| self.has_composite(a, depth + 1))
+            }
+            TypeExpr::Option { inner, .. } | TypeExpr::List { inner, .. } => {
+                self.has_composite(inner, depth + 1)
+            }
+            TypeExpr::Result { ok_type, .. } => self.has_composite(ok_type, depth + 1),
+            TypeExpr::Bytes { .. } => false,
+        }
+    }
+}
+
+/// Resolve a declared type to the generator's [`Ty`] (aliases, records,
+/// variants and error types looked up in `env`).  Fixed-width names are `Fx`
+/// only in a v1 document.
+fn ty_of_type<'a>(
+    t: &TypeExpr<'a>,
+    env: &TyEnv<'a>,
+    v1: bool,
+    span: (usize, usize),
+    depth: usize,
+) -> Result<Ty, CodegenError> {
+    if depth > 64 {
+        return Err(unsupported("type nests too deeply or is recursive", span));
+    }
+    let rec = |t: &TypeExpr<'a>| ty_of_type(t, env, v1, span, depth + 1);
+    match t {
         TypeExpr::Bytes { width: None, .. } => Ok(Ty::Bytes),
         TypeExpr::Bytes {
             width: Some(Width::Literal(n)),
             ..
         } => {
             if *n > MAX_FIXED_WIDTH {
-                return Err(width_too_large(*n, p.span));
+                return Err(width_too_large(*n, span));
             }
             Ok(Ty::BytesN(*n))
         }
-        TypeExpr::Named { name, .. } => match *name {
-            "Bytes" => Ok(Ty::Bytes),
-            "Bool" => Ok(Ty::Bool),
-            "U8" => Ok(Ty::U8),
-            "U64" => Ok(Ty::U64),
-            "Nat" => Ok(Ty::Nat),
-            other => Err(unsupported(format!("binder type {other}"), p.span)),
-        },
-        _ => Err(unsupported(
-            format!("binder `{}` has a type the generator cannot enumerate", p.name),
-            p.span,
+        TypeExpr::Bytes { .. } => Err(unsupported("a symbolic width in a binder type", span)),
+        TypeExpr::Named { name, .. } => {
+            if v1 {
+                if let Some(f) = FixedTy::from_name(name) {
+                    return Ok(Ty::Fx(f));
+                }
+            }
+            match *name {
+                "Bytes" => Ok(Ty::Bytes),
+                "Bool" => Ok(Ty::Bool),
+                "U8" => Ok(Ty::U8),
+                "U64" => Ok(Ty::U64),
+                "Nat" => Ok(Ty::Nat),
+                other if v1 => {
+                    if let Some(a) = env.aliases.get(other) {
+                        return rec(a);
+                    }
+                    if let Some(fields) = env.records.get(other) {
+                        let fs: Result<Vec<Ty>, _> = fields.iter().map(|(_, t)| rec(t)).collect();
+                        return Ok(Ty::Data {
+                            name: other.to_string(),
+                            ctors: vec![(other.to_string(), fs?)],
+                        });
+                    }
+                    if let Some(ctors) = env.variants.get(other) {
+                        let mut out = Vec::new();
+                        for (c, fields) in ctors {
+                            let fs: Result<Vec<Ty>, _> =
+                                fields.iter().map(|(_, t)| rec(t)).collect();
+                            out.push((c.to_string(), fs?));
+                        }
+                        return Ok(Ty::Data {
+                            name: other.to_string(),
+                            ctors: out,
+                        });
+                    }
+                    Err(unsupported(format!("binder type {other}"), span))
+                }
+                other => Err(unsupported(format!("binder type {other}"), span)),
+            }
+        }
+        _ if !v1 => Err(unsupported(
+            "a binder type the generator cannot enumerate",
+            span,
         )),
+        TypeExpr::Tuple { elems, .. } => {
+            let cs: Result<Vec<Ty>, _> = elems.iter().map(rec).collect();
+            Ok(Ty::Tuple(cs?))
+        }
+        TypeExpr::Option { inner, .. } => Ok(Ty::Opt(Box::new(rec(inner)?))),
+        TypeExpr::List { inner, .. } => Ok(Ty::List(Box::new(rec(inner)?))),
+        TypeExpr::Result {
+            ok_type, err_name, ..
+        } => {
+            let cases = env
+                .errors
+                .get(err_name)
+                .ok_or_else(|| unsupported(format!("error type {err_name}"), span))?;
+            Ok(Ty::Res(
+                Box::new(rec(ok_type)?),
+                cases.iter().map(|c| c.to_string()).collect(),
+            ))
+        }
     }
+}
+
+fn ty_of<'a>(p: &Parameter<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Ty, CodegenError> {
+    ty_of_type(&p.param_type, env, v1, p.span, 0).map_err(|e| {
+        if e.code == DiagnosticCode::W0701
+            && matches!(&e.kind, CodegenErrorKind::UnsupportedTarget(m)
+                if m.starts_with("a binder type the generator cannot enumerate"))
+        {
+            unsupported(
+                format!("binder `{}` has a type the generator cannot enumerate", p.name),
+                p.span,
+            )
+        } else {
+            e
+        }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -251,6 +515,8 @@ struct Cx<'c> {
     widths: &'c mut BTreeMap<String, BTreeSet<u64>>,
     /// The document is a v1 document (WX-B/WX-C built-ins and types).
     v1: bool,
+    /// WX-A constructors: name -> (type name, index, arity).
+    ctors: &'c HashMap<String, (String, usize, usize)>,
 }
 
 fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
@@ -316,6 +582,35 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
             name, widths, args, ..
         } => {
             let segs = &name.segments;
+            // WX-A: `x.f.g` with a binder head is projection and wins over an
+            // error constructor of the same spelling (VER04j section 4.3).
+            if cx.v1 && segs.len() >= 2 && args.is_none() && cx.binders.contains(segs[0]) {
+                let mut out = format!("b_{}", segs[0]);
+                for f in &segs[1..] {
+                    let _ = write!(out, ".field(\"{f}\")");
+                }
+                return Ok(out);
+            }
+            // WX-A constructors: `C(e1, ..., en)` and the bare nullary `C`.
+            if segs.len() == 1 && !cx.binders.contains(segs[0]) {
+                if let Some((ty, idx, arity)) = cx.ctors.get(segs[0]) {
+                    let mut parts = Vec::new();
+                    for a in args.iter().flat_map(|l| l.iter()) {
+                        parts.push(emit(a, cx)?);
+                    }
+                    if parts.len() != *arity || !widths.is_empty() {
+                        return Err(unsupported(
+                            format!("constructor `{}` expects {arity} arguments", segs[0]),
+                            sp,
+                        ));
+                    }
+                    return Ok(format!(
+                        "V::Con(\"{ty}\", {idx}, \"{}\", vec![{}])",
+                        segs[0],
+                        parts.join(", ")
+                    ));
+                }
+            }
             if segs.len() == 2 && cx.errors.contains(segs[0]) && args.is_none() {
                 return Ok(format!("V::Name(\"{}\".into())", segs[1]));
             }
@@ -380,8 +675,104 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                 }
             }
         }
-        Expression::Quantified { .. } | Expression::Match { .. } | Expression::List { .. } => {
-            return Err(unsupported("quantifier, match or list inside a body", sp));
+        Expression::Tuple { elements, .. } => {
+            let mut parts = Vec::new();
+            for el in elements {
+                parts.push(emit(el, cx)?);
+            }
+            format!("V::Tup(vec![{}])", parts.join(", "))
+        }
+        Expression::Project { base, key, .. } => {
+            let b = emit(base, cx)?;
+            match key {
+                ProjKey::Index(i) => format!("{b}.proj({i})"),
+                ProjKey::Field(f) => format!("{b}.field(\"{f}\")"),
+            }
+        }
+        // WX-A `match`: a closure tries each arm's pattern in order; the checker
+        // has proved one matches (VER04j sections 4.3 and 4.5).
+        Expression::Match { target, arms, .. } => {
+            let mut out = format!("(|| -> V {{\nlet s = {};\n", emit(target, cx)?);
+            for arm in arms {
+                let mut names = Vec::new();
+                let pat = emit_pattern(&arm.pattern, cx, &mut names, sp)?;
+                let added: Vec<String> = names
+                    .iter()
+                    .filter(|n| cx.binders.insert((*n).clone()))
+                    .cloned()
+                    .collect();
+                let body = emit(&arm.body, cx)?;
+                for n in &added {
+                    cx.binders.remove(n);
+                }
+                let mut lets = String::new();
+                if !names.is_empty() {
+                    lets.push_str("let mut it = bs.into_iter(); ");
+                    for n in &names {
+                        let _ = write!(lets, "let b_{n} = it.next().expect(\"binder\"); ");
+                    }
+                }
+                let _ = writeln!(
+                    out,
+                    "{{ let mut bs: Vec<V> = Vec::new(); if pat_match(&{pat}, &s, &mut bs) {{ {lets}return {body}; }} }}"
+                );
+            }
+            out.push_str("panic!(\"non-exhaustive match\")\n})()");
+            out
+        }
+        Expression::Quantified { .. } | Expression::List { .. } => {
+            return Err(unsupported("quantifier or list inside a body", sp));
+        }
+    })
+}
+
+/// A pattern as a prelude `Pat` value expression; binder names are appended to
+/// `names` in the order `pat_match` pushes their values (left to right).  A bare
+/// NAME that is a declared constructor is a constructor pattern, any other NAME
+/// a binder (VER04j section 4.3).
+fn emit_pattern(
+    p: &Pattern<'_>,
+    cx: &Cx<'_>,
+    names: &mut Vec<String>,
+    span: (usize, usize),
+) -> Result<String, CodegenError> {
+    Ok(match p {
+        Pattern::Wild => "Pat::Wild".into(),
+        Pattern::Bool(b) => format!("Pat::Bool({b})"),
+        Pattern::None => "Pat::None".into(),
+        Pattern::Some(q) => format!("Pat::Some(&{})", emit_pattern(q, cx, names, span)?),
+        Pattern::Ok(q) => format!("Pat::Ok(&{})", emit_pattern(q, cx, names, span)?),
+        Pattern::Err(q) => format!("Pat::Err(&{})", emit_pattern(q, cx, names, span)?),
+        Pattern::Tuple(ps) => {
+            let mut items = Vec::new();
+            for q in ps {
+                items.push(emit_pattern(q, cx, names, span)?);
+            }
+            format!("Pat::Tup(&[{}])", items.join(", "))
+        }
+        Pattern::Ctor { name, args } => {
+            let segs = &name.segments;
+            if segs.len() == 2 {
+                return Ok(format!("Pat::Case(\"{}\")", segs[1]));
+            }
+            if let Some((_, idx, arity)) = cx.ctors.get(segs[0]) {
+                if args.len() != *arity {
+                    return Err(unsupported(
+                        format!("pattern `{}` has the wrong number of fields", segs[0]),
+                        span,
+                    ));
+                }
+                let mut items = Vec::new();
+                for q in args {
+                    items.push(emit_pattern(q, cx, names, span)?);
+                }
+                return Ok(format!("Pat::Con({idx}, &[{}])", items.join(", ")));
+            }
+            if !args.is_empty() {
+                return Err(unsupported(format!("unknown constructor `{}`", segs[0]), span));
+            }
+            names.push(segs[0].to_string());
+            "Pat::Bind".into()
         }
     })
 }
@@ -483,6 +874,12 @@ fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
         }
         Expression::Unary { operand, .. } => count_binders(operand, out),
         Expression::Grouped { inner, .. } => count_binders(inner, out),
+        Expression::Project { base, .. } => count_binders(base, out),
+        Expression::Tuple { elements, .. } => {
+            for x in elements {
+                count_binders(x, out);
+            }
+        }
         Expression::Conditional {
             condition,
             then_branch,
@@ -509,13 +906,45 @@ fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
     }
 }
 
+/// Demote the leftmost full `U16`/`I16` leaf of `ty` (depth first) to its edge
+/// set, recording its component path (tuple index / constructor field index).
+fn demote_first(ty: &mut Ty, path: &mut Vec<usize>) -> bool {
+    match ty {
+        Ty::Fx(f) if f.bits() == 16 => {
+            *ty = Ty::FxEdge(*f);
+            true
+        }
+        Ty::Tuple(cs) => cs.iter_mut().enumerate().any(|(i, c)| {
+            path.push(i);
+            let hit = demote_first(c, path);
+            if !hit {
+                path.pop();
+            }
+            hit
+        }),
+        Ty::Data { ctors, .. } => ctors.iter_mut().any(|(_, fs)| {
+            fs.iter_mut().enumerate().any(|(i, c)| {
+                path.push(i);
+                let hit = demote_first(c, path);
+                if !hit {
+                    path.pop();
+                }
+                hit
+            })
+        }),
+        Ty::Opt(t) | Ty::List(t) | Ty::Res(t, _) => demote_first(t, path),
+        _ => false,
+    }
+}
+
 /// VER04j section 2.6, the budget rule.  Every binder starts at its default
 /// domain (`full` where it has one); while the Cartesian product (or the byte
-/// budget) is over `budget`, demote the *leftmost* binder that is currently a
-/// `full` `U16`/`I16` to its edge set.  Returns the indexes demoted, in order.
-/// `U8`/`I8` binders are never demoted.  If nothing is left to demote and the
-/// claim is still over budget the caller reports W0706 -- no silent sampling.
-fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<usize> {
+/// budget) is over `budget`, demote the *leftmost* `full` `U16`/`I16` leaf (for a
+/// composite binder, depth first inside it) to its edge set.  Returns the
+/// binder index and component path of each demotion, in order.  `U8`/`I8`
+/// leaves are never demoted.  If nothing is left to demote and the claim is
+/// still over budget the caller reports W0706 -- no silent sampling.
+fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<usize>)> {
     let mut demoted = Vec::new();
     loop {
         let over = match claim_domain(tys) {
@@ -525,15 +954,17 @@ fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<usize> {
         if !over {
             break;
         }
-        let Some(i) = tys
-            .iter()
-            .position(|t| matches!(t, Ty::Fx(f) if f.bits() == 16))
-        else {
+        let mut done = false;
+        for (i, t) in tys.iter_mut().enumerate() {
+            let mut path = Vec::new();
+            if demote_first(t, &mut path) {
+                demoted.push((i, path));
+                done = true;
+                break;
+            }
+        }
+        if !done {
             break;
-        };
-        if let Ty::Fx(f) = tys[i] {
-            tys[i] = Ty::FxEdge(f);
-            demoted.push(i);
         }
     }
     demoted
@@ -563,6 +994,17 @@ const FAULTS: &[(&str, &str)] = &[
     ("exp-mod-256", "ExpMod256"),
 ];
 
+/// The faults of VER04j section 4.8: rewrites of a composite operation's result.
+/// They apply to the operation they are bound to only.
+const WXA_FAULTS: &[(&str, &str)] = &[
+    ("drop-consumed", "DropConsumed"),
+    ("swap-components", "SwapComponents"),
+    ("field-zero", "FieldZero"),
+    ("wrong-ctor", "WrongCtor"),
+    ("ok-as-err", "OkAsErr"),
+    ("off-by-one-consumed", "OffByOneConsumed"),
+];
+
 fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
@@ -573,6 +1015,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
                 .iter()
                 .find(|(n, _, _)| *n == name)
                 .map(|(_, v, _)| *v)
+        })
+        .or_else(|| {
+            WXA_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
         })
 }
 
@@ -628,6 +1076,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .iter()
         .copied()
         .chain(V1_FAULTS.iter().map(|(n, v, _)| (*n, *v)))
+        .chain(WXA_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -701,6 +1150,20 @@ enum Shape {
     /// v1: scalar parameters (fixed-width integers, `Nat`) and a fixed-width,
     /// `Bool`, `Nat`, `Option` or `Result` result.
     ScalarV1(RetV1),
+    /// WX-A: a signature that mentions a tuple, record or variant, converted to
+    /// and from the host through the bindings' `struct`/`enum`/`ret=` data.
+    Composite,
+}
+
+impl Shape {
+    /// Does the shape's adapter obey a fault only while its operation is the
+    /// one under attack (the `scoped` mechanism)?
+    fn scoped(self) -> bool {
+        matches!(
+            self,
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite
+        )
+    }
 }
 
 impl Shape {
@@ -708,7 +1171,7 @@ impl Shape {
     /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Shape::Scalar { .. } | Shape::ScalarV1(_) => &[],
+            Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -721,8 +1184,18 @@ impl Shape {
     }
 }
 
-fn shape_of(op: &OpDecl<'_>, v1: bool) -> Result<Shape, CodegenError> {
-    let tys: Result<Vec<Ty>, _> = op.params.iter().map(|p| ty_of_op_param(p, v1)).collect();
+fn shape_of<'a>(op: &OpDecl<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Shape, CodegenError> {
+    if v1
+        && (op.params.iter().any(|p| env.has_composite(&p.param_type, 0))
+            || env.has_composite(&op.return_type, 0))
+    {
+        return Ok(Shape::Composite);
+    }
+    let tys: Result<Vec<Ty>, _> = op
+        .params
+        .iter()
+        .map(|p| ty_of_op_param(p, v1, env))
+        .collect();
     let tys = tys?;
     if v1 {
         let scalar_params = !tys.is_empty()
@@ -769,13 +1242,13 @@ fn returns_result_u8(t: &TypeExpr<'_>) -> bool {
 
 /// Operation parameters may carry a *named* width (`Bytes<N>`); treat it as
 /// `BytesN(0)` for shape matching only.
-fn ty_of_op_param(p: &Parameter<'_>, v1: bool) -> Result<Ty, CodegenError> {
+fn ty_of_op_param<'a>(p: &Parameter<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Ty, CodegenError> {
     match &p.param_type {
         TypeExpr::Bytes {
             width: Some(Width::Named(_)),
             ..
         } => Ok(Ty::BytesN(0)),
-        _ => ty_of(p, v1),
+        _ => ty_of(p, v1, env),
     }
 }
 
@@ -790,7 +1263,7 @@ fn adapter(
     let mut s = String::new();
     match shape {
         // Scalar operations are emitted by `scalar_adapter`/`scalar_adapter_v1`.
-        Shape::Scalar { .. } | Shape::ScalarV1(_) => {}
+        Shape::Scalar { .. } | Shape::ScalarV1(_) | Shape::Composite => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -905,7 +1378,7 @@ fn scalar_adapter(
     let tys: Vec<Ty> = op
         .params
         .iter()
-        .map(|p| ty_of_op_param(p, false))
+        .map(|p| ty_of_op_param(p, false, &TyEnv::default()))
         .collect::<Result<_, _>>()?;
     let given = options.arg_types.get(n);
     if let Some(g) = given {
@@ -1104,7 +1577,7 @@ fn v1_fault(name: &str) -> Option<V1Fault> {
 
 /// The Rust name of a parameter's native type: the binding's `args=` entry, or
 /// the type matching the Warrant type (`Nat` is `u32`).
-fn rust_arg_type(t: Ty, given: Option<&str>) -> Result<String, String> {
+fn rust_arg_type(t: &Ty, given: Option<&str>) -> Result<String, String> {
     let default = match t {
         Ty::Fx(f) | Ty::FxEdge(f) => f.suffix(),
         _ => "u32",
@@ -1153,7 +1626,7 @@ fn scalar_adapter_v1(
     let tys: Vec<Ty> = op
         .params
         .iter()
-        .map(|p| ty_of_op_param(p, true))
+        .map(|p| ty_of_op_param(p, true, &TyEnv::default()))
         .collect::<Result<_, _>>()?;
     let given = options.arg_types.get(n);
     if let Some(g) = given {
@@ -1168,7 +1641,7 @@ fn scalar_adapter_v1(
     let mut names = Vec::new();
     let mut rts = Vec::new();
     for (i, t) in tys.iter().enumerate() {
-        let rt = rust_arg_type(*t, given.map(|g| g[i].as_str()))
+        let rt = rust_arg_type(t, given.map(|g| g[i].as_str()))
             .map_err(|bad| unsupported(format!("argument type `{bad}` of `{n}`"), op.span))?;
         let _ = writeln!(
             conv,
@@ -1322,6 +1795,496 @@ fn scalar_adapter_v1(
 }
 
 // ---------------------------------------------------------------------------
+// WX-A composite adapters (VER04j sections 4.6 and 4.8)
+// ---------------------------------------------------------------------------
+
+/// The host type a Warrant type maps to when the bindings do not say
+/// (scalars, tuples of them, `Option`, `List`); records and variants must be
+/// declared with a `struct` or `enum` line.
+fn default_host(t: &Ty) -> Result<HostTy, String> {
+    Ok(match t {
+        Ty::Fx(f) | Ty::FxEdge(f) => HostTy::Int(f.suffix().to_string()),
+        Ty::Nat | Ty::NatCount => HostTy::Int("u32".into()),
+        Ty::Bool => HostTy::Bool,
+        Ty::Bytes => HostTy::Bytes,
+        Ty::Tuple(cs) => HostTy::Tuple(cs.iter().map(default_host).collect::<Result<_, _>>()?),
+        Ty::Opt(t) => HostTy::Opt(Box::new(default_host(t)?)),
+        Ty::List(t) => HostTy::List(Box::new(default_host(t)?)),
+        Ty::Data { name, .. } => HostTy::Named(name.clone()),
+        other => return Err(format!("no default host type for {other:?}")),
+    })
+}
+
+/// State of one conversion-code generation: the declared host types and a
+/// counter that makes every generated variable name unique.
+struct HostCx<'h> {
+    spec: &'h HostSpec,
+    ctr: usize,
+}
+
+impl HostCx<'_> {
+    fn fresh(&mut self, prefix: &str) -> String {
+        self.ctr += 1;
+        format!("{prefix}{}", self.ctr)
+    }
+}
+
+fn is_numeric(t: &Ty) -> bool {
+    matches!(t, Ty::Fx(_) | Ty::FxEdge(_) | Ty::Nat | Ty::NatCount)
+}
+
+/// Rust source converting the model value at `place` (an expression of type
+/// `&V`) into host type `h`.  A scalar the host integer cannot hold raises
+/// `Unreachable` (see `host`), never narrows.  `top` marks a parameter, which
+/// is passed to the export by reference where the host type is `bytes`.
+fn to_host(
+    t: &Ty,
+    h: &HostTy,
+    place: &str,
+    top: bool,
+    hc: &mut HostCx<'_>,
+) -> Result<String, String> {
+    match (t, h) {
+        (Ty::Fx(f) | Ty::FxEdge(f), HostTy::Int(rt)) if rt == f.suffix() => {
+            Ok(format!("host::<{rt}>({place}.int())"))
+        }
+        (Ty::Nat | Ty::NatCount, HostTy::Int(rt)) if rt.starts_with('u') => {
+            Ok(format!("host::<{rt}>({place}.int())"))
+        }
+        (Ty::Bool, HostTy::Bool) => Ok(format!("{place}.boolv()")),
+        (Ty::Bytes, HostTy::Bytes) => Ok(if top {
+            format!("{place}.bytes()")
+        } else {
+            format!("{place}.bytes().to_vec()")
+        }),
+        (Ty::Tuple(cs), HostTy::Tuple(hs)) if cs.len() == hs.len() => {
+            let mut parts = Vec::new();
+            for (i, (c, h)) in cs.iter().zip(hs).enumerate() {
+                parts.push(to_host(c, h, &format!("{place}.tup()[{i}]"), false, hc)?);
+            }
+            Ok(format!("({})", parts.join(", ")))
+        }
+        (Ty::Data { name, ctors }, HostTy::Named(hn)) if hn == name => {
+            let decl = hc
+                .spec
+                .types
+                .get(hn)
+                .ok_or_else(|| format!("host type `{hn}` is not declared"))?;
+            let path = decl.path.clone();
+            match &decl.shape {
+                HostShape::Struct(hfields) => {
+                    if ctors.len() != 1 || ctors[0].1.len() != hfields.len() {
+                        return Err(format!("struct `{hn}` does not fit the record's fields"));
+                    }
+                    let mut parts = Vec::new();
+                    for (i, (c, hf)) in ctors[0].1.iter().zip(hfields).enumerate() {
+                        let v = to_host(c, &hf.ty, &format!("{place}.fields()[{i}]"), false, hc)?;
+                        parts.push(format!("{}: {v}", hf.name));
+                    }
+                    Ok(format!("{path} {{ {} }}", parts.join(", ")))
+                }
+                HostShape::Enum(hctors) => {
+                    if ctors.len() != hctors.len() {
+                        return Err(format!("enum `{hn}` has a different number of constructors"));
+                    }
+                    let mut arms = String::new();
+                    for (i, ((cname, cfields), (hname, hfields))) in
+                        ctors.iter().zip(hctors).enumerate()
+                    {
+                        if cname != hname || cfields.len() != hfields.len() {
+                            return Err(format!(
+                                "enum `{hn}` constructor `{hname}` does not fit `{cname}`"
+                            ));
+                        }
+                        let mut parts = Vec::new();
+                        for (j, (c, hf)) in cfields.iter().zip(hfields).enumerate() {
+                            let v =
+                                to_host(c, &hf.ty, &format!("{place}.fields()[{j}]"), false, hc)?;
+                            parts.push(format!("{}: {v}", hf.name));
+                        }
+                        let _ = write!(arms, "{i} => {path}::{hname} {{ {} }}, ", parts.join(", "));
+                    }
+                    Ok(format!(
+                        "match {place}.ctor() {{ {arms}_ => unreachable!(\"constructor index\") }}"
+                    ))
+                }
+            }
+        }
+        (Ty::Opt(c), HostTy::Opt(hh)) => {
+            let x = hc.fresh("x");
+            let inner = to_host(c, hh, &x, false, hc)?;
+            Ok(format!("{place}.some_ref().map(|{x}| {inner})"))
+        }
+        (Ty::List(c), HostTy::List(hh)) => {
+            let x = hc.fresh("x");
+            let inner = to_host(c, hh, &x, false, hc)?;
+            Ok(format!(
+                "{place}.list().iter().map(|{x}| {inner}).collect::<Vec<_>>()"
+            ))
+        }
+        _ => Err(format!("host type {h:?} does not fit the Warrant type {t:?}")),
+    }
+}
+
+/// Rust source converting the host value `expr` (evaluated exactly once) into
+/// a model value of type `t`.
+fn from_host(t: &Ty, h: &HostTy, expr: &str, hc: &mut HostCx<'_>) -> Result<String, String> {
+    match (t, h) {
+        (Ty::Fx(f) | Ty::FxEdge(f), HostTy::Int(rt)) if rt == f.suffix() => {
+            Ok(format!("V::Fixed(F::{}, ({expr}) as i128)", f.name()))
+        }
+        (Ty::Nat | Ty::NatCount, HostTy::Int(rt)) if rt.starts_with('u') => {
+            Ok(format!("V::Int(({expr}) as i128)"))
+        }
+        (Ty::Bool, HostTy::Bool) => Ok(format!("V::Bool({expr})")),
+        (Ty::Bytes, HostTy::Bytes) => Ok(format!("V::Bytes(({expr}).to_vec())")),
+        (Ty::Tuple(cs), HostTy::Tuple(hs)) if cs.len() == hs.len() => {
+            let v = hc.fresh("t");
+            let mut parts = Vec::new();
+            for (i, (c, h)) in cs.iter().zip(hs).enumerate() {
+                parts.push(from_host(c, h, &format!("{v}.{i}"), hc)?);
+            }
+            Ok(format!("{{ let {v} = {expr}; V::Tup(vec![{}]) }}", parts.join(", ")))
+        }
+        (Ty::Data { name, ctors }, HostTy::Named(hn)) if hn == name => {
+            let decl = hc
+                .spec
+                .types
+                .get(hn)
+                .ok_or_else(|| format!("host type `{hn}` is not declared"))?;
+            let path = decl.path.clone();
+            match &decl.shape {
+                HostShape::Struct(hfields) => {
+                    if ctors.len() != 1 || ctors[0].1.len() != hfields.len() {
+                        return Err(format!("struct `{hn}` does not fit the record's fields"));
+                    }
+                    let v = hc.fresh("s");
+                    let mut parts = Vec::new();
+                    for (c, hf) in ctors[0].1.iter().zip(hfields) {
+                        parts.push(from_host(c, &hf.ty, &format!("{v}.{}", hf.name), hc)?);
+                    }
+                    Ok(format!(
+                        "{{ let {v} = {expr}; V::Con(\"{name}\", 0, \"{}\", vec![{}]) }}",
+                        ctors[0].0,
+                        parts.join(", ")
+                    ))
+                }
+                HostShape::Enum(hctors) => {
+                    if ctors.len() != hctors.len() {
+                        return Err(format!("enum `{hn}` has a different number of constructors"));
+                    }
+                    let mut arms = String::new();
+                    for (i, ((cname, cfields), (hname, hfields))) in
+                        ctors.iter().zip(hctors).enumerate()
+                    {
+                        if cname != hname || cfields.len() != hfields.len() {
+                            return Err(format!(
+                                "enum `{hn}` constructor `{hname}` does not fit `{cname}`"
+                            ));
+                        }
+                        let (mut pats, mut vals) = (Vec::new(), Vec::new());
+                        for (c, hf) in cfields.iter().zip(hfields) {
+                            let var = hc.fresh("y");
+                            pats.push(format!("{}: {var}", hf.name));
+                            vals.push(from_host(c, &hf.ty, &var, hc)?);
+                        }
+                        let _ = write!(
+                            arms,
+                            "{path}::{hname} {{ {} }} => V::Con(\"{name}\", {i}, \"{cname}\", vec![{}]), ",
+                            pats.join(", "),
+                            vals.join(", ")
+                        );
+                    }
+                    Ok(format!("match {expr} {{ {arms}}}"))
+                }
+            }
+        }
+        (Ty::Opt(c), HostTy::Opt(hh)) => {
+            let x = hc.fresh("x");
+            let inner = from_host(c, hh, &x, hc)?;
+            Ok(format!(
+                "match {expr} {{ None => V::Opt(None), Some({x}) => V::Opt(Some(Box::new({inner}))) }}"
+            ))
+        }
+        (Ty::List(c), HostTy::List(hh)) => {
+            let x = hc.fresh("x");
+            let inner = from_host(c, hh, &x, hc)?;
+            Ok(format!(
+                "V::List(({expr}).into_iter().map(|{x}| {inner}).collect())"
+            ))
+        }
+        _ => Err(format!("host type {h:?} does not fit the Warrant type {t:?}")),
+    }
+}
+
+/// The adapter of an operation whose signature mentions a tuple, record or
+/// variant (VER04j sections 4.6 and 4.8).
+///
+/// ```text
+/// fn op_decode(_w, args: &[V], fault) -> V {
+///     let fault = fault_for("decode", fault);
+///     let p0 = args[0].bytes();                  // bytes  -> &[u8]
+///     let p1 = host::<usize>(args[1].int());     // Nat    -> usize, or Unreachable
+///     let v = match contained(|| decode(p0, p1)) {          // panic -> Err(CASE)
+///         Some(r) => V::Ok(Box::new({ let t = r; V::Tup(vec![..t.0.., ..t.1..]) })),
+///         None => V::Err("TRUNCATED".into()),
+///     };
+///     match fault { Fault::OffByOneConsumed => fault_off_by_one_consumed(v), _ => v }
+/// }
+/// ```
+///
+/// An export that returns a host `Result` is bound with `errors=` and its error
+/// variants are mapped to Warrant cases instead.  Every fault of the binding is
+/// a rewrite of the final value and is checked, at generation, to apply to the
+/// declared result type (W0701 otherwise).
+fn composite_adapter<'a>(
+    op: &OpDecl<'a>,
+    env: &TyEnv<'a>,
+    export: &str,
+    err_case: Option<&str>,
+    faults: &[String],
+    options: &EvidenceOptions,
+) -> Result<String, CodegenError> {
+    let n = op.name;
+    let bad = |m: String| unsupported(format!("operation `{n}`: {m}"), op.span);
+    if !op.static_params.is_empty() || op.is_fresh {
+        return Err(bad(
+            "static widths and fresh outputs are not supported on a composite operation".into(),
+        ));
+    }
+    let host = options.hosts.ops.get(n);
+    if options.arg_types.contains_key(n) && host.and_then(|h| h.args.as_ref()).is_none() {
+        return Err(bad("an args= entry is not a host type".into()));
+    }
+    let ptys: Vec<Ty> = op
+        .params
+        .iter()
+        .map(|p| ty_of_op_param(p, true, env))
+        .collect::<Result<_, _>>()?;
+    if ptys.iter().any(|t| matches!(t, Ty::BytesN(_))) {
+        return Err(bad("fixed-width Bytes parameters are not supported here".into()));
+    }
+    let hargs: Vec<HostTy> = match host.and_then(|h| h.args.clone()) {
+        Some(a) if a.len() == ptys.len() => a,
+        Some(a) => {
+            return Err(bad(format!(
+                "args= has {} entries for {} parameters",
+                a.len(),
+                ptys.len()
+            )))
+        }
+        None => ptys
+            .iter()
+            .map(default_host)
+            .collect::<Result<_, _>>()
+            .map_err(&bad)?,
+    };
+    let full = ty_of_type(&op.return_type, env, true, op.span, 0)?;
+    let (payload, cases, is_result) = match &full {
+        Ty::Res(t, cases) => ((**t).clone(), cases.clone(), true),
+        other => (other.clone(), Vec::new(), false),
+    };
+    let hret = match host.and_then(|h| h.ret.clone()) {
+        Some(r) => r,
+        None => default_host(&payload).map_err(&bad)?,
+    };
+    // Which faults make sense for this result (checked, never silently inert).
+    // A fault rewrites the composite *inside* an `Ok` or a `Some`.
+    let core = match &payload {
+        Ty::Opt(t) => (**t).clone(),
+        other => other.clone(),
+    };
+    for f in faults {
+        let ok = match f.as_str() {
+            "drop-consumed" | "off-by-one-consumed" => {
+                matches!(&core, Ty::Tuple(cs) if cs.len() >= 2 && is_numeric(&cs[1]))
+            }
+            "swap-components" => {
+                matches!(&core, Ty::Tuple(cs) if cs.len() >= 2 && cs.iter().all(|c| *c == cs[0]))
+            }
+            "field-zero" => matches!(&core, Ty::Data { ctors, .. }
+                if ctors.len() == 1 && ctors[0].1.iter().any(is_numeric)),
+            "wrong-ctor" => matches!(&core, Ty::Data { ctors, .. } if ctors.len() >= 2),
+            "ok-as-err" => {
+                is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
+            }
+            "missing-error" => is_result,
+            _ => {
+                return Err(bad(format!("fault `{f}` is not a composite-operation fault")));
+            }
+        };
+        if !ok {
+            return Err(bad(format!(
+                "fault `{f}` does not apply to the result type of the operation"
+            )));
+        }
+    }
+    let mut hc = HostCx {
+        spec: &options.hosts,
+        ctr: 0,
+    };
+    let mut s = String::new();
+    let _ = writeln!(s, "#[allow(unused_variables, unused_mut)]");
+    let _ = writeln!(s, "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{");
+    let _ = writeln!(s, "    let fault = fault_for(\"{n}\", fault);");
+    for (i, (t, h)) in ptys.iter().zip(&hargs).enumerate() {
+        let v = to_host(t, h, &format!("args[{i}]"), true, &mut hc).map_err(&bad)?;
+        let _ = writeln!(s, "    let p{i} = {v};");
+    }
+    let arglist: Vec<String> = (0..ptys.len()).map(|i| format!("p{i}")).collect();
+    let call = format!("{export}({})", arglist.join(", "));
+    let minimal = format!("domain_take({}, 1).remove(0)", payload.rust());
+    if !is_result {
+        let v = from_host(&payload, &hret, &call, &mut hc).map_err(&bad)?;
+        let _ = writeln!(s, "    let v: V = {v};");
+    } else if let Some(he) = host.and_then(|h| h.errors.as_ref()) {
+        let decl_cases = env_cases_of(&op.return_type, env);
+        for (_, case) in &he.map {
+            if !cases.contains(case) && !decl_cases.contains(case) {
+                return Err(bad(format!("errors= names `{case}`, which is not an error case")));
+            }
+        }
+        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(&bad)?;
+        let _ = writeln!(s, "    let v: V = match {call} {{");
+        let _ = writeln!(s, "        Ok(r) => V::Ok(Box::new({ok})),");
+        if faults.iter().any(|f| f == "missing-error") {
+            let _ = writeln!(
+                s,
+                "        Err(_) if fault == Fault::MissingError => V::Ok(Box::new({minimal})),"
+            );
+        }
+        let _ = writeln!(s, "        Err(e) => match e {{");
+        for (variant, case) in &he.map {
+            let _ = writeln!(
+                s,
+                "            {}::{variant} {{ .. }} => V::Err(\"{case}\".into()),",
+                he.path
+            );
+        }
+        let _ = writeln!(
+            s,
+            "            #[allow(unreachable_patterns)]\n            _ => panic!(\"unmapped host error\"),\n        }},\n    }};"
+        );
+    } else {
+        let case = err_case.ok_or_else(|| CodegenError {
+            code: DiagnosticCode::W0704,
+            kind: CodegenErrorKind::MissingBinding(format!(
+                "binding for `{n}` has neither error normalization nor errors="
+            )),
+            span: op.span,
+        })?;
+        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(&bad)?;
+        let _ = writeln!(s, "    let v: V = match contained(|| {call}) {{");
+        let _ = writeln!(s, "        Some(r) => V::Ok(Box::new({ok})),");
+        if faults.iter().any(|f| f == "missing-error") {
+            let _ = writeln!(
+                s,
+                "        None if fault == Fault::MissingError => V::Ok(Box::new({minimal})),"
+            );
+        }
+        let _ = writeln!(s, "        None => V::Err(\"{case}\".into()),\n    }};");
+    }
+    let mut arms = String::new();
+    for f in faults {
+        let rhs = match f.as_str() {
+            "drop-consumed" => "fault_drop_consumed(v)".to_string(),
+            "swap-components" => "fault_swap_components(v)".to_string(),
+            "field-zero" => "fault_field_zero(v)".to_string(),
+            "off-by-one-consumed" => "fault_off_by_one_consumed(v)".to_string(),
+            "wrong-ctor" => format!("fault_wrong_ctor(v, {})", core.rust()),
+            "ok-as-err" => format!("fault_ok_as_err(v, \"{}\")", cases[0]),
+            _ => continue,
+        };
+        let variant = fault_variant(f).expect("registered fault");
+        let _ = writeln!(arms, "        Fault::{variant} => {rhs},");
+    }
+    if arms.is_empty() {
+        s.push_str("    v\n}\n\n");
+    } else {
+        let _ = write!(s, "    match fault {{\n{arms}        _ => v,\n    }}\n}}\n\n");
+    }
+    Ok(s)
+}
+
+/// The declared error cases of the `Result` return type of an operation.
+fn env_cases_of(t: &TypeExpr<'_>, env: &TyEnv<'_>) -> Vec<String> {
+    match t {
+        TypeExpr::Result { err_name, .. } => env
+            .errors
+            .get(err_name)
+            .map(|v| v.iter().map(|c| c.to_string()).collect())
+            .unwrap_or_default(),
+        _ => Vec::new(),
+    }
+}
+
+/// Does the document need the WX-A part of the prelude (composite values,
+/// patterns, composite domains)?  Only a v1 document that declares a record or
+/// variant, writes a tuple, a projection or a `match`, or quantifies over an
+/// `Option`/`Result`/`List`/composite binder.  Every other v1 document keeps
+/// the WX-B/WX-C output byte for byte.
+fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
+    fn non_scalar<'a>(t: &TypeExpr<'a>, env: &TyEnv<'a>, depth: usize) -> bool {
+        if depth > 64 {
+            return false;
+        }
+        match t {
+            TypeExpr::Tuple { .. }
+            | TypeExpr::Option { .. }
+            | TypeExpr::Result { .. }
+            | TypeExpr::List { .. } => true,
+            TypeExpr::Named { name, .. } => {
+                env.records.contains_key(name)
+                    || env.variants.contains_key(name)
+                    || env
+                        .aliases
+                        .get(name)
+                        .is_some_and(|a| non_scalar(a, env, depth + 1))
+            }
+            TypeExpr::Bytes { .. } => false,
+        }
+    }
+    fn walk<'a>(e: &Expression<'a>, env: &TyEnv<'a>) -> bool {
+        match e {
+            Expression::Tuple { .. } | Expression::Project { .. } | Expression::Match { .. } => true,
+            Expression::Quantified { binders, body, .. } => {
+                binders.iter().any(|b| non_scalar(&b.param_type, env, 0)) || walk(body, env)
+            }
+            Expression::Binary { left, right, .. } => walk(left, env) || walk(right, env),
+            Expression::Unary { operand, .. } => walk(operand, env),
+            Expression::Grouped { inner, .. } => walk(inner, env),
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => walk(condition, env) || walk(then_branch, env) || walk(else_branch, env),
+            Expression::Reference { args, .. } => args
+                .iter()
+                .flat_map(|l| l.iter())
+                .any(|a| walk(a, env)),
+            Expression::List { elements, .. } => elements.iter().any(|a| walk(a, env)),
+            Expression::Literal { .. } => false,
+        }
+    }
+    file.declarations.iter().any(|d| match d {
+        Declaration::Record(_) | Declaration::Variant(_) => true,
+        Declaration::Model(m) => {
+            m.params.iter().any(|p| env.has_composite(&p.param_type, 0))
+                || env.has_composite(&m.target_type, 0)
+                || m.body.as_ref().is_some_and(|b| walk(b, env))
+        }
+        Declaration::Op(o) => {
+            o.params.iter().any(|p| env.has_composite(&p.param_type, 0))
+                || env.has_composite(&o.return_type, 0)
+        }
+        Declaration::Example(ex) => walk(&ex.body, env),
+        Declaration::Claim(c) => walk(&c.body, env),
+        _ => false,
+    })
+}
+
+// ---------------------------------------------------------------------------
 // The generator
 // ---------------------------------------------------------------------------
 
@@ -1393,6 +2356,8 @@ pub fn generate_evidence_harness(
     }
     let module = file.name;
     let v1 = file.version == Version::V1;
+    let env = TyEnv::new(file);
+    let comp = v1 && uses_composites(file, &env);
 
     let mut models = HashSet::new();
     let mut errors = HashSet::new();
@@ -1419,6 +2384,7 @@ pub fn generate_evidence_harness(
     let mut body = String::new();
     let mut features: BTreeSet<&str> = BTreeSet::new();
     features.insert(if v1 { "v1" } else { "v0" });
+    features.insert(if comp { "comp" } else { "plain" });
 
     // Model functions.
     for d in &file.declarations {
@@ -1432,12 +2398,18 @@ pub fn generate_evidence_harness(
                     allow_ops: false,
                     widths: &mut widths,
                     v1,
+                    ctors: &env.ctors,
                 };
                 let params: Vec<String> =
                     m.params.iter().map(|p| format!("b_{}: V", p.name)).collect();
+                let attr = if comp {
+                    "#[allow(unused_variables, unused_mut)]\n"
+                } else {
+                    ""
+                };
                 let _ = write!(
                     body,
-                    "fn model_{}({}) -> V {{\n    {}\n}}\n\n",
+                    "{attr}fn model_{}({}) -> V {{\n    {}\n}}\n\n",
                     m.name,
                     params.join(", "),
                     emit(b, &mut cx)?
@@ -1465,6 +2437,7 @@ pub fn generate_evidence_harness(
                 allow_ops: true,
                 widths: &mut widths,
                 v1,
+                ctors: &env.ctors,
             };
             let _ = write!(
                 body,
@@ -1503,9 +2476,9 @@ pub fn generate_evidence_harness(
             .ok_or_else(|| unsupported(format!("claim {} calls no operation", c.name), *span))?;
         let mut tys: Vec<Ty> = binders
             .iter()
-            .map(|b| ty_of(b, v1))
+            .map(|b| ty_of(b, v1, &env))
             .collect::<Result<_, _>>()?;
-        let mut demoted: Vec<usize> = Vec::new();
+        let mut demoted: Vec<(usize, Vec<usize>)> = Vec::new();
         if v1 {
             // A Nat that flows directly into a shift count gets the
             // count-aware domain (VER04j section 3.6).
@@ -1542,7 +2515,13 @@ pub fn generate_evidence_harness(
         let names_src: Vec<String> = binders.iter().map(|b| format!("\"{}\"", b.name)).collect();
         let demoted_src: Vec<String> = demoted
             .iter()
-            .map(|i| format!("\"{}\"", binders[*i].name))
+            .map(|(i, path)| {
+                let mut name = binders[*i].name.to_string();
+                for seg in path {
+                    let _ = write!(name, ".{seg}");
+                }
+                format!("\"{name}\"")
+            })
             .collect();
         let mut cx = Cx {
             binders: binders.iter().map(|p| p.name.to_string()).collect(),
@@ -1552,6 +2531,7 @@ pub fn generate_evidence_harness(
             allow_ops: true,
             widths: &mut widths,
             v1,
+            ctors: &env.ctors,
         };
         let binds: String = binders
             .iter()
@@ -1581,18 +2561,35 @@ pub fn generate_evidence_harness(
                 dem = demoted_src.join(", "),
             );
         }
+        let up = c.name.to_uppercase();
+        let n = c.name;
+        let _ = write!(body, "const CLAIM_{up}_TYS: &[Ty] = &[{}];\n\n", tys_src.join(", "));
         let _ = write!(
             body,
-            "const CLAIM_{up}_TYS: &[Ty] = &[{tys}];\n\n\
-             #[allow(unused_variables)]\nfn claim_{n}_admit(env: &[V]) -> bool {{\n{binds}    {admit}\n}}\n\n\
-             #[allow(unused_variables)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    {holds}.truthy()\n}}\n\n\
-             pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
-             pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    property(\"claim/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
-             pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    fuzz_claim(\"fuzz/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations)\n}}\n\n",
-            up = c.name.to_uppercase(),
-            n = c.name,
-            tys = tys_src.join(", "),
+            "#[allow(unused_variables)]\nfn claim_{n}_admit(env: &[V]) -> bool {{\n{binds}    {admit}\n}}\n\n"
         );
+        if comp {
+            // A value a host integer cannot hold raises `Unreachable`: the case
+            // is skipped and counted, never narrowed (VER04j section 4.6).
+            let _ = write!(
+                body,
+                "#[allow(unused_variables, unused_mut)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    match catch_unwind(AssertUnwindSafe(|| {holds}.truthy())) {{\n        Ok(v) => v,\n        Err(p) if p.is::<Unreachable>() => {{\n            count_unreach();\n            true\n        }}\n        Err(p) => std::panic::resume_unwind(p),\n    }}\n}}\n\n"
+            );
+            let _ = write!(
+                body,
+                "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = property(\"claim/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n"
+            );
+        } else {
+            let _ = write!(
+                body,
+                "#[allow(unused_variables)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    {holds}.truthy()\n}}\n\n\
+                 pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    property(\"claim/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    fuzz_claim(\"fuzz/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations)\n}}\n\n"
+            );
+        }
         claims.push(Cl {
             name: c.name.to_string(),
             op: op.to_string(),
@@ -1600,6 +2597,18 @@ pub fn generate_evidence_harness(
     }
     if claims.is_empty() {
         return Err(unsupported("document has no claims to generate evidence for", file.span));
+    }
+
+    // WX-A: the position of a record field, looked up by name at run time (the
+    // translator has no static types, so `r.f` is resolved dynamically).
+    if comp {
+        body.push_str("#[allow(unused_variables)]\nfn field_pos(ty: &str, f: &str) -> usize {\n    match (ty, f) {\n");
+        for (ty, fields) in &env.fields {
+            for (i, f) in fields.iter().enumerate() {
+                let _ = writeln!(body, "        (\"{ty}\", \"{f}\") => {i},");
+            }
+        }
+        body.push_str("        _ => panic!(\"no such field\"),\n    }\n}\n\n");
     }
 
     // Adapters (after expression translation so fixed widths are known).
@@ -1610,10 +2619,28 @@ pub fn generate_evidence_harness(
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
-        let shape = shape_of(op, v1)?;
+        let shape = shape_of(op, v1, &env)?;
         let empty = BTreeSet::new();
         let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
-        if let Shape::ScalarV1(ret) = shape {
+        if shape == Shape::Composite {
+            features.insert("scoped");
+            adapters.push_str(&composite_adapter(
+                op,
+                &env,
+                &binding.export,
+                err_case,
+                &binding.negative_controls,
+                options,
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else if let Shape::ScalarV1(ret) = shape {
             features.insert("scoped");
             adapters.push_str(&scalar_adapter_v1(
                 op,
@@ -1752,7 +2779,7 @@ pub fn generate_evidence_harness(
             if members.is_empty() {
                 continue;
             }
-            let scoped = matches!(shapes[op], Shape::Scalar { .. } | Shape::ScalarV1(_));
+            let scoped = shapes[op].scoped();
             for (fname, frust) in &op_faults[op] {
                 if scoped {
                     // The fault attacks this operation only: another scalar

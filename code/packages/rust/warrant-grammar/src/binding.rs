@@ -33,6 +33,217 @@ pub struct BindingManifest {
     pub bindings: BTreeMap<String, OpBinding>,
 }
 
+/// A host (Rust) type of a bound composite component (VER04j section 4.6).
+///
+/// ```text
+/// u8 u16 u32 u64 i8 i16 i32 i64 usize     HostTy::Int
+/// bool  bytes                              HostTy::Bool, HostTy::Bytes
+/// (u64,usize)                              HostTy::Tuple   (a Rust tuple)
+/// opt<u8>  list<u32>                       Option<u8>, Vec<u32>
+/// Tlv                                      HostTy::Named   (a declared struct/enum)
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum HostTy {
+    Int(String),
+    Bool,
+    Bytes,
+    Tuple(Vec<HostTy>),
+    Opt(Box<HostTy>),
+    List(Box<HostTy>),
+    Named(String),
+}
+
+/// One `name:type` field of a host struct or enum variant.  The name is a Rust
+/// identifier or a decimal index (`0`, `1`), which reaches the fields of a
+/// tuple struct or tuple variant (`P { 0: x }`).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostField {
+    pub name: String,
+    pub ty: HostTy,
+}
+
+/// How a declared host type is built and observed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum HostShape {
+    /// A struct: its fields, in the order of the Warrant record's fields.
+    Struct(Vec<HostField>),
+    /// An enum: its variants (`name`, fields), in the order of the Warrant
+    /// variant's constructors; a variant is matched by name.
+    Enum(Vec<(String, Vec<HostField>)>),
+}
+
+/// A `struct` or `enum` line of the bindings file: the host type (a Rust path)
+/// that implements one Warrant record or variant.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostType {
+    pub path: String,
+    pub shape: HostShape,
+}
+
+/// `errors=PATH/Variant=CASE,...`: the host error enum of an export that returns
+/// `Result<T, PATH>`, and which Warrant error case each (unit-like) variant is.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HostErrors {
+    pub path: String,
+    pub map: Vec<(String, String)>,
+}
+
+/// The host signature of one operation (all parts optional; absent means the
+/// default derived from the Warrant type).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct OpHost {
+    pub args: Option<Vec<HostTy>>,
+    pub ret: Option<HostTy>,
+    pub errors: Option<HostErrors>,
+}
+
+/// Everything the bindings file says about host composites (VER04j section 4.6).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct HostSpec {
+    /// Declared host structs and enums by Warrant type name.
+    pub types: BTreeMap<String, HostType>,
+    /// Host signatures by operation name.
+    pub ops: BTreeMap<String, OpHost>,
+}
+
+const HOST_INTS: [&str; 9] = ["u8", "u16", "u32", "u64", "i8", "i16", "i32", "i64", "usize"];
+const MAX_HOST_DEPTH: usize = 8;
+const MAX_HOST_ITEMS: usize = 256;
+
+/// Split `text` on commas that are not inside `()` or `<>`.
+pub fn split_top(text: &str) -> Vec<&str> {
+    let mut out = Vec::new();
+    let (mut depth, mut start) = (0i32, 0usize);
+    for (i, c) in text.char_indices() {
+        match c {
+            '(' | '<' => depth += 1,
+            ')' | '>' => depth -= 1,
+            ',' if depth == 0 => {
+                out.push(&text[start..i]);
+                start = i + 1;
+            }
+            _ => {}
+        }
+    }
+    out.push(&text[start..]);
+    out
+}
+
+/// Parse one host type expression.
+///
+/// ```text
+/// ht = "u8" | ... | "usize" | "bool" | "bytes"
+///    | "(" ht { "," ht } ")"  |  "opt<" ht ">"  |  "list<" ht ">"  |  NAME
+/// ```
+pub fn parse_host_ty(text: &str) -> Result<HostTy, String> {
+    parse_host_ty_at(text.trim(), 0)
+}
+
+fn parse_host_ty_at(t: &str, depth: usize) -> Result<HostTy, String> {
+    if depth > MAX_HOST_DEPTH {
+        return Err(format!("host type `{t}` nests deeper than {MAX_HOST_DEPTH}"));
+    }
+    if HOST_INTS.contains(&t) {
+        return Ok(HostTy::Int(t.to_string()));
+    }
+    match t {
+        "bool" => return Ok(HostTy::Bool),
+        "bytes" => return Ok(HostTy::Bytes),
+        _ => {}
+    }
+    if let Some(inner) = t.strip_prefix("opt<").and_then(|r| r.strip_suffix('>')) {
+        return Ok(HostTy::Opt(Box::new(parse_host_ty_at(inner.trim(), depth + 1)?)));
+    }
+    if let Some(inner) = t.strip_prefix("list<").and_then(|r| r.strip_suffix('>')) {
+        return Ok(HostTy::List(Box::new(parse_host_ty_at(inner.trim(), depth + 1)?)));
+    }
+    if let Some(inner) = t.strip_prefix('(').and_then(|r| r.strip_suffix(')')) {
+        let parts = split_top(inner);
+        if parts.len() < 2 || parts.len() > 8 {
+            return Err(format!("host tuple `{t}` needs 2 to 8 components"));
+        }
+        let items: Result<Vec<_>, _> = parts
+            .into_iter()
+            .map(|p| parse_host_ty_at(p.trim(), depth + 1))
+            .collect();
+        return Ok(HostTy::Tuple(items?));
+    }
+    if is_rust_identifier(t) {
+        return Ok(HostTy::Named(t.to_string()));
+    }
+    Err(format!("`{t}` is not a host type"))
+}
+
+/// `a::b::C`: identifier segments joined by `::`.
+pub fn is_rust_path(text: &str) -> bool {
+    !text.is_empty() && text.split("::").all(is_rust_identifier)
+}
+
+fn parse_host_fields(text: &str) -> Result<Vec<HostField>, String> {
+    let mut out: Vec<HostField> = Vec::new();
+    if text.trim().is_empty() {
+        return Ok(out);
+    }
+    for part in split_top(text) {
+        let (name, ty) = part
+            .split_once(':')
+            .ok_or_else(|| format!("field `{part}` must be name:type"))?;
+        let name = name.trim();
+        let ok = is_rust_identifier(name)
+            || (!name.is_empty() && name.bytes().all(|b| b.is_ascii_digit()));
+        if !ok {
+            return Err(format!("field name `{name}` is not an identifier or an index"));
+        }
+        if out.iter().any(|f| f.name == name) {
+            return Err(format!("field `{name}` appears twice"));
+        }
+        if out.len() >= MAX_HOST_ITEMS {
+            return Err("too many fields".to_string());
+        }
+        out.push(HostField {
+            name: name.to_string(),
+            ty: parse_host_ty(ty)?,
+        });
+    }
+    Ok(out)
+}
+
+fn host_names(t: &HostTy, out: &mut Vec<String>) {
+    match t {
+        HostTy::Named(n) => out.push(n.clone()),
+        HostTy::Tuple(ts) => ts.iter().for_each(|t| host_names(t, out)),
+        HostTy::Opt(t) | HostTy::List(t) => host_names(t, out),
+        _ => {}
+    }
+}
+
+/// Parse the value of `errors=`: `PATH/Variant=CASE,Variant2=CASE2`.
+fn parse_host_errors(text: &str) -> Result<HostErrors, String> {
+    let (path, rest) = text
+        .split_once('/')
+        .ok_or_else(|| format!("errors=`{text}` must be PATH/Variant=CASE,..."))?;
+    if !is_rust_path(path) {
+        return Err(format!("errors path `{path}` is not a Rust path"));
+    }
+    let mut map = Vec::new();
+    for pair in rest.split(',') {
+        let (variant, case) = pair
+            .split_once('=')
+            .ok_or_else(|| format!("errors entry `{pair}` must be Variant=CASE"))?;
+        if !is_rust_identifier(variant) || !is_rust_identifier(case) {
+            return Err(format!("errors entry `{pair}` must name identifiers"));
+        }
+        map.push((variant.to_string(), case.to_string()));
+    }
+    if map.is_empty() {
+        return Err("errors= lists no variant".to_string());
+    }
+    Ok(HostErrors {
+        path: path.to_string(),
+        map,
+    })
+}
+
 /// A parsed `evidence.bindings` file: the binding manifest plus every
 /// generation parameter, so one data file (not Rust code) tells the evidence
 /// generator how to bind a package (VER04 section 6, VER04h section 1).
@@ -81,6 +292,9 @@ pub struct EvidenceBindingFile {
     /// here: an acknowledged absence of proof is an opt-in made in this
     /// reviewed file, never something a manifest can claim by itself.
     pub proofs_not_live: BTreeMap<String, String>,
+    /// WX-A host composites: the `struct`/`enum` lines and the `ret=` /
+    /// `errors=` options (VER04j section 4.6).
+    pub hosts: HostSpec,
 }
 
 /// The most cases an `exhaustive_budget` may ask the generated harness to
@@ -169,6 +383,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
     let mut bindings = BTreeMap::new();
     let mut arg_types = BTreeMap::new();
     let mut proofs_not_live = BTreeMap::new();
+    let mut hosts = HostSpec::default();
     for (n, raw) in text.lines().enumerate() {
         let line = raw.trim();
         if line.is_empty() || line.starts_with('#') {
@@ -201,6 +416,58 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
             "fuzz_iterations" => num(&mut fuzz_iterations)?,
             "negctl_fuzz_iterations" => num(&mut negctl_fuzz_iterations)?,
             "exhaustive_budget" => num(&mut exhaustive_budget)?,
+            "struct" | "enum" => {
+                let mut words = rest.split_whitespace();
+                let name = words.next().ok_or_else(|| at(format!("`{key}` needs a type name")))?;
+                if !is_rust_identifier(name) {
+                    return Err(at(format!("type name `{name}` is not an identifier")));
+                }
+                let (mut path, mut body) = (None, None);
+                for w in words {
+                    let (k, v) = w.split_once('=').unwrap_or((w, ""));
+                    match (k, v.is_empty()) {
+                        ("path", false) => path = Some(v.to_string()),
+                        ("fields", false) if key == "struct" => body = Some(v.to_string()),
+                        ("ctors", false) if key == "enum" => body = Some(v.to_string()),
+                        _ => return Err(at(format!("{key} `{name}`: unknown or malformed option `{w}`"))),
+                    }
+                }
+                let path = path.ok_or_else(|| at(format!("{key} `{name}` has no path=")))?;
+                if !is_rust_path(&path) {
+                    return Err(at(format!("path `{path}` is not a Rust path")));
+                }
+                let body = body.ok_or_else(|| {
+                    at(format!("{key} `{name}` has no {}=", if key == "struct" { "fields" } else { "ctors" }))
+                })?;
+                let shape = if key == "struct" {
+                    HostShape::Struct(parse_host_fields(&body).map_err(&at)?)
+                } else {
+                    let mut ctors: Vec<(String, Vec<HostField>)> = Vec::new();
+                    for part in split_top(&body) {
+                        let (cname, fields) = match part.split_once('(') {
+                            Some((c, f)) => (
+                                c,
+                                parse_host_fields(f.strip_suffix(')').ok_or_else(|| {
+                                    at(format!("constructor `{part}` is missing its `)`"))
+                                })?)
+                                .map_err(&at)?,
+                            ),
+                            None => (part, Vec::new()),
+                        };
+                        if !is_rust_identifier(cname) || ctors.iter().any(|(c, _)| c == cname) {
+                            return Err(at(format!("constructor name `{cname}` is invalid or repeated")));
+                        }
+                        if ctors.len() >= MAX_HOST_ITEMS {
+                            return Err(at("too many constructors".to_string()));
+                        }
+                        ctors.push((cname.to_string(), fields));
+                    }
+                    HostShape::Enum(ctors)
+                };
+                if hosts.types.insert(name.to_string(), HostType { path, shape }).is_some() {
+                    return Err(at(format!("{key} `{name}` is declared twice")));
+                }
+            }
             "op" => {
                 let mut words = rest.split_whitespace();
                 let name = words.next().ok_or_else(|| at("`op` needs a name".into()))?;
@@ -211,10 +478,16 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 let mut faults = Vec::new();
                 let mut args = None;
                 let mut not_live = None;
+                let mut ret = None;
+                let mut host_errors = None;
                 for w in words {
                     let (k, v) = w.split_once('=').unwrap_or((w, ""));
                     let list = || -> Vec<String> {
-                        v.split(',').filter(|s| !s.is_empty()).map(String::from).collect()
+                        split_top(v)
+                            .into_iter()
+                            .filter(|s| !s.is_empty())
+                            .map(String::from)
+                            .collect()
                     };
                     match k {
                         "export" if !v.is_empty() => export = Some(v.to_string()),
@@ -222,6 +495,10 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         "fresh" if v.is_empty() => fresh = true,
                         "error" if !v.is_empty() => error = Some(v.to_string()),
                         "args" if !v.is_empty() => args = Some(list()),
+                        "ret" if !v.is_empty() => ret = Some(parse_host_ty(v).map_err(&at)?),
+                        "errors" if !v.is_empty() => {
+                            host_errors = Some(parse_host_errors(v).map_err(&at)?)
+                        }
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),
                         _ => return Err(at(format!("op `{name}`: unknown or malformed option `{w}`"))),
@@ -237,8 +514,23 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 if faults.is_empty() {
                     return Err(at(format!("op `{name}` needs faults= (at least one)")));
                 }
+                let host_args = args.as_ref().and_then(|a| {
+                    a.iter()
+                        .map(|t| parse_host_ty(t).ok())
+                        .collect::<Option<Vec<_>>>()
+                });
                 if let Some(a) = args {
                     arg_types.insert(name.to_string(), a);
+                }
+                if host_args.is_some() || ret.is_some() || host_errors.is_some() {
+                    hosts.ops.insert(
+                        name.to_string(),
+                        OpHost {
+                            args: host_args,
+                            ret,
+                            errors: host_errors,
+                        },
+                    );
                 }
                 let dup = bindings.insert(
                     name.to_string(),
@@ -264,6 +556,24 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
     let need_n = |v: Option<u64>, k: &str| v.ok_or_else(|| format!("missing `{k}`"));
     if bindings.is_empty() {
         return Err("no `op` lines".into());
+    }
+    // Every host type a signature or field names must be declared.
+    let mut named = Vec::new();
+    for t in hosts.types.values() {
+        match &t.shape {
+            HostShape::Struct(fs) => fs.iter().for_each(|f| host_names(&f.ty, &mut named)),
+            HostShape::Enum(cs) => cs
+                .iter()
+                .flat_map(|(_, fs)| fs)
+                .for_each(|f| host_names(&f.ty, &mut named)),
+        }
+    }
+    for o in hosts.ops.values() {
+        o.args.iter().flatten().for_each(|t| host_names(t, &mut named));
+        o.ret.iter().for_each(|t| host_names(t, &mut named));
+    }
+    if let Some(missing) = named.iter().find(|n| !hosts.types.contains_key(*n)) {
+        return Err(format!("host type `{missing}` is used but has no `struct` or `enum` line"));
     }
     let package = need(package, "package")?;
     if !is_rust_identifier(&package) {
@@ -297,6 +607,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
         exhaustive_budget,
         arg_types,
         proofs_not_live,
+        hosts,
     })
 }
 
