@@ -2276,7 +2276,7 @@ mod tests {
     fn refuses_every_candidate_in_a_program_containing_with() {
         assert_eq!(
             propagate_source("var x = 1;with (o) { console.log(x); }"),
-            "var x=1;with(o){console.log(x)};"
+            "var x=1;with(o)console.log(x);"
         );
     }
 
@@ -2286,7 +2286,7 @@ mod tests {
     fn refuses_a_const_candidate_too_when_with_is_present() {
         assert_eq!(
             propagate_source_open_world("const x = 1;with (o) { console.log(x); }"),
-            "const x=1;with(o){console.log(x)};"
+            "const x=1;with(o)console.log(x);"
         );
     }
 
