@@ -933,6 +933,17 @@ export function forEachTrackLessons(
   }
 }
 
+/** Bounded-source counterpart: visit and release one parsed track at a time. */
+export async function forEachTrackLessonsAsync(
+  root: string,
+  visit: (language: string, lessons: ParsedLesson[]) => void,
+  onCacheKey?: LessonCacheKeyObserver,
+): Promise<void> {
+  for (const language of lessonTrackNames(root)) {
+    visit(language, await loadTrackLessonsAsync(language, root, onCacheKey));
+  }
+}
+
 /** One guarded, lazy track walk shared by both loaders. */
 function* lessonTrackNames(root: string): Generator<string> {
   for (const track of sortedEntries(root)) {
