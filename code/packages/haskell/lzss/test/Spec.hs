@@ -1,5 +1,6 @@
-import LZSSSpec (spec)
+import qualified HostileHeadersSpec
+import qualified LZSSSpec
 import Test.Hspec (hspec)
 
 main :: IO ()
-main = hspec spec
+main = hspec (LZSSSpec.spec >> HostileHeadersSpec.spec)

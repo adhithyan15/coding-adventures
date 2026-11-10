@@ -106,6 +106,44 @@ proofs fail with payload-free categories. Success retains both complete
 non-copyable inputs. The boundary does not claim revocation policy for the
 second proof's own signer or for the intermediate.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
+then consumes that complete separately authenticated branch and nominally
+reifies the added revocation proof's own delegated responder-to-intermediate-
+to-reviewed-root path. The infallible non-copyable wrapper retains both the
+original routed responder policy and the exact authenticated responder-status
+proof; it accepts no substitute certificate, path, root, algorithm, key,
+signature, status, or time. This projection performs no new validation or
+external effect and stops before reviewed-root or intermediate name policy,
+no-check or separately authenticated revocation policy for that added
+responder, complete revocation, generalized path validation, TLS, HTTP, OAuth,
+or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_anchor_dns_policy`
+then consumes that exact added responder path and derives both inputs through
+private repository-owned evidence: the separately authenticated proof's fully
+routed responder and the original proof's exact selected reviewed-root
+constraints. Entries without out-of-band constraints succeed without reading
+responder Subject Alternative Name. Constrained entries apply the supported
+permitted-DNS subset under separate caller-owned parse limits and retain only
+count evidence. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This stops before
+intermediate name constraints, no-check or separately authenticated revocation
+policy for the added responder, complete revocation, generalized path
+validation, TLS, HTTP, OAuth, or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy`
+then consumes that complete reviewed-root DNS proof and derives the separately
+authenticated proof's exact responder and exact retained intermediate through
+private repository-owned evidence. An intermediate without NameConstraints
+succeeds without reading responder Subject Alternative Name. A present
+NameConstraints extension must be critical; its supported permitted and
+excluded DNS subtrees are applied under separate caller-owned parse limits,
+and success retains only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload. This
+stops before no-check or separately authenticated revocation policy for the
+added responder, complete revocation, generalized path validation, TLS, HTTP,
+OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
@@ -139,13 +177,29 @@ name those exact objects and time. Target, issuer, then time are checked in
 stable order. Success retains both complete non-copyable branches, while
 failures reuse the existing payload-free intermediate-binding categories.
 This does not establish revocation policy for either added proof's own
-responder, feed this alternative into the added-status responder path
-projection, or provide complete revocation, generalized path validation, TLS,
+responder or provide complete revocation, generalized path validation, TLS,
 HTTP, OAuth, or network readiness.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_path`
+then projects that authenticated-original-responder composition's exact added
+status responder-to-reviewed-root path. The infallible wrapper retains both
+complete authenticated revocation branches and accepts no substitute
+certificate, path, root, algorithm, key, signature, status, or time. The
+defaulted source parameter preserves the existing no-check projection's public
+type shape.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_anchor_dns_policy`
+derives the added proof's authenticated responder and the original proof's
+selected reviewed-root constraints through private repository-owned evidence.
+It applies the same bounded permitted-DNS policy as the no-check-source path.
+The resulting proof is consumed unchanged by the existing added-responder
+no-check and separately authenticated revocation functions. This resolves
+policy routing for the added responder only; it does not establish policy for
+either additional proof's own responder or complete revocation.
+
 `reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path`
-then consumes that complete composition and nominally reifies the added status
-proof's delegated responder-to-reviewed-root path. The retained proof already
+then consumes the complete no-check composition and nominally reifies the
+added status proof's delegated responder-to-reviewed-root path. The retained proof already
 contains the exact responder's certificate-wide role and critical-extension
 policy, algorithm/key policy, OCSP-signing purpose, observation-time validity,
 routed repository-owned RSA response and certificate-signature verification,
@@ -251,18 +305,17 @@ revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
 time. Both compositions derive those same inputs through the consumed
-responder-policy proof and retain the added proof. The no-check follow-up
-projection reifies that proof's exact delegated responder-to-reviewed-root
-path; subsequent policies apply supported reviewed-root DNS constraints and
-either the no-check or separately authenticated revocation branch to that
-exact added responder.
+responder-policy proof and retain the added proof. Both follow-up projections
+reify the added proof's exact delegated responder-to-reviewed-root path;
+subsequent policies apply supported reviewed-root DNS constraints and either
+the no-check or separately authenticated revocation branch to that exact added
+responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, project the added
-intermediate-status responder path from the original authenticated responder-
-revocation branch, implement complete revocation policy, validate either
-additional revocation proof's own responder, interpret unsupported OCSP extensions,
+intermediate constraints to the responder certificate, implement complete
+revocation policy, validate either additional revocation proof's own responder,
+interpret unsupported OCSP extensions,
 acquire or cache OCSP data, read a clock, implement TLS or HTTP, authorize
 OAuth transport, open a network connection, or access a credential. The
 reviewed Mozilla root snapshot excludes OS, enterprise, user-installed, and

@@ -3,12 +3,14 @@ import {
   readdirSync,
   realpathSync,
 } from "node:fs";
+import { spawn } from "node:child_process";
 import { basename, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import type {
   CurriculumExtensionMembership,
   CurriculumLessonMembership,
 } from "./curriculum-membership.js";
-import { isAbsentErrno, readLedgerFileWithSource } from "./shard.js";
+import { isAbsentErrno, parseLedgerText, readLedgerFileWithSource } from "./shard.js";
 
 export const CURRICULUM_MEMBERSHIP_DIRECTORY = "curriculum-membership.d";
 export const CURRICULUM_MEMBERSHIP_META_OWNER = "_meta.json";
@@ -268,4 +270,100 @@ export function readCurriculumMembershipOwners(
     owners,
     sourcePaths: [...identities.sourcePaths, metaPath, ...expectedNames.map((name) => join(directory, name))],
   };
+}
+
+/** Read exact direct-owner sets through pinned parents with bounded opens. */
+export async function readCurriculumMembershipOwnersBatchAsync(
+  root: string,
+  languages: readonly string[],
+  options: { requireCanonicalBytes?: boolean } = {},
+): Promise<Map<string, LoadedCurriculumMembershipOwners>> {
+  if (languages.length === 0 || languages.length > 64 ||
+      languages.some((language) => !SAFE_LANGUAGE.test(language)) ||
+      new Set(languages).size !== languages.length) {
+    throw new Error("curriculum membership batch requires distinct safe languages");
+  }
+  const identities = languages.map((language) => curriculumLessonIdentitySources(root, language));
+  const tasks = languages.map((language, index) => ({
+    language,
+    names: [CURRICULUM_MEMBERSHIP_META_OWNER,
+      ...identities[index]!.ids.map((id) => `${id}.json`)],
+  }));
+  const script = fileURLToPath(new URL(
+    "../../../../learning/human-languages/data/scripts/curriculum_membership_owner_read.py",
+    import.meta.url,
+  ));
+  const python = process.platform === "win32" ? "python" : "python3";
+  const output = await new Promise<Buffer>((resolve, reject) => {
+    const child = spawn(python, [script], { stdio: ["pipe", "pipe", "pipe"], windowsHide: true });
+    const chunks: Buffer[] = [];
+    let bytes = 0;
+    let exceeded = false;
+    child.stdout.on("data", (chunk: Buffer) => {
+      bytes += chunk.length;
+      if (bytes > 128 * 1024 * 1024) {
+        exceeded = true;
+        child.kill();
+      } else {
+        chunks.push(chunk);
+      }
+    });
+    // Python exception context may include author-controlled bytes. Never log it.
+    child.stderr.resume();
+    child.stdin.on("error", () => { /* A failed child is handled by close/error. */ });
+    child.on("error", (cause) => reject(new Error("curriculum owner reader could not start", { cause })));
+    child.on("close", (code) => {
+      if (exceeded || code !== 0) reject(new Error("anchored curriculum owner batch failed"));
+      else resolve(Buffer.concat(chunks));
+    });
+    child.stdin.end(JSON.stringify({ root, tasks }));
+  });
+  let response: unknown;
+  try {
+    response = JSON.parse(output.toString("utf8"));
+  } catch (cause) {
+    throw new Error("anchored curriculum owner batch returned invalid JSON", { cause });
+  }
+  const results = typeof response === "object" && response !== null && !Array.isArray(response)
+    ? (response as Record<string, unknown>).results : undefined;
+  if (!Array.isArray(results) || results.length !== tasks.length) {
+    throw new Error("anchored curriculum owner batch returned the wrong task count");
+  }
+  const out = new Map<string, LoadedCurriculumMembershipOwners>();
+  for (const [index, task] of tasks.entries()) {
+    const files = results[index];
+    if (typeof files !== "object" || files === null || Array.isArray(files) ||
+        Object.keys(files).length !== task.names.length) {
+      throw new Error("anchored curriculum owner batch returned an invalid owner set");
+    }
+    const texts = files as Record<string, unknown>;
+    const directory = join(root, task.language, CURRICULUM_MEMBERSHIP_DIRECTORY);
+    const metaPath = join(directory, CURRICULUM_MEMBERSHIP_META_OWNER);
+    const metaText = texts[CURRICULUM_MEMBERSHIP_META_OWNER];
+    if (typeof metaText !== "string") throw new Error("curriculum membership metadata is missing");
+    const meta = object(parseLedgerText(metaText, metaPath), CURRICULUM_MEMBERSHIP_META_OWNER);
+    exactKeys(meta, ["version", "language"], CURRICULUM_MEMBERSHIP_META_OWNER);
+    if (meta.version !== 1 || meta.language !== task.language) {
+      throw new Error(`curriculum membership owner '${CURRICULUM_MEMBERSHIP_META_OWNER}' must declare version 1 and language '${task.language}'`);
+    }
+    if (options.requireCanonicalBytes !== false && metaText !== canonical(meta)) {
+      throw new Error(`curriculum membership owner '${CURRICULUM_MEMBERSHIP_META_OWNER}' is not canonical`);
+    }
+    const owners = task.names.slice(1).map((name) => {
+      const text = texts[name];
+      if (typeof text !== "string") throw new Error(`curriculum membership owner '${name}' is missing`);
+      const raw = parseLedgerText(text, join(directory, name));
+      const owner = parseOwner(raw, name, basename(name, ".json"));
+      if (options.requireCanonicalBytes !== false && text !== canonical(raw)) {
+        throw new Error(`curriculum membership owner '${name}' is not canonical`);
+      }
+      return owner;
+    });
+    out.set(task.language, {
+      owners,
+      sourcePaths: [...identities[index]!.sourcePaths, metaPath,
+        ...task.names.slice(1).map((name) => join(directory, name))],
+    });
+  }
+  return out;
 }

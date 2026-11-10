@@ -2,7 +2,6 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
-  loadEverything,
   loadExamInventory,
   loadTrackChapters,
   loadTrackLessons,
@@ -19,7 +18,7 @@ import {
 } from "../assert-language-corpus.js";
 
 it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
-  const { lessons } = loadEverything();
+  const lessons = loadTrackLessons("kannada");
   const coverage = measureExamCoverage(loadExamInventory("kannada", "A1"), lessons);
   expect(coverage.enumerated).toBe(258);
   // 194 -> 197: KA-A1-L-12 (the full stop and the comma), KA-A1-L-13 (the
@@ -67,8 +66,10 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   // 204 -> 209: chapter 12's four short lessons close exactly the five-part
   // third-person bridge: pronouns, human/non-human, present endings,
   // possessives and the bounded non-human -gaḷu plural.
-  expect(coverage.covered).toBe(209);
-  expect(coverage.unmapped).toBe(49);
+  // 209 -> 211: chapter 104 closes exactly the dependent
+  // accusative/object-pronoun pair.
+  expect(coverage.covered).toBe(211);
+  expect(coverage.unmapped).toBe(47);
   expect(coverage.partial).toBe(0);
   // KA-A1-NUM-07 was one of the thirteen ordinal points HL-C354 left open, and
   // the one it priced cheapest: Kannada's -aneya has no exceptions, so ten
@@ -80,7 +81,7 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "kannada A1 (partial inventory): 209/258 points covered (81%)",
+    "kannada A1 (partial inventory): 211/258 points covered (82%)",
   );
 
   const chapter103 = loadTrackChapters()

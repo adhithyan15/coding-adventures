@@ -5,11 +5,12 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   diffRootSlugSplits,
   findRootSlugSplits,
+  liveRootSlugs,
   loadRootSlugBaseline,
   loadRootTagVocabulary,
   parseRootSlug,
 } from "../src/root-slug-splits.js";
-import { runRootSlugSplitsCli } from "../src/root-slug-splits-cli.js";
+import { runRootSlugSplitsCli, runRootSlugSplitsCliAsync } from "../src/root-slug-splits-cli.js";
 import { defaultCurriculumRoot } from "../src/loader.js";
 
 const roots: string[] = [];
@@ -120,6 +121,16 @@ describe("root slug vocabulary", () => {
 });
 
 describe("root slug splits", () => {
+  it("visits every track's parsed roots once and keeps the joiner's comma rule", () => {
+    const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["amare-latin"] });
+    writeFileSync(
+      join(root, "toy", "lessons", "TOY-2.md"),
+      "---\nschema_version: 2\nid: TOY-2\nchapter: 2\nheadword: w2\n" +
+        "roots: latin-stare, stare-latin, amare-latin\n---\n\n# w2\n",
+    );
+    expect(liveRootSlugs(root)).toEqual(["amare-latin", "latin-stare", "stare-latin"]);
+  });
+
   it("reports one etymon spelled two ways", () => {
     const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["latin-stare"] });
     expect(findRootSlugSplits(root)).toEqual([
@@ -283,6 +294,19 @@ describe("the write side", () => {
     expect(runRootSlugSplitsCli(["--write", "--allow-new"], root)).toBe(0);
   });
 
+  it("gives the bounded CLI route the same baseline growth decision", async () => {
+    const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["latin-stare"] });
+    writeFileSync(
+      join(root, "core", "root-slug-split-baseline.json"),
+      `${JSON.stringify({ version: 1, splits: [] }, null, 2)}\n`,
+    );
+    await expect(runRootSlugSplitsCliAsync(["--write"], root)).rejects.toThrow(
+      /refusing to grow the baseline/,
+    );
+    expect(await runRootSlugSplitsCliAsync(["--write", "--allow-new"], root)).toBe(0);
+    expect(runRootSlugSplitsCli(["--check"], root)).toBe(0);
+  });
+
   it("refuses to write through a SYMLINK, as the read side already refuses to read one", (ctx) => {
     // `readLedgerFile` refuses a symlinked ledger, so without this the two
     // halves of one CLI disagree about the same path and --write follows a link
@@ -303,8 +327,8 @@ describe("the write side", () => {
 });
 
 describe("the live corpus", () => {
-  it("matches its committed baseline", () => {
-    expect(runRootSlugSplitsCli(["--check"])).toBe(0);
+  it("matches its committed baseline", async () => {
+    expect(await runRootSlugSplitsCliAsync(["--check"])).toBe(0);
   });
 
   it("pins the CURRENT DEBT, which may only fall", { timeout: 120_000 }, () => {

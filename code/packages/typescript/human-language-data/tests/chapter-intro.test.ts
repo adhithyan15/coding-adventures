@@ -2,9 +2,8 @@
 
 import { describe, expect, it } from "vitest";
 import { generatedBookOutputs } from "../src/book-cli.js";
-import { loadTrackChapters } from "../src/loader.js";
+import { loadTrackChapters, loadTrackLessons } from "../src/loader.js";
 import { renderBookChapter } from "../src/book.js";
-import { loadLessons } from "../src/loader.js";
 
 // Numbered chapter `.tex` only: generatedBookOutputs also carries the generated
 // hashes JSON and canonical reference appendices, neither of which has a chapter
@@ -79,7 +78,9 @@ describe("the chapter opening", () => {
 
   it("is omitted, not faked, when a chapter has no capability", () => {
     // A chapter with no HL05 entry gets no opening rather than an invented one.
-    const lessons = loadLessons();
+    // The renderer selects only the target language and chapter, so the full
+    // canonical Spanish track is sufficient for this real-corpus example.
+    const lessons = loadTrackLessons("spanish");
     const spanish = lessons.find((l) => l.language === "spanish")!;
     const target = {
       language: "spanish",

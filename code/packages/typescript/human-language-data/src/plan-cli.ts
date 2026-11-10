@@ -17,8 +17,13 @@ import {
   loadAssessmentPolicy,
   listExamInventories,
   loadChapterPolicy,
-  loadEverything,
+  loadCurriculumSpine,
   loadExamInventory,
+  loadLanguageCurricula,
+  loadLanguageCurriculaAsync,
+  loadLanguageRegistry,
+  loadLessons,
+  loadLessonsAsync,
   listTaskShapeInventories,
   defaultCurriculumRoot,
 } from "./loader.js";
@@ -85,7 +90,39 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     return 2;
   }
 
-  const { registry, lessons, curricula, spine } = loadEverything(options.root);
+  // The plan never consumes taxonomy, books, scripts, sound tags, letter
+  // ledgers, or a dataset projection. Their own gates still validate them;
+  // constructing them here made every plan test pay for unrelated corpus I/O.
+  const registry = loadLanguageRegistry(options.root);
+  const lessons = loadLessons(options.root);
+  const curricula = loadLanguageCurricula(options.root);
+  return finishCompletionPlan(options, registry, lessons, curricula);
+}
+
+/** The same planner, with bounded canonical source reads for the direct CLI. */
+export async function runCompletionPlanAsync(args = process.argv.slice(2)): Promise<number> {
+  let options: PlanOptions;
+  try {
+    options = parseOptions(args);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    return 2;
+  }
+  const registry = loadLanguageRegistry(options.root);
+  const [lessons, curricula] = await Promise.all([
+    loadLessonsAsync(options.root),
+    loadLanguageCurriculaAsync(options.root),
+  ]);
+  return finishCompletionPlan(options, registry, lessons, curricula);
+}
+
+function finishCompletionPlan(
+  options: PlanOptions,
+  registry: ReturnType<typeof loadLanguageRegistry>,
+  lessons: ReturnType<typeof loadLessons>,
+  curricula: ReturnType<typeof loadLanguageCurricula>,
+): number {
+  const spine = loadCurriculumSpine(options.root);
   // Only the sections the plan reads. This used to build the WHOLE gap report and
   // then use three of its fields; the duration estimates, modality derivation, book
   // coverage and chapter gates it also built were never looked at, and they were
@@ -222,5 +259,5 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  process.exitCode = runCompletionPlan();
+  process.exitCode = await runCompletionPlanAsync();
 }

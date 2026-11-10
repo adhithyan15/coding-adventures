@@ -91,12 +91,10 @@
 
 package com.codingadventures.lz77;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -268,36 +266,48 @@ public final class LZ77 {
      * @return the reconstructed bytes (includes the seed)
      */
     public static byte[] decode(List<Token> tokens, byte[] initialBuffer) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            out.write(initialBuffer);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        // Security / performance: the previous implementation re-read
+        // out.toByteArray() (a full copy of the output) for every copied byte,
+        // which is quadratic in the output size.  Keep a plain growable array
+        // so a back-reference copy is O(length).
+        byte[] buf = Arrays.copyOf(initialBuffer, Math.max(initialBuffer.length, 16));
+        int len = initialBuffer.length;
 
         for (Token token : tokens) {
             if (token.length() > 0) {
-                // Back-reference: copy byte-by-byte for overlap safety.
-                int start = out.size() - token.offset();
-                // Guard: offset must not exceed what has already been written.
-                // A crafted stream with offset > out.size() would produce a
-                // negative start index and cause ArrayIndexOutOfBoundsException.
-                if (start < 0) {
+                // Guard: a zero offset, or one reaching before the start of
+                // the output, is invalid (corrupt or hostile input).
+                if (token.offset() < 1 || token.offset() > len) {
                     throw new IllegalArgumentException(
                         "LZ77: back-reference offset " + token.offset() +
-                        " exceeds output buffer size " + out.size());
+                        " is invalid for output buffer size " + len);
                 }
+                buf = ensureCapacity(buf, len, token.length() + 1);
+                int start = len - token.offset();
+                // Byte-by-byte copy: overlapping matches (offset < length) read
+                // bytes written earlier in this same loop.
                 for (int i = 0; i < token.length(); i++) {
-                    // Re-read each time: if offset < length, we read bytes
-                    // written during this very loop iteration.
-                    out.write(out.toByteArray()[start + i]);
+                    buf[len++] = buf[start + i];
                 }
+            } else {
+                buf = ensureCapacity(buf, len, 1);
             }
             // Always append next_char.
-            out.write(token.nextChar());
+            buf[len++] = (byte) token.nextChar();
         }
 
-        return out.toByteArray();
+        return Arrays.copyOf(buf, len);
+    }
+
+    /** Grow {@code buf} (doubling) so that {@code extra} more bytes fit. */
+    private static byte[] ensureCapacity(byte[] buf, int len, int extra) {
+        long needed = (long) len + extra;
+        if (needed <= buf.length) return buf;
+        if (needed > Integer.MAX_VALUE - 8) {
+            throw new IllegalArgumentException("LZ77: decoded output too large");
+        }
+        long grown = Math.max(needed, Math.min((long) buf.length * 2, Integer.MAX_VALUE - 8));
+        return Arrays.copyOf(buf, (int) grown);
     }
 
     // =========================================================================
@@ -376,11 +386,14 @@ public final class LZ77 {
     static List<Token> deserialiseTokens(byte[] data) {
         if (data == null || data.length < HEADER_SIZE) return new ArrayList<>();
         ByteBuffer buf = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN);
-        int tokenCount = buf.getInt();
-
-        // Cap against payload size to prevent DoS from crafted headers.
+        // Security: the header count is an unsigned 32-bit value controlled by
+        // the attacker.  Read it as unsigned (a raw int goes negative above
+        // 2^31 and made new ArrayList<>(negative) throw), then cap it against
+        // the payload size so neither allocation nor iteration follows the
+        // claim.  A larger claim is treated as truncated.
+        long tokenCount = buf.getInt() & 0xFFFFFFFFL;
         int maxTokens = (data.length - HEADER_SIZE) / TOKEN_SIZE;
-        int safeCount = Math.min(tokenCount, maxTokens);
+        int safeCount = (int) Math.min(tokenCount, (long) maxTokens);
 
         List<Token> tokens = new ArrayList<>(safeCount);
         for (int i = 0; i < safeCount && buf.remaining() >= TOKEN_SIZE; i++) {

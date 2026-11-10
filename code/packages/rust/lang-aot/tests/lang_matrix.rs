@@ -7378,6 +7378,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // Like bounded powered roots expose their checked integer coefficients and
+    // common remaining radicand before the additive expression is floored.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 + sqrt(entier(80)) ^ 3)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -18805,6 +18816,31 @@ fn algol_like_floor_root_sums_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but like floor-root sums did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_powered_like_floor_root_sums_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("sqrt(entier(80)) ^ 3 + sqrt(entier(80)) ^ 3")
+        })
+        .expect("the powered like floor-root sum ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but powered like floor-root sums did not complete"
             );
             continue;
         };

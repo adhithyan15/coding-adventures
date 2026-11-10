@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- Hardening (CWE-789): deserialise_tokens clamps the untrusted header count to the complete tokens present instead of looping over the claimed count (the loop already broke at the first missing token). decode stops at an invalid (zero or too-large) offset instead of reading nil slots. NOT RUN locally (toolchain unavailable in the review environment).
+- Added tests/test_hostile_headers.lua (busted): hostile headers with a wall-clock bound, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

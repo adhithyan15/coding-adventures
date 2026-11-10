@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Security
+
+- No code change: token count was already clamped to (len-8)/4, decode stops at original_length and bounds/cycle-guards dictionary references.
+- Added hostile-header tests (header-claimed counts/lengths of 2^32-1, counts beyond the data) and round trips over every byte string of length <= 2 plus a seeded random sample to tests/*_test.c. Verified clean under -fsanitize=address,undefined (gcc) as well as the iso-harness gcc/clang runs.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

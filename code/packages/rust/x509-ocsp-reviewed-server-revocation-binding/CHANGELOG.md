@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- Apply the separately authenticated responder-revocation proof's exact
+  intermediate critical permitted and excluded DNS constraints to that proof's
+  exact responder, retaining only count evidence.
+- Reuse the repository-owned bounded evaluator and stop before no-check,
+  recursive responder revocation, complete revocation, TLS, HTTP, or OAuth
+  readiness.
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the separately authenticated original responder-revocation
+  proof's own exact responder.
+- Derive both policy inputs through the consumed non-copyable path, retain only
+  count evidence, and stop before intermediate name constraints, no-check,
+  recursive revocation, complete revocation, TLS, HTTP, or OAuth readiness.
+- Reify the separately authenticated original responder-revocation proof's own
+  exact delegated responder-to-intermediate-to-reviewed-root path while
+  retaining the complete non-copyable branch.
+- Accept no substitute certificate, path, root, algorithm, key, signature,
+  status, or time, and stop before name, no-check, recursive revocation,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth policy.
+- Reify the added intermediate-status responder path from the original
+  separately authenticated responder-revocation branch while retaining both
+  complete authenticated revocation proofs under repository-owned evidence.
+- Feed that projected path through the existing reviewed-root DNS, RFC 6960
+  no-check, and separately authenticated added-responder revocation policies
+  without accepting substitute certificates, roots, status, or time.
+- Preserve defaulted public type parameters for the existing no-check source
+  and stop before either added proof's own responder policy, complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
 - Compose the separately authenticated original responder-revocation branch
   with exact intermediate status by deriving the retained intermediate,
   selected reviewed root, and original observation time through private

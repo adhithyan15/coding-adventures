@@ -250,6 +250,13 @@ function M.decode(tokens, original_length)
   local out = {}
 
   for _, tok in ipairs(tokens) do
+    -- Security: stop once the declared length is reached (nothing more
+    -- survives the final truncation; a hostile chain of tokens otherwise
+    -- expands quadratically) and on a dangling dictionary index (previously
+    -- an "attempt to index a nil value" error).
+    if original_length ~= nil and #out >= original_length then break end
+    if tok.dict_index >= #dict_table then break end
+
     local seq = reconstruct(dict_table, tok.dict_index)
     for _, b in ipairs(seq) do
       out[#out + 1] = b
@@ -326,7 +333,9 @@ end
 function M.deserialise_tokens(data)
   if #data < 8 then return {}, 0 end
   local original_length = read_u32(data, 1)
-  local token_count     = read_u32(data, 5)
+  -- Security: clamp the attacker-controlled count to the complete 4-byte tokens
+  -- actually present.
+  local token_count     = math.min(read_u32(data, 5), (#data - 8) // 4)
   local tokens = {}
   for i = 0, token_count - 1 do
     local base = 9 + i * 4  -- 1-indexed: bytes 9..12 are token 0

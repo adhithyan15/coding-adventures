@@ -511,10 +511,15 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // a match in `code_to_sym`, emit the symbol, reset the accumulator.
     // The zero-padding at the end of the bit stream is harmless: once we've
     // decoded `original_length` symbols we stop, never reading into padding bits.
-    let mut output: Vec<u8> = Vec::with_capacity(original_length);
+    //
+    // Security: `original_length` is an untrusted header field, so it must not
+    // size the allocation.  Every symbol costs at least one bit, so the output
+    // can never exceed the number of bits actually present; cap the hint there
+    // and let the vector grow if the stream really is that long.
+    let mut output: Vec<u8> = Vec::with_capacity(original_length.min(bit_string.len()));
+    let bit_bytes = bit_string.as_bytes();
     let mut pos = 0usize;
     let mut accumulated = String::new();
-    let bit_bytes = bit_string.as_bytes();
 
     while output.len() < original_length {
         if pos >= bit_string.len() {
@@ -524,6 +529,8 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 original_length
             ));
         }
+        // `bit_string` is pure ASCII ('0'/'1'), so byte indexing is exact and
+        // O(1); `chars().nth(pos)` would make the loop quadratic in the input.
         accumulated.push(bit_bytes[pos] as char);
         pos += 1;
         // SECURITY: no code is longer than max_len, so a longer accumulator can

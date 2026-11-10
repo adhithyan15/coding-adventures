@@ -6,6 +6,11 @@
 
 - Add required_capabilities.json (pure computation).
 
+### Security
+
+- `decompress` stops expanding codes once the declared `original_length` is reached (each code can emit ~4 KiB, so a small stream could previously expand far beyond it before the final truncate). Valid streams are unchanged.
+- Added `tests/hostile_headers.rs` (allocation guard, hostile headers, exhaustive <=2-byte and seeded random round trips).
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

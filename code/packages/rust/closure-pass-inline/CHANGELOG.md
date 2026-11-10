@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.33.2] - 2026-11-10
+
+### Changed - tests only
+
+- `does_not_inline_void_helper_with_param_local_name_collision` feeds the
+  pass a `let` that shadows a parameter. `javascript-parser` now refuses that
+  program as an early error (V8C09), so the test parses it with the plain
+  grammar parser (`parse_javascript`, no early-error checks) through the new
+  `inline_source_unchecked` helper. The pass's defence in depth is unchanged
+  and still tested.
+
 ## [0.33.1] - 2026-11-10
 
 ### Fixed

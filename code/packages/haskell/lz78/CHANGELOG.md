@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- decode stops once the declared length is reached (a hostile chain of tokens previously expanded quadratically through list appends before the final trim). Header validation was already strict (exact wire length). NOT RUN locally (toolchain unavailable in the review environment).
+- Added test/HostileHeadersSpec.hs (hspec, registered in the cabal test-suite and Spec.hs): hostile headers must be rejected promptly, plus round trips over every byte string of length <= 2 and a seeded pseudo-random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## Unreleased
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir

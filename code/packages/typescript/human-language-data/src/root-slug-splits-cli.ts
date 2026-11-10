@@ -6,8 +6,10 @@ import {
   ROOT_SLUG_BASELINE_PATH,
   diffRootSlugSplits,
   findRootSlugSplits,
+  findRootSlugSplitsAsync,
   loadRootSlugBaseline,
   serialiseRootSlugBaseline,
+  type RootSlugSplit,
 } from "./root-slug-splits.js";
 import { isSharded } from "./shard.js";
 
@@ -50,15 +52,37 @@ function printable(value: string): string {
   return stripControlCharacters(value);
 }
 
-export function runRootSlugSplitsCli(args: readonly string[], root = defaultCurriculumRoot()): number {
+function parseArgs(args: readonly string[]): { mode: "--check" | "--write"; allowNew: boolean } {
   const allowNew = args.includes("--allow-new");
   const rest = args.filter((arg) => arg !== "--allow-new");
   if (rest.length !== 1 || (rest[0] !== "--check" && rest[0] !== "--write")) {
     throw new Error("usage: root-slug-splits-cli --check|--write [--allow-new]");
   }
-  const live = findRootSlugSplits(root);
+  return { mode: rest[0], allowNew };
+}
 
-  if (rest[0] === "--write") {
+/** Preserve the synchronous library API for callers with an existing root. */
+export function runRootSlugSplitsCli(args: readonly string[], root = defaultCurriculumRoot()): number {
+  const { mode, allowNew } = parseArgs(args);
+  return runWithLive(mode, allowNew, root, findRootSlugSplits(root));
+}
+
+/** The executable's bounded-I/O route; both routes share one baseline verdict. */
+export async function runRootSlugSplitsCliAsync(
+  args: readonly string[],
+  root = defaultCurriculumRoot(),
+): Promise<number> {
+  const { mode, allowNew } = parseArgs(args);
+  return runWithLive(mode, allowNew, root, await findRootSlugSplitsAsync(root));
+}
+
+function runWithLive(
+  mode: "--check" | "--write",
+  allowNew: boolean,
+  root: string,
+  live: readonly RootSlugSplit[],
+): number {
+  if (mode === "--write") {
     const path = resolve(root, ROOT_SLUG_BASELINE_PATH);
     assertWritableLedger(path);
     // The baseline MAY ONLY SHRINK, and `--write` is the command a contributor
@@ -121,10 +145,10 @@ export function runRootSlugSplitsCli(args: readonly string[], root = defaultCurr
 }
 
 if (process.argv[1]?.endsWith("root-slug-splits-cli.js")) {
-  try {
-    process.exitCode = runRootSlugSplitsCli(process.argv.slice(2));
-  } catch (error) {
+  void runRootSlugSplitsCliAsync(process.argv.slice(2)).then((code) => {
+    process.exitCode = code;
+  }).catch((error: unknown) => {
     process.stderr.write(`${(error as Error).message}\n`);
     process.exitCode = 1;
-  }
+  });
 }

@@ -933,14 +933,35 @@ impl<'a> Emitter<'a> {
     /// colon to match upstream's `printer.cont(":");` + the body's
     /// own indentation; in compact mode there is no whitespace at all.
     ///
-    /// Note: `label:` is not itself an expression so it doesn't enter
-    /// the precedence ladder; statements live above expressions in the
-    /// grammar.
+    /// Upstream Closure Compiler (`CodeGenerator.java::case Token.LABEL` /
+    /// `addNonEmptyStatement`) unwraps a single-statement block and prints
+    /// an empty block as `;` (CCR-087, #15924).
     fn emit_labeled(&mut self, l: &LabeledStatement) {
         self.maybe_map(&l.cv);
         self.emit_identifier(&l.label);
         self.write_str(":");
         self.pretty_ws();
+        if !self.opts.pretty {
+            if let Statement::Tagged(TaggedStatement::BlockStatement(block)) = &*l.body {
+                let non_empty: Vec<&Statement> = block
+                    .body
+                    .iter()
+                    .filter(|s| !matches!(s, Statement::Tagged(TaggedStatement::EmptyStatement(_))))
+                    .collect();
+                if non_empty.is_empty() {
+                    self.maybe_map(&block.cv);
+                    self.write_str(";");
+                    return;
+                }
+                if non_empty.len() == 1 {
+                    let inner = non_empty[0];
+                    if !is_block_decl_or_do(inner) {
+                        self.emit_statement(inner);
+                        return;
+                    }
+                }
+            }
+        }
         self.emit_statement(&l.body);
     }
 
@@ -6546,7 +6567,7 @@ mod tests {
     fn program_final_statement_is_terminated_whatever_kind_it_is() {
         let a = || expr_stmt(ident("a"));
 
-        // A bare block, and a labeled block.
+        // A bare block, a labeled block (unwrapped under CCR-087), and a multi-statement labeled block.
         assert_eq!(emit_stmt(block_of(vec![a()])), "{a};");
         assert_eq!(
             emit_stmt(Statement::labeled_statement(LabeledStatement {
@@ -6557,7 +6578,18 @@ mod tests {
                 },
                 body: Box::new(block_of(vec![a()])),
             })),
-            "L:{a};"
+            "L:a;"
+        );
+        assert_eq!(
+            emit_stmt(Statement::labeled_statement(LabeledStatement {
+                cv: None,
+                label: Identifier {
+                    cv: None,
+                    name: "L".to_string()
+                },
+                body: Box::new(block_of(vec![a(), a()])),
+            })),
+            "L:{a;a};"
         );
 
         // `switch`.
@@ -9383,6 +9415,206 @@ mod tests {
             },
         );
         assert!(out.code.contains("if (c) {\n"), "got:\n{}", out.code);
+    }
+
+    // ---- CCR-087 (#15924): labeled block unwrapping --------------------
+
+    fn labeled_stmt(label: &str, body: Statement) -> Statement {
+        Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier {
+                cv: None,
+                name: label.to_string(),
+            },
+            body: Box::new(body),
+        })
+    }
+
+    #[test]
+    fn ccr087_labeled_single_statement_drops_braces() {
+        let call_a = expr_stmt(Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("a")),
+            arguments: vec![],
+        }));
+
+        // lbl:{a()} -> lbl:a();
+        let s = labeled_stmt("lbl", block_of(vec![call_a]));
+        assert_eq!(emit_stmt(s), "lbl:a();");
+
+        // lbl:{break lbl} -> lbl:break lbl;
+        let s_break = labeled_stmt(
+            "lbl",
+            block_of(vec![Statement::break_statement(BreakStatement {
+                cv: None,
+                label: Some(Identifier {
+                    cv: None,
+                    name: "lbl".to_string(),
+                }),
+            })]),
+        );
+        assert_eq!(emit_stmt(s_break), "lbl:break lbl;");
+
+        // lbl:{return 1} -> lbl:return 1;
+        let s_return = labeled_stmt(
+            "lbl",
+            block_of(vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: Some(num(1.0)),
+            })]),
+        );
+        assert_eq!(emit_stmt(s_return), "lbl:return 1;");
+
+        // lbl:{var x=1} -> lbl:var x=1;
+        let var_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_var = labeled_stmt("lbl", block_of(vec![var_decl]));
+        assert_eq!(emit_stmt(s_var), "lbl:var x=1;");
+    }
+
+    #[test]
+    fn ccr087_labeled_empty_block_emits_semicolon() {
+        // lbl:{} -> lbl:;
+        let s_empty = labeled_stmt("lbl", block_of(vec![]));
+        assert_eq!(emit_stmt(s_empty), "lbl:;");
+
+        // lbl:{;} -> lbl:;
+        let empty_stmt = Statement::empty_statement(EmptyStatement { cv: None });
+        let s_empty_stmt = labeled_stmt("lbl", block_of(vec![empty_stmt.clone()]));
+        assert_eq!(emit_stmt(s_empty_stmt), "lbl:;");
+
+        // lbl:{;;} -> lbl:;
+        let s_multi_empty = labeled_stmt("lbl", block_of(vec![empty_stmt.clone(), empty_stmt]));
+        assert_eq!(emit_stmt(s_multi_empty), "lbl:;");
+    }
+
+    #[test]
+    fn ccr087_labeled_multi_statement_keeps_braces() {
+        let call_a = expr_stmt(ident("a"));
+        let call_b = expr_stmt(ident("b"));
+        let s = labeled_stmt("lbl", block_of(vec![call_a, call_b]));
+        assert_eq!(emit_stmt(s), "lbl:{a;b};");
+    }
+
+    #[test]
+    fn ccr087_labeled_lexical_declarations_keep_braces() {
+        // lbl:{let x=1} -> lbl:{let x=1};
+        let let_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_let = labeled_stmt("lbl", block_of(vec![let_decl]));
+        assert_eq!(emit_stmt(s_let), "lbl:{let x=1};");
+
+        // lbl:{const x=1} -> lbl:{const x=1};
+        let const_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_const = labeled_stmt("lbl", block_of(vec![const_decl]));
+        assert_eq!(emit_stmt(s_const), "lbl:{const x=1};");
+
+        // lbl:{class C{}} -> lbl:{class C{}};
+        let class_decl = Statement::Declaration(Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: None,
+            body: vec![],
+        }));
+        let s_class = labeled_stmt("lbl", block_of(vec![class_decl]));
+        assert_eq!(emit_stmt(s_class), "lbl:{class C{}};");
+
+        // lbl:{function f(){}} -> lbl:{function f(){}};
+        let fn_decl = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let s_fn = labeled_stmt("lbl", block_of(vec![fn_decl]));
+        assert_eq!(emit_stmt(s_fn), "lbl:{function f(){}};");
+    }
+
+    #[test]
+    fn ccr087_labeled_do_while_and_nested_label_keep_braces() {
+        // lbl:{do a();while(b)} -> lbl:{do a();while(b)};
+        let s_do = labeled_stmt("lbl", block_of(vec![do_a_while("b")]));
+        assert_eq!(emit_stmt(s_do), "lbl:{do a();while(b)};");
+
+        // lbl:{lbl2:a()} -> lbl:{lbl2:a;};
+        let nested_lbl = labeled_stmt("lbl2", expr_stmt(ident("a")));
+        let s_nested = labeled_stmt("lbl", block_of(vec![nested_lbl]));
+        assert_eq!(emit_stmt(s_nested), "lbl:{lbl2:a;};");
+    }
+
+    #[test]
+    fn ccr087_labeled_block_pretty_mode_keeps_braces() {
+        let s = labeled_stmt("lbl", block_of(vec![expr_stmt(ident("a"))]));
+        let out = emit_with(
+            program().with_body(vec![ProgramItem::Statement(s)]),
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(out.code.contains("lbl: {\n"), "got:\n{}", out.code);
+    }
+
+    #[test]
+    fn ccr087_function_final_labeled_empty_block_retains_semi() {
+        let s = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![labeled_stmt("lbl", block_of(vec![]))],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        // Must emit `lbl:;` and never strip the semicolon before `}`.
+        assert_eq!(emit_stmt(s), "function f(){lbl:;};");
     }
 
     // ---- "use strict" prologue (#17907) -------------------------------
