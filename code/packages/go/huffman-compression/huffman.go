@@ -75,6 +75,13 @@ const (
 	// tableEntrySize is the size of each code-length table entry in bytes.
 	// Each entry is (symbol uint8, code_length uint8) — 2 bytes total.
 	tableEntrySize = 2
+
+	// maxSymbols is the most entries a valid table can hold: symbols are bytes.
+	maxSymbols = 256
+
+	// maxCodeLen is the longest code length the decoder accepts. Real codes
+	// over 256 symbols are far shorter; 56 keeps every 64-bit shift safe.
+	maxCodeLen = 56
 )
 
 // ---------------------------------------------------------------------------
@@ -137,39 +144,13 @@ func (b *bitBuilder) bytes() []byte {
 }
 
 // ---------------------------------------------------------------------------
-// Internal helpers: bit stream unpacking
-// ---------------------------------------------------------------------------
-
-// unpackBits reads the packed byte slice and returns a string of '0' and '1'
-// characters in LSB-first order.
-//
-// The returned string may include zero-padding bits at the end (the caller
-// knows how many bits are meaningful because it decodes exactly
-// original_length symbols by prefix matching, not by counting bits).
-func unpackBits(data []byte) string {
-	buf := make([]byte, len(data)*8)
-	pos := 0
-	for _, by := range data {
-		for bit := uint(0); bit < 8; bit++ {
-			if (by>>bit)&1 == 1 {
-				buf[pos] = '1'
-			} else {
-				buf[pos] = '0'
-			}
-			pos++
-		}
-	}
-	return string(buf)
-}
-
-// ---------------------------------------------------------------------------
 // Internal helper: reconstruct canonical codes from a sorted table
 // ---------------------------------------------------------------------------
 
 // symbolLen is a (symbol, code_length) pair from the wire-format table.
 type symbolLen struct {
-	symbol    int
-	codeLen   int
+	symbol  int
+	codeLen int
 }
 
 // buildCanonicalCodes reconstructs a symbol→bitString map from a slice of
@@ -350,8 +331,9 @@ func Decompress(data []byte) ([]byte, error) {
 	if len(data) < headerSize {
 		return nil, fmt.Errorf("huffman.Decompress: data too short for header (%d bytes)", len(data))
 	}
-	originalLength := int(binary.BigEndian.Uint32(data[0:4]))
-	symbolCount := int(binary.BigEndian.Uint32(data[4:8]))
+	// Keep the header fields as uint64 so nothing wraps on 32-bit platforms.
+	originalLength := uint64(binary.BigEndian.Uint32(data[0:4]))
+	symbolCount := uint64(binary.BigEndian.Uint32(data[4:8]))
 
 	// ── Edge case: empty original ────────────────────────────────────────────
 	if originalLength == 0 {
@@ -359,8 +341,14 @@ func Decompress(data []byte) ([]byte, error) {
 	}
 
 	// ── Step 2: parse code-length table ─────────────────────────────────────
-	tableSize := symbolCount * tableEntrySize
-	tableEnd := headerSize + tableSize
+	//
+	// SECURITY: the header is attacker-controlled. Symbols are single bytes, so
+	// a table can name at most 256 of them. Checking this first also bounds
+	// the table size computation below.
+	if symbolCount > maxSymbols {
+		return nil, fmt.Errorf("huffman.Decompress: symbol_count %d exceeds %d", symbolCount, maxSymbols)
+	}
+	tableEnd := headerSize + int(symbolCount)*tableEntrySize
 	if len(data) < tableEnd {
 		return nil, fmt.Errorf(
 			"huffman.Decompress: data too short for table (need %d bytes, have %d)",
@@ -368,61 +356,90 @@ func Decompress(data []byte) ([]byte, error) {
 		)
 	}
 
-	// The table is already in (code_length, symbol_value) ascending order
-	// because that is how Compress stored it. We read it into the same struct.
-	pairs := make([]symbolLen, symbolCount)
-	for i := 0; i < symbolCount; i++ {
-		offset := headerSize + i*tableEntrySize
-		pairs[i] = symbolLen{
-			symbol:  int(data[offset]),
-			codeLen: int(data[offset+1]),
-		}
-	}
-
 	// ── Step 3: reconstruct canonical codes ─────────────────────────────────
 	//
-	// Using the same deterministic algorithm as the encoder: given the sorted
-	// (symbol, length) list, assign codes numerically starting from 0.
-	codeTable := buildCanonicalCodes(pairs)
-
-	// Build the reverse map: bitString → symbol, for decoding.
-	reverseTable := make(map[string]int, len(codeTable))
-	for sym, bits := range codeTable {
-		reverseTable[bits] = sym
-	}
-
-	// ── Step 4: unpack bit stream ────────────────────────────────────────────
+	// Given the sorted (symbol, length) list, assign codes numerically
+	// starting from 0, left-shifting whenever the length grows.
 	//
-	// The remaining bytes after the table are the LSB-first packed bit stream.
-	// We expand each byte into 8 bits (LSB at index 0).
-	bitStream := unpackBits(data[tableEnd:])
-
-	// ── Step 5: decode symbols by prefix matching ────────────────────────────
-	//
-	// Walk the bit stream character by character, growing a "current" prefix.
-	// When the prefix matches an entry in reverseTable, emit the symbol and
-	// reset. Stop when we have decoded original_length symbols.
-	//
-	// This O(total_bits × avg_code_length) prefix scan is simple and correct.
-	// A production codec would use a Huffman trie or lookup table for speed.
-	result := make([]byte, 0, originalLength)
-	current := ""
-	for _, ch := range bitStream {
-		current += string(ch)
-		if sym, ok := reverseTable[current]; ok {
-			result = append(result, byte(sym))
-			current = ""
-			if len(result) == originalLength {
-				break
-			}
+	// SECURITY: the table is hostile input, so we reject
+	//   - a symbol that appears twice (ambiguous table),
+	//   - lengths of 0 or above maxCodeLen (a zero-length code matches
+	//     nothing; a huge length would overflow the 64-bit shift),
+	//   - tables not sorted by length (the encoder always sorts), and
+	//   - over-subscribed tables (Kraft sum > 1): before each assignment the
+	//     running code must still fit in `length` bits, i.e. code>>length == 0.
+	// Codes are keyed by (length, value) packed into a uint64 so decoding needs
+	// no per-symbol string building.
+	codeToSym := make(map[uint64]byte, symbolCount)
+	var seen [256]bool
+	var code uint64
+	prevLen := uint(0)
+	maxLen := uint(0)
+	for i := 0; i < int(symbolCount); i++ {
+		offset := headerSize + i*tableEntrySize
+		sym := data[offset]
+		length := uint(data[offset+1])
+		if seen[sym] {
+			return nil, fmt.Errorf("huffman.Decompress: symbol %d appears twice in table", sym)
 		}
+		seen[sym] = true
+		if length == 0 || length > maxCodeLen {
+			return nil, fmt.Errorf("huffman.Decompress: invalid code length %d in table", length)
+		}
+		if i == 0 {
+			prevLen = length
+		}
+		if length < prevLen {
+			return nil, fmt.Errorf("huffman.Decompress: table is not sorted by code length")
+		}
+		code <<= length - prevLen
+		if code>>length != 0 {
+			return nil, fmt.Errorf("huffman.Decompress: table over-subscribes the code space")
+		}
+		codeToSym[uint64(length)<<56|code] = sym
+		code++
+		prevLen = length
+		maxLen = length
 	}
 
-	if len(result) != originalLength {
+	// SECURITY: every code is at least one bit, so N payload bytes hold at most
+	// 8*N symbols. Reject a larger declared length before allocating anything
+	// sized from it.
+	payload := data[tableEnd:]
+	totalBits := uint64(len(payload)) * 8
+	if originalLength > totalBits {
 		return nil, fmt.Errorf(
-			"huffman.Decompress: decoded %d symbols, expected %d",
-			len(result), originalLength,
+			"huffman.Decompress: declared length %d exceeds the %d bits available",
+			originalLength, totalBits,
 		)
+	}
+
+	// ── Steps 4+5: decode straight from the packed bits ─────────────────────
+	//
+	// Bits are LSB-first within each byte, so bit i is
+	// (payload[i/8] >> (i%8)) & 1 -- O(1), no expanded bit string. We build the
+	// candidate code MSB-first as an integer. Canonical codes are prefix-free,
+	// so the first (length, value) hit is the symbol. Once the accumulated
+	// length reaches the longest code without a match, no later bit can match
+	// (an incomplete table fed unmatched bits), so we fail immediately.
+	result := make([]byte, 0, originalLength)
+	var acc uint64
+	var accLen uint
+	for pos := uint64(0); uint64(len(result)) < originalLength; pos++ {
+		if pos >= totalBits {
+			return nil, fmt.Errorf(
+				"huffman.Decompress: decoded %d symbols, expected %d",
+				len(result), originalLength,
+			)
+		}
+		acc = acc<<1 | uint64((payload[pos>>3]>>(pos&7))&1)
+		accLen++
+		if sym, ok := codeToSym[uint64(accLen)<<56|acc]; ok {
+			result = append(result, sym)
+			acc, accLen = 0, 0
+		} else if accLen >= maxLen {
+			return nil, fmt.Errorf("huffman.Decompress: bit pattern does not match any code")
+		}
 	}
 
 	return result, nil

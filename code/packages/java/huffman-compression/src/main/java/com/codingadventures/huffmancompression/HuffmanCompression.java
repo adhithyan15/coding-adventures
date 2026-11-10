@@ -94,6 +94,12 @@ public final class HuffmanCompression {
     /** Utility class — no instances. */
     private HuffmanCompression() {}
 
+    /** Symbols are single bytes, so a valid table has at most 256 entries. */
+    private static final int MAX_SYMBOLS = 256;
+
+    /** Longest code length the decoder accepts; keeps every 64-bit shift safe. */
+    private static final int MAX_CODE_LEN = 56;
+
     // =========================================================================
     // Public API
     // =========================================================================
@@ -206,18 +212,38 @@ public final class HuffmanCompression {
         if (data == null || data.length < 8) return new byte[0];
 
         ByteBuffer buf = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN);
-        int originalLength = buf.getInt();
-        int symbolCount    = buf.getInt();
+        // Read the header as unsigned: a signed int would turn 0xFFFFFFFF into -1.
+        long originalLength = buf.getInt() & 0xFFFFFFFFL;
+        long symbolCount    = buf.getInt() & 0xFFFFFFFFL;
 
         if (originalLength == 0) return new byte[0];
+
+        // SECURITY: the header is attacker-controlled.  Symbols are single
+        // bytes, so a table can name at most 256 of them.  Checking first also
+        // keeps every size computation below tiny.
+        if (symbolCount > MAX_SYMBOLS) {
+            throw new IllegalArgumentException(
+                "symbol_count " + symbolCount + " exceeds " + MAX_SYMBOLS);
+        }
+        int tableEnd = 8 + (int) symbolCount * 2;
+        if (data.length < tableEnd) {
+            throw new IllegalArgumentException("input too short for the code-lengths table");
+        }
 
         // Parse code-lengths table.
         // Each entry: 2 bytes — symbol (uint8), code_length (uint8).
         // Wire format guarantees entries are sorted by (code_length, symbol_value).
-        List<int[]> lengths = new ArrayList<>(symbolCount);
+        // A byte value can have only one code, so a repeated symbol is rejected.
+        List<int[]> lengths = new ArrayList<>((int) symbolCount);
+        boolean[] seen = new boolean[256];
         for (int i = 0; i < symbolCount; i++) {
             int sym    = buf.get() & 0xFF;
             int length = buf.get() & 0xFF;
+            if (seen[sym]) {
+                throw new IllegalArgumentException(
+                    "symbol " + sym + " appears twice in code-lengths table");
+            }
+            seen[sym] = true;
             lengths.add(new int[]{sym, length});
         }
 
@@ -228,48 +254,82 @@ public final class HuffmanCompression {
         //   prev_length = first entry's length
         //   for each entry in sorted order:
         //     if length > prev_length: code <<= (length - prev_length)
-        //     assign bit_string = zero-padded binary of code
+        //     assign (length, code) -> symbol
         //     code += 1
         //
         // This produces a prefix-free code table that matches the encoder exactly.
-        Map<String, Integer> codeToSymbol = new HashMap<>();
-        int codeVal  = 0;
+        //
+        // SECURITY: the table is hostile input, so we reject
+        //   * lengths of 0 or above MAX_CODE_LEN (a zero-length code matches
+        //     nothing; a long one could overflow the 64-bit shift),
+        //   * tables not sorted by length (the encoder always sorts), and
+        //   * over-subscribed tables (Kraft sum > 1): before each assignment the
+        //     running code must still fit in `length` bits (code >>> length == 0).
+        // Since length <= 56 the long shifts below never have their count masked.
+        // Codes are keyed by (length << 56 | code) so no strings are built.
+        Map<Long, Integer> codeToSymbol = new HashMap<>();
+        long codeVal = 0;
         int prevLen  = lengths.isEmpty() ? 0 : lengths.get(0)[1];
+        int maxLen   = 0;
         for (int[] entry : lengths) {
             int sym    = entry[0];
             int length = entry[1];
-            if (length > prevLen) codeVal <<= (length - prevLen);
-            String bitStr = String.format("%" + length + "s",
-                Integer.toBinaryString(codeVal)).replace(' ', '0');
-            codeToSymbol.put(bitStr, sym);
+            if (length == 0 || length > MAX_CODE_LEN) {
+                throw new IllegalArgumentException("invalid code length " + length + " in table");
+            }
+            if (length < prevLen) {
+                throw new IllegalArgumentException("code-lengths table is not sorted by length");
+            }
+            codeVal <<= (length - prevLen);
+            if ((codeVal >>> length) != 0) {
+                throw new IllegalArgumentException(
+                    "code-lengths table over-subscribes the code space");
+            }
+            codeToSymbol.put(((long) length << 56) | codeVal, sym);
             codeVal++;
             prevLen = length;
+            maxLen = length;
         }
 
-        // Unpack the remaining bytes as a bit string (LSB-first).
-        StringBuilder bitString = new StringBuilder();
-        while (buf.hasRemaining()) {
-            int byteVal = buf.get() & 0xFF;
-            for (int i = 0; i < 8; i++) {
-                bitString.append((byteVal >> i) & 1);
-            }
+        // SECURITY: every code is at least one bit, so N payload bytes hold at
+        // most 8*N symbols.  Reject a larger declared length before allocating
+        // anything sized from it (also guards the int array size).
+        long totalBits = (long) (data.length - tableEnd) * 8;
+        if (originalLength > totalBits || originalLength > Integer.MAX_VALUE - 8) {
+            throw new IllegalArgumentException(
+                "declared length " + originalLength + " exceeds the " + totalBits
+                + " bits available");
         }
 
-        // Decode exactly original_length symbols.
-        byte[] output = new byte[originalLength];
-        int pos = 0;
-        StringBuilder accumulated = new StringBuilder();
-        for (int decoded = 0; decoded < originalLength; ) {
-            if (pos >= bitString.length()) {
+        // Decode exactly original_length symbols straight from the payload.
+        //
+        // Bits are LSB-first within each byte, so bit i is
+        // (data[tableEnd + i/8] >> (i%8)) & 1 -- O(1), no expanded bit string.
+        // The candidate code is built MSB-first as a long.  Canonical codes are
+        // prefix-free, so the first (length, value) hit is the symbol.  Once the
+        // accumulated length reaches the longest code without a match, no later
+        // bit can match (an incomplete table fed unmatched bits): fail fast.
+        byte[] output = new byte[(int) originalLength];
+        long pos = 0;
+        long acc = 0;
+        int accLen = 0;
+        for (int decoded = 0; decoded < output.length; ) {
+            if (pos >= totalBits) {
                 throw new IllegalArgumentException(
                     "Bit stream exhausted before decoding all symbols"
                 );
             }
-            accumulated.append(bitString.charAt(pos++));
-            String accStr = accumulated.toString();
-            if (codeToSymbol.containsKey(accStr)) {
-                output[decoded++] = (byte) (int) codeToSymbol.get(accStr);
-                accumulated.setLength(0);
+            int bit = (data[tableEnd + (int) (pos >>> 3)] >> (int) (pos & 7)) & 1;
+            pos++;
+            acc = (acc << 1) | bit;
+            accLen++;
+            Integer sym = codeToSymbol.get(((long) accLen << 56) | acc);
+            if (sym != null) {
+                output[decoded++] = (byte) (int) sym;
+                acc = 0;
+                accLen = 0;
+            } else if (accLen >= maxLen) {
+                throw new IllegalArgumentException("bit pattern does not match any code");
             }
         }
         return output;

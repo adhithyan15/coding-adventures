@@ -103,6 +103,42 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isCtCompareInput,
 	},
 	{
+		name:     "dart/ct-compare",
+		language: "dart",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
+		name:     "haskell/ct-compare",
+		language: "haskell",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
+		name:     "lua/ct-compare",
+		language: "lua",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
+		name:     "ocaml/ct-compare",
+		language: "ocaml",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
+		name:     "perl/ct-compare",
+		language: "perl",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
+		name:     "swift/ct-compare",
+		language: "swift",
+		inputs:   "the CT01 corpus",
+		matches:  isCtCompareCorpus,
+	},
+	{
 		name:     "rust/mosaic-package-resolver",
 		language: "rust",
 		inputs:   "Mosaic manifests and sources under code/",
@@ -258,6 +294,17 @@ func isCtCompareInput(changed string) bool {
 		changed == "code/scripts/ct_compare_tfv.py" ||
 		changed == "code/scripts/ct_compare_conformance.py" ||
 		changed == "code/scripts/tfv.py"
+}
+
+// isCtCompareCorpus selects the CT01 lanes whose tests read cases.json directly
+// (or, for OCaml, compare a vendored copy with it). They do not read the TFV
+// projection or the Python scripts, so only the exact corpus file selects them.
+//
+//	code/specs/fixtures/ct-compare-v1/cases.json   → true
+//	code/specs/fixtures/ct-compare-v1/cases.tfv    → false (Rust L0 transport only)
+//	code/specs/fixtures/ct-compare-v10/cases.json  → false
+func isCtCompareCorpus(changed string) bool {
+	return changed == "code/specs/fixtures/ct-compare-v1/cases.json"
 }
 
 // isTestBootstrapInput reports whether a changed path is one the bootstrap

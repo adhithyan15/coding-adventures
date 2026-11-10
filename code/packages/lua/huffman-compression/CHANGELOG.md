@@ -41,3 +41,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `coding-adventures-huffman-compression-0.1.0-1.rockspec` for LuaRocks.
 - `BUILD` file for the monorepo build system (ensures huffman-tree is installed first).
 - `README.md` with usage examples, wire format diagram, and series context.
+
+## [0.1.1] - 2026-11-10
+
+### Security
+
+- SEC-003: `decompress` now treats the code-lengths table as hostile input and
+  raises an error for `symbol_count > 256`, duplicate symbols, code lengths
+  outside 1..56, tables not sorted by length, over-subscribed (Kraft > 1)
+  tables, a truncated table, and a declared `original_length` larger than
+  8 x payload bytes (checked before any work is sized from it). Bits are read
+  in O(1) straight from the payload instead of being expanded into a bit
+  string, and decoding fails once the accumulated bits reach the longest code
+  length. Valid encoder output still round-trips.

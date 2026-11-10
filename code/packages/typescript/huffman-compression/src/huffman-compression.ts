@@ -128,79 +128,105 @@ function packBitsLsbFirst(bits: string): Uint8Array {
   return new Uint8Array(output);
 }
 
-/**
- * Unpack a Uint8Array into a bit string, reading each byte from LSB upward.
- *
- * Mirrors packBitsLsbFirst exactly: bit 0 of each byte becomes the first
- * bit in the output string, then bit 1, ..., up to bit 7.
- *
- * The decoder will read only the bits it needs (tracked by original_length)
- * and ignores any zero-padding in the final byte.
- *
- * @param data - The packed bytes to unpack.
- * @returns A string of '0' and '1' characters.
- */
-function unpackBitsLsbFirst(data: Uint8Array): string {
-  let bits = "";
-  for (const byte of data) {
-    // Iterate over all 8 bit positions: LSB (bit 0) first.
-    for (let i = 0; i < 8; i++) {
-      bits += ((byte >> i) & 1).toString();
-    }
-  }
-  return bits;
-}
-
 // =============================================================================
 // Canonical code reconstruction
 // =============================================================================
 
+/** Symbols are single bytes, so a valid table has at most 256 entries. */
+const MAX_SYMBOLS = 256;
+
+/** Longest code length the decoder accepts. */
+const MAX_CODE_LEN = 56;
+
 /**
- * Reconstruct canonical Huffman codes from a sorted (symbol, length) list.
+ * A binary decoding trie stored in flat typed arrays.
+ *
+ * `child[2 * node + bit]` is the next node (or -1), and `symbol[node]` is the
+ * decoded byte at a leaf (or -1 for an interior node). Walking one bit is two
+ * array reads, so decoding is O(1) per bit and builds no strings.
+ */
+interface DecodeTrie {
+  child: Int32Array;
+  symbol: Int16Array;
+}
+
+/**
+ * Reconstruct canonical Huffman codes from a sorted (symbol, length) list and
+ * load them into a decoding trie.
  *
  * This is the DEFLATE-style canonical reconstruction algorithm. Given only
  * the code lengths (not the actual tree), it produces the exact same codes
- * that the encoder used. This works because canonical codes are assigned
- * deterministically from sorted lengths — there's only one valid assignment.
+ * that the encoder used.
  *
  * Algorithm:
  *   code = 0
  *   prevLen = lengths[0][1]
  *   for each (symbol, len) in order:
  *     if len > prevLen: code <<= (len - prevLen)   // left-shift for longer codes
- *     map[binaryString(code, len)] = symbol
+ *     assign code (len bits) to symbol
  *     code++
  *     prevLen = len
  *
- * Why does this work?
- *   At each bit-length level, codes are contiguous integers. When we move
- *   to a longer level, we shift left (double) — this is equivalent to taking
- *   the next available code at that longer length. The result is a valid
- *   prefix-free code identical to what the encoder produced.
+ * SECURITY: the table is hostile input. We reject
+ *   - lengths of 0 or above MAX_CODE_LEN (a zero-length code matches nothing),
+ *   - tables not sorted by length (the encoder always sorts), and
+ *   - over-subscribed tables (Kraft sum > 1): before each assignment the
+ *     running code must still fit in `len` bits, i.e. code >> len === 0.
+ *
+ * The code is a BigInt on purpose. JavaScript's `<<` operates on 32-bit
+ * integers and masks the shift count to 5 bits, so `code << 40` would silently
+ * compute `code << 8`, wrapping the table into something the Kraft check
+ * cannot see. BigInt shifts are exact for any length up to MAX_CODE_LEN.
  *
  * @param lengths - Array of [symbol, codeLength] pairs sorted by
  *                  (codeLength, symbol) ascending — same order as wire format.
- * @returns A Map from canonical bit string (e.g., "10") to symbol value.
+ * @returns The decoding trie and the longest code length.
  */
-function canonicalCodesFromLengths(
-  lengths: Array<[number, number]>
-): Map<string, number> {
-  const result = new Map<string, number>();
-  let code = 0;
-  let prevLen = lengths[0]![1];
+function canonicalCodesFromLengths(lengths: Array<[number, number]>): DecodeTrie {
+  // Each code adds at most `len` nodes; +1 for the root.
+  let maxNodes = 1;
+  for (const [, len] of lengths) maxNodes += Math.min(len, MAX_CODE_LEN);
+  const child = new Int32Array(2 * maxNodes).fill(-1);
+  const symbol = new Int16Array(maxNodes).fill(-1);
+  let nodeCount = 1;
+
+  let code = 0n;
+  let prevLen = lengths.length > 0 ? lengths[0]![1] : 0;
 
   for (const [sym, len] of lengths) {
-    if (len > prevLen) {
-      // Moving to a longer code length: shift left to align with new level.
-      code <<= len - prevLen;
+    if (len === 0 || len > MAX_CODE_LEN) {
+      throw new Error(`invalid code length ${len} in table`);
     }
-    // Format code as a zero-padded binary string of length `len`.
-    result.set(code.toString(2).padStart(len, "0"), sym);
+    if (len < prevLen) {
+      throw new Error("code-lengths table is not sorted by length");
+    }
+    // Moving to a longer code length: shift left to align with new level.
+    code <<= BigInt(len - prevLen);
+    if (code >> BigInt(len) !== 0n) {
+      throw new Error("code-lengths table over-subscribes the code space");
+    }
+
+    // Insert the code into the trie, most significant bit first.
+    let node = 0;
+    for (let i = len - 1; i >= 0; i--) {
+      if (symbol[node]! >= 0) {
+        throw new Error("code-lengths table is not prefix-free");
+      }
+      const bit = Number((code >> BigInt(i)) & 1n);
+      let next = child[2 * node + bit]!;
+      if (next < 0) {
+        next = nodeCount++;
+        child[2 * node + bit] = next;
+      }
+      node = next;
+    }
+    symbol[node] = sym;
+
     code++;
     prevLen = len;
   }
 
-  return result;
+  return { child, symbol };
 }
 
 // =============================================================================
@@ -350,58 +376,79 @@ export function decompress(data: Uint8Array): Uint8Array {
   // Step 2: Parse the code-lengths table.
   // Each entry: 2 bytes — symbol (uint8), code_length (uint8).
   // Wire format guarantees entries are sorted by (code_length, symbol_value).
+  //
+  // SECURITY: the header is attacker-controlled. Symbols are single bytes, so
+  // a table can name at most 256 of them; refuse more before sizing anything.
+  if (symbolCount > MAX_SYMBOLS) {
+    throw new Error(`symbol_count ${symbolCount} exceeds ${MAX_SYMBOLS}`);
+  }
   const tableOffset = 8;
+  const bitsOffset = tableOffset + 2 * symbolCount;
+  if (data.length < bitsOffset) {
+    throw new Error("input too short for the code-lengths table");
+  }
   const lengths: Array<[number, number]> = [];
+  const seen = new Uint8Array(256);
   for (let i = 0; i < symbolCount; i++) {
     const off = tableOffset + 2 * i;
     const symbol = data[off]!;
     const length = data[off + 1]!;
+    // A byte value can have only one code; a repeat makes the table ambiguous.
+    if (seen[symbol]) {
+      throw new Error(`symbol ${symbol} appears twice in code-lengths table`);
+    }
+    seen[symbol] = 1;
     lengths.push([symbol, length]);
   }
 
-  // Step 3: Reconstruct canonical codes from the sorted lengths list.
-  // The reconstruction produces the exact same prefix-free code table that
-  // the encoder used, from only the lengths — no tree structure needed.
-  const codeToSymbol = canonicalCodesFromLengths(lengths);
+  // Step 3: Reconstruct canonical codes from the sorted lengths list (and
+  // validate them) into a decoding trie.
+  const { child, symbol: trieSymbol } = canonicalCodesFromLengths(lengths);
 
-  // Step 4: Unpack the bit stream (LSB-first).
-  const bitsOffset = tableOffset + 2 * symbolCount;
-  const bitStream = unpackBitsLsbFirst(data.subarray(bitsOffset));
+  // SECURITY: every code is at least one bit, so N payload bytes hold at most
+  // 8*N symbols. Reject a larger declared length BEFORE allocating the output.
+  const payload = data.subarray(bitsOffset);
+  const totalBits = payload.length * 8;
+  if (originalLength > totalBits) {
+    throw new Error(
+      `Bit stream exhausted: declared length ${originalLength} exceeds the ${totalBits} bits available`
+    );
+  }
 
-  // Step 5: Decode exactly original_length symbols.
+  // Step 4+5: Decode exactly original_length symbols straight from the bytes.
   //
-  // We scan left to right through the bit string, accumulating bits one at a
-  // time. As soon as the accumulated string matches a canonical code, we emit
-  // the corresponding symbol and reset. This works because the code is prefix-
-  // free: the first match is always the correct one.
+  // Bits are LSB-first within each byte, so bit i of the stream is
+  // (payload[i >> 3] >> (i & 7)) & 1 — O(1) with no expanded bit string. We
+  // walk the trie one bit at a time; because the code is prefix-free, the
+  // first leaf reached is the symbol. A missing child means the bits match no
+  // code (an incomplete table fed unmatched bits), so we fail immediately
+  // instead of scanning the rest of the input.
   //
   // Example with "AAABBC" (A=0, B=10, C=11):
-  //   bits: "0 0 0 10 10 11"
-  //   step 1: "0" → matches A
-  //   step 2: "0" → matches A
-  //   step 3: "0" → matches A
-  //   step 4: "1" → no match, accumulate; "10" → matches B
-  //   step 5: "1" → no match, accumulate; "10" → matches B
-  //   step 6: "1" → no match, accumulate; "11" → matches C
+  //   bits: "0 0 0 10 10 11" -> A A A B B C
   const output = new Uint8Array(originalLength);
   let pos = 0;
-  let accumulated = "";
+  let node = 0;
   let decoded = 0;
 
   while (decoded < originalLength) {
-    if (pos >= bitStream.length) {
+    if (pos >= totalBits) {
       throw new Error(
         `Bit stream exhausted after ${decoded} symbols; expected ${originalLength}`
       );
     }
-    accumulated += bitStream[pos];
+    const bit = (payload[pos >> 3]! >> (pos & 7)) & 1;
     pos++;
 
-    const sym = codeToSymbol.get(accumulated);
-    if (sym !== undefined) {
+    node = child[2 * node + bit]!;
+    if (node < 0) {
+      throw new Error("bit pattern does not match any code");
+    }
+    const sym = trieSymbol[node]!;
+    if (sym >= 0) {
       output[decoded] = sym;
       decoded++;
-      accumulated = "";
+      node = 0;
     }
   }
 

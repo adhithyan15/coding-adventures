@@ -389,4 +389,102 @@ void main() {
       );
     });
   });
+
+  group('hostile input (SEC-003)', () {
+    Uint8List hostile(
+        List<(int, int)> entries, int original, List<int> payload) {
+      final out = Uint8List(8 + entries.length * 2 + payload.length);
+      final header = ByteData.sublistView(out);
+      header.setUint32(0, original, Endian.big);
+      header.setUint32(4, entries.length, Endian.big);
+      for (var i = 0; i < entries.length; i += 1) {
+        out[8 + i * 2] = entries[i].$1;
+        out[9 + i * 2] = entries[i].$2;
+      }
+      out.setRange(8 + entries.length * 2, out.length, payload);
+      return out;
+    }
+
+    test('rejects a huge length gap', () {
+      expect(
+        () => decompress(hostile([(0, 1), (1, 255)], 4, List.filled(8, 0xff))),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects a zero code length', () {
+      expect(
+        () => decompress(hostile([(0, 0)], 1, [0])),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects an over-subscribed table', () {
+      expect(
+        () => decompress(hostile([(0, 1), (1, 1), (2, 1)], 1, [0])),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects an unsorted table', () {
+      expect(
+        () => decompress(hostile([(0, 2), (1, 1)], 1, [0])),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects symbol_count over 256', () {
+      final entries = [for (var i = 0; i < 257; i += 1) (i % 256, 9)];
+      expect(
+        () => decompress(hostile(entries, 1, [0])),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects a duplicate symbol', () {
+      expect(
+        () => decompress(hostile([(0, 1), (0, 1)], 1, [0])),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects declared length u32 max with a tiny payload', () {
+      expect(
+        () => decompress(
+          hostile([(0, 1), (1, 1)], 0xffffffff, [0, 0, 0, 0]),
+          0xffffffff,
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('rejects a declared length beyond the payload bits before allocating',
+        () {
+      // 32 MiB declared (within the default cap) from a 1-byte payload.
+      expect(
+        () => decompress(hostile([(0, 1), (1, 1)], 32 * 1024 * 1024, [0])),
+        throwsA(
+          isA<FormatException>().having(
+            (error) => error.message,
+            'message',
+            contains('bits available'),
+          ),
+        ),
+      );
+    });
+
+    test('fails fast when bits match no code', () {
+      expect(
+        () => decompress(hostile([(0, 1)], 8, List.filled(100000, 0xff))),
+        throwsFormatException,
+      );
+    });
+
+    test('large round trip is linear', () {
+      final data = Uint8List.fromList(
+        [for (var i = 0; i < 400000; i += 1) i % 7],
+      );
+      expect(decompress(compress(data)), data);
+    });
+  });
 }

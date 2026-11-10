@@ -3,6 +3,11 @@ import 'dart:typed_data';
 import 'package:coding_adventures_huffman_tree/huffman_tree.dart';
 
 /// Maximum code length allowed by the CMP04 wire format.
+///
+/// SECURITY: the decoder rejects any table entry outside `1..maxCodeLength`
+/// (the other ports allow up to 56; this one is stricter because the encoder
+/// never emits more than 16). A bounded length keeps every shift and every
+/// per-length table tiny no matter what a hostile header declares.
 const int maxCodeLength = 16;
 
 /// Default cap for output length declared by untrusted compressed payloads.
@@ -168,6 +173,18 @@ Uint8List decompress(
   }
 
   final decoder = _canonicalDecoderFromLengths(lengths);
+
+  // SECURITY: every code is at least one bit, so N payload bytes hold at most
+  // 8*N symbols. Reject a larger declared length BEFORE allocating the output
+  // buffer sized from it; otherwise a 20-byte input could demand up to
+  // `maxDecompressedSize` bytes of memory.
+  final availableBits = (data.length - bitOffset) * 8;
+  if (originalLength > availableBits) {
+    throw FormatException(
+      'Malformed Huffman stream: bit stream exhausted before decoding; declared length $originalLength exceeds the $availableBits bits available.',
+    );
+  }
+
   final bitReader = _BitReader(data.sublist(bitOffset));
   final output = Uint8List(originalLength);
   var decoded = 0;

@@ -536,6 +536,9 @@ subtest 'the real CLI exits 2 for a Cargo self-edge' => sub {
     my $err = do { local $/; <$stderr> // '' };
     waitpid($pid, 0);
     is($? >> 8, 2, 'exit status 2');
+    # Windows perl writes stderr in text mode, so each line ends in CRLF; the
+    # diagnostic is the same, only the line terminator differs.
+    $err =~ s/\r\n/\n/g;
     like($err, qr/^DEPENDENCY_SELF_EDGE: package=rust\/app manifest=code\/packages\/rust\/app\/Cargo\.toml dependency=rust\/app$/m,
         'the stable diagnostic on stderr');
     unlike($err, qr/\Q$root\E/, 'no checkout root');
