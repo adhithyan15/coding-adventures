@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Fixed the canonical `ct-compare.warrant` tests, which asserted 1 claim and 13 results; the spec now has 9 claims (VER-P030), so they expect 9 claims and 21 results (12 examples + 9 claims).
+- Raised the claim-refinement rejection-sampling cap in `src/warrant.ts` from 100 to 1000 attempts: `len(a) == len(b)` over two independent `Bytes` binders is accepted ~1 time in 33, so `select_picks` failed deterministically with "Generator filter exhausted". Mirrors the same fix in `warrant-compiler`.
+
 ## 0.5.0 (2026-11-08)
 
 - Level 3 CDCL SAT Solver & Tseitin Bit-Blaster (VER09 / VER09a).

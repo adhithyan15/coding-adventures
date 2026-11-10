@@ -1360,7 +1360,13 @@ export function executeWarrantModule(
             budget: { count: 0, limit: 10_000 },
           };
           return Boolean(evaluateWarrantExpr(claim.refinement!, filterCtx));
-        }, 100);
+          // Rejection sampling needs headroom: a refinement like
+          // `len(a) == len(b)` over two independent Bytes (length 0..32) is
+          // accepted only ~1 time in 33, so the old cap of 100 attempts ran out
+          // (probability ~5% per sample, which a fixed seed turns into a
+          // deterministic "Generator filter exhausted" failure). 1000 attempts
+          // makes that ~4e-14 and is still a hard bound.
+        }, 1000);
       }
 
       assertProperty(
