@@ -2,13 +2,14 @@
 //! generators produce from this package today.
 //!
 //! `code/programs/typescript/visicalc-html` and `visicalc-webcomp` open
-//! straight from disk, so their compiled pieces are committed:
+//! straight from disk, so their compiled pieces are committed, except the
+//! engine bundle, which is generated and not committed (BUILD-001):
 //!
 //! | committed file                              | generated from                          |
 //! |---------------------------------------------|-----------------------------------------|
 //! | `visicalc-html/index.html` `<template>`s    | this package's FormulaBar and Grid, HTML |
 //! | `visicalc-webcomp/vendor/{FormulaBar,Grid}.js` | the same, as Web Components           |
-//! | `visicalc-html/vendor/spreadsheet-engine-wasm.js` | `spreadsheet-wasm`'s committed `.wasm` |
+//! | `visicalc-html/vendor/spreadsheet-engine-wasm.js` | *not committed*: built below from `spreadsheet-wasm` |
 //!
 //! They used to be regenerated and copied in by hand, and all of them had
 //! drifted: the pages lacked the cell editor's geometry and name (#15048),
@@ -19,7 +20,9 @@
 //! (see BUILD), which is exactly when the demos can go stale.
 //!
 //! The scripts are bash, so the tests are Unix-only; a failure message names
-//! the command that regenerates the files.
+//! the command that regenerates the files. The engine bundle is not checked
+//! for staleness, because it is not stored: the engine tests build it first,
+//! which needs the `wasm32-unknown-unknown` target (BUILD installs it).
 
 #![cfg(unix)]
 
@@ -57,9 +60,33 @@ fn the_web_component_demo_ships_todays_elements() {
     check("visicalc-webcomp", "bash", &["scripts/build.sh", "--check"]);
 }
 
+/// Build the engine bundle once per test process: compile `spreadsheet-wasm`
+/// for the browser (incremental, so cheap when nothing changed), then
+/// base64-embed it. Always rebuilding, rather than trusting a leftover file,
+/// means the tests exercise today's sources.
+fn build_engine_bundle() {
+    static BUILT: std::sync::Once = std::sync::Once::new();
+    BUILT.call_once(|| {
+        check(
+            "visicalc-html",
+            "bash",
+            &["../../../packages/rust/spreadsheet-wasm/build-wasm.sh"],
+        );
+        check("visicalc-html", "bash", &["scripts/bundle-wasm-engine.sh"]);
+    });
+}
+
 #[test]
-fn the_html_demo_embeds_the_committed_engine() {
-    check("visicalc-html", "bash", &["scripts/bundle-wasm-engine.sh", "--check"]);
+fn the_html_demo_engine_bundle_builds_and_embeds_the_wasm() {
+    build_engine_bundle();
+    let bundle = typescript_programs().join("visicalc-html/vendor/spreadsheet-engine-wasm.js");
+    let text = std::fs::read_to_string(&bundle)
+        .unwrap_or_else(|err| panic!("read {}: {err}", bundle.display()));
+    assert!(
+        text.contains("var __SPREADSHEET_WASM_B64__ = \""),
+        "{}: the bundle does not embed the .wasm",
+        bundle.display()
+    );
 }
 
 /// The infinite-grid smoke test drives the embedded engine through Node's
@@ -70,5 +97,6 @@ fn the_embedded_engine_passes_the_infinite_grid_smoke_test() {
         eprintln!("skipping: node is not installed");
         return;
     }
+    build_engine_bundle();
     check("visicalc-html", "node", &["scripts/verify-infinite.mjs"]);
 }

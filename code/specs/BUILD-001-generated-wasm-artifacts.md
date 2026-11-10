@@ -70,6 +70,7 @@ vendor bundle.
 | `spreadsheet-wasm`, `task-wasm`, `engram-wasm` BUILD files | build the `.wasm` (`rustup target add`, `bash build-wasm.sh`) and then run the crate's `node js/smoke.mjs` against the fresh build |
 | VisiCalc demos (`visicalc-html`, `visicalc-webcomp`, `visicalc-deno`) | run `build-demo-wasm.sh visicalc` once after a clone; their READMEs say so |
 | `mosaic/visicalc` `tests/web_demos_are_current.rs` | the engine tests build the bundle on demand (`bundle-wasm-engine.sh` builds the `.wasm` if absent) before exercising it |
+| `.github/workflows/visicalc.yml` | adds the wasm32 target before `cargo test` on the root Mosaic package (whose tests build the bundle); its path filters watch `visicalc-html/**` and `spreadsheet-wasm/**` instead of the vendor file |
 | `task-app` `scripts/build-web.sh`, `build-webcomponent.sh` | already call `task-wasm/build-wasm.sh` first; unchanged |
 | `engram-app` `scripts/build-web.sh`, `build-electron.sh`, `build-all.ps1` | already call `engram-wasm/build-wasm.sh` first; unchanged |
 | `release-task-app.yml`, `release-engram.yml`, `deploy-task-app.yml`, `deploy-engram.yml` | already build through the scripts above; the `cmp` of the built engine against the bundled copy remains and is now a real "the shipped engine is the one just built" check |
@@ -98,12 +99,24 @@ protecting against is covered as follows:
 ## Build-tool inputs
 
 The build tool hashes a package's source files to decide whether to rebuild.
-Registries that name these artifacts as exact hash inputs would, after a local
-build, make a package's hash depend on an ignored build output. Because they
-are listed in `.gitignore` and absent from a clean checkout, the hash on CI is
-unaffected; the entries are kept only where removing them would force a
-regeneration of every language's registry digest. Where an entry is kept, it
-is documented as describing a file that exists only after a build.
+Two build-tool registries named these artifacts as exact inputs, and both
+conformance checks require every named path to be a tracked file. They are
+updated, in every language's embedded copy and in the neutral fixtures:
+
+- `rust-engram-wasm-build-inputs` (language source-input registry) no longer
+  lists `pkg/engram_engine.wasm`; the entry keeps `js/engram-mosaic-host-wasm.mjs`
+  and `js/smoke.mjs`. A built output must not feed the hash of the package that
+  builds it.
+- The `typescript-visicalc-deno-cross-package-inputs` boundary (repository
+  source-input boundary) no longer lists
+  `visicalc-html/vendor/spreadsheet-engine-wasm.js`; it keeps
+  `visicalc-html/index.html`.
+
+Both digests change, so the registry digest and the boundary digest constants,
+the corpus cases that carry them, and the neutral
+`source-collection-engram-wasm-exact-inputs` and
+`source-collection-repository-visicalc-deno-cross-package` expectations are
+regenerated together (see the lesson on grepping for the old digest).
 
 ## Migration
 
