@@ -952,16 +952,16 @@ fn ill_formed_terms_are_refused_with_a_reason() {
     assert!(unknown(eq(app("bvnot", &[u.clone(), v.clone()]), u.clone())).contains("takes 1 argument"));
     assert!(unknown(eq(app("bvneg", &[]), u.clone())).contains("takes 1 argument"));
     for f in ["bvadd", "bvand", "bvor", "bvxor", "bvsub", "bvmul"] {
-        assert!(unknown(eq(app(f, &[u.clone()]), u.clone())).contains("at least 2 arguments"), "{f}");
+        assert!(unknown(eq(app(f, std::slice::from_ref(&u)), u.clone())).contains("at least 2 arguments"), "{f}");
         let wide = idx("zero_extend", &[1], &u);
         assert!(unknown(eq(app(f, &[u.clone(), v.clone(), wide]), u.clone())).contains("on widths 4 and 5"), "{f}");
     }
     for f in ["bvshl", "bvlshr", "bvashr", "bvult", "bvule", "bvugt", "bvuge", "bvslt", "bvsle", "bvsgt", "bvsge"] {
-        assert!(unknown(app(f, &[u.clone()])).contains("takes 2 arguments"), "{f}");
+        assert!(unknown(app(f, std::slice::from_ref(&u))).contains("takes 2 arguments"), "{f}");
         assert!(unknown(app(f, &[u.clone(), idx("zero_extend", &[1], &v)])).contains("widths 4 and 5"), "{f}");
     }
     assert!(unknown(eq(app("bvfoo", &[u.clone(), v.clone()]), u.clone())).contains("`bvfoo` is not supported"));
-    assert!(unknown(eq(app("bvrotl", &[u.clone()]), u.clone())).contains("not supported"));
+    assert!(unknown(eq(app("bvrotl", std::slice::from_ref(&u)), u.clone())).contains("not supported"));
     // Mixed sorts and widths in `=`, `ite`, and Boolean/bit-vector confusion.
     assert!(unknown(eq(u.clone(), Predicate::Bool(true))).contains("different sorts or widths"));
     assert!(unknown(eq(u.clone(), idx("zero_extend", &[1], &v))).contains("different sorts or widths"));
