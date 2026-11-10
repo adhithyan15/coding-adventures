@@ -1,6 +1,13 @@
 defmodule CodingAdventures.HuffmanCompression do
   import Bitwise
 
+  # Symbols are single bytes, so a valid table has at most 256 entries.
+  @max_symbols 256
+
+  # Longest code length the decoder accepts. Real codes over 256 symbols are far
+  # shorter; the encoder never emits more.
+  @max_code_len 56
+
   @moduledoc """
   Huffman Compression — CMP04 wire-format compress/decompress.
 
@@ -166,7 +173,19 @@ defmodule CodingAdventures.HuffmanCompression do
   @doc """
   Decompress CMP04 wire-format bytes back to the original binary.
 
-  Returns `{:error, :too_short}` if the input is fewer than 8 bytes.
+  Returns `{:error, reason}` for malformed or hostile input instead of raising
+  or looping. The reasons are:
+
+    * `:too_short` — fewer than 8 bytes, or a truncated code-lengths table
+    * `:too_many_symbols` — `symbol_count` above 256 (symbols are single bytes)
+    * `:no_symbols` — non-empty output declared with an empty table
+    * `:duplicate_symbol` — a byte value appears twice in the table
+    * `:invalid_code_length` — a length of 0, or above #{56}
+    * `:unsorted_table` — table not sorted by code length
+    * `:oversubscribed` — the lengths need more code space than exists (Kraft > 1)
+    * `:declared_length_too_large` — `original_length` exceeds 8 x payload bytes
+    * `:bit_stream_exhausted` — payload ended before all symbols were decoded
+    * `:invalid_code` — the bits read match no code in the table
 
   ## Examples
 
@@ -184,36 +203,40 @@ defmodule CodingAdventures.HuffmanCompression do
     # Step 1: parse the 8-byte header.
     <<original_length::32-big, symbol_count::32-big, rest_data::binary>> = data
 
-    # Fast path: empty input
-    if original_length == 0 do
-      ""
-    else
-      # Step 2: parse the code-lengths table (symbol_count * 2 bytes).
-      table_byte_count = symbol_count * 2
+    cond do
+      # Fast path: empty input
+      original_length == 0 ->
+        ""
 
-      if byte_size(rest_data) < table_byte_count do
+      # SECURITY: the header is attacker-controlled. Symbols are single bytes, so
+      # a table can name at most 256 of them. Checking first also keeps the
+      # table-size arithmetic below tiny.
+      symbol_count > @max_symbols ->
+        {:error, :too_many_symbols}
+
+      symbol_count == 0 ->
+        {:error, :no_symbols}
+
+      # Step 2: the code-lengths table is symbol_count * 2 bytes.
+      byte_size(rest_data) < symbol_count * 2 ->
         {:error, :too_short}
-      else
-        <<table_bytes::binary-size(table_byte_count), bit_stream_bytes::binary>> = rest_data
 
-        # Parse N entries, each 2 bytes: {symbol, code_length}
-        lengths = parse_lengths_table(table_bytes, symbol_count, [])
+      true ->
+        table_byte_count = symbol_count * 2
+        <<table_bytes::binary-size(table_byte_count), payload::binary>> = rest_data
+        decode_payload(original_length, parse_lengths_table(table_bytes, []), payload)
+    end
+  end
 
-        # Step 3: reconstruct canonical codes from the lengths table.
-        # The lengths list is already sorted by (code_length, symbol_value).
-        # We reverse the map: bit_string → symbol, for lookup during decoding.
-        decode_table = canonical_codes_from_lengths(lengths)
-
-        # Step 4: unpack the bit stream (LSB-first).
-        all_bits = unpack_bits_lsb_first(bit_stream_bytes)
-
-        # Step 5: decode exactly original_length symbols.
-        # We rebuild the tree from the decode table for use with HuffmanTree.decode_all/3.
-        # Alternatively, decode directly using the code table.
-        symbols = decode_with_table(all_bits, decode_table, original_length)
-
-        :binary.list_to_bin(symbols)
-      end
+  # Validate the table, build the decode map, bound the declared length, then
+  # decode. Each validation stage returns :ok / {:ok, value} or {:error, reason};
+  # a successful decode returns the plain binary.
+  defp decode_payload(original_length, lengths, payload) do
+    with :ok <- check_unique_symbols(lengths),
+         {:ok, decode_table, max_len} <- canonical_decode_table(lengths),
+         :ok <- check_declared_length(original_length, payload) do
+      # Step 5: decode exactly original_length symbols straight from the bytes.
+      decode_bits(payload, byte_size(payload) * 8, decode_table, max_len, original_length, 0, 0, 0, [])
     end
   end
 
@@ -222,107 +245,125 @@ defmodule CodingAdventures.HuffmanCompression do
   # Parse the code-lengths table from a binary.
   # Each entry is 2 bytes: <<symbol::8, code_length::8>>.
   # Returns a list of {symbol, code_length} pairs in wire order (already sorted).
-  defp parse_lengths_table(_bytes, 0, acc), do: Enum.reverse(acc)
+  defp parse_lengths_table(<<>>, acc), do: Enum.reverse(acc)
 
-  defp parse_lengths_table(<<sym::8, len::8, rest_data::binary>>, n, acc) do
-    parse_lengths_table(rest_data, n - 1, [{sym, len} | acc])
+  defp parse_lengths_table(<<sym::8, len::8, rest_data::binary>>, acc) do
+    parse_lengths_table(rest_data, [{sym, len} | acc])
+  end
+
+  # A byte value can have only one code; a repeat makes the table ambiguous.
+  defp check_unique_symbols(lengths) do
+    if length(Enum.uniq_by(lengths, fn {sym, _len} -> sym end)) == length(lengths) do
+      :ok
+    else
+      {:error, :duplicate_symbol}
+    end
+  end
+
+  # SECURITY: the declared length is attacker-controlled. Every code is at least
+  # one bit, so N payload bytes hold at most 8*N symbols; reject a larger
+  # declaration before any work is sized from it.
+  defp check_declared_length(original_length, payload) do
+    if original_length > byte_size(payload) * 8 do
+      {:error, :declared_length_too_large}
+    else
+      :ok
+    end
   end
 
   # ─── Canonical code reconstruction ──────────────────────────────────────────
   #
   # Given a list of {symbol, code_length} pairs sorted by (length, symbol),
-  # reconstruct the canonical bit strings and return a map %{bit_string => symbol}.
+  # reconstruct the canonical codes and return {:ok, map, max_len} where map is
+  # %{{length, code} => symbol}.
   #
   # Algorithm (same as DEFLATE):
   #   Start with code = 0 and prev_len = first_len.
   #   For each entry:
   #     If len > prev_len: code = code <<< (len - prev_len)
-  #     Emit code as a zero-padded binary string of `len` bits.
+  #     Assign `code` (len bits) to the symbol.
   #     Increment code by 1 for the next entry.
   #
   # This produces the canonical codes — the same codes the encoder produced
   # because both sides sort by (length, symbol) and apply the same formula.
+  #
+  # SECURITY: the table is hostile input, so each entry is checked:
+  #   * a length of 0 matches nothing, and one above @max_code_len is never
+  #     emitted by the encoder;
+  #   * a table not sorted by length breaks the canonical construction (the
+  #     encoder always sorts);
+  #   * an over-subscribed table (Kraft sum > 1) is detected by requiring the
+  #     running code to still fit in `len` bits (code >>> len == 0).
+  # Integers are arbitrary precision in Elixir, so nothing can wrap; the bounds
+  # exist to keep the table small and the semantics identical to other ports.
+  # Keys are {len, code} tuples so no per-symbol bit strings are built.
 
-  defp canonical_codes_from_lengths([]) do
-    %{}
-  end
+  defp canonical_decode_table([]), do: {:ok, %{}, 0}
 
-  defp canonical_codes_from_lengths(lengths) do
-    [{_first_sym, first_len} | _rest] = lengths
+  defp canonical_decode_table([{_first_sym, first_len} | _] = lengths) do
+    result =
+      Enum.reduce_while(lengths, {%{}, 0, first_len}, fn {sym, len}, {acc, code, prev_len} ->
+        cond do
+          len == 0 or len > @max_code_len ->
+            {:halt, {:error, :invalid_code_length}}
 
-    {table, _, _} =
-      Enum.reduce(lengths, {%{}, 0, first_len}, fn {sym, len}, {acc, code, prev_len} ->
-        # Shift left when moving to a longer code length.
-        # This is the canonical code assignment formula.
-        shifted = if len > prev_len, do: code <<< (len - prev_len), else: code
-        bits = Integer.to_string(shifted, 2) |> String.pad_leading(len, "0")
-        {Map.put(acc, bits, sym), shifted + 1, len}
+          len < prev_len ->
+            {:halt, {:error, :unsorted_table}}
+
+          true ->
+            # Shift left when moving to a longer code length.
+            shifted = code <<< (len - prev_len)
+
+            if (shifted >>> len) != 0 do
+              {:halt, {:error, :oversubscribed}}
+            else
+              {:cont, {Map.put(acc, {len, shifted}, sym), shifted + 1, len}}
+            end
+        end
       end)
 
-    table
+    case result do
+      {:error, _reason} = error ->
+        error
+
+      {table, _next_code, max_len} ->
+        {:ok, table, max_len}
+    end
   end
 
   # ─── Symbol decoding ─────────────────────────────────────────────────────────
   #
-  # We decode by scanning a bit string and trying increasingly longer prefixes
-  # until we find a match in the decode table.
+  # Bits are LSB-first within each byte, so bit `pos` of the stream is
+  # (byte[pos / 8] >>> (pos % 8)) &&& 1 — O(1) with :binary.at/2, no giant bit
+  # string and no O(n) String.length per symbol.
   #
-  # This is a greedy prefix scan — it works because Huffman codes are
-  # prefix-free: no valid code is a prefix of another valid code. So the first
-  # match is always the correct one.
-  #
-  # For large alphabets, a trie would be faster (O(max_code_len) per symbol
-  # instead of O(n * max_code_len)). For educational purposes we use a map.
+  # We build the candidate code MSB-first as an integer. Huffman codes are
+  # prefix-free, so the first {len, code} hit in the table is the right symbol.
+  # Once the accumulated length reaches the longest code with no match, no later
+  # bit can match (an incomplete table fed unmatched bits), so we fail at once.
 
-  defp decode_with_table(bits, decode_table, count) do
-    do_decode_symbols(bits, decode_table, count, 0, [])
+  defp decode_bits(_payload, _total, _table, _max, 0, _pos, _code, _len, out) do
+    out |> Enum.reverse() |> :binary.list_to_bin()
   end
 
-  defp do_decode_symbols(_bits, _table, 0, _pos, acc) do
-    Enum.reverse(acc)
-  end
-
-  defp do_decode_symbols(bits, table, remaining, pos, acc) do
-    # Try prefixes of increasing length starting at `pos`.
-    bits_remaining = String.length(bits) - pos
-
-    if bits_remaining <= 0 do
-      # Bit stream exhausted early (truncated input) — return what we have.
-      Enum.reverse(acc)
+  defp decode_bits(payload, total, table, max_len, remaining, pos, code, len, out) do
+    if pos >= total do
+      {:error, :bit_stream_exhausted}
     else
-      case scan_prefix(bits, table, pos, pos + 1) do
-        {:ok, sym, new_pos} ->
-          do_decode_symbols(bits, table, remaining - 1, new_pos, [sym | acc])
+      byte = :binary.at(payload, pos >>> 3)
+      bit = (byte >>> (pos &&& 7)) &&& 1
+      next_code = (code <<< 1) ||| bit
+      next_len = len + 1
 
-        :not_found ->
-          # Could not match any code — malformed stream, stop.
-          Enum.reverse(acc)
-      end
-    end
-  end
+      case Map.fetch(table, {next_len, next_code}) do
+        {:ok, sym} ->
+          decode_bits(payload, total, table, max_len, remaining - 1, pos + 1, 0, 0, [sym | out])
 
-  # Scan for the longest matching prefix starting at `start_pos`, ending at
-  # `end_pos` (exclusive). Tries end_pos from start_pos+1 up to
-  # start_pos + max_possible_code_length.
-  defp scan_prefix(bits, table, start_pos, end_pos) do
-    total_bits = String.length(bits)
+        :error when next_len >= max_len ->
+          {:error, :invalid_code}
 
-    if end_pos > total_bits + 1 or end_pos - start_pos > 16 do
-      :not_found
-    else
-      snippet = String.slice(bits, start_pos, end_pos - start_pos)
-
-      case Map.get(table, snippet) do
-        nil ->
-          # No match yet, try a longer prefix.
-          if end_pos > total_bits do
-            :not_found
-          else
-            scan_prefix(bits, table, start_pos, end_pos + 1)
-          end
-
-        sym ->
-          {:ok, sym, end_pos}
+        :error ->
+          decode_bits(payload, total, table, max_len, remaining, pos + 1, next_code, next_len, out)
       end
     end
   end

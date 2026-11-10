@@ -188,6 +188,10 @@ def compress(data: bytes | bytearray) -> bytes:
     return header + code_table_bytes + bit_bytes
 
 
+_MAX_SYMBOLS = 256
+_MAX_CODE_LEN = 56
+
+
 def decompress(data: bytes | bytearray) -> bytes:
     """Decompress CMP04 wire-format *data* and return the original bytes.
 
@@ -220,15 +224,33 @@ def decompress(data: bytes | bytearray) -> bytes:
     if original_length == 0:
         return b""
 
+    # SECURITY: every number below comes from an attacker-controlled header.
+    # Symbols are single bytes, so a table can name at most 256 of them.  A
+    # larger count is hostile and, if trusted, would drive the table size.
+    if symbol_count > _MAX_SYMBOLS:
+        msg = f"symbol_count {symbol_count} exceeds {_MAX_SYMBOLS}"
+        raise ValueError(msg)
+
     # Parse code-lengths table.
     # Each entry: 2 bytes — symbol (uint8), code_length (uint8).
     # Wire format guarantees entries are sorted by (code_length, symbol_value).
     table_offset = 8
+    bits_offset = table_offset + 2 * symbol_count
+    if len(data) < bits_offset:
+        msg = "input too short for the code-lengths table"
+        raise ValueError(msg)
     lengths: list[tuple[int, int]] = []
+    seen: set[int] = set()
     for i in range(symbol_count):
         off = table_offset + 2 * i
         symbol = data[off]
         length = data[off + 1]
+        # A byte value can only have one code; a repeat would silently
+        # overwrite a table entry and make the code ambiguous.
+        if symbol in seen:
+            msg = f"symbol {symbol} appears twice in code-lengths table"
+            raise ValueError(msg)
+        seen.add(symbol)
         lengths.append((symbol, length))
 
     # Reconstruct canonical codes from the sorted lengths list.
@@ -238,41 +260,77 @@ def decompress(data: bytes | bytearray) -> bytes:
     #   prev_length = first entry's length
     #   for each entry in sorted order:
     #     if length > prev_length: code <<= (length - prev_length)
-    #     assign bit_string = zero-padded binary of code
+    #     assign (length, code) -> symbol
     #     code += 1
     #
-    # This produces a prefix-free code table guaranteed to match the encoder.
-    code_to_symbol: dict[str, int] = {}
+    # SECURITY: the table is hostile input, so we reject
+    #   * lengths of 0 (an empty code matches nothing and loops forever) or
+    #     above _MAX_CODE_LEN (the encoder never emits them; a huge gap would
+    #     make ``code <<= gap`` allocate an enormous integer),
+    #   * tables not sorted by length (the encoder always sorts), and
+    #   * over-subscribed tables (Kraft sum > 1).  Before each assignment the
+    #     running code must still fit in ``length`` bits; if ``code >> length``
+    #     is non-zero the code space is exhausted and the table is impossible.
+    # Codes are keyed by (length, value) integers rather than bit strings so
+    # lookups are O(1) and no per-symbol string is built.
+    code_to_symbol: dict[tuple[int, int], int] = {}
     code = 0
     prev_length = lengths[0][1] if lengths else 0
+    max_len = 0
     for symbol, length in lengths:
-        if length > prev_length:
-            code <<= (length - prev_length)
-        bit_string = format(code, f"0{length}b")
-        code_to_symbol[bit_string] = symbol
+        if length == 0 or length > _MAX_CODE_LEN:
+            msg = f"invalid code length {length} in table"
+            raise ValueError(msg)
+        if length < prev_length:
+            msg = "code-lengths table is not sorted by length"
+            raise ValueError(msg)
+        code <<= length - prev_length
+        if code >> length:
+            msg = "code-lengths table over-subscribes the code space"
+            raise ValueError(msg)
+        code_to_symbol[(length, code)] = symbol
         code += 1
         prev_length = length
+        max_len = length
 
-    # Unpack the bit stream.
-    bits_offset = table_offset + 2 * symbol_count
-    bit_string = _unpack_bits_lsb_first(data[bits_offset:])
+    # SECURITY: every code is at least one bit, so N payload bytes can hold at
+    # most 8*N symbols.  A header declaring more is hostile or corrupt; reject
+    # it before anything is sized from it.
+    payload = data[bits_offset:]
+    total_bits = len(payload) * 8
+    if original_length > total_bits:
+        msg = (
+            f"declared length {original_length} exceeds the "
+            f"{total_bits} bits available"
+        )
+        raise ValueError(msg)
 
     # Decode exactly original_length symbols using the canonical code table.
     #
-    # Because the code is prefix-free, we can scan left-to-right: accumulate
-    # bits one at a time until we get a hit in code_to_symbol, emit the symbol,
-    # reset the accumulator, and repeat.
-    output: list[int] = []
+    # Bits are read straight out of the payload bytes (LSB-first within each
+    # byte), so access is O(1) — no giant bit string.  We build the candidate
+    # code MSB-first as an integer.  Because the code is prefix-free, the first
+    # (length, value) hit is the symbol.  If the accumulated length exceeds the
+    # longest code in the table, no further bit can ever match (an incomplete
+    # table fed unmatched bits), so we fail immediately instead of scanning on.
+    output = bytearray()
     pos = 0
-    accumulated = ""
+    acc = 0
+    acc_len = 0
     while len(output) < original_length:
-        if pos >= len(bit_string):
+        if pos >= total_bits:
             msg = "bit stream exhausted before decoding all symbols"
             raise ValueError(msg)
-        accumulated += bit_string[pos]
+        acc = (acc << 1) | ((payload[pos >> 3] >> (pos & 7)) & 1)
+        acc_len += 1
         pos += 1
-        if accumulated in code_to_symbol:
-            output.append(code_to_symbol[accumulated])
-            accumulated = ""
+        symbol = code_to_symbol.get((acc_len, acc))
+        if symbol is not None:
+            output.append(symbol)
+            acc = 0
+            acc_len = 0
+        elif acc_len >= max_len:
+            msg = "bit pattern does not match any code"
+            raise ValueError(msg)
 
     return bytes(output)

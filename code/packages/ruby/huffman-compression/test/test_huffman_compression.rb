@@ -248,4 +248,57 @@ class TestHuffmanCompression < Minitest::Test
     compressed = HuffmanCompression.compress(data)
     assert_equal data.bytesize, compressed[0, 4].unpack1("N")
   end
+
+  # ── Hostile input (SEC-003): the code-lengths table is attacker-controlled ──
+
+  def hostile(entries, orig, payload)
+    header = [orig, entries.length].pack("NN")
+    table = entries.map { |sym, len| [sym, len].pack("CC") }.join
+    (header + table + payload).b
+  end
+
+  def assert_hostile(entries, orig, payload)
+    assert_raises(ArgumentError) { HuffmanCompression.decompress(hostile(entries, orig, payload)) }
+  end
+
+  def test_hostile_huge_length_gap_rejected
+    assert_hostile([[0, 1], [1, 255]], 4, "\xFF".b * 8)
+  end
+
+  def test_hostile_zero_length_rejected
+    assert_hostile([[0, 0]], 1, "\x00".b)
+  end
+
+  def test_hostile_oversubscribed_rejected
+    assert_hostile([[0, 1], [1, 1], [2, 1]], 1, "\x00".b)
+  end
+
+  def test_hostile_unsorted_rejected
+    assert_hostile([[0, 2], [1, 1]], 1, "\x00".b)
+  end
+
+  def test_hostile_symbol_count_over_256_rejected
+    assert_hostile((0...257).map { |i| [i % 256, 9] }, 1, "\x00".b)
+  end
+
+  def test_hostile_duplicate_symbol_rejected
+    assert_hostile([[0, 1], [0, 1]], 1, "\x00".b)
+  end
+
+  def test_hostile_declared_length_u32_max_rejected
+    assert_hostile([[0, 1], [1, 1]], 0xFFFFFFFF, "\x00".b * 4)
+  end
+
+  def test_hostile_truncated_table_rejected
+    assert_raises(ArgumentError) { HuffmanCompression.decompress(([1, 5].pack("NN") + "\x00\x01".b).b) }
+  end
+
+  def test_hostile_unmatched_bits_fail_fast
+    assert_hostile([[0, 1]], 8, "\xFF".b * 100_000)
+  end
+
+  def test_large_roundtrip_is_linear
+    data = (0...400_000).map { |i| i % 7 }.pack("C*")
+    assert_equal data, HuffmanCompression.decompress(HuffmanCompression.compress(data))
+  end
 end

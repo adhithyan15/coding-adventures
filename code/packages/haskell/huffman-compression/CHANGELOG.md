@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.1 - 2026-11-10
+
+### Security
+
+- SEC-003: `decompress` now rejects a declared original length larger than
+  8 x payload bytes before decoding, so a hostile header can no longer ask for
+  more symbols than the payload could possibly hold. The existing validation
+  (at most 256 symbols, no duplicate symbols, code lengths 1..16, sorted table,
+  over-subscription check in unbounded `Integer`, fail-fast on an unmatched
+  prefix) is unchanged and now covered by explicit hostile-input tests. Valid
+  encoder output still round-trips.
+
 ## Unreleased
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir
