@@ -508,7 +508,7 @@ mod linux {
                 .stdout(Stdio::piped())
                 .stderr(Stdio::piped());
             // SAFETY: the closure runs between fork and exec and only calls
-            // async-signal-safe functions (`close_range`/`close`/`getrlimit`).
+            // async-signal-safe functions (`close_range`/`fcntl`/`getrlimit`).
             unsafe {
                 command.pre_exec(|| {
                     close_inherited_fds();
@@ -527,10 +527,10 @@ mod linux {
         }
     }
 
-    /// Close every descriptor above stderr in the freshly forked launcher
-    /// child, before `exec`.
+    /// Mark every descriptor above stderr close-on-exec in the freshly
+    /// forked launcher child, so that `exec` drops them.
     ///
-    /// `std::process::Command` only closes descriptors that are
+    /// `std::process::Command` only closes descriptors that are already
     /// `O_CLOEXEC`. A CI runner (or a build tool above it) routinely leaks
     /// plain pipes into every process it starts, and without this step they
     /// reach the gate's child, where the RCG011 audit rightly refuses them
@@ -538,12 +538,19 @@ mod linux {
     /// the guarantee; this makes the *launcher* hand over exactly 0/1/2 so
     /// the audit measures the launch, not the runner's hygiene. `Command`'s
     /// own stdio plumbing is already dup'd onto 0-2 by this point.
+    ///
+    /// Why set CLOEXEC instead of closing: between fork and exec, `std`
+    /// keeps a private CLOEXEC pipe open to report an `exec` failure back
+    /// to the parent. Closing it would turn "exec failed" into an ordinary
+    /// exit status; marking descriptors CLOEXEC leaves that pipe working
+    /// and still guarantees nothing above 2 survives into the new image.
     fn close_inherited_fds() {
+        // Linux 5.11+: one call marks the whole range CLOEXEC.
+        const CLOSE_RANGE_CLOEXEC: u32 = 1 << 2;
         // SAFETY: raw syscalls with integer arguments; `getrlimit` writes
         // into a live local struct.
         unsafe {
-            // Linux 5.9+: one call closes the whole range.
-            if libc::syscall(libc::SYS_close_range, 3u32, u32::MAX, 0u32) == 0 {
+            if libc::syscall(libc::SYS_close_range, 3u32, u32::MAX, CLOSE_RANGE_CLOEXEC) == 0 {
                 return;
             }
             let mut limit = libc::rlimit {
@@ -556,7 +563,8 @@ mod linux {
                 4096
             };
             for fd in 3..top {
-                libc::close(fd);
+                // EBADF for descriptors that are not open is expected.
+                libc::fcntl(fd, libc::F_SETFD, libc::FD_CLOEXEC);
             }
         }
     }
