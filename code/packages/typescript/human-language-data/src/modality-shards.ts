@@ -678,20 +678,40 @@ export async function readModalityManifestOwnersWithSourcesAsync(
   const plan = modalityOwnerReadPlan(root, options, 16);
   const tracks = new Map<string, Map<string, string>>();
   const sourceTexts = new Map<string, string>();
+  const recordedTracks = new Set<string>();
   let step = plan.next();
-  while (!step.done) {
-    const language = basename(dirname(step.value[0]!)).slice(0, -2);
-    let track = tracks.get(language);
-    if (track === undefined) {
+  // The strict plan above performs root and first-track preflight before any
+  // child starts. Each child still pins its own track directory and checks the
+  // exact owner set. Overlap a small number of those independent guarded reads;
+  // parse and validate their results in the plan's original language order.
+  const readErrors = new Map<string, unknown>();
+  for (let offset = 0; offset < options.expectedLanguages.length; offset += 4) {
+    const languages = options.expectedLanguages.slice(offset, offset + 4);
+    const results = await Promise.allSettled(languages.map((language) => {
       const ids = options.expectedLessonIds.get(language) ?? [];
-      track = await readAnchoredModalityTrack(root, language, [
+      return readAnchoredModalityTrack(root, language, [
         MODALITY_META_OWNER,
         ...ids.map((id) => `${id}.json`),
       ]);
-      tracks.set(language, track);
+    }));
+    for (const [index, result] of results.entries()) {
+      const language = languages[index]!;
+      if (result.status === "fulfilled") tracks.set(language, result.value);
+      else readErrors.set(language, result.reason);
+    }
+  }
+  while (!step.done) {
+    const language = basename(dirname(step.value[0]!)).slice(0, -2);
+    if (readErrors.has(language)) throw readErrors.get(language);
+    const track = tracks.get(language);
+    if (track === undefined) {
+      throw new Error(`modality anchored reader omitted track '${language}'`);
+    }
+    if (!recordedTracks.has(language)) {
       for (const [name, text] of track) {
         sourceTexts.set(`${MODALITY_MANIFEST_DIR}/${language}.d/${name}`, text);
       }
+      recordedTracks.add(language);
     }
     const sources = step.value.map((path) => {
       const name = basename(path);
