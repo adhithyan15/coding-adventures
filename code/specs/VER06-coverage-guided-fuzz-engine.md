@@ -147,7 +147,9 @@ Every fuzz target invocation yields one of four outcomes:
 
 ### 5.2 Crash Signature Deduplication
 To prevent flooding reports with identical defects, crashes are deduplicated by their normalized crash signature:
-$$\text{sig\_hash} = \text{fnv1a64}(\text{normalize}(\text{frame}_1) \mathbin{\Vert} \text{normalize}(\text{frame}_2) \mathbin{\Vert} \dots \mathbin{\Vert} \text{error\_kind})$$
+$$\text{sig\_hash} = \text{fnv1a64}(\text{error\_kind} \mathbin{:} \text{frame}_1 \mathbin{:} \text{frame}_2 \mathbin{:} \dots) \bmod 2^{32}, \text{ printed as 8 lowercase hex digits}$$
+(amended in the audit, §9.4 item 6, to the form the fuzz-v1 corpus pins; frames
+are joined by `:` without escaping)
 Crashes with matching `sig_hash` increment the hit counter for that signature but do not trigger duplicate failure reports.
 
 ### 5.3 Minimization (Shrinking Crashing Inputs)
@@ -210,3 +212,72 @@ The conformance corpus (`code/specs/fixtures/fuzz-v1/cases.json` and `cases.tfv`
 10. `fuzz/failure_id/*`: Failure vocabulary rejects unregistered IDs.
 11. `fuzz/private_reporting/*`: Failure formatting produces opaque tokens without raw bytes.
 12. `fuzz/corpus_reject/*`: Malformed corpus entries and corrupt syntax fail closed.
+
+---
+
+## 9. Audit of the Rust lane: testable contracts and divergences
+
+Tests: `code/packages/rust/test-bootstrap/tests/fuzz_properties.rs` (31 tests)
+and the fuzz-v1 corpus run (`fuzz_corpus.rs`, `fuzz_conformance.py`).
+
+### 9.1 Campaign contracts
+
+1. **Determinism.** `fuzz_target` is a pure function of (initial corpus,
+   options, target): the same seed gives the same iterations, admitted seeds,
+   edge count and crash records. Different seeds give different campaigns.
+2. **Budget.** With a live corpus, `iterations == max_iterations` exactly;
+   no mutated candidate exceeds `max_input_len` (initial seeds are run as
+   given). An empty initial corpus is replaced by one `[0]` seed. Seeds that
+   crash, time out or run out of memory are never mutated: a corpus of
+   crashers fuzzes nothing (`iterations == 0`).
+3. **Honest report.** Every execution, triage included, lands somewhere:
+   `crashes` (deduplicated), `timeouts` (count), `ooms` (count), or the
+   corpus. `FuzzReport::is_clean()` is true only if at least one mutation
+   iteration ran **and** there was no crash, timeout or OOM. A campaign with
+   `max_iterations == 0`, or one that never got past triage, is never clean.
+   (The first Rust implementation dropped timeouts and OOMs silently, so a
+   target that timed out on every input produced the same report as a clean
+   one.)
+4. **Dedup and minimization.** One `CrashRecord` per signature, for initial
+   seeds as well as mutants; `hits` counts every campaign execution with that
+   signature; a *novel* crash is minimized (§5.3) before it is stored. The
+   minimizer keeps the exact signature, can reach the empty input, and never
+   trades one crash for another.
+5. **Feedback.** Coverage guidance is observable: on a three-stage staircase
+   target the engine cracks the crash for 5 of 6 seeds in 6000 iterations with
+   per-stage coverage and 1 of 6 with none (blind mutation).
+
+### 9.2 Mutator contracts
+
+For every byte string of length 0..=2 (65,793 inputs): `bit_flip` and
+`byte_flip` preserve length and are involutions for offsets
+`{0, 1, 9, usize::MAX}` and counts `{0, 1, 4, 17, usize::MAX}`. Their windows
+wrap around the buffer and apply by **parity**, so the cost is O(len) for any
+`count` (`bit_flip(&[0,0], 0, usize::MAX) == [0x00, 0x80]`; the previous
+`count`-iteration loop never terminated). `byte_arithmetic` is undone by the
+negated delta for widths 1 and 2 in both endiannesses, wraps modulo 2^(8w),
+and returns its input unchanged for unsupported widths or a too-short buffer.
+Block operations obey exact length arithmetic and `splice` is
+`target[..ts] ++ donor[ds..]` with both splits clamped.
+
+### 9.3 Private reporting
+
+`format_tap_failure` reduces every argument to its grammar (ids
+`[A-Za-z0-9._/-]`, hash lowercase hex; anything else becomes `_`), so no
+argument can add a TAP line. Well-formed arguments are unchanged:
+`not ok <N> - <target> [<failure-id>:<hex8>]`.
+
+### 9.4 Divergences found in the audit
+
+| # | Spec | Rust lane | Resolution |
+|---|---|---|---|
+| 1 | §5.3 a novel crash is minimized | `minimize_crashing_input` existed but was never called; one-byte inputs were never tried for deletion | Fixed |
+| 2 | §5.1 four outcomes reported | Timeout and OOM silently dropped | Fixed (counts + `is_clean`) |
+| 3 | §5.2 report each signature once | Crashing initial seeds produced duplicate records | Fixed |
+| 4 | §3.1-3.2 flips take any count | `count = usize::MAX` hung | Fixed (parity) |
+| 5 | §6.1 opaque token | newline in an id forged a TAP line | Fixed (sanitised) |
+| 6 | §5.2 `sig_hash = fnv1a64(normalize(frame) ... error_kind)` | Low 32 bits of `fnv1a64(kind ":" frames joined by ":")`. Corpus-pinned, so the **spec is amended to the implementation**. Known limit: frames are not escaped, so one frame `x:y` and two frames `x`, `y` deduplicate as one crash; 32 bits collide near 65k distinct signatures | Spec amended; limit documented |
+| 7 | §3.4 boundary values of 16/32/64 bits; §3.1-3.3 widths 2/4/8, flips of 2 and 4 | The mutators exist and are corpus-pinned, but `mutate_sequence` (and therefore `fuzz_target`) only ever uses 1-bit/1-byte flips, width-1 arithmetic and the 8-bit interest list | Open: the engine is weaker than the algebra it specifies |
+| 8 | §6.3 crashing input goes to private storage | `CrashRecord.minimal_input` holds raw bytes in memory; nothing is written anywhere. Callers must not print it; TAP goes only through `format_tap_failure` | Open: no artifact store exists |
+| 9 | §6.2 five failure ids | `fuzz-leak` and `fuzz-panic` are registered but the engine cannot produce them (`FuzzOutcome` has four variants) | Open: recorded |
+| 10 | §7 coverage source | The engine takes a caller-supplied bitmap; there is no instrumentation, so every "coverage-guided" claim is only as good as the target's own edge reporting (`black-box-uninstrumented` when it records none) | Recorded |

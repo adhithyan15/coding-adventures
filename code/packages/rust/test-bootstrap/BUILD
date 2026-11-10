@@ -13,3 +13,9 @@ cargo test -q -p coding_adventures_test_bootstrap --test self_corpus -- --sabota
 #    is exactly what cases.json generates (for both TF01 and VER05 PBT).
 python3 ../../../scripts/bootstrap_harness_conformance.py
 python3 ../../../scripts/pbt_conformance.py
+# 4. Differential (TF01 section 8.1): the Rust parser's verdict on every
+#    bounded-exhaustive TFV document, and its deep-equality matrix, are replayed
+#    through the independent Python reference. Any disagreement fails the build.
+TFV_DIFFERENTIAL_OUT=../target/tfv-differential.tsv cargo test -q -p coding_adventures_test_bootstrap --test tfv_exhaustive
+python3 ../../../scripts/tfv_differential.py ../target/tfv-differential.tsv
+python3 ../../../scripts/tfv_differential.py --self-test

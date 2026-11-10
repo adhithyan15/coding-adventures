@@ -2,7 +2,16 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [Unreleased]
+## [0.247.6] - 2026-11-10
+
+### Fixed - hoist preceding initializer into for header in fold-control-flow (#15855)
+
+- Variable declarations immediately preceding a `for` loop with no `init` (including rewritten `while` loops) are now hoisted into the `for` header.
+- Safely handles `var` (always safe) and `let`/`const` (with post-loop use and loop-body closure capture checks).
+- Reached 100% byte-for-byte parity with upstream Closure Compiler on `ladder_t4_while_simple`.
+- Reduced active ladder divergence count from 51 to 50.
+
+## [0.247.5] - 2026-11-09
 
 ### Fixed - retain terminator after class field in WHITESPACE_ONLY (#15862)
 
