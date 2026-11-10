@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed — engine bundle regenerated
+
+- `vendor/spreadsheet-engine-wasm.js` re-embeds `spreadsheet-wasm`'s rebuilt
+  `.wasm` (its inputs digest drifted with new registry crate versions; no
+  engine source changed). `scripts/bundle-wasm-engine.sh --check` passes.
+
 ### Changed — engine bundle regenerated (#17914)
 
 - `vendor/spreadsheet-engine-wasm.js` re-embeds `spreadsheet-wasm`'s rebuilt
