@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.39.1] - 2026-11-10
+
+### Fixed - hoist preceding variable declaration into `for` loop header without init (#15855)
+
+In `fold_program` and `fold_block_statement`, immediately preceding variable
+declarations are now hoisted into a following `for` loop whose `init` is `None`
+(such as `for (; i < 3; )` or rewritten `while` loops).
+- `var` declarations are always safe to hoist into the `for` header.
+- `let` and `const` declarations are block-scoped and hoisted only when
+  neither hazard is present: (1) no declared binding is referenced after the loop
+  in the enclosing scope, and (2) the loop body does not capture any declared
+  binding in a nested closure (function/arrow).
+- Closes ladder rung `ladder_t4_while_simple` to 100% byte-for-byte parity with
+  upstream Closure Compiler.
+
 ## [Unreleased]
 
 ### Fixed - keep hoisted declarations after a `return` (#17841)

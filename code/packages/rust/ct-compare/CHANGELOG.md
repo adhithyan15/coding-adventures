@@ -4,6 +4,10 @@
 
 - Round-2 security fixes: `source_sha256` now covers every `src/**/*.rs` (framing `warrant-src-v1`, shared helper in test-bootstrap) in the test, proof and bench manifests; `run_main` takes the `src/` directory; new `tests/sabotage_guard.rs` runs the real target with `WARRANT_EVIDENCE_FAULT=none` plus a filter (refused, exit 2, no manifest).
 - Security review fixes: test and bench manifests record `source_sha256` (dev-dependency `coding_adventures_sha256`); proof entries record `obligation_sha256`; the generated harness is regenerated (checked exhaustive budget, `run_main(source)`); `assurance_report.json` gains `certificate_kind` per claim; BUILD passes `--allow-unverified` to `--check` because the report still cites nine `unverified::` static attestations.
+- The evidence generator's binding table moved out of `warrant-grammar`'s
+  `gen_evidence` example into `evidence.bindings` (data, per package); BUILD now
+  runs `gen_evidence -- --check ct-compare`. The generated
+  `tests/generated/warrant_evidence.rs` is byte-identical.
 
 - Add the Warrant-derived evidence harness (VER04h): `tests/warrant_evidence.rs`
   runs `tests/generated/warrant_evidence.rs`, generated from

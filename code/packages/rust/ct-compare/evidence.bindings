@@ -1,0 +1,21 @@
+# Warrant binding manifest (VER04 section 6) for code/specs/ct-compare.warrant.
+#
+# One line per Warrant operation: which public export implements it, which
+# deliberate faults the generated negative controls attack it with (VER04h
+# section 6), and any normalization of a panic into the declared error.  The
+# generator (`warrant-grammar --example gen_evidence`) reads nothing else about
+# this package; `BUILD` fails when tests/generated/warrant_evidence.rs drifts.
+package coding_adventures_ct_compare
+revision 0.1.0
+spec code/specs/ct-compare.warrant
+output code/packages/rust/ct-compare/tests/generated/warrant_evidence.rs
+seed 0x5741_5252_414e_5421
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 400000
+
+op eq export=ct_eq faults=invert,ignore-last-byte
+op eq_fixed export=ct_eq_fixed static=N faults=invert,ignore-last-byte
+op select_bytes export=ct_select_bytes fresh error=CT_SELECT_LENGTH_MISMATCH faults=swap-choice,missing-error
+op eq_u64 export=ct_eq_u64 faults=invert,ignore-high-bit
