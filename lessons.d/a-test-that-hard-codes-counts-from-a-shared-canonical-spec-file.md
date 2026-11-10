@@ -4,7 +4,7 @@ category: Testing & coverage
 
 # A test that hard-codes counts from a shared canonical spec file breaks when another PR extends that file, and a fixed-seed rejection sampler with a low retry cap fails deterministically
 
-Two TypeScript packages (`warrant-compiler` #19042, `test-bootstrap` #19039) landed
+Two TypeScript packages (`warrant-compiler` #19042, `test-bootstrap` #19038) landed
 tests asserting that `code/specs/ct-compare.warrant` has 1 claim and produces 13
 results. #19054 then added 8 claims to that file. Each PR was green on its own;
 together they turned 2 of the 15 `main` full-build shards red.
