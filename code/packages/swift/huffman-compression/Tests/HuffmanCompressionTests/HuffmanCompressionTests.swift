@@ -397,4 +397,63 @@ final class HuffmanCompressionTests: XCTestCase {
         XCTAssertEqual(result.count, data.count,
             "Decompressed data must have exactly the same length as the original")
     }
+
+    // MARK: - Hostile input (SEC-003): the code-lengths table is attacker-controlled
+
+    private func hostile(_ entries: [(UInt8, UInt8)], original: UInt32, payload: [UInt8]) -> [UInt8] {
+        var out = [UInt8]()
+        for shift in [24, 16, 8, 0] { out.append(UInt8((original >> UInt32(shift)) & 0xFF)) }
+        let n = UInt32(entries.count)
+        for shift in [24, 16, 8, 0] { out.append(UInt8((n >> UInt32(shift)) & 0xFF)) }
+        for (sym, len) in entries { out.append(sym); out.append(len) }
+        return out + payload
+    }
+
+    func testHostileHugeLengthGapRejected() {
+        let d = hostile([(0, 1), (1, 255)], original: 4, payload: [UInt8](repeating: 0xFF, count: 8))
+        XCTAssertThrowsError(try decompress(d))
+    }
+
+    func testHostileZeroLengthRejected() {
+        XCTAssertThrowsError(try decompress(hostile([(0, 0)], original: 1, payload: [0])))
+    }
+
+    func testHostileOversubscribedRejected() {
+        XCTAssertThrowsError(try decompress(hostile([(0, 1), (1, 1), (2, 1)], original: 1, payload: [0])))
+    }
+
+    func testHostileUnsortedRejected() {
+        XCTAssertThrowsError(try decompress(hostile([(0, 2), (1, 1)], original: 1, payload: [0])))
+    }
+
+    func testHostileSymbolCountOver256Rejected() {
+        let entries = (0..<257).map { (UInt8($0 % 256), UInt8(9)) }
+        XCTAssertThrowsError(try decompress(hostile(entries, original: 1, payload: [0])))
+    }
+
+    func testHostileDuplicateSymbolRejected() {
+        XCTAssertThrowsError(try decompress(hostile([(0, 1), (0, 1)], original: 1, payload: [0])))
+    }
+
+    func testHostileDeclaredLengthU32MaxRejected() {
+        let d = hostile([(0, 1), (1, 1)], original: UInt32.max, payload: [0, 0, 0, 0])
+        XCTAssertThrowsError(try decompress(d))
+    }
+
+    func testHostileSingleSymbolDeclaredLengthRejected() {
+        // The single-symbol table used to return `original_length` copies
+        // without looking at the payload at all.
+        let d = hostile([(65, 1)], original: UInt32.max, payload: [0])
+        XCTAssertThrowsError(try decompress(d))
+    }
+
+    func testHostileUnmatchedBitsFailFast() {
+        let d = hostile([(0, 1)], original: 8, payload: [UInt8](repeating: 0xFF, count: 100_000))
+        XCTAssertThrowsError(try decompress(d))
+    }
+
+    func testLargeRoundTripIsLinear() throws {
+        let data = (0..<400_000).map { UInt8($0 % 7) }
+        XCTAssertEqual(try rt(data), data)
+    }
 }

@@ -195,6 +195,97 @@ public sealed class HuffmanCompressionTests
         Assert.Contains("positive", error.Message);
     }
 
+    // ---- Hostile input (SEC-003): the code-length table is attacker-controlled ----
+
+    private static byte[] Hostile((int Symbol, int Length)[] entries, uint original, byte[] payload)
+    {
+        var output = new byte[8 + (entries.Length * 2) + payload.Length];
+        BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(0, 4), original);
+        BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(4, 4), (uint)entries.Length);
+        for (var i = 0; i < entries.Length; i++)
+        {
+            output[8 + (2 * i)] = (byte)entries[i].Symbol;
+            output[9 + (2 * i)] = (byte)entries[i].Length;
+        }
+
+        payload.CopyTo(output, 8 + (entries.Length * 2));
+        return output;
+    }
+
+    private static byte[] Filled(int count, byte value)
+    {
+        var bytes = new byte[count];
+        Array.Fill(bytes, value);
+        return bytes;
+    }
+
+    [Fact]
+    public void Decompress_RejectsHugeLengthGap()
+    {
+        var data = Hostile([(0, 1), (1, 255)], 4, Filled(8, 0xFF));
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_RejectsOversubscribedTable()
+    {
+        var data = Hostile([(0, 1), (1, 1), (2, 1)], 1, [0]);
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_RejectsUnsortedTable()
+    {
+        var data = Hostile([(0, 2), (1, 1)], 1, [0]);
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_RejectsSymbolCountOver256()
+    {
+        var entries = new (int Symbol, int Length)[257];
+        for (var i = 0; i < entries.Length; i++)
+        {
+            entries[i] = (i % 256, 9);
+        }
+
+        var data = Hostile(entries, 1, [0]);
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_RejectsDuplicateSymbol()
+    {
+        var data = Hostile([(0, 1), (0, 1)], 1, [0]);
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_RejectsDeclaredLengthUInt32MaxWithTinyPayload()
+    {
+        var data = Hostile([(0, 1), (1, 1)], uint.MaxValue, new byte[4]);
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_FailsFastWhenBitsMatchNoCode()
+    {
+        var data = Hostile([(0, 1)], 8, Filled(100_000, 0xFF));
+        Assert.Throws<InvalidOperationException>(() => HuffmanCompression.Decompress(data));
+    }
+
+    [Fact]
+    public void Decompress_LargeRoundTripIsLinear()
+    {
+        var data = new byte[400_000];
+        for (var i = 0; i < data.Length; i++)
+        {
+            data[i] = (byte)(i % 7);
+        }
+
+        Assert.Equal(data, HuffmanCompression.Decompress(HuffmanCompression.Compress(data)));
+    }
+
     private static byte[] Repeat(byte[] source, int times)
     {
         var output = new byte[source.Length * times];

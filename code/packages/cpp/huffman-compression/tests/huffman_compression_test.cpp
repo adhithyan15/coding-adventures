@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "huffman_compression.hpp"
@@ -28,6 +29,30 @@ template <typename Ex, typename F> static bool throws(F body) {
         return false;
     }
     return false;
+}
+
+// Build a CMP04 stream from explicit (symbol, length) pairs for hostile-input tests.
+static std::vector<std::uint8_t>
+hostile(const std::vector<std::pair<int, int>> &entries, std::uint32_t original,
+        std::size_t payload_len, std::uint8_t payload_byte) {
+    std::vector<std::uint8_t> out;
+    for (int s = 24; s >= 0; s -= 8) {
+        out.push_back(static_cast<std::uint8_t>(original >> s));
+    }
+    const std::uint32_t n = static_cast<std::uint32_t>(entries.size());
+    for (int s = 24; s >= 0; s -= 8) {
+        out.push_back(static_cast<std::uint8_t>(n >> s));
+    }
+    for (const auto &e : entries) {
+        out.push_back(static_cast<std::uint8_t>(e.first));
+        out.push_back(static_cast<std::uint8_t>(e.second));
+    }
+    out.insert(out.end(), payload_len, payload_byte);
+    return out;
+}
+
+static bool rejected(const std::vector<std::uint8_t> &data) {
+    return throws<std::invalid_argument>([&] { (void)ca::huffman::decompress(data); });
 }
 
 int main() {
@@ -64,6 +89,37 @@ int main() {
     // Malformed input throws.
     ISO_CHECK(throws<std::invalid_argument>(
         [] { (void)ca::huffman::decompress(std::vector<std::uint8_t>{1, 2, 3}); }));
+
+    // Hostile input (SEC-003): the code-lengths table is attacker-controlled.
+    ISO_CHECK(rejected(hostile({{0, 1}, {1, 255}}, 4, 8, 0xff))); // huge length gap
+    ISO_CHECK(rejected(hostile({{0, 0}}, 1, 1, 0)));              // zero length
+    ISO_CHECK(rejected(hostile({{0, 1}, {1, 1}, {2, 1}}, 1, 1, 0))); // over-subscribed
+    ISO_CHECK(rejected(hostile({{0, 2}, {1, 1}}, 1, 1, 0)));      // unsorted
+    {
+        std::vector<std::pair<int, int>> many;
+        for (int i = 0; i < 257; i++) {
+            many.push_back({i & 0xff, 9});
+        }
+        ISO_CHECK(rejected(hostile(many, 1, 1, 0))); // > 256 entries
+    }
+    ISO_CHECK(rejected(hostile({{0, 1}, {0, 1}}, 1, 1, 0)));      // duplicate symbol
+    ISO_CHECK(rejected(hostile({{0, 1}, {1, 1}}, 0xFFFFFFFFu, 4, 0))); // u32 max length
+    ISO_CHECK(rejected(hostile({{0, 1}}, 8, 100000, 0xff)));      // unmatched bits
+    {
+        // Claims 5 table entries but carries only one.
+        auto truncated = hostile({{0, 1}}, 1, 0, 0);
+        truncated[7] = 5;
+        ISO_CHECK(rejected(truncated));
+    }
+
+    // Large input round-trips in linear time.
+    {
+        std::vector<std::uint8_t> big(400000);
+        for (std::size_t i = 0; i < big.size(); i++) {
+            big[i] = static_cast<std::uint8_t>(i % 7);
+        }
+        round_trip(big);
+    }
 
     return ISO_TEST_RESULT();
 }
