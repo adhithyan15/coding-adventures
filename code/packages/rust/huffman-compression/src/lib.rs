@@ -35,7 +35,7 @@
 //! Bytes 4–7:    symbol_count     (big-endian uint32) — number of distinct bytes
 //! Bytes 8–8+2N: code-lengths table — N entries, each 2 bytes:
 //!                 [0] symbol value  (uint8, 0–255)
-//!                 [1] code length   (uint8, 1–16)
+//!                 [1] code length   (uint8, 1–56; decompress refuses 0 and > 56)
 //!               Sorted by (code_length, symbol_value) ascending.
 //! Bytes 8+2N+:  bit stream — packed LSB-first, zero-padded to byte boundary.
 //! ```
@@ -164,7 +164,11 @@ fn pack_bits_lsb_first(bits: &str) -> Vec<u8> {
 /// Each byte b produces 8 bits: `(b>>0)&1`, `(b>>1)&1`, ..., `(b>>7)&1` —
 /// so the LSB of each byte becomes the "leftmost" (earliest in stream) bit.
 fn unpack_bits_lsb_first(data: &[u8]) -> String {
-    let mut bits = String::with_capacity(data.len() * 8);
+    // Saturating: on a 32-bit target `len * 8` can exceed usize::MAX. The
+    // capacity is only a hint, so a saturated value just means the String
+    // grows normally (or the allocator refuses), never a wrapped-small buffer
+    // being trusted.
+    let mut bits = String::with_capacity(data.len().saturating_mul(8));
     for byte in data {
         for i in 0..8 {
             bits.push(if (byte >> i) & 1 == 1 { '1' } else { '0' });
@@ -179,6 +183,26 @@ fn unpack_bits_lsb_first(data: &[u8]) -> String {
 const MAX_CODE_LEN: usize = 56;
 
 // ─── Encoder ─────────────────────────────────────────────────────────────────
+
+/// The CMP04 header stores the original length as a big-endian `u32`.
+///
+/// ```text
+///   len                     result
+///   0 ..= 4_294_967_295     Ok(len as u32)   (exact: fits in 32 bits)
+///   4_294_967_296 ..        Err              (would be truncated mod 2^32)
+/// ```
+///
+/// A separate function so the boundary can be tested with plain `usize`
+/// values instead of allocating a 4 GiB buffer.
+fn header_length(len: usize) -> Result<u32, String> {
+    u32::try_from(len).map_err(|_| {
+        format!(
+            "input is {len} bytes; CMP04 stores the original length in 32 bits \
+             (at most {} bytes)",
+            u32::MAX
+        )
+    })
+}
 
 /// Compress bytes using Huffman coding and return CMP04 wire-format bytes.
 ///
@@ -205,7 +229,9 @@ const MAX_CODE_LEN: usize = 56;
 ///
 /// # Errors
 ///
-/// Returns `Err(String)` if the tree build fails (e.g., internal DT27 error).
+/// Returns `Err(String)` if the tree build fails (e.g., internal DT27 error),
+/// or if `data` is longer than `u32::MAX` bytes (4 GiB - 1), which the
+/// CMP04 header's 32-bit `original_length` field cannot represent.
 ///
 /// # Examples
 ///
@@ -216,7 +242,13 @@ const MAX_CODE_LEN: usize = 56;
 /// assert_eq!(decompress(&compressed).unwrap(), b"AAABBC");
 /// ```
 pub fn compress(data: &[u8]) -> Result<Vec<u8>, String> {
-    let original_length = data.len() as u32;
+    // SEC-003d. `data.len() as u32` would silently keep only the low 32 bits
+    // of a 4 GiB-or-larger length: a 4 GiB + 3 byte input would be written
+    // with original_length = 3, and decompress would return 3 bytes with no
+    // error. The same bound also keeps every per-byte count in the u32
+    // frequency histogram below from overflowing (no count can exceed the
+    // input length). The C and C++ encoders refuse such inputs too.
+    let original_length = header_length(data.len())?;
 
     // Edge case: empty input — return 8-byte header, no bit stream.
     if data.is_empty() {
@@ -294,7 +326,7 @@ pub fn compress(data: &[u8]) -> Result<Vec<u8>, String> {
     out.extend_from_slice(&symbol_count.to_be_bytes());
     for (sym, len) in &lengths {
         out.push(*sym as u8);   // symbol value (fits in u8 for byte-level data)
-        out.push(*len as u8);   // code length (1–16)
+        out.push(*len as u8);   // code length (1–56)
     }
     out.extend_from_slice(&bit_bytes);
 
@@ -513,6 +545,25 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // ── SEC-003d: the 32-bit header length is never truncated ────────────────
+
+    #[test]
+    fn header_length_accepts_every_value_that_fits() {
+        assert_eq!(header_length(0), Ok(0));
+        assert_eq!(header_length(1), Ok(1));
+        assert_eq!(header_length(u32::MAX as usize), Ok(u32::MAX));
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn header_length_refuses_lengths_that_would_wrap() {
+        // 2^32 would have been written as 0, and 2^32 + 3 as 3.
+        for len in [1usize << 32, (1usize << 32) + 3, usize::MAX] {
+            let err = header_length(len).unwrap_err();
+            assert!(err.contains("32 bits"), "{err}");
+        }
+    }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
