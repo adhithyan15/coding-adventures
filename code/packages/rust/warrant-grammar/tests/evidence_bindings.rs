@@ -30,6 +30,7 @@ fn options(b: &EvidenceBindingFile, spec: &str) -> EvidenceOptions {
         negctl_fuzz_iterations: b.negctl_fuzz_iterations,
         exhaustive_budget: b.exhaustive_budget,
         arg_types: b.arg_types.clone(),
+        hosts: Default::default(),
     }
 }
 

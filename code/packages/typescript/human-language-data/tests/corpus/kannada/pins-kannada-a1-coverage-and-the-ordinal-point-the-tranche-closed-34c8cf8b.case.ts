@@ -63,8 +63,11 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   // relational, ablative, question, answer and geography points. The generic
   // place vocabulary was already owned; this tranche adds the missing
   // composition path and does not move any other point.
-  expect(coverage.covered).toBe(204);
-  expect(coverage.unmapped).toBe(54);
+  // 204 -> 209: chapter 12's four short lessons close exactly the five-part
+  // third-person bridge: pronouns, human/non-human, present endings,
+  // possessives and the bounded non-human -gaḷu plural.
+  expect(coverage.covered).toBe(209);
+  expect(coverage.unmapped).toBe(49);
   expect(coverage.partial).toBe(0);
   // KA-A1-NUM-07 was one of the thirteen ordinal points HL-C354 left open, and
   // the one it priced cheapest: Kannada's -aneya has no exceptions, so ten
@@ -76,7 +79,7 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "kannada A1 (partial inventory): 204/258 points covered (79%)",
+    "kannada A1 (partial inventory): 209/258 points covered (81%)",
   );
 
   const chapter103 = loadTrackChapters()

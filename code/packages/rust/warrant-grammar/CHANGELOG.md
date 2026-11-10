@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.3.0 - Warrant v1: WX-A (tuples, records and non-recursive sum types)
+
+Implements VER04j section 4 (its section 14.1 lists every deviation). All of it
+is under the `v1` header; a v0 document means exactly what it did (WX-A syntax in
+a v0 document is `W0101`), the checker output and evidence of `ct-compare` and
+`gf256` are byte-identical, and a v1 document that uses no composite generates
+the WX-B/WX-C harness byte for byte.
+
+- **Parser.** Tuple types and literals (arity 2 to 8), `record` and `variant`
+  declarations (32 fields, 256 constructors, duplicates are `W0201`), postfix
+  projection `t.0` / `f(x).field` (a `.` with no whitespace around it), recursive
+  patterns (`_`, `true`/`false`, tuples, constructors, `E.CASE`, `Some(p)`,
+  `Ok(p)`, `Err(p)`, depth 8). `Pattern` is now recursive; new AST nodes
+  `Declaration::{Record, Variant}`, `TypeExpr::Tuple`,
+  `Expression::{Tuple, Project}`, `ProjKey`.
+- **Checker.** `Type::{Tuple, Adt}`, a constructor namespace shared with every
+  other module symbol (`W0201`), an acyclic type graph through tuples, records,
+  variants, `List`, `Option`, `Result` and aliases (`W0203`), projection (including
+  `x.f` with a binder head), constructor typing with the v0 per-argument
+  subtyping, invariant composites, pattern typing, and a pattern-matrix
+  exhaustiveness and redundancy check (`patterns.rs`, `W0301`, `W0602` on 256
+  arms, depth or work exhaustion). `labels op: r.field public` accepts a record
+  field path. The v0 `match` check is kept for v0 documents.
+- **Evaluator.** `EvalValue::{Tuple, Con}`, construction, projection, general
+  matching, structural equality, a composite size bound (`W0703`),
+  `encode_portable` (VER04j 4.9, `Result` in the VER04i `M1` form), `encode_checked`
+  and `W0709` past 64 containers.
+- **Evidence generator.** Composite domains (product, constructors in order,
+  `Option`, `Result`, `List`), the byte/case budgets and leftmost-first demotion
+  inside composites with component paths, `match`/tuple/constructor/projection
+  translation, composite-aware generators, relation bias and shrinkers, composite
+  adapters bound through `struct`/`enum` lines and `ret=`/`errors=`, the six
+  faults, the unreachable-by-type count, manifest `domain` text. New
+  `binding::{HostTy, HostSpec, ...}`, `evidence::EvidenceOptions::hosts`.
+- **Tests.** `wxa_syntax`, `wxa_checker`, `wxa_patterns` (matrix versus brute
+  force), `wxa_semantics`, `wxa_generator`, `wxa_regen` and `wxa_evidence`
+  (generated pilot harness, domains, generators, shrinkers, every fault, and the
+  ground-evaluator versus generated-model differential on every composite domain
+  within budget). `wx_generator` no longer expects a `match` body to be refused.
+- Version 0.3.0.
+
 ## 0.2.0 — Warrant v1: WX-B (fixed-width integers) and WX-C (bitwise operations)
 
 Implements VER04j sections 1, 2 and 3 (see its section 14 for every deviation).
