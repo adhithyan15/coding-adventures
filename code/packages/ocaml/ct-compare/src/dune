@@ -1,0 +1,6 @@
+(library
+ (name coding_adventures_ct_compare)
+ (public_name coding-adventures-ct-compare)
+ (wrapped false)
+ (instrumentation
+  (backend bisect_ppx)))
