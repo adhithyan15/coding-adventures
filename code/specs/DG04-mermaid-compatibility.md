@@ -186,6 +186,10 @@ the same backend-neutral pipeline.
 The nine unique sources in the neo-look Cypress suite also parse into structural
 IR and render through native Metal. This pins source semantics only; Mermaid's
 neo themes and look-specific visual fidelity remain outside the completed subset.
+The two Unicode-heavy sources from the unified Cypress suite are pinned exactly,
+including decorated entity and attribute identifiers, comments, aliases, emoji,
+and relationship roles through semantic IR, structural layout, portable paint,
+and native Metal rendering. Browser HTML-label styling remains out of scope.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
