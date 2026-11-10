@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Reify the separately authenticated original responder-revocation proof's own
+  exact delegated responder-to-intermediate-to-reviewed-root path while
+  retaining the complete non-copyable branch.
+- Accept no substitute certificate, path, root, algorithm, key, signature,
+  status, or time, and stop before name, no-check, recursive revocation,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth policy.
 - Reify the added intermediate-status responder path from the original
   separately authenticated responder-revocation branch while retaining both
   complete authenticated revocation proofs under repository-owned evidence.

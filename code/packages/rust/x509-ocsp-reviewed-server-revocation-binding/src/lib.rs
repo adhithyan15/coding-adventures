@@ -27,7 +27,10 @@
 //! Both the no-check and separately authenticated original-responder branches
 //! can project their added intermediate-status responder through that same
 //! policy sequence without accepting substitute evidence. Routed flows still
-//! stop before complete revocation composition.
+//! stop before complete revocation composition. The separately authenticated
+//! original-responder branch can also reify its added revocation proof's own
+//! exact responder-to-reviewed-root path while retaining the complete branch,
+//! stopping before policy for that responder.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -1793,6 +1796,42 @@ impl<Proof, Revocation> fmt::Debug for BoundX509OcspReviewedResponderRevocation<
     }
 }
 
+/// Non-copyable evidence reifying a responder-revocation proof's own responder path.
+///
+/// The retained separately authenticated responder-revocation branch already
+/// proves that its added proof's exact delegated responder passed certificate-
+/// wide role, algorithm, OCSP-signing-purpose, and observation-time validity
+/// policy; that repository-owned routed RSA verification authenticated its
+/// response and certificate signatures; and that its exact responder-to-
+/// intermediate-to-reviewed-root path is the one retained by that proof. This
+/// nominal wrapper reifies that path without accepting substitute evidence or
+/// performing additional validation.
+///
+/// It does not apply reviewed-root or intermediate name constraints to the
+/// added responder, establish no-check or separately authenticated revocation
+/// policy for it, generalize path validation, or grant TLS, HTTP, OAuth, or
+/// network authority.
+pub struct BoundX509OcspReviewedResponderRevocationResponderPath<Proof, Revocation> {
+    responder_revocation: BoundX509OcspReviewedResponderRevocation<Proof, Revocation>,
+}
+
+impl<Proof, Revocation> BoundX509OcspReviewedResponderRevocationResponderPath<Proof, Revocation> {
+    /// Return the complete separately authenticated responder branch intact.
+    pub const fn responder_revocation(
+        &self,
+    ) -> &BoundX509OcspReviewedResponderRevocation<Proof, Revocation> {
+        &self.responder_revocation
+    }
+}
+
+impl<Proof, Revocation> fmt::Debug
+    for BoundX509OcspReviewedResponderRevocationResponderPath<Proof, Revocation>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509OcspReviewedResponderRevocationResponderPath")
+    }
+}
+
 /// Non-copyable routed reviewed-path evidence with intermediate revocation status.
 ///
 /// Success retains the complete fully routed reviewed server-revocation proof
@@ -2130,6 +2169,34 @@ impl<Proof, IntermediateRevocation, ResponderRevocation, Source> fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509OcspReviewedIntermediateStatusResponderRevocation")
+    }
+}
+
+/// Reify the responder-revocation proof's own exact responder path.
+///
+/// The safe responder-revocation constructor already binds one complete fully
+/// routed authenticated proof to the original responder, its exact
+/// intermediate issuer, and the original observation time. That retained
+/// proof already authenticates its own delegated responder through the same
+/// exact intermediate to the selected reviewed root. This infallible nominal
+/// projection retains the complete branch and accepts no caller-supplied
+/// certificate, path, root, algorithm, key, signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It stops before reviewed-root or intermediate
+/// name policy for the added responder, that responder's no-check or
+/// authenticated-revocation policy, complete revocation policy, generalized
+/// path validation, TLS, HTTP, OAuth readiness, or network authority.
+pub fn reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path<
+    Proof,
+    Revocation,
+>(
+    responder_revocation: BoundX509OcspReviewedResponderRevocation<Proof, Revocation>,
+) -> BoundX509OcspReviewedResponderRevocationResponderPath<Proof, Revocation> {
+    BoundX509OcspReviewedResponderRevocationResponderPath {
+        responder_revocation,
     }
 }
 
@@ -5209,6 +5276,44 @@ mod tests {
         assert_eq!(
             format!("{bound:?}"),
             "BoundX509OcspReviewedResponderRevocation"
+        );
+    }
+
+    #[test]
+    fn responder_revocation_responder_path_retains_the_complete_branch() {
+        let intermediate_dns_policy = ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+            anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                responder_path: BoundX509OcspReviewedResponderPath {
+                    reviewed_server_revocation: (),
+                },
+                constrained_dns_names: None,
+            },
+            constrained_dns_names: None,
+        };
+        let bound = BoundX509OcspReviewedResponderRevocation {
+            intermediate_dns_policy,
+            responder_revocation: 7_u8,
+        };
+
+        let responder_path =
+            reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path(bound);
+
+        assert_eq!(
+            *responder_path.responder_revocation().responder_revocation(),
+            7
+        );
+        assert_eq!(
+            responder_path
+                .responder_revocation()
+                .intermediate_dns_policy()
+                .anchor_policy()
+                .responder_path()
+                .reviewed_server_revocation(),
+            &()
+        );
+        assert_eq!(
+            format!("{responder_path:?}"),
+            "BoundX509OcspReviewedResponderRevocationResponderPath"
         );
     }
 
