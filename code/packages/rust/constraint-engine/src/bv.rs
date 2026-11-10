@@ -406,6 +406,9 @@ impl Lowering {
                     if x.width() != acc.width() {
                         return Err(format!("`{f}` on widths {} and {}", acc.width(), x.width()));
                     }
+                    if f == "bvmul" {
+                        self.reserve(multiplication_gate_estimate(acc.width()))?;
+                    }
                     let g = &mut self.aig;
                     acc = match f {
                         "bvand" => bv::and(g, &acc, &x),
@@ -460,6 +463,43 @@ const DIV_GATES_PER_BIT: usize = 64;
 fn division_gate_estimate(w: usize) -> usize {
     DIV_GATES_PER_BIT_SQUARED * w * w + DIV_GATES_PER_BIT * w
 }
+
+/// Upper bound on the gates one `bvmul` builds at width `w`, so that a
+/// multiplier too big for [`MAX_AIG_NODES`] is refused before it is built.
+///
+/// `bit_blaster::bv::mul` is shift-and-add: row `i` is `a << i` ANDed with
+/// `b[i]`, and the `w` rows are summed by `w` ripple-carry adders. Shifted-in
+/// zeros and the all-zero first accumulator fold away, so about half of each
+/// adder is constant; what is left is a little under `4 w²` AND nodes. Measured
+/// at the time of writing (new nodes for `bvmul x y`, `w`-bit inputs):
+///
+/// ```text
+///   w      actual    4w² + 2w    ratio
+///   1           1           6     6.0
+///   2           6          20     3.3
+///   3          19          42     2.2
+///   8         204         272     1.3
+///   16        916       1 056     1.15
+///   32      3 876       4 160     1.07
+///   64     15 940      16 512     1.04
+///  128     64 644      66 048     1.02
+/// ```
+///
+/// The actual count is `4 w² - O(w)`, so `4 w² + 2 w` stays above it with a
+/// ratio that tends to 1. Structural hashing can only make a real multiplier
+/// smaller (never larger), so the estimate also bounds a multiplier built
+/// next to existing circuitry. (Every `and` call is a unit of work too: the
+/// multiplier makes `10 w²` of them, below [`MAX_GATE_CALLS`] whenever the
+/// node bound holds.) See `multiplication_cost_estimate_is_conservative`.
+fn multiplication_gate_estimate(w: usize) -> usize {
+    MUL_GATES_PER_BIT_SQUARED.saturating_mul(w).saturating_mul(w).saturating_add(MUL_GATES_PER_BIT.saturating_mul(w))
+}
+
+/// Gates per bit² of the shift-and-add multiplier (see above).
+const MUL_GATES_PER_BIT_SQUARED: usize = 4;
+
+/// The linear slack on top, which also covers widths 1 to 3.
+const MUL_GATES_PER_BIT: usize = 2;
 
 /// SMT-LIB `bvsmod`: the remainder whose sign follows the **divisor**.
 ///

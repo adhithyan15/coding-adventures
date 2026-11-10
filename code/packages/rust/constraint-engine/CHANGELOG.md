@@ -1,5 +1,30 @@
 # Changelog — `constraint-engine`
 
+## 0.5.1 — 2026-11-10
+
+### Fixed
+
+- `bvmul` now refuses an oversized multiplier **before building it** (backlog
+  LH-006c), as division and the extensions already did in 0.5.0. Until now a
+  512-bit multiplier built about 2.6 million gates before the late
+  `check_size` answered `Unknown`. `multiplication_gate_estimate(w)`
+  (`4 w² + 2 w` nodes, derived in the literate comment above it in
+  `src/bv.rs`) is checked against `MAX_AIG_NODES` with the same `reserve`
+  helper as division, for each multiplication of an n-ary `bvmul`; the
+  `Unknown` reason is unchanged (`bit-blasted circuit exceeds MAX_AIG_NODES`).
+  The estimate is 1.04x the real count at width 64 and 1.02x at 128.
+  Because the estimate is slightly above the real count, a lone multiplier
+  at widths 250 and 251 (real size just under the cap) is now refused where
+  it used to fit; widths up to 249 behave as before.
+
+### Added
+
+- `multiplication_cost_estimate_is_conservative` (estimate at or above the
+  real node count for 22 widths including 1, 2, 3, 8, 16, 32, 64 and odd
+  ones; at most 4x at widths from 16 up) and
+  `wide_multiplication_is_refused_before_it_is_built` (no node or gate call
+  is made when refused).
+
 ## 0.5.0 — 2026-11-10
 
 Faithfulness audit of the BV tactic's `Predicate` to circuit lowering

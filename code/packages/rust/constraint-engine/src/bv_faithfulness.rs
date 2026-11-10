@@ -723,6 +723,47 @@ fn division_cost_estimate_is_conservative() {
     }
 }
 
+#[test]
+fn multiplication_cost_estimate_is_conservative() {
+    // The pre-check estimate must be at least the real gate count, and not
+    // so loose that it refuses sizes the real circuit would fit.
+    for w in [1usize, 2, 3, 4, 5, 7, 8, 9, 13, 16, 17, 31, 32, 33, 47, 63, 64, 65, 100, 127, 128, 200] {
+        let mut l = Lowering::new(&env_of(2, w)).unwrap();
+        let before = l.aig.num_nodes();
+        l.term(&app("bvmul", &[var("x"), var("y")])).unwrap_or_else(|e| panic!("bvmul {w}: {e}"));
+        let used = l.aig.num_nodes() - before;
+        let est = multiplication_gate_estimate(w);
+        assert!(used <= est, "bvmul at {w}: {used} gates > estimate {est}");
+        if w >= 16 {
+            assert!(est <= 4 * used, "bvmul at {w}: estimate {est} is more than 4x the real {used}");
+        }
+    }
+}
+
+#[test]
+fn wide_multiplication_is_refused_before_it_is_built() {
+    // The smallest width whose estimate no longer fits under the node cap is
+    // refused without building anything; one below it still goes through.
+    let over = (1..=MAX_BV_WIDTH).find(|&w| multiplication_gate_estimate(w) > MAX_AIG_NODES).unwrap();
+    for w in [over, 512] {
+        let mut l = Lowering::new(&env_of(2, w)).unwrap();
+        let before = l.aig.num_nodes();
+        let r = l.term(&app("bvmul", &[var("x"), var("y")]));
+        assert!(matches!(&r, Err(why) if why.contains("MAX_AIG_NODES")), "bvmul at {w}: {r:?}");
+        assert_eq!(l.aig.num_nodes(), before, "bvmul at {w} built gates before refusing");
+        assert_eq!(l.aig.and_calls(), 0, "bvmul at {w} did work before refusing");
+        let p = eq(app("bvmul", &[x(), y()]), x());
+        assert!(matches!(BvTactic::solve(&[p], &env_of(2, w)), SolverResult::Unknown(why) if why.contains("MAX_AIG_NODES")));
+    }
+    let mut l = Lowering::new(&env_of(2, over - 1)).unwrap();
+    assert!(l.term(&app("bvmul", &[var("x"), var("y")])).is_ok());
+    // 512 bits is refused quickly, not after millions of gates.
+    let started = std::time::Instant::now();
+    let p = eq(app("bvmul", &[x(), y()]), x());
+    let _ = BvTactic::solve(&[p], &env_of(2, 512));
+    assert!(started.elapsed().as_secs() < 5, "512-bit bvmul refused slowly");
+}
+
 /// Is `lhs = rhs` valid? `Unsat` of the negation is the proof, and this
 /// tactic only reports `Unsat` after `drat-check` accepted its DRAT proof.
 fn proved(e: &SortEnv, name: &str, lhs: Predicate, rhs: Predicate) {
