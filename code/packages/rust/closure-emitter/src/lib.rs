@@ -2707,13 +2707,19 @@ impl<'a> Emitter<'a> {
                     return;
                 }
                 if p.method {
+                    if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                        if fe.is_async {
+                            self.write_str("async");
+                            self.required_ws();
+                        }
+                        if fe.generator {
+                            self.write_str("*");
+                        }
+                        self.emit_property_key(&p.key);
+                        self.emit_param_list_and_body(&fe.params, &fe.body);
+                        return;
+                    }
                     self.emit_property_key(&p.key);
-                    // Method value is a FunctionExpression (Phase
-                    // 2). For Phase 1 we conservatively emit the
-                    // value expression which may be a function
-                    // literal or any expression — Phase 1 doesn't
-                    // emit FunctionExpression yet, so any non-
-                    // function value just gets emitted as-is.
                     self.emit_expression(&p.value);
                     return;
                 }
@@ -2726,13 +2732,21 @@ impl<'a> Emitter<'a> {
                 self.write_str("get");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
             PropertyKind::Set => {
                 self.write_str("set");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
         }
     }

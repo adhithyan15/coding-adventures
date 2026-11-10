@@ -388,6 +388,19 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "def outer():\n    x = 1\n    def mid():\n        def inner():\n            return x\n        return inner\n    fn = mid()\n    x = 100\n    return fn()\n\nprint(outer())\n",
         "100",
     ),
+    // ── private name mangling (#18496 review) ─────────────────────────
+    // Identifiers starting with `__` and not ending with `__` inside a class
+    // are mangled to `_ClassName__identifier`.
+    (
+        "py_class_private_method_mangled",
+        "class Secret:\n    def __init__(self):\n        self.__key = 42\n    def __hidden(self):\n        return self.__key * 2\n    def reveal(self):\n        return self.__hidden()\n\ns = Secret()\nprint(s.reveal())\n",
+        "84",
+    ),
+    (
+        "py_class_private_attr_isolation",
+        "class Base:\n    def __init__(self):\n        self.__x = 10\n    def get_base_x(self):\n        return self.__x\n\nclass Sub(Base):\n    def __init__(self):\n        self.__x = 20\n    def get_sub_x(self):\n        return self.__x\n\nb = Base()\ns = Sub()\nprint(b.get_base_x())\nprint(s.get_sub_x())\n",
+        "10\n20",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what

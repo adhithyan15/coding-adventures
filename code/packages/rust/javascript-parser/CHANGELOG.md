@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.7] - 2026-11-09
+
+### Fixed
+
+- Support adjacent class members and reserved-word property names (#17852):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, removed trailing `SEMICOLON` requirement after `method_definition` and `async_method` in `class_element` to allow adjacent class members without explicit semicolons.
+  - In `code/grammars/ecmascript/es5.grammar` through `es2025.grammar`, defined `identifier_name` matching `NAME` and all ECMAScript reserved words, allowing reserved words as property names in `property_name`, member dot access `.` and optional chaining `?.`.
+  - In `src/bridge.rs`, added helper `extract_ident_name` to extract identifier names from either raw tokens or `identifier_name` grammar nodes in `convert_member_expression`, `convert_call_expression`, `convert_optional_chain_expression`, and `convert_property_key`.
+  - Regenerated compiled grammars for Rust and Ruby.
+  - Added unit tests for adjacent class members without semicolons, reserved words as property names and dot access, and reserved words as class members.
+
+## [0.67.6] - 2026-11-09
+
+### Fixed
+
+- Support object method shorthand and async function expressions (#17941):
+  - In `code/grammars/ecmascript/es2015.grammar` through `es2025.grammar`, reordered `property_definition` alternatives so `method_definition` and `async_method` are evaluated before bare identifier `NAME`. In PEG parsers with ordered choice, testing `NAME` first caused method declarations like `{ f() {} }` and `{ valueOf() {} }` to be eagerly parsed as shorthand property names, failing on the opening parenthesis `(`.
+  - In `primary_expression`, reordered `async_function_expression` and `async_generator_expression` before identifier `NAME` so contextual keyword `async` followed by `function` is correctly parsed as an async function expression instead of an identifier followed by an unexpected `function` keyword.
+  - In `src/bridge.rs`, updated AST bridging to convert method definitions into `Property` nodes with `method: true` (or `kind: Get` / `kind: Set` for getters/setters), mapped async flags to `FunctionExpression::is_async`, and routed `async_function_expression`, `async_generator_expression`, and `await_expression` in `convert_expression`.
+  - Regenerated compiled grammars for Rust and Ruby.
+  - Added unit test coverage for object method shorthand, `valueOf` method shorthand, and async function expressions.
+
 ## [0.67.5] - 2026-11-09
 
 ### Fixed

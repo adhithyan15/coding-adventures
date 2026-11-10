@@ -127,7 +127,8 @@ end
 #   receiver                         block gets
 #   an object whose class defines    (that method runs: `each` is a user
 #     `each` (`sir_um_each`)          method like any other)
-#   Array                            each element
+#   Array                            each element (or none when arity == 0)
+#   Hash, zero-parameter block       call without arguments (#18798 item 23)
 #   Hash, one-parameter block        each `[key, value]` pair, as Ruby does
 #   Hash, any other block            each key and value, as two arguments
 #
@@ -139,10 +140,17 @@ def sir_each(recv, blk, arity = nil)
   return recv.public_send(:sir_um_each, blk) if recv.respond_to?(:sir_um_each)
 
   case recv
-  when Array then recv.each { |x| blk.call(x) }
+  when Array
+    if arity == 0
+      recv.each { blk.call }
+    else
+      recv.each { |x| blk.call(x) }
+    end
   when Hash
     if arity == 1
       recv.each { |k, v| blk.call([k, v]) }
+    elsif arity == 0
+      recv.each { blk.call }
     else
       recv.each { |k, v| blk.call(k, v) }
     end

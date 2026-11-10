@@ -4,6 +4,7 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+- Implement Python private name mangling in class bodies (Python §6.2.1): identifiers starting with at least two underscores and at most one trailing underscore inside a class body are mangled to `_<ClassName><ident>` (stripping leading underscores from the class name), applying to method definitions, attribute accesses, assignment targets, bare names, parameters, and local variables, isolating subclass private attributes and matching CPython scoping (#18496 review).
 - Maintain an active local variable counter map in `FunctionCtx` to perform $O(1)$ local variable and enclosing value queries (`is_local`, `is_enclosing_value`, `resolve_var_in`), eliminating $O(N \cdot V)$ linear scans over `locals` and DoS risk on functions with many local bindings (#18482 item 6).
 - Reject calls and bare references to cousin nested functions and nested functions from module top-level with positioned `"unresolved name <name>"` errors, enforcing lexical scoping (LEGB) for nested defs (#18482 item 4).
 - Reject `*args` and `**kwargs` splat arguments in function and method calls, `range(...)` calls, and class base expressions with positioned errors (`"unsupported: *starred argument in call (deferred)"` / `"unsupported: **double-starred keyword argument in call (deferred)"`) instead of silently collapsing them into single positional arguments (#18482 item 2).

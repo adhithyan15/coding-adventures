@@ -434,6 +434,26 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "begin\n  x = 42\n  puts x\nend\nbegin\n  begin\n    puts \"nested\"\n  end\nend\ndef f\n  begin\n    99\n  end\nend\nputs f\n",
         "42\nnested\n99",
     ),
+    // #18798 item 23 — a block with no parameters.
+    // In Ruby, blocks discard surplus arguments yielded to them. Calling or
+    // yielding to a 0-parameter block from `each` or a method previously raised
+    // `ArgumentError: wrong number of arguments (given 1, expected 0)` on the
+    // Ruby backend.
+    (
+        "rb_block_with_no_parameters",
+        "xs = [1, 2]\nxs.each do\n  puts 42\nend\ndef g\n  yield 10\n  yield 20\nend\ng do\n  puts 99\nend\n",
+        "42\n42\n99\n99",
+    ),
+    // #18798 item 3 — lambdas: invocation via `.call(...)` and outer-local/parameter captures.
+    // In Ruby, `g.call(...)` or `g.call` invokes a lambda. Previously, `.call` was routed
+    // through OOP dynamic method dispatch (`__method__`), failing at runtime on
+    // Python/JS/Go/Rust and refused on C/Ruby. Furthermore, lambdas were hoisted with
+    // an empty capture list, so reads of enclosing locals and method parameters failed.
+    (
+        "rb_lambda_call_and_outer_captures",
+        "f = ->(x, y) { x + y }\nputs f.call(10, 20)\nz = -> { 42 }\nputs z.call\nx = 100\nadd_x = ->(n) { n + x }\nputs add_x.call(5)\ndef make_adder(base)\n  adder = ->(v) { base + v }\n  adder\nend\na = make_adder(50)\nputs a.call(7)\n",
+        "30\n42\n105\n57",
+    ),
 ];
 
 /// `(name, Python source, CPython's stdout)`: class names that are not Ruby

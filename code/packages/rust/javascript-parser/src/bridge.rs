@@ -56,7 +56,7 @@ use coding_adventures_javascript_ast::{
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
-        AssignmentOperator, AssignmentTarget,
+        AssignmentOperator, AssignmentTarget, AwaitExpression,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ClassExpression, ClassMember, MethodDefinition, MethodKind, PropertyDefinition,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
@@ -196,6 +196,20 @@ fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
         }
     }
     None
+}
+
+/// Extract an identifier or property name from either a direct Token or an
+/// `identifier_name` grammar Node.
+fn extract_ident_name(item: Option<&ASTNodeOrToken>) -> Option<String> {
+    match item {
+        Some(ASTNodeOrToken::Token(t)) => Some(t.value.clone()),
+        Some(ASTNodeOrToken::Node(n))
+            if n.rule_name == "reserved_word" || n.rule_name == "identifier_name" =>
+        {
+            leftmost_token(n).map(|s| s.to_string())
+        }
+        _ => None,
+    }
 }
 
 /// If there is exactly one Node child, return it; else `None`.
@@ -1365,9 +1379,11 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
     // scope. So a missing name is NOT an error here — it's the common case.
     // As with declarations, a `*` marks a generator expression (CLOC12.163 PR2):
     // skip it during name extraction and record it in `generator`.
+    let is_async = has_token(node, "async");
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t)
-            if t.value != "function"
+            if t.value != "async"
+                && t.value != "function"
                 && t.value != "*"
                 && t.value != "("
                 && t.value != ")"
@@ -1406,7 +1422,7 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
         params,
         body,
         generator: has_token(node, "*"),
-        is_async: false,
+        is_async,
     })
 }
 
@@ -1805,6 +1821,7 @@ fn convert_method_definition(
     let mut saw_get = false;
     let mut saw_set = false;
     let mut saw_star = false;
+    let mut saw_async = false;
     for c in &node.children {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "property_name" => break,
@@ -1812,6 +1829,7 @@ fn convert_method_definition(
                 "get" => saw_get = true,
                 "set" => saw_set = true,
                 "*" => saw_star = true,
+                "async" => saw_async = true,
                 _ => {}
             },
             _ => {}
@@ -1838,6 +1856,7 @@ fn convert_method_definition(
         MethodKind::Set
     } else if !is_static
         && !saw_star
+        && !saw_async
         && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
     {
         // `*constructor(){}` is a SyntaxError in real JS — a generator is never a
@@ -1878,7 +1897,7 @@ fn convert_method_definition(
             body,
             // `*gen(){}` → a generator method; the emitter re-prints the `*`.
             generator: saw_star,
-            is_async: false,
+            is_async: saw_async,
         },
         computed,
         is_static,
@@ -2021,6 +2040,23 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
         cv: None,
         delegate,
         argument,
+    }))
+}
+
+/// Convert an `await_expression` grammar node into an [`AwaitExpression`].
+///
+/// ```text
+///   await_expression = "await" unary_expression ;
+/// ```
+fn convert_await_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    let nodes = node_children(node);
+    let arg_node = nodes
+        .first()
+        .ok_or_else(|| internal(node, "await_expression: missing operand"))?;
+    let argument = convert_expression(arg_node)?;
+    Ok(Expression::AwaitExpression(AwaitExpression {
+        cv: None,
+        argument: Box::new(argument),
     }))
 }
 
@@ -2478,24 +2514,19 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
 
-        // A plain (non-generator, non-async) function in value position —
+        // A plain, generator, or async function in value position —
         // an IIFE `(function(){})()`, an assigned function
         // `x = function(){}`, a named recursive `function f(){…f()…}`, a
-        // callback `arr.map(function(x){return x})`. Now that the typed AST
-        // has `Expression::FunctionExpression` (CLOC12.149), convert it
-        // instead of declining, so closurec optimises through it rather than
-        // falling back to WHITESPACE_ONLY. (gap-153.)
-        "function_expression" => {
+        // callback `arr.map(function(x){return x})`, `async function(){}`, etc.
+        "function_expression"
+        | "generator_expression"
+        | "async_function_expression"
+        | "async_generator_expression" => {
             convert_function_expression(node).map(Expression::FunctionExpression)
         }
 
-        // A generator function in value position (`x = function*(){…}`,
-        // `(function*(){…})()`). Same converter as `function_expression` — the
-        // `*` sets the `generator` flag so the emitter re-prints `function*`
-        // (CLOC12.163 PR2, gap-164).
-        "generator_expression" => {
-            convert_function_expression(node).map(Expression::FunctionExpression)
-        }
+        // An `await` expression inside an async function body.
+        "await_expression" => convert_await_expression(node),
 
         // A `yield` / `yield* x` expression inside a generator body
         // (CLOC12.163 PR2, gap-164). Now that the typed AST has
@@ -2549,10 +2580,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_class_expression(node).map(Expression::ClassExpression)
         }
 
-        "await_expression"
-        | "async_function_expression"
-        | "async_generator_expression"
-        | "tagged_template_expression"
+        "tagged_template_expression"
         | "new_target_expression" => Err(unsupported(node)),
 
         other => Err(BridgeError::InternalError {
@@ -3047,10 +3075,10 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                         });
                         i += 1;
                     }
-                    // `?.` NAME — optional dot access (the bare name token sits
-                    // directly after `?.`, with no interposed `.`).
-                    Some(ASTNodeOrToken::Token(name_t)) => {
-                        let prop_name = name_t.value.clone();
+                    // `?.` NAME / identifier_name — optional dot access (the bare name token or
+                    // identifier_name node sits directly after `?.`, with no interposed `.`).
+                    Some(c) if extract_ident_name(Some(c)).is_some() => {
+                        let prop_name = extract_ident_name(Some(c)).unwrap();
                         i += 1;
                         base = Expression::OptionalMemberExpression(OptionalMemberExpression {
                             cv: None,
@@ -3071,12 +3099,10 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                 }
             }
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                // DOT NAME — dot property access.
+                // DOT NAME / identifier_name — dot property access.
                 i += 1;
-                let prop_name = match children.get(i) {
-                    Some(ASTNodeOrToken::Token(t)) => t.value.clone(),
-                    _ => return Err(internal(node, "optional_chain_expression: missing property name after .")),
-                };
+                let prop_name = extract_ident_name(children.get(i))
+                    .ok_or_else(|| internal(node, "optional_chain_expression: missing property name after ."))?;
                 i += 1;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
@@ -3244,12 +3270,10 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
                 });
                 i += 1;
             }
-            // `.NAME` — dot (non-computed) member access.
+            // `.NAME` / `.identifier_name` — dot (non-computed) member access.
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                let prop_name = match children.get(i + 1) {
-                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
-                    _ => return Err(internal(node, "call_expression.dot: missing property name")),
-                };
+                let prop_name = extract_ident_name(children.get(i + 1))
+                    .ok_or_else(|| internal(node, "call_expression.dot: missing property name"))?;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
                     object: Box::new(base),
@@ -3259,7 +3283,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
                     })),
                     computed: false,
                 });
-                i += 2; // consume DOT + NAME
+                i += 2; // consume DOT + NAME (or identifier_name)
             }
             // `[expr]` — computed member access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -3583,17 +3607,13 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     };
     while i < children.len() {
         match &children[i] {
-            // `.NAME` — non-computed (dot) property access.
+            // `.NAME` / `.identifier_name` — non-computed (dot) property access.
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                let prop_name = match children.get(i + 1) {
-                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
-                    _ => {
-                        return Err(internal(
-                            node,
-                            "member_expression.dot: missing property name",
-                        ))
-                    }
-                };
+                let prop_name = extract_ident_name(children.get(i + 1))
+                    .ok_or_else(|| internal(
+                        node,
+                        "member_expression.dot: missing property name",
+                    ))?;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
                     object: Box::new(base),
@@ -3603,7 +3623,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                     })),
                     computed: false,
                 });
-                i += 2; // consume DOT + NAME
+                i += 2; // consume DOT + NAME (or identifier_name)
             }
             // `[expr]` — computed property access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -4031,8 +4051,9 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 
 fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, BridgeError> {
     // property_definition = property_name COLON assignment_expression
+    //                     | method_definition
+    //                     | async_method
     //                     | NAME  (shorthand)
-    //                     | method_definition  (unsupported Phase 2)
     //
     // The ELLIPSIS spread form `...expr` is NOT handled here — `convert_object_literal`
     // detects it (`has_token`) and builds `ObjectMember::Spread` directly, since a
@@ -4056,6 +4077,29 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
             computed,
             method: false,
         });
+    }
+    if nodes.len() == 1 {
+        let child = nodes[0];
+        match child.rule_name.as_str() {
+            "method_definition" | "async_method" => {
+                let m = convert_method_definition(child, false)?;
+                let (kind, method) = match m.kind {
+                    MethodKind::Get => (PropertyKind::Get, false),
+                    MethodKind::Set => (PropertyKind::Set, false),
+                    MethodKind::Constructor | MethodKind::Method => (PropertyKind::Init, true),
+                };
+                return Ok(Property {
+                    cv: m.cv,
+                    key: m.key,
+                    value: Box::new(Expression::FunctionExpression(m.value)),
+                    kind,
+                    computed: m.computed,
+                    shorthand: false,
+                    method,
+                });
+            }
+            _ => {}
+        }
     }
     if nodes.is_empty() {
         // Shorthand NAME property: { x } == { x: x }
@@ -4117,34 +4161,47 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
         return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
     }
     for c in &node.children {
-        if let ASTNodeOrToken::Token(t) = c {
-            match t.type_ {
-                TokenType::String => {
-                    let raw = t.value.clone();
-                    let value = decode_string_escapes(&raw);
-                    return Ok(PropertyKey::StringLiteral(
-                        coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
-                    ));
-                }
-                TokenType::Number => {
-                    let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
-                    return Ok(PropertyKey::NumericLiteral(
-                        coding_adventures_javascript_ast::expression::NumericLiteral {
-                            cv: None,
-                            value: val,
-                            raw: t.value.clone(),
-                        },
-                    ));
-                }
-                // NAME / KEYWORD (reserved words ARE legal property names, e.g.
-                // `{if: 1}`) and any other terminal: a bare identifier key.
-                _ => {
+        match c {
+            ASTNodeOrToken::Node(inner)
+                if inner.rule_name == "reserved_word" || inner.rule_name == "identifier_name" =>
+            {
+                if let Some(name) = leftmost_token(inner) {
                     return Ok(PropertyKey::Identifier(Identifier {
                         cv: None,
-                        name: t.value.clone(),
+                        name: name.to_string(),
                     }));
                 }
             }
+            ASTNodeOrToken::Token(t) => {
+                match t.type_ {
+                    TokenType::String => {
+                        let raw = t.value.clone();
+                        let value = decode_string_escapes(&raw);
+                        return Ok(PropertyKey::StringLiteral(
+                            coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
+                        ));
+                    }
+                    TokenType::Number => {
+                        let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
+                        return Ok(PropertyKey::NumericLiteral(
+                            coding_adventures_javascript_ast::expression::NumericLiteral {
+                                cv: None,
+                                value: val,
+                                raw: t.value.clone(),
+                            },
+                        ));
+                    }
+                    // NAME / KEYWORD (reserved words ARE legal property names, e.g.
+                    // `{if: 1}`) and any other terminal: a bare identifier key.
+                    _ => {
+                        return Ok(PropertyKey::Identifier(Identifier {
+                            cv: None,
+                            name: t.value.clone(),
+                        }));
+                    }
+                }
+            }
+            _ => {}
         }
     }
     Err(internal(node, "property_name: no key token"))
@@ -5049,6 +5106,72 @@ mod tests {
         assert!(prop.computed);
         assert!(matches!(&prop.key, PropertyKey::Expression(e)
             if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+    }
+
+    #[test]
+    fn object_method_shorthand() {
+        let p = bridge_ok("var o = { f() { return 1; } };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) =
+            &p.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ObjectExpression(o) = vd.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected object");
+        };
+        let ObjectMember::Property(prop) = &o.properties[0] else { panic!("expected property") };
+        assert!(prop.method);
+        assert!(!prop.shorthand);
+        assert!(matches!(&prop.key, PropertyKey::Identifier(id) if id.name == "f"));
+        let Expression::FunctionExpression(fe) = prop.value.as_ref() else {
+            panic!("expected function value");
+        };
+        assert!(!fe.is_async);
+        assert!(!fe.generator);
+
+        // Also test valueOf method shorthand
+        let p2 = bridge_ok("var o = { valueOf() { return 1; } };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd2))) =
+            &p2.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ObjectExpression(o2) = vd2.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected object");
+        };
+        let ObjectMember::Property(prop2) = &o2.properties[0] else { panic!("expected property") };
+        assert!(prop2.method);
+        assert!(matches!(&prop2.key, PropertyKey::Identifier(id) if id.name == "valueOf"));
+    }
+
+    #[test]
+    fn async_function_expressions_bridge() {
+        let p = bridge_ok("var p = async function () {};");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) =
+            &p.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::FunctionExpression(fe) = vd.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected function expression");
+        };
+        assert!(fe.is_async);
+        assert!(!fe.generator);
+        assert!(fe.id.is_none());
+
+        let p2 = bridge_ok("var o = 1 ? 2 : async function () { return 1; };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd2))) =
+            &p2.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ConditionalExpression(ce) = vd2.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected conditional");
+        };
+        let Expression::FunctionExpression(fe2) = ce.alternate.as_ref() else {
+            panic!("expected function expression in alternate");
+        };
+        assert!(fe2.is_async);
     }
 
     #[test]
@@ -8157,5 +8280,32 @@ mod tests {
             panic!("expected static block, got {:?}", c.body[0]);
         };
         assert_eq!(kinds(&b.body), vec!["fn", "class"]);
+    }
+
+    #[test]
+    fn adjacent_class_members_without_semicolons() {
+        // #17852: adjacent class members with no separator on one line.
+        let p = bridge_ok("class P { m() { a(); } n() { b(); } }");
+        let ProgramItem::Declaration(Declaration::ClassDeclaration(c)) = &p.body[0] else {
+            panic!("expected class declaration, got {:?}", p.body[0]);
+        };
+        assert_eq!(c.body.len(), 2);
+    }
+
+    #[test]
+    fn reserved_words_as_property_names_and_dot_access() {
+        // #17852: reserved words after . and as object property names.
+        let p = bridge_ok("a.throw(1); o.return(); x = { if: 1, default: 2 };");
+        assert_eq!(p.body.len(), 3);
+    }
+
+    #[test]
+    fn reserved_words_as_class_members() {
+        // #17852: reserved words as class methods and fields.
+        let p = bridge_ok("class C { throw() {} return() {} if = 1; }");
+        let ProgramItem::Declaration(Declaration::ClassDeclaration(c)) = &p.body[0] else {
+            panic!("expected class declaration, got {:?}", p.body[0]);
+        };
+        assert_eq!(c.body.len(), 3);
     }
 }

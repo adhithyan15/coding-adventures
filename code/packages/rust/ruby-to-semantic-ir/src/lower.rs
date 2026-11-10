@@ -9787,6 +9787,8 @@ impl Lowerer {
         let saved_visible = self.enclosing_visible.clone();
         self.enclosing_visible.extend(saved_locals.iter().cloned());
         self.enclosing_visible.extend(saved_params.iter().cloned());
+        let enclosing_locals = saved_locals.clone();
+        let enclosing_params = saved_params.clone();
         let saved_param_aliases = self.param_aliases.clone();
         for p in &params {
             self.param_aliases.remove(&p.name);
@@ -9873,7 +9875,7 @@ impl Lowerer {
         // `sequentialize_let_bindings`).
         sequentialize_let_bindings(&mut stmts_out);
 
-        let body = Block {
+        let mut body = Block {
             stmts: stmts_out,
             value,
             span: self.span_of(inner),
@@ -9882,6 +9884,7 @@ impl Lowerer {
         let mut captures: Vec<Capture> = Vec::new();
         let mut capture_values: Vec<CaptureValue> = Vec::new();
         let cap_span = self.span_of(block_node);
+        let mut captured_names: HashSet<String> = HashSet::new();
         for (name, cv) in &saved_cell_vars {
             if !block_shadowed.contains(name)
                 && Self::body_references_capture(&body, &cv.cell_name)
@@ -9899,9 +9902,55 @@ impl Lowerer {
                         span: cap_span.clone(),
                     },
                 });
+                captured_names.insert(name.clone());
+                captured_names.insert(cv.cell_name.clone());
                 self.features_used.insert(Feature::Closures);
                 self.features_used.insert(Feature::DynamicTyping);
             }
+        }
+
+        // M4 / #18798 Item 3 — capture free reads of the immediate enclosing scope's
+        // locals/params. Compute the lambda's own bound names (params,
+        // and anything assigned inside the body — those shadow or rebind
+        // locally and are NOT captured), then rewrite every free read to
+        // `Scope::Capture` and thread the enclosing value in.
+        let mut lambda_bound: HashSet<String> = HashSet::new();
+        for p in &params {
+            lambda_bound.insert(p.name.clone());
+        }
+        Self::collect_bound_names_in_block(&body, &mut lambda_bound);
+
+        let is_free = |name: &str| {
+            !lambda_bound.contains(name)
+                && !captured_names.contains(name)
+                && (enclosing_params.contains(name) || enclosing_locals.contains(name))
+        };
+        let mut free: Vec<String> = Vec::new();
+        Self::recapture_reads_in_block(&mut body, &is_free, &mut free);
+        if !free.is_empty() {
+            self.features_used.insert(Feature::Closures);
+            self.features_used.insert(Feature::DynamicTyping);
+        }
+        for name in free {
+            // The enclosing value-ref scope: an enclosing *param* reads back
+            // as `Param`, otherwise an enclosing *local* reads as `Local`.
+            let outer_scope = if enclosing_params.contains(&name) {
+                Scope::Param
+            } else {
+                Scope::Local
+            };
+            captures.push(Capture {
+                name: name.clone(),
+                sir_type: None,
+            });
+            capture_values.push(CaptureValue {
+                name: name.clone(),
+                value: Expr::VarRef {
+                    name,
+                    scope: outer_scope,
+                    span: cap_span.clone(),
+                },
+            });
         }
 
         // Mint a synthetic function name (shares the same counter as
@@ -12480,6 +12529,30 @@ impl Lowerer {
             .collect::<Result<Vec<_>, _>>()?;
 
         let span = self.span_of(dot_node);
+
+        // #18798 Item 3 — `recv.call(args)` on a callable/closure value.
+        // In Ruby, procs and lambdas are invoked via `.call(...)`. Lowering
+        // to `Expr::IndirectCall` bypasses OOP dynamic method dispatch and
+        // invokes the closure directly across all backends.
+        if method_name == "call" {
+            let mut final_args = args;
+            if let Some(block_node) = self.find_node_child(dot_node, "block") {
+                let (fn_name, capture_values) = self.hoist_block_to_function(block_node)?;
+                let bspan = self.span_of(block_node);
+                final_args.push(Expr::MakeClosure {
+                    fn_name,
+                    captures: capture_values,
+                    span: bspan,
+                });
+            }
+            self.features_used.insert(Feature::Closures);
+            return Ok(Expr::IndirectCall {
+                target: Box::new(receiver),
+                args: final_args,
+                effects: EffectSet::PURE,
+                span,
+            });
+        }
 
         // O2 (OOP production) — `Foo.new(args)` on a *constant* receiver is
         // object construction, not an ordinary method call.  It lowers to the

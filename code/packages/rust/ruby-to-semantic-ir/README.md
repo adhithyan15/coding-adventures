@@ -164,10 +164,6 @@ function).
   (a method that ends in one returns `nil`, not the iterable), locals a
   `while` body introduces staying visible after the loop, and a `rescue =>
   e` binding staying visible after its clause (#18798).
-- A block that assigns an outer local (`t = 0; xs.each { |x| t = t + x }`):
-  the block's `t` is a new block local, so the read of `t` is refused.
-- A lambda body that reads an outer local (lambdas capture nothing yet), and
-  calling a lambda (`g.call(1)` is a built-in method call no backend runs).
 - Implicit return of a trailing **`begin`/`rescue`** (a trailing `if`/`unless`
   and `case` — both `case/when` and `case/in` — now promote to the block value),
   and of a block/lambda's tail conditional.

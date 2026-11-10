@@ -4,6 +4,23 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - parse adjacent class members and reserved-word property names (#17852)
+
+- In `SIMPLE` and `ADVANCED` compilation modes, class definitions with adjacent methods or constructor without semicolons (e.g. `class P { m() { a(); } n() { b(); } }`) previously failed to parse because the ECMAScript grammar required semicolons after method definitions.
+- Property access with reserved keywords (e.g. `a.throw(1); o.return(); x = { if: 1, default: 2 };` and optional chain `a?.throw()`) previously failed with grammar syntax errors because property access rules only matched bare identifier tokens instead of identifier names.
+- Removed the `#17840` class member semicolon workaround from `whitespace_only.rs` now that the grammar natively supports adjacent class members.
+- Advanced ladder rung `ladder_t6_class_simple` to 100% byte-for-byte parity with upstream Closure Compiler, and advanced `ladder_t6_class_advanced` from parse error exit 1 to clean compilation exit 0.
+- Added regression test suite in `tests/regression_class_members_reserved_props_17852.rs`.
+
+
+### Fixed - parse object method shorthand and async function expressions (#17941)
+
+- Object method shorthand declarations (e.g. `var o = { f() { return 1; } };` and `{ valueOf() { return 1; } }`) previously failed to parse in all compilation levels (`SIMPLE`, `ADVANCED`, `WHITESPACE_ONLY`) with `Expected COLON or COMMA or RBRACE, got "("`.
+- Async function expressions (e.g. `var p = async function () {};` and `var o = 1 ? 2 : async function () { return 1; };`) previously failed to parse with `Expected ARROW or NAME or LPAREN ..., got "function"` because `async` was eagerly tokenized/parsed as an identifier before considering async function expressions.
+- Fixed grammar alternative ordering in `es2015.grammar` through `es2025.grammar`, updated AST bridging to preserve `method` and `is_async` flags, and updated the code emitter to output concise method syntax and getter/setter syntax.
+- Advanced ladder rungs `ladder_t7_getter_setter_advanced` and `ladder_t7_getter_setter_simple` from exit 1 (parser failure) to exit 0 (clean compilation).
+- Added integration test suite in `tests/regression_object_methods_async_17941.rs`.
+
 ### Fixed - support template literals with substitutions at SIMPLE and ADVANCED (#17854)
 
 - In `SIMPLE` and `ADVANCED` compilation modes, template literals with substitutions (e.g. `` `hello ${name}!` ``) previously failed to parse with syntax error or unsupported syntax because the underlying grammar in ES2016-ES2025 omitted the trailing substitution before `TEMPLATE_TAIL` and the typed-AST bridge declined substitution templates.

@@ -134,8 +134,8 @@ class_heritage = "extends" left_hand_side_expression ;
 
 class_body = LBRACE { class_element } RBRACE ;
 
-class_element = [ "static" ] method_definition SEMICOLON
-              | [ "static" ] async_method SEMICOLON
+class_element = [ "static" ] method_definition [ SEMICOLON ]
+              | [ "static" ] async_method [ SEMICOLON ]
               | SEMICOLON ;
 
 method_definition = property_name LPAREN [ formal_parameters ] RPAREN
@@ -398,16 +398,16 @@ postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
 left_hand_side_expression = call_expression | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  { arguments | DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | LBRACKET expression RBRACKET | template_literal }
+                    { DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT NAME | DOT reserved_word
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -431,6 +431,8 @@ concise_body = assignment_expression
 # --- Primary expressions ---
 
 primary_expression = "this"
+                   | async_function_expression
+                   | async_generator_expression
                    | NAME
                    | NUMBER
                    | STRING
@@ -442,7 +444,6 @@ primary_expression = "this"
                    | object_literal
                    | function_expression
                    | generator_expression
-                   | async_function_expression
                    | class_expression
                    | template_literal
                    | LPAREN expression RPAREN ;
@@ -464,14 +465,55 @@ element_list = [ spread_element | assignment_expression ]
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | NAME
                     | method_definition
                     | async_method
+                    | NAME
                     | object_spread_property ;
 
 object_spread_property = ELLIPSIS assignment_expression ;
 
+reserved_word = "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
 property_name = NAME
+              | reserved_word
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;
