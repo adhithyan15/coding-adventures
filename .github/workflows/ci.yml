@@ -4322,6 +4322,24 @@ jobs:
           ghc-version: '9.4'
           cabal-version: '3.10'
 
+      # GHC links with `-fuse-ld=gold`. Ubuntu 22.04/24.04 ship ld.gold inside
+      # `binutils`, but on 26.04 (what `ubuntu-latest` now resolves to) gold was
+      # split out into its own `binutils-gold` package, so a package that really
+      # links -- haskell/conduit builds `network` through hsc2hs -- failed with
+      # "collect2: fatal error: cannot find 'ld'" in every full build. Most
+      # Haskell packages here are tested with runghc and never link, which is why
+      # only conduit showed it. Install gold only when it is absent, so older
+      # images are untouched.
+      - name: Install the gold linker for GHC (Linux)
+        if: needs.detect.outputs.needs_haskell == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        shell: bash
+        run: |
+          if ! command -v ld.gold >/dev/null 2>&1; then
+            bash code/scripts/ci/apt-install.sh binutils-gold
+          fi
+          command -v ld.gold
+
       # Cabal 3.10 can report a successful `cabal update` while deferring the
       # package-index cache materialization until the first solver query.  On
       # fresh hosted runners that made the first Haskell BUILD incorrectly
