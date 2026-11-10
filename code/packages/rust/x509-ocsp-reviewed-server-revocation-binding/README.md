@@ -139,13 +139,29 @@ name those exact objects and time. Target, issuer, then time are checked in
 stable order. Success retains both complete non-copyable branches, while
 failures reuse the existing payload-free intermediate-binding categories.
 This does not establish revocation policy for either added proof's own
-responder, feed this alternative into the added-status responder path
-projection, or provide complete revocation, generalized path validation, TLS,
+responder or provide complete revocation, generalized path validation, TLS,
 HTTP, OAuth, or network readiness.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_path`
+then projects that authenticated-original-responder composition's exact added
+status responder-to-reviewed-root path. The infallible wrapper retains both
+complete authenticated revocation branches and accepts no substitute
+certificate, path, root, algorithm, key, signature, status, or time. The
+defaulted source parameter preserves the existing no-check projection's public
+type shape.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_anchor_dns_policy`
+derives the added proof's authenticated responder and the original proof's
+selected reviewed-root constraints through private repository-owned evidence.
+It applies the same bounded permitted-DNS policy as the no-check-source path.
+The resulting proof is consumed unchanged by the existing added-responder
+no-check and separately authenticated revocation functions. This resolves
+policy routing for the added responder only; it does not establish policy for
+either additional proof's own responder or complete revocation.
+
 `reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path`
-then consumes that complete composition and nominally reifies the added status
-proof's delegated responder-to-reviewed-root path. The retained proof already
+then consumes the complete no-check composition and nominally reifies the
+added status proof's delegated responder-to-reviewed-root path. The retained proof already
 contains the exact responder's certificate-wide role and critical-extension
 policy, algorithm/key policy, OCSP-signing purpose, observation-time validity,
 routed repository-owned RSA response and certificate-signature verification,
@@ -251,18 +267,17 @@ revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
 time. Both compositions derive those same inputs through the consumed
-responder-policy proof and retain the added proof. The no-check follow-up
-projection reifies that proof's exact delegated responder-to-reviewed-root
-path; subsequent policies apply supported reviewed-root DNS constraints and
-either the no-check or separately authenticated revocation branch to that
-exact added responder.
+responder-policy proof and retain the added proof. Both follow-up projections
+reify the added proof's exact delegated responder-to-reviewed-root path;
+subsequent policies apply supported reviewed-root DNS constraints and either
+the no-check or separately authenticated revocation branch to that exact added
+responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, project the added
-intermediate-status responder path from the original authenticated responder-
-revocation branch, implement complete revocation policy, validate either
-additional revocation proof's own responder, interpret unsupported OCSP extensions,
+intermediate constraints to the responder certificate, implement complete
+revocation policy, validate either additional revocation proof's own responder,
+interpret unsupported OCSP extensions,
 acquire or cache OCSP data, read a clock, implement TLS or HTTP, authorize
 OAuth transport, open a network connection, or access a credential. The
 reviewed Mozilla root snapshot excludes OS, enterprise, user-installed, and
