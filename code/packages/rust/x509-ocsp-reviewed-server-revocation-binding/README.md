@@ -118,6 +118,19 @@ no-check or separately authenticated revocation policy for that added
 responder, complete revocation, generalized path validation, TLS, HTTP, OAuth,
 or network readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_anchor_dns_policy`
+then consumes that exact added responder path and derives both inputs through
+private repository-owned evidence: the separately authenticated proof's fully
+routed responder and the original proof's exact selected reviewed-root
+constraints. Entries without out-of-band constraints succeed without reading
+responder Subject Alternative Name. Constrained entries apply the supported
+permitted-DNS subset under separate caller-owned parse limits and retain only
+count evidence. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This stops before
+intermediate name constraints, no-check or separately authenticated revocation
+policy for the added responder, complete revocation, generalized path
+validation, TLS, HTTP, OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,

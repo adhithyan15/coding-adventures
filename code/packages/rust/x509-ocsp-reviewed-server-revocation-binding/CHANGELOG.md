@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the separately authenticated original responder-revocation
+  proof's own exact responder.
+- Derive both policy inputs through the consumed non-copyable path, retain only
+  count evidence, and stop before intermediate name constraints, no-check,
+  recursive revocation, complete revocation, TLS, HTTP, or OAuth readiness.
 - Reify the separately authenticated original responder-revocation proof's own
   exact delegated responder-to-intermediate-to-reviewed-root path while
   retaining the complete non-copyable branch.
