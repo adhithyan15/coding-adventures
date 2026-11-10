@@ -247,7 +247,7 @@ fn the_path_rules_as_a_predicate() {
     for ok in ["a", "a.tfv", "dir/sub/file-1_2.tfv", "A/B", "sha256-cavs-v1/short.tfv", "a..b"] {
         assert!(valid_table_path(ok), "{ok}");
     }
-    for bad in ["", "/", "/a", "a/", "a//b", ".", "..", "a/./b", "a/../b", "a\\b", "a b", "a\0b", "é"] {
+    for bad in ["", "/", "/a", "a/", "a//b", ".", "..", "a/./b", "a/../b", "a/.../b", "...", "a\\b", "a b", "a\0b", "é"] {
         assert!(!valid_table_path(bad), "{bad:?}");
     }
     assert!(valid_table_path(&"a".repeat(MAX_PATH_BYTES)));

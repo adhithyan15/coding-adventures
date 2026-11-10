@@ -224,7 +224,8 @@ pub fn valid_table_path(path: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'_' | b'.' | b'/' | b'-'))
         && path
             .split('/')
-            .all(|seg| !seg.is_empty() && seg != "." && seg != "..")
+            // No empty segment and no all-dot segment (`.`, `..`, `...`).
+            .all(|seg| !seg.is_empty() && !seg.bytes().all(|b| b == b'.'))
 }
 
 /// One `name: type` field of a record or constructor (VER04j section 4.2).

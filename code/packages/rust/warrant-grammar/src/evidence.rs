@@ -2577,6 +2577,22 @@ pub fn load_document_tables(
 ) -> Result<Vec<LoadedTable>, CodegenError> {
     let env = TyEnv::new(file);
     let mut out: Vec<LoadedTable> = Vec::new();
+    let table_count = file
+        .declarations
+        .iter()
+        .filter(|d| matches!(d, Declaration::Vectors(_)))
+        .count();
+    if table_count > vectors::MAX_DOCUMENT_TABLES {
+        return Err(CodegenError {
+            code: DiagnosticCode::W0602,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "{table_count} tables exceed the cap of {} per document",
+                vectors::MAX_DOCUMENT_TABLES
+            )),
+            span: file.span,
+        });
+    }
+    let mut held_bytes: u64 = 0;
     // The row budget of the whole document is checked before any file is
     // touched: refusing 250,001 declared rows must not first read 100,000-row
     // files.  (Saturating, so a hostile `rows` cannot wrap the sum.)
@@ -2604,7 +2620,19 @@ pub fn load_document_tables(
             .zip(&v.columns)
             .map(|(t, c)| (c.name.to_string(), shape_of_ty(t)))
             .collect();
-        out.push(vectors::load_table(v, &shapes, root)?);
+        let table = vectors::load_table(v, &shapes, root)?;
+        held_bytes = held_bytes.saturating_add(table.bytes.len() as u64);
+        if held_bytes > vectors::MAX_DOCUMENT_BYTES {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0602,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "the tables of this document hold more than {} bytes together",
+                    vectors::MAX_DOCUMENT_BYTES
+                )),
+                span: v.span,
+            });
+        }
+        out.push(table);
     }
     Ok(out)
 }

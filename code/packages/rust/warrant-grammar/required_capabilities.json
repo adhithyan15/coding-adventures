@@ -6,8 +6,14 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "*",
-      "justification": "WX-E pinned vector tables: src/vectors.rs reads one fixture below the fixtures root (code/specs/fixtures) per `vectors` declaration, refusing symlinks and anything over 16 MiB and comparing its SHA-256 with the document's pin before parsing it; codegen::verify_regeneration reads the checked-in file a regeneration check compares against."
+      "target": "code/specs/fixtures/**",
+      "justification": "WX-E pinned vector tables: src/vectors.rs reads one fixture below the fixtures root (code/specs/fixtures) per `vectors` declaration, refusing symlinks and anything over 16 MiB and comparing its SHA-256 with the document's pin before parsing it."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/packages/rust/*/tests/generated/**",
+      "justification": "codegen::verify_regeneration and the gen_evidence drift check read the checked-in generated harness or table copy that a regeneration is compared against."
     }
   ],
   "justification": "Grammar construction, bounded source admission, layout, parser, checker, evaluator and evidence generator are pure in-memory computation. The only OS access is reading files: the pinned vector fixtures of VER04j WX-E (size-capped, symlink-safe, digest-checked, never fetched from the network) and the regeneration target of a drift check. Nothing is written, spawned or connected."

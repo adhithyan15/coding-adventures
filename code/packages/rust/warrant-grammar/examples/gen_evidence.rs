@@ -24,7 +24,7 @@ use coding_adventures_warrant_grammar::evidence::{
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
-use coding_adventures_warrant_grammar::vectors::{read_fixture, FIXTURES_ROOT, MAX_TABLE_FILE_BYTES};
+use coding_adventures_warrant_grammar::vectors::{ensure_no_symlinks, read_fixture, FIXTURES_ROOT, MAX_TABLE_FILE_BYTES};
 
 /// Every file this driver reads is read through the loader's capped, symlink-safe
 /// reader: at most 64 MiB (a generated harness is a few MiB), no symlinked
@@ -86,12 +86,8 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
             }
         } else {
             let dir = copy.parent().ok_or("table copy has no directory")?;
-            // Never write through a linked directory.
-            if let Ok(md) = fs::symlink_metadata(dir) {
-                if md.file_type().is_symlink() {
-                    return Err(format!("{} is a link", dir.display()).into());
-                }
-            }
+            // Never write through a linked file or directory, at any level.
+            ensure_no_symlinks(root, &format!("code/packages/rust/{package}/{rel}"))?;
             fs::create_dir_all(dir)?;
             fs::write(&copy, bytes)?;
             println!("wrote {}", copy.display());
@@ -108,6 +104,7 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
         }
         println!("Warrant evidence harness for {package} is current");
     } else {
+        ensure_no_symlinks(root, &b.output)?;
         fs::write(&target, text.as_bytes())?;
         println!("wrote {}", target.display());
     }

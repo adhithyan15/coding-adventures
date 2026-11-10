@@ -319,12 +319,12 @@ fn values_nested_beyond_the_limit_are_refused_by_the_checker_itself() {
 
 #[test]
 fn a_map_with_more_than_one_entry_is_w0709_without_the_quadratic_key_check() {
-    // 30,000 two-entry maps on one line would make the TFV parser's pairwise key
+    // 10,000 two-entry maps on one line would make the TFV parser's pairwise key
     // check quadratic; they are refused before it runs.
     let hostile = format!(
         "tfv 1\nr1 R2 Kmsg X Kmd L{n} {}\n",
-        "M2 S61 T S62 T ".repeat(30_000),
-        n = 30_000
+        "M2 S61 T S62 T ".repeat(10_000),
+        n = 10_000
     );
     let started = std::time::Instant::now();
     assert_eq!(code(load_bytes(hostile.as_bytes(), 1)), DiagnosticCode::W0709);
@@ -605,4 +605,81 @@ fn composite_columns_generate_with_the_composite_prelude() {
     assert!(out.contains("Ty::Data(\"R\""), "{out}");
     assert!(out.contains("Ty::Res("));
     assert!(out.contains("(Ty::Res(t, cases), Value::Map(pairs))"), "the composite decoder is emitted");
+}
+
+// ---------------------------------------------------------------------------
+// Review fixes: record ids, FIFOs, memory caps, write-side symlink guard
+// ---------------------------------------------------------------------------
+
+#[test]
+fn record_ids_that_start_with_m_are_not_map_headers() {
+    let root = Root::new();
+    let text = "tfv 1\nMax-case R2 Kmsg X Kmd X00000000\nM5 R2 Kmsg X01 Kmd X00000000\nM R2 Kmsg X02 Kmd X00000000\n";
+    root.write("t.tfv", text.as_bytes());
+    assert_eq!(load(&root, &doc("t.tfv", &sha256_hex(text.as_bytes()), 3, COLS, HOLDS)).unwrap(), 3);
+    // A real big map after such an id is still refused.
+    let hostile = "tfv 1\nM5 R2 Kmsg X Kmd M2 S61 T S62 T\n";
+    assert_eq!(code(load_bytes(hostile.as_bytes(), 1)), DiagnosticCode::W0709);
+}
+
+#[test]
+fn a_record_with_too_many_tokens_is_refused_before_parsing() {
+    use coding_adventures_warrant_grammar::vectors::MAX_ROW_TOKENS;
+    let line = format!("r1 R1 Kmsg L{} {}", MAX_ROW_TOKENS, "I1 ".repeat(MAX_ROW_TOKENS));
+    let text = format!("tfv 1\n{}\n", line.trim_end());
+    assert_eq!(code(load_bytes(text.as_bytes(), 1)), DiagnosticCode::W0602);
+}
+
+#[test]
+fn table_count_and_aggregate_bytes_are_capped() {
+    use coding_adventures_warrant_grammar::vectors::MAX_DOCUMENT_TABLES;
+    let root = Root::new();
+    let table = |n: usize, file: &str, pin: &str| {
+        format!(
+            "  vectors t{n}:\n    source \"{file}\"\n    sha256 b\"{pin}\"\n    rows 1\n    column msg: Bytes\n    holds f(msg) == f(msg)\n"
+        )
+    };
+    let head = "warrant t v1\n  op f(m: Bytes) -> Bytes<4>\n  labels f:\n    m public\n";
+    let many: String = (0..=MAX_DOCUMENT_TABLES).map(|i| table(i, "x.tfv", &"0".repeat(64))).collect();
+    assert_eq!(load(&root, &format!("{head}{many}")).unwrap_err().code, DiagnosticCode::W0602);
+    // Five tables over one ~14 MiB file: 70 MiB held together is over 64 MiB.
+    let big = format!("tfv 1\nr1 R1 Kmsg X{}\n", "ab".repeat(7 * 1024 * 1024));
+    root.write("big.tfv", big.as_bytes());
+    let pin = sha256_hex(big.as_bytes());
+    let five: String = (0..5).map(|i| table(i, "big.tfv", &pin)).collect();
+    let e = load(&root, &format!("{head}{five}")).unwrap_err();
+    assert_eq!(e.code, DiagnosticCode::W0602);
+    assert!(format!("{e}").contains("together"), "{e}");
+    let four: String = (0..4).map(|i| table(i, "big.tfv", &pin)).collect();
+    assert_eq!(load(&root, &format!("{head}{four}")).unwrap(), 4);
+}
+
+#[cfg(unix)]
+#[test]
+fn a_fifo_is_refused_without_blocking() {
+    let root = Root::new();
+    let fifo = root.path().join("pipe.tfv");
+    let made = std::process::Command::new("mkfifo").arg(&fifo).status().expect("mkfifo");
+    assert!(made.success());
+    let started = std::time::Instant::now();
+    let e = read_fixture(root.path(), "pipe.tfv", 1 << 20).unwrap_err();
+    assert!(e.contains("not a regular file"), "{e}");
+    assert!(started.elapsed() < std::time::Duration::from_secs(5));
+}
+
+#[cfg(unix)]
+#[test]
+fn the_write_side_guard_refuses_symlinks_at_every_level() {
+    use coding_adventures_warrant_grammar::vectors::ensure_no_symlinks;
+    use std::os::unix::fs::symlink;
+    let root = Root::new();
+    let other = Root::new();
+    fs::create_dir_all(root.path().join("a/b")).unwrap();
+    assert!(ensure_no_symlinks(root.path(), "a/b/new.tfv").is_ok());
+    assert!(ensure_no_symlinks(root.path(), "not/yet/there.tfv").is_ok());
+    symlink(other.path(), root.path().join("dir-link")).unwrap();
+    symlink(other.path().join("x"), root.path().join("a/file-link")).unwrap();
+    assert!(ensure_no_symlinks(root.path(), "dir-link/x.tfv").is_err());
+    assert!(ensure_no_symlinks(root.path(), "a/file-link").is_err());
+    assert!(ensure_no_symlinks(root.path(), "../escape").is_err());
 }

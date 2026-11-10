@@ -58,7 +58,7 @@
 //! entries, so a line of hostile map headers would otherwise be a denial of
 //! service that the pin cannot prevent (the pin only says *which* file).
 
-use std::fs::{self, File};
+use std::fs;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
@@ -75,6 +75,17 @@ pub const FIXTURES_ROOT: &str = "code/specs/fixtures";
 
 /// Largest fixture, in bytes (VER04j section 5.2).
 pub const MAX_TABLE_FILE_BYTES: u64 = 16 * 1024 * 1024;
+
+/// Most tables one document may load (each keeps its bytes and rows alive).
+pub const MAX_DOCUMENT_TABLES: usize = 16;
+
+/// Most fixture bytes all the tables of one document may hold together.
+pub const MAX_DOCUMENT_BYTES: u64 = 64 * 1024 * 1024;
+
+/// Most space-separated tokens one record line may have: a line of N tokens
+/// expands to hundreds of bytes per token once parsed, so an 8M-token line
+/// would be hundreds of MB.
+pub const MAX_ROW_TOKENS: usize = 65_536;
 
 /// Deepest nesting of containers a row may have (TFV's own limit).
 pub const MAX_NESTING: usize = tfv::MAX_DEPTH;
@@ -195,7 +206,21 @@ pub fn read_fixture(root: &Path, rel: &str, max_bytes: u64) -> Result<Vec<u8>, S
         return Err(format!("fixture {rel:?} is larger than {max_bytes} bytes"));
     }
     // Step 2: open it, and check that the handle is the file we inspected.
-    let file = File::open(&path).map_err(|_| format!("fixture {rel:?} cannot be opened"))?;
+    // Non-blocking: a FIFO swapped in after the lstat must not block the
+    // open; `fstat` below then refuses it as not a regular file.
+    let mut options = fs::OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        #[cfg(target_os = "linux")]
+        options.custom_flags(0o4000); // O_NONBLOCK
+        #[cfg(any(target_os = "macos", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))]
+        options.custom_flags(0x4); // O_NONBLOCK
+    }
+    let file = options
+        .open(&path)
+        .map_err(|_| format!("fixture {rel:?} cannot be opened"))?;
     let md = file
         .metadata()
         .map_err(|_| format!("fixture {rel:?} cannot be inspected"))?;
@@ -242,14 +267,42 @@ fn record_lines(text: &str) -> u64 {
 }
 
 /// Does any record line carry a map header with more than one entry (`M2`, `M10`,
-/// ...)?  A token that starts with `M` is always a map header: every other
-/// token starts with a different tag, and text and bytes are hex.
+/// ...)?  The first token of a record line is its id (which may start with `M`);
+/// every later token that is `M` followed only by digits is a map header, since
+/// every other value token starts with a different tag.
 fn has_big_map(text: &str) -> bool {
     text.split('\n')
         .filter(|l| !l.starts_with('#'))
-        .flat_map(|l| l.split(' '))
+        .flat_map(|l| l.split(' ').skip(1))
         .filter_map(|t| t.strip_prefix('M'))
-        .any(|n| n != "0" && n != "1")
+        .any(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()) && n != "0" && n != "1")
+}
+
+/// The most tokens on any record line.
+fn max_line_tokens(text: &str) -> usize {
+    text.split('\n')
+        .filter(|l| !l.starts_with('#'))
+        .map(|l| l.bytes().filter(|b| *b == b' ').count() + 1)
+        .max()
+        .unwrap_or(0)
+}
+
+/// Refuse `rel` (below `root`) if it, or any directory above it that exists,
+/// is a symlink: used before the generator writes a file.
+pub fn ensure_no_symlinks(root: &Path, rel: &str) -> Result<(), String> {
+    if !valid_table_path(rel) {
+        return Err(format!("path {rel:?} breaks the path rules"));
+    }
+    let mut path = root.to_path_buf();
+    for seg in rel.split('/') {
+        path.push(seg);
+        if let Ok(md) = fs::symlink_metadata(&path) {
+            if md.file_type().is_symlink() {
+                return Err(format!("{rel:?} passes through a symlink"));
+            }
+        }
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -402,6 +455,13 @@ pub fn load_table(
     if lines != decl.rows {
         return Err(integrity(
             format!("table {}: the file has {lines} records, the document pins {}", decl.name, decl.rows),
+            span,
+        ));
+    }
+    if max_line_tokens(text) > MAX_ROW_TOKENS {
+        return Err(err(
+            DiagnosticCode::W0602,
+            format!("table {}: a record has more than {MAX_ROW_TOKENS} tokens", decl.name),
             span,
         ));
     }

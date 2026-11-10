@@ -1555,3 +1555,23 @@ The numbering continues from 14.1.
     made-up messages, `Result<U8, E>` answers) against an in-test subject; the
     differential test recomputes every digest with Python `hashlib` over the same
     rows and compares it with the pinned data and with the subject.
+
+50. **Observer scope (WX-H).** The window accounts only allocations made through the
+    global allocator *on the calling (worker) thread*: memory a subject allocates on
+    threads it spawns, or maps directly (`mmap`, a foreign allocator), is not charged
+    and not contained.  The cap is a guard against the common bomb, a `Vec` sized
+    from a header, not a sandbox.
+51. **What kills `truncate-silently`.** The synthesized `output-bound` claim cannot:
+    a truncated `Ok` is within the bound.  It is caught by a *written* claim or
+    example that expects `Err(E.OUTPUT_LIMIT)` (the pilot's
+    `one_byte_over_the_limit` and `empty_input_is_corrupt_under_any_limit`).
+52. **Memory caps of the loader (WX-E).** A document may declare at most 16 tables
+    (`MAX_DOCUMENT_TABLES`), its tables may hold at most 64 MiB together
+    (`MAX_DOCUMENT_BYTES`) and a record line at most 65,536 tokens
+    (`MAX_ROW_TOKENS`), each W0602; the first token of a record line (its id) is not
+    scanned as a map header; the fixture is opened non-blocking and must be a regular
+    file by `fstat` (a FIFO swapped in after the `lstat` cannot hang the generator);
+    all-dot path segments (`...`) are refused like `..`; the generator refuses to
+    write a table copy or harness through a symlink at any level; the capability
+    manifest narrows `fs:read` to `code/specs/fixtures/**` and
+    `code/packages/rust/*/tests/generated/**`.
