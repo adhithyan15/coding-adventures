@@ -1826,10 +1826,14 @@ transitively through every target crate. Closure expansion is memoized per
 crate, rejects a normal/build cycle atomically, and allows at most 16 crate
 records on one root-to-leaf expansion path. Shared diamonds reuse the same
 complete memoized closure. The output is the sorted unique
-`[trigger_package, dependent_package]` relation, with self-relations removed.
+`[trigger_package, dependent_package]` relation, with self-relations removed
+and an inclusive 16,384-relation ceiling. The implementation must intern
+package identities in closure state and bound retained membership independently
+of package-name length; a path-by-package ownership cross product is forbidden.
 
 Duplicate package names, package roots, crate directories, or exemptions;
-missing or unowned crates; unsafe identities; ceiling excess; redirects;
+missing or unowned crates; unsafe identities; input or relation ceiling excess;
+redirects;
 cycles; and excessive depth each return one stable error code and no partial
 relation. This pure step MUST NOT read a manifest, Cargo configuration, or
 exemption ledger; resolve a host path, symlink, junction, or reparse point;

@@ -1,6 +1,7 @@
 use build_tool::cargo_trigger_snapshot::{
     resolve_cargo_trigger_snapshot, CargoCrateSnapshot, CargoTriggerPackageSnapshot,
     CargoTriggerRelation, CargoTriggerSnapshotError, CargoTriggerSnapshotInput,
+    MAX_CARGO_TRIGGER_RELATIONS,
 };
 
 fn package(name: &str, root: &str, trigger_paths: &[&str]) -> CargoTriggerPackageSnapshot {
@@ -249,6 +250,15 @@ fn rejects_unsafe_and_duplicate_snapshot_identities() {
         Err(CargoTriggerSnapshotError::UnsafePath)
     );
 
+    let reduced_drive = input(
+        vec![package("app", "code/app", &["../../C:/outside"])],
+        Vec::new(),
+    );
+    assert_eq!(
+        resolve_cargo_trigger_snapshot(&reduced_drive),
+        Err(CargoTriggerSnapshotError::UnsafePath)
+    );
+
     let duplicate_name = input(
         vec![
             package("app", "code/app", &[]),
@@ -272,4 +282,83 @@ fn rejects_unsafe_and_duplicate_snapshot_identities() {
         resolve_cargo_trigger_snapshot(&duplicate_crate),
         Err(CargoTriggerSnapshotError::DuplicateCratePath)
     );
+}
+
+#[test]
+fn invalid_error_precedence_does_not_depend_on_input_order() {
+    let invalid_name = package("", "code/valid", &[]);
+    let unsafe_root = package("valid", "code//invalid", &[]);
+    let first = input(vec![invalid_name.clone(), unsafe_root.clone()], Vec::new());
+    let reversed = input(vec![unsafe_root, invalid_name], Vec::new());
+    let expected = Err(CargoTriggerSnapshotError::InvalidPackageName);
+    assert_eq!(resolve_cargo_trigger_snapshot(&first), expected);
+    assert_eq!(resolve_cargo_trigger_snapshot(&reversed), expected);
+}
+
+fn amplified_relation_snapshot(dependent_count: usize) -> CargoTriggerSnapshotInput {
+    let trigger_count = 128;
+    let mut packages = Vec::new();
+    let mut crates = vec![CargoCrateSnapshot {
+        path: "code/hub".to_string(),
+        link_paths: (0..trigger_count)
+            .map(|index| format!("../trigger-{index:03}"))
+            .collect(),
+    }];
+    for index in 0..trigger_count {
+        let name = format!("trigger-{index:03}");
+        let root = format!("code/{name}");
+        packages.push(package(&name, &root, &[]));
+        crates.push(CargoCrateSnapshot {
+            path: root,
+            link_paths: Vec::new(),
+        });
+    }
+    for index in 0..dependent_count {
+        packages.push(package(
+            &format!("dependent-{index:03}"),
+            &format!("code/dependent-{index:03}"),
+            &["../hub"],
+        ));
+    }
+    CargoTriggerSnapshotInput {
+        packages,
+        crates,
+        exemptions: vec!["code/hub".to_string()],
+        config_redirected: false,
+    }
+}
+
+#[test]
+fn relation_ceiling_is_exact_and_fails_before_amplified_output() {
+    let at_limit = resolve_cargo_trigger_snapshot(&amplified_relation_snapshot(128))
+        .expect("exactly 16,384 relations must proceed");
+    assert_eq!(at_limit.len(), MAX_CARGO_TRIGGER_RELATIONS);
+
+    assert_eq!(
+        resolve_cargo_trigger_snapshot(&amplified_relation_snapshot(129)),
+        Err(CargoTriggerSnapshotError::RelationLimitExceeded)
+    );
+    assert_eq!(
+        CargoTriggerSnapshotError::RelationLimitExceeded.code(),
+        "CARGO_TRIGGER_RELATION_LIMIT_EXCEEDED"
+    );
+}
+
+#[test]
+fn implementation_source_acquires_no_host_authority() {
+    let source = include_str!("../src/cargo_trigger_snapshot.rs");
+    for forbidden in [
+        "std::fs",
+        "std::process",
+        "std::env",
+        "std::net",
+        "std::time",
+        "PathBuf",
+        "Path::",
+    ] {
+        assert!(
+            !source.contains(forbidden),
+            "pure snapshot resolver must not contain {forbidden}"
+        );
+    }
 }
