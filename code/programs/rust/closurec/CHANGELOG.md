@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.9] - 2026-11-10
+
+### Fixed - wrap substatement do-while in braces at WHITESPACE_ONLY (CCR-083, #15918)
+
+- In `src/whitespace_only.rs`, wrap bare `do…while` statements in braces when they appear in a substatement body slot (`if`, `else`, `while`, `for`, `for-in`, `for-of`, `with`, `do`), matching upstream Closure Compiler (`CodeGenerator.java::isBlockDeclOrDo`).
+- Prevent the `while` tail condition of a `do…while` statement from spuriously arming `opens_control_flow_head`, allowing Rule A to drop redundant semicolons before closing braces in `do…while` blocks.
+- Bare `do…while` at statement position and under labels (`lbl:`) remain bare.
+
 ## [0.247.8] - 2026-11-10
 
 ### Fixed - `if (1) let⏎x = 1;` compiles as an identifier statement (V8C09)

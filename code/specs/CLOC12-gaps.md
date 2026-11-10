@@ -301,8 +301,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
   `do…while` in every one of those slots. `else`/`do` drop the separating
   space before a `{`-led body.
-- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
-  ASI), since both rewrite the same statement boundaries.
+- **WHITESPACE_ONLY token path: resolved.** A pre-pass in `whitespace_only.rs`
+  braces a bare `do…while` statement in every substatement body slot (`if`,
+  `else`, `while`, `for`, `for-in`, `for-of`, `with`, `do`). `do_while_tails`
+  marks the tail `while` condition of `do…while` loops so it doesn't open a
+  control-flow head, allowing Rule A to drop trailing semicolons before `}`.
 
 ### #17907 — a non-directive is never printed as `"use strict"`
 
