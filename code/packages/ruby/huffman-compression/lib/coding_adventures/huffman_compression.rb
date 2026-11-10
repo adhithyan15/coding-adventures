@@ -104,6 +104,12 @@ module CodingAdventures
   #
   # Both methods accept and return binary Strings (encoding: ASCII-8BIT / "binary").
   module HuffmanCompression
+    # Symbols are single bytes, so a valid table has at most 256 entries.
+    MAX_SYMBOLS = 256
+    # Longest code length the decoder accepts.  Real Huffman codes over 256
+    # symbols from 32-bit counts are far shorter; 56 keeps every shift tiny.
+    MAX_CODE_LEN = 56
+
     # ── Public API ────────────────────────────────────────────────────────────
 
     # Compress +data+ (String) using Huffman coding and return CMP04 wire bytes.
@@ -209,13 +215,23 @@ module CodingAdventures
       #
       # N entries at bytes 8+, each 2 bytes: [symbol_uint8, length_uint8]
       table_start = 8
-      table_end = table_start + (symbol_count * 2)
-      return "".b if data.bytesize < table_end
 
+      # SECURITY: the header is attacker-controlled.  Symbols are single bytes,
+      # so a table can name at most 256 of them; refuse anything larger before
+      # computing the table size or iterating.
+      raise ArgumentError, "symbol_count #{symbol_count} exceeds #{MAX_SYMBOLS}" if symbol_count > MAX_SYMBOLS
+
+      table_end = table_start + (symbol_count * 2)
+      raise ArgumentError, "input too short for the code-lengths table" if data.bytesize < table_end
+
+      seen = {}
       lengths = symbol_count.times.map do |i|
         offset = table_start + (i * 2)
-        sym = data[offset, 1].unpack1("C")
-        len = data[offset + 1, 1].unpack1("C")
+        sym = data.getbyte(offset)
+        len = data.getbyte(offset + 1)
+        # A byte value can have only one code; a repeat makes the table ambiguous.
+        raise ArgumentError, "symbol #{sym} appears twice in code-lengths table" if seen[sym]
+        seen[sym] = true
         [sym, len]
       end
 
@@ -228,53 +244,74 @@ module CodingAdventures
       #   prev_len = first length
       #   for each (symbol, length):
       #     code <<= (length - prev_len)   ← left-shift when length increases
-      #     code_to_sym[format("%0Xb", code)] = symbol
+      #     code_to_sym[[length, code]] = symbol
       #     code += 1
       #     prev_len = length
       #
       # This is the same algorithm HuffmanTree#canonical_code_table uses in
       # reverse — proving that lengths alone define the code table.
+      #
+      # SECURITY: the table is hostile input, so we also reject
+      #   * lengths of 0 or above MAX_CODE_LEN (a huge gap would make the shift
+      #     build an enormous Integer; a zero-length code matches nothing),
+      #   * tables not sorted by length (the encoder always sorts), and
+      #   * over-subscribed tables (Kraft sum > 1): before each assignment the
+      #     running code must still fit in `len` bits, i.e. `code >> len == 0`.
+      # Codes are keyed by [length, integer] so lookups are O(1) and no
+      # per-symbol string is built.
       code = 0
-      prev_len = lengths[0][1]
+      prev_len = lengths.empty? ? 0 : lengths[0][1]
       code_to_sym = {}
+      max_len = 0
 
       lengths.each do |sym, len|
-        code <<= (len - prev_len) if len > prev_len
-        # Store the code as a fixed-width bit string, e.g. 3-bit code 5 → "101"
-        code_to_sym[code.to_s(2).rjust(len, "0")] = sym
+        raise ArgumentError, "invalid code length #{len} in table" if len.zero? || len > MAX_CODE_LEN
+        raise ArgumentError, "code-lengths table is not sorted by length" if len < prev_len
+        code <<= (len - prev_len)
+        raise ArgumentError, "code-lengths table over-subscribes the code space" unless (code >> len).zero?
+        code_to_sym[[len, code]] = sym
         code += 1
         prev_len = len
+        max_len = len
       end
 
-      # ── Step 4: Unpack the bit stream ─────────────────────────────────────
-      #
-      # The bit stream starts immediately after the code-lengths table.
-      # Bits are stored LSB-first: bit 0 of byte 0 → first bit of stream, etc.
-      bit_data = data[table_end..]
-      bits = unpack_bits_lsb_first(bit_data)
+      # SECURITY: every code is at least one bit, so N payload bytes can hold
+      # at most 8*N symbols.  Reject a larger declared length before any
+      # allocation is sized from it.
+      total_bits = (data.bytesize - table_end) * 8
+      if original_length > total_bits
+        raise ArgumentError, "declared length #{original_length} exceeds the #{total_bits} bits available"
+      end
 
-      # ── Step 5: Decode symbols ────────────────────────────────────────────
+      # ── Steps 4+5: Decode symbols straight from the payload bytes ─────────
       #
-      # Walk the bit stream, accumulating a bit-prefix until we find it in
-      # code_to_sym.  This is the "canonical code trie walk" done on a flat
-      # hash — no tree needed because canonical codes have the prefix-free
-      # property: no code is a prefix of another.
+      # Bits are stored LSB-first: bit 0 of byte 0 is the first bit of the
+      # stream.  We read them with getbyte (O(1)) instead of expanding the
+      # payload into a '0'/'1' string, and build the candidate code MSB-first
+      # as an Integer.  Canonical codes are prefix-free, so the first
+      # [length, value] hit is the symbol.  Once the accumulated length reaches
+      # the longest code with no match, no later bit can ever match (an
+      # incomplete table fed unmatched bits), so we fail immediately.
       #
       # We decode exactly original_length symbols (the header tells us when
       # to stop, so trailing zero-padding bits are ignored automatically).
       output = []
-      prefix = ""
-      max_len = lengths.map { |_, len| len }.max || 0
-
-      bits.each_char do |bit|
-        prefix += bit
-        if (sym = code_to_sym[prefix])
+      acc = 0
+      acc_len = 0
+      pos = 0
+      while output.length < original_length
+        raise ArgumentError, "bit stream exhausted before decoding all symbols" if pos >= total_bits
+        byte = data.getbyte(table_end + (pos >> 3))
+        acc = (acc << 1) | ((byte >> (pos & 7)) & 1)
+        acc_len += 1
+        pos += 1
+        if (sym = code_to_sym[[acc_len, acc]])
           output << sym
-          prefix = ""
-          break if output.length == original_length
+          acc = 0
+          acc_len = 0
+        elsif acc_len >= max_len
+          raise ArgumentError, "bit pattern does not match any code"
         end
-        # Guard: prefix longer than max code length means corrupted data
-        break if prefix.length > max_len
       end
 
       output.pack("C*")

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.HuffmanCompression.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Pure C# CMP04 Huffman lossless compression with canonical wire-format helpers</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
