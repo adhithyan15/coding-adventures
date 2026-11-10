@@ -161,7 +161,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
         self.assertEqual(summary["repository_source_boundary_count"], 18)
-        self.assertEqual(summary["repository_source_input_count"], 21)
+        self.assertEqual(summary["repository_source_input_count"], 20)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -376,7 +376,6 @@ class CorpusTests(unittest.TestCase):
             [
                 "js/engram-mosaic-host-wasm.mjs",
                 "js/smoke.mjs",
-                "pkg/engram_engine.wasm",
             ],
         )
         self.assertIn(
@@ -446,14 +445,14 @@ class CorpusTests(unittest.TestCase):
             summary,
             {
                 "boundary_count": 18,
-                "input_count": 21,
+                "input_count": 20,
                 "scope_count": 485,
-                "authorization_count": 488,
+                "authorization_count": 487,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "220436e5989c1d3b46770da00de3d5c7d55cc0c4d0535f2940daa9c6daa6d6e3",
+            "fdf54a19088b209d575866c5dc6919c14b1b6e001e29681a5bef4e1241a12dc4",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -486,7 +485,6 @@ class CorpusTests(unittest.TestCase):
             ],
             [
                 "code/programs/typescript/visicalc-html/index.html",
-                "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js",
             ],
         )
         tracked_paths = {
@@ -979,7 +977,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 486),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 485),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -1243,11 +1241,6 @@ class CorpusTests(unittest.TestCase):
                 "js/smoke.mjs",
             ),
             (
-                "rust",
-                "code/packages/rust/engram-wasm/pkg/engram_engine.wasm",
-                "pkg/engram_engine.wasm",
-            ),
-            (
                 "swift",
                 "code/packages/swift/grammar-tools/regen-embedded-grammars.sh",
                 "regen-embedded-grammars.sh",
@@ -1362,7 +1355,6 @@ class CorpusTests(unittest.TestCase):
         package_paths = [
             "js/engram-mosaic-host-wasm.mjs",
             "js/smoke.mjs",
-            "pkg/engram_engine.wasm",
         ]
 
         def tracked_blob(repository_path: str) -> bytes:
