@@ -310,7 +310,7 @@ hashingSpec = describe "package hashing" $ do
         languageSourceInputRegistryValue `shouldBe` checked
         canonicalRegistryDigest checked `shouldBe` languageSourceInputRegistryDigest
         languageSourceInputRegistryDigest
-            `shouldBe` "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621"
+            `shouldBe` "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
 
     it "makes every embedded registry language reachable from discovery" $ do
         let rules = registryLanguages languageSourceInputRegistry
@@ -459,7 +459,6 @@ hashingSpec = describe "package hashing" $ do
                 , "build-wasm.sh"
                 , "js/engram-mosaic-host-wasm.mjs"
                 , "js/smoke.mjs"
-                , "pkg/engram_engine.wasm"
                 ]
 
     it "fails closed on registry drift, unknown languages, and portable path aliases" $ do

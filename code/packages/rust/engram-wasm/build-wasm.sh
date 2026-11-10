@@ -31,7 +31,7 @@ fi
 echo "Building engram-wasm for $TARGET (release)..."
 (cd "$WORKSPACE" && cargo build -p engram-wasm --target "$TARGET" --release)
 
-SRC="$WORKSPACE/target/$TARGET/release/engram_wasm.wasm"
+SRC="${CARGO_TARGET_DIR:-$WORKSPACE/target}/$TARGET/release/engram_wasm.wasm"
 DST="$OUT_DIR/engram_engine.wasm"
 cp "$SRC" "$DST"
 

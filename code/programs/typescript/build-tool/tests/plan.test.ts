@@ -270,7 +270,13 @@ describe("real CLI plan emission", () => {
         "--plan-file",
         outputPath,
       ],
-      { encoding: "utf-8", timeout: fixture.limits.wall_time_ms },
+      // The fixture's 5 s limit bounds the portable contract, not a cold
+      // `tsx` start on a loaded Windows runner (which hit ETIMEDOUT at ~5.2 s).
+      // Use the 30 s CLI-spawn allowance already used in resolver.test.ts.
+      {
+        encoding: "utf-8",
+        timeout: Math.max(fixture.limits.wall_time_ms, 30_000),
+      },
     );
 
     expect(result.error).toBeUndefined();

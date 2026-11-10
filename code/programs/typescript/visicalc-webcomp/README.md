@@ -35,7 +35,10 @@ spreadsheet logic:
    loaded from the HTML demo's `../visicalc-html/vendor/spreadsheet-engine-wasm.js`
    (the `.wasm` embedded as base64, so the page opens from `file://`). This
    demo used to carry its own copy of the bundle and of the loader; both had
-   gone stale, so it now shares the one the HTML demo regenerates and checks.
+   gone stale, so it now shares the one the HTML demo builds. That bundle is
+   generated and not committed (BUILD-001): run
+   `bash ../../../scripts/build-demo-wasm.sh visicalc` once after a clone,
+   or the page loads without an engine.
 
 The inline glue awaits the WASM module, seeds a workbook, pushes the workbook's
 *computed* values into the `<mos-grid>` attributes, and feeds user edits
