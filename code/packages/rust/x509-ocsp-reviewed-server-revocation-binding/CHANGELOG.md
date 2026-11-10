@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the separately authenticated responder-revocation proof's exact
+  intermediate critical permitted and excluded DNS constraints to that proof's
+  exact responder, retaining only count evidence.
+- Reuse the repository-owned bounded evaluator and stop before no-check,
+  recursive responder revocation, complete revocation, TLS, HTTP, or OAuth
+  readiness.
 - Apply the selected reviewed root's supported out-of-band permitted-DNS
   constraints to the separately authenticated original responder-revocation
   proof's own exact responder.
