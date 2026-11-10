@@ -122,6 +122,71 @@ the faults `saturate-add`, `trap-as-zero-mul`, `narrow-width`, `sign-confuse`,
 checked in at `tests/generated/wx_evidence.rs` (`WARRANT_REGEN=1 cargo test -p
 coding_adventures_warrant_grammar --test wx_regen` rewrites it).
 
+## Warrant v1: tuples, records and sum types (VER04j WX-A)
+
+The same `v1` header also enables structured values: tuples, records and
+non-recursive sum types, with nested patterns and an exhaustiveness check.
+
+```text
+warrant leb v1
+  error LebError = TRUNCATED | OVERLONG
+  record Span(start: U8, len: U8)
+  variant Shape = Circle(r: U8) | Rect(w: U8, h: U8) | Empty
+  model Pair = (U8, U8)
+
+  model dec2(b0: U8, b1: U8) -> Result<(U64, Nat), LebError> =
+    if b0 < 128u8 then Ok((widen<U64>(b0), 1)) else Err(LebError.OVERLONG)
+  model area(s: Shape) -> U64 =
+    match s with Circle(r) -> widen<U64>(r) * widen<U64>(r)
+               | Rect(w, h) -> widen<U64>(w) * widen<U64>(h)
+               | Empty -> 0u64
+  example gap:
+    normalize(9u8, 4u8).len == 5u8
+```
+
+| Construct | Meaning |
+|---|---|
+| `(T1, T2, ...)`, `(e1, e2, ...)` | structural tuple, arity 2 to 8; `t.0`, `f(x).1` project |
+| `record R(a: T, ...)` | nominal, one constructor named `R`, 1 to 32 fields; `r.a` projects |
+| `variant V = A(x: T) \| B \| ...` | nominal sum, 2 to 256 constructors, positional `A(e)`, bare `B`; no recursion (W0203) |
+| `match e with p -> e \| ...` | patterns `_`, binders, `true`/`false`, `(p, q)`, `C(p, ...)`, `Some(p)`, `Ok(p)`, `Err(E.CASE)`; non-exhaustive or redundant is W0301 |
+
+Everything is v1-only: in a v0 document each of these is `W0101`, and a v0
+document means exactly what it did (`tests/v0_compat.rs`). Composites are
+invariant (`(Nat, Nat)` is not an `(Int, Int)`), unordered (`<` is W0301) and
+compared structurally.
+
+- [`src/patterns.rs`](src/patterns.rs) is the pattern-matrix usefulness algorithm
+  behind exhaustiveness and redundancy; `tests/wxa_patterns.rs` holds it to
+  brute-force enumeration over small types.
+- The ground evaluator builds `EvalValue::Tuple` and `EvalValue::Con`, and
+  `EvalValue::encode_portable` writes the cross-language corpus form (tuple and
+  record `L<n> ...`, variant `L2 S<ctor name> L<k> ...`, `Option` `L0`/`L1 x`,
+  `Result` as the VER04i `M1` form); nesting past TFV's 64 containers is `W0709`.
+- Evidence: composite binders get the domains of VER04j 4.7 (a product,
+  lexicographic; a variant's constructors in order; `Option`, `Result`, `List`),
+  the leftmost-first `U16`/`I16` demotion reaches into them, generators draw
+  constructors uniformly and relation-bias one leaf, and shrinkers work
+  component-wise. Operations whose signature mentions a composite are bound
+  with `struct`/`enum` lines and `ret=`/`errors=` in `evidence.bindings`:
+
+```text
+struct Span path=subject::Span fields=start:u8,len:u8
+enum Shape path=subject::Shape ctors=Circle(r:u8),Rect(w:u8,h:u8),Empty
+op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=subject::LebErr/Overlong=OVERLONG faults=off-by-one-consumed,drop-consumed
+op classify export=classify ret=Shape faults=wrong-ctor
+```
+
+  The faults are `drop-consumed`, `swap-components`, `field-zero`, `wrong-ctor`,
+  `ok-as-err` and `off-by-one-consumed` (the LEB128 bug class: right value, wrong
+  bytes consumed). A value a host integer cannot hold is counted as
+  `unreachable_by_type` in the manifest, never narrowed. The checked-in pilot is
+  `tests/fixtures/wxa.warrant` with its bindings and generated harness
+  (`tests/generated/wxa_evidence.rs`, `WARRANT_REGEN=1 cargo test -p
+  coding_adventures_warrant_grammar --test wxa_regen` rewrites it);
+  `tests/wxa_evidence.rs` also runs the ground evaluator against the generated
+  model code on every composite domain within budget.
+
 ## Tests and regeneration
 
 From the Rust workspace:

@@ -1163,6 +1163,9 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   survey and the `gf256` conversion's forced workarounds. No v0 text is changed;
   section 1.4 records the one evaluator conformance fix against existing v0 text
   (non-wrapping `U8` in the generated evaluator).
+- WX-A implemented (`rust/warrant-grammar` 0.3.0): see section 14.1 for the
+  deviations and clarifications this forced; section 4 itself is unchanged except
+  that nothing in it was found wrong.
 - WX-B and WX-C implemented (`rust/warrant-grammar` 0.2.0): see section 14 for the
   deviations and clarifications this forced. Sections 1.4, 2.6, 2.7 and 3.7 were
   corrected in place: the `U16 x U16` demotion example, the list of values the edge
@@ -1294,15 +1297,23 @@ The numbering continues from the WX-B/WX-C items above.
     `List` domain is `1 + d + d^2 + e^3` with `d = min(16, |D|)` and
     `e = min(4, |D|)`.  The budget demotion rule of section 2.6 now applies to every
     full `U16`/`I16` *leaf* of a composite binder (depth-first, left to right); the
-    manifest's `demoted` entry is the binder name followed by the component path
-    (`p.0`).  A binder whose domain is over budget after demotion is W0706.
+    manifest's `demoted` entry is the binder name followed by the component path:
+    the tuple component or field index, and for a variant the constructor name
+    before the field index (`p.0`, `r.1`, `a.Q.0`).  A binder whose domain is over
+    budget after demotion is W0706.  A composite binder's domain is one stored
+    vector, unlike the lazily iterated product of separate binders, so the 64 MiB
+    byte budget bounds the product *inside* a composite even when the case budget
+    is raised: `(U16, U16)` demotes both components at 2^26 too, and
+    `(U16, U8, U8)` is W0706 at every budget.  `List<T>` is the same size for
+    every `T` with at least 16 elements (337), so `List<List<U8>>` is 337.
 21. **Generators and shrinkers** are as 4.7.  `Result` draws `Ok` or `Err` with equal
     probability and then an error case uniformly; a `List` draws a length in
     `0..=3`.  Relation bias descends into one leaf: it perturbs one randomly chosen
     component, keeping the constructor.
 22. **Bindings (section 4.6).** `evidence.bindings` gains
     `struct T path=P fields=name:ht,...` and `enum T path=P ctors=C(name:ht,...),...`
-    lines and, on `op`, `ret=ht` and `errors=P:Variant=CASE,...`.  A host type `ht` is
+    lines and, on `op`, `ret=ht` and `errors=P/Variant=CASE,...` (the path and the
+    variants are separated by `/`, because a Rust path contains `::`).  A host type `ht` is
     `u8..u64`, `i8..i64`, `usize`, `bool`, `bytes`, `(ht, ht, ...)`, `opt<ht>`,
     `list<ht>` or a declared `struct`/`enum` name; `args=` is split on commas outside
     brackets.  A host field name may be a decimal index, which reaches a tuple
@@ -1320,11 +1331,45 @@ The numbering continues from the WX-B/WX-C items above.
     (cyclic), and the predecessor's fields are the first element of each field's
     domain; `field-zero` needs a numeric field and `swap-components` a homogeneous
     pair or longer tuple, each checked at generation (W0701); `ok-as-err` needs a
-    `Result` whose payload is composite.  The fault applies to the operation it is
-    bound to only (the `scoped` mechanism of the scalar adapters).
-24. **Not implemented in this slice:** list literals, list patterns and
-    quantifiers inside model or claim bodies in the evidence harness (they remain
-    W0701, as for v0), payload-carrying host errors, and the `error_offset` second
-    observer of section 4.2 (it is an ordinary `op`).  The checked-in pilot for
-    section 4.11 is a LEB128-shaped fixture with an in-test subject, not the
-    `wasm-leb128` package, which is deliberately not converted here.
+    `Result` whose payload is composite.  A fault rewrites the composite *inside* an
+    `Ok` or a `Some` (an `Option<(U8, U8)>` result can be attacked by
+    `swap-components`), and `drop-consumed` and `off-by-one-consumed` need a numeric
+    second component.  `swap-components` reverses a tuple, which exchanges a pair.
+    `missing-error` is also accepted on a composite `Result` operation (a panic is
+    reported as `Ok` of the first element of the payload's domain).  The fault
+    applies to the operation it is bound to only (the `scoped` mechanism of the
+    scalar adapters).
+24. **Evidence bodies.** `match`, tuples, constructors and projections are now
+    translated in model and claim bodies (a `match` was W0701 for v1 before WX-A, and
+    `tests/wx_generator.rs` was updated accordingly); list literals and
+    quantifiers inside a body remain W0701, as for v0.  `len` also accepts a list
+    value.  A claim binder may be an `Option`, `Result` or `List` (the domains of
+    section 4.7), but an operation that mentions no tuple, record or variant is still
+    adapted by the WX-B/WX-C shapes only: an `Option`/`Result`/`List` *parameter* of
+    such an operation has no adapter.
+25. **Prelude gating.** The WX-A part of the generated prelude (`//@if comp`) is
+    emitted only for a v1 document that declares a record or variant, writes a tuple,
+    a projection or a `match`, or quantifies over an `Option`, `Result`, `List` or
+    composite; every other document's generated output, v0 or v1, is byte-identical
+    to the WX-B/WX-C generator's (`tests/wx_regen.rs`, `tests/v0_compat.rs`).
+26. **Checker output.** `CheckedWarrantModule` is unchanged (its `Debug` rendering for
+    the two checked-in specifications is pinned by `tests/v0_compat.rs`); the
+    records and variants stay inside the checker, and `CheckedAdt`/`CheckedCtor` are
+    exported for a later consumer.  The canonical `warrant.tokens` and
+    `warrant.grammar` are *not* extended with WX-A productions: the hand-written
+    parser is the reference for tuples, records, variants, projections and
+    patterns, and `warrant-syntax-v1` is untouched (as in item 11, a
+    `warrant-syntax-v2` corpus remains unwritten; its cases are
+    `tests/wxa_syntax.rs`).
+27. **Not implemented in this slice:** list literals, list patterns and quantifiers
+    inside evidence bodies (item 24), payload-carrying host errors, a host `Result`
+    *parameter*, fixed-width `Bytes<N>` parameters and static widths on a composite
+    operation, and the `error_offset` second observer of section 4.2 (it is an
+    ordinary `op`).  The checked-in pilot for section 4.11 is a LEB128-shaped
+    fixture (`tests/fixtures/wxa.warrant`, decoding the first one or two bytes of a
+    stream) with an in-test subject, not the `wasm-leb128` package, which is
+    deliberately not converted here.  The exhaustiveness differential covers every
+    arm sequence up to four arms on `Bool x Option<Bool>`, every sequence up to
+    three arms plus a fixed-seed sample of four-arm sequences on the
+    three-component type of section 4.11, and every sequence up to four arms on
+    single-column types.

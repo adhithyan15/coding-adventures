@@ -83,6 +83,42 @@ mod harness {
         pub fn try_pair(a: u8) -> (u8, u8) {
             (a, a.checked_add(1).expect("255 has no successor"))
         }
+        #[derive(Debug, Clone, PartialEq, Eq)]
+        pub struct Blob {
+            pub tag: u8,
+            pub data: Vec<u8>,
+        }
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        pub enum Tok {
+            Num(u8),
+            Pair2(u8, u8),
+            End,
+        }
+        pub fn pick(o: Option<(u8, bool)>, l: Vec<bool>) -> (u8, usize) {
+            let first = match o {
+                None => 0,
+                Some((x, true)) => x,
+                Some((_, false)) => 1,
+            };
+            (first, l.len())
+        }
+        pub fn bsum(d: &[u8]) -> (u8, usize) {
+            (u8::from(!d.is_empty()), d.len())
+        }
+        pub fn blob(a: u8) -> Blob {
+            Blob { tag: a, data: vec![a] }
+        }
+        pub fn tok(a: u8, b: u8) -> Tok {
+            match (a == 0, b == 0) {
+                (true, true) => Tok::End,
+                (true, _) => Tok::Num(b),
+                (_, true) => Tok::Num(a),
+                (false, false) => Tok::Pair2(a, b),
+            }
+        }
+        pub fn bits(a: u8) -> (Vec<bool>, usize) {
+            (vec![a & 1 == 1, a & 2 == 2], 2)
+        }
         pub fn sh(a: u8, n: u8) -> (u8, u8) {
             (a.checked_shl(u32::from(n)).unwrap_or(0), n)
         }
@@ -103,6 +139,11 @@ mod harness {
             "order_model" => model_order_model(a(0), a(1)),
             "split_model" => model_split_model(a(0)),
             "try_pair_model" => model_try_pair_model(a(0)),
+            "pick_model" => model_pick_model(a(0), a(1)),
+            "bsum_model" => model_bsum_model(a(0)),
+            "blob_model" => model_blob_model(a(0)),
+            "tag_of" => model_tag_of(a(0)),
+            "tok_model" => model_tok_model(a(0), a(1)),
             other => panic!("no model {other}"),
         }
     }
@@ -166,6 +207,9 @@ use harness::{Fault, Ty, F, V};
 fn is_fail(v: &Verdict, id: &str) -> bool {
     matches!(v, Verdict::Fail { failure_id, .. } if *failure_id == id)
 }
+
+const PICK_O: Ty = Ty::Opt(&Ty::Tuple(&[U8T, Ty::Bool]));
+const BLOB: Ty = Ty::Data("Blob", &[("Blob", &[U8T, Ty::Bytes])]);
 
 fn fixed_of(f: F) -> FixedTy {
     match f {
@@ -784,7 +828,7 @@ fn to_eval(v: &V) -> EvalValue {
             ty: ty.to_string(),
             index: *i,
             ctor: c.to_string(),
-            record: *ty == "Span",
+            record: *ty == "Span" || *ty == "Blob",
             fields: fs.iter().map(to_eval).collect(),
         },
         V::Ok(x) => EvalValue::Result(Ok(Box::new(to_eval(x)))),
@@ -836,6 +880,11 @@ fn models() -> Vec<(&'static str, Vec<Ty>)> {
         ("order_model", vec![U8T, U8T]),
         ("split_model", vec![U8T]),
         ("try_pair_model", vec![U8T]),
+        ("pick_model", vec![PICK_O, Ty::List(&Ty::Bool)]),
+        ("bsum_model", vec![Ty::Bytes]),
+        ("blob_model", vec![U8T]),
+        ("tag_of", vec![BLOB]),
+        ("tok_model", vec![U8T, U8T]),
     ]
 }
 
@@ -904,7 +953,10 @@ fn ground_evaluator_and_generated_model_agree_on_every_composite_domain() {
         total += compared;
     }
     // Pairs of bytes (x4), a variant domain, and single bytes.
-    assert_eq!(total, 4 * 65_536 + 65_793 + 3 * 256);
+    assert_eq!(
+        total,
+        4 * 65_536 + 65_793 + 3 * 256 + 513 * 15 + 347 + 256 + 88_832 + 65_536
+    );
     // Nothing was vacuous: both Ok and Err results occur for dec2, and every
     // constructor of Shape is produced by classify_model.
     let outcomes: BTreeSet<&str> = argument_vectors(&[U8T, U8T])
