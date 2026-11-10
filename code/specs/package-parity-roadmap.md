@@ -20895,3 +20895,23 @@ paths or symlinks, inspect Cargo configuration or the exemption ledger on
 disk, consult environment state, run a process, access the network, execute a
 package, or integrate the CLI. Those exact-identity and integration concerns
 remain with the separately recorded native-adapter and CLI owners.
+
+#### Rust crate-closure snapshot local completion and review receipt
+
+Exact local implementation head
+`3de7922caf26a633787c7c4be16188008c1b15be` completes the authority-free
+resolver. It uses a segment trie for deepest package ownership and compact
+package-ID bitsets for memoized closure membership, preserves exact 16/17-depth
+and cycle semantics, makes validation and traversal input-order-independent,
+rejects noncanonical reduced identities, and fails before materializing the
+16,385th unique trigger relation's strings or output. The fixed ceilings are
+4,096 packages,
+16,384 crates and references, 4,096 exemptions, and 16,384 output relations.
+
+The full Rust build-tool suite passes with 271 tests, together with `cargo
+check`, Clippy with warnings denied, Rust formatting, and diff hygiene. Three
+independent exact-head reviews—correctness, security, and adversarial—issued
+SHIP after the initial relation-amplification, closure-memory, owner-lookup,
+validation-order, and reduced drive-prefix findings were closed. The worktree
+remains clean and the tranche retains no filesystem, environment, process,
+network, symlink, package-execution, or CLI authority.
