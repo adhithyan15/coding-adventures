@@ -20,6 +20,11 @@
 //!    stale manifests, and a "no unsafe" claim next to a declared unsafe
 //!    exception.
 //!
+//! Since VER13 (AS-001a part 2) [`Evidence::load`] also loads the assumption
+//! catalogue found above the package directory ([`crate::catalogue`]), claims
+//! cite catalogue ids, and [`verify_evidence`] runs the assumption rules
+//! AC-1..AC-14 of [`crate::assumptions`] before comparing claims field by field.
+//!
 //! ## Hardening (security review B1-B9)
 //!
 //! Everything read from disk is untrusted until proven otherwise: manifests and
@@ -44,6 +49,11 @@ use coding_adventures_warrant_grammar::parser::{
 };
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
+use crate::assumptions::{
+    check_assumptions, derive_claim_assumptions, op_claim_kinds, remaining_by_layer, AssumptionCheckError,
+    BASELINE_RUNG, HOST_STACK,
+};
+use crate::catalogue::CatalogueSet;
 use crate::json::JsonValue;
 use crate::matrix::{AuditEvidence, AuditProfile, PackageAuditContext, WeaknessStatus};
 use crate::report::{
@@ -193,6 +203,16 @@ pub struct Evidence {
     pub cert: CertFacts,
     pub source_sha256: String,
     pub proofs_dir: PathBuf,
+    /// `rust/<package directory name>`: the package the evidence is about.
+    pub package_id: String,
+    /// The VER13 catalogue, evidence kinds and non-claims, with their digests.
+    pub catalogue: CatalogueSet,
+    /// SHA-256 (hex) of each manifest's bytes, by manifest name
+    /// (`test`, `proof`, `bench`); AC-3 compares catalogue digests with it.
+    pub manifest_sha256: BTreeMap<String, String>,
+    /// Build tuples recorded by manifest entries that carry a `pinned`
+    /// object, by evidence id (rule AC-9).  No manifest records one today.
+    pub pinned: BTreeMap<String, BTreeMap<String, String>>,
 }
 
 /// Read `path` as bytes, refusing anything larger than `cap`.  The limit is
@@ -212,14 +232,33 @@ pub fn read_capped(path: &Path, cap: u64) -> Result<Vec<u8>, EvidenceError> {
     Ok(bytes)
 }
 
-fn read(path: &Path) -> Result<String, EvidenceError> {
-    String::from_utf8(read_capped(path, MAX_MANIFEST_BYTES)?)
-        .map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))
+fn parse(path: &Path) -> Result<JsonValue, EvidenceError> {
+    Ok(parse_with_digest(path)?.0)
 }
 
-fn parse(path: &Path) -> Result<JsonValue, EvidenceError> {
-    JsonValue::parse(&read(path)?)
-        .map_err(|e| EvidenceError(format!("{} is not valid JSON: {e}", path.display())))
+/// Parse a manifest and return the SHA-256 of the exact bytes parsed, so a
+/// digest always describes what was read (no second read can differ).
+fn parse_with_digest(path: &Path) -> Result<(JsonValue, String), EvidenceError> {
+    let bytes = read_capped(path, MAX_MANIFEST_BYTES)?;
+    let digest = sha256_hex(&bytes);
+    let text = String::from_utf8(bytes).map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))?;
+    let v = JsonValue::parse(&text)
+        .map_err(|e| EvidenceError(format!("{} is not valid JSON: {e}", path.display())))?;
+    Ok((v, digest))
+}
+
+/// The optional `pinned` build tuple of a manifest entry (rule AC-9): all four
+/// fields of [`crate::catalogue::PINNED_FIELDS`], non-empty strings.
+fn record_pinned(
+    entry: &JsonValue,
+    id: &str,
+    out: &mut BTreeMap<String, BTreeMap<String, String>>,
+) -> Result<(), EvidenceError> {
+    if let Some(p) = entry.get("pinned") {
+        let tuple = crate::catalogue::parse_pinned_object(p, id, false).map_err(|e| EvidenceError(e.0))?;
+        out.insert(id.to_string(), tuple);
+    }
+    Ok(())
 }
 
 /// A required string field; wrong type or absence is an error, not `""`.
@@ -667,8 +706,11 @@ impl Evidence {
         let dir = package_dir.join("evidence");
         let mut seen: BTreeSet<String> = BTreeSet::new();
 
+        let mut manifest_sha256 = BTreeMap::new();
+        let mut pinned = BTreeMap::new();
         let tpath = dir.join("test-manifest.json");
-        let tv = parse(&tpath)?;
+        let (tv, tdigest) = parse_with_digest(&tpath)?;
+        manifest_sha256.insert("test".to_string(), tdigest);
         schema(&tv, "warrant-test-evidence-v1", &tpath)?;
         let mut tests = Vec::new();
         for t in tv
@@ -679,6 +721,7 @@ impl Evidence {
             let what = "test manifest";
             let id = req_text(t, "id", what)?;
             claim_id(&mut seen, &id, what)?;
+            record_pinned(t, &id, &mut pinned)?;
             tests.push(TestEntry {
                 id,
                 kind: req_text(t, "kind", what)?,
@@ -698,7 +741,8 @@ impl Evidence {
         // declares `labels` and `bound` rows, so there is always at least one
         // obligation to account for, as a verdict or as a `not-live` entry.
         let ppath = dir.join("proof-manifest.json");
-        let pv = parse(&ppath)?;
+        let (pv, pdigest) = parse_with_digest(&ppath)?;
+        manifest_sha256.insert("proof".to_string(), pdigest);
         schema(&pv, "warrant-proof-evidence-v1", &ppath)?;
         let mut proofs = Vec::new();
         for p in pv
@@ -709,6 +753,7 @@ impl Evidence {
             let what = "proof manifest";
             let id = req_text(p, "id", what)?;
             claim_id(&mut seen, &id, what)?;
+            record_pinned(p, &id, &mut pinned)?;
             let mut certificates = Vec::new();
             for c in p.get("certificates").and_then(|x| x.as_array()).unwrap_or(&[]) {
                 let kind = req_text(c, "kind", what)?;
@@ -738,7 +783,8 @@ impl Evidence {
         // evidence (and the matrix then cannot cite any).
         let bpath = dir.join("bench-manifest.json");
         let bv = if bpath.is_file() {
-            let bv = parse(&bpath)?;
+            let (bv, bdigest) = parse_with_digest(&bpath)?;
+            manifest_sha256.insert("bench".to_string(), bdigest);
             schema(&bv, "warrant-bench-evidence-v1", &bpath)?;
             Some(bv)
         } else {
@@ -754,6 +800,7 @@ impl Evidence {
             let what = "bench manifest";
             let id = req_text(t, "id", what)?;
             claim_id(&mut seen, &id, what)?;
+            record_pinned(t, &id, &mut pinned)?;
             bench.push((id, req_text(t, "verdict", what)?));
         }
 
@@ -793,6 +840,16 @@ impl Evidence {
             ));
         }
 
+        // The assumption catalogue sits above the package, like the spec.
+        let catalogue = CatalogueSet::locate(package_dir).map_err(|e| EvidenceError(e.to_string()))?;
+        let package_id = format!(
+            "rust/{}",
+            want_spec
+                .strip_prefix("code/specs/")
+                .and_then(|s| s.strip_suffix(".warrant"))
+                .ok_or_else(|| EvidenceError("package directory has no usable name".into()))?
+        );
+
         Ok(Evidence {
             tests,
             test_spec_sha256: text(&tv, "spec_sha256"),
@@ -816,7 +873,22 @@ impl Evidence {
             cert,
             source_sha256: sha256_hex(&source_framed),
             proofs_dir: dir.join("proofs"),
+            package_id,
+            catalogue,
+            manifest_sha256,
+            pinned,
         })
+    }
+
+    /// Which manifest holds evidence id `id`, and the verdict it records.
+    pub fn manifest_entry(&self, id: &str) -> Option<(&'static str, &str)> {
+        if let Some(t) = self.tests.iter().find(|t| t.id == id) {
+            return Some(("test", t.verdict.as_str()));
+        }
+        if let Some(p) = self.proofs.iter().find(|p| p.id == id) {
+            return Some(("proof", p.verdict.as_str()));
+        }
+        self.bench.iter().find(|(b, _)| b == id).map(|(_, v)| ("bench", v.as_str()))
     }
 
     /// Every id a report may cite, with the verdict it carries.
@@ -1134,16 +1206,19 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
         } else {
             "unknown".to_string()
         };
+        // The strings the evidence layer has always emitted are kept as
+        // *seeds*: each must resolve to a catalogue id or alias, so the
+        // migration to catalogue ids cannot lose one of them.
         let buffers = obligations.iter().any(|p| p.max_len > 0 && p.label != "proved");
-        let mut assumptions = vec!["compiler.preserves_timing".to_string()];
+        let mut legacy = vec!["compiler.preserves_timing".to_string()];
         if buffers {
-            assumptions.push("memory.unaliased".to_string());
+            legacy.push("memory.unaliased".to_string());
         }
-        // Rows the prover does not discharge stay visible as assumptions.
+        // Rows the prover does not discharge stay visible as assumptions
+        // (`heap-bound:unchecked` is an alias of `wir.bound.heap-unchecked`).
         for p in ev.proofs.iter().filter(|p| p.op == op.name && p.verdict == "unchecked") {
-            assumptions.push(format!("{}:unchecked", p.kind));
+            legacy.push(format!("{}:unchecked", p.kind));
         }
-        assumptions.sort();
         // Every obligation recorded `not-live` means no proof exists for this
         // operation: the claim carries no proof block at all (never a label),
         // and the manifest's note says why.
@@ -1152,11 +1227,22 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
         } else {
             let certificate = certificate_digest(ev, &op.name)
                 .ok_or_else(|| EvidenceError(format!("operation `{}` has no certificates", op.name)))?;
+            // Rule AC-4, applied by construction: every catalogue entry whose
+            // `applies_to` matches this label, these claim kinds and this
+            // package, closed over the catalogue edges.
+            let kinds = op_claim_kinds(ev, &op.name);
+            let (assumptions, discharged) =
+                derive_claim_assumptions(&ev.catalogue, &ev.package_id, &proof_label, &kinds, &legacy, HOST_STACK)
+                    .map_err(|e| EvidenceError(format!("operation `{}`: {e}", op.name)))?;
             Some(ProofEvidence {
+                remaining_by_layer: remaining_by_layer(&ev.catalogue.catalogue, &assumptions),
                 label: proof_label,
                 assumptions,
                 certificate,
                 certificate_kind: certificate_kind(ev, &op.name).to_string(),
+                stack: HOST_STACK.to_string(),
+                rung: BASELINE_RUNG.to_string(),
+                discharged,
             })
         };
 
@@ -1227,6 +1313,8 @@ pub enum EvidenceCheckError {
     /// A trivial (collapsed-miter) certificate is presented without the
     /// `certificate_kind: "trivial-miter"` marking.
     TrivialCertificateUnmarked(String),
+    /// A VER13 assumption rule (AC-1..AC-14) failed.
+    Assumption(AssumptionCheckError),
 }
 
 impl fmt::Display for EvidenceCheckError {
@@ -1242,6 +1330,7 @@ impl fmt::Display for EvidenceCheckError {
             Self::Load(m) => ("cannot load evidence", m),
             Self::DuplicateId(m) => ("duplicate id", m),
             Self::TrivialCertificateUnmarked(m) => ("trivial certificate presented as a full proof", m),
+            Self::Assumption(a) => return write!(f, "{a}"),
         };
         write!(f, "{name}: {m}")
     }
@@ -1262,6 +1351,14 @@ pub fn verify_evidence(
     ev: &Evidence,
 ) -> Result<Vec<String>, EvidenceCheckError> {
     use EvidenceCheckError as E;
+
+    // 0. The report is about the package the evidence describes.
+    if report.package != ev.package_id {
+        return Err(E::EvidenceMismatch(format!(
+            "report is for {} but the evidence is for {}",
+            report.package, ev.package_id
+        )));
+    }
 
     // 1. Staleness: manifests must describe the spec and source on disk.
     if ev.test_spec_sha256 != ev.spec.sha256 {
@@ -1433,6 +1530,12 @@ pub fn verify_evidence(
     for x in &report.exemptions {
         check_ids(&x.evidence)?;
     }
+
+    // 4b. VER13 assumption rules (AC-1..AC-14), before the field-by-field
+    //     comparison below, so a broken assumption list is named by the rule it
+    //     breaks rather than reported as a generic mismatch.  AC-10 (unused
+    //     entries) is a warning here; `--strict` makes the CLI fail on it.
+    check_assumptions(report, ev, false).map_err(E::Assumption)?;
 
     // 5. Counts, labels and digests equal what the manifests say.  Claims are
     //    matched by exact id; an id may appear once, every derived claim must be

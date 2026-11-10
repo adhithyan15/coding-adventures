@@ -2,9 +2,15 @@
 //!
 //! Provides the machine-readable assurance report generator, weakness registry evaluator,
 //! and standalone report checker with zero third-party dependencies.
+//!
+//! Every assumption a report states is a catalogue id of VER13
+//! (`code/assumptions/catalogue-v1.json`), pinned by digest in the report and
+//! checked by rules AC-1..AC-14 ([`assumptions`], [`catalogue`]).
 
 #![deny(unsafe_code)]
 
+pub mod assumptions;
+pub mod catalogue;
 pub mod checker;
 pub mod evidence;
 pub mod json;
@@ -12,6 +18,8 @@ pub mod matrix;
 pub mod registry;
 pub mod report;
 
+pub use assumptions::{check_assumptions, AssumptionCheckError, AssumptionSummary};
+pub use catalogue::{CatalogueError, CatalogueSet};
 pub use checker::{verify_assurance_report, CheckError, CheckVerdict};
 pub use evidence::{
     derive_claims, verify_evidence, Evidence, EvidenceCheckError, EvidenceError,
@@ -22,9 +30,9 @@ pub use matrix::{
 };
 pub use registry::{RegistryError, WeaknessClass, WeaknessRegistry};
 pub use report::{
-    AssuranceReport, CapabilitiesSummary, ClaimEvidence, ComputedExemption, ExhaustiveEvidence,
-    FuzzEvidence,
-    ProofEvidence, PropertyEvidence, ReportError, RungsSummary,
+    AssuranceReport, CapabilitiesSummary, CatalogueRef, ClaimEvidence, ComputedExemption,
+    DischargedAssumption, ExhaustiveEvidence, FuzzEvidence, ProofEvidence, PropertyEvidence,
+    ReportError, RungsSummary,
 };
 
 /// Construct the report-only assurance report for `rust/ct-compare` from
@@ -52,6 +60,11 @@ pub fn generate_ct_compare_report(
 /// `evidence`, so the function holds no evidence literal.  Obligations the
 /// proof manifest records `not-live` become claims without a proof block and
 /// unapproved exemptions that quote the recorded blocker.
+///
+/// Assumptions come from the VER13 catalogue loaded with `evidence`: each
+/// claim lists every entry that applies to it (rule AC-4), the report lists
+/// the entries about its weakness matrix, capability evidence and verdict, and
+/// each exemption lists the ids it derives from (rule AC-13).
 pub fn generate_package_report(
     package: &str,
     version: &str,
@@ -60,6 +73,12 @@ pub fn generate_package_report(
     evidence: &Evidence,
     profile: AuditProfile,
 ) -> Result<AssuranceReport, MatrixError> {
+    if package != evidence.package_id {
+        return Err(MatrixError::MissingEvidence(format!(
+            "asked for a report on {package} but the evidence is for {}",
+            evidence.package_id
+        )));
+    }
     let ctx = evidence.audit_context_with_profile(package, profile);
     let weaknesses = build_weakness_matrix(registry, &ctx)?;
     let claims = derive_claims(evidence).map_err(|e| MatrixError::MissingEvidence(e.0))?;
@@ -67,7 +86,7 @@ pub fn generate_package_report(
 
     // One exemption per unapproved-exemption row, copied from the row so the
     // two lists cannot disagree.
-    let exemptions = weaknesses
+    let exemptions: Vec<ComputedExemption> = weaknesses
         .iter()
         .filter(|w| w.status == WeaknessStatus::Exemption)
         .map(|w| {
@@ -85,14 +104,35 @@ pub fn generate_package_report(
                 approved: w.approved.unwrap_or(false),
                 rationale: w.reason.clone(),
                 evidence: w.evidence.clone(),
+                assumptions: Vec::new(),
             }
         })
         .collect();
+    // Derived, never typed in: the section 3.9 table applied to what the
+    // claims still assume.
+    let set = &evidence.catalogue;
+    let mut exemptions = exemptions;
+    for x in &mut exemptions {
+        x.assumptions = assumptions::derive_exemption_assumptions(set, &x.id, &claims)
+            .map_err(MatrixError::MissingEvidence)?;
+    }
+    let unverified: std::collections::BTreeSet<String> = weaknesses
+        .iter()
+        .flat_map(|w| w.evidence.iter())
+        .chain(claims.iter().flat_map(|c| c.evidence.iter()))
+        .chain(exemptions.iter().flat_map(|x| x.evidence.iter()))
+        .filter(|id| id.starts_with(evidence::UNVERIFIED_PREFIX))
+        .cloned()
+        .collect();
+    let report_assumptions = assumptions::derive_report_assumptions(set, package, &unverified)
+        .map_err(MatrixError::MissingEvidence)?;
 
     Ok(AssuranceReport {
         package: package.into(),
         version: version.into(),
         commit: commit_sha.into(),
+        catalogue: assumptions::catalogue_ref(set),
+        assumptions: report_assumptions,
         closure: vec![package.into()],
         capabilities: CapabilitiesSummary {
             declared: evidence.cert.declared_effects.clone(),
