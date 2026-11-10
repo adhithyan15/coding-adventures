@@ -55,6 +55,19 @@ static bool rejected(const std::vector<std::uint8_t> &data) {
     return throws<std::invalid_argument>([&] { (void)ca::huffman::decompress(data); });
 }
 
+// Largest code length recorded in a compressed stream's lengths table
+// (entries are [symbol, length] pairs after the 8-byte header).
+static unsigned max_table_length(const std::vector<std::uint8_t> &packed) {
+    const std::size_t n = (static_cast<std::size_t>(packed[4]) << 24) |
+                          (static_cast<std::size_t>(packed[5]) << 16) |
+                          (static_cast<std::size_t>(packed[6]) << 8) | packed[7];
+    unsigned max_len = 0;
+    for (std::size_t i = 0; i < n; i++) {
+        max_len = std::max<unsigned>(max_len, packed[8 + 2 * i + 1]);
+    }
+    return max_len;
+}
+
 int main() {
     // Empty → 8-byte header.
     {
@@ -110,6 +123,71 @@ int main() {
         auto truncated = hostile({{0, 1}}, 1, 0, 0);
         truncated[7] = 5;
         ISO_CHECK(rejected(truncated));
+    }
+
+
+    // SEC-003c: Fibonacci frequencies (1,1,2,3,5,8,...) are the worst case for
+    // Huffman depth: a tree of depth d needs total weight >= Fibonacci(d + 2).
+    // 34 symbols total ~14.9 MB and give a 33-bit deepest code, which overflowed
+    // the old 32-bit code values. It must round-trip and every emitted length
+    // must stay within the decoder's 1..56 limit.
+    {
+        constexpr std::size_t kSyms = 34;
+        std::vector<std::size_t> count(kSyms, 1);
+        std::size_t total = 2;
+        for (std::size_t s = 2; s < kSyms; s++) {
+            count[s] = count[s - 1] + count[s - 2];
+            total += count[s];
+        }
+        std::vector<std::uint8_t> input;
+        input.reserve(total);
+        // Interleave symbols so the input is not trivially run-length ordered.
+        while (input.size() < total) {
+            for (std::size_t s = 0; s < kSyms; s++) {
+                if (count[s] > 0) {
+                    input.push_back(static_cast<std::uint8_t>(s));
+                    count[s]--;
+                }
+            }
+        }
+        auto packed = ca::huffman::compress(input);
+        const unsigned max_len = max_table_length(packed);
+        ISO_CHECK(max_len > 32); // really exercises the >32-bit path
+        ISO_CHECK(max_len <= 56);
+        ISO_CHECK(ca::huffman::decompress(packed) == input);
+    }
+
+    // All 256 symbols, equal counts: a flat tree, every code exactly 8 bits.
+    {
+        std::vector<std::uint8_t> buf(256 * 3);
+        for (std::size_t i = 0; i < buf.size(); i++) {
+            buf[i] = static_cast<std::uint8_t>(i & 0xff);
+        }
+        round_trip(buf);
+        ISO_CHECK_EQ_UINT(max_table_length(ca::huffman::compress(buf)), 8);
+    }
+
+    // The longest legal code (56 bits) decodes; 57 is rejected. A degenerate
+    // "comb" table with lengths 1,2,...,56,56 (57 symbols).
+    {
+        std::vector<std::pair<int, int>> comb;
+        for (int i = 0; i < 57; i++) {
+            comb.push_back({i, i < 56 ? i + 1 : 56});
+        }
+        auto ok = ca::huffman::decompress(hostile(comb, 1, 8, 0x00));
+        ISO_CHECK_EQ_UINT(ok.size(), 1);
+        comb[56].second = 57;
+        comb[55].second = 56;
+        ISO_CHECK(rejected(hostile(comb, 1, 8, 0x00)));
+    }
+
+    // Empty input stays an 8-byte header of zeros.
+    {
+        auto packed = ca::huffman::compress({});
+        ISO_CHECK_EQ_UINT(packed.size(), 8);
+        for (std::uint8_t b : packed) {
+            ISO_CHECK_EQ_UINT(b, 0);
+        }
     }
 
     // Large input round-trips in linear time.

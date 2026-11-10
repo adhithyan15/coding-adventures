@@ -8,10 +8,64 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
 
+use crate::fixed::FixedTy;
 use crate::parser::{
     AssumptionsDecl, BinaryOp, BoundDecl, Declaration, Expression, InputDecl, LabelsDecl, Literal,
-    MatchArm, ModelDecl, OpDecl, Pattern, QualifiedName, TypeExpr, UnaryOp, WarrantFile, Width,
+    MatchArm, ModelDecl, OpDecl, Pattern, QualifiedName, TypeExpr, UnaryOp, Version, WarrantFile,
+    Width,
 };
+
+/// Names reserved in every document (VER04 section 2).
+const V0_BUILTINS: [&str; 18] = [
+    "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at", "concat",
+    "fixed", "div", "Some", "None", "Ok", "Err",
+];
+
+/// The six types WX-B adds; reserved only in v1 documents.
+const V1_TYPES: [&str; 6] = ["U16", "U32", "I8", "I16", "I32", "I64"];
+
+/// The v1 built-in *functions* (WX-B and WX-C).  Reserved, and in scope, only
+/// in v1 documents (VER04j section 1.2): a v0 document may still define its
+/// own model called `rem` or `shl` and keeps meaning that definition.
+pub const V1_FUNCTIONS: [&str; 31] = [
+    "widen",
+    "wrap",
+    "try",
+    "to_int",
+    "to_nat",
+    "max_value",
+    "min_value",
+    "checked_add",
+    "checked_sub",
+    "checked_mul",
+    "rem",
+    "div_trunc",
+    "rem_trunc",
+    "unwrap_or",
+    "bit_and",
+    "bit_or",
+    "bit_xor",
+    "bit_not",
+    "shl",
+    "shr",
+    "sar",
+    "rotl",
+    "rotr",
+    "popcount",
+    "clz",
+    "ctz",
+    "bit",
+    "be_bytes",
+    "le_bytes",
+    "from_be",
+    "from_le",
+];
+
+/// Is `name` a built-in reserved in a document of version `version`?
+fn is_reserved_builtin(version: Version, name: &str) -> bool {
+    V0_BUILTINS.contains(&name)
+        || (version == Version::V1 && (V1_TYPES.contains(&name) || V1_FUNCTIONS.contains(&name)))
+}
 
 /// Defensive limits for semantic checking.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -132,6 +186,13 @@ pub enum Type {
     Nat,
     U8,
     U64,
+    /// The six fixed-width types added by WX-B (v1 documents only).
+    U16,
+    U32,
+    I8,
+    I16,
+    I32,
+    I64,
     Bytes,
     FixedBytes(u64),
     FixedBytesParam(String),
@@ -150,6 +211,12 @@ impl Type {
             Self::Nat => "Nat".to_string(),
             Self::U8 => "U8".to_string(),
             Self::U64 => "U64".to_string(),
+            Self::U16 => "U16".to_string(),
+            Self::U32 => "U32".to_string(),
+            Self::I8 => "I8".to_string(),
+            Self::I16 => "I16".to_string(),
+            Self::I32 => "I32".to_string(),
+            Self::I64 => "I64".to_string(),
             Self::Bytes => "Bytes".to_string(),
             Self::FixedBytes(n) => format!("Bytes<{n}>"),
             Self::FixedBytesParam(p) => format!("Bytes<{p}>"),
@@ -157,6 +224,36 @@ impl Type {
             Self::Option(inner) => format!("Option<{}>", inner.display_name()),
             Self::Result(inner, err) => format!("Result<{}, {err}>", inner.display_name()),
             Self::ErrorVariant(v) => format!("ErrorVariant({v})"),
+        }
+    }
+
+    /// The fixed-width type this semantic type denotes, if it is one of the
+    /// eight (`U8`, `U64` and the six v1 additions).
+    pub fn fixed(&self) -> Option<FixedTy> {
+        Some(match self {
+            Self::U8 => FixedTy::U8,
+            Self::U16 => FixedTy::U16,
+            Self::U32 => FixedTy::U32,
+            Self::U64 => FixedTy::U64,
+            Self::I8 => FixedTy::I8,
+            Self::I16 => FixedTy::I16,
+            Self::I32 => FixedTy::I32,
+            Self::I64 => FixedTy::I64,
+            _ => return None,
+        })
+    }
+
+    /// The semantic type of a fixed-width type.
+    pub fn from_fixed(ty: FixedTy) -> Type {
+        match ty {
+            FixedTy::U8 => Type::U8,
+            FixedTy::U16 => Type::U16,
+            FixedTy::U32 => Type::U32,
+            FixedTy::U64 => Type::U64,
+            FixedTy::I8 => Type::I8,
+            FixedTy::I16 => Type::I16,
+            FixedTy::I32 => Type::I32,
+            FixedTy::I64 => Type::I64,
         }
     }
 
@@ -383,12 +480,14 @@ impl<'a> Checker<'a> {
         let mut seen_assumptions = HashSet::new();
 
         // Built-in types and callables reserved in module symbol namespace
-        let builtins = [
-            "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at",
-            "concat", "fixed", "div", "Some", "None", "Ok", "Err",
-        ];
-        for b in builtins {
+        // (the v1 names only in a v1 document, VER04j section 1.2).
+        for b in V0_BUILTINS {
             module_symbols.insert(b.to_string());
+        }
+        if self.file.version == Version::V1 {
+            for b in V1_TYPES.iter().chain(V1_FUNCTIONS.iter()) {
+                module_symbols.insert((*b).to_string());
+            }
         }
 
         for decl in &self.file.declarations {
@@ -598,6 +697,13 @@ impl<'a> Checker<'a> {
                 "U8" => Ok(Type::U8),
                 "U64" => Ok(Type::U64),
                 "Bytes" => Ok(Type::Bytes),
+                // WX-B types exist only in a v1 document; in v0 they fall
+                // through to the alias lookup and are unbound names (W0202).
+                other
+                    if this.file.version == Version::V1 && FixedTy::from_name(other).is_some() =>
+                {
+                    Ok(Type::from_fixed(FixedTy::from_name(other).unwrap()))
+                }
                 other => {
                     if let Some(resolved) = this.resolved_aliases.get(other) {
                         return Ok(resolved.clone());
@@ -1263,6 +1369,11 @@ impl<'a> Checker<'a> {
                     UnaryOp::Neg => {
                         if op_type == Type::Int || op_type == Type::Nat {
                             Ok(Type::Int)
+                        } else if op_type.fixed().is_some_and(FixedTy::signed) {
+                            // VER04j section 2.3: wrapping negation of a
+                            // signed value; an unsigned `-a` stays rejected
+                            // (write `0uN - a`).
+                            Ok(op_type)
                         } else {
                             Err(CheckerError {
                                 code: DiagnosticCode::W0301,
@@ -1432,6 +1543,7 @@ impl<'a> Checker<'a> {
             Literal::Bool(_) => Ok(Type::Bool),
             Literal::U8(_) => Ok(Type::U8),
             Literal::U64(_) => Ok(Type::U64),
+            Literal::Fixed(ty, _) => Ok(Type::from_fixed(*ty)),
             Literal::Int(_) => {
                 if let Some(Type::Nat) = expected {
                     Ok(Type::Nat)
@@ -1485,6 +1597,14 @@ impl<'a> Checker<'a> {
             if args.is_none() && widths.is_empty() {
                 return Ok(ty.clone());
             }
+        }
+
+        // 2a. v1 built-ins (WX-B/WX-C), in scope only in a v1 document.
+        if self.file.version == Version::V1
+            && name.segments.len() == 1
+            && (V1_FUNCTIONS.contains(&first) || first == "div")
+        {
+            return self.typecheck_v1_builtin(first, widths, args, env, allow_ops, span);
         }
 
         // 2. Built-in constructors and functions
@@ -1953,6 +2073,245 @@ impl<'a> Checker<'a> {
         })
     }
 
+    // ── WX-B / WX-C built-ins (VER04j sections 2.3, 3.2, 3.3) ──────────────
+
+    /// Type a call to a v1 built-in function.  Every rule is a row of the
+    /// specification tables; an operand that does not fit is W0301 and the
+    /// result type is the table's `Result` column.
+    ///
+    /// ```text
+    /// widen<T>(x)            x: F, range(x) within range(T)   -> T
+    /// wrap<T>(x)             x: F | Int | Nat                 -> T
+    /// try<T>(x)              x: F | Int | Nat                 -> Option<T>
+    /// to_int(x) / to_nat(x)  x: F  /  x: unsigned F           -> Int / Nat
+    /// max_value<T>()         (no operands)                    -> T
+    /// checked_add(a, b)      T, T                             -> Option<T>
+    /// div(a, b)  rem(a, b)   unsigned T, T                    -> Option<T>
+    ///                        Int|Nat, Int|Nat                 -> Option<Int>
+    ///                        signed: rejected (floor vs trunc is a trap)
+    /// div_trunc rem_trunc    signed T, T                      -> Option<T>
+    /// unwrap_or(o, d)        Option<T>, T                     -> T
+    /// bit_and(a, b) ...      T, T                             -> T
+    /// shl(a, n) shr rotl ... T, Nat                           -> T
+    /// sar(a, n)              signed T, Nat                    -> T
+    /// popcount(a) clz ctz    T                                -> Nat
+    /// bit(a, i)              T, Nat                           -> Bool
+    /// be_bytes(a) le_bytes   T                                -> Bytes<w/8>
+    /// from_be<T>(b)          Bytes<w/8>                       -> T
+    /// ```
+    fn typecheck_v1_builtin(
+        &mut self,
+        name: &str,
+        widths: &[Width<'a>],
+        args: Option<&[Expression<'a>]>,
+        env: &HashMap<String, Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        let mismatch = |expected: &str, actual: String| CheckerError {
+            code: DiagnosticCode::W0301,
+            kind: CheckerErrorKind::TypeMismatch {
+                expected: expected.to_string(),
+                actual,
+            },
+            span,
+        };
+        // The static type argument of `widen<T>`, `max_value<T>`, ...
+        let static_ty = |widths: &[Width<'a>]| -> Result<FixedTy, CheckerError> {
+            match widths {
+                [Width::Named(n)] => FixedTy::from_name(n)
+                    .ok_or_else(|| mismatch("fixed-width type argument", (*n).to_string())),
+                [Width::Literal(n)] => {
+                    Err(mismatch("fixed-width type argument", format!("{n}")))
+                }
+                other => Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: other.len(),
+                    },
+                    span,
+                }),
+            }
+        };
+        let wants_static = matches!(
+            name,
+            "widen" | "wrap" | "try" | "max_value" | "min_value" | "from_be" | "from_le"
+        );
+        if !wants_static && !widths.is_empty() {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::ArityMismatch {
+                    expected: 0,
+                    actual: widths.len(),
+                },
+                span,
+            });
+        }
+        let arity = match name {
+            "max_value" | "min_value" => 0,
+            "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz"
+            | "ctz" | "be_bytes" | "le_bytes" | "from_be" | "from_le" => 1,
+            _ => 2,
+        };
+        let list = args.ok_or(CheckerError {
+            code: DiagnosticCode::W0301,
+            kind: CheckerErrorKind::ArityMismatch {
+                expected: arity,
+                actual: 0,
+            },
+            span,
+        })?;
+        if list.len() != arity {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::ArityMismatch {
+                    expected: arity,
+                    actual: list.len(),
+                },
+                span,
+            });
+        }
+
+        match name {
+            "max_value" | "min_value" => Ok(Type::from_fixed(static_ty(widths)?)),
+            "widen" | "wrap" | "try" => {
+                let target = static_ty(widths)?;
+                let x = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let ok_operand = match x.fixed() {
+                    Some(src) => name != "widen" || src.widens_to(target),
+                    None => name != "widen" && x.is_assignable_to(&Type::Int),
+                };
+                if !ok_operand {
+                    return Err(mismatch(
+                        if name == "widen" {
+                            "fixed-width operand whose range is contained in the target"
+                        } else {
+                            "fixed-width, Int or Nat operand"
+                        },
+                        x.display_name(),
+                    ));
+                }
+                let t = Type::from_fixed(target);
+                Ok(if name == "try" {
+                    Type::Option(Box::new(t))
+                } else {
+                    t
+                })
+            }
+            "to_int" | "to_nat" => {
+                let x = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                match x.fixed() {
+                    Some(f) if name == "to_int" || !f.signed() => {
+                        Ok(if name == "to_int" { Type::Int } else { Type::Nat })
+                    }
+                    _ => Err(mismatch(
+                        if name == "to_int" {
+                            "fixed-width operand"
+                        } else {
+                            "unsigned fixed-width operand"
+                        },
+                        x.display_name(),
+                    )),
+                }
+            }
+            "from_be" | "from_le" => {
+                let target = static_ty(widths)?;
+                let b = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                match b {
+                    // A dynamic Bytes is rejected on purpose: there is no
+                    // implicit truncation or padding (use `fixed<N>` first).
+                    Type::FixedBytes(n) if n == target.bytes() => Ok(Type::from_fixed(target)),
+                    other => Err(mismatch(
+                        &format!("Bytes<{}>", target.bytes()),
+                        other.display_name(),
+                    )),
+                }
+            }
+            "unwrap_or" => {
+                let o = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let Type::Option(inner) = o else {
+                    return Err(mismatch("Option<T>", o.display_name()));
+                };
+                let d = self.typecheck_expression(&list[1], env, Some(&inner), allow_ops)?;
+                if !d.is_assignable_to(&inner) {
+                    return Err(mismatch(&inner.display_name(), d.display_name()));
+                }
+                Ok(*inner)
+            }
+            "div" | "rem" => {
+                let a = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let b = self.typecheck_expression(&list[1], env, Some(&a), allow_ops)?;
+                match (a.fixed(), b.fixed()) {
+                    (Some(f), Some(g)) if f == g && !f.signed() => {
+                        Ok(Type::Option(Box::new(a)))
+                    }
+                    (Some(f), Some(g)) if f == g => Err(mismatch(
+                        "unsigned fixed-width operands (a signed model must say div_trunc/rem_trunc)",
+                        a.display_name(),
+                    )),
+                    (None, None)
+                        if a.is_assignable_to(&Type::Int) && b.is_assignable_to(&Type::Int) =>
+                    {
+                        Ok(Type::Option(Box::new(Type::Int)))
+                    }
+                    _ => Err(mismatch(
+                        &format!("matching operands, got {}", a.display_name()),
+                        b.display_name(),
+                    )),
+                }
+            }
+            "div_trunc" | "rem_trunc" | "checked_add" | "checked_sub" | "checked_mul"
+            | "bit_and" | "bit_or" | "bit_xor" => {
+                let a = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let b = self.typecheck_expression(&list[1], env, Some(&a), allow_ops)?;
+                let f = a
+                    .fixed()
+                    .ok_or_else(|| mismatch("fixed-width operand", a.display_name()))?;
+                if a != b {
+                    return Err(mismatch(&a.display_name(), b.display_name()));
+                }
+                if name.ends_with("_trunc") && !f.signed() {
+                    return Err(mismatch("signed fixed-width operands", a.display_name()));
+                }
+                Ok(if name.starts_with("bit_") {
+                    a
+                } else {
+                    Type::Option(Box::new(a))
+                })
+            }
+            "bit_not" | "popcount" | "clz" | "ctz" | "be_bytes" | "le_bytes" => {
+                let a = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let f = a
+                    .fixed()
+                    .ok_or_else(|| mismatch("fixed-width operand", a.display_name()))?;
+                Ok(match name {
+                    "bit_not" => a,
+                    "popcount" | "clz" | "ctz" => Type::Nat,
+                    _ => Type::FixedBytes(f.bytes()),
+                })
+            }
+            // shl shr sar rotl rotr bit: the count is a mathematical Nat.
+            _ => {
+                let a = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                let n = self.typecheck_expression(&list[1], env, Some(&Type::Nat), allow_ops)?;
+                let f = a
+                    .fixed()
+                    .ok_or_else(|| mismatch("fixed-width operand", a.display_name()))?;
+                if n != Type::Nat {
+                    return Err(mismatch("Nat shift count or bit index", n.display_name()));
+                }
+                if name == "sar" && !f.signed() {
+                    return Err(mismatch(
+                        "signed operand (a logical shift is spelled shr)",
+                        a.display_name(),
+                    ));
+                }
+                Ok(if name == "bit" { Type::Bool } else { a })
+            }
+        }
+    }
+
     fn instantiate_type(
         &mut self,
         ty: &TypeExpr<'a>,
@@ -2020,6 +2379,9 @@ impl<'a> Checker<'a> {
                     Ok(Type::U8)
                 } else if l_ty == Type::U64 && r_ty == Type::U64 {
                     Ok(Type::U64)
+                } else if l_ty.fixed().is_some() && l_ty == r_ty {
+                    // WX-B: same fixed-width type on both sides, wrapping.
+                    Ok(l_ty)
                 } else {
                     Err(CheckerError {
                         code: DiagnosticCode::W0301,
@@ -2041,6 +2403,7 @@ impl<'a> Checker<'a> {
                 if (l_ty.is_assignable_to(&Type::Int) && r_ty.is_assignable_to(&Type::Int))
                     || (l_ty == Type::U8 && r_ty == Type::U8)
                     || (l_ty == Type::U64 && r_ty == Type::U64)
+                    || (l_ty.fixed().is_some() && l_ty == r_ty)
                 {
                     Ok(Type::Bool)
                 } else {
@@ -2097,15 +2460,11 @@ impl<'a> Checker<'a> {
         span: (usize, usize),
         env: &HashMap<String, Type>,
     ) -> Result<(), CheckerError> {
-        let builtins = [
-            "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at",
-            "concat", "fixed", "div", "Some", "None", "Ok", "Err",
-        ];
         if env.contains_key(binder)
             || self.models.contains_key(binder)
             || self.operations.contains_key(binder)
             || self.errors.contains_key(binder)
-            || builtins.contains(&binder)
+            || is_reserved_builtin(self.file.version, binder)
         {
             return Err(CheckerError {
                 code: DiagnosticCode::W0203,

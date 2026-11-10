@@ -15,6 +15,7 @@ pub fn parser_grammar() -> ParserGrammar {
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"warrant"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::Optional { element: Box::new(GrammarElement::TokenReference { name: r#"NAME"#.to_string() }) },
                 GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() },
                 GrammarElement::TokenReference { name: r#"INDENT"#.to_string() },
                 GrammarElement::Repetition { element: Box::new(GrammarElement::Alternation { choices: vec![
@@ -575,6 +576,13 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::Literal { value: r#"false"#.to_string() },
                 GrammarElement::TokenReference { name: r#"U64_LITERAL"#.to_string() },
                 GrammarElement::TokenReference { name: r#"U8_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"U16_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"U32_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"I8_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"I16_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"I32_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"I64_LITERAL"#.to_string() },
+                GrammarElement::TokenReference { name: r#"HEX_LITERAL"#.to_string() },
                 GrammarElement::TokenReference { name: r#"BYTES_LITERAL"#.to_string() },
                 GrammarElement::TokenReference { name: r#"INT"#.to_string() },
             ] },
