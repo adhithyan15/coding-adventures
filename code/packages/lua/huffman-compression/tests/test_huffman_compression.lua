@@ -28,8 +28,8 @@ end
 -- ── Version ───────────────────────────────────────────────────────────────────
 
 describe("huffman_compression module", function()
-    it("has VERSION '0.1.0'", function()
-        assert.equals("0.1.0", hc.VERSION)
+    it("has VERSION '0.1.1'", function()
+        assert.equals("0.1.1", hc.VERSION)
     end)
 
     it("exposes compress function", function()
@@ -351,6 +351,83 @@ describe("decode correctness", function()
             state = (state * 6364136223846793005 + 1) % 256
             chars[#chars + 1] = string.char(state)
         end
+        local data = table.concat(chars)
+        assert.equals(data, rt(data))
+    end)
+end)
+
+-- ── Hostile input (SEC-003): the code-lengths table is attacker-controlled ────
+
+-- hostile builds a CMP04 stream from explicit (symbol, length) entries.
+local function hostile(entries, orig, payload)
+    local parts = { string.pack(">I4I4", orig, #entries) }
+    for _, e in ipairs(entries) do
+        parts[#parts + 1] = string.char(e[1], e[2])
+    end
+    parts[#parts + 1] = payload
+    return table.concat(parts)
+end
+
+describe("hostile input", function()
+    it("rejects a huge length gap", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 1}, {1, 255}}, 4, string.rep("\255", 8)))
+        end)
+    end)
+
+    it("rejects a zero length", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 0}}, 1, "\0"))
+        end)
+    end)
+
+    it("rejects an over-subscribed table", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 1}, {1, 1}, {2, 1}}, 1, "\0"))
+        end)
+    end)
+
+    it("rejects an unsorted table", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 2}, {1, 1}}, 1, "\0"))
+        end)
+    end)
+
+    it("rejects symbol_count over 256", function()
+        local entries = {}
+        for i = 0, 256 do entries[#entries + 1] = {i % 256, 9} end
+        assert.has_error(function()
+            hc.decompress(hostile(entries, 1, "\0"))
+        end)
+    end)
+
+    it("rejects a duplicate symbol", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 1}, {0, 1}}, 1, "\0"))
+        end)
+    end)
+
+    it("rejects declared length u32 max with a tiny payload", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 1}, {1, 1}}, 4294967295, string.rep("\0", 4)))
+        end)
+    end)
+
+    it("rejects a truncated table", function()
+        assert.has_error(function()
+            hc.decompress(string.pack(">I4I4", 1, 5) .. "\0\1")
+        end)
+    end)
+
+    it("fails fast when bits match no code", function()
+        assert.has_error(function()
+            hc.decompress(hostile({{0, 1}}, 8, string.rep("\255", 100000)))
+        end)
+    end)
+
+    it("decodes a large valid input", function()
+        local chars = {}
+        for i = 0, 99999 do chars[#chars + 1] = string.char(i % 7) end
         local data = table.concat(chars)
         assert.equals(data, rt(data))
     end)

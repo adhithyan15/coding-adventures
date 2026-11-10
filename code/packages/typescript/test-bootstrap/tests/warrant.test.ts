@@ -97,17 +97,19 @@ describe("Canonical ct-compare.warrant Execution (VER04e, VER04f)", () => {
     expect(module.operations.has("eq")).toBe(true);
     expect(module.operations.has("select_bytes")).toBe(true);
     expect(module.examples.length).toBe(12);
-    expect(module.claims.length).toBe(1);
+    // ct-compare.warrant gained claims in VER-P030 (#19054): 9 now, was 1.
+    expect(module.claims.length).toBe(9);
     expect(module.inputContracts.length).toBe(9);
   });
 
-  it("executes all 12 examples and 1 claim successfully against host implementation", () => {
+  it("executes all 12 examples and 9 claims successfully against host implementation", () => {
     const results = executeWarrantModule(module, ctCompareHost, {
       claimSamples: 25,
       seed: 42n,
     });
 
-    expect(results.length).toBe(13);
+    // 12 examples + 9 claims.
+    expect(results.length).toBe(21);
     for (const r of results) {
       expect(r.passed).toBe(true);
       expect(r.verdict.status).toBe("pass");

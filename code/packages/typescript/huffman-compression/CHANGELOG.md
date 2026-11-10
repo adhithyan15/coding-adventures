@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1] — 2026-11-10
+
+### Security
+
+- SEC-003: `decompress` now treats the code-lengths table as hostile input and
+  throws for `symbol_count > 256`, duplicate symbols, code lengths outside
+  1..56, tables not sorted by length, over-subscribed (Kraft > 1) tables, and a
+  declared `original_length` larger than 8 x payload bytes (checked before
+  allocating the output). Canonical codes are built with BigInt because
+  JavaScript's `<<` masks the shift count to 5 bits. Decoding walks a flat trie
+  reading bits in O(1) and fails as soon as the bits match no code. Valid
+  encoder output still round-trips.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

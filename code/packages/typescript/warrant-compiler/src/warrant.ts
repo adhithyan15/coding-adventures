@@ -1513,6 +1513,12 @@ export function executeWarrantModule(
 
       let claimGen = tupleGen;
       if (claim.refinement) {
+      // The attempt cap below (1000) is deliberate; rejection sampling needs
+      // headroom. A refinement like `len(a) == len(b)` over two independent Bytes
+      // (length 0..32) is accepted only ~1 time in 33, so the old cap of 100 ran
+      // out (~5% per sample, which a fixed seed turns into a deterministic
+      // "Generator filter exhausted" failure). 1000 makes that ~4e-14 and is
+      // still a hard bound.
         claimGen = tupleGen.filter((tupleValues: any[]) => {
           const filterEnv = new Map<string, unknown>();
           for (let i = 0; i < claim.binders.length; i++) {
@@ -1525,7 +1531,7 @@ export function executeWarrantModule(
             budget: { count: 0, limit: 10_000 },
           };
           return Boolean(evaluateWarrantExpr(claim.refinement!, filterCtx));
-        }, 100);
+        }, 1000);
       }
 
       assertProperty(

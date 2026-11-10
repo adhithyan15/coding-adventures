@@ -101,7 +101,7 @@
 
 local M = {}
 
-M.VERSION = "0.1.0"
+M.VERSION = "0.1.1"
 
 -- HuffmanTree is our dependency (DT27). We rely on:
 --   HuffmanTree.build({{sym, freq}, ...})  → tree
@@ -190,58 +190,23 @@ local function pack_bits_lsb_first(bits)
     return table.concat(output)
 end
 
--- unpack_bits_lsb_first expands raw bytes into a string of '0'/'1' characters,
--- LSB-first.
---
--- Reverses pack_bits_lsb_first: for each byte, bit 0 (LSB) becomes the next
--- character in the output, then bit 1, …, bit 7 (MSB).
---
--- The result will have exactly 8 × #data characters. Callers must trim to the
--- meaningful bit count using the original_length decoded from the header.
---
--- @param data  string  Raw packed bytes.
--- @return string  String of '0' and '1' characters.
-local function unpack_bits_lsb_first(data)
-    local bits = {}
-    for i = 1, #data do
-        local byte = data:byte(i)
-        for j = 0, 7 do
-            bits[#bits + 1] = tostring((byte >> j) & 1)
-        end
-    end
-    return table.concat(bits)
-end
-
 -- ── Canonical Code Reconstruction ────────────────────────────────────────────
 
--- int_to_bits converts an integer code to a zero-padded MSB-first binary string.
---
--- The canonical code assignment produces integer values; we need them as
--- bit strings so the decoder can match them against the bit stream.
---
--- Example:
---   int_to_bits(0, 1) → "0"
---   int_to_bits(2, 2) → "10"   (binary 10 = decimal 2)
---   int_to_bits(3, 2) → "11"
---   int_to_bits(5, 4) → "0101"
---
--- @param code  integer  Non-negative integer code value.
--- @param len   integer  Total number of bits in the output string.
--- @return string  MSB-first binary string of exactly `len` characters.
-local function int_to_bits(code, len)
-    local bits = {}
-    for k = len - 1, 0, -1 do
-        bits[#bits + 1] = tostring((code >> k) & 1)
-    end
-    return table.concat(bits)
-end
+-- Symbols are single bytes, so a valid code-length table has at most 256 entries.
+local MAX_SYMBOLS = 256
+
+-- Longest code length the decoder accepts.  Real codes over 256 symbols are far
+-- shorter; 56 keeps every shift, and the (len << 56 | code) key, inside a
+-- 64-bit Lua integer.
+local MAX_CODE_LEN = 56
 
 -- canonical_codes_from_lengths reconstructs canonical Huffman codes from a
--- sorted code-length table.
+-- sorted code-length table, and VALIDATES the table because it comes straight
+-- from untrusted input.
 --
 -- This is the inverse of the canonical assignment done during compression.
 -- Given the sorted (symbol, length) pairs, we replay the same numeric
--- assignment and produce the mapping from bit-string → symbol.
+-- assignment and produce a lookup from (length, code) → symbol.
 --
 -- The input `lengths` must be sorted by (length, symbol) ascending — this is
 -- exactly how the CMP04 header stores the table.
@@ -251,35 +216,55 @@ end
 --   For each entry (in sorted order):
 --     If this entry's length > previous length:
 --       code = code << (len - prev_len)   ← shift left to "make room"
---     Assign int_to_bits(code, len) → symbol
+--     Assign (len, code) → symbol
 --     code = code + 1
 --
 -- Why does this work? The left-shift allocates a whole sub-tree of the correct
 -- height to the new length tier. Incrementing assigns the next code at that tier.
 -- The prefix-free property is maintained automatically.
 --
+-- SECURITY: errors are raised for
+--   * lengths of 0 (matches nothing) or above MAX_CODE_LEN (shift overflow),
+--   * tables not sorted by length (the encoder always sorts), and
+--   * over-subscribed tables (Kraft sum > 1): before each assignment the
+--     running code must still fit in `len` bits, i.e. code >> len == 0.
+--
+-- The lookup key is (len << 56) | code, an integer, so no per-symbol bit
+-- strings are built and lookups are O(1).
+--
 -- @param lengths  table  Array of {symbol, length} pairs, sorted by (len, sym).
--- @return table  Mapping {bit_string → symbol} for decoding.
+-- @return table, integer  Mapping {key → symbol}, and the longest code length.
 local function canonical_codes_from_lengths(lengths)
     local code_to_sym = {}
     local code        = 0
-    local prev_len    = lengths[1][2]
+    local prev_len    = lengths[1] and lengths[1][2] or 0
+    local max_len     = 0
 
     for _, entry in ipairs(lengths) do
         local sym = entry[1]
         local len = entry[2]
 
-        if len > prev_len then
-            -- Moving to a longer code length: shift left to allocate the new tier.
-            code = code << (len - prev_len)
+        if len == 0 or len > MAX_CODE_LEN then
+            error(string.format("CMP04 decompress: invalid code length %d in table", len))
+        end
+        if len < prev_len then
+            error("CMP04 decompress: code-lengths table is not sorted by length")
         end
 
-        code_to_sym[int_to_bits(code, len)] = sym
+        -- Moving to a longer code length: shift left to allocate the new tier.
+        code = code << (len - prev_len)
+
+        if (code >> len) ~= 0 then
+            error("CMP04 decompress: code-lengths table over-subscribes the code space")
+        end
+
+        code_to_sym[(len << 56) | code] = sym
         code     = code + 1
         prev_len = len
+        max_len  = len
     end
 
-    return code_to_sym
+    return code_to_sym, max_len
 end
 
 -- ── Encoder ───────────────────────────────────────────────────────────────────
@@ -474,13 +459,32 @@ function M.decompress(data)
 
     -- ── Step 2: Parse code-length table ──────────────────────────────────────
 
-    -- pos2 is the 1-indexed position of the first byte of the code-length table.
-    local lengths    = {}
-    local table_pos  = pos2
+    -- SECURITY: the header is attacker-controlled.  Symbols are single bytes,
+    -- so a table can name at most 256 of them; refuse more before sizing
+    -- anything from the count.
+    if symbol_count > MAX_SYMBOLS then
+        error(string.format("CMP04 decompress: symbol_count %d exceeds %d",
+            symbol_count, MAX_SYMBOLS))
+    end
 
+    -- pos2 is the 1-indexed position of the first byte of the code-length table.
+    local table_pos = pos2
+    local bit_start = table_pos + symbol_count * 2
+    if #data < bit_start - 1 then
+        error("CMP04 decompress: input too short for the code-lengths table")
+    end
+
+    local lengths = {}
+    local seen    = {}
     for _ = 1, symbol_count do
         local sym = data:byte(table_pos)
         local len = data:byte(table_pos + 1)
+        -- A byte value can have only one code; a repeat makes the table ambiguous.
+        if seen[sym] then
+            error(string.format(
+                "CMP04 decompress: symbol %d appears twice in code-lengths table", sym))
+        end
+        seen[sym] = true
         lengths[#lengths + 1] = {sym, len}
         table_pos = table_pos + 2
     end
@@ -488,48 +492,62 @@ function M.decompress(data)
     -- ── Step 3: Reconstruct canonical codes ──────────────────────────────────
 
     -- lengths is already sorted by (len, sym) — the encoder wrote them that way.
-    -- canonical_codes_from_lengths returns {bit_string → symbol}.
-    local code_to_sym = canonical_codes_from_lengths(lengths)
+    -- canonical_codes_from_lengths validates the table and returns
+    -- {(len << 56 | code) → symbol} plus the longest code length.
+    local code_to_sym, max_len = canonical_codes_from_lengths(lengths)
 
-    -- ── Step 4: Unpack the bit stream ────────────────────────────────────────
-
-    local bit_data   = data:sub(table_pos)
-    local all_bits   = unpack_bits_lsb_first(bit_data)
-
-    -- ── Step 5: Greedy prefix decode ─────────────────────────────────────────
+    -- ── Step 4: Bound the declared length by the payload ─────────────────────
     --
-    -- Walk the bit string character by character, building a candidate code
-    -- prefix. As soon as the prefix matches an entry in code_to_sym, emit the
-    -- corresponding symbol and reset the prefix.
+    -- SECURITY: every code is at least one bit, so N payload bytes hold at most
+    -- 8*N symbols.  Reject a larger declared length before doing any work sized
+    -- from it.
+    local total_bits = (#data - (bit_start - 1)) * 8
+    if original_length > total_bits then
+        error(string.format(
+            "CMP04 decompress: bit stream exhausted: declared length %d exceeds the %d bits available",
+            original_length, total_bits))
+    end
+
+    -- ── Step 5: Greedy prefix decode straight from the bytes ─────────────────
     --
-    -- This is the table-driven equivalent of walking a binary tree: instead of
-    -- following left/right child pointers, we extend the string key one character
-    -- at a time and check for a match.
+    -- Bits are LSB-first within each byte, so bit i (0-based) of the stream is
+    -- (byte[i // 8] >> (i % 8)) & 1 — O(1), with no expanded '0'/'1' string.
+    -- We build the candidate code MSB-first as an integer.  Canonical codes are
+    -- prefix-free, so the first (len, code) hit is the symbol.  Once the
+    -- accumulated length reaches the longest code without a match, no later bit
+    -- can match (an incomplete table fed unmatched bits), so we fail at once
+    -- instead of scanning the rest of the input.
     --
     -- Why not use HuffmanTree:decode_all()?
     -- We reconstructed a flat code→symbol table from the lengths, not a tree
-    -- object. Building a tree just to decode would require re-running HuffmanTree.build()
-    -- with the reconstructed frequencies — but the header only stores lengths, not
-    -- frequencies. The greedy prefix approach works directly from the code table.
+    -- object, and the header only stores lengths, not frequencies.
 
     local symbols = {}
-    local prefix  = ""
-    local bit_idx = 1
+    local count   = 0
+    local acc     = 0
+    local acc_len = 0
+    local pos     = 0
 
-    while #symbols < original_length do
-        if bit_idx > #all_bits then
+    while count < original_length do
+        if pos >= total_bits then
             error(string.format(
                 "CMP04 decompress: bit stream exhausted after %d symbols; expected %d",
-                #symbols, original_length))
+                count, original_length))
         end
 
-        prefix = prefix .. all_bits:sub(bit_idx, bit_idx)
-        bit_idx = bit_idx + 1
+        local byte = data:byte(bit_start + (pos >> 3))
+        acc     = (acc << 1) | ((byte >> (pos & 7)) & 1)
+        acc_len = acc_len + 1
+        pos     = pos + 1
 
-        local sym = code_to_sym[prefix]
+        local sym = code_to_sym[(acc_len << 56) | acc]
         if sym then
-            symbols[#symbols + 1] = sym
-            prefix = ""
+            count = count + 1
+            symbols[count] = sym
+            acc     = 0
+            acc_len = 0
+        elseif acc_len >= max_len then
+            error("CMP04 decompress: bit pattern does not match any code")
         end
     end
 

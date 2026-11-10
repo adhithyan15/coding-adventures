@@ -88,9 +88,28 @@ decompress input
                             else do
                                 decodeTable <- canonicalDecodeTable entries
                                 let maxLength = maximum (map snd entries)
-                                    bits = unpackBitsLsbFirst (BS.drop tableEnd input)
-                                decoded <- decodeSymbols originalLength maxLength decodeTable bits
-                                Right (BS.pack decoded)
+                                    payload = BS.drop tableEnd input
+                                    availableBits = 8 * toInteger (BS.length payload)
+                                -- SECURITY: every code is at least one bit, so N
+                                -- payload bytes can hold at most 8*N symbols. A
+                                -- header declaring more is hostile or corrupt;
+                                -- reject it before any decoding work is sized from
+                                -- it (the table itself is already validated above:
+                                -- <= 256 symbols, no duplicates, lengths 1..16,
+                                -- sorted, and not over-subscribed).
+                                if toInteger originalLength > availableBits
+                                    then
+                                        Left
+                                            ( "bit stream exhausted: declared length "
+                                                ++ show originalLength
+                                                ++ " exceeds the "
+                                                ++ show availableBits
+                                                ++ " bits available"
+                                            )
+                                    else do
+                                        let bits = unpackBitsLsbFirst payload
+                                        decoded <- decodeSymbols originalLength maxLength decodeTable bits
+                                        Right (BS.pack decoded)
 
 validateHeader :: Word32 -> Word32 -> Either String ()
 validateHeader originalLength symbolCount

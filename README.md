@@ -541,7 +541,8 @@ The main CI workflow uses the same build planner:
   the selected languages require those runners;
 - pushes to `main` create a forced sharded full-build plan;
 - Rust packages run per-package Clippy with warnings denied;
-- CodeQL covers JavaScript/TypeScript, Python, Ruby, Go, and Swift;
+- CodeQL covers JavaScript/TypeScript, Python, Ruby, Go, and Swift, and runs
+  daily and on demand rather than on every pull request;
 - Miri blocks on unsafe-bearing runtime crates, with deeper integration checks
   running after merge and nightly;
 - dedicated workflows test Rust-to-Node and Rust-to-Python native matrices, and

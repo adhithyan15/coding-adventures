@@ -9,6 +9,12 @@ namespace CodingAdventures.HuffmanCompression;
 /// </summary>
 public static class HuffmanCompression
 {
+    // Symbols are single bytes, so a valid table has at most 256 entries.
+    private const int MaxSymbols = 256;
+
+    // Longest code length the decoder accepts; keeps every 64-bit shift safe.
+    private const int MaxCodeLength = 56;
+
     /// <summary>
     /// Compresses bytes using canonical Huffman codes and the CMP04 wire format.
     /// </summary>
@@ -78,12 +84,15 @@ public static class HuffmanCompression
             return [];
         }
 
-        if (originalLength > int.MaxValue || symbolCount > int.MaxValue)
+        // SECURITY: the header is attacker-controlled. Symbols are single bytes,
+        // so a table can name at most 256 of them. Check before computing the
+        // table size or sizing anything from it.
+        if (symbolCount > MaxSymbols)
         {
-            throw new InvalidOperationException("CMP04 header fields exceed supported .NET array sizes");
+            throw new InvalidOperationException($"symbol_count {symbolCount} exceeds {MaxSymbols}");
         }
 
-        var tableLength = checked((int)symbolCount * 2);
+        var tableLength = (int)symbolCount * 2;
         var bitStreamOffset = 8 + tableLength;
         if (bitStreamOffset > data.Length)
         {
@@ -91,42 +100,73 @@ public static class HuffmanCompression
         }
 
         var lengths = new List<(int Symbol, int Length)>((int)symbolCount);
-        for (var index = 0; index < symbolCount; index++)
+        var seen = new bool[256];
+        for (var index = 0; index < (int)symbolCount; index++)
         {
-            var offset = 8 + ((int)index * 2);
+            var offset = 8 + (index * 2);
             var symbol = data[offset];
             var length = data[offset + 1];
-            if (length == 0)
+
+            // A byte value can have only one code; a repeat makes the table ambiguous.
+            if (seen[symbol])
             {
-                throw new InvalidOperationException("Code lengths must be positive");
+                throw new InvalidOperationException($"Symbol {symbol} appears twice in the code-length table");
             }
 
+            seen[symbol] = true;
             lengths.Add((symbol, length));
         }
 
-        var codeToSymbol = BuildCanonicalDecodeTable(lengths);
-        var output = new byte[originalLength];
-        var accumulated = new StringBuilder();
-        var decoded = 0;
+        var codeToSymbol = BuildCanonicalDecodeTable(lengths, out var maxLength);
 
-        for (var offset = bitStreamOffset; offset < data.Length && decoded < output.Length; offset++)
+        // SECURITY: every code is at least one bit, so N payload bytes hold at
+        // most 8*N symbols. Reject a larger declared length BEFORE allocating
+        // the output array (which would otherwise be up to 2 GiB).
+        var totalBits = (long)(data.Length - bitStreamOffset) * 8;
+        if (originalLength > totalBits)
         {
-            var value = data[offset];
-            for (var bit = 0; bit < 8 && decoded < output.Length; bit++)
-            {
-                accumulated.Append(((value >> bit) & 1) == 1 ? '1' : '0');
-                if (codeToSymbol.TryGetValue(accumulated.ToString(), out var symbol))
-                {
-                    output[decoded] = symbol;
-                    decoded++;
-                    accumulated.Clear();
-                }
-            }
+            throw new InvalidOperationException(
+                $"Bit stream exhausted: declared length {originalLength} exceeds the {totalBits} bits available");
         }
 
-        if (decoded < output.Length)
+        if (originalLength > int.MaxValue)
         {
-            throw new InvalidOperationException("Bit stream exhausted before decoding all symbols");
+            throw new InvalidOperationException("CMP04 header fields exceed supported .NET array sizes");
+        }
+
+        // Decode straight from the payload bytes. Bits are LSB-first within each
+        // byte, so bit i is (data[offset + i/8] >> (i%8)) & 1 -- O(1), no
+        // expanded bit string. The candidate code is built MSB-first as an
+        // integer; canonical codes are prefix-free so the first (length, value)
+        // hit is the symbol. Once the accumulated length reaches the longest
+        // code without a match, no later bit can match (an incomplete table fed
+        // unmatched bits), so we fail immediately instead of scanning on.
+        var output = new byte[(int)originalLength];
+        var decoded = 0;
+        ulong accumulated = 0;
+        var accumulatedLength = 0;
+
+        for (long position = 0; decoded < output.Length; position++)
+        {
+            if (position >= totalBits)
+            {
+                throw new InvalidOperationException("Bit stream exhausted before decoding all symbols");
+            }
+
+            var bit = (data[bitStreamOffset + (int)(position >> 3)] >> (int)(position & 7)) & 1;
+            accumulated = (accumulated << 1) | (uint)bit;
+            accumulatedLength++;
+            if (codeToSymbol.TryGetValue(((ulong)accumulatedLength << 56) | accumulated, out var symbol))
+            {
+                output[decoded] = symbol;
+                decoded++;
+                accumulated = 0;
+                accumulatedLength = 0;
+            }
+            else if (accumulatedLength >= maxLength)
+            {
+                throw new InvalidOperationException("Bit pattern does not match any code");
+            }
         }
 
         return output;
@@ -158,23 +198,53 @@ public static class HuffmanCompression
         return output;
     }
 
-    private static Dictionary<string, byte> BuildCanonicalDecodeTable(IEnumerable<(int Symbol, int Length)> lengths)
+    // The canonical reconstruction rule (same as DEFLATE):
+    //   code = 0
+    //   for each (symbol, length) in sorted order:
+    //     if length > previous: code <<= (length - previous)
+    //     assign code to symbol; code++
+    //
+    // SECURITY: the table is hostile input, so we reject
+    //   * lengths of 0 or above MaxCodeLength (a zero-length code matches
+    //     nothing; a long one could overflow the 64-bit shift),
+    //   * tables not sorted by length (the encoder always sorts), and
+    //   * over-subscribed tables (Kraft sum > 1): before each assignment the
+    //     running code must still fit in `length` bits (code >> length == 0).
+    // C# masks a ulong shift count to 6 bits; the 1..56 bound keeps every shift
+    // below 64 so the mask can never change a result.
+    // Codes are keyed by (length << 56 | code) so no strings are built.
+    private static Dictionary<ulong, byte> BuildCanonicalDecodeTable(
+        IEnumerable<(int Symbol, int Length)> lengths,
+        out int maxLength)
     {
-        var table = new Dictionary<string, byte>();
+        var table = new Dictionary<ulong, byte>();
         var ordered = lengths.ToList();
-        var codeValue = 0;
+        ulong codeValue = 0;
         var previousLength = ordered.Count == 0 ? 0 : ordered[0].Length;
+        maxLength = 0;
 
         foreach (var (symbol, length) in ordered)
         {
-            if (length > previousLength)
+            if (length == 0 || length > MaxCodeLength)
             {
-                codeValue <<= length - previousLength;
+                throw new InvalidOperationException($"Code lengths must be positive and at most {MaxCodeLength}");
             }
 
-            table[Convert.ToString(codeValue, 2).PadLeft(length, '0')] = (byte)symbol;
+            if (length < previousLength)
+            {
+                throw new InvalidOperationException("Code-length table is not sorted by length");
+            }
+
+            codeValue <<= length - previousLength;
+            if ((codeValue >> length) != 0)
+            {
+                throw new InvalidOperationException("Code-length table over-subscribes the code space");
+            }
+
+            table[((ulong)length << 56) | codeValue] = (byte)symbol;
             codeValue++;
             previousLength = length;
+            maxLength = length;
         }
 
         return table;
