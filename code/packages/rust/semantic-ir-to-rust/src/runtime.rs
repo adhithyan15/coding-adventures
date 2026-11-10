@@ -150,6 +150,7 @@ pub const RUNTIME: &str = r##"mod __sir {
 
     pub struct Closure {
         pub fun: Box<dyn Fn(Vec<Value>) -> Value + 'static>,
+        pub arity: usize,
     }
 
     // ── symbol interning ──────────────────────────────────────────
@@ -256,7 +257,21 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 apply_closure(&c, args)
             }),
+            arity: n,
         }))
+    }
+
+    /// Yield a key-value entry to a Hash block.
+    ///
+    /// When the block declares arity 1, Ruby yields the 2-element Array `[key, value]`.
+    /// Otherwise, Ruby yields `key` and `value` as separate arguments.
+    pub fn yield_hash_pair(b: &Value, key: Value, val: Value) -> Value {
+        if let Value::Closure(cl) = b {
+            if cl.arity == 1 {
+                return apply_closure(b, vec![seq_lit(vec![key, val])]);
+            }
+        }
+        apply_closure(b, vec![key, val])
     }
 
     // ── truthiness ────────────────────────────────────────────────
@@ -2586,6 +2601,7 @@ pub const RUNTIME: &str = r##"mod __sir {
         let n = name.to_string();
         Value::Closure(Rc::new(Closure {
             fun: Box::new(move |args: Vec<Value>| call_builtin_by_name(&n, args)),
+            arity: usize::MAX,
         }))
     }
 
@@ -4107,7 +4123,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             "each" | "each_pair" => {
                 if let Some(b) = &block {
                     for (k, v) in entries_rc.borrow().clone() {
-                        apply_closure(b, vec![k, v]);
+                        yield_hash_pair(b, k, v);
                     }
                 }
                 recv
@@ -4118,7 +4134,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .borrow()
                         .clone()
                         .into_iter()
-                        .map(|(k, v)| apply_closure(b, vec![k, v]))
+                        .map(|(k, v)| yield_hash_pair(b, k, v))
                         .collect(),
                 ),
                 None => unknown_method(&recv, name),
@@ -4129,7 +4145,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .borrow()
                         .clone()
                         .into_iter()
-                        .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .filter(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
                 }
@@ -4339,7 +4355,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     snapshot
                         .into_iter()
-                        .find(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .find(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                         .map(|(k, v)| seq_lit(vec![k, v]))
                         .unwrap_or(Value::Nil)
                 }
@@ -4349,7 +4365,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        snapshot.into_iter().any(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(!entries_rc.borrow().is_empty()),
@@ -4358,7 +4374,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        snapshot.into_iter().all(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        snapshot.into_iter().all(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(true),
@@ -4367,7 +4383,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        !snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        !snapshot.into_iter().any(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(entries_rc.borrow().is_empty()),
@@ -4378,7 +4394,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let snapshot = entries_rc.borrow().clone();
                 let n = snapshot
                     .into_iter()
-                    .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                    .filter(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                     .count();
                 Value::Int(n as i64)
             }
@@ -4391,7 +4407,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let mut keyed: Vec<(Value, Value)> = snapshot
                         .into_iter()
                         .map(|(k, v)| {
-                            (apply_closure(b, vec![k.clone(), v.clone()]), seq_lit(vec![k, v]))
+                            (yield_hash_pair(b, k.clone(), v.clone()), seq_lit(vec![k, v]))
                         })
                         .collect();
                     keyed.sort_by(|(ka, _), (kb, _)| {
@@ -4416,7 +4432,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut best: Option<(Value, (Value, Value))> = None;
                     for (k, v) in snapshot {
-                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let key = yield_hash_pair(b, k.clone(), v.clone());
                         let take = match &best {
                             None => true,
                             Some((bk, _)) => {
@@ -4448,7 +4464,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let acc = map_lit(vec![]);
                     for (k, v) in snapshot {
-                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let key = yield_hash_pair(b, k.clone(), v.clone());
                         let bucket = match map_get(&acc, &key) {
                             seq @ Value::Seq(_) => seq,
                             _ => seq_lit(vec![]),
@@ -4470,7 +4486,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let mut yes = Vec::new();
                     let mut no = Vec::new();
                     for (k, v) in snapshot {
-                        if truthy(&apply_closure(b, vec![k.clone(), v.clone()])) {
+                        if truthy(&yield_hash_pair(b, k.clone(), v.clone())) {
                             yes.push(seq_lit(vec![k, v]));
                         } else {
                             no.push(seq_lit(vec![k, v]));
@@ -4488,7 +4504,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut out = Vec::new();
                     for (k, v) in snapshot {
-                        match apply_closure(b, vec![k, v]) {
+                        match yield_hash_pair(b, k, v) {
                             Value::Seq(inner) => out.extend(inner.borrow().clone()),
                             other => out.push(other),
                         }
@@ -4535,7 +4551,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut acc = seed;
                     for (k, v) in snapshot {
-                        acc = plus(vec![acc, apply_closure(b, vec![k, v])]);
+                        acc = plus(vec![acc, yield_hash_pair(b, k, v)]);
                     }
                     acc
                 }
@@ -5407,6 +5423,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let recv = args.remove(0);
                 call_method(recv, &method, args)
             }),
+            arity: 1,
         }))
     }
 

@@ -6,6 +6,56 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Lower `.call(...)` on lambda/proc receivers to `Expr::IndirectCall` and capture outer locals/parameters in lambda bodies (#18798, Item 3).**
+  In Ruby, lambdas and procs are callable objects invoked with `.call(...)`. Lowering
+  `.call(...)` as a general OOP method call (`__method__`) failed at runtime because
+  `call_method` only inspects class instance methods, producing `undefined method 'call'`
+  on Python, JS, TS, Go, and Rust, and being refused on C and Ruby. Additionally,
+  `hoist_lambda_body` did not track enclosing locals or parameters, leaving lambda bodies
+  unable to read enclosing lexical scope variables.
+  `fold_one_dot_call` now intercepts `method_name == "call"`, lowering directly to
+  `Expr::IndirectCall` and registering `Feature::Closures`. Trailing blocks attached to
+  `.call` are hoisted and appended to indirect call arguments. `hoist_lambda_body` now
+  tracks enclosing lexical locals and parameters, performs free-variable recapture analysis
+  (`recapture_reads_in_block`), populates `Function.captures` and `Expr::MakeClosure.captures`,
+  and rewrites free reads to `Scope::Capture`, properly capturing both cell-boxed mutable
+  variables and immutable enclosing parameters/locals.
+
+
+- **Persist `while`/`until` loop body locals and `rescue => e` bindings into enclosing scope (#18798, Comment 1 & Item 8).**
+  In Ruby, neither `while`/`until` loops nor `begin ... rescue` clauses introduce a
+  new scope. Locals first assigned inside a `while` or `until` loop body or condition
+  are ordinary locals of the enclosing scope that persist after the loop (or evaluate
+  to `nil` if the loop did not execute). Similarly, an exception binding `rescue => e`
+  binds into an ordinary local in the enclosing scope that persists after the clause
+  and mutates any existing outer local `e`.
+  Previously, `ruby-to-semantic-ir` only performed pre-loop declarations for `for`
+  loops, and removed `rescue` bindings from `declared_locals` upon leaving the clause,
+  causing post-loop or post-rescue reads of those locals to fail validation. Additionally,
+  backends (such as JavaScript, Go, Rust, and C) emitted catch parameters that shadowed
+  the outer `e`, preventing mutations from escaping the clause.
+  `while_statement` and `until_statement` now collect body-assigned names via
+  `collect_loop_assigned_names` and emit pre-loop `LetBinding(name, nil)` declarations
+  in the enclosing scope. `rescue_clause` bindings now declare the outer local `e = nil`
+  before the `TryCatch`, catch the exception into an internal temporary binding
+  `__rescue_binding_<n>`, and assign into the outer local `e` at the start of the clause
+  body, preserving the mutation across all SIR backends. Block parameter shadowing also
+  isolates outer method parameter aliases so block parameters resolve cleanly to `Scope::Param`.
+
+- **Box outer variables in cells when mutated inside blocks (#18798, Item 5).**
+  In Ruby, blocks are closures sharing the outer local variable scope. When an
+  outer variable or parameter was assigned or mutated inside a block (such as
+  `t = 0; xs.each { |x| t = t + x }`), it lowered to a fresh local binding
+  `Stmt::LetBinding`, leaving the outer variable unmutated and causing subsequent
+  reads of the local to fail the SIR validator (`references unknown name`).
+  Outer variables and parameters assigned inside blocks or lambdas are now
+  identified and boxed into 1-element sequences (`__cell_<name>_<n> = [init]`).
+  Reads lower to `Expr::SeqIndex(cell, 0)` and writes lower to
+  `Stmt::SeqSet(cell, 0, value)`. When a block or lambda references an outer cell,
+  the cell sequence itself is captured into `Function.captures` and `MakeClosure.captures`
+  with `Scope::Capture`. Block parameters and block-local variables continue to
+  shadow outer cell variables cleanly.
+
 - **Dispatch bare-name calls to methods of `self` inside classes (#18798, Item 21).**
   In Ruby, calling a method with no receiver (`m`, `m(...)`, or `m { ... }`) inside
   an instance method of a class or module invokes `self.m` if the method exists in the

@@ -553,3 +553,71 @@ when the fix is merged and verified on fetched main.
 | P2 / WD-007 | Retire or derive remaining hand-written ct-compare tests (conformance, fuzz_targets, optimized_ir) |
 | P2 / WD-008 | Miri evidence for CWE-416/415/476/190; tools behind the nine `unverified::` attestations |
 | P2 / OPS-002 | `cargo build --workspace` cannot run in this sandbox (skia-bindings download 403); rely on CI for workspace builds |
+
+### Coordinator round 2 status (2026-11-09)
+
+| Priority / ID | Work | State |
+|---|---|---|
+| done / WD-001 |  | Merged as #19054 (2ff2db8cb02), verified on main |
+| in PR / SEC-001 |  | #19059 |
+
+### Status deltas after 2026-11-09 coordinator round 1 (append to VER-BACKLOG polyglot section)
+
+| Priority / ID | Work | State |
+|---|---|---|
+| done-local / LH-003 | test-bootstrap audit: branch worktree-agent-aca74c66a7307fa91 (7 commits). READY-WITH-CAVEATS overall (tfv/verdict/prng READY; run/pbt/fuzz/bench with caveats). 7 false-pass bugs fixed in pbt/fuzz/bench (zero-case property passed; trusted shrinker; fuzz dropped Timeout/Oom; unchecked hard bench budgets; dropped Verdict; crash dedup/minimization), i128 range bias, hangs, TAP injection. 22/22 mutants killed; 95.7% lines measured; Rust/Python TFV differential over 364,413 documents | queued for PR (conflicts likely with WD-001's test-bootstrap 0.3.0 changes; rebase after WD-001 merges) |
+| P1 / LH-003a | ct-compare zero-allocation evidence is vacuous: AllocCounter is cooperative and the closures never record; replace with a counting `#[global_allocator]` and re-derive CWE-400 evidence | after LH-003 merge |
+| P1 / LH-003b | Add `gen_bytes_pair(min,max,p_equal,p_near)` (VER05 §7.2); independent 16-byte draws never collide | after LH-003 |
+| P2 / LH-003c | L0 supervisor must check `1..N` against results (process::exit(0) truncation); VER05 CI digest is 64-bit FNV not SHA-256; gen_nat/gen_ascii unimplemented; VER06 engine uses a subset of the mutator algebra, 32-bit signature with unescaped ':' joins | backlog |
+| P1 / WD-009 | Bind proof certificates to obligations by recomputing CNF/lowered-function hash in `--check` (security review B4 follow-up) | after WD-001 |
+| done-local / LH-001 | drat-check audit: branch worktree-agent-adde9212bf3b22b8f (4 commits). READY-WITH-CAVEATS; no soundness bug; 5,003,728 candidate proofs over all 15,180 width-2 formulas (none accepted for SAT), all 1,686 UNSAT accepted, 1.65M-proof differential vs independent checker, width-3 domain; 18/18 mutants killed; 99.83% lines. Fixed `+N`/`-0` token acceptance (`-0` acted as a terminator) | queued for PR |
+| P2 / LH-001a | drat-check: `check_with_limit(.., usize::MAX)` allows 2^30 vars (memory DoS footgun); binary DRAT unsupported; encoding faithfulness of bit-blaster and cdcl-sat proof emission unverified (LH-005/006) | backlog |
+| done-local / LH-005 | cdcl-sat audit: branch worktree-agent-a111d37eee462ba9e (5 commits). READY; no bugs; ~290k exhaustive/assumption solves all brute-force checked with every UNSAT proof DRAT-certified; PHP/XOR/Tseitin families; 28/29 mutants killed (1 equivalent); 99.93% lines; VER09 reconciled (DRAT emission implemented, budgets, cores) | queued for PR |
+| P0 / LH-005a | INTEGRATION: drat-check audit (LH-001) now rejects `+N`/`-0`; cdcl-sat still accepts them and its new solver/kernel DIMACS agreement test will fail once both land. Make cdcl-sat's DIMACS reader strict in the same PR that lands LH-001+LH-005 | must ship together |
+| P2 / WD-010 | Security review round 3 INFO: unsafe code outside `src/**/*.rs` text (include!, #[path] outside src, build.rs/OUT_DIR, proc-macros, tests/benches) is neither source-bound nor scanned; reject include!/#[path]/build.rs in the checker or require them in the certificate | backlog |
+| P3 / WD-011 | `ca-assurance-report/src/report.rs` ~395/410/428 `as_i64().unwrap_or(0) as u64` wraps negative counts (pre-existing); use u64::try_from | backlog |
+| P3 / WD-012 | `ct-compare/tests/sabotage_guard.rs` uses predictable temp dir in /tmp with remove_dir_all+create_dir_all; move under CARGO_TARGET_TMPDIR | backlog |
+| done-local / LP-001 | gf256 Warrant conversion: branch worktree-agent-a88d5407e27ca898b (5 commits on 21d86a2323, pre-security-fix base; rebase onto merged #19054). READY-WITH-CAVEATS: 38 claims, 51,472,354 exhaustive cases incl. all 2^24 triples, 7 scoped sabotage faults caught, model oracles pin polynomial 0x11D; data-driven bindings (ct-compare output byte-identical); package-agnostic ca-assurance-report. No gf256 bug; spec/README corrected (AES values, 0^0). Proofs not-live: WIR front end rejects `&'static`, struct-field index, `return if..else` | queued for PR after #19054 |
+| P1 / LP-001a | Rust-subset front end (VER25a/b): lifetimes, struct field + index, `return if/else` expressions, OnceLock tables, so gf256 proofs go live | after LP-001 |
+| P2 / LP-001b | `Field::new` accepts any u16 polynomial without validation; capabilities.rs witness + `--verify-cert` for gf256 (E0 currently rests on an unverified cert) | backlog |
+| P2 / OPS-003 | Agent worktrees are created from origin/main, not the current branch; briefs that need unmerged work must say so (lesson recorded by LP-001) | apply in briefs |
+| done-local / WD-002 | VER04i polyglot spec: branch worktree-agent-a9f43bf58278f3a70 (commit 5d1187fbda). `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and a stdlib Python oracle (materialising ct-compare would be ~28 MB/library); 256 biased property cases per claim materialised; binding wrappers for per-op sabotage; `warrant-lane-evidence-v1` manifests; 9 new fail-closed checks; rollout python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir, then lua, perl, haskell, swift, dart, ocaml | queued for PR |
+
+Provisional decisions on VER04i §14 (coordinator defaults, pending owner review):
+1. Runner lives in each lane's test-bootstrap package (create one per lane as needed), not a separate warrant-corpus package.
+2. In-lane model evaluator cross-checked by digest: yes (no WASM toolchain dependency).
+3. Keep hand-written ct-compare-v1 as the independent oracle for work-accounting fields.
+4. Shard by default when a lane exceeds 120 s; ceiling stays.
+5. Native-layer generators emitted by the Rust compiler (single source of truth).
+6. A fault no claim catches always forces a new claim (fail closed).
+7. No release-ready without an armed VER08b sandbox (matches the user's sandbox requirement).
+8. gf256.warrant exists on the LP-001 branch; examples become real once it merges.
+| done-local / LH-006 | bit-blaster audit: branch worktree-agent-afc4e1727d486b34a (3 commits). READY: no unfaithful encoding, no false UNSAT (bit-blaster or constraint-engine LIA); exhaustive widths 1-6 through AIG->Tseitin->cdcl-sat vs reference with drat-certified uniqueness; 3.5M depth-2 assignments; certified identities; 24/24 mutants killed; 100% lines. Added udiv/urem/sdiv/srem/extract/concat/zext/sext circuits; width-0 panic made explicit | queued for PR |
+| P2 / LH-006a | constraint-engine::bv (Predicate->circuit lowering) not re-audited; widths 7-8 sampled; wide multiplier miters exceed drat-check default work limit; bvsmod missing | backlog |
+| done-local / LP-006 | required_capabilities.json audit: branch worktree-agent-aa95d6cf90c4675a6 (3 commits). 280 leaf crates: 153 valid, 60 added (57 pure; repl, fpga-bitstream, wall-clock with declared capabilities), 53 still missing, 14 invalid | queued for PR |
+| P1 / LP-006a | 14 invalid existing manifests (legacy shape: atbash-cipher, caesar-cipher, irc-framing, irc-proto, layout-ir, sql-backend, text-interfaces, write-ahead-log; array: bounded-json; non-object entries: csprng, vault-pm-storage-removable; "abilities" typo: resp-protocol, skip-list, tcp-server which likely needs real net capabilities). INTEGRATION RISK: the hardened analyzer (LH-002) rejects lenient/unknown-field manifests; fix these before or with LH-002 | before LH-002 PR |
+| P2 / LP-006b | 53 leaf crates still without a manifest (mostly simulators/protocols; protocol, os-job-core, jit-loader-macos, cuda-compute, jni-bridge likely need real capabilities); rng CHANGELOG.d shard | backlog |
+| done-local / LP-006a | 14 invalid manifests fixed: branch worktree-agent-a04ef1c6a7559cf4a (commit 2c2469ea85); all pass the hardened analyzer; tcp-server now declares net/time; csprng rand/fs/ffi with unsafe+foreign_linkage exceptions; write-ahead-log fs; vault-pm-storage-removable fs/ffi | ship with or before LH-002 |
+| P2 / LH-002c | Analyzer over-declaration: `#[cfg(test)]` code counted (forces test-only time/env/proc declarations), bare `use std::thread` counted as thread:spawn; target charset stricter than the schema | backlog |
+| done-local / WD-3xx | ct-compare ports for lua, perl, haskell, ocaml, dart, swift: branch worktree-agent-a867a8cd1052bd444 (7 commits). lua/perl/haskell/ocaml/dart run locally and pass (100% measured where tooling existed); swift never compiled (toolchain download blocked) — first CI run decides; build-tool registers the six lanes as CT01 consumers. Satisfies package-parity owners ct-compare-<lang>-lane-parity (state file left to the parity loop controller) | queued for PR; check no parity PR is active first |
+| P2 / OPS-004 | The package-parity loop (.claude/package-parity-loop-state.json) owns per-lane ct-compare items; coordinate so the two loops never pick the same item concurrently | ongoing |
+| P1 / OPS-005 | CI lesson: changing a crate's source invalidates its committed effect_certificate.json (`--verify-cert` source_digest mismatch); regenerate certificates for every changed crate before pushing | lesson to record with the #19054 fix |
+| done-local / WX-000 | VER04j Warrant v1 extensions spec: branch worktree-agent-ad69283a1344b3c11 (commit a809a22a915). `warrant x v1` header; WX-B fixed-width ints (wrapping), WX-C bitwise (named functions; shift >= width gives 0), WX-E pinned vector tables, WX-A tuples/records/variants, WX-H output bounds with allocation-capped observer; WX-F/WX-D sketched. Order B+C (6-9d), E (6-8d), A (10-15d), H (5-7d), F, D | queued for PR; reconcile its provisional corpus encodings with VER04i (it could not see the VER04i branch) |
+| P1 / WD-013 | BUG: the Rust evidence generator evaluates U8 arithmetic as non-wrapping, contradicting VER04 §3 (U8/U64 wrap). Claims using U8 arithmetic get a wrong oracle; gf256 worked around it. Fix with differential tests in the first WX slice | after #19054 |
+
+Provisional decisions on VER04j §12 (coordinator defaults, pending owner review):
+1. `warrant x v1` header (not per-feature `use`). 2. Fixed-width `+ - *` wrap by default (keeps v0 meaning). 3. Signed div/rem rejected; `div_trunc`/`rem_trunc`; MIN / -1 -> None. 4. Shift counts >= width give 0 (mathematical), not hardware masking. 5. DER-TLV offset via a second observer op (no payload-carrying error types yet). 7. VER04i owns corpus encodings; VER04j defers to it. 8. Exhaustive budget stays a per-package option.
+NEEDS USER DECISION: (6) WX-H lz* `max_output` + error channel is a breaking API change across ~17 ports — Rust-only adapter shim for the pilot vs cross-port API change; (9) who vets NIST/RFC vector data before a pin is accepted.
+| done-local / AS-000 | VER13 assumption catalogue + constant-time discharge ladder: branch worktree-agent-a51d8746a7f0723d2 (commit c1db6260647). 84 assumptions across spec/src/wir/tcb/compiler/machine-code/uarch/gate/phys/os/governance (only 4 emitted today). Ladder R0 WIR bounded(128) -> R1 IR/asm taint translation validation (pinned toolchain) -> R2 owned wir-to-riscv + symbolic RV32I `proved-to-isa` -> R3 `riscv-gatelevel` netlist `proved-to-gate-level`. Catalogue JSON + `--check` rules AC-1..AC-15 | queued for PR |
+| P1 / AS-001a | Land catalogue JSON + AC checks; migrate ct-compare report (assumption list grows before it shrinks) | after AS-000 merges |
+| P1 / AS-002 | Discharge `memory.unaliased`; Miri on volatile_barrier; replace name-matched volatile lowering (`wir.lowering.volatile-by-name`) | after AS-001a |
+| P2 / AS-003a | R1 IR/asm taint checker for ct-compare with pinned toolchain tuple | after AS-001a |
+| P2 / AS-004 | Spec inconsistency: ct-compare.warrant says `assume platform: none` while proofs rely on platform assumptions (`spec.platform.declared-none`) | with AS-001a |
+
+Provisional decisions on VER13 open questions (coordinator defaults, pending owner review):
+1. Labels are per `stack`; CWE-208 retires only for the stack actually proved (owned RV32I), not for host rustc builds. 2. Netlist by tracing the existing riscv-gatelevel engine into HNL (re-synthesis later as a cross-check). 3. Constant-time kernels restricted to RV32I first; RV32M ladder later. 4. Byte-address observation model. 5. Only the checker marks entries discharged, from evidence. 6. Catalogue in code/assumptions/, VER13 absorbs VER00 §7.5.2. 7. Bounded BMC cross-check once at R3.
+| ready / LH-003 | test-bootstrap audit integrated onto main: branch worktree-agent-a411ad7edc430baa3 (0.4.0; no consumer changes; all BUILDs pass; security review PASSED) | next PR after SEC-001 |
+| P2 / LH-003d | Security LOW: bench hard budgets that cannot be checked still yield BudgetVerdict::Pass (listed only in output) — add strict mode / `is_fully_checked()`; nothing consumes FuzzReport::is_clean() yet; tfv_differential.py f-string backslash needs Python >= 3.12 (CI uses 3.13) | backlog |
+| P2 / OPS-006 | A worktree-isolated agent switched the MAIN checkout's branch (to its own worktree branch); no work lost. Briefs must say never run `git checkout`/`switch` outside the agent's own worktree | apply in briefs |
+| ready / LP-001 | gf256 + package-agnostic report: branch worktree-agent-a6e1ded123339efdd (integration on main + security fixes M1/L1/L3/L4/L5; round 2 PASSED) | queued for PR |
+| P2 / WD-014 | Security INFO: `--check` step 6 doesn't re-derive CWE-125/787 discharge; proof `kind` not whitelisted; evidence.bindings not hash-bound; gen_evidence numeric options uncapped and file I/O uncapped/symlink-following | backlog |

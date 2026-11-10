@@ -2,10 +2,19 @@
 
 ## Unreleased
 
+- `tests/gf256_proofs.rs` records `source_sha256` over every `gf256/src/**/*.rs` with the shared `warrant-src-v1` framing (`manifest::source_tree_framing`), like `warrant_proofs.rs`.
 - Round-2: `tests/warrant_proofs.rs` records `source_sha256` over every `ct-compare/src/**/*.rs` (framing `warrant-src-v1` from test-bootstrap) instead of `lib.rs` alone.
 - `tests/warrant_proofs.rs` records `obligation_sha256` per discharged proof entry: SHA-256 of the canonical text of the lowered, inlined WIR function plus the textual obligation (security review B4c). `ca-assurance-report --check` verifies it is present and well formed; recomputation is follow-up WD-009.
 
 ## 0.1.0
+
+- Add `tests/gf256_proofs.rs` (VER04h, gf256): attempts the Warrant `labels`/`bound`
+  obligations of `code/specs/gf256.warrant` on the real `gf256/src/lib.rs`. The
+  Rust-subset front end refuses the file (`&'static` lifetime at 188:17; also
+  struct field access `t.log[..]`, `return if ... {..}` and `OnceLock`), so every
+  constant-time and steps-bound obligation is written to `proof-manifest.json` as
+  `not-live` with the front end's own message and a per-export probe, never as a
+  proof. The `lowering-blocker` test fails the day the front end accepts the file.
 
 - VER04h / VER-P030: add `inline` (WIR call inlining) so the symbolic executor and provers analyse a public export itself (`ct_eq`, `ct_eq_fixed`) rather than only its helper; differential-tested against the un-inlined program and the real Rust function.
 - `ConstantTimeProver` and `BoundProver` keep every DRAT-checked refutation (`ProofCertificate`, with a `trivial` flag for miter-collapsed proofs) in `certificates`.
