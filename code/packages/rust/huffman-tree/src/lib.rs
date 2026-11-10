@@ -460,8 +460,10 @@ impl HuffmanTree {
     /// assert_eq!(tree.decode_all("001011", 4).unwrap(), vec![65, 65, 67, 66]);
     /// ```
     pub fn decode_all(&self, bits: &str, count: usize) -> Result<Vec<u16>, String> {
-        let mut result: Vec<u16> = Vec::with_capacity(count);
         let chars: Vec<char> = bits.chars().collect();
+        // `count` is caller-supplied (often an untrusted header value): never
+        // preallocate more than the bit string could possibly yield.
+        let mut result: Vec<u16> = Vec::with_capacity(count.min(chars.len()));
         let mut i: usize = 0;
         let single_leaf = matches!(self.root, Node::Leaf(_));
 

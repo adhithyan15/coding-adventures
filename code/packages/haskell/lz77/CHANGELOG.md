@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- No code change: the header count is validated against the payload length before any token is parsed, and invalid offsets return Left. NOT RUN locally (toolchain unavailable in the review environment).
+- Added test/HostileHeadersSpec.hs (hspec, registered in the cabal test-suite and Spec.hs): hostile headers must be rejected promptly, plus round trips over every byte string of length <= 2 and a seeded pseudo-random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## Unreleased
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir

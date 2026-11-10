@@ -1008,7 +1008,10 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         }
     };
 
-    let mut output: Vec<u8> = Vec::with_capacity(original_length);
+    // Security: `original_length` is an untrusted header field; do not size the
+    // allocation from it.  Cap the hint by the number of bits present (8x the
+    // payload) and let the vector grow if the stream really produces more.
+    let mut output: Vec<u8> = Vec::with_capacity(original_length.min(bits.len()));
 
     loop {
         // We stop as soon as we have original_length bytes, even mid-command.

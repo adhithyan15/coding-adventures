@@ -227,30 +227,47 @@ object LZSS {
      * @return the reconstructed bytes
      */
     fun decode(tokens: List<Token>, originalLength: Int = -1): ByteArray {
-        val out = ByteArrayOutputStream()
+        // Security / performance: the previous implementation re-read
+        // out.toByteArray() (a full copy of the output) for every copied byte,
+        // which is quadratic in the output size.  Keep a plain growable array,
+        // and stop once the declared length is reached (nothing more survives
+        // the final trim).
+        var buf = ByteArray(256)
+        var len = 0
 
         for (token in tokens) {
+            if (originalLength >= 0 && len >= originalLength) break
             when (token) {
-                is Literal -> out.write(token.value)
+                is Literal -> {
+                    buf = ensureCapacity(buf, len, 1)
+                    buf[len++] = token.value.toByte()
+                }
                 is Match   -> {
-                    val startPos = out.size() - token.offset
-                    // Guard: offset must not exceed what has already been written.
-                    // A crafted stream with offset > out.size() produces a negative
-                    // startPos and causes ArrayIndexOutOfBoundsException.
-                    require(startPos >= 0) {
-                        "LZSS: back-reference offset ${token.offset} exceeds output buffer size ${out.size()}"
+                    // Guard: a zero offset, or one reaching before the start of
+                    // the output, is invalid (corrupt or hostile input).
+                    require(token.offset in 1..len) {
+                        "LZSS: back-reference offset ${token.offset} is invalid for output buffer size $len"
                     }
-                    repeat(token.length) { i ->
-                        // Re-read live output each step: handles overlapping matches
-                        // where the source overlaps the destination being written.
-                        out.write(out.toByteArray()[startPos + i].toInt() and 0xFF)
+                    buf = ensureCapacity(buf, len, token.length)
+                    val startPos = len - token.offset
+                    for (i in 0 until token.length) {
+                        buf[len++] = buf[startPos + i]
                     }
                 }
             }
         }
 
-        val result = out.toByteArray()
-        return if (originalLength in 0 until result.size) result.copyOf(originalLength) else result
+        if (originalLength in 0 until len) len = originalLength
+        return buf.copyOf(len)
+    }
+
+    /** Grow [buf] (doubling) so that [extra] more bytes fit after [len]. */
+    private fun ensureCapacity(buf: ByteArray, len: Int, extra: Int): ByteArray {
+        val needed = len.toLong() + extra
+        if (needed <= buf.size) return buf
+        require(needed <= Int.MAX_VALUE - 8) { "LZSS: decoded output too large" }
+        val grown = maxOf(needed, minOf(buf.size.toLong() * 2, (Int.MAX_VALUE - 8).toLong()))
+        return buf.copyOf(grown.toInt())
     }
 
     // =========================================================================
@@ -353,10 +370,11 @@ object LZSS {
 
         val header     = ByteBuffer.wrap(data, 0, HEADER_SIZE).order(ByteOrder.BIG_ENDIAN)
         /* originalLength = */ header.getInt()
-        val blockCount = header.getInt()
-
-        // Cap block count against actual payload to prevent DoS.
-        val safeCount = minOf(blockCount, data.size - HEADER_SIZE)
+        // Security: block_count is an unsigned 32-bit attacker-controlled value.
+        // Read it unsigned (a raw Int goes negative above 2^31 and silently
+        // decoded zero blocks), then cap it against the payload size.
+        val blockCount = header.getInt().toLong() and 0xFFFFFFFFL
+        val safeCount = minOf(blockCount, (data.size - HEADER_SIZE).toLong()).toInt()
         val tokens    = mutableListOf<Token>()
         var pos       = HEADER_SIZE
 

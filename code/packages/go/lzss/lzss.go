@@ -48,7 +48,37 @@ package lzss
 
 import (
 	"encoding/binary"
+	"math"
 )
+
+// clampCount turns an attacker-controlled 32-bit header count into an int that
+// is never negative and never larger than maxItems.
+//
+// Why clamp before converting? On a 32-bit GOARCH, int is 32 bits wide, so
+// int(uint32(0xFFFFFFFF)) is -1. A negative count makes make([]T, 0, count)
+// panic. Comparing in uint64 first means the conversion to int only ever sees
+// a value that is at most maxItems, which is already an int.
+func clampCount(claimed uint32, maxItems int) int {
+	if maxItems < 0 {
+		return 0
+	}
+	if uint64(claimed) > uint64(maxItems) {
+		return maxItems
+	}
+	return int(claimed)
+}
+
+// clampLength turns an attacker-controlled 32-bit length field into an int that
+// is never negative. A length is not bounded by the input size (LZSS output can
+// be larger than its input), so the only ceiling is math.MaxInt. Without the
+// clamp a 32-bit build reads 0xFFFFFFFF as -1, which the decoder treats as the
+// "no truncation" sentinel instead of a real bound.
+func clampLength(claimed uint32) int {
+	if uint64(claimed) > uint64(math.MaxInt) {
+		return math.MaxInt
+	}
+	return int(claimed)
+}
 
 // TokenKind distinguishes the two LZSS token types.
 type TokenKind uint8
@@ -155,13 +185,30 @@ func Encode(data []byte, windowSize, maxMatch, minMatch int) []Token {
 // originalLength trims the output to the exact uncompressed size.
 // Pass -1 to return all bytes.
 func Decode(tokens []Token, originalLength int) []byte {
-	output := make([]byte, 0, originalLength)
+	// Security: originalLength comes from an untrusted header (up to 4 GiB) and
+	// may be -1 ("unknown"), so it is only a hint, capped at what the tokens
+	// could plausibly produce.  The slice grows on demand beyond that.
+	capHint := len(tokens) * 4
+	if originalLength >= 0 && originalLength < capHint {
+		capHint = originalLength
+	}
+	output := make([]byte, 0, capHint)
 
 	for _, tok := range tokens {
+		// Once the declared length is reached nothing more survives the final
+		// truncation, so stop instead of expanding further matches.
+		if originalLength >= 0 && len(output) >= originalLength {
+			break
+		}
 		switch tok.Kind {
 		case KindLiteral:
 			output = append(output, tok.Byte)
 		case KindMatch:
+			// Invalid back-references (offset 0 or before the start of the
+			// output) are skipped.
+			if tok.Offset == 0 || int(tok.Offset) > len(output) {
+				continue
+			}
 			start := len(output) - int(tok.Offset)
 			for i := 0; i < int(tok.Length); i++ {
 				output = append(output, output[start+i]) // byte-by-byte for overlap
@@ -224,14 +271,9 @@ func DeserialiseTokens(data []byte) ([]Token, int) {
 		return nil, 0
 	}
 
-	originalLength := int(binary.BigEndian.Uint32(data[0:4]))
-	blockCount := int(binary.BigEndian.Uint32(data[4:8]))
-
+	originalLength := clampLength(binary.BigEndian.Uint32(data[0:4]))
 	// 1 byte minimum per block (flag only). Cap to prevent DoS.
-	maxPossibleBlocks := len(data) - 8
-	if blockCount > maxPossibleBlocks {
-		blockCount = maxPossibleBlocks
-	}
+	blockCount := clampCount(binary.BigEndian.Uint32(data[4:8]), len(data)-8)
 
 	tokens := make([]Token, 0)
 	pos := 8

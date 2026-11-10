@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   `ArgumentError` instead of reading from the wrong position.
 - A negative or non-integer copy length raises `ArgumentError`; before, it
   never reached the copy loop's base case and grew the output forever.
+- SEC-001: deserialisation is binary pattern matching that stops at the data
+  present, so the header count cannot drive work or memory;
+  `test/hostile_headers_test.exs` pins that, plus round trips over every byte
+  string of length <= 2 and a seeded random sample.
 
 ## [0.1.0] - 2026-04-11
 

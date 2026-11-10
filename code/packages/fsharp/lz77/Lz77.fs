@@ -115,18 +115,24 @@ type Lz77 =
         if data.Length < 4 then
             []
         else
-            let count = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4))
+            // Security: the header count is attacker-controlled (up to 2^32-1).
+            // The loop previously ran `count` times (billions of iterations,
+            // and `int index * 4` overflowed into negative spans).  Clamp it to
+            // the number of complete 4-byte tokens actually present; a larger
+            // claim is treated as truncated.
+            let claimed = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4))
+            let maxPossible = uint32 ((data.Length - 4) / 4)
+            let count = min claimed maxPossible
             if count = 0u then
                 []
             else
                 let tokens = ResizeArray<Lz77Token>()
-                for index in 0u .. count - 1u do
-                    let start = 4 + (int index * 4)
-                    if start + 4 <= data.Length then
-                        tokens.Add(
-                            { Offset = int (BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(start, 2)))
-                              Length = int data[start + 2]
-                              NextChar = data[start + 3] })
+                for index in 0 .. int count - 1 do
+                    let start = 4 + (index * 4)
+                    tokens.Add(
+                        { Offset = int (BinaryPrimitives.ReadUInt16BigEndian(data.AsSpan(start, 2)))
+                          Length = int data[start + 2]
+                          NextChar = data[start + 3] })
 
                 List.ofSeq tokens
 

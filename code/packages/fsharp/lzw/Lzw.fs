@@ -156,7 +156,10 @@ type Lzw =
         let mutable previousCode: int option = None
         let mutable stop = false
 
-        for code in codes do
+        // Security: stop once the declared length is reached (each code can emit
+        // a long dictionary entry, so a small stream could otherwise expand far
+        // beyond it before the final truncation).
+        for code in codes |> Seq.takeWhile (fun _ -> originalLength < 0 || output.Count < originalLength) do
             if not stop then
                 if code = Constants.ClearCode then
                     Lzw.ResetDecoderDictionary(dictionary)
@@ -231,7 +234,8 @@ type Lzw =
         if data.Length < 4 then
             [], 0
         else
-            let originalLength = int (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)))
+            // Security: clamp instead of a raw `int` cast (negative = "no truncation").
+            let originalLength = int (min (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4))) (uint32 Int32.MaxValue))
             let reader = BitReader(data[4..])
             let codes = ResizeArray<int>()
             let mutable nextCode = Constants.InitialNextCode
