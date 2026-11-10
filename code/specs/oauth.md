@@ -2623,15 +2623,18 @@ retains both complete non-copyable branches under a distinct type. This pure
 public-certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Revocation policy for
-both added proofs' own responders, projection of the added intermediate-status
-responder path from this alternative branch, generalized path construction or
-validation, complete revocation policy, TLS, HTTP, OAuth transport, and network
-authority remain unavailable. Concrete HTTPS and live-provider readiness
-remain unavailable.
+both added proofs' own responders, generalized path construction or validation,
+complete revocation policy, TLS, HTTP, OAuth transport, and network authority
+remain unavailable. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
-A subsequent bounded projection consumes that complete no-check plus
-intermediate-status composition and reifies the added status proof's exact
-delegated responder-to-reviewed-root path as a distinct non-copyable type.
+A subsequent bounded projection consumes either the complete no-check plus
+intermediate-status composition or the complete separately authenticated
+original-responder plus intermediate-status composition and reifies the added
+status proof's exact delegated responder-to-reviewed-root path as a distinct
+non-copyable type. Private repository-owned evidence prevents an external
+source implementation, and defaulted source parameters preserve the existing
+no-check projection's public type shape.
 The consumed inputs already prove that the added proof's exact responder
 certificate passed certificate-wide critical-extension and end-entity role
 policy, caller-selected algorithm/key policy, OCSP-signing purpose, and
@@ -2651,8 +2654,8 @@ construction or validation, implement complete revocation policy, TLS, HTTP,
 OAuth transport, or network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
-A bounded policy follow-up consumes that exact added-status responder path and
-applies the selected Mozilla-reviewed root's supported out-of-band DNS
+A bounded policy follow-up consumes either exact added-status responder path
+and applies the selected Mozilla-reviewed root's supported out-of-band DNS
 constraints to the exact fully routed authenticated responder certificate.
 The responder and reviewed-root constraint bytes are derived only through the
 consumed proof; the preceding identity binding already proves that this same
