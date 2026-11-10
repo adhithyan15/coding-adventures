@@ -95,27 +95,46 @@ func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
 	}
 }
 
-func TestCtCompareInputsSelectOnlyTheRustAdapter(t *testing.T) {
+func TestCtCompareInputsSelectTheirConsumers(t *testing.T) {
+	corpusLanes := []string{"dart", "haskell", "lua", "ocaml", "perl", "swift"}
 	packages := []discovery.Package{
 		{Name: "rust/ct-compare", Language: "rust"},
 		{Name: "rust/test-bootstrap", Language: "rust"},
 	}
-	for _, input := range []string{
-		"code/specs/fixtures/ct-compare-v1/cases.json",
-		"code/specs/fixtures/ct-compare-v1/cases.tfv",
-		"code/scripts/ct_compare_tfv.py",
-		"code/scripts/ct_compare_conformance.py",
+	for _, lane := range corpusLanes {
+		packages = append(packages, discovery.Package{Name: lane + "/ct-compare", Language: lane})
+	}
+	allCt := map[string]bool{"rust/ct-compare": true}
+	for _, lane := range corpusLanes {
+		allCt[lane+"/ct-compare"] = true
+	}
+	for _, tc := range []struct {
+		input string
+		want  map[string]bool
+	}{
+		// cases.json is read by every lane; the Rust adapter also owns the
+		// TFV projection and the Python reference scripts.
+		{"code/specs/fixtures/ct-compare-v1/cases.json", allCt},
+		{"code/specs/fixtures/ct-compare-v1/cases.tfv", map[string]bool{"rust/ct-compare": true}},
+		{"code/scripts/ct_compare_tfv.py", map[string]bool{"rust/ct-compare": true}},
+		{"code/scripts/ct_compare_conformance.py", map[string]bool{"rust/ct-compare": true}},
 	} {
-		got, err := repositoryInputConsumersForChange([]string{input}, packages, "all")
-		if err != nil || !reflect.DeepEqual(got, map[string]bool{"rust/ct-compare": true}) {
-			t.Fatalf("%s: got %v, err %v", input, got, err)
+		got, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "all")
+		if err != nil || !reflect.DeepEqual(got, tc.want) {
+			t.Fatalf("%s: got %v, err %v", tc.input, got, err)
 		}
-		if _, err := repositoryInputConsumersForChange([]string{input}, packages[1:], "all"); err == nil {
+		if _, err := repositoryInputConsumersForChange([]string{tc.input}, packages[1:2], "all"); err == nil {
 			t.Fatal("missing CT01 consumer must fail closed")
 		}
-		if got, err := repositoryInputConsumersForChange([]string{input}, packages, "go"); err != nil || len(got) != 0 {
+		if got, err := repositoryInputConsumersForChange([]string{tc.input}, packages, "go"); err != nil || len(got) != 0 {
 			t.Fatalf("single-language filtering: %v, %v", got, err)
 		}
+	}
+	// A single corpus lane is selectable on its own.
+	got, err := repositoryInputConsumersForChange(
+		[]string{"code/specs/fixtures/ct-compare-v1/cases.json"}, packages, "lua")
+	if err != nil || !reflect.DeepEqual(got, map[string]bool{"lua/ct-compare": true}) {
+		t.Fatalf("lua filter: got %v, err %v", got, err)
 	}
 	for _, input := range []string{
 		"code/specs/fixtures/ct-compare-v10/cases.json",
@@ -128,6 +147,13 @@ func TestCtCompareInputsSelectOnlyTheRustAdapter(t *testing.T) {
 		if isCtCompareInput(input) {
 			t.Errorf("lookalike selected CT01 consumer: %s", input)
 		}
+		if isCtCompareCorpus(input) {
+			t.Errorf("lookalike selected a CT01 corpus lane: %s", input)
+		}
+	}
+	if isCtCompareCorpus("code/specs/fixtures/ct-compare-v1/cases.tfv") ||
+		isCtCompareCorpus("code/scripts/tfv.py") {
+		t.Fatal("corpus lanes must not read the TFV projection or scripts")
 	}
 	if !isCtCompareInput("code/scripts/tfv.py") {
 		t.Fatal("TFV reference changes must select the CT01 adapter too")

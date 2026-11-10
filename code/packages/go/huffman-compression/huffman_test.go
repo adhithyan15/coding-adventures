@@ -280,3 +280,60 @@ func TestCompressionEffectiveness_SkewedDistribution(t *testing.T) {
 			len(compressed), len(data))
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Hostile input (SEC-003): the code-lengths table is attacker-controlled.
+// ---------------------------------------------------------------------------
+
+func hostile(entries [][2]byte, orig uint32, payload []byte) []byte {
+	out := make([]byte, 8)
+	binary.BigEndian.PutUint32(out[0:4], orig)
+	binary.BigEndian.PutUint32(out[4:8], uint32(len(entries)))
+	for _, e := range entries {
+		out = append(out, e[0], e[1])
+	}
+	return append(out, payload...)
+}
+
+func TestHostileInputRejected(t *testing.T) {
+	over256 := make([][2]byte, 257)
+	for i := range over256 {
+		over256[i] = [2]byte{byte(i), 9}
+	}
+	cases := []struct {
+		name string
+		data []byte
+	}{
+		{"huge length gap", hostile([][2]byte{{0, 1}, {1, 255}}, 4, bytes.Repeat([]byte{0xff}, 8))},
+		{"zero length", hostile([][2]byte{{0, 0}}, 1, []byte{0})},
+		{"oversubscribed", hostile([][2]byte{{0, 1}, {1, 1}, {2, 1}}, 1, []byte{0})},
+		{"unsorted", hostile([][2]byte{{0, 2}, {1, 1}}, 1, []byte{0})},
+		{"symbol_count over 256", hostile(over256, 1, []byte{0})},
+		{"duplicate symbol", hostile([][2]byte{{0, 1}, {0, 1}}, 1, []byte{0})},
+		{"declared length u32 max", hostile([][2]byte{{0, 1}, {1, 1}}, 0xFFFFFFFF, make([]byte, 4))},
+		{"unmatched bits", hostile([][2]byte{{0, 1}}, 8, bytes.Repeat([]byte{0xff}, 100000))},
+		{"truncated table", append([]byte{0, 0, 0, 1, 0, 0, 0, 5}, 0, 1)},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if _, err := huffman.Decompress(c.data); err == nil {
+				t.Errorf("expected error for hostile input %q", c.name)
+			}
+		})
+	}
+}
+
+func TestLargeRoundTripIsLinear(t *testing.T) {
+	data := make([]byte, 400000)
+	for i := range data {
+		data[i] = byte(i % 7)
+	}
+	c, err := huffman.Compress(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	d, err := huffman.Decompress(c)
+	if err != nil || !bytes.Equal(d, data) {
+		t.Fatalf("round trip failed: %v", err)
+	}
+}

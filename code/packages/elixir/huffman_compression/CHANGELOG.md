@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] - 2026-11-10
+
+### Security
+
+- SEC-003: `decompress/1` now treats the code-lengths table as hostile input
+  and returns `{:error, reason}` for `symbol_count > 256`, duplicate symbols,
+  code lengths outside 1..56, tables not sorted by length, over-subscribed
+  (Kraft > 1) tables, a declared `original_length` larger than 8 x payload
+  bytes, a payload that ends early, and bits that match no code. Previously a
+  truncated or undecodable stream silently returned a partial binary. Bits are
+  now read in O(1) with `:binary.at/2` instead of `String.length/1` per symbol
+  (which made decoding quadratic), and decoding fails as soon as the
+  accumulated bits reach the longest code length. Valid encoder output still
+  round-trips.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

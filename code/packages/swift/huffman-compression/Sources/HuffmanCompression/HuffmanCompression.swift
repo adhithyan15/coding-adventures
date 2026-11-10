@@ -129,7 +129,25 @@ public enum HuffmanCompressionError: Error, Equatable {
 
     /// The HuffmanTree returned an error (forwarded).
     case huffmanTreeError(String)
+
+    /// The code-lengths table is structurally invalid: more than 256 entries,
+    /// a repeated symbol, not sorted by length, or over-subscribed (Kraft sum > 1).
+    case invalidCodeTable(String)
+
+    /// The header declares more symbols than the payload could possibly hold
+    /// (every code is at least one bit, so N bytes hold at most 8N symbols).
+    case declaredLengthExceedsPayload(declared: Int, availableBits: Int)
+
+    /// The bits read so far match no code in the table (an incomplete table
+    /// fed unmatched bits).
+    case undecodableBits
 }
+
+/// Symbols are single bytes, so a valid table has at most 256 entries.
+private let maxSymbols = 256
+
+/// Longest code length the decoder accepts; keeps every 64-bit shift safe.
+private let maxCodeLength = 56
 
 // MARK: - String extension: left-padding
 
@@ -440,6 +458,14 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
     // ── Step 3: Parse code-lengths table ──────────────────────────────────────
     // Each entry is 2 bytes: [symbol, length]. There are `symbolCount` entries.
     // The table starts at byte 8 and occupies 2 × symbolCount bytes.
+    //
+    // SECURITY: the header is attacker-controlled. Symbols are single bytes, so
+    // a table can name at most 256 of them; refuse more before computing the
+    // table size or iterating.
+    guard symbolCount <= maxSymbols else {
+        throw HuffmanCompressionError.invalidCodeTable(
+            "symbol_count \(symbolCount) exceeds \(maxSymbols)")
+    }
     let tableStart = 8
     let tableBytes = symbolCount * 2
     guard data.count >= tableStart + tableBytes else {
@@ -452,66 +478,97 @@ public func decompress(_ data: [UInt8]) throws -> [UInt8] {
     // Read and validate each (symbol, length) pair.
     var lengths = [(symbol: Int, length: Int)]()
     lengths.reserveCapacity(symbolCount)
+    var seen = [Bool](repeating: false, count: 256)
     for i in 0..<symbolCount {
         let sym = Int(data[tableStart + i * 2])
         let len = Int(data[tableStart + i * 2 + 1])
-        guard len >= 1 else {
+        guard len >= 1, len <= maxCodeLength else {
             throw HuffmanCompressionError.invalidCodeLength(symbol: sym, length: len)
         }
+        // A byte value can have only one code; a repeat makes the table ambiguous.
+        guard !seen[sym] else {
+            throw HuffmanCompressionError.invalidCodeTable("symbol \(sym) appears twice")
+        }
+        seen[sym] = true
         lengths.append((symbol: sym, length: len))
     }
 
     // ── Step 4: Reconstruct canonical codes ───────────────────────────────────
-    // The table was stored sorted by (length, symbol), which is the exact
-    // input format that `canonicalCodesFromLengths` requires.
-    let codeToSym = canonicalCodesFromLengths(lengths)
-
-    // ── Step 5: Unpack the bit stream ─────────────────────────────────────────
-    // The bit stream starts immediately after the code-lengths table.
-    let bitStreamStart = tableStart + tableBytes
-    let bitBytes = Array(data[bitStreamStart...])
-    let bitString = unpackBitsLsbFirst(bitBytes)
-
-    // ── Step 6: Special case — single symbol ──────────────────────────────────
-    // When there is only one distinct symbol, the canonical code is "0" (the
-    // HuffmanTree's single-leaf convention). Each occurrence is one "0" bit.
-    if symbolCount == 1 {
-        let onlySym = lengths[0].symbol
-        return [UInt8](repeating: UInt8(onlySym), count: originalLength)
+    // The canonical rule (same as DEFLATE):
+    //   code = 0
+    //   for each (symbol, length) in sorted order:
+    //     if length > previous: code <<= (length - previous)
+    //     assign code to symbol; code += 1
+    //
+    // SECURITY: the table is hostile input, so besides the length bounds above
+    // we reject tables not sorted by length (the encoder always sorts) and
+    // over-subscribed tables (Kraft sum > 1): before each assignment the running
+    // code must still fit in `length` bits (code >> length == 0). Lengths are at
+    // most 56, so the UInt64 shifts below can never overflow.
+    // Codes are keyed by (length << 56 | code) so no strings are built.
+    var codeToSym = [UInt64: UInt8]()
+    var code: UInt64 = 0
+    var previousLength = lengths[0].length
+    var maxLength = 0
+    for entry in lengths {
+        guard entry.length >= previousLength else {
+            throw HuffmanCompressionError.invalidCodeTable("table is not sorted by code length")
+        }
+        code <<= UInt64(entry.length - previousLength)
+        guard (code >> UInt64(entry.length)) == 0 else {
+            throw HuffmanCompressionError.invalidCodeTable("table over-subscribes the code space")
+        }
+        codeToSym[(UInt64(entry.length) << 56) | code] = UInt8(entry.symbol)
+        code += 1
+        previousLength = entry.length
+        maxLength = entry.length
     }
 
-    // ── Step 7: Decode bit stream ─────────────────────────────────────────────
-    // We walk the bit string character by character, accumulating a "current
-    // code" string. At each step we check whether `currentCode` matches any
-    // entry in `codeToSym`. Because canonical codes are prefix-free, there is
-    // exactly one match at the right length.
-    //
-    // This is a greedy prefix search: try the shortest code first (length 1),
-    // extending one bit at a time until a match is found.
-    //
-    // Maximum code length is 16 bits (the Huffman tree depth bound), so the
-    // inner search is bounded and never runs away.
-    var output   = [UInt8]()
+    // ── Step 5: Bound the declared length by the payload ──────────────────────
+    // SECURITY: every code is at least one bit, so N payload bytes hold at most
+    // 8*N symbols. Reject a larger declared length BEFORE allocating anything
+    // sized from it.
+    let bitStreamStart = tableStart + tableBytes
+    let totalBits = (data.count - bitStreamStart) * 8
+    guard originalLength <= totalBits else {
+        throw HuffmanCompressionError.declaredLengthExceedsPayload(
+            declared: originalLength, availableBits: totalBits)
+    }
+
+    // ── Step 6: Decode the bit stream ─────────────────────────────────────────
+    // Bits are LSB-first within each byte, so bit i of the stream is
+    // (data[start + i/8] >> (i%8)) & 1 -- O(1), no expanded bit string. The
+    // candidate code is built MSB-first as an integer. Canonical codes are
+    // prefix-free, so the first (length, value) hit is the symbol. Once the
+    // accumulated length reaches the longest code without a match, no later bit
+    // can match (an incomplete table fed unmatched bits), so we fail at once.
+    // This also covers the single-symbol table (code "0"): its bits are read and
+    // checked like any other rather than being trusted blindly.
+    var output = [UInt8]()
     output.reserveCapacity(originalLength)
-    var currentCode = ""
-    var idx = bitString.startIndex
+    var position = 0
+    var accumulated: UInt64 = 0
+    var accumulatedLength = 0
 
     while output.count < originalLength {
-        guard idx < bitString.endIndex else {
+        guard position < totalBits else {
             throw HuffmanCompressionError.bitStreamExhausted(
                 decoded:  output.count,
                 expected: originalLength
             )
         }
+        let bit = (data[bitStreamStart + (position >> 3)] >> UInt8(position & 7)) & 1
+        position += 1
+        accumulated = (accumulated << 1) | UInt64(bit)
+        accumulatedLength += 1
 
-        currentCode.append(bitString[idx])
-        idx = bitString.index(after: idx)
-
-        if let sym = codeToSym[currentCode] {
-            output.append(UInt8(sym))
-            currentCode = ""
+        if let sym = codeToSym[(UInt64(accumulatedLength) << 56) | accumulated] {
+            output.append(sym)
+            accumulated = 0
+            accumulatedLength = 0
+        } else if accumulatedLength >= maxLength {
+            throw HuffmanCompressionError.undecodableBits
         }
-        // If no match yet, currentCode grows by one more bit on the next iteration.
     }
 
     return output

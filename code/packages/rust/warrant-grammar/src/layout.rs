@@ -397,19 +397,20 @@ pub fn capture_layout<'a>(
                         },
                         &mut tokens,
                     )?;
-                } else if c == b'0'
-                    && idx + 1 < line_bytes.len()
-                    && (line_bytes[idx + 1] == b'x' || line_bytes[idx + 1] == b'X')
-                {
+                } else if c == b'0' && idx + 1 < line_bytes.len() && line_bytes[idx + 1] == b'x' {
+                    // HEX_LITERAL (VER04j section 2.2): `0x` then every
+                    // alphanumeric.  Digit set, case and suffix are validated
+                    // by the parser, which can name the failure (W0101); here
+                    // an uppercase digit must not split into `0x1` + `D`.
+                    let num_start = idx;
                     idx += 2;
-                    let hex_start = idx;
-                    while idx < line_bytes.len() && line_bytes[idx].is_ascii_hexdigit() {
+                    while idx < line_bytes.len() && line_bytes[idx].is_ascii_alphanumeric() {
                         idx += 1;
                     }
-                    let hex = &source[line_start + hex_start..line_start + idx];
+                    let num = &source[line_start + num_start..line_start + idx];
                     push_token(
                         LayoutToken {
-                            kind: LayoutTokenKind::Bytes(hex),
+                            kind: LayoutTokenKind::Number(num),
                             span: TokenSpan::Real {
                                 start: tok_start,
                                 end: line_start + idx,
@@ -422,10 +423,16 @@ pub fn capture_layout<'a>(
                     while idx < line_bytes.len() && line_bytes[idx].is_ascii_digit() {
                         idx += 1;
                     }
-                    if idx + 3 <= line_bytes.len() && &line_bytes[idx..idx + 3] == b"u64" {
-                        idx += 3;
-                    } else if idx + 2 <= line_bytes.len() && &line_bytes[idx..idx + 2] == b"u8" {
-                        idx += 2;
+                    // Literal suffix: u8 u16 u32 u64 i8 i16 i32 i64.  Longest
+                    // first so that `5u16` is not read as `5u1` + `6`.
+                    const SUFFIXES: [&[u8]; 8] = [
+                        b"u64", b"u32", b"u16", b"i64", b"i32", b"i16", b"u8", b"i8",
+                    ];
+                    if let Some(sfx) = SUFFIXES
+                        .iter()
+                        .find(|sfx| line_bytes[idx..].starts_with(sfx))
+                    {
+                        idx += sfx.len();
                     }
                     let num = &source[line_start + num_start..line_start + idx];
                     push_token(

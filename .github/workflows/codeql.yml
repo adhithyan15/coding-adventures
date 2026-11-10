@@ -24,21 +24,31 @@
 #
 # Rust is NOT listed because CodeQL does not support it yet.
 #
-# To keep CodeQL fast on pull requests, we run the same Go build-tool
-# detection pass used by CI and only start a language's CodeQL job when
-# its corresponding needs_<lang> flag is true. Scheduled scans still run
-# all enabled languages to keep coverage fresh.
+# CodeQL does NOT run on pull requests or on pushes to main. It used to run
+# on every push to every PR (~300 runs a week) and spent most of its time on
+# the `detect` job -- a full-history checkout, a Go build-tool build and a
+# whole-repo plan -- just to decide which languages to scan, while the scans
+# themselves took one or two minutes. It now runs as its own scheduled flow:
+# every day, and on demand (Actions -> CodeQL -> Run workflow). Scheduled and
+# manual runs scan all enabled languages, so coverage stays fresh without
+# taxing pull-request or main capacity.
+#
+# Nothing in branch protection requires a CodeQL check, so removing the
+# pull_request trigger cannot leave a required context pending. If that ever
+# changes, the required check must be removed first.
+#
+# A manual run is treated like a scheduled one (force a full plan, enable every
+# language), so "Run workflow" always means a complete scan. The pull_request
+# and push-to-main branches in the steps below are now unreachable and are left
+# in place to keep this change small; remove them if the triggers stay as is.
 
 name: CodeQL
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   schedule:
-    # Weekly scan at 03:17 UTC on Mondays
-    - cron: "17 3 * * 1"
+    # Daily scan at 03:17 UTC
+    - cron: "17 3 * * *"
+  workflow_dispatch:
 
 # Cancel stale CodeQL runs for the same branch when a newer commit arrives.
 concurrency:
@@ -112,7 +122,7 @@ jobs:
           go build -o ../../../../build-tool .
           cd ../../../..
           force_flag=()
-          if [ "$EVENT_NAME" = "schedule" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
+          if [ "$EVENT_NAME" = "schedule" ] || [ "$EVENT_NAME" = "workflow_dispatch" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
             force_flag=(-force)
           fi
           emit_plan() {
@@ -151,7 +161,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           GIT_REF: ${{ github.ref }}
         run: |
-          if [ "$EVENT_NAME" = "schedule" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
+          if [ "$EVENT_NAME" = "schedule" ] || [ "$EVENT_NAME" = "workflow_dispatch" ] || { [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; }; then
             printf '%s\n' \
               'needs_typescript=true' \
               'needs_python=true' \
