@@ -302,7 +302,7 @@ mod tests {
         );
         // And it is threaded into `twice` as that block's value.
         assert!(
-            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a)))"),
+            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a), 1))"),
             "enclosing block must be threaded through the non-empty capture; got:\n{}",
             a.source
         );
@@ -883,22 +883,53 @@ mod tests {
             "got:\n{}",
             src
         );
-        assert!(src.contains("const e: __Sir.Val = __exc;"), "got:\n{}", src);
+        assert!(src.contains("e = __rescue_binding_0;"), "got:\n{}", src);
         assert!(src.contains("throw __exc;"), "got:\n{}", src);
         assert!(src.contains("finally {"), "got:\n{}", src);
     }
 
     #[test]
     fn rescue_binding_that_the_clause_reassigns_is_let_ts() {
-        // #18798 — `rescue => e` ⏎ `e = 5`: the binding was always `const`,
-        // so the reassignment did not compile.  It is `let` when the clause
-        // stores into it, `const` otherwise.
+        // #18798 — `rescue => e` ⏎ `e = 5`: the outer local `e` is declared as
+        // `let e: __Sir.Val = null;` before the try-catch, and `e = 5` reassigns
+        // it cleanly inside the rescue body.
         let module = ruby_to_semantic_ir::compile_source(
             "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
             "demo",
         )
         .expect("lower ruby");
         let src = compile(&module).expect("compile to ts").source;
+        assert!(src.contains("let e: __Sir.Val = null;"), "got:\n{}", src);
+        assert!(src.contains("e = 5;"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn direct_sir_rescue_binding_that_the_clause_reassigns_is_let_ts() {
+        // Direct SIR RescueClause with a binding mutated inside the clause:
+        // emitted as `let e` (not `const e`).
+        use semantic_ir::{RescueClause, Scope, Stmt};
+        let try_stmt = Stmt::TryCatch {
+            body: vec![],
+            rescues: vec![RescueClause {
+                exception_types: vec![],
+                binding: Some("e".to_string()),
+                body: vec![Stmt::Assign {
+                    name: "e".to_string(),
+                    scope: Scope::Local,
+                    value: Expr::IntLit { value: 5, span: s() },
+                    span: s(),
+                }],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions, Feature::MutableBindings],
+        );
+        let src = compile(&m).expect("compile to ts").source;
         assert!(src.contains("let e: __Sir.Val = __exc;"), "got:\n{}", src);
     }
 
@@ -970,6 +1001,37 @@ mod tests {
         assert!(src.contains("throw __exc;"), "got:\n{}", src);
         // No ensure → no finally clause.
         assert!(!src.contains("finally {"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn try_catch_without_rescue_or_ensure_emits_inline_body_ts() {
+        use semantic_ir::Stmt;
+        // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+        // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+        // TS must emit the body statements inline rather than a syntax-invalid
+        // `try { }` block with no `catch` or `finally`.
+        let try_stmt = Stmt::TryCatch {
+            body: vec![Stmt::LetBinding {
+                name: "x".into(),
+                value: Expr::IntLit { value: 42, span: s() },
+                sir_type: None,
+                span: s(),
+            }],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions],
+        );
+        let a = compile(&m).expect("compile");
+        let main_src = a.source.split("function main():").nth(1).expect("main body");
+        assert!(!main_src.contains("try {"), "got:\n{main_src}");
+        assert!(!main_src.contains("catch"), "got:\n{main_src}");
+        assert!(!main_src.contains("finally"), "got:\n{main_src}");
+        assert!(main_src.contains("42"), "got:\n{main_src}");
     }
 
     // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────

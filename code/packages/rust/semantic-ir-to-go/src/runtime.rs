@@ -30,6 +30,7 @@ type Pair struct {
 
 type Closure struct {
 	Fn func(args []Value) Value
+	Arity int
 }
 
 // ── SIR16 sequences ────────────────────────────────────────────
@@ -137,16 +138,19 @@ func _sir_apply(c Value, args []Value) Value {
 	return cl.Fn(args)
 }
 
-func _sir_make_closure(fn func(args []Value) Value, captures []Value) Value {
+func _sir_make_closure(fn func(args []Value) Value, captures []Value, arity int) Value {
 	// fn is the synthesised lambda function; it accepts a single
 	// flat []Value argument expected as captures-first then params.
 	// Combine the closure-time captures with the runtime args.
-	return &Closure{Fn: func(args []Value) Value {
-		combined := make([]Value, 0, len(captures)+len(args))
-		combined = append(combined, captures...)
-		combined = append(combined, args...)
-		return fn(combined)
-	}}
+	return &Closure{
+		Fn: func(args []Value) Value {
+			combined := make([]Value, 0, len(captures)+len(args))
+			combined = append(combined, captures...)
+			combined = append(combined, args...)
+			return fn(combined)
+		},
+		Arity: arity,
+	}
 }
 
 // _sir_strict_arity wraps a closure so it must be called with exactly `n`
@@ -166,7 +170,7 @@ func _sir_strict_arity(c Value, n int) Value {
 				"arity mismatch: closure expects %d argument(s), got %d", n, len(args)))))
 		}
 		return inner(args)
-	}}
+	}, Arity: n}
 }
 
 func _sir_global_set(name Value, value Value) Value {
@@ -1504,7 +1508,7 @@ func _sir_map_put(m *Map, key Value, value Value) {
 func _sir_builtin_closure(name string) Value {
 	return &Closure{Fn: func(args []Value) Value {
 		return _sir_call_builtin_by_name(name, args)
-	}}
+	}, Arity: -1}
 }
 
 func _sir_call_builtin_by_name(name string, args []Value) Value {
@@ -1667,7 +1671,7 @@ func _sir_sym_to_proc(sym Value) Value {
 			return nil
 		}
 		return _sir_call_method(args[0], name, args[1:])
-	}}
+	}, Arity: 1}
 }
 
 // Public dispatch entry point emitted for every `__method__` call.
@@ -3201,11 +3205,18 @@ func _sir_dig_index(k Value, length int) (int, bool) {
 	return idx, true
 }
 
+func _sir_yield_hash_pair(block *Closure, key, val Value) Value {
+	if block != nil && block.Arity == 1 {
+		return _sir_apply(block, []Value{&Seq{Items: []Value{key, val}}})
+	}
+	return _sir_apply(block, []Value{key, val})
+}
+
 func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure) (Value, bool) {
 	switch name {
 	case "each", "each_pair":
 		for _, e := range recv.Entries {
-			_sir_apply(block, []Value{e.Key, e.Val})
+			_sir_yield_hash_pair(block, e.Key, e.Val)
 		}
 		return recv, true
 	case "each_key":
@@ -3225,13 +3236,13 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "map":
 		out := make([]Value, len(recv.Entries))
 		for i, e := range recv.Entries {
-			out[i] = _sir_apply(block, []Value{e.Key, e.Val})
+			out[i] = _sir_yield_hash_pair(block, e.Key, e.Val)
 		}
 		return &Seq{Items: out}, true
 	case "select", "filter":
 		m := &Map{Entries: []MapEntry{}}
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
 			}
 		}
@@ -3239,7 +3250,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "reject":
 		m := &Map{Entries: []MapEntry{}}
 		for _, e := range recv.Entries {
-			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if !_sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
 			}
 		}
@@ -3275,28 +3286,28 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "find", "detect":
 		// First [k, v] pair whose block result is truthy; nil if none.
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return &Seq{Items: []Value{e.Key, e.Val}}, true
 			}
 		}
 		return nil, true
 	case "any?":
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return true, true
 			}
 		}
 		return false, true
 	case "all?":
 		for _, e := range recv.Entries {
-			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if !_sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return false, true
 			}
 		}
 		return true, true
 	case "none?":
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return false, true
 			}
 		}
@@ -3305,7 +3316,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// count { |k, v| pred } — number of pairs with a truthy block result.
 		n := int64(0)
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				n++
 			}
 		}
@@ -3319,7 +3330,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		}
 		keyed := make([]sbKV, len(recv.Entries))
 		for i, e := range recv.Entries {
-			keyed[i] = sbKV{_sir_apply(block, []Value{e.Key, e.Val}), &Seq{Items: []Value{e.Key, e.Val}}}
+			keyed[i] = sbKV{_sir_yield_hash_pair(block, e.Key, e.Val), &Seq{Items: []Value{e.Key, e.Val}}}
 		}
 		sort.SliceStable(keyed, func(i, j int) bool {
 			return _sir_value_lt(keyed[i].key, keyed[j].key)
@@ -3337,9 +3348,9 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		}
 		wantMin := name == "min_by"
 		best := recv.Entries[0]
-		bestKey := _sir_apply(block, []Value{best.Key, best.Val})
+		bestKey := _sir_yield_hash_pair(block, best.Key, best.Val)
 		for _, e := range recv.Entries[1:] {
-			k := _sir_apply(block, []Value{e.Key, e.Val})
+			k := _sir_yield_hash_pair(block, e.Key, e.Val)
 			take := false
 			if wantMin {
 				take = _sir_value_lt(k, bestKey)
@@ -3362,7 +3373,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// A Hash of block key → Array of [k, v] pairs, in first-seen key order.
 		acc := _sir_map_lit([]Value{}, []Value{})
 		for _, e := range recv.Entries {
-			k := _sir_apply(block, []Value{e.Key, e.Val})
+			k := _sir_yield_hash_pair(block, e.Key, e.Val)
 			pair := &Seq{Items: []Value{e.Key, e.Val}}
 			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
 				seq.Items = append(seq.Items, pair)
@@ -3377,7 +3388,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		no := []Value{}
 		for _, e := range recv.Entries {
 			pair := &Seq{Items: []Value{e.Key, e.Val}}
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				yes = append(yes, pair)
 			} else {
 				no = append(no, pair)
@@ -3389,7 +3400,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// contributes its elements, a scalar is appended as-is.
 		out := []Value{}
 		for _, e := range recv.Entries {
-			r := _sir_apply(block, []Value{e.Key, e.Val})
+			r := _sir_yield_hash_pair(block, e.Key, e.Val)
 			if s, ok := r.(*Seq); ok {
 				out = append(out, s.Items...)
 			} else {
@@ -3428,7 +3439,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			acc = args[0]
 		}
 		for _, e := range recv.Entries {
-			acc = _sir_plus([]Value{acc, _sir_apply(block, []Value{e.Key, e.Val})})
+			acc = _sir_plus([]Value{acc, _sir_yield_hash_pair(block, e.Key, e.Val)})
 		}
 		return acc, true
 	case "to_h":
