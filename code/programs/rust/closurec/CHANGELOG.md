@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.7] - 2026-11-10
+
+### Fixed - `if (1) let⏎x = 1;` compiles as an identifier statement (V8C09)
+
+- `javascript-parser` now reads `let` as an identifier when it is the whole
+  body of `if`/`for`/`while`/`with`/`else`/`do`/a label and a line break
+  follows (ExpressionStatement only refuses `let [`; test262
+  `let-identifier-with-newline`). `if (1) let\nx = 1;` therefore compiles to
+  `let;x=1;`, never to the declaration `let x=1;`. The two regression tests
+  that asserted it must be refused (`regression_if_let_statement_18146`,
+  `regression_expression_statement_lookahead`) now assert this instead; the
+  same-line forms (`if (1) let x = 1;`, `const`) are still refused.
+
 ## [0.247.6] - 2026-11-10
 
 ### Fixed - hoist preceding initializer into for header in fold-control-flow (#15855)

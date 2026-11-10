@@ -5608,14 +5608,28 @@ mod tests {
     fn inline_source(src: &str) -> String {
         let es = EsVersion::Es2025;
         let node = parse_javascript_typed(src, es).expect("parse");
-        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        inline_program(&bridge::grammar_to_program(&node, es).expect("bridge"))
+    }
+
+    /// Like [`inline_source`], but parses with the plain grammar parser, which
+    /// runs no early-error checks. For programs the real parser refuses and
+    /// that the pass must still decline to touch (defense in depth against a
+    /// parser that lets one through).
+    fn inline_source_unchecked(src: &str) -> String {
+        let es = EsVersion::Es2025;
+        let node =
+            coding_adventures_javascript_parser::parse_javascript(src, "es2025").expect("parse");
+        inline_program(&bridge::grammar_to_program(&node, es).expect("bridge"))
+    }
+
+    fn inline_program(prog: &Program) -> String {
 
         let pass = InlinePass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(false);
         let out = pass
             .run(PassContext {
-                program: &prog,
+                program: prog,
                 sidecar: &sidecar,
                 cv: &mut cv,
             })
@@ -6427,12 +6441,13 @@ mod tests {
 
     #[test]
     fn does_not_inline_void_helper_with_param_local_name_collision() {
-        // A `let` local sharing a parameter's name is illegal JS (a
-        // faithful parser never emits it), but the name-based alpha-renamer
-        // is not scope-aware, so we decline outright rather than risk a
+        // A `let` local sharing a parameter's name is illegal JS (the real
+        // parser now refuses it as an early error, so this one is parsed
+        // without the checks), but the name-based alpha-renamer is not
+        // scope-aware, so we decline outright rather than risk a
         // mis-rename. Defense in depth against a non-conformant parser.
         assert_eq!(
-            inline_source("function f(x) { const x = 1; sink(x); } f(a);"),
+            inline_source_unchecked("function f(x) { const x = 1; sink(x); } f(a);"),
             "function f(x){const x=1;sink(x)}f(a);"
         );
     }
