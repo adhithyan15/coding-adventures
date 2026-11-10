@@ -308,13 +308,16 @@ fn a_counter_passed_by_mutable_reference_is_forwarded_faithfully() {
 
 #[test]
 fn instruction_budget_rules_for_live_not_live_and_unsupported() {
-    // min_batch_duration of 1 ns is met by a single iteration, so the batch
-    // size is exactly 1 on every run and Live(n) means n instructions/iter.
+    // The batch size is pinned to exactly 1 (max_batch_size: 1 means the
+    // calibration loop never scales), so Live(n) means n instructions/iter.
+    // It used to rely on one `1 + 1` meeting a 1 ns min_batch_duration, but a
+    // coarse clock (Windows) can read 0 ns for that, which doubled the batch
+    // and turned Live(101) into 51 per iteration: a spurious Pass.
     let harness = BenchmarkHarness::new(BenchmarkConfig {
         warmup_iterations: 1,
         warmup_max_duration: Duration::from_micros(50),
         min_batch_duration: Duration::from_nanos(1),
-        max_batch_size: 64,
+        max_batch_size: 1,
         sample_count: 3,
         seed: 1,
     });
@@ -493,8 +496,15 @@ fn batch_calibration_grows_for_cheap_work_and_respects_the_ceiling() {
         sample_count: 3,
         seed: 1,
     });
+    // The body spins until the clock visibly advances, so one iteration is
+    // at least one clock tick (>= 1 ns) on every platform. A bare
+    // `black_box(1u8)` can measure 0 ns on a coarse clock (Windows), which
+    // would make the harness scale the batch and the test flaky.
     let result = harness.run("already-long-enough", &Budget::default(), || {
-        std::hint::black_box(1u8)
+        let start = std::time::Instant::now();
+        while start.elapsed().is_zero() {
+            std::hint::spin_loop();
+        }
     });
     assert_eq!(
         result.batch_size, 1,

@@ -30,3 +30,13 @@
 ### Spec
 
 - TF01 §8.3 item 9: what is and is not detectable (table of known limits).
+
+### Tests: Windows timer resolution
+
+- `instruction_budget_rules_for_live_not_live_and_unsupported` failed on the
+  Windows runner. It assumed one `1 + 1` iteration meets a 1 ns
+  `min_batch_duration`, but Windows' clock can read 0 ns for it. The harness
+  then doubled the batch, and `Live(101)` became 51 instructions per
+  iteration, a spurious Pass. The test now pins `max_batch_size: 1`. The
+  calibration test with the same latent dependency now spins until the
+  clock advances, so one iteration is at least one tick on every platform.
