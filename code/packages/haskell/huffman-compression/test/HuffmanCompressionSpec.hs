@@ -96,6 +96,28 @@ spec = do
         it "rejects invalid bit prefixes" $
             decompress (wire 1 1 [65, 1, 1]) `leftShouldContain` "invalid prefix"
 
+    describe "hostile input (SEC-003)" $ do
+        it "rejects a huge length gap" $
+            decompress (wire 4 2 ([0, 1, 1, 255] ++ replicate 8 255)) `shouldSatisfy` isLeft
+        it "rejects a zero code length" $
+            decompress (wire 1 1 [0, 0, 0]) `shouldSatisfy` isLeft
+        it "rejects an over-subscribed table" $
+            decompress (wire 1 3 [0, 1, 1, 1, 2, 1, 0]) `shouldSatisfy` isLeft
+        it "rejects an unsorted table" $
+            decompress (wire 1 2 [0, 2, 1, 1, 0]) `shouldSatisfy` isLeft
+        it "rejects more than 256 symbols" $
+            decompress (wire 1 257 (concat (replicate 257 [0, 9]) ++ [0])) `shouldSatisfy` isLeft
+        it "rejects a duplicate symbol" $
+            decompress (wire 1 2 [0, 1, 0, 1, 0]) `shouldSatisfy` isLeft
+        it "rejects a declared length of u32 max with a tiny payload" $
+            decompress (wire 4294967295 2 ([0, 1, 1, 1] ++ replicate 4 0))
+                `leftShouldContain` "bits available"
+        it "fails fast when bits match no code" $
+            decompress (wire 8 1 ([0, 1] ++ replicate 100000 255)) `shouldSatisfy` isLeft
+        it "decodes a large valid input" $ do
+            let input = BS.pack [fromIntegral (i `mod` 7) | i <- [0 .. 99999 :: Int]]
+            roundTrip input `shouldBe` Right input
+
 roundTrip :: BS.ByteString -> Either String BS.ByteString
 roundTrip input = compress input >>= decompress
 

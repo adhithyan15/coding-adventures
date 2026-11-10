@@ -1,6 +1,6 @@
 cabal-version: 3.0
 name:          huffman-compression
-version:       0.1.0
+version:       0.1.1
 synopsis:      CMP04 canonical Huffman byte compression
 description:   Pure Haskell CMP04 compression with canonical Huffman codes and strict wire-format validation.
 category:      Compression
