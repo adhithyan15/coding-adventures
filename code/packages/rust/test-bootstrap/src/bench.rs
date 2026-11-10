@@ -28,10 +28,12 @@
 //! └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
 //! ```
 
+use std::cell::Cell;
 use std::hint::black_box;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
+use crate::counting_alloc::{is_installed, thread_stats, AllocStats};
 use crate::prng::SplitMix64;
 
 /// Multiplier for normalizing Median Absolute Deviation (MAD) to estimate
@@ -151,40 +153,55 @@ impl CostCounter for &StepCounter {
     }
 }
 
-/// A heap allocation counter tracking allocated bytes and allocation events.
+/// A heap allocation counter backed by the real allocator.
+///
+/// It reads the calling thread's tally from
+/// [`crate::counting_alloc::CountingAllocator`], so it sees every allocation
+/// the closure makes whether or not the closure cooperates. (The previous
+/// version only counted what closures *recorded*, which made every
+/// `max_alloc_bytes = 0` budget pass vacuously; audit finding LH-003a.)
+///
+/// The binary using it must install the allocator with
+/// [`crate::install_counting_allocator!`]. If it did not, [`sample`] returns
+/// [`CounterSample::NotLive`] and the harness leaves `alloc_bytes` in
+/// [`BenchmarkResult::unchecked_hard_budgets`] rather than reporting a
+/// meaningless zero.
+///
+/// [`sample`]: CostCounter::sample
 #[derive(Debug, Default)]
 pub struct AllocCounter {
-    allocated_bytes: AtomicU64,
-    allocation_count: AtomicU64,
-    snapshot_bytes: AtomicU64,
-    snapshot_count: AtomicU64,
+    snapshot: Cell<AllocStats>,
 }
 
 impl AllocCounter {
-    /// Create a new allocation counter.
-    pub const fn new() -> Self {
+    /// Create an allocation counter, armed at the thread's current tally.
+    pub fn new() -> Self {
         Self {
-            allocated_bytes: AtomicU64::new(0),
-            allocation_count: AtomicU64::new(0),
-            snapshot_bytes: AtomicU64::new(0),
-            snapshot_count: AtomicU64::new(0),
+            snapshot: Cell::new(thread_stats()),
         }
     }
 
-    /// Record an allocation event of `bytes` bytes.
-    pub fn record_alloc(&self, bytes: u64) {
-        self.allocated_bytes.fetch_add(bytes, Ordering::Relaxed);
-        self.allocation_count.fetch_add(1, Ordering::Relaxed);
+    /// Heap activity on this thread since the last `start` (or since `new`),
+    /// or `None` when the counting allocator is not installed.
+    pub fn stats(&self) -> Option<AllocStats> {
+        // Read the tally BEFORE probing: the probe allocates one box itself.
+        let now = thread_stats();
+        if is_installed() {
+            Some(now.since(self.snapshot.get()))
+        } else {
+            None
+        }
     }
 
-    /// Total cumulative bytes recorded.
-    pub fn total_bytes(&self) -> u64 {
-        self.allocated_bytes.load(Ordering::Relaxed)
+    fn arm(&self) {
+        self.snapshot.set(thread_stats());
     }
 
-    /// Total cumulative allocation count.
-    pub fn total_count(&self) -> u64 {
-        self.allocation_count.load(Ordering::Relaxed)
+    fn read(&self) -> CounterSample {
+        match self.stats() {
+            Some(stats) => CounterSample::Live(stats.bytes_allocated),
+            None => CounterSample::NotLive,
+        }
     }
 }
 
@@ -194,20 +211,11 @@ impl CostCounter for AllocCounter {
     }
 
     fn start(&mut self) {
-        self.snapshot_bytes.store(
-            self.allocated_bytes.load(Ordering::Relaxed),
-            Ordering::Relaxed,
-        );
-        self.snapshot_count.store(
-            self.allocation_count.load(Ordering::Relaxed),
-            Ordering::Relaxed,
-        );
+        self.arm();
     }
 
     fn sample(&mut self) -> CounterSample {
-        let cur = self.allocated_bytes.load(Ordering::Relaxed);
-        let snap = self.snapshot_bytes.load(Ordering::Relaxed);
-        CounterSample::Live(cur.saturating_sub(snap))
+        self.read()
     }
 }
 
@@ -217,20 +225,11 @@ impl CostCounter for &AllocCounter {
     }
 
     fn start(&mut self) {
-        self.snapshot_bytes.store(
-            self.allocated_bytes.load(Ordering::Relaxed),
-            Ordering::Relaxed,
-        );
-        self.snapshot_count.store(
-            self.allocation_count.load(Ordering::Relaxed),
-            Ordering::Relaxed,
-        );
+        self.arm();
     }
 
     fn sample(&mut self) -> CounterSample {
-        let cur = self.allocated_bytes.load(Ordering::Relaxed);
-        let snap = self.snapshot_bytes.load(Ordering::Relaxed);
-        CounterSample::Live(cur.saturating_sub(snap))
+        self.read()
     }
 }
 
@@ -1024,14 +1023,20 @@ mod tests {
 
     #[test]
     fn test_alloc_counter() {
+        // Real measurement: nothing here "reports" its allocations.
         let mut counter = AllocCounter::new();
         counter.start();
-        counter.record_alloc(1024);
-        counter.record_alloc(512);
+        let a = black_box(Vec::<u8>::with_capacity(1024));
+        let b = black_box(Vec::<u8>::with_capacity(512));
         assert_eq!(counter.sample(), CounterSample::Live(1536));
         assert_eq!(counter.name(), "alloc_bytes");
-        assert_eq!(counter.total_bytes(), 1536);
-        assert_eq!(counter.total_count(), 2);
+        let stats = counter.stats().expect("allocator installed in test builds");
+        assert_eq!(stats.allocations, 2);
+        assert_eq!(stats.bytes_allocated, 1536);
+        drop((a, b));
+        // start() re-arms: the earlier activity no longer counts.
+        counter.start();
+        assert_eq!(counter.sample(), CounterSample::Live(0));
     }
 
     #[test]
@@ -1206,7 +1211,7 @@ mod tests {
         };
 
         let result = harness.run_with_counter("alloc_exceeded", &budget, &alloc_counter, || {
-            alloc_counter.record_alloc(20);
+            black_box(Vec::<u8>::with_capacity(20))
         });
 
         assert!(matches!(

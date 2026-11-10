@@ -231,28 +231,27 @@ fn a_step_budget_is_exact_at_the_limit() {
 }
 
 #[test]
-fn an_allocation_budget_of_zero_fails_on_one_recorded_byte() {
+fn an_allocation_budget_cannot_be_checked_without_the_counting_allocator() {
+    // This binary deliberately does NOT call install_counting_allocator!, so
+    // the real allocation counter has nothing to read. It must say NotLive and
+    // leave the declared budget visibly unchecked; a bare zero would be the
+    // vacuous pass of audit finding LH-003a. (Real measurement is tested in
+    // alloc_budget.rs, which installs the allocator.)
     let harness = fast(10);
     let zero = Budget {
         max_alloc_bytes: Some(0),
         ..Default::default()
     };
-    let quiet = AllocCounter::new();
-    let result = harness.run_with_counter("alloc/quiet", &zero, &quiet, || 1 + 1);
-    assert_eq!(result.alloc_bytes_per_iter, Some(0.0));
-    assert_eq!(result.budget_verdict, BudgetVerdict::Pass);
-
-    let noisy = AllocCounter::new();
-    let result = harness.run_with_counter("alloc/noisy", &zero, &noisy, || noisy.record_alloc(1));
-    assert!(matches!(
-        result.budget_verdict,
-        BudgetVerdict::Failed {
-            observed: 1,
-            limit: 0,
-            ..
-        }
-    ));
-    assert_eq!(noisy.total_count(), noisy.total_bytes(), "1 byte per event");
+    let counter = AllocCounter::new();
+    assert_eq!(counter.stats(), None);
+    let result = harness.run_with_counter("alloc/uninstalled", &zero, &counter, || {
+        std::hint::black_box(vec![0u8; 4096])
+    });
+    assert_eq!(result.alloc_bytes_per_iter, None);
+    assert_eq!(result.unchecked_hard_budgets, ["alloc_bytes"]);
+    let mut by_ref = &counter;
+    by_ref.start();
+    assert_eq!(by_ref.sample(), CounterSample::NotLive);
 }
 
 #[test]
@@ -402,29 +401,6 @@ fn a_hard_budget_without_a_matching_counter_is_reported_unchecked() {
     let result = harness.run("none", &Budget::default(), || 1 + 1);
     assert!(result.unchecked_hard_budgets.is_empty());
     assert!(!result.to_tap_yaml().contains("unchecked_hard_budgets"));
-}
-
-#[test]
-fn alloc_counter_is_cooperative_not_an_allocator_hook() {
-    // KNOWN LIMIT (VER07 §8): AllocCounter counts what the closure *records*.
-    // It does not observe the real heap, so a closure that allocates but does
-    // not call record_alloc passes a zero-byte budget. Zero-allocation claims
-    // made through it (ct-compare's) are only as good as the instrumentation.
-    let harness = fast(10);
-    let zero = Budget {
-        max_alloc_bytes: Some(0),
-        ..Default::default()
-    };
-    let counter = AllocCounter::new();
-    let result = harness.run_with_counter("alloc/liar", &zero, &counter, || {
-        std::hint::black_box(vec![0u8; 4096])
-    });
-    assert_eq!(
-        result.budget_verdict,
-        BudgetVerdict::Pass,
-        "the real 4 KiB allocation went unseen"
-    );
-    assert_eq!(counter.total_bytes(), 0);
 }
 
 #[test]
