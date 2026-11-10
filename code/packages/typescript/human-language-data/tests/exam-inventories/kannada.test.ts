@@ -255,12 +255,13 @@ describe("the committed Kannada A1 inventory", () => {
       new Set(pronouns?.frontmatter["practises.knowledge"]),
     );
 
-    const everything = loadEverything();
+    const curriculum = loadTrackLanguageCurriculum("kannada");
+    expect(curriculum).toBeDefined();
     const throughA1 = new Set(
       lessonsUpToLevel(
-        everything.lessons,
-        everything.curricula,
-        everything.spine,
+        lessons,
+        [curriculum!],
+        loadCurriculumSpine(),
         "A1",
       ).map((lesson) => lesson.realization.lessonId),
     );
