@@ -211,8 +211,9 @@ jobs:
           cmp \
             code/packages/rust/task-wasm/pkg/task_engine.wasm \
             code/programs/mosaic/task-app/host/web/public/task_engine.wasm
-          git diff --exit-code -- . \
-            ':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'
+          # The engine is built, not committed (BUILD-001), so nothing needs
+          # excluding: a changed tracked file is real drift.
+          git diff --exit-code
 
       - name: Archive the verified web bundle
         shell: bash

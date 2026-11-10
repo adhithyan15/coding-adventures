@@ -2,19 +2,24 @@
   "chapter": 12,
   "title": "Family",
   "label": "ch:ka-family",
-  "canDo": "I can name my parents and my brothers and sisters in Kannada, choosing the right word for older or younger.",
+  "canDo": "I can name close family, refer to he, she, it or they, say who works, mark his, her or their, and make a familiar non-human noun plural.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "KA-C12-kutumba",
+    "lesson": "KA-C12-plural-galu",
     "kind": "production",
-    "summary": "Name ಅಪ್ಪ and ಅಮ್ಮ, then the four age-graded siblings ಅಣ್ಣ · ತಮ್ಮ · ಅಕ್ಕ · ತಂಗಿ, where age is chosen before gender.",
+    "summary": "Name the family set, distinguish human from non-human third person, say who works, form his/her/their, and make ಹೆಸರು and ಕೆಲಸ plural with -ಗಳು.",
     "assesses": [
-      "KA-LEX-C11-BANNAGALU-01",
-      "KA-LEX-C11-BANNAGALU-02",
       "KA-ETYMON-C12-KUTUMBA-01",
-      "KA-ETYMON-C12-KUTUMBA-02"
+      "KA-ETYMON-C12-KUTUMBA-02",
+      "KA-GRAMMAR-C12-THIRD-PERSON-03",
+      "KA-GRAMMAR-C12-HUMAN-NONHUMAN-04",
+      "KA-GRAMMAR-C12-PRESENT-THIRD-05",
+      "KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06",
+      "KA-GRAMMAR-C12-PLURAL-GALU-07",
+      "KA-LEX-C02-HESARU-01",
+      "KA-LEX-C05-MAADU-01"
     ]
   }
 }

@@ -103,6 +103,7 @@ pub fn options(spec: &str, budget: u64) -> EvidenceOptions {
         negctl_fuzz_iterations: 1500,
         exhaustive_budget: budget,
         arg_types: BTreeMap::new(),
+        hosts: Default::default(),
     }
 }
 

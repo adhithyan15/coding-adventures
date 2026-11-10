@@ -1,0 +1,2 @@
+cargo test -p capability-runtime-conformance -- --nocapture
+cargo clippy -p capability-runtime-conformance --all-targets -- -D warnings

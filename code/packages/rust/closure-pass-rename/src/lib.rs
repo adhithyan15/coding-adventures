@@ -2204,7 +2204,7 @@ mod tests {
             rename_source(
                 "function f(counter) { if (counter>0) { return counter; } return 0; }"
             ),
-            "function f(a){if(a>0){return a}return 0};"
+            "function f(a){if(a>0)return a;return 0};"
         );
     }
 
@@ -2274,7 +2274,7 @@ mod tests {
             rename_source(
                 "function f() { for (var index = 0; index<3; ) { sink(index); } }"
             ),
-            "function f(){for(var a=0;a<3;){sink(a)}};"
+            "function f(){for(var a=0;a<3;)sink(a);};"
         );
     }
 
@@ -2305,9 +2305,8 @@ mod tests {
             rename_source(
                 "function f(cond) { if (cond) { var hoisted = 1; } return hoisted; }"
             ),
-            // The block-final `var b=1` carries no `;` before `}` — the emitter
-            // pops the redundant terminator (closure-emitter 0.58.0).
-            "function f(a){if(a){var b=1}return b};"
+            // The single-statement block drops braces around `var b=1;` (CCR-076, #15861).
+            "function f(a){if(a)var b=1;return b};"
         );
     }
 

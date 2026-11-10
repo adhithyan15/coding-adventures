@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.19.1] - 2026-11-09
+
+### Changed — test assertions track closure-emitter single-statement unwrapping (CCR-076, #15861)
+
+- Updated expected output strings in `tests::refuses_every_candidate_in_a_program_containing_with` and `tests::refuses_a_const_candidate_too_when_with_is_present` to reflect single-statement `with` body brace unwrapping from `closure-emitter` 0.63.6.
+
 ## [0.19.0] - 2026-10-20
 
 ### Changed — SIMPLE keeps a top-level `const` (CCR-078, #15863, CLOC43)

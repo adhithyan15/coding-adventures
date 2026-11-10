@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 #
-# bundle-wasm-engine.sh — produce the committed browser bundle that loads the
-# Rust spreadsheet engine compiled to WebAssembly.
+# bundle-wasm-engine.sh — produce the browser bundle that loads the Rust
+# spreadsheet engine compiled to WebAssembly.
+#
+# The bundle is GENERATED and ignored by version control (BUILD-001): build it
+# after a clone, and again after the engine or the loader changes.
+# `code/scripts/build-demo-wasm.sh` does that for every demo engine.
 #
 # Output: vendor/spreadsheet-engine-wasm.js =
 #     var __SPREADSHEET_WASM_B64__ = "<base64 of the .wasm>";
@@ -12,8 +16,9 @@
 # window.SpreadsheetEngine (same API as the TypeScript engine) and resolves
 # window.__spreadsheetEngineReady once the module instantiates.
 #
-# Source of the .wasm: the spreadsheet-wasm crate's committed artifact. If it
-# is missing we build it.
+# Source of the .wasm: the spreadsheet-wasm crate's built artifact
+# (pkg/spreadsheet_engine.wasm, also generated and ignored). If it is missing
+# we build it.
 #
 # Usage:
 #   cd code/programs/typescript/visicalc-html && bash scripts/bundle-wasm-engine.sh
@@ -35,29 +40,18 @@ OUT_DIR="$DEMO_DIR/vendor"
 OUT="$OUT_DIR/spreadsheet-engine-wasm.js"
 
 if [ ! -f "$WASM" ]; then
-  echo "error: $WASM is missing; build it with code/packages/rust/spreadsheet-wasm/build-wasm.sh" >&2
-  exit 1
+  echo "pkg/spreadsheet_engine.wasm is missing; building it with spreadsheet-wasm/build-wasm.sh"
+  bash "$REPO_ROOT/code/packages/rust/spreadsheet-wasm/build-wasm.sh"
 fi
 
-# The bundle is a pure function of the committed .wasm and the loader, so it
-# is regenerated rather than edited, and `--check` (CI) fails when the
-# committed bundle is not what those two produce. The .wasm itself is checked
-# against its sources by spreadsheet-wasm's `build-wasm.sh --check`.
+# The bundle is a pure function of the .wasm and the loader, so it is
+# regenerated rather than edited. Neither it nor the .wasm is committed, so
+# there is nothing to check for staleness.
 render_bundle() {
   printf '// AUTO-GENERATED — DO NOT EDIT. Regenerate with scripts/bundle-wasm-engine.sh\n'
   printf 'var __SPREADSHEET_WASM_B64__ = "%s";\n' "$(base64 < "$WASM" | tr -d '\n')"
   cat "$LOADER"
 }
-
-if [ "${1:-}" = "--check" ]; then
-  if ! render_bundle | cmp -s - "$OUT"; then
-    echo "error: $OUT is stale: it does not embed the committed .wasm with the current loader." >&2
-    echo "       Regenerate with: bash $SCRIPT_DIR/bundle-wasm-engine.sh" >&2
-    exit 1
-  fi
-  echo "vendor/spreadsheet-engine-wasm.js is current"
-  exit 0
-fi
 
 mkdir -p "$OUT_DIR"
 render_bundle > "$OUT"

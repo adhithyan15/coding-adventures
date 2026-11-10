@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C12-third-person-possession",
+    "language": "kannada",
+    "chapter": 12,
+    "sequence": 406,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba5574823433d7e3"
+  },
+  "findings": []
+}

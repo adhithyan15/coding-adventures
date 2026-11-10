@@ -268,7 +268,7 @@ describe("collectSourceFiles", () => {
     expect(Object.isFrozen(sourceInputRegistry())).toBe(true);
     expect(Object.isFrozen(sourceInputRegistry().languages[0].scoped_inputs)).toBe(true);
     expect(sourceInputRegistryDigest()).toBe(
-      "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+      "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
     );
   });
 

@@ -2,6 +2,11 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.33.1] - 2026-11-10
+
+### Fixed
+- Updated `does_not_inline_nested_if` test assertion to match unwrapped single-statement `if` body emitted by `closure-emitter` (#15861).
+
 ## [0.33.0] - 2026-11-07
 
 ### Fixed — closure-deferred reads, missing statement arms, computed keys in inline substitution (#18144)

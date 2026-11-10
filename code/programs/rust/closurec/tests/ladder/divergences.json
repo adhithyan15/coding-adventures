@@ -260,7 +260,7 @@
   },
   "ladder_t6_for_of_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "for(const v of [1,2,3]){console.log(v)};\n",
+   "closurec_stdout": "for(const v of [1,2,3])console.log(v);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15861",
    "level": "ADVANCED",
    "reason": "Three differences remain: upstream rewrites `const` to `let`, renames the loop binding (CCR-022), and drops the braces around the single-statement body (CCR-076), which also removes the space before `[`. The statement terminator now matches (CCR-073).",
@@ -271,7 +271,7 @@
   },
   "ladder_t6_for_of_simple": {
    "closurec_exit": 0,
-   "closurec_stdout": "for(const v of [1,2,3]){console.log(v)};\n",
+   "closurec_stdout": "for(const v of [1,2,3])console.log(v);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15861",
    "level": "SIMPLE",
    "reason": "Three differences remain: upstream rewrites `const` to `let`, renames the loop binding (CCR-022), and drops the braces around the single-statement body (CCR-076), which also removes the space before `[`. The statement terminator now matches (CCR-073).",
@@ -451,7 +451,7 @@
   },
   "ladder_t7_labeled_break_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "outer:for(var i=0;i<2;i++){for(var j=0;j<2;j++){break outer}}console.log(i);\n",
+   "closurec_stdout": "outer:for(var i=0;i<2;i++)for(var j=0;j<2;j++)break outer;console.log(i);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15861",
    "level": "ADVANCED",
    "reason": "Upstream renames the label and the loop locals (CCR-022) and drops braces around single-statement bodies (CCR-076). At SIMPLE and ADVANCED it also hoists the initializer into the for header (CCR-074).",
@@ -462,7 +462,7 @@
   },
   "ladder_t7_labeled_break_simple": {
    "closurec_exit": 0,
-   "closurec_stdout": "outer:for(var i=0;i<2;i++){for(var j=0;j<2;j++){break outer}}console.log(i);\n",
+   "closurec_stdout": "outer:for(var i=0;i<2;i++)for(var j=0;j<2;j++)break outer;console.log(i);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15861",
    "level": "SIMPLE",
    "reason": "Upstream renames the label and the loop locals (CCR-022) and drops braces around single-statement bodies (CCR-076). At SIMPLE and ADVANCED it also hoists the initializer into the for header (CCR-074).",
@@ -470,17 +470,6 @@
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "var i=0;a:for(;i<2;i++)for(var j=0;j<2;j++)break a;console.log(i);\n"
-  },
-  "ladder_t7_labeled_break_ws": {
-   "closurec_exit": 0,
-   "closurec_stdout": "outer:for(var i=0;i<2;i++){for(var j=0;j<2;j++)break outer}console.log(i);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15861",
-   "level": "WHITESPACE_ONLY",
-   "reason": "Upstream renames the label and the loop locals (CCR-022) and drops braces around single-statement bodies (CCR-076). At SIMPLE and ADVANCED it also hoists the initializer into the for header (CCR-074).",
-   "rung": "labeled_break",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "outer:for(var i=0;i<2;i++)for(var j=0;j<2;j++)break outer;console.log(i);\n"
   },
   "ladder_t7_logical_assign_advanced": {
    "closurec_exit": 0,

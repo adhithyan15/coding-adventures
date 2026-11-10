@@ -4,6 +4,10 @@ category: CI & GitHub Actions
 
 # A change to the generic lexer crate must also rebuild spreadsheet-wasm's committed .wasm and the VisiCalc bundle, because build-wasm.sh --check hashes every crate the wasm depends on
 
+> **Superseded by BUILD-001.** These artifacts are no longer committed and the
+> `--check` staleness gate is gone; nothing needs rebuilding or recommitting.
+> Build locally with `bash code/scripts/build-demo-wasm.sh`. Kept as history.
+
 **What went wrong.** #17822 changed only `code/packages/rust/lexer` (F10 mode
 transitions on NEWLINE). Its `build (shard-5-of-15)` failed on
 `rust/spreadsheet-wasm`: `build-wasm.sh --check` reported
