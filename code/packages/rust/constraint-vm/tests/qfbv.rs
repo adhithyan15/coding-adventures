@@ -346,11 +346,38 @@ fn unsupported_input_is_refused_not_guessed() {
     refuse(&format!("{d}(assert (bvult x))"), "takes 2 arguments");
     refuse(&format!("{d}(assert (= x (bvnot x x)))"), "takes 1 argument");
     refuse(&format!("{d}(assert (= x (bvadd x)))"), "at least 2");
-    refuse(&format!("{d}(assert (= x (bvudiv x x)))"), "function `bvudiv`");
+    refuse(&format!("{d}(assert (= x (bvnand x x)))"), "function `bvnand`");
     refuse(&format!("{d}(assert (= x y))"), "undeclared `y`");
     refuse(&format!("{d}(assert (= x #q1))"), "malformed");
     refuse(&format!("{d}(assert (= x (_ bv16 4)))"), "does not fit");
     refuse(&format!("{d}(assert (< 1 2))"), "not supported");
+}
+
+/// Division and `bvsmod` arrived with constraint-engine 0.5.0. The SMT-LIB
+/// reader already hands them over as plain applications, so no VM code
+/// changes; pin the total semantics (division by zero, sign of `bvsmod`)
+/// through the whole stack. UNSAT answers are DRAT-certified by the engine.
+#[test]
+fn division_family_follows_smt_lib_through_the_reader() {
+    let answer = |text: &str| {
+        let program = smt_lib_format::read(&format!("(declare-const x (_ BitVec 4)){text}(check-sat)")).unwrap();
+        match Vm::new().execute(&program).unwrap().sat_results.as_slice() {
+            [SolverResult::Sat(_)] => "sat",
+            [SolverResult::Unsat] => "unsat",
+            other => panic!("{text}: {other:?}"),
+        }
+    };
+    // x / 0 = all ones, x urem 0 = x, for every x (the negation is UNSAT).
+    assert_eq!(answer("(assert (distinct (bvudiv x #x0) #xf))"), "unsat");
+    assert_eq!(answer("(assert (distinct (bvurem x #x0) x))"), "unsat");
+    // -7 smod 3 = 2 but -7 srem 3 = -1; 7 smod -3 = -2 but 7 srem -3 = 1.
+    assert_eq!(answer("(assert (and (= x #b1001) (= (bvsmod x #x3) #x2)))"), "sat");
+    assert_eq!(answer("(assert (and (= x #b1001) (= (bvsrem x #x3) #xf)))"), "sat");
+    assert_eq!(answer("(assert (and (= x #x7) (= (bvsmod x #xd) #xe)))"), "sat");
+    assert_eq!(answer("(assert (and (= x #x7) (= (bvsrem x #xd) #x1)))"), "sat");
+    assert_eq!(answer("(assert (and (= x #b1001) (= (bvsmod x #x3) #xf)))"), "unsat");
+    // MIN sdiv -1 = MIN (overflow wraps).
+    assert_eq!(answer("(assert (and (= x #x8) (distinct (bvsdiv x #xf) #x8)))"), "unsat");
 }
 
 #[test]
