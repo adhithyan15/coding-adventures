@@ -1,11 +1,13 @@
 (* Tests for the OCaml lane of CT01.
 
    Part 1 replays every case of the shared corpus
-   (code/specs/fixtures/ct-compare-v1/cases.json), via the vendored copy in
-   test/fixtures (dune's workspace root is this package, so the canonical file
-   outside it cannot be a dune dependency); a drift test compares the copy to
-   the canonical file whenever the test can find it.  Part 2 adds the checks the
-   corpus only samples. *)
+   (code/specs/fixtures/ct-compare-v1/cases.json), embedded verbatim in
+   corpus_data.ml as [Corpus_data.json] (dune's workspace root is this package,
+   so the canonical file outside it cannot be a dune dependency).  Embedding
+   means the tests touch no filesystem and the package keeps an empty
+   capability manifest; the BUILD file checks the copy against the canonical
+   corpus byte for byte.
+   Part 2 adds the checks the corpus only samples. *)
 
 open Coding_adventures_ct_compare
 
@@ -109,12 +111,6 @@ let parse_json text =
   if !pos <> len then failwith "trailing JSON content";
   v
 
-let read_file path =
-  let ic = open_in_bin path in
-  let s = really_input_string ic (in_channel_length ic) in
-  close_in ic;
-  s
-
 let field o k =
   match o with
   | Obj fs -> (
@@ -148,7 +144,7 @@ let error_name = function
 
 (* --------------------------------------------------------------- corpus --- *)
 
-let corpus = parse_json (read_file "fixtures/ct-compare-v1/cases.json")
+let corpus = parse_json Corpus_data.json
 let cases = match field corpus "cases" with Arr l -> l | _ -> failwith "cases"
 
 let run_case c () =
@@ -217,30 +213,6 @@ let corpus_tests =
   :: List.map
        (fun c -> Alcotest.test_case (str_field c "id") `Quick (run_case c))
        cases
-
-(* The vendored copy must match the canonical corpus.  Walk up from the test's
-   working directory (inside _build, inside the repository) looking for it; if
-   the package was built outside the monorepo there is nothing to compare. *)
-let canonical_corpus () =
-  let rel = "code/specs/fixtures/ct-compare-v1/cases.json" in
-  let rec up dir n =
-    if n = 0 then None
-    else
-      let candidate = Filename.concat dir rel in
-      if Sys.file_exists candidate then Some candidate
-      else
-        let parent = Filename.dirname dir in
-        if parent = dir then None else up parent (n - 1)
-  in
-  up (Sys.getcwd ()) 12
-
-let test_vendored_copy_is_current () =
-  match canonical_corpus () with
-  | None -> () (* built outside the monorepo: nothing to compare *)
-  | Some path ->
-      Alcotest.(check bool)
-        "vendored cases.json equals the canonical corpus" true
-        (read_file path = read_file "fixtures/ct-compare-v1/cases.json")
 
 (* -------------------------------------------------------------- equality -- *)
 
@@ -391,12 +363,7 @@ let test_u64_extremes () =
 let () =
   Alcotest.run "ct-compare"
     [
-      ( "corpus",
-        corpus_tests
-        @ [
-            Alcotest.test_case "vendored copy is current" `Quick
-              test_vendored_copy_is_current;
-          ] );
+      ("corpus", corpus_tests);
       ( "equality",
         [
           Alcotest.test_case "equal and empty" `Quick test_equal_and_empty;

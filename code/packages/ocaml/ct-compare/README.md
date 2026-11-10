@@ -85,10 +85,15 @@ under both bits, length mismatches, invalid choices (including negatives,
 bases.
 
 Dune's workspace root is this package, so the canonical corpus outside it
-cannot be a dune dependency. `test/fixtures/ct-compare-v1/cases.json` is a
-copy, and `vendored copy is current` fails the build whenever the canonical
-`code/specs/fixtures/ct-compare-v1/cases.json` is reachable and differs. Refresh
-the copy with `cp` after any corpus change.
+cannot be a dune dependency, and the capability analyzer rejects generated
+sources. `test/corpus_data.ml` therefore embeds the corpus verbatim as
+`let json = {ct|...|ct}`, so the tests read no files and `required_capabilities.json`
+stays empty. The first test line of `BUILD` rebuilds that file from
+`code/specs/fixtures/ct-compare-v1/cases.json` and fails on any byte of drift.
+The check is content-only, so it runs in the Linux build and not again on Windows.
+Refresh the copy with
+`{ printf 'let json =\n  {ct|'; cat ../../../specs/fixtures/ct-compare-v1/cases.json; printf '|ct}\n'; } > test/corpus_data.ml`
+after any corpus change.
 
 Coverage tooling (`bisect_ppx`) and `ocamlformat` are required by `BUILD` in CI;
 neither was available where this port was written, so coverage was not measured

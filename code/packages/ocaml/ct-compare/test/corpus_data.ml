@@ -1,4 +1,5 @@
-{
+let json =
+  {ct|{
   "schema_version": 1,
   "profile": "ct-compare-v1",
   "cases": [
@@ -329,3 +330,4 @@
     }
   ]
 }
+|ct}
