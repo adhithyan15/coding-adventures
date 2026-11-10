@@ -14,6 +14,8 @@
   Residual: output can still be up to 8x the input; a caller-set `max_output`
   awaits the WX-H / LP-003 API decision.
 - `table_end` computed with checked arithmetic.
+- Tables with more than 256 entries or a repeated symbol return `Err`
+  (Kraft alone admits ~2^56 long codes, a memory amplification).
 
 ## [0.1.0] - 2026-04-12
 

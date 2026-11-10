@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   into a binary with O(1) append and `:binary.at/2`; output is identical for
   valid input. A token whose offset exceeds the output so far now raises
   `ArgumentError` instead of reading from the wrong position.
+- A negative or non-integer copy length raises `ArgumentError`; before, it
+  never reached the copy loop's base case and grew the output forever.
 
 ## [0.1.0] - 2026-04-11
 
