@@ -4818,6 +4818,16 @@ mod v_es5 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -4875,6 +4885,16 @@ mod v_es5 {
                                                         },
                                                         GrammarElement::TokenReference {
                                                             name: r#"NAME"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
                                                         },
                                                     ],
                                                 },
@@ -5172,11 +5192,139 @@ mod v_es5 {
                     line_number: 240,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 242,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -5186,7 +5334,7 @@ mod v_es5 {
                             },
                         ],
                     },
-                    line_number: 242,
+                    line_number: 282,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -5222,7 +5370,7 @@ mod v_es5 {
                             },
                         ],
                     },
-                    line_number: 244,
+                    line_number: 284,
                 },
             ],
             version: 1,
@@ -7814,6 +7962,16 @@ mod v_es2015 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -7880,6 +8038,16 @@ mod v_es2015 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -7908,6 +8076,16 @@ mod v_es2015 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -8255,11 +8433,139 @@ mod v_es2015 {
                     line_number: 483,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 489,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -8282,7 +8588,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 489,
+                    line_number: 529,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -8318,7 +8624,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 494,
+                    line_number: 534,
                 },
                 GrammarRule {
                     name: r#"generator_expression"#.to_string(),
@@ -8357,7 +8663,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 497,
+                    line_number: 537,
                 },
                 GrammarRule {
                     name: r#"class_expression"#.to_string(),
@@ -8381,7 +8687,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 502,
+                    line_number: 542,
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
@@ -8414,7 +8720,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 519,
+                    line_number: 559,
                 },
             ],
             version: 1,
@@ -8876,9 +9182,6 @@ mod v_es2016 {
                                     },
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
-                                    },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
                                     },
                                 ],
                             },
@@ -11012,6 +11315,16 @@ mod v_es2016 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -11078,6 +11391,16 @@ mod v_es2016 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -11119,6 +11442,16 @@ mod v_es2016 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -11499,11 +11832,139 @@ mod v_es2016 {
                     line_number: 440,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 445,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -11526,7 +11987,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 445,
+                    line_number: 485,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -11562,7 +12023,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 450,
+                    line_number: 491,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -11598,7 +12059,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 461,
+                    line_number: 502,
                 },
             ],
             version: 1,
@@ -12218,8 +12679,10 @@ mod v_es2017 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -12233,8 +12696,10 @@ mod v_es2017 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -14401,6 +14866,16 @@ mod v_es2017 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -14467,6 +14942,16 @@ mod v_es2017 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -14508,6 +14993,16 @@ mod v_es2017 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -14903,11 +15398,139 @@ mod v_es2017 {
                     line_number: 456,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 462,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -14930,7 +15553,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 462,
+                    line_number: 502,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -14966,7 +15589,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 467,
+                    line_number: 508,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -15002,7 +15625,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 472,
+                    line_number: 513,
                 },
             ],
             version: 1,
@@ -15707,8 +16330,10 @@ mod v_es2018 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -15722,8 +16347,10 @@ mod v_es2018 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -17997,6 +18624,16 @@ mod v_es2018 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -18063,6 +18700,16 @@ mod v_es2018 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -18104,6 +18751,16 @@ mod v_es2018 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -18509,11 +19166,139 @@ mod v_es2018 {
                     line_number: 473,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 475,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -18536,7 +19321,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 475,
+                    line_number: 515,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -18572,7 +19357,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 480,
+                    line_number: 521,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -18608,7 +19393,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 485,
+                    line_number: 526,
                 },
             ],
             version: 1,
@@ -19313,8 +20098,10 @@ mod v_es2019 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -19328,8 +20115,10 @@ mod v_es2019 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -21609,6 +22398,16 @@ mod v_es2019 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -21675,6 +22474,16 @@ mod v_es2019 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -21716,6 +22525,16 @@ mod v_es2019 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -22121,11 +22940,139 @@ mod v_es2019 {
                     line_number: 426,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 428,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -22148,7 +23095,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 428,
+                    line_number: 468,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -22184,7 +23131,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 433,
+                    line_number: 474,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -22220,7 +23167,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 477,
                 },
             ],
             version: 1,
@@ -22925,8 +23872,10 @@ mod v_es2020 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -22940,8 +23889,10 @@ mod v_es2020 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -25247,6 +26198,16 @@ mod v_es2020 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -25292,6 +26253,16 @@ mod v_es2020 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
@@ -25320,6 +26291,16 @@ mod v_es2020 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -25368,7 +26349,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 417,
+                    line_number: 419,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -25389,6 +26370,16 @@ mod v_es2020 {
                                                         },
                                                         GrammarElement::TokenReference {
                                                             name: r#"NAME"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
                                                         },
                                                     ],
                                                 },
@@ -25445,6 +26436,19 @@ mod v_es2020 {
                                         value: r#"super"#.to_string(),
                                     },
                                     GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"super"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
                                         name: r#"LBRACKET"#.to_string(),
                                     },
                                     GrammarElement::RuleReference {
@@ -25470,7 +26474,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 420,
+                    line_number: 422,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -25498,7 +26502,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 427,
+                    line_number: 430,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -25540,7 +26544,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 429,
+                    line_number: 432,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -25554,7 +26558,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 435,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -25571,7 +26575,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 434,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -25597,7 +26601,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 439,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -25621,7 +26625,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 439,
+                    line_number: 442,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -25699,7 +26703,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 444,
+                    line_number: 447,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -25719,7 +26723,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 475,
+                    line_number: 478,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -25736,7 +26740,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 486,
+                    line_number: 489,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -25755,7 +26759,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 488,
+                    line_number: 491,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -25797,7 +26801,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 490,
+                    line_number: 493,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -25837,7 +26841,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 493,
+                    line_number: 496,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -25870,7 +26874,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 495,
+                    line_number: 498,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -25884,7 +26888,132 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 501,
+                    line_number: 504,
+                },
+                GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 506,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -25892,6 +27021,9 @@ mod v_es2020 {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -25914,7 +27046,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 503,
+                    line_number: 546,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -25950,7 +27082,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 508,
+                    line_number: 552,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -25986,7 +27118,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 511,
+                    line_number: 555,
                 },
             ],
             version: 1,
@@ -26691,8 +27823,10 @@ mod v_es2021 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -26706,8 +27840,10 @@ mod v_es2021 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -29022,6 +30158,16 @@ mod v_es2021 {
                                         GrammarElement::Sequence {
                                             elements: vec![
                                                 GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
                                                 GrammarElement::RuleReference {
@@ -29067,6 +30213,16 @@ mod v_es2021 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"LBRACKET"#.to_string(),
                                                 },
@@ -29095,6 +30251,16 @@ mod v_es2021 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -29170,6 +30336,16 @@ mod v_es2021 {
                                                 GrammarElement::Sequence {
                                                     elements: vec![
                                                         GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
                                                             name: r#"LBRACKET"#.to_string(),
                                                         },
                                                         GrammarElement::RuleReference {
@@ -29211,6 +30387,16 @@ mod v_es2021 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -29662,11 +30848,139 @@ mod v_es2021 {
                     line_number: 439,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 441,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -29689,7 +31003,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 441,
+                    line_number: 481,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -29725,7 +31039,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 446,
+                    line_number: 487,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -29761,7 +31075,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 449,
+                    line_number: 490,
                 },
             ],
             version: 1,
@@ -30466,8 +31780,10 @@ mod v_es2022 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -30481,8 +31797,10 @@ mod v_es2022 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -33096,6 +34414,16 @@ mod v_es2022 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"DOT"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -33149,6 +34477,16 @@ mod v_es2022 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -33187,6 +34525,16 @@ mod v_es2022 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -33274,6 +34622,16 @@ mod v_es2022 {
                                                         GrammarElement::TokenReference {
                                                             name: r#"DOT"#.to_string(),
                                                         },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
                                                         GrammarElement::TokenReference {
                                                             name: r#"PRIVATE_NAME"#.to_string(),
                                                         },
@@ -33323,6 +34681,16 @@ mod v_es2022 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -33774,11 +35142,139 @@ mod v_es2022 {
                     line_number: 529,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 531,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -33801,7 +35297,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 531,
+                    line_number: 571,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -33837,7 +35333,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 536,
+                    line_number: 577,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -33873,7 +35369,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 539,
+                    line_number: 580,
                 },
             ],
             version: 1,
@@ -34587,8 +36083,10 @@ mod v_es2023 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -34602,8 +36100,10 @@ mod v_es2023 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -37217,6 +38717,16 @@ mod v_es2023 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"DOT"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -37270,6 +38780,16 @@ mod v_es2023 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -37308,6 +38828,16 @@ mod v_es2023 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -37395,6 +38925,16 @@ mod v_es2023 {
                                                         GrammarElement::TokenReference {
                                                             name: r#"DOT"#.to_string(),
                                                         },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
                                                         GrammarElement::TokenReference {
                                                             name: r#"PRIVATE_NAME"#.to_string(),
                                                         },
@@ -37444,6 +38984,16 @@ mod v_es2023 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -37895,11 +39445,139 @@ mod v_es2023 {
                     line_number: 456,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 458,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -37922,7 +39600,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 458,
+                    line_number: 498,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -37958,7 +39636,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 463,
+                    line_number: 504,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -37994,7 +39672,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 466,
+                    line_number: 507,
                 },
             ],
             version: 1,
@@ -38708,8 +40386,10 @@ mod v_es2024 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -38723,8 +40403,10 @@ mod v_es2024 {
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::TokenReference {
+                                            name: r#"SEMICOLON"#.to_string(),
+                                        }),
                                     },
                                 ],
                             },
@@ -41338,6 +43020,16 @@ mod v_es2024 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"DOT"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -41391,6 +43083,16 @@ mod v_es2024 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -41429,6 +43131,16 @@ mod v_es2024 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -41516,6 +43228,16 @@ mod v_es2024 {
                                                         GrammarElement::TokenReference {
                                                             name: r#"DOT"#.to_string(),
                                                         },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
                                                         GrammarElement::TokenReference {
                                                             name: r#"PRIVATE_NAME"#.to_string(),
                                                         },
@@ -41565,6 +43287,16 @@ mod v_es2024 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -42016,11 +43748,139 @@ mod v_es2024 {
                     line_number: 451,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 453,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -42043,7 +43903,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 453,
+                    line_number: 493,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -42079,7 +43939,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 458,
+                    line_number: 499,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -42115,7 +43975,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 461,
+                    line_number: 502,
                 },
             ],
             version: 1,
@@ -42904,9 +44764,6 @@ mod v_es2025 {
                                     GrammarElement::RuleReference {
                                         name: r#"method_definition"#.to_string(),
                                     },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
-                                    },
                                 ],
                             },
                             GrammarElement::Sequence {
@@ -42923,9 +44780,6 @@ mod v_es2025 {
                                     },
                                     GrammarElement::RuleReference {
                                         name: r#"async_method"#.to_string(),
-                                    },
-                                    GrammarElement::TokenReference {
-                                        name: r#"SEMICOLON"#.to_string(),
                                     },
                                 ],
                             },
@@ -45717,6 +47571,16 @@ mod v_es2025 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"DOT"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -45770,6 +47634,16 @@ mod v_es2025 {
                                                 GrammarElement::TokenReference {
                                                     name: r#"OPTIONAL_CHAIN"#.to_string(),
                                                 },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"OPTIONAL_CHAIN"#.to_string(),
+                                                },
                                                 GrammarElement::TokenReference {
                                                     name: r#"PRIVATE_NAME"#.to_string(),
                                                 },
@@ -45808,6 +47682,16 @@ mod v_es2025 {
                                                 },
                                                 GrammarElement::TokenReference {
                                                     name: r#"NAME"#.to_string(),
+                                                },
+                                            ],
+                                        },
+                                        GrammarElement::Sequence {
+                                            elements: vec![
+                                                GrammarElement::TokenReference {
+                                                    name: r#"DOT"#.to_string(),
+                                                },
+                                                GrammarElement::RuleReference {
+                                                    name: r#"reserved_word"#.to_string(),
                                                 },
                                             ],
                                         },
@@ -45895,6 +47779,16 @@ mod v_es2025 {
                                                         GrammarElement::TokenReference {
                                                             name: r#"DOT"#.to_string(),
                                                         },
+                                                        GrammarElement::RuleReference {
+                                                            name: r#"reserved_word"#.to_string(),
+                                                        },
+                                                    ],
+                                                },
+                                                GrammarElement::Sequence {
+                                                    elements: vec![
+                                                        GrammarElement::TokenReference {
+                                                            name: r#"DOT"#.to_string(),
+                                                        },
                                                         GrammarElement::TokenReference {
                                                             name: r#"PRIVATE_NAME"#.to_string(),
                                                         },
@@ -45944,6 +47838,16 @@ mod v_es2025 {
                                     },
                                     GrammarElement::TokenReference {
                                         name: r#"NAME"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::TokenReference {
+                                        name: r#"DOT"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"reserved_word"#.to_string(),
                                     },
                                 ],
                             },
@@ -46395,11 +48299,139 @@ mod v_es2025 {
                     line_number: 617,
                 },
                 GrammarRule {
+                    name: r#"reserved_word"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Literal {
+                                value: r#"await"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"break"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"case"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"catch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"class"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"const"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"continue"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"debugger"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"default"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"delete"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"do"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"else"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"enum"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"export"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"extends"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"false"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"finally"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"for"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"function"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"if"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"import"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"in"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"instanceof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"let"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"new"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"null"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"return"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"super"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"switch"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"this"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"throw"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"true"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"try"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"typeof"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"var"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"void"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"while"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"with"#.to_string(),
+                            },
+                            GrammarElement::Literal {
+                                value: r#"yield"#.to_string(),
+                            },
+                        ],
+                    },
+                    line_number: 619,
+                },
+                GrammarRule {
                     name: r#"property_name"#.to_string(),
                     body: GrammarElement::Alternation {
                         choices: vec![
                             GrammarElement::TokenReference {
                                 name: r#"NAME"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"reserved_word"#.to_string(),
                             },
                             GrammarElement::TokenReference {
                                 name: r#"STRING"#.to_string(),
@@ -46422,7 +48454,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 619,
+                    line_number: 659,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -46458,7 +48490,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 624,
+                    line_number: 665,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -46494,7 +48526,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 627,
+                    line_number: 668,
                 },
             ],
             version: 1,

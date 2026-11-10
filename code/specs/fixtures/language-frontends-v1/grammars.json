@@ -357,7 +357,7 @@
       "version": "es2015",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2015.grammar",
-      "sha256": "322c83babb8cae6c5dd79b650241f34a7ae7ab58213190b58f58aac0363c583d"
+      "sha256": "18178b0cff14104eb0a1d6a098a96fb5e1e75aad9c2fcb6d6fb52905343f1a52"
     },
     {
       "family": "javascript",
@@ -371,7 +371,7 @@
       "version": "es2016",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2016.grammar",
-      "sha256": "7d423825bb3ba387de2500ea4e0f8610a7d10039a1fa6ba4b561ebe86e2a146e"
+      "sha256": "e7643e42f4d15b191385166948fb1297e28a062fb07b5d853d8e630cc2741958"
     },
     {
       "family": "javascript",
@@ -385,7 +385,7 @@
       "version": "es2017",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2017.grammar",
-      "sha256": "76dadea24d912ce7bcaec4d2691b13c4765c711fd8973bde2913ba9017001c02"
+      "sha256": "6d19335434b79c6ee07b5191af1102d3cbfd8d41f34847c3be85f9ce090a6a4c"
     },
     {
       "family": "javascript",
@@ -399,7 +399,7 @@
       "version": "es2018",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2018.grammar",
-      "sha256": "a76f99c48175fe7d2ac50e1308c91bc751f6fa0b103195802be3d0689d9bc961"
+      "sha256": "c3be3d8f9d193a627baca1340100affe1ffab967f4ae5ef3af7cde6ce70eeeed"
     },
     {
       "family": "javascript",
@@ -413,7 +413,7 @@
       "version": "es2019",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2019.grammar",
-      "sha256": "708eb80c32caeeb0b442e74e3f45e10212164198e178bdc973bbc79097d444ab"
+      "sha256": "f0d2994817c6fae7e649a65c63578b9cda325615aa73220bf8db17403966a0de"
     },
     {
       "family": "javascript",
@@ -427,7 +427,7 @@
       "version": "es2020",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2020.grammar",
-      "sha256": "2b55d49cb49d1f182e2056776d0ddf6d53343d070579aa6f5d60c187c03a30b6"
+      "sha256": "6509e60e12ef802116b0fd868d9151d0ad1a76efff1232b67e7fe35cb6ce9ecf"
     },
     {
       "family": "javascript",
@@ -441,7 +441,7 @@
       "version": "es2021",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2021.grammar",
-      "sha256": "63b020d96f7f09520898eb8829a544883814f13c225cdc6bd6114c1703b48024"
+      "sha256": "a4234aa092c5884052f0a4e6a0775cd1356b16ed2216c57cc809e9d99f6fdd88"
     },
     {
       "family": "javascript",
@@ -455,7 +455,7 @@
       "version": "es2022",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2022.grammar",
-      "sha256": "601494cdb4a6944216253d921a8f273c71667017011eff19070cc57583e29fa1"
+      "sha256": "058cb10ff0d7f0584da6847617e0f0daa6143f505f37de71c757b3e81d3dc76b"
     },
     {
       "family": "javascript",
@@ -469,7 +469,7 @@
       "version": "es2023",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2023.grammar",
-      "sha256": "4b75fd894c0a1de76020ec35f3d8cb4814a20fca3d23ae97e191bbd7076929d4"
+      "sha256": "661fbaa6421de334c46f74f57aaaaa7f88de60acf1f15b30c30f33764f6f9fc8"
     },
     {
       "family": "javascript",
@@ -483,7 +483,7 @@
       "version": "es2024",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2024.grammar",
-      "sha256": "69632cc5f7dbf4bdbe4805fe9c6aad19044e3da6c9f0025e4b09fada7ba90988"
+      "sha256": "a2e000f1cac291814490b1715c70d949d8d55c43bc35299bdd817933125f9af0"
     },
     {
       "family": "javascript",
@@ -497,7 +497,7 @@
       "version": "es2025",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2025.grammar",
-      "sha256": "010305da13428986a7b8afa5e29864da9a5a3b2e3f2388ae8d4ff3b9ef2265ff"
+      "sha256": "df50b64dc7f2bacef539633179c5abb16da1074ac7ddb8a423ad3ede08b48988"
     },
     {
       "family": "javascript",
@@ -525,7 +525,7 @@
       "version": "es5",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es5.grammar",
-      "sha256": "61eebcf17313295e44a0c9816c6c2c6cff53a0320054c11e8e18a839863d71f4"
+      "sha256": "1dd6b2d694eadb12564d37bbf9d81af1d4d48451e371743cd497ee9a5852fe4d"
     },
     {
       "family": "javascript",

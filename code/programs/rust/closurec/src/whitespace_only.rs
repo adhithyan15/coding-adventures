@@ -3181,11 +3181,6 @@ pub fn whitespace_only_minify(
 
     // State machine:
     let mut brace_stack: Vec<BlockKind> = Vec::new();
-    // #17840: parallel to `brace_stack`, whether each open brace is a class
-    // MEMBER body (a method or static block, opened directly in a class
-    // body), and whether the `}` most recently closed was one. See the
-    // class-body ASI note at the top of the emit loop.
-    let mut brace_is_member_body: Vec<bool> = Vec::new();
     // `)` index in `kept` → its `(` index, computed once (the emit loop never
     // mutates `kept`), so the member-body test is O(1) per brace.
     // #18123: which tokens sit directly in a class body or object literal.
@@ -3206,7 +3201,6 @@ pub fn whitespace_only_minify(
         }
         table
     };
-    let mut closed_member_body = false;
     // ^ for each open `{`, the kind of block it opens.
     //   `BlockKind::Function` triggers gap-030 rule-B (emit
     //   `;` after closing `}`); `BlockKind::TryChain` triggers
@@ -3274,24 +3268,6 @@ pub fn whitespace_only_minify(
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
-
-        // #17840: closurec's grammar wants a separator between class members,
-        // so ASI may place a `;` directly in a class body
-        // (`class P{m(){}⏎n(){}}`). There it would be an empty class element,
-        // which upstream never prints (`class P{m(){}n(){}}`). Drop it.
-        if synth_asi_semi
-            .as_ref()
-            .is_some_and(|semi| std::ptr::eq(tok, semi))
-            && brace_stack.last() == Some(&BlockKind::Class)
-            && closed_member_body
-            && prev_emitted_tok.is_some_and(|p| is_structural_punct(p, "}"))
-        {
-            // Only after a method or static block: `m(){}⏎n(){}` prints
-            // `m(){}n(){}` upstream. A FIELD keeps its `;` (`x=1;y=2`):
-            // without it the output wouldn't parse.
-            idx += 1;
-            continue;
-        }
 
         // gap-045: single-arg arrow function — drop the
         // enclosing parens around a bare-identifier param.
@@ -3809,7 +3785,6 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
-            closed_member_body = brace_is_member_body.pop().unwrap_or(false);
             let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
             let next_is_close_brace = next_val == Some("}");
             let next_is_chain_continuation =
@@ -4009,40 +3984,6 @@ pub fn whitespace_only_minify(
             } else {
                 BlockKind::Other
             };
-            // A class member body: opened directly in a class body after
-            // `static` (static block) or after a method's `)`, where the
-            // `(` is not a `function` expression's (`x = function(){}` is
-            // a field).
-            // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
-            // A method's `(` is preceded by its name, perhaps behind `*`,
-            // `async`, `get`/`set` or `static`. A field initialiser has `=`,
-            // `function`, `class` or `extends` among those few tokens.
-            let member_body = brace_stack.last() == Some(&BlockKind::Class)
-                && idx >= 1
-                && (kept[idx - 1].value == "static"
-                    || (is_structural_punct(kept[idx - 1], ")")
-                        && kept_open_paren[idx - 1] != usize::MAX
-                        && {
-                            let p = kept_open_paren[idx - 1];
-                            // Walk back over this member's own header, to the
-                            // `{`/`}`/`;` that ends the previous member. A
-                            // field initialiser has `=`, `function`, `class` or
-                            // `extends` there (`x = function(){}`,
-                            // `x = class extends f(B){}`); a method doesn't.
-                            // Each header is walked once, so this is linear.
-                            (0..p)
-                                .rev()
-                                .map(|k| kept[k])
-                                .take_while(|t| {
-                                    !(is_structural_punct(t, "{")
-                                        || is_structural_punct(t, "}")
-                                        || is_structural_punct(t, ";"))
-                                })
-                                .all(|t| {
-                                    !matches!(t.value.as_str(), "function" | "class" | "extends" | "=")
-                                })
-                        }));
-            brace_is_member_body.push(member_body);
             brace_stack.push(kind);
             next_block_is_try_chain = false;
             next_block_is_switch_body = false;

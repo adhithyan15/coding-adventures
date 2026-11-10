@@ -198,6 +198,20 @@ fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
     None
 }
 
+/// Extract an identifier or property name from either a direct Token or an
+/// `identifier_name` grammar Node.
+fn extract_ident_name(item: Option<&ASTNodeOrToken>) -> Option<String> {
+    match item {
+        Some(ASTNodeOrToken::Token(t)) => Some(t.value.clone()),
+        Some(ASTNodeOrToken::Node(n))
+            if n.rule_name == "reserved_word" || n.rule_name == "identifier_name" =>
+        {
+            leftmost_token(n).map(|s| s.to_string())
+        }
+        _ => None,
+    }
+}
+
 /// If there is exactly one Node child, return it; else `None`.
 fn sole_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
     let nodes = node_children(node);
@@ -3061,10 +3075,10 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                         });
                         i += 1;
                     }
-                    // `?.` NAME — optional dot access (the bare name token sits
-                    // directly after `?.`, with no interposed `.`).
-                    Some(ASTNodeOrToken::Token(name_t)) => {
-                        let prop_name = name_t.value.clone();
+                    // `?.` NAME / identifier_name — optional dot access (the bare name token or
+                    // identifier_name node sits directly after `?.`, with no interposed `.`).
+                    Some(c) if extract_ident_name(Some(c)).is_some() => {
+                        let prop_name = extract_ident_name(Some(c)).unwrap();
                         i += 1;
                         base = Expression::OptionalMemberExpression(OptionalMemberExpression {
                             cv: None,
@@ -3085,12 +3099,10 @@ fn convert_optional_chain_expression(node: &GrammarASTNode) -> Result<Expression
                 }
             }
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                // DOT NAME — dot property access.
+                // DOT NAME / identifier_name — dot property access.
                 i += 1;
-                let prop_name = match children.get(i) {
-                    Some(ASTNodeOrToken::Token(t)) => t.value.clone(),
-                    _ => return Err(internal(node, "optional_chain_expression: missing property name after .")),
-                };
+                let prop_name = extract_ident_name(children.get(i))
+                    .ok_or_else(|| internal(node, "optional_chain_expression: missing property name after ."))?;
                 i += 1;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
@@ -3258,12 +3270,10 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
                 });
                 i += 1;
             }
-            // `.NAME` — dot (non-computed) member access.
+            // `.NAME` / `.identifier_name` — dot (non-computed) member access.
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                let prop_name = match children.get(i + 1) {
-                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
-                    _ => return Err(internal(node, "call_expression.dot: missing property name")),
-                };
+                let prop_name = extract_ident_name(children.get(i + 1))
+                    .ok_or_else(|| internal(node, "call_expression.dot: missing property name"))?;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
                     object: Box::new(base),
@@ -3273,7 +3283,7 @@ fn convert_call_expression(node: &GrammarASTNode) -> Result<Expression, BridgeEr
                     })),
                     computed: false,
                 });
-                i += 2; // consume DOT + NAME
+                i += 2; // consume DOT + NAME (or identifier_name)
             }
             // `[expr]` — computed member access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -3597,17 +3607,13 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     };
     while i < children.len() {
         match &children[i] {
-            // `.NAME` — non-computed (dot) property access.
+            // `.NAME` / `.identifier_name` — non-computed (dot) property access.
             ASTNodeOrToken::Token(t) if t.value == "." => {
-                let prop_name = match children.get(i + 1) {
-                    Some(ASTNodeOrToken::Token(name)) => name.value.clone(),
-                    _ => {
-                        return Err(internal(
-                            node,
-                            "member_expression.dot: missing property name",
-                        ))
-                    }
-                };
+                let prop_name = extract_ident_name(children.get(i + 1))
+                    .ok_or_else(|| internal(
+                        node,
+                        "member_expression.dot: missing property name",
+                    ))?;
                 base = Expression::MemberExpression(MemberExpression {
                     cv: None,
                     object: Box::new(base),
@@ -3617,7 +3623,7 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                     })),
                     computed: false,
                 });
-                i += 2; // consume DOT + NAME
+                i += 2; // consume DOT + NAME (or identifier_name)
             }
             // `[expr]` — computed property access.
             ASTNodeOrToken::Token(t) if t.value == "[" => {
@@ -4155,34 +4161,47 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
         return Ok(PropertyKey::Expression(Box::new(convert_expression(inner)?)));
     }
     for c in &node.children {
-        if let ASTNodeOrToken::Token(t) = c {
-            match t.type_ {
-                TokenType::String => {
-                    let raw = t.value.clone();
-                    let value = decode_string_escapes(&raw);
-                    return Ok(PropertyKey::StringLiteral(
-                        coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
-                    ));
-                }
-                TokenType::Number => {
-                    let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
-                    return Ok(PropertyKey::NumericLiteral(
-                        coding_adventures_javascript_ast::expression::NumericLiteral {
-                            cv: None,
-                            value: val,
-                            raw: t.value.clone(),
-                        },
-                    ));
-                }
-                // NAME / KEYWORD (reserved words ARE legal property names, e.g.
-                // `{if: 1}`) and any other terminal: a bare identifier key.
-                _ => {
+        match c {
+            ASTNodeOrToken::Node(inner)
+                if inner.rule_name == "reserved_word" || inner.rule_name == "identifier_name" =>
+            {
+                if let Some(name) = leftmost_token(inner) {
                     return Ok(PropertyKey::Identifier(Identifier {
                         cv: None,
-                        name: t.value.clone(),
+                        name: name.to_string(),
                     }));
                 }
             }
+            ASTNodeOrToken::Token(t) => {
+                match t.type_ {
+                    TokenType::String => {
+                        let raw = t.value.clone();
+                        let value = decode_string_escapes(&raw);
+                        return Ok(PropertyKey::StringLiteral(
+                            coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
+                        ));
+                    }
+                    TokenType::Number => {
+                        let val: f64 = parse_js_number(&t.value).unwrap_or(0.0);
+                        return Ok(PropertyKey::NumericLiteral(
+                            coding_adventures_javascript_ast::expression::NumericLiteral {
+                                cv: None,
+                                value: val,
+                                raw: t.value.clone(),
+                            },
+                        ));
+                    }
+                    // NAME / KEYWORD (reserved words ARE legal property names, e.g.
+                    // `{if: 1}`) and any other terminal: a bare identifier key.
+                    _ => {
+                        return Ok(PropertyKey::Identifier(Identifier {
+                            cv: None,
+                            name: t.value.clone(),
+                        }));
+                    }
+                }
+            }
+            _ => {}
         }
     }
     Err(internal(node, "property_name: no key token"))
@@ -8261,5 +8280,32 @@ mod tests {
             panic!("expected static block, got {:?}", c.body[0]);
         };
         assert_eq!(kinds(&b.body), vec!["fn", "class"]);
+    }
+
+    #[test]
+    fn adjacent_class_members_without_semicolons() {
+        // #17852: adjacent class members with no separator on one line.
+        let p = bridge_ok("class P { m() { a(); } n() { b(); } }");
+        let ProgramItem::Declaration(Declaration::ClassDeclaration(c)) = &p.body[0] else {
+            panic!("expected class declaration, got {:?}", p.body[0]);
+        };
+        assert_eq!(c.body.len(), 2);
+    }
+
+    #[test]
+    fn reserved_words_as_property_names_and_dot_access() {
+        // #17852: reserved words after . and as object property names.
+        let p = bridge_ok("a.throw(1); o.return(); x = { if: 1, default: 2 };");
+        assert_eq!(p.body.len(), 3);
+    }
+
+    #[test]
+    fn reserved_words_as_class_members() {
+        // #17852: reserved words as class methods and fields.
+        let p = bridge_ok("class C { throw() {} return() {} if = 1; }");
+        let ProgramItem::Declaration(Declaration::ClassDeclaration(c)) = &p.body[0] else {
+            panic!("expected class declaration, got {:?}", p.body[0]);
+        };
+        assert_eq!(c.body.len(), 3);
     }
 }
