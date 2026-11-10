@@ -144,6 +144,17 @@ stops before no-check or separately authenticated revocation policy for the
 added responder, complete revocation, generalized path validation, TLS, HTTP,
 OAuth, or network readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_policy`
+then consumes that complete root-and-intermediate DNS proof and derives the
+separately authenticated proof's exact responder through private repository-
+owned evidence. It requires one structurally unique `id-pkix-ocsp-nocheck`
+extension with exact DER `NULL` contents and retains the complete non-copyable
+proof on success. Stable failures expose no certificate, extension, response,
+key, signature, status, root, or time payload. This resolves only RFC 6960's
+trust-for-certificate-lifetime branch and stops before separately authenticated
+revocation for this responder, complete revocation, generalized path
+validation, TLS, HTTP, OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
