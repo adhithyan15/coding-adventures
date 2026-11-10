@@ -30,13 +30,6 @@ All notable changes to `huffman-compression` (C) are documented in this file.
   is 46 (Fibonacci(48) > 2^32), so no length-limiting is needed and the output is
   byte-identical to before for every input that previously worked. A
   defence-in-depth check refuses any table with a length above 56.
-- SEC-003 (decoder, ported from the C++/Rust packages): `huffman_decompress`
-  treats the header and lengths table as hostile input. It rejects
-  `symbol_count > 256`, duplicate symbols, lengths outside 1..56 (was 1..32),
-  unsorted and over-subscribed (Kraft > 1) tables, and a declared length larger
-  than 8 x payload bytes BEFORE allocating. Codes are 64-bit and decoded with
-  per-length canonical tables (O(1) per bit instead of a scan of the table).
-
 ### Added
 
 - Tests: Fibonacci-frequency input forcing 33-bit codes (round-trip, all
