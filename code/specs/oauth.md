@@ -2605,6 +2605,26 @@ implement complete revocation policy, generalize path construction or
 validation, or provide TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
 
+A further bounded policy follow-up consumes that complete reviewed-root DNS
+proof and applies the separately authenticated proof's exact retained
+intermediate NameConstraints to its exact responder certificate. Both
+certificates are derived only through the consumed repository-owned evidence;
+callers cannot substitute a certificate, SAN collection, intermediate, path,
+root, algorithm, key, signature, status, freshness endpoint, or time. An
+intermediate without NameConstraints succeeds without reading Subject
+Alternative Name. A present extension must be critical; its supported
+permitted and excluded DNS subtrees and the responder SAN are decoded under
+separate caller-owned ASN.1 limits, every responder `dNSName` must comply, and
+success retains only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload. This
+pure public-certificate-data policy performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. It does not establish
+no-check or separately authenticated revocation policy for the added
+responder, implement complete revocation policy, generalize path construction
+or validation, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof

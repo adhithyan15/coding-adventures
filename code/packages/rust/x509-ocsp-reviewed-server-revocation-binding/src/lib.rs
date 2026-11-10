@@ -1869,6 +1869,53 @@ impl<Proof, Revocation> fmt::Debug
     }
 }
 
+/// Non-copyable responder-revocation path after intermediate DNS policy.
+///
+/// Success retains the complete reviewed-root DNS proof and proves either
+/// that the separately authenticated revocation proof's exact intermediate
+/// has no NameConstraints extension or that its supported critical permitted-
+/// and-excluded-DNS subset was applied to every dNSName in that proof's exact
+/// responder certificate. It is not evidence for no-check, separately
+/// authenticated responder revocation, generalized path validation, complete
+/// revocation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy<
+    Proof,
+    Revocation,
+> {
+    anchor_dns_policy:
+        ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy<Proof, Revocation>,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<Proof, Revocation>
+    ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy<Proof, Revocation>
+{
+    /// Return the consumed complete reviewed-root DNS proof.
+    pub const fn anchor_dns_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy<Proof, Revocation>
+    {
+        &self.anchor_dns_policy
+    }
+
+    /// Return count-only DNS evidence when the exact intermediate constrained DNS.
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl<Proof, Revocation> fmt::Debug
+    for ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy<
+        Proof,
+        Revocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy")
+    }
+}
+
 /// Non-copyable routed reviewed-path evidence with intermediate revocation status.
 ///
 /// Success retains the complete fully routed reviewed server-revocation proof
@@ -2287,6 +2334,59 @@ where
     Ok(
         ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy {
             responder_path,
+            constrained_dns_names,
+        },
+    )
+}
+
+/// Apply exact retained-intermediate DNS policy to the added revocation responder.
+///
+/// Both certificates are derived only through the consumed repository-owned
+/// proof. An intermediate without NameConstraints succeeds without reading
+/// responder Subject Alternative Name. A present NameConstraints extension
+/// must be critical, and its supported permitted and excluded DNS subtrees are
+/// applied under separate caller-owned ASN.1 limits.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before no-check or separately authenticated revocation policy for the added
+/// responder, complete revocation policy, generalized path validation, TLS,
+/// HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity, private_bounds)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy<
+    Proof,
+    Revocation,
+>(
+    anchor_dns_policy: ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy<
+        Proof,
+        Revocation,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy<Proof, Revocation>,
+    X509OcspReviewedResponderIntermediateDnsPolicyError,
+>
+where
+    Revocation: IntermediateStatusResponderRevocationBindingEvidence,
+{
+    let responder_revocation = anchor_dns_policy
+        .responder_path()
+        .responder_revocation()
+        .responder_revocation();
+    let responder_certificate = responder_revocation.authenticated_responder_certificate();
+    let intermediate_certificate = responder_revocation.intermediate_status_issuer_certificate();
+    let constrained_dns_names = evaluate_responder_intermediate_dns_policy(
+        responder_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy {
+            anchor_dns_policy,
             constrained_dns_names,
         },
     )
@@ -4661,6 +4761,32 @@ mod tests {
         }
     }
 
+    struct TestResponderRevocationResponderIntermediateEvidence<'certificate, 'encoded> {
+        responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        issuer: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+    }
+
+    impl IntermediateStatusResponderEvidence
+        for TestResponderRevocationResponderIntermediateEvidence<'_, '_>
+    {
+        fn authenticated_responder_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+            self.responder
+        }
+    }
+
+    impl IntermediateStatusResponderRevocationBindingEvidence
+        for TestResponderRevocationResponderIntermediateEvidence<'_, '_>
+    {
+        fn intermediate_status_issuer_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+            self.issuer
+        }
+
+        fn intermediate_status_observation_time(&self) -> x509_time::X509Time {
+            self.observation_time
+        }
+    }
+
     impl ReviewedIntermediateStatusOriginalProofEvidence
         for TestReviewedResponderRevocationIntermediateEvidence<'_, '_>
     {
@@ -5530,6 +5656,124 @@ mod tests {
                 .responder,
             &responder,
         ));
+    }
+
+    #[test]
+    fn responder_revocation_responder_intermediate_dns_policy_applies_exact_constraints() {
+        let responder_encoded = certificate(&[subject_alt_name(&[
+            dns_name("ocsp.example.test"),
+            dns_name("backup.example.test"),
+        ])]);
+        let intermediate_encoded = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let intermediate_dns_policy = ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+            anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                responder_path: BoundX509OcspReviewedResponderPath {
+                    reviewed_server_revocation:
+                        TestResponderRevocationResponderAnchorOriginalEvidence {
+                            name_constraints: None,
+                        },
+                },
+                constrained_dns_names: None,
+            },
+            constrained_dns_names: None,
+        };
+        let responder_revocation = BoundX509OcspReviewedResponderRevocation {
+            intermediate_dns_policy,
+            responder_revocation: TestResponderRevocationResponderIntermediateEvidence {
+                responder: &responder,
+                issuer: &intermediate,
+                observation_time,
+            },
+        };
+        let anchor_dns_policy =
+            ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy {
+                responder_path:
+                    reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path(
+                        responder_revocation,
+                    ),
+                constrained_dns_names: None,
+            };
+
+        let intermediate_policy = validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy(
+            anchor_dns_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+        assert_eq!(
+            intermediate_policy.constrained_dns_names().unwrap().count(),
+            2
+        );
+        let retained = intermediate_policy
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .responder_revocation();
+        assert!(std::ptr::eq(retained.responder, &responder));
+        assert!(std::ptr::eq(retained.issuer, &intermediate));
+        assert_eq!(retained.observation_time, observation_time);
+        assert_eq!(
+            format!("{intermediate_policy:?}"),
+            "ValidatedX509OcspReviewedResponderRevocationResponderIntermediateDnsPolicy"
+        );
+    }
+
+    #[test]
+    fn unconstrained_responder_revocation_intermediate_does_not_require_responder_san() {
+        let responder_encoded = certificate(&[]);
+        let intermediate_encoded = certificate(&[]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+        let intermediate_dns_policy = ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+            anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                responder_path: BoundX509OcspReviewedResponderPath {
+                    reviewed_server_revocation:
+                        TestResponderRevocationResponderAnchorOriginalEvidence {
+                            name_constraints: None,
+                        },
+                },
+                constrained_dns_names: None,
+            },
+            constrained_dns_names: None,
+        };
+        let responder_revocation = BoundX509OcspReviewedResponderRevocation {
+            intermediate_dns_policy,
+            responder_revocation: TestResponderRevocationResponderIntermediateEvidence {
+                responder: &responder,
+                issuer: &intermediate,
+                observation_time: time(b"\x17\x0d261025120000Z"),
+            },
+        };
+        let anchor_dns_policy =
+            ValidatedX509OcspReviewedResponderRevocationResponderAnchorDnsPolicy {
+                responder_path:
+                    reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path(
+                        responder_revocation,
+                    ),
+                constrained_dns_names: None,
+            };
+
+        let intermediate_policy = validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy(
+            anchor_dns_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+        assert_eq!(intermediate_policy.constrained_dns_names(), None);
+        let retained = intermediate_policy
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .responder_revocation();
+        assert!(std::ptr::eq(retained.responder, &responder));
+        assert!(std::ptr::eq(retained.issuer, &intermediate));
     }
 
     #[test]

@@ -131,6 +131,19 @@ intermediate name constraints, no-check or separately authenticated revocation
 policy for the added responder, complete revocation, generalized path
 validation, TLS, HTTP, OAuth, or network readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy`
+then consumes that complete reviewed-root DNS proof and derives the separately
+authenticated proof's exact responder and exact retained intermediate through
+private repository-owned evidence. An intermediate without NameConstraints
+succeeds without reading responder Subject Alternative Name. A present
+NameConstraints extension must be critical; its supported permitted and
+excluded DNS subtrees are applied under separate caller-owned parse limits,
+and success retains only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload. This
+stops before no-check or separately authenticated revocation policy for the
+added responder, complete revocation, generalized path validation, TLS, HTTP,
+OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
