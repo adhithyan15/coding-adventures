@@ -149,7 +149,7 @@ typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
  * argument with nil and ignores an extra one) or the exact argument count a
  * STRICT closure demands (SIR10 "Strict closures": a Ruby lambda, every Twig
  * closure).  `_sir_strict_arity` sets it; `_sir_apply` enforces it. */
-struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; };
+struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; int nparam; };
 
 /* ---- small allocation + string helpers ---------------------- */
 
@@ -935,7 +935,7 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
     SirValue v;
     va_list ap;
     int i;
-    c->fn = fn; c->ncap = ncap; c->arity = -1;
+    c->fn = fn; c->ncap = ncap; c->arity = -1; c->nparam = -1;
     c->caps = (ncap > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)ncap) : NULL;
     va_start(ap, ncap);
     for (i = 0; i < ncap; i++) c->caps[i] = va_arg(ap, SirValue);
@@ -950,6 +950,15 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
 SirValue _sir_strict_arity(SirValue c, int arity) {
     if (c.tag == SIR_CLOSURE) c.as.clo->arity = arity;
     return c;
+}
+
+SirValue _sir_closure_with_nparam(SirValue c, int nparam) {
+    if (c.tag == SIR_CLOSURE && c.as.clo) c.as.clo->nparam = nparam;
+    return c;
+}
+
+void _sir_closure_set_nparam(SirValue *c, int nparam) {
+    if (c->tag == SIR_CLOSURE && c->as.clo) c->as.clo->nparam = nparam;
 }
 
 /* Defined with the exception machinery further down. */
@@ -2436,10 +2445,17 @@ static SirValue _sir_hash_invert(SirMap *m) {
  * args a 1-param block doesn't bind are simply unused, the same block-arity
  * flexibility Ruby itself has). */
 
+static SirValue _sir_hash_yield_pair(SirValue block, SirValue key, SirValue val) {
+    if (block.tag == SIR_CLOSURE && block.as.clo && block.as.clo->nparam == 1) {
+        return _sir_apply(block, 1, _sir_seq_lit(2, key, val));
+    }
+    return _sir_apply(block, 2, key, val);
+}
+
 static SirValue _sir_hash_each(SirMap *m, SirValue block) {
     int64_t n = m->len;
     struct SirMapEntry *entries = m->entries;
-    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, entries[i].key, entries[i].val);
+    for (int64_t i = 0; i < n; i++) _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
     return _sir_map_wrap(m);  /* Hash#each returns the receiver */
 }
 static SirValue _sir_hash_each_key(SirMap *m, SirValue block) {
@@ -2462,7 +2478,7 @@ static SirValue _sir_hash_map(SirMap *m, SirValue block) {
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->len = n;
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
-    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
     return _sir_seq_wrap(r);
 }
 /* Shared by `select` (keep_if_truthy=1) / `reject` (keep_if_truthy=0) — both
@@ -2473,7 +2489,7 @@ static SirValue _sir_hash_filter(SirMap *m, SirValue block, int keep_if_truthy) 
     struct SirMapEntry *entries = m->entries;
     SirMap *r = _sir_map_new(n);
     for (int64_t i = 0; i < n; i++) {
-        int truthy = _sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val));
+        int truthy = _sir_truthy(_sir_hash_yield_pair(block, entries[i].key, entries[i].val));
         if (truthy == keep_if_truthy) _sir_map_put(r, entries[i].key, entries[i].val);
     }
     return _sir_map_wrap(r);
@@ -2488,7 +2504,7 @@ static SirValue _sir_hash_sort_by(SirMap *m, SirValue block) {
     SirValue *keys = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     SirValue *pairs = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     for (int64_t i = 0; i < n; i++) {
-        keys[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        keys[i] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         pairs[i] = _sir_seq_lit(2, entries[i].key, entries[i].val);
     }
     for (int64_t i = 1; i < n; i++) {
@@ -2518,7 +2534,7 @@ static SirValue _sir_hash_group_by(SirMap *m, SirValue block) {
     struct SirMapEntry *entries = m->entries;
     SirMap *r = _sir_map_new(0);
     for (int64_t i = 0; i < n; i++) {
-        SirValue key = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        SirValue key = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
         int64_t at = _sir_map_find(r, key);
         if (at >= 0) {
@@ -2541,7 +2557,7 @@ static SirValue _sir_hash_partition(SirMap *m, SirValue block) {
     int64_t ny = 0, nn = 0;
     for (int64_t i = 0; i < n; i++) {
         SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
-        if (_sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val))) yes->items[ny++] = pair;
+        if (_sir_truthy(_sir_hash_yield_pair(block, entries[i].key, entries[i].val))) yes->items[ny++] = pair;
         else no->items[nn++] = pair;
     }
     yes->len = ny;
@@ -2558,7 +2574,7 @@ static SirValue _sir_hash_sum(SirMap *m, SirValue block) {
     for (int64_t i = 0; i < n; i++) {
         SirValue pair[2];
         pair[0] = acc;
-        pair[1] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        pair[1] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         acc = _sir_plus_v(pair, 2);
     }
     return acc;

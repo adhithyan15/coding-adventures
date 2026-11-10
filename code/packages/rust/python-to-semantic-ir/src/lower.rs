@@ -871,6 +871,22 @@ struct Lowerer {
     /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`,
     /// `__param_<p>_<N>`).
     temp_counter: usize,
+    /// Stack of enclosing `class` names for private name mangling
+    /// (Python Language Reference §6.2.1).
+    class_scopes: Vec<String>,
+}
+
+fn should_mangle(ident: &str) -> bool {
+    ident.starts_with("__") && !ident.ends_with("__")
+}
+
+fn mangle_ident(ident: &str, class_name: &str) -> String {
+    let stripped = class_name.trim_start_matches('_');
+    if stripped.is_empty() || !should_mangle(ident) {
+        ident.to_string()
+    } else {
+        format!("_{stripped}{ident}")
+    }
 }
 
 impl Lowerer {
@@ -888,6 +904,19 @@ impl Lowerer {
             call_graph: Vec::new(),
             used_names: HashSet::new(),
             temp_counter: 0,
+            class_scopes: Vec::new(),
+        }
+    }
+
+    fn current_class_name(&self) -> Option<&str> {
+        self.class_scopes.last().map(|s| s.as_str())
+    }
+
+    fn mangle_name(&self, name: &str) -> String {
+        if let Some(cls) = self.current_class_name() {
+            mangle_ident(name, cls)
+        } else {
+            name.to_string()
         }
     }
 
@@ -1068,6 +1097,7 @@ impl Lowerer {
                 ));
             }
             let name = self.def_name(def)?;
+        let name = self.mangle_name(&name);
             // Every `def`, nested or not, is lifted into one module-level
             // namespace, and `DefFacts` / `fn_captures` are keyed by name.
             // A second `def` of the same name would overwrite the first
@@ -1848,6 +1878,7 @@ impl Lowerer {
                     "unsupported: assignment to `self` inside a method (deferred)".to_string(),
                 ));
             }
+            let name = self.mangle_name(&name);
             return Ok(Target::Name(name));
         }
         let not_supported = || {
@@ -2245,7 +2276,7 @@ impl Lowerer {
                 for list in target_lists {
                     if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
                     {
-                        out.push(name);
+                        out.push(self.mangle_name(&name));
                     }
                 }
             }
@@ -2253,7 +2284,7 @@ impl Lowerer {
                 if let Some(tl) = self.first_child_named(node, "target_list") {
                     for t in child_nodes(tl) {
                         if let Ok(Some(name)) = self.target_name(t) {
-                            out.push(name);
+                            out.push(self.mangle_name(&name));
                         }
                     }
                 }
@@ -2467,6 +2498,7 @@ impl Lowerer {
                 let mc = self.lower_def(inner, ctx, depth)?;
                 self.observed.add(Feature::Closures);
                 let name = self.def_name(inner)?;
+                let name = self.mangle_name(&name);
                 if ctx.is_enclosing_value(&name) {
                     let span = self.span_of(inner);
                     let store = self.store_target(Target::Name(name), mc, ctx, span)?;
@@ -2522,40 +2554,45 @@ impl Lowerer {
 
         self.observed.add(Feature::Classes);
 
-        let mut stmts = vec![Stmt::ClassDef {
-            name: name.clone(),
-            superclass,
-            body: vec![],
-            span: span.clone(),
-        }];
+        self.class_scopes.push(name.clone());
+        let res = (|| -> Result<Vec<Stmt>, PythonLowerError> {
+            let mut stmts = vec![Stmt::ClassDef {
+                name: name.clone(),
+                superclass,
+                body: vec![],
+                span: span.clone(),
+            }];
 
-        for stmt_node in class_body_statements(suite) {
-            if is_pass_stmt(stmt_node) {
-                // `class Foo: pass` is Python's spelling of an empty class
-                // body — a no-op here, matching Stmt::ClassDef's empty
-                // `body: []` (methods are hoisted, so the empty-body case
-                // is `pass`-only or `def`-only, never both meaningfully).
-                continue;
+            for stmt_node in class_body_statements(suite) {
+                if is_pass_stmt(stmt_node) {
+                    // `class Foo: pass` is Python's spelling of an empty class
+                    // body — a no-op here, matching Stmt::ClassDef's empty
+                    // `body: []` (methods are hoisted, so the empty-body case
+                    // is `pass`-only or `def`-only, never both meaningfully).
+                    continue;
+                }
+                let def = self.as_def_stmt(stmt_node).ok_or_else(|| {
+                    self.err_at(
+                        stmt_node,
+                        "unsupported: class body statement other than `def` (deferred)".to_string(),
+                    )
+                })?;
+                // Method decorators (`@property`, `@staticmethod`, etc.) are not yet
+                // lowered. Reject with a positioned error rather than silently
+                // dropping the decorator (#18496 item 6).
+                if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+                    return Err(self.err_at(
+                        def,
+                        "unsupported: decorated method (deferred)".to_string(),
+                    ));
+                }
+                stmts.push(self.lower_method_registration(&name, def, depth)?);
             }
-            let def = self.as_def_stmt(stmt_node).ok_or_else(|| {
-                self.err_at(
-                    stmt_node,
-                    "unsupported: class body statement other than `def` (deferred)".to_string(),
-                )
-            })?;
-            // Method decorators (`@property`, `@staticmethod`, etc.) are not yet
-            // lowered. Reject with a positioned error rather than silently
-            // dropping the decorator (#18496 item 6).
-            if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
-                return Err(self.err_at(
-                    def,
-                    "unsupported: decorated method (deferred)".to_string(),
-                ));
-            }
-            stmts.push(self.lower_method_registration(&name, def, depth)?);
-        }
 
-        Ok(stmts)
+            Ok(stmts)
+        })();
+        self.class_scopes.pop();
+        res
     }
 
     /// Lower one `def` inside a `class` body: hoist its body to a
@@ -2586,10 +2623,11 @@ impl Lowerer {
             ));
         }
         let py_name = self.def_name(def)?;
+        let mangled_name = self.mangle_name(&py_name);
         let sir_method_name = if py_name == "__init__" {
             "initialize".to_string()
         } else {
-            py_name.clone()
+            mangled_name.clone()
         };
 
         let specs = self.def_param_specs(def)?;
@@ -2644,7 +2682,7 @@ impl Lowerer {
         let suite = self
             .first_child_named(def, "suite")
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
-        let hoisted_name = self.hoisted_method_name(class_name, &py_name);
+        let hoisted_name = self.hoisted_method_name(class_name, &mangled_name);
         let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
         let span = self.span_of(def);
         let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
@@ -2857,6 +2895,7 @@ impl Lowerer {
                 ))
             }
         };
+        let var = self.mangle_name(&var);
         // Inside a method a bare `self` always reads the implicit receiver
         // (`resolve_var`), so `for self in xs:` would bind a variable no
         // read can see: the body would print the receiver every time.
@@ -3099,6 +3138,7 @@ impl Lowerer {
             ));
         }
         let name = self.def_name(def)?;
+        let name = self.mangle_name(&name);
         // Resolve `(name, optional default-CST)` for each parameter, then
         // lower every default **in the enclosing scope** (Python evaluates
         // defaults at `def` time in the scope the `def` is written inside).
@@ -3215,6 +3255,7 @@ impl Lowerer {
                 // Positional param (before any `*`): Required.
                 "param_with_default" => {
                     let (name, default) = self.param_spec(child)?;
+                    let name = self.mangle_name(&name);
                     specs.push((name, ParamKind::Required, default));
                 }
                 // Everything after a bare `*` / `*args` is keyword-only.
@@ -3278,6 +3319,7 @@ impl Lowerer {
                 ASTNodeOrToken::Node(n) => match n.rule_name.as_str() {
                     "param_with_default" => {
                         let (name, default) = self.param_spec(n)?;
+                        let name = self.mangle_name(&name);
                         specs.push((name, ParamKind::Keyword, default));
                     }
                     "double_star_param" => {
@@ -3433,7 +3475,7 @@ impl Lowerer {
             for child in &lp.children {
                 if let ASTNodeOrToken::Token(t) = child {
                     if matches!(t.type_, lexer::token::TokenType::Name) && t.type_name.is_none() {
-                        names.push(t.value.clone());
+                        names.push(self.mangle_name(&t.value));
                     }
                 }
             }
@@ -4044,7 +4086,7 @@ impl Lowerer {
         // assignment target?
         if let Some(def) = self.as_def_stmt(stmt) {
             if let Ok(n) = self.def_name(def) {
-                bound.insert(n);
+                bound.insert(self.mangle_name(&n));
             }
             return Ok(());
         }
@@ -4110,7 +4152,7 @@ impl Lowerer {
                 for list in target_lists {
                     if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
                     {
-                        out.push(name);
+                        out.push(self.mangle_name(&name));
                     }
                 }
             }
@@ -4118,7 +4160,7 @@ impl Lowerer {
                 if let Some(tl) = self.first_child_named(node, "target_list") {
                     for t in child_nodes(tl) {
                         if let Ok(Some(name)) = self.target_name(t) {
-                            out.push(name);
+                            out.push(self.mangle_name(&name));
                         }
                     }
                 }
@@ -4181,7 +4223,7 @@ impl Lowerer {
         if node.rule_name == "def_stmt" {
             let mut inner = bound.clone();
             if let Ok(n) = self.def_name(node) {
-                inner.insert(n);
+                inner.insert(self.mangle_name(&n));
             }
             if let Ok(specs) = self.def_param_specs(node) {
                 for (pname, _kind, default_node) in specs {
@@ -4218,9 +4260,9 @@ impl Lowerer {
         // A bare `Name` token (no type_name) is a reference.
         if let Some(tok) = node.token() {
             if matches!(tok.type_, lexer::token::TokenType::Name) && tok.type_name.is_none() {
-                let name = &tok.value;
-                if !bound.contains(name) && seen.insert(name.clone()) {
-                    free.push(name.clone());
+                let name = self.mangle_name(&tok.value);
+                if !bound.contains(&name) && seen.insert(name.clone()) {
+                    free.push(name);
                 }
             }
             return Ok(());
@@ -4887,6 +4929,7 @@ impl Lowerer {
             Some(ASTNodeOrToken::Token(t)) if t.value == "[" => Ok(SuffixKind::Subscript),
             Some(ASTNodeOrToken::Token(t)) if t.value == "." => {
                 let name = self.attr_name(suffix)?;
+                let name = self.mangle_name(&name);
                 Ok(SuffixKind::Attr(name))
             }
             _ => Err(self.err_at(
@@ -4939,6 +4982,7 @@ impl Lowerer {
                 ))
             }
         };
+        let name = self.mangle_name(&name);
 
         // `len(x)` → SeqLen (preferred over BuiltinCall("len")).  Arity
         // must be exactly 1; a value of the same name in scope shadows the
@@ -5773,10 +5817,12 @@ impl Lowerer {
     fn resolve_var(
         &mut self,
         node: &GrammarASTNode,
-        name: &str,
+        raw_name: &str,
         ctx: &mut FunctionCtx,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
+        let mangled = self.mangle_name(raw_name);
+        let name = mangled.as_str();
         // A bare `self` inside a method body is the SIR dispatch
         // envelope's implicit receiver (SIR25 §2.3), not an ordinary
         // value — `self` is never in `ctx.params` (it is stripped by

@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased
+
+### Fixed (#18798 item 17)
+
+- **Eliminate token flag bit collisions with base lexer metadata flags.** Reallocated `NUMBERED_BLOCK_PARAM_FLAG` to bit 8 (`1 << 8`) and `ENDLESS_RANGE_FLAG` to bit 9 (`1 << 9`), separating Ruby-specific token flags from common `lexer::token` metadata bits 0..7 (`TOKEN_PRECEDED_BY_NEWLINE` at bit 0, `TOKEN_CONTEXT_KEYWORD` at bit 1, `TOKEN_PRECEDED_BY_SPACE` at bit 2, `TOKEN_SYNTHETIC` at bit 3). Previously, any token preceded by a newline was falsely flagged with `NUMBERED_BLOCK_PARAM_FLAG`, and tagging endless ranges set `TOKEN_CONTEXT_KEYWORD`.
+
 ## Unreleased — a modifier after a bare jump keyword (#18798)
 
 - `tag_modifier_keywords` retags `if`/`unless`/`while`/`until` that follow a

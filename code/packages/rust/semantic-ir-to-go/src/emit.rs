@@ -717,6 +717,13 @@ fn emit_try_catch(
     ensure_body: Option<&[Stmt]>,
     indent: usize,
 ) {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause carries
+    // an empty `rescues` and `None` `ensure_body`. Emit the body statements
+    // inline instead of introducing an anonymous closure wrapper.
+    if rescues.is_empty() && ensure_body.is_none() {
+        emit_stmt_list(out, body, indent);
+        return;
+    }
     let pad = indent_str(indent);
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -906,7 +913,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 }
                 emit_expr(out, &c.value, indent);
             }
-            out.push_str("})");
+            let _ = write!(out, "}}, {params_arity})");
         }
         Expr::Intrinsic { name, span, .. } => {
             panic!(
@@ -4157,6 +4164,27 @@ mod tests {
             ensure_pos < recover_pos,
             "ensure's defer must be emitted first (runs last, LIFO); got:\n{out}"
         );
+    }
+
+    /// #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+    /// lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+    /// Go must emit the body statements inline rather than wrapping in func() { ... }().
+    #[test]
+    fn emit_try_catch_without_rescue_or_ensure_emits_inline() {
+        let tc = Stmt::TryCatch {
+            body: vec![print_stmt(Expr::StrLit {
+                value: "bare".into(),
+                span: s(),
+            })],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 0);
+        assert!(!out.contains("func()"), "got:\n{out}");
+        assert!(!out.contains("defer"), "got:\n{out}");
+        assert!(out.contains("\"bare\""), "got:\n{out}");
     }
 
     /// A `ClassDef { superclass: Some }` registers ONE ancestry edge at

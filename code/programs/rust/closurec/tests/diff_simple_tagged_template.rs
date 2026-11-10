@@ -76,3 +76,16 @@ fn simple_tagged_template_fixture_matches_expected_stdout() {
         "a pre-fold expression survived — did it fall back to WHITESPACE_ONLY? {actual}"
     );
 }
+
+/// Tagged templates with substitutions parse and compile through SIMPLE (#17854).
+#[test]
+fn substituted_tagged_template_compiles_at_simple() {
+    let path = std::env::temp_dir().join(format!("closurec-tagged-sub-{}.js", std::process::id()));
+    std::fs::write(&path, "log(tag`hello ${name}!`, 1 + 2);\n").unwrap();
+    let out = Command::new(BINARY).args(["-O", "SIMPLE", "--js", path.to_str().unwrap()]).output().unwrap();
+    assert!(out.status.success(), "exit: {:?}, stderr: {}", out.status.code(), String::from_utf8_lossy(&out.stderr));
+    let actual = String::from_utf8_lossy(&out.stdout);
+    assert!(actual.contains("tag`hello ${"), "did not emit tagged template: {actual}");
+    assert!(actual.contains(",3)"), "1+2 did not fold: {actual}");
+    let _ = std::fs::remove_file(&path);
+}
