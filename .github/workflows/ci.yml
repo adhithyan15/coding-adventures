@@ -4166,6 +4166,20 @@ jobs:
           version: '6.8.3'
           cache: true
 
+      # The binary is keyed on the pinned version and runner OS/arch only. A PR's
+      # cache is visible to that PR alone, so it is runs on main (which restore
+      # and save in main's own cache scope) that warm it for everyone else. The
+      # version check below is a sanity check for a wrong-version or corrupt
+      # entry, not an integrity control: only main-ref jobs can write the entry
+      # PRs read, and those run reviewed, merged code.
+      - name: Restore cargo-tarpaulin cache
+        id: tarpaulin-cache
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cargo-tarpaulin
+          key: cargo-tarpaulin-0.37.2-${{ runner.os }}-${{ runner.arch }}
+
       - name: Install cargo-tarpaulin
         # PINNED, and --locked. An unpinned `cargo install` means coverage can
         # break with no repo change, and it already did once:
@@ -4194,7 +4208,22 @@ jobs:
         # which the `--engine llvm` crates need as the floating `@stable`
         # toolchain advances.
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin --version 0.37.2 --locked
+        env:
+          TARPAULIN_CACHE_HIT: ${{ steps.tarpaulin-cache.outputs.cache-hit }}
+        run: |
+          # Compiling tarpaulin from source costs ~90 s in every Linux build job
+          # (15 times in a sharded full build). The binary is cached; a cache
+          # hit is only trusted if it runs and reports the pinned version, so a
+          # binary built on a newer runner image that lands on an older one (or
+          # a corrupt entry) falls back to the same pinned, --locked install as
+          # before instead of failing the coverage steps.
+          if [ "${TARPAULIN_CACHE_HIT:-}" = "true" ] \
+             && cargo tarpaulin --version 2>/dev/null | grep -q ' 0\.37\.2$'; then
+            echo "Reusing cached cargo-tarpaulin 0.37.2"
+          else
+            cargo install cargo-tarpaulin --version 0.37.2 --locked --force
+          fi
+          cargo tarpaulin --version
 
       - name: Set up Elixir
         # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
