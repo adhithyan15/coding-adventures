@@ -34,6 +34,10 @@
   lesson and membership reads while retaining the synchronous library API and
   byte-identical planning tail. The clean-corpus equivalence test remains the
   gate for this path.
+- Share a bounded lesson read across the two verb baseline assertions, and
+  overlap the independent committed-modality read with the shared lesson read.
+  Both still compare the complete canonical reports; neither test budget nor
+  assertion changes.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.
