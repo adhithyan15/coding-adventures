@@ -302,3 +302,37 @@ class RepositoryTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NodeTestMatcherTests(unittest.TestCase):
+    """`node [flags] --test` is matched by a linear token scan (CodeQL py/redos)."""
+
+    def test_recognises_node_test_forms(self) -> None:
+        for line in (
+            "node --test",
+            "node --test test/x.test.js",
+            "node --experimental-strip-types --test x",
+            "C:\\tools\\node.exe --experimental-vm-modules --test",
+            "/usr/bin/node --test",
+        ):
+            with self.subTest(line=line):
+                self.assertTrue(audit._is_node_test(line))
+
+    def test_rejects_non_node_test_forms(self) -> None:
+        for line in (
+            "node script.js --test",
+            "nodemon --test",
+            "npx vitest run",
+            "node",
+            "echo --test",
+        ):
+            with self.subTest(line=line):
+                self.assertFalse(audit._is_node_test(line))
+
+    def test_hostile_line_is_linear(self) -> None:
+        import time
+
+        line = "node " + "-!\t-" * 50_000
+        start = time.perf_counter()
+        self.assertFalse(audit._is_node_test(line))
+        self.assertLess(time.perf_counter() - start, 1.0)

@@ -254,7 +254,7 @@ def check_ruby_standardrb(package: Path, rel: str) -> list[Finding]:
 # `perl -I.. t/x.t` and `prove` are both TAP producers, so they share a name.
 RUNNER_PATTERNS = [
     ("vitest", re.compile(r"\bvitest\b")),
-    ("node-test", re.compile(r"\bnode\b(?:\s+--?\S+)*\s+--test\b")),
+    ("node-test", None),  # matched by _is_node_test below, not a regex
     ("pytest", re.compile(r"\bpytest\b")),
     ("unittest", re.compile(r"-m\s+unittest\b")),
     ("tap", re.compile(r"\bprove\b|\bperl\b[^&|]*\bt[/\\][^\s&|]*\.t\b")),
@@ -271,6 +271,27 @@ RUNNER_PATTERNS = [
     ("cabal-test", re.compile(r"\b(?:cabal|stack)\s+test\b")),
     ("dart-test", re.compile(r"\bdart\s+test\b")),
 ]
+
+
+# `node [flags...] --test ...` is matched on whitespace-split tokens rather
+# than with a regex. The obvious regex, `\bnode\b(?:\s+--?\S+)*\s+--test\b`,
+# nests a quantified group whose pieces can each match the same characters,
+# so a hostile line such as "node -!\t-!\t-!..." makes it backtrack
+# exponentially (CodeQL py/redos). A token scan is linear and says exactly
+# what we mean: a `node` executable, then only flag tokens, then `--test`.
+def _is_node_test(text: str) -> bool:
+    tokens = text.split()
+    for i, token in enumerate(tokens):
+        name = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+        if name not in ("node", "node.exe"):
+            continue
+        for follower in tokens[i + 1 :]:
+            if follower == "--test":
+                return True
+            if not follower.startswith("-"):
+                break
+    return False
+
 
 NPM_RUN = re.compile(r"\bnpm\s+run\s+(?:--silent\s+)?([\w:.-]+)|\bnpm\s+(test)\b")
 
@@ -296,7 +317,8 @@ def runners_in(path: Path, package: Path) -> set[str]:
     for line in read_command_lines(path):
         text = expand_npm(line, scripts)
         for name, pattern in RUNNER_PATTERNS:
-            if pattern.search(text):
+            matched = _is_node_test(text) if pattern is None else pattern.search(text)
+            if matched:
                 found.add(name)
     return found
 
