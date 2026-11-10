@@ -30,7 +30,7 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::Write as _;
 
-use crate::binding::{validate_bindings, BindingManifest};
+use crate::binding::{is_rust_identifier, validate_bindings, BindingManifest};
 use crate::checker::CheckedWarrantModule;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
@@ -43,7 +43,9 @@ use crate::parser::{
 /// The runtime prelude embedded verbatim in every generated harness.
 const PRELUDE: &str = include_str!("evidence_prelude.rs.txt");
 
-/// Maximum size of the Cartesian product of binder domains (VER04h section 3).
+/// Default maximum size of the Cartesian product of binder domains (VER04h
+/// section 3).  A package may raise it in [`EvidenceOptions::exhaustive_budget`]
+/// when it can justify the wall-clock cost (gf256 does so for `U8^3`, 2^24).
 pub const EXHAUSTIVE_BUDGET: u64 = 400_000;
 
 /// Largest fixed width (`Bytes<N>` binder or `op<N>` call width) the generator
@@ -72,6 +74,14 @@ pub struct EvidenceOptions {
     pub property_cases: u64,
     pub fuzz_iterations: u64,
     pub negctl_fuzz_iterations: u64,
+    /// Largest Cartesian product of binder domains one claim may enumerate;
+    /// echoed into the generated `EXHAUSTIVE_BUDGET` constant.
+    pub exhaustive_budget: u64,
+    /// Rust parameter types of each operation's export, by operation name
+    /// (`u8`, `u16`, `u32`, `u64`).  Only the scalar adapter consults it; an
+    /// absent entry means the Rust type matching the Warrant type (`U8` is
+    /// `u8`, `U64` is `u64`, `Nat` is `u32`).
+    pub arg_types: BTreeMap<String, Vec<String>>,
 }
 
 fn unsupported(msg: impl Into<String>, span: (usize, usize)) -> CodegenError {
@@ -305,7 +315,10 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                         }
                         _ if cx.ops.contains_key(n) => {
                             if !cx.allow_ops {
-                                return Err(unsupported("operation call inside a model", sp));
+                                return Err(unsupported(
+                                    "operation call inside a model or binder refinement (an admission predicate may use models only, so a fault cannot change which cases are admitted)",
+                                    sp,
+                                ));
                             }
                             let mut ws = Vec::new();
                             for w in widths {
@@ -336,6 +349,137 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
 }
 
 // ---------------------------------------------------------------------------
+// Fault registry
+// ---------------------------------------------------------------------------
+
+/// Every fault a binding may name, in the order the generated `Fault` enum
+/// lists the ones a document uses.  The first five are consumed by the
+/// fixed-shape (byte-slice / `U64`) adapters; the rest by the scalar adapter
+/// (see [`SCALAR_FAULTS`]).  A package's generated enum holds only the faults
+/// its bindings reference, so adding a registry entry never changes the output
+/// of a package that does not use it.
+const FAULTS: &[(&str, &str)] = &[
+    ("invert", "Invert"),
+    ("ignore-last-byte", "IgnoreLastByte"),
+    ("ignore-high-bit", "IgnoreHighBit"),
+    ("swap-choice", "SwapChoice"),
+    ("missing-error", "MissingError"),
+    ("or-for-xor", "OrForXor"),
+    ("wrapping-sub", "WrappingSub"),
+    ("mul-as-add", "MulAsAdd"),
+    ("alt-poly", "AltPoly"),
+    ("generator-shift", "GeneratorShift"),
+    ("exp-mod-256", "ExpMod256"),
+];
+
+fn fault_variant(name: &str) -> Option<&'static str> {
+    FAULTS.iter().find(|(n, _)| *n == name).map(|(_, v)| *v)
+}
+
+/// How a scalar-adapter fault rewrites the call.  Templates are Rust source
+/// over `{k}` (the package crate), `{e}` (the export name) and `{args}` (the
+/// converted arguments `p0, p1, ...`).
+#[derive(Clone, Copy)]
+enum ScalarFaultKind {
+    /// The call is replaced by the expression.
+    Replace(&'static str),
+    /// The result `r: u8` is rewritten by the expression.
+    Post(&'static str),
+    /// The last argument is rewritten by the expression over `p`.
+    PreLast(&'static str),
+    /// A panic of a fallible operation becomes `Ok(0)` instead of the error.
+    MissingError,
+}
+
+/// Faults the scalar adapter understands (VER04h section 6, field-arithmetic
+/// family).  Each models a mistake a plausible refactor of the real crate
+/// could introduce, injected at the adapter so the crate is never modified.
+const SCALAR_FAULTS: &[(&str, ScalarFaultKind)] = &[
+    // addition done with OR instead of XOR (forgets that 1 + 1 = 0).
+    ("or-for-xor", ScalarFaultKind::Replace("p0 | p1")),
+    // integer wrapping subtraction instead of XOR.
+    ("wrapping-sub", ScalarFaultKind::Replace("p0.wrapping_sub(p1)")),
+    // multiplication that returns the (XOR) sum.
+    ("mul-as-add", ScalarFaultKind::Replace("p0 ^ p1")),
+    // the operation computed in the AES field (reduction polynomial 0x11B)
+    // instead of the Reed-Solomon one (0x11D): still a field, wrong tables.
+    ("alt-poly", ScalarFaultKind::Replace("{k}::Field::new(0x11B).{e}({args})")),
+    // the antilog index is off by one: every non-zero result is multiplied by
+    // the generator 2 (ALOG[i + 1] instead of ALOG[i]).
+    (
+        "generator-shift",
+        ScalarFaultKind::Post("if r == 0 { r } else { {k}::multiply(r, 2) }"),
+    ),
+    // the exponent is reduced modulo 256 instead of the group order 255.
+    ("exp-mod-256", ScalarFaultKind::PreLast("p % 256")),
+    ("missing-error", ScalarFaultKind::MissingError),
+];
+
+fn scalar_fault(name: &str) -> Option<ScalarFaultKind> {
+    SCALAR_FAULTS.iter().find(|(n, _)| *n == name).map(|(_, k)| *k)
+}
+
+/// The generated `Fault` enum, restricted to `used` faults.  For a package
+/// that uses exactly the original five, this is byte-for-byte the text the
+/// prelude carried before faults became data (ct-compare's checked-in harness
+/// proves it).
+fn fault_block(used: &BTreeSet<String>) -> String {
+    let list: Vec<(&str, &str)> = FAULTS
+        .iter()
+        .copied()
+        .filter(|(n, _)| used.contains(*n))
+        .collect();
+    let mut s = String::new();
+    s.push_str("/// Deliberate adapter faults (VER04h section 6). `None` is the real adapter.\n");
+    s.push_str("#[derive(Clone, Copy, Debug, PartialEq, Eq)]\npub enum Fault {\n    None,\n");
+    for (_, v) in &list {
+        let _ = writeln!(s, "    {v},");
+    }
+    s.push_str(
+        "}\n\nimpl Fault {\n    pub fn name(self) -> &'static str {\n        match self {\n            Fault::None => \"none\",\n",
+    );
+    for (n, v) in &list {
+        let _ = writeln!(s, "            Fault::{v} => \"{n}\",");
+    }
+    s.push_str(
+        "        }\n    }\n    pub fn parse(text: &str) -> Option<Fault> {\n        [\n            Fault::None,\n",
+    );
+    for (_, v) in &list {
+        let _ = writeln!(s, "            Fault::{v},");
+    }
+    s.push_str("        ]\n        .into_iter()\n        .find(|f| f.name() == text)\n    }\n}\n");
+    s
+}
+
+/// Expand the prelude: `//@@FAULTS@@` becomes the generated fault block and
+/// `//@if <feature>` ... `//@endif` regions are kept only when the feature is
+/// enabled (marker lines never reach the output).
+fn expand_prelude(faults: &str, features: &BTreeSet<&str>) -> String {
+    let mut out = String::new();
+    let mut keep = true;
+    for line in PRELUDE.lines() {
+        if let Some(f) = line.strip_prefix("//@if ") {
+            keep = features.contains(f.trim());
+            continue;
+        }
+        if line == "//@endif" {
+            keep = true;
+            continue;
+        }
+        if !keep {
+            continue;
+        }
+        if line == "//@@FAULTS@@" {
+            out.push_str(faults);
+        } else {
+            out.push_str(line);
+            out.push('\n');
+        }
+    }
+    out
+}
+
+// ---------------------------------------------------------------------------
 // Operation adapters
 // ---------------------------------------------------------------------------
 
@@ -345,11 +489,19 @@ enum Shape {
     FixedEq,
     U64Eq,
     Select,
+    /// Scalar-parameter operation returning `U8` (`fallible == false`) or
+    /// `Result<U8, E>` through panic normalization (`fallible == true`).
+    Scalar {
+        fallible: bool,
+    },
 }
 
 impl Shape {
+    /// Faults a fixed shape owns.  The scalar shape owns none: its faults are
+    /// the ones the operation's binding names (`negative_controls`).
     fn faults(self) -> &'static [(&'static str, &'static str)] {
         match self {
+            Shape::Scalar { .. } => &[],
             Shape::BytesEq | Shape::FixedEq => {
                 &[("invert", "Fault::Invert"), ("ignore-last-byte", "Fault::IgnoreLastByte")]
             }
@@ -372,11 +524,29 @@ fn shape_of(op: &OpDecl<'_>) -> Result<Shape, CodegenError> {
         (1, [Ty::BytesN(_), Ty::BytesN(_)], true, _) => Ok(Shape::FixedEq),
         (0, [Ty::U64, Ty::U64], true, _) => Ok(Shape::U64Eq),
         (0, [Ty::Bytes, Ty::Bytes, Ty::Bool], _, true) if op.is_fresh => Ok(Shape::Select),
+        (0, ps, _, _)
+            if !ps.is_empty()
+                && ps.iter().all(|t| matches!(t, Ty::U8 | Ty::U64 | Ty::Nat))
+                && !op.is_fresh
+                && (returns_u8(&op.return_type) || returns_result_u8(&op.return_type)) =>
+        {
+            Ok(Shape::Scalar {
+                fallible: returns_result_u8(&op.return_type),
+            })
+        }
         _ => Err(unsupported(
             format!("operation `{}` has a signature with no adapter shape", op.name),
             op.span,
         )),
     }
+}
+
+fn returns_u8(t: &TypeExpr<'_>) -> bool {
+    matches!(t, TypeExpr::Named { name: "U8", .. })
+}
+
+fn returns_result_u8(t: &TypeExpr<'_>) -> bool {
+    matches!(t, TypeExpr::Result { ok_type, .. } if returns_u8(ok_type))
 }
 
 /// Operation parameters may carry a *named* width (`Bytes<N>`); treat it as
@@ -401,6 +571,8 @@ fn adapter(
     let n = op.name;
     let mut s = String::new();
     match shape {
+        // Scalar operations are emitted by `scalar_adapter`.
+        Shape::Scalar { .. } => {}
         Shape::BytesEq => {
             let _ = write!(
                 s,
@@ -495,6 +667,142 @@ fn adapter(
     Ok(s)
 }
 
+/// Adapter for a scalar-parameter operation returning `U8` or `Result<U8, E>`.
+///
+/// Arguments are converted from the dynamic value to the export's Rust types
+/// (a value that does not fit is a harness bug and panics outside any claim),
+/// the real export is called, and the `u8` result is wrapped as `V::Nat` (or
+/// `Ok`/`Err` for a fallible operation whose declared panic becomes `err_case`).
+/// Each fault the binding lists adds one `match fault` arm; with `Fault::None`
+/// the adapter is exactly `export(p0, p1, ...)`.
+fn scalar_adapter(
+    op: &OpDecl<'_>,
+    fallible: bool,
+    export: &str,
+    err_case: Option<&str>,
+    faults: &[String],
+    options: &EvidenceOptions,
+) -> Result<String, CodegenError> {
+    let n = op.name;
+    let tys: Vec<Ty> = op
+        .params
+        .iter()
+        .map(ty_of_op_param)
+        .collect::<Result<_, _>>()?;
+    let given = options.arg_types.get(n);
+    if let Some(g) = given {
+        if g.len() != tys.len() {
+            return Err(unsupported(
+                format!("operation `{n}` arg_types has {} entries for {} parameters", g.len(), tys.len()),
+                op.span,
+            ));
+        }
+    }
+    let mut conv = String::new();
+    let mut names = Vec::new();
+    for (i, t) in tys.iter().enumerate() {
+        let default = match t {
+            Ty::U8 => "u8",
+            Ty::U64 => "u64",
+            _ => "u32",
+        };
+        let rt = given.map(|g| g[i].as_str()).unwrap_or(default);
+        if !["u8", "u16", "u32", "u64"].contains(&rt) {
+            return Err(unsupported(format!("argument type `{rt}` of `{n}`"), op.span));
+        }
+        if rt == "u64" {
+            let _ = writeln!(conv, "    let p{i} = args[{i}].u64v();");
+        } else {
+            let _ = writeln!(
+                conv,
+                "    let p{i} = {rt}::try_from(args[{i}].u64v()).expect(\"argument {i} of {n} fits {rt}\");"
+            );
+        }
+        names.push(format!("p{i}"));
+    }
+    let arglist = names.join(", ");
+    let subst = |t: &str| {
+        t.replace("{k}", &options.package_crate)
+            .replace("{e}", export)
+            .replace("{args}", &arglist)
+    };
+    let mut pre = String::new();
+    let mut replace_arms = String::new();
+    let mut post_arms = String::new();
+    let mut missing = false;
+    let last = tys.len() - 1;
+    for f in faults {
+        let (Some(variant), Some(kind)) = (fault_variant(f), scalar_fault(f)) else {
+            return Err(unsupported(
+                format!("operation `{n}` names unknown scalar fault `{f}`"),
+                op.span,
+            ));
+        };
+        match kind {
+            ScalarFaultKind::Replace(t) => {
+                let _ = writeln!(replace_arms, "            Fault::{variant} => {},", subst(t));
+            }
+            ScalarFaultKind::Post(t) => {
+                let _ = writeln!(post_arms, "            Fault::{variant} => {},", subst(t));
+            }
+            ScalarFaultKind::PreLast(t) => {
+                let _ = writeln!(
+                    pre,
+                    "    let p{last} = if fault == Fault::{variant} {{ let p = p{last}; {} }} else {{ p{last} }};",
+                    subst(t)
+                );
+            }
+            ScalarFaultKind::MissingError => {
+                if !fallible {
+                    return Err(unsupported(
+                        format!("fault `missing-error` needs a fallible operation, `{n}` is total"),
+                        op.span,
+                    ));
+                }
+                missing = true;
+            }
+        }
+    }
+    let mut compute = String::new();
+    let _ = write!(
+        compute,
+        "let r: u8 = match fault {{\n{replace_arms}            _ => {export}({arglist}),\n        }};\n"
+    );
+    if !post_arms.is_empty() {
+        let _ = write!(compute, "        let r: u8 = match fault {{\n{post_arms}            _ => r,\n        }};\n");
+    }
+    // The adapter obeys a fault only when it is the attacked operation (or no
+    // operation is singled out, as in a global WARRANT_EVIDENCE_FAULT run).
+    let _ = writeln!(conv, "    let fault = fault_for(\"{n}\", fault);");
+    let mut s = String::new();
+    if fallible {
+        let case = err_case.ok_or_else(|| CodegenError {
+            code: DiagnosticCode::W0704,
+            kind: CodegenErrorKind::MissingBinding(format!(
+                "binding for `{n}` has no error normalization"
+            )),
+            span: op.span,
+        })?;
+        let _ = write!(
+            s,
+            "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{\n{conv}{pre}\
+             \x20   match contained(|| {{\n        {compute}        r\n    }}) {{\n\
+             \x20       Some(r) => V::Ok(Box::new(V::Nat(u64::from(r)))),\n"
+        );
+        if missing {
+            s.push_str("        None if fault == Fault::MissingError => V::Ok(Box::new(V::Nat(0))),\n");
+        }
+        let _ = write!(s, "        None => V::Err(\"{case}\".into()),\n    }}\n}}\n\n");
+    } else {
+        let _ = write!(
+            s,
+            "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{\n{conv}{pre}\
+             \x20   {compute}    V::Nat(u64::from(r))\n}}\n\n"
+        );
+    }
+    Ok(s)
+}
+
 // ---------------------------------------------------------------------------
 // The generator
 // ---------------------------------------------------------------------------
@@ -522,6 +830,35 @@ pub fn generate_evidence_harness(
     manifest: &BindingManifest,
     options: &EvidenceOptions,
 ) -> Result<String, CodegenError> {
+    // Everything spliced into generated Rust source as code must be an
+    // identifier; the spec path lands inside a string literal and must not be
+    // able to close it.  The bindings parser checks the same things, but a
+    // caller may build a manifest by hand, so the generator checks again.
+    if !is_rust_identifier(&options.package_crate) {
+        return Err(unsupported(
+            format!("package `{}` is not a Rust identifier", options.package_crate),
+            (0, 0),
+        ));
+    }
+    if options.spec_path.contains(['"', '\\', '\n', '\r']) {
+        return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
+    }
+    for (op, b) in &manifest.bindings {
+        if !is_rust_identifier(&b.export) {
+            return Err(unsupported(
+                format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
+                (0, 0),
+            ));
+        }
+        if let Some(n) = &b.error_normalization {
+            if !is_rust_identifier(&n.error_case) {
+                return Err(unsupported(
+                    format!("error case `{}` of operation `{op}` is not an identifier", n.error_case),
+                    (0, 0),
+                ));
+            }
+        }
+    }
     for d in &file.declarations {
         if let Declaration::Op(o) = d {
             if !manifest.bindings.contains_key(o.name) {
@@ -561,6 +898,7 @@ pub fn generate_evidence_harness(
 
     let mut widths: BTreeMap<String, BTreeSet<u64>> = BTreeMap::new();
     let mut body = String::new();
+    let mut features: BTreeSet<&str> = BTreeSet::new();
 
     // Model functions.
     for d in &file.declarations {
@@ -645,7 +983,7 @@ pub fn generate_evidence_harness(
         let (shown, over) = match claim_domain(&tys) {
             Some((p, b)) => (
                 format!("{p} ({b} bytes)"),
-                p > EXHAUSTIVE_BUDGET || b > DOMAIN_BYTES_BUDGET,
+                p > options.exhaustive_budget || b > DOMAIN_BYTES_BUDGET,
             ),
             None => ("overflowing u64".to_string(), true),
         };
@@ -653,11 +991,14 @@ pub fn generate_evidence_harness(
             return Err(CodegenError {
                 code: DiagnosticCode::W0706,
                 kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "claim {} exhaustive domain {shown} exceeds budget {EXHAUSTIVE_BUDGET} cases / {DOMAIN_BYTES_BUDGET} bytes",
-                    c.name
+                    "claim {} exhaustive domain {shown} exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
+                    c.name, options.exhaustive_budget
                 )),
                 span: *span,
             });
+        }
+        if tys.contains(&Ty::U8) {
+            features.insert("u8");
         }
         let mut cx = Cx {
             binders: binders.iter().map(|p| p.name.to_string()).collect(),
@@ -673,11 +1014,16 @@ pub fn generate_evidence_harness(
             .map(|(i, p)| format!("    let b_{} = env[{i}].clone();\n", p.name))
             .collect();
         let mut admit = String::from("true");
+        // Admission predicates may use models only: an operation inside one
+        // would be evaluated by the faulted adapter and so change which cases
+        // a negative control admits.
+        cx.allow_ops = false;
         for p in binders {
             if let Some(r) = &p.refinement {
                 let _ = write!(admit, " && {}.truthy()", emit(r, &mut cx)?);
             }
         }
+        cx.allow_ops = true;
         let holds = emit(cbody, &mut cx)?;
         let tys_src: Vec<String> = tys.iter().map(|t| t.rust()).collect();
         let _ = write!(
@@ -703,18 +1049,53 @@ pub fn generate_evidence_harness(
 
     // Adapters (after expression translation so fixed widths are known).
     let mut shapes: BTreeMap<String, Shape> = BTreeMap::new();
+    // The faults each operation is attacked with, as (name, Rust variant).
+    let mut op_faults: BTreeMap<String, Vec<(String, String)>> = BTreeMap::new();
+    let mut used_faults: BTreeSet<String> = BTreeSet::new();
     let mut adapters = String::new();
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
         let shape = shape_of(op)?;
         let empty = BTreeSet::new();
-        adapters.push_str(&adapter(
-            op,
-            shape,
-            &binding.export,
-            binding.error_normalization.as_ref().map(|n| n.error_case.as_str()),
-            widths.get(op.name).unwrap_or(&empty),
-        )?);
+        let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
+        if let Shape::Scalar { fallible } = shape {
+            features.insert("scoped");
+            adapters.push_str(&scalar_adapter(
+                op,
+                fallible,
+                &binding.export,
+                err_case,
+                &binding.negative_controls,
+                options,
+            )?);
+            let mut list = Vec::new();
+            for f in &binding.negative_controls {
+                let variant = fault_variant(f).ok_or_else(|| {
+                    unsupported(format!("unknown fault `{f}` for `{}`", op.name), op.span)
+                })?;
+                list.push((f.clone(), format!("Fault::{variant}")));
+            }
+            op_faults.insert(op.name.to_string(), list);
+        } else {
+            adapters.push_str(&adapter(
+                op,
+                shape,
+                &binding.export,
+                err_case,
+                widths.get(op.name).unwrap_or(&empty),
+            )?);
+            op_faults.insert(
+                op.name.to_string(),
+                shape
+                    .faults()
+                    .iter()
+                    .map(|(n, v)| (n.to_string(), v.to_string()))
+                    .collect(),
+            );
+        }
+        for (n, _) in &op_faults[op.name] {
+            used_faults.insert(n.clone());
+        }
         shapes.insert(op.name.to_string(), shape);
     }
 
@@ -763,7 +1144,7 @@ pub fn generate_evidence_harness(
             n = c.name
         );
     }
-    for (op, shape) in &shapes {
+    for op in shapes.keys() {
         for kind in ["example", "exhaustive", "property", "fuzz"] {
             let members: Vec<String> = if kind == "example" {
                 examples
@@ -786,7 +1167,29 @@ pub fn generate_evidence_harness(
             if members.is_empty() {
                 continue;
             }
-            for (fname, frust) in shape.faults() {
+            let scoped = matches!(shapes[op], Shape::Scalar { .. });
+            for (fname, frust) in &op_faults[op] {
+                if scoped {
+                    // The fault attacks this operation only: another scalar
+                    // adapter that lists the same fault must stay honest, or a
+                    // fault applied consistently to every operation (the AES
+                    // polynomial, say) would hide from every relational claim.
+                    // The control stops at the first claim (document order)
+                    // that catches the fault, so a 2^24-case claim that cannot
+                    // catch it is not run to completion; `caught_by` names
+                    // that first claim.
+                    let _ = write!(
+                        suite,
+                        "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
+                         \x20       let runs: [(&str, fn(Fault) -> Verdict); {len}] = [{members}];\n\
+                         \x20       let caught: Vec<&str> = attacking(\"{op}\", || runs.iter().find(|(_, f)| is_detected(&f({frust}))).map(|(n, _)| *n).into_iter().collect());\n\
+                         \x20       negctl_result(caught, \"{fname}\")\n    }});\n",
+                        idn = id("negctl", &format!("{kind}/{op}/{fname}")),
+                        len = members.len(),
+                        members = members.join(", "),
+                    );
+                    continue;
+                }
                 let _ = write!(
                     suite,
                     "    reg(&mut suite, Meta {{ fault: \"{fname}\".into(), target: \"{kind}\".into(), ..Meta::new(\"{idn}\", \"negctl\", \"{op}\", \"\") }}, || {{\n\
@@ -830,12 +1233,12 @@ pub fn generate_evidence_harness(
         pc = options.property_cases,
         fi = options.fuzz_iterations,
         nfi = options.negctl_fuzz_iterations,
-        budget = EXHAUSTIVE_BUDGET,
+        budget = options.exhaustive_budget,
         bbudget = DOMAIN_BYTES_BUDGET,
         maxw = MAX_FIXED_WIDTH,
         vo = VALUE_OVERHEAD,
     );
-    out.push_str(PRELUDE);
+    out.push_str(&expand_prelude(&fault_block(&used_faults), &features));
     out.push_str("\n// ---------------------------------------------------------------------------\n// Generated from the Warrant document\n// ---------------------------------------------------------------------------\n\n");
     out.push_str(&body);
     out.push_str(&adapters);

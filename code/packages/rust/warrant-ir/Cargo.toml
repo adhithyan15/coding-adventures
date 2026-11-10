@@ -23,3 +23,11 @@ coding_adventures_sha256 = { path = "../sha256" }
 name = "warrant_proofs"
 path = "tests/warrant_proofs.rs"
 harness = false
+
+# gf256: the same labels/bound rows, attempted on the real gf256 source.  The
+# front end refuses the file, so this target records the obligations `not-live`
+# with the precise blocker instead of a proof.
+[[test]]
+name = "gf256_proofs"
+path = "tests/gf256_proofs.rs"
+harness = false

@@ -176,31 +176,41 @@ defmodule CodingAdventures.LZ77 do
       "ABABABAZ"
   """
   def decode(tokens, initial_buffer \\ "") do
-    output = :binary.bin_to_list(initial_buffer)
-    result = Enum.reduce(tokens, output, &decode_token/2)
-    :binary.list_to_bin(result)
+    # SECURITY (SEC-004): the accumulator is a binary, not a list. Appending
+    # `<<out::binary, b>>` is amortised O(1) on the BEAM and `:binary.at/2` is
+    # O(1), so decoding is linear. The old `list ++ [x]` / `Enum.at` version
+    # was O(n^2).
+    Enum.reduce(tokens, initial_buffer, &decode_token/2)
   end
 
   # Applies one token to the output accumulator.
   defp decode_token(%{offset: 0, length: 0, next_char: byte}, output) do
-    output ++ [byte]
+    <<output::binary, byte>>
   end
 
   defp decode_token(%{offset: offset, length: length, next_char: next_char}, output) do
-    start = length(output) - offset
-    # Copy length bytes byte-by-byte to handle overlapping matches.
-    copied = copy_bytes(output, start, length, output)
-    copied ++ [next_char]
+    start = byte_size(output) - offset
+
+    if offset < 0 or start < 0 do
+      raise ArgumentError, "invalid LZ77 token: offset #{offset} exceeds output size"
+    end
+
+    # A negative or non-integer length (e.g. 2.0) would never reach
+    # copy_bytes/3's integer zero base case and would grow the output forever.
+    if not is_integer(length) or length < 0 do
+      raise ArgumentError, "invalid LZ77 token: length must be a non-negative integer"
+    end
+
+    # Copy byte-by-byte so overlapping matches (length > offset) re-read bytes
+    # that this very token just wrote.
+    copied = copy_bytes(output, start, length)
+    <<copied::binary, next_char>>
   end
 
-  # Copies `count` bytes starting at position `start` in the buffer.
-  # The buffer is passed as `acc` and grows as we copy (overlapping support).
-  defp copy_bytes(_original, _start, 0, acc), do: acc
+  defp copy_bytes(acc, _start, 0), do: acc
 
-  defp copy_bytes(original, start, count, acc) do
-    # Use the growing `acc` list so that overlapping reads work.
-    byte = Enum.at(acc, start)
-    copy_bytes(original, start + 1, count - 1, acc ++ [byte])
+  defp copy_bytes(acc, start, count) do
+    copy_bytes(<<acc::binary, :binary.at(acc, start)>>, start + 1, count - 1)
   end
 
   @doc """

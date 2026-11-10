@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Security fixes (review of the gf256 / package-agnostic branch):
+  - L3: `exhaustive_budget` is capped at 2^26 (`MAX_EXHAUSTIVE_BUDGET`) by the `evidence.bindings` parser, with a clear error above it; gf256's 2^24 is unchanged.
+  - L4: `package` and every `export` must be Rust identifiers (also re-checked by the generator, together with error cases and the embedded spec path); `spec` / `output` must be plain relative paths (no absolute path, `..`, backslash, drive letter) and `EvidenceBindingFile::validate_paths` pins them to `code/specs/<pkg>.warrant` and a `.rs` file directly under `code/packages/rust/<pkg>/tests/generated/`; `gen_evidence` validates its `<package>` argument (`[A-Za-z0-9][A-Za-z0-9_-]*`) and calls `validate_paths`.
+  - L1 (support): a new per-op option `proofs_not_live=<reason>` (`EvidenceBindingFile::proofs_not_live`) declares that an operation's proof obligations cannot run; `ca-assurance-report` accepts a `not-live` proof entry only for such an operation.
+  - Generated harnesses (ct-compare, gf256) are byte-identical.
 - Round-2: `resolve_sabotage` rejects a filter unless the fault is a real (non-`none`) one; `run_main` takes the crate's `src/` directory and records the framed `src/**/*.rs` digest as `source_sha256`. Generated harness regenerated.
 - Security review fixes (VER04h section 3 and 6):
   - A1: exhaustive-domain size uses checked arithmetic in the generator and in
@@ -15,6 +20,34 @@
     (`resolve_sabotage`, `require_tests`).
 
 ## 0.1.0 — Unreleased
+
+- Evidence generator, second package (gf256, VER04h): the per-package binding
+  table is now data. `examples/gen_evidence [--check] [<package> ...]` reads
+  `code/packages/rust/<package>/evidence.bindings` (parsed by the new
+  `binding::parse_evidence_bindings`, which rejects unknown keys and options so a
+  typo cannot weaken evidence) instead of a hardcoded op-to-export table.
+  ct-compare's generated harness is byte-identical through its new bindings file.
+  - `EvidenceOptions` gains `exhaustive_budget` (default 400,000; gf256 uses 2^24
+    for the `U8^3` field-law claims, measured at about 9 s per claim in a debug
+    build) and `arg_types` (Rust parameter types of an export, e.g. `power`'s
+    `u32` exponent against the Warrant `U64`).
+  - New scalar adapter shape for operations over `U8`/`U64`/`Nat` returning `U8` or
+    `Result<U8, E>` (a panic is normalised to `E` by the binding, as for
+    `ct_select_bytes`), with a closed registry of field-arithmetic faults
+    (`or-for-xor`, `wrapping-sub`, `mul-as-add`, `alt-poly`, `generator-shift`,
+    `exp-mod-256`, `missing-error`). The generated `Fault` enum lists only the
+    faults a package uses.
+  - A negative control on a scalar operation attacks that operation alone
+    (`attacking`/`fault_for`) and stops at the first claim that catches the fault;
+    a fault applied to every operation of a field was invisible to every
+    relational claim (lesson recorded).
+  - Binder refinements may use models only; an operation inside one is refused
+    (W0701). `U8` binders stay inside 0..=255 under relation-biased generation,
+    `U64` binders draw small values often, and the fuzz coverage map sees `U8`
+    values; these prelude regions are feature-gated so other packages' output
+    does not change.
+  - Tests: `tests/evidence_bindings.rs` (bindings reader, budget, fault and
+    refinement rules, byte-for-byte regeneration of both checked-in harnesses).
 
 - Add `evidence` (VER04h / VER-P030): compile a checked Warrant document into a
   Rust evidence harness (examples, bounded-exhaustive, property, fuzz and
