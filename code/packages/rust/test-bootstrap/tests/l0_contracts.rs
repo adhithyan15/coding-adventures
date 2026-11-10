@@ -877,11 +877,11 @@ fn parse_args_accepts_exactly_the_documented_forms() {
     assert!(parse_args(["--sabotage", "ALWAYS-PASS"]).is_err());
 }
 
-// Linux only: /dev/full is a Linux device (macOS has none). A read-only fd is
-// not a portable substitute, because Rust's std treats EBADF on stdout as a
-// successful write, so the child would exit 0 (logged as a known limit in
-// VER-BACKLOG LH-003c). The closed-pipe test below covers a failed report on every
-// platform.
+// Linux only: /dev/full is a Linux device (macOS has none). It exercises the
+// "write fails with ENOSPC" path. The EBADF paths (closed and read-only fd 1),
+// which Rust's std would otherwise treat as a successful write, are covered
+// for every Unix by the two tests after it (LH-003c). The closed-pipe test
+// further below covers a failed report on every platform.
 #[cfg(target_os = "linux")]
 #[test]
 fn a_report_that_cannot_be_written_is_not_a_pass() {
@@ -895,6 +895,74 @@ fn a_report_that_cannot_be_written_is_not_a_pass() {
         .status()
         .expect("spawn");
     assert_eq!(out.code(), Some(1));
+}
+
+// LH-003c. Rust's std treats EBADF on stdout as a successful write, so without
+// an explicit check a harness whose fd 1 is closed or read-only prints nothing
+// and exits 0: a false pass. Both cases must exit 1 and say why on stderr.
+#[cfg(unix)]
+#[test]
+fn a_closed_stdout_exits_one_not_zero() {
+    use std::os::unix::process::CommandExt;
+    use std::process::Stdio;
+    extern "C" {
+        fn close(fd: i32) -> i32;
+    }
+    let mut command = Command::new(sibling_binary("exit_fixture"));
+    command
+        .env("TFB_FIXTURE", "pass")
+        .stdout(Stdio::null())
+        .stderr(Stdio::piped());
+    // SAFETY: runs in the forked child before exec; it calls only `close`, an
+    // async-signal-safe function, and allocates nothing.
+    unsafe {
+        command.pre_exec(|| {
+            close(1);
+            Ok(())
+        });
+    }
+    let out = command.output().expect("spawn");
+    assert_eq!(out.status.code(), Some(1), "closed fd 1 must not pass");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("standard output is not writable") && stderr.contains("closed"),
+        "{stderr}"
+    );
+}
+
+#[cfg(unix)]
+#[test]
+fn a_read_only_stdout_exits_one_not_zero() {
+    use std::process::Stdio;
+    // /dev/null opened read-only: a write to it fails with EBADF.
+    let read_only = std::fs::File::open("/dev/null").expect("open /dev/null");
+    let out = Command::new(sibling_binary("exit_fixture"))
+        .env("TFB_FIXTURE", "pass")
+        .stdout(read_only)
+        .stderr(Stdio::piped())
+        .output()
+        .expect("spawn");
+    assert_eq!(out.status.code(), Some(1), "read-only fd 1 must not pass");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("read-only"), "{stderr}");
+}
+
+#[cfg(unix)]
+#[test]
+fn a_writable_stdout_that_discards_is_still_accepted() {
+    // KNOWN LIMIT (TF01 section 8): a stdout that accepts and discards bytes
+    // (/dev/null) cannot be told apart from a working one. The run passes;
+    // only a supervisor reading the real stream can notice nothing arrived.
+    let sink = std::fs::OpenOptions::new()
+        .write(true)
+        .open("/dev/null")
+        .expect("open /dev/null");
+    let out = Command::new(sibling_binary("exit_fixture"))
+        .env("TFB_FIXTURE", "pass")
+        .stdout(sink)
+        .status()
+        .expect("spawn");
+    assert_eq!(out.code(), Some(0));
 }
 
 #[test]

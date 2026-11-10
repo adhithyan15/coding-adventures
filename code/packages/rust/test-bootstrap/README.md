@@ -137,8 +137,17 @@ rediscover them (TF01 §8, VER05 §7, VER06 §9, VER07 §8):
   tests you do not control. There are no timeouts at this layer.
 - **Independent `Bytes` draws almost never collide** (never at fixed length 16).
   An "equal inputs" claim needs a correlated generator; see VER05 §7.2.
-- **`AllocCounter` is cooperative**: it counts what the closure records, not the
-  real heap, so a zero-allocation budget through it proves nothing by itself.
+- **`AllocCounter` measures the real heap, but only in a binary that installs
+  the allocator.** Add `coding_adventures_test_bootstrap::install_counting_allocator!();`
+  to the bench or test binary. Without it the counter reports `NotLive` and the
+  `max_alloc_bytes` budget is listed as unchecked, never passed. Tallies are
+  per thread: allocations on threads the closure spawns are not counted.
+- **Standard output is checked, not trusted.** A closed (Linux) or read-only
+  fd 1 makes the runner exit 1 instead of silently printing nothing (Rust std
+  hides `EBADF`). Still undetectable: a stdout that discards bytes (`/dev/null`),
+  a closed fd 1 on non-Linux Unix, a read-only Windows handle, and an fd 1
+  closed after start. Table in TF01 §8.3 item 9; supervisors must still require
+  the `1..N` plan and `N` result lines.
 - **`FuzzReport::is_clean()`**, not `crashes.is_empty()`, is the "found nothing"
   test: timeouts and out-of-memory outcomes are counted separately.
 - **PBT CI redaction** uses a 64-bit FNV digest over a low-entropy string, not
