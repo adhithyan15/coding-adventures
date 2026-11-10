@@ -9,19 +9,19 @@ headword: ತಲೆ ಕೈ
 gloss: head and hand — native Dravidian, matching Tamil/Malayalam closely
 romanization: "tale kai"
 concept_tag: KA-BODY-BASIC
-prerequisites: [KA-C12-kutumba, KA-C10-vaara]
+prerequisites: [KA-C12-plural-galu, KA-C10-vaara]
 sounds: [kannada-vowel-sign-ai]
 roots: [dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "ತಲೆ tale (head) and ಕೈ kai (hand) are native Dravidian, matching Tamil talai/kai and Malayalam thala/kai closely — a shared core across three of the four languages"
-reviews_of: [KA-C12-kutumba]
+reviews_of: [KA-C12-plural-galu, KA-C12-kutumba]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
+  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07]
 introduces:
   knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01]
 practises:
-  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01]
+  knowledge: [KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,14 @@ variety: standard-colloquial
 # ತಲೆ, ಕೈ — head and hand, the shared Dravidian core
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07] -->
 
 [PAUSE 2s] Three languages, nearly one word each — Kannada's basic body
 parts line up with Tamil and Malayalam almost perfectly.
+
+First retrieve the bridge: say *avaḷa amma kelasa māḍuttāḷe*, then say
+*hesarugaḷu*. Which word in the sentence is human, and which plural names
+non-human things?
 
 ## You'll want to know: The words
 <!-- hl-knowledge: introduces=[KA-LEX-C13-DEHADA-BHAGAGALU-01]; assesses=[] -->
@@ -51,12 +55,14 @@ parts line up with Tamil and Malayalam almost perfectly.
 **ತಲೆ** (*tale*) is native Dravidian, one word with Tamil *talai* and Telugu *tala* (DEDR 3103). **ಕೈ** (*kai*) is native too, one word with Tamil *kai* (DEDR 2023), where the entry spells the Kannada word *kay*, *kayi*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07, KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C10-VAARA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "tale" — head]
 - [YOU SAY: "kai" — hand]
 - [YOU SAY: the match — nearly identical across Tamil, Malayalam, Kannada]
+- [YOU SAY: “Her mother works” — *avaḷa amma kelasa māḍuttāḷe*]
+- [YOU SAY: “names” — *hesarugaḷu*; then “they” for people — *avaru*]
 - [YOU RECALL: say *sōmavāra maṅgaḷavāra budhavāra guruvāra śukravāra śanivāra bhānuvāra*]
 
 ## Wrap-up Recall

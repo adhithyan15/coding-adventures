@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:60ddcbaad26f8569",
+  "sourceHash": "fnv1a64:e7a76d75e5f071d6",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:889f208865f518cb",
+      "sourceHash": "fnv1a64:6b050d9fa5365d0f",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,10 @@
             {
               "kind": "speech",
               "text": "Kannada's water-word sides with Tamil, not with Malayalam's surprising break from the pack."
+            },
+            {
+              "kind": "speech",
+              "text": "One last retrieval first: say avaḷa amma kelasa māḍuttāḷe, change “her” to “his”, then say hesarugaḷu and avaru. Which one is a non-human noun plural and which one is a human pronoun?"
             }
           ]
         },
@@ -102,6 +106,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: \"anna\" — cooked rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷa amma kelasa māḍuttāḷe; then avana appa kelasa māḍuttāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷa amma kelasa māḍuttāḷe*; then *avana appa kelasa māḍuttāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hesarugaḷu and avaru; name which is non-human and which is human",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hesarugaḷu* and *avaru*; name which is non-human and which is human]"
             },
             {
               "kind": "prompt",

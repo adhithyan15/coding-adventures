@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 12,
   "title": "Family",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7cbed957dddfc06e",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:28f4cbabc30ce9e1",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -161,6 +161,269 @@
             {
               "kind": "speech",
               "text": "How many Kannada sibling words are there, and what do they split on? (Four — ಅಣ್ಣ/ತಮ್ಮ, ಅಕ್ಕ/ತಂಗಿ — split by relative age, not just gender.) How closely do Kannada's words match Tamil's? (Very closely — nearly the same forms across the whole set.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C12-third-person",
+      "sequence": 402,
+      "title": "ಅವನು, ಅವಳು, ಅದು, ಅವರು — people and things outside the conversation",
+      "headword": "ಅವನು ಅವಳು ಅದು ಅವರು",
+      "romanization": "avanu avaḷu adu avaru",
+      "gloss": "he, she, it, and they or respectful he/she",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72bce8f5cdc48b86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ನಾನು for “I”, then name father, mother, older brother and older sister. Now point away from “I” and “you”: this lesson gives those people their pronouns."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four third-person forms",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅವನು (avanu) — he."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು (avaḷu) — she."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅದು (adu) — it, that non-human thing."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರು (avaru) — they; also respectful “he” or “she”."
+            },
+            {
+              "kind": "speech",
+              "text": "Use ಅವರು for one respected adult as well as for several people. The sentence around it tells you whether it means respectful singular or plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the first split is human or non-human",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kannada does not make every noun carry masculine or feminine marking. In the third person, the useful first question is human or non-human: ಅವನು / ಅವಳು / ಅವರು point to people; ಅದು points to a non-human thing. That split will matter again when verbs and plurals change shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "father, then “he” — ಅಪ್ಪ, ಅವನು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: father, then “he” — **ಅಪ್ಪ, ಅವನು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mother, then “she” — ಅಮ್ಮ, ಅವಳು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mother, then “she” — **ಅಮ್ಮ, ಅವಳು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ಅವರು once for “they”, then once for one respected adult",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ಅವರು** once for “they”, then once for one respected adult]"
+            },
+            {
+              "kind": "prompt",
+              "action": "IDENTIFY",
+              "instruction": "which one is non-human? — ಅದು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU IDENTIFY: which one is non-human? — **ಅದು**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say he, she, it and they/respectful he or she. Which three forms point to people, and which one points to a non-human thing?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C12-present-endings",
+      "sequence": 404,
+      "title": "ಮಾಡುತ್ತಾನೆ, ಮಾಡುತ್ತಾಳೆ, ಮಾಡುತ್ತಾರೆ — let the ending name the person",
+      "headword": "ಮಾಡುತ್ತಾನೆ ಮಾಡುತ್ತಾಳೆ ಮಾಡುತ್ತಾರೆ",
+      "romanization": "māḍuttāne māḍuttāḷe māḍuttāre",
+      "gloss": "he works, she works, they work or a respected person works",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d18d51ba9c31e0be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “I work”: nānu kelasa māḍuttēne. Then say he, she and they/respectful he or she. Keep māḍutt- still and change only the ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending follows the human pronoun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avanu kelasa māḍuttāne. — He works."
+            },
+            {
+              "kind": "speech",
+              "text": "avaḷu kelasa māḍuttāḷe. — She works."
+            },
+            {
+              "kind": "speech",
+              "text": "avaru kelasa māḍuttāre. — They work; or one respected person works."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem and -utt- stay still. The endings -tāne, -tāḷe, -tāre tell you which human pronoun fits. Keep the non-human present ending for a later lesson; for now, recognise adu as the non-human member of the pronoun set."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“He works” — avanu kelasa māḍuttāne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “He works” — *avanu kelasa māḍuttāne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“She works” — avaḷu kelasa māḍuttāḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “She works” — *avaḷu kelasa māḍuttāḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“They work” — avaru kelasa māḍuttāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “They work” — *avaru kelasa māḍuttāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "IDENTIFY",
+              "instruction": "which ending can also belong to one respected person? — -tāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU IDENTIFY: which ending can also belong to one respected person? — *-tāre*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hold māḍutt- still and give the three human endings: he, she, and they/respectful singular."
             }
           ]
         }
@@ -360,6 +623,130 @@
       ]
     },
     {
+      "id": "KA-C12-third-person-possession",
+      "sequence": 406,
+      "title": "ಅವನ, ಅವಳ, ಅವರ — whose family member?",
+      "headword": "ಅವನ ಅವಳ ಅವರ",
+      "romanization": "avana avaḷa avara",
+      "gloss": "his, her, and their or a respected person's",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba5574823433d7e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say he, she and they/respectful he or she. Then say father, mother, older brother and older sister. Now join each person to a family word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: remove the final pronoun ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅವನ ಅಪ್ಪ (avana appa) — his father."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳ ಅಮ್ಮ (avaḷa amma) — her mother."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವರ ಅಕ್ಕ (avara akka) — their older sister, or a respected person's older sister."
+            },
+            {
+              "kind": "speech",
+              "text": "For this small set, hear the pair: ಅವನು becomes ಅವನ, ಅವಳು becomes ಅವಳ, ಅವರು becomes ಅವರ. This lesson teaches those three possessive forms as a set; it does not yet turn the ending into a rule for every noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“his father” — ಅವನ ಅಪ್ಪ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “his father” — **ಅವನ ಅಪ್ಪ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“her mother” — ಅವಳ ಅಮ್ಮ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “her mother” — **ಅವಳ ಅಮ್ಮ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“their older sister” — ಅವರ ಅಕ್ಕ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “their older sister” — **ಅವರ ಅಕ್ಕ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "IDENTIFY",
+              "instruction": "which possessive can also belong to one respected person? — ಅವರ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU IDENTIFY: which possessive can also belong to one respected person? — **ಅವರ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Change he, she and they/respectful singular into his, her and their/respectful singular possessive."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S143-digit-four",
       "sequence": 407,
       "title": "೪ (4) — the digit for nālku",
@@ -496,6 +883,135 @@
             {
               "kind": "speech",
               "text": "Which number is ೪? (4 — nālku, ನಾಲ್ಕು.) Name every digit you have met so far, in order."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C12-plural-galu",
+      "sequence": 408,
+      "title": "ಹೆಸರುಗಳು, ಕೆಲಸಗಳು — more than one non-human thing",
+      "headword": "ಹೆಸರುಗಳು ಕೆಲಸಗಳು",
+      "romanization": "hesarugaḷu kelasagaḷu",
+      "gloss": "names and kinds of work — the non-human plural ending -ಗಳು",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06ac3da001ed6233",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ಹೆಸರು, “name”, then ಕೆಲಸ, “work”. These are non-human nouns, so their ordinary plural can use one ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: add -ಗಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೆಸರು (hesaru, name) becomes ಹೆಸರುಗಳು (hesarugaḷu, names)."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕೆಲಸ (kelasa, work) becomes ಕೆಲಸಗಳು (kelasagaḷu, kinds of work or tasks)."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is -ಗಳು (-gaḷu). Use it here for ordinary non-human nouns. Do not force it onto the family words: human plurals have their own patterns, and avaru already gives you “they” for people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“names” — ಹೆಸರುಗಳು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “names” — **ಹೆಸರುಗಳು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“kinds of work” — ಕೆಲಸಗಳು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “kinds of work” — **ಕೆಲಸಗಳು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Her mother works” — avaḷa amma kelasa māḍuttāḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Her mother works” — *avaḷa amma kelasa māḍuttāḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“their older sister” — avara akka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “their older sister” — *avara akka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "IDENTIFY",
+              "instruction": "which pronoun means people in the plural? — avaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU IDENTIFY: which pronoun means people in the plural? — *avaru*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Make “name” and “work” plural. Then say “Her mother works” and “their older sister.” Which pronoun gives you “they” for people?"
             }
           ]
         }
