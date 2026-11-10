@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/ver13-assumption-catalogue-v1.schema.json",
+  "title": "VER13 Assumption Catalogue v1",
+  "description": "Machine-readable assumption catalogue (VER13 section 5.2). Structural contract only; the cross-entry rules (unique ids, resolving and acyclic depends_on/refines, backlog ids, spec-sync) are enforced by code/scripts/assumption_catalogue.py.",
+  "type": "object",
+  "required": [
+    "schema",
+    "assumptions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "ver13-assumption-catalogue-v1"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "aliases",
+          "refines",
+          "refined_by",
+          "layer",
+          "family",
+          "title",
+          "statement",
+          "kind",
+          "status",
+          "applies_to",
+          "depends_on",
+          "discharge",
+          "since",
+          "legacy",
+          "used_by",
+          "tier",
+          "constrains_input_classes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9._:-]+$"
+            }
+          },
+          "refines": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "refined_by": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._-]+$"
+            }
+          },
+          "layer": {
+            "type": "string",
+            "enum": [
+              "spec",
+              "src",
+              "wir",
+              "cc",
+              "mc",
+              "uarch",
+              "gate",
+              "phys",
+              "os",
+              "gov"
+            ]
+          },
+          "family": {
+            "type": "string",
+            "enum": [
+              "spec",
+              "src",
+              "wir",
+              "cc",
+              "mc",
+              "uarch",
+              "gate",
+              "phys",
+              "tcb",
+              "os",
+              "gov",
+              "att"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "model",
+              "trust",
+              "tool",
+              "environment",
+              "attestation",
+              "physical",
+              "governance",
+              "declared"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assumed",
+              "attested",
+              "evidenced",
+              "discharged",
+              "floor"
+            ]
+          },
+          "applies_to": {
+            "type": "object",
+            "required": [
+              "labels",
+              "claims",
+              "packages"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "proved",
+                    "bounded(k)",
+                    "proved-per-run",
+                    "proved-to-isa",
+                    "proved-to-gate-level"
+                  ]
+                }
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "constant-time",
+                    "functional",
+                    "bound",
+                    "capability",
+                    "weakness-row",
+                    "report"
+                  ]
+                }
+              },
+              "packages": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(\\*|[a-z0-9_-]+/[a-z0-9_-]+)$"
+                }
+              }
+            }
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._-]+$"
+            }
+          },
+          "discharge": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "evidence_kinds",
+                  "rung",
+                  "tools",
+                  "difficulty",
+                  "backlog",
+                  "plan"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "evidence_kinds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "rung": {
+                    "type": "string",
+                    "enum": [
+                      "R0+",
+                      "R1",
+                      "R2",
+                      "R3",
+                      "R4"
+                    ]
+                  },
+                  "tools": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "difficulty": {
+                    "type": "string",
+                    "enum": [
+                      "S",
+                      "M",
+                      "L",
+                      "XL",
+                      "N/A"
+                    ]
+                  },
+                  "backlog": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9]*-[0-9A-Za-z]+$"
+                  },
+                  "plan": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          },
+          "discharged_by": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "evidence",
+                "digest",
+                "stack",
+                "pinned"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "evidence": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "stack": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pinned": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "since": {
+            "type": "string",
+            "minLength": 1
+          },
+          "legacy": {
+            "type": "boolean"
+          },
+          "used_by": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "O1",
+              "O2",
+              "O3",
+              "O3/O4",
+              "O4",
+              "O5",
+              "O6",
+              "P",
+              "floor",
+              "gov",
+              "via-ladder",
+              ""
+            ]
+          },
+          "constrains_input_classes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "public",
+                "secret",
+                "trusted",
+                "hostile"
+              ]
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
