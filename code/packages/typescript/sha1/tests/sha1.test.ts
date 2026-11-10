@@ -9,7 +9,8 @@
  * input, exact block boundaries, and very long inputs.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import { sha1, sha1Hex, toHex, SHA1Hasher, VERSION } from "../src/index.js";
 
 const enc = new TextEncoder();
@@ -28,7 +29,7 @@ function bytes(n: number, fill = 0): Uint8Array {
 
 describe("version", () => {
   it("exports VERSION", () => {
-    expect(VERSION).toBe("0.1.0");
+    assert.equal(VERSION, "0.1.0");
   });
 });
 
@@ -36,28 +37,31 @@ describe("version", () => {
 
 describe("FIPS 180-4 test vectors", () => {
   it("empty string", () => {
-    expect(sha1Hex(text(""))).toBe(
+    assert.equal(
+      sha1Hex(text("")),
       "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     );
   });
 
   it("'abc'", () => {
-    expect(sha1Hex(text("abc"))).toBe(
+    assert.equal(
+      sha1Hex(text("abc")),
       "a9993e364706816aba3e25717850c26c9cd0d89d",
     );
   });
 
   it("448-bit (56-byte) message", () => {
     const msg = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
-    expect(msg.length).toBe(56);
-    expect(sha1Hex(text(msg))).toBe(
+    assert.equal(msg.length, 56);
+    assert.equal(
+      sha1Hex(text(msg)),
       "84983e441c3bd26ebaae4aa1f95129e5e54670f1",
     );
   });
 
   it("one million 'a' characters", () => {
     const data = new Uint8Array(1_000_000).fill(0x61); // 'a'
-    expect(sha1Hex(data)).toBe("34aa973cd4c4daa4f61eeb2bdbad27316534016f");
+    assert.equal(sha1Hex(data), "34aa973cd4c4daa4f61eeb2bdbad27316534016f");
   });
 });
 
@@ -65,34 +69,34 @@ describe("FIPS 180-4 test vectors", () => {
 
 describe("output format", () => {
   it("returns Uint8Array", () => {
-    expect(sha1(text("test"))).toBeInstanceOf(Uint8Array);
+    assert.ok(sha1(text("test")) instanceof Uint8Array);
   });
 
   it("digest is exactly 20 bytes", () => {
-    expect(sha1(text("")).length).toBe(20);
-    expect(sha1(text("hello world")).length).toBe(20);
-    expect(sha1(new Uint8Array(1000)).length).toBe(20);
+    assert.equal(sha1(text("")).length, 20);
+    assert.equal(sha1(text("hello world")).length, 20);
+    assert.equal(sha1(new Uint8Array(1000)).length, 20);
   });
 
   it("sha1Hex returns 40-char string", () => {
-    expect(sha1Hex(text("")).length).toBe(40);
-    expect(sha1Hex(text("hello")).length).toBe(40);
+    assert.equal(sha1Hex(text("")).length, 40);
+    assert.equal(sha1Hex(text("hello")).length, 40);
   });
 
   it("sha1Hex is lowercase", () => {
     const hex = sha1Hex(text("abc"));
-    expect(hex).toBe(hex.toLowerCase());
-    expect(/^[0-9a-f]+$/.test(hex)).toBe(true);
+    assert.equal(hex, hex.toLowerCase());
+    assert.ok(/^[0-9a-f]+$/.test(hex));
   });
 
   it("sha1Hex matches toHex(sha1(data))", () => {
     for (const msg of ["", "abc", "hello world"]) {
-      expect(sha1Hex(text(msg))).toBe(toHex(sha1(text(msg))));
+      assert.equal(sha1Hex(text(msg)), toHex(sha1(text(msg))));
     }
   });
 
   it("deterministic — same input same output", () => {
-    expect(sha1(text("hello"))).toEqual(sha1(text("hello")));
+    assert.deepEqual(sha1(text("hello")), sha1(text("hello")));
   });
 
   it("avalanche — one byte change flips many bits", () => {
@@ -106,7 +110,7 @@ describe("output format", () => {
         diff += (xor >> b) & 1;
       }
     }
-    expect(diff).toBeGreaterThan(20);
+    assert.ok(diff > 20);
   });
 });
 
@@ -123,35 +127,35 @@ describe("output format", () => {
 describe("block boundaries", () => {
   it("55 bytes — exactly one block after padding", () => {
     const r = sha1(bytes(55));
-    expect(r.length).toBe(20);
-    expect(r).toEqual(sha1(bytes(55))); // deterministic
+    assert.equal(r.length, 20);
+    assert.deepEqual(r, sha1(bytes(55))); // deterministic
   });
 
   it("56 bytes — requires second block for padding", () => {
-    expect(sha1(bytes(56)).length).toBe(20);
+    assert.equal(sha1(bytes(56)).length, 20);
   });
 
   it("55 and 56 bytes produce different digests", () => {
-    expect(sha1(bytes(55))).not.toEqual(sha1(bytes(56)));
+    assert.notDeepEqual(sha1(bytes(55)), sha1(bytes(56)));
   });
 
   it("64 bytes — one data block + full padding block", () => {
-    expect(sha1(bytes(64)).length).toBe(20);
+    assert.equal(sha1(bytes(64)).length, 20);
   });
 
   it("127 bytes", () => {
-    expect(sha1(bytes(127)).length).toBe(20);
+    assert.equal(sha1(bytes(127)).length, 20);
   });
 
   it("128 bytes — two data blocks + full padding block", () => {
-    expect(sha1(bytes(128)).length).toBe(20);
+    assert.equal(sha1(bytes(128)).length, 20);
   });
 
   it("all boundary sizes produce distinct digests", () => {
     const sizes = [55, 56, 63, 64, 127, 128];
     const digests = sizes.map((n) => toHex(sha1(bytes(n))));
     const unique = new Set(digests);
-    expect(unique.size).toBe(6);
+    assert.equal(unique.size, 6);
   });
 });
 
@@ -160,18 +164,18 @@ describe("block boundaries", () => {
 describe("edge cases", () => {
   it("single null byte differs from empty", () => {
     const r = sha1(new Uint8Array([0x00]));
-    expect(r.length).toBe(20);
-    expect(r).not.toEqual(sha1(new Uint8Array(0)));
+    assert.equal(r.length, 20);
+    assert.notDeepEqual(r, sha1(new Uint8Array(0)));
   });
 
   it("single 0xFF byte", () => {
-    expect(sha1(new Uint8Array([0xff])).length).toBe(20);
+    assert.equal(sha1(new Uint8Array([0xff])).length, 20);
   });
 
   it("all 256 byte values", () => {
     const data = new Uint8Array(256);
     for (let i = 0; i < 256; i++) data[i] = i;
-    expect(sha1(data).length).toBe(20);
+    assert.equal(sha1(data).length, 20);
   });
 
   it("every single-byte input produces a unique digest", () => {
@@ -179,11 +183,11 @@ describe("edge cases", () => {
     for (let i = 0; i < 256; i++) {
       digests.add(sha1Hex(new Uint8Array([i])));
     }
-    expect(digests.size).toBe(256);
+    assert.equal(digests.size, 256);
   });
 
   it("1000 zero bytes", () => {
-    expect(sha1(bytes(1000)).length).toBe(20);
+    assert.equal(sha1(bytes(1000)).length, 20);
   });
 });
 
@@ -192,15 +196,15 @@ describe("edge cases", () => {
 describe("toHex", () => {
   it("converts bytes to lowercase hex", () => {
     const b = new Uint8Array([0x00, 0x0f, 0xff, 0xab]);
-    expect(toHex(b)).toBe("000fffab");
+    assert.equal(toHex(b), "000fffab");
   });
 
   it("empty array → empty string", () => {
-    expect(toHex(new Uint8Array(0))).toBe("");
+    assert.equal(toHex(new Uint8Array(0)), "");
   });
 
   it("zero-pads single-digit hex values", () => {
-    expect(toHex(new Uint8Array([0x05]))).toBe("05");
+    assert.equal(toHex(new Uint8Array([0x05])), "05");
   });
 });
 
@@ -210,14 +214,14 @@ describe("SHA1Hasher streaming", () => {
   it("single update matches oneshot", () => {
     const h = new SHA1Hasher();
     h.update(text("abc"));
-    expect(h.hexDigest()).toBe(sha1Hex(text("abc")));
+    assert.equal(h.hexDigest(), sha1Hex(text("abc")));
   });
 
   it("two updates split at byte boundary", () => {
     const h = new SHA1Hasher();
     h.update(text("ab"));
     h.update(text("c"));
-    expect(toHex(h.digest())).toBe(sha1Hex(text("abc")));
+    assert.equal(toHex(h.digest()), sha1Hex(text("abc")));
   });
 
   it("split at 64-byte block boundary", () => {
@@ -225,7 +229,7 @@ describe("SHA1Hasher streaming", () => {
     const h = new SHA1Hasher();
     h.update(data.subarray(0, 64));
     h.update(data.subarray(64));
-    expect(h.digest()).toEqual(sha1(data));
+    assert.deepEqual(h.digest(), sha1(data));
   });
 
   it("byte-at-a-time", () => {
@@ -235,12 +239,12 @@ describe("SHA1Hasher streaming", () => {
     for (const byte of data) {
       h.update(new Uint8Array([byte]));
     }
-    expect(h.digest()).toEqual(sha1(data));
+    assert.deepEqual(h.digest(), sha1(data));
   });
 
   it("empty input", () => {
     const h = new SHA1Hasher();
-    expect(h.digest()).toEqual(sha1(text("")));
+    assert.deepEqual(h.digest(), sha1(text("")));
   });
 
   it("digest is non-destructive", () => {
@@ -248,7 +252,7 @@ describe("SHA1Hasher streaming", () => {
     h.update(text("abc"));
     const d1 = h.digest();
     const d2 = h.digest();
-    expect(d1).toEqual(d2);
+    assert.deepEqual(d1, d2);
   });
 
   it("update after digest continues correctly", () => {
@@ -256,13 +260,13 @@ describe("SHA1Hasher streaming", () => {
     h.update(text("ab"));
     h.digest(); // snapshot — must not mutate state
     h.update(text("c"));
-    expect(h.digest()).toEqual(sha1(text("abc")));
+    assert.deepEqual(h.digest(), sha1(text("abc")));
   });
 
   it("hexDigest returns FIPS vector for 'abc'", () => {
     const h = new SHA1Hasher();
     h.update(text("abc"));
-    expect(h.hexDigest()).toBe("a9993e364706816aba3e25717850c26c9cd0d89d");
+    assert.equal(h.hexDigest(), "a9993e364706816aba3e25717850c26c9cd0d89d");
   });
 
   it("copy is independent", () => {
@@ -271,21 +275,21 @@ describe("SHA1Hasher streaming", () => {
     const h2 = h.copy();
     h2.update(text("c"));
     h.update(text("x")); // different suffix on original
-    expect(h2.digest()).toEqual(sha1(text("abc")));
-    expect(h.digest()).toEqual(sha1(text("abx")));
+    assert.deepEqual(h2.digest(), sha1(text("abc")));
+    assert.deepEqual(h.digest(), sha1(text("abx")));
   });
 
   it("copy produces same digest as original", () => {
     const h = new SHA1Hasher();
     h.update(text("abc"));
     const h2 = h.copy();
-    expect(h.digest()).toEqual(h2.digest());
+    assert.deepEqual(h.digest(), h2.digest());
   });
 
   it("chained update calls work", () => {
     const h = new SHA1Hasher();
     const result = h.update(text("a")).update(text("b")).update(text("c")).hexDigest();
-    expect(result).toBe(sha1Hex(text("abc")));
+    assert.equal(result, sha1Hex(text("abc")));
   });
 
   it("streaming million 'a's matches oneshot", () => {
@@ -293,6 +297,6 @@ describe("SHA1Hasher streaming", () => {
     const h = new SHA1Hasher();
     h.update(data.subarray(0, 500_000));
     h.update(data.subarray(500_000));
-    expect(h.digest()).toEqual(sha1(data));
+    assert.deepEqual(h.digest(), sha1(data));
   });
 });

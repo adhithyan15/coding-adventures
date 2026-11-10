@@ -82,6 +82,12 @@ import java.nio.ByteOrder
  */
 object HuffmanCompression {
 
+    /** Symbols are single bytes, so a valid table has at most 256 entries. */
+    private const val MAX_SYMBOLS = 256L
+
+    /** Longest code length the decoder accepts; keeps every 64-bit shift safe. */
+    private const val MAX_CODE_LEN = 56
+
     // =========================================================================
     // Public API
     // =========================================================================
@@ -177,17 +183,29 @@ object HuffmanCompression {
         if (data == null || data.size < 8) return ByteArray(0)
 
         val buf = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN)
-        val originalLength = buf.getInt()
-        val symbolCount    = buf.getInt()
+        // Read the header as unsigned: a signed Int would turn 0xFFFFFFFF into -1.
+        val originalLength = buf.getInt().toLong() and 0xFFFFFFFFL
+        val symbolCount    = buf.getInt().toLong() and 0xFFFFFFFFL
 
-        if (originalLength == 0) return ByteArray(0)
+        if (originalLength == 0L) return ByteArray(0)
+
+        // SECURITY: the header is attacker-controlled.  Symbols are single
+        // bytes, so a table can name at most 256 of them.  Checking first also
+        // keeps every size computation below tiny.
+        require(symbolCount <= MAX_SYMBOLS) { "symbol_count $symbolCount exceeds $MAX_SYMBOLS" }
+        val tableEnd = 8 + symbolCount.toInt() * 2
+        require(data.size >= tableEnd) { "input too short for the code-lengths table" }
 
         // Parse code-lengths table.
         // Wire format guarantees entries are sorted by (code_length, symbol_value).
-        val lengths = ArrayList<IntArray>(symbolCount)
-        repeat(symbolCount) {
+        // A byte value can have only one code, so a repeated symbol is rejected.
+        val lengths = ArrayList<IntArray>(symbolCount.toInt())
+        val seen = BooleanArray(256)
+        repeat(symbolCount.toInt()) {
             val sym    = buf.get().toInt() and 0xFF
             val length = buf.get().toInt() and 0xFF
+            require(!seen[sym]) { "symbol $sym appears twice in code-lengths table" }
+            seen[sym] = true
             lengths.add(intArrayOf(sym, length))
         }
 
@@ -198,45 +216,68 @@ object HuffmanCompression {
         //   prev_length = first entry's length
         //   for each entry in sorted order:
         //     if length > prev_length: code = code shl (length - prev_length)
-        //     assign bit_string = left-padded binary of code
+        //     assign (length, code) -> symbol
         //     code += 1
-        val codeToSymbol = HashMap<String, Int>()
-        var codeVal = 0
+        //
+        // SECURITY: the table is hostile input, so we reject
+        //   * lengths of 0 or above MAX_CODE_LEN (a zero-length code matches
+        //     nothing; a long one could overflow the 64-bit shift),
+        //   * tables not sorted by length (the encoder always sorts), and
+        //   * over-subscribed tables (Kraft sum > 1): before each assignment the
+        //     running code must still fit in `length` bits (code ushr length == 0).
+        // Kotlin's Long shl masks the count to 6 bits; the 1..56 bound keeps every
+        // shift below 64 so the mask can never change a result.
+        // Codes are keyed by (length shl 56) or code, so no strings are built.
+        val codeToSymbol = HashMap<Long, Int>()
+        var codeVal = 0L
         var prevLen = if (lengths.isEmpty()) 0 else lengths[0][1]
+        var maxLen = 0
 
         for ((sym, length) in lengths.map { it[0] to it[1] }) {
-            if (length > prevLen) codeVal = codeVal shl (length - prevLen)
-            val bitStr = Integer.toBinaryString(codeVal).padStart(length, '0')
-            codeToSymbol[bitStr] = sym
+            require(length in 1..MAX_CODE_LEN) { "invalid code length $length in table" }
+            require(length >= prevLen) { "code-lengths table is not sorted by length" }
+            codeVal = codeVal shl (length - prevLen)
+            require((codeVal ushr length) == 0L) { "code-lengths table over-subscribes the code space" }
+            codeToSymbol[(length.toLong() shl 56) or codeVal] = sym
             codeVal++
             prevLen = length
+            maxLen = length
         }
 
-        // Unpack the remaining bytes as a bit string (LSB-first).
-        val bitString = buildString {
-            while (buf.hasRemaining()) {
-                val byteVal = buf.get().toInt() and 0xFF
-                repeat(8) { i -> append((byteVal shr i) and 1) }
-            }
+        // SECURITY: every code is at least one bit, so N payload bytes hold at
+        // most 8*N symbols.  Reject a larger declared length before allocating
+        // anything sized from it (also guards the Int array size).
+        val totalBits = (data.size - tableEnd).toLong() * 8
+        require(originalLength <= totalBits && originalLength <= Int.MAX_VALUE - 8) {
+            "declared length $originalLength exceeds the $totalBits bits available"
         }
 
-        // Decode exactly original_length symbols.
-        val output = ByteArray(originalLength)
-        var pos = 0
-        val accumulated = StringBuilder()
-
+        // Decode exactly original_length symbols straight from the payload.
+        //
+        // Bits are LSB-first within each byte, so bit i is
+        // (data[tableEnd + i/8] >> (i%8)) & 1 -- O(1), no expanded bit string.
+        // The candidate code is built MSB-first as a Long.  Canonical codes are
+        // prefix-free, so the first (length, value) hit is the symbol.  Once the
+        // accumulated length reaches the longest code without a match, no later
+        // bit can match (an incomplete table fed unmatched bits): fail fast.
+        val output = ByteArray(originalLength.toInt())
+        var pos = 0L
+        var acc = 0L
+        var accLen = 0
         var decoded = 0
-        while (decoded < originalLength) {
-            if (pos >= bitString.length) {
-                throw IllegalArgumentException(
-                    "Bit stream exhausted after $decoded symbols; expected $originalLength"
-                )
-            }
-            accumulated.append(bitString[pos++])
-            val sym = codeToSymbol[accumulated.toString()]
+        while (decoded < output.size) {
+            require(pos < totalBits) { "Bit stream exhausted before decoding all symbols" }
+            val bit = (data[tableEnd + (pos ushr 3).toInt()].toInt() shr (pos and 7L).toInt()) and 1
+            pos++
+            acc = (acc shl 1) or bit.toLong()
+            accLen++
+            val sym = codeToSymbol[(accLen.toLong() shl 56) or acc]
             if (sym != null) {
                 output[decoded++] = sym.toByte()
-                accumulated.clear()
+                acc = 0L
+                accLen = 0
+            } else {
+                require(accLen < maxLen) { "bit pattern does not match any code" }
             }
         }
         return output

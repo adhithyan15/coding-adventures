@@ -2609,6 +2609,26 @@ Generalized path construction or validation, complete revocation policy, TLS,
 HTTP, OAuth transport, and network authority remain unavailable. Concrete
 HTTPS and live-provider readiness remain unavailable.
 
+An alternative bounded authenticated-responder composition now consumes the
+complete fully routed original responder-revocation proof plus a separate
+fully authenticated, fully routed OCSP target-revocation proof for the retained
+intermediate. Private repository-owned evidence interfaces derive the exact
+retained intermediate, selected Mozilla-reviewed root, and original server-
+status observation time from the first branch; downstream callers can use the
+concrete proof types but cannot implement substitute evidence. The second
+proof must name those exact certificate objects and time. Stable target,
+issuer, and observation-time mismatch categories retain no certificate,
+response, key, signature, status, hostname, root, or time payload. Success
+retains both complete non-copyable branches under a distinct type. This pure
+public-certificate-data composition performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. Revocation policy for
+both added proofs' own responders, projection of the added intermediate-status
+responder path from this alternative branch, generalized path construction or
+validation, complete revocation policy, TLS, HTTP, OAuth transport, and network
+authority remain unavailable. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 A subsequent bounded projection consumes that complete no-check plus
 intermediate-status composition and reifies the added status proof's exact
 delegated responder-to-reviewed-root path as a distinct non-copyable type.

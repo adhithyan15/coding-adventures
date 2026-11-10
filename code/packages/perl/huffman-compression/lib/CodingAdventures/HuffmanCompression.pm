@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use CodingAdventures::HuffmanTree;
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.1';
 
 =head1 NAME
 
@@ -135,31 +135,6 @@ sub _pack_bits_lsb_first {
     return pack("C*", @output);
 }
 
-=head2 _unpack_bits_lsb_first
-
-  my $bits = _unpack_bits_lsb_first($bytes);
-
-Reverses C<_pack_bits_lsb_first>: reads each byte and extracts bits from
-position 0 (LSB) to position 7 (MSB), emitting a string of C<'0'>/'C<'1'>.
-
-Example:
-
-  byte: 0x0D = 0b00001101
-  bit string: "10110000"  (bits 0,1,2,3,...,7 = 1,0,1,1,0,0,0,0)
-
-=cut
-
-sub _unpack_bits_lsb_first {
-    my ($data) = @_;
-    my $bits = "";
-    for my $byte (unpack("C*", $data)) {
-        for my $i (0..7) {
-            $bits .= (($byte >> $i) & 1);
-        }
-    }
-    return $bits;
-}
-
 # ---------------------------------------------------------------------------
 # Internal: canonical code reconstruction
 # ---------------------------------------------------------------------------
@@ -168,12 +143,13 @@ sub _unpack_bits_lsb_first {
 
 =head2 _canonical_codes_from_lengths
 
-  my %code_to_sym = _canonical_codes_from_lengths(@lengths);
+  my ($code_to_sym, $max_len) = _canonical_codes_from_lengths(@lengths);
 
 Reconstructs the canonical Huffman code table from a sorted list of
-C<[$symbol, $code_length]> pairs.
+C<[$symbol, $code_length]> pairs and B<validates> it, because the table comes
+straight from untrusted input.
 
-The input B<must> be sorted by C<(code_length, symbol_value)> ascending — the
+The input must be sorted by C<(code_length, symbol_value)> ascending — the
 same order used by C<compress> when writing the header table.
 
 The algorithm:
@@ -181,31 +157,58 @@ The algorithm:
   1. Start with code = 0.
   2. For each (symbol, len) pair in order:
      a. If len > prev_len, shift code left by (len - prev_len).
-     b. Format code as a zero-padded binary string of $len digits.
-     c. Map bits → symbol in the output hash.
+     b. Check the code still fits in len bits (Kraft sum <= 1).
+     c. Map (len, code) -> symbol in the output hash.
      d. Increment code.
      e. Update prev_len.
 
-The result maps bit strings (e.g. C<"01">) to integer symbol values (e.g. 65
-for C<'A'>). This is the I<inverse> of the encoder's C<sym → bits> table.
+Dies when a length is 0 or above 56, when the table is not sorted by length,
+or when the table over-subscribes the code space.
+
+Returns a hashref keyed by C<"$len:$code"> (no per-symbol bit strings are
+built) and the longest code length.
 
 =cut
+
+# Longest code length the decoder accepts.  Real codes over 256 symbols are far
+# shorter; 56 keeps every shift well inside a 64-bit integer.
+use constant MAX_CODE_LEN => 56;
+
+# Symbols are single bytes, so a valid table has at most 256 entries.
+use constant MAX_SYMBOLS => 256;
 
 sub _canonical_codes_from_lengths {
     my (@lengths) = @_;   # list of [$sym, $len] sorted by ($len, $sym)
     my %code_to_sym;
     my $code     = 0;
-    my $prev_len = $lengths[0][1];
+    my $prev_len = @lengths ? $lengths[0][1] : 0;
+    my $max_len  = 0;
     for my $entry (@lengths) {
         my ($sym, $len) = @$entry;
+
+        # SECURITY: a zero-length code matches nothing; a huge length would
+        # push the shift past the width of an integer.
+        die "invalid code length $len in table\n"
+            if $len == 0 || $len > MAX_CODE_LEN;
+
+        # The encoder always sorts by length; an unsorted table is hostile.
+        die "code-lengths table is not sorted by length\n" if $len < $prev_len;
+
         # When code length increases, shift left to maintain prefix-free property.
-        $code <<= ($len - $prev_len) if $len > $prev_len;
-        my $bits = sprintf("%0${len}b", $code);
-        $code_to_sym{$bits} = $sym;
+        $code <<= ($len - $prev_len);
+
+        # SECURITY: over-subscribed table (Kraft sum > 1).  The running code
+        # must still fit in $len bits; if it does not, the code space is
+        # exhausted and no prefix-free assignment exists.
+        die "code-lengths table over-subscribes the code space\n"
+            if ($code >> $len) != 0;
+
+        $code_to_sym{"$len:$code"} = $sym;
         $code++;
         $prev_len = $len;
+        $max_len  = $len;
     }
-    return %code_to_sym;
+    return (\%code_to_sym, $max_len);
 }
 
 # ---------------------------------------------------------------------------
@@ -350,7 +353,13 @@ sub decompress {
     my ($orig_len, $sym_count) = unpack("NN", substr($data, 0, 8));
 
     # Step 2: empty input short-circuit.
-    return "" if $sym_count == 0;
+    return "" if $sym_count == 0 || $orig_len == 0;
+
+    # SECURITY: the header is attacker-controlled.  Symbols are single bytes,
+    # so a table can name at most 256 of them.  Check before computing the
+    # table size so a huge count cannot drive the arithmetic below.
+    die "symbol_count $sym_count exceeds " . MAX_SYMBOLS . "\n"
+        if $sym_count > MAX_SYMBOLS;
 
     # Step 3: parse code-lengths table.
     # Each entry: 2 bytes (symbol byte, code_length byte).
@@ -360,48 +369,59 @@ sub decompress {
     return "" if length($data) < $table_offset + $table_size;
 
     my @lengths;
+    my %seen;
     for my $i (0 .. $sym_count - 1) {
         my ($sym, $len) = unpack("CC", substr($data, $table_offset + $i * 2, 2));
+        # A byte value can have only one code; a repeat makes the table ambiguous.
+        die "symbol $sym appears twice in code-lengths table\n" if $seen{$sym}++;
         push @lengths, [$sym, $len];
     }
 
-    # Step 4: reconstruct canonical codes.
+    # Step 4: reconstruct (and validate) canonical codes.
     # _canonical_codes_from_lengths expects [@lengths] sorted by (len, sym),
     # which is exactly the order compress wrote them.
-    my %code_to_sym = _canonical_codes_from_lengths(@lengths);
+    my ($code_to_sym, $max_len) = _canonical_codes_from_lengths(@lengths);
 
-    # Step 5 & 6: extract and unpack the bit stream.
+    # Step 5: bound the declared length by the payload.
+    # SECURITY: every code is at least one bit, so N payload bytes hold at most
+    # 8*N symbols.  Reject a larger declared length before doing any work sized
+    # from it.
     my $bitstream_offset = $table_offset + $table_size;
     my $bitstream_bytes  = substr($data, $bitstream_offset);
-    my $bits             = _unpack_bits_lsb_first($bitstream_bytes);
+    my $total_bits       = length($bitstream_bytes) * 8;
+    die "declared length $orig_len exceeds the $total_bits bits available\n"
+        if $orig_len > $total_bits;
 
-    # Step 7: greedy prefix-free decoding.
-    # We scan the bit string from left to right. At each position we try
-    # progressively longer substrings until we find a match in %code_to_sym.
-    # Because canonical codes are prefix-free, the match is always unambiguous.
-    #
-    # The maximum code length is 16 (uint8 in header, capped by HuffmanTree).
-    # We try lengths 1..16 before giving up on a bit position.
+    # Step 6: decode straight from the payload bytes.
+    # vec($bytes, $i, 1) reads bit $i with bit 0 being the LEAST significant
+    # bit of the first byte -- exactly the LSB-first order the encoder wrote --
+    # in O(1), so we never expand the payload into a huge '0'/'1' string (or a
+    # 56x-larger list via unpack "C*").  The candidate code is built MSB-first
+    # as an integer.  Canonical codes are prefix-free, so the first
+    # "$len:$code" hit is the symbol.  Once the accumulated length reaches the
+    # longest code without a match, no later bit can match (an incomplete
+    # table fed unmatched bits), so we die immediately.
     my @output;
     my $pos     = 0;
-    my $bit_len = length($bits);
+    my $acc     = 0;
+    my $acc_len = 0;
     while (@output < $orig_len) {
-        # Guard: if we've run out of bits before reaching orig_len, stop.
-        last if $pos >= $bit_len;
+        die "bit stream exhausted after " . scalar(@output) . " symbols\n"
+            if $pos >= $total_bits;
 
-        my $matched = 0;
-        for my $len (1 .. 16) {
-            last if $pos + $len > $bit_len;
-            my $prefix = substr($bits, $pos, $len);
-            if (exists $code_to_sym{$prefix}) {
-                push @output, $code_to_sym{$prefix};
-                $pos += $len;
-                $matched = 1;
-                last;
-            }
+        $acc = ($acc << 1) | vec($bitstream_bytes, $pos, 1);
+        $pos++;
+        $acc_len++;
+
+        my $key = "$acc_len:$acc";
+        if (exists $code_to_sym->{$key}) {
+            push @output, $code_to_sym->{$key};
+            $acc     = 0;
+            $acc_len = 0;
         }
-        # If no code matched (malformed stream), stop to avoid infinite loop.
-        last unless $matched;
+        elsif ($acc_len >= $max_len) {
+            die "bit pattern does not match any code\n";
+        }
     }
 
     return pack("C*", @output);

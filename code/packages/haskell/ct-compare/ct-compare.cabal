@@ -1,0 +1,28 @@
+cabal-version: 3.0
+name:          ct-compare
+version:       0.1.0
+synopsis:      Constant-time byte comparison and selection (CT01)
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  CtCompare
+    build-depends:    base >=4.14
+                    , bytestring >=0.11.1
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    Corpus
+                    , CtCompareSpec
+    hs-source-dirs:   test
+    build-depends:    ct-compare
+                    , base >=4.14
+                    , bytestring >=0.11.1
+                    , hspec == 2.*
+    default-language: Haskell2010

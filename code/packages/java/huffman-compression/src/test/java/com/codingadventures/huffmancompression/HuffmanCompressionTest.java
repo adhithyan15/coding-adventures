@@ -457,4 +457,89 @@ class HuffmanCompressionTest {
         for (int i = 0; i < times; i++) System.arraycopy(src, 0, out, i * src.length, src.length);
         return out;
     }
+
+    // =========================================================================
+    // Hostile input (SEC-003): the code-lengths table is attacker-controlled.
+    // =========================================================================
+
+    private static byte[] hostile(int[][] entries, long orig, byte[] payload) {
+        ByteBuffer b = ByteBuffer.allocate(8 + entries.length * 2 + payload.length)
+            .order(ByteOrder.BIG_ENDIAN);
+        b.putInt((int) orig).putInt(entries.length);
+        for (int[] e : entries) {
+            b.put((byte) e[0]).put((byte) e[1]);
+        }
+        b.put(payload);
+        return b.array();
+    }
+
+    private static byte[] filled(int n, int v) {
+        byte[] a = new byte[n];
+        Arrays.fill(a, (byte) v);
+        return a;
+    }
+
+    @Test
+    void hostileHugeLengthGapRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 1}, {1, 255}}, 4, filled(8, 0xFF))));
+    }
+
+    @Test
+    void hostileZeroLengthRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 0}}, 1, filled(1, 0))));
+    }
+
+    @Test
+    void hostileOversubscribedRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 1}, {1, 1}, {2, 1}}, 1, filled(1, 0))));
+    }
+
+    @Test
+    void hostileUnsortedRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 2}, {1, 1}}, 1, filled(1, 0))));
+    }
+
+    @Test
+    void hostileSymbolCountOver256Rejected() {
+        int[][] entries = new int[257][];
+        for (int i = 0; i < 257; i++) entries[i] = new int[]{i % 256, 9};
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(entries, 1, filled(1, 0))));
+    }
+
+    @Test
+    void hostileDuplicateSymbolRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 1}, {0, 1}}, 1, filled(1, 0))));
+    }
+
+    @Test
+    void hostileDeclaredLengthU32MaxRejected() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 1}, {1, 1}}, 0xFFFFFFFFL, filled(4, 0))));
+    }
+
+    @Test
+    void hostileTruncatedTableRejected() {
+        byte[] d = ByteBuffer.allocate(10).order(ByteOrder.BIG_ENDIAN)
+            .putInt(1).putInt(5).put((byte) 0).put((byte) 1).array();
+        assertThrows(IllegalArgumentException.class, () -> HuffmanCompression.decompress(d));
+    }
+
+    @Test
+    void hostileUnmatchedBitsFailFast() {
+        assertThrows(IllegalArgumentException.class, () ->
+            HuffmanCompression.decompress(hostile(new int[][]{{0, 1}}, 8, filled(100_000, 0xFF))));
+    }
+
+    @Test
+    void largeRoundTripIsLinear() {
+        byte[] data = new byte[400_000];
+        for (int i = 0; i < data.length; i++) data[i] = (byte) (i % 7);
+        assertArrayEquals(data, HuffmanCompression.decompress(HuffmanCompression.compress(data)));
+    }
 }

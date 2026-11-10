@@ -181,65 +181,129 @@ inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data)
     return out;
 }
 
-// Throws std::invalid_argument on a malformed stream.
+// Longest code length the decoder accepts. Real codes over 256 symbols are far
+// shorter; 56 keeps every 64-bit shift (and the code value itself) in range.
+constexpr unsigned kMaxCodeLen = 56;
+
+// Symbols are single bytes, so a valid table has at most 256 entries.
+constexpr std::uint64_t kMaxSymbols = 256;
+
+// Throws std::invalid_argument on a malformed or hostile stream.
 inline std::vector<std::uint8_t> decompress(const std::vector<std::uint8_t> &data) {
     using namespace detail;
     if (data.size() < 8) {
         throw std::invalid_argument("huffman: input too short (header)");
     }
-    std::size_t original_length = (static_cast<std::size_t>(data[0]) << 24) |
-                                  (static_cast<std::size_t>(data[1]) << 16) |
-                                  (static_cast<std::size_t>(data[2]) << 8) | data[3];
-    std::size_t symbol_count = (static_cast<std::size_t>(data[4]) << 24) |
-                               (static_cast<std::size_t>(data[5]) << 16) |
-                               (static_cast<std::size_t>(data[6]) << 8) | data[7];
+    const std::uint64_t original_length = (static_cast<std::uint64_t>(data[0]) << 24) |
+                                          (static_cast<std::uint64_t>(data[1]) << 16) |
+                                          (static_cast<std::uint64_t>(data[2]) << 8) | data[3];
+    const std::uint64_t symbol_count = (static_cast<std::uint64_t>(data[4]) << 24) |
+                                       (static_cast<std::uint64_t>(data[5]) << 16) |
+                                       (static_cast<std::uint64_t>(data[6]) << 8) | data[7];
     if (original_length == 0) {
         return {};
     }
-    if (symbol_count == 0 || symbol_count > 256) {
+    // SECURITY: the header is attacker-controlled. Symbols are single bytes, so a
+    // table can name at most 256 of them; checking first also bounds the
+    // table-size arithmetic below.
+    if (symbol_count == 0 || symbol_count > kMaxSymbols) {
         throw std::invalid_argument("huffman: bad symbol count");
     }
-    std::size_t table_end = 8 + 2 * symbol_count;
+    const std::size_t count = static_cast<std::size_t>(symbol_count);
+    const std::size_t table_end = 8 + 2 * count;
     if (data.size() < table_end) {
         throw std::invalid_argument("huffman: truncated table");
     }
-    std::vector<sym_len> table(symbol_count);
-    for (std::size_t i = 0; i < symbol_count; i++) {
-        table[i].symbol = data[8 + 2 * i];
-        table[i].length = data[8 + 2 * i + 1];
-        if (table[i].length == 0 || table[i].length > 32) {
+
+    // Rebuild canonical codes (DEFLATE style):
+    //     code = 0
+    //     for each (symbol, length) in sorted order:
+    //         code <<= (length - previous length)
+    //         assign `code`; code += 1
+    //
+    // SECURITY: the table is hostile input, so each entry is checked before use:
+    //   - a repeated symbol makes the table ambiguous;
+    //   - a length of 0 matches nothing, and one above kMaxCodeLen would overflow
+    //     the 64-bit shift;
+    //   - a table not sorted by length breaks the "codes of a length are
+    //     consecutive" property (the encoder always sorts);
+    //   - an over-subscribed table (Kraft sum > 1) is detected by requiring the
+    //     running code to still fit in `length` bits (code >> length == 0).
+    //
+    // Codes of one length are consecutive integers starting at first_code[L]; the
+    // symbol for code c is syms[base[L] + (c - first_code[L])]. That makes each
+    // probe O(1) instead of scanning every symbol per bit.
+    std::array<std::uint8_t, 256> syms{};
+    std::array<bool, 256> seen{};
+    std::array<std::uint64_t, kMaxCodeLen + 1> first_code{};
+    std::array<std::size_t, kMaxCodeLen + 1> counts{};
+    std::array<std::size_t, kMaxCodeLen + 1> base{};
+    std::uint64_t code = 0;
+    unsigned prev_len = 0;
+    unsigned max_len = 0;
+    for (std::size_t i = 0; i < count; i++) {
+        const std::uint8_t symbol = data[8 + 2 * i];
+        const unsigned length = data[8 + 2 * i + 1];
+        if (seen[symbol]) {
+            throw std::invalid_argument("huffman: duplicate symbol in table");
+        }
+        seen[symbol] = true;
+        if (length == 0 || length > kMaxCodeLen) {
             throw std::invalid_argument("huffman: bad code length");
         }
+        if (i > 0 && length < prev_len) {
+            throw std::invalid_argument("huffman: table not sorted by length");
+        }
+        if (i > 0) {
+            code <<= (length - prev_len);
+        }
+        if ((code >> length) != 0) {
+            throw std::invalid_argument("huffman: table over-subscribes the code space");
+        }
+        if (counts[length] == 0) {
+            first_code[length] = code;
+            base[length] = i;
+        }
+        counts[length]++;
+        syms[i] = symbol;
+        code++;
+        prev_len = length;
+        max_len = length;
     }
-    auto codes = canonical_codes(table);
+
+    // SECURITY: every code is at least one bit, so N payload bytes hold at most
+    // 8*N symbols. Reject a larger declared length BEFORE allocating anything
+    // sized from it. Written as ceil(original/8) > bytes to avoid overflow.
+    const std::size_t payload_bytes = data.size() - table_end;
+    if ((original_length + 7) / 8 > static_cast<std::uint64_t>(payload_bytes)) {
+        throw std::invalid_argument("huffman: declared length exceeds the payload");
+    }
 
     std::vector<std::uint8_t> output;
-    std::uint32_t cur = 0;
+    output.reserve(static_cast<std::size_t>(original_length));
+    std::uint64_t cur = 0;
     unsigned cur_len = 0;
-    std::size_t produced = 0;
-    std::size_t total_bits = (data.size() - table_end) * 8;
+    const std::size_t total_bits = payload_bytes * 8;
     std::size_t bit_pos = 0;
-    while (produced < original_length && bit_pos < total_bits) {
-        std::size_t byte_index = table_end + bit_pos / 8;
-        unsigned bit = (data[byte_index] >> (bit_pos % 8)) & 1u;
+    // Read the LSB-first bit stream, accumulating a code MSB-first. If the
+    // accumulated length reaches the longest code without a match, no later bit
+    // can ever match (an incomplete table fed unmatched bits): fail immediately.
+    while (output.size() < original_length) {
+        if (bit_pos >= total_bits) {
+            throw std::invalid_argument("huffman: truncated bit stream");
+        }
+        const unsigned bit = (static_cast<unsigned>(data[table_end + bit_pos / 8]) >> (bit_pos % 8)) & 1u;
         bit_pos++;
         cur = (cur << 1) | bit;
         cur_len++;
-        for (std::size_t i = 0; i < symbol_count; i++) {
-            if (table[i].length == cur_len && codes[i] == cur) {
-                output.push_back(static_cast<std::uint8_t>(table[i].symbol));
-                produced++;
-                cur = 0;
-                cur_len = 0;
-                break;
-            }
-        }
-        if (cur_len > 32) {
+        if (counts[cur_len] != 0 && cur >= first_code[cur_len] &&
+            cur - first_code[cur_len] < counts[cur_len]) {
+            output.push_back(syms[base[cur_len] + static_cast<std::size_t>(cur - first_code[cur_len])]);
+            cur = 0;
+            cur_len = 0;
+        } else if (cur_len >= max_len) {
             throw std::invalid_argument("huffman: malformed code stream");
         }
-    }
-    if (produced != original_length) {
-        throw std::invalid_argument("huffman: truncated bit stream");
     }
     return output;
 }
