@@ -26,6 +26,25 @@
 namespace ca {
 namespace huffman {
 
+// Longest code length either side of the wire accepts.
+//
+// WHY 56 (and why the encoder never needs length-limiting):
+//   A Huffman tree of depth d needs a total weight of at least Fibonacci(d + 2)
+//   (the worst case is the "Fibonacci" frequency distribution 1,1,2,3,5,8,...).
+//   The CMP04 header stores the input length in a u32, so the total weight is at
+//   most 2^32 - 1, and Fibonacci(48) = 4,807,526,976 > 2^32 caps the depth at
+//   46. 46 <= 56, so with size() <= UINT32_MAX every code the encoder builds fits
+//   in the 64-bit code accumulator with 8+ bits to spare, and the decoder's
+//   1..56 limit can never reject encoder output. (A depth of 33..46 DOES occur,
+//   for ~15 MB of Fibonacci-distributed bytes, and overflowed the previous
+//   32-bit code values.) No package-merge or zlib-style length cap is needed,
+//   and because nothing is capped the canonical codes (hence the output bytes)
+//   are unchanged for every input the old encoder handled correctly.
+constexpr unsigned kMaxCodeLen = 56;
+
+// Symbols are single bytes, so a valid table has at most 256 entries.
+constexpr std::uint64_t kMaxSymbols = 256;
+
 namespace detail {
 
 struct hnode {
@@ -102,9 +121,13 @@ compute_code_lengths(const std::array<std::uint32_t, 256> &freq) {
 }
 
 // Canonical (DEFLATE-style) codes for a table sorted by (length, symbol).
-inline std::vector<std::uint32_t> canonical_codes(const std::vector<sym_len> &table) {
-    std::vector<std::uint32_t> codes(table.size(), 0);
-    std::uint32_t code = 0;
+//
+// Codes are 64-bit: a code longer than 32 bits does not fit in a uint32_t, and
+// shifting a 32-bit value by >= 32 is undefined behaviour. Every length is in
+// 1..kMaxCodeLen, so the shift distance is at most 55 and codes stay below 2^56.
+inline std::vector<std::uint64_t> canonical_codes(const std::vector<sym_len> &table) {
+    std::vector<std::uint64_t> codes(table.size(), 0);
+    std::uint64_t code = 0;
     for (std::size_t i = 1; i < table.size(); i++) {
         code = (code + 1) << (table[i].length - table[i - 1].length);
         codes[i] = code;
@@ -114,9 +137,15 @@ inline std::vector<std::uint32_t> canonical_codes(const std::vector<sym_len> &ta
 
 } // namespace detail
 
+// Throws std::length_error if the input exceeds UINT32_MAX bytes (the header's
+// length field and the frequency counters are 32-bit; truncating would also void
+// the depth bound documented at kMaxCodeLen).
 inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data) {
     using namespace detail;
     std::vector<std::uint8_t> out;
+    if (static_cast<std::uint64_t>(data.size()) > 0xFFFFFFFFull) {
+        throw std::length_error("huffman: input larger than 4 GiB");
+    }
     std::uint32_t original_length = static_cast<std::uint32_t>(data.size());
     if (data.empty()) {
         out.assign(8, 0);
@@ -130,6 +159,11 @@ inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data)
 
     std::vector<sym_len> table;
     for (int i = 0; i < 256; i++) {
+        // Defence in depth: unreachable for size() <= UINT32_MAX (depth <= 46),
+        // but never emit a table the decoder would reject.
+        if (code_len[static_cast<std::size_t>(i)] > kMaxCodeLen) {
+            throw std::length_error("huffman: code length exceeds 56 bits");
+        }
         if (code_len[i] > 0) {
             table.push_back(sym_len{static_cast<std::uint16_t>(i), code_len[i]});
         }
@@ -139,7 +173,7 @@ inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data)
     });
     auto codes = canonical_codes(table);
 
-    std::array<std::uint32_t, 256> sym_code{};
+    std::array<std::uint64_t, 256> sym_code{};
     std::array<std::uint8_t, 256> sym_len_by_byte{};
     for (std::size_t i = 0; i < table.size(); i++) {
         sym_code[table[i].symbol] = codes[i];
@@ -150,9 +184,9 @@ inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data)
     unsigned bit_acc = 0, bit_cnt = 0;
     for (std::uint8_t b : data) {
         std::uint8_t clen = sym_len_by_byte[b];
-        std::uint32_t ccode = sym_code[b];
+        std::uint64_t ccode = sym_code[b];
         for (int j = clen - 1; j >= 0; j--) {
-            unsigned bit = (ccode >> j) & 1u;
+            unsigned bit = static_cast<unsigned>((ccode >> j) & 1u);
             bit_acc |= bit << bit_cnt;
             if (++bit_cnt == 8) {
                 bits.push_back(static_cast<std::uint8_t>(bit_acc));
@@ -180,13 +214,6 @@ inline std::vector<std::uint8_t> compress(const std::vector<std::uint8_t> &data)
     out.insert(out.end(), bits.begin(), bits.end());
     return out;
 }
-
-// Longest code length the decoder accepts. Real codes over 256 symbols are far
-// shorter; 56 keeps every 64-bit shift (and the code value itself) in range.
-constexpr unsigned kMaxCodeLen = 56;
-
-// Symbols are single bytes, so a valid table has at most 256 entries.
-constexpr std::uint64_t kMaxSymbols = 256;
 
 // Throws std::invalid_argument on a malformed or hostile stream.
 inline std::vector<std::uint8_t> decompress(const std::vector<std::uint8_t> &data) {

@@ -2,6 +2,28 @@
 
 All notable changes to `huffman-compression` (C++) are documented in this file.
 
+## [0.1.2] - 2026-11-10
+
+### Security
+
+- SEC-003c: canonical Huffman codes are now built and emitted in
+  `std::uint64_t` (they were `std::uint32_t`). A Fibonacci-like symbol
+  distribution (34 symbols with counts 1,1,2,3,5,... = ~15 MB of input) yields
+  33-bit codes, which overflowed the 32-bit shift/accumulator and produced a
+  stream that decoded to the wrong bytes. The encoder never emits a code longer
+  than 56 bits: with the input size capped at 2^32-1 bytes (larger inputs now
+  throw `std::length_error` rather than silently truncating the header length)
+  the maximum possible depth is 46 (Fibonacci(48) > 2^32), so no
+  length-limiting is needed and the output is byte-identical to before for every
+  input that previously worked. A defence-in-depth check throws if a length
+  above 56 is ever produced.
+
+### Added
+
+- Tests: Fibonacci-frequency input forcing 33-bit codes (round-trip, all
+  lengths <= 56), 256-symbol flat tree, 56-bit/57-bit table decode checks,
+  empty-input header.
+
 ## [0.1.1] - 2026-11-10
 
 ### Security
