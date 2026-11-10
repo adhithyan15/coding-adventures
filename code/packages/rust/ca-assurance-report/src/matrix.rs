@@ -144,6 +144,46 @@ pub struct AuditEvidence {
     /// Proofs whose symbolic execution bounds-checks every access.
     pub oob_ids: Vec<String>,
     pub oob_label: String,
+    /// Ids of constant-time obligations the manifest records `not-live`
+    /// (attempted, refused by the tooling): an *acknowledged* absence of
+    /// proof, as opposed to an absent manifest, which stays an open row.
+    pub ct_not_live: Vec<String>,
+    /// Ids of every constant-time / steps-bound obligation that is not a
+    /// ranked pass (`not-live`, `unchecked`, failed, unranked).  Any entry
+    /// here blocks the discharge of the rows that rest on that proof kind.
+    pub ct_unproven: Vec<String>,
+    pub step_unproven: Vec<String>,
+    /// Same for step-bound obligations.
+    pub step_not_live: Vec<String>,
+    /// The blocker text the manifest recorded for the not-live obligations.
+    pub not_live_note: String,
+    /// What kind of package the three attestation rows (CWE-326/327/407)
+    /// describe; see [`AuditProfile`].
+    pub profile: AuditProfile,
+}
+
+/// What the package does, for the rows whose rationale is a static statement
+/// about the package rather than a derived fact.  Those rows already carry the
+/// `unverified::` evidence prefix; this only selects which true sentence they
+/// carry.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum AuditProfile {
+    /// Constant-time comparison / selection primitives (rust/ct-compare).
+    #[default]
+    Comparison,
+    /// Table-driven finite-field arithmetic (rust/gf256).
+    FieldArithmetic,
+}
+
+impl std::str::FromStr for AuditProfile {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, String> {
+        match s {
+            "comparison" => Ok(AuditProfile::Comparison),
+            "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
+            other => Err(format!("unknown profile `{other}` (comparison | field-arithmetic)")),
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -344,7 +384,10 @@ fn evaluate_row(
 
         // Parsing / DoS
         400 => {
-            if ctx.has_zero_alloc_proof && !ctx.evidence.step_bound_ids.is_empty() {
+            if ctx.has_zero_alloc_proof
+                && !ctx.evidence.step_bound_ids.is_empty()
+                && ctx.evidence.step_unproven.is_empty()
+            {
                 let mut ids = ctx.evidence.alloc_ids.clone();
                 ids.extend(ctx.evidence.step_bound_ids.iter().cloned());
                 Ok(WeaknessRow {
@@ -357,6 +400,21 @@ fn evaluate_row(
                         ctx.evidence.step_bound_label
                     ),
                     evidence: ids,
+                })
+            } else if !ctx.evidence.step_not_live.is_empty() {
+                // The manifest says, in its own words, that the step-bound
+                // obligation was attempted and could not run.  That is a
+                // recorded, unapproved exemption, not an open row.
+                Ok(WeaknessRow {
+                    cwe: 400,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: format!(
+                        "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks ({})",
+                        ctx.evidence.not_live_note
+                    ),
+                    evidence: vec![],
                 })
             } else {
                 Err(MatrixError::OpenRow("CWE-400 resource exhaustion evidence missing".into()))
@@ -398,14 +456,21 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: "linear complexity: algorithms operate in strict linear time O(n) independent of input values".into(),
+                reason: match ctx.evidence.profile {
+                    AuditProfile::Comparison => "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
+                    AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
+                }
+                .into(),
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
             })
         }
 
         // Cryptography: CWE-208 observable timing discrepancy
         208 => {
-            if ctx.has_wir_timing_proof && ctx.has_instruction_benchmarks {
+            if ctx.has_wir_timing_proof
+                && ctx.has_instruction_benchmarks
+                && ctx.evidence.ct_unproven.is_empty()
+            {
                 // Computed exemption: proof floor is proved-to-gate-level (CPU netlist).
                 // Backed by the WIR self-composition proofs and the benchmark
                 // manifest, but gate-level proof is deferred to the Busicom
@@ -422,6 +487,20 @@ fn evaluate_row(
                         ctx.evidence.ct_proof_label
                     ),
                     evidence: ids,
+                })
+            } else if !ctx.evidence.ct_not_live.is_empty() {
+                // Applicable and unaddressed: the package is labelled secret,
+                // no constant-time proof exists, and the manifest says why.
+                Ok(WeaknessRow {
+                    cwe: 208,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: format!(
+                        "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists ({})",
+                        ctx.evidence.not_live_note
+                    ),
+                    evidence: vec![],
                 })
             } else {
                 Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks WIR or benchmark evidence".into()))
@@ -447,7 +526,11 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers".into(),
+                reason: match ctx.evidence.profile {
+                    AuditProfile::Comparison => "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers",
+                    AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
+                }
+                .into(),
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
             })
         }
@@ -457,7 +540,11 @@ fn evaluate_row(
                 name: class.name.clone(),
                 status: WeaknessStatus::Excluded,
                 approved: None,
-                reason: "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys".into(),
+                reason: match ctx.evidence.profile {
+                    AuditProfile::Comparison => "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys",
+                    AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
+                }
+                .into(),
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],
             })
         }

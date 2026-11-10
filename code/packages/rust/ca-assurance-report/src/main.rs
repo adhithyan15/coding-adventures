@@ -11,9 +11,31 @@ use std::path::PathBuf;
 use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
-    generate_ct_compare_report, verify_assurance_report, verify_evidence, AssuranceReport,
-    CheckVerdict, Evidence, WeaknessRegistry,
+    generate_package_report, verify_assurance_report, verify_evidence, AssuranceReport,
+    AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
 };
+
+/// `rust/<directory name>` and the `version = "..."` of the package's
+/// `Cargo.toml`: the report names the package it was generated for, it does not
+/// carry a hardcoded identity.
+fn package_identity(dir: &std::path::Path) -> Result<(String, String), String> {
+    let canon = dir.canonicalize().map_err(|e| format!("{}: {e}", dir.display()))?;
+    let name = canon
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or("package directory has no name")?
+        .to_string();
+    // Same size cap as every other input; the version comes from the
+    // `[package]` table only.
+    let cargo = coding_adventures_ca_assurance_report::evidence::read_capped(
+        &canon.join("Cargo.toml"),
+        coding_adventures_ca_assurance_report::evidence::MAX_MANIFEST_BYTES,
+    )
+    .map_err(|e| format!("{}/Cargo.toml: {}", canon.display(), e.0))?;
+    let cargo = String::from_utf8(cargo).map_err(|_| format!("{}/Cargo.toml is not UTF-8", canon.display()))?;
+    let version = coding_adventures_ca_assurance_report::evidence::package_version(&cargo).map_err(|e| e.0)?;
+    Ok((format!("rust/{name}"), version))
+}
 
 fn print_usage() {
     eprintln!("Usage: ca-assurance-report-rs [OPTIONS]");
@@ -21,6 +43,8 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
+    eprintln!("  --profile <P>          comparison (default) | field-arithmetic: which true sentence the");
+    eprintln!("                         static attestation rows (CWE-326/327/407) carry");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
     eprintln!("                         without it --check fails on any such id");
@@ -69,6 +93,7 @@ fn main() {
     let mut allow_unverified = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
+    let mut profile = AuditProfile::Comparison;
 
     let mut i = 1;
     while i < args.len() {
@@ -94,6 +119,20 @@ fn main() {
             }
             "--allow-unverified" => {
                 allow_unverified = true;
+            }
+            "--profile" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --profile requires an argument");
+                    exit(2);
+                }
+                profile = match args[i].parse() {
+                    Ok(p) => p,
+                    Err(e) => {
+                        eprintln!("Error: {e}");
+                        exit(2);
+                    }
+                };
             }
             "--registry" => {
                 i += 1;
@@ -232,7 +271,21 @@ fn main() {
                 exit(1);
             }
         };
-        let report = match generate_ct_compare_report(&commit_sha, &registry, &evidence) {
+        let (package_id, version) = match package_identity(&package_dir) {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("Error: {e}");
+                exit(1);
+            }
+        };
+        let report = match generate_package_report(
+            &package_id,
+            &version,
+            &commit_sha,
+            &registry,
+            &evidence,
+            profile,
+        ) {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("Error generating report: {e}");

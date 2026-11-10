@@ -89,41 +89,7 @@ impl V {
     }
 }
 
-/// Deliberate adapter faults (VER04h section 6). `None` is the real adapter.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Fault {
-    None,
-    Invert,
-    IgnoreLastByte,
-    IgnoreHighBit,
-    SwapChoice,
-    MissingError,
-}
-
-impl Fault {
-    pub fn name(self) -> &'static str {
-        match self {
-            Fault::None => "none",
-            Fault::Invert => "invert",
-            Fault::IgnoreLastByte => "ignore-last-byte",
-            Fault::IgnoreHighBit => "ignore-high-bit",
-            Fault::SwapChoice => "swap-choice",
-            Fault::MissingError => "missing-error",
-        }
-    }
-    pub fn parse(text: &str) -> Option<Fault> {
-        [
-            Fault::None,
-            Fault::Invert,
-            Fault::IgnoreLastByte,
-            Fault::IgnoreHighBit,
-            Fault::SwapChoice,
-            Fault::MissingError,
-        ]
-        .into_iter()
-        .find(|f| f.name() == text)
-    }
-}
+//@@FAULTS@@
 
 fn mask_last_byte(bytes: &[u8]) -> Vec<u8> {
     let mut v = bytes.to_vec();
@@ -138,6 +104,35 @@ fn contained<T>(body: impl FnOnce() -> T) -> Option<T> {
     catch_unwind(AssertUnwindSafe(body)).ok()
 }
 
+//@if scoped
+thread_local! {
+    /// The one operation a negative control is currently attacking, if any.
+    static ATTACK_OP: std::cell::RefCell<Option<&'static str>> = const { std::cell::RefCell::new(None) };
+}
+
+/// The fault `op`'s adapter should obey: the requested one unless a negative
+/// control is attacking a different operation.
+fn fault_for(op: &str, fault: Fault) -> Fault {
+    ATTACK_OP.with(|a| match *a.borrow() {
+        Some(target) if target != op => Fault::None,
+        _ => fault,
+    })
+}
+
+/// Run `body` with only `op` obeying injected faults.
+fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            ATTACK_OP.with(|a| *a.borrow_mut() = None);
+        }
+    }
+    ATTACK_OP.with(|a| *a.borrow_mut() = Some(op));
+    let _reset = Reset;
+    body()
+}
+
+//@endif
 /// Binder types the generator understands.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Ty {
@@ -386,6 +381,12 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
             0 => 0,
             1 => u64::MAX,
             2 => 1u64 << src.bounded(64),
+//@if u8
+            // Documents that mix U8 and U64 binders (an exponent next to a
+            // byte) need small U64 values often enough for refinements such as
+            // `e < 255` to be admitted.
+            3..=5 => src.bounded(300),
+//@endif
             _ => src.word(),
         }),
         Ty::Bytes => {
@@ -422,8 +423,18 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
             }
             V::Bytes(o)
         }
+//@if u8
+        // A small U64 pairs with another small U64, so refinements that relate
+        // two exponents (`e < 255 and f < 255 and e != f`) are admitted.
+        (V::U64(n), 6..=7) if *n < 1000 => V::U64(src.bounded(300)),
+//@endif
         (V::U64(n), 4) | (V::U64(n), 5) => V::U64(n ^ (1u64 << src.bounded(64))),
         (V::U64(n), 6) => V::U64(n | (1u64 << src.bounded(64))),
+//@if u8
+        // A U8 binder stays inside 0..=255: flip one bit, or step by one mod 256.
+        (V::Nat(n), 4..=5) if ty == Ty::U8 => V::Nat(n ^ (1u64 << src.bounded(8))),
+        (V::Nat(n), 6..=7) if ty == Ty::U8 => V::Nat((n + 1) % 256),
+//@endif
         (V::Nat(n), 4..=7) => V::Nat(n.wrapping_add(1)),
         (p, _) => p.clone(),
     }
@@ -542,6 +553,9 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
             V::Bytes(b) => cov.record_edge(300 + b.len().min(64)),
             V::U64(n) => cov.record_edge(500 + n.count_ones() as usize),
             V::Bool(x) => cov.record_edge(600 + usize::from(*x)),
+//@if u8
+            V::Nat(n) => cov.record_edge(2000 + (*n as usize).min(512)),
+//@endif
             _ => {}
         }
         for w in &env[i + 1..] {
@@ -555,6 +569,11 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
                 (V::U64(a), V::U64(b)) => {
                     cov.record_edge(if a == b { 700 } else { 701 + (a ^ b).count_ones() as usize });
                 }
+//@if u8
+                (V::Nat(a), V::Nat(b)) => {
+                    cov.record_edge(if a == b { 3000 } else { 3001 + (a ^ b).count_ones() as usize });
+                }
+//@endif
                 _ => {}
             }
         }
