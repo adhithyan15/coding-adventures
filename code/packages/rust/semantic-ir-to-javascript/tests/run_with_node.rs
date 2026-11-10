@@ -1737,6 +1737,31 @@ fn try_catch_builtin_ancestry_catches() {
     }
 }
 
+/// #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+/// lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+/// JS must emit the body statements inline rather than a syntax-invalid
+/// `try { }` block with no `catch` or `finally`.
+#[test]
+fn try_catch_without_rescue_or_ensure_emits_inline_body_js() {
+    let try_catch = Stmt::TryCatch {
+        body: vec![print(str_("no_rescue_or_ensure"))],
+        rescues: vec![],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Strings],
+    );
+    let compiled = semantic_ir_to_javascript::compile(&module).expect("compile");
+    let main_src = compiled.source.split("function main()").nth(1).expect("main body");
+    assert!(!main_src.contains("try {"), "got:\n{}", main_src);
+    if let Some(stdout) = run_module(&module, "no_rescue_or_ensure") {
+        assert_eq!(stdout, "no_rescue_or_ensure");
+    }
+}
+
 /// (b) A bare `rescue` (no exception types) is a catch-all: it must catch
 /// a `raise RuntimeError, "y"` and print "rescued".
 #[test]
@@ -3388,6 +3413,39 @@ fn ruby_source_prints_true_false() {
 }
 
 #[test]
+fn python_source_prints_true_false_none() {
+    let stmts = vec![
+        print(Expr::BoolLit { value: true, span: sp() }),
+        print(Expr::BoolLit { value: false, span: sp() }),
+        print(Expr::NilLit { span: sp() }),
+    ];
+    let m = Module {
+        name: "disppy".into(),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("python")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&m, "disppy") {
+        assert_eq!(stdout, "True\nFalse\nNone", "Python source must render booleans and None as True/False/None");
+    }
+}
+
+#[test]
 fn twig_source_keeps_lisp_booleans() {
     if let Some(stdout) = run_module(&bool_display_module("twig"), "disptwig") {
         assert_eq!(stdout, "#t\n#f", "non-Ruby source keeps the default Lisp #t/#f");
@@ -4063,6 +4121,87 @@ fn array_tally() {
             "{a: 3, b: 1, c: 1}\n\
              {1: 2, 2: 1, 3: 3}\n\
              {}"
+        );
+    }
+}
+
+#[test]
+fn floored_modulo_signs() {
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                print(bc("%", vec![int(7), int(3)])),
+                print(bc("%", vec![int(-7), int(3)])),
+                print(bc("%", vec![int(7), int(-3)])),
+                print(bc("%", vec![int(-7), int(-3)])),
+            ],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "mod_signs".into(),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "mod_signs") {
+        assert_eq!(
+            stdout,
+            "1\n\
+             2\n\
+             -2\n\
+             -1"
+        );
+    }
+}
+
+#[test]
+fn node_list_in_place_mutation_and_aliasing() {
+    let stmts = vec![
+        let_("xs", arr(vec![int(1), int(2)])),
+        Stmt::LetStarBinding {
+            name: "ys".into(),
+            sir_type: None,
+            value: local("xs"),
+            span: sp(),
+        },
+        Stmt::ExprStmt {
+            expr: method(local("xs"), "append", vec![int(3)]),
+            span: sp(),
+        },
+        print(local("ys")),
+        Stmt::Assign {
+            name: "xs".into(),
+            scope: Scope::Local,
+            value: bc("+=", vec![local("xs"), arr(vec![int(4), int(5)])]),
+            span: sp(),
+        },
+        print(local("ys")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "list_mut") {
+        assert_eq!(
+            stdout,
+            "[1, 2, 3]\n\
+             [1, 2, 3, 4, 5]"
         );
     }
 }

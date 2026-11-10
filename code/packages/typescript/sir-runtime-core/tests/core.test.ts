@@ -88,6 +88,22 @@ describe("predicates and display", () => {
     expect(sir.toDisplay(true)).toBe("#t");
   });
 
+  it("display convention: Python booleans and None (#18496)", () => {
+    // A Python-sourced program selects `True`/`False` and `None`.
+    // Restore the default so module state does not leak.
+    try {
+      sir.setDisplayConvention("python");
+      expect(sir.toDisplay(true)).toBe("True");
+      expect(sir.toDisplay(false)).toBe("False");
+      expect(sir.toDisplay(null)).toBe("None");
+      expect(sir.toDisplay(undefined as unknown as sir.Val)).toBe("None");
+      expect(sir.toDisplay(sir.intern("sym"))).toBe("sym");
+    } finally {
+      sir.setDisplayConvention("lisp");
+    }
+    expect(sir.toDisplay(true)).toBe("#t");
+  });
+
   describe("display convention: APL high-minus + NDArray (SIR22)", () => {
     // An APL-sourced program selects `setDisplayConvention("apl")` so a
     // negative number renders with APL's own high-minus glyph (`¯`, not
@@ -342,6 +358,34 @@ describe("arithmetic", () => {
       expect((e as Error).message).toBe("divided by 0");
     }
   });
+
+  // ── Floored modulo `%` (#18496 item 2) ─────────────────────────────────
+
+  it("mod computes floored modulo across all sign combinations", () => {
+    expect(sir.mod(7, 3)).toBe(1);
+    expect(sir.mod(-7, 3)).toBe(2);
+    expect(sir.mod(7, -3)).toBe(-2);
+    expect(sir.mod(-7, -3)).toBe(-1);
+    expect(sir.mod(6, 3)).toBe(0);
+    expect(sir.mod(-6, 3)).toBe(0);
+  });
+
+  it("mod dispatches through callBuiltin('%', ...)", () => {
+    expect(sir.callBuiltin("%", [7, 3])).toBe(1);
+    expect(sir.callBuiltin("%", [-7, 3])).toBe(2);
+    expect(sir.callBuiltin("%", [7, -3])).toBe(-2);
+    expect(sir.callBuiltin("%", [-7, -3])).toBe(-1);
+  });
+
+  it("mod by zero raises a typed ZeroDivisionError", () => {
+    expect(() => sir.mod(1, 0)).toThrow(SirError);
+    try {
+      sir.mod(1, 0);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("ZeroDivisionError");
+      expect((e as Error).message).toBe("divided by 0");
+    }
+  });
 });
 
 describe("polymorphic + (string/array concat)", () => {
@@ -368,6 +412,23 @@ describe("polymorphic + (string/array concat)", () => {
 
   it("numeric + unchanged", () => {
     expect(sir.add(1, 2)).toBe(3);
+  });
+});
+
+describe("in-place addition iadd (+=)", () => {
+  it("array in-place mutation and aliasing", () => {
+    const xs = [1, 2];
+    const ys = xs;
+    const r = sir.iadd(xs, [3, 4]);
+    expect(r).toBe(xs);
+    expect(ys).toEqual([1, 2, 3, 4]);
+    expect(sir.callBuiltin("+=", [xs, [5]])).toBe(xs);
+    expect(ys).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("non-array fallback to numeric addition", () => {
+    expect(sir.iadd(1, 2)).toBe(3);
+    expect(sir.callBuiltin("+=", [10, 20])).toBe(30);
   });
 });
 

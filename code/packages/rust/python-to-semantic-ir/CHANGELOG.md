@@ -4,6 +4,16 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+- Implement Python private name mangling in class bodies (Python §6.2.1): identifiers starting with at least two underscores and at most one trailing underscore inside a class body are mangled to `_<ClassName><ident>` (stripping leading underscores from the class name), applying to method definitions, attribute accesses, assignment targets, bare names, parameters, and local variables, isolating subclass private attributes and matching CPython scoping (#18496 review).
+- Maintain an active local variable counter map in `FunctionCtx` to perform $O(1)$ local variable and enclosing value queries (`is_local`, `is_enclosing_value`, `resolve_var_in`), eliminating $O(N \cdot V)$ linear scans over `locals` and DoS risk on functions with many local bindings (#18482 item 6).
+- Reject calls and bare references to cousin nested functions and nested functions from module top-level with positioned `"unresolved name <name>"` errors, enforcing lexical scoping (LEGB) for nested defs (#18482 item 4).
+- Reject `*args` and `**kwargs` splat arguments in function and method calls, `range(...)` calls, and class base expressions with positioned errors (`"unsupported: *starred argument in call (deferred)"` / `"unsupported: **double-starred keyword argument in call (deferred)"`) instead of silently collapsing them into single positional arguments (#18482 item 2).
+- Box variables captured by closures into 1-element sequences (`[Param]` / `[nil]`) when mutated or assigned after closure creation, ensuring Python closures see current cell variable bindings across mutations across all backends (#18496 item 5).
+- Bind nested `def` statements that shadow an enclosing parameter or prior local variable (`store_target`) so calling `n()` invokes the nested function rather than performing an indirect call on the parameter or prior value (#18496 item 7).
+- Reject function and method decorators with positioned errors (`"unsupported: decorated function (deferred)"` / `"unsupported: decorated method (deferred)"`) instead of silently ignoring and dropping them (#18496 item 6, #18482 item 1).
+- Preserve subscript assignment evaluation order (Python §6.3): single subscript assignment `target[index] = value` now evaluates `value` into a temporary `LetStarBinding` before the store statement, ensuring `value`'s side effects execute before `target` or `index` on all backends (#18496 review).
+- Lower augmented addition `+=` to builtin `"+="` instead of `"+"` to enable in-place collection mutation and preserve alias semantics (#18496 item 4).
+
 ## Unreleased — Every invented name comes from one pool (#18771)
 
 The lowerer invents names of four kinds: parameter copies

@@ -1,5 +1,22 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — #18428 — `vm_lisp`: lower `string-length` to `str_len`
+
+- `vm_lisp` now rewrites `call_builtin "string-length" [x]` to `str_len x` with type hint `i64`. When a Twig function receives an untyped parameter or dynamic value, `twig-ir-compiler` emits dynamic `call_builtin "string-length"`. Rewriting it to `str_len` enables correct execution on `vm-core` and JIT fallback tier, ensuring non-string values raise a clean `TypeError`.
+- Tests: `vm_lisp_on_vm::string_length_counts_bytes_and_refuses_non_strings`.
+
+## Unreleased — #18486 — `dynamic_arith`: floored modulo lowering
+
+- `dynamic_arith` now maps `modulo` to `i64_mod_floor` rather than truncating `mod`.
+  Previously, both `remainder` and `modulo` mapped to truncating `mod`. `remainder`
+  truncates (sign follows dividend), but `modulo` must floor (sign follows divisor)
+  per Scheme / Twig / VM semantics: `(modulo -7 2) == 1`, `(modulo 7 -2) == -1`.
+- Every IIR code-generation backend (`iir-to-wasm`, `iir-to-llvm`, `iir-to-jvm-class-file`,
+  `iir-to-cil-bytecode`, `iir-to-beam`, `x86_64-backend`, `aarch64-backend`, `vm-core`,
+  `jit-core`) already lowers `i64_mod_floor` per LANG83 PR1b, so routing `modulo` to
+  `i64_mod_floor` enables correct floored modulo across all columns.
+- Tests: `dynamic_arith::tests::modulo_lowers_to_i64_mod_floor_and_remainder_to_mod`.
+
 ## Unreleased — #18470 re-review — typed division is guarded too
 
 - `vm_lisp` now also guards a **typed** `div` / `mod` in a Lisp-family module

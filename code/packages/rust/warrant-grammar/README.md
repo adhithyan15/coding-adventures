@@ -12,11 +12,75 @@ assert!(!tokens.definitions.is_empty());
 assert!(!rules.rules.is_empty());
 ```
 
-The public API only constructs grammar data. A guarded untrusted-source
-lexer/parser, original UTF-8 byte spans and input/work/native-stack quotas are
-P006b. Name/type checking, hostile-input/label/binding validation, solvers and
-Rust generation are later layers. Grammar data and syntax acceptance provide
-none of those results or release authorization.
+The additive [VER04a source stage](../../../specs/VER04a-warrant-source-admission.md)
+also admits bytes, normalizes CRLF and maps normalized ranges to original UTF-8
+bytes. LF input borrows its original buffer. Other input must fit the 1-MiB
+source, 64-MiB owned-buffer and 3-MiB scan-work ceilings; callers may lower caps.
+Malformed UTF-8, leading BOM, NUL and bare CR reject with fixed `W0001` errors.
+Document Debug omits source. Range coordinates are one-based line/byte-column,
+with zero-based raw byte offsets. Paths/revision binding remain a later layer.
+
+```rust
+use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
+let source = SourceDocument::admit(b"warrant x\r\n", SourceLimits::default()).unwrap();
+assert_eq!(source.normalized(), "warrant x\n");
+let newline = source.original_span(9, 10).unwrap();
+assert_eq!(&source.original()[newline.start.byte_offset..newline.end.byte_offset], "\r\n");
+```
+
+The additive [VER04b layout stage](../../../specs/VER04b-warrant-layout-capture.md)
+captures significant-layout tokens (`INDENT`, `DEDENT`, `NEWLINE`) over admitted
+source documents. Synthetic layout tokens possess exact zero-width origins, mapping
+via `doc.original_span(at, at)` to zero-width original source intervals without
+fictitious positive-width whitespace spans:
+
+```rust
+use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
+let tokens = capture_layout(&source, LayoutLimits::default()).unwrap();
+```
+
+The additive [VER04c parser stage](../../../specs/VER04c-guarded-warrant-parser.md)
+constructs a typed, bounded Abstract Syntax Tree (AST) conforming to `warrant.grammar`.
+It operates directly on the `&[LayoutToken]` stream and enforces strict quotas:
+maximum call-stack recursion depth (`max_depth: 64`, ceiling `128`) preventing CWE-674,
+maximum AST node budget (`max_nodes: 65,536`, ceiling `1,048,576`), and work limits.
+All diagnostics return closed `W0001` codes and never leak raw token text.
+
+```rust
+use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
+let ast = parse_document(&tokens, &source, ParserLimits::default()).unwrap();
+```
+
+The additive [VER04d type-checking and binding stage](../../../specs/VER04d-warrant-type-system.md)
+performs semantic analysis, scope resolution, cycle detection, static type checking,
+and host-language binding schema verification. It enforces strict subtyping (`Nat <: Int`,
+`Bytes<N> <: Bytes`), exhaustive pattern matching, operation contracts (`labels`, `bound`,
+`input`, `assume`), and stable diagnostics (`W0201`..`W0602`):
+
+```rust
+use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::binding::{validate_bindings, BindingManifest};
+
+let checked = check_warrant(&ast).unwrap();
+validate_bindings(&checked, &manifest).unwrap();
+```
+
+The additive [VER04e code generation stage](../../../specs/VER04e-warrant-codegen.md)
+compiles checked Warrant modules into canonical portable test vectors (TFV) and
+standalone Rust L0 test harnesses running on `test-bootstrap`. It features a bounded
+ground model evaluator (depth <= 64, work <= 1,000,000), real export invocations,
+fresh-output non-aliasing validation, panic containment/normalization via `catch_unwind`,
+and adapter negative controls:
+
+```rust
+use coding_adventures_warrant_grammar::codegen::{compile_warrant_to_tfv, compile_rust_l0_harness, CodegenLimits, RustL0Options};
+
+let tfv = compile_warrant_to_tfv(&ast, CodegenLimits::default()).unwrap();
+let harness = compile_rust_l0_harness(&ast, &checked, &manifest, &options).unwrap();
+```
+
+Source admission, layout capture, grammar data, parser, type checking and codegen do not
+establish solvers, property engine, proof or release authorization (VER-P009+).
 
 ## Tests and regeneration
 
@@ -51,6 +115,20 @@ adapter unit tests. Test adapters suppress raw source/parser exception text;
 they use a shared-parser rule cap on bounded embedded fixtures, which is not a
 multi-shape stack-safety proof or an implementation of VER04's full budgets.
 
+Eleven source-stage tests separately check authored raw byte/line coordinates,
+all scalar-boundary ranges of small mixed sources, invalid UTF-8 and forbidden
+bytes, UTF-8 query boundaries, exact lowered limits and a dense 1-MiB newline
+input. None exposes an untrusted-source lexer/parser. The shared CV04a range
+API still deliberately refuses indentation/layout synthesis.
+
 Some parser positives deliberately have duplicate names, a Bool/Int mismatch
 or an unreachable refinement. Those belong to later checkers; their presence
 demonstrates why a parsed tree must not be labelled a checked specification.
+
+## Evidence generation (VER04h)
+
+`warrant_grammar::evidence::compile_rust_evidence_harness` turns a checked
+document into a Rust test target containing, for every `example` and `claim`,
+the L0 case, a bounded-exhaustive suite, a property suite, a fuzz suite and
+sabotage controls. The oracle is the *translated claim body*. See
+`examples/gen_evidence.rs` and [VER04h](../../../specs/VER04h-warrant-derived-evidence.md).

@@ -520,14 +520,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
   skip_definitions: [
       GT::TokenDefinition.new(
         name: "WHITESPACE",
-        pattern: "[ \\t\\r\\n\\v\\f]+",
+        pattern: "[ \\t\\r\\n\\v\\f\\u2028\\u2029]+",
         is_regex: true,
         line_number: 316,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n\\r]*",
+        pattern: "\\/\\/[^\\n\\r\\u2028\\u2029]*",
         is_regex: true,
         line_number: 317,
         alias_name: nil,

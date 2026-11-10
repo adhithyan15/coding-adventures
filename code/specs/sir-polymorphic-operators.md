@@ -32,6 +32,7 @@ backend runtimes:
 | TS (`sir-runtime-core`, ts) | same as JS/py port | ⚠️ audit | ⚠️ audit | — |
 | **Go** (inline) | ❌ `_sir_plus` numeric-only → `_sir_as_int("a")` garbage | ❌ | ❌ | `runtime.rs:212` int/float fold only |
 | **Rust** (inline) | ❌ `plus` numeric-only → `as_i64` garbage | ❌ | ❌ | `runtime.rs:204` int/float fold only |
+| **C** (`semantic-ir-to-c`) | ✅ `_sir_plus_v` `SIR_STR` concat | ❌ `xs[0].tag == SIR_SEQ` falls into numeric int fold → prints pointer | ❌ | `runtime.rs:388` string concat + numeric fold only |
 
 So `"Tom" + " with"` (a real OOP e2e we currently sidestep with numeric `+`) is
 **wrong in Go/Rust** and array `+`/`*` is wrong or broken in most backends. This
@@ -72,6 +73,7 @@ existing variadic contract.
 | PO3 | `semantic-ir-to-javascript` (inline runtime) | fix array `+` (native `[]+[]` wrong) + `*` |
 | PO4 | `semantic-ir-to-go` (inline runtime) | `_sir_plus`/`_sir_times` string+Seq arms via type switch |
 | PO5 | `semantic-ir-to-rust` (inline runtime) | `plus`/`times` `Value::Str`/`Value::Seq` arms |
+| PO6 | `semantic-ir-to-c` (inline runtime) | `_sir_plus_v` `SIR_SEQ` arm: fresh `SirSeq` concat, `TypeError` on non-seq (#18496 item 3) |
 
 Each: unit tests + **execution-proof** through the native toolchain
 (`"a"+"b"→"ab"`, `"ab"*3→"ababab"`, `[1]+[2]→[1,2]`, `[0]*3→[0,0,0]`,

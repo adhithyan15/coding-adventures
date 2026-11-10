@@ -1,5 +1,10 @@
 # Changelog — vm-core
 
+## Unreleased — #18428 — `string-length` registered as dynamic builtin
+
+- Pre-registered builtin `"string-length"` on `BuiltinRegistry`: checks that its operand is `Value::Str`, returns byte count as `Value::Int`, and refuses non-strings with `TypeError` (`expected: "str"`).
+- Tests: `builtins::tests::string_length_builtin_counts_bytes_and_refuses_non_strings`.
+
 ## Unreleased — LANG83 PR5b — strings are bytes
 
 - The load-time check (`check_str_ceiling`) runs `IIRModule::str_literal_errors()`, so a raw-byte literal anywhere but `str_const`'s literal is `VMError::InvalidModule` before any instruction runs (security review L2). Test `a_raw_byte_operand_outside_str_const_is_refused_at_load`.

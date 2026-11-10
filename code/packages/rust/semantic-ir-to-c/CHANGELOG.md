@@ -1,5 +1,53 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current indentation level, avoiding unnecessary `_sir_push_handler` / `setjmp` setup when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block across backends (#18798)
+
+- **Closure nparam & Hash#each 1-param block.** Added `nparam` field to `SirClosure` and constructors `_sir_closure_with_nparam` / `_sir_closure_set_nparam`. Added `_sir_hash_yield_pair` runtime helper that passes `_sir_seq_lit(2, key, val)` when `nparam == 1`, matching Ruby semantics for 1-parameter blocks vs 2-parameter blocks.
+
+## Unreleased — Exception message method (#18798 item 8)
+
+- **Exception `message` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method_v` in `runtime.rs` now support zero-argument `"message"` on `SIR_ERROR` exception values, returning `recv.as.err->msg` (or `sir_class` if nil).
+
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure thunk missing argument padding.** `emit_closure_thunk` in `emit.rs` now emits `_sir_missing()` instead of `_sir_nil()` when padding omitted arguments in closure calls. This ensures callees with default parameters trigger their body-top default evaluation prologue instead of binding `nil`.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `append` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method` in `runtime.rs` now recognize `"append"`, mutating `SirSeq` in place and returning the receiver pointer.
+- **In-place addition `+=`.** Added `_sir_iadd` and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Appends items to `lhs.as.seq` in place when `lhs` is a sequence, preserving pointer identity across aliases, and falls back to `_sir_plus` for other types.
+
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`
+  in `fixed_helper` (and `_sir_call_builtin_by_name`). It computes floored modulo
+  matching Python and Ruby semantics, avoiding `INT64_MIN % -1` undefined behavior
+  and intermediate product overflow.
+- **ZeroDivisionError.** Modulo by zero raises a catchable `ZeroDivisionError`
+  with message `"divided by 0"`.
+
+
+## Unreleased — List concatenation on polymorphic `+` (#18496 item 3)
+
+- **Polymorphic `+` sequence concatenation.** `_sir_plus_v` now handles operands
+  with `xs[0].tag == SIR_SEQ`. It verifies all operands are `SIR_SEQ` (raising a
+  rescuable `TypeError` with message `"no implicit conversion into Array"` otherwise)
+  and allocates a fresh `SirSeq` with items copied from each operand, matching Ruby's
+  `Array#+` and Python's `list + list` without aliasing operand buffers. In the numeric
+  path, non-floats safely accumulate through `_sir_as_int` instead of reading raw union memory.
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted C runtime defines `SIR_DISPLAY_PYTHON 1`. `_sir_fmt`, `_sir_fmt_elem`,
+  `_sir_display_str`, and `_sir_display_elem` print `True`, `False`, and `None`
+  matching CPython behavior.
+
 ## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
 
 - **Two Integers compare exactly.** `_sir_lt`/`_sir_gt`/`_sir_le`/`_sir_ge`

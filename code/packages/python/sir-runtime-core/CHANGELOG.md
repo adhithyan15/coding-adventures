@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased — Closure arity introspection default (#18798)
+
+- `Closure.__init__` now defaults `arity` to `_positional_arity(fn)` when `arity is None`, allowing directly-instantiated closures to report their arity to block dispatchers.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- Added `iadd(a, b)` for in-place addition `+=`. Mutates lists in place via `.extend()` / `.append()`, preserving object identity across aliases, and falls back to `add(a, b)` otherwise.
+- Registered under `"+=" : arithmetic.iadd` in `_builtins` table.
+
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- Added `mod(a, b)` computing floored modulo matching Python and Ruby `%`.
+  Registered under `"%" : arithmetic.mod` in `_builtins` table.
+  Raises typed `ZeroDivisionError: divided by 0` on zero divisor.
+
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+`set_display_convention("python")` sets `to_display(True)` to `"True"`,
+`to_display(False)` to `"False"`, and `to_display(None)` to `"None"`.
+
 ## Unreleased — Ruby's `nil.to_s` (#18798)
 
 Under the `"ruby"` display convention `to_display(None)` is the empty string,

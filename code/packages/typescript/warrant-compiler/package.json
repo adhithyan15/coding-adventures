@@ -1,0 +1,17 @@
+{
+  "name": "@coding-adventures/warrant-compiler",
+  "version": "0.1.0",
+  "description": "Standalone zero-runtime-dependency Warrant specification compiler, AST, evaluator, and universal claim verifier",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-strip-types --test tests/warrant.test.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

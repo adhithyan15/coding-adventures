@@ -9,7 +9,8 @@
  */
 
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import { LCG, PCG32, Xorshift64 } from "../src/index.js";
 
 interface Call {
@@ -28,7 +29,7 @@ interface Case {
 }
 
 const corpus: { cases: Case[] } = JSON.parse(
-  readFileSync(new URL("../../../../specs/fixtures/rng-v1/cases.json", import.meta.url), "utf8"),
+  readFileSync(new URL("../../../../../specs/fixtures/rng-v1/cases.json", import.meta.url), "utf8"),
 );
 
 const make = (name: Case["generator"], seed: bigint) =>
@@ -42,7 +43,7 @@ const floatBits = (x: number): string => {
 
 describe("rng-v1 corpus", () => {
   it("has every case", () => {
-    expect(corpus.cases.length).toBeGreaterThanOrEqual(27);
+    assert.ok(corpus.cases.length >= 27);
   });
 
   for (const c of corpus.cases) {
@@ -52,21 +53,21 @@ describe("rng-v1 corpus", () => {
         const at = `${c.id} call ${index} (${call.op})`;
         switch (call.op) {
           case "next_u32":
-            expect(String(g.nextU32()), at).toBe(call.result);
+            assert.equal(String(g.nextU32()), call.result, at);
             break;
           case "next_u64":
-            expect(String(g.nextU64()), at).toBe(call.result);
+            assert.equal(String(g.nextU64()), call.result, at);
             break;
           case "next_float":
-            expect(floatBits(g.nextFloat()), at).toBe(call.result_bits);
+            assert.equal(floatBits(g.nextFloat()), call.result_bits, at);
             break;
           case "next_int_in_range": {
             const min = BigInt(call.min!);
             const max = BigInt(call.max!);
             if (call.error) {
-              expect(() => g.nextBigIntInRange(min, max), at).toThrow(RangeError);
+              assert.throws(() => g.nextBigIntInRange(min, max), RangeError, at);
             } else {
-              expect(String(g.nextBigIntInRange(min, max)), at).toBe(call.result);
+              assert.equal(String(g.nextBigIntInRange(min, max)), call.result, at);
             }
             break;
           }
@@ -83,24 +84,24 @@ describe("number bounds", () => {
     const a = new PCG32(5n);
     const b = new PCG32(5n);
     for (let i = 0; i < 200; i++) {
-      expect(BigInt(a.nextIntInRange(-1000, 2 ** 40))).toBe(b.nextBigIntInRange(-1000n, 2n ** 40n));
+      assert.equal(BigInt(a.nextIntInRange(-1000, 2 ** 40)), b.nextBigIntInRange(-1000n, 2n ** 40n));
     }
   });
 
   it("reject unsafe or reversed bounds before drawing", () => {
     const g = new LCG(9n);
     const fresh = new LCG(9n);
-    expect(() => g.nextIntInRange(0, 2 ** 60)).toThrow(RangeError);
-    expect(() => g.nextIntInRange(0.5, 2)).toThrow(RangeError);
-    expect(() => g.nextIntInRange(2, 1)).toThrow(RangeError);
-    expect(() => g.nextBigIntInRange(0n, 1n << 63n)).toThrow(RangeError);
-    expect(() => g.nextBigIntInRange(-(1n << 63n) - 1n, 0n)).toThrow(RangeError);
-    expect(g.nextU32()).toBe(fresh.nextU32());
+    assert.throws(() => g.nextIntInRange(0, 2 ** 60), RangeError);
+    assert.throws(() => g.nextIntInRange(0.5, 2), RangeError);
+    assert.throws(() => g.nextIntInRange(2, 1), RangeError);
+    assert.throws(() => g.nextBigIntInRange(0n, 1n << 63n), RangeError);
+    assert.throws(() => g.nextBigIntInRange(-(1n << 63n) - 1n, 0n), RangeError);
+    assert.equal(g.nextU32(), fresh.nextU32());
   });
 
   it("reach beyond 2^32 for wide ranges", () => {
     const g = new Xorshift64(3n);
     const values = Array.from({ length: 64 }, () => g.nextIntInRange(0, 2 ** 40));
-    expect(values.some((v) => v >= 2 ** 32)).toBe(true);
+    assert.ok(values.some((v) => v >= 2 ** 32));
   });
 });

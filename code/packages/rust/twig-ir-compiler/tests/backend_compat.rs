@@ -1257,3 +1257,21 @@ fn union_constructor_alloc_immediately_followed_by_its_two_field_stores() {
          (the field cons cell + the tag/head cons cell)"
     );
 }
+
+#[test]
+fn twig_string_length_on_untyped_param_produces_call_builtin() {
+    let m = compile_source(
+        "(define (strlen s) (string-length s)) (strlen (car (list \"HELLO\")))",
+        "untyped_strlen",
+    )
+    .expect("untyped strlen must compile to IIR");
+
+    let strlen = m.functions.iter().find(|f| f.name == "strlen").expect("strlen fn");
+    assert_eq!(strlen.params, vec![("s".to_string(), "any".to_string())]);
+    assert!(
+        strlen.instructions.iter().any(|i| i.op == "call_builtin"
+            && i.srcs.first() == Some(&interpreter_ir::Operand::Var("string-length".into()))),
+        "untyped string-length must emit call_builtin: {:?}",
+        strlen.instructions
+    );
+}

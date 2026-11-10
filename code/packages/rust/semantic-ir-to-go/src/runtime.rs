@@ -15,6 +15,7 @@ pub const RUNTIME: &str = r##"// ── inlined SIR runtime ──────�
 // `true`/`false` rather than the Lisp `#t`/`#f`.  A compile-time `const` → the
 // Go compiler folds the branch away; existing Twig output is unchanged.
 const _sir_display_ruby = __SIR_DISPLAY_RUBY__
+const _sir_display_python = __SIR_DISPLAY_PYTHON__
 
 type Value interface{}
 
@@ -29,6 +30,7 @@ type Pair struct {
 
 type Closure struct {
 	Fn func(args []Value) Value
+	Arity int
 }
 
 // ── SIR16 sequences ────────────────────────────────────────────
@@ -95,6 +97,17 @@ func _sir_is_missing(v Value) bool {
 	return ok
 }
 
+// _sir_closure_arg extracts argument `i` from `args`, returning the
+// `_sir_missing` sentinel if `i >= len(args)`. Used by closure adapter
+// functions so callers passing fewer arguments than the callee's parameter count
+// trigger default-parameter prologues rather than an index-out-of-bounds panic (#18490).
+func _sir_closure_arg(args []Value, i int) Value {
+	if i < len(args) {
+		return args[i]
+	}
+	return _sir_missing
+}
+
 var _sir_symbol_table = make(map[string]*Symbol)
 var _sir_globals = make(map[string]Value)
 
@@ -125,16 +138,19 @@ func _sir_apply(c Value, args []Value) Value {
 	return cl.Fn(args)
 }
 
-func _sir_make_closure(fn func(args []Value) Value, captures []Value) Value {
+func _sir_make_closure(fn func(args []Value) Value, captures []Value, arity int) Value {
 	// fn is the synthesised lambda function; it accepts a single
 	// flat []Value argument expected as captures-first then params.
 	// Combine the closure-time captures with the runtime args.
-	return &Closure{Fn: func(args []Value) Value {
-		combined := make([]Value, 0, len(captures)+len(args))
-		combined = append(combined, captures...)
-		combined = append(combined, args...)
-		return fn(combined)
-	}}
+	return &Closure{
+		Fn: func(args []Value) Value {
+			combined := make([]Value, 0, len(captures)+len(args))
+			combined = append(combined, captures...)
+			combined = append(combined, args...)
+			return fn(combined)
+		},
+		Arity: arity,
+	}
 }
 
 // _sir_strict_arity wraps a closure so it must be called with exactly `n`
@@ -154,7 +170,7 @@ func _sir_strict_arity(c Value, n int) Value {
 				"arity mismatch: closure expects %d argument(s), got %d", n, len(args)))))
 		}
 		return inner(args)
-	}}
+	}, Arity: n}
 }
 
 func _sir_global_set(name Value, value Value) Value {
@@ -294,6 +310,25 @@ func _sir_plus(args []Value) Value {
 		total += _sir_as_int(a)
 	}
 	return total
+}
+
+// In-place addition for `+=`. When the first operand is a *Seq,
+// mutates it in place by appending the elements of `b` (or `b` itself if not *Seq),
+// preserving pointer identity across aliases (Python's `__iadd__`).
+// Non-sequence operands fall back to standard `_sir_plus`.
+func _sir_iadd(args []Value) Value {
+	if len(args) < 2 {
+		return _sir_plus(args)
+	}
+	if aSeq, ok := args[0].(*Seq); ok {
+		if bSeq, ok := args[1].(*Seq); ok {
+			aSeq.Items = append(aSeq.Items, bSeq.Items...)
+		} else {
+			aSeq.Items = append(aSeq.Items, args[1])
+		}
+		return aSeq
+	}
+	return _sir_plus(args)
 }
 
 // Coerce an operand to a Go string for the string `+` arm.  A genuine
@@ -676,6 +711,38 @@ func _sir_true_div(args []Value) Value {
 		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
 	}
 	return a / b
+}
+
+// Floored binary modulo (`%`).  Matches Python and Ruby `%`:
+// remainder has the sign of the divisor (or 0).
+// Division by zero raises `ZeroDivisionError`.
+// Avoids `math.MinInt64 % -1` integer overflow panic.
+func _sir_mod(args []Value) Value {
+	if len(args) < 2 {
+		return int64(0)
+	}
+	if _sir_any_float(args) {
+		a := _sir_as_float(args[0])
+		b := _sir_as_float(args[1])
+		if b == 0.0 {
+			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+		}
+		q := math.Floor(a / b)
+		return a - q*b
+	}
+	a := _sir_as_int(args[0])
+	b := _sir_as_int(args[1])
+	if b == 0 {
+		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+	}
+	if b == -1 {
+		return int64(0)
+	}
+	r := a % b
+	if r != 0 && (r < 0) != (b < 0) {
+		r += b
+	}
+	return r
 }
 
 func _sir_eq(args []Value) Value {
@@ -1081,6 +1148,9 @@ func _sir_format(v Value) string {
 
 func _sir_format_d(v Value, visited map[Value]bool) string {
 	if v == nil {
+		if _sir_display_python {
+			return "None"
+		}
 		return "nil"
 	}
 	// Defensive: the MISSING sentinel (SIR19 default params) should never
@@ -1096,10 +1166,16 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 			if _sir_display_ruby {
 				return "true"
 			}
+			if _sir_display_python {
+				return "True"
+			}
 			return "#t"
 		}
 		if _sir_display_ruby {
 			return "false"
+		}
+		if _sir_display_python {
+			return "False"
 		}
 		return "#f"
 	}
@@ -1432,7 +1508,7 @@ func _sir_map_put(m *Map, key Value, value Value) {
 func _sir_builtin_closure(name string) Value {
 	return &Closure{Fn: func(args []Value) Value {
 		return _sir_call_builtin_by_name(name, args)
-	}}
+	}, Arity: -1}
 }
 
 func _sir_call_builtin_by_name(name string, args []Value) Value {
@@ -1455,6 +1531,10 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_utrunc_div(args)
 	case "div_true":
 		return _sir_true_div(args)
+	case "%":
+		return _sir_mod(args)
+	case "+=":
+		return _sir_iadd(args)
 	case "neg":
 		return _sir_neg(args)
 	case "not":
@@ -1591,7 +1671,7 @@ func _sir_sym_to_proc(sym Value) Value {
 			return nil
 		}
 		return _sir_call_method(args[0], name, args[1:])
-	}}
+	}, Arity: 1}
 }
 
 // Public dispatch entry point emitted for every `__method__` call.
@@ -3125,11 +3205,18 @@ func _sir_dig_index(k Value, length int) (int, bool) {
 	return idx, true
 }
 
+func _sir_yield_hash_pair(block *Closure, key, val Value) Value {
+	if block != nil && block.Arity == 1 {
+		return _sir_apply(block, []Value{&Seq{Items: []Value{key, val}}})
+	}
+	return _sir_apply(block, []Value{key, val})
+}
+
 func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure) (Value, bool) {
 	switch name {
 	case "each", "each_pair":
 		for _, e := range recv.Entries {
-			_sir_apply(block, []Value{e.Key, e.Val})
+			_sir_yield_hash_pair(block, e.Key, e.Val)
 		}
 		return recv, true
 	case "each_key":
@@ -3149,13 +3236,13 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "map":
 		out := make([]Value, len(recv.Entries))
 		for i, e := range recv.Entries {
-			out[i] = _sir_apply(block, []Value{e.Key, e.Val})
+			out[i] = _sir_yield_hash_pair(block, e.Key, e.Val)
 		}
 		return &Seq{Items: out}, true
 	case "select", "filter":
 		m := &Map{Entries: []MapEntry{}}
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
 			}
 		}
@@ -3163,7 +3250,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "reject":
 		m := &Map{Entries: []MapEntry{}}
 		for _, e := range recv.Entries {
-			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if !_sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				m.Entries = append(m.Entries, MapEntry{Key: e.Key, Val: e.Val})
 			}
 		}
@@ -3199,28 +3286,28 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 	case "find", "detect":
 		// First [k, v] pair whose block result is truthy; nil if none.
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return &Seq{Items: []Value{e.Key, e.Val}}, true
 			}
 		}
 		return nil, true
 	case "any?":
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return true, true
 			}
 		}
 		return false, true
 	case "all?":
 		for _, e := range recv.Entries {
-			if !_sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if !_sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return false, true
 			}
 		}
 		return true, true
 	case "none?":
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				return false, true
 			}
 		}
@@ -3229,7 +3316,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// count { |k, v| pred } — number of pairs with a truthy block result.
 		n := int64(0)
 		for _, e := range recv.Entries {
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				n++
 			}
 		}
@@ -3243,7 +3330,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		}
 		keyed := make([]sbKV, len(recv.Entries))
 		for i, e := range recv.Entries {
-			keyed[i] = sbKV{_sir_apply(block, []Value{e.Key, e.Val}), &Seq{Items: []Value{e.Key, e.Val}}}
+			keyed[i] = sbKV{_sir_yield_hash_pair(block, e.Key, e.Val), &Seq{Items: []Value{e.Key, e.Val}}}
 		}
 		sort.SliceStable(keyed, func(i, j int) bool {
 			return _sir_value_lt(keyed[i].key, keyed[j].key)
@@ -3261,9 +3348,9 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		}
 		wantMin := name == "min_by"
 		best := recv.Entries[0]
-		bestKey := _sir_apply(block, []Value{best.Key, best.Val})
+		bestKey := _sir_yield_hash_pair(block, best.Key, best.Val)
 		for _, e := range recv.Entries[1:] {
-			k := _sir_apply(block, []Value{e.Key, e.Val})
+			k := _sir_yield_hash_pair(block, e.Key, e.Val)
 			take := false
 			if wantMin {
 				take = _sir_value_lt(k, bestKey)
@@ -3286,7 +3373,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// A Hash of block key → Array of [k, v] pairs, in first-seen key order.
 		acc := _sir_map_lit([]Value{}, []Value{})
 		for _, e := range recv.Entries {
-			k := _sir_apply(block, []Value{e.Key, e.Val})
+			k := _sir_yield_hash_pair(block, e.Key, e.Val)
 			pair := &Seq{Items: []Value{e.Key, e.Val}}
 			if seq, ok := _sir_map_get(acc, k).(*Seq); ok && seq != nil {
 				seq.Items = append(seq.Items, pair)
@@ -3301,7 +3388,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		no := []Value{}
 		for _, e := range recv.Entries {
 			pair := &Seq{Items: []Value{e.Key, e.Val}}
-			if _sir_truthy(_sir_apply(block, []Value{e.Key, e.Val})) {
+			if _sir_truthy(_sir_yield_hash_pair(block, e.Key, e.Val)) {
 				yes = append(yes, pair)
 			} else {
 				no = append(no, pair)
@@ -3313,7 +3400,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 		// contributes its elements, a scalar is appended as-is.
 		out := []Value{}
 		for _, e := range recv.Entries {
-			r := _sir_apply(block, []Value{e.Key, e.Val})
+			r := _sir_yield_hash_pair(block, e.Key, e.Val)
 			if s, ok := r.(*Seq); ok {
 				out = append(out, s.Items...)
 			} else {
@@ -3352,7 +3439,7 @@ func _sir_hash_block_method(recv *Map, name string, args []Value, block *Closure
 			acc = args[0]
 		}
 		for _, e := range recv.Entries {
-			acc = _sir_plus([]Value{acc, _sir_apply(block, []Value{e.Key, e.Val})})
+			acc = _sir_plus([]Value{acc, _sir_yield_hash_pair(block, e.Key, e.Val)})
 		}
 		return acc, true
 	case "to_h":
@@ -6849,7 +6936,7 @@ mod tests {
             "_sir_cons", "_sir_car", "_sir_cdr",
             "_sir_is_null", "_sir_is_pair", "_sir_is_number", "_sir_is_symbol",
             "_sir_write", "_sir_global_set", "_sir_global_get",
-            "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
+            "_sir_apply", "_sir_make_closure", "_sir_closure_arg", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
             // E3 exception helpers.
             "_sir_new_error", "_sir_exc_value", "_sir_rescue_matches",

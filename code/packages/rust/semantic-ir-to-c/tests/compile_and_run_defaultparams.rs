@@ -212,6 +212,37 @@ fn prologue_and_padding_emit_the_sentinel() {
     assert!(src.contains("_sir_missing()"), "call-site padding:\n{src}");
 }
 
+#[test]
+fn thunk_pads_omitted_arguments_with_missing_sentinel() {
+    // Closure thunk must pad omitted arguments with `_sir_missing()` rather
+    // than `_sir_nil()` (#18490).
+    let mut m = defparam_module(
+        vec![param("a", None), param("b", Some(ilit(10)))],
+        bc("+", vec![pref("a"), pref("b")]),
+        vec![
+            puts(Expr::IndirectCall {
+                target: Box::new(Expr::MakeClosure {
+                    fn_name: "f".into(),
+                    captures: vec![],
+                    span: s(),
+                }),
+                args: vec![ilit(1)],
+                effects: EffectSet::PURE,
+                span: s(),
+            }),
+        ],
+    );
+    m.manifest.add(Feature::Closures);
+    let src = semantic_ir_to_c::compile(&m).expect("compile").source;
+    assert!(
+        src.contains("(argc > 1 ? args[1] : _sir_missing())"),
+        "thunk omitted-arg padding:\n{src}"
+    );
+    if let Some(out) = run(&m) {
+        assert_eq!(out, "11\n");
+    }
+}
+
 /// Deletes a run's `.c` file and executable when the helper returns or
 /// panics.  Each call names its files uniquely (see `unique_suffix` or the
 /// counter above), so without this they would pile up in the temp directory,

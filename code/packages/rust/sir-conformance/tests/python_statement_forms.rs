@@ -35,10 +35,10 @@
 //!   the validator refused.
 //!
 //! Each program's expected stdout is the value CPython prints.  The run
-//! test re-checks that against a real `python3` when one is on `PATH`, so a
-//! wrong expectation cannot hide a wrong lowering.  Every program prints once and
-//! prints only integers and strings: `print(None)` and `print(True)` do not
-//! yet print CPython's spelling on these backends.
+//! test re-checks that against a real `python3` (or `python`) when one is on `PATH`, so a
+//! wrong expectation cannot hide a wrong lowering.  Booleans and `None`
+//! follow Python's spelling (`True`, `False`, `None`) via the Python
+//! display convention (#18496 item 1).
 //!
 //! `while` loops are bounded by a guard counter, so a regression of the
 //! parameter-shadowing bug fails with a wrong number instead of hanging.
@@ -54,6 +54,17 @@ use sir_conformance::{lower_source_via, run_source_via, Frontend, RunOutcome, Ta
 
 /// `(name, Python source, CPython's stdout)`.
 const PROGRAMS: &[(&str, &str, &str)] = &[
+    // ── display convention: booleans and None (#18496 item 1) ──────────
+    (
+        "py_display_booleans_and_none",
+        "print(True)\nprint(False)\nprint(None)\nprint(True, False, None)\n",
+        "True\nFalse\nNone\nTrue False None",
+    ),
+    (
+        "py_display_booleans_and_none_in_list",
+        "print([True, False, None])\n",
+        "[True, False, None]",
+    ),
     // ── augmented assignment ──────────────────────────────────────────
     // The issue's program, extended over the lowered operators.  (`%=` is
     // lowered too, but the binary `%` itself does not run on every backend
@@ -140,6 +151,17 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "py_chained_three_targets",
         "xs = [0, 0]\nn = xs[1] = m = 4\nprint(n + xs[1] + m)\n",
         "12",
+    ),
+    // ── list concatenation on binary `+` (#18496 item 3) ──────────────
+    (
+        "py_list_concat_plus",
+        "print([1] + [2])\n",
+        "[1, 2]",
+    ),
+    (
+        "py_list_concat_multiple",
+        "print([1, 2] + [3, 4] + [5])\n",
+        "[1, 2, 3, 4, 5]",
     ),
     // ── `for` over an already-bound variable ──────────────────────────
     // The variable keeps the last item after the loop.
@@ -291,6 +313,94 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "def main():\n    return 1\n\ndef g():\n    __py_main = 5\n    return main() * 10 + __py_main\n\nprint(g())\n",
         "15",
     ),
+    // ── floored modulo `%` across all signs (#18496 item 2) ───────────
+    (
+        "py_mod_signs",
+        "print(7 % 3)\nprint(-7 % 3)\nprint(7 % -3)\nprint(-7 % -3)\n",
+        "1\n2\n-2\n-1",
+    ),
+    // ── list in-place mutation and aliasing (#18496 item 4) ────────────
+    (
+        "py_list_append_aliased",
+        "xs = [1, 2]\nys = xs\nxs.append(3)\nprint(ys)\n",
+        "[1, 2, 3]",
+    ),
+    (
+        "py_list_aug_assign_aliased",
+        "xs = [1, 2]\nys = xs\nxs += [3, 4]\nprint(ys)\n",
+        "[1, 2, 3, 4]",
+    ),
+    (
+        "py_number_aug_assign_not_aliased",
+        "n = 1\nm = n\nn += 2\nprint(m)\nprint(n)\n",
+        "1\n3",
+    ),
+    // ── subscript assignment evaluation order (Python §6.3, #18496 review)
+    (
+        "py_subscript_assign_eval_order",
+        "log = []\ndef f():\n    log.append(1)\n    return 42\ndef g():\n    log.append(2)\n    return 0\nxs = [0]\nxs[g()] = f()\nprint(xs[0])\nprint(log)\n",
+        "42\n[1, 2]",
+    ),
+    (
+        "py_chained_subscript_assign_eval_order",
+        "log = []\ndef f():\n    log.append(1)\n    return 99\ndef g():\n    log.append(2)\n    return 0\ndef h():\n    log.append(3)\n    return 1\nxs = [0, 0]\nxs[g()] = xs[h()] = f()\nprint(xs)\nprint(log)\n",
+        "[99, 99]\n[1, 2, 3]",
+    ),
+    // ── nested def shadowing parameter or local (#18496 item 7) ──────
+    (
+        "py_nested_def_shadow_param",
+        "def f(n):\n    def n():\n        return 42\n    return n()\n\nprint(f(10))\n",
+        "42",
+    ),
+    (
+        "py_nested_def_shadow_local",
+        "def f():\n    n = 1\n    def n():\n        return 42\n    return n()\n\nprint(f())\n",
+        "42",
+    ),
+    (
+        "py_nested_def_shadow_param_returns_closure",
+        "def f(n):\n    def n():\n        return 42\n    return n\n\nprint(f(10)())\n",
+        "42",
+    ),
+    // ── closure cell variables (#18496 item 5) ────────────────────────
+    (
+        "py_param_captured_then_assigned",
+        "def f(x):\n    def g():\n        return x\n    x = 20\n    return g()\n\nprint(f(10))\n",
+        "20",
+    ),
+    (
+        "py_local_captured_then_assigned",
+        "def f():\n    x = 10\n    g = lambda: x\n    x = 20\n    return g()\n\nprint(f())\n",
+        "20",
+    ),
+    (
+        "py_closure_defined_before_variable_assigned",
+        "def f():\n    def g():\n        return x\n    x = 42\n    return g()\n\nprint(f())\n",
+        "42",
+    ),
+    (
+        "py_loop_closure_captures_variable",
+        "def f():\n    fn = lambda: 0\n    for i in [1, 2, 3]:\n        fn = lambda: i\n    return fn()\n\nprint(f())\n",
+        "3",
+    ),
+    (
+        "py_nested_closure_cell_variable",
+        "def outer():\n    x = 1\n    def mid():\n        def inner():\n            return x\n        return inner\n    fn = mid()\n    x = 100\n    return fn()\n\nprint(outer())\n",
+        "100",
+    ),
+    // ── private name mangling (#18496 review) ─────────────────────────
+    // Identifiers starting with `__` and not ending with `__` inside a class
+    // are mangled to `_ClassName__identifier`.
+    (
+        "py_class_private_method_mangled",
+        "class Secret:\n    def __init__(self):\n        self.__key = 42\n    def __hidden(self):\n        return self.__key * 2\n    def reveal(self):\n        return self.__hidden()\n\ns = Secret()\nprint(s.reveal())\n",
+        "84",
+    ),
+    (
+        "py_class_private_attr_isolation",
+        "class Base:\n    def __init__(self):\n        self.__x = 10\n    def get_base_x(self):\n        return self.__x\n\nclass Sub(Base):\n    def __init__(self):\n        self.__x = 20\n    def get_sub_x(self):\n        return self.__x\n\nb = Base()\ns = Sub()\nprint(b.get_base_x())\nprint(s.get_sub_x())\n",
+        "10\n20",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what
@@ -318,6 +428,14 @@ fn cpython(source: &str) -> Option<String> {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
+        .or_else(|_| {
+            Command::new("python")
+                .args(["-I", "-"])
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+        })
         .ok()?;
     child
         .stdin

@@ -69,7 +69,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: forme-pages-${{ github.event.pull_request.number || 'publish' }}
+  group: ${{ github.event_name == 'pull_request' && format('forme-root-pr-{0}', github.event.pull_request.number) || format('forme-root-{0}', github.ref) }}
   cancel-in-progress: false
 
 jobs:
@@ -131,6 +131,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    concurrency:
+      group: gh-pages-deployment
+      cancel-in-progress: false
+      queue: max
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

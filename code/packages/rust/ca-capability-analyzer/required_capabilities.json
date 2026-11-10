@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/ca-capability-analyzer",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads required_capabilities.json manifests and Rust source files during package analysis."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Recursively discovers Rust source files within the target package directory."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "Creates target source directories when generating capability modules."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Emits generated capability modules and canonical effect proof certificates to target package directory."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Emits capability analysis reports and diagnostics to standard output."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads CLI arguments via std::env::args during invocation."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "*",
+      "justification": "Exits with status codes via std::process::exit on success or failure."
+    }
+  ],
+  "justification": "Static analysis CLI tool that reads package files, checks capabilities, and prints analysis reports."
+}

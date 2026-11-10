@@ -43,6 +43,7 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // [`emit_strict_closure`].
     "lambda",
     "+",
+    "+=",
     "-",
     "*",
     "/",
@@ -179,10 +180,18 @@ pub fn emit_module(m: &Module) -> String {
     emit_banner(&mut out, m);
 
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace(
-        "__SIR_DISPLAY_RUBY__",
-        if display_ruby { "true" } else { "false" },
-    ));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
+            ),
+    );
     out.push_str("\n\n");
 
     emit_globals_comment(&mut out, &m.globals);
@@ -1601,7 +1610,15 @@ fn emit_expr(e: &Expr) -> String {
             // parameter must be a name no user variable can have.  It was
             // `__sir_args`, which a user could spell — and then read the
             // argument array in place of their own variable.
-            fixed.push("*sir_args".to_string());
+            let arity = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied());
+            // #18798 (item 23): in Ruby, blocks discard surplus arguments.
+            // If the block function takes 0 parameters, forwarding `*sir_args`
+            // to a 0-parameter `def` raises ArgumentError at run time whenever
+            // the caller passes arguments (e.g. `[1].each { puts 42 }` or
+            // `yield 1` to a 0-parameter block).
+            if arity != Some(0) {
+                fixed.push("*sir_args".to_string());
+            }
             format!(
                 "->(*sir_args) {{ {}({}) }}",
                 function_emit_name(fn_name),
@@ -2037,6 +2054,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
     match name {
         // n-ary arithmetic folds to a native chained operator.
         "+" => format!("({})", join_op(&a, " + ", "0")),
+        "+=" => format!("sir_iadd({}, {})", arg(&a, 0), arg(&a, 1)),
         "*" => format!("({})", join_op(&a, " * ", "1")),
         "/" => format!("({})", join_op(&a, " / ", "1")),
         "-" => {
@@ -2314,6 +2332,8 @@ fn is_each_with_block(args: &[Expr]) -> bool {
 /// | `[]`                | 1         | `sir_index`     |
 /// | `[]=`               | 2         | `sir_index_set` |
 /// | `size` / `length`   | 0         | `sir_size`      |
+/// | `append` / `push`   | varargs   | `sir_append`    |
+/// | `message`           | 0         | `sir_message`   |
 fn collection_access(args: &[Expr]) -> Option<&'static str> {
     let Some(Expr::StrLit { value, .. }) = args.get(1) else {
         return None;
@@ -2322,6 +2342,8 @@ fn collection_access(args: &[Expr]) -> Option<&'static str> {
         ("[]", 3) => Some("sir_index"),
         ("[]=", 4) => Some("sir_index_set"),
         ("size" | "length", 2) => Some("sir_size"),
+        ("append" | "push", _) => Some("sir_append"),
+        ("message", 2) => Some("sir_message"),
         _ => None,
     }
 }

@@ -4,6 +4,67 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 review)
+
+- Conformance programs `py_class_private_method_mangled` and `py_class_private_attr_isolation` in `tests/python_statement_forms.rs`, verifying Python private name mangling (`__method`, `self.__attr`) in class bodies and subclass isolation across all backends.
+
+### Added (#18798 item 3)
+
+- Conformance program `rb_lambda_call_and_outer_captures` in `tests/ruby_sir_gaps.rs`, verifying that Ruby arrow lambdas invoked via `.call(...)` correctly receive arguments (multi-arg and zero-arg) and capture outer local variables and enclosing method parameters across all backends (Ruby, Python, C, JavaScript, TypeScript, Go, Rust).
+
+### Added (#18798 item 23)
+
+- Conformance program `rb_block_with_no_parameters` in `tests/ruby_sir_gaps.rs`, verifying that yielding or passing arguments to a zero-parameter block discards the surplus arguments across iterators and methods on all backends.
+
+### Added (#18798)
+
+- Conformance program `rb_begin_without_rescue_or_ensure` in `tests/ruby_sir_gaps.rs`, verifying that `begin ... end` with no `rescue` or `ensure` executes its statements inline across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
+
+
+- Conformance program `rb_hash_each_one_parameter_block` in `tests/ruby_sir_gaps.rs`, verifying that `Hash#each` yields a 2-element array `[key, value]` to a one-parameter block across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
+
+### Added (#18496 item 5)
+
+- Conformance programs `py_param_captured_then_assigned`, `py_local_captured_then_assigned`, `py_closure_defined_before_variable_assigned`, `py_loop_closure_captures_variable`, and `py_nested_closure_cell_variable` in `tests/python_statement_forms.rs`, verifying that closures observe mutated cell variables across reassignments, loop iterations, and multi-level nesting across all backends.
+
+### Changed (#18798 item 8)
+
+- Emptied `REFUSED` table in `tests/ruby_sir_gaps.rs`. `rb_rescue_arrow_binding_named_like_a_method` now passes across all backends including C and Ruby.
+
+### Added (#18496 item 7)
+
+- Conformance programs `py_nested_def_shadow_param`, `py_nested_def_shadow_local`, and `py_nested_def_shadow_param_returns_closure` in `tests/python_statement_forms.rs`, verifying that nested `def` statements shadowing parameters or prior locals invoke the nested function across all backends.
+
+### Added (#18490)
+
+- Conformance program `sir_closure_default_param_omitted_call` in `tests/local_shadows_function.rs`, verifying that calling a closure with an omitted default parameter evaluates the default argument expression on all backends.
+
+### Added (#18496 review)
+
+- Conformance programs `py_subscript_assign_eval_order` and `py_chained_subscript_assign_eval_order` in `tests/python_statement_forms.rs`, verifying that single and chained subscript assignments evaluate the RHS value strictly before the subscript target and index across all backends.
+
+### Added (#18496 item 4)
+
+- Conformance programs `py_list_append_aliased`, `py_list_aug_assign_aliased`, and `py_number_aug_assign_not_aliased` in `tests/python_statement_forms.rs`, verifying list in-place mutation and aliasing on `.append()` and `+=` across all backends.
+
+### Added (#18496 item 2)
+
+- Conformance program `py_mod_signs` in `tests/python_statement_forms.rs`,
+  verifying that binary `%` computes floored modulo across all sign combinations
+  (`(+, +)`, `(-, +)`, `(+, -)`, `(-, -)`) matching CPython across all backends.
+
+### Added (#18496 item 3)
+
+- Conformance programs `py_list_concat_plus` and `py_list_concat_multiple` in
+  `tests/python_statement_forms.rs`, verifying that `print([1] + [2])` and chained list
+  concatenation match CPython across all backends.
+
+### Added (#18496 item 1)
+
+- Conformance programs `py_display_booleans_and_none` and `py_display_booleans_and_none_in_list`
+  in `tests/python_statement_forms.rs`, verifying that lowered Python `print(True)`,
+  `print(False)`, and `print(None)` match CPython's display across all backends.
+
 ### Added (#18798, items 11–15 and 19)
 
 - Security review follow-up: `rb_for_over_a_huge_range_stops_at_break_and_locals_between_guards`

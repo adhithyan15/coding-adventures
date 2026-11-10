@@ -2,7 +2,7 @@
 name = "coding_adventures_warrant_grammar"
 version = "0.1.0"
 edition = "2021"
-description = "Canonical Warrant v0 token/parser grammar data and syntax-corpus checks (VER04 P006a)"
+description = "Warrant v0 grammar artifacts, bounded source admission, layout, parser, type checker and bindings"
 license = "MIT"
 
 [dependencies]
@@ -12,6 +12,8 @@ grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
 
 [[test]]
 name = "self_corpus"

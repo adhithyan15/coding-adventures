@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline` crate will be documented in this file.
 
+## [0.33.0] - 2026-11-07
+
+### Fixed — closure-deferred reads, missing statement arms, computed keys in inline substitution (#18144)
+
+```js
+function make(x){return function(){return x}}
+var a=1;
+var f=make(a);
+a=2;
+console.log(f());       // 1
+```
+
+ADVANCED spliced `make` with non-literal argument `a` into caller scope, resulting
+in deferred execution of `f()` reading `a` after reassignment (`a=2`), printing `2`.
+
+- Nested closure parameter capture guards:
+  Parameters captured within nested closures (functions, arrow functions, class methods)
+  are tracked via `collect_closure_param_usage_expr` / `_stmt`. An inlining candidate
+  is only substituted if callers provide literal arguments for all closure-captured
+  parameters (`is_literal_arg`).
+- Parameter mutations inside nested closures:
+  Candidates that mutate their own parameters inside nested closures are unconditionally
+  rejected from inlining.
+- Computed class member keys:
+  `substitute`'s `ClassExpression` arm now walks and substitutes computed method keys
+  (`if m.computed`), which evaluate in the enclosing helper scope.
+- Full statement arm substitution:
+  `substitute_in_stmt` now covers all AST statement variants, including `ReturnStatement`,
+  `ThrowStatement`, `TryStatement`, `ForOfStatement`, `ForInStatement`, `ForStatement`,
+  `WhileStatement`, `DoWhileStatement`, `SwitchStatement`, `LabeledStatement`, `WithStatement`.
+- Lexical scoping & shadowing in nested bodies:
+  Nested declarations (`var`, `let`, `const`, `function`, `class`, catch parameters,
+  for-of loop variables) shadow outer parameters and are preserved without substitution.
+
+Unit tests added covering all 7 failure modes. closurec gains `tests/regression_inline_substitution_18144.rs`.
+
 ## [0.32.0] - 2026-10-24
 
 ### Fixed — a nested function no longer captures a caller's binding after inlining (#18134)

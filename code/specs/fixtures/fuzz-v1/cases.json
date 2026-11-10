@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "fuzz/mutate_bit_flip/bit0",
+      "op": "mutate_bit_flip",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "bit_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "count": {
+        "kind": "int",
+        "value": "1"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "0100"
+      }
+    },
+    {
+      "id": "fuzz/mutate_bit_flip/bit9",
+      "op": "mutate_bit_flip",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "bit_offset": {
+        "kind": "int",
+        "value": "9"
+      },
+      "count": {
+        "kind": "int",
+        "value": "1"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "0002"
+      }
+    },
+    {
+      "id": "fuzz/mutate_bit_flip/consecutive_4bits",
+      "op": "mutate_bit_flip",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "bit_offset": {
+        "kind": "int",
+        "value": "2"
+      },
+      "count": {
+        "kind": "int",
+        "value": "4"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "3c00"
+      }
+    },
+    {
+      "id": "fuzz/mutate_byte_flip/byte0",
+      "op": "mutate_byte_flip",
+      "input": {
+        "kind": "bytes",
+        "hex": "123456"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "count": {
+        "kind": "int",
+        "value": "1"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "ed3456"
+      }
+    },
+    {
+      "id": "fuzz/mutate_byte_flip/bytes1_2",
+      "op": "mutate_byte_flip",
+      "input": {
+        "kind": "bytes",
+        "hex": "123456"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "1"
+      },
+      "count": {
+        "kind": "int",
+        "value": "2"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "12cba9"
+      }
+    },
+    {
+      "id": "fuzz/mutate_arithmetic/u8_add1",
+      "op": "mutate_arithmetic",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "delta": {
+        "kind": "int",
+        "value": "1"
+      },
+      "width": {
+        "kind": "int",
+        "value": "1"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "0100"
+      }
+    },
+    {
+      "id": "fuzz/mutate_arithmetic/u8_wrap",
+      "op": "mutate_arithmetic",
+      "input": {
+        "kind": "bytes",
+        "hex": "ff00"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "delta": {
+        "kind": "int",
+        "value": "1"
+      },
+      "width": {
+        "kind": "int",
+        "value": "1"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "0000"
+      }
+    },
+    {
+      "id": "fuzz/mutate_arithmetic/u16_le_add35",
+      "op": "mutate_arithmetic",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "delta": {
+        "kind": "int",
+        "value": "35"
+      },
+      "width": {
+        "kind": "int",
+        "value": "2"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "2300"
+      }
+    },
+    {
+      "id": "fuzz/mutate_arithmetic/u16_be_add35",
+      "op": "mutate_arithmetic",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "delta": {
+        "kind": "int",
+        "value": "35"
+      },
+      "width": {
+        "kind": "int",
+        "value": "2"
+      },
+      "endian": "big",
+      "output": {
+        "kind": "bytes",
+        "hex": "0023"
+      }
+    },
+    {
+      "id": "fuzz/mutate_boundary/u8_max",
+      "op": "mutate_boundary",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "width": {
+        "kind": "int",
+        "value": "1"
+      },
+      "val": {
+        "kind": "int",
+        "value": "255"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "ff00"
+      }
+    },
+    {
+      "id": "fuzz/mutate_boundary/u32_max_le",
+      "op": "mutate_boundary",
+      "input": {
+        "kind": "bytes",
+        "hex": "00000000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "width": {
+        "kind": "int",
+        "value": "4"
+      },
+      "val": {
+        "kind": "int",
+        "value": "4294967295"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "ffffffff"
+      }
+    },
+    {
+      "id": "fuzz/mutate_boundary/u32_signed_min_le",
+      "op": "mutate_boundary",
+      "input": {
+        "kind": "bytes",
+        "hex": "00000000"
+      },
+      "byte_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "width": {
+        "kind": "int",
+        "value": "4"
+      },
+      "val": {
+        "kind": "int",
+        "value": "2147483648"
+      },
+      "endian": "little",
+      "output": {
+        "kind": "bytes",
+        "hex": "00000080"
+      }
+    },
+    {
+      "id": "fuzz/mutate_block_delete/middle",
+      "op": "mutate_block_delete",
+      "input": {
+        "kind": "bytes",
+        "hex": "0102030405"
+      },
+      "offset": {
+        "kind": "int",
+        "value": "1"
+      },
+      "length": {
+        "kind": "int",
+        "value": "2"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "010405"
+      }
+    },
+    {
+      "id": "fuzz/mutate_block_insert/middle",
+      "op": "mutate_block_insert",
+      "input": {
+        "kind": "bytes",
+        "hex": "010205"
+      },
+      "offset": {
+        "kind": "int",
+        "value": "2"
+      },
+      "insert_bytes": {
+        "kind": "bytes",
+        "hex": "0304"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "0102030405"
+      }
+    },
+    {
+      "id": "fuzz/mutate_block_duplicate/prefix",
+      "op": "mutate_block_duplicate",
+      "input": {
+        "kind": "bytes",
+        "hex": "010203"
+      },
+      "src_offset": {
+        "kind": "int",
+        "value": "0"
+      },
+      "length": {
+        "kind": "int",
+        "value": "2"
+      },
+      "dst_offset": {
+        "kind": "int",
+        "value": "3"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "0102030102"
+      }
+    },
+    {
+      "id": "fuzz/mutate_splice/cross",
+      "op": "mutate_splice",
+      "target": {
+        "kind": "bytes",
+        "hex": "01020304"
+      },
+      "donor": {
+        "kind": "bytes",
+        "hex": "05060708"
+      },
+      "target_split": {
+        "kind": "int",
+        "value": "2"
+      },
+      "donor_split": {
+        "kind": "int",
+        "value": "2"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "01020708"
+      }
+    },
+    {
+      "id": "fuzz/mutate_sequence/seed42_steps4",
+      "op": "mutate_sequence",
+      "input": {
+        "kind": "bytes",
+        "hex": "0000000000000000"
+      },
+      "seed": {
+        "kind": "int",
+        "value": "42"
+      },
+      "steps": {
+        "kind": "int",
+        "value": "4"
+      },
+      "output": {
+        "kind": "bytes",
+        "hex": "03ff00000000bf080000"
+      }
+    },
+    {
+      "id": "fuzz/corpus_admit/novel_edge",
+      "op": "corpus_admit",
+      "existing_edges": [
+        {
+          "kind": "int",
+          "value": "1"
+        },
+        {
+          "kind": "int",
+          "value": "2"
+        },
+        {
+          "kind": "int",
+          "value": "3"
+        }
+      ],
+      "trace_edges": [
+        {
+          "kind": "int",
+          "value": "2"
+        },
+        {
+          "kind": "int",
+          "value": "4"
+        }
+      ],
+      "admitted": true,
+      "new_edges": {
+        "kind": "int",
+        "value": "1"
+      }
+    },
+    {
+      "id": "fuzz/corpus_admit/redundant_edge",
+      "op": "corpus_admit",
+      "existing_edges": [
+        {
+          "kind": "int",
+          "value": "1"
+        },
+        {
+          "kind": "int",
+          "value": "2"
+        },
+        {
+          "kind": "int",
+          "value": "3"
+        }
+      ],
+      "trace_edges": [
+        {
+          "kind": "int",
+          "value": "1"
+        },
+        {
+          "kind": "int",
+          "value": "2"
+        }
+      ],
+      "admitted": false,
+      "new_edges": {
+        "kind": "int",
+        "value": "0"
+      }
+    },
+    {
+      "id": "fuzz/crash_dedup/same_signature",
+      "op": "crash_dedup",
+      "crash_a_kind": "panic",
+      "crash_a_frames": [
+        "eval",
+        "step"
+      ],
+      "crash_b_kind": "panic",
+      "crash_b_frames": [
+        "eval",
+        "step"
+      ],
+      "is_duplicate": true
+    },
+    {
+      "id": "fuzz/crash_dedup/divergent_signature",
+      "op": "crash_dedup",
+      "crash_a_kind": "panic",
+      "crash_a_frames": [
+        "eval",
+        "step"
+      ],
+      "crash_b_kind": "segv",
+      "crash_b_frames": [
+        "alloc",
+        "write"
+      ],
+      "is_duplicate": false
+    },
+    {
+      "id": "fuzz/failure_id/crash_valid",
+      "op": "failure_id_valid",
+      "input": "fuzz-crash",
+      "valid": true
+    },
+    {
+      "id": "fuzz/failure_id/unregistered",
+      "op": "failure_id_valid",
+      "input": "fuzz-arbitrary-error",
+      "valid": false
+    },
+    {
+      "id": "fuzz/private_reporting/opaque_token",
+      "op": "private_reporting",
+      "target": "ct_compare",
+      "failure_id": "fuzz-crash",
+      "raw_payload": {
+        "kind": "bytes",
+        "hex": "deadbeef"
+      },
+      "sig_hash": "3a8f19b2",
+      "tap_line": "not ok 1 - ct_compare [fuzz-crash:3a8f19b2]",
+      "contains_raw_payload": false
+    },
+    {
+      "id": "fuzz/corpus_reject/bad_header",
+      "op": "corpus_reject",
+      "text": "bad header\n"
+    }
+  ]
+}

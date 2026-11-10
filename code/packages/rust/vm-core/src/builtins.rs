@@ -548,6 +548,26 @@ impl BuiltinRegistry {
         // over the `dyn_*` primitives below (#18470, LANG83 PR7).
         reg.register("pair?", dyn_is_pair);
 
+        // `string-length` (#18428) — dynamic string length when an operand
+        // is untyped (`any`). On the VM, `Value::Str` holds the byte slice.
+        // A non-string operand yields a clean `TypeError`.
+        reg.register("string-length", |args| {
+            if args.len() != 1 {
+                return Err(VMError::Custom(format!(
+                    "`string-length` requires exactly 1 argument, got {}",
+                    args.len()
+                )));
+            }
+            match &args[0] {
+                Value::Str(s) => Ok(Value::Int(s.len() as i64)),
+                other => Err(VMError::TypeError {
+                    expected: "str".into(),
+                    actual: other.iir_type_name().into(),
+                    context: "string-length".into(),
+                }),
+            }
+        });
+
         // The LANG83 PR7f dynamic-value primitives this VM can lower over its
         // own `Value` kinds (#18470) — see "The dynamic-value primitives" in
         // the module docs. Every Lisp rule (truthiness, `not`, `number?`,
@@ -992,5 +1012,18 @@ mod tests {
         let reg = BuiltinRegistry::new();
         let err = reg.call("print_str", &[Value::Int(1)]).unwrap_err();
         assert!(matches!(err, VMError::TypeError { .. }));
+    }
+
+    #[test]
+    fn string_length_builtin_counts_bytes_and_refuses_non_strings() {
+        let reg = BuiltinRegistry::new();
+        assert_eq!(reg.call("string-length", &[Value::str("HELLO")]).unwrap(), Value::Int(5));
+        assert_eq!(reg.call("string-length", &[Value::str("")]).unwrap(), Value::Int(0));
+
+        let err = reg.call("string-length", &[Value::Int(42)]).unwrap_err();
+        assert!(matches!(err, VMError::TypeError { .. }));
+
+        let err_arity = reg.call("string-length", &[]).unwrap_err();
+        assert!(matches!(err_arity, VMError::Custom(_)));
     }
 }

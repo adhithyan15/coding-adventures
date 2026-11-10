@@ -297,7 +297,7 @@ pub fn whitespace_only_minify(
     // parse we can't tell generator `yield⏎7` (needs the `;`) from sloppy
     // `var yield; yield⏎(9)` (must not get one); the source's own newline is
     // right for both.
-    let (asi_points, asi_splice): (Vec<usize>, Option<&lexer::token::Token>) =
+    let (mut asi_points, asi_splice): (Vec<usize>, Option<&lexer::token::Token>) =
         match synth_asi_semi.as_ref() {
             Some(semi) => match coding_adventures_javascript_parser::asi::asi_insertion_points(
                 tokens.clone(),
@@ -313,12 +313,27 @@ pub fn whitespace_only_minify(
             },
             None => (Vec::new(), None),
         };
+
+    // #18152: contextual keyword ASI boundaries (e.g. `let⏎new Foo`, `let⏎++x`, `await⏎using⏎x`, `x=y.if⏎l:;`).
+    let contextual_points = contextual_asi_points(&tokens);
+    for &pt in &contextual_points {
+        if !asi_points.contains(&pt) {
+            asi_points.push(pt);
+        }
+    }
+    asi_points.sort_unstable();
+    asi_points.dedup();
+
     let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());
     {
         let mut points = asi_points.iter().peekable();
         for (i, t) in tokens.iter().enumerate() {
             while points.peek() == Some(&&i) {
-                if let Some(splice) = asi_splice {
+                if contextual_points.contains(&i) {
+                    if let Some(semi) = synth_asi_semi.as_ref() {
+                        kept.push(semi);
+                    }
+                } else if let Some(splice) = asi_splice {
                     kept.push(splice);
                 }
                 points.next();
@@ -328,8 +343,12 @@ pub fn whitespace_only_minify(
             }
         }
         // A point at `tokens.len()` (after everything) is the end of input.
-        for _ in points {
-            if let Some(splice) = asi_splice {
+        for &pt in points {
+            if contextual_points.contains(&pt) {
+                if let Some(semi) = synth_asi_semi.as_ref() {
+                    kept.push(semi);
+                }
+            } else if let Some(splice) = asi_splice {
                 kept.push(splice);
             }
         }
@@ -867,6 +886,7 @@ pub fn whitespace_only_minify(
     // statement start or preceded by anything else. (Before this
     // guard, `o.delete(a)` mis-emitted as `o.delete a`.)
     {
+        let is_async_mask = compute_async_context_mask(&kept);
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 1 < kept.len() {
@@ -885,10 +905,13 @@ pub fn whitespace_only_minify(
             // guard below also covers `o.instanceof(x)` — a property
             // access whose call parens must be preserved.
             let is_unary_kw = is_word_like(kept[i])
-                && matches!(
-                    kept[i].value.as_str(),
-                    "void" | "typeof" | "delete" | "instanceof" | "await"
-                );
+                && match kept[i].value.as_str() {
+                    "void" | "typeof" | "delete" | "instanceof" => true,
+                    // #18152: `await` only acts as a unary operator in an async function or module.
+                    // In a script outside an async function, `await(x)` is a function call.
+                    "await" => is_async_mask.get(i).copied().unwrap_or(false),
+                    _ => false,
+                };
             // Property guard: skip `o.delete(`, `o?.typeof(`, …
             let is_property = i >= 1
                 && (is_structural_punct(kept[i - 1], ".")
@@ -3158,16 +3181,12 @@ pub fn whitespace_only_minify(
 
     // State machine:
     let mut brace_stack: Vec<BlockKind> = Vec::new();
-    // #17840: parallel to `brace_stack`, whether each open brace is a class
-    // MEMBER body (a method or static block, opened directly in a class
-    // body), and whether the `}` most recently closed was one. See the
-    // class-body ASI note at the top of the emit loop.
-    let mut brace_is_member_body: Vec<bool> = Vec::new();
     // `)` index in `kept` → its `(` index, computed once (the emit loop never
     // mutates `kept`), so the member-body test is O(1) per brace.
     // #18123: which tokens sit directly in a class body or object literal.
     // There a keyword can only be a member name (`class C{if(){}}`).
     let in_member_list = member_list_positions(&kept);
+    let is_async_mask = compute_async_context_mask(&kept);
     let kept_open_paren: Vec<usize> = {
         let mut table = vec![usize::MAX; kept.len()];
         let mut stack = Vec::new();
@@ -3182,7 +3201,6 @@ pub fn whitespace_only_minify(
         }
         table
     };
-    let mut closed_member_body = false;
     // ^ for each open `{`, the kind of block it opens.
     //   `BlockKind::Function` triggers gap-030 rule-B (emit
     //   `;` after closing `}`); `BlockKind::TryChain` triggers
@@ -3250,24 +3268,6 @@ pub fn whitespace_only_minify(
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
-
-        // #17840: closurec's grammar wants a separator between class members,
-        // so ASI may place a `;` directly in a class body
-        // (`class P{m(){}⏎n(){}}`). There it would be an empty class element,
-        // which upstream never prints (`class P{m(){}n(){}}`). Drop it.
-        if synth_asi_semi
-            .as_ref()
-            .is_some_and(|semi| std::ptr::eq(tok, semi))
-            && brace_stack.last() == Some(&BlockKind::Class)
-            && closed_member_body
-            && prev_emitted_tok.is_some_and(|p| is_structural_punct(p, "}"))
-        {
-            // Only after a method or static block: `m(){}⏎n(){}` prints
-            // `m(){}n(){}` upstream. A FIELD keeps its `;` (`x=1;y=2`):
-            // without it the output wouldn't parse.
-            idx += 1;
-            continue;
-        }
 
         // gap-045: single-arg arrow function — drop the
         // enclosing parens around a bare-identifier param.
@@ -3660,12 +3660,14 @@ pub fn whitespace_only_minify(
 
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
-        // upstream forces that one (CCR-084, `function f(){throw 1;}`).
+        // upstream forces that one (CCR-084, `function f(){throw 1;}`),
+        // or it sits directly in a class body (CCR-077, `class A{x=1;}`).
         if val == ";"
             && !body_position_next
             && !throw_terminator[idx]
             && !is_label_body(&kept, idx)
             && !is_with_body(&kept, &kept_open_paren, idx)
+            && !in_member_list[idx]
         {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
@@ -3745,9 +3747,10 @@ pub fn whitespace_only_minify(
                 || new_paren_needs_space(&kept, idx)
                 || get_set_computed_needs_space(&kept, idx)
                 || async_gen_method_needs_space(&kept, idx)
-                || await_operator_needs_space(&kept, idx)
+                || await_operator_needs_space(&kept, &is_async_mask, idx)
                 || keyword_string_needs_space(&kept, idx)
                 || case_unary_needs_space(&kept, idx)
+                || lt_bang_needs_space(&kept, idx, prev_emitted_tok)
             {
                 out.push(' ');
             }
@@ -3784,7 +3787,6 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
-            closed_member_body = brace_is_member_body.pop().unwrap_or(false);
             let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
             let next_is_close_brace = next_val == Some("}");
             let next_is_chain_continuation =
@@ -3984,40 +3986,6 @@ pub fn whitespace_only_minify(
             } else {
                 BlockKind::Other
             };
-            // A class member body: opened directly in a class body after
-            // `static` (static block) or after a method's `)`, where the
-            // `(` is not a `function` expression's (`x = function(){}` is
-            // a field).
-            // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
-            // A method's `(` is preceded by its name, perhaps behind `*`,
-            // `async`, `get`/`set` or `static`. A field initialiser has `=`,
-            // `function`, `class` or `extends` among those few tokens.
-            let member_body = brace_stack.last() == Some(&BlockKind::Class)
-                && idx >= 1
-                && (kept[idx - 1].value == "static"
-                    || (is_structural_punct(kept[idx - 1], ")")
-                        && kept_open_paren[idx - 1] != usize::MAX
-                        && {
-                            let p = kept_open_paren[idx - 1];
-                            // Walk back over this member's own header, to the
-                            // `{`/`}`/`;` that ends the previous member. A
-                            // field initialiser has `=`, `function`, `class` or
-                            // `extends` there (`x = function(){}`,
-                            // `x = class extends f(B){}`); a method doesn't.
-                            // Each header is walked once, so this is linear.
-                            (0..p)
-                                .rev()
-                                .map(|k| kept[k])
-                                .take_while(|t| {
-                                    !(is_structural_punct(t, "{")
-                                        || is_structural_punct(t, "}")
-                                        || is_structural_punct(t, ";"))
-                                })
-                                .all(|t| {
-                                    !matches!(t.value.as_str(), "function" | "class" | "extends" | "=")
-                                })
-                        }));
-            brace_is_member_body.push(member_body);
             brace_stack.push(kind);
             next_block_is_try_chain = false;
             next_block_is_switch_body = false;
@@ -5730,6 +5698,35 @@ fn case_unary_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
     is_word_like(prev) && prev.value == "case"
 }
 
+/// Issue #17887: decide whether the token at `kept[idx]` (a `!` operator)
+/// needs a preceding space because it was preceded by `<` and is immediately
+/// followed by `--` (i.e. `< !--`).
+///
+/// In ECMAScript Annex B.1.1, `<!--` in script mode starts a SingleLineHTMLOpenComment.
+/// Gluing `<` and `!--b` into `a<!--b` swallows the remainder of the line as a comment,
+/// causing a silent miscompile. Upstream Closure preserves a space between `<` and `!`.
+fn lt_bang_needs_space(
+    kept: &[&lexer::token::Token],
+    idx: usize,
+    prev_emitted_tok: Option<&lexer::token::Token>,
+) -> bool {
+    if idx + 1 >= kept.len() {
+        return false;
+    }
+    let tok = kept[idx];
+    if !is_structural_punct(tok, "!") {
+        return false;
+    }
+    let Some(prev) = prev_emitted_tok else {
+        return false;
+    };
+    if !is_structural_punct(prev, "<") {
+        return false;
+    }
+    let next = kept[idx + 1];
+    is_structural_punct(next, "--")
+}
+
 /// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
 /// METHOD (`async *m(){}`), so a separating space is needed between the
 /// preceding `async` and this `*`.
@@ -5825,12 +5822,20 @@ fn async_gen_method_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
 /// (`await` as a plain value/identifier — `await(x)` at top level — is
 /// a PARSE ERROR in the upstream compiler, so it never appears in a
 /// byte-identity input; only the operator form needs handling.)
-fn await_operator_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+fn await_operator_needs_space(
+    kept: &[&lexer::token::Token],
+    is_async: &[bool],
+    idx: usize,
+) -> bool {
     if idx == 0 {
         return false;
     }
     let prev = kept[idx - 1];
     if !is_word_like(prev) || prev.value != "await" {
+        return false;
+    }
+    // #18152: `await` outside an async function or module is an identifier, not a unary operator.
+    if !is_async.get(idx - 1).copied().unwrap_or(false) {
         return false;
     }
     // PROPERTY guard.
@@ -6304,6 +6309,403 @@ fn bracket_partners(kept: &[&lexer::token::Token]) -> Vec<usize> {
         }
     }
     partners
+}
+
+fn is_async_function_or_method_header(
+    kept: &[&lexer::token::Token],
+    partners: &[usize],
+    paren_open: usize,
+) -> bool {
+    if paren_open == 0 {
+        return false;
+    }
+    // Case 1: computed property `[expr]()`
+    if is_structural_punct(kept[paren_open - 1], "]") {
+        let lbracket = partners[paren_open - 1];
+        if lbracket == usize::MAX || lbracket == 0 {
+            return false;
+        }
+        let mut before = lbracket - 1;
+        if kept[before].value == "*" && before > 0 {
+            before -= 1;
+        }
+        return kept[before].value == "async"
+            && !is_string_literal(kept[before])
+            && (before == 0
+                || (!is_structural_punct(kept[before - 1], ".")
+                    && !is_structural_punct(kept[before - 1], "?.")));
+    }
+
+    // Case 2: name, generator `*`, or `function`
+    let mut k = paren_open;
+    // Method name or function name (or keyword like `if`, or string/number)
+    if k > 0
+        && (is_word_like(kept[k - 1])
+            || is_string_literal(kept[k - 1])
+            || kept[k - 1].type_ == lexer::token::TokenType::Number)
+    {
+        k -= 1;
+    }
+    // Optional `*`
+    if k > 0 && kept[k - 1].value == "*" {
+        k -= 1;
+    }
+    // Optional `function`
+    if k > 0 && kept[k - 1].value == "function" && !is_string_literal(kept[k - 1]) {
+        k -= 1;
+    }
+    // Check if the token immediately preceding is `async`
+    if k > 0 && kept[k - 1].value == "async" && !is_string_literal(kept[k - 1]) {
+        // ECMA-262 §15.8: async [no LineTerminator here]
+        let newline_after_async =
+            kept[k].flags.unwrap_or(0) & lexer::token::TOKEN_PRECEDED_BY_NEWLINE != 0;
+        let is_property = k >= 2
+            && (is_structural_punct(kept[k - 2], ".")
+                || is_structural_punct(kept[k - 2], "?."));
+        !newline_after_async && !is_property
+    } else {
+        false
+    }
+}
+
+/// #18152: For each token in `kept`, whether it sits in an async context
+/// (an async function/method/arrow body, or at top level in an ES module).
+/// In an async context, `await` acts as a unary operator; outside an async
+/// context (e.g. in a script at top level or in a sync function), `await`
+/// is an ordinary identifier, and `await(...)` is a function call whose
+/// parens must be preserved.
+fn compute_async_context_mask(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    let mut is_async = vec![false; kept.len()];
+    if kept.is_empty() {
+        return is_async;
+    }
+
+    // Check if the file is an ES module (has top-level import or export declaration).
+    let mut is_module = false;
+    let mut brace_depth: usize = 0;
+    for (i, tok) in kept.iter().enumerate() {
+        if is_structural_punct(tok, "{") {
+            brace_depth += 1;
+        } else if is_structural_punct(tok, "}") {
+            brace_depth = brace_depth.saturating_sub(1);
+        } else if brace_depth == 0 && !is_string_literal(tok) {
+            let is_property = i > 0
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
+            if !is_property {
+                if tok.value == "export" {
+                    is_module = true;
+                    break;
+                }
+                if tok.value == "import" {
+                    // Dynamic import `import(...)` or `import.meta` is valid in scripts; an import declaration is not.
+                    let next = kept.get(i + 1);
+                    let is_dynamic_or_meta = next.map(|t| {
+                        is_structural_punct(t, "(") || is_structural_punct(t, ".")
+                    }) == Some(true);
+                    if !is_dynamic_or_meta {
+                        is_module = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    let partners = bracket_partners(kept);
+
+    // Stack of enclosing block scopes: whether the current scope is in an async context.
+    // If it's a module, top-level is already an async context.
+    let mut scope_stack: Vec<bool> = vec![is_module];
+
+    // For concise arrow functions: async () => expr or async x => expr
+    let mut concise_async_arrow_depth: Option<usize> = None;
+    let mut paren_bracket_depth: usize = 0;
+
+    for i in 0..kept.len() {
+        let tok = kept[i];
+
+        if is_structural_punct(tok, "(") || is_structural_punct(tok, "[") {
+            paren_bracket_depth += 1;
+        } else if is_structural_punct(tok, ")") || is_structural_punct(tok, "]") {
+            paren_bracket_depth = paren_bracket_depth.saturating_sub(1);
+        }
+
+        // Check if concise async arrow ended:
+        // A comma only terminates the arrow body when at the arrow body's own nesting depth
+        // (not inside arguments or arrays, e.g. `async () => fn(a, await(b))`).
+        if let Some(arrow_depth) = concise_async_arrow_depth {
+            if paren_bracket_depth < arrow_depth
+                || (paren_bracket_depth == arrow_depth
+                    && (tok.value == ";"
+                        || tok.value == ","
+                        || is_structural_punct(tok, "}")))
+            {
+                concise_async_arrow_depth = None;
+            }
+        }
+
+        if is_structural_punct(tok, "{") {
+            let current_async = *scope_stack.last().unwrap_or(&false);
+            let block_async = if i > 0 && is_structural_punct(kept[i - 1], ")") {
+                let p = partners[i - 1];
+                if p != usize::MAX && p > 0 {
+                    let before_p = kept[p - 1];
+                    // Check for statement headers: if(c){, while(c){, for(...){, switch(c){, catch(e){, with(o){
+                    if matches!(
+                        before_p.value.as_str(),
+                        "if" | "while" | "for" | "switch" | "catch" | "with"
+                    ) {
+                        current_async
+                    } else {
+                        is_async_function_or_method_header(kept, &partners, p)
+                    }
+                } else {
+                    current_async
+                }
+            } else if i >= 1 && kept[i - 1].value == "=>" {
+                // Arrow: ... => {
+                let arrow_pos = i - 1;
+                if arrow_pos > 0 && is_structural_punct(kept[arrow_pos - 1], ")") {
+                    let p = partners[arrow_pos - 1];
+                    p != usize::MAX
+                        && p > 0
+                        && kept[p - 1].value == "async"
+                        && !is_string_literal(kept[p - 1])
+                        && kept[p].flags.unwrap_or(0) & lexer::token::TOKEN_PRECEDED_BY_NEWLINE == 0
+                        && (p == 1
+                            || (!is_structural_punct(kept[p - 2], ".")
+                                && !is_structural_punct(kept[p - 2], "?.")))
+                } else if arrow_pos >= 2
+                    && kept[arrow_pos - 2].value == "async"
+                    && !is_string_literal(kept[arrow_pos - 2])
+                    && kept[arrow_pos - 1].flags.unwrap_or(0)
+                        & lexer::token::TOKEN_PRECEDED_BY_NEWLINE
+                        == 0
+                    && (arrow_pos == 2
+                        || (!is_structural_punct(kept[arrow_pos - 3], ".")
+                            && !is_structural_punct(kept[arrow_pos - 3], "?.")))
+                {
+                    true // async x => {
+                } else {
+                    false
+                }
+            } else if i > 0
+                && matches!(
+                    kept[i - 1].value.as_str(),
+                    "else" | "do" | "try" | "finally" | "{" | ";"
+                )
+            {
+                // Control-flow continuation and bare statement blocks inherit the current async context.
+                current_async
+            } else {
+                // Class bodies (`class Name {`, `class extends ... {`), object literals, etc.,
+                // are not async function bodies.
+                false
+            };
+
+            scope_stack.push(block_async);
+        } else if is_structural_punct(tok, "}") && scope_stack.len() > 1 {
+            scope_stack.pop();
+        }
+
+        // Check for concise async arrow: `async (...) => expr` or `async x => expr`
+        if tok.value == "=>"
+            && kept.get(i + 1).map(|t| is_structural_punct(t, "{")) != Some(true)
+        {
+            let is_async_arrow = if i > 0 && is_structural_punct(kept[i - 1], ")") {
+                let p = partners[i - 1];
+                p != usize::MAX
+                    && p > 0
+                    && kept[p - 1].value == "async"
+                    && !is_string_literal(kept[p - 1])
+                    && kept[p].flags.unwrap_or(0) & lexer::token::TOKEN_PRECEDED_BY_NEWLINE == 0
+                    && (p == 1
+                        || (!is_structural_punct(kept[p - 2], ".")
+                            && !is_structural_punct(kept[p - 2], "?.")))
+            } else if i >= 2
+                && kept[i - 2].value == "async"
+                && !is_string_literal(kept[i - 2])
+                && kept[i - 1].flags.unwrap_or(0)
+                    & lexer::token::TOKEN_PRECEDED_BY_NEWLINE
+                    == 0
+                && (i == 2
+                    || (!is_structural_punct(kept[i - 3], ".")
+                        && !is_structural_punct(kept[i - 3], "?.")))
+            {
+                true // async x => expr
+            } else {
+                false
+            };
+            if is_async_arrow {
+                concise_async_arrow_depth = Some(paren_bracket_depth);
+            }
+        }
+
+        let in_async =
+            concise_async_arrow_depth.is_some() || *scope_stack.last().unwrap_or(&false);
+        is_async[i] = in_async;
+    }
+
+    is_async
+}
+
+/// Helper for #18152 / #18125: returns whether `tok` is a token that can start a new statement
+/// across a line terminator (excluding relational operators `in`/`instanceof` and contextual words).
+fn is_statement_start_token(tok: &lexer::token::Token) -> bool {
+    if tok.value == "++" || tok.value == "--" || tok.value == "!" || tok.value == "~" || tok.value == "{" {
+        return true;
+    }
+    if tok.type_ == lexer::token::TokenType::Keyword {
+        return matches!(
+            tok.value.as_str(),
+            "var" | "let" | "const" | "if" | "for" | "while" | "do" | "return"
+                | "throw" | "function" | "class" | "switch" | "try" | "break"
+                | "continue" | "new" | "this" | "typeof" | "void" | "delete"
+                | "debugger" | "super" | "import" | "export" | "async"
+                | "await" | "yield" | "true" | "false" | "null"
+        );
+    }
+    if tok.type_ == lexer::token::TokenType::Number || is_string_literal(tok) {
+        return true;
+    }
+    if tok.type_ == lexer::token::TokenType::Name && tok.type_name.is_none() {
+        return !matches!(tok.value.as_str(), "of" | "in" | "instanceof" | "as" | "from");
+    }
+    false
+}
+
+/// #18152: Identify token indices before which a `;` must be inserted due to
+/// ASI rules involving contextual keywords used as identifiers:
+/// - `let⏎new Foo`: `let` at end of line followed by a non-binding token is an expression statement `let;`.
+/// - `let⏎++x`: `let` followed by prefix `++`/`--` (a postfix `++`/`--` can never follow a line terminator).
+/// - `await⏎using⏎x`: `using` followed by a line terminator cannot be a `using` declaration (§14.3.1);
+///   it ends the statement, requiring `;` before `x`.
+/// - `x=y.if⏎l:;`: a property access ending a line ends the statement when followed by a statement start.
+fn contextual_asi_points(tokens: &[lexer::token::Token]) -> Vec<usize> {
+    let mut points = Vec::new();
+    if tokens.is_empty() {
+        return points;
+    }
+
+    let open_paren = {
+        let mut op = vec![usize::MAX; tokens.len()];
+        let mut stack = Vec::new();
+        for (k, t) in tokens.iter().enumerate() {
+            if is_structural_punct(t, "(") {
+                stack.push(k);
+            } else if is_structural_punct(t, ")") {
+                if let Some(o) = stack.pop() {
+                    op[k] = o;
+                }
+            }
+        }
+        op
+    };
+
+    for (i, tok) in tokens.iter().enumerate() {
+        if i == 0 || is_trivia(tok) || is_eof(tok) {
+            continue;
+        }
+        if tok.flags.unwrap_or(0) & lexer::token::TOKEN_PRECEDED_BY_NEWLINE == 0 {
+            continue;
+        }
+        if tok.value == ";" || tok.value == "}" {
+            continue;
+        }
+
+        let prev_idx = match tokens[..i].iter().rposition(|t| !is_trivia(t)) {
+            Some(idx) => idx,
+            None => continue,
+        };
+        let prev = &tokens[prev_idx];
+        if prev.value == ";" || prev.value == "{" || prev.value == "}" {
+            continue;
+        }
+
+        // Case 1: `let` at end of line followed by a statement-start token
+        if prev.value == "let" && !is_string_literal(prev) {
+            let prev_is_property = prev_idx > 0
+                && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?.");
+            if !prev_is_property {
+                // `let` must be in statement position (preceded by start of input or `;` / `{` / `}`).
+                let before_prev_is_stmt_boundary =
+                    match tokens[..prev_idx].iter().rposition(|t| !is_trivia(t)) {
+                        None => true,
+                        Some(p) => matches!(tokens[p].value.as_str(), ";" | "{" | "}"),
+                    };
+                if before_prev_is_stmt_boundary && is_statement_start_token(tok) {
+                    points.push(i);
+                    continue;
+                }
+            }
+        }
+
+        // Case 2: Postfix `++`/`--` cannot follow a newline (ECMA-262 §12.4).
+        if tok.value == "++" || tok.value == "--" {
+            let prev_ends_expr = (prev.type_ == lexer::token::TokenType::Name && !is_string_literal(prev))
+                || prev.type_ == lexer::token::TokenType::Number
+                || is_string_literal(prev)
+                || matches!(prev.value.as_str(), ")" | "]" | "this" | "true" | "false" | "null" | "super")
+                || (prev_idx > 0 && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?."));
+            let is_stmt_header = prev.value == ")" && {
+                let p = open_paren[prev_idx];
+                p != usize::MAX && p > 0 && matches!(tokens[p - 1].value.as_str(), "if" | "while" | "for" | "with")
+            };
+            if prev_ends_expr && !is_stmt_header {
+                points.push(i);
+                continue;
+            }
+        }
+
+        // Case 3: `using` at end of line (§14.3.1).
+        if prev.value == "using" && !is_string_literal(prev) {
+            let prev_is_property = prev_idx > 0
+                && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?.");
+            if !prev_is_property && is_statement_start_token(tok) {
+                points.push(i);
+                continue;
+            }
+        }
+
+        // Case 4: Property access ending a line: `x=y.if\nl:;` (#18125)
+        if prev_idx > 0
+            && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?.")
+            && is_statement_start_token(tok)
+        {
+            points.push(i);
+            continue;
+        }
+
+        // Case 5: Statement keyword on a new line after an expression end (#17887).
+        // If a program cannot be parsed by the grammar (e.g. contextual `yield` as identifier),
+        // ordinary statement boundaries before statement-starting keywords like `var`,
+        // `let`, `const`, `function`, `class`, `if`, etc. must still receive ASI.
+        let is_stmt_keyword = tok.type_ == lexer::token::TokenType::Keyword
+            && matches!(
+                tok.value.as_str(),
+                "var" | "let" | "const" | "function" | "class" | "if" | "while" | "for"
+                    | "do" | "return" | "throw" | "switch" | "try" | "break" | "continue"
+                    | "debugger" | "import" | "export" | "yield"
+            );
+        if is_stmt_keyword {
+            let prev_ends_expr = (prev.type_ == lexer::token::TokenType::Name && !is_string_literal(prev))
+                || prev.type_ == lexer::token::TokenType::Number
+                || is_string_literal(prev)
+                || matches!(prev.value.as_str(), ")" | "]" | "this" | "true" | "false" | "null" | "super" | "yield")
+                || (prev_idx > 0 && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?."));
+            let is_stmt_header = prev.value == ")" && {
+                let p = open_paren[prev_idx];
+                p != usize::MAX && p > 0 && matches!(tokens[p - 1].value.as_str(), "if" | "while" | "for" | "with")
+            };
+            if prev_ends_expr && !is_stmt_header {
+                points.push(i);
+                continue;
+            }
+        }
+    }
+
+    points
 }
 
 /// #18114: in the window `} ( ) )` at `body_close`…`outer_close`, is the
@@ -7015,6 +7417,23 @@ mod tests {
     #[test]
     fn empty_source_yields_empty_output() {
         assert_eq!(minify(""), "");
+    }
+
+    #[test]
+    fn lt_bang_decr_keeps_space_to_prevent_html_comment() {
+        // Issue #17887: `a < !--b` (or `a < ! --b`) must emit `a< !--b`, never `a<!--b`
+        // which in script mode starts an Annex B single-line HTML comment.
+        assert_eq!(
+            minify("var b=2,a=1; var x = a < !--b; console.log(\"ok\", x)"),
+            "var b=2,a=1;var x=a< !--b;console.log(\"ok\",x);"
+        );
+        assert_eq!(minify("a < ! --b"), "a< !--b;");
+        // Negative checks: no space needed if not followed by `--`
+        assert_eq!(minify("a < !b"), "a<!b;");
+        assert_eq!(minify("a < !++b"), "a<!++b;");
+        assert_eq!(minify("a < ! - -b"), "a<!- -b;");
+        assert_eq!(minify("a << !--b"), "a<<!--b;");
+        assert_eq!(minify("a <= !--b"), "a<=!--b;");
     }
 
     #[test]
@@ -11397,9 +11816,11 @@ mod tests {
                 Err(MinifyError::LexError(_))
             )
         };
-        // U+2028/U+2029 end the hashbang, but the lexer runs past them.
-        assert!(refused("#!/x\u{2028}console.log(1)"));
-        assert!(refused("#!/x\u{2029}console.log(1)\nf()"));
+        // #17887: U+2028/U+2029 end the hashbang properly without swallowing following code.
+        assert!(!refused("#!/x\u{2028}console.log(1)"));
+        assert!(!refused("#!/x\u{2029}console.log(1)\nf()"));
+        assert_eq!(minify("#!/x\u{2028}console.log(1)"), "console.log(1);");
+        assert_eq!(minify("#!/x\u{2029}console.log(1)\nf()"), "console.log(1);f();");
         // `#!` is only a hashbang at the very start of the file.
         assert!(refused("console.log(1);\n#!foo\nconsole.log(2);"));
         assert!(refused(" #!/x\nconsole.log(1)"));
@@ -11549,5 +11970,98 @@ mod tests {
         assert_eq!(marks("class C{class;extends(){if(a){}}}"), vec![false]);
         // A class expression as a field initialiser still has a member list.
         assert_eq!(marks("class C{x=class{if(){}}}"), vec![true]);
+    }
+
+    // ---- #18152: contextual keywords and script await calls -------------
+
+    #[test]
+    fn issue18152_await_in_script_call_preserved() {
+        assert_eq!(minify("await(x);"), "await(x);");
+        assert_eq!(minify("function f(){await(x)}"), "function f(){await(x)};");
+        // Reviewer edge case 1.4: top-level property access named export/import does not make file a module
+        assert_eq!(minify("window.export=1;await(x);"), "window.export=1;await(x);");
+        assert_eq!(minify("lib.import=fn;await(x);"), "lib.import=fn;await(x);");
+        // Reviewer edge case 1.5: class body inside async function is not async context;
+        // class field retains its terminator (CCR-077, #15862).
+        assert_eq!(
+            minify("async function f(){class Foo{field=await(x)}}"),
+            "async function f(){class Foo{field=await(x);}};"
+        );
+    }
+
+    #[test]
+    fn issue18152_await_in_async_context_elided() {
+        assert_eq!(minify("async function f(){await(x)}"), "async function f(){await x};");
+        assert_eq!(minify("let f=async()=>{await(x)}"), "let f=async()=>{await x};");
+        assert_eq!(minify("import x from 'y';await(x)"), "import x from\"y\";await x;");
+        // Reviewer edge case 1.6: comma inside nested call/array in concise arrow does not cancel async context
+        assert_eq!(minify("let f=async()=>fn(a,await(b))"), "let f=async()=>fn(a,await b);");
+    }
+
+    #[test]
+    fn issue18152_contextual_keywords_asi() {
+        assert_eq!(minify("let\nnew Foo;"), "let;new Foo;");
+        assert_eq!(minify("let\n++x;"), "let;++x;");
+        assert_eq!(
+            minify("async function f(){if(a){await\nusing\nx}}"),
+            "async function f(){if(a){await using;x}};"
+        );
+        assert_eq!(minify("x=y.if\nl:;"), "x=y.if;l:;");
+        // Reviewer edge cases 1.1 & 1.2: property accesses and operators must not have synthetic semicolons
+        assert_eq!(minify("obj.let\n(x);"), "obj.let(x);");
+        assert_eq!(minify("stream.let\n.filter(fn);"), "stream.let.filter(fn);");
+        assert_eq!(
+            minify("target.element\ninstanceof HTMLInputElement;"),
+            "target.element instanceof HTMLInputElement;"
+        );
+        assert_eq!(minify("target.element\nin obj;"), "target.element in obj;");
+    }
+
+    #[test]
+    fn issue18125_keyword_property_statement_boundary() {
+        assert_eq!(
+            minify("function f(){\nx=y.if\nl:;\n}"),
+            "function f(){x=y.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.if\nl:;}"),
+            "function f(){x=y.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.while\nreturn 1;}"),
+            "function f(){x=y.while;return 1};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.for\nif(a)b();}"),
+            "function f(){x=y.for;if(a)b()};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.default\nvar z=1;}"),
+            "function f(){x=y.default;var z=1};"
+        );
+        assert_eq!(
+            minify("async function f(){x=y.delete\nawait p;}"),
+            "async function f(){x=y.delete;await p};"
+        );
+        assert_eq!(
+            minify("function f(){x=y?.if\nl:;}"),
+            "function f(){x=y?.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.class\n!foo();}"),
+            "function f(){x=y.class;!foo()};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.catch\n{let b=2;}}"),
+            "function f(){x=y.catch;{let b=2}};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.finally\ntrue;}"),
+            "function f(){x=y.finally;true};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.return\n~x;}"),
+            "function f(){x=y.return;~x};"
+        );
     }
 }

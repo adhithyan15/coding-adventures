@@ -72,12 +72,12 @@ _DISPLAY_CONVENTION = "lisp"
 
 
 def set_display_convention(name: str) -> None:
-    """Select the value-display convention: ``"ruby"`` or ``"lisp"`` (default).
+    """Select the value-display convention: ``"ruby"``, ``"python"`` or ``"lisp"`` (default).
 
     An unrecognised name falls back to the ``"lisp"`` default rather than
     raising, so a forward-compatible emitter can never crash an older runtime."""
     global _DISPLAY_CONVENTION
-    _DISPLAY_CONVENTION = "ruby" if name == "ruby" else "lisp"
+    _DISPLAY_CONVENTION = name if name in ("ruby", "python") else "lisp"
 
 
 def to_display(v: Any) -> str:
@@ -86,19 +86,27 @@ def to_display(v: Any) -> str:
     Distinct from ``repr``: ``nil`` prints as ``nil``, a symbol as its bare
     name, a pair as a Lisp list.  Booleans and ``nil`` follow the active display
     convention (see :func:`set_display_convention`): ``true`` / ``false`` and
-    an empty ``nil`` under ``"ruby"`` (Ruby's ``to_s``), else the default Lisp
+    an empty ``nil`` under ``"ruby"`` (Ruby's ``to_s``), ``True`` / ``False``
+    and ``None`` under ``"python"``, else the default Lisp
     ``#t`` / ``#f`` and ``nil``.  Everything else falls back to
     ``str`` (which renders ints/floats/sequences/maps natively, and pairs via
     :meth:`Pair.__repr__`)."""
     if v is None:
         # Ruby's ``nil.to_s`` is the empty string, so ``puts nil`` prints an
-        # empty line and ``"a#{nil}b"`` is ``ab`` (#18798, item 11).  Inside an
-        # array Ruby shows ``nil`` (``inspect``), but an array never reaches
+        # empty line and ``"a#{nil}b"`` is ``ab`` (#18798, item 11).
+        # Python's ``None`` displays as ``"None"``.
+        # Inside an array Ruby shows ``nil`` (``inspect``), but an array never reaches
         # this branch: it renders through ``str`` below.
-        return "" if _DISPLAY_CONVENTION == "ruby" else "nil"
+        if _DISPLAY_CONVENTION == "ruby":
+            return ""
+        if _DISPLAY_CONVENTION == "python":
+            return "None"
+        return "nil"
     if isinstance(v, bool):
         if _DISPLAY_CONVENTION == "ruby":
             return "true" if v else "false"
+        if _DISPLAY_CONVENTION == "python":
+            return "True" if v else "False"
         return "#t" if v else "#f"
     if isinstance(v, Symbol):
         return v.name

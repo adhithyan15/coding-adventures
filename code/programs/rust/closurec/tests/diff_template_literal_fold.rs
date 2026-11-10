@@ -64,3 +64,16 @@ fn no_substitution_template_folds_to_string() {
         "a backtick template survived — the CLOC12.197 fold did not run: {actual}"
     );
 }
+
+/// Substituted template with constant operands collapses to a single string literal (#17854).
+#[test]
+fn substituted_template_folds_to_string() {
+    let path = std::env::temp_dir().join(format!("closurec-template-fold-{}.js", std::process::id()));
+    std::fs::write(&path, "g(`hello ${'world'}!`);\n").unwrap();
+    let out = Command::new(BINARY).args(["-O", "SIMPLE", "--js", path.to_str().unwrap()]).output().unwrap();
+    assert!(out.status.success(), "exit: {:?}, stderr: {}", out.status.code(), String::from_utf8_lossy(&out.stderr));
+    let flat = String::from_utf8_lossy(&out.stdout).replace([' ', '\n'], "");
+    assert!(flat.contains("\"helloworld!\""), "did not fold: {flat}");
+    assert!(!flat.contains('`'), "backtick survived: {flat}");
+    let _ = std::fs::remove_file(&path);
+}

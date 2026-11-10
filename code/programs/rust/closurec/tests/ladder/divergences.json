@@ -113,25 +113,14 @@
   },
   "ladder_t4_while_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
+   "closurec_stdout": "for(var i=0;i<3;)i++;console.log(i);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
    "level": "ADVANCED",
-   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
+   "reason": "At ADVANCED upstream additionally renames the loop-local binding (CCR-022).",
    "rung": "while",
    "tier": 4,
    "upstream_exit": 0,
    "upstream_stdout": "for(var a=0;a<3;)a++;console.log(a);\n"
-  },
-  "ladder_t4_while_simple": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
-   "level": "SIMPLE",
-   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
-   "rung": "while",
-   "tier": 4,
-   "upstream_exit": 0,
-   "upstream_stdout": "for(var i=0;i<3;)i++;console.log(i);\n"
   },
   "ladder_t5_regex_advanced": {
    "closurec_exit": 0,
@@ -189,28 +178,15 @@
    "upstream_stdout": "console.log(2);\n"
   },
   "ladder_t6_class_advanced": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
-   "closurec_stdout": "",
+   "closurec_exit": 0,
+   "closurec_stdout": "class A{constructor(){this.x=1}get(){return this.x}}console.log((new A).get());\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
    "level": "ADVANCED",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a class method following a constructor fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
+   "reason": "closurec does not rename the class declaration in advanced mode, leaving class A unminified, whereas upstream renames it to a.",
    "rung": "class",
    "tier": 6,
    "upstream_exit": 0,
    "upstream_stdout": "class a{constructor(){this.x=1}get(){return this.x}}console.log((new a).get());\n"
-  },
-  "ladder_t6_class_simple": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "SIMPLE compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "SIMPLE",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a class method following a constructor fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "class",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "class A{constructor(){this.x=1}get(){return this.x}}console.log((new A).get());\n"
   },
   "ladder_t6_class_static_advanced": {
    "closurec_exit": 0,
@@ -370,30 +346,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "console.log(3);\n"
   },
-  "ladder_t6_template_advanced": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a template literal with a substitution fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "template",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(\"v1\");\n"
-  },
-  "ladder_t6_template_simple": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "SIMPLE compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "SIMPLE",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a template literal with a substitution fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "template",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "var n=1;console.log(`v${n}`);\n"
-  },
   "ladder_t7_async_fn_advanced": {
    "closurec_exit": 1,
    "closurec_stderr_starts_with": "ADVANCED compilation failed at typed AST bridge stage:",
@@ -421,24 +373,13 @@
   "ladder_t7_class_field_advanced": {
    "closurec_exit": 0,
    "closurec_stdout": "class A{x=1;}console.log((new A).x);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
    "level": "ADVANCED",
-   "reason": "At WHITESPACE_ONLY upstream retains the terminator after a class field and closurec drops it (CCR-077). At ADVANCED upstream additionally renames the class binding (CCR-022).",
+   "reason": "At ADVANCED upstream additionally renames the class binding (CCR-022).",
    "rung": "class_field",
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "class a{x=1;}console.log((new a).x);\n"
-  },
-  "ladder_t7_class_field_ws": {
-   "closurec_exit": 0,
-   "closurec_stdout": "class A{x=1}console.log((new A).x);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
-   "level": "WHITESPACE_ONLY",
-   "reason": "At WHITESPACE_ONLY upstream retains the terminator after a class field and closurec drops it (CCR-077). At ADVANCED upstream additionally renames the class binding (CCR-022).",
-   "rung": "class_field",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "class A{x=1;}console.log((new A).x);\n"
   },
   "ladder_t7_computed_key_advanced": {
    "closurec_exit": 0,
@@ -477,45 +418,32 @@
   },
   "ladder_t7_generator_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "function* g(){yield 1}console.log([...g()]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
+   "closurec_stdout": "function*g(){yield 1}console.log([...g()]);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15940",
    "level": "ADVANCED",
-   "reason": "At SIMPLE the only difference is a space: upstream emits `function*g`, closurec emits `function* g` (CCR-077). At ADVANCED upstream additionally inlines the single-use generator into its call site (CCR-068).",
+   "reason": "At ADVANCED upstream inlines the single-use generator into its call site (CCR-068).",
    "rung": "generator",
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "console.log([...function*(){yield 1}()]);\n"
   },
-  "ladder_t7_generator_simple": {
-   "closurec_exit": 0,
-   "closurec_stdout": "function* g(){yield 1}console.log([...g()]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15862",
-   "level": "SIMPLE",
-   "reason": "At SIMPLE the only difference is a space: upstream emits `function*g`, closurec emits `function* g` (CCR-077). At ADVANCED upstream additionally inlines the single-use generator into its call site (CCR-068).",
-   "rung": "generator",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "function*g(){yield 1}console.log([...g()]);\n"
-  },
   "ladder_t7_getter_setter_advanced": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
-   "closurec_stdout": "",
+   "closurec_exit": 0,
+   "closurec_stdout": "var o={get a(){return 1},set a(v){}};console.log(o.a);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
    "level": "ADVANCED",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: an object-literal accessor pair fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
+   "reason": "closurec now parses and compiles getter/setter object literals at ADVANCED (previously failed at parse stage), but does not yet inline the getter into console.log(1) or eliminate the unused object literal.",
    "rung": "getter_setter",
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "console.log(1);\n"
   },
   "ladder_t7_getter_setter_simple": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "SIMPLE compilation failed at parse stage:",
-   "closurec_stdout": "",
+   "closurec_exit": 0,
+   "closurec_stdout": "var o={get a(){return 1},set a(v){}};console.log(o.a);\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
    "level": "SIMPLE",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: an object-literal accessor pair fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
+   "reason": "At SIMPLE, getter/setter object literals now parse and compile. Upstream renames parameter `v` to `a` in `set a(a){}` whereas closurec preserves parameter name `v`.",
    "rung": "getter_setter",
    "tier": 7,
    "upstream_exit": 0,

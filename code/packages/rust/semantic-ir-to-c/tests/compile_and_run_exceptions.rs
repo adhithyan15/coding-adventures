@@ -132,6 +132,25 @@ fn rescue_clause(types: Vec<&str>, binding: Option<&str>, body: Vec<Stmt>) -> Re
 fn trycatch(body: Vec<Stmt>, rescues: Vec<RescueClause>, ensure_body: Option<Vec<Stmt>>) -> Stmt {
     Stmt::TryCatch { body, rescues, ensure_body, span: s() }
 }
+
+#[test]
+fn try_catch_without_rescue_or_ensure_emits_inline_c() {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+    // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+    // C emits the body statements inline without setjmp handler overhead.
+    let m = exc_module(vec![trycatch(
+        vec![puts(strlit("bare_c"))],
+        vec![],
+        None,
+    )]);
+    let c = semantic_ir_to_c::compile(&m).expect("compile");
+    let fn_src = c.source.split("SirValue sir_user_main(void) {").nth(1).expect("user main");
+    assert!(!fn_src.contains("_sir_push_handler"), "got:\n{}", fn_src);
+    assert!(!fn_src.contains("setjmp"), "got:\n{}", fn_src);
+    if let Some(out) = run(&m) {
+        assert_eq!(out, "bare_c\n");
+    }
+}
 /// A `main` module running `stmts`, declaring Exceptions + Strings.
 fn exc_module(stmts: Vec<Stmt>) -> Module {
     Module {
@@ -234,6 +253,37 @@ fn raise_named_class_with_a_compound_message_still_constructs_the_exception() {
         None,
     )])) {
         Some(out) => assert_eq!(out, "b\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn exception_message_method_returns_message_or_class_name() {
+    // #18798 item 8: built-in `.message` accessor on exception objects
+    // Calling `__method__(e, "message")` returns the exception's message string,
+    // or the class name if no explicit message was given.
+    let m = exc_class_module(vec![
+        trycatch(
+            vec![raise_class("ArgumentError", Some(strlit("boom")))],
+            vec![rescue_clause(
+                vec!["ArgumentError"],
+                Some("e"),
+                vec![puts(bc("__method__", vec![local("e"), strlit("message")]))],
+            )],
+            None,
+        ),
+        trycatch(
+            vec![raise_class("TypeError", None)],
+            vec![rescue_clause(
+                vec!["TypeError"],
+                Some("e"),
+                vec![puts(bc("__method__", vec![local("e"), strlit("message")]))],
+            )],
+            None,
+        ),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "boom\nTypeError\n"),
         None => eprintln!("skip: no cc"),
     }
 }

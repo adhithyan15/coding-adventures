@@ -2302,11 +2302,13 @@ mod tests {
     #[test]
     fn list_subscript_assignment_lowers_to_seq_set() {
         let m = lower("xs = [1, 2]\nxs[0] = 9\n");
-        match &main_stmts(&m)[1] {
+        let stmts = main_stmts(&m);
+        assert!(matches!(&stmts[1], Stmt::LetStarBinding { name, value, .. } if name == "__subval_0" && matches!(value, Expr::IntLit { value: 9, .. })));
+        match &stmts[2] {
             Stmt::SeqSet { seq, index, value, .. } => {
-                assert!(matches!(seq, Expr::VarRef { .. }));
+                assert!(matches!(seq, Expr::VarRef { name, .. } if name == "xs"));
                 assert!(matches!(index, Expr::IntLit { value: 0, .. }));
-                assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected SeqSet, got {other:?}"),
         }
@@ -2316,11 +2318,13 @@ mod tests {
     #[test]
     fn dict_subscript_assignment_lowers_to_map_set() {
         let m = lower("d = {}\nd[\"k\"] = 5\n");
-        match &main_stmts(&m)[1] {
+        let stmts = main_stmts(&m);
+        assert!(matches!(&stmts[1], Stmt::LetStarBinding { name, value, .. } if name == "__subval_0" && matches!(value, Expr::IntLit { value: 5, .. })));
+        match &stmts[2] {
             Stmt::MapSet { map, key, value, .. } => {
-                assert!(matches!(map, Expr::VarRef { .. }));
+                assert!(matches!(map, Expr::VarRef { name, .. } if name == "d"));
                 assert!(matches!(key, Expr::StrLit { value, .. } if value == "k"));
-                assert!(matches!(value, Expr::IntLit { value: 5, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected MapSet, got {other:?}"),
         }
@@ -2334,7 +2338,7 @@ mod tests {
         match main_stmts(&m).last().expect("a stmt") {
             Stmt::SeqSet { seq, value, .. } => {
                 assert!(matches!(seq, Expr::SeqIndex { .. }), "base is the inner index");
-                assert!(matches!(value, Expr::IntLit { value: 7, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected SeqSet with SeqIndex base, got {other:?}"),
         }
@@ -3309,6 +3313,145 @@ print(d.bark())
 ";
         if let Some(out) = run_roundtrip(src) {
             assert_eq!(out, "...\nwoof");
+        }
+    }
+
+    #[test]
+    fn class_private_method_mangled() {
+        let src = "\
+class C:
+    def __secret(self):
+        return 42
+    def reveal(self):
+        return self.__secret()
+";
+        let m = lower(src);
+        let funcs: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+        assert!(funcs.contains(&"C___C__secret"), "expected hoisted name C___C__secret, got {funcs:?}");
+
+        // Check registration in main body
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let registered = main.body.stmts.iter().any(|s| {
+            matches!(s, Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name,
+                    args,
+                    ..
+                },
+                ..
+            } if name == "__def_method__" && matches!(&args[1], Expr::StrLit { value, .. } if value == "_C__secret"))
+        });
+        assert!(registered, "method should be registered as _C__secret");
+    }
+
+    #[test]
+    fn class_private_instance_var_mangled() {
+        let src = "\
+class C:
+    def __init__(self):
+        self.__val = 100
+    def get_val(self):
+        return self.__val
+";
+        let m = lower(src);
+        let init = m.functions.iter().find(|f| f.name == "C____init__").unwrap();
+        let stores_mangled = init.body.stmts.iter().any(|s| {
+            matches!(s, Stmt::Assign {
+                name,
+                scope: Scope::Instance,
+                ..
+            } if name == "@_C__val")
+        });
+        assert!(stores_mangled, "self.__val store should be mangled to @_C__val");
+
+        let getter = m.functions.iter().find(|f| f.name == "C__get_val").unwrap();
+        let returns_mangled = matches!(&getter.body.value, Expr::VarRef {
+            name,
+            scope: Scope::Instance,
+            ..
+        } if name == "@_C__val");
+        assert!(returns_mangled, "self.__val read should be mangled to @_C__val");
+    }
+
+    #[test]
+    fn class_outer_helper_not_called_due_to_mangling() {
+        let src = "\
+def __helper():
+    return 1
+
+class C:
+    def call(self):
+        return __helper()
+";
+        // Inside class C, `__helper()` is mangled to `_C__helper()`, which does not exist,
+        // so it fails to resolve (NameError).
+        let err = compile_source(src, "test").unwrap_err();
+        assert!(err.message.contains("unresolved name `_C__helper`"), "error was: {}", err.message);
+    }
+
+    #[test]
+    fn class_with_leading_underscores_mangled() {
+        let src = "\
+class _Foo:
+    def __secret(self):
+        return 1
+
+class __Bar:
+    def __secret(self):
+        return 2
+
+class ___:
+    def __secret(self):
+        return 3
+";
+        let m = lower(src);
+        let funcs: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+        // Leading underscores in class name stripped:
+        // _Foo -> Foo -> _Foo__secret
+        assert!(funcs.contains(&"_Foo___Foo__secret"), "got {funcs:?}");
+        // __Bar -> Bar -> _Bar__secret
+        assert!(funcs.contains(&"__Bar___Bar__secret"), "got {funcs:?}");
+        // ___ -> all underscores -> not mangled -> __secret
+        assert!(funcs.contains(&"_______secret"), "got {funcs:?}");
+    }
+
+    #[test]
+    fn class_dunder_methods_not_mangled() {
+        let src = "\
+class C:
+    def __init__(self):
+        pass
+    def __str__(self):
+        return \"C\"
+";
+        let m = lower(src);
+        let funcs: Vec<&str> = m.functions.iter().map(|f| f.name.as_str()).collect();
+        assert!(funcs.contains(&"C____init__"), "got {funcs:?}");
+        assert!(funcs.contains(&"C____str__"), "got {funcs:?}");
+    }
+
+    #[test]
+    fn e2e_class_private_name_mangling() {
+        let src = "\
+class Base:
+    def __init__(self):
+        self.__x = 10
+    def get_base_x(self):
+        return self.__x
+
+class Sub(Base):
+    def __init__(self):
+        self.__x = 20
+    def get_sub_x(self):
+        return self.__x
+
+b = Base()
+s = Sub()
+print(b.get_base_x())
+print(s.get_sub_x())
+";
+        if let Some(out) = run_roundtrip(src) {
+            assert_eq!(out, "10\n20");
         }
     }
 }

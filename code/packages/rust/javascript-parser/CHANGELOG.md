@@ -2,10 +2,88 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.7] - 2026-11-09
+
+### Fixed
+
+- Support adjacent class members and reserved-word property names (#17852):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, removed trailing `SEMICOLON` requirement after `method_definition` and `async_method` in `class_element` to allow adjacent class members without explicit semicolons.
+  - In `code/grammars/ecmascript/es5.grammar` through `es2025.grammar`, defined `identifier_name` matching `NAME` and all ECMAScript reserved words, allowing reserved words as property names in `property_name`, member dot access `.` and optional chaining `?.`.
+  - In `src/bridge.rs`, added helper `extract_ident_name` to extract identifier names from either raw tokens or `identifier_name` grammar nodes in `convert_member_expression`, `convert_call_expression`, `convert_optional_chain_expression`, and `convert_property_key`.
+  - Regenerated compiled grammars for Rust and Ruby.
+  - Added unit tests for adjacent class members without semicolons, reserved words as property names and dot access, and reserved words as class members.
+
+## [0.67.6] - 2026-11-09
+
+### Fixed
+
+- Support object method shorthand and async function expressions (#17941):
+  - In `code/grammars/ecmascript/es2015.grammar` through `es2025.grammar`, reordered `property_definition` alternatives so `method_definition` and `async_method` are evaluated before bare identifier `NAME`. In PEG parsers with ordered choice, testing `NAME` first caused method declarations like `{ f() {} }` and `{ valueOf() {} }` to be eagerly parsed as shorthand property names, failing on the opening parenthesis `(`.
+  - In `primary_expression`, reordered `async_function_expression` and `async_generator_expression` before identifier `NAME` so contextual keyword `async` followed by `function` is correctly parsed as an async function expression instead of an identifier followed by an unexpected `function` keyword.
+  - In `src/bridge.rs`, updated AST bridging to convert method definitions into `Property` nodes with `method: true` (or `kind: Get` / `kind: Set` for getters/setters), mapped async flags to `FunctionExpression::is_async`, and routed `async_function_expression`, `async_generator_expression`, and `await_expression` in `convert_expression`.
+  - Regenerated compiled grammars for Rust and Ruby.
+  - Added unit test coverage for object method shorthand, `valueOf` method shorthand, and async function expressions.
+
+## [0.67.5] - 2026-11-09
+
+### Fixed
+
+- Support template literals with substitutions across modern ECMAScript editions (#17854):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, replaced the broken `template_literal` and `template_span` rules with `template_literal = TEMPLATE_NO_SUB | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;`, matching `es2015.grammar` and standard ECMA-262 structure. Previously the grammar lacked a final expression before `TEMPLATE_TAIL`, causing all template literals with substitutions to fail to parse.
+  - In `src/bridge.rs`, updated `convert_template_literal` to parse multi-part template literals into `TemplateLiteral` with $N + 1$ `TemplateElement` quasis interleaved with $N$ expressions, properly tracking `tail: false` for heads/middles and `tail: true` for tails.
+  - Regenerated compiled grammars in `src/_grammar.rs`.
+  - Added unit tests for single substitution, multiple substitutions, adjacent substitutions, expression substitutions, and tagged templates with substitutions across all modern ECMAScript editions (ES2015-ES2025).
+
+## [0.67.4] - 2026-11-08
+
+### Fixed
+
+- Speculative ASI insertion performance on labeled blocks (#17882):
+  - In `src/asi.rs`, `opens_block` now recognizes `{` preceded by a label (and switch `default`) so that semicolons before `}` are speculated in a single linear pass rather than requiring quadratic retries in `retry_on_error`.
+  - In `ends_object_literal`, require `!opens_block(o)` to prevent erroneously classifying a labeled block's closing `}` as an object literal closing brace, which previously caused spurious semicolon insertion after the block.
+  - Resolves pathological parser latency and timeout when parsing many labeled blocks (e.g. 400 lines reduced from >50s to <300ms).
+
+## [0.67.3] - 2026-11-08
+
+### Fixed
+
+- Prevent lexical declarations in single-statement contexts (#18146):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, `lexical_declaration` is moved from `statement` to `source_element`, `block`, `case_clause`, `default_clause`, and `static_block`.
+  - ECMA-262 specifies that `Statement` excludes lexical declarations (`let` and `const`). By excluding `lexical_declaration` from `statement`, single-statement contexts (such as `if`, `while`, `for`, `with`, and labelled statements) refuse declarations fail-closed rather than miscompiling `if (1) let\nx = 1` or `if (1) const x = 1` into `let x=1;`.
+  - Regenerated compiled grammars in `src/_grammar.rs`.
+
+## [0.67.2] - 2026-11-08
+
+### Fixed
+
+- Support bare `yield` expressions and restricted-production ASI after `yield` (#17939):
+  - In `code/grammars/ecmascript/es2015.grammar` through `es2025.grammar`, `yield_expression` now permits an optional operand (`"yield" STAR assignment_expression | "yield" [ assignment_expression ]`), allowing bare `yield;` and `yield\n` to parse cleanly.
+  - In typed AST `bridge.rs`, `convert_yield_expression` handles operand-less `yield_expression` by producing `YieldExpression { argument: None, delegate }`.
+  - In `early_errors.rs`, enforce ECMA-262 early SyntaxErrors for yield expressions: forbidden in formal parameters, class static initialization blocks, as assignment/update targets, and in strict mode outside generators.
+  - Regenerated compiled grammars `src/_grammar.rs` (rustfmt).
+
+## [0.67.1] - 2026-11-08
+
+### Fixed
+
+- Function and class declarations in class static initialization blocks (`static { ... }`) (#17940):
+  - In `code/grammars/ecmascript/es2022.grammar`, `es2023.grammar`, `es2024.grammar`, and `es2025.grammar`, `static_block` now accepts declarations (`function_declaration`, `generator_declaration`, `async_function_declaration`, `async_generator_declaration`, `class_declaration`, and in ES2025 `decorated_class_declaration`) in addition to `statement`.
+  - In typed AST `bridge.rs`, `convert_static_block` now lowers its children via `convert_statement_list_item` (matching `convert_block_statement`), preserving function and class declarations instead of rejecting them or lowering them as expressions.
+  - In `early_errors.rs`, `static_block` is added to block scope validation so duplicate lexical declarations within a static block are detected as early errors.
+  - Regenerated `src/_grammar.rs` (rustfmt).
+
 ## Unreleased - an ExpressionStatement never starts with `{` or `function` (F12 phase 0)
 
 ### Fixed
 
+- Module specifier escape sequence decoding in typed AST bridge (#18122):
+  - In `import_source`, `decode_string_escapes` is now invoked on the module specifier's token value before creating `StringLiteral`. This ensures `StringLiteral.value` holds the decoded characters rather than source escape sequences, preventing downstream emitters from doubling backslashes in `import` and `export ... from` specifiers.
+- Keyword property names in Phase-1 ASI parsing (#18125):
+  - Normalizes member access keyword tokens after `.` or `?.` to `TokenType::Name` during `parse_with_asi_tracked`, allowing the compiled grammar (`DOT NAME`) to parse keyword properties like `x=y.if` and compute accurate ASI insertion points before subsequent newline-led statements.
+- Contextual keyword ASI boundaries and expression termination (#18152):
+  - `can_end_expression` now includes contextual keywords `let`, `await`, `yield` so they can terminate expression statements before newline-led statement starts.
+  - `ends_expression_before` now correctly treats property accesses (`is_member_access_dot`) as ending expressions.
+  - `speculate_line_semicolons` allows `let` followed across a newline by statement-starting tokens (`++`, `--`, statement keywords, numbers, strings) to trigger ASI rather than being suppressed by contextual keyword guards.
 - The ES grammars now enforce ECMA-262's ExpressionStatement lookahead:
   `!( LBRACE | "function" )` in ES1/ES3/ES5, plus `"class"` and `"let" LBRACKET`
   from ES2015 and `"async" "function"` from ES2017. Before, a block whose last

@@ -639,6 +639,8 @@ pub fn emit_module(m: &Module) -> String {
         out.push_str("__Sir.setDisplayConvention(\"ruby\");\n");
     } else if m.metadata.source_language.as_deref() == Some("apl") {
         out.push_str("__Sir.setDisplayConvention(\"apl\");\n");
+    } else if m.metadata.source_language.as_deref() == Some("python") {
+        out.push_str("__Sir.setDisplayConvention(\"python\");\n");
     }
     // Only OOP-using modules import the OOP runtime, so a pure
     // arithmetic module gains no dependency on it.
@@ -1516,6 +1518,14 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emitting
+            // a bare `try { … }` without `catch` or `finally` is a TypeScript
+            // syntax error. Emit the body statements inline.
+            if rescues.is_empty() && ensure_body.is_none() {
+                emit_stmt_block(out, body, indent);
+                return;
+            }
             let pad = " ".repeat(indent);
             let _ = writeln!(out, "{}try {{", pad);
             emit_stmt_block(out, body, indent + 2);
@@ -1762,14 +1772,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
-            // Render: new __Sir.Closure((..._a) => <fn>(<cap0>, <cap1>, ..._a))
+            // Render: new __Sir.Closure((..._a) => <fn>(<cap0>, <cap1>, ..._a), <arity>)
+            let arity = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied());
             out.push_str("new __Sir.Closure((..._a: __Sir.Val[]) => ");
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
             for c in captures {
                 emit_expr(out, &c.value, indent);
                 out.push_str(", ");
             }
-            out.push_str("..._a))");
+            out.push_str("..._a)");
+            if let Some(ar) = arity {
+                let _ = write!(out, ", {ar}");
+            }
+            out.push(')');
         }
         Expr::Intrinsic { name, span, .. } => {
             // v0 backend accepts no intrinsics; the check_module
@@ -2446,7 +2461,8 @@ fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
         emit_expr(out, &c.value, indent);
         out.push_str(", ");
     }
-    out.push_str("..._a); })");
+    out.push_str("..._a); }, ");
+    let _ = write!(out, "{n})");
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
@@ -2709,6 +2725,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => "__Sir.sub",
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
+        "%" => "__Sir.mod",
+        "+=" => "__Sir.iadd",
         // SIR21 T3b-2: `div_floor` is a bare alias for `div` (a documented
         // pre-existing limitation — this runtime's untagged `Val` model
         // cannot distinguish Ruby Integer from Ruby Float at runtime, so
@@ -3539,6 +3557,31 @@ mod tests {
     }
 
     #[test]
+    fn emit_builtin_call_mod() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "%".into(),
+                args: vec![
+                    Expr::IntLit {
+                        value: 7,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 3,
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__Sir.mod(7, 3)");
+    }
+
+    #[test]
     fn emit_builtin_call_shift_left() {
         // `ruby-to-semantic-ir` lowers `<<` to a top-level
         // `BuiltinCall("<<", [lhs, rhs])` -- a separate protocol from
@@ -3897,6 +3940,42 @@ mod tests {
         // Never both — an exhaustive `if`/`else if` in `emit_module`, not
         // two independent conditions.
         assert!(!out.contains(r#"setDisplayConvention("ruby")"#));
+    }
+
+    #[test]
+    fn emit_display_convention_python_selects_python_booleans() {
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("python")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains(r#"__Sir.setDisplayConvention("python");"#),
+            "python module must select the Python display convention; got:\n{out}"
+        );
+        assert!(!out.contains(r#"setDisplayConvention("ruby")"#));
+        assert!(!out.contains(r#"setDisplayConvention("apl")"#));
     }
 
     #[test]

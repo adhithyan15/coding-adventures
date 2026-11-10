@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.5] - 2026-11-09
+
+### Fixed — emit `function*` without trailing space (#15862)
+
+- In `src/lib.rs`, `emit_function_declaration` and `emit_function_expression` (when named) now omit the space after `function*` (e.g. `function*g(){}` instead of `function* g(){}`), matching Closure Compiler upstream output.
+- Added tests in `tests/upstream/code_printer_function_test.rs` and `src/lib.rs`.
+
+## [0.63.4] - 2026-11-09
+
+### Fixed — emit concise object method shorthand and getters/setters (#17941)
+
+- In `src/lib.rs`, `emit_property` now checks `p.method`. When `p.method` is true and the property value is a `FunctionExpression`, it emits concise method syntax `[async ][*]key(params){body}` without the redundant `:function` tokens.
+- For `PropertyKind::Get` and `PropertyKind::Set`, methods now format parameters and bodies directly following `get key()` / `set key(v)`.
+- Added unit test coverage in `tests/upstream/code_printer_object_literal_test.rs`.
+
+## [0.63.3] - 2026-11-08
+
+### Fixed — wrap leftmost object expressions in arrow concise bodies (#18146)
+
+- Concise arrow function bodies whose leftmost token is an object literal (e.g. `() => ({})`, `() => ({}).x`, `() => ({})[1]`, `() => ({})()`) now parenthesise that leading object literal (`arrow_concise_start`) so JavaScript engines do not mis-parse the bare `{` as a block body.
+- Intervening precedence parentheses (e.g. `() => ({}+1).x`) are not double-wrapped.
+
+
+### Fixed — prevent emitting `<!--` HTML comment sequence after `<` (#17887)
+
+- `BinaryOperator::Lt` (`<`) followed by `UnaryOperator::Not` (`!`) with a prefix decrement (`--`) operand (e.g. `a < !--b`) previously emitted as `a<!--b` in compact mode. In ECMAScript Annex B.1.1 (script mode), `<!--` begins a `SingleLineHTMLOpenComment`, swallowing the remainder of the line and causing a silent miscompile under Node.js and browsers.
+- Added `arg_starts_with_bang_decr` helper in `emit_binary` to ensure a separating space is preserved after `<` (`a< !--b;`), matching Closure Compiler upstream behavior.
+- Added unit test coverage in `code_printer_update_test.rs`.
+
+## [0.63.1] - 2026-11-08
+
+### Added
+
+- Unit test coverage for module specifier string emission without escape doubling (#18122).
+
 ## [0.63.0] - 2026-10-24
 
 ### Fixed — a non-directive is never printed as `"use strict"` (#17907)

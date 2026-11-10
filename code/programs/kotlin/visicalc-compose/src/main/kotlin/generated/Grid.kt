@@ -7,32 +7,91 @@ package generated
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.BasicTooltipBox
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.rememberBasicTooltipState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.alpha
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
 import androidx.compose.material.RadioButton
+import androidx.compose.material.Slider
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.CollectionInfo
+import androidx.compose.ui.semantics.CollectionItemInfo
+import androidx.compose.ui.semantics.collectionInfo
+import androidx.compose.ui.semantics.collectionItemInfo
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.TextUnit
+
+private fun _mosaicTruthy(value: Any?): Boolean = when (value) {
+    null -> false
+    is Boolean -> value
+    is Number -> value.toDouble() != 0.0
+    is String -> value.isNotEmpty()
+    is Collection<*> -> value.isNotEmpty()
+    is Map<*, *> -> value.isNotEmpty()
+    else -> true
+}
+
+@Composable
+private fun _MosaicBranch(content: @Composable () -> Unit) {
+    content()
+}
+
+@Composable
+private fun _MosaicAutoFocus(content: @Composable (Modifier) -> Unit) {
+    val requester = remember { FocusRequester() }
+    LaunchedEffect(requester) { requester.requestFocus() }
+    content(Modifier.focusRequester(requester))
+}
 
 sealed class GridEvent {
     abstract val mosaicName: String
@@ -68,64 +127,162 @@ fun Grid(
     dispatch: (GridEvent) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .background(Color(0xFF1E1E1E)),
+        modifier = Modifier.fillMaxWidth()
+            .background(Color(0xFF1E1E1E))
+            .semantics { collectionInfo = CollectionInfo(rowCount = viewportRows.size + 1, columnCount = columnHeaders.size) },
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            columnWidths.forEachIndexed { _kotlinIdxcw, w ->
-                val cw: Double = _kotlinIdxcw.toDouble()
-                // Col (column-width hint — no Compose analog)
-            }
+        GridSection0(
+            columnHeaders,
+            viewportRows,
+            columnWidths,
+            totalHeight,
+            selectedRow,
+            selectedCol,
+            editRow,
+            editCol,
+            editContent,
+            dispatch,
+        )
+        GridSection1(
+            columnHeaders,
+            viewportRows,
+            columnWidths,
+            totalHeight,
+            selectedRow,
+            selectedCol,
+            editRow,
+            editCol,
+            editContent,
+            dispatch,
+        )
+        GridSection2(
+            columnHeaders,
+            viewportRows,
+            columnWidths,
+            totalHeight,
+            selectedRow,
+            selectedCol,
+            editRow,
+            editCol,
+            editContent,
+            dispatch,
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun GridSection0(
+    columnHeaders: List<String>,
+    viewportRows: List<List<String>>,
+    columnWidths: List<Double>,
+    totalHeight: Double,
+    selectedRow: Double,
+    selectedCol: Double,
+    editRow: Double,
+    editCol: Double,
+    editContent: String,
+    dispatch: (GridEvent) -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        columnWidths.forEachIndexed { _kotlinIdxcw, w ->
+            val cw: Double = _kotlinIdxcw.toDouble()
+            // Col (column-width hint — no Compose analog)
         }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier
-                    .height(24.dp),
-            ) {
-                columnHeaders.forEachIndexed { _kotlinIdxch, h ->
-                    val ch: Double = _kotlinIdxch.toDouble()
-                    Box(
-                        modifier = Modifier
-                            .width(columnWidths[_kotlinIdxch].dp)
-                            .height(24.dp)
-                            .background(Color(0xFF2D2D30))
-                            .border(1.dp, Color(0xFF3F3F46)),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(( h ), color = Color(0xFF9D9D9D), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
-                    }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun GridSection1(
+    columnHeaders: List<String>,
+    viewportRows: List<List<String>>,
+    columnWidths: List<Double>,
+    totalHeight: Double,
+    selectedRow: Double,
+    selectedCol: Double,
+    editRow: Double,
+    editCol: Double,
+    editContent: String,
+    dispatch: (GridEvent) -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .height(24.dp),
+        ) {
+            columnHeaders.forEachIndexed { _kotlinIdxch, h ->
+                val ch: Double = _kotlinIdxch.toDouble()
+                Column(
+                    modifier = Modifier
+                        .wrapContentWidth(unbounded = true)
+                        .width(columnWidths[_kotlinIdxch].dp)
+                        .height(24.dp)
+                        .background(Color(0xFF2D2D30))
+                        .border(1.dp, Color(0xFF3F3F46))
+                        .semantics { collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = _kotlinIdxch, columnSpan = 1); heading() },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(( h ), color = Color(0xFF9D9D9D), fontFamily = FontFamily.Monospace, fontSize = 12.sp, fontWeight = FontWeight.Normal)
                 }
             }
         }
-        Column(modifier = Modifier.fillMaxWidth()) {
-            viewportRows.forEachIndexed { _kotlinIdxr, row ->
-                val r: Double = _kotlinIdxr.toDouble()
-                Row(
-                    modifier = Modifier
-                        .height(22.dp),
-                ) {
-                    row.forEachIndexed { _kotlinIdxc, v ->
-                        val c: Double = _kotlinIdxc.toDouble()
-                        Box(
-                            modifier = Modifier
-                                .width(columnWidths[_kotlinIdxc].dp)
-                                .height(22.dp)
-                                .background(if ( r == editRow && c == editCol ) Color(0xFF1F4F3F) else if ( r == selectedRow && c == selectedCol ) Color(0xFF264F78) else Color.Transparent)
-                                .border(1.dp, Color(0xFF3F3F46))
-                                .padding(2.dp),
-                            contentAlignment = Alignment.CenterEnd,
-                        ) {
-                            if (( r == editRow && c == editCol )) {
-                                BasicTextField(
-                                    value = editContent,
-                                    onValueChange = { v -> dispatch(GridEvent.FormulaChange(v)) },
-                                    singleLine = true,
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    keyboardActions = KeyboardActions(onDone = { dispatch(GridEvent.EditCommit) }),
-                                    textStyle = TextStyle(color = if ( r == selectedRow && c == selectedCol ) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp),
-                                )
-                            } else {
-                                Text(( v ), color = if ( r == selectedRow && c == selectedCol ) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun GridSection2(
+    columnHeaders: List<String>,
+    viewportRows: List<List<String>>,
+    columnWidths: List<Double>,
+    totalHeight: Double,
+    selectedRow: Double,
+    selectedCol: Double,
+    editRow: Double,
+    editCol: Double,
+    editContent: String,
+    dispatch: (GridEvent) -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        viewportRows.forEachIndexed { _kotlinIdxr, row ->
+            val r: Double = _kotlinIdxr.toDouble()
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .height(22.dp),
+            ) {
+                row.forEachIndexed { _kotlinIdxc, v ->
+                    val c: Double = _kotlinIdxc.toDouble()
+                    Column(
+                        modifier = Modifier
+                            .wrapContentWidth(unbounded = true)
+                            .width(columnWidths[_kotlinIdxc].dp)
+                            .height(22.dp)
+                            .background(if (_mosaicTruthy(( r == editRow && c == editCol ))) Color(0xFF1F4F3F) else if (_mosaicTruthy(( r == selectedRow && c == selectedCol ))) Color(0xFF264F78) else Color.Transparent)
+                            .border(1.dp, Color(0xFF3F3F46))
+                            .padding(2.dp)
+                            .semantics { collectionItemInfo = CollectionItemInfo(rowIndex = _kotlinIdxr + 1, rowSpan = 1, columnIndex = _kotlinIdxc, columnSpan = 1) },
+                        horizontalAlignment = Alignment.End,
+                    ) {
+                        if (_mosaicTruthy(( r == editRow && c == editCol ))) {
+                            _MosaicBranch {
+                                _MosaicAutoFocus { _mosaicAutoFocusModifier ->
+                                    BasicTextField(
+                                        value = editContent,
+                                        onValueChange = { v -> dispatch(GridEvent.FormulaChange(v)) },
+                                        singleLine = true,
+                                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                        keyboardActions = KeyboardActions(onDone = { dispatch(GridEvent.EditCommit) }),
+                                        modifier = Modifier.fillMaxWidth()
+                                        .background(Color.Transparent)
+                                        .padding(0.dp).testTag("cell-editor").semantics { contentDescription = "Cell value" }.then(_mosaicAutoFocusModifier),
+                                        textStyle = TextStyle(color = if (_mosaicTruthy(( r == selectedRow && c == selectedCol ))) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp),
+                                    )
+                                }
+                            }
+                        } else {
+                            _MosaicBranch {
+                                Text(( v ), color = if (_mosaicTruthy(( r == selectedRow && c == selectedCol ))) Color(0xFFFFFFFF) else Color(0xFFCCCCCC), fontFamily = FontFamily.Monospace, fontSize = 12.sp)
                             }
                         }
                     }

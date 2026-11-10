@@ -116,6 +116,47 @@ fn ruby_source_prints_true_false() {
 }
 
 #[test]
+fn python_source_prints_true_false_none() {
+    if !go_available() {
+        eprintln!("skipping: go not on PATH");
+        return;
+    }
+    let stmts = vec![
+        puts_stmt(vec![blit(true)]),
+        puts_stmt(vec![blit(false)]),
+        puts_stmt(vec![Expr::NilLit { span: s() }]),
+    ];
+    let body = Block {
+        stmts,
+        value: Expr::IntLit { value: 0, span: s() },
+        span: s(),
+    };
+    let m = Module {
+        name: "test_display_py".into(),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("python")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    };
+    let Some(out) = run(&m, "python") else { return };
+    assert_eq!(out, "True\nFalse\nNone\n", "Python source must render booleans and None as True/False/None");
+}
+
+#[test]
 fn twig_source_keeps_lisp_booleans() {
     if !go_available() {
         eprintln!("skipping: go not on PATH");

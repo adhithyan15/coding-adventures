@@ -82,7 +82,8 @@ impl Visitor for SeqLits {
 
 // ── augmented assignment ─────────────────────────────────────────────
 
-/// The issue's program: `x += 2` used to lower to the statement `x`.
+/// `x += 2` lowers to the in-place addition builtin `+=`, which backends
+/// implement as mutating mutable operands in place and falling back to addition for primitives.
 #[test]
 fn augmented_add_stores_target_plus_value() {
     let m = lower("x = 1\nx += 2\nprint(x)\n");
@@ -94,7 +95,7 @@ fn augmented_add_stores_target_plus_value() {
             assert_eq!(name, "x");
             assert_eq!(*scope, Scope::Local);
             let (op, args) = builtin(value);
-            assert_eq!(op, "+");
+            assert_eq!(op, "+=");
             assert!(
                 is_var(&args[0], "x", Scope::Local),
                 "reads x first: {args:?}"
@@ -105,11 +106,11 @@ fn augmented_add_stores_target_plus_value() {
     }
 }
 
-/// Each lowered augmented operator uses the same builtin as its binary
-/// operator, so the two cannot disagree (`/=` true-divides like `/`).
+/// Lowered augmented operators match their binary operator, except `+=` which
+/// lowers to the in-place builtin `"+="` to support in-place mutation of collections.
 #[test]
 fn every_lowered_augmented_operator_matches_its_binary_operator() {
-    for op in ["+", "-", "*", "/", "%"] {
+    for op in ["-", "*", "/", "%"] {
         let binary = lower(&format!("x = 7\ny = x {op} 2\n"));
         let augmented = lower(&format!("x = 7\nx {op}= 2\n"));
         let binary_name = match &main_body(&binary).stmts[1] {
@@ -125,6 +126,12 @@ fn every_lowered_augmented_operator_matches_its_binary_operator() {
             }
             other => panic!("`{op}=`: expected `Assign x`, got {other:?}"),
         }
+    }
+    // `+=` uses `"+="` for in-place semantics
+    let add_aug = lower("x = 7\nx += 2\n");
+    match &main_body(&add_aug).stmts[1] {
+        Stmt::Assign { value, .. } => assert_eq!(builtin(value).0, "+="),
+        other => panic!("{other:?}"),
     }
     // The table entry that is not a pass-through spelling.
     let m = lower("x = 7\nx /= 2\n");
@@ -196,7 +203,7 @@ fn augmented_instance_variable_in_a_method() {
         } => {
             assert_eq!((name.as_str(), *scope), ("@n", Scope::Instance));
             let (op, args) = builtin(value);
-            assert_eq!(op, "+");
+            assert_eq!(op, "+=");
             assert!(is_var(&args[0], "@n", Scope::Instance), "{args:?}");
             assert!(is_var(&args[1], "k", Scope::Param), "{args:?}");
         }
@@ -889,3 +896,363 @@ fn a_hoisted_method_skips_names_in_the_source() {
     names.sort_unstable();
     assert_eq!(names, ["A__b__c", "A__b__c_1", "C__m_1", "main"]);
 }
+
+/// Single subscript assignment evaluates value before index (Python §6.3).
+#[test]
+fn single_subscript_evaluates_value_before_index() {
+    let m = lower("xs = [0]\ndef f():\n    return 1\ndef g():\n    return 0\nxs[g()] = f()\n");
+    let stmts = &main_body(&m).stmts;
+    // The lowered sequence for `xs[g()] = f()` evaluates the RHS value `f()`
+    // into a `__subval_0` temporary first, followed by the `SeqSet` whose index
+    // evaluates `g()` and whose value references `__subval_0`.
+    let last_two = &stmts[stmts.len() - 2..];
+    match (&last_two[0], &last_two[1]) {
+        (
+            Stmt::LetStarBinding { name, value, .. },
+            Stmt::SeqSet {
+                seq,
+                index,
+                value: val_ref,
+                ..
+            },
+        ) => {
+            assert_eq!(name, "__subval_0");
+            assert!(matches!(value, Expr::DirectCall { fn_name, .. } if fn_name == "f"));
+            assert!(matches!(seq, Expr::VarRef { name, .. } if name == "xs"));
+            assert!(matches!(index, Expr::DirectCall { fn_name, .. } if fn_name == "g"));
+            assert!(matches!(val_ref, Expr::VarRef { name, .. } if name == "__subval_0"));
+        }
+        other => panic!("expected [LetStarBinding, SeqSet], got {other:?}"),
+    }
+}
+
+/// Decorated functions are refused with a positioned error (#18496 item 6, #18482 item 1).
+#[test]
+fn decorated_function_is_refused() {
+    let err = refuse("@my_decorator\ndef f():\n    return 1\n");
+    assert!(err.message.contains("decorated function"), "{err}");
+    assert_eq!(err.line, 1);
+}
+
+/// Decorated nested functions are refused with a positioned error.
+#[test]
+fn decorated_nested_function_is_refused() {
+    let err = refuse("def outer():\n    @inner_dec\n    def inner():\n        return 1\n    return inner()\n");
+    assert!(err.message.contains("decorated function"), "{err}");
+    assert_eq!(err.line, 2);
+}
+
+/// Decorated methods inside classes are refused with a positioned error (#18496 item 6).
+#[test]
+fn decorated_method_is_refused() {
+    let err = refuse("class C:\n    @property\n    def value(self):\n        return 42\n");
+    assert!(err.message.contains("decorated method"), "{err}");
+    assert_eq!(err.line, 2);
+}
+
+/// A nested `def` whose declared name matches an enclosing parameter shadows
+/// that parameter: the closure is bound to the parameter's local alias so that
+/// calling `n()` invokes the nested function rather than performing an indirect
+/// call on the parameter value (#18496 item 7).
+#[test]
+fn nested_def_shadowing_parameter_is_invoked() {
+    let m = lower("def f(n):\n    def n():\n        return 42\n    return n()\n");
+    let f = func(&m, "f");
+    // The call to `n()` should resolve as an IndirectCall targeting the shadowed parameter alias
+    match &f.body.value {
+        semantic_ir::Expr::IndirectCall { target, args, .. } => {
+            assert!(args.is_empty());
+            match target.as_ref() {
+                semantic_ir::Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(*scope, semantic_ir::Scope::Local);
+                    assert!(name.starts_with("__param_n_"), "expected parameter alias, got {name}");
+                }
+                other => panic!("expected VarRef target, got {other:?}"),
+            }
+        }
+        other => panic!("expected IndirectCall, got {other:?}"),
+    }
+    // And the body statements must contain an assignment storing the closure into that alias
+    let has_assign_closure = f.body.stmts.iter().any(|stmt| {
+        matches!(
+            stmt,
+            semantic_ir::Stmt::Assign {
+                name,
+                scope: semantic_ir::Scope::Local,
+                value: semantic_ir::Expr::MakeClosure { fn_name, .. },
+                ..
+            } if name.starts_with("__param_n_") && fn_name == "n"
+        )
+    });
+    assert!(has_assign_closure, "expected Assign of MakeClosure into __param_n_ in {:?}", f.body.stmts);
+    assert!(m.manifest.contains(semantic_ir::Feature::MutableBindings));
+    assert!(m.manifest.contains(semantic_ir::Feature::Closures));
+}
+
+/// A nested `def` whose declared name matches a prior local variable shadows
+/// that local: the closure is assigned to the local variable so that calling
+/// `n()` invokes the nested function (#18496 item 7).
+#[test]
+fn nested_def_shadowing_prior_local_is_invoked() {
+    let m = lower("def f():\n    n = 1\n    def n():\n        return 42\n    return n()\n");
+    let f = func(&m, "f");
+    match &f.body.value {
+        semantic_ir::Expr::IndirectCall { target, args, .. } => {
+            assert!(args.is_empty());
+            match target.as_ref() {
+                semantic_ir::Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(*scope, semantic_ir::Scope::Local);
+                    assert_eq!(name, "n");
+                }
+                other => panic!("expected VarRef target, got {other:?}"),
+            }
+        }
+        other => panic!("expected IndirectCall, got {other:?}"),
+    }
+    let has_assign_closure = f.body.stmts.iter().any(|stmt| {
+        matches!(
+            stmt,
+            semantic_ir::Stmt::Assign {
+                name,
+                scope: semantic_ir::Scope::Local,
+                value: semantic_ir::Expr::MakeClosure { fn_name, .. },
+                ..
+            } if name == "n" && fn_name == "n"
+        )
+    });
+    assert!(has_assign_closure, "expected Assign of MakeClosure into n in {:?}", f.body.stmts);
+}
+
+/// A nested `def` shadowing a parameter returns the closure when referenced as a value.
+#[test]
+fn nested_def_shadowing_parameter_returns_closure() {
+    let m = lower("def f(n):\n    def n():\n        return 42\n    return n\n");
+    let f = func(&m, "f");
+    match &f.body.value {
+        semantic_ir::Expr::VarRef { name, scope, .. } => {
+            assert_eq!(*scope, semantic_ir::Scope::Local);
+            assert!(name.starts_with("__param_n_"), "expected parameter alias, got {name}");
+        }
+        other => panic!("expected VarRef, got {other:?}"),
+    }
+}
+
+/// A local variable assigned after closure creation is boxed into a cell variable (#18496 item 5).
+#[test]
+fn local_assigned_after_closure_creation_is_cell_boxed() {
+    let m = lower("def f():\n    x = 10\n    g = lambda: x\n    x = 20\n    return g()\n");
+    let f = func(&m, "f");
+    let cell_alias = match &f.body.stmts[0] {
+        semantic_ir::Stmt::LetStarBinding { name, value, .. } => {
+            assert!(name.starts_with("__cell_x_"));
+            assert!(matches!(value, semantic_ir::Expr::SeqLit { .. }));
+            name.clone()
+        }
+        other => panic!("expected cell LetStarBinding for x, got {other:?}"),
+    };
+    assert!(matches!(&f.body.stmts[1], semantic_ir::Stmt::SeqSet { seq, .. } if matches!(seq, semantic_ir::Expr::VarRef { name, .. } if name == &cell_alias)));
+    assert!(matches!(&f.body.stmts[3], semantic_ir::Stmt::SeqSet { seq, .. } if matches!(seq, semantic_ir::Expr::VarRef { name, .. } if name == &cell_alias)));
+    assert!(m.manifest.contains(semantic_ir::Feature::Sequences));
+    assert!(m.manifest.contains(semantic_ir::Feature::Closures));
+}
+
+/// A parameter assigned after closure creation is boxed into a cell variable (#18496 item 5).
+#[test]
+fn parameter_assigned_after_closure_creation_is_cell_boxed() {
+    let m = lower("def f(x):\n    def g():\n        return x\n    x = 20\n    return g()\n");
+    let f = func(&m, "f");
+    let _cell_alias = match &f.body.stmts[0] {
+        semantic_ir::Stmt::LetStarBinding { name, value, .. } => {
+            assert!(name.starts_with("__cell_x_"));
+            match value {
+                semantic_ir::Expr::SeqLit { items, .. } => {
+                    assert_eq!(items.len(), 1);
+                    assert!(matches!(&items[0], semantic_ir::Expr::VarRef { name, scope: semantic_ir::Scope::Param, .. } if name == "x"));
+                }
+                other => panic!("expected SeqLit with param x, got {other:?}"),
+            }
+            name.clone()
+        }
+        other => panic!("expected cell LetStarBinding for x, got {other:?}"),
+    };
+    let g = func(&m, "g");
+    match &g.body.value {
+        semantic_ir::Expr::SeqIndex { seq, .. } => match seq.as_ref() {
+            semantic_ir::Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "x");
+                assert_eq!(*scope, semantic_ir::Scope::Capture);
+            }
+            other => panic!("expected VarRef capture, got {other:?}"),
+        },
+        other => panic!("expected SeqIndex, got {other:?}"),
+    }
+}
+
+/// A closure defined before a variable is assigned captures the cell variable (#18496 item 5).
+#[test]
+fn closure_defined_before_variable_assignment_is_cell_boxed() {
+    let m = lower("def f():\n    def g():\n        return x\n    x = 42\n    return g()\n");
+    let f = func(&m, "f");
+    assert!(matches!(&f.body.stmts[0], semantic_ir::Stmt::LetStarBinding { name, .. } if name.starts_with("__cell_x_")));
+    assert!(matches!(&f.body.stmts[2], semantic_ir::Stmt::SeqSet { .. }));
+}
+
+/// A `*args` call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_call_argument_is_refused() {
+    let src = "def f(a, b):\n    return a + b\nxs = [1, 2]\nf(*xs)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 4);
+}
+
+/// A `**kwargs` call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn double_starred_call_argument_is_refused() {
+    let src = "def f(a=1):\n    return a\nd = {\"a\": 2}\nf(**d)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: **double-starred keyword argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 4);
+}
+
+/// A `*args` method call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_method_call_argument_is_refused() {
+    let src = "class C:\n    def m(self, x):\n        return x\nc = C()\nxs = [1]\nc.m(*xs)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 6);
+}
+
+/// A `*args` in a `range(...)` call inside a `for` loop header is refused (#18482 item 2).
+#[test]
+fn starred_range_in_for_header_is_refused() {
+    let src = "xs = [5]\nfor i in range(*xs):\n    pass\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 2);
+}
+
+/// A `*args` in a class base list is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_base_class_is_refused() {
+    let src = "class C(*xs):\n    pass\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in base class list (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 1);
+}
+
+// ── lexical visibility of nested defs (#18482 item 4) ────────────────
+
+/// A function cannot call a nested def defined inside another function (a "cousin").
+/// Python raises NameError; the frontend must refuse it as unresolved name (#18482 item 4).
+#[test]
+fn cousin_nested_def_call_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f()\n\ndef g():\n    return inner_f()\n\nf()\ng()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 7);
+}
+
+/// The module top-level cannot call a nested def defined inside a function (#18482 item 4).
+#[test]
+fn top_level_calling_nested_def_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f()\n\ninner_f()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 6);
+}
+
+/// A bare reference to a cousin nested def is refused as unresolved name (#18482 item 4).
+#[test]
+fn bare_reference_to_cousin_nested_def_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f\n\ndef g():\n    h = inner_f\n    return h()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 7);
+}
+
+/// Sibling nested defs within the same enclosing function can call each other (#18482 item 4).
+#[test]
+fn sibling_nested_defs_can_call_each_other() {
+    let src = "def outer(n):\n    def ev(x):\n        if x == 0:\n            return 1\n        else:\n            return od(x - 1)\n    def od(x):\n        if x == 0:\n            return 0\n        else:\n            return ev(x - 1)\n    return ev(n)\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 4); // main, outer, ev, od
+}
+
+/// A nested def can call itself recursively (#18482 item 4).
+#[test]
+fn nested_def_self_recursion_allowed() {
+    let src = "def outer(n):\n    def fact(x):\n        if x <= 1:\n            return 1\n        else:\n            return x * fact(x - 1)\n    return fact(n)\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 3); // main, outer, fact
+}
+
+/// A deeply nested def can see and call its ancestor's siblings (#18482 item 4).
+#[test]
+fn deeply_nested_def_can_call_ancestor_sibling() {
+    let src = "def outer():\n    def mid1():\n        def inner():\n            return mid2()\n        return inner()\n    def mid2():\n        return 42\n    return mid1()\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 5); // main, outer, mid1, inner, mid2
+}
+
+// ── constant-time local variable lookup (#18482 item 6) ─────────────
+
+/// Block-scoped variables rewound after nested if/for blocks do not leak into
+/// subsequent scopes or corrupt the constant-time local lookup map (#18482 item 6).
+#[test]
+fn block_scoped_locals_rewind_cleanly() {
+    let src = "def f(x):\n    y = 0\n    if x > 0:\n        y = 1\n        z = 10\n    else:\n        y = 2\n        z = 20\n    return y\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 2);
+}
+
+/// A function with many local variable assignments lowers correctly and verifies
+/// constant-time local tracking across blocks (#18482 item 6).
+#[test]
+fn many_local_assignments_in_blocks_lower_cleanly() {
+    let mut code = String::from("def f():\n");
+    for i in 0..100 {
+        code.push_str(&format!("    v{i} = {i}\n"));
+    }
+    code.push_str("    return v99\n");
+    let m = lower(&code);
+    assert_eq!(m.functions.len(), 2);
+}
+
+
+
+
+

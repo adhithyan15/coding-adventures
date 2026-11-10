@@ -1393,6 +1393,19 @@ mod tests {
             "/bin/ls",
             "/usr/bin/ls",
             "/usr/bin/env",
+            "/usr/bin/coreutils",
+            "/usr/bin/dash",
+            "/bin/dash",
+            "/usr/bin/bash",
+            "/bin/bash",
+            "/usr/bin/grep",
+            "/bin/grep",
+            "/usr/bin/sed",
+            "/bin/sed",
+            "/usr/bin/tar",
+            "/bin/tar",
+            "/usr/bin/gzip",
+            "/bin/gzip",
         ]
         .into_iter()
         .filter(|candidate| {

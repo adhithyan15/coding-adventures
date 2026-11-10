@@ -323,6 +323,28 @@ with `endStatement(needSemiColon=true)` for `THROW`. `throw_terminators` marks
 that `;` and gap-030 rule A leaves it in place, so `function f(){throw 1}` →
 `function f(){throw 1;};`. The AST-emitter half is slice 1 (#17839).
 
+**Follow-on: Contextual keywords used as identifiers (#18152).** When a
+contextual keyword or keyword-spelled identifier ends a line, WHITESPACE_ONLY
+must preserve the statement boundary with a `;`:
+- `let⏎new Foo`: `let` at end of line followed by `new` (or another keyword/operator/literal that cannot continue a lexical declaration) is an identifier expression statement `let;`.
+- `let⏎++x`: `let` at end of line followed by `++` or `--` is an identifier expression statement `let;` followed by a prefix increment. A postfix `++`/`--` can never follow a newline (§12.4).
+- `async function f(){if(a){await⏎using⏎x}}`: `using [no LineTerminator here] BindingList` (§14.3.1) and `await [no LineTerminator here] using` forbid newlines inside declarations. An `await using` expression followed by a line break ends the expression statement, requiring `;` before `x`.
+- In `javascript-parser` and `closurec`, these boundaries are identified and spliced with synthetic semicolons so that node-backed execution round-trips correctly.
+
+**Follow-on: Keyword property names at statement boundary (#18125).** When a
+member access property name is spelled like a keyword (e.g. `x=y.if\nl:;`), the
+token after `.` or `?.` is classified by the lexer as `TokenType::Keyword`. In
+ECMAScript (§13.3.7), property identifiers following member dots are `IdentifierNames`
+(which permit any keyword or reserved word). To enable `GrammarParser` (which
+requires `DOT NAME`) to parse keyword properties during Phase-1 ASI and compute
+correct insertion points before newline-led statements:
+- `javascript-parser/src/asi.rs` normalizes member access keyword tokens after `.`
+  or `?.` to `TokenType::Name` during Phase-1 ASI parsing.
+- `closurec/src/whitespace_only.rs` ensures `contextual_asi_points` and
+  `is_statement_start_token` recognize keyword property terminations across line
+  breaks followed by statements.
+
+
 ## Non-goals
 
 * No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).

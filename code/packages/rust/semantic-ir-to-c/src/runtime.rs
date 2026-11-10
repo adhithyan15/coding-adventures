@@ -39,6 +39,7 @@ pub const RUNTIME: &str = r####"/* =============================================
 
 /* Display convention: 1 => Ruby (true/false, empty nil), 0 => Lisp (#t/#f). */
 #define SIR_DISPLAY_RUBY __SIR_DISPLAY_RUBY__
+#define SIR_DISPLAY_PYTHON __SIR_DISPLAY_PYTHON__
 
 typedef enum {
     SIR_NIL, SIR_BOOL, SIR_INT, SIR_FLOAT,
@@ -148,7 +149,7 @@ typedef SirValue (*SirFn)(SirValue *caps, SirValue *args, int argc);
  * argument with nil and ignores an extra one) or the exact argument count a
  * STRICT closure demands (SIR10 "Strict closures": a Ruby lambda, every Twig
  * closure).  `_sir_strict_arity` sets it; `_sir_apply` enforces it. */
-struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; };
+struct SirClosure { SirFn fn; int ncap; SirValue *caps; int arity; int nparam; };
 
 /* ---- small allocation + string helpers ---------------------- */
 
@@ -382,7 +383,11 @@ SirValue *_sir_va_collect(int n, va_list ap) {
 
 /* ---- arithmetic (array cores + variadic wrappers) ----------- */
 
-/* `+` is polymorphic: string operands concatenate, else numeric add with
+SirValue _sir_error(const char *sir_class, SirValue msg);
+SirValue _sir_raise(SirValue exc);
+
+/* `+` is polymorphic: string operands concatenate, sequence operands
+ * concatenate (Ruby Array#+ / Python [a] + [b]), else numeric add with
  * int -> float promotion once any operand is a float. */
 SirValue _sir_plus_v(SirValue *xs, int n) {
     int i;
@@ -392,6 +397,33 @@ SirValue _sir_plus_v(SirValue *xs, int n) {
         for (i = 1; i < n; i++) acc = _sir_cat(acc, _sir_str_of(xs[i]));
         return _sir_str(acc);
     }
+    if (xs[0].tag == SIR_SEQ) {
+        /* Sequence concatenation: build a FRESH SirSeq so the result never
+         * aliases any input's backing items (matching Ruby Array#+ and the
+         * Go/Rust reference runtimes). All operands must be sequences; a non-
+         * sequence raises a rescuable TypeError. */
+        int64_t total_len = 0;
+        for (i = 0; i < n; i++) {
+            if (xs[i].tag != SIR_SEQ) {
+                return _sir_raise(_sir_error("TypeError", _sir_str("no implicit conversion into Array")));
+            }
+            total_len += xs[i].as.seq->len;
+        }
+        SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+        r->len = total_len;
+        r->items = (total_len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)total_len) : NULL;
+        int64_t offset = 0;
+        for (i = 0; i < n; i++) {
+            SirSeq *cur = xs[i].as.seq;
+            for (int64_t k = 0; k < cur->len; k++) {
+                r->items[offset++] = cur->items[k];
+            }
+        }
+        SirValue v;
+        v.tag = SIR_SEQ;
+        v.as.seq = r;
+        return v;
+    }
     {
         int64_t iacc = (xs[0].tag == SIR_INT) ? xs[0].as.i : 0;
         double  facc = _sir_as_num(xs[0]);
@@ -399,7 +431,7 @@ SirValue _sir_plus_v(SirValue *xs, int n) {
         for (i = 1; i < n; i++) {
             if (!promoted && xs[i].tag == SIR_FLOAT) { promoted = 1; facc = (double)iacc; }
             if (promoted) facc += _sir_as_num(xs[i]);
-            else          iacc += xs[i].as.i;
+            else          iacc += _sir_as_int(xs[i]);
         }
         return promoted ? _sir_float(facc) : _sir_int(iacc);
     }
@@ -478,6 +510,37 @@ SirValue _sir_utdiv(SirValue a, SirValue b) {
 SirValue _sir_utmod(SirValue a, SirValue b) {
     if (b.as.i == 0) { fprintf(stderr, "sir: divided by 0\n"); exit(1); }
     return _sir_int((int64_t)((uint64_t)a.as.i % (uint64_t)b.as.i));
+}
+
+/* Floored binary modulo (`%`).  Matches Python and Ruby `%` semantics:
+ * remainder has the sign of the divisor `b` (or 0).
+ * Division by zero raises `ZeroDivisionError`.
+ * Avoids INT64_MIN % -1 UB (returns 0).
+ * Uses `tr + b` to adjust truncating remainder without multiply overflow. */
+SirValue _sir_mod(SirValue a, SirValue b) {
+    if (a.tag == SIR_INT && b.tag == SIR_INT) {
+        int64_t ai = a.as.i, bi = b.as.i;
+        if (bi == 0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        if (bi == -1) {
+            return _sir_int(0);
+        }
+        int64_t tr = ai % bi;
+        if (tr != 0 && ((tr < 0) != (bi < 0))) {
+            tr += bi;
+        }
+        return _sir_int(tr);
+    }
+    {
+        double ad = _sir_as_num(a), bd = _sir_as_num(b);
+        if (bd == 0.0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        double q = floor(ad / bd);
+        double r = ad - q * bd;
+        return _sir_float(r);
+    }
 }
 
 /* SIR21 T3b-2: true (float) division -- always coerces both operands to
@@ -872,7 +935,7 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
     SirValue v;
     va_list ap;
     int i;
-    c->fn = fn; c->ncap = ncap; c->arity = -1;
+    c->fn = fn; c->ncap = ncap; c->arity = -1; c->nparam = -1;
     c->caps = (ncap > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)ncap) : NULL;
     va_start(ap, ncap);
     for (i = 0; i < ncap; i++) c->caps[i] = va_arg(ap, SirValue);
@@ -887,6 +950,15 @@ SirValue _sir_make_closure(SirFn fn, int ncap, ...) {
 SirValue _sir_strict_arity(SirValue c, int arity) {
     if (c.tag == SIR_CLOSURE) c.as.clo->arity = arity;
     return c;
+}
+
+SirValue _sir_closure_with_nparam(SirValue c, int nparam) {
+    if (c.tag == SIR_CLOSURE && c.as.clo) c.as.clo->nparam = nparam;
+    return c;
+}
+
+void _sir_closure_set_nparam(SirValue *c, int nparam) {
+    if (c->tag == SIR_CLOSURE && c->as.clo) c->as.clo->nparam = nparam;
 }
 
 /* Defined with the exception machinery further down. */
@@ -961,7 +1033,7 @@ void _sir_fmt(FILE *out, SirValue v);
  * `print [nil, false]` printed `[, false]` (#18798); every other element
  * renders as `_sir_fmt` does. */
 void _sir_fmt_elem(FILE *out, SirValue v) {
-    if (v.tag == SIR_NIL) fputs("nil", out);
+    if (v.tag == SIR_NIL) fputs(SIR_DISPLAY_PYTHON ? "None" : "nil", out);
     else _sir_fmt(out, v);
 }
 
@@ -1067,9 +1139,9 @@ void _sir_fmt(FILE *out, SirValue v) {
     }
     _sir_fmt_depth++;
     switch (v.tag) {
-        case SIR_NIL:   fputs(SIR_DISPLAY_RUBY ? "" : "nil", out); break;
-        case SIR_BOOL:  fputs(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
-                                     : (SIR_DISPLAY_RUBY ? "false" : "#f"), out); break;
+        case SIR_NIL:   fputs(SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil"), out); break;
+        case SIR_BOOL:  fputs(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"))
+                                     : (SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f")), out); break;
         case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); fputs(buf, out); break;
         case SIR_FLOAT: _sir_fmt_float(out, v.as.f); break;
         case SIR_STR:   fputs(v.as.s, out); break;
@@ -1125,7 +1197,7 @@ char *_sir_display_str(SirValue v);
 
 /* The string twin of `_sir_fmt_elem`: `nil` inside a collection is `nil`. */
 char *_sir_display_elem(SirValue v) {
-    return v.tag == SIR_NIL ? _sir_dup("nil") : _sir_display_str(v);
+    return v.tag == SIR_NIL ? _sir_dup(SIR_DISPLAY_PYTHON ? "None" : "nil") : _sir_display_str(v);
 }
 
 char *_sir_display_seq(SirValue v) {
@@ -1196,9 +1268,9 @@ char *_sir_display_str(SirValue v) {
     if (_sir_display_depth > SIR_MAX_DISPLAY_DEPTH) return _sir_dup("[...]");
     _sir_display_depth++;
     switch (v.tag) {
-        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : "nil"); break;
-        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
-                                                  : (SIR_DISPLAY_RUBY ? "false" : "#f")); break;
+        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil")); break;
+        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"))
+                                                  : (SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f"))); break;
         case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); result = _sir_dup(buf); break;
         case SIR_FLOAT: result = _sir_display_float(v.as.f); break;
         case SIR_STR:   result = _sir_dup(v.as.s); break;
@@ -2059,6 +2131,23 @@ static void _sir_array_push_one(SirSeq *s, SirValue v) {
     s->items = ni;
     s->len++;
 }
+/* In-place addition for `+=`.  When `a` is a sequence (Array), appends the
+ * elements of `b` (or `b` itself if not a sequence) into `a` in place,
+ * preserving object identity across aliases (Python's `__iadd__` / Ruby's `concat`).
+ * For other types (integers, floats, strings), falls back to standard binary addition. */
+static inline SirValue _sir_iadd(SirValue a, SirValue b) {
+    if (a.tag == SIR_SEQ) {
+        if (b.tag == SIR_SEQ) {
+            for (int64_t i = 0; i < b.as.seq->len; i++) {
+                _sir_array_push_one(a.as.seq, b.as.seq->items[i]);
+            }
+        } else {
+            _sir_array_push_one(a.as.seq, b);
+        }
+        return a;
+    }
+    return _sir_plus(2, a, b);
+}
 /* #18798 (item 13) — `a[i] = v` on an Array, as Ruby does it.  The strict
  * `_sir_seq_set` (the SIR-native `SeqSet` statement) exits on anything outside
  * `0 <= i < len`, and `[]=` used to share it:
@@ -2356,10 +2445,17 @@ static SirValue _sir_hash_invert(SirMap *m) {
  * args a 1-param block doesn't bind are simply unused, the same block-arity
  * flexibility Ruby itself has). */
 
+static SirValue _sir_hash_yield_pair(SirValue block, SirValue key, SirValue val) {
+    if (block.tag == SIR_CLOSURE && block.as.clo && block.as.clo->nparam == 1) {
+        return _sir_apply(block, 1, _sir_seq_lit(2, key, val));
+    }
+    return _sir_apply(block, 2, key, val);
+}
+
 static SirValue _sir_hash_each(SirMap *m, SirValue block) {
     int64_t n = m->len;
     struct SirMapEntry *entries = m->entries;
-    for (int64_t i = 0; i < n; i++) _sir_apply(block, 2, entries[i].key, entries[i].val);
+    for (int64_t i = 0; i < n; i++) _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
     return _sir_map_wrap(m);  /* Hash#each returns the receiver */
 }
 static SirValue _sir_hash_each_key(SirMap *m, SirValue block) {
@@ -2382,7 +2478,7 @@ static SirValue _sir_hash_map(SirMap *m, SirValue block) {
     SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
     r->len = n;
     r->items = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
-    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+    for (int64_t i = 0; i < n; i++) r->items[i] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
     return _sir_seq_wrap(r);
 }
 /* Shared by `select` (keep_if_truthy=1) / `reject` (keep_if_truthy=0) — both
@@ -2393,7 +2489,7 @@ static SirValue _sir_hash_filter(SirMap *m, SirValue block, int keep_if_truthy) 
     struct SirMapEntry *entries = m->entries;
     SirMap *r = _sir_map_new(n);
     for (int64_t i = 0; i < n; i++) {
-        int truthy = _sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val));
+        int truthy = _sir_truthy(_sir_hash_yield_pair(block, entries[i].key, entries[i].val));
         if (truthy == keep_if_truthy) _sir_map_put(r, entries[i].key, entries[i].val);
     }
     return _sir_map_wrap(r);
@@ -2408,7 +2504,7 @@ static SirValue _sir_hash_sort_by(SirMap *m, SirValue block) {
     SirValue *keys = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     SirValue *pairs = (n > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)n) : NULL;
     for (int64_t i = 0; i < n; i++) {
-        keys[i] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        keys[i] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         pairs[i] = _sir_seq_lit(2, entries[i].key, entries[i].val);
     }
     for (int64_t i = 1; i < n; i++) {
@@ -2438,7 +2534,7 @@ static SirValue _sir_hash_group_by(SirMap *m, SirValue block) {
     struct SirMapEntry *entries = m->entries;
     SirMap *r = _sir_map_new(0);
     for (int64_t i = 0; i < n; i++) {
-        SirValue key = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        SirValue key = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
         int64_t at = _sir_map_find(r, key);
         if (at >= 0) {
@@ -2461,7 +2557,7 @@ static SirValue _sir_hash_partition(SirMap *m, SirValue block) {
     int64_t ny = 0, nn = 0;
     for (int64_t i = 0; i < n; i++) {
         SirValue pair = _sir_seq_lit(2, entries[i].key, entries[i].val);
-        if (_sir_truthy(_sir_apply(block, 2, entries[i].key, entries[i].val))) yes->items[ny++] = pair;
+        if (_sir_truthy(_sir_hash_yield_pair(block, entries[i].key, entries[i].val))) yes->items[ny++] = pair;
         else no->items[nn++] = pair;
     }
     yes->len = ny;
@@ -2478,7 +2574,7 @@ static SirValue _sir_hash_sum(SirMap *m, SirValue block) {
     for (int64_t i = 0; i < n; i++) {
         SirValue pair[2];
         pair[0] = acc;
-        pair[1] = _sir_apply(block, 2, entries[i].key, entries[i].val);
+        pair[1] = _sir_hash_yield_pair(block, entries[i].key, entries[i].val);
         acc = _sir_plus_v(pair, 2);
     }
     return acc;
@@ -3500,6 +3596,17 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SYM) return _sir_str(recv.as.s);  /* Symbol#to_s -- the bare name, no `:` */
     } else if (strcmp(m, "inspect") == 0) {
         if (recv.tag == SIR_SYM) return _sir_sym_inspect(recv.as.s);
+    } else if (strcmp(m, "message") == 0 && argc == 0) {
+        /* Built-in `.message` accessor on exception values (#18798 item 8).
+         * Ruby and SIR exception objects provide `.message` to inspect the
+         * payload. When no explicit message was supplied (e.g. `raise Class`),
+         * the message defaults to the class name as a string. */
+        if (recv.tag == SIR_ERROR) {
+            if (recv.as.err->msg.tag == SIR_NIL) {
+                return _sir_str(recv.as.err->sir_class);
+            }
+            return recv.as.err->msg;
+        }
     }
     /* Collections slice 3: 0-arg Array query/transform methods. */
     else if (strcmp(m, "count") == 0) {
@@ -3620,10 +3727,10 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             return _sir_hash_partition(recv.as.map, args[0]);
     }
     /* Collections slice 4: Array mutation + 1-arg query methods. */
-    else if (strcmp(m, "push") == 0) {
+    else if (strcmp(m, "push") == 0 || strcmp(m, "append") == 0) {
         if (recv.tag == SIR_SEQ) {
             for (int i = 0; i < argc; i++) _sir_array_push_one(recv.as.seq, args[i]);
-            return recv;  /* Array#push returns the (mutated) receiver */
+            return recv;  /* Array#push / Array#append returns the (mutated) receiver */
         }
     } else if (strcmp(m, "pop") == 0) {
         if (recv.tag == SIR_SEQ && argc == 0) return _sir_array_pop(recv.as.seq);
@@ -4072,6 +4179,7 @@ SirValue _sir_arg(SirValue *args, int argc, int i) {
 SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     const char *name = caps[0].as.s;
     if (strcmp(name, "+") == 0)        return _sir_plus_v(args, argc);
+    if (strcmp(name, "+=") == 0)       return _sir_iadd(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "-") == 0)        return _sir_minus_v(args, argc);
     if (strcmp(name, "*") == 0)        return _sir_times_v(args, argc);
     if (strcmp(name, "/") == 0)        return _sir_divide_v(args, argc);
@@ -4103,6 +4211,7 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "tmod") == 0)     return _sir_itmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "utmod") == 0)    return _sir_utmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "%") == 0)        return _sir_mod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     /* SIR21 T3b-2: div_floor is `_sir_divide_v` under a new name (identical
        floor-int/true-divide-float dispatch, zero new logic). div_trunc/
        udiv_trunc are the OLD `tdiv`/`utdiv` names under their new canonical

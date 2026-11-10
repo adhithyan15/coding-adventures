@@ -79,10 +79,18 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Rust.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace(
-        "__SIR_DISPLAY_RUBY__",
-        if display_ruby { "true" } else { "false" },
-    ));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
+            ),
+    );
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -1036,6 +1044,13 @@ fn emit_try_catch(
     ensure_body: &Option<Vec<Stmt>>,
     indent: usize,
 ) {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause carries
+    // an empty `rescues` and `None` `ensure_body`. Emit the body statements
+    // inline without catch_unwind overhead.
+    if rescues.is_empty() && ensure_body.is_none() {
+        emit_bare_stmts(out, body, indent);
+        return;
+    }
     let pad = indent_str(indent);
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -2173,6 +2188,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => ("__sir::minus", true),
         "*" => ("__sir::times", true),
         "/" => ("__sir::divide", true),
+        "%" => ("__sir::modulo", false),
+        "+=" => ("__sir::iadd", false),
         // SIR21 T3b-2: `div_floor` is a bare rename of `divide` (Ruby's `/`
         // already floors ints / true-divides floats — see `divide`'s own
         // doc comment). `div_trunc`/`udiv_trunc`/`div_true` are genuinely
@@ -2421,7 +2438,7 @@ fn emit_make_closure(
     //     fun: Box::new(move |__args: Vec<__sir::Value>| {
     //         let mut __it = __args.into_iter();
     //         <fn_name>(__cap_<n0>.clone(), __cap_<n1>.clone(),
-    //                   __it.next().unwrap_or(__sir::Value::Nil),
+    //                   __it.next().unwrap_or(__sir::Value::Missing),
     //                   ... )
     //     })
     //   }))
@@ -2514,10 +2531,16 @@ fn emit_make_closure(
             out.push_str(", ");
         }
         first = false;
-        out.push_str("__it.next().unwrap_or(__sir::Value::Nil)");
+        // Drain argument iterator. If an argument is omitted, pad with the
+        // `__sir::Value::Missing` sentinel rather than `Value::Nil` (#18490).
+        // This ensures the callee's default-parameter prologue
+        // (`let p = if __sir::is_missing(&p) { <default> } else { p };`)
+        // detects the omitted argument and substitutes its default expression,
+        // exactly matching direct-call semantics.
+        out.push_str("__it.next().unwrap_or(__sir::Value::Missing)");
     }
     out.push_str(")\n");
-    let _ = writeln!(out, "{}}}) }}))", pad);
+    let _ = writeln!(out, "{}}}), arity: {arity} }}))", pad);
     let _ = write!(out, "{}}}", indent_str(indent));
 }
 
@@ -3466,6 +3489,29 @@ mod tests {
         emit_expr(&mut out, &e, 0);
         assert!(out.contains("let __cap_fn: __sir::Value"), "got: {out}");
         assert!(!out.contains("__cap_r#"), "got: {out}");
+    }
+
+    /// An omitted argument in a closure adapter drains as `Value::Missing`
+    /// rather than `Value::Nil` (#18490) so defaulted parameters evaluate
+    /// their default expressions.
+    #[test]
+    fn closure_adapter_drains_omitted_arguments_with_missing_sentinel() {
+        let e = Expr::MakeClosure {
+            fn_name: "f".into(),
+            captures: vec![],
+            span: Span::synthetic(),
+        };
+        let mut out = String::new();
+        FN_ARITY.with(|t| t.borrow_mut().insert("f".into(), 2));
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.contains("__it.next().unwrap_or(__sir::Value::Missing)"),
+            "closure adapter must unwrap to Value::Missing sentinel (#18490); got:\n{out}"
+        );
+        assert!(
+            !out.contains("__it.next().unwrap_or(__sir::Value::Nil)"),
+            "closure adapter must not unwrap to Nil; got:\n{out}"
+        );
     }
 
     #[test]
@@ -5371,6 +5417,27 @@ mod tests {
             out.contains("std::panic::resume_unwind(Box::new(__exc));"),
             "got: {out}"
         );
+    }
+
+    #[test]
+    fn emit_try_catch_without_rescue_or_ensure_emits_inline() {
+        // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+        // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+        // Rust emits the body statements inline without catch_unwind overhead.
+        let tc = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: int(42),
+                span: s(),
+            }],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 1);
+        assert!(!out.contains("catch_unwind"), "got:\n{out}");
+        assert!(!out.contains("Err(__payload)"), "got:\n{out}");
+        assert!(out.contains("42"), "got:\n{out}");
     }
 
     #[test]

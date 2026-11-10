@@ -265,7 +265,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Still open, filed from the review.** #18123: a *method* named
   `if`/`while`/`for`/`with` still gets body-slot rules (`class C{if(){}}`
   → `class C{if();}`). #18124: gap-032/gap-076 flatten a lone `let`/`const`
-  into a body slot. #18125: a newline after `y.if` loses its boundary.
+  into a body slot. #18125: resolved — a newline after `y.if` preserves its
+  statement boundary with a spliced `;`.
 - **Tests.** Eight unit tests, and
   `closurec/tests/regression_ws_empty_body_semi.rs`. It pins 25 shapes to
   the jar's bytes, and checks with `node` that those shapes, plus 11
@@ -759,6 +760,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `await(x)` → `await x`.
 - **What it needs:** Same simple-reference operand paren elision as gap-070/071, but for the `await` unary operator. Deferred: `await` is async-context-only, so a naive keyword-anchored elision could mis-handle a non-async `await` used as a plain identifier (`await` is only reserved inside async functions/modules). Needs an async-context guard before it can be added to the keyword set safely.
 - **CLOC12.106 resolution:** The original async-context worry dissolved once verified against the JAR: the upstream compiler **rejects** any non-async `await` as a PARSE ERROR ("await must be inside asynchronous function"), so identifier-`await` never appears in a byte-identity input — every accepted input has `await` as the operator. `await` binds at UNARY precedence (like `typeof`/`void`/`delete`), so it was added to gap-101's `is_safe_unary_kw_operand` keyword block (NOT the gap-056 `yield` block, which is for the looser-binding `yield`). A safe operand drops its parens; a parenthesised BINARY operand keeps them (`await` binds tighter than the binary op). Two extra concerns: (1) **always-space** — upstream emits the operator with a separating space before its operand even when non-word-like (`await -b`, `await (a+b)`), handled by a new `await_operator_needs_space` emit predicate; (2) **contextual-keyword guards** — `await` as a function/method NAME (`function await(x){}`, `{await(x){}}` — matched `)` followed by `{`) or a property (`o.await(x)`) is excluded from both the drop and the space. JAR-verified across all operand kinds + the name/property guards; +3 `gap072_*` unit tests. Known residual: deeply-nested `await(await(x))` keeps the inner parens (the keyword block does not recurse into a dropped span — a pre-existing pattern shared with the other keywords).
+- **#18152 follow-up:** In standard ECMAScript scripts (outside modules and outside async functions), `await` is an ordinary identifier, not a unary keyword. Stripping parens in `await(x)` turns a valid function call into `await x;` which fails to parse in node. Therefore, paren elision and unary-operator spacing for `await` must ONLY be performed when the token resides inside an async function (or async method / arrow function) or in a module.
+
 
 ### gap-073 — `get`/`set` before a computed key needs a space
 
@@ -3659,3 +3662,10 @@ tests (`this;` → `ThisExpression`; `this.x;` → member access whose object is
 rather than falling back to a verbatim WHITESPACE_ONLY pass). The **PR3
 conformance port** (`code_printer_this_test.rs`) exercises the emitter via
 hand-constructed AST separately.
+
+
+### gap-ModuleSpecifierEscapes — module specifiers decode string escapes in typed AST bridge — **RESOLVED (javascript-parser 0.67.0, issue #18122)**
+
+At `SIMPLE` and `ADVANCED` compilation levels, module specifiers in `import` declarations (`import ... from "..."`), side-effect imports (`import "..."`), and `export ... from "..."` declarations previously retained source escape sequences verbatim in the `StringLiteral.value` field because `import_source` copied the raw token value without calling `decode_string_escapes`. When `closure-emitter` re-emitted the specifier, its string quote-and-escape routine treated the un-decoded backslashes as literal characters, escaping each `\` to `\\`. For example, `import a from "./a\x2ejs"` emitted as `import a from"./a\\x2ejs";`, altering the module path at runtime.
+
+**Fix (#18122):** `import_source` now decodes the token's escape sequences via `decode_string_escapes(&t.value)`, aligning module specifier string literals with primary string literals and object literal string keys. Module specifiers now emit exact canonical characters across all compilation levels.

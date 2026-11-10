@@ -139,7 +139,6 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "caught",
     ),
     // The binding, named like a method, is the local in the clause body.
-    // `message` is a built-in method C and Ruby do not run yet: REFUSED.
     (
         "rb_rescue_arrow_binding_named_like_a_method",
         "def e\n  1\nend\nbegin\n  raise \"boom\"\nrescue => e\n  puts e.message\nend\n",
@@ -382,6 +381,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "h = {a: 1}\nputs h[:a]\nputs h[:b] == nil\nh[:b] = 2\nputs h[:b]\nputs h.size\n",
         "1\ntrue\n2\n2",
     ),
+    // #18798 Comment 1 — `Hash#each` with a one-parameter block yields the
+    // `[key, value]` pair as an Array, while a two-parameter block yields
+    // `k` and `v` separately.
+    (
+        "rb_hash_each_one_parameter_block",
+        "h = {a: 1, b: 2}\nh.each do |pair|\n  for v in pair\n    puts v\n  end\nend\nh.each { |k, v| puts k; puts v }\n",
+        "a\n1\nb\n2\na\n1\nb\n2",
+    ),
     // #18798 item 14 — `return` before the end of a method: inside a method
     // with `rescue` (Python, JavaScript and Go printed 2, the `rescue`
     // catching an "unknown builtin: return"; Rust panicked; C and Ruby refused
@@ -419,6 +426,34 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "def f\n  begin\n    raise \"x\"\n  rescue\n    5\n  end\nend\nputs f\ndef g\n  begin\n    6\n  rescue\n    7\n  end\nend\nputs g\ndef h(n)\n  if n > 0\n    begin\n      raise \"y\"\n    rescue => e\n      \"caught\"\n    ensure\n      puts \"ens\"\n    end\n  else\n    \"none\"\n  end\nend\nputs h(1)\nputs h(0)\n",
         "5\n6\nens\ncaught\nnone",
     ),
+    // #18798 item 22 — `begin … end` with no `rescue` or `ensure` clause.
+    // Python and JS/TS previously emitted a bare `try:` or `try { }` with no
+    // `except`/`finally` or `catch`/`finally`, failing compilation with a syntax error.
+    (
+        "rb_begin_without_rescue_or_ensure",
+        "begin\n  x = 42\n  puts x\nend\nbegin\n  begin\n    puts \"nested\"\n  end\nend\ndef f\n  begin\n    99\n  end\nend\nputs f\n",
+        "42\nnested\n99",
+    ),
+    // #18798 item 23 — a block with no parameters.
+    // In Ruby, blocks discard surplus arguments yielded to them. Calling or
+    // yielding to a 0-parameter block from `each` or a method previously raised
+    // `ArgumentError: wrong number of arguments (given 1, expected 0)` on the
+    // Ruby backend.
+    (
+        "rb_block_with_no_parameters",
+        "xs = [1, 2]\nxs.each do\n  puts 42\nend\ndef g\n  yield 10\n  yield 20\nend\ng do\n  puts 99\nend\n",
+        "42\n42\n99\n99",
+    ),
+    // #18798 item 3 — lambdas: invocation via `.call(...)` and outer-local/parameter captures.
+    // In Ruby, `g.call(...)` or `g.call` invokes a lambda. Previously, `.call` was routed
+    // through OOP dynamic method dispatch (`__method__`), failing at runtime on
+    // Python/JS/Go/Rust and refused on C/Ruby. Furthermore, lambdas were hoisted with
+    // an empty capture list, so reads of enclosing locals and method parameters failed.
+    (
+        "rb_lambda_call_and_outer_captures",
+        "f = ->(x, y) { x + y }\nputs f.call(10, 20)\nz = -> { 42 }\nputs z.call\nx = 100\nadd_x = ->(n) { n + x }\nputs add_x.call(5)\ndef make_adder(base)\n  adder = ->(v) { base + v }\n  adder\nend\na = make_adder(50)\nputs a.call(7)\n",
+        "30\n42\n105\n57",
+    ),
 ];
 
 /// `(name, Python source, CPython's stdout)`: class names that are not Ruby
@@ -440,18 +475,7 @@ const PYTHON_PROGRAMS: &[(&str, &str, &str)] = &[
 ];
 
 /// `(program, backend, why)`: cells that must be refused at compile time.
-const REFUSED: &[(&str, Target, &str)] = &[
-    (
-        "rb_rescue_arrow_binding_named_like_a_method",
-        Target::C,
-        "the built-in method `message` (Collections batch)",
-    ),
-    (
-        "rb_rescue_arrow_binding_named_like_a_method",
-        Target::Ruby,
-        "the built-in method `message` (Collections batch)",
-    ),
-];
+const REFUSED: &[(&str, Target, &str)] = &[];
 
 /// The reference interpreter's stdout for `source` (trailing newlines
 /// trimmed), or `None` when it is not on `PATH`.

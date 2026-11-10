@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current statement indentation, avoiding invalid bare `try:` blocks with no handler.
+
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** `BuiltinCall("+=", [lhs, rhs])` now routes through `_sir_iadd` in `emit_builtin_call`. Emitted runtime preamble imports `iadd as _sir_iadd` from `coding_adventures_sir_runtime_core`.
+
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`
+  in `emit_builtin_call`. Emitted runtime preamble imports `mod as _sir_mod` from
+  `coding_adventures_sir_runtime_core`.
+
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Python code invokes `_sir_set_display_convention("python")`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### A constant named like a function is renamed; only a user callee's keywords are

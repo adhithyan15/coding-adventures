@@ -58,7 +58,7 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 ///   differently (ES2015 inlines them in `property_definition`).
 pub fn check(root: &GrammarASTNode) -> Result<(), String> {
     enum Step<'a> {
-        Enter(&'a GrammarASTNode, bool),
+        Enter(&'a GrammarASTNode, bool, bool, bool, bool),
         /// Leave a block scope: forget its lexical names.
         LeaveScope(Vec<&'a str>),
         /// Leave a function or class body: restore the outer scopes.
@@ -66,10 +66,18 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
     }
     let mut active: HashMap<&str, usize> = HashMap::new();
     let mut saved: Vec<HashMap<&str, usize>> = Vec::new();
-    let mut stack: Vec<Step> = vec![Step::Enter(root, has_use_strict_directive(root))];
+    let mut stack: Vec<Step> = vec![Step::Enter(
+        root,
+        has_use_strict_directive(root),
+        false,
+        false,
+        false,
+    )];
     while let Some(step) = stack.pop() {
-        let (node, strict) = match step {
-            Step::Enter(node, strict) => (node, strict),
+        let (node, strict, in_static_block, in_generator, in_parameters) = match step {
+            Step::Enter(node, strict, in_static_block, in_generator, in_parameters) => {
+                (node, strict, in_static_block, in_generator, in_parameters)
+            }
             Step::LeaveScope(names) => {
                 for name in names {
                     if let Some(count) = active.get_mut(name) {
@@ -86,11 +94,16 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 continue;
             }
         };
+        let is_static = node.rule_name == "static_block";
+        let in_static = in_static_block || is_static;
         match node.rule_name.as_str() {
-            rule @ ("block" | "switch_statement") => {
-                let items =
-                    if rule == "block" { block_items(node) } else { case_block_items(node) };
-                let names = check_duplicates(&items, strict)?;
+            rule @ ("block" | "switch_statement" | "static_block") => {
+                let items = if rule == "switch_statement" {
+                    case_block_items(node)
+                } else {
+                    block_items(node)
+                };
+                let names = check_duplicates(&items, strict, in_static)?;
                 for &name in &names {
                     *active.entry(name).or_insert(0) += 1;
                 }
@@ -100,20 +113,117 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 saved.push(std::mem::take(&mut active));
                 stack.push(Step::LeaveBoundary);
             }
-            "variable_statement" => check_vars(node, &active)?,
-            "for_statement" | "for_in_statement" | "for_of_statement" | "for_await_of_statement"
+            "variable_statement" => check_vars(node, &active, in_static)?,
+            "for_statement"
+            | "for_in_statement"
+            | "for_of_statement"
+            | "for_await_of_statement"
                 if has_token(node, "var") =>
             {
                 for decl in children(node).take_while(|n| {
-                    matches!(n.rule_name.as_str(), "variable_declaration_list" | "variable_declaration")
+                    matches!(
+                        n.rule_name.as_str(),
+                        "variable_declaration_list" | "variable_declaration"
+                    )
                 }) {
-                    check_vars(decl, &active)?;
+                    check_vars(decl, &active, in_static)?;
+                }
+            }
+            "yield_expression" => {
+                if in_parameters && (in_generator || strict || has_operand_or_delegate(node)) {
+                    return Err(
+                        "early error: `yield` expression cannot be used in formal parameters (ECMA-262 §15.3.1)"
+                            .to_string(),
+                    );
+                }
+                if in_static {
+                    return Err(
+                        "early error: `yield` expression cannot be used in a class static initialization block (ECMA-262 §15.7.1)"
+                            .to_string(),
+                    );
+                }
+                if strict && !in_generator {
+                    return Err(
+                        "early error: `yield` cannot be used in strict mode outside of a generator (ECMA-262 §13.1.1)"
+                            .to_string(),
+                    );
+                }
+                if !in_generator && has_operand_or_delegate(node) {
+                    return Err(
+                        "early error: `yield` expression with operand cannot be used outside of a generator (ECMA-262 §15.1.1)"
+                            .to_string(),
+                    );
+                }
+            }
+            "assignment_expression" => {
+                let nds = nodes(node);
+                if nds.len() == 3
+                    && nds[1].rule_name == "assignment_operator"
+                    && is_invalid_yield_target(nds[0])
+                {
+                    return Err(
+                        "early error: invalid left-hand side in assignment (ECMA-262 §13.15.1)"
+                            .to_string(),
+                    );
+                }
+            }
+            "postfix_expression" => {
+                if has_token(node, "++") || has_token(node, "--") {
+                    if let Some(operand) = children(node).next() {
+                        if is_invalid_yield_target(operand) {
+                            return Err(
+                                "early error: invalid left-hand side expression in postfix operation (ECMA-262 §13.4)"
+                                    .to_string(),
+                            );
+                        }
+                    }
+                }
+            }
+            "unary_expression" => {
+                if has_token(node, "++") || has_token(node, "--") {
+                    if let Some(operand) = children(node).next() {
+                        if is_invalid_yield_target(operand) {
+                            return Err(
+                                "early error: invalid left-hand side expression in prefix operation (ECMA-262 §13.4)"
+                                    .to_string(),
+                            );
+                        }
+                    }
+                }
+            }
+            "for_in_statement" | "for_of_statement" | "for_await_of_statement" => {
+                if let Some(lhs) =
+                    children(node).find(|n| n.rule_name == "left_hand_side_expression")
+                {
+                    if is_invalid_yield_target(lhs) {
+                        return Err(
+                            "early error: invalid left-hand side in for-in/of loop (ECMA-262 §14.7.5)"
+                                .to_string(),
+                        );
+                    }
                 }
             }
             _ => {}
         }
         // Children in reverse, so they are entered in source order.
-        let class = matches!(node.rule_name.as_str(), "class_declaration" | "class_expression");
+        let class = matches!(
+            node.rule_name.as_str(),
+            "class_declaration" | "class_expression"
+        );
+        let is_gen_fn = matches!(
+            node.rule_name.as_str(),
+            "generator_declaration"
+                | "generator_expression"
+                | "async_generator_declaration"
+                | "async_generator_expression"
+        );
+        let is_method = matches!(
+            node.rule_name.as_str(),
+            "method_definition" | "async_method" | "private_method_definition"
+        );
+        let is_gen_method = is_method && has_token(node, "*");
+        let is_generator = is_gen_fn || is_gen_method;
+
         for child in node.children.iter().rev() {
             if let ASTNodeOrToken::Node(child) = child {
                 let child_strict = strict
@@ -122,7 +232,57 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                     || child.rule_name == "class_body"
                     // A function body's own directive prologue.
                     || (child.rule_name == "function_body" && has_use_strict_directive(child));
-                stack.push(Step::Enter(child, child_strict));
+                let is_boundary = matches!(
+                    child.rule_name.as_str(),
+                    "function_declaration"
+                        | "generator_declaration"
+                        | "async_function_declaration"
+                        | "async_generator_declaration"
+                        | "function_expression"
+                        | "generator_expression"
+                        | "async_function_expression"
+                        | "async_generator_expression"
+                        | "arrow_function"
+                        | "async_arrow_function"
+                        | "function_body"
+                        | "class_declaration"
+                        | "class_expression"
+                        | "class_body"
+                );
+                let child_in_static = if is_boundary { false } else { in_static };
+
+                let child_in_generator = match child.rule_name.as_str() {
+                    "function_body" => is_generator,
+                    "concise_body" => false,
+                    "static_block" => false,
+                    "function_declaration"
+                    | "function_expression"
+                    | "async_function_declaration"
+                    | "async_function_expression" => false,
+                    "formal_parameters" => {
+                        if node.rule_name == "arrow_parameters" {
+                            in_generator
+                        } else {
+                            is_generator
+                        }
+                    }
+                    "arrow_parameters" => in_generator,
+                    _ => in_generator,
+                };
+
+                let child_in_params = match child.rule_name.as_str() {
+                    "formal_parameters" | "arrow_parameters" => true,
+                    rule if is_boundary_rule(rule) => false,
+                    _ => in_parameters,
+                };
+
+                stack.push(Step::Enter(
+                    child,
+                    child_strict,
+                    child_in_static,
+                    child_in_generator,
+                    child_in_params,
+                ));
             }
         }
     }
@@ -131,10 +291,20 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
 
 /// Rule 2 for one `var` binding list: none of its names may be lexically
 /// declared by an enclosing block scope since the nearest function boundary.
-fn check_vars(decl: &GrammarASTNode, active: &HashMap<&str, usize>) -> Result<(), String> {
+fn check_vars(
+    decl: &GrammarASTNode,
+    active: &HashMap<&str, usize>,
+    in_static_block: bool,
+) -> Result<(), String> {
     let mut names = Vec::new();
     bound_names(decl, &mut names);
     for (name, line, column) in names {
+        if in_static_block && name == "await" {
+            return Err(format!(
+                "early error at {line}:{column}: `await` cannot be used as a binding identifier \
+                 in a class static initialization block (ECMA-262 §15.7.1)"
+            ));
+        }
         if active.contains_key(name) {
             return Err(format!(
                 "early error at {line}:{column}: `{name}` is declared with both var and \
@@ -155,13 +325,24 @@ struct Lexical<'a> {
 }
 
 /// Rule 1 for one scope's items. Returns the scope's lexical names.
-fn check_duplicates<'a>(items: &[&'a GrammarASTNode], strict: bool) -> Result<Vec<&'a str>, String> {
+fn check_duplicates<'a>(
+    items: &[&'a GrammarASTNode],
+    strict: bool,
+    in_static_block: bool,
+) -> Result<Vec<&'a str>, String> {
     let mut lexical: Vec<Lexical> = Vec::new();
     for item in items {
         lexically_declared(item, &mut lexical);
     }
     let mut seen: HashMap<&str, bool> = HashMap::new();
     for l in &lexical {
+        if in_static_block && l.name == "await" {
+            return Err(format!(
+                "early error at {}:{}: `await` cannot be used as a binding identifier \
+                 in a class static initialization block (ECMA-262 §15.7.1)",
+                l.line, l.column
+            ));
+        }
         if let Some(&prev_plain) = seen.get(l.name) {
             let annex_b = !strict && prev_plain && l.plain_function;
             if !annex_b {
@@ -210,16 +391,24 @@ fn lexically_declared<'a>(item: &'a GrammarASTNode, out: &mut Vec<Lexical<'a>>) 
     };
     match item.rule_name.as_str() {
         "function_declaration" => push_decl_name(item, true, out),
-        "generator_declaration" | "async_function_declaration" | "async_generator_declaration"
+        "generator_declaration"
+        | "async_function_declaration"
+        | "async_generator_declaration"
         | "class_declaration" => push_decl_name(item, false, out),
         "decorated_class_declaration" => {
-            if let Some(cd) = nodes(item).into_iter().find(|n| n.rule_name == "class_declaration") {
+            if let Some(cd) = nodes(item)
+                .into_iter()
+                .find(|n| n.rule_name == "class_declaration")
+            {
                 push_decl_name(cd, false, out);
             }
         }
         "lexical_declaration" | "using_declaration" | "await_using_declaration" => {
             let mut names = Vec::new();
-            for list in nodes(item).into_iter().filter(|n| n.rule_name == "binding_list") {
+            for list in nodes(item)
+                .into_iter()
+                .filter(|n| n.rule_name == "binding_list")
+            {
                 bound_names(list, &mut names);
             }
             out.extend(names.into_iter().map(|(name, line, column)| Lexical {
@@ -249,7 +438,12 @@ fn push_decl_name<'a>(decl: &'a GrammarASTNode, plain_function: bool, out: &mut 
             _ => None,
         });
     if let Some(t) = name {
-        out.push(Lexical { name: &t.value, plain_function, line: t.line, column: t.column });
+        out.push(Lexical {
+            name: &t.value,
+            plain_function,
+            line: t.line,
+            column: t.column,
+        });
     }
 }
 
@@ -261,7 +455,10 @@ fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usiz
     while let Some(n) = stack.pop() {
         match n.rule_name.as_str() {
             // `NAME` or a pattern first, then an optional `= initializer`.
-            "lexical_binding" | "variable_declaration" | "binding_element" | "object_rest_property" => {
+            "lexical_binding"
+            | "variable_declaration"
+            | "binding_element"
+            | "object_rest_property" => {
                 for c in &n.children {
                     match c {
                         ASTNodeOrToken::Token(t) if is_name(t) => {
@@ -281,7 +478,10 @@ fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usiz
             // binds NAME.
             "binding_property" => {
                 if has_token(n, ":") {
-                    if let Some(el) = nodes(n).into_iter().find(|c| c.rule_name == "binding_element") {
+                    if let Some(el) = nodes(n)
+                        .into_iter()
+                        .find(|c| c.rule_name == "binding_element")
+                    {
                         stack.push(el);
                     }
                 } else if let Some(t) = n.children.iter().find_map(|c| match c {
@@ -292,14 +492,24 @@ fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usiz
                 }
             }
             // Lists and patterns: their binding children.
-            "binding_list" | "variable_declaration_list" | "variable_statement" | "binding_pattern"
-            | "object_binding_pattern" | "array_binding_pattern" => {
+            "binding_list"
+            | "variable_declaration_list"
+            | "variable_statement"
+            | "binding_pattern"
+            | "object_binding_pattern"
+            | "array_binding_pattern" => {
                 for c in nodes(n).into_iter().rev() {
                     if matches!(
                         c.rule_name.as_str(),
-                        "lexical_binding" | "variable_declaration" | "variable_declaration_list"
-                            | "binding_pattern" | "object_binding_pattern" | "array_binding_pattern"
-                            | "binding_property" | "binding_element" | "object_rest_property"
+                        "lexical_binding"
+                            | "variable_declaration"
+                            | "variable_declaration_list"
+                            | "binding_pattern"
+                            | "object_binding_pattern"
+                            | "array_binding_pattern"
+                            | "binding_property"
+                            | "binding_element"
+                            | "object_rest_property"
                     ) {
                         stack.push(c);
                     }
@@ -334,14 +544,20 @@ fn has_use_strict_directive(body: &GrammarASTNode) -> bool {
 /// Up to `limit` tokens of `node`'s subtree, in source order: enough to tell
 /// a lone string-literal statement from anything longer. Iterative, and it
 /// stops as soon as it has `limit` tokens.
-fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a lexer::token::Token>, limit: usize) {
+fn collect_tokens<'a>(
+    node: &'a GrammarASTNode,
+    out: &mut Vec<&'a lexer::token::Token>,
+    limit: usize,
+) {
     // Each frame: a node and the index of its next child to visit.
     let mut stack: Vec<(&GrammarASTNode, usize)> = vec![(node, 0)];
     while let Some((n, i)) = stack.pop() {
         if out.len() >= limit {
             return;
         }
-        let Some(child) = n.children.get(i) else { continue };
+        let Some(child) = n.children.get(i) else {
+            continue;
+        };
         stack.push((n, i + 1));
         match child {
             ASTNodeOrToken::Token(t) => out.push(t),
@@ -380,7 +596,144 @@ fn is_string(t: &lexer::token::Token) -> bool {
 
 /// An identifier token (not a keyword, punctuator or literal).
 fn is_name(t: &lexer::token::Token) -> bool {
-    matches!(t.type_, lexer::token::TokenType::Name) && t.type_name.as_deref().is_none_or(|n| n == "NAME")
+    matches!(t.type_, lexer::token::TokenType::Name)
+        && t.type_name.as_deref().is_none_or(|n| n == "NAME")
+}
+
+fn is_boundary_rule(name: &str) -> bool {
+    matches!(
+        name,
+        "function_declaration"
+            | "generator_declaration"
+            | "async_function_declaration"
+            | "async_generator_declaration"
+            | "function_expression"
+            | "generator_expression"
+            | "async_function_expression"
+            | "async_generator_expression"
+            | "arrow_function"
+            | "async_arrow_function"
+            | "function_body"
+            | "concise_body"
+            | "class_declaration"
+            | "class_expression"
+            | "class_body"
+            | "static_block"
+    )
+}
+
+fn has_operand_or_delegate(node: &GrammarASTNode) -> bool {
+    has_token(node, "*") || children(node).next().is_some()
+}
+
+fn is_invalid_yield_target(node: &GrammarASTNode) -> bool {
+    let unwrapped = unwrap_parens(node);
+    if unwrapped.rule_name == "yield_expression" {
+        return true;
+    }
+    match unwrapped.rule_name.as_str() {
+        "array_literal" => {
+            if let Some(list) = children(unwrapped).find(|n| n.rule_name == "element_list") {
+                for elem in children(list) {
+                    if let Some(target) = destructuring_assignment_target(elem) {
+                        if is_invalid_yield_target(target) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        "object_literal" => {
+            for prop in children(unwrapped).filter(|n| n.rule_name == "property_definition") {
+                if let Some(target) = destructuring_property_target(prop) {
+                    if is_invalid_yield_target(target) {
+                        return true;
+                    }
+                }
+            }
+        }
+        _ => {}
+    }
+    false
+}
+
+fn destructuring_assignment_target(elem: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    match elem.rule_name.as_str() {
+        "spread_element" | "object_spread_property" => children(elem).next(),
+        "assignment_expression" => {
+            let nds = nodes(elem);
+            if nds.len() == 3 && nds[1].rule_name == "assignment_operator" {
+                Some(nds[0])
+            } else {
+                Some(elem)
+            }
+        }
+        _ => Some(elem),
+    }
+}
+
+fn destructuring_property_target(prop: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    if prop.rule_name == "property_definition" {
+        if has_token(prop, ":") {
+            let nds = nodes(prop);
+            if let Some(&val) = nds.get(1) {
+                return destructuring_assignment_target(val);
+            }
+        } else if let Some(spread) =
+            children(prop).find(|n| n.rule_name == "object_spread_property")
+        {
+            return destructuring_assignment_target(spread);
+        }
+    }
+    None
+}
+
+fn unwrap_parens(mut node: &GrammarASTNode) -> &GrammarASTNode {
+    loop {
+        match node.rule_name.as_str() {
+            "expression"
+            | "assignment_expression"
+            | "conditional_expression"
+            | "nullish_coalescing_expression"
+            | "logical_or_expression"
+            | "logical_and_expression"
+            | "bitwise_or_expression"
+            | "bitwise_xor_expression"
+            | "bitwise_and_expression"
+            | "equality_expression"
+            | "relational_expression"
+            | "shift_expression"
+            | "additive_expression"
+            | "multiplicative_expression"
+            | "exponentiation_expression"
+            | "unary_expression"
+            | "postfix_expression"
+            | "left_hand_side_expression"
+            | "call_expression"
+            | "optional_chain_expression"
+            | "new_expression"
+            | "member_expression" => {
+                let n = nodes(node);
+                if n.len() == 1 && node.children.len() == 1 {
+                    node = n[0];
+                } else {
+                    break;
+                }
+            }
+            "primary_expression" => {
+                let n = nodes(node);
+                if n.len() == 1
+                    && ((has_token(node, "(") && has_token(node, ")")) || node.children.len() == 1)
+                {
+                    node = n[0];
+                } else {
+                    break;
+                }
+            }
+            _ => break,
+        }
+    }
+    node
 }
 
 #[cfg(test)]
@@ -407,21 +760,30 @@ mod tests {
         assert!(!ok("{ let f; { var f; } }"));
         assert!(!ok("{ function f(){} for (var f in o); }"));
         assert!(!ok("function x(){ { class f {} var f; } }"));
+        assert!(!ok("class C { static { let f; var f; } }"));
+        assert!(!ok("class C { static { function f(){} var f; } }"));
     }
 
     #[test]
     fn switch_clauses_share_one_scope() {
-        assert!(!ok("switch (0) { case 1: let f; default: async function f(){} }"));
+        assert!(!ok(
+            "switch (0) { case 1: let f; default: async function f(){} }"
+        ));
         assert!(!ok("switch (0) { case 1: let f; case 2: var f; }"));
-        assert!(ok("switch (0) { case 1: let f; } switch (0) { case 1: let f; }"));
+        assert!(ok(
+            "switch (0) { case 1: let f; } switch (0) { case 1: let f; }"
+        ));
     }
 
     #[test]
     fn annex_b_allows_duplicate_plain_functions_in_sloppy_code_only() {
         assert!(ok("{ function f(){} function f(){} }"));
         assert!(!ok("'use strict'; { function f(){} function f(){} }"));
-        assert!(!ok("function g(){ 'use strict'; { function f(){} function f(){} } }"));
+        assert!(!ok(
+            "function g(){ 'use strict'; { function f(){} function f(){} } }"
+        ));
         assert!(!ok("class C { m(){ { function f(){} function f(){} } } }"));
+        assert!(!ok("class C { static { function f(){} function f(){} } }"));
         // Async functions and generators never qualify.
         assert!(!ok("{ async function f(){} async function f(){} }"));
     }
@@ -443,6 +805,9 @@ mod tests {
         assert!(ok("{ var f; { let f; } }"));
         // A class field's or static block's var scope is its own.
         assert!(ok("{ let f; class C { static { var f; } m(){ var f; } } }"));
+        assert!(ok(
+            "class C { static { function f(){} } static { function f(){} } }"
+        ));
     }
 
     #[test]
@@ -450,7 +815,10 @@ mod tests {
         // ES2015 spells object methods inline in `property_definition`
         // (security review): `function_body` is the boundary that holds.
         for v in [EsVersion::Es2015, EsVersion::Es2025] {
-            for src in ["{ let f; x = { m(){ var f; } }; }", "{ let f; x = { get y(){ var f; } }; }"] {
+            for src in [
+                "{ let f; x = { m(){ var f; } }; }",
+                "{ let f; x = { get y(){ var f; } }; }",
+            ] {
                 if let Err(e) = parse_javascript_typed(src, v) {
                     assert!(!e.contains("early error"), "{v:?} {src:?}: {e}");
                 }
@@ -460,7 +828,17 @@ mod tests {
 
     #[test]
     fn class_heritage_is_strict() {
-        assert!(!ok("class C extends (function(){ { function f(){} function f(){} } }) {}"));
+        assert!(!ok(
+            "class C extends (function(){ { function f(){} function f(){} } }) {}"
+        ));
+    }
+
+    #[test]
+    fn await_cannot_be_binding_name_in_static_block() {
+        assert!(!ok("class C { static { class await {} } }"));
+        assert!(!ok("class C { static { function await() {} } }"));
+        assert!(!ok("class C { static { var await; } }"));
+        assert!(!ok("class C { static { let await; } }"));
     }
 
     #[test]
@@ -474,10 +852,81 @@ mod tests {
         assert!(ast.is_ok());
         // Deeply nested blocks over a large body: each block used to re-walk
         // its whole subtree.
-        let src = format!("{}{}{}", "{let a;".repeat(40), "x=1;".repeat(10_000), "}".repeat(40));
+        let src = format!(
+            "{}{}{}",
+            "{let a;".repeat(40),
+            "x=1;".repeat(10_000),
+            "}".repeat(40)
+        );
         let root = crate::parse_javascript(&src, "es2025").expect("parses");
         let start = std::time::Instant::now();
         assert!(super::check(&root).is_ok());
-        assert!(start.elapsed() < std::time::Duration::from_secs(5), "{:?}", start.elapsed());
+        assert!(
+            start.elapsed() < std::time::Duration::from_secs(5),
+            "{:?}",
+            start.elapsed()
+        );
+    }
+
+    #[test]
+    fn yield_early_errors() {
+        // Formal parameters:
+        assert!(!ok("function* g(x = yield) {}"));
+        assert!(!ok("function* g(x = yield 1) {}"));
+        assert!(!ok("class C { *m(x = yield) {} }"));
+        assert!(!ok("class C { m(x = yield) {} }"));
+        assert!(!ok("class C { static *m(x = yield) {} }"));
+        assert!(!ok("class C { static m(x = yield) {} }"));
+        assert!(!ok("\"use strict\"; function f(x = yield) {}"));
+        assert!(!ok("\"use strict\"; (x = yield) => {}"));
+        assert!(!ok("function* g() { (x = yield) => {} }"));
+
+        // Static block:
+        assert!(!ok("class C { static { yield; } }"));
+        assert!(!ok("class C { static { yield 1; } }"));
+        assert!(!ok("\"use strict\"; class C { static { yield; } }"));
+
+        // Strict mode outside generator:
+        assert!(!ok("\"use strict\"; yield;"));
+        assert!(!ok("\"use strict\"; yield 1;"));
+        assert!(!ok("\"use strict\"; [yield] = [];"));
+        assert!(!ok("\"use strict\"; ({yield} = {});"));
+        assert!(!ok("\"use strict\"; ({a: yield} = {});"));
+        assert!(!ok("\"use strict\"; for (yield in x);"));
+        assert!(!ok("\"use strict\"; for (yield of x);"));
+
+        // Target of assignment or update:
+        assert!(!ok("function* g() { (yield) = 1; }"));
+        assert!(!ok("function* g() { ((yield)) = 1; }"));
+        assert!(!ok("function* g() { (yield) += 1; }"));
+        assert!(!ok("function* g() { (yield)++; }"));
+        assert!(!ok("function* g() { (yield)--; }"));
+        assert!(!ok("function* g() { ++(yield); }"));
+        assert!(!ok("function* g() { --(yield); }"));
+        assert!(!ok("function* g() { [yield] = []; }"));
+        assert!(!ok("function* g() { [(yield)] = []; }"));
+        assert!(!ok("function* g() { [ ...yield ] = []; }"));
+        assert!(!ok("function* g() { ({a: yield} = {}); }"));
+        assert!(!ok("function* g() { ({a: (yield)} = {}); }"));
+        assert!(!ok("function* g() { for ((yield) in o); }"));
+        assert!(!ok("function* g() { for ((yield) of o); }"));
+
+        // Valid generator bodies:
+        assert!(ok("function* g() { yield; }"));
+        assert!(ok("function* g() { yield 1; }"));
+        assert!(ok("function* g() { yield* [1, 2]; }"));
+        assert!(ok("function* g() { var x = yield; }"));
+        assert!(ok("function* g() { let x = (yield 1); }"));
+        assert!(ok("function* g() { [x = yield] = []; }"));
+        assert!(ok("function* g() { [x = yield 1] = []; }"));
+        assert!(ok("function* g() { obj[yield] = 1; }"));
+        assert!(ok("function* g() { yield\n{ x; } }"));
+        assert!(ok("class C { *m() { yield; } }"));
+        assert!(ok("let o = { *m() { yield; } };"));
+        assert!(ok("function* g() { class C { [yield] = 1; } }"));
+        assert!(ok("function* g() { class C { [yield]() {} } }"));
+        assert!(ok("function* g() { class C { get [yield]() {} } }"));
+        assert!(!ok("class C { [yield] = 1; }"));
+        assert!(!ok("function* g() { class C { m() { yield; } } }"));
     }
 }

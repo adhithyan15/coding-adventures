@@ -66,6 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    concurrency:
+      group: gh-pages-deployment
+      cancel-in-progress: false
+      queue: max
     steps:
       - name: Checkout
         uses: actions/checkout@v7

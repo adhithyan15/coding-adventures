@@ -622,6 +622,10 @@ struct FunctionCtx {
     params: HashSet<String>,
     captures: HashSet<String>,
     locals: Vec<String>,
+    /// Number of active bindings for each local variable currently on the stack.
+    /// Enables O(1) membership checks (`is_local`) instead of O(V) linear scans
+    /// over `locals` (#18482 item 6).
+    locals_counts: std::collections::HashMap<String, usize>,
     /// The *owner* key of this context: the name of the `def` whose body
     /// it lowers ([`MODULE_OWNER`] for `main`, a sentinel for a method
     /// body or a throwaway default-value context).  It is compared with
@@ -630,6 +634,14 @@ struct FunctionCtx {
     /// whose captures may be planned from here (see
     /// [`Lowerer::plan_captures`]).
     owner: String,
+    /// The owner of the immediately enclosing scope (`None` for top-level,
+    /// detached, or method bodies). Used to trace the lexical enclosing
+    /// chain when resolving nested def calls (#18482 item 4).
+    parent_owner: Option<String>,
+    /// The sequence of enclosing scope owners from the module body down
+    /// to (but not including) this context's own `owner`. Used to check
+    /// lexical visibility of nested functions (#18482 item 4).
+    lexical_ancestors: Vec<String>,
     /// True only for a method body hoisted from a `class` statement's
     /// `def` (OOP surface).  A method's first parameter (`self`, by Python
     /// convention) is *not* added to `params` — it is not an ordinary
@@ -645,6 +657,18 @@ struct FunctionCtx {
     /// ([`Lowerer::resolve_var_in`]) and store ([`Lowerer::store_target`])
     /// of a local goes through [`Self::ir_local`].
     aliases: std::collections::HashMap<String, String>,
+    /// Variables boxed into 1-element sequences (`[value]`) to implement
+    /// Python's closure cell-variable semantics (#18496 item 5).
+    ///
+    /// In Python, closures capture variable bindings (cells), not snapshots
+    /// of values at closure definition time. When an enclosing function modifies
+    /// a variable captured by a closure, or a closure is created in a loop or
+    /// before the variable is initialized, the variable is stored in a 1-element
+    /// heap-allocated sequence (a cell). Every read of the variable becomes
+    /// `Expr::SeqIndex(cell, 0)`, and every store becomes `Stmt::SeqSet(cell, 0, v)`.
+    /// Closures receive the cell reference itself (`Expr::VarRef`) in their
+    /// capture vector.
+    cells: HashSet<String>,
 }
 
 impl FunctionCtx {
@@ -655,9 +679,39 @@ impl FunctionCtx {
             params,
             captures,
             locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
             owner: owner.to_string(),
+            parent_owner: None,
+            lexical_ancestors: Vec::new(),
             in_method: false,
             aliases: std::collections::HashMap::new(),
+            cells: HashSet::new(),
+        }
+    }
+
+    /// A context for a function with inherited cell variables from its enclosing
+    /// scope, owned by the function named `owner`, inheriting its enclosing scope's
+    /// lexical ancestors (#18482 item 4).
+    fn new_with_cells(
+        params: HashSet<String>,
+        captures: HashSet<String>,
+        cells: HashSet<String>,
+        owner: &str,
+        enclosing: &FunctionCtx,
+    ) -> Self {
+        let mut lexical_ancestors = enclosing.lexical_ancestors.clone();
+        lexical_ancestors.push(enclosing.owner.clone());
+        Self {
+            params,
+            captures,
+            locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
+            owner: owner.to_string(),
+            parent_owner: Some(enclosing.owner.clone()),
+            lexical_ancestors,
+            in_method: false,
+            aliases: std::collections::HashMap::new(),
+            cells,
         }
     }
 
@@ -670,11 +724,15 @@ impl FunctionCtx {
             params,
             captures: HashSet::new(),
             locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
             // No `def` records this sentinel as its parent, so nothing is
             // ever planned from inside a method body (see `DefFacts`).
             owner: DETACHED_OWNER.to_string(),
+            parent_owner: None,
+            lexical_ancestors: Vec::new(),
             in_method: true,
             aliases: std::collections::HashMap::new(),
+            cells: HashSet::new(),
         }
     }
 
@@ -690,9 +748,6 @@ impl FunctionCtx {
         Self::new(HashSet::new(), HashSet::new(), DETACHED_OWNER)
     }
 
-    /// Is `name` an enclosing-scope value (local / param / capture) of
-    /// *this* function?  Such a name, when read inside a nested
-    /// `lambda`/`def`, must be **captured**.
     /// The IR name of the local spelled `name` in the source: its alias
     /// if it has one, else `name` itself.
     fn ir_local(&self, name: &str) -> String {
@@ -702,10 +757,39 @@ impl FunctionCtx {
             .unwrap_or_else(|| sir_var_name(name))
     }
 
+    /// Push a local variable onto the scope stack in O(1) time (#18482 item 6).
+    fn push_local(&mut self, name: String) {
+        *self.locals_counts.entry(name.clone()).or_insert(0) += 1;
+        self.locals.push(name);
+    }
+
+    /// Rewind local variables back to `mark` in O(popped) time (#18482 item 6).
+    fn rewind_locals(&mut self, mark: usize) {
+        for popped in self.locals.drain(mark..) {
+            if let std::collections::hash_map::Entry::Occupied(mut occ) =
+                self.locals_counts.entry(popped)
+            {
+                if *occ.get() <= 1 {
+                    occ.remove();
+                } else {
+                    *occ.get_mut() -= 1;
+                }
+            }
+        }
+    }
+
+    /// Check whether `name` is currently bound as a local variable in O(1) time (#18482 item 6).
+    fn is_local(&self, name: &str) -> bool {
+        self.locals_counts.contains_key(name)
+    }
+
+    /// Check whether `name` is bound in this function context (as a local,
+    /// parameter, capture, or cell) in O(1) time (#18482 item 6).
     fn is_enclosing_value(&self, name: &str) -> bool {
-        self.locals.iter().any(|n| n == name)
+        self.is_local(name)
             || self.params.contains(name)
             || self.captures.contains(name)
+            || self.cells.contains(name)
     }
 }
 
@@ -787,6 +871,22 @@ struct Lowerer {
     /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`,
     /// `__param_<p>_<N>`).
     temp_counter: usize,
+    /// Stack of enclosing `class` names for private name mangling
+    /// (Python Language Reference §6.2.1).
+    class_scopes: Vec<String>,
+}
+
+fn should_mangle(ident: &str) -> bool {
+    ident.starts_with("__") && !ident.ends_with("__")
+}
+
+fn mangle_ident(ident: &str, class_name: &str) -> String {
+    let stripped = class_name.trim_start_matches('_');
+    if stripped.is_empty() || !should_mangle(ident) {
+        ident.to_string()
+    } else {
+        format!("_{stripped}{ident}")
+    }
 }
 
 impl Lowerer {
@@ -804,6 +904,19 @@ impl Lowerer {
             call_graph: Vec::new(),
             used_names: HashSet::new(),
             temp_counter: 0,
+            class_scopes: Vec::new(),
+        }
+    }
+
+    fn current_class_name(&self) -> Option<&str> {
+        self.class_scopes.last().map(|s| s.as_str())
+    }
+
+    fn mangle_name(&self, name: &str) -> String {
+        if let Some(cls) = self.current_class_name() {
+            mangle_ident(name, cls)
+        } else {
+            name.to_string()
         }
     }
 
@@ -820,7 +933,7 @@ impl Lowerer {
 
     /// Drop every local bound since `mark`, leaving the enclosing scope.
     fn scope_rewind(ctx: &mut FunctionCtx, mark: usize) {
-        ctx.locals.truncate(mark);
+        ctx.rewind_locals(mark);
     }
 
     // -------------------------------------------------------------------
@@ -858,7 +971,12 @@ impl Lowerer {
 
         // ── Pass 2: lower each top-level statement. ──
         let mut ctx = FunctionCtx::top_level();
+        let span = Span::point(FILE, 1, 1);
+        let cell_prologue = self.cell_prologue_for_node(file, &mut ctx, &span)?;
         let mut items: Vec<Lowered> = Vec::new();
+        for stmt in cell_prologue {
+            items.push(Lowered::Stmt(Box::new(stmt)));
+        }
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
                 if let Some(item) = self.lower_top_statement(stmt, &mut ctx, 0)? {
@@ -969,7 +1087,17 @@ impl Lowerer {
         }
         // Only `statement` nodes carry defs; recurse structurally.
         if let Some(def) = self.as_def_stmt(stmt) {
+            // Function decorators (`@dec\ndef f(): ...`) are not yet lowered to
+            // decorator applications. Reject with a positioned error rather than
+            // silently dropping the decorator (#18496 item 6, #18482 item 1).
+            if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+                return Err(self.err_at(
+                    def,
+                    "unsupported: decorated function (deferred)".to_string(),
+                ));
+            }
             let name = self.def_name(def)?;
+        let name = self.mangle_name(&name);
             // Every `def`, nested or not, is lifted into one module-level
             // namespace, and `DefFacts` / `fn_captures` are keyed by name.
             // A second `def` of the same name would overwrite the first
@@ -1182,6 +1310,12 @@ impl Lowerer {
                 ))
             }
         };
+        if let Some(kind) = self.splat_arg_kind(base) {
+            return Err(self.err_at(
+                base,
+                format!("unsupported: {kind} argument in base class list (deferred)"),
+            ));
+        }
         if self.keyword_arg_name(base).is_some() {
             return Err(self.err_at(
                 base,
@@ -1438,8 +1572,7 @@ impl Lowerer {
 
         if let [only] = target_lists {
             let target = self.classify_target(self.single_expr(only)?, ctx)?;
-            let stmt = self.store_target(target, value, ctx, span)?;
-            return Ok(Lowered::Stmt(Box::new(stmt)));
+            return self.store_single_target(target, value, ctx, span);
         }
 
         // A chain: evaluate once into a temporary, then store it into
@@ -1451,7 +1584,7 @@ impl Lowerer {
             value,
             span: span.clone(),
         }];
-        ctx.locals.push(tmp.clone());
+        ctx.push_local(tmp.clone());
         for list in target_lists {
             let target = self.classify_target(self.single_expr(list)?, ctx)?;
             let read_tmp = Expr::VarRef {
@@ -1528,16 +1661,27 @@ impl Lowerer {
                 ASTNodeOrToken::Node(_) => None,
             })
             .ok_or_else(|| self.err_at(op_node, "malformed augmented operator".to_string()))?;
-        // `+=` → `+`: the augmented spelling is the binary one plus `=`.
-        let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
-        let Some(builtin) = arith_builtin(binary) else {
-            return Err(self.err_at(
-                op_node,
-                format!(
-                    "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
-                     is not lowered yet) (deferred)"
-                ),
-            ));
+        // Python's `+=` invokes in-place addition (`__iadd__`). On mutable collections
+        // such as lists, `xs += [1]` extends `xs` in place, preserving object identity
+        // across any aliases (`ys = xs; xs += [1]` modifies both `xs` and `ys`). On
+        // immutable objects (ints, floats, strings), it falls back to binary `+`.
+        // We lower `+=` to the builtin `"+="` so that code generators can emit in-place
+        // mutation for sequences and normal addition otherwise. Other augmented operators
+        // (`-=`, `*=`, etc.) map to their respective binary builtins.
+        let builtin = if op_text == "+=" {
+            "+="
+        } else {
+            let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
+            let Some(builtin) = arith_builtin(binary) else {
+                return Err(self.err_at(
+                    op_node,
+                    format!(
+                        "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
+                         is not lowered yet) (deferred)"
+                    ),
+                ));
+            };
+            builtin
         };
         let value_list = self
             .first_child_named(aug, "expression_list")
@@ -1647,8 +1791,7 @@ impl Lowerer {
             Some(value_list) => {
                 let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
                 let target = self.classify_target(target_node, ctx)?;
-                let stmt = self.store_target(target, value, ctx, span)?;
-                Ok(Lowered::Stmt(Box::new(stmt)))
+                self.store_single_target(target, value, ctx, span)
             }
             None => match self.target_name(target_node)? {
                 Some(_) => Ok(Lowered::Stmts(vec![])),
@@ -1659,6 +1802,50 @@ impl Lowerer {
                         .to_string(),
                 )),
             },
+        }
+    }
+
+    /// Store an already-lowered `value` into a single `target`, handling
+    /// evaluation order for subscriptions.
+    ///
+    /// ## Subscript assignment evaluation order (Python Reference §6.3)
+    ///
+    /// In Python, an assignment `target[index] = value` strictly evaluates the
+    /// RHS `value` *before* evaluating `target` or `index`. Because backends
+    /// typically evaluate `(seq)[index] = val;` left-to-right (container, then
+    /// index, then value), inlining `value` into `Stmt::SeqSet` or `Stmt::MapSet`
+    /// would execute index side effects before value side effects (`xs[g()] = f()`).
+    ///
+    /// We preserve Python's evaluation order by binding `value` into a fresh
+    /// temporary local binding (`let* __subval_N = value`) *before* emitting the
+    /// subscript store statement, so that `value`'s evaluation precedes the
+    /// container and index expressions.
+    fn store_single_target(
+        &mut self,
+        target: Target<'_>,
+        value: Expr,
+        ctx: &mut FunctionCtx,
+        span: Span,
+    ) -> Result<Lowered, PythonLowerError> {
+        if matches!(target, Target::Subscript { .. }) {
+            let tmp = self.fresh_temp_name("subval");
+            let val_binding = Stmt::LetStarBinding {
+                name: tmp.clone(),
+                sir_type: None,
+                value,
+                span: span.clone(),
+            };
+            ctx.push_local(tmp.clone());
+            let read_tmp = Expr::VarRef {
+                name: tmp,
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            let store = self.store_target(target, read_tmp, ctx, span)?;
+            Ok(Lowered::Stmts(vec![val_binding, store]))
+        } else {
+            let stmt = self.store_target(target, value, ctx, span)?;
+            Ok(Lowered::Stmt(Box::new(stmt)))
         }
     }
 
@@ -1691,6 +1878,7 @@ impl Lowerer {
                     "unsupported: assignment to `self` inside a method (deferred)".to_string(),
                 ));
             }
+            let name = self.mangle_name(&name);
             return Ok(Target::Name(name));
         }
         let not_supported = || {
@@ -1773,7 +1961,24 @@ impl Lowerer {
     ) -> Result<Stmt, PythonLowerError> {
         match target {
             Target::Name(name) => {
-                if ctx.locals.iter().any(|n| n == &name) {
+                if ctx.cells.contains(&name) {
+                    self.observed.add(Feature::Sequences);
+                    let cell_ref = Expr::VarRef {
+                        name: ctx.ir_local(&name),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    };
+                    return Ok(Stmt::SeqSet {
+                        seq: cell_ref,
+                        index: Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        },
+                        value,
+                        span,
+                    });
+                }
+                if ctx.is_local(&name) {
                     self.observed.add(Feature::MutableBindings);
                     Ok(Stmt::Assign {
                         name: ctx.ir_local(&name),
@@ -1782,7 +1987,7 @@ impl Lowerer {
                         span,
                     })
                 } else {
-                    ctx.locals.push(name.clone());
+                    ctx.push_local(name.clone());
                     Ok(Stmt::LetStarBinding {
                         name: ctx.ir_local(&name),
                         sir_type: None,
@@ -1838,6 +2043,280 @@ impl Lowerer {
         }
     }
 
+    /// Identify cell variables in `suite` and generate prologue statements creating
+    /// 1-element sequences (`[initial_value]`) for each cell variable (#18496 item 5).
+    ///
+    /// ## Python Closure Cell Variables
+    ///
+    /// In Python, closures capture variable *bindings* (cells), not snapshot values
+    /// at closure definition time.
+    ///
+    /// Consider:
+    /// ```python
+    /// def f():
+    ///     x = 10
+    ///     g = lambda: x
+    ///     x = 20
+    ///     return g()
+    /// ```
+    /// Under value capture, `g` captures 10 when created, returning 10 instead of 20.
+    /// With cell boxing, `x` is stored in a 1-element sequence `[nil]` at prologue.
+    /// `x = 10` does `SeqSet(cell_x, 0, 10)`. `g` captures `cell_x`. `x = 20` does
+    /// `SeqSet(cell_x, 0, 20)`. When `g()` runs, it reads `SeqIndex(cell_x, 0)` -> 20.
+    ///
+    /// Similarly, if a closure is defined before the variable is assigned, or in a loop:
+    /// all closures share the cell reference and observe subsequent mutations.
+    fn cell_prologue(
+        &mut self,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        self.cell_prologue_for_node(suite, ctx, span)
+    }
+
+    fn cell_prologue_for_node(
+        &mut self,
+        root: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        let cell_vars = self.identify_cell_vars(root, ctx)?;
+        if cell_vars.is_empty() {
+            return Ok(Vec::new());
+        }
+        self.observed.add(Feature::Sequences);
+        let mut stmts = Vec::with_capacity(cell_vars.len());
+        for name in cell_vars {
+            let alias = self.fresh_temp_name(&format!("cell_{name}"));
+            let is_param = ctx.params.contains(&name);
+            let init_val = if is_param {
+                Expr::VarRef {
+                    name: sir_var_name(&name),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                }
+            } else {
+                Expr::NilLit { span: span.clone() }
+            };
+            stmts.push(Stmt::LetStarBinding {
+                name: alias.clone(),
+                sir_type: None,
+                value: Expr::SeqLit {
+                    items: vec![init_val],
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            });
+            ctx.cells.insert(name.clone());
+            ctx.aliases.insert(name.clone(), alias);
+            ctx.push_local(name);
+        }
+        Ok(stmts)
+    }
+
+    fn identify_cell_vars(
+        &self,
+        root: &GrammarASTNode,
+        ctx: &FunctionCtx,
+    ) -> Result<Vec<String>, PythonLowerError> {
+        let mut closure_reads = HashSet::new();
+        self.collect_closure_reads(root, &mut closure_reads)?;
+
+        if closure_reads.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        // Single linear pass over top-level statements in root:
+        let mut assign_counts: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
+        let mut in_control_flow: HashSet<String> = HashSet::new();
+        let mut assigned_after_closure: HashSet<String> = HashSet::new();
+        let mut seen_closures_reading: HashSet<String> = HashSet::new();
+
+        for child in &root.children {
+            if let ASTNodeOrToken::Node(stmt) = child {
+                if stmt.rule_name != "statement" {
+                    continue;
+                }
+                let mut targets = Vec::new();
+                self.node_local_assign_targets(stmt, &mut targets, 0)?;
+
+                let is_cf = Self::stmt_is_control_flow(stmt);
+                let mut reads_in_stmt = HashSet::new();
+                self.collect_closure_reads(stmt, &mut reads_in_stmt)?;
+
+                for t in targets {
+                    *assign_counts.entry(t.clone()).or_insert(0) += 1;
+                    if is_cf {
+                        in_control_flow.insert(t.clone());
+                    }
+                    if seen_closures_reading.contains(&t) || reads_in_stmt.contains(&t) {
+                        assigned_after_closure.insert(t);
+                    }
+                }
+
+                for r in reads_in_stmt {
+                    seen_closures_reading.insert(r);
+                }
+            }
+        }
+
+        let mut cell_vars = Vec::new();
+        for name in closure_reads {
+            let is_param = ctx.params.contains(&name);
+            let count = assign_counts.get(&name).copied().unwrap_or(0);
+            if is_param {
+                if count > 0 {
+                    cell_vars.push(name);
+                }
+            } else if count > 0 {
+                let mutated = count > 1
+                    || in_control_flow.contains(&name)
+                    || assigned_after_closure.contains(&name);
+                if mutated {
+                    cell_vars.push(name);
+                }
+            }
+        }
+        cell_vars.sort();
+        Ok(cell_vars)
+    }
+
+    fn collect_closure_reads(
+        &self,
+        node: &GrammarASTNode,
+        captured: &mut HashSet<String>,
+    ) -> Result<(), PythonLowerError> {
+        if node.rule_name == "def_stmt" {
+            let mut inner_bound = HashSet::new();
+            if let Ok(specs) = self.def_param_specs(node) {
+                for (pname, _, _) in specs {
+                    inner_bound.insert(pname);
+                }
+            }
+            if let Some(suite) = self.first_child_named(node, "suite") {
+                let _ = self.collect_suite_bound_names(suite, &mut inner_bound);
+                let mut free = Vec::new();
+                let mut seen = HashSet::new();
+                let _ = self.collect_free_names(suite, &inner_bound, &mut free, &mut seen, 0);
+                for f in free {
+                    if !self.function_names.contains(&f) {
+                        captured.insert(f);
+                    }
+                }
+                for child in &suite.children {
+                    if let ASTNodeOrToken::Node(n) = child {
+                        self.collect_closure_reads(n, captured)?;
+                    }
+                }
+            }
+            return Ok(());
+        }
+        if node.rule_name == "lambda_expr" {
+            let mut inner_bound = HashSet::new();
+            if let Ok(ps) = self.lambda_params(node) {
+                for p in ps {
+                    inner_bound.insert(p);
+                }
+            }
+            if let Some(body) = self.first_child_named(node, "expression") {
+                let mut free = Vec::new();
+                let mut seen = HashSet::new();
+                let _ = self.collect_free_names(body, &inner_bound, &mut free, &mut seen, 0);
+                for f in free {
+                    if !self.function_names.contains(&f) {
+                        captured.insert(f);
+                    }
+                }
+                for child in &body.children {
+                    if let ASTNodeOrToken::Node(n) = child {
+                        self.collect_closure_reads(n, captured)?;
+                    }
+                }
+            }
+            return Ok(());
+        }
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                self.collect_closure_reads(n, captured)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn node_local_assign_targets(
+        &self,
+        node: &GrammarASTNode,
+        out: &mut Vec<String>,
+        depth: usize,
+    ) -> Result<(), PythonLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
+        if node.rule_name == "def_stmt" {
+            return Ok(());
+        }
+        match node.rule_name.as_str() {
+            "assign_stmt" => {
+                let kids = child_nodes(node);
+                let mut target_lists: Vec<&GrammarASTNode> = Vec::new();
+                if let [lhs, tail] = kids.as_slice() {
+                    target_lists.push(lhs);
+                    if tail.rule_name == "assign_suffix" {
+                        let more = child_nodes(tail);
+                        if let Some((_value, rest)) = more.split_last() {
+                            target_lists.extend(rest.iter().copied());
+                        }
+                    }
+                }
+                for list in target_lists {
+                    if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
+                    {
+                        out.push(self.mangle_name(&name));
+                    }
+                }
+            }
+            "for_stmt" => {
+                if let Some(tl) = self.first_child_named(node, "target_list") {
+                    for t in child_nodes(tl) {
+                        if let Ok(Some(name)) = self.target_name(t) {
+                            out.push(self.mangle_name(&name));
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                self.node_local_assign_targets(n, out, depth + 1)?;
+            }
+        }
+        Ok(())
+    }
+
+
+    fn stmt_is_control_flow(stmt: &GrammarASTNode) -> bool {
+        for child in &stmt.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "compound_stmt" {
+                    for c in &n.children {
+                        if let ASTNodeOrToken::Node(inner) = c {
+                            if matches!(inner.rule_name.as_str(), "if_stmt" | "while_stmt" | "for_stmt") {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        false
+    }
+
     /// The statements that start a function body by copying each
     /// parameter the body **assigns** into a fresh local, and the matching
     /// alias in `ctx` (see [`FunctionCtx::aliases`]).
@@ -1884,7 +2363,7 @@ impl Lowerer {
         self.collect_suite_bound_names(suite, &mut assigned)?;
         let mut copied: Vec<String> = assigned
             .into_iter()
-            .filter(|n| ctx.params.contains(n))
+            .filter(|n| ctx.params.contains(n) && !ctx.cells.contains(n))
             .collect();
         // Deterministic output: a `HashSet` has no stable order.
         copied.sort();
@@ -1901,7 +2380,7 @@ impl Lowerer {
                 },
                 span: span.clone(),
             });
-            ctx.locals.push(name.clone());
+            ctx.push_local(name.clone());
             ctx.aliases.insert(name, alias);
         }
         Ok(stmts)
@@ -1993,14 +2472,40 @@ impl Lowerer {
             "def_stmt" => {
                 // A nested `def` reaching the general statement lowerer:
                 // lift it to a top-level synthesised function with
-                // captures, then yield a `MakeClosure` so the closure
-                // value is produced at this position (e.g. as a block
-                // value to be `return`ed).
+                // captures, producing a `MakeClosure` expression (`mc`).
+                //
+                // In Python, `def` is an executable statement that creates a
+                // closure and binds it to its declared identifier in the current
+                // scope. When the declared name shadows an enclosing value (a
+                // parameter or a prior local variable in `ctx`), subsequent
+                // references and calls in this suite resolve through that enclosing
+                // value (`resolve_var_in`), because an enclosing value wins over
+                // module-level function lookup (see `lower_call_by_name` and
+                // `resolve_name`).
+                //
+                // We therefore bind `mc` into the shadowed target via
+                // `store_target`. If the name was already in `ctx.locals` (e.g. a
+                // copied parameter `__param_n_0` or earlier local), `store_target`
+                // emits a `Stmt::Assign` and declares `MutableBindings`. If it
+                // was an enclosing capture, it emits a `LetStarBinding` to shadow
+                // it locally.
+                //
+                // When the name does NOT shadow any enclosing value, we retain
+                // `Lowered::Expr(mc)` so that unshadowed nested functions can be
+                // called via direct calls (`DirectCall`) or closure calls
+                // (`lower_closure_call`) without allocating redundant local
+                // variable slots.
                 let mc = self.lower_def(inner, ctx, depth)?;
-                // This `MakeClosure` is retained (it becomes the block
-                // value) → the module uses closures.
                 self.observed.add(Feature::Closures);
-                Ok(Lowered::Expr(mc))
+                let name = self.def_name(inner)?;
+                let name = self.mangle_name(&name);
+                if ctx.is_enclosing_value(&name) {
+                    let span = self.span_of(inner);
+                    let store = self.store_target(Target::Name(name), mc, ctx, span)?;
+                    Ok(Lowered::Stmt(Box::new(store)))
+                } else {
+                    Ok(Lowered::Expr(mc))
+                }
             }
             other => Err(self.err_at(
                 inner,
@@ -2049,31 +2554,45 @@ impl Lowerer {
 
         self.observed.add(Feature::Classes);
 
-        let mut stmts = vec![Stmt::ClassDef {
-            name: name.clone(),
-            superclass,
-            body: vec![],
-            span: span.clone(),
-        }];
+        self.class_scopes.push(name.clone());
+        let res = (|| -> Result<Vec<Stmt>, PythonLowerError> {
+            let mut stmts = vec![Stmt::ClassDef {
+                name: name.clone(),
+                superclass,
+                body: vec![],
+                span: span.clone(),
+            }];
 
-        for stmt_node in class_body_statements(suite) {
-            if is_pass_stmt(stmt_node) {
-                // `class Foo: pass` is Python's spelling of an empty class
-                // body — a no-op here, matching Stmt::ClassDef's empty
-                // `body: []` (methods are hoisted, so the empty-body case
-                // is `pass`-only or `def`-only, never both meaningfully).
-                continue;
+            for stmt_node in class_body_statements(suite) {
+                if is_pass_stmt(stmt_node) {
+                    // `class Foo: pass` is Python's spelling of an empty class
+                    // body — a no-op here, matching Stmt::ClassDef's empty
+                    // `body: []` (methods are hoisted, so the empty-body case
+                    // is `pass`-only or `def`-only, never both meaningfully).
+                    continue;
+                }
+                let def = self.as_def_stmt(stmt_node).ok_or_else(|| {
+                    self.err_at(
+                        stmt_node,
+                        "unsupported: class body statement other than `def` (deferred)".to_string(),
+                    )
+                })?;
+                // Method decorators (`@property`, `@staticmethod`, etc.) are not yet
+                // lowered. Reject with a positioned error rather than silently
+                // dropping the decorator (#18496 item 6).
+                if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+                    return Err(self.err_at(
+                        def,
+                        "unsupported: decorated method (deferred)".to_string(),
+                    ));
+                }
+                stmts.push(self.lower_method_registration(&name, def, depth)?);
             }
-            let def = self.as_def_stmt(stmt_node).ok_or_else(|| {
-                self.err_at(
-                    stmt_node,
-                    "unsupported: class body statement other than `def` (deferred)".to_string(),
-                )
-            })?;
-            stmts.push(self.lower_method_registration(&name, def, depth)?);
-        }
 
-        Ok(stmts)
+            Ok(stmts)
+        })();
+        self.class_scopes.pop();
+        res
     }
 
     /// Lower one `def` inside a `class` body: hoist its body to a
@@ -2097,11 +2616,18 @@ impl Lowerer {
         def: &GrammarASTNode,
         depth: usize,
     ) -> Result<Stmt, PythonLowerError> {
+        if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+            return Err(self.err_at(
+                def,
+                "unsupported: decorated method (deferred)".to_string(),
+            ));
+        }
         let py_name = self.def_name(def)?;
+        let mangled_name = self.mangle_name(&py_name);
         let sir_method_name = if py_name == "__init__" {
             "initialize".to_string()
         } else {
-            py_name.clone()
+            mangled_name.clone()
         };
 
         let specs = self.def_param_specs(def)?;
@@ -2156,7 +2682,7 @@ impl Lowerer {
         let suite = self
             .first_child_named(def, "suite")
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
-        let hoisted_name = self.hoisted_method_name(class_name, &py_name);
+        let hoisted_name = self.hoisted_method_name(class_name, &mangled_name);
         let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
         let span = self.span_of(def);
         let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
@@ -2369,6 +2895,7 @@ impl Lowerer {
                 ))
             }
         };
+        let var = self.mangle_name(&var);
         // Inside a method a bare `self` always reads the implicit receiver
         // (`resolve_var`), so `for self in xs:` would bind a variable no
         // read can see: the body would print the receiver every time.
@@ -2448,14 +2975,14 @@ impl Lowerer {
     ) -> Result<(String, Block), PythonLowerError> {
         // A parameter used as a loop variable is a local by now (the
         // function prologue copies it, see `param_copy_prologue`).
-        let already_bound = ctx.locals.iter().any(|n| n == var);
+        let already_bound = ctx.is_local(var);
         if !already_bound {
-            ctx.locals.push(var.to_string());
+            ctx.push_local(var.to_string());
             let body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
             return Ok((var.to_string(), body));
         }
         let tmp = self.fresh_temp_name("for");
-        ctx.locals.push(tmp.clone());
+        ctx.push_local(tmp.clone());
         let read_tmp = Expr::VarRef {
             name: tmp.clone(),
             scope: Scope::Local,
@@ -2492,6 +3019,14 @@ impl Lowerer {
         }
 
         let args = self.call_arguments(suffix);
+        for a in &args {
+            if let Some(kind) = self.splat_arg_kind(a) {
+                return Err(self.err_at(
+                    a,
+                    format!("unsupported: {kind} argument in call (deferred)"),
+                ));
+            }
+        }
 
         let span = self.span_of(primary);
         let int = |v: i64| Expr::IntLit {
@@ -2596,7 +3131,14 @@ impl Lowerer {
         enclosing: &mut FunctionCtx,
         depth: usize,
     ) -> Result<Expr, PythonLowerError> {
+        if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+            return Err(self.err_at(
+                def,
+                "unsupported: decorated function (deferred)".to_string(),
+            ));
+        }
         let name = self.def_name(def)?;
+        let name = self.mangle_name(&name);
         // Resolve `(name, optional default-CST)` for each parameter, then
         // lower every default **in the enclosing scope** (Python evaluates
         // defaults at `def` time in the scope the `def` is written inside).
@@ -2713,6 +3255,7 @@ impl Lowerer {
                 // Positional param (before any `*`): Required.
                 "param_with_default" => {
                     let (name, default) = self.param_spec(child)?;
+                    let name = self.mangle_name(&name);
                     specs.push((name, ParamKind::Required, default));
                 }
                 // Everything after a bare `*` / `*args` is keyword-only.
@@ -2776,6 +3319,7 @@ impl Lowerer {
                 ASTNodeOrToken::Node(n) => match n.rule_name.as_str() {
                     "param_with_default" => {
                         let (name, default) = self.param_spec(n)?;
+                        let name = self.mangle_name(&name);
                         specs.push((name, ParamKind::Keyword, default));
                     }
                     "double_star_param" => {
@@ -2871,8 +3415,19 @@ impl Lowerer {
         let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // Lower the body in the synthesised function's own context.
-        let mut inner =
-            FunctionCtx::new(bound.clone(), captures.iter().cloned().collect(), &fn_name);
+        let mut inner_cells = HashSet::new();
+        for c in &captures {
+            if enclosing.cells.contains(c) {
+                inner_cells.insert(c.clone());
+            }
+        }
+        let mut inner = FunctionCtx::new_with_cells(
+            bound.clone(),
+            captures.iter().cloned().collect(),
+            inner_cells,
+            &fn_name,
+            enclosing,
+        );
         let value = self.lower_expr_in(body_expr, &mut inner, depth + 1)?;
         let body = Block {
             stmts: vec![],
@@ -2920,7 +3475,7 @@ impl Lowerer {
             for child in &lp.children {
                 if let ASTNodeOrToken::Token(t) = child {
                     if matches!(t.type_, lexer::token::TokenType::Name) && t.type_name.is_none() {
-                        names.push(t.value.clone());
+                        names.push(self.mangle_name(&t.value));
                     }
                 }
             }
@@ -3009,14 +3564,24 @@ impl Lowerer {
         let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // ── Lower the body in the function's own context. ──
-        let mut inner = FunctionCtx::new(
+        let mut inner_cells = HashSet::new();
+        for c in &captures {
+            if enclosing.cells.contains(c) {
+                inner_cells.insert(c.clone());
+            }
+        }
+        let mut inner = FunctionCtx::new_with_cells(
             params.iter().map(|(n, _, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
+            inner_cells,
             name,
+            enclosing,
         );
-        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let cell_prologue = self.cell_prologue(suite, &mut inner, &span)?;
+        let param_prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
         let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
-        body.stmts.splice(0..0, prologue);
+        body.stmts.splice(0..0, param_prologue);
+        body.stmts.splice(0..0, cell_prologue);
 
         self.push_function(name, params, &captures, body, span.clone());
 
@@ -3180,6 +3745,36 @@ impl Lowerer {
     /// (the earliest point its closure is built).  That is the only
     /// context whose values `f` can thread.
     ///
+    /// Check whether a function named `target` is lexically visible from `ctx`
+    /// (#18482 item 4).
+    ///
+    /// In Python, nested `def` statements bind in their defining enclosing scope.
+    /// A top-level function (`facts.parent == MODULE_OWNER`) is module-global and
+    /// visible everywhere.
+    ///
+    /// A nested function is defined in scope `facts.parent`. It is visible if and
+    /// only if `facts.parent` is the current scope (`ctx.owner == facts.parent`)
+    /// or is present in the chain of enclosing scopes (`ctx.lexical_ancestors`).
+    ///
+    /// Unrelated scopes (top-level code outside the parent, cousin functions nested
+    /// under different parents) cannot see `target` and will receive a positioned
+    /// `unresolved name` error matching Python's `NameError`.
+    fn is_function_visible(&self, target: &str, ctx: &FunctionCtx) -> bool {
+        let Some(facts) = self.def_facts.get(target) else {
+            return false;
+        };
+        if facts.parent == MODULE_OWNER {
+            return true;
+        }
+        if ctx.owner == facts.parent {
+            return true;
+        }
+        if ctx.parent_owner.as_deref() == Some(&facts.parent) {
+            return true;
+        }
+        ctx.lexical_ancestors.iter().any(|a| a == &facts.parent)
+    }
+
     /// Each list is sorted alphabetically, so the order is deterministic.
     fn plan_captures(
         &mut self,
@@ -3201,7 +3796,9 @@ impl Lowerer {
         // the same spelling shadows it — the same rule calls and bare
         // references use (`resolve_var`, `lower_call_suffix`).
         let names_function = |this: &Self, n: &str| {
-            this.function_names.contains(n) && !enclosing.is_enclosing_value(n)
+            this.function_names.contains(n)
+                && this.is_function_visible(n, enclosing)
+                && !enclosing.is_enclosing_value(n)
         };
 
         // ── Gather the group. ──
@@ -3371,6 +3968,10 @@ impl Lowerer {
 
     /// The value of each capture in `names`, read in the `enclosing`
     /// context where the closure is built.
+    ///
+    /// For a cell variable (#18496 item 5), the closure must receive the
+    /// cell sequence reference itself (`Expr::VarRef`), not an indexed read
+    /// of the cell (`Expr::SeqIndex`).
     fn capture_values(
         &self,
         names: &[String],
@@ -3379,7 +3980,31 @@ impl Lowerer {
     ) -> Result<Vec<Expr>, PythonLowerError> {
         names
             .iter()
-            .map(|n| self.resolve_var_in(enclosing, n, span.clone()))
+            .map(|n| {
+                if enclosing.cells.contains(n) {
+                    if enclosing.is_local(n) {
+                        Ok(Expr::VarRef {
+                            name: enclosing.ir_local(n),
+                            scope: Scope::Local,
+                            span: span.clone(),
+                        })
+                    } else if enclosing.captures.contains(n) {
+                        Ok(Expr::VarRef {
+                            name: sir_var_name(n),
+                            scope: Scope::Capture,
+                            span: span.clone(),
+                        })
+                    } else {
+                        Err(PythonLowerError {
+                            message: format!("unresolved cell capture `{n}`"),
+                            line: span.start_line,
+                            column: span.start_col,
+                        })
+                    }
+                } else {
+                    self.resolve_var_in(enclosing, n, span.clone())
+                }
+            })
             .collect()
     }
 
@@ -3461,7 +4086,7 @@ impl Lowerer {
         // assignment target?
         if let Some(def) = self.as_def_stmt(stmt) {
             if let Ok(n) = self.def_name(def) {
-                bound.insert(n);
+                bound.insert(self.mangle_name(&n));
             }
             return Ok(());
         }
@@ -3527,7 +4152,7 @@ impl Lowerer {
                 for list in target_lists {
                     if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
                     {
-                        out.push(name);
+                        out.push(self.mangle_name(&name));
                     }
                 }
             }
@@ -3535,7 +4160,7 @@ impl Lowerer {
                 if let Some(tl) = self.first_child_named(node, "target_list") {
                     for t in child_nodes(tl) {
                         if let Ok(Some(name)) = self.target_name(t) {
-                            out.push(name);
+                            out.push(self.mangle_name(&name));
                         }
                     }
                 }
@@ -3598,7 +4223,7 @@ impl Lowerer {
         if node.rule_name == "def_stmt" {
             let mut inner = bound.clone();
             if let Ok(n) = self.def_name(node) {
-                inner.insert(n);
+                inner.insert(self.mangle_name(&n));
             }
             if let Ok(specs) = self.def_param_specs(node) {
                 for (pname, _kind, default_node) in specs {
@@ -3635,9 +4260,9 @@ impl Lowerer {
         // A bare `Name` token (no type_name) is a reference.
         if let Some(tok) = node.token() {
             if matches!(tok.type_, lexer::token::TokenType::Name) && tok.type_name.is_none() {
-                let name = &tok.value;
-                if !bound.contains(name) && seen.insert(name.clone()) {
-                    free.push(name.clone());
+                let name = self.mangle_name(&tok.value);
+                if !bound.contains(&name) && seen.insert(name.clone()) {
+                    free.push(name);
                 }
             }
             return Ok(());
@@ -4304,6 +4929,7 @@ impl Lowerer {
             Some(ASTNodeOrToken::Token(t)) if t.value == "[" => Ok(SuffixKind::Subscript),
             Some(ASTNodeOrToken::Token(t)) if t.value == "." => {
                 let name = self.attr_name(suffix)?;
+                let name = self.mangle_name(&name);
                 Ok(SuffixKind::Attr(name))
             }
             _ => Err(self.err_at(
@@ -4356,6 +4982,7 @@ impl Lowerer {
                 ))
             }
         };
+        let name = self.mangle_name(&name);
 
         // `len(x)` → SeqLen (preferred over BuiltinCall("len")).  Arity
         // must be exactly 1; a value of the same name in scope shadows the
@@ -4443,8 +5070,12 @@ impl Lowerer {
         }
         // Known function (top-level or nested-lifted) → DirectCall, but
         // only if it is *not* shadowed by an enclosing value of the same
-        // name (a local/param/capture closure handle wins).
-        if self.function_names.contains(&name) && !ctx.is_enclosing_value(&name) {
+        // name (a local/param/capture closure handle wins), and it is
+        // lexically visible from this scope (#18482 item 4).
+        if self.function_names.contains(&name)
+            && self.is_function_visible(&name, ctx)
+            && !ctx.is_enclosing_value(&name)
+        {
             // A function that captures something cannot be called
             // directly: every backend gives a closure body its captures
             // as leading parameters, and a `DirectCall` passes only the
@@ -4561,16 +5192,15 @@ impl Lowerer {
     /// declare [`Feature::KeywordParams`] so the manifest matches what the
     /// validator observes.
     ///
-    /// ## Keyword arg vs. `**dict` splat — a deliberate distinction
+    /// ## Keyword arg vs. `*args` / `**kwargs` splat — deliberate refusal
     ///
     /// Only the explicit `NAME = value` spelling becomes a `KeywordArg`.  The
     /// grammar's other two `argument` forms — `STAR expression` (`*seq`) and
     /// `DOUBLE_STAR expression` (`**dict`, keyword-rest splat) — are NOT
-    /// keyword arguments: `**dict` names no single parameter, it unpacks a
-    /// mapping.  Those splat forms keep their existing (subset-external)
-    /// treatment via [`Self::single_arg_expr`], which returns the inner
-    /// `expression`; we detect the `NAME EQUALS` shape *first* by the leading
-    /// NAME + `=` tokens so a `**dict` never masquerades as a keyword arg.
+    /// supported yet in SIR and are refused with positioned errors (#18482 item 2),
+    /// mirroring the refusal on `*args` and `**kwargs` parameter declarations.
+    /// Earlier versions dropped the splat token and collapsed them into single
+    /// positional arguments, which changed program meaning silently.
     fn lower_call_args(
         &mut self,
         suffix: &GrammarASTNode,
@@ -4580,6 +5210,12 @@ impl Lowerer {
         let arg_nodes = self.call_arguments(suffix);
         let mut args = Vec::with_capacity(arg_nodes.len());
         for a in &arg_nodes {
+            if let Some(kind) = self.splat_arg_kind(a) {
+                return Err(self.err_at(
+                    a,
+                    format!("unsupported: {kind} argument in call (deferred)"),
+                ));
+            }
             match self.keyword_arg_name(a) {
                 // `NAME = expression` → a keyword argument.
                 Some(kw_name) => {
@@ -4594,8 +5230,7 @@ impl Lowerer {
                         span,
                     });
                 }
-                // A bare positional argument (or a `*`/`**` splat, whose
-                // token is dropped by `single_arg_expr` — unchanged v0).
+                // A bare positional argument.
                 None => {
                     let e = self.single_arg_expr(a)?;
                     args.push(self.lower_expr_d(e, ctx, depth + 1)?);
@@ -4603,6 +5238,29 @@ impl Lowerer {
             }
         }
         Ok(args)
+    }
+
+    /// If this `argument` node is a `*args` (`STAR`) or `**kwargs`
+    /// (`DOUBLE_STAR`) unpacking form, return a descriptive label for the
+    /// error message (`"*starred"` or `"**double-starred keyword"`).
+    ///
+    /// The CST for `*xs` is `argument[ STAR, expression ]` and for `**d`
+    /// is `argument[ DOUBLE_STAR, expression ]`.  Splat arguments are
+    /// deferred (SIR #18482 item 2); detecting them here prevents
+    /// [`Self::single_arg_expr`] from silently stripping the splat operator
+    /// and treating the argument as a single positional parameter.
+    fn splat_arg_kind(&self, arg: &GrammarASTNode) -> Option<&'static str> {
+        for child in &arg.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if t.value == "**" {
+                    return Some("**double-starred keyword");
+                }
+                if t.value == "*" {
+                    return Some("*starred");
+                }
+            }
+        }
+        None
     }
 
     /// If this `argument` node is the keyword form `NAME EQUALS expression`,
@@ -5159,10 +5817,12 @@ impl Lowerer {
     fn resolve_var(
         &mut self,
         node: &GrammarASTNode,
-        name: &str,
+        raw_name: &str,
         ctx: &mut FunctionCtx,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
+        let mangled = self.mangle_name(raw_name);
+        let name = mangled.as_str();
         // A bare `self` inside a method body is the SIR dispatch
         // envelope's implicit receiver (SIR25 §2.3), not an ordinary
         // value — `self` is never in `ctx.params` (it is stripped by
@@ -5184,7 +5844,8 @@ impl Lowerer {
         // function carries captures (a nested closure), re-thread them
         // from the currently visible enclosing values; otherwise it is a
         // zero-capture closure handle.
-        if self.function_names.contains(name) {
+        // It must be lexically visible from this scope (#18482 item 4).
+        if self.function_names.contains(name) && self.is_function_visible(name, ctx) {
             self.observed.add(Feature::Closures);
             return self.named_closure(name, ctx, span);
         }
@@ -5243,9 +5904,26 @@ impl Lowerer {
                 line: span.start_line,
                 column: span.start_col,
             };
-            let value = self
-                .resolve_var_in(ctx, cn, span.clone())
-                .map_err(|_| not_in_scope())?;
+            let value = if ctx.cells.contains(cn) {
+                if ctx.is_local(cn) {
+                    Expr::VarRef {
+                        name: ctx.ir_local(cn),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }
+                } else if ctx.captures.contains(cn) {
+                    Expr::VarRef {
+                        name: sir_var_name(cn),
+                        scope: Scope::Capture,
+                        span: span.clone(),
+                    }
+                } else {
+                    return Err(not_in_scope());
+                }
+            } else {
+                self.resolve_var_in(ctx, cn, span.clone())
+                    .map_err(|_| not_in_scope())?
+            };
             let is_capture = matches!(
                 value,
                 Expr::VarRef {
@@ -5271,7 +5949,36 @@ impl Lowerer {
         name: &str,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
-        if ctx.locals.iter().rev().any(|n| n == name) {
+        if ctx.cells.contains(name) {
+            let cell_ref = if ctx.is_local(name) {
+                Expr::VarRef {
+                    name: ctx.ir_local(name),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                }
+            } else if ctx.captures.contains(name) {
+                Expr::VarRef {
+                    name: sir_var_name(name),
+                    scope: Scope::Capture,
+                    span: span.clone(),
+                }
+            } else {
+                return Err(PythonLowerError {
+                    message: format!("unresolved cell variable `{name}`"),
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            };
+            return Ok(Expr::SeqIndex {
+                seq: Box::new(cell_ref),
+                index: Box::new(Expr::IntLit {
+                    value: 0,
+                    span: span.clone(),
+                }),
+                span,
+            });
+        }
+        if ctx.is_local(name) {
             return Ok(Expr::VarRef {
                 name: ctx.ir_local(name),
                 scope: Scope::Local,

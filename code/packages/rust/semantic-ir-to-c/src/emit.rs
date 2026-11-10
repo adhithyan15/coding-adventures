@@ -163,7 +163,11 @@ pub fn emit_module(m: &Module) -> String {
     // boolean-selected LITERAL (never source text — see the security note in
     // runtime.rs).
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "1" } else { "0" }));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    let runtime = RUNTIME
+        .replace("__SIR_DISPLAY_RUBY__", if display_ruby { "1" } else { "0" })
+        .replace("__SIR_DISPLAY_PYTHON__", if display_python { "1" } else { "0" });
+    out.push_str(&runtime);
     out.push_str("\n\n");
 
     emit_globals_comment(&mut out, &m.globals);
@@ -354,7 +358,12 @@ fn emit_thunk(out: &mut String, m: &Module, name: &str) {
                 out.push_str(", ");
             }
             first = false;
-            let _ = write!(out, "(argc > {i} ? args[{i}] : _sir_nil())", i = i);
+            // Pad omitted arguments with the `_sir_missing()` sentinel rather
+            // than `_sir_nil()` (#18490). If the callee has default parameters,
+            // its opening prologue (`if (_sir_is_missing(p)) { p = <default>; }`)
+            // detects the sentinel and evaluates the default expression,
+            // exactly as direct calls do.
+            let _ = write!(out, "(argc > {i} ? args[{i}] : _sir_missing())", i = i);
         }
         // A body with no captures and no params is still a valid zero-arg call.
         out.push_str(");\n");
@@ -686,6 +695,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emit the
+            // body statements inline without setjmp handler overhead.
+            if rescues.is_empty() && ensure_body.is_none() {
+                for st in body {
+                    emit_stmt(out, st, indent);
+                }
+                return;
+            }
             let id = fresh_id();
             let i1 = indent + 1;
             let i2 = indent + 2;
@@ -1512,6 +1530,7 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
+            let nparam = SIGNATURES.with(|a| a.borrow().get(fn_name).map_or(0, |p| p.len()));
             let _ = writeln!(out, "{pad}{{");
             let inner = indent + 1;
             let ipad = indent_str(inner);
@@ -1527,6 +1546,7 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
                 let _ = write!(out, ", {n}");
             }
             out.push_str(");\n");
+            let _ = writeln!(out, "{ipad}_sir_closure_set_nparam(&{dst}, {nparam});");
             let _ = writeln!(out, "{pad}}}");
         }
         // A call whose arguments contain control flow: hoist every argument
@@ -2206,9 +2226,10 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
+            let nparam = SIGNATURES.with(|a| a.borrow().get(fn_name).map_or(0, |p| p.len()));
             let _ = write!(
                 out,
-                "_sir_make_closure({}, {}",
+                "_sir_closure_with_nparam(_sir_make_closure({}, {}",
                 thunk_name(fn_name),
                 captures.len()
             );
@@ -2216,7 +2237,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 out.push_str(", ");
                 emit_expr(out, &c.value, indent);
             }
-            out.push(')');
+            let _ = write!(out, "), {nparam})");
         }
         Expr::Block(b) => {
             // Simple only when stmts empty (guaranteed by is_simple).
@@ -2830,7 +2851,7 @@ fn is_builtin_method(name: &str) -> bool {
         | "each" | "map" | "select" | "reject" | "any?" | "all?" | "none?"
         | "sort_by" | "each_with_index" | "reduce" | "inject"
         // slice 4 — Array mutation + 1-arg query methods
-        | "push" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
+        | "push" | "append" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
         // slice 6 — Hash non-block methods
         | "keys" | "values" | "to_h" | "dig" | "merge" | "delete" | "clear" | "invert"
         // slice 7 — Hash block methods
@@ -2849,6 +2870,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "inspect" | "nil?" | "equal?" | "itself" | "frozen?" | "&" | "|" | "^"
         // deferred-from-slice-8 — String char-set + padding methods
         | "squeeze" | "ljust" | "rjust" | "center"
+        // #18798 item 8 — built-in message accessor on exception objects
+        | "message"
     )
 }
 
@@ -3528,6 +3551,8 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         // `utdiv` -> `div_trunc`/`udiv_trunc` below).
         "tmod" => ("_sir_itmod", 2),
         "utmod" => ("_sir_utmod", 2),
+        "%" => ("_sir_mod", 2),
+        "+=" => ("_sir_iadd", 2),
         // SIR21 T3b-2: `div_trunc`/`udiv_trunc` are `tdiv`/`utdiv` under
         // their new canonical names (same `_sir_itdiv`/`_sir_utdiv` helpers,
         // zero behaviour change). The old bare `"tdiv"`/`"utdiv"` dispatch

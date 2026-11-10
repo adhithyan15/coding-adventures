@@ -1,2 +1,20 @@
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
 cargo test -p coding_adventures_ct_compare -- --nocapture
 python3 ../../../scripts/ct_compare_tfv.py
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check ct-compare
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=invert&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-last-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-high-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=swap-choice&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs
+set WARRANT_PROOF_FAULT=secret-branch&& cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs 2>NUL | findstr /B /C:"not ok "
+set WARRANT_BENCH_OUT=evidence/bench-manifest.json&& cargo test -q -p coding_adventures_ct_compare --test microbenchmarks
+# VER04h: the report is derived from the manifests written above; --check
+# cross-checks it against them and fails closed on any disagreement.
+# --allow-unverified: the report still cites `unverified::` static attestations
+# (AST audits no tool re-runs); the default is to refuse them, and this flag
+# makes the dependence visible here until they are replaced by checked evidence.
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

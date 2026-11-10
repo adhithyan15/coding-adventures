@@ -2,6 +2,25 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [Unreleased]
+
+### Added (#18798)
+
+- `Closure.arity` and `makeClosure(fn, captures, arity)` record the declared parameter count on `Closure` handles so method dispatchers can distinguish 1-parameter blocks from multi-parameter blocks.
+
+### Added (#18496 item 4)
+
+- `iadd(a, b)` — in-place addition for `+=`. Mutates arrays in place, preserving object identity across aliases, and delegates to `add(a, b)` otherwise. Registered under `"+=" : iadd` in `builtins` table.
+
+### Added (#18496 item 2)
+
+- `mod(a, b)` — floored binary modulo matching Python and Ruby `%` semantics (`r = a - b * floor(a / b)`).
+  Registered under `"%" : mod` in `builtins` table. Raises typed `ZeroDivisionError: divided by 0` on zero divisor.
+
+### Added (#18496 item 1)
+
+- `setDisplayConvention("python")` sets `toDisplay(true)` to `"True"`, `toDisplay(false)` to `"False"`, and `toDisplay(null)` / `toDisplay(undefined)` to `"None"`.
+
 ## [0.6.0] - 2026-08-17
 
 ### Added — SIR21 T3b-2 Slice 2: `truncDiv`/`trueDiv`

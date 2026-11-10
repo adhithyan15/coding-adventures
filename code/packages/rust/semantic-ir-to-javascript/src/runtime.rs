@@ -63,6 +63,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
   // unchanged.
   const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
+  const SIR_DISPLAY_PYTHON = __SIR_DISPLAY_PYTHON__;
   // A second, independent display-convention flag: `true` when the
   // module's `source_language` is APL, else `false`. APL's own console
   // convention renders a negative number with the high-minus glyph `¯`
@@ -192,7 +193,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `applyClosure` invokes it.  Wrapping (rather than using a bare JS
   // function) keeps closures distinguishable from other callables.
   class Closure {
-    constructor(fn) { this.fn = fn; }
+    constructor(fn, arity) { this.fn = fn; this.arity = arity; }
   }
 
   // ── symbol interning ───────────────────────────────────────────
@@ -338,7 +339,17 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
   }
   function mod(a, b) {
-    const r = numOf(a) % numOf(b);
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    let r = an % bn;
+    if (r !== 0 && ((r < 0) !== (bn < 0))) {
+      r += bn;
+    }
+    if (r === 0) {
+      r = 0;
+    }
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
   }
   // Equality is Ruby `==`: by VALUE for numbers, STRUCTURAL for composites.
@@ -440,9 +451,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `"a#{x}b"` — SIR's `StrConcat`: every part shown with `toS`, joined.
   function strConcat(...parts) { return parts.map(toS).join(""); }
   function formatSeen(v, seen) {
-    if (v === null || v === undefined) { return "nil"; }
-    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
-    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
+    if (v === null || v === undefined) { return SIR_DISPLAY_PYTHON ? "None" : "nil"; }
+    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"); }
+    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f"); }
     if (typeof v === "string") { return v; }
     // An EXCEPTION renders as its MESSAGE, matching Ruby's `Exception#to_s`.
     // `Error`, not `SirError`: `emit.rs`'s `catch` binds the RAW thrown value,
@@ -638,6 +649,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "div_trunc": (a, b) => truncDiv(a, b),
     "udiv_trunc": (a, b) => utruncDiv(a, b),
     "div_true": (a, b) => trueDiv(a, b),
+    "+=": (a, b) => iadd(a, b),
     "=": (x, y) => eq(x, y),
     // `==` is a synonym for `=`; `!=` its negation.  Present in this table (not
     // only the emitter's infix map) so a first-class `:==`/`:!=` symbol
@@ -921,6 +933,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Numeric fold (unchanged): int/float promotion via native `+`.
     return numFold(args.slice(1), first, (x, y) => x + y);
   }
+  // In-place addition for `+=`. When the target operand is an Array,
+  // mutates it in place by pushing the elements of `b` (or `b` itself if not an Array),
+  // preserving object identity across aliases (Python's `__iadd__` / Ruby's `concat`).
+  // Non-array operands fall back to standard addition (`plus(a, b)`).
+  function iadd(a, b) {
+    if (Array.isArray(a)) {
+      if (Array.isArray(b)) {
+        for (let i = 0; i < b.length; i++) { a.push(b[i]); }
+      } else {
+        a.push(b);
+      }
+      return a;
+    }
+    return plus(a, b);
+  }
   // `*` — Ruby `*` is BINARY (receiver * arg).  We handle the binary
   // string/array arms explicitly and keep the variadic numeric fold for
   // the ≥2-arg numeric case (`(* 2 3 4)`).
@@ -1055,7 +1082,11 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       // Native higher-order methods pass (element, index, array); the SIR
       // closure only binds the params it declared, so extra JS arguments
       // are harmlessly ignored by `applyClosure`'s spread.
-      return (...xs) => applyClosure(a, xs);
+      const fn = (...xs) => applyClosure(a, xs);
+      if (a.arity !== undefined) {
+        fn.arity = a.arity;
+      }
+      return fn;
     }
     return a;
   }
@@ -1082,7 +1113,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // must live here (the frontend denylist is defense in depth in front of it).
   const METHOD_ALLOWLIST = new Set([
     // Array
-    "push", "pop", "shift", "unshift", "slice", "splice", "concat",
+    "push", "append", "pop", "shift", "unshift", "slice", "splice", "concat",
     "map", "filter", "reduce", "reduceRight", "forEach", "includes",
     "indexOf", "lastIndexOf", "join", "sort", "reverse", "find",
     "findIndex", "some", "every", "flat", "flatMap", "fill", "at",
@@ -1617,6 +1648,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "to_h", "each_with_index", "each_with_object",
   ]);
   function hashMethod(recv, name, args) {
+    const yieldKV = (blk, k, v) => (blk && blk.arity === 1 ? blk([k, v]) : blk(k, v));
     switch (name) {
       case "keys": return [...recv.keys()];
       case "values": return [...recv.values()];
@@ -1689,16 +1721,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         return recv;
       }
       case "each": case "each_pair": {
-        // Yields (key, value); returns the receiver.
+        // Yields (key, value) or [key, value] for 1-param blocks; returns the receiver.
         const blk = args[args.length - 1];
-        if (typeof blk === "function") { for (const [k, v] of recv) { blk(k, v); } }
+        if (typeof blk === "function") { for (const [k, v] of recv) { yieldKV(blk, k, v); } }
         return recv;
       }
       case "map": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return []; }
         const out = [];
-        for (const [k, v] of recv) { out.push(blk(k, v)); }
+        for (const [k, v] of recv) { out.push(yieldKV(blk, k, v)); }
         return out;
       }
       case "select": case "filter": case "reject": {
@@ -1708,7 +1740,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const keepWhenTruthy = name !== "reject";
         const out = new Map();
         for (const [k, v] of recv) {
-          const t = truthy(blk(k, v));
+          const t = truthy(yieldKV(blk, k, v));
           if (keepWhenTruthy ? t : !t) { out.set(k, v); }
         }
         return out;
@@ -1745,32 +1777,32 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       case "find": case "detect": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return [k, v]; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return [k, v]; } }
         return null;
       }
       case "any?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size > 0; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return true; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return true; } }
         return false;
       }
       case "all?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return true; }
-        for (const [k, v] of recv) { if (!truthy(blk(k, v))) { return false; } }
+        for (const [k, v] of recv) { if (!truthy(yieldKV(blk, k, v))) { return false; } }
         return true;
       }
       case "none?": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size === 0; }
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { return false; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { return false; } }
         return true;
       }
       case "count": {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return recv.size; }
         let n = 0;
-        for (const [k, v] of recv) { if (truthy(blk(k, v))) { n++; } }
+        for (const [k, v] of recv) { if (truthy(yieldKV(blk, k, v))) { n++; } }
         return n;
       }
       case "sort_by": {
@@ -1779,7 +1811,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
         const keyed = [];
-        for (const [k, v] of recv) { keyed.push([blk(k, v), [k, v]]); }
+        for (const [k, v] of recv) { keyed.push([yieldKV(blk, k, v), [k, v]]); }
         keyed.sort((a, b) => arrCmp(a[0], b[0]));
         return keyed.map((p) => p[1]);
       }
@@ -1793,7 +1825,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         let bestPair = null;
         let bestKey;
         for (const [k, v] of recv) {
-          const key = blk(k, v);
+          const key = yieldKV(blk, k, v);
           if (bestPair === null || (wantMin ? key < bestKey : key > bestKey)) {
             bestPair = [k, v];
             bestKey = key;
@@ -1814,7 +1846,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (typeof blk !== "function") { return HASH_MISS; }
         const groups = new Map();
         for (const [k, v] of recv) {
-          const gk = blk(k, v);
+          const gk = yieldKV(blk, k, v);
           const bucket = groups.get(gk);
           if (bucket) { bucket.push([k, v]); } else { groups.set(gk, [[k, v]]); }
         }
@@ -1827,7 +1859,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const yes = [];
         const no = [];
         for (const [k, v] of recv) {
-          if (truthy(blk(k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
+          if (truthy(yieldKV(blk, k, v))) { yes.push([k, v]); } else { no.push([k, v]); }
         }
         return [yes, no];
       }
@@ -1838,7 +1870,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         if (typeof blk !== "function") { return HASH_MISS; }
         const out = [];
         for (const [k, v] of recv) {
-          const r = blk(k, v);
+          const r = yieldKV(blk, k, v);
           if (Array.isArray(r)) { out.push(...r); } else { out.push(r); }
         }
         return out;
@@ -1866,7 +1898,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
         const blk = args[args.length - 1];
         if (typeof blk !== "function") { return HASH_MISS; }
         let acc = args.length >= 2 ? args[0] : 0;
-        for (const [k, v] of recv) { acc = acc + blk(k, v); }
+        for (const [k, v] of recv) { acc = acc + yieldKV(blk, k, v); }
         return acc;
       }
       case "to_h": {
@@ -1966,6 +1998,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // mirrors these labels for `respond_to?`.
   const ARR_MISS = Symbol("arr-miss");
   const ARRAY_METHODS = new Set([
+    "push", "append",
     "each", "each_with_index", "map", "collect", "select", "filter", "reject",
     "find", "detect", "reduce", "inject", "any?", "all?", "none?", "count",
     "sort", "sort_by", "min", "max", "minmax", "min_by", "max_by", "group_by",
@@ -2050,6 +2083,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ? args[args.length - 1]
       : null;
     switch (name) {
+      // In-place mutation: `push` and `append`. Appends all argument items to `recv`
+      // in place and returns `recv` (mirroring Python/C/Ruby chaining semantics, rather
+      // than native JS push's return of the new integer length).
+      case "push":
+      case "append": {
+        for (let i = 0; i < args.length; i++) {
+          recv.push(args[i]);
+        }
+        return recv;
+      }
       // #18798 (item 13) — `a[i]`, `a[i] = v` and `a.size`.  The Ruby
       // frontend lowers indexing to the method calls `[]` / `[]=` (it cannot
       // tell an Array from a Hash), and none of the three was here, so
@@ -6634,7 +6677,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, matlabTruthy, format, toS, strConcat, write,
-    plus, times, divide, shiftLeft,
+    plus, times, divide, shiftLeft, iadd,
     // SIR21 T3b-2: `div_trunc`/`udiv_trunc`/`div_true` — the three
     // genuinely-new division ops (`div_floor` is `divide` above, exported
     // under its existing name).

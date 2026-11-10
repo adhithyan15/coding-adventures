@@ -240,6 +240,16 @@ struct Emitter<'a> {
     /// `({}+1).x` prints `({}+1).x`, the object protected by the binary's own
     /// paren, with no double wrap. `None` outside an expression statement.
     expr_stmt_start: Option<usize>,
+    /// When emitting an arrow function's concise body, tracks `self.out.len()`
+    /// right after the `=>` — the byte offset the concise body's **first token**
+    /// will land at. An object literal emitted at exactly this offset is the
+    /// leading token of the concise body, where a bare `{` mis-parses as a *block
+    /// body*, so [`emit_object`](Self::emit_object) wraps just that object in parens
+    /// (`()=>({}).x`, `()=>({})[1]`, `()=>({})`).
+    ///
+    /// Like `expr_stmt_start`, using the position avoids double-wrapping when an
+    /// intervening spine node is precedence-wrapped (e.g. `()=>({}+1).x`).
+    arrow_concise_start: Option<usize>,
 }
 
 impl<'a> Emitter<'a> {
@@ -252,6 +262,7 @@ impl<'a> Emitter<'a> {
             indent: 0,
             source_map: SourceMapBuilder::new(),
             expr_stmt_start: None,
+            arrow_concise_start: None,
         }
     }
 
@@ -1274,8 +1285,9 @@ impl<'a> Emitter<'a> {
         self.write_str("function");
         if f.generator {
             self.write_str("*");
+        } else {
+            self.required_ws();
         }
-        self.required_ws();
         self.emit_identifier(&f.id);
         self.write_str("(");
         for (i, p) in f.params.iter().enumerate() {
@@ -1352,7 +1364,9 @@ impl<'a> Emitter<'a> {
             self.write_str("*");
         }
         if let Some(id) = &f.id {
-            self.required_ws();
+            if !f.generator {
+                self.required_ws();
+            }
             self.emit_identifier(id);
         }
         self.emit_param_list_and_body(&f.params, &f.body);
@@ -1606,9 +1620,10 @@ impl<'a> Emitter<'a> {
     ///    `AssignmentExpression`.
     /// 3. **Object-literal concise bodies are wrapped.** `() => ({a:1})` —
     ///    without the parens the leading `{` parses as a *block* body, so
-    ///    a concise body that is an [`Expression::ObjectExpression`] gets
-    ///    a disambiguating wrap. (The deeper leftmost-`{` case, e.g.
-    ///    `() => ({}).x`, is not yet wrapped — see CLOC12-gaps.)
+    ///    a concise body that has an object literal as its leftmost token
+    ///    (`() => ({})`, `() => ({}).x`, `() => ({})[1]`) gets a
+    ///    disambiguating wrap around that object literal via
+    ///    `arrow_concise_start`.
     ///
     /// Parenthesisation in the two mis-parse contexts — as a call callee
     /// (`(() => {})()`) and as a member object (`(() => {}).x`) — is
@@ -1669,16 +1684,14 @@ impl<'a> Emitter<'a> {
         match &a.body {
             ArrowBody::Block(b) => self.emit_function_body(b),
             ArrowBody::Expression(e) => {
-                // A concise body that starts with `{` (an object literal)
-                // would otherwise be read as a block body.
-                let wrap = matches!(**e, Expression::ObjectExpression(_));
-                if wrap {
-                    self.write_str("(");
-                }
+                // A concise body that starts with `{` (an object literal,
+                // directly or deep on a member/call/assignment spine like
+                // `({}).x` or `({})[1]`) would otherwise be read as a block body.
+                // We record the start offset so `emit_object` wraps just that
+                // leading object literal in parens (`()=>({}).x`, not `()=>({}.x)`).
+                let prev = self.arrow_concise_start.replace(self.out.len());
                 self.emit_expression_inner(e, PREC_ASSIGNMENT);
-                if wrap {
-                    self.write_str(")");
-                }
+                self.arrow_concise_start = prev;
             }
         }
     }
@@ -2028,16 +2041,20 @@ impl<'a> Emitter<'a> {
         }
 
         // Every other (symbolic) operator is emitted tight in compact mode
-        // (`a+b`, `a&&b`, `a<<b`, `a===b`) — a space only in `pretty` mode. The
-        // ONLY token-merge hazard is the additive operators `+` / `-`: if the
-        // left operand already ends with the same sign, or the right operand
-        // begins with it, dropping the space fuses the pair into the
-        // increment/decrement token — `a+ +b` would become `a++b` (parsed
-        // `a++ b`), a MISCOMPILE. No other operator can fuse: no operand begins
-        // or ends with `<`,`>`,`&`,`|`,`*`,`/`,`%`,`^`,`=` in a way that forms a
-        // different token, and the right operand can never lead with `*` or `/`
-        // (so `/` cannot start a `/*`//`//` comment), since `++`/`--` are not
-        // representable unary operators here. We guard both seams for `+`/`-`.
+        // (`a+b`, `a&&b`, `a<<b`, `a===b`) — a space only in `pretty` mode. Two
+        // token-merge hazards exist:
+        //
+        // 1. Additive operators `+` / `-`: if the left operand already ends with
+        //    the same sign, or the right operand begins with it, dropping the
+        //    space fuses the pair into the increment/decrement token — `a+ +b`
+        //    would become `a++b` (parsed `a++ b`), a MISCOMPILE. We guard both
+        //    seams for `+`/`-`.
+        //
+        // 2. Relational `<` followed by `!` and `--`: `a < !--b` (or `a < ! --b`)
+        //    fusing into `a<!--b` triggers ECMAScript Annex B.1.1 single-line HTML
+        //    comment syntax in script mode (`<!--`), swallowing the remainder of
+        //    the line and causing a silent miscompile (#17887). We guard the `<`
+        //    right seam with a space (`a< !--b`).
         let sign = match b.operator {
             BinaryOperator::Add => Some('+'),
             BinaryOperator::Sub => Some('-'),
@@ -2048,8 +2065,9 @@ impl<'a> Emitter<'a> {
             self.write_str(" ");
         }
         self.write_str(op);
-        let right_needs_space =
-            self.opts.pretty || sign.is_some_and(|sc| arg_starts_with_sign(&b.right, sc));
+        let right_needs_space = self.opts.pretty
+            || sign.is_some_and(|sc| arg_starts_with_sign(&b.right, sc))
+            || (matches!(b.operator, BinaryOperator::Lt) && arg_starts_with_bang_decr(&b.right));
         if right_needs_space {
             self.write_str(" ");
         }
@@ -2631,13 +2649,15 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_object(&mut self, o: &ObjectExpression) {
-        // If this object is the **leading token** of an expression statement, a
-        // bare `{` would open a block — wrap it in parens. It is leading exactly
-        // when nothing has been written since the statement began, i.e. the
-        // recorded start offset still equals the current output length. Objects
-        // anywhere to the right (past any token, including a precedence `(`)
-        // don't match and print bare.
-        let wrap = self.expr_stmt_start == Some(self.out.len());
+        // If this object is the **leading token** of an expression statement or
+        // an arrow function concise body, a bare `{` would open a block or block
+        // body — wrap it in parens. It is leading exactly when nothing has been
+        // written since the statement or concise body began, i.e. the recorded
+        // start offset still equals the current output length. Objects anywhere
+        // to the right (past any token, including a precedence `(`) don't match
+        // and print bare.
+        let wrap = self.expr_stmt_start == Some(self.out.len())
+            || self.arrow_concise_start == Some(self.out.len());
         self.maybe_map(&o.cv);
         if wrap {
             self.write_str("(");
@@ -2690,13 +2710,19 @@ impl<'a> Emitter<'a> {
                     return;
                 }
                 if p.method {
+                    if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                        if fe.is_async {
+                            self.write_str("async");
+                            self.required_ws();
+                        }
+                        if fe.generator {
+                            self.write_str("*");
+                        }
+                        self.emit_property_key(&p.key);
+                        self.emit_param_list_and_body(&fe.params, &fe.body);
+                        return;
+                    }
                     self.emit_property_key(&p.key);
-                    // Method value is a FunctionExpression (Phase
-                    // 2). For Phase 1 we conservatively emit the
-                    // value expression which may be a function
-                    // literal or any expression — Phase 1 doesn't
-                    // emit FunctionExpression yet, so any non-
-                    // function value just gets emitted as-is.
                     self.emit_expression(&p.value);
                     return;
                 }
@@ -2709,13 +2735,21 @@ impl<'a> Emitter<'a> {
                 self.write_str("get");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
             PropertyKind::Set => {
                 self.write_str("set");
                 self.required_ws();
                 self.emit_property_key(&p.key);
-                self.emit_expression(&p.value);
+                if let Expression::FunctionExpression(fe) = p.value.as_ref() {
+                    self.emit_param_list_and_body(&fe.params, &fe.body);
+                } else {
+                    self.emit_expression(&p.value);
+                }
             }
         }
     }
@@ -3311,6 +3345,24 @@ fn arg_starts_with_sign(e: &Expression, sign: char) -> bool {
         }
         _ => false,
     }
+}
+
+/// Returns true if expression `e`, emitted without outer parentheses, would
+/// begin with `!` immediately followed by `--` (i.e. prefix `--` update).
+///
+/// In ECMAScript (Annex B.1.1), `<!--` begins a SingleLineHTMLOpenComment in
+/// script mode. When preceded by a `<` binary operator (`a < !--b`), omitting
+/// whitespace produces `a<!--b`, which turns the remainder of the line into an
+/// HTML-like comment, dropping statements and causing a silent miscompile (#17887).
+fn arg_starts_with_bang_decr(e: &Expression) -> bool {
+    if let Expression::UnaryExpression(u) = e {
+        if matches!(u.operator, UnaryOperator::Not) {
+            if let Expression::UpdateExpression(up) = &*u.argument {
+                return up.prefix && matches!(up.operator, UpdateOperator::Decrement);
+            }
+        }
+    }
+    false
 }
 
 fn binary_op_str(op: BinaryOperator) -> &'static str {
@@ -5889,6 +5941,30 @@ mod tests {
         assert_eq!(out.code, "function noop(){};");
     }
 
+    #[test]
+    fn generator_declaration_no_space() {
+        let body = BlockStatement {
+            cv: None,
+            body: vec![],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: true,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function*g(){};");
+    }
+
     // ---- arrays + objects -----------------------------------
 
     #[test]
@@ -7446,6 +7522,54 @@ mod tests {
         assert_eq!(emit_expr(arrow_concise(&[], obj)), "()=>({});");
     }
 
+    /// Issue #18146: A concise body whose leftmost expression is an object
+    /// literal (e.g. `({}).x`, `({})[1]`, `({})()`) must parenthesise that
+    /// object literal so the leading `{` is not mis-parsed as a block body.
+    #[test]
+    fn arrow_object_literal_member_concise_body_is_wrapped() {
+        let obj = || {
+            Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            })
+        };
+        let m = member(obj(), "x", false);
+        assert_eq!(emit_expr(arrow_concise(&[], m)), "()=>({}).x;");
+
+        let m_computed = member(obj(), "1", true);
+        assert_eq!(emit_expr(arrow_concise(&[], m_computed)), "()=>({})[1];");
+
+        let c = call(obj(), vec![]);
+        assert_eq!(emit_expr(arrow_concise(&[], c)), "()=>({})();");
+    }
+
+    /// A concise body where an object literal is NOT the leading token
+    /// (e.g. `[{}]`, `1+{}`) must NOT have parens inserted around the object.
+    #[test]
+    fn arrow_non_leading_object_concise_body_is_not_wrapped() {
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        let arr = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(obj)],
+        });
+        assert_eq!(emit_expr(arrow_concise(&[], arr)), "()=>[{}];");
+    }
+
+    /// When an object literal under an arrow concise body is already protected
+    /// by precedence parentheses (e.g. `({}+1).x`), it must not be double-wrapped.
+    #[test]
+    fn arrow_object_under_precedence_wrapped_concise_body_is_not_double_wrapped() {
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        let e = member(binary(BinaryOperator::Add, obj, num(1.0)), "x", false);
+        assert_eq!(emit_expr(arrow_concise(&[], e)), "()=>({}+1).x;");
+    }
+
     /// An IIFE arrow: the callee is wrapped because `()=>{}()` is a
     /// syntax error.
     #[test]
@@ -8594,6 +8718,20 @@ mod tests {
         );
     }
 
+    #[test]
+    fn import_decoded_specifier_value_emitted_without_doubling() {
+        // Issue #18122: Module specifiers print from the decoded value,
+        // through the same quote-and-escape path as emit_string.
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Default(id_("a"))], "./a.js"),
+            "import a from\"./a.js\";"
+        );
+        assert_eq!(
+            emit_import_decl(vec![], "./a.js"),
+            "import\"./a.js\";"
+        );
+    }
+
     // ---- ES-module export declarations (CLOC12.189) -----------
 
     fn emit_one_decl(d: Declaration) -> String {
@@ -8629,6 +8767,25 @@ mod tests {
             source: Some(src_("y")),
         });
         assert_eq!(emit_one_decl(d), "export{a}from\"y\";");
+    }
+
+    #[test]
+    fn export_decoded_specifier_value_emitted_without_doubling() {
+        // Issue #18122: Export re-export specifiers print from decoded value.
+        let d1 = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("b", "b")],
+            source: Some(src_("./cA")),
+        });
+        assert_eq!(emit_one_decl(d1), "export{b}from\"./cA\";");
+
+        let d2 = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source: src_("./cA.js"),
+        });
+        assert_eq!(emit_one_decl(d2), "export*from\"./cA.js\";");
     }
 
     #[test]

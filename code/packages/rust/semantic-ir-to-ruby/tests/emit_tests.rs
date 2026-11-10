@@ -93,10 +93,14 @@ fn display_convention_follows_source_language() {
         .contains("SIR_DISPLAY_RUBY = true"));
 
     module.metadata.source_language = Some("twig".into());
-    assert!(compile(&module)
-        .unwrap()
-        .source
-        .contains("SIR_DISPLAY_RUBY = false"));
+    let twig = compile(&module).unwrap().source;
+    assert!(twig.contains("SIR_DISPLAY_RUBY = false"));
+    assert!(twig.contains("SIR_DISPLAY_PYTHON = false"));
+
+    module.metadata.source_language = Some("python".into());
+    let py = compile(&module).unwrap().source;
+    assert!(py.contains("SIR_DISPLAY_PYTHON = true"));
+    assert!(py.contains("SIR_DISPLAY_RUBY = false"));
 }
 
 #[test]
@@ -2806,6 +2810,40 @@ fn each_runs_a_user_classs_own_each_and_returns_the_receiver() {
     }
 }
 
+/// #18798 (item 23): a block with no parameters over an Array or a Hash
+/// discards the yielded elements rather than raising ArgumentError.
+#[test]
+fn each_with_zero_parameter_block_runs_over_array_and_hash() {
+    let rb = ruby_to_ruby(
+        "xs = [1, 2]\nxs.each do\n  puts 42\nend\n{a: 1, b: 2}.each { puts 99 }\n",
+    );
+    assert!(
+        rb.contains("sir_each(xs, ->(*sir_args) { sir_fn___block_0() }, 0)"),
+        "got:\n{rb}"
+    );
+    assert!(
+        rb.contains("sir_each({:a => 1, :b => 2}, ->(*sir_args) { sir_fn___block_1() }, 0)"),
+        "got:\n{rb}"
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "42\n42\n99\n99"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// #18798 (item 23): yielding arguments to a block with no parameters
+/// discards the surplus arguments (Ruby non-lambda Proc semantics).
+#[test]
+fn yield_to_zero_parameter_block_discards_arguments() {
+    let rb = ruby_to_ruby(
+        "def greet\n  yield 1\n  yield 2, 3\nend\ngreet { puts \"hello\" }\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "hello\nhello"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
 /// Any other built-in method is still refused cleanly, and so is `each`
 /// without a block.
 #[test]
@@ -2904,5 +2942,19 @@ fn e2e_index_assignment_refuses_a_non_integer_or_huge_index() {
     assert!(rb.contains("sir_index_set("), "{rb}");
     if let Some(out) = run_ruby(&rb) {
         assert_eq!(out, "float\nstring\ntoo big\n3");
+    }
+}
+
+/// #18798 item 8 — built-in `.message` accessor on exception objects.
+/// Mapped through `sir_message` which fetches `.message` on exceptions
+/// or invokes `:sir_um_message` on user classes.
+#[test]
+fn e2e_exception_message_method() {
+    let src = "begin\n  raise \"boom\"\nrescue => e\n  puts e.message\nend\n";
+    let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
+    let rb = compile(&module).expect("compiles").source;
+    assert!(rb.contains("sir_message("), "uses sir_message helper:\n{rb}");
+    if let Some(out) = run_ruby(&rb) {
+        assert_eq!(out, "boom");
     }
 }

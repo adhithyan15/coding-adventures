@@ -134,6 +134,19 @@ def test_display_convention_ruby_booleans() -> None:
     assert sir.to_display(None) == "nil"
 
 
+def test_display_convention_python_booleans_and_none() -> None:
+    try:
+        sir.set_display_convention("python")
+        assert sir.to_display(True) == "True"
+        assert sir.to_display(False) == "False"
+        assert sir.to_display(None) == "None"
+        assert sir.to_display(sir.intern("sym")) == "sym"
+    finally:
+        sir.set_display_convention("lisp")
+    assert sir.to_display(True) == "#t"
+    assert sir.to_display(None) == "nil"
+
+
 def test_ruby_puts_and_print_of_nil(capsys: pytest.CaptureFixture[str]) -> None:
     # #18798: `puts nil` is an empty line, `print nil` prints nothing, and a
     # nil inside a `puts`ed array is an empty line too (`puts` flattens).
@@ -521,6 +534,31 @@ def test_true_div_by_zero_raises_typed_zero_division_error() -> None:
     assert excinfo.value.args[0] == "divided by 0"
 
 
+def test_mod_computes_floored_modulo_across_all_signs() -> None:
+    assert sir.mod(7, 3) == 1
+    assert sir.mod(-7, 3) == 2
+    assert sir.mod(7, -3) == -2
+    assert sir.mod(-7, -3) == -1
+    assert sir.mod(6, 3) == 0
+    assert sir.mod(-6, 3) == 0
+
+
+def test_mod_dispatches_via_call_builtin() -> None:
+    assert sir.call_builtin("%", [7, 3]) == 1
+    assert sir.call_builtin("%", [-7, 3]) == 2
+    assert sir.call_builtin("%", [7, -3]) == -2
+    assert sir.call_builtin("%", [-7, -3]) == -1
+
+
+def test_mod_by_zero_raises_typed_zero_division_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.mod(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+    assert excinfo.value.args[0] == "divided by 0"
+
+
 def test_comparisons() -> None:
     assert sir.lt(1, 2) is True
     assert sir.gt(2, 1) is True
@@ -686,3 +724,18 @@ def test_as_lambda_returns_same_closure_and_sets_flag() -> None:
 
 def test_as_lambda_passes_non_closure_through() -> None:
     assert sir.as_lambda(42) == 42
+
+
+def test_iadd_mutates_list_in_place() -> None:
+    xs = [1, 2]
+    ys = xs
+    res = sir.iadd(xs, [3, 4])
+    assert res is xs
+    assert ys == [1, 2, 3, 4]
+    assert sir.call_builtin("+=", [xs, [5]]) is xs
+    assert ys == [1, 2, 3, 4, 5]
+
+
+def test_iadd_falls_back_for_numbers() -> None:
+    assert sir.iadd(1, 2) == 3
+    assert sir.call_builtin("+=", [5, 10]) == 15

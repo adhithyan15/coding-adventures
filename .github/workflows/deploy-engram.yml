@@ -39,8 +39,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: deploy-engram
-  cancel-in-progress: true
+  group: gh-pages-deployment
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   build-and-deploy:

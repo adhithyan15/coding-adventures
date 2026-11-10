@@ -92,10 +92,18 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Go.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace(
-        "__SIR_DISPLAY_RUBY__",
-        if display_ruby { "true" } else { "false" },
-    ));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
+            ),
+    );
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');
@@ -709,6 +717,13 @@ fn emit_try_catch(
     ensure_body: Option<&[Stmt]>,
     indent: usize,
 ) {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause carries
+    // an empty `rescues` and `None` `ensure_body`. Emit the body statements
+    // inline instead of introducing an anonymous closure wrapper.
+    if rescues.is_empty() && ensure_body.is_none() {
+        emit_stmt_list(out, body, indent);
+        return;
+    }
     let pad = indent_str(indent);
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -883,7 +898,13 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 if i > 0 {
                     out.push_str(", ");
                 }
-                let _ = write!(out, "__args[{}]", i);
+                // Bounds-check the argument slice via `_sir_closure_arg` rather
+                // than direct indexing `__args[{i}]` (#18490). If a closure with
+                // defaulted parameters is called with fewer arguments than parameters,
+                // omitted slots return `_sir_missing` so the callee's prologue
+                // (`if _sir_is_missing(p) { p = <default> }`) evaluates the default
+                // instead of panicking with a Go index-out-of-bounds.
+                let _ = write!(out, "_sir_closure_arg(__args, {})", i);
             }
             out.push_str(") }, []Value{");
             for (i, c) in captures.iter().enumerate() {
@@ -892,7 +913,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 }
                 emit_expr(out, &c.value, indent);
             }
-            out.push_str("})");
+            let _ = write!(out, "}}, {params_arity})");
         }
         Expr::Intrinsic { name, span, .. } => {
             panic!(
@@ -1858,6 +1879,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => "_sir_minus",
         "*" => "_sir_times",
         "/" => "_sir_divide",
+        "%" => "_sir_mod",
+        "+=" => "_sir_iadd",
         // SIR21 T3b-2: div_floor is `/` under its canonical name (same
         // helper, zero behaviour change) -- bare `/` stays too, as Twig's
         // permanent fallback (see the SIR21 spec's §E3). div_trunc/
@@ -3791,6 +3814,34 @@ mod tests {
         assert!(out.starts_with(r#"_sir_call_method(xs, "map", []Value{_sir_make_closure("#));
     }
 
+    /// Closure adapters bounds-check arguments using `_sir_closure_arg` rather
+    /// than direct indexing (#18490), returning `_sir_missing` for omitted
+    /// arguments so default parameter prologues run without panicking.
+    #[test]
+    fn closure_adapter_indexes_args_with_closure_arg_helper() {
+        let block = Expr::MakeClosure {
+            fn_name: "f".into(),
+            captures: vec![],
+            span: s(),
+        };
+        FN_ARITY.with(|t| t.borrow_mut().insert("f".into(), 2));
+        let mut out = String::new();
+        emit_expr(&mut out, &block, 0);
+        FN_ARITY.with(|t| t.borrow_mut().clear());
+        assert!(
+            out.contains("_sir_closure_arg(__args, 0)"),
+            "closure adapter must use _sir_closure_arg (#18490); got:\n{out}"
+        );
+        assert!(
+            out.contains("_sir_closure_arg(__args, 1)"),
+            "closure adapter must use _sir_closure_arg (#18490); got:\n{out}"
+        );
+        assert!(
+            !out.contains("__args[0]"),
+            "closure adapter must not index __args directly; got:\n{out}"
+        );
+    }
+
     #[test]
     fn method_dispatch_sym_block_pass_emits_sym_to_proc() {
         // `xs.map(&:to_s)` — block_pass(SymLit) survives to the dispatch and
@@ -4113,6 +4164,27 @@ mod tests {
             ensure_pos < recover_pos,
             "ensure's defer must be emitted first (runs last, LIFO); got:\n{out}"
         );
+    }
+
+    /// #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+    /// lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+    /// Go must emit the body statements inline rather than wrapping in func() { ... }().
+    #[test]
+    fn emit_try_catch_without_rescue_or_ensure_emits_inline() {
+        let tc = Stmt::TryCatch {
+            body: vec![print_stmt(Expr::StrLit {
+                value: "bare".into(),
+                span: s(),
+            })],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 0);
+        assert!(!out.contains("func()"), "got:\n{out}");
+        assert!(!out.contains("defer"), "got:\n{out}");
+        assert!(out.contains("\"bare\""), "got:\n{out}");
     }
 
     /// A `ClassDef { superclass: Some }` registers ONE ancestry edge at

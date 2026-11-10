@@ -437,10 +437,16 @@ console.log(prose, nested);
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
         # +1: neural-framework, the standalone no-emit NN37 training lane.
-        self.assertEqual(summary.total_projects, 493)
-        self.assertEqual(summary.shared_projects, 302)
-        self.assertEqual(summary.inherited_root_dir, 130)
-        self.assertEqual(summary.inherited_out_dir, 133)
+        # +1: test-bootstrap, the TF01a zero-dependency Level 0 harness and test runner.
+        # +1: sat-solver, the VER09a zero-dependency Level 3 CDCL SAT solver package.
+        # +1: warrant-compiler, the VER04g zero-dependency Level 1 Warrant compiler package.
+        # +1: pbt, the VER05 zero-dependency Level 2 property-based testing package.
+        # +1: fuzz, the VER06 zero-dependency Level 2 coverage-guided fuzz engine package.
+        # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
+        self.assertEqual(summary.total_projects, 499)
+        self.assertEqual(summary.shared_projects, 308)
+        self.assertEqual(summary.inherited_root_dir, 135)
+        self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
@@ -579,7 +585,13 @@ console.log(prose, nested);
         # +1: forme-shell-desktop locks its React, Tauri, and test toolchain.
         # -1: the retired checklist-app took its lockfile with it.
         # +1: neural-framework locks its standalone compiler and test graph.
-        self.assertEqual(summary.locked_compilers, 492)
+        # +1: test-bootstrap locks its standalone compiler and test graph.
+        # +1: sat-solver locks its standalone compiler.
+        # +1: warrant-compiler locks its standalone compiler.
+        # +1: pbt locks its standalone compiler.
+        # +1: fuzz locks its standalone compiler.
+        # +1: test-matchers locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 498)
 
 
 if __name__ == "__main__":

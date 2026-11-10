@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline via `emit_bare_stmts`, avoiding unnecessary `catch_unwind` closure wrappers when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block across backends (#18798)
+
+- **Closure arity & Hash#each 1-param block.** Emitted Rust `Closure` now tracks `arity: usize`. Emitted Hash block dispatch (`yield_hash_pair`) yields a 2-element array `[key, value]` when the block's arity is 1, and passes `key` and `value` separately when arity is 2 or more, matching Ruby semantics.
+
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure adapter missing argument sentinel.** `MakeClosure` adapter generation in `emit.rs` now drains omitted arguments with `unwrap_or(__sir::Value::Missing)` instead of `Value::Nil`. This ensures callees with default parameters recognize missing arguments via `__sir::is_missing(&param)` and evaluate their default expressions.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** Added `__sir::iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates `Value::Seq` in place, preserving pointer identity across aliases, and delegates to `plus` otherwise.
+
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `__sir::modulo`
+  in `emit_builtin_call` (and `call_builtin_by_name`). It computes floored modulo
+  matching Python and Ruby semantics, avoiding `i64::MIN % -1` integer overflow panic.
+- **ZeroDivisionError.** Modulo by zero raises a typed `ZeroDivisionError: divided by 0`.
+
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Rust runtime sets `SIR_DISPLAY_PYTHON: bool = true`. `format_d`
+  prints `True`, `False`, and `None` matching CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, Ruby's `[]=` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted**, as

@@ -239,6 +239,16 @@ function g(){var y=2; return t()()}   // 1; after the splice, 2
 The nested body's own locals are over-collected as well. That can cost an
 inline, never soundness.
 
+### Addendum: inline substitution guards and nested closures (#18144)
+
+Inliner substitution (`substitute` and `substitute_in_stmt`) and call-site qualification enforce:
+
+1. **Closure-deferred reads**: When a parameter is referenced inside a nested closure (arrow function, function expression, or class method body), it cannot be substituted by an identifier argument. Substituting an identifier defers reading the variable until closure invocation, observing later mutations to the caller's binding. Inlining is permitted only if the argument is an immutable literal (`NumericLiteral`, `StringLiteral`, `BooleanLiteral`, `NullLiteral`, `BigIntLiteral`, `UndefinedLiteral`).
+2. **Mutated parameters in nested closures**: If a parameter is assigned or mutated inside a nested closure (`a = a + 1`), the function is never inlinable: a literal argument would yield invalid syntax, and an identifier argument would mutate caller state across invocations.
+3. **Complete statement substitution**: `substitute_in_stmt` handles all statement variants: `ReturnStatement` (substituting the returned expression), `ThrowStatement`, `TryStatement` (block, catch clause, and finalizer), `ForOfStatement`, `ForInStatement`, `ForStatement`, `WhileStatement`, `DoWhileStatement`, `SwitchStatement`, and `LabeledStatement`.
+4. **Computed class method keys**: `substitute`'s `ClassExpression` arm traverses computed method keys in the enclosing scope (`ClassMember::Method` with `m.computed`).
+5. **Nested local shadowing**: `substitute` strips any local identifiers declared inside a nested function body (`var`, `let`, `const`, `function`, `class`, catch parameter, for-in/for-of loop targets) from the substitution map so that nested locals sharing an outer parameter's name are never rewritten.
+
 ## Test plan
 
 Extend `closure-pass-inline` unit tests (the harness already has

@@ -99,7 +99,13 @@
       "id": "KA-A1-N-02",
       "category": "Naamapada (the noun)",
       "label": "place names: the town or village you are from, and the country",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C91-ABOUTYOU-04",
+        "KA-LEX-C103-HOME-03",
+        "KA-LEX-C103-HOME-04",
+        "KA-LEX-C103-HOME-05",
+        "KA-LEX-C103-ORIGIN-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -109,7 +115,7 @@
         "A1-N-01",
         "A1-NE20-02"
       ],
-      "note": "halli ('a village') is taught in chapter 55 and uuru ('town') nowhere. Not one settlement name, no word for a country, and no name of Karnataka or India is introduced anywhere -- so a learner can say what KIND of place they come from and never WHICH. The likeliest single fix is a chapter-55 sibling teaching uuru plus one place name."
+      "note": "CLOSED by chapter 103. The 2026-11-04 re-audit found the old note stale: uuru, nagara, deesha and raajya already had direct owners. Chapter 103 now retrieves those owners and adds Bengaluru and Karnataka inside the origin exchange."
     },
     {
       "id": "KA-A1-N-03",
@@ -240,7 +246,9 @@
       "id": "KA-A1-ADJ-04",
       "category": "Gunavaacaka (the adjective)",
       "label": "relational adjectives: where somebody is from",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C103-ORIGIN-RELATION-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -249,7 +257,7 @@
       "derivedFrom": [
         "A1-ADJ-02"
       ],
-      "note": "Untaught. No gentilic, no way to say Kannadiga, Indian, or 'from Bangalore' as a property of a person. Blocked behind the same missing place-name vocabulary as KA-A1-N-02."
+      "note": "CLOSED for the bounded A1 demand by chapter 103. The official-source ಕರ್ನಾಟಕದವನೇ? line is taught for scoped recognition, while the neutral productive path uses the respectful ಎಲ್ಲಿಂದ question and an -ಇಂದ answer."
     },
     {
       "id": "KA-A1-ADJ-05",
@@ -1388,7 +1396,9 @@
       "id": "KA-A1-CASE-07",
       "category": "Vibhakti (case)",
       "label": "the ablative: from where",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C103-ABLATIVE-INDA-08"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1397,7 +1407,7 @@
       "derivedFrom": [
         "A1-NG3-07"
       ],
-      "note": "Untaught, and it is what 'Where are you from?' needs. -inda again, in its other job. With KA-A1-N-02's missing place names, origin is unsayable twice over."
+      "note": "CLOSED by chapter 103. The lesson teaches -inda only in its concrete place-source job and explicitly leaves later time and cause uses to later rungs."
     },
     {
       "id": "KA-A1-CASE-08",
@@ -1727,7 +1737,9 @@
       "id": "KA-A1-Q-09",
       "category": "Prashne (questions)",
       "label": "asking where somebody is from",
-      "probe": null,
+      "probe": [
+        "KA-FUNCTION-C103-ASK-ORIGIN-09"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1737,7 +1749,7 @@
         "A1-F1-02",
         "A1-NG3-07"
       ],
-      "note": "Untaught, and blocked twice: no ablative case (KA-A1-CASE-07) and no place names (KA-A1-N-02). This is a standard A1 exam item in every published inventory, and Kannada cannot form it at all."
+      "note": "CLOSED by chapter 103 with the respectful fixed frame ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?, bounded to an exact Ministry of Tourism Kannada sentence."
     },
     {
       "id": "KA-A1-S-01",
@@ -2146,7 +2158,9 @@
       "id": "KA-A1-F-05",
       "category": "Vyavahaara (communicative functions)",
       "label": "say where you are from",
-      "probe": null,
+      "probe": [
+        "KA-FUNCTION-C103-SAY-ORIGIN-10"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -2156,7 +2170,7 @@
         "A1-F1-03",
         "A1-NG3-07"
       ],
-      "note": "Unsayable. See KA-A1-Q-09 -- no ablative, no place names."
+      "note": "CLOSED by chapter 103 with ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ, an exact answer attested in a Press Information Bureau Kannada transcript."
     },
     {
       "id": "KA-A1-F-06",
@@ -3939,7 +3953,13 @@
       "id": "KA-A1-LEX-55",
       "category": "Padakosha (lexicon by domain)",
       "label": "geography: country, town, city",
-      "probe": null,
+      "probe": [
+        "KA-LEX-C91-ABOUTYOU-04",
+        "KA-LEX-C103-HOME-03",
+        "KA-LEX-C103-HOME-04",
+        "KA-LEX-C103-HOME-05",
+        "KA-LEX-C103-ORIGIN-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -3948,7 +3968,7 @@
       "derivedFrom": [
         "A1-NE20-02"
       ],
-      "note": "Untaught apart from halli ('a village'). See KA-A1-N-02."
+      "note": "CLOSED by chapters 91 and 103: uuru, nagara, deesha and raajya are direct owners, and the chapter-103 origin lesson adds Bengaluru and Karnataka in an ask-answer path."
     },
     {
       "id": "KA-A1-LEX-56",

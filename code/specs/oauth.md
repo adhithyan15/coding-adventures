@@ -2673,6 +2673,26 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+An alternative bounded added-responder revocation follow-up consumes that
+same complete reviewed-root DNS proof plus a separate fully authenticated,
+fully routed OCSP target-revocation proof. Private repository-owned evidence
+interfaces expose the exact added responder, its selected reviewed-root
+issuer, and the explicit observation time from the retained intermediate-
+status proof, plus the corresponding target, issuer, and time from the second
+proof. External callers can use the concrete repository-owned authenticated
+proof types but cannot implement substitute evidence. The second proof must
+name the same exact decoded responder and reviewed root objects and the same
+observation time. Stable target, issuer, then time mismatch categories retain
+no certificate, response, key, signature, status, hostname, root, or time
+payload. Success retains both complete non-copyable inputs under a distinct
+type. This pure public-certificate-data composition performs no credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It does
+not establish revocation policy for the second proof's own responder, compose
+complete revocation policy, generalize path construction or validation, or
+provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

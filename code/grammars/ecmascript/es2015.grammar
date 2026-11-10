@@ -322,7 +322,7 @@ expression = assignment_expression { COMMA assignment_expression } ;
 # Arrow function: `(x, y) => x + y` or `x => x * 2`
 
 assignment_expression = arrow_function
-                      | "yield" [ STAR ] assignment_expression
+                      | yield_expression
                       | left_hand_side_expression assignment_operator assignment_expression
                       | conditional_expression ;
 
@@ -414,15 +414,15 @@ postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
 left_hand_side_expression = call_expression | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  { arguments | DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 new_expression = member_expression
                | "new" new_expression ;
 
-member_expression = primary_expression { DOT NAME | LBRACKET expression RBRACKET
+member_expression = primary_expression { DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                                        | template_literal }
-                  | "super" DOT NAME
+                  | "super" DOT NAME | DOT reserved_word
                   | "super" LBRACKET expression RBRACKET
                   | "new" member_expression arguments ;
 
@@ -481,15 +481,52 @@ array_element = ELLIPSIS assignment_expression
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
-                    | "get" property_name LPAREN RPAREN LBRACE function_body RBRACE
-                    | "set" property_name LPAREN formal_parameter RPAREN LBRACE function_body RBRACE
-                    | STAR property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+                    | method_definition
                     | NAME ;
 
 # Property names: ES2015 adds computed property names using [expression].
 
-property_name = NAME | STRING | NUMBER
+reserved_word = "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
+property_name = NAME | reserved_word | STRING | NUMBER
               | LBRACKET assignment_expression RBRACKET ;
 
 # Function and generator expressions
@@ -518,3 +555,6 @@ class_expression = "class" [ NAME ] [ class_heritage ] class_body ;
 # `({a})`, and `{ a }⏎/foo/g.exec(s)` compiled to a different program. The
 # rule is kept on one line, with this note at the end of the file, so the
 # rules after it keep their line numbers in the compiled grammars.
+
+yield_expression = "yield" STAR assignment_expression | "yield" [ assignment_expression ] ;
+

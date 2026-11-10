@@ -23,6 +23,7 @@ cd "$DEMO_DIR"
 
 case "$(uname -s)" in
   Darwin) LIB="native/libspreadsheet_capi.dylib" ;;
+  MINGW*|MSYS*|CYGWIN*) LIB="native/spreadsheet_capi.dll" ;;
   *)      LIB="native/libspreadsheet_capi.so" ;;
 esac
 if [ ! -f "$LIB" ]; then

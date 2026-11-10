@@ -1,8 +1,8 @@
 [package]
 name = "coding_adventures_test_bootstrap"
-version = "0.1.1"
+version = "0.4.0"
 edition = "2021"
-description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output"
+description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output, VER05 property testing engine, VER06 coverage-guided fuzz engine, and VER07 microbenchmark harness"
 
 [dependencies]
 
@@ -12,4 +12,22 @@ description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure ver
 [[test]]
 name = "self_corpus"
 path = "tests/self_corpus.rs"
+harness = false
+
+[[test]]
+name = "pbt_corpus"
+path = "tests/pbt_corpus.rs"
+harness = false
+
+[[test]]
+name = "fuzz_corpus"
+path = "tests/fuzz_corpus.rs"
+harness = false
+
+# A real `fn main()` suite whose contents `l0_contracts.rs` selects through the
+# TFB_FIXTURE environment variable, so exit statuses can be observed from
+# outside the process. With no variable set it is two passing tests.
+[[test]]
+name = "exit_fixture"
+path = "tests/exit_fixture.rs"
 harness = false

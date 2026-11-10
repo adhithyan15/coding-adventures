@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+- Round-2 security fixes: `source_sha256` now covers every `src/**/*.rs` (framing `warrant-src-v1`, shared helper in test-bootstrap) in the test, proof and bench manifests; `run_main` takes the `src/` directory; new `tests/sabotage_guard.rs` runs the real target with `WARRANT_EVIDENCE_FAULT=none` plus a filter (refused, exit 2, no manifest).
+- Security review fixes: test and bench manifests record `source_sha256` (dev-dependency `coding_adventures_sha256`); proof entries record `obligation_sha256`; the generated harness is regenerated (checked exhaustive budget, `run_main(source)`); `assurance_report.json` gains `certificate_kind` per claim; BUILD passes `--allow-unverified` to `--check` because the report still cites nine `unverified::` static attestations.
+- The evidence generator's binding table moved out of `warrant-grammar`'s
+  `gen_evidence` example into `evidence.bindings` (data, per package); BUILD now
+  runs `gen_evidence -- --check ct-compare`. The generated
+  `tests/generated/warrant_evidence.rs` is byte-identical.
+
+- Add the Warrant-derived evidence harness (VER04h): `tests/warrant_evidence.rs`
+  runs `tests/generated/warrant_evidence.rs`, generated from
+  `code/specs/ct-compare.warrant`, against the real public API: every example,
+  bounded-exhaustive suites (120,409 `eq` cases; 65,536 `eq_fixed<1>` cases;
+  142,129 `eq_u64` cases; ...), relation-biased property suites (4,096 cases
+  each), fuzz suites (5,000 iterations each) and per-operation sabotage
+  controls. `evidence/test-manifest.json` records what the run did.
+  BUILD fails if the generated file drifts and checks each sabotage mode.
+
+- Add equal-instruction-count microbenchmarks and deterministic cost budgeting
+  (`tests/microbenchmarks.rs`, VER07 / VER07a / VER-P017):
+  - Multi-scale $n \in \{16, 256, 4096\}$ sweeps for `ct_eq` with zero-allocation budget;
+  - Equivalence class verification: identical, differing first, differing last, differing middle;
+  - Compile-time fixed width comparison benchmarks (`ct_eq_fixed` for 16, 32, and 64 bytes);
+  - Branch-free selection microbenchmarks (`ct_select_bytes`);
+  - 64-bit integer comparison microbenchmarks (`ct_eq_u64`);
+  - Hardware instruction count divergence assertions when PMU counters are live;
+  - Negative sabotage test asserting divergence detection on naive short-circuiting comparison mutants.
+
 - Keep negative adapter diagnostics within TF01's closed failure-ID vocabulary:
   rejected baselines and undetected injected defects report corpus-mismatch.
   Exercise the real failing TAP output with the always-pass sabotage mode.

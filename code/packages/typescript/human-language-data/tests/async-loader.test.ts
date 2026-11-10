@@ -86,7 +86,6 @@ describe("bounded asynchronous lesson loading", () => {
 
     expect(await loadEverythingAsync(root)).toStrictEqual(loadEverything(root));
   });
-
   it("matches the synchronous track and whole-corpus order without a cache", async () => {
     writeLesson("spanish", "002-dos.md", lesson("dos", "dos"));
     writeLesson("spanish", "001-uno.md", lesson("uno", "uno"));

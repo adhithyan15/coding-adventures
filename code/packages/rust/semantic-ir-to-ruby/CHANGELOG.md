@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased — Block with no parameters (#18798 item 23)
+
+- **Block with no parameters discards surplus arguments.** In `emit.rs`,
+  closures wrapping a function with 0 declared parameters omit `*sir_args`
+  forwarding, matching Ruby block/proc non-lambda semantics where surplus
+  arguments are ignored. In `runtime.rs`, `sir_each` checks `arity == 0`
+  for both `Array` and `Hash` and invokes `blk.call` without arguments.
+
+## Unreleased — Exception message method (#18798 item 8)
+
+- **Exception `message` builtin method.** Added `sir_message` helper in `runtime.rs` and mapped zero-argument `("message", 2)` in `collection_access` in `emit.rs`. Dispatches `:sir_um_message` on user classes, returns `.message` on `Exception` instances, and raises `NoMethodError` otherwise.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `append` and `push`.** Added `sir_append` helper to runtime and mapped `"append"` and `"push"` in `collection_access`. Appends elements in place and returns the receiver.
+- **In-place addition `+=`.** Added `sir_iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates arrays in place, preserving object identity across aliases, and delegates to `+` otherwise.
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Ruby runtime sets `SIR_DISPLAY_PYTHON = true`. `sir_fmt`
+  prints `True`, `False`, and `None` (including nested in arrays) matching
+  CPython behavior.
+
 ## Unreleased — interpolation, `[]`/`[]=`/`size` (#18798)
 
 - **Security review: `a[1.0e9] = 1` padded the array to about 8 GB.** The

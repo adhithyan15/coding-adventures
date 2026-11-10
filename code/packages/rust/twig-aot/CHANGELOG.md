@@ -1,5 +1,32 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18779: lower const Str in variables and preserve heap defs in stack maps
+
+- **Lower `const Str` / `const Bytes` literals identically to `str_const`.**
+  `lower_string_literals_for_aot` and `collect_runtime_str_vars_for_aot` now recognize `const` instructions with string or byte slice operands, lowering them to GC buffer allocations (`push_aot_string_literal` + `mov dest = buf_var`) so top-level and local string variables are properly rooted and accepted on native backends.
+- **`AOT_BUILTIN_MAP` maps `"string-length"` to `"str_len"` and runs before string lowering.**
+  `pre_lower_aot_builtins` runs before `lower_string_literals_for_aot` and translates dynamic `call_builtin "string-length"` to `str_len`, which lowers to runtime length header loading (`field_load var, 0`) when not statically folded, avoiding `BackendRefused`.
+- **`root_heap_word_copies` roots all heap-producing definitions.**
+  Heap-producing instructions (`allocates_gc_block`, `call`, `global_load`, and `dyn_pair_first`/`dyn_pair_rest`) retype their destinations to `"any"`, and any instruction defining a variable in `may_hold_heap` receives type `"any"`, ensuring the variable's frame slot remains a GC root even when scalar definitions exist.
+- **Tests:** `heap_valued_defs_with_scalar_defs_in_any_order_get_a_root_type`, `string_held_in_variable_compiles_to_native_object`.
+
+## Unreleased — #18486: `AOT_BUILTIN_MAP` maps `modulo` to `i64_mod_floor`
+
+- `AOT_BUILTIN_MAP` now recognizes `"modulo"`, `"remainder"`, and `"quotient"`, mapping
+  `"modulo"` to `"i64_mod_floor"`, `"remainder"` to `"mod"`, and `"quotient"` to `"div"`.
+  When compiling typed functions or running `pre_lower_aot_builtins`, `modulo` lowers to
+  floored modulo rather than truncating remainder, matching the VM's Scheme-compliant floor
+  semantics.
+- Tests: `tests::modulo_builtins_lower_to_i64_mod_floor`, `tests::prepare_module_for_aot_lowers_modulo_to_i64_mod_floor`.
+
+## Unreleased — #18488: variadic comparisons and reference operand typing in comparisons
+
+- **Variadic comparisons lower to pairwise chained comparisons and `and`.**
+  `pre_lower_aot_builtins` lowers `call_builtin "<"` (and `<=`, `>`, `>=`, `=`) with 3 or more arguments into a chain of binary comparisons folded with `and` (`a < b ∧ b < c`). Previously, `call_builtin` was mapped directly to `cmp_*` with all arguments, causing native backends to evaluate only the first two operands and ignore the remainder.
+- **`infer_aot_type` maps `ref<any>` (and other reference/array types) in comparisons to `i64`.**
+  Comparisons in IIR have a `type_hint` that reflects the operand comparison type. Since reference pointers are 64-bit words, treating reference operands as `i64` ensures the specialiser emits a native word comparison (`cmp_*_i64`) rather than falling back to `call_runtime generic_cmp_*` (which native backends refuse).
+- **Tests**: `variadic_comparison_lowers_to_chained_pairwise_compares_and_and` and `compare_with_ref_operand_infers_i64_and_specialises_to_i64`.
+
 ## Unreleased — LANG83 PR5b — literals are bytes
 
 - The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.

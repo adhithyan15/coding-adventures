@@ -1,0 +1,33 @@
+[package]
+name = "coding_adventures_warrant_ir"
+version = "0.1.0"
+edition = "2021"
+description = "Warrant Intermediate Representation (WIR) core AST, type checker, cost semantics, and bounded reference interpreter (VER25, VER-P021)"
+license = "MIT"
+
+[dependencies]
+bit-blaster = { path = "../bit-blaster" }
+cdcl-sat = { path = "../cdcl-sat" }
+drat-check = { path = "../drat-check" }
+
+[dev-dependencies]
+coding_adventures_ct_compare = { path = "../ct-compare" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+# VER04h: proof obligations derived from the Warrant `labels` / `bound` rows,
+# run over the real lowered ct-compare source; writes the proof manifest and
+# content-addressed DRAT files when WARRANT_PROOF_OUT=<dir> is set.
+[[test]]
+name = "warrant_proofs"
+path = "tests/warrant_proofs.rs"
+harness = false
+
+# gf256: the same labels/bound rows, attempted on the real gf256 source.  The
+# front end refuses the file, so this target records the obligations `not-live`
+# with the precise blocker instead of a proof.
+[[test]]
+name = "gf256_proofs"
+path = "tests/gf256_proofs.rs"
+harness = false

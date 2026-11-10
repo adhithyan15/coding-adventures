@@ -1310,6 +1310,29 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — dynamic string-length on an untyped parameter (#18428). When a function
+    // has multiple call sites with different operand types or dynamic arguments, the parameter
+    // cannot be statically inferred as `str`. `twig-ir-compiler` emits dynamic
+    // `call_builtin "string-length"`, which `vm_lisp` rewrites to `str_len`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (define (run) (if (< 1 2) (strlen \"HELLO\") (strlen 42))) (run)",
+        expect: Expect::Exit(5),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Twig — dynamic string-length on a non-string traps with TypeError (#18428).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (strlen 42)",
+        expect: Expect::Trap,
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
     // actual materialises through `str_concat` + `str_slice`, then feeds the
@@ -7329,6 +7352,17 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin output(entier(sqrt(entier(80)) ^ 3 / 80)) end",
         expect: Expect::Stdout("8"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A bounded powered root divisor is split into its integer and remaining
+    // root factors, then rationalized before the wide expression is floored.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 / (sqrt(entier(5)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -15930,8 +15964,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // comparison rows on six columns (all but Clr / Beam), then
         // #18493 / #18470's seventeen truthiness, value-kind, predicate and
         // dynamic-division rows (51 cells: Vm and Jit on every row, plus the
-        // NativeAot / Llvm / Wasm / Jvm cells each row was run on).
-        (Language::Twig, 77, 507),
+        // NativeAot / Llvm / Wasm / Jvm cells each row was run on), and
+        // #18428's two dynamic string-length rows on Vm and Jit (4 cells).
+        (Language::Twig, 79, 511),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
@@ -18709,6 +18744,31 @@ fn algol_powered_floor_root_products_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but powered floor-root products did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_powered_floor_root_quotients_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("sqrt(entier(80)) ^ 3 / (sqrt(entier(5)) ^ 3)")
+        })
+        .expect("the powered floor-root quotient ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but powered floor-root quotients did not complete"
             );
             continue;
         };

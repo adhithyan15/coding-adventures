@@ -2,7 +2,117 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
-## [Unreleased]
+## [0.247.6] - 2026-11-10
+
+### Fixed - hoist preceding initializer into for header in fold-control-flow (#15855)
+
+- Variable declarations immediately preceding a `for` loop with no `init` (including rewritten `while` loops) are now hoisted into the `for` header.
+- Safely handles `var` (always safe) and `let`/`const` (with post-loop use and loop-body closure capture checks).
+- Reached 100% byte-for-byte parity with upstream Closure Compiler on `ladder_t4_while_simple`.
+- Reduced active ladder divergence count from 51 to 50.
+
+## [0.247.5] - 2026-11-09
+
+### Fixed - retain terminator after class field in WHITESPACE_ONLY (#15862)
+
+- In `src/whitespace_only.rs`, Rule A (which elides semicolons immediately preceding a closing brace `}`) now exempts semicolons directly located within a class body member list (`!in_member_list[idx]`), retaining class field terminators (e.g. `class A{x=1;}` instead of `class A{x=1}`).
+- Closed ladder rung `ladder_t7_class_field_ws` to 100% byte-for-byte parity with upstream Closure Compiler, reducing active ladder divergences to 51.
+- Updated `ladder_t7_generator_advanced` and closed `ladder_t7_generator_simple` following generator spacing parity in `closure-emitter`.
+- Added regression test suite in `tests/regression_emitter_spacing_class_field_15862.rs`.
+
+## [0.247.4] - 2026-11-09
+
+- In `SIMPLE` and `ADVANCED` compilation modes, class definitions with adjacent methods or constructor without semicolons (e.g. `class P { m() { a(); } n() { b(); } }`) previously failed to parse because the ECMAScript grammar required semicolons after method definitions.
+- Property access with reserved keywords (e.g. `a.throw(1); o.return(); x = { if: 1, default: 2 };` and optional chain `a?.throw()`) previously failed with grammar syntax errors because property access rules only matched bare identifier tokens instead of identifier names.
+- Removed the `#17840` class member semicolon workaround from `whitespace_only.rs` now that the grammar natively supports adjacent class members.
+- Advanced ladder rung `ladder_t6_class_simple` to 100% byte-for-byte parity with upstream Closure Compiler, and advanced `ladder_t6_class_advanced` from parse error exit 1 to clean compilation exit 0.
+- Added regression test suite in `tests/regression_class_members_reserved_props_17852.rs`.
+
+
+### Fixed - parse object method shorthand and async function expressions (#17941)
+
+- Object method shorthand declarations (e.g. `var o = { f() { return 1; } };` and `{ valueOf() { return 1; } }`) previously failed to parse in all compilation levels (`SIMPLE`, `ADVANCED`, `WHITESPACE_ONLY`) with `Expected COLON or COMMA or RBRACE, got "("`.
+- Async function expressions (e.g. `var p = async function () {};` and `var o = 1 ? 2 : async function () { return 1; };`) previously failed to parse with `Expected ARROW or NAME or LPAREN ..., got "function"` because `async` was eagerly tokenized/parsed as an identifier before considering async function expressions.
+- Fixed grammar alternative ordering in `es2015.grammar` through `es2025.grammar`, updated AST bridging to preserve `method` and `is_async` flags, and updated the code emitter to output concise method syntax and getter/setter syntax.
+- Advanced ladder rungs `ladder_t7_getter_setter_advanced` and `ladder_t7_getter_setter_simple` from exit 1 (parser failure) to exit 0 (clean compilation).
+- Added integration test suite in `tests/regression_object_methods_async_17941.rs`.
+
+### Fixed - support template literals with substitutions at SIMPLE and ADVANCED (#17854)
+
+- In `SIMPLE` and `ADVANCED` compilation modes, template literals with substitutions (e.g. `` `hello ${name}!` ``) previously failed to parse with syntax error or unsupported syntax because the underlying grammar in ES2016-ES2025 omitted the trailing substitution before `TEMPLATE_TAIL` and the typed-AST bridge declined substitution templates.
+- With the grammar and bridge fixes in `javascript-parser`, substitution templates now compile cleanly through the full pipeline at both `SIMPLE` and `ADVANCED` levels.
+- When all substitutions are compile-time constants (e.g. `` `hello ${'world'}!` ``), the constant-folding pass in `SIMPLE` and `ADVANCED` collapses the template into a plain string literal (`"hello world!"`), matching the reference Closure Compiler.
+- Added integration tests covering substituted template literals and tagged templates in `tests/diff_simple_template_literal.rs`, `tests/diff_template_literal_fold.rs`, and `tests/diff_simple_tagged_template.rs`.
+
+### Fixed - refuse lexical declarations in single-statement contexts (#18146)
+
+- In ECMAScript (§14.1.1), `Statement` excludes lexical declarations (`let` and `const`), which are only valid in statement-list contexts (blocks, case/default clauses, class static blocks, and module/script roots).
+- Because `es2016.grammar` through `es2025.grammar` previously included `lexical_declaration` in `statement`, inputs like `if (1) let\nx = 1` and `if (1) const x = 1` were incorrectly parsed as lexical declarations inside the `if` body, miscompiling to `let x=1;` or `const x=1;`.
+- Moved `lexical_declaration` out of `statement` into `source_element`, `block`, `case_clause`, `default_clause`, and `static_block` across `es2016.grammar` through `es2025.grammar`, ensuring single-statement contexts fail closed and are never miscompiled to a different program.
+- Added regression tests in `tests/regression_if_let_statement_18146.rs` and `tests/regression_expression_statement_lookahead.rs`.
+
+### Fixed - preserve statement break after identifier yield in WHITESPACE_ONLY (#17887)
+
+- In sloppy mode outside a generator, `yield` is a valid identifier. When minifying code where `yield` was used as an identifier or assignment target (e.g. `var yield = 4\nvar x = yield\n/ 2;` or `var a = 10\nyield = 6\nvar x = yield\n/ 2;`), `WHITESPACE_ONLY` previously dropped statement breaks before statement-starting keywords or assignment targets, resulting in syntax errors.
+- Added statement-keyword newline boundary detection (Case 5) in `whitespace_only.rs::contextual_asi_points` to ensure statement boundaries before statement keywords (and `yield` as statement start) are preserved even when the primary grammar parse falls back to restricted ASI.
+- Hardened temp directory generation in `tests/regression_emitter_html_comment_17887.rs` against concurrent test collisions with an atomic sequence counter.
+- Added regression tests in `tests/regression_ws_yield_identifier_17887.rs` verified against Node.js runtime execution.
+
+### Fixed - line comments and hashbangs stop before U+2028 and U+2029 (#17887)
+
+- Fixed a bug where line comments (`// ...`) and hashbangs (`#! ...`) swallowed U+2028 (Line Separator) and U+2029 (Paragraph Separator) and ran past them to the next `\n` or `\r`. Under ECMA-262 §12.3, U+2028 and U+2029 are LineTerminators that terminate single-line comments.
+- Updated `LINE_COMMENT` and `HASHBANG` patterns across all ECMAScript `.tokens` files (`es1.tokens` through `es2025.tokens`) to `[^\n\r\u2028\u2029]*` and regenerated `javascript-lexer` compiled grammars.
+- Added regression tests in `javascript-lexer` verifying line comments and hashbangs stop before U+2028 and U+2029.
+
+### Fixed - bare yield and restricted-production ASI after yield (#17939)
+
+- Fixed a bug where `yield` followed by a newline (e.g. `function* G(){ yield\n{ x; }\n}`) dropped the restricted-production boundary under `WHITESPACE_ONLY` or failed to parse under `SIMPLE` and `ADVANCED`.
+- ECMA-262 §15.4 defines bare `yield` (without an operand) as legal syntax. Updated `yield_expression` across `es2015.grammar` through `es2025.grammar` to permit an optional operand (`"yield" STAR assignment_expression | "yield" [ assignment_expression ]`) and updated `javascript-parser/src/bridge.rs` to lower operand-less yield expressions to `YieldExpression { argument: None, delegate }`.
+- ASI insertion points now cleanly parse bare `yield` and insert semicolons where forced by newlines, ensuring `yield\n{ x; }` compiles to `yield;{x;}` without fusing into `yield{x}`.
+- Added regression tests in `tests/regression_yield_bare_17939.rs` validated against Node.js runtime execution across `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED`.
+
+### Fixed - function and class declarations in class static initialization blocks (#17940)
+
+- Function, generator, async function, and class declarations inside class static initialization blocks (`class C { static { function f() { return 1; } } }`) now parse and compile correctly under `SIMPLE` and `ADVANCED` compilation levels, rather than failing at the parse stage or emitting declarations as parenthesized expressions.
+- Updated `static_block` in ES2022–ES2025 grammars to include declaration alternatives, updated `javascript-parser/src/bridge.rs`'s `convert_static_block` to lower declarations via `convert_statement_list_item`, and added static blocks to early error duplicate checks.
+- Added regression tests in `tests/regression_static_block_declarations_17940.rs` validated against Node.js runtime execution.
+
+### Fixed - prevent emitting `<!--` HTML comment sequence after `<` (#17887)
+
+- Fixed a silent miscompile where `a < !--b` (or `a < ! --b`) was emitted as `a<!--b` across `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED` compilation levels. In ECMAScript Annex B.1.1 (script mode), `<!--` begins a SingleLineHTMLOpenComment, causing Node.js and browsers to treat the remainder of the line as a comment and discard subsequent statements.
+- Added `lt_bang_needs_space` in `code/programs/rust/closurec/src/whitespace_only.rs` and updated `closure-emitter`'s `emit_binary` to ensure a separating space is preserved after `<` (`a< !--b;`), matching Closure Compiler upstream behavior.
+- Added regression integration tests in `tests/regression_emitter_html_comment_17887.rs` validated against Node.js runtime execution.
+
+### Fixed - SIMPLE and ADVANCED module specifier escape backslash doubling (#18122)
+
+- Fixed module specifiers in `import` declarations, side-effect imports, and `export ... from` re-exports doubling backslashes when compiled under `SIMPLE` and `ADVANCED` optimization levels (e.g. `import a from "./a\x2ejs"` previously emitting `./a\\x2ejs`).
+- `javascript-parser/src/bridge.rs::import_source` now decodes string escape sequences via `decode_string_escapes`, ensuring `StringLiteral.value` represents the actual module path without un-decoded escape characters.
+- Added regression tests in `tests/regression_module_specifier_escapes_18122.rs` validated with `node --check`.
+- Version-synced `cli.spec.json` and `tests/diff/help-markdown/expected.stdout` to 0.247.0.
+
+### Fixed - WHITESPACE_ONLY keyword property newline boundary (#18125)
+
+- Member access keyword properties ending a line (e.g. `function f(){x=y.if\nl:;}`): Phase-1 ASI parsing in `javascript-parser` now normalizes keyword property names after `.` or `?.` to `TokenType::Name`, allowing `asi_insertion_points` to succeed on keyword property access and accurately splice semicolons before subsequent statements across line terminators.
+- Expanded `is_statement_start_token` in `whitespace_only.rs` to include all valid statement-starting tokens (`await`, `yield`, `true`, `false`, `null`, `!`, `~`, `{`).
+- Added unit tests in `whitespace_only.rs` and regression integration tests in `tests/regression_ws_keyword_prop_boundary_18125.rs` validated against Node.js `new Function(...)`.
+
+### Fixed - WHITESPACE_ONLY contextual keyword ASI boundaries and script await calls (#18152)
+
+- Contextual keyword ASI: `let⏎new Foo`, `let⏎++x`, `await⏎using⏎x`, and property access `x=y.if⏎l:;` now properly splice `;` statement terminators into minified output.
+- `await` operand paren elision and unary spacing: `await(x)` in scripts outside async functions is preserved as a function call, rather than miscompiling to top-level `await x;` (which is a SyntaxError in scripts). Unary `await` paren elision and spacing are only applied inside async functions, async methods, async arrows, or ES modules (`compute_async_context_mask`).
+- Added unit tests in `whitespace_only.rs` and regression integration tests in `tests/regression_ws_contextual_keywords_18152.rs` verifying minified output parses cleanly with `node`.
+
+### Fixed - ADVANCED inline substitution soundness: deferred closure reads, missing statement arms, computed keys (#18144)
+
+Parameters captured in nested closures now require literal arguments at call sites
+to prevent deferred execution observing subsequent mutations. Parameters mutated inside
+nested closures are prohibited from candidate selection. Computed class method keys
+are correctly substituted in the enclosing scope, and `substitute_in_stmt` now covers
+all statement variants (`ReturnStatement`, `ThrowStatement`, `TryStatement`, loops, etc.)
+while preserving shadowing by inner lexical declarations.
+
+`tests/regression_inline_substitution_18144.rs` pins 10 program shapes and compares
+runtime output under `node` against `SIMPLE` and `ADVANCED` compilation.
 
 ### Fixed - WHITESPACE_ONLY no longer moves an argument IIFE's call outside the call (#18114)
 

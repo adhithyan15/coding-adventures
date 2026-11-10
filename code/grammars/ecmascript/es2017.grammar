@@ -53,6 +53,7 @@ source_element = import_declaration
                | generator_declaration
                | async_function_declaration
                | class_declaration
+               | lexical_declaration
                | statement ;
 
 # ============================================================================
@@ -84,7 +85,7 @@ generator_declaration = "function" STAR NAME LPAREN [ formal_parameters ] RPAREN
 generator_expression = "function" STAR [ NAME ] LPAREN [ formal_parameters ] RPAREN
                        LBRACE function_body RBRACE ;
 
-yield_expression = "yield" [ STAR ] assignment_expression ;
+yield_expression = "yield" STAR assignment_expression | "yield" [ assignment_expression ] ;
 
 # --- NEW IN ES2017: Async functions ---
 #
@@ -161,8 +162,8 @@ class_body = LBRACE { class_element } RBRACE ;
 
 # --- CHANGED IN ES2017: class_element gains async_method ---
 
-class_element = [ "static" ] method_definition SEMICOLON
-              | [ "static" ] async_method SEMICOLON
+class_element = [ "static" ] method_definition [ SEMICOLON ]
+              | [ "static" ] async_method [ SEMICOLON ]
               | SEMICOLON ;
 
 method_definition = property_name LPAREN [ formal_parameters ] RPAREN
@@ -250,7 +251,6 @@ statement = block
           | try_statement
           | throw_statement
           | debugger_statement
-          | lexical_declaration
           | expression_statement ;
 
 # A block, case clause or default clause holds a StatementList: statements
@@ -258,7 +258,7 @@ statement = block
 # alternatives, `{ function g(){} g() }` parsed `function g(){}` as a
 # function EXPRESSION, which binds nothing (#17877). The group mirrors
 # source_element minus import/export, which are module-top-level only.
-block = LBRACE { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | statement ) } RBRACE ;
+block = LBRACE { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | lexical_declaration | statement ) } RBRACE ;
 
 variable_statement = "var" variable_declaration_list SEMICOLON ;
 
@@ -310,9 +310,9 @@ with_statement = "with" LPAREN expression RPAREN statement ;
 switch_statement = "switch" LPAREN expression RPAREN
                    LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
 
-case_clause = "case" expression COLON { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | statement ) } ;
+case_clause = "case" expression COLON { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | lexical_declaration | statement ) } ;
 
-default_clause = "default" COLON { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | statement ) } ;
+default_clause = "default" COLON { ( function_declaration | generator_declaration | async_function_declaration | class_declaration | lexical_declaration | statement ) } ;
 
 labelled_statement = NAME COLON statement ;
 
@@ -395,16 +395,16 @@ postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
 left_hand_side_expression = call_expression | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  { arguments | DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | LBRACKET expression RBRACKET | template_literal }
+                    { DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT NAME | DOT reserved_word
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -430,6 +430,7 @@ concise_body = assignment_expression
 # --- Primary expressions ---
 
 primary_expression = "this"
+                   | async_function_expression
                    | NAME
                    | NUMBER
                    | STRING
@@ -441,7 +442,6 @@ primary_expression = "this"
                    | object_literal
                    | function_expression
                    | generator_expression
-                   | async_function_expression
                    | class_expression
                    | template_literal
                    | LPAREN expression RPAREN ;
@@ -454,12 +454,53 @@ element_list = [ spread_element | assignment_expression ]
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | NAME
                     | method_definition
                     | async_method
+                    | NAME
                     | ELLIPSIS assignment_expression ;
 
+reserved_word = "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
 property_name = NAME
+              | reserved_word
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;
@@ -470,9 +511,7 @@ function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
 # --- Template literals (ES2015) ---
 
 template_literal = TEMPLATE_NO_SUB
-                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
-
-template_span = expression TEMPLATE_MIDDLE ;
+                 | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;
 
 # ============================================================================
 # ExpressionStatement lookahead (F12 phase 0)

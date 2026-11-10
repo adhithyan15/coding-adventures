@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 WEB="$HERE/host/web"
 RUST="$HERE/../../../packages/rust"

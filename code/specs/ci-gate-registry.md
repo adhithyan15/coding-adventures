@@ -188,6 +188,21 @@ MUST demonstrate native scheduling with `force=false`. A new direct reader of
 this family must extend the relation and its drift test together.
 
 The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/test-trigger-selection-*.json` has a
+separate direct-native-consumer relation containing only
+`go/programs/build-tool` and `rust/programs/build-tool`. Any exact flat JSON
+case addition, edit, deletion, or renamed source MUST seed both roots before
+affected and prerequisite closure on detect and every platform override.
+Ordinary changed roots are united with them. Empty stems, nested paths,
+backslash spellings, case variants, extensionless names, backups, and sibling
+fixture domains MUST NOT trigger this relation. Explicit Go or Rust plans seed
+only their own reader; other single-language plans seed neither. An applicable
+missing reader MUST fail planning without writing a partial plan. Emitted
+affected sets and Go/Rust toolchain flags demonstrate native scheduling with
+`force=false`, and any new direct reader must update the relation and its
+source-reference drift test together.
+
+The exact flat case family
 `code/specs/fixtures/build-tool-v1/cases/toolchain-detection-*.json` MUST
 likewise seed every direct native toolchain-detection reader before affected
 and prerequisite closure. Its current consumers are

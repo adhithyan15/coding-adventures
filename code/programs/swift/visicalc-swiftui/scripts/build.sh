@@ -30,6 +30,10 @@
 
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$DEMO_DIR/../../../.." && pwd)"
@@ -102,7 +106,11 @@ RUST="$REPO_ROOT/code/packages/rust"
 mkdir -p "$DEMO_DIR/Vendor/macos" "$DEMO_DIR/Vendor/ios-sim"
 
 (cd "$RUST" && cargo build -p spreadsheet-capi --release)
-cp "$RUST/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/macos/"
+if [ -f "$RUST/target/release/libspreadsheet_capi.a" ]; then
+  cp "$RUST/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/macos/"
+elif [ -f "$RUST/target/release/spreadsheet_capi.lib" ]; then
+  cp "$RUST/target/release/spreadsheet_capi.lib" "$DEMO_DIR/Vendor/macos/libspreadsheet_capi.a"
+fi
 
 # iOS Simulator slice (skipped if the target isn't installed — macOS still works).
 if rustup target list --installed 2>/dev/null | grep -q aarch64-apple-ios-sim; then

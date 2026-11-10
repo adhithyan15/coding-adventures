@@ -9,6 +9,10 @@
 # committed npm package — this script only refreshes the generated + copied artifacts.
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" # the task-app package dir
 WEB="$HERE/host/web"
 RUST="$(cd "$HERE/../../../packages/rust" && pwd)"

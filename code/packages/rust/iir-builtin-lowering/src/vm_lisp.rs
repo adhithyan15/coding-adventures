@@ -52,6 +52,7 @@
 //! | `call_builtin "/" a b`, `"quotient"` | checks (below), then `div a b` (truncating) |
 //! | `call_builtin "remainder" a b` | checks, then `mod a b` (truncating: the sign of `a`) |
 //! | `call_builtin "modulo" a b` | checks, then `i64_mod_floor a b` (floored: the sign of `b`) |
+//! | `call_builtin "string-length" x` | `str_len x` (string check on VM, returns byte length) |
 //!
 //! `tag` is `call_builtin dyn_tag x`. Everything else is a registry op the VM
 //! already runs: `cmp_eq` / `cmp_ne`, `add`, `or`, `field_load`, `mov`,
@@ -381,6 +382,7 @@ fn rewrite_builtin(instr: IIRInstr, fresh: &mut Fresh, out: &mut Vec<IIRInstr>) 
         ("/" | "quotient", [a, b]) => emit_division(instr, "div", a, b, fresh, out),
         ("remainder", [a, b]) => emit_division(instr, "mod", a, b, fresh, out),
         ("modulo", [a, b]) => emit_division(instr, "i64_mod_floor", a, b, fresh, out),
+        ("string-length", [x]) => out.push(retarget(instr, "str_len", vec![x.clone()], I64)),
         _ => out.push(instr),
     }
 }

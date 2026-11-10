@@ -1,0 +1,43 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER neo-look Cypress source corpus; neo theme and look fidelity remain out of scope",
+  "fixtures": [
+    {
+      "name": "neo-basic-relationships",
+      "source": "erDiagram\n    CUSTOMER ||--o{ ORDER : places\n    ORDER ||--|{ LINE-ITEM : contains\n    CUSTOMER ||--|{ ADDRESS : \"has\""
+    },
+    {
+      "name": "neo-relationship-types",
+      "source": "erDiagram\n    ENTITY_A0 ||--|| ENTITY_B0 : \"one-to-one-identifying\"\n    ENTITY_A1 ||--o{ ENTITY_B1 : \"one-to-many-identifying\"\n    ENTITY_A2 }o--o{ ENTITY_B2 : \"many-to-many-identifying\"\n    ENTITY_A3 ||..o| ENTITY_B3 : \"one-to-zero-or-one-non-identifying\"\n    ENTITY_A4 }|..o{ ENTITY_B4 : \"one-or-more-to-many-non-identifying\""
+    },
+    {
+      "name": "neo-entities-and-attributes",
+      "source": "erDiagram\n    CUSTOMER {\n        string name\n        string custNumber\n        string sector\n    }\n    ORDER {\n        int orderNumber\n        string deliveryAddress\n    }\n    LINE-ITEM {\n        string productCode\n        int quantity\n        float pricePerUnit\n    }\n    CUSTOMER ||--o{ ORDER : places\n    ORDER ||--|{ LINE-ITEM : contains"
+    },
+    {
+      "name": "neo-keys-and-comments",
+      "source": "erDiagram\n    AUTHOR {\n        string name PK \"Primary identifier\"\n        string email UK \"Unique email\"\n    }\n    BOOK {\n        string isbn PK \"Book identifier\"\n        string title \"Book title\"\n        string author FK \"Author reference\"\n        float price \"Book price\"\n    }\n    AUTHOR ||--|{ BOOK : writes"
+    },
+    {
+      "name": "neo-entity-aliases",
+      "source": "erDiagram\n    p[Person] {\n        varchar(64) firstName\n        varchar(64) lastName\n    }\n    c[\"Customer Account\"] {\n        varchar(128) email\n    }\n    o[Order] {\n        int orderNumber\n    }\n    p ||--o| c : has\n    c ||--o{ o : places"
+    },
+    {
+      "name": "neo-complex-relationships",
+      "source": "erDiagram\n    CUSTOMER }|..|{ DELIVERY-ADDRESS : has\n    CUSTOMER ||--o{ ORDER : places\n    CUSTOMER ||--o{ INVOICE : \"liable for\"\n    DELIVERY-ADDRESS ||--o{ ORDER : receives\n    INVOICE ||--|{ ORDER : covers\n    ORDER ||--|{ ORDER-ITEM : includes\n    PRODUCT-CATEGORY ||--|{ PRODUCT : contains\n    PRODUCT ||--o{ ORDER-ITEM : \"ordered in\""
+    },
+    {
+      "name": "neo-recursive-relationships",
+      "source": "erDiagram\n    EMPLOYEE {\n        int id PK\n        string name\n        int managerId FK\n    }\n    EMPLOYEE ||--o{ EMPLOYEE : manages\n    DEPARTMENT ||--|{ EMPLOYEE : employs"
+    },
+    {
+      "name": "neo-standalone-entities",
+      "source": "erDiagram\n    ACTIVE_ENTITY\n    ISOLATED_ENTITY {\n        string id PK\n        string data\n    }\n    CONNECTED_A ||--|| CONNECTED_B : relates"
+    },
+    {
+      "name": "neo-attribute-types",
+      "source": "erDiagram\n    PRODUCT {\n        int id PK\n        string name\n        string[] tags\n        varchar(255) description\n        type~T~ genericType\n        float price\n    }"
+    }
+  ]
+}

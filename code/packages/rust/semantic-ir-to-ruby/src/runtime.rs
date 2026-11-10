@@ -25,6 +25,7 @@ pub const RUNTIME: &str = r####"# ── inlined SIR runtime (semantic-ir-to-rub
 # Ruby's semantics match the SIR's, so this preamble is small.
 
 SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__
+SIR_DISPLAY_PYTHON = __SIR_DISPLAY_PYTHON__
 
 # A cons cell — the one SIR primitive with no native Ruby type.
 SirPair = Struct.new(:car, :cdr)
@@ -126,7 +127,8 @@ end
 #   receiver                         block gets
 #   an object whose class defines    (that method runs: `each` is a user
 #     `each` (`sir_um_each`)          method like any other)
-#   Array                            each element
+#   Array                            each element (or none when arity == 0)
+#   Hash, zero-parameter block       call without arguments (#18798 item 23)
 #   Hash, one-parameter block        each `[key, value]` pair, as Ruby does
 #   Hash, any other block            each key and value, as two arguments
 #
@@ -138,10 +140,17 @@ def sir_each(recv, blk, arity = nil)
   return recv.public_send(:sir_um_each, blk) if recv.respond_to?(:sir_um_each)
 
   case recv
-  when Array then recv.each { |x| blk.call(x) }
+  when Array
+    if arity == 0
+      recv.each { blk.call }
+    else
+      recv.each { |x| blk.call(x) }
+    end
   when Hash
     if arity == 1
       recv.each { |k, v| blk.call([k, v]) }
+    elsif arity == 0
+      recv.each { blk.call }
     else
       recv.each { |k, v| blk.call(k, v) }
     end
@@ -197,6 +206,44 @@ def sir_size(recv)
   case recv
   when Array, Hash, String then recv.size
   else raise NoMethodError, "undefined method 'size' for #{recv.inspect}"
+  end
+end
+
+def sir_append(recv, *args)
+  return recv.public_send(:sir_um_append, *args) if recv.respond_to?(:sir_um_append)
+  return recv.public_send(:sir_um_push, *args) if recv.respond_to?(:sir_um_push)
+
+  case recv
+  when Array
+    args.each { |a| recv.push(a) }
+    recv
+  else raise NoMethodError, "undefined method 'append' for #{recv.inspect}"
+  end
+end
+
+def sir_message(recv)
+  return recv.public_send(:sir_um_message) if recv.respond_to?(:sir_um_message)
+
+  case recv
+  when Exception then recv.message
+  else raise NoMethodError, "undefined method 'message' for #{recv.inspect}"
+  end
+end
+
+# In-place addition for `+=`. When `a` is an Array, mutates `a` in place
+# by appending the elements of `b` (or `b` itself if not an Array),
+# preserving object identity across aliases (Python's `__iadd__`).
+# For non-arrays, falls back to standard binary addition.
+def sir_iadd(a, b)
+  if a.is_a?(Array)
+    if b.is_a?(Array)
+      b.each { |x| a.push(x) }
+    else
+      a.push(b)
+    end
+    a
+  else
+    a + b
   end
 end
 
@@ -292,9 +339,10 @@ end
 # ── display ──
 def sir_fmt(v)
   case v
-  when nil        then SIR_DISPLAY_RUBY ? "" : "nil"
-  when true       then SIR_DISPLAY_RUBY ? "true"  : "#t"
-  when false      then SIR_DISPLAY_RUBY ? "false" : "#f"
+  when nil        then SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil")
+  when true       then SIR_DISPLAY_RUBY ? "true"  : (SIR_DISPLAY_PYTHON ? "True" : "#t")
+  when false      then SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f")
+  when Array      then "[" + v.map { |x| (x.nil? && SIR_DISPLAY_RUBY) ? "nil" : sir_fmt(x) }.join(", ") + "]"
   when SirPair    then sir_fmt_pair(v)
   when Symbol     then v.to_s
   when Float      then sir_fmt_float(v)

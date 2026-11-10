@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "People at Work",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3c936b0ebb0ea72f",
+  "sourceHash": "fnv1a64:0228ea930f0aa6e5",
   "lessons": [
     {
       "id": "KA-C104-business",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6935009da58d7d1",
+      "sourceHash": "fnv1a64:c663d860308445eb",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for country, then the Kannada for state."
+              "text": "Before the new one: ask where somebody is from, answer “from Bengaluru”, then recognise the question that asks whether a male addressee is from Karnataka."
             }
           ]
         },
@@ -117,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Kannada for country, then the Kannada for state, then say vyāpāra again",
+              "instruction": "ask where somebody is from, answer “from Bengaluru”, then say vyāpāra again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Kannada for country, then the Kannada for state, then say *vyāpāra* again]"
+              "source": "[YOU RECALL: ask where somebody is from, answer “from Bengaluru”, then say *vyāpāra* again]"
             }
           ]
         },

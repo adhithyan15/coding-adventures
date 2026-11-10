@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/ca-assurance-report",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads weakness registry JSON, package manifests, and assurance reports."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "Discovers source and artifact files in target package directories."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Emits generated assurance reports to target package directories."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Emits verification verdicts and report diagnostics to stdout."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads CLI invocation arguments via std::env::args."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "*",
+      "justification": "Signals exit status codes via std::process::exit."
+    }
+  ],
+  "justification": "Verification gate tool that audits packages against the weakness registry and emits assurance reports."
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/ct-compare",
+  "source_digest": "9e529b2fddeead19e5e6c4c90b7714366ac105b2dccc1c135e15906e89a1ad49",
+  "manifest_digest": "d05abc674f26ccb41669d21c35adb9802ec8f8c1a2bca114ec232c215e41e0f9",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "ct_eq",
+      "signature": "pub fn ct_eq(a: &[u8], b: &[u8]) -> bool",
+      "effects": []
+    },
+    {
+      "name": "ct_eq_fixed",
+      "signature": "pub fn ct_eq_fixed<const N: usize>(a: &[u8",
+      "effects": []
+    },
+    {
+      "name": "ct_select_bytes",
+      "signature": "pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Vec<u8>",
+      "effects": []
+    },
+    {
+      "name": "ct_eq_u64",
+      "signature": "pub fn ct_eq_u64(a: u64, b: u64) -> bool",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [
+    {
+      "construct": "unsafe_code",
+      "language": "rust",
+      "justification": "Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update."
+    }
+  ],
+  "label": "proved"
+}

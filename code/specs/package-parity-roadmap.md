@@ -20541,3 +20541,319 @@ ancestry. Mark PR #18885 ready at GitHub's authoritative ready-for-review event
 time `2026-11-03T14:16:20Z`. Commit and push this ready receipt normally, then
 require fresh independent review and terminal acceptable hosted qualification
 on the resulting exact head before guarded squash auto-merge.
+
+#### Duplicate-discovery selector merge and test-trigger routing selection
+
+All 42 checks on exact independently reviewed head
+`4454d6d2ca83d8496dae8a0f51fd6ffb89be6bcb` completed terminal acceptable:
+30 succeeded, 11 were expected skips, and CodeQL reported one neutral aggregate
+verdict. GitHub manually squash-merged PR #18885 at
+`2026-11-03T15:52:51Z` as
+`e98ddd9de5ee8812a8cd714122711b81351892cd`. The receipt remains an ancestor
+of the successor-selection snapshot
+`d4c427403c0bcbef769e966b78338b45990ef4ff`; the clean completed worktree was
+queued for archival.
+
+Reprioritization selects the ready test-trigger fixture routing owner. Both
+prerequisites are merged. This bounded selector change maps exact flat
+`test-trigger-selection-*.json` changes only to the existing Go and Rust native
+readers, while preserving ordinary changed-root union, prerequisite closure,
+old rename/deletion sources, missing-root atomic failure, explicit language
+plans, and Linux, macOS, and Windows plans. It is the smallest operational
+follow-up to the merged authority-free Rust Cargo test-trigger core and does
+not change fixture data, workflows, the selection core, or native reader
+behavior. Complete local validation, reconcile live overlap, and require fresh
+independent exact-head review before first publication.
+
+The local implementation is complete at product revision
+`d19754aafe24f4ee7de37706113fd4b527882296`. Focused tests cover exact and
+lookalike paths, all three platforms, language filtering, ordinary-root union,
+rename-old-source retention, missing-reader atomic failure, prerequisite
+closure, emitted toolchains, and direct-reader drift. Go vet and build pass;
+the full package suite passes with only the pre-existing PowerShell generator
+round-trip skipped because `pwsh` is unavailable in this environment. The
+change adds no fixture, workflow, selection-core, native-reader, or host
+authority. Reconcile current main and live PR overlap, then require independent
+correctness and security review before publication.
+
+#### Test-trigger fixture selector PR #18899 draft receipt
+
+Open draft PR #18899 at `2026-11-03T16:47:12Z` from exact independently
+reviewed head `ed80b9bba070755c30a1e5b6bed4a74f22ab9101` over exact base
+`d4c427403c0bcbef769e966b78338b45990ef4ff`. The branch did not previously
+exist remotely, the first push was normal, GitHub reported the draft mergeable,
+and all seven other live PRs had zero exact-path overlap with the four product
+paths or the state and roadmap receipts. Keep PR #18899 draft while this
+PR-number receipt is committed and pushed normally. Require fresh independent
+review of the resulting exact head before marking it ready; keep auto-merge
+disabled until every check on an exact reviewed head is terminal acceptable and
+GitHub still reports the PR mergeable.
+
+#### Test-trigger fixture selector PR #18899 ready receipt
+
+Independent publication reviews issued SHIP for exact lifecycle head
+`f34e6390070c965257af793d973666812e1c2f99`. They verified exact local,
+remote, and GitHub head parity, the exact base, mergeability, stable reviewed
+product and authority scope, clean ignored-inclusive status, zero overlap with
+every other live PR, the unique dependency-complete acyclic 1,572-item state
+graph, GitHub-authoritative creation time, and correct active-PR metadata. Mark
+PR #18899 ready at GitHub's authoritative ready-for-review event time
+`2026-11-03T16:48:46Z`. Commit and push this ready receipt normally, then
+require fresh independent review and terminal acceptable hosted qualification
+on the resulting exact head before guarded squash auto-merge.
+
+#### Test-trigger fixture selector hosted-timeout and current-main reconciliation
+
+Three hosted attempts on exact independently reviewed head
+`18763dbce2008dbc4f4c5495188342b7cf4a4279` completed every other check
+acceptably, but the repo-wide metadata-contract job reached its hard 30-minute
+budget each time. The third attempt completed all metadata validators before
+the cancellation occurred during Java Gradle startup; the aggregate CI gate
+failed only because that job was cancelled. An earlier macOS arm64 capacity
+cancellation was external and the third macOS attempt succeeded. Auto-merge
+remained disabled.
+
+Merge exact current `origin/main`
+`71161251ab03a08c23bcecb4f9d41edd14ad7049` normally and conflict-free.
+The only exact-path overlap is the Go README and CI-gate registry
+documentation, where both semantic additions are retained. Current main also
+includes the path-disjoint metadata-checkout optimization from PR #18844.
+Focused routing tests, Go vet, Go build, strict JSON parsing, diff hygiene, and
+the unique dependency-complete acyclic 1,572-item state graph pass after the
+reconciliation. Product implementation revision
+`d19754aafe24f4ee7de37706113fd4b527882296` remains unchanged. Commit and push
+this receipt normally, then require fresh independent correctness and security
+review plus new hosted qualification on the resulting exact head. Record a
+separate workflow-budget owner only if the optimized checkout still exhausts
+the job budget; do not grant an exception or bypass the failed gate.
+
+#### Test-trigger fixture selector successful qualification and second reconciliation
+
+All 44 checks on exact independently reviewed head
+`f7cb536d9e29944a54fb8f3f50e534c4c1ae605b` completed terminal acceptable
+against base `71161251ab03a08c23bcecb4f9d41edd14ad7049`: 32 succeeded,
+11 were expected path-gated skips, and the CodeQL aggregate was neutral while
+the relevant Go analysis succeeded. The previously timing-out repo-wide
+metadata-contract job succeeded with the current-main checkout optimization.
+Do not enable guarded auto-merge because protected main advanced before the
+final decision.
+
+Merge exact current `origin/main`
+`06558a38bff6f1ca1fb8f69c4b1de58b8b6e9931` normally and conflict-free.
+The seven intervening Marathi, radix-tree, ALGOL, Mermaid, OCSP, tree-set, and
+trie commits are exact-path-disjoint from the six PR paths. Focused routing
+tests, Go vet, Go build, strict JSON parsing, and diff hygiene pass after this
+second reconciliation, while product implementation revision
+`d19754aafe24f4ee7de37706113fd4b527882296` remains unchanged. Commit and push
+normally, then require fresh independent correctness and security review plus
+fresh hosted qualification on the resulting exact head. Never reuse the
+successful prior check rollup for the new base.
+
+#### Test-trigger fixture selector third current-main reconciliation
+
+While exact head `443d47e52ff94a68dd91482c425973e55ae937af` was still
+qualifying, protected main advanced again. Merge exact current `origin/main`
+`f82d639ef03291d25cc1fb1babc5241cabe02e2b` normally and conflict-free.
+The two intervening window-native backend and routed OCSP target-issuer commits
+are exact-path-disjoint from the six PR paths and touch no workflow. Preserve
+product implementation revision `d19754aafe24f4ee7de37706113fd4b527882296`,
+rerun focused routing, Go vet/build, strict JSON, graph, and diff-hygiene
+validation, and require fresh independent correctness/security review before a
+normal push. The resulting exact head needs an entirely new hosted rollup;
+never reuse partial or completed checks from the superseded base.
+
+Protected main advanced once more immediately after the third reconciled head
+was pushed. Merge exact `origin/main`
+`735518ae484e6570e05dfd47be76f6dc57019a79` normally and conflict-free. The
+single intervening music-machine native-backend commit is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+fourth reconciliation: rerun local validation, obtain fresh independent
+review, push normally, and require an entirely new hosted rollup.
+
+Protected main advanced again while that fourth reconciled head was
+qualifying. Merge exact `origin/main`
+`07311291dfb63b4292bc00b9c42db063d7a241de` normally and conflict-free. The
+three intervening reviewed-server OCSP binding, Mermaid ER topology, and Twig
+JVM compiler backend commits are exact-path-disjoint from the six PR paths and
+touch no workflow. Treat the resulting head as a fifth reconciliation: rerun
+local validation, obtain fresh independent review, push normally, and require
+another entirely new hosted rollup.
+
+Protected main advanced once more while the fifth reconciled head was
+qualifying. Merge exact `origin/main`
+`57ff2ac06825b289dd975b4ded65a3cc0c28d3b8` normally and conflict-free. The
+intervening fully routed OCSP responder-path commit is exact-path-disjoint from
+the six PR paths and touches no workflow. Treat the resulting head as a sixth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
+Protected main advanced again before the sixth reconciled local head could be
+reviewed and pushed. Merge exact `origin/main`
+`62af3051aba81bc763efb48fa0e98e0aa1e79f0f` normally and conflict-free. The
+intervening TypeScript jit-core `node:test` migration is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+seventh reconciliation with fresh local validation, independent review,
+normal push, and an entirely new hosted rollup.
+
+Protected main advanced again while the seventh reconciled head was
+qualifying. Merge exact `origin/main`
+`c55b9d4adbec9f83b17e8d0d4d49a0836af5df9c` normally and conflict-free. The
+two intervening rationalized ALGOL quotient and OCSP routed-responder
+DNS-policy commits are exact-path-disjoint from the six PR paths and touch no
+workflow. Treat the resulting head as an eighth reconciliation with fresh
+local validation, independent review, normal push, and an entirely new hosted
+rollup.
+
+Protected main advanced again before the eighth reconciled local head could be
+reviewed and pushed. Merge exact `origin/main`
+`b5df48eb00096972f831fe8c7739ba7818664083` normally and conflict-free. The
+intervening TypeScript codegen-core `node:test` migration is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+ninth reconciliation with fresh local validation, independent review, normal
+push, and an entirely new hosted rollup.
+
+Protected main advanced again before the ninth reconciled local head could
+complete review and push. Merge exact `origin/main`
+`778ecf0030b4c75097e461e9d5554fa2b934af27` normally and conflict-free. The
+three intervening OCSP responder-intermediate DNS policy, TypeScript
+tetrad-runtime `node:test` migration, and Kannada B2 inventory-boundary commits
+are exact-path-disjoint from the six PR paths and touch no workflow. Treat the
+resulting head as a tenth reconciliation with fresh local validation,
+independent review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again while the tenth reconciled head was qualifying.
+Merge exact `origin/main`
+`e3463970aaa22e1ba39536bbb676641f159d41a4` normally and conflict-free. The
+intervening TypeScript Starlark compiler `node:test` migration is
+exact-path-disjoint from the six PR paths and touches no workflow. Treat the
+resulting head as an eleventh reconciliation with fresh local validation,
+independent review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again while the eleventh reconciled head was
+qualifying. Merge exact `origin/main`
+`57f46f2e4c2605c0dd3c7482cc84f8a6dcd8f1de` normally and conflict-free. The
+two intervening TypeScript multi-directed-graph `node:test` migration and
+routed OCSP responder no-check commits are exact-path-disjoint from the six PR
+paths and touch no workflow. Treat the resulting head as a twelfth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
+Protected main advanced again before the twelfth reconciled local head could
+be pushed. Merge exact `origin/main`
+`f586ce30cec9e1b748781e247ed44efab87aa202` normally and conflict-free. The
+intervening Mermaid ER upstream-attribute render commit is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+thirteenth reconciliation with fresh local validation, independent review,
+normal push, and an entirely new hosted rollup.
+
+Exact reviewed head `378d8c56120a0a35276063ccfd9b703c676f5c68`
+completed all 42 hosted checks acceptably against that base, including the CI
+gate and metadata-contract job, but protected main advanced before guarded
+auto-merge could be enabled. Merge exact `origin/main`
+`8326ea3697bdd56cc90fc068fa4829093b93585a` normally and conflict-free. The
+two intervening TypeScript SIR exception-test migration and routed responder
+revocation-evidence commits are exact-path-disjoint from the six PR paths and
+touch no workflow. Treat the resulting head as a fourteenth reconciliation
+with fresh local validation, independent review, normal push, and an entirely
+new hosted rollup.
+
+Protected main advanced again before the fourteenth reconciled local head
+could complete review and push. Merge exact `origin/main`
+`524f8956bcfa1b0931df95ecfd2b3c6813d29107` normally and conflict-free. The
+additional TypeScript heap test migration is exact-path-disjoint from the six
+PR paths and touches no workflow. Treat the resulting head as a fifteenth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
+Protected main advanced again while the fifteenth reconciled head was
+qualifying. Merge exact `origin/main`
+`6906dafda1635371cbe2511c6fcea7c606761779` normally and conflict-free. The
+intervening Mermaid ER upstream-attribute metadata commit is exact-path-
+disjoint from the six PR paths and touches no workflow. Treat the resulting
+head as a sixteenth reconciliation with fresh local validation, independent
+review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced twice before the sixteenth reconciled local head
+could complete review and push. Merge exact `origin/main`
+`f75afee79ac7e1d11735b7d6e686888b5013e9c9` normally and conflict-free. The
+two additional TypeScript JVM class-file test migration and routed
+intermediate revocation-evidence commits are exact-path-disjoint from the six
+PR paths and touch no workflow. Treat the resulting head as a seventeenth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
+The seventeenth head was pushed normally after a transient GitHub server
+error cleared, but protected main advanced while GitHub's PR object was still
+indexing that updated branch ref. Merge exact `origin/main`
+`5273e9817392b4ee129dff393bf1bdd037d24e2a` normally and conflict-free. The
+intervening TypeScript LZSS test migration is exact-path-disjoint from the six
+PR paths and touches no workflow. Treat the resulting head as an eighteenth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
+GitHub repeatedly returned an internal server error for the reviewed
+eighteenth head's normal push, and protected main advanced before the service
+recovered. Merge exact `origin/main`
+`a9e800bf25a7cf76adda5851ea79bede1184561e` normally and conflict-free. The
+three intervening commits comprise two Mermaid ER upstream-label commits and
+a composed no-check intermediate-revocation commit; all are exact-path-
+disjoint from the six PR paths and touch no workflow. Treat the resulting
+head as a nineteenth reconciliation with fresh local validation, independent
+review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again during review of the nineteenth reconciled
+local head. Merge exact `origin/main`
+`10eed71eb3e9033d07428f0045c5d5a5322acfe4` normally and conflict-free. The
+intervening ALGOL powered floor-root-products commit is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+twentieth reconciliation with fresh local validation, independent review,
+normal push, and an entirely new hosted rollup.
+
+Exact reviewed head `4762d35a3bf45ec35d763a3e7f0457c780cf7bac`
+completed all 42 hosted checks acceptably, with GitHub reporting the PR clean
+and mergeable, but protected main advanced before guarded auto-merge could be
+enabled. Merge exact `origin/main`
+`65478727e9268e80949dd8445f3245296dd44464` normally and conflict-free. The
+three intervening TypeScript LZ78 test migration, Mermaid ER upstream numeric-
+render, and reified intermediate-status responder-path commits are exact-path-
+disjoint from the six PR paths and touch no workflow. Treat the resulting head
+as a twenty-first reconciliation with fresh local validation, independent
+review, normal push, and an entirely new hosted rollup.
+
+Five Unicode 17 generated-runtime conformance jobs on the twenty-first head
+failed while downloading the pinned upstream Unicode license: Elixir, Lua,
+Perl, and Dart received HTTP 522, while Haskell timed out reading the same
+upstream response. Record the external-fetch failures for future
+retry/resilience prioritization if they recur; do not treat the rollup as
+acceptable. Protected main also advanced. Merge exact `origin/main`
+`ef7d69ef3e399785d65ca62dad8cd65f2aa95839` normally and conflict-free. The
+three intervening constrained intermediate-status responder-DNS, TypeScript
+SHA-256 test migration, and TypeScript X25519 test migration commits are exact-
+path-disjoint from the six PR paths and touch no workflow. Treat the resulting
+head as a twenty-second reconciliation with fresh local validation,
+independent review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again during review of the twenty-second reconciled
+local head. Merge exact `origin/main`
+`06c8677bdf210f48bca8cb202ad75e1fc225b1a5` normally and conflict-free. The
+additional Mermaid ER upstream one-cardinalities commit is exact-path-
+disjoint from the six PR paths and touches no workflow. Treat the resulting
+head as a twenty-third reconciliation with fresh local validation,
+independent review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again while the twenty-third head was qualifying
+without failures and only its macOS and Windows Forme jobs remained. Merge
+exact `origin/main` `1beb5b6148760b8885744d042fa8957d474dbb94`
+normally and conflict-free. The two intervening TypeScript LZW test migration
+and validated intermediate-status responder no-check commits are exact-path-
+disjoint from the six PR paths and touch no workflow. Treat the resulting head
+as a twenty-fourth reconciliation with fresh local validation, independent
+review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced again while the twenty-fourth head was still early in
+hosted qualification without failures. Merge exact `origin/main`
+`79f6e1e54bc0f41c2fc3e2be4099471355ad6b0b` normally and conflict-free. The
+intervening TypeScript LZ77 test migration is exact-path-disjoint from the six
+PR paths and touches no workflow. Treat the resulting head as a twenty-fifth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.

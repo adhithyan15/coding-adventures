@@ -261,6 +261,30 @@ fn cyclic_sequence_does_not_stack_overflow() {
     }
 }
 
+#[test]
+fn sequence_plus_concatenates_operands_into_new_sequence() {
+    // `[1] + [2]` concats to `[1, 2]`, and chaining `[] + [1, 2] + [3]` works.
+    // Concatenation allocates a fresh sequence so mutating the result does
+    // not disturb the original operand sequences.
+    let m = seq_module(vec![
+        let_("a", seq(vec![ilit(1)])),
+        puts(local("a")),
+        let_("b", seq(vec![ilit(2)])),
+        puts(local("b")),
+        let_("c", bc("+", vec![local("a"), local("b")])),
+        puts(local("c")),
+        let_("d", bc("+", vec![seq(vec![]), seq(vec![ilit(10), ilit(20)]), seq(vec![ilit(30)])])),
+        puts(local("d")),
+        // Mutate c[0] = 99 to confirm `a` was not mutated:
+        Stmt::SeqSet { seq: local("c"), index: ilit(0), value: ilit(99), span: s() },
+        puts(local("a")),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1\n2\n1\n2\n10\n20\n30\n1\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
 /// Deletes a run's `.c` file and executable when the helper returns or
 /// panics.  Each call names its files uniquely (see `unique_suffix` or the
 /// counter above), so without this they would pile up in the temp directory,

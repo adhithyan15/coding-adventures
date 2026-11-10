@@ -1,0 +1,184 @@
+//! # Rust Capability Module Generator (VER23)
+//!
+//! Generates sealed `src/capabilities.rs` from `required_capabilities.json`.
+//! Implements "you cannot name what you did not declare" (VER00 §8.6).
+
+#![deny(unsafe_code)]
+
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use crate::manifest::{load_manifest, Capability, ManifestData};
+
+/// Generate the canonical source code for `src/capabilities.rs`.
+pub fn generate_module_source(package_name: &str, manifest: Option<&ManifestData>) -> String {
+    let clean_pkg_name: String = package_name
+        .chars()
+        .filter(|c| c.is_ascii_graphic() && *c != '\n' && *c != '\r')
+        .collect();
+    let mut out = String::new();
+    out.push_str("// Generated from required_capabilities.json. Do not edit.\n");
+    out.push_str(&format!("// Package: {}\n", clean_pkg_name));
+
+    match manifest {
+        None => {
+            out.push_str("// Declared capabilities: none (pure computation)\n");
+            out.push_str("// Proof label: proved\n\n");
+            out.push_str("#![deny(unsafe_code)]\n\n");
+            out.push_str("/// Pure computation witness token.\n");
+            out.push_str("///\n");
+            out.push_str("/// This package declares zero ambient capabilities.\n");
+            out.push_str("/// No I/O, network, filesystem, process, environment, or threading handles\n");
+            out.push_str("/// are exposed by this module.\n");
+            out.push_str("#[derive(Debug, Clone, Copy, PartialEq, Eq)]\n");
+            out.push_str("pub struct PureCapabilities;\n");
+        }
+        Some(m) if m.capabilities.is_empty() => {
+            out.push_str("// Declared capabilities: none (pure computation)\n");
+            out.push_str("// Proof label: proved\n\n");
+            out.push_str("#![deny(unsafe_code)]\n\n");
+            out.push_str("/// Pure computation witness token.\n");
+            out.push_str("///\n");
+            out.push_str("/// This package declares zero ambient capabilities in required_capabilities.json.\n");
+            out.push_str("/// No I/O, network, filesystem, process, environment, or threading handles\n");
+            out.push_str("/// are exposed by this module.\n");
+            out.push_str("#[derive(Debug, Clone, Copy, PartialEq, Eq)]\n");
+            out.push_str("pub struct PureCapabilities;\n");
+        }
+        Some(m) => {
+            out.push_str("// Declared capabilities:\n");
+            for cap in &m.capabilities {
+                out.push_str(&format!("//   - {}:{}:{}\n", cap.category, cap.action, cap.target));
+            }
+            out.push_str("\n#![deny(unsafe_code)]\n\n");
+            out.push_str("/// Package capability authority token.\n");
+            out.push_str("///\n");
+            out.push_str("/// Exposes only the capabilities explicitly authorized in required_capabilities.json.\n");
+            out.push_str("#[derive(Debug)]\n");
+            out.push_str("pub struct PackageCapabilities {\n");
+            for (idx, cap) in m.capabilities.iter().enumerate() {
+                let field_name = sanitize_ident(&format!("cap_{}_{}_{}", cap.category, cap.action, idx));
+                out.push_str(&format!("    pub(crate) {}: {},\n", field_name, capability_type_name(cap)));
+            }
+            out.push_str("}\n\n");
+
+            // Define individual capability witness tokens
+            for cap in &m.capabilities {
+                let type_name = capability_type_name(cap);
+                out.push_str(&format!("/// Authority witness for `{}:{}:{}`.\n", cap.category, cap.action, cap.target));
+                out.push_str("#[derive(Debug, Clone, Copy)]\n");
+                out.push_str(&format!("pub struct {};\n\n", type_name));
+            }
+        }
+    }
+
+    out
+}
+
+fn sanitize_ident(s: &str) -> String {
+    let mut out = String::new();
+    for c in s.chars() {
+        if c.is_ascii_alphanumeric() {
+            out.push(c);
+        } else {
+            out.push('_');
+        }
+    }
+    if out.is_empty() {
+        "ident".to_string()
+    } else {
+        out
+    }
+}
+
+fn capability_type_name(cap: &Capability) -> String {
+    let cat = to_camel_case(&cap.category);
+    let act = to_camel_case(&cap.action);
+    let tgt = if cap.target == "*" {
+        "All".to_string()
+    } else {
+        to_camel_case(&cap.target)
+    };
+    format!("{cat}{act}{tgt}Cap")
+}
+
+fn to_camel_case(s: &str) -> String {
+    let mut out = String::new();
+    let mut capitalize_next = true;
+    for c in s.chars() {
+        if c.is_ascii_alphanumeric() {
+            if capitalize_next {
+                out.push(c.to_ascii_uppercase());
+                capitalize_next = false;
+            } else {
+                out.push(c);
+            }
+        } else {
+            capitalize_next = true;
+        }
+    }
+    if out.is_empty() {
+        "Witness".to_string()
+    } else {
+        out
+    }
+}
+
+/// Target path for `src/capabilities.rs` within a package directory.
+pub fn capabilities_module_path(package_dir: &Path) -> PathBuf {
+    package_dir.join("src").join("capabilities.rs")
+}
+
+/// Check whether on-disk `src/capabilities.rs` matches the expected generated module.
+pub fn check_module_on_disk(package_dir: &Path) -> Result<bool, String> {
+    let manifest = load_manifest(package_dir).map_err(|e| format!("Failed to load manifest: {e}"))?;
+    let pkg_name = if manifest.is_explicit {
+        manifest.package.as_str()
+    } else {
+        package_dir
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("pure-computation")
+    };
+
+    let expected = generate_module_source(pkg_name, Some(&manifest));
+    let path = capabilities_module_path(package_dir);
+    if !path.exists() {
+        return Ok(false);
+    }
+
+    let actual = fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read {}: {e}", path.display()))?;
+
+    // Normalize CRLF
+    let actual_normalized = actual.replace("\r\n", "\n");
+    let expected_normalized = expected.replace("\r\n", "\n");
+
+    Ok(actual_normalized == expected_normalized)
+}
+
+/// Write the generated `src/capabilities.rs` to disk.
+pub fn write_module_to_disk(package_dir: &Path) -> Result<(), String> {
+    let manifest = load_manifest(package_dir).map_err(|e| format!("Failed to load manifest: {e}"))?;
+    let pkg_name = if manifest.is_explicit {
+        manifest.package.as_str()
+    } else {
+        package_dir
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("pure-computation")
+    };
+
+    let content = generate_module_source(pkg_name, Some(&manifest));
+    let src_dir = package_dir.join("src");
+    if !src_dir.exists() {
+        fs::create_dir_all(&src_dir)
+            .map_err(|e| format!("Failed to create src dir {}: {e}", src_dir.display()))?;
+    }
+
+    let target_path = capabilities_module_path(package_dir);
+    fs::write(&target_path, content)
+        .map_err(|e| format!("Failed to write {}: {e}", target_path.display()))?;
+
+    Ok(())
+}

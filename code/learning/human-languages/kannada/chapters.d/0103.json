@@ -2,18 +2,20 @@
   "chapter": 103,
   "title": "Where I Live",
   "label": "ch:ka-where-i-live",
-  "canDo": "I can say where I live: house, street, city, country and state.",
+  "canDo": "I can ask and say where somebody is from, using town, city, country and state.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "KA-C103-state",
+    "lesson": "KA-C103-origin-answer",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 103: I can say where I live: house, street, city, country and state.",
+    "summary": "Complete the last lesson of chapter 103: I can ask and say where somebody is from.",
     "assesses": [
-      "KA-LEX-C103-HOME-03",
-      "KA-LEX-C103-HOME-04",
-      "KA-LEX-C103-HOME-05"
+      "KA-LEX-C103-ORIGIN-06",
+      "KA-GRAMMAR-C103-ORIGIN-RELATION-07",
+      "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+      "KA-FUNCTION-C103-ASK-ORIGIN-09",
+      "KA-FUNCTION-C103-SAY-ORIGIN-10"
     ]
   }
 }

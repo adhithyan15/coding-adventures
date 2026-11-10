@@ -110,6 +110,29 @@ describe("the committed Kannada A1 inventory", () => {
     }
   });
 
+  it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
+    // The 2026-11-04 source audit found that the old inventory notes were stale:
+    // uuru, nagara, deesha and raajya already have direct owners. The missing
+    // work is the composition path -- place names, the person/place relation,
+    // ablative -inda, and the ask/answer pair. Keep the exact six-point effect
+    // pinned so a broad new lesson cannot receive accidental credit here.
+    const originIds = [
+      "KA-A1-N-02",
+      "KA-A1-ADJ-04",
+      "KA-A1-CASE-07",
+      "KA-A1-Q-09",
+      "KA-A1-F-05",
+      "KA-A1-LEX-55",
+    ];
+    const lessons = loadTrackLessons("kannada");
+    const coverage = measureExamCoverage(inventory, lessons);
+    const origin = coverage.points.filter((point) => originIds.includes(point.id));
+    expect(origin.map((point) => point.id)).toEqual(originIds);
+    expect(origin.every((point) => point.covered)).toBe(true);
+    expect(coverage.covered).toBe(204);
+    expect(coverage.unmapped).toBe(54);
+  }, 60_000);
+
   it("reports a CLOSED joining column and a script still 19 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
@@ -138,8 +161,11 @@ describe("the committed Kannada A1 inventory", () => {
     // accentuation and superscript abbreviation letters have no Kannada
     // counterpart at all, and neither does Spanish's mid-distance demonstrative.
     // The real ceiling for this track is 254/258, not 258/258.
-    expect(coverage.covered).toBe(198);
-    expect(coverage.unmapped).toBe(60);
+    // 198 -> 204: the chapter-103 origin tranche closes exactly the six points
+    // pinned above. The generic place words were already taught; the new work is
+    // the bounded person/place relation, ablative, and ask-answer composition.
+    expect(coverage.covered).toBe(204);
+    expect(coverage.unmapped).toBe(54);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -195,7 +221,7 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 198/258 points covered (77%)",
+      "kannada A1 (partial inventory): 204/258 points covered (79%)",
     );
   }, 60_000);
 });

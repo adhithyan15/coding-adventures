@@ -28,6 +28,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     // away — zero per-call cost — and existing Twig output is byte-for-byte
     // unchanged (the default is the Lisp form).
     pub const SIR_DISPLAY_RUBY: bool = __SIR_DISPLAY_RUBY__;
+    pub const SIR_DISPLAY_PYTHON: bool = __SIR_DISPLAY_PYTHON__;
     use std::cell::Cell;
     use std::cell::RefCell;
     use std::collections::HashMap;
@@ -149,6 +150,7 @@ pub const RUNTIME: &str = r##"mod __sir {
 
     pub struct Closure {
         pub fun: Box<dyn Fn(Vec<Value>) -> Value + 'static>,
+        pub arity: usize,
     }
 
     // ── symbol interning ──────────────────────────────────────────
@@ -255,7 +257,21 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 apply_closure(&c, args)
             }),
+            arity: n,
         }))
+    }
+
+    /// Yield a key-value entry to a Hash block.
+    ///
+    /// When the block declares arity 1, Ruby yields the 2-element Array `[key, value]`.
+    /// Otherwise, Ruby yields `key` and `value` as separate arguments.
+    pub fn yield_hash_pair(b: &Value, key: Value, val: Value) -> Value {
+        if let Value::Closure(cl) = b {
+            if cl.arity == 1 {
+                return apply_closure(b, vec![seq_lit(vec![key, val])]);
+            }
+        }
+        apply_closure(b, vec![key, val])
     }
 
     // ── truthiness ────────────────────────────────────────────────
@@ -361,6 +377,27 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
                 Value::Int(total)
             }
+        }
+    }
+
+    // In-place addition for `+=`. When `a` is a `Value::Seq`, mutates it in place
+    // by appending elements of `b` (or `b` itself if not a `Seq`), preserving
+    // pointer identity across aliases (Python's `__iadd__`). Non-sequences fall
+    // back to standard binary `plus`.
+    pub fn iadd(a: Value, b: Value) -> Value {
+        match &a {
+            Value::Seq(items) => {
+                match &b {
+                    Value::Seq(b_items) => {
+                        items.borrow_mut().extend(b_items.borrow().iter().cloned());
+                    }
+                    other => {
+                        items.borrow_mut().push(other.clone());
+                    }
+                }
+                a
+            }
+            _ => plus(vec![a, b]),
         }
     }
 
@@ -729,6 +766,37 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Float(as_f64(&a) / y)
     }
 
+    /// Floored binary modulo (`%`). Matches Python and Ruby `%` semantics:
+    /// remainder has the sign of the divisor `b` (or 0).
+    /// Raises `ZeroDivisionError` on zero divisor.
+    /// Handles `i64::MIN % -1` wrapping safely.
+    pub fn modulo(a: Value, b: Value) -> Value {
+        if matches!(a, Value::Float(_)) || matches!(b, Value::Float(_)) {
+            let y = as_f64(&b);
+            if y == 0.0 {
+                raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+            }
+            let x = as_f64(&a);
+            let q = (x / y).floor();
+            return Value::Float(x - q * y);
+        }
+        let y = as_i64(&b);
+        if y == 0 {
+            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+        }
+        if y == -1 {
+            return Value::Int(0);
+        }
+        let x = as_i64(&a);
+        let r = x % y;
+        let floored_r = if r != 0 && ((r < 0) != (y < 0)) {
+            r + y
+        } else {
+            r
+        };
+        Value::Int(floored_r)
+    }
+
     // ── comparison ────────────────────────────────────────────────
     pub fn eq(a: Value, b: Value) -> Value {
         Value::Bool(value_eq(&a, &b))
@@ -969,9 +1037,9 @@ pub const RUNTIME: &str = r##"mod __sir {
             // matching how Python/Ruby render `3.0`.  Non-finite values
             // print as `NaN` / `inf` / `-inf`.
             Value::Float(x) => format_float(*x),
-            Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else { "#t" }.to_string(),
-            Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else { "#f" }.to_string(),
-            Value::Nil => "nil".to_string(),
+            Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else if SIR_DISPLAY_PYTHON { "True" } else { "#t" }.to_string(),
+            Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else if SIR_DISPLAY_PYTHON { "False" } else { "#f" }.to_string(),
+            Value::Nil => if SIR_DISPLAY_PYTHON { "None" } else { "nil" }.to_string(),
             // An exception renders as its MESSAGE, matching Ruby's
             // `Exception#to_s`, so `rescue => e; puts e` prints "boom".  The
             // message is a plain `String`, so unlike an instance/seq/map this
@@ -2533,6 +2601,7 @@ pub const RUNTIME: &str = r##"mod __sir {
         let n = name.to_string();
         Value::Closure(Rc::new(Closure {
             fun: Box::new(move |args: Vec<Value>| call_builtin_by_name(&n, args)),
+            arity: usize::MAX,
         }))
     }
 
@@ -2555,6 +2624,14 @@ pub const RUNTIME: &str = r##"mod __sir {
             "div_true" => {
                 let mut it = args.into_iter();
                 true_div(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "%" => {
+                let mut it = args.into_iter();
+                modulo(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "+=" => {
+                let mut it = args.into_iter();
+                iadd(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
             }
             // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
             // was UNIMPLEMENTED here, so any negative literal panicked with
@@ -4046,7 +4123,7 @@ pub const RUNTIME: &str = r##"mod __sir {
             "each" | "each_pair" => {
                 if let Some(b) = &block {
                     for (k, v) in entries_rc.borrow().clone() {
-                        apply_closure(b, vec![k, v]);
+                        yield_hash_pair(b, k, v);
                     }
                 }
                 recv
@@ -4057,7 +4134,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .borrow()
                         .clone()
                         .into_iter()
-                        .map(|(k, v)| apply_closure(b, vec![k, v]))
+                        .map(|(k, v)| yield_hash_pair(b, k, v))
                         .collect(),
                 ),
                 None => unknown_method(&recv, name),
@@ -4068,7 +4145,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                         .borrow()
                         .clone()
                         .into_iter()
-                        .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .filter(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                         .collect();
                     Value::Map(Rc::new(RefCell::new(kept)))
                 }
@@ -4278,7 +4355,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     snapshot
                         .into_iter()
-                        .find(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                        .find(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                         .map(|(k, v)| seq_lit(vec![k, v]))
                         .unwrap_or(Value::Nil)
                 }
@@ -4288,7 +4365,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        snapshot.into_iter().any(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(!entries_rc.borrow().is_empty()),
@@ -4297,7 +4374,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        snapshot.into_iter().all(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        snapshot.into_iter().all(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(true),
@@ -4306,7 +4383,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Some(b) => {
                     let snapshot = entries_rc.borrow().clone();
                     Value::Bool(
-                        !snapshot.into_iter().any(|(k, v)| truthy(&apply_closure(b, vec![k, v]))),
+                        !snapshot.into_iter().any(|(k, v)| truthy(&yield_hash_pair(b, k, v))),
                     )
                 }
                 None => Value::Bool(entries_rc.borrow().is_empty()),
@@ -4317,7 +4394,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let snapshot = entries_rc.borrow().clone();
                 let n = snapshot
                     .into_iter()
-                    .filter(|(k, v)| truthy(&apply_closure(b, vec![k.clone(), v.clone()])))
+                    .filter(|(k, v)| truthy(&yield_hash_pair(b, k.clone(), v.clone())))
                     .count();
                 Value::Int(n as i64)
             }
@@ -4330,7 +4407,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let mut keyed: Vec<(Value, Value)> = snapshot
                         .into_iter()
                         .map(|(k, v)| {
-                            (apply_closure(b, vec![k.clone(), v.clone()]), seq_lit(vec![k, v]))
+                            (yield_hash_pair(b, k.clone(), v.clone()), seq_lit(vec![k, v]))
                         })
                         .collect();
                     keyed.sort_by(|(ka, _), (kb, _)| {
@@ -4355,7 +4432,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut best: Option<(Value, (Value, Value))> = None;
                     for (k, v) in snapshot {
-                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let key = yield_hash_pair(b, k.clone(), v.clone());
                         let take = match &best {
                             None => true,
                             Some((bk, _)) => {
@@ -4387,7 +4464,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let acc = map_lit(vec![]);
                     for (k, v) in snapshot {
-                        let key = apply_closure(b, vec![k.clone(), v.clone()]);
+                        let key = yield_hash_pair(b, k.clone(), v.clone());
                         let bucket = match map_get(&acc, &key) {
                             seq @ Value::Seq(_) => seq,
                             _ => seq_lit(vec![]),
@@ -4409,7 +4486,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let mut yes = Vec::new();
                     let mut no = Vec::new();
                     for (k, v) in snapshot {
-                        if truthy(&apply_closure(b, vec![k.clone(), v.clone()])) {
+                        if truthy(&yield_hash_pair(b, k.clone(), v.clone())) {
                             yes.push(seq_lit(vec![k, v]));
                         } else {
                             no.push(seq_lit(vec![k, v]));
@@ -4427,7 +4504,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut out = Vec::new();
                     for (k, v) in snapshot {
-                        match apply_closure(b, vec![k, v]) {
+                        match yield_hash_pair(b, k, v) {
                             Value::Seq(inner) => out.extend(inner.borrow().clone()),
                             other => out.push(other),
                         }
@@ -4474,7 +4551,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                     let snapshot = entries_rc.borrow().clone();
                     let mut acc = seed;
                     for (k, v) in snapshot {
-                        acc = plus(vec![acc, apply_closure(b, vec![k, v])]);
+                        acc = plus(vec![acc, yield_hash_pair(b, k, v)]);
                     }
                     acc
                 }
@@ -5346,6 +5423,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 let recv = args.remove(0);
                 call_method(recv, &method, args)
             }),
+            arity: 1,
         }))
     }
 

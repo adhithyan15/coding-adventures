@@ -1,5 +1,36 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline via `emit_stmt_list`, avoiding unnecessary closure wrappers when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
+
+- `Closure.Arity` and `_sir_make_closure(..., arity)` record the declared parameter count on `Closure`; `_sir_hash_block_method` yields `[key, value]` pairs when `block.Arity == 1`.
+
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure adapter bounds check and missing argument sentinel.** Added `_sir_closure_arg(args []Value, i int) Value` helper in `runtime.rs` that bounds-checks the arguments slice and returns `_sir_missing` if `i >= len(args)`. `MakeClosure` in `emit.rs` now indexes incoming arguments through `_sir_closure_arg(__args, i)`, avoiding runtime `index out of range` panics when called with fewer arguments than parameters and properly triggering default-parameter evaluation.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** Added `_sir_iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates `*Seq` in place, preserving pointer identity across aliases, and delegates to `_sir_plus` otherwise.
+
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`
+  in `emit_builtin_call` (and `_sir_call_builtin_by_name`). It computes floored modulo
+  matching Python and Ruby semantics, avoiding `math.MinInt64 % -1` integer overflow panic.
+- **ZeroDivisionError.** Modulo by zero panics with `ZeroDivisionError: divided by 0`.
+
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Go runtime sets `_sir_display_python = true`. `_sir_format_d`
+  prints `True`, `False`, and `None` matching CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, `[]`/`[]=` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted.**  It renders as

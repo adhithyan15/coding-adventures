@@ -25,12 +25,18 @@ const CASES: &[(&str, &str)] = &[
         "#!/usr/bin/env node\n\n// c\nvar x = 1;\nconsole.log(x)\n",
         "var x=1;console.log(x);",
     ),
+    (
+        "#!/x\u{2028}console.log(1)\n",
+        "console.log(1);",
+    ),
+    (
+        "#!/x\u{2029}console.log(1)\nconsole.log(2)\n",
+        "console.log(1);console.log(2);",
+    ),
 ];
 
 /// Inputs WHITESPACE_ONLY must refuse: non-zero exit, no output.
 const REFUSED: &[&str] = &[
-    "#!/x\u{2028}console.log(1)\n",
-    "#!/x\u{2029}console.log(1)\nconsole.log(2)\n",
     "console.log(1);\n#!foo\nconsole.log(2);\n",
     " #!/x\nconsole.log(1)\n",
 ];

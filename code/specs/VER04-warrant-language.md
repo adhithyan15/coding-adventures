@@ -561,3 +561,24 @@ their own checker. Public error IDs/spans, source normalization and the full
 hostile-source budgets are not implemented by an artifact-only package's test
 adapter. Its bounded test use of the shared parser must not be advertised as
 complete source-frontend safety or full VER04 conformance.
+
+## 12. Bounded source-stage delivery
+
+P006b is divided into source admission/normalization (b1), exact bounded
+significant-layout origins (b2) and the guarded parser (b3). The additive
+[VER04a source contract](VER04a-warrant-source-admission.md) specifies b1's
+UTF-8 admission, distinct normalized buffer, original byte/line mapping and
+fixed W0001 rejection. It explicitly rejects bare CR and treats only LF/CRLF
+as source line endings. A successful admitted buffer is not a parsed or checked
+document.
+
+The additive [VER04b layout contract](VER04b-warrant-layout-capture.md) specifies
+b2's bounded significant-layout capture and synthetic token origin mapping over
+admitted source documents, ensuring synthetic INDENT/DEDENT/NEWLINE tokens possess
+exact zero-width origins without fictitious positive-width spans.
+
+The additive [VER04c guarded parser contract](VER04c-guarded-warrant-parser.md)
+specifies b3's bounded AST construction over layout token streams, enforcing explicit
+node quotas (`max_nodes`) and recursion stack guards (`max_depth` ≤ 64) against
+stack exhaustion. The shared CV04a standard-mode partition contract remains unchanged;
+its indentation refusal must not be treated as complete layout capture.

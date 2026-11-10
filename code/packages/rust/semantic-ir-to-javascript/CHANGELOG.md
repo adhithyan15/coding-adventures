@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current statement indentation, avoiding invalid bare `try { }` blocks without catch or finally.
+
+
+## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
+
+- `Expr::MakeClosure` emits the closure's parameter count as `new __Sir.Closure(..., arity)` and `Closure` records it; `hashMethod` yields `[key, value]` pairs when `blk.arity === 1`.
+
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `push` and `append`.** `arrayMethod` now handles `"append"` and `"push"`, appending arguments in-place and returning the array receiver. Added `"append"` to `METHOD_ALLOWLIST` and `ARRAY_METHODS`.
+- **In-place addition `+=`.** Added `__Sir.iadd` which extends arrays in place when the target is an Array (preserving object identity across aliases), and delegates to `plus` otherwise. Mapped `BuiltinCall("+=", ...)` to `__Sir.iadd`.
+
+## Unreleased — Floored binary `%` semantics and ZeroDivisionError (#18496 item 2)
+
+- **Floored binary `%`.** `__Sir.mod` now computes floored modulo matching Python
+  and Ruby semantics (`r = a - b * floor(a / b)`), adjusting the native JS
+  truncated remainder whenever non-zero and signs differ.
+- **ZeroDivisionError.** Modulo by zero now throws `ZeroDivisionError: divided by 0`
+  rather than returning `NaN`.
+
+
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted JavaScript runtime sets `SIR_DISPLAY_PYTHON = true`. `formatSeen`
+  prints `True`, `False`, and `None` (standalone and in collections) matching
+  CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, `[]`/`[]=`/`size` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted**, as

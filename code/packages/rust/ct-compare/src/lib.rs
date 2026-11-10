@@ -79,6 +79,8 @@
 #![deny(unsafe_code)]
 #![deny(unsafe_op_in_unsafe_fn)]
 
+pub mod capabilities;
+
 use core::hint::black_box;
 
 /// Audited compiler-observability boundary for equality scans.

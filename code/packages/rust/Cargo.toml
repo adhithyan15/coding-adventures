@@ -8,6 +8,8 @@ resolver = "2"
 # (independent of this `members` list) and applies the documented SKIP.
 exclude = ["os-kernel"]
 members = [
+    "ca-capability-analyzer",
+    "ca-assurance-report",
     "avr-classic-simulator",
     "superh2-simulator",
     "cortex-m4-gatelevel",
@@ -788,6 +790,7 @@ members = [
     "ct-compare",
     "test-bootstrap",
     "warrant-grammar",
+    "warrant-ir",
     "zeroize",
     "x3dh",
     "double-ratchet",

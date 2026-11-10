@@ -1,0 +1,21 @@
+[package]
+name = "coding_adventures_ca_assurance_report"
+version = "0.1.0"
+edition = "2021"
+description = "Assurance report generator and weakness registry evaluator (VER15 / VER01 / VER-P028)"
+
+[lib]
+name = "coding_adventures_ca_assurance_report"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ca-assurance-report-rs"
+path = "src/main.rs"
+
+[dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+drat-check = { path = "../drat-check" }
+
+[dev-dependencies]

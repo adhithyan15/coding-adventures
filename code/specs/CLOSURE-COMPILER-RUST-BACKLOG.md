@@ -169,9 +169,9 @@ Ranking:
 | 8e | #18134 | ADVANCED inlining lets a nested function capture a caller's shadowing binding. | Ready |
 | 8f | #18144 | ADVANCED inline substitution: closure-deferred reads, a missing `return` arm, computed class keys. | Ready |
 | 8g | #18123 | WHITESPACE_ONLY applies body-slot rules to methods named `if`/`while`/`for`/`with`, so the output doesn't parse. | Ready |
-| 8h | #18152 | WHITESPACE_ONLY breaks `let`/`using`/`await` used as identifiers (ASI and paren elision). | Ready |
-| 8i | #18125 | WHITESPACE_ONLY loses the newline boundary after a keyword property name (`x=y.if⏎l:;`). | Ready |
-| 8j | #18122 | SIMPLE doubles backslashes in `import`/`export` module specifiers. | Ready |
+| 8h | #18152 | WHITESPACE_ONLY breaks `let`/`using`/`await` used as identifiers (ASI and paren elision). | Done (#18999) |
+| 8i | #18125 | WHITESPACE_ONLY loses the newline boundary after a keyword property name (`x=y.if⏎l:;`). | Done (#19009) |
+| 8j | #18122 | SIMPLE doubles backslashes in `import`/`export` module specifiers. | In Progress |
 
 ### Q0.5 — valid JavaScript that closurec rejects
 

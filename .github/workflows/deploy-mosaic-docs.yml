@@ -38,8 +38,9 @@ permissions:
   contents: write
 
 concurrency:
-  group: deploy-mosaic-docs
-  cancel-in-progress: true
+  group: gh-pages-deployment
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   build-and-deploy:

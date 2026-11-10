@@ -221,6 +221,7 @@ pub fn emit_module(m: &Module) -> String {
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
     let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
     let display_derive = m.metadata.source_language.as_deref() == Some("derive");
@@ -251,6 +252,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_AXIOM_BOOLEAN__",
                 if display_axiom_boolean { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);
@@ -843,6 +848,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emitting
+            // a bare `try { … }` without `catch` or `finally` is a JavaScript
+            // syntax error. Emit the body statements inline.
+            if rescues.is_empty() && ensure_body.is_none() {
+                for st in body {
+                    emit_stmt(out, st, indent);
+                }
+                return;
+            }
             let _ = writeln!(out, "{pad}try {{");
             for st in body {
                 emit_stmt(out, st, indent + 2);
@@ -1125,13 +1140,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
+            let arity = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied());
             out.push_str("new __Sir.Closure((..._a) => ");
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
             for c in captures {
                 emit_expr(out, &c.value, indent);
                 out.push_str(", ");
             }
-            out.push_str("..._a))");
+            out.push_str("..._a)");
+            if let Some(ar) = arity {
+                let _ = write!(out, ", {ar}");
+            }
+            out.push(')');
         }
         // ── SIR16: sequences (Sequences) — native arrays ──────────────
         Expr::SeqLit { items, .. } => {
@@ -1724,7 +1744,8 @@ fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
         emit_expr(out, &c.value, indent);
         out.push_str(", ");
     }
-    out.push_str("..._a); })");
+    out.push_str("..._a); }, ");
+    let _ = write!(out, "{n})");
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
@@ -1958,6 +1979,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             // `runtime::minus` / `runtime::mod`.
             "-" => Some("__Sir.minus"),
             "%" => Some("__Sir.mod"),
+            "+=" => Some("__Sir.iadd"),
             _ => None,
         };
         if let Some(helper) = poly {
