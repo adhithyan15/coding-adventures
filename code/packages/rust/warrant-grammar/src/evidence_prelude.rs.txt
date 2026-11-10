@@ -17,6 +17,9 @@ use coding_adventures_test_bootstrap::pbt::{
 };
 use coding_adventures_test_bootstrap::prng::{fnv1a64, SplitMix64};
 use coding_adventures_test_bootstrap::run::{self, Outcome, Suite};
+//@if vec
+use coding_adventures_test_bootstrap::tfv::{self, Value};
+//@endif
 use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
@@ -1181,6 +1184,241 @@ fn obs_limit_bias(tys: &[Ty], env: &mut [V], src: &mut dyn Src) {
             Ty::Fx(f) | Ty::FxEdge(f) => V::Fixed(*f, pick),
             _ => V::Int(pick),
         };
+    }
+}
+
+//@endif
+//@if vec
+// ---------------------------------------------------------------------------
+// WX-E: pinned known-answer tables (VER04j section 5).
+//
+// The generator copied the verified fixture into the crate and embedded it with
+// `include_bytes!`; the table's test hashes that copy first and fails
+// `corpus-malformed` if it no longer matches the pin, then reads the rows with
+// the same TF01 TFV parser every lane uses and runs `holds` once per row.
+// ---------------------------------------------------------------------------
+
+/// Counters of one table run, for the manifest.
+#[derive(Clone, Debug, Default)]
+pub struct TableStats {
+    /// Rows run.
+    pub cases: u64,
+    /// Rows the document pins.
+    pub rows_pinned: u64,
+    /// SHA-256 of the checked-in copy.
+    pub sha256: String,
+    /// Rows whose `holds` was false (or that panicked).
+    pub failed: u64,
+    /// The first 16 failing rows as `vectors/<table>/<row id>`; empty in CI mode
+    /// (VER00 section 7.3: the data is not echoed).
+    pub failed_ids: Vec<String>,
+}
+
+/// Stats of the fault-free run of each table, by table name.
+static TABLE_STATS: Mutex<BTreeMap<String, TableStats>> = Mutex::new(BTreeMap::new());
+
+/// Decode one TFV value as a model value of type `ty` (VER04j section 4.9).
+/// Integers are range-checked, `Bytes<N>` length-checked; constructors are
+/// found by *name*.  The generator already verified every row of the file, so
+/// a failure here means the checked-in copy was altered after generation.
+fn table_value(v: &Value, ty: Ty, depth: usize) -> Result<V, String> {
+    if depth > 64 {
+        return Err("nests too deeply".into());
+    }
+    let int = |t: &str| t.parse::<i128>().map_err(|_| "integer out of range".to_string());
+    match (ty, v) {
+        (Ty::Bool, Value::Bool(b)) => Ok(V::Bool(*b)),
+        (Ty::Fx(f) | Ty::FxEdge(f), Value::Int(t)) => {
+            let n = int(t)?;
+            if n < f.min() || n > f.max() {
+                return Err("integer out of range".into());
+            }
+            Ok(V::Fixed(f, n))
+        }
+        (Ty::Nat | Ty::NatCount, Value::Int(t)) => {
+            let n = int(t)?;
+            if n < 0 {
+                return Err("negative Nat".into());
+            }
+            Ok(V::Int(n))
+        }
+        (Ty::Bytes, Value::Bytes(b)) => Ok(V::Bytes(b.clone())),
+        (Ty::BytesN(n), Value::Bytes(b)) if b.len() == n => Ok(V::Bytes(b.clone())),
+//@if comp
+        (Ty::Tuple(cs), Value::List(items)) if items.len() == cs.len() => {
+            let mut out = Vec::with_capacity(cs.len());
+            for (c, x) in cs.iter().zip(items) {
+                out.push(table_value(x, *c, depth + 1)?);
+            }
+            Ok(V::Tup(out))
+        }
+        (Ty::Opt(t), Value::List(items)) => match items.as_slice() {
+            [] => Ok(V::Opt(None)),
+            [x] => Ok(V::Opt(Some(Box::new(table_value(x, *t, depth + 1)?)))),
+            _ => Err("an Option is L0 or L1 x".into()),
+        },
+        (Ty::List(t), Value::List(items)) => {
+            let mut out = Vec::with_capacity(items.len());
+            for x in items {
+                out.push(table_value(x, *t, depth + 1)?);
+            }
+            Ok(V::List(out))
+        }
+        // A record (one constructor) is its field list; a variant is
+        // `L2 S<ctor> L<k> fields`, by constructor *name*.
+        (Ty::Data(name, ctors), Value::List(items)) if ctors.len() == 1 => {
+            let (cname, shapes) = ctors[0];
+            if items.len() != shapes.len() {
+                return Err("wrong number of fields".into());
+            }
+            let mut out = Vec::with_capacity(shapes.len());
+            for (s, x) in shapes.iter().zip(items) {
+                out.push(table_value(x, *s, depth + 1)?);
+            }
+            Ok(V::Con(name, 0, cname, out))
+        }
+        (Ty::Data(name, ctors), Value::List(items)) => {
+            let [Value::Text(c), Value::List(fields)] = items.as_slice() else {
+                return Err("a variant is L2 S<ctor> L<k> ...".into());
+            };
+            let Some(i) = ctors.iter().position(|(n, _)| *n == c.as_str()) else {
+                return Err("unknown constructor".into());
+            };
+            let (cname, shapes) = ctors[i];
+            if fields.len() != shapes.len() {
+                return Err("wrong number of fields".into());
+            }
+            let mut out = Vec::with_capacity(shapes.len());
+            for (s, x) in shapes.iter().zip(fields) {
+                out.push(table_value(x, *s, depth + 2)?);
+            }
+            Ok(V::Con(name, i, cname, out))
+        }
+        (Ty::Res(t, cases), Value::Map(pairs)) => match pairs.as_slice() {
+            [(Value::Text(k), payload)] if k == "ok" => {
+                Ok(V::Ok(Box::new(table_value(payload, *t, depth + 1)?)))
+            }
+            [(Value::Text(k), Value::Text(case))] if k == "err" && cases.contains(&case.as_str()) => {
+                Ok(V::Err(case.clone()))
+            }
+            _ => Err("a Result is M1 S\"ok\" v or M1 S\"err\" S<CASE>".into()),
+        },
+//@endif
+        _ => Err("a value that does not fit its column".into()),
+    }
+}
+
+/// Run one table: check the pin, read the rows, evaluate `holds` for each.
+pub fn run_table(
+    name: &str,
+    bytes: &[u8],
+    pinned: &str,
+    rows_pinned: usize,
+    cols: &[(&str, Ty)],
+    holds: Holds,
+    fault: Fault,
+) -> (Verdict, TableStats) {
+    let mut stats = TableStats {
+        rows_pinned: rows_pinned as u64,
+        sha256: sha256_hex(bytes),
+        ..TableStats::default()
+    };
+    let malformed = |why: String| Verdict::fail("corpus-malformed", format!("table {name}: {why}"));
+    // The pin comes first: nothing in the copy is read until it matches.
+    if stats.sha256 != pinned {
+        return (malformed("the checked-in copy does not match its sha256 pin".into()), stats);
+    }
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return (malformed("the checked-in copy is not UTF-8".into()), stats);
+    };
+    let records = match tfv::parse_file(text) {
+        Ok(r) => r,
+        Err(e) => return (malformed(format!("malformed TFV, {e}")), stats),
+    };
+    if records.len() != rows_pinned {
+        return (
+            malformed(format!("{} records, {rows_pinned} pinned", records.len())),
+            stats,
+        );
+    }
+    let in_ci = std::env::var("CI").is_ok();
+    for rec in &records {
+        if rec.fields.len() != cols.len() {
+            return (malformed(format!("row {:?} does not have the declared columns", rec.id)), stats);
+        }
+        let mut env = Vec::with_capacity(cols.len());
+        for (cname, ty) in cols {
+            let Some(value) = rec.field(cname) else {
+                return (malformed(format!("row {:?} is missing a column", rec.id)), stats);
+            };
+            match table_value(value, *ty, 0) {
+                Ok(v) => env.push(v),
+                Err(why) => return (malformed(format!("row {:?}: {why}", rec.id)), stats),
+            }
+        }
+        stats.cases += 1;
+        // A panicking row fails (the subject is not trusted to be total); one
+        // that cannot be handed to the host at all fails too.
+        let held = catch_unwind(AssertUnwindSafe(|| holds(&env, fault))).unwrap_or(false);
+        if !held {
+            stats.failed += 1;
+            if !in_ci && stats.failed_ids.len() < 16 {
+                stats.failed_ids.push(format!("vectors/{name}/{}", rec.id));
+            }
+        }
+    }
+    if fault == Fault::None {
+        TABLE_STATS.lock().unwrap().insert(name.to_string(), stats.clone());
+    }
+    if stats.failed == 0 {
+        return (Verdict::Pass, stats);
+    }
+    let first = if stats.failed_ids.is_empty() {
+        String::new()
+    } else {
+        format!("; first: {}", stats.failed_ids.join(", "))
+    };
+    (
+        Verdict::fail(
+            "not-deep-equal",
+            format!("table {name}: {} of {} rows failed{first}", stats.failed, stats.cases),
+        ),
+        stats,
+    )
+}
+
+//@endif
+//@if bytefaults
+/// Fault `flip-result-bit`: the lowest bit of the first byte of a byte-string
+/// result (inside an `Ok` or a `Some`) is flipped; an empty result gains a byte.
+fn fault_flip_result_bit(v: V) -> V {
+    match v {
+        V::Bytes(mut b) => {
+            match b.first_mut() {
+                Some(x) => *x ^= 1,
+                None => b.push(1),
+            }
+            V::Bytes(b)
+        }
+        V::Ok(x) => V::Ok(Box::new(fault_flip_result_bit(*x))),
+        V::Opt(Some(x)) => V::Opt(Some(Box::new(fault_flip_result_bit(*x)))),
+        other => other,
+    }
+}
+
+/// Fault `drop-last-result-byte`: the last byte of a byte-string result is
+/// lost; an empty result gains a byte.
+fn fault_drop_last_result_byte(v: V) -> V {
+    match v {
+        V::Bytes(mut b) => {
+            if b.pop().is_none() {
+                b.push(0);
+            }
+            V::Bytes(b)
+        }
+        V::Ok(x) => V::Ok(Box::new(fault_drop_last_result_byte(*x))),
+        V::Opt(Some(x)) => V::Opt(Some(Box::new(fault_drop_last_result_byte(*x)))),
+        other => other,
     }
 }
 
@@ -2383,6 +2621,9 @@ fn write_manifest(outcomes: &[Outcome]) {
 //@if obs
         let obs_entry = obs_stats.get(&m.id).cloned();
 //@endif
+//@if vec
+        let table_stat = TABLE_STATS.lock().unwrap().get(&m.claim).cloned();
+//@endif
         let mut e: BTreeMap<String, Json> = BTreeMap::new();
         e.insert("id".into(), Json::Str(m.id));
         e.insert("kind".into(), Json::str(m.kind));
@@ -2424,6 +2665,21 @@ fn write_manifest(outcomes: &[Outcome]) {
 //@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
+//@if vec
+            "table" => {
+                let t = table_stat.unwrap_or_default();
+                e.insert("cases".into(), Json::Num(t.cases));
+                e.insert("rows_pinned".into(), Json::Num(t.rows_pinned));
+                e.insert("table_sha256".into(), Json::Str(t.sha256));
+                if t.failed > 0 {
+                    e.insert("failed_rows".into(), Json::Num(t.failed));
+                    e.insert(
+                        "failed_ids".into(),
+                        Json::Arr(t.failed_ids.into_iter().map(Json::Str).collect()),
+                    );
+                }
+            }
+//@endif
             _ => {
                 e.insert("fault".into(), Json::Str(m.fault));
                 e.insert("target".into(), Json::Str(m.target));

@@ -29,6 +29,7 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::Write as _;
+use std::path::Path;
 
 use crate::binding::{
     is_rust_identifier, validate_bindings, BindingManifest, HostShape, HostSpec, HostTy,
@@ -38,8 +39,9 @@ use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
 };
 use crate::fixed::{self, FixedTy};
+use crate::vectors::{self, LoadedTable, Shape as ColShape};
 use crate::parser::{
-    BinaryOp, ClaimDecl, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
+    valid_table_path, BinaryOp, ClaimDecl, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
     TypeExpr,
     UnaryOp, Version, WarrantFile, Width,
 };
@@ -1061,6 +1063,14 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("off-by-one-consumed", "OffByOneConsumed"),
 ];
 
+/// Faults for an operation whose result is a byte string (a digest, a codec
+/// output): rewrites of the composite adapter's result, so a pinned table (WX-E)
+/// has something to fail.  They apply to the operation they are bound to only.
+const WXE_FAULTS: &[(&str, &str)] = &[
+    ("flip-result-bit", "FlipResultBit"),
+    ("drop-last-result-byte", "DropLastResultByte"),
+];
+
 /// The faults of VER04j section 6.4 (WX-H), rewrites of a composite adapter's
 /// limit parameter or result.  They apply to the operation they are bound to only.
 const WXH_FAULTS: &[(&str, &str)] = &[
@@ -1089,6 +1099,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXH_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXE_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1149,6 +1165,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .chain(V1_FAULTS.iter().map(|(n, v, _)| (*n, *v)))
         .chain(WXA_FAULTS.iter().copied())
         .chain(WXH_FAULTS.iter().copied())
+        .chain(WXE_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1882,7 +1899,7 @@ fn default_host(t: &Ty) -> Result<HostTy, String> {
         Ty::Fx(f) | Ty::FxEdge(f) => HostTy::Int(f.suffix().to_string()),
         Ty::Nat | Ty::NatCount => HostTy::Int("u32".into()),
         Ty::Bool => HostTy::Bool,
-        Ty::Bytes => HostTy::Bytes,
+        Ty::Bytes | Ty::BytesN(_) => HostTy::Bytes,
         Ty::Tuple(cs) => HostTy::Tuple(cs.iter().map(default_host).collect::<Result<_, _>>()?),
         Ty::Opt(t) => HostTy::Opt(Box::new(default_host(t)?)),
         Ty::List(t) => HostTy::List(Box::new(default_host(t)?)),
@@ -1952,7 +1969,7 @@ fn to_host(
             Ok(format!("host::<{rt}>({place}.int())"))
         }
         (Ty::Bool, HostTy::Bool) => Ok(format!("{place}.boolv()")),
-        (Ty::Bytes, HostTy::Bytes) => Ok(if top {
+        (Ty::Bytes | Ty::BytesN(_), HostTy::Bytes) => Ok(if top {
             format!("{place}.bytes()")
         } else {
             format!("{place}.bytes().to_vec()")
@@ -2038,7 +2055,7 @@ fn from_host(t: &Ty, h: &HostTy, expr: &str, hc: &mut HostCx<'_>) -> Result<Stri
             Ok(format!("V::Int(({expr}) as i128)"))
         }
         (Ty::Bool, HostTy::Bool) => Ok(format!("V::Bool({expr})")),
-        (Ty::Bytes, HostTy::Bytes) => Ok(format!("V::Bytes(({expr}).to_vec())")),
+        (Ty::Bytes | Ty::BytesN(_), HostTy::Bytes) => Ok(format!("V::Bytes(({expr}).to_vec())")),
         (Ty::Tuple(cs), HostTy::Tuple(hs)) if cs.len() == hs.len() => {
             let v = hc.fresh("t");
             let mut parts = Vec::new();
@@ -2217,6 +2234,9 @@ fn composite_adapter<'a>(
             "missing-error" => is_result,
             // WX-H: the limit faults rewrite the one numeric parameter the
             // operation's `output` bound mentions.
+            "flip-result-bit" | "drop-last-result-byte" => {
+                matches!(&core, Ty::Bytes | Ty::BytesN(_))
+            }
             "ignore-limit" | "off-by-one-limit" | "limit-after-alloc" => limit.is_some(),
             "truncate-silently" => {
                 limit.is_some()
@@ -2328,6 +2348,8 @@ fn composite_adapter<'a>(
     let mut arms = String::new();
     for f in faults {
         let rhs = match f.as_str() {
+            "flip-result-bit" => "fault_flip_result_bit(v)".to_string(),
+            "drop-last-result-byte" => "fault_drop_last_result_byte(v)".to_string(),
             "truncate-silently" => {
                 let b = ptys.iter().position(|t| *t == Ty::Bytes).unwrap_or(0);
                 let l = limit.unwrap_or(0);
@@ -2469,6 +2491,124 @@ fn limit_param<'a>(
 // The generator
 // ---------------------------------------------------------------------------
 
+/// The verified `vectors` tables of a document and where the generated harness
+/// finds their checked-in copies (VER04j section 5.3 item 1).
+///
+/// ```text
+/// <package>/tests/generated/warrant_evidence.rs        the harness
+/// <package>/tests/generated/tables/<name>.tfv          dir = "tests/generated/tables"
+/// ```
+#[derive(Clone, Copy, Debug)]
+pub struct TableSet<'t> {
+    /// The copies' directory, relative to the package root; it obeys the path
+    /// rules of a table source (so it can be embedded in a string literal).
+    pub dir: &'t str,
+    /// Tables returned by [`load_document_tables`], one per `vectors` declaration.
+    pub tables: &'t [LoadedTable],
+}
+
+impl TableSet<'_> {
+    /// No tables: valid only for a document that declares none.
+    pub const NONE: TableSet<'static> = TableSet {
+        dir: "tests/generated/tables",
+        tables: &[],
+    };
+
+    /// The files the driver must write (or, with `--check`, compare): the
+    /// package-relative path of each copy and its exact bytes.
+    pub fn files(&self) -> Vec<(String, &[u8])> {
+        self.tables
+            .iter()
+            .map(|t| (format!("{}/{}.tfv", self.dir, t.name), t.bytes.as_slice()))
+            .collect()
+    }
+}
+
+/// The shape of values a column of generator type `t` carries in a TFV row.
+fn shape_of_ty(t: &Ty) -> ColShape {
+    match t {
+        Ty::Bool => ColShape::Bool,
+        Ty::U8 => ColShape::fixed(FixedTy::U8),
+        Ty::U64 => ColShape::fixed(FixedTy::U64),
+        Ty::Nat | Ty::NatCount => ColShape::nat(),
+        Ty::Fx(f) | Ty::FxEdge(f) => ColShape::fixed(*f),
+        Ty::Bytes => ColShape::Bytes,
+        Ty::BytesN(n) => ColShape::BytesN(*n),
+        Ty::Tuple(cs) => ColShape::Tuple(cs.iter().map(shape_of_ty).collect()),
+        Ty::Data { name, ctors } => {
+            // A record has one constructor (named like the type) and is its
+            // field list; a variant has at least two.
+            if ctors.len() == 1 && ctors[0].0 == *name {
+                ColShape::Tuple(ctors[0].1.iter().map(shape_of_ty).collect())
+            } else {
+                ColShape::Variant(
+                    ctors
+                        .iter()
+                        .map(|(c, fs)| (c.clone(), fs.iter().map(shape_of_ty).collect()))
+                        .collect(),
+                )
+            }
+        }
+        Ty::Opt(t) => ColShape::Opt(Box::new(shape_of_ty(t))),
+        Ty::List(t) => ColShape::List(Box::new(shape_of_ty(t))),
+        Ty::Res(t, cases) => ColShape::Result(Box::new(shape_of_ty(t)), cases.clone()),
+    }
+}
+
+/// The generator types of a table's columns, in declaration order.
+fn column_tys<'a>(
+    v: &crate::parser::VectorsDecl<'a>,
+    env: &TyEnv<'a>,
+) -> Result<Vec<Ty>, CodegenError> {
+    v.columns
+        .iter()
+        .map(|c| ty_of_type(&c.ty, env, true, c.span, 0))
+        .collect()
+}
+
+/// Load and verify every `vectors` table of a v1 document from the fixtures
+/// root `root` (see [`crate::vectors`] for the order of the checks): the pin is
+/// compared before the file is parsed, sizes and row counts are capped, symlinks
+/// are refused, and every row is decoded against its column types.  Nothing is
+/// fetched from anywhere else.
+pub fn load_document_tables(
+    file: &WarrantFile<'_>,
+    root: &Path,
+) -> Result<Vec<LoadedTable>, CodegenError> {
+    let env = TyEnv::new(file);
+    let mut out: Vec<LoadedTable> = Vec::new();
+    // The row budget of the whole document is checked before any file is
+    // touched: refusing 250,001 declared rows must not first read 100,000-row
+    // files.  (Saturating, so a hostile `rows` cannot wrap the sum.)
+    let mut total: u64 = 0;
+    for d in &file.declarations {
+        let Declaration::Vectors(v) = d else { continue };
+        total = total.saturating_add(v.rows);
+        if v.rows > crate::checker::MAX_TABLE_ROWS || total > crate::checker::MAX_DOCUMENT_ROWS {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0602,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "table {} exceeds the row budget ({} per table, {} per document)",
+                    v.name,
+                    crate::checker::MAX_TABLE_ROWS,
+                    crate::checker::MAX_DOCUMENT_ROWS
+                )),
+                span: v.span,
+            });
+        }
+    }
+    for d in &file.declarations {
+        let Declaration::Vectors(v) = d else { continue };
+        let shapes: Vec<(String, ColShape)> = column_tys(v, &env)?
+            .iter()
+            .zip(&v.columns)
+            .map(|(t, c)| (c.name.to_string(), shape_of_ty(t)))
+            .collect();
+        out.push(vectors::load_table(v, &shapes, root)?);
+    }
+    Ok(out)
+}
+
 /// Compile `file` into the evidence harness source (see module docs).
 pub fn compile_rust_evidence_harness(
     file: &WarrantFile<'_>,
@@ -2476,12 +2616,23 @@ pub fn compile_rust_evidence_harness(
     manifest: &BindingManifest,
     options: &EvidenceOptions,
 ) -> Result<String, CodegenError> {
+    compile_rust_evidence_harness_with_tables(file, checked, manifest, options, &TableSet::NONE)
+}
+
+/// [`compile_rust_evidence_harness`] for a document with `vectors` tables.
+pub fn compile_rust_evidence_harness_with_tables(
+    file: &WarrantFile<'_>,
+    checked: &CheckedWarrantModule,
+    manifest: &BindingManifest,
+    options: &EvidenceOptions,
+    tables: &TableSet<'_>,
+) -> Result<String, CodegenError> {
     validate_bindings(checked, manifest).map_err(|e| CodegenError {
         code: DiagnosticCode::W0704,
         kind: CodegenErrorKind::MissingBinding(format!("{:?}", e.kind)),
         span: e.span,
     })?;
-    generate_evidence_harness(file, manifest, options)
+    generate_evidence_harness_with_tables(file, manifest, options, tables)
 }
 
 /// [`compile_rust_evidence_harness`] without the binding/contract validation
@@ -2491,6 +2642,16 @@ pub fn generate_evidence_harness(
     file: &WarrantFile<'_>,
     manifest: &BindingManifest,
     options: &EvidenceOptions,
+) -> Result<String, CodegenError> {
+    generate_evidence_harness_with_tables(file, manifest, options, &TableSet::NONE)
+}
+
+/// [`generate_evidence_harness`] for a document with `vectors` tables.
+pub fn generate_evidence_harness_with_tables(
+    file: &WarrantFile<'_>,
+    manifest: &BindingManifest,
+    options: &EvidenceOptions,
+    table_set: &TableSet<'_>,
 ) -> Result<String, CodegenError> {
     // Everything spliced into generated Rust source as code must be an
     // identifier; the spec path lands inside a string literal and must not be
@@ -2538,8 +2699,79 @@ pub fn generate_evidence_harness(
     let module = file.name;
     let v1 = file.version == Version::V1;
     let env = TyEnv::new(file);
+
+    // WX-E: every declared table must have been loaded (and verified) by the
+    // caller; the copies' directory is embedded in a string literal, so it must
+    // obey the path rules.
+    let mut table_decls: Vec<(&crate::parser::VectorsDecl<'_>, &LoadedTable, Vec<Ty>)> = Vec::new();
+    for d in &file.declarations {
+        let Declaration::Vectors(v) = d else { continue };
+        if !v1 {
+            return Err(unsupported("a `vectors` table in a v0 document", v.span));
+        }
+        let Some(t) = table_set.tables.iter().find(|t| t.name == v.name) else {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0708,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "table {} was not loaded: use load_document_tables and the *_with_tables entry points",
+                    v.name
+                )),
+                span: v.span,
+            });
+        };
+        if t.sha256 != v.sha256 || t.source != v.source || t.rows.len() as u64 != v.rows {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0708,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "table {}: the loaded file is not the one the document pins",
+                    v.name
+                )),
+                span: v.span,
+            });
+        }
+        // A table no constant function fails can never be failed by a fault of
+        // VER04h section 6 either (VER04j section 5.3 item 4).
+        if vectors::is_constant_output(t, &v.holds) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0601,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "table {} is not discriminating: its expected column is the same in every row",
+                    v.name
+                )),
+                span: v.span,
+            });
+        }
+        table_decls.push((v, t, column_tys(v, &env)?));
+    }
+    if !table_decls.is_empty() && !valid_table_path(table_set.dir) {
+        return Err(unsupported(
+            format!("table directory {:?} breaks the path rules", table_set.dir),
+            file.span,
+        ));
+    }
+    {
+        let mut upper = BTreeSet::new();
+        for (v, _, _) in &table_decls {
+            if !upper.insert(v.name.to_uppercase()) {
+                return Err(unsupported(
+                    format!("table name `{}` collides with another table when upper-cased", v.name),
+                    v.span,
+                ));
+            }
+        }
+    }
+    let plain_column = |t: &Ty| {
+        matches!(
+            t,
+            Ty::Bool | Ty::Fx(_) | Ty::FxEdge(_) | Ty::Nat | Ty::NatCount | Ty::Bytes | Ty::BytesN(_)
+        )
+    };
+    let tables_need_comp = table_decls
+        .iter()
+        .any(|(_, _, tys)| tys.iter().any(|t| !plain_column(t)));
     let comp = v1
-        && (uses_composites(file, &env)
+        && (tables_need_comp
+            || uses_composites(file, &env)
             || file.declarations.iter().any(|d| {
                 matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite)))
             }));
@@ -2600,6 +2832,9 @@ pub fn generate_evidence_harness(
     features.insert(if comp { "comp" } else { "plain" });
     if obs {
         features.insert("obs");
+    }
+    if !table_decls.is_empty() {
+        features.insert("vec");
     }
 
     // Model functions.
@@ -2926,6 +3161,64 @@ pub fn generate_evidence_harness(
         return Err(unsupported("document has no claims to generate evidence for", file.span));
     }
 
+    // WX-E: one function per table (the embedded copy, its pin, its columns,
+    // and `holds` as a function of one row).
+    struct Tb {
+        name: String,
+        op: String,
+    }
+    let mut tabs: Vec<Tb> = Vec::new();
+    for (v, t, tys) in &table_decls {
+        let op = find_operation_in_expr(&v.holds, &op_names)
+            .ok_or_else(|| unsupported(format!("table {} calls no operation", v.name), v.span))?;
+        let mut cx = Cx {
+            binders: v.columns.iter().map(|c| c.name.to_string()).collect(),
+            models: &models,
+            ops: &ops,
+            errors: &errors,
+            allow_ops: true,
+            widths: &mut widths,
+            v1,
+            ctors: &env.ctors,
+        };
+        let holds = emit(&v.holds, &mut cx)?;
+        let binds: String = v
+            .columns
+            .iter()
+            .enumerate()
+            .map(|(i, c)| format!("    let b_{} = env[{i}].clone();\n", c.name))
+            .collect();
+        let cols: Vec<String> = v
+            .columns
+            .iter()
+            .zip(tys)
+            .map(|(c, ty)| format!("(\"{}\", {})", c.name, ty.rust()))
+            .collect();
+        let obs_arm = if obs {
+            "        Err(p) if p.is::<ObsFailure>() => obs_failed(p),\n"
+        } else {
+            ""
+        };
+        let (n, up) = (v.name, v.name.to_uppercase());
+        let _ = write!(
+            body,
+            "const TABLE_{up}_BYTES: &[u8] = include_bytes!(concat!(env!(\"CARGO_MANIFEST_DIR\"), \"/{dir}/{n}.tfv\"));\n\
+             const TABLE_{up}_SHA256: &str = \"{sha}\";\n\
+             const TABLE_{up}_ROWS: usize = {rows};\n\
+             const TABLE_{up}_COLUMNS: &[(&str, Ty)] = &[{cols}];\n\n\
+             #[allow(unused_variables, unused_mut)]\nfn table_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    match catch_unwind(AssertUnwindSafe(|| {holds}.truthy())) {{\n        Ok(v) => v,\n{obs_arm}        Err(_) => false,\n    }}\n}}\n\n\
+             pub fn tab_{n}(fault: Fault) -> (Verdict, TableStats) {{\n    run_table(\"{n}\", TABLE_{up}_BYTES, TABLE_{up}_SHA256, TABLE_{up}_ROWS, TABLE_{up}_COLUMNS, table_{n}_holds, fault)\n}}\n\n",
+            dir = table_set.dir,
+            sha = t.sha256,
+            rows = t.rows.len(),
+            cols = cols.join(", "),
+        );
+        tabs.push(Tb {
+            name: v.name.to_string(),
+            op: op.to_string(),
+        });
+    }
+
     // WX-H: the `heap` and `output` rows as functions of the call's arguments.
     for (opn, rows) in &obs_ops {
         let decl = op_decls
@@ -3146,8 +3439,24 @@ pub fn generate_evidence_harness(
             id3 = id("fuzz", &c.name),
         );
     }
+    for t in &tabs {
+        let _ = write!(
+            suite,
+            "    reg(&mut suite, Meta::new(\"{id}\", \"table\", \"{op}\", \"{n}\"), move || {{\n        let (v, _) = tab_{n}(fault);\n        (v, Stats::default(), String::new())\n    }});\n",
+            id = id("table", &t.name),
+            op = t.op,
+            n = t.name,
+        );
+    }
     // Negative controls, per (suite kind, op, fault).
     let mut neg_wrappers = String::new();
+    for t in &tabs {
+        let _ = write!(
+            neg_wrappers,
+            "fn neg_tab_{n}(fault: Fault) -> Verdict {{\n    tab_{n}(fault).0\n}}\n\n",
+            n = t.name
+        );
+    }
     for ex in &examples {
         let _ = write!(
             neg_wrappers,
@@ -3165,8 +3474,13 @@ pub fn generate_evidence_harness(
         );
     }
     for op in shapes.keys() {
-        for kind in ["example", "exhaustive", "property", "fuzz"] {
-            let members: Vec<String> = if kind == "example" {
+        for kind in ["example", "exhaustive", "property", "fuzz", "table"] {
+            let members: Vec<String> = if kind == "table" {
+                tabs.iter()
+                    .filter(|t| &t.op == op)
+                    .map(|t| format!("(\"{n}\", neg_tab_{n})", n = t.name))
+                    .collect()
+            } else if kind == "example" {
                 examples
                     .iter()
                     .filter(|e| &e.op == op)
@@ -3232,6 +3546,9 @@ pub fn generate_evidence_harness(
     }
     if body.contains("V::concat(") {
         features.insert("concat");
+    }
+    if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
+        features.insert("bytefaults");
     }
 
     // Assemble.

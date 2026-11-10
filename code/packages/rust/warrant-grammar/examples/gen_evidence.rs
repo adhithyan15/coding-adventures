@@ -18,10 +18,13 @@ use std::{env, fs, path::PathBuf};
 use coding_adventures_sha256::sha256_hex;
 use coding_adventures_warrant_grammar::binding::{is_package_dir_name, parse_evidence_bindings};
 use coding_adventures_warrant_grammar::checker::check_warrant;
-use coding_adventures_warrant_grammar::evidence::{compile_rust_evidence_harness, EvidenceOptions};
+use coding_adventures_warrant_grammar::evidence::{
+    compile_rust_evidence_harness_with_tables, load_document_tables, EvidenceOptions, TableSet,
+};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
+use coding_adventures_warrant_grammar::vectors::FIXTURES_ROOT;
 
 fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<(), Box<dyn std::error::Error>> {
     // The package name is joined into filesystem paths: refuse anything but a
@@ -53,8 +56,40 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
         arg_types: b.arg_types.clone(),
         hosts: Default::default(),
     };
-    let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
+    // WX-E: verify every pinned table (digest before parse, size and row caps,
+    // no symlinks, every row decoded) and let the harness embed its copy.  A
+    // package's tables always live next to its harness (`validate_paths` pins
+    // the output to `tests/generated/`).
+    let tables = load_document_tables(&file, &root.join(FIXTURES_ROOT)).map_err(|e| format!("{e}"))?;
+    let set = TableSet {
+        dir: "tests/generated/tables",
+        tables: &tables,
+    };
+    let text = compile_rust_evidence_harness_with_tables(&file, &checked, &b.manifest, &options, &set)
         .map_err(|e| format!("{e}"))?;
+    let package_dir = root.join("code/packages/rust").join(package);
+    for (rel, bytes) in set.files() {
+        let copy = package_dir.join(&rel);
+        if check {
+            if fs::read(&copy).ok().as_deref() != Some(bytes) {
+                return Err(format!(
+                    "generated table copy drift: {rel} of {package} is stale; run gen_evidence {package}"
+                )
+                .into());
+            }
+        } else {
+            let dir = copy.parent().ok_or("table copy has no directory")?;
+            // Never write through a linked directory.
+            if let Ok(md) = fs::symlink_metadata(dir) {
+                if md.file_type().is_symlink() {
+                    return Err(format!("{} is a link", dir.display()).into());
+                }
+            }
+            fs::create_dir_all(dir)?;
+            fs::write(&copy, bytes)?;
+            println!("wrote {}", copy.display());
+        }
+    }
     let target = root.join(&b.output);
     if check {
         if fs::read(&target)? != text.as_bytes() {
