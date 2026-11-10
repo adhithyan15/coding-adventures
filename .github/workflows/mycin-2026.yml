@@ -25,7 +25,10 @@ name: mycin-2026
 
 on:
   push:
-    branches: ['**']
+    # main only: a pull request already runs this workflow, so a push to the
+    # PR branch must not run it a second time (path filters on push also match
+    # files that arrive through a merge of main).
+    branches: [main]
     paths:
       - 'code/specs/data/mycin-2026/**'
       - 'code/packages/rust/adj-lang-cli/**'
