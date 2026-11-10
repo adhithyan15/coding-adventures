@@ -2145,7 +2145,7 @@ fn composite_adapter<'a>(
             .iter()
             .map(default_host)
             .collect::<Result<_, _>>()
-            .map_err(&bad)?,
+            .map_err(bad)?,
     };
     let full = ty_of_type(&op.return_type, env, true, op.span, 0)?;
     let (payload, cases, is_result) = match &full {
@@ -2154,7 +2154,7 @@ fn composite_adapter<'a>(
     };
     let hret = match host.and_then(|h| h.ret.clone()) {
         Some(r) => r,
-        None => default_host(&payload).map_err(&bad)?,
+        None => default_host(&payload).map_err(bad)?,
     };
     // Which faults make sense for this result (checked, never silently inert).
     // A fault rewrites the composite *inside* an `Ok` or a `Some`.
@@ -2197,14 +2197,14 @@ fn composite_adapter<'a>(
     let _ = writeln!(s, "fn op_{n}(_w: &[u64], args: &[V], fault: Fault) -> V {{");
     let _ = writeln!(s, "    let fault = fault_for(\"{n}\", fault);");
     for (i, (t, h)) in ptys.iter().zip(&hargs).enumerate() {
-        let v = to_host(t, h, &format!("args[{i}]"), true, &mut hc).map_err(&bad)?;
+        let v = to_host(t, h, &format!("args[{i}]"), true, &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let p{i} = {v};");
     }
     let arglist: Vec<String> = (0..ptys.len()).map(|i| format!("p{i}")).collect();
     let call = format!("{export}({})", arglist.join(", "));
     let minimal = format!("domain_take({}, 1).remove(0)", payload.rust());
     if !is_result {
-        let v = from_host(&payload, &hret, &call, &mut hc).map_err(&bad)?;
+        let v = from_host(&payload, &hret, &call, &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let v: V = {v};");
     } else if let Some(he) = host.and_then(|h| h.errors.as_ref()) {
         let decl_cases = env_cases_of(&op.return_type, env);
@@ -2213,7 +2213,7 @@ fn composite_adapter<'a>(
                 return Err(bad(format!("errors= names `{case}`, which is not an error case")));
             }
         }
-        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(&bad)?;
+        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let v: V = match {call} {{");
         let _ = writeln!(s, "        Ok(r) => V::Ok(Box::new({ok})),");
         if faults.iter().any(|f| f == "missing-error") {
@@ -2242,7 +2242,7 @@ fn composite_adapter<'a>(
             )),
             span: op.span,
         })?;
-        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(&bad)?;
+        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let v: V = match contained(|| {call}) {{");
         let _ = writeln!(s, "        Some(r) => V::Ok(Box::new({ok})),");
         if faults.iter().any(|f| f == "missing-error") {
