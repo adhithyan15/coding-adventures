@@ -190,6 +190,9 @@ The two Unicode-heavy sources from the unified Cypress suite are pinned exactly,
 including decorated entity and attribute identifiers, comments, aliases, emoji,
 and relationship roles through semantic IR, structural layout, portable paint,
 and native Metal rendering. Browser HTML-label styling remains out of scope.
+The unified suite's three unique entity-style sources are also pinned exactly,
+covering direct multi-target styles, inline and assigned classes, named colors,
+default-class precedence, and direct overrides through the same native pipeline.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
