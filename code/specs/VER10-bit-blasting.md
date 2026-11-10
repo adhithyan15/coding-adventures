@@ -246,3 +246,90 @@ lists no capabilities.
    LIA search answers `Unknown` rather than `Unsat` whenever it cannot
    evaluate. Bool variables are searched over {0, 1}. The guard caps
    literals at ±2^62 and requires arithmetic operands to be `Int`.
+
+## 9. Faithfulness contract (audit)
+
+A wrong encoding makes a correct UNSAT proof certify the wrong formula, so
+*faithfulness* is the soundness property of this crate. This section states
+it exactly, says which layer owns which part, and records what the audit
+found. Every claim below is exercised by a named test (§9.4).
+
+### 9.1 Reference semantics
+
+For a bit-vector term `t` of width `w` over free variables `x₁…xₙ` and an
+assignment `σ` giving each `xᵢ` an integer in `[0, 2^wᵢ)`, `⟦t⟧σ ∈ [0, 2^w)`
+is defined by SMT-LIB `QF_BV` (all arithmetic modulo `2^w`):
+
+| Term | `⟦t⟧σ` |
+|---|---|
+| `not`, `and`, `or`, `xor` | bitwise |
+| `add`, `sub`, `neg`, `mul` | `+`, `−`, `−`, `·` modulo `2^w` |
+| `shl`, `lshr`, `ashr` (amount `s`, same width) | `a·2^s`, `⌊a/2^s⌋`, `⌊signed(a)/2^s⌋`, each modulo `2^w`; `s ≥ w` gives `0`, `0`, all sign bits |
+| `udiv`, `urem` | `⌊a/b⌋`, `a mod b`; **`b = 0`: `udiv = 2^w−1`, `urem = a`** |
+| `sdiv`, `srem` | truncating signed division and remainder (remainder has the dividend's sign), result modulo `2^w` (so `−2^(w−1) / −1 = −2^(w−1)`); **`b = 0`: `sdiv = 1` if `a < 0` else `−1`, `srem = a`** |
+| `eq`, `ult/ule/ugt/uge`, `slt/sle/sgt/sge` | the mathematical relation on the unsigned / two's-complement readings |
+| `ite(c, t, e)` | `t` if `c` else `e` |
+| `extract(hi, lo, a)` | bits `hi..=lo` of `a`, width `hi−lo+1` |
+| `concat(hi, lo)` | `hi·2^w_lo + lo`, width `w_hi + w_lo` |
+| `zext(a, k)`, `sext(a, k)` | `a` widened by `k` bits with zeros / copies of the sign bit |
+| constants | the value truncated to the width |
+
+### 9.2 The contract
+
+Let `C(g, T)` be the clauses a `Tseitin` encoder writes when asked for the
+literals of the edges `T` of an AIG `g`, and let `cone(T)` be the inputs
+reachable from `T`.
+
+**(F1) AIG faithfulness.** For every edge `e` and every assignment `σ` of
+the inputs, `Aig::simulate` / `Aig::eval` of `e` equals the Boolean function
+that the construction of `e` denotes. In particular the bit-vector circuits
+satisfy `eval(op(a, b)[i], σ) = bit i of ⟦op⟧(σ(a), σ(b))`.
+Simplification and structural hashing preserve this: `and(a, b)` returns an
+edge that evaluates to `eval(a) ∧ eval(b)` under every `σ`, whether the
+result is a constant, an operand, an existing node or a new node.
+
+**(F2) Tseitin functional exactness.** For every assignment `σ` of
+`cone(T)`, exactly one assignment of the SAT variables of `C(g, T)` agrees
+with `σ` on the input variables and satisfies `C(g, T)`, and in it the
+literal of each edge `e` in the cone has the value `eval(e, σ)`. (Each AND
+node is defined by its three clauses and the constant node by a unit, so
+values propagate forward from the inputs uniquely.) Inputs outside
+`cone(T)` get no variable and are unconstrained; callers read them as
+`false`.
+
+**(F3) The combination.** For every term `t` and every `σ`, the CNF
+`C(g, t.bits) ∧ (inputs = σ)` has a unique extension, and the output bits
+equal `⟦t⟧σ`. Consequently the miter `C(g, ¬(t₁ = t₂)) ∧ unit(¬(t₁ = t₂))`
+is UNSAT exactly when `⟦t₁⟧σ = ⟦t₂⟧σ` for all `σ`, and every SAT model's
+input bits are a real counterexample. Equisatisfiability alone would not
+give the second half; the functional (one extension) form does.
+
+**(F4) What the contract does not cover.** It is a statement about circuits
+the caller actually built. It does not cover the lowering from `Predicate`
+to circuits (`constraint-engine::bv`, which has its own differential
+tests), the solver (VER09) or the proof checker (VER11).
+
+### 9.3 Audit findings: spec versus code at audit time
+
+| Spec statement | Code | Verdict |
+|---|---|---|
+| §4 table: not/and/or/xor, add, neg, sub, mul, shifts, eq, ult family, slt family, ite, constants | all present in `bv.rs` | match |
+| §4 "widths are arbitrary (≥ 1)" | `BitVec::input(_, 0)` and `constant(0, _)` are accepted; `msb()` and the `slt` family then panic with an opaque message (an index underflow in `flip_sign`) | divergence (robustness): operations that need a sign bit now refuse width 0 with a clear message |
+| §4 shifts: amount ≥ w forces the overflow value | `barrel` forces overflow from bit `k` when `2^k ≥ w`, and the staged shifts saturate to zero below that | match |
+| §2.2 and-simplification rules | identical, in the stated order | match |
+| §3 Tseitin: three clauses per AND, constant pinned by a unit, cone only, incremental | as stated | match |
+| (task scope) `extract`, `concat`, `udiv`, `urem`, `sdiv`, `srem`, `zext`, `sext` | **absent at audit time**; §5 says the tactic answers `Unknown` for them | gap, closed by this audit for the circuit layer (§9.1); the `constraint-engine` tactic still answers `Unknown` for them |
+| (task scope) LIA inside `bit-blaster` | none: LIA is `constraint-engine::lia` (bounded Cooper); `bit-blaster` has no integer-arithmetic encoding | not applicable here; LIA's Unknown semantics are checked in `constraint-engine` (§9.4) |
+| §6 "Line coverage is held at 95% or more" | claimed, no recorded measurement | measured in the audit (see CHANGELOG) |
+
+### 9.4 Evidence
+
+`bit-blaster/tests/faithfulness.rs`: every operator at widths 1–4 (and up to
+8 for the pairwise ones where cheap) over all assignments, solved by
+`cdcl-sat` with the inputs fixed as unit clauses and compared with a direct
+Rust reference, plus uniqueness (the negated output is UNSAT with a
+`drat-check`-accepted proof); every expression tree of depth 2 over a
+representative operator set at widths 2 and 3; identities proved with
+certified proofs and non-identities refuted with a verified counterexample.
+`constraint-engine/tests/lia_unknown.rs`: incomplete LIA searches answer
+`Unknown`, never `Unsat`.
