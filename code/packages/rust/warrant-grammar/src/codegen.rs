@@ -1332,6 +1332,10 @@ impl<'a> Evaluator<'a> {
                     ty,
                 )
             }
+            "imin" | "imax" => {
+                let (a, b) = (int(0)?, int(1)?);
+                EvalValue::Int(if name == "imin" { a.min(b) } else { a.max(b) })
+            }
             "unwrap_or" => match args.first() {
                 Some(EvalValue::Option(Some(v))) => (**v).clone(),
                 Some(EvalValue::Option(None)) => args.get(1).cloned().ok_or_else(|| bad("arity"))?,

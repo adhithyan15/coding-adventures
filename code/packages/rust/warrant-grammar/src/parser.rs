@@ -1231,6 +1231,11 @@ impl<'a> Parser<'a> {
                 break;
             }
             let (var_name, sp_start) = self.expect_name()?;
+            // WX-H: `output` is a contextual metric, legal in a v1 document
+            // only (VER04j sections 1.2 and 6.6).
+            if var_name == "output" {
+                self.require_v1()?;
+            }
             self.expect_symbol("<=")?;
             let bound_expr = self.parse_expression()?;
             self.expect_newline()?;

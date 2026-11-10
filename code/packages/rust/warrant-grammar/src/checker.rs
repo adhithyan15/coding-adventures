@@ -34,7 +34,7 @@ const V1_TYPES: [&str; 6] = ["U16", "U32", "I8", "I16", "I32", "I64"];
 /// The v1 built-in *functions* (WX-B and WX-C).  Reserved, and in scope, only
 /// in v1 documents (VER04j section 1.2): a v0 document may still define its
 /// own model called `rem` or `shl` and keeps meaning that definition.
-pub const V1_FUNCTIONS: [&str; 31] = [
+pub const V1_FUNCTIONS: [&str; 33] = [
     "widen",
     "wrap",
     "try",
@@ -66,6 +66,8 @@ pub const V1_FUNCTIONS: [&str; 31] = [
     "le_bytes",
     "from_be",
     "from_le",
+    "imin",
+    "imax",
 ];
 
 /// Is `name` a built-in reserved in a document of version `version`?
@@ -1415,6 +1417,7 @@ impl<'a> Checker<'a> {
             })?;
 
             let op_params = op.params.clone();
+            let op_return = op.return_type.clone();
             let op_static_params: Vec<String> = op
                 .static_params
                 .iter()
@@ -1427,7 +1430,10 @@ impl<'a> Checker<'a> {
             }
 
             for row in &bnd.rows {
-                if row.name != "steps" && row.name != "heap" && row.name != "depth" {
+                // `output` exists only in a v1 document (the parser already
+                // refused it in a v0 one, W0101).
+                let v1_metric = self.file.version == Version::V1 && row.name == "output";
+                if row.name != "steps" && row.name != "heap" && row.name != "depth" && !v1_metric {
                     return Err(CheckerError {
                         code: DiagnosticCode::W0401,
                         kind: CheckerErrorKind::InvalidContract(format!(
@@ -1436,6 +1442,37 @@ impl<'a> Checker<'a> {
                         )),
                         span: row.span,
                     });
+                }
+                if v1_metric {
+                    // WX-H (section 6.2): the size of a successful result is
+                    // defined for byte strings and lists, and for a `Result`
+                    // of one of them (its `Ok` payload).
+                    let ret = self.resolve_type(&op_return, &op_static_params)?;
+                    let sized = |t: &Type| {
+                        matches!(
+                            t,
+                            Type::Bytes
+                                | Type::FixedBytes(_)
+                                | Type::FixedBytesParam(_)
+                                | Type::List(_)
+                        )
+                    };
+                    let ok = match &ret {
+                        Type::Result(inner, _) => sized(inner),
+                        other => sized(other),
+                    };
+                    if !ok {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bytes, Bytes<N>, List<T> or a Result of one of them \
+                                           for an `output` bound"
+                                    .to_string(),
+                                actual: ret.display_name(),
+                            },
+                            span: row.span,
+                        });
+                    }
                 }
                 let bound_ty =
                     self.typecheck_expression(&row.bound, &env, Some(&Type::Int), false)?;
@@ -2526,6 +2563,7 @@ impl<'a> Checker<'a> {
     ///                        signed: rejected (floor vs trunc is a trap)
     /// div_trunc rem_trunc    signed T, T                      -> Option<T>
     /// unwrap_or(o, d)        Option<T>, T                     -> T
+    /// imin(a, b)  imax(a, b) Int|Nat, Int|Nat                 -> Int
     /// bit_and(a, b) ...      T, T                             -> T
     /// shl(a, n) shr rotl ... T, Nat                           -> T
     /// sar(a, n)              signed T, Nat                    -> T
@@ -2662,6 +2700,16 @@ impl<'a> Checker<'a> {
                         other.display_name(),
                     )),
                 }
+            }
+            // WX-H: total `Int` helpers for bound expressions (section 6.2).
+            "imin" | "imax" => {
+                for operand in list {
+                    let t = self.typecheck_expression(operand, env, Some(&Type::Int), allow_ops)?;
+                    if !t.is_assignable_to(&Type::Int) {
+                        return Err(mismatch("Int or Nat operand", t.display_name()));
+                    }
+                }
+                Ok(Type::Int)
             }
             "unwrap_or" => {
                 let o = self.typecheck_expression(&list[0], env, None, allow_ops)?;

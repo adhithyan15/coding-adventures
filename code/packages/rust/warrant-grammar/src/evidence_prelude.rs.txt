@@ -361,6 +361,15 @@ impl V {
         let ok = y != 0 && !(y == -1 && x == f.min());
         V::opt(ok.then(|| if div { x / y } else { x % y }), f)
     }
+//@if minmax
+    /// `imin`/`imax` (WX-H): the smaller / larger of two `Int` values.
+    pub fn imin(a: &V, b: &V) -> V {
+        V::Int(a.int().min(b.int()))
+    }
+    pub fn imax(a: &V, b: &V) -> V {
+        V::Int(a.int().max(b.int()))
+    }
+//@endif
     pub fn unwrap_or(o: &V, d: &V) -> V {
         match o {
             V::Opt(Some(v)) => (**v).clone(),

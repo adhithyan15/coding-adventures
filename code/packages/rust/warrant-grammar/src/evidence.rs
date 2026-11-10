@@ -834,7 +834,7 @@ fn emit_v1_call(
         "widen" | "wrap" | "try" | "to_int" | "to_nat" | "bit_not" | "popcount" | "clz" | "ctz"
         | "be_bytes" | "le_bytes" | "from_be" | "from_le" | "Some" => 1,
         "checked_add" | "checked_sub" | "checked_mul" | "div" | "rem" | "div_trunc"
-        | "rem_trunc" | "unwrap_or" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
+        | "rem_trunc" | "unwrap_or" | "imin" | "imax" | "bit_and" | "bit_or" | "bit_xor" | "shl" | "shr" | "sar"
         | "rotl" | "rotr" | "bit" => 2,
         _ => return Ok(None),
     };
@@ -859,6 +859,8 @@ fn emit_v1_call(
         "div_trunc" => format!("V::divrem_trunc(true, &{}, &{})", p[0], p[1]),
         "rem_trunc" => format!("V::divrem_trunc(false, &{}, &{})", p[0], p[1]),
         "unwrap_or" => format!("V::unwrap_or(&{}, &{})", p[0], p[1]),
+        "imin" => format!("V::imin(&{}, &{})", p[0], p[1]),
+        "imax" => format!("V::imax(&{}, &{})", p[0], p[1]),
         "bit_and" => format!("V::bitop('&', &{}, &{})", p[0], p[1]),
         "bit_or" => format!("V::bitop('|', &{}, &{})", p[0], p[1]),
         "bit_xor" => format!("V::bitop('^', &{}, &{})", p[0], p[1]),
@@ -2885,6 +2887,12 @@ pub fn generate_evidence_harness(
         }
     }
     suite.push_str("    suite\n}\n");
+
+    // WX-H: the `imin`/`imax` helpers are emitted only when some expression
+    // uses them, so every other harness stays byte-identical.
+    if body.contains("V::imin(") || body.contains("V::imax(") {
+        features.insert("minmax");
+    }
 
     // Assemble.
     let mut out = String::new();
