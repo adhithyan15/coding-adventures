@@ -63,11 +63,11 @@ jobs:
 
   verify:
     needs: web
-    # Pinned: ubuntu-latest moved to 26.04, where the pinned Playwright
-    # (release-tests/package.json, 1.58.x) cannot install Chromium
-    # ("Playwright does not support chromium on ubuntu26.04-x64").
-    # Unpin when release-tests moves to a Playwright that supports 26.04.
-    runs-on: ubuntu-24.04
+    # release-tests pins Playwright 1.64.0, the first pin that can install
+    # Chromium on ubuntu-latest (26.04): support for ubuntu26.04-x64 arrived in
+    # 1.61. 1.58.x could not ("Playwright does not support chromium on
+    # ubuntu26.04-x64"), which is why this job was briefly held on 24.04.
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       # Deliberately no checkout: the app runs exclusively from the downloaded ZIP.
