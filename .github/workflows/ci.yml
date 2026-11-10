@@ -4338,7 +4338,8 @@ jobs:
           if ! command -v ld.gold >/dev/null 2>&1; then
             bash code/scripts/ci/apt-install.sh binutils-gold
           fi
-          command -v ld.gold
+          # Prove it runs, not just that the name is on PATH.
+          ld.gold --version | head -n 1
 
       # Cabal 3.10 can report a successful `cabal update` while deferring the
       # package-index cache materialization until the first solver query.  On
