@@ -2,6 +2,7 @@
   "name": "@coding-adventures/visicalc-deno",
   "version": "0.2.0",
   "tasks": {
+    "wasm": "bash ../../../scripts/build-demo-wasm.sh visicalc",
     "dev": "deno run --allow-net main.ts",
     "desktop": "deno desktop -A main.ts",
     "build": "deno desktop -A --output VisiCalc.app main.ts",

@@ -54,6 +54,24 @@ has passed the trusted kernel `drat-check` first; a rejected proof becomes
 `Unknown`. `BitVec` mixed with `Int` is `Unknown`, since there is no BV–LIA
 combination yet.
 
+Supported operations: `bvnot/bvneg`, n-ary `bvand/bvor/bvxor/bvadd/bvsub/bvmul`
+(left-associative), `bvshl/bvlshr/bvashr`, the eight comparisons, `=`,
+`distinct`, `ite`, `concat`, and the division family `bvudiv/bvurem/bvsdiv/
+bvsrem/bvsmod` with SMT-LIB's total semantics (`bvudiv x 0` is all ones,
+`bvurem x 0` is `x`, `bvsmod`'s sign follows the divisor). Indexed
+operations arrive flattened, because `smt-lib-format` cannot yet read an
+indexed head: `((_ extract 7 4) x)` is
+`Apply { f: "_", args: [Var("extract"), Int(7), Int(4), x] }`, likewise
+`zero_extend` and `sign_extend`; `(_ bvN w)` is the constant. Division is
+refused up front (before building a circuit) once its estimated size would
+exceed the node cap.
+
+**Audit status.** The lowering is checked against an independent SMT-LIB
+reference (`src/bv_faithfulness.rs`): exhaustively at widths 1 to 8, by
+seeded random and corner values at 16/32/64 bits, end to end with certified
+UNSAT, plus certified identities. What is not proved (general wide
+multiplier miters, from width 10 up) is listed in the CHANGELOG.
+
 ## Usage
 
 ```rust

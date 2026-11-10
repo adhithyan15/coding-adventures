@@ -393,6 +393,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-neo-source-11.16.1-visual-corpus.json"
     ));
+    const ER_UNIFIED_UNICODE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-unified-unicode-11.16.1-corpus.json"
+    ));
+    const ER_UNIFIED_UNICODE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-unified-unicode-11.16.1-visual-corpus.json"
+    ));
     const ER_STYLES_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2932,6 +2940,49 @@ line "Target" [35, 50, 68, 82]"##,
             let pixels = render(&scene);
             write_png(&pixels, &format!("/tmp/mermaid_er_neo_source_{index}_e2e.png"))
                 .unwrap();
+            assert!(pixels.width > 0 && pixels.height > 0);
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_unified_unicode_sources_to_png() {
+        let syntax: Value = serde_json::from_str(ER_UNIFIED_UNICODE_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(ER_UNIFIED_UNICODE_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        let visual_names = visual["fixtures"].as_array().unwrap();
+        assert_eq!(fixtures.len(), visual_names.len());
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, (fixture, visual_name)) in fixtures.iter().zip(visual_names).enumerate() {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let layout = layout_structural_diagram(&diagram);
+            assert!(!layout.nodes.is_empty());
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let pixels = render(&scene);
+            write_png(
+                &pixels,
+                &format!("/tmp/mermaid_er_unified_unicode_{index}_e2e.png"),
+            )
+            .unwrap();
             assert!(pixels.width > 0 && pixels.height > 0);
             assert!(scene.instructions.iter().any(|instruction| matches!(
                 instruction,

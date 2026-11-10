@@ -196,7 +196,7 @@ decodeEmbedded label =
 
 languageSourceInputRegistryDigest :: String
 languageSourceInputRegistryDigest =
-    "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621"
+    "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"
 
 generatedDirectoryComponents :: [String]
 generatedDirectoryComponents =

@@ -96,6 +96,10 @@ into that integer coefficient and optional remaining root; the latter is
 rationalized with exact common-factor cancellation. Dynamic or negative
 exponents, exponent chains beyond the existing unroll cap, zero divisors, and
 overflow remain outside the proof.
+Additive sequences may also combine repeated positive static roots with the
+same radicand into one checked integer coefficient before flooring, including
+outer signs and checked integer offsets. Unlike radicands, dynamic roots, and
+coefficient or offset overflow remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.

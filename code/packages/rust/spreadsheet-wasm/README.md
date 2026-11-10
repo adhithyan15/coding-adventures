@@ -61,8 +61,8 @@ lower-fidelity per [`spreadsheet-io`](../spreadsheet-io).
 ```bash
 # Compile to pkg/spreadsheet_engine.wasm (one-time: rustup target add wasm32-unknown-unknown)
 bash build-wasm.sh
-# Fail if the committed .wasm is stale against its sources (CI runs this)
-bash build-wasm.sh --check
+# (pkg/ is generated and not committed, BUILD-001: nothing to keep "current".
+# CI builds it fresh and runs the smoke tests below.)
 
 # Prove it computes, end-to-end, in Node:
 node js/smoke.mjs
@@ -83,7 +83,7 @@ wb.getRaw("B6");     // "=SUM(B1:B5)"
 
 It is dependency-free and runs in both Node and the browser; the caller
 supplies the raw `.wasm` bytes, so it works from `file://` (embedded bytes) or
-a server (fetched buffer). The committed `pkg/spreadsheet_engine.wasm` is the
+a server (fetched buffer). The built (git-ignored) `pkg/spreadsheet_engine.wasm` is the
 artifact the VisiCalc demos consume.
 
 ## Tests

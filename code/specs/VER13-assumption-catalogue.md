@@ -647,10 +647,10 @@ Fields:
 
 | Field | Type | Meaning |
 |---|---|---|
-| `id` | string `[a-z0-9._-]+` | Stable, never reused, never renamed (rename = new id + `aliases`). Legacy ids from reports are valid ids or aliases. |
+| `id` | string `[A-Za-z0-9._-]+` | Stable, never reused, never renamed (rename = new id + `aliases`). Legacy ids from reports are valid ids or aliases. |
 | `aliases` | string[] | Other spellings accepted in reports (`heap-bound:unchecked`). Resolve to this id. |
 | `refines` / `refined_by` | id / id[] | Umbrella relation. A parent is discharged iff all children are. |
-| `layer` | one of the eight layer keys | Where it is a statement about; orders `proved-to-L`. |
+| `layer` | the eight layer keys, plus `os` and `gov` | Where it is a statement about; orders `proved-to-L`. `os` and `gov` entries have no stack position and are consumed at a layer of their own name (§3.9 counts them as one group). |
 | `family` | `spec|src|wir|cc|mc|uarch|gate|phys|tcb|os|gov|att` | Prefix grouping. |
 | `kind` | `model|trust|tool|environment|attestation|physical|governance|declared` | `declared` = part of the claim, not dischargeable (e.g. public lengths). |
 | `status` | `assumed|attested|evidenced|discharged|floor` | See §2. |
@@ -660,6 +660,25 @@ Fields:
 | `discharge` | object or `null` | `evidence_kinds`, `rung` (`R0+`, `R1`..`R4`), `tools`, `difficulty`, `backlog`. `null` only for `floor` and `declared`. |
 | `discharged_by` | object[] | Present only when `status: discharged`: `[{"evidence": "<id>", "digest": "sha256:…", "stack": "owned-rv32i", "pinned": {…}}]`. |
 | `since` | string | Spec/PR that introduced it. |
+| `title` | string | One-line name (the first sentence of `statement`, at most about 110 characters). |
+| `legacy` | boolean | True for the four ids reports emit today (§3.9). |
+| `used_by` | string | The spec §3 "Used by" column, verbatim. |
+| `tier` | string | The spec §3 "Ord" column (`O1`..`O6`, `O3/O4`, `P`, `floor`, `gov`, `via-ladder`, or empty for the umbrella). |
+| `constrains_input_classes` | string[] | Input classes (`public`, `secret`, `trusted`, `hostile`) the assumption restricts; AC-15 forbids `hostile` here for `environment`-kind and `spec.*` entries. Empty for every entry today. |
+| `discharge.plan` | string | The spec §3 "Discharge" column, verbatim. |
+| `notes` | string, optional | Free text. |
+
+Implementation clarifications (AS-001a part 1): every entry carries all of
+the fields above (the example in this section elides some for brevity);
+`status: floor` is used for every entry with `discharge: null`, including the
+`kind: declared` ones; `discharge.difficulty` keeps the worst case when §3
+gives two (`S (ct-compare) / L (general)` is `L`); and the catalogue-only
+half of the checker (`code/scripts/assumption_catalogue.py`, AC-14 plus the
+shape halves of AC-3, AC-8, AC-11 and AC-15) landed before the report-side
+rules. `code/assumptions/evidence-kinds.json` belongs to the report-side part
+and does not exist yet. The JSON is generated from §3 by
+`code/scripts/generate_assumption_catalogue.py` and the unit tests fail if the
+committed file is not exactly what that script produces.
 
 `evidence-kinds.json` maps each evidence-id pattern to the manifest that
 must contain it and the verdict it must carry (reusing VER04h's manifest

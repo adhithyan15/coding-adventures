@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.1.2] - 2026-11-10
+
+### Security
+
+- SEC-003d: `compress` returns `Err` for input longer than `u32::MAX` bytes
+  instead of writing `data.len() as u32`, which kept only the low 32 bits of
+  the length (a 4 GiB + 3 byte input would decompress to 3 bytes with no
+  error). The bound also stops the `u32` frequency counts from overflowing.
+  This matches the C and C++ encoders (SEC-003c). The boundary is tested
+  through the new private `header_length` helper, so no test allocates 4 GiB.
+- `unpack_bits_lsb_first` sizes its buffer with `len.saturating_mul(8)`, so a
+  32-bit target can no longer wrap the capacity hint.
+
+### Documentation
+
+- The module doc and an encoder comment said code lengths are 1–16. They
+  are 1–56: `decompress` refuses 0 and anything above `MAX_CODE_LEN` (56).
+
+### Known limit (backlog SEC-003e)
+
+- `compress` still materialises one `char` per output bit, so input near the
+  4 GiB cap needs tens of GB of memory. The length check fails closed, but it
+  is not a resource bound. Streaming bit packing is tracked separately.
+
 ## [0.1.1] - 2026-11-10
 
 ### Security

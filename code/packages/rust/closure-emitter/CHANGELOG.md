@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.6] - 2026-11-09
+
+### Fixed — unwrap single-statement bodies when safe (CCR-076, #15861)
+
+- In `src/lib.rs`, `emit_body_slot` unwraps a single-statement `BlockStatement` body in loops and conditionals in compact mode, matching upstream Closure Compiler (`CodeGenerator.java::addNonEmptyStatement`).
+- Braces are retained when:
+  - In pretty-print mode (`opts.pretty`).
+  - The single statement is a lexical declaration (`let`, `const`, `class`, `function`), which is a syntax error in single-statement context.
+  - The single statement is a `do…while` (CCR-083, IE6/7 browser bug).
+  - The single statement is a `LabeledStatement`.
+  - The statement is the `consequent` of an `if` with an `else` branch and contains a dangling-else hazard (`statement_has_dangling_else`).
+- Added comprehensive unit tests for single-statement unwrapping, dangling-else hazards, and lexical declaration brace retention.
+
 ## [0.63.5] - 2026-11-09
 
 ### Fixed — emit `function*` without trailing space (#15862)

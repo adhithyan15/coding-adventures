@@ -1,0 +1,11 @@
+{
+  "id": "KA-C12-third-person-possession",
+  "pathSegment": "KA-PATH-015",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # Changelog — visicalc-html
 
+## Unreleased - BUILD-001
+
+- `vendor/spreadsheet-engine-wasm.js` is generated and no longer committed. `scripts/bundle-wasm-engine.sh` builds the spreadsheet `.wasm` if missing and drops its `--check` mode; `scripts/verify-infinite.mjs` says how to build a missing bundle. Build with `bash code/scripts/build-demo-wasm.sh visicalc`.
+
 ## Unreleased
 
 ### Changed — engine bundle regenerated
