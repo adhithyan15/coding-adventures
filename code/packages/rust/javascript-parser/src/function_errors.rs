@@ -62,7 +62,8 @@ struct Ctx {
 }
 
 /// Words that are identifiers in sloppy code and reserved in strict code
-/// (§13.1.1). `yield` and `let` have their own rules elsewhere.
+/// (§13.1.1). `yield` has its own rule in `early_errors.rs`; `let` is checked
+/// in [`check_reference`].
 const STRICT_RESERVED: [&str; 7] = [
     "implements",
     "interface",
@@ -455,12 +456,12 @@ fn template_escape_error(raw: &str) -> Option<&'static str> {
             Some('u') if chars.get(i + 2) == Some(&'{') => {
                 let mut j = i + 3;
                 let mut value: u32 = 0;
-                let mut digits = 0;
+                let mut digits = 0usize;
                 while hex(j) {
                     value = value
                         .saturating_mul(16)
                         .saturating_add(chars[j].to_digit(16).unwrap_or(0));
-                    digits += 1;
+                    digits = digits.saturating_add(1);
                     j += 1;
                 }
                 if digits == 0 || chars.get(j) != Some(&'}') || value > 0x10_FFFF {
@@ -488,7 +489,10 @@ fn check_reference(token: &Token, ctx: Ctx) -> Result<(), String> {
             at(token)
         ));
     }
-    if ctx.strict && STRICT_RESERVED.contains(&token.value.as_str()) {
+    // `let` reaches here only as an identifier reference that `asi.rs`
+    // demoted from a keyword (`if (c) let⏎x`): fine in sloppy code, reserved
+    // in strict code.
+    if ctx.strict && (STRICT_RESERVED.contains(&token.value.as_str()) || token.value == "let") {
         return Err(format!(
             "{}: `{}` is a reserved word in strict mode code (ECMA-262 §13.1.1)",
             at(token),
@@ -819,6 +823,16 @@ mod tests {
         assert!(!ok("({ get x() { 'use strict'; public = 42; } })"));
         assert!(ok("function eval() {}"));
         assert!(ok("var public = 1; ({ public: 1 }).public;"));
+    }
+
+    #[test]
+    fn let_is_reserved_in_strict_code() {
+        assert!(!ok("'use strict'; if (0) let\nx = 1;"));
+        assert!(!ok("'use strict'; if (0) let\n{}"));
+        assert!(!ok("class C { m() { if (0) let\nx = 1; } }"));
+        assert!(!ok("function f() { 'use strict'; L: let\n{} }"));
+        assert!(ok("if (0) let\nx = 1;"));
+        assert!(ok("function f() { 'use strict'; if (0) { let y = 1; } }"));
     }
 
     #[test]
