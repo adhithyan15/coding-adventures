@@ -1,6 +1,6 @@
 [package]
 name = "cdcl-sat"
-version = "0.3.0"
+version = "0.3.2"
 edition = "2021"
 description = "VER09 — conflict-driven clause-learning SAT solver: two watched literals, 1UIP learning, backjumping, VSIDS, Luby restarts, assumptions, DIMACS. Zero dependencies."
 license = "MIT"

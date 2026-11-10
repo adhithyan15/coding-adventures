@@ -55,11 +55,11 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentTarget,
     BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
-    ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
+    ClassDeclaration, ClassExpression, ClassMember, ExportDefaultKind, MethodDefinition, PropertyDefinition,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -363,8 +363,9 @@ fn fold_program(prog: &Program, st: &mut FoldState) -> Program {
         version: prog.version,
         source_type: prog.source_type,
         // DIV#2 — as a post-step, merge any runs of adjacent same-kind variable
-        // declarations this list now holds (see `coalesce_var_decls`).
-        body: coalesce_var_decls(new_body, st),
+        // declarations this list now holds (see `coalesce_var_decls`), then hoist
+        // variable declarations preceding for loops without init (CCR-074, #15855).
+        body: hoist_for_inits(coalesce_var_decls(new_body, st), st),
     }
 }
 
@@ -766,8 +767,9 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     BlockStatement {
         cv: b.cv.clone(),
         // DIV#2 — merge adjacent same-kind variable declarations in the block
-        // body (including any the flatten/hoist above made adjacent).
-        body: coalesce_var_decls(new_body, st),
+        // body (including any the flatten/hoist above made adjacent), then hoist
+        // variable declarations preceding for loops without init (CCR-074, #15855).
+        body: hoist_for_inits(coalesce_var_decls(new_body, st), st),
     }
 }
 
@@ -819,6 +821,12 @@ trait VarDeclCarrier: Clone {
     fn as_var_decl(&self) -> Option<&VariableDeclaration>;
     /// Wrap a (merged) variable declaration back into a list element.
     fn from_var_decl(decl: VariableDeclaration) -> Self;
+    /// The ForStatement this element carries, if any.
+    fn as_for_statement(&self) -> Option<&ForStatement>;
+    /// Wrap a ForStatement back into a list element.
+    fn from_for_statement(for_s: ForStatement) -> Self;
+    /// Whether this element references any of the given variable names.
+    fn references_any(&self, names: &HashSet<String>) -> bool;
 }
 
 impl VarDeclCarrier for ProgramItem {
@@ -833,6 +841,21 @@ impl VarDeclCarrier for ProgramItem {
         // Match the bridge's program-level shape (a variable *statement*).
         ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(decl)))
     }
+    fn as_for_statement(&self) -> Option<&ForStatement> {
+        match self {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ForStatement(f))) => Some(f),
+            _ => None,
+        }
+    }
+    fn from_for_statement(for_s: ForStatement) -> Self {
+        ProgramItem::Statement(Statement::Tagged(TaggedStatement::ForStatement(for_s)))
+    }
+    fn references_any(&self, names: &HashSet<String>) -> bool {
+        match self {
+            ProgramItem::Statement(s) => stmt_references_any(s, names),
+            ProgramItem::Declaration(d) => decl_references_any(d, names),
+        }
+    }
 }
 
 impl VarDeclCarrier for Statement {
@@ -844,6 +867,18 @@ impl VarDeclCarrier for Statement {
     }
     fn from_var_decl(decl: VariableDeclaration) -> Self {
         Statement::Declaration(Declaration::VariableDeclaration(decl))
+    }
+    fn as_for_statement(&self) -> Option<&ForStatement> {
+        match self {
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => Some(f),
+            _ => None,
+        }
+    }
+    fn from_for_statement(for_s: ForStatement) -> Self {
+        Statement::Tagged(TaggedStatement::ForStatement(for_s))
+    }
+    fn references_any(&self, names: &HashSet<String>) -> bool {
+        stmt_references_any(self, names)
     }
 }
 
@@ -931,6 +966,472 @@ fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> V
         i = j;
     }
     out
+}
+
+/// Hoist a variable declaration immediately preceding a `for` loop without an
+/// initializer into the loop's `init` clause (CCR-074, #15855).
+///
+/// SAFETY:
+/// - `var`: Function-scoped in JS; moving it into `for (var ...; ...)` leaves its
+///   scope and binding semantics completely unchanged. Always safe.
+/// - `let` / `const`: Block-scoped. Moving it into `for (let ...; ...)` narrows its
+///   scope to the loop itself. This is observable if:
+///   1) Any declared binding is referenced in subsequent statements in the enclosing
+///      block / program (would throw ReferenceError if moved into loop).
+///   2) Any closure in the loop body captures any declared binding (which changes
+///      per-iteration binding semantics in ES2015+).
+///
+///   When either condition holds, the hoist is declined.
+fn hoist_for_inits<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> Vec<T> {
+    let mut out: Vec<T> = Vec::with_capacity(items.len());
+    let mut i = 0;
+    while i < items.len() {
+        if i + 1 < items.len() {
+            if let Some(vd) = items[i].as_var_decl() {
+                if let Some(for_s) = items[i + 1].as_for_statement() {
+                    if for_s.init.is_none() && !vd.declarations.is_empty() {
+                        let is_var = vd.kind == VarKind::Var;
+                        let mut can_hoist = is_var;
+                        if !can_hoist {
+                            let names: HashSet<String> = vd
+                                .declarations
+                                .iter()
+                                .map(|d| match &d.id {
+                                    BindingTarget::Identifier(id) => id.name.clone(),
+                                })
+                                .collect();
+                            // Declining condition 1: Any subsequent statement references a declared name.
+                            let used_after = items[i + 2..]
+                                .iter()
+                                .any(|item| item.references_any(&names));
+                            // Declining condition 2: Loop body contains a closure that captures a declared name.
+                            let captured_in_body = stmt_has_capturing_closure(&for_s.body, &names);
+
+                            if !used_after && !captured_in_body {
+                                can_hoist = true;
+                            }
+                        }
+
+                        if can_hoist {
+                            let mut new_for = for_s.clone();
+                            new_for.init = Some(ForInit::VariableDeclaration(vd.clone()));
+                            let decl_cv = vd.cv.clone();
+                            st.record_fold_deleting(
+                                &new_for.cv,
+                                &[decl_cv],
+                                "hoist-var-into-for",
+                                "var …; for (; …) …",
+                                "for (var …; …) …",
+                            );
+                            out.push(T::from_for_statement(new_for));
+                            i += 2;
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        out.push(items[i].clone());
+        i += 1;
+    }
+    out
+}
+
+fn expr_references_any(expr: &Expression, names: &HashSet<String>) -> bool {
+    match expr {
+        Expression::Identifier(id) => names.contains(&id.name),
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::ThisExpression(_)
+        | Expression::Super(_)
+        | Expression::NewTarget(_)
+        | Expression::ImportMeta(_) => false,
+        Expression::BinaryExpression(e) => {
+            expr_references_any(&e.left, names) || expr_references_any(&e.right, names)
+        }
+        Expression::LogicalExpression(e) => {
+            expr_references_any(&e.left, names) || expr_references_any(&e.right, names)
+        }
+        Expression::UnaryExpression(e) => expr_references_any(&e.argument, names),
+        Expression::UpdateExpression(e) => expr_references_any(&e.argument, names),
+        Expression::AssignmentExpression(e) => {
+            let left_refs = match &e.left {
+                AssignmentTarget::Identifier(id) => names.contains(&id.name),
+                AssignmentTarget::MemberExpression(m) => {
+                    expr_references_any(&m.object, names)
+                        || (m.computed && expr_references_any(&m.property, names))
+                }
+            };
+            left_refs || expr_references_any(&e.right, names)
+        }
+        Expression::ConditionalExpression(e) => {
+            expr_references_any(&e.test, names)
+                || expr_references_any(&e.consequent, names)
+                || expr_references_any(&e.alternate, names)
+        }
+        Expression::CallExpression(e) => {
+            expr_references_any(&e.callee, names)
+                || e.arguments.iter().any(|arg| expr_references_any(arg, names))
+        }
+        Expression::MemberExpression(e) => {
+            expr_references_any(&e.object, names)
+                || (e.computed && expr_references_any(&e.property, names))
+        }
+        Expression::OptionalMemberExpression(e) => {
+            expr_references_any(&e.object, names)
+                || (e.computed && expr_references_any(&e.property, names))
+        }
+        Expression::OptionalCallExpression(e) => {
+            expr_references_any(&e.callee, names)
+                || e.arguments.iter().any(|arg| expr_references_any(arg, names))
+        }
+        Expression::ChainExpression(e) => expr_references_any(&e.expression, names),
+        Expression::ArrayExpression(e) => e
+            .elements
+            .iter()
+            .any(|el| el.as_ref().is_some_and(|arg| expr_references_any(arg, names))),
+        Expression::ObjectExpression(e) => e.properties.iter().any(|prop| match prop {
+            ObjectMember::Property(p) => {
+                let key_refs = if p.computed || p.shorthand {
+                    match &p.key {
+                        PropertyKey::Identifier(id) => names.contains(&id.name),
+                        PropertyKey::Expression(expr) => expr_references_any(expr, names),
+                        _ => false,
+                    }
+                } else {
+                    false
+                };
+                key_refs || expr_references_any(&p.value, names)
+            }
+            ObjectMember::Spread(s) => expr_references_any(&s.argument, names),
+        }),
+        Expression::FunctionExpression(f) => block_references_any(&f.body, names),
+        Expression::ArrowFunctionExpression(a) => match &a.body {
+            ArrowBody::Expression(e) => expr_references_any(e, names),
+            ArrowBody::Block(b) => block_references_any(b, names),
+        },
+        Expression::ClassExpression(c) => {
+            if let Some(super_class) = &c.super_class {
+                if expr_references_any(super_class, names) {
+                    return true;
+                }
+            }
+            c.body.iter().any(|member| match member {
+                ClassMember::Method(m) => {
+                    let key_refs = if m.computed {
+                        match &m.key {
+                            PropertyKey::Identifier(id) => names.contains(&id.name),
+                            PropertyKey::Expression(expr) => expr_references_any(expr, names),
+                            _ => false,
+                        }
+                    } else {
+                        false
+                    };
+                    key_refs || block_references_any(&m.value.body, names)
+                }
+                ClassMember::Field(p) => {
+                    let key_refs = if p.computed {
+                        match &p.key {
+                            PropertyKey::Identifier(id) => names.contains(&id.name),
+                            PropertyKey::Expression(expr) => expr_references_any(expr, names),
+                            _ => false,
+                        }
+                    } else {
+                        false
+                    };
+                    key_refs || p.value.as_ref().is_some_and(|v| expr_references_any(v, names))
+                }
+                ClassMember::StaticBlock(b) => block_references_any(b, names),
+            })
+        }
+        Expression::TemplateLiteral(t) => {
+            t.expressions.iter().any(|e| expr_references_any(e, names))
+        }
+        Expression::TaggedTemplateExpression(t) => {
+            expr_references_any(&t.tag, names)
+                || t.quasi.expressions.iter().any(|e| expr_references_any(e, names))
+        }
+        Expression::NewExpression(e) => {
+            expr_references_any(&e.callee, names)
+                || e.arguments.iter().any(|arg| expr_references_any(arg, names))
+        }
+        Expression::SequenceExpression(e) => {
+            e.expressions.iter().any(|arg| expr_references_any(arg, names))
+        }
+        Expression::SpreadElement(e) => expr_references_any(&e.argument, names),
+        Expression::YieldExpression(e) => {
+            e.argument.as_ref().is_some_and(|arg| expr_references_any(arg, names))
+        }
+        Expression::AwaitExpression(e) => expr_references_any(&e.argument, names),
+        Expression::ImportExpression(e) => expr_references_any(&e.source, names),
+    }
+}
+
+fn stmt_references_any(stmt: &Statement, names: &HashSet<String>) -> bool {
+    match stmt {
+        Statement::Declaration(d) => decl_references_any(d, names),
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BlockStatement(b) => block_references_any(b, names),
+            TaggedStatement::IfStatement(i) => {
+                expr_references_any(&i.test, names)
+                    || stmt_references_any(&i.consequent, names)
+                    || i.alternate.as_ref().is_some_and(|a| stmt_references_any(a, names))
+            }
+            TaggedStatement::WhileStatement(w) => {
+                expr_references_any(&w.test, names) || stmt_references_any(&w.body, names)
+            }
+            TaggedStatement::DoWhileStatement(d) => {
+                stmt_references_any(&d.body, names) || expr_references_any(&d.test, names)
+            }
+            TaggedStatement::ForStatement(f) => {
+                let init_refs = match &f.init {
+                    Some(ForInit::VariableDeclaration(v)) => var_decl_references_any(v, names),
+                    Some(ForInit::Expression(e)) => expr_references_any(e, names),
+                    None => false,
+                };
+                init_refs
+                    || f.test.as_ref().is_some_and(|t| expr_references_any(t, names))
+                    || f.update.as_ref().is_some_and(|u| expr_references_any(u, names))
+                    || stmt_references_any(&f.body, names)
+            }
+            TaggedStatement::ForInStatement(f) => {
+                let left_refs = match &f.left {
+                    ForInit::VariableDeclaration(v) => var_decl_references_any(v, names),
+                    ForInit::Expression(e) => expr_references_any(e, names),
+                };
+                left_refs
+                    || expr_references_any(&f.right, names)
+                    || stmt_references_any(&f.body, names)
+            }
+            TaggedStatement::ForOfStatement(f) => {
+                let left_refs = match &f.left {
+                    ForInit::VariableDeclaration(v) => var_decl_references_any(v, names),
+                    ForInit::Expression(e) => expr_references_any(e, names),
+                };
+                left_refs
+                    || expr_references_any(&f.right, names)
+                    || stmt_references_any(&f.body, names)
+            }
+            TaggedStatement::ExpressionStatement(e) => expr_references_any(&e.expression, names),
+            TaggedStatement::ReturnStatement(r) => {
+                r.argument.as_ref().is_some_and(|a| expr_references_any(a, names))
+            }
+            TaggedStatement::ThrowStatement(th) => expr_references_any(&th.argument, names),
+            TaggedStatement::LabeledStatement(l) => stmt_references_any(&l.body, names),
+            TaggedStatement::WithStatement(w) => {
+                expr_references_any(&w.object, names) || stmt_references_any(&w.body, names)
+            }
+            TaggedStatement::SwitchStatement(s) => {
+                expr_references_any(&s.discriminant, names)
+                    || s.cases.iter().any(|c| {
+                        c.test.as_ref().is_some_and(|t| expr_references_any(t, names))
+                            || c.consequent.iter().any(|stmt| stmt_references_any(stmt, names))
+                    })
+            }
+            TaggedStatement::TryStatement(tr) => {
+                block_references_any(&tr.block, names)
+                    || tr.handler.as_ref().is_some_and(|h| block_references_any(&h.body, names))
+                    || tr.finalizer.as_ref().is_some_and(|f| block_references_any(f, names))
+            }
+            TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            | TaggedStatement::EmptyStatement(_)
+            | TaggedStatement::DebuggerStatement(_) => false,
+        },
+    }
+}
+
+fn block_references_any(b: &BlockStatement, names: &HashSet<String>) -> bool {
+    b.body.iter().any(|s| stmt_references_any(s, names))
+}
+
+fn var_decl_references_any(v: &VariableDeclaration, names: &HashSet<String>) -> bool {
+    v.declarations.iter().any(|d| {
+        d.init.as_ref().is_some_and(|init| expr_references_any(init, names))
+    })
+}
+
+fn decl_references_any(d: &Declaration, names: &HashSet<String>) -> bool {
+    match d {
+        Declaration::VariableDeclaration(v) => var_decl_references_any(v, names),
+        Declaration::FunctionDeclaration(f) => block_references_any(&f.body, names),
+        Declaration::ClassDeclaration(c) => {
+            if let Some(super_class) = &c.super_class {
+                if expr_references_any(super_class, names) {
+                    return true;
+                }
+            }
+            c.body.iter().any(|member| match member {
+                ClassMember::Method(m) => block_references_any(&m.value.body, names),
+                ClassMember::Field(p) => {
+                    p.value.as_ref().is_some_and(|v| expr_references_any(v, names))
+                }
+                ClassMember::StaticBlock(b) => block_references_any(b, names),
+            })
+        }
+        Declaration::ImportDeclaration(_) => false,
+        Declaration::ExportNamedDeclaration(e) => {
+            e.declaration.as_ref().is_some_and(|d| decl_references_any(d, names))
+        }
+        Declaration::ExportDefaultDeclaration(e) => match &e.declaration {
+            ExportDefaultKind::Expression(expr) => expr_references_any(expr, names),
+            ExportDefaultKind::FunctionDeclaration(f) => block_references_any(&f.body, names),
+            ExportDefaultKind::ClassDeclaration(c) => {
+                c.super_class.as_ref().is_some_and(|s| expr_references_any(s, names))
+            }
+        },
+        Declaration::ExportAllDeclaration(_) => false,
+    }
+}
+
+fn stmt_has_capturing_closure(stmt: &Statement, names: &HashSet<String>) -> bool {
+    match stmt {
+        Statement::Declaration(d) => match d {
+            Declaration::FunctionDeclaration(f) => block_references_any(&f.body, names),
+            Declaration::VariableDeclaration(v) => v
+                .declarations
+                .iter()
+                .any(|d| d.init.as_ref().is_some_and(|e| expr_has_capturing_closure(e, names))),
+            _ => false,
+        },
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BlockStatement(b) => {
+                b.body.iter().any(|s| stmt_has_capturing_closure(s, names))
+            }
+            TaggedStatement::IfStatement(i) => {
+                expr_has_capturing_closure(&i.test, names)
+                    || stmt_has_capturing_closure(&i.consequent, names)
+                    || i.alternate.as_ref().is_some_and(|a| stmt_has_capturing_closure(a, names))
+            }
+            TaggedStatement::WhileStatement(w) => {
+                expr_has_capturing_closure(&w.test, names)
+                    || stmt_has_capturing_closure(&w.body, names)
+            }
+            TaggedStatement::DoWhileStatement(d) => {
+                stmt_has_capturing_closure(&d.body, names)
+                    || expr_has_capturing_closure(&d.test, names)
+            }
+            TaggedStatement::ForStatement(f) => stmt_has_capturing_closure(&f.body, names),
+            TaggedStatement::ForInStatement(f) => stmt_has_capturing_closure(&f.body, names),
+            TaggedStatement::ForOfStatement(f) => stmt_has_capturing_closure(&f.body, names),
+            TaggedStatement::ExpressionStatement(e) => {
+                expr_has_capturing_closure(&e.expression, names)
+            }
+            TaggedStatement::ReturnStatement(r) => {
+                r.argument.as_ref().is_some_and(|a| expr_has_capturing_closure(a, names))
+            }
+            TaggedStatement::ThrowStatement(th) => {
+                expr_has_capturing_closure(&th.argument, names)
+            }
+            TaggedStatement::LabeledStatement(l) => {
+                stmt_has_capturing_closure(&l.body, names)
+            }
+            TaggedStatement::WithStatement(w) => {
+                expr_has_capturing_closure(&w.object, names)
+                    || stmt_has_capturing_closure(&w.body, names)
+            }
+            TaggedStatement::SwitchStatement(s) => {
+                expr_has_capturing_closure(&s.discriminant, names)
+                    || s.cases.iter().any(|c| {
+                        c.consequent.iter().any(|stmt| stmt_has_capturing_closure(stmt, names))
+                    })
+            }
+            TaggedStatement::TryStatement(tr) => {
+                tr.block.body.iter().any(|s| stmt_has_capturing_closure(s, names))
+                    || tr.handler.as_ref().is_some_and(|h| {
+                        h.body.body.iter().any(|s| stmt_has_capturing_closure(s, names))
+                    })
+                    || tr.finalizer.as_ref().is_some_and(|f| {
+                        f.body.iter().any(|s| stmt_has_capturing_closure(s, names))
+                    })
+            }
+            _ => false,
+        },
+    }
+}
+
+fn expr_has_capturing_closure(expr: &Expression, names: &HashSet<String>) -> bool {
+    match expr {
+        Expression::FunctionExpression(f) => block_references_any(&f.body, names),
+        Expression::ArrowFunctionExpression(a) => match &a.body {
+            ArrowBody::Expression(e) => expr_references_any(e, names),
+            ArrowBody::Block(b) => block_references_any(b, names),
+        },
+        Expression::BinaryExpression(b) => {
+            expr_has_capturing_closure(&b.left, names) || expr_has_capturing_closure(&b.right, names)
+        }
+        Expression::LogicalExpression(l) => {
+            expr_has_capturing_closure(&l.left, names) || expr_has_capturing_closure(&l.right, names)
+        }
+        Expression::UnaryExpression(u) => expr_has_capturing_closure(&u.argument, names),
+        Expression::UpdateExpression(u) => expr_has_capturing_closure(&u.argument, names),
+        Expression::AssignmentExpression(a) => expr_has_capturing_closure(&a.right, names),
+        Expression::ConditionalExpression(c) => {
+            expr_has_capturing_closure(&c.test, names)
+                || expr_has_capturing_closure(&c.consequent, names)
+                || expr_has_capturing_closure(&c.alternate, names)
+        }
+        Expression::CallExpression(c) => {
+            expr_has_capturing_closure(&c.callee, names)
+                || c.arguments.iter().any(|arg| expr_has_capturing_closure(arg, names))
+        }
+        Expression::MemberExpression(m) => {
+            expr_has_capturing_closure(&m.object, names)
+                || (m.computed && expr_has_capturing_closure(&m.property, names))
+        }
+        Expression::OptionalMemberExpression(m) => {
+            expr_has_capturing_closure(&m.object, names)
+                || (m.computed && expr_has_capturing_closure(&m.property, names))
+        }
+        Expression::OptionalCallExpression(c) => {
+            expr_has_capturing_closure(&c.callee, names)
+                || c.arguments.iter().any(|arg| expr_has_capturing_closure(arg, names))
+        }
+        Expression::ChainExpression(c) => expr_has_capturing_closure(&c.expression, names),
+        Expression::ArrayExpression(a) => a
+            .elements
+            .iter()
+            .any(|el| el.as_ref().is_some_and(|e| expr_has_capturing_closure(e, names))),
+        Expression::ObjectExpression(o) => o.properties.iter().any(|m| match m {
+            ObjectMember::Property(p) => {
+                let key_has = if p.computed {
+                    match &p.key {
+                        PropertyKey::Expression(e) => expr_has_capturing_closure(e, names),
+                        _ => false,
+                    }
+                } else {
+                    false
+                };
+                key_has || expr_has_capturing_closure(&p.value, names)
+            }
+            ObjectMember::Spread(s) => expr_has_capturing_closure(&s.argument, names),
+        }),
+        Expression::SequenceExpression(s) => {
+            s.expressions.iter().any(|e| expr_has_capturing_closure(e, names))
+        }
+        Expression::NewExpression(n) => {
+            expr_has_capturing_closure(&n.callee, names)
+                || n.arguments.iter().any(|arg| expr_has_capturing_closure(arg, names))
+        }
+        Expression::TemplateLiteral(t) => {
+            t.expressions.iter().any(|e| expr_has_capturing_closure(e, names))
+        }
+        Expression::TaggedTemplateExpression(t) => {
+            expr_has_capturing_closure(&t.tag, names)
+                || t.quasi.expressions.iter().any(|e| expr_has_capturing_closure(e, names))
+        }
+        Expression::SpreadElement(s) => expr_has_capturing_closure(&s.argument, names),
+        Expression::YieldExpression(y) => {
+            y.argument.as_ref().is_some_and(|a| expr_has_capturing_closure(a, names))
+        }
+        Expression::AwaitExpression(a) => expr_has_capturing_closure(&a.argument, names),
+        _ => false,
+    }
 }
 
 /// May this statement be deleted when it is unreachable (after a `return`)?
@@ -5446,5 +5947,168 @@ mod tests {
             inner_fn_decl("h"),
         ]);
         assert_eq!(body.len(), 3, "{body:?}");
+    }
+
+    // ---------------- while / for initializer hoisting (CCR-074, #15855) ----------------
+
+    fn while_stmt(test: Expression, body: Statement) -> Statement {
+        Statement::while_statement(WhileStatement {
+            cv: Some("while.1".to_string()),
+            test,
+            body: Box::new(body),
+        })
+    }
+
+    fn bin_op(op: BinaryOperator, left: Expression, right: Expression) -> Expression {
+        Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: op,
+            left: Box::new(left),
+            right: Box::new(right),
+        })
+    }
+
+    #[test]
+    fn var_preceding_while_hoisted_into_for() {
+        // var i = 0; while (i < 3) i++; console.log(i);
+        // -> for (var i = 0; i < 3; ) i++; console.log(i);
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(var_decl_stmt("i")),
+            ProgramItem::Statement(while_stmt(
+                bin_op(BinaryOperator::Lt, ident("i"), num(3.0, None)),
+                expr_stmt(ident("i"), None),
+            )),
+            ProgramItem::Statement(expr_stmt(ident("i"), None)),
+        ]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "hoist-var-into-for"));
+        assert_eq!(out.body.len(), 2);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ForStatement(f))) => {
+                match &f.init {
+                    Some(ForInit::VariableDeclaration(vd)) => {
+                        assert_eq!(vd.kind, VarKind::Var);
+                        let BindingTarget::Identifier(id) = &vd.declarations[0].id;
+                        assert_eq!(id.name, "i");
+                    }
+                    other => panic!("expected VariableDeclaration in for.init, got {:?}", other),
+                }
+            }
+            other => panic!("expected ForStatement as first item, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn let_read_after_loop_not_hoisted() {
+        // let i = 0; while (i < 3) i++; console.log(i);
+        // -> let i = 0; for (; i < 3; ) i++; console.log(i);
+        let let_stmt_with_init = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "i".to_string(),
+                }),
+                init: Some(num(0.0, None)),
+            }],
+        }));
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(let_stmt_with_init),
+            ProgramItem::Statement(while_stmt(
+                bin_op(BinaryOperator::Lt, ident("i"), num(3.0, None)),
+                expr_stmt(ident("i"), None),
+            )),
+            ProgramItem::Statement(expr_stmt(ident("i"), None)),
+        ]);
+        let (out, contribs, _, _) = run_pass(prog);
+        assert!(!contribs.iter().any(|c| c.tag == "hoist-var-into-for"));
+        assert_eq!(out.body.len(), 3);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) => {
+                assert_eq!(vd.kind, VarKind::Let);
+            }
+            other => panic!("expected let declaration to remain unhoisted, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn const_captured_in_body_not_hoisted() {
+        // const x = 1; while (c) { arr.push(() => x); }
+        // Declined because x is captured in closure in body.
+        let const_stmt = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0, None)),
+            }],
+        }));
+        let arrow = Expression::ArrowFunctionExpression(ArrowFunctionExpression {
+            cv: None,
+            params: vec![],
+            body: ArrowBody::Expression(Box::new(ident("x"))),
+            is_async: false,
+        });
+        let body = expr_stmt(arrow, None);
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(const_stmt),
+            ProgramItem::Statement(while_stmt(ident("c"), body)),
+        ]);
+        let (out, contribs, _, _) = run_pass(prog);
+        assert!(!contribs.iter().any(|c| c.tag == "hoist-var-into-for"));
+        assert_eq!(out.body.len(), 2);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) => {
+                assert_eq!(vd.kind, VarKind::Const);
+            }
+            other => panic!("expected const declaration to remain unhoisted, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn let_not_read_after_and_no_closure_hoisted() {
+        // let i = 0; while (i < 3) i++;
+        // -> for (let i = 0; i < 3; ) i++;
+        let let_stmt_with_init = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "i".to_string(),
+                }),
+                init: Some(num(0.0, None)),
+            }],
+        }));
+        let prog = program().with_body(vec![
+            ProgramItem::Statement(let_stmt_with_init),
+            ProgramItem::Statement(while_stmt(
+                bin_op(BinaryOperator::Lt, ident("i"), num(3.0, None)),
+                expr_stmt(ident("i"), None),
+            )),
+        ]);
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed);
+        assert!(contribs.iter().any(|c| c.tag == "hoist-var-into-for"));
+        assert_eq!(out.body.len(), 1);
+        match &out.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::ForStatement(f))) => {
+                match &f.init {
+                    Some(ForInit::VariableDeclaration(vd)) => {
+                        assert_eq!(vd.kind, VarKind::Let);
+                    }
+                    other => panic!("expected VariableDeclaration in for.init, got {:?}", other),
+                }
+            }
+            other => panic!("expected ForStatement as first item, got {:?}", other),
+        }
     }
 }

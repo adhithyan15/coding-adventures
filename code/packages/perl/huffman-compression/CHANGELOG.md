@@ -10,6 +10,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - `BUILD_windows` passes dependency library paths with `-I` instead of `set PERL5LIB=...`, which MSYS perl on CI splits on `:` and so never found.
 
+## [0.1.1] - 2026-11-10
+
+### Security
+
+- SEC-003: `decompress` now treats the code-lengths table as hostile input and
+  dies for `symbol_count > 256`, duplicate symbols, code lengths outside
+  1..56, tables not sorted by length, over-subscribed (Kraft > 1) tables, and a
+  declared `original_length` larger than 8 x payload bytes (checked before any
+  work is sized from it). Bits are read with `vec` in O(1) from the payload
+  instead of being expanded into a bit string, and decoding dies once the
+  accumulated bits reach the longest code length. A zero `original_length`
+  now short-circuits before the table is parsed. Valid encoder output still
+  round-trips.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

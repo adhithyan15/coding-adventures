@@ -332,3 +332,90 @@ describe("error handling", () => {
     expect(() => decompress(bad)).toThrow("Bit stream exhausted");
   });
 });
+
+// =============================================================================
+// Hostile input (SEC-003): the code-lengths table is attacker-controlled.
+// =============================================================================
+
+function hostile(
+  entries: Array<[number, number]>,
+  orig: number,
+  payload: Uint8Array
+): Uint8Array {
+  const out = new Uint8Array(8 + entries.length * 2 + payload.length);
+  const view = new DataView(out.buffer);
+  view.setUint32(0, orig, false);
+  view.setUint32(4, entries.length, false);
+  entries.forEach(([s, l], i) => {
+    out[8 + 2 * i] = s;
+    out[9 + 2 * i] = l;
+  });
+  out.set(payload, 8 + entries.length * 2);
+  return out;
+}
+
+describe("hostile input", () => {
+  it("rejects a huge length gap", () => {
+    expect(() =>
+      decompress(hostile([[0, 1], [1, 255]], 4, new Uint8Array(8).fill(0xff)))
+    ).toThrow();
+  });
+
+  it("rejects a gap that a 5-bit shift mask would wrap to a valid code", () => {
+    // 1 -> 33: (33 - 1) & 31 === 0, so a masked `<<` would not shift at all.
+    expect(() =>
+      decompress(hostile([[0, 1], [1, 33]], 4, new Uint8Array(8).fill(0xff)))
+    ).toThrow();
+  });
+
+  it("rejects a zero length", () => {
+    expect(() => decompress(hostile([[0, 0]], 1, new Uint8Array(1)))).toThrow();
+  });
+
+  it("rejects an over-subscribed table", () => {
+    expect(() =>
+      decompress(hostile([[0, 1], [1, 1], [2, 1]], 1, new Uint8Array(1)))
+    ).toThrow();
+  });
+
+  it("rejects an unsorted table", () => {
+    expect(() =>
+      decompress(hostile([[0, 2], [1, 1]], 1, new Uint8Array(1)))
+    ).toThrow();
+  });
+
+  it("rejects symbol_count over 256", () => {
+    const entries: Array<[number, number]> = [];
+    for (let i = 0; i < 257; i++) entries.push([i % 256, 9]);
+    expect(() => decompress(hostile(entries, 1, new Uint8Array(1)))).toThrow();
+  });
+
+  it("rejects a duplicate symbol", () => {
+    expect(() =>
+      decompress(hostile([[0, 1], [0, 1]], 1, new Uint8Array(1)))
+    ).toThrow();
+  });
+
+  it("rejects a declared length of u32 max with a tiny payload", () => {
+    expect(() =>
+      decompress(hostile([[0, 1], [1, 1]], 0xffffffff, new Uint8Array(4)))
+    ).toThrow();
+  });
+
+  it("rejects a truncated table", () => {
+    const d = new Uint8Array([0, 0, 0, 1, 0, 0, 0, 5, 0, 1]);
+    expect(() => decompress(d)).toThrow();
+  });
+
+  it("fails fast when bits match no code", () => {
+    expect(() =>
+      decompress(hostile([[0, 1]], 8, new Uint8Array(100_000).fill(0xff)))
+    ).toThrow();
+  });
+
+  it("decodes a large valid input in linear time", () => {
+    const data = new Uint8Array(400_000);
+    for (let i = 0; i < data.length; i++) data[i] = i % 7;
+    expect(decompress(compress(data))).toEqual(data);
+  });
+});
