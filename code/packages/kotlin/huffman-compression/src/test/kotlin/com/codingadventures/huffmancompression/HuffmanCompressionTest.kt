@@ -326,6 +326,76 @@ class HuffmanCompressionTest {
     }
 
     // =========================================================================
+    // Hostile input (SEC-003): the code-lengths table is attacker-controlled
+    // =========================================================================
+
+    private fun hostile(entries: List<Pair<Int, Int>>, original: Long, payload: ByteArray): ByteArray {
+        val b = ByteBuffer.allocate(8 + entries.size * 2 + payload.size).order(ByteOrder.BIG_ENDIAN)
+        b.putInt(original.toInt()).putInt(entries.size)
+        for ((s, l) in entries) b.put(s.toByte()).put(l.toByte())
+        b.put(payload)
+        return b.array()
+    }
+
+    private fun filled(n: Int, v: Int) = ByteArray(n) { v.toByte() }
+
+    @Test fun hostile_hugeLengthGapRejected() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 1, 1 to 255), 4, filled(8, 0xFF)))
+        }
+    }
+
+    @Test fun hostile_zeroLengthRejected() {
+        assertThrows<IllegalArgumentException> { decompress(hostile(listOf(0 to 0), 1, filled(1, 0))) }
+    }
+
+    @Test fun hostile_oversubscribedRejected() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 1, 1 to 1, 2 to 1), 1, filled(1, 0)))
+        }
+    }
+
+    @Test fun hostile_unsortedRejected() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 2, 1 to 1), 1, filled(1, 0)))
+        }
+    }
+
+    @Test fun hostile_symbolCountOver256Rejected() {
+        val entries = (0 until 257).map { (it % 256) to 9 }
+        assertThrows<IllegalArgumentException> { decompress(hostile(entries, 1, filled(1, 0))) }
+    }
+
+    @Test fun hostile_duplicateSymbolRejected() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 1, 0 to 1), 1, filled(1, 0)))
+        }
+    }
+
+    @Test fun hostile_declaredLengthU32MaxRejected() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 1, 1 to 1), 0xFFFFFFFFL, filled(4, 0)))
+        }
+    }
+
+    @Test fun hostile_truncatedTableRejected() {
+        val d = ByteBuffer.allocate(10).order(ByteOrder.BIG_ENDIAN)
+            .putInt(1).putInt(5).put(0).put(1).array()
+        assertThrows<IllegalArgumentException> { decompress(d) }
+    }
+
+    @Test fun hostile_unmatchedBitsFailFast() {
+        assertThrows<IllegalArgumentException> {
+            decompress(hostile(listOf(0 to 1), 8, filled(100_000, 0xFF)))
+        }
+    }
+
+    @Test fun largeRoundTripIsLinear() {
+        val data = ByteArray(400_000) { (it % 7).toByte() }
+        assertContentEquals(data, decompress(compress(data)))
+    }
+
+    // =========================================================================
     // Private helpers
     // =========================================================================
 
