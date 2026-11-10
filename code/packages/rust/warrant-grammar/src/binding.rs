@@ -440,7 +440,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                     at(format!("{key} `{name}` has no {}=", if key == "struct" { "fields" } else { "ctors" }))
                 })?;
                 let shape = if key == "struct" {
-                    HostShape::Struct(parse_host_fields(&body).map_err(&at)?)
+                    HostShape::Struct(parse_host_fields(&body).map_err(at)?)
                 } else {
                     let mut ctors: Vec<(String, Vec<HostField>)> = Vec::new();
                     for part in split_top(&body) {
@@ -450,7 +450,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                                 parse_host_fields(f.strip_suffix(')').ok_or_else(|| {
                                     at(format!("constructor `{part}` is missing its `)`"))
                                 })?)
-                                .map_err(&at)?,
+                                .map_err(at)?,
                             ),
                             None => (part, Vec::new()),
                         };
@@ -495,9 +495,9 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         "fresh" if v.is_empty() => fresh = true,
                         "error" if !v.is_empty() => error = Some(v.to_string()),
                         "args" if !v.is_empty() => args = Some(list()),
-                        "ret" if !v.is_empty() => ret = Some(parse_host_ty(v).map_err(&at)?),
+                        "ret" if !v.is_empty() => ret = Some(parse_host_ty(v).map_err(at)?),
                         "errors" if !v.is_empty() => {
-                            host_errors = Some(parse_host_errors(v).map_err(&at)?)
+                            host_errors = Some(parse_host_errors(v).map_err(at)?)
                         }
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),

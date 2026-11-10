@@ -1,0 +1,7 @@
+; corpus_data.ml embeds the CT01 corpus as an OCaml string, so the test binary
+; reads no files and the package keeps an empty capability manifest. The BUILD
+; file checks it byte for byte against code/specs/fixtures/ct-compare-v1.
+
+(test
+ (name test_ct_compare)
+ (libraries alcotest coding_adventures_ct_compare))
