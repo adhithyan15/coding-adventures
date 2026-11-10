@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+**Rebuilt: the inputs digest drifted with no change to a repository source.**
+`build-wasm.sh --check` failed on `main` ("pkg/spreadsheet_engine.wasm is
+stale") although no crate in the engine's dependency tree changed in this
+repository since the stamp was written. The digest also covers the name and
+version of every crate `cargo tree` resolves, and `Cargo.lock` is gitignored,
+so registry crates (`autocfg`, `memchr`, `aho-corasick`, `num-*`, ...) float
+to whatever is newest and a new release alone flips the check. The `.wasm`, its
+`.inputs` stamp and the VisiCalc HTML bundle are regenerated with
+`bash build-wasm.sh` and `bundle-wasm-engine.sh`; `js/smoke.mjs` passes and
+both `--check` modes are green. The check can drift again for the same reason.
+
 **Rebuilt for the lexer's borrowed callback context (#17914).** The generic
 `lexer` crate changed (`LexerContext::previous_token` is borrowed, not
 cloned), so the `.wasm`'s inputs digest changed. `pkg/spreadsheet_engine.wasm`,
