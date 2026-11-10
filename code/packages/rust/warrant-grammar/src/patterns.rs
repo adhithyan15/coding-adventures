@@ -148,13 +148,22 @@ pub fn useful(
     tys: &[PTy],
     budget: &mut usize,
 ) -> Result<bool, Exhausted> {
-    spend(budget, rows.len() + 1)?;
+    spend(budget, rows.len() + 1 + tys.len())?;
     if q.is_empty() {
         // No columns left: q is useful exactly when no row already matches.
         return Ok(rows.is_empty());
     }
+    // A row of wildcards matches everything `q` matches: not useful, and no
+    // need to expand the shape at all.
+    if rows.iter().any(|r| r.iter().all(|p| matches!(p, Pat::Wild))) {
+        return Ok(false);
+    }
     let ty = &tys[0];
     let all = ty.ctors();
+    if let Some(all) = &all {
+        // Cloning the sub-shapes is work too.
+        spend(budget, all.iter().map(Vec::len).sum::<usize>())?;
+    }
     match (&q[0], all) {
         (Pat::Ctor(c, args), Some(all)) => {
             let fields = &all[*c];

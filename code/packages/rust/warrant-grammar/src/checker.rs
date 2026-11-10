@@ -16,6 +16,9 @@ use crate::parser::{
 };
 use crate::patterns::{self, PTy, Pat};
 
+/// Most nodes the shape of a `match` scrutinee may expand to.
+pub const MAX_SHAPE_NODES: usize = 4096;
+
 /// Most arms one `match` may have (VER04j section 4.3).
 pub const MAX_MATCH_ARMS: usize = 256;
 
@@ -394,6 +397,8 @@ pub struct Checker<'a> {
     limits: CheckerLimits,
     work_count: usize,
     depth: usize,
+    /// Shape nodes expanded for the current `match` (capped, see `pty_of`).
+    shape_nodes: usize,
 
     // Module namespace symbols
     type_aliases: BTreeMap<String, TypeExpr<'a>>,
@@ -426,6 +431,7 @@ impl<'a> Checker<'a> {
             limits,
             work_count: 0,
             depth: limits.max_depth,
+            shape_nodes: 0,
             type_aliases: BTreeMap::new(),
             resolved_aliases: BTreeMap::new(),
             errors: BTreeMap::new(),
@@ -3054,6 +3060,17 @@ impl<'a> Checker<'a> {
     /// a deliberately explosive family of nested records stops at the budget.
     fn pty_of(&mut self, ty: &Type, span: (usize, usize)) -> Result<PTy, CheckerError> {
         self.charge_work(span)?;
+        // A shape is inlined by value, so a diamond of records is exponential
+        // in its depth and the usefulness recursion is as deep as the shape is
+        // large: cap the expansion (W0602) before either is paid for.
+        self.shape_nodes += 1;
+        if self.shape_nodes > MAX_SHAPE_NODES {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0602,
+                kind: CheckerErrorKind::WorkBudgetExceeded,
+                span,
+            });
+        }
         self.enter_scope(span, |this| {
             Ok(match ty {
                 Type::Bool => PTy::Bool,
@@ -3254,6 +3271,7 @@ impl<'a> Checker<'a> {
             });
         }
         let target_ty = self.typecheck_expression(target, env, None, allow_ops)?;
+        self.shape_nodes = 0;
         let shape = self.pty_of(&target_ty, span)?;
         let mut rows: Vec<Pat> = Vec::new();
         let mut arm_types: Vec<Type> = Vec::new();

@@ -320,3 +320,82 @@ fn composite_adapter_refusals() {
     assert!(text.contains(".list().iter().map(|x"), "{text}");
     assert!(text.contains("V::List(("), "{text}");
 }
+
+// ---------------------------------------------------------------------------
+// Security regressions: exponential type expansion and struct field binding
+// ---------------------------------------------------------------------------
+
+fn diamond(levels: usize) -> String {
+    let mut s = String::from("  record L0(a: Bool, b: Bool)\n");
+    for i in 1..=levels {
+        s.push_str(&format!("  record L{i}(a: L{}, b: L{})\n", i - 1, i - 1));
+    }
+    s
+}
+
+#[test]
+fn a_diamond_of_records_is_refused_quickly_by_the_generator() {
+    let src = format!(
+        "warrant t v1\n{}  op f(a: U8) -> (U8, U8)\n  claim c:\n    forall x: L30. f(0u8) == f(0u8)\n",
+        diamond(30)
+    );
+    let start = std::time::Instant::now();
+    let e = generate(&src, OPF).unwrap_err();
+    assert!(e.contains("W0706"), "{e}");
+    assert!(start.elapsed().as_millis() < 1000, "{:?}", start.elapsed());
+    // The same diamond as an operation result is refused too.
+    let src = format!(
+        "warrant t v1\n{}  op f(a: U8) -> L30\n  claim c:\n    forall a: U8. f(a) == f(a)\n",
+        diamond(30)
+    );
+    let start = std::time::Instant::now();
+    assert!(generate(&src, &["op f export=f faults=field-zero"]).is_err());
+    assert!(start.elapsed().as_millis() < 1000, "{:?}", start.elapsed());
+    // A modest diamond (L5 = 64 leaves) is expanded; its domain is over budget.
+    let src = format!(
+        "warrant t v1\n{}  op f(a: U8) -> (U8, U8)\n  claim c:\n    forall x: L5. f(0u8) == f(0u8)\n",
+        diamond(5)
+    );
+    assert!(generate(&src, OPF).unwrap_err().contains("W0706"));
+}
+
+#[test]
+fn a_wide_shape_is_refused_by_the_checker_without_deep_recursion() {
+    let start = std::time::Instant::now();
+    for levels in [17usize, 30] {
+        let src = format!(
+            "warrant t v1\n{}  model m(x: L{levels}) -> Nat = match x with _ -> 0\n",
+            diamond(levels)
+        );
+        let (c, k) = check_code(&src);
+        assert_eq!((c, k), (D::W0602, K::WorkBudgetExceeded), "L{levels}");
+    }
+    assert!(start.elapsed().as_millis() < 1000, "{:?}", start.elapsed());
+    // A diamond that fits the cap is still matched.
+    let src = format!(
+        "warrant t v1\n{}  model m(x: L5) -> Nat = match x with _ -> 0\n",
+        diamond(5)
+    );
+    with_file(&src, |f| {
+        check_warrant(f).expect("small shape");
+    });
+}
+
+#[test]
+fn a_host_struct_must_name_the_records_fields() {
+    let src = "warrant t v1\n  record R(a: U8, b: U8)\n  op h(a: U8) -> R\n  claim c:\n    forall a: U8. h(a) == h(a)\n";
+    let swapped = generate(
+        src,
+        &[
+            "struct R path=s::R fields=b:u8,a:u8",
+            "op h export=h faults=field-zero",
+        ],
+    )
+    .unwrap_err();
+    assert!(swapped.contains("W0701"), "{swapped}");
+    // The right names, and positional indexes of a tuple struct, are accepted.
+    for fields in ["a:u8,b:u8", "0:u8,1:u8"] {
+        let line = format!("struct R path=s::R fields={fields}");
+        generate(src, &[&line, "op h export=h faults=field-zero"]).unwrap();
+    }
+}

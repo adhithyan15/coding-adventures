@@ -408,10 +408,38 @@ fn ty_of_type<'a>(
     span: (usize, usize),
     depth: usize,
 ) -> Result<Ty, CodegenError> {
+    let nodes = std::cell::Cell::new(0usize);
+    ty_of_type_in(t, env, v1, span, depth, &nodes)
+}
+
+/// Most nodes a binder or result type may expand to.  Records and variants are
+/// inlined by value, so a diamond (`Li(a: L(i-1), b: L(i-1))`) is exponential in
+/// its depth although it is a few lines of source; the cap refuses it before any
+/// size computation walks the expanded tree (W0706).
+pub const MAX_TYPE_NODES: usize = 4096;
+
+fn ty_of_type_in<'a>(
+    t: &TypeExpr<'a>,
+    env: &TyEnv<'a>,
+    v1: bool,
+    span: (usize, usize),
+    depth: usize,
+    nodes: &std::cell::Cell<usize>,
+) -> Result<Ty, CodegenError> {
     if depth > 64 {
         return Err(unsupported("type nests too deeply or is recursive", span));
     }
-    let rec = |t: &TypeExpr<'a>| ty_of_type(t, env, v1, span, depth + 1);
+    nodes.set(nodes.get() + 1);
+    if nodes.get() > MAX_TYPE_NODES {
+        return Err(CodegenError {
+            code: DiagnosticCode::W0706,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "type expands to more than {MAX_TYPE_NODES} nodes"
+            )),
+            span,
+        });
+    }
+    let rec = |t: &TypeExpr<'a>| ty_of_type_in(t, env, v1, span, depth + 1, nodes);
     match t {
         TypeExpr::Bytes { width: None, .. } => Ok(Ty::Bytes),
         TypeExpr::Bytes {
@@ -1833,7 +1861,31 @@ fn default_host(t: &Ty) -> Result<HostTy, String> {
 /// counter that makes every generated variable name unique.
 struct HostCx<'h> {
     spec: &'h HostSpec,
+    /// Warrant record name -> field names, to bind host struct fields by name.
+    fields: &'h BTreeMap<String, Vec<String>>,
     ctr: usize,
+}
+
+/// A host struct's field names must be the record's field names (or the
+/// positional indexes of a tuple struct): binding by position alone would let
+/// `fields=b:u8,a:u8` silently swap two fields.
+fn check_field_names(
+    record: &str,
+    host: &[crate::binding::HostField],
+    hc: &HostCx<'_>,
+) -> Result<(), String> {
+    let Some(names) = hc.fields.get(record) else {
+        return Ok(());
+    };
+    for (i, (hf, want)) in host.iter().zip(names).enumerate() {
+        if hf.name != *want && hf.name != i.to_string() {
+            return Err(format!(
+                "struct `{record}` field {i} is `{}`, the record's field is `{want}`",
+                hf.name
+            ));
+        }
+    }
+    Ok(())
 }
 
 impl HostCx<'_> {
@@ -1890,6 +1942,7 @@ fn to_host(
                     if ctors.len() != 1 || ctors[0].1.len() != hfields.len() {
                         return Err(format!("struct `{hn}` does not fit the record's fields"));
                     }
+                    check_field_names(name, hfields, hc)?;
                     let mut parts = Vec::new();
                     for (i, (c, hf)) in ctors[0].1.iter().zip(hfields).enumerate() {
                         let v = to_host(c, &hf.ty, &format!("{place}.fields()[{i}]"), false, hc)?;
@@ -1972,6 +2025,7 @@ fn from_host(t: &Ty, h: &HostTy, expr: &str, hc: &mut HostCx<'_>) -> Result<Stri
                     if ctors.len() != 1 || ctors[0].1.len() != hfields.len() {
                         return Err(format!("struct `{hn}` does not fit the record's fields"));
                     }
+                    check_field_names(name, hfields, hc)?;
                     let v = hc.fresh("s");
                     let mut parts = Vec::new();
                     for (c, hf) in ctors[0].1.iter().zip(hfields) {
@@ -2135,6 +2189,7 @@ fn composite_adapter<'a>(
     }
     let mut hc = HostCx {
         spec: &options.hosts,
+        fields: &env.fields,
         ctr: 0,
     };
     let mut s = String::new();
