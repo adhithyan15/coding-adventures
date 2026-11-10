@@ -1,17 +1,21 @@
 {
   "language": "kannada",
   "chapter": 12,
-  "sourceHash": "fnv1a64:7cbed957dddfc06e",
+  "sourceHash": "fnv1a64:d3a45ea3434947dc",
   "lessonIds": [
     "KA-C12-kutumba",
+    "KA-C12-third-person",
+    "KA-C12-present-endings",
     "KA-S121-letter-sa",
-    "KA-S143-digit-four"
+    "KA-C12-third-person-possession",
+    "KA-S143-digit-four",
+    "KA-C12-plural-galu"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
   "text": "kannada/narration/ch12.txt",
   "json": "kannada/narration/ch12.json",
-  "textHash": "fnv1a64:81a324baa4380bf9",
-  "jsonHash": "fnv1a64:a7ffe68d6fc12e95",
+  "textHash": "fnv1a64:290028ff7b978d2f",
+  "jsonHash": "fnv1a64:0efac250295ef15a",
   "findings": []
 }

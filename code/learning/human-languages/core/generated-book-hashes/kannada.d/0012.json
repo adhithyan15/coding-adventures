@@ -1,11 +1,15 @@
 {
   "language": "kannada",
   "chapter": 12,
-  "sourceHash": "fnv1a64:216e5631d3713239",
+  "sourceHash": "fnv1a64:b28790766ff65d2c",
   "lessonIds": [
     "KA-C12-kutumba",
+    "KA-C12-third-person",
+    "KA-C12-present-endings",
     "KA-S121-letter-sa",
-    "KA-S143-digit-four"
+    "KA-C12-third-person-possession",
+    "KA-S143-digit-four",
+    "KA-C12-plural-galu"
   ],
   "tex": "kannada/book/chapters/ch12-family.tex"
 }
