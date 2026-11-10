@@ -2434,52 +2434,6 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 // WX-H helpers
 // ---------------------------------------------------------------------------
 
-/// Names (first path segment) an expression mentions, restricted to `names`.
-fn mentioned(e: &Expression<'_>, names: &HashSet<&str>, out: &mut BTreeSet<String>) {
-    match e {
-        Expression::Reference { name, args, .. } => {
-            if let Some(first) = name.segments.first() {
-                if names.contains(first) {
-                    out.insert((*first).to_string());
-                }
-            }
-            for a in args.iter().flat_map(|l| l.iter()) {
-                mentioned(a, names, out);
-            }
-        }
-        Expression::Grouped { inner, .. } => mentioned(inner, names, out),
-        Expression::Unary { operand, .. } => mentioned(operand, names, out),
-        Expression::Binary { left, right, .. } => {
-            mentioned(left, names, out);
-            mentioned(right, names, out);
-        }
-        Expression::Conditional {
-            condition,
-            then_branch,
-            else_branch,
-            ..
-        } => {
-            mentioned(condition, names, out);
-            mentioned(then_branch, names, out);
-            mentioned(else_branch, names, out);
-        }
-        Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
-            for x in elements {
-                mentioned(x, names, out);
-            }
-        }
-        Expression::Project { base, .. } => mentioned(base, names, out),
-        Expression::Match { target, arms, .. } => {
-            mentioned(target, names, out);
-            for a in arms {
-                mentioned(&a.body, names, out);
-            }
-        }
-        Expression::Quantified { body, .. } => mentioned(body, names, out),
-        Expression::Literal { .. } => {}
-    }
-}
-
 /// The limit parameter of an operation's `output` row: the one unsigned numeric
 /// parameter (`U16`, `U32`, `U64` or `Nat`) the bound mentions.  `Ok(None)` when
 /// it mentions none or several, in which case the limit faults are refused.
@@ -2491,7 +2445,7 @@ fn limit_param<'a>(
 ) -> Result<Option<usize>, CodegenError> {
     let names: HashSet<&str> = op.params.iter().map(|p| p.name).collect();
     let mut seen = BTreeSet::new();
-    mentioned(output, &names, &mut seen);
+    output.mentioned_names(&names, &mut seen);
     let mut found = None;
     let mut count = 0;
     for (i, p) in op.params.iter().enumerate() {
