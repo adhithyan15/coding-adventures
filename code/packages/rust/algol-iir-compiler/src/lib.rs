@@ -3895,7 +3895,9 @@ impl Compiler {
                     let Piece::Node(operand) = sequence.get(index)? else {
                         return None;
                     };
-                    if let Some(radicand) = self.exact_static_sqrt_radicand(operand) {
+                    if let Some((term_coefficient, radicand)) =
+                        self.exact_static_sqrt_term_factors(operand)
+                    {
                         if floor_root.is_some() {
                             return None;
                         }
@@ -3907,9 +3909,9 @@ impl Compiler {
                             like_root_radicand = Some(radicand);
                         }
                         like_root_coefficient = if subtract {
-                            like_root_coefficient.checked_sub(1)?
+                            like_root_coefficient.checked_sub(term_coefficient)?
                         } else {
-                            like_root_coefficient.checked_add(1)?
+                            like_root_coefficient.checked_add(term_coefficient)?
                         };
                     } else if let Some(value) =
                         self.exact_static_integer_signed_floor_root_value(operand, subtract)
@@ -3945,7 +3947,7 @@ impl Compiler {
                     self.exact_scaled_floor_root_value(
                         like_root_coefficient,
                         1,
-                        radicand as u128,
+                        radicand,
                     )?
                 } else {
                     floor_root?
@@ -4012,6 +4014,16 @@ impl Compiler {
         }
         let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
         u64::try_from(value).ok()
+    }
+
+    /// Extract one positive static square-root term as an integer coefficient
+    /// and one remaining radicand. Even powers are ordinary integer terms.
+    fn exact_static_sqrt_term_factors(&self, node: &GrammarASTNode) -> Option<(i64, u128)> {
+        if let Some(radicand) = self.exact_static_sqrt_radicand(node) {
+            return Some((1, radicand as u128));
+        }
+        let factors = self.exact_static_sqrt_power_factors(node)?;
+        (factors.1 != 1).then_some(factors)
     }
 
     /// Reduce a bounded nonnegative power of one static square root to an
@@ -17825,6 +17837,29 @@ mod tests {
         ] {
             compile_source(source, "test")
                 .expect_err("unlike and dynamic additive roots must fail closed");
+        }
+    }
+
+    #[test]
+    fn al4_powered_like_floor_root_sums_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 + sqrt(entier(80)) ^ 3)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 - sqrt(entier(80)) + 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(80)) ^ 3 + sqrt(entier(80)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "like powered static square roots may combine before floor-root reduction for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 + sqrt(entier(5)) ^ 3)) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 3; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 + sqrt(entier(80)) ^ dynamic())) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test")
+                .expect_err("unlike and dynamic powered additive roots must fail closed");
         }
     }
 
