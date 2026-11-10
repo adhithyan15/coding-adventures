@@ -539,7 +539,10 @@ The main CI workflow uses the same build planner:
 
 - pull requests build affected packages across Linux, macOS, and Windows when
   the selected languages require those runners;
-- pushes to `main` create a forced sharded full-build plan;
+- pushes to `main` run the same incremental, affected-package plan as pull
+  requests, so merges do not each consume a full build's worth of runners;
+- a forced sharded full build runs every 6 hours on Linux, plus once a day
+  (00:00 UTC) on macOS and Windows too, and on demand via `workflow_dispatch`;
 - Rust packages run per-package Clippy with warnings denied;
 - CodeQL covers JavaScript/TypeScript, Python, Ruby, Go, and Swift, and runs
   daily and on demand rather than on every pull request;
