@@ -683,6 +683,13 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Almost no PR runs the Windows shard, so a BUILD_windows that has
+          # drifted from its BUILD (vitest left behind after a node --test
+          # migration, `set PERL5LIB=`, standardrb without the EndOfLine
+          # exemption, ...) stays latent until an unrelated PR rebuilds the
+          # package as a dependent. Find it here instead.
+          python3 code/scripts/audit_build_windows.py --check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_audit_build_windows.py'
           # B06 Phase 0: every tracked Cargo manifest contributes to one exact,
           # monotone inventory. New names fail, and removed names must leave the
           # allowlist in the same change so an old crate cannot silently return.
