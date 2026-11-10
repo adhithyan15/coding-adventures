@@ -1,8 +1,8 @@
 Kannada, chapter 104: People at Work.
-5 lessons. All 5 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
 ವ್ಯಾಪಾರ (vyāpāra) — business, trade.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 What does ವ್ಯಾಪಾರ (vyāpāra) mean? ("Business, trade".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 7.
 ಕೆಲಸಗಾರ (kelasagāra) — a worker.
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 What does ಕೆಲಸಗಾರ (kelasagāra) mean? ("A worker".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 7.
 ಪೊಲೀಸ್ (polīs) — the police.
 
 Warm-up.
@@ -97,7 +97,7 @@ Wrap-up Recall.
 What does ಪೊಲೀಸ್ (polīs) mean? ("The police".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 4 of 7.
 ಚಾಲಕ (cālaka) — a driver.
 
 Warm-up.
@@ -126,7 +126,7 @@ Wrap-up Recall.
 What does ಚಾಲಕ (cālaka) mean? ("A driver".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 5 of 7.
 ಅಂಗಡಿ (aṅgaḍi) — a shop.
 
 Warm-up.
@@ -157,3 +157,79 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does ಅಂಗಡಿ (aṅgaḍi) mean? ("A shop".) Say it once more.
+
+
+Lesson 6 of 7.
+-ಅನ್ನು (-annu) — the person or particular thing an action reaches.
+
+Warm-up.
+[pause 2 seconds]
+Your first visible case ending was -ಗೆ: one piece on the end for one job. Say the Kannada for the police and for a shop. This lesson gives a second ending and one new job.
+
+Grammar Lens: -ಅನ್ನು marks the object.
+ಪೊಲೀಸರನ್ನು ಕರೆಯಿರಿ polīsarannu kareyiri — please call the police.
+The calling reaches ಪೊಲೀಸರು (polīsaru), “the police”. Kannada puts -ಅನ್ನು (-annu) on that object: ಪೊಲೀಸರು becomes ಪೊಲೀಸರನ್ನು. The final sound joins the ending, but the job stays visible.
+With a person, the object ending is required. With a non-human thing, it often marks a particular thing already in view:
+[a table of 2 rows, read aloud]
+the word: ಪೊಲೀಸರು polīsaru. as the object: ಪೊಲೀಸರನ್ನು polīsarannu. meaning: the police, as the people called.
+the word: ಅಂಗಡಿ aṅgaḍi. as the object: ಅಂಗಡಿಯನ್ನು aṅgaḍiyannu. meaning: the particular shop, as the thing acted on.
+This is the accusative, the direct-object case. Keep the practical question: who or what does the action reach? Put its marker on that word.
+
+What you've built.
+Two case endings, two jobs: -ಗೆ points to a receiver or experiencer; -ಅನ್ನು (-annu) marks the object an action reaches. Kannada keeps the jobs in separate pieces rather than hiding both inside one ending.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: polīsaru … polīsarannu]
+[pause 8 seconds for the answer]
+[your turn — say: aṅgaḍi … aṅgaḍiyannu]
+[pause 8 seconds for the answer]
+[your turn — say: polīsarannu kareyiri — please call the police]
+[pause 8 seconds for the answer]
+[your turn — say: which word in that sentence the action reaches, and which ending marks it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ಅನ್ನು (-annu) mark? (The direct object — the person or particular thing the action reaches.) What is polīsaru as the object? (Polīsarannu.) Which ending points to a receiver instead? (-ಗೆ.) Next, the same object ending lands on pronouns you already know.
+
+
+Lesson 7 of 7.
+ನನ್ನನ್ನು, ನಿಮ್ಮನ್ನು, ಅವನನ್ನು — familiar pronouns in the object seat.
+
+Warm-up.
+[pause 2 seconds]
+Say ನಾನು, ನೀನು, ನೀವು, ಅವನು, ಅವಳು, ಅದು, ಅವರು. Those are the pronouns when they do the action. Now move each one to the place where the action reaches it.
+
+Grammar Lens: the same -ಅನ್ನು, on changed pronoun bodies.
+[a table of 7 rows, read aloud]
+the pronoun: ನಾನು nānu — I. as the object: ನನ್ನನ್ನು nannannu — me.
+the pronoun: ನೀನು nīnu — familiar you. as the object: ನಿನ್ನನ್ನು ninnannu — you.
+the pronoun: ನೀವು nīvu — respectful you. as the object: ನಿಮ್ಮನ್ನು nimmannu — you.
+the pronoun: ಅವನು avanu — he. as the object: ಅವನನ್ನು avanannu — him.
+the pronoun: ಅವಳು avaḷu — she. as the object: ಅವಳನ್ನು avaḷannu — her.
+the pronoun: ಅದು adu — it / that. as the object: ಅದನ್ನು adannu — it / that.
+the pronoun: ಅವರು avaru — they or respected he/she. as the object: ಅವರನ್ನು avarannu — them or that respected person.
+The pronoun body changes before -ಅನ್ನು (-annu) lands. Do not try to glue the ending onto the full dictionary form. Learn each left-to-right pair, then hear the one shared ending at the right edge.
+ನನ್ನನ್ನು ಕರೆಯಿರಿ — nannannu kareyiri — please call me ಅವರನ್ನು ಕರೆಯಿರಿ — avarannu kareyiri — please call them, or that respected person.
+The respectful/plural choice stays intact: ನೀವು becomes ನಿಮ್ಮನ್ನು and ಅವರು becomes ಅವರನ್ನು still carry respect as well as number.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: nānu … nannannu; nīvu … nimmannu]
+[pause 8 seconds for the answer]
+[your turn — say: avanu … avanannu; avaḷu … avaḷannu]
+[pause 8 seconds for the answer]
+[your turn — say: adu … adannu; avaru … avarannu]
+[pause 8 seconds for the answer]
+[your turn — say: nannannu kareyiri — please call me]
+[pause 8 seconds for the answer]
+[your turn — say: name business, a worker, the police, a driver and a shop]
+[pause 8 seconds for the answer]
+[your turn — say: which two object forms preserve the respectful/plural choice]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is “me” as the object? (Nannannu.) Respectful “you”? (Nimmannu.) “Him” and “her”? (Avanannu, avaḷannu.) “It” and “them”? (Adannu, avarannu.) Which ending do all seven share? (-ಅನ್ನು (-annu), after the pronoun body changes.)
+Business, worker, police, driver and shop? (ವ್ಯಾಪಾರ (vyāpāra), ಕೆಲಸಗಾರ (kelasagāra), ಪೊಲೀಸ್ (polīs), ಚಾಲಕ (cālaka), ಅಂಗಡಿ (aṅgaḍi).)

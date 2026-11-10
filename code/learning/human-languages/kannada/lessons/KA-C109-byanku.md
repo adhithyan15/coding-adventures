@@ -19,28 +19,31 @@ etymology_hook: "byāṅku ← English bank"
 duration:
   max_seconds: 200
 requires:
-  knowledge: [KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
+  knowledge: [KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
 introduces:
   knowledge: [KA-LEX-C109-LOC109-05]
 practises:
-  knowledge: [KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
+  knowledge: [KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C109-granthalaya]
+reviews_of: [KA-C109-granthalaya, KA-C104-accusative-annu, KA-C104-object-pronouns]
 ---
 
 # ಬ್ಯಾಂಕು (byāṅku) — a bank
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08] -->
 
 [PAUSE 2s] Before the new one: say the Kannada for a temple, then the Kannada for a library.
 
 [PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**,
 **ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**. [YOU READ: the sign form **೧ನೇ**]
+
+[PAUSE 2s] From the earlier object lesson, say **-ಅನ್ನು**, then “him”, “her” and
+“them” as objects.
 
 ## You'll want to know: ಬ್ಯಾಂಕು
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-05]; assesses=[] -->
@@ -58,15 +61,17 @@ reviews_of: [KA-C109-granthalaya]
 One more word for this chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07] -->
 
 [PAUSE 1s]
 - [YOU SAY: *byāṅku*]
 - [YOU SAY: *byāṅku*, once more]
 - [YOU SAY: say *byāṅku*]
+- [YOU RECALL: **-ಅನ್ನು; ಅವನನ್ನು; ಅವಳನ್ನು; ಅವರನ್ನು**]
 - [YOU RECALL: say the Kannada for a temple, then the Kannada for a library, then say *byāṅku* again]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07] -->
 
-[PAUSE 3s] What does ಬ್ಯಾಂಕು mean? ("A bank".) Say it once more.
+[PAUSE 3s] What does ಬ್ಯಾಂಕು mean? ("A bank".) Say it once more. Then say “it”
+and “them” as objects. (**ಅದನ್ನು; ಅವರನ್ನು**.)

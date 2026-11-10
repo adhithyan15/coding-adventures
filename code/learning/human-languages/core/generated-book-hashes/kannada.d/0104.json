@@ -1,13 +1,15 @@
 {
   "language": "kannada",
   "chapter": 104,
-  "sourceHash": "fnv1a64:5547da010555c8fd",
+  "sourceHash": "fnv1a64:7df573349d220b87",
   "lessonIds": [
     "KA-C104-business",
     "KA-C104-worker",
     "KA-C104-police",
     "KA-C104-driver",
-    "KA-C104-shop"
+    "KA-C104-shop",
+    "KA-C104-accusative-annu",
+    "KA-C104-object-pronouns"
   ],
   "tex": "kannada/book/chapters/ch104-people-at-work.tex"
 }

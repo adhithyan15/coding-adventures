@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Wishes and Warmth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f73308c4888c2136",
+  "sourceHash": "fnv1a64:4a5efeedd8ba026e",
   "lessons": [
     {
       "id": "KA-C105-wishes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66c5c9995e09dac2",
+      "sourceHash": "fnv1a64:f1dbba6a8c6b7f92",
       "notice": null,
       "blocks": [
         {
@@ -563,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24ab807ff3f9ac1d",
+      "sourceHash": "fnv1a64:75f2fba23ce59fb6",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say hospitality and love. Then ask where somebody is from, answer “from Bengaluru”, and recognise the Karnataka relation question."
+              "text": "Say hospitality and love. Then ask where somebody is from, answer “from Bengaluru”, and recognise the Karnataka relation question. From the last chapter, say the object ending, then “me” and respectful “you” as objects."
             }
           ]
         },
@@ -657,6 +657,15 @@
             {
               "kind": "prompt",
               "action": "RECALL",
+              "instruction": "-ಅನ್ನು; ನನ್ನನ್ನು; ನಿಮ್ಮನ್ನು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **-ಅನ್ನು**; **ನನ್ನನ್ನು**; **ನಿಮ್ಮನ್ನು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
               "instruction": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? and ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.",
               "spoken": true,
               "scored": false,
@@ -687,7 +696,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ಮೆಚ್ಚುಗೆ (meccuge) mean? (\"Appreciation, praise\".) Say it once more."
+              "text": "What does ಮೆಚ್ಚುಗೆ (meccuge) mean? (\"Appreciation, praise\".) Say it once more. Then say the ending for an object and “me” as an object. (-ಅನ್ನು; ನನ್ನನ್ನು.)"
             }
           ]
         }

@@ -36,6 +36,7 @@
 //! is listed in TF01 §7; all of it belongs to the layers built on this one.
 
 pub mod bench;
+pub mod counting_alloc;
 pub mod fuzz;
 pub mod manifest;
 pub mod pbt;
@@ -43,6 +44,11 @@ pub mod prng;
 pub mod run;
 pub mod tfv;
 pub mod verdict;
+
+// The crate's own unit-test binary measures real allocations (bench.rs and
+// counting_alloc.rs tests), so it installs the counting allocator once here.
+#[cfg(test)]
+crate::install_counting_allocator!();
 
 pub use bench::{
     bench, BenchmarkConfig, BenchmarkHarness, BenchmarkResult, Budget, BudgetVerdict, CostCounter,

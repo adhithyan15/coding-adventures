@@ -140,14 +140,14 @@ affected package list and rebuilds the selected shard.
 
 ## CI Shape
 
-Sharding is reserved for forced full builds: every `main` push, and a pull
-request carrying the `ci-full-build` label (so a change to the main build itself
-can be proven before it merges; label, then push). Other pull requests and
-branch pushes continue to run the normal affected-package build plan without a
-shard index, because those builds are already narrow and should not wait on
-multiple macOS/Windows shard jobs.
+Sharding is reserved for forced full builds: periodic scheduled `main` builds
+(running every 6 hours, Linux only), manual workflow dispatches with `full_build`,
+and a pull request carrying the `ci-full-build` label (so a change to the main build itself
+can be proven before it merges; label, then push). Standard pull requests and
+ordinary `main` pushes run the normal incremental affected-package build plan without
+a shard index, keeping feedback fast and reserving runner capacity.
 
-For `main` pushes, the detect job emits `build_shards`, a compact JSON array
+For forced full builds, the detect job emits `build_shards`, a compact JSON array
 for a GitHub Actions matrix. The CI workflow turns those shard entries into
 Ubuntu runner jobs:
 
@@ -157,8 +157,21 @@ strategy:
     include: ${{ fromJSON(needs.detect.outputs.build_matrix) }}
 ```
 
-Each sharded main job downloads the same `build-plan.json` and passes
+Each sharded job downloads the same `build-plan.json` and passes
 `-shard-index ${{ matrix.shard_index }}`.
+
+### Cross-OS daily full build
+
+The 6-hourly and `ci-full-build` runs are Linux-only. One scheduled run a day
+(the `0 0 * * *` cron, 00:00 UTC), and any manual dispatch with `full_build` and
+`cross_os_full`, additionally repeats the same shard indexes on `macos-latest`
+and `windows-2025`: 15 shards on each, 45 jobs in all. The shard plan is computed
+once, on Linux, and every OS runs the same `-shard-index` values against the same
+`build-plan.json`; each entry's label is prefixed with its OS
+(`windows-2025 shard-3-of-15`). The macOS and Windows legs use a 300-minute step
+ceiling instead of Linux's 150. This is the only per-`main` cross-OS coverage, so a
+platform-only regression can take up to a day to surface; pull requests keep their
+per-change macOS and Windows legs.
 
 ## Scaling Notes
 
