@@ -224,4 +224,10 @@ defmodule CodingAdventures.LZ77Test do
       end
     end
   end
+
+  test "decode rejects a negative copy length instead of looping forever" do
+    assert_raise ArgumentError, fn ->
+      LZ77.decode([%{offset: 0, length: 0, next_char: ?A}, %{offset: 1, length: -1, next_char: ?B}])
+    end
+  end
 end
