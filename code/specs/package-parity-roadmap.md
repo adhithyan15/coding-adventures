@@ -20857,3 +20857,41 @@ intervening TypeScript LZ77 test migration is exact-path-disjoint from the six
 PR paths and touches no workflow. Treat the resulting head as a twenty-fifth
 reconciliation with fresh local validation, independent review, normal push,
 and an entirely new hosted rollup.
+
+#### Test-trigger fixture selector merge receipt and Rust crate-closure snapshot selection
+
+Exact independently reviewed head
+`c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7` completed all 42 hosted checks
+acceptably: 30 succeeded, 11 were expected skips, and the CodeQL aggregate was
+neutral. GitHub squash-merged PR #18899 at `2026-11-05T01:59:10Z` as
+`11290878781e7e1c7881476572a487e9f0a0c9f6`. GitHub's timeline contains no
+auto-merge-enable event, so this receipt is recorded as a manual squash merge
+without claiming guarded auto-merge. The merge is an ancestor of exact current
+`origin/main` `57bfc809e3eb440317c5ae59552c74b2ae64b980`; GitHub deleted the remote
+branch and the clean completed worktree and local branch were removed safely.
+
+Reprioritization selects
+`build-tool-rust-cargo-trigger-crate-closure-snapshot-parity` on branch
+`codex/rust-cargo-trigger-crate-closure-snapshot` from that exact current-main
+revision. Its neutral strict Cargo manifest snapshot prerequisite is merged,
+and completing the pure resolver directly unlocks the exact-identity native
+adapter and then CLI integration. All 22 live open PRs are exact-path-disjoint
+from the planned Rust build-tool source, tests, README, changelog, state,
+roadmap, and conformance-spec scope.
+
+The selected slice accepts only immutable caller-supplied snapshots. It
+lexically validates repository-relative package and crate identities, resolves
+development and root-patch trigger paths, follows normal and build links
+through nested or orphan crates, attributes nested crates to their containing
+package, and accepts an otherwise unowned crate only when the immutable
+exemption snapshot names it exactly. It fails closed on duplicate identities,
+missing crates, unsafe paths, unsupported Cargo-config redirects, dependency
+cycles, and a chain deeper than 16 crates. Memoized closure evaluation must
+make shared diamonds deterministic without repeated expansion. Results are
+sorted unique trigger relations with self-relations removed.
+
+This tranche grants no native authority: it must not read files, resolve host
+paths or symlinks, inspect Cargo configuration or the exemption ledger on
+disk, consult environment state, run a process, access the network, execute a
+package, or integrate the CLI. Those exact-identity and integration concerns
+remain with the separately recorded native-adapter and CLI owners.

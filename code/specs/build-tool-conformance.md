@@ -1799,6 +1799,44 @@ workspace/replace redirection, and non-HTTPS/non-SSH Git sources fail atomically
 with an empty result and one stable bounded error. Diagnostics and successful
 results MUST NOT echo raw Git URLs, registry names, versions, or refs.
 
+The Rust Cargo-trigger crate-closure adopter is a second authority-free step
+over already captured snapshots. Its input contains at most 4,096 packages,
+16,384 crate records, 16,384 total trigger/link path references, and 4,096
+exact orphan exemptions. A package record carries its canonical
+repository-relative root plus the development/root-patch paths emitted by the
+manifest snapshot. A crate record carries its canonical repository-relative
+directory plus normal/build paths emitted by the `crate_closure` profile. A
+closed Cargo-configuration snapshot separately states whether any captured
+ancestor redirects `paths`, `patch`, or `source`; any redirect fails the whole
+operation before resolution.
+
+Canonical package roots, crate directories, and exemption identities contain
+only nonempty forward-slash-separated segments and no `.`, `..`, backslash,
+leading slash, drive prefix, NUL, or empty segment. Dependency paths are
+lexically joined to the referring crate directory, may use `.` and `..`, and
+must remain inside the repository. Identity remains byte-exact after that
+lexical reduction: the pure resolver performs no case folding, Unicode
+normalization, filesystem lookup, or symlink resolution.
+
+Every trigger target must name a captured crate. An exact package root selects
+that package; a nested crate selects the deepest containing package; and an
+otherwise unowned crate is permitted only when its exact canonical identity is
+present in the immutable exemption snapshot. Normal/build links are followed
+transitively through every target crate. Closure expansion is memoized per
+crate, rejects a normal/build cycle atomically, and allows at most 16 crate
+records on one root-to-leaf expansion path. Shared diamonds reuse the same
+complete memoized closure. The output is the sorted unique
+`[trigger_package, dependent_package]` relation, with self-relations removed.
+
+Duplicate package names, package roots, crate directories, or exemptions;
+missing or unowned crates; unsafe identities; ceiling excess; redirects;
+cycles; and excessive depth each return one stable error code and no partial
+relation. This pure step MUST NOT read a manifest, Cargo configuration, or
+exemption ledger; resolve a host path, symlink, junction, or reparse point;
+inspect the environment; run a process; access the network; execute a package;
+or integrate the build-tool CLI. Exact native capture and final CLI selection
+remain separate adapters.
+
 `ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
 path-selection work units whenever `force` is false, both snapshots are
 non-null, and no changed path is a fixed gating-machinery sentinel. After

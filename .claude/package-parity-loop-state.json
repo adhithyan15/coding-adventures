@@ -16,16 +16,14 @@
       "external-approval"
     ]
   },
-  "active_pr": 18899,
-  "active_prs": [
-    18899
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-11-04T13:16:28Z",
+    "observed_at": "2026-11-10T06:01:11Z",
     "pr_number": 18899,
-    "head_revision": "46c041bd3d28c28079a18f8b7dca955d18246d2b",
-    "action": "Fresh hosted qualification on exact independently reviewed head 46c041bd3d28c28079a18f8b7dca955d18246d2b had no failures but remained early in its rollup when protected main advanced to 79f6e1e54bc0f41c2fc3e2be4099471355ad6b0b. Guarded auto-merge remained disabled. The intervening TypeScript LZ77 test migration is path- and workflow-disjoint. Reconcile current main normally and require a fresh exact head, fresh independent review, and an entirely new hosted rollup. The preceding Unicode external-fetch failure receipt remains recorded for future resilience prioritization if it recurs.",
-    "manual_merge": false
+    "head_revision": "c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7",
+    "action": "Exact reviewed head c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7 completed all 42 hosted checks acceptably: 30 successes, 11 expected skips, and one neutral CodeQL aggregate. GitHub squash-merged PR #18899 at 2026-11-05T01:59:10Z as 11290878781e7e1c7881476572a487e9f0a0c9f6. No auto-merge-enable event exists in GitHub's timeline, so the receipt is recorded as a manual squash merge without claiming guarded auto-merge. The merge is an ancestor of current origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980; the remote branch was deleted and the clean completed worktree and local branch were removed safely.",
+    "manual_merge": true
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2980,7 +2978,7 @@
     {
       "id": "build-tool-test-trigger-fixture-native-ci-selection-routing",
       "title": "Route test-trigger fixtures to native Go and Rust CI readers",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-ci-gate-fixture-native-ci-selection",
         "build-tool-rust-cargo-test-trigger-selection-parity"
@@ -3005,6 +3003,11 @@
       "implementation_revision": "d19754aafe24f4ee7de37706113fd4b527882296",
       "validation_revision": "d19754aafe24f4ee7de37706113fd4b527882296",
       "validation_notes": "The bounded implementation changes four product paths: the Go selector, a focused native-routing suite, Go README, and the CI-gate registry. Exact flat test-trigger-selection JSON cases seed only the Go and Rust readers; empty stems, nested paths, backslash spellings, case variants, extensionless names, and backups remain negative. Focused selection, language, missing-root, rename-old-source, union, prerequisite-closure, three-platform plan, toolchain, and direct-reader drift tests pass. Go vet and build pass. The full Go build-tool suite passes when the exact pre-existing PowerShell generator round-trip is skipped; the only unskipped failure requires unavailable pwsh. JSON state parsing, the 1,572-item unique dependency-complete acyclic graph, gofmt, and diff hygiene pass. Three hosted attempts on prior exact reviewed head 18763dbce2008dbc4f4c5495188342b7cf4a4279 completed every other check acceptably but exhausted the repo-wide metadata-contract job's hard 30-minute budget; current-main reconciliation incorporates the later path-disjoint checkout optimization and must be qualified afresh. No fixture, workflow, selection-core, native-reader, filesystem, process, environment, network, credential, or execution authority changed.",
+      "final_review_revision": "c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7",
+      "merged_head_revision": "c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7",
+      "merge_revision": "11290878781e7e1c7881476572a487e9f0a0c9f6",
+      "merged_at": "2026-11-05T01:59:10Z",
+      "merge_notes": "All 42 checks on the exact reviewed head completed terminal acceptable: 30 successes, 11 expected skips, and one neutral CodeQL aggregate. GitHub reported the PR mergeable and squash-merged it as 11290878781e7e1c7881476572a487e9f0a0c9f6. The timeline contains no auto-merge-enable event, so no guarded auto-merge claim is made. The receipt is an ancestor of current origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980; the remote branch was deleted and the clean completed worktree and local branch were removed safely.",
       "notes": "Recorded after the Rust Cargo test-trigger core introduced six shared test-trigger-selection-*.json cases. Extend the native fixture-change selection map so exact flat changes in that family seed only go/programs/build-tool and rust/programs/build-tool. Reject empty stems, nested paths, backslash spellings, case variants, and backups; cover added, modified, deleted, and renamed paths; preserve ordinary package-root union and prerequisite closure; and prove Linux, macOS, Windows, and explicit language-plan behavior. This operational routing is separate from the authority-free selection core and grants no native or merge credit."
     },
     {
@@ -3045,13 +3048,16 @@
     {
       "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
       "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
       ],
-      "branch": null,
+      "branch": "codex/rust-cargo-trigger-crate-closure-snapshot",
       "pr_number": null,
       "registered_at": "2026-11-03T06:22:44Z",
+      "selected_at": "2026-11-10T06:01:11Z",
+      "selection_revision": "57bfc809e3eb440317c5ae59552c74b2ae64b980",
+      "selection_notes": "Selected after verified merge receipt and cleanup for PR #18899. Its neutral manifest-snapshot prerequisite is merged, it directly unlocks the exact-identity native adapter and then CLI integration, and all 22 live open PRs are exact-path-disjoint from the planned Rust build-tool source, tests, README, changelog, state, roadmap, and conformance-spec scope. The fresh dedicated worktree starts at exact origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980. Keep this tranche authority-free: consume already captured immutable package, crate, config, and exemption snapshots; do not read files, resolve host paths or symlinks, consult environment state, run processes, or integrate the CLI.",
       "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
     },
     {
@@ -27546,10 +27552,10 @@
     }
   ],
   "postmerge_refresh": {
-    "pr_number": 18583,
-    "revision": "20db234ceca6c3ee1e91c79dace52851c4c3feb8",
+    "pr_number": 18899,
+    "revision": "11290878781e7e1c7881476572a487e9f0a0c9f6",
     "receipt_count": 1,
-    "evidence": "code/specs/package-parity-roadmap.md#sha-512-hf04-merge-receipt-and-lua-graphdiff-reprioritization",
+    "evidence": "code/specs/package-parity-roadmap.md#test-trigger-fixture-selector-merge-receipt-and-rust-crate-closure-snapshot-selection",
     "native_qualification": false,
     "successor_selected": true,
     "external_successor_observed": null
