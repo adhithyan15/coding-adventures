@@ -198,4 +198,30 @@ defmodule CodingAdventures.LZ77Test do
       assert LZ77.compress(data) == LZ77.compress(data)
     end
   end
+
+  describe "decode performance and hostile offsets (SEC-004)" do
+    test "decodes a large valid token stream in linear time" do
+      # One literal then 400 overlapping 255-byte copies (~100 KB of output).
+      tokens =
+        [%{offset: 0, length: 0, next_char: 65}] ++
+          for _ <- 1..400, do: %{offset: 1, length: 255, next_char: 66}
+
+      {micros, out} = :timer.tc(fn -> LZ77.decode(tokens) end)
+      assert byte_size(out) == 1 + 400 * 256
+      assert micros < 5_000_000
+    end
+
+    test "many literal tokens decode in linear time" do
+      tokens = for i <- 1..60_000, do: %{offset: 0, length: 0, next_char: rem(i, 256)}
+      {micros, out} = :timer.tc(fn -> LZ77.decode(tokens) end)
+      assert byte_size(out) == 60_000
+      assert micros < 5_000_000
+    end
+
+    test "offset beyond output raises ArgumentError" do
+      assert_raise ArgumentError, fn ->
+        LZ77.decode([%{offset: 5, length: 1, next_char: 65}])
+      end
+    end
+  end
 end
