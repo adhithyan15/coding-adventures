@@ -174,6 +174,12 @@ fn child_contexts<'a>(
         });
     }
     match node.rule_name.as_str() {
+        // `await(x)` is an await expression, which the grammar cannot parse yet:
+        // it reads a call of an identifier named `await`. Leave that callee alone.
+        "call_expression" => Box::new(move |child| Ctx {
+            in_async: ctx.in_async && !is_bare_await(child),
+            ..ctx
+        }),
         "class_declaration" | "class_expression" => Box::new(move |child| Ctx {
             strict: true,
             // Computed keys and fields are not part of an enclosing async function.
@@ -196,6 +202,18 @@ fn child_contexts<'a>(
             super_prop: true,
         }),
         _ => Box::new(move |_| ctx),
+    }
+}
+
+/// Is `node` just the identifier `await` (through the single-child wrappers)?
+fn is_bare_await(node: &GrammarASTNode) -> bool {
+    let mut current = node;
+    loop {
+        match current.children.as_slice() {
+            [ASTNodeOrToken::Node(inner)] => current = inner,
+            [ASTNodeOrToken::Token(t)] => return t.value == "await" && is_name(t),
+            _ => return false,
+        }
     }
 }
 
@@ -308,6 +326,15 @@ fn check_node(node: &GrammarASTNode, ctx: Ctx) -> Result<(), String> {
                 }
             }
         }
+        // `({ async⏎m() {} })`: no line terminator after `async` in an object
+        // literal method (§15.8). Elsewhere the break is legal: `async⏎function f(){}`
+        // and `async⏎x => 1` are `async` the identifier, then ASI, and in a class
+        // `async⏎m(){}` is a field `async` followed by a method.
+        "property_definition" => {
+            if let Some(method) = children(node).find(|n| n.rule_name == "async_method") {
+                check_async_line(method)?;
+            }
+        }
         "member_expression" => {
             let is_super = matches!(
                 node.children.first(),
@@ -368,11 +395,6 @@ fn check_node(node: &GrammarASTNode, ctx: Ctx) -> Result<(), String> {
             );
         }
         _ => {}
-    }
-    // `async⏎function`, `async⏎m(){}` and `async⏎x => 1`: no line
-    // terminator after `async` (§15.8, §15.9).
-    if function_kind(node).is_some_and(|k| k.is_async) {
-        check_async_line(node)?;
     }
     Ok(())
 }
@@ -870,6 +892,8 @@ mod tests {
         assert!(!ok("(async function* await() {})"));
         assert!(!ok("({ async m(await) {} })"));
         assert!(ok("var await; function f() { var await; }"));
+        // `await(x)` is an await expression, not a call of an identifier.
+        assert!(ok("(async function () { return await(x); })"));
         assert!(ok("(async function () { ({ await: 1 }).await; })"));
         assert!(ok("(async function () { (() => { var await; }); })"));
     }
@@ -879,6 +903,10 @@ mod tests {
         assert!(!ok("({ async\n m() {} })"));
         assert!(ok("({ async m() {} })"));
         assert!(ok("({ async: 1, async\n })"));
+        // Elsewhere the break is legal: `async` is an identifier, then ASI.
+        assert!(ok("async\nfunction foo() {}"));
+        assert!(ok("async\nx => {}"));
+        assert!(ok("class C { async\n m() {} }"));
     }
 
     #[test]
