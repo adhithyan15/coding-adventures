@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- Added `BUILD_windows` identical to `BUILD` but with `--except Layout/EndOfLine` on the `standardrb` line (the repo forces LF; Windows StandardRB expects CRLF).
+
 ## [0.2.0] - 2026-08-13
 
 ### Added

@@ -3,6 +3,12 @@
 All notable changes to this package are recorded here.
 Follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) conventions.
 
+## [Unreleased]
+
+### Fixed
+
+- Added `BUILD_windows` identical to `BUILD` but with `--except Layout/EndOfLine` on the `standardrb` line (the repo forces LF; Windows StandardRB expects CRLF).
+
 ## [0.1.1] — 2026-04-26
 
 ### Tests
