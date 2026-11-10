@@ -96,6 +96,18 @@ SPEC_PATH = REPO_ROOT / "code" / "specs" / "VER13-assumption-catalogue.md"
 BACKLOG_PATH = REPO_ROOT / "code" / "specs" / "VER-BACKLOG.md"
 
 SCHEMA_ID = "ver13-assumption-catalogue-v1"
+
+# Input caps, identical to ca-assurance-report/src/catalogue.rs: files are
+# read with a capped read *before* parsing, so an oversized file never reaches
+# the JSON parser; counts bound the per-entry work (and the pattern-overlap
+# check, which compares patterns pairwise within a bucket).
+MAX_CATALOGUE_BYTES = 1024 * 1024
+MAX_EVIDENCE_KINDS_BYTES = 256 * 1024
+MAX_NON_CLAIMS_BYTES = 64 * 1024
+MAX_REPORT_BYTES = 16 * 1024 * 1024  # ca-assurance-report MAX_MANIFEST_BYTES
+MAX_ENTRIES = 4096
+MAX_LIST_ITEMS = 256
+MAX_TOTAL_PATTERNS = 4096
 EVIDENCE_KINDS_SCHEMA_ID = "ver13-evidence-kinds-v1"
 NON_CLAIMS_SCHEMA_ID = "ver13-non-claims-v1"
 # The repository-relative path a report records in ``catalogue.path``.
@@ -170,11 +182,14 @@ CLAIM_KINDS = (
 )
 INPUT_CLASSES = ("public", "secret", "trusted", "hostile")
 
-ID_RE = re.compile(r"^[A-Za-z0-9._-]+$")
-ALIAS_RE = re.compile(r"^[a-z0-9._:-]+$")
-BACKLOG_ID_RE = re.compile(r"^[A-Z][A-Z0-9]*-[0-9A-Za-z]+$")
-PACKAGE_RE = re.compile(r"^(\*|[a-z0-9_-]+/[a-z0-9_-]+)$")
-DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+# Whole-string patterns, always applied with ``fullmatch``: ``re.match`` with
+# ``$`` would accept a trailing newline (``"id\n"``) that the Rust loader in
+# ca-assurance-report rejects, and the two validators must agree.
+ID_RE = re.compile(r"[A-Za-z0-9._-]+")
+ALIAS_RE = re.compile(r"[a-z0-9._:-]+")
+BACKLOG_ID_RE = re.compile(r"[A-Z][A-Z0-9]*-[0-9A-Za-z]+")
+PACKAGE_RE = re.compile(r"\*|[a-z0-9_-]+/[a-z0-9_-]+")
+DIGEST_RE = re.compile(r"sha256:[0-9a-f]{64}")
 
 ENTRY_REQUIRED = (
     "id",
@@ -254,6 +269,19 @@ def _reject_constant(name: str) -> object:
     raise CatalogueError(f"non-JSON constant {name}")
 
 
+def read_capped(path: Path, cap: int) -> bytes:
+    """Read at most ``cap`` bytes of ``path``; a longer file is an error.
+
+    The limit is applied to the bytes actually read (``cap + 1`` requested), not
+    to a file size that could change between a stat and the read.
+    """
+    with path.open("rb") as handle:
+        raw = handle.read(cap + 1)
+    if len(raw) > cap:
+        raise CatalogueError(f"{path} is larger than the {cap}-byte limit")
+    return raw
+
+
 def parse_catalogue_text(text: str) -> dict:
     """Parse catalogue text strictly: no duplicate keys, no NaN, object root."""
     try:
@@ -264,6 +292,9 @@ def parse_catalogue_text(text: str) -> dict:
         )
     except json.JSONDecodeError as exc:
         raise CatalogueError(f"invalid JSON: {exc}") from exc
+    except RecursionError as exc:
+        # Deep nesting exhausts the parser's stack: a finding, not a traceback.
+        raise CatalogueError("JSON nested too deeply") from exc
     if not isinstance(data, dict):
         raise CatalogueError("catalogue root must be a JSON object")
     return data
@@ -330,7 +361,7 @@ def _check_applies_to(out: list[Finding], eid: str, applies: object) -> None:
         )
     else:
         for pkg in pkgs:
-            if not PACKAGE_RE.match(pkg):
+            if not PACKAGE_RE.fullmatch(pkg):
                 out.append(
                     Finding("schema", eid, f"applies_to.packages bad entry {pkg!r}")
                 )
@@ -363,7 +394,7 @@ def _check_discharge(out: list[Finding], eid: str, discharge: object) -> None:
             )
         )
     backlog = discharge["backlog"]
-    if not isinstance(backlog, str) or not BACKLOG_ID_RE.match(backlog):
+    if not isinstance(backlog, str) or not BACKLOG_ID_RE.fullmatch(backlog):
         out.append(
             Finding("schema", eid, f"discharge.backlog {backlog!r} is not a backlog id")
         )
@@ -387,7 +418,9 @@ def _check_discharged_by(out: list[Finding], eid: str, value: object) -> None:
                     "schema", eid, "discharged_by.evidence must be a non-empty string"
                 )
             )
-        if not isinstance(item["digest"], str) or not DIGEST_RE.match(item["digest"]):
+        if not isinstance(item["digest"], str) or not DIGEST_RE.fullmatch(
+            item["digest"]
+        ):
             out.append(
                 Finding("schema", eid, "discharged_by.digest must be sha256:<64 hex>")
             )
@@ -429,7 +462,7 @@ def _check_reference_fields(out: list[Finding], eid: str, entry: dict) -> None:
         out.append(Finding("schema", eid, "aliases must be a list of strings"))
     else:
         for alias in aliases:
-            if not ALIAS_RE.match(alias):
+            if not ALIAS_RE.fullmatch(alias):
                 out.append(
                     Finding(
                         "schema", eid, f"alias {alias!r} violates {ALIAS_RE.pattern}"
@@ -460,6 +493,9 @@ def validate_structure(data: dict) -> list[Finding]:
     if not isinstance(entries, list):
         out.append(Finding("schema", "<root>", "assumptions must be a list"))
         return out
+    if len(entries) > MAX_ENTRIES:
+        out.append(Finding("schema", "<root>", f"more than {MAX_ENTRIES} entries"))
+        return out
     for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             out.append(Finding("schema", f"<entry {index}>", "entry must be an object"))
@@ -468,7 +504,7 @@ def validate_structure(data: dict) -> list[Finding]:
         eid = raw_id if isinstance(raw_id, str) else f"<entry {index}>"
         if not _check_fields(out, eid, "entry", entry, ENTRY_REQUIRED, ENTRY_OPTIONAL):
             continue
-        if not isinstance(raw_id, str) or not ID_RE.match(raw_id):
+        if not isinstance(raw_id, str) or not ID_RE.fullmatch(raw_id):
             out.append(Finding("schema", eid, f"id must match {ID_RE.pattern}"))
         _check_scalar_types(out, eid, entry)
         _check_reference_fields(out, eid, entry)
@@ -1067,8 +1103,8 @@ def check_spec_sync(entries: list[dict], spec_text: str) -> list[Finding]:
 # ---------------------------------------------------------------------------
 
 MANIFESTS = ("test", "proof", "bench", "planned")
-KIND_RE = re.compile(r"^[a-z0-9-]+$")
-SEGMENT_RE = re.compile(r"^[A-Za-z0-9_.:-]+$")
+KIND_RE = re.compile(r"[a-z0-9-]+")
+SEGMENT_RE = re.compile(r"[A-Za-z0-9_.:-]+")
 EVIDENCE_KIND_FIELDS = (
     "kind",
     "manifest",
@@ -1091,7 +1127,7 @@ def parse_pattern(pattern: str) -> list[str] | None:
     parts = pattern.split("/")
     if not 1 <= len(parts) <= MAX_PATTERN_SEGMENTS or parts[0] == "*":
         return None
-    if any(p != "*" and not SEGMENT_RE.match(p) for p in parts):
+    if any(p != "*" and not SEGMENT_RE.fullmatch(p) for p in parts):
         return None
     return parts
 
@@ -1118,6 +1154,9 @@ def check_evidence_kinds(data: object, entries: list[dict]) -> list[Finding]:
     if not isinstance(rows, list) or not rows:
         out.append(Finding("schema", where, "kinds must be a non-empty list"))
         return out
+    if len(rows) > MAX_ENTRIES:
+        out.append(Finding("schema", where, f"more than {MAX_ENTRIES} kinds"))
+        return out
     defined: dict[str, list[list[str]]] = {}
     for index, row in enumerate(rows):
         rid = row.get("kind") if isinstance(row, dict) else None
@@ -1127,13 +1166,17 @@ def check_evidence_kinds(data: object, entries: list[dict]) -> list[Finding]:
             continue
         if not _check_fields(out, eid, "kind", row, EVIDENCE_KIND_FIELDS):
             continue
-        if not isinstance(rid, str) or not KIND_RE.match(rid):
+        if not isinstance(rid, str) or not KIND_RE.fullmatch(rid):
             out.append(Finding("schema", eid, "kind must match [a-z0-9-]+"))
             continue
         if rid in defined:
             out.append(Finding("schema", eid, "kind defined twice"))
         manifest = row["manifest"]
-        if manifest not in MANIFESTS:
+        if not isinstance(manifest, str):
+            # Never use a list/dict as a key below (``dict.get`` would raise).
+            out.append(Finding("schema", eid, "manifest must be a string"))
+            manifest = "<invalid>"
+        elif manifest not in MANIFESTS:
             out.append(
                 Finding("schema", eid, f"manifest {manifest!r} not in {MANIFESTS}")
             )
@@ -1148,6 +1191,8 @@ def check_evidence_kinds(data: object, entries: list[dict]) -> list[Finding]:
             out.append(
                 Finding("schema", eid, "patterns must be a non-empty list of strings")
             )
+        elif len(row["patterns"]) > MAX_LIST_ITEMS:
+            out.append(Finding("schema", eid, f"more than {MAX_LIST_ITEMS} patterns"))
         else:
             for pattern in row["patterns"]:
                 seg = parse_pattern(pattern)
@@ -1171,12 +1216,21 @@ def check_evidence_kinds(data: object, entries: list[dict]) -> list[Finding]:
                 parsed.append(seg)
         defined[rid] = parsed
     flat = [(k, p) for k, pats in defined.items() for p in pats]
-    for i, (ka, pa) in enumerate(flat):
-        for kb, pb in flat[i + 1 :]:
-            if patterns_overlap(pa, pb):
-                out.append(
-                    Finding("schema", ka, f"a pattern overlaps a pattern of {kb!r}")
-                )
+    if len(flat) > MAX_TOTAL_PATTERNS:
+        out.append(Finding("schema", where, f"more than {MAX_TOTAL_PATTERNS} patterns"))
+        return out
+    # Two patterns can only overlap with equal length and the same (always
+    # literal) first segment, so compare pairwise within those buckets only.
+    buckets: dict[tuple[int, str], list[tuple[str, list[str]]]] = {}
+    for kind, pattern in flat:
+        buckets.setdefault((len(pattern), pattern[0]), []).append((kind, pattern))
+    for bucket in buckets.values():
+        for i, (ka, pa) in enumerate(bucket):
+            for kb, pb in bucket[i + 1 :]:
+                if patterns_overlap(pa, pb):
+                    out.append(
+                        Finding("schema", ka, f"a pattern overlaps a pattern of {kb!r}")
+                    )
     used: set[str] = set()
     for entry in entries:
         discharge = entry.get("discharge")
@@ -1213,6 +1267,9 @@ def check_non_claims(data: object) -> list[Finding]:
     if not isinstance(rows, list):
         out.append(Finding("schema", where, "non_claims must be a list"))
         return out
+    if len(rows) > MAX_ENTRIES:
+        out.append(Finding("schema", where, f"more than {MAX_ENTRIES} rows"))
+        return out
     seen: set[tuple] = set()
     for index, row in enumerate(rows):
         eid = f"<non-claim {index}>"
@@ -1222,7 +1279,7 @@ def check_non_claims(data: object) -> list[Finding]:
         if not _check_fields(out, eid, "non-claim", row, NON_CLAIM_FIELDS):
             continue
         pkg = row["package"]
-        if not isinstance(pkg, str) or pkg == "*" or not PACKAGE_RE.match(pkg):
+        if not isinstance(pkg, str) or pkg == "*" or not PACKAGE_RE.fullmatch(pkg):
             out.append(Finding("schema", eid, f"package {pkg!r} must be lang/name"))
         cwe = row["cwe"]
         if (
@@ -1250,9 +1307,12 @@ def check_non_claims(data: object) -> list[Finding]:
         if not isinstance(row["statement"], str) or not row["statement"].strip():
             out.append(Finding("schema", eid, "statement must be a non-empty string"))
         key = (pkg, cwe, row["claim"])
-        if key in seen:
-            out.append(Finding("schema", eid, "duplicate non-claim"))
-        seen.add(key)
+        # Only hashable scalars form a key; a list or object here was already
+        # reported above and must not raise TypeError.
+        if all(isinstance(k, (str, int)) for k in key):
+            if key in seen:
+                out.append(Finding("schema", eid, "duplicate non-claim"))
+            seen.add(key)
     return out
 
 
@@ -1276,11 +1336,12 @@ def check_report_pins(packages_root: Path, pin: dict) -> list[Finding]:
         except ValueError:
             where = str(report)
         try:
-            data = parse_catalogue_text(report.read_text(encoding="utf-8"))
+            raw = read_capped(report, MAX_REPORT_BYTES)
+            data = parse_catalogue_text(raw.decode("utf-8"))
         except (CatalogueError, OSError, UnicodeDecodeError) as exc:
             out.append(Finding("AC-14", where, f"unreadable report: {exc}"))
             continue
-        got = data.get("catalogue")
+        got = data.get("catalogue") if isinstance(data, dict) else None
         if got != pin:
             out.append(
                 Finding(
@@ -1369,7 +1430,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     try:
-        raw = args.catalogue.read_bytes()
+        raw = read_capped(args.catalogue, MAX_CATALOGUE_BYTES)
         if args.digest:
             print(catalogue_digest(raw))
             return 0
@@ -1381,8 +1442,8 @@ def main(argv: list[str] | None = None) -> int:
         if not findings:
             findings = check_companions(
                 raw,
-                args.evidence_kinds.read_bytes(),
-                args.non_claims.read_bytes(),
+                read_capped(args.evidence_kinds, MAX_EVIDENCE_KINDS_BYTES),
+                read_capped(args.non_claims, MAX_NON_CLAIMS_BYTES),
                 args.packages_root,
             )
     except (CatalogueError, OSError, UnicodeDecodeError) as exc:
@@ -1397,9 +1458,11 @@ def main(argv: list[str] | None = None) -> int:
     print(f"assumption-catalogue: OK ({count} entries)")
     print(f"catalogue sha256: {digest}")
     print(
-        f"evidence-kinds sha256: {catalogue_digest(args.evidence_kinds.read_bytes())}"
+        f"evidence-kinds sha256: {catalogue_digest(read_capped(args.evidence_kinds, MAX_EVIDENCE_KINDS_BYTES))}"
     )
-    print(f"non-claims sha256: {catalogue_digest(args.non_claims.read_bytes())}")
+    print(
+        f"non-claims sha256: {catalogue_digest(read_capped(args.non_claims, MAX_NON_CLAIMS_BYTES))}"
+    )
     return 0
 
 

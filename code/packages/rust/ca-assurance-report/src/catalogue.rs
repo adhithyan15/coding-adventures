@@ -93,6 +93,9 @@ pub const MAX_LIST_ITEMS: usize = 256;
 pub const MAX_TEXT_BYTES: usize = 4096;
 /// At most this many `/`-separated segments in an evidence-id pattern.
 pub const MAX_PATTERN_SEGMENTS: usize = 16;
+/// At most this many patterns across all evidence kinds (bounds the
+/// pairwise overlap check, which also only compares within a bucket).
+pub const MAX_TOTAL_PATTERNS: usize = 4096;
 
 // ---------------------------------------------------------------------------
 // Vocabularies (VER13 sections 2 and 5.2).  The Python checker and the JSON
@@ -365,16 +368,44 @@ pub struct CatalogueSet {
 impl CatalogueSet {
     /// Find `code/assumptions/` by walking up from `package_dir` (the same way
     /// the Warrant document is found) and load all three files from it.
+    ///
+    /// The search starts at the package directory's *parent*: a package that
+    /// ships its own `code/assumptions/*.json` must not be able to shadow the
+    /// repository catalogue it is checked against (security review, LOW).
     pub fn locate(package_dir: &Path) -> Result<CatalogueSet, CatalogueError> {
-        let start = package_dir
-            .canonicalize()
-            .map_err(|e| CatalogueError(format!("package dir {}: {e}", package_dir.display())))?;
-        for dir in start.ancestors() {
+        let start = canonical_dir(package_dir)?;
+        if start.join(CATALOGUE_PATH).exists() {
+            return bad(format!(
+                "{} ships its own {CATALOGUE_PATH}; the catalogue must live above the package, not in it",
+                package_dir.display()
+            ));
+        }
+        for dir in start.ancestors().skip(1) {
             if dir.join(CATALOGUE_PATH).is_file() {
                 return Self::load_from_root(dir);
             }
         }
         bad(format!("{CATALOGUE_PATH} not found above {}", package_dir.display()))
+    }
+
+    /// Load the catalogue of repository root `root`, which must be a strict
+    /// ancestor of `package_dir`.  [`crate::evidence::Evidence::load`] passes
+    /// the root at which it found the package's Warrant document, so the spec
+    /// and the catalogue always come from the same checkout.
+    pub fn load_for_package(root: &Path, package_dir: &Path) -> Result<CatalogueSet, CatalogueError> {
+        let pkg = canonical_dir(package_dir)?;
+        let root = canonical_dir(root)?;
+        if root == pkg || !pkg.starts_with(&root) {
+            return bad(format!(
+                "catalogue root {} is not a strict ancestor of the package directory {}",
+                root.display(),
+                pkg.display()
+            ));
+        }
+        if !root.join(CATALOGUE_PATH).is_file() {
+            return bad(format!("{CATALOGUE_PATH} not found at {}", root.display()));
+        }
+        Self::load_from_root(&root)
     }
 
     /// Load the three files below repository root `root`.
@@ -425,6 +456,10 @@ impl CatalogueSet {
             non_claims_sha256: sha256_hex(non_claims),
         })
     }
+}
+
+fn canonical_dir(dir: &Path) -> Result<PathBuf, CatalogueError> {
+    dir.canonicalize().map_err(|e| CatalogueError(format!("directory {}: {e}", dir.display())))
 }
 
 // ---------------------------------------------------------------------------
@@ -950,13 +985,31 @@ pub fn parse_evidence_kinds(bytes: &[u8]) -> Result<EvidenceKinds, CatalogueErro
         }
         kinds.push(EvidenceKind { kind, manifest, patterns, verdict, per_run });
     }
-    // No evidence id may be claimable by two kinds (or twice by one).
-    let all: Vec<(&str, &Vec<Segment>)> =
-        kinds.iter().flat_map(|k| k.patterns.iter().map(move |p| (k.kind.as_str(), p))).collect();
-    for (i, (ka, pa)) in all.iter().enumerate() {
-        for (kb, pb) in &all[i + 1..] {
-            if patterns_overlap(pa, pb) {
-                return bad(format!("{what}: a pattern of `{ka}` overlaps a pattern of `{kb}`"));
+    // No evidence id may be claimable by two kinds (or twice by one).  Two
+    // patterns can only overlap with equal length and the same first segment
+    // (always a literal), so the pairwise check runs within those buckets.
+    let total: usize = kinds.iter().map(|k| k.patterns.len()).sum();
+    if total > MAX_TOTAL_PATTERNS {
+        return bad(format!("{what}: more than {MAX_TOTAL_PATTERNS} patterns in total"));
+    }
+    // (pattern length, first segment) -> (kind, pattern) pairs in that bucket.
+    type Bucket<'a> = Vec<(&'a str, &'a Vec<Segment>)>;
+    let mut buckets: BTreeMap<(usize, String), Bucket> = BTreeMap::new();
+    for k in &kinds {
+        for p in &k.patterns {
+            let head = match &p[0] {
+                Segment::Literal(l) => l.clone(),
+                Segment::Any => unreachable!("parse_pattern refuses a leading *"),
+            };
+            buckets.entry((p.len(), head)).or_default().push((k.kind.as_str(), p));
+        }
+    }
+    for bucket in buckets.values() {
+        for (i, (ka, pa)) in bucket.iter().enumerate() {
+            for (kb, pb) in &bucket[i + 1..] {
+                if patterns_overlap(pa, pb) {
+                    return bad(format!("{what}: a pattern of `{ka}` overlaps a pattern of `{kb}`"));
+                }
             }
         }
     }

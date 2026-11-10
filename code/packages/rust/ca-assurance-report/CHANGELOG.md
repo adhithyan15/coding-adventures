@@ -41,6 +41,13 @@ VER13 AS-001a part 2: reports cite the assumption catalogue, pin it, and
   strict report parsing, the CLI `--strict` path). Test sandboxes copy
   `code/assumptions/`.
 - `effect_certificate.json` regenerated.
+- Security review (LOW findings): the catalogue is loaded from the repository root at
+  which the package's Warrant document was found, which must be a strict ancestor of
+  the package directory (`CatalogueSet::load_for_package`); `CatalogueSet::locate`
+  refuses a catalogue at or inside the package. Evidence-kind patterns are capped at
+  4096 in total and the overlap check compares only within (length, namespace)
+  buckets. Tests: `ac14_a_package_cannot_shadow_the_repository_catalogue`,
+  `ac14_the_evidence_kind_pattern_count_is_capped`.
 
 ## Unreleased (before 0.2.0)
 

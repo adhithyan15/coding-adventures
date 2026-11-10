@@ -813,7 +813,8 @@ impl Evidence {
                 return err(format!("{who} manifest names spec {got:?}, expected {want_spec:?}"));
             }
         }
-        let spec = load_spec(&find_spec(package_dir, &want_spec)?)?;
+        let spec_path = find_spec(package_dir, &want_spec)?;
+        let spec = load_spec(&spec_path)?;
         for (who, v) in [("test", Some(&tv)), ("proof", Some(&pv)), ("bench", bv.as_ref())] {
             let Some(v) = v else { continue };
             let module = req_text(v, "module", &format!("{who} manifest"))?;
@@ -840,8 +841,16 @@ impl Evidence {
             ));
         }
 
-        // The assumption catalogue sits above the package, like the spec.
-        let catalogue = CatalogueSet::locate(package_dir).map_err(|e| EvidenceError(e.to_string()))?;
+        // The assumption catalogue comes from the same repository root as the
+        // Warrant document (`<root>/code/specs/<name>.warrant`), and that root
+        // must lie strictly above the package: a package cannot ship its own
+        // catalogue (or spec tree) and be checked against it.
+        let spec_root = spec_path
+            .ancestors()
+            .nth(want_spec.split('/').count())
+            .ok_or_else(|| EvidenceError(format!("spec {} has no repository root", spec_path.display())))?;
+        let catalogue = CatalogueSet::load_for_package(spec_root, package_dir)
+            .map_err(|e| EvidenceError(e.to_string()))?;
         let package_id = format!(
             "rust/{}",
             want_spec

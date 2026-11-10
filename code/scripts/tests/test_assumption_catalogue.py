@@ -937,6 +937,112 @@ class CompanionFileTests(unittest.TestCase):
         jsonschema.validate(non_claims(), nc)
 
 
+def run_cli(*args: str) -> tuple[int, str, str]:
+    """Run ``main`` in-process and capture its exit code, stdout and stderr."""
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = ac.main(list(args))
+    return code, out.getvalue(), err.getvalue()
+
+
+class HardeningTests(unittest.TestCase):
+    """Security review of AS-001a part 2: the Python validator agrees with the
+    Rust loader on edge cases and never ends in a traceback."""
+
+    def test_trailing_newline_is_rejected_like_rust(self):
+        for regex, good in (
+            (ac.KIND_RE, "miri-run"),
+            (ac.SEGMENT_RE, "warrant"),
+            (ac.ID_RE, "memory.unaliased"),
+            (ac.ALIAS_RE, "heap-bound:unchecked"),
+            (ac.PACKAGE_RE, "rust/gf256"),
+            (ac.BACKLOG_ID_RE, "AS-002"),
+            (ac.DIGEST_RE, "sha256:" + "0" * 64),
+        ):
+            self.assertIsNotNone(regex.fullmatch(good), regex.pattern)
+            self.assertIsNone(regex.fullmatch(good + "\n"), regex.pattern)
+        data = kinds()
+        kind_row(data, "miri-run")["kind"] = "miri-run\n"
+        text = messages(ac.check_evidence_kinds(data, REAL["assumptions"]))
+        self.assertIn("kind must match", text)
+        self.assertIsNone(ac.parse_pattern("miri/*/x\n"))
+        cat = fresh()
+        cat["assumptions"][0]["id"] = cat["assumptions"][0]["id"] + "\n"
+        self.assertIn("id must match", messages(ac.validate_structure(cat)))
+        nc = non_claims()
+        nc["non_claims"][0]["package"] = "rust/gf256\n"
+        self.assertIn("package", messages(ac.check_non_claims(nc)))
+
+    def test_unhashable_values_are_findings_not_type_errors(self):
+        data = kinds()
+        kind_row(data, "miri-run")["manifest"] = ["proof"]
+        self.assertIn(
+            "manifest must be a string",
+            messages(ac.check_evidence_kinds(data, REAL["assumptions"])),
+        )
+        nc = non_claims()
+        nc["non_claims"][0].update(package=["rust/gf256"], cwe={"a": 1}, claim=[1])
+        text = messages(ac.check_non_claims(nc))
+        self.assertIn("package", text)
+        self.assertIn("cwe", text)
+
+    def test_deep_nesting_is_a_catalogue_error_not_a_recursion_error(self):
+        deep = "[" * 200_000 + "]" * 200_000
+        with self.assertRaises(ac.CatalogueError) as caught:
+            ac.parse_catalogue_text(deep)
+        self.assertIn("nested too deeply", str(caught.exception))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "kinds.json"
+            path.write_text("[" * 100_000 + "]" * 100_000, encoding="utf-8")
+            code, _, err = run_cli("--evidence-kinds", str(path))
+        self.assertEqual(1, code)
+        self.assertIn("ERROR", err)
+        self.assertIn("nested too deeply", err)
+
+    def test_oversized_files_are_refused_before_parsing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            big = Path(tmp) / "non-claims.json"
+            big.write_bytes(b" " * (ac.MAX_NON_CLAIMS_BYTES + 1))
+            with self.assertRaises(ac.CatalogueError):
+                ac.read_capped(big, ac.MAX_NON_CLAIMS_BYTES)
+            code, _, err = run_cli("--non-claims", str(big))
+            self.assertEqual(1, code)
+            self.assertIn("limit", err)
+            ok = Path(tmp) / "ok.json"
+            ok.write_bytes(b"{}")
+            self.assertEqual(b"{}", ac.read_capped(ok, 2))
+            pkg = Path(tmp) / "rust" / "demo"
+            pkg.mkdir(parents=True)
+            report = pkg / "assurance_report.json"
+            report.write_bytes(b" " * (ac.MAX_REPORT_BYTES + 1))
+            pin = ac.expected_pin(RAW, KINDS_RAW, NON_CLAIMS_RAW)
+            self.assertIn("limit", messages(ac.check_report_pins(Path(tmp), pin)))
+        self.assertEqual(1024 * 1024, ac.MAX_CATALOGUE_BYTES)
+        self.assertEqual(256 * 1024, ac.MAX_EVIDENCE_KINDS_BYTES)
+
+    def test_count_caps(self):
+        cat = fresh()
+        cat["assumptions"] = cat["assumptions"] * 49  # > 4096 entries
+        self.assertIn("more than 4096 entries", messages(ac.validate_structure(cat)))
+        data = kinds()
+        row = kind_row(data, "miri-run")
+        row["patterns"] = [f"m{i}/x" for i in range(ac.MAX_LIST_ITEMS + 1)]
+        self.assertIn(
+            "more than 256 patterns",
+            messages(ac.check_evidence_kinds(data, REAL["assumptions"])),
+        )
+        data = kinds()
+        for n, row in enumerate(data["kinds"][:17]):
+            row["patterns"] = [f"ns{n}/p{i}" for i in range(ac.MAX_LIST_ITEMS)]
+        self.assertIn(
+            "more than 4096 patterns",
+            messages(ac.check_evidence_kinds(data, REAL["assumptions"])),
+        )
+        nc = non_claims()
+        nc["non_claims"] = nc["non_claims"] * (ac.MAX_ENTRIES + 1)
+        self.assertIn("more than 4096 rows", messages(ac.check_non_claims(nc)))
+
+
 class CommandLineTests(unittest.TestCase):
     def cli(self, *args: str) -> tuple[int, str, str]:
         out, err = io.StringIO(), io.StringIO()

@@ -266,6 +266,54 @@ fn ac14_missing_oversized_or_malformed_catalogue_files_fail_closed() {
     }
 }
 
+#[test]
+fn ac14_a_package_cannot_shadow_the_repository_catalogue() {
+    // A package that ships its own `code/assumptions/` (here: three files that
+    // are not even valid catalogues) is never checked against it.
+    let sb = common::Sandbox::new("ac14-shadow");
+    let shadow = sb.pkg.join("code/assumptions");
+    std::fs::create_dir_all(&shadow).unwrap();
+    for f in ["catalogue-v1.json", "evidence-kinds.json", "non-claims.json"] {
+        std::fs::write(shadow.join(f), "{\"schema\": \"shadow\"}").unwrap();
+    }
+    // `locate` refuses a catalogue at or inside the package outright.
+    let e = CatalogueSet::locate(&sb.pkg).unwrap_err();
+    assert!(e.to_string().starts_with("AC-14 MalformedCatalogue") && e.0.contains("ships its own"), "{e}");
+    // Evidence::load reads the catalogue at the Warrant document's root, which
+    // is above the package, so the shadow is never read.
+    let ev = Evidence::load(&sb.pkg).expect("the repository catalogue is used");
+    let real = CatalogueSet::load_from_root(&sb.root).unwrap();
+    assert_eq!(ev.catalogue.catalogue_sha256, real.catalogue_sha256);
+    // A package that also ships the spec tree would put that root *at* the
+    // package: refused, never loaded.
+    std::fs::create_dir_all(sb.pkg.join("code/specs")).unwrap();
+    std::fs::copy(sb.spec(), sb.pkg.join("code/specs/ct-compare.warrant")).unwrap();
+    let e = Evidence::load(&sb.pkg).unwrap_err();
+    assert!(e.0.contains("strict ancestor"), "{e}");
+    let e = CatalogueSet::load_for_package(&sb.pkg, &sb.pkg).unwrap_err();
+    assert!(e.0.contains("strict ancestor"), "{e}");
+    let e = CatalogueSet::load_for_package(&sb.pkg.join("code"), &sb.pkg).unwrap_err();
+    assert!(e.0.contains("strict ancestor"), "{e}");
+}
+
+#[test]
+fn ac14_the_evidence_kind_pattern_count_is_capped() {
+    use coding_adventures_ca_assurance_report::catalogue::{parse_evidence_kinds, MAX_TOTAL_PATTERNS};
+    // 17 kinds x 256 patterns = 4352 > 4096: refused before the overlap check.
+    let rows: Vec<String> = (0..17)
+        .map(|k| {
+            let pats: Vec<String> = (0..256).map(|i| format!("\"ns{k}/p{i}\"")).collect();
+            format!(
+                "{{\"kind\": \"k{k}\", \"manifest\": \"planned\", \"patterns\": [{}], \"verdict\": \"pass\", \"per_run\": false, \"description\": \"d\"}}",
+                pats.join(", ")
+            )
+        })
+        .collect();
+    let doc = format!("{{\"schema\": \"ver13-evidence-kinds-v1\", \"kinds\": [{}]}}", rows.join(", "));
+    let e = parse_evidence_kinds(doc.as_bytes()).unwrap_err();
+    assert!(e.0.contains(&format!("more than {MAX_TOTAL_PATTERNS} patterns")), "{e}");
+}
+
 // ---- AC-1 UnknownAssumption -------------------------------------------------
 
 #[test]

@@ -693,9 +693,10 @@ reading was taken; each item says which.
    all three data files: `{"schema", "path", "sha256",
    "evidence_kinds_sha256", "non_claims_sha256"}`. `--check` recomputes the
    digests of the files on disk and fails with `CatalogueDrift` (AC-14) on any
-   difference. The tool finds `code/assumptions/` by walking up from the
-   package directory, as it finds the Warrant document; nothing is embedded
-   in the binary. CI (`code/scripts/assumption_catalogue.py`, run on every
+   difference. The tool loads `code/assumptions/` from the repository root
+   at which it found the package's Warrant document, and that root must be a
+   strict ancestor of the package directory, so a package cannot ship its own
+   catalogue and be checked against it; nothing is embedded in the binary. CI (`code/scripts/assumption_catalogue.py`, run on every
    PR) also checks that every committed `code/packages/*/*/assurance_report.json`
    pins the current digests, so a catalogue edit cannot leave a report stale
    until the next PR that happens to rebuild that package.
@@ -704,8 +705,10 @@ reading was taken; each item says which.
    checker, minus spec sync and backlog lookup) and refuses a missing,
    unreadable, non-UTF-8 or malformed file. Size caps are enforced while
    reading: catalogue 1 MiB, `evidence-kinds.json` 256 KiB,
-   `non-claims.json` 64 KiB; at most 4096 entries, 256 items per list and
-   4096 bytes per string.
+   `non-claims.json` 64 KiB; at most 4096 entries, 256 items per list, 4096
+   evidence-id patterns in total and 4096 bytes per string. The Python
+   checker applies the same file and count caps and the same whole-string
+   patterns (no trailing newline).
 3. **Aliases (AC-1).** Section 5.2 says aliases are "accepted in reports";
    section 5.3 says "reports cite catalogue ids only". Stricter reading: an
    alias in a claim's `assumptions`, `discharged`, an exemption's or the
