@@ -20925,3 +20925,15 @@ lifecycle-only receipt requires independent delta review before readiness.
 Guarded auto-merge remains disabled until every hosted check on one exact
 reviewed head is terminal acceptable and GitHub still reports the PR
 mergeable.
+
+Protected main advanced from
+`57bfc809e3eb440317c5ae59552c74b2ae64b980` to
+`cfd0a6c64a9a0025f572e9d94be59e62e050cf3a` while exact reviewed PR head
+`44a6b307283905cb87283c1ecc697fc58f37a029` had only its CI gate still
+queued. The eight intervening commits are exact-path-disjoint from the parity
+tranche and touch no workflow. Merge current main normally and conflict-free
+as `a0bd2928ae4f520653d825bde4a92fc311877183`. The full 271-test Rust
+build-tool suite, `cargo check`, Clippy with warnings denied, Rust formatting,
+strict state parsing, and diff hygiene pass after integration. Treat the
+result as a fresh exact-head review and hosted-CI rollup; guarded auto-merge
+remains disabled.

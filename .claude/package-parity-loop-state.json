@@ -21,10 +21,10 @@
     19107
   ],
   "last_ci_action": {
-    "observed_at": "2026-11-10T06:28:55Z",
+    "observed_at": "2026-11-10T11:04:01Z",
     "pr_number": 19107,
-    "head_revision": "28084f0362df7a6ee87a82db65825a99d7b4e8aa",
-    "action": "Draft PR #19107 was opened by normal first push from exact independently reviewed head 28084f0362df7a6ee87a82db65825a99d7b4e8aa against exact main 57bfc809e3eb440317c5ae59552c74b2ae64b980. GitHub reports the draft mergeable. This lifecycle receipt must be pushed and independently reviewed before the PR is marked ready; guarded auto-merge remains disabled while exact-head hosted checks are queued."
+    "head_revision": "44a6b307283905cb87283c1ecc697fc58f37a029",
+    "action": "Exact reviewed head 44a6b307283905cb87283c1ecc697fc58f37a029 had every reported check terminal acceptable except the queued CI gate when protected main advanced from 57bfc809e3eb440317c5ae59552c74b2ae64b980 to cfd0a6c64a9a0025f572e9d94be59e62e050cf3a. Eight intervening commits are exact-path-disjoint from the parity tranche and touch no workflow. Main was merged normally and conflict-free as a0bd2928ae4f520653d825bde4a92fc311877183; full local revalidation passes. Fresh exact-head review and hosted CI are required, and guarded auto-merge remains disabled."
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -3061,12 +3061,14 @@
       "selection_revision": "57bfc809e3eb440317c5ae59552c74b2ae64b980",
       "selection_notes": "Selected after verified merge receipt and cleanup for PR #18899. Its neutral manifest-snapshot prerequisite is merged, it directly unlocks the exact-identity native adapter and then CLI integration, and all 22 live open PRs are exact-path-disjoint from the planned Rust build-tool source, tests, README, changelog, state, roadmap, and conformance-spec scope. The fresh dedicated worktree starts at exact origin/main 57bfc809e3eb440317c5ae59552c74b2ae64b980. Keep this tranche authority-free: consume already captured immutable package, crate, config, and exemption snapshots; do not read files, resolve host paths or symlinks, consult environment state, run processes, or integrate the CLI.",
       "implementation_revision": "3de7922caf26a633787c7c4be16188008c1b15be",
-      "validation_revision": "3de7922caf26a633787c7c4be16188008c1b15be",
+      "validation_revision": "a0bd2928ae4f520653d825bde4a92fc311877183",
       "pr_opened_at": "2026-11-10T06:28:55Z",
       "base_revision": "57bfc809e3eb440317c5ae59552c74b2ae64b980",
       "publication_head": "28084f0362df7a6ee87a82db65825a99d7b4e8aa",
+      "reconciliation_revision": "a0bd2928ae4f520653d825bde4a92fc311877183",
+      "reconciled_main_revision": "cfd0a6c64a9a0025f572e9d94be59e62e050cf3a",
       "publication_notes": "Draft PR #19107 was opened from the independently reviewed exact head after a normal first push. GitHub reports it mergeable against the exact reviewed base. The draft exists to obtain its durable PR identity; this lifecycle-only receipt requires independent delta review before readiness, and guarded auto-merge remains disabled until every exact-head hosted check is terminal acceptable and GitHub still reports the PR mergeable.",
-      "validation_notes": "The authority-free Rust resolver accepts only caller-supplied immutable package, crate, redirect, and exact exemption snapshots. It performs byte-exact lexical reduction, deepest segment-trie ownership, nested and exempt-orphan traversal, transitive normal/build closure, stable cycle and 16-level depth refusal, compact package-ID bitset memoization, deterministic validation, and sorted unique self-free relations. Inclusive ceilings cover 4,096 packages, 16,384 crates and references, 4,096 exemptions, and 16,384 output relations; the 16,385th unique relation fails before string materialization. Full cargo test (271 tests), cargo check, clippy with warnings denied, rustfmt check, and diff hygiene pass. Independent correctness, security, and adversarial reviews issued SHIP at exact head 3de7922caf26a633787c7c4be16188008c1b15be after relation, memory, owner-lookup, validation-order, and reduced drive-prefix findings were closed. The worktree remains clean and authority-empty.",
+      "validation_notes": "The authority-free Rust resolver accepts only caller-supplied immutable package, crate, redirect, and exact exemption snapshots. It performs byte-exact lexical reduction, deepest segment-trie ownership, nested and exempt-orphan traversal, transitive normal/build closure, stable cycle and 16-level depth refusal, compact package-ID bitset memoization, deterministic validation, and sorted unique self-free relations. Inclusive ceilings cover 4,096 packages, 16,384 crates and references, 4,096 exemptions, and 16,384 output relations; the 16,385th unique relation fails before string materialization. Full cargo test (271 tests), cargo check, clippy with warnings denied, rustfmt check, strict state parsing, and diff hygiene pass again after normally merging exact current main cfd0a6c64a9a0025f572e9d94be59e62e050cf3a. Independent correctness, security, and adversarial reviews issued SHIP for the pre-reconciliation exact head after relation, memory, owner-lookup, validation-order, and reduced drive-prefix findings were closed; fresh review of the reconciled head remains required. The worktree remains clean and authority-empty.",
       "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
     },
     {
