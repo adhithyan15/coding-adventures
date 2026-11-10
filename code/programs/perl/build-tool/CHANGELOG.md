@@ -8,6 +8,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+- Test fix: `t/17-cargo-link-tables.t` normalises CRLF in the CLI's stderr before
+  matching the `DEPENDENCY_SELF_EDGE` diagnostic with a `$`-anchored regex; on
+  Windows, perl writes stderr in text mode, so the line ended in `\r`.
+
 ### Changed
 
 - Source hashing now consults a complete installed language-specific input
