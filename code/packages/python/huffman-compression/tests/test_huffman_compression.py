@@ -297,3 +297,58 @@ class TestIdempotency:
     def test_compress_twice_same_result(self) -> None:
         data = b"ABCABCABC" * 10
         assert compress(data) == compress(data)
+
+
+# ---------------------------------------------------------------------------
+# Hostile input (SEC-003): the code-lengths table is attacker-controlled.
+# ---------------------------------------------------------------------------
+
+
+def _hostile(entries: list[tuple[int, int]], orig: int, payload: bytes) -> bytes:
+    out = struct.pack(">II", orig, len(entries))
+    for sym, length in entries:
+        out += bytes([sym, length])
+    return out + payload
+
+
+class TestHostileInput:
+    def test_huge_length_gap_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 1), (1, 255)], 4, b"\xff" * 8))
+
+    def test_zero_length_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 0)], 1, b"\x00"))
+
+    def test_oversubscribed_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 1), (1, 1), (2, 1)], 1, b"\x00"))
+
+    def test_unsorted_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 2), (1, 1)], 1, b"\x00"))
+
+    def test_symbol_count_over_256_rejected(self) -> None:
+        entries = [(i % 256, 9) for i in range(257)]
+        with pytest.raises(ValueError):
+            decompress(_hostile(entries, 1, b"\x00"))
+
+    def test_duplicate_symbol_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 1), (0, 1)], 1, b"\x00"))
+
+    def test_declared_length_u32_max_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 1), (1, 1)], 0xFFFFFFFF, b"\x00" * 4))
+
+    def test_truncated_table_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(struct.pack(">II", 1, 5) + b"\x00\x01")
+
+    def test_unmatched_bits_fail_fast(self) -> None:
+        with pytest.raises(ValueError):
+            decompress(_hostile([(0, 1)], 8, b"\xff" * 100_000))
+
+    def test_large_roundtrip_is_linear(self) -> None:
+        data = bytes(i % 7 for i in range(400_000))
+        assert decompress(compress(data)) == data

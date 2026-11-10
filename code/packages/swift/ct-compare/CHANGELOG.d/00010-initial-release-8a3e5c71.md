@@ -1,0 +1,9 @@
+## 0.1.0
+
+- Initial Swift lane of CT01: `ctEq`, `ctEqFixed`, `ctSelectBytes`, `ctEqU64` and the
+  bit-returning `ctEqBit`, `ctEqFixedBit`, `ctEqU64Bit` over `[UInt8]` and `UInt64`.
+- `ctSelectBytes` throws `CtCompareError` (`selectLengthMismatch`, `invalidChoice`); the
+  selection bit is a `UInt8` that must be 0 or 1; wrapping operators for the two's-complement steps.
+- XCTest suite replays the complete CT01 corpus and adds exhaustive position, byte-value,
+  length-mismatch, 64-bit-flip and invalid-choice checks. Not compiled or run locally: no
+  Swift toolchain was available.

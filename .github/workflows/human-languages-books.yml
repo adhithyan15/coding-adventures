@@ -57,11 +57,26 @@ jobs:
     outputs:
       books: ${{ steps.changes.outputs.books }}
     steps:
+      # This job runs on EVERY pull-request push, because the `Human Languages
+      # Books gate` it feeds is a required check, and it only ever asks git
+      # about commits and trees (`git diff --name-only`, `git ls-tree`,
+      # `git ls-files`) -- it never reads file contents. So it does not need
+      # the whole repository on disk: history is still complete (the PR diff
+      # needs both SHAs and their merge base), but blobs are skipped
+      # (`filter: blob:none`) and only `.github` is checked out. That took the
+      # checkout from minutes to seconds. `git ls-files` still lists every
+      # tracked path (skip-worktree entries stay in the index), and the repo is
+      # public, so git can fetch any blob it unexpectedly needs without the
+      # credentials that persist-credentials: false removes. If this job ever
+      # starts reading file contents, drop the filter and sparse-checkout.
       - name: Checkout
         uses: actions/checkout@v7
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            .github
 
       - name: Detect relevant paths
         id: changes

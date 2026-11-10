@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/huffman-compression",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Huffman (1952) lossless compression and decompression — CMP04",
   "type": "module",
   "main": "src/index.ts",
