@@ -520,6 +520,13 @@ pub struct BenchmarkResult {
     pub instructions_per_iter: CounterSample,
     /// Outcome of comparing metrics against stated budget.
     pub budget_verdict: BudgetVerdict,
+    /// Hard budgets (`"steps"`, `"alloc_bytes"`, `"instructions"`) the
+    /// [`Budget`] declared but this run could not check: no counter of that
+    /// kind was attached, or it was not `Live`. A `Pass` verdict with a
+    /// non-empty list means "nothing was found", not "the budget held".
+    /// Before the audit this was invisible: `bench()` with `max_steps: Some(1)`
+    /// reported a plain pass.
+    pub unchecked_hard_budgets: Vec<&'static str>,
 }
 
 impl BenchmarkResult {
@@ -527,7 +534,10 @@ impl BenchmarkResult {
     pub fn to_tap_yaml(&self) -> String {
         let mut yaml = String::new();
         yaml.push_str("  ---\n");
-        yaml.push_str(&format!("  benchmark: \"{}\"\n", self.name));
+        yaml.push_str(&format!(
+            "  benchmark: \"{}\"\n",
+            escape_quoted(&self.name)
+        ));
         yaml.push_str(&format!("  batch_size: {}\n", self.batch_size));
         yaml.push_str(&format!("  sample_count: {}\n", self.sample_count));
         yaml.push_str("  timing_ns:\n");
@@ -590,6 +600,12 @@ impl BenchmarkResult {
                 yaml.push_str(&format!("    limit_ns: {}\n", limit_ns));
             }
         }
+        if !self.unchecked_hard_budgets.is_empty() {
+            yaml.push_str(&format!(
+                "    unchecked_hard_budgets: [{}]\n",
+                self.unchecked_hard_budgets.join(", ")
+            ));
+        }
         yaml.push_str("  ...\n");
         yaml
     }
@@ -628,9 +644,10 @@ impl BenchmarkResult {
               \"steps_per_iter\": {},\n  \
               \"alloc_bytes_per_iter\": {},\n  \
               \"instructions_per_iter\": {},\n  \
+              \"unchecked_hard_budgets\": [{}],\n  \
               \"budget_verdict\": {}\n\
             }}",
-            self.name,
+            escape_quoted(&self.name),
             self.batch_size,
             self.sample_count,
             self.median_ns,
@@ -651,9 +668,36 @@ impl BenchmarkResult {
                 .map(|v| format!("{:.2}", v))
                 .unwrap_or_else(|| "null".into()),
             instr_str,
+            self.unchecked_hard_budgets
+                .iter()
+                .map(|name| format!("\"{name}\""))
+                .collect::<Vec<_>>()
+                .join(", "),
             verdict_str
         )
     }
+}
+
+/// Escape `text` for use inside a double-quoted JSON string, which is also a
+/// valid YAML double-quoted scalar. A benchmark name is caller-chosen; written
+/// raw, a quote or newline in it would break the JSON or add forged lines to
+/// the TAP diagnostic block.
+fn escape_quoted(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    for c in text.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c.is_control() || matches!(c, '\u{2028}' | '\u{2029}') => {
+                out.push_str(&format!("\\u{:04x}", c as u32));
+            }
+            c => out.push(c),
+        }
+    }
+    out
 }
 
 /// Compute the non-parametric percentile from an already-sorted slice of floats
@@ -833,6 +877,16 @@ impl BenchmarkHarness {
             alloc_bytes_per_iter: None,
             instructions_per_iter: CounterSample::NotLive,
             budget_verdict,
+            // Nothing here measures steps, allocations or instructions, so
+            // every hard budget the caller declared is, so far, unchecked.
+            unchecked_hard_budgets: [
+                ("steps", budget.max_steps),
+                ("alloc_bytes", budget.max_alloc_bytes),
+                ("instructions", budget.max_instructions),
+            ]
+            .into_iter()
+            .filter_map(|(name, limit)| limit.map(|_| name))
+            .collect(),
         }
     }
 
@@ -860,6 +914,7 @@ impl BenchmarkHarness {
         match counter.name() {
             "steps" => {
                 if let CounterSample::Live(val) = sample {
+                    result.unchecked_hard_budgets.retain(|n| *n != "steps");
                     let per_iter = val as f64 / result.batch_size as f64;
                     result.steps_per_iter = Some(per_iter);
                     if let Some(limit) = budget.max_steps {
@@ -875,6 +930,7 @@ impl BenchmarkHarness {
             }
             "alloc_bytes" => {
                 if let CounterSample::Live(val) = sample {
+                    result.unchecked_hard_budgets.retain(|n| *n != "alloc_bytes");
                     let per_iter = val as f64 / result.batch_size as f64;
                     result.alloc_bytes_per_iter = Some(per_iter);
                     if let Some(limit) = budget.max_alloc_bytes {
@@ -891,6 +947,7 @@ impl BenchmarkHarness {
             "instructions" => {
                 result.instructions_per_iter = sample;
                 if let CounterSample::Live(val) = sample {
+                    result.unchecked_hard_budgets.retain(|n| *n != "instructions");
                     let per_iter = (val as f64 / result.batch_size as f64).ceil() as u64;
                     if let Some(limit) = budget.max_instructions {
                         if per_iter > limit {
@@ -1230,6 +1287,7 @@ mod tests {
                 observed: 50,
                 limit: 40,
             },
+            unchecked_hard_budgets: vec![],
         };
 
         let yaml_live = res.to_tap_yaml();

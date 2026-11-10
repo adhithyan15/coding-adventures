@@ -209,7 +209,7 @@ TAP version 14
 ok 1 - ct-compare/eq-empty
 not ok 2 - ct-compare/eq-last-byte
   ---
-  failure_id: not-deep-equal
+  failure_id: "not-deep-equal"
   message: "expected T, got F"
   ...
 ok 3 - ct-compare/eq-u64-zero
@@ -280,3 +280,129 @@ It has:
   capabilities.
 
 All of that belongs to the layers above, which this layer is used to check.
+
+---
+
+## 8. Testable contracts (audit of the Rust lane)
+
+This section turns the places where §§2-7 were loose into statements a test
+can fail. Each is pinned by a named test in
+`code/packages/rust/test-bootstrap/tests/` and, for the grammar, by a
+differential run against the Python reference (`code/scripts/tfv.py`). Where
+the implementation and the older text disagreed, the disagreement is listed in
+§8.6; no behaviour was changed to match prose that nothing relied on.
+
+### 8.1 TFV grammar: the cases §2 left implicit
+
+| Input | Contract |
+|---|---|
+| A leading BOM (`U+FEFF`) | Rejected: the first line must be exactly `tfv 1`. A BOM inside a text value is ordinary data (`Sefbbbf`) |
+| CRLF line endings | Rejected. `tfv 1\r` is not the header, and a `\r` anywhere in a record line is an error. A `\r` inside a `#` comment line is **not** an error: comment lines are skipped whole, so only record lines are CR-checked |
+| Empty file; a file of one `\n` | Rejected (no header) |
+| Header only (`tfv 1`, with or without a final newline) | Accepted, zero records |
+| Blank lines, `#` lines | Skipped anywhere after the header; line numbers still count them |
+| Leading, trailing or doubled space; tab; U+00A0 | Rejected (single ASCII space is the only separator) |
+| Record id | `[A-Za-z0-9._/-]+`, ASCII only, case-sensitive: `a` and `A` are different ids. A line beginning `#` is a comment, never a record |
+| Duplicate record id | Rejected, even when separated by comments or blank lines |
+| Field name | `[a-z][a-z0-9_]*`; duplicates inside one record rejected; the same name in two records is fine; order is preserved and is not required to be sorted |
+| **Unknown fields** | The *format* does not know field meanings, so any well-formed field is accepted. Closing a record's shape is the job of the corpus validator (§4: "a closed shape for every record") |
+| `R<n>` / `L<n>` / `M<n>` counts | `0` or no-leading-zero digits. `R01`, `R-1`, `R+1`, empty are rejected. A count that does not fit the lane's `usize` is rejected as "count too large"; a count that fits but exceeds the tokens present is rejected as "record ends early" or "value missing". Either way: rejected, and no memory is reserved from the count |
+| Integers | `I-?(0\|[1-9][0-9]*)`, never `I-0`, at most 1000 digits (sign excluded): 1000 digits accepted, 1001 rejected, in both signs. Only ASCII digits count (an Arabic-Indic digit is rejected) |
+| `D` | Exactly 16 lowercase hex digits; any 64-bit pattern, including every NaN payload |
+| `X`, `S` | Even-length lowercase hex, possibly empty. `S` must be valid UTF-8 in the strict sense: overlongs (`c080`), surrogates (`eda080`), values above U+10FFFF (`f4908080`), truncated and stray continuation bytes are rejected. NUL and the noncharacters U+FFFE/U+FFFF are valid |
+| Nesting | The outermost container is depth 1; depth 64 is accepted and 65 rejected, for lists, maps and mixtures |
+| Map keys | Distinctness uses `deep_equal`, so `D7ff8000000000000` and `D7ff0000000000001` (two NaNs) are *duplicate* keys. Map order in a file is preserved by the parser and ignored by `deep_equal` |
+| Accepted text | Is **canonical**: re-encoding the parsed records reproduces each input record line byte for byte (so there is exactly one spelling of every accepted record) |
+
+The Rust parser and `tfv.py` must agree on accept/reject and on the canonical
+re-encoding for every document of the bounded domains in
+`tests/tfv_exhaustive.rs` (364 413 documents) and on the deep-equality matrix
+of its 470-value universe (220 900 pairs). `code/scripts/tfv_differential.py`
+performs the replay.
+
+### 8.2 `deep_equal` and `error_is`
+
+- `deep_equal` is an equivalence relation (reflexive, symmetric, transitive)
+  over all values, including NaN. Equal values are interchangeable: they
+  compare identically to every third value.
+- `error_is(None, id)` is always `no-error`, even when `id` is empty. Ids are
+  compared as exact strings (no trimming, no case folding); an empty id equals
+  an empty id.
+- A failing verdict's message renders both sides in TFV notation:
+  `expected <expected>, got <actual>` / `expected error "<id>", none raised`.
+
+### 8.3 Run protocol
+
+1. **What fails.** A test is reported `ok` only if its body *returned*
+   `Verdict::Pass`. A panic of any payload type, at any point in the body
+   (before or after a passing check, nested inside a swallowed inner panic),
+   is `not ok` with `failure_id: "panic"`. A returned `Fail` with a registered
+   id is `not ok`. A returned `Fail` with an unregistered id is a protocol
+   error (§5.3 bail-out). Under `panic = "abort"` a panic ends the process
+   from a signal, which is non-zero but yields no TAP for the remaining tests;
+   lanes must build test targets with unwinding panics.
+2. **Vacuous tests are passes.** L0 does not count checks. A body that
+   returns `Pass` without consulting the core, or returns early, passes
+   (§7: no assertion machinery here). The Rust lane makes the commonest
+   accident, computing a verdict and dropping it, a compile error under
+   `-D warnings` by marking `Verdict` `#[must_use]`.
+3. **An empty suite passes** with the plan `1..0`, which a supervisor can see.
+4. **Truncated runs.** A test that terminates the process (`exit(0)`) cannot be
+   reported by an in-process harness: the exit status is 0 and the results are
+   missing. The plan line `1..N` is printed *before* the first test precisely
+   so that a supervisor can compare it with the number of `ok`/`not ok`
+   lines. A supervisor (BUILD script, CI wrapper) MUST NOT rely on the exit
+   status alone for suites whose tests it does not control.
+5. **No timeouts at L0.** A non-terminating test hangs the run; time limits
+   belong to the supervisor.
+6. **Exit statuses.** 0: every test returned `Pass` and the full report was
+   written. 1: any `not ok`, any `Bail out!`, any failure writing the report
+   (`/dev/full`, a closed pipe, at any byte offset). 2: unusable command line;
+   nothing is run and stdout stays empty, even if the suite would have failed.
+7. **Arguments.** `--seed` takes ASCII digits only and fits a `u64`; leading
+   zeros are accepted (`007` is 7); a repeated `--seed` takes the last value.
+   `--sabotage` takes exactly `always-pass`. Anything else is a usage error.
+8. **Output safety.** For every Unicode scalar `c` in U+0000-U+2FFF placed in a
+   failure message, the TAP output keeps its exact line structure and cannot
+   contain a forged `ok`/`not ok` line. A test id with any character outside
+   `[A-Za-z0-9._/-]`, or empty, produces a single `Bail out!` line and no
+   result lines.
+
+### 8.4 Sabotage mode, precisely
+
+`--sabotage always-pass` replaces only the answers of `Ctx::deep_equal` and
+`Ctx::error_is`. It does not mask panics, hand-constructed failures, or the
+invalid-failure-id bail-out, and it does not change `Ctx::seed`. Consequently,
+over the self-corpus the set of `not ok` ids is **exactly** the set of
+`deep_equal`/`error_is` records whose `verdict` is `fail`, each with
+`failure_id: "corpus-mismatch"`, the process exits 1, and every other record
+(`splitmix64`, `fnv1a64`, `shuffle`, `sub_seed`, `tfv_reject`,
+`failure_id_valid`) still reports `ok`. The `l0_contracts` test checks this
+set equality against the corpus itself, and the BUILD checks it from outside
+with `grep`.
+
+### 8.5 Randomness
+
+- SplitMix64 is pinned by two published vectors, seed 0
+  (`e220a8397b1dcdaf 6e789e6aa1b965f4 06c45d188009454f f88bb8a8724c81ec
+  1b39896a51a8749b`) and seed 1234567 (`6457827717110365317 ...`), and by an
+  independent `u128` reference over 207 seeds x 1000 outputs.
+- FNV-1a 64 is pinned by `""`, `"a"`, `"foo"`, `"foobar"` and is over UTF-8
+  bytes.
+- `bounded(n)` equals the §5.1 sampler for every `n` in 1..=3000 and at the
+  2^32 edges; `n = 0` and `n > 2^32` panic.
+- `sub_seed(run, id)` takes no input but its two arguments. Over every id of
+  length 1-4 over a 6-letter alphabet (1554 ids) the sub-seeds are pairwise
+  distinct for each of four run seeds. Because the derivation XORs the run seed
+  with the id's hash, `sub_seed(a, x) == sub_seed(b, y)` whenever
+  `a XOR b == fnv1a64(x) XOR fnv1a64(y)`: sub-seeds are independent across ids
+  under one run seed, not across run seeds. That aliasing is inherent in the
+  specified derivation and accepted.
+
+### 8.6 Divergences found in the audit
+
+| # | Where | Finding | Resolution |
+|---|---|---|---|
+| 1 | §5.3 example | The example block printed `failure_id: not-deep-equal` unquoted while the text, and every implementation, require a double-quoted scalar | Example corrected |
+| 2 | §3 | `Verdict` could be computed and dropped silently, giving a vacuous pass | `#[must_use]` on `Verdict` (Rust lane); documented in 8.3 |
+| 3 | §5.2 | No statement on a process that exits mid-run | Documented in 8.3 item 4 |
