@@ -7,11 +7,11 @@
 //!
 //! * **enforcement** - the test binary installs a deny-by-default seccomp +
 //!   Landlock sandbox into itself, derived mechanically from the manifest,
-//!   immediately before the first library call ([`arm`](mod@arm));
+//!   immediately before the first library call (module `arm`, Linux only);
 //! * **observation** - a parent runs it under `strace -f` and classifies every
 //!   syscall after the ARMED marker ([`observe`]).
 //!
-//! Negative controls ([`sabotage`]) prove each mechanism catches each
+//! Negative controls (module `sabotage`, Linux only) prove each mechanism catches each
 //! forbidden category on its own, and a Docker ring ([`container`]) renders
 //! the same policy at the container boundary. Results are written as
 //! `capability_runtime_evidence.json` (schema in the spec).
