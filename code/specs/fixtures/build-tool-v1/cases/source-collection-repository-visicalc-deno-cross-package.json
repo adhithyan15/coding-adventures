@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "source-collection/repository-visicalc-deno-cross-package-inputs",
   "domain": "source_collection",
-  "summary": "The Deno VisiCalc build includes only its two exact sibling compile-time text imports.",
+  "summary": "The Deno VisiCalc build includes only its one exact tracked sibling compile-time text import (index.html); the generated engine bundle is not a source input.",
   "platforms": ["darwin", "linux", "windows"],
   "capabilities": ["source_collection"],
   "workspace": {"files": []},
@@ -12,7 +12,7 @@
       "mode": "repository_boundary",
       "language": "typescript",
       "package_root": "code/programs/typescript/visicalc-deno",
-      "boundary_sha256": "cb16da5d6c8734a51d24af28e4595b31c4dee04a97997824e0969a79c3cbb820",
+      "boundary_sha256": "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78",
       "candidates": [
         {"path": "code/programs/typescript/visicalc-html/index.html", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
         {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "kind": "file", "tracked": true, "content_hex": "736f757263650a"},
@@ -27,8 +27,7 @@
     "outcome": "ok",
     "result": {
       "files": [
-        {"path": "code/programs/typescript/visicalc-html/index.html", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
-        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+        {"path": "code/programs/typescript/visicalc-html/index.html", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
       ]
     },
     "diagnostics": []

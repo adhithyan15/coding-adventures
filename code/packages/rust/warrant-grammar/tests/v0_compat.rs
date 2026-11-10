@@ -139,6 +139,7 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
             negctl_fuzz_iterations: b.negctl_fuzz_iterations,
             exhaustive_budget: b.exhaustive_budget,
             arg_types: b.arg_types.clone(),
+            hosts: Default::default(),
         };
         let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
             .unwrap_or_else(|e| panic!("{package}: {e}"));

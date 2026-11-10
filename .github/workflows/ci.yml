@@ -683,6 +683,13 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # VER13 assumption catalogue: ids unique, depends_on/refines resolve
+          # and are acyclic, every discharge.backlog names a VER-BACKLOG row, and
+          # spec section 3 equals the JSON (AC-14). Prints the SHA-256 a report
+          # will pin. The tests pin each rule with a negative case.
+          python3 code/scripts/assumption_catalogue.py
+          python3 code/scripts/generate_assumption_catalogue.py --check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_assumption_catalogue.py'
           # B06 Phase 0: every tracked Cargo manifest contributes to one exact,
           # monotone inventory. New names fail, and removed names must leave the
           # allowlist in the same change so an old crate cannot silently return.

@@ -159,7 +159,9 @@
       "id": "KA-A1-N-05",
       "category": "Naamapada (the noun)",
       "label": "number: the plural suffix -galu",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C12-PLURAL-GALU-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -168,20 +170,22 @@
       "derivedFrom": [
         "A1-N-05"
       ],
-      "note": "UNTAUGHT AS A MORPHEME, and it is one of the cheapest fixes in this file. -galu is already sitting inside five taught headwords -- bannagalu (colours), tingalugalu (months), kaalagalu (seasons), dehada bhaagagalu (body parts) -- so the learner has read it four times without being told what it is. One lesson naming it would convert every taught noun into a plural."
+      "note": "CLOSED by chapter 12's bounded -gaḷu lesson. It names the suffix and gives ordinary non-human noun pairs, while explicitly refusing to turn the pattern into an unrestricted plural rule for human nouns."
     },
     {
       "id": "KA-A1-N-06",
       "category": "Naamapada (the noun)",
       "label": "human/non-human is the division Kannada actually marks",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C12-HUMAN-NONHUMAN-04"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
         "ED-KANNADA"
       ],
       "derivedFrom": [],
-      "note": "Untaught. Kannada's real noun classification is not gender but human vs non-human, which drives verb agreement and the plural. Nothing in the corpus names it. NO SPANISH ORIGIN: Human vs non-human is the division Kannada actually marks, and it drives agreement and the plural. No Spanish point asks about it, because Spanish sorts nouns by gender instead.",
+      "note": "CLOSED by chapter 12's third-person lesson, which names the human/non-human split through avanu, avaḷu, avaru and adu without claiming that Spanish gender transfers. NO SPANISH ORIGIN: human vs non-human is the division Kannada actually marks, and no Spanish point asks about it.",
       "kannadaSpecific": true
     },
     {
@@ -428,7 +432,9 @@
       "id": "KA-A1-POS-03",
       "category": "Sambandha (possession)",
       "label": "third-person possessive: his, her, their",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -438,7 +444,7 @@
         "A1-POS-01",
         "A1-POS-02"
       ],
-      "note": "Untaught, and blocked behind the missing third-person pronouns at KA-A1-PRON-03. avana / avala / avara cannot be taught before avanu / avalu / avaru are."
+      "note": "CLOSED by chapter 12 after the third-person pronouns: avana, avaḷa and avara are taught as a bounded possessive set in family phrases, not as a general genitive paradigm."
     },
     {
       "id": "KA-A1-NUM-01",
@@ -657,7 +663,9 @@
       "id": "KA-A1-PRON-03",
       "category": "Sarvanaama (pronouns)",
       "label": "third-person subject pronouns: he, she, they",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C12-THIRD-PERSON-03"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -666,7 +674,7 @@
       "derivedFrom": [
         "A1-PRON-01"
       ],
-      "note": "UNTAUGHT, AND THE LARGEST SINGLE HOLE IN THE GRAMMAR. avanu, avalu, adu and avaru appear nowhere in the corpus. A learner can talk about themselves and to one other person, and cannot say one word about anybody who is not in the room -- which also blocks KA-A1-POS-03, most of the family vocabulary from being used in a sentence, and every third-person verb form."
+      "note": "CLOSED by chapter 12's family bridge: avanu, avaḷu, adu and avaru are introduced together, with avaru's respectful singular use distinguished from its plural use."
     },
     {
       "id": "KA-A1-PRON-04",
@@ -1253,7 +1261,9 @@
       "id": "KA-A1-T-04",
       "category": "Kaala (tense)",
       "label": "person endings across the paradigm",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C12-PRESENT-THIRD-05"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1262,7 +1272,7 @@
       "derivedFrom": [
         "A1-V-01"
       ],
-      "note": "PARTIAL, AND UNEVENLY SO. The first person -eene is taught thoroughly. Third-person -aane / -aale / -aare are shown once, in passing, in chapter 5's grammar lens, and are not atoms -- and with no third-person pronoun to pair them with (KA-A1-PRON-03) they cannot be used."
+      "note": "CLOSED for the A1 present-tense demand by chapter 12: -tāne, -tāḷe and -tāre are taught with avanu, avaḷu and avaru. The later past-person system and the non-human present ending remain outside this bounded bridge."
     },
     {
       "id": "KA-A1-T-05",

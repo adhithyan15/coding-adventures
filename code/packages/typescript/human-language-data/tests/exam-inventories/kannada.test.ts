@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { loadTrackLessons, loadExamInventory } from "../../src/loader.js";
+import {
+  loadEverything,
+  loadExamInventory,
+  loadTrackChapters,
+  loadTrackLessons,
+} from "../../src/loader.js";
 import {
   EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
@@ -7,6 +12,7 @@ import {
   isExamInventoryComplete,
   trackIntroducedAtoms,
 } from "../../src/exam-inventory.js";
+import { lessonsUpToLevel } from "../../src/levels.js";
 
 describe("the committed Kannada A1 inventory", () => {
   const inventory = loadExamInventory("kannada", "A1");
@@ -129,8 +135,81 @@ describe("the committed Kannada A1 inventory", () => {
     const origin = coverage.points.filter((point) => originIds.includes(point.id));
     expect(origin.map((point) => point.id)).toEqual(originIds);
     expect(origin.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(204);
-    expect(coverage.unmapped).toBe(54);
+    expect(coverage.covered).toBe(209);
+    expect(coverage.unmapped).toBe(49);
+  }, 60_000);
+
+  it("teaches the five-part A1 third-person bridge before the A1 boundary", () => {
+    // Issue #19104 deliberately joins the five points that make chapter 12's
+    // family words usable in a sentence. Keep the effect exact: a future broad
+    // lesson must not receive accidental credit for an unrelated A1 point.
+    const bridgeIds = [
+      "KA-A1-N-05",
+      "KA-A1-N-06",
+      "KA-A1-POS-03",
+      "KA-A1-PRON-03",
+      "KA-A1-T-04",
+    ];
+    const lessons = loadTrackLessons("kannada");
+    const coverage = measureExamCoverage(inventory, lessons);
+    const bridge = coverage.points.filter((point) => bridgeIds.includes(point.id));
+    expect(bridge.map((point) => point.id)).toEqual(bridgeIds);
+    expect(bridge.every((point) => point.covered)).toBe(true);
+    expect(coverage.covered).toBe(209);
+    expect(coverage.unmapped).toBe(49);
+
+    // The plural examples must be words the learner actually owns. The first
+    // reviewed draft used banna/bannagaḷu while citing the four colour-word
+    // atoms, even though none of those atoms teaches the noun "colour".
+    const pluralLesson = lessons.find(
+      (lesson) => lesson.realization.lessonId === "KA-C12-plural-galu",
+    );
+    expect(pluralLesson?.frontmatter["requires.knowledge"]).toEqual(
+      expect.arrayContaining(["KA-LEX-C02-HESARU-01", "KA-LEX-C05-MAADU-01"]),
+    );
+    expect(pluralLesson?.frontmatter["requires.knowledge"]).not.toEqual(
+      expect.arrayContaining(["KA-LEX-C11-BANNAGALU-01", "KA-LEX-C11-BANNAGALU-02"]),
+    );
+    expect(pluralLesson?.body).toContain("ಕೆಲಸ");
+    expect(pluralLesson?.body).not.toContain("ಬಣ್ಣ");
+
+    // The chapter payoff is a second public claim about the last lesson. Keep
+    // it exact too: stale colour atoms survived the first prose repair because
+    // only the lesson frontmatter and body were pinned.
+    const chapter12 = loadTrackChapters()
+      .find((track) => track.language === "kannada")
+      ?.chapters.find((chapter) => chapter.chapter === 12);
+    expect(chapter12?.payoff?.lesson).toBe("KA-C12-plural-galu");
+    expect(chapter12?.payoff?.assesses).toEqual([
+      "KA-ETYMON-C12-KUTUMBA-01",
+      "KA-ETYMON-C12-KUTUMBA-02",
+      "KA-GRAMMAR-C12-THIRD-PERSON-03",
+      "KA-GRAMMAR-C12-HUMAN-NONHUMAN-04",
+      "KA-GRAMMAR-C12-PRESENT-THIRD-05",
+      "KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06",
+      "KA-GRAMMAR-C12-PLURAL-GALU-07",
+      "KA-LEX-C02-HESARU-01",
+      "KA-LEX-C05-MAADU-01",
+    ]);
+    expect(new Set(chapter12?.payoff?.assesses)).toEqual(
+      new Set(pluralLesson?.frontmatter["practises.knowledge"]),
+    );
+
+    const everything = loadEverything();
+    const throughA1 = new Set(
+      lessonsUpToLevel(
+        everything.lessons,
+        everything.curricula,
+        everything.spine,
+        "A1",
+      ).map((lesson) => lesson.realization.lessonId),
+    );
+    expect([
+      "KA-C12-third-person",
+      "KA-C12-present-endings",
+      "KA-C12-third-person-possession",
+      "KA-C12-plural-galu",
+    ].every((id) => throughA1.has(id))).toBe(true);
   }, 60_000);
 
   it("reports a CLOSED joining column and a script still 19 characters short", () => {
@@ -164,8 +243,10 @@ describe("the committed Kannada A1 inventory", () => {
     // 198 -> 204: the chapter-103 origin tranche closes exactly the six points
     // pinned above. The generic place words were already taught; the new work is
     // the bounded person/place relation, ablative, and ask-answer composition.
-    expect(coverage.covered).toBe(204);
-    expect(coverage.unmapped).toBe(54);
+    // 204 -> 209: chapter 12 then closes the exact third-person bridge pinned
+    // above: pronouns, human/non-human, present endings, possessives and -gaḷu.
+    expect(coverage.covered).toBe(209);
+    expect(coverage.unmapped).toBe(49);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -221,7 +302,7 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 204/258 points covered (79%)",
+      "kannada A1 (partial inventory): 209/258 points covered (81%)",
     );
   }, 60_000);
 });

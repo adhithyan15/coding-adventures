@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-pass-rename` crate will be documented in this file.
 
+## [0.22.3] - 2026-11-09
+
+### Changed — test assertions track closure-emitter single-statement unwrapping (CCR-076, #15861)
+
+- Updated expected output strings in `tests::renames_for_loop_var`, `tests::renames_nested_var_because_function_scoped`, and `tests::renames_param_used_in_nested_block` to reflect single-statement loop and conditional body brace unwrapping from `closure-emitter` 0.63.6.
+
 ## [0.22.2] - 2026-09-23
 
 ### Fixed — the catch-param test section called two different things "soundness" — CCR-022

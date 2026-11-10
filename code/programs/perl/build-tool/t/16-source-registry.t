@@ -32,7 +32,7 @@ my $registry = decode_json($canonical_bytes);
 subtest 'packaged registry is a complete and pinned projection' => sub {
     is($h->registry_bytes(), $canonical_bytes, 'runtime package data equals the neutral registry byte for byte');
     is(decode_json($h->registry_bytes()), $registry, 'all roles and owners are present');
-    is($h->registry_digest(), '5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621',
+    is($h->registry_digest(), '8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1',
         'domain-separated canonical registry identity');
 };
 

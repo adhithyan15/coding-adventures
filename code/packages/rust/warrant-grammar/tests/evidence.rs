@@ -74,6 +74,7 @@ fn options(spec: &str) -> EvidenceOptions {
         negctl_fuzz_iterations: 1000,
         exhaustive_budget: 400_000,
         arg_types: BTreeMap::new(),
+        hosts: Default::default(),
     }
 }
 

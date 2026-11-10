@@ -22,6 +22,7 @@ pub mod evidence;
 pub mod fixed;
 pub mod layout;
 pub mod parser;
+pub mod patterns;
 pub mod source;
 
 pub use _parser::parser_grammar;

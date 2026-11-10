@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - BUILD-001
+
+- `main.ts` text-imports the generated (uncommitted) `visicalc-html/vendor/spreadsheet-engine-wasm.js`; added `deno task wasm` (`build-demo-wasm.sh visicalc`) and README/BUILD notes.
+
 ## 0.2.0
 
 - Add the **FFI native-engine variant** (`main-ffi.ts`): loads
