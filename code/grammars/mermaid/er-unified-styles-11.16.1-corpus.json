@@ -1,0 +1,19 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 unified ER entity-style rendering sources; browser HTML-label styling is out of scope",
+  "fixtures": [
+    {
+      "name": "unified-direct-style-statement",
+      "source": "erDiagram\n  c[CUSTOMER]\n  p[PERSON]\n  style c,p fill:#f9f,stroke:blue, color:grey, font-size:24px,font-weight:bold"
+    },
+    {
+      "name": "unified-class-statements",
+      "source": "erDiagram\n  c[CUSTOMER]\n  p[PERSON]:::blue\n  classDef bold font-size:24px, font-weight: bold\n  classDef blue stroke:lightblue, color: #0000FF\n  class c,p bold"
+    },
+    {
+      "name": "unified-default-class-and-direct-style",
+      "source": "erDiagram\n  c[CUSTOMER]\n  p[PERSON]:::blue\n  classDef blue stroke:lightblue, color: #0000FF\n  classDef default fill:pink\n  style c color:green"
+    }
+  ]
+}

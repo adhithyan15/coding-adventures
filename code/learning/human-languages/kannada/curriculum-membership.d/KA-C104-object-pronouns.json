@@ -1,0 +1,11 @@
+{
+  "id": "KA-C104-object-pronouns",
+  "pathSegment": "KA-PATH-104-JOBS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-104-JOBS",
+      "order": 6
+    }
+  ]
+}

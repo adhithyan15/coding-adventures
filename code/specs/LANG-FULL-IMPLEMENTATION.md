@@ -98,8 +98,9 @@ exponents, exponent chains beyond the existing unroll cap, zero divisors, and
 overflow remain outside the proof.
 Additive sequences may also combine repeated positive static roots with the
 same radicand into one checked integer coefficient before flooring, including
-outer signs and checked integer offsets. Unlike radicands, dynamic roots, and
-coefficient or offset overflow remain outside the proof.
+bounded nonnegative powers, outer signs, and checked integer offsets. Even
+powers become ordinary integer terms. Unlike radicands, dynamic or negative
+exponents, and coefficient or offset overflow remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.

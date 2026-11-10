@@ -34,10 +34,10 @@ public sealed class HasherConformanceTests
         Assert.Equal(23, checkedLanguage.RootElement.GetProperty("languages").GetArrayLength());
         Assert.Equal(18, checkedBoundary.RootElement.GetProperty("boundaries").GetArrayLength());
         Assert.Equal(
-            "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+            "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "cb16da5d6c8734a51d24af28e4595b31c4dee04a97997824e0969a79c3cbb820",
+            "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,

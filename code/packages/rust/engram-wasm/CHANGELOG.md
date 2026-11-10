@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - BUILD-001
+
+- `pkg/engram_engine.wasm` is no longer committed (ignored; built by `build-wasm.sh`). `BUILD` builds it and runs the smoke test against that fresh build, which removes the stale-artifact failure mode the old checked-in file had. `build-wasm.sh` honours `CARGO_TARGET_DIR`.
+
 ## Unreleased
 
 **Regenerated `pkg/engram_engine.wasm` for the switcher's plain labels

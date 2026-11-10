@@ -1,19 +1,21 @@
 {
   "language": "kannada",
   "chapter": 104,
-  "sourceHash": "fnv1a64:0228ea930f0aa6e5",
+  "sourceHash": "fnv1a64:4910b7ecf3ae5d1d",
   "lessonIds": [
     "KA-C104-business",
     "KA-C104-worker",
     "KA-C104-police",
     "KA-C104-driver",
-    "KA-C104-shop"
+    "KA-C104-shop",
+    "KA-C104-accusative-annu",
+    "KA-C104-object-pronouns"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "kannada/narration/ch104.txt",
   "json": "kannada/narration/ch104.json",
-  "textHash": "fnv1a64:b0c11a7008ef0d1b",
-  "jsonHash": "fnv1a64:9864c278b78b11e4",
+  "textHash": "fnv1a64:b2489f42a203763c",
+  "jsonHash": "fnv1a64:f7a001af5cb48baa",
   "findings": []
 }

@@ -10,6 +10,8 @@ description = "Constant-time byte-slice equality — no early exit on first diff
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 coding_adventures_sha256 = { path = "../sha256" }
 
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
+
 [[test]]
 name = "conformance"
 path = "tests/conformance.rs"
@@ -30,4 +32,12 @@ harness = false
 [[test]]
 name = "warrant_evidence"
 path = "tests/warrant_evidence.rs"
+harness = false
+
+# VER08b: runs the public API inside a manifest-derived sandbox (Linux live;
+# elsewhere reports NOT-LIVE). The BUILD runs every [[test]] target via
+# `cargo test -p coding_adventures_ct_compare`.
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
 harness = false

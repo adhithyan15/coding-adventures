@@ -1,5 +1,9 @@
 # Changelog — visicalc-webcomp
 
+## Unreleased - BUILD-001
+
+- The shared engine bundle `../visicalc-html/vendor/spreadsheet-engine-wasm.js` is generated, not committed; README says to run `bash code/scripts/build-demo-wasm.sh visicalc` after a clone.
+
 ## Unreleased
 
 ### Fixed — vendor elements regenerated for #17807

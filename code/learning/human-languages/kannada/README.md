@@ -164,11 +164,26 @@ ordinary non-human plural **-gaḷu**. The lessons explicitly defer the broader
 past-person system, the non-human present ending, a general genitive paradigm,
 and human plural formation.
 
-Strict Kannada A1 inventory coverage moves from **204/258 to 209/258**. The
-remaining 49 points stay open, including four structurally untransferable
-Spanish-proxy demands. This is a repository coverage measurement, not a claim
-of certification, standard setting, human validation, learner readiness or
-learner attainment.
+Strict Kannada A1 inventory coverage moved from **204/258 to 209/258**. The
+current remaining total is updated by the object bridge below. This is a
+repository coverage measurement, not a claim of certification, standard
+setting, human validation, learner readiness or learner attainment.
+
+## Kannada A1 object bridge status
+
+Two short chapter-104 lessons teach the dependency in the inventory itself:
+the accusative **-annu** first, then the object-pronoun set **nannannu,
+ninnannu, nimmannu, avanannu, avaḷannu, adannu, avarannu**. The lessons keep
+the distinction between familiar and respectful “you,” explain why the
+pronoun body changes before the shared ending, and retrieve the pair in
+chapters 105, 106, and 109 across the R1, R2, and R3 windows.
+
+Strict Kannada A1 inventory coverage moves from **209/258 to 211/258**. The
+remaining 47 points stay open, including four structurally untransferable
+Spanish-proxy demands. The measured C2 planner remains **9,542 projectable /
+159 enumerable**, because 47 open points still require ten five-point
+tranches. These are repository measurements, not claims of certification,
+standard setting, human validation, learner readiness or learner attainment.
 
 ## Kannada B2 content inventory status
 

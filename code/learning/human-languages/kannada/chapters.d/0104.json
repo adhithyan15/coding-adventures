@@ -2,18 +2,23 @@
   "chapter": 104,
   "title": "People at Work",
   "label": "ch:ka-people-at-work",
-  "canDo": "I can name business, a worker, the police, a driver and a shop.",
+  "canDo": "I can name business, a worker, the police, a driver and a shop, mark the object with -annu, and ask someone to call me or another familiar person.",
   "spineNodes": [
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "KA-C104-shop",
+    "lesson": "KA-C104-object-pronouns",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 104: I can name business, a worker, the police, a driver and a shop.",
+    "summary": "Name the work set, mark the person or particular thing an action reaches with -annu, and use familiar object pronouns in a polite call request.",
     "assesses": [
+      "KA-LEX-C104-JOBS-01",
+      "KA-LEX-C104-JOBS-02",
       "KA-LEX-C104-JOBS-03",
       "KA-LEX-C104-JOBS-04",
-      "KA-LEX-C104-JOBS-05"
+      "KA-LEX-C104-JOBS-05",
+      "KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06",
+      "KA-GRAMMAR-C104-OBJECT-PRONOUNS-07",
+      "KA-LEX-C101-OPEN-04"
     ]
   }
 }

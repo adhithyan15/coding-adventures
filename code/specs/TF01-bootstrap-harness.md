@@ -357,7 +357,8 @@ performs the replay.
    belong to the supervisor.
 6. **Exit statuses.** 0: every test returned `Pass` and the full report was
    written. 1: any `not ok`, any `Bail out!`, any failure writing the report
-   (`/dev/full`, a closed pipe, at any byte offset). 2: unusable command line;
+   (`/dev/full`, a closed pipe, at any byte offset), and a standard output
+   that is closed or read-only (item 9). 2: unusable command line;
    nothing is run and stdout stays empty, even if the suite would have failed.
 7. **Arguments.** `--seed` takes ASCII digits only and fits a `u64`; leading
    zeros are accepted (`007` is 7); a repeated `--seed` takes the last value.
@@ -367,6 +368,32 @@ performs the replay.
    contain a forged `ok`/`not ok` line. A test id with any character outside
    `[A-Za-z0-9._/-]`, or empty, produces a single `Bail out!` line and no
    result lines.
+
+9. **Standard output must be usable (LH-003c).** Rust's `std::io::Stdout`
+   treats the OS error `EBADF` as a successful write, so a harness whose fd 1
+   is closed or read-only would print nothing and exit 0. Before running any
+   test the Rust runner checks that standard output is open and writable and
+   otherwise exits 1 with a one-line reason on stderr, running nothing. The
+   plan line is then written with an explicit `write_all` and `flush`, and any
+   error (`ENOSPC`, `EPIPE`, ...) is exit status 1.
+
+   *Known limits: what is and is not detectable.*
+
+   | Situation | Detected? | How / why not |
+   |---|---|---|
+   | fd 1 closed at process start (Linux, Android, macOS) | yes | std re-opens a closed fd 1 as `/dev/null` before `main`, after which it is indistinguishable from `> /dev/null`; the runner samples fd 1 from a loader constructor (ELF `.init_array`, Mach-O `__DATA,__mod_init_func`) that runs before std's start-up and fails the run if it was closed |
+   | fd 1 closed at process start (other Unix: the BSDs, illumos) | **no** | they have `.init_array` too, but no CI job runs them, so the hook is not installed there untested; the std repair makes it a working `/dev/null` and the run exits 0 with nothing observable. Supervisors must require the plan line |
+   | fd 1 open read-only (`fcntl(1, F_GETFL)` access mode `O_RDONLY`), or an `O_PATH` descriptor (Linux) | yes | writes would fail `EBADF`, which std hides |
+   | fd 1 is `/dev/full`, a pipe whose reader has gone | yes | the write returns `ENOSPC` / `EPIPE`, not `EBADF` |
+   | Windows: no standard output handle (`GetStdHandle` is NULL or `INVALID_HANDLE_VALUE`) or `GetFileType` fails | yes (implemented, not exercised: CI does not run Rust on Windows) | |
+   | Windows: stdout handle open read-only | **no** | no access-mode query is made |
+   | stdout accepts and discards bytes (`/dev/null`, a pipe nobody reads) | **no** | indistinguishable from a working sink; only a supervisor reading the real stream can notice that nothing arrived |
+   | fd 1 closed or replaced *after* the check (by a test body or a thread) | **no** | the check runs once; later `EBADF` writes are swallowed by std |
+   | A test that calls `process::exit(0)` | no (§8.3 item 4) | detectable only by a supervisor comparing `1..N` with the result lines |
+
+   A supervisor MUST therefore still require the `1..N` plan line and `N`
+   result lines; the in-process check narrows the false-pass window, it does
+   not close it.
 
 ### 8.4 Sabotage mode, precisely
 
@@ -406,3 +433,4 @@ with `grep`.
 | 1 | §5.3 example | The example block printed `failure_id: not-deep-equal` unquoted while the text, and every implementation, require a double-quoted scalar | Example corrected |
 | 2 | §3 | `Verdict` could be computed and dropped silently, giving a vacuous pass | `#[must_use]` on `Verdict` (Rust lane); documented in 8.3 |
 | 3 | §5.2 | No statement on a process that exits mid-run | Documented in 8.3 item 4 |
+| 4 | §5.3 | A closed or read-only fd 1 made the runner print nothing and exit 0 (std hides `EBADF`) | Checked at start; limits tabulated in 8.3 item 9 (LH-003c) |

@@ -47,7 +47,7 @@ const snap = engine.snapshot();  engine.load(snap);     // host-owned persistenc
 
 ```bash
 cargo test -p task-wasm      # native unit tests of the ABI logic
-./build-wasm.sh              # → pkg/task_engine.wasm
+./build-wasm.sh              # → pkg/task_engine.wasm (generated; not committed, BUILD-001)
 node js/smoke.mjs            # end-to-end JS ↔ wasm round-trip
 ```
 

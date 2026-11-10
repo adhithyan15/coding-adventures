@@ -52,6 +52,10 @@ generated React/Electron renderers to refresh after asynchronous host setup.
 
 ## Building
 
+`pkg/engram_engine.wasm` is generated and not committed (BUILD-001); build it
+before running the smoke test or any web/Electron shell. `BUILD` does this in
+CI, and `code/scripts/build-demo-wasm.sh engram` does it locally.
+
 PowerShell:
 
 ```powershell
