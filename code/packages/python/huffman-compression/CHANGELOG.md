@@ -1,5 +1,17 @@
 # Changelog — coding-adventures-huffman-compression
 
+## [0.1.1] — 2026-11-10
+
+### Security
+
+- SEC-003: `decompress` now treats the code-lengths table as hostile input.
+  It rejects `symbol_count > 256`, duplicate symbols, code lengths outside
+  1..56, tables not sorted by length, and over-subscribed (Kraft > 1) tables,
+  and rejects a declared `original_length` larger than 8 x payload bytes
+  before sizing anything from it. Decoding reads bits in O(1) from the payload
+  bytes and fails as soon as the accumulated bits exceed the longest code.
+  All failures raise `ValueError`. Valid encoder output still round-trips.
+
 ## [Unreleased]
 
 ### Changed
