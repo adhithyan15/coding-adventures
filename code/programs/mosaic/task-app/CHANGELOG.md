@@ -2,14 +2,14 @@
 
 All notable changes to the `task-app` web program are documented here.
 
-## [Unreleased] - BUILD-001
-
-- `task-wasm/pkg/task_engine.wasm` is no longer committed; the web build scripts already build it first. The release workflow's tracked-file check no longer excludes it.
-
 ## [Unreleased]
 
 Entries added after `task-app-v0.5.16` accumulate here until the next version is
 cut.
+
+### Changed
+
+- `task-wasm/pkg/task_engine.wasm` is no longer committed; the web build scripts already build it first. The release workflow's tracked-file check no longer excludes it.
 
 ### Added
 
