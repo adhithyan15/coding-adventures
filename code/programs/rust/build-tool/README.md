@@ -53,6 +53,20 @@ before request-dependent path-classification preflights. The core never reads a
 checkout or acquires process, environment, clock, randomness, or network
 authority.
 
+The Cargo trigger snapshot resolver is the authority-free bridge between the
+strict neutral manifest records and that one-hop selector. Callers provide
+immutable package roots, crate directories, development/root-patch paths,
+normal/build link paths, Cargo-configuration redirect evidence, and exact
+orphan exemptions. The resolver performs byte-exact lexical path reduction,
+attributes nested crates to the deepest containing package, follows link
+closure through exempt orphan crates, memoizes shared diamonds, removes
+self-relations, and returns sorted unique trigger pairs. Duplicate identities,
+missing or unowned crates, redirects, cycles, unsafe paths, and a dependency
+chain beyond 16 crate records fail atomically with stable codes. It never opens
+a manifest or ledger, resolves a host path or symlink, inspects environment
+state, runs a process, or accesses the network; those operations belong to the
+separate native adapter.
+
 Diff validation retains only compact per-package glob work factors. After the
 whole-operation preflight succeeds, one validated pattern is compiled at a
 time and reused across that package's indexed candidate paths. Package roots
@@ -186,6 +200,11 @@ The Cargo test-trigger suite separately pins all six
 `test-trigger-selection-*.json` cases. The same successful cases are evaluated
 through Go's established one-hop selection helpers, while Rust additionally
 pins fail-closed graph/relation diagnostics and exact cardinality ceilings.
+The Cargo trigger snapshot suite separately covers package-root, nested-crate,
+and exempt-orphan attribution; transitive root-patch closure; deterministic
+shared diamonds; self-edge removal; exact 16/17-depth behavior even when a
+shallower cached closure exists; redirect, missing, unowned, unsafe, duplicate,
+and cycle refusal; and input-order-independent output.
 
 ## Discovery and metadata diagnostics
 

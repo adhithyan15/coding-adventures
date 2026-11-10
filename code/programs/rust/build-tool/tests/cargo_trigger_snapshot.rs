@@ -7,7 +7,10 @@ fn package(name: &str, root: &str, trigger_paths: &[&str]) -> CargoTriggerPackag
     CargoTriggerPackageSnapshot {
         name: name.to_string(),
         root: root.to_string(),
-        trigger_paths: trigger_paths.iter().map(|path| (*path).to_string()).collect(),
+        trigger_paths: trigger_paths
+            .iter()
+            .map(|path| (*path).to_string())
+            .collect(),
     }
 }
 
@@ -26,7 +29,7 @@ fn input(
         packages,
         crates,
         exemptions: Vec::new(),
-        config_redirects: Vec::new(),
+        config_redirected: false,
     }
 }
 
@@ -44,7 +47,11 @@ fn resolves_package_nested_and_orphan_crate_closures() {
             package(
                 "app",
                 "code/apps/app",
-                &["../../packages/shared", "../../packages/owner/native", "../../orphan"],
+                &[
+                    "../../packages/shared",
+                    "../../packages/owner/native",
+                    "../../orphan",
+                ],
             ),
             package("shared", "code/packages/shared", &[]),
             package("core", "code/packages/core", &[]),
@@ -53,7 +60,7 @@ fn resolves_package_nested_and_orphan_crate_closures() {
         vec![
             crate_snapshot("code/packages/shared", &["../core"]),
             crate_snapshot("code/packages/core", &[]),
-            crate_snapshot("code/packages/owner/native", &["../../packages/core"]),
+            crate_snapshot("code/packages/owner/native", &["../../core"]),
             crate_snapshot("code/orphan", &["../packages/core"]),
         ],
     );
@@ -152,7 +159,7 @@ fn accepts_sixteen_crates_but_rejects_the_seventeenth() {
             packages: vec![package("app", "code/app", &["../c0"])],
             crates,
             exemptions,
-            config_redirects: Vec::new(),
+            config_redirected: false,
         }
     }
 
@@ -163,17 +170,53 @@ fn accepts_sixteen_crates_but_rejects_the_seventeenth() {
 }
 
 #[test]
+fn cached_shallow_closure_cannot_hide_a_deep_path() {
+    let mut crates = Vec::new();
+    let mut exemptions = Vec::new();
+    for index in 0..17 {
+        let path = format!("code/c{index}");
+        let links = if index == 16 {
+            Vec::new()
+        } else {
+            vec![format!("../c{}", index + 1)]
+        };
+        crates.push(CargoCrateSnapshot {
+            path: path.clone(),
+            link_paths: links,
+        });
+        exemptions.push(path);
+    }
+    let snapshot = CargoTriggerSnapshotInput {
+        // Sorted evaluation computes c10's seven-crate closure first.  The
+        // later c0 route must still count that cached subtree at depth 11.
+        packages: vec![
+            package("a-shallow", "code/shallow", &["../c10"]),
+            package("z-deep", "code/deep", &["../c0"]),
+        ],
+        crates,
+        exemptions,
+        config_redirected: false,
+    };
+
+    assert_eq!(
+        resolve_cargo_trigger_snapshot(&snapshot),
+        Err(CargoTriggerSnapshotError::DepthLimitExceeded)
+    );
+}
+
+#[test]
 fn rejects_redirects_missing_crates_and_unowned_crates() {
     let mut redirect = input(vec![package("app", "code/app", &[])], Vec::new());
-    redirect
-        .config_redirects
-        .push("code/app/.cargo/config.toml".to_string());
+    redirect.config_redirected = true;
     assert_eq!(
         resolve_cargo_trigger_snapshot(&redirect),
         Err(CargoTriggerSnapshotError::ConfigRedirect)
     );
 
-    let missing = input(vec![package("app", "code/app", &["../missing"])], Vec::new());
+    let missing = input(
+        vec![package("app", "code/app", &["../missing"])],
+        Vec::new(),
+    );
     assert_eq!(
         resolve_cargo_trigger_snapshot(&missing),
         Err(CargoTriggerSnapshotError::MissingCrate)
@@ -207,7 +250,10 @@ fn rejects_unsafe_and_duplicate_snapshot_identities() {
     );
 
     let duplicate_name = input(
-        vec![package("app", "code/app", &[]), package("app", "code/other", &[])],
+        vec![
+            package("app", "code/app", &[]),
+            package("app", "code/other", &[]),
+        ],
         Vec::new(),
     );
     assert_eq!(
@@ -217,7 +263,10 @@ fn rejects_unsafe_and_duplicate_snapshot_identities() {
 
     let duplicate_crate = input(
         vec![package("app", "code/app", &[])],
-        vec![crate_snapshot("code/crate", &[]), crate_snapshot("code/crate", &[])],
+        vec![
+            crate_snapshot("code/crate", &[]),
+            crate_snapshot("code/crate", &[]),
+        ],
     );
     assert_eq!(
         resolve_cargo_trigger_snapshot(&duplicate_crate),
