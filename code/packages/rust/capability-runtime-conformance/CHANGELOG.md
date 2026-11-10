@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Fixed
+
+- Launcher now closes every inherited descriptor above stderr between `fork`
+  and `exec` (`close_range`, with a `close` loop fallback). `Command` only
+  closes `O_CLOEXEC` descriptors, and the GitHub Actions runner leaks plain
+  pipes into build steps, so the child's `RCG011` audit (correctly) refused to
+  arm: "no checks ran" plus `RCG009` for all 18 controls on CI. The audit is
+  unchanged and still fail-closed; the launcher now hands over exactly 0/1/2.
+
 ### Added
 
 - Initial implementation of the VER08b runtime capability conformance gate.

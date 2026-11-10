@@ -268,7 +268,7 @@ mod linux {
     use crate::policy::BASELINE;
     use crate::sabotage::{self, CONTROLS};
     use std::io::Write as _;
-    use std::os::unix::process::ExitStatusExt;
+    use std::os::unix::process::{CommandExt as _, ExitStatusExt};
     use std::path::Path;
     use std::process::{Command, Stdio};
 
@@ -507,6 +507,14 @@ mod linux {
                 .stdin(Stdio::null())
                 .stdout(Stdio::piped())
                 .stderr(Stdio::piped());
+            // SAFETY: the closure runs between fork and exec and only calls
+            // async-signal-safe functions (`close_range`/`close`/`getrlimit`).
+            unsafe {
+                command.pre_exec(|| {
+                    close_inherited_fds();
+                    Ok(())
+                });
+            }
             let output = command.output()?;
             let trace = std::fs::read_to_string(&trace_path).ok();
             let _ = std::fs::remove_file(&trace_path);
@@ -516,6 +524,40 @@ mod linux {
                 stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
                 trace,
             })
+        }
+    }
+
+    /// Close every descriptor above stderr in the freshly forked launcher
+    /// child, before `exec`.
+    ///
+    /// `std::process::Command` only closes descriptors that are
+    /// `O_CLOEXEC`. A CI runner (or a build tool above it) routinely leaks
+    /// plain pipes into every process it starts, and without this step they
+    /// reach the gate's child, where the RCG011 audit rightly refuses them
+    /// ("no inherited descriptor may be ambient authority"). The audit is
+    /// the guarantee; this makes the *launcher* hand over exactly 0/1/2 so
+    /// the audit measures the launch, not the runner's hygiene. `Command`'s
+    /// own stdio plumbing is already dup'd onto 0-2 by this point.
+    fn close_inherited_fds() {
+        // SAFETY: raw syscalls with integer arguments; `getrlimit` writes
+        // into a live local struct.
+        unsafe {
+            // Linux 5.9+: one call closes the whole range.
+            if libc::syscall(libc::SYS_close_range, 3u32, u32::MAX, 0u32) == 0 {
+                return;
+            }
+            let mut limit = libc::rlimit {
+                rlim_cur: 0,
+                rlim_max: 0,
+            };
+            let top = if libc::getrlimit(libc::RLIMIT_NOFILE, &mut limit) == 0 {
+                limit.rlim_cur.min(1 << 20) as i32
+            } else {
+                4096
+            };
+            for fd in 3..top {
+                libc::close(fd);
+            }
         }
     }
 
@@ -1301,6 +1343,47 @@ mod linux {
                 .join(format!("rcg-harness-unit-{name}-{}", std::process::id()));
             let _ = std::fs::remove_dir_all(&dir);
             dir
+        }
+
+        #[test]
+        fn launcher_closes_leaked_non_cloexec_descriptors_before_exec() {
+            // Plain pipe: no O_CLOEXEC, exactly what a CI runner leaks.
+            let mut pipe = [0i32; 2];
+            // SAFETY: pipe2 with flags 0 into a live two-element array; the
+            // descriptor is then moved high (F_DUPFD, no CLOEXEC) so `ls`'s
+            // own directory handle cannot reuse its number.
+            let leaked = unsafe {
+                assert_eq!(libc::pipe2(pipe.as_mut_ptr(), 0), 0);
+                let high = libc::fcntl(pipe[0], libc::F_DUPFD, 200);
+                libc::close(pipe[0]);
+                libc::close(pipe[1]);
+                high
+            };
+            assert!(leaked >= 200);
+            let mut command = Command::new("ls");
+            command
+                .arg("/proc/self/fd")
+                .env_clear()
+                .env("PATH", "/usr/bin:/bin");
+            // SAFETY: the closure only calls async-signal-safe functions.
+            unsafe {
+                command.pre_exec(|| {
+                    close_inherited_fds();
+                    Ok(())
+                });
+            }
+            let output = command.output().expect("spawn ls");
+            // SAFETY: closing the descriptor created above.
+            unsafe {
+                libc::close(leaked);
+            }
+            let listing = String::from_utf8_lossy(&output.stdout);
+            let open: Vec<i32> = listing
+                .split_whitespace()
+                .filter_map(|n| n.parse().ok())
+                .filter(|fd| *fd > 2)
+                .collect();
+            assert!(!open.contains(&leaked), "{listing}");
         }
 
         #[test]
