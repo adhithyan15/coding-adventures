@@ -90,7 +90,8 @@ can progress independently once their prerequisites are available.
   0.187 seconds. The unchanged-cursor path is still present on fetched main
   `57bfc809e3eb`. See [the lexer progress contract](02-lexer.md#leading-hash-in-grammar-driven-indentation-mode).
   Validate unsupported input, an explicit hash token and legacy hash comments.
-  Reconcile the spreadsheet WASM and VisiCalc artifact owners before publishing.
+  BUILD-001 landed in #19086, so validate a fresh spreadsheet WASM and VisiCalc
+  bundle with the build-at-use scripts. The generated outputs are ignored.
 - **P006b2/P006b3 reconciliation** — #18992 and #18996 landed with a dedicated
   bounded Warrant layout scanner. It classifies `--` comment-only lines before
   comparing indentation. The shared lexer's treatment of other comment
