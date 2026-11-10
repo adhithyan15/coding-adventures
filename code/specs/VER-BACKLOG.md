@@ -644,7 +644,7 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | PR / BUILD-001 | stop committing generated wasm; build where used | PR #19086 |
 | PR / SEC-003b | huffman decoder hardening in 16 more lanes | PR #19087 |
 | PR / AS-001a(1) | VER13 catalogue data (84 entries) + AC-14 checker in CI | PR #19089 |
-| P1 / AS-001a(2) | ca-assurance-report side: pin `catalogue.sha256`; enforce AC-1..AC-13 report rules; migrate ct-compare report to catalogue ids; derived exemptions; `evidence-kinds.json` | after #19077 and #19089 |
+| P1 / AS-001a(2) | ca-assurance-report side: pin `catalogue.sha256`; enforce AC-1..AC-13 report rules; migrate ct-compare report to catalogue ids; derived exemptions; `evidence-kinds.json` | after #19077 and #19089; done-local on branch `claude/as-001a2-report-catalogue` (ca-assurance-report 0.2.0; VER13 clarifications part 2) |
 | P0 / CI-RED-001 | main fails `test_repository_source_input_boundary_is_closed_and_canonical` (six TypeScript packages missing from the TS workspace boundary); fix is open PR #19050 | watch; blocks #19086 |
 | P2 / LH-003c | Rust std treats EBADF on stdout as a successful write, so a harness whose fd 1 is closed or read-only prints nothing and exits 0. Detect at start (fstat fd 1) or document in TF01 §8 known limits; supervisors must require the plan line | open |
 | P2 / CI-001 | Playwright 1.58 cannot install Chromium on ubuntu-latest (26.04); `release-visicalc.yml` verify pinned to ubuntu-24.04 in #19086. Bump release-tests Playwright, then unpin | open |
