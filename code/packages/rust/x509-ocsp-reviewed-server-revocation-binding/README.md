@@ -106,6 +106,18 @@ proofs fail with payload-free categories. Success retains both complete
 non-copyable inputs. The boundary does not claim revocation policy for the
 second proof's own signer or for the intermediate.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
+then consumes that complete separately authenticated branch and nominally
+reifies the added revocation proof's own delegated responder-to-intermediate-
+to-reviewed-root path. The infallible non-copyable wrapper retains both the
+original routed responder policy and the exact authenticated responder-status
+proof; it accepts no substitute certificate, path, root, algorithm, key,
+signature, status, or time. This projection performs no new validation or
+external effect and stops before reviewed-root or intermediate name policy,
+no-check or separately authenticated revocation policy for that added
+responder, complete revocation, generalized path validation, TLS, HTTP, OAuth,
+or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
