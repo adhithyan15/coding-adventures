@@ -142,10 +142,10 @@ rediscover them (TF01 §8, VER05 §7, VER06 §9, VER07 §8):
   to the bench or test binary. Without it the counter reports `NotLive` and the
   `max_alloc_bytes` budget is listed as unchecked, never passed. Tallies are
   per thread: allocations on threads the closure spawns are not counted.
-- **Standard output is checked, not trusted.** A closed (Linux) or read-only
+- **Standard output is checked, not trusted.** A closed (Linux, macOS) or read-only
   fd 1 makes the runner exit 1 instead of silently printing nothing (Rust std
   hides `EBADF`). Still undetectable: a stdout that discards bytes (`/dev/null`),
-  a closed fd 1 on non-Linux Unix, a read-only Windows handle, and an fd 1
+  a closed fd 1 on Unix systems other than Linux, Android and macOS, a read-only Windows handle, and an fd 1
   closed after start. Table in TF01 §8.3 item 9; supervisors must still require
   the `1..N` plan and `N` result lines.
 - **`FuzzReport::is_clean()`**, not `crashes.is_empty()`, is the "found nothing"

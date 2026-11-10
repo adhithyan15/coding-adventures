@@ -900,7 +900,12 @@ fn a_report_that_cannot_be_written_is_not_a_pass() {
 // LH-003c. Rust's std treats EBADF on stdout as a successful write, so without
 // an explicit check a harness whose fd 1 is closed or read-only prints nothing
 // and exits 0: a false pass. Both cases must exit 1 and say why on stderr.
-#[cfg(unix)]
+//
+// A closed fd 1 is only visible to a pre-`main` constructor (std re-opens it
+// as /dev/null before `main`), so this test runs exactly where the runner
+// installs one: Linux, Android and macOS. Other Unix systems are a
+// documented known limit (TF01 section 8.3).
+#[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))]
 #[test]
 fn a_closed_stdout_exits_one_not_zero() {
     use std::os::unix::process::CommandExt;

@@ -381,8 +381,8 @@ performs the replay.
 
    | Situation | Detected? | How / why not |
    |---|---|---|
-   | fd 1 closed at process start (Linux) | yes | std re-opens a closed fd 1 as `/dev/null` before `main`, after which it is indistinguishable from `> /dev/null`; the runner samples fd 1 from a `.init_array` entry that runs before std's start-up and fails the run if it was closed |
-   | fd 1 closed at process start (other Unix, e.g. macOS) | **no** | no portable pre-`main` hook; the std repair makes it a working `/dev/null` and the run exits 0 with nothing observable. Supervisors must require the plan line |
+   | fd 1 closed at process start (Linux, Android, macOS) | yes | std re-opens a closed fd 1 as `/dev/null` before `main`, after which it is indistinguishable from `> /dev/null`; the runner samples fd 1 from a loader constructor (ELF `.init_array`, Mach-O `__DATA,__mod_init_func`) that runs before std's start-up and fails the run if it was closed |
+   | fd 1 closed at process start (other Unix: the BSDs, illumos) | **no** | they have `.init_array` too, but no CI job runs them, so the hook is not installed there untested; the std repair makes it a working `/dev/null` and the run exits 0 with nothing observable. Supervisors must require the plan line |
    | fd 1 open read-only (`fcntl(1, F_GETFL)` access mode `O_RDONLY`), or an `O_PATH` descriptor (Linux) | yes | writes would fail `EBADF`, which std hides |
    | fd 1 is `/dev/full`, a pipe whose reader has gone | yes | the write returns `ENOSPC` / `EPIPE`, not `EBADF` |
    | Windows: no standard output handle (`GetStdHandle` is NULL or `INVALID_HANDLE_VALUE`) or `GetFileType` fails | yes (implemented, not exercised: CI does not run Rust on Windows) | |

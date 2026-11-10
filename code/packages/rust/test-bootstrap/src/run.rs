@@ -58,11 +58,18 @@ pub const STDOUT_UNUSABLE_EXIT: i32 = 1;
 /// Returns `Err` describing the problem when fd 1 (Unix) or the standard
 /// output handle (Windows) is closed, missing, or not open for writing.
 pub fn stdout_is_usable() -> io::Result<()> {
-    #[cfg(target_os = "linux")]
+    #[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))]
     {
-        // Naming the static here keeps the object that holds the .init_array
-        // entry in the final link.
+        // Naming the static here keeps the object that holds the constructor
+        // table entry in the final link.
         std::hint::black_box(&early::INIT);
+        // `None` (the constructor never ran) deliberately falls through to the
+        // in-`main` probe below rather than failing: Miri and other
+        // interpreters do not run loader constructors, and refusing there
+        // would make the harness unusable under them. On a real binary the
+        // entry is always linked (above) and always run, and the
+        // `a_closed_stdout_exits_one_not_zero` test proves it on every
+        // platform this block compiles for.
         if early::stdout_flags_at_start() == Some(-1) {
             return Err(io::Error::other(
                 "closed when the process started (std re-opens a closed fd 1 as /dev/null, \
@@ -135,12 +142,22 @@ pub fn fd_is_writable(fd: i32) -> io::Result<()> {
 // closed stdout looks exactly like `> /dev/null`, which is a working,
 // writable, discarding stdout.
 //
-// To see the original state we have to look *before* std's start-up code. On
-// Linux (glibc and musl) the dynamic loader runs every function listed in the
-// `.init_array` section before `main` is entered, and std's repair happens
-// inside `main`, so a one-function entry here samples fd 1 first. It does
-// nothing but read the flags and store them in an atomic.
-#[cfg(target_os = "linux")]
+// To see the original state we have to look *before* std's start-up code.
+// Every mainstream loader has a table of constructor functions that it runs
+// before `main` is entered, and std's repair happens inside `main`, so a
+// one-function entry in that table samples fd 1 first. It does nothing but
+// read the flags and store them in an atomic.
+//
+//   Platform         Constructor table                 Run by
+//   ---------------  --------------------------------  ----------------------
+//   Linux, Android   ELF section `.init_array`         ld.so / the libc start
+//   macOS            Mach-O `__DATA,__mod_init_func`   dyld
+//
+// The BSDs and illumos also use `.init_array`, and iOS has `__mod_init_func`,
+// but no CI job runs them, so they are left out rather than claimed untested.
+// On those, a closed fd 1 at start-up is a documented known limit (TF01
+// section 8.3).
+#[cfg(any(target_os = "linux", target_os = "android", target_os = "macos"))]
 mod early {
     use std::sync::atomic::{AtomicI32, Ordering};
 
@@ -152,17 +169,23 @@ mod early {
         STDOUT_FLAGS.store(super::get_fd_flags(1).unwrap_or(-1), Ordering::Relaxed);
     }
 
-    // The constructor table entry. `#[used]` stops the compiler discarding it;
-    // `.init_array` is a KEEP section in the linker script, so --gc-sections
-    // keeps it too. Its address is referenced from `stdout_is_usable` so the
-    // object file holding it is always linked in.
+    // The constructor table entry. `#[used]` stops the compiler discarding it.
+    // On ELF, `.init_array` is a KEEP section in the linker script, so
+    // --gc-sections keeps it too; on Mach-O, `ld64` never dead-strips
+    // `__mod_init_func`, whose section type (S_MOD_INIT_FUNC_POINTERS) dyld
+    // reads as "call each pointer before main". Its address is referenced
+    // from `stdout_is_usable` so the object file holding it is always linked in.
     #[used]
-    #[link_section = ".init_array"]
+    #[cfg_attr(
+        any(target_os = "linux", target_os = "android"),
+        link_section = ".init_array"
+    )]
+    #[cfg_attr(target_os = "macos", link_section = "__DATA,__mod_init_func")]
     pub static INIT: extern "C" fn() = sample_stdout_before_main;
 
     /// The flags of fd 1 sampled before `main`; `Some(-1)` means it was
     /// closed, `None` means the sample never ran (e.g. a static analysis
-    /// harness, or a platform that skips `.init_array`).
+    /// harness, or a loader that skips its constructor table).
     pub fn stdout_flags_at_start() -> Option<i32> {
         match STDOUT_FLAGS.load(Ordering::Relaxed) {
             UNSET => None,
