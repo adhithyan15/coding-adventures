@@ -4,6 +4,25 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 review)
+
+- Conformance programs `py_class_private_method_mangled` and `py_class_private_attr_isolation` in `tests/python_statement_forms.rs`, verifying Python private name mangling (`__method`, `self.__attr`) in class bodies and subclass isolation across all backends.
+
+### Added (#18798 item 3)
+
+- Conformance program `rb_lambda_call_and_outer_captures` in `tests/ruby_sir_gaps.rs`, verifying that Ruby arrow lambdas invoked via `.call(...)` correctly receive arguments (multi-arg and zero-arg) and capture outer local variables and enclosing method parameters across all backends (Ruby, Python, C, JavaScript, TypeScript, Go, Rust).
+
+### Added (#18798 item 23)
+
+- Conformance program `rb_block_with_no_parameters` in `tests/ruby_sir_gaps.rs`, verifying that yielding or passing arguments to a zero-parameter block discards the surplus arguments across iterators and methods on all backends.
+
+### Added (#18798)
+
+- Conformance program `rb_begin_without_rescue_or_ensure` in `tests/ruby_sir_gaps.rs`, verifying that `begin ... end` with no `rescue` or `ensure` executes its statements inline across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
+
+
+- Conformance program `rb_hash_each_one_parameter_block` in `tests/ruby_sir_gaps.rs`, verifying that `Hash#each` yields a 2-element array `[key, value]` to a one-parameter block across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
+
 ### Added (#18496 item 5)
 
 - Conformance programs `py_param_captured_then_assigned`, `py_local_captured_then_assigned`, `py_closure_defined_before_variable_assigned`, `py_loop_closure_captures_variable`, and `py_nested_closure_cell_variable` in `tests/python_statement_forms.rs`, verifying that closures observe mutated cell variables across reassignments, loop iterations, and multi-level nesting across all backends.

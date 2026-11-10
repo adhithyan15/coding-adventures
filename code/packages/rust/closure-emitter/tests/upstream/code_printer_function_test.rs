@@ -254,6 +254,17 @@ fn generator_prefix() {
     assert_emits(g, "(function*(){});");
 }
 
+/// A named generator function expression prints `(function*g(){});` without
+/// a space after `function*` (CCR-077, #15862).
+#[test]
+fn generator_named_expression_no_space() {
+    let mut g = fexpr(Some("g"), &[], vec![]);
+    if let Expression::FunctionExpression(f) = &mut g {
+        f.generator = true;
+    }
+    assert_emits(g, "(function*g(){});");
+}
+
 /// An async function expression prints an `async` prefix (a required
 /// space follows). Shown in a call argument to avoid also exercising the
 /// statement-start wrap.

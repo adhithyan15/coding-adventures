@@ -132,6 +132,25 @@ fn rescue_clause(types: Vec<&str>, binding: Option<&str>, body: Vec<Stmt>) -> Re
 fn trycatch(body: Vec<Stmt>, rescues: Vec<RescueClause>, ensure_body: Option<Vec<Stmt>>) -> Stmt {
     Stmt::TryCatch { body, rescues, ensure_body, span: s() }
 }
+
+#[test]
+fn try_catch_without_rescue_or_ensure_emits_inline_c() {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+    // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+    // C emits the body statements inline without setjmp handler overhead.
+    let m = exc_module(vec![trycatch(
+        vec![puts(strlit("bare_c"))],
+        vec![],
+        None,
+    )]);
+    let c = semantic_ir_to_c::compile(&m).expect("compile");
+    let fn_src = c.source.split("SirValue sir_user_main(void) {").nth(1).expect("user main");
+    assert!(!fn_src.contains("_sir_push_handler"), "got:\n{}", fn_src);
+    assert!(!fn_src.contains("setjmp"), "got:\n{}", fn_src);
+    if let Some(out) = run(&m) {
+        assert_eq!(out, "bare_c\n");
+    }
+}
 /// A `main` module running `stmts`, declaring Exceptions + Strings.
 fn exc_module(stmts: Vec<Stmt>) -> Module {
     Module {

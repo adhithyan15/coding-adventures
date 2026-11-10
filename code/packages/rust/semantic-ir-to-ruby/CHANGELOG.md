@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Block with no parameters (#18798 item 23)
+
+- **Block with no parameters discards surplus arguments.** In `emit.rs`,
+  closures wrapping a function with 0 declared parameters omit `*sir_args`
+  forwarding, matching Ruby block/proc non-lambda semantics where surplus
+  arguments are ignored. In `runtime.rs`, `sir_each` checks `arity == 0`
+  for both `Array` and `Hash` and invokes `blk.call` without arguments.
+
 ## Unreleased — Exception message method (#18798 item 8)
 
 - **Exception `message` builtin method.** Added `sir_message` helper in `runtime.rs` and mapped zero-argument `("message", 2)` in `collection_access` in `emit.rs`. Dispatches `:sir_um_message` on user classes, returns `.message` on `Exception` instances, and raises `NoMethodError` otherwise.

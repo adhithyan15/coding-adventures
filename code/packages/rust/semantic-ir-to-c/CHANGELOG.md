@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current indentation level, avoiding unnecessary `_sir_push_handler` / `setjmp` setup when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block across backends (#18798)
+
+- **Closure nparam & Hash#each 1-param block.** Added `nparam` field to `SirClosure` and constructors `_sir_closure_with_nparam` / `_sir_closure_set_nparam`. Added `_sir_hash_yield_pair` runtime helper that passes `_sir_seq_lit(2, key, val)` when `nparam == 1`, matching Ruby semantics for 1-parameter blocks vs 2-parameter blocks.
+
 ## Unreleased — Exception message method (#18798 item 8)
 
 - **Exception `message` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method_v` in `runtime.rs` now support zero-argument `"message"` on `SIR_ERROR` exception values, returning `recv.as.err->msg` (or `sir_class` if nil).

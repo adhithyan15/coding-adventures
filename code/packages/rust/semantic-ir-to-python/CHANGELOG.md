@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current statement indentation, avoiding invalid bare `try:` blocks with no handler.
+
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **In-place addition `+=`.** `BuiltinCall("+=", [lhs, rhs])` now routes through `_sir_iadd` in `emit_builtin_call`. Emitted runtime preamble imports `iadd as _sir_iadd` from `coding_adventures_sir_runtime_core`.

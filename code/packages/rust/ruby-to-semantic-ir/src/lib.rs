@@ -959,9 +959,9 @@ mod tests {
     }
 
     #[test]
-    fn block_reassigning_outer_name_is_not_captured() {
-        // A name assigned inside the block is block-local (v0: capture-then-
-        // reassign would need by-reference capture), so it is NOT captured.
+    fn block_reassigning_outer_name_is_captured_via_cell() {
+        // #18798 Item 5 — an outer local mutated inside a block is boxed into
+        // a 1-element cell sequence (__cell_<name>_<n>) and captured by reference.
         let m = lower("def run\n  x = 1\n  [1, 2, 3].each do |n|\n    x = n\n    x\n  end\nend\n");
         let blk = m
             .functions
@@ -970,9 +970,139 @@ mod tests {
             .expect("hoisted block function");
         assert!(
             !blk.captures.iter().any(|c| c.name == "x"),
-            "an in-block-assigned name must not be captured; captures = {:?}",
+            "outer variable name 'x' is replaced by cell capture; captures = {:?}",
             blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
         );
+        assert!(
+            blk.captures.iter().any(|c| c.name.starts_with("__cell_x_")),
+            "expected cell capture for x; captures = {:?}",
+            blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
+        );
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn ruby_block_mutating_outer_local_validates_and_boxes_cells() {
+        // #18798 Item 5: `t = 0; [1, 2, 3].each { |x| t = t + x }; puts t`
+        let src = "t = 0\n[1, 2, 3].each { |x| t = t + x }\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("hoisted block function");
+        assert!(
+            blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")),
+            "block should capture cell for t; captures = {:?}",
+            blk.captures
+        );
+
+        // Check main body has LetStarBinding for __cell_t_0
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert!(
+            main.body.stmts.iter().any(|s| match s {
+                Stmt::LetStarBinding { name, value, .. } => {
+                    name.starts_with("__cell_t_") && matches!(value, Expr::SeqLit { .. })
+                }
+                _ => false,
+            }),
+            "main must initialize cell for t: {:?}",
+            main.body.stmts
+        );
+    }
+
+    #[test]
+    fn ruby_block_compound_assign_outer_local_validates() {
+        let src = "total = 10\n[1, 2].each do |x|\n  total += x\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn ruby_block_mutating_method_param_validates() {
+        let src = "def sum(xs, acc)\n  xs.each { |x| acc += x }\n  acc\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "sum")
+            .expect("sum function");
+        // Parameter acc should be boxed in cell prologue
+        assert!(
+            f.body.stmts.iter().any(|s| match s {
+                Stmt::LetStarBinding { name, value, .. } => {
+                    name.starts_with("__cell_acc_") && matches!(value, Expr::SeqLit { .. })
+                }
+                _ => false,
+            }),
+            "sum prologue must initialize cell for acc: {:?}",
+            f.body.stmts
+        );
+    }
+
+    #[test]
+    fn ruby_nested_blocks_mutating_outer_local_validates() {
+        let src = "count = 0\n[1].each do |x|\n  [2].each do |y|\n    count += x + y\n  end\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk0 = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        let blk1 = m.functions.iter().find(|f| f.name == "__block_1").expect("block 1");
+        assert!(blk0.captures.iter().any(|c| c.name.starts_with("__cell_count_")));
+        assert!(blk1.captures.iter().any(|c| c.name.starts_with("__cell_count_")));
+    }
+
+    #[test]
+    fn ruby_block_param_shadowing_outer_local_does_not_mutate_outer() {
+        let src = "t = 100\n[1, 2].each do |t|\n  t = t + 1\nend\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        // Because t is shadowed by block parameter, it's not a cell variable
+        assert!(!blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")));
+    }
+
+    #[test]
+    fn ruby_block_local_shadowing_outer_local_does_not_mutate_outer() {
+        let src = "t = 100\n[1, 2].each do |x; t|\n  t = x * 2\nend\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        assert!(!blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")));
     }
 
     #[test]
@@ -5826,6 +5956,81 @@ mod tests {
         );
     }
 
+    #[test]
+    fn arrow_lambda_call_lowers_to_indirect_call() {
+        let m = lower("f = ->(x) { x + 1 }\nf.call(2)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let b = main_body(&m);
+        match &b.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(**target, Expr::VarRef { ref name, .. } if name == "f"));
+                assert_eq!(args.len(), 1);
+            }
+            other => panic!("expected IndirectCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_captures_outer_local() {
+        let m = lower("x = 10\nf = ->(y) { x + y }\nf.call(5)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let hoisted = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("expected hoisted block function");
+        assert_eq!(hoisted.captures.len(), 1);
+        assert_eq!(hoisted.captures[0].name, "x");
+
+        let b = main_body(&m);
+        let closure = b.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "f" => match value {
+                Expr::BuiltinCall { name, args, .. } if name == "lambda" => Some(&args[0]),
+                _ => None,
+            },
+            _ => None,
+        }).expect("expected f lambda binding");
+
+        match closure {
+            Expr::MakeClosure { captures, .. } => {
+                assert_eq!(captures.len(), 1);
+                assert_eq!(captures[0].name, "x");
+            }
+            other => panic!("expected MakeClosure, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_captures_enclosing_param() {
+        let m = lower("def make_adder(n)\n  f = ->(x) { x + n }\n  f\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let hoisted = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("expected hoisted block function");
+        assert_eq!(hoisted.captures.len(), 1);
+        assert_eq!(hoisted.captures[0].name, "n");
+    }
+
+    #[test]
+    fn arrow_lambda_zero_args_call() {
+        let m = lower("f = -> { 42 }\nf.call\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let b = main_body(&m);
+        match &b.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(**target, Expr::VarRef { ref name, .. } if name == "f"));
+                assert!(args.is_empty());
+            }
+            other => panic!("expected IndirectCall with 0 args, got {:?}", other),
+        }
+    }
+
     // -----------------------------------------------------------------
     // Phase 6v / 16a — `begin … rescue … ensure … end`
     // -----------------------------------------------------------------
@@ -5858,14 +6063,16 @@ mod tests {
             "begin\n  x = 1\nrescue StandardError => e\n  y = 2\nend\n",
         );
         let b = main_body(&m);
-        match &b.stmts[0] {
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        match &b.stmts[1] {
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
                 assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
                 assert_eq!(rescues.len(), 1);
                 let r = &rescues[0];
                 assert_eq!(r.exception_types, vec!["StandardError".to_string()]);
-                assert_eq!(r.binding.as_deref(), Some("e"));
-                assert!(matches!(&r.body[0], Stmt::LetBinding { name, .. } if name == "y"));
+                assert!(r.binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
+                assert!(matches!(&r.body[0], Stmt::Assign { name, .. } if name == "e"));
+                assert!(matches!(&r.body[1], Stmt::LetBinding { name, .. } if name == "y"));
                 assert!(ensure_body.is_none());
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
@@ -5900,11 +6107,13 @@ mod tests {
             "end\n",
         ));
         let b = main_body(&m);
-        match &b.stmts[0] {
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        match &b.stmts[1] {
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
                 assert!(matches!(&body[0], Stmt::LetBinding { name, .. } if name == "x"));
                 assert_eq!(rescues.len(), 1);
-                assert!(matches!(&rescues[0].body[0], Stmt::LetBinding { name, .. } if name == "y"));
+                assert!(matches!(&rescues[0].body[0], Stmt::Assign { name, .. } if name == "e"));
+                assert!(matches!(&rescues[0].body[1], Stmt::LetBinding { name, .. } if name == "y"));
                 let ens = ensure_body.as_ref().expect("ensure present");
                 assert!(matches!(&ens[0], Stmt::LetBinding { name, .. } if name == "z"));
             }
@@ -5939,7 +6148,8 @@ mod tests {
         // lists BOTH classes, in source order.
         let m = lower("begin\n  x = 1\nrescue Foo, Bar => e\n  y = 2\nend\n");
         let b = main_body(&m);
-        match &b.stmts[0] {
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        match &b.stmts[1] {
             Stmt::TryCatch { rescues, .. } => {
                 assert_eq!(rescues.len(), 1);
                 assert_eq!(
@@ -5947,7 +6157,7 @@ mod tests {
                     vec!["Foo".to_string(), "Bar".to_string()],
                     "both exception classes preserved in order"
                 );
-                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
@@ -5967,13 +6177,15 @@ mod tests {
             "end\n",
         ));
         let b = main_body(&m);
-        match &b.stmts[0] {
+        assert!(matches!(&b.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        assert!(matches!(&b.stmts[1], Stmt::LetBinding { name, .. } if name == "f"));
+        match &b.stmts[2] {
             Stmt::TryCatch { rescues, .. } => {
                 assert_eq!(rescues.len(), 2, "two rescue clauses");
                 assert_eq!(rescues[0].exception_types, vec!["TypeError".to_string()]);
-                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert_eq!(rescues[1].exception_types, vec!["NameError".to_string()]);
-                assert_eq!(rescues[1].binding.as_deref(), Some("f"));
+                assert!(rescues[1].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
@@ -6113,25 +6325,31 @@ mod tests {
     #[test]
     fn def_with_method_level_rescue_wraps_body_in_trycatch() {
         // `def f; x = 1; rescue Foo => e; y = e; end` → the method body is
-        // a single `Stmt::TryCatch` (no explicit begin), after the `let` of
-        // the local that holds the method's value (#18798).  Both blocks
-        // end in an assignment, which stores no value here, so the value
+        // `TryCatch` (no explicit begin), after the `let` of
+        // the local that holds the method's value (#18798) and the `let` of `e`.
+        // Both blocks end in an assignment, which stores no value here, so the value
         // stays nil.
         let m = lower("def f\n  x = 1\nrescue Foo => e\n  y = e\nend\n");
         let f = func(&m, "f");
-        assert_eq!(f.body.stmts.len(), 2, "the value's `let`, then one TryCatch; got {:?}", f.body.stmts);
+        assert_eq!(f.body.stmts.len(), 3, "the value's `let`, `e`'s `let`, then one TryCatch; got {:?}", f.body.stmts);
         assert!(
             matches!(&f.body.stmts[0], Stmt::LetBinding { name, value: Expr::NilLit { .. }, .. }
                 if name.starts_with("__rescue_value_")),
             "got {:?}",
             f.body.stmts[0]
         );
-        match &f.body.stmts[1] {
+        assert!(
+            matches!(&f.body.stmts[1], Stmt::LetBinding { name, value: Expr::NilLit { .. }, .. }
+                if name == "e"),
+            "got {:?}",
+            f.body.stmts[1]
+        );
+        match &f.body.stmts[2] {
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
                 assert!(!body.is_empty(), "try body has the method statements");
                 assert_eq!(rescues.len(), 1);
                 assert_eq!(rescues[0].exception_types, vec!["Foo".to_string()]);
-                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert!(ensure_body.is_none());
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
@@ -6163,7 +6381,7 @@ mod tests {
                 _ => None,
             }
         };
-        let Some(Stmt::TryCatch { body, rescues, ensure_body, .. }) = f.body.stmts.get(1) else {
+        let Some(Stmt::TryCatch { body, rescues, ensure_body, .. }) = f.body.stmts.get(2) else {
             panic!("expected a TryCatch, got {:?}", f.body.stmts);
         };
         assert!(matches!(stored(body), Some(Expr::IntLit { value: 1, .. })), "{body:?}");
@@ -10441,19 +10659,20 @@ b = "y"
         assert!(err.message.contains("parameter"), "got {err}");
     }
 
-    /// `rescue => e` (no class) binds the exception and has an empty type
-    /// list (a catch-all).  It used to leave `=> e` for the body, where it
-    /// lowered to a call of a method named `=>`.
+    /// `rescue => e` (no class) binds the exception into outer local `e`
+    /// and has an empty type list (a catch-all).
     #[test]
     fn rescue_arrow_without_a_class_binds_the_exception() {
         let m = lower("begin\n  raise \"boom\"\nrescue => e\n  puts e\nend\n");
         let body = main_body(&m);
-        match &body.stmts[0] {
+        assert!(matches!(&body.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        match &body.stmts[1] {
             Stmt::TryCatch { rescues, .. } => {
                 assert_eq!(rescues.len(), 1);
                 assert!(rescues[0].exception_types.is_empty());
-                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
-                assert_eq!(rescues[0].body.len(), 1);
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
+                assert_eq!(rescues[0].body.len(), 2);
+                assert!(matches!(&rescues[0].body[0], Stmt::Assign { name, .. } if name == "e"));
             }
             other => panic!("expected TryCatch, got {other:?}"),
         }
@@ -10465,11 +10684,12 @@ b = "y"
     #[test]
     fn a_rescue_binding_shadows_a_method_of_the_same_name() {
         let m = lower("def e\n  1\nend\nbegin\n  raise \"boom\"\nrescue => e\n  puts e\nend\n");
-        let Stmt::TryCatch { rescues, .. } = &main_body(&m).stmts[1] else {
+        assert!(matches!(&main_body(&m).stmts[1], Stmt::LetBinding { name, .. } if name == "e"));
+        let Stmt::TryCatch { rescues, .. } = &main_body(&m).stmts[2] else {
             panic!("expected TryCatch");
         };
-        let Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. } = &rescues[0].body[0] else {
-            panic!("expected the puts");
+        let Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. } = &rescues[0].body[1] else {
+            panic!("expected the puts, got {:?}", rescues[0].body);
         };
         assert!(
             matches!(args.last(), Some(Expr::VarRef { name, scope: Scope::Local, .. }) if name == "e"),
@@ -11094,5 +11314,120 @@ b = "y"
             }
             other => panic!("expected BuiltinCall(__method__), got {other:?}"),
         }
+    }
+
+    /// #18798 Comment 1 — In Ruby, `while` and `until` do not open a scope.
+    /// A local first assigned in the loop body or condition is visible after the loop.
+    #[test]
+    fn while_locals_persist_in_outer_scope() {
+        let src = "i = 0\nwhile i < 1\n  y = 42\n  i += 1\nend\nputs y\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let body = main_body(&m);
+        // Pre-declared before the while loop
+        assert!(body.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, .. } if name == "y")));
+    }
+
+    /// #18798 Comment 1 — When a loop never executes, its body-assigned locals
+    /// still exist in the enclosing scope and evaluate to nil.
+    #[test]
+    fn while_unexecuted_leaves_locals_as_nil() {
+        let src = "while false\n  z = 99\nend\nputs z\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let body = main_body(&m);
+        assert!(matches!(&body.stmts[0], Stmt::LetBinding { name, value: Expr::NilLit { .. }, .. } if name == "z"));
+    }
+
+    /// #18798 Comment 1 — `until` behaves like `while`: locals assigned in the
+    /// body persist in the outer scope.
+    #[test]
+    fn until_locals_persist_in_outer_scope() {
+        let src = "i = 0\nuntil i >= 1\n  w = 100\n  i += 1\nend\nputs w\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let body = main_body(&m);
+        assert!(body.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, .. } if name == "w")));
+    }
+
+    /// #18798 Comment 1 — In Ruby, `rescue => e` binds into an outer local that
+    /// stays visible after the `begin ... rescue ... end` block.
+    #[test]
+    fn rescue_binding_persists_in_outer_scope() {
+        let src = "begin\n  raise \"err\"\nrescue => e\nend\nputs e\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let body = main_body(&m);
+        // e is declared before TryCatch, and referenced in the tail value
+        assert!(matches!(&body.stmts[0], Stmt::LetBinding { name, .. } if name == "e"));
+        assert!(matches!(&body.stmts[1], Stmt::TryCatch { .. }));
+        match &body.value {
+            Expr::BuiltinCall { args, .. } => {
+                assert!(matches!(args.last(), Some(Expr::VarRef { name, scope: Scope::Local, .. }) if name == "e"));
+            }
+            other => panic!("expected tail print, got {other:?}"),
+        }
+    }
+
+    /// #18798 Comment 1 — When `rescue => e` catches an exception, it mutates
+    /// a pre-existing local `e` rather than shadowing it with a catch block parameter.
+    #[test]
+    fn rescue_binding_updates_preexisting_outer_local() {
+        let src = "e = 1\nbegin\n  raise \"err\"\nrescue => e\n  puts \"in\"\nend\nputs e\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let body = main_body(&m);
+        // e is declared at line 1; no duplicate let binding for e before TryCatch
+        assert_eq!(
+            body.stmts.iter().filter(|s| matches!(s, Stmt::LetBinding { name, .. } if name == "e")).count(),
+            1
+        );
+        let Stmt::TryCatch { rescues, .. } = &body.stmts[1] else {
+            panic!("expected TryCatch");
+        };
+        // Inside rescue body, first statement assigns the caught exception into the outer local `e`
+        assert!(matches!(&rescues[0].body[0], Stmt::Assign { name, scope: Scope::Local, .. } if name == "e"));
+    }
+
+    /// #18798 Item 8 — A block parameter shadows an outer method parameter alias
+    /// without reading the outer alias.
+    #[test]
+    fn block_param_shadows_outer_param_alias() {
+        let src = "def f(x)\n  x = x + 1\n  [5].each { |x| puts x }\n  puts x\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = func(&m, "f");
+        // In f, x is aliased to __param_x_0
+        assert!(f.body.stmts.iter().any(|s| matches!(s, Stmt::LetBinding { name, .. } if name.starts_with("__param_x_"))));
+
+        // In the hoisted block function, x is the block parameter
+        let block_fn = m.functions.iter().find(|func| func.name.starts_with("__block_")).expect("hoisted block");
+        assert_eq!(block_fn.params[0].name, "x");
+        let Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. } = &block_fn.body.stmts[0] else {
+            panic!("expected puts in block");
+        };
+        // Inside the block, x resolves to Scope::Param x, not the outer local alias
+        assert!(matches!(args.last(), Some(Expr::VarRef { name, scope: Scope::Param, .. }) if name == "x"));
+    }
+
+    /// A block parameter assigned in the block body is copied into a local alias
+    /// so the assignment does not mutate Scope::Param.
+    #[test]
+    fn block_param_assigned_in_block_copies_to_local() {
+        let src = "[1].each { |x| x = x + 10; puts x }\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let block_fn = m.functions.iter().find(|func| func.name.starts_with("__block_")).expect("hoisted block");
+        assert_eq!(block_fn.params[0].name, "x");
+        // Prologue copies x (Param) into __param_x_0 (Local)
+        assert!(matches!(&block_fn.body.stmts[0], Stmt::LetBinding { name, value: Expr::VarRef { name: param_name, scope: Scope::Param, .. }, .. }
+            if name.starts_with("__param_x_") && param_name == "x"));
     }
 }

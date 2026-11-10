@@ -101,8 +101,8 @@ class_heritage = "extends" left_hand_side_expression ;
 
 class_body = LBRACE { class_element } RBRACE ;
 
-class_element = [ "static" ] method_definition SEMICOLON
-              | [ "static" ] async_method SEMICOLON
+class_element = [ "static" ] method_definition [ SEMICOLON ]
+              | [ "static" ] async_method [ SEMICOLON ]
               | class_field_declaration
               | private_method_definition
               | static_block
@@ -375,15 +375,15 @@ left_hand_side_expression = call_expression
                           | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | DOT PRIVATE_NAME
+                  { arguments | DOT NAME | DOT reserved_word | DOT PRIVATE_NAME
                   | LBRACKET expression RBRACKET | template_literal } ;
 
 optional_chain_expression = member_expression
-                            { OPTIONAL_CHAIN NAME
+                            { OPTIONAL_CHAIN NAME | OPTIONAL_CHAIN reserved_word
                             | OPTIONAL_CHAIN PRIVATE_NAME
                             | OPTIONAL_CHAIN LBRACKET expression RBRACKET
                             | OPTIONAL_CHAIN arguments
-                            | DOT NAME
+                            | DOT NAME | DOT reserved_word
                             | DOT PRIVATE_NAME
                             | LBRACKET expression RBRACKET
                             | arguments
@@ -393,10 +393,10 @@ new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | DOT PRIVATE_NAME
+                    { DOT NAME | DOT reserved_word | DOT PRIVATE_NAME
                     | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT NAME | DOT reserved_word
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -416,6 +416,8 @@ concise_body = assignment_expression
              | LBRACE function_body RBRACE ;
 
 primary_expression = "this"
+                   | async_function_expression
+                   | async_generator_expression
                    | NAME
                    | NUMBER
                    | BIGINT
@@ -428,7 +430,6 @@ primary_expression = "this"
                    | object_literal
                    | function_expression
                    | generator_expression
-                   | async_function_expression
                    | class_expression
                    | template_literal
                    | dynamic_import
@@ -447,14 +448,55 @@ element_list = [ spread_element | assignment_expression ]
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | NAME
                     | method_definition
                     | async_method
+                    | NAME
                     | object_spread_property ;
 
 object_spread_property = ELLIPSIS assignment_expression ;
 
+reserved_word = "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
 property_name = NAME
+              | reserved_word
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;
@@ -463,9 +505,7 @@ function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
                       LBRACE function_body RBRACE ;
 
 template_literal = TEMPLATE_NO_SUB
-                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
-
-template_span = expression TEMPLATE_MIDDLE ;
+                 | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;
 
 # ============================================================================
 # ExpressionStatement lookahead (F12 phase 0)
