@@ -1912,6 +1912,15 @@ impl<'a> GrammarLexer<'a> {
             if let Some((name, alias, matched)) = self.try_match_token() {
                 let start_line = self.line;
                 let start_col = self.column;
+                // Emitting an empty token would grow the output without
+                // consuming input, so reject it before building the token.
+                if matched.is_empty() {
+                    return Err(LexerError {
+                        message: "Zero-width token match in indentation".to_string(),
+                        line: start_line,
+                        column: start_col,
+                    });
+                }
 
                 let (token_type, type_name) = self.resolve_token_type(
                     &name,

@@ -52,7 +52,8 @@ with a `skip:` rule such as `COMMENT = /#[^\r\n]*/`. The comment preserves
 the indentation stack. Without a matching skip rule, a leading hash proceeds
 through normal token matching and can be emitted by a rule like `HASH = "#"`.
 An unrecognized hash or a zero-width skip match at that position returns a
-`LexerError`.
+`LexerError`. Indentation-mode token patterns must consume at least one
+character when they match.
 
 ### Token flags: the gap before each token (F11)
 
