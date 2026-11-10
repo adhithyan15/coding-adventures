@@ -640,17 +640,73 @@ impl<'a> Emitter<'a> {
         }
     }
 
-    /// Emit the body slot of an `if`/`else`, `while`, `for`, `for-in`,
-    /// `for-of`, `with` or `do` (CCR-083, #15918).
+    /// Does [`Self::emit_body_slot`] start this body with `{`? A keyword before it
+    /// (`else`, `do`) then needs no separating space: `else{`, `do{`.
+    fn body_slot_opens_with_brace(&self, body: &Statement, in_if_with_else: bool) -> bool {
+        if self.opts.pretty {
+            return matches!(
+                body,
+                Statement::Tagged(
+                    TaggedStatement::BlockStatement(_) | TaggedStatement::DoWhileStatement(_)
+                )
+            );
+        }
+        if let Some(inner) = self.unwrap_single_statement_body(body, in_if_with_else) {
+            // When unwrapped, does the unwrapped inner statement start with `{`?
+            // Only a `DoWhileStatement` will be wrapped in `{` by emit_body_slot (CCR-083).
+            matches!(inner, Statement::Tagged(TaggedStatement::DoWhileStatement(_)))
+        } else {
+            matches!(
+                body,
+                Statement::Tagged(
+                    TaggedStatement::BlockStatement(_) | TaggedStatement::DoWhileStatement(_)
+                )
+            )
+        }
+    }
+
+    /// Unwrap a single-statement block body when safe (CCR-076, #15861).
     ///
-    /// Upstream's AST always holds a BLOCK there, and its printer
-    /// (`addNonEmptyStatement`) unwraps a one-statement block except when the
-    /// statement is a `do…while` (`isBlockDeclOrDo`, "a IE6/7 browser bug that
-    /// needs a block around DOs"). So a bare `do…while` body prints braced:
-    /// `if(c)do a();while(d)` → `if(c){do a();while(d)}`. The `do…while`'s own
-    /// `;` sits before the `}` and is dropped, as at the end of any block.
-    /// Labels are not body slots here, since upstream lets them take any child.
-    fn emit_body(&mut self, body: &Statement) {
+    /// Upstream Closure Compiler (`CodeGenerator.java::addNonEmptyStatement`)
+    /// unwraps single-statement blocks around loop and conditional bodies,
+    /// EXCEPT when:
+    /// 1. `self.opts.pretty` is enabled.
+    /// 2. The statement is a lexical declaration (`let`, `const`, `class`, `function`),
+    ///    which is a JS syntax error in single-statement context.
+    /// 3. The statement is a `do…while` (CCR-083, IE browser bug).
+    /// 4. The statement is a labeled statement (`firstAndOnlyChild.isLabel()`).
+    /// 5. In an `if` that has an `else`, the statement has a dangling-else hazard.
+    fn unwrap_single_statement_body<'s>(
+        &self,
+        body: &'s Statement,
+        in_if_with_else: bool,
+    ) -> Option<&'s Statement> {
+        if self.opts.pretty {
+            return None;
+        }
+        let Statement::Tagged(TaggedStatement::BlockStatement(block)) = body else {
+            return None;
+        };
+        if block.body.len() != 1 {
+            return None;
+        }
+        let inner = &block.body[0];
+        if is_block_decl_or_do(inner) {
+            return None;
+        }
+        if in_if_with_else && statement_has_dangling_else(inner) {
+            return None;
+        }
+        Some(inner)
+    }
+
+    /// Emit the body slot of an `if`/`else`, `while`, `for`, `for-in`,
+    /// `for-of`, `with` or `do` (CCR-076, CCR-083).
+    fn emit_body_slot(&mut self, body: &Statement, in_if_with_else: bool) {
+        if let Some(inner) = self.unwrap_single_statement_body(body, in_if_with_else) {
+            self.emit_statement(inner);
+            return;
+        }
         if !matches!(body, Statement::Tagged(TaggedStatement::DoWhileStatement(_))) {
             self.emit_statement(body);
             return;
@@ -669,17 +725,6 @@ impl<'a> Emitter<'a> {
         self.write_str("}");
     }
 
-    /// Does [`Self::emit_body`] start this body with `{`? A keyword before it
-    /// (`else`, `do`) then needs no separating space: `else{`, `do{`.
-    fn body_opens_with_brace(body: &Statement) -> bool {
-        matches!(
-            body,
-            Statement::Tagged(
-                TaggedStatement::BlockStatement(_) | TaggedStatement::DoWhileStatement(_)
-            )
-        )
-    }
-
     fn emit_if(&mut self, i: &IfStatement) {
         self.maybe_map(&i.cv);
         self.write_str("if");
@@ -688,17 +733,17 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&i.test);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&i.consequent);
+        self.emit_body_slot(&i.consequent, i.alternate.is_some());
         if let Some(alt) = &i.alternate {
             self.pretty_ws();
             self.write_str("else");
             // `else{` lexes cleanly; only a word-led body needs the space.
-            if Self::body_opens_with_brace(alt) {
+            if self.body_slot_opens_with_brace(alt, false) {
                 self.pretty_ws();
             } else {
                 self.required_ws();
             }
-            self.emit_body(alt);
+            self.emit_body_slot(alt, false);
         }
     }
 
@@ -710,7 +755,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&w.test);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&w.body);
+        self.emit_body_slot(&w.body, false);
     }
 
     /// `with (object) body` (CLOC12.187). Byte-identical in shape to a `while`
@@ -724,7 +769,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&w.object);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&w.body);
+        self.emit_body_slot(&w.body, false);
     }
 
     fn emit_do_while(&mut self, d: &DoWhileStatement) {
@@ -740,12 +785,12 @@ impl<'a> Emitter<'a> {
         // before a closing `}` via `last_stmt_uses_terminator_semi`).
         self.maybe_map(&d.cv);
         self.write_str("do");
-        if Self::body_opens_with_brace(&d.body) {
+        if self.body_slot_opens_with_brace(&d.body, false) {
             self.pretty_ws();
         } else {
             self.required_ws();
         }
-        self.emit_body(&d.body);
+        self.emit_body_slot(&d.body, false);
         self.pretty_ws();
         self.write_str("while");
         self.pretty_ws();
@@ -780,7 +825,7 @@ impl<'a> Emitter<'a> {
         }
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&f.body);
+        self.emit_body_slot(&f.body, false);
     }
 
     fn emit_for_in(&mut self, f: &ForInStatement) {
@@ -808,7 +853,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&f.right);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&f.body);
+        self.emit_body_slot(&f.body, false);
     }
 
     fn emit_for_of(&mut self, f: &ForOfStatement) {
@@ -831,7 +876,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&f.right);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_body(&f.body);
+        self.emit_body_slot(&f.body, false);
     }
 
     fn emit_return(&mut self, r: &ReturnStatement) {
@@ -3602,6 +3647,71 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
         // never reach this point.
         Statement::Declaration(Declaration::VariableDeclaration(_)) => true,
         Statement::Declaration(_) => false,
+    }
+}
+
+/// Returns true if a statement cannot be unwrapped into a single-statement body
+/// (CCR-076, #15861).
+///
+/// In JS and upstream Closure Compiler (`CodeGenerator.java::isBlockDeclOrDo`):
+/// 1. Lexical declarations (`let`, `const`, `class`, and functions) are syntax
+///    errors in a single-statement context (`if (x) let y = 1;` is illegal).
+/// 2. `do…while` statements require braces (CCR-083, IE6/7 browser bug).
+/// 3. Labeled statements require braces (`firstAndOnlyChild.isLabel()`).
+fn is_block_decl_or_do(stmt: &Statement) -> bool {
+    match stmt {
+        Statement::Declaration(d) => match d {
+            Declaration::VariableDeclaration(v) => v.kind != VarKind::Var,
+            Declaration::FunctionDeclaration(_)
+            | Declaration::ClassDeclaration(_)
+            | Declaration::ImportDeclaration(_)
+            | Declaration::ExportNamedDeclaration(_)
+            | Declaration::ExportDefaultDeclaration(_)
+            | Declaration::ExportAllDeclaration(_) => true,
+        },
+        Statement::Tagged(TaggedStatement::DoWhileStatement(_)) => true,
+        Statement::Tagged(TaggedStatement::LabeledStatement(_)) => true,
+        _ => false,
+    }
+}
+
+/// Upstream Closure Compiler (`CodeGenerator.java::isDanglingElseHazard`).
+/// Checks if the trailing statement along the direct child chain has an un-elsed `if`.
+fn statement_has_dangling_else(mut stmt: &Statement) -> bool {
+    loop {
+        match stmt {
+            Statement::Tagged(TaggedStatement::IfStatement(i)) => {
+                if let Some(alt) = &i.alternate {
+                    stmt = alt.as_ref();
+                } else {
+                    return true;
+                }
+            }
+            Statement::Tagged(TaggedStatement::WhileStatement(w)) => {
+                stmt = w.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::ForStatement(f)) => {
+                stmt = f.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::ForInStatement(f)) => {
+                stmt = f.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::ForOfStatement(f)) => {
+                stmt = f.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::LabeledStatement(l)) => {
+                stmt = l.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::WithStatement(w)) => {
+                stmt = w.body.as_ref();
+            }
+            Statement::Tagged(TaggedStatement::BlockStatement(b))
+                if b.body.len() == 1 && !is_block_decl_or_do(&b.body[0]) =>
+            {
+                stmt = &b.body[0];
+            }
+            _ => return false,
+        }
     }
 }
 
@@ -7034,14 +7144,14 @@ mod tests {
 
     #[test]
     fn do_while_block_body_emits_tight() {
-        // do { a; } while (b)  — block body needs no separator after `do`
+        // do { a; c; } while (b)  — block body needs no separator after `do`
         // (`do{` lexes cleanly), and the loop ends in a real terminator `;`.
         let d = DoWhileStatement {
             cv: None,
-            body: Box::new(Statement::block_statement(block_with("a"))),
+            body: Box::new(block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("c"))])),
             test: ident("b"),
         };
-        assert_eq!(emit_do_while_item(d), "do{a}while(b);");
+        assert_eq!(emit_do_while_item(d), "do{a;c}while(b);");
     }
 
     #[test]
@@ -7081,10 +7191,10 @@ mod tests {
     #[test]
     fn do_while_as_last_block_statement_pops_terminator_semi() {
         // Inside a block, the do-while's trailing `;` is redundant before the
-        // closing `}` (ASI), so it is popped: `{do{a}while(b)}`.
+        // closing `}` (ASI), so it is popped: `{do{a;c}while(b)}`.
         let d = DoWhileStatement {
             cv: None,
-            body: Box::new(Statement::block_statement(block_with("a"))),
+            body: Box::new(block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("c"))])),
             test: ident("b"),
         };
         let outer = BlockStatement {
@@ -7093,7 +7203,7 @@ mod tests {
         };
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
-        assert_eq!(code, "{do{a}while(b)};");
+        assert_eq!(code, "{do{a;c}while(b)};");
     }
 
     // ---- debugger (CLOC21) ------------------------------------
@@ -7160,18 +7270,18 @@ mod tests {
 
     #[test]
     fn for_in_var_left_block_body_emits_with_spaced_in() {
-        // `for (var k in obj) { a }` — `in` is spaced on both sides so `k in`
+        // `for (var k in obj) { a; b; }` — `in` is spaced on both sides so `k in`
         // and `in obj` don't mis-lex.
         let f = ForInStatement {
             cv: None,
             left: for_in_var_left("k", VarKind::Var),
             right: ident("obj"),
-            body: Box::new(Statement::block_statement(block_with("a"))),
+            body: Box::new(block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("b"))])),
         };
         let item = ProgramItem::Statement(Statement::for_in_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(var k in obj){a};"
+            "for(var k in obj){a;b};"
         );
     }
 
@@ -7181,12 +7291,12 @@ mod tests {
             cv: None,
             left: for_in_var_left("k", VarKind::Const),
             right: ident("obj"),
-            body: Box::new(Statement::block_statement(block_with("a"))),
+            body: Box::new(block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("b"))])),
         };
         let item = ProgramItem::Statement(Statement::for_in_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(const k in obj){a};"
+            "for(const k in obj){a;b};"
         );
     }
 
@@ -7213,17 +7323,17 @@ mod tests {
 
     #[test]
     fn for_of_var_left_block_body_emits_with_spaced_of() {
-        // `for (var v of it) { a }` — `of` spaced on both sides.
+        // `for (var v of it) { a; b; }` — `of` spaced on both sides.
         let f = ForOfStatement {
             cv: None,
             left: for_in_var_left("v", VarKind::Var),
             right: ident("it"),
-            body: Box::new(Statement::block_statement(block_with("a"))),
+            body: Box::new(block_of(vec![expr_stmt(ident("a")), expr_stmt(ident("b"))])),
         };
         let item = ProgramItem::Statement(Statement::for_of_statement(f));
         assert_eq!(
             emit_default(program().with_body(vec![item])).code,
-            "for(var v of it){a};"
+            "for(var v of it){a;b};"
         );
     }
 
@@ -9017,6 +9127,262 @@ mod tests {
             alternate: Some(Box::new(block_of(vec![expr_stmt(ident("b")), expr_stmt(ident("e"))]))),
         });
         assert_eq!(emit_stmt(s), "if(c)a;else{b;e};");
+    }
+
+    // ---- CCR-076 (#15861): single-statement body unwrapping ------------
+
+    #[test]
+    fn ccr076_single_statement_bodies_drop_braces() {
+        let single = |name| block_of(vec![expr_stmt(ident(name))]);
+
+        // if (c) { a; } -> if(c)a;
+        let s_if = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(single("a")),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_if), "if(c)a;");
+
+        // while (c) { a; } -> while(c)a;
+        let s_while = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(single("a")),
+        });
+        assert_eq!(emit_stmt(s_while), "while(c)a;");
+
+        // for (;;) { a; } -> for(;;)a;
+        let s_for = Statement::for_statement(ForStatement {
+            cv: None,
+            init: None,
+            test: None,
+            update: None,
+            body: Box::new(single("a")),
+        });
+        assert_eq!(emit_stmt(s_for), "for(;;)a;");
+
+        // with (o) { a; } -> with(o)a;
+        let s_with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: ident("o"),
+            body: Box::new(single("a")),
+        });
+        assert_eq!(emit_stmt(s_with), "with(o)a;");
+
+        // if (c) { a; } else { b; } -> if(c)a;else b;
+        let s_if_else = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(single("a")),
+            alternate: Some(Box::new(single("b"))),
+        });
+        assert_eq!(emit_stmt(s_if_else), "if(c)a;else b;");
+    }
+
+    #[test]
+    fn ccr076_dangling_else_hazard_keeps_braces() {
+        // if (a) { if (b) c; } else d;
+        // Braces must NOT drop around `{ if (b) c; }`, otherwise `else d;` binds to `if (b)`.
+        let inner_if = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("b"),
+            consequent: Box::new(expr_stmt(ident("c"))),
+            alternate: None,
+        });
+        let outer = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("a"),
+            consequent: Box::new(block_of(vec![inner_if])),
+            alternate: Some(Box::new(expr_stmt(ident("d")))),
+        });
+        assert_eq!(emit_stmt(outer), "if(a){if(b)c;}else d;");
+    }
+
+    #[test]
+    fn ccr076_nested_dangling_else_hazard_keeps_braces() {
+        // if (a) { while (x) if (b) c; } else d;
+        let inner_if = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("b"),
+            consequent: Box::new(expr_stmt(ident("c"))),
+            alternate: None,
+        });
+        let inner_while = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("x"),
+            body: Box::new(inner_if),
+        });
+        let outer = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("a"),
+            consequent: Box::new(block_of(vec![inner_while])),
+            alternate: Some(Box::new(expr_stmt(ident("d")))),
+        });
+        assert_eq!(emit_stmt(outer), "if(a){while(x)if(b)c;}else d;");
+    }
+
+    #[test]
+    fn ccr076_if_consequent_with_complete_if_else_drops_braces() {
+        // if (a) { if (b) c; else d; } else e;
+        // The inner if has an else, so it is NOT a dangling else hazard. Braces drop.
+        let inner_if = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("b"),
+            consequent: Box::new(expr_stmt(ident("c"))),
+            alternate: Some(Box::new(expr_stmt(ident("d")))),
+        });
+        let outer = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("a"),
+            consequent: Box::new(block_of(vec![inner_if])),
+            alternate: Some(Box::new(expr_stmt(ident("e")))),
+        });
+        assert_eq!(emit_stmt(outer), "if(a)if(b)c;else d;else e;");
+    }
+
+    #[test]
+    fn ccr076_lexical_declarations_keep_braces() {
+        // `let` in single-statement body -> syntax error if unbraced.
+        let let_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_let = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![let_decl])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_let), "if(c){let x=1};");
+
+        // `const` in single-statement body -> syntax error if unbraced.
+        let const_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_const = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![const_decl])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_const), "if(c){const x=1};");
+
+        // `class` in single-statement body -> syntax error if unbraced.
+        let class_decl = Statement::Declaration(Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: None,
+            body: vec![],
+        }));
+        let s_class = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![class_decl])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_class), "if(c){class C{}};");
+
+        // `function` in single-statement body -> syntax error in strict mode if unbraced.
+        let fn_decl = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let s_fn = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![fn_decl])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_fn), "if(c){function f(){}};");
+
+        // `var` IS allowed in single-statement context, so it drops braces.
+        let var_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_var = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![var_decl])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s_var), "if(c)var x=1;");
+    }
+
+    #[test]
+    fn ccr076_labeled_statement_keeps_braces() {
+        let labeled = Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier {
+                cv: None,
+                name: "l".to_string(),
+            },
+            body: Box::new(expr_stmt(ident("a"))),
+        });
+        let s = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![labeled])),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s), "if(c){l:a;};");
+    }
+
+    #[test]
+    fn ccr076_pretty_mode_keeps_braces() {
+        let s = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(block_of(vec![expr_stmt(ident("a"))])),
+            alternate: None,
+        });
+        let out = emit_with(
+            program().with_body(vec![ProgramItem::Statement(s)]),
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(out.code.contains("if (c) {\n"), "got:\n{}", out.code);
     }
 
     // ---- "use strict" prologue (#17907) -------------------------------
