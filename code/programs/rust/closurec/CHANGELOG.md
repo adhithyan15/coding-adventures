@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.10] - 2026-11-10
+
+### Fixed - strip `"use strict"` unless `--emit_use_strict`, and re-emit it single-quoted (CCR-085, #15920)
+
+- In `src/whitespace_only.rs`, strip leading `"use strict"` and `'use strict'` directive prologues at script top level and at the start of function bodies (matching upstream Closure Compiler parse-time directive stripping). Non-"use strict" directives (e.g. `"use asm"`, `"x"`) and non-leading `"use strict"` statements are preserved.
+- In `src/run.rs`, when `--emit_use_strict` is passed, emit single-quoted `'use strict';` (without newline in compact mode, with trailing newline in `PRETTY_PRINT` mode), matching upstream Closure Compiler byte parity.
+- Re-captured differential fixture `tests/diff/emit-use-strict/` against the upstream oracle (`'use strict';var x=1;\n`).
+- Added comprehensive integration tests in `tests/diff_emit_use_strict.rs` and unit tests in `src/whitespace_only.rs`.
+
 ## [0.247.9] - 2026-11-10
 
 ### Fixed - wrap substatement do-while in braces at WHITESPACE_ONLY (CCR-083, #15918)

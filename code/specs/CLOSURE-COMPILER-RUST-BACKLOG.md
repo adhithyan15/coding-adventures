@@ -194,7 +194,7 @@ its blast radius across the 462 goldens.
 | 15 | CCR-088 #15925 | Unwrap single-statement substatement blocks for every statement kind, not just expression statements. | Ready |
 | 16 | CCR-076 #15861 | Drop braces around a single-statement body. | Ready |
 | 17 | CCR-077 #15862 | Match upstream spacing and class-body punctuation. | Ready |
-| 18 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. Do it after #17907. | Ready |
+| 18 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. Do it after #17907. | Complete |
 | 19 | CCR-074 #15855 | The `while`→`for` rewrite hoists the preceding initializer into the `for` header. | Ready |
 | 20 | CCR-084, CCR-083, CCR-087, CCR-086 | Their fixes merged (see below), but the issues are still open. Check that each is fully done, close it or file what's left. | Ready |
 
