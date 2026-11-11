@@ -251,3 +251,74 @@ fn high4_include_through_the_prelude_is_cap003() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-1: glob re-exports through a local module
+// ---------------------------------------------------------------------------
+
+#[test]
+fn high1_glob_reexport_through_a_local_module_is_resolved() {
+    check(
+        "HIGH-1",
+        &[
+            // PoC t12: `m::process::Command` became `std::m::process::Command`
+            // (an unknown std module, whose CAP003 globs suppressed): PASS.
+            (
+                "t12 pub use std::* in a module",
+                "mod m { pub use std::*; }\npub fn f() { let _ = m::process::Command::new(\"sh\").arg(\"-c\").arg(\"id\").status(); }",
+                &["?", "proc:exec"],
+            ),
+            // PoC t13: `m::remove_dir_all` became `std::fs::m::remove_dir_all`: fs:read only.
+            (
+                "t13 pub use std::fs::* in a module",
+                "mod m { pub use std::fs::*; }\npub fn f() { m::remove_dir_all(\"/tmp/x\").unwrap(); }",
+                &["fs:delete", "fs:read"],
+            ),
+            ("crate-rooted path through the glob module", "mod m { pub use std::fs::*; }\nfn f() { crate::m::remove_file(\"x\"); }", &["fs:delete", "fs:read"]),
+            ("self-rooted path inside the glob module", "mod m { use std::fs::*; fn f() { self::remove_file(\"x\"); } }", &["fs:delete", "fs:read"]),
+            ("alias of an item reached through the glob", "mod m { pub use std::fs::*; }\nuse crate::m::remove_dir_all as r;\nfn f() { r(\"x\"); }", &["fs:delete", "fs:read"]),
+            ("two-level glob chain", "mod m { pub use std::*; }\nmod n { pub use crate::m::*; }\nfn f() { n::env::var(\"X\"); }", &["?", "env:read"]),
+            ("glob over a crate-rooted std alias", "pub use std as s;\nmod m { pub use crate::s::*; }\nfn f() { m::process::Command::new(\"x\"); }", &["?", "proc:exec"]),
+            ("glob over a self-rooted std alias", "use std::fs as q;\nmod m { pub use self::q::*; }\nfn f() { m::remove_file(\"x\"); }", &["fs:delete", "fs:read"]),
+            ("decoy pure std glob through a module", "mod m { pub use std::fmt::*; }\nfn f() -> m::Result { Ok(()) }", &[]),
+            ("decoy local globs stay local", "use crate::m::*; use super::*; fn f() { read(1); remove_file(2); }", &[]),
+        ],
+    );
+}
+
+#[test]
+fn high1_a_glob_over_a_bare_std_root_is_cap003() {
+    for src in [
+        "use std::*;",
+        "use core::*;",
+        "use alloc::*;",
+        "pub use ::std::*;",
+        "use std::{*};",
+        "use std as s; use s::*;",
+        "extern crate core as c; use c::{*};",
+        "pub use std as s; mod m { pub use crate::s::*; }",
+    ] {
+        assert!(verdict(src).contains(&"?".to_string()), "{src}: {:?}", verdict(src));
+    }
+    // A glob over a std *module* is resolved, not refused.
+    assert_eq!(verdict("use std::fmt::*;"), Vec::<String>::new());
+    assert_eq!(verdict("use core::prelude::v1::*;"), Vec::<String>::new());
+}
+
+#[test]
+fn low_glob_expansion_is_capped_counting_pure_globs() {
+    // 60 bindings of one name (under the 64-spellings-per-path limit) times 100
+    // globs through it: 6,000 glob spellings, every one of them pure.  The old
+    // cap counted only non-pure globs, after materialising the whole product.
+    let mut src = String::new();
+    for i in 0..60 {
+        src.push_str(&format!("use p{i} as h;\n"));
+    }
+    for k in 0..100 {
+        src.push_str(&format!("use h::g{k}::*;\n"));
+    }
+    let start = std::time::Instant::now();
+    let got = verdict(&src);
+    assert!(got.contains(&"?".to_string()), "{got:?}");
+    assert!(start.elapsed() < std::time::Duration::from_secs(10));
+}

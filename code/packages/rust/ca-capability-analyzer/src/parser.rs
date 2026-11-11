@@ -851,6 +851,11 @@ const MAX_ALIAS_PATH: usize = 64;
 const MAX_ALIAS_ENTRIES: usize = 20_000;
 /// Distinct glob imports kept (after normalisation); more is treated as an attack.
 const MAX_GLOBS: usize = 256;
+/// Spellings produced while normalising glob imports, *pure ones included*;
+/// more is CAP003.  The old cap counted only the globs that were kept, after
+/// materialising (globs x binding targets), so pure globs through a heavily
+/// rebound name grew without bound (security review round 3, LOW).
+const MAX_GLOB_SPELLINGS: usize = 4096;
 /// Longest path (in segments) the resolver will expand; longer is CAP003.
 const MAX_PATH_SEGS: usize = 64;
 /// Spellings tried for one written path; more is CAP003 (ambiguity explosion).
@@ -864,6 +869,39 @@ const CANDIDATE_BUDGET: usize = 200_000;
 struct Resolver {
     bindings: HashMap<String, Vec<Vec<String>>>,
     globs: Vec<Vec<String>>,
+    /// Glob paths, as written, that resolve to a bare `std`/`core`/`alloc`
+    /// root (`use std::*;`, `use s::*;` after `use std as s;`).  See
+    /// [`Resolver::glob_is_bare_root`].
+    root_globs: HashSet<Vec<String>>,
+}
+
+/// Every spelling of the glob path `g` after alias substitution: `g` itself
+/// and, for each segment that is a binding name, `target + rest`.  This is the
+/// same per-segment rule [`Resolver::candidates`] applies to ordinary paths, so
+/// `use crate::s::*;` with `pub use std as s;` elsewhere is seen as `std::*`.
+/// (The old code substituted only the *first* segment, so a local head such
+/// as `crate::` hid the alias.)  Every spelling counts against `budget`.
+fn glob_spellings(
+    bindings: &HashMap<String, Vec<Vec<String>>>,
+    g: &[String],
+    budget: &mut usize,
+) -> Result<Vec<Vec<String>>, String> {
+    let mut out = vec![g.to_vec()];
+    for (i, seg) in g.iter().enumerate() {
+        for t in bindings.get(seg).map(Vec::as_slice).unwrap_or(&[]) {
+            if out.len() >= *budget {
+                return Err("too many glob import spellings".into());
+            }
+            let mut np = t.clone();
+            np.extend_from_slice(&g[i + 1..]);
+            out.push(np);
+        }
+    }
+    if out.len() > *budget {
+        return Err("too many glob import spellings".into());
+    }
+    *budget -= out.len();
+    Ok(out)
 }
 
 impl Resolver {
@@ -955,20 +993,16 @@ impl Resolver {
             bindings.entry(n).or_default().push(p);
         }
 
-        // Normalise glob heads the same way; keep only globs that can name std surfaces.
+        // Normalise globs through the bindings; keep only globs that can name
+        // std surfaces.  Every spelling, kept or not, is counted (LOW).
         let mut norm_globs: Vec<Vec<String>> = Vec::new();
+        let mut root_globs: HashSet<Vec<String>> = HashSet::new();
+        let mut budget = MAX_GLOB_SPELLINGS;
         for g in globs {
-            let expanded: Vec<Vec<String>> = match g.first().and_then(|h| bindings.get(h)) {
-                Some(ts) => ts
-                    .iter()
-                    .map(|t| {
-                        let mut np = t.clone();
-                        np.extend_from_slice(&g[1..]);
-                        np
-                    })
-                    .collect(),
-                None => vec![g],
-            };
+            let expanded = glob_spellings(&bindings, &g, &mut budget)?;
+            if expanded.iter().any(|e| e.len() == 1 && is_std_root(&e[0])) {
+                root_globs.insert(g.clone());
+            }
             for e in expanded {
                 if let Some(h) = e.first() {
                     let relevant = is_std_root(h)
@@ -991,6 +1025,7 @@ impl Resolver {
         Ok(Self {
             bindings,
             globs: norm_globs,
+            root_globs,
         })
     }
 
@@ -998,13 +1033,22 @@ impl Resolver {
         self.bindings.contains_key(name)
     }
 
-    /// All spellings of `segs` worth classifying; the bool marks glob-derived
-    /// ones.  The second result is true if the list was truncated at
-    /// [`MAX_CANDIDATES`] (the caller reports CAP003).  `segs` must be at most
-    /// [`MAX_PATH_SEGS`] long, so the work here is bounded by
-    /// `MAX_CANDIDATES x (MAX_ALIAS_PATH + MAX_PATH_SEGS)`.
-    fn candidates(&self, segs: &[String]) -> (Vec<(Vec<String>, bool)>, bool) {
-        let mut out: Vec<(Vec<String>, bool)> = vec![(segs.to_vec(), false)];
+    /// Is the glob import of `path` (as written) a glob over a whole standard
+    /// crate (`use std::*;`)?  Such a glob makes every name of `std`'s root -
+    /// `fs`, `process`, `net`, ... - nameable through any module that holds it,
+    /// so a path can reach authority without one `std` segment in sight
+    /// (security review round 3, HIGH-1, PoC t12).  It is CAP003.
+    fn glob_is_bare_root(&self, path: &[String]) -> bool {
+        self.root_globs.contains(path)
+    }
+
+    /// All alias spellings of `segs` worth classifying (glob spellings are
+    /// generated by [`Sink::path`], see there).  The second result is true if
+    /// the list was truncated at [`MAX_CANDIDATES`] (the caller reports
+    /// CAP003).  `segs` must be at most [`MAX_PATH_SEGS`] long, so the work
+    /// here is bounded by `MAX_CANDIDATES x (MAX_ALIAS_PATH + MAX_PATH_SEGS)`.
+    fn candidates(&self, segs: &[String]) -> (Vec<Vec<String>>, bool) {
+        let mut out: Vec<Vec<String>> = vec![segs.to_vec()];
         let mut truncated = false;
         'outer: for (i, s) in segs.iter().enumerate() {
             if let Some(targets) = self.bindings.get(s) {
@@ -1015,20 +1059,8 @@ impl Resolver {
                     }
                     let mut c = t.clone();
                     c.extend_from_slice(&segs[i + 1..]);
-                    out.push((c, false));
+                    out.push(c);
                 }
-            }
-        }
-        let rooted = is_std_root(&segs[0]) || is_local_head(&segs[0]);
-        if !rooted && !truncated {
-            for g in &self.globs {
-                if out.len() >= MAX_CANDIDATES {
-                    truncated = true;
-                    break;
-                }
-                let mut c = g.clone();
-                c.extend_from_slice(segs);
-                out.push((c, true));
             }
         }
         out.sort();
@@ -1112,7 +1144,7 @@ impl Sink<'_> {
         }
         // Once the per-file budget is spent, paths are classified as written only
         // (never silently skipped) and the file carries one CAP003.
-        let mut cands = vec![(segs.to_vec(), false)];
+        let mut cands = vec![segs.to_vec()];
         if self.cand_budget > 0 {
             let (all, truncated) = res.candidates(segs);
             if truncated {
@@ -1127,38 +1159,98 @@ impl Sink<'_> {
             // files (one or two spellings per path) never come near the limit.
             let extra = all.len().saturating_sub(1);
             if extra > self.cand_budget {
-                self.cand_budget = 0;
-                self.unanalyzable(
-                    line,
-                    col,
-                    "alias resolution exceeded the per-file work budget",
-                    written.clone(),
-                );
+                self.spend_all_budget(line, col, &written);
             } else {
                 self.cand_budget -= extra;
                 cands = all;
             }
         }
-        for (cand, from_glob) in cands {
-            let refs: Vec<&str> = cand.iter().map(String::as_str).collect();
-            let cls = crate::rules::classify_segments(&refs, is_macro);
-            let evidence = if cand.as_slice() == segs {
-                written.clone()
+        for cand in &cands {
+            self.classify(cand, segs, &written, is_macro, line, col, true);
+        }
+
+        // Glob spellings.  A glob `use G::*;` in module `m` makes `m::x` (and,
+        // inside `m`, plain `x`) name `G::x`.  Which module holds the glob is
+        // not tracked, so *every suffix* of every spelling is tried after every
+        // glob prefix: `m::process::Command` with `use std::*;` in `m` is
+        // `std::process::Command`.  The old code tried only `G + <whole path>`
+        // (`std::m::process::Command`, an unknown std module), so a glob
+        // re-export through a local module hid everything behind it (HIGH-1,
+        // PoCs t12/t13).  A suffix starting at `crate`/`self`/`super`/`Self` is
+        // skipped (it cannot follow a glob prefix), and spellings headed by a
+        // standard crate are absolute and never go through a local glob.
+        //
+        // CAP003 from a glob spelling is reported only when the glob prefix is
+        // a bare standard crate (`std::*`, itself CAP003): under `use std::fs::*`
+        // most suffixes are local names that only *look* like `std::fs::x`,
+        // and they are classified as `fs` access, not refused.
+        if res.globs.is_empty() || self.cand_budget == 0 {
+            return;
+        }
+        for cand in &cands {
+            if is_std_root(&cand[0]) {
+                continue;
+            }
+            for k in 0..cand.len() {
+                if is_local_head(&cand[k]) {
+                    continue;
+                }
+                for g in &res.globs {
+                    if self.cand_budget == 0 {
+                        self.spend_all_budget(line, col, &written);
+                        return;
+                    }
+                    self.cand_budget -= 1;
+                    let mut gc = g.clone();
+                    gc.extend_from_slice(&cand[k..]);
+                    self.classify(&gc, segs, &written, is_macro, line, col, g.len() == 1);
+                }
+            }
+        }
+    }
+
+    /// The per-file spelling budget is exhausted: say so once (CAP003).
+    fn spend_all_budget(&mut self, line: usize, col: usize, written: &str) {
+        self.cand_budget = 0;
+        self.unanalyzable(
+            line,
+            col,
+            "alias resolution exceeded the per-file work budget",
+            written.to_string(),
+        );
+    }
+
+    /// Classify one spelling `cand` of the written path `segs`.
+    /// `report_cap003` is false for glob spellings under a module glob (above).
+    #[allow(clippy::too_many_arguments)]
+    fn classify(
+        &mut self,
+        cand: &[String],
+        segs: &[String],
+        written: &str,
+        is_macro: bool,
+        line: usize,
+        col: usize,
+        report_cap003: bool,
+    ) {
+        let refs: Vec<&str> = cand.iter().map(String::as_str).collect();
+        let cls = crate::rules::classify_segments(&refs, is_macro);
+        let evidence = || {
+            if cand == segs {
+                written.to_string()
             } else {
                 format!("{written} => {}", cand.join("::"))
-            };
-            match cls {
-                Classification::Capability { category, action } => {
-                    self.detection(line, col, category, action, evidence)
-                }
-                Classification::BannedConstruct { construct } => {
-                    self.banned(line, col, construct, evidence)
-                }
-                Classification::Unanalyzable { reason } if !from_glob => {
-                    self.unanalyzable(line, col, reason, evidence)
-                }
-                _ => {}
             }
+        };
+        match cls {
+            Classification::Capability { category, action } => {
+                self.detection(line, col, category, action, evidence())
+            }
+            Classification::BannedConstruct { construct } => self.banned(line, col, construct, evidence()),
+            Classification::Unanalyzable { reason } if report_cap003 => {
+                self.unanalyzable(line, col, reason, evidence())
+            }
+            _ => {}
         }
     }
 }
@@ -1707,6 +1799,14 @@ fn stage2_file(
     for l in &facts.leaves {
         if l.path.is_empty() {
             continue;
+        }
+        if l.glob && res.glob_is_bare_root(&l.path) {
+            sink.unanalyzable(
+                l.line,
+                l.col,
+                "glob import of a whole standard crate (`use std::*`): every std module becomes nameable without `std`",
+                format!("{}::*", l.path.join("::")),
+            );
         }
         sink.path(res, &l.path, false, l.line, l.col);
     }

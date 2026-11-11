@@ -78,7 +78,8 @@ const FS: &[Case] = &[
     ("fs use nested group", "use std::{fs::{File, OpenOptions}, io};", &["fs:read", "fs:write"]),
     ("fs use group self", "use std::fs::{self, File};", &["fs:read"]),
     ("fs use glob then call", "use std::fs::*; fn f(){ read_dir(\".\"); }", &["fs:list", "fs:read"]),
-    ("fs use root glob", "use std::*; fn f(){ fs::read(\"x\"); }", &["fs:read"]),
+    // A glob over a whole standard crate is CAP003 since round 3 (HIGH-1).
+    ("fs use root glob", "use std::*; fn f(){ fs::read(\"x\"); }", &["?", "fs:read"]),
     ("fs use std alias", "use std as s; fn f(){ s::fs::File::open(\"x\"); }", &["fs:read"]),
     ("fs use std self alias", "use std::{self as s}; fn f(){ s::fs::read(\"x\"); }", &["fs:read"]),
     ("fs extern crate alias", "extern crate std as s; fn f(){ s::fs::read(\"x\"); }", &["fs:read"]),
