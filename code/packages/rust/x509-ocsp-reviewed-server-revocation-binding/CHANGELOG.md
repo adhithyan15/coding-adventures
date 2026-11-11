@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the recursive OCSP revocation proof's exact delegated
+  responder while retaining both authenticated proof layers.
+- Derive the responder and root constraints only through the consumed generic
+  source, retain count-only evidence, and stop before intermediate name,
+  no-check, further revocation, complete revocation, TLS, HTTP, or OAuth policy.
 - Reify the recursive OCSP revocation proof's own exact delegated responder-
   to-reviewed-root path while retaining the complete generic source and both
   authenticated proof layers.
