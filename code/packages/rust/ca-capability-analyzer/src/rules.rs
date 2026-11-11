@@ -390,7 +390,7 @@ fn classify_std(segs: &[&str], is_macro: bool) -> Classification {
         "ffi" => cap("ffi", "call"),
         "os" => {
             if rest.contains(&"net") {
-                cap("net", "connect")
+                os_net_rule(rest)
             } else if rest.contains(&"process") {
                 cap("proc", "exec")
             } else if rest.contains(&"fs") {
@@ -452,6 +452,24 @@ fn net_rule(rest: &[&str]) -> Classification {
             | "SocketAddrV6" | "AddrParseError" | "Shutdown" => Classification::AllowedPure,
             _ => cap("net", "connect"),
         },
+    }
+}
+
+/// `std::os::<platform>::net::…`: Unix-domain sockets.  A listener, and a
+/// datagram socket bound to an address, accept traffic exactly as
+/// `TcpListener` / `UdpSocket::bind` do (`net:listen`); they also create a
+/// socket file (security review round 5, R5-3, case `unix-listener-class`).
+/// Everything else there (`UnixStream`, `UnixDatagram::unbound`, the address
+/// type) is `net:connect`, as before.
+fn os_net_rule(rest: &[&str]) -> Classification {
+    let net = rest.iter().position(|s| *s == "net").unwrap_or(0);
+    let after = &rest[net + 1..];
+    match after.first() {
+        Some(&"UnixListener") => cap("net", "listen"),
+        Some(&"UnixDatagram") if matches!(after.get(1), Some(&"bind") | Some(&"bind_addr")) => {
+            cap("net", "listen")
+        }
+        _ => cap("net", "connect"),
     }
 }
 

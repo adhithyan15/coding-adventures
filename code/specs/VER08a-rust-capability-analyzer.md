@@ -122,7 +122,8 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 | `std::io::{pipe, PipeReader, PipeWriter}` (an anonymous OS pipe: two raw file descriptors or handles; the taxonomy has no IPC category, so it shares the raw-handle row below, D47) | `ffi:call` |
 | other `std::io` items (`Read`, `Write`, `Cursor`, `Error`, `copy`, …) | pure |
 | `std::ffi::*`, `core::ffi::*`, `alloc::ffi::*` | `ffi:call` |
-| `std::os::…` containing segment `net` / `process` / `fs` / `thread` | `net:connect` / `proc:exec` / `fs:write` / `thread:spawn` |
+| `std::os::…::net::UnixListener`, `std::os::…::net::UnixDatagram::{bind, bind_addr}` (Unix-domain listeners: accept traffic like `TcpListener` / `UdpSocket::bind`, and create a socket file, D48) | `net:listen` |
+| any other `std::os::…` containing segment `net` / `process` / `fs` / `thread` | `net:connect` / `proc:exec` / `fs:write` / `thread:spawn` |
 | any other `std::os::*` (raw fds/handles) | `ffi:call` |
 | `{core,std}::arch::*` item whose name starts `_rdrand` / `_rdseed` (hardware randomness) | `rand:read` |
 | `std::path::absolute` (joins the current directory) | `env:read` |
@@ -316,3 +317,4 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 | D45 | `std::thread::park_timeout_ms(10)` (the deprecated `u32` form of `park_timeout`) was `thread:spawn`, so a `thread:spawn`-only manifest slept unseen (case `park-timeout-ms`) | `std::thread::park_timeout_ms` is `time:sleep` (§3.3) | R5-3 (third review) false negative |
 | D46 | `use std::net::*; ("127.0.0.1", 80).to_socket_addrs()` resolved a name under a manifest declaring only `net:connect`: the glob is `net:connect` and the trait `ToSocketAddrs` (`net:dns`) is never named (case `net-glob-to-socket-addrs`) | `.to_socket_addrs(` is `net:dns` through the method heuristic, on any receiver (§3.3) | R5-3 (third review) false negative |
 | D47 | `std::io` was pure apart from the standard streams, so `std::io::pipe()` created an OS pipe (two file descriptors) under an empty manifest (case `io-pipe`) | `std::io::{pipe, PipeReader, PipeWriter}` are `ffi:call`, the row for raw OS handles (`std::os::fd`, ...): the Spec 13 taxonomy has no IPC category, and `CAP003` would be wrong because the construct is seen exactly and `CAP003` is never waivable, so no package could declare a pipe (§3.3) | R5-3 (third review) false negative |
+| D48 | every `std::os::…::net` item was `net:connect`, so `std::os::unix::net::UnixListener::bind` (listens, and creates a socket file) passed under a `net:connect`-only manifest (case `unix-listener-class`) | `std::os::…::net::UnixListener` and `UnixDatagram::{bind, bind_addr}` are `net:listen`, matching `std::net::TcpListener` and `UdpSocket::bind`; `UnixStream`, `UnixDatagram::unbound` and the address type stay `net:connect` (§3.3) | R5-3 (third review) false negative |

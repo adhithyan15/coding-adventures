@@ -47,6 +47,7 @@ directory; the rest are documented as known open gaps (VER08a §8.1).
 - [false negative, R5-3] `std::thread::park_timeout_ms(10)`, the deprecated `u32` form of `park_timeout`, was `thread:spawn`, so a package declaring only `thread:spawn` slept unseen (case `park-timeout-ms`). It is now `time:sleep`, like `park_timeout`.
 - [false negative, R5-3] `use std::net::*;` brings `ToSocketAddrs` into scope without naming it, so `("127.0.0.1", 80).to_socket_addrs()` did a name lookup under a manifest declaring only `net:connect` (case `net-glob-to-socket-addrs`). `.to_socket_addrs(` is now `net:dns` through the method heuristic.
 - [false negative, R5-3] `std::io` was pure apart from the standard streams, so `std::io::pipe()` created an OS pipe under an empty manifest (case `io-pipe`). `std::io::{pipe, PipeReader, PipeWriter}` are now `ffi:call`, the row VER08a already uses for raw OS handles: the capability taxonomy has no IPC category, and `CAP003` would make pipes undeclarable although the analyzer sees them exactly.
+- [false negative, R5-3] Every `std::os::…::net` item was `net:connect`, so `std::os::unix::net::UnixListener::bind` (listens, and creates a socket file) passed under a `net:connect`-only manifest (case `unix-listener-class`). `UnixListener` and `UnixDatagram::{bind, bind_addr}` are now `net:listen`, like `TcpListener` and `UdpSocket::bind`.
 
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 

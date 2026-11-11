@@ -255,3 +255,27 @@ fn r5_3c_io_pipe_is_a_raw_os_handle() {
         ],
     );
 }
+
+#[test]
+fn r5_3d_unix_listeners_are_net_listen() {
+    check(
+        "R5-3d",
+        &[
+            (
+                "unix-listener-class",
+                "pub fn binder() -> fn(&'static str) -> std::io::Result<std::os::unix::net::UnixListener> {\n    std::os::unix::net::UnixListener::bind::<&'static str>\n}",
+                &["net:listen"],
+            ),
+            ("UnixListener through a use", "use std::os::unix::net::UnixListener;\npub fn f() { let _ = UnixListener::bind(\"/tmp/s\"); }", &["net:listen"]),
+            ("UnixDatagram::bind", "pub fn f() { let _ = std::os::unix::net::UnixDatagram::bind(\"/tmp/s\"); }", &["net:listen"]),
+            (
+                "UnixDatagram::bind_addr through a use",
+                "use std::os::unix::net::{SocketAddr, UnixDatagram};\npub fn f(a: &SocketAddr) { let _ = UnixDatagram::bind_addr(a); }",
+                &["net:connect", "net:listen"],
+            ),
+            // Decoys: connecting sockets stay `net:connect`.
+            ("UnixStream::connect", "pub fn f() { let _ = std::os::unix::net::UnixStream::connect(\"/tmp/s\"); }", &["net:connect"]),
+            ("UnixDatagram::unbound", "pub fn f() { let _ = std::os::unix::net::UnixDatagram::unbound(); }", &["net:connect"]),
+        ],
+    );
+}
