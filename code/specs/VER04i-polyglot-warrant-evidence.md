@@ -260,15 +260,17 @@ varying fastest** (row-major). Refinements filter in that order; a discarded
 tuple is counted and receives no case id. A case index `@i` is the zero-based
 ordinal among admitted cases after refinement.
 
-The canonical stream encoding (`warrant-stream-v1`) is hashed with SHA-256.
-After the header `"warrant-stream-v1\0"`, encode the suite context as a
+The canonical stream encoding (`warrant-stream-v1`) uses two independent
+SHA-256 streams. Both start with the same context prefix. After the header
+`"warrant-stream-v1\0"`, encode the suite context as a
 u32-LE byte length plus the UTF-8 suite id, a u32-LE binder count, then for
 each binder a u32-LE byte length plus its canonical Warrant type name; finish
-the context with the same length-prefixed canonical result type name. Each
-admitted case then contributes its typed binder values in order, followed by
-its typed pure-model result. The fixed suite context and binder/result types
-define case boundaries; stream position is the admitted-case ordinal. There
-are no per-case delimiters or ordinal bytes. Hash this byte stream:
+the context with the same length-prefixed canonical result type name. For each
+admitted case, append its typed binder values in order to `inputs_sha256`, and
+append only its typed pure-model result to `expected_sha256`. The fixed suite
+context and binder/result types define case boundaries; stream position is
+the admitted-case ordinal. There are no per-case delimiters or ordinal bytes.
+Hash each stream separately:
 
 | Value | Bytes |
 |---|---|
