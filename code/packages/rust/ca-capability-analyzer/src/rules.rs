@@ -217,10 +217,21 @@ pub fn classify_resolved(path: &str, is_macro: bool) -> Classification {
     classify_segments(&segs, is_macro)
 }
 
+/// Head segment of a spelling that goes through a type alias whose
+/// right-hand side is a `macro_rules!` metavariable (`type P = $t;`): the type
+/// is chosen by the macro's caller.  It contains characters no identifier can,
+/// so it never collides with a real name.
+pub const UNKNOWN_TYPE_SEGMENT: &str = "<type chosen by a macro caller>";
+
 /// Classify an already-split resolved path.
 pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
     if segs.is_empty() {
         return Classification::AllowedPure;
+    }
+    // `P::name` with `type P = $t;`: the type is unknown, so `P::name` gets the
+    // verdict a method call `.name(..)` on an unknown receiver gets (H3).
+    if segs[0] == UNKNOWN_TYPE_SEGMENT {
+        return segs.get(1).and_then(|m| method_call_rule(m)).unwrap_or(Classification::AllowedPure);
     }
     let head = segs[0];
     let last = segs[segs.len() - 1];

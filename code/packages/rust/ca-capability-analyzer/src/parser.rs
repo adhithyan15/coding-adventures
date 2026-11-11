@@ -32,7 +32,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::rules::{
     classify_resolved, is_local_head, is_std_root, method_call_rule, Classification, FOREIGN_LINKAGE_ATTRS,
-    SHORTHAND_HEADS,
+    SHORTHAND_HEADS, UNKNOWN_TYPE_SEGMENT,
 };
 
 /// A detected capability access within a source file.
@@ -702,54 +702,193 @@ fn skip_angle(toks: &[Token], open: usize) -> Option<usize> {
     None
 }
 
-/// `type NAME[<..>] = [&|*|mut|dyn|impl]* path ...;` as a binding `NAME -> path`.
-fn type_alias_leaf(toks: &[Token], i: usize) -> Option<UseLeaf> {
-    let (name, _) = ident_at(toks, i + 1)?;
+/// Why a `type` item is CAP003.
+const TYPE_ALIAS_META_NAME: &str =
+    "type alias whose name is a macro_rules! metavariable; the name it binds is not known";
+const TYPE_ALIAS_UNPARSEABLE: &str = "unparseable type alias; the names it binds are not known";
+
+/// Longest `type` item (in tokens) read before it is refused.
+const TYPE_ALIAS_LIMIT: usize = 4096;
+
+/// Keywords that occur in types but are never a type path.
+fn is_type_keyword(name: &str) -> bool {
+    matches!(name, "dyn" | "impl" | "mut" | "const" | "for" | "where" | "as" | "fn" | "unsafe" | "extern")
+}
+
+/// The bindings of the `type` item at token `i` (security review round 4, H3).
+///
+/// `type F = File;` binds `F` exactly like `use .. File as F;` (VER08a L1).
+/// The old reader took the *first* path after `=` and returned nothing for any
+/// other shape, so three shapes bound nothing at all and `P::exists(..)`
+/// passed:
+///
+/// ```text
+///   type $n = std::path::Path;                              name is a metavariable
+///   type P = (std::path::Path);                             parenthesised
+///   type P = <std::path::PathBuf as std::ops::Deref>::Target;   qualified
+/// ```
+///
+/// Now:
+///
+/// * a metavariable name is `Err` (CAP003): the analyzer cannot know which
+///   name the expansion binds;
+/// * the alias is bound to **every** path on the right-hand side, up to the
+///   `;` that ends the item (generic arguments, parentheses, qualified
+///   projections, trait objects included); the alias's own generic
+///   parameters are skipped;
+/// * a metavariable on the right-hand side (`type P = $t;`) also binds the
+///   alias to [`UNKNOWN_TYPE_SEGMENT`], a segment no identifier can spell, so
+///   no binding substitutes it and `P::name` gets the method-call verdict of
+///   `.name(` (`rules::classify_segments`);
+/// * `type Item;` / `type Item: Bound;` (no `=`) binds nothing;
+/// * anything the reader cannot delimit (no `;` before a closing bracket or
+///   the end of the file, unbalanced generics, a name that is not an
+///   identifier) is `Err` (CAP003).
+///
+/// The tokens stay in the walk, so the right-hand side is classified too.
+fn type_alias_leaves(toks: &[Token], br: &Brackets, i: usize) -> Result<Vec<UseLeaf>, &'static str> {
+    if is_punct(toks, i + 1, '$') {
+        return Err(TYPE_ALIAS_META_NAME);
+    }
+    let Some((name, _)) = ident_at(toks, i + 1) else {
+        return Err(TYPE_ALIAS_UNPARSEABLE);
+    };
+    let name = name.to_string();
+    let stop = (i + TYPE_ALIAS_LIMIT).min(toks.len());
     let mut j = i + 2;
+    // Generic parameters: `type P<'a, T: Bound, const N: usize>`.
+    let mut params: HashSet<&str> = HashSet::new();
     if is_punct(toks, j, '<') {
-        j = skip_angle(toks, j)?;
-    }
-    if !is_punct(toks, j, '=') {
-        return None;
-    }
-    j += 1;
-    loop {
-        match toks.get(j).map(|t| &t.tok) {
-            Some(Tok::Punct('&' | '*')) | Some(Tok::Lifetime) => j += 1,
-            Some(Tok::Ident { name, raw: false })
-                if matches!(name.as_str(), "mut" | "const" | "dyn" | "impl") =>
-            {
-                j += 1
+        let end = skip_angle(toks, j).ok_or(TYPE_ALIAS_UNPARSEABLE)?;
+        for k in j + 1..end {
+            if is_punct(toks, k - 1, '<') || is_punct(toks, k - 1, ',') || ident_at(toks, k - 1) == Some(("const", false)) {
+                if let Some((p, _)) = ident_at(toks, k) {
+                    if p != "const" {
+                        params.insert(p);
+                    }
+                }
             }
-            _ => break,
         }
+        j = end;
     }
-    if is_pathsep(toks, j) {
+    // Bounds and a `where` clause may precede `=`; `=` inside `<..>`
+    // (`Iterator<Item = u8>`) does not count.
+    let mut angle = 0usize;
+    let eq = loop {
+        if j >= stop {
+            return Err(TYPE_ALIAS_UNPARSEABLE);
+        }
+        match &toks[j].tok {
+            Tok::Punct('<') => angle += 1,
+            Tok::Punct('>') if !is_punct(toks, j - 1, '-') => angle = angle.saturating_sub(1),
+            Tok::Punct('(' | '[' | '{') => {
+                j = br.close(j).saturating_add(1).max(j + 1);
+                continue;
+            }
+            Tok::Punct(')' | ']' | '}') => return Err(TYPE_ALIAS_UNPARSEABLE),
+            Tok::Punct(';') if angle == 0 => return Ok(Vec::new()),
+            Tok::Punct('=') if angle == 0 && !is_punct(toks, j + 1, '>') => break j,
+            _ => {}
+        }
         j += 1;
-    }
-    let (line, col) = (toks.get(j)?.line, toks.get(j)?.col);
-    let mut path: Vec<String> = Vec::new();
-    while let Some((seg, _)) = ident_at(toks, j) {
-        path.push(seg.to_string());
-        if path.len() > MAX_ALIAS_PATH {
-            return None;
+    };
+    // The right-hand side ends at the first `;` outside brackets.
+    let mut k = eq + 1;
+    let end = loop {
+        if k >= stop {
+            return Err(TYPE_ALIAS_UNPARSEABLE);
         }
-        if is_pathsep(toks, j + 1) {
-            j += 2;
-        } else {
-            break;
+        match &toks[k].tok {
+            Tok::Punct('(' | '[' | '{') => {
+                let c = br.close(k);
+                if c >= toks.len() {
+                    return Err(TYPE_ALIAS_UNPARSEABLE);
+                }
+                k = c + 1;
+                continue;
+            }
+            Tok::Punct(')' | ']' | '}') => return Err(TYPE_ALIAS_UNPARSEABLE),
+            Tok::Punct(';') => break k,
+            _ => {}
+        }
+        k += 1;
+    };
+    let mut leaves = Vec::new();
+    let mut k = eq + 1;
+    while k < end {
+        if is_punct(toks, k, '$') {
+            if ident_at(toks, k + 1) == Some(("crate", false)) {
+                // `$crate::x::T` is the defining crate: read it as `crate::x::T`.
+                k += 1;
+            } else {
+                leaves.push(UseLeaf {
+                    path: vec![UNKNOWN_TYPE_SEGMENT.to_string()],
+                    alias: Some(name.clone()),
+                    glob: false,
+                    line: toks[k].line,
+                    col: toks[k].col,
+                });
+                k += 2;
+                continue;
+            }
+        }
+        let starts_path = match ident_at(toks, k) {
+            Some((n, raw)) => raw || !(is_type_keyword(n) || is_non_path_keyword(n)),
+            None => is_pathsep(toks, k) && ident_at(toks, k + 1).is_some(),
+        } && !(k > 0 && is_pathsep(toks, k - 1));
+        if !starts_path {
+            k += 1;
+            continue;
+        }
+        let (line, col) = (toks[k].line, toks[k].col);
+        if is_pathsep(toks, k) {
+            k += 1;
+        }
+        let mut path: Vec<String> = Vec::new();
+        while let Some((seg, _)) = ident_at(toks, k) {
+            path.push(seg.to_string());
+            if path.len() > MAX_ALIAS_PATH {
+                return Err(TYPE_ALIAS_UNPARSEABLE);
+            }
+            k += 1;
+            // `Foo::<T>::Bar`: skip the turbofish, keep reading the path.
+            if is_pathsep(toks, k) && is_punct(toks, k + 1, '<') {
+                k = skip_angle(toks, k + 1).ok_or(TYPE_ALIAS_UNPARSEABLE)?;
+            }
+            if is_pathsep(toks, k) && ident_at(toks, k + 1).is_some() {
+                k += 1;
+            } else {
+                break;
+            }
+        }
+        let trivial = path.len() == 1 && (path[0] == name || params.contains(path[0].as_str()));
+        if !path.is_empty() && !trivial {
+            leaves.push(UseLeaf { path, alias: Some(name.clone()), glob: false, line, col });
         }
     }
-    if path.is_empty() || (path.len() == 1 && path[0] == name) {
-        return None;
+    Ok(leaves)
+}
+
+/// Token ranges of `macro_rules!` matchers: patterns, not code, so a `type $n`
+/// or `use $p` there is not an item (H3, H4).
+fn matcher_mask(toks: &[Token], br: &Brackets) -> Vec<bool> {
+    let mut mask = vec![false; toks.len()];
+    for i in 0..toks.len() {
+        if ident_at(toks, i) == Some(("macro_rules", false))
+            && is_punct(toks, i + 1, '!')
+            && matches!(toks.get(i + 3).map(|t| &t.tok), Some(Tok::Punct('(' | '[' | '{')))
+        {
+            let open = i + 3;
+            if let Some(arms) = macro_arms(toks, br, open, br.close(open)) {
+                for a in arms {
+                    for m in mask.iter_mut().take(a.m_close + 1).skip(a.m_open) {
+                        *m = true;
+                    }
+                }
+            }
+        }
     }
-    Some(UseLeaf {
-        path,
-        alias: Some(name.to_string()),
-        glob: false,
-        line,
-        col,
-    })
+    mask
 }
 
 /// Everything stage 1 learns about one file.
@@ -762,10 +901,15 @@ struct FileFacts {
     use_errors: Vec<(usize, &'static str)>,
 }
 
-fn stage1_file(toks: &[Token]) -> FileFacts {
+fn stage1_file(toks: &[Token], br: &Brackets) -> FileFacts {
     let mut f = FileFacts::default();
+    let in_matcher = matcher_mask(toks, br);
     let mut i = 0;
     while i < toks.len() {
+        if in_matcher[i] {
+            i += 1;
+            continue;
+        }
         let prev_is_dot_or_dollar = i > 0 && (is_punct(toks, i - 1, '.') || is_punct(toks, i - 1, '$'));
         if let (Some(("use", false)), false) = (ident_at(toks, i), prev_is_dot_or_dollar) {
             let starts_tree = ident_at(toks, i + 1).is_some()
@@ -789,9 +933,9 @@ fn stage1_file(toks: &[Token]) -> FileFacts {
         }
         if let (Some(("type", false)), false) = (ident_at(toks, i), prev_is_dot_or_dollar) {
             // `type F = File;` binds `F` exactly like `use ... as F` (VER08a L1).
-            // The tokens stay in the walk, so the right-hand side is classified too.
-            if let Some(leaf) = type_alias_leaf(toks, i) {
-                f.leaves.push(leaf);
+            match type_alias_leaves(toks, br, i) {
+                Ok(leaves) => f.leaves.extend(leaves),
+                Err(reason) => f.use_errors.push((i, reason)),
             }
         }
         if let (Some(("extern", false)), Some(("crate", false))) =
@@ -2657,7 +2801,13 @@ fn stage2_file(
         sink.path(res, &l.path, false, l.line, l.col);
     }
     for &(s, reason) in &facts.use_errors {
-        let evidence = if reason.contains("extern crate") { "extern crate ..." } else { "use ..." };
+        let evidence = if reason.contains("extern crate") {
+            "extern crate ..."
+        } else if reason.contains("type alias") {
+            "type ..."
+        } else {
+            "use ..."
+        };
         sink.unanalyzable(toks[s].line, toks[s].col, reason, evidence.into());
     }
 
@@ -2904,8 +3054,8 @@ pub fn scan_sources_with_edition(files: &[(&str, &str)], edition: Edition) -> Re
         }
     }
 
-    let facts: Vec<FileFacts> = lexed.iter().map(|(_, t)| stage1_file(t)).collect();
     let brackets: Vec<Brackets> = lexed.iter().map(|(_, t)| Brackets::build(t)).collect();
+    let facts: Vec<FileFacts> = lexed.iter().zip(brackets.iter()).map(|((_, t), br)| stage1_file(t, br)).collect();
     let mut local = LocalTypes::default();
     for ((_, toks), br) in lexed.iter().zip(brackets.iter()) {
         collect_local_types(toks, br, &mut local);

@@ -278,6 +278,64 @@ fn h2_ordinary_self_paths_stay_clean() {
 }
 
 // ---------------------------------------------------------------------------
+// H3: type aliases bind every path of the right-hand side, or fail closed
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h3_type_alias_shapes_are_bound_or_refused() {
+    check(
+        "H3",
+        &[
+            (
+                "type-paren",
+                "#[allow(unused_parens)]\ntype P = (std::path::Path);\npub fn f() -> bool { P::exists(P::new(\"x\")) }",
+                &["fs:list"],
+            ),
+            (
+                "type-qualified",
+                "type P = <std::path::PathBuf as std::ops::Deref>::Target;\npub fn f() -> bool { P::exists(P::new(\"x\")) }",
+                &["fs:list"],
+            ),
+            (
+                "where clause before the =",
+                "type X<T> where T: Copy = std::path::Path;\npub fn f() -> bool { X::is_dir(X::new(\"x\")) }",
+                &["fs:list"],
+            ),
+            (
+                "path inside generic arguments",
+                "type P = Box<std::sync::mpsc::Receiver<u8>>;\npub fn f(r: &std::sync::mpsc::Receiver<u8>) { let _ = P::recv_timeout(r, std::time::Duration::ZERO); }",
+                &["time:sleep"],
+            ),
+            (
+                "right-hand side is a metavariable",
+                "macro_rules! a { ($t:ty) => { type P = $t; }; }\na!(std::path::Path);\npub fn f() -> bool { P::exists(P::new(\"x\")) }",
+                &["fs:list"],
+            ),
+            ("associated type without a value", "trait T { type Item; type Out: Clone; fn f(&self); }", &[]),
+            ("associated type with a pure value", "struct S;\nimpl Iterator for S { type Item = u8; fn next(&mut self) -> Option<u8> { None } }", &[]),
+            ("matcher pattern is not a type alias", "macro_rules! m { (type $n:ident = $t:ty) => { }; }", &[]),
+            ("existing shape still binds", "type F<'a> = &'a std::fs::File;\nfn f() { F::create(\"x\"); }", &["fs:read", "fs:write"]),
+        ],
+    );
+}
+
+#[test]
+fn h3_unparseable_type_aliases_are_cap003() {
+    check_cap003(
+        "H3 CAP003",
+        &[
+            (
+                "type-ident-name",
+                "macro_rules! alias {\n    ($n:ident) => {\n        type $n = std::path::Path;\n    };\n}\nalias!(P);\npub fn f() -> bool { P::exists(P::new(\"x\")) }",
+            ),
+            ("no terminating semicolon", "type P = std::path::Path"),
+            ("closing delimiter before the semicolon", "mod m { type P = std::path::Path }"),
+            ("unbalanced generics", "type P<T = std::path::Path;"),
+        ],
+    );
+}
+
+// ---------------------------------------------------------------------------
 // H6: clock reads and timed waits reached through the pure list
 // ---------------------------------------------------------------------------
 
