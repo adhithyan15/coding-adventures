@@ -211,11 +211,23 @@ afterEach(() => {
 // pushed this hook past its 30 s budget, while the manifest itself built in seconds.
 let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
+let committedManifestOnce: Promise<ModalityManifest> | undefined;
 beforeAll(async () => {
-  // The source bytes still determine each cache key. Bounded overlapping reads
-  // shorten the Windows file-open wall time without trusting mtime or size.
-  realLessons = await loadLessonsAsync();
-  realManifest = buildModalityManifest(realLessons);
+  // Both independent owner reads stay inside this hook's unchanged budget.
+  // Overlap their bounded I/O so later assertions compare completed reports
+  // without opening another corpus under the per-test timeout.
+  committedManifestOnce = loadModalityManifestAsync();
+  // Attach a rejection handler before the independent lesson read can suspend;
+  // the awaited original promise below still propagates manifest failures.
+  void committedManifestOnce.catch(() => undefined);
+  try {
+    realLessons = await loadLessonsAsync();
+    realManifest = buildModalityManifest(realLessons);
+    await committedManifestOnce;
+  } catch (error) {
+    await committedManifestOnce.catch(() => undefined);
+    throw error;
+  }
 });
 
 // The COMMITTED manifest, read from disk at most once per file.
@@ -229,11 +241,10 @@ beforeAll(async () => {
 // in this file writes; the two reads inside "carries the marker into the committed
 // manifest" were that case's entire cost, and it timed out at 30 s on CI.
 //
-// The guarded async route bounds those opens. Lazy rather than in `beforeAll`,
-// so the cost stays with the cases that use it
-// (and inside their budgets) instead of moving into the shared hook. Read-only for
-// the same reason as `realManifest` above: every use filters or maps a copy.
-let committedManifestOnce: Promise<ModalityManifest> | undefined;
+// The guarded async route bounds those opens, and the shared hook overlaps
+// this independent read with lesson loading under its unchanged timeout.
+// Read-only for the same reason as `realManifest` above: every use filters or
+// maps a copy.
 function committedManifest(): Promise<ModalityManifest> {
   committedManifestOnce ??= loadModalityManifestAsync();
   return committedManifestOnce;
