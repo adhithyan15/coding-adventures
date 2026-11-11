@@ -2924,6 +2924,25 @@ policy, generalized path construction or validation, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A parallel bounded recursive-revocation slice consumes that same complete
+reviewed-root DNS proof plus another fully authenticated, fully routed OCSP
+target-revocation proof. Repository-owned private evidence derives the added
+proof's own exact authenticated delegated responder, the exact selected
+Mozilla-reviewed root already bound as issuer, and the original explicit
+observation time only through the retained proof; external callers cannot
+implement substitute evidence. The recursive proof must target that same
+decoded responder object, name that same decoded reviewed-root object, and use
+that same observation time. Stable target, issuer, then time failures expose
+no certificate, response, key, signature, status, hostname, root, or time
+payload. Success retains the complete generic source and both non-copyable
+authenticated proof layers. This pure public-certificate-data composition
+performs no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not establish revocation policy for the recursive
+proof's own responder, complete revocation policy, generalized path
+construction or validation, TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact default-
 source alternative proof after the server target, original responder,
 intermediate, added intermediate-status responder, and the added responder-
