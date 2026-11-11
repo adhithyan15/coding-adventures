@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ### Changed
 
 - Replaced panic-prone and truncating lifecycle/I/O operations with typed,

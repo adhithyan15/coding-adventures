@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## Unreleased — LANG83 PR5b — strings are bytes
 
 - `parse_class_file` decodes a `CONSTANT_Utf8` payload as modified UTF-8: `C0 80` is U+0000. A class whose string constant holds a NUL (a byte-string literal, LANG83 PR5b) used to fail to parse. Test `modified_utf8_nul_decodes_to_u0000`.
