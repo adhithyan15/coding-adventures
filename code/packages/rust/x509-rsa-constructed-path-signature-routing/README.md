@@ -59,6 +59,14 @@ issuer must be the final accumulated target-nearest intermediate. Success
 retains the accumulator, routed target signature, and server policy together;
 detached constructions, nonzero depths, disconnected issuers, and policy from
 a byte-equal independent target decode fail closed.
+The reviewed-anchor DNS-policy follow-up also accepts this arbitrary-depth
+closure. It derives the exact target and already-validated SAN index from the
+retained server policy, and optional constraint bytes from the reviewed anchor
+retained by the accumulator's terminal proof. Caller-owned decoder limits
+bound the existing supported permitted-DNS evaluator. An unconstrained
+snapshot entry retains the complete closure without new DNS evidence; a
+constrained entry succeeds only after every retained target dNSName satisfies
+that supported subset.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -104,13 +112,13 @@ DNS and IP counts. The earlier DNS count remains available as compatibility
 evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
-fixed-shape result, ordered transitions, intermediate accumulator, and target
-signature closure do not validate the anchor's self-signature, establish
-complete generalized path validation, define full Name comparison, apply all
-NameConstraints or GeneralName forms, check revocation, perform hostname
-verification, TLS, or HTTP, authorize OAuth transport, or open a network
-connection. Target identity, time, purpose, routed selected-adjacency RSA
-signatures, construction-derived path-length state, and the supported
+fixed-shape result, ordered transitions, intermediate accumulator, target
+signature closure, and arbitrary-depth reviewed-anchor policy do not validate
+the anchor's self-signature, establish complete generalized path validation,
+define full Name comparison, apply all NameConstraints or GeneralName forms,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection. Target identity, time, purpose, routed selected-adjacency
+RSA signatures, construction-derived path-length state, and the supported
 reviewed-anchor DNS and intermediate DNS/IP subsets do not make the whole path
 valid. This does not make concrete HTTPS or live-provider use ready.
 

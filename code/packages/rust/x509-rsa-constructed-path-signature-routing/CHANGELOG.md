@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.14.0 - 2026-11-11
+
+### Added
+
+- Added reviewed-anchor DNS-policy evaluation over the arbitrary-depth routed
+  target-signature closure.
+- Added fixed public-certificate coverage proving that an unconstrained
+  reviewed snapshot entry retains the complete signature closure without
+  caller-supplied target, SAN-index, anchor, or constraint inputs.
+
+### Security
+
+- The exact target, already-validated SAN index, and reviewed anchor constraint
+  bytes are derived only through the consumed closure before the existing
+  bounded permitted-DNS evaluator runs.
+- This applies only the reviewed snapshot's supported permitted-DNS subset. It
+  does not apply every intermediate NameConstraints value, excluded or non-DNS
+  anchor constraints, complete path/name policy, revocation, TLS, HTTP, OAuth,
+  or network authority.
+
 ## 0.13.0 - 2026-11-11
 
 ### Added
