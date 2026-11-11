@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.12] - 2026-11-10
+
+### Fixed - refuse `super` outside a method, matching upstream Closure Compiler (CCR-075 slice 3, #15860)
+
+- In `src/refusals.rs`, refuse `super` accessed outside a method with `JSC_INVALID_SUPER_ACCESS` ("'super' may only be accessed within a method") and exit status 1, matching upstream Closure Compiler behavior.
+- Support `super` in class methods, constructors, getters, setters, object literal concise methods, class field declarations, and static blocks.
+- Inherit `super_ok` context in lexical arrow functions, allowing `super` in arrow functions nested within methods while rejecting top-level arrow functions using `super`.
+- Reject `super` inside standalone function declarations, function expressions, generator functions, and computed method property names evaluated outside method scope.
+- Convert `tests/diff/simple-super/` to an exact refusal fixture matching `closure-compiler-v20260915` (`expected.exit` 1, `expected.stderr`, empty `expected.stdout`), and update `tests/diff_simple_super.rs` accordingly.
+
 ## [0.247.11] - 2026-11-10
 
 ### Fixed - parity for refusal rendering order, UTF-16 columns, tab carets, and CRLF (CLOC44, #18159)
