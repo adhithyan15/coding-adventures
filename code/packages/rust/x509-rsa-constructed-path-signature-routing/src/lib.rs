@@ -6,9 +6,11 @@
 //! after all exact-object and issuing-CA checks pass does caller-owned routing
 //! invoke one repository-owned fixed RSA certificate-signature verifier.
 //!
-//! It authenticates one projected link only. It does not validate a complete
-//! path, establish trust, check revocation, perform TLS or HTTP, or grant OAuth
-//! or network authority.
+//! It also composes reviewed construction, ordered intermediate path-length
+//! evidence, and the exact depth-zero target signature with complete server
+//! policy. This does not validate a complete path, establish trust, check
+//! revocation or hostname, perform TLS or HTTP, or grant OAuth or network
+//! authority.
 
 #![deny(unsafe_code)]
 
@@ -297,6 +299,47 @@ impl fmt::Display for X509RsaConstructedPathIntermediatePathLengthAccumulationEr
 }
 
 impl std::error::Error for X509RsaConstructedPathIntermediatePathLengthAccumulationError {}
+
+/// Stable, payload-free accumulated target-signature closure failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathTargetSignatureClosureErrorKind {
+    /// Retained evidence describes another construction or disconnected issuer.
+    EvidenceMismatch,
+    /// The routed proof is not the construction's exact depth-zero target link.
+    InvalidPathShape,
+    /// Complete server policy is not for the construction's exact target object.
+    TargetPolicyMismatch,
+}
+
+/// A redacted accumulated target-signature closure failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathTargetSignatureClosureError {
+    kind: X509RsaConstructedPathTargetSignatureClosureErrorKind,
+}
+
+impl X509RsaConstructedPathTargetSignatureClosureError {
+    const fn new(kind: X509RsaConstructedPathTargetSignatureClosureErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathTargetSignatureClosureErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathTargetSignatureClosureError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path target signature closure error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathTargetSignatureClosureError {}
 
 /// Stable, payload-free reviewed two-link path binding failures.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1577,6 +1620,149 @@ impl fmt::Debug
     }
 }
 
+/// Accumulated intermediate evidence closed by the exact target signature.
+///
+/// The retained routed target proof is the depth-zero adjacency from the same
+/// construction as the accumulated anchor-to-target intermediate evidence.
+/// Its issuer is the exact target-nearest intermediate already processed by
+/// that accumulator, and complete server policy retains the construction's
+/// exact target object. This is signature and role-policy closure only; it
+/// does not establish complete path, hostname, revocation, TLS, HTTP, OAuth,
+/// or network validity.
+pub struct BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    accumulated_intermediates: AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    target_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'target, 'target_encoded>,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return all retained anchor-to-target intermediate evidence.
+    #[must_use]
+    pub const fn accumulated_intermediates(
+        &self,
+    ) -> &AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.accumulated_intermediates
+    }
+
+    /// Return routed authentication of the exact construction target.
+    #[must_use]
+    pub const fn target_signature(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.target_signature
+    }
+
+    /// Return complete server policy for the exact construction target.
+    #[must_use]
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'target, 'target_encoded> {
+        &self.server_policy
+    }
+}
+
+impl fmt::Debug
+    for BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature")
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -2365,6 +2551,124 @@ pub fn accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths<
             ordered_signatures,
             intermediate_policies,
             path_length_state,
+        },
+    )
+}
+
+/// Close accumulated intermediate evidence with the exact routed target link.
+///
+/// The target proof must be the depth-zero adjacency from the same exact
+/// constructed path retained by the accumulator. Its child must be that
+/// construction's target and its issuer must be the exact target-nearest
+/// intermediate already retained by the final accumulated policy. Complete
+/// server policy must retain the same exact target object. Success consumes
+/// and keeps all three proofs without granting complete path, hostname,
+/// revocation, TLS, HTTP, OAuth, or network authority.
+pub fn bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    accumulated_intermediates: AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    target_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'target, 'target_encoded>,
+) -> Result<
+    BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathTargetSignatureClosureError,
+> {
+    let constructed_path = accumulated_intermediates
+        .initialized_path_length()
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let target_link = target_signature.adjacent_link();
+    if !same_exact_object(constructed_path, target_link.constructed_path()) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    if target_link.issuer_depth() != 0 {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    }
+    let Some(target_certificate) = target_link.child_target_certificate() else {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(target_certificate, constructed_path.target_certificate()) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    let Some(target_nearest_policy) = accumulated_intermediates.intermediate_policies().last()
+    else {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(
+        target_link.issuer_certificate(),
+        target_nearest_policy.certificate(),
+    ) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    if !same_exact_object(server_policy.certificate(), target_certificate) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::TargetPolicyMismatch,
+        ));
+    }
+
+    Ok(
+        BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature {
+            accumulated_intermediates,
+            target_signature,
+            server_policy,
         },
     )
 }

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.13.0 - 2026-11-11
+
+### Added
+
+- Added an exact-object closure that consumes accumulated reviewed intermediate
+  evidence, the construction's routed depth-zero target signature, and complete
+  server policy for that exact target.
+- Added fixed public-certificate coverage for the retained closure, nonzero
+  target depth, detached construction, and byte-equal independently decoded
+  target policy.
+
+### Security
+
+- Closure requires construction identity, the exact depth-zero target child,
+  issuer continuity with the accumulated target-nearest intermediate, and
+  exact-object target-policy identity before retaining all evidence together.
+- This supplies repository-owned routed RSA evidence for each selected
+  child-to-issuer adjacency only. It does not validate the anchor's
+  self-signature, generalized path or name constraints, hostname, revocation,
+  TLS, HTTP, OAuth, or network authority.
+
 ## 0.12.0 - 2026-11-11
 
 ### Added
