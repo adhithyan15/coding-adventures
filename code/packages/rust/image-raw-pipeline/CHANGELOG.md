@@ -2,6 +2,12 @@
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] — 2026-06-13
 
 ### Added
