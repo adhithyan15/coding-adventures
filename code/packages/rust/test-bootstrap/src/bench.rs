@@ -715,8 +715,14 @@ pub fn percentile_sorted(sorted: &[f64], p: f64) -> f64 {
     let index = p * (n - 1) as f64;
     let lower_idx = index.floor() as usize;
     let upper_idx = (lower_idx + 1).min(n - 1);
+    let lower = sorted[lower_idx];
+    let upper = sorted[upper_idx];
+    // A weighted sum of equal endpoints can round outside the sample range.
+    if lower == upper {
+        return lower;
+    }
     let weight = index - lower_idx as f64;
-    sorted[lower_idx] * (1.0 - weight) + sorted[upper_idx] * weight
+    lower * (1.0 - weight) + upper * weight
 }
 
 /// Compute the median of an already-sorted slice of floats.
