@@ -654,3 +654,15 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
 | P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
 | spec / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713. Implementation follows after the WX-H/WX-E branch (`claude/warrant-wx-h-e`) merges, in the order D1, F and G (parallel), D2, D3 | open; 13 owner questions in VER04k section 9 |
+
+### Rust capability analyzer: open gaps after the third security review (2026-11-11)
+
+The branch `claude/ver-cap-split-a-analyzer` closes the cheap third-review
+cases (VER08a D43-D49, including review G-A, associated-type projections).
+These false negatives stay open; each has an example, root cause and intended
+fix in [VER08a §8.1](VER08a-rust-capability-analyzer.md#81-known-open-gaps-security-review-round-3).
+
+| Priority / id | Item | Status |
+|---|---|---|
+| P1 / CA-OG1 | Review G-C: a type alias's generic parameter default is never bound, so `type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)` is pure (case `alias-default-param`). Fix: bind the alias to every path inside a parameter default in `type_alias_leaves`, as for the right-hand side; an undelimitable default is CAP003 | open |
+| P1 / CA-OG2 | Review G-E: the local-receiver waiver (L4) is bypassed when the local type derefs to `Path` (cases `waiver-cfg-out`, `waiver-macro-body`, `waiver-generic-instance`, `waiver-ctor-wrong-type`, `waiver-same-name-module`, `waiver-arbitrary-self`); `collect_local_types` keys by bare name and ignores cfg, macro bodies, generic arguments, modules and arbitrary self types. Fix: refuse the waiver when any `impl Deref`/`DerefMut for <Name>` exists; otherwise require one unique definition, a non-generic inherent impl outside macro bodies and cfg, and a plain receiver | open |

@@ -79,7 +79,7 @@ All files are lexed first; one package-wide binding table is built:
 | `use ::a::b;` | leading `::` ignored |
 | `use a::b as _;` | no binding; the path itself is still classified |
 | `extern crate a as b;` | binding `b -> a`; any other shape (`extern crate a as b <more>;`, a metavariable name, no `;`) is `CAP003` |
-| `type F = a::b;` / `type F<T> = &a::b<T>;` / `type F = (a::b);` / `type F = <a::B as c::D>::E;` | one binding `F -> p` for **every** path `p` on the right-hand side up to the `;` that ends the item (inside generic arguments, parentheses and qualified projections too; the alias's own generic parameters, lifetimes and keywords are skipped). A metavariable on the right-hand side (`type F = $t;`), or a macro invocation (`type F = ty!();`, D44), also binds `F` to an *unknown type*, for which `F::name` gets the method-call verdict of `.name(` (§3.3). `type Item;` / `type Item: Bound;` bind nothing. A metavariable *name* (`type $n = ..;`), a right-hand side with no `;` before a closing bracket or the end of the file, unbalanced generics or a non-identifier name is `CAP003`. `type` inside a `macro_rules!` matcher is a pattern and is ignored |
+| `type F = a::b;` / `type F<T> = &a::b<T>;` / `type F = (a::b);` / `type F = <a::B as c::D>::E;` | one binding `F -> p` for **every** path `p` on the right-hand side up to the `;` that ends the item (inside generic arguments, parentheses and qualified projections too; the alias's own generic parameters, lifetimes and keywords are skipped). A metavariable on the right-hand side (`type F = $t;`), or a macro invocation (`type F = ty!();`, D44), also binds `F` to an *unknown type*, for which `F::name` gets the method-call verdict of `.name(` (§3.3). `type Item;` / `type Item: Bound;` bind nothing. Paths in the alias's generic parameter *defaults* (`type F<P = std::path::Path> = P;`) are not bound yet: open gap CA-OG1 (§8.1). A metavariable *name* (`type $n = ..;`), a right-hand side with no `;` before a closing bracket or the end of the file, unbalanced generics or a non-identifier name is `CAP003`. `type` inside a `macro_rules!` matcher is a pattern and is ignored |
 
 Bindings are expanded through other bindings at **every segment**, not only the head, to a fixed point: a binding `n -> p` gains `n -> t + p[i+1..]` for every segment `p[i]` that is itself a binding with spelling `t`, repeated until nothing changes, so `mod a { pub use std as s; } use a::s as t;` gives `t -> std` (two-level renames through modules, `super::`, `crate::`, nested `extern crate`, and globs over such renames are followed). A spelling records the set of original bindings it was derived from and is never substituted through one of them again (rustc never resolves a path through the same import twice; that is an import cycle), so self-similar names such as `pub use self::sha256::sha256;` with `use crate::sha256;` converge; when two derivations reach one spelling, the intersection of their sets is kept (fewer blocked substitutions, so the result only grows). Bounded: growth past 64 segments, past 20,000 spellings, past 4,000,000 substitution attempts or past 16 rounds is `CAP003`. Identical bindings are de-duplicated *before* expansion and every cap is checked *inside* the expansion loop, so no intermediate result can exceed it (§5, M4). For every path occurrence (in `use` leaves and everywhere else) the analyzer classifies the path **and** every *candidate*: for each path segment equal to a binding name, `binding_target + remaining_segments`; and, for each such spelling not headed `std`/`core`/`alloc`, `glob_prefix + suffix` for each glob and **every suffix** of the spelling that does not start at `crate`/`self`/`super`/`Self` (which module holds a glob is not tracked, so `m::process::Command` with `mod m { pub use std::*; }` is tried as `std::process::Command`). Glob prefixes are themselves normalised through the bindings at every segment (`use crate::s::*;` with `pub use std as s;` is a glob over `std`). A glob over a bare standard crate (`use std::*;`, `use core::*;`, `use alloc::*;`, also through an alias) is `CAP003`: every std module becomes nameable without a `std` segment. Glob spellings under any other glob may add `CAP001`/`CAP002` results, never `CAP003`; under a bare-root glob their `CAP003` is reported too. Pinned by tests:
 
@@ -137,7 +137,7 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 
 Method heuristic: `.name(` with `name` in {`read_dir metadata symlink_metadata canonicalize read_link exists try_exists is_file is_dir is_symlink`} is `fs:list`, because `Path::exists()` reaches the filesystem without naming `std::fs`; `.set_times(`, `.set_modified(`, `.set_permissions(` are `fs:write` (they write metadata through a handle opened only for reading); `.recv_timeout(`, `.recv_deadline(`, `.wait_timeout(`, `.wait_timeout_ms(`, `.wait_timeout_while(` are `time:sleep` (timed waits on the pure `std::sync` types, like `thread::park_timeout`); `.elapsed(` is `time:read` (`UNIX_EPOCH.elapsed()` reads the clock without naming `SystemTime`); `.to_socket_addrs(` is `net:dns` (a glob `use std::net::*;` brings `ToSocketAddrs` into scope without naming it, D46). A turbofish between the name and `(` does not hide the call: `.exists::<>(` is `.exists(` (D43). This over-approximates (a user method called `exists` or `elapsed` is flagged).
 
-*Receiver resolution (L4).* The heuristic is skipped for exactly one provable shape: the receiver is `Local::ctor(..)` optionally followed by `.unwrap()`, `.expect(..)`, `.clone()` or `?`, where `Local` is a struct/enum of the package whose own inherent `impl Local { .. }` declares both `ctor` (an associated fn returning `Self`, `Local`, `Result<Self|Local, _>` or `Option<Self|Local>`) and a `self` method of the called name, and `Local` is not rebound by a `use`/`type`, and no glob import in the package reaches outside the crate (a glob headed by anything but `crate`/`self`/`super`/`Self` after normalisation, e.g. `use std::path::*;` or `use dep::*;`, may supply a different `Local` that no binding records). Inherent methods win method resolution, so such a call cannot reach `Path::<name>`. Anything else - a variable, a field, another adapter, a trait method - stays flagged. Example: `Url::parse(s).unwrap().canonicalize()` in url-parser is the crate's own `Url::canonicalize`, not a filesystem call.
+*Receiver resolution (L4).* The heuristic is skipped for exactly one provable shape: the receiver is `Local::ctor(..)` optionally followed by `.unwrap()`, `.expect(..)`, `.clone()` or `?`, where `Local` is a struct/enum of the package whose own inherent `impl Local { .. }` declares both `ctor` (an associated fn returning `Self`, `Local`, `Result<Self|Local, _>` or `Option<Self|Local>`) and a `self` method of the called name, and `Local` is not rebound by a `use`/`type`, and no glob import in the package reaches outside the crate (a glob headed by anything but `crate`/`self`/`super`/`Self` after normalisation, e.g. `use std::path::*;` or `use dep::*;`, may supply a different `Local` that no binding records). Inherent methods win method resolution, so such a call cannot reach `Path::<name>`. Anything else - a variable, a field, another adapter, a trait method - stays flagged. Example: `Url::parse(s).unwrap().canonicalize()` in url-parser is the crate's own `Url::canonicalize`, not a filesystem call. Known bypasses of this waiver (a `cfg`-ed out or macro-body impl, generic instantiations, same-named types, arbitrary self types) are open gap CA-OG2 (§8.1).
 
 `core::arch::*::__cpuid` and similar CPU-identification intrinsics are *informational only* (INFO): they reveal the CPU model but are not an OS authority, and are not reported.
 
@@ -266,6 +266,70 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 - **G-7** Dynamic behaviour (function pointers, trait objects, `dlopen` through any crate, `/proc/self/mem` through a declared fs capability).
 - **G-8** Type-directed routes beyond the §3.3 method heuristic and the type-alias / qualified-path / receiver / `Self` rules of §3.2-3.3. A binding whose target begins `crate::`/`super::`/`self::` (`type F = super::File;`, `use super::File as G;`) is not followed into the module it names (modules are not tracked); every same-named binding elsewhere in the package is followed instead, at any segment (`G -> super::File` with `use std::fs::File;` anywhere reaches `std::fs::File`). Before D34 this sentence claimed the same, but only the *first* segment of a binding target was expanded, so `super::File` never reached the `File` binding.
 - **G-9** `cfg` is ignored (conservative); compiler flags, `.cargo/config.toml` and `RUSTFLAGS` are not examined.
+
+### 8.1 Known open gaps (security review round 3)
+
+A third security review of the round-3/round-4 fixes built crates that the
+analyzer passes (exit `0`) while `cargo check` compiles a capability call into
+them. The cheap ones are fixed (D43-D49, `tests/test_secreview_round5.rs`,
+including the review's G-A, associated-type projections, closed by D49). The
+two below are **known, open false negatives**. They are listed here, with a
+stable id, as backlog items (`VER-BACKLOG.md`), not as accepted behaviour: a
+`PASS` from this analyzer does not exclude them.
+
+#### CA-OG1: generic defaults on type aliases (review G-C)
+
+```rust
+type F<P: ?Sized = std::path::Path> = P;
+pub fn probe(p: &std::path::Path) -> bool { <F>::exists(p) }   // Path::exists: fs:list, reported pure
+```
+
+*Root cause.* `type_alias_leaves` (`src/parser.rs`) skips the alias's own
+`<..>` generic parameter list, defaults included, and drops a right-hand side
+that is a single parameter name as trivial (`type F<P> = P;`). So `F` gets no
+binding, and `<F>::exists` / `F::exists` reads as a local path. In type
+position `F` (no arguments) is `F<std::path::Path>`, i.e. `Path`. Case
+`alias-default-param`.
+
+*Intended fix.* Treat every path inside a parameter default
+(`P = <type>`, `const N: T = <expr>`) as a right-hand-side path: bind the alias
+to each of them, exactly as paths after `=` are bound. A right-hand side that
+is a parameter with a default then reaches the default. A default that cannot
+be delimited is `CAP003`, like the rest of the item.
+
+#### CA-OG2: the local-receiver waiver (L4) can be bypassed (review G-E)
+
+The waiver of §3.3 L4 skips the method heuristic for
+`Local::ctor(..).name()` when `Local` has its own inherent `name`. It rests on
+"an inherent method of that name always wins method resolution". Each case
+below defeats that while `Local` derefs to `std::path::Path`, so the call is
+`Path::exists` (`fs:list`) and the analyzer reports it pure:
+
+| Case | Shape | Why the inherent method does not apply |
+|---|---|---|
+| `waiver-cfg-out` | `#[cfg(any())] impl L { pub fn exists(&self) -> bool { .. } }` | the inherent impl is compiled out |
+| `waiver-macro-body` | the only `impl L { fn exists(&self) .. }` sits in a `macro_rules!` body that is never invoked | the impl never exists |
+| `waiver-generic-instance` | `impl L<u8> { fn exists(&self) .. }`, `impl L<PathBuf> { fn new() -> Self }`, `Deref for L<PathBuf>` | `exists` is inherent on a different instantiation |
+| `waiver-ctor-wrong-type` | `impl<T> L<T> { fn new(t: T) -> Self }`, `exists` only on `L<u8>`, `L::new(PathBuf::from(..))` | the constructor builds another instantiation |
+| `waiver-same-name-module` | `mod a { struct L; impl L { fn new() .. fn exists(&self) .. } }`, `mod b { struct L(PathBuf); impl Deref for L .. L::new().exists() }` | the name `L` denotes a different type in `b` |
+| `waiver-arbitrary-self` | `pub fn exists(self: Rc<Self>) -> bool` with a plain `L` receiver | the receiver type does not match, so lookup auto-derefs to `Path` |
+
+*Root cause.* `collect_local_types` (`src/parser.rs`) records constructors
+and `self` methods keyed by the **bare type name**, from every `impl` token in
+the file: it ignores `cfg` attributes, `macro_rules!` bodies, the impl's
+generic arguments (`L<u8>` and `L<PathBuf>` are both `L`), the module the type
+lives in, and the receiver's type (any first parameter spelled `self` counts,
+including `self: Rc<Self>`).
+
+*Intended fix.* Refuse the waiver for `Name` whenever any
+`impl Deref for <Name..>` or `impl DerefMut for <Name..>` exists in the
+package: auto-deref is the only route from a local receiver to a std method,
+so without it the waiver is unnecessary for soundness and with it the waiver
+is unsafe. Otherwise require exactly one definition of `Name` in the package,
+an inherent impl with no generic arguments that is not inside a `macro_rules!`
+body and carries no `cfg`/`cfg_attr` attribute, and a plain receiver
+(`self`, `&self`, `&mut self`, `mut self`). Anything else keeps the method
+heuristic's verdict.
 
 ## 9. Divergence Log (previous revision -> this revision)
 

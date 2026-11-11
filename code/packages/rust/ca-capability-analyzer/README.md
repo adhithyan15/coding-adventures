@@ -79,7 +79,9 @@ Per construct: `absent`, `present-excepted(N)` or `present-violation(N)`. Anythi
 
 It is a *lexical* analyzer (a lexer, a `use`-tree/alias resolver that follows renames through every
 path segment and resolves `Self` to the enclosing `impl`'s self type, and a classifier; no parser,
-no macro expansion, no type information). Exact contracts, including the full list of detected
+no macro expansion, no type information). A type it cannot name (a metavariable, a macro in type
+position such as `<ty!()>::exists`, an associated-type projection such as `D::Target::exists`) is
+an unknown type, and its item gets the verdict of a method call `.exists(` on an unknown receiver. Exact contracts, including the full list of detected
 surfaces and the evasion routes handled, are in [VER08a](../../../specs/VER08a-rust-capability-analyzer.md)
 and [VER23a](../../../specs/VER23a-rust-effect-modules.md). Out of scope, stated honestly (VER08a section 8):
 
@@ -88,6 +90,16 @@ and [VER23a](../../../specs/VER23a-rust-effect-modules.md). Out of scope, stated
 - `tests/`, `benches/`, `examples/` and dev-dependencies are not analysed;
 - macros are not expanded (authority produced only by another crate's macros is invisible);
 - implicit authority that is never named in source (HashMap entropy seeding, allocation, panic output).
+
+### Known limitations
+
+Two false negatives found by the third security review are **open**: a type alias whose generic
+parameter default names the type (`type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)`,
+CA-OG1), and bypasses of the local-receiver waiver for `Local::new().exists()` when `Local`
+derefs to `Path` (a `cfg`-ed out or macro-body inherent impl, generic instantiations, same-named
+types, `self: Rc<Self>`; CA-OG2). Each has an example, root cause and intended fix in
+[VER08a section 8.1, "Known open gaps"](../../../specs/VER08a-rust-capability-analyzer.md#81-known-open-gaps-security-review-round-3),
+and a row in [VER-BACKLOG](../../../specs/VER-BACKLOG.md). A `PASS` does not exclude them.
 
 Bounded by design: every resolver stage has a work ceiling (VER08a section 5) and exceeding it is a
 `CAP003`, never a hang or an allocation abort. `Cargo.toml` is read by a small tokenizing TOML reader
@@ -112,7 +124,7 @@ cargo clippy -p coding_adventures_ca_capability_analyzer --all-targets -- -D war
 python3 tests/data/gen_sha256_vectors.py   # regenerate hashlib vectors (needs python3)
 ```
 
-Test suites: `tests/test_evasion_corpus.rs` (350 exact-verdict cases), `test_secreview_round3.rs` and
-`test_secreview_round4.rs` (review proofs of concept with decoys), `test_sha256_vectors.rs`,
+Test suites: `tests/test_evasion_corpus.rs` (350 exact-verdict cases), `test_secreview_round3.rs`,
+`test_secreview_round4.rs` and `test_secreview_round5.rs` (review proofs of concept with decoys), `test_sha256_vectors.rs`,
 `test_certificate_tamper.rs`, `test_manifest_hardening.rs`, `test_package_analysis.rs`,
 `test_analyzer.rs` (original suite).
