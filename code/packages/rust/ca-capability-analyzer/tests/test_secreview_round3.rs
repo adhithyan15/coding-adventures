@@ -492,3 +492,20 @@ fn low_generate_module_refuses_symlinks() {
     write_module_to_disk(ok.dir()).unwrap();
     assert!(ok.read("src/capabilities.rs").contains("PureCapabilities"));
 }
+
+// ---------------------------------------------------------------------------
+// INFO: `File::create_buffered` creates/truncates like `File::create`
+// ---------------------------------------------------------------------------
+
+#[test]
+fn info_file_create_buffered_is_fs_write() {
+    check(
+        "INFO",
+        &[
+            // PoC t7: classified as fs:read, so a read-only manifest passed.
+            ("t7 std::fs::File::create_buffered", "pub fn f() { let _ = std::fs::File::create_buffered(\"x\"); }", &["fs:write"]),
+            ("imported File", "use std::fs::File; fn f() { let _ = File::create_buffered(\"x\"); }", &["fs:read", "fs:write"]),
+            ("decoy open_buffered reads", "fn f() { let _ = std::fs::File::open_buffered(\"x\"); }", &["fs:read"]),
+        ],
+    );
+}

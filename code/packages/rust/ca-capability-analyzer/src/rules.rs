@@ -337,7 +337,11 @@ fn fs_rule(rest: &[&str]) -> Classification {
             "write" | "copy" | "rename" | "hard_link" | "soft_link" | "set_permissions"
             | "OpenOptions" => cap("fs", "write"),
             "File" => match rest.get(1) {
-                Some(&"create") | Some(&"create_new") | Some(&"options") => cap("fs", "write"),
+                // `create_buffered` creates/truncates exactly like `create`
+                // (security review round 3, INFO, PoC t7).
+                Some(&"create") | Some(&"create_new") | Some(&"create_buffered") | Some(&"options") => {
+                    cap("fs", "write")
+                }
                 _ => cap("fs", "read"),
             },
             _ => cap("fs", "read"),

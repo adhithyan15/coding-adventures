@@ -100,7 +100,7 @@ Binding heads are expanded through other bindings to a fixed point (bounded; a c
 | `std::fs::{read_dir, metadata, symlink_metadata, canonicalize, read_link, exists, try_exists, ReadDir, DirEntry, Metadata}` | `fs:list` |
 | `std::fs::{create_dir, create_dir_all, DirBuilder}` | `fs:create` |
 | `std::fs::{remove_file, remove_dir, remove_dir_all}` | `fs:delete` |
-| `std::fs::{write, copy, rename, hard_link, soft_link, set_permissions, OpenOptions}`, `std::fs::File::{create, create_new, options}` | `fs:write` |
+| `std::fs::{write, copy, rename, hard_link, soft_link, set_permissions, OpenOptions}`, `std::fs::File::{create, create_new, create_buffered, options}` | `fs:write` |
 | any other `std::fs` item (`read`, `read_to_string`, `File`, `File::open`, bare module) | `fs:read` |
 | `std::net::TcpListener`, `std::net::UdpSocket::bind` | `net:listen` |
 | `std::net::ToSocketAddrs` | `net:dns` |
@@ -294,3 +294,4 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 | D30 | the receiver waiver ignored glob imports: a local `PathBuf` with an inherent `read_dir` in one module plus `use std::path::*;` in another made std's `PathBuf::from(..).read_dir()` pure (PoC t11) | waiver refused when any glob reaches outside the crate (§3.3 L4) | MEDIUM-1 (round-3 review) false negative |
 | D31 | splice rules fired only when `$` touched `::`, `<..>::` or `#[`; `($s:tt) => { std $s fs $s write(..) }` with `m!(::)` (PoC t2) and `($a:tt) => { # $a pub mod hidden; }` with `m!([path = ".."])` (PoC t6) passed; matchers were checked as if they were code | arms are parsed; in transcribers a `#` not starting `#[`/`#![` and a `tt` metavariable next to an identifier, another metavariable, `[` or `!` are `CAP003`; matchers are not checked; an unparseable body is `CAP003` (§3.5) | HIGH-2 (round-3 review) false negative |
 | D32 | root-level files could `mod` into the root directories the scanner skips: `build.rs` `mod examples;` (PoC t5), `[lib] path = "lib.rs"` + `mod tests;` or `mod tests { mod x; }` (PoC t10) | such `mod` declarations in root-level files, `mod` handed to a macro there, and `mod $name` in transcribers are `CAP003` (§5) | HIGH-5 (round-3 review) false negative |
+| D33 | `std::fs::File::create_buffered` was `fs:read` (PoC t7) | `fs:write` (§3.3) | INFO (round-3 review) |
