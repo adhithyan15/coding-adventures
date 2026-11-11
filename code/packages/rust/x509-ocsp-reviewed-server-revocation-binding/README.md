@@ -384,6 +384,18 @@ further separately authenticated revocation policy for that responder,
 complete revocation, generalized path validation, TLS, HTTP, OAuth, or network
 readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_no_check_policy`
+then consumes that complete reviewed-root DNS proof and derives the recursive
+proof's exact authenticated responder only through the retained non-copyable
+evidence. It requires one structurally unique `id-pkix-ocsp-nocheck` extension
+whose value is exact DER `NULL`. A critical instance can reach this semantic
+gate only when certificate-wide role policy already recognized its OID; RFC
+6960 recommends, but does not require, non-critical marking. Success retains
+the complete proof and resolves only the no-check branch for that exact
+recursive responder. Separately authenticated further recursion, complete
+revocation, generalized path validation, TLS, HTTP, OAuth, and network
+readiness remain unavailable.
+
 `complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
 then nominally completes revocation policy for this exact default-source
 alternative branch. Its input type proves that the server target, original
