@@ -58,6 +58,7 @@ turbofish and projection rules did not reach. Each fix has a regression in
 `tests/test_secreview_round5.rs` named after the review's case directory.
 
 - [false negative, F4] The turbofish skip of D43 walked `::<..>` with a counter blind to brackets, so a `>` inside them closed it early: in `c.wait_timeout::<[u8; (2 > 1) as usize]>(g, d)` the token after the comparison was `1`, not `(`, and the call read as a field (case `tf_paren_gt`). `.name::<` is now a method call whatever follows, since a field takes no generic arguments; the turbofish is not walked.
+- [false negative, F2] An attribute on a generic parameter hid its name from the projection rule of D49: in `fn probe<#[allow(unused)] D: Deref<Target = Path>>(d: &D)` the token before `D` is the attribute's `]`, not `<` or `,`, so `D` was not a parameter and `D::Target::exists(d)` read as a local path (case `proj_attr_param`). An identifier after the `]` that closes an attribute now starts a parameter too.
 
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 

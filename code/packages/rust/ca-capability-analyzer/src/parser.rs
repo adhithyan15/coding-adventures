@@ -2695,12 +2695,37 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<(Option<Vec<String>>
     Ok((if segs.is_empty() { None } else { Some(segs) }, via_trait))
 }
 
+/// True if the token at `k` is the `]` that closes an attribute `#[..]`
+/// (or `#![..]`).
+///
+/// A generic parameter may carry attributes, `<#[allow(unused)] D: Tr>`, so
+/// the token before its name can be the end of an attribute rather than `<`
+/// or `,` (follow-up review F2, case `proj_attr_param`).
+fn closes_attribute(toks: &[Token], br: &Brackets, k: usize) -> bool {
+    if !is_punct(toks, k, ']') {
+        return false;
+    }
+    let o = br.open_of.get(k).copied().unwrap_or(usize::MAX);
+    if o == usize::MAX || o == 0 {
+        return false;
+    }
+    is_punct(toks, o - 1, '#') || (o >= 2 && is_punct(toks, o - 1, '!') && is_punct(toks, o - 2, '#'))
+}
+
 /// Names declared as generic type (or const) parameters anywhere in the file:
 /// the identifiers at the top level of the `<..>` right after `impl`, or after
 /// the name in `fn`/`struct`/`enum`/`union`/`trait`/`type NAME <..>`, that
-/// start a parameter (`<T`, `, T`, `const N`).  Package-wide scoping is not
-/// tracked: a name declared as a parameter anywhere in the file counts
-/// everywhere in it (security review round 5, R5-4).
+/// start a parameter (`<T`, `, T`, `const N`, or an attribute's `]` then `T`:
+/// `<#[allow(unused)] T`).  Package-wide scoping is not tracked: a name
+/// declared as a parameter anywhere in the file counts everywhere in it
+/// (security review round 5, R5-4).
+///
+/// ```text
+///   fn f< 'a , #[cfg(x)] #[allow(y)] const N : usize , D : Tr >
+///            ^                        ^~~~~~~~~ N      ^ D
+///            '-- lifetimes are not identifiers     each follows `<`, `,`
+///                                                   or an attribute's `]`
+/// ```
 fn generic_param_names(toks: &[Token], br: &Brackets) -> HashSet<String> {
     let mut out = HashSet::new();
     for i in 1..toks.len() {
@@ -2728,7 +2753,9 @@ fn generic_param_names(toks: &[Token], br: &Brackets) -> HashSet<String> {
                 }
                 Tok::Punct('<') => depth += 1,
                 Tok::Punct('>') if !is_punct(toks, k - 1, '-') => depth = depth.saturating_sub(1),
-                Tok::Ident { name, .. } if depth == 0 && (k == i + 1 || is_punct(toks, k - 1, ',')) => {
+                Tok::Ident { name, .. }
+                    if depth == 0 && (k == i + 1 || is_punct(toks, k - 1, ',') || closes_attribute(toks, br, k - 1)) =>
+                {
                     let mut n = name.as_str();
                     if n == "const" {
                         if let Some((c, _)) = ident_at(toks, k + 1) {

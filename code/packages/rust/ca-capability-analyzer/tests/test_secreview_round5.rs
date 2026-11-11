@@ -413,3 +413,41 @@ fn f4_a_turbofish_after_a_method_name_is_always_a_call() {
         ],
     );
 }
+
+// F2: an attribute on a generic parameter hid its name.
+//
+// `generic_param_names` took an identifier as a parameter only right after
+// `<` or `,`.  In `fn probe<#[allow(unused)] D: Deref<Target = Path>>` the
+// token before `D` is the `]` of the attribute, so `D` was not a parameter
+// and `D::Target::exists(d)` read as a local path.
+#[test]
+fn f2_an_attribute_does_not_hide_a_generic_parameter() {
+    check(
+        "F2",
+        &[
+            (
+                "proj_attr_param",
+                "use std::ops::Deref;\nuse std::path::{Path, PathBuf};\npub fn probe<#[allow(unused)] D: Deref<Target = Path>>(d: &D) -> bool {\n    D::Target::exists(d)\n}\npub fn run() -> bool { probe(&PathBuf::from(\"Cargo.toml\")) }",
+                &["fs:list"],
+            ),
+            (
+                "two attributes, second parameter",
+                "fn f<'a, #[cfg(all())] #[allow(unused)] D: std::ops::Deref<Target = std::path::Path>>(d: &'a D) -> bool { D::Target::is_file(d) }",
+                &["fs:list"],
+            ),
+            (
+                "attribute on an impl parameter",
+                "struct W<U>(U);\nimpl<#[allow(unused)] T: Tr> W<T> { fn f(&self) -> bool { T::A::read_link(&self.0).is_ok() } }",
+                &["fs:list"],
+            ),
+            (
+                "attribute on a const parameter",
+                "fn f<#[allow(unused)] const N: usize, #[allow(unused)] D: Tr>(d: &D) -> bool { D::A::is_dir(d) }",
+                &["fs:list"],
+            ),
+            // Decoys: an attributed parameter used as a value path stays pure.
+            ("attributed parameter, pure item", "fn f<#[allow(unused)] T: Default>() -> T { T::default() }", &[]),
+            ("attributed parameter, pure projection", "fn f<#[allow(unused)] I: Iterator>() -> Option<I::Item> where I::Item: Default { Some(I::Item::default()) }", &[]),
+        ],
+    );
+}
