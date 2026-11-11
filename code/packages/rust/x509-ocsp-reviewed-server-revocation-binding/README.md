@@ -168,6 +168,16 @@ revocation policy for the intermediate-status proof's own responder, complete
 revocation, generalized path validation, TLS, HTTP, OAuth, or network
 readiness.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_path`
+then projects the retained intermediate-status proof's exact authenticated
+responder-to-reviewed-root path without accepting any substitute evidence or
+performing more parsing or validation. The generic path wrapper retains the
+complete responder-of-responder no-check plus intermediate-status composition
+under a source-specific accessor. It stops before reviewed-root DNS policy for
+that responder, no-check or separately authenticated revocation policy for it,
+complete revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,

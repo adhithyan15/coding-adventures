@@ -2666,6 +2666,25 @@ path construction or validation, or provide TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+A subsequent infallible projection consumes that complete composition and
+reifies the intermediate-status proof's exact authenticated responder-to-
+reviewed-root path. The preceding proof already established certificate-wide
+critical-extension and end-entity role policy, caller-selected algorithm/key
+policy, OCSP-signing purpose, validity at the exact observation time,
+repository-owned routed RSA verification for both the response and responder
+certificate, and exact issuer identity with the selected Mozilla-reviewed
+root. The nominal path wrapper retains the complete non-copyable composition
+under a source-specific accessor, accepts no substitute certificate, path,
+root, algorithm, key, signature, status, or time, and performs no additional
+parsing or validation. This pure public-certificate-data projection performs
+no credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not apply the selected root's supported out-of-band DNS
+constraints to that responder, establish no-check or separately authenticated
+revocation policy for it, implement complete revocation policy, generalize path
+construction or validation, or provide TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof
