@@ -10,6 +10,12 @@ All notable changes to this package will be documented in this file.
   helpers, and `RoutePattern::match_target` so local API dispatchers can
   match routes by path while preserving query strings separately.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
