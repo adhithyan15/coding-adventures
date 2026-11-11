@@ -188,6 +188,96 @@ fn h1_a_rename_chain_that_outgrows_the_path_cap_is_cap003() {
 }
 
 // ---------------------------------------------------------------------------
+// H2: `Self` names the impl's self type
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h2_self_resolves_to_the_impl_self_type() {
+    check(
+        "H2",
+        &[
+            (
+                "self-impl-path",
+                "pub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for std::path::Path {\n    fn probe(&self) -> bool { Self::exists(self) }\n}",
+                &["fs:list"],
+            ),
+            (
+                "qualified-self-angle",
+                "pub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for std::path::Path { fn probe(&self) -> bool { <Self>::is_file(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "self type through a rename",
+                "use std::path::PathBuf as B;\npub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for B { fn probe(&self) -> bool { Self::is_dir(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "self type with generics and a where clause",
+                "pub trait Probe<T> { fn probe(&self) -> bool; }\nimpl<T> Probe<T> for std::path::Path where T: Copy { fn probe(&self) -> bool { Self::metadata(self).is_ok() } }",
+                &["fs:list"],
+            ),
+            (
+                "parenthesised self type",
+                "pub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for (std::path::Path) { fn probe(&self) -> bool { Self::exists(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "self type through a type alias",
+                "type P = std::path::Path;\npub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for P { fn probe(&self) -> bool { Self::try_exists(self).is_ok() } }",
+                &["fs:list"],
+            ),
+            (
+                "inner impl wins over the outer one",
+                "struct S;\nimpl S { fn g() { pub trait Q { fn q(&self) -> bool; } impl Q for std::path::Path { fn q(&self) -> bool { Self::exists(self) } } } }",
+                &["fs:list"],
+            ),
+        ],
+    );
+}
+
+#[test]
+fn h2_an_unknown_self_type_falls_back_to_the_method_rules() {
+    check(
+        "H2 unknown",
+        &[
+            (
+                "Self inside a macro_rules! transcriber",
+                "macro_rules! m { () => { Self::exists(self) } }\npub trait Probe { fn probe(&self) -> bool; }\nimpl Probe for std::path::Path { fn probe(&self) -> bool { m!() } }",
+                &["fs:list"],
+            ),
+            (
+                "impl over a metavariable",
+                "pub trait Probe { fn probe(&self) -> bool; }\nmacro_rules! m { ($t:ty) => { impl Probe for $t { fn probe(&self) -> bool { Self::is_symlink(self) } } } }\nm!(std::path::Path);",
+                &["fs:list"],
+            ),
+        ],
+    );
+}
+
+#[test]
+fn h2_ordinary_self_paths_stay_clean() {
+    check(
+        "H2 decoys",
+        &[
+            ("local constructor", "struct S;\nimpl S { fn new() -> Self { Self } fn g() -> Self { Self::new() } }", &[]),
+            (
+                "trait impl for a local type",
+                "struct S;\nimpl Default for S { fn default() -> Self { Self::make() } }\nimpl S { fn make() -> Self { S } }",
+                &[],
+            ),
+            ("trait default body", "trait T { fn new() -> Self; fn twice() -> (Self, Self) where Self: Sized { (Self::new(), Self::new()) } }", &[]),
+            (
+                "impl over a pure std type",
+                "trait Half { fn half(self) -> Self; }\nimpl Half for std::time::Duration { fn half(self) -> Self { Self::from_nanos(self.as_nanos() as u64 / 2) } }",
+                &[],
+            ),
+            ("macro impl with a local constructor", "macro_rules! m { ($t:ident) => { impl $t { fn z() -> Self { Self::default() } } } }", &[]),
+            ("Self in a struct definition", "struct List { next: Option<Box<Self>> }", &[]),
+        ],
+    );
+}
+
+// ---------------------------------------------------------------------------
 // H6: clock reads and timed waits reached through the pure list
 // ---------------------------------------------------------------------------
 

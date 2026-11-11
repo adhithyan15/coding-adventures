@@ -2348,6 +2348,285 @@ fn macro_arg_mask(toks: &[Token], br: &Brackets) -> Vec<bool> {
     mask
 }
 
+// ---------------------------------------------------------------------------
+// `Self` (VER08a §3.2, security review round 4, H2)
+// ---------------------------------------------------------------------------
+//
+// `Self` is a keyword, not a binding, so it never reached the binding table:
+//
+//     impl Probe for std::path::Path {
+//         fn probe(&self) -> bool { Self::exists(self) }     // Path::exists
+//     }
+//
+// classified `Self::exists` as a local path (pure).  `Self` is lexically
+// scoped to an `impl` block, so it is resolved by *region*: every `impl`
+// header names a self type, and inside the block's braces `Self::x` is also
+// classified as `<self type>::x`, through the binding table as usual.
+//
+// Regions are found without a parser, so two things are deliberately loose:
+//
+// * every non-raw `impl` token starts a candidate region, also `-> impl Trait {`
+//   (a return type, whose "region" is a function body).  A bogus region only
+//   *adds* spellings, because `Self` is resolved against **every** enclosing
+//   region, never just the innermost - so it can never hide the real one;
+// * a self type that is not a plain path is `Unknown` when it involves a
+//   metavariable or a qualified projection (`impl T for $t`,
+//   `impl T for <A as B>::C`), and `NoPath` for slices, tuples, arrays and fn
+//   pointers (whose inherent methods are pure).  Inside a `macro_rules!` body
+//   `Self` is always `Unknown`: it names whatever impl the macro is expanded
+//   in.  For an `Unknown` self type, `Self::name` gets the method-call verdict
+//   of `.name(` (`Self::exists` is `fs:list`), exactly as a method call on an
+//   unknown receiver does.
+
+/// What `Self` denotes inside one region.
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum SelfTy {
+    /// A path, resolved further through the binding table.
+    Known(Vec<String>),
+    /// A slice, tuple, array, never or fn-pointer type: no capability-bearing
+    /// inherent items.
+    NoPath,
+    /// Chosen by a macro caller or not a path we can read.
+    Unknown,
+}
+
+/// A token range `[open, close]` in which `Self` denotes `ty`.
+struct SelfRegion {
+    open: usize,
+    close: usize,
+    ty: SelfTy,
+}
+
+/// Longest `impl` header (in tokens) searched for the body's `{`.
+const IMPL_HEADER_LIMIT: usize = 1024;
+/// Enclosing regions considered for one `Self`; deeper nesting is `Unknown`.
+const MAX_SELF_REGIONS: usize = 32;
+
+/// Read the self type in `toks[from..to]` (the tokens after `for`, or after
+/// `impl<..>` in an inherent impl, up to `where` or the body).
+fn parse_self_type(toks: &[Token], br: &Brackets, from: usize, to: usize, depth: usize) -> SelfTy {
+    if depth > 16 {
+        return SelfTy::Unknown;
+    }
+    let mut j = from;
+    // References, pointers and trait objects: `&'a mut T`, `*const T`, `dyn T`.
+    loop {
+        match toks.get(j).map(|t| &t.tok) {
+            Some(Tok::Punct('&' | '*')) | Some(Tok::Lifetime) if j < to => j += 1,
+            Some(Tok::Ident { name, raw: false }) if j < to && matches!(name.as_str(), "mut" | "const" | "dyn") => j += 1,
+            _ => break,
+        }
+    }
+    if j >= to {
+        return SelfTy::Unknown;
+    }
+    match &toks[j].tok {
+        // `(T)` is `T`; `(A, B)` and `()` are tuples.
+        Tok::Punct('(') => {
+            let c = br.close(j);
+            if c >= to {
+                return SelfTy::Unknown;
+            }
+            let mut k = j + 1;
+            let mut top_comma = false;
+            while k < c {
+                if matches!(toks[k].tok, Tok::Punct('(' | '[' | '{')) {
+                    k = br.close(k).saturating_add(1).max(k + 1);
+                    continue;
+                }
+                if is_punct(toks, k, ',') {
+                    top_comma = true;
+                }
+                k += 1;
+            }
+            if top_comma || c == j + 1 {
+                SelfTy::NoPath
+            } else {
+                parse_self_type(toks, br, j + 1, c, depth + 1)
+            }
+        }
+        Tok::Punct('[') | Tok::Punct('!') => SelfTy::NoPath,
+        Tok::Ident { name, raw: false } if matches!(name.as_str(), "fn" | "unsafe" | "extern" | "_") => SelfTy::NoPath,
+        Tok::PathSep | Tok::Ident { .. } => {
+            if is_pathsep(toks, j) {
+                j += 1;
+            }
+            let mut segs: Vec<String> = Vec::new();
+            while let Some((seg, _)) = ident_at(toks, j) {
+                if j >= to {
+                    break;
+                }
+                segs.push(seg.to_string());
+                if segs.len() > MAX_PATH_SEGS {
+                    return SelfTy::Unknown;
+                }
+                j += 1;
+                // Generic arguments `Foo<T>` / `Foo::<T>` belong to this segment.
+                if is_pathsep(toks, j) && is_punct(toks, j + 1, '<') {
+                    j += 1;
+                }
+                if is_punct(toks, j, '<') {
+                    match skip_angle(toks, j) {
+                        Some(n) => j = n,
+                        None => return SelfTy::Unknown,
+                    }
+                }
+                if is_pathsep(toks, j) && ident_at(toks, j + 1).is_some() {
+                    j += 1;
+                } else {
+                    break;
+                }
+            }
+            if segs.is_empty() {
+                SelfTy::Unknown
+            } else {
+                SelfTy::Known(segs)
+            }
+        }
+        // `<A as B>::C`, a metavariable, anything else.
+        _ => SelfTy::Unknown,
+    }
+}
+
+/// The region of the `impl` at token `i`: its body braces and self type.
+/// `None` if no body `{` is found before a `;` or within the header limit.
+fn impl_region(toks: &[Token], br: &Brackets, i: usize) -> Option<SelfRegion> {
+    // Find the body: the first `{` outside `<..>` (const generic arguments such
+    // as `Foo<{ N }>` are blocks inside angle brackets) and outside `(..)`/`[..]`.
+    let mut angle = 0usize;
+    let mut k = i + 1;
+    let stop = (i + 1 + IMPL_HEADER_LIMIT).min(toks.len());
+    let open = loop {
+        if k >= stop {
+            return None;
+        }
+        match &toks[k].tok {
+            Tok::Punct('<') => angle += 1,
+            Tok::Punct('>') if !(k > 0 && is_punct(toks, k - 1, '-')) => angle = angle.saturating_sub(1),
+            Tok::Punct(';') => return None,
+            Tok::Punct('(' | '[') => {
+                k = br.close(k).saturating_add(1).max(k + 1);
+                continue;
+            }
+            Tok::Punct('{') if angle == 0 => break k,
+            Tok::Punct('{') => {
+                k = br.close(k).saturating_add(1).max(k + 1);
+                continue;
+            }
+            _ => {}
+        }
+        k += 1;
+    };
+    let close = br.close(open).min(toks.len().saturating_sub(1));
+    // A metavariable anywhere in the header: the caller chooses the type.
+    if (i + 1..open).any(|k| is_punct(toks, k, '$')) {
+        return Some(SelfRegion { open, close, ty: SelfTy::Unknown });
+    }
+    let mut j = i + 1;
+    if is_punct(toks, j, '<') {
+        j = match skip_angle(toks, j) {
+            Some(n) if n <= open => n,
+            _ => return Some(SelfRegion { open, close, ty: SelfTy::Unknown }),
+        };
+    }
+    // `for` at angle depth 0 separates trait and self type; `for<'a>` is a
+    // higher-ranked bound, and `where` ends the self type.
+    let mut angle = 0usize;
+    let mut for_at = None;
+    let mut end = open;
+    for k in j..open {
+        match &toks[k].tok {
+            Tok::Punct('<') => angle += 1,
+            Tok::Punct('>') if !is_punct(toks, k - 1, '-') => angle = angle.saturating_sub(1),
+            Tok::Ident { name, raw: false } if angle == 0 && name == "where" => {
+                end = k;
+                break;
+            }
+            Tok::Ident { name, raw: false }
+                if angle == 0
+                    && name == "for"
+                    && for_at.is_none()
+                    && !(is_punct(toks, k + 1, '<') && matches!(toks.get(k + 2).map(|t| &t.tok), Some(Tok::Lifetime))) =>
+            {
+                for_at = Some(k);
+            }
+            _ => {}
+        }
+    }
+    let from = match for_at {
+        Some(f) => f + 1,
+        None => {
+            // `impl const Tr for` / `impl !Send for` without a `for` is malformed;
+            // an inherent impl starts with its type.
+            j
+        }
+    };
+    let ty = parse_self_type(toks, br, from, end, 0);
+    Some(SelfRegion { open, close, ty })
+}
+
+/// Every `impl` region and `macro_rules!` body of a file, sorted by `open`.
+fn self_regions(toks: &[Token], br: &Brackets) -> Vec<SelfRegion> {
+    let mut out = Vec::new();
+    for i in 0..toks.len() {
+        if ident_at(toks, i) == Some(("impl", false)) && !(i > 0 && is_punct(toks, i - 1, '$')) {
+            if let Some(r) = impl_region(toks, br, i) {
+                out.push(r);
+            }
+        } else if ident_at(toks, i) == Some(("macro_rules", false))
+            && is_punct(toks, i + 1, '!')
+            && matches!(toks.get(i + 3).map(|t| &t.tok), Some(Tok::Punct('(' | '[' | '{')))
+        {
+            let open = i + 3;
+            out.push(SelfRegion { open, close: br.close(open).min(toks.len().saturating_sub(1)), ty: SelfTy::Unknown });
+        }
+    }
+    out.sort_by_key(|r| r.open);
+    out
+}
+
+/// Classify the spellings `Self` adds to the path `segs` (`segs[0] == "Self"`)
+/// written at a token inside the regions `active` (indices into `regions`).
+#[allow(clippy::too_many_arguments)]
+fn self_path(
+    sink: &mut Sink,
+    res: &Resolver,
+    regions: &[SelfRegion],
+    active: &[usize],
+    segs: &[String],
+    is_macro: bool,
+    line: usize,
+    col: usize,
+) {
+    if segs.len() < 2 {
+        return;
+    }
+    let mut unknown = active.len() > MAX_SELF_REGIONS;
+    let mut seen: HashSet<&[String]> = HashSet::new();
+    for &r in active.iter().rev().take(MAX_SELF_REGIONS) {
+        match &regions[r].ty {
+            SelfTy::Known(p) => {
+                if seen.insert(p.as_slice()) {
+                    let mut full = p.clone();
+                    full.extend_from_slice(&segs[1..]);
+                    if full.len() <= MAX_PATH_SEGS {
+                        sink.path(res, &full, is_macro, line, col);
+                    } else {
+                        unknown = true;
+                    }
+                }
+            }
+            SelfTy::NoPath => {}
+            SelfTy::Unknown => unknown = true,
+        }
+    }
+    if unknown {
+        if let Some(Classification::Capability { category, action }) = method_call_rule(&segs[1]) {
+            sink.detection(line, col, category, action, format!("{} (Self type not known)", segs.join("::")));
+        }
+    }
+}
+
 fn stage2_file(
     toks: &[Token],
     br: &Brackets,
@@ -2358,6 +2637,10 @@ fn stage2_file(
 ) {
     let in_macro_args = macro_arg_mask(toks, br);
     sink.macro_budget = toks.len().saturating_mul(4) + 1024;
+    // `Self` regions (H2), entered and left as the walk moves forward.
+    let regions = self_regions(toks, br);
+    let mut next_region = 0usize;
+    let mut active: Vec<usize> = Vec::new();
     // Use leaves (declaration sites).
     for l in &facts.leaves {
         if l.path.is_empty() {
@@ -2494,6 +2777,22 @@ fn stage2_file(
                     let mut q = qualified_prefix;
                     q.extend(segs);
                     sink.path(res, &q, is_macro, t.line, t.col);
+                    segs = q;
+                }
+                if segs[0] == "Self" {
+                    // Regions are properly nested (they are bracket pairs), so a
+                    // stack of the ones containing `i` is maintained lazily.
+                    while next_region < regions.len() && regions[next_region].open <= i {
+                        while active.last().is_some_and(|&r| regions[r].close < regions[next_region].open) {
+                            active.pop();
+                        }
+                        active.push(next_region);
+                        next_region += 1;
+                    }
+                    while active.last().is_some_and(|&r| regions[r].close < i) {
+                        active.pop();
+                    }
+                    self_path(sink, res, &regions, &active, &segs, is_macro, t.line, t.col);
                 }
                 i = if is_macro { j + 1 } else { j };
             }
