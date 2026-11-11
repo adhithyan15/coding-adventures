@@ -31,7 +31,7 @@
       }
     },
     "macos-arm64": {
-      "runner": "macos-14",
+      "runner": "macos-15",
       "runner_os": "macOS",
       "runner_arch": "ARM64",
       "windows_compiler": null,
@@ -40,8 +40,8 @@
       "receipt_file": "macos-arm64/installed-packages.txt",
       "receipt_sha256": "af05d45f4d4f354ea2456b7cca0b60c74c8b7d79940af3ba0e1f9b934b98ec3a",
       "runner_image": {
-        "image_os": "macos14",
-        "image_version": "20260629.0180.1"
+        "image_os": "macos15",
+        "image_version": "PENDING-real-run"
       }
     },
     "windows-x64": {
