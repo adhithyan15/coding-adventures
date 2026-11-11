@@ -75,8 +75,18 @@ fn r5_1_turbofish_on_the_method_name_keeps_the_method_heuristic() {
                 "use std::sync::{Condvar, Mutex};\nuse std::time::Duration;\npub fn nap() {\n    let m = Mutex::new(());\n    let c = Condvar::new();\n    let g = m.lock().unwrap();\n    let _ = c.wait_timeout::<>(g, Duration::from_millis(10));\n}",
                 &["time:sleep"],
             ),
-            ("non-empty turbofish", "fn f(p: &P) -> bool { p.is_file::<u8>() }", &["fs:list"]),
-            ("nested turbofish", "fn f(t: &T) { t.elapsed::<Vec<Box<u8>>>(); }", &["time:read"]),
+            // A non-empty turbofish needs a method with generic parameters
+            // (`p.is_file::<u8>()` is E0107); the timed waits have one.
+            (
+                "non-empty turbofish",
+                "#[allow(deprecated)]\nfn f(c: &std::sync::Condvar, g: std::sync::MutexGuard<'_, u8>) { let _ = c.wait_timeout_ms::<u8>(g, 1); }",
+                &["time:sleep"],
+            ),
+            (
+                "nested turbofish",
+                "fn f(c: &std::sync::Condvar, g: std::sync::MutexGuard<'_, Vec<Box<u8>>>) { let _ = c.wait_timeout::<Vec<Box<u8>>>(g, std::time::Duration::from_millis(1)); }",
+                &["time:sleep"],
+            ),
             ("turbofish on a set_times call", "fn f(h: &H) { h.set_times::<>(t); }", &["fs:write"]),
         ],
     );
@@ -407,8 +417,18 @@ fn f4_a_turbofish_after_a_method_name_is_always_a_call() {
                 "use std::sync::{Condvar, Mutex};\nuse std::time::Duration;\npub fn nap() -> bool {\n    let m = Mutex::new([0u8; 1]);\n    let c = Condvar::new();\n    let g = m.lock().unwrap();\n    let r = c.wait_timeout::<[u8; (2 > 1) as usize]>(g, Duration::from_millis(1));\n    r.is_ok()\n}",
                 &["time:sleep"],
             ),
-            ("comparison in a braced const argument", "fn f(p: &P) -> bool { p.exists::<{ 2 > 1 }>() }", &["fs:list"]),
-            ("shift in an array length", "fn f(t: &T) { t.elapsed::<[u8; 4 >> 1]>(); }", &["time:read"]),
+            (
+                "comparison in a braced array length",
+                "fn f(c: &std::sync::Condvar, g: std::sync::MutexGuard<'_, [u8; 1]>) { let _ = c.wait_timeout::<[u8; { 2 > 1 } as usize]>(g, std::time::Duration::from_millis(1)); }",
+                &["time:sleep"],
+            ),
+            (
+                "shift in an array length",
+                "#[allow(deprecated)]\nfn f(c: &std::sync::Condvar, g: std::sync::MutexGuard<'_, [u8; 2]>) { let _ = c.wait_timeout_ms::<[u8; 4 >> 1]>(g, 1); }",
+                &["time:sleep"],
+            ),
+            // Not valid Rust (the turbofish never closes): this only exercises
+            // the lexer and the walk at the end of the token stream.
             ("turbofish never closed before the end", "fn f(p: &P) -> bool { p.is_dir::<", &["fs:list"]),
             // Decoys: the rule is about listed method names only.
             ("pure method with a bracketed comparison", "fn f(v: &[u8]) -> Vec<u8> { v.iter().copied().collect::<Vec<[u8; (2 > 1) as usize]>>() }", &[]),
