@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the alternative added revocation proof's exact delegated
+  responder, retaining only count evidence and the complete generic source.
+- Stop before intermediate constraints, responder no-check or separately
+  authenticated revocation, complete revocation, generalized path validation,
+  TLS, HTTP, or OAuth readiness.
 - Reify the alternative intermediate-status responder-revocation proof's own
   exact delegated responder-to-reviewed-root path while retaining the complete
   generic source and authenticated proof.

@@ -319,6 +319,21 @@ policy for the delegated responder, no-check or separately authenticated
 revocation policy for it, complete revocation, generalized path validation,
 TLS, HTTP, OAuth, or network readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_anchor_dns_policy`
+then consumes that exact path and derives both policy inputs internally: the
+added revocation proof's authenticated delegated responder and the selected
+Mozilla-reviewed root's optional out-of-band constraint bytes. Entries without
+constraints succeed without reading responder Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and the exact
+responder SAN under separate caller-owned ASN.1 limits, require every responder
+`dNSName` to comply, and retain only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, status, root, or time
+payload. This does not apply excluded or non-DNS root constraints or the
+retained intermediate's constraints, establish no-check or separately
+authenticated revocation policy for the delegated responder, complete
+revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
