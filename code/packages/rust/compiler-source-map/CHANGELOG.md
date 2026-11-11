@@ -1,5 +1,11 @@
 # Changelog — compiler-source-map
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] — 2026-04-11
 
 Initial release: Rust port of the `compiler-source-map` Go package.

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## 0.1.0 — 2026-08-27
 
 - Add a complete Rust functional simulator for the repository's DEC PDP-11

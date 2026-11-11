@@ -28,6 +28,17 @@ policy, and advanced state together. That lower-level transition remains
 available for generalized traversal code, but it cannot directly create the
 fixed reviewed two-link result.
 
+An ordered-transition follow-up borrows the reviewed construction-derived
+initializer and consumes a terminal routed proof only when both retain the same
+exact constructed-path object. That terminal proof authenticates the
+anchor-nearest intermediate as its exact child using the reviewed root's key;
+complete intermediate policy must retain that same child. The result retains
+the initializer reference, terminal signature and reviewed-root handoff,
+complete child policy, and advanced state together. Proofs from another
+construction and policy for another certificate fail before transition. This
+API establishes only the first ordered intermediate step; accumulating later
+depths remains future work.
+
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
 selection retains that same exact decoded certificate. It keeps the
@@ -72,9 +83,9 @@ DNS and IP counts. The earlier DNS count remains available as compatibility
 evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
-fixed-shape result does not generalize to additional intermediates, derive the
-initial state for a generalized traversal, define full Name comparison, apply
-other GeneralName forms, excluded or non-DNS anchor constraints, check
+fixed-shape result and first ordered transition do not accumulate additional
+intermediates, establish a complete generalized traversal, define full Name
+comparison, apply other GeneralName forms, excluded or non-DNS anchor constraints, check
 revocation, perform hostname verification, TLS, or HTTP, authorize OAuth
 transport, or open a network connection. Target identity, time, purpose, the
 construction-derived fixed-shape state, and the supported reviewed-anchor DNS

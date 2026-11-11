@@ -1,5 +1,11 @@
 # Changelog — ibm704-encoder
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## v0.2.0 — 2026-08-27 — canonical IBM 704 words
 
 * Replaced the idealized word layout with the historical Type A and Type B
