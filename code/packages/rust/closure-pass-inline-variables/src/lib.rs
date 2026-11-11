@@ -2703,7 +2703,7 @@ mod tests {
         // Inside a function body too.
         assert_eq!(
             propagate_source_open_world("const T = true; function f() { if (T) g(); }"),
-            "const T=!0;function f(){if(!0)g();};"
+            "const T=!0;function f(){if(!0)g()};"
         );
         // Not a bare name, not a statement, or not `&&`/`||`: left alone.
         for (src, unchanged) in [

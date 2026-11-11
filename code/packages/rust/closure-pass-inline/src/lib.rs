@@ -6353,7 +6353,7 @@ mod tests {
         // verbatim with the parameter substituted in.
         assert_eq!(
             inline_source("function f(x) { if (x > 0) log(x); else warn(x); } f(v);"),
-            "function f(x){if(x>0)log(x);else warn(x);}if(v>0)log(v);else warn(v);"
+            "function f(x){if(x>0)log(x);else warn(x)}if(v>0)log(v);else warn(v);"
         );
     }
 
@@ -6372,7 +6372,7 @@ mod tests {
         // and branch that read it are renamed consistently.
         assert_eq!(
             inline_source("function f(x) { const t = x > 0; if (t) sink(x); } f(v);"),
-            "function f(x){const t=x>0;if(t)sink(x);}const a=v>0;if(a)sink(v);"
+            "function f(x){const t=x>0;if(t)sink(x)}const a=v>0;if(a)sink(v);"
         );
     }
 
@@ -6382,7 +6382,7 @@ mod tests {
         // temp once, and the `if` reads the temp.
         assert_eq!(
             inline_source("function f(p) { if (p) sink(p); } f(g());"),
-            "function f(p){if(p)sink(p);}const a=g();if(a)sink(a);"
+            "function f(p){if(p)sink(p)}const a=g();if(a)sink(a);"
         );
     }
 
@@ -6412,7 +6412,7 @@ mod tests {
         // branch fails the restriction — declined (kept for a later slice).
         assert_eq!(
             inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
-            "function f(x){if(x)if(y)a();}f(v);"
+            "function f(x){if(x)if(y)a()}f(v);"
         );
     }
 
@@ -6425,7 +6425,7 @@ mod tests {
         // OUTER `if` (it must NOT capture the inner else-less `if`).
         assert_eq!(
             inline_source("function g(x) { if (x) a(x); } if (c) g(v); else other();"),
-            "function g(x){if(x)a(x);}if(c){if(v)a(v);}else other();"
+            "function g(x){if(x)a(x)}if(c){if(v)a(v)}else other();"
         );
     }
 
@@ -6459,7 +6459,7 @@ mod tests {
         // invariant preserved.
         assert_eq!(
             inline_source("function f(x) { if (x) f(x); } g(f);"),
-            "function f(x){if(x)f(x);}g(f);"
+            "function f(x){if(x)f(x)}g(f);"
         );
     }
 
