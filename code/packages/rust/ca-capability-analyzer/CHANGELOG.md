@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - Round-3 security review fixes (VER08a divergence D25 onwards)
+
+Each fix has a regression in `tests/test_secreview_round3.rs` built from the
+reviewer's proof-of-concept crate, which printed `PASS` while `cargo check`
+compiled the capability in.
+
+- [false negative, HIGH-3] A file starting `#!/x"` (a shebang line rustc ignores) opened a string in the analyzer that swallowed the following code. The lexer now applies rustc's `strip_shebang` rule exactly (after a leading BOM: `#!` is a shebang line unless, after whitespace and non-doc comments, the next token is `[`).
+
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 
 - [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).

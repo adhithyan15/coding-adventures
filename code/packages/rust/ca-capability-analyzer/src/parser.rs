@@ -263,13 +263,104 @@ impl Lexer {
     }
 }
 
+/// Length (in chars) of the shebang line that rustc would skip, or 0.
+///
+/// The analyzer must read the same tokens rustc reads.  Its old lexer treated
+/// `#!/x"` as `#`, `!`, `/`, `x` and the *start of a string*, which then
+/// swallowed the real code that followed (security review round 3, HIGH-3):
+///
+/// ```text
+///   #!/x"                                   rustc: shebang line, ignored
+///   pub fn f() { std::fs::write(..) }       rustc: code      old analyzer: "string"
+///   // "                                    rustc: comment   old analyzer: string ends
+/// ```
+///
+/// This mirrors `rustc_lexer::strip_shebang` exactly:
+///
+/// 1. the file (after a leading byte-order mark) must start with `#!`;
+/// 2. skip whitespace and *non-doc* comments (`//`, `////..`, `/* */`, `/***/`);
+/// 3. if the next token is `[`, the text is an inner attribute (`#![no_std]`)
+///    and nothing is skipped; anything else (including a doc comment, which is
+///    a token) makes the whole first line a shebang.
+///
+/// The skipped length is the first line without its `\n`; a `\r` before the
+/// `\n` is left behind as whitespace, exactly as `str::lines` trims it there.
+fn shebang_len(chars: &[char]) -> usize {
+    if chars.first() != Some(&'#') || chars.get(1) != Some(&'!') {
+        return 0;
+    }
+    let at = |i: usize| chars.get(i).copied();
+    let mut i = 2;
+    loop {
+        match at(i) {
+            Some(c) if is_rust_whitespace(c) => i += 1,
+            // `//` is a plain comment unless it is `//!` or exactly `///`.
+            Some('/') if at(i + 1) == Some('/') => {
+                let doc = at(i + 2) == Some('!') || (at(i + 2) == Some('/') && at(i + 3) != Some('/'));
+                if doc {
+                    break;
+                }
+                while at(i).is_some_and(|c| c != '\n') {
+                    i += 1;
+                }
+            }
+            // `/*` is a plain comment unless it is `/*!` or `/**x` (`/**/` and
+            // `/***` are plain).  An unterminated one is still a plain comment
+            // token to `strip_shebang`, after which there is no `[`.
+            Some('/') if at(i + 1) == Some('*') => {
+                let doc = at(i + 2) == Some('!')
+                    || (at(i + 2) == Some('*') && !matches!(at(i + 3), Some('*') | Some('/')));
+                if doc {
+                    break;
+                }
+                let mut depth = 1usize;
+                i += 2;
+                while depth > 0 {
+                    match (at(i), at(i + 1)) {
+                        (None, _) => break,
+                        (Some('/'), Some('*')) => {
+                            depth += 1;
+                            i += 2;
+                        }
+                        (Some('*'), Some('/')) => {
+                            depth -= 1;
+                            i += 2;
+                        }
+                        _ => i += 1,
+                    }
+                }
+            }
+            _ => break,
+        }
+    }
+    if at(i) == Some('[') {
+        return 0;
+    }
+    chars.iter().position(|&c| c == '\n').unwrap_or(chars.len())
+}
+
+/// Rust's whitespace: exactly the Unicode `Pattern_White_Space` set (the
+/// Reference, "Whitespace"), which is what `rustc_lexer::is_whitespace` uses.
+fn is_rust_whitespace(c: char) -> bool {
+    matches!(
+        c,
+        '\t' | '\n' | '\u{0B}' | '\u{0C}' | '\r' | ' ' | '\u{85}' | '\u{200E}' | '\u{200F}' | '\u{2028}' | '\u{2029}'
+    )
+}
+
 fn lex(content: &str) -> Result<Vec<Token>, String> {
+    // rustc removes one leading byte-order mark, then a shebang line.
+    let content = content.strip_prefix('\u{feff}').unwrap_or(content);
     let mut lx = Lexer {
         chars: content.chars().collect(),
         pos: 0,
         line: 1,
         col: 0,
     };
+    // Skipping with `bump` keeps line/column numbers true to the file.
+    for _ in 0..shebang_len(&lx.chars) {
+        lx.bump();
+    }
     let mut toks = Vec::new();
 
     while let Some(c) = lx.peek(0) {
@@ -1691,7 +1782,8 @@ pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
 /// `pub(in ..)` are not public entry points and are skipped.
 pub fn public_fn_signatures(content: &str) -> Result<Vec<(String, String)>, String> {
     let toks = lex(content)?;
-    let chars: Vec<char> = content.chars().collect();
+    // `lex` drops a leading byte-order mark; token offsets are relative to the rest.
+    let chars: Vec<char> = content.strip_prefix('\u{feff}').unwrap_or(content).chars().collect();
     let mut out = Vec::new();
     let mut i = 0;
     while i < toks.len() {
