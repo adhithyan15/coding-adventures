@@ -30,8 +30,10 @@
 //! accepting substitute evidence. Routed flows still stop before complete
 //! revocation composition. The separately authenticated original-responder
 //! branch can also reify its added revocation proof's own exact responder-to-
-//! reviewed-root path while retaining the complete branch, stopping before
-//! policy for that responder.
+//! reviewed-root path while retaining the complete branch, and apply the
+//! selected root's supported out-of-band DNS constraints to that exact
+//! recursive responder. It stops before intermediate name constraints and
+//! no-check or further authenticated revocation policy for that responder.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -2711,6 +2713,78 @@ impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevoc
     }
 }
 
+/// Recursive responder path after selected reviewed-root DNS policy.
+///
+/// Success proves either that the exact selected reviewed root carries no
+/// out-of-band name constraints or that its supported permitted DNS subtrees
+/// were applied to every dNSName in the recursive revocation proof's exact
+/// delegated responder certificate. It is not evidence for intermediate,
+/// excluded, or non-DNS constraints, responder no-check or further
+/// authenticated revocation, complete revocation, generalized path
+/// validation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+    Source = BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, IntermediateRevocation>,
+> {
+    responder_path:
+        BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+            Source,
+        >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation, Source>
+    ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    >
+{
+    /// Return the consumed complete recursive delegated-responder path proof.
+    pub const fn responder_path(
+        &self,
+    ) -> &BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    > {
+        &self.responder_path
+    }
+
+    /// Return count-only DNS evidence when the selected root carried constraints.
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation, Source>
+    fmt::Debug
+    for ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy",
+        )
+    }
+}
+
 /// Non-copyable added-responder revocation path after RFC 6960 no-check policy.
 ///
 /// Success retains the complete reviewed-root DNS proof and proves that the
@@ -3141,6 +3215,79 @@ pub fn reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revo
     BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath {
         recursive_responder_revocation,
     }
+}
+
+/// Apply selected reviewed-root DNS policy to the recursive proof's responder.
+///
+/// The exact delegated responder certificate and selected Mozilla-reviewed
+/// root constraints are derived only through the consumed repository-owned
+/// path. Entries without constraints succeed without reading responder
+/// Subject Alternative Name. Separate caller-owned limits bound both ASN.1
+/// parses.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before excluded or non-DNS root constraints, intermediate name constraints,
+/// no-check or further separately authenticated revocation policy for the
+/// delegated responder, complete revocation policy, generalized path
+/// validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity, private_bounds)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_anchor_dns_policy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+    Source,
+>(
+    responder_path:
+        BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+            Source,
+        >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    >,
+    X509OcspReviewedResponderAnchorDnsPolicyError,
+>
+where
+    RecursiveResponderRevocation: IntermediateStatusResponderEvidence,
+    Source: IntermediateStatusResponderAnchorSourceEvidence<IntermediateRevocation>,
+{
+    let recursive_responder_revocation = responder_path.recursive_responder_revocation();
+    let responder_certificate = recursive_responder_revocation
+        .recursive_responder_revocation()
+        .authenticated_responder_certificate();
+    let source = &recursive_responder_revocation
+        .anchor_dns_policy()
+        .responder_path()
+        .responder_revocation()
+        .anchor_dns_policy()
+        .responder_path()
+        .source;
+    let constrained_dns_names = evaluate_responder_anchor_dns_policy(
+        responder_certificate,
+        source.selected_reviewed_root_name_constraints(),
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy {
+            responder_path,
+            constrained_dns_names,
+        },
+    )
 }
 
 /// Require RFC 6960 no-check policy for the delegated responder.
@@ -6451,6 +6598,53 @@ mod tests {
         .unwrap()
     }
 
+    fn recursive_intermediate_status_responder_revocation_responder_path<
+        'certificate,
+        'encoded,
+    >(
+        original_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        added_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        issuer: &'certificate x509_certificate::X509Certificate<'encoded>,
+        responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        recursive_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
+    ) -> BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+        TestResponderRevocationResponderAnchorOriginalEvidence,
+        TestIntermediateStatusResponderRevocationEvidence<'certificate, 'encoded>,
+        TestResponderTargetRevocationBindingEvidence<'certificate, 'encoded>,
+        TestResponderTargetRevocationBindingEvidence<'certificate, 'encoded>,
+    >{
+        let responder_path = intermediate_status_responder_revocation_responder_path(
+            original_responder,
+            added_responder,
+            issuer,
+            responder,
+            observation_time,
+            name_constraints,
+        );
+        let responder_dns = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let recursive = bind_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation(
+            responder_dns,
+            TestResponderTargetRevocationBindingEvidence {
+                responder: recursive_responder,
+                target: responder,
+                issuer,
+                observation_time,
+            },
+        )
+        .unwrap();
+
+        reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_path(
+            recursive,
+        )
+    }
+
     #[test]
     fn target_expiry_fails_before_issuer_validity_is_evaluated() {
         let encoded = fixture(LEAF_HEX);
@@ -7083,6 +7277,142 @@ mod tests {
             format!("{recursive_responder_path:?}"),
             "BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath"
         );
+    }
+
+    #[test]
+    fn recursive_responder_anchor_dns_policy_applies_selected_root_constraints() {
+        let original_encoded = certificate(&[]);
+        let added_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder_encoded =
+            certificate(&[subject_alt_name(&[dns_name("added-ocsp.example.test")])]);
+        let recursive_responder_encoded = certificate(&[subject_alt_name(&[
+            dns_name("recursive-ocsp.example.test"),
+            dns_name("recursive-backup.example.test"),
+        ])]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let recursive_responder =
+            decode_x509_certificate(&recursive_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let name_constraints: &'static [u8] =
+            Box::leak(permitted_dns_subtrees(&[b".example.test"]).into_boxed_slice());
+        let responder_path = recursive_intermediate_status_responder_revocation_responder_path(
+            &original,
+            &added,
+            &issuer,
+            &responder,
+            &recursive_responder,
+            observation_time,
+            Some(name_constraints),
+        );
+
+        let anchor_policy = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+        assert_eq!(anchor_policy.constrained_dns_names().unwrap().count(), 2);
+        assert!(std::ptr::eq(
+            anchor_policy
+                .responder_path()
+                .recursive_responder_revocation()
+                .recursive_responder_revocation()
+                .responder,
+            &recursive_responder,
+        ));
+        assert_eq!(
+            format!("{anchor_policy:?}"),
+            "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderAnchorDnsPolicy"
+        );
+    }
+
+    #[test]
+    fn unconstrained_recursive_responder_root_skips_responder_san() {
+        let original_encoded = certificate(&[]);
+        let added_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder_encoded = certificate(&[]);
+        let recursive_responder_encoded = certificate(&[]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let recursive_responder =
+            decode_x509_certificate(&recursive_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let responder_path = recursive_intermediate_status_responder_revocation_responder_path(
+            &original,
+            &added,
+            &issuer,
+            &responder,
+            &recursive_responder,
+            observation_time,
+            None,
+        );
+
+        let anchor_policy = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+        assert_eq!(anchor_policy.constrained_dns_names(), None);
+        assert!(std::ptr::eq(
+            anchor_policy
+                .responder_path()
+                .recursive_responder_revocation()
+                .recursive_responder_revocation()
+                .responder,
+            &recursive_responder,
+        ));
+    }
+
+    #[test]
+    fn recursive_responder_anchor_dns_failure_is_redacted() {
+        let original_encoded = certificate(&[]);
+        let added_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder_encoded =
+            certificate(&[subject_alt_name(&[dns_name("added-ocsp.example.test")])]);
+        let recursive_responder_encoded =
+            certificate(&[subject_alt_name(&[dns_name("recursive-ocsp.other.test")])]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let recursive_responder =
+            decode_x509_certificate(&recursive_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let name_constraints: &'static [u8] =
+            Box::leak(permitted_dns_subtrees(&[b".example.test"]).into_boxed_slice());
+        let responder_path = recursive_intermediate_status_responder_revocation_responder_path(
+            &original,
+            &added,
+            &issuer,
+            &responder,
+            &recursive_responder,
+            observation_time,
+            Some(name_constraints),
+        );
+
+        let error = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509OcspReviewedResponderAnchorDnsPolicyErrorKind::ResponderDnsNameConstraints(_)
+        ));
+        assert!(!format!("{error:?} {error}").contains("other.test"));
     }
 
     #[test]
