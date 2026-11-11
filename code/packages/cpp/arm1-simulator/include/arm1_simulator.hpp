@@ -483,19 +483,19 @@ inline std::string hex08(std::uint32_t v) {
 }  // namespace detail
 
 inline std::string DecodedInstruction::disassemble() const {
-    std::string cond = cond_string(this->cond);
+    std::string cc = cond_string(this->cond);
     switch (inst_type) {
     case InstType::DataProcessing: {
         std::string op = op_string(opcode);
         std::string suf = (s && !is_test_op(opcode)) ? "S" : "";
         std::string op2 = detail::operand2(*this);
         if (opcode == OP_MOV || opcode == OP_MVN) {
-            return op + cond + suf + " " + detail::reg(rd) + ", " + op2;
+            return op + cc + suf + " " + detail::reg(rd) + ", " + op2;
         }
         if (is_test_op(opcode)) {
-            return op + cond + " " + detail::reg(rn) + ", " + op2;
+            return op + cc + " " + detail::reg(rn) + ", " + op2;
         }
-        return op + cond + suf + " " + detail::reg(rd) + ", " + detail::reg(rn) +
+        return op + cc + suf + " " + detail::reg(rd) + ", " + detail::reg(rn) +
                ", " + op2;
     }
     case InstType::LoadStore: {
@@ -514,32 +514,32 @@ inline std::string DecodedInstruction::disassemble() const {
         std::string sign = up ? "" : "-";
         if (pre_index) {
             std::string wb = write_back ? "!" : "";
-            return op + cond + b_suf + " " + detail::reg(rd) + ", [" +
+            return op + cc + b_suf + " " + detail::reg(rd) + ", [" +
                    detail::reg(rn) + ", " + sign + offset + "]" + wb;
         }
-        return op + cond + b_suf + " " + detail::reg(rd) + ", [" +
+        return op + cc + b_suf + " " + detail::reg(rd) + ", [" +
                detail::reg(rn) + "], " + sign + offset;
     }
     case InstType::BlockTransfer: {
         std::string op = load ? "LDM" : "STM";
         std::string mode = pre_index ? (up ? "IB" : "DB") : (up ? "IA" : "DA");
         std::string wb = write_back ? "!" : "";
-        return op + cond + mode + " " + detail::reg(rn) + wb + ", {" +
+        return op + cc + mode + " " + detail::reg(rn) + wb + ", {" +
                detail::reg_list(register_list) + "}";
     }
     case InstType::Branch:
-        return std::string(link ? "BL" : "B") + cond + " #" +
+        return std::string(link ? "BL" : "B") + cc + " #" +
                std::to_string(branch_offset);
     case InstType::SWI:
         if (swi_comment == HALT_SWI) {
-            return "HLT" + cond;
+            return "HLT" + cc;
         }
-        return "SWI" + cond + " #0x" + detail::hex(swi_comment);
+        return "SWI" + cc + " #0x" + detail::hex(swi_comment);
     case InstType::Coprocessor:
-        return "CDP" + cond + " (undefined)";
+        return "CDP" + cc + " (undefined)";
     case InstType::Undefined:
     default:
-        return "UND" + cond + " #0x" + detail::hex08(raw);
+        return "UND" + cc + " #0x" + detail::hex08(raw);
     }
 }
 
