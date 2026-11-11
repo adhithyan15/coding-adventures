@@ -570,6 +570,20 @@ descendant, or any `CHANGELOG.md`, `required_capabilities.json`,
 `effect_certificate.json` or `assurance_report.json`). Reading those files as
 data (`include_str!`, `--check assurance_report.json`) is allowed.
 
+That check is a best-effort tripwire for honest mistakes, not a security
+boundary. It matches literal paths in a fixed set of syntactic forms, so
+indirection gets past it: a variable (`F=evidence/x; sh $F`), a pipe or
+redirect (`sh < evidence/x`), a wrapper (`bash -c`, `env`, `timeout`,
+`make -f`, `go run`), `include!(concat!(env!(...), ...))`,
+`#[cfg_attr(..., path = ...)]`, a `build.rs` that copies a metadata file, and
+anything in `package.json` scripts, Makefiles or non-Rust sources. The type
+restriction above is what removes the accidental case. What remains is a
+deliberate two-step: a reviewed pull request (which propagates normally,
+because the wiring itself is a source change) makes behaviour depend on an
+allowed-type data file, and a later `A`/`M` edit of only that file is then
+local. Review of the first step is the control; no instance exists in the
+repository today.
+
 Other packages do read some of these files, but none of them is a dependent
 of the file's owner, so dependency propagation never selected them:
 `rust/required-capabilities-compiler` reads

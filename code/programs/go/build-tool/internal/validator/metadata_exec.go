@@ -12,11 +12,20 @@ package validator
 //
 // pkgmeta already closes the list by type (CHANGELOG.d/ takes only direct
 // *.md shards, evidence/ only .json, .cnf and .drat), so a script dropped
-// there is ordinary source. This validation closes the other half: no tracked
-// file may USE a metadata-class location as code, whatever its extension. It
-// runs with -validate-build-files, i.e. in the detect job of every pull
-// request, so a new violation fails the PR that introduces it no matter which
-// packages that PR selects.
+// there is ordinary source. This validation is a best-effort tripwire for the
+// other half: it fails when a tracked file visibly USES a metadata-class
+// location as code, whatever that location's extension. It runs with
+// -validate-build-files, i.e. in the detect job of every pull request, so a
+// new violation fails the PR that introduces it no matter which packages that
+// PR selects.
+//
+// It is NOT a security boundary. It matches literal paths in the forms in the
+// table below, so indirection is not seen: a shell variable, a pipe or
+// redirect, a wrapper (bash -c, env, timeout, make -f, go run), include! of
+// concat!/env!, #[cfg_attr(..., path = ...)], a build.rs that copies the file,
+// package.json scripts, Makefiles and non-Rust sources. Wiring code to a
+// metadata file is itself a source change that propagates and is reviewed;
+// the tripwire only catches the honest mistake early.
 //
 // A metadata-class path has a component `CHANGELOG.d` or `evidence` with
 // something below it, or a basename CHANGELOG.md, required_capabilities.json,
@@ -193,6 +202,7 @@ func MetadataExecutionReferences(name, text string) []string {
 
 // ValidateNoExecutedMetadata fails when any tracked file under code/ uses a
 // metadata-class location as code (see the table at the top of this file).
+// It is a best-effort tripwire, not a security boundary (see above).
 func ValidateNoExecutedMetadata(repoRoot string) error {
 	cmd := exec.Command("git", "-C", repoRoot, "ls-files", "-z", "--", "code")
 	var stderr bytes.Buffer

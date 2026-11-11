@@ -82,13 +82,22 @@ func GetChangedFilesWithStatus(repoRoot, diffBase string) ([]string, ChangeStatu
 }
 
 // parseNameStatus decodes `--name-status -z` output: a status token, then one
-// path (two for R and C, which are both recorded as non-additive). An output
-// it cannot decode yields every path it did read with no statuses at all, so
-// nothing can be classified as local.
+// path (two for R and C, which are both recorded as non-additive).
 //
 //	"M\x00a/x.go\x00D\x00b/CHANGELOG.md\x00" → [a/x.go b/CHANGELOG.md], {M, D}
+//
+// Two inputs give nil, nil, the same answer as "Git gave no answer", so every
+// caller takes its existing fallback (hashing in run(), a full plan in
+// -emit-plan) exactly as it did before statuses existed:
+//
+//	empty output   An empty diff. Callers test for nil, not for length, so a
+//	               non-nil empty slice here would make -emit-plan's per-platform
+//	               overrides say "build nothing" while the top-level set says
+//	               "build everything".
+//	undecodable    A truncated record or an empty path. Returning the paths
+//	               read so far would silently drop the rest of the diff.
 func parseNameStatus(out []byte) ([]string, ChangeStatuses) {
-	files := []string{}
+	var files []string
 	statuses := ChangeStatuses{}
 	fields := bytes.Split(out, []byte{0})
 	for index := 0; index < len(fields); {
@@ -104,11 +113,11 @@ func parseNameStatus(out []byte) ([]string, ChangeStatuses) {
 			status = 'R'
 		}
 		if index+paths > len(fields) {
-			return files, nil
+			return nil, nil
 		}
 		for _, path := range fields[index : index+paths] {
 			if len(path) == 0 {
-				return files, nil
+				return nil, nil
 			}
 			files = append(files, string(path))
 			// A path listed twice keeps its least additive status.
@@ -117,6 +126,9 @@ func parseNameStatus(out []byte) ([]string, ChangeStatuses) {
 			}
 		}
 		index += paths
+	}
+	if files == nil {
+		return nil, nil
 	}
 	return files, statuses
 }

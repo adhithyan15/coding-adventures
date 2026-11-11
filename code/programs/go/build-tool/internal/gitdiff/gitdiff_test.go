@@ -333,12 +333,19 @@ func TestParseNameStatus(t *testing.T) {
 			t.Errorf("Additive(%q) = %t, want %t", path, got, want)
 		}
 	}
-	// A truncated record yields no statuses at all, never a partial set.
-	if files, statuses := parseNameStatus([]byte("M\x00a/x.go\x00D")); statuses != nil || !slices.Equal(files, []string{"a/x.go"}) {
-		t.Fatalf("truncated: files = %v, statuses = %v", files, statuses)
-	}
-	if files, statuses := parseNameStatus(nil); len(files) != 0 || len(statuses) != 0 {
-		t.Fatalf("empty: files = %v, statuses = %v", files, statuses)
+	// Empty and undecodable output both mean "no usable diff": nil, nil, never
+	// a non-nil empty slice (callers test for nil) and never a partial list.
+	for name, out := range map[string][]byte{
+		"nil":          nil,
+		"empty":        {},
+		"only NULs":    []byte("\x00\x00"),
+		"truncated":    []byte("M\x00a/x.go\x00D"),
+		"empty path":   []byte("M\x00a/x.go\x00M\x00\x00"),
+		"short rename": []byte("M\x00a/x.go\x00R100\x00e/old"),
+	} {
+		if files, statuses := parseNameStatus(out); files != nil || statuses != nil {
+			t.Errorf("%s: files = %#v, statuses = %v, want nil, nil", name, files, statuses)
+		}
 	}
 }
 
@@ -399,6 +406,10 @@ func TestGetChangedFilesWithStatusReportsDeletionsAndRenames(t *testing.T) {
 	}
 	if files, statuses := GetChangedFilesWithStatus(repo, "no-such-ref"); files != nil || statuses != nil {
 		t.Errorf("unknown base = %v %v, want nil, nil", files, statuses)
+	} // HEAD equal to the base is an empty diff, which must look exactly like
+	// "no answer" so -emit-plan keeps its full-plan fallback on every platform.
+	if files, statuses := GetChangedFilesWithStatus(repo, "HEAD"); files != nil || statuses != nil {
+		t.Errorf("empty diff = %#v %v, want nil, nil", files, statuses)
 	}
 }
 
