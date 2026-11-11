@@ -198,6 +198,17 @@ fn bootstrap_interval_is_ordered_inside_the_sample_and_deterministic() {
     );
 }
 
+#[test]
+fn bootstrap_interval_preserves_identical_fractional_samples() {
+    // Weighted interpolation of this value with itself can round down even
+    // though every resample median is exactly the input value.
+    let sample = 8.335_937_499_999_998;
+    assert_eq!(
+        bootstrap_median_ci_95(&[sample; 10], 1000, 7),
+        (sample, sample)
+    );
+}
+
 // ---------------------------------------------------------------------------
 // Budgets (VER07 §5.1) through deterministic counters
 // ---------------------------------------------------------------------------
