@@ -279,3 +279,102 @@ fn r5_3d_unix_listeners_are_net_listen() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// R5-4: associated-type projections and unknown types look at the method
+// ---------------------------------------------------------------------------
+//
+// `<PathBuf as Deref>::Target` is `Path`, so `<PathBuf as Deref>::Target::exists`
+// is `Path::exists`; so is `D::Target::exists` for `D: Deref<Target = Path>`,
+// and `Self::Target::exists` under a `Deref<Target = Path>` supertrait.  The
+// analyzer does not evaluate projections, so the type is unknown, and an
+// unknown type gets the method-call verdict of its *last* segment.  The old
+// unknown-type checks looked at `segs[1]` (`Target`), not at the method.
+//
+// Rust accepts the shorthand `X::Assoc` only when `X` is a type parameter or
+// `Self` (a concrete type needs the qualified form, E0223), so these three
+// shapes are every way to write a projection path:
+//
+//   <T as Trait>::Assoc::item     qualified, with a trait
+//   Self::Assoc::item             Self
+//   P::Assoc::item                P a generic parameter declared in the file
+
+#[test]
+fn r5_4_projections_get_the_method_verdict() {
+    check(
+        "R5-4",
+        &[
+            (
+                "proj-deref-target",
+                "pub fn probe(p: &std::path::Path) -> bool {\n    <std::path::PathBuf as std::ops::Deref>::Target::exists(p)\n}",
+                &["fs:list"],
+            ),
+            (
+                "proj-generic-bound",
+                "use std::ops::Deref;\nuse std::path::{Path, PathBuf};\npub fn probe<D: Deref<Target = Path>>(d: &D) -> bool {\n    D::Target::exists(d)\n}\npub fn run() -> bool { probe(&PathBuf::from(\"Cargo.toml\")) }",
+                &["fs:list"],
+            ),
+            (
+                "proj-self-target-trait",
+                "use std::ops::Deref;\nuse std::path::{Path, PathBuf};\npub trait Probe: Deref<Target = Path> {\n    fn probe(&self) -> bool { Self::Target::exists(self) }\n}\nimpl Probe for PathBuf {}\npub fn run() -> bool { PathBuf::from(\"Cargo.toml\").probe() }",
+                &["fs:list"],
+            ),
+            (
+                "proj-blanket-impl",
+                "use std::ops::Deref;\nuse std::path::{Path, PathBuf};\npub trait Probe { fn probe(&self) -> bool; }\nimpl<T: Deref<Target = Path>> Probe for T {\n    fn probe(&self) -> bool { <Self as Deref>::Target::exists(self) }\n}\npub fn run() -> bool { PathBuf::from(\"Cargo.toml\").probe() }",
+                &["fs:list"],
+            ),
+            (
+                "proj-condvar-wait",
+                "use std::ops::Deref;\nuse std::sync::{Arc, Condvar, Mutex};\nuse std::time::Duration;\npub fn nap() {\n    let m = Mutex::new(());\n    let c = Arc::new(Condvar::new());\n    let g = m.lock().unwrap();\n    let _ = <Arc<Condvar> as Deref>::Target::wait_timeout(&c, g, Duration::from_millis(10));\n}",
+                &["time:sleep"],
+            ),
+            (
+                "Self projection in a blanket impl, shorthand",
+                "use std::ops::Deref;\npub trait Probe { fn probe(&self) -> bool; }\nimpl<T: Deref<Target = std::path::Path>> Probe for T { fn probe(&self) -> bool { Self::Target::is_dir(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "generic projection, qualified without a trait",
+                "fn f<D: std::ops::Deref<Target = std::path::Path>>(d: &D) -> bool { <D>::Target::is_file(d) }",
+                &["fs:list"],
+            ),
+            (
+                "generic of an impl, nested projection",
+                "struct W<T>(T);\nimpl<T: Tr> W<T> { fn f(&self) -> bool { T::A::B::read_link(&self.0).is_ok() } }",
+                &["fs:list"],
+            ),
+            (
+                "unknown Self, projection",
+                "macro_rules! m { ($t:ty) => { impl Probe for $t { fn probe(&self) -> bool { Self::Target::exists(self) } } } }",
+                &["fs:list"],
+            ),
+            (
+                "unknown alias, projection",
+                "macro_rules! a { ($t:ty) => { type P = $t; }; }\na!(std::path::PathBuf);\npub fn f(p: &std::path::Path) -> bool { P::Target::try_exists(p).is_ok() }",
+                &["fs:list"],
+            ),
+            (
+                "type macro, qualified projection",
+                "fn f(p: &std::path::Path) -> bool { <ty!() as std::ops::Deref>::Target::canonicalize(p).is_ok() }",
+                &["fs:list"],
+            ),
+        ],
+    );
+}
+
+#[test]
+fn r5_4_projection_decoys_stay_clean() {
+    check(
+        "R5-4 decoys",
+        &[
+            ("projection to a pure item", "fn f<I: Iterator>() -> Option<I::Item> where I::Item: Default { Some(I::Item::default()) }", &[]),
+            ("Self projection to a pure item", "trait T: Iterator where Self::Item: Default { fn z() -> Self::Item { Self::Item::default() } }", &[]),
+            ("qualified projection to a pure item", "fn f<I: Iterator>(x: u8) -> <I as Iterator>::Item where <I as Iterator>::Item: From<u8> { <I as Iterator>::Item::from(x) }", &[]),
+            ("qualified trait method named like nothing listed", "fn f(v: &Vec<u8>) -> usize { <Vec<u8> as AsRef<[u8]>>::as_ref(v).len() }", &[]),
+            ("module path ending in a listed name", "mod cleanup { pub fn metadata(_: u8) {} }\nfn f() { cleanup::metadata(1); }", &[]),
+            ("generic name used as a value path", "fn f<T: Default>() -> T { T::default() }", &[]),
+            ("local type with a listed associated fn", "struct C;\nimpl C { fn exists() -> bool { true } }\nfn f() -> bool { C::exists() }", &[]),
+        ],
+    );
+}

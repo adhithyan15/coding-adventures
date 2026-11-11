@@ -238,9 +238,14 @@ pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
         return Classification::AllowedPure;
     }
     // `P::name` with `type P = $t;`: the type is unknown, so `P::name` gets the
-    // verdict a method call `.name(..)` on an unknown receiver gets (H3).
+    // verdict a method call `.name(..)` on an unknown receiver gets (H3).  The
+    // method is the *last* segment: `P::Target::exists` is `.exists(`
+    // (security review round 5, R5-4), not `.Target(`.
     if segs[0] == UNKNOWN_TYPE_SEGMENT {
-        return segs.get(1).and_then(|m| method_call_rule(m)).unwrap_or(Classification::AllowedPure);
+        return match segs.len() {
+            1 => Classification::AllowedPure,
+            n => method_call_rule(segs[n - 1]).unwrap_or(Classification::AllowedPure),
+        };
     }
     let head = segs[0];
     let last = segs[segs.len() - 1];

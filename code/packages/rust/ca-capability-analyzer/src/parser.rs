@@ -2608,11 +2608,12 @@ fn receiver_is_local_inherent(
 }
 
 /// For the `>` at `gt` followed by `::` (`<File as T>::create`, `<File>::create`,
-/// `Vec::<u8>::new`): the path whose associated item is being named.
+/// `Vec::<u8>::new`): the path whose associated item is being named, and
+/// whether the group names a trait (`<T as Trait>`, an `as` at its top level).
 /// A macro invocation in the self position (`<ty!()>::exists`) yields
 /// `[UNKNOWN_TYPE_SEGMENT]`, so the item gets the method-call verdict.
 /// `Err(())` if the matching `<` cannot be found within 512 tokens.
-fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>, ()> {
+fn qualified_self_path(toks: &[Token], gt: usize) -> Result<(Option<Vec<String>>, bool), ()> {
     let mut depth = 1usize;
     let mut open = None;
     let lo = gt.saturating_sub(512);
@@ -2645,7 +2646,19 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>,
             }
         }
         segs.reverse();
-        return Ok(if segs.is_empty() { None } else { Some(segs) });
+        return Ok((if segs.is_empty() { None } else { Some(segs) }, false));
+    }
+    // `<T as Trait>`: an `as` outside any nested `<..>` or bracket.
+    let mut via_trait = false;
+    let mut nest = 0usize;
+    for k in open + 1..gt {
+        match &toks[k].tok {
+            Tok::Punct('<' | '(' | '[' | '{') => nest += 1,
+            Tok::Punct('>') if !is_punct(toks, k - 1, '-') => nest = nest.saturating_sub(1),
+            Tok::Punct(')' | ']' | '}') => nest = nest.saturating_sub(1),
+            Tok::Ident { name, raw: false } if nest == 0 && name == "as" => via_trait = true,
+            _ => {}
+        }
     }
     let mut j = open + 1;
     loop {
@@ -2677,9 +2690,59 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>,
     // the analyzer never sees; its name is not that type (R5-2, case
     // `type-macro-qualified`).  The self type is unknown.
     if !segs.is_empty() && is_punct(toks, j + 1, '!') {
-        return Ok(Some(vec![UNKNOWN_TYPE_SEGMENT.to_string()]));
+        return Ok((Some(vec![UNKNOWN_TYPE_SEGMENT.to_string()]), via_trait));
     }
-    Ok(if segs.is_empty() { None } else { Some(segs) })
+    Ok((if segs.is_empty() { None } else { Some(segs) }, via_trait))
+}
+
+/// Names declared as generic type (or const) parameters anywhere in the file:
+/// the identifiers at the top level of the `<..>` right after `impl`, or after
+/// the name in `fn`/`struct`/`enum`/`union`/`trait`/`type NAME <..>`, that
+/// start a parameter (`<T`, `, T`, `const N`).  Package-wide scoping is not
+/// tracked: a name declared as a parameter anywhere in the file counts
+/// everywhere in it (security review round 5, R5-4).
+fn generic_param_names(toks: &[Token], br: &Brackets) -> HashSet<String> {
+    let mut out = HashSet::new();
+    for i in 1..toks.len() {
+        if !is_punct(toks, i, '<') {
+            continue;
+        }
+        let opens_params = ident_at(toks, i - 1) == Some(("impl", false))
+            || (i >= 2
+                && ident_at(toks, i - 1).is_some()
+                && matches!(
+                    ident_at(toks, i - 2),
+                    Some(("fn" | "struct" | "enum" | "union" | "trait" | "type", false))
+                ));
+        if !opens_params {
+            continue;
+        }
+        let Some(end) = skip_angle(toks, i) else { continue };
+        let mut depth = 0usize;
+        let mut k = i + 1;
+        while k + 1 < end {
+            match &toks[k].tok {
+                Tok::Punct('(' | '[' | '{') => {
+                    k = br.close(k).saturating_add(1).max(k + 1);
+                    continue;
+                }
+                Tok::Punct('<') => depth += 1,
+                Tok::Punct('>') if !is_punct(toks, k - 1, '-') => depth = depth.saturating_sub(1),
+                Tok::Ident { name, .. } if depth == 0 && (k == i + 1 || is_punct(toks, k - 1, ',')) => {
+                    let mut n = name.as_str();
+                    if n == "const" {
+                        if let Some((c, _)) = ident_at(toks, k + 1) {
+                            n = c;
+                        }
+                    }
+                    out.insert(n.to_string());
+                }
+                _ => {}
+            }
+            k += 1;
+        }
+    }
+    out
 }
 
 /// `mask[i]` is true if token `i` lies inside the delimiters of a macro invocation `name!( .. )`.
@@ -2980,8 +3043,10 @@ fn self_path(
             SelfTy::Unknown => unknown = true,
         }
     }
+    // The method is the *last* segment: `Self::Target::exists` under an
+    // unknown self type is `.exists(` (R5-4), not `.Target(`.
     if unknown {
-        if let Some(Classification::Capability { category, action }) = method_call_rule(&segs[1]) {
+        if let Some(Classification::Capability { category, action }) = method_call_rule(&segs[segs.len() - 1]) {
             sink.detection(line, col, category, action, format!("{} (Self type not known)", segs.join("::")));
         }
     }
@@ -2996,6 +3061,7 @@ fn stage2_file(
     sink: &mut Sink,
 ) {
     let in_macro_args = macro_arg_mask(toks, br);
+    let generics = generic_param_names(toks, br);
     sink.macro_budget = toks.len().saturating_mul(4) + 1024;
     // `Self` regions (H2), entered and left as the walk moves forward.
     let regions = self_regions(toks, br);
@@ -3114,14 +3180,18 @@ fn stage2_file(
                 // comparison `a > ::std::x` is ambiguous; so the path as written is
                 // *always* classified too, and the qualified reading only adds to it.
                 let mut qualified_prefix: Vec<String> = Vec::new();
+                let mut via_trait = false;
                 let closes_angle = i >= 2
                     && is_pathsep(toks, i - 1)
                     && is_punct(toks, i - 2, '>')
                     && !(i >= 3 && (is_punct(toks, i - 3, '=') || is_punct(toks, i - 3, '-')));
                 if closes_angle {
                     match qualified_self_path(toks, i - 2) {
-                        Ok(Some(prefix)) => qualified_prefix = prefix,
-                        Ok(None) => {}
+                        Ok((Some(prefix), t)) => {
+                            qualified_prefix = prefix;
+                            via_trait = t;
+                        }
+                        Ok((None, t)) => via_trait = t,
                         Err(()) => sink.unanalyzable(
                             t.line,
                             t.col,
@@ -3154,11 +3224,33 @@ fn stage2_file(
                     );
                 }
                 sink.path(res, &segs, is_macro, t.line, t.col);
+                let written_len = segs.len();
                 if !qualified_prefix.is_empty() {
                     let mut q = qualified_prefix;
                     q.extend(segs);
                     sink.path(res, &q, is_macro, t.line, t.col);
                     segs = q;
+                }
+                // Associated-type projections (R5-4): `<T as Tr>::Assoc::item`,
+                // `Self::Assoc::item` and `P::Assoc::item` for a generic
+                // parameter `P` name a type the analyzer does not evaluate
+                // (`<PathBuf as Deref>::Target` is `Path`).  Rust accepts the
+                // shorthand `X::Assoc` only for a type parameter or `Self`
+                // (E0223), so these are the shapes.  The type is unknown: the
+                // item gets the method-call verdict of `.item(`.
+                let projection = !is_macro
+                    && ((via_trait && written_len >= 2)
+                        || (segs.len() >= 3 && (segs[0] == "Self" || generics.contains(segs[0].as_str()))));
+                if projection {
+                    if let Some(Classification::Capability { category, action }) = method_call_rule(&segs[segs.len() - 1]) {
+                        sink.detection(
+                            t.line,
+                            t.col,
+                            category,
+                            action,
+                            format!("{} (associated type not known)", segs.join("::")),
+                        );
+                    }
                 }
                 if segs[0] == "Self" {
                     // Regions are properly nested (they are bracket pairs), so a
