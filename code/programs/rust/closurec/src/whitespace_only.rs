@@ -10433,8 +10433,8 @@ mod tests {
         assert_eq!(minify("function g(){'use strict';f()}"), "function g(){f()};");
         assert_eq!(minify("function g(){\"use strict\";return 1}"), "function g(){return 1};");
         assert_eq!(minify("var f=()=>{'use strict';x()};"), "var f=()=>{x()};");
-        assert_eq!(minify("class C{m(){'use strict';x()}}"), "class C{m(){x()}}");
-        assert_eq!(minify("class C{constructor(){'use strict'}}"), "class C{constructor(){}}");
+        assert_eq!(minify("class C{m(){'use strict';x()}}"), "class C{m(){x()}};");
+        assert_eq!(minify("class C{constructor(){'use strict'}}"), "class C{constructor(){}};");
         assert_eq!(minify("var o={m(){'use strict';x()}};"), "var o={m(){x()}};");
 
         // Non-use-strict directives survive
