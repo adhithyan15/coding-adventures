@@ -7,6 +7,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+- Add the sealed `src/capabilities.rs` generated from `required_capabilities.json`
+  (`ca-capability-analyzer --generate-module`), required by the hardened analyzer
+  before an effect certificate verifies; certificate, evidence manifests and
+  assurance report regenerated for the new source digest.
+
 - `evidence.bindings`: every operation declares `proofs_not_live=frontend-refuses-lib`, the explicit opt-in `ca-assurance-report --check` now requires for the `not-live` proof entries (VER04h section 9). No change to the library or to the generated harness.
 
 ## 0.2.1 — 2026-11-09

@@ -48,8 +48,16 @@ impl Copy {
         for f in ["test-manifest.json", "proof-manifest.json"] {
             fs::copy(real.join("evidence").join(f), pkg.join("evidence").join(f)).unwrap();
         }
+        // Copy every source file: the evidence binds the digest of all of
+        // `src/**/*.rs` (e.g. the generated `capabilities.rs` too), so a copy
+        // of `lib.rs` alone would read as stale before the edit under test.
         fs::create_dir_all(pkg.join("src")).unwrap();
-        fs::copy(real.join("src/lib.rs"), pkg.join("src/lib.rs")).unwrap();
+        for entry in fs::read_dir(real.join("src")).unwrap() {
+            let entry = entry.unwrap();
+            if entry.file_type().unwrap().is_file() {
+                fs::copy(entry.path(), pkg.join("src").join(entry.file_name())).unwrap();
+            }
+        }
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
         fs::copy(real.join("evidence.bindings"), pkg.join("evidence.bindings")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
