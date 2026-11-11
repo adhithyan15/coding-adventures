@@ -24,6 +24,9 @@
 //! | `super` outside a method          | `JSC_INVALID_SUPER_ACCESS` "'super'     |
 //! |                                   | may only be accessed within a method"   |
 //! |                                   | (slice 3)                               |
+//! | `with` structure                  | `JSC_USE_OF_WITH` "The with             |
+//! |                                   | statement cannot be used in strict      |
+//! |                                   | mode." (slice 4)                        |
 //!
 //! Upstream reports **every** occurrence: the `#x` of a field, method or
 //! accessor declaration, every `this.#x` use, and `#x in o`. Each one is a
@@ -91,6 +94,8 @@ const RETURN_OUTSIDE_FUNCTION: &str = "Parse error. return must be inside functi
 const NEW_TARGET_OUTSIDE_FUNCTION: &str = "Parse error. new.target must be inside a function";
 const INVALID_SUPER_ACCESS: &str = "JSC_INVALID_SUPER_ACCESS";
 const SUPER_OUTSIDE_METHOD: &str = "'super' may only be accessed within a method";
+const USE_OF_WITH: &str = "JSC_USE_OF_WITH";
+const WITH_IN_STRICT_MODE: &str = "The with statement cannot be used in strict mode.";
 
 /// Convert a 1-based character (scalar) column from the lexer/parser into
 /// a 0-based column in UTF-16 code units, matching upstream Java String indexing.
@@ -120,16 +125,17 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
         message: PRIVATE_ELEMENTS,
     };
     let mut out = Vec::new();
-    // Slices 2 & 3: `return` / `new.target` outside a function, `super` outside
-    // a method. They need the parse tree, so only parse when a candidate
-    // KEYWORD token is present. A string `"super"` or a member name `x.super`
-    // is not one.
+    // Slices 2, 3 & 4: `return` / `new.target` outside a function, `super` outside
+    // a method, and `with` statements. They need the parse tree, so only parse
+    // when a candidate KEYWORD token is present. A string `"with"` or a member
+    // name `x.with` is not one.
     let candidate = tokens.iter().enumerate().any(|(i, t)| {
         let keyword = matches!(t.type_, lexer::token::TokenType::Keyword)
             && !(i > 0 && matches!(tokens[i - 1].value.as_str(), "." | "?."));
         keyword
             && (t.value == "return"
                 || t.value == "super"
+                || t.value == "with"
                 || (t.value == "new"
                     && tokens.get(i + 1).is_some_and(|d| d.value == ".")
                     && tokens.get(i + 2).is_some_and(|n| n.value == "target")))
@@ -248,6 +254,7 @@ fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<R
             "member_expression" if !here.super_ok && is_super(node) => {
                 Some((INVALID_SUPER_ACCESS, SUPER_OUTSIDE_METHOD))
             }
+            "with_statement" => Some((USE_OF_WITH, WITH_IN_STRICT_MODE)),
             _ => None,
         };
         if let (Some((key, message)), Some(line), Some(column)) = (diag, node.start_line, node.start_column) {
@@ -563,6 +570,45 @@ mod tests {
                 (8, UNSUPPORTED_FEATURE),
                 (11, PARSE_ERROR),
                 (18, INVALID_SUPER_ACCESS)
+            ]
+        );
+    }
+
+    // ---- Slice 4: `with` statement -----------------------------------
+    // Every expectation below was measured on the v20260915 jar.
+
+    #[test]
+    fn with_statement_is_refused() {
+        assert_eq!(
+            parse_refusals("with (o) { x(1 + 2); }"),
+            vec![(0, WITH_IN_STRICT_MODE)]
+        );
+        assert_eq!(
+            parse_refusals("function f() { with (o) {} }"),
+            vec![(15, WITH_IN_STRICT_MODE)]
+        );
+        assert_eq!(
+            parse_refusals("with (a) {} with (b) {}"),
+            vec![(0, WITH_IN_STRICT_MODE), (12, WITH_IN_STRICT_MODE)]
+        );
+        for src in [
+            "var x = 'with'; // with",
+            "obj.with = 1;",
+        ] {
+            assert!(scan_es(src).is_empty(), "{src:?}");
+        }
+    }
+
+    #[test]
+    fn refusals_of_all_four_slices_come_out_in_source_order() {
+        let r = scan_es("class A{#x}return;super.x;with(o){}");
+        assert_eq!(
+            r.iter().map(|r| (r.column, r.key)).collect::<Vec<_>>(),
+            vec![
+                (8, UNSUPPORTED_FEATURE),
+                (11, PARSE_ERROR),
+                (18, INVALID_SUPER_ACCESS),
+                (26, USE_OF_WITH),
             ]
         );
     }
