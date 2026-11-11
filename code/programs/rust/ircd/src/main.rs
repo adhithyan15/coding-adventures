@@ -370,6 +370,11 @@ fn main() {
     //    Note: ctrlc is not added as a dependency to keep this zero-dependency.
     //    Instead, we run the server in a background thread and join it.
     //    (A full production server would use ctrlc or signal-hook crate here.)
+    //
+    //    Only the Unix signal handler below uses this handle, so it is
+    //    declared for Unix only. Unconditionally, it was an unused variable
+    //    on Windows, which `-D warnings` turns into a build failure.
+    #[cfg(unix)]
     let el_for_shutdown = Arc::clone(&event_loop);
 
     // Run the server loop in the current thread.
