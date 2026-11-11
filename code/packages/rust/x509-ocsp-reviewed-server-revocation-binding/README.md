@@ -193,6 +193,16 @@ response, key, signature, status, root, or time payload. This does not apply
 excluded or non-DNS root constraints, establish complete revocation policy,
 generalize path validation, or provide TLS, HTTP, OAuth, or network readiness.
 
+`complete_x509_ocsp_routed_issuer_reviewed_nested_no_check_fixed_path_revocation_policy`
+then consumes the exact branch after the intermediate-status responder also
+passes RFC 6960 no-check policy. Its input type proves that every non-root
+certificate in this one retained fixed chain is covered by authenticated good-
+and-fresh OCSP status or exact no-check policy; the selected Mozilla-reviewed
+root remains the trust anchor. The infallible nominal wrapper retains the full
+composition and accepts no substitute evidence. It does not generalize path
+construction or validation, acquire or refresh revocation data, read a clock,
+or provide TLS, HTTP, OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
