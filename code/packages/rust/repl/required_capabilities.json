@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/repl",
+  "capabilities": [
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "*",
+      "justification": "run() reads REPL input lines from process stdin via io::stdin().lock().lines()."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "run() writes prompts and evaluation output to process stdout (write! / println!)."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "repl-eval",
+      "justification": "Mode::Async evaluates each input on a dedicated OS thread via std::thread::spawn."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "Mode::Async waits on the result channel with recv_timeout(tick_ms) to drive the waiting animation."
+    }
+  ],
+  "justification": "Sync mode, run_with_io and the trait objects are pure. The convenience run() wrapper uses process stdin/stdout, and Mode::Async spawns one OS thread per evaluation and waits on a timeout tick."
+}
