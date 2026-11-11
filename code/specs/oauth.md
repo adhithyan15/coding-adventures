@@ -1614,14 +1614,71 @@ keeps the initializer reference, terminal signature and reviewed-root handoff,
 complete child policy, and advanced state together. Proofs from another
 construction and policy for another certificate fail closed, so a caller
 cannot skip the root-authenticated first step or inject detached initial state.
-This is only the first ordered
-intermediate transition; it does not accumulate additional intermediates or
-establish complete path validation. The pure public-certificate-data
+This is only the first ordered intermediate transition. A bounded second-step
+follow-up now consumes that result together with the immediately target-nearer
+routed adjacency from the same exact constructed-path object. The new
+adjacency's issuer must be the already processed anchor-nearest intermediate,
+its issuer depth must immediately precede the retained terminal depth, and its
+child must be another candidate certificate rather than the target. Complete
+intermediate policy must retain that exact authenticated child before the
+retained path-length state is advanced. The non-copyable result keeps the
+entire first step, second routed signature, complete second-child policy, and
+twice-advanced state together. A proof from another construction, a skipped or
+replayed depth, an issuer not retained by the first step, or policy for another
+certificate fails closed. This establishes exactly two ordered intermediate
+transitions; it does not iterate over an arbitrary path, prove that all
+remaining depths were processed, or establish complete path validation. The
+pure public-certificate-data
 composition performs no parsing, new signature verification, credential access
 or editing, signing, storage, clock acquisition, provider action, audit event,
 trace emission, I/O, network access, or other external effect. It does not
 check names, time, revocation, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
+A bounded arbitrary-depth follow-up now borrows the same retained initializer,
+reviewed terminal, an anchor-to-target slice of already routed follow-on
+signatures, and an equally ordered slice of complete intermediate policies.
+The caller supplies a nonzero intermediate ceiling. Before transition, the
+composition derives the exact intermediate count from the retained
+construction, rejects counts above that ceiling, and requires exactly one
+policy per intermediate plus one follow-on signature for every intermediate
+after the root-authenticated first child. It then requires every follow-on
+proof to retain the same exact construction, consume the immediately
+target-nearer issuer depth, name the previously processed intermediate as its
+exact issuer object, authenticate another candidate rather than the target,
+and pair that child with policy for the same exact object before advancing the
+private working state. Success retains the initializer, reviewed terminal,
+both complete borrowed evidence slices, the processed count, and the final
+path-length state. This proves only that every intermediate path-length
+transition represented by the selected construction was processed in
+anchor-to-target order; it deliberately stops before the target signature and
+does not turn routed link proofs into complete path validation. The pure
+public-certificate-data composition performs no parsing, new signature
+verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It does not check target authentication, complete
+Name semantics, time, hostname, revocation, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A bounded target-signature closure now consumes that arbitrary-depth
+intermediate accumulator together with one already routed depth-zero signature
+proof and complete server-certificate policy. It fails closed unless the
+signature retains the same exact constructed-path object, projects issuer
+depth zero, authenticates the construction's exact target child, and names the
+target-nearest intermediate retained by the accumulator's final ordered policy
+as its exact issuer object. The complete server policy must retain that same
+exact target object. Success keeps the entire intermediate accumulator, the
+target signature, and complete target policy in one non-copyable result, so
+every selected child-to-issuer adjacency from target through reviewed anchor
+has repository-owned routed RSA verification evidence without allowing a
+detached target or issuer proof to be spliced in. This is signature-evidence
+closure only: it does not validate the anchor self-signature, generalize all
+certificate or Name policy across an arbitrary path, apply every intermediate
+NameConstraints value, verify the requested hostname, check revocation, or
+compose TLS, HTTP, OAuth transport, or network authority. The pure public-
+certificate-data composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target

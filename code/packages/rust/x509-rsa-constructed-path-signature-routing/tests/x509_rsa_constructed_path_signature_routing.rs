@@ -26,8 +26,11 @@ use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 use x509_rsa_constructed_path_signature_routing::{
+    accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths,
     advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length,
+    advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_x509_rsa_constructed_path_intermediate_path_length,
+    bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature,
     bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
@@ -37,11 +40,14 @@ use x509_rsa_constructed_path_signature_routing::{
     verify_x509_rsa_constructed_path_policy_signature,
     BoundX509RsaConstructedReviewedIntermediatePath,
     X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind,
+    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
+    X509RsaConstructedPathNextIntermediatePathLengthErrorKind,
     X509RsaConstructedPathReviewedAnchorErrorKind,
     X509RsaConstructedPathReviewedIntermediatePathErrorKind,
     X509RsaConstructedPathReviewedServerPolicyErrorKind,
     X509RsaConstructedPathSignatureRoutingErrorKind,
+    X509RsaConstructedPathTargetSignatureClosureErrorKind,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_signature_routing::{
@@ -61,8 +67,19 @@ const INTERMEDIATE_HEX: &str =
     include_str!("../../x509-rsa-sha256-reviewed-server-link/tests/fixtures/letsencrypt_r13.hex");
 const ROOT_HEX: &str =
     include_str!("../../x509-rsa-sha256-reviewed-anchor-link/tests/fixtures/isrg_root_x1.hex");
+// Fixed public-certificate chain observed from sectigo.com on 2026-11-11.
+// Tests never contact the network; the checked-in DER exercises a real
+// leaf -> intermediate -> intermediate -> reviewed-root RSA chain.
+const SECTIGO_TARGET_HEX: &str = include_str!("fixtures/sectigo_com_leaf.der.hex");
+const SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX: &str =
+    include_str!("fixtures/sectigo_public_server_authentication_ca_ov_r36.der.hex");
+const SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX: &str =
+    include_str!("fixtures/sectigo_public_server_authentication_root_r46.der.hex");
+const USERTRUST_ROOT_HEX: &str =
+    include_str!("fixtures/usertrust_rsa_certification_authority.der.hex");
 
 const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
+const SHA384_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 12];
 const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const SERVER_AUTH_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 3, 1];
 const NULL_DER: &[u8] = &[0x05, 0x00];
@@ -86,6 +103,20 @@ fn decode(input: &[u8]) -> X509Certificate<'_> {
 fn profile() -> X509CertificateAlgorithmProfile<'static> {
     X509CertificateAlgorithmProfile::new(
         SHA256_WITH_RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        8_192,
+        2_048,
+        4_096,
+    )
+    .unwrap()
+}
+
+fn sha384_profile() -> X509CertificateAlgorithmProfile<'static> {
+    X509CertificateAlgorithmProfile::new(
+        SHA384_WITH_RSA_ENCRYPTION_OID,
         X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
         RSA_ENCRYPTION_OID,
         X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
@@ -166,6 +197,10 @@ fn constructed_three_issuer_path_by_test_order<
 
 fn route() -> X509RsaSignatureRoute {
     X509RsaSignatureRoute::new(0, X509RsaSignatureVerifier::RsaPkcs1V15Sha256)
+}
+
+fn sha384_route() -> X509RsaSignatureRoute {
+    X509RsaSignatureRoute::new(1, X509RsaSignatureVerifier::RsaPkcs1V15Sha384)
 }
 
 fn limits() -> RsaPublicOperationLimits {
@@ -754,6 +789,862 @@ fn advances_anchor_nearest_intermediate_first_on_longer_construction() {
             .path_length_state()
             .remaining_non_self_issued_intermediate_cas(),
         0
+    );
+}
+
+#[test]
+fn advances_the_immediately_next_authenticated_intermediate() {
+    let target_encoded = fixture(SECTIGO_TARGET_HEX);
+    let intermediate_encoded = fixture(SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX);
+    let anchor_nearest_encoded = fixture(SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX);
+    let terminal_root_encoded = fixture(USERTRUST_ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![
+        decode(&intermediate_encoded),
+        decode(&anchor_nearest_encoded),
+        decode(&terminal_root_encoded),
+    ];
+    let path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let profiles = [profile(), sha384_profile()];
+    let routes = [route(), sha384_route()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(2).unwrap(),
+        algorithm_policy(&candidates[1], &profiles),
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[2], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let first = advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        &initialized,
+        reviewed_terminal,
+        intermediate_policy(&candidates[1], &profiles, false),
+    )
+    .unwrap();
+    let next_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+
+    let second = advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        first,
+        next_signature,
+        intermediate_policy(&candidates[0], &profiles, false),
+    )
+    .unwrap();
+
+    assert_eq!(
+        second
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert_eq!(
+        second
+            .previous_step()
+            .reviewed_terminal()
+            .verified_terminal_signature()
+            .adjacent_link()
+            .issuer_depth(),
+        2
+    );
+    assert_eq!(second.next_signature().adjacent_link().issuer_depth(), 1);
+    assert!(std::ptr::eq(
+        second.next_signature().adjacent_link().issuer_certificate(),
+        &candidates[1]
+    ));
+    assert!(std::ptr::eq(
+        second.intermediate_policy().certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{second:?}"),
+        "AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn accumulates_every_ordered_intermediate_with_bounded_retained_evidence() {
+    let target_encoded = fixture(SECTIGO_TARGET_HEX);
+    let intermediate_encoded = fixture(SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX);
+    let anchor_nearest_encoded = fixture(SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX);
+    let terminal_root_encoded = fixture(USERTRUST_ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![
+        decode(&intermediate_encoded),
+        decode(&anchor_nearest_encoded),
+        decode(&terminal_root_encoded),
+    ];
+    let path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let detached_path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let profiles = [profile(), sha384_profile()];
+    let routes = [route(), sha384_route()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(2).unwrap(),
+        algorithm_policy(&candidates[1], &profiles),
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[2], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let next_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let detached_signature = verify_x509_rsa_constructed_path_policy_signature(
+        detached_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let skipped_target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let policies = [
+        intermediate_policy(&candidates[1], &profiles, false),
+        intermediate_policy(&candidates[0], &profiles, false),
+    ];
+    let reversed_policies = [
+        intermediate_policy(&candidates[0], &profiles, false),
+        intermediate_policy(&candidates[1], &profiles, false),
+    ];
+    let ordered_signatures = [next_signature];
+    let detached_signatures = [detached_signature];
+    let skipped_signatures = [skipped_target_signature];
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &ordered_signatures,
+        &policies,
+        0,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidIntermediateLimit
+    );
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &ordered_signatures,
+        &policies,
+        1,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::IntermediateLimitExceeded
+    );
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &[],
+        &policies,
+        2,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceCountMismatch
+    );
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &detached_signatures,
+        &policies,
+        2,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceMismatch
+    );
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &skipped_signatures,
+        &policies,
+        2,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape
+    );
+
+    let error = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &ordered_signatures,
+        &reversed_policies,
+        2,
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::IntermediatePolicyMismatch
+    );
+
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &ordered_signatures,
+        &policies,
+        2,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        accumulated.initialized_path_length(),
+        &initialized
+    ));
+    assert!(std::ptr::eq(
+        accumulated.reviewed_terminal(),
+        &reviewed_terminal
+    ));
+    assert_eq!(accumulated.processed_intermediate_count(), 2);
+    assert_eq!(accumulated.ordered_signatures().len(), 1);
+    assert!(std::ptr::eq(
+        accumulated.ordered_signatures()[0]
+            .adjacent_link()
+            .issuer_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(accumulated.intermediate_policies().len(), 2);
+    assert!(std::ptr::eq(
+        accumulated.intermediate_policies()[1].certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        accumulated
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert_eq!(
+        format!("{accumulated:?}"),
+        "AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn accepts_an_empty_follow_on_slice_for_one_intermediate() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let policies = [intermediate_policy(&candidates[0], &profiles, false)];
+
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &[],
+        &policies,
+        1,
+    )
+    .unwrap();
+
+    assert_eq!(accumulated.processed_intermediate_count(), 1);
+    assert!(accumulated.ordered_signatures().is_empty());
+    assert!(std::ptr::eq(
+        accumulated.intermediate_policies()[0].certificate(),
+        &candidates[0]
+    ));
+}
+
+#[test]
+fn closes_accumulated_intermediates_with_exact_target_signature_and_policy() {
+    let target_encoded = fixture(TARGET_HEX);
+    let detached_target_encoded = target_encoded.clone();
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let detached_target = decode(&detached_target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let detached_path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let intermediate_policies = [intermediate_policy(&candidates[0], &profiles, false)];
+    let no_follow_on_signatures = [];
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &no_follow_on_signatures,
+        &intermediate_policies,
+        1,
+    )
+    .unwrap();
+
+    let non_target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        non_target_signature,
+        server_policy(&target),
+    )
+    .expect_err("a nonzero-depth proof cannot close the target link");
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape
+    );
+
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &no_follow_on_signatures,
+        &intermediate_policies,
+        1,
+    )
+    .unwrap();
+
+    let detached_target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        detached_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        detached_target_signature,
+        server_policy(&target),
+    )
+    .expect_err("a signature from another construction remains detached evidence");
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch
+    );
+
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &no_follow_on_signatures,
+        &intermediate_policies,
+        1,
+    )
+    .unwrap();
+    let target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        target_signature,
+        server_policy(&detached_target),
+    )
+    .expect_err("byte-equal target policy from another decode remains detached evidence");
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathTargetSignatureClosureErrorKind::TargetPolicyMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path target signature closure error TargetPolicyMismatch"
+    );
+
+    let accumulated = accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+        &initialized,
+        &reviewed_terminal,
+        &no_follow_on_signatures,
+        &intermediate_policies,
+        1,
+    )
+    .unwrap();
+    let target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let closed = bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        target_signature,
+        server_policy(&target),
+    )
+    .unwrap();
+
+    assert_eq!(
+        closed
+            .accumulated_intermediates()
+            .processed_intermediate_count(),
+        1
+    );
+    assert_eq!(closed.target_signature().adjacent_link().issuer_depth(), 0);
+    assert!(std::ptr::eq(
+        closed
+            .target_signature()
+            .adjacent_link()
+            .child_target_certificate()
+            .unwrap(),
+        &target
+    ));
+    assert!(std::ptr::eq(closed.server_policy().certificate(), &target));
+    assert_eq!(
+        format!("{closed:?}"),
+        "BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature"
+    );
+}
+
+#[test]
+fn rejects_next_signature_from_a_distinct_construction() {
+    let target_encoded = fixture(SECTIGO_TARGET_HEX);
+    let intermediate_encoded = fixture(SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX);
+    let anchor_nearest_encoded = fixture(SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX);
+    let terminal_root_encoded = fixture(USERTRUST_ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![
+        decode(&intermediate_encoded),
+        decode(&anchor_nearest_encoded),
+        decode(&terminal_root_encoded),
+    ];
+    let initialized_path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let next_signature_path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let profiles = [profile(), sha384_profile()];
+    let routes = [route(), sha384_route()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        initialized_path,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(2).unwrap(),
+        algorithm_policy(&candidates[1], &profiles),
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[2], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let first = advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        &initialized,
+        reviewed_terminal,
+        intermediate_policy(&candidates[1], &profiles, false),
+    )
+    .unwrap();
+    let next_signature = verify_x509_rsa_constructed_path_policy_signature(
+        next_signature_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+
+    let error = match advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        first,
+        next_signature,
+        intermediate_policy(&candidates[0], &profiles, false),
+    ) {
+        Err(error) => error,
+        Ok(_) => panic!("byte-identical construction objects remain detached evidence"),
+    };
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path next intermediate path-length error EvidenceMismatch"
+    );
+}
+
+#[test]
+fn rejects_a_skipped_target_nearer_depth() {
+    let target_encoded = fixture(SECTIGO_TARGET_HEX);
+    let intermediate_encoded = fixture(SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX);
+    let anchor_nearest_encoded = fixture(SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX);
+    let terminal_root_encoded = fixture(USERTRUST_ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![
+        decode(&intermediate_encoded),
+        decode(&anchor_nearest_encoded),
+        decode(&terminal_root_encoded),
+    ];
+    let path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let profiles = [profile(), sha384_profile()];
+    let routes = [route(), sha384_route()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(2).unwrap(),
+        algorithm_policy(&candidates[1], &profiles),
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[2], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let first = advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        &initialized,
+        reviewed_terminal,
+        intermediate_policy(&candidates[1], &profiles, false),
+    )
+    .unwrap();
+    let skipped_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+
+    let error = match advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        first,
+        skipped_signature,
+        intermediate_policy(&candidates[0], &profiles, false),
+    ) {
+        Err(error) => error,
+        Ok(_) => panic!("ordered traversal must not skip an adjacency depth"),
+    };
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape
+    );
+}
+
+#[test]
+fn rejects_next_policy_not_bound_to_the_authenticated_child() {
+    let target_encoded = fixture(SECTIGO_TARGET_HEX);
+    let intermediate_encoded = fixture(SECTIGO_TARGET_NEAREST_INTERMEDIATE_HEX);
+    let anchor_nearest_encoded = fixture(SECTIGO_ANCHOR_NEAREST_INTERMEDIATE_HEX);
+    let terminal_root_encoded = fixture(USERTRUST_ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![
+        decode(&intermediate_encoded),
+        decode(&anchor_nearest_encoded),
+        decode(&terminal_root_encoded),
+    ];
+    let path = constructed_three_issuer_path_by_test_order(&target, &candidates);
+    let profiles = [profile(), sha384_profile()];
+    let routes = [route(), sha384_route()];
+
+    let reviewed_path = bind_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+    )
+    .unwrap();
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(2).unwrap(),
+        algorithm_policy(&candidates[1], &profiles),
+        role_policy(
+            &candidates[2],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[2], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+    )
+    .unwrap();
+    let first = advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        &initialized,
+        reviewed_terminal,
+        intermediate_policy(&candidates[1], &profiles, false),
+    )
+    .unwrap();
+    let next_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+
+    let error = match advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+        first,
+        next_signature,
+        intermediate_policy(&candidates[1], &profiles, false),
+    ) {
+        Err(error) => error,
+        Ok(_) => panic!("policy for the previous issuer is not policy for the next child"),
+    };
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathNextIntermediatePathLengthErrorKind::IntermediatePolicyMismatch
     );
 }
 

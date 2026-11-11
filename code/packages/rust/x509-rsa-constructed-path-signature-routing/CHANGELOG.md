@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.13.0 - 2026-11-11
+
+### Added
+
+- Added an exact-object closure that consumes accumulated reviewed intermediate
+  evidence, the construction's routed depth-zero target signature, and complete
+  server policy for that exact target.
+- Added fixed public-certificate coverage for the retained closure, nonzero
+  target depth, detached construction, and byte-equal independently decoded
+  target policy.
+
+### Security
+
+- Closure requires construction identity, the exact depth-zero target child,
+  issuer continuity with the accumulated target-nearest intermediate, and
+  exact-object target-policy identity before retaining all evidence together.
+- This supplies repository-owned routed RSA evidence for each selected
+  child-to-issuer adjacency only. It does not validate the anchor's
+  self-signature, generalized path or name constraints, hostname, revocation,
+  TLS, HTTP, OAuth, or network authority.
+
+## 0.12.0 - 2026-11-11
+
+### Added
+
+- Added an allocation-free ordered accumulator for every intermediate on one
+  already constructed path, bounded by a caller-owned nonzero intermediate
+  ceiling.
+- Added fixed public-certificate chain coverage for a one-intermediate empty
+  follow-on slice, multi-intermediate evidence retention, exact evidence
+  counts, ordered depths, detached construction, and child-policy binding.
+
+### Security
+
+- The accumulator derives the intermediate count from the exact construction,
+  requires exact signature and policy counts, and applies each transition only
+  after construction identity, depth, issuer continuity, and authenticated
+  child-policy identity checks pass.
+- This accumulates only intermediate path-length state. It stops before the
+  target signature and does not establish complete validation, check names or
+  revocation, perform TLS or HTTP, authorize OAuth, or grant network authority.
+
+## 0.11.0 - 2026-11-11
+
+### Added
+
+- Added the immediately target-nearer ordered path-length transition after the
+  root-authenticated first intermediate.
+- Added fixed public-certificate chain coverage for retained two-step evidence,
+  exact depth order, detached-construction rejection, and child-policy binding.
+
+### Security
+
+- The second transition requires the same exact construction, the immediately
+  preceding issuer depth, the already processed intermediate as issuer, and
+  complete policy for the exact authenticated candidate child before advancing
+  retained state.
+- This proves exactly two public-certificate transitions. It does not iterate
+  over arbitrary paths, establish complete validation, check revocation,
+  perform TLS or HTTP, authorize OAuth, or grant network authority.
+
 ## 0.10.0 - 2026-11-11
 
 ### Added
