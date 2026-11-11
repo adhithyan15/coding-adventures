@@ -2851,6 +2851,67 @@ impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevoc
     }
 }
 
+/// Non-copyable complete revocation policy for one recursive fixed path.
+///
+/// The retained default-source proof covers the server target, original
+/// responder, intermediate, added intermediate-status responder, that
+/// responder's revocation proof signer, and the recursive revocation proof's
+/// own signer with authenticated good-and-fresh OCSP status or exact RFC 6960
+/// no-check policy. The selected Mozilla-reviewed root remains the trust
+/// anchor, not a revocation target. This nominal completion evidence does not
+/// generalize path construction or validation, acquire or refresh revocation
+/// data, read a clock, or provide TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+> {
+    recursive_responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+        >,
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation>
+    ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+{
+    /// Return the consumed complete recursive no-check proof intact.
+    pub const fn recursive_responder_no_check_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderNoCheckPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >{
+        &self.recursive_responder_no_check_policy
+    }
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation> fmt::Debug
+    for ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy",
+        )
+    }
+}
+
 /// Non-copyable added-responder revocation path after RFC 6960 no-check policy.
 ///
 /// Success retains the complete reviewed-root DNS proof and proves that the
@@ -3413,6 +3474,46 @@ where
             anchor_dns_policy,
         },
     )
+}
+
+/// Complete revocation policy for the exact recursive no-check fixed path.
+///
+/// The input is deliberately restricted to the default source branch. Its
+/// type can be constructed only after the retained server target, original
+/// responder, intermediate, added intermediate-status responder, added
+/// responder-revocation proof signer, and recursive revocation proof signer
+/// have each passed their branch-specific authenticated-status or RFC 6960
+/// no-check policy. This infallible nominal composition accepts no substitute
+/// certificate, path, root, algorithm, key, signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It does not generalize path construction or
+/// validation, fetch, cache, acquire, or refresh revocation data, or provide
+/// TLS, HTTP, OAuth readiness, or network authority.
+pub const fn complete_x509_ocsp_routed_issuer_reviewed_recursive_responder_no_check_fixed_path_revocation_policy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+>(
+    recursive_responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+        >,
+) -> ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+> {
+    ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy {
+        recursive_responder_no_check_policy,
+    }
 }
 
 /// Require RFC 6960 no-check policy for the delegated responder.
@@ -7588,6 +7689,61 @@ mod tests {
         assert_eq!(
             format!("{no_check_policy:?}"),
             "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderNoCheckPolicy"
+        );
+    }
+
+    #[test]
+    fn recursive_responder_no_check_completes_exact_fixed_path() {
+        let original_encoded = certificate(&[]);
+        let added_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder_encoded = certificate(&[]);
+        let recursive_responder_encoded =
+            certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let recursive_responder =
+            decode_x509_certificate(&recursive_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let responder_path = recursive_intermediate_status_responder_revocation_responder_path(
+            &original,
+            &added,
+            &issuer,
+            &responder,
+            &recursive_responder,
+            observation_time,
+            None,
+        );
+        let anchor_dns_policy = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let no_check = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_no_check_policy(
+            anchor_dns_policy,
+        )
+        .unwrap();
+
+        let complete = complete_x509_ocsp_routed_issuer_reviewed_recursive_responder_no_check_fixed_path_revocation_policy(
+            no_check,
+        );
+
+        assert!(std::ptr::eq(
+            complete
+                .recursive_responder_no_check_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .recursive_responder_revocation()
+                .recursive_responder_revocation()
+                .responder,
+            &recursive_responder,
+        ));
+        assert_eq!(
+            format!("{complete:?}"),
+            "ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy"
         );
     }
 
