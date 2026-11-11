@@ -1,0 +1,5 @@
+tests/diff/simple-super/input/a.js:1:0: ERROR - [JSC_INVALID_SUPER_ACCESS] 'super' may only be accessed within a method
+  1| super.f(1 + 2);
+     ^
+
+1 error(s), 0 warning(s)

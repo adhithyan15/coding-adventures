@@ -21,6 +21,9 @@
 //! | `new.target` outside a function   | `JSC_PARSE_ERROR` "Parse error.         |
 //! |                                   | new.target must be inside a function"   |
 //! |                                   | (slice 2)                               |
+//! | `super` outside a method          | `JSC_INVALID_SUPER_ACCESS` "'super'     |
+//! |                                   | may only be accessed within a method"   |
+//! |                                   | (slice 3)                               |
 //!
 //! Upstream reports **every** occurrence: the `#x` of a field, method or
 //! accessor declaration, every `this.#x` use, and `#x in o`. Each one is a
@@ -86,6 +89,8 @@ const PRIVATE_ELEMENTS: &str =
 const PARSE_ERROR: &str = "JSC_PARSE_ERROR";
 const RETURN_OUTSIDE_FUNCTION: &str = "Parse error. return must be inside function";
 const NEW_TARGET_OUTSIDE_FUNCTION: &str = "Parse error. new.target must be inside a function";
+const INVALID_SUPER_ACCESS: &str = "JSC_INVALID_SUPER_ACCESS";
+const SUPER_OUTSIDE_METHOD: &str = "'super' may only be accessed within a method";
 
 /// Convert a 1-based character (scalar) column from the lexer/parser into
 /// a 0-based column in UTF-16 code units, matching upstream Java String indexing.
@@ -115,14 +120,16 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
         message: PRIVATE_ELEMENTS,
     };
     let mut out = Vec::new();
-    // Slice 2: `return` / `new.target` outside a function. They need the
-    // parse tree, so only parse when a candidate KEYWORD token is present.
-    // A string `"return"` or a member name `x.return` is not one.
+    // Slices 2 & 3: `return` / `new.target` outside a function, `super` outside
+    // a method. They need the parse tree, so only parse when a candidate
+    // KEYWORD token is present. A string `"super"` or a member name `x.super`
+    // is not one.
     let candidate = tokens.iter().enumerate().any(|(i, t)| {
         let keyword = matches!(t.type_, lexer::token::TokenType::Keyword)
             && !(i > 0 && matches!(tokens[i - 1].value.as_str(), "." | "?."));
         keyword
             && (t.value == "return"
+                || t.value == "super"
                 || (t.value == "new"
                     && tokens.get(i + 1).is_some_and(|d| d.value == ".")
                     && tokens.get(i + 2).is_some_and(|n| n.value == "target")))
@@ -154,29 +161,32 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     out
 }
 
-/// Slice 2 (CLOC44): every `return` and `new.target` that is not inside a
-/// function, in the parse tree of one file.
+/// Slices 2 & 3 (CLOC44): `return` / `new.target` outside a function, and
+/// `super` outside a method.
 ///
 /// Upstream's rule, measured on the jar, is not quite ECMA-262's, and it
-/// treats the two keywords differently:
+/// treats the constructs differently:
 ///
-/// | Where                                       | `return`  | `new.target` |
-/// |---------------------------------------------|-----------|--------------|
-/// | top level, a block, a label                 | refused   | refused      |
-/// | a function, method, getter, setter          | allowed   | allowed      |
-/// | an arrow (even at top level)                | allowed   | allowed      |
-/// | a class `static {}` block                   | refused   | as outside   |
-/// | a class field initialiser (`x = …`)         | n/a       | as outside   |
-/// | a method's computed key (`[k](){}`)         | n/a       | as outside   |
+/// | Where                                       | `return`  | `new.target` | `super`      |
+/// |---------------------------------------------|-----------|--------------|--------------|
+/// | top level, a block, a label                 | refused   | refused      | refused      |
+/// | a standalone function                       | allowed   | allowed      | refused      |
+/// | a method, getter, setter                    | allowed   | allowed      | allowed      |
+/// | an arrow (at top level or in function)      | allowed   | allowed      | as outside   |
+/// | an arrow inside a method                    | allowed   | allowed      | allowed      |
+/// | a class `static {}` block                   | refused   | as outside   | allowed      |
+/// | a class field initialiser (`x = …`)         | n/a       | as outside   | allowed      |
+/// | a method's computed key (`[k](){}`)         | n/a       | as outside   | as outside   |
 ///
-/// "As outside" means the context around the class: `class A{x=new.target}`
+/// "As outside" means the context around the class/function: `class A{x=new.target}`
 /// is refused at top level, but `function f(){class A{x=new.target}}`
-/// compiles. So two flags travel down the tree:
+/// compiles. So three flags travel down the tree:
 ///
-/// - a function-like node (declaration, expression, method, accessor,
-///   generator, async form, arrow) sets both, which covers its parameters
-///   as well as its body;
-/// - `static_block` clears `return_ok` only;
+/// - functions set `return_ok` and `new_target_ok`, but clear `super_ok`;
+/// - methods set `return_ok`, `new_target_ok`, and `super_ok`;
+/// - arrows set `return_ok` and `new_target_ok`, and inherit `outer.super_ok`;
+/// - `static_block` and `class_field_declaration` clear `return_ok`, inherit
+///   `new_target_ok`, and set `super_ok`;
 /// - a method's `property_name` child (its key, computed or not) keeps the
 ///   flags from outside the method.
 ///
@@ -188,10 +198,14 @@ fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<R
     struct Context {
         return_ok: bool,
         new_target_ok: bool,
+        super_ok: bool,
     }
-    const FUNCTION: Context = Context { return_ok: true, new_target_ok: true };
     let mut out = Vec::new();
-    let top = Context { return_ok: false, new_target_ok: false };
+    let top = Context {
+        return_ok: false,
+        new_target_ok: false,
+        super_ok: false,
+    };
     let mut stack: Vec<(&GrammarASTNode, Context)> = vec![(root, top)];
     while let Some((node, outer)) = stack.pop() {
         let rule = node.rule_name.as_str();
@@ -199,33 +213,50 @@ fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<R
         let here = match rule {
             "function_declaration"
             | "function_expression"
-            | "function_body"
             | "generator_declaration"
             | "generator_expression"
             | "async_function_declaration"
             | "async_function_expression"
             | "async_generator_declaration"
-            | "async_generator_expression"
-            | "arrow_function"
-            | "async_arrow_function" => FUNCTION,
-            _ if method_like => FUNCTION,
-            "static_block" => Context { return_ok: false, ..outer },
+            | "async_generator_expression" => Context {
+                return_ok: true,
+                new_target_ok: true,
+                super_ok: false,
+            },
+            "arrow_function" | "async_arrow_function" => Context {
+                return_ok: true,
+                new_target_ok: true,
+                super_ok: outer.super_ok,
+            },
+            _ if method_like => Context {
+                return_ok: true,
+                new_target_ok: true,
+                super_ok: true,
+            },
+            "static_block" | "class_field_declaration" => Context {
+                return_ok: false,
+                new_target_ok: outer.new_target_ok,
+                super_ok: true,
+            },
             _ => outer,
         };
-        let message = match rule {
-            "return_statement" if !here.return_ok => Some(RETURN_OUTSIDE_FUNCTION),
+        let diag = match rule {
+            "return_statement" if !here.return_ok => Some((PARSE_ERROR, RETURN_OUTSIDE_FUNCTION)),
             "member_expression" if !here.new_target_ok && is_new_target(node) => {
-                Some(NEW_TARGET_OUTSIDE_FUNCTION)
+                Some((PARSE_ERROR, NEW_TARGET_OUTSIDE_FUNCTION))
+            }
+            "member_expression" if !here.super_ok && is_super(node) => {
+                Some((INVALID_SUPER_ACCESS, SUPER_OUTSIDE_METHOD))
             }
             _ => None,
         };
-        if let (Some(message), Some(line), Some(column)) = (message, node.start_line, node.start_column) {
+        if let (Some((key, message)), Some(line), Some(column)) = (diag, node.start_line, node.start_column) {
             out.push(Refusal {
                 file,
                 line,
                 // Upstream reports column in UTF-16 code units (0-based).
                 column: utf16_col(lines, line, column),
-                key: PARSE_ERROR,
+                key,
                 message,
             });
         }
@@ -251,6 +282,15 @@ fn is_new_target(node: &GrammarASTNode) -> bool {
         })
         .collect();
     tokens == ["new", ".", "target"]
+}
+
+/// Is `node` a `member_expression` whose base is the `super` keyword?
+fn is_super(node: &GrammarASTNode) -> bool {
+    matches!(
+        node.children.first(),
+        Some(ASTNodeOrToken::Token(t))
+            if t.value == "super" && matches!(t.type_, lexer::token::TokenType::Keyword)
+    )
 }
 
 /// Render `refusals` exactly as upstream prints them to stderr, without the
@@ -450,6 +490,81 @@ mod tests {
         ] {
             assert!(scan_es(src).is_empty(), "{src:?}");
         }
+    }
+
+    // ---- Slice 3: `super` outside a method ----------------------------
+    // Every expectation below was measured on the v20260915 jar.
+
+    #[test]
+    fn super_outside_a_method_is_refused() {
+        assert_eq!(
+            parse_refusals("super.f(1 + 2);"),
+            vec![(0, SUPER_OUTSIDE_METHOD)]
+        );
+        assert_eq!(
+            parse_refusals("x=()=>super.x;"),
+            vec![(6, SUPER_OUTSIDE_METHOD)]
+        );
+        assert_eq!(
+            parse_refusals("super.x;super.y;"),
+            vec![(0, SUPER_OUTSIDE_METHOD), (8, SUPER_OUTSIDE_METHOD)]
+        );
+        assert_eq!(
+            parse_refusals("if(a){super.x;}"),
+            vec![(6, SUPER_OUTSIDE_METHOD)]
+        );
+    }
+
+    #[test]
+    fn super_in_arrows_inherits_method_context() {
+        for src in [
+            "class A{m(){const f=()=>super.x;}}",
+            "var o={m(){const f=()=>super.x;}};",
+            "class A{static m(){const f=()=>super.x;}}",
+        ] {
+            assert!(scan_es(src).is_empty(), "{src:?}");
+        }
+    }
+
+    #[test]
+    fn methods_class_fields_and_static_blocks_allow_super() {
+        for src in [
+            "class A{m(){super.x;}}",
+            "class A{constructor(){super();}}",
+            "class A{get x(){return super.x;}}",
+            "class A{set x(v){super.x=v;}}",
+            "var o={m(){super.x;}};",
+            "class A{x=super.y;}",
+            "class A{static{super.y;}}",
+            "var x='super'; // super",
+        ] {
+            assert!(scan_es(src).is_empty(), "{src:?}");
+        }
+    }
+
+    #[test]
+    fn computed_method_key_outside_method_refuses_super() {
+        assert_eq!(
+            parse_refusals("class A{[super.x](){}}"),
+            vec![(9, SUPER_OUTSIDE_METHOD)]
+        );
+        assert_eq!(
+            parse_refusals("class A{static [super.x](){}}"),
+            vec![(16, SUPER_OUTSIDE_METHOD)]
+        );
+    }
+
+    #[test]
+    fn refusals_of_all_three_slices_come_out_in_source_order() {
+        let r = scan_es("class A{#x}return;super.x;");
+        assert_eq!(
+            r.iter().map(|r| (r.column, r.key)).collect::<Vec<_>>(),
+            vec![
+                (8, UNSUPPORTED_FEATURE),
+                (11, PARSE_ERROR),
+                (18, INVALID_SUPER_ACCESS)
+            ]
+        );
     }
 
     #[test]
