@@ -2,6 +2,12 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json declaring only the capabilities used by #[cfg(test)] modules (the analyzer scans cfg(test) code); production code is pure.
+
 ## Unreleased — a `DirectCall` to a closure body is refused (issue #18466)
 
 **Validator: a `DirectCall` may not target a function with captures**
