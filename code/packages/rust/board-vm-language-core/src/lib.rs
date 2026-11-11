@@ -9346,6 +9346,9 @@ fn windows_device_paths() -> Vec<String> {
     Vec::new()
 }
 
+// Only the Unix device scan calls this; without the gate it is dead code on
+// Windows and `-D warnings` turns that into a build failure.
+#[cfg(unix)]
 fn collect_matching_dir_paths(dir: &str, paths: &mut Vec<String>, matches: impl Fn(&str) -> bool) {
     let Ok(entries) = fs::read_dir(dir) else {
         return;
