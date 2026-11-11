@@ -2640,6 +2640,77 @@ impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevoc
     }
 }
 
+/// Non-copyable path for the recursive revocation proof's own responder.
+///
+/// The retained recursive responder-revocation branch already proves that its
+/// recursive proof's exact delegated responder passed certificate-wide role,
+/// algorithm, OCSP-signing-purpose, and observation-time validity policy; that
+/// repository-owned routed RSA verification authenticated the response and
+/// certificate signatures; and that the exact responder path terminates at
+/// the selected Mozilla-reviewed root. This nominal wrapper reifies that path
+/// without accepting substitute evidence or performing additional validation.
+///
+/// It does not apply reviewed-root name policy to the delegated responder,
+/// establish no-check or separately authenticated revocation policy for it,
+/// complete revocation policy, generalize path validation, or grant TLS, HTTP,
+/// OAuth, or network authority.
+pub struct BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+    Source = BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, IntermediateRevocation>,
+> {
+    recursive_responder_revocation:
+        BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocation<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+            Source,
+        >,
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation, Source>
+    BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    >
+{
+    /// Return the complete recursive responder-revocation branch intact.
+    pub const fn recursive_responder_revocation(
+        &self,
+    ) -> &BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocation<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    > {
+        &self.recursive_responder_revocation
+    }
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation, Source>
+    fmt::Debug
+    for BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+        Source,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath",
+        )
+    }
+}
+
 /// Non-copyable added-responder revocation path after RFC 6960 no-check policy.
 ///
 /// Success retains the complete reviewed-root DNS proof and proves that the
@@ -3026,6 +3097,50 @@ where
             recursive_responder_revocation,
         },
     )
+}
+
+/// Reify the recursive responder-revocation proof's own exact responder path.
+///
+/// The safe recursive responder-revocation constructor already binds one
+/// complete fully routed authenticated proof to the added proof's responder,
+/// its exact reviewed-root issuer, and the original observation time. That
+/// retained recursive proof already authenticates its own delegated responder
+/// to the selected reviewed root. This infallible nominal projection preserves
+/// the complete generic source and accepts no caller-supplied certificate,
+/// path, root, algorithm, key, signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It stops before reviewed-root name policy for the
+/// delegated responder, that responder's no-check or authenticated-revocation
+/// policy, complete revocation policy, generalized path validation, TLS, HTTP,
+/// OAuth readiness, or network authority.
+pub fn reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_path<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+    Source,
+>(
+    recursive_responder_revocation:
+        BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocation<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+            Source,
+        >,
+) -> BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+    Source,
+> {
+    BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath {
+        recursive_responder_revocation,
+    }
 }
 
 /// Require RFC 6960 no-check policy for the delegated responder.
@@ -6861,7 +6976,7 @@ mod tests {
     }
 
     #[test]
-    fn recursive_added_responder_revocation_retains_generic_source_and_exact_proof() {
+    fn recursive_added_responder_revocation_path_retains_generic_source_and_exact_proof() {
         let original_encoded = certificate(&[]);
         let added_encoded = certificate(&[]);
         let issuer_encoded = certificate(&[]);
@@ -6940,6 +7055,33 @@ mod tests {
         assert_eq!(
             format!("{recursive:?}"),
             "BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocation"
+        );
+
+        let recursive_responder_path = reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_path(
+            recursive,
+        );
+        assert!(std::ptr::eq(
+            recursive_responder_path
+                .recursive_responder_revocation()
+                .recursive_responder_revocation()
+                .target,
+            &responder,
+        ));
+        let retained_source = &recursive_responder_path
+            .recursive_responder_revocation()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .anchor_dns_policy()
+            .responder_path()
+            .source;
+        assert!(std::ptr::eq(
+            retained_source.intermediate_revocation().original_responder,
+            &original,
+        ));
+        assert_eq!(
+            format!("{recursive_responder_path:?}"),
+            "BoundX509OcspReviewedIntermediateStatusResponderRevocationResponderRevocationResponderPath"
         );
     }
 
