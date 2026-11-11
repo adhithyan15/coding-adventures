@@ -999,6 +999,21 @@ class HardeningTests(unittest.TestCase):
         self.assertIn("ERROR", err)
         self.assertIn("nested too deeply", err)
 
+    def test_depth_limit_is_exact_and_ignores_brackets_in_strings(self):
+        ok = "[" * ac.MAX_JSON_DEPTH + "]" * ac.MAX_JSON_DEPTH
+        ac.check_json_depth(ok)  # exactly at the limit: accepted
+        deep = "[" * (ac.MAX_JSON_DEPTH + 1) + "]" * (ac.MAX_JSON_DEPTH + 1)
+        with self.assertRaises(ac.CatalogueError) as caught:
+            ac.check_json_depth(deep)
+        self.assertIn("nested too deeply", str(caught.exception))
+        # Brackets inside strings, including after an escaped quote, are content.
+        ac.check_json_depth('{"a": "' + "[" * 500 + '"}')
+        ac.check_json_depth('{"a": "x\\"' + "[" * 500 + '"}')
+        # The limit applies before json.loads is ever called.
+        with self.assertRaises(ac.CatalogueError) as caught:
+            ac.parse_catalogue_text('{"a": ' + "[" * 65 + "]" * 65 + "}")
+        self.assertIn("nested too deeply", str(caught.exception))
+
     def test_oversized_files_are_refused_before_parsing(self):
         with tempfile.TemporaryDirectory() as tmp:
             big = Path(tmp) / "non-claims.json"

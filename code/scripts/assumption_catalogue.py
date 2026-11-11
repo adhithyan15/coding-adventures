@@ -282,8 +282,51 @@ def read_capped(path: Path, cap: int) -> bytes:
     return raw
 
 
+# Deepest container nesting accepted, the same limit as the Rust loader
+# (`ca-assurance-report` `json::MAX_JSON_DEPTH`). The real files nest about five
+# deep.
+MAX_JSON_DEPTH = 64
+
+
+def check_json_depth(text: str, limit: int = MAX_JSON_DEPTH) -> None:
+    """Refuse JSON whose arrays/objects nest deeper than ``limit``, before parsing.
+
+    ``json.loads`` recurses once per level, so how deep it can go depends on the
+    interpreter: CPython 3.13's C decoder parsed 100,000 levels on CI, where an
+    older interpreter raised ``RecursionError``. A fixed limit, checked by a
+    linear scan, gives the same answer on every Python. Brackets inside strings
+    do not count, so the scan tracks string and escape state::
+
+        {"a": "[[["}      depth 1   (the brackets are string content)
+        [[[]]]            depth 3
+    """
+    depth = 0
+    in_string = False
+    escaped = False
+    for ch in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+        elif ch == '"':
+            in_string = True
+        elif ch in "[{":
+            depth += 1
+            if depth > limit:
+                raise CatalogueError(
+                    f"JSON nested too deeply (more than {limit} levels)"
+                )
+        elif ch in "]}":
+            depth -= 1
+
+
 def parse_catalogue_text(text: str) -> dict:
-    """Parse catalogue text strictly: no duplicate keys, no NaN, object root."""
+    """Parse catalogue text strictly: no duplicate keys, no NaN, object root,
+    at most ``MAX_JSON_DEPTH`` levels of nesting."""
+    check_json_depth(text)
     try:
         data = json.loads(
             text,
