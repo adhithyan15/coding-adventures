@@ -336,6 +336,81 @@ fn h3_unparseable_type_aliases_are_cap003() {
 }
 
 // ---------------------------------------------------------------------------
+// H4: a metavariable that can be a keyword, in a keyword position
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h4_ident_metavariable_in_a_keyword_position_is_cap003() {
+    check_cap003(
+        "H4",
+        &[
+            (
+                "ident-keyword-use",
+                "macro_rules! kw { ($k:ident) => { $k std::io as out; }; }\nkw!(use);\npub fn f() -> bool { out::stdout().flush().is_ok() }",
+            ),
+            (
+                "ident-keyword-extern-narrow",
+                "macro_rules! kw { ($k:ident) => { $k crate std as s; }; }\nkw!(extern);\npub fn f() -> String { s::env::var(\"HOME\").unwrap_or_default() }",
+            ),
+            ("use group via ident", "macro_rules! u { ($k:ident) => { $k {std::env as out}; }; }\nu!(use);\npub fn f() { out::var(\"H\"); }"),
+            ("use group via tt", "macro_rules! u { ($k:tt) => { $k {std::env as out}; }; }\nu!(use);\npub fn f() { out::var(\"H\"); }"),
+            ("type alias via ident", "macro_rules! t { ($k:ident) => { $k P = std::path::Path; }; }\nt!(type);"),
+            ("impl generics via ident", "macro_rules! i { ($k:ident) => { $k<T> Probe for T {} }; }\ni!(impl);"),
+            ("keyword then metavariable", "macro_rules! k { ($k:ident, $p:path) => { $k $p as out; }; }\nk!(use, std::env);"),
+            ("repetition of idents before a name", "macro_rules! k { ($($k:ident)*) => { $($k)* std::env as out; }; }\nk!(pub use);"),
+            ("extern ABI string via ident", "macro_rules! k { ($k:ident) => { $k \"C\" fn f() {} }; }"),
+            // `use` directly followed by a metavariable: the use tree is chosen
+            // by the caller (`u!(std)` is `use std as out;`).
+            ("use of an ident metavariable", "macro_rules! u { ($i:ident) => { use $i as out; }; }\nu!(std);\npub fn f() { out::env::var(\"H\"); }"),
+            ("use of a path metavariable", "macro_rules! u { ($p:path) => { use $p as out; }; }\nu!(std::path::Path);\npub fn f() { out::exists(out::new(\"x\")); }"),
+        ],
+    );
+}
+
+#[test]
+fn h4_the_review_controls_still_fail() {
+    check(
+        "H4 controls",
+        &[
+            (
+                "ident-keyword-extern (pure manifest)",
+                "macro_rules! kw { ($k:ident) => { $k crate std as s; }; }\nkw!(extern);\npub fn f() -> String { s::env::var(\"HOME\").unwrap_or_default() }",
+                &["?", "ffi:call"],
+            ),
+            (
+                "ident-keyword-unsafe",
+                "macro_rules! kw { ($k:ident) => { $k { core::ptr::read(&1u8 as *const u8) } }; }\npub fn f() -> u8 { kw!(unsafe) }",
+                &["!unsafe_code"],
+            ),
+        ],
+    );
+}
+
+#[test]
+fn h4_ordinary_ident_metavariables_stay_clean() {
+    check(
+        "H4 decoys",
+        &[
+            ("fn name", "macro_rules! m { ($name:ident, $t:ty) => { fn $name(x: $t) -> $t { x } } }", &[]),
+            ("impl block", "macro_rules! m { ($i:ident) => { impl $i { fn new() -> Self { $i } } } }", &[]),
+            ("struct literal", "macro_rules! m { ($s:ident, $f:ident) => { $s { $f: 1, other: 2 } } }", &[]),
+            ("empty struct literal", "macro_rules! m { ($s:ident) => { $s {} } }", &[]),
+            ("shorthand struct literal", "macro_rules! m { ($s:ident, $a:ident, $b:ident) => { $s { $a, $b } } }", &[]),
+            ("for loop", "macro_rules! m { ($i:ident) => { for $i in 0..3 { let _ = $i; } } }", &[]),
+            ("cast", "macro_rules! m { ($x:ident) => { $x as u8 } }", &[]),
+            ("call", "macro_rules! m { ($f:ident) => { $f(1); } }", &[]),
+            ("let", "macro_rules! m { ($x:ident) => { let $x = 1; let y = $x + 1; } }", &[]),
+            ("field type", "macro_rules! m { ($n:ident, $t:ty) => { struct S { $n: $t } } }", &[]),
+            ("comparison", "macro_rules! m { ($a:ident, $b:ident) => { let c = $a < $b; } }", &[]),
+            ("generic type in a field", "macro_rules! m { ($n:ident) => { struct S { v: Vec<$n> } fn f() -> $n<u8> { todo!() } } }", &[]),
+            ("use of $crate", "macro_rules! m { () => { use $crate::inner::Thing; } }", &[]),
+            ("use pattern in a matcher", "macro_rules! m { (use $p:path) => { }; }", &[]),
+            ("keyword argument to a known macro", "fn f() { let v = vec![if true { 1 } else { 2 }]; let _ = v; }", &[]),
+        ],
+    );
+}
+
+// ---------------------------------------------------------------------------
 // H6: clock reads and timed waits reached through the pure list
 // ---------------------------------------------------------------------------
 
@@ -362,6 +437,33 @@ fn h6_time_reached_through_pure_modules_is_classified() {
             ("Receiver UFCS", "use std::sync::mpsc::Receiver;\nfn f(r: &Receiver<u8>) { let _ = Receiver::recv_timeout(r, D); }", &["time:sleep"]),
             ("decoy Duration", "fn f() -> std::time::Duration { std::time::Duration::from_millis(1) }", &[]),
             ("decoy untimed wait", "fn f(c: &std::sync::Condvar, g: G) { let _ = c.wait(g); let _ = rx.recv(); }", &[]),
+        ],
+    );
+}
+
+// ---------------------------------------------------------------------------
+// H7: a method name spliced by a metavariable
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h7_method_name_splice_is_cap003() {
+    check_cap003(
+        "H7",
+        &[
+            (
+                "ident-method-splice",
+                "macro_rules! call {\n    ($e:expr, $m:ident) => {\n        $e.$m()\n    };\n}\npub fn f() -> bool {\n    call!(std::path::Path::new(\"Cargo.toml\"), exists)\n}",
+            ),
+            ("tt method", "macro_rules! call { ($e:expr, $m:tt) => { $e.$m(1) }; }"),
+            ("method on a literal receiver", "macro_rules! call { ($m:ident) => { p.$m() }; }"),
+        ],
+    );
+    check(
+        "H7 decoys",
+        &[
+            ("field access", "macro_rules! get { ($e:expr, $f:ident) => { $e.$f }; }", &[]),
+            ("tuple field", "macro_rules! get { ($e:expr) => { $e.0 }; }", &[]),
+            ("fixed method", "macro_rules! call { ($e:expr) => { $e.len() }; }", &[]),
         ],
     );
 }

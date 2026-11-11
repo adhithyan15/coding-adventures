@@ -912,12 +912,23 @@ fn stage1_file(toks: &[Token], br: &Brackets) -> FileFacts {
         }
         let prev_is_dot_or_dollar = i > 0 && (is_punct(toks, i - 1, '.') || is_punct(toks, i - 1, '$'));
         if let (Some(("use", false)), false) = (ident_at(toks, i), prev_is_dot_or_dollar) {
+            // `use $crate::..` names the defining crate: read it as `crate::..`.
+            // Any other metavariable after `use` chooses the imported path
+            // (`($i:ident) => { use $i as out; }` with `u!(std)`), so the
+            // binding is unknown: CAP003 (H4).
+            let dollar_crate = is_punct(toks, i + 1, '$') && ident_at(toks, i + 2) == Some(("crate", false));
+            if is_punct(toks, i + 1, '$') && !dollar_crate {
+                f.use_errors.push((i, "use declaration whose path is a macro_rules! metavariable; the names it binds are not known"));
+                i += 1;
+                continue;
+            }
             let starts_tree = ident_at(toks, i + 1).is_some()
                 || is_pathsep(toks, i + 1)
-                || is_punct(toks, i + 1, '{');
+                || is_punct(toks, i + 1, '{')
+                || dollar_crate;
             if starts_tree {
                 let start = i;
-                let mut j = i + 1;
+                let mut j = if dollar_crate { i + 2 } else { i + 1 };
                 let ok = parse_use_tree(toks, &mut j, &[], &mut f.leaves, 0) && is_punct(toks, j, ';');
                 if !ok {
                     f.use_errors.push((start, "unparseable use declaration"));
@@ -1750,8 +1761,11 @@ enum UnitKind {
     /// A `$x` whose fragment is `tt` or unknown: the caller may supply *any*
     /// single token, including `::`, `#` and `!`.
     MetaTt,
-    /// A `$x` with any other fragment (`ident`, `expr`, `ty`, `path`, ...):
-    /// a single identifier or an opaque, already-parsed node.
+    /// A `$x` whose fragment is `ident`: one identifier - **including any
+    /// keyword** (`use`, `extern`, `type`, `impl`, ...).  See [`check_keyword_splices`].
+    MetaIdent,
+    /// A `$x` with any other fragment (`expr`, `ty`, `path`, ...): an opaque,
+    /// already-parsed node.
     MetaOther,
     /// A `$( .. ) sep? op` repetition; `tt` is true if it contains a `MetaTt`.
     Repeat { tt: bool },
@@ -1775,7 +1789,18 @@ struct Unit {
 
 impl Unit {
     fn is_meta(&self) -> bool {
-        matches!(self.kind, UnitKind::MetaTt | UnitKind::MetaOther | UnitKind::Repeat { .. })
+        matches!(self.kind, UnitKind::MetaTt | UnitKind::MetaIdent | UnitKind::MetaOther | UnitKind::Repeat { .. })
+    }
+
+    /// Can this unit expand to a keyword?  An `ident` or `tt` metavariable can
+    /// (an `ident` fragment matches keywords), and so can a repetition whose
+    /// last unit can.
+    fn may_be_keyword(&self) -> bool {
+        match self.kind {
+            UnitKind::MetaTt | UnitKind::MetaIdent => true,
+            UnitKind::Repeat { .. } => self.inner.last().is_some_and(Unit::may_be_keyword),
+            _ => false,
+        }
     }
 
     fn is_tt(&self) -> bool {
@@ -1871,6 +1896,7 @@ fn transcriber_units(
             } else {
                 match frags.get(name).map(String::as_str) {
                     Some("tt") | None => UnitKind::MetaTt,
+                    Some("ident") => UnitKind::MetaIdent,
                     Some(_) => UnitKind::MetaOther,
                 }
             };
@@ -1895,6 +1921,85 @@ fn transcriber_units(
 fn units_glue(a: &Unit, b: &Unit) -> bool {
     (a.is_tt() && (b.kind == UnitKind::PathIdent || b.is_meta() || matches!(b.kind, UnitKind::OpenBracket | UnitKind::Bang)))
         || (b.is_tt() && (a.kind == UnitKind::PathIdent || a.is_meta()))
+}
+
+/// Is the `{` at `open` the start of something that could be a `use` group
+/// (`{std::env as out}`, `{a::{b, c}}`, `{$p}`) rather than a block or a struct
+/// literal?  A use group holds only identifiers, `::`, `,`, `*`, nested braces
+/// and metavariables, and binds a name other than its own only through `::`,
+/// `as`, `*` or a non-`ident` metavariable.  A struct literal has `field:` or
+/// `..`; a block has calls, operators or literals; `{ $a, $b }` with `ident`
+/// fragments binds each name to itself.
+fn group_may_be_use_tree(toks: &[Token], br: &Brackets, frags: &HashMap<String, String>, open: usize) -> bool {
+    let close = br.close(open).min(toks.len());
+    let mut renames = false;
+    let mut k = open + 1;
+    while k < close {
+        match &toks[k].tok {
+            Tok::PathSep | Tok::Punct('*') => renames = true,
+            Tok::Ident { name, raw: false } if name == "as" => renames = true,
+            Tok::Ident { .. } | Tok::Punct(',' | '{' | '}') => {}
+            Tok::Punct('$') => match ident_at(toks, k + 1) {
+                Some((n, _)) if frags.get(n).map(String::as_str) == Some("ident") || n == "crate" => k += 1,
+                _ => renames = true,
+            },
+            _ => return false,
+        }
+        k += 1;
+    }
+    renames
+}
+
+/// Keyword splices (security review round 4, H4).
+///
+/// An `ident` fragment matches *any* identifier, keywords included, and a `tt`
+/// matches any token.  So the caller can supply the keyword of an item whose
+/// body the transcriber spells:
+///
+/// ```text
+///   ($k:ident) => { $k std::io as out; }        kw!(use)      -> use std::io as out;
+///   ($k:ident) => { $k crate std as s; }        kw!(extern)   -> extern crate std as s;
+///   ($k:tt)    => { $k {std::env as out}; }     kw!(use)      -> use {std::env as out};
+/// ```
+///
+/// The walker sees `use`/`extern` only as a lone argument and the binding
+/// never reaches the table, so `out::stdout()` was pure (cases
+/// `ident-keyword-use`, `ident-keyword-extern-narrow`).
+///
+/// Two places could catch this: the *call site* (a bare keyword as a macro
+/// argument) or the *transcriber* (a metavariable where a keyword would start
+/// an item).  The call site is not sound: `kw!(use std;)` against
+/// `($k:ident $s:ident ;) => { $k $s as out; }` passes a complete-looking
+/// `use std;` while the expansion binds `out`.  So the rule is on the
+/// transcriber side, keyed on what follows the metavariable.  Every keyword
+/// that introduces a binding the analyzer tracks is followed by a name, a path
+/// or a group: `use <path|{..}|$x>`, `extern crate`, `type <name>`,
+/// `impl <path|<..>|$x>`, `mod <name>`.  So an `ident`/`tt` metavariable (or a
+/// repetition ending in one) is CAP003 when the next unit is
+///
+/// * an identifier that can be a path segment (`std`, `crate`, a name) or a
+///   string literal (`extern "C"`),
+/// * another metavariable or repetition,
+/// * a `{ .. }` group that can be a use tree ([`group_may_be_use_tree`]), or
+/// * `<` with the metavariable at the start of an item (`$k<T> Tr for T {}`).
+///
+/// A strict keyword after it (`$x as u8`, `for $i in`, `$t where`) is not a
+/// trigger: no tracked binding keyword is followed by one.  `unsafe` and
+/// `extern` reach the walk as tokens wherever they are written, call sites
+/// included, so `kw!(unsafe)` stays `CAP002` (control `ident-keyword-unsafe`).
+/// Accepted false positive: `$a < b` at the start of a statement.
+fn keyword_follows(toks: &[Token], br: &Brackets, frags: &HashMap<String, String>, before: Option<&Unit>, b: &Unit) -> bool {
+    if b.kind == UnitKind::PathIdent || b.is_meta() {
+        return true;
+    }
+    match &toks[b.at].tok {
+        Tok::Str(_) => true,
+        Tok::Punct('{') => group_may_be_use_tree(toks, br, frags, b.at),
+        Tok::Punct('<') => {
+            before.is_none() || before.is_some_and(|u| matches!(toks[u.at].tok, Tok::Punct(';' | '{' | '}' | ']')))
+        }
+        _ => false,
+    }
 }
 
 /// Report every gluing adjacency in `units`, recursing into repetitions.
@@ -1926,6 +2031,46 @@ fn check_unit_seq(sink: &mut Sink, toks: &[Token], units: &[Unit]) {
             Some(s) => {
                 let sep = Unit { kind: token_unit_kind(toks, s), at: s, inner: Vec::new(), sep: None, passthrough: false };
                 if units_glue(last, &sep) || units_glue(&sep, first) {
+                    report(sink, u.at);
+                }
+            }
+            None => {}
+        }
+    }
+}
+
+/// Apply [`keyword_follows`] to every adjacency in `units`, recursing into
+/// repetitions (also across consecutive iterations and around a separator).
+fn check_keyword_splices(sink: &mut Sink, toks: &[Token], br: &Brackets, frags: &HashMap<String, String>, units: &[Unit]) {
+    let report = |sink: &mut Sink, at: usize| {
+        sink.unanalyzable(
+            toks[at].line,
+            toks[at].col,
+            "macro_rules! places an `ident`/`tt` metavariable where a keyword would start an item (`$k std::io as out;` with `m!(use)`); the expansion is not analysed",
+            "$kw ..".into(),
+        );
+    };
+    for (n, w) in units.windows(2).enumerate() {
+        let before = if n == 0 { None } else { units.get(n - 1) };
+        if w[0].may_be_keyword() && keyword_follows(toks, br, frags, before, &w[1]) {
+            report(sink, w[0].at);
+        }
+    }
+    for u in units {
+        if !matches!(u.kind, UnitKind::Repeat { .. }) || u.inner.is_empty() {
+            continue;
+        }
+        check_keyword_splices(sink, toks, br, frags, &u.inner);
+        let (first, last) = (&u.inner[0], &u.inner[u.inner.len() - 1]);
+        match u.sep {
+            None if !u.passthrough && last.may_be_keyword() && keyword_follows(toks, br, frags, None, first) => {
+                report(sink, u.at)
+            }
+            Some(s) => {
+                let sep = Unit { kind: token_unit_kind(toks, s), at: s, inner: Vec::new(), sep: None, passthrough: false };
+                if (last.may_be_keyword() && keyword_follows(toks, br, frags, None, &sep))
+                    || (sep.may_be_keyword() && keyword_follows(toks, br, frags, None, first))
+                {
                     report(sink, u.at);
                 }
             }
@@ -2021,7 +2166,10 @@ fn check_transcriber_splices(sink: &mut Sink, toks: &[Token], br: &Brackets, arm
         }
     }
     match transcriber_units(toks, br, arm, &frags, from, to, 0) {
-        Ok(units) => check_unit_seq(sink, toks, &units),
+        Ok(units) => {
+            check_unit_seq(sink, toks, &units);
+            check_keyword_splices(sink, toks, br, &frags, &units);
+        }
         Err(at) => sink.unanalyzable(
             toks[at].line,
             toks[at].col,
@@ -2122,6 +2270,24 @@ fn check_transcriber_legacy(sink: &mut Sink, toks: &[Token], br: &Brackets, open
                         toks[k].col,
                         "macro_rules! invokes a macro chosen by a metavariable; the expansion is not analysed",
                         "$name!(..)".into(),
+                    );
+                }
+            }
+            Tok::Punct('.') if is_punct(toks, k + 1, '$') && !(k > 0 && is_punct(toks, k - 1, '.')) => {
+                // `$e.$m()`: the method is chosen by the caller, so
+                // `call!(Path::new(".."), exists)` is `Path::exists` and the
+                // method heuristic (§3.3) never sees the name (H7, case
+                // `ident-method-splice`).  After `.`, a repetition `$( .. )`, or
+                // a metavariable followed by `(` or a turbofish `::`, is
+                // CAP003; a spliced *field* (`$e.$f`) is not a call.
+                let method_splice = is_punct(toks, k + 2, '(')
+                    || (ident_at(toks, k + 2).is_some() && (is_punct(toks, k + 3, '(') || is_pathsep(toks, k + 3)));
+                if method_splice {
+                    sink.unanalyzable(
+                        toks[k].line,
+                        toks[k].col,
+                        "macro_rules! calls a method whose name is a metavariable; the method is not analysed",
+                        ".$m(..)".into(),
                     );
                 }
             }
