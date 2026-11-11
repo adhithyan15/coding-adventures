@@ -154,21 +154,38 @@ fn a_table_row_is_a_case_and_the_manifest_has_one_entry_per_table() {
 
 #[test]
 fn every_fault_fails_rows_of_the_shipped_tables() {
+    // The generated runner deliberately keeps NO failed row ids when the `CI`
+    // environment variable is set (the same log-size and data-exposure choice
+    // that prints `repro-fnv` hashes instead of counterexamples there). The
+    // counts and verdicts are the same either way; only the ids differ, so the
+    // test checks whichever behaviour applies to the environment it runs in.
+    // It reads `CI` rather than setting it: `std::env::set_var` races with the
+    // other tests of this binary, which run on parallel threads.
+    let in_ci = std::env::var("CI").is_ok();
     for (fault, failing) in [(Fault::FlipResultBit, 23), (Fault::DropLastResultByte, 23)] {
         let (v, stats) = harness::tab_synthetic_digests(fault);
         assert!(is_fail(&v, "not-deep-equal"), "{fault:?}: {v:?}");
         assert_eq!(stats.failed, failing, "{fault:?}");
-        assert_eq!(stats.failed_ids.len(), 16, "the first 16 ids are kept");
-        assert_eq!(stats.failed_ids[0], "vectors/synthetic_digests/len-0");
         let msg = message_of(&v);
         assert!(msg.contains("23 of 23 rows failed"), "{msg}");
-        assert!(msg.contains("vectors/synthetic_digests/len-0"), "{msg}");
+        if in_ci {
+            assert!(stats.failed_ids.is_empty(), "CI keeps no row ids: {:?}", stats.failed_ids);
+            assert!(!msg.contains("vectors/synthetic_digests/"), "CI names no rows: {msg}");
+        } else {
+            assert_eq!(stats.failed_ids.len(), 16, "the first 16 ids are kept");
+            assert_eq!(stats.failed_ids[0], "vectors/synthetic_digests/len-0");
+            assert!(msg.contains("vectors/synthetic_digests/len-0"), "{msg}");
+        }
     }
     // `missing-error` fails the one row whose answer is an error.
     let (v, stats) = harness::tab_synthetic_results(Fault::MissingError);
     assert!(is_fail(&v, "not-deep-equal"), "{v:?}");
     assert_eq!(stats.failed, 1);
-    assert_eq!(stats.failed_ids, vec!["vectors/synthetic_results/case-0".to_string()]);
+    if in_ci {
+        assert!(stats.failed_ids.is_empty(), "{:?}", stats.failed_ids);
+    } else {
+        assert_eq!(stats.failed_ids, vec!["vectors/synthetic_results/case-0".to_string()]);
+    }
     // No fault, no failure; and the honest run is what the manifest records.
     assert!(matches!(harness::tab_synthetic_digests(Fault::None).0, Verdict::Pass));
     assert!(matches!(harness::tab_synthetic_results(Fault::None).0, Verdict::Pass));
