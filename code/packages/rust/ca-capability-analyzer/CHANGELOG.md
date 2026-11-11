@@ -18,6 +18,14 @@ compiled the capability in.
 - [hardening, LOW] `--generate-module` (`write_module_to_disk`) followed a symlinked `src/` or `src/capabilities.rs` and overwrote a file outside the package. Both are now checked with `symlink_metadata` and refused before writing (VER23a V11).
 - [false negative, INFO] `std::fs::File::create_buffered` (creates/truncates like `File::create`) was `fs:read` (PoC t7). It is now `fs:write`.
 
+### Second review of the round-3 fixes (VER08a divergence D34 onwards)
+
+A second review built small crates that printed `PASS` (exit 0) while
+`cargo check` compiled a std capability call. Each fix has a regression in
+`tests/test_secreview_round4.rs` named after the review's case directory.
+
+- [false negative, H1] Renames resolved only one level deep: a binding was expanded only through its *first* segment and a written path was substituted once, so `mod a { pub use std as s; } use a::s as t; t::env::var(..)` read as `a::s::env::var` (pure). The same hole covered `use super::i as j` over `use std::io as i`, `use crate::Q as P`, a nested `pub extern crate std as s2` renamed again, `use j::*` over such a rename and `t::include!(..)` (cases `alias2-*`, `extern-crate-nested-2level`). The binding table is now closed under substitution at every segment, to a fixed point. Each spelling carries the set of original bindings it came from and never reuses one, so self-similar names (`pub use self::sha256::sha256;` + `use crate::sha256;`) converge. Caps: 64 segments, 20,000 spellings, 4,000,000 substitution attempts, 16 rounds; exceeding one is `CAP003`. VER08a G-8 claimed same-named bindings were already followed; it now describes what the analyzer does. A converging alias cycle (invalid Rust) is no longer `CAP003`.
+
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 
 - [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).

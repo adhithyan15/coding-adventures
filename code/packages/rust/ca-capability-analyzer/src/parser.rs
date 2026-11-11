@@ -908,6 +908,169 @@ fn glob_spellings(
     Ok(out)
 }
 
+/// Upper bound on substitution attempts while closing the binding table;
+/// more is CAP003 (an attacker-sized table must not take minutes).
+const MAX_ALIAS_WORK: usize = 4_000_000;
+
+/// `a` and `b` (sorted, de-duplicated) share an element.
+fn sorted_intersects(a: &[u32], b: &[u32]) -> bool {
+    let (mut i, mut j) = (0, 0);
+    while i < a.len() && j < b.len() {
+        match a[i].cmp(&b[j]) {
+            std::cmp::Ordering::Less => i += 1,
+            std::cmp::Ordering::Greater => j += 1,
+            std::cmp::Ordering::Equal => return true,
+        }
+    }
+    false
+}
+
+/// Union of two sorted, de-duplicated sets.
+fn sorted_union(a: &[u32], b: &[u32]) -> Vec<u32> {
+    let mut out: Vec<u32> = a.iter().chain(b.iter()).copied().collect();
+    out.sort_unstable();
+    out.dedup();
+    out
+}
+
+/// Intersection of two sorted, de-duplicated sets.
+fn sorted_intersection(a: &[u32], b: &[u32]) -> Vec<u32> {
+    a.iter().copied().filter(|x| b.binary_search(x).is_ok()).collect()
+}
+
+/// Close the binding table under substitution at every segment.
+///
+/// ## Why every segment
+///
+/// rustc resolves the *first* segment of a path in the current scope and every
+/// later segment inside the module the prefix names.  This table is not
+/// scoped, so it cannot tell which module a later segment lives in; what it can
+/// do is try every binding of that name.  The old code expanded a binding only
+/// through its *first* segment, and expanded a written path only once.  So
+///
+/// ```text
+///   mod a { pub use std as s; }      s -> std
+///   use a::s as t;                   t -> a::s      (head `a` is no binding)
+///   t::env::var("HOME")              t::env::var -> a::s::env::var   (pure!)
+/// ```
+///
+/// never reached `std::env::var` (review cases `alias2-*`,
+/// `extern-crate-nested-2level`).  Now a binding `n -> p` gains `n -> t + rest`
+/// for every segment `p[i]` that is itself a binding with spelling `t`
+/// (`rest = p[i+1..]`), repeated until nothing changes: `t -> a::s` gains
+/// `t -> std`.  This is the rule [`glob_spellings`] and
+/// [`Resolver::candidates`] apply to globs and written paths; with a closed
+/// table, one substitution at any segment of a written path reaches every
+/// spelling (a substitution discards the prefix before it, so a second one
+/// further right is the same as doing only that one).
+///
+/// ## Why provenance
+///
+/// Names repeat, so a binding can be substituted into itself.  With
+/// `mod sha256 { pub fn sha256() }`, `pub use self::sha256::sha256;` and
+/// `use crate::sha256;` in another module:
+///
+/// ```text
+///   self::sha256::sha256 -> crate::sha256::sha256 -> crate::sha256::sha256::sha256 -> ...
+/// ```
+///
+/// without end.  Each spelling therefore records the set of original
+/// bindings it was derived from, and a substitution that would use one of them
+/// twice is skipped.  rustc never resolves a path through the same import
+/// twice (that is an import cycle), so nothing it can resolve is lost.  When
+/// two derivations reach the same spelling, the *intersection* of their sets is
+/// kept: a smaller set blocks fewer later substitutions, so the result only
+/// grows (sound), and the process is monotone, so it terminates.
+///
+/// ## Caps
+///
+/// Every cap is checked inside the loops, before anything is materialised:
+/// [`MAX_ALIAS_PATH`] segments per spelling, [`MAX_ALIAS_ENTRIES`] spellings,
+/// [`MAX_ALIAS_WORK`] substitution attempts and [`MAX_ALIAS_ROUNDS`] rounds.
+/// Exceeding any of them is an `Err`, which the caller reports as CAP003.
+fn close_bindings(entries: Vec<(String, Vec<String>)>) -> Result<Vec<(String, Vec<String>)>, String> {
+    struct Spelling {
+        name: String,
+        path: Vec<String>,
+        prov: Vec<u32>,
+    }
+    let grew = || "alias expansion grew without bound".to_string();
+    let mut table: Vec<Spelling> = entries
+        .into_iter()
+        .enumerate()
+        .map(|(k, (name, path))| Spelling { name, path, prov: vec![k as u32] })
+        .collect();
+    let mut index: HashMap<(String, Vec<String>), usize> =
+        table.iter().enumerate().map(|(k, e)| ((e.name.clone(), e.path.clone()), k)).collect();
+    let mut work = 0usize;
+    for _ in 0..MAX_ALIAS_ROUNDS {
+        // New spellings (and shrunk provenance) found this round, applied after it.
+        let mut staged: HashMap<(String, Vec<String>), Vec<u32>> = HashMap::new();
+        // name -> spellings of that name, as of the start of this round.
+        let mut by_name: HashMap<&str, Vec<usize>> = HashMap::new();
+        for (k, e) in table.iter().enumerate() {
+            by_name.entry(e.name.as_str()).or_default().push(k);
+        }
+        for e in &table {
+            for (i, seg) in e.path.iter().enumerate() {
+                let Some(targets) = by_name.get(seg.as_str()) else { continue };
+                for &f in targets {
+                    let t = &table[f];
+                    work += 1;
+                    if work > MAX_ALIAS_WORK {
+                        return Err(grew());
+                    }
+                    if sorted_intersects(&e.prov, &t.prov) {
+                        continue;
+                    }
+                    let len = t.path.len() + e.path.len() - i - 1;
+                    if len > MAX_ALIAS_PATH {
+                        return Err(grew());
+                    }
+                    let mut np = Vec::with_capacity(len);
+                    np.extend_from_slice(&t.path);
+                    np.extend_from_slice(&e.path[i + 1..]);
+                    let prov = sorted_union(&e.prov, &t.prov);
+                    let key = (e.name.clone(), np);
+                    match staged.get_mut(&key) {
+                        Some(p) => *p = sorted_intersection(p, &prov),
+                        None => {
+                            if !index.contains_key(&key) && table.len() + staged.len() >= MAX_ALIAS_ENTRIES {
+                                return Err(grew());
+                            }
+                            staged.insert(key, prov);
+                        }
+                    }
+                }
+            }
+        }
+        drop(by_name);
+        let mut changed = false;
+        for (key, prov) in staged {
+            match index.get(&key) {
+                Some(&k) => {
+                    let narrowed = sorted_intersection(&table[k].prov, &prov);
+                    if narrowed != table[k].prov {
+                        table[k].prov = narrowed;
+                        changed = true;
+                    }
+                }
+                None => {
+                    index.insert(key.clone(), table.len());
+                    table.push(Spelling { name: key.0, path: key.1, prov });
+                    changed = true;
+                }
+            }
+        }
+        if !changed {
+            let mut out: Vec<(String, Vec<String>)> = table.into_iter().map(|e| (e.name, e.path)).collect();
+            out.sort();
+            return Ok(out);
+        }
+    }
+    Err("alias cycle: use-bindings did not converge".into())
+}
+
 impl Resolver {
     fn build(leaves: &[UseLeaf]) -> Result<Self, String> {
         let mut entries: Vec<(String, Vec<String>)> = Vec::new();
@@ -942,55 +1105,9 @@ impl Resolver {
             return Err("too many use bindings".into());
         }
 
-        // Expand binding heads through other bindings to a fixed point.
-        let mut converged = false;
-        for _ in 0..MAX_ALIAS_ROUNDS {
-            let mut changed = false;
-            let mut next: Vec<(String, Vec<String>)> = Vec::with_capacity(entries.len());
-            // name -> indices of entries that can serve as substitution targets
-            // (an entry whose own head is its own name cannot: see below).
-            let mut by_name: HashMap<&str, Vec<usize>> = HashMap::new();
-            for (j, (n, p)) in entries.iter().enumerate() {
-                if p[0] != *n {
-                    by_name.entry(n.as_str()).or_default().push(j);
-                }
-            }
-            for (k, (name, path)) in entries.iter().enumerate() {
-                // An entry whose own head is its own name (`pub use sha256::sha256;`:
-                // a module and a function sharing a name) cannot be expanded
-                // further and must not serve as a substitution target either,
-                // or every path through it would grow forever.
-                let targets: Vec<&Vec<String>> = by_name
-                    .get(path[0].as_str())
-                    .map(|v| v.iter().filter(|&&j| j != k).map(|&j| &entries[j].1).collect())
-                    .unwrap_or_default();
-                if targets.is_empty() {
-                    next.push((name.clone(), path.clone()));
-                } else {
-                    changed = true;
-                    for t in targets {
-                        let mut np = t.clone();
-                        np.extend_from_slice(&path[1..]);
-                        // Check the caps *inside* the loop: (entries x targets) can be
-                        // quadratic and must never be materialised before it is refused.
-                        if np.len() > MAX_ALIAS_PATH || next.len() >= MAX_ALIAS_ENTRIES {
-                            return Err("alias expansion grew without bound".into());
-                        }
-                        next.push((name.clone(), np));
-                    }
-                }
-            }
-            next.sort();
-            next.dedup();
-            entries = next;
-            if !changed {
-                converged = true;
-                break;
-            }
-        }
-        if !converged {
-            return Err("alias cycle: use-bindings did not converge".into());
-        }
+        // Expand every binding through every other binding, at *every*
+        // segment, to a fixed point (security review round 4, H1).
+        let entries = close_bindings(entries)?;
 
         let mut bindings: HashMap<String, Vec<Vec<String>>> = HashMap::new();
         for (n, p) in entries {

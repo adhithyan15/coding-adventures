@@ -325,7 +325,10 @@ const UNANALYZABLE: &[Case] = &[
     ("unknown alloc module", "use alloc::weird::Thing;", &["?"]),
     ("unknown std macro", "fn f(){ std::mystery!(); }", &["?"]),
     ("unknown std via alias", "use std as s; fn f(){ s::rt::lang_start(); }", &["?"]),
-    ("alias 3-cycle fails closed", "use b::x as a; use c::x as b; use a::x as c;", &["?"]),
+    // Since D34 a spelling never reuses an import it was derived from, so a
+    // cycle converges instead of tripping the round cap.  rustc rejects it.
+    ("alias 3-cycle converges (invalid Rust anyway)", "use b::x as a; use c::x as b; use a::x as c;", &[]),
+    ("alias cycle hiding nothing but std still resolves", "use std::env as e; use b::x as a; use a::y as b; fn f() { e::var(\"X\"); }", &["env:read"]),
     ("alias 2-cycle converges (invalid Rust anyway)", "use a::b as c; use c::d as a;", &[]),
     ("unparseable use", "use std::{fs, ;", &["?", "fs:read"]),
 ];
