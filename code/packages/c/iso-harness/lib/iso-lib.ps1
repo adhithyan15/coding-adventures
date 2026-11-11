@@ -55,7 +55,11 @@ function Iso-StrictFlags {
     # wants, and under /WX it failed every package that calls strncpy, strcpy,
     # fopen and friends (12 C/C++ packages in the first Windows full build).
     # /W4 /WX still make every conformance and conversion warning fatal.
-    $flags = @('/nologo', '/permissive-', '/W4', '/WX', '/D_CRT_SECURE_NO_WARNINGS')
+    # The value is deliberately empty (`/D...=`): three tests already write
+    # `#define _CRT_SECURE_NO_WARNINGS` themselves, and `/D...` alone defines it as
+    # 1, so their identical-looking redefinition raised C4005, fatal under /WX.
+    # An empty value makes theirs an identical redefinition, which is allowed.
+    $flags = @('/nologo', '/permissive-', '/W4', '/WX', '/D_CRT_SECURE_NO_WARNINGS=')
     # Do not treat clang-cl as MSVC internally: its extension diagnostics use
     # Clang's policy even though its command-line dialect looks like cl.exe.
     if ($Compiler -eq 'clang-cl') { $flags += '/clang:-pedantic-errors' }
