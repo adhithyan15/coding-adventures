@@ -3974,6 +3974,31 @@ jobs:
           luarocks install luacheck
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
+      # The Unix leg gets LUA_PATH/LUA_CPATH from leafo/gh-actions-luarocks, so a
+      # plain `lua` finds rocks installed with `luarocks make --local`. The Windows
+      # leg only put luarocks' bin directory on PATH, so `busted` (a luarocks
+      # wrapper that sets its own paths) passed while the follow-up
+      # `lua installed_runtime_smoke.lua` in json_value, lattice_parser and
+      # nib_type_checker could not `require` the module it had just installed
+      # ("module 'coding_adventures.json_value' not found"). Export what
+      # `luarocks path` prints for cmd (`SET "NAME=value"`) to later steps.
+      - name: Export the LuaRocks module paths (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $exported = 0
+          luarocks path | ForEach-Object {
+            if ($_ -match '^SET\s+"?(LUA_PATH|LUA_CPATH)=(.*?)"?\s*$') {
+              "$($Matches[1])=$($Matches[2])" | Add-Content -Path $env:GITHUB_ENV
+              $exported++
+            }
+          }
+          # Not fatal: every Windows Lua job runs this step, and the packages whose
+          # BUILD runs a plain `lua` fail loudly on their own if the paths are absent.
+          if ($exported -ne 2) {
+            Write-Warning "Expected LUA_PATH and LUA_CPATH from luarocks path, exported $exported"
+          }
+
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
