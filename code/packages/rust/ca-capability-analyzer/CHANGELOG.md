@@ -35,6 +35,15 @@ A second review built small crates that printed `PASS` (exit 0) while
 - [denial of service, LOW] `matcher_has_tt_repeat` rescanned the whole matcher for every transcriber repetition, so a long matcher with many `$($t)*` repetitions was quadratic (`perf-matcher-rescan-80000`: 14.3 s release; 40,000 x 40,000 in a debug test: 32 s). The matcher's `$( $x:tt ) sep? op` repetitions are now collected once per arm (`matcher_tt_repeats`) and looked up by name (0.5 s and 0.2 s). Verdicts are unchanged; the repo-wide sweep is identical.
 - [hardening, LOW] `--generate-module` used `fs::write`, which truncates the existing file in place: a `src/capabilities.rs` hard-linked to a file outside the package overwrote that file (case `generator-hardlink`; `symlink_metadata` cannot see a hard link). The module is now written to a new temporary file in `src/` (`create_new`, never following an existing name) and renamed over the target, which replaces the directory entry and leaves the other link untouched (VER23a V13). A failed write leaves the non-`.rs` temporary file and names it, since the analyzer declares no `fs:delete`.
 
+### Third review (VER08a divergence D43 onwards)
+
+A third review built more crates that printed `PASS` while `cargo check`
+compiled a capability call. The cheap cases are fixed, each with a
+regression in `tests/test_secreview_round5.rs` named after the review's case
+directory; the rest are documented as known open gaps (VER08a §8.1).
+
+- [false negative, R5-1] The method heuristic tested only the token right after the method name, so an empty turbofish hid the call: `Path::new("Cargo.toml").exists::<>()` and `c.wait_timeout::<>(g, d)` were pure (cases `turbofish-exists`, `turbofish-wait-timeout`). An optional `::<..>` is now skipped before testing for `(`, and a `::<` that does not close counts as a call.
+
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 
 - [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).
