@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
+
+- [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).
+- [false negative, N2] `$($t)*::read_dir` / `$($t)+::` / `$($t),*::` evaded the repetition rule. Any `$(..)` repetition, with or without separator and kleene operator, followed by `::` is now `CAP003`.
+- [false negative, L-A] `Cargo.toml` unscanned-root comparison (`tests`, `benches`, `examples`, `target`, ..) is now ASCII case-insensitive (`path = "Tests/evil.rs"`).
+- [false-positive guard] `<$t>::MAX` (SCREAMING_CASE associated constant) is exempt from the N1 rule; `segment-tree` uses it and a constant cannot do I/O.
+- [docs, L-B] VER08a documents why `include_str!`/`include_bytes!` are not flagged.
+
+## 0.3.1 - Security-review fixes (VER08a divergence D14-D21)
+
+Specs first: VER08a updated (rules §3.2-3.5.1, work ceilings §5, divergence log D14-D21).
+Every fix has a regression that fails on 0.3.0 (corpus group `SECFIX` in
+`tests/test_evasion_corpus.rs`; `tests/test_secfix_regression.rs`).
+
+- [false negative, M1] `Path::exists(p)`, `std::path::Path::metadata(p)`, `PathBuf::read_dir(p)`, `<PathBuf>::is_file(p)` and `let g = Path::canonicalize;` were pure. Any `…::Path/PathBuf::<fs method>` is now `fs:list`; `std::path::absolute` is `env:read`. The path reader understands `>::item` and turbofish.
+- [false negative, M2] `m!(include, "../tests/evil.rs")` through `macro_rules! m { ($mac:ident, $f:expr) => { $mac!($f) } }` evaded `CAP003`. A bare `include`/`include_str`/`include_bytes` argument of a macro invocation and any `$name!(..)` in a `macro_rules!` body are now `CAP003`.
+- [false negative, M3] The line-oriented `Cargo.toml` reader missed top-level inline tables, `bin = [{ path = .. }]`, `package = { build = .. }`, `lib = { proc-macro = true }`, quoted table names, multi-line strings and multi-line arrays that reset the "current section". Replaced by a tokenizing reader that flattens every value to a key path, flags `path`/`build`/`proc-macro`/`proc_macro` anywhere outside dependency tables, refuses unverifiable values (multi-line strings, escapes, tables, arrays) and fails closed on anything it cannot parse. A line the old reader ignored (garbage without `=`) is now a finding.
+- [denial of service, M4] Alias expansion materialised (entries x targets) before checking its cap (264 KB input -> 2.3 GB abort); candidate generation was quadratic in path length; `matching_close` rescanned from every `#[` (O(n^2) on `#[#[#[…`); glob count was uncapped. Now: de-dup before expansion and caps inside the loops, 64 segments / 64 spellings per path, per-file work budget, a single-pass bracket table, 256-glob cap, macro-body scan budget. All reviewer inputs finish in well under a second in a debug build and yield `CAP003`.
+- [false negative, L1] `type F = File; F::create(..)`, `<File>::create(..)`, `type U = UdpSocket; U::bind(..)` escalated within a category. `type` aliases are bindings and `<T>::item` is classified as `T::item`.
+- [false negative, L2] `core::arch`/`std::arch` `_rdrand*`/`_rdseed*` intrinsics are `rand:read` (`__cpuid` documented as informational).
+- [false negative, L3] `extern "Rust" { … }` blocks are `foreign_linkage` + `ffi:call`.
+- [false positive, L4] The `.canonicalize()`-style method heuristic now resolves the one receiver shape it can prove (`Local::ctor(..)[.unwrap()/.expect()/.clone()/?]` with an inherent method of that name on a package-local type). `url-parser` no longer needs a false `fs:list` declaration; its manifest is corrected to `capabilities: []`.
+- [behaviour] New type-alias bindings mean `type Handle = *mut std::ffi::c_void;` makes each later use of `Handle` an `ffi:call` detection, as the `use` form already did (packages already failing the analyzer: audio-device-coreaudio, iocp, objc-bridge, transport-platform).
+
+Tests: 68 new SECFIX corpus cases (each with decoys), 17 regression tests (M3 bypasses and legitimate manifests, M4 timings).
+
+## 0.3.0 - Audit hardening (VER08a / VER23a contract revision)
+
+Specs first: `code/specs/VER08a-rust-capability-analyzer.md` and
+`VER23a-rust-effect-modules.md` now state exact, testable contracts, the
+out-of-scope limits of a lexical analyzer (G-1..G-9), and divergence logs
+(D1-D13, V1-V10).
+
+Bugs fixed (severity in brackets):
+
+- [false negative] `use std::{fs, process::Command};` and every brace group were read as a bare `std` (pure). The scanner is now a real lexer plus a package-wide `use`/alias/glob/`extern crate` resolver.
+- [false negative] `src/capabilities.rs` was never scanned; nested directories named `target`/`node_modules`/`_build` were skipped (`mod target;` hid code). Everything is scanned; exclusions apply at the package root only.
+- [false negative] Unknown `std`/`core`/`alloc` paths defaulted to pure. They are now `CAP003` (deny by default).
+- [false negative] Only six `extern` ABI names counted as FFI (`"C-unwind"` escaped); now every ABI except `"Rust"`. Attributes matched by substring; now exact identifiers, plus `link`, `link_section`, `link_ordinal`, `linkage`, `naked`.
+- [false negative] `include!`, `#[path]`, proc-macro crates/attributes, metavariable-spliced paths and attributes in `macro_rules!`, and `Cargo.toml` paths into unscanned directories are now `CAP003` (never waivable).
+- [false negative, AF-22] A clean report hid that `unsafe` was present under a manifest exception. Reports now list `excepted_constructs`, print them on every PASS, and end with a machine-readable `SUMMARY` line; `AnalysisReport::construct_status` distinguishes absent / present-excepted / present-violation.
+- [false negative] `Path::exists()`-style filesystem probes (method heuristic), `RandomState`/rand crates (`rand` category), `std::os::*`, `std::backtrace`, `_print` and `dbg!` are now detected.
+- [false claim] `--emit-cert` hard-coded `proved` without analysing; it now refuses unless the analysis is clean. Entry-point signatures were truncated at the first `;` (the committed ct-compare certificate was wrong and is regenerated). Entry effects of capability-bearing packages are now the sound over-approximation (all declared effects).
+- [tamper] The certificate checker ignored `unconditional_roots`, exception justifications, unknown fields and duplicate keys, and matched entry points by name. It now recomputes the whole expected certificate and compares every field; JSON output is fully escaped; the digest walker refuses symlinks and exempts only the top-level `src/capabilities.rs`.
+- [robustness] Manifest JSON: duplicate keys, lenient numbers/whitespace/control characters, duplicate or unknown banned-construct exceptions are rejected. Violations sorted by enum variant instead of file/line/col; now by location.
+- [false positive] `std::time::Duration`, `std::net::IpAddr` and other data types are pure.
+
+Tests: 350-case evasion corpus with exact verdicts, 224 hashlib-generated SHA-256 vectors plus NIST examples, 30 certificate tamper tests, 17 manifest tests, 34 package/scanner/Cargo/CLI tests (all in addition to the previous 42). Measured coverage 96.6% lines / 96.4% regions (`cargo llvm-cov`). 20 hand-made mutants, all killed.
+
+Known limits (documented, not fixed): third-party dependencies are only reported; capability `target` is not enforced; `tests/`, `benches/`, `examples/` are not analysed; macros are not expanded.
+
 ## 0.2.0 — 2026-11-08
 
 - Generated capability module and canonical effect certificate support (VER23 / VER24 / VER-P027b):
