@@ -143,6 +143,7 @@ jobs:
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
       run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
       run_rust_grammar_regen_check: ${{ steps.detect.outputs.run_rust_grammar_regen_check }}
+      run_swift_grammar_regen_check: ${{ steps.detect.outputs.run_swift_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -745,6 +746,13 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Almost no PR runs the Windows shard, so a BUILD_windows that has
+          # drifted from its BUILD (vitest left behind after a node --test
+          # migration, `set PERL5LIB=`, standardrb without the EndOfLine
+          # exemption, ...) stays latent until an unrelated PR rebuilds the
+          # package as a dependent. Find it here instead.
+          python3 code/scripts/audit_build_windows.py --check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_audit_build_windows.py'
           # VER13 assumption catalogue: ids unique, depends_on/refines resolve
           # and are acyclic, every discharge.backlog names a VER-BACKLOG row, and
           # spec section 3 equals the JSON (AC-14). Prints the SHA-256 a report
@@ -1471,6 +1479,37 @@ jobs:
             exit 1
           fi
           echo "All reconciled Rust compiled grammars are up to date."
+
+  # ── Job 7d: Swift compiled-grammar regeneration check ──────────
+  #
+  # Every Swift lexer/parser embeds its grammar in a generated _Grammar.swift.
+  # swift/grammar-tools's BUILD already runs `regen-embedded-grammars.sh
+  # --check`, but a .tokens/.grammar edit maps to no package, so a grammar-only
+  # change never scheduled that BUILD on its pull request: three ecmascript
+  # lexers drifted and every periodic full build then failed on swift/grammar-tools.
+  # This job runs the same guard whenever one of the grammars it covers, the
+  # generator, or a generated file changes (see ci-gates.json). It uses the
+  # Swift that ubuntu-latest preinstalls, as the Linux build shards do.
+  swift-grammar-regen-check:
+    name: Swift embedded-grammar regeneration check
+    needs: detect
+    if: needs.detect.outputs.run_swift_grammar_regen_check == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Fail if any embedded Swift grammar is stale
+        run: |
+          if ! bash code/packages/swift/grammar-tools/regen-embedded-grammars.sh --check; then
+            echo "::error::An embedded Swift grammar (_Grammar.swift) differs from its canonical .tokens/.grammar source."
+            echo "Run 'code/packages/swift/grammar-tools/regen-embedded-grammars.sh' locally and commit the result."
+            exit 1
+          fi
+          echo "All embedded Swift grammars are up to date."
 
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
@@ -3935,6 +3974,31 @@ jobs:
           luarocks install luacheck
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
 
+      # The Unix leg gets LUA_PATH/LUA_CPATH from leafo/gh-actions-luarocks, so a
+      # plain `lua` finds rocks installed with `luarocks make --local`. The Windows
+      # leg only put luarocks' bin directory on PATH, so `busted` (a luarocks
+      # wrapper that sets its own paths) passed while the follow-up
+      # `lua installed_runtime_smoke.lua` in json_value, lattice_parser and
+      # nib_type_checker could not `require` the module it had just installed
+      # ("module 'coding_adventures.json_value' not found"). Export what
+      # `luarocks path` prints for cmd (`SET "NAME=value"`) to later steps.
+      - name: Export the LuaRocks module paths (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $exported = 0
+          luarocks path | ForEach-Object {
+            if ($_ -match '^SET\s+"?(LUA_PATH|LUA_CPATH)=(.*?)"?\s*$') {
+              "$($Matches[1])=$($Matches[2])" | Add-Content -Path $env:GITHUB_ENV
+              $exported++
+            }
+          }
+          # Not fatal: every Windows Lua job runs this step, and the packages whose
+          # BUILD runs a plain `lua` fail loudly on their own if the paths are absent.
+          if ($exported -ne 2) {
+            Write-Warning "Expected LUA_PATH and LUA_CPATH from luarocks path, exported $exported"
+          }
+
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
@@ -4580,6 +4644,17 @@ jobs:
             if (Test-Path $_) {
               Add-Content -Path $env:GITHUB_PATH -Value $_
             }
+          }
+          # Prepending msys64\usr\bin puts MSYS2's coreutils `link.exe` (the
+          # hard-link creator) ahead of MSVC's linker. rustc and cl then run it
+          # as a linker and every crate that links fails with "linking with
+          # `link.exe` failed": 33 wasm/* packages in the first Windows full
+          # build, the only run that installs Ruby and Rust together. Nothing in
+          # this job calls coreutils `link` (scripts use `ln`), so rename it and
+          # let the MSVC `link.exe` that the MSVC bootstrap put on PATH win.
+          $coreutilsLink = Join-Path $env:RUBY_PREFIX 'msys64\usr\bin\link.exe'
+          if (Test-Path $coreutilsLink) {
+            Rename-Item -LiteralPath $coreutilsLink -NewName 'link.exe.msys-coreutils'
           }
 
       # ── Verify toolchains ────────────────────────────────────
@@ -5899,7 +5974,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5928,6 +6003,7 @@ jobs:
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
           RUST_GRAMMAR_REGEN_RESULT: ${{ needs['rust-grammar-regen-check'].result }}
+          SWIFT_GRAMMAR_REGEN_RESULT: ${{ needs['swift-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
@@ -5966,7 +6042,7 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
           # A selected conformance job may not silently skip: missing training
           # evidence must not become a green required check.
@@ -5974,7 +6050,7 @@ jobs:
             true:success|false:success|false:skipped) ;;
             *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
           esac
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

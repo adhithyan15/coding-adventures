@@ -813,6 +813,38 @@ func TestRustGrammarGateCoversSourcesArtifactsAndGenerator(t *testing.T) {
 	}
 }
 
+// The Swift lexers/parsers embed grammars as generated _Grammar.swift files.
+// swift/grammar-tools's BUILD checks them, but a grammar-only edit maps to no
+// package and so never scheduled that BUILD on its pull request. Only the path
+// clauses can fire this gate for a source edit; the generated files, the
+// generator and the covered packages must fire it too.
+func TestSwiftGrammarGateCoversSourcesArtifactsAndGenerator(t *testing.T) {
+	reg := loadRealRegistry(t)
+	cases := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+		want     bool
+	}{
+		{"ecmascript token source", map[string]bool{}, []string{"code/grammars/ecmascript/es5.tokens"}, true},
+		{"toml token source", map[string]bool{}, []string{"code/grammars/toml/toml.tokens"}, true},
+		{"algol parser source", map[string]bool{}, []string{"code/grammars/algol/algol60.grammar"}, true},
+		{"generator", map[string]bool{}, []string{"code/packages/swift/grammar-tools/regen-embedded-grammars.sh"}, true},
+		{"generator package", map[string]bool{"swift/grammar-tools": true}, nil, true},
+		{"generated lexer package", map[string]bool{"swift/ecmascript-es3-lexer": true}, nil, true},
+		{"generated parser package", map[string]bool{"swift/algol-parser": true}, nil, true},
+		{"grammar the Swift lanes do not embed", map[string]bool{}, []string{"code/grammars/lattice/lattice.grammar"}, false},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, tc.affected, tc.changed, false)
+			if got["swift-grammar-regen-check"] != tc.want {
+				t.Errorf("Swift grammar gate = %v, want %v", got["swift-grammar-regen-check"], tc.want)
+			}
+		})
+	}
+}
+
 func TestD18FManifestChangeFiresOnlyD18F(t *testing.T) {
 	reg := loadRealRegistry(t)
 	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/fixtures/chief-of-staff-message/v1/manifest.json"}, false)

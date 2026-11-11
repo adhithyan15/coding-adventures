@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.4.0 - Warrant v1: WX-H (output bounds) and WX-E (pinned external tables)
+
+Implements VER04j sections 5 and 6 (sections 14.2 and 14.3 list every deviation).
+All of it is under the `v1` header; a v0 document means exactly what it did
+(`output` in a v0 `bound` and `vectors` in a v0 document are `W0101`), and every
+generated harness of `ct-compare`, `gf256` and the earlier v1 fixtures is
+byte-identical (the new prelude parts are gated by features a document must use).
+
+- **Parser.** `output` as a bound metric; `vectors NAME:` with the contextual row
+  words `source`, `sha256`, `rows`, `column`, `holds` (path alphabet and shape,
+  64-hex pin, plain decimal row count, at most 32 unique columns); new
+  `Declaration::Vectors`, `VectorsDecl`, `ColumnDecl`, `valid_table_path`,
+  `Expression::mentioned_names`, `ParserErrorKind::TableIntegrity` (W0708).
+- **Checker.** `output` needs a `Bytes`/`Bytes<N>`/`List<T>` result or a `Result`
+  of one (W0301); `imin`/`imax` built-ins (`V1_FUNCTIONS` is now 33 names); tables
+  share the test-name namespace, are capped at 100,000 rows each and 250,000 per
+  document with saturating arithmetic (W0602), empty or vacuous tables are W0601,
+  unused or undecodable columns W0710, shadowing W0203. New `DiagnosticCode::{W0601,
+  W0710}`, `CheckerErrorKind::{TableRows, VacuousTable, UnusedColumn,
+  UndecodableColumn}`, `MAX_TABLE_ROWS`, `MAX_DOCUMENT_ROWS`.
+- **Evaluator / model code.** `imin`, `imax`, and byte-string `concat` in the
+  generated model translation.
+- **Evidence generator (WX-H).** The allocation observer (counting global
+  allocator, per-call window, containment by a parked worker, per-test latch, 64
+  workers / 1 GiB process cap), bounds as functions of the call arguments (a
+  negative or unevaluable bound fails the instance), the synthesized
+  `<op>/output-bound` suites, manifest `instances_observed` / `max_observed_heap` /
+  `bound_at_max`, relation bias for a limit parameter, the faults `ignore-limit`,
+  `off-by-one-limit`, `limit-after-alloc`, `truncate-silently`, and the composite
+  adapter as the fallback shape for other v1 signatures (`Bytes` results,
+  `Bytes<N>` results, `fresh`).
+- **Evidence generator (WX-E).** `vectors::{load_table, read_fixture, Shape,
+  check_value, expected_column, is_constant_output}`, `evidence::{TableSet,
+  load_document_tables, compile_rust_evidence_harness_with_tables,
+  generate_evidence_harness_with_tables}`, the generated table runner and manifest
+  entry, the `table` negative-control kind, the discrimination check, the faults
+  `flip-result-bit` and `drop-last-result-byte`, and `gen_evidence` materialising
+  and drift-checking `tests/generated/tables/<name>.tfv`.
+- **Dependencies.** `coding_adventures_test_bootstrap` and `coding_adventures_sha256`
+  are now regular dependencies (the loader hashes and parses fixtures).
+  `required_capabilities.json` now declares `fs:read` (it was already read by
+  `codegen::verify_regeneration`).
+- **Fixtures.** `code/specs/fixtures/warrant-vectors-synthetic-v1/` (synthetic
+  messages, hashlib digests, stdlib-only generator with a drift check). The build
+  tool maps that directory to this package.
+- **Tests.** `wxh_front`, `wxh_generator`, `wxh_evidence` (generated pilot harness,
+  observer, every fault, ground-evaluator versus generated model differential),
+  `wxh_vulnerable`, `wxh_wasteful`, `wxh_caps`, `wxh_caps_count`, `wxh_regen`,
+  `wxe_front`, `wxe_loader`, `wxe_evidence` (including a differential run against
+  Python `hashlib`), `wxe_edges`, `wxv_regen`.
+
 ## 0.3.0 - Warrant v1: WX-A (tuples, records and non-recursive sum types)
 
 Implements VER04j section 4 (its section 14.1 lists every deviation). All of it

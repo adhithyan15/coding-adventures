@@ -6,6 +6,7 @@ use x509_certificate_path_construction::{
 use x509_certificate_path_reviewed_anchor_binding::{
     bind_constructed_x509_certificate_path_to_reviewed_anchor,
     bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
+    initialize_reviewed_constructed_x509_certificate_path_length,
     X509CertificatePathReviewedAnchorBindingErrorKind,
 };
 use x509_certificate_policy::{validate_certificate_role_policy, X509CertificateRole};
@@ -363,4 +364,127 @@ fn rejects_exact_reviewed_terminal_end_entity_role_evidence() {
         error.kind(),
         X509CertificatePathReviewedAnchorBindingErrorKind::AnchorNotCertificateAuthority
     );
+}
+
+#[test]
+fn initializes_zero_capacity_for_a_direct_target_to_reviewed_root_path() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let path = construct_path(
+        &target,
+        &candidates,
+        candidates[0].tbs_certificate().subject().contents(),
+    );
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path =
+        bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy,
+    )
+    .unwrap();
+
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+
+    assert_eq!(
+        initialized
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert_eq!(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path()
+            .issuer_count(),
+        1
+    );
+    assert_eq!(
+        format!("{initialized:?}"),
+        "InitializedReviewedConstructedX509CertificatePathLength"
+    );
+}
+
+#[test]
+fn derives_intermediate_capacity_from_the_retained_construction() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let intermediate_subject = name_contents(b"intermediate.example");
+    let intermediate_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &intermediate_subject,
+        &test_subject_public_key_info_contents(),
+    );
+    let target_encoded = certificate(
+        &intermediate_subject,
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [decoded(&intermediate_encoded), root];
+    let path = construct_path(
+        &target,
+        &candidates,
+        candidates[1].tbs_certificate().subject().contents(),
+    );
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[1]).unwrap();
+    let reviewed_path =
+        bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let reviewed_role_path = bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy,
+    )
+    .unwrap();
+
+    let initialized =
+        initialize_reviewed_constructed_x509_certificate_path_length(reviewed_role_path);
+
+    assert_eq!(
+        initialized
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        1
+    );
+    assert_eq!(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path()
+            .issuer_count(),
+        2
+    );
+    assert!(std::ptr::eq(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        initialized
+            .reviewed_path()
+            .anchor_role_policy()
+            .certificate()
+    ));
 }

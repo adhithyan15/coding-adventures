@@ -1,6 +1,6 @@
 # CLOC44 — refuse what Closure refuses (CCR-075)
 
-**Status:** slices 1–3 implemented (private elements, return/new.target outside function, super outside method).
+**Status:** slices 1–4 implemented (private elements, return/new.target outside function, super outside method, with statement).
 **Decision:** owner, 2026-10-19 (#15860, option a).
 **Crate:** `closurec` (`src/refusals.rs`, `run.rs` step 1b, `tests/ladder.rs`).
 
@@ -140,6 +140,23 @@ at the `super` keyword token when `super` is accessed outside a method.
 and checks `super_ok` during the AST walk. `simple-super` now asserts the identical
 refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
 
+## Slice 4: `with` statement
+
+Upstream reports `JSC_USE_OF_WITH` ("The with statement cannot be used in strict mode.")
+at the `with` keyword token at SIMPLE and ADVANCED compilation levels, exit status 1.
+At WHITESPACE_ONLY, strict-mode validation is not enforced on scripts, matching upstream's
+acceptance and emission of `with` in verified goldens like `minify_with_body_flatten`.
+
+| Where | Upstream |
+|---|---|
+| `with (o) { x(1 + 2); }` at SIMPLE | refused, exit 1 |
+| `function f() { with (o) {} }` at ADVANCED | refused, exit 1 |
+| `with(o){a()}` at WHITESPACE_ONLY | compiled (`with(o)a();`), exit 0 |
+
+`refusals::scan` parses when a `with` keyword token is present (not after `.` or `?.`),
+and reports `with_statement` at SIMPLE and ADVANCED. `simple-with` now asserts the identical
+refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
+
 ## The ladder's third verdict
 
 A rung upstream refuses records that refusal in its own fixture:
@@ -164,7 +181,6 @@ The refusals already captured in `tests/oracle/upstream-refusals-v20260915.json`
 |---|---|
 | `simple-import`, `simple-export`, `simple-importexpr` | `JSC_INVALID_MODULE_PATH` (module resolution) |
 | `simple-importmeta` | `JSC_CANNOT_CONVERT` (`import.meta`) |
-| `simple-with` | `JSC_USE_OF_WITH` |
 
 Found since, and not yet captured as fixtures:
 

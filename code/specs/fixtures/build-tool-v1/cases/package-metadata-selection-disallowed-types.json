@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-metadata-disallowed-types",
+  "domain": "diff_selection",
+  "summary": "Only direct markdown shards under CHANGELOG.d and json, cnf or drat data under evidence are metadata; scripts, sources and nested shards propagate.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "rust/evidence-script",
+          "rel_path": "code/packages/rust/evidence-script",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-script-user",
+          "rel_path": "code/packages/rust/evidence-script-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-source",
+          "rel_path": "code/packages/rust/evidence-source",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-source-user",
+          "rel_path": "code/packages/rust/evidence-source-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-double",
+          "rel_path": "code/packages/rust/evidence-double",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-double-user",
+          "rel_path": "code/packages/rust/evidence-double-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-markdown",
+          "rel_path": "code/packages/rust/evidence-markdown",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-markdown-user",
+          "rel_path": "code/packages/rust/evidence-markdown-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-script",
+          "rel_path": "code/packages/rust/shard-script",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-script-user",
+          "rel_path": "code/packages/rust/shard-script-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-nested",
+          "rel_path": "code/packages/rust/shard-nested",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-nested-user",
+          "rel_path": "code/packages/rust/shard-nested-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-bare",
+          "rel_path": "code/packages/rust/shard-bare",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-bare-user",
+          "rel_path": "code/packages/rust/shard-bare-user",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [
+        [
+          "rust/evidence-script",
+          "rust/evidence-script-user"
+        ],
+        [
+          "rust/evidence-source",
+          "rust/evidence-source-user"
+        ],
+        [
+          "rust/evidence-double",
+          "rust/evidence-double-user"
+        ],
+        [
+          "rust/evidence-markdown",
+          "rust/evidence-markdown-user"
+        ],
+        [
+          "rust/shard-script",
+          "rust/shard-script-user"
+        ],
+        [
+          "rust/shard-nested",
+          "rust/shard-nested-user"
+        ],
+        [
+          "rust/shard-bare",
+          "rust/shard-bare-user"
+        ]
+      ],
+      "forced_packages": [],
+      "unknown_path_policy": "error",
+      "metadata_policy": "package_local"
+    },
+    "changed_paths": [
+      "code/packages/rust/evidence-script/evidence/run.sh",
+      "code/packages/rust/evidence-source/evidence/lib.rs",
+      "code/packages/rust/evidence-double/evidence/x.json.py",
+      "code/packages/rust/evidence-markdown/evidence/README.md",
+      "code/packages/rust/shard-script/CHANGELOG.d/2026-11-11-0123abcd-x.sh",
+      "code/packages/rust/shard-nested/CHANGELOG.d/nested/2026-11-11-0123abcd-x.md",
+      "code/packages/rust/shard-bare/CHANGELOG.d/.md"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-metadata-disallowed-types",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "rust/evidence-double",
+        "rust/evidence-markdown",
+        "rust/evidence-script",
+        "rust/evidence-source",
+        "rust/shard-bare",
+        "rust/shard-nested",
+        "rust/shard-script"
+      ],
+      "affected_packages": [
+        "rust/evidence-double",
+        "rust/evidence-double-user",
+        "rust/evidence-markdown",
+        "rust/evidence-markdown-user",
+        "rust/evidence-script",
+        "rust/evidence-script-user",
+        "rust/evidence-source",
+        "rust/evidence-source-user",
+        "rust/shard-bare",
+        "rust/shard-bare-user",
+        "rust/shard-nested",
+        "rust/shard-nested-user",
+        "rust/shard-script",
+        "rust/shard-script-user"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

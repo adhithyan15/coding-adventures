@@ -37,8 +37,19 @@ pub enum DiagnosticCode {
     /// domain would allocate `O(width^2)` bytes.
     W0707,
     /// W0709: A value nests deeper than TFV's 64-container limit (VER04j
-    /// section 4.9) and cannot be encoded into a corpus.
+    /// section 4.9) and cannot be encoded into a corpus; or a table row has a
+    /// shape no Warrant type has (WX-E).
     W0709,
+    /// W0601: A table that cannot discriminate (VER04j section 5.3 item 4).
+    W0601,
+    /// W0602: A budget is exhausted: more table rows than the tool profile
+    /// allows (VER04j section 5.2).
+    W0602,
+    /// W0708: Table integrity: bad path, symlink, size limit, digest mismatch,
+    /// row-count mismatch, malformed TFV (VER04j section 5.4).
+    W0708,
+    /// W0710: A table row whose fields or values do not fit the declared columns.
+    W0710,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -52,6 +63,10 @@ impl fmt::Display for DiagnosticCode {
             Self::W0706 => write!(f, "W0706"),
             Self::W0707 => write!(f, "W0707"),
             Self::W0709 => write!(f, "W0709"),
+            Self::W0601 => write!(f, "W0601"),
+            Self::W0602 => write!(f, "W0602"),
+            Self::W0708 => write!(f, "W0708"),
+            Self::W0710 => write!(f, "W0710"),
         }
     }
 }
@@ -1331,6 +1346,10 @@ impl<'a> Evaluator<'a> {
                     },
                     ty,
                 )
+            }
+            "imin" | "imax" => {
+                let (a, b) = (int(0)?, int(1)?);
+                EvalValue::Int(if name == "imin" { a.min(b) } else { a.max(b) })
             }
             "unwrap_or" => match args.first() {
                 Some(EvalValue::Option(Some(v))) => (**v).clone(),

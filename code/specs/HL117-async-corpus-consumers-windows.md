@@ -31,6 +31,17 @@ consumers.
 * A read-only test file may share one awaited bounded corpus load across its
   cases. A test that edits corpus sources must not use that shared value:
   after an edit, the content-addressed loader must read the new bytes again.
+* The async committed-modality loader may derive its independent narration
+  lesson-identity index through the already guarded, pinned generated-hash
+  batch reader. It must enumerate the complete narration owner-language set
+  against the independent registry first, request narration owners only, and
+  retain the same chapter schema, safe-ID, global uniqueness, and case-fold
+  collision checks as the synchronous index. Corrupt or missing owners must
+  still fail; unrelated book-hash owners must not become a new prerequisite.
+  Chunk the pinned transport when the language registry outgrows one batch,
+  while keeping collision checks global across chunks.
+  Verify sync/async index parity and negative owner fixtures before using this
+  faster path in the unchanged Windows coverage suite.
 * A one-track assertion may read that track's complete canonical lessons and
   curriculum directly when the measured function itself filters to that track.
   Keep independently shared policy and spine inputs, and fail if the track

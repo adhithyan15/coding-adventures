@@ -1,7 +1,9 @@
+import { spawnSync } from "node:child_process";
 import { lstatSync, readdirSync, realpathSync } from "node:fs";
 import { basename, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { assertRelativeManifestPath } from "./manifest-path.js";
-import { isAbsentErrno, readLedgerFile } from "./shard.js";
+import { isAbsentErrno, parseLedgerText, readLedgerFile } from "./shard.js";
 
 export const BOOK_GENERATION_DIRECTORY = "core/book-generation.d";
 
@@ -482,6 +484,72 @@ function readStrictDirectory(root: string, directory: string): string[] {
     .sort(codeUnit);
 }
 
+interface BookGenerationOwnerSource {
+  meta: unknown;
+  names(directory: string): string[];
+  read(directory: string, name: string): unknown;
+}
+
+/** Reuse one schema and identity validator for path and pinned-batch I/O. */
+function assembleBookGenerationOwners(
+  root: string,
+  source: BookGenerationOwnerSource,
+): LoadedBookGenerationOwners {
+  const base = join(root, BOOK_GENERATION_DIRECTORY);
+  const metaPath = join(base, "_meta.json");
+  const meta = exactMeta(source.meta, "book-generation.d/_meta.json");
+  const sourcePaths = [metaPath];
+
+  const readSection = (
+    directory: string,
+    expectedName: (value: unknown, label: string) => string,
+  ): unknown[] => {
+    const names = source.names(directory);
+    const entries: unknown[] = [];
+    for (const name of names) {
+      if (!name.endsWith(".json")) {
+        throw new Error(`book-generation owner '${directory}/${name}' has a malformed name`);
+      }
+      const path = join(base, directory, name);
+      const entry = source.read(directory, name);
+      if (expectedName(entry, `${directory}/${name}`) !== name) {
+        throw new Error(`book-generation owner '${directory}/${name}' does not match its record identity`);
+      }
+      entries.push(entry);
+      sourcePaths.push(path);
+    }
+    return entries;
+  };
+
+  const scriptSets: Record<string, unknown[]> = {};
+  let previousOrdinal = 0;
+  for (const name of source.names("script-sets.d")) {
+    const match = SCRIPT_SET_OWNER.exec(name);
+    const ordinal = match === null ? 0 : Number(match[1]);
+    if (match === null || ordinal <= previousOrdinal) {
+      throw new Error(`book-generation script-set owner '${name}' is malformed or out of canonical order`);
+    }
+    const id = match[2];
+    if (Object.hasOwn(scriptSets, id)) throw new Error(`book-generation scriptSet '${id}' is duplicated`);
+    const path = join(base, "script-sets.d", name);
+    scriptSets[id] = arrays(source.read("script-sets.d", name), `script-sets.d/${name}`);
+    sourcePaths.push(path);
+    previousOrdinal = ordinal;
+  }
+
+  const document: BookGenerationDocument = {
+    ...meta,
+    scriptSets,
+    referenceAppendices: readSection("reference-appendices.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
+    glossaries: readSection("glossaries.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
+    answerKeys: readSection("answer-keys.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
+    indexes: readSection("indexes.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
+    targets: readSection("targets.d", chapterOwnerName) as BookGenerationChapterOwner[],
+    handwritten: readSection("handwritten.d", chapterOwnerName) as BookGenerationChapterOwner[],
+  };
+  return { document: validateDocument(document), sourcePaths };
+}
+
 export function readBookGenerationOwners(root: string): LoadedBookGenerationOwners {
   const base = join(root, BOOK_GENERATION_DIRECTORY);
   assertRealDescendantComponents(root, base);
@@ -506,65 +574,98 @@ export function readBookGenerationOwners(root: string): LoadedBookGenerationOwne
   if (metaStat.isSymbolicLink() || !metaStat.isFile()) {
     throw new Error(`book-generation owner '${metaPath}' must be a real regular file`);
   }
-  const meta = exactMeta(readLedgerFile(metaPath), "book-generation.d/_meta.json");
-  const sourcePaths = [metaPath];
-
-  const readSection = (
-    directory: string,
-    expectedName: (value: unknown, label: string) => string,
-  ): unknown[] => {
-    const names = readStrictDirectory(root, directory);
-    const entries: unknown[] = [];
-    for (const name of names) {
-      if (!name.endsWith(".json")) {
-        throw new Error(`book-generation owner '${directory}/${name}' has a malformed name`);
-      }
+  return assembleBookGenerationOwners(root, {
+    meta: readLedgerFile(metaPath),
+    names: (directory) => readStrictDirectory(root, directory),
+    read: (directory, name) => {
       const path = join(base, directory, name);
       const ownerStat = lstatSync(path);
       if (ownerStat.isSymbolicLink() || !ownerStat.isFile()) {
         throw new Error(`book-generation owner '${path}' must be a real regular file`);
       }
-      const entry = readLedgerFile(path);
-      if (expectedName(entry, `${directory}/${name}`) !== name) {
-        throw new Error(`book-generation owner '${directory}/${name}' does not match its record identity`);
-      }
-      entries.push(entry);
-      sourcePaths.push(path);
-    }
-    return entries;
-  };
+      return readLedgerFile(path);
+    },
+  });
+}
 
-  const scriptSets: Record<string, unknown[]> = {};
-  let previousOrdinal = 0;
-  for (const name of readStrictDirectory(root, "script-sets.d")) {
-    const match = SCRIPT_SET_OWNER.exec(name);
-    const ordinal = match === null ? 0 : Number(match[1]);
-    if (match === null || ordinal <= previousOrdinal) {
-      throw new Error(`book-generation script-set owner '${name}' is malformed or out of canonical order`);
-    }
-    const id = match[2];
-    if (Object.hasOwn(scriptSets, id)) throw new Error(`book-generation scriptSet '${id}' is duplicated`);
-    const path = join(base, "script-sets.d", name);
-    const ownerStat = lstatSync(path);
-    if (ownerStat.isSymbolicLink() || !ownerStat.isFile()) {
-      throw new Error(`book-generation owner '${path}' must be a real regular file`);
-    }
-    scriptSets[id] = arrays(readLedgerFile(path), `script-sets.d/${name}`);
-    sourcePaths.push(path);
-    previousOrdinal = ordinal;
+/**
+ * Transport the same owner bytes through pinned parents for the all-plan check.
+ * The Python helper does not decide book semantics: after its bounded reads,
+ * the exact TypeScript parser above checks every owner identity and document.
+ */
+export function readBookGenerationOwnersBatch(root: string): LoadedBookGenerationOwners {
+  const script = fileURLToPath(new URL(
+    "../../../../learning/human-languages/data/scripts/book_generation_owner_read.py",
+    import.meta.url,
+  ));
+  const python = process.platform === "win32" ? "python" : "python3";
+  const child = spawnSync(python, [script], {
+    input: JSON.stringify({ root }),
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+    timeout: 30_000,
+    windowsHide: true,
+  });
+  if (child.error || child.status !== 0) {
+    throw new Error("anchored book-generation owner batch failed", { cause: child.error });
   }
-
-  const document: BookGenerationDocument = {
-    ...meta,
-    scriptSets,
-    referenceAppendices: readSection("reference-appendices.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
-    glossaries: readSection("glossaries.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
-    answerKeys: readSection("answer-keys.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
-    indexes: readSection("indexes.d", backmatterOwnerName) as BookGenerationBackmatterOwner[],
-    targets: readSection("targets.d", chapterOwnerName) as BookGenerationChapterOwner[],
-    handwritten: readSection("handwritten.d", chapterOwnerName) as BookGenerationChapterOwner[],
-  };
-  return { document: validateDocument(document), sourcePaths };
+  let response: unknown;
+  try {
+    response = JSON.parse(child.stdout);
+  } catch (cause) {
+    throw new Error("anchored book-generation owner batch returned invalid JSON", { cause });
+  }
+  if (typeof response !== "object" || response === null || Array.isArray(response) ||
+      Object.keys(response).length !== 2) {
+    throw new Error("anchored book-generation owner batch returned an invalid tree");
+  }
+  const tree = response as Record<string, unknown>;
+  if (typeof tree.meta !== "string" || typeof tree.sections !== "object" ||
+      tree.sections === null || Array.isArray(tree.sections)) {
+    throw new Error("anchored book-generation owner batch returned invalid metadata or sections");
+  }
+  const rawSections = tree.sections as Record<string, unknown>;
+  if (Object.keys(rawSections).length !== BOOK_GENERATION_SECTION_DIRECTORIES.length ||
+      BOOK_GENERATION_SECTION_DIRECTORIES.some((directory) => !Object.hasOwn(rawSections, directory))) {
+    throw new Error("anchored book-generation owner batch returned an inexact section set");
+  }
+  const sections = new Map<string, { names: string[]; files: Record<string, string> }>();
+  for (const directory of BOOK_GENERATION_SECTION_DIRECTORIES) {
+    const raw = rawSections[directory];
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw) ||
+        Object.keys(raw).length !== 2) {
+      throw new Error(`anchored book-generation owner batch returned invalid '${directory}'`);
+    }
+    const section = raw as Record<string, unknown>;
+    if (!Array.isArray(section.names) ||
+        section.names.some((name) => typeof name !== "string" ||
+          !name.endsWith(".json") || name.includes("/") || name.includes("\\")) ||
+        typeof section.files !== "object" || section.files === null ||
+        Array.isArray(section.files)) {
+      throw new Error(`anchored book-generation owner batch returned invalid names or files for '${directory}'`);
+    }
+    const names = section.names as string[];
+    const files = section.files as Record<string, unknown>;
+    if (new Set(names).size !== names.length ||
+        new Set(names.map((name) => name.toLowerCase())).size !== names.length ||
+        Object.keys(files).length !== names.length ||
+        names.some((name) => !Object.hasOwn(files, name) || typeof files[name] !== "string")) {
+      throw new Error(`anchored book-generation owner batch returned an inexact '${directory}' owner set`);
+    }
+    sections.set(directory, {
+      names: [...names].sort(codeUnit),
+      files: files as Record<string, string>,
+    });
+  }
+  const base = join(root, BOOK_GENERATION_DIRECTORY);
+  return assembleBookGenerationOwners(root, {
+    meta: parseLedgerText(tree.meta, join(base, "_meta.json")),
+    names: (directory) => sections.get(directory)!.names,
+    read: (directory, name) => parseLedgerText(
+      sections.get(directory)!.files[name],
+      join(base, directory, name),
+    ),
+  });
 }
 
 export function assertBookGenerationOwnerNames(

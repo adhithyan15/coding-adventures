@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "f6167bf933ee2ca7809595594ce15ab087cdc77f6bb8ffbf3f42d4ed9bdbed34"
+    "c45d240d96a9067b2d3c55b236c5ac0f69ca72f032cbd3116a61bf5a19442f09"
 )
 WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '          coverage_prefix="$PWD/bisect"\n'
@@ -102,7 +102,7 @@ TARGETS = {
         "build_file": "BUILD",
     },
     "macos-arm64": {
-        "runner": "macos-14",
+        "runner": "macos-15",
         "runner_os": "macOS",
         "runner_arch": "ARM64",
         "windows_compiler": None,

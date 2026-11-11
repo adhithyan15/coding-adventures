@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   payload-free errors for target-only paths and evidence mismatches.
 - Added exact-object binding between reviewed-terminal evidence and complete
   certificate-wide issuing-CA role-policy evidence.
+- Added non-copyable construction-derived path-length initialization that
+  retains the exact reviewed path and anchor role proof with its initial state.
 
 ### Security
 
@@ -23,5 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   independently decoded certificates fail closed.
 - Reviewed-terminal role policy for another decoded object and exact terminal
   end-entity role evidence fail closed.
+- Callers of the construction-bound initializer cannot select or inflate its
+  path-length capacity: the retained construction fixes the intermediate count.
 - Binding grants no link authentication, self-signature, algorithm, validity,
   constraint, hostname, revocation, TLS, HTTP, OAuth, or network authority.
