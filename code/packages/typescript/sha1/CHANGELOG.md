@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `BUILD_windows` now mirrors `BUILD` (`npm ci`, `npm run build`,
+  `npm run test:coverage`). The tests moved to `node:test` in #19101, but the
+  Windows build still ran `npx vitest run --coverage` on a package that no
+  longer depends on vitest, so it would have failed the first time the Windows
+  shard rebuilt this package. The BUILD_windows drift audit (OPS-013) caught it.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

@@ -91,9 +91,13 @@ fn build_windows() {
             "libperl_bridge_shim.a"
         },
     );
+    // quiet=>0 is deliberate: with quiet=>1 a failed compile only reports
+    // "error building xs.dll from ...", which hid the compiler's own diagnostic
+    // when perl/conduit and perl/irc-server-native failed on the first Windows
+    // full build. Cargo shows this output only when the build script fails.
     run(Command::new(&perl).args([
         "-MExtUtils::CBuilder", "-e",
-        "ExtUtils::CBuilder->new(quiet=>1)->compile(source=>$ARGV[0],object_file=>$ARGV[1]);",
+        "ExtUtils::CBuilder->new(quiet=>0)->compile(source=>$ARGV[0],object_file=>$ARGV[1]);",
         "src/perl_bridge_shim.c",
     ]).arg(&object), "compile Windows Perl bridge shim");
     let ar = env::var("AR").unwrap_or_else(|_| perl_config(&perl, "ar"));

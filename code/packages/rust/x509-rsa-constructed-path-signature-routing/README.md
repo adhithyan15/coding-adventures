@@ -28,6 +28,46 @@ policy, and advanced state together. That lower-level transition remains
 available for generalized traversal code, but it cannot directly create the
 fixed reviewed two-link result.
 
+An ordered-transition follow-up borrows the reviewed construction-derived
+initializer and consumes a terminal routed proof only when both retain the same
+exact constructed-path object. That terminal proof authenticates the
+anchor-nearest intermediate as its exact child using the reviewed root's key;
+complete intermediate policy must retain that same child. The result retains
+the initializer reference, terminal signature and reviewed-root handoff,
+complete child policy, and advanced state together. Proofs from another
+construction and policy for another certificate fail before transition. This
+API establishes the first ordered intermediate step. A second-step follow-up
+consumes that result only with the immediately target-nearer routed adjacency
+from the same construction. Its issuer must be the already processed
+anchor-nearest intermediate, and complete policy must retain its exact
+candidate child before the prior state advances. The result retains both
+ordered proofs, both child policies, and the twice-advanced state. Detached
+constructions, skipped depths, disconnected issuers, target children, and
+cross-certificate policy fail closed. This proves exactly two intermediate
+steps. An allocation-free accumulator generalizes only that ordered
+path-length portion: it borrows the same initializer and reviewed terminal,
+then consumes anchor-to-target slices of follow-on routed signatures and
+complete intermediate policies. It derives the exact intermediate count from
+the construction, requires exact evidence counts, enforces a caller-owned
+nonzero intermediate ceiling, and applies every transition in immediate depth
+order while retaining all borrowed evidence and the final state. It stops
+before the target signature and does not establish complete path validation.
+An exact target-signature closure can then consume that accumulator together
+with the routed depth-zero target adjacency from the identical construction
+and complete server policy for the exact decoded target. The target proof's
+issuer must be the final accumulated target-nearest intermediate. Success
+retains the accumulator, routed target signature, and server policy together;
+detached constructions, nonzero depths, disconnected issuers, and policy from
+a byte-equal independent target decode fail closed.
+The reviewed-anchor DNS-policy follow-up also accepts this arbitrary-depth
+closure. It derives the exact target and already-validated SAN index from the
+retained server policy, and optional constraint bytes from the reviewed anchor
+retained by the accumulator's terminal proof. Caller-owned decoder limits
+bound the existing supported permitted-DNS evaluator. An unconstrained
+snapshot entry retains the complete closure without new DNS evidence; a
+constrained entry succeeds only after every retained target dNSName satisfies
+that supported subset.
+
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
 selection retains that same exact decoded certificate. It keeps the
@@ -72,14 +112,15 @@ DNS and IP counts. The earlier DNS count remains available as compatibility
 evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
-fixed-shape result does not generalize to additional intermediates, derive the
-initial state for a generalized traversal, define full Name comparison, apply
-other GeneralName forms, excluded or non-DNS anchor constraints, check
-revocation, perform hostname verification, TLS, or HTTP, authorize OAuth
-transport, or open a network connection. Target identity, time, purpose, the
-construction-derived fixed-shape state, and the supported reviewed-anchor DNS
-and intermediate DNS/IP subsets do not make the whole path valid. This does
-not make concrete HTTPS or live-provider use ready.
+fixed-shape result, ordered transitions, intermediate accumulator, target
+signature closure, and arbitrary-depth reviewed-anchor policy do not validate
+the anchor's self-signature, establish complete generalized path validation,
+define full Name comparison, apply all NameConstraints or GeneralName forms,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection. Target identity, time, purpose, routed selected-adjacency
+RSA signatures, construction-derived path-length state, and the supported
+reviewed-anchor DNS and intermediate DNS/IP subsets do not make the whole path
+valid. This does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

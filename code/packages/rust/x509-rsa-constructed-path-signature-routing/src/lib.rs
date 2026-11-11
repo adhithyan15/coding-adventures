@@ -6,9 +6,11 @@
 //! after all exact-object and issuing-CA checks pass does caller-owned routing
 //! invoke one repository-owned fixed RSA certificate-signature verifier.
 //!
-//! It authenticates one projected link only. It does not validate a complete
-//! path, establish trust, check revocation, perform TLS or HTTP, or grant OAuth
-//! or network authority.
+//! It also composes reviewed construction, ordered intermediate path-length
+//! evidence, the exact depth-zero target signature with complete server policy,
+//! and the reviewed snapshot's supported anchor DNS constraints. This does not
+//! validate a complete path, establish trust, check revocation, perform TLS or
+//! HTTP, or grant OAuth or network authority.
 
 #![deny(unsafe_code)]
 
@@ -20,6 +22,7 @@ use x509_certificate_path_length_policy::{
     X509CertificatePathLengthError, X509CertificatePathLengthErrorKind,
     X509CertificatePathLengthState,
 };
+use x509_certificate_path_reviewed_anchor_binding::InitializedReviewedConstructedX509CertificatePathLength;
 use x509_certificate_policy::{
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy, X509CertificateRole,
 };
@@ -161,6 +164,182 @@ impl fmt::Display for X509RsaConstructedPathReviewedAnchorError {
 }
 
 impl std::error::Error for X509RsaConstructedPathReviewedAnchorError {}
+
+/// Stable, payload-free construction-initialized path-length failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind {
+    /// The initializer and terminal proof retain different path objects.
+    EvidenceMismatch,
+    /// The retained reviewed construction contains no intermediate certificate.
+    InvalidPathShape,
+    /// Complete intermediate policy is not for the terminal proof's exact child.
+    IntermediatePolicyMismatch,
+    /// The authenticated intermediate exhausted or violated path-length policy.
+    PathLength(X509CertificatePathLengthErrorKind),
+}
+
+/// A redacted construction-initialized path-length failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathInitializedIntermediatePathLengthError {
+    kind: X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind,
+}
+
+impl X509RsaConstructedPathInitializedIntermediatePathLengthError {
+    const fn new(kind: X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathInitializedIntermediatePathLengthError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path initialized intermediate path-length error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathInitializedIntermediatePathLengthError {}
+
+/// Stable, payload-free next ordered intermediate path-length failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathNextIntermediatePathLengthErrorKind {
+    /// The retained steps describe different path objects or disconnected issuers.
+    EvidenceMismatch,
+    /// The routed proof is not the immediately target-nearer intermediate link.
+    InvalidPathShape,
+    /// Complete intermediate policy is not for the routed proof's exact child.
+    IntermediatePolicyMismatch,
+    /// The authenticated intermediate exhausted or violated path-length policy.
+    PathLength(X509CertificatePathLengthErrorKind),
+}
+
+/// A redacted next ordered intermediate path-length failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathNextIntermediatePathLengthError {
+    kind: X509RsaConstructedPathNextIntermediatePathLengthErrorKind,
+}
+
+impl X509RsaConstructedPathNextIntermediatePathLengthError {
+    const fn new(kind: X509RsaConstructedPathNextIntermediatePathLengthErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathNextIntermediatePathLengthErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathNextIntermediatePathLengthError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path next intermediate path-length error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathNextIntermediatePathLengthError {}
+
+/// Stable, payload-free ordered intermediate accumulation failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind {
+    /// The caller supplied a zero intermediate work ceiling.
+    InvalidIntermediateLimit,
+    /// The constructed path contains more intermediates than caller policy permits.
+    IntermediateLimitExceeded,
+    /// The evidence slices do not contain exactly one entry for every required step.
+    EvidenceCountMismatch,
+    /// Retained evidence describes another construction or a disconnected issuer.
+    EvidenceMismatch,
+    /// The construction has no intermediate or a proof is not the next required depth.
+    InvalidPathShape,
+    /// Complete intermediate policy is not for the authenticated child at that step.
+    IntermediatePolicyMismatch,
+    /// An authenticated intermediate exhausted or violated path-length policy.
+    PathLength(X509CertificatePathLengthErrorKind),
+}
+
+/// A redacted ordered intermediate accumulation failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathIntermediatePathLengthAccumulationError {
+    kind: X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind,
+}
+
+impl X509RsaConstructedPathIntermediatePathLengthAccumulationError {
+    const fn new(kind: X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathIntermediatePathLengthAccumulationError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path intermediate path-length accumulation error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathIntermediatePathLengthAccumulationError {}
+
+/// Stable, payload-free accumulated target-signature closure failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathTargetSignatureClosureErrorKind {
+    /// Retained evidence describes another construction or disconnected issuer.
+    EvidenceMismatch,
+    /// The routed proof is not the construction's exact depth-zero target link.
+    InvalidPathShape,
+    /// Complete server policy is not for the construction's exact target object.
+    TargetPolicyMismatch,
+}
+
+/// A redacted accumulated target-signature closure failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathTargetSignatureClosureError {
+    kind: X509RsaConstructedPathTargetSignatureClosureErrorKind,
+}
+
+impl X509RsaConstructedPathTargetSignatureClosureError {
+    const fn new(kind: X509RsaConstructedPathTargetSignatureClosureErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathTargetSignatureClosureErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathTargetSignatureClosureError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path target signature closure error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathTargetSignatureClosureError {}
 
 /// Stable, payload-free reviewed two-link path binding failures.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -969,6 +1148,733 @@ impl fmt::Debug
     }
 }
 
+/// First anchor-to-target path-length transition from reviewed construction.
+///
+/// The terminal proof authenticates the anchor-nearest intermediate as the
+/// exact child of the reviewed trust anchor. Complete intermediate policy for
+/// that same child supplies role, self-issued, and path-length inputs. The
+/// borrowed initializer retains the identical reviewed construction and its
+/// derived initial capacity. This proves only the first ordered transition,
+/// not subsequent traversal or complete path validity.
+pub struct AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    initialized_path_length: &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    reviewed_terminal: BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the borrowed reviewed construction and initial capacity proof.
+    #[must_use]
+    pub const fn initialized_path_length(
+        &self,
+    ) -> &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        self.initialized_path_length
+    }
+
+    /// Return authentication of the anchor-nearest intermediate by the root.
+    #[must_use]
+    pub const fn reviewed_terminal(
+        &self,
+    ) -> &BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_terminal
+    }
+
+    /// Return complete policy for the authenticated anchor-nearest child.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded> {
+        &self.intermediate_policy
+    }
+
+    /// Return path-length state after the first ordered transition.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength")
+    }
+}
+
+/// Second anchor-to-target path-length transition from reviewed construction.
+///
+/// The previous step proves the root-authenticated anchor-nearest intermediate.
+/// The next routed proof must be the immediately target-nearer adjacency from
+/// the same exact construction, and its issuer must be that already processed
+/// intermediate. Complete policy for the routed proof's exact candidate child
+/// supplies the next transition inputs. This proves exactly two ordered
+/// intermediate steps, not arbitrary traversal or complete path validity.
+pub struct AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    previous_step: AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    next_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the retained root-authenticated first ordered transition.
+    #[must_use]
+    pub const fn previous_step(
+        &self,
+    ) -> &AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.previous_step
+    }
+
+    /// Return authentication of the immediately target-nearer intermediate.
+    #[must_use]
+    pub const fn next_signature(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.next_signature
+    }
+
+    /// Return complete policy for the authenticated second candidate child.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded> {
+        &self.intermediate_policy
+    }
+
+    /// Return path-length state after the second ordered transition.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength")
+    }
+}
+
+/// Borrowed evidence that every constructed intermediate advanced path length.
+///
+/// The reviewed terminal authenticates the anchor-nearest intermediate. The
+/// follow-on signatures and complete policies are retained in anchor-to-target
+/// order and cover exactly every remaining intermediate in the construction.
+/// The caller-selected ceiling bounds both evidence slices before traversal.
+/// This stops before the target signature and is not complete path validity.
+pub struct AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    initialized_path_length: &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    reviewed_terminal: &'evidence BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    ordered_signatures: &'evidence [VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >],
+    intermediate_policies:
+        &'evidence [ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>],
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the borrowed reviewed construction and initial capacity proof.
+    #[must_use]
+    pub const fn initialized_path_length(
+        &self,
+    ) -> &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        self.initialized_path_length
+    }
+
+    /// Return the root-authenticated terminal adjacency and reviewed anchor.
+    #[must_use]
+    pub const fn reviewed_terminal(
+        &self,
+    ) -> &'evidence BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        self.reviewed_terminal
+    }
+
+    /// Return all routed follow-on proofs in anchor-to-target order.
+    #[must_use]
+    pub const fn ordered_signatures(
+        &self,
+    ) -> &'evidence [VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >] {
+        self.ordered_signatures
+    }
+
+    /// Return complete policy for every intermediate in anchor-to-target order.
+    #[must_use]
+    pub const fn intermediate_policies(
+        &self,
+    ) -> &'evidence [ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>]
+    {
+        self.intermediate_policies
+    }
+
+    /// Return the exact number of processed intermediate certificates.
+    #[must_use]
+    pub const fn processed_intermediate_count(&self) -> usize {
+        self.intermediate_policies.len()
+    }
+
+    /// Return path-length state after every intermediate transition.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength")
+    }
+}
+
+/// Accumulated intermediate evidence closed by the exact target signature.
+///
+/// The retained routed target proof is the depth-zero adjacency from the same
+/// construction as the accumulated anchor-to-target intermediate evidence.
+/// Its issuer is the exact target-nearest intermediate already processed by
+/// that accumulator, and complete server policy retains the construction's
+/// exact target object. This is signature and role-policy closure only; it
+/// does not establish complete path, hostname, revocation, TLS, HTTP, OAuth,
+/// or network validity.
+pub struct BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    accumulated_intermediates: AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    target_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'target, 'target_encoded>,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return all retained anchor-to-target intermediate evidence.
+    #[must_use]
+    pub const fn accumulated_intermediates(
+        &self,
+    ) -> &AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.accumulated_intermediates
+    }
+
+    /// Return routed authentication of the exact construction target.
+    #[must_use]
+    pub const fn target_signature(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.target_signature
+    }
+
+    /// Return complete server policy for the exact construction target.
+    #[must_use]
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'target, 'target_encoded> {
+        &self.server_policy
+    }
+}
+
+impl fmt::Debug
+    for BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature")
+    }
+}
+
+/// Arbitrary-depth routed closure after reviewed-anchor DNS policy.
+///
+/// The exact target and its validated Subject Alternative Name index are
+/// derived from the retained server policy. Optional constraint bytes are
+/// derived from the reviewed anchor retained by the accumulator's terminal
+/// proof. Success proves either that the snapshot entry has no constraints or
+/// that every target dNSName satisfies its supported permitted DNS subtrees.
+/// This does not apply intermediate constraints, excluded or non-DNS anchor
+/// constraints, revocation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    target_signature_closure: BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the complete consumed target-signature closure.
+    #[must_use]
+    pub const fn target_signature_closure(
+        &self,
+    ) -> &BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.target_signature_closure
+    }
+
+    /// Return DNS evidence when the reviewed snapshot entry carried constraints.
+    #[must_use]
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy")
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -1257,6 +2163,703 @@ pub fn advance_x509_rsa_constructed_path_intermediate_path_length<
         authenticated_intermediate,
         path_length_state,
     })
+}
+
+/// Advance the root-authenticated first intermediate from initialized state.
+///
+/// RFC 5280 path processing proceeds from the trust anchor toward the target.
+/// The terminal routed proof therefore authenticates the anchor-nearest
+/// intermediate as its child using the reviewed root's key. The terminal proof
+/// and initializer must retain the same exact constructed-path object, and
+/// complete intermediate policy must retain that exact terminal child. Only
+/// after those checks pass is a private working state recreated from the
+/// construction-derived capacity and advanced with that child policy.
+///
+/// The initializer is borrowed because it owns the path that the terminal
+/// proof itself borrows. The result retains that reference, the consumed
+/// terminal authentication, complete child policy, and advanced state. This is
+/// one ordered transition only; it does not process remaining intermediates or
+/// establish complete path, TLS, HTTP, or OAuth validity.
+pub fn advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    initialized_path_length: &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    reviewed_terminal: BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathInitializedIntermediatePathLengthError,
+> {
+    let initialized_path = initialized_path_length
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_link = reviewed_terminal
+        .verified_terminal_signature()
+        .adjacent_link();
+    if !same_exact_object(initialized_path, terminal_link.constructed_path()) {
+        return Err(
+            X509RsaConstructedPathInitializedIntermediatePathLengthError::new(
+                X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind::EvidenceMismatch,
+            ),
+        );
+    }
+
+    let Some(anchor_nearest_intermediate) = terminal_link.child_candidate_certificate() else {
+        return Err(
+            X509RsaConstructedPathInitializedIntermediatePathLengthError::new(
+                X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind::InvalidPathShape,
+            ),
+        );
+    };
+    if !same_exact_object(
+        anchor_nearest_intermediate,
+        intermediate_policy.certificate(),
+    ) {
+        return Err(
+            X509RsaConstructedPathInitializedIntermediatePathLengthError::new(
+                X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind::IntermediatePolicyMismatch,
+            ),
+        );
+    }
+
+    let path_length_state = X509CertificatePathLengthState::new(
+        initialized_path_length
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+    );
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(&intermediate_policy)
+        .map_err(|error| {
+            X509RsaConstructedPathInitializedIntermediatePathLengthError::new(
+                X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind::PathLength(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(
+        AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength {
+            initialized_path_length,
+            reviewed_terminal,
+            intermediate_policy,
+            path_length_state,
+        },
+    )
+}
+
+/// Advance the immediately target-nearer authenticated intermediate.
+///
+/// The previous ordered step and `next_signature` must retain the same exact
+/// construction. The routed proof's issuer depth must immediately precede the
+/// reviewed terminal depth, and its issuer must be the exact intermediate
+/// already processed by the previous step. Its child must be another selected
+/// candidate, and `intermediate_policy` must retain that exact child. Only then
+/// is the prior retained path-length state recreated privately and advanced.
+///
+/// Success consumes and retains both ordered proofs and the second child policy.
+/// It does not iterate over later depths or establish complete path, TLS, HTTP,
+/// OAuth, or network validity.
+pub fn advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    previous_step: AdvancedInitializedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    next_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathNextIntermediatePathLengthError,
+> {
+    let previous_terminal_link = previous_step
+        .reviewed_terminal()
+        .verified_terminal_signature()
+        .adjacent_link();
+    let next_link = next_signature.adjacent_link();
+    if !same_exact_object(
+        previous_terminal_link.constructed_path(),
+        next_link.constructed_path(),
+    ) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let Some(expected_next_depth) = previous_terminal_link.issuer_depth().checked_sub(1) else {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    };
+    if next_link.issuer_depth() != expected_next_depth {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    }
+    if !same_exact_object(
+        next_link.issuer_certificate(),
+        previous_step.intermediate_policy().certificate(),
+    ) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let Some(next_intermediate) = next_link.child_candidate_certificate() else {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(next_intermediate, intermediate_policy.certificate()) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::IntermediatePolicyMismatch,
+        ));
+    }
+
+    let path_length_state = X509CertificatePathLengthState::new(
+        previous_step
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+    );
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(&intermediate_policy)
+        .map_err(|error| {
+            X509RsaConstructedPathNextIntermediatePathLengthError::new(
+                X509RsaConstructedPathNextIntermediatePathLengthErrorKind::PathLength(error.kind()),
+            )
+        })?;
+
+    Ok(
+        AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength {
+            previous_step,
+            next_signature,
+            intermediate_policy,
+            path_length_state,
+        },
+    )
+}
+
+/// Accumulate every intermediate path-length transition in construction order.
+///
+/// `intermediate_policies` must contain exactly one complete policy per
+/// intermediate, ordered from the reviewed anchor toward the target.
+/// `ordered_signatures` must contain the corresponding already routed proof for
+/// every intermediate after the root-authenticated first child. The exact
+/// construction determines both counts; `max_intermediates` is an additional
+/// caller-selected nonzero work ceiling.
+///
+/// Each follow-on proof must consume the immediately target-nearer issuer depth,
+/// use the previously processed intermediate as its exact issuer object, and
+/// authenticate another selected candidate whose exact object is retained by
+/// the next policy. Success borrows all complete inputs and the final advanced
+/// state. It deliberately stops before the target signature and does not
+/// establish complete path, TLS, HTTP, OAuth, or network validity.
+pub fn accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    initialized_path_length: &'initialized InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    reviewed_terminal: &'evidence BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    ordered_signatures: &'evidence [VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >],
+    intermediate_policies: &'evidence [ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >],
+    max_intermediates: usize,
+) -> Result<
+    AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathIntermediatePathLengthAccumulationError,
+> {
+    if max_intermediates == 0 {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidIntermediateLimit,
+            ),
+        );
+    }
+
+    let initialized_path = initialized_path_length
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let terminal_link = reviewed_terminal
+        .verified_terminal_signature()
+        .adjacent_link();
+    if !same_exact_object(initialized_path, terminal_link.constructed_path()) {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceMismatch,
+            ),
+        );
+    }
+
+    let Some(intermediate_count) = initialized_path.issuer_count().checked_sub(1) else {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+            ),
+        );
+    };
+    if intermediate_count == 0 {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+            ),
+        );
+    }
+    if intermediate_count > max_intermediates {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::IntermediateLimitExceeded,
+            ),
+        );
+    }
+    if intermediate_policies.len() != intermediate_count
+        || ordered_signatures.len().checked_add(1) != Some(intermediate_count)
+    {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceCountMismatch,
+            ),
+        );
+    }
+
+    let Some(first_intermediate) = terminal_link.child_candidate_certificate() else {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+            ),
+        );
+    };
+    let first_policy = &intermediate_policies[0];
+    if !same_exact_object(first_intermediate, first_policy.certificate()) {
+        return Err(
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::IntermediatePolicyMismatch,
+            ),
+        );
+    }
+
+    let mut path_length_state = X509CertificatePathLengthState::new(
+        initialized_path_length
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+    );
+    path_length_state = path_length_state
+        .advance_validated_intermediate_ca(first_policy)
+        .map_err(|error| {
+            X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::PathLength(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    let mut expected_depth = terminal_link.issuer_depth();
+    let mut previous_intermediate = first_policy.certificate();
+    for (signature, policy) in ordered_signatures
+        .iter()
+        .zip(intermediate_policies[1..].iter())
+    {
+        let Some(next_depth) = expected_depth.checked_sub(1) else {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+                ),
+            );
+        };
+        let link = signature.adjacent_link();
+        if !same_exact_object(initialized_path, link.constructed_path()) {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceMismatch,
+                ),
+            );
+        }
+        if link.issuer_depth() != next_depth {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+                ),
+            );
+        }
+        if !same_exact_object(link.issuer_certificate(), previous_intermediate) {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::EvidenceMismatch,
+                ),
+            );
+        }
+        let Some(next_intermediate) = link.child_candidate_certificate() else {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::InvalidPathShape,
+                ),
+            );
+        };
+        if !same_exact_object(next_intermediate, policy.certificate()) {
+            return Err(
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::IntermediatePolicyMismatch,
+                ),
+            );
+        }
+
+        path_length_state = path_length_state
+            .advance_validated_intermediate_ca(policy)
+            .map_err(|error| {
+                X509RsaConstructedPathIntermediatePathLengthAccumulationError::new(
+                    X509RsaConstructedPathIntermediatePathLengthAccumulationErrorKind::PathLength(
+                        error.kind(),
+                    ),
+                )
+            })?;
+        expected_depth = next_depth;
+        previous_intermediate = policy.certificate();
+    }
+
+    Ok(
+        AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength {
+            initialized_path_length,
+            reviewed_terminal,
+            ordered_signatures,
+            intermediate_policies,
+            path_length_state,
+        },
+    )
+}
+
+/// Close accumulated intermediate evidence with the exact routed target link.
+///
+/// The target proof must be the depth-zero adjacency from the same exact
+/// constructed path retained by the accumulator. Its child must be that
+/// construction's target and its issuer must be the exact target-nearest
+/// intermediate already retained by the final accumulated policy. Complete
+/// server policy must retain the same exact target object. Success consumes
+/// and keeps all three proofs without granting complete path, hostname,
+/// revocation, TLS, HTTP, OAuth, or network authority.
+pub fn bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    accumulated_intermediates: AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    target_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'target, 'target_encoded>,
+) -> Result<
+    BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathTargetSignatureClosureError,
+> {
+    let constructed_path = accumulated_intermediates
+        .initialized_path_length()
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path();
+    let target_link = target_signature.adjacent_link();
+    if !same_exact_object(constructed_path, target_link.constructed_path()) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    if target_link.issuer_depth() != 0 {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    }
+    let Some(target_certificate) = target_link.child_target_certificate() else {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(target_certificate, constructed_path.target_certificate()) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    let Some(target_nearest_policy) = accumulated_intermediates.intermediate_policies().last()
+    else {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(
+        target_link.issuer_certificate(),
+        target_nearest_policy.certificate(),
+    ) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch,
+        ));
+    }
+    if !same_exact_object(server_policy.certificate(), target_certificate) {
+        return Err(X509RsaConstructedPathTargetSignatureClosureError::new(
+            X509RsaConstructedPathTargetSignatureClosureErrorKind::TargetPolicyMismatch,
+        ));
+    }
+
+    Ok(
+        BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature {
+            accumulated_intermediates,
+            target_signature,
+            server_policy,
+        },
+    )
+}
+
+/// Apply selected reviewed-anchor DNS policy to one arbitrary-depth closure.
+///
+/// The target certificate and validated SAN extension index are derived only
+/// from the closure's complete server policy. Optional constraint bytes are
+/// derived only from the reviewed anchor retained through the accumulator's
+/// terminal proof. Separate caller limits bound both repository-owned
+/// decoders, and success retains the complete closure.
+pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    target_signature_closure: BoundAccumulatedReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let certificate = target_signature_closure.server_policy().certificate();
+    let subject_alt_name_extension_index = target_signature_closure
+        .server_policy()
+        .identity()
+        .extension_index();
+    let name_constraints = target_signature_closure
+        .accumulated_intermediates()
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        subject_alt_name_extension_index,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy {
+            target_signature_closure,
+            constrained_dns_names,
+        },
+    )
 }
 
 /// Bind one exact routed target -> intermediate -> reviewed-root construction.

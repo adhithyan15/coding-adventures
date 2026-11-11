@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-metadata-strict-and-forced",
+  "domain": "diff_selection",
+  "summary": "A strict-glob package keeps declared-source semantics: a declared changelog propagates, an undeclared one selects nothing. Forced seeds propagate.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "python/declares",
+          "rel_path": "code/packages/python/declares",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "src/**/*.py",
+            "CHANGELOG.md"
+          ]
+        },
+        {
+          "name": "python/declares-user",
+          "rel_path": "code/packages/python/declares-user",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "src/**/*.py"
+          ]
+        },
+        {
+          "name": "python/undeclared",
+          "rel_path": "code/packages/python/undeclared",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "src/**/*.py"
+          ]
+        },
+        {
+          "name": "python/undeclared-user",
+          "rel_path": "code/packages/python/undeclared-user",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "src/**/*.py"
+          ]
+        },
+        {
+          "name": "python/forced",
+          "rel_path": "code/packages/python/forced",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "python/forced-user",
+          "rel_path": "code/packages/python/forced-user",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [
+        [
+          "python/declares",
+          "python/declares-user"
+        ],
+        [
+          "python/undeclared",
+          "python/undeclared-user"
+        ],
+        [
+          "python/forced",
+          "python/forced-user"
+        ]
+      ],
+      "forced_packages": [
+        "python/forced"
+      ],
+      "unknown_path_policy": "error",
+      "metadata_policy": "package_local"
+    },
+    "changed_paths": [
+      "code/packages/python/declares/CHANGELOG.md",
+      "code/packages/python/undeclared/CHANGELOG.md",
+      "code/packages/python/forced/CHANGELOG.md"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-metadata-strict-and-forced",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "python/declares",
+        "python/forced"
+      ],
+      "affected_packages": [
+        "python/declares",
+        "python/declares-user",
+        "python/forced",
+        "python/forced-user"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

@@ -1,5 +1,11 @@
 # Changelog — cas-factor (Rust)
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.3.0] — 2026-05-29
 
 **Track K2 — n-variate Hensel lifting (Rust port).**

@@ -1,5 +1,11 @@
 # Changelog — `x86_64-encoder`
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## Unreleased — 2026-08-18
 
 Brought under CI: the crate had no `BUILD` file, so nothing ever ran its tests
