@@ -38,6 +38,10 @@
   overlap the independent committed-modality read with the shared lesson read.
   Both still compare the complete canonical reports; neither test budget nor
   assertion changes.
+- Derive the async committed-modality narration identity index through the
+  pinned generated-hash batch reader, requesting narration owners only. Keep
+  exact registry language closure, chapter validation, and global lesson-ID
+  collision checks; the synchronous index remains unchanged.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.

@@ -38,6 +38,8 @@ consumers.
   retain the same chapter schema, safe-ID, global uniqueness, and case-fold
   collision checks as the synchronous index. Corrupt or missing owners must
   still fail; unrelated book-hash owners must not become a new prerequisite.
+  Chunk the pinned transport when the language registry outgrows one batch,
+  while keeping collision checks global across chunks.
   Verify sync/async index parity and negative owner fixtures before using this
   faster path in the unchanged Windows coverage suite.
 * A one-track assertion may read that track's complete canonical lessons and
