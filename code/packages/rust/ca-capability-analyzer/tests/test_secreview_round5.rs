@@ -205,3 +205,29 @@ fn r5_3a_park_timeout_ms_is_a_timed_sleep() {
         ],
     );
 }
+
+#[test]
+fn r5_3b_to_socket_addrs_is_a_dns_lookup() {
+    check(
+        "R5-3b",
+        &[
+            (
+                "net-glob-to-socket-addrs",
+                "use std::net::*;\npub fn resolve() -> usize { (\"127.0.0.1\", 80).to_socket_addrs().map(|i| i.count()).unwrap_or(0) }\npub fn _keep(_: Option<IpAddr>) {}",
+                // The glob itself names the `std::net` module (`net:connect`,
+                // which the review's manifest declares); the lookup is `net:dns`.
+                &["net:connect", "net:dns"],
+            ),
+            ("bare receiver", "fn f(s: &str) { let _ = s.to_socket_addrs(); }", &["net:dns"]),
+            ("turbofish", "fn f(s: &str) { let _ = s.to_socket_addrs::<>(); }", &["net:dns"]),
+            (
+                "UFCS through a glob",
+                "use std::net::*;\nfn f() { let _ = ToSocketAddrs::to_socket_addrs(&(\"h\", 80)); }",
+                &["net:connect", "net:dns"],
+            ),
+            // Decoys: the address data types stay pure.
+            ("address data type", "fn f(a: std::net::IpAddr) -> bool { a.is_loopback() }", &[]),
+            ("field named to_socket_addrs", "fn f(s: &S) -> u8 { s.to_socket_addrs }", &[]),
+        ],
+    );
+}

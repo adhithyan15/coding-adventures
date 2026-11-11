@@ -104,6 +104,13 @@ pub const CLOCK_READ_METHODS: &[&str] = &["elapsed"];
 /// (review case `handle-method-escalation`).
 pub const FS_WRITE_METHODS: &[&str] = &["set_times", "set_modified", "set_permissions"];
 
+/// Methods that resolve a host name: `ToSocketAddrs::to_socket_addrs`.  A glob
+/// (`use std::net::*;`) brings the trait into scope without naming it, so
+/// `("example.com", 80).to_socket_addrs()` looked up a name under a manifest
+/// declaring only `net:connect` (security review round 5, R5-3, case
+/// `net-glob-to-socket-addrs`).
+pub const DNS_METHODS: &[&str] = &["to_socket_addrs"];
+
 /// The verdict for a *method call* `.name(..)` whose receiver type is unknown.
 ///
 /// A lexical analyzer cannot see the receiver's type, so a method that reaches
@@ -119,6 +126,8 @@ pub fn method_call_rule(name: &str) -> Option<Classification> {
         Some(cap("time", "sleep"))
     } else if CLOCK_READ_METHODS.contains(&name) {
         Some(cap("time", "read"))
+    } else if DNS_METHODS.contains(&name) {
+        Some(cap("net", "dns"))
     } else {
         None
     }
