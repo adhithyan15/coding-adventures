@@ -346,6 +346,19 @@ for that exact responder and stops before separately authenticated recursive
 responder revocation, complete revocation, generalized path validation, TLS,
 HTTP, OAuth, or network readiness.
 
+`bind_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation`
+provides the separately authenticated alternative for that exact delegated
+responder. It consumes the same complete reviewed-root DNS proof plus another
+fully routed authenticated OCSP target-revocation proof, derives the added
+proof's authenticated responder, exact selected reviewed-root issuer, and
+original observation time only through the retained evidence, and requires
+the recursive proof to name those same exact objects at that exact time.
+Target, issuer, then time are checked in stable order with the existing
+payload-free failure categories. Success retains the entire generic source
+and both non-copyable authenticated proof layers. It stops before revocation
+policy for the recursive proof's own responder, complete revocation,
+generalized path validation, TLS, HTTP, OAuth, or network readiness.
+
 `complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
 then nominally completes revocation policy for this exact default-source
 alternative branch. Its input type proves that the server target, original

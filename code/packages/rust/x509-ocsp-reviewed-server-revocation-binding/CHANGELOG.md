@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind a separately authenticated routed OCSP proof to the alternative added
+  revocation proof's own exact delegated responder, selected reviewed-root
+  issuer, and original observation time in stable target-issuer-time order.
+- Retain the complete generic non-copyable source and stop before policy for
+  the recursive proof's own responder, complete revocation, generalized path
+  validation, TLS, HTTP, or OAuth readiness.
 - Complete revocation policy for the double-nested alternative fixed path
   whose original and added responder-revocation proofs both carry exact RFC
   6960 no-check policy for their own responders.
