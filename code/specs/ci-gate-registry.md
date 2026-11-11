@@ -469,7 +469,7 @@ latent from #829 until #17722.
 
 ### Windows recipe changes prove themselves on the pull request
 
-The `build-windows-recipes` gate (OPS-015) has no `packages`, only `paths`:
+The `build-windows-recipes` gate (BUILD-002) has no `packages`, only `paths`:
 `code/packages/**/BUILD_windows` and `code/programs/**/BUILD_windows`. A pull
 request that changes any Windows recipe therefore sets
 `run_build_windows_recipes`, which does two things in `ci.yml`: it adds the
