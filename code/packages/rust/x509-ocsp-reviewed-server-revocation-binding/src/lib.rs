@@ -24,13 +24,14 @@
 //! policy without accepting substitute evidence, then apply the exact selected
 //! root's supported out-of-band DNS constraints and either RFC 6960 no-check
 //! policy or separately authenticated exact revocation to that added responder.
-//! Both the no-check and separately authenticated original-responder branches
-//! can project their added intermediate-status responder through that same
-//! policy sequence without accepting substitute evidence. Routed flows still
-//! stop before complete revocation composition. The separately authenticated
-//! original-responder branch can also reify its added revocation proof's own
-//! exact responder-to-reviewed-root path while retaining the complete branch,
-//! stopping before policy for that responder.
+//! The no-check, separately authenticated original-responder, and nested
+//! responder-of-responder no-check branches can project their added
+//! intermediate-status responder through that same policy sequence without
+//! accepting substitute evidence. Routed flows still stop before complete
+//! revocation composition. The separately authenticated original-responder
+//! branch can also reify its added revocation proof's own exact responder-to-
+//! reviewed-root path while retaining the complete branch, stopping before
+//! policy for that responder.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -2885,6 +2886,19 @@ impl<Proof, ResponderRevocation, IntermediateRevocation>
     }
 }
 
+impl<Proof, ResponderRevocation, IntermediateRevocation>
+    IntermediateStatusResponderPathSourceEvidence<IntermediateRevocation>
+    for BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+{
+    fn intermediate_revocation(&self) -> &IntermediateRevocation {
+        self.intermediate_revocation()
+    }
+}
+
 impl<Proof, IntermediateRevocation>
     IntermediateStatusResponderAnchorSourceEvidence<IntermediateRevocation>
     for BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, IntermediateRevocation>
@@ -2913,6 +2927,30 @@ where
 {
     fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]> {
         self.responder_revocation()
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .selected_reviewed_root_name_constraints()
+    }
+}
+
+impl<Proof, ResponderRevocation, IntermediateRevocation>
+    IntermediateStatusResponderAnchorSourceEvidence<IntermediateRevocation>
+    for BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+where
+    Proof: ReviewedIntermediateStatusOriginalProofEvidence,
+{
+    fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]> {
+        self.responder_no_check_policy()
+            .intermediate_dns_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
             .intermediate_dns_policy()
             .anchor_policy()
             .responder_path()
@@ -3203,6 +3241,73 @@ pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermedia
         Proof,
         IntermediateRevocation,
         BoundX509OcspReviewedResponderRevocationIntermediateRevocation<
+            Proof,
+            ResponderRevocation,
+            IntermediateRevocation,
+        >,
+    >,
+    X509OcspReviewedResponderAnchorDnsPolicyError,
+>
+where
+    Proof: ReviewedIntermediateStatusOriginalProofEvidence,
+    IntermediateRevocation: IntermediateStatusResponderEvidence,
+{
+    let source = &responder_path.source;
+    let responder_certificate = source
+        .intermediate_revocation()
+        .authenticated_responder_certificate();
+    let constrained_dns_names = evaluate_responder_anchor_dns_policy(
+        responder_certificate,
+        source.selected_reviewed_root_name_constraints(),
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy {
+            responder_path,
+            constrained_dns_names,
+        },
+    )
+}
+
+/// Apply reviewed-root DNS policy after nested responder no-check policy.
+///
+/// The added intermediate-status responder certificate and selected reviewed
+/// root constraints are derived only through the consumed responder-of-
+/// responder no-check composition. Entries without constraints succeed
+/// without reading responder Subject Alternative Name. Separate caller-owned
+/// limits bound both ASN.1 parses.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before excluded or non-DNS root constraints, no-check or separately
+/// authenticated revocation policy for the added responder, complete
+/// revocation policy, generalized path validation, TLS, HTTP, OAuth readiness,
+/// or network authority.
+#[allow(clippy::type_complexity, private_bounds)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_anchor_dns_policy<
+    Proof,
+    ResponderRevocation,
+    IntermediateRevocation,
+>(
+    responder_path: BoundX509OcspReviewedIntermediateStatusResponderPath<
+        Proof,
+        IntermediateRevocation,
+        BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+            Proof,
+            ResponderRevocation,
+            IntermediateRevocation,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy<
+        Proof,
+        IntermediateRevocation,
+        BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
             Proof,
             ResponderRevocation,
             IntermediateRevocation,
@@ -5011,6 +5116,7 @@ mod tests {
         intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
         root: &'certificate x509_certificate::X509Certificate<'encoded>,
         observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
     }
 
     struct TestResponderRevocationResponderAnchorOriginalEvidence {
@@ -5114,8 +5220,32 @@ mod tests {
         TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
         u8,
     > {
-        let responder_revocation =
-            responder_revocation_intermediate_evidence(intermediate, root, observation_time);
+        responder_revocation_responder_no_check_intermediate_binding_evidence_with_constraints(
+            intermediate,
+            root,
+            observation_time,
+            None,
+        )
+    }
+
+    fn responder_revocation_responder_no_check_intermediate_binding_evidence_with_constraints<
+        'certificate,
+        'encoded,
+    >(
+        intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
+        root: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
+    ) -> ValidatedX509OcspReviewedResponderRevocationResponderNoCheckPolicy<
+        TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
+        u8,
+    > {
+        let responder_revocation = responder_revocation_intermediate_evidence_with_constraints(
+            intermediate,
+            root,
+            observation_time,
+            name_constraints,
+        );
 
         ValidatedX509OcspReviewedResponderRevocationResponderNoCheckPolicy {
             intermediate_dns_policy:
@@ -5136,7 +5266,7 @@ mod tests {
         for TestReviewedResponderRevocationIntermediateEvidence<'_, '_>
     {
         fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]> {
-            None
+            self.name_constraints
         }
     }
 
@@ -5179,6 +5309,23 @@ mod tests {
         TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
         u8,
     > {
+        responder_revocation_intermediate_evidence_with_constraints(
+            intermediate,
+            root,
+            observation_time,
+            None,
+        )
+    }
+
+    fn responder_revocation_intermediate_evidence_with_constraints<'certificate, 'encoded>(
+        intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
+        root: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
+    ) -> BoundX509OcspReviewedResponderRevocation<
+        TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
+        u8,
+    > {
         BoundX509OcspReviewedResponderRevocation {
             intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
                 anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
@@ -5188,6 +5335,7 @@ mod tests {
                                 intermediate,
                                 root,
                                 observation_time,
+                                name_constraints,
                             },
                     },
                     constrained_dns_names: None,
@@ -6507,6 +6655,137 @@ mod tests {
             format!("{responder_path:?}"),
             "BoundX509OcspReviewedIntermediateStatusResponderPath"
         );
+    }
+
+    #[test]
+    fn nested_no_check_intermediate_status_anchor_dns_policy_retains_complete_composition() {
+        let intermediate_encoded = certificate(&[]);
+        let root_encoded = certificate(&[]);
+        let added_responder_encoded = certificate(&[
+            subject_alt_name(&[
+                dns_name("ocsp.example.test"),
+                dns_name("backup.example.test"),
+            ]),
+            extension(OCSP_NO_CHECK_OID_DER, NULL_DER),
+        ]);
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+        let root = decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap();
+        let added_responder =
+            decode_x509_certificate(&added_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let name_constraints: &'static [u8] =
+            Box::leak(permitted_dns_subtrees(&[b".example.test"]).into_boxed_slice());
+        let responder_no_check_policy =
+            responder_revocation_responder_no_check_intermediate_binding_evidence_with_constraints(
+                &intermediate,
+                &root,
+                observation_time,
+                Some(name_constraints),
+            );
+        let intermediate_status = TestIntermediateStatusResponderRevocationEvidence {
+            original_responder: &intermediate,
+            added_responder: &added_responder,
+            issuer: &root,
+            observation_time,
+        };
+        let composition = bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_revocation(
+            responder_no_check_policy,
+            intermediate_status,
+        )
+        .unwrap();
+        let responder_path = reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_path(
+            composition,
+        );
+
+        let anchor_dns_policy = validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let no_check =
+            validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy(
+                anchor_dns_policy,
+            )
+            .unwrap();
+
+        assert_eq!(
+            no_check
+                .anchor_dns_policy()
+                .constrained_dns_names()
+                .unwrap()
+                .count(),
+            2
+        );
+        let retained = no_check
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation_responder_no_check_intermediate_revocation();
+        assert!(std::ptr::eq(
+            retained.intermediate_revocation().added_responder,
+            &added_responder,
+        ));
+        assert_eq!(
+            *retained
+                .responder_no_check_policy()
+                .intermediate_dns_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .responder_revocation()
+                .responder_revocation(),
+            7
+        );
+    }
+
+    #[test]
+    fn nested_no_check_intermediate_status_anchor_dns_policy_redacts_name_failure() {
+        let intermediate_encoded = certificate(&[]);
+        let root_encoded = certificate(&[]);
+        let added_responder_encoded =
+            certificate(&[subject_alt_name(&[dns_name("ocsp.other.test")])]);
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+        let root = decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap();
+        let added_responder =
+            decode_x509_certificate(&added_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+        let name_constraints: &'static [u8] =
+            Box::leak(permitted_dns_subtrees(&[b".example.test"]).into_boxed_slice());
+        let responder_no_check_policy =
+            responder_revocation_responder_no_check_intermediate_binding_evidence_with_constraints(
+                &intermediate,
+                &root,
+                observation_time,
+                Some(name_constraints),
+            );
+        let intermediate_status = TestIntermediateStatusResponderRevocationEvidence {
+            original_responder: &intermediate,
+            added_responder: &added_responder,
+            issuer: &root,
+            observation_time,
+        };
+        let composition = bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_revocation(
+            responder_no_check_policy,
+            intermediate_status,
+        )
+        .unwrap();
+        let responder_path = reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_path(
+            composition,
+        );
+
+        let error = validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509OcspReviewedResponderAnchorDnsPolicyErrorKind::ResponderDnsNameConstraints(_)
+        ));
+        assert!(!format!("{error:?} {error}").contains("ocsp.other.test"));
     }
 
     #[test]
