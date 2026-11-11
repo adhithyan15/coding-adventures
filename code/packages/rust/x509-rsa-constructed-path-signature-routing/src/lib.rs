@@ -8,9 +8,11 @@
 //!
 //! It also composes reviewed construction, ordered intermediate path-length
 //! evidence, the exact depth-zero target signature with complete server policy,
-//! and the reviewed snapshot's supported anchor DNS constraints. This does not
-//! validate a complete path, establish trust, check revocation, perform TLS or
-//! HTTP, or grant OAuth or network authority.
+//! the reviewed snapshot's supported anchor DNS constraints, and every retained
+//! intermediate's supported DNS/IP constraints against the exact target. This
+//! does not constrain subordinate CA names, validate a complete path, establish
+//! trust, check revocation, perform TLS or HTTP, or grant OAuth or network
+//! authority.
 
 #![deny(unsafe_code)]
 
@@ -1875,6 +1877,133 @@ impl fmt::Debug
     }
 }
 
+/// Arbitrary-depth closure after every retained intermediate name policy.
+///
+/// Complete intermediate policies are visited only in the anchor-to-target
+/// order already retained by the accumulator. Every present NameConstraints
+/// extension must be critical, decode as the supported DNS/IP subset, and
+/// admit every exact target identity. This does not constrain subordinate CA
+/// names, support every GeneralName, establish complete path validity, check
+/// revocation, perform TLS or HTTP, or authorize OAuth or network activity.
+pub struct ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    anchor_policy: ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    constrained_intermediate_count: usize,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+    constrained_names: Option<ConstrainedDnsAndIpNames>,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the consumed reviewed-anchor policy and complete closure.
+    #[must_use]
+    pub const fn anchor_policy(
+        &self,
+    ) -> &ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.anchor_policy
+    }
+
+    /// Return how many retained intermediates carried supported constraints.
+    #[must_use]
+    pub const fn constrained_intermediate_count(&self) -> usize {
+        self.constrained_intermediate_count
+    }
+
+    /// Return target DNS-count evidence when any intermediate constrained it.
+    #[must_use]
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+
+    /// Return target DNS/IP counts when any intermediate constrained them.
+    #[must_use]
+    pub const fn constrained_names(&self) -> Option<ConstrainedDnsAndIpNames> {
+        self.constrained_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy",
+        )
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -2862,6 +2991,87 @@ pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_pol
     )
 }
 
+/// Apply every retained intermediate's supported critical name constraints.
+///
+/// The target and validated SAN index are derived from the complete server
+/// policy retained by `anchor_policy`. Intermediate certificates are derived
+/// from the accumulator's complete policy slice and visited only in its
+/// anchor-to-target order. The earlier accumulator ceiling bounds visits;
+/// separate caller limits bound every constraints and SAN decode.
+pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    anchor_policy: ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let target_signature_closure = anchor_policy.target_signature_closure();
+    let target_certificate = target_signature_closure.server_policy().certificate();
+    let subject_alt_name_extension_index = target_signature_closure
+        .server_policy()
+        .identity()
+        .extension_index();
+    let intermediate_certificates = target_signature_closure
+        .accumulated_intermediates()
+        .intermediate_policies()
+        .iter()
+        .map(ValidatedX509IntermediateCertificatePolicy::certificate);
+    let (constrained_intermediate_count, constrained_dns_names, constrained_names) =
+        evaluate_ordered_intermediate_name_constraints_policy(
+            target_certificate,
+            subject_alt_name_extension_index,
+            intermediate_certificates,
+            constraint_limits,
+            subject_alt_name_limits,
+        )?;
+
+    Ok(
+        ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy {
+            anchor_policy,
+            constrained_intermediate_count,
+            constrained_dns_names,
+            constrained_names,
+        },
+    )
+}
+
 /// Bind one exact routed target -> intermediate -> reviewed-root construction.
 ///
 /// The authenticated intermediate must be the depth-zero projection and the
@@ -3308,6 +3518,51 @@ fn evaluate_intermediate_name_constraints_policy(
     Ok(Some((constrained_dns_names, constrained_names)))
 }
 
+fn evaluate_ordered_intermediate_name_constraints_policy<'certificate, 'encoded, I>(
+    target_certificate: &x509_certificate::X509Certificate<'_>,
+    subject_alt_name_extension_index: usize,
+    intermediate_certificates: I,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    (
+        usize,
+        Option<ConstrainedDnsNames>,
+        Option<ConstrainedDnsAndIpNames>,
+    ),
+    X509RsaConstructedPathReviewedServerPolicyError,
+>
+where
+    'encoded: 'certificate,
+    I: IntoIterator<Item = &'certificate x509_certificate::X509Certificate<'encoded>>,
+{
+    let mut constrained_intermediate_count = 0;
+    let mut constrained_dns_names = None;
+    let mut constrained_names = None;
+
+    for intermediate_certificate in intermediate_certificates {
+        let Some((next_dns_names, next_names)) = evaluate_intermediate_name_constraints_policy(
+            target_certificate,
+            subject_alt_name_extension_index,
+            intermediate_certificate,
+            constraint_limits,
+            subject_alt_name_limits,
+        )?
+        else {
+            continue;
+        };
+        constrained_intermediate_count += 1;
+        constrained_dns_names = Some(next_dns_names);
+        constrained_names = Some(next_names);
+    }
+
+    Ok((
+        constrained_intermediate_count,
+        constrained_dns_names,
+        constrained_names,
+    ))
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     core::ptr::eq(left, right)
 }
@@ -3488,6 +3743,40 @@ mod tests {
         )
     }
 
+    fn evaluate_ordered_intermediates(
+        target_encoded: &[u8],
+        intermediate_encoded: &[Vec<u8>],
+    ) -> Result<
+        (
+            usize,
+            Option<ConstrainedDnsNames>,
+            Option<ConstrainedDnsAndIpNames>,
+        ),
+        X509RsaConstructedPathReviewedServerPolicyError,
+    > {
+        let target = decode_x509_certificate(target_encoded, Asn1Limits::default()).unwrap();
+        let intermediates = intermediate_encoded
+            .iter()
+            .map(|encoded| decode_x509_certificate(encoded, Asn1Limits::default()).unwrap())
+            .collect::<Vec<_>>();
+        let subject_alt_name_extension_index = target
+            .tbs_certificate()
+            .extensions()
+            .and_then(|extensions| {
+                extensions
+                    .iter()
+                    .position(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+            })
+            .unwrap_or(usize::MAX);
+        evaluate_ordered_intermediate_name_constraints_policy(
+            &target,
+            subject_alt_name_extension_index,
+            intermediates.iter(),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
+
     #[test]
     fn exact_object_identity_rejects_byte_equal_distinct_values() {
         let left = [1_u8, 2, 3];
@@ -3569,6 +3858,64 @@ mod tests {
         assert_eq!(constrained.1.dns_count(), 1);
         assert_eq!(constrained.1.ip_count(), 1);
         assert_eq!(constrained.1.total_count(), 2);
+    }
+
+    #[test]
+    fn ordered_intermediate_constraints_all_apply_to_target_dns_and_ip_names() {
+        let target = certificate(&[subject_alt_name(&[
+            dns_name("api.example.test"),
+            ip_address(&[192, 0, 2, 9]),
+        ])]);
+        let broad_ip = [192, 0, 0, 0, 255, 255, 0, 0];
+        let narrow_ip = [192, 0, 2, 0, 255, 255, 255, 0];
+        let intermediates = [
+            certificate(&[mixed_name_constraints(
+                &[b".test"],
+                &[&broad_ip],
+                &[],
+                &[],
+                true,
+            )]),
+            certificate(&[mixed_name_constraints(
+                &[b".example.test"],
+                &[&narrow_ip],
+                &[],
+                &[],
+                true,
+            )]),
+        ];
+
+        let (constrained_intermediate_count, constrained_dns, constrained_names) =
+            evaluate_ordered_intermediates(&target, &intermediates).unwrap();
+
+        assert_eq!(constrained_intermediate_count, 2);
+        assert_eq!(constrained_dns.unwrap().count(), 1);
+        assert_eq!(constrained_names.unwrap().dns_count(), 1);
+        assert_eq!(constrained_names.unwrap().ip_count(), 1);
+    }
+
+    #[test]
+    fn later_ordered_intermediate_constraint_violation_fails_closed() {
+        let target = certificate(&[subject_alt_name(&[dns_name("api.example.test")])]);
+        let intermediates = [
+            certificate(&[name_constraints(&[b".test"], &[], true)]),
+            certificate(&[name_constraints(
+                &[b".example.test"],
+                &[b".example.test"],
+                true,
+            )]),
+        ];
+
+        let error = evaluate_ordered_intermediates(&target, &intermediates).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::TargetIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+            )
+        );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("api.example.test"));
     }
 
     #[test]
