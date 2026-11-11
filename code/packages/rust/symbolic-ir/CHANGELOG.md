@@ -1,5 +1,11 @@
 # Changelog — symbolic-ir (Rust)
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.2.0] — 2026-05-16
 
 ### Added
