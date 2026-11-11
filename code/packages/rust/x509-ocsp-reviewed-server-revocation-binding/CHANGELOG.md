@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reify the exact intermediate-status responder-to-reviewed-root path while
+  retaining the complete responder-of-responder no-check plus intermediate-
+  status composition.
+- Stop before reviewed-root DNS or revocation policy for that responder,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth.
 - Compose the responder-of-responder RFC 6960 no-check proof with separately
   authenticated status for the exact retained intermediate at the original
   observation time.
