@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Complete revocation policy for the double-nested alternative fixed path
+  whose original and added responder-revocation proofs both carry exact RFC
+  6960 no-check policy for their own responders.
+- Restrict the nominal completion to the fully covered source-specific proof
+  and stop before generic authenticated recursion, generalized path validation,
+  revocation acquisition or refresh, TLS, HTTP, or OAuth readiness.
 - Complete revocation policy for the alternative added-responder fixed path
   after every non-root certificate is covered by authenticated status or exact
   RFC 6960 no-check policy.
