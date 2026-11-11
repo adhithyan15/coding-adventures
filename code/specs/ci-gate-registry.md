@@ -216,10 +216,10 @@ explicit single-language plan seeds only its own reader, and an applicable
 missing reader MUST fail planning without writing a partial plan. A new direct
 reader must update the relation and its source-reference drift test together.
 
-Package-local metadata also narrows what gates see. A change to a package's
-root `README.md`, `CHANGELOG.md`, `CHANGELOG.d/`, `required_capabilities.json`,
-`effect_certificate.json`, `assurance_report.json` or `evidence/` affects that
-package and its prerequisites but not its dependents
+Package-local metadata also narrows what gates see. Adding or editing a
+package's root `CHANGELOG.md`, `CHANGELOG.d/*.md`, `required_capabilities.json`,
+`effect_certificate.json`, `assurance_report.json` or `evidence/` data
+affects that package and its prerequisites but not its dependents
 (`code/specs/12-build-system.md`, "Package-local metadata"). A gate still
 fires on the file's path or on the owning package; a gate that only listed a
 dependent of the owner no longer fires for such a change.
