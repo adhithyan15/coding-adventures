@@ -334,6 +334,18 @@ authenticated revocation policy for the delegated responder, complete
 revocation, generalized path validation, TLS, HTTP, OAuth, or network
 readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_policy`
+then consumes that complete reviewed-root DNS proof and derives the added
+revocation proof's exact authenticated delegated responder only through the
+retained path. It requires one structurally unique `id-pkix-ocsp-nocheck`
+extension whose value is exact DER `NULL`; RFC 6960 recommends but does not
+require that extension to be non-critical, so certificate-wide role policy
+must already have recognized a critical instance. Success retains the entire
+generic source and non-copyable proof. This resolves only the no-check branch
+for that exact responder and stops before separately authenticated recursive
+responder revocation, complete revocation, generalized path validation, TLS,
+HTTP, OAuth, or network readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy

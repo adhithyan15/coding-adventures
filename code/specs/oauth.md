@@ -2908,6 +2908,22 @@ generalize path construction or validation, or provide TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A following bounded no-check slice consumes that complete reviewed-root DNS
+proof and derives the added revocation proof's exact authenticated delegated
+responder only through the retained path. It requires one structurally unique
+`id-pkix-ocsp-nocheck` extension whose contents are exact DER `NULL`. RFC 6960
+recommends but does not require a non-critical extension, so a critical
+instance can reach this semantic gate only after certificate-wide role policy
+recognizes its OID. Success retains the complete generic non-copyable proof.
+This pure public-certificate-data policy performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves
+only the no-check branch for that exact responder and does not establish
+separately authenticated recursive responder revocation, complete revocation
+policy, generalized path construction or validation, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
