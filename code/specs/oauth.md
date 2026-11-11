@@ -1699,6 +1699,32 @@ certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Concrete HTTPS and
 live-provider readiness remain unavailable.
+A bounded ordered-intermediate name-policy follow-up now consumes that exact
+reviewed-anchor policy result together with separate caller-owned limits for
+each intermediate NameConstraints decoder and each target Subject Alternative
+Name decoder. It derives the exact target certificate and already-validated
+SAN extension index only from the retained target-signature closure, then
+visits every complete intermediate policy retained by the accumulator in its
+already-proved anchor-to-target order. An intermediate without NameConstraints
+succeeds without new evidence. A present extension must be critical, must
+decode as the repository's supported permitted-and-excluded DNS and IP
+subsets, and every retained target dNSName and iPAddress must satisfy both
+subsets before traversal may continue. The accumulator's earlier nonzero
+intermediate ceiling bounds the number of visits; the new caller-owned limits
+bound each repository-owned decode. Success retains the complete reviewed-
+anchor policy result, the number of constrained intermediates, and only
+payload-free target DNS/IP counts. Callers cannot substitute another target,
+SAN index, intermediate, or traversal order.
+
+This composes supported intermediate constraints only against the exact target
+identities. It does not apply constraints to subordinate CA subject or SAN
+names, support every GeneralName form, generalize full Name processing or path
+validation, validate the anchor self-signature, check revocation, compose TLS
+or HTTP, authorize OAuth transport, or grant network authority. The pure
+public-certificate-data composition performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. Concrete HTTPS and
+live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
