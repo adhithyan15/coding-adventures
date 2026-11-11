@@ -206,7 +206,7 @@ a join over equal keys (§9) and not a naming convention.
       "admit": ["bool", true],
       "lhs": ["subject_op", "eq", [["var","a"],["var","b"]]],
       "rhs": ["model_call", "same", [["var","a"],["var","b"]]],
-      "cases": 120409, "discarded": 0,
+      "cases": 120409, "discarded": 0, "expected_calls": 120409,
       "domain_text": "Bytes[347] x Bytes[347]",
       "inputs_sha256": "<hex>", "expected_sha256": "<hex>"
     }
@@ -215,6 +215,12 @@ a join over equal keys (§9) and not a naming convention.
   "samples": { "per_claim": 256, "seed": "<u64>", "generator": "warrant-biased-v1" }
 }
 ```
+
+`expected_calls` is the exact number of subject-operation invocations in an
+unfaulted complete run of the suite. WD-003's equality-only v0 profile permits
+one subject call per admitted case, so `expected_calls == cases`; a later
+profile that admits multiple subject calls must count them from the checked
+subject expression and include the count in the corpus.
 
 IR calls have separate subject and oracle forms. `subject_op(name, args)` is
 the only node that dispatches through a lane's binding table to the real
