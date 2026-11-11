@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Complete revocation policy for the alternative added-responder fixed path
+  after every non-root certificate is covered by authenticated status or exact
+  RFC 6960 no-check policy.
+- Restrict the infallible non-copyable completion to the fully covered default
+  source and stop before generalized path validation, revocation acquisition
+  or refresh, TLS, HTTP, or OAuth readiness.
 - Apply RFC 6960 no-check policy to the alternative added revocation proof's
   own exact delegated responder after its selected reviewed-root DNS policy.
 - Retain the complete generic non-copyable proof while stopping before

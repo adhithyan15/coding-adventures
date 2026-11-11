@@ -1,7 +1,6 @@
 # CLOC44 — refuse what Closure refuses (CCR-075)
 
-**Status:** slice 1 implemented (private elements). The remaining slices are
-listed below.
+**Status:** slices 1–3 implemented (private elements, return/new.target outside function, super outside method).
 **Decision:** owner, 2026-10-19 (#15860, option a).
 **Crate:** `closurec` (`src/refusals.rs`, `run.rs` step 1b, `tests/ladder.rs`).
 
@@ -119,6 +118,28 @@ interleave the way upstream prints them.
 No ladder rung changes, because the ladder's `new_target` and `try_catch`
 rungs use these constructs inside functions.
 
+## Slice 3: `super` outside a method
+
+Upstream reports `JSC_INVALID_SUPER_ACCESS` ("'super' may only be accessed within a method")
+at the `super` keyword token when `super` is accessed outside a method.
+
+| Where                                       | Upstream |
+|---------------------------------------------|----------|
+| `super.f(1 + 2);` (top level)               | refused, exit 1 |
+| `x = () => super.x;` (top level)            | refused |
+| `function f() { super.x; }`                 | refused |
+| `class A { [super.x]() {} }`                | refused (computed key is outside method) |
+| `class A { m() { super.x; } }`              | compiled |
+| `class A { constructor() { super(); } }`    | compiled |
+| `class A { m() { () => super.x; } }`        | compiled |
+| `({ m() { super.x; } })`                    | compiled |
+| `class A { x = super.y; }`                  | compiled |
+| `class A { static { super.y; } }`           | compiled |
+
+`refusals::scan` parses when a `super` keyword token is present (not after `.` or `?.`),
+and checks `super_ok` during the AST walk. `simple-super` now asserts the identical
+refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
+
 ## The ladder's third verdict
 
 A rung upstream refuses records that refusal in its own fixture:
@@ -143,7 +164,6 @@ The refusals already captured in `tests/oracle/upstream-refusals-v20260915.json`
 |---|---|
 | `simple-import`, `simple-export`, `simple-importexpr` | `JSC_INVALID_MODULE_PATH` (module resolution) |
 | `simple-importmeta` | `JSC_CANNOT_CONVERT` (`import.meta`) |
-| `simple-super` | `JSC_INVALID_SUPER_ACCESS` |
 | `simple-with` | `JSC_USE_OF_WITH` |
 
 Found since, and not yet captured as fixtures:
