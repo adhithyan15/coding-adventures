@@ -562,12 +562,15 @@ pub fn whitespace_only_minify(
         while i < kept.len() {
             let t = kept[i];
             if is_string_literal(t) && t.value == "use strict" {
-                drops.push(i);
                 if i + 1 < kept.len() && is_structural_punct(kept[i + 1], ";") {
+                    drops.push(i);
                     drops.push(i + 1);
                     i += 2;
-                } else {
+                } else if i + 1 == kept.len() {
+                    drops.push(i);
                     i += 1;
+                } else {
+                    break;
                 }
             } else {
                 break;
@@ -583,12 +586,18 @@ pub fn whitespace_only_minify(
                 while j < kept.len() {
                     let t = kept[j];
                     if is_string_literal(t) && t.value == "use strict" {
-                        drops.push(j);
                         if j + 1 < kept.len() && is_structural_punct(kept[j + 1], ";") {
+                            drops.push(j);
                             drops.push(j + 1);
                             j += 2;
-                        } else {
+                        } else if j + 1 < kept.len() && is_structural_punct(kept[j + 1], "}") {
+                            drops.push(j);
                             j += 1;
+                        } else if j + 1 == kept.len() {
+                            drops.push(j);
+                            j += 1;
+                        } else {
+                            break;
                         }
                     } else {
                         break;
@@ -10441,6 +10450,7 @@ mod tests {
         assert_eq!(minify("\"use asm\";\"use strict\";f();"), "\"use asm\";\"use strict\";f();");
         assert_eq!(minify("\"use strict\";\"use asm\";f();"), "\"use asm\";f();");
         assert_eq!(minify("\"x\";f();"), "\"x\";f();");
+        assert_eq!(minify("\"use strict\",1;"), "\"use strict\",1;");
 
         // Blocks that are not function bodies keep "use strict"
         assert_eq!(minify("{\"use strict\";var x=1;}"), "{\"use strict\";var x=1};");
