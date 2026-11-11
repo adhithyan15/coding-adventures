@@ -76,6 +76,14 @@ permitted-and-excluded DNS/IP subset, and admit every exact target dNSName and
 iPAddress under separate caller-owned decoder limits. The earlier accumulator
 ceiling bounds visits. Success retains the full prior proof, the number of
 constrained intermediates, and only payload-free target DNS/IP counts.
+An ordered subordinate-CA follow-up consumes that target policy and derives
+the same complete intermediate policies, exact certificates, traversal order,
+and self-issued classifications only from retained evidence. Each
+intermediate's critical supported DNS/IP constraints are applied to every
+target-nearer intermediate's optional SAN, excluding non-final self-issued
+subordinate CAs. An absent subordinate SAN is an empty supported-name set; a
+present SAN must decode under caller-owned limits. Success retains the entire
+target policy and only payload-free application and repeated-name counts.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -124,14 +132,15 @@ Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result, ordered transitions, intermediate accumulator, target
 signature closure, arbitrary-depth reviewed-anchor policy, and ordered target
 identity checks against intermediate constraints do not validate the anchor's
-self-signature, constrain subordinate CA subject or SAN names, establish
-complete generalized path validation, define full Name comparison, apply all
-NameConstraints or GeneralName forms, check revocation, perform TLS or HTTP,
-authorize OAuth transport, or open a network connection. Target identity,
-time, purpose, routed selected-adjacency RSA signatures, construction-derived
-path-length state, and the supported reviewed-anchor DNS and intermediate
-DNS/IP subsets do not make the whole path valid. This does not make concrete
-HTTPS or live-provider use ready.
+self-signature, constrain subordinate CA distinguished names, apply reviewed
+anchor constraints to subordinate CAs, establish complete generalized path
+validation, define full Name comparison, apply all NameConstraints or
+GeneralName forms, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection. Target identity, time, purpose,
+routed selected-adjacency RSA signatures, construction-derived path-length
+state, and the supported reviewed-anchor DNS and intermediate DNS/IP subsets
+do not make the whole path valid. This does not make concrete HTTPS or
+live-provider use ready.
 
 ## Validation
 
