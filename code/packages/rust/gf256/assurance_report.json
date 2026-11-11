@@ -1,9 +1,30 @@
 {
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
   "capabilities": {
     "analyzer": "pass",
     "certificate": "proved",
     "declared": [],
     "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
   },
   "claims": [
     {
@@ -347,6 +368,7 @@
   "exemptions": [
     {
       "approved": false,
+      "assumptions": [],
       "cwe": 400,
       "evidence": [],
       "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
@@ -355,6 +377,7 @@
     },
     {
       "approved": false,
+      "assumptions": [],
       "cwe": 208,
       "evidence": [],
       "id": "EXEMPT-CWE-208-GATE-LEVEL",

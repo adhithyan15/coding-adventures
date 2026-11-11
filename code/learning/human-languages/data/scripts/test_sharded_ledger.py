@@ -3,11 +3,14 @@ import os
 import subprocess
 import sys
 import tempfile
+import textwrap
 import threading
 import unittest
 from pathlib import Path
 from unittest import mock
 
+import book_generation_owner_read
+import sharded_ledger
 from sharded_ledger import (
     _files,
     _read,
@@ -54,6 +57,73 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
     def tearDown(self):
         self.temporary.cleanup()
+
+    def test_book_owner_batch_stays_on_pinned_section_during_swap_attempt(self):
+        base = self.root / "core" / "book-generation.d"
+        for section in book_generation_owner_read.SECTIONS:
+            (base / section).mkdir(parents=True)
+        (base / "_meta.json").write_text("inside metadata", encoding="utf-8")
+        section = base / "targets.d"
+        (section / "test-0001.json").write_text("inside owner", encoding="utf-8")
+        (self.outside / "test-0001.json").write_text("outside sentinel", encoding="utf-8")
+        moved = base / "targets-moved"
+        original = sharded_ledger._read_pinned_regular_batch
+        swapped = []
+
+        def attempt_swap_after_open(handle, names, read_one):
+            if "test-0001.json" in names:
+                try:
+                    os.rename(section, moved)
+                    link_directory(self.outside, section)
+                    swapped.append(True)
+                except OSError:
+                    # Windows may refuse to rename an open pinned directory.
+                    pass
+            return original(handle, names, read_one)
+
+        read = (
+            book_generation_owner_read._windows
+            if os.name == "nt"
+            else book_generation_owner_read._unix
+        )
+        try:
+            with mock.patch(
+                "sharded_ledger._read_pinned_regular_batch",
+                side_effect=attempt_swap_after_open,
+            ):
+                result = read(self.root)
+            self.assertEqual(
+                result["sections"]["targets.d"]["files"]["test-0001.json"],
+                "inside owner",
+            )
+            self.assertEqual(
+                (self.outside / "test-0001.json").read_text(encoding="utf-8"),
+                "outside sentinel",
+            )
+        finally:
+            if swapped:
+                if os.name == "nt":
+                    os.rmdir(section)
+                else:
+                    os.unlink(section)
+                os.rename(moved, section)
+
+    @unittest.skipUnless(os.name != "nt" and hasattr(os, "mkfifo"), "Unix FIFO required")
+    def test_book_owner_batch_refuses_a_fifo_without_blocking(self):
+        base = self.root / "core" / "book-generation.d"
+        for section in book_generation_owner_read.SECTIONS:
+            (base / section).mkdir(parents=True)
+        (base / "_meta.json").write_text("{}\n", encoding="utf-8")
+        os.mkfifo(base / "targets.d" / "test-0001.json")
+        result = subprocess.run(
+            [sys.executable, str(Path(book_generation_owner_read.__file__))],
+            input=json.dumps({"root": str(self.root)}).encode("utf-8"),
+            capture_output=True,
+            timeout=5,
+            check=False,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(b"not a regular file", result.stderr)
 
     def test_mock_evidence_reads_checked_regular_file_bytes(self):
         path = self.root / "spanish" / "mocks" / "paper.md"
@@ -193,6 +263,42 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 else:
                     os.unlink(directory)
                 os.rename(moved, directory)
+
+    @unittest.skipUnless(os.name != "nt" and hasattr(os, "mkfifo"), "Unix FIFO required")
+    def test_modality_owner_cli_refuses_fifo_swapped_after_listing(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside owner", encoding="utf-8")
+        request = {"root": str(self.root), "language": "spanish", "names": ["_meta.json"]}
+        # The injected helper runs *after* the pinned reader has listed the
+        # exact owner set. A five-second subprocess deadline makes the old
+        # blocking open a deterministic test failure rather than a hung suite.
+        script = textwrap.dedent("""
+            import os
+            import sys
+            import modality_owner_read
+            import sharded_ledger
+
+            owner = os.path.join(sys.argv[1], "_meta.json")
+            original = sharded_ledger._read_pinned_regular_batch
+
+            def swap(parent, names, read_one):
+                os.unlink(owner)
+                os.mkfifo(owner)
+                return original(parent, names, read_one)
+
+            sharded_ledger._read_pinned_regular_batch = swap
+            sys.exit(modality_owner_read.main())
+        """)
+        result = subprocess.run(
+            [sys.executable, "-c", script, str(directory)],
+            input=json.dumps(request).encode("utf-8"),
+            capture_output=True, timeout=5, check=False,
+            cwd=Path(__file__).resolve().parent,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(json.loads(result.stdout)["error"]["kind"], "ValueError")
+        self.assertNotIn(b"inside owner", result.stdout + result.stderr)
 
     def test_modality_owner_cli_transports_exact_unicode_bytes_and_scrubs_errors(self):
         directory = self.root / "core" / "lesson-modality" / "spanish.d"

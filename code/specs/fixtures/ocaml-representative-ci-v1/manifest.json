@@ -92,7 +92,7 @@
       "build_file": "BUILD"
     },
     "macos-arm64": {
-      "runner": "macos-14",
+      "runner": "macos-15",
       "runner_os": "macOS",
       "runner_arch": "ARM64",
       "windows_compiler": null,
@@ -127,5 +127,5 @@
     "code/packages/ocaml/ca-capability-analyzer": "00a375c99904152d8c1a534564d880a29174b0df9012407ae8cf7e5ec711e880",
     "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
   },
-  "workflow_sha256": "f6167bf933ee2ca7809595594ce15ab087cdc77f6bb8ffbf3f42d4ed9bdbed34"
+  "workflow_sha256": "c45d240d96a9067b2d3c55b236c5ac0f69ca72f032cbd3116a61bf5a19442f09"
 }

@@ -16,6 +16,7 @@
 
 use core::fmt;
 use x509_certificate_path_construction::ConstructedX509CertificatePath;
+use x509_certificate_path_length_policy::X509CertificatePathLengthState;
 use x509_certificate_policy::{ValidatedCertificateRolePolicy, X509CertificateRole};
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
 
@@ -208,6 +209,91 @@ impl fmt::Debug
     }
 }
 
+/// Construction-derived path-length capacity bound to a reviewed terminal.
+///
+/// RFC 5280 initializes path-length processing to the number of non-anchor
+/// certificates between the target and trust anchor. This evidence derives
+/// that capacity from the retained constructed path and keeps the complete
+/// reviewed-terminal and issuing-CA role proof beside it. Callers therefore
+/// cannot initialize traversal with detached or inflated state. This does not
+/// authenticate a path link, process an intermediate, or establish complete
+/// path validity.
+pub struct InitializedReviewedConstructedX509CertificatePathLength<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    reviewed_path: BoundReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    InitializedReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the complete reviewed-terminal and issuing-CA role proof.
+    #[must_use]
+    pub const fn reviewed_path(
+        &self,
+    ) -> &BoundReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.reviewed_path
+    }
+
+    /// Return the initial capacity derived from the retained construction.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for InitializedReviewedConstructedX509CertificatePathLength<'_, '_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("InitializedReviewedConstructedX509CertificatePathLength")
+    }
+}
+
 /// Bind a constructed path's exact terminal candidate to reviewed-root evidence.
 ///
 /// A target-only construction is rejected because this boundary is intended to
@@ -331,4 +417,60 @@ pub fn bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy<
             anchor_role_policy,
         },
     )
+}
+
+/// Initialize path-length state from one exact reviewed construction.
+///
+/// The reviewed-path binding guarantees at least one selected issuer and that
+/// the last selected issuer is the exact reviewed root. Subtracting that trust
+/// anchor from the construction's issuer count therefore yields the number of
+/// prospective intermediate certificates. The construction crate's fixed
+/// capacity bounds that value well below `u64::MAX`.
+///
+/// Success consumes and retains the complete reviewed-terminal role evidence,
+/// preventing the construction-derived state from being silently attached to
+/// another path. This is initialization only: it applies no intermediate
+/// transition, signature, name, time, revocation, TLS, HTTP, OAuth, or network
+/// policy.
+#[must_use]
+pub fn initialize_reviewed_constructed_x509_certificate_path_length<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    reviewed_path: BoundReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+) -> InitializedReviewedConstructedX509CertificatePathLength<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    let issuer_count = reviewed_path
+        .reviewed_path()
+        .constructed_path()
+        .issuer_count();
+    let intermediate_count = issuer_count.saturating_sub(1) as u64;
+
+    InitializedReviewedConstructedX509CertificatePathLength {
+        reviewed_path,
+        path_length_state: X509CertificatePathLengthState::new(intermediate_count),
+    }
 }

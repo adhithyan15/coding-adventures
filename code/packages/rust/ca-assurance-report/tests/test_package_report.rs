@@ -66,6 +66,11 @@ impl Copy {
             root.join("code/specs/gf256.warrant"),
         )
         .unwrap();
+        let assumptions = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../assumptions");
+        fs::create_dir_all(root.join("code/assumptions")).unwrap();
+        for f in ["catalogue-v1.json", "evidence-kinds.json", "non-claims.json"] {
+            fs::copy(assumptions.join(f), root.join("code/assumptions").join(f)).unwrap();
+        }
         Copy { root, pkg }
     }
     fn edit(&self, rel: &str, from: &str, to: &str) {

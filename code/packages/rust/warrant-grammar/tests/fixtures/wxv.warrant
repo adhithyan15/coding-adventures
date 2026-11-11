@@ -1,0 +1,41 @@
+-- VER04j WX-E test fixture: a v1 document with two pinned `vectors` tables
+-- (section 5).  It is NOT a package specification; it exists so the loader, the
+-- generator and the table runner are tested by compiling and running what they
+-- emit against a tiny in-test subject (see tests/wxe_evidence.rs).
+--
+-- The data is synthetic (code/specs/fixtures/warrant-vectors-synthetic-v1/):
+-- made-up messages with hashlib digests.  No NIST/RFC vector is used.
+warrant wxv v1
+  error EmptyErr = EMPTY
+
+  op digest(msg: Bytes) -> Bytes<32>
+  op first_byte(msg: Bytes) -> Result<U8, EmptyErr>
+
+  labels digest:
+    msg public
+  labels first_byte:
+    msg public
+
+  vectors synthetic_digests:
+    source "warrant-vectors-synthetic-v1/digests.tfv"
+    sha256 b"8931b6cf0de7233d3134e77705206dc054054973e678f6bfd6e641db4883bea3"
+    rows 23
+    column msg: Bytes
+    column md: Bytes<32>
+    holds digest(msg) == md
+
+  vectors synthetic_results:
+    source "warrant-vectors-synthetic-v1/first-bytes.tfv"
+    sha256 b"3c3b3f9c4e097c87cdf7135b057e2f0f8321c5ff31d074c8f74ac28daecceeb7"
+    rows 8
+    column msg: Bytes
+    column out: Result<U8, EmptyErr>
+    holds first_byte(msg) == out
+
+  -- One known answer in the document itself, so the example kind has a member
+  -- for the two digest faults (the row `len-3` of the table, restated).
+  example digest_of_a_three_byte_message:
+    digest(b"030a11") == b"6ab0dba1f4f1dfbb37b4f9eeb092c09fca4900ad32bdcd147d8dde35d6c87c35"
+
+  claim first_byte_is_ok_exactly_when_the_message_is_nonempty:
+    forall m: Bytes. match first_byte(m) with Ok(x) -> len(m) > 0 | Err(e) -> len(m) == 0

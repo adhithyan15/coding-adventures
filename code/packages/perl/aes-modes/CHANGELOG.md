@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `BUILD_windows` passes dependency library paths with `-I` instead of `set PERL5LIB=...`, which MSYS perl on CI splits on `:` and so never found.
+
 - **Windows build.** New `BUILD_windows`: `set "PERL5LIB=..\aes\lib;%PERL5LIB%" && prove -l -v t\`.
   The shared BUILD's `PERL5LIB=$(cd ../aes && pwd)/lib:... perl Makefile.PL` cannot run under `cmd /C`.
 
