@@ -2924,6 +2924,24 @@ policy, generalized path construction or validation, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A branch-specific bounded completion slice then consumes that exact default-
+source alternative proof after the server target, original responder,
+intermediate, added intermediate-status responder, and the added responder-
+revocation proof's own responder have each been covered by authenticated good-
+and-fresh OCSP status or exact RFC 6960 no-check policy. The input type excludes
+the generic source whose separately authenticated responder branch remains
+unresolved. The selected Mozilla-reviewed root remains the trust anchor rather
+than a revocation target. The infallible non-copyable result retains every
+prerequisite and accepts no substitute certificate, path, root, algorithm,
+key, signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It proves complete revocation policy
+only for this one retained fixed branch; it does not generalize path
+construction or validation, fetch, cache, acquire, or refresh revocation data,
+or provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

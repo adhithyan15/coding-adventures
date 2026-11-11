@@ -346,6 +346,17 @@ for that exact responder and stops before separately authenticated recursive
 responder revocation, complete revocation, generalized path validation, TLS,
 HTTP, OAuth, or network readiness.
 
+`complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
+then nominally completes revocation policy for this exact default-source
+alternative branch. Its input type proves that the server target, original
+responder, intermediate, added intermediate-status responder, and the added
+responder-revocation proof's own responder are each covered by authenticated
+good-and-fresh OCSP status or exact RFC 6960 no-check policy. The selected
+Mozilla-reviewed root remains the trust anchor. The infallible non-copyable
+wrapper retains the complete proof and accepts no substitute evidence. It does
+not generalize path construction or validation, acquire or refresh revocation
+data, read a clock, or provide TLS, HTTP, OAuth, or network readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy

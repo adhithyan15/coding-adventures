@@ -2629,6 +2629,62 @@ impl<Proof, IntermediateRevocation, ResponderRevocation, Source> fmt::Debug
     }
 }
 
+/// Non-copyable complete revocation policy for one exact alternative fixed path.
+///
+/// The retained default-source proof covers the server target, original
+/// responder, intermediate, added intermediate-status responder, and the
+/// added responder-revocation proof's own responder with authenticated good-
+/// and-fresh OCSP status or exact RFC 6960 no-check policy. The selected
+/// Mozilla-reviewed root remains the trust anchor, not a revocation target.
+/// This nominal completion evidence does not generalize path construction or
+/// validation, acquire or refresh revocation data, read a clock, or provide
+/// TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+> {
+    responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+        >,
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation>
+    ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+    >
+{
+    /// Return the consumed complete alternative-branch proof intact.
+    pub const fn responder_no_check_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+    > {
+        &self.responder_no_check_policy
+    }
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation> fmt::Debug
+    for ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy",
+        )
+    }
+}
+
 /// Reify the responder-revocation proof's own exact responder path.
 ///
 /// The safe responder-revocation constructor already binds one complete fully
@@ -2817,6 +2873,43 @@ where
             anchor_dns_policy,
         },
     )
+}
+
+/// Complete revocation policy for the exact alternative fixed path.
+///
+/// The input is deliberately restricted to the default source branch. Its
+/// type can be constructed only after the retained server target, original
+/// responder, intermediate, added intermediate-status responder, and the
+/// added responder-revocation proof's own responder have each passed their
+/// branch-specific authenticated-status or RFC 6960 no-check policy. This
+/// infallible nominal composition accepts no substitute certificate, path,
+/// root, algorithm, key, signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It does not generalize path construction or
+/// validation, fetch, cache, acquire, or refresh revocation data, or provide
+/// TLS, HTTP, OAuth readiness, or network authority.
+pub const fn complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+>(
+    responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+        >,
+) -> ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+>{
+    ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy {
+        responder_no_check_policy,
+    }
 }
 
 /// Apply selected reviewed-root DNS policy to the added revocation responder.
@@ -6449,7 +6542,7 @@ mod tests {
     }
 
     #[test]
-    fn intermediate_status_responder_revocation_no_check_selects_exact_responder() {
+    fn intermediate_status_responder_revocation_no_check_completes_exact_fixed_path() {
         let original_encoded = certificate(&[]);
         let added_encoded = certificate(&[]);
         let issuer_encoded = certificate(&[]);
@@ -6491,6 +6584,23 @@ mod tests {
         assert_eq!(
             format!("{no_check:?}"),
             "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy"
+        );
+
+        let complete = complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy(no_check);
+
+        assert!(std::ptr::eq(
+            complete
+                .responder_no_check_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .responder_revocation()
+                .responder_revocation()
+                .responder,
+            &responder,
+        ));
+        assert_eq!(
+            format!("{complete:?}"),
+            "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy"
         );
     }
 
