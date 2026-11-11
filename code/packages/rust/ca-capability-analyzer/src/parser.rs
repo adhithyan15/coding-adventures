@@ -873,6 +873,10 @@ struct Resolver {
     /// root (`use std::*;`, `use s::*;` after `use std as s;`).  See
     /// [`Resolver::glob_is_bare_root`].
     root_globs: HashSet<Vec<String>>,
+    /// Some glob import is headed by something other than `crate`/`self`/
+    /// `super`/`Self` after normalisation (`use std::path::*;`, `use dep::*;`):
+    /// a bare type name may then be an item from outside this crate.
+    foreign_glob: bool,
 }
 
 /// Every spelling of the glob path `g` after alias substitution: `g` itself
@@ -997,6 +1001,7 @@ impl Resolver {
         // std surfaces.  Every spelling, kept or not, is counted (LOW).
         let mut norm_globs: Vec<Vec<String>> = Vec::new();
         let mut root_globs: HashSet<Vec<String>> = HashSet::new();
+        let mut foreign_glob = false;
         let mut budget = MAX_GLOB_SPELLINGS;
         for g in globs {
             let expanded = glob_spellings(&bindings, &g, &mut budget)?;
@@ -1004,6 +1009,9 @@ impl Resolver {
                 root_globs.insert(g.clone());
             }
             for e in expanded {
+                if e.first().is_some_and(|h| !is_local_head(h)) {
+                    foreign_glob = true;
+                }
                 if let Some(h) = e.first() {
                     let relevant = is_std_root(h)
                         || SHORTHAND_HEADS.contains(&h.as_str())
@@ -1026,6 +1034,7 @@ impl Resolver {
             bindings,
             globs: norm_globs,
             root_globs,
+            foreign_glob,
         })
     }
 
@@ -1690,9 +1699,17 @@ fn receiver_is_local_inherent(
             if f >= 3 && (is_pathsep(toks, f - 3) || is_punct(toks, f - 3, '>') || is_punct(toks, f - 3, '.')) {
                 return false;
             }
+            // The name `ty` must denote the local type.  A `use`/`type` binding
+            // of that name rebinds it (L4).  So may a glob import, which no
+            // binding records: with `use std::path::*;` in scope, `PathBuf` at
+            // the call site is std's `PathBuf` even if another module defines
+            // its own `PathBuf` with an inherent `read_dir` (security review
+            // round 3, MEDIUM-1, PoC t11).  Bindings and globs are package-wide,
+            // so any glob reaching outside the crate refuses the waiver.
             return local.ctors.get(ty).is_some_and(|c| c.contains(fname))
                 && local.methods.get(ty).is_some_and(|m| m.contains(method))
-                && !res.has_binding(ty);
+                && !res.has_binding(ty)
+                && !res.foreign_glob;
         }
         return false;
     }

@@ -322,3 +322,27 @@ fn low_glob_expansion_is_capped_counting_pure_globs() {
     assert!(got.contains(&"?".to_string()), "{got:?}");
     assert!(start.elapsed() < std::time::Duration::from_secs(10));
 }
+
+// ---------------------------------------------------------------------------
+// MEDIUM-1: the `.read_dir()` receiver waiver must not trust a type name a
+// glob import may supply
+// ---------------------------------------------------------------------------
+
+const T11_LOCAL_TYPE: &str = "mod a {\n    pub struct PathBuf;\n    impl PathBuf {\n        pub fn from(_: &str) -> Self { PathBuf }\n        pub fn read_dir(&self) {}\n    }\n}\n";
+
+#[test]
+fn medium1_receiver_waiver_is_refused_under_a_foreign_glob() {
+    let with = |tail: &str| format!("{T11_LOCAL_TYPE}{tail}");
+    let t11 = with("use std::path::*;\npub fn f() -> usize { PathBuf::from(\"/etc\").read_dir().unwrap().count() }\n");
+    let third_party = with("use dep::*;\npub fn f() { PathBuf::from(\"/etc\").read_dir(); }\n");
+    let local_glob = with("use crate::a::*;\npub fn f() { PathBuf::from(\"/etc\").read_dir(); }\n");
+    let no_glob = with("use crate::a::PathBuf as P;\npub fn f() { a::PathBuf::from(\"/etc\").read_dir(); }\n");
+    // PoC t11: `PathBuf` at the root is std's (from the glob); the local type
+    // with its own `read_dir` lives in `mod a`.  The waiver made this pure.
+    assert!(verdict(&t11).contains(&"fs:list".to_string()), "t11: {:?}", verdict(&t11));
+    assert!(verdict(&third_party).contains(&"fs:list".to_string()), "third-party glob: {:?}", verdict(&third_party));
+    // Local globs only name items of this crate: the waiver still applies.
+    assert_eq!(verdict(&local_glob), Vec::<String>::new());
+    // (`a::PathBuf::from` is not a simple local path: never waived, as before.)
+    assert_eq!(verdict(&no_glob), vec!["fs:list".to_string()]);
+}
