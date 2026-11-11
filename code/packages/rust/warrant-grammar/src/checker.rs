@@ -12,7 +12,7 @@ use crate::fixed::FixedTy;
 use crate::parser::{
     AssumptionsDecl, BinaryOp, BoundDecl, Declaration, Expression, FieldDecl, InputDecl,
     LabelsDecl, Literal, MatchArm, ModelDecl, OpDecl, Pattern, ProjKey, QualifiedName, TypeExpr,
-    UnaryOp, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
+    UnaryOp, VectorsDecl, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
 };
 use crate::patterns::{self, PTy, Pat};
 
@@ -21,6 +21,13 @@ pub const MAX_SHAPE_NODES: usize = 4096;
 
 /// Most arms one `match` may have (VER04j section 4.3).
 pub const MAX_MATCH_ARMS: usize = 256;
+
+/// Most rows one `vectors` table may declare (VER04j section 5.2: a tool-profile
+/// constant; exhaustion is W0602).
+pub const MAX_TABLE_ROWS: u64 = 100_000;
+
+/// Most rows all the tables of one document may declare together.
+pub const MAX_DOCUMENT_ROWS: u64 = 250_000;
 
 /// Names reserved in every document (VER04 section 2).
 const V0_BUILTINS: [&str; 18] = [
@@ -34,7 +41,7 @@ const V1_TYPES: [&str; 6] = ["U16", "U32", "I8", "I16", "I32", "I64"];
 /// The v1 built-in *functions* (WX-B and WX-C).  Reserved, and in scope, only
 /// in v1 documents (VER04j section 1.2): a v0 document may still define its
 /// own model called `rem` or `shl` and keeps meaning that definition.
-pub const V1_FUNCTIONS: [&str; 31] = [
+pub const V1_FUNCTIONS: [&str; 33] = [
     "widen",
     "wrap",
     "try",
@@ -66,6 +73,8 @@ pub const V1_FUNCTIONS: [&str; 31] = [
     "le_bytes",
     "from_be",
     "from_le",
+    "imin",
+    "imax",
 ];
 
 /// Is `name` a built-in reserved in a document of version `version`?
@@ -109,8 +118,14 @@ pub enum DiagnosticCode {
     W0501,
     /// W0502: Failed binding negative control or fresh-output requirement.
     W0502,
+    /// W0601: A vacuous contract: a `vectors` table whose `holds` calls no
+    /// operation, or one with no rows (VER04j section 5.2).
+    W0601,
     /// W0602: Incomplete mandatory solver/analyzer/observer evidence; budget exhaustion.
     W0602,
+    /// W0710: Column/type mismatch of a `vectors` table: an unused column or a
+    /// column type with no TFV decoding (VER04j section 5.4).
+    W0710,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -124,7 +139,9 @@ impl fmt::Display for DiagnosticCode {
             Self::W0402 => write!(f, "W0402"),
             Self::W0501 => write!(f, "W0501"),
             Self::W0502 => write!(f, "W0502"),
+            Self::W0601 => write!(f, "W0601"),
             Self::W0602 => write!(f, "W0602"),
+            Self::W0710 => write!(f, "W0710"),
         }
     }
 }
@@ -177,6 +194,15 @@ pub enum CheckerErrorKind {
     NullaryWithParens(String),
     /// WX-A: a match with more than [`MAX_MATCH_ARMS`] arms.
     TooManyArms,
+    /// WX-E: a table, or a document's tables together, declare more rows than the
+    /// tool profile allows.
+    TableRows { rows: u64, limit: u64 },
+    /// WX-E: a table with `rows 0`, or whose `holds` calls no operation.
+    VacuousTable(String),
+    /// WX-E: a column the `holds` expression never mentions.
+    UnusedColumn(String),
+    /// WX-E: a column type that a TFV row cannot carry (a symbolic width).
+    UndecodableColumn(String),
 }
 
 /// Semantic checking error with source span.
@@ -418,6 +444,9 @@ pub struct Checker<'a> {
     // Test namespace symbols
     test_symbols: HashSet<String>,
 
+    // WX-E: the document's tables, in declaration order.
+    vectors: Vec<&'a VectorsDecl<'a>>,
+
     // Contracts
     labels: BTreeMap<String, &'a LabelsDecl<'a>>,
     bounds: BTreeMap<String, &'a BoundDecl<'a>>,
@@ -441,6 +470,7 @@ impl<'a> Checker<'a> {
             adts: BTreeMap::new(),
             ctor_index: BTreeMap::new(),
             test_symbols: HashSet::new(),
+            vectors: Vec::new(),
             labels: BTreeMap::new(),
             bounds: BTreeMap::new(),
             inputs: BTreeMap::new(),
@@ -667,6 +697,17 @@ impl<'a> Checker<'a> {
                             span: cl.span,
                         });
                     }
+                }
+                // WX-E: a table shares the test-name namespace (section 5.2).
+                Declaration::Vectors(v) => {
+                    if !self.test_symbols.insert(v.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateTestName(v.name.to_string()),
+                            span: v.span,
+                        });
+                    }
+                    self.vectors.push(v);
                 }
                 Declaration::Labels(lbl) => {
                     if self.labels.insert(lbl.name.to_string(), lbl).is_some() {
@@ -1297,6 +1338,93 @@ impl<'a> Checker<'a> {
                 _ => {}
             }
         }
+        self.typecheck_vectors()
+    }
+
+    /// WX-E (VER04j section 5.2): the row budget, the columns, and the `holds`
+    /// expression of every `vectors` table.
+    ///
+    /// ```text
+    /// rows <= 100,000 per table, 250,000 per document   W0602
+    /// rows 0                                            W0601 (nothing to check)
+    /// column of a symbolic width (Bytes<n>)             W0710 (no TFV decoding)
+    /// column named like a model, op, constructor, ...   W0203
+    /// holds: Bool over exactly the columns              W0301 / W0710 (unused)
+    /// holds calls no operation                          W0601 (vacuous)
+    /// ```
+    fn typecheck_vectors(&mut self) -> Result<(), CheckerError> {
+        let tables = self.vectors.clone();
+        let mut total: u64 = 0;
+        for v in tables {
+            self.charge_work(v.span)?;
+            total = total.saturating_add(v.rows);
+            if v.rows > MAX_TABLE_ROWS || total > MAX_DOCUMENT_ROWS {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0602,
+                    kind: CheckerErrorKind::TableRows {
+                        rows: v.rows,
+                        limit: if v.rows > MAX_TABLE_ROWS {
+                            MAX_TABLE_ROWS
+                        } else {
+                            MAX_DOCUMENT_ROWS
+                        },
+                    },
+                    span: v.span,
+                });
+            }
+            if v.rows == 0 {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0601,
+                    kind: CheckerErrorKind::VacuousTable(format!("table {} declares no rows", v.name)),
+                    span: v.span,
+                });
+            }
+            let mut env: HashMap<String, Type> = HashMap::new();
+            for c in &v.columns {
+                self.check_arm_binder(c.name, c.span, &env)?;
+                if has_symbolic_width(&c.ty) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0710,
+                        kind: CheckerErrorKind::UndecodableColumn(c.name.to_string()),
+                        span: c.span,
+                    });
+                }
+                let ty = self.resolve_type(&c.ty, &[])?;
+                env.insert(c.name.to_string(), ty);
+            }
+            let ty = self.typecheck_expression(&v.holds, &env, Some(&Type::Bool), true)?;
+            if ty != Type::Bool {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::TypeMismatch {
+                        expected: "Bool".to_string(),
+                        actual: ty.display_name(),
+                    },
+                    span: v.span,
+                });
+            }
+            let ops: HashSet<&str> = self.operations.keys().map(String::as_str).collect();
+            if crate::codegen::find_operation_in_expr(&v.holds, &ops).is_none() {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0601,
+                    kind: CheckerErrorKind::VacuousTable(format!(
+                        "table {} never calls an operation",
+                        v.name
+                    )),
+                    span: v.span,
+                });
+            }
+            let cols: HashSet<&str> = v.columns.iter().map(|c| c.name).collect();
+            let mut seen = BTreeSet::new();
+            v.holds.mentioned_names(&cols, &mut seen);
+            if let Some(c) = v.columns.iter().find(|c| !seen.contains(c.name)) {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0710,
+                    kind: CheckerErrorKind::UnusedColumn(c.name.to_string()),
+                    span: c.span,
+                });
+            }
+        }
         Ok(())
     }
 
@@ -1415,6 +1543,7 @@ impl<'a> Checker<'a> {
             })?;
 
             let op_params = op.params.clone();
+            let op_return = op.return_type.clone();
             let op_static_params: Vec<String> = op
                 .static_params
                 .iter()
@@ -1427,7 +1556,10 @@ impl<'a> Checker<'a> {
             }
 
             for row in &bnd.rows {
-                if row.name != "steps" && row.name != "heap" && row.name != "depth" {
+                // `output` exists only in a v1 document (the parser already
+                // refused it in a v0 one, W0101).
+                let v1_metric = self.file.version == Version::V1 && row.name == "output";
+                if row.name != "steps" && row.name != "heap" && row.name != "depth" && !v1_metric {
                     return Err(CheckerError {
                         code: DiagnosticCode::W0401,
                         kind: CheckerErrorKind::InvalidContract(format!(
@@ -1436,6 +1568,37 @@ impl<'a> Checker<'a> {
                         )),
                         span: row.span,
                     });
+                }
+                if v1_metric {
+                    // WX-H (section 6.2): the size of a successful result is
+                    // defined for byte strings and lists, and for a `Result`
+                    // of one of them (its `Ok` payload).
+                    let ret = self.resolve_type(&op_return, &op_static_params)?;
+                    let sized = |t: &Type| {
+                        matches!(
+                            t,
+                            Type::Bytes
+                                | Type::FixedBytes(_)
+                                | Type::FixedBytesParam(_)
+                                | Type::List(_)
+                        )
+                    };
+                    let ok = match &ret {
+                        Type::Result(inner, _) => sized(inner),
+                        other => sized(other),
+                    };
+                    if !ok {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bytes, Bytes<N>, List<T> or a Result of one of them \
+                                           for an `output` bound"
+                                    .to_string(),
+                                actual: ret.display_name(),
+                            },
+                            span: row.span,
+                        });
+                    }
                 }
                 let bound_ty =
                     self.typecheck_expression(&row.bound, &env, Some(&Type::Int), false)?;
@@ -2526,6 +2689,7 @@ impl<'a> Checker<'a> {
     ///                        signed: rejected (floor vs trunc is a trap)
     /// div_trunc rem_trunc    signed T, T                      -> Option<T>
     /// unwrap_or(o, d)        Option<T>, T                     -> T
+    /// imin(a, b)  imax(a, b) Int|Nat, Int|Nat                 -> Int
     /// bit_and(a, b) ...      T, T                             -> T
     /// shl(a, n) shr rotl ... T, Nat                           -> T
     /// sar(a, n)              signed T, Nat                    -> T
@@ -2662,6 +2826,16 @@ impl<'a> Checker<'a> {
                         other.display_name(),
                     )),
                 }
+            }
+            // WX-H: total `Int` helpers for bound expressions (section 6.2).
+            "imin" | "imax" => {
+                for operand in list {
+                    let t = self.typecheck_expression(operand, env, Some(&Type::Int), allow_ops)?;
+                    if !t.is_assignable_to(&Type::Int) {
+                        return Err(mismatch("Int or Nat operand", t.display_name()));
+                    }
+                }
+                Ok(Type::Int)
             }
             "unwrap_or" => {
                 let o = self.typecheck_expression(&list[0], env, None, allow_ops)?;
@@ -3339,6 +3513,18 @@ fn body_span(expr: &Expression<'_>) -> (usize, usize) {
         | Expression::Grouped { span, .. }
         | Expression::Tuple { span, .. }
         | Expression::Project { span, .. } => *span,
+    }
+}
+
+/// Does a type mention a symbolic width (`Bytes<n>`) anywhere?  A TFV row has
+/// no way to carry one, so a `vectors` column may not (W0710).
+fn has_symbolic_width(t: &TypeExpr<'_>) -> bool {
+    match t {
+        TypeExpr::Bytes { width, .. } => matches!(width, Some(Width::Named(_))),
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => has_symbolic_width(inner),
+        TypeExpr::Result { ok_type, .. } => has_symbolic_width(ok_type),
+        TypeExpr::Tuple { elems, .. } => elems.iter().any(has_symbolic_width),
+        TypeExpr::Named { .. } => false,
     }
 }
 
