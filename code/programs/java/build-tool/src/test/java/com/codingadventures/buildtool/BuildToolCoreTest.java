@@ -56,6 +56,14 @@ final class BuildToolCoreTest {
                     // the legacy path-selection package records consumed here.
                     continue;
                 }
+                if (domain.equals("diff_selection")
+                        && fixture.path("input").path("options").has("metadata_policy")) {
+                    // The package_local metadata variant keeps root README,
+                    // changelog, capability and evidence changes from reaching
+                    // dependents. This core does not model that policy, so it
+                    // skips the variant instead of replaying it as legacy selection.
+                    continue;
+                }
                 seen.add(fixture.path("id").asText());
                 if (domain.equals("graph")) {
                     assertGraphFixture(fixture);

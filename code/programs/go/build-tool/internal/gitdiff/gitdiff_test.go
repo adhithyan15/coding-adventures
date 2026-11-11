@@ -236,3 +236,65 @@ func TestMapFilesToPackages_MultipleFiles(t *testing.T) {
 		t.Error("ruby/b should be changed (shell BUILD, any file)")
 	}
 }
+
+// ClassifyChangedFiles splits the changed packages of MapFilesToPackages by
+// whether the change can reach dependents. Package-local metadata at the root
+// of a shell package is local; anything else, including a metadata name that
+// is nested or that a Starlark package declares as a source, propagates.
+func TestClassifyChangedFiles_PackageLocalMetadata(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/meta", Path: "/repo/code/packages/rust/meta", Language: "rust"},
+		{Name: "rust/mixed", Path: "/repo/code/packages/rust/mixed", Language: "rust"},
+		{Name: "rust/nested", Path: "/repo/code/packages/rust/nested", Language: "rust"},
+		{
+			Name: "python/declares-readme", Path: "/repo/code/packages/python/declares-readme",
+			Language: "python", IsStarlark: true, DeclaredSrcs: []string{"src/**/*.py", "README.md"},
+		},
+		{
+			Name: "python/strict", Path: "/repo/code/packages/python/strict",
+			Language: "python", IsStarlark: true, DeclaredSrcs: []string{"src/**/*.py"},
+		},
+	}
+	changed := []string{
+		// Metadata only: local.
+		"code/packages/rust/meta/README.md",
+		"code/packages/rust/meta/CHANGELOG.md",
+		"code/packages/rust/meta/CHANGELOG.d/2026-11-11-0123abcd-x.md",
+		"code/packages/rust/meta/required_capabilities.json",
+		"code/packages/rust/meta/effect_certificate.json",
+		"code/packages/rust/meta/assurance_report.json",
+		"code/packages/rust/meta/evidence/test-manifest.json",
+		// Metadata plus source: the source wins.
+		"code/packages/rust/mixed/README.md",
+		"code/packages/rust/mixed/src/lib.rs",
+		// A nested README is a test input somewhere: it propagates.
+		"code/packages/rust/nested/tests/fixtures/README.md",
+		// A declared Starlark source propagates whatever its name.
+		"code/packages/python/declares-readme/README.md",
+		// An undeclared one selects nothing at all, as before.
+		"code/packages/python/strict/CHANGELOG.md",
+	}
+	propagating, local := ClassifyChangedFiles(changed, packages, "/repo")
+	if got, want := keys(propagating), []string{"python/declares-readme", "rust/mixed", "rust/nested"}; !slices.Equal(got, want) {
+		t.Errorf("propagating = %v, want %v", got, want)
+	}
+	if got, want := keys(local), []string{"rust/meta"}; !slices.Equal(got, want) {
+		t.Errorf("local = %v, want %v", got, want)
+	}
+	// MapFilesToPackages is still the union: every package whose own BUILD
+	// must re-run.
+	if got, want := keys(MapFilesToPackages(changed, packages, "/repo")), []string{"python/declares-readme", "rust/meta", "rust/mixed", "rust/nested"}; !slices.Equal(got, want) {
+		t.Errorf("MapFilesToPackages = %v, want %v", got, want)
+	}
+}
+
+func keys(set map[string]bool) []string {
+	result := make([]string, 0, len(set))
+	for name, selected := range set {
+		if selected {
+			result = append(result, name)
+		}
+	}
+	slices.Sort(result)
+	return result
+}

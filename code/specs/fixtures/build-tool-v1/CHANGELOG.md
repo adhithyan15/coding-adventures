@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-11-11
+
+- Added the `metadata_policy: "package_local"` variant of `diff_selection`
+  and five `package-metadata-selection-*.json` cases. A package-prefix
+  package whose only changed paths are its root `README.md`, `CHANGELOG.md`,
+  `CHANGELOG.d/` entries, `required_capabilities.json`,
+  `effect_certificate.json`, `assurance_report.json` or `evidence/` files is
+  changed and affected but reaches no dependent; its prerequisites are still
+  closed over. The cases pin every metadata class, a source change beside
+  metadata (still propagates), nested/misspelled/file-shaped lookalikes,
+  strict-glob and forced packages (unchanged), and a repository-boundary
+  consumer of a capability manifest (propagates from the consumer). The pure
+  schema gains `package_metadata_selection_input`, the runner oracle models
+  the policy, and the twelve-case `diff-selection-*.json` roster is
+  unchanged. The corpus now has 202 cases.
+
 ## 2026-11-03
 
 - Added twelve closed `cargo_manifest_snapshot` fixtures and the matching pure

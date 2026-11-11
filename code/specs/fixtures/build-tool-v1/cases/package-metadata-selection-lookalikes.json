@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-metadata-lookalikes",
+  "domain": "diff_selection",
+  "summary": "Nested, misspelled or file-shaped metadata names are ordinary package-prefix changes and still select every dependent.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "rust/nested",
+          "rel_path": "code/packages/rust/nested",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-user",
+          "rel_path": "code/packages/rust/nested-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/bindings",
+          "rel_path": "code/packages/rust/bindings",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/bindings-user",
+          "rel_path": "code/packages/rust/bindings-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shaped",
+          "rel_path": "code/packages/rust/shaped",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shaped-user",
+          "rel_path": "code/packages/rust/shaped-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/spelled",
+          "rel_path": "code/packages/rust/spelled",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/spelled-user",
+          "rel_path": "code/packages/rust/spelled-user",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [
+        [
+          "rust/nested",
+          "rust/nested-user"
+        ],
+        [
+          "rust/bindings",
+          "rust/bindings-user"
+        ],
+        [
+          "rust/shaped",
+          "rust/shaped-user"
+        ],
+        [
+          "rust/spelled",
+          "rust/spelled-user"
+        ]
+      ],
+      "forced_packages": [],
+      "unknown_path_policy": "error",
+      "metadata_policy": "package_local"
+    },
+    "changed_paths": [
+      "code/packages/rust/nested/tests/fixtures/README.md",
+      "code/packages/rust/bindings/evidence.bindings",
+      "code/packages/rust/shaped/CHANGELOG.d",
+      "code/packages/rust/spelled/readme.md"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-metadata-lookalikes",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "rust/bindings",
+        "rust/nested",
+        "rust/shaped",
+        "rust/spelled"
+      ],
+      "affected_packages": [
+        "rust/bindings",
+        "rust/bindings-user",
+        "rust/nested",
+        "rust/nested-user",
+        "rust/shaped",
+        "rust/shaped-user",
+        "rust/spelled",
+        "rust/spelled-user"
+      ],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

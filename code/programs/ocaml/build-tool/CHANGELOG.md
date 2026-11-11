@@ -6,6 +6,13 @@ All notable changes to the OCaml build-tool core are documented here.
 
 ### Fixed
 
+- Skip `package-metadata-selection-*.json` cases, whose options carry
+  `metadata_policy: "package_local"`. That variant keeps a package's root
+  README, changelog, capability manifest and assurance evidence from
+  reaching its dependents; this core does not model the policy, so it skips
+  the variant exactly as it skips `trigger_relations` and still replays the
+  unchanged twelve-case legacy diff roster.
+
 - Ignore test-trigger variant diff-selection fixtures carrying
   `trigger_relations`, matching the Java, Kotlin, and Dart legacy fixture
   filtering contracts.

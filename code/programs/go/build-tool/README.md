@@ -612,6 +612,29 @@ one-line layout edit. Selection uses raw Git paths (deletions count), honors
 It applies to Git-diff mode only; `-force` and the hash fallback already
 build everything they consider changed.
 
+### Package-local metadata does not rebuild dependents
+
+A change to a package's root `README.md`, `CHANGELOG.md`, `CHANGELOG.d/`
+entries, `required_capabilities.json`, `effect_certificate.json`,
+`assurance_report.json` or `evidence/` files rebuilds that package (its BUILD
+may check the file) and its prerequisites, but not its dependents, and it
+fires no Cargo dev-dependency test trigger. Nothing a dependent builds or tests
+can read those files; `internal/pkgmeta` lists them with the repository
+evidence for each, and `package_metadata.go` wires them in exactly the way
+repository input consumers are. Adding only a capability manifest and a
+changelog entry to `rust/bounded-json` used to select 556 packages; it now
+selects 1.
+
+The rule is deliberately narrow. Only exact, case-sensitive names at the
+package root count (`docs/README.md`, `readme.md` and `evidence.bindings` are
+source); strict-glob Starlark packages keep their declared-source semantics;
+any other change in the same package makes it an ordinary changed package;
+fixture seeds, forced roots and repository-boundary consumers propagate; and
+`-force` and the hash fallback are unchanged. The neutral
+`metadata_policy: "package_local"` diff-selection variant
+(`package-metadata-selection-*.json`) pins the same rule, and
+`internal/graphdiff` replays it.
+
 ## Architecture
 
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
@@ -625,6 +648,8 @@ The tool is organized into seven internal packages, each responsible for one pha
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
 6. **gitdiff** -- Git-based change detection for incremental builds
+   (with **pkgmeta**, which names the package-local metadata files whose
+   changes do not reach dependents)
 7. **reporter** -- Terminal-friendly build report formatting
 
 ## Go concurrency advantage

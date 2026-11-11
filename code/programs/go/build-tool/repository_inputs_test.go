@@ -405,9 +405,12 @@ func TestRepositoryInputConsumersPlan(t *testing.T) {
 			},
 		},
 		{
-			name:    "control: a non-source file in a Mosaic package does not select the guard",
+			// README.md is package-local metadata (package_metadata.go): the
+			// toolkit's own BUILD re-runs, but neither the guard nor the app
+			// that depends on the toolkit can read it.
+			name:    "control: a README in a Mosaic package selects only that package",
 			changed: []string{"code/packages/mosaic/mosaic-pkg-toolkit/README.md"},
-			want:    []string{"mosaic/mosaic-pkg-toolkit", "mosaic/programs/task-app"},
+			want:    []string{"mosaic/mosaic-pkg-toolkit"},
 		},
 		{
 			name:    "control: a guard code change still reaches its dependents",
@@ -430,7 +433,8 @@ func TestRepositoryInputConsumersPlan(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			affected := withRepositoryInputConsumers(graph, affectedForGraph(graph, changed, nil, false), consumers)
+			local := packageLocalChangeRoots(tc.changed, packages, root, changed)
+			affected := withPackageLocalChanges(graph, withRepositoryInputConsumers(graph, affectedForGraph(graph, changed, nil, false), consumers), local)
 			if got := affectedListFromSet(affected); !reflect.DeepEqual(got, tc.want) {
 				t.Fatalf("top-level affected = %v, want %v", got, tc.want)
 			}

@@ -196,6 +196,7 @@ const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/disc
 const duplicateDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json"
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
 const testTriggerFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/test-trigger-selection-"
+const packageMetadataFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/package-metadata-selection-"
 const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
 const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
 const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
@@ -252,6 +253,21 @@ var ciGateFixtureConsumers = []struct{ name, language string }{
 var testTriggerFixtureConsumers = []struct{ name, language string }{
 	{"go/programs/build-tool", "go"},
 	{"rust/programs/build-tool", "rust"},
+}
+
+// These package BUILD fronts open the package-metadata selection fixtures
+// (package-metadata-selection-*.json, the metadata_policy "package_local"
+// variant of diff_selection). Go replays them. The JVM, Dart and OCaml cores
+// dispatch every flat case by its decoded domain, so they parse these files
+// too and must skip the variant explicitly; a new case must re-run them to
+// prove they still do. Readers that select diff cases by the
+// "diff-selection-" filename prefix never open these files.
+var packageMetadataFixtureConsumers = []struct{ name, language string }{
+	{"dart/programs/build-tool", "dart"},
+	{"go/programs/build-tool", "go"},
+	{"java/programs/build-tool", "java"},
+	{"kotlin/programs/build-tool", "kotlin"},
+	{"ocaml/programs/build-tool", "ocaml"},
 }
 
 // These native test fronts read the flat toolchain-detection case family.
@@ -480,6 +496,16 @@ func hasTestTriggerFixturePath(changedFiles []string) bool {
 	return false
 }
 
+func hasPackageMetadataFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, packageMetadataFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
+}
+
 func hasToolchainDetectionFixturePath(changedFiles []string) bool {
 	for _, changed := range changedFiles {
 		name, ok := strings.CutPrefix(changed, toolchainDetectionFixturePrefix)
@@ -587,7 +613,11 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 	}
 
-	changed := gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	// Only changes that can reach dependents are roots here. A package whose
+	// only changes are package-local metadata (README, changelog, capability
+	// manifest, assurance evidence) is selected separately and without its
+	// dependents; see package_metadata.go.
+	changed, _ := gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot)
 	// External native-acceptance specifications need a producer root as well
 	// as a step gate. Otherwise CI enables the step without selecting its
 	// compiler or installing its toolchain. Keep the exact relation bounded
@@ -694,6 +724,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	duplicateDiscoveryFixtureChanged := containsPath(changedFiles, duplicateDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	testTriggerFixtureChanged := hasTestTriggerFixturePath(changedFiles)
+	packageMetadataFixtureChanged := hasPackageMetadataFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
 	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
 	resolutionCases := map[string]bool{}
@@ -738,7 +769,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !testTriggerFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !testTriggerFixtureChanged && !packageMetadataFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -788,6 +819,17 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("test-trigger fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if packageMetadataFixtureChanged {
+		for _, consumer := range packageMetadataFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("package-metadata fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -1397,19 +1439,27 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 						fmt.Fprintf(os.Stderr, "Error selecting repository input consumers: %v\n", consumerErr)
 						return 1
 					}
-					if len(changedPkgs) > 0 || len(inputConsumers) > 0 {
+					// So are packages whose only changes are package-local
+					// metadata (see package_metadata.go).
+					localPkgs := packageLocalChangeRoots(changedFiles, packages, repoRoot, changedPkgs)
+					if len(changedPkgs) > 0 || len(inputConsumers) > 0 || len(localPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
 						// Cargo dev-dependents of the closure, one hop, before
 						// prerequisites (see withDevDependents).
 						affectedSet = withDevDependents(affectedSet, testTriggers)
 						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
 						affectedSet = withRepositoryInputConsumers(graph, affectedSet, inputConsumers)
+						affectedSet = withPackageLocalChanges(graph, affectedSet, localPkgs)
 						if len(inputConsumers) > 0 {
 							fmt.Printf("Git diff: repository-wide inputs changed — also selecting %s\n",
 								strings.Join(sortedConsumerNames(inputConsumers), ", "))
 						}
+						if len(localPkgs) > 0 {
+							fmt.Printf("Git diff: %d packages changed only package-local metadata — selected without their dependents\n",
+								len(localPkgs))
+						}
 						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
-							len(changedPkgs), len(affectedSet))
+							len(changedPkgs)+len(localPkgs), len(affectedSet))
 					} else {
 						fmt.Println("Git diff: no package files changed — nothing to build")
 						affectedSet = make(map[string]bool) // empty = build nothing
@@ -1802,16 +1852,21 @@ func emitBuildPlanAgainst(
 			fmt.Fprintf(os.Stderr, "Error selecting %s repository input consumers: %v\n", goos, consumerErr)
 			return 1
 		}
-		platformAffected := withRepositoryInputConsumers(
+		platformLocal := packageLocalChangeRoots(changedFiles, platformPackages, repoRoot, platformChanged)
+		platformAffected := withPackageLocalChanges(
 			platformGraph,
-			affectedForGraphWithTriggers(
+			withRepositoryInputConsumers(
 				platformGraph,
-				platformTriggers,
-				platformChanged,
-				affectedSet,
-				force,
+				affectedForGraphWithTriggers(
+					platformGraph,
+					platformTriggers,
+					platformChanged,
+					affectedSet,
+					force,
+				),
+				platformConsumers,
 			),
-			platformConsumers,
+			platformLocal,
 		)
 		platformOverrides[goos] = plan.PlatformState{
 			DependencyEdges:  graphEdges(platformGraph),
