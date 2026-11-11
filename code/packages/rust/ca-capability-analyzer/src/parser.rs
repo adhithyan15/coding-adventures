@@ -1367,7 +1367,363 @@ fn angle_group_has_meta(toks: &[Token], gt: usize) -> bool {
     saw_dollar
 }
 
-/// Flag metavariables spliced next to `::` inside a `macro_rules!` body.
+/// One `(matcher) => {transcriber}` arm of a `macro_rules!` body: the token
+/// indices of the matcher's and the transcriber's opening and closing delimiters.
+struct MacroArm {
+    m_open: usize,
+    m_close: usize,
+    t_open: usize,
+    t_close: usize,
+}
+
+/// Split the body `toks[open..=close]` into arms.  `None` if it is not a
+/// sequence of `group => group` separated by `;` (rustc rejects such a body).
+fn macro_arms(toks: &[Token], br: &Brackets, open: usize, close: usize) -> Option<Vec<MacroArm>> {
+    let is_open = |i: usize| matches!(toks.get(i).map(|t| &t.tok), Some(Tok::Punct('(' | '[' | '{')));
+    if close >= toks.len() {
+        return None;
+    }
+    let mut arms = Vec::new();
+    let mut k = open + 1;
+    while k < close {
+        if !is_open(k) {
+            return None;
+        }
+        let m_close = br.close(k);
+        if !(m_close < close && is_punct(toks, m_close + 1, '=') && is_punct(toks, m_close + 2, '>') && is_open(m_close + 3)) {
+            return None;
+        }
+        let t_close = br.close(m_close + 3);
+        if t_close >= close {
+            return None;
+        }
+        arms.push(MacroArm { m_open: k, m_close, t_open: m_close + 3, t_close });
+        k = t_close + 1;
+        if is_punct(toks, k, ';') {
+            k += 1;
+        }
+    }
+    Some(arms)
+}
+
+/// `$name:frag` declarations of one matcher.  A name declared twice with
+/// different fragments (only possible across nested repetitions of a
+/// malformed macro) is recorded as `tt`, the most permissive.
+fn matcher_fragments(toks: &[Token], from: usize, to: usize) -> HashMap<String, String> {
+    let mut frags: HashMap<String, String> = HashMap::new();
+    for k in from..to {
+        if !is_punct(toks, k, '$') || !is_punct(toks, k + 2, ':') {
+            continue;
+        }
+        if let (Some((name, _)), Some((frag, _))) = (ident_at(toks, k + 1), ident_at(toks, k + 3)) {
+            let e = frags.entry(name.to_string()).or_insert_with(|| frag.to_string());
+            if e != frag {
+                *e = "tt".to_string();
+            }
+        }
+    }
+    frags
+}
+
+/// Strict keywords that can never be a path segment.  `self`, `super`,
+/// `crate` and `Self` *are* path segments, and edition-dependent or weak
+/// keywords (`dyn`, `try`, `gen`, `union`, `macro_rules`, ...) can be plain
+/// identifiers, so none of those is listed: they count as identifiers.
+fn is_non_path_keyword(name: &str) -> bool {
+    matches!(
+        name,
+        "as" | "break"
+            | "const"
+            | "continue"
+            | "else"
+            | "enum"
+            | "extern"
+            | "false"
+            | "fn"
+            | "for"
+            | "if"
+            | "impl"
+            | "in"
+            | "let"
+            | "loop"
+            | "match"
+            | "mod"
+            | "move"
+            | "mut"
+            | "pub"
+            | "ref"
+            | "return"
+            | "static"
+            | "struct"
+            | "trait"
+            | "true"
+            | "type"
+            | "unsafe"
+            | "use"
+            | "where"
+            | "while"
+            | "async"
+            | "await"
+            | "abstract"
+            | "become"
+            | "box"
+            | "do"
+            | "final"
+            | "macro"
+            | "override"
+            | "priv"
+            | "typeof"
+            | "unsized"
+            | "virtual"
+            | "yield"
+    )
+}
+
+/// What one transcriber unit can turn into when the macro is expanded.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum UnitKind {
+    /// An identifier that may be a path segment (`std`, `fs`, `self`, `$crate`).
+    PathIdent,
+    /// A keyword that is never a path segment (`let`, `fn`, `struct`, ...).
+    Keyword,
+    /// A `$x` whose fragment is `tt` or unknown: the caller may supply *any*
+    /// single token, including `::`, `#` and `!`.
+    MetaTt,
+    /// A `$x` with any other fragment (`ident`, `expr`, `ty`, `path`, ...):
+    /// a single identifier or an opaque, already-parsed node.
+    MetaOther,
+    /// A `$( .. ) sep? op` repetition; `tt` is true if it contains a `MetaTt`.
+    Repeat { tt: bool },
+    /// `[`
+    OpenBracket,
+    /// `!` not followed by `=`
+    Bang,
+    Other,
+}
+
+struct Unit {
+    kind: UnitKind,
+    /// First token of the unit (for the diagnostic position).
+    at: usize,
+    /// Repetition contents, separator token and whether the repetition is a
+    /// verbatim `tt` pass-through of a matcher repetition (see below).
+    inner: Vec<Unit>,
+    sep: Option<usize>,
+    passthrough: bool,
+}
+
+impl Unit {
+    fn is_meta(&self) -> bool {
+        matches!(self.kind, UnitKind::MetaTt | UnitKind::MetaOther | UnitKind::Repeat { .. })
+    }
+
+    fn is_tt(&self) -> bool {
+        matches!(self.kind, UnitKind::MetaTt | UnitKind::Repeat { tt: true })
+    }
+}
+
+/// Repetitions nested deeper than this are refused (CAP003): the unit tree
+/// is built recursively.
+const MAX_REPEAT_DEPTH: usize = 64;
+
+/// Classify a single (non-`$`) token as a unit kind.
+fn token_unit_kind(toks: &[Token], k: usize) -> UnitKind {
+    match &toks[k].tok {
+        Tok::Ident { name, raw } => {
+            if !*raw && is_non_path_keyword(name) {
+                UnitKind::Keyword
+            } else {
+                UnitKind::PathIdent
+            }
+        }
+        Tok::Punct('[') => UnitKind::OpenBracket,
+        Tok::Punct('!') if !(is_punct(toks, k + 1, '=') && toks[k].end == toks[k + 1].start) => UnitKind::Bang,
+        _ => UnitKind::Other,
+    }
+}
+
+/// Does the matcher contain the repetition `$( $name:tt ) sep? op` with exactly
+/// this separator and operator?  Then a transcriber `$( $name ) sep? op` emits
+/// the caller's tokens in the caller's own order, contiguous exactly as the
+/// walker already saw them inside the invocation's arguments.
+fn matcher_has_tt_repeat(toks: &[Token], arm: &MacroArm, name: &str, sep: Option<&Tok>, op: &Tok) -> bool {
+    (arm.m_open + 1..arm.m_close).any(|k| {
+        is_punct(toks, k, '$')
+            && is_punct(toks, k + 1, '(')
+            && is_punct(toks, k + 2, '$')
+            && ident_at(toks, k + 3) == Some((name, false))
+            && is_punct(toks, k + 4, ':')
+            && ident_at(toks, k + 5) == Some(("tt", false))
+            && is_punct(toks, k + 6, ')')
+            && match sep {
+                None => toks.get(k + 7).map(|t| &t.tok) == Some(op),
+                Some(s) => {
+                    toks.get(k + 7).map(|t| &t.tok) == Some(s) && toks.get(k + 8).map(|t| &t.tok) == Some(op)
+                }
+            }
+    })
+}
+
+/// Build the units of `toks[from..to]` (a transcriber or a repetition body).
+/// `Err(at)` if repetitions nest deeper than [`MAX_REPEAT_DEPTH`].
+fn transcriber_units(
+    toks: &[Token],
+    br: &Brackets,
+    arm: &MacroArm,
+    frags: &HashMap<String, String>,
+    from: usize,
+    to: usize,
+    depth: usize,
+) -> Result<Vec<Unit>, usize> {
+    if depth > MAX_REPEAT_DEPTH {
+        return Err(from);
+    }
+    let is_kleene = |i: usize| is_punct(toks, i, '*') || is_punct(toks, i, '+') || is_punct(toks, i, '?');
+    let mut units = Vec::new();
+    let mut k = from;
+    while k < to {
+        let unit = if is_punct(toks, k, '$') && is_punct(toks, k + 1, '(') {
+            let c = br.close(k + 1).min(to);
+            let inner = transcriber_units(toks, br, arm, frags, k + 2, c, depth + 1)?;
+            // `$( .. ) op` or `$( .. ) sep op`; anything else is malformed and
+            // treated as a separator-less repetition (more adjacency, not less).
+            let (sep, end) = if is_kleene(c + 1) {
+                (None, c + 1)
+            } else if c + 2 < to && is_kleene(c + 2) {
+                (Some(c + 1), c + 2)
+            } else {
+                (None, c)
+            };
+            let tt = inner.iter().any(Unit::is_tt);
+            let passthrough = match (inner.as_slice(), toks.get(end).map(|t| &t.tok)) {
+                ([only], Some(op)) if only.kind == UnitKind::MetaTt && end > c => ident_at(toks, only.at + 1)
+                    .is_some_and(|(n, _)| matcher_has_tt_repeat(toks, arm, n, sep.map(|s| &toks[s].tok), op)),
+                _ => false,
+            };
+            let u = Unit { kind: UnitKind::Repeat { tt }, at: k, inner, sep, passthrough };
+            k = end + 1;
+            u
+        } else if is_punct(toks, k, '$') && ident_at(toks, k + 1).is_some() {
+            let (name, raw) = ident_at(toks, k + 1).unwrap_or(("", false));
+            let kind = if name == "crate" && !raw {
+                UnitKind::PathIdent
+            } else {
+                match frags.get(name).map(String::as_str) {
+                    Some("tt") | None => UnitKind::MetaTt,
+                    Some(_) => UnitKind::MetaOther,
+                }
+            };
+            let u = Unit { kind, at: k, inner: Vec::new(), sep: None, passthrough: false };
+            k += 2;
+            u
+        } else {
+            let u = Unit { kind: token_unit_kind(toks, k), at: k, inner: Vec::new(), sep: None, passthrough: false };
+            k += 1;
+            u
+        };
+        units.push(unit);
+    }
+    Ok(units)
+}
+
+/// Can the expansion of `a` immediately followed by `b` glue tokens into a
+/// path, an attribute or a macro call that neither the transcriber nor the
+/// call site shows?  A `tt` metavariable may be *any* token - `::`, `#`, `!`,
+/// `std` - so it is unsafe next to an identifier, another metavariable, `[`
+/// (a `#` makes it an attribute) or `!` (an identifier makes it a macro call).
+fn units_glue(a: &Unit, b: &Unit) -> bool {
+    (a.is_tt() && (b.kind == UnitKind::PathIdent || b.is_meta() || matches!(b.kind, UnitKind::OpenBracket | UnitKind::Bang)))
+        || (b.is_tt() && (a.kind == UnitKind::PathIdent || a.is_meta()))
+}
+
+/// Report every gluing adjacency in `units`, recursing into repetitions.
+fn check_unit_seq(sink: &mut Sink, toks: &[Token], units: &[Unit]) {
+    let report = |sink: &mut Sink, at: usize| {
+        sink.unanalyzable(
+            toks[at].line,
+            toks[at].col,
+            "macro_rules! splices a token-tree metavariable next to an identifier or another metavariable; the expansion is not analysed",
+            "$t ident / $a $b".into(),
+        );
+    };
+    for w in units.windows(2) {
+        if units_glue(&w[0], &w[1]) {
+            report(sink, w[0].at);
+        }
+    }
+    for u in units {
+        if !matches!(u.kind, UnitKind::Repeat { .. }) || u.inner.is_empty() {
+            continue;
+        }
+        check_unit_seq(sink, toks, &u.inner);
+        // Iterations are emitted back to back: the last unit of one iteration
+        // touches the separator (if any), which touches the first unit of the
+        // next iteration.
+        let (first, last) = (&u.inner[0], &u.inner[u.inner.len() - 1]);
+        match u.sep {
+            None if !u.passthrough && units_glue(last, first) => report(sink, u.at),
+            Some(s) => {
+                let sep = Unit { kind: token_unit_kind(toks, s), at: s, inner: Vec::new(), sep: None, passthrough: false };
+                if units_glue(last, &sep) || units_glue(&sep, first) {
+                    report(sink, u.at);
+                }
+            }
+            None => {}
+        }
+    }
+}
+
+/// Splice checks for one transcriber `toks[t_open..=t_close]` (HIGH-2).
+///
+/// The walker sees a transcriber's literal tokens and, separately, each call
+/// site's argument tokens.  A path or an attribute that exists only in the
+/// *expansion* - pieces from both glued together - is invisible to it:
+///
+/// ```text
+///   ($s:tt) => { std $s fs $s write(..) }     m!(::)              PoC t2
+///   ($a:tt) => { # $a pub mod hidden; }       m!([path = ".."])   PoC t6
+/// ```
+///
+/// Two rules, both fail closed:
+///
+/// 1. a `#` must be followed by `[` or `![`, i.e. start a complete attribute the
+///    walker inspects.  `# $a`, `#! $a`, a `#` before a delimiter or used as a
+///    repetition separator, are CAP003;
+/// 2. a `tt` metavariable (or a repetition containing one) directly next to an
+///    identifier that can be a path segment, to another metavariable, or
+///    followed by `[` / `!`, is CAP003 ([`units_glue`]).  Other fragments
+///    (`ident`, `expr`, `ty`, `path`, ...) cannot produce `::` or `#`, so
+///    `$vis struct $name` or `fn $name(x: $t)` stay clean.  One exception: a
+///    verbatim pass-through `$($t)*` of a matcher `$($t:tt)*` (same separator
+///    and operator) re-emits the caller's tokens in the caller's order.
+fn check_transcriber_splices(sink: &mut Sink, toks: &[Token], br: &Brackets, arm: &MacroArm) {
+    let (from, to) = (arm.t_open + 1, arm.t_close.min(toks.len()));
+    for k in from..to {
+        if is_punct(toks, k, '#') {
+            let whole_attr = is_punct(toks, k + 1, '[') || (is_punct(toks, k + 1, '!') && is_punct(toks, k + 2, '['));
+            if !whole_attr {
+                sink.unanalyzable(
+                    toks[k].line,
+                    toks[k].col,
+                    "macro_rules! emits a `#` that does not start a complete attribute; the expansion is not analysed",
+                    "# $..".into(),
+                );
+            }
+        }
+    }
+    let frags = matcher_fragments(toks, arm.m_open + 1, arm.m_close);
+    match transcriber_units(toks, br, arm, &frags, from, to, 0) {
+        Ok(units) => check_unit_seq(sink, toks, &units),
+        Err(at) => sink.unanalyzable(
+            toks[at].line,
+            toks[at].col,
+            "macro_rules! repetitions nest too deeply to analyse",
+            "$( $( ..".into(),
+        ),
+    }
+}
+
+/// Flag metavariable splices inside a `macro_rules!` body (VER08a §3.5).
 fn check_macro_body(sink: &mut Sink, toks: &[Token], br: &Brackets, open: usize, close: usize) {
     // `macro_rules!` nested inside `macro_rules!` is re-scanned by its outer
     // bodies; the budget keeps the total linear (CAP003 when exceeded).
@@ -1383,6 +1739,32 @@ fn check_macro_body(sink: &mut Sink, toks: &[Token], br: &Brackets, open: usize,
         return;
     }
     sink.macro_budget -= cost;
+    // Only transcribers are emitted as code; matchers (`$a:ident $b:tt`,
+    // `$(#[$m:meta])*`) are patterns and are not checked.  A body that is not
+    // a list of `(matcher) => {transcriber}` arms is rejected by rustc; it is
+    // checked as one transcriber and reported.
+    match macro_arms(toks, br, open, close) {
+        Some(arms) => {
+            for arm in &arms {
+                check_transcriber_legacy(sink, toks, br, arm.t_open, arm.t_close);
+                check_transcriber_splices(sink, toks, br, arm);
+            }
+        }
+        None => {
+            sink.unanalyzable(
+                toks[open].line,
+                toks[open].col,
+                "macro_rules! body is not a list of `(matcher) => {transcriber}` arms",
+                "macro_rules! ...".into(),
+            );
+            check_transcriber_legacy(sink, toks, br, open, close);
+        }
+    }
+}
+
+/// The path-splice rules of rounds 1-2 (`$x::`, `::$x`, `$(..)::`, `<$t>::`,
+/// `#[$a]`, `$m!`) over the tokens `toks[open..close]`.
+fn check_transcriber_legacy(sink: &mut Sink, toks: &[Token], br: &Brackets, open: usize, close: usize) {
     // `repeat[d]` is true if the group opened at depth d began with `$(`.
     let mut stack: Vec<bool> = Vec::new();
     let mut last_closed_repeat = false;

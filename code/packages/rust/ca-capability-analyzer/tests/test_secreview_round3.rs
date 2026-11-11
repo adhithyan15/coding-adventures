@@ -346,3 +346,63 @@ fn medium1_receiver_waiver_is_refused_under_a_foreign_glob() {
     // (`a::PathBuf::from` is not a simple local path: never waived, as before.)
     assert_eq!(verdict(&no_glob), vec!["fs:list".to_string()]);
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-2: `macro_rules!` transcribers that splice path or attribute tokens
+// ---------------------------------------------------------------------------
+
+#[test]
+fn high2_metavariable_splices_into_paths_and_attributes_are_cap003() {
+    for (name, src) in [
+        // PoC t2: `$s` is `::`, so the expansion is `std::fs::write(..)`; neither
+        // the transcriber nor the call site ever shows `std::fs` contiguously.
+        ("t2 tt splices ::", "macro_rules! m { ($s:tt) => { std $s fs $s write(\"a\", \"b\").unwrap() } }\npub fn f() { m!(::); }"),
+        // PoC t6: `# $a` with `$a = [path = ".."]` is `#[path = ".."]` unseen
+        // (and `[no_mangle]` would be `#[no_mangle]` without CAP002).
+        ("t6 # then metavariable", "macro_rules! m { ($a:tt) => { # $a pub mod hidden; } }\nm!([path = \"../payload.txt\"]);\npub fn f() { hidden::g() }"),
+        ("#! then metavariable", "macro_rules! m { ($a:tt) => { #! $a } }\nm!([no_mangle]);"),
+        ("# then repetition", "macro_rules! m { ($($a:tt)*) => { # $($a)* fn f() {} } }"),
+        ("lone # before a delimiter", "macro_rules! m { ($($x:ident)*) => { $( $x # )* [path = \"x\"] mod hidden; } }"),
+        ("# as repetition separator", "macro_rules! m { ($($x:ident),*) => { $( $x )#* [no_mangle] fn f() {} } }"),
+        ("tt metavariable before [", "macro_rules! m { ($h:tt) => { $h [path = \"x\"] mod hidden; } }\nm!(#);"),
+        ("tt metavariable before ! [", "macro_rules! m { ($h:tt) => { $h ! [no_mangle] } }"),
+        ("tt metavariable before ident", "macro_rules! m { ($s:tt) => { $s fs::write(\"a\", \"b\") } }"),
+        ("ident before tt metavariable", "macro_rules! m { ($s:tt) => { std $s } }"),
+        ("tt next to tt", "macro_rules! m { ($a:tt, $b:tt, $c:tt, $d:tt, $e:tt) => { $a $b $c $d $e(\"a\", \"b\") } }\npub fn f() { m!(std, ::, fs, ::, write); }"),
+        ("tt next to ident metavariable", "macro_rules! m { ($s:tt, $a:ident) => { $s $a $s fs } }"),
+        ("include then ! from tt", "macro_rules! m { ($b:tt) => { include $b (\"../x.rs\") } }\nm!(!);"),
+        ("tt repetition next to ident", "macro_rules! m { ($($t:tt)*) => { $($t)* write(\"a\", \"b\") } }\npub fn f() { m!(std::fs::); }"),
+        ("separator dropped between tt repetitions", "macro_rules! m { ($($t:tt),*) => { $($t)* (\"a\", \"b\") } }\npub fn f() { m!(std, ::, fs, ::, write); }"),
+        ("tt repetition with ident separator", "macro_rules! m { ($($t:tt)*) => { $($t)fs* } }"),
+        ("unknown metavariable is treated as tt", "macro_rules! m { () => { std $x fs } }"),
+        ("crate path keyword next to tt", "macro_rules! m { ($s:tt) => { crate $s helper() } }"),
+    ] {
+        let got = verdict(src);
+        assert!(got.contains(&"?".to_string()), "{name}: expected CAP003, got {got:?}\n{src}");
+    }
+}
+
+#[test]
+fn high2_ordinary_macro_rules_stay_clean() {
+    check(
+        "HIGH-2 decoys",
+        &[
+            ("visibility and name", "macro_rules! m { ($vis:vis $name:ident) => { $vis struct $name; } }", &[]),
+            ("fn with typed params", "macro_rules! m { ($name:ident, $t:ty) => { fn $name(x: $t) -> $t { x } } }", &[]),
+            ("index an expression", "macro_rules! m { ($x:expr) => { $x[0] } }", &[]),
+            ("impl block", "macro_rules! m { ($i:ident) => { impl $i { fn new() -> Self { $i } } } }", &[]),
+            ("tt passthrough", "macro_rules! m { ($($t:tt)*) => { $($t)* } }", &[]),
+            ("tt passthrough into another macro", "macro_rules! m { ($($t:tt)*) => { foo!($($t)*) } }", &[]),
+            ("tt passthrough with plus", "macro_rules! m { ($($t:tt)+) => { [$($t)+] } }", &[]),
+            ("tt operand in an expression", "macro_rules! m { ($t:tt) => { $t + 1 } }", &[]),
+            ("tt after keyword", "macro_rules! m { ($t:tt) => { return $t; } }", &[]),
+            ("tt in a let", "macro_rules! m { ($t:tt) => { let x = $t; } }", &[]),
+            ("idents next to each other", "macro_rules! m { ($a:ident $b:ident) => { $a + $b } }", &[]),
+            ("mod with an ident name", "macro_rules! m { ($name:ident) => { mod $name {} } }", &[]),
+            ("forwarded attributes are whole", "macro_rules! m { ($(#[$a:meta])* $n:ident) => { #[derive(Debug)] struct $n; } }", &[]),
+            ("separated repetition", "macro_rules! m { ($($x:expr),*) => { vec![$($x),*] } }", &[]),
+            ("$crate path", "macro_rules! m { () => { $crate::helper() } }", &[]),
+            ("several arms", "macro_rules! m { () => { 0 }; ($x:expr) => { $x }; ($x:expr, $($y:expr),+) => { $x + m!($($y),+) } }", &[]),
+        ],
+    );
+}
