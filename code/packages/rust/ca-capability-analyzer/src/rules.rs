@@ -349,8 +349,12 @@ fn classify_std(segs: &[&str], is_macro: bool) -> Classification {
         // Hardware randomness; every other `arch` intrinsic is arithmetic.
         // (`__cpuid` reveals the CPU model: informational, VER08a §3.3.)
         "arch" if rest.iter().any(|s| is_hw_random_intrinsic(s)) => cap("rand", "read"),
+        // `park_timeout_ms` is the deprecated `u32` form of `park_timeout`
+        // (security review round 5, R5-3, case `park-timeout-ms`).
         "thread" => match rest.first() {
-            Some(&"sleep") | Some(&"sleep_ms") | Some(&"park_timeout") => cap("time", "sleep"),
+            Some(&"sleep") | Some(&"sleep_ms") | Some(&"park_timeout") | Some(&"park_timeout_ms") => {
+                cap("time", "sleep")
+            }
             _ => cap("thread", "spawn"),
         },
         // `UNIX_EPOCH` is a `SystemTime`: `UNIX_EPOCH.elapsed()` reads the clock

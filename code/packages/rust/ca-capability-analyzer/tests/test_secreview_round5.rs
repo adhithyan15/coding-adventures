@@ -186,3 +186,22 @@ fn r5_2_type_macro_decoys_stay_clean() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// R5-3: gaps in the std table
+// ---------------------------------------------------------------------------
+
+#[test]
+fn r5_3a_park_timeout_ms_is_a_timed_sleep() {
+    check(
+        "R5-3a",
+        &[
+            ("park-timeout-ms", "#[allow(deprecated)]\npub fn nap() { std::thread::park_timeout_ms(10) }", &["time:sleep"]),
+            ("park-timeout-control", "pub fn nap() { std::thread::park_timeout(std::time::Duration::from_millis(10)) }", &["time:sleep"]),
+            ("through a use", "use std::thread::park_timeout_ms as p;\n#[allow(deprecated)]\npub fn nap() { p(10) }", &["time:sleep"]),
+            // Decoys: the rest of `std::thread` stays `thread:spawn`.
+            ("park without a timeout", "pub fn f() { std::thread::park() }", &["thread:spawn"]),
+            ("spawn", "pub fn f() { std::thread::spawn(|| {}); }", &["thread:spawn"]),
+        ],
+    );
+}

@@ -112,7 +112,7 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 | `std::env::{set_var, remove_var, set_current_dir}` | `env:write` |
 | any other `std::env` item (`var`, `vars`, `args`, `current_dir`, `consts`, bare module) | `env:read` |
 | `std::backtrace::*` (reads `RUST_BACKTRACE`) | `env:read` |
-| `std::thread::{sleep, sleep_ms, park_timeout}` | `time:sleep` |
+| `std::thread::{sleep, sleep_ms, park_timeout, park_timeout_ms}` | `time:sleep` |
 | any other `std::thread` item (`spawn`, `scope`, `Builder`, `current`, bare module) | `thread:spawn` |
 | `std::time::{Duration, TryFromFloatSecsError}` | pure |
 | any other `std::time` item (`Instant`, `SystemTime`, `UNIX_EPOCH`, bare module) | `time:read` |
@@ -312,3 +312,4 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 | D42 | the `$($t)*` pass-through test rescanned the whole matcher for every transcriber repetition: a 40,000-token matcher with 40,000 repetitions took about 30 s in a debug build (cases `perf-matcher-rescan-*`, `perf-valid-40000`) | the matcher's `$( $x:tt ) sep? op` repetitions are collected once per arm and looked up by name; verdicts unchanged (§5) | LOW (second review of round 3) denial of service |
 | D43 | the method heuristic tested only the token right after the name, so `Path::new("Cargo.toml").exists::<>()` and `c.wait_timeout::<>(g, d)` (legal for a method with no generic parameters) were pure (cases `turbofish-exists`, `turbofish-wait-timeout`) | an optional turbofish `::<..>` after the method name is skipped before testing for `(`; a `::<` that does not close is treated as a call (§3.3) | R5-1 (third review) false negative |
 | D44 | a macro invocation in type position was read as a path named after the macro: `<ty!()>::exists(p)` was `ty::exists`, `impl P for ty!() { .. Self::exists(self) .. }` resolved `Self` to `ty`, and `type F = ty!();` bound `F -> ty`, all pure although `ty!()` expanded to `std::path::Path` (cases `type-macro-qualified`, `type-macro-impl-self`, `type-macro-alias`, `type-macro-condvar`); and `<(std::path::Path)>::exists(p)` named no self type (found while fixing) | a qualified self type, an impl self type or a type-alias right-hand side that is a macro invocation (`name !`) is an *unknown type*, which gets the method-call verdict of `.name(`, as a metavariable already did; a parenthesised qualified self type is read through the parentheses (§3.2) | R5-2 (third review) false negative |
+| D45 | `std::thread::park_timeout_ms(10)` (the deprecated `u32` form of `park_timeout`) was `thread:spawn`, so a `thread:spawn`-only manifest slept unseen (case `park-timeout-ms`) | `std::thread::park_timeout_ms` is `time:sleep` (§3.3) | R5-3 (third review) false negative |
