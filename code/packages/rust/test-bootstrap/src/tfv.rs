@@ -173,13 +173,16 @@ pub fn parse_file(text: &str) -> Result<Vec<Record>, TfvError> {
         return reject(1, "first line must be exactly 'tfv 1'");
     }
     let mut records: Vec<Record> = Vec::new();
+    // A set, not a scan of `records`: a table of 100,000 rows (VER04j WX-E) made
+    // the scan quadratic (about 5 * 10^9 comparisons).
+    let mut seen_ids: std::collections::HashSet<String> = std::collections::HashSet::new();
     for (index, line) in lines.iter().enumerate().skip(1) {
         let number = index + 1;
         if line.is_empty() || line.starts_with('#') {
             continue;
         }
         let record = parse_record(line, number)?;
-        if records.iter().any(|seen| seen.id == record.id) {
+        if !seen_ids.insert(record.id.clone()) {
             return reject(number, format!("duplicate record id {:?}", record.id));
         }
         records.push(record);
@@ -508,6 +511,27 @@ mod tests {
         assert_eq!(records.len(), 2);
         assert!(records[1].field("x").is_some());
         assert!(records[1].field("y").is_none());
+    }
+
+    #[test]
+    fn a_hundred_thousand_rows_parse_and_a_duplicate_is_still_the_line_that_repeats_it() {
+        // Linear duplicate detection (VER04j WX-E: tables of up to 100,000 rows).
+        let mut text = String::from("tfv 1\n");
+        for i in 0..100_000 {
+            text.push_str(&format!("row/{i} R1 Kx I{i}\n"));
+        }
+        let started = std::time::Instant::now();
+        let records = parse_file(&text).unwrap();
+        assert_eq!(records.len(), 100_000);
+        assert!(
+            started.elapsed() < std::time::Duration::from_secs(20),
+            "parsing 100,000 rows took {:?}",
+            started.elapsed()
+        );
+        text.push_str("row/77 R0\n");
+        let error = parse_file(&text).unwrap_err();
+        assert_eq!(error.line, 100_002);
+        assert!(error.message.contains("duplicate record id"));
     }
 
     #[test]

@@ -948,6 +948,55 @@ request, an unknown relation endpoint, and an ordinary graph cycle. The
 operation accepts inert values only and gains no filesystem, Git, process,
 environment, network, clock, randomness, or credential authority.
 
+Package-local metadata selection is a third `diff_selection` variant. Its
+options are exactly the path-selection options above plus the required
+constant `metadata_policy: "package_local"`; the original path-selection
+options never carry the field. Under the policy, a changed path inside a
+`package_prefix` package whose package-relative path is exactly
+`CHANGELOG.md`, `required_capabilities.json`, `effect_certificate.json` or
+`assurance_report.json`, a direct child of `CHANGELOG.d/` ending in `.md`, or a
+descendant of `evidence/` ending in `.json`, `.cnf` or `.drat` (every segment
+non-empty and neither `.` nor `..`), marks that package *local*. Matching is
+case-sensitive, root-only and closed by type, so `README.md`,
+`docs/CHANGELOG.md`, `x/evidence/y.json`, `changelog.md`, `evidence.bindings`,
+`evidence/run.sh`, `CHANGELOG.d/nested/x.md` and a file named `CHANGELOG.d`
+are ordinary paths. Every other selection rule is unchanged: strict-glob
+packages, BUILD fronts (including platform variants such as `BUILD_windows`),
+forced seeds, repository-boundary consumers and the unknown-path policy all
+seed ordinary changed packages. A local package that is also an ordinary seed
+is ordinary. Then:
+
+- `changed_packages` is the ordinary seeds plus the local packages;
+- `affected_packages` is the dependent closure of the ordinary seeds plus the
+  local packages, so a local package reaches none of its dependents; and
+- `prerequisite_packages` is the prerequisite closure of the affected set,
+  excluding affected packages, as before.
+
+Every changed path in the contract is an addition or modification. A host
+that knows a path was deleted, renamed away or changed type (for example from
+`git diff --name-status`) MUST treat it as an ordinary path, because packaging
+that lists a file needs it to exist in a dependent's build; a host that
+cannot tell MUST also treat it as ordinary. Platform BUILD-front selection is
+likewise a host concern outside this pure operation: a host MUST classify
+local packages from the same platform-filtered path list as ordinary ones, so
+that a package is never dropped from both. Backslash spellings are not
+portable fixture paths and are rejected by the schema; hosts treat them as
+ordinary paths.
+
+The listed files are those the package's own BUILD may check but no
+dependent's build or test can read; `code/specs/12-build-system.md`
+("Package-local metadata") records the repository evidence for each. The
+fixtures use the distinct `package-metadata-selection-*.json` filename prefix
+and `diff-selection/package-metadata-` id prefix and pin a metadata-only
+change of every listed class, a source change beside metadata, README and
+nested, misspelled, case-varied and file-shaped lookalikes, disallowed
+extensions and nesting under `evidence/` and `CHANGELOG.d/`, a platform BUILD
+front beside metadata, strict-glob and forced packages, and a
+repository-boundary consumer of a capability manifest. Implementations that
+dispatch every flat case by domain and do not implement the policy must skip
+cases whose options carry `metadata_policy`, as they skip
+`trigger_relations`.
+
 The adapter must not read the caller's real checkout, Git config, hooks, or
 credentials.
 
@@ -1764,6 +1813,11 @@ The Cargo test-trigger variant also uses `diff_selection`, but its closed
 `changed_packages`; its result has the same three sorted selection lists. Its
 fixtures use the distinct `test-trigger-selection-*.json` filename prefix so
 the existing package-root `diff-selection-*.json` roster remains unchanged.
+The package-local metadata variant also uses `diff_selection`; its closed
+`options` record is the path-selection record plus the required constant
+`metadata_policy: "package_local"`, its result has the same three sorted
+lists, and its fixtures use the `package-metadata-selection-*.json` prefix for
+the same reason.
 
 `cargo_manifest_snapshot` is the authority-free boundary before Cargo path
 resolution. It MUST NOT read files, resolve paths or symlinks, inspect Cargo

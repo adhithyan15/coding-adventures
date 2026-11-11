@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/ver13-evidence-kinds-v1.schema.json",
+  "title": "VER13 Evidence Kinds v1",
+  "description": "Maps each evidence kind named by a catalogue entry's discharge.evidence_kinds to the manifest that can hold it and the evidence-id patterns of that kind (VER13 section 5.1). Structural contract only; closure with the catalogue (every named kind defined, every defined kind named) and pattern disjointness are enforced by code/scripts/assumption_catalogue.py and ca-assurance-report.",
+  "type": "object",
+  "required": [
+    "schema",
+    "kinds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "ver13-evidence-kinds-v1"
+    },
+    "kinds": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "manifest",
+          "patterns",
+          "verdict",
+          "per_run",
+          "description"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "manifest": {
+            "type": "string",
+            "enum": [
+              "test",
+              "proof",
+              "bench",
+              "planned"
+            ],
+            "description": "planned: no manifest produces this kind yet, so its evidence cannot discharge anything."
+          },
+          "patterns": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 256,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.:-]+(/([A-Za-z0-9_.:-]+|\\*)){0,15}$"
+            },
+            "description": "'/'-separated segments; '*' matches exactly one non-empty segment; the first segment is a literal namespace (warrant for test/proof, bench for bench, anything else for planned)."
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "pass"
+            ]
+          },
+          "per_run": {
+            "type": "boolean",
+            "description": "Per-run evidence is about one pinned build and needs the pinned tuple (rule AC-9)."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        }
+      }
+    }
+  }
+}

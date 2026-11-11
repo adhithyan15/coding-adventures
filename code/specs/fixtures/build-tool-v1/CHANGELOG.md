@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-11-11
+
+- Review fixes for the `package_local` metadata policy. `README.md` is no
+  longer metadata (a Python dependent's `pip install -e ../<dep>` reads the
+  dependency's `readme`). The list is closed by type: `CHANGELOG.d/` admits
+  only direct `*.md` shards and `evidence/` only `.json`, `.cnf` and `.drat`.
+  Two new cases pin a platform BUILD front beside metadata
+  (`package-metadata-selection-build-front.json`) and disallowed types and
+  nesting (`package-metadata-selection-disallowed-types.json`); the
+  lookalike case now covers README, nested evidence/shard/manifest paths,
+  file-shaped, backup and case-varied names. The spec now states that hosts
+  treat deletions, renames and type changes as ordinary paths. The corpus now
+  has 204 cases.
+- Added the `metadata_policy: "package_local"` variant of `diff_selection`
+  and five `package-metadata-selection-*.json` cases. A package-prefix
+  package whose only changed paths are its root `README.md`, `CHANGELOG.md`,
+  `CHANGELOG.d/` entries, `required_capabilities.json`,
+  `effect_certificate.json`, `assurance_report.json` or `evidence/` files is
+  changed and affected but reaches no dependent; its prerequisites are still
+  closed over. The cases pin every metadata class, a source change beside
+  metadata (still propagates), nested/misspelled/file-shaped lookalikes,
+  strict-glob and forced packages (unchanged), and a repository-boundary
+  consumer of a capability manifest (propagates from the consumer). The pure
+  schema gains `package_metadata_selection_input`, the runner oracle models
+  the policy, and the twelve-case `diff-selection-*.json` roster is
+  unchanged. The corpus now has 202 cases.
+
 ## 2026-11-03
 
 - Added twelve closed `cargo_manifest_snapshot` fixtures and the matching pure

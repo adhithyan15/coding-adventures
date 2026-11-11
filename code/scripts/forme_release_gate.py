@@ -32,6 +32,9 @@ PRODUCT_BUILD_ROOTS = (
     "code/programs/typescript/forme-shell-desktop",
 )
 MAX_JSON_BYTES = 1024 * 1024
+# Must equal LIGHTHOUSE_SAMPLE_COUNT in code/sites/blog/web-quality.ts (odd, so the
+# median is a measured sample).
+LIGHTHOUSE_SAMPLE_COUNT = 5
 HEX_40 = re.compile(r"^[0-9a-f]{40}$")
 HEX_64 = re.compile(r"^[0-9a-f]{64}$")
 BUILD_ID = re.compile(r"^blake2b:[0-9a-f]{64}$")
@@ -225,14 +228,14 @@ def _validate_quality(value: Any) -> None:
         performance_samples = target["performanceSamples"]
         if (
             not isinstance(performance_samples, list)
-            or len(performance_samples) != 3
+            or len(performance_samples) != LIGHTHOUSE_SAMPLE_COUNT
             or any(
                 not _finite_number(sample) or sample < 0 or sample > 1
                 for sample in performance_samples
             )
         ):
             raise ValueError("web quality performance samples are invalid")
-        median_performance = sorted(performance_samples)[1]
+        median_performance = sorted(performance_samples)[LIGHTHOUSE_SAMPLE_COUNT // 2]
         if median_performance != performance or median_performance < contract["performance"]:
             raise ValueError("web quality performance median is invalid")
         resources = _record(lighthouse["resources"], "web quality resources")
