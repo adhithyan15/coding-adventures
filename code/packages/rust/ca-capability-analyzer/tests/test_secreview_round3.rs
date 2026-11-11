@@ -462,3 +462,33 @@ fn high5_root_level_mod_into_a_skipped_directory_is_cap003() {
     assert_eq!(files_verdict(&[("src/lib.rs", "#[cfg(test)]\nmod tests { #[test] fn t() {} }")]), Vec::<String>::new());
     assert_eq!(files_verdict(&[("src/lib.rs", "macro_rules! mk { ($n:ident) => { mod $n { pub fn f() {} } } }")]), Vec::<String>::new());
 }
+
+// ---------------------------------------------------------------------------
+// LOW: `--generate-module` must not follow a symlinked `src` or target file
+// ---------------------------------------------------------------------------
+
+#[cfg(unix)]
+#[test]
+fn low_generate_module_refuses_symlinks() {
+    use coding_adventures_ca_capability_analyzer::write_module_to_disk;
+    use std::os::unix::fs::symlink;
+
+    // `src` is a symlink to a directory outside the package.
+    let outside = Pkg::empty("symlink_outside");
+    let p = Pkg::with("symlink_src", &[("required_capabilities.json", &pure_manifest("s"))]);
+    symlink(outside.dir(), p.path("src")).unwrap();
+    assert!(write_module_to_disk(p.dir()).is_err());
+    assert!(!outside.path("capabilities.rs").exists(), "wrote through a symlinked src/");
+
+    // `src/capabilities.rs` is a symlink to a file elsewhere.
+    let victim = Pkg::with("symlink_victim", &[("victim.txt", "keep me")]);
+    let q = Pkg::with("symlink_file", &[("required_capabilities.json", &pure_manifest("s")), ("src/lib.rs", "")]);
+    symlink(victim.path("victim.txt"), q.path("src/capabilities.rs")).unwrap();
+    assert!(write_module_to_disk(q.dir()).is_err());
+    assert_eq!(victim.read("victim.txt"), "keep me", "wrote through a symlinked src/capabilities.rs");
+
+    // A regular package still works.
+    let ok = Pkg::with("symlink_none", &[("required_capabilities.json", &pure_manifest("s")), ("src/lib.rs", "")]);
+    write_module_to_disk(ok.dir()).unwrap();
+    assert!(ok.read("src/capabilities.rs").contains("PureCapabilities"));
+}

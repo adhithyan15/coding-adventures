@@ -191,6 +191,8 @@ Any single-field alteration of a valid certificate fails at least one of these (
   --verify-cert <FILE>     Run small certificate checker against package sources and <FILE>
 ```
 
+`--generate-module` refuses (exit `2`) when `src` or `src/capabilities.rs` is a symbolic link, checked with `symlink_metadata` before writing: following it would overwrite a file outside the package.
+
 Exit Codes:
 - `0`: Success (checks passed, certificate verified, or modules match).
 - `1`: Security violation, certificate mismatch, or uncommitted module drift.
@@ -210,3 +212,4 @@ Exit Codes:
 | V8 | any nested `capabilities.rs` excluded from digest | only `src/capabilities.rs` | nested file was an unbound hole |
 | V9 | symlinks silently skipped by digest walker, refused by scanner | digest walker errors too | consistency |
 | V10 | cert JSON writer escaped only `"` | full JSON escaping | backslash/newline in justification produced invalid JSON |
+| V11 | `--generate-module` followed a symlinked `src` or `src/capabilities.rs` and wrote outside the package | refused before writing (§5) | round-3 security review (LOW) |
