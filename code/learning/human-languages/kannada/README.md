@@ -148,11 +148,42 @@ windows before the established A1 boundary.
 
 The exact Kannada surfaces are bounded to official Government of India
 transcripts. They do not set a CEFR level or supply an external Kannada A1
-syllabus. Strict inventory coverage moves from **198/258 to 204/258**; the
-remaining 54 points stay open, including four structurally untransferable
-Spanish-proxy demands. This is a repository coverage measurement, not a claim
-of certification, standard setting, human validation, learner readiness or
-learner attainment.
+syllabus. Strict inventory coverage moved from **198/258 to 204/258**; the
+remaining total is updated by the chapter-12 bridge below. This is a repository
+coverage measurement, not a claim of certification, standard setting, human
+validation, learner readiness or learner attainment.
+
+## Kannada A1 third-person bridge status
+
+Four short chapter-12 lessons make the existing family words usable with a
+bounded third-person path. They introduce **avanu**, **avaḷu**, **adu**, and
+**avaru**; the human/non-human distinction; the present endings in **avanu
+kelasa māḍuttāne**, **avaḷu kelasa māḍuttāḷe**, and **avaru kelasa māḍuttāre**;
+the family phrases **avana appa**, **avaḷa amma**, and **avara akka**; and the
+ordinary non-human plural **-gaḷu**. The lessons explicitly defer the broader
+past-person system, the non-human present ending, a general genitive paradigm,
+and human plural formation.
+
+Strict Kannada A1 inventory coverage moved from **204/258 to 209/258**. The
+current remaining total is updated by the object bridge below. This is a
+repository coverage measurement, not a claim of certification, standard
+setting, human validation, learner readiness or learner attainment.
+
+## Kannada A1 object bridge status
+
+Two short chapter-104 lessons teach the dependency in the inventory itself:
+the accusative **-annu** first, then the object-pronoun set **nannannu,
+ninnannu, nimmannu, avanannu, avaḷannu, adannu, avarannu**. The lessons keep
+the distinction between familiar and respectful “you,” explain why the
+pronoun body changes before the shared ending, and retrieve the pair in
+chapters 105, 106, and 109 across the R1, R2, and R3 windows.
+
+Strict Kannada A1 inventory coverage moves from **209/258 to 211/258**. The
+remaining 47 points stay open, including four structurally untransferable
+Spanish-proxy demands. The measured C2 planner remains **9,542 projectable /
+159 enumerable**, because 47 open points still require ten five-point
+tranches. These are repository measurements, not claims of certification,
+standard setting, human validation, learner readiness or learner attainment.
 
 ## Kannada B2 content inventory status
 

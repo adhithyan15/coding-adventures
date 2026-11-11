@@ -14,7 +14,7 @@
       "packages": [],
       "dependency_edges": [],
       "orphan_package_root_snapshot": {
-        "registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+        "registry_sha256": "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
         "roots": [
           {"path": "code/packages/python/comment-only", "language": "python", "kind": "package", "source_evidence": "code/packages/python/comment-only/demo.py"},
           {"path": "code/packages/python/missing", "language": "python", "kind": "package", "source_evidence": "code/packages/python/missing/demo.py"},

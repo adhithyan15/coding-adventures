@@ -933,14 +933,35 @@ impl<'a> Emitter<'a> {
     /// colon to match upstream's `printer.cont(":");` + the body's
     /// own indentation; in compact mode there is no whitespace at all.
     ///
-    /// Note: `label:` is not itself an expression so it doesn't enter
-    /// the precedence ladder; statements live above expressions in the
-    /// grammar.
+    /// Upstream Closure Compiler (`CodeGenerator.java::case Token.LABEL` /
+    /// `addNonEmptyStatement`) unwraps a single-statement block and prints
+    /// an empty block as `;` (CCR-087, #15924).
     fn emit_labeled(&mut self, l: &LabeledStatement) {
         self.maybe_map(&l.cv);
         self.emit_identifier(&l.label);
         self.write_str(":");
         self.pretty_ws();
+        if !self.opts.pretty {
+            if let Statement::Tagged(TaggedStatement::BlockStatement(block)) = &*l.body {
+                let non_empty: Vec<&Statement> = block
+                    .body
+                    .iter()
+                    .filter(|s| !matches!(s, Statement::Tagged(TaggedStatement::EmptyStatement(_))))
+                    .collect();
+                if non_empty.is_empty() {
+                    self.maybe_map(&block.cv);
+                    self.write_str(";");
+                    return;
+                }
+                if non_empty.len() == 1 {
+                    let inner = non_empty[0];
+                    if !is_block_decl_or_do(inner) {
+                        self.emit_statement(inner);
+                        return;
+                    }
+                }
+            }
+        }
         self.emit_statement(&l.body);
     }
 
@@ -3602,25 +3623,63 @@ fn string_statement_value(s: &Statement) -> Option<&str> {
 /// after the listed leaf terminator types.
 fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
     match s {
-        Statement::Tagged(t) => matches!(
-            t,
+        Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(_)
-                | TaggedStatement::ReturnStatement(_)
-                | TaggedStatement::BreakStatement(_)
-                | TaggedStatement::ContinueStatement(_)
-                // NOT `ThrowStatement` (CCR-084, #15919): upstream ends every
-                // `throw` with a forced `;` (CodeGenerator's
-                // `endStatement(/* needSemiColon= */ true, …)`, "otherwise
-                // safari can't parse this"), so a block-final `throw` keeps
-                // it: `function f(){throw 1;}`.
-                // `do … while(x);` ends in a real terminator `;` that ASI can
-                // supply before a closing `}`, so it is safe to pop. (Plain
-                // `while(x)…` is NOT here: its trailing `;` is a body slot.)
-                | TaggedStatement::DoWhileStatement(_)
-                // `debugger;` ends in a real terminator `;`, poppable before a
-                // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
-                | TaggedStatement::DebuggerStatement(_)
-        ),
+            | TaggedStatement::ReturnStatement(_)
+            | TaggedStatement::BreakStatement(_)
+            | TaggedStatement::ContinueStatement(_)
+            // NOT `ThrowStatement` (CCR-084, #15919): upstream ends every
+            // `throw` with a forced `;` (CodeGenerator's
+            // `endStatement(/* needSemiColon= */ true, …)`, "otherwise
+            // safari can't parse this"), so a block-final `throw` keeps
+            // it: `function f(){throw 1;}`.
+            // `do … while(x);` ends in a real terminator `;` that ASI can
+            // supply before a closing `}`, so it is safe to pop. (Plain
+            // `while(x)…` is NOT here: its trailing `;` is a body slot.)
+            | TaggedStatement::DoWhileStatement(_)
+            // `debugger;` ends in a real terminator `;`, poppable before a
+            // closing `}` (ASI re-supplies it). The `;` is NOT a body slot.
+            | TaggedStatement::DebuggerStatement(_) => true,
+            // CCR-088 (#15925): Compound statements whose trailing emitted
+            // character is a statement terminator from their body slot.
+            // Pop the redundant `;` before a closing `}` (ASI supplies it).
+            TaggedStatement::WhileStatement(w) => last_body_stmt_uses_terminator_semi(&w.body),
+            TaggedStatement::ForStatement(f) => last_body_stmt_uses_terminator_semi(&f.body),
+            TaggedStatement::ForInStatement(f) => last_body_stmt_uses_terminator_semi(&f.body),
+            TaggedStatement::ForOfStatement(f) => last_body_stmt_uses_terminator_semi(&f.body),
+            TaggedStatement::IfStatement(i) => {
+                if let Some(alt) = &i.alternate {
+                    last_body_stmt_uses_terminator_semi(alt)
+                } else {
+                    last_body_stmt_uses_terminator_semi(&i.consequent)
+                }
+            }
+            TaggedStatement::LabeledStatement(l) => {
+                if let Statement::Tagged(TaggedStatement::BlockStatement(block)) = &*l.body {
+                    let non_empty: Vec<&Statement> = block
+                        .body
+                        .iter()
+                        .filter(|s| {
+                            !matches!(s, Statement::Tagged(TaggedStatement::EmptyStatement(_)))
+                        })
+                        .collect();
+                    if non_empty.len() == 1 {
+                        let inner = non_empty[0];
+                        if !is_block_decl_or_do(inner) {
+                            last_stmt_uses_terminator_semi(inner)
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    last_stmt_uses_terminator_semi(&l.body)
+                }
+            }
+            TaggedStatement::WithStatement(w) => last_body_stmt_uses_terminator_semi(&w.body),
+            _ => false,
+        },
         // A block-final `var x = 1;` carries a real terminator `;`
         // that the closing `}` makes redundant (ASI supplies it), so
         // pop it: `function(){var y=h();}` → `function(){var y=h()}`,
@@ -3647,6 +3706,34 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
         // never reach this point.
         Statement::Declaration(Declaration::VariableDeclaration(_)) => true,
         Statement::Declaration(_) => false,
+    }
+}
+
+/// Helper for `last_stmt_uses_terminator_semi` when evaluating compound statement bodies (CCR-088, #15925).
+///
+/// In compact mode, a compound statement body slot either:
+/// 1. Unwraps a single-statement `BlockStatement` into a bare statement (per `unwrap_single_statement_body`),
+///    so the last token emitted is that statement's terminator.
+/// 2. Is already a bare statement (e.g. `while(c) return 1;`).
+/// 3. Remains a block `{ ... }`, which ends in `}` (no semicolon to pop).
+/// 4. Is an `EmptyStatement` (`;`), which must NEVER pop (otherwise `while(c);}` becomes invalid syntax).
+/// 5. Ends in `throw`, which upstream never pops (CCR-084).
+fn last_body_stmt_uses_terminator_semi(body: &Statement) -> bool {
+    // If the body is a DoWhileStatement, emit_body_slot always wraps it in `{ ... }` (CCR-083),
+    // so it ends in `}` rather than a terminator `;`.
+    if matches!(body, Statement::Tagged(TaggedStatement::DoWhileStatement(_))) {
+        return false;
+    }
+    if let Statement::Tagged(TaggedStatement::BlockStatement(b)) = body {
+        if b.body.len() == 1 {
+            let inner = &b.body[0];
+            if !is_block_decl_or_do(inner) {
+                return last_stmt_uses_terminator_semi(inner);
+            }
+        }
+        false
+    } else {
+        last_stmt_uses_terminator_semi(body)
     }
 }
 
@@ -6546,7 +6633,7 @@ mod tests {
     fn program_final_statement_is_terminated_whatever_kind_it_is() {
         let a = || expr_stmt(ident("a"));
 
-        // A bare block, and a labeled block.
+        // A bare block, a labeled block (unwrapped under CCR-087), and a multi-statement labeled block.
         assert_eq!(emit_stmt(block_of(vec![a()])), "{a};");
         assert_eq!(
             emit_stmt(Statement::labeled_statement(LabeledStatement {
@@ -6557,7 +6644,18 @@ mod tests {
                 },
                 body: Box::new(block_of(vec![a()])),
             })),
-            "L:{a};"
+            "L:a;"
+        );
+        assert_eq!(
+            emit_stmt(Statement::labeled_statement(LabeledStatement {
+                cv: None,
+                label: Identifier {
+                    cv: None,
+                    name: "L".to_string()
+                },
+                body: Box::new(block_of(vec![a(), a()])),
+            })),
+            "L:{a;a};"
         );
 
         // `switch`.
@@ -9184,6 +9282,7 @@ mod tests {
     fn ccr076_dangling_else_hazard_keeps_braces() {
         // if (a) { if (b) c; } else d;
         // Braces must NOT drop around `{ if (b) c; }`, otherwise `else d;` binds to `if (b)`.
+        // The terminator `;` inside the block before `}` is popped in compact mode (CCR-088).
         let inner_if = Statement::if_statement(IfStatement {
             cv: None,
             test: ident("b"),
@@ -9196,12 +9295,13 @@ mod tests {
             consequent: Box::new(block_of(vec![inner_if])),
             alternate: Some(Box::new(expr_stmt(ident("d")))),
         });
-        assert_eq!(emit_stmt(outer), "if(a){if(b)c;}else d;");
+        assert_eq!(emit_stmt(outer), "if(a){if(b)c}else d;");
     }
 
     #[test]
     fn ccr076_nested_dangling_else_hazard_keeps_braces() {
         // if (a) { while (x) if (b) c; } else d;
+        // Semicolon before `}` is popped in compact mode (CCR-088).
         let inner_if = Statement::if_statement(IfStatement {
             cv: None,
             test: ident("b"),
@@ -9219,7 +9319,7 @@ mod tests {
             consequent: Box::new(block_of(vec![inner_while])),
             alternate: Some(Box::new(expr_stmt(ident("d")))),
         });
-        assert_eq!(emit_stmt(outer), "if(a){while(x)if(b)c;}else d;");
+        assert_eq!(emit_stmt(outer), "if(a){while(x)if(b)c}else d;");
     }
 
     #[test]
@@ -9364,7 +9464,7 @@ mod tests {
             consequent: Box::new(block_of(vec![labeled])),
             alternate: None,
         });
-        assert_eq!(emit_stmt(s), "if(c){l:a;};");
+        assert_eq!(emit_stmt(s), "if(c){l:a};");
     }
 
     #[test]
@@ -9383,6 +9483,366 @@ mod tests {
             },
         );
         assert!(out.code.contains("if (c) {\n"), "got:\n{}", out.code);
+    }
+
+    // ---- CCR-087 (#15924): labeled block unwrapping --------------------
+
+    fn labeled_stmt(label: &str, body: Statement) -> Statement {
+        Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier {
+                cv: None,
+                name: label.to_string(),
+            },
+            body: Box::new(body),
+        })
+    }
+
+    #[test]
+    fn ccr087_labeled_single_statement_drops_braces() {
+        let call_a = expr_stmt(Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("a")),
+            arguments: vec![],
+        }));
+
+        // lbl:{a()} -> lbl:a();
+        let s = labeled_stmt("lbl", block_of(vec![call_a]));
+        assert_eq!(emit_stmt(s), "lbl:a();");
+
+        // lbl:{break lbl} -> lbl:break lbl;
+        let s_break = labeled_stmt(
+            "lbl",
+            block_of(vec![Statement::break_statement(BreakStatement {
+                cv: None,
+                label: Some(Identifier {
+                    cv: None,
+                    name: "lbl".to_string(),
+                }),
+            })]),
+        );
+        assert_eq!(emit_stmt(s_break), "lbl:break lbl;");
+
+        // lbl:{return 1} -> lbl:return 1;
+        let s_return = labeled_stmt(
+            "lbl",
+            block_of(vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: Some(num(1.0)),
+            })]),
+        );
+        assert_eq!(emit_stmt(s_return), "lbl:return 1;");
+
+        // lbl:{var x=1} -> lbl:var x=1;
+        let var_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Var,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_var = labeled_stmt("lbl", block_of(vec![var_decl]));
+        assert_eq!(emit_stmt(s_var), "lbl:var x=1;");
+    }
+
+    #[test]
+    fn ccr087_labeled_empty_block_emits_semicolon() {
+        // lbl:{} -> lbl:;
+        let s_empty = labeled_stmt("lbl", block_of(vec![]));
+        assert_eq!(emit_stmt(s_empty), "lbl:;");
+
+        // lbl:{;} -> lbl:;
+        let empty_stmt = Statement::empty_statement(EmptyStatement { cv: None });
+        let s_empty_stmt = labeled_stmt("lbl", block_of(vec![empty_stmt.clone()]));
+        assert_eq!(emit_stmt(s_empty_stmt), "lbl:;");
+
+        // lbl:{;;} -> lbl:;
+        let s_multi_empty = labeled_stmt("lbl", block_of(vec![empty_stmt.clone(), empty_stmt]));
+        assert_eq!(emit_stmt(s_multi_empty), "lbl:;");
+    }
+
+    #[test]
+    fn ccr087_labeled_multi_statement_keeps_braces() {
+        let call_a = expr_stmt(ident("a"));
+        let call_b = expr_stmt(ident("b"));
+        let s = labeled_stmt("lbl", block_of(vec![call_a, call_b]));
+        assert_eq!(emit_stmt(s), "lbl:{a;b};");
+    }
+
+    #[test]
+    fn ccr087_labeled_lexical_declarations_keep_braces() {
+        // lbl:{let x=1} -> lbl:{let x=1};
+        let let_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_let = labeled_stmt("lbl", block_of(vec![let_decl]));
+        assert_eq!(emit_stmt(s_let), "lbl:{let x=1};");
+
+        // lbl:{const x=1} -> lbl:{const x=1};
+        let const_decl = Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Const,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: coding_adventures_javascript_ast::BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: "x".to_string(),
+                }),
+                init: Some(num(1.0)),
+            }],
+        }));
+        let s_const = labeled_stmt("lbl", block_of(vec![const_decl]));
+        assert_eq!(emit_stmt(s_const), "lbl:{const x=1};");
+
+        // lbl:{class C{}} -> lbl:{class C{}};
+        let class_decl = Statement::Declaration(Declaration::ClassDeclaration(ClassDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "C".to_string(),
+            },
+            super_class: None,
+            body: vec![],
+        }));
+        let s_class = labeled_stmt("lbl", block_of(vec![class_decl]));
+        assert_eq!(emit_stmt(s_class), "lbl:{class C{}};");
+
+        // lbl:{function f(){}} -> lbl:{function f(){}};
+        let fn_decl = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        let s_fn = labeled_stmt("lbl", block_of(vec![fn_decl]));
+        assert_eq!(emit_stmt(s_fn), "lbl:{function f(){}};");
+    }
+
+    #[test]
+    fn ccr087_labeled_do_while_and_nested_label_keep_braces() {
+        // lbl:{do a();while(b)} -> lbl:{do a();while(b)};
+        let s_do = labeled_stmt("lbl", block_of(vec![do_a_while("b")]));
+        assert_eq!(emit_stmt(s_do), "lbl:{do a();while(b)};");
+
+        // lbl:{lbl2:a()} -> lbl:{lbl2:a}; (popped before `}` in compact mode per CCR-088)
+        let nested_lbl = labeled_stmt("lbl2", expr_stmt(ident("a")));
+        let s_nested = labeled_stmt("lbl", block_of(vec![nested_lbl]));
+        assert_eq!(emit_stmt(s_nested), "lbl:{lbl2:a};");
+    }
+
+    // ---- CCR-088: Omit terminator semicolon before closing `}` across compound statements (#15925) ----
+
+    #[test]
+    fn ccr088_function_while_return_drops_semi() {
+        let ret = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(num(1.0)),
+        });
+        let w = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(block_of(vec![ret])),
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![w],
+            },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function f(){while(c)return 1};");
+    }
+
+    #[test]
+    fn ccr088_for_empty_body_retains_semi() {
+        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement { cv: None }));
+        let for_stmt = Statement::for_statement(ForStatement {
+            cv: None,
+            init: None,
+            test: None,
+            update: None,
+            body: Box::new(empty),
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![for_stmt],
+            },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function f(){for(;;);};");
+    }
+
+    #[test]
+    fn ccr088_while_throw_retains_semi() {
+        let throw_stmt = Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: num(1.0),
+        });
+        let w = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(block_of(vec![throw_stmt])),
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![w],
+            },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        // Upstream always keeps `;` after `throw` (CCR-084).
+        assert_eq!(out.code, "function f(){while(c)throw 1;};");
+    }
+
+    #[test]
+    fn ccr088_nested_loops_return_drops_semi() {
+        let ret = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(num(1.0)),
+        });
+        let inner_while = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("d"),
+            body: Box::new(block_of(vec![ret])),
+        });
+        let outer_while = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(block_of(vec![inner_while])),
+        });
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![outer_while],
+            },
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function f(){while(c)while(d)return 1};");
+    }
+
+    #[test]
+    fn ccr088_switch_while_return_drops_semi() {
+        let ret = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(num(1.0)),
+        });
+        let w = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(block_of(vec![ret])),
+        });
+        let switch_stmt = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![w],
+            }],
+        });
+        let prog = program().with_body(vec![ProgramItem::Statement(switch_stmt)]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "switch(x){case 1:while(c)return 1};");
+    }
+
+    #[test]
+    fn ccr087_labeled_block_pretty_mode_keeps_braces() {
+        let s = labeled_stmt("lbl", block_of(vec![expr_stmt(ident("a"))]));
+        let out = emit_with(
+            program().with_body(vec![ProgramItem::Statement(s)]),
+            EmitOptions {
+                pretty: true,
+                ..EmitOptions::default()
+            },
+        );
+        assert!(out.code.contains("lbl: {\n"), "got:\n{}", out.code);
+    }
+
+    #[test]
+    fn ccr087_function_final_labeled_empty_block_retains_semi() {
+        let s = Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: BlockStatement {
+                cv: None,
+                body: vec![labeled_stmt("lbl", block_of(vec![]))],
+            },
+            generator: false,
+            is_async: false,
+        }));
+        // Must emit `lbl:;` and never strip the semicolon before `}`.
+        assert_eq!(emit_stmt(s), "function f(){lbl:;};");
     }
 
     // ---- "use strict" prologue (#17907) -------------------------------

@@ -106,6 +106,103 @@ proofs fail with payload-free categories. Success retains both complete
 non-copyable inputs. The boundary does not claim revocation policy for the
 second proof's own signer or for the intermediate.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
+then consumes that complete separately authenticated branch and nominally
+reifies the added revocation proof's own delegated responder-to-intermediate-
+to-reviewed-root path. The infallible non-copyable wrapper retains both the
+original routed responder policy and the exact authenticated responder-status
+proof; it accepts no substitute certificate, path, root, algorithm, key,
+signature, status, or time. This projection performs no new validation or
+external effect and stops before reviewed-root or intermediate name policy,
+no-check or separately authenticated revocation policy for that added
+responder, complete revocation, generalized path validation, TLS, HTTP, OAuth,
+or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_anchor_dns_policy`
+then consumes that exact added responder path and derives both inputs through
+private repository-owned evidence: the separately authenticated proof's fully
+routed responder and the original proof's exact selected reviewed-root
+constraints. Entries without out-of-band constraints succeed without reading
+responder Subject Alternative Name. Constrained entries apply the supported
+permitted-DNS subset under separate caller-owned parse limits and retain only
+count evidence. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This stops before
+intermediate name constraints, no-check or separately authenticated revocation
+policy for the added responder, complete revocation, generalized path
+validation, TLS, HTTP, OAuth, or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_intermediate_dns_policy`
+then consumes that complete reviewed-root DNS proof and derives the separately
+authenticated proof's exact responder and exact retained intermediate through
+private repository-owned evidence. An intermediate without NameConstraints
+succeeds without reading responder Subject Alternative Name. A present
+NameConstraints extension must be critical; its supported permitted and
+excluded DNS subtrees are applied under separate caller-owned parse limits,
+and success retains only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload. This
+stops before no-check or separately authenticated revocation policy for the
+added responder, complete revocation, generalized path validation, TLS, HTTP,
+OAuth, or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_policy`
+then consumes that complete root-and-intermediate DNS proof and derives the
+separately authenticated proof's exact responder through private repository-
+owned evidence. It requires one structurally unique `id-pkix-ocsp-nocheck`
+extension with exact DER `NULL` contents and retains the complete non-copyable
+proof on success. Stable failures expose no certificate, extension, response,
+key, signature, status, root, or time payload. This resolves only RFC 6960's
+trust-for-certificate-lifetime branch and stops before separately authenticated
+revocation for this responder, complete revocation, generalized path
+validation, TLS, HTTP, OAuth, or network readiness.
+
+`bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_revocation`
+then consumes that complete no-check proof plus a separately authenticated,
+fully routed proof for the exact retained intermediate. It derives the exact
+intermediate, selected reviewed root, and original observation time only
+through the consumed no-check proof, reuses the stable target-then-issuer-then-
+time binding policy, and retains both complete non-copyable inputs on success.
+This resolves the original responder through separately authenticated status,
+resolves that status proof's own responder through RFC 6960 no-check policy,
+and authenticates status for the exact retained intermediate. It stops before
+revocation policy for the intermediate-status proof's own responder, complete
+revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_path`
+then projects the retained intermediate-status proof's exact authenticated
+responder-to-reviewed-root path without accepting any substitute evidence or
+performing more parsing or validation. The generic path wrapper retains the
+complete responder-of-responder no-check plus intermediate-status composition
+under a source-specific accessor. It stops before reviewed-root DNS policy for
+that responder, no-check or separately authenticated revocation policy for it,
+complete revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_anchor_dns_policy`
+then consumes that exact nested-source path and derives both the intermediate-
+status proof's fully routed authenticated responder and the original proof's
+selected reviewed-root constraints through private repository-owned evidence.
+Entries without constraints succeed without reading responder Subject
+Alternative Name. Constrained entries decode the supported permitted-DNS
+subset and exact responder SAN under separate caller-owned ASN.1 limits,
+require every responder `dNSName` to comply, and retain only count evidence.
+The complete nested no-check plus intermediate-status composition remains
+available to the existing added-responder no-check and separately authenticated
+revocation policies. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This does not apply
+excluded or non-DNS root constraints, establish complete revocation policy,
+generalize path validation, or provide TLS, HTTP, OAuth, or network readiness.
+
+`complete_x509_ocsp_routed_issuer_reviewed_nested_no_check_fixed_path_revocation_policy`
+then consumes the exact branch after the intermediate-status responder also
+passes RFC 6960 no-check policy. Its input type proves that every non-root
+certificate in this one retained fixed chain is covered by authenticated good-
+and-fresh OCSP status or exact no-check policy; the selected Mozilla-reviewed
+root remains the trust anchor. The infallible nominal wrapper retains the full
+composition and accepts no substitute evidence. It does not generalize path
+construction or validation, acquire or refresh revocation data, read a clock,
+or provide TLS, HTTP, OAuth, or network readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,
@@ -139,13 +236,29 @@ name those exact objects and time. Target, issuer, then time are checked in
 stable order. Success retains both complete non-copyable branches, while
 failures reuse the existing payload-free intermediate-binding categories.
 This does not establish revocation policy for either added proof's own
-responder, feed this alternative into the added-status responder path
-projection, or provide complete revocation, generalized path validation, TLS,
+responder or provide complete revocation, generalized path validation, TLS,
 HTTP, OAuth, or network readiness.
 
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_path`
+then projects that authenticated-original-responder composition's exact added
+status responder-to-reviewed-root path. The infallible wrapper retains both
+complete authenticated revocation branches and accepts no substitute
+certificate, path, root, algorithm, key, signature, status, or time. The
+defaulted source parameter preserves the existing no-check projection's public
+type shape.
+
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_status_responder_anchor_dns_policy`
+derives the added proof's authenticated responder and the original proof's
+selected reviewed-root constraints through private repository-owned evidence.
+It applies the same bounded permitted-DNS policy as the no-check-source path.
+The resulting proof is consumed unchanged by the existing added-responder
+no-check and separately authenticated revocation functions. This resolves
+policy routing for the added responder only; it does not establish policy for
+either additional proof's own responder or complete revocation.
+
 `reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path`
-then consumes that complete composition and nominally reifies the added status
-proof's delegated responder-to-reviewed-root path. The retained proof already
+then consumes the complete no-check composition and nominally reifies the
+added status proof's delegated responder-to-reviewed-root path. The retained proof already
 contains the exact responder's certificate-wide role and critical-extension
 policy, algorithm/key policy, OCSP-signing purpose, observation-time validity,
 routed repository-owned RSA response and certificate-signature verification,
@@ -195,6 +308,68 @@ both complete non-copyable inputs, while failures reuse the existing stable
 payload-free categories. This does not establish revocation policy for the
 second proof's own responder or complete revocation, generalized path
 validation, TLS, HTTP, OAuth, or network readiness.
+
+That alternative branch can then use
+`reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_path`
+to project the second proof's own exact delegated responder-to-reviewed-root
+path. The infallible non-copyable wrapper preserves the complete generic source
+and authenticated revocation proof without accepting substitute evidence or
+performing more validation. It stops before reviewed-root or intermediate DNS
+policy for the delegated responder, no-check or separately authenticated
+revocation policy for it, complete revocation, generalized path validation,
+TLS, HTTP, OAuth, or network readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_anchor_dns_policy`
+then consumes that exact path and derives both policy inputs internally: the
+added revocation proof's authenticated delegated responder and the selected
+Mozilla-reviewed root's optional out-of-band constraint bytes. Entries without
+constraints succeed without reading responder Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and the exact
+responder SAN under separate caller-owned ASN.1 limits, require every responder
+`dNSName` to comply, and retain only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, status, root, or time
+payload. This does not apply excluded or non-DNS root constraints or the
+retained intermediate's constraints, establish no-check or separately
+authenticated revocation policy for the delegated responder, complete
+revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_policy`
+then consumes that complete reviewed-root DNS proof and derives the added
+revocation proof's exact authenticated delegated responder only through the
+retained path. It requires one structurally unique `id-pkix-ocsp-nocheck`
+extension whose value is exact DER `NULL`; RFC 6960 recommends but does not
+require that extension to be non-critical, so certificate-wide role policy
+must already have recognized a critical instance. Success retains the entire
+generic source and non-copyable proof. This resolves only the no-check branch
+for that exact responder and stops before separately authenticated recursive
+responder revocation, complete revocation, generalized path validation, TLS,
+HTTP, OAuth, or network readiness.
+
+`complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
+then nominally completes revocation policy for this exact default-source
+alternative branch. Its input type proves that the server target, original
+responder, intermediate, added intermediate-status responder, and the added
+responder-revocation proof's own responder are each covered by authenticated
+good-and-fresh OCSP status or exact RFC 6960 no-check policy. The selected
+Mozilla-reviewed root remains the trust anchor. The infallible non-copyable
+wrapper retains the complete proof and accepts no substitute evidence. It does
+not generalize path construction or validation, acquire or refresh revocation
+data, read a clock, or provide TLS, HTTP, OAuth, or network readiness.
+
+`complete_x509_ocsp_routed_issuer_reviewed_double_nested_no_check_fixed_path_revocation_policy`
+provides the corresponding source-specific completion when the original
+responder uses separately authenticated revocation and that proof's own
+responder has already passed exact RFC 6960 no-check policy. The retained
+alternative branch additionally authenticates revocation for the added
+intermediate-status responder and applies exact no-check policy to that proof's
+own responder. Its input type therefore covers every non-root certificate in
+this one double-nested fixed path while excluding the unresolved generic
+authenticated-recursion source. The selected Mozilla-reviewed root remains the
+trust anchor. This nominal composition performs no new parsing, cryptography,
+clock acquisition, I/O, or external effect and does not generalize path
+construction or validation, acquire or refresh revocation data, or provide
+TLS, HTTP, OAuth, or network readiness.
 
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
@@ -251,18 +426,17 @@ revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
 time. Both compositions derive those same inputs through the consumed
-responder-policy proof and retain the added proof. The no-check follow-up
-projection reifies that proof's exact delegated responder-to-reviewed-root
-path; subsequent policies apply supported reviewed-root DNS constraints and
-either the no-check or separately authenticated revocation branch to that
-exact added responder.
+responder-policy proof and retain the added proof. Both follow-up projections
+reify the added proof's exact delegated responder-to-reviewed-root path;
+subsequent policies apply supported reviewed-root DNS constraints and either
+the no-check or separately authenticated revocation branch to that exact added
+responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, project the added
-intermediate-status responder path from the original authenticated responder-
-revocation branch, implement complete revocation policy, validate either
-additional revocation proof's own responder, interpret unsupported OCSP extensions,
+intermediate constraints to the responder certificate, implement complete
+revocation policy, validate either additional revocation proof's own responder,
+interpret unsupported OCSP extensions,
 acquire or cache OCSP data, read a clock, implement TLS or HTTP, authorize
 OAuth transport, open a network connection, or access a credential. The
 reviewed Mozilla root snapshot excludes OS, enterprise, user-installed, and

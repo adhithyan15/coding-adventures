@@ -1,0 +1,59 @@
+-- VER04j WX-H test fixture: a v1 document with the `output` bound metric, a
+-- parameterised bound (`to_int(max_output)`) and the CWE-789 bug class of
+-- section 6.1: a decompressor that sizes an allocation from a header field.
+-- It is NOT a package specification and touches no lz* API (open question 6 of
+-- the specification stays with the owner); it exists so the generator is tested
+-- by compiling and running what it emits against in-test subjects (see
+-- tests/wxh_evidence.rs and tests/wxh_vulnerable.rs).
+--
+-- The toy format: a four byte little-endian length header, then (count, byte)
+-- pairs, each pair standing for `count` copies of `byte`.  The header must equal
+-- the number of bytes the pairs decode to (else CORRUPT), and must not exceed
+-- `max_output` (else OUTPUT_LIMIT).
+warrant wxh v1
+  error LzError = OUTPUT_LIMIT | CORRUPT
+
+  op decompress(data: Bytes, max_output: U32) -> Result<Bytes, LzError> fresh
+
+  labels decompress:
+    data public
+    max_output public
+
+  bound decompress:
+    output <= to_int(max_output)
+    steps <= 32 * (len(data) + to_int(max_output)) + 4096
+    heap <= 2 * to_int(max_output) + 8 * len(data) + 4096
+    depth <= 16
+
+  example three_bytes_within_the_limit:
+    decompress(b"030000000361", 3u32) == Ok(b"616161")
+  example one_byte_over_the_limit:
+    decompress(b"030000000361", 2u32) == Err(LzError.OUTPUT_LIMIT)
+  example short_header_is_corrupt:
+    decompress(b"010203", 10u32) == Err(LzError.CORRUPT)
+  -- A ten-byte stream that declares 0xFFFFFFFF bytes of output.
+  example tiny_bomb_is_rejected:
+    decompress(b"ffffffffff61ff61ff61", 1024u32) == Err(LzError.OUTPUT_LIMIT)
+  example tiny_bomb_under_a_huge_limit_is_corrupt:
+    decompress(b"ffffffffff61ff61ff61", 4294967295u32) == Err(LzError.CORRUPT)
+
+  -- A well-formed stream of `n <= 255` copies of 0x61 is the header `n` followed
+  -- by the pair (n, 0x61).  Random byte strings are almost never well formed, so
+  -- this claim is what puts valid input in front of the limit; its two U32
+  -- binders are related by the generator, so the boundary `m = n - 1` is hit.
+  model stream(n: U32) -> Bytes = concat(le_bytes(n), concat(be_bytes(wrap<U8>(to_int(n))), b"61"))
+
+  -- Models used only by the differential tests of imin/imax/concat (section 10.3):
+  -- the generated code and the ground evaluator must agree.
+  model lo(a: Int, b: Int) -> Int = imin(a, b)
+  model hi(a: Int, b: Int) -> Int = imax(a, b)
+  model cat(a: Bytes, b: Bytes) -> Bytes = concat(a, b)
+
+  claim well_formed_streams_obey_the_limit:
+    forall n: U32 | n <= 255u32, m: U32. match decompress(stream(n), m) with Ok(r) -> len(r) == to_int(n) and to_int(n) <= to_int(m) | Err(LzError.OUTPUT_LIMIT) -> to_int(m) < to_int(n) | Err(e) -> false
+  claim empty_input_is_corrupt_under_any_limit:
+    forall m: U32. decompress(b"", m) == Err(LzError.CORRUPT)
+  claim success_survives_a_larger_limit:
+    forall d: Bytes, m: U32. match decompress(d, m) with Ok(r) -> decompress(d, max_value<U32>()) == Ok(r) | Err(e) -> true
+  claim zero_limit_yields_nothing:
+    forall d: Bytes. match decompress(d, 0u32) with Ok(r) -> len(r) == 0 | Err(e) -> true

@@ -2,7 +2,8 @@
  * forme-capability — realms catalogue tests
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import {
   FIRST_PARTY_ONLY,
   KERNEL_REALMS,
@@ -14,52 +15,52 @@ import {
 
 describe("KERNEL_REALMS", () => {
   it("is the FM01 §5.2 set", () => {
-    expect(new Set(KERNEL_REALMS)).toEqual(new Set([
+    assert.deepEqual(new Set(KERNEL_REALMS), new Set([
       "storage", "network", "env", "filesystem",
       "system", "content", "editor", "telemetry", "plugin",
     ]));
   });
 
   it("is frozen — runtime mutation rejected", () => {
-    expect(() => {
+    assert.throws(() => {
       // @ts-expect-error — readonly at the type level.
       KERNEL_REALMS.push("bogus");
-    }).toThrow(TypeError);
+    }, TypeError);
   });
 });
 
 describe("isKernelRealm", () => {
   it("accepts every kernel realm", () => {
     for (const realm of KERNEL_REALMS) {
-      expect(isKernelRealm(realm)).toBe(true);
+      assert.equal(isKernelRealm(realm), true);
     }
   });
 
   it("rejects unknown realms", () => {
-    expect(isKernelRealm("ext:custom")).toBe(false);
-    expect(isKernelRealm("bogus")).toBe(false);
-    expect(isKernelRealm("")).toBe(false);
+    assert.equal(isKernelRealm("ext:custom"), false);
+    assert.equal(isKernelRealm("bogus"), false);
+    assert.equal(isKernelRealm(""), false);
   });
 });
 
 describe("first-party-only and sensitive predicates", () => {
   it("isFirstPartyOnly recognises the spec list", () => {
     for (const cap of FIRST_PARTY_ONLY) {
-      expect(isFirstPartyOnly(cap)).toBe(true);
+      assert.equal(isFirstPartyOnly(cap), true);
     }
-    expect(isFirstPartyOnly("storage:read")).toBe(false);
+    assert.equal(isFirstPartyOnly("storage:read"), false);
   });
 
   it("isSensitive recognises the spec list", () => {
     for (const cap of SENSITIVE) {
-      expect(isSensitive(cap)).toBe(true);
+      assert.equal(isSensitive(cap), true);
     }
-    expect(isSensitive("network:api.github.com")).toBe(false);
-    expect(isSensitive("storage:read")).toBe(false);
+    assert.equal(isSensitive("network:api.github.com"), false);
+    assert.equal(isSensitive("storage:read"), false);
   });
 
   it("system:shell is both first-party-only and sensitive", () => {
-    expect(isFirstPartyOnly("system:shell")).toBe(true);
-    expect(isSensitive("system:shell")).toBe(true);
+    assert.equal(isFirstPartyOnly("system:shell"), true);
+    assert.equal(isSensitive("system:shell"), true);
   });
 });

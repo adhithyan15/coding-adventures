@@ -280,6 +280,24 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // CCR-083 (#15918): synthetic `{`/`}` pair to wrap a bare `do…while`
+    // statement that appears in a substatement body slot (`if`, `else`,
+    // `while`, `for`, `with`, `do`).
+    let synth_lbrace: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "{".to_string();
+        s.type_ = lexer::token::TokenType::LBrace;
+        s.type_name = None;
+        s
+    });
+    let synth_rbrace: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "}".to_string();
+        s.type_ = lexer::token::TokenType::RBrace;
+        s.type_name = None;
+        s
+    });
+
     // #17840 — restore the statement boundaries that newlines provided.
     // Dropping trivia drops newlines too, and on its own that turns
     // `a()⏎b()` into the invalid `a()b()`. The parser's ASI module knows
@@ -522,6 +540,73 @@ pub fn whitespace_only_minify(
                 stack.pop();
             }
         }
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
+    // CCR-085 (#15920): strip leading `"use strict"` and `'use strict'` directive
+    // prologues at script top-level and at the beginning of function bodies.
+    //
+    // Upstream Closure Compiler strips a leading run of `"use strict"` / `'use strict'`
+    // directives at parse time (unless `--emit_use_strict` is passed, in which case
+    // it prepends a single single-quoted `'use strict';`). Non-"use strict" directives
+    // (such as `"use asm"` or `"x"`) survive, and a `"use strict"` that follows any
+    // other statement is kept.
+    {
+        let partners = bracket_partners(&kept);
+        let mut drops: Vec<usize> = Vec::new();
+
+        // 1. Script top-level prologue (starting at index 0).
+        let mut i = 0;
+        while i < kept.len() {
+            let t = kept[i];
+            if is_string_literal(t) && t.value == "use strict" {
+                if i + 1 < kept.len() && is_structural_punct(kept[i + 1], ";") {
+                    drops.push(i);
+                    drops.push(i + 1);
+                    i += 2;
+                } else if i + 1 == kept.len() {
+                    drops.push(i);
+                    i += 1;
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        // 2. Function body prologues (starting right after `{` where `{` is a function body).
+        for brace_idx in 0..kept.len() {
+            if is_structural_punct(kept[brace_idx], "{")
+                && is_function_body_open(&kept, &partners, brace_idx)
+            {
+                let mut j = brace_idx + 1;
+                while j < kept.len() {
+                    let t = kept[j];
+                    if is_string_literal(t) && t.value == "use strict" {
+                        if j + 1 < kept.len() && is_structural_punct(kept[j + 1], ";") {
+                            drops.push(j);
+                            drops.push(j + 1);
+                            j += 2;
+                        } else if j + 1 == kept.len()
+                            || kept.get(j + 1).is_some_and(|next| is_structural_punct(next, "}"))
+                        {
+                            drops.push(j);
+                            j += 1;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        drops.sort_unstable();
+        drops.dedup();
         for &drop_idx in drops.iter().rev() {
             kept.remove(drop_idx);
         }
@@ -2493,6 +2578,96 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- CCR-083 (#15918): do-while in substatement body slot is braced ----
+    // At WHITESPACE_ONLY, when a `do…while` is the body of `if`, `else`,
+    // `while`, `for`, `with` or `do`, upstream wraps it in braces:
+    //   if(c)do a();while(0)  →  if(c){do a();while(0)};
+    //   while(c)do a();while(0)  →  while(c){do a();while(0)};
+    //   for(;;)do a();while(0)  →  for(;;){do a();while(0)};
+    //   with(o)do a();while(0)  →  with(o){do a();while(0)};
+    //   if(c)a();else do b();while(0)  →  if(c)a();else{do b();while(0)};
+    //   do do a();while(1);while(0)  →  do{do a();while(1)}while(0);
+    //
+    // A `do…while` at top-level/statement position or under a label (`lbl:`)
+    // stays bare.
+    if let (Some(lb), Some(rb)) = (synth_lbrace.as_ref(), synth_rbrace.as_ref()) {
+        for _ in 0..8 {
+            let partners = bracket_partners(&kept);
+            let in_member_list = member_list_positions(&kept);
+            let mut found_wrap: Option<(usize, usize, Option<usize>)> = None;
+
+            for i in 0..kept.len() {
+                let t = kept[i];
+                if !is_word_like(t)
+                    || t.value != "do"
+                    || in_member_list[i]
+                    || (i > 0 && matches!(kept[i - 1].value.as_str(), "." | "?."))
+                {
+                    continue;
+                }
+                if i == 0 {
+                    continue;
+                }
+                let prev = kept[i - 1];
+                let in_body_slot = if is_structural_punct(prev, ")") {
+                    let open_paren = partners[i - 1];
+                    open_paren > 0
+                        && open_paren < kept.len()
+                        && {
+                            let head_kw = kept[open_paren - 1];
+                            is_word_like(head_kw)
+                                && !in_member_list[open_paren - 1]
+                                && !(open_paren >= 2
+                                    && matches!(kept[open_paren - 2].value.as_str(), "." | "?."))
+                                && matches!(
+                                    head_kw.value.as_str(),
+                                    "if" | "while" | "for" | "with"
+                                )
+                        }
+                } else {
+                    is_word_like(prev)
+                        && matches!(prev.value.as_str(), "else" | "do")
+                        && !in_member_list[i - 1]
+                        && !(i >= 2 && matches!(kept[i - 2].value.as_str(), "." | "?."))
+                };
+
+                if in_body_slot {
+                    let body_end = find_statement_end(&kept, &partners, &in_member_list, i + 1);
+                    if body_end < kept.len()
+                        && is_word_like(kept[body_end])
+                        && kept[body_end].value == "while"
+                        && body_end + 1 < kept.len()
+                        && is_structural_punct(kept[body_end + 1], "(")
+                    {
+                        let cond_close = partners[body_end + 1];
+                        if cond_close < kept.len() {
+                            let semi_idx = if cond_close + 1 < kept.len()
+                                && is_structural_punct(kept[cond_close + 1], ";")
+                            {
+                                Some(cond_close + 1)
+                            } else {
+                                None
+                            };
+                            found_wrap = Some((i, cond_close, semi_idx));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if let Some((do_idx, cond_close, semi_idx)) = found_wrap {
+                if let Some(s) = semi_idx {
+                    kept[s] = rb;
+                } else {
+                    kept.insert(cond_close + 1, rb);
+                }
+                kept.insert(do_idx, lb);
+            } else {
+                break;
+            }
+        }
+    }
+
     // ---- gap-067 + CCR-087: labeled single-statement block flatten -
     // A labeled statement whose body is a block holding ONE statement
     // drops the braces. Upstream prints a label's body through
@@ -3243,6 +3418,9 @@ pub fn whitespace_only_minify(
     // by position in `kept`, which the emit loop below never mutates. See
     // `throw_terminators`.
     let throw_terminator = throw_terminators(&kept);
+    // CCR-083 (#15918): which `while` tokens close a `do…while`? Indexed by
+    // position in `kept`.
+    let do_while_tail = do_while_tails(&kept);
 
     while idx < kept.len() {
         let tok = kept[idx];
@@ -4075,7 +4253,7 @@ pub fn whitespace_only_minify(
             at_stmt_boundary = false;
         } else if matches!(val, "if" | "while" | "for")
             && !in_member_list[idx]
-            && opens_control_flow_head(&kept, idx, prev_before_this_emit)
+            && opens_control_flow_head(&kept, idx, prev_before_this_emit, &do_while_tail)
         {
             // The next `(` is a control-flow head.
             next_paren_is_control_flow_head = true;
@@ -6290,6 +6468,41 @@ fn bracket_partners(kept: &[&lexer::token::Token]) -> Vec<usize> {
     partners
 }
 
+/// CCR-085 (#15920): returns true if `{` at `brace_idx` opens a function,
+/// method, accessor, constructor, or arrow function body.
+fn is_function_body_open(
+    kept: &[&lexer::token::Token],
+    partners: &[usize],
+    brace_idx: usize,
+) -> bool {
+    if brace_idx == 0 {
+        return false;
+    }
+    let prev = kept[brace_idx - 1];
+    if is_structural_punct(prev, "=>") {
+        return true;
+    }
+    if is_structural_punct(prev, ")") {
+        let paren_close = brace_idx - 1;
+        let paren_open = partners[paren_close];
+        if paren_open == usize::MAX || paren_open == 0 {
+            return false;
+        }
+        let before_paren = paren_open - 1;
+        let kw = kept[before_paren];
+        if is_word_like(kw) {
+            let val = kw.value.as_str();
+            let is_prop = before_paren > 0
+                && matches!(kept[before_paren - 1].value.as_str(), "." | "?.");
+            if !is_prop && matches!(val, "if" | "while" | "for" | "switch" | "with" | "catch") {
+                return false;
+            }
+        }
+        return true;
+    }
+    false
+}
+
 fn is_async_function_or_method_header(
     kept: &[&lexer::token::Token],
     partners: &[usize],
@@ -6842,6 +7055,169 @@ fn is_with_body(kept: &[&lexer::token::Token], kept_open_paren: &[usize], idx: u
     !after_member_dot
 }
 
+/// Find the token index right after the end of the statement starting at `i`.
+/// (CCR-083, #15918)
+fn find_statement_end(
+    kept: &[&lexer::token::Token],
+    partners: &[usize],
+    in_member_list: &[bool],
+    i: usize,
+) -> usize {
+    if i >= kept.len() {
+        return kept.len();
+    }
+    let t = kept[i];
+    if is_structural_punct(t, "{") {
+        let close = partners[i];
+        if close < kept.len() {
+            return close + 1;
+        }
+        return kept.len();
+    }
+    if is_structural_punct(t, ";") {
+        return i + 1;
+    }
+    // Labeled statement: `ident : stmt`
+    if is_plain_identifier(t)
+        && i + 1 < kept.len()
+        && is_structural_punct(kept[i + 1], ":")
+    {
+        return find_statement_end(kept, partners, in_member_list, i + 2);
+    }
+    if is_word_like(t)
+        && !in_member_list[i]
+        && !(i > 0 && matches!(kept[i - 1].value.as_str(), "." | "?."))
+    {
+        match t.value.as_str() {
+            "if" | "with" => {
+                if i + 1 < kept.len() && is_structural_punct(kept[i + 1], "(") {
+                    let head_close = partners[i + 1];
+                    if head_close < kept.len() {
+                        let cons_end =
+                            find_statement_end(kept, partners, in_member_list, head_close + 1);
+                        if cons_end < kept.len()
+                            && is_word_like(kept[cons_end])
+                            && kept[cons_end].value == "else"
+                            && !in_member_list[cons_end]
+                            && !(cons_end > 0
+                                && matches!(kept[cons_end - 1].value.as_str(), "." | "?."))
+                        {
+                            return find_statement_end(
+                                kept,
+                                partners,
+                                in_member_list,
+                                cons_end + 1,
+                            );
+                        }
+                        return cons_end;
+                    }
+                }
+            }
+            "while" | "for" => {
+                let paren_pos = if t.value == "for"
+                    && i + 1 < kept.len()
+                    && !is_string_literal(kept[i + 1])
+                    && kept[i + 1].value == "await"
+                {
+                    i + 2
+                } else {
+                    i + 1
+                };
+                if paren_pos < kept.len() && is_structural_punct(kept[paren_pos], "(") {
+                    let head_close = partners[paren_pos];
+                    if head_close < kept.len() {
+                        return find_statement_end(
+                            kept,
+                            partners,
+                            in_member_list,
+                            head_close + 1,
+                        );
+                    }
+                }
+            }
+            "do" => {
+                let body_end =
+                    find_statement_end(kept, partners, in_member_list, i + 1);
+                if body_end < kept.len()
+                    && is_word_like(kept[body_end])
+                    && kept[body_end].value == "while"
+                    && body_end + 1 < kept.len()
+                    && is_structural_punct(kept[body_end + 1], "(")
+                {
+                    let cond_close = partners[body_end + 1];
+                    if cond_close < kept.len() {
+                        let after_cond = cond_close + 1;
+                        if after_cond < kept.len()
+                            && is_structural_punct(kept[after_cond], ";")
+                        {
+                            return after_cond + 1;
+                        }
+                        return after_cond;
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    // Other statements: advance until top-level `;` or unmatched closing bracket.
+    let mut j = i;
+    while j < kept.len() {
+        let tok = kept[j];
+        if is_structural_punct(tok, "(")
+            || is_structural_punct(tok, "[")
+            || is_structural_punct(tok, "{")
+        {
+            let close = partners[j];
+            if close < kept.len() {
+                j = close + 1;
+            } else {
+                j += 1;
+            }
+        } else if is_structural_punct(tok, ";") {
+            return j + 1;
+        } else if is_structural_punct(tok, ")")
+            || is_structural_punct(tok, "]")
+            || is_structural_punct(tok, "}")
+        {
+            return j;
+        } else {
+            j += 1;
+        }
+    }
+    j
+}
+
+/// For each token in `kept`, is it the `while` keyword that closes a `do…while`?
+/// (CCR-083, #15918)
+///
+/// In JS (`DoWhileStatement`), the `while (cond);` tail closes the loop and has
+/// NO following statement body. Marking it prevents the emit loop from treating
+/// this `while` as a new while-loop head (`opens_control_flow_head`), which
+/// would spuriously set `body_position_next` and prevent Rule A from dropping a
+/// redundant `;` before `}`.
+fn do_while_tails(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    let mut out = vec![false; kept.len()];
+    let partners = bracket_partners(kept);
+    let in_member_list = member_list_positions(kept);
+    for i in 0..kept.len() {
+        let t = kept[i];
+        if is_word_like(t)
+            && t.value == "do"
+            && !in_member_list[i]
+            && !(i > 0 && matches!(kept[i - 1].value.as_str(), "." | "?."))
+        {
+            let body_end = find_statement_end(kept, &partners, &in_member_list, i + 1);
+            if body_end < kept.len()
+                && is_word_like(kept[body_end])
+                && kept[body_end].value == "while"
+            {
+                out[body_end] = true;
+            }
+        }
+    }
+    out
+}
+
 /// #17883: does the keyword at `idx` (`if`/`while`/`for`) really open a
 /// control-flow head?
 ///
@@ -6861,8 +7237,12 @@ fn opens_control_flow_head(
     kept: &[&lexer::token::Token],
     idx: usize,
     prev: Option<&lexer::token::Token>,
+    do_while_tail: &[bool],
 ) -> bool {
     let tok = kept[idx];
+    if tok.value == "while" && do_while_tail.get(idx).copied().unwrap_or(false) {
+        return false;
+    }
     if is_string_literal(tok) || prev.is_some_and(|p| matches!(p.value.as_str(), "." | "?.")) {
         return false;
     }
@@ -10046,6 +10426,36 @@ mod tests {
         assert_eq!(minify(";\"a\";f();"), "\"a\";f();");
     }
 
+    /// CCR-085 (#15920): strips leading "use strict" and 'use strict' directive
+    /// prologues in scripts and function bodies.
+    #[test]
+    fn ccr085_strips_leading_use_strict_in_program_and_function() {
+        // Top-level stripped
+        assert_eq!(minify("\"use strict\";f();"), "f();");
+        assert_eq!(minify("'use strict';f();"), "f();");
+        assert_eq!(minify("\"use strict\";\"use strict\";f();"), "f();");
+        assert_eq!(minify("\"use strict\";"), "");
+        assert_eq!(minify("'use strict'"), "");
+
+        // Function bodies stripped
+        assert_eq!(minify("function g(){'use strict';f()}"), "function g(){f()};");
+        assert_eq!(minify("function g(){\"use strict\";return 1}"), "function g(){return 1};");
+        assert_eq!(minify("var f=()=>{'use strict';x()};"), "var f=()=>{x()};");
+        assert_eq!(minify("class C{m(){'use strict';x()}}"), "class C{m(){x()}};");
+        assert_eq!(minify("class C{constructor(){'use strict'}}"), "class C{constructor(){}};");
+        assert_eq!(minify("var o={m(){'use strict';x()}};"), "var o={m(){x()}};");
+
+        // Non-use-strict directives survive
+        assert_eq!(minify("\"use asm\";\"use strict\";f();"), "\"use asm\";\"use strict\";f();");
+        assert_eq!(minify("\"use strict\";\"use asm\";f();"), "\"use asm\";f();");
+        assert_eq!(minify("\"x\";f();"), "\"x\";f();");
+        assert_eq!(minify("\"use strict\",1;"), "\"use strict\",1;");
+
+        // Blocks that are not function bodies keep "use strict"
+        assert_eq!(minify("{\"use strict\";var x=1;}"), "{\"use strict\";var x=1};");
+        assert_eq!(minify("if(a){\"use strict\";}"), "if(a)\"use strict\";");
+    }
+
     #[test]
     fn gap088_for_header_separators_kept() {
         assert_eq!(minify("for(;;)x();"), "for(;;)x();");
@@ -10413,6 +10823,49 @@ mod tests {
     // `do{S}while(cond)` with a single un-terminated body statement
     // flattens to `do S;while(cond)`. The do-while sibling of
     // gap-074/079/080/076.
+
+    // ---- CCR-083 (#15918): do-while in substatement body slot is braced ----
+    //
+    // Upstream wraps a `do…while` in braces when it appears in a substatement
+    // body slot (`if`, `else`, `while`, `for`, `for-in`, `for-of`, `with`, `do`).
+    // Statement-position and labeled `do…while` stay bare.
+
+    /// CCR-083: all seven substatement positions wrap bare `do…while` in braces.
+    #[test]
+    fn ccr083_substatement_do_while_braced() {
+        assert_eq!(minify("if(c)do a();while(0)"), "if(c){do a();while(0)};");
+        assert_eq!(minify("if(c){do a();while(0)}"), "if(c){do a();while(0)};");
+        assert_eq!(minify("while(c)do a();while(0)"), "while(c){do a();while(0)};");
+        assert_eq!(minify("for(;;)do a();while(0)"), "for(;;){do a();while(0)};");
+        assert_eq!(minify("for(k in o)do a();while(0)"), "for(k in o){do a();while(0)};");
+        assert_eq!(minify("for(k of o)do a();while(0)"), "for(k of o){do a();while(0)};");
+        assert_eq!(minify("with(o)do a();while(0)"), "with(o){do a();while(0)};");
+        assert_eq!(
+            minify("if(c)a();else do b();while(0)"),
+            "if(c)a();else{do b();while(0)};"
+        );
+        assert_eq!(
+            minify("do do a();while(1);while(0)"),
+            "do{do a();while(1)}while(0);"
+        );
+        assert_eq!(
+            minify("function f(){if(c)do a();while(0)}"),
+            "function f(){if(c){do a();while(0)}};"
+        );
+    }
+
+    /// CCR-083 non-cases: statement position and labeled do-while stay bare.
+    #[test]
+    fn ccr083_statement_and_label_do_while_bare() {
+        assert_eq!(minify("do a();while(0)"), "do a();while(0);");
+        assert_eq!(minify("lbl:do a();while(0)"), "lbl:do a();while(0);");
+    }
+
+    /// CCR-083: a block ending in `do…while` drops the redundant `;` before `}`.
+    #[test]
+    fn ccr083_do_while_block_drops_semi_before_brace() {
+        assert_eq!(minify("{do a();while(0);}"), "{do a();while(0)};");
+    }
 
     /// The target case: `do{x()}while(a);` -> `do x();while(a);`.
     #[test]

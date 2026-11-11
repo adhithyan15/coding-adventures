@@ -1254,6 +1254,7 @@ members = [
     "zwave-command-classes",
     "capability-cage",
     "capability-os-sandbox",
+    "capability-runtime-conformance",
     "iir-to-jvm-class-file",
     "semantic-ir",
     "twig-to-semantic-ir",

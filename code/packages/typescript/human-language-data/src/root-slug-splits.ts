@@ -45,7 +45,7 @@
 
 import { resolve } from "node:path";
 import { rootSlugs } from "./cousins.js";
-import { defaultCurriculumRoot, loadLessons } from "./loader.js";
+import { defaultCurriculumRoot, forEachTrackLessons, forEachTrackLessonsAsync } from "./loader.js";
 import { readLedgerFile } from "./shard.js";
 
 export interface RootTagVocabulary {
@@ -165,9 +165,26 @@ function canonicalTag(tag: string, vocabulary: RootTagVocabulary): string {
 /** Every distinct `roots:` slug in the corpus, sorted. */
 export function liveRootSlugs(root = defaultCurriculumRoot()): string[] {
   const seen = new Set<string>();
-  for (const lesson of loadLessons(root)) {
-    for (const slug of rootSlugs(lesson)) seen.add(slug);
-  }
+  // Keep only the small set of join keys, not the parsed bodies of every
+  // lesson. The visitor uses the same guarded loader as loadLessons and the
+  // same rootSlugs interpretation as the cousins joiner; each track's parsed
+  // objects can be reclaimed before the next track is opened.
+  forEachTrackLessons(root, (_language, lessons) => {
+    for (const lesson of lessons) {
+      for (const slug of rootSlugs(lesson)) seen.add(slug);
+    }
+  });
+  return [...seen].sort(compareCodeUnits);
+}
+
+/** Same guarded track walk, with bounded in-flight source reads inside a track. */
+export async function liveRootSlugsAsync(root = defaultCurriculumRoot()): Promise<string[]> {
+  const seen = new Set<string>();
+  await forEachTrackLessonsAsync(root, (_language, lessons) => {
+    for (const lesson of lessons) {
+      for (const slug of rootSlugs(lesson)) seen.add(slug);
+    }
+  });
   return [...seen].sort(compareCodeUnits);
 }
 
@@ -194,7 +211,16 @@ export function liveRootSlugs(root = defaultCurriculumRoot()): string[] {
  */
 export function findRootSlugSplits(root = defaultCurriculumRoot()): RootSlugSplit[] {
   const vocabulary = loadRootTagVocabulary(root);
-  const slugs = liveRootSlugs(root);
+  return splitRootSlugs(liveRootSlugs(root), vocabulary);
+}
+
+/** CLI route: the same split calculation over a bounded async source walk. */
+export async function findRootSlugSplitsAsync(root = defaultCurriculumRoot()): Promise<RootSlugSplit[]> {
+  const vocabulary = loadRootTagVocabulary(root);
+  return splitRootSlugs(await liveRootSlugsAsync(root), vocabulary);
+}
+
+function splitRootSlugs(slugs: readonly string[], vocabulary: RootTagVocabulary): RootSlugSplit[] {
   const parsed = slugs.map((slug) => parseRootSlug(slug, vocabulary));
 
   const byKey = new Map<string, string[]>();

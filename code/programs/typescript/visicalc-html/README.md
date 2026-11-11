@@ -62,7 +62,7 @@ it through a C ABI.)
 > virtualized window math uses exact per-column / per-row cumulative offsets (a
 > prefix-sum over the bounded extent), not a uniform-cell assumption.
 > Headless proof: `node scripts/verify-infinite.mjs` replays the exact windowing
-> math against the committed WASM bundle and asserts the render stays bounded,
+> math against the built WASM bundle and asserts the render stays bounded,
 > the formatted display strings are correct, a formula 1000 rows down is
 > reachable, the gaps are empty (sparse), an edit's diff reaches the far cell
 > that depends on it, a save → mutate → load round trip restores the
@@ -162,7 +162,10 @@ that own *no* spreadsheet logic:
    loader `vendor/spreadsheet-engine-wasm.js` embeds the `.wasm` as
    base64 and, once instantiated, exposes `window.SpreadsheetEngine`
    (same API as the TypeScript engine). `bash scripts/bundle-wasm-engine.sh`
-   rebuilds it from `spreadsheet-wasm`'s committed `pkg/spreadsheet_engine.wasm`.
+   rebuilds it from `spreadsheet-wasm`'s built `pkg/spreadsheet_engine.wasm`.
+   The bundle is **generated and not committed** (BUILD-001): run
+   `bash ../../../scripts/build-demo-wasm.sh visicalc` after a clone before
+   opening the page.
    The Web Component demo loads this same bundle.
 
 The inline `<script>` in `index.html` is the glue: it awaits the WASM
@@ -190,19 +193,26 @@ Any modern browser works — no module loader, no server.
 ## Keeping the generated pieces current
 
 The page carries generated code so it opens from disk, and every piece is
-written by a script, never pasted:
+written by a script, never pasted. The engine pieces are **built, not
+committed** (BUILD-001, `code/specs/BUILD-001-generated-wasm-artifacts.md`):
 
 ```bash
-bash ../../../packages/rust/spreadsheet-wasm/build-wasm.sh  # the engine .wasm (+ its .inputs stamp)
-bash scripts/bundle-wasm-engine.sh                          # vendor/ engine bundle from that .wasm
+# After a clone, or when the engine or loader changed (one command):
+bash ../../../scripts/build-demo-wasm.sh visicalc
+
+# ...which is these two steps:
+bash ../../../packages/rust/spreadsheet-wasm/build-wasm.sh  # the engine .wasm (pkg/, not committed)
+bash scripts/bundle-wasm-engine.sh                          # vendor/ engine bundle from that .wasm (not committed)
+
+# Committed, and checked in CI:
 bash scripts/build.sh                                       # the Mosaic <template>s in index.html
 ```
 
-Each has a `--check` mode, and `code/programs/mosaic/visicalc`'s
-`web_demos_are_current` tests run them (with `verify-infinite.mjs`) whenever
-`mosaic-compile` or `spreadsheet-wasm` changes, so a stale page fails CI
-instead of shipping. `spreadsheet-wasm`'s own CI checks its `.wasm` against
-the sources it is built from.
+`scripts/build.sh` has a `--check` mode, and `code/programs/mosaic/visicalc`'s
+`web_demos_are_current` tests run it, build the engine bundle, and run
+`verify-infinite.mjs` against it whenever `mosaic-compile` or
+`spreadsheet-wasm` changes. There is no staleness check for the engine because
+nothing is stored: CI builds it fresh.
 
 ## Where this fits in the cross-backend demo plan
 

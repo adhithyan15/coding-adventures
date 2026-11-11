@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased]
+
+### Security
+
+- CWE-789: `decode_all` caps its preallocation at the number of input bits instead of the caller-supplied `count`.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

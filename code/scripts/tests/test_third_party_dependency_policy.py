@@ -344,7 +344,7 @@ cmd = "npx vitest run"
 class PythonToolTests(unittest.TestCase):
     def test_collects_pip_pipx_and_uv_tool_packages(self) -> None:
         commands = """
-python3 -m pip install --quiet jsonschema==4.26.0 fonttools
+python3 -m pip install --quiet jsonschema==4.26.0 fonttools==4.68.0
 pip install --no-deps -e ../matrix -e . build
 pip install -e ".[dev]" > /dev/null 2>&1
 uv pip install --system pytest pytest-cov

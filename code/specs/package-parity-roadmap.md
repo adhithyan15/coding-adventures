@@ -20857,3 +20857,124 @@ intervening TypeScript LZ77 test migration is exact-path-disjoint from the six
 PR paths and touches no workflow. Treat the resulting head as a twenty-fifth
 reconciliation with fresh local validation, independent review, normal push,
 and an entirely new hosted rollup.
+
+#### Test-trigger fixture selector merge receipt and Rust crate-closure snapshot selection
+
+Exact independently reviewed head
+`c4f8d99c8fe1b49cd216b2d2e1c7b6024a675be7` completed all 42 hosted checks
+acceptably: 30 succeeded, 11 were expected skips, and the CodeQL aggregate was
+neutral. GitHub squash-merged PR #18899 at `2026-11-05T01:59:10Z` as
+`11290878781e7e1c7881476572a487e9f0a0c9f6`. GitHub's timeline contains no
+auto-merge-enable event, so this receipt is recorded as a manual squash merge
+without claiming guarded auto-merge. The merge is an ancestor of exact current
+`origin/main` `57bfc809e3eb440317c5ae59552c74b2ae64b980`; GitHub deleted the remote
+branch and the clean completed worktree and local branch were removed safely.
+
+Reprioritization selects
+`build-tool-rust-cargo-trigger-crate-closure-snapshot-parity` on branch
+`codex/rust-cargo-trigger-crate-closure-snapshot` from that exact current-main
+revision. Its neutral strict Cargo manifest snapshot prerequisite is merged,
+and completing the pure resolver directly unlocks the exact-identity native
+adapter and then CLI integration. All 22 live open PRs are exact-path-disjoint
+from the planned Rust build-tool source, tests, README, changelog, state,
+roadmap, and conformance-spec scope.
+
+The selected slice accepts only immutable caller-supplied snapshots. It
+lexically validates repository-relative package and crate identities, resolves
+development and root-patch trigger paths, follows normal and build links
+through nested or orphan crates, attributes nested crates to their containing
+package, and accepts an otherwise unowned crate only when the immutable
+exemption snapshot names it exactly. It fails closed on duplicate identities,
+missing crates, unsafe paths, unsupported Cargo-config redirects, dependency
+cycles, and a chain deeper than 16 crates. Memoized closure evaluation must
+make shared diamonds deterministic without repeated expansion. Results are
+sorted unique trigger relations with self-relations removed.
+
+This tranche grants no native authority: it must not read files, resolve host
+paths or symlinks, inspect Cargo configuration or the exemption ledger on
+disk, consult environment state, run a process, access the network, execute a
+package, or integrate the CLI. Those exact-identity and integration concerns
+remain with the separately recorded native-adapter and CLI owners.
+
+#### Rust crate-closure snapshot local completion and review receipt
+
+Exact local implementation head
+`3de7922caf26a633787c7c4be16188008c1b15be` completes the authority-free
+resolver. It uses a segment trie for deepest package ownership and compact
+package-ID bitsets for memoized closure membership, preserves exact 16/17-depth
+and cycle semantics, makes validation and traversal input-order-independent,
+rejects noncanonical reduced identities, and fails before materializing the
+16,385th unique trigger relation's strings or output. The fixed ceilings are
+4,096 packages,
+16,384 crates and references, 4,096 exemptions, and 16,384 output relations.
+
+The full Rust build-tool suite passes with 271 tests, together with `cargo
+check`, Clippy with warnings denied, Rust formatting, and diff hygiene. Three
+independent exact-head reviews—correctness, security, and adversarial—issued
+SHIP after the initial relation-amplification, closure-memory, owner-lookup,
+validation-order, and reduced drive-prefix findings were closed. The worktree
+remains clean and the tranche retains no filesystem, environment, process,
+network, symlink, package-execution, or CLI authority.
+
+Draft PR #19107 was opened at `2026-11-10T06:28:55Z` by normal first push
+from exact independently reviewed head
+`28084f0362df7a6ee87a82db65825a99d7b4e8aa` against exact `main`
+`57bfc809e3eb440317c5ae59552c74b2ae64b980`. GitHub reports the draft
+mergeable. The draft exists to obtain its durable PR identity; this
+lifecycle-only receipt requires independent delta review before readiness.
+Guarded auto-merge remains disabled until every hosted check on one exact
+reviewed head is terminal acceptable and GitHub still reports the PR
+mergeable.
+
+Protected main advanced from
+`57bfc809e3eb440317c5ae59552c74b2ae64b980` to
+`cfd0a6c64a9a0025f572e9d94be59e62e050cf3a` while exact reviewed PR head
+`44a6b307283905cb87283c1ecc697fc58f37a029` had only its CI gate still
+queued. The eight intervening commits are exact-path-disjoint from the parity
+tranche and touch no workflow. Merge current main normally and conflict-free
+as `a0bd2928ae4f520653d825bde4a92fc311877183`. The full 271-test Rust
+build-tool suite, `cargo check`, Clippy with warnings denied, Rust formatting,
+strict state parsing, and diff hygiene pass after integration. Treat the
+result as a fresh exact-head review and hosted-CI rollup; guarded auto-merge
+remains disabled.
+
+Before that reconciled head could be published, protected main advanced again
+by two Warrant and Mermaid commits to
+`0470e0947e6f46ca0751b0dbe3b0d6de929d151e`. Both commits are exact-path-
+disjoint from the parity tranche and touch no workflow. Merge that current
+main normally and conflict-free as
+`ef9184d288890108164f6e2c5c5280fdc78063d0`. The same complete local
+validation remains green. This final reconciliation again requires fresh
+exact-head review and hosted CI before guarded auto-merge.
+
+Protected main advanced once more while only the exact-head CI gate remained
+queued, from `0470e0947e6f46ca0751b0dbe3b0d6de929d151e` to
+`c097efa5dbc604efb3fddb6d7f11b4559ffa81d1`. The intervening ALGOL
+floor-root-sum commit is exact-path-disjoint from the parity tranche and
+touches no workflow. Merge that main normally and conflict-free as
+`02329e686f1e1928ab1c04699eeca479880628f1`; the complete local validation
+remains green. Require another exact-head review and hosted-CI rollup before
+guarded auto-merge.
+
+Protected main then advanced by seven commits to
+`ae4512d04068145cf305a98b862f46c326a49c13` while exact reviewed head
+`6ae41ad97d835d1c804b3ea09153368faf7335d0` had no failures and only its
+Ubuntu and macOS builds remained queued. The delta is exact-path-disjoint from
+the parity tranche, but it adds assumption-catalogue commands to the repo-wide
+CI contract and changes unrelated release/VisiCalc workflows. Merge current
+main normally and conflict-free as
+`aa739f84fb13536347be59a1ca5868cd332e5d77`. The complete Rust validation,
+the newly required assumption-catalogue validation and generator check, and
+all 71 catalogue tests pass locally. Require fresh exact-head review and
+hosted CI; guarded auto-merge remains disabled.
+
+Protected main advanced again from
+`ae4512d04068145cf305a98b862f46c326a49c13` to
+`b9528b15054c4686a73e15880a1c3548f1b00524` while exact reviewed head
+`6517a9d65581a91e85427d3a36912a9c02e6fb92` remained mergeable without
+failures. The intervening dependency-free TypeScript SHA-512 test migration
+is exact-path-disjoint from the parity tranche and touches no workflow. Merge
+current main normally and conflict-free as
+`e665a342bd7979331e78f1c3bd5fa8bd741c3aa4`; complete Rust and repo-wide
+catalogue validation remains green. Require fresh exact-head review and hosted
+CI before guarded auto-merge.

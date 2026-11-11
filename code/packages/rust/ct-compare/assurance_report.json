@@ -511,7 +511,7 @@
   "closure": [
     "rust/ct-compare"
   ],
-  "commit": "83b719f9e66",
+  "commit": "838ab7d47e2",
   "exemptions": [
     {
       "approved": false,
@@ -607,8 +607,7 @@
         "bench/ct_eq/256_bytes",
         "bench/ct_eq/4096_bytes",
         "bench/ct_eq_fixed/fixed_widths",
-        "bench/ct_eq_u64/all_classes",
-        "bench/ct_select_bytes/branchless_choice"
+        "bench/ct_eq_u64/all_classes"
       ],
       "id": "EXEMPT-CWE-208-GATE-LEVEL",
       "kind": "weakness-floor",
@@ -773,7 +772,6 @@
         "bench/ct_eq/4096_bytes",
         "bench/ct_eq_fixed/fixed_widths",
         "bench/ct_eq_u64/all_classes",
-        "bench/ct_select_bytes/branchless_choice",
         "warrant/ct_compare/proof/eq/steps-bound",
         "warrant/ct_compare/proof/eq_fixed/steps-bound",
         "warrant/ct_compare/proof/eq_u64/steps-bound",
@@ -831,8 +829,7 @@
         "bench/ct_eq/256_bytes",
         "bench/ct_eq/4096_bytes",
         "bench/ct_eq_fixed/fixed_widths",
-        "bench/ct_eq_u64/all_classes",
-        "bench/ct_select_bytes/branchless_choice"
+        "bench/ct_eq_u64/all_classes"
       ],
       "name": "Observable Timing Discrepancy",
       "reason": "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label bounded(128) and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)",

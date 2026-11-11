@@ -59,6 +59,7 @@ BOOK_CHAPTER_IDENTITY = re.compile(r"^([a-z][a-z0-9-]*)/(\d{4})$")
 SAFE_BOOK_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WINDOWS_RESERVED = re.compile(r"^(con|prn|aux|nul|com[1-9]|lpt[1-9])$", re.IGNORECASE)
 MODALITY_OWNER_NAME = re.compile(r"^(?:_meta|[A-Za-z0-9][A-Za-z0-9-]*)\.json$")
+CURRICULUM_MEMBERSHIP_OWNER_NAME = re.compile(r"^(?:_meta|[A-Za-z0-9][A-Za-z0-9_-]*)\.json$")
 NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
 DIRECTORY = getattr(os, "O_DIRECTORY", 0)
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
@@ -606,7 +607,7 @@ def _read_pinned_regular_batch(directory_handle, names, read_one):
         return {name: future.result() for name, future in zip(names, futures)}
 
 
-def read_track_regular_texts(root, track, directory_parts, names):
+def read_track_regular_texts(root, track, directory_parts, names, *, owner_kind="modality"):
     """Read one exact direct-owner set relative to a pinned parent handle.
 
     The directory remains pinned across listing and all at-most-16 concurrent
@@ -626,7 +627,13 @@ def read_track_regular_texts(root, track, directory_parts, names):
             raise ValueError(f"unsafe modality owner directory component: {part!r}")
     if not isinstance(names, (tuple, list)) or not names:
         raise ValueError("modality owner names must be nonempty")
-    if any(not isinstance(name, str) or not MODALITY_OWNER_NAME.fullmatch(name) for name in names):
+    if owner_kind == "modality":
+        owner_name = MODALITY_OWNER_NAME
+    elif owner_kind == "curriculum-membership":
+        owner_name = CURRICULUM_MEMBERSHIP_OWNER_NAME
+    else:
+        raise ValueError("invalid direct-owner kind")
+    if any(not isinstance(name, str) or not owner_name.fullmatch(name) for name in names):
         raise ValueError("unsafe modality owner filename")
     if len(names) != len(set(names)) or len(names) != len({name.lower() for name in names}):
         raise ValueError("duplicate or case-folded modality owner filename")

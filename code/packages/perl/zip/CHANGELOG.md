@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- BUILD_windows passes the LZSS path with `prove -I` (MSYS perl splits PERL5LIB on `:`, so the `;`-joined value was ignored and LZSS could not be located).
+
 ## [0.2.0] - 2026-08-13
 
 ### Added

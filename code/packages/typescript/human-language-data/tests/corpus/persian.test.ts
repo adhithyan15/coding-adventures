@@ -1,5 +1,11 @@
 import { expect, it } from "vitest";
-import { loadAssessmentPolicy, loadChapterPolicy, loadEverything, loadTrackLessons } from "../../src/loader.js";
+import {
+  loadAssessmentPolicy,
+  loadChapterPolicy,
+  loadCurriculumSpine,
+  loadTrackLanguageCurriculum,
+  loadTrackLessons,
+} from "../../src/loader.js";
 import { buildRootLedger } from "../../src/root-ledger.js";
 import { measureWritingStages } from "../../src/writing-stages.js";
 import {
@@ -63,13 +69,14 @@ it("pins Persian lesson-content budgets", () =>
   }));
 
 it("pins Persian's writing ladder IN ORDER, pre-A1 through A1", () => {
-  const { lessons, curricula, spine } = loadEverything();
+  const curriculum = loadTrackLanguageCurriculum("persian");
+  expect(curriculum).toBeDefined();
   const report = measureWritingStages(
     loadAssessmentPolicy(),
     ["persian"],
-    lessons,
-    curricula.filter((curriculum) => curriculum.language === "persian"),
-    spine,
+    loadTrackLessons("persian"),
+    [curriculum!],
+    loadCurriculumSpine(),
   );
   const persian = report.tracks[0]!;
 

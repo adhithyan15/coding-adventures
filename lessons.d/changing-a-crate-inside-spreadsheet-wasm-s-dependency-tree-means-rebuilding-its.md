@@ -4,6 +4,10 @@ category: CI & GitHub Actions
 
 # Changing a crate inside spreadsheet-wasm's dependency tree means rebuilding its committed wasm and the VisiCalc bundle
 
+> **Superseded by BUILD-001.** These artifacts are no longer committed and the
+> `--check` staleness gate is gone; nothing needs rebuilding or recommitting.
+> Build locally with `bash code/scripts/build-demo-wasm.sh`. Kept as history.
+
 `spreadsheet-wasm/pkg/spreadsheet_engine.wasm` is a committed build artifact.
 Since #17810, CI runs `build-wasm.sh --check`. That check hashes the source of
 every crate in `cargo tree -p spreadsheet-wasm --target wasm32-unknown-unknown`

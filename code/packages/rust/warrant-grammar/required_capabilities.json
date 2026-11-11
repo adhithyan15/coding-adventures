@@ -2,6 +2,19 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/warrant-grammar",
-  "capabilities": [],
-  "justification": "Pure embedded grammar construction plus bounded in-memory source admission/normalization and original-byte range mapping. No filesystem, network, clock, random, process or thread operations. Significant-layout capture and the guarded parser remain P006b2/b3 work."
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/specs/fixtures/**",
+      "justification": "WX-E pinned vector tables: src/vectors.rs reads one fixture below the fixtures root (code/specs/fixtures) per `vectors` declaration, refusing symlinks and anything over 16 MiB and comparing its SHA-256 with the document's pin before parsing it."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/packages/rust/*/tests/generated/**",
+      "justification": "codegen::verify_regeneration and the gen_evidence drift check read the checked-in generated harness or table copy that a regeneration is compared against."
+    }
+  ],
+  "justification": "Grammar construction, bounded source admission, layout, parser, checker, evaluator and evidence generator are pure in-memory computation. The only OS access is reading files: the pinned vector fixtures of VER04j WX-E (size-capped, symlink-safe, digest-checked, never fetched from the network) and the regeneration target of a drift check. Nothing is written, spawned or connected."
 }

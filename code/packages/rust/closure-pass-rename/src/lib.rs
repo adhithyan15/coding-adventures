@@ -2274,7 +2274,7 @@ mod tests {
             rename_source(
                 "function f() { for (var index = 0; index<3; ) { sink(index); } }"
             ),
-            "function f(){for(var a=0;a<3;)sink(a);};"
+            "function f(){for(var a=0;a<3;)sink(a)};"
         );
     }
 

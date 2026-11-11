@@ -253,6 +253,12 @@ def decode(
 
     for token in tokens:
         if token.length > 0:
+            # A zero offset, or one reaching before the start of the output, is
+            # invalid (corrupt or hostile input). Negative indices would silently
+            # read from the end of the buffer, and too-large ones would raise
+            # IndexError, so stop decoding and return what was produced so far.
+            if token.offset < 1 or token.offset > len(output):
+                break
             # Copy length bytes from position (current_output_length - offset).
             start = len(output) - token.offset
             # Copy byte-by-byte to handle overlapping matches.
@@ -300,7 +306,12 @@ def _deserialise_tokens(data: bytes) -> list[Token]:
     if len(data) < 4:
         return []
 
-    token_count = struct.unpack(">I", data[:4])[0]
+    # Security: the header count is attacker-controlled.  Never loop (or size
+    # anything) from it beyond what the remaining bytes can physically hold:
+    # clamp to (len - 4) // 4 complete tokens.  A header claiming more tokens
+    # than are present is treated as truncated; fewer stops at the claim.
+    claimed = struct.unpack(">I", data[:4])[0]
+    token_count = min(claimed, (len(data) - 4) // 4)
     tokens: list[Token] = []
 
     for i in range(token_count):

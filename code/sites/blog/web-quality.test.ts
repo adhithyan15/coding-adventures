@@ -114,26 +114,19 @@ describe("Forme release web-quality gate", () => {
     });
   });
 
-  it("uses three-sample median performance with conservative accessibility and resources", () => {
+  it("uses five-sample median performance with conservative accessibility and resources", () => {
+    const sample = (performance: number, image: number, script: number, total: number) => ({
+      performance,
+      accessibility: 1,
+      resources: { image, script, total },
+      diagnostics: [],
+    });
     const report = aggregateLighthouseReports(target, [
-      {
-        performance: 0.85,
-        accessibility: 1,
-        resources: { image: 20_000, script: 4_000, total: 120_000 },
-        diagnostics: [],
-      },
-      {
-        performance: 0.97,
-        accessibility: 1,
-        resources: { image: 21_000, script: 3_000, total: 121_000 },
-        diagnostics: [],
-      },
-      {
-        performance: 0.99,
-        accessibility: 1,
-        resources: { image: 19_000, script: 5_000, total: 119_000 },
-        diagnostics: [],
-      },
+      sample(0.85, 20_000, 4_000, 120_000),
+      sample(0.97, 21_000, 3_000, 121_000),
+      sample(0.99, 19_000, 5_000, 119_000),
+      sample(0.98, 18_000, 2_000, 118_000),
+      sample(0.9, 17_000, 1_000, 117_000),
     ]);
 
     expect(report).toEqual({
@@ -143,8 +136,26 @@ describe("Forme release web-quality gate", () => {
         resources: { image: 21_000, script: 5_000, total: 121_000 },
         diagnostics: [],
       },
-      performanceSamples: [0.85, 0.97, 0.99],
+      performanceSamples: [0.85, 0.97, 0.99, 0.98, 0.9],
     });
+  });
+
+  it("tolerates two slow audits but reports every sample when three are slow", () => {
+    const sample = (performance: number) => ({
+      performance,
+      accessibility: 1,
+      resources: { image: 0, script: 0, total: 0 },
+      diagnostics: [],
+    });
+
+    expect(aggregateLighthouseReports(target, [
+      sample(0.92), sample(0.98), sample(0.89), sample(0.98), sample(0.98),
+    ]).aggregate.diagnostics).toEqual([]);
+    expect(aggregateLighthouseReports(target, [
+      sample(0.92), sample(0.89), sample(0.9), sample(0.98), sample(0.98),
+    ]).aggregate.diagnostics).toEqual([
+      "performance median score 0.92 < 0.95 (samples 0.92/0.89/0.9/0.98/0.98)",
+    ]);
   });
 
   it("fails closed across malformed sample sets and every non-performance diagnostic", () => {
@@ -155,16 +166,20 @@ describe("Forme release web-quality gate", () => {
       diagnostics: [],
     } as const;
 
-    expect(() => aggregateLighthouseReports(target, [passing, passing])).toThrow(/exactly 3/);
+    expect(() => aggregateLighthouseReports(target, [passing, passing, passing])).toThrow(/exactly 5/);
     expect(() => aggregateLighthouseReports(target, [
       passing,
       { ...passing, performance: Number.NaN },
+      passing,
+      passing,
       passing,
     ])).toThrow(/finite sample 2 performance/);
 
     const report = aggregateLighthouseReports(target, [
       { ...passing, performance: 0.91 },
       { ...passing, performance: 0.92 },
+      { ...passing, performance: 0.93 },
+      { ...passing, performance: 0.99 },
       {
         ...passing,
         performance: 0.99,
@@ -178,7 +193,7 @@ describe("Forme release web-quality gate", () => {
     ]);
     expect(report.aggregate.diagnostics).toEqual([
       "accessibility score 0.99 < 1",
-      "performance median score 0.92 < 0.95",
+      "performance median score 0.93 < 0.95 (samples 0.91/0.92/0.93/0.99/0.99)",
       "resource image 70000 > 65536 bytes",
     ]);
   });

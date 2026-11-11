@@ -61,7 +61,6 @@
 
 package com.codingadventures.lz77
 
-import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -196,27 +195,42 @@ object LZ77 {
      * - Always append [Token.nextChar].
      */
     fun decode(tokens: List<Token>, initialBuffer: ByteArray = ByteArray(0)): ByteArray {
-        val out = ByteArrayOutputStream()
-        out.write(initialBuffer)
+        // Security / performance: the previous implementation re-read
+        // out.toByteArray() (a full copy of the output) for every copied byte,
+        // which is quadratic in the output size.  Keep a plain growable array
+        // so a back-reference copy is O(length).
+        var buf = initialBuffer.copyOf(maxOf(initialBuffer.size, 16))
+        var len = initialBuffer.size
 
         for (token in tokens) {
             if (token.length > 0) {
-                val startPos = out.size() - token.offset
-                // Guard: offset must not exceed what has already been written.
-                // A crafted stream with offset > out.size() produces a negative
-                // startPos and causes ArrayIndexOutOfBoundsException.
-                require(startPos >= 0) {
-                    "LZ77: back-reference offset ${token.offset} exceeds output buffer size ${out.size()}"
+                // Guard: a zero offset, or one reaching before the start of the
+                // output, is invalid (corrupt or hostile input).
+                require(token.offset in 1..len) {
+                    "LZ77: back-reference offset ${token.offset} is invalid for output buffer size $len"
                 }
-                repeat(token.length) { i ->
-                    // Re-read live output each step: handles overlapping matches
-                    // where the source overlaps the destination being written.
-                    out.write(out.toByteArray()[startPos + i].toInt() and 0xFF)
+                buf = ensureCapacity(buf, len, token.length + 1)
+                val startPos = len - token.offset
+                // Byte-by-byte: overlapping matches read bytes written earlier
+                // in this same loop.
+                for (i in 0 until token.length) {
+                    buf[len++] = buf[startPos + i]
                 }
+            } else {
+                buf = ensureCapacity(buf, len, 1)
             }
-            out.write(token.nextChar)
+            buf[len++] = token.nextChar.toByte()
         }
-        return out.toByteArray()
+        return buf.copyOf(len)
+    }
+
+    /** Grow [buf] (doubling) so that [extra] more bytes fit after [len]. */
+    private fun ensureCapacity(buf: ByteArray, len: Int, extra: Int): ByteArray {
+        val needed = len.toLong() + extra
+        if (needed <= buf.size) return buf
+        require(needed <= Int.MAX_VALUE - 8) { "LZ77: decoded output too large" }
+        val grown = maxOf(needed, minOf(buf.size.toLong() * 2, (Int.MAX_VALUE - 8).toLong()))
+        return buf.copyOf(grown.toInt())
     }
 
     // =========================================================================
@@ -277,9 +291,13 @@ object LZ77 {
     fun deserialiseTokens(data: ByteArray): List<Token> {
         if (data.size < HEADER_SIZE) return emptyList()
         val buf = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN)
-        val tokenCount = buf.getInt()
+        // Security: the header count is an unsigned 32-bit attacker-controlled
+        // value.  Read it unsigned (a raw Int goes negative above 2^31, which
+        // silently decoded nothing) and cap it against the payload size so
+        // iteration never follows the claim.
+        val tokenCount = buf.getInt().toLong() and 0xFFFFFFFFL
         val maxTokens  = (data.size - HEADER_SIZE) / TOKEN_SIZE
-        val safeCount  = minOf(tokenCount, maxTokens)
+        val safeCount  = minOf(tokenCount, maxTokens.toLong()).toInt()
 
         return buildList {
             repeat(safeCount) {

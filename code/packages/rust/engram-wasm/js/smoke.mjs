@@ -120,9 +120,9 @@ check("demo host deck rows", demo.props.deckRows, [
 // package layer was compiled out of wasm entirely. It no longer is.
 //
 // They kept passing after that changed, because this file runs against the
-// checked-in `pkg/engram_engine.wasm`, which was itself stale. Two stale
+// then-checked-in `pkg/engram_engine.wasm`, which was itself stale. Two stale
 // artifacts agreeing with each other reads exactly like a passing test, which is
-// why the wasm is now rebuilt and compared in CI rather than trusted.
+// why the wasm is no longer committed at all: BUILD rebuilds it before this runs.
 const exportedApkg = demoEngine.exportAnkiApkg();
 function decodeBase64(value) {
   const binary = atob(value);

@@ -57,6 +57,8 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 ///   function-ish rules above them, also covers grammars that spell methods
 ///   differently (ES2015 inlines them in `property_definition`).
 pub fn check(root: &GrammarASTNode) -> Result<(), String> {
+    // Function-level, strict-mode and template rules have their own pass.
+    crate::function_errors::check(root)?;
     enum Step<'a> {
         Enter(&'a GrammarASTNode, bool, bool, bool, bool),
         /// Leave a block scope: forget its lexical names.
@@ -156,21 +158,19 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 }
             }
             "assignment_expression" => {
-                let nds = nodes(node);
-                if nds.len() == 3
-                    && nds[1].rule_name == "assignment_operator"
-                    && is_invalid_yield_target(nds[0])
-                {
-                    return Err(
-                        "early error: invalid left-hand side in assignment (ECMA-262 §13.15.1)"
-                            .to_string(),
-                    );
+                if let Some((target, op, _)) = assignment_parts(node) {
+                    if invalid_target(target, op == "=") {
+                        return Err(
+                            "early error: invalid left-hand side in assignment (ECMA-262 §13.15.1)"
+                                .to_string(),
+                        );
+                    }
                 }
             }
             "postfix_expression" => {
                 if has_token(node, "++") || has_token(node, "--") {
                     if let Some(operand) = children(node).next() {
-                        if is_invalid_yield_target(operand) {
+                        if invalid_target(operand, false) {
                             return Err(
                                 "early error: invalid left-hand side expression in postfix operation (ECMA-262 §13.4)"
                                     .to_string(),
@@ -182,7 +182,7 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
             "unary_expression" => {
                 if has_token(node, "++") || has_token(node, "--") {
                     if let Some(operand) = children(node).next() {
-                        if is_invalid_yield_target(operand) {
+                        if invalid_target(operand, false) {
                             return Err(
                                 "early error: invalid left-hand side expression in prefix operation (ECMA-262 §13.4)"
                                     .to_string(),
@@ -195,7 +195,7 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 if let Some(lhs) =
                     children(node).find(|n| n.rule_name == "left_hand_side_expression")
                 {
-                    if is_invalid_yield_target(lhs) {
+                    if invalid_target(lhs, true) {
                         return Err(
                             "early error: invalid left-hand side in for-in/of loop (ECMA-262 §14.7.5)"
                                 .to_string(),
@@ -316,12 +316,12 @@ fn check_vars(
 }
 
 /// One lexically declared name.
-struct Lexical<'a> {
-    name: &'a str,
+pub(crate) struct Lexical<'a> {
+    pub(crate) name: &'a str,
     /// A plain `function` declaration: the only kind Annex B lets repeat.
-    plain_function: bool,
-    line: usize,
-    column: usize,
+    pub(crate) plain_function: bool,
+    pub(crate) line: usize,
+    pub(crate) column: usize,
 }
 
 /// Rule 1 for one scope's items. Returns the scope's lexical names.
@@ -380,7 +380,7 @@ fn case_block_items(switch: &GrammarASTNode) -> Vec<&GrammarASTNode> {
 }
 
 /// LexicallyDeclaredNames of one statement-list item.
-fn lexically_declared<'a>(item: &'a GrammarASTNode, out: &mut Vec<Lexical<'a>>) {
+pub(crate) fn lexically_declared<'a>(item: &'a GrammarASTNode, out: &mut Vec<Lexical<'a>>) {
     // A `statement` wrapper only matters when it holds a lexical declaration.
     let item = match item.rule_name.as_str() {
         "statement" => match nodes(item).as_slice() {
@@ -450,7 +450,7 @@ fn push_decl_name<'a>(decl: &'a GrammarASTNode, plain_function: bool, out: &mut 
 /// BoundNames of a declaration list, binding, or pattern: the identifiers it
 /// binds, with their positions. Property keys and default-value expressions
 /// bind nothing.
-fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usize)>) {
+pub(crate) fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usize)>) {
     let mut stack = vec![node];
     while let Some(n) = stack.pop() {
         match n.rule_name.as_str() {
@@ -523,7 +523,7 @@ fn bound_names<'a>(node: &'a GrammarASTNode, out: &mut Vec<(&'a str, usize, usiz
 /// Does `body` (a program or function body) open with a `"use strict"`
 /// directive? A directive is a leading expression statement that is a lone
 /// string literal.
-fn has_use_strict_directive(body: &GrammarASTNode) -> bool {
+pub(crate) fn has_use_strict_directive(body: &GrammarASTNode) -> bool {
     for element in nodes(body) {
         let mut tokens = Vec::new();
         collect_tokens(element, &mut tokens, 3);
@@ -544,7 +544,7 @@ fn has_use_strict_directive(body: &GrammarASTNode) -> bool {
 /// Up to `limit` tokens of `node`'s subtree, in source order: enough to tell
 /// a lone string-literal statement from anything longer. Iterative, and it
 /// stops as soon as it has `limit` tokens.
-fn collect_tokens<'a>(
+pub(crate) fn collect_tokens<'a>(
     node: &'a GrammarASTNode,
     out: &mut Vec<&'a lexer::token::Token>,
     limit: usize,
@@ -567,14 +567,14 @@ fn collect_tokens<'a>(
 }
 
 /// `node`'s node children, without allocating.
-fn children(node: &GrammarASTNode) -> impl Iterator<Item = &GrammarASTNode> {
+pub(crate) fn children(node: &GrammarASTNode) -> impl Iterator<Item = &GrammarASTNode> {
     node.children.iter().filter_map(|c| match c {
         ASTNodeOrToken::Node(n) => Some(n),
         ASTNodeOrToken::Token(_) => None,
     })
 }
 
-fn nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+pub(crate) fn nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     node.children
         .iter()
         .filter_map(|c| match c {
@@ -584,18 +584,18 @@ fn nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
-fn has_token(node: &GrammarASTNode, value: &str) -> bool {
+pub(crate) fn has_token(node: &GrammarASTNode, value: &str) -> bool {
     node.children
         .iter()
         .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == value && !is_string(t)))
 }
 
-fn is_string(t: &lexer::token::Token) -> bool {
+pub(crate) fn is_string(t: &lexer::token::Token) -> bool {
     matches!(t.type_, lexer::token::TokenType::String)
 }
 
 /// An identifier token (not a keyword, punctuator or literal).
-fn is_name(t: &lexer::token::Token) -> bool {
+pub(crate) fn is_name(t: &lexer::token::Token) -> bool {
     matches!(t.type_, lexer::token::TokenType::Name)
         && t.type_name.as_deref().is_none_or(|n| n == "NAME")
 }
@@ -626,69 +626,150 @@ fn has_operand_or_delegate(node: &GrammarASTNode) -> bool {
     has_token(node, "*") || children(node).next().is_some()
 }
 
-fn is_invalid_yield_target(node: &GrammarASTNode) -> bool {
-    let unwrapped = unwrap_parens(node);
-    if unwrapped.rule_name == "yield_expression" {
-        return true;
+/// The operator of an `assignment_expression` node of the form
+/// `target <assignment_operator> value`, with its two operands.
+fn assignment_parts(node: &GrammarASTNode) -> Option<(&GrammarASTNode, &str, &GrammarASTNode)> {
+    let nds = nodes(node);
+    if node.rule_name == "assignment_expression"
+        && nds.len() == 3
+        && nds[1].rule_name == "assignment_operator"
+    {
+        let op = nds[1].children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+            ASTNodeOrToken::Node(_) => None,
+        })?;
+        Some((nds[0], op, nds[2]))
+    } else {
+        None
     }
+}
+
+/// Is `node`, as the target of an assignment, update or `for-in/of` head, a
+/// Syntax Error (ECMA-262 §13.15.1, §13.4.1, §13.15.5)?
+///
+/// `pattern_ok` says whether an array or object literal may stand here as a
+/// destructuring pattern (`=` and `for-in/of`: yes; `+=`, `++`: no).
+///
+/// ```text
+/// (yield) = 1            error: a yield expression is no target
+/// (async function(){}) = 1   error: AssignmentTargetType of a function is invalid
+/// a?.b = 1               error: an optional chain is no target
+/// [{ m(){} }] = x        error: a method is no AssignmentProperty
+/// [...a, b] = x          error: the rest element must be last
+/// ({...[a]} = x)         error: an object rest target is a simple target
+/// ```
+fn invalid_target(node: &GrammarASTNode, pattern_ok: bool) -> bool {
+    let unwrapped = unwrap_parens(node);
     match unwrapped.rule_name.as_str() {
-        "array_literal" => {
-            if let Some(list) = children(unwrapped).find(|n| n.rule_name == "element_list") {
-                for elem in children(list) {
-                    if let Some(target) = destructuring_assignment_target(elem) {
-                        if is_invalid_yield_target(target) {
-                            return true;
-                        }
-                    }
-                }
+        "yield_expression"
+        | "function_expression"
+        | "generator_expression"
+        | "async_function_expression"
+        | "async_generator_expression"
+        | "class_expression"
+        | "arrow_function"
+        | "async_arrow_function"
+        | "template_literal" => true,
+        // An optional chain is never an assignment target; a plain member
+        // access has one child, so only a real `?.` gets here.
+        "optional_chain_expression" => has_token(unwrapped, "?."),
+        "primary_expression" => match unwrapped.children.as_slice() {
+            [ASTNodeOrToken::Token(t)] => {
+                matches!(
+                    t.type_,
+                    lexer::token::TokenType::Number | lexer::token::TokenType::String
+                ) || (!is_string(t)
+                    && matches!(t.value.as_str(), "this" | "true" | "false" | "null"))
             }
-        }
-        "object_literal" => {
-            for prop in children(unwrapped).filter(|n| n.rule_name == "property_definition") {
-                if let Some(target) = destructuring_property_target(prop) {
-                    if is_invalid_yield_target(target) {
-                        return true;
-                    }
-                }
+            _ => false,
+        },
+        "array_literal" => !pattern_ok || array_pattern_invalid(unwrapped),
+        "object_literal" => !pattern_ok || object_pattern_invalid(unwrapped),
+        _ => false,
+    }
+}
+
+/// An element or property value of an assignment pattern: `target` or
+/// `target = default`. A compound operator (`a += 1`) is no pattern element.
+fn pattern_element_invalid(elem: &GrammarASTNode) -> bool {
+    match assignment_parts(elem) {
+        Some((target, "=", _)) => invalid_target(target, true),
+        Some(_) => true,
+        None => invalid_target(elem, true),
+    }
+}
+
+/// The rest element's operand: no initializer, and a pattern only where the
+/// caller allows one.
+fn rest_target_invalid(operand: &GrammarASTNode, pattern_ok: bool) -> bool {
+    assignment_parts(operand).is_some() || invalid_target(operand, pattern_ok)
+}
+
+fn array_pattern_invalid(array: &GrammarASTNode) -> bool {
+    let Some(list) = children(array).find(|n| n.rule_name == "element_list") else {
+        return false;
+    };
+    for (index, child) in list.children.iter().enumerate() {
+        let ASTNodeOrToken::Node(elem) = child else {
+            continue;
+        };
+        if elem.rule_name == "spread_element" {
+            // `[...a, b]` and `[...a,]`: the rest element must be last, with
+            // no trailing comma.
+            if index + 1 < list.children.len() {
+                return true;
             }
+            if children(elem)
+                .next()
+                .is_none_or(|op| rest_target_invalid(op, true))
+            {
+                return true;
+            }
+        } else if pattern_element_invalid(elem) {
+            return true;
         }
-        _ => {}
     }
     false
 }
 
-fn destructuring_assignment_target(elem: &GrammarASTNode) -> Option<&GrammarASTNode> {
-    match elem.rule_name.as_str() {
-        "spread_element" | "object_spread_property" => children(elem).next(),
-        "assignment_expression" => {
-            let nds = nodes(elem);
-            if nds.len() == 3 && nds[1].rule_name == "assignment_operator" {
-                Some(nds[0])
-            } else {
-                Some(elem)
-            }
+fn object_pattern_invalid(object: &GrammarASTNode) -> bool {
+    let last = object.children.len().saturating_sub(1);
+    for (index, child) in object.children.iter().enumerate() {
+        let ASTNodeOrToken::Node(prop) = child else {
+            continue;
+        };
+        if prop.rule_name != "property_definition" {
+            continue;
         }
-        _ => Some(elem),
-    }
-}
-
-fn destructuring_property_target(prop: &GrammarASTNode) -> Option<&GrammarASTNode> {
-    if prop.rule_name == "property_definition" {
-        if has_token(prop, ":") {
-            let nds = nodes(prop);
-            if let Some(&val) = nds.get(1) {
-                return destructuring_assignment_target(val);
+        if let Some(spread) = children(prop).find(|n| n.rule_name == "object_spread_property") {
+            // `{...a, b}` and `{...a,}`: the rest property must be last, and
+            // its operand a simple target.
+            if index + 1 < last {
+                return true;
             }
-        } else if let Some(spread) =
-            children(prop).find(|n| n.rule_name == "object_spread_property")
+            if children(spread)
+                .next()
+                .is_none_or(|op| rest_target_invalid(op, false))
+            {
+                return true;
+            }
+        } else if children(prop)
+            .any(|n| matches!(n.rule_name.as_str(), "method_definition" | "async_method"))
         {
-            return destructuring_assignment_target(spread);
+            // Methods, getters and setters are not AssignmentProperties.
+            return true;
+        } else if has_token(prop, ":") {
+            if let Some(&value) = nodes(prop).get(1) {
+                if pattern_element_invalid(value) {
+                    return true;
+                }
+            }
         }
     }
-    None
+    false
 }
 
-fn unwrap_parens(mut node: &GrammarASTNode) -> &GrammarASTNode {
+pub(crate) fn unwrap_parens(mut node: &GrammarASTNode) -> &GrammarASTNode {
     loop {
         match node.rule_name.as_str() {
             "expression"

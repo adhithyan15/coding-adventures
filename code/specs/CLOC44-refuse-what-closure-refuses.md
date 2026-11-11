@@ -1,7 +1,6 @@
 # CLOC44 — refuse what Closure refuses (CCR-075)
 
-**Status:** slice 1 implemented (private elements). The remaining slices are
-listed below.
+**Status:** slices 1–4 implemented (private elements, return/new.target outside function, super outside method, with statement).
 **Decision:** owner, 2026-10-19 (#15860, option a).
 **Crate:** `closurec` (`src/refusals.rs`, `run.rs` step 1b, `tests/ladder.rs`).
 
@@ -33,12 +32,12 @@ a.js:12:10: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is 
 | Element | Rule |
 |---|---|
 | file | as given on the command line, with runs of `/` collapsed (Java `File`) |
-| line / column | 1-based line, 0-based column |
-| excerpt | `"  " + line + "| "` then the source line verbatim |
-| caret | indented by the excerpt prefix's width plus the column |
+| line / column | 1-based line, 0-based column in UTF-16 code units |
+| excerpt | `"  " + line + "| "` then the source line verbatim (including CRLF `\r`) |
+| caret | indented by the excerpt prefix's width plus the column (tabs copied from excerpt) |
 | separator | a blank line after each error |
 | summary | `N error(s), 0 warning(s)` |
-| order | input files in order, then source position |
+| order | source name (Java `String.compareTo`), then source position |
 | exit status | `min(N, 127)` |
 
 ### Bounded output, a deliberate divergence
@@ -119,6 +118,45 @@ interleave the way upstream prints them.
 No ladder rung changes, because the ladder's `new_target` and `try_catch`
 rungs use these constructs inside functions.
 
+## Slice 3: `super` outside a method
+
+Upstream reports `JSC_INVALID_SUPER_ACCESS` ("'super' may only be accessed within a method")
+at the `super` keyword token when `super` is accessed outside a method.
+
+| Where                                       | Upstream |
+|---------------------------------------------|----------|
+| `super.f(1 + 2);` (top level)               | refused, exit 1 |
+| `x = () => super.x;` (top level)            | refused |
+| `function f() { super.x; }`                 | refused |
+| `class A { [super.x]() {} }`                | refused (computed key is outside method) |
+| `class A { m() { super.x; } }`              | compiled |
+| `class A { constructor() { super(); } }`    | compiled |
+| `class A { m() { () => super.x; } }`        | compiled |
+| `({ m() { super.x; } })`                    | compiled |
+| `class A { x = super.y; }`                  | compiled |
+| `class A { static { super.y; } }`           | compiled |
+
+`refusals::scan` parses when a `super` keyword token is present (not after `.` or `?.`),
+and checks `super_ok` during the AST walk. `simple-super` now asserts the identical
+refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
+
+## Slice 4: `with` statement
+
+Upstream reports `JSC_USE_OF_WITH` ("The with statement cannot be used in strict mode.")
+at the `with` keyword token at SIMPLE and ADVANCED compilation levels, exit status 1.
+At WHITESPACE_ONLY, strict-mode validation is not enforced on scripts, matching upstream's
+acceptance and emission of `with` in verified goldens like `minify_with_body_flatten`.
+
+| Where | Upstream |
+|---|---|
+| `with (o) { x(1 + 2); }` at SIMPLE | refused, exit 1 |
+| `function f() { with (o) {} }` at ADVANCED | refused, exit 1 |
+| `with(o){a()}` at WHITESPACE_ONLY | compiled (`with(o)a();`), exit 0 |
+
+`refusals::scan` parses when a `with` keyword token is present (not after `.` or `?.`),
+and reports `with_statement` at SIMPLE and ADVANCED. `simple-with` now asserts the identical
+refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
+
 ## The ladder's third verdict
 
 A rung upstream refuses records that refusal in its own fixture:
@@ -143,8 +181,6 @@ The refusals already captured in `tests/oracle/upstream-refusals-v20260915.json`
 |---|---|
 | `simple-import`, `simple-export`, `simple-importexpr` | `JSC_INVALID_MODULE_PATH` (module resolution) |
 | `simple-importmeta` | `JSC_CANNOT_CONVERT` (`import.meta`) |
-| `simple-super` | `JSC_INVALID_SUPER_ACCESS` |
-| `simple-with` | `JSC_USE_OF_WITH` |
 
 Found since, and not yet captured as fixtures:
 

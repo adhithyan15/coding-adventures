@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,10 +9,13 @@ import {
 } from "../src/curriculum-membership.js";
 import {
   readCurriculumMembershipOwners,
+  readCurriculumMembershipOwnersBatchAsync,
 } from "../src/curriculum-membership-shards.js";
 import {
   defaultCurriculumRoot,
   loadAuthoredLanguageCurricula,
+  loadLanguageCurricula,
+  loadLanguageCurriculaAsync,
   loadTrackLanguageCurriculum,
 } from "../src/loader.js";
 
@@ -20,6 +23,21 @@ const roots: string[] = [];
 afterEach(() => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
 });
+
+function canCreateDirectoryLinks(): boolean {
+  const root = mkdtempSync(join(tmpdir(), "hl-curriculum-owner-link-probe-"));
+  try {
+    const link = join(root, "link");
+    symlinkSync(join(root, "missing"), link, process.platform === "win32" ? "junction" : "dir");
+    return lstatSync(link).isSymbolicLink();
+  } catch {
+    return false;
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+const directoryLinksAvailable = canCreateDirectoryLinks();
 
 function fixture(): string {
   const root = mkdtempSync(join(tmpdir(), "hl-curriculum-membership-"));
@@ -124,6 +142,47 @@ describe("direct curriculum lesson owners", () => {
       }, null, 2)}\n`,
     );
     expect(readCurriculumMembershipOwners(root, "toy").owners).toHaveLength(1);
+  });
+
+  it("keeps bounded anchored reads in parity and observes subsequent edits", async () => {
+    const root = fixture();
+    const path = join(root, "toy", "curriculum-membership.d", "TOY-L1.json");
+    const owner = {
+      id: "TOY-L1", pathSegment: "TOY-PATH-1", pathOrder: 0, extensions: [],
+    };
+    await expect(readCurriculumMembershipOwnersBatchAsync(root, ["toy"]))
+      .rejects.toThrow(/anchored curriculum owner batch failed/);
+    writeFileSync(path, `${JSON.stringify(owner, null, 2)}\n`);
+    const first = (await readCurriculumMembershipOwnersBatchAsync(root, ["toy"])).get("toy");
+    expect(first).toEqual(readCurriculumMembershipOwners(root, "toy"));
+    writeFileSync(join(root, "toy", "curriculum.json"),
+      `${JSON.stringify(authored(), null, 2)}\n`);
+    expect(await loadLanguageCurriculaAsync(root)).toEqual(loadLanguageCurricula(root));
+    writeFileSync(path, `${JSON.stringify({ ...owner, pathOrder: 1 }, null, 2)}\n`);
+    expect((await readCurriculumMembershipOwnersBatchAsync(root, ["toy"]))
+      .get("toy")?.owners[0]?.pathOrder).toBe(1);
+    writeFileSync(path, JSON.stringify(owner));
+    await expect(readCurriculumMembershipOwnersBatchAsync(root, ["toy"]))
+      .rejects.toThrow(/not canonical/);
+    writeFileSync(path, `${JSON.stringify(owner, null, 2)}\n`);
+    writeFileSync(join(root, "toy", "curriculum-membership.d", "extra.json"), "{}\n");
+    await expect(readCurriculumMembershipOwnersBatchAsync(root, ["toy"]))
+      .rejects.toThrow(/anchored curriculum owner batch failed/);
+  });
+
+  it.skipIf(!directoryLinksAvailable)("refuses a redirected owner directory", async () => {
+    const root = fixture();
+    const ownerDirectory = join(root, "toy", "curriculum-membership.d");
+    const outside = mkdtempSync(join(tmpdir(), "hl-curriculum-owner-outside-"));
+    roots.push(outside);
+    rmSync(ownerDirectory, { recursive: true });
+    symlinkSync(outside, ownerDirectory, process.platform === "win32" ? "junction" : "dir");
+    try {
+      await expect(readCurriculumMembershipOwnersBatchAsync(root, ["toy"]))
+        .rejects.toThrow(/anchored curriculum owner batch failed/);
+    } finally {
+      rmSync(ownerDirectory);
+    }
   });
 
   it("rejects a shard directory beside a direct owner before reading it", () => {

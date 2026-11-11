@@ -140,6 +140,14 @@ public static class Lzw
 
         foreach (var code in codes)
         {
+            // Security: stop once the declared length is reached (each code can
+            // emit a long dictionary entry, so a small stream could otherwise
+            // expand far beyond it before the final truncation).
+            if (originalLength >= 0 && output.Count >= originalLength)
+            {
+                break;
+            }
+
             if (code == CLEAR_CODE)
             {
                 ResetDecoderDictionary(dictionary);
@@ -235,7 +243,9 @@ public static class Lzw
             return ([], 0);
         }
 
-        var originalLength = (int)BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4));
+        // Security: clamp instead of a raw (int) cast, which turns lengths >= 2^31
+        // negative (DecodeCodes treats negative as "no truncation").
+        var originalLength = (int)Math.Min(BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)), (uint)int.MaxValue);
         var reader = new BitReader(data[4..]);
         var codes = new List<int>();
         var nextCode = INITIAL_NEXT_CODE;

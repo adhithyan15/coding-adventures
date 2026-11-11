@@ -3,7 +3,6 @@ import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
   loadChapterPolicy,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -24,7 +23,7 @@ import { expectLanguageContinuity, expectLanguageModality } from "../assert-lang
 // track's own test file reads. Both halves were falsified before being kept.
 // ---------------------------------------------------------------------------
 it("probes only Tamil atoms that EXIST, so a guessed id cannot under-report", () => {
-  const { lessons } = loadEverything();
+  const lessons = loadTrackLessons("tamil");
   const taught = trackIntroducedAtoms(lessons, "tamil");
   const unknown: string[] = [];
   for (const point of loadExamInventory("tamil", "A1").points) {

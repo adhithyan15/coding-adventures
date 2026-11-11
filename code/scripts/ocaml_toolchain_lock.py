@@ -51,7 +51,7 @@ TARGETS = {
         "windows_compiler": None,
     },
     "macos-arm64": {
-        "runner": "macos-14",
+        "runner": "macos-15",
         "runner_os": "macOS",
         "runner_arch": "ARM64",
         "windows_compiler": None,
@@ -131,8 +131,11 @@ GENERIC_BOOTSTRAP_RUN_SHA256 = (
 )
 GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
-    # OCaml predicates/bootstrap/mutation rejection remain unchanged and pinned.
-    "020779b966f41a27ec7c83ee0c42074cde01b8fcbb3546b1e1aac9389dd68a67"
+    # The daily cross-OS full build adds only the CROSS_OS_FULL branch that
+    # appends macOS/Windows shard entries to a forced full build, plus a comment
+    # on needs_macos. OCaml predicates/bootstrap/mutation rejection remain
+    # unchanged and pinned.
+    "6794fcd5db936716e39dd7bc777069a27b48a46236404ff1a29e23bfbb0152b2"
 )
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
