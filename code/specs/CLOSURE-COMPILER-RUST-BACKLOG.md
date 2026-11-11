@@ -209,7 +209,7 @@ its blast radius across the 462 goldens.
 | 25 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
 | 26 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
 | 27 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
-| 27a | #18159 | CLOC44 refusal rendering: multi-file order, UTF-16 columns, tab carets, CRLF excerpts. | Ready |
+| 27a | #18159 | CLOC44 refusal rendering: multi-file order, UTF-16 columns, tab carets, CRLF excerpts. | Complete |
 
 ### Q3 — ADVANCED semantics
 

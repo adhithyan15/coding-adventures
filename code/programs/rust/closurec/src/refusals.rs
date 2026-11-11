@@ -46,8 +46,8 @@
 //!   verbatim. The caret is indented by that prefix's width plus the column.
 //! - A blank line follows each error, and the run ends with
 //!   `N error(s), 0 warning(s)`.
-//! - Errors appear in input order, then by position. The exit status is
-//!   `min(N, 127)`.
+//! - Errors appear in source-name order (Java `String.compareTo`), then by
+//!   line and column. The exit status is `min(N, 127)`.
 
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_parser::parse_javascript_typed;
@@ -63,7 +63,7 @@ pub struct Refusal {
     pub file: usize,
     /// 1-based line.
     pub line: usize,
-    /// 0-based column, in characters.
+    /// 0-based column, in UTF-16 code units.
     pub column: usize,
     /// The diagnostic key, e.g. `JSC_UNSUPPORTED_LANGUAGE_FEATURE`.
     pub key: &'static str,
@@ -87,6 +87,17 @@ const PARSE_ERROR: &str = "JSC_PARSE_ERROR";
 const RETURN_OUTSIDE_FUNCTION: &str = "Parse error. return must be inside function";
 const NEW_TARGET_OUTSIDE_FUNCTION: &str = "Parse error. new.target must be inside a function";
 
+/// Convert a 1-based character (scalar) column from the lexer/parser into
+/// a 0-based column in UTF-16 code units, matching upstream Java String indexing.
+fn utf16_col(lines: &[&str], line: usize, char_col_1based: usize) -> usize {
+    let char_offset = char_col_1based.saturating_sub(1);
+    if let Some(line_str) = lines.get(line.saturating_sub(1)) {
+        line_str.chars().take(char_offset).map(|c| c.len_utf16()).sum()
+    } else {
+        char_offset
+    }
+}
+
 /// Every refusal in one input file, in source order.
 ///
 /// A file the lexer can't tokenize yields none here, because the ordinary
@@ -95,11 +106,11 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     let Ok(tokens) = tokenize_javascript_typed(source, version) else {
         return Vec::new();
     };
+    let lines: Vec<&str> = source.split('\n').collect();
     let at = |t: &lexer::token::Token| Refusal {
         file,
         line: t.line,
-        // The lexer's columns are 1-based; upstream prints 0-based.
-        column: t.column.saturating_sub(1),
+        column: utf16_col(&lines, t.line, t.column),
         key: UNSUPPORTED_FEATURE,
         message: PRIVATE_ELEMENTS,
     };
@@ -118,7 +129,7 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     });
     if candidate {
         if let Ok(root) = parse_javascript_typed(source, version) {
-            out.extend(outside_function(file, &root));
+            out.extend(outside_function(file, &root, &lines));
         }
     }
     for (i, t) in tokens.iter().enumerate() {
@@ -172,7 +183,7 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
 /// Each refusal is reported at the statement's or expression's first token.
 /// The walk is iterative, with an explicit stack, so a deeply nested input
 /// can't overflow the native stack.
-fn outside_function(file: usize, root: &GrammarASTNode) -> Vec<Refusal> {
+fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<Refusal> {
     #[derive(Clone, Copy)]
     struct Context {
         return_ok: bool,
@@ -212,8 +223,8 @@ fn outside_function(file: usize, root: &GrammarASTNode) -> Vec<Refusal> {
             out.push(Refusal {
                 file,
                 line,
-                // 1-based in the tree; upstream prints 0-based.
-                column: column.saturating_sub(1),
+                // Upstream reports column in UTF-16 code units (0-based).
+                column: utf16_col(lines, line, column),
                 key: PARSE_ERROR,
                 message,
             });
@@ -248,9 +259,32 @@ fn is_new_target(node: &GrammarASTNode) -> bool {
 /// [`MAX_DIAGNOSTIC_BYTES`].
 pub fn render(refusals: &[Refusal], files: &[(String, String)]) -> String {
     // Each file's lines, split once and borrowed, never copied per error.
-    let lines: Vec<Vec<&str>> = files.iter().map(|(_, src)| src.lines().collect()).collect();
+    // Using `split('\n')` rather than `lines()` preserves trailing `\r`
+    // so CRLF files echo the carriage return on excerpt lines, exactly as
+    // upstream does (CLOC44, #18159).
+    let lines: Vec<Vec<&str>> = files.iter().map(|(_, src)| src.split('\n').collect()).collect();
+
+    // Upstream sorts diagnostics by source name (Java String.compareTo,
+    // which compares UTF-16 code units), then line, then column.
+    let mut order: Vec<usize> = (0..refusals.len()).collect();
+    order.sort_by(|&i, &j| {
+        let ra = &refusals[i];
+        let rb = &refusals[j];
+        let name_a = files.get(ra.file).map(|(n, _)| n.as_str()).unwrap_or_default();
+        let name_b = files.get(rb.file).map(|(n, _)| n.as_str()).unwrap_or_default();
+        name_a
+            .encode_utf16()
+            .cmp(name_b.encode_utf16())
+            .then_with(|| ra.line.cmp(&rb.line))
+            .then_with(|| ra.column.cmp(&rb.column))
+            .then_with(|| ra.key.cmp(rb.key))
+            .then_with(|| ra.message.cmp(rb.message))
+            .then_with(|| ra.file.cmp(&rb.file))
+    });
+
     let mut out = String::new();
-    for r in refusals {
+    for &idx in &order {
+        let r = &refusals[idx];
         let excerpt = lines
             .get(r.file)
             .and_then(|l| l.get(r.line.saturating_sub(1)))
@@ -258,19 +292,43 @@ pub fn render(refusals: &[Refusal], files: &[(String, String)]) -> String {
             .unwrap_or_default();
         let name = files.get(r.file).map(|(n, _)| n.as_str()).unwrap_or_default();
         let gutter = format!("  {}| ", r.line);
-        let pad = gutter.chars().count() + r.column;
+
+        // Build caret line: gutter is padded with spaces. For the excerpt up to
+        // `r.column`, upstream preserves tab characters verbatim from the source line
+        // (`\t\t^`), and replaces non-tabs with spaces (CLOC44, #18159).
+        let mut caret = " ".repeat(gutter.chars().count());
+        let mut col = 0;
+        for c in excerpt.chars() {
+            if col >= r.column {
+                break;
+            }
+            let u16_len = c.len_utf16();
+            if c == '\t' {
+                caret.push('\t');
+            } else {
+                for _ in 0..u16_len {
+                    caret.push(' ');
+                }
+            }
+            col += u16_len;
+        }
+        while col < r.column {
+            caret.push(' ');
+            col += 1;
+        }
+        caret.push('^');
+
         // Header, excerpt line, caret line, blank line.
-        let block = name.len() + r.key.len() + r.message.len() + 48 + gutter.len() + excerpt.len() + pad;
+        let block = name.len() + r.key.len() + r.message.len() + 48 + gutter.len() + excerpt.len() + caret.len() + 4;
         if out.len().saturating_add(block) > MAX_DIAGNOSTIC_BYTES {
             break;
         }
         out.push_str(&format!(
-            "{name}:{}:{}: ERROR - [{}] {}\n{gutter}{excerpt}\n{}^\n\n",
+            "{name}:{}:{}: ERROR - [{}] {}\n{gutter}{excerpt}\n{caret}\n\n",
             r.line,
             r.column,
             r.key,
             r.message,
-            " ".repeat(pad),
         ));
     }
     out.push_str(&format!("{} error(s), 0 warning(s)", refusals.len()));
@@ -472,5 +530,53 @@ mod tests {
         assert_eq!(exit_status(1), 1);
         assert_eq!(exit_status(6), 6);
         assert_eq!(exit_status(200), 127);
+    }
+
+    #[test]
+    fn multi_file_refusals_sort_by_java_string_order() {
+        // Upstream sorts by source name using Java String.compareTo (UTF-16 code units),
+        // then line, then column, rather than input order.
+        let files = vec![
+            ("z.js".to_string(), "return;".to_string()),
+            ("a.js".to_string(), "return;".to_string()),
+        ];
+        let mut refusals = scan(0, &files[0].1, EsVersion::Es2025);
+        refusals.extend(scan(1, &files[1].1, EsVersion::Es2025));
+        let out = render(&refusals, &files);
+        let a_pos = out.find("a.js:1:0: ERROR").expect("a.js present");
+        let z_pos = out.find("z.js:1:0: ERROR").expect("z.js present");
+        assert!(a_pos < z_pos, "a.js should precede z.js in diagnostic output");
+    }
+
+    #[test]
+    fn utf16_columns_count_surrogate_pairs() {
+        // `var s='😀';return;`: '😀' is 1 Unicode scalar, but 2 UTF-16 code units.
+        // Upstream reports column 11 (0-based UTF-16 code units), not 10.
+        let src = "var s='😀';return;";
+        let r = scan(0, src, EsVersion::Es2025);
+        assert_eq!(r.len(), 1);
+        assert_eq!(r[0].line, 1);
+        assert_eq!(r[0].column, 11);
+    }
+
+    #[test]
+    fn tab_carets_preserve_tabs_from_source_line() {
+        // Upstream's caret line copies tabs from the excerpt so carets align with tab stops.
+        let src = "\t\treturn;";
+        let files = vec![("tabs.js".to_string(), src.to_string())];
+        let r = scan(0, src, EsVersion::Es2025);
+        let out = render(&r, &files);
+        // Gutter is "  1| " (5 spaces), followed by two tabs, then '^'.
+        assert!(out.contains("  1| \t\treturn;\n     \t\t^\n"));
+    }
+
+    #[test]
+    fn crlf_excerpts_keep_trailing_carriage_return() {
+        // Upstream retains the trailing '\r' on excerpt lines when source has CRLF endings.
+        let src = "var a=1;\r\nreturn;\r\n";
+        let files = vec![("crlf.js".to_string(), src.to_string())];
+        let r = scan(0, src, EsVersion::Es2025);
+        let out = render(&r, &files);
+        assert!(out.contains("  2| return;\r\n"));
     }
 }
