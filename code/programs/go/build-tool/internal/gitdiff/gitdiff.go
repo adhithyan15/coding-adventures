@@ -28,7 +28,25 @@ func isBuildFront(base string) bool {
 	}
 }
 
-// GetChangedFiles runs `git diff --no-renames --name-only -z <base>...HEAD` and returns
+// ChangeStatuses maps a raw changed Git path to the first letter of its
+// `git diff --name-status` status: A (added), M (modified), D (deleted),
+// T (type changed, e.g. a file became a symlink), R/C (renamed/copied, never
+// produced with --no-renames, but parsed defensively), U, X or B.
+//
+// Only an addition or an in-place modification can leave a package-local
+// metadata change local (see ClassifyChangedFiles). A nil map means "status
+// unknown", which makes every metadata path propagate: callers that cannot
+// say how a file changed get the conservative behaviour.
+type ChangeStatuses map[string]byte
+
+// Additive reports whether path was added or modified in place. Anything
+// else, including a path with no recorded status, is not additive.
+func (statuses ChangeStatuses) Additive(path string) bool {
+	status, ok := statuses[path]
+	return ok && (status == 'A' || status == 'M')
+}
+
+// GetChangedFiles runs `git diff --no-renames --name-status -z <base>...HEAD` and returns
 // the list of changed file paths relative to the repo root.
 //
 // Uses three-dot diff which shows changes since the merge base — exactly
@@ -36,27 +54,71 @@ func isBuildFront(base string) bool {
 // deleted source and added destination, so consumers of either path rebuild.
 // Falls back to two-dot diff if three-dot fails.
 func GetChangedFiles(repoRoot, diffBase string) []string {
+	files, _ := GetChangedFilesWithStatus(repoRoot, diffBase)
+	return files
+}
+
+// GetChangedFilesWithStatus is GetChangedFiles plus each path's status.
+//
+// With --no-renames a rename is reported as the deletion of its old path (D)
+// and the addition of its new path (A), so a rename out of, into or within a
+// metadata location always carries a D and therefore propagates. If Git
+// gives no answer, both results are nil (the caller falls back to hashing).
+func GetChangedFilesWithStatus(repoRoot, diffBase string) ([]string, ChangeStatuses) {
 	// Try three-dot diff first (merge base)
-	cmd := exec.Command("git", "diff", "--no-renames", "--name-only", "-z", diffBase+"...HEAD")
+	cmd := exec.Command("git", "diff", "--no-renames", "--name-status", "-z", diffBase+"...HEAD")
 	cmd.Dir = repoRoot
 	out, err := cmd.Output()
 	if err != nil {
 		// Fallback: two-dot diff
-		cmd = exec.Command("git", "diff", "--no-renames", "--name-only", "-z", diffBase, "HEAD")
+		cmd = exec.Command("git", "diff", "--no-renames", "--name-status", "-z", diffBase, "HEAD")
 		cmd.Dir = repoRoot
 		out, err = cmd.Output()
 		if err != nil {
-			return nil
+			return nil, nil
 		}
 	}
+	return parseNameStatus(out)
+}
 
-	var files []string
-	for _, path := range bytes.Split(out, []byte{0}) {
-		if len(path) != 0 {
-			files = append(files, string(path))
+// parseNameStatus decodes `--name-status -z` output: a status token, then one
+// path (two for R and C, which are both recorded as non-additive). An output
+// it cannot decode yields every path it did read with no statuses at all, so
+// nothing can be classified as local.
+//
+//	"M\x00a/x.go\x00D\x00b/CHANGELOG.md\x00" → [a/x.go b/CHANGELOG.md], {M, D}
+func parseNameStatus(out []byte) ([]string, ChangeStatuses) {
+	files := []string{}
+	statuses := ChangeStatuses{}
+	fields := bytes.Split(out, []byte{0})
+	for index := 0; index < len(fields); {
+		token := fields[index]
+		index++
+		if len(token) == 0 {
+			continue
 		}
+		status := token[0]
+		paths := 1
+		if status == 'R' || status == 'C' {
+			paths = 2
+			status = 'R'
+		}
+		if index+paths > len(fields) {
+			return files, nil
+		}
+		for _, path := range fields[index : index+paths] {
+			if len(path) == 0 {
+				return files, nil
+			}
+			files = append(files, string(path))
+			// A path listed twice keeps its least additive status.
+			if prior, seen := statuses[string(path)]; !seen || prior == 'A' || prior == 'M' {
+				statuses[string(path)] = status
+			}
+		}
+		index += paths
 	}
-	return files
+	return files, statuses
 }
 
 // MapFilesToPackages maps changed file paths to package names: every package
@@ -64,7 +126,7 @@ func GetChangedFiles(repoRoot, diffBase string) []string {
 // ClassifyChangedFiles returns; callers that propagate changes to dependents
 // must use ClassifyChangedFiles instead.
 func MapFilesToPackages(changedFiles []string, packages []discovery.Package, repoRoot string) map[string]bool {
-	propagating, local := ClassifyChangedFiles(changedFiles, packages, repoRoot)
+	propagating, local := ClassifyChangedFiles(changedFiles, packages, repoRoot, nil)
 	for name := range local {
 		propagating[name] = true
 	}
@@ -80,21 +142,26 @@ func MapFilesToPackages(changedFiles []string, packages []discovery.Package, rep
 // Whether the change also rebuilds the package's dependents depends on the
 // file:
 //
-//	Package type      | File changed               | Package | Dependents
-//	------------------|----------------------------|---------|-----------
-//	Shell BUILD       | src/main.py                | YES     | YES
-//	Shell BUILD       | README.md                  | YES     | NO  (local)
-//	Shell BUILD       | CHANGELOG.d/x.md           | YES     | NO  (local)
-//	Shell BUILD       | required_capabilities.json | YES     | NO  (local)
-//	Shell BUILD       | docs/README.md             | YES     | YES (nested)
-//	Starlark, srcs    | README.md (not in srcs)    | NO      | NO
-//	Starlark, srcs    | README.md (in srcs)        | YES     | YES
-//	Starlark, srcs    | src/main.py                | YES     | YES
-//	Starlark, srcs    | BUILD                      | YES     | YES
+//	Package type      | File changed (status)          | Package | Dependents
+//	------------------|--------------------------------|---------|-----------
+//	Shell BUILD       | src/main.py                    | YES     | YES
+//	Shell BUILD       | README.md                      | YES     | YES (read by packaging)
+//	Shell BUILD       | CHANGELOG.md (A or M)          | YES     | NO  (local)
+//	Shell BUILD       | CHANGELOG.d/x.md (A or M)      | YES     | NO  (local)
+//	Shell BUILD       | required_capabilities.json (M) | YES     | NO  (local)
+//	Shell BUILD       | CHANGELOG.md (D, T, R)         | YES     | YES (may be required)
+//	Shell BUILD       | evidence/run.sh                | YES     | YES (not a data type)
+//	Shell BUILD       | sub/required_capabilities.json | YES     | YES (nested)
+//	Starlark, srcs    | CHANGELOG.md (not in srcs)     | NO      | NO
+//	Starlark, srcs    | CHANGELOG.md (in srcs)         | YES     | YES
+//	Starlark, srcs    | src/main.py                    | YES     | YES
+//	Starlark, srcs    | BUILD                          | YES     | YES
 //
 // The "local" rows are package-local metadata (internal/pkgmeta): files no
-// dependent's build or tests can read. Such a package is returned in local,
-// and only there; a package that also has an ordinary change is propagating.
+// dependent's build or tests can read, added or modified in place according
+// to statuses. A nil statuses map classifies nothing as local. Such a
+// package is returned in local, and only there; a package that also has an
+// ordinary change is propagating.
 //
 // For Starlark BUILD packages with declared srcs, we apply strict filtering:
 // only trigger a rebuild if the changed file matches one of the declared
@@ -102,7 +169,7 @@ func MapFilesToPackages(changedFiles []string, packages []discovery.Package, rep
 // or CHANGELOG.md in a Starlark package does NOT trigger a rebuild. A
 // declared source is an input the package author named, so it always
 // propagates, even when its name looks like metadata.
-func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, repoRoot string) (propagating, local map[string]bool) {
+func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, repoRoot string, statuses ChangeStatuses) (propagating, local map[string]bool) {
 	propagating = make(map[string]bool)
 	local = make(map[string]bool)
 
@@ -128,11 +195,11 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 		})
 	}
 
-	for _, f := range changedFiles {
+	for _, raw := range changedFiles {
 		// Normalize to forward slashes for consistent matching. On Linux and
 		// macOS a backslash is an ordinary filename byte and survives, which
 		// keeps such a path out of the metadata list (conservative).
-		f = filepath.ToSlash(f)
+		f := filepath.ToSlash(raw)
 
 		for _, pkg := range pkgPaths {
 			if !strings.HasPrefix(f, pkg.relPath+"/") && f != pkg.relPath {
@@ -148,7 +215,10 @@ func ClassifyChangedFiles(changedFiles []string, packages []discovery.Package, r
 			if !pkg.isStarlark || len(pkg.declaredSrcs) == 0 {
 				// Shell BUILD or no declared srcs: any file triggers a
 				// rebuild; only package-local metadata stops there.
-				if pkgmeta.IsPackageLocal(relToPackage) {
+				// Only an addition or in-place edit can be local. A deleted,
+				// renamed-away or retyped metadata file can break a
+				// dependent that needs it to exist (packaging file lists).
+				if pkgmeta.IsPackageLocal(relToPackage) && statuses.Additive(raw) {
 					local[pkg.name] = true
 				} else {
 					propagating[pkg.name] = true

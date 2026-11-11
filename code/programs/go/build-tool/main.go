@@ -572,8 +572,27 @@ func changedPackageRootsForPlatformAndLanguage(
 	goos string,
 	language string,
 ) (map[string]bool, error) {
+	changed, _, err := selectPackageRoots(changedFiles, nil, packages, repoRoot, goos, language)
+	return changed, err
+}
+
+// selectPackageRoots returns one platform's propagating roots and, separately,
+// the packages whose only changes there are package-local metadata (see
+// package_metadata.go). Both sets come from the SAME platform-filtered path
+// list, so a package is never dropped from both: a BUILD_windows edit that is
+// filtered out on Linux leaves the package's metadata change local there, and
+// on Windows the BUILD front makes it an ordinary root. Statuses say which
+// paths were only added or modified; nil statuses make every path propagate.
+func selectPackageRoots(
+	changedFiles []string,
+	statuses gitdiff.ChangeStatuses,
+	packages []discovery.Package,
+	repoRoot string,
+	goos string,
+	language string,
+) (changed, local map[string]bool, err error) {
 	if changedFiles == nil {
-		return nil, nil
+		return nil, nil, nil
 	}
 
 	packageByDir := make(map[string]discovery.Package, len(packages))
@@ -617,7 +636,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	// only changes are package-local metadata (README, changelog, capability
 	// manifest, assurance evidence) is selected separately and without its
 	// dependents; see package_metadata.go.
-	changed, _ := gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot)
+	changed, local = gitdiff.ClassifyChangedFiles(filtered, packages, repoRoot, statuses)
 	// External native-acceptance specifications need a producer root as well
 	// as a step gate. Otherwise CI enables the step without selecting its
 	// compiler or installing its toolchain. Keep the exact relation bounded
@@ -631,7 +650,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 		}
 		if !found {
-			return nil, fmt.Errorf("Closure provenance specification consumer %q is missing from discovered packages", closureProvenanceConsumer)
+			return nil, nil, fmt.Errorf("Closure provenance specification consumer %q is missing from discovered packages", closureProvenanceConsumer)
 		}
 		changed[closureProvenanceConsumer] = true
 	}
@@ -657,7 +676,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				}
 			}
 			if !found {
-				return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -674,7 +693,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 		}
 		if !found {
-			return nil, fmt.Errorf("BF03 fixture consumer %q is missing from discovered packages", "go/compiler-ir")
+			return nil, nil, fmt.Errorf("BF03 fixture consumer %q is missing from discovered packages", "go/compiler-ir")
 		}
 		changed["go/compiler-ir"] = true
 	}
@@ -692,7 +711,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 		}
 		if !found {
-			return nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", "typescript/gfm-parser")
+			return nil, nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", "typescript/gfm-parser")
 		}
 		changed["typescript/gfm-parser"] = true
 	}
@@ -715,7 +734,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				}
 			}
 			if !found {
-				return nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -731,7 +750,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	for _, path := range changedFiles {
 		if caseName := resolutionFixtureCase(path); caseName != "" {
 			if _, known := resolutionNativeFixtureCases[caseName]; !known {
-				return nil, fmt.Errorf("resolution fixture case %q has no classified native readers", caseName)
+				return nil, nil, fmt.Errorf("resolution fixture case %q has no classified native readers", caseName)
 			}
 			resolutionCases[caseName] = true
 		}
@@ -740,7 +759,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	for _, path := range changedFiles {
 		if caseName := hashingCacheFixtureCase(path); caseName != "" {
 			if _, known := hashingCacheNativeFixtureCases[caseName]; !known {
-				return nil, fmt.Errorf("hashing-cache fixture case %q has no classified native readers", caseName)
+				return nil, nil, fmt.Errorf("hashing-cache fixture case %q has no classified native readers", caseName)
 			}
 			hashingCacheCases[caseName] = true
 		}
@@ -749,7 +768,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	for _, path := range changedFiles {
 		if caseName := validationFixtureCase(path); caseName != "" {
 			if _, known := validationNativeFixtureCases[caseName]; !known {
-				return nil, fmt.Errorf("validation fixture case %q has no classified native readers", caseName)
+				return nil, nil, fmt.Errorf("validation fixture case %q has no classified native readers", caseName)
 			}
 			validationCases[caseName] = true
 		}
@@ -758,7 +777,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	for _, path := range changedFiles {
 		if caseName := planFixtureCase(path); caseName != "" {
 			if _, known := planNativeFixtureCases[caseName]; !known {
-				return nil, fmt.Errorf("plan fixture case %q has no classified native readers", caseName)
+				return nil, nil, fmt.Errorf("plan fixture case %q has no classified native readers", caseName)
 			}
 			planCases[caseName] = true
 		}
@@ -770,7 +789,7 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 	}
 	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !testTriggerFixtureChanged && !packageMetadataFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
-		return changed, nil
+		return changed, withoutRoots(local, changed), nil
 	}
 
 	// The fixture lives outside every package directory. Its gate validates
@@ -785,7 +804,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -796,7 +815,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("duplicate-discovery fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("duplicate-discovery fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -807,7 +826,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -818,7 +837,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("test-trigger fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("test-trigger fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -829,7 +848,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("package-metadata fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("package-metadata fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -840,7 +859,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -851,7 +870,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("graph/diff fixture consumer %q is missing from discovered packages", consumer.name)
+				return nil, nil, fmt.Errorf("graph/diff fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -863,7 +882,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("resolution fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+				return nil, nil, fmt.Errorf("resolution fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -875,7 +894,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("hashing-cache fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+				return nil, nil, fmt.Errorf("hashing-cache fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -887,7 +906,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("validation fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+				return nil, nil, fmt.Errorf("validation fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -899,7 +918,7 @@ func changedPackageRootsForPlatformAndLanguage(
 				continue
 			}
 			if !available[consumer.name] {
-				return nil, fmt.Errorf("plan fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+				return nil, nil, fmt.Errorf("plan fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
@@ -926,11 +945,11 @@ func changedPackageRootsForPlatformAndLanguage(
 	} {
 		if sourceFixtureFamilies[family.name] {
 			if err := seedSourceConsumers(family.consumers, family.name); err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 		}
 	}
-	return changed, nil
+	return changed, withoutRoots(local, changed), nil
 }
 
 func buildVariantApplies(base, goos string) bool {
@@ -1145,6 +1164,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
 	var changedFilesForPlan []string
+	var changeStatusesForPlan gitdiff.ChangeStatuses
 	ciToolchains := make(map[string]bool)
 	usedPlan := false
 
@@ -1381,7 +1401,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// Step 5: Git-diff change detection (default mode).
 		// Git is the source of truth — no cache file needed for primary workflow.
 		if !*force {
-			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
+			changedFiles, statuses := gitdiff.GetChangedFilesWithStatus(repoRoot, *diffBase)
+			changeStatusesForPlan = statuses
 			changedFilesForPlan = changedFiles
 			if len(changedFiles) > 0 {
 				if containsPath(changedFiles, gitdiff.CIWorkflowPath) {
@@ -1420,8 +1441,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					*force = true
 					affectedSet = nil
 				} else {
-					changedPkgs, selectionErr := changedPackageRootsForPlatformAndLanguage(
+					changedPkgs, localPkgs, selectionErr := selectPackageRoots(
 						changedFiles,
+						statuses,
 						packages,
 						repoRoot,
 						runtime.GOOS,
@@ -1441,7 +1463,6 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					}
 					// So are packages whose only changes are package-local
 					// metadata (see package_metadata.go).
-					localPkgs := packageLocalChangeRoots(changedFiles, packages, repoRoot, changedPkgs)
 					if len(changedPkgs) > 0 || len(inputConsumers) > 0 || len(localPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
 						// Cargo dev-dependents of the closure, one hop, before
@@ -1488,6 +1509,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
 		packageRootErr := validator.ValidateNoOrphanPackageRoots(repoRoot)
 		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)
+		// Package-local metadata is selected without its dependents, so it
+		// must never be executed (internal/validator/metadata_exec.go).
+		metadataErr := validator.ValidateNoExecutedMetadata(repoRoot)
 
 		if buildErr != nil {
 			fmt.Fprintln(os.Stderr, buildErr)
@@ -1501,7 +1525,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if artifactErr != nil {
 			fmt.Fprintln(os.Stderr, artifactErr)
 		}
-		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil {
+		if metadataErr != nil {
+			fmt.Fprintln(os.Stderr, metadataErr)
+		}
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil || metadataErr != nil {
 			return 1
 		}
 
@@ -1524,6 +1551,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			affectedSet,
 			changedPackageRoots,
 			changedFilesForPlan,
+			changeStatusesForPlan,
 			*force,
 			ciToolchains,
 			*diffBase,
@@ -1777,14 +1805,15 @@ func emitBuildPlan(
 	ciGatesPath string,
 	language string,
 ) int {
-	return emitBuildPlanAgainst(nil, packages, graph, affectedSet, changedPackageRoots, changedFiles,
+	return emitBuildPlanAgainst(nil, packages, graph, affectedSet, changedPackageRoots, changedFiles, nil,
 		force, ciToolchains, diffBase, repoRoot, outputPath, alsoDetectLanguages, shardCount,
 		alsoEmitShardMatrix, ciGatesPath, language)
 }
 
 // emitBuildPlanAgainst is emitBuildPlan with the unfiltered discovery list
 // that Cargo path entries resolve against (nil means packages itself; see
-// resolver.ResolveWithTestTriggersAgainst).
+// resolver.ResolveWithTestTriggersAgainst) and the Git status of each changed
+// file (nil, as emitBuildPlan passes, keeps every metadata change ordinary).
 func emitBuildPlanAgainst(
 	known []discovery.Package,
 	packages []discovery.Package,
@@ -1792,6 +1821,7 @@ func emitBuildPlanAgainst(
 	affectedSet map[string]bool,
 	changedPackageRoots map[string]bool,
 	changedFiles []string,
+	changeStatuses gitdiff.ChangeStatuses,
 	force bool,
 	ciToolchains map[string]bool,
 	diffBase string,
@@ -1842,7 +1872,7 @@ func emitBuildPlanAgainst(
 			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
 			return 1
 		}
-		platformChanged, selectionErr := changedPackageRootsForPlatformAndLanguage(changedFiles, platformPackages, repoRoot, goos, language)
+		platformChanged, platformLocal, selectionErr := selectPackageRoots(changedFiles, changeStatuses, platformPackages, repoRoot, goos, language)
 		if selectionErr != nil {
 			fmt.Fprintf(os.Stderr, "Error selecting %s native fixture consumers: %v\n", goos, selectionErr)
 			return 1
@@ -1852,7 +1882,6 @@ func emitBuildPlanAgainst(
 			fmt.Fprintf(os.Stderr, "Error selecting %s repository input consumers: %v\n", goos, consumerErr)
 			return 1
 		}
-		platformLocal := packageLocalChangeRoots(changedFiles, platformPackages, repoRoot, platformChanged)
 		platformAffected := withPackageLocalChanges(
 			platformGraph,
 			withRepositoryInputConsumers(

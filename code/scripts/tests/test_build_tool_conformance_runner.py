@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 202)
+        self.assertEqual(summary["case_count"], 204)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3970,14 +3970,16 @@ class PureDomainValidationTests(unittest.TestCase):
         )
 
     def test_package_metadata_selection_keeps_metadata_local(self) -> None:
-        # The package_local metadata variant: root README/changelog/capability
-        # manifest/certificate/assurance report/evidence changes select their
-        # package and its prerequisites but never its dependents.
+        # The package_local metadata variant: root changelog/capability
+        # manifest/certificate/assurance report/evidence-data changes select
+        # their package and its prerequisites but never its dependents.
         fixtures = sorted(CASES_ROOT.glob("package-metadata-selection-*.json"))
         self.assertEqual(
             [path.name for path in fixtures],
             [
                 "package-metadata-selection-boundary-consumer.json",
+                "package-metadata-selection-build-front.json",
+                "package-metadata-selection-disallowed-types.json",
                 "package-metadata-selection-local-only.json",
                 "package-metadata-selection-lookalikes.json",
                 "package-metadata-selection-source-propagates.json",
@@ -4031,13 +4033,27 @@ class PureDomainValidationTests(unittest.TestCase):
                     runner.validate_case_document(unknown, **self._schema_args())
 
         for relative, expected in (
-            ("README.md", True),
             ("CHANGELOG.md", True),
             ("CHANGELOG.d/_meta.md", True),
             ("required_capabilities.json", True),
             ("effect_certificate.json", True),
             ("assurance_report.json", True),
+            ("evidence/test-manifest.json", True),
+            ("evidence/proofs/a.cnf", True),
             ("evidence/proofs/a.drat", True),
+            ("README.md", False),
+            ("CHANGELOG.d/nested/a.md", False),
+            ("CHANGELOG.d/run.sh", False),
+            ("CHANGELOG.d/.md", False),
+            ("evidence/run.sh", False),
+            ("evidence/x.json.py", False),
+            ("evidence/README.md", False),
+            ("evidence//x.json", False),
+            ("evidence/../x.json", False),
+            ("x/evidence/y.json", False),
+            ("x/CHANGELOG.d/y.md", False),
+            ("sub/required_capabilities.json", False),
+            ("changelog.md", False),
             ("", False),
             ("src/lib.rs", False),
             ("docs/README.md", False),
@@ -4953,7 +4969,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 202)
+        self.assertEqual(summary["case_count"], 204)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

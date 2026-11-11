@@ -90,9 +90,11 @@ The 197-case bootstrap corpus covers every process-free v1 domain:
   trigger hop outside the build graph, prerequisite closure after that hop,
   valid trigger cycles, and stable graph-cycle or unknown-relation refusal,
   plus the `metadata_policy: "package_local"` variant in which a package's
-  root README, changelog, capability manifest, effect certificate, assurance
-  report or evidence change selects that package and its prerequisites but
-  none of its dependents (`package-metadata-selection-*.json`);
+  root changelog or `CHANGELOG.d/*.md` shard, capability manifest, effect
+  certificate, assurance report or `evidence/` data (`.json`, `.cnf`,
+  `.drat`) selects that package and its prerequisites but none of its
+  dependents, while README, lookalikes, disallowed types and BUILD fronts
+  still propagate (`package-metadata-selection-*.json`);
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
   Three adversarial dependency cases additionally pin reverse-ordered

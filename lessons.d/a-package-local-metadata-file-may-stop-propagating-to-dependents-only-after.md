@@ -14,21 +14,41 @@ dependents could read either file.
 
 **The fix.** `code/programs/go/build-tool/internal/pkgmeta` names the
 package-root files a package's own BUILD may check but no dependent reads:
-`README.md`, `CHANGELOG.md`, `CHANGELOG.d/**`, `required_capabilities.json`,
-`effect_certificate.json`, `assurance_report.json` and `evidence/**`. A
-package whose only changes are those files is selected with its prerequisites
-but not its dependents or Cargo dev-dependency triggers
+`CHANGELOG.md`, `CHANGELOG.d/*.md`, `required_capabilities.json`,
+`effect_certificate.json`, `assurance_report.json` and `evidence/**` data
+(`.json`, `.cnf`, `.drat`). A package whose only changes are additions or
+edits of those files is selected with its prerequisites but not its
+dependents or Cargo dev-dependency triggers
 (`package_metadata.go`). The shared contract pins it as the
 `metadata_policy: "package_local"` diff-selection variant
 (`package-metadata-selection-*.json`). The bounded-json case now selects 1
 package.
 
+**What review caught.** The first version listed `README.md`, but 644 BUILDs
+run `pip install -e ../<dep>` and hatchling reads the dependency's
+`readme = "README.md"`: deleting `python/html-renderer/README.md` broke
+`python/programs/pipeline-visualizer` while only the renderer was selected.
+"Only the package itself reads it" must include the dependents' *packaging*,
+and an existence requirement is broken by a deletion even when no content is
+read, so deletions, renames and type changes (Git `D`/`T`, unknown status)
+always propagate now. It also classified local roots from the unfiltered path
+list while ordinary roots used the platform-filtered one, so a metadata
+change beside a `BUILD_windows` edit selected nothing on Linux and macOS.
+Compute both sets from one list. And an allowlist closed only by name let
+`evidence/run.sh` be "metadata"; it is now closed by type, and
+`-validate-build-files` refuses any BUILD, script, Cargo path or Rust
+`#[path]`/`include!` that executes a metadata-class location.
+
 **What consumes what** (the evidence, so the next person can re-check it):
 
 - Own package only: `rust/ct-compare` and `rust/gf256` BUILDs verify their own
   certificate, assurance report and `evidence/`; Rust/Go/OCaml analyzers and
-  many tests read their own `required_capabilities.json`; READMEs are read by
-  their own package's packaging or `include_str!`.
+  many tests read their own `required_capabilities.json`.
+- Dependents, for existence only: packaging file lists (gemspec `files`,
+  `.cabal` `extra-doc-files`, Perl `MANIFEST`, npm `files`) name
+  `CHANGELOG.md` and sometimes `required_capabilities.json`; only a deletion
+  can break them, and deletions propagate. Dependents read `README.md`
+  content (hatchling `readme`), so README is not metadata.
 - Other packages, none of them a dependent of the owner:
   `rust/required-capabilities-compiler` reads
   `rust/weather-agent-e2e/required_capabilities.json` (a declared

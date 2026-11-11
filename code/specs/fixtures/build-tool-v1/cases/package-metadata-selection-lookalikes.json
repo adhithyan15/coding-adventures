@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-lookalikes",
   "domain": "diff_selection",
-  "summary": "Nested, misspelled or file-shaped metadata names are ordinary package-prefix changes and still select every dependent.",
+  "summary": "README.md and nested, misspelled, case-varied or file-shaped metadata names are ordinary package-prefix changes and still select every dependent.",
   "platforms": [
     "darwin",
     "linux",
@@ -19,13 +19,103 @@
     "options": {
       "packages": [
         {
-          "name": "rust/nested",
-          "rel_path": "code/packages/rust/nested",
+          "name": "rust/readme",
+          "rel_path": "code/packages/rust/readme",
           "source_mode": "package_prefix"
         },
         {
-          "name": "rust/nested-user",
-          "rel_path": "code/packages/rust/nested-user",
+          "name": "rust/readme-user",
+          "rel_path": "code/packages/rust/readme-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-evidence",
+          "rel_path": "code/packages/rust/nested-evidence",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-evidence-user",
+          "rel_path": "code/packages/rust/nested-evidence-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-shard",
+          "rel_path": "code/packages/rust/nested-shard",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-shard-user",
+          "rel_path": "code/packages/rust/nested-shard-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-manifest",
+          "rel_path": "code/packages/rust/nested-manifest",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/nested-manifest-user",
+          "rel_path": "code/packages/rust/nested-manifest-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-file",
+          "rel_path": "code/packages/rust/evidence-file",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/evidence-file-user",
+          "rel_path": "code/packages/rust/evidence-file-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-dir-file",
+          "rel_path": "code/packages/rust/shard-dir-file",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/shard-dir-file-user",
+          "rel_path": "code/packages/rust/shard-dir-file-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/backup",
+          "rel_path": "code/packages/rust/backup",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/backup-user",
+          "rel_path": "code/packages/rust/backup-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/lower-case",
+          "rel_path": "code/packages/rust/lower-case",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/lower-case-user",
+          "rel_path": "code/packages/rust/lower-case-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/mixed-case",
+          "rel_path": "code/packages/rust/mixed-case",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/mixed-case-user",
+          "rel_path": "code/packages/rust/mixed-case-user",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/upper-dir",
+          "rel_path": "code/packages/rust/upper-dir",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/upper-dir-user",
+          "rel_path": "code/packages/rust/upper-dir-user",
           "source_mode": "package_prefix"
         },
         {
@@ -37,44 +127,52 @@
           "name": "rust/bindings-user",
           "rel_path": "code/packages/rust/bindings-user",
           "source_mode": "package_prefix"
-        },
-        {
-          "name": "rust/shaped",
-          "rel_path": "code/packages/rust/shaped",
-          "source_mode": "package_prefix"
-        },
-        {
-          "name": "rust/shaped-user",
-          "rel_path": "code/packages/rust/shaped-user",
-          "source_mode": "package_prefix"
-        },
-        {
-          "name": "rust/spelled",
-          "rel_path": "code/packages/rust/spelled",
-          "source_mode": "package_prefix"
-        },
-        {
-          "name": "rust/spelled-user",
-          "rel_path": "code/packages/rust/spelled-user",
-          "source_mode": "package_prefix"
         }
       ],
       "edges": [
         [
-          "rust/nested",
-          "rust/nested-user"
+          "rust/readme",
+          "rust/readme-user"
+        ],
+        [
+          "rust/nested-evidence",
+          "rust/nested-evidence-user"
+        ],
+        [
+          "rust/nested-shard",
+          "rust/nested-shard-user"
+        ],
+        [
+          "rust/nested-manifest",
+          "rust/nested-manifest-user"
+        ],
+        [
+          "rust/evidence-file",
+          "rust/evidence-file-user"
+        ],
+        [
+          "rust/shard-dir-file",
+          "rust/shard-dir-file-user"
+        ],
+        [
+          "rust/backup",
+          "rust/backup-user"
+        ],
+        [
+          "rust/lower-case",
+          "rust/lower-case-user"
+        ],
+        [
+          "rust/mixed-case",
+          "rust/mixed-case-user"
+        ],
+        [
+          "rust/upper-dir",
+          "rust/upper-dir-user"
         ],
         [
           "rust/bindings",
           "rust/bindings-user"
-        ],
-        [
-          "rust/shaped",
-          "rust/shaped-user"
-        ],
-        [
-          "rust/spelled",
-          "rust/spelled-user"
         ]
       ],
       "forced_packages": [],
@@ -82,10 +180,17 @@
       "metadata_policy": "package_local"
     },
     "changed_paths": [
-      "code/packages/rust/nested/tests/fixtures/README.md",
-      "code/packages/rust/bindings/evidence.bindings",
-      "code/packages/rust/shaped/CHANGELOG.d",
-      "code/packages/rust/spelled/readme.md"
+      "code/packages/rust/readme/README.md",
+      "code/packages/rust/nested-evidence/x/evidence/y.json",
+      "code/packages/rust/nested-shard/x/CHANGELOG.d/y.md",
+      "code/packages/rust/nested-manifest/sub/required_capabilities.json",
+      "code/packages/rust/evidence-file/evidence",
+      "code/packages/rust/shard-dir-file/CHANGELOG.d",
+      "code/packages/rust/backup/CHANGELOG.md.bak",
+      "code/packages/rust/lower-case/changelog.md",
+      "code/packages/rust/mixed-case/Required_capabilities.json",
+      "code/packages/rust/upper-dir/Evidence/test-manifest.json",
+      "code/packages/rust/bindings/evidence.bindings"
     ]
   },
   "expected": {
@@ -95,20 +200,41 @@
     "outcome": "ok",
     "result": {
       "changed_packages": [
+        "rust/backup",
         "rust/bindings",
-        "rust/nested",
-        "rust/shaped",
-        "rust/spelled"
+        "rust/evidence-file",
+        "rust/lower-case",
+        "rust/mixed-case",
+        "rust/nested-evidence",
+        "rust/nested-manifest",
+        "rust/nested-shard",
+        "rust/readme",
+        "rust/shard-dir-file",
+        "rust/upper-dir"
       ],
       "affected_packages": [
+        "rust/backup",
+        "rust/backup-user",
         "rust/bindings",
         "rust/bindings-user",
-        "rust/nested",
-        "rust/nested-user",
-        "rust/shaped",
-        "rust/shaped-user",
-        "rust/spelled",
-        "rust/spelled-user"
+        "rust/evidence-file",
+        "rust/evidence-file-user",
+        "rust/lower-case",
+        "rust/lower-case-user",
+        "rust/mixed-case",
+        "rust/mixed-case-user",
+        "rust/nested-evidence",
+        "rust/nested-evidence-user",
+        "rust/nested-manifest",
+        "rust/nested-manifest-user",
+        "rust/nested-shard",
+        "rust/nested-shard-user",
+        "rust/readme",
+        "rust/readme-user",
+        "rust/shard-dir-file",
+        "rust/shard-dir-file-user",
+        "rust/upper-dir",
+        "rust/upper-dir-user"
       ],
       "prerequisite_packages": []
     },

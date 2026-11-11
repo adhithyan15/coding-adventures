@@ -63,7 +63,7 @@
       "metadata_policy": "package_local"
     },
     "changed_paths": [
-      "code/packages/rust/meta/README.md",
+      "code/packages/rust/meta/CHANGELOG.md",
       "code/packages/rust/meta/src/lib.rs",
       "code/packages/rust/leaf/CHANGELOG.d/_meta.md"
     ]

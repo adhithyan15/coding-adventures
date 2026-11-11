@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-strict-and-forced",
   "domain": "diff_selection",
-  "summary": "A strict-glob package keeps declared-source semantics: a declared README propagates, an undeclared changelog selects nothing. Forced seeds propagate.",
+  "summary": "A strict-glob package keeps declared-source semantics: a declared changelog propagates, an undeclared one selects nothing. Forced seeds propagate.",
   "platforms": [
     "darwin",
     "linux",
@@ -24,7 +24,7 @@
           "source_mode": "strict_globs",
           "source_globs": [
             "src/**/*.py",
-            "README.md"
+            "CHANGELOG.md"
           ]
         },
         {
@@ -83,9 +83,9 @@
       "metadata_policy": "package_local"
     },
     "changed_paths": [
-      "code/packages/python/declares/README.md",
+      "code/packages/python/declares/CHANGELOG.md",
       "code/packages/python/undeclared/CHANGELOG.md",
-      "code/packages/python/forced/README.md"
+      "code/packages/python/forced/CHANGELOG.md"
     ]
   },
   "expected": {

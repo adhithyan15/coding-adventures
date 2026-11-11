@@ -238,53 +238,167 @@ func TestMapFilesToPackages_MultipleFiles(t *testing.T) {
 }
 
 // ClassifyChangedFiles splits the changed packages of MapFilesToPackages by
-// whether the change can reach dependents. Package-local metadata at the root
-// of a shell package is local; anything else, including a metadata name that
-// is nested or that a Starlark package declares as a source, propagates.
+// whether the change can reach dependents. An added or modified piece of
+// package-local metadata at the root of a shell package is local; anything
+// else propagates: README.md, a nested or misspelled name, a non-data file in
+// a metadata directory, a metadata name a Starlark package declares as a
+// source, and every deletion, rename or type change.
 func TestClassifyChangedFiles_PackageLocalMetadata(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/meta", Path: "/repo/code/packages/rust/meta", Language: "rust"},
 		{Name: "rust/mixed", Path: "/repo/code/packages/rust/mixed", Language: "rust"},
 		{Name: "rust/nested", Path: "/repo/code/packages/rust/nested", Language: "rust"},
+		{Name: "rust/readme", Path: "/repo/code/packages/rust/readme", Language: "rust"},
+		{Name: "rust/deleted", Path: "/repo/code/packages/rust/deleted", Language: "rust"},
+		{Name: "rust/retyped", Path: "/repo/code/packages/rust/retyped", Language: "rust"},
+		{Name: "rust/script", Path: "/repo/code/packages/rust/script", Language: "rust"},
+		{Name: "rust/unknown", Path: "/repo/code/packages/rust/unknown", Language: "rust"},
 		{
-			Name: "python/declares-readme", Path: "/repo/code/packages/python/declares-readme",
-			Language: "python", IsStarlark: true, DeclaredSrcs: []string{"src/**/*.py", "README.md"},
+			Name: "python/declares", Path: "/repo/code/packages/python/declares",
+			Language: "python", IsStarlark: true, DeclaredSrcs: []string{"src/**/*.py", "CHANGELOG.md"},
 		},
 		{
 			Name: "python/strict", Path: "/repo/code/packages/python/strict",
 			Language: "python", IsStarlark: true, DeclaredSrcs: []string{"src/**/*.py"},
 		},
 	}
+	statuses := ChangeStatuses{
+		"code/packages/rust/meta/CHANGELOG.md":                         'M',
+		"code/packages/rust/meta/CHANGELOG.d/2026-11-11-0123abcd-x.md": 'A',
+		"code/packages/rust/meta/required_capabilities.json":           'A',
+		"code/packages/rust/meta/effect_certificate.json":              'M',
+		"code/packages/rust/meta/assurance_report.json":                'M',
+		"code/packages/rust/meta/evidence/test-manifest.json":          'M',
+		"code/packages/rust/mixed/CHANGELOG.md":                        'M',
+		"code/packages/rust/mixed/src/lib.rs":                          'M',
+		"code/packages/rust/nested/sub/required_capabilities.json":     'A',
+		"code/packages/rust/readme/README.md":                          'M',
+		"code/packages/rust/deleted/CHANGELOG.md":                      'D',
+		"code/packages/rust/retyped/required_capabilities.json":        'T',
+		"code/packages/rust/script/evidence/run.sh":                    'A',
+		"code/packages/python/declares/CHANGELOG.md":                   'M',
+		"code/packages/python/strict/CHANGELOG.md":                     'M',
+		// rust/unknown has no recorded status.
+	}
 	changed := []string{
-		// Metadata only: local.
-		"code/packages/rust/meta/README.md",
 		"code/packages/rust/meta/CHANGELOG.md",
 		"code/packages/rust/meta/CHANGELOG.d/2026-11-11-0123abcd-x.md",
 		"code/packages/rust/meta/required_capabilities.json",
 		"code/packages/rust/meta/effect_certificate.json",
 		"code/packages/rust/meta/assurance_report.json",
 		"code/packages/rust/meta/evidence/test-manifest.json",
-		// Metadata plus source: the source wins.
-		"code/packages/rust/mixed/README.md",
+		"code/packages/rust/mixed/CHANGELOG.md",
 		"code/packages/rust/mixed/src/lib.rs",
-		// A nested README is a test input somewhere: it propagates.
-		"code/packages/rust/nested/tests/fixtures/README.md",
-		// A declared Starlark source propagates whatever its name.
-		"code/packages/python/declares-readme/README.md",
-		// An undeclared one selects nothing at all, as before.
+		"code/packages/rust/nested/sub/required_capabilities.json",
+		"code/packages/rust/readme/README.md",
+		"code/packages/rust/deleted/CHANGELOG.md",
+		"code/packages/rust/retyped/required_capabilities.json",
+		"code/packages/rust/script/evidence/run.sh",
+		"code/packages/rust/unknown/CHANGELOG.md",
+		"code/packages/python/declares/CHANGELOG.md",
 		"code/packages/python/strict/CHANGELOG.md",
 	}
-	propagating, local := ClassifyChangedFiles(changed, packages, "/repo")
-	if got, want := keys(propagating), []string{"python/declares-readme", "rust/mixed", "rust/nested"}; !slices.Equal(got, want) {
-		t.Errorf("propagating = %v, want %v", got, want)
+	propagating, local := ClassifyChangedFiles(changed, packages, "/repo", statuses)
+	wantPropagating := []string{
+		"python/declares", "rust/deleted", "rust/mixed", "rust/nested",
+		"rust/readme", "rust/retyped", "rust/script", "rust/unknown",
+	}
+	if got := keys(propagating); !slices.Equal(got, wantPropagating) {
+		t.Errorf("propagating = %v, want %v", got, wantPropagating)
 	}
 	if got, want := keys(local), []string{"rust/meta"}; !slices.Equal(got, want) {
 		t.Errorf("local = %v, want %v", got, want)
 	}
+	// Without statuses nothing is local.
+	propagatingUnknown, localUnknown := ClassifyChangedFiles(changed, packages, "/repo", nil)
+	if len(localUnknown) != 0 || !propagatingUnknown["rust/meta"] {
+		t.Errorf("nil statuses: propagating = %v, local = %v", keys(propagatingUnknown), keys(localUnknown))
+	}
 	// MapFilesToPackages is still the union: every package whose own BUILD
 	// must re-run.
-	if got, want := keys(MapFilesToPackages(changed, packages, "/repo")), []string{"python/declares-readme", "rust/meta", "rust/mixed", "rust/nested"}; !slices.Equal(got, want) {
-		t.Errorf("MapFilesToPackages = %v, want %v", got, want)
+	wantUnion := append(append([]string{}, wantPropagating...), "rust/meta")
+	slices.Sort(wantUnion)
+	if got := keys(MapFilesToPackages(changed, packages, "/repo")); !slices.Equal(got, wantUnion) {
+		t.Errorf("MapFilesToPackages = %v, want %v", got, wantUnion)
+	}
+}
+
+func TestParseNameStatus(t *testing.T) {
+	files, statuses := parseNameStatus([]byte("M\x00a/x.go\x00D\x00b/CHANGELOG.md\x00A\x00c/y.md\x00T\x00d/z\x00R100\x00e/old\x00e/new\x00"))
+	if want := []string{"a/x.go", "b/CHANGELOG.md", "c/y.md", "d/z", "e/old", "e/new"}; !slices.Equal(files, want) {
+		t.Fatalf("files = %v, want %v", files, want)
+	}
+	for path, want := range map[string]bool{"a/x.go": true, "b/CHANGELOG.md": false, "c/y.md": true, "d/z": false, "e/old": false, "e/new": false, "missing": false} {
+		if got := statuses.Additive(path); got != want {
+			t.Errorf("Additive(%q) = %t, want %t", path, got, want)
+		}
+	}
+	// A truncated record yields no statuses at all, never a partial set.
+	if files, statuses := parseNameStatus([]byte("M\x00a/x.go\x00D")); statuses != nil || !slices.Equal(files, []string{"a/x.go"}) {
+		t.Fatalf("truncated: files = %v, statuses = %v", files, statuses)
+	}
+	if files, statuses := parseNameStatus(nil); len(files) != 0 || len(statuses) != 0 {
+		t.Fatalf("empty: files = %v, statuses = %v", files, statuses)
+	}
+}
+
+// A real Git history: modify, add, delete and rename metadata, then check the
+// statuses GetChangedFilesWithStatus reports. --no-renames turns the rename
+// into a deletion plus an addition, so the rename still carries a D.
+func TestGetChangedFilesWithStatusReportsDeletionsAndRenames(t *testing.T) {
+	repo := t.TempDir()
+	git := func(args ...string) {
+		t.Helper()
+		cmd := exec.Command("git", append([]string{"-c", "user.name=T", "-c", "user.email=t@example.invalid"}, args...)...)
+		cmd.Dir = repo
+		if out, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v: %s", args, err, out)
+		}
+	}
+	write := func(rel, content string) {
+		t.Helper()
+		path := filepath.Join(repo, filepath.FromSlash(rel))
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	git("init", "-q")
+	write("p/CHANGELOG.md", "one\n")
+	write("p/required_capabilities.json", "{}\n")
+	write("p/effect_certificate.json", "{}\n")
+	git("add", ".")
+	git("commit", "-qm", "base")
+	git("branch", "base")
+	write("p/CHANGELOG.md", "two\n")
+	write("p/CHANGELOG.d/x.md", "shard\n")
+	if err := os.Remove(filepath.Join(repo, "p", "required_capabilities.json")); err != nil {
+		t.Fatal(err)
+	}
+	git("mv", "p/effect_certificate.json", "p/assurance_report.json")
+	git("add", "-A")
+	git("commit", "-qm", "change")
+
+	files, statuses := GetChangedFilesWithStatus(repo, "base")
+	slices.Sort(files)
+	if want := []string{"p/CHANGELOG.d/x.md", "p/CHANGELOG.md", "p/assurance_report.json", "p/effect_certificate.json", "p/required_capabilities.json"}; !slices.Equal(files, want) {
+		t.Fatalf("files = %v, want %v", files, want)
+	}
+	for path, want := range map[string]byte{
+		"p/CHANGELOG.md": 'M', "p/CHANGELOG.d/x.md": 'A', "p/required_capabilities.json": 'D',
+		"p/effect_certificate.json": 'D', "p/assurance_report.json": 'A',
+	} {
+		if statuses[path] != want {
+			t.Errorf("status(%s) = %q, want %q", path, statuses[path], want)
+		}
+	}
+	if plain := GetChangedFiles(repo, "base"); len(plain) != len(files) {
+		t.Errorf("GetChangedFiles = %v, want the same %d paths", plain, len(files))
+	}
+	if files, statuses := GetChangedFilesWithStatus(repo, "no-such-ref"); files != nil || statuses != nil {
+		t.Errorf("unknown base = %v %v, want nil, nil", files, statuses)
 	}
 }
 

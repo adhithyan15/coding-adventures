@@ -43,6 +43,8 @@ var expectedDiffFixtures = []string{
 // stays unchanged.
 var expectedPackageMetadataFixtures = []string{
 	"package-metadata-selection-boundary-consumer.json",
+	"package-metadata-selection-build-front.json",
+	"package-metadata-selection-disallowed-types.json",
 	"package-metadata-selection-local-only.json",
 	"package-metadata-selection-lookalikes.json",
 	"package-metadata-selection-source-propagates.json",

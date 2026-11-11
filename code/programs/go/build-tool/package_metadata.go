@@ -32,6 +32,13 @@ package main
 //     test triggers: its library did not change, so nothing that links it
 //     has anything new to test.
 //
+// Only an addition or in-place edit (Git status A or M) can be local; a
+// deletion, rename or type change of a metadata file is an ordinary change,
+// because packaging that lists the file needs it to exist in a dependent's
+// build. Local and ordinary roots are both computed by selectPackageRoots
+// (main.go) from one platform-filtered path list, so a package can never fall
+// out of both sets.
+//
 // A package with any other change is an ordinary root and propagates as
 // before, metadata included. So does every root seeded for an external
 // fixture or by -force, and the hash-cache fallback is unchanged: it is the
@@ -44,26 +51,13 @@ package main
 
 import (
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 )
 
-// packageLocalChangeRoots returns the packages whose only changes are
-// package-local metadata. Packages already in propagating — the roots
-// changedPackageRootsForPlatformAndLanguage selected, including every
-// fixture-consumer seed — are excluded: one ordinary change makes the whole
-// package an ordinary root. A nil change list (no Git answer) returns nil.
-func packageLocalChangeRoots(
-	changedFiles []string,
-	packages []discovery.Package,
-	repoRoot string,
-	propagating map[string]bool,
-) map[string]bool {
-	if changedFiles == nil {
-		return nil
-	}
-	_, local := gitdiff.ClassifyChangedFiles(changedFiles, packages, repoRoot)
-	for name := range propagating {
+// withoutRoots returns local minus every package in roots: one ordinary
+// change — or any fixture-consumer seed — makes the whole package an
+// ordinary root.
+func withoutRoots(local, roots map[string]bool) map[string]bool {
+	for name := range roots {
 		delete(local, name)
 	}
 	return local

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "diff-selection/package-metadata-local-only",
   "domain": "diff_selection",
-  "summary": "Root README, changelog, capability manifest, certificate, assurance report and evidence select their package and its prerequisites but no dependent.",
+  "summary": "Root changelog and shards, capability manifest, certificate, assurance report and evidence data select their package and its prerequisites but no dependent.",
   "platforms": [
     "darwin",
     "linux",
@@ -49,13 +49,14 @@
       "metadata_policy": "package_local"
     },
     "changed_paths": [
-      "code/packages/rust/meta/README.md",
       "code/packages/rust/meta/CHANGELOG.md",
       "code/packages/rust/meta/CHANGELOG.d/2026-11-11-0123abcd-capabilities.md",
       "code/packages/rust/meta/required_capabilities.json",
       "code/packages/rust/meta/effect_certificate.json",
       "code/packages/rust/meta/assurance_report.json",
-      "code/packages/rust/meta/evidence/test-manifest.json"
+      "code/packages/rust/meta/evidence/test-manifest.json",
+      "code/packages/rust/meta/evidence/proofs/0123abcd.cnf",
+      "code/packages/rust/meta/evidence/proofs/0123abcd.drat"
     ]
   },
   "expected": {

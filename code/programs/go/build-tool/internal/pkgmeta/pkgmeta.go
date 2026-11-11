@@ -29,24 +29,36 @@
 //
 // # The closed list, and the evidence for each entry
 //
-// A file belongs here only if no *dependent* of its package can read it. The
-// list was built from repository-wide searches (recorded in
+// A file belongs here only if no *dependent* of its package can read it,
+// whether as an input to its build, its tests or its toolchain. The list was
+// built from repository-wide searches (recorded in
 // code/specs/12-build-system.md, "Package-local metadata"):
 //
-//	path (package-relative)      who reads it
-//	──────────────────────────   ─────────────────────────────────────────────
-//	README.md                    the package's own docs/tests (Rust
-//	                             include_str!, pyproject readme, gemspec files);
-//	                             no dependent's BUILD or test opens it
-//	CHANGELOG.md, CHANGELOG.d/   repository changelog checkers (code/scripts,
-//	                             scheduled by path, not by package)
-//	required_capabilities.json   the package's own analyzer/cage checks and
-//	                             tests; the generated cage (gen_capabilities.go,
-//	                             src/capabilities.rs) is *source* and still
-//	                             propagates when it is regenerated
-//	effect_certificate.json      the package's own --verify-cert step
-//	assurance_report.json        the package's own --check step
-//	evidence/                    the package's own warrant evidence steps
+//	path (package-relative)        who reads it
+//	─────────────────────────────  ──────────────────────────────────────────
+//	CHANGELOG.md                   repository changelog checks (code/scripts,
+//	                               scheduled by path); packaging file lists
+//	                               (gemspec, cabal extra-doc-files, Perl
+//	                               MANIFEST, npm "files") that a dependent's
+//	                               install needs only to EXIST
+//	CHANGELOG.d/<name>.md          the same checks, and the package's own
+//	                               doc-shard check
+//	required_capabilities.json     the package's own analyzer/cage checks and
+//	                               tests; the generated cage (gen_capabilities.go,
+//	                               src/capabilities.rs) is *source* and still
+//	                               propagates when it is regenerated
+//	effect_certificate.json        the package's own --verify-cert step
+//	assurance_report.json          the package's own --check step
+//	evidence/**.{json,cnf,drat}    the package's own warrant evidence steps
+//
+// README.md is deliberately NOT here: a Python dependent's
+// `pip install -e ../<dep>` makes hatchling read the dependency's
+// `readme = "README.md"`, so deleting one breaks the dependent's install.
+//
+// Packaging that needs a file only to exist is safe because only additions
+// and modifications can be local: the caller (gitdiff.ClassifyChangedFiles)
+// treats a deletion, rename or type change of any of these paths as an
+// ordinary change that propagates.
 //
 // Readers in *other* packages exist, but none of them is a dependent of the
 // owner, so dependency propagation never selected them anyway:
@@ -59,13 +71,15 @@
 //
 // # Matching rules
 //
-//   - Only the package ROOT counts. tests/fixtures/README.md is a test input
-//     (rust/html-lexer reads rust/html-parser's), so a nested README is
-//     ordinary source.
-//   - Exact, case-sensitive basenames. readme.md, README.md.bak, CHANGELOG
-//     and evidence.bindings (read by rust/warrant-grammar) are ordinary source.
-//   - CHANGELOG.d/ and evidence/ match only strict descendants: a FILE named
-//     CHANGELOG.d or evidence is ordinary source.
+//   - Only the package ROOT counts. A nested sub/required_capabilities.json,
+//     x/CHANGELOG.d/y.md or x/evidence/y.json is ordinary source.
+//   - Exact, case-sensitive names. changelog.md, CHANGELOG.md.bak,
+//     evidence.bindings (read by rust/warrant-grammar) are ordinary source.
+//   - Closed by USE as well as by name: CHANGELOG.d/ holds only direct
+//     `*.md` shards and evidence/ only the data extensions present in the
+//     repository today (.json, .cnf, .drat). A script, source file or
+//     anything else placed there is ordinary source, so it cannot become a
+//     non-propagating way to change what something executes.
 //   - Raw slash-separated Git paths. A backslash never matches, so an
 //     unusual spelling falls back to the conservative behaviour.
 //
@@ -77,30 +91,32 @@ import "strings"
 
 // rootFiles are package-root files that are metadata when they change.
 var rootFiles = map[string]struct{}{
-	"README.md":                  {},
 	"CHANGELOG.md":               {},
 	"required_capabilities.json": {},
 	"effect_certificate.json":    {},
 	"assurance_report.json":      {},
 }
 
-// rootDirectories are package-root directories whose every descendant is
-// metadata. The trailing slash is part of the prefix.
-var rootDirectories = []string{
-	"CHANGELOG.d/",
-	"evidence/",
-}
+// EvidenceExtensions are the only file extensions accepted under evidence/.
+// They are exactly the extensions of every tracked evidence file today
+// (`git ls-files 'code/**/evidence/**'`: test/proof/bench manifests in JSON,
+// DIMACS CNF problems and DRAT proofs). Extending the list needs the same
+// survey and a check that nothing executes the new type.
+var EvidenceExtensions = []string{".json", ".cnf", ".drat"}
 
 // IsPackageLocal reports whether relative — a slash-separated path relative
 // to the package root, exactly as Git spells it — is package-local metadata.
 //
-//	README.md                          → true
+//	CHANGELOG.md                       → true
 //	CHANGELOG.d/2026-11-11-x.md        → true
 //	evidence/test-manifest.json        → true
+//	evidence/proofs/abc.drat           → true
 //	required_capabilities.json         → true
+//	README.md                          → false (dependents' packaging reads it)
 //	src/lib.rs                         → false (source)
-//	docs/README.md                     → false (not at the root)
-//	readme.md, README.md.bak           → false (not the exact name)
+//	sub/required_capabilities.json     → false (not at the root)
+//	CHANGELOG.d/nested/x.md            → false (shards are direct children)
+//	CHANGELOG.d/run.sh, evidence/x.sh  → false (not a data type)
 //	CHANGELOG.d, evidence              → false (a file, not the directory)
 //	evidence.bindings                  → false (read by other packages)
 //	""                                 → false (the package root itself)
@@ -111,10 +127,27 @@ func IsPackageLocal(relative string) bool {
 	if _, ok := rootFiles[relative]; ok {
 		return true
 	}
-	for _, prefix := range rootDirectories {
-		if rest, ok := strings.CutPrefix(relative, prefix); ok && rest != "" {
-			return true
+	if shard, ok := strings.CutPrefix(relative, "CHANGELOG.d/"); ok {
+		return !strings.Contains(shard, "/") && hasStemAndSuffix(shard, ".md")
+	}
+	if rest, ok := strings.CutPrefix(relative, "evidence/"); ok {
+		for _, segment := range strings.Split(rest, "/") {
+			if segment == "" || segment == "." || segment == ".." {
+				return false
+			}
+		}
+		base := rest[strings.LastIndex(rest, "/")+1:]
+		for _, extension := range EvidenceExtensions {
+			if hasStemAndSuffix(base, extension) {
+				return true
+			}
 		}
 	}
 	return false
+}
+
+// hasStemAndSuffix reports whether name ends with suffix and has at least
+// one character before it: ".md" alone is not a shard.
+func hasStemAndSuffix(name, suffix string) bool {
+	return len(name) > len(suffix) && strings.HasSuffix(name, suffix)
 }

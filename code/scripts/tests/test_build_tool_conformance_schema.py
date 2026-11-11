@@ -418,7 +418,7 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             for example in self.examples
             if example["id"].startswith("diff-selection/package-metadata-")
         ]
-        self.assertEqual(len(fixtures), 5)
+        self.assertEqual(len(fixtures), 7)
         for example in fixtures:
             with self.subTest(case=example["id"]):
                 record = {

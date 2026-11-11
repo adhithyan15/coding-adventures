@@ -53,7 +53,7 @@ void main() {
         // legacy path-selection package records consumed here.
         if (options.containsKey('trigger_relations')) continue;
         // The package_local metadata variant (package-metadata-selection-*)
-        // keeps root README/changelog/capability/evidence changes from
+        // keeps root changelog/capability/evidence-data edits from
         // reaching dependents. This core does not model that policy, so it
         // skips the variant instead of replaying it as legacy selection.
         if (options.containsKey('metadata_policy')) continue;

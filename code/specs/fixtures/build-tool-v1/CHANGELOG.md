@@ -2,6 +2,17 @@
 
 ## 2026-11-11
 
+- Review fixes for the `package_local` metadata policy. `README.md` is no
+  longer metadata (a Python dependent's `pip install -e ../<dep>` reads the
+  dependency's `readme`). The list is closed by type: `CHANGELOG.d/` admits
+  only direct `*.md` shards and `evidence/` only `.json`, `.cnf` and `.drat`.
+  Two new cases pin a platform BUILD front beside metadata
+  (`package-metadata-selection-build-front.json`) and disallowed types and
+  nesting (`package-metadata-selection-disallowed-types.json`); the
+  lookalike case now covers README, nested evidence/shard/manifest paths,
+  file-shaped, backup and case-varied names. The spec now states that hosts
+  treat deletions, renames and type changes as ordinary paths. The corpus now
+  has 204 cases.
 - Added the `metadata_policy: "package_local"` variant of `diff_selection`
   and five `package-metadata-selection-*.json` cases. A package-prefix
   package whose only changed paths are its root `README.md`, `CHANGELOG.md`,

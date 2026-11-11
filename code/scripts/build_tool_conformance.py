@@ -66,17 +66,18 @@ MAX_DIFF_SELECTION_MATCH_WORK = 50_000_000
 # is in code/specs/12-build-system.md, "Package-local metadata").  A
 # package-prefix package selected only through them is changed and affected
 # but propagates to no dependent.  Matching is exact, case-sensitive and
-# root-only; the two directories match strict descendants only.
+# root-only, and closed by use: CHANGELOG.d/ holds only direct `*.md` shards
+# and evidence/ only the data extensions tracked today.  README.md is not
+# listed: dependents' packaging (hatchling `readme`) reads it.
 PACKAGE_LOCAL_METADATA_FILES = frozenset(
     {
-        "README.md",
         "CHANGELOG.md",
         "required_capabilities.json",
         "effect_certificate.json",
         "assurance_report.json",
     }
 )
-PACKAGE_LOCAL_METADATA_DIRECTORIES = ("CHANGELOG.d/", "evidence/")
+PACKAGE_LOCAL_EVIDENCE_EXTENSIONS = (".json", ".cnf", ".drat")
 MAX_CI_GATE_SELECTION_MATCH_WORK = 50_000_000
 CI_GATE_MACHINERY_EXACT = (
     ".github/workflows/ci.yml",
@@ -3687,18 +3688,28 @@ def _is_package_local_metadata(relative: str) -> bool:
     """Classify one package-relative path for the package_local policy.
 
     >>> [_is_package_local_metadata(p) for p in (
-    ...     "README.md", "CHANGELOG.d/_meta.md", "evidence/x.json",
-    ...     "docs/README.md", "readme.md", "CHANGELOG.d", "evidence.bindings")]
-    [True, True, True, False, False, False, False]
+    ...     "CHANGELOG.md", "CHANGELOG.d/_meta.md", "evidence/p/x.drat",
+    ...     "README.md", "docs/CHANGELOG.md", "CHANGELOG.d/x.sh",
+    ...     "CHANGELOG.d/a/b.md", "evidence/run.sh", "evidence.bindings")]
+    [True, True, True, False, False, False, False, False, False]
     """
     if "\\" in relative:
         return False
     if relative in PACKAGE_LOCAL_METADATA_FILES:
         return True
-    return any(
-        relative.startswith(prefix) and len(relative) > len(prefix)
-        for prefix in PACKAGE_LOCAL_METADATA_DIRECTORIES
-    )
+    if relative.startswith("CHANGELOG.d/"):
+        shard = relative[len("CHANGELOG.d/") :]
+        return "/" not in shard and len(shard) > len(".md") and shard.endswith(".md")
+    if relative.startswith("evidence/"):
+        rest = relative[len("evidence/") :]
+        if any(segment in ("", ".", "..") for segment in rest.split("/")):
+            return False
+        base = rest.rsplit("/", 1)[-1]
+        return any(
+            len(base) > len(extension) and base.endswith(extension)
+            for extension in PACKAGE_LOCAL_EVIDENCE_EXTENSIONS
+        )
+    return False
 
 
 def _expected_diff_selection(

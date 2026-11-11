@@ -242,8 +242,8 @@ let consumes_every_shared_fixture () =
                let options = fixture |> member "input" |> member "options" in
                (* This closed variant uses package-name strings rather than the
                   legacy path-selection package records consumed here. *)
-               (* The package_local metadata variant keeps root README,
-                  changelog, capability and evidence changes from reaching
+               (* The package_local metadata variant keeps root changelog,
+                  capability and evidence-data edits from reaching
                   dependents. This core does not model that policy, so it
                   skips the variant instead of replaying it as legacy
                   selection. *)

@@ -58,8 +58,8 @@ final class BuildToolCoreTest {
                 }
                 if (domain.equals("diff_selection")
                         && fixture.path("input").path("options").has("metadata_policy")) {
-                    // The package_local metadata variant keeps root README,
-                    // changelog, capability and evidence changes from reaching
+                    // The package_local metadata variant keeps root changelog,
+                    // capability and evidence-data edits from reaching
                     // dependents. This core does not model that policy, so it
                     // skips the variant instead of replaying it as legacy selection.
                     continue;
