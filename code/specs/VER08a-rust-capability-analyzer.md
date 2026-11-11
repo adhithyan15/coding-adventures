@@ -100,7 +100,7 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 | `std::fs::{read_dir, metadata, symlink_metadata, canonicalize, read_link, exists, try_exists, ReadDir, DirEntry, Metadata}` | `fs:list` |
 | `std::fs::{create_dir, create_dir_all, DirBuilder}` | `fs:create` |
 | `std::fs::{remove_file, remove_dir, remove_dir_all}` | `fs:delete` |
-| `std::fs::{write, copy, rename, hard_link, soft_link, set_permissions, OpenOptions}`, `std::fs::File::{create, create_new, create_buffered, options}` | `fs:write` |
+| `std::fs::{write, copy, rename, hard_link, soft_link, set_permissions, OpenOptions}`, `std::fs::File::{create, create_new, create_buffered, options, set_times, set_modified, set_permissions}` | `fs:write` |
 | any other `std::fs` item (`read`, `read_to_string`, `File`, `File::open`, bare module) | `fs:read` |
 | `std::net::TcpListener`, `std::net::UdpSocket::bind` | `net:listen` |
 | `std::net::ToSocketAddrs` | `net:dns` |
@@ -113,8 +113,9 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 | `std::backtrace::*` (reads `RUST_BACKTRACE`) | `env:read` |
 | `std::thread::{sleep, sleep_ms, park_timeout}` | `time:sleep` |
 | any other `std::thread` item (`spawn`, `scope`, `Builder`, `current`, bare module) | `thread:spawn` |
-| `std::time::{Duration, TryFromFloatSecsError, UNIX_EPOCH}` | pure |
-| any other `std::time` item (`Instant`, `SystemTime`, bare module) | `time:read` |
+| `std::time::{Duration, TryFromFloatSecsError}` | pure |
+| any other `std::time` item (`Instant`, `SystemTime`, `UNIX_EPOCH`, bare module) | `time:read` |
+| `…::Condvar::{wait_timeout, wait_timeout_ms, wait_timeout_while}`, `…::Receiver::{recv_timeout, recv_deadline}`, however qualified (`std::sync` is a pure module) | `time:sleep` |
 | `std::io::{stdin, Stdin, StdinLock}` | `stdin:read` |
 | `std::io::{stdout, stderr, Stdout, Stderr, StdoutLock, StderrLock, _print, _eprint}`; macros `print println eprint eprintln dbg` (bare or `std::`-qualified) | `stdout:write` |
 | other `std::io` items (`Read`, `Write`, `Cursor`, `Error`, `copy`, …) | pure |
@@ -130,7 +131,7 @@ Bindings are expanded through other bindings at **every segment**, not only the 
 | *unresolved-head shorthand*: a path headed `fs net process env thread time ffi io os` that no binding explains is treated as `std::<same path>` | as above |
 | pure std modules/macros (below) | pure |
 
-Method heuristic: `.name(` with `name` in {`read_dir metadata symlink_metadata canonicalize read_link exists try_exists is_file is_dir is_symlink`} is `fs:list`, because `Path::exists()` reaches the filesystem without naming `std::fs`. This over-approximates (a user method called `exists` is flagged).
+Method heuristic: `.name(` with `name` in {`read_dir metadata symlink_metadata canonicalize read_link exists try_exists is_file is_dir is_symlink`} is `fs:list`, because `Path::exists()` reaches the filesystem without naming `std::fs`; `.set_times(`, `.set_modified(`, `.set_permissions(` are `fs:write` (they write metadata through a handle opened only for reading); `.recv_timeout(`, `.recv_deadline(`, `.wait_timeout(`, `.wait_timeout_ms(`, `.wait_timeout_while(` are `time:sleep` (timed waits on the pure `std::sync` types, like `thread::park_timeout`); `.elapsed(` is `time:read` (`UNIX_EPOCH.elapsed()` reads the clock without naming `SystemTime`). This over-approximates (a user method called `exists` or `elapsed` is flagged).
 
 *Receiver resolution (L4).* The heuristic is skipped for exactly one provable shape: the receiver is `Local::ctor(..)` optionally followed by `.unwrap()`, `.expect(..)`, `.clone()` or `?`, where `Local` is a struct/enum of the package whose own inherent `impl Local { .. }` declares both `ctor` (an associated fn returning `Self`, `Local`, `Result<Self|Local, _>` or `Option<Self|Local>`) and a `self` method of the called name, and `Local` is not rebound by a `use`/`type`, and no glob import in the package reaches outside the crate (a glob headed by anything but `crate`/`self`/`super`/`Self` after normalisation, e.g. `use std::path::*;` or `use dep::*;`, may supply a different `Local` that no binding records). Inherent methods win method resolution, so such a call cannot reach `Path::<name>`. Anything else - a variable, a field, another adapter, a trait method - stays flagged. Example: `Url::parse(s).unwrap().canonicalize()` in url-parser is the crate's own `Url::canonicalize`, not a filesystem call.
 
@@ -296,3 +297,5 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 | D32 | root-level files could `mod` into the root directories the scanner skips: `build.rs` `mod examples;` (PoC t5), `[lib] path = "lib.rs"` + `mod tests;` or `mod tests { mod x; }` (PoC t10) | such `mod` declarations in root-level files, `mod` handed to a macro there, and `mod $name` in transcribers are `CAP003` (§5) | HIGH-5 (round-3 review) false negative |
 | D33 | `std::fs::File::create_buffered` was `fs:read` (PoC t7) | `fs:write` (§3.3) | INFO (round-3 review) |
 | D34 | bindings were expanded only through their *first* segment and written paths substituted once, so a rename of a rename through a module was never followed: `mod a { pub use std as s; } use a::s as t; t::env::var(..)` was `a::s::env::var` (pure), likewise `use super::i as j` with `use std::io as i`, `use crate::Q as P`, `mod m { pub extern crate std as s2; } use m::s2 as s3;`, `use j::*` over such a rename, and `t::include!` (review cases `alias2-*`, `extern-crate-nested-2level`); G-8 wrongly said same-named bindings were followed | bindings closed under substitution at every segment to a fixed point, with per-spelling provenance so no import is used twice; caps 64 segments, 20,000 spellings, 4,000,000 attempts, 16 rounds, each `CAP003` (§3.2, §5); a converging alias cycle (`use b::x as a; use c::x as b; use a::x as c;`, rejected by rustc) is no longer `CAP003` | H1 (second review of round 3) false negative |
+| D35 | `std::time::UNIX_EPOCH` was pure and `.elapsed()` unclassified, so `std::time::UNIX_EPOCH.elapsed()` read the clock (case `unix-epoch-elapsed`); `rx.recv_timeout(..)` and `c.wait_timeout(..)` on the pure `std::sync` types slept on the clock (case `sync-timed-wait`) | `UNIX_EPOCH` is `time:read`; `.elapsed(` is `time:read`; `.recv_timeout(` `.recv_deadline(` `.wait_timeout(` `.wait_timeout_ms(` `.wait_timeout_while(` and their `Condvar::`/`Receiver::` UFCS forms are `time:sleep` (§3.3) | H6 (second review of round 3) false negative |
+| D36 | `file.set_times(..)` (also `set_modified`, `set_permissions`) on a handle from `File::open` wrote metadata under an `fs:read`-only manifest (case `handle-method-escalation`) | those methods are `fs:write`, as are `std::fs::File::{set_times, set_modified, set_permissions}` (§3.3) | MEDIUM (second review of round 3) false negative |

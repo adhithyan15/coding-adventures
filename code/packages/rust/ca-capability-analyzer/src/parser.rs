@@ -31,8 +31,8 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::rules::{
-    classify_resolved, is_local_head, is_std_root, Classification, FOREIGN_LINKAGE_ATTRS,
-    FS_LIST_METHODS, SHORTHAND_HEADS,
+    classify_resolved, is_local_head, is_std_root, method_call_rule, Classification, FOREIGN_LINKAGE_ATTRS,
+    SHORTHAND_HEADS,
 };
 
 /// A detected capability access within a source file.
@@ -2396,11 +2396,15 @@ fn stage2_file(
                     && is_punct(toks, i - 1, '.')
                     && !(i > 1 && is_punct(toks, i - 2, '.'));
                 if after_dot {
-                    if is_punct(toks, i + 1, '(')
-                        && FS_LIST_METHODS.contains(&name.as_str())
-                        && !receiver_is_local_inherent(toks, br, res, local, i - 1, name)
-                    {
-                        sink.detection(t.line, t.col, "fs", "list", format!(".{name}()"));
+                    // Method heuristic (VER08a §3.3): `.exists(`, `.set_times(`,
+                    // `.recv_timeout(`, `.elapsed(`, ... reach the OS on some std
+                    // type whatever the receiver is spelled as.
+                    if is_punct(toks, i + 1, '(') {
+                        if let Some(Classification::Capability { category, action }) = method_call_rule(name) {
+                            if !receiver_is_local_inherent(toks, br, res, local, i - 1, name) {
+                                sink.detection(t.line, t.col, category, action, format!(".{name}()"));
+                            }
+                        }
                     }
                     i += 1;
                     continue;

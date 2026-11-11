@@ -186,3 +186,56 @@ fn h1_a_rename_chain_that_outgrows_the_path_cap_is_cap003() {
     let got = verdict(&src);
     assert!(got.contains(&"?".to_string()), "expected CAP003, got {got:?}");
 }
+
+// ---------------------------------------------------------------------------
+// H6: clock reads and timed waits reached through the pure list
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h6_time_reached_through_pure_modules_is_classified() {
+    check(
+        "H6",
+        &[
+            (
+                "unix-epoch-elapsed",
+                "pub fn f() -> u64 {\n    std::time::UNIX_EPOCH.elapsed().map(|d| d.as_secs()).unwrap_or(0)\n}",
+                &["time:read"],
+            ),
+            ("UNIX_EPOCH imported", "use std::time::UNIX_EPOCH;\nfn f() { let _ = UNIX_EPOCH; }", &["time:read"]),
+            ("elapsed on any receiver", "fn f(t: T) { let _ = t.elapsed(); }", &["time:read"]),
+            (
+                "sync-timed-wait",
+                "use std::sync::{mpsc, Condvar, Mutex};\nuse std::time::Duration;\npub fn f() -> bool {\n    let (_tx, rx) = mpsc::channel::<()>();\n    let a = rx.recv_timeout(Duration::from_millis(1)).is_err();\n    let m = Mutex::new(());\n    let c = Condvar::new();\n    let b = c.wait_timeout(m.lock().unwrap(), Duration::from_millis(1)).is_ok();\n    a && b\n}",
+                &["time:sleep"],
+            ),
+            ("wait_timeout_while", "fn f(c: &C, g: G) { let _ = c.wait_timeout_while(g, D, |_| true); }", &["time:sleep"]),
+            ("wait_timeout_ms", "fn f(c: &C, g: G) { let _ = c.wait_timeout_ms(g, 1); }", &["time:sleep"]),
+            ("Condvar UFCS", "fn f(c: &std::sync::Condvar, g: G) { let _ = std::sync::Condvar::wait_timeout(c, g, D); }", &["time:sleep"]),
+            ("Receiver UFCS", "use std::sync::mpsc::Receiver;\nfn f(r: &Receiver<u8>) { let _ = Receiver::recv_timeout(r, D); }", &["time:sleep"]),
+            ("decoy Duration", "fn f() -> std::time::Duration { std::time::Duration::from_millis(1) }", &[]),
+            ("decoy untimed wait", "fn f(c: &std::sync::Condvar, g: G) { let _ = c.wait(g); let _ = rx.recv(); }", &[]),
+        ],
+    );
+}
+
+// ---------------------------------------------------------------------------
+// MEDIUM: metadata writes through an open handle
+// ---------------------------------------------------------------------------
+
+#[test]
+fn medium_handle_metadata_writes_are_fs_write() {
+    check(
+        "MEDIUM",
+        &[
+            (
+                "handle-method-escalation",
+                "pub fn f() -> bool {\n    match std::fs::File::open(\"Cargo.toml\") {\n        Ok(file) => file.set_times(std::fs::FileTimes::new()).is_ok(),\n        Err(_) => false,\n    }\n}",
+                &["fs:read", "fs:write"],
+            ),
+            ("set_permissions on a handle", "fn f(h: &H, p: P) { let _ = h.set_permissions(p); }", &["fs:write"]),
+            ("set_modified on a handle", "fn f(h: &H, t: T) { let _ = h.set_modified(t); }", &["fs:write"]),
+            ("File::set_times UFCS", "fn f(h: &std::fs::File) { let _ = std::fs::File::set_times(h, T); }", &["fs:read", "fs:write"]),
+            ("File::set_permissions UFCS", "use std::fs::File;\nfn f(h: &File) { let _ = File::set_permissions(h, P); }", &["fs:read", "fs:write"]),
+        ],
+    );
+}

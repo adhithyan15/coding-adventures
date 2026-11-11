@@ -78,15 +78,68 @@ pub const FS_LIST_METHODS: &[&str] = &[
     "is_symlink",
 ];
 
+/// Methods that block with a timeout, i.e. read the clock and sleep, on types
+/// that live in the *pure* `std::sync` module: `Receiver::recv_timeout`,
+/// `Condvar::wait_timeout{,_ms,_while}` (and the unstable `recv_deadline`).
+/// `thread::park_timeout` is `time:sleep` for the same reason; these reached
+/// the clock without naming `std::time` or `std::thread` (security review
+/// round 4, H6, case `sync-timed-wait`).
+pub const TIMED_WAIT_METHODS: &[&str] = &[
+    "recv_timeout",
+    "recv_deadline",
+    "wait_timeout",
+    "wait_timeout_ms",
+    "wait_timeout_while",
+];
+
+/// Methods that read the clock: `SystemTime::elapsed` / `Instant::elapsed`.
+/// `std::time::UNIX_EPOCH.elapsed()` reads the current time without naming
+/// `SystemTime` or `Instant` (H6, case `unix-epoch-elapsed`).
+pub const CLOCK_READ_METHODS: &[&str] = &["elapsed"];
+
+/// Methods that write file metadata through an already open handle
+/// (`File::set_times`, `File::set_modified`, `File::set_permissions`).  A
+/// handle opened for *reading* is enough for `futimens`/`fchmod`, so a package
+/// declaring only `fs:read` could change timestamps and permissions
+/// (review case `handle-method-escalation`).
+pub const FS_WRITE_METHODS: &[&str] = &["set_times", "set_modified", "set_permissions"];
+
+/// The verdict for a *method call* `.name(..)` whose receiver type is unknown.
+///
+/// A lexical analyzer cannot see the receiver's type, so a method that reaches
+/// the OS on some std type is flagged on every receiver.  This over-approximates
+/// a user method that happens to share the name (the receiver waiver in
+/// `parser.rs` removes the one shape it can prove local, VER08a §3.3 L4).
+pub fn method_call_rule(name: &str) -> Option<Classification> {
+    if FS_LIST_METHODS.contains(&name) {
+        Some(cap("fs", "list"))
+    } else if FS_WRITE_METHODS.contains(&name) {
+        Some(cap("fs", "write"))
+    } else if TIMED_WAIT_METHODS.contains(&name) {
+        Some(cap("time", "sleep"))
+    } else if CLOCK_READ_METHODS.contains(&name) {
+        Some(cap("time", "read"))
+    } else {
+        None
+    }
+}
+
+/// UFCS forms of the method rules on types whose own name is pure:
 /// `…::Path::<fs method>` / `…::PathBuf::<fs method>` reach the filesystem
-/// exactly as `p.<fs method>()` does, so they get the same `fs:list` verdict.
+/// exactly as `p.<fs method>()` does (`fs:list`), and `…::Condvar::wait_timeout`
+/// / `…::Receiver::recv_timeout` block exactly as `c.wait_timeout(..)` does
+/// (`time:sleep`).
 pub fn path_method_rule(segs: &[&str]) -> Option<Classification> {
     let n = segs.len();
-    if n >= 2
-        && matches!(segs[n - 2], "Path" | "PathBuf")
-        && FS_LIST_METHODS.contains(&segs[n - 1])
-    {
+    if n < 2 {
+        return None;
+    }
+    let (ty, method) = (segs[n - 2], segs[n - 1]);
+    if matches!(ty, "Path" | "PathBuf") && FS_LIST_METHODS.contains(&method) {
         return Some(cap("fs", "list"));
+    }
+    if matches!(ty, "Condvar" | "Receiver") && TIMED_WAIT_METHODS.contains(&method) {
+        return Some(cap("time", "sleep"));
     }
     None
 }
@@ -289,10 +342,10 @@ fn classify_std(segs: &[&str], is_macro: bool) -> Classification {
             Some(&"sleep") | Some(&"sleep_ms") | Some(&"park_timeout") => cap("time", "sleep"),
             _ => cap("thread", "spawn"),
         },
+        // `UNIX_EPOCH` is a `SystemTime`: `UNIX_EPOCH.elapsed()` reads the clock
+        // without naming `SystemTime` (H6), so it is no longer on the pure list.
         "time" => match rest.first() {
-            Some(&"Duration") | Some(&"TryFromFloatSecsError") | Some(&"UNIX_EPOCH") => {
-                Classification::AllowedPure
-            }
+            Some(&"Duration") | Some(&"TryFromFloatSecsError") => Classification::AllowedPure,
             _ => cap("time", "read"),
         },
         "io" => match rest.first() {
@@ -338,10 +391,12 @@ fn fs_rule(rest: &[&str]) -> Classification {
             | "OpenOptions" => cap("fs", "write"),
             "File" => match rest.get(1) {
                 // `create_buffered` creates/truncates exactly like `create`
-                // (security review round 3, INFO, PoC t7).
+                // (security review round 3, INFO, PoC t7); the metadata setters
+                // write through a read-only handle (round 4, MEDIUM).
                 Some(&"create") | Some(&"create_new") | Some(&"create_buffered") | Some(&"options") => {
                     cap("fs", "write")
                 }
+                Some(m) if FS_WRITE_METHODS.contains(m) => cap("fs", "write"),
                 _ => cap("fs", "read"),
             },
             _ => cap("fs", "read"),

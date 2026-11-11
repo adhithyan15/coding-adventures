@@ -161,7 +161,8 @@ const NET_PROC_ENV_TIME: &[Case] = &[
     ("time use Instant", "use std::time::Instant;", &["time:read"]),
     ("time module use", "use std::time; fn f(){ time::Instant::now(); }", &["time:read"]),
     ("time Duration is pure", "use std::time::Duration; fn f(){ Duration::from_secs(1); }", &[]),
-    ("time UNIX_EPOCH is pure", "use std::time::UNIX_EPOCH;", &[]),
+    // D35: `UNIX_EPOCH` is a `SystemTime`, and `UNIX_EPOCH.elapsed()` reads the clock.
+    ("time UNIX_EPOCH reads the clock", "use std::time::UNIX_EPOCH;", &["time:read"]),
     ("time core::time pure", "use core::time::Duration;", &[]),
     ("time sleep", "fn f(){ std::thread::sleep(d); }", &["time:sleep"]),
     ("time sleep via use thread", "use std::thread; fn f(){ thread::sleep(d); }", &["thread:spawn", "time:sleep"]),
