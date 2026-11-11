@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed — Windows build
+
+- Added `BUILD_windows` and made the extension's `build.rs` find the Python
+  import library itself (same cause and fix as `conduit`: no `lib` prefix on a
+  Windows cdylib, and no `PYTHON_LIB_PATH`, gave
+  `could not open 'python3.lib'`).
+
 ## [0.1.0] - 2026-06-13
 
 ### Added
