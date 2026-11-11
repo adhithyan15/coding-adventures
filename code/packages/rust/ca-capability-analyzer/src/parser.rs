@@ -1828,26 +1828,42 @@ fn token_unit_kind(toks: &[Token], k: usize) -> UnitKind {
     }
 }
 
-/// Does the matcher contain the repetition `$( $name:tt ) sep? op` with exactly
-/// this separator and operator?  Then a transcriber `$( $name ) sep? op` emits
-/// the caller's tokens in the caller's own order, contiguous exactly as the
-/// walker already saw them inside the invocation's arguments.
-fn matcher_has_tt_repeat(toks: &[Token], arm: &MacroArm, name: &str, sep: Option<&Tok>, op: &Tok) -> bool {
-    (arm.m_open + 1..arm.m_close).any(|k| {
-        is_punct(toks, k, '$')
+/// The `$( $name:tt ) sep? op` repetitions of one matcher, keyed by `name`,
+/// as `(separator, operator)` pairs.
+///
+/// A transcriber `$( $name ) sep? op` with the same separator and operator
+/// emits the caller's tokens in the caller's own order, contiguous exactly as
+/// the walker already saw them inside the invocation's arguments.  The old
+/// `matcher_has_tt_repeat` rescanned the whole matcher for every transcriber
+/// repetition, so a long matcher with many repetitions was quadratic (40,000
+/// of each took about 30 s; security review round 4, LOW, cases
+/// `perf-matcher-rescan-*`, `perf-valid-40000`).  The set is built once per arm
+/// in one pass, and each repetition is a hash lookup.
+type TtRepeats = HashMap<String, Vec<(Option<Tok>, Tok)>>;
+
+fn matcher_tt_repeats(toks: &[Token], arm: &MacroArm) -> TtRepeats {
+    let mut out: TtRepeats = HashMap::new();
+    for k in arm.m_open + 1..arm.m_close {
+        if !(is_punct(toks, k, '$')
             && is_punct(toks, k + 1, '(')
             && is_punct(toks, k + 2, '$')
-            && ident_at(toks, k + 3) == Some((name, false))
             && is_punct(toks, k + 4, ':')
             && ident_at(toks, k + 5) == Some(("tt", false))
-            && is_punct(toks, k + 6, ')')
-            && match sep {
-                None => toks.get(k + 7).map(|t| &t.tok) == Some(op),
-                Some(s) => {
-                    toks.get(k + 7).map(|t| &t.tok) == Some(s) && toks.get(k + 8).map(|t| &t.tok) == Some(op)
-                }
-            }
-    })
+            && is_punct(toks, k + 6, ')'))
+        {
+            continue;
+        }
+        let Some((name, false)) = ident_at(toks, k + 3) else { continue };
+        let (Some(a), b) = (toks.get(k + 7).map(|t| &t.tok), toks.get(k + 8).map(|t| &t.tok)) else { continue };
+        let entry = out.entry(name.to_string()).or_default();
+        // `$($t:tt)*`: no separator, operator `a`.
+        entry.push((None, a.clone()));
+        // `$($t:tt),*`: separator `a`, operator `b`.
+        if let Some(b) = b {
+            entry.push((Some(a.clone()), b.clone()));
+        }
+    }
+    out
 }
 
 /// Build the units of `toks[from..to]` (a transcriber or a repetition body).
@@ -1855,7 +1871,7 @@ fn matcher_has_tt_repeat(toks: &[Token], arm: &MacroArm, name: &str, sep: Option
 fn transcriber_units(
     toks: &[Token],
     br: &Brackets,
-    arm: &MacroArm,
+    tt_repeats: &TtRepeats,
     frags: &HashMap<String, String>,
     from: usize,
     to: usize,
@@ -1870,7 +1886,7 @@ fn transcriber_units(
     while k < to {
         let unit = if is_punct(toks, k, '$') && is_punct(toks, k + 1, '(') {
             let c = br.close(k + 1).min(to);
-            let inner = transcriber_units(toks, br, arm, frags, k + 2, c, depth + 1)?;
+            let inner = transcriber_units(toks, br, tt_repeats, frags, k + 2, c, depth + 1)?;
             // `$( .. ) op` or `$( .. ) sep op`; anything else is malformed and
             // treated as a separator-less repetition (more adjacency, not less).
             let (sep, end) = if is_kleene(c + 1) {
@@ -1883,7 +1899,10 @@ fn transcriber_units(
             let tt = inner.iter().any(Unit::is_tt);
             let passthrough = match (inner.as_slice(), toks.get(end).map(|t| &t.tok)) {
                 ([only], Some(op)) if only.kind == UnitKind::MetaTt && end > c => ident_at(toks, only.at + 1)
-                    .is_some_and(|(n, _)| matcher_has_tt_repeat(toks, arm, n, sep.map(|s| &toks[s].tok), op)),
+                    .is_some_and(|(n, _)| {
+                        let sep = sep.map(|s| &toks[s].tok);
+                        tt_repeats.get(n).is_some_and(|v| v.iter().any(|(s, o)| s.as_ref() == sep && o == op))
+                    }),
                 _ => false,
             };
             let u = Unit { kind: UnitKind::Repeat { tt }, at: k, inner, sep, passthrough };
@@ -2165,7 +2184,8 @@ fn check_transcriber_splices(sink: &mut Sink, toks: &[Token], br: &Brackets, arm
             );
         }
     }
-    match transcriber_units(toks, br, arm, &frags, from, to, 0) {
+    let tt_repeats = matcher_tt_repeats(toks, arm);
+    match transcriber_units(toks, br, &tt_repeats, &frags, from, to, 0) {
         Ok(units) => {
             check_unit_seq(sink, toks, &units);
             check_keyword_splices(sink, toks, br, &frags, &units);

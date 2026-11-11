@@ -596,3 +596,29 @@ fn medium_handle_metadata_writes_are_fs_write() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// LOW: pass-through detection is linear in the matcher size
+// ---------------------------------------------------------------------------
+
+#[test]
+fn low_many_tt_repetitions_against_a_long_matcher_finish_quickly() {
+    // `perf-valid-40000` in miniature: a long literal matcher and many
+    // transcriber repetitions.  The old code rescanned the matcher once per
+    // repetition (quadratic); the per-arm set keeps it linear.
+    let n = 40_000;
+    let mut src = String::from("macro_rules! m { (");
+    for _ in 0..n {
+        src.push_str("a ");
+    }
+    src.push_str("$($t:tt)*) => { ");
+    for _ in 0..n {
+        src.push_str("$($t)* ; ");
+    }
+    src.push_str("}; }\n");
+    let start = std::time::Instant::now();
+    let got = verdict(&src);
+    let took = start.elapsed();
+    assert_eq!(got, Vec::<String>::new());
+    assert!(took < std::time::Duration::from_secs(10), "took {took:?}");
+}
