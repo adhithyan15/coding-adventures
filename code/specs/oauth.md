@@ -1589,6 +1589,21 @@ evidence fail before retention. This does not authenticate any path link,
 validate the anchor self-signature or algorithm, apply anchor constraints,
 check time or revocation, perform TLS or HTTP, authorize OAuth transport, or
 grant network authority. Concrete HTTPS remains unavailable.
+A bounded path-length initialization follow-up now consumes that exact
+reviewed-terminal issuing-CA proof and derives RFC 5280's initial capacity only
+from the retained construction. Because the construction already proves that
+its final selected issuer is the reviewed trust anchor, subtracting that anchor
+from the selected-issuer count yields the exact prospective intermediate count.
+The non-copyable result retains the complete constructed path, reviewed-root
+selection, anchor role policy, and derived state together; callers cannot
+inflate the capacity or attach it to another construction. This pure public-
+certificate-data composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not authenticate an adjacency, apply an intermediate
+transition, generalize full path validation, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
@@ -2924,6 +2939,98 @@ policy, generalized path construction or validation, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A parallel bounded recursive-revocation slice consumes that same complete
+reviewed-root DNS proof plus another fully authenticated, fully routed OCSP
+target-revocation proof. Repository-owned private evidence derives the added
+proof's own exact authenticated delegated responder, the exact selected
+Mozilla-reviewed root already bound as issuer, and the original explicit
+observation time only through the retained proof; external callers cannot
+implement substitute evidence. The recursive proof must target that same
+decoded responder object, name that same decoded reviewed-root object, and use
+that same observation time. Stable target, issuer, then time failures expose
+no certificate, response, key, signature, status, hostname, root, or time
+payload. Success retains the complete generic source and both non-copyable
+authenticated proof layers. This pure public-certificate-data composition
+performs no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not establish revocation policy for the recursive
+proof's own responder, complete revocation policy, generalized path
+construction or validation, TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded infallible projection now consumes that exact recursive proof and
+reifies the recursive proof's own delegated responder-to-reviewed-root path as
+a distinct non-copyable type. The retained binding already proves the exact
+recursive target, reviewed-root issuer, observation time, repository-owned RSA
+signature routes, certificate role policy, and responder validity. The
+projection retains the complete generic source and both authenticated proof
+layers without accepting a substitute certificate, path, root, algorithm,
+key, signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply reviewed-root name
+policy to that recursive responder, establish its RFC 6960 no-check or
+separately authenticated revocation policy, complete revocation policy,
+generalize path construction or validation, implement TLS or HTTP, authorize
+OAuth transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A following bounded name-policy slice consumes that exact recursive responder
+path and derives the recursive proof's authenticated delegated responder plus
+the selected Mozilla-reviewed root's optional out-of-band constraint bytes
+only through the retained generic source. An unconstrained root succeeds
+without reading responder Subject Alternative Name. A constrained root is
+decoded under a caller-owned ASN.1 limit, the responder SAN is decoded under a
+separate caller-owned limit, every responder `dNSName` must satisfy the
+supported permitted-DNS subset, and success retains only count evidence beside
+the complete proof. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This pure public-
+certificate-data policy performs no credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply excluded or
+non-DNS root constraints or intermediate constraints, establish RFC 6960 no-
+check or further separately authenticated revocation policy for that
+responder, complete revocation policy, generalize path construction or
+validation, implement TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
+A following bounded no-check slice consumes that complete reviewed-root DNS
+proof and derives the recursive proof's exact authenticated delegated responder
+only through retained repository-owned evidence. It requires the structurally
+unique `id-pkix-ocsp-nocheck` extension already admitted by certificate-wide
+role policy and validates that its value is exact DER `NULL`. RFC 6960
+recommends, but does not require, non-critical marking; a critical instance can
+reach this semantic gate only after the prerequisite role policy recognized
+its OID. Missing or malformed values fail with existing stable payload-free
+categories, and success retains the complete prior proof under a distinct
+non-copyable type. Callers cannot substitute a responder certificate,
+extension, path, algorithm, key, signature, status, root, or time. This pure
+public-certificate-data policy performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. It does not establish
+separately authenticated further responder revocation, complete revocation
+policy, generalized path construction or validation, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+A source-specific bounded completion slice then consumes that exact default-
+source recursive proof after the server target, original responder,
+intermediate, added intermediate-status responder, that responder's revocation
+proof signer, and the recursive revocation proof's own signer have each been
+covered by authenticated good-and-fresh OCSP status or exact RFC 6960 no-check
+policy. The input type excludes generic sources whose earlier responder
+branches remain unresolved, and the selected Mozilla-reviewed root remains the
+trust anchor rather than a revocation target. The infallible non-copyable
+result retains every prerequisite without accepting a substitute certificate,
+path, root, algorithm, key, signature, status, or time. This pure public-
+certificate-data composition performs no parsing, cryptography, credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It proves
+complete revocation policy only for this one retained fixed branch; it does not
+generalize path construction or validation, fetch, cache, acquire, or refresh
+revocation data, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact default-
 source alternative proof after the server target, original responder,
 intermediate, added intermediate-status responder, and the added responder-
@@ -2941,6 +3048,26 @@ only for this one retained fixed branch; it does not generalize path
 construction or validation, fetch, cache, acquire, or refresh revocation data,
 or provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 and live-provider readiness remain unavailable.
+
+A second source-specific bounded completion slice consumes the corresponding
+double-nested proof after separately authenticated revocation covers the
+original responder and the added intermediate-status responder, while each
+revocation proof's own exact delegated responder has passed RFC 6960 no-check
+policy. Authenticated status also covers the server target and retained
+intermediate, and the selected Mozilla-reviewed root remains the trust anchor
+rather than a revocation target. The input type fixes the source to the
+complete original-responder-revocation plus responder-no-check composition;
+the unresolved generic source cannot reach this constructor. The infallible
+non-copyable result retains every prerequisite without accepting a substitute
+certificate, path, root, algorithm, key, signature, status, or time. This pure
+public-certificate-data composition performs no parsing, cryptography,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It proves complete revocation policy only for this one retained fixed
+branch; separately authenticated recursive responder revocation, generalized
+path construction or validation, revocation acquisition or refresh, TLS,
+HTTP, OAuth transport, and network authority remain unavailable. Concrete
+HTTPS and live-provider readiness remain unavailable.
 
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete

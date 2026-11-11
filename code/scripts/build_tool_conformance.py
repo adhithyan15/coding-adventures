@@ -60,6 +60,24 @@ CLI_MAX_ARGUMENT_CHARACTERS = 256
 CLI_MAX_ARGUMENT_BYTES = 4096
 MAX_DECLARED_SOURCE_MATCH_WORK = 50_000_000
 MAX_DIFF_SELECTION_MATCH_WORK = 50_000_000
+# Package-local metadata for the `metadata_policy: "package_local"` variant of
+# diff selection.  These package-root files are checked by the package's own
+# BUILD but read by no dependent's build or tests (the repository-wide evidence
+# is in code/specs/12-build-system.md, "Package-local metadata").  A
+# package-prefix package selected only through them is changed and affected
+# but propagates to no dependent.  Matching is exact, case-sensitive and
+# root-only, and closed by use: CHANGELOG.d/ holds only direct `*.md` shards
+# and evidence/ only the data extensions tracked today.  README.md is not
+# listed: dependents' packaging (hatchling `readme`) reads it.
+PACKAGE_LOCAL_METADATA_FILES = frozenset(
+    {
+        "CHANGELOG.md",
+        "required_capabilities.json",
+        "effect_certificate.json",
+        "assurance_report.json",
+    }
+)
+PACKAGE_LOCAL_EVIDENCE_EXTENSIONS = (".json", ".cnf", ".drat")
 MAX_CI_GATE_SELECTION_MATCH_WORK = 50_000_000
 CI_GATE_MACHINERY_EXACT = (
     ".github/workflows/ci.yml",
@@ -3666,6 +3684,34 @@ def _expected_test_trigger_selection(
     return changed, affected, closed - affected
 
 
+def _is_package_local_metadata(relative: str) -> bool:
+    """Classify one package-relative path for the package_local policy.
+
+    >>> [_is_package_local_metadata(p) for p in (
+    ...     "CHANGELOG.md", "CHANGELOG.d/_meta.md", "evidence/p/x.drat",
+    ...     "README.md", "docs/CHANGELOG.md", "CHANGELOG.d/x.sh",
+    ...     "CHANGELOG.d/a/b.md", "evidence/run.sh", "evidence.bindings")]
+    [True, True, True, False, False, False, False, False, False]
+    """
+    if "\\" in relative:
+        return False
+    if relative in PACKAGE_LOCAL_METADATA_FILES:
+        return True
+    if relative.startswith("CHANGELOG.d/"):
+        shard = relative[len("CHANGELOG.d/") :]
+        return "/" not in shard and len(shard) > len(".md") and shard.endswith(".md")
+    if relative.startswith("evidence/"):
+        rest = relative[len("evidence/") :]
+        if any(segment in ("", ".", "..") for segment in rest.split("/")):
+            return False
+        base = rest.rsplit("/", 1)[-1]
+        return any(
+            len(base) > len(extension) and base.endswith(extension)
+            for extension in PACKAGE_LOCAL_EVIDENCE_EXTENSIONS
+        )
+    return False
+
+
 def _expected_diff_selection(
     options: dict[str, Any],
     changed_paths: list[str],
@@ -3717,6 +3763,11 @@ def _expected_diff_selection(
                 return "DIFF_MATCH_LIMIT_EXCEEDED"
             remaining_match_work -= pattern_factor * path_factor
 
+    # Under the package_local metadata policy, a package-prefix package whose
+    # selected paths are all package-local metadata is collected separately:
+    # it is changed and affected, but its dependents are not.
+    package_local_policy = options.get("metadata_policy") == "package_local"
+    local: set[str] = set()
     for path in changed_paths:
         boundary_consumers = boundary_reverse_index.get(path, set())
         path_known = bool(boundary_consumers)
@@ -3735,7 +3786,14 @@ def _expected_diff_selection(
                     for pattern in package["source_globs"]
                 )
             ):
-                changed.add(package["name"])
+                if (
+                    package_local_policy
+                    and package["source_mode"] == "package_prefix"
+                    and _is_package_local_metadata(relative)
+                ):
+                    local.add(package["name"])
+                else:
+                    changed.add(package["name"])
         if not path_known:
             unknown = True
 
@@ -3744,6 +3802,7 @@ def _expected_diff_selection(
         if options["unknown_path_policy"] == "error":
             return "DIFF_UNKNOWN_PATH"
         changed = set(package_names)
+    local -= changed
 
     dependents: dict[str, set[str]] = {name: set() for name in package_names}
     prerequisites: dict[str, set[str]] = {name: set() for name in package_names}
@@ -3759,6 +3818,10 @@ def _expected_diff_selection(
             if dependent not in affected:
                 affected.add(dependent)
                 pending.append(dependent)
+    # Local-only packages join after the dependent closure, so they never
+    # reach a dependent; they still pull in their prerequisites below.
+    affected |= local
+    changed |= local
 
     closed = set(affected)
     pending = list(affected)

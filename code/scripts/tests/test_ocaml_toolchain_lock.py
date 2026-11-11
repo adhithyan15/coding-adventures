@@ -620,7 +620,7 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
     def test_rejects_target_missing_from_only_fresh_matrix(self) -> None:
         entry = (
             "          - target: macos-arm64\n"
-            "            runner: macos-14\n"
+            "            runner: macos-15\n"
             "            runner-os: macOS\n"
             "            runner-arch: ARM64\n"
         )

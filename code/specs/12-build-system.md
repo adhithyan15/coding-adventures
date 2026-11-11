@@ -338,7 +338,7 @@ The primary change detection mode uses git:
 git diff --name-only <base>...HEAD
 ```
 
-This produces the list of files that changed relative to the base branch (typically `origin/main`). Changed files are mapped to packages by path prefix matching. The dependency graph is then used to find all affected packages — both directly changed packages and their transitive dependents.
+This produces the list of files that changed relative to the base branch (typically `origin/main`). Changed files are mapped to packages by path prefix matching. The dependency graph is then used to find all affected packages — both directly changed packages and their transitive dependents. A package whose only changes are additions or edits of package-local metadata (its root changelog, capability manifest or assurance evidence; see below) is rebuilt without its dependents.
 
 #### Repository input consumers
 
@@ -508,6 +508,134 @@ outside it:
   so a symlink swapped in between is refused rather than followed.
 
 A leading UTF-8 byte-order mark is stripped, as TOML allows.
+
+#### Package-local metadata
+
+Some files in a package are checked by the package's own BUILD but cannot be
+read by any of its dependents' builds or tests. Rebuilding every dependent
+when one of them changes costs CI time and proves nothing: before this rule, a
+pull request that only added `rust/bounded-json/required_capabilities.json`
+and a `CHANGELOG.md` entry selected 556 packages, and one that touched 40
+such files across leaf crates selected 42.
+
+The Go tool calls these files *package-local metadata*. A changed path is
+package-local metadata when it lies in a package whose source mode is package
+prefix (a shell `BUILD`, or a Starlark `BUILD` that declares no `srcs`), Git
+reports it as **added or modified** (`A` or `M` in
+`git diff --no-renames --name-status`), and its package-relative path is
+exactly one of:
+
+| Package-relative path | Read by | Why no dependent can read it |
+|---|---|---|
+| `CHANGELOG.md` | repository changelog checks in `code/scripts`; packaging file lists (gemspec `files`, `.cabal` `extra-doc-files`, Perl `MANIFEST`, npm `files`) | the checks are scheduled by changed path, not by package; packaging needs the file only to *exist* when a dependent installs the package from its path, and an addition or edit cannot remove it |
+| `CHANGELOG.d/<name>.md` (direct children only) | the same changelog checks, and the package's own doc-shard check (for example `typescript/script-ductus`'s BUILD checks only its own shards) | same |
+| `required_capabilities.json` | the package's own analyzer, cage-drift and manifest tests; packaging file lists | the generated cage (`gen_capabilities.go`, `src/capabilities.rs`) is source, so regenerating it still propagates; no tool composes a dependency's manifest into a dependent's |
+| `effect_certificate.json` | the package's own `ca-capability-analyzer --verify-cert` step | only `rust/ca-assurance-report`, `rust/ct-compare` and `rust/gf256` have one, and each verifies its own |
+| `assurance_report.json` | the package's own `ca-assurance-report --check` step, and `code/scripts/assumption_catalogue.py` | the script is scheduled by path |
+| `evidence/**` ending in `.json`, `.cnf` or `.drat` | the package's own warrant evidence steps | same; these are the only extensions under any `evidence/` today |
+
+`README.md` is **not** on the list. A Python dependent's BUILD runs
+`pip install -e ../<dep>`, and hatchling then reads the dependency's
+`readme = "README.md"`: deleting `python/html-renderer/README.md` breaks
+`python/programs/pipeline-visualizer`'s install. Packaging reads a README for
+the dependent too, not only while building the package itself, so README
+changes propagate as before.
+
+**Deletions, renames and type changes always propagate.** Packaging that
+lists a file (above) fails when the file is missing, in the dependent's build
+as well as the owner's. So only `A` and `M` can be local; `D`, `T` (for
+example a file replaced by a symlink) and any status the tool cannot read are
+ordinary changes. Renames need no special case: with `--no-renames` a rename
+is the deletion of its old path plus the addition of its new one, and the
+deletion propagates. A path whose status is unknown propagates.
+
+Matching is exact and case-sensitive, applies only at the package root, and
+uses raw Git paths. It is closed by use as well as by name: `CHANGELOG.d/`
+admits only direct `*.md` shards and `evidence/` only `.json`, `.cnf` and
+`.drat` data, so a script, source file, nested shard or anything else placed
+there is ordinary source. `README.md`, `docs/CHANGELOG.md`,
+`sub/required_capabilities.json`, `x/evidence/y.json`, `changelog.md`,
+`CHANGELOG.md.bak`, a *file* named `CHANGELOG.d` or `evidence`, and
+`evidence.bindings` are ordinary source. Nested names matter:
+`rust/html-lexer` reads `rust/html-parser/tests/fixtures/README.md`, and
+`rust/warrant-grammar` and `rust/warrant-ir` read
+`rust/gf256/evidence.bindings`.
+
+The other half of "closed by use" is enforced by `-validate-build-files`
+(`internal/validator/metadata_exec.go`), which runs in the detect job of
+every pull request: no tracked BUILD front, shell/PowerShell/batch script,
+Cargo `path`/`build` value, Rust `#[path]` or Rust `include!` under `code/`
+may execute a metadata-class location (any `CHANGELOG.d/` or `evidence/`
+descendant, or any `CHANGELOG.md`, `required_capabilities.json`,
+`effect_certificate.json` or `assurance_report.json`). Reading those files as
+data (`include_str!`, `--check assurance_report.json`) is allowed.
+
+That check is a best-effort tripwire for honest mistakes, not a security
+boundary. It matches literal paths in a fixed set of syntactic forms, so
+indirection gets past it: a variable (`F=evidence/x; sh $F`), a pipe or
+redirect (`sh < evidence/x`), a wrapper (`bash -c`, `env`, `timeout`,
+`make -f`, `go run`), `include!(concat!(env!(...), ...))`,
+`#[cfg_attr(..., path = ...)]`, a `build.rs` that copies a metadata file, and
+anything in `package.json` scripts, Makefiles or non-Rust sources. The type
+restriction above is what removes the accidental case. What remains is a
+deliberate two-step: a reviewed pull request (which propagates normally,
+because the wiring itself is a source change) makes behaviour depend on an
+allowed-type data file, and a later `A`/`M` edit of only that file is then
+local. Review of the first step is the control; no instance exists in the
+repository today.
+
+Other packages do read some of these files, but none of them is a dependent
+of the file's owner, so dependency propagation never selected them:
+`rust/required-capabilities-compiler` reads
+`rust/weather-agent-e2e/required_capabilities.json` (it is declared in the
+repository source-input boundary), `rust/ca-assurance-report`'s tests read
+`rust/gf256`'s evidence and reports, `rust/ca-capability-analyzer`'s tests
+read `rust/ct-compare`, and `typescript/human-language-data`'s tests read
+the `CHANGELOG.d/` shards of `typescript/script-ductus` and
+`typescript/programs/language-ladder`, both of which depend on it. Before
+adding a cross-package read of one of these files from a dependent, take the
+file off the list.
+
+A package whose **only** changes are package-local metadata is selected
+like a repository input consumer: it and its prerequisites, not its
+dependents, and it fires no Cargo dev-dependency test trigger, because its
+library did not change. The package itself still rebuilds, since its own
+BUILD may check the file it changed. Any other change in the same package
+makes it an ordinary changed package again:
+
+```
+closure  = AffectedNodes(ordinary changed packages)
+closure ∪= triggers[a]  for every a in closure
+affected = closure + prerequisites
+         ∪ repository input consumers + their prerequisites
+         ∪ metadata-only packages     + their prerequisites
+```
+
+Both sets are computed per platform from the same platform-filtered path
+list. A metadata change next to an edit of `BUILD_windows` therefore leaves
+the package local on Linux and macOS (where that front is filtered out) and
+makes it an ordinary root on Windows; the package is selected everywhere.
+
+The rule does not apply to:
+
+- strict-glob Starlark packages, which keep their declared-source semantics:
+  a declared `CHANGELOG.md` propagates, an undeclared one selects nothing;
+- packages seeded for an external fixture, forced packages, or a
+  repository-boundary consumer of the file, which are ordinary changed
+  packages;
+- `-force`, and the hash-based fallback below, which stays conservative.
+
+CI gates (`code/specs/ci-gate-registry.md`) see the narrower affected set. A
+gate whose path patterns match the metadata file still fires; one that fired
+only because a dependent of the owner was affected no longer does.
+
+The rule is pinned by the `metadata_policy: "package_local"` variant of the
+shared `diff_selection` contract (`code/specs/build-tool-conformance.md`,
+section 4), which the corpus oracle and the Go tool replay. The contract
+models changed paths, not Git statuses or platforms, so the deletion rule and
+platform filtering are covered by the Go tool's own tests. Implementations
+that do not offer the policy keep the original contract, in which every
+package-prefix path propagates; that is conservative, never wrong.
 
 ### Hash-Based Fallback
 

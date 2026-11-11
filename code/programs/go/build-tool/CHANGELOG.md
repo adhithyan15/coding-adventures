@@ -1,5 +1,76 @@
 # Changelog
 
+## Unreleased — package-local metadata second review
+
+- **An empty diff is "no answer" again.** `parseNameStatus` returned a
+  non-nil empty slice for an empty diff. `run()` tests the length and fell
+  back to hashing, but `selectPackageRoots` tests for nil, so `-emit-plan`
+  wrote "build nothing" (`[]`) into every platform override while the
+  top-level set said "build everything" (`null`); `plan.go` applies the
+  override, so build jobs would have built nothing. Empty output now gives
+  nil, nil, and the overrides are `null` again, as on main.
+- **An undecodable diff falls back as a whole.** A truncated record or an
+  empty path used to return the paths read so far and drop the rest. It now
+  returns nil, nil, so the caller takes the same fallback as when Git fails.
+- **The metadata-execution check is described as what it is.**
+  `ValidateNoExecutedMetadata` matches literal paths in fixed forms, so a
+  shell variable, pipe, wrapper command, `concat!`/`env!` path,
+  `cfg_attr(path)` or `build.rs` copy gets past it. The spec and the
+  validator now call it a best-effort tripwire, not a boundary; the type
+  restriction is what keeps scripts and sources under `evidence/` and
+  `CHANGELOG.d/` propagating.
+
+## Unreleased — package-local metadata review fixes
+
+- **Platform BUILD fronts no longer drop the owner.** Local-only packages
+  were classified from the unfiltered path list while ordinary roots used the
+  platform-filtered one, so a metadata change beside a `BUILD_windows` edit
+  selected nothing on Linux and macOS (287 → 0 for `rust/ct-compare`, 556 → 0
+  for `rust/bounded-json`). `selectPackageRoots` now returns both sets from
+  the same list; the package is local on Linux/macOS and ordinary on Windows.
+- **`README.md` is no longer metadata.** A Python dependent's
+  `pip install -e ../<dep>` reads the dependency's `readme`; deleting
+  `python/html-renderer/README.md` broke `python/programs/pipeline-visualizer`
+  while only the renderer was selected. README changes propagate as before.
+- **Only additions and edits can be local.** `gitdiff.GetChangedFilesWithStatus`
+  reads `git diff --no-renames --name-status -z`; a deletion, rename (D + A),
+  type change or unknown status propagates. `ClassifyChangedFiles` and
+  `emitBuildPlanAgainst` take the statuses; a nil map keeps every metadata
+  change ordinary.
+- **Closed by type.** `CHANGELOG.d/` admits only direct `*.md` shards and
+  `evidence/` only `.json`, `.cnf` and `.drat` (the extensions tracked
+  today). `-validate-build-files` adds `ValidateNoExecutedMetadata`, which
+  flags a tracked BUILD front, script, Cargo `path`/`build`, Rust
+  `#[path]` or `include!` that visibly executes a metadata-class location
+  (a best-effort tripwire; see above).
+- `TestRepositoryInputConsumersPlan` is back to its original README
+  expectation (the Mosaic package and the app that depends on it).
+
+## Unreleased — package-local metadata no longer rebuilds dependents
+
+- A package whose only changes are package-local metadata — its root
+  `README.md`, `CHANGELOG.md`, `CHANGELOG.d/` entries,
+  `required_capabilities.json`, `effect_certificate.json`,
+  `assurance_report.json` or `evidence/` files — is now selected with its
+  prerequisites but without its dependents or Cargo dev-dependency test
+  triggers, the way a repository input consumer is. The package itself still
+  rebuilds, because its BUILD may check the file. Any other change in the
+  package (or a strict-glob declared source, a fixture seed, a forced or
+  boundary-consumer root) propagates as before; `-force` and the hash
+  fallback are unchanged. A capability-manifest-only change to
+  `rust/bounded-json` now selects 1 package instead of 556.
+- New `internal/pkgmeta` holds the closed, root-only, case-sensitive list
+  and the repository evidence for each entry. `gitdiff.ClassifyChangedFiles`
+  splits changed packages into propagating and local; `MapFilesToPackages`
+  is now their union. `package_metadata.go` wires the local set into the
+  detect plan and every platform override.
+- `internal/graphdiff` replays the new `metadata_policy: "package_local"`
+  diff-selection variant (`package-metadata-selection-*.json`), and changes
+  to those cases seed the Dart, Go, Java, Kotlin and OCaml build-tool
+  readers.
+- `TestRepositoryInputConsumersPlan`'s README control now expects only the
+  Mosaic package itself, not the app that depends on it.
+
 ## Unreleased - BUILD-001 registry update
 
 - Source-input registry and repository boundary updated for BUILD-001 (generated wasm artifacts are built, not committed): `code/packages/rust/engram-wasm/pkg/engram_engine.wasm` is no longer an exact package input of `rust-engram-wasm-build-inputs`, and `visicalc-html/vendor/spreadsheet-engine-wasm.js` is no longer a cross-package input of the Deno VisiCalc boundary. Registry digest is now `8f3d9ee3...`, boundary digest `ec516870... (combined with the #19050 TypeScript boundary sync)`.
