@@ -1103,6 +1103,7 @@ export function deriveLessonModality(
     .filter((block) => block.type === "writing")
     .map((block) => block.title);
   const detachableSegments = blocks.filter((block) => block.detachable).map((block) => block.title);
+  const hasDetachable = detachableSegments.length > 0;
 
   // Rule 1 — a writing lesson teaches the hand. Nothing else can override that
   // downward, so we do not even look at the body. Note this is the lesson TYPE:
@@ -1200,14 +1201,16 @@ export function deriveLessonModality(
   if (isWriting) coreReasons.push("writing-type");
   // Rule 2 by type, for the core: the text is the lesson, so nothing is set aside.
   if (isReading) coreReasons.push("reading-type");
-  const coreText = lessonCoreText(lesson);
-  const coreScriptBlock = lesson.blocks.some(
-    (block) => block.type === "script" && !isDetachableBlock(block),
-  );
+  // Without a detachable block, `lessonCoreText` is byte-for-byte `text`.
+  // Reuse the whole-lesson scans rather than searching the same Markdown twice.
+  const coreText = hasDetachable ? lessonCoreText(lesson) : text;
+  const coreScriptBlock = hasDetachable
+    ? lesson.blocks.some((block) => block.type === "script" && !isDetachableBlock(block))
+    : hasScriptBlock;
   if (coreScriptBlock) coreReasons.push("script-block");
-  const coreCues = matchedSightCues(coreText, cueContext);
+  const coreCues = hasDetachable ? matchedSightCues(coreText, cueContext) : cues;
   if (coreCues.length > 0) coreReasons.push("sight-cue");
-  const coreWideTable = widestTableColumns(coreText) > maxColumns;
+  const coreWideTable = (hasDetachable ? widestTableColumns(coreText) : tableColumns) > maxColumns;
   if (coreWideTable) coreReasons.push("wide-table");
   // THE RULE THIS AMENDMENT WAS MISSING. A detachable section is set aside with a stop
   // guard; a step in any section the car KEEPS is read out plainly, so it decides the
@@ -1245,7 +1248,6 @@ export function deriveLessonModality(
   //   -------------------  ---------------------------------------------
   //   no                   the accepted modality (override or derivation)
   //   yes                  the weaker of coreDerived and the accepted one
-  const hasDetachable = blocks.some((block) => block.detachable);
   const coreAccepted = hasDetachable ? weakerModality(coreDerived, accepted) : accepted;
 
   return {
