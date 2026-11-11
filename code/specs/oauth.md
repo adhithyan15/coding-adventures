@@ -2873,6 +2873,20 @@ complete revocation policy, generalize path construction or validation, or
 provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS and
 live-provider readiness remain unavailable.
 
+That alternative branch now has a bounded infallible projection for the added
+revocation proof's own exact delegated responder-to-reviewed-root path. The
+non-copyable result retains the complete generic source, selected-root DNS
+proof, target binding, and fully routed authenticated revocation proof. It
+accepts no substitute certificate, path, root, algorithm, key, signature,
+status, or time and performs no parsing, cryptography, credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. Reviewed-root
+and intermediate name policy for that delegated responder, no-check or
+separately authenticated revocation policy for it, complete revocation policy,
+generalized path construction or validation, TLS, HTTP, OAuth transport, and
+network authority remain unavailable. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

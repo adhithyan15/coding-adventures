@@ -309,6 +309,16 @@ payload-free categories. This does not establish revocation policy for the
 second proof's own responder or complete revocation, generalized path
 validation, TLS, HTTP, OAuth, or network readiness.
 
+That alternative branch can then use
+`reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_path`
+to project the second proof's own exact delegated responder-to-reviewed-root
+path. The infallible non-copyable wrapper preserves the complete generic source
+and authenticated revocation proof without accepting substitute evidence or
+performing more validation. It stops before reviewed-root or intermediate DNS
+policy for the delegated responder, no-check or separately authenticated
+revocation policy for it, complete revocation, generalized path validation,
+TLS, HTTP, OAuth, or network readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
