@@ -1614,9 +1614,21 @@ keeps the initializer reference, terminal signature and reviewed-root handoff,
 complete child policy, and advanced state together. Proofs from another
 construction and policy for another certificate fail closed, so a caller
 cannot skip the root-authenticated first step or inject detached initial state.
-This is only the first ordered
-intermediate transition; it does not accumulate additional intermediates or
-establish complete path validation. The pure public-certificate-data
+This is only the first ordered intermediate transition. A bounded second-step
+follow-up now consumes that result together with the immediately target-nearer
+routed adjacency from the same exact constructed-path object. The new
+adjacency's issuer must be the already processed anchor-nearest intermediate,
+its issuer depth must immediately precede the retained terminal depth, and its
+child must be another candidate certificate rather than the target. Complete
+intermediate policy must retain that exact authenticated child before the
+retained path-length state is advanced. The non-copyable result keeps the
+entire first step, second routed signature, complete second-child policy, and
+twice-advanced state together. A proof from another construction, a skipped or
+replayed depth, an issuer not retained by the first step, or policy for another
+certificate fails closed. This establishes exactly two ordered intermediate
+transitions; it does not iterate over an arbitrary path, prove that all
+remaining depths were processed, or establish complete path validation. The
+pure public-certificate-data
 composition performs no parsing, new signature verification, credential access
 or editing, signing, storage, clock acquisition, provider action, audit event,
 trace emission, I/O, network access, or other external effect. It does not
