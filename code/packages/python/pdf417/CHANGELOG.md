@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- Added `BUILD_windows`. The Unix `BUILD` calls `.venv/bin/python`, which does not
+  exist on Windows (the interpreter is `.venv\Scripts\python.exe`), so the package
+  failed in the first Windows full build with `'.venv' is not recognized as an
+  internal or external command`. The new file runs the same steps with Windows
+  paths; no source change.
+
 ## [0.1.0] — 2026-05-06
 
 ### Added
