@@ -948,6 +948,39 @@ request, an unknown relation endpoint, and an ordinary graph cycle. The
 operation accepts inert values only and gains no filesystem, Git, process,
 environment, network, clock, randomness, or credential authority.
 
+Package-local metadata selection is a third `diff_selection` variant. Its
+options are exactly the path-selection options above plus the required
+constant `metadata_policy: "package_local"`; the original path-selection
+options never carry the field. Under the policy, a changed path inside a
+`package_prefix` package whose package-relative path is exactly `README.md`,
+`CHANGELOG.md`, `required_capabilities.json`, `effect_certificate.json` or
+`assurance_report.json`, or a strict descendant of `CHANGELOG.d/` or
+`evidence/`, marks that package *local*. Matching is case-sensitive and
+root-only, so `docs/README.md`, `readme.md`, `evidence.bindings` and a file
+named `CHANGELOG.d` are ordinary paths. Every other selection rule is
+unchanged: strict-glob packages, BUILD fronts, forced seeds,
+repository-boundary consumers and the unknown-path policy all seed ordinary
+changed packages. A local package that is also an ordinary seed is ordinary.
+Then:
+
+- `changed_packages` is the ordinary seeds plus the local packages;
+- `affected_packages` is the dependent closure of the ordinary seeds plus the
+  local packages, so a local package reaches none of its dependents; and
+- `prerequisite_packages` is the prerequisite closure of the affected set,
+  excluding affected packages, as before.
+
+The listed files are those the package's own BUILD may check but no
+dependent's build or test can read; `code/specs/12-build-system.md`
+("Package-local metadata") records the repository evidence for each. The
+fixtures use the distinct `package-metadata-selection-*.json` filename prefix
+and `diff-selection/package-metadata-` id prefix and pin a metadata-only
+change of every listed class, a source change beside metadata, nested and
+misspelled lookalikes, strict-glob and forced packages, and a
+repository-boundary consumer of a capability manifest. Implementations that
+dispatch every flat case by domain and do not implement the policy must skip
+cases whose options carry `metadata_policy`, as they skip
+`trigger_relations`.
+
 The adapter must not read the caller's real checkout, Git config, hooks, or
 credentials.
 
@@ -1764,6 +1797,11 @@ The Cargo test-trigger variant also uses `diff_selection`, but its closed
 `changed_packages`; its result has the same three sorted selection lists. Its
 fixtures use the distinct `test-trigger-selection-*.json` filename prefix so
 the existing package-root `diff-selection-*.json` roster remains unchanged.
+The package-local metadata variant also uses `diff_selection`; its closed
+`options` record is the path-selection record plus the required constant
+`metadata_policy: "package_local"`, its result has the same three sorted
+lists, and its fixtures use the `package-metadata-selection-*.json` prefix for
+the same reason.
 
 `cargo_manifest_snapshot` is the authority-free boundary before Cargo path
 resolution. It MUST NOT read files, resolve paths or symlinks, inspect Cargo

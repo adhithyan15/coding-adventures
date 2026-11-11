@@ -203,6 +203,28 @@ affected sets and Go/Rust toolchain flags demonstrate native scheduling with
 source-reference drift test together.
 
 The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/package-metadata-selection-*.json`
+(the `metadata_policy: "package_local"` diff-selection variant) has its own
+direct-native-consumer relation: `<language>/programs/build-tool` for Dart,
+Go, Java, Kotlin and OCaml. Go replays the cases; the JVM, Dart and OCaml
+cores dispatch every flat case by domain and must prove they skip the variant.
+Any exact flat JSON case addition, edit, deletion, or renamed source MUST seed
+those roots before affected and prerequisite closure on detect and every
+platform override, united with ordinary changed roots. Empty stems, nested
+paths, backslash spellings, case variants and backups MUST NOT trigger it, an
+explicit single-language plan seeds only its own reader, and an applicable
+missing reader MUST fail planning without writing a partial plan. A new direct
+reader must update the relation and its source-reference drift test together.
+
+Package-local metadata also narrows what gates see. A change to a package's
+root `README.md`, `CHANGELOG.md`, `CHANGELOG.d/`, `required_capabilities.json`,
+`effect_certificate.json`, `assurance_report.json` or `evidence/` affects that
+package and its prerequisites but not its dependents
+(`code/specs/12-build-system.md`, "Package-local metadata"). A gate still
+fires on the file's path or on the owning package; a gate that only listed a
+dependent of the owner no longer fires for such a change.
+
+The exact flat case family
 `code/specs/fixtures/build-tool-v1/cases/toolchain-detection-*.json` MUST
 likewise seed every direct native toolchain-detection reader before affected
 and prerequisite closure. Its current consumers are
