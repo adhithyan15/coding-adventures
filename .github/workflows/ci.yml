@@ -4581,6 +4581,17 @@ jobs:
               Add-Content -Path $env:GITHUB_PATH -Value $_
             }
           }
+          # Prepending msys64\usr\bin puts MSYS2's coreutils `link.exe` (the
+          # hard-link creator) ahead of MSVC's linker. rustc and cl then run it
+          # as a linker and every crate that links fails with "linking with
+          # `link.exe` failed": 33 wasm/* packages in the first Windows full
+          # build, the only run that installs Ruby and Rust together. Nothing in
+          # this job calls coreutils `link` (scripts use `ln`), so rename it and
+          # let the MSVC `link.exe` that the MSVC bootstrap put on PATH win.
+          $coreutilsLink = Join-Path $env:RUBY_PREFIX 'msys64\usr\bin\link.exe'
+          if (Test-Path $coreutilsLink) {
+            Rename-Item -LiteralPath $coreutilsLink -NewName 'link.exe.msys-coreutils'
+          }
 
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
