@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reify the alternative intermediate-status responder-revocation proof's own
+  exact delegated responder-to-reviewed-root path while retaining the complete
+  generic source and authenticated proof.
+- Stop before name policy or revocation policy for that delegated responder,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth.
 - Complete revocation policy for the exact retained nested no-check fixed path
   after every non-root certificate is covered by authenticated good-and-fresh
   status or RFC 6960 no-check policy.
