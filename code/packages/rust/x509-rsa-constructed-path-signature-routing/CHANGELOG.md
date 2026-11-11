@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.12.0 - 2026-11-11
+
+### Added
+
+- Added an allocation-free ordered accumulator for every intermediate on one
+  already constructed path, bounded by a caller-owned nonzero intermediate
+  ceiling.
+- Added fixed public-certificate chain coverage for a one-intermediate empty
+  follow-on slice, multi-intermediate evidence retention, exact evidence
+  counts, ordered depths, detached construction, and child-policy binding.
+
+### Security
+
+- The accumulator derives the intermediate count from the exact construction,
+  requires exact signature and policy counts, and applies each transition only
+  after construction identity, depth, issuer continuity, and authenticated
+  child-policy identity checks pass.
+- This accumulates only intermediate path-length state. It stops before the
+  target signature and does not establish complete validation, check names or
+  revocation, perform TLS or HTTP, authorize OAuth, or grant network authority.
+
 ## 0.11.0 - 2026-11-11
 
 ### Added
