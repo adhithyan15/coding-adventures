@@ -204,8 +204,8 @@ a join over equal keys (§9) and not a naming convention.
       "kind": "exhaustive", "claim": "eq_agrees", "ops": ["eq"],
       "binders": [["a", {"domain":"bytes_d1"}], ["b", {"domain":"bytes_d1"}]],
       "admit": ["bool", true],
-      "lhs": ["op", "eq", [["var","a"],["var","b"]]],
-      "rhs": ["call", "same", [["var","a"],["var","b"]]],
+      "lhs": ["subject_op", "eq", [["var","a"],["var","b"]]],
+      "rhs": ["model_call", "same", [["var","a"],["var","b"]]],
       "cases": 120409, "discarded": 0,
       "domain_text": "Bytes[347] x Bytes[347]",
       "inputs_sha256": "<hex>", "expected_sha256": "<hex>"
@@ -229,9 +229,13 @@ therefore `['eq', ['var','a'], ['var','b']]`; the subject side of a claim is
 The compiler fails unsupported operations or nodes with `W0701`; every
 consumer rejects an unknown tag and never skips it.
 
-For each case the consumer evaluates the checked claim with subject calls
-dispatched to the real export and reference expressions dispatched only to
-pure models. The corpus oracle evaluates and records only the pure reference
+WD-003's first profile accepts only equality claims with exactly one subject
+expression and one pure reference expression (the sides may appear in either
+order). It rejects claims with no pure reference side or with subject calls
+on both sides; there is no implementation-independent expected value for
+those forms in this profile. For each case, the consumer evaluates the subject
+expression through the real export and the reference expression through pure
+models. The corpus oracle evaluates and records only the pure reference
 result. A wrong subject result cannot change the oracle value and must fail
 the case comparison. The shared conformance fixture includes a deliberately
 wrong subject result to prove this separation.
@@ -256,8 +260,15 @@ varying fastest** (row-major). Refinements filter in that order; a discarded
 tuple is counted and receives no case id. A case index `@i` is the zero-based
 ordinal among admitted cases after refinement.
 
-The canonical stream encoding (`warrant-stream-v1`), hashed with SHA-256 after
-the header `"warrant-stream-v1\0"`:
+The canonical stream encoding (`warrant-stream-v1`) is hashed with SHA-256.
+After the header `"warrant-stream-v1\0"`, encode the suite context as a
+u32-LE byte length plus the UTF-8 suite id, a u32-LE binder count, then for
+each binder a u32-LE byte length plus its canonical Warrant type name; finish
+the context with the same length-prefixed canonical result type name. Each
+admitted case then contributes its typed binder values in order, followed by
+its typed pure-model result. The fixed suite context and binder/result types
+define case boundaries; stream position is the admitted-case ordinal. There
+are no per-case delimiters or ordinal bytes. Hash this byte stream:
 
 | Value | Bytes |
 |---|---|
