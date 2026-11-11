@@ -4,6 +4,16 @@ All notable changes to `@coding-adventures/matrix-rust-napi`
 (TypeScript wrapper) are documented here.  The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed — Windows build
+
+- Added `BUILD_windows`. The Unix `BUILD` copies the cdylib with a `cp ... || cp ...`
+  fallback chain, which `cmd` cannot run, so the package failed in the first Windows
+  full build ("The system cannot find the path specified") even though cargo had just
+  built `matrix_rust_napi.dll`. The Windows file builds the crate, copies the dll to
+  `matrix_rust_napi.node` with `copy`, then runs the same vitest suite.
+
 ## [0.4.0] — 2026-05-18
 
 ### Added — MX07 Phase 4: TypeScript wrapper + end-to-end vitest smoke
