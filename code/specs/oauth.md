@@ -1679,6 +1679,26 @@ certificate-data composition performs no parsing, new signature verification,
 credential access or editing, signing, storage, clock acquisition, provider
 action, audit event, trace emission, I/O, network access, or other external
 effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A bounded reviewed-anchor DNS-policy follow-up now consumes that exact target-
+signature closure together with separate caller-owned limits for the reviewed
+constraint and target Subject Alternative Name decoders. It derives the exact
+target certificate and already-validated SAN extension index only from the
+closure's complete server policy, and derives optional constraint bytes only
+from the reviewed anchor retained through the accumulator's terminal proof.
+An unconstrained snapshot entry succeeds without new DNS evidence. A
+constrained entry must decode as the repository's supported permitted-DNS
+subset and every retained target dNSName must satisfy that subset before
+success retains the complete target-signature closure plus only a payload-free
+constrained-name count. Callers cannot substitute another target, anchor, SAN
+index, or constraint value. This applies only the reviewed snapshot's current
+supported anchor DNS policy. It does not apply every intermediate
+NameConstraints value, excluded or non-DNS anchor constraints, generalize full
+Name processing or path validation, check revocation, compose TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
+certificate-data composition performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. Concrete HTTPS and
+live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
