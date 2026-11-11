@@ -2685,6 +2685,77 @@ impl<Proof, IntermediateRevocation, ResponderRevocation> fmt::Debug
     }
 }
 
+/// Non-copyable complete revocation policy for one double-nested fixed path.
+///
+/// The retained source-specific proof covers the server target, original
+/// responder, the original responder-revocation proof's own responder,
+/// intermediate, added intermediate-status responder, and the added
+/// responder-revocation proof's own responder with authenticated good-and-
+/// fresh OCSP status or exact RFC 6960 no-check policy. The selected Mozilla-
+/// reviewed root remains the trust anchor, not a revocation target. This
+/// nominal completion evidence does not generalize path construction or
+/// validation, acquire or refresh revocation data, read a clock, or provide
+/// TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    OriginalResponderRevocation,
+    IntermediateRevocation,
+    AddedResponderRevocation,
+> {
+    responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            AddedResponderRevocation,
+            BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+                Proof,
+                OriginalResponderRevocation,
+                IntermediateRevocation,
+            >,
+        >,
+}
+
+impl<Proof, OriginalResponderRevocation, IntermediateRevocation, AddedResponderRevocation>
+    ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
+    >
+{
+    /// Return the consumed complete double-nested proof intact.
+    pub const fn responder_no_check_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+        Proof,
+        IntermediateRevocation,
+        AddedResponderRevocation,
+        BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+            Proof,
+            OriginalResponderRevocation,
+            IntermediateRevocation,
+        >,
+    > {
+        &self.responder_no_check_policy
+    }
+}
+
+impl<Proof, OriginalResponderRevocation, IntermediateRevocation, AddedResponderRevocation>
+    fmt::Debug
+    for ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        OriginalResponderRevocation,
+        IntermediateRevocation,
+        AddedResponderRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy",
+        )
+    }
+}
+
 /// Reify the responder-revocation proof's own exact responder path.
 ///
 /// The safe responder-revocation constructor already binds one complete fully
@@ -2908,6 +2979,50 @@ pub const fn complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_respo
     ResponderRevocation,
 >{
     ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy {
+        responder_no_check_policy,
+    }
+}
+
+/// Complete revocation policy for the exact double-nested fixed path.
+///
+/// The input is deliberately restricted to the source branch that already
+/// retains separately authenticated original-responder revocation plus exact
+/// RFC 6960 no-check policy for that proof's own responder. The remaining
+/// retained intermediate and added responder branches likewise carry their
+/// exact authenticated-status or no-check evidence. This infallible nominal
+/// composition accepts no substitute certificate, path, root, algorithm, key,
+/// signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It does not generalize path construction or
+/// validation, fetch, cache, acquire, or refresh revocation data, or provide
+/// TLS, HTTP, OAuth readiness, or network authority.
+pub const fn complete_x509_ocsp_routed_issuer_reviewed_double_nested_no_check_fixed_path_revocation_policy<
+    Proof,
+    OriginalResponderRevocation,
+    IntermediateRevocation,
+    AddedResponderRevocation,
+>(
+    responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+            AddedResponderRevocation,
+            BoundX509OcspReviewedResponderRevocationResponderNoCheckIntermediateRevocation<
+                Proof,
+                OriginalResponderRevocation,
+                IntermediateRevocation,
+            >,
+        >,
+) -> ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    OriginalResponderRevocation,
+    IntermediateRevocation,
+    AddedResponderRevocation,
+> {
+    ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy {
         responder_no_check_policy,
     }
 }
@@ -6601,6 +6716,114 @@ mod tests {
         assert_eq!(
             format!("{complete:?}"),
             "ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy"
+        );
+    }
+
+    #[test]
+    fn double_nested_no_check_completes_exact_alternative_fixed_path() {
+        let intermediate_encoded = certificate(&[]);
+        let root_encoded = certificate(&[]);
+        let added_responder_encoded = certificate(&[]);
+        let final_responder_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+        let root = decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap();
+        let added_responder =
+            decode_x509_certificate(&added_responder_encoded, Asn1Limits::default()).unwrap();
+        let final_responder =
+            decode_x509_certificate(&final_responder_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+
+        let original_responder_no_check =
+            responder_revocation_responder_no_check_intermediate_binding_evidence(
+                &intermediate,
+                &root,
+                observation_time,
+            );
+        let intermediate_status = TestIntermediateStatusResponderRevocationEvidence {
+            original_responder: &intermediate,
+            added_responder: &added_responder,
+            issuer: &root,
+            observation_time,
+        };
+        let source = bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_revocation(
+            original_responder_no_check,
+            intermediate_status,
+        )
+        .unwrap();
+        let added_responder_path = reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_path(
+            source,
+        );
+        let added_responder_dns = validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_status_responder_anchor_dns_policy(
+            added_responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let added_responder_revocation =
+            bind_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation(
+                added_responder_dns,
+                TestResponderTargetRevocationBindingEvidence {
+                    responder: &final_responder,
+                    target: &added_responder,
+                    issuer: &root,
+                    observation_time,
+                },
+            )
+            .unwrap();
+        let final_responder_path = reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_path(
+            added_responder_revocation,
+        );
+        let final_responder_dns = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_anchor_dns_policy(
+            final_responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let final_responder_no_check = validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_policy(
+            final_responder_dns,
+        )
+        .unwrap();
+
+        let complete = complete_x509_ocsp_routed_issuer_reviewed_double_nested_no_check_fixed_path_revocation_policy(
+            final_responder_no_check,
+        );
+
+        assert!(std::ptr::eq(
+            complete
+                .responder_no_check_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .responder_revocation()
+                .responder_revocation()
+                .responder,
+            &final_responder,
+        ));
+        let retained_source = complete
+            .responder_no_check_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation_responder_no_check_intermediate_revocation();
+        assert!(std::ptr::eq(
+            retained_source.intermediate_revocation().added_responder,
+            &added_responder,
+        ));
+        assert_eq!(
+            *retained_source
+                .responder_no_check_policy()
+                .intermediate_dns_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .responder_revocation()
+                .responder_revocation(),
+            7,
+        );
+        assert_eq!(
+            format!("{complete:?}"),
+            "ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy"
         );
     }
 

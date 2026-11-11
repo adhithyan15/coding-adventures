@@ -357,6 +357,20 @@ wrapper retains the complete proof and accepts no substitute evidence. It does
 not generalize path construction or validation, acquire or refresh revocation
 data, read a clock, or provide TLS, HTTP, OAuth, or network readiness.
 
+`complete_x509_ocsp_routed_issuer_reviewed_double_nested_no_check_fixed_path_revocation_policy`
+provides the corresponding source-specific completion when the original
+responder uses separately authenticated revocation and that proof's own
+responder has already passed exact RFC 6960 no-check policy. The retained
+alternative branch additionally authenticates revocation for the added
+intermediate-status responder and applies exact no-check policy to that proof's
+own responder. Its input type therefore covers every non-root certificate in
+this one double-nested fixed path while excluding the unresolved generic
+authenticated-recursion source. The selected Mozilla-reviewed root remains the
+trust anchor. This nominal composition performs no new parsing, cryptography,
+clock acquisition, I/O, or external effect and does not generalize path
+construction or validation, acquire or refresh revocation data, or provide
+TLS, HTTP, OAuth, or network readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy

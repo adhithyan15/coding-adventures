@@ -89,7 +89,10 @@ track's exact owner set beneath a pinned directory handle through Python 3
 (`python` on Windows, `python3` on Unix). It still compares every generated
 owner byte and independently reconstructs the manifest against lesson and
 narration identities; a missing Python reader fails the check. The synchronous
-loader and `--write`/recovery path remain available.
+loader and `--write`/recovery path remain available. The awaitable committed
+manifest loader uses the same pinned batch reader for narration identities
+only, after checking the complete owner-language set against the registry;
+unrelated generated-book hashes are not a prerequisite.
 Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`
