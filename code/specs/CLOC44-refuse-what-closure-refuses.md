@@ -143,15 +143,18 @@ refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
 ## Slice 4: `with` statement
 
 Upstream reports `JSC_USE_OF_WITH` ("The with statement cannot be used in strict mode.")
-at the `with` keyword token at every compilation level, exit status 1.
+at the `with` keyword token at SIMPLE and ADVANCED compilation levels, exit status 1.
+At WHITESPACE_ONLY, strict-mode validation is not enforced on scripts, matching upstream's
+acceptance and emission of `with` in verified goldens like `minify_with_body_flatten`.
 
 | Where | Upstream |
 |---|---|
-| `with (o) { x(1 + 2); }` | refused, exit 1 |
-| `function f() { with (o) {} }` | refused, exit 1 |
+| `with (o) { x(1 + 2); }` at SIMPLE | refused, exit 1 |
+| `function f() { with (o) {} }` at ADVANCED | refused, exit 1 |
+| `with(o){a()}` at WHITESPACE_ONLY | compiled (`with(o)a();`), exit 0 |
 
 `refusals::scan` parses when a `with` keyword token is present (not after `.` or `?.`),
-and reports `with_statement`. `simple-with` now asserts the identical
+and reports `with_statement` at SIMPLE and ADVANCED. `simple-with` now asserts the identical
 refusal (`expected.stderr`/`expected.exit`, empty `expected.stdout`).
 
 ## The ladder's third verdict

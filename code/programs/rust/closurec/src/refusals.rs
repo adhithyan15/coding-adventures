@@ -56,6 +56,7 @@
 //!   line and column. The exit status is `min(N, 127)`.
 
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
+use crate::config::CompilationLevel;
 use coding_adventures_javascript_parser::parse_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
@@ -112,7 +113,12 @@ fn utf16_col(lines: &[&str], line: usize, char_col_1based: usize) -> usize {
 ///
 /// A file the lexer can't tokenize yields none here, because the ordinary
 /// pipeline reports that failure itself.
-pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
+pub fn scan(
+    file: usize,
+    source: &str,
+    version: EsVersion,
+    level: CompilationLevel,
+) -> Vec<Refusal> {
     let Ok(tokens) = tokenize_javascript_typed(source, version) else {
         return Vec::new();
     };
@@ -128,21 +134,22 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     // Slices 2, 3 & 4: `return` / `new.target` outside a function, `super` outside
     // a method, and `with` statements. They need the parse tree, so only parse
     // when a candidate KEYWORD token is present. A string `"with"` or a member
-    // name `x.with` is not one.
+    // name `x.with` is not one. Note `with` is permitted at WHITESPACE_ONLY.
+    let refuse_with = level != CompilationLevel::WhitespaceOnly;
     let candidate = tokens.iter().enumerate().any(|(i, t)| {
         let keyword = matches!(t.type_, lexer::token::TokenType::Keyword)
             && !(i > 0 && matches!(tokens[i - 1].value.as_str(), "." | "?."));
         keyword
             && (t.value == "return"
                 || t.value == "super"
-                || t.value == "with"
+                || (refuse_with && t.value == "with")
                 || (t.value == "new"
                     && tokens.get(i + 1).is_some_and(|d| d.value == ".")
                     && tokens.get(i + 2).is_some_and(|n| n.value == "target")))
     });
     if candidate {
         if let Ok(root) = parse_javascript_typed(source, version) {
-            out.extend(outside_function(file, &root, &lines));
+            out.extend(outside_function(file, &root, &lines, refuse_with));
         }
     }
     for (i, t) in tokens.iter().enumerate() {
@@ -199,7 +206,12 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
 /// Each refusal is reported at the statement's or expression's first token.
 /// The walk is iterative, with an explicit stack, so a deeply nested input
 /// can't overflow the native stack.
-fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<Refusal> {
+fn outside_function(
+    file: usize,
+    root: &GrammarASTNode,
+    lines: &[&str],
+    refuse_with: bool,
+) -> Vec<Refusal> {
     #[derive(Clone, Copy)]
     struct Context {
         return_ok: bool,
@@ -254,7 +266,7 @@ fn outside_function(file: usize, root: &GrammarASTNode, lines: &[&str]) -> Vec<R
             "member_expression" if !here.super_ok && is_super(node) => {
                 Some((INVALID_SUPER_ACCESS, SUPER_OUTSIDE_METHOD))
             }
-            "with_statement" => Some((USE_OF_WITH, WITH_IN_STRICT_MODE)),
+            "with_statement" if refuse_with => Some((USE_OF_WITH, WITH_IN_STRICT_MODE)),
             _ => None,
         };
         if let (Some((key, message)), Some(line), Some(column)) = (diag, node.start_line, node.start_column) {
@@ -405,7 +417,7 @@ mod tests {
     use super::*;
 
     fn scan_es(src: &str) -> Vec<Refusal> {
-        scan(0, src, EsVersion::Es2025)
+        scan(0, src, EsVersion::Es2025, CompilationLevel::Simple)
     }
 
     #[test]
@@ -646,7 +658,7 @@ mod tests {
         // Captured from closure-compiler-v20260915 (two errors, exit 2).
         let src = "class A { #x = 1; get(){ return this.#x; } }\nconsole.log(new A().get());\n";
         let files = vec![("t.js".to_string(), src.to_string())];
-        let out = render(&scan(0, src, EsVersion::Es2025), &files);
+        let out = render(&scan(0, src, EsVersion::Es2025, CompilationLevel::Simple), &files);
         let line = "class A { #x = 1; get(){ return this.#x; } }";
         let expected = format!(
             "t.js:1:10: ERROR - [{UNSUPPORTED_FEATURE}] {PRIVATE_ELEMENTS}\n  1| {line}\n{}^\n\n\
@@ -661,7 +673,7 @@ mod tests {
     #[test]
     fn multi_digit_lines_widen_the_gutter() {
         let src = format!("{}class C {{\n  #y;\n}}\n", "var v;\n".repeat(11));
-        let r = scan(0, &src, EsVersion::Es2025);
+        let r = scan(0, &src, EsVersion::Es2025, CompilationLevel::Simple);
         assert_eq!((r[0].line, r[0].column), (13, 2));
         let files = vec![("b.js".to_string(), src.clone())];
         assert!(render(&r, &files).starts_with("b.js:13:2: ERROR"));
@@ -678,7 +690,7 @@ mod tests {
     fn rendering_is_bounded_on_a_hostile_single_line() {
         // `#a;` × 20000 on one line: upstream would print ~2.4 GB.
         let src = "#a;".repeat(20_000);
-        let r = scan(0, &src, EsVersion::Es2025);
+        let r = scan(0, &src, EsVersion::Es2025, CompilationLevel::Simple);
         assert_eq!(r.len(), 20_000);
         let files = vec![("h.js".to_string(), src)];
         let out = render(&r, &files);
@@ -701,8 +713,8 @@ mod tests {
             ("z.js".to_string(), "return;".to_string()),
             ("a.js".to_string(), "return;".to_string()),
         ];
-        let mut refusals = scan(0, &files[0].1, EsVersion::Es2025);
-        refusals.extend(scan(1, &files[1].1, EsVersion::Es2025));
+        let mut refusals = scan(0, &files[0].1, EsVersion::Es2025, CompilationLevel::Simple);
+        refusals.extend(scan(1, &files[1].1, EsVersion::Es2025, CompilationLevel::Simple));
         let out = render(&refusals, &files);
         let a_pos = out.find("a.js:1:0: ERROR").expect("a.js present");
         let z_pos = out.find("z.js:1:0: ERROR").expect("z.js present");
@@ -714,7 +726,7 @@ mod tests {
         // `var s='😀';return;`: '😀' is 1 Unicode scalar, but 2 UTF-16 code units.
         // Upstream reports column 11 (0-based UTF-16 code units), not 10.
         let src = "var s='😀';return;";
-        let r = scan(0, src, EsVersion::Es2025);
+        let r = scan(0, src, EsVersion::Es2025, CompilationLevel::Simple);
         assert_eq!(r.len(), 1);
         assert_eq!(r[0].line, 1);
         assert_eq!(r[0].column, 11);
@@ -725,7 +737,7 @@ mod tests {
         // Upstream's caret line copies tabs from the excerpt so carets align with tab stops.
         let src = "\t\treturn;";
         let files = vec![("tabs.js".to_string(), src.to_string())];
-        let r = scan(0, src, EsVersion::Es2025);
+        let r = scan(0, src, EsVersion::Es2025, CompilationLevel::Simple);
         let out = render(&r, &files);
         // Gutter is "  1| " (5 spaces), followed by two tabs, then '^'.
         assert!(out.contains("  1| \t\treturn;\n     \t\t^\n"));
@@ -736,8 +748,13 @@ mod tests {
         // Upstream retains the trailing '\r' on excerpt lines when source has CRLF endings.
         let src = "var a=1;\r\nreturn;\r\n";
         let files = vec![("crlf.js".to_string(), src.to_string())];
-        let r = scan(0, src, EsVersion::Es2025);
+        let r = scan(0, src, EsVersion::Es2025, CompilationLevel::Simple);
         let out = render(&r, &files);
         assert!(out.contains("  2| return;\r\n"));
+    }
+
+    #[test]
+    fn with_statement_allowed_at_whitespace_only() {
+        assert!(scan(0, "with (o) { a(); }", EsVersion::Es2025, CompilationLevel::WhitespaceOnly).is_empty());
     }
 }

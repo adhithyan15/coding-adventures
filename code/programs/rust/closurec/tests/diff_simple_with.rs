@@ -60,3 +60,20 @@ fn advanced_with_is_also_refused() {
         "must report strict mode message: {stderr}"
     );
 }
+
+#[test]
+fn whitespace_only_allows_with() {
+    let out = Command::new(BINARY)
+        .args([
+            "--js",
+            "tests/diff/simple-with/input/a.js",
+            "--compilation_level",
+            "WHITESPACE_ONLY",
+        ])
+        .output()
+        .expect("run closurec");
+
+    assert!(out.status.success(), "whitespace only must exit 0: {:?}", out.status);
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("with(o)"), "must preserve with in whitespace-only: {stdout}");
+}

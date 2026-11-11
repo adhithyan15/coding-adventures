@@ -6,7 +6,7 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ### Fixed - refuse `with` statement, matching upstream Closure Compiler (CCR-075 slice 4, #15860)
 
-- In `src/refusals.rs`, refuse `with` statement with `JSC_USE_OF_WITH` ("The with statement cannot be used in strict mode.") and exit status 1, matching upstream Closure Compiler behavior at all compilation levels.
+- In `src/refusals.rs`, refuse `with` statement at SIMPLE and ADVANCED compilation levels with `JSC_USE_OF_WITH` ("The with statement cannot be used in strict mode.") and exit status 1, matching upstream Closure Compiler behavior while preserving WHITESPACE_ONLY acceptance (e.g. `minify_with_body_flatten`).
 - Fast-path candidate scanning triggers parsing when keyword `with` appears outside member access or string literals.
 - Convert `tests/diff/simple-with/` to an exact refusal fixture matching `closure-compiler-v20260915` (`expected.exit` 1, `expected.stderr`, empty `expected.stdout`, and `README.md`).
 - Update `tests/diff_simple_with.rs` to verify that `simple-with` and ADVANCED compilation with `with` are refused matching upstream byte for byte.
