@@ -110,6 +110,7 @@ import {
   assertBookGenerationIdentitySets,
   bookGenerationOwnerContents,
   readBookGenerationOwners,
+  readBookGenerationOwnersBatch,
   type BookGenerationDocument,
 } from "./book-generation-shards.js";
 import {
@@ -2105,7 +2106,12 @@ export function runShardCli(
       failed = true;
       continue;
     }
-    const expected = unshardContents(root, plan);
+    // The full check is already a batch over every plan. Read its largest
+    // direct-owner tree through pinned, bounded handles; the single-plan API
+    // and the public synchronous unshard path keep their existing behavior.
+    const expected = plan.projection === "book-generation" && requested === undefined
+      ? serialize(readBookGenerationOwnersBatch(root).document)
+      : unshardContents(root, plan);
     const rebuilt = JSON.parse(expected) as Record<string, unknown>;
     if (mode === "--check" && requested === undefined &&
         CHAPTER_SHARDED_TRACKS.some((track) => plan.path === `${track}/chapters.json`)) {

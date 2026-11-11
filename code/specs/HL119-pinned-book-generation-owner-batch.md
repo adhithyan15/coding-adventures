@@ -17,8 +17,10 @@ filename comparisons account for only a small fraction of that phase.
 * Pin the trusted root and each descendant directory handle before listing or
   reading. Refuse a resurrected monolith, missing or extra top-level entries,
   symlink/junction/reparse owner directories and files, malformed names, and
-  non-regular files. A path swap after prevalidation must not redirect an owner
-  read outside the checkout. Keep at most sixteen owner files open per section.
+  non-regular files. In particular, a FIFO must fail without a blocking open;
+  the child transport also has a finite deadline. A path swap after
+  prevalidation must not redirect an owner read outside the checkout. Keep at
+  most sixteen owner files open per section.
 * Return raw UTF-8 owner bytes and exact relative names. TypeScript remains the
   authoritative parser and applies the same metadata, record-name/identity,
   canonical order, duplicate, cross-ledger, and source-path checks as the
