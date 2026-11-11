@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Fixed — Windows build
+
+- Added `BUILD_windows` and made the extension's `build.rs` find the Python
+  import library itself. The Unix `BUILD` looks for `libconduit_native.*` (a
+  Windows cdylib has no `lib` prefix) and `.venv/bin/python`, and `build.rs`
+  relied on a `PYTHON_LIB_PATH` nobody set, so linking failed with
+  `could not open 'python3.lib'`. `build.rs` now asks the interpreter for
+  `<base_prefix>\libs` when `PYTHON_LIB_PATH` is unset.
+
+
 ### Tests — real-socket server E2E (parity with the other ports)
 
 - Add `tests/test_server_e2e.py`: a real-socket end-to-end suite. It builds a
