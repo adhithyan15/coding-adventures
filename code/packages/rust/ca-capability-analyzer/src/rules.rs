@@ -181,9 +181,15 @@ pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
         };
     }
 
-    // `include!` pulls in code that is never scanned.
-    if is_macro && last == "include" && (segs.len() == 1 || (segs.len() == 2 && is_std_root(head)))
-    {
+    // `include!` pulls in code that is never scanned.  The standard library
+    // re-exports it from the preludes too (`std::prelude::v1::include!`,
+    // `core::prelude::rust_2021::include!`), and `prelude` is a pure module, so
+    // matching only `include!` / `std::include!` let the prelude spelling pass
+    // (security review round 3, HIGH-4, PoC t3).  Any std/core/alloc path that
+    // *ends* in `include` is the macro, whatever its length, and so is the
+    // `use` that imports it (`use std::prelude::v1::include as i;`).
+    // `include_str!` / `include_bytes!` embed data and stay pure (VER08a L-B).
+    if last == "include" && ((is_macro && segs.len() == 1) || is_std_root(head)) {
         return Classification::Unanalyzable {
             reason: "code pulled in by include! is not scanned",
         };

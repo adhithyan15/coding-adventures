@@ -225,3 +225,29 @@ fn high7_c_string_prefixes_follow_the_package_edition() {
     let r = analyze_files("t8f", &[("src/lib.rs", "const S: &str = c\"x\\\" std::fs::write \";\n")]);
     assert!(r.is_clean(), "{}", r.format_text(true));
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-4: `include!` is CAP003 however it is reached through std/core/alloc
+// ---------------------------------------------------------------------------
+
+#[test]
+fn high4_include_through_the_prelude_is_cap003() {
+    check(
+        "HIGH-4",
+        &[
+            // PoC t3: the prelude re-exports `include`, and `prelude` is a pure module.
+            ("t3 std::prelude::v1::include!", "std::prelude::v1::include!(\"payload.txt\");", &["?"]),
+            ("core::prelude::rust_2021::include!", "core::prelude::rust_2021::include!(\"payload.txt\");", &["?"]),
+            ("::std::prelude::rust_2024::include!", "::std::prelude::rust_2024::include!(\"payload.txt\");", &["?"]),
+            ("use .. include as i", "use std::prelude::v1::include as i;\ni!(\"payload.txt\");", &["?"]),
+            ("use .. include alone", "use core::prelude::v1::include;", &["?"]),
+            ("use group", "use std::prelude::v1::{include, Vec};", &["?"]),
+            ("alias of the prelude module", "use std::prelude::v1 as p; p::include!(\"x\");", &["?"]),
+            ("re-export used through crate", "pub use std::prelude::v1::include as inc; crate::inc!(\"x\");", &["?"]),
+            // Still data, not code (VER08a L-B): allowed through any path.
+            ("decoy prelude include_str!", "const S: &str = std::prelude::v1::include_str!(\"x\");", &[]),
+            ("decoy prelude include_bytes!", "const S: &[u8] = core::prelude::v1::include_bytes!(\"x\");", &[]),
+            ("decoy prelude Vec", "fn f() { let _ = std::prelude::v1::Vec::<u8>::new(); }", &[]),
+        ],
+    );
+}
