@@ -117,11 +117,22 @@ function Iso-BuildAndRun {
         $exe = Join-Path $buildDir "$cc-$Name.exe"
         Write-Host "iso-harness: [$cc] compiling $Name"
         # /Fe: sets the output executable; /Fo: the intermediate obj directory.
-        & $cc @flags $Sources "/Fe:$exe" "/Fo:$buildDir\"
+        # Everything after /link goes to the linker: /STACK gives the program the
+        # 8 MiB main-thread stack that Linux and macOS give by default. MSVC's
+        # default is 1 MiB, so a test that is fine elsewhere (a deep recursive
+        # formatter, a large automatic buffer) overflowed here and looked like a
+        # portability bug when it was only a smaller default.
+        & $cc @flags $Sources "/Fe:$exe" "/Fo:$buildDir\" /link /STACK:8388608
         if ($LASTEXITCODE -ne 0) { throw "iso-harness: [$cc] COMPILE FAILED for $Name" }
         Write-Host "iso-harness: [$cc] running $Name"
         & $exe
-        if ($LASTEXITCODE -ne 0) { throw "iso-harness: [$cc] RUNTIME FAILURE for $Name" }
+        $runExit = $LASTEXITCODE
+        if ($runExit -ne 0) {
+            # Windows crash codes are NTSTATUS values, unreadable in decimal:
+            # 0xC00000FD is a stack overflow, 0xC0000005 an access violation.
+            $hex = '0x{0:X8}' -f ([uint32]([int64]$runExit -band 0xFFFFFFFFL))
+            throw "iso-harness: [$cc] RUNTIME FAILURE for $Name (exit code $runExit / $hex)"
+        }
     }
 }
 
