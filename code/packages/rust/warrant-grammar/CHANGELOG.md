@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — VER04i WD-003 portable corpus
+
+- Add a closed ct-compare Warrant v0 corpus profile generated from the checked
+  Warrant source, with distinct subject-operation and pure-model IR, canonical
+  admitted-case enumeration, independent input/result SHA-256 streams, generated
+  examples and sabotage-control descriptors, and byte-stable `--check` support.
+- Add a stdlib-only Python oracle that independently validates source-bound
+  declarations, suite semantics, corpus digests and TFV examples, with mutation
+  tests for incomplete or misbound evidence. The first profile rejects sharding
+  and unsupported Warrant constructs; it does not claim to execute a lane.
+- Route the corpus generator, oracle and their tests through package BUILD and
+  repository-input selection.
+
+
 ## 0.4.0 - Warrant v1: WX-H (output bounds) and WX-E (pinned external tables)
 
 Implements VER04j sections 5 and 6 (sections 14.2 and 14.3 list every deviation).

@@ -4,4 +4,7 @@ cargo run -q -p coding_adventures_warrant_grammar --example regenerate -- --chec
 cargo test -q -p coding_adventures_warrant_grammar --test self_corpus -- --sabotage always-pass 2>NUL | findstr /B /C:"not ok "
 python ../../../scripts/warrant_syntax_corpus.py
 python -m unittest discover -s ../../../scripts/tests -p test_warrant_syntax_corpus.py
+python ../../../scripts/warrant_corpus_oracle.py
+python -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
+cargo run -q -p coding_adventures_warrant_grammar --example gen_corpus -- --check
 python ../../../specs/fixtures/warrant-vectors-synthetic-v1/generate.py --check

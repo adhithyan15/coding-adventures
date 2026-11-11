@@ -876,6 +876,24 @@ enum RepositorySourceInputBoundaryProjection {
               ],
               "reason": "Every TypeScript package extends the tracked base compiler configuration at its package-workspace root.",
               "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
+            },
+            {
+              "id": "warrant-ct-compare-corpus-inputs",
+              "input_origin": "repository",
+              "applies_to": {
+                "exact_roots": ["code/packages/rust/warrant-grammar"],
+                "descendant_roots": [],
+                "excluded_roots": []
+              },
+              "inputs": [
+                {"path": "code/scripts/tests/test_warrant_corpus_oracle.py", "role": "cross_package_exact"},
+                {"path": "code/scripts/warrant_corpus_oracle.py", "role": "cross_package_exact"},
+                {"path": "code/specs/ct-compare.warrant", "role": "cross_package_exact"},
+                {"path": "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv", "role": "cross_package_exact"},
+                {"path": "code/specs/fixtures/ct-compare-warrant-v1/corpus.json", "role": "cross_package_exact"}
+              ],
+              "reason": "The Warrant grammar package runs the independent corpus oracle and generated-artifact check, which read the exact tracked Warrant spec and corpus files.",
+              "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
             }
           ]
         }
