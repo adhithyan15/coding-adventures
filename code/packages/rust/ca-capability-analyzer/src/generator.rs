@@ -185,10 +185,40 @@ pub fn write_module_to_disk(package_dir: &Path) -> Result<(), String> {
 
     let target_path = capabilities_module_path(package_dir);
     refuse_symlink(&target_path)?;
-    fs::write(&target_path, content)
-        .map_err(|e| format!("Failed to write {}: {e}", target_path.display()))?;
+    replace_file(&src_dir, &target_path, content.as_bytes())
+}
 
-    Ok(())
+/// Replace `target` (in directory `dir`) with `bytes` without writing through it.
+///
+/// `fs::write` opens the existing file and truncates it *in place*.  If
+/// `src/capabilities.rs` is a hard link to a file outside the package, that
+/// outside file is what gets overwritten (security review round 4, LOW, case
+/// `generator-hardlink`); a hard link cannot be told apart from an ordinary
+/// file by `symlink_metadata`.  So the module is written to a new temporary
+/// file in the same directory, opened with `create_new` (it fails rather than
+/// follows if the name exists, a symlink included; the next name is tried),
+/// and `rename`d over the target.  `rename` replaces the directory entry, so
+/// the old inode - and any other name it has - is left untouched.
+///
+/// The temporary name is not a `.rs` file, so neither the scanner nor the
+/// certificate digest ever reads it.  If writing fails, it is *not* deleted
+/// (this crate declares no `fs:delete` capability); the error names it.
+fn replace_file(dir: &Path, target: &Path, bytes: &[u8]) -> Result<(), String> {
+    use std::io::{ErrorKind, Write};
+    for n in 0..64u32 {
+        let tmp = dir.join(format!(".capabilities.rs.tmp{n}"));
+        let mut file = match fs::OpenOptions::new().write(true).create_new(true).open(&tmp) {
+            Ok(f) => f,
+            Err(e) if e.kind() == ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(format!("Failed to create {}: {e}", tmp.display())),
+        };
+        return file
+            .write_all(bytes)
+            .and_then(|()| file.sync_all())
+            .and_then(|()| fs::rename(&tmp, target))
+            .map_err(|e| format!("Failed to write {} (temporary file {} left behind): {e}", target.display(), tmp.display()));
+    }
+    Err(format!("Failed to write {}: no free temporary file name in {}", target.display(), dir.display()))
 }
 
 /// `Err` if `path` exists and is a symbolic link (not followed).

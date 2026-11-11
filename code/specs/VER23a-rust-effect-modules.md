@@ -191,7 +191,7 @@ Any single-field alteration of a valid certificate fails at least one of these (
   --verify-cert <FILE>     Run small certificate checker against package sources and <FILE>
 ```
 
-`--generate-module` refuses (exit `2`) when `src` or `src/capabilities.rs` is a symbolic link, checked with `symlink_metadata` before writing: following it would overwrite a file outside the package.
+`--generate-module` refuses (exit `2`) when `src` or `src/capabilities.rs` is a symbolic link, checked with `symlink_metadata` before writing: following it would overwrite a file outside the package. The module is written to a new temporary file in `src/` (`.capabilities.rs.tmpN`, opened with `create_new`, so an existing name - a symlink included - is never followed) and `rename`d over `src/capabilities.rs`. A rename replaces the directory entry, so a `src/capabilities.rs` that is a *hard link* to a file outside the package leaves that file untouched (`fs::write` truncated it in place). On a write failure the temporary file is left behind and named in the error: the analyzer declares no `fs:delete`. The name is not `.rs`, so it is never scanned or digested.
 
 Exit Codes:
 - `0`: Success (checks passed, certificate verified, or modules match).
@@ -214,3 +214,4 @@ Exit Codes:
 | V10 | cert JSON writer escaped only `"` | full JSON escaping | backslash/newline in justification produced invalid JSON |
 | V11 | `--generate-module` followed a symlinked `src` or `src/capabilities.rs` and wrote outside the package | refused before writing (§5) | round-3 security review (LOW) |
 | V12 | entry points were always read from `src/lib.rs`: with `[lib] path = "src/lib.txt"` the certificate listed a decoy `src/lib.rs` and said `proved` while `lib.txt` was compiled (review `cert-nonrs.json`) | certificates refuse any `[lib] path` other than `src/lib.rs`; non-`.rs` target roots are `CAP003` in the analysis (§3.3) | second review of round 3 (H5) |
+| V13 | `--generate-module` wrote with `fs::write`, which truncates in place: a `src/capabilities.rs` hard-linked to a file outside the package overwrote that file (case `generator-hardlink`) | write a temporary file in `src/`, then `rename` it into place (§5) | second review of round 3 (LOW) |

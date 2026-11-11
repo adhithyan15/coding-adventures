@@ -622,3 +622,30 @@ fn low_many_tt_repetitions_against_a_long_matcher_finish_quickly() {
     assert_eq!(got, Vec::<String>::new());
     assert!(took < std::time::Duration::from_secs(10), "took {took:?}");
 }
+
+// ---------------------------------------------------------------------------
+// LOW: `--generate-module` replaces the file, never writes through a hard link
+// ---------------------------------------------------------------------------
+
+#[cfg(unix)]
+#[test]
+fn low_generate_module_does_not_write_through_a_hard_link() {
+    use coding_adventures_ca_capability_analyzer::write_module_to_disk;
+    let outside = Pkg::with("h_outside", &[("victim.txt", "precious\n")]);
+    let p = Pkg::with(
+        "h_link",
+        &[("required_capabilities.json", &pure_manifest("h_link")), ("src/lib.rs", "pub fn f() {}\n")],
+    );
+    std::fs::hard_link(outside.path("victim.txt"), p.path("src/capabilities.rs")).unwrap();
+    write_module_to_disk(p.dir()).unwrap();
+    assert_eq!(outside.read("victim.txt"), "precious\n", "the hard-linked file outside the package was overwritten");
+    assert!(p.read("src/capabilities.rs").contains("Generated from required_capabilities.json"));
+    // No temporary file is left behind.
+    let left: Vec<String> = std::fs::read_dir(p.path("src"))
+        .unwrap()
+        .map(|e| e.unwrap().file_name().to_string_lossy().to_string())
+        .collect();
+    let mut left = left;
+    left.sort();
+    assert_eq!(left, vec!["capabilities.rs".to_string(), "lib.rs".to_string()]);
+}
