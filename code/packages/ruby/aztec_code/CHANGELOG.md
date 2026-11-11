@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Added `BUILD_windows` identical to `BUILD` but with `--except Layout/EndOfLine` on the `standardrb` line (the repo forces LF; Windows StandardRB expects CRLF).
+
+### Fixed
+
 - Removed the redundant `keyword_init: true` on the internal `SymbolSpec`
   struct. Ruby 3.2+ Structs accept keyword arguments natively (the gem targets
   `>= 3.3.0`), so the option was flagged by standardrb's
