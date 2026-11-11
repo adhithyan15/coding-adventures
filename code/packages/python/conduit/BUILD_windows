@@ -1,0 +1,5 @@
+cd ext\conduit_native && cargo build --release
+uv venv --quiet --clear
+.venv\Scripts\python.exe -c "import sysconfig, shutil; shutil.copy('ext/conduit_native/target/release/conduit_native.dll', 'src/coding_adventures/conduit/conduit_native' + sysconfig.get_config_var('EXT_SUFFIX'))"
+uv pip install -e .[dev] --quiet
+.venv\Scripts\python.exe -m pytest tests\ -v

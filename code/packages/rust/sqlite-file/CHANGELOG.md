@@ -1,5 +1,11 @@
 # Changelog — sqlite-file
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## Unreleased
 
 **`content_size` no longer truncates a serial-type length on 32-bit targets.**

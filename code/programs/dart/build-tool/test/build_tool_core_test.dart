@@ -52,6 +52,11 @@ void main() {
         // This closed variant uses package-name strings rather than the
         // legacy path-selection package records consumed here.
         if (options.containsKey('trigger_relations')) continue;
+        // The package_local metadata variant (package-metadata-selection-*)
+        // keeps root changelog/capability/evidence-data edits from
+        // reaching dependents. This core does not model that policy, so it
+        // skips the variant instead of replaying it as legacy selection.
+        if (options.containsKey('metadata_policy')) continue;
       }
       seen.add(fixture['id']! as String);
       if (domain == 'graph') {

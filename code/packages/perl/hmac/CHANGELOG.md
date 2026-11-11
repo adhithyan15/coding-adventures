@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- `BUILD_windows` passes dependency library paths with `-I` instead of `set PERL5LIB=...`, which MSYS perl on CI splits on `:` and so never found.
+
+### Fixed
+
 - Declare the four internal hash packages used by the HMAC implementation and
   materialize their library paths in standalone BUILD runs.
 - Install only the external Test2 test harness during BUILD execution instead

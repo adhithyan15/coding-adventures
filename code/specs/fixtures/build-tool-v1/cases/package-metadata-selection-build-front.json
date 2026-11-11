@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-metadata-build-front",
+  "domain": "diff_selection",
+  "summary": "A platform BUILD front changed beside metadata is an ordinary path, so the owner is always selected and propagates; the contract does not model platform filtering.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "rust/pre",
+          "rel_path": "code/packages/rust/pre",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/meta",
+          "rel_path": "code/packages/rust/meta",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/dep",
+          "rel_path": "code/packages/rust/dep",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/strict",
+          "rel_path": "code/packages/rust/strict",
+          "source_mode": "strict_globs",
+          "source_globs": [
+            "src/**/*.rs"
+          ]
+        },
+        {
+          "name": "rust/strict-user",
+          "rel_path": "code/packages/rust/strict-user",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [
+        [
+          "rust/pre",
+          "rust/meta"
+        ],
+        [
+          "rust/meta",
+          "rust/dep"
+        ],
+        [
+          "rust/strict",
+          "rust/strict-user"
+        ]
+      ],
+      "forced_packages": [],
+      "unknown_path_policy": "error",
+      "metadata_policy": "package_local"
+    },
+    "changed_paths": [
+      "code/packages/rust/meta/effect_certificate.json",
+      "code/packages/rust/meta/BUILD_windows",
+      "code/packages/rust/strict/required_capabilities.json",
+      "code/packages/rust/strict/BUILD_mac"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-metadata-build-front",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "rust/meta",
+        "rust/strict"
+      ],
+      "affected_packages": [
+        "rust/dep",
+        "rust/meta",
+        "rust/strict",
+        "rust/strict-user"
+      ],
+      "prerequisite_packages": [
+        "rust/pre"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

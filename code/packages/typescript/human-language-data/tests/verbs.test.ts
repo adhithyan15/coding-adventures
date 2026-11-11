@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadLessons, loadTaxonomy } from "../src/loader.js";
+import { loadLessonsAsync, loadTaxonomy } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { coreVerbConcepts, verbCoverage } from "../src/verbs.js";
 import type { Taxonomy } from "../src/types.js";
@@ -24,9 +24,11 @@ function lesson(id: string, concept: string, language = "spanish") {
  * through the same loaders `loadEverything` calls — and derives it once. Both
  * cases only read it.
  */
-let realReportOnce: ReturnType<typeof verbCoverage> | undefined;
-function realReport(): ReturnType<typeof verbCoverage> {
-  realReportOnce ??= verbCoverage(loadLessons(), loadTaxonomy());
+let realReportOnce: Promise<ReturnType<typeof verbCoverage>> | undefined;
+function realReport(): Promise<ReturnType<typeof verbCoverage>> {
+  realReportOnce ??= loadLessonsAsync().then((lessons) =>
+    verbCoverage(lessons, loadTaxonomy()),
+  );
   return realReportOnce;
 }
 
@@ -107,8 +109,8 @@ describe("corpus snapshot", () => {
   // Each agent measured this alone and each wrote "the first track off zero". All three
   // were right in isolation and wrong together; the numbers here are re-measured against
   // the merged corpus.
-  it("pins the core verb baseline: eighteen tracks, and Spanish has joined", () => {
-    const report = realReport();
+  it("pins the core verb baseline: eighteen tracks, and Spanish has joined", async () => {
+    const report = await realReport();
 
     expect(report.summary.coreVerbCount).toBe(40);
 
@@ -361,8 +363,8 @@ describe("corpus snapshot", () => {
     }
   });
 
-  it("gives every track an explicit authoring list", () => {
-    const report = realReport();
+  it("gives every track an explicit authoring list", async () => {
+    const report = await realReport();
     for (const track of report.tracks) {
       expect(track.covered.length + track.missing.length).toBe(40);
     }

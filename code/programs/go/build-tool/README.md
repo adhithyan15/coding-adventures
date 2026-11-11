@@ -612,6 +612,44 @@ one-line layout edit. Selection uses raw Git paths (deletions count), honors
 It applies to Git-diff mode only; `-force` and the hash fallback already
 build everything they consider changed.
 
+### Package-local metadata does not rebuild dependents
+
+Adding or editing a package's root `CHANGELOG.md`, a direct
+`CHANGELOG.d/*.md` shard, `required_capabilities.json`,
+`effect_certificate.json`, `assurance_report.json` or `evidence/` data
+(`.json`, `.cnf`, `.drat`) rebuilds that package (its BUILD may check the file)
+and its prerequisites, but not its dependents, and it fires no Cargo
+dev-dependency test trigger. Nothing a dependent builds or tests can read
+those files; `internal/pkgmeta` lists them with the repository evidence for
+each, and `package_metadata.go` wires them in exactly the way repository
+input consumers are. Adding only a capability manifest and a changelog entry
+to `rust/bounded-json` used to select 556 packages; it now selects 1.
+
+The rule is deliberately narrow:
+
+- `README.md` is not metadata: a Python dependent's `pip install -e ../<dep>`
+  reads the dependency's `readme`.
+- Only additions and in-place edits can be local. The tool reads
+  `git diff --no-renames --name-status`; a deletion, a rename (a deletion
+  plus an addition), a type change or an unknown status propagates, because
+  packaging that lists a file needs it to exist in a dependent's build.
+- Only exact, case-sensitive names at the package root count, closed by
+  type: a script under `evidence/` or a nested `CHANGELOG.d/` shard is
+  source. `-validate-build-files` also refuses any BUILD, script, Cargo
+  `path`/`build`, Rust `#[path]` or `include!` that executes a metadata-class
+  location (`internal/validator/metadata_exec.go`).
+- Local and ordinary roots come from the same platform-filtered path list, so
+  a metadata change beside a `BUILD_windows` edit is local on Linux and macOS
+  and ordinary on Windows; the package is selected everywhere.
+- Strict-glob Starlark packages keep their declared-source semantics; any
+  other change in the same package, fixture seeds, forced roots and
+  repository-boundary consumers propagate; `-force` and the hash fallback are
+  unchanged.
+
+The neutral `metadata_policy: "package_local"` diff-selection variant
+(`package-metadata-selection-*.json`) pins the path rules, and
+`internal/graphdiff` replays it.
+
 ## Architecture
 
 The tool is organized into seven internal packages, each responsible for one phase of the build pipeline:
@@ -625,6 +663,8 @@ The tool is organized into seven internal packages, each responsible for one pha
 4. **cache** -- JSON-based build cache (read/write with atomic saves)
 5. **executor** -- Parallel execution with goroutines + semaphore
 6. **gitdiff** -- Git-based change detection for incremental builds
+   (with **pkgmeta**, which names the package-local metadata files whose
+   changes do not reach dependents)
 7. **reporter** -- Terminal-friendly build report formatting
 
 ## Go concurrency advantage

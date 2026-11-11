@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/ver13-non-claims-v1.schema.json",
+  "title": "VER13 Non-Claims v1",
+  "description": "Properties a package declares it does not provide (VER13 section 2, 'Non-claim'). Rule AC-12 of ca-assurance-report --check refuses a report that shows such a property as proved.",
+  "type": "object",
+  "required": [
+    "schema",
+    "non_claims"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "ver13-non-claims-v1"
+    },
+    "non_claims": {
+      "type": "array",
+      "maxItems": 4096,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "package",
+          "cwe",
+          "claim",
+          "source",
+          "statement"
+        ],
+        "properties": {
+          "package": {
+            "type": "string",
+            "pattern": "^[a-z0-9_-]+/[a-z0-9_-]+$"
+          },
+          "cwe": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000
+          },
+          "claim": {
+            "type": "string",
+            "enum": [
+              "constant-time",
+              "functional",
+              "bound",
+              "capability",
+              "weakness-row",
+              "report"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "pattern": "^code/",
+            "description": "Repository path of the document that states the non-claim."
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        }
+      }
+    }
+  }
+}

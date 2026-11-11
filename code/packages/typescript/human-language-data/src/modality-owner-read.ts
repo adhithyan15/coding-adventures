@@ -2,6 +2,9 @@ import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const MAX_RESPONSE_BYTES = 64 * 1024 * 1024;
+// A silent child must not hold a corpus hook or a failed batch forever. This is
+// per track, well above normal pinned reads and below the existing hook budget.
+const CHILD_DEADLINE_MS = 20_000;
 
 /** One pinned-parent, exact-set read. The Python boundary never exposes error bytes. */
 export async function readAnchoredModalityTrack(
@@ -19,11 +22,17 @@ export async function readAnchoredModalityTrack(
     const chunks: Buffer[] = [];
     let bytes = 0;
     let failed = false;
+    let timedOut = false;
+    let childError: Error | undefined;
+    const deadline = setTimeout(() => {
+      timedOut = true;
+      child.kill("SIGKILL");
+    }, CHILD_DEADLINE_MS);
     child.stdout.on("data", (chunk: Buffer) => {
       bytes += chunk.length;
       if (bytes > MAX_RESPONSE_BYTES) {
         failed = true;
-        child.kill();
+        child.kill("SIGKILL");
       } else {
         chunks.push(chunk);
       }
@@ -31,9 +40,18 @@ export async function readAnchoredModalityTrack(
     // Python's stderr can include exception context; never forward it to CI.
     child.stderr.resume();
     child.stdin.on("error", () => { /* A failed child is handled by close/error. */ });
-    child.on("error", (cause) => reject(new Error("modality anchored reader could not start", { cause })));
+    // Node emits close after error once the child's stdio has closed. Retain
+    // the cause, but do not let the batch settle while a started child lives.
+    child.on("error", (cause) => {
+      childError = new Error("modality anchored reader could not start", { cause });
+    });
     child.on("close", (code) => {
-      if (failed || code !== 0) {
+      clearTimeout(deadline);
+      if (timedOut) {
+        reject(new Error(`modality anchored reader timed out for '${language}'`));
+      } else if (childError !== undefined) {
+        reject(childError);
+      } else if (failed || code !== 0) {
         reject(new Error(`modality anchored reader failed for '${language}'`));
       } else {
         resolve(Buffer.concat(chunks));
