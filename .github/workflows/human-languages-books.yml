@@ -312,9 +312,10 @@ jobs:
               ;;
           esac
 
-  # Exercise the compile driver with the system Bash on both platforms. The
-  # fixtures stub TeX and use the existing static book-root seam, so this job
-  # catches shell compatibility failures before the costly all-books build.
+  # Exercise the compile driver and pinned Python shard reader on both Unix
+  # platforms. The Bash fixtures stub TeX and use the existing static book-root
+  # seam, so this job catches compatibility and FIFO regressions before the
+  # costly all-books build.
   bash_compat:
     name: Compile driver Bash compatibility (${{ matrix.os }})
     needs: detect
@@ -329,9 +330,15 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
       - name: Test with the system Bash
         shell: bash
         run: bash code/scripts/tests/test-check-book-compile-bash-compat.sh
+      - name: Test Unix shard boundary
+        run: python3 code/learning/human-languages/data/scripts/test_sharded_ledger.py -v
 
   # Junctions need no symlink privilege on Windows. Keep the shard writer's
   # handle-relative escape tests in the same required gate as the Unix symlink
