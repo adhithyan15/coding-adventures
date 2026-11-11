@@ -2836,6 +2836,23 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A branch-specific bounded completion slice then consumes that exact nested
+no-check composition after the server target, original responder, responder-
+status proof's own responder, intermediate, and intermediate-status proof's
+responder have each been covered by authenticated good-and-fresh OCSP status
+or exact RFC 6960 no-check policy. The selected Mozilla-reviewed root remains
+the trust anchor rather than a revocation target. The infallible non-copyable
+result retains all prerequisite evidence and accepts no substitute
+certificate, path, root, algorithm, key, signature, status, or time. This pure
+public-certificate-data composition performs no parsing, cryptography,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It proves complete revocation policy only for this one retained fixed
+path; it does not generalize path construction or validation, fetch, cache,
+acquire, or refresh revocation data, or provide TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An alternative bounded added-responder revocation follow-up consumes that
 same complete reviewed-root DNS proof plus a separate fully authenticated,
 fully routed OCSP target-revocation proof. Private repository-owned evidence

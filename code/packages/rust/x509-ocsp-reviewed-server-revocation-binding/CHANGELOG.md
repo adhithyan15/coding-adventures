@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Complete revocation policy for the exact retained nested no-check fixed path
+  after every non-root certificate is covered by authenticated good-and-fresh
+  status or RFC 6960 no-check policy.
+- Retain the complete non-copyable proof while stopping before generalized
+  path validation, revocation acquisition or refresh, TLS, HTTP, or OAuth.
 - Apply the selected reviewed root's supported out-of-band permitted-DNS
   constraints to the nested no-check composition's exact intermediate-status
   responder, retaining only count evidence.
