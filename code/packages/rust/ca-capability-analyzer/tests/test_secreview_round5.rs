@@ -231,3 +231,27 @@ fn r5_3b_to_socket_addrs_is_a_dns_lookup() {
         ],
     );
 }
+
+/// `std::io::pipe()` creates an anonymous OS pipe: two raw file descriptors
+/// (handles on Windows).  The taxonomy has no IPC category; VER08a already
+/// classifies raw OS handles (`std::os::fd`, `std::os::unix::io`, ...) as
+/// `ffi:call`, so the pipe and its two handle types join that row.  `CAP003`
+/// would be wrong: the analyzer sees the construct exactly, and `CAP003` is
+/// never waivable, so no package could declare a pipe.
+#[test]
+fn r5_3c_io_pipe_is_a_raw_os_handle() {
+    check(
+        "R5-3c",
+        &[
+            ("io-pipe", "pub fn mk() -> bool { std::io::pipe().is_ok() }", &["ffi:call"]),
+            ("imported", "use std::io::{pipe, PipeReader, PipeWriter};\npub fn mk() -> Option<(PipeReader, PipeWriter)> { pipe().ok() }", &["ffi:call"]),
+            ("reader type only", "pub fn f(_: std::io::PipeReader) {}", &["ffi:call"]),
+            ("writer type only", "pub fn f(_: &std::io::PipeWriter) {}", &["ffi:call"]),
+            ("shorthand head", "pub fn mk() -> bool { io::pipe().is_ok() }", &["ffi:call"]),
+            // Decoys: the rest of `std::io` stays pure.
+            ("io traits and cursor", "use std::io::{Cursor, Read, Write};\npub fn f(b: &[u8]) -> usize { let mut v = Vec::new(); Cursor::new(b).read_to_end(&mut v).unwrap_or(0) }", &[]),
+            ("io copy between in-memory buffers", "pub fn f() { let _ = std::io::copy(&mut std::io::empty(), &mut std::io::sink()); }", &[]),
+            ("local fn named pipe", "fn pipe() -> u8 { 0 }\npub fn f() -> u8 { pipe() }", &[]),
+        ],
+    );
+}

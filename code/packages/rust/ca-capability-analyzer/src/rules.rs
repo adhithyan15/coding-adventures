@@ -378,6 +378,13 @@ fn classify_std(segs: &[&str], is_macro: bool) -> Classification {
             | Some(&"StdoutLock") | Some(&"StderrLock") | Some(&"_print") | Some(&"_eprint") => {
                 cap("stdout", "write")
             }
+            // `std::io::pipe()` creates an anonymous OS pipe, two raw file
+            // descriptors (handles on Windows).  The taxonomy has no IPC
+            // category; raw OS handles (`std::os::fd`, ...) are `ffi:call`, so
+            // the pipe and its handle types are too.  Not `CAP003`: the
+            // construct is seen exactly, and `CAP003` is never waivable
+            // (security review round 5, R5-3, case `io-pipe`).
+            Some(&"pipe") | Some(&"PipeReader") | Some(&"PipeWriter") => cap("ffi", "call"),
             _ => Classification::AllowedPure,
         },
         "ffi" => cap("ffi", "call"),
