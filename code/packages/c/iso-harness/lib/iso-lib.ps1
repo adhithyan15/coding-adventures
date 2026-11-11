@@ -49,7 +49,13 @@ function Iso-StrictFlags {
         [Parameter(Mandatory)][ValidateSet('c','cpp')][string]$Lang,
         [ValidateSet('cl','clang-cl')][string]$Compiler = 'cl'
     )
-    $flags = @('/nologo', '/permissive-', '/W4', '/WX')
+    # _CRT_SECURE_NO_WARNINGS silences only C4996, MSVC's "this ISO function is
+    # unsafe, use strncpy_s" advisory. That advice steers code toward Microsoft's
+    # non-ISO *_s extensions, which is the opposite of what a pure-ISO build
+    # wants, and under /WX it failed every package that calls strncpy, strcpy,
+    # fopen and friends (12 C/C++ packages in the first Windows full build).
+    # /W4 /WX still make every conformance and conversion warning fatal.
+    $flags = @('/nologo', '/permissive-', '/W4', '/WX', '/D_CRT_SECURE_NO_WARNINGS')
     # Do not treat clang-cl as MSVC internally: its extension diagnostics use
     # Clang's policy even though its command-line dialect looks like cl.exe.
     if ($Compiler -eq 'clang-cl') { $flags += '/clang:-pedantic-errors' }
