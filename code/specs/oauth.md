@@ -2998,6 +2998,24 @@ policy, generalized path construction or validation, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A source-specific bounded completion slice then consumes that exact default-
+source recursive proof after the server target, original responder,
+intermediate, added intermediate-status responder, that responder's revocation
+proof signer, and the recursive revocation proof's own signer have each been
+covered by authenticated good-and-fresh OCSP status or exact RFC 6960 no-check
+policy. The input type excludes generic sources whose earlier responder
+branches remain unresolved, and the selected Mozilla-reviewed root remains the
+trust anchor rather than a revocation target. The infallible non-copyable
+result retains every prerequisite without accepting a substitute certificate,
+path, root, algorithm, key, signature, status, or time. This pure public-
+certificate-data composition performs no parsing, cryptography, credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It proves
+complete revocation policy only for this one retained fixed branch; it does not
+generalize path construction or validation, fetch, cache, acquire, or refresh
+revocation data, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact default-
 source alternative proof after the server target, original responder,
 intermediate, added intermediate-status responder, and the added responder-

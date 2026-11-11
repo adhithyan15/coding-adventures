@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Complete revocation policy for the exact default-source recursive fixed path
+  after every non-root certificate is covered by authenticated good-and-fresh
+  status or exact RFC 6960 no-check policy.
+- Retain the complete non-copyable proof while stopping before generalized
+  path validation, revocation acquisition or refresh, TLS, HTTP, or OAuth.
 - Apply exact RFC 6960 no-check policy to the recursive OCSP proof's own
   authenticated delegated responder after its selected reviewed-root DNS
   policy.

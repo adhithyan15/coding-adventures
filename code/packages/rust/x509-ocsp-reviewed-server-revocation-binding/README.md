@@ -396,6 +396,19 @@ recursive responder. Separately authenticated further recursion, complete
 revocation, generalized path validation, TLS, HTTP, OAuth, and network
 readiness remain unavailable.
 
+`complete_x509_ocsp_routed_issuer_reviewed_recursive_responder_no_check_fixed_path_revocation_policy`
+then nominally completes revocation policy for this exact default-source
+recursive branch. Its input type proves that the server target, original
+responder, intermediate, added intermediate-status responder, that responder's
+revocation proof signer, and the recursive revocation proof's own signer are
+each covered by authenticated good-and-fresh OCSP status or exact RFC 6960
+no-check policy. The selected Mozilla-reviewed root remains the trust anchor.
+The infallible non-copyable wrapper retains the complete proof and accepts no
+substitute evidence. It performs no parsing, cryptography, clock acquisition,
+credential or provider operation, audit or trace emission, I/O, or network
+effect. It does not generalize path construction or validation, acquire or
+refresh revocation data, or provide TLS, HTTP, OAuth, or network readiness.
+
 `complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
 then nominally completes revocation policy for this exact default-source
 alternative branch. Its input type proves that the server target, original
