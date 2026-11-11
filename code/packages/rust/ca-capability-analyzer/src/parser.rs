@@ -74,7 +74,51 @@ pub struct ScanResult {
     pub unanalyzable: Vec<SourceUnanalyzable>,
 }
 
-/// Scan a single Rust source file string.
+/// The Rust edition the scanned files are compiled with (from `Cargo.toml`).
+///
+/// The edition changes how text is *lexed*.  Edition 2021 added C-string
+/// literals: `cr#"..."#` is one raw C string there, but in 2015/2018 it is the
+/// identifier `cr`, a `#` punctuation token and an ordinary string.  Reading
+/// a 2018 crate with 2021 rules turned real code into "string contents" and
+/// hid it (security review round 3, HIGH-7, PoC t8).
+///
+/// `Unknown` (no `Cargo.toml`, no `package.edition`, an inherited
+/// `edition.workspace = true`, a per-target `edition` key, or a future edition)
+/// makes every construct whose reading depends on the edition `CAP003`.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Edition {
+    E2015,
+    E2018,
+    E2021,
+    E2024,
+    #[default]
+    Unknown,
+}
+
+impl Edition {
+    /// Parse a `package.edition` value; anything unrecognised is `Unknown`.
+    pub fn parse(s: &str) -> Self {
+        match s {
+            "2015" => Self::E2015,
+            "2018" => Self::E2018,
+            "2021" => Self::E2021,
+            "2024" => Self::E2024,
+            _ => Self::Unknown,
+        }
+    }
+
+    /// `Some(true)` if `c"`/`cr"` start C strings, `Some(false)` if they are an
+    /// identifier followed by a string, `None` if the edition is unknown.
+    fn has_c_strings(self) -> Option<bool> {
+        match self {
+            Self::E2015 | Self::E2018 => Some(false),
+            Self::E2021 | Self::E2024 => Some(true),
+            Self::Unknown => None,
+        }
+    }
+}
+
+/// Scan a single Rust source file string (edition unknown: see [`Edition`]).
 pub fn scan_source(file_rel_path: &str, content: &str) -> Result<ScanResult, String> {
     scan_sources(&[(file_rel_path, content)]).map_err(|e| {
         // Strip the "<file>: " prefix added for multi-file scans.
@@ -126,6 +170,8 @@ struct Lexer {
     line: usize,
     col: usize,
     notes: Vec<LexNote>,
+    /// Do `c"` / `cr"` start C strings?  `None`: edition unknown.
+    c_strings: Option<bool>,
 }
 
 /// Why non-ASCII text outside a literal or comment is CAP003 (HIGH-6).
@@ -397,7 +443,7 @@ fn is_rust_whitespace(c: char) -> bool {
     )
 }
 
-fn lex(content: &str) -> Result<(Vec<Token>, Vec<LexNote>), String> {
+fn lex(content: &str, edition: Edition) -> Result<(Vec<Token>, Vec<LexNote>), String> {
     // rustc removes one leading byte-order mark, then a shebang line.
     let content = content.strip_prefix('\u{feff}').unwrap_or(content);
     let mut lx = Lexer {
@@ -406,6 +452,7 @@ fn lex(content: &str) -> Result<(Vec<Token>, Vec<LexNote>), String> {
         line: 1,
         col: 0,
         notes: Vec::new(),
+        c_strings: edition.has_c_strings(),
     };
     // Skipping with `bump` keeps line/column numbers true to the file.
     for _ in 0..shebang_len(&lx.chars) {
@@ -441,10 +488,31 @@ fn lex(content: &str) -> Result<(Vec<Token>, Vec<LexNote>), String> {
             Tok::Str(lx.string()?)
         } else if let Some(h) = lx.raw_string_hashes(0) {
             Tok::Str(lx.raw_string(h)?)
-        } else if (c == 'b' || c == 'c') && lx.peek(1) == Some('"') {
+        } else if c == 'b' && lx.peek(1) == Some('"') {
             lx.bump();
             Tok::Str(lx.string()?)
-        } else if let (true, Some(h)) = (c == 'b' || c == 'c', lx.raw_string_hashes(1)) {
+        } else if c == 'c' && lx.peek(1) == Some('"') && lx.c_strings != Some(false) {
+            // A cooked C string has the same boundaries as `c` followed by an
+            // ordinary string (same escapes), so an unknown edition is harmless
+            // here; only before 2021 is `c` lexed as an identifier.
+            lx.bump();
+            Tok::Str(lx.string()?)
+        } else if let (true, Some(h)) = (c == 'b', lx.raw_string_hashes(1)) {
+            lx.bump();
+            Tok::Str(lx.raw_string(h)?)
+        } else if let (true, Some(h)) = (c == 'c' && lx.c_strings != Some(false), lx.raw_string_hashes(1)) {
+            // A raw C string `cr#"..."#` (2021+) and `cr` `#` `"..."` (2015/2018)
+            // end at different quotes, so with an unknown edition one of the two
+            // readings may hide code: fail closed.  The raw reading is then
+            // used only to keep lexing the rest of the file.
+            if lx.c_strings.is_none() {
+                lx.notes.push(LexNote {
+                    line,
+                    col,
+                    reason: "raw C-string prefix `cr` whose meaning depends on the edition, which is unknown (Cargo.toml `package.edition`)",
+                    evidence: "cr\"..\"".into(),
+                });
+            }
             lx.bump();
             Tok::Str(lx.raw_string(h)?)
         } else if c == 'b' && lx.peek(1) == Some('\'') {
@@ -1795,11 +1863,18 @@ fn extern_item(sink: &mut Sink, toks: &[Token], i: usize) {
 }
 
 /// Scan several files as one package: bindings are shared across files.
+/// The edition is unknown, so edition-dependent lexemes are CAP003; use
+/// [`scan_sources_with_edition`] when `Cargo.toml` names it.
 pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
+    scan_sources_with_edition(files, Edition::Unknown)
+}
+
+/// [`scan_sources`] for files compiled with a known edition.
+pub fn scan_sources_with_edition(files: &[(&str, &str)], edition: Edition) -> Result<ScanResult, String> {
     let mut lexed: Vec<(&str, Vec<Token>)> = Vec::with_capacity(files.len());
     let mut lex_notes: Vec<(&str, Vec<LexNote>)> = Vec::new();
     for (name, content) in files {
-        let (toks, notes) = lex(content).map_err(|e| format!("{name}: {e}"))?;
+        let (toks, notes) = lex(content, edition).map_err(|e| format!("{name}: {e}"))?;
         lexed.push((name, toks));
         if !notes.is_empty() {
             lex_notes.push((name, notes));
@@ -1865,7 +1940,7 @@ pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
 /// word-splitting code truncated there).  `pub(crate)`, `pub(super)` and
 /// `pub(in ..)` are not public entry points and are skipped.
 pub fn public_fn_signatures(content: &str) -> Result<Vec<(String, String)>, String> {
-    let (toks, _) = lex(content)?;
+    let (toks, _) = lex(content, Edition::Unknown)?;
     // `lex` drops a leading byte-order mark; token offsets are relative to the rest.
     let chars: Vec<char> = content.strip_prefix('\u{feff}').unwrap_or(content).chars().collect();
     let mut out = Vec::new();

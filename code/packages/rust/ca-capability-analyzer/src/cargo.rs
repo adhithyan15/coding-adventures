@@ -44,6 +44,8 @@
 use std::fs;
 use std::path::Path;
 
+use crate::parser::Edition;
+
 /// A fail-closed finding inside `Cargo.toml`.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CargoFinding {
@@ -58,6 +60,27 @@ pub struct CargoFacts {
     pub findings: Vec<CargoFinding>,
     /// Sorted, de-duplicated names under dependency / build-dependency tables.
     pub dependencies: Vec<String>,
+    /// The edition every target is compiled with, or `Unknown` (see [`EditionState`]).
+    pub edition: Edition,
+}
+
+/// What the reader has learned about the edition so far.
+///
+/// Only one spelling is trusted: `[package] edition = "20xx"` as a plain
+/// single-line string.  Everything else that *could* set an edition makes it
+/// `Unknown`, because the lexer would otherwise read some file with the wrong
+/// rules (HIGH-7):
+///
+/// * an inherited `edition.workspace = true` (the value lives in another file);
+/// * a per-target `edition` key (`[lib] edition = ..`, `[[bin]] edition = ..`):
+///   targets may then disagree;
+/// * any other form of the value (multi-line, escaped, table, scalar).
+///
+/// `[workspace.package] edition` only feeds members that opt in, so it is ignored.
+#[derive(Default)]
+struct EditionState {
+    package: Option<String>,
+    conflict: bool,
 }
 
 const UNSCANNED_ROOTS: &[&str] = &["tests", "benches", "examples", "target", "node_modules", "_build"];
@@ -365,6 +388,7 @@ fn is_exempt_table(path: &[String]) -> bool {
 
 struct Checker<'a> {
     facts: &'a mut CargoFacts,
+    edition: &'a mut EditionState,
 }
 
 impl Checker<'_> {
@@ -386,6 +410,16 @@ impl Checker<'_> {
         }
         if path.is_empty() || is_exempt_table(path) {
             return;
+        }
+        if path.iter().any(|s| s == "edition") && path[0] != "workspace" {
+            match (path, val) {
+                ([p, e], Some(Val::Str { text, multi: false, escaped: false })) if p == "package" && e == "edition" => {
+                    if self.edition.package.replace(text.clone()).is_some() {
+                        self.edition.conflict = true;
+                    }
+                }
+                _ => self.edition.conflict = true,
+            }
         }
         let Some(k) = path.iter().position(|s| WATCHED_KEYS.contains(&s.as_str())) else {
             return;
@@ -459,7 +493,12 @@ impl Checker<'_> {
 }
 
 /// Parse one statement (table header or `key = value`).  `Ok(false)` at end of file.
-fn statement(rd: &mut Reader, section: &mut Vec<String>, facts: &mut CargoFacts) -> R<bool> {
+fn statement(
+    rd: &mut Reader,
+    section: &mut Vec<String>,
+    facts: &mut CargoFacts,
+    edition: &mut EditionState,
+) -> R<bool> {
     rd.skip_all();
     let line = rd.line;
     if rd.peek(0).is_none() {
@@ -481,7 +520,7 @@ fn statement(rd: &mut Reader, section: &mut Vec<String>, facts: &mut CargoFacts)
         }
         rd.end_of_statement()?;
         *section = key;
-        Checker { facts }.check(section, None, line);
+        Checker { facts, edition }.check(section, None, line);
         return Ok(true);
     }
     let key = rd.key()?;
@@ -494,7 +533,7 @@ fn statement(rd: &mut Reader, section: &mut Vec<String>, facts: &mut CargoFacts)
     rd.end_of_statement()?;
     let mut full = section.clone();
     full.extend(key);
-    Checker { facts }.visit(&full, &v, line);
+    Checker { facts, edition }.visit(&full, &v, line);
     Ok(true)
 }
 
@@ -507,8 +546,9 @@ pub fn analyze_cargo_text(text: &str) -> CargoFacts {
         line: 1,
     };
     let mut section: Vec<String> = Vec::new();
+    let mut edition = EditionState::default();
     loop {
-        match statement(&mut rd, &mut section, &mut facts) {
+        match statement(&mut rd, &mut section, &mut facts, &mut edition) {
             Ok(true) => {}
             Ok(false) => break,
             Err(msg) => {
@@ -523,6 +563,12 @@ pub fn analyze_cargo_text(text: &str) -> CargoFacts {
     }
     facts.dependencies.sort();
     facts.dependencies.dedup();
+    // A file the reader could not finish may hold an edition key it never saw.
+    let complete = facts.findings.iter().all(|f| !f.reason.contains("could not be parsed"));
+    facts.edition = match (edition.package, edition.conflict, complete) {
+        (Some(e), false, true) => Edition::parse(&e),
+        _ => Edition::Unknown,
+    };
     facts
 }
 

@@ -163,3 +163,65 @@ fn high6_extern_crate_alias_must_end_at_a_semicolon() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-7: C-string prefixes exist only from edition 2021
+// ---------------------------------------------------------------------------
+
+/// PoC t8 without its `macro_rules!` definition: in edition 2018 `cr#"` is the
+/// identifier `cr`, a `#` and an ordinary string, so the block is real code; in
+/// 2021 the whole thing is one raw C string.
+const T8_INVOCATION: &str = "m!{ cr#\" a \" { std::fs::write(\"a\", \"b\").unwrap(); } \" \"# }\n";
+
+fn cargo_with(edition_line: &str) -> String {
+    format!("[package]\nname = \"poc\"\nversion = \"0.1.0\"\n{edition_line}\n")
+}
+
+#[test]
+fn high7_c_string_prefixes_follow_the_package_edition() {
+    use coding_adventures_ca_capability_analyzer::cargo::analyze_cargo_text;
+    use coding_adventures_ca_capability_analyzer::parser::Edition;
+
+    for (toml, want) in [
+        ("edition = \"2015\"", Edition::E2015),
+        ("edition = \"2018\"", Edition::E2018),
+        ("edition = \"2021\"", Edition::E2021),
+        ("edition = \"2024\"", Edition::E2024),
+        ("edition = \"2027\"", Edition::Unknown),
+        ("", Edition::Unknown),
+        ("edition.workspace = true", Edition::Unknown),
+        ("edition = { workspace = true }", Edition::Unknown),
+        ("edition = \"2021\"\n[lib]\nedition = \"2018\"", Edition::Unknown),
+        ("edition = \"2021\"\n[[bin]]\nname = \"b\"\nedition = \"2018\"", Edition::Unknown),
+        ("edition = \"2021\"\nbin = [{ name = \"b\", edition = \"2015\" }]", Edition::Unknown),
+        ("edition = '''2021'''", Edition::Unknown),
+        // `[workspace.package]` only feeds members that opt in; it does not set this edition.
+        ("edition = \"2018\"\n[workspace.package]\nedition = \"2021\"", Edition::E2018),
+    ] {
+        assert_eq!(analyze_cargo_text(&cargo_with(toml)).edition, want, "{toml:?}");
+    }
+
+    // PoC t8 (edition 2018): the analyzer lexed a raw C string and printed PASS.
+    for ed in ["2015", "2018"] {
+        let r = analyze_files("t8", &[("Cargo.toml", &cargo_with(&format!("edition = \"{ed}\""))), ("src/lib.rs", T8_INVOCATION)]);
+        assert!(r.detected_capabilities.contains("fs:write:*"), "{ed}: {}", r.format_text(true));
+        assert_eq!(r.exit_code(), 1, "{ed}");
+    }
+
+    // Edition 2021 and later: one raw C string, nothing to report.
+    for ed in ["2021", "2024"] {
+        let r = analyze_files("t8c", &[("Cargo.toml", &cargo_with(&format!("edition = \"{ed}\""))), ("src/lib.rs", T8_INVOCATION)]);
+        assert!(r.is_clean(), "{ed}: {}", r.format_text(true));
+    }
+
+    // Unknown edition: the raw C-string reading is ambiguous, so it is CAP003.
+    for line in ["", "edition.workspace = true", "edition = \"2021\"\n[lib]\nedition = \"2018\""] {
+        let r = analyze_files("t8d", &[("Cargo.toml", &cargo_with(line)), ("src/lib.rs", T8_INVOCATION)]);
+        assert_cap003(line, &r);
+    }
+    // No Cargo.toml at all: same.
+    assert_cap003("no Cargo.toml", &analyze_files("t8e", &[("src/lib.rs", T8_INVOCATION)]));
+    // A cooked `c"..."` has the same string boundaries in every edition: never ambiguous.
+    let r = analyze_files("t8f", &[("src/lib.rs", "const S: &str = c\"x\\\" std::fs::write \";\n")]);
+    assert!(r.is_clean(), "{}", r.format_text(true));
+}

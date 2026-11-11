@@ -38,7 +38,7 @@ pub use generator::{
 pub use manifest::{load_manifest, Capability, ManifestData, ManifestError};
 pub use cargo::{analyze_cargo_toml, CargoFacts};
 pub use parser::{
-    scan_source, scan_sources, ScanResult, SourceBannedConstruct, SourceDetection,
+    scan_source, scan_sources, scan_sources_with_edition, Edition, ScanResult, SourceBannedConstruct, SourceDetection,
     SourceUnanalyzable,
 };
 pub use report::{AnalysisReport, ConstructStatus, ExceptedConstruct, Violation};
@@ -99,10 +99,11 @@ pub fn analyze_package(
         .map(|s| (s.rel_path.as_str(), s.content.as_str()))
         .collect();
     let total_bytes: u64 = sources.iter().map(|s| s.size_bytes).sum();
-    let scan_result = scan_sources(&files).map_err(AnalyzerError::Parse)?;
 
-    // 4. Cargo.toml facts (proc-macro, escaping paths, dependencies)
+    // 4. Cargo.toml facts (proc-macro, escaping paths, dependencies, edition).
+    //    Read before the scan: the edition decides how `cr#"..."#` is lexed.
     let cargo = analyze_cargo_toml(package_dir).map_err(AnalyzerError::Parse)?;
+    let scan_result = scan_sources_with_edition(&files, cargo.edition).map_err(AnalyzerError::Parse)?;
 
     let mut violations = Vec::new();
     let mut excepted_constructs = Vec::new();
