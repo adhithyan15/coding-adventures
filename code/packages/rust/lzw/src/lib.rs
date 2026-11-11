@@ -369,6 +369,15 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 
     // ── Main decode loop ──────────────────────────────────────────────────────
     loop {
+        // Security: `original_length` is untrusted, but it bounds the output
+        // we will ever keep (see the final truncate).  Stop as soon as it is
+        // reached so a tiny stream of long dictionary entries cannot expand
+        // far beyond it (each code can emit up to ~4 KiB).  Valid streams are
+        // unaffected: the truncate would have discarded the extra anyway.
+        if output.len() >= original_length {
+            break;
+        }
+
         let code = match reader.read(code_size) {
             Some(c) => c as usize,
             None => break,

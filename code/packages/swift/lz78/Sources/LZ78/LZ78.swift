@@ -230,6 +230,13 @@ public func decode(_ tokens: [Token], originalLength: Int = -1) -> [UInt8] {
     var output = [UInt8]()
 
     for tok in tokens {
+        // Security: stop once the declared length is reached (nothing more
+        // survives the final truncation; a hostile chain of tokens otherwise
+        // expands quadratically) and on a dangling dictionary index (indexing
+        // it would trap and crash the process).
+        if originalLength >= 0 && output.count >= originalLength { break }
+        if Int(tok.dictIndex) >= table.count { break }
+
         let seq = reconstruct(table: table, index: tok.dictIndex)
         output.append(contentsOf: seq)
 
@@ -306,7 +313,8 @@ public func deserialiseTokens(_ data: [UInt8]) -> ([Token], Int) {
     let maxPossible = (data.count - 8) / 4
     tokens.reserveCapacity(min(tokenCount, maxPossible))
 
-    for i in 0 ..< tokenCount {
+    // Security: iterate only over tokens actually present, never `tokenCount`.
+    for i in 0 ..< min(tokenCount, maxPossible) {
         let base = 8 + i * 4
         guard base + 4 <= data.count else { break }
         let dictIndex = readU16(at: base)

@@ -301,8 +301,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
   `do…while` in every one of those slots. `else`/`do` drop the separating
   space before a `{`-led body.
-- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
-  ASI), since both rewrite the same statement boundaries.
+- **WHITESPACE_ONLY token path: resolved.** A pre-pass in `whitespace_only.rs`
+  braces a bare `do…while` statement in every substatement body slot (`if`,
+  `else`, `while`, `for`, `for-in`, `for-of`, `with`, `do`). `do_while_tails`
+  marks the tail `while` condition of `do…while` loops so it doesn't open a
+  control-flow head, allowing Rule A to drop trailing semicolons before `}`.
 
 ### #17907 — a non-directive is never printed as `"use strict"`
 
@@ -346,13 +349,22 @@ historical context with status `RESOLVED` and a link to the fix PR.
   dropping it made the string a live directive. The template,
   parenthesised and sequence forms already printed as written. Stripping the
   leading run in WHITESPACE_ONLY, which needs function-body boundaries in the
-  token stream, is left to CCR-085 (#15920).
-- **Tests.** Eleven emitter unit tests, and
-  `closurec/tests/regression_use_strict_prologue.rs`. The closurec test pins
-  WHITESPACE_ONLY and SIMPLE bytes for seven shapes, SIMPLE bytes for seven
-  more (in function bodies, and after `"a";`), asserts that no level opens
-  its output with `"use strict"`, and, when `node` is on `PATH`, checks
-  that every output prints what its source prints.
+  token stream, is resolved in CCR-085 (#15920).
+- **CCR-085 (#15920) — strip `"use strict"` unless `--emit_use_strict`, re-emit single-quoted.**
+  - **Resolution:** `whitespace_only.rs` now strips leading runs of `"use strict"` and
+    `'use strict'` directives from script top level and from function bodies
+    (using `is_function_body_open` on bracket partners).
+  - **Re-emission:** `run.rs` emits `'use strict';` (single-quoted, no newline in compact,
+    newline in `PRETTY_PRINT`) when `--emit_use_strict` is passed.
+  - **Design Decision Record:** Upstream Closure Compiler removes `"use strict"` directives
+    from input files by default and requires `--emit_use_strict` to add one back.
+    Dropping `"use strict"` is a semantic change (sloppy mode by default in scripts unless
+    the flag is passed), but matching upstream byte-for-byte is our core contract, and
+    `--emit_use_strict` provides the clear escape hatch. Both default stripping and
+    single-quoted re-emission under `--emit_use_strict` are verified against the pinned
+    oracle jar `closure-compiler-v20260915`.
+- **Tests.** Eleven emitter unit tests, `closurec/tests/regression_use_strict_prologue.rs`,
+  and `closurec/tests/diff_emit_use_strict.rs`.
 
 ### gap-031 — empty `{}` body collapses to `;`
 

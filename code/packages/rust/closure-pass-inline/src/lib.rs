@@ -5608,14 +5608,28 @@ mod tests {
     fn inline_source(src: &str) -> String {
         let es = EsVersion::Es2025;
         let node = parse_javascript_typed(src, es).expect("parse");
-        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        inline_program(&bridge::grammar_to_program(&node, es).expect("bridge"))
+    }
+
+    /// Like [`inline_source`], but parses with the plain grammar parser, which
+    /// runs no early-error checks. For programs the real parser refuses and
+    /// that the pass must still decline to touch (defense in depth against a
+    /// parser that lets one through).
+    fn inline_source_unchecked(src: &str) -> String {
+        let es = EsVersion::Es2025;
+        let node =
+            coding_adventures_javascript_parser::parse_javascript(src, "es2025").expect("parse");
+        inline_program(&bridge::grammar_to_program(&node, es).expect("bridge"))
+    }
+
+    fn inline_program(prog: &Program) -> String {
 
         let pass = InlinePass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(false);
         let out = pass
             .run(PassContext {
-                program: &prog,
+                program: prog,
                 sidecar: &sidecar,
                 cv: &mut cv,
             })
@@ -6339,7 +6353,7 @@ mod tests {
         // verbatim with the parameter substituted in.
         assert_eq!(
             inline_source("function f(x) { if (x > 0) log(x); else warn(x); } f(v);"),
-            "function f(x){if(x>0)log(x);else warn(x);}if(v>0)log(v);else warn(v);"
+            "function f(x){if(x>0)log(x);else warn(x)}if(v>0)log(v);else warn(v);"
         );
     }
 
@@ -6358,7 +6372,7 @@ mod tests {
         // and branch that read it are renamed consistently.
         assert_eq!(
             inline_source("function f(x) { const t = x > 0; if (t) sink(x); } f(v);"),
-            "function f(x){const t=x>0;if(t)sink(x);}const a=v>0;if(a)sink(v);"
+            "function f(x){const t=x>0;if(t)sink(x)}const a=v>0;if(a)sink(v);"
         );
     }
 
@@ -6368,7 +6382,7 @@ mod tests {
         // temp once, and the `if` reads the temp.
         assert_eq!(
             inline_source("function f(p) { if (p) sink(p); } f(g());"),
-            "function f(p){if(p)sink(p);}const a=g();if(a)sink(a);"
+            "function f(p){if(p)sink(p)}const a=g();if(a)sink(a);"
         );
     }
 
@@ -6398,7 +6412,7 @@ mod tests {
         // branch fails the restriction — declined (kept for a later slice).
         assert_eq!(
             inline_source("function f(x) { if (x) { if (y) a(); } } f(v);"),
-            "function f(x){if(x)if(y)a();}f(v);"
+            "function f(x){if(x)if(y)a()}f(v);"
         );
     }
 
@@ -6411,7 +6425,7 @@ mod tests {
         // OUTER `if` (it must NOT capture the inner else-less `if`).
         assert_eq!(
             inline_source("function g(x) { if (x) a(x); } if (c) g(v); else other();"),
-            "function g(x){if(x)a(x);}if(c){if(v)a(v);}else other();"
+            "function g(x){if(x)a(x)}if(c){if(v)a(v)}else other();"
         );
     }
 
@@ -6427,12 +6441,13 @@ mod tests {
 
     #[test]
     fn does_not_inline_void_helper_with_param_local_name_collision() {
-        // A `let` local sharing a parameter's name is illegal JS (a
-        // faithful parser never emits it), but the name-based alpha-renamer
-        // is not scope-aware, so we decline outright rather than risk a
+        // A `let` local sharing a parameter's name is illegal JS (the real
+        // parser now refuses it as an early error, so this one is parsed
+        // without the checks), but the name-based alpha-renamer is not
+        // scope-aware, so we decline outright rather than risk a
         // mis-rename. Defense in depth against a non-conformant parser.
         assert_eq!(
-            inline_source("function f(x) { const x = 1; sink(x); } f(a);"),
+            inline_source_unchecked("function f(x) { const x = 1; sink(x); } f(a);"),
             "function f(x){const x=1;sink(x)}f(a);"
         );
     }
@@ -6444,7 +6459,7 @@ mod tests {
         // invariant preserved.
         assert_eq!(
             inline_source("function f(x) { if (x) f(x); } g(f);"),
-            "function f(x){if(x)f(x);}g(f);"
+            "function f(x){if(x)f(x)}g(f);"
         );
     }
 

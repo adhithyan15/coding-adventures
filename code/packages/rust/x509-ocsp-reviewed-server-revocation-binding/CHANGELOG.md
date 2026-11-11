@@ -2,6 +2,81 @@
 
 ## Unreleased
 
+- Complete revocation policy for the alternative added-responder fixed path
+  after every non-root certificate is covered by authenticated status or exact
+  RFC 6960 no-check policy.
+- Restrict the infallible non-copyable completion to the fully covered default
+  source and stop before generalized path validation, revocation acquisition
+  or refresh, TLS, HTTP, or OAuth readiness.
+- Apply RFC 6960 no-check policy to the alternative added revocation proof's
+  own exact delegated responder after its selected reviewed-root DNS policy.
+- Retain the complete generic non-copyable proof while stopping before
+  separately authenticated recursive responder revocation, complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the alternative added revocation proof's exact delegated
+  responder, retaining only count evidence and the complete generic source.
+- Stop before intermediate constraints, responder no-check or separately
+  authenticated revocation, complete revocation, generalized path validation,
+  TLS, HTTP, or OAuth readiness.
+- Reify the alternative intermediate-status responder-revocation proof's own
+  exact delegated responder-to-reviewed-root path while retaining the complete
+  generic source and authenticated proof.
+- Stop before name policy or revocation policy for that delegated responder,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth.
+- Complete revocation policy for the exact retained nested no-check fixed path
+  after every non-root certificate is covered by authenticated good-and-fresh
+  status or RFC 6960 no-check policy.
+- Retain the complete non-copyable proof while stopping before generalized
+  path validation, revocation acquisition or refresh, TLS, HTTP, or OAuth.
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the nested no-check composition's exact intermediate-status
+  responder, retaining only count evidence.
+- Preserve the complete non-copyable source for downstream no-check or
+  separately authenticated revocation policy and stop before complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
+- Reify the exact intermediate-status responder-to-reviewed-root path while
+  retaining the complete responder-of-responder no-check plus intermediate-
+  status composition.
+- Stop before reviewed-root DNS or revocation policy for that responder,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth.
+- Compose the responder-of-responder RFC 6960 no-check proof with separately
+  authenticated status for the exact retained intermediate at the original
+  observation time.
+- Retain both complete non-copyable inputs and stop before policy for the
+  intermediate-status proof's own responder or complete revocation readiness.
+- Apply the repository-owned RFC 6960 no-check evaluator to the separately
+  authenticated responder-revocation proof's own exact responder after its
+  root and intermediate DNS policies.
+- Retain the complete non-copyable proof and stop before recursive responder
+  revocation, complete revocation, TLS, HTTP, or OAuth readiness.
+- Apply the separately authenticated responder-revocation proof's exact
+  intermediate critical permitted and excluded DNS constraints to that proof's
+  exact responder, retaining only count evidence.
+- Reuse the repository-owned bounded evaluator and stop before no-check,
+  recursive responder revocation, complete revocation, TLS, HTTP, or OAuth
+  readiness.
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the separately authenticated original responder-revocation
+  proof's own exact responder.
+- Derive both policy inputs through the consumed non-copyable path, retain only
+  count evidence, and stop before intermediate name constraints, no-check,
+  recursive revocation, complete revocation, TLS, HTTP, or OAuth readiness.
+- Reify the separately authenticated original responder-revocation proof's own
+  exact delegated responder-to-intermediate-to-reviewed-root path while
+  retaining the complete non-copyable branch.
+- Accept no substitute certificate, path, root, algorithm, key, signature,
+  status, or time, and stop before name, no-check, recursive revocation,
+  complete revocation, generalized path validation, TLS, HTTP, or OAuth policy.
+- Reify the added intermediate-status responder path from the original
+  separately authenticated responder-revocation branch while retaining both
+  complete authenticated revocation proofs under repository-owned evidence.
+- Feed that projected path through the existing reviewed-root DNS, RFC 6960
+  no-check, and separately authenticated added-responder revocation policies
+  without accepting substitute certificates, roots, status, or time.
+- Preserve defaulted public type parameters for the existing no-check source
+  and stop before either added proof's own responder policy, complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
 - Compose the separately authenticated original responder-revocation branch
   with exact intermediate status by deriving the retained intermediate,
   selected reviewed root, and original observation time through private

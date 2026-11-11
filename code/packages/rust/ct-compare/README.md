@@ -138,6 +138,25 @@ WIR-level trace proofs and the assurance report remain later VER26 steps.
 Proof labels are the bound actually discharged (`bounded(128)`; `proved` only for
 `ct_eq_u64`). Every certificate is a trivial miter-collapsed refutation.
 
+## Zero-allocation evidence (measured, LH-003a)
+
+`tests/microbenchmarks.rs` installs test-bootstrap's counting
+`#[global_allocator]`, so every `max_alloc_bytes: 0` budget is checked against
+the real heap, and a benchmark only counts as zero-allocation when the counter
+was live and read exactly 0.0 bytes per iteration.
+`bench/sabotage/allocation_detected` proves the counter can see a one-byte
+`Vec::with_capacity(1)` and fails it.
+
+Measured result: `ct_eq` (16, 256, 4096 bytes), `ct_eq_fixed` (16/32/64) and
+`ct_eq_u64` allocate **0 bytes in 0 allocations** per call. `ct_select_bytes`
+**does allocate**: it returns a fresh `Vec`, exactly one allocation of
+`a.len()` bytes per call (pinned by
+`bench/select_bytes/allocates_exactly_its_output`). It is therefore not part of
+the zero-allocation claim: its benchmark id is `bench/select_bytes/...`, outside
+the `bench/ct_*` set the assurance report cites for CWE-400. A caller that cannot
+allocate needs a variant writing into a caller-provided buffer; that API does
+not exist yet.
+
 ## Implementation Notes
 
 - `#[inline(never)]` on the public functions. Inlining them into

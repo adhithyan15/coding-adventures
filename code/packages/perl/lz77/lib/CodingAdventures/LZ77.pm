@@ -195,6 +195,12 @@ sub decode {
 
     for my $token (@$tokens_ref) {
         if ($token->{length} > 0) {
+            # Security: a zero offset, or one reaching before the start of the
+            # output, is invalid (corrupt/hostile input).  Stop decoding and
+            # return what has been produced so far instead of reading undef /
+            # wrapped (negative) indexes.  Valid streams are unaffected.
+            last if $token->{offset} < 1 || $token->{offset} > scalar(@output);
+
             # Copy length bytes from position (output_len - offset).
             my $start = scalar(@output) - $token->{offset};
             # Copy byte-by-byte to handle overlapping matches (offset < length).
@@ -258,7 +264,13 @@ sub _deserialise_tokens {
     my ($data) = @_;
     return () if length($data) < 4;
 
+    # Security: the header count is attacker-controlled (up to 2^32-1).  Clamp
+    # it to the number of complete 4-byte tokens actually present so neither
+    # allocation nor iteration follows the claim; a larger claim is treated as
+    # truncated.
     my ($count) = unpack 'N', substr($data, 0, 4);
+    my $max_possible = int((length($data) - 4) / 4);
+    $count = $max_possible if $count > $max_possible;
     my @tokens;
 
     for my $i (0 .. $count - 1) {

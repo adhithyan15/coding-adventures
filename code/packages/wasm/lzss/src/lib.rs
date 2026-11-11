@@ -295,6 +295,20 @@ mod tests {
         let result = decompress(&bad);
         let _ = result; // must not panic or hang
     }
+
+    #[test]
+    fn decompress_hostile_original_length_is_bounded() {
+        // Security regression: original_length = 2^32 - 1 with a single literal.
+        // The (shared) Rust decoder must not size its output from the header;
+        // it returns just the byte that is actually present.
+        let hostile = [0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 1, 0x00, b'x'];
+        assert_eq!(decompress(&hostile), b"x");
+        // Header only, all 0xFF.
+        assert_eq!(decompress(&[0xFF; 8]), b"");
+        // Invalid match offsets are skipped, not a panic.
+        let bad_match = [0, 0, 0, 100, 0, 0, 0, 1, 0x01, 0, 0, 5];
+        assert_eq!(decompress(&bad_match), b"");
+    }
 }
 
 // ─── wasm-bindgen tests (run under Node via wasm-pack test --node) ────────────

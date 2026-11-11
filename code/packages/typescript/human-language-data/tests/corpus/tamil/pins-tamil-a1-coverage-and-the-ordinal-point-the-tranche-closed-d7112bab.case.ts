@@ -3,7 +3,6 @@ import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
   loadChapterPolicy,
-  loadEverything,
   loadExamInventory,
   loadTrackLessons,
 } from "../../../src/loader.js";
@@ -17,7 +16,7 @@ import { measureScriptClosure } from "../../../src/script-closure.js";
 import { expectLanguageContinuity, expectLanguageModality } from "../assert-language-corpus.js";
 
 it("pins Tamil A1 coverage, and the ordinal point the tranche closed", () => {
-  const { lessons } = loadEverything();
+  const lessons = loadTrackLessons("tamil");
   const coverage = measureExamCoverage(loadExamInventory("tamil", "A1"), lessons);
   expect(coverage.enumerated).toBe(262);
   // 175 -> 176: TA-A1-PRON-03, the rest of the subject paradigm. THE GAP WAS

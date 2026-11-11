@@ -109,7 +109,12 @@ public static class Lz77
             return [];
         }
 
-        var count = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4));
+        // Security: the header count is attacker-controlled (up to 2^32-1).
+        // Clamp it to the number of complete 4-byte tokens actually present so
+        // iteration never follows the claim; a larger claim is treated as
+        // truncated.
+        var claimed = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4));
+        long count = Math.Min((long)claimed, (data.Length - 4) / 4);
         var tokens = new List<Lz77Token>();
         for (var i = 0; i < count; i++)
         {

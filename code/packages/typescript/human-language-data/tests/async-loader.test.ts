@@ -21,6 +21,8 @@ import {
   suiteLessonCacheOptions,
 } from "../src/lesson-cache.js";
 import {
+  loadEverything,
+  loadEverythingAsync,
   loadLessons,
   loadLessonsAsync,
   loadTrackLessons,
@@ -68,6 +70,22 @@ afterEach(() => {
 });
 
 describe("bounded asynchronous lesson loading", () => {
+  it("keeps the complete loader result identical on a small authored corpus", async () => {
+    writeLesson("spanish", "001-uno.md", lesson("uno", "uno"));
+    mkdirSync(join(root, "concepts"), { recursive: true });
+    writeFileSync(join(root, "concepts", "taxonomy.json"), '{"version":1,"concepts":{}}');
+    mkdirSync(join(root, "core", "sound-tags.d"), { recursive: true });
+    writeFileSync(join(root, "core", "languages.json"),
+      '{"version":1,"languages":[{"id":"spanish","name":"Spanish","family":"Test","script":"latin","status":"active","bridges":[]}]}');
+    writeFileSync(join(root, "core", "spine.json"), '{"version":1,"nodes":[]}');
+    writeFileSync(join(root, "core", "sound-tags.d", "_meta.json"),
+      `${JSON.stringify({ version: 1 }, null, 2)}\n`);
+    writeFileSync(join(root, "core", "sound-tags.d", "spanish.json"),
+      `${JSON.stringify({ language: "spanish", tags: [] }, null, 2)}\n`);
+    expect(configureLessonCache(undefined)).toBe(false);
+
+    expect(await loadEverythingAsync(root)).toStrictEqual(loadEverything(root));
+  });
   it("matches the synchronous track and whole-corpus order without a cache", async () => {
     writeLesson("spanish", "002-dos.md", lesson("dos", "dos"));
     writeLesson("spanish", "001-uno.md", lesson("uno", "uno"));

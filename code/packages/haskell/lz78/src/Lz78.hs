@@ -153,6 +153,13 @@ decode tokens originalLength = do
     foldTokens = go (IntMap.singleton 0 (0, 0)) 1 [] 0
 
     go table _ output outputLength [] = Right (output, outputLength, table)
+    -- Security: once the declared length is reached nothing more survives the
+    -- final trim; stop instead of expanding further tokens (a hostile chain of
+    -- tokens otherwise expands quadratically).
+    go table _ output outputLength _
+        | Just limit <- originalLength
+        , outputLength >= limit =
+            Right (output, outputLength, table)
     go table nextId output outputLength (token : rest) = do
         prefix <- reconstruct table nextId (dictIndex token)
         let withPrefix = reverse prefix ++ output

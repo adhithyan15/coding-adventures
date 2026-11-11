@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - CI-001
+
+- `release-tests` pins `@playwright/test` 1.64.0, up from 1.58.2. 1.58 could not
+  install Chromium on ubuntu-latest, now Ubuntu 26.04; support for
+  `ubuntu26.04-x64` arrived in 1.61. The release workflow's `verify` job
+  therefore runs on `ubuntu-latest` again instead of being held on
+  ubuntu-24.04. 1.64.0 was chosen over the newest 1.65.0 because it has been
+  out for more than two weeks. The lockfile was regenerated with
+  `npm install --package-lock-only`: Playwright no longer depends on
+  `fsevents` and now needs Node 20 or later (the workflow uses Node 22). The
+  config and both specs load under 1.64 (`playwright test --list`).
+
 ## Unreleased - BUILD-001
 
 - `tests/web_demos_are_current.rs` no longer checks a committed engine bundle: it builds `spreadsheet-wasm` and the VisiCalc bundle, asserts the bundle embeds the wasm, and runs the infinite-grid smoke test. BUILD installs the wasm32 target.

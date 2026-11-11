@@ -182,7 +182,7 @@ Ranking:
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
 | 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Decision — phase 1 waits for the owner to confirm F12's *Decisions* section |
 | 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. #17914 (the `-->` test262 regression fix) merged on 2026-10-24. | Ready |
-| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876. Slice 2 (`return`/`new.target` outside a function) is PR #18162. Next: `super`, `with`, `import.meta`, module paths. | Ready |
+| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (#17876), slice 2 (#18162), slice 3 (`super` outside a method, `simple-super`). Next: `with`, `import.meta`, module paths. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
 
@@ -194,7 +194,7 @@ its blast radius across the 462 goldens.
 | 15 | CCR-088 #15925 | Unwrap single-statement substatement blocks for every statement kind, not just expression statements. | Ready |
 | 16 | CCR-076 #15861 | Drop braces around a single-statement body. | Ready |
 | 17 | CCR-077 #15862 | Match upstream spacing and class-body punctuation. | Ready |
-| 18 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. Do it after #17907. | Ready |
+| 18 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. Do it after #17907. | Complete |
 | 19 | CCR-074 #15855 | The `while`→`for` rewrite hoists the preceding initializer into the `for` header. | Ready |
 | 20 | CCR-084, CCR-083, CCR-087, CCR-086 | Their fixes merged (see below), but the issues are still open. Check that each is fully done, close it or file what's left. | Ready |
 
@@ -209,7 +209,7 @@ its blast radius across the 462 goldens.
 | 25 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
 | 26 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
 | 27 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
-| 27a | #18159 | CLOC44 refusal rendering: multi-file order, UTF-16 columns, tab carets, CRLF excerpts. | Ready |
+| 27a | #18159 | CLOC44 refusal rendering: multi-file order, UTF-16 columns, tab carets, CRLF excerpts. | Complete |
 
 ### Q3 — ADVANCED semantics
 

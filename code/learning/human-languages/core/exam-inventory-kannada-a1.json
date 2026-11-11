@@ -739,7 +739,9 @@
       "id": "KA-A1-PRON-07",
       "category": "Sarvanaama (pronouns)",
       "label": "object pronouns",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C104-OBJECT-PRONOUNS-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -749,7 +751,7 @@
         "A1-PRON-02",
         "A1-PRON-08"
       ],
-      "note": "Untaught. Kannada makes them by putting the pronoun in the accusative (nannannu, 'me'), and no accusative is taught anywhere -- see KA-A1-CASE-03."
+      "note": "Closed by chapter 104 after the accusative owner: nannannu, ninnannu, nimmannu, avanannu, avaLannu, adannu and avarannu are taught as one bounded object-pronoun set, with respectful nimage/avarige kept distinct from the accusative forms."
     },
     {
       "id": "KA-A1-PRON-08",
@@ -1343,7 +1345,9 @@
       "id": "KA-A1-CASE-03",
       "category": "Vibhakti (case)",
       "label": "the accusative -annu: marking a definite object",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1352,7 +1356,7 @@
       "derivedFrom": [
         "A1-SV-04"
       ],
-      "note": "UNTAUGHT, AND A BLOCKER. Spanish's A1-SV-04 is about the personal a; Kannada's equivalent is -annu, which is what makes 'I saw the man' possible and what object pronouns are built from. Nothing teaches it, so every taught transitive verb can only take a bare object."
+      "note": "Closed by chapter 104. The existing poliisarannu kareyiri preview now receives a direct owner: -annu marks a human object and often a particular non-human object, with the familiar aNgaDi -> aNgaDiyannu and poliisaru -> poliisarannu seams kept visible. The next lesson builds the object pronouns from that case."
     },
     {
       "id": "KA-A1-CASE-04",

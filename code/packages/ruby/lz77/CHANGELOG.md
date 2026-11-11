@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- Hardening (CWE-789): deserialise_tokens clamps the untrusted header count to the complete tokens present instead of looping over the claimed count. decode stops at an invalid (zero or too-large) offset instead of appending nil / wrapped-index bytes.
+- Added test/test_hostile_headers.rb: hostile headers checked for bounded time and sane results, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

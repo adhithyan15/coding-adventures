@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Add an authority-free Cargo trigger crate-closure resolver over immutable
+  package, crate, Cargo-config, and exemption snapshots. It resolves exact
+  lexical repository identities, nested and exempt orphan crates, root patch
+  triggers, and transitive normal/build links; memoizes shared diamonds;
+  rejects cycles and chains deeper than 16 crates; and returns at most 16,384
+  sorted unique trigger relations without reading the host or running Cargo.
+  Package membership uses compact interned bitsets and owner lookup uses a
+  segment trie, preventing closure and path-by-package amplification.
 - Add a process-free graph and diff-selection core that dynamically consumes
   all eight graph and twelve diff-selection neutral fixtures. It provides
   canonical all-or-error graph results, deterministic dependent and

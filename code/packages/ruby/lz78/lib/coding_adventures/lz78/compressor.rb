@@ -154,6 +154,12 @@ module CodingAdventures
         output = "".b
 
         tokens.each do |tok|
+          # Security: stop once the declared length is reached (nothing more
+          # survives the truncation; expanding further lets a tiny hostile
+          # stream grow quadratically) and on a dangling dictionary index.
+          break if original_length && output.bytesize >= original_length
+          break if tok.dict_index >= dict_table.length
+
           seq = reconstruct(dict_table, tok.dict_index)
           output << seq
 
@@ -164,7 +170,11 @@ module CodingAdventures
           dict_table << [tok.dict_index, tok.next_char]
         end
 
-        original_length ? output.byteslice(0, original_length) : output
+        # Windows portability: a hostile header can declare 0xFFFFFFFF, which
+        # does not fit a 32-bit C long, so byteslice would raise RangeError.
+        # Clamp to the bytes actually produced (never longer than the input
+        # supports) before the native call; the result is identical.
+        original_length ? output.byteslice(0, [original_length, output.bytesize].min) : output
       end
 
       # Serialises tokens to the CMP01 wire format.
@@ -191,7 +201,9 @@ module CodingAdventures
         return [[], 0] if data.bytesize < 8
 
         original_length = data.byteslice(0, 4).unpack1("N")
-        token_count     = data.byteslice(4, 4).unpack1("N")
+        # Security: clamp the attacker-controlled count to the complete 4-byte
+        # tokens actually present.
+        token_count     = [data.byteslice(4, 4).unpack1("N"), (data.bytesize - 8) / 4].min
         tokens = []
 
         token_count.times do |i|

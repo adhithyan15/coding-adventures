@@ -2,7 +2,8 @@
  * collect.test.ts — collectByTag end-to-end behaviour.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import { collectByTag } from "../src/index.js";
 
 interface Post {
@@ -25,26 +26,26 @@ const tagsOf = (p: Post) => p.tags;
 describe("collectByTag — basic grouping", () => {
   it("returns a Map keyed by normalised tag", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf });
-    expect(byTag.has("typescript")).toBe(true);
-    expect(byTag.has("react")).toBe(true);
-    expect(byTag.has("node-22")).toBe(true);
+    assert.equal(byTag.has("typescript"), true);
+    assert.equal(byTag.has("react"), true);
+    assert.equal(byTag.has("node-22"), true);
   });
 
   it("merges case/punctuation variants into one bucket", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf });
     const tsBucket = byTag.get("typescript")!;
-    expect(tsBucket.map((p) => p.id).sort()).toEqual(["a", "b"]);
+    assert.deepEqual(tsBucket.map((p) => p.id).sort(), ["a", "b"]);
   });
 
   it("untagged items dropped by default", () => {
     const { byTag, tagNames } = collectByTag(POSTS, { tagsOf });
-    expect(tagNames.includes("untagged")).toBe(false);
-    expect(byTag.has("untagged")).toBe(false);
+    assert.equal(tagNames.includes("untagged"), false);
+    assert.equal(byTag.has("untagged"), false);
   });
 
   it("each item appears in each of its tags' buckets", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf });
-    expect(byTag.get("react")!.map((p) => p.id).sort()).toEqual(["b", "c"]);
+    assert.deepEqual(byTag.get("react")!.map((p) => p.id).sort(), ["b", "c"]);
   });
 });
 
@@ -52,12 +53,12 @@ describe("collectByTag — sorted tagNames", () => {
   it("tagNames is alphabetically sorted", () => {
     const { tagNames } = collectByTag(POSTS, { tagsOf });
     const sortedCopy = [...tagNames].sort();
-    expect(tagNames).toEqual(sortedCopy);
+    assert.deepEqual(tagNames, sortedCopy);
   });
 
   it("tagNames length matches byTag.size", () => {
     const { byTag, tagNames } = collectByTag(POSTS, { tagsOf });
-    expect(tagNames.length).toBe(byTag.size);
+    assert.equal(tagNames.length, byTag.size);
   });
 });
 
@@ -65,7 +66,7 @@ describe("collectByTag — within-bucket sort", () => {
   it("default: preserve input order", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf });
     // typescript bucket: post 'a' first (appeared first), then 'b'.
-    expect(byTag.get("typescript")!.map((p) => p.id)).toEqual(["a", "b"]);
+    assert.deepEqual(byTag.get("typescript")!.map((p) => p.id), ["a", "b"]);
   });
 
   it("sortBy comparator sorts within each bucket", () => {
@@ -74,9 +75,9 @@ describe("collectByTag — within-bucket sort", () => {
       sortBy: (a, b) => (b.pubDate ?? "").localeCompare(a.pubDate ?? ""),
     });
     // newest-first within typescript: b (2026-02) before a (2026-01)
-    expect(byTag.get("typescript")!.map((p) => p.id)).toEqual(["b", "a"]);
+    assert.deepEqual(byTag.get("typescript")!.map((p) => p.id), ["b", "a"]);
     // newest-first within react: b (2026-02) before c (2025-12)
-    expect(byTag.get("react")!.map((p) => p.id)).toEqual(["b", "c"]);
+    assert.deepEqual(byTag.get("react")!.map((p) => p.id), ["b", "c"]);
   });
 
   it("sortBy applied to every bucket", () => {
@@ -86,7 +87,7 @@ describe("collectByTag — within-bucket sort", () => {
     });
     for (const bucket of byTag.values()) {
       const ids = bucket.map((p) => p.id);
-      expect(ids).toEqual([...ids].sort());
+      assert.deepEqual(ids, [...ids].sort());
     }
   });
 });
@@ -94,26 +95,26 @@ describe("collectByTag — within-bucket sort", () => {
 describe("collectByTag — untagged bucket", () => {
   it("includeUntagged: true creates the bucket", () => {
     const { byTag, tagNames } = collectByTag(POSTS, { tagsOf, includeUntagged: true });
-    expect(byTag.has("untagged")).toBe(true);
-    expect(tagNames).toContain("untagged");
+    assert.equal(byTag.has("untagged"), true);
+    assert.ok(tagNames.includes("untagged"));
   });
 
   it("untagged bucket contains items with no tags field", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf, includeUntagged: true });
     const untagged = byTag.get("untagged")!;
-    expect(untagged.map((p) => p.id).sort()).toEqual(["d", "e"]);
+    assert.deepEqual(untagged.map((p) => p.id).sort(), ["d", "e"]);
   });
 
   it("untagged includes items with empty tags array", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: [] }];
     const { byTag } = collectByTag(items, { tagsOf, includeUntagged: true });
-    expect(byTag.get("untagged")!.length).toBe(1);
+    assert.equal(byTag.get("untagged")!.length, 1);
   });
 
   it("untagged includes items where every tag normalises to empty", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: ["@@@", "日本語"] }];
     const { byTag } = collectByTag(items, { tagsOf, includeUntagged: true });
-    expect(byTag.get("untagged")!.length).toBe(1);
+    assert.equal(byTag.get("untagged")!.length, 1);
   });
 
   it("untaggedBucketName option overrides the bucket name", () => {
@@ -122,13 +123,13 @@ describe("collectByTag — untagged bucket", () => {
       includeUntagged: true,
       untaggedBucketName: "no-tags",
     });
-    expect(byTag.has("untagged")).toBe(false);
-    expect(byTag.has("no-tags")).toBe(true);
+    assert.equal(byTag.has("untagged"), false);
+    assert.equal(byTag.has("no-tags"), true);
   });
 
   it("includeUntagged: false explicit also drops untagged", () => {
     const { byTag } = collectByTag(POSTS, { tagsOf, includeUntagged: false });
-    expect(byTag.has("untagged")).toBe(false);
+    assert.equal(byTag.has("untagged"), false);
   });
 
   it("tagsOf returning null treated as untagged", () => {
@@ -137,7 +138,7 @@ describe("collectByTag — untagged bucket", () => {
       tagsOf: () => null,
       includeUntagged: true,
     });
-    expect(byTag.get("untagged")!.length).toBe(1);
+    assert.equal(byTag.get("untagged")!.length, 1);
   });
 });
 
@@ -150,8 +151,8 @@ describe("collectByTag — per-item dedup", () => {
     // All three raw tags normalise to "type-script" vs "typescript" —
     // wait: "Type Script" → "type-script", "typescript" → "typescript".
     // So we get TWO buckets, each containing the item once.
-    expect(byTag.get("typescript")?.length).toBe(1);
-    expect(byTag.get("type-script")?.length).toBe(1);
+    assert.equal(byTag.get("typescript")?.length, 1);
+    assert.equal(byTag.get("type-script")?.length, 1);
   });
 
   it("genuinely identical normalised tags dedupe to a single insert", () => {
@@ -159,7 +160,7 @@ describe("collectByTag — per-item dedup", () => {
       { id: "x", title: "X", tags: ["TypeScript", "typescript", "TYPESCRIPT"] },
     ];
     const { byTag } = collectByTag(items, { tagsOf });
-    expect(byTag.get("typescript")!.length).toBe(1);
+    assert.equal(byTag.get("typescript")!.length, 1);
   });
 });
 
@@ -167,9 +168,9 @@ describe("collectByTag — prototype pollution defence", () => {
   it("'__proto__' tag normalises to 'proto' and lands in its own bucket", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: ["__proto__"] }];
     const { byTag } = collectByTag(items, { tagsOf });
-    expect(byTag.has("proto")).toBe(true);
+    assert.equal(byTag.has("proto"), true);
     // Object.prototype must not have been polluted.
-    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    assert.equal(({} as Record<string, unknown>).polluted, undefined);
   });
 
   it("even if a hostile tag somehow survived as '__proto__', Map keys don't touch Object.prototype", () => {
@@ -179,15 +180,15 @@ describe("collectByTag — prototype pollution defence", () => {
     const { byTag } = collectByTag(items, {
       tagsOf: () => ["__proto__-literally"],
     });
-    expect(byTag.has("proto-literally")).toBe(true);
-    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+    assert.equal(byTag.has("proto-literally"), true);
+    assert.equal(({} as Record<string, unknown>).polluted, undefined);
   });
 
   it("'constructor' tag normalised + Map-stored — no constructor hijack", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: ["constructor"] }];
     const { byTag } = collectByTag(items, { tagsOf });
-    expect(byTag.has("constructor")).toBe(true);
-    expect(byTag.get("constructor")!.length).toBe(1);
+    assert.equal(byTag.has("constructor"), true);
+    assert.equal(byTag.get("constructor")!.length, 1);
   });
 });
 
@@ -195,26 +196,26 @@ describe("collectByTag — purity / determinism", () => {
   it("does not mutate input items array", () => {
     const before = JSON.stringify(POSTS);
     collectByTag(POSTS, { tagsOf, sortBy: (a, b) => a.id.localeCompare(b.id) });
-    expect(JSON.stringify(POSTS)).toBe(before);
+    assert.equal(JSON.stringify(POSTS), before);
   });
 
   it("does not mutate individual item tag arrays", () => {
     const item: Post = { id: "x", title: "X", tags: ["b", "a"] };
     collectByTag([item], { tagsOf });
-    expect(item.tags).toEqual(["b", "a"]);  // unchanged order
+    assert.deepEqual(item.tags, ["b", "a"]);  // unchanged order
   });
 
   it("same input → byte-identical output", () => {
     const a = collectByTag(POSTS, { tagsOf });
     const b = collectByTag(POSTS, { tagsOf });
-    expect(JSON.stringify([...a.byTag.entries()])).toBe(JSON.stringify([...b.byTag.entries()]));
-    expect(a.tagNames).toEqual(b.tagNames);
+    assert.equal(JSON.stringify([...a.byTag.entries()]), JSON.stringify([...b.byTag.entries()]));
+    assert.deepEqual(a.tagNames, b.tagNames);
   });
 
   it("output buckets are fresh arrays (no shared references)", () => {
     const a = collectByTag(POSTS, { tagsOf });
     const b = collectByTag(POSTS, { tagsOf });
-    expect(a.byTag.get("typescript")).not.toBe(b.byTag.get("typescript"));
+    assert.notEqual(a.byTag.get("typescript"), b.byTag.get("typescript"));
   });
 
   it("byTag Map iteration order matches first-seen-bucket order", () => {
@@ -224,15 +225,15 @@ describe("collectByTag — purity / determinism", () => {
       { id: "3", title: "3", tags: ["Mango"] },
     ];
     const { byTag, tagNames } = collectByTag(items, { tagsOf });
-    expect([...byTag.keys()]).toEqual(["zebra", "apple", "mango"]);
+    assert.deepEqual([...byTag.keys()], ["zebra", "apple", "mango"]);
     // tagNames is sorted alphabetically though, regardless.
-    expect(tagNames).toEqual(["apple", "mango", "zebra"]);
+    assert.deepEqual(tagNames, ["apple", "mango", "zebra"]);
   });
 
   it("empty input → empty result", () => {
     const { byTag, tagNames } = collectByTag([], { tagsOf });
-    expect(byTag.size).toBe(0);
-    expect(tagNames).toEqual([]);
+    assert.equal(byTag.size, 0);
+    assert.deepEqual(tagNames, []);
   });
 });
 
@@ -242,19 +243,19 @@ describe("collectByTag — tags that normalise to empty are dropped", () => {
       { id: "x", title: "X", tags: ["@@@", "javascript"] },
     ];
     const { byTag, tagNames } = collectByTag(items, { tagsOf });
-    expect(tagNames).toEqual(["javascript"]);
-    expect(byTag.size).toBe(1);
+    assert.deepEqual(tagNames, ["javascript"]);
+    assert.equal(byTag.size, 1);
   });
 
   it("all tags normalise to empty + includeUntagged=true → goes to untagged", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: ["@@@", "..."] }];
     const { byTag } = collectByTag(items, { tagsOf, includeUntagged: true });
-    expect(byTag.get("untagged")!.length).toBe(1);
+    assert.equal(byTag.get("untagged")!.length, 1);
   });
 
   it("all tags normalise to empty + includeUntagged=false → item disappears", () => {
     const items: Post[] = [{ id: "x", title: "X", tags: ["@@@"] }];
     const { byTag } = collectByTag(items, { tagsOf });
-    expect(byTag.size).toBe(0);
+    assert.equal(byTag.size, 0);
   });
 });

@@ -9,7 +9,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadEverything } from "../src/loader.js";
+import { loadLanguageRegistry } from "../src/loader.js";
 import {
   assertLevelProgressOwners,
   loadLevelProgressOwners,
@@ -155,7 +155,7 @@ describe("shared progression tests remain generic", () => {
   it("contains no registered track identity in either shared test", () => {
     const root = new URL(".", import.meta.url);
     const registered = new Set(
-      loadEverything().registry.languages.map((language) => language.id.toLowerCase()),
+      loadLanguageRegistry().languages.map((language) => language.id.toLowerCase()),
     );
     for (const name of ["level-gate.test.ts", "levels.test.ts"]) {
       const source = readFileSync(new URL(name, root), "utf8");

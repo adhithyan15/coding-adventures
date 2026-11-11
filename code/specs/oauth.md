@@ -2566,6 +2566,146 @@ construction or validation, TLS, HTTP, OAuth transport, and network authority
 remain unavailable. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+A bounded follow-up projection consumes that complete separately authenticated
+original-responder branch and reifies the added revocation proof's own exact
+delegated responder-to-intermediate-to-reviewed-root path under a distinct
+non-copyable type. The consumed branch already retains the added proof's exact
+authenticated responder, its routed repository-owned RSA response and
+certificate-signature verification, observation-time validity, exact
+intermediate issuer, and the selected Mozilla-reviewed root. The infallible
+projection retains the entire branch and accepts no substitute certificate,
+path, root, algorithm, key, signature, status, freshness endpoint, or time.
+This pure public-certificate-data composition performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It does not
+apply reviewed-root or intermediate name policy to that added responder,
+establish its RFC 6960 no-check or separately authenticated revocation policy,
+complete revocation policy, generalize path construction or validation,
+implement TLS or HTTP, authorize OAuth transport, or grant network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded policy follow-up consumes that exact added responder path and
+applies the selected Mozilla-reviewed root's supported out-of-band DNS
+constraints to the separately authenticated proof's exact fully routed
+responder certificate. The responder and reviewed-root constraint bytes are
+derived only through the consumed proof; callers cannot substitute a
+certificate, SAN collection, snapshot entry, root, path, algorithm, key,
+signature, status, freshness endpoint, or time. Entries without out-of-band
+constraints succeed without reading Subject Alternative Name. Constrained
+entries decode the supported permitted-DNS subset and exact responder SAN
+under separate caller-owned ASN.1 limits, require every responder `dNSName` to
+comply, and retain only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload.
+This pure public-certificate-data policy performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It does not
+apply intermediate, excluded, or non-DNS name constraints, establish no-check
+or separately authenticated revocation policy for the added responder,
+implement complete revocation policy, generalize path construction or
+validation, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
+A further bounded policy follow-up consumes that complete reviewed-root DNS
+proof and applies the separately authenticated proof's exact retained
+intermediate NameConstraints to its exact responder certificate. Both
+certificates are derived only through the consumed repository-owned evidence;
+callers cannot substitute a certificate, SAN collection, intermediate, path,
+root, algorithm, key, signature, status, freshness endpoint, or time. An
+intermediate without NameConstraints succeeds without reading Subject
+Alternative Name. A present extension must be critical; its supported
+permitted and excluded DNS subtrees and the responder SAN are decoded under
+separate caller-owned ASN.1 limits, every responder `dNSName` must comply, and
+success retains only count evidence. Stable failures expose no certificate,
+name, constraint, response, key, signature, status, root, or time payload. This
+pure public-certificate-data policy performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. It does not establish
+no-check or separately authenticated revocation policy for the added
+responder, implement complete revocation policy, generalize path construction
+or validation, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
+A final bounded branch policy consumes that complete root-and-intermediate DNS
+proof and requires RFC 6960 no-check semantics on the separately authenticated
+proof's exact responder. The responder is derived only through the consumed
+repository-owned evidence; callers cannot substitute a certificate, extension
+set, path, root, algorithm, key, signature, status, freshness endpoint, or
+time. One structurally unique `id-pkix-ocsp-nocheck` extension must be present
+with exact DER `NULL` contents, and success retains the complete non-copyable
+proof. Stable failures expose no certificate, extension, response, key,
+signature, status, root, or time payload. This pure public-certificate-data
+policy performs no credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It resolves only RFC 6960's trust-for-certificate-
+lifetime branch for this responder and does not establish separately
+authenticated revocation for it, implement complete revocation policy,
+generalize path construction or validation, or provide TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+A bounded composition follow-up consumes that responder-of-responder no-check
+proof plus a separate fully authenticated, fully routed OCSP target-revocation
+proof for the retained intermediate. It derives the exact retained
+intermediate, selected Mozilla-reviewed root, and original server-status
+observation time exclusively through the consumed no-check proof, then
+requires the second proof to name those exact certificate objects and time.
+Stable target, issuer, and observation-time mismatch categories retain no
+certificate, response, key, signature, status, hostname, root, or time
+payload. Success retains both complete non-copyable inputs under a distinct
+type; callers cannot duplicate or substitute the consumed responder branch,
+raw status, certificates, paths, roots, algorithms, keys, signatures, or time.
+This pure public-certificate-data composition performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves the
+original responder through separately authenticated status, resolves that
+status proof's own responder through RFC 6960 no-check policy, and
+authenticates status for the exact retained intermediate at the same
+observation time. It does not establish revocation policy for the intermediate-
+status proof's own responder, implement complete revocation policy, generalize
+path construction or validation, or provide TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+A subsequent infallible projection consumes that complete composition and
+reifies the intermediate-status proof's exact authenticated responder-to-
+reviewed-root path. The preceding proof already established certificate-wide
+critical-extension and end-entity role policy, caller-selected algorithm/key
+policy, OCSP-signing purpose, validity at the exact observation time,
+repository-owned routed RSA verification for both the response and responder
+certificate, and exact issuer identity with the selected Mozilla-reviewed
+root. The nominal path wrapper retains the complete non-copyable composition
+under a source-specific accessor, accepts no substitute certificate, path,
+root, algorithm, key, signature, status, or time, and performs no additional
+parsing or validation. This pure public-certificate-data projection performs
+no credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not apply the selected root's supported out-of-band DNS
+constraints to that responder, establish no-check or separately authenticated
+revocation policy for it, implement complete revocation policy, generalize path
+construction or validation, or provide TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
+A bounded policy follow-up consumes that exact nested-source responder path
+and applies the selected Mozilla-reviewed root's supported out-of-band DNS
+constraints to the intermediate-status proof's exact fully routed
+authenticated responder certificate. Both policy inputs are derived only
+through the complete responder-of-responder no-check plus intermediate-status
+composition; callers cannot substitute a certificate, SAN collection,
+snapshot entry, root, path, algorithm, key, signature, status, or time. Entries
+without constraints succeed without reading Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and exact
+responder SAN under separate caller-owned ASN.1 limits, require every responder
+`dNSName` to comply, and retain only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, status, root, or time
+payload. The complete source remains available to the existing added-responder
+no-check and separately authenticated revocation policies. This pure public-
+certificate-data policy performs no credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply excluded or non-
+DNS root constraints, implement complete revocation policy, generalize path
+construction or validation, or provide TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof
@@ -2623,15 +2763,18 @@ retains both complete non-copyable branches under a distinct type. This pure
 public-certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Revocation policy for
-both added proofs' own responders, projection of the added intermediate-status
-responder path from this alternative branch, generalized path construction or
-validation, complete revocation policy, TLS, HTTP, OAuth transport, and network
-authority remain unavailable. Concrete HTTPS and live-provider readiness
-remain unavailable.
+both added proofs' own responders, generalized path construction or validation,
+complete revocation policy, TLS, HTTP, OAuth transport, and network authority
+remain unavailable. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
-A subsequent bounded projection consumes that complete no-check plus
-intermediate-status composition and reifies the added status proof's exact
-delegated responder-to-reviewed-root path as a distinct non-copyable type.
+A subsequent bounded projection consumes either the complete no-check plus
+intermediate-status composition or the complete separately authenticated
+original-responder plus intermediate-status composition and reifies the added
+status proof's exact delegated responder-to-reviewed-root path as a distinct
+non-copyable type. Private repository-owned evidence prevents an external
+source implementation, and defaulted source parameters preserve the existing
+no-check projection's public type shape.
 The consumed inputs already prove that the added proof's exact responder
 certificate passed certificate-wide critical-extension and end-entity role
 policy, caller-selected algorithm/key policy, OCSP-signing purpose, and
@@ -2651,8 +2794,8 @@ construction or validation, implement complete revocation policy, TLS, HTTP,
 OAuth transport, or network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
-A bounded policy follow-up consumes that exact added-status responder path and
-applies the selected Mozilla-reviewed root's supported out-of-band DNS
+A bounded policy follow-up consumes each exact added-status responder path
+and applies the selected Mozilla-reviewed root's supported out-of-band DNS
 constraints to the exact fully routed authenticated responder certificate.
 The responder and reviewed-root constraint bytes are derived only through the
 consumed proof; the preceding identity binding already proves that this same
@@ -2693,6 +2836,23 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A branch-specific bounded completion slice then consumes that exact nested
+no-check composition after the server target, original responder, responder-
+status proof's own responder, intermediate, and intermediate-status proof's
+responder have each been covered by authenticated good-and-fresh OCSP status
+or exact RFC 6960 no-check policy. The selected Mozilla-reviewed root remains
+the trust anchor rather than a revocation target. The infallible non-copyable
+result retains all prerequisite evidence and accepts no substitute
+certificate, path, root, algorithm, key, signature, status, or time. This pure
+public-certificate-data composition performs no parsing, cryptography,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It proves complete revocation policy only for this one retained fixed
+path; it does not generalize path construction or validation, fetch, cache,
+acquire, or refresh revocation data, or provide TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An alternative bounded added-responder revocation follow-up consumes that
 same complete reviewed-root DNS proof plus a separate fully authenticated,
 fully routed OCSP target-revocation proof. Private repository-owned evidence
@@ -2712,6 +2872,75 @@ not establish revocation policy for the second proof's own responder, compose
 complete revocation policy, generalize path construction or validation, or
 provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS and
 live-provider readiness remain unavailable.
+
+That alternative branch now has a bounded infallible projection for the added
+revocation proof's own exact delegated responder-to-reviewed-root path. The
+non-copyable result retains the complete generic source, selected-root DNS
+proof, target binding, and fully routed authenticated revocation proof. It
+accepts no substitute certificate, path, root, algorithm, key, signature,
+status, or time and performs no parsing, cryptography, credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. Reviewed-root
+and intermediate name policy for that delegated responder, no-check or
+separately authenticated revocation policy for it, complete revocation policy,
+generalized path construction or validation, TLS, HTTP, OAuth transport, and
+network authority remain unavailable. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A following bounded policy slice consumes that exact delegated-responder path
+and applies the selected Mozilla-reviewed root's supported out-of-band DNS
+constraints to the added revocation proof's authenticated responder. Both the
+responder certificate and reviewed-root constraint bytes are derived only
+through the consumed proof; callers cannot substitute a certificate, SAN
+collection, snapshot entry, root, path, algorithm, key, signature, status, or
+time. Entries without constraints succeed without reading Subject Alternative
+Name. Constrained entries decode the supported permitted-DNS subset and the
+exact responder SAN under separate caller-owned ASN.1 limits, require every
+responder `dNSName` to comply, and retain only count evidence. Stable failures
+expose no certificate, name, constraint, response, key, signature, status,
+root, or time payload. This pure public-certificate-data policy performs no
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not apply excluded or non-DNS root constraints or the retained
+intermediate's constraints, establish no-check or separately authenticated
+revocation policy for that responder, compose complete revocation policy,
+generalize path construction or validation, or provide TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+A following bounded no-check slice consumes that complete reviewed-root DNS
+proof and derives the added revocation proof's exact authenticated delegated
+responder only through the retained path. It requires one structurally unique
+`id-pkix-ocsp-nocheck` extension whose contents are exact DER `NULL`. RFC 6960
+recommends but does not require a non-critical extension, so a critical
+instance can reach this semantic gate only after certificate-wide role policy
+recognizes its OID. Success retains the complete generic non-copyable proof.
+This pure public-certificate-data policy performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves
+only the no-check branch for that exact responder and does not establish
+separately authenticated recursive responder revocation, complete revocation
+policy, generalized path construction or validation, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
+A branch-specific bounded completion slice then consumes that exact default-
+source alternative proof after the server target, original responder,
+intermediate, added intermediate-status responder, and the added responder-
+revocation proof's own responder have each been covered by authenticated good-
+and-fresh OCSP status or exact RFC 6960 no-check policy. The input type excludes
+the generic source whose separately authenticated responder branch remains
+unresolved. The selected Mozilla-reviewed root remains the trust anchor rather
+than a revocation target. The infallible non-copyable result retains every
+prerequisite and accepts no substitute certificate, path, root, algorithm,
+key, signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It proves complete revocation policy
+only for this one retained fixed branch; it does not generalize path
+construction or validation, fetch, cache, acquire, or refresh revocation data,
+or provide TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
 
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete

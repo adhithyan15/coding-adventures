@@ -2,6 +2,55 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.12] - 2026-11-10
+
+### Fixed - refuse `super` outside a method, matching upstream Closure Compiler (CCR-075 slice 3, #15860)
+
+- In `src/refusals.rs`, refuse `super` accessed outside a method with `JSC_INVALID_SUPER_ACCESS` ("'super' may only be accessed within a method") and exit status 1, matching upstream Closure Compiler behavior.
+- Support `super` in class methods, constructors, getters, setters, object literal concise methods, class field declarations, and static blocks.
+- Inherit `super_ok` context in lexical arrow functions, allowing `super` in arrow functions nested within methods while rejecting top-level arrow functions using `super`.
+- Reject `super` inside standalone function declarations, function expressions, generator functions, and computed method property names evaluated outside method scope.
+- Convert `tests/diff/simple-super/` to an exact refusal fixture matching `closure-compiler-v20260915` (`expected.exit` 1, `expected.stderr`, empty `expected.stdout`), and update `tests/diff_simple_super.rs` accordingly.
+
+## [0.247.11] - 2026-11-10
+
+### Fixed - parity for refusal rendering order, UTF-16 columns, tab carets, and CRLF (CLOC44, #18159)
+
+- In `src/refusals.rs`, sort rendered refusals across multi-file runs using Java `String.compareTo` ordering (comparing UTF-16 code units by source name, then line, then column) rather than raw input order.
+- In `src/refusals.rs`, compute refusal diagnostic columns in 0-based UTF-16 code units (converting character offsets to UTF-16 scalar lengths) to match upstream Java string indexing on surrogate pairs (e.g. emoji).
+- In `src/refusals.rs`, preserve tab characters verbatim in the caret line (`\t\t^`) from excerpt lines so caret markers align accurately with tab stops.
+- In `src/refusals.rs`, preserve trailing `\r` on excerpt lines from CRLF source files using `split('\n')` rather than `lines()`.
+
+## [0.247.10] - 2026-11-10
+
+### Fixed - strip `"use strict"` unless `--emit_use_strict`, and re-emit it single-quoted (CCR-085, #15920)
+
+- In `src/whitespace_only.rs`, strip leading `"use strict"` and `'use strict'` directive prologues at script top level and at the start of function bodies (matching upstream Closure Compiler parse-time directive stripping). Non-"use strict" directives (e.g. `"use asm"`, `"x"`) and non-leading `"use strict"` statements are preserved.
+- In `src/run.rs`, when `--emit_use_strict` is passed, emit single-quoted `'use strict';` (without newline in compact mode, with trailing newline in `PRETTY_PRINT` mode), matching upstream Closure Compiler byte parity.
+- Re-captured differential fixture `tests/diff/emit-use-strict/` against the upstream oracle (`'use strict';var x=1;\n`).
+- Added comprehensive integration tests in `tests/diff_emit_use_strict.rs` and unit tests in `src/whitespace_only.rs`.
+
+## [0.247.9] - 2026-11-10
+
+### Fixed - wrap substatement do-while in braces at WHITESPACE_ONLY (CCR-083, #15918)
+
+- In `src/whitespace_only.rs`, wrap bare `do…while` statements in braces when they appear in a substatement body slot (`if`, `else`, `while`, `for`, `for-in`, `for-of`, `with`, `do`), matching upstream Closure Compiler (`CodeGenerator.java::isBlockDeclOrDo`).
+- Prevent the `while` tail condition of a `do…while` statement from spuriously arming `opens_control_flow_head`, allowing Rule A to drop redundant semicolons before closing braces in `do…while` blocks.
+- Bare `do…while` at statement position and under labels (`lbl:`) remain bare.
+
+## [0.247.8] - 2026-11-10
+
+### Fixed - `if (1) let⏎x = 1;` compiles as an identifier statement (V8C09)
+
+- `javascript-parser` now reads `let` as an identifier when it is the whole
+  body of `if`/`for`/`while`/`with`/`else`/`do`/a label and a line break
+  follows (ExpressionStatement only refuses `let [`; test262
+  `let-identifier-with-newline`). `if (1) let\nx = 1;` therefore compiles to
+  `let;x=1;`, never to the declaration `let x=1;`. The two regression tests
+  that asserted it must be refused (`regression_if_let_statement_18146`,
+  `regression_expression_statement_lookahead`) now assert this instead; the
+  same-line forms (`if (1) let x = 1;`, `const`) are still refused.
+
 ## [0.247.7] - 2026-11-10
 
 ### Fixed - unwrap single-statement bodies when safe (CCR-076, #15861)

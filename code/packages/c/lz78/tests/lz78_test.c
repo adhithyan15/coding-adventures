@@ -43,6 +43,108 @@ static void check_tokens(const char *text, const Lz78Token *expected, size_t n) 
     free(toks);
 }
 
+
+/* ---- Security regression tests: hostile headers ------------------------- *
+ * Each case is a few bytes of input whose header claims an enormous count or
+ * length.  An implementation that sized an allocation or loop from the claim
+ * would allocate gigabytes or read out of bounds; these checks (best run under
+ * ASan/UBSan, see the CHANGELOG) assert the call returns promptly with the
+ * data actually present.  Also: round trips over every input of length <= 2
+ * and a seeded random sample. */
+static unsigned long hostile_rng_state = 0x5EEDu;
+static unsigned hostile_rng(void) {
+    /* xorshift32 */
+    unsigned long x = hostile_rng_state & 0xFFFFFFFFul;
+    x ^= (x << 13) & 0xFFFFFFFFul;
+    x ^= (x >> 17);
+    x ^= (x << 5) & 0xFFFFFFFFul;
+    hostile_rng_state = x;
+    return (unsigned)x;
+}
+
+static void hostile_round_trip(const unsigned char *d, size_t n) {
+    unsigned char *packed = NULL;
+    unsigned char *restored = NULL;
+    size_t packed_len = 0, restored_len = 0;
+    int ok = lz78_compress(d, n, 65536, &packed, &packed_len) == LZ78_OK &&
+             lz78_decompress(packed, packed_len, &restored, &restored_len) == LZ78_OK;
+    ISO_CHECK(ok);
+    if (ok) {
+        ISO_CHECK_EQ_UINT(restored_len, n);
+        if (restored_len == n && n > 0) {
+            ISO_CHECK(memcmp(restored, d, n) == 0);
+        }
+    }
+    free(packed);
+    free(restored);
+}
+
+static void hostile_tests(void) {
+    unsigned char *out = NULL;
+    size_t out_len = 0;
+    unsigned a, b, i;
+
+    {
+        unsigned char d[8];
+        memset(d, 0xFF, sizeof d);
+        ISO_CHECK(lz78_decompress(d, sizeof d, &out, &out_len) == LZ78_OK);
+        ISO_CHECK_EQ_UINT(out_len, 0);
+        free(out);
+        out = NULL;
+    }
+    /* Declared length 2^32-1 but only one token present. */
+    {
+        static const unsigned char d[] = {0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 1,
+                                          0,    0,    'h',  0};
+        ISO_CHECK(lz78_decompress(d, sizeof d, &out, &out_len) == LZ78_OK);
+        ISO_CHECK_EQ_UINT(out_len, 1);
+        ISO_CHECK(out_len == 1 && out[0] == 'h');
+        free(out);
+        out = NULL;
+    }
+    /* Token count far larger than the data. */
+    {
+        static const unsigned char d[] = {0, 0, 0, 2,   0xFF, 0xFF, 0xFF, 0xFF,
+                                          0, 0, 'h', 0, 0,    0,    'i',  0, 0, 0};
+        ISO_CHECK(lz78_decompress(d, sizeof d, &out, &out_len) == LZ78_OK);
+        ISO_CHECK_EQ_UINT(out_len, 2);
+        ISO_CHECK(out_len == 2 && memcmp(out, "hi", 2) == 0);
+        free(out);
+        out = NULL;
+    }
+    /* Dangling dictionary index must not read out of bounds. */
+    {
+        static const unsigned char d[] = {0, 0, 0, 10, 0, 0, 0, 2, 0,
+                                          0, 'a', 0,   0x27, 0x0F, 'b', 0};
+        ISO_CHECK(lz78_decompress(d, sizeof d, &out, &out_len) == LZ78_OK);
+        free(out);
+        out = NULL;
+    }
+
+    hostile_round_trip((const unsigned char *)"", 0);
+    for (a = 0; a < 256; a++) {
+        unsigned char one[1];
+        one[0] = (unsigned char)a;
+        hostile_round_trip(one, 1);
+        for (b = 0; b < 256; b++) {
+            unsigned char two[2];
+            two[0] = (unsigned char)a;
+            two[1] = (unsigned char)b;
+            hostile_round_trip(two, 2);
+        }
+    }
+    for (i = 0; i < 300; i++) {
+        unsigned char buf[600];
+        unsigned n = 3 + hostile_rng() % 597;
+        unsigned alpha = (i % 4 == 0) ? 2 : (i % 4 == 1) ? 4 : (i % 4 == 2) ? 16 : 256;
+        unsigned j;
+        for (j = 0; j < n; j++) {
+            buf[j] = (unsigned char)(hostile_rng() % alpha);
+        }
+        hostile_round_trip(buf, n);
+    }
+}
+
 int main(void) {
     /* Empty input. */
     {
@@ -228,6 +330,8 @@ int main(void) {
                          (int)LZ78_OK);
         free(out); /* whatever it produced, it must not have crashed */
     }
+
+    hostile_tests();
 
     return ISO_TEST_RESULT();
 }

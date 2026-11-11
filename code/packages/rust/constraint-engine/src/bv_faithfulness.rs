@@ -723,6 +723,82 @@ fn division_cost_estimate_is_conservative() {
     }
 }
 
+#[test]
+fn multiplication_cost_estimate_is_conservative() {
+    // The pre-check estimate must be at least the real gate count, and not
+    // so loose that it refuses sizes the real circuit would fit.
+    for w in [1usize, 2, 3, 4, 5, 7, 8, 9, 13, 16, 17, 31, 32, 33, 47, 63, 64, 65, 100, 127, 128, 200] {
+        let mut l = Lowering::new(&env_of(2, w)).unwrap();
+        let before = l.aig.num_nodes();
+        let calls_before = l.aig.and_calls();
+        l.term(&app("bvmul", &[var("x"), var("y")])).unwrap_or_else(|e| panic!("bvmul {w}: {e}"));
+        let used = l.aig.num_nodes() - before;
+        let est = multiplication_gate_estimate(w);
+        assert!(used <= est, "bvmul at {w}: {used} gates > estimate {est}");
+        let calls = l.aig.and_calls() - calls_before;
+        let call_est = multiplication_and_call_estimate(w);
+        assert!(calls <= call_est, "bvmul at {w}: {calls} gate calls > estimate {call_est}");
+        if w >= 16 {
+            assert!(est <= 4 * used, "bvmul at {w}: estimate {est} is more than 4x the real {used}");
+        }
+    }
+}
+
+#[test]
+fn wide_multiplication_is_refused_before_it_is_built() {
+    // The smallest width whose estimate no longer fits under the node cap is
+    // refused without building anything; one below it still goes through.
+    let over = (1..=MAX_BV_WIDTH).find(|&w| multiplication_gate_estimate(w) > MAX_AIG_NODES).unwrap();
+    for w in [over, 512] {
+        let mut l = Lowering::new(&env_of(2, w)).unwrap();
+        let before = l.aig.num_nodes();
+        let r = l.term(&app("bvmul", &[var("x"), var("y")]));
+        assert!(matches!(&r, Err(why) if why.contains("MAX_AIG_NODES")), "bvmul at {w}: {r:?}");
+        assert_eq!(l.aig.num_nodes(), before, "bvmul at {w} built gates before refusing");
+        assert_eq!(l.aig.and_calls(), 0, "bvmul at {w} did work before refusing");
+        let p = eq(app("bvmul", &[x(), y()]), x());
+        assert!(matches!(BvTactic::solve(&[p], &env_of(2, w)), SolverResult::Unknown(why) if why.contains("MAX_AIG_NODES")));
+    }
+    let mut l = Lowering::new(&env_of(2, over - 1)).unwrap();
+    assert!(l.term(&app("bvmul", &[var("x"), var("y")])).is_ok());
+    // (No wall-clock assertion: the unchanged node and gate-call counts above
+    // already prove nothing was built, and timing is flaky on loaded CI.)
+}
+
+#[test]
+fn a_long_bvmul_chain_is_refused_mid_fold_before_the_overflowing_step() {
+    // n-ary `bvmul` multiplies left to right and reserves before each step.
+    // At 128 bits one product is ~65k nodes, so a chain of distinct operands
+    // (x·y·z·…, each product a new circuit) crosses the node cap within a few
+    // steps; the refusal comes before the step that would cross it.
+    let w = 128;
+    let names: Vec<String> = (0..8).map(|i| format!("v{i}")).collect();
+    let env: SortEnv = names.iter().map(|n| (n.clone(), Sort::BitVec(w as u32))).collect();
+    let distinct: Vec<Predicate> = names.iter().map(|n| var(n)).collect();
+    let mut l = Lowering::new(&env).unwrap();
+    let r = l.term(&app("bvmul", &distinct));
+    assert!(matches!(&r, Err(why) if why.contains("MAX_AIG_NODES")), "distinct chain: {r:?}");
+    assert!(l.aig.num_nodes() <= MAX_AIG_NODES, "node cap crossed before refusal");
+}
+
+#[test]
+fn repeated_identical_multipliers_are_refused_on_work_before_crossing_the_cap() {
+    // `(bvadd m m m …)` with `m = (bvmul v0 v1)`: structural hashing makes
+    // every copy after the first free in NODES, so the node reservation never
+    // trips, but each copy repeats ~10 w² gate constructions. The work
+    // reservation must refuse before the step that would pass MAX_GATE_CALLS;
+    // a check made only after building would overshoot by one multiplier.
+    let w = 128;
+    let env: SortEnv = ["v0", "v1"].iter().map(|n| (n.to_string(), Sort::BitVec(w as u32))).collect();
+    let m = app("bvmul", &[var("v0"), var("v1")]);
+    let copies: Vec<Predicate> = (0..40).map(|_| m.clone()).collect();
+    let mut l = Lowering::new(&env).unwrap();
+    let r = l.term(&app("bvadd", &copies));
+    assert!(matches!(&r, Err(why) if why.contains("MAX_GATE_CALLS")), "repeated multipliers: {r:?}");
+    assert!(l.aig.and_calls() <= MAX_GATE_CALLS, "work cap crossed before refusal");
+    assert!(l.aig.num_nodes() < MAX_AIG_NODES / 2, "copies should have been structurally shared");
+}
+
 /// Is `lhs = rhs` valid? `Unsat` of the negation is the proof, and this
 /// tactic only reports `Unsat` after `drat-check` accepted its DRAT proof.
 fn proved(e: &SortEnv, name: &str, lhs: Predicate, rhs: Predicate) {

@@ -332,6 +332,13 @@ sub decode {
     my @out;
 
     for my $tok (@$tokens) {
+        # Security: stop once the declared length is reached (nothing more
+        # survives the truncation; expanding further lets a tiny hostile
+        # stream grow quadratically) and on a dangling dictionary index
+        # (previously "Can't use an undefined value as an ARRAY reference").
+        last if defined $original_length && scalar @out >= $original_length;
+        last if $tok->{dict_index} >= scalar @dict_table;
+
         my $seq = _reconstruct(\@dict_table, $tok->{dict_index});
         push @out, @$seq;
 

@@ -11,7 +11,7 @@ import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import { measureLostScript, renderLostScript } from "../src/lost-script.js";
 import { parseLesson } from "../src/parse.js";
-import { defaultCurriculumRoot, loadLessons } from "../src/loader.js";
+import { defaultCurriculumRoot, loadLessonsAsync } from "../src/loader.js";
 
 /** A minimal lesson in `language` whose body is `body`. */
 const lesson = (body: string, language = "japanese") =>
@@ -214,9 +214,13 @@ describe("lost script: the corpus", () => {
   // same text, and reading files keeps this gate off the cost of rendering
   // every book of every track a second time.
   const root = defaultCurriculumRoot();
+  // Both read-only corpus cases inspect the same canonical bytes. A future
+  // source-editing case must call the loader afresh, not reuse this promise.
+  let memo: ReturnType<typeof loadLessonsAsync> | undefined;
+  const committedLessons = () => (memo ??= loadLessonsAsync(root));
 
-  it("THE GATE: no lesson and no generated book has a '?' standing in for a word", () => {
-    const lessons = loadLessons(root);
+  it("THE GATE: no lesson and no generated book has a '?' standing in for a word", async () => {
+    const lessons = await committedLessons();
     const books = committedBookFiles(root);
     const report = measureLostScript(lessons, books);
     // Named rather than counted, so whoever breaks this knows which file to open.
@@ -225,8 +229,8 @@ describe("lost script: the corpus", () => {
     expect(books.length).toBeGreaterThan(100);
   });
 
-  it("is not vacuous: the same corpus plus one damaged line fires once", () => {
-    const lessons = [...loadLessons(root), lesson("[PAUSE 15s] Say ??? and tap all three morae.")];
+  it("is not vacuous: the same corpus plus one damaged line fires once", async () => {
+    const lessons = [...await committedLessons(), lesson("[PAUSE 15s] Say ??? and tap all three morae.")];
     expect(measureLostScript(lessons).summary.sourceFindings).toBe(1);
   });
 });
