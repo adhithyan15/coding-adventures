@@ -187,6 +187,63 @@ op classify export=classify ret=Shape faults=wrong-ctor
   `tests/wxa_evidence.rs` also runs the ground evaluator against the generated
   model code on every composite domain within budget.
 
+## Warrant v1: output bounds (VER04j WX-H)
+
+A v1 `bound` block gains a fourth metric, `output`, that bounds the *size of the
+successful result* (a `Bytes` length, a list's element count, the `Ok` payload of
+a `Result`); a bound expression may use parameters, `len`, `to_int`, `unwrap_or`
+and the new total helpers `imin`/`imax`.
+
+```text
+op decompress(data: Bytes, max_output: U32) -> Result<Bytes, LzError> fresh
+bound decompress:
+  output <= to_int(max_output)
+  heap   <= 2 * to_int(max_output) + 8 * len(data) + 4096
+```
+
+For every operation with an `output` or `heap` row the generator registers
+`exhaustive`/`property`/`fuzz` suites named `<op>/output-bound` and runs *every*
+instance of the operation under an **allocation observer**: a counting global
+allocator and a per-call window. The cap (64 MiB) is enforced by containment, not
+by failing the allocation (a `GlobalAlloc` may not unwind, and a null return aborts
+the process on stable Rust): the over-cap request is never made, its worker thread
+is parked and abandoned, and the instance fails with `bound-heap-exceeded` and the
+size it asked for. A test that tripped once fails its later observed instances
+without running them, and at most 64 workers holding 1 GiB are ever abandoned.
+The faults `ignore-limit`, `off-by-one-limit`, `limit-after-alloc` and
+`truncate-silently` attack the limit parameter the `output` row mentions.
+`tests/fixtures/wxh.warrant` (a toy run-length decompressor) with a vulnerable, a
+wasteful and a capped subject is the pilot (`wxh_evidence`, `wxh_vulnerable`,
+`wxh_wasteful`, `wxh_caps*`); no `lz*` API is touched.
+
+## Warrant v1: pinned external tables (VER04j WX-E)
+
+```text
+vectors synthetic_digests:
+  source "warrant-vectors-synthetic-v1/digests.tfv"
+  sha256 b"<64 lowercase hex digits: SHA-256 of the file>"
+  rows 23
+  column msg: Bytes
+  column md: Bytes<32>
+  holds digest(msg) == md
+```
+
+The data lives in a TF01 TFV fixture under `code/specs/fixtures/`; the document
+pins its identity. `evidence::load_document_tables` is the tool half
+(`src/vectors.rs`): it checks the path rules, refuses symlinks, caps the file at
+16 MiB and the table at 100,000 rows (250,000 per document), compares the SHA-256
+**before** parsing, refuses maps with more than one entry, parses with the lane's
+own TFV parser and decodes every row against its column types (W0708 / W0709 /
+W0710); it never touches the network. The generator copies the verified bytes into
+the package (`tests/generated/tables/<name>.tfv`, embedded with `include_bytes!`),
+the generated test hashes the copy again (`corpus-malformed` on a mismatch), runs
+`holds` per row, and records one manifest entry per table (`kind: "table"`,
+`cases`, `rows_pinned`, `table_sha256`, `failed_ids`). `gen_evidence` materialises
+and drift-checks the copies. A table whose expected column is constant is W0601.
+The shipped fixtures are synthetic (`warrant-vectors-synthetic-v1`, README there
+records provenance); adding a NIST/RFC set is an owner decision and the loader is
+the hook.
+
 ## Tests and regeneration
 
 From the Rust workspace:

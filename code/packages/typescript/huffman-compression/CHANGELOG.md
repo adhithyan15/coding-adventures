@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+- The "decodes a large valid input in linear time" test no longer relies on
+  vitest's default 5 s timeout as its performance bound. Under `--coverage` on
+  a loaded Windows runner the honest linear decode took 5.4 s and timed out. It
+  now sets an explicit 60 s timeout, which still catches the O(n^2) decoder it
+  guards against (hours for ~1.2 M bits), and compares the 400 KB output in a
+  plain loop rather than with `toEqual`.
+
 ## [0.1.1] — 2026-11-10
 
 ### Security

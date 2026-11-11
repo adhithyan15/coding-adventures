@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ### Security
 
 - CWE-789/CWE-400: `deserialise_tokens` no longer preallocates from the untrusted token-count header; the count is clamped to `(len - 8) / 4`. `decode` stops on a dangling `dict_index` instead of panicking, and stops as soon as the declared `original_length` is reached (a hostile chain of tokens previously expanded quadratically before truncation).

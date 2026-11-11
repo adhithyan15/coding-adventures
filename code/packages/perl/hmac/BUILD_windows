@@ -1,2 +1,2 @@
 cpanm --notest --quiet Test2::V0
-set "PERL5LIB=..\md5\lib;..\sha1\lib;..\sha256\lib;..\sha512\lib;%PERL5LIB%" && prove -l -v t\
+prove -I..\md5\lib -I..\sha1\lib -I..\sha256\lib -I..\sha512\lib -l -v t\
