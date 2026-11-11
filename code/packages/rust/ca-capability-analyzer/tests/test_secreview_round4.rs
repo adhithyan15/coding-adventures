@@ -15,7 +15,8 @@
 
 mod common;
 
-use coding_adventures_ca_capability_analyzer::{scan_source, ScanResult};
+use coding_adventures_ca_capability_analyzer::{analyze_package, scan_source, AnalysisReport, ScanResult};
+use common::{pure_manifest, Pkg};
 
 fn verdict_of(res: &ScanResult) -> Vec<String> {
     let mut v: Vec<String> = Vec::new();
@@ -65,6 +66,21 @@ fn check_cap003(label: &str, cases: &[(&str, &str)]) {
     }
     assert!(failures.is_empty(), "{} case(s) failed:\n{}", failures.len(), failures.join("\n"));
 }
+
+fn analyze_files(tag: &str, files: &[(&str, &str)]) -> AnalysisReport {
+    let p = Pkg::with(tag, files);
+    analyze_package(p.dir(), false).unwrap_or_else(|e| panic!("{tag}: {e}"))
+}
+
+fn cap003_reasons(r: &AnalysisReport) -> Vec<String> {
+    r.violations
+        .iter()
+        .filter(|v| v.code() == "CAP003")
+        .map(|v| v.format_line())
+        .collect()
+}
+
+const CARGO_2021: &str = "[package]\nname = \"poc\"\nversion = \"0.1.0\"\nedition = \"2021\"\n";
 
 // ---------------------------------------------------------------------------
 // H1: a rename is followed through every segment, to a fixed point
@@ -408,6 +424,97 @@ fn h4_ordinary_ident_metavariables_stay_clean() {
             ("keyword argument to a known macro", "fn f() { let v = vec![if true { 1 } else { 2 }]; let _ = v; }", &[]),
         ],
     );
+}
+
+// ---------------------------------------------------------------------------
+// H5: Cargo target paths and build scripts must be `.rs` files
+// ---------------------------------------------------------------------------
+
+#[test]
+fn h5_cargo_targets_not_ending_in_rs_are_cap003() {
+    use coding_adventures_ca_capability_analyzer::cargo::analyze_cargo_text;
+    for (name, extra) in [
+        ("cargo-lib-nonrs", "[lib]\npath = \"src/lib.txt\"\n"),
+        ("cargo-bin-nonrs", "[[bin]]\nname = \"tool\"\npath = \"src/tool.inc\"\n"),
+        ("cargo-build-nonrs", "build = \"build.txt\"\n"),
+        ("build without extension", "build = \"src/build\"\n"),
+        ("example", "[[example]]\nname = \"e\"\npath = \"src/e.txt\"\n"),
+        ("test", "[[test]]\nname = \"t\"\npath = \"src/t\"\n"),
+        ("bench (extension case differs)", "[[bench]]\nname = \"b\"\npath = \"src/b.RS\"\n"),
+        // Top-level inline tables come before `[package]`.
+        ("inline lib table", "lib = { path = \"src/lib\" }\n"),
+        ("bin array of tables", "bin = [{ name = \"x\", path = \"src/x.rs.txt\" }]\n"),
+    ] {
+        // `build` is a `[package]` key; the target tables start their own section.
+        let text = if extra.starts_with("lib =") || extra.starts_with("bin =") {
+            format!("{extra}{CARGO_2021}")
+        } else {
+            format!("{CARGO_2021}{extra}")
+        };
+        let facts = analyze_cargo_text(&text);
+        assert!(
+            facts.findings.iter().any(|f| f.reason.contains(".rs")),
+            "{name}: expected a non-.rs finding, got {:?}",
+            facts.findings
+        );
+    }
+    for (name, extra) in [
+        ("explicit default lib path", "[lib]\npath = \"src/lib.rs\"\n"),
+        ("bin path", "[[bin]]\nname = \"tool\"\npath = \"src/bin/tool.rs\"\n"),
+        ("build script", "build = \"build.rs\"\n"),
+        ("build disabled", "build = false\n"),
+        ("metadata path is not a target", "[package.metadata.x]\npath = \"docs\"\n"),
+    ] {
+        let facts = analyze_cargo_text(&format!("{CARGO_2021}{extra}"));
+        assert!(facts.findings.is_empty(), "{name}: unexpected {:?}", facts.findings);
+    }
+}
+
+#[test]
+fn h5_a_non_rs_library_root_fails_the_package() {
+    let r = analyze_files(
+        "h5lib",
+        &[
+            ("Cargo.toml", &format!("{CARGO_2021}[lib]\npath = \"src/lib.txt\"\n")),
+            ("src/lib.txt", "pub fn f() { std::fs::remove_file(\"x\").unwrap(); }\n"),
+            ("src/lib.rs", "pub fn decoy() {}\n"),
+            ("required_capabilities.json", &pure_manifest("h5lib")),
+        ],
+    );
+    assert_eq!(r.exit_code(), 1, "{}", r.format_text(true));
+    assert!(cap003_reasons(&r).iter().any(|l| l.contains("Cargo.toml")), "{:?}", cap003_reasons(&r));
+}
+
+#[test]
+fn h5_the_certificate_refuses_a_library_root_other_than_src_lib_rs() {
+    use coding_adventures_ca_capability_analyzer::{generate_certificate, write_module_to_disk};
+    let p = Pkg::with(
+        "h5cert",
+        &[
+            ("Cargo.toml", &format!("{CARGO_2021}[lib]\npath = \"src/real.rs\"\n")),
+            ("src/real.rs", "pub fn hidden_entry() {}\n"),
+            ("src/lib.rs", "pub fn decoy() {}\n"),
+            ("required_capabilities.json", &pure_manifest("h5cert")),
+        ],
+    );
+    write_module_to_disk(p.dir()).unwrap();
+    let err = generate_certificate(p.dir()).expect_err("certificate must be refused");
+    assert!(err.contains("src/lib.rs"), "{err}");
+
+    // The default layout (and an explicit `src/lib.rs`) still certifies.
+    for cargo in [CARGO_2021.to_string(), format!("{CARGO_2021}[lib]\npath = \"./src/lib.rs\"\n")] {
+        let q = Pkg::with(
+            "h5cert_ok",
+            &[
+                ("Cargo.toml", &cargo),
+                ("src/lib.rs", "pub fn entry() {}\n"),
+                ("required_capabilities.json", &pure_manifest("h5cert_ok")),
+            ],
+        );
+        write_module_to_disk(q.dir()).unwrap();
+        let cert = generate_certificate(q.dir()).unwrap_or_else(|e| panic!("{cargo}: {e}"));
+        assert_eq!(cert.entry_points.len(), 1);
+    }
 }
 
 // ---------------------------------------------------------------------------

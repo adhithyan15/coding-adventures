@@ -354,8 +354,34 @@ fn exceptions_of(manifest: &ManifestData) -> Vec<BannedExceptionCert> {
     v
 }
 
+/// Is `raw` (a `Cargo.toml` `[lib] path`) the default library root `src/lib.rs`?
+/// `./src/lib.rs` and `src//lib.rs` are; anything else is not.
+fn is_default_lib_root(raw: &str) -> bool {
+    let p = raw.replace('\\', "/");
+    let comps: Vec<&str> = p.split('/').filter(|c| !c.is_empty() && *c != ".").collect();
+    !p.starts_with('/') && comps == ["src", "lib.rs"]
+}
+
+/// The certificate's entry points are the `pub fn`s of `src/lib.rs`, and its
+/// `source_digest` covers `src/**/*.rs`.  Both describe the library only if
+/// `src/lib.rs` *is* the library root.  `[lib] path = "src/real.rs"` (or a
+/// root outside `src/`) compiles another file, so the certificate would list
+/// a decoy's entry points (security review round 4, H5, `cert-nonrs.json`
+/// listed `decoy` while `lib.txt` was compiled).  Such a package is refused
+/// rather than certified from the wrong file.
+fn require_default_lib_root(package_dir: &Path) -> Result<(), String> {
+    let facts = crate::cargo::analyze_cargo_toml(package_dir)?;
+    match facts.lib_path {
+        Some(p) if !is_default_lib_root(&p) => Err(format!(
+            "refusing certificate: Cargo.toml [lib] path = \"{p}\"; certificate entry points and source_digest are defined for the library root src/lib.rs only"
+        )),
+        _ => Ok(()),
+    }
+}
+
 /// Recompute every certificate field from disk, without judging cleanliness.
 fn expected_certificate(package_dir: &Path, manifest: &ManifestData) -> Result<EffectCertificate, String> {
+    require_default_lib_root(package_dir)?;
     let declared_effects = declared_effects_of(manifest);
     let mut entry_points = discover_public_entry_points(package_dir)?;
     // No per-entry attribution exists (no call graph): record the sound

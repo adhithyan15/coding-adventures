@@ -62,7 +62,25 @@ pub struct CargoFacts {
     pub dependencies: Vec<String>,
     /// The edition every target is compiled with, or `Unknown` (see [`EditionState`]).
     pub edition: Edition,
+    /// `[lib] path` when it is a plain string (the certificate requires the
+    /// library root to be `src/lib.rs`, see `certificate.rs`).
+    pub lib_path: Option<String>,
 }
+
+/// Target kinds whose `path` names a crate root (`[lib]`, `[[bin]]`, ...).
+const TARGET_TABLES: &[&str] = &["lib", "bin", "example", "test", "bench"];
+
+/// Why a target root or build script that is not a `.rs` file is CAP003.
+///
+/// Cargo compiles whatever file `path` / `build` names, whatever its
+/// extension, but the scanner (`scanner.rs`) reads only `*.rs` files.  So
+/// `[lib] path = "src/lib.txt"` compiled `lib.txt` while the analyzer scanned
+/// a decoy `src/lib.rs` and printed PASS - and the certificate said "proved"
+/// (security review round 4, H5, cases `cargo-lib-nonrs`, `cargo-bin-nonrs`,
+/// `cargo-build-nonrs`).  The extension is compared exactly (`.RS` is not
+/// scanned either).
+const NON_RS_REASON: &str =
+    "does not name a `.rs` file; the scanner reads only `.rs` files, so this target root would not be analysed";
 
 /// What the reader has learned about the edition so far.
 ///
@@ -425,7 +443,15 @@ impl Checker<'_> {
             return;
         };
         let key = path[k].clone();
+        let is_target_root = key == "path" && TARGET_TABLES.contains(&path[0].as_str());
         if matches!(path[0].as_str(), "test" | "bench" | "example") && key == "path" {
+            // Not shipped (G-5), so where it points is not examined - but it
+            // must still be a `.rs` file (H5).
+            if let Some(Val::Str { text, multi: false, escaped: false }) = val {
+                if k + 1 == path.len() && !text.ends_with(".rs") {
+                    self.finding(line, format!("{key} {NON_RS_REASON}"), format!("{key} = \"{text}\""));
+                }
+            }
             return;
         }
         let evidence = format!("{} ...", path.join("."));
@@ -452,6 +478,12 @@ impl Checker<'_> {
                         format!("{key} points outside the scanned source set"),
                         format!("{key} = \"{text}\""),
                     );
+                }
+                if (is_target_root || key == "build") && !text.ends_with(".rs") {
+                    self.finding(line, format!("{key} {NON_RS_REASON}"), format!("{key} = \"{text}\""));
+                }
+                if path.len() == 2 && path[0] == "lib" && key == "path" {
+                    self.facts.lib_path = Some(text.clone());
                 }
             }
             ("build", Val::Scalar(s)) if s == "false" => {}
