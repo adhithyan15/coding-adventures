@@ -1,3 +1,38 @@
 {
-  "abilities": []
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/tcp-server",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "*",
+      "justification": "TcpServer::start binds a std::net::TcpListener (non-blocking) on the configured host and port."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "*",
+      "justification": "Accepted TcpStream connections are read from and written to."
+    },
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "*",
+      "justification": "TcpListener::bind resolves the configured host name through ToSocketAddrs."
+    },
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "Source imports the std::thread module only to call thread::sleep; no threads are spawned. Declared because the lexical analyzer classifies the bare module import as thread:spawn."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "*",
+      "justification": "The serve loop sleeps 10 ms via thread::sleep when no connection had work."
+    }
+  ],
+  "justification": "Single-threaded polling TCP server: binds a listener on a configured host and port, accepts connections and exchanges bytes with a pluggable handler. No filesystem, process, or environment access."
 }
