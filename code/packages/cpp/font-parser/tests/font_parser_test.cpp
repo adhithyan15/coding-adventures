@@ -199,9 +199,9 @@ int main() {
         ISO_CHECK(m.family_name == "Test");
         ISO_CHECK(m.subfamily_name == "Regular");
 
-        ISO_CHECK(f.glyph_id(0x41) == std::optional<std::uint16_t>(1));
-        ISO_CHECK(f.glyph_id(0x42) == std::optional<std::uint16_t>(2));
-        ISO_CHECK(f.glyph_id(0x20) == std::optional<std::uint16_t>(3));
+        ISO_CHECK(f.glyph_id(0x41) == std::optional<std::uint16_t>(static_cast<std::uint16_t>(1)));
+        ISO_CHECK(f.glyph_id(0x42) == std::optional<std::uint16_t>(static_cast<std::uint16_t>(2)));
+        ISO_CHECK(f.glyph_id(0x20) == std::optional<std::uint16_t>(static_cast<std::uint16_t>(3)));
         ISO_CHECK(!f.glyph_id(0x5A).has_value());
         ISO_CHECK(!f.glyph_id(0x10000).has_value());
         ISO_CHECK(!f.glyph_id(0xFFFF).has_value());
