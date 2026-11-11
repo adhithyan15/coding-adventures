@@ -385,9 +385,9 @@ swift, dart, ocaml (need a CT01 ct-compare port first).
 
 | Priority / ID | Work | State / acceptance |
 |---|---|---|
-| P0 / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | in PR; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
-| P1 / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | waiting WD-001 |
-| P1 / WD-003 | Rust Warrant compiler emits the language-neutral expanded corpus for ct-compare + Python reference validator + regeneration check | waiting WD-002 |
+| done / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | merged #19054 (`2ff2db8cb02`), verified on main; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
+| done / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | merged #19078; corrected contract is tracked in VER04i |
+| P1 / WD-003 | Rust Warrant compiler emits the language-neutral corpus for ct-compare Warrant v0; independent stdlib-only Python semantic/digest validator; byte-stable regeneration and falsification checks | active: contract/spec correction first, then Rust producer and independent Python oracle; explicitly unsharded; Python lane binding/report remains WD-1xx/004 |
 | P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | waiting WD-002 |
 | P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | waiting WD-003/004 |
 | P3 / WD-2xx | Native Warrant backends emitting L2 PBT/fuzz suites per lane (TypeScript first: engines exist) | waiting WD-1xx per lane |
@@ -436,6 +436,23 @@ WX-E external oracle / vector-table construct + per-language fixture generator;
 WX-F binding-level sequence drivers for stateful objects; WX-D bounded
 fold/count/map; WX-G in-out postconditions; WX-H `max_output` bounds;
 WX-I recursive sums; WX-J strings/floats/maps/stateful models (Tier 3).
+
+### Missing Warrant v1 implementation features (user direction 2026-11-11)
+
+VER04k already specifies the next language features; this queue records
+implementation work against those existing WX IDs rather than opening duplicate
+specs. WX-B/C/A/E/H are implemented in `warrant-grammar`; WX-D/F/G remain
+spec-only. Keep the corpus profile honest: Warrant v1-only constructs are not
+accepted by WD-003's Warrant v0 corpus until their compiler and evaluator work
+lands.
+
+| Priority / ID | Work and affected evidence | Dependency and acceptance |
+|---|---|---|
+| P1 / WX-D1 | Implement VER04k §2.1 sequence constructors `take`, `drop`, `slice`, `replicate`, `range`, `to_list`, `to_bytes`; unlocks a faithful `gf256` multiply model, general `wasm-leb128` model, and sequence pre/postconditions for streaming hashes and writers | WX-H/WX-E merged #19121; alongside WX-F/G baseline work; compiler/checker/evaluator/corpus update with boundary and negative tests per VER04k §2.15 |
+| P1 / WX-F | Implement VER04k §3 binding-level constructor/step/finish drivers; enables real streaming SHA-family, range-coder and rANS sequences | alongside WX-D1 and WX-G; split-point sweeps that use `slice` follow WX-D1; each driver is binding-validated, runs subject operations across every sequence element, and kills missing/reordered/duplicated-step controls |
+| P1 / WX-G | Implement VER04k §4 `inout` and `ensures`; enables zeroize post-state evidence and output-buffer writers such as sqlite-file varint and TLS ALPN | alongside WX-D1 and WX-F; sequence postconditions that use list/byte built-ins follow WX-D1; checker rejects inadmissible/hidden post-state, generator binds mutable adapter slots, and both true and false postconditions are falsified |
+| P2 / WX-D2 | Implement VER04k §2.2 first-order bounded `fold`, `map`, `count`, `all`, `any`; enables reusable list/byte reference models for hashes, codecs and bitset | after WX-D1, WX-F and WX-G; validate typing, model purity, and evaluator budget exhaustion as specified |
+| P2 / WX-D3 | Implement VER04k §2.3 bounded symbolic unrolling for sequence forms; enables selected WIR proofs over loop-based `gf256` and codec implementations | after WX-D2 and the corresponding WIR lowering; proof rows remain `unchecked` until source lowering and certificates are independently verified |
 
 ### Bottom-up hardening and self-hosting (user direction 2026-11-09)
 
@@ -581,7 +598,7 @@ when the fix is merged and verified on fetched main.
 | P1 / LP-001a | Rust-subset front end (VER25a/b): lifetimes, struct field + index, `return if/else` expressions, OnceLock tables, so gf256 proofs go live | after LP-001 |
 | P2 / LP-001b | `Field::new` accepts any u16 polynomial without validation; capabilities.rs witness + `--verify-cert` for gf256 (E0 currently rests on an unverified cert) | backlog |
 | P2 / OPS-003 | Agent worktrees are created from origin/main, not the current branch; briefs that need unmerged work must say so (lesson recorded by LP-001) | apply in briefs |
-| done-local / WD-002 | VER04i polyglot spec: branch worktree-agent-a9f43bf58278f3a70 (commit 5d1187fbda). `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and a stdlib Python oracle (materialising ct-compare would be ~28 MB/library); 256 biased property cases per claim materialised; binding wrappers for per-op sabotage; `warrant-lane-evidence-v1` manifests; 9 new fail-closed checks; rollout python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir, then lua, perl, haskell, swift, dart, ocaml | queued for PR |
+| merged / WD-002 | VER04i polyglot spec: merged in #19078. `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and stdlib Python oracle; per-lane rollout and manifest/report contract remain queued in WD-1xx/004 |
 
 Provisional decisions on VER04i §14 (coordinator defaults, pending owner review):
 1. Runner lives in each lane's test-bootstrap package (create one per lane as needed), not a separate warrant-corpus package.
@@ -653,4 +670,4 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | P3 / SEC-003c | C and C++ huffman encoders hold codes in 32-bit integers; an extremely skewed distribution needs longer codes | open |
 | P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
 | P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
-| spec / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713. Implementation follows after the WX-H/WX-E branch (`claude/warrant-wx-h-e`) merges, in the order D1, F and G (parallel), D2, D3 | open; 13 owner questions in VER04k section 9 |
+| done / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713 | merged as #19115; 13 owner questions in VER04k section 9 remain for resolution before implementation |
