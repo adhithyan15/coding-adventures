@@ -425,7 +425,7 @@ describe("the plan CLI", () => {
     });
     const { code, err } = run(root);
     expect(code).toBe(1);
-    expect(err).toMatch(/has no usable probe/);
+    expect(err).toMatch(/french A1 inventory exists but could not be read.*has no usable probe/);
   }, 120_000);
 
   it("counts a duplicated inventory once", () => {
