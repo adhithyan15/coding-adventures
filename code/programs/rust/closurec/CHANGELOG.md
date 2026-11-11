@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.247.11] - 2026-11-10
+
+### Fixed - parity for refusal rendering order, UTF-16 columns, tab carets, and CRLF (CLOC44, #18159)
+
+- In `src/refusals.rs`, sort rendered refusals across multi-file runs using Java `String.compareTo` ordering (comparing UTF-16 code units by source name, then line, then column) rather than raw input order.
+- In `src/refusals.rs`, compute refusal diagnostic columns in 0-based UTF-16 code units (converting character offsets to UTF-16 scalar lengths) to match upstream Java string indexing on surrogate pairs (e.g. emoji).
+- In `src/refusals.rs`, preserve tab characters verbatim in the caret line (`\t\t^`) from excerpt lines so caret markers align accurately with tab stops.
+- In `src/refusals.rs`, preserve trailing `\r` on excerpt lines from CRLF source files using `split('\n')` rather than `lines()`.
+
 ## [0.247.10] - 2026-11-10
 
 ### Fixed - strip `"use strict"` unless `--emit_use_strict`, and re-emit it single-quoted (CCR-085, #15920)

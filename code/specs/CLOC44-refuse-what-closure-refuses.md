@@ -33,12 +33,12 @@ a.js:12:10: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is 
 | Element | Rule |
 |---|---|
 | file | as given on the command line, with runs of `/` collapsed (Java `File`) |
-| line / column | 1-based line, 0-based column |
-| excerpt | `"  " + line + "| "` then the source line verbatim |
-| caret | indented by the excerpt prefix's width plus the column |
+| line / column | 1-based line, 0-based column in UTF-16 code units |
+| excerpt | `"  " + line + "| "` then the source line verbatim (including CRLF `\r`) |
+| caret | indented by the excerpt prefix's width plus the column (tabs copied from excerpt) |
 | separator | a blank line after each error |
 | summary | `N error(s), 0 warning(s)` |
-| order | input files in order, then source position |
+| order | source name (Java `String.compareTo`), then source position |
 | exit status | `min(N, 127)` |
 
 ### Bounded output, a deliberate divergence
