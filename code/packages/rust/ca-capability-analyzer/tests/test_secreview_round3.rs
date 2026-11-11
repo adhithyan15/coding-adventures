@@ -102,3 +102,64 @@ fn high3_shebang_line_is_skipped_like_rustc_does() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-6: Unicode whitespace and identifiers are lexed as rustc lexes them,
+// or the file fails closed
+// ---------------------------------------------------------------------------
+
+#[test]
+fn high6_pattern_white_space_separates_tokens_like_rustc() {
+    check(
+        "HIGH-6 whitespace",
+        &[
+            // PoC t9: U+200E LEFT-TO-RIGHT MARK is Pattern_White_Space, so rustc
+            // reads `std::fs::write`; the analyzer read `std::fs` and a stray char.
+            ("t9 LRM between segments", "pub fn f() { std::fs::\u{200e}write(\"a\", \"b\").unwrap(); }", &["fs:write"]),
+            ("RLM between segments", "fn f() { std::fs::\u{200f}remove_file(\"a\"); }", &["fs:delete"]),
+            ("LINE SEPARATOR", "fn f() { std::fs::\u{2028}remove_file(\"a\"); }", &["fs:delete"]),
+            ("PARAGRAPH SEPARATOR", "fn f() { std\u{2029}::process::Command::new(\"a\"); }", &["proc:exec"]),
+            ("NEXT LINE", "fn f() { std::\u{85}env::set_var(\"a\", \"b\"); }", &["env:write"]),
+            ("vertical tab", "fn f() { std::fs::\u{0b}remove_file(\"a\"); }", &["fs:delete"]),
+            ("decoy unicode in strings, chars and comments", "const S: &str = \"caf\u{e9} \u{200e}\"; // \u{2603} \u{a0}\n/* \u{3000} */ const C: char = '\u{2603}';", &[]),
+        ],
+    );
+}
+
+#[test]
+fn high6_other_non_ascii_outside_literals_is_cap003() {
+    for (name, src) in [
+        // PoC t4: U+00B7 MIDDLE DOT is XID_Continue, so rustc's alias is `s·x`;
+        // the analyzer read the alias `s` and never resolved `s·x::fs`.
+        ("t4 middle dot in extern crate alias", "extern crate std as s\u{b7}x;\npub fn f() { s\u{b7}x::fs::write(\"a\", \"b\").unwrap(); }"),
+        ("non-ASCII identifier", "fn f() { let caf\u{e9} = 1; }"),
+        ("non-ASCII identifier start", "fn \u{e9}t\u{e9}() {}"),
+        ("non-ASCII raw identifier", "fn f() { let r#caf\u{e9} = 1; }"),
+        ("non-ASCII lifetime", "fn f<'\u{e9}>() {}"),
+        ("NBSP is not Rust whitespace", "fn f() { std::fs::\u{a0}write(\"a\", \"b\"); }"),
+        ("IDEOGRAPHIC SPACE", "fn f() {\u{3000}}"),
+        ("byte-order mark after the start", "fn f() {}\u{feff}"),
+        ("zero-width space", "fn f() { std::fs\u{200b}::write(\"a\", \"b\"); }"),
+        ("non-ASCII suffix after a literal", "const X: u8 = 1\u{e9};"),
+    ] {
+        let got = verdict(src);
+        assert!(got.contains(&"?".to_string()), "{name}: expected CAP003, got {got:?}\n{src:?}");
+    }
+}
+
+#[test]
+fn high6_extern_crate_alias_must_end_at_a_semicolon() {
+    check(
+        "HIGH-6 extern crate",
+        &[
+            ("alias followed by more tokens", "extern crate std as s ::x;\nfn f(){ s::fs::read(\"a\"); }", &["?"]),
+            ("name followed by junk", "extern crate std x;", &["?"]),
+            ("alias missing", "extern crate std as;", &["?"]),
+            ("unterminated", "extern crate std as s", &["?"]),
+            ("decoy plain extern crate", "extern crate alloc;", &[]),
+            ("decoy extern crate self alias", "extern crate self as me;", &[]),
+            ("decoy extern crate alias", "extern crate core as c; fn f() -> c::primitive::u8 { 0 }", &[]),
+            ("decoy underscore alias", "extern crate std as _;", &[]),
+        ],
+    );
+}

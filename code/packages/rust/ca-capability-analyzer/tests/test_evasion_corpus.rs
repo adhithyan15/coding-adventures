@@ -102,7 +102,8 @@ const FS: &[Case] = &[
     ("fs in trait default", "trait T { fn f(){ std::fs::read(\"x\"); } }", &["fs:read"]),
     ("fs in const fn body", "const fn f(){ let _ = std::fs::read; }", &["fs:read"]),
     ("fs unknown item defaults to read", "fn f(){ std::fs::some_new_api(); }", &["fs:read"]),
-    ("fs unicode ident under fs", "fn f(){ std::fs::r\u{e9}ad(); }", &["fs:read"]),
+    // Non-ASCII identifiers are CAP003 since round 3 (HIGH-6): no XID/NFC tables.
+    ("fs unicode ident under fs", "fn f(){ std::fs::r\u{e9}ad(); }", &["?", "fs:read"]),
     ("fs shorthand head", "fn f(){ fs::read(\"x\"); }", &["fs:read"]),
     ("fs shorthand write", "fn f(){ fs::write(\"a\",\"b\"); }", &["fs:write"]),
     ("fs method exists", "fn f(p: &std::path::Path){ p.exists(); }", &["fs:list"]),
@@ -256,7 +257,8 @@ const BANNED: &[Case] = &[
     ("unsafe after byte string", "const S: &[u8] = b\"a\\\"b\"; unsafe fn f(){}", &["!unsafe_code"]),
     ("unsafe after raw byte string", "const S: &[u8] = br#\"a\"b\"#; unsafe fn f(){}", &["!unsafe_code"]),
     ("unsafe CRLF", "fn f(){\r\n unsafe {}\r\n}\r\n", &["!unsafe_code"]),
-    ("unsafe after non-ascii ident", "fn \u{fc}ber(){ unsafe {} }", &["!unsafe_code"]),
+    // A non-ASCII identifier is itself CAP003 since round 3 (HIGH-6).
+    ("unsafe after non-ascii ident", "fn \u{fc}ber(){ unsafe {} }", &["!unsafe_code", "?"]),
     ("ptr::read in unsafe", "unsafe fn f(p: *const u8) -> u8 { std::ptr::read(p) }", &["!unsafe_code"]),
     ("transmute in unsafe", "fn f(){ unsafe { std::mem::transmute::<u32, f32>(1) }; }", &["!unsafe_code"]),
     ("core ptr write_volatile in unsafe", "fn f(p: *mut u8){ unsafe { core::ptr::write_volatile(p, 0) } }", &["!unsafe_code"]),
@@ -368,7 +370,9 @@ const PURE: &[Case] = &[
     ("method w/ similar name", "fn f(s: S){ s.exists_x(); s.my_metadata(); }", &[]),
     ("raw ident unsafe decl", "fn r#unsafe(){} fn f(){ r#unsafe(); }", &[]),
     ("raw ident others", "fn r#match(){} fn f(){ r#match(); }", &[]),
-    ("non-ascii idents", "fn f(){ let \u{fc}nsafe = 1; let \u{43a}\u{43e}\u{434} = 2; }", &[]),
+    // Not a decoy any more: non-ASCII identifiers are CAP003 (round 3, HIGH-6),
+    // but `\u{fc}nsafe` must still not read as the keyword `unsafe`.
+    ("non-ascii idents", "fn f(){ let \u{fc}nsafe = 1; let \u{43a}\u{43e}\u{434} = 2; }", &["?"]),
     ("lookalike idents", "fn f(){ let unsafely = 1; let is_unsafe = 2; let my_unsafe = 3; let unsafe_ = 4; let _unsafe = 5; }", &[]),
     ("lint attrs mention unsafe_code", "#![deny(unsafe_code)]\n#![forbid(unsafe_code)]\n#![warn(unsafe_op_in_unsafe_fn)]", &[]),
     ("benign attrs", "#[derive(Debug, Clone)] #[repr(C)] #[inline(never)] #[used] #[global_allocator] #[must_use] #![no_std] struct S;", &[]),

@@ -7,6 +7,7 @@ reviewer's proof-of-concept crate, which printed `PASS` while `cargo check`
 compiled the capability in.
 
 - [false negative, HIGH-3] A file starting `#!/x"` (a shebang line rustc ignores) opened a string in the analyzer that swallowed the following code. The lexer now applies rustc's `strip_shebang` rule exactly (after a leading BOM: `#!` is a shebang line unless, after whitespace and non-doc comments, the next token is `[`).
+- [false negative, HIGH-6] Whitespace was `char::is_whitespace`, not Rust's `Pattern_White_Space`: `std::fs::<U+200E>write` read as `std::fs` (PoC t9). Identifiers used `is_alphanumeric`, not XID: `extern crate std as s·x;` (U+00B7) bound `s` in the analyzer and `s·x` in rustc (PoC t4). Whitespace is now exactly `Pattern_White_Space`; any other non-ASCII character outside a literal or comment is lexed into an identifier and is `CAP003` (no XID/NFC tables in a zero-dependency crate); a byte-order mark is skipped only at offset 0. `extern crate NAME [as ALIAS]` must be followed by `;`, otherwise `CAP003`.
 
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 

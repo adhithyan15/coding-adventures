@@ -111,22 +111,67 @@ struct Token {
     end: usize,
 }
 
+/// Something the lexer saw but cannot lex the way rustc would (CAP003).
+#[derive(Clone, Debug)]
+struct LexNote {
+    line: usize,
+    col: usize,
+    reason: &'static str,
+    evidence: String,
+}
+
 struct Lexer {
     chars: Vec<char>,
     pos: usize,
     line: usize,
     col: usize,
+    notes: Vec<LexNote>,
 }
 
+/// Why non-ASCII text outside a literal or comment is CAP003 (HIGH-6).
+///
+/// rustc accepts identifiers made of Unicode `XID_Start`/`XID_Continue`
+/// characters and compares them after NFC normalisation.  This crate has no
+/// dependencies and no Unicode tables, and `char::is_alphanumeric` is a
+/// *different* set: U+00B7 MIDDLE DOT is `XID_Continue` but not alphanumeric,
+/// so `extern crate std as s·x;` gave the analyzer the alias `s` while rustc
+/// bound `s·x` (PoC t4).  Rather than guess, any non-ASCII character that is
+/// not Rust whitespace and sits outside a string, character literal or comment
+/// is lexed as part of an identifier and reported.  rustc either accepts it as
+/// an identifier we cannot compare soundly or rejects the file; both are
+/// "not a PASS".
+const NON_ASCII_REASON: &str =
+    "non-ASCII character outside a literal or comment (identifier rules are not implemented; fail closed)";
+
+/// ASCII identifier characters, plus every non-ASCII character that is not
+/// whitespace (reported through [`NON_ASCII_REASON`]).
 fn is_ident_start(c: char) -> bool {
-    c == '_' || c.is_alphabetic()
+    c == '_' || c.is_ascii_alphabetic() || (!c.is_ascii() && !is_rust_whitespace(c))
 }
 
 fn is_ident_continue(c: char) -> bool {
-    c == '_' || c.is_alphanumeric()
+    c == '_' || c.is_ascii_alphanumeric() || (!c.is_ascii() && !is_rust_whitespace(c))
+}
+
+/// Numeric literal body and suffix: ASCII only, so a non-ASCII suffix starts
+/// an identifier token of its own and is reported.
+fn is_ascii_ident_continue(c: char) -> bool {
+    c == '_' || c.is_ascii_alphanumeric()
 }
 
 impl Lexer {
+    /// Report a lexeme (identifier or lifetime) that contains non-ASCII text.
+    fn note_if_non_ascii(&mut self, text: &str, line: usize, col: usize) {
+        if !text.is_ascii() {
+            self.notes.push(LexNote {
+                line,
+                col,
+                reason: NON_ASCII_REASON,
+                evidence: text.chars().take(32).collect(),
+            });
+        }
+    }
+
     fn peek(&self, off: usize) -> Option<char> {
         self.chars.get(self.pos + off).copied()
     }
@@ -249,10 +294,14 @@ impl Lexer {
                 Tok::Char
             }
             (Some(c1), _) if is_ident_start(c1) => {
+                let (line, col) = (self.line, self.col);
+                let mut text = String::from("'");
                 self.bump();
-                while self.peek(0).is_some_and(is_ident_continue) {
+                while let Some(c) = self.peek(0).filter(|&c| is_ident_continue(c)) {
+                    text.push(c);
                     self.bump();
                 }
+                self.note_if_non_ascii(&text, line, col);
                 Tok::Lifetime
             }
             _ => {
@@ -348,7 +397,7 @@ fn is_rust_whitespace(c: char) -> bool {
     )
 }
 
-fn lex(content: &str) -> Result<Vec<Token>, String> {
+fn lex(content: &str) -> Result<(Vec<Token>, Vec<LexNote>), String> {
     // rustc removes one leading byte-order mark, then a shebang line.
     let content = content.strip_prefix('\u{feff}').unwrap_or(content);
     let mut lx = Lexer {
@@ -356,6 +405,7 @@ fn lex(content: &str) -> Result<Vec<Token>, String> {
         pos: 0,
         line: 1,
         col: 0,
+        notes: Vec::new(),
     };
     // Skipping with `bump` keeps line/column numbers true to the file.
     for _ in 0..shebang_len(&lx.chars) {
@@ -364,7 +414,11 @@ fn lex(content: &str) -> Result<Vec<Token>, String> {
     let mut toks = Vec::new();
 
     while let Some(c) = lx.peek(0) {
-        if c.is_whitespace() || c == '\u{feff}' {
+        // Exactly Pattern_White_Space: `char::is_whitespace` is a different set
+        // (it lacks U+200E/U+200F, which rustc skips, so `std::fs::<U+200E>write`
+        // read as `std::fs` plus a stray character - PoC t9).  A byte-order
+        // mark is only skipped at the start of the file (above).
+        if is_rust_whitespace(c) {
             lx.bump();
             continue;
         }
@@ -408,6 +462,7 @@ fn lex(content: &str) -> Result<Vec<Token>, String> {
                     name.push(ch);
                     lx.bump();
                 }
+                lx.note_if_non_ascii(&name, line, col);
                 Tok::Ident { name, raw: true }
             } else {
                 let mut name = String::new();
@@ -415,15 +470,16 @@ fn lex(content: &str) -> Result<Vec<Token>, String> {
                     name.push(ch);
                     lx.bump();
                 }
+                lx.note_if_non_ascii(&name, line, col);
                 Tok::Ident { name, raw: false }
             }
         } else if c.is_ascii_digit() {
-            while lx.peek(0).is_some_and(is_ident_continue) {
+            while lx.peek(0).is_some_and(is_ascii_ident_continue) {
                 lx.bump();
             }
             if lx.peek(0) == Some('.') && lx.peek(1).is_some_and(|d| d.is_ascii_digit()) {
                 lx.bump();
-                while lx.peek(0).is_some_and(is_ident_continue) {
+                while lx.peek(0).is_some_and(is_ascii_ident_continue) {
                     lx.bump();
                 }
             }
@@ -444,7 +500,7 @@ fn lex(content: &str) -> Result<Vec<Token>, String> {
             end: lx.pos,
         });
     }
-    Ok(toks)
+    Ok((toks, lx.notes))
 }
 
 // ---------------------------------------------------------------------------
@@ -634,8 +690,8 @@ struct FileFacts {
     /// Token ranges `[start, end)` consumed by `use` / `extern crate` items.
     skip: Vec<(usize, usize)>,
     leaves: Vec<UseLeaf>,
-    /// `(token index, message)` for `use` items that could not be parsed.
-    use_errors: Vec<usize>,
+    /// `(token index, message)` for `use` / `extern crate` items that could not be parsed.
+    use_errors: Vec<(usize, &'static str)>,
 }
 
 fn stage1_file(toks: &[Token]) -> FileFacts {
@@ -652,7 +708,7 @@ fn stage1_file(toks: &[Token]) -> FileFacts {
                 let mut j = i + 1;
                 let ok = parse_use_tree(toks, &mut j, &[], &mut f.leaves, 0) && is_punct(toks, j, ';');
                 if !ok {
-                    f.use_errors.push(start);
+                    f.use_errors.push((start, "unparseable use declaration"));
                     while j < toks.len() && !is_punct(toks, j, ';') {
                         j += 1;
                     }
@@ -673,32 +729,49 @@ fn stage1_file(toks: &[Token]) -> FileFacts {
         if let (Some(("extern", false)), Some(("crate", false))) =
             (ident_at(toks, i), ident_at(toks, i + 1))
         {
-            // extern crate NAME [as ALIAS];
-            if let Some((name, _)) = ident_at(toks, i + 2) {
-                let t = &toks[i + 2];
-                let mut j = i + 3;
+            // `extern crate NAME [as ALIAS];` and nothing else.  The old reader
+            // took the first identifier after `as` and skipped to the next `;`,
+            // so whatever rustc saw as the rest of the alias (`s·x`, PoC t4)
+            // was silently dropped.  Any other shape - including a name spliced
+            // in by a `macro_rules!` metavariable - binds a name the analyzer
+            // cannot see, so it is CAP003.
+            let mut j = i + 2;
+            let mut leaf = None;
+            if let Some((name, _)) = ident_at(toks, j) {
+                let t = &toks[j];
+                j += 1;
                 let mut alias = None;
+                let mut well_formed = true;
                 if let Some(("as", false)) = ident_at(toks, j) {
-                    if let Some((a, _)) = ident_at(toks, j + 1) {
-                        alias = Some(a.to_string());
-                        j += 2;
+                    match ident_at(toks, j + 1) {
+                        Some((a, _)) => {
+                            alias = Some(a.to_string());
+                            j += 2;
+                        }
+                        None => well_formed = false,
                     }
                 }
-                f.leaves.push(UseLeaf {
-                    path: vec![name.to_string()],
-                    alias,
-                    glob: false,
-                    line: t.line,
-                    col: t.col,
-                });
-                while j < toks.len() && !is_punct(toks, j, ';') {
-                    j += 1;
+                if well_formed && is_punct(toks, j, ';') {
+                    leaf = Some(UseLeaf {
+                        path: vec![name.to_string()],
+                        alias,
+                        glob: false,
+                        line: t.line,
+                        col: t.col,
+                    });
                 }
-                let end = (j + 1).min(toks.len());
-                f.skip.push((i, end));
-                i = end;
-                continue;
             }
+            match leaf {
+                Some(l) => f.leaves.push(l),
+                None => f.use_errors.push((i, "unparseable extern crate declaration")),
+            }
+            while j < toks.len() && !is_punct(toks, j, ';') {
+                j += 1;
+            }
+            let end = (j + 1).min(toks.len());
+            f.skip.push((i, end));
+            i = end;
+            continue;
         }
         i += 1;
     }
@@ -1569,13 +1642,9 @@ fn stage2_file(
         }
         sink.path(res, &l.path, false, l.line, l.col);
     }
-    for &s in &facts.use_errors {
-        sink.unanalyzable(
-            toks[s].line,
-            toks[s].col,
-            "unparseable use declaration",
-            "use ...".into(),
-        );
+    for &(s, reason) in &facts.use_errors {
+        let evidence = if reason.contains("extern crate") { "extern crate ..." } else { "use ..." };
+        sink.unanalyzable(toks[s].line, toks[s].col, reason, evidence.into());
     }
 
     let skip: HashMap<usize, usize> = facts.skip.iter().copied().collect();
@@ -1728,9 +1797,13 @@ fn extern_item(sink: &mut Sink, toks: &[Token], i: usize) {
 /// Scan several files as one package: bindings are shared across files.
 pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
     let mut lexed: Vec<(&str, Vec<Token>)> = Vec::with_capacity(files.len());
+    let mut lex_notes: Vec<(&str, Vec<LexNote>)> = Vec::new();
     for (name, content) in files {
-        let toks = lex(content).map_err(|e| format!("{name}: {e}"))?;
+        let (toks, notes) = lex(content).map_err(|e| format!("{name}: {e}"))?;
         lexed.push((name, toks));
+        if !notes.is_empty() {
+            lex_notes.push((name, notes));
+        }
     }
 
     let facts: Vec<FileFacts> = lexed.iter().map(|(_, t)| stage1_file(t)).collect();
@@ -1742,6 +1815,17 @@ pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
     let all_leaves: Vec<UseLeaf> = facts.iter().flat_map(|f| f.leaves.iter().cloned()).collect();
 
     let mut result = ScanResult::default();
+    for (name, notes) in lex_notes {
+        for n in notes {
+            result.unanalyzable.push(SourceUnanalyzable {
+                file: name.to_string(),
+                line: n.line,
+                col: n.col,
+                reason: n.reason.to_string(),
+                evidence: n.evidence,
+            });
+        }
+    }
     let resolver = match Resolver::build(&all_leaves) {
         Ok(r) => r,
         Err(reason) => {
@@ -1781,7 +1865,7 @@ pub fn scan_sources(files: &[(&str, &str)]) -> Result<ScanResult, String> {
 /// word-splitting code truncated there).  `pub(crate)`, `pub(super)` and
 /// `pub(in ..)` are not public entry points and are skipped.
 pub fn public_fn_signatures(content: &str) -> Result<Vec<(String, String)>, String> {
-    let toks = lex(content)?;
+    let (toks, _) = lex(content)?;
     // `lex` drops a leading byte-order mark; token offsets are relative to the rest.
     let chars: Vec<char> = content.strip_prefix('\u{feff}').unwrap_or(content).chars().collect();
     let mut out = Vec::new();
