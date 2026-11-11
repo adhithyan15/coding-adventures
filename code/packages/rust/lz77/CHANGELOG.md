@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ### Security
 
 - CWE-789/CWE-400: `deserialise_tokens` no longer calls `Vec::with_capacity` with the untrusted 4-byte header count (`decompress(&[0xFF;4])` aborted the process with a ~17 GB allocation). The token count is clamped to what the remaining bytes can hold; a header claiming more tokens than are present is treated as truncated.

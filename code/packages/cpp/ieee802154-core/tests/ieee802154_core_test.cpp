@@ -46,10 +46,10 @@ int main() {
         auto f = ie::MacFrame::parse_without_fcs(
             {0x41, 0x98, 0x07, 0x34, 0x12, 0x78, 0x56, 0xbc, 0x9a, 0x01, 0x02});
         ISO_CHECK(f.frame_control == data_frame_control());
-        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(7));
-        ISO_CHECK(f.destination_pan_id == std::optional<std::uint16_t>(0x1234));
+        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(static_cast<std::uint8_t>(7)));
+        ISO_CHECK(f.destination_pan_id == std::optional<std::uint16_t>(static_cast<std::uint16_t>(0x1234)));
         ISO_CHECK(f.destination == ie::Address::make_short(0x5678));
-        ISO_CHECK(f.source_pan_id == std::optional<std::uint16_t>(0x1234));
+        ISO_CHECK(f.source_pan_id == std::optional<std::uint16_t>(static_cast<std::uint16_t>(0x1234)));
         ISO_CHECK(f.source == ie::Address::make_short(0x9abc));
         ISO_CHECK(!f.auxiliary_security_header.has_value());
         ISO_CHECK(f.payload == Bytes({0x01, 0x02}));
@@ -60,10 +60,10 @@ int main() {
     {
         ie::MacFrame f;
         f.frame_control = data_frame_control();
-        f.sequence_number = 7;
-        f.destination_pan_id = 0x1234;
+        f.sequence_number = static_cast<std::uint8_t>(7);
+        f.destination_pan_id = static_cast<std::uint16_t>(0x1234);
         f.destination = ie::Address::make_short(0x5678);
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_short(0x9abc);
         f.payload = {0x01, 0x02};
         ISO_CHECK(f.encode() ==
@@ -75,7 +75,7 @@ int main() {
     {
         auto f = ie::MacFrame::parse_without_fcs({0x02, 0x00, 0x2a});
         ISO_CHECK(f.frame_control.frame_type == ie::FrameType::Acknowledgment);
-        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(0x2a));
+        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(static_cast<std::uint8_t>(0x2a)));
         ISO_CHECK(!f.destination && !f.source);
         ISO_CHECK(f.payload.empty());
     }
@@ -83,8 +83,8 @@ int main() {
     // ── frame with FCS ──────────────────────────────────────────────────────
     {
         auto f = ie::MacFrame::parse_with_fcs({0x02, 0x00, 0x2a, 0xef, 0xbe});
-        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(0x2a));
-        ISO_CHECK(f.fcs == std::optional<std::uint16_t>(0xbeef));
+        ISO_CHECK(f.sequence_number == std::optional<std::uint8_t>(static_cast<std::uint8_t>(0x2a)));
+        ISO_CHECK(f.fcs == std::optional<std::uint16_t>(static_cast<std::uint16_t>(0xbeef)));
         ISO_CHECK(f.payload.empty());
     }
 
@@ -94,10 +94,10 @@ int main() {
         f.frame_control = data_frame_control();
         f.frame_control.ack_request = true;
         f.frame_control.frame_pending = true;
-        f.sequence_number = 7;
-        f.destination_pan_id = 0x1234;
+        f.sequence_number = static_cast<std::uint8_t>(7);
+        f.destination_pan_id = static_cast<std::uint16_t>(0x1234);
         f.destination = ie::Address::make_short(0x5678);
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_short(0x9abc);
         f.payload = {0xaa, 0xbb, 0xcc};
         f.fcs = 0xbeef;
@@ -156,10 +156,10 @@ int main() {
         ie::MacFrame f;
         f.frame_control = data_frame_control();
         f.frame_control.security_enabled = true;
-        f.sequence_number = 7;
-        f.destination_pan_id = 0x1234;
+        f.sequence_number = static_cast<std::uint8_t>(7);
+        f.destination_pan_id = static_cast<std::uint16_t>(0x1234);
         f.destination = ie::Address::make_short(0x5678);
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_short(0x9abc);
         ie::AuxSecurityHeader h;
         h.security_control.security_level = ie::SecurityLevel::EncMic64;
@@ -183,10 +183,10 @@ int main() {
         ie::MacFrame f;
         f.frame_control = data_frame_control();
         f.frame_control.security_enabled = true;
-        f.sequence_number = 7;
-        f.destination_pan_id = 0x1234;
+        f.sequence_number = static_cast<std::uint8_t>(7);
+        f.destination_pan_id = static_cast<std::uint16_t>(0x1234);
         f.destination = ie::Address::make_short(0x5678);
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_short(0x9abc);
         ISO_CHECK(throws_mac([&] { f.encode(); },
                              ie::MacError::MissingAuxiliarySecurityHeader));
@@ -224,7 +224,7 @@ int main() {
         ISO_CHECK_EQ_INT(bp.superframe.beacon_order(), 15);
         ISO_CHECK_EQ_INT(bp.superframe.superframe_order(), 12);
         ISO_CHECK_EQ_INT(bp.gts.descriptor_count, 1);
-        ISO_CHECK(bp.gts.directions == std::optional<std::uint8_t>(0x01));
+        ISO_CHECK(bp.gts.directions == std::optional<std::uint8_t>(static_cast<std::uint8_t>(0x01)));
         ISO_CHECK_EQ_UINT(bp.gts.descriptors.size(), 1u);
         ISO_CHECK(bp.gts.descriptors[0].short_address == 0x4567 &&
                   bp.gts.descriptors[0].starting_slot == 5 &&
@@ -245,7 +245,7 @@ int main() {
         f.frame_control.destination_address_mode = ie::AddressMode::None;
         f.frame_control.source_address_mode = ie::AddressMode::Extended;
         f.sequence_number = 0x2a;
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_extended(0x8877665544332211ull);
         f.payload = {0xff, 0xdf, 0x00, 0x00};
         auto pd = ie::PanDescriptor::from_beacon_frame(f, 15, 0, 244);
@@ -262,9 +262,9 @@ int main() {
         ie::MacFrame f;
         f.frame_control = data_frame_control();
         f.source = ie::Address::make_short(0x0001);
-        f.source_pan_id = 0x1234;
+        f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.destination = ie::Address::make_short(0xffff);
-        f.destination_pan_id = 0x1234;
+        f.destination_pan_id = static_cast<std::uint16_t>(0x1234);
         ISO_CHECK(throws_beacon(
             [&] { ie::PanDescriptor::from_beacon_frame(f, 11, 0, 128); },
             ie::BeaconError::ExpectedBeaconFrame));
