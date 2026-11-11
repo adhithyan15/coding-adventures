@@ -93,12 +93,12 @@ class FormeReleaseGateTests(unittest.TestCase):
             gate._validate_quality(quality)
 
         quality = self._quality()
-        quality["targets"][1]["performanceSamples"] = [0.95, 0.96]
+        quality["targets"][1]["performanceSamples"] = [0.95, 0.96, 0.97]
         with self.assertRaisesRegex(ValueError, "performance samples"):
             gate._validate_quality(quality)
 
         quality = self._quality()
-        quality["targets"][1]["performanceSamples"] = [0.96, 0.94, 0.94]
+        quality["targets"][1]["performanceSamples"] = [0.96, 0.94, 0.94, 0.94, 0.96]
         with self.assertRaisesRegex(ValueError, "median"):
             gate._validate_quality(quality)
 
@@ -138,7 +138,7 @@ class FormeReleaseGateTests(unittest.TestCase):
                     "resources": resources,
                     "diagnostics": [],
                 },
-                "performanceSamples": [contract["performance"]] * 3,
+                "performanceSamples": [contract["performance"]] * gate.LIGHTHOUSE_SAMPLE_COUNT,
                 "diagnostics": [],
             })
         return {

@@ -1,1 +1,1 @@
-set PERL5LIB=..\avl-tree\lib && perl -Ilib t/00-load.t && perl -Ilib t/01-tree-set.t
+perl -Ilib -I..\avl-tree\lib t/00-load.t && perl -Ilib -I..\avl-tree\lib t/01-tree-set.t

@@ -51,7 +51,7 @@ TARGETS = {
         "windows_compiler": None,
     },
     "macos-arm64": {
-        "runner": "macos-14",
+        "runner": "macos-15",
         "runner_os": "macOS",
         "runner_arch": "ARM64",
         "windows_compiler": None,
