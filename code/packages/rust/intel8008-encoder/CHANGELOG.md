@@ -1,5 +1,11 @@
 # Changelog — intel8008-encoder
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## v0.1.0 — 2026-06-03 — initial carve-out
 
 Phase 6 of the historical-arch backend migration.  Opcode

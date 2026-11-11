@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.11.0 - 2026-11-11
+
+### Added
+
+- Added the immediately target-nearer ordered path-length transition after the
+  root-authenticated first intermediate.
+- Added fixed public-certificate chain coverage for retained two-step evidence,
+  exact depth order, detached-construction rejection, and child-policy binding.
+
+### Security
+
+- The second transition requires the same exact construction, the immediately
+  preceding issuer depth, the already processed intermediate as issuer, and
+  complete policy for the exact authenticated candidate child before advancing
+  retained state.
+- This proves exactly two public-certificate transitions. It does not iterate
+  over arbitrary paths, establish complete validation, check revocation,
+  perform TLS or HTTP, authorize OAuth, or grant network authority.
+
+## 0.10.0 - 2026-11-11
+
+### Added
+
+- Added the first trust-anchor-to-target path-length transition from exact
+  reviewed construction-derived initialization and one routed authenticated
+  intermediate.
+- Added coverage for retained initial and advanced evidence, target-nearer
+  anchor-nearest selection on a longer construction, rejection of proof from a
+  distinct construction object, and rejection of policy for another child.
+
+### Security
+
+- The transition requires the initializer and terminal proof to retain the
+  identical constructed path, authenticates the anchor-nearest intermediate as
+  the reviewed root's exact child, and binds complete intermediate policy to
+  that child before applying path length.
+- This is only one ordered public-certificate transition. It does not
+  accumulate remaining intermediates, establish complete path validation,
+  check names or revocation, perform TLS or HTTP, authorize OAuth, or grant
+  network authority.
+
 ## 0.9.0 - 2026-11-03
 
 ### Added

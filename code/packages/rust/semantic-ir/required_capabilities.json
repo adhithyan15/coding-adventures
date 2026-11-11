@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/semantic-ir",
+  "capabilities": [
+    {
+      "category": "thread",
+      "action": "spawn",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: std::thread::Builder spawns a large-stack thread for deep-recursion tests. The analyzer ignores cfg, so it is declared."
+    }
+  ],
+  "justification": "Production code is pure computation; the declared capabilities are used only by #[cfg(test)] modules, which the analyzer scans conservatively (cfg is ignored)."
+}

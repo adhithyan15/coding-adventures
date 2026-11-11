@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## 0.1.0 (2026-09-07)
 
 - Added exact 64 KiB RV64I+M architectural state with 32 64-bit GPRs, enforced

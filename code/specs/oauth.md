@@ -1604,6 +1604,36 @@ effect. It does not authenticate an adjacency, apply an intermediate
 transition, generalize full path validation, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
 and live-provider readiness remain unavailable.
+A bounded ordered-transition follow-up now borrows that retained initializer
+and consumes one routed terminal proof from the same exact constructed-path
+object. That terminal proof authenticates the anchor-nearest intermediate as
+its exact child using the reviewed root's key. Complete intermediate policy
+must retain that same child before a fresh private working state is derived
+from the construction-derived capacity and advanced. The non-copyable result
+keeps the initializer reference, terminal signature and reviewed-root handoff,
+complete child policy, and advanced state together. Proofs from another
+construction and policy for another certificate fail closed, so a caller
+cannot skip the root-authenticated first step or inject detached initial state.
+This is only the first ordered intermediate transition. A bounded second-step
+follow-up now consumes that result together with the immediately target-nearer
+routed adjacency from the same exact constructed-path object. The new
+adjacency's issuer must be the already processed anchor-nearest intermediate,
+its issuer depth must immediately precede the retained terminal depth, and its
+child must be another candidate certificate rather than the target. Complete
+intermediate policy must retain that exact authenticated child before the
+retained path-length state is advanced. The non-copyable result keeps the
+entire first step, second routed signature, complete second-child policy, and
+twice-advanced state together. A proof from another construction, a skipped or
+replayed depth, an issuer not retained by the first step, or policy for another
+certificate fails closed. This establishes exactly two ordered intermediate
+transitions; it does not iterate over an arbitrary path, prove that all
+remaining depths were processed, or establish complete path validation. The
+pure public-certificate-data
+composition performs no parsing, new signature verification, credential access
+or editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It does not
+check names, time, revocation, TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
