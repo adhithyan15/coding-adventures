@@ -112,8 +112,11 @@ npm run check:shards
 ```
 
 The complete check validates every plan. It batches generated book and
-narration hash owner reads beneath pinned directories, then applies the same
-JSON and chapter validators as the individual readers. Already-checked
+narration hash owners and the large book-generation owner tree beneath pinned
+directories, then applies the same TypeScript JSON, record-identity, and
+cross-ledger validators as the individual readers. The book-generation batch
+keeps at most sixteen owner files open per section; a standalone plan check
+retains its synchronous reader. Already-checked
 curriculum and chapter owners supply their independent identities to later
 cross-ledger comparisons; a standalone plan check reads its independent
 sources directly. On Windows the batch needs `python` on PATH; on Unix it
