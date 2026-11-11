@@ -18,6 +18,7 @@ import {
   bookGenerationIdentitySets,
   bookGenerationOwnerContents,
   readBookGenerationOwners,
+  readBookGenerationOwnersBatch,
   type BookGenerationDocument,
 } from "../src/book-generation-shards.js";
 import {
@@ -506,5 +507,60 @@ describe("strict owner tree", () => {
     writeOwners(path);
     writeFileSync(join(path, "core", "book-generation.json"), "{}\n");
     expect(() => readBookGenerationOwners(path)).toThrow(/resurrected monolith/);
+  });
+});
+
+describe("pinned book-generation owner batch", () => {
+  it("matches the synchronous document and source paths on a fixture", () => {
+    const path = sandbox();
+    writeOwners(path);
+    expect(readBookGenerationOwnersBatch(path)).toEqual(readBookGenerationOwners(path));
+  });
+
+  it("matches the synchronous reader on the complete canonical owner tree", () => {
+    expect(readBookGenerationOwnersBatch(root)).toEqual(readBookGenerationOwners(root));
+  });
+
+  it("rejects a missing section or extra owner instead of accepting an incomplete tree", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const directory = join(path, BOOK_GENERATION_DIRECTORY, "targets.d");
+    rmSync(directory, { recursive: true });
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
+    mkdirSync(directory);
+    writeFileSync(join(directory, "test-0001.json"), serialize(smallDocument().targets[0]));
+    writeFileSync(join(directory, "unexpected.json"), "{}\n");
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
+  });
+
+  it("rejects corrupt JSON and a filename/body identity mismatch", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const owner = join(path, BOOK_GENERATION_DIRECTORY, "targets.d", "test-0001.json");
+    writeFileSync(owner, "{broken\n");
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
+    writeFileSync(owner, serialize({ ...smallDocument().targets[0], chapter: 2 }));
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow(/does not match its record identity/);
+  });
+
+  it("refuses linked owner directories and linked child entries", () => {
+    const path = sandbox();
+    writeOwners(path);
+    const base = join(path, BOOK_GENERATION_DIRECTORY);
+    const section = join(base, "targets.d");
+    rmSync(section, { recursive: true });
+    symlinkSync(join(base, "handwritten.d"), section, process.platform === "win32" ? "junction" : "dir");
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
+    rmSync(section);
+    mkdirSync(section);
+    symlinkSync(join(base, "handwritten.d"), join(section, "test-0001.json"), process.platform === "win32" ? "junction" : "dir");
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
+  });
+
+  it("refuses a resurrected aggregate before reading owners", () => {
+    const path = sandbox();
+    writeOwners(path);
+    writeFileSync(join(path, "core", "book-generation.json"), "{}\n");
+    expect(() => readBookGenerationOwnersBatch(path)).toThrow();
   });
 });

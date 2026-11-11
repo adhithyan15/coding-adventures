@@ -24,6 +24,7 @@ pub mod layout;
 pub mod parser;
 pub mod patterns;
 pub mod source;
+pub mod vectors;
 
 pub use _parser::parser_grammar;
 pub use _tokens::token_grammar;

@@ -80,7 +80,7 @@ jobs:
             runner-arch: X64
             build-file: BUILD
           - target: macos-arm64
-            runner: macos-14
+            runner: macos-15
             runner-os: macOS
             runner-arch: ARM64
             build-file: BUILD

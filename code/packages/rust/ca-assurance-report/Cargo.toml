@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_ca_assurance_report"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Assurance report generator and weakness registry evaluator (VER15 / VER01 / VER-P028)"
 
