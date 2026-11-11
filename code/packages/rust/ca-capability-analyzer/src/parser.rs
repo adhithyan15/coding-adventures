@@ -740,6 +740,8 @@ fn is_type_keyword(name: &str) -> bool {
 ///   alias to [`UNKNOWN_TYPE_SEGMENT`], a segment no identifier can spell, so
 ///   no binding substitutes it and `P::name` gets the method-call verdict of
 ///   `.name(` (`rules::classify_segments`);
+/// * so does a macro invocation (`type P = ty!();`, security review round 5,
+///   R5-2): its name is not the type it expands to;
 /// * `type Item;` / `type Item: Bound;` (no `=`) binds nothing;
 /// * anything the reader cannot delimit (no `;` before a closing bracket or
 ///   the end of the file, unbalanced generics, a name that is not an
@@ -860,6 +862,19 @@ fn type_alias_leaves(toks: &[Token], br: &Brackets, i: usize) -> Result<Vec<UseL
             } else {
                 break;
             }
+        }
+        // `type F = ty!();`: the alias names whatever the macro expands to,
+        // not a type called `ty` (R5-2, case `type-macro-alias`).  Bind it to
+        // the unknown type, as for a metavariable right-hand side.
+        if !path.is_empty() && is_punct(toks, k, '!') {
+            leaves.push(UseLeaf {
+                path: vec![UNKNOWN_TYPE_SEGMENT.to_string()],
+                alias: Some(name.clone()),
+                glob: false,
+                line,
+                col,
+            });
+            continue;
         }
         let trivial = path.len() == 1 && (path[0] == name || params.contains(path[0].as_str()));
         if !path.is_empty() && !trivial {
@@ -2594,6 +2609,8 @@ fn receiver_is_local_inherent(
 
 /// For the `>` at `gt` followed by `::` (`<File as T>::create`, `<File>::create`,
 /// `Vec::<u8>::new`): the path whose associated item is being named.
+/// A macro invocation in the self position (`<ty!()>::exists`) yields
+/// `[UNKNOWN_TYPE_SEGMENT]`, so the item gets the method-call verdict.
 /// `Err(())` if the matching `<` cannot be found within 512 tokens.
 fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>, ()> {
     let mut depth = 1usize;
@@ -2633,7 +2650,10 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>,
     let mut j = open + 1;
     loop {
         match toks.get(j).map(|t| &t.tok) {
-            Some(Tok::Punct('&' | '*' | '<')) | Some(Tok::Lifetime) => j += 1,
+            // `(` too: `<(std::path::Path)>::exists` is a parenthesised type,
+            // read as the type inside (security review round 5, R5-2).  For a
+            // tuple `<(A, B)>::x` this reads `A::x`, which only adds a spelling.
+            Some(Tok::Punct('&' | '*' | '<' | '(')) | Some(Tok::Lifetime) => j += 1,
             Some(Tok::Ident { name, raw: false }) if matches!(name.as_str(), "mut" | "dyn" | "const") => j += 1,
             _ => break,
         }
@@ -2652,6 +2672,12 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<Option<Vec<String>>,
         } else {
             break;
         }
+    }
+    // `<ty!()>::exists`: a macro invocation in type position expands to a type
+    // the analyzer never sees; its name is not that type (R5-2, case
+    // `type-macro-qualified`).  The self type is unknown.
+    if !segs.is_empty() && is_punct(toks, j + 1, '!') {
+        return Ok(Some(vec![UNKNOWN_TYPE_SEGMENT.to_string()]));
     }
     Ok(if segs.is_empty() { None } else { Some(segs) })
 }
@@ -2700,8 +2726,9 @@ fn macro_arg_mask(toks: &[Token], br: &Brackets) -> Vec<bool> {
 //   *adds* spellings, because `Self` is resolved against **every** enclosing
 //   region, never just the innermost - so it can never hide the real one;
 // * a self type that is not a plain path is `Unknown` when it involves a
-//   metavariable or a qualified projection (`impl T for $t`,
-//   `impl T for <A as B>::C`), and `NoPath` for slices, tuples, arrays and fn
+//   metavariable, a macro invocation or a qualified projection
+//   (`impl T for $t`, `impl T for ty!()`, `impl T for <A as B>::C`), and
+//   `NoPath` for slices, tuples, arrays and fn
 //   pointers (whose inherent methods are pure).  Inside a `macro_rules!` body
 //   `Self` is always `Unknown`: it names whatever impl the macro is expanded
 //   in.  For an `Unknown` self type, `Self::name` gets the method-call verdict
@@ -2807,7 +2834,10 @@ fn parse_self_type(toks: &[Token], br: &Brackets, from: usize, to: usize, depth:
                     break;
                 }
             }
-            if segs.is_empty() {
+            // `impl P for ty!() { .. }`: a macro invocation in type position;
+            // its name is not the type it expands to (R5-2, case
+            // `type-macro-impl-self`).
+            if segs.is_empty() || is_punct(toks, j, '!') {
                 SelfTy::Unknown
             } else {
                 SelfTy::Known(segs)

@@ -93,3 +93,96 @@ fn r5_1_turbofish_decoys_stay_clean() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// R5-2: a macro invocation in type position is an unknown type
+// ---------------------------------------------------------------------------
+//
+// `ty!()` expands to a type the analyzer never sees.  The readers of a
+// qualified self type (`<ty!()>::exists`), an impl self type
+// (`impl P for ty!()`) and a type alias right-hand side (`type F = ty!();`)
+// stopped at the `!` and took the macro's *name* as the type: `ty::exists`,
+// a local, pure path.  Each now yields an unknown type, which gets the
+// verdict of a method call `.name(` on an unknown receiver, exactly as a
+// metavariable does.
+
+#[test]
+fn r5_2_a_type_macro_is_an_unknown_type() {
+    check(
+        "R5-2",
+        &[
+            (
+                "type-macro-qualified",
+                "macro_rules! ty { () => { std::path::Path }; }\npub fn probe(p: &std::path::Path) -> bool { <ty!()>::exists(p) }",
+                &["fs:list"],
+            ),
+            (
+                "type-macro-alias",
+                "macro_rules! ty { () => { std::path::Path }; }\ntype F = ty!();\npub fn probe(p: &std::path::Path) -> bool { F::exists(p) }",
+                &["fs:list"],
+            ),
+            (
+                "type-macro-impl-self",
+                "macro_rules! ty { () => { std::path::Path }; }\npub trait P { fn go(&self) -> bool; }\nimpl P for ty!() { fn go(&self) -> bool { Self::exists(self) } }\npub fn run() -> bool { std::path::Path::new(\"Cargo.toml\").go() }",
+                &["fs:list"],
+            ),
+            (
+                "type-macro-condvar",
+                "macro_rules! cv { () => { std::sync::Condvar }; }\npub fn nap() {\n    let m = std::sync::Mutex::new(());\n    let c = <cv!()>::new();\n    let g = m.lock().unwrap();\n    let _ = <cv!()>::wait_timeout(&c, g, std::time::Duration::from_millis(10));\n}",
+                &["time:sleep"],
+            ),
+            (
+                "qualified with a trait",
+                "macro_rules! ty { () => { std::path::Path }; }\npub trait Probe { fn exists(&self) -> bool; }\nfn f(p: &std::path::Path) -> bool { <ty!() as Probe>::exists(p) }",
+                &["fs:list"],
+            ),
+            (
+                "qualified, macro behind a reference",
+                "macro_rules! ty { () => { std::path::Path }; }\nfn f(p: &std::path::Path) -> bool { <&ty!()>::is_file(&p) }",
+                &["fs:list"],
+            ),
+            (
+                "qualified, path-qualified macro",
+                "fn f(p: &std::path::Path) -> bool { <crate::ty!()>::read_link(p).is_ok() }",
+                &["fs:list"],
+            ),
+            (
+                "inherent impl over a macro",
+                "macro_rules! ty { () => { std::path::Path }; }\nimpl ty!() { fn go(&self) -> bool { Self::is_symlink(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "alias to a macro with brackets",
+                "type F = ty![];\nfn f(p: &std::path::Path) -> bool { F::try_exists(p).is_ok() }",
+                &["fs:list"],
+            ),
+            (
+                "alias to a path-qualified macro",
+                "type F = crate::ty!{};\nfn f(p: &std::path::Path) -> bool { F::canonicalize(p).is_ok() }",
+                &["fs:list"],
+            ),
+            // Found while fixing R5-2: a parenthesised qualified self type.
+            (
+                "parenthesised qualified self type",
+                "#![allow(unused_parens)]\npub fn a(p: &std::path::Path) -> bool { <(std::path::Path)>::exists(p) }",
+                &["fs:list"],
+            ),
+        ],
+    );
+}
+
+#[test]
+fn r5_2_type_macro_decoys_stay_clean() {
+    check(
+        "R5-2 decoys",
+        &[
+            ("qualified pure item", "macro_rules! ty { () => { Vec<u8> }; }\nfn f() -> Vec<u8> { <ty!()>::new() }", &[]),
+            ("qualified trait item", "fn f() -> u8 { <ty!() as Default>::default() }", &[]),
+            ("impl self with a local ctor", "impl Default for ty!() { fn default() -> Self { Self::new() } }", &[]),
+            ("alias with a pure item", "type V = ty!();\nfn f() -> V { V::new() }", &[]),
+            ("never type alias", "type Never = !;", &[]),
+            ("macro in a value position", "fn f() -> usize { vec![1u8].len() }", &[]),
+            ("parenthesised pure self type", "#![allow(unused_parens)]\nfn f() -> Vec<u8> { <(Vec<u8>)>::new() }", &[]),
+        ],
+    );
+}

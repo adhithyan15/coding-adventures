@@ -43,6 +43,7 @@ regression in `tests/test_secreview_round5.rs` named after the review's case
 directory; the rest are documented as known open gaps (VER08a §8.1).
 
 - [false negative, R5-1] The method heuristic tested only the token right after the method name, so an empty turbofish hid the call: `Path::new("Cargo.toml").exists::<>()` and `c.wait_timeout::<>(g, d)` were pure (cases `turbofish-exists`, `turbofish-wait-timeout`). An optional `::<..>` is now skipped before testing for `(`, and a `::<` that does not close counts as a call.
+- [false negative, R5-2] A macro invocation in type position was read as a path named after the macro: `<ty!()>::exists(p)` classified `ty::exists`, `impl P for ty!()` made `Self` mean `ty`, and `type F = ty!();` bound `F -> ty`, all pure although `ty!()` expanded to `std::path::Path` or `std::sync::Condvar` (cases `type-macro-qualified`, `type-macro-impl-self`, `type-macro-alias`, `type-macro-condvar`). Each is now an unknown type, so `X::name` gets the method-call verdict of `.name(` (`exists` is `fs:list`, `wait_timeout` is `time:sleep`), as a metavariable already did. Found while fixing: `<(std::path::Path)>::exists(p)` named no self type; a parenthesised qualified self type is now read through the parentheses.
 
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 
