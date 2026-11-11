@@ -44,7 +44,14 @@ candidate child before the prior state advances. The result retains both
 ordered proofs, both child policies, and the twice-advanced state. Detached
 constructions, skipped depths, disconnected issuers, target children, and
 cross-certificate policy fail closed. This proves exactly two intermediate
-steps, not arbitrary-depth accumulation or complete path validation.
+steps. An allocation-free accumulator generalizes only that ordered
+path-length portion: it borrows the same initializer and reviewed terminal,
+then consumes anchor-to-target slices of follow-on routed signatures and
+complete intermediate policies. It derives the exact intermediate count from
+the construction, requires exact evidence counts, enforces a caller-owned
+nonzero intermediate ceiling, and applies every transition in immediate depth
+order while retaining all borrowed evidence and the final state. It stops
+before the target signature and does not establish complete path validation.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -90,14 +97,15 @@ DNS and IP counts. The earlier DNS count remains available as compatibility
 evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
-fixed-shape result and two ordered transitions do not iterate over arbitrary
-remaining intermediates, establish a complete generalized traversal, define
-full Name comparison, apply other GeneralName forms, excluded or non-DNS
-anchor constraints, check revocation, perform hostname verification, TLS, or
-HTTP, authorize OAuth transport, or open a network connection. Target
-identity, time, purpose, the construction-derived path-length state, and the
-supported reviewed-anchor DNS and intermediate DNS/IP subsets do not make the
-whole path valid. This does not make concrete HTTPS or live-provider use ready.
+fixed-shape result, ordered transitions, and intermediate-only accumulator do
+not authenticate the target signature, establish complete generalized path
+validation, define full Name comparison, apply other GeneralName forms,
+excluded or non-DNS anchor constraints, check revocation, perform hostname
+verification, TLS, or HTTP, authorize OAuth transport, or open a network
+connection. Target identity, time, purpose, the construction-derived
+path-length state, and the supported reviewed-anchor DNS and intermediate
+DNS/IP subsets do not make the whole path valid. This does not make concrete
+HTTPS or live-provider use ready.
 
 ## Validation
 
