@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Apply RFC 6960 no-check policy to the alternative added revocation proof's
+  own exact delegated responder after its selected reviewed-root DNS policy.
+- Retain the complete generic non-copyable proof while stopping before
+  separately authenticated recursive responder revocation, complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
 - Apply the selected reviewed root's supported out-of-band permitted-DNS
   constraints to the alternative added revocation proof's exact delegated
   responder, retaining only count evidence and the complete generic source.
