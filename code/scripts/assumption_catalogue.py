@@ -1439,7 +1439,7 @@ def check_companions(
     packages_root: Path | None,
 ) -> list[Finding]:
     """Evidence kinds, non-claims and report pins (catalogue already valid)."""
-    entries = json.loads(raw_catalogue)["assumptions"]
+    entries = parse_catalogue_text(raw_catalogue.decode("utf-8"))["assumptions"]
     findings = check_evidence_kinds(
         parse_catalogue_text(raw_kinds.decode("utf-8")), entries
     )
@@ -1497,7 +1497,7 @@ def main(argv: list[str] | None = None) -> int:
     if findings:
         print(f"assumption-catalogue: {len(findings)} finding(s)", file=sys.stderr)
         return 1
-    count = len(json.loads(raw)["assumptions"])
+    count = len(parse_catalogue_text(raw.decode("utf-8"))["assumptions"])
     print(f"assumption-catalogue: OK ({count} entries)")
     print(f"catalogue sha256: {digest}")
     print(
