@@ -590,10 +590,9 @@ pub fn whitespace_only_minify(
                             drops.push(j);
                             drops.push(j + 1);
                             j += 2;
-                        } else if j + 1 < kept.len() && is_structural_punct(kept[j + 1], "}") {
-                            drops.push(j);
-                            j += 1;
-                        } else if j + 1 == kept.len() {
+                        } else if j + 1 == kept.len()
+                            || kept.get(j + 1).is_some_and(|next| is_structural_punct(next, "}"))
+                        {
                             drops.push(j);
                             j += 1;
                         } else {
