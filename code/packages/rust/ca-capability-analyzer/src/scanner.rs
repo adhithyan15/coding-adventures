@@ -6,6 +6,11 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+/// Directories skipped at the package root only (VER08a §5).  Root-level
+/// source files must not reach them through `mod` (`parser.rs`,
+/// `check_root_level_mods`), nor Cargo `path` keys (`cargo.rs`).
+pub const SKIPPED_ROOT_DIRS: &[&str] = &["target", "node_modules", "_build", "tests", "benches", "examples"];
+
 /// Resource limits (VER08a §5).
 pub const MAX_SOURCE_FILES: usize = 10_000;
 pub const MAX_FILE_SIZE_BYTES: u64 = 4 * 1024 * 1024; // 4 MiB
@@ -137,13 +142,7 @@ fn collect_rs_files(
         // ordinary module (`mod target;`) and must be scanned.
         if meta.is_dir() {
             let at_root = current_dir == root;
-            if name.starts_with('.')
-                || (at_root
-                    && matches!(
-                        name.as_str(),
-                        "target" | "node_modules" | "_build" | "tests" | "benches" | "examples"
-                    ))
-            {
+            if name.starts_with('.') || (at_root && SKIPPED_ROOT_DIRS.contains(&name.as_str())) {
                 continue;
             }
             collect_rs_files(root, &path, depth + 1, out)?;

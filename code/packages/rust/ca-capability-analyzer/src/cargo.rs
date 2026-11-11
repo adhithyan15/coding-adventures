@@ -83,7 +83,7 @@ struct EditionState {
     conflict: bool,
 }
 
-const UNSCANNED_ROOTS: &[&str] = &["tests", "benches", "examples", "target", "node_modules", "_build"];
+use crate::scanner::SKIPPED_ROOT_DIRS as UNSCANNED_ROOTS;
 
 /// True if a Cargo `path`/`build` value would point outside the scanned set.
 pub fn path_escapes_scan(raw: &str) -> bool {

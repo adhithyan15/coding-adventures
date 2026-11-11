@@ -406,3 +406,59 @@ fn high2_ordinary_macro_rules_stay_clean() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// HIGH-5: root-level files must not reach the directories the scanner skips
+// ---------------------------------------------------------------------------
+
+fn files_verdict(files: &[(&str, &str)]) -> Vec<String> {
+    verdict_of(&coding_adventures_ca_capability_analyzer::scan_sources(files).unwrap())
+}
+
+#[test]
+fn high5_root_level_mod_into_a_skipped_directory_is_cap003() {
+    // PoC t5: build.rs (always root-level) declares `mod examples;`, which
+    // compiles `examples/mod.rs` - a directory the scanner skips at the root.
+    let r = analyze_files(
+        "t5",
+        &[
+            ("Cargo.toml", CARGO_2021),
+            ("src/lib.rs", "pub fn f() {}\n"),
+            ("build.rs", "mod examples;\nfn main() { examples::go(); }\n"),
+            ("examples/mod.rs", "pub fn go() { let _ = std::fs::write(std::env::var(\"OUT_DIR\").unwrap() + \"/pwn\", \"x\"); }\n"),
+        ],
+    );
+    assert_cap003("t5", &r);
+    // PoC t10: `[lib] path = "lib.rs"` makes lib.rs the crate root, and
+    // `mod tests;` compiles `tests/mod.rs`.
+    let r = analyze_files(
+        "t10",
+        &[
+            ("Cargo.toml", &format!("{CARGO_2021}autotests = false\n\n[lib]\npath = \"lib.rs\"\n")),
+            ("lib.rs", "mod tests;\npub fn f() { tests::go() }\n"),
+            ("tests/mod.rs", "pub fn go() { std::fs::write(\"a\", \"b\").unwrap(); }\n"),
+            ("required_capabilities.json", &pure_manifest("t10")),
+        ],
+    );
+    assert_cap003("t10", &r);
+
+    for (name, files) in [
+        ("inline module holding an out-of-line one", vec![("lib.rs", "mod tests { mod x; }")]),
+        ("case-insensitive filesystems", vec![("build.rs", "mod Tests;\nfn main() {}")]),
+        ("raw identifier", vec![("build.rs", "mod r#benches;\nfn main() {}")]),
+        ("every skipped root", vec![("main.rs", "mod target; mod node_modules; mod _build; fn main() {}")]),
+        ("root file named like a skipped directory", vec![("lib.rs", "mod examples;"), ("examples.rs", "mod x;")]),
+        ("`mod` passed as a token in a root file", vec![("build.rs", "m!(mod);\nfn main() {}")]),
+        ("module name from a metavariable", vec![("src/lib.rs", "macro_rules! mk { ($n:ident) => { mod $n; } }")]),
+        ("module body from a metavariable", vec![("src/lib.rs", "macro_rules! mk { ($n:ident, $($b:tt)*) => { mod $n { $($b)* } } }")]),
+    ] {
+        let got = files_verdict(&files);
+        assert!(got.contains(&"?".to_string()), "{name}: expected CAP003, got {got:?}");
+    }
+
+    // Decoys: modules under src/ and root modules with ordinary names are scanned.
+    assert_eq!(files_verdict(&[("src/lib.rs", "mod tests;"), ("src/tests.rs", "fn t() {}")]), Vec::<String>::new());
+    assert_eq!(files_verdict(&[("build.rs", "mod helpers;\nfn main() {}"), ("helpers.rs", "pub fn h() {}")]), Vec::<String>::new());
+    assert_eq!(files_verdict(&[("src/lib.rs", "#[cfg(test)]\nmod tests { #[test] fn t() {} }")]), Vec::<String>::new());
+    assert_eq!(files_verdict(&[("src/lib.rs", "macro_rules! mk { ($n:ident) => { mod $n { pub fn f() {} } } }")]), Vec::<String>::new());
+}

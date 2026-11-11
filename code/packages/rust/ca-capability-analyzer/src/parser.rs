@@ -1711,7 +1711,54 @@ fn check_transcriber_splices(sink: &mut Sink, toks: &[Token], br: &Brackets, arm
             }
         }
     }
+    // `mod $n;` / `mod $n { .. }` with a caller-chosen name: invoked from a
+    // root-level file, `mk!(tests)` declares `mod tests;` and compiles a
+    // skipped directory (HIGH-5).  The invocation site is unknown here, so an
+    // out-of-line declaration is CAP003, and so is an inline one whose body
+    // may declare an out-of-line module: it holds `mod`, or a metavariable
+    // that can *be* one (`tt`, `item`, `stmt`, an undeclared name, or an
+    // `ident` - which matches keywords - followed by a name: `$k x;`).
     let frags = matcher_fragments(toks, arm.m_open + 1, arm.m_close);
+    let may_declare_mod = |j: usize| -> bool {
+        if ident_at(toks, j) == Some(("mod", false)) {
+            return true;
+        }
+        if !is_punct(toks, j, '$') {
+            return false;
+        }
+        match ident_at(toks, j + 1) {
+            Some(("crate", false)) | None => false,
+            Some((name, _)) => match frags.get(name).map(String::as_str) {
+                Some("expr" | "ty" | "path" | "pat" | "pat_param" | "literal" | "lifetime" | "block" | "meta" | "vis") => false,
+                // A module name is never a strict keyword: `$f as alias` is not `mod as`.
+                Some("ident") => {
+                    matches!(ident_at(toks, j + 2), Some((n, raw)) if raw || !is_non_path_keyword(n))
+                        || is_punct(toks, j + 2, '$')
+                }
+                _ => true,
+            },
+        }
+    };
+    for k in from..to {
+        if ident_at(toks, k) != Some(("mod", false)) || !is_punct(toks, k + 1, '$') || ident_at(toks, k + 2).is_none() {
+            continue;
+        }
+        let after = k + 3;
+        let risky = if is_punct(toks, after, '{') {
+            let c = br.close(after).min(to);
+            (after + 1..c).any(may_declare_mod)
+        } else {
+            true
+        };
+        if risky {
+            sink.unanalyzable(
+                toks[k].line,
+                toks[k].col,
+                "macro_rules! declares a module whose name is a metavariable; its file location is not tracked",
+                "mod $name".into(),
+            );
+        }
+    }
     match transcriber_units(toks, br, arm, &frags, from, to, 0) {
         Ok(units) => check_unit_seq(sink, toks, &units),
         Err(at) => sink.unanalyzable(
@@ -2334,6 +2381,63 @@ fn stage2_file(
     }
 }
 
+/// Module declarations in a *root-level* file (no `/` in its path: `build.rs`,
+/// a `lib.rs`/`main.rs` that `Cargo.toml` places at the root, or a module file
+/// beside them).
+///
+/// The scanner skips `tests/ benches/ examples/ target/ node_modules/ _build/`
+/// at the package root (VER08a §5).  A crate root at the root resolves
+/// `mod NAME;` to `./NAME.rs` or `./NAME/mod.rs`, so `mod examples;` in
+/// `build.rs` (PoC t5), or `mod tests;` in a root `lib.rs` (PoC t10), compiles
+/// code from a skipped directory.  In a root-level file this is CAP003:
+///
+/// * `mod NAME`, inline or out-of-line, at any nesting, when `NAME` is a
+///   skipped directory name compared ASCII case-insensitively (a
+///   case-insensitive filesystem resolves `Tests/` to `tests/`).  Inline
+///   `mod tests { mod x; }` reaches `tests/x.rs` the same way;
+/// * any out-of-line `mod NAME;` in a file whose stem is a skipped name
+///   (`tests.rs`): as a module file its children live in `tests/`;
+/// * a `mod` keyword not followed by a name: it is being handed to a macro
+///   (`m!(mod)`), which can complete the declaration out of sight.
+///
+/// Cargo `path` keys at the root (`[lib] path = "lib.rs"`) stay allowed: the
+/// file itself is scanned, and this rule covers what it can reach.
+fn check_root_level_mods(sink: &mut Sink, toks: &[Token], file_stem_skipped: bool) {
+    for i in 0..toks.len() {
+        if ident_at(toks, i) != Some(("mod", false)) || (i > 0 && (is_punct(toks, i - 1, '.') || is_punct(toks, i - 1, '$'))) {
+            continue;
+        }
+        let (line, col) = (toks[i].line, toks[i].col);
+        match ident_at(toks, i + 1) {
+            Some((name, _)) if is_skipped_root_dir(name) => sink.unanalyzable(
+                line,
+                col,
+                "module declared in a root-level file resolves into a directory the scanner skips",
+                format!("mod {name}"),
+            ),
+            Some((name, _)) if file_stem_skipped && is_punct(toks, i + 2, ';') => sink.unanalyzable(
+                line,
+                col,
+                "out-of-line module in a root-level file named like a skipped directory resolves into that directory",
+                format!("mod {name};"),
+            ),
+            Some(_) => {}
+            None => sink.unanalyzable(
+                line,
+                col,
+                "`mod` keyword in a root-level file is not followed by a module name (passed to a macro?)",
+                "mod ..".into(),
+            ),
+        }
+    }
+}
+
+/// Directory names the scanner skips at the package root (VER08a §5), compared
+/// ASCII case-insensitively.
+fn is_skipped_root_dir(name: &str) -> bool {
+    crate::scanner::SKIPPED_ROOT_DIRS.iter().any(|d| name.eq_ignore_ascii_case(d))
+}
+
 /// `extern` at token `i`: FFI detections (VER08a §3.4).
 fn extern_item(sink: &mut Sink, toks: &[Token], i: usize) {
     let (line, col) = (toks[i].line, toks[i].col);
@@ -2423,6 +2527,10 @@ pub fn scan_sources_with_edition(files: &[(&str, &str)], edition: Edition) -> Re
             macro_budget: 0,
         };
         stage2_file(toks, br, f, &resolver, &local, &mut sink);
+        if !name.contains('/') {
+            let stem = name.strip_suffix(".rs").unwrap_or(name);
+            check_root_level_mods(&mut sink, toks, is_skipped_root_dir(stem));
+        }
     }
     Ok(result)
 }
