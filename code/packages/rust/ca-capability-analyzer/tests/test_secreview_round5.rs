@@ -378,3 +378,38 @@ fn r5_4_projection_decoys_stay_clean() {
         ],
     );
 }
+
+// ---------------------------------------------------------------------------
+// Follow-up review of the round-5 fixes
+// ---------------------------------------------------------------------------
+//
+// A focused review of D43-D49 found no regressions, but four shapes the new
+// turbofish and projection rules did not reach.  Each test names the
+// review's case directory.
+
+// F4: a `>` inside brackets ended the turbofish skip early.
+//
+// `skip_angle` counts `<` and `>` without regard to brackets, so in
+// `c.wait_timeout::<[u8; (2 > 1) as usize]>(g, d)` the comparison `2 > 1`
+// closed the turbofish, the token after it was `1`, not `(`, and the call was
+// read as a field.  A field takes no generic arguments, so `.name::<` is
+// always a method call: the heuristic no longer looks for the `(`.
+#[test]
+fn f4_a_turbofish_after_a_method_name_is_always_a_call() {
+    check(
+        "F4",
+        &[
+            (
+                "tf_paren_gt",
+                "use std::sync::{Condvar, Mutex};\nuse std::time::Duration;\npub fn nap() -> bool {\n    let m = Mutex::new([0u8; 1]);\n    let c = Condvar::new();\n    let g = m.lock().unwrap();\n    let r = c.wait_timeout::<[u8; (2 > 1) as usize]>(g, Duration::from_millis(1));\n    r.is_ok()\n}",
+                &["time:sleep"],
+            ),
+            ("comparison in a braced const argument", "fn f(p: &P) -> bool { p.exists::<{ 2 > 1 }>() }", &["fs:list"]),
+            ("shift in an array length", "fn f(t: &T) { t.elapsed::<[u8; 4 >> 1]>(); }", &["time:read"]),
+            ("turbofish never closed before the end", "fn f(p: &P) -> bool { p.is_dir::<", &["fs:list"]),
+            // Decoys: the rule is about listed method names only.
+            ("pure method with a bracketed comparison", "fn f(v: &[u8]) -> Vec<u8> { v.iter().copied().collect::<Vec<[u8; (2 > 1) as usize]>>() }", &[]),
+            ("field named exists, compared", "fn f(s: &S) -> bool { s.exists > 1 }", &[]),
+        ],
+    );
+}

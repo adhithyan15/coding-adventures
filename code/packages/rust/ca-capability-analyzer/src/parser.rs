@@ -3118,17 +3118,22 @@ fn stage2_file(
                     // A turbofish may sit between the name and `(`:
                     // `p.exists::<>()` is legal for a method with no generic
                     // parameters, and called `Path::exists` unseen (security
-                    // review round 5, R5-1, case `turbofish-exists`).  It is
-                    // skipped; a `::<` that does not close within the
-                    // `skip_angle` window is treated as a call (fail closed).
-                    let is_call = if is_pathsep(toks, i + 1) && is_punct(toks, i + 2, '<') {
-                        match skip_angle(toks, i + 2) {
-                            Some(after) => is_punct(toks, after, '('),
-                            None => true,
-                        }
-                    } else {
-                        is_punct(toks, i + 1, '(')
-                    };
+                    // review round 5, R5-1, case `turbofish-exists`).
+                    //
+                    // `.name::<` is *always* a method call: a field takes no
+                    // generic arguments, so there is nothing else it can be.
+                    // The turbofish is therefore not walked to find the `(`.
+                    // Walking it was unsound: `skip_angle` counts `<`/`>`
+                    // without regard to brackets, so the comparison in
+                    // `c.wait_timeout::<[u8; (2 > 1) as usize]>(g, d)` closed
+                    // it early and the call read as a field (follow-up review
+                    // F4, case `tf_paren_gt`).
+                    //
+                    //   .name (          call
+                    //   .name ::<        call (turbofish; fields cannot have one)
+                    //   .name            field (anything else)
+                    let is_call = is_punct(toks, i + 1, '(')
+                        || (is_pathsep(toks, i + 1) && is_punct(toks, i + 2, '<'));
                     if is_call {
                         if let Some(Classification::Capability { category, action }) = method_call_rule(name) {
                             if !receiver_is_local_inherent(toks, br, res, local, i - 1, name) {

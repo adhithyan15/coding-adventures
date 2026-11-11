@@ -51,6 +51,14 @@ directory; the rest are documented as known open gaps (VER08a §8.1).
 - [false negative, R5-4] Associated-type projections were read as paths, so `<std::path::PathBuf as std::ops::Deref>::Target::exists(p)` (`Target` is `Path`), `D::Target::exists(d)` for `D: Deref<Target = Path>`, `Self::Target::exists(self)` under a `Deref<Target = Path>` supertrait, `<Self as Deref>::Target::exists` in a blanket impl and `<Arc<Condvar> as Deref>::Target::wait_timeout` were pure (cases `proj-deref-target`, `proj-generic-bound`, `proj-self-target-trait`, `proj-blanket-impl`, `proj-condvar-wait`). `<T as Tr>::A::item`, `Self::A::item` and `P::A::item` for a generic parameter `P` declared in the file are now unknown types, and an unknown type (projection, alias to a metavariable or type macro, unknown `Self`) gets the method-call verdict of its *last* segment instead of its second.
 - [known open gaps] Still open after the third review, and documented with an example, root cause and intended fix in VER08a §8.1 (backlog rows in `code/specs/VER-BACKLOG.md`): **CA-OG1** (review G-C) a type alias whose generic parameter default names the type, `type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)` (case `alias-default-param`); **CA-OG2** (review G-E) bypasses of the local-receiver waiver L4 when the local type derefs to `Path`: a `cfg`-ed out or `macro_rules!`-body inherent impl, an inherent method on another generic instantiation, a constructor building another instantiation, a same-named type in another module, and `self: Rc<Self>` (cases `waiver-cfg-out`, `waiver-macro-body`, `waiver-generic-instance`, `waiver-ctor-wrong-type`, `waiver-same-name-module`, `waiver-arbitrary-self`). Review G-A (associated-type projections) is closed by R5-4.
 
+### Follow-up review of the third-review fixes (VER08a divergence D50 onwards)
+
+A focused review of D43-D49 found no regressions, but some shapes the new
+turbofish and projection rules did not reach. Each fix has a regression in
+`tests/test_secreview_round5.rs` named after the review's case directory.
+
+- [false negative, F4] The turbofish skip of D43 walked `::<..>` with a counter blind to brackets, so a `>` inside them closed it early: in `c.wait_timeout::<[u8; (2 > 1) as usize]>(g, d)` the token after the comparison was `1`, not `(`, and the call read as a field (case `tf_paren_gt`). `.name::<` is now a method call whatever follows, since a field takes no generic arguments; the turbofish is not walked.
+
 ## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
 
 - [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).
