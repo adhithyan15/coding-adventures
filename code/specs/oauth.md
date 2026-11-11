@@ -2943,6 +2943,23 @@ proof's own responder, complete revocation policy, generalized path
 construction or validation, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded infallible projection now consumes that exact recursive proof and
+reifies the recursive proof's own delegated responder-to-reviewed-root path as
+a distinct non-copyable type. The retained binding already proves the exact
+recursive target, reviewed-root issuer, observation time, repository-owned RSA
+signature routes, certificate role policy, and responder validity. The
+projection retains the complete generic source and both authenticated proof
+layers without accepting a substitute certificate, path, root, algorithm,
+key, signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply reviewed-root name
+policy to that recursive responder, establish its RFC 6960 no-check or
+separately authenticated revocation policy, complete revocation policy,
+generalize path construction or validation, implement TLS or HTTP, authorize
+OAuth transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact default-
 source alternative proof after the server target, original responder,
 intermediate, added intermediate-status responder, and the added responder-

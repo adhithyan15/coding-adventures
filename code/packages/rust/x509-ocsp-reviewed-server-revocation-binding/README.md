@@ -359,6 +359,16 @@ and both non-copyable authenticated proof layers. It stops before revocation
 policy for the recursive proof's own responder, complete revocation,
 generalized path validation, TLS, HTTP, OAuth, or network readiness.
 
+`reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_revocation_responder_path`
+then projects the recursive proof's own exact delegated responder-to-reviewed-
+root path. The infallible non-copyable wrapper retains the complete generic
+source and both authenticated proof layers without accepting a substitute
+certificate, path, root, algorithm, key, signature, status, or time. It
+performs no new validation or external effect and stops before reviewed-root
+name policy, no-check or separately authenticated revocation policy for that
+responder, complete revocation, generalized path validation, TLS, HTTP, OAuth,
+or network readiness.
+
 `complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
 then nominally completes revocation policy for this exact default-source
 alternative branch. Its input type proves that the server target, original
