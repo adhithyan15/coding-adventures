@@ -2960,6 +2960,44 @@ generalize path construction or validation, implement TLS or HTTP, authorize
 OAuth transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A following bounded name-policy slice consumes that exact recursive responder
+path and derives the recursive proof's authenticated delegated responder plus
+the selected Mozilla-reviewed root's optional out-of-band constraint bytes
+only through the retained generic source. An unconstrained root succeeds
+without reading responder Subject Alternative Name. A constrained root is
+decoded under a caller-owned ASN.1 limit, the responder SAN is decoded under a
+separate caller-owned limit, every responder `dNSName` must satisfy the
+supported permitted-DNS subset, and success retains only count evidence beside
+the complete proof. Stable failures expose no certificate, name, constraint,
+response, key, signature, status, root, or time payload. This pure public-
+certificate-data policy performs no credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply excluded or
+non-DNS root constraints or intermediate constraints, establish RFC 6960 no-
+check or further separately authenticated revocation policy for that
+responder, complete revocation policy, generalize path construction or
+validation, implement TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
+A following bounded no-check slice consumes that complete reviewed-root DNS
+proof and derives the recursive proof's exact authenticated delegated responder
+only through retained repository-owned evidence. It requires the structurally
+unique `id-pkix-ocsp-nocheck` extension already admitted by certificate-wide
+role policy and validates that its value is exact DER `NULL`. RFC 6960
+recommends, but does not require, non-critical marking; a critical instance can
+reach this semantic gate only after the prerequisite role policy recognized
+its OID. Missing or malformed values fail with existing stable payload-free
+categories, and success retains the complete prior proof under a distinct
+non-copyable type. Callers cannot substitute a responder certificate,
+extension, path, algorithm, key, signature, status, root, or time. This pure
+public-certificate-data policy performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. It does not establish
+separately authenticated further responder revocation, complete revocation
+policy, generalized path construction or validation, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact default-
 source alternative proof after the server target, original responder,
 intermediate, added intermediate-status responder, and the added responder-
