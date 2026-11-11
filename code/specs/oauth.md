@@ -2643,6 +2643,29 @@ generalize path construction or validation, or provide TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+A bounded composition follow-up consumes that responder-of-responder no-check
+proof plus a separate fully authenticated, fully routed OCSP target-revocation
+proof for the retained intermediate. It derives the exact retained
+intermediate, selected Mozilla-reviewed root, and original server-status
+observation time exclusively through the consumed no-check proof, then
+requires the second proof to name those exact certificate objects and time.
+Stable target, issuer, and observation-time mismatch categories retain no
+certificate, response, key, signature, status, hostname, root, or time
+payload. Success retains both complete non-copyable inputs under a distinct
+type; callers cannot duplicate or substitute the consumed responder branch,
+raw status, certificates, paths, roots, algorithms, keys, signatures, or time.
+This pure public-certificate-data composition performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves the
+original responder through separately authenticated status, resolves that
+status proof's own responder through RFC 6960 no-check policy, and
+authenticates status for the exact retained intermediate at the same
+observation time. It does not establish revocation policy for the intermediate-
+status proof's own responder, implement complete revocation policy, generalize
+path construction or validation, or provide TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof

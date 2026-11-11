@@ -155,6 +155,19 @@ trust-for-certificate-lifetime branch and stops before separately authenticated
 revocation for this responder, complete revocation, generalized path
 validation, TLS, HTTP, OAuth, or network readiness.
 
+`bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_no_check_intermediate_revocation`
+then consumes that complete no-check proof plus a separately authenticated,
+fully routed proof for the exact retained intermediate. It derives the exact
+intermediate, selected reviewed root, and original observation time only
+through the consumed no-check proof, reuses the stable target-then-issuer-then-
+time binding policy, and retains both complete non-copyable inputs on success.
+This resolves the original responder through separately authenticated status,
+resolves that status proof's own responder through RFC 6960 no-check policy,
+and authenticates status for the exact retained intermediate. It stops before
+revocation policy for the intermediate-status proof's own responder, complete
+revocation, generalized path validation, TLS, HTTP, OAuth, or network
+readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
 independent branch for the routed path's issuing CA. It consumes the complete
 fully routed reviewed server-revocation proof plus a separate fully routed,

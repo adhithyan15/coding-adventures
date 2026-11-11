@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Compose the responder-of-responder RFC 6960 no-check proof with separately
+  authenticated status for the exact retained intermediate at the original
+  observation time.
+- Retain both complete non-copyable inputs and stop before policy for the
+  intermediate-status proof's own responder or complete revocation readiness.
 - Apply the repository-owned RFC 6960 no-check evaluator to the separately
   authenticated responder-revocation proof's own exact responder after its
   root and intermediate DNS policies.
