@@ -36,6 +36,7 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
     validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_policy,
+    validate_accumulated_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy,
     validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy,
     validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy,
     verify_x509_rsa_constructed_path_policy_signature,
@@ -209,8 +210,12 @@ fn limits() -> RsaPublicOperationLimits {
 }
 
 fn observed_time() -> X509Time {
+    time(b"\x17\x0d260201000000Z")
+}
+
+fn time(encoded: &[u8]) -> X509Time {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
-    decode_x509_time(decoder.decode_exact(b"\x17\x0d260201000000Z").unwrap()).unwrap()
+    decode_x509_time(decoder.decode_exact(encoded).unwrap()).unwrap()
 }
 
 fn intermediate_policy<'certificate, 'encoded>(
@@ -238,6 +243,18 @@ fn intermediate_policy<'certificate, 'encoded>(
 fn server_policy<'certificate, 'encoded>(
     certificate: &'certificate X509Certificate<'encoded>,
 ) -> ValidatedX509ServerCertificatePolicy<'certificate, 'encoded> {
+    server_policy_for(
+        certificate,
+        "valid-isrgrootx1.letsencrypt.org",
+        &observed_time(),
+    )
+}
+
+fn server_policy_for<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    reference_name: &str,
+    observation_time: &X509Time,
+) -> ValidatedX509ServerCertificatePolicy<'certificate, 'encoded> {
     let role_policy = validate_certificate_role_policy(
         certificate,
         X509CertificateRole::EndEntity,
@@ -251,14 +268,14 @@ fn server_policy<'certificate, 'encoded>(
     .unwrap();
     let profiles = [profile()];
     let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
-    let reference = ReferenceIdentity::parse("valid-isrgrootx1.letsencrypt.org").unwrap();
+    let reference = ReferenceIdentity::parse(reference_name).unwrap();
     let purpose = X509CertificatePurposePolicy::new(SERVER_AUTH_OID).unwrap();
 
     validate_x509_server_certificate_policy(
         role_policy,
         algorithm_policy,
         &reference,
-        &observed_time(),
+        observation_time,
         purpose,
         Asn1Limits::default(),
     )
@@ -1119,6 +1136,55 @@ fn accumulates_every_ordered_intermediate_with_bounded_retained_evidence() {
     assert_eq!(
         format!("{accumulated:?}"),
         "AccumulatedReviewedX509RsaConstructedPathIntermediatePathLength"
+    );
+
+    let target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let closed = bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        target_signature,
+        server_policy_for(&target, "sectigo.com", &time(b"\x17\x0d261112000000Z")),
+    )
+    .unwrap();
+    let anchor_policy =
+        validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_policy(
+            closed,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+    let intermediate_name_policy =
+        validate_accumulated_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy(
+            anchor_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    assert_eq!(intermediate_name_policy.constrained_intermediate_count(), 0);
+    assert_eq!(intermediate_name_policy.constrained_dns_names(), None);
+    assert_eq!(intermediate_name_policy.constrained_names(), None);
+    assert_eq!(
+        intermediate_name_policy
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .processed_intermediate_count(),
+        2
+    );
+    assert_eq!(
+        format!("{intermediate_name_policy:?}"),
+        "ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy"
     );
 }
 
