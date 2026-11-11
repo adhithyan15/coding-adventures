@@ -9,7 +9,7 @@ Every Rust package in this repository declares its operating-system level capabi
 `ca-capability-analyzer-rs` verifies that:
 1. Every ambient OS access in `.rs` files matches a declared capability (`CAP001` check);
 2. All banned constructs (`unsafe` blocks/functions, inline assembly, foreign linkage) have matching manifest exceptions (`CAP002` check), and excepted constructs stay **visible** in the output (see below);
-2b. Constructs the analyzer can see but cannot analyse (`include!`, `#[path]`, proc-macros, macro-spliced paths, unknown `std` paths, `Cargo.toml` paths into unscanned directories) fail closed as `CAP003`, which no exception can waive;
+2b. Constructs the analyzer can see but cannot analyse (`include!` however it is reached, `#[path]`, proc-macros, macro-spliced paths and attributes, `use std::*`, non-ASCII identifiers, edition-dependent C-string prefixes when `package.edition` is unknown, root-level `mod` declarations into unscanned directories, unknown `std` paths, `Cargo.toml` paths into unscanned directories) fail closed as `CAP003`, which no exception can waive. The lexer follows rustc's shebang, whitespace (`Pattern_White_Space`) and edition rules;
 3. Manifests conform to `required_capabilities.schema.json` version 1;
 4. Traversal adheres to strict resource quotas and refuses symlinked files;
 5. Sealed capability modules (`src/capabilities.rs`) enforce "you cannot name what you did not declare" (VER23);
