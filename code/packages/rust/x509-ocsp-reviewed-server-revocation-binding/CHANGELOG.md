@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band permitted-DNS
+  constraints to the nested no-check composition's exact intermediate-status
+  responder, retaining only count evidence.
+- Preserve the complete non-copyable source for downstream no-check or
+  separately authenticated revocation policy and stop before complete
+  revocation, generalized path validation, TLS, HTTP, or OAuth readiness.
 - Reify the exact intermediate-status responder-to-reviewed-root path while
   retaining the complete responder-of-responder no-check plus intermediate-
   status composition.

@@ -2685,6 +2685,27 @@ revocation policy for it, implement complete revocation policy, generalize path
 construction or validation, or provide TLS, HTTP, OAuth transport, or network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
+A bounded policy follow-up consumes that exact nested-source responder path
+and applies the selected Mozilla-reviewed root's supported out-of-band DNS
+constraints to the intermediate-status proof's exact fully routed
+authenticated responder certificate. Both policy inputs are derived only
+through the complete responder-of-responder no-check plus intermediate-status
+composition; callers cannot substitute a certificate, SAN collection,
+snapshot entry, root, path, algorithm, key, signature, status, or time. Entries
+without constraints succeed without reading Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and exact
+responder SAN under separate caller-owned ASN.1 limits, require every responder
+`dNSName` to comply, and retain only count evidence. Stable failures expose no
+certificate, name, constraint, response, key, signature, status, root, or time
+payload. The complete source remains available to the existing added-responder
+no-check and separately authenticated revocation policies. This pure public-
+certificate-data policy performs no credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not apply excluded or non-
+DNS root constraints, implement complete revocation policy, generalize path
+construction or validation, or provide TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof
@@ -2773,7 +2794,7 @@ construction or validation, implement complete revocation policy, TLS, HTTP,
 OAuth transport, or network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
-A bounded policy follow-up consumes either exact added-status responder path
+A bounded policy follow-up consumes each exact added-status responder path
 and applies the selected Mozilla-reviewed root's supported out-of-band DNS
 constraints to the exact fully routed authenticated responder certificate.
 The responder and reviewed-root constraint bytes are derived only through the
