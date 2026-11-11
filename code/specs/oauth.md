@@ -1634,6 +1634,31 @@ or editing, signing, storage, clock acquisition, provider action, audit event,
 trace emission, I/O, network access, or other external effect. It does not
 check names, time, revocation, TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
+A bounded arbitrary-depth follow-up now borrows the same retained initializer,
+reviewed terminal, an anchor-to-target slice of already routed follow-on
+signatures, and an equally ordered slice of complete intermediate policies.
+The caller supplies a nonzero intermediate ceiling. Before transition, the
+composition derives the exact intermediate count from the retained
+construction, rejects counts above that ceiling, and requires exactly one
+policy per intermediate plus one follow-on signature for every intermediate
+after the root-authenticated first child. It then requires every follow-on
+proof to retain the same exact construction, consume the immediately
+target-nearer issuer depth, name the previously processed intermediate as its
+exact issuer object, authenticate another candidate rather than the target,
+and pair that child with policy for the same exact object before advancing the
+private working state. Success retains the initializer, reviewed terminal,
+both complete borrowed evidence slices, the processed count, and the final
+path-length state. This proves only that every intermediate path-length
+transition represented by the selected construction was processed in
+anchor-to-target order; it deliberately stops before the target signature and
+does not turn routed link proofs into complete path validation. The pure
+public-certificate-data composition performs no parsing, new signature
+verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It does not check target authentication, complete
+Name semantics, time, hostname, revocation, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
