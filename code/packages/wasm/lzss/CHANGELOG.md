@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- Inherits the lzss (Rust) fix: decompress no longer sizes its output buffer from the untrusted original_length header. Added a native regression test (hostile length 2^32-1, all-0xFF header, invalid match offsets).
+- Native cargo test run locally: 18 passed.
+
 ## [0.1.0] - 2026-04-25
 
 ### Added

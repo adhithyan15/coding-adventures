@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Bridge, Park, Temple, Library, Bank",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e3915a692fef9477",
+  "sourceHash": "fnv1a64:b83c99466043fcf9",
   "lessons": [
     {
       "id": "KA-C109-setuve",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c4fe96e35d66456",
+      "sourceHash": "fnv1a64:4afa882aa5359d3d",
       "notice": null,
       "blocks": [
         {
@@ -591,6 +591,16 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the sign form **೧ನೇ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the earlier object lesson, say -ಅನ್ನು, then “him”, “her” and “them” as objects."
             }
           ]
         },
@@ -668,6 +678,15 @@
             {
               "kind": "prompt",
               "action": "RECALL",
+              "instruction": "-ಅನ್ನು; ಅವನನ್ನು; ಅವಳನ್ನು; ಅವರನ್ನು",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **-ಅನ್ನು; ಅವನನ್ನು; ಅವಳನ್ನು; ಅವರನ್ನು**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
               "instruction": "say the Kannada for a temple, then the Kannada for a library, then say byāṅku again",
               "spoken": true,
               "scored": false,
@@ -689,7 +708,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ಬ್ಯಾಂಕು (byāṅku) mean? (\"A bank\".) Say it once more."
+              "text": "What does ಬ್ಯಾಂಕು (byāṅku) mean? (\"A bank\".) Say it once more. Then say “it” and “them” as objects. (ಅದನ್ನು; ಅವರನ್ನು.)"
             }
           ]
         }

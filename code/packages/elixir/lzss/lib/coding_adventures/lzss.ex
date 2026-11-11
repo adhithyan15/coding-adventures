@@ -74,7 +74,12 @@ defmodule CodingAdventures.LZSS do
                    min_match   \\ @default_min_match)
       when is_binary(data) do
     bytes  = :binary.bin_to_list(data)
-    encode_loop(bytes, 0, bytes, window_size, max_match, min_match, [])
+    # Build the random-access array and the length ONCE. Rebuilding them on
+    # every step (as `:array.from_list(data)` / `length(data)` / `Enum.at/2`
+    # inside the loop did) costs O(n) per byte and made encoding O(n^2): a
+    # 200 KB input took minutes and timed out the zstd test suite on CI.
+    arr = :array.from_list(bytes)
+    encode_loop(bytes, 0, {arr, length(bytes)}, window_size, max_match, min_match, [])
   end
 
   defp encode_loop([], _cursor, _data, _ws, _mm, _min, acc), do: Enum.reverse(acc)
@@ -89,16 +94,16 @@ defmodule CodingAdventures.LZSS do
       new_remaining = Enum.drop(rest_bytes, len - 1)
       encode_loop(new_remaining, cursor + len, data, ws, mm, min, [tok | acc])
     else
-      tok = literal(Enum.at(data, cursor))
+      {arr, _n} = data
+      tok = literal(:array.get(cursor, arr))
       encode_loop(rest_bytes, cursor + 1, data, ws, mm, min, [tok | acc])
     end
   end
 
   # Find the longest match for data[cursor:] in data[win_start:cursor].
   # Returns {best_offset, best_length}. Matches may overlap.
-  defp find_longest_match(data, cursor, win_start, max_match) do
-    lookahead_end = min(cursor + max_match, length(data))
-    data_arr = :array.from_list(data)
+  defp find_longest_match({data_arr, n}, cursor, win_start, max_match) do
+    lookahead_end = min(cursor + max_match, n)
 
     Enum.reduce(win_start..(cursor - 1)//1, {0, 0}, fn pos, {best_off, best_len} ->
       len = count_match(data_arr, pos, cursor, lookahead_end, 0)

@@ -1,84 +1,40 @@
 //! Integration test for the `tests/diff/simple-super/` fixture.
 //!
-//! Exercises CLOC12.166 PR2 — the **`super`** keyword (`Super`) now flows
-//! through the full SIMPLE pipeline (parser → typed-AST bridge → passes →
-//! emitter) instead of declining at the bridge and dragging the whole file to
-//! WHITESPACE_ONLY (gap-167, now closed).
-//!
-//! The fixture is `super.f(1 + 2);` — a retained call (an unknown `super.f(...)`
-//! member call has side effects, so DCE keeps it) whose receiver is `super` and
-//! whose argument is the foldable `1 + 2`. Two facts prove the pipeline ran
-//! end-to-end rather than falling back:
-//!   1. the `super` receiver round-trips (the bridge produced a real `Super`
-//!      node rather than declining), and
-//!   2. the argument `1 + 2` folds to `3`.
-//! A WHITESPACE_ONLY fallback — which a bridge decline would force for the
-//! *whole file* — would instead re-emit the source verbatim, leaving `1 + 2`
-//! unfolded (`super.f(1 + 2)`).
-//!
-//! (`super` is syntactically legal only inside a class method / derived
-//! constructor; the shared grammar is permissive and parses the bare
-//! statement, and the bridge simply lowers whatever the parser produced. The
-//! point here is the *pipeline plumbing*, not JS semantic validation.)
-
-// Literate-programming test docs: intentional prose paragraphs following lists.
-// clippy 1.97's doc-list-continuation lints flag them as mis-indented list
-// items; the formatting is deliberate, so allow crate-wide for this test.
-#![allow(clippy::doc_lazy_continuation, clippy::doc_overindented_list_items)]
+//! The pinned reference compiler (`closure-compiler-v20260915`) refuses this
+//! input with `JSC_INVALID_SUPER_ACCESS` ("'super' may only be accessed within a method"):
+//! `super.f(1 + 2)` is at top level. Since CLOC44 slice 3 (CCR-075, #15860),
+//! closurec refuses it the same way: `expected.stderr` and `expected.exit` were
+//! captured from the jar, the stderr must match byte for byte, and there must
+//! be no stdout. Before slice 3 closurec compiled this input, and this fixture
+//! pinned that output.
 
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
-
-fn read_flags() -> Vec<String> {
-    let raw = std::fs::read_to_string("tests/diff/simple-super/flags.txt").expect("read flags.txt");
-    raw.lines()
-        .filter(|l| !l.is_empty())
-        .map(|s| s.to_string())
-        .collect()
-}
+const DIR: &str = "tests/diff/simple-super";
 
 #[test]
-fn simple_super_fixture_matches_expected_stdout() {
-    let flags = read_flags();
-    let out = Command::new(BINARY)
-        .args(&flags)
-        .output()
-        .expect("run closurec");
+fn simple_super_is_refused_like_upstream() {
+    let flags: Vec<String> = std::fs::read_to_string(format!("{DIR}/flags.txt"))
+        .expect("read flags.txt")
+        .lines()
+        .filter(|l| !l.is_empty())
+        .map(str::to_string)
+        .collect();
+    let out = Command::new(BINARY).args(&flags).output().expect("run closurec");
 
-    assert!(
-        out.status.success(),
-        "exit: {:?}, stderr: {}",
-        out.status.code(),
-        String::from_utf8_lossy(&out.stderr),
-    );
+    let want_exit: i32 = std::fs::read_to_string(format!("{DIR}/expected.exit"))
+        .expect("read expected.exit")
+        .trim()
+        .parse()
+        .expect("expected.exit is a number");
+    let want_stderr = std::fs::read(format!("{DIR}/expected.stderr")).expect("read expected.stderr");
 
-    let actual = String::from_utf8_lossy(&out.stdout);
-    let expected = std::fs::read_to_string("tests/diff/simple-super/expected.stdout")
-        .expect("read expected.stdout");
+    assert_eq!(out.status.code(), Some(want_exit), "exit status");
+    assert!(out.stdout.is_empty(), "a refused input must produce no output");
     assert_eq!(
-        actual.trim_end_matches('\n'),
-        expected.trim_end_matches('\n'),
-        "mismatch.\nactual:\n{actual}\nexpected:\n{expected}",
-    );
-
-    // Guard the *point* of the fixture. Strip spaces so the checks are
-    // insensitive to inter-token whitespace.
-    let a = actual.replace(' ', "");
-    // (1) the `super` receiver survived — proving the bridge converted `super`
-    //     to a real `Super` node rather than declining to WHITESPACE_ONLY.
-    assert!(
-        a.contains("super.f"),
-        "`super` receiver did not round-trip: {actual}"
-    );
-    // (2) the argument folded — proving the SIMPLE pipeline ran over the call
-    //     (`1 + 2` → `3`), not a verbatim WHITESPACE_ONLY pass.
-    assert!(
-        a.contains("super.f(3)"),
-        "argument `1 + 2` did not fold to `3`: {actual}"
-    );
-    assert!(
-        !a.contains("1+2"),
-        "unfolded `1+2` present — pipeline fell back to WHITESPACE_ONLY: {actual}"
+        String::from_utf8_lossy(&out.stderr),
+        String::from_utf8_lossy(&want_stderr),
+        "diagnostics must match upstream byte for byte"
     );
 }

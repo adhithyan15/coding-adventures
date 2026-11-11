@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Add BUILD_windows (standardrb skips Layout/EndOfLine; repo forces LF).
+
 ## [0.2.0] - 2026-08-13
 
 ### Added

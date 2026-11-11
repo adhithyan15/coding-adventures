@@ -148,10 +148,21 @@ pub fn encode(data: &[u8], window_size: usize, max_match: usize, min_match: usiz
 /// assert_eq!(decode(&tokens, Some(7)), b"AAAAAAA");
 /// ```
 pub fn decode(tokens: &[Token], original_length: Option<usize>) -> Vec<u8> {
-    let capacity = original_length.unwrap_or(tokens.len() * 4);
+    // Security: `original_length` comes from an untrusted header, so it is
+    // only a *hint* and is capped by what the tokens could plausibly produce
+    // (the same 4 bytes/token estimate used when no length is given).  The
+    // vector grows on demand beyond that, so a lying header cannot force a
+    // huge up-front allocation.
+    let estimate = tokens.len().saturating_mul(4);
+    let capacity = original_length.map_or(estimate, |n| n.min(estimate));
     let mut output = Vec::with_capacity(capacity);
 
     for tok in tokens {
+        // Once the declared length is reached nothing more can survive the
+        // final truncate, so stop instead of expanding further matches.
+        if original_length.is_some_and(|n| output.len() >= n) {
+            break;
+        }
         match tok {
             Token::Literal(b) => output.push(*b),
             Token::Match { offset, length } => {

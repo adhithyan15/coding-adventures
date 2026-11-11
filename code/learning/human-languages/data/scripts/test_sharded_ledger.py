@@ -8,6 +8,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+import book_generation_owner_read
+import sharded_ledger
 from sharded_ledger import (
     _files,
     _read,
@@ -54,6 +56,73 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
 
     def tearDown(self):
         self.temporary.cleanup()
+
+    def test_book_owner_batch_stays_on_pinned_section_during_swap_attempt(self):
+        base = self.root / "core" / "book-generation.d"
+        for section in book_generation_owner_read.SECTIONS:
+            (base / section).mkdir(parents=True)
+        (base / "_meta.json").write_text("inside metadata", encoding="utf-8")
+        section = base / "targets.d"
+        (section / "test-0001.json").write_text("inside owner", encoding="utf-8")
+        (self.outside / "test-0001.json").write_text("outside sentinel", encoding="utf-8")
+        moved = base / "targets-moved"
+        original = sharded_ledger._read_pinned_regular_batch
+        swapped = []
+
+        def attempt_swap_after_open(handle, names, read_one):
+            if "test-0001.json" in names:
+                try:
+                    os.rename(section, moved)
+                    link_directory(self.outside, section)
+                    swapped.append(True)
+                except OSError:
+                    # Windows may refuse to rename an open pinned directory.
+                    pass
+            return original(handle, names, read_one)
+
+        read = (
+            book_generation_owner_read._windows
+            if os.name == "nt"
+            else book_generation_owner_read._unix
+        )
+        try:
+            with mock.patch(
+                "sharded_ledger._read_pinned_regular_batch",
+                side_effect=attempt_swap_after_open,
+            ):
+                result = read(self.root)
+            self.assertEqual(
+                result["sections"]["targets.d"]["files"]["test-0001.json"],
+                "inside owner",
+            )
+            self.assertEqual(
+                (self.outside / "test-0001.json").read_text(encoding="utf-8"),
+                "outside sentinel",
+            )
+        finally:
+            if swapped:
+                if os.name == "nt":
+                    os.rmdir(section)
+                else:
+                    os.unlink(section)
+                os.rename(moved, section)
+
+    @unittest.skipUnless(os.name != "nt" and hasattr(os, "mkfifo"), "Unix FIFO required")
+    def test_book_owner_batch_refuses_a_fifo_without_blocking(self):
+        base = self.root / "core" / "book-generation.d"
+        for section in book_generation_owner_read.SECTIONS:
+            (base / section).mkdir(parents=True)
+        (base / "_meta.json").write_text("{}\n", encoding="utf-8")
+        os.mkfifo(base / "targets.d" / "test-0001.json")
+        result = subprocess.run(
+            [sys.executable, str(Path(book_generation_owner_read.__file__))],
+            input=json.dumps({"root": str(self.root)}).encode("utf-8"),
+            capture_output=True,
+            timeout=5,
+            check=False,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(b"not a regular file", result.stderr)
 
     def test_mock_evidence_reads_checked_regular_file_bytes(self):
         path = self.root / "spanish" / "mocks" / "paper.md"

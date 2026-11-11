@@ -9,7 +9,7 @@ headword: "ಶುಭಾಶಯಗಳು"
 gloss: "best wishes"
 romanization: "śubhāśayagaḷu"
 concept_tag: KA-WISH-WISHES
-prerequisites: [KA-C104-driver, KA-C104-shop]
+prerequisites: [KA-C104-driver, KA-C104-shop, KA-C104-object-pronouns]
 sounds: []
 roots: [sanskrit-shubha, sanskrit-ashaya]
 etymology_hook: "śubhāśayagaḷu: Sanskrit śubha 'auspicious, good' (CDIAL 12532) + āśaya 'intention' + plural -gaḷu"

@@ -1,1 +1,1 @@
-set PERL5LIB=..\lzss\lib;%PERL5LIB% && prove -l -v t
+prove -I..\lzss\lib -l -v t

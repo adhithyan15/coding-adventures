@@ -2,7 +2,7 @@ import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { cpSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { tmpdir } from "node:os";
-import { runCompletionPlan } from "../src/plan-cli.js";
+import { runCompletionPlan, runCompletionPlanAsync } from "../src/plan-cli.js";
 import { defaultCurriculumRoot, loadLanguageRegistry } from "../src/loader.js";
 import { EXAM_INVENTORY_META_OWNER } from "../src/exam-inventory-shards.js";
 
@@ -150,10 +150,19 @@ afterAll(() => {
 // case reads the same run instead of planning the whole corpus again. Memoising
 // is safe because the shared copy is clean whenever no case is mid-edit, and the
 // value is computed lazily, so either case alone still computes it for itself.
-let cleanShared: { code: number; out: string; err: string } | undefined;
-function cleanSharedRun(): { code: number; out: string; err: string } {
-  cleanShared ??= run(sharedRoot, 200);
+let cleanShared: Promise<{ code: number; out: string; err: string }> | undefined;
+function cleanSharedRun(): Promise<{ code: number; out: string; err: string }> {
+  cleanShared ??= runAsync(sharedRoot, 200);
   return cleanShared;
+}
+
+async function runAsync(root: string, headSize = 25): Promise<{ code: number; out: string; err: string }> {
+  let out = "";
+  let err = "";
+  vi.spyOn(process.stdout, "write").mockImplementation((chunk) => ((out += chunk), true));
+  vi.spyOn(process.stderr, "write").mockImplementation((chunk) => ((err += chunk), true));
+  const code = await runCompletionPlanAsync(["--root", root, "--head", String(headSize)]);
+  return { code, out, err };
 }
 
 function run(root: string, headSize = 25): { code: number; out: string; err: string } {
@@ -235,12 +244,12 @@ function committedInventorySummary(root = defaultCurriculumRoot()): {
 }
 
 describe("the plan CLI", () => {
-  it("leads French and German with their exam gap on a clean corpus", () => {
+  it("leads French and German with their exam gap on a clean corpus", async () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
     // work. Ask for the complete enumerable queue so this test continues to
     // assert that the measured French/German exam gaps survive behind that gate.
     // The NEVER_READ_* guard that used to sit here is the next case.
-    const { code, out } = cleanSharedRun();
+    const { code, out } = await cleanSharedRun();
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);
@@ -349,12 +358,12 @@ describe("the plan CLI", () => {
   // the pair overran the budget while every assertion held. Each case now runs
   // one plan; the shared run is memoised, so whichever case runs first pays
   // for it and either case alone still computes everything it needs.
-  it("plans the pruned shared copy exactly as it plans the committed corpus", () => {
+  it("plans the pruned shared copy exactly as it plans the committed corpus", async () => {
     // This guards NEVER_READ_* above. The plan only reads, so running it on the
     // committed corpus is safe, and the pruned copy must plan identically. If it
     // ever differs, one of those directories has become an input and must come
     // off the list.
-    const pruned = cleanSharedRun();
+    const pruned = await cleanSharedRun();
     vi.restoreAllMocks();
     const real = run(defaultCurriculumRoot(), 200);
     expect(pruned).toEqual(real);
@@ -468,8 +477,8 @@ describe("the plan CLI", () => {
     expect(distinct.size).toBeGreaterThan(0);
   });
 
-  it("rejects a flag used as another flag's value", () => {
-    expect(cleanSharedRun().code).toBe(0);
+  it("rejects a flag used as another flag's value", async () => {
+    expect((await cleanSharedRun()).code).toBe(0);
     let err = "";
     vi.spyOn(process.stderr, "write").mockImplementation((chunk) => ((err += chunk), true));
     expect(runCompletionPlan(["--root", "--format"])).toBe(2);

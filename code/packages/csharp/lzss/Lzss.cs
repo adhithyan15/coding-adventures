@@ -56,6 +56,13 @@ public static class Lzss
         var output = new List<byte>();
         foreach (var token in tokens)
         {
+            // Once the declared length is reached nothing more survives the
+            // final truncation; stop instead of expanding further matches.
+            if (originalLength >= 0 && output.Count >= originalLength)
+            {
+                break;
+            }
+
             switch (token)
             {
                 case LzssLiteral literal:
@@ -151,7 +158,9 @@ public static class Lzss
             return ([], 0);
         }
 
-        var originalLength = (int)BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4));
+        // Security: clamp instead of a raw (int) cast, which turns lengths >= 2^31
+        // negative (Decode treats negative as "no truncation").
+        var originalLength = (int)Math.Min(BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)), (uint)int.MaxValue);
         var blockCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4));
         var maxPossibleBlocks = (uint)(data.Length - 8);
         if (blockCount > maxPossibleBlocks)

@@ -13,5 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Lz78.fsproj" />
     <Compile Include="Lz78Tests.fs" />
+    <Compile Include="HostileHeadersTests.fs" />
   </ItemGroup>
 </Project>

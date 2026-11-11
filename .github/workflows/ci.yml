@@ -54,11 +54,29 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Full 15-shard Linux regression build every 6 hours. The 00:00 UTC run
+    # is the daily one: it also runs the same shards on macOS and Windows
+    # (see `cross_os_full` in the detect job). The cron string is matched
+    # literally in detect-main, so change both together.
+    - cron: '0 0 * * *'
+    - cron: '0 6,12,18 * * *'
+  workflow_dispatch:
+    inputs:
+      full_build:
+        description: 'Run forced, sharded full build (15 Linux shards)'
+        type: boolean
+        default: true
+      cross_os_full:
+        description: 'Also run the 15 shards on macOS and Windows (needs full_build; ~45 jobs)'
+        type: boolean
+        default: false
 
 # One run per branch at a time. Superseded runs are cancelled everywhere but
-# main (below).
+# main (below). Scheduled and dispatch runs on main use separate concurrency groups
+# so they do not block or cancel incremental push builds.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'schedule' && 'schedule' || (github.event_name == 'workflow_dispatch' && 'dispatch' || 'head') }}
   # A run on main always finishes, so main's state is always known; a
   # newer push queues behind it (GitHub keeps only the newest waiting).
   # Pull requests and other branches still cancel superseded runs.
@@ -108,6 +126,7 @@ jobs:
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       full_build: ${{ steps.detect-main.outputs.full_build }}
+      cross_os_full: ${{ steps.detect-main.outputs.cross_os_full }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
       build_matrix: ${{ steps.build-matrix.outputs.build_matrix }}
       shard_count: ${{ steps.build-matrix.outputs.shard_count }}
@@ -124,6 +143,7 @@ jobs:
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
       run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
       run_rust_grammar_regen_check: ${{ steps.detect.outputs.run_rust_grammar_regen_check }}
+      run_swift_grammar_regen_check: ${{ steps.detect.outputs.run_swift_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -161,6 +181,7 @@ jobs:
           PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
           EVENT_NAME: ${{ github.event_name }}
           GIT_REF: ${{ github.ref }}
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
             # Validate the base ref before using it to prevent script injection.
@@ -173,7 +194,11 @@ jobs:
               exit 1
             fi
           elif [ "$GIT_REF" = "refs/heads/main" ]; then
-            BASE="HEAD~1"
+            if [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ ]] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+              BASE="$BEFORE_SHA"
+            else
+              BASE="HEAD~1"
+            fi
           else
             git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
             BASE="origin/main"
@@ -181,15 +206,14 @@ jobs:
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
           echo "Diff base: $BASE"
 
-      # full_build selects the forced, sharded build every main push runs.
-      # A pull request can ask for the same build with the `ci-full-build`
-      # label, so a change to the main build itself (sharding, disk reclaim,
-      # step ceilings) is proven on its own PR instead of after it merges --
-      # main runs take 4-5 hours and batch many merges, so a regression found
-      # there is found late and blamed on the wrong PR (X-7). Add the label,
-      # then push: labelling alone does not start a run, and a re-run replays
-      # the old event's labels. A labelled PR runs only the Linux shards; drop
-      # the label for the ordinary macOS/Windows legs.
+      # full_build selects the forced, sharded full build (15 shards).
+      # It runs periodically on a schedule (every 6 hours) or via workflow_dispatch,
+      # or when a pull request carries the `ci-full-build` label.
+      # cross_os_full additionally runs those shards on macOS and Windows. It is
+      # set only by the 00:00 UTC schedule (once a day) and by a manual dispatch
+      # with `cross_os_full`; the `ci-full-build` label stays Linux-only.
+      # Ordinary pushes to main run incremental change detection against the previous commit,
+      # giving fast feedback and preserving runner headroom.
       - name: Check if main branch
         id: detect-main
         shell: bash
@@ -197,18 +221,36 @@ jobs:
           GIT_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
           FULL_BUILD_LABEL: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci-full-build') }}
+          MANUAL_FULL_BUILD: ${{ github.event.inputs.full_build }}
+          MANUAL_CROSS_OS_FULL: ${{ github.event.inputs.cross_os_full }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
         run: |
-          if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
+          if [ "$GIT_REF" = "refs/heads/main" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
-            echo "full_build=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_main=false" >> "$GITHUB_OUTPUT"
-            if [ "$FULL_BUILD_LABEL" = "true" ]; then
-              echo "::notice::ci-full-build label: running main's forced, sharded full build on this pull request"
-              echo "full_build=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "full_build=false" >> "$GITHUB_OUTPUT"
-            fi
+          fi
+
+          if [ "$EVENT_NAME" = "schedule" ] || [ "$MANUAL_FULL_BUILD" = "true" ]; then
+            echo "::notice::$EVENT_NAME: running forced, sharded full build (15 shards)"
+            echo "full_build=true" >> "$GITHUB_OUTPUT"
+          elif [ "$FULL_BUILD_LABEL" = "true" ]; then
+            echo "::notice::ci-full-build label: running forced, sharded full build on this pull request"
+            echo "full_build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "full_build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Compared as plain strings, never evaluated. The daily cron must
+          # match the 00:00 entry under `on.schedule` exactly.
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$SCHEDULE_CRON" = "0 0 * * *" ]; then
+            echo "::notice::daily schedule: also running the full build on macOS and Windows"
+            echo "cross_os_full=true" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ] && [ "$MANUAL_FULL_BUILD" = "true" ] && [ "$MANUAL_CROSS_OS_FULL" = "true" ]; then
+            echo "::notice::manual dispatch: also running the full build on macOS and Windows"
+            echo "cross_os_full=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cross_os_full=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Detect needed languages and emit build plan
@@ -355,7 +397,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ steps.detect-main.outputs.full_build }}" = "true" ]; then
-            echo "Forced full build (main push or ci-full-build label); enabling all supported toolchains"
+            echo "Forced full build (schedule, dispatch, or ci-full-build label); enabling all supported toolchains"
             printf '%s\n' \
               'needs_python=true' \
               'needs_ruby=true' \
@@ -405,6 +447,7 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           FULL_BUILD: ${{ steps.detect-main.outputs.full_build }}
+          CROSS_OS_FULL: ${{ steps.detect-main.outputs.cross_os_full }}
           BUILD_SHARDS: ${{ steps.detect.outputs.build_shards }}
           NEEDS_SWIFT: ${{ steps.toolchains.outputs.needs_swift }}
           NEEDS_ELIXIR: ${{ steps.toolchains.outputs.needs_elixir }}
@@ -444,10 +487,12 @@ jobs:
             """macOS re-runs the whole affected build. It earns its runner only
             when the change could behave differently there.
 
-            These legs exist ONLY on pull requests -- main builds from ubuntu
-            shards -- so unlike the job gates there is no main-merge safety net.
-            Dropping a leg removes that coverage from the repo entirely, which
-            is why the OS-only suites below get an explicit gate."""
+            These per-change legs exist ONLY on pull requests. main's only
+            cross-OS coverage is the daily full build (cross_os_full), which
+            can lag a regression by up to a day, so unlike the job gates there
+            is no per-merge safety net. Dropping a leg removes that coverage
+            from pull requests entirely, which is why the OS-only suites below
+            get an explicit gate."""
             # The macOS leg carries one suite gated on runner.os alone, with no
             # toolchain condition: the ADJ POSIX process-tree containment tests.
             if flag("RUN_MACOS_OS_SUITES"):
@@ -551,6 +596,24 @@ jobs:
               for shard in shards
             ]
             shard_count = len(entries)
+            if flag("CROSS_OS_FULL"):
+              # The daily full build repeats the same shards on macOS and
+              # Windows, so a platform-only regression surfaces within a day
+              # instead of only when a pull request happens to touch it. The
+              # shard plan is computed once (on Linux); each OS runs the same
+              # shard indexes against the same build-plan.json.
+              for platform in (MACOS, WINDOWS):
+                entries += [
+                  {
+                    "os": platform["os"],
+                    "label": platform["label"] + " " + shard["label"],
+                    "sharded": True,
+                    "shard_index": shard["shard_index"],
+                    "package_count": shard.get("package_count", 0),
+                    "languages": shard.get("languages", []),
+                  }
+                  for shard in shards
+                ]
           elif os.environ["EVENT_NAME"] == "pull_request":
             entries = [LINUX]
             if needs_macos(plan):
@@ -1409,6 +1472,37 @@ jobs:
             exit 1
           fi
           echo "All reconciled Rust compiled grammars are up to date."
+
+  # ── Job 7d: Swift compiled-grammar regeneration check ──────────
+  #
+  # Every Swift lexer/parser embeds its grammar in a generated _Grammar.swift.
+  # swift/grammar-tools's BUILD already runs `regen-embedded-grammars.sh
+  # --check`, but a .tokens/.grammar edit maps to no package, so a grammar-only
+  # change never scheduled that BUILD on its pull request: three ecmascript
+  # lexers drifted and every periodic full build then failed on swift/grammar-tools.
+  # This job runs the same guard whenever one of the grammars it covers, the
+  # generator, or a generated file changes (see ci-gates.json). It uses the
+  # Swift that ubuntu-latest preinstalls, as the Linux build shards do.
+  swift-grammar-regen-check:
+    name: Swift embedded-grammar regeneration check
+    needs: detect
+    if: needs.detect.outputs.run_swift_grammar_regen_check == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Fail if any embedded Swift grammar is stale
+        run: |
+          if ! bash code/packages/swift/grammar-tools/regen-embedded-grammars.sh --check; then
+            echo "::error::An embedded Swift grammar (_Grammar.swift) differs from its canonical .tokens/.grammar source."
+            echo "Run 'code/packages/swift/grammar-tools/regen-embedded-grammars.sh' locally and commit the result."
+            exit 1
+          fi
+          echo "All embedded Swift grammars are up to date."
 
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
@@ -4013,7 +4107,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m pip install --disable-pip-version-check --quiet fonttools
+          python3 -m pip install --disable-pip-version-check --quiet fonttools==4.68.0
           python3 -c "import fontTools; print('fontTools', fontTools.version)"
           # Pin the exact interpreter fontTools was just installed into.
           # tests/fonttools_oracle.rs defaults to bare `python3` (see
@@ -4104,6 +4198,20 @@ jobs:
           version: '6.8.3'
           cache: true
 
+      # The binary is keyed on the pinned version and runner OS/arch only. A PR's
+      # cache is visible to that PR alone, so it is runs on main (which restore
+      # and save in main's own cache scope) that warm it for everyone else. The
+      # version check below is a sanity check for a wrong-version or corrupt
+      # entry, not an integrity control: only main-ref jobs can write the entry
+      # PRs read, and those run reviewed, merged code.
+      - name: Restore cargo-tarpaulin cache
+        id: tarpaulin-cache
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cargo-tarpaulin
+          key: cargo-tarpaulin-0.37.2-${{ runner.os }}-${{ runner.arch }}
+
       - name: Install cargo-tarpaulin
         # PINNED, and --locked. An unpinned `cargo install` means coverage can
         # break with no repo change, and it already did once:
@@ -4132,7 +4240,22 @@ jobs:
         # which the `--engine llvm` crates need as the floating `@stable`
         # toolchain advances.
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin --version 0.37.2 --locked
+        env:
+          TARPAULIN_CACHE_HIT: ${{ steps.tarpaulin-cache.outputs.cache-hit }}
+        run: |
+          # Compiling tarpaulin from source costs ~90 s in every Linux build job
+          # (15 times in a sharded full build). The binary is cached; a cache
+          # hit is only trusted if it runs and reports the pinned version, so a
+          # binary built on a newer runner image that lands on an older one (or
+          # a corrupt entry) falls back to the same pinned, --locked install as
+          # before instead of failing the coverage steps.
+          if [ "${TARPAULIN_CACHE_HIT:-}" = "true" ] \
+             && cargo tarpaulin --version 2>/dev/null | grep -q ' 0\.37\.2$'; then
+            echo "Reusing cached cargo-tarpaulin 0.37.2"
+          else
+            cargo install cargo-tarpaulin --version 0.37.2 --locked --force
+          fi
+          cargo tarpaulin --version
 
       - name: Set up Elixir
         # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
@@ -4329,6 +4452,25 @@ jobs:
           ghc-version: '9.4'
           cabal-version: '3.10'
 
+      # GHC links with `-fuse-ld=gold`. Ubuntu 22.04/24.04 ship ld.gold inside
+      # `binutils`, but on 26.04 (what `ubuntu-latest` now resolves to) gold was
+      # split out into its own `binutils-gold` package, so a package that really
+      # links -- haskell/conduit builds `network` through hsc2hs -- failed with
+      # "collect2: fatal error: cannot find 'ld'" in every full build. Most
+      # Haskell packages here are tested with runghc and never link, which is why
+      # only conduit showed it. Install gold only when it is absent, so older
+      # images are untouched.
+      - name: Install the gold linker for GHC (Linux)
+        if: needs.detect.outputs.needs_haskell == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        shell: bash
+        run: |
+          if ! command -v ld.gold >/dev/null 2>&1; then
+            bash code/scripts/ci/apt-install.sh binutils-gold
+          fi
+          # Prove it runs, not just that the name is on PATH.
+          ld.gold --version | head -n 1
+
       # Cabal 3.10 can report a successful `cabal update` while deferring the
       # package-index cache materialization until the first solver query.  On
       # fresh hosted runners that made the first Haskell BUILD incorrectly
@@ -4470,6 +4612,17 @@ jobs:
             if (Test-Path $_) {
               Add-Content -Path $env:GITHUB_PATH -Value $_
             }
+          }
+          # Prepending msys64\usr\bin puts MSYS2's coreutils `link.exe` (the
+          # hard-link creator) ahead of MSVC's linker. rustc and cl then run it
+          # as a linker and every crate that links fails with "linking with
+          # `link.exe` failed": 33 wasm/* packages in the first Windows full
+          # build, the only run that installs Ruby and Rust together. Nothing in
+          # this job calls coreutils `link` (scripts use `ln`), so rename it and
+          # let the MSVC `link.exe` that the MSVC bootstrap put on PATH win.
+          $coreutilsLink = Join-Path $env:RUBY_PREFIX 'msys64\usr\bin\link.exe'
+          if (Test-Path $coreutilsLink) {
+            Rename-Item -LiteralPath $coreutilsLink -NewName 'link.exe.msys-coreutils'
           }
 
       # ── Verify toolchains ────────────────────────────────────
@@ -5729,19 +5882,30 @@ jobs:
       # disk-watch.sh prints `df` every five minutes and a breakdown of the
       # largest directories when usage crosses 70/80/90/95%, so a shard that
       # runs out of disk says what filled it while it still can (#17652).
+      # NOTE: the step name is load-bearing. The build-tool validators (Go,
+      # Python, Elixir, Lua, Perl, .NET) and ci_package_durations.py match on
+      # the literal "Full build on main merge", and a CI acceptance test indexes
+      # on it. The build now also runs on schedule/dispatch/label, but renaming
+      # the step would silently disable those checks.
       - name: Full build on main merge
         if: needs.detect.outputs.full_build == 'true'
-        timeout-minutes: 150
+        # Linux shards keep the 150-minute ceiling. The daily macOS/Windows
+        # shards run the same work on slower runners, so they get the same
+        # 300-minute ceiling as the pull-request build step above.
+        timeout-minutes: ${{ matrix.os == 'ubuntu-latest' && 150 || 300 }}
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          code/scripts/ci/disk-watch.sh report "before full build"
-          code/scripts/ci/disk-watch.sh watch 300 &
-          disk_watch_pid=$!
-          trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after full build"' EXIT
+          # Windows is left out of disk-watch, as in the pull-request build.
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            code/scripts/ci/disk-watch.sh report "before full build"
+            code/scripts/ci/disk-watch.sh watch 300 &
+            disk_watch_pid=$!
+            trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after full build"' EXIT
+          fi
           # -prune-leaf-targets: each standalone Cargo package builds its whole
           # dependency tree into its own target/, and keeping them all filled
           # the runner disk part-way through a shard (X-7). A leaf's target/
@@ -5778,7 +5942,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5807,6 +5971,7 @@ jobs:
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
           RUST_GRAMMAR_REGEN_RESULT: ${{ needs['rust-grammar-regen-check'].result }}
+          SWIFT_GRAMMAR_REGEN_RESULT: ${{ needs['swift-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
@@ -5845,7 +6010,7 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
           # A selected conformance job may not silently skip: missing training
           # evidence must not become a green required check.
@@ -5853,7 +6018,7 @@ jobs:
             true:success|false:success|false:skipped) ;;
             *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
           esac
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

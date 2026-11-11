@@ -57,6 +57,14 @@ public static class Lz78
 
         foreach (var token in tokens)
         {
+            // Security: once the declared length is reached nothing more
+            // survives the final truncation; stop instead of expanding further
+            // (a hostile chain of tokens otherwise expands quadratically).
+            if (originalLength >= 0 && output.Count >= originalLength)
+            {
+                break;
+            }
+
             if (token.DictIndex < 0 || token.DictIndex >= table.Count)
             {
                 throw new InvalidOperationException("Token references a dictionary entry that does not exist");
@@ -111,13 +119,16 @@ public static class Lz78
             return ([], 0);
         }
 
-        var originalLength = (int)BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4));
-        var tokenCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4));
+        // Security: a raw (int) cast turns lengths >= 2^31 negative, which
+        // Decode treats as "no truncation"; clamp instead.  The token count is
+        // clamped to the complete 4-byte tokens actually present.
+        var originalLength = (int)Math.Min(BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)), (uint)int.MaxValue);
+        var tokenCount = Math.Min((long)BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4)), (data.Length - 8) / 4);
         var tokens = new List<Lz78Token>();
 
-        for (var i = 0u; i < tokenCount; i++)
+        for (var i = 0; i < tokenCount; i++)
         {
-            var index = 8 + ((int)i * 4);
+            var index = 8 + (i * 4);
             if (index + 4 > data.Length)
             {
                 break;

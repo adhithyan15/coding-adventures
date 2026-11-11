@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "See You Soon",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ec713e83b3feecba",
+  "sourceHash": "fnv1a64:8e165ab4fc50e417",
   "lessons": [
     {
       "id": "KA-C106-farewell",
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e064dbc8f15074de",
+      "sourceHash": "fnv1a64:bce4dc0f703e2920",
       "notice": null,
       "blocks": [
         {
@@ -855,6 +855,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "the object ending; then me, respectful you, him, her, it and them as objects",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the object ending; then me, respectful you, him, her, it and them as objects]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "festival greetings; thank a host for their hospitality; name love and appreciation",
               "spoken": true,
               "scored": false,
@@ -885,7 +894,7 @@
             },
             {
               "kind": "speech",
-              "text": "Other? (ಬೇರೆ.) Wrong? (ತಪ್ಪು.) All? (ಎಲ್ಲಾ.) Only one? (ಒಂದೇ.) For no reason? (ಸುಮ್ಮನೆ.) House, street, city, country, state? (ಮನೆ, ಬೀದಿ, ನಗರ, ದೇಶ, ರಾಜ್ಯ.) Business, worker, police, driver, shop? (ವ್ಯಾಪಾರ, ಕೆಲಸಗಾರ, ಪೊಲೀಸ್, ಚಾಲಕ, ಅಂಗಡಿ.) Best wishes? (ಶುಭಾಶಯಗಳು.) Festival? (ಹಬ್ಬ.) Hospitality? (ಆತಿಥ್ಯ.) Love? (ಪ್ರೀತಿ.) Appreciation? (ಮೆಚ್ಚುಗೆ.) Farewell? (ವಿದಾಯ (vidāya).) Today? (ಇವತ್ತು (ivattu).) Later? (ನಂತರ (nantara).) Please phone? (ಫೋನ್ ಮಾಡಿ (phōn māḍi).) I'll see you? (ಸಿಗುತ್ತೇನೆ (siguttēne).)"
+              "text": "Other? (ಬೇರೆ.) Wrong? (ತಪ್ಪು.) All? (ಎಲ್ಲಾ.) Only one? (ಒಂದೇ.) For no reason? (ಸುಮ್ಮನೆ.) House, street, city, country, state? (ಮನೆ, ಬೀದಿ, ನಗರ, ದೇಶ, ರಾಜ್ಯ.) Business, worker, police, driver, shop? (ವ್ಯಾಪಾರ, ಕೆಲಸಗಾರ, ಪೊಲೀಸ್, ಚಾಲಕ, ಅಂಗಡಿ.) Object ending? (-ಅನ್ನು.) Me and respectful you as objects? (ನನ್ನನ್ನು, ನಿಮ್ಮನ್ನು.) Best wishes? (ಶುಭಾಶಯಗಳು.) Festival? (ಹಬ್ಬ.) Hospitality? (ಆತಿಥ್ಯ.) Love? (ಪ್ರೀತಿ.) Appreciation? (ಮೆಚ್ಚುಗೆ.) Farewell? (ವಿದಾಯ (vidāya).) Today? (ಇವತ್ತು (ivattu).) Later? (ನಂತರ (nantara).) Please phone? (ಫೋನ್ ಮಾಡಿ (phōn māḍi).) I'll see you? (ಸಿಗುತ್ತೇನೆ (siguttēne).)"
             }
           ]
         }

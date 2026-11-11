@@ -139,3 +139,35 @@ on a shrunk list.
 4. The CI job.
 5. Static semantics (early errors) in `javascript-parser`, each slice growing
    the list.
+
+## 10. Progress of the early-error slices
+
+Each slice lists what it added, so the next one can start from what is left.
+
+- **Function-level, strict-mode and template early errors (2026-11-10).**
+  `javascript-parser/src/function_errors.rs`: duplicate parameters, `"use
+  strict"` with non-simple parameters, rest-parameter placement, parameter
+  versus body lexical names, strict `eval`/`arguments`/reserved-word bindings,
+  `with` and legacy octal literals in strict code, `await` as an identifier in
+  async functions, `super.x` outside methods, `async` followed by a line
+  break, untagged-template escapes, a template after an optional chain, rest
+  elements in array binding patterns, and for-in/of head initializers.
+  `early_errors.rs` gained a full assignment-target validator (`invalid_target`);
+  `asi.rs` reads a single-statement `let` followed by a line break as an
+  identifier. Written to restore a gate that had gone red when the grammar
+  began to accept async function expressions and object methods (264
+  regressions that had only ever "passed" because those constructs failed to
+  parse).
+- **Still open:** top-level `super.x` and `new.target` (needs a Script goal),
+  `super()` calls (the grammar has no call form), `await` expressions inside
+  async functions (they do not parse yet), `yield`/`await` in the remaining
+  binding positions, function-body-level `let`/`var` redeclarations, the
+  Annex B `for (var x = 1 in y)` form, and elisions in binding patterns.
+
+### Rule for later slices
+
+A change that makes the grammar accept new syntax is a conformance change: it
+turns every negative test about that syntax from "passes because it fails to
+parse" into "passes only if an early error fires". Run the runner over the
+directories that syntax lives in before merging, and land the early errors in
+the same change.

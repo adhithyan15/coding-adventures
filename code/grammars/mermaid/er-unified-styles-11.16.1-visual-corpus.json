@@ -1,0 +1,10 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "native Metal rendering coverage for the unified ER style sources without claiming browser HTML-label styling fidelity",
+  "fixtures": [
+    "unified-direct-style-statement",
+    "unified-class-statements",
+    "unified-default-class-and-direct-style"
+  ]
+}

@@ -190,6 +190,10 @@ export function decode(tokens: Token[], initialBuffer: Uint8Array = new Uint8Arr
   for (const tok of tokens) {
     if (tok.length > 0) {
       // Copy length bytes from position (output.length - offset).
+      // A zero offset or one reaching before the start of the output is
+      // invalid (corrupt or hostile input): stop and return what has been
+      // produced so far rather than reading undefined bytes.
+      if (tok.offset === 0 || tok.offset > output.length) break;
       const start = output.length - tok.offset;
       // Copy byte-by-byte to handle overlapping matches (offset < length).
       for (let i = 0; i < tok.length; i++) {
@@ -246,7 +250,11 @@ export function deserialiseTokens(data: Uint8Array): Token[] {
   if (data.length < 4) return [];
 
   const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-  const count = view.getUint32(0, false);
+  // Security: the header count is attacker-controlled (up to 2^32-1).  Clamp
+  // it to the number of complete 4-byte tokens actually present so neither
+  // allocation nor iteration follows the claim; a larger claim is treated as
+  // truncated.
+  const count = Math.min(view.getUint32(0, false), Math.floor((data.length - 4) / 4));
   const tokens: Token[] = [];
 
   for (let i = 0; i < count; i++) {

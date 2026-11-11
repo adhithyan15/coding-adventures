@@ -2,6 +2,19 @@
 
 ## 0.1.0 — unreleased
 
+- **Gate restored: 264 regressions fixed, 14,304 more tests listed (2026-11-10).**
+  The grammar had begun to accept object methods, async function expressions
+  and `let` as a single-statement body (#19048, #19061, #19068, #19073), and the
+  negative tests about those constructs had only "passed" because they failed
+  to parse. javascript-parser now has the early errors for them
+  (`function_errors.rs`, a full assignment-target validator in
+  `early_errors.rs`, and `let` + line break in `asi.rs`; see its 0.67.8
+  changelog). A filtered check by root cause: 248 were "accepted a program that
+  must be a SyntaxError", 16 were "rejected a valid program" (`let`), none was
+  removed from the list. A full run at 7ab7faf: 102,955 results, 83,741 pass, 0
+  regressions; `--update` added the 14,304 unlisted passes (the list is now
+  83,741 ids) and removed nothing.
+
 - **ExpressionStatement lookahead (F12 phase 0): 94 tests now pass, 74 are
   removed.** The 94 are negative tests that are now correctly rejected, such
   as `if (x) class C {}` and declarations in loop bodies. The owner approved

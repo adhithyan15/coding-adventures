@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- Hardening (CWE-789): decode stops once original_length is reached (quadratic expansion before truncation) and on a dangling dict_index (previously died with 'undefined value as an ARRAY reference'). The token count was already capped.
+- Added t/02-hostile-headers.t (Test::More): hostile headers checked for bounded time and sane results, plus round trips over every byte string of length <= 2 and a seeded random sample. (The pre-existing t/*.t need Test2::V0, which is not installed in the local review environment.)
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

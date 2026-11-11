@@ -40,6 +40,8 @@
 - `table_end` computed with checked arithmetic.
 - Tables with more than 256 entries or a repeated symbol return `Err`
   (Kraft alone admits ~2^56 long codes, a memory amplification).
+- CWE-789 (SEC-001): the output capacity hint is also capped at the payload bit
+  count, and `tests/hostile_headers.rs` adds hostile-header regression tests.
 
 ## [0.1.0] - 2026-04-12
 

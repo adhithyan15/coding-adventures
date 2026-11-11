@@ -119,6 +119,11 @@ module CodingAdventures
 
         tokens.each do |token|
           if token.length > 0
+            # A zero offset or one reaching before the start of the output is
+            # invalid (corrupt or hostile input): stop and return what has been
+            # produced so far rather than reading nil / wrapped indexes.
+            break if token.offset.zero? || token.offset > output.length
+
             # Copy length bytes from position (output.length - offset).
             start = output.length - token.offset
             # Copy byte-by-byte to handle overlapping matches (offset < length).
@@ -158,7 +163,11 @@ module CodingAdventures
       def self.deserialise_tokens(data)
         return [] if data.bytesize < 4
 
-        count = data.unpack1("N")
+        # Security: the header count is attacker-controlled (up to 2^32-1).
+        # Clamp it to the number of complete 4-byte tokens actually present so
+        # neither allocation nor iteration follows the claim; a larger claim is
+        # treated as truncated.
+        count = [data.unpack1("N"), (data.bytesize - 4) / 4].min
         tokens = []
 
         count.times do |i|

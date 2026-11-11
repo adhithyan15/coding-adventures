@@ -67,7 +67,9 @@ type Lzss =
         let originalLength = defaultArg originalLength -1
         let output = ResizeArray<byte>()
 
-        for token in tokens do
+        // Once the declared length is reached nothing more survives the final
+        // truncation; stop instead of expanding further matches.
+        for token in tokens |> Seq.takeWhile (fun _ -> originalLength < 0 || output.Count < originalLength) do
             match token with
             | Literal value -> output.Add value
             | Match(offset, length) ->
@@ -127,7 +129,8 @@ type Lzss =
         if data.Length < 8 then
             [], 0
         else
-            let originalLength = int (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)))
+            // Security: clamp instead of a raw `int` cast (negative = "no truncation").
+            let originalLength = int (min (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4))) (uint32 Int32.MaxValue))
             let mutable blockCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4))
             let maxPossibleBlocks = uint32 (data.Length - 8)
             if blockCount > maxPossibleBlocks then

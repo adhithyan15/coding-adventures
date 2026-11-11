@@ -5,8 +5,12 @@
 //! clauses, module/script top-level, and class static blocks).
 //!
 //! Subordinate statements in `if`, `while`, `do-while`, `for`, `with`, and `label:` take a
-//! single Statement. Inputs like `if (1) let\nx = 1` or `if (1) const x = 1;` must be refused
+//! single Statement. Inputs like `if (1) let x = 1;` or `if (1) const x = 1;` must be refused
 //! fail-closed and never compiled to a different program (e.g. `let x=1;`).
+//!
+//! The one near-miss is a line break after `let`: ExpressionStatement only refuses `let [`,
+//! so `if (1) let\nx = 1;` is `let` (an identifier) ended by ASI, then `x = 1;`. It must
+//! compile as that, and never as the declaration `let x = 1;`.
 
 use std::process::Command;
 
@@ -14,7 +18,6 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 
 /// Programs that must be refused at parse stage, never compiled to a different program.
 const REFUSED: &[&str] = &[
-    "if (1) let\nx = 1;",
     "if (1) const x = 1;",
     "if (x) let y = 2;",
     "if (x) const y = 2;",
@@ -69,6 +72,25 @@ fn single_statement_lexical_declarations_are_refused() {
                 !out.status.success(),
                 "Program must be refused at {level}, but succeeded: {src:?}\nOutput: {}",
                 String::from_utf8_lossy(&out.stdout)
+            );
+        }
+    }
+}
+
+#[test]
+fn let_then_a_line_break_is_an_identifier_never_a_declaration() {
+    for src in ["if (1) let\nx = 1;", "while (0) let\n{}", "lbl: let\nx = 1;"] {
+        for level in ["SIMPLE", "WHITESPACE_ONLY"] {
+            let out = run_compiler(src, level);
+            assert!(
+                out.status.success(),
+                "`let` then a line break is valid sloppy code at {level}: {src:?}\nStderr: {}",
+                String::from_utf8_lossy(&out.stderr)
+            );
+            let compiled = String::from_utf8(out.stdout).expect("UTF-8 stdout");
+            assert!(
+                !compiled.contains("let x") && !compiled.contains("let{") && !compiled.contains("let {"),
+                "compiled to a declaration at {level}: {src:?} -> {compiled:?}"
             );
         }
     }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { measureLiteralMarkup, renderLiteralMarkup, stripHtmlComments } from "../src/literal-markup.js";
-import { parseLesson } from "../src/parse.js";
-import { loadEverything } from "../src/loader.js";
+import { parseLesson, type ParsedLesson } from "../src/parse.js";
+import { loadLessonsAsync } from "../src/loader.js";
 import { generatedBookOutputs } from "../src/book-cli.js";
 
 const lesson = (body: string) =>
@@ -21,6 +21,14 @@ const lesson = (body: string) =>
     ].join("\n"),
     "spanish",
   );
+
+// These two read-only corpus assertions inspect the same source bytes. Keep
+// one bounded load for this test module; a new test that edits lessons must
+// call the loader again rather than reusing this promise.
+let corpusLessonsPromise: Promise<ParsedLesson[]> | undefined;
+function corpusLessons(): Promise<ParsedLesson[]> {
+  return corpusLessonsPromise ??= loadLessonsAsync();
+}
 
 describe("literal markup", () => {
   it("catches the exact defect that shipped to three books", () => {
@@ -156,8 +164,8 @@ describe("literal markup", () => {
     expect(Date.now() - started).toBeLessThan(500);
   });
 
-  it("THE GATE: the committed corpus carries no literal markup at either layer", () => {
-    const { lessons } = loadEverything();
+  it("THE GATE: the committed corpus carries no literal markup at either layer", async () => {
+    const lessons = await corpusLessons();
     // The generator's own output, not the committed files: this asks whether the
     // books a reader would get TODAY are clean, which is one step ahead of
     // whatever happens to be checked in.
@@ -183,10 +191,10 @@ describe("literal markup", () => {
     // the gates, so it gets twice their budget rather than lifting them all.
   }, 360_000);
 
-  it("proves the corpus gate is not vacuous", () => {
+  it("proves the corpus gate is not vacuous", async () => {
     // The check above passes on an empty input too. This pins that the same
     // measurement, over the same corpus plus one planted line, actually fires.
-    const { lessons } = loadEverything();
+    const lessons = await corpusLessons();
     const planted = [...lessons, lesson("planted &nbsp; control")];
     expect(measureLiteralMarkup(planted).summary.sourceFindings).toBe(1);
   }, 60_000);

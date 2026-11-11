@@ -98,6 +98,7 @@ import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -243,37 +244,54 @@ public final class LZSS {
      * @return the reconstructed bytes
      */
     public static byte[] decode(List<Token> tokens, int originalLength) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // Security / performance: the previous implementation re-read
+        // out.toByteArray() (a full copy of the output) for every copied byte,
+        // which is quadratic in the output size.  Keep a plain growable array
+        // so a back-reference copy is O(length), and stop once the declared
+        // length is reached (nothing more survives the final trim).
+        byte[] buf = new byte[256];
+        int len = 0;
 
         for (Token token : tokens) {
+            if (originalLength >= 0 && len >= originalLength) break;
+
             if (token instanceof Literal lit) {
-                out.write(lit.value());
+                buf = ensureCapacity(buf, len, 1);
+                buf[len++] = (byte) lit.value();
             } else {
-                Match m   = (Match) token;
-                int start = out.size() - m.offset();
-                // Guard: offset must not exceed what has already been written.
-                // A crafted stream with offset > out.size() would produce a
-                // negative start index and cause ArrayIndexOutOfBoundsException.
-                if (start < 0) {
+                Match m = (Match) token;
+                // Guard: a zero offset, or one reaching before the start of
+                // the output, is invalid (corrupt or hostile input).
+                if (m.offset() < 1 || m.offset() > len) {
                     throw new IllegalArgumentException(
                         "LZSS: back-reference offset " + m.offset() +
-                        " exceeds output buffer size " + out.size());
+                        " is invalid for output buffer size " + len);
                 }
+                buf = ensureCapacity(buf, len, m.length());
+                int start = len - m.offset();
                 for (int i = 0; i < m.length(); i++) {
-                    out.write(out.toByteArray()[start + i]);
+                    buf[len++] = buf[start + i];
                 }
             }
         }
 
-        byte[] result = out.toByteArray();
         // originalLength must be non-negative; negative values (from crafted headers)
         // are treated as "no truncation" to avoid NegativeArraySizeException.
-        if (originalLength >= 0 && originalLength < result.length) {
-            byte[] trimmed = new byte[originalLength];
-            System.arraycopy(result, 0, trimmed, 0, originalLength);
-            return trimmed;
+        if (originalLength >= 0 && originalLength < len) {
+            len = originalLength;
         }
-        return result;
+        return Arrays.copyOf(buf, len);
+    }
+
+    /** Grow {@code buf} (doubling) so that {@code extra} more bytes fit. */
+    private static byte[] ensureCapacity(byte[] buf, int len, int extra) {
+        long needed = (long) len + extra;
+        if (needed <= buf.length) return buf;
+        if (needed > Integer.MAX_VALUE - 8) {
+            throw new IllegalArgumentException("LZSS: decoded output too large");
+        }
+        long grown = Math.max(needed, Math.min((long) buf.length * 2, Integer.MAX_VALUE - 8));
+        return Arrays.copyOf(buf, (int) grown);
     }
 
     // =========================================================================
@@ -395,11 +413,14 @@ public final class LZSS {
         if (data == null || data.length < HEADER_SIZE) return new ArrayList<>();
         ByteBuffer header = ByteBuffer.wrap(data, 0, HEADER_SIZE).order(ByteOrder.BIG_ENDIAN);
         /* originalLength = */ header.getInt();
-        int blockCount = header.getInt();
+        // Security: block_count is an unsigned 32-bit attacker-controlled
+        // value.  Read it as unsigned (a raw int goes negative above 2^31 and
+        // silently decoded zero blocks), then cap it against the payload size
+        // so iteration never follows the claim.
+        long blockCount = header.getInt() & 0xFFFFFFFFL;
 
-        // Cap block count against actual payload to prevent DoS.
         int maxBlocks = data.length - HEADER_SIZE; // at least 1 byte per block
-        int safeCount = Math.min(blockCount, maxBlocks);
+        int safeCount = (int) Math.min(blockCount, (long) maxBlocks);
 
         List<Token> tokens = new ArrayList<>();
         int pos = HEADER_SIZE;
