@@ -1701,10 +1701,21 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
     // it sits at the very top of the function body it's meant to
     // govern. CC has the same ordering.
     if config.language.emit_use_strict {
+        // CCR-085 (#15920): match upstream Closure Compiler by emitting
+        // single-quoted `'use strict';`. In pretty-print mode, add a trailing
+        // newline; in compact mode, emit `'use strict';` directly before the
+        // next statement with no extra newline.
+        let is_pretty = config
+            .formatting
+            .formatting
+            .contains(&crate::config::FormattingMode::PrettyPrint);
+        let directive = if is_pretty {
+            "'use strict';\n"
+        } else {
+            "'use strict';"
+        };
         // CLOC11.62 — record the emit_use_strict contribution
-        // on the combined entry. The directive is a fixed-size
-        // 16-byte prepend (`"use strict";\n`), so meta carries
-        // the input/output byte lengths.
+        // on the combined entry.
         if let Some(id) = &combined_cv_id {
             let mut meta = std::collections::HashMap::new();
             meta.insert(
@@ -1714,7 +1725,7 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
             meta.insert(
                 "output_byte_len".to_string(),
                 serde_json::Value::Number(
-                    ((combined.len() + 16) as u64).into(),
+                    ((combined.len() + directive.len()) as u64).into(),
                 ),
             );
             cv_log.contribute(
@@ -1724,11 +1735,7 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
                 meta,
             ).map_err(provenance_error("emit_use_strict"))?;
         }
-        // Use double quotes to match CC's emission. A trailing
-        // newline keeps the directive on its own line, which is
-        // visually clearer in --output_wrapper templates that
-        // include their own newlines.
-        combined.insert_str(0, "\"use strict\";\n");
+        combined.insert_str(0, directive);
     }
 
     // Step 3 (CLOC11.30): apply --output_wrapper / --output_wrapper_file.
@@ -2681,7 +2688,7 @@ mod tests {
         let out = run_compiler(&cfg).expect("ok");
         // Directive lands at the very top.
         assert!(
-            out.stdout_text.starts_with("\"use strict\";"),
+            out.stdout_text.starts_with("'use strict';"),
             "expected leading 'use strict'; got: {:?}",
             out.stdout_text
         );
@@ -2740,7 +2747,7 @@ mod tests {
         // the user code — not before the opener.
         let s = &out.stdout_text;
         let iife_start = s.find("(function(){").expect("iife opener");
-        let directive = s.find("\"use strict\";").expect("directive");
+        let directive = s.find("'use strict';").expect("directive");
         let body = s.find("var x=1;").expect("body");
         assert!(iife_start < directive, "got: {s}");
         assert!(directive < body, "got: {s}");
@@ -2778,11 +2785,11 @@ mod tests {
         let out = run_compiler(&cfg).expect("ok");
         let s = &out.stdout_text;
         assert!(s.starts_with("PRE "), "got: {s}");
-        assert!(s.contains("\"use strict\";"), "got: {s}");
+        assert!(s.contains("'use strict';"), "got: {s}");
         assert!(s.ends_with(" POST"), "got: {s}");
         // Directive sits between PRE and the body.
         let pre = s.find("PRE ").expect("pre");
-        let directive = s.find("\"use strict\";").expect("directive");
+        let directive = s.find("'use strict';").expect("directive");
         let body = s.find("var x=1;").expect("body");
         assert!(pre < directive);
         assert!(directive < body);

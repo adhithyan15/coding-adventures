@@ -545,6 +545,65 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // CCR-085 (#15920): strip leading `"use strict"` and `'use strict'` directive
+    // prologues at script top-level and at the beginning of function bodies.
+    //
+    // Upstream Closure Compiler strips a leading run of `"use strict"` / `'use strict'`
+    // directives at parse time (unless `--emit_use_strict` is passed, in which case
+    // it prepends a single single-quoted `'use strict';`). Non-"use strict" directives
+    // (such as `"use asm"` or `"x"`) survive, and a `"use strict"` that follows any
+    // other statement is kept.
+    {
+        let partners = bracket_partners(&kept);
+        let mut drops: Vec<usize> = Vec::new();
+
+        // 1. Script top-level prologue (starting at index 0).
+        let mut i = 0;
+        while i < kept.len() {
+            let t = kept[i];
+            if is_string_literal(t) && t.value == "use strict" {
+                drops.push(i);
+                if i + 1 < kept.len() && is_structural_punct(kept[i + 1], ";") {
+                    drops.push(i + 1);
+                    i += 2;
+                } else {
+                    i += 1;
+                }
+            } else {
+                break;
+            }
+        }
+
+        // 2. Function body prologues (starting right after `{` where `{` is a function body).
+        for brace_idx in 0..kept.len() {
+            if is_structural_punct(kept[brace_idx], "{")
+                && is_function_body_open(&kept, &partners, brace_idx)
+            {
+                let mut j = brace_idx + 1;
+                while j < kept.len() {
+                    let t = kept[j];
+                    if is_string_literal(t) && t.value == "use strict" {
+                        drops.push(j);
+                        if j + 1 < kept.len() && is_structural_punct(kept[j + 1], ";") {
+                            drops.push(j + 1);
+                            j += 2;
+                        } else {
+                            j += 1;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        drops.sort_unstable();
+        drops.dedup();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-089: empty `new` call-paren drop for a MEMBER-expression
     // callee — `new a.b()` → `new a.b`, `new a.b.c()` → `new a.b.c`,
     // `new a[x]()` → `new a[x]`. gap-050 (in the emit loop) already
@@ -6401,6 +6460,41 @@ fn bracket_partners(kept: &[&lexer::token::Token]) -> Vec<usize> {
     partners
 }
 
+/// CCR-085 (#15920): returns true if `{` at `brace_idx` opens a function,
+/// method, accessor, constructor, or arrow function body.
+fn is_function_body_open(
+    kept: &[&lexer::token::Token],
+    partners: &[usize],
+    brace_idx: usize,
+) -> bool {
+    if brace_idx == 0 {
+        return false;
+    }
+    let prev = kept[brace_idx - 1];
+    if is_structural_punct(prev, "=>") {
+        return true;
+    }
+    if is_structural_punct(prev, ")") {
+        let paren_close = brace_idx - 1;
+        let paren_open = partners[paren_close];
+        if paren_open == usize::MAX || paren_open == 0 {
+            return false;
+        }
+        let before_paren = paren_open - 1;
+        let kw = kept[before_paren];
+        if is_word_like(kw) {
+            let val = kw.value.as_str();
+            let is_prop = before_paren > 0
+                && matches!(kept[before_paren - 1].value.as_str(), "." | "?.");
+            if !is_prop && matches!(val, "if" | "while" | "for" | "switch" | "with" | "catch") {
+                return false;
+            }
+        }
+        return true;
+    }
+    false
+}
+
 fn is_async_function_or_method_header(
     kept: &[&lexer::token::Token],
     partners: &[usize],
@@ -10322,6 +10416,35 @@ mod tests {
         );
         // Any other string still loses the empty statement.
         assert_eq!(minify(";\"a\";f();"), "\"a\";f();");
+    }
+
+    /// CCR-085 (#15920): strips leading "use strict" and 'use strict' directive
+    /// prologues in scripts and function bodies.
+    #[test]
+    fn ccr085_strips_leading_use_strict_in_program_and_function() {
+        // Top-level stripped
+        assert_eq!(minify("\"use strict\";f();"), "f();");
+        assert_eq!(minify("'use strict';f();"), "f();");
+        assert_eq!(minify("\"use strict\";\"use strict\";f();"), "f();");
+        assert_eq!(minify("\"use strict\";"), "");
+        assert_eq!(minify("'use strict'"), "");
+
+        // Function bodies stripped
+        assert_eq!(minify("function g(){'use strict';f()}"), "function g(){f()};");
+        assert_eq!(minify("function g(){\"use strict\";return 1}"), "function g(){return 1};");
+        assert_eq!(minify("var f=()=>{'use strict';x()};"), "var f=()=>{x()};");
+        assert_eq!(minify("class C{m(){'use strict';x()}}"), "class C{m(){x()}}");
+        assert_eq!(minify("class C{constructor(){'use strict'}}"), "class C{constructor(){}}");
+        assert_eq!(minify("var o={m(){'use strict';x()}};"), "var o={m(){x()}};");
+
+        // Non-use-strict directives survive
+        assert_eq!(minify("\"use asm\";\"use strict\";f();"), "\"use asm\";\"use strict\";f();");
+        assert_eq!(minify("\"use strict\";\"use asm\";f();"), "\"use asm\";f();");
+        assert_eq!(minify("\"x\";f();"), "\"x\";f();");
+
+        // Blocks that are not function bodies keep "use strict"
+        assert_eq!(minify("{\"use strict\";var x=1;}"), "{\"use strict\";var x=1};");
+        assert_eq!(minify("if(a){\"use strict\";}"), "if(a)\"use strict\";");
     }
 
     #[test]
