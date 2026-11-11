@@ -413,9 +413,28 @@ describe("hostile input", () => {
     ).toThrow();
   });
 
-  it("decodes a large valid input in linear time", () => {
-    const data = new Uint8Array(400_000);
-    for (let i = 0; i < data.length; i++) data[i] = i % 7;
-    expect(decompress(compress(data))).toEqual(data);
-  });
+  // The guard is against quadratic decoding: an O(n^2) decoder needs hours for
+  // ~1.2 M bits, so a generous explicit timeout still catches it. It is NOT a
+  // speed benchmark. Vitest's default 5 s timeout made it one: under
+  // --coverage on a loaded Windows runner the honest linear decode took 5.4 s.
+  // The bytes are compared in a plain loop because `toEqual` on a 400 KB
+  // array is slower than the decode it checks.
+  it(
+    "decodes a large valid input in linear time",
+    () => {
+      const data = new Uint8Array(400_000);
+      for (let i = 0; i < data.length; i++) data[i] = i % 7;
+      const out = decompress(compress(data));
+      expect(out.length).toBe(data.length);
+      let firstDiff = -1;
+      for (let i = 0; i < data.length; i++) {
+        if (out[i] !== data[i]) {
+          firstDiff = i;
+          break;
+        }
+      }
+      expect(firstDiff).toBe(-1);
+    },
+    60_000,
+  );
 });

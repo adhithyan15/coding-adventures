@@ -1,6 +1,55 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-11-10)
+
+VER13 AS-001a part 2: reports cite the assumption catalogue, pin it, and
+`--check` enforces the report-side assumption rules. The report format changes
+(breaking), hence the minor version bump.
+
+- New module `catalogue`: loads `code/assumptions/catalogue-v1.json`,
+  `evidence-kinds.json` and `non-claims.json`, found by walking up from the package
+  directory. Fails closed on a missing, oversized (1 MiB / 256 KiB / 64 KiB, checked
+  while reading), non-UTF-8 or malformed file: unknown or missing fields, duplicate
+  keys, out-of-vocabulary values, dangling or cyclic `depends_on`/`refines`,
+  inconsistent `refines`/`refined_by`, the catalogue-side AC-3/AC-8/AC-11/AC-15
+  shape rules, evidence kinds named but not defined (or defined but unused), and
+  evidence-id patterns that overlap or leave their manifest's namespace.
+- New module `assumptions`: derives each claim's assumption list (every entry whose
+  `applies_to` matches the label, claim kinds and package, closed over
+  `depends_on`/`refines`/`refined_by`), the new report-level `assumptions` list, and
+  each exemption's list (VER13 section 3.9); and checks AC-1..AC-14 with the spec's
+  diagnostic names (`UnknownAssumption`, `EmptyAssumptions`, `UnevidencedDischarge`,
+  `SilentlyDroppedAssumption`, `LabelOutranksAssumptions`, `PartialUmbrella`,
+  `StackMismatch`, `FloorDischarged`, `PinMismatch`, `UnusedAssumption`,
+  `StaleAttestation`, `NonClaimReported`, `ExemptionAssumptionMismatch`,
+  `CatalogueDrift`). `verify_evidence` runs them before the field comparison
+  (`EvidenceCheckError::Assumption`).
+- Report format: new `catalogue` pin object and top-level `assumptions`; each proof
+  gains `stack` (`host-rustc`), `rung` (`R0`), `discharged` and `remaining_by_layer`;
+  each exemption gains `assumptions`. All are parsed strictly (absent or mistyped is
+  an error, not a default). The legacy strings `compiler.preserves_timing`,
+  `memory.unaliased`, `heap-bound:unchecked`, `depth-bound:unchecked` are now seeds
+  resolved through the catalogue (`wir.bound.*-unchecked`).
+- `Evidence` gains `package_id`, `catalogue`, `manifest_sha256` and `pinned` (an
+  optional per-entry build tuple, rule AC-9). `verify_evidence` checks that the
+  report is for the evidence's package; `generate_package_report` refuses a mismatch.
+- The `pass`-verdict rule against unchecked rows also matches `*-unchecked` ids.
+- CLI: `--strict` turns the AC-10 unused-assumption warning into a failure; unused
+  entries are printed as `warning: AC-10 UnusedAssumption: <id>`.
+- Tests: `tests/test_assumptions.rs` (a falsification test per rule, positive
+  controls for a backed discharge and a pinned per-run discharge, loader negatives,
+  strict report parsing, the CLI `--strict` path). Test sandboxes copy
+  `code/assumptions/`.
+- `effect_certificate.json` regenerated.
+- Security review (LOW findings): the catalogue is loaded from the repository root at
+  which the package's Warrant document was found, which must be a strict ancestor of
+  the package directory (`CatalogueSet::load_for_package`); `CatalogueSet::locate`
+  refuses a catalogue at or inside the package. Evidence-kind patterns are capped at
+  4096 in total and the overlap check compares only within (length, namespace)
+  buckets. Tests: `ac14_a_package_cannot_shadow_the_repository_catalogue`,
+  `ac14_the_evidence_kind_pattern_count_is_capped`.
+
+## Unreleased (before 0.2.0)
 
 - Security fixes (review of the gf256 / package-agnostic branch):
   - M1: the CWE-400 and CWE-208 rows are derived from *every* steps-bound / constant-time obligation, not only the live ones. A manifest in which some operations pass and others are `not-live` or `unchecked` can no longer discharge CWE-400 or cite WIR proofs for CWE-208 on the strength of the passing operations (`AuditEvidence::{step,ct}_unproven`; `weakest()` and the CWE-125/787 bounds row consider every obligation; `unchecked` blocks as it did before the generalisation). `--check` re-derives the same rule (`verify_evidence` step 6): a report whose CWE-400 row is `discharged`, or whose CWE-400 / CWE-208 row cites a proof id of that kind, while any obligation of the kind is not a ranked pass, is an `EvidenceMismatch`.

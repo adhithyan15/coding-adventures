@@ -1,1 +1,1 @@
-set PERL5LIB=lib;../neural-network/lib && prove -l t
+prove -I..\neural-network\lib -l t

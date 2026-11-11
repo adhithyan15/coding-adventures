@@ -2,6 +2,16 @@
 
 All notable changes to this program will be documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- Windows build: `el_for_shutdown` was declared unconditionally but used only
+  in the `#[cfg(unix)]` signal-handler block. On Windows it was an unused
+  variable, which `-D warnings` turns into a compile error. Windows CI rarely
+  rebuilds ircd, so it surfaced only when a change to irc-proto/irc-framing
+  made it rebuild. The declaration is now `#[cfg(unix)]` too.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

@@ -33,10 +33,24 @@ fn main() {
             println!("cargo:rustc-link-arg=-Wl,--allow-shlib-undefined");
         }
         "windows" => {
-            // On Windows we need to link against the Python import library.
-            // The library is typically at: Python3X\libs\python3X.lib.
-            // We look for it via PYTHON_LIB_PATH or fall back to a common location.
-            if let Ok(lib_path) = std::env::var("PYTHON_LIB_PATH") {
+            // On Windows we need to link against the Python import library
+            // (`python3.lib`, the stable-ABI one, lives in <base_prefix>\libs).
+            // PYTHON_LIB_PATH wins if set; otherwise ask the interpreter that
+            // will load the extension, exactly as the sibling *-native crates
+            // do. Without a search path rust-lld fails with
+            // "could not open 'python3.lib'".
+            let lib_dir = std::env::var("PYTHON_LIB_PATH").ok().or_else(|| {
+                let python = std::env::var("PYO3_PYTHON")
+                    .or_else(|_| std::env::var("PYTHON_SYS_EXECUTABLE"))
+                    .unwrap_or_else(|_| "python".to_string());
+                let output = std::process::Command::new(python)
+                    .args(["-c", "import sys, os; print(os.path.join(sys.base_prefix, 'libs'))"])
+                    .output()
+                    .ok()?;
+                let dir = String::from_utf8_lossy(&output.stdout).trim().to_string();
+                if output.status.success() && !dir.is_empty() { Some(dir) } else { None }
+            });
+            if let Some(lib_path) = lib_dir {
                 println!("cargo:rustc-link-search={lib_path}");
             }
             // Link against python3 (the version-agnostic import lib for stable ABI).
