@@ -507,3 +507,62 @@ fn f3_a_projection_in_a_type_alias_is_an_unknown_type() {
         ],
     );
 }
+
+// F1: a turbofish on the associated-type segment hid a projection.
+//
+// `<PathBuf as Deref>::Target::<>::exists(p)` is `Path::exists`.  At
+// `exists` the analyzer saw the turbofish `::<>::` and walked back over
+// `Target` only: the walk stopped at the `>` closing `<PathBuf as Deref>`, so
+// the path read `Target::exists`, with no qualified group and no projection.
+// The walk now continues through that `>` into the group, so the item is
+// `<PathBuf as Deref>::Target::exists`, the projection of D49.
+#[test]
+fn f1_a_turbofish_on_the_associated_type_keeps_the_projection() {
+    check(
+        "F1",
+        &[
+            (
+                "proj_qual_tf",
+                "pub fn probe() -> bool {\n    let p = std::path::Path::new(\"Cargo.toml\");\n    <std::path::PathBuf as std::ops::Deref>::Target::<>::exists(p)\n}",
+                &["fs:list"],
+            ),
+            (
+                "proj_angle_tf",
+                "use std::ops::Deref;\nuse std::path::{Path, PathBuf};\npub fn probe<D: Deref<Target = Path>>(d: &D) -> bool {\n    <D>::Target::<>::exists(d)\n}\npub fn run() -> bool { probe(&PathBuf::from(\"Cargo.toml\")) }",
+                &["fs:list"],
+            ),
+            (
+                "Self, qualified with a trait",
+                "use std::ops::Deref;\npub trait Probe { fn probe(&self) -> bool; }\nimpl<T: Deref<Target = std::path::Path>> Probe for T { fn probe(&self) -> bool { <Self as Deref>::Target::<>::is_file(self) } }",
+                &["fs:list"],
+            ),
+            (
+                "timed wait through a projection",
+                "use std::ops::Deref;\nuse std::sync::{Arc, Condvar, Mutex};\npub fn nap() {\n    let m = Mutex::new(());\n    let c = Arc::new(Condvar::new());\n    let g = m.lock().unwrap();\n    let _ = <Arc<Condvar> as Deref>::Target::<>::wait_timeout(&c, g, std::time::Duration::from_millis(1));\n}",
+                &["time:sleep"],
+            ),
+            (
+                "two turbofish segments",
+                "fn f(p: &std::path::Path) -> bool { <std::path::PathBuf as std::ops::Deref>::Target::<>::Other::<>::read_link(p).is_ok() }",
+                &["fs:list"],
+            ),
+            // Controls that already held: no qualified group in front.
+            ("generic parameter shorthand", "fn f<D: std::ops::Deref<Target = std::path::Path>>(d: &D) -> bool { D::Target::<>::exists(d) }", &["fs:list"]),
+            ("Self shorthand", "trait P: std::ops::Deref<Target = std::path::Path> { fn f(&self) -> bool { Self::Target::<>::is_dir(self) } }", &["fs:list"]),
+            // Decoys: projections and turbofish chains to pure items.
+            ("projection to a pure item", "fn f<I: Iterator>() -> I::Item where I::Item: Default { <I as Iterator>::Item::<>::default() }", &[]),
+            ("turbofish on a generic type", "fn f() -> std::collections::HashMap<u8, u8> { std::collections::HashMap::<u8, u8>::new() }", &[]),
+            ("qualified trait method with a turbofish", "fn f(v: &[u8]) -> Vec<u8> { <[u8] as ToOwned>::to_owned::<>(v) }", &[]),
+        ],
+    );
+}
+
+/// The F1 walk through turbofish groups is bounded: a chain of more than 8
+/// groups is `CAP003` (fail closed), so the work per path stays small.
+#[test]
+fn f1_turbofish_chain_walk_is_bounded() {
+    let short = format!("fn f() {{ let _ = <A as B>::C{}::new(); }}", "::<>::D".repeat(8));
+    assert_eq!(verdict(&short), Vec::<String>::new(), "{short}");
+    let long = format!("fn f() {{ let _ = <A as B>::C{}::new(); }}", "::<>::D".repeat(9));
+    assert_eq!(verdict(&long), vec!["?".to_string()], "{long}");
+}

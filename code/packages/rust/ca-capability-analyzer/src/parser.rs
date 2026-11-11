@@ -2700,15 +2700,107 @@ fn receiver_is_local_inherent(
     false
 }
 
+/// Most `<..>` groups [`qualified_self_path`] walks through before giving up
+/// (`CAP003`).  Real code chains one or two (`<T as Tr>::A::<>::item`); the
+/// cap keeps the work per path small, since every segment after a `>::`
+/// starts a new walk and an uncapped chain made each walk as long as the
+/// chain.
+const MAX_QUALIFIED_HOPS: usize = 8;
+
+/// What [`qualified_self_path`] learns about the `<..>` group before a `>::`.
+struct QualifiedSelf {
+    /// The path whose associated item is being named, if any.
+    prefix: Option<Vec<String>>,
+    /// The innermost qualified group names a trait (`<T as Trait>`, an `as`
+    /// at its top level).
+    via_trait: bool,
+    /// How many segments of `prefix` were written *after* that qualified
+    /// group, through turbofish segments: 1 for the `Target` of
+    /// `<T as Deref>::Target::<>::exists`.  0 when there is no such group.
+    assoc_segs: usize,
+}
+
 /// For the `>` at `gt` followed by `::` (`<File as T>::create`, `<File>::create`,
 /// `Vec::<u8>::new`): the path whose associated item is being named, and
 /// whether the group names a trait (`<T as Trait>`, an `as` at its top level).
 /// A macro invocation in the self position (`<ty!()>::exists`) yields
 /// `[UNKNOWN_TYPE_SEGMENT]`, so the item gets the method-call verdict.
-/// `Err(())` if the matching `<` cannot be found within 512 tokens.
-fn qualified_self_path(toks: &[Token], gt: usize) -> Result<(Option<Vec<String>>, bool), ()> {
+/// `Err(())` if a matching `<` cannot be found within 512 tokens.
+///
+/// A turbofish group (`Path::<T>::item`) names the path before `::<`.  That
+/// path may itself follow a `>::` (follow-up review F1, case `proj_qual_tf`):
+///
+/// ```text
+///   <PathBuf as Deref> :: Target :: <> :: exists
+///   '----- group -----'   '--- turbofish ---'
+/// ```
+///
+/// The walk back from the turbofish stopped at the group's `>`, so the item
+/// read `Target::exists`, with no qualified group and no projection.  It now
+/// continues through that `>` (at most [`MAX_QUALIFIED_HOPS`] times), prepends
+/// what it finds, and reports the innermost qualified group's `via_trait`
+/// together with the number of segments written after it.
+fn qualified_self_path(toks: &[Token], gt: usize) -> Result<QualifiedSelf, ()> {
+    // Segments collected from turbofish groups, last first (the walk goes
+    // backwards; reversed once at the end, so each segment is moved once).
+    let mut rev_tail: Vec<String> = Vec::new();
+    let mut gt = gt;
+    let mut hops = 0usize;
+    loop {
+        let open = matching_open_angle(toks, gt).ok_or(())?;
+        if !(open >= 1 && is_pathsep(toks, open - 1)) {
+            let (prefix, via_trait) = qualified_group(toks, open, gt)?;
+            let assoc_segs = rev_tail.len();
+            rev_tail.reverse();
+            let tail = rev_tail;
+            let prefix = match prefix {
+                Some(mut p) => {
+                    p.extend(tail);
+                    Some(p)
+                }
+                None if !tail.is_empty() => Some(tail),
+                None => None,
+            };
+            if prefix.as_ref().is_some_and(|p| p.len() > MAX_PATH_SEGS) {
+                return Err(());
+            }
+            return Ok(QualifiedSelf { prefix, via_trait, assoc_segs });
+        }
+        // Turbofish `Path::<T>::item`: the item belongs to the path before `::<`.
+        let mut q = open;
+        while q >= 2 && is_pathsep(toks, q - 1) {
+            match ident_at(toks, q - 2) {
+                Some((n, _)) => rev_tail.push(n.to_string()),
+                None => break,
+            }
+            q -= 2;
+            if rev_tail.len() > MAX_PATH_SEGS {
+                return Err(());
+            }
+        }
+        // `<..> :: Seg :: <..> ::` - the path continues before another group
+        // (not `->` / `=>`, whose `>` closes nothing).
+        let chained = !rev_tail.is_empty()
+            && q >= 2
+            && is_pathsep(toks, q - 1)
+            && is_punct(toks, q - 2, '>')
+            && !(q >= 3 && (is_punct(toks, q - 3, '-') || is_punct(toks, q - 3, '=')));
+        if !chained {
+            rev_tail.reverse();
+            let prefix = if rev_tail.is_empty() { None } else { Some(rev_tail) };
+            return Ok(QualifiedSelf { prefix, via_trait: false, assoc_segs: 0 });
+        }
+        hops += 1;
+        if hops > MAX_QUALIFIED_HOPS {
+            return Err(());
+        }
+        gt = q - 2;
+    }
+}
+
+/// The `<` matching the `>` at `gt`, searching back at most 512 tokens.
+fn matching_open_angle(toks: &[Token], gt: usize) -> Option<usize> {
     let mut depth = 1usize;
-    let mut open = None;
     let lo = gt.saturating_sub(512);
     let mut k = gt;
     while k > lo {
@@ -2718,29 +2810,16 @@ fn qualified_self_path(toks: &[Token], gt: usize) -> Result<(Option<Vec<String>>
         } else if is_punct(toks, k, '<') {
             depth -= 1;
             if depth == 0 {
-                open = Some(k);
-                break;
+                return Some(k);
             }
         }
     }
-    let open = open.ok_or(())?;
-    // Turbofish `Path::<T>::item`: the item belongs to the path before `::<`.
-    if open >= 1 && is_pathsep(toks, open - 1) {
-        let mut segs: Vec<String> = Vec::new();
-        let mut q = open;
-        while q >= 2 && is_pathsep(toks, q - 1) {
-            match ident_at(toks, q - 2) {
-                Some((n, _)) => segs.push(n.to_string()),
-                None => break,
-            }
-            q -= 2;
-            if segs.len() > MAX_PATH_SEGS {
-                return Err(());
-            }
-        }
-        segs.reverse();
-        return Ok((if segs.is_empty() { None } else { Some(segs) }, false));
-    }
+    None
+}
+
+/// The self type path of the qualified group `<..>` spanning `open..=gt`
+/// (not a turbofish), and whether the group names a trait.
+fn qualified_group(toks: &[Token], open: usize, gt: usize) -> Result<(Option<Vec<String>>, bool), ()> {
     // `<T as Trait>`: an `as` outside any nested `<..>` or bracket.
     let mut via_trait = false;
     let mut nest = 0usize;
@@ -3275,17 +3354,18 @@ fn stage2_file(
                 // *always* classified too, and the qualified reading only adds to it.
                 let mut qualified_prefix: Vec<String> = Vec::new();
                 let mut via_trait = false;
+                let mut assoc_segs = 0usize;
                 let closes_angle = i >= 2
                     && is_pathsep(toks, i - 1)
                     && is_punct(toks, i - 2, '>')
                     && !(i >= 3 && (is_punct(toks, i - 3, '=') || is_punct(toks, i - 3, '-')));
                 if closes_angle {
                     match qualified_self_path(toks, i - 2) {
-                        Ok((Some(prefix), t)) => {
-                            qualified_prefix = prefix;
-                            via_trait = t;
+                        Ok(q) => {
+                            qualified_prefix = q.prefix.unwrap_or_default();
+                            via_trait = q.via_trait;
+                            assoc_segs = q.assoc_segs;
                         }
-                        Ok((None, t)) => via_trait = t,
                         Err(()) => sink.unanalyzable(
                             t.line,
                             t.col,
@@ -3333,10 +3413,14 @@ fn stage2_file(
                 // (E0223), so these are the shapes a projection is *spelled*
                 // in at its use.  A type alias can carry one to a use that
                 // names only the alias; `type_alias_leaves` binds such an
-                // alias to the unknown type (F3).  The type is unknown: the
-                // item gets the method-call verdict of `.item(`.
+                // alias to the unknown type (F3).  A turbofish may separate
+                // the associated type from the item
+                // (`<T as Tr>::Assoc::<>::item`, F1): `assoc_segs` counts the
+                // segments written between the group and this path.  The
+                // type is unknown: the item gets the method-call verdict of
+                // `.item(`.
                 let projection = !is_macro
-                    && ((via_trait && written_len >= 2)
+                    && ((via_trait && written_len + assoc_segs >= 2)
                         || (segs.len() >= 3 && (segs[0] == "Self" || generics.contains(segs[0].as_str()))));
                 if projection {
                     if let Some(Classification::Capability { category, action }) = method_call_rule(&segs[segs.len() - 1]) {
