@@ -293,11 +293,14 @@ fn r5_3d_unix_listeners_are_net_listen() {
 //
 // Rust accepts the shorthand `X::Assoc` only when `X` is a type parameter or
 // `Self` (a concrete type needs the qualified form, E0223), so these three
-// shapes are every way to write a projection path:
+// shapes are every way to spell a projection at its use:
 //
 //   <T as Trait>::Assoc::item     qualified, with a trait
 //   Self::Assoc::item             Self
 //   P::Assoc::item                P a generic parameter declared in the file
+//
+// They are not every way to *reach* one: a type alias can carry the
+// projection to a use that names only the alias (F3 below).
 
 #[test]
 fn r5_4_projections_get_the_method_verdict() {
@@ -448,6 +451,59 @@ fn f2_an_attribute_does_not_hide_a_generic_parameter() {
             // Decoys: an attributed parameter used as a value path stays pure.
             ("attributed parameter, pure item", "fn f<#[allow(unused)] T: Default>() -> T { T::default() }", &[]),
             ("attributed parameter, pure projection", "fn f<#[allow(unused)] I: Iterator>() -> Option<I::Item> where I::Item: Default { Some(I::Item::default()) }", &[]),
+        ],
+    );
+}
+
+// F3: a generic type alias carried a projection.
+//
+// `type X<D> = <D as std::ops::Deref>::Target;` binds `X` to `Deref` and
+// `Target` only (`D` is the alias's own parameter, skipped), so
+// `X::<std::path::PathBuf>::exists(p)` - `Path::exists` - read as
+// `Deref::exists` / `Target::exists`, both pure.  An alias whose right-hand
+// side holds a projection is now also bound to the unknown type.
+#[test]
+fn f3_a_projection_in_a_type_alias_is_an_unknown_type() {
+    check(
+        "F3",
+        &[
+            (
+                "proj_alias_generic",
+                "type X<D> = <D as std::ops::Deref>::Target;\npub fn probe() -> bool {\n    let p = std::path::Path::new(\"Cargo.toml\");\n    X::<std::path::PathBuf>::exists(p)\n}",
+                &["fs:list"],
+            ),
+            (
+                "proj_alias_short",
+                "#![allow(type_alias_bounds)]\ntype X<D: std::ops::Deref> = D::Target;\npub fn probe() -> bool {\n    let p = std::path::Path::new(\"Cargo.toml\");\n    X::<std::path::PathBuf>::exists(p)\n}",
+                &["fs:list"],
+            ),
+            (
+                "qualified without a trait, qualified use",
+                "type X<D: std::ops::Deref> = <D>::Target;\nfn f(p: &std::path::Path) -> bool { <X<std::path::PathBuf>>::is_file(p) }",
+                &["fs:list"],
+            ),
+            (
+                "attributed alias parameter",
+                "type X<#[allow(unused)] D: std::ops::Deref> = D::Target;\nfn f(p: &std::path::Path) -> bool { X::<std::path::PathBuf>::is_dir(p) }",
+                &["fs:list"],
+            ),
+            (
+                "parameter after a bracketed default",
+                "type X<const B: bool = { 2 > 1 }, D = std::path::PathBuf> = <D as std::ops::Deref>::Target;\nfn f(p: &std::path::Path) -> bool { X::<true>::read_link(p).is_ok() }",
+                &["fs:list"],
+            ),
+            // Found while fixing F3: a `>` in a bracketed default ended the
+            // parameter list of a trait early, hiding the parameter after it.
+            (
+                "trait parameter after a bracketed default",
+                "trait Tr<T = [u8; (2 > 1) as usize], D: std::ops::Deref<Target = std::path::Path> = std::path::PathBuf> { fn f(d: &D) -> bool { D::Target::exists(d) } }",
+                &["fs:list"],
+            ),
+            // Decoys: aliases without a projection, and projections to pure items.
+            ("generic alias, no projection", "type V<T> = Vec<T>;\nfn f() -> V<u8> { V::<u8>::new() }", &[]),
+            ("projection alias, pure item", "type It<I> = <I as Iterator>::Item;\nfn f<I: Iterator>() -> Option<It<I>> where It<I>: Default { Some(It::<I>::default()) }", &[]),
+            ("bound names are not parameters", "type F<D: AsRef<std::fs::File>> = (std::fs::File, D);\nfn f() -> usize { std::mem::size_of::<F<u8>>() }", &["fs:read"]),
+            ("fn-pointer alias with a return arrow", "type F = fn(u8) -> ::core::primitive::u8;\nfn f(g: F) -> u8 { g(1) }", &[]),
         ],
     );
 }

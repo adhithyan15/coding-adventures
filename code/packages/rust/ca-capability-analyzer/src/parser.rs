@@ -702,6 +702,75 @@ fn skip_angle(toks: &[Token], open: usize) -> Option<usize> {
     None
 }
 
+/// Like [`skip_angle`], but a `(..)`, `[..]` or `{..}` group is skipped
+/// whole, so a `>` inside one (`<const B: bool = { 2 > 1 }, D>`,
+/// `<T = [u8; (2 > 1) as usize]>`) does not close the list.  For generic
+/// *parameter* lists, whose brackets are always balanced in valid Rust.
+fn skip_angle_bracketed(toks: &[Token], br: &Brackets, open: usize) -> Option<usize> {
+    let mut depth = 0usize;
+    let mut k = open;
+    while k < toks.len().min(open + 256) {
+        match &toks[k].tok {
+            Tok::Punct('(' | '[' | '{') => {
+                k = br.close(k).saturating_add(1).max(k + 1);
+                continue;
+            }
+            Tok::Punct(')' | ']' | '}') => return None,
+            Tok::Punct('<') => depth += 1,
+            Tok::Punct('>') if !(k > 0 && is_punct(toks, k - 1, '-')) => {
+                depth = depth.checked_sub(1)?;
+                if depth == 0 {
+                    return Some(k + 1);
+                }
+            }
+            _ => {}
+        }
+        k += 1;
+    }
+    None
+}
+
+/// The names a generic parameter list declares: `open` is its `<`, `end` is
+/// just past its `>` ([`skip_angle_bracketed`]).  A name is an identifier at
+/// the list's top level that starts a parameter: right after `<` or `,`, or
+/// after the `]` of an attribute (`<#[allow(unused)] T>`, follow-up review
+/// F2); `const N` declares `N`.  Lifetimes are not identifiers, and nothing
+/// inside a bound (`T: AsRef<File>`) or a bracketed default is a name.
+///
+/// ```text
+///   < 'a , #[cfg(x)] #[allow(y)] const N : usize , D : Tr<File> = Vec<u8> >
+///                                      ^ N             ^ D   (File, Vec: not names)
+/// ```
+fn generic_list_names<'t>(toks: &'t [Token], br: &Brackets, open: usize, end: usize) -> Vec<&'t str> {
+    let mut out = Vec::new();
+    let mut depth = 0usize;
+    let mut k = open + 1;
+    while k + 1 < end {
+        match &toks[k].tok {
+            Tok::Punct('(' | '[' | '{') => {
+                k = br.close(k).saturating_add(1).max(k + 1);
+                continue;
+            }
+            Tok::Punct('<') => depth += 1,
+            Tok::Punct('>') if !is_punct(toks, k - 1, '-') => depth = depth.saturating_sub(1),
+            Tok::Ident { name, .. }
+                if depth == 0 && (k == open + 1 || is_punct(toks, k - 1, ',') || closes_attribute(toks, br, k - 1)) =>
+            {
+                let mut n = name.as_str();
+                if n == "const" {
+                    if let Some((c, _)) = ident_at(toks, k + 1) {
+                        n = c;
+                    }
+                }
+                out.push(n);
+            }
+            _ => {}
+        }
+        k += 1;
+    }
+    out
+}
+
 /// Why a `type` item is CAP003.
 const TYPE_ALIAS_META_NAME: &str =
     "type alias whose name is a macro_rules! metavariable; the name it binds is not known";
@@ -742,6 +811,9 @@ fn is_type_keyword(name: &str) -> bool {
 ///   `.name(` (`rules::classify_segments`);
 /// * so does a macro invocation (`type P = ty!();`, security review round 5,
 ///   R5-2): its name is not the type it expands to;
+/// * so does a projection (`type X<D> = <D as Deref>::Target;`,
+///   `type X<D: Deref> = D::Target;`, follow-up review F3): the type it names
+///   is not evaluated;
 /// * `type Item;` / `type Item: Bound;` (no `=`) binds nothing;
 /// * anything the reader cannot delimit (no `;` before a closing bracket or
 ///   the end of the file, unbalanced generics, a name that is not an
@@ -759,18 +831,12 @@ fn type_alias_leaves(toks: &[Token], br: &Brackets, i: usize) -> Result<Vec<UseL
     let stop = (i + TYPE_ALIAS_LIMIT).min(toks.len());
     let mut j = i + 2;
     // Generic parameters: `type P<'a, T: Bound, const N: usize>`.
+    // Only top-level names count (`type P<D: AsRef<File>>` declares `D`, not
+    // `File`), attributed ones included (`<#[allow(unused)] D>`, F2).
     let mut params: HashSet<&str> = HashSet::new();
     if is_punct(toks, j, '<') {
-        let end = skip_angle(toks, j).ok_or(TYPE_ALIAS_UNPARSEABLE)?;
-        for k in j + 1..end {
-            if is_punct(toks, k - 1, '<') || is_punct(toks, k - 1, ',') || ident_at(toks, k - 1) == Some(("const", false)) {
-                if let Some((p, _)) = ident_at(toks, k) {
-                    if p != "const" {
-                        params.insert(p);
-                    }
-                }
-            }
-        }
+        let end = skip_angle_bracketed(toks, br, j).ok_or(TYPE_ALIAS_UNPARSEABLE)?;
+        params.extend(generic_list_names(toks, br, j, end));
         j = end;
     }
     // Bounds and a `where` clause may precede `=`; `=` inside `<..>`
@@ -815,6 +881,21 @@ fn type_alias_leaves(toks: &[Token], br: &Brackets, i: usize) -> Result<Vec<UseL
         }
         k += 1;
     };
+    // A projection on the right-hand side names a type the analyzer does not
+    // evaluate (follow-up review F3):
+    //
+    //   type X<D> = <D as std::ops::Deref>::Target;    qualified group `<..>::`
+    //   type X<D: Deref> = D::Target;                  own parameter, then `::`
+    //
+    // `X::<PathBuf>::exists(p)` is `Path::exists`, but the paths on the
+    // right-hand side are only `D`, `Deref` and `Target`.  Such an alias is
+    // also bound to [`UNKNOWN_TYPE_SEGMENT`], so `X::name` gets the
+    // method-call verdict of `.name(`, as for a metavariable.  Any `>` `::`
+    // counts, with or without `as`: in type position a turbofish-qualified
+    // `Vec::<u8>::Assoc` is a projection too.
+    let mut projection = (eq + 1..end).any(|k| {
+        is_punct(toks, k, '>') && is_pathsep(toks, k + 1) && !(is_punct(toks, k - 1, '-') || is_punct(toks, k - 1, '='))
+    });
     let mut leaves = Vec::new();
     let mut k = eq + 1;
     while k < end {
@@ -876,10 +957,22 @@ fn type_alias_leaves(toks: &[Token], br: &Brackets, i: usize) -> Result<Vec<UseL
             });
             continue;
         }
+        if path.len() >= 2 && params.contains(path[0].as_str()) {
+            projection = true;
+        }
         let trivial = path.len() == 1 && (path[0] == name || params.contains(path[0].as_str()));
         if !path.is_empty() && !trivial {
             leaves.push(UseLeaf { path, alias: Some(name.clone()), glob: false, line, col });
         }
+    }
+    if projection {
+        leaves.push(UseLeaf {
+            path: vec![UNKNOWN_TYPE_SEGMENT.to_string()],
+            alias: Some(name),
+            glob: false,
+            line: toks[eq].line,
+            col: toks[eq].col,
+        });
     }
     Ok(leaves)
 }
@@ -2713,19 +2806,12 @@ fn closes_attribute(toks: &[Token], br: &Brackets, k: usize) -> bool {
 }
 
 /// Names declared as generic type (or const) parameters anywhere in the file:
-/// the identifiers at the top level of the `<..>` right after `impl`, or after
-/// the name in `fn`/`struct`/`enum`/`union`/`trait`/`type NAME <..>`, that
-/// start a parameter (`<T`, `, T`, `const N`, or an attribute's `]` then `T`:
-/// `<#[allow(unused)] T`).  Package-wide scoping is not tracked: a name
-/// declared as a parameter anywhere in the file counts everywhere in it
-/// (security review round 5, R5-4).
-///
-/// ```text
-///   fn f< 'a , #[cfg(x)] #[allow(y)] const N : usize , D : Tr >
-///            ^                        ^~~~~~~~~ N      ^ D
-///            '-- lifetimes are not identifiers     each follows `<`, `,`
-///                                                   or an attribute's `]`
-/// ```
+/// the names ([`generic_list_names`]) of the `<..>` right after `impl`, or
+/// after the name in `fn`/`struct`/`enum`/`union`/`trait`/`type NAME <..>`.
+/// Package-wide scoping is not tracked: a name declared as a parameter
+/// anywhere in the file counts everywhere in it (security review round 5,
+/// R5-4).  The list is delimited bracket-aware, so a `>` inside a bracketed
+/// default does not end it early and hide the parameters after it.
 fn generic_param_names(toks: &[Token], br: &Brackets) -> HashSet<String> {
     let mut out = HashSet::new();
     for i in 1..toks.len() {
@@ -2742,32 +2828,8 @@ fn generic_param_names(toks: &[Token], br: &Brackets) -> HashSet<String> {
         if !opens_params {
             continue;
         }
-        let Some(end) = skip_angle(toks, i) else { continue };
-        let mut depth = 0usize;
-        let mut k = i + 1;
-        while k + 1 < end {
-            match &toks[k].tok {
-                Tok::Punct('(' | '[' | '{') => {
-                    k = br.close(k).saturating_add(1).max(k + 1);
-                    continue;
-                }
-                Tok::Punct('<') => depth += 1,
-                Tok::Punct('>') if !is_punct(toks, k - 1, '-') => depth = depth.saturating_sub(1),
-                Tok::Ident { name, .. }
-                    if depth == 0 && (k == i + 1 || is_punct(toks, k - 1, ',') || closes_attribute(toks, br, k - 1)) =>
-                {
-                    let mut n = name.as_str();
-                    if n == "const" {
-                        if let Some((c, _)) = ident_at(toks, k + 1) {
-                            n = c;
-                        }
-                    }
-                    out.insert(n.to_string());
-                }
-                _ => {}
-            }
-            k += 1;
-        }
+        let Some(end) = skip_angle_bracketed(toks, br, i) else { continue };
+        out.extend(generic_list_names(toks, br, i, end).into_iter().map(str::to_string));
     }
     out
 }
@@ -3268,7 +3330,10 @@ fn stage2_file(
                 // parameter `P` name a type the analyzer does not evaluate
                 // (`<PathBuf as Deref>::Target` is `Path`).  Rust accepts the
                 // shorthand `X::Assoc` only for a type parameter or `Self`
-                // (E0223), so these are the shapes.  The type is unknown: the
+                // (E0223), so these are the shapes a projection is *spelled*
+                // in at its use.  A type alias can carry one to a use that
+                // names only the alias; `type_alias_leaves` binds such an
+                // alias to the unknown type (F3).  The type is unknown: the
                 // item gets the method-call verdict of `.item(`.
                 let projection = !is_macro
                     && ((via_trait && written_len >= 2)
