@@ -52,6 +52,13 @@ the construction, requires exact evidence counts, enforces a caller-owned
 nonzero intermediate ceiling, and applies every transition in immediate depth
 order while retaining all borrowed evidence and the final state. It stops
 before the target signature and does not establish complete path validation.
+An exact target-signature closure can then consume that accumulator together
+with the routed depth-zero target adjacency from the identical construction
+and complete server policy for the exact decoded target. The target proof's
+issuer must be the final accumulated target-nearest intermediate. Success
+retains the accumulator, routed target signature, and server policy together;
+detached constructions, nonzero depths, disconnected issuers, and policy from
+a byte-equal independent target decode fail closed.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -97,15 +104,15 @@ DNS and IP counts. The earlier DNS count remains available as compatibility
 evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
-fixed-shape result, ordered transitions, and intermediate-only accumulator do
-not authenticate the target signature, establish complete generalized path
-validation, define full Name comparison, apply other GeneralName forms,
-excluded or non-DNS anchor constraints, check revocation, perform hostname
+fixed-shape result, ordered transitions, intermediate accumulator, and target
+signature closure do not validate the anchor's self-signature, establish
+complete generalized path validation, define full Name comparison, apply all
+NameConstraints or GeneralName forms, check revocation, perform hostname
 verification, TLS, or HTTP, authorize OAuth transport, or open a network
-connection. Target identity, time, purpose, the construction-derived
-path-length state, and the supported reviewed-anchor DNS and intermediate
-DNS/IP subsets do not make the whole path valid. This does not make concrete
-HTTPS or live-provider use ready.
+connection. Target identity, time, purpose, routed selected-adjacency RSA
+signatures, construction-derived path-length state, and the supported
+reviewed-anchor DNS and intermediate DNS/IP subsets do not make the whole path
+valid. This does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

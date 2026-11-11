@@ -1659,6 +1659,26 @@ or other external effect. It does not check target authentication, complete
 Name semantics, time, hostname, revocation, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded target-signature closure now consumes that arbitrary-depth
+intermediate accumulator together with one already routed depth-zero signature
+proof and complete server-certificate policy. It fails closed unless the
+signature retains the same exact constructed-path object, projects issuer
+depth zero, authenticates the construction's exact target child, and names the
+target-nearest intermediate retained by the accumulator's final ordered policy
+as its exact issuer object. The complete server policy must retain that same
+exact target object. Success keeps the entire intermediate accumulator, the
+target signature, and complete target policy in one non-copyable result, so
+every selected child-to-issuer adjacency from target through reviewed anchor
+has repository-owned routed RSA verification evidence without allowing a
+detached target or issuer proof to be spliced in. This is signature-evidence
+closure only: it does not validate the anchor self-signature, generalize all
+certificate or Name policy across an arbitrary path, apply every intermediate
+NameConstraints value, verify the requested hostname, check revocation, or
+compose TLS, HTTP, OAuth transport, or network authority. The pure public-
+certificate-data composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
