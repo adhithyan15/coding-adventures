@@ -275,8 +275,10 @@ the selected BUILD file per OS (or `null`), direct dependencies per OS,
 declared by the repository-input consumer table) and `extra_toolchains`.
 Lists are sorted and de-duplicated, so output is byte-identical for a tree.
 See `kiln_graph.go` for the field-by-field contract and
-`testdata/kiln-legacy-graph.golden.json` for the pinned format. Mosaic's
-repository guard is predicate-only and exports no paths.
+`testdata/kiln-legacy-graph.golden.json` for the pinned format. `repo_input_globs`
+holds pattern-valued inputs (`**` any depth, `*` within a segment), e.g. the
+Mosaic guard's `code/**/?*.mll`; `repo_inputs_unknown` is set only for a
+consumer that declares neither.
 
 ### Sharding v1 and v2
 

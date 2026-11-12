@@ -86,6 +86,21 @@ type repositoryInputConsumer struct {
 	// leaves this nil; the export then lists no paths for it. A test pins
 	// every declared path to its predicate so the two cannot drift.
 	paths []string
+	// globs declares inputs that are a pattern rather than a finite list
+	// (`**` any depth including none, `*` within one segment), for
+	// predicates such as the Mosaic walk. A test pins them to the predicate
+	// over a fixture tree. A row must declare paths, globs, or both; the
+	// export marks one that declares neither repo_inputs_unknown so a future
+	// predicate-only row cannot silently export an empty list.
+	globs []string
+}
+
+// mosaicRepositoryGlobs is exactly isMosaicRepositorySource as globs.
+var mosaicRepositoryGlobs = []string{
+	"code/**/?*.mil",
+	"code/**/?*.mll",
+	"code/**/?*.msl",
+	"code/**/mosaic-package.toml",
 }
 
 // Declared input path sets, one per predicate in this file. They mirror the
@@ -195,6 +210,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		language: "rust",
 		inputs:   "Mosaic manifests and sources under code/",
 		matches:  isMosaicRepositorySource,
+		globs:    mosaicRepositoryGlobs,
 	},
 	{
 		name:     "python/rng",

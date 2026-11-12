@@ -69,6 +69,11 @@ package main
 //	                          this package. A consumer whose predicate cannot
 //	                          be written as a path list lists none (see the
 //	                          `paths` field comment there).
+//	repo_input_globs          the same, for inputs that are a pattern ("**"
+//	                          any depth, "*" within a segment) rather than a
+//	                          finite list, e.g. code/**/*.mll for Mosaic.
+//	repo_inputs_unknown       true (otherwise omitted) when a consumer
+//	                          declares neither paths nor globs.
 //	extra_toolchains          toolchains beyond the package's own language,
 //	                          the union of discovery's value and each OS's
 //	                          re-derivation from that OS's BUILD file.
@@ -100,14 +105,19 @@ type kilnLegacyGraph struct {
 }
 
 type kilnLegacyPackage struct {
-	Name            string              `json:"name"`
-	RelPath         string              `json:"rel_path"`
-	Language        string              `json:"language"`
-	BuildFiles      map[string]*string  `json:"build_files"`
-	Deps            map[string][]string `json:"deps"`
-	DevDeps         []string            `json:"dev_deps"`
-	RepoInputs      []string            `json:"repo_inputs"`
-	ExtraToolchains []string            `json:"extra_toolchains"`
+	Name           string              `json:"name"`
+	RelPath        string              `json:"rel_path"`
+	Language       string              `json:"language"`
+	BuildFiles     map[string]*string  `json:"build_files"`
+	Deps           map[string][]string `json:"deps"`
+	DevDeps        []string            `json:"dev_deps"`
+	RepoInputs     []string            `json:"repo_inputs"`
+	RepoInputGlobs []string            `json:"repo_input_globs"`
+	// RepoInputsUnknown is set (and otherwise omitted) when a consumer
+	// names this package but declares neither paths nor globs: the export
+	// cannot say what it reads, and Kiln must not treat [] as "nothing".
+	RepoInputsUnknown bool     `json:"repo_inputs_unknown,omitempty"`
+	ExtraToolchains   []string `json:"extra_toolchains"`
 }
 
 // sortedUnique returns the set's members sorted, never nil.
@@ -185,6 +195,7 @@ func buildKilnLegacyGraph(packages []discovery.Package, repoRoot string) (*kilnL
 			Deps:            make(map[string][]string, len(kilnGraphPlatforms)),
 			DevDeps:         sortedUnique(devDeps[pkg.Name]),
 			RepoInputs:      []string{},
+			RepoInputGlobs:  []string{},
 			ExtraToolchains: sortedUnique(toolchains[pkg.Name]),
 		}
 		for _, goos := range kilnGraphPlatforms {
@@ -201,9 +212,14 @@ func buildKilnLegacyGraph(packages []discovery.Package, repoRoot string) (*kilnL
 		for _, consumer := range repositoryInputConsumers {
 			if consumer.name == pkg.Name && consumer.language == pkg.Language {
 				entry.RepoInputs = append(entry.RepoInputs, consumer.paths...)
+				entry.RepoInputGlobs = append(entry.RepoInputGlobs, consumer.globs...)
+				if len(consumer.paths) == 0 && len(consumer.globs) == 0 {
+					entry.RepoInputsUnknown = true
+				}
 			}
 		}
 		entry.RepoInputs = sortedUnique(stringSet(entry.RepoInputs))
+		entry.RepoInputGlobs = sortedUnique(stringSet(entry.RepoInputGlobs))
 		out.Packages = append(out.Packages, entry)
 	}
 	sort.Slice(out.Packages, func(i, j int) bool { return out.Packages[i].Name < out.Packages[j].Name })

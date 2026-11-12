@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
 )
 
 var updateKilnGolden = flag.Bool("update-kiln-golden", false, "rewrite testdata/kiln-legacy-graph.golden.json")
@@ -189,13 +190,12 @@ func TestKilnGraphSemantics(t *testing.T) {
 
 // Every path a consumer declares must be one its own predicate accepts (as the
 // path itself or as a file beneath it), so the exported list and the
-// change-detection predicate cannot drift apart.
+// change-detection predicate cannot drift apart. Every row must also declare
+// something, so no consumer exports as unknown today.
 func TestRepositoryInputPathsAgreeWithPredicates(t *testing.T) {
-	predicateOnly := []string{}
 	for _, consumer := range repositoryInputConsumers {
-		if len(consumer.paths) == 0 {
-			predicateOnly = append(predicateOnly, consumer.name)
-			continue
+		if len(consumer.paths) == 0 && len(consumer.globs) == 0 {
+			t.Errorf("%s declares neither paths nor globs", consumer.name)
 		}
 		for _, p := range consumer.paths {
 			if !consumer.matches(p) && !consumer.matches(strings.TrimSuffix(p, "/")+"/x") {
@@ -203,7 +203,45 @@ func TestRepositoryInputPathsAgreeWithPredicates(t *testing.T) {
 			}
 		}
 	}
-	if !reflect.DeepEqual(predicateOnly, []string{"rust/mosaic-package-resolver"}) {
-		t.Errorf("predicate-only consumers = %v; give new ones a paths list or update this test", predicateOnly)
+}
+
+// The Mosaic globs must select exactly the files the predicate accepts,
+// including near-misses the predicate rejects.
+func TestMosaicGlobsAgreeWithPredicate(t *testing.T) {
+	candidates := []string{
+		"code/packages/mosaic/mosaic-pkg-toolkit/mosaic-package.toml",
+		"code/programs/mosaic/task-app/src/TaskApp.mll",
+		"code/packages/rust/mosaic-emit-qt/fixtures/x/src/Grid.msl",
+		"code/a.mil", "code/x.mll", "code/mosaic-package.toml",
+		"code/packages/mosaic/mosaic-pkg-toolkit/README.md",
+		"code/x/mosaic-package.toml.bak", "code/x/a.mill", "docs/a.mil",
+		"docs/mosaic-package.toml", "mosaic-package.toml", "a.mll",
+		"code/x/.mll", "code/x/.mil", "code/x/mosaic-package.toml/y.txt",
+		"code/x/sub.mll/readme", "code/x/A.MLL", "code/x/xmosaic-package.toml",
+		"code\\packages\\mosaic\\x\\A.mil",
+	}
+	for _, c := range candidates {
+		globHit := false
+		for _, g := range mosaicRepositoryGlobs {
+			if globmatch.MatchPath(g, c) {
+				globHit = true
+			}
+		}
+		if want := isMosaicRepositorySource(c); globHit != want {
+			t.Errorf("%q: globs=%v predicate=%v", c, globHit, want)
+		}
+	}
+}
+
+func TestUnknownRepositoryInputsAreFlagged(t *testing.T) {
+	saved := repositoryInputConsumers
+	defer func() { repositoryInputConsumers = saved }()
+	repositoryInputConsumers = []repositoryInputConsumer{{name: "rust/x", language: "rust"}}
+	graph, err := buildKilnLegacyGraph([]discovery.Package{{Name: "rust/x", Language: "rust", Path: t.TempDir()}}, t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !graph.Packages[0].RepoInputsUnknown {
+		t.Fatal("a consumer with no paths or globs must set repo_inputs_unknown")
 	}
 }

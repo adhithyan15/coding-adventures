@@ -17,6 +17,7 @@
       },
       "dev_deps": [],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -41,6 +42,7 @@
       },
       "dev_deps": [],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -61,6 +63,7 @@
         "rust/cyc-a"
       ],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -87,6 +90,7 @@
         "rust/support"
       ],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": [
         "java"
       ]
@@ -109,6 +113,7 @@
       "repo_inputs": [
         "code/specs/fixtures/rng-v1"
       ],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -127,6 +132,7 @@
       },
       "dev_deps": [],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -145,6 +151,7 @@
       },
       "dev_deps": [],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     },
     {
@@ -163,6 +170,7 @@
       },
       "dev_deps": [],
       "repo_inputs": [],
+      "repo_input_globs": [],
       "extra_toolchains": []
     }
   ]
