@@ -8,8 +8,8 @@ fn seed_register(seed: usize, index: usize) -> u64 {
 
 fn seeded_state(cpu: &AArch64GateLevel, name: &str, raw: u32, seed: usize) -> AArch64State {
     let mut state = cpu.get_state();
-    for index in 0..32 {
-        state.registers[index] = seed_register(seed, index);
+    for (index, reg) in state.registers.iter_mut().enumerate().take(32) {
+        *reg = seed_register(seed, index);
     }
     state.registers[31] = 0;
     state.registers[2] = 0x200;

@@ -11,8 +11,8 @@ fn compare_one(raw: u32, seed: usize, prepare: impl Fn(&mut ArmState)) {
     functional.load_checked(&program).unwrap();
     gate.load_checked(&program).unwrap();
     let mut state = functional.get_state();
-    for index in 0..15 {
-        state.registers[index] = ((seed as u32 + 1).wrapping_mul(0x7f4a_7c15))
+    for (index, reg) in state.registers.iter_mut().enumerate().take(15) {
+        *reg = ((seed as u32 + 1).wrapping_mul(0x7f4a_7c15))
             ^ (index as u32).wrapping_mul(0x6c8e_9cf5);
     }
     state.flags = [
