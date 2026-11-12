@@ -239,6 +239,20 @@ class PosixFallbackTest(AuditTestCase):
             with self.subTest(line=line):
                 self.assertTrue(audit.posix_construct(line))
 
+    def test_venv_bin_after_shell_operators_is_posix(self) -> None:
+        for line in ("cd x &&.venv/bin/python -m pytest", "true;.venv/bin/ruff check"):
+            with self.subTest(line=line):
+                self.assertEqual(audit.posix_construct(line), ".venv/bin/")
+
+    def test_venv_bin_pattern_is_linear_on_long_relative_paths(self) -> None:
+        # A crafted BUILD line of many `../` must not stall the audit.
+        import time
+
+        line = "../" * 40_000 + "x"
+        started = time.perf_counter()
+        audit.posix_construct(line)
+        self.assertLess(time.perf_counter() - started, 1.0)
+
     def test_windows_venv_scripts_path_is_not_posix(self) -> None:
         self.assertEqual(audit.posix_construct(r".venv\Scripts\python -m pytest"), "")
         self.assertEqual(audit.posix_construct("uv venv .venv --quiet --no-project"), "")
