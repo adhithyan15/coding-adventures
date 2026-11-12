@@ -278,6 +278,28 @@ of a binder deep-copies its value and charges nothing, so many reads of one
 large value can take far more memory than its charge. VER04k section 9.1 (note
 on E4) records this as an open hazard, tracked as backlog WX-RD1.
 
+## Portable corpus (VER04i WD-003)
+
+`examples/gen_corpus.rs` compiles the checked `ct-compare` Warrant v0 source into
+`code/specs/fixtures/ct-compare-warrant-v1/`. The generated corpus separates
+`subject_op` calls from pure `model_call` reference expressions, enumerates the
+closed supported domains in canonical order, and pins independent input and
+expected-result digest streams. The first profile includes examples, exhaustive
+suites and their required negative-control descriptors; it rejects sharding and
+Warrant constructs outside the explicitly supported profile.
+
+The independent stdlib-only validator is `code/scripts/warrant_corpus_oracle.py`.
+It derives the accepted declarations and suite shape from the Warrant source,
+then independently recomputes domains, refinements, example records and digest
+streams. The Python BUILD tests also mutate the artifact to ensure missing or
+misbound evidence is rejected. This validates corpus generation; it does not
+run a subject lane or establish a proof.
+
+```sh
+cargo run -p coding_adventures_warrant_grammar --example gen_corpus -- --check
+python3 ../../../scripts/warrant_corpus_oracle.py
+python3 -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
+```
 ## Tests and regeneration
 
 From the Rust workspace:
