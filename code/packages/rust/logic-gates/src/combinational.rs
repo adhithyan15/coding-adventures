@@ -47,10 +47,15 @@ use crate::gates::{and_gate, not_gate, or_gate};
 // Helper — bit validation (reuses the same pattern as gates.rs)
 // ===========================================================================
 
-/// Panics (in debug mode) if the value is not 0 or 1.
+/// Panics, in every build profile, if the value is not 0 or 1.
+///
+/// This was a `debug_assert!`.  In a release build `tri_state(2, 1)` then
+/// returned `Some(2)` and `priority_encoder` read a 2 as an inactive input
+/// (finding SEC-007).  A plain `assert!` makes the rejection independent of the
+/// optimisation level.
 #[inline]
 fn validate_bit(value: u8, name: &str) {
-    debug_assert!(
+    assert!(
         value == 0 || value == 1,
         "{name} must be 0 or 1, got {value}"
     );
@@ -448,7 +453,11 @@ pub fn encoder(inputs: &[u8]) -> Vec<u8> {
     validate_bits(inputs, "inputs");
 
     // Validate one-hot: exactly one bit must be 1
-    let active_count: u8 = inputs.iter().sum();
+    // Count in `usize`: a `u8` sum wraps, so 257 active inputs would count as 1
+    // and pass this check in a release build (SEC-007), while a debug build
+    // would panic on the overflow instead.  Every element is 0 or 1 here, so a
+    // `usize` sum cannot overflow for any slice that fits in memory.
+    let active_count: usize = inputs.iter().map(|&b| usize::from(b)).sum();
     assert!(
         active_count == 1,
         "inputs must be one-hot (exactly one bit = 1), got {active_count} active bits"
