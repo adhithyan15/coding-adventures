@@ -29,7 +29,7 @@ the template this specification turns into a mechanism.
 **Direction (owner, 2026-11-12):** each layer is verified alone and every layer
 above takes that result as an assumption (VER27 P9). The coordinator's design
 decisions for this specification were: ids of the form
-`contract.<lane>.<package>.<claim>`; every named claim published implicitly; a
+`contract.<package>.<claim>`; every named claim published implicitly; a
 new generated id family; discharge that fails closed; strength that never
 rounds up; coverage by kind; exact linking with no fuzzy matching; direct
 dependencies only; re-selection in CI. Where this document refines one of them
@@ -60,7 +60,7 @@ actually produced.
 The mechanism in one page:
 
 1. **Publish.** Every named `claim` in a package's `.warrant` is implicitly
-   published under the id `contract.<lane>.<package>.<claim>` (section 3).
+   published under the id `contract.<package>.<claim>` (section 3).
    Proof-backed obligations (timing, resource) and capability facts are
    published under longer derived ids.
 2. **Name.** An upper package writes the id in its own `assume platform:` block.
@@ -103,7 +103,7 @@ is section 14's subject.
 | Lower package, upper package | The package that publishes a claim, and the package whose `.warrant` names it. The upper package must list the lower one as a direct dependency in its build manifest (section 5, condition a). |
 | Claim | A named `claim` block of a Warrant document (VER04 section 5). An `example` is not a claim and is not published (section 3.5). |
 | Contract | A published claim: the pair of an id and the evidence the lower package produced for it. |
-| Contract id | `contract.<lane>.<package>.<claim>`, or one of the longer forms of section 3.1. |
+| Contract id | `contract.<package>.<claim>`, or one of the longer forms of section 3.1. |
 | Link | One contract id in an upper package's `assume platform:` block, together with its resolution in the upper report. |
 | Discharged, open | The two states of a link whose id resolves (section 5.2). A link whose id does not resolve is an error, not a state. |
 | Pin | A digest of lower-package content recorded in the upper report (section 5.3). |
@@ -119,15 +119,20 @@ is section 14's subject.
 
 | Kind | Id shape | Example | Segments |
 |---|---|---|---|
-| functional | `contract.<lane>.<package>.<claim>` | `contract.rust.logic-gates.and_truth_table` | 4 |
-| timing | `contract.<lane>.<package>.timing.<op>` | `contract.rust.ct-compare.timing.eq` | 5 |
-| capability | `contract.<lane>.<package>.capability.<category>` | `contract.rust.logic-gates.capability.proc` | 5 |
-| resource | `contract.<lane>.<package>.resource.<op>.<metric>` | `contract.rust.ct-compare.resource.eq.steps` | 6 |
+| functional | `contract.<package>.<claim>` | `contract.logic-gates.and_truth_table` | 3 |
+| timing | `contract.<package>.timing.<op>` | `contract.ct-compare.timing.eq` | 4 |
+| capability | `contract.<package>.capability.<category>` | `contract.logic-gates.capability.proc` | 4 |
+| resource | `contract.<package>.resource.<op>.<metric>` | `contract.ct-compare.resource.eq.steps` | 5 |
+
+The id has **no lane segment** (revision after review, item H5; section 17, D20).
+The `.warrant` file is language-neutral, one file shared by every lane, so an id
+written in it must mean the same thing in every lane's use of that file. The lane
+is supplied by the context: it is the lane of the report being generated or
+checked, read from the report's own package id (`rust/arithmetic` is lane `rust`).
 
 Segment rules:
 
-* `<lane>`: one of the lane names above, lower case.
-* `<package>`: the package's directory name under `code/packages/<lane>/`,
+* `<package>`: the package's directory name under `code/packages/<lane>/` for the report's own lane,
   which is also the stem of `code/specs/<package>.warrant` and the suffix of the
   report's package id (`rust/logic-gates`). The pattern is
   `[A-Za-z0-9][A-Za-z0-9_-]*`. Hyphens are allowed because real package names
@@ -144,7 +149,7 @@ Segment rules:
   bytes, and has no empty segment.
 
 A package may define a claim named `timing`, `capability` or `resource`. That
-is a 4-segment id and cannot collide with the longer forms.
+is a 3-segment id and cannot collide with the longer forms.
 
 ### 3.2 Which ids exist
 
@@ -173,9 +178,9 @@ An upper package writes ids in the existing `assume platform:` block:
 
 ```text
   assume platform:
-    contract.rust.logic-gates.xor_truth_table
-    contract.rust.logic-gates.and_truth_table
-    contract.rust.logic-gates.or_truth_table
+    contract.logic-gates.xor_truth_table
+    contract.logic-gates.and_truth_table
+    contract.logic-gates.or_truth_table
   assume environment:
     none
 ```
@@ -206,20 +211,23 @@ ids.
 
 ### 3.4 Lane
 
-The lane is in the id because evidence is per lane even though the `.warrant`
-file is language-neutral. One `code/specs/logic-gates.warrant` yields one set of
-declared claims, and `contract.rust.logic-gates.and_truth_table` and
-`contract.python.logic-gates.and_truth_table` are two different contracts: they
-resolve against different manifests, different sources and different digests,
-and one can be discharged while the other is open. A lane that has no manifest
-for the package, or no binding for the claim's operation, resolves to open
-(`lower-evidence-absent` or `claim-not-in-manifest`), never to the Rust
-evidence.
+Evidence is per lane even though the `.warrant` file is language-neutral. One
+`code/specs/logic-gates.warrant` yields one set of declared claims. The id
+`contract.logic-gates.and_truth_table`, written once in an upper `.warrant`, is
+resolved by each lane's report against **that lane's** package
+(`code/packages/<lane>/logic-gates`), manifests, sources and digests. The Rust
+report can discharge it while the Python report leaves it open, because the Python
+`logic-gates` has no manifest. A lane with no manifest for the package, or no
+binding for the claim's operation, resolves to open (`lower-evidence-absent` or
+`claim-not-in-manifest`), never to another lane's evidence.
 
-The lane in the id must equal the upper package's own lane. A Rust package
-cannot assume `contract.python.*`. Cross-lane links (a Perl package that loads a
-Rust cdylib, for example) are real in this repository and are a non-goal here
-(section 15); they fail with `ContractLaneMismatch`.
+**Cross-lane resolution is an error.** A report never looks in a lane other than
+its own. If the named package does not exist in the report's lane, or exists only
+as a different lane's package (a Rust crate that a Perl package reaches through a
+cdylib), the id fails with `ContractUnknownClaim` (naming the missing lane
+directory), and a package that is not a direct dependency in the report's own
+lane's build manifest fails with `ContractNotDependency`. Cross-lane links are a
+real shape in this repository and are a non-goal here (section 15).
 
 ### 3.5 Implicit publication: no `publish` list
 
@@ -292,20 +300,71 @@ the derivation says otherwise fails `--check`.
 
 | | Condition | Reads | Fails as |
 |---|---|---|---|
-| (a) | The upper package directly depends on the lower package: a normal `[dependencies]` entry in its build manifest (`Cargo.toml` for the Rust lane). A dev-dependency or build-dependency does not count. | upper `Cargo.toml` | error `ContractNotDependency` (not an open state) |
+| (a) | The upper package depends on **the in-tree lower package** (section 5.1.1): a non-optional, non-target-specific, non-feature-gated `[dependencies]` entry of `Cargo.toml` that is a `path` dependency whose path canonicalises to `code/packages/<lane>/<package>`, whose package name matches, with no `[patch]`, `[replace]` or `package =` rename affecting it. A dev-dependency or build-dependency does not count. | upper `Cargo.toml`, workspace manifest | error `ContractNotDependency` (not an open state) |
 | (b) | The lower evidence manifest contains the claim, every suite entry for it has verdict `pass`, and at least one suite is not an example. | lower `evidence/test-manifest.json` (and the proof manifest for non-functional kinds) | open: `claim-not-in-manifest`, `no-suite`, `suite-failed` |
-| (c) | The lower package's own report passes `--check`, run recursively on the same tree. | lower `assurance_report.json` and everything its own check reads | open: `lower-report-absent`, `lower-report-fails-check` |
+| (c) | The lower package's own report passes `--check`, run on the same tree with the flags the lower package's own BUILD uses (section 5.1.2). Its `unverified::` ids are carried, not hidden. | lower `assurance_report.json` and everything its own check reads | open: `lower-report-absent`, `lower-report-fails-check` |
 | (d) | The lower digests are pinned in the upper report and every pin still matches the files on disk (section 5.3). | the pins and the lower files | error `ContractPinMismatch` at `--check`; at `--generate` the pins are simply (re)computed |
 | (e) | The claim is not under any sabotage or fault mode (section 5.5). | lower manifests, environment | open: `lower-fault-mode` |
 
-In addition, two things are required that the brief did not list, because they
+In addition, these are required, which the brief did not list, because they
 are what makes "the lower claim holds" mean something to the upper layer:
 
 * the lower claim's own contract assumptions are all discharged (otherwise it
   holds only conditionally, and the upper link is open with
   `lower-claim-conditional`);
-* the lower and upper reports are for the same `stack` (VER13 rule AC-7; open
-  with `stack-mismatch`).
+* the lower claim's evidence and the upper link were built the same way: the
+  lower package's features, `cfg` flags and `build.rs` outputs in its evidence
+  build are the ones the upper package links it with. If they differ or cannot be
+  shown equal, the link is open with `build-config-unpinned` (section 5.1.1);
+* the lower and upper reports agree on the stack of the claims involved (VER13
+  rule AC-7; open with `stack-mismatch`). `stack` is recorded **per claim proof**
+  in the report (`host-rustc` today, `owned-rv32i` for a rung R2 proof), not per
+  report, so the comparison is made per operation row: a contract's stack is the
+  one on the lower operation's proof block, or `host-rustc` for test-only
+  evidence.
+
+### 5.1.1 Binding condition (a) to the in-tree package
+
+A dependency name alone is not enough: a `path` to a fork, a `package =` rename,
+a registry or git dependency, a `[patch]` or `[replace]` section, or an optional,
+target-specific or feature-gated dependency would each satisfy "depends on
+`logic-gates`" while linking different code from the code whose evidence was read.
+The Rust-lane reader therefore requires **all** of:
+
+* a `[dependencies]` entry (not `[dev-dependencies]`, `[build-dependencies]` or a
+  `[target.*]` table) that is not `optional = true` and is not enabled only by a
+  feature;
+* a `path` key that, canonicalised (symlinks refused), equals
+  `code/packages/<lane>/<package>`, with no `git`, `registry` or `version`-only form;
+* the lower `Cargo.toml` `[package] name` equal to the dependency key, and no
+  `package =` rename on the entry;
+* no `[patch]` or `[replace]` entry, in the upper manifest or the workspace root
+  manifest, that names the lower package or its source;
+* the lower package's `Cargo.toml` and `build.rs` (if any) digested and pinned
+  (section 5.3).
+
+If the lower crate has features or `cfg` that differ between its evidence build
+(the default features, as the evidence BUILD runs `cargo test`) and how the upper
+package links it (a `features =`, `default-features = false`, or a `cfg` on the
+upper side), the link is open with `build-config-unpinned`. Until the manifests
+record the feature set and `cfg` list of the evidence build, the reader treats any
+`features` or `default-features` key on the dependency entry as that case.
+Anything else that falls outside these requirements is `ContractNotDependency`.
+
+### 5.1.2 Re-checking the lower report: two choices, the second chosen
+
+The lower report could be re-checked strictly (no `--allow-unverified`), or checked
+as its own BUILD checks it, with its `unverified::` ids carried upward. Strict
+re-checking would make every link to `ct-compare` open today, because its report
+still cites nine `unverified::` attestations and its BUILD passes
+`--allow-unverified` (VER04h section 9, check 15; backlog WD-008). **Decision: the
+second.** The lower report is checked with the flags its own BUILD uses, every
+other rule applying in full, and every `unverified::` id it cites, plus those it
+inherits from its own links, is carried into the upper claim rows'
+`conditional_on` as `inherited-unverified: <id> via <contract id>`. They are never
+inherited silently: a claim row that rests on a lower report with unverified
+attestations cannot print without them. When WD-008 removes the flag, the carried
+list is empty and the two choices coincide.
 
 ### 5.2 Errors and open states
 
@@ -324,11 +383,10 @@ test):
 
 | Failure | Raised when |
 |---|---|
-| `ContractIdMalformed` | An id is not one of the shapes of section 3.1, has an empty or over-long segment, or a disallowed character. |
-| `ContractLaneMismatch` | The id's lane differs from the upper package's lane. |
+| `ContractIdMalformed` | An id is not one of the shapes of section 3.1, has an empty or over-long segment, a disallowed character, or a lane segment (ids carry none). |
 | `ContractSelfLink` | The id names the upper package itself. |
 | `ContractNotDependency` | Condition (a) fails: the named package is not a direct normal dependency of the upper package, or is a dev-dependency only. |
-| `ContractUnknownClaim` | The lower package, its `.warrant`, or the named claim, operation or category does not exist in the lower document (section 3.2). |
+| `ContractUnknownClaim` | The lower package (in the report's own lane), its `.warrant`, or the named claim, operation or category does not exist (section 3.2). |
 | `ContractDuplicate` | An id appears twice in one document or one report. |
 | `ContractCycle` | Resolving the link re-enters a package already being resolved (section 10). |
 | `ContractPinMismatch` | A pinned digest differs from the file on disk at `--check`. |
@@ -350,6 +408,7 @@ the rest go in `also`:
 | `no-suite` | The manifest names the claim but has no non-example suite for it. |
 | `suite-failed` | A suite entry for the claim has a verdict other than `pass`. |
 | `lower-fault-mode` | Condition (e), section 5.5. |
+| `build-config-unpinned` | The lower crate's features or `cfg` in the evidence build differ from, or cannot be shown equal to, how the upper package links it (section 5.1.1). |
 | `lower-claim-conditional` | The lower claim rests on a contract link of its own that is open; the open ids are listed. |
 | `stack-mismatch` | The lower report's `stack` differs from the upper's. |
 | `kind-not-yet-published` | The id is a timing, resource or capability id and its slice has not landed. |
@@ -370,6 +429,9 @@ field):
 |---|---|---|
 | `spec_sha256` | SHA-256 of the lower `code/specs/<package>.warrant` | The statement of every claim. |
 | `manifests` | SHA-256 of each lower manifest the link read, by name (`test`, and `proof` or `bench` for the other kinds); the same digests VER13 AC-3 already computes | The evidence. |
+| `cargo_sha256`, `build_rs_sha256` | SHA-256 of the lower `Cargo.toml` and `build.rs` (or the literal `absent`) | Features, dependencies and build-time code the evidence build used. |
+| `unverified_deps` | per listed unverified **path** dependency of the lower package (for `logic-gates`, `transistors`): its `source_sha256` and `Cargo.toml` digest | The code the lower claim stands on without a contract. A change there is not invisible. |
+| `toolchain` | the toolchain id of the evidence build (`rustc` version and target, as VER13 AC-9 pins) | The evidence is for one build. |
 | `source_sha256` | the lower manifest's `source_sha256` (the `warrant-src-v1` framing of every file under the lower `src/`, VER04h section 8), recomputed from disk | The code the evidence ran. |
 | `claim_sha256` | SHA-256 of the claim declaration's canonical form: the lexer's comment-free token stream of the declaration, tokens joined by single spaces | Exactness: it is the claim's text, so a rename or a changed formula is visible as one changed line in the upper report's diff. |
 | `claim_entries_sha256` | SHA-256 of the claim's manifest entries, canonical JSON, sorted | Lets the check say "the pinned claim's evidence is unchanged, only an unrelated claim moved" (a message, not a relaxation). |
@@ -385,6 +447,25 @@ Any pin that no longer matches the file on disk fails `--check` closed with
 `ContractPinMismatch`, whether or not the change looks harmless. The remedy is
 to regenerate the upper report, which is then a reviewable diff.
 
+### 5.3.1 Regeneration must not accept a downgrade silently
+
+Regenerating recomputes pins, and could therefore turn a weakened or changed
+claim into a clean, green report. The gate is in CI, not in `--check` (which sees
+one tree): the slice-3 script `contract_regression_gate` compares each package's
+`contracts` block against the one at the diff base (`--diff-base`, as the build
+tool does) and **fails** if, for any link present in both, the strength decreased,
+the status went from discharged to open, or `claim_sha256` changed. A
+**commit trailer** in any commit of the range accepts it, one per id:
+
+```text
+Contract-Change-Accepted: contract.logic-gates.xor_truth_table: tightened to cover 3-valued input
+```
+
+The reason text is required and non-empty. Choice of trailer over a CLI flag: it
+travels with the change, is visible in review and in `git log`, and cannot be left
+enabled in a BUILD file. A new link, a removed link, and a strength increase need
+no acceptance.
+
 ### 5.4 What the report records
 
 A new top-level `contracts` object (`schema: "ver29-contract-links-v1"`) in
@@ -398,19 +479,21 @@ Illustrative shape (digests abbreviated to `…`):
   "reach": {"state": "unchecked", "text": "reach-around unchecked"},
   "dependencies": [
     {"package": "rust/logic-gates", "section": "dependencies",
-     "coverage": "covered",
-     "assumed": ["contract.rust.logic-gates.and_truth_table",
-                 "contract.rust.logic-gates.or_truth_table",
-                 "contract.rust.logic-gates.xor_truth_table"]}
+     "linkage": "linked",
+     "assumed": ["contract.logic-gates.and_truth_table",
+                 "contract.logic-gates.or_truth_table",
+                 "contract.logic-gates.xor_truth_table"]}
   ],
   "assumed": [
-    {"id": "contract.rust.logic-gates.xor_truth_table",
+    {"id": "contract.logic-gates.xor_truth_table",
      "kind": "functional", "status": "discharged", "strength": "exhaustive",
      "limited_by": [],
      "lower": {"package": "rust/logic-gates", "version": "0.1.0",
-               "stack": "host-x86_64",
+               "stack": "host-rustc",
                "spec_sha256": "…", "manifests": {"test": "…"},
-               "source_sha256": "…",
+               "source_sha256": "…", "cargo_sha256": "…", "build_rs_sha256": "absent",
+               "unverified_deps": {"rust/transistors": {"source_sha256": "…", "cargo_sha256": "…"}},
+               "toolchain": "rustc 1.xx.x x86_64-unknown-linux-gnu",
                "claim_sha256": "…", "claim_entries_sha256": "…"},
      "evidence": [
        "rust/logic-gates:warrant/logic_gates/exhaustive/xor_truth_table",
@@ -418,8 +501,8 @@ Illustrative shape (digests abbreviated to `…`):
        "rust/logic-gates:warrant/logic_gates/fuzz/xor_truth_table"]}
   ],
   "published": [
-    {"id": "contract.rust.arithmetic.add4_modular_sum", "kind": "functional",
-     "own_strength": "exhaustive", "strength": "exhaustive",
+    {"id": "contract.arithmetic.add4_modular_sum", "kind": "functional",
+     "own_strength": "exhaustive", "strength": "unattributed",
      "limited_by": [], "claim_sha256": "…", "claim_entries_sha256": "…",
      "evidence": ["warrant/arithmetic/exhaustive/add4_modular_sum", "…"]}
   ]
@@ -429,7 +512,14 @@ Illustrative shape (digests abbreviated to `…`):
 * `assumed` has one entry per id in the package's `.warrant`, discharged or open.
   An open entry has `status: "open"`, `reason`, `also`, `detail`, and no
   `strength`.
-* `published` has one entry per claim the package publishes. A package that
+* `published` has one entry per **Warrant claim**, and it is where per-claim
+  strength lives. The report's own claim rows are per **operation**, not per claim
+  (`derive_claims` makes one row `<symbol>_soundness` per operation by summing that
+  operation's suites; `wasm-leb128` has 6 such rows for 42 claims, with mixed
+  domains, and `logic-gates` has 22 rows for 88 claims). A row-level strength, where
+  one is shown, is the **minimum** over the strengths of that operation's claims,
+  never the maximum, so a row can never read stronger than its weakest claim.
+  `published` has one entry per claim the package publishes. A package that
   assumes nothing and is assumed by nothing still has the block (it is how the
   next layer up finds strengths); `logic-gates` has 88 rows.
 * `evidence` ids inside `contracts` are written `<package>:<id>` with the lower
@@ -439,13 +529,23 @@ Illustrative shape (digests abbreviated to `…`):
   "each cited id exists in the named lower manifest, with verdict `pass` and the
   pinned digest", which `contracts` carries.
 * `dependencies` lists **every** direct normal dependency, whether or not any
-  contract is assumed from it. A dependency with an empty `assumed` list has
-  `coverage: "unverified"`; third-party registry crates are listed under
-  `external` and are unverified by definition. This is the reported unverified
-  dependency of section 8, available before any call analysis exists.
-* Each claim row of the report gains a `contract` object:
-  `{"kind", "strength", "limited_by", "conditional_on"}` (section 6). The existing
-  per-operation `proof` block and VER13 labels are unchanged.
+  contract is assumed from it. The dependency-level value is `linked` (the package
+  assumes at least one contract of it) or `unverified` (it assumes none).
+  `linked` says **nothing** about which operations are covered: it is the
+  dependency-level fact only. The word `covered` is reserved for call level
+  (section 8.3) and means "the operation used has a contract", with the argument
+  domain and the caller's preconditions unchecked. Third-party registry crates and
+  `std` are listed under `external` and are unverified by definition. This is the
+  reported unverified dependency of section 8, available before any call analysis
+  exists.
+* Each operation row of the report gains a `contract` object:
+  `{"kind", "strength", "strength_state", "limited_by", "conditional_on"}` (section
+  6). `strength` is the minimum over the operation's claims; `strength_state` is
+  `own` (no contract link applies), `attributed` (call-level pass landed, section
+  8) or `unattributed` (section 6.4). The existing per-operation `proof` block and
+  VER13 labels are unchanged. `stack` stays on that `proof` block, where it is
+  recorded per claim proof (`host-rustc` or `owned-rv32i`); it is never a
+  report-wide value.
 
 ### 5.5 Fault and sabotage modes (condition e)
 
@@ -465,7 +565,12 @@ A claim is under a fault mode if any of these hold:
    operation are not shown to detect a fault, and the claim is open with
    `lower-fault-mode` and a `detail` naming the control. This is stricter than
    the brief's wording; it follows VER04h section 6 ("a suite that cannot fail is
-   not evidence").
+   not evidence"). **Limit:** negative controls are per (suite kind, operation,
+   fault), and a control passes when *some* claim of that kind for the operation
+   catches the fault (`caught_by`). A passing control therefore does not show that
+   the *assumed claim's own* suite can fail; another claim of the same operation may
+   have caught every fault. Requiring a control that targets the assumed claim is
+   open question VQ11.
 
 ### 5.6 Policy: when an open link blocks
 
@@ -490,14 +595,21 @@ weakest:
 | Rank | Label | Meaning | Source in the manifests |
 |---|---|---|---|
 | 5 | `proved` | A certificate-checked proof (`proved` in VER13 section 5.4). | proof manifest entry with label `proved` |
-| 4 | `bounded-proof` | A proof up to a stated bound `K` (`bounded(K)`). `K` is kept in `detail`. | proof manifest entry with label `bounded(K)` |
-| 3 | `exhaustive` | Every value of the claim's whole input domain was enumerated and the claim held. | `exhaustive` suite whose every binder is a complete finite type (below) |
+| 4 | `exhaustive` | Every value of the claim's whole input domain was enumerated and the claim held, by a stateless, deterministic binding (section 6.2). | `exhaustive` suite whose every binder is a complete finite type, on a stateless binding |
+| 3 | `bounded-proof(k=K)` | A proof up to a stated bound `K` (`bounded(K)`). `K` is **always printed** (`bounded-proof(k=128)`): a proof up to length 128 says nothing about length 129, which an enumeration of a complete domain does not leave out. | proof manifest entry with label `bounded(K)` |
 | 2 | `exhaustive-sampled` | Enumerated over a stated finite domain that is not the whole input domain (a representative set, edge values, widths up to a bound). | any other `exhaustive` suite |
 | 1 | `randomized` | Property or fuzz evidence only. | `property` or `fuzz` suites |
 | 0 | `example` | Examples only. No current generator produces a claim with example-only evidence; the label exists so that a downgrade has a floor to land on. | `example` entries |
 
 The brief's order was proof, exhaustive, property or fuzz, example. Two things
-were added because the manifests make them unavoidable, and one was kept tied:
+were added because the manifests make them unavoidable, and one was kept tied.
+(Review revision: `bounded-proof` ranks below `exhaustive`, not between `proved`
+and it, so a bound can never outrank a complete enumeration.) The order is a
+**convention for taking a minimum**, not an implication: `bounded-proof(k=K)` and
+`exhaustive-sampled` are not comparable in general (a proof to length 128 and a
+hand-picked sample answer different questions), and `exhaustive-sampled` ranking
+above `randomized` is a choice, not a theorem. Both are placed where a consumer
+who takes the minimum errs towards the weaker label.
 
 * `exhaustive-sampled`. VER04h section 3 says plainly that "exhaustive" is only
   ever relative to a stated finite domain, and the domain table gives `Bytes`
@@ -507,14 +619,35 @@ were added because the manifests make them unavoidable, and one was kept tied:
   up to a proof by enumeration. `logic-gates` shows the split in one table:
   `and_truth_table` (`Bool set(2)` twice) is `exhaustive`;
   `and_n_truth_table_every_width` (`n: Nat set(65)`) is `exhaustive-sampled`.
-* `bounded-proof` is VER13's own `bounded(k) < proved`, kept as a separate rung
-  from `proved`.
+* `bounded-proof(k=K)` is VER13's own `bounded(k) < proved`, kept as a separate
+  rung and printed with its bound. When two bounded proofs meet in a minimum, the
+  smaller `K` wins.
 * Property and fuzz share the label `randomized` (the brief's tie); the row in
   the report says which suites exist.
 
 ### 6.2 Deciding "complete" (exhaustive versus sampled)
 
-An `exhaustive` suite is complete when every binder of the claim is of a type
+An `exhaustive` suite supports the label `exhaustive` only if **both** parts hold.
+
+**Stateless and deterministic binding (review item H3).** Enumerating inputs from
+one initial state of a stateful operation (a flip-flop's `clock` method called from
+a freshly built object for each case) proves the transition from that state only; it
+says nothing about the next state, the history, or other initial states. The
+evidence is `exhaustive` only if the operation is a pure function of its arguments:
+the package's `evidence.bindings` declares `state none` (a package-level line or a
+per-operation `state=none` key, validated like the other binding keys), and the
+package's effect certificate and capability audit show no clock or random source
+(`effect-certificate::proved`, `capability-audit::rand-empty`; the runtime gate of
+VER08b observes the rest). An operation without that declaration, or any operation
+that wraps a stateful object, is classified at most `exhaustive-sampled`, whatever
+its binders. This matters for the `sequential` layer of the 4004 chain
+(registers, flip-flops): their claims will not be `exhaustive` until a sequence
+driver (VER04j section 7.1, not implemented) makes the history part of the
+quantifier. The `state none` key is a small producer change in the bindings reader;
+absent the key the classifier is conservative, so `logic-gates` stays
+`exhaustive-sampled` until its bindings say `state none`.
+
+**Complete domain.** The suite is complete when every binder of the claim is of a type
 whose whole value set the generator enumerates: `Bool`, `U8`, `U16`, `I8`,
 `I16`, each recorded as `set(2)` or `full(n)` with `n` equal to the size of the
 type. `Nat`, `Int`, `U64`, `Bytes` and any binder recorded as `edge` or listed in
@@ -553,40 +686,68 @@ contains the lower layer's own links, a three-layer chain composes by reading on
 report per step: layer 3 reads layer 2's `published` rows, layer 2's strengths
 already include layer 1.
 
-### 6.4 Attribution in the first implementation: package-wide
+### 6.4 Attribution: an upper claim rests only on the contracts of the operations it uses
 
-`assume platform:` is document-level: "Assume sections occur once per kind"
-(VER04 section 2). A claim cannot say which of the document's contracts it uses.
-Until the reach analysis of section 8 can attribute uses, **every claim of an
-upper package is capped by the weakest assumed contract of its kind**. This is
-sound and over-conservative: one `randomized` contract caps every functional
-claim of the package. The refinement is per-operation attribution from the
-call-level pass; no new keyword is proposed (open question VQ2).
+`assume platform:` is document-level (VER04 section 2: "Assume sections occur once
+per kind"); a claim cannot say which of the document's contracts it uses. Taking a
+strength from "any contract on the dependency" is wrong in both directions (review
+item C1):
+
+* `arithmetic` assumes only `contract.logic-gates.not_truth_table`, yet its adders
+  call `xor_gate`, `and_gate` and `or_gate`: a strength taken from the `not` link
+  would be printed for code that rests on three uncontracted operations.
+* An upper claim proved over nibbles through an adapter and a refinement
+  (`add4_modular_sum`, `a < 16`) says nothing about a caller that passes 12-bit
+  values to the same export.
+* `hmac` assumes `timing.eq` and also calls a sibling operation that is not
+  constant time.
+
+**Rule.** An upper claim's strength may rest only on contracts for the operations
+that claim's operation actually uses. Until the reach pass of section 8 can say
+which operations those are, **no contract strength is taken for an upper claim at
+all**: the claim's strength state is `unattributed`, printed as
+`unattributed (own: exhaustive)` (its own suites' strength, never a contract's). In
+a minimum, `unattributed` is below every label, so a claim that rests on an
+unattributed lower claim is itself `unattributed`. A package with no contract link
+at all (the bottom layer) has `strength_state: own`. After slice 4, each claim is
+attributed to its operation's used lower operations and its effective strength is
+the minimum over *those* operations' contracts of the claim's kind. A used
+operation with no assumed contract makes the claim conditional on it (section 7.2,
+rule C2), never silently covered.
+
+This replaces the first revision's package-wide cap, which was sound only in the
+direction of being weak but could still print a label for the wrong operation.
 
 ### 6.5 How it appears
 
-In the report, per claim row and per link:
+Strength lives in `published`, one row per Warrant claim. A report's per-operation
+row shows the **minimum** over that operation's claims (never the maximum; the
+operation row is a summary, not a per-claim fact). Before slice 4:
 
 ```text
-claim add4_modular_sum    exhaustive   limited_by []   conditional_on []
-link  xor_truth_table     discharged   exhaustive
-link  and_n_every_width   discharged   exhaustive-sampled
-claim half_adder_sum      exhaustive-sampled   limited_by [contract.rust.logic-gates.and_n_truth_table_every_width]
+published add4_modular_sum   own exhaustive   strength unattributed (own: exhaustive)
+published half_adder_sum     own exhaustive   strength unattributed (own: exhaustive)
+link      xor_truth_table    discharged       exhaustive   (the lower claim's strength; for the lower layer, strength_state own)
+op row    add4               unattributed (own: exhaustive)    [min over its claims]
 ```
 
-A claim whose package has an open link of the same kind, or an unverified
-dependency, keeps its computed strength and lists the open ids and the
-dependency in `conditional_on`. Unverified dependencies are inherited: the list
-also carries those the assumed lower packages' own reports show as unverified
-(`arithmetic` inherits `rust/transistors` through `logic-gates`), marked
-`via <contract id>`. An inherited unverified dependency is information and does
-not stop a discharge (section 5.1 lists what does); it is why a chain's top claim
-cannot print as plain `exhaustive` while any layer under it stands on something
-no contract covers. The human-readable rendering is
-`exhaustive, conditional on 1 open contract and 1 unverified dependency`. The
-words are never dropped: a claim with a non-empty `conditional_on` is not
-printed as plain `exhaustive`. A claim with no `conditional_on` and no `limited_by`
-is printed as the label alone.
+After slice 4, with each claim attributed to the operations it uses:
+
+```text
+published half_adder_sum     exhaustive   limited_by []  uses [xor_gate, and_gate]  covered (domain unchecked)
+published full_adder_sum     exhaustive   limited_by []  uses [xor_gate, and_gate, or_gate]
+published and_n_user         exhaustive-sampled  limited_by [contract.logic-gates.and_n_truth_table_every_width]
+```
+
+`conditional_on` lists open links of the claim's kind that its operation uses,
+every contract-less dependency, and inherited `unverified::` ids (section 5.1.2).
+The one rule for what prints (review item C2, section 7.2): a **functional**
+strength prints together with `conditional_on: [<dependencies without contracts>]`;
+**timing, resource and capability** strengths are *withheld* for any contract-less
+dependency, external crates and `std` included. The rendering of a conditional
+functional claim is `exhaustive, conditional on 1 unverified dependency`; the words
+are never dropped. A claim with no `conditional_on` and no `limited_by` is printed as
+its label alone.
 
 ---
 
@@ -617,28 +778,58 @@ An upper claim of kind K may only rest on contracts that cover K.
   claim needs capability contracts below it.
 * A **functional** upper claim needs functional contracts.
 
-Mechanically, for each upper claim of kind K and each direct dependency D
-(section 5.4 `dependencies`): at least one discharged contract of kind K from D
-must be assumed. If not, the claim's K-strength is withheld: the claim row has
-`strength: null`, `reason: "kind-uncovered"` and names D. Writing a strength
-there anyway is `ContractKindOverclaim`.
+Mechanically, for each upper claim of kind K, **for every operation the claim's
+operation uses** (section 8) in a dependency D, a discharged contract of kind K
+covering exactly that operation must be assumed. Until the pass can name the used
+operations, every direct dependency of the package counts as used. If a K contract
+is missing, the K-strength is withheld: the claim row has `strength: null`,
+`reason: "kind-uncovered"` and names the dependency and, after slice 4, the
+operation. Writing a strength there anyway is `ContractKindOverclaim`.
 
-This first version is **package-granular**, so it is conservative: a dependency
-that the claim's operation never touches still blocks. It becomes precise when
-section 8's pass says which dependencies and operations an upper operation
-reaches. Until then the remedies are to publish the missing contract, to move
-the dependency to `[dev-dependencies]` if production code does not use it, or to
-accept the withheld strength.
+### 7.2.1 One rule for dependencies without contracts (review item C2)
+
+The first revision said three inconsistent things about a dependency that
+publishes no contract (`logic-gates` over `transistors`; external crates; `std`).
+There is one rule:
+
+| Claim kind | A used dependency has no contract of that kind (path dependency, external crate or `std`) |
+|---|---|
+| functional | The strength **prints**, and the claim carries `conditional_on: [<each such dependency>]`. A functional claim over host `std` is the normal case and is not withheld. |
+| timing | The strength is **withheld** (`strength: null`, `kind-uncovered`). |
+| resource | The strength is **withheld**. |
+| capability | The strength is **withheld**. |
+
+Why the asymmetry: a functional claim is a statement about outputs that the tests
+check on the real stack, so an uncovered dependency is a visible condition on a
+real result. A timing, resource or capability claim says something about what the
+whole stack does underneath, so any layer the claim has no contract for is a hole
+in the statement itself; `std` and external crates are such layers, and a
+`timing` strength over them is withheld until a contract (or a VER13 catalogue
+entry for the host) covers them.
+
+### 7.2.2 `covered` is narrow
+
+`covered`, at call level, means only "the operation used has a contract". It does
+**not** say the arguments the upper layer passes lie in the contract's domain, or
+satisfy the refinement its claim carried (`a < 16u8`), or that the upper layer
+respects the preconditions the contract states by its `rejects` rows. A
+nibble-domain contract used at 12 bits is `covered`. The report prints
+`covered (domain unchecked)` wherever it prints the word, and section 15 lists the
+limit. A future domain-compatibility check is open question VQ12.
 
 ### 7.3 Example: constant time all the way down
 
 `hmac` over `ct-compare`: an `hmac_verify` claim that the comparison is
-constant time needs `contract.rust.ct-compare.timing.eq`. If `ct-compare`
+constant time needs `contract.ct-compare.timing.eq`. If `ct-compare`
 publishes only functional claims, `hmac`'s timing strength is withheld with
-`kind-uncovered(rust/ct-compare)`, and CWE-208 stays open exactly as it does
-today. Discharging the timing id is then one `assume platform:` row, and its
-strength is the label of `ct-compare`'s constant-time proof (`proved` or
-`bounded-proof`), which caps `hmac`'s.
+`kind-uncovered(ct-compare)`, and CWE-208 stays open exactly as it does
+today. Discharging the timing id is then one `assume platform:` row. Its strength
+is the label of `ct-compare`'s constant-time proof (`proved` or
+`bounded-proof(k=K)`), which caps `hmac`'s, **only for the operations that
+contract names**: if `hmac_verify` also calls a sibling `ct-compare` operation
+with no timing contract (or calls `std::cmp`), the timing strength stays withheld
+for that claim, with the uncovered operation named once slice 4 lands. Package-
+granular `linked` is not enough; the used operation must be covered.
 
 ---
 
@@ -667,7 +858,7 @@ What the pass can and cannot do, so nobody expects more:
 | Reachable | Not reachable |
 |---|---|
 | Every path in the upper `src/**/*.rs` that the binding closure resolves into the lower crate (`logic_gates::gates::and_gate`, or `and_gate` after `use logic_gates::gates::{and_gate, ..}`, as `arithmetic/src/adders.rs` writes it) | Method calls on a value of a lower type (`reg.write(..)`): the receiver's type is not known lexically; these are counted and listed as `unresolved` |
-| The lower item's identity by its last segment plus its crate, matched to the lower's bound exports (`evidence.bindings`, `export=`), so `logic_gates::gates::and_gate` and `logic_gates::and_gate` are one operation | Calls through function pointers, trait objects, generics and macros that expand to a call |
+| The lower item's identity is its **defining path**, found by resolving the written path through the lower crate's actual module tree and `pub use` re-exports (read from the lower `src/lib.rs` and the files it declares), not by matching the last segment. `logic_gates::gates::and_gate` and the root re-export `logic_gates::and_gate` resolve to one definition, which is then matched to the lower's bound exports (`evidence.bindings`, `export=`). A different item that merely shares the name (`other::and_gate`, a private function in another module) is a different definition and does not match. A re-export the pass cannot follow (a glob it cannot expand, a macro-generated item) leaves the use `unresolved` | Calls through function pointers, trait objects, generics and macros that expand to a call; code from `build.rs`, `OUT_DIR`, `include!`, `#[path]` modules and macro expansion |
 | Uses of a lower constant or type (`MAX_DECODER_WIDTH`, a struct) as item uses | Which of the listed uses a given upper operation actually executes: a package-level list, not a per-operation one, until the pass follows own-package calls |
 
 The pass is an additive mode of the analyzer (`--emit-uses`, JSON out); existing
@@ -679,10 +870,11 @@ For each resolved use:
 
 | Class | Condition | Report |
 |---|---|---|
-| `covered` | the lower item is a bound operation and an assumed, discharged contract's manifest entries name it (`op`) | counted |
+| `covered` | the lower item (by defining path) is a bound operation and an assumed, discharged contract's manifest entries name it (`op`). **Only that:** the arguments' domain and the caller's preconditions are not checked (section 7.2.2) | counted, printed `covered (domain unchecked)` |
 | `uncontracted-op` | the lower item is a bound operation but no assumed contract covers it | listed: unverified dependency |
 | `unbound-item` | the lower item is not in the lower package's bindings (a constant, a type, the `sequential` module of `logic-gates`) | listed: unverified dependency |
 | `unresolved` | a method call or other use the pass cannot resolve | listed, with file and line |
+| `opaque` | a construct the pass cannot see through: `build.rs`, `OUT_DIR`, `include!`, a `#[path]` module, a macro expansion, a generic or trait-object call into a lower type | listed, counted |
 | `uncontracted-helper` | an own-package function reachable from a bound operation of the upper package, by path-resolved calls, that is itself neither a bound operation nor covered by any upper claim | listed (below) |
 
 ### 8.4 The `bits.rs` example
@@ -705,7 +897,7 @@ VER27 rule (b) says such a helper "needs its own claim or removal". With the pas
 the choices become visible and checkable: either the 4004 Warrant document binds
 `int_to_bits` and `bits_to_int` as operations with a round-trip claim (then the
 helper is `covered` by an upper claim, and the claim is itself published as
-`contract.rust.intel4004-gatelevel.bits_roundtrip` for the layers above), or the
+`contract.intel4004-gatelevel.bits_roundtrip` for the layers above), or the
 helper is removed, or it stays listed as unverified and `--require-closed` fails.
 
 The pass is **not** a general "every private function needs a claim" rule. The
@@ -723,10 +915,21 @@ does, `contracts.reach` is exactly
 
 and the human report prints the phrase wherever it prints a contract strength.
 What *does* exist before the pass is the dependency-level view of section 5.4
-(`dependencies`, with `coverage: covered` or `unverified`): a dependency with
-no assumed contract is reported even without any call analysis. After the pass,
-`reach.state` is `call-level` and carries the SHA-256 of the pass output, so
-`--check` can reject `call-level` without it (`ReachClaimUnsupported`).
+(`dependencies`, with `linkage: linked` or `unverified`): a dependency with no
+assumed contract is reported even without any call analysis. After the pass,
+`reach.state` is one of:
+
+| State | When |
+|---|---|
+| `unchecked` | the pass has not run; the text is exactly `reach-around unchecked` |
+| `call-level-partial` | the pass ran and the count of `unresolved` plus `opaque` uses is greater than 0; the report prints both counts and every listed item. Review revision: the first draft said `call-level` here, which would have let a method call into a lower type pass unseen |
+| `call-level` | the pass ran and the `unresolved` and `opaque` counts are 0 |
+
+Both non-`unchecked` states carry the SHA-256 of the pass output, so `--check`
+rejects them without it (`ReachClaimUnsupported`). `build.rs`, `OUT_DIR`,
+`include!`, `#[path]`, macros and generics are listed items: a package that has
+any of them cannot reach `call-level` without a recorded justification per item
+(open question VQ13), and a `--require-closed` run fails on `call-level-partial`.
 
 ### 8.6 A dynamic complement (proposal, not committed)
 
@@ -837,16 +1040,18 @@ already give it every `logic-gates` dependent. Two things are not covered:
 
 ### 11.2 The rule
 
-Let a **link edge** U -> L (lane x) exist when `code/specs/U.warrant` contains a
-`contract.x.L.*` id. The build tool derives the set of link edges at start-up by
+Let a **link edge** U -> L exist when `code/specs/U.warrant` contains a
+`contract.L.*` id. The build tool derives the set of link edges at start-up by
 scanning the `.warrant` files (a grep over a few dozen files). Then:
 
 | Changed path | Selected |
 |---|---|
-| `code/specs/L.warrant` | every U with an edge to L, for the lanes in its ids: the **link check** of U |
+| `code/specs/L.warrant` | every U with an edge to L, in every lane where U and L both exist: the **link check** of U |
 | `code/packages/x/L/evidence/**`, `code/packages/x/L/evidence.bindings`, `code/packages/x/L/assurance_report.json` | the same |
 | `code/packages/x/L/src/**` and anything else under `L` | already selected through the Cargo dependency graph with a full build of every dependent; the link check runs inside U's BUILD as it does today for `--check` |
 | `code/specs/U.warrant` | U (full), plus every package with an edge from it upward |
+| a path in a lower package's pinned **unverified path dependency** (for `logic-gates`, `code/packages/rust/transistors/**`), or the lower `Cargo.toml` or `build.rs` | the link check of every U whose pins list it (section 5.3: `unverified_deps`, `cargo_sha256`, `build_rs_sha256`) |
+| the **generator, prelude or report tooling**: `code/packages/rust/warrant-grammar/src/` (`evidence.rs`, `evidence_prelude.rs.txt`, `codegen.rs`, `binding.rs`), `code/packages/rust/ca-assurance-report/**`, `code/packages/rust/ca-capability-analyzer/**`, the slice-3 gate script | **all** link checks, every U with any link edge: these change what a manifest or a report means, so no pin comparison can be trusted across the change |
 
 A lower change selects uppers **transitively along link edges**: L's change
 selects U, and U's report is the lower report that V (an upper of U) checks, so V
@@ -890,17 +1095,20 @@ LG01, `Bool set(2)` for each binder):
 
 | Id | Operation | Exhaustive cases | Own strength |
 |---|---|---|---|
-| `contract.rust.logic-gates.xor_truth_table` | `xor_gate` | 4 | `exhaustive` |
-| `contract.rust.logic-gates.and_truth_table` | `and_gate` | 4 | `exhaustive` |
-| `contract.rust.logic-gates.or_truth_table` | `or_gate` | 4 | `exhaustive` |
+| `contract.logic-gates.xor_truth_table` | `xor_gate` | 4 | `exhaustive` |
+| `contract.logic-gates.and_truth_table` | `and_gate` | 4 | `exhaustive` |
+| `contract.logic-gates.or_truth_table` | `or_gate` | 4 | `exhaustive` |
 
 Each has an exhaustive, a property (4,096 cases) and a fuzz (5,000 iterations)
 suite. The logic-gates report has no contract links of its own (nothing below it is
 a Warrant package: it depends on `transistors`, which has no `.warrant`), so it
-lists `rust/transistors` under `dependencies` with `coverage: "unverified"`.
-Every logic-gates claim therefore prints as `exhaustive, conditional on 1
-unverified dependency`; that is correct, and it is the first thing a reader of the
-chain learns.
+lists `rust/transistors` under `dependencies` with `linkage: "unverified"`.
+Every logic-gates functional claim therefore prints as `exhaustive, conditional on
+1 unverified dependency` (rule C2, section 7.2.1: functional strengths print with
+the condition; a timing strength would be withheld); that is correct, and it is the
+first thing a reader of the chain learns. The label `exhaustive` also assumes
+`logic-gates`' bindings declare `state none` (section 6.2); until they do, the
+classifier reads the claims as `exhaustive-sampled`.
 
 ### 12.2 The upper `.warrant` (sketch)
 
@@ -929,9 +1137,9 @@ warrant arithmetic v1
       Ok((rem(a + b + b2u(c), 16u8), if a + b + b2u(c) >= 16u8 then 1u8 else 0u8))
 
   assume platform:
-    contract.rust.logic-gates.xor_truth_table
-    contract.rust.logic-gates.and_truth_table
-    contract.rust.logic-gates.or_truth_table
+    contract.logic-gates.xor_truth_table
+    contract.logic-gates.and_truth_table
+    contract.logic-gates.or_truth_table
   assume environment:
     none
 ```
@@ -963,44 +1171,73 @@ section 4.15, "(a+b+c) mod 16".
 
 ### 12.4 The upper report rows
 
-Contract links (`contracts.assumed`):
+Contract links (`contracts.assumed`), which are the same before and after the
+reach pass:
 
 | Link | Status | Strength | Lower evidence | `limited_by` |
 |---|---|---|---|---|
-| `contract.rust.logic-gates.xor_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
-| `contract.rust.logic-gates.and_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
-| `contract.rust.logic-gates.or_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
+| `contract.logic-gates.xor_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
+| `contract.logic-gates.and_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
+| `contract.logic-gates.or_truth_table` | discharged | `exhaustive` | 3 suites, all `pass` | none |
 
-Claims:
+`dependencies`: `rust/logic-gates` is `linked`. Claims, **before the reach pass**
+(slice 2; section 6.4: no contract strength is taken until uses are attributed):
 
-| Claim | Own | Effective | `conditional_on` |
+| Published claim | Own | Strength state | Printed |
 |---|---|---|---|
-| `half_adder_sum_carry` | `exhaustive` (4 cases) | `exhaustive` | inherited unverified dependency `rust/transistors` (via the three links); reach: `reach-around unchecked` |
-| `full_adder_sum_carry` | `exhaustive` (8 cases) | `exhaustive` | as above |
-| `add4_modular_sum` | `exhaustive` (512 cases) | `exhaustive` | as above |
+| `half_adder_sum_carry` | `exhaustive` (4 cases) | `unattributed` | `unattributed (own: exhaustive)`; `conditional_on`: inherited unverified `rust/transistors` via the three links; `reach-around unchecked` |
+| `full_adder_sum_carry` | `exhaustive` (8 cases) | `unattributed` | as above |
+| `add4_modular_sum` | `exhaustive` (512 cases) | `unattributed` | as above |
 
-The effective strength is `min(exhaustive, exhaustive) = exhaustive`, and each
-claim prints as `exhaustive, conditional on 1 unverified dependency (inherited)`.
-The report prints `reach-around unchecked` until section 8's pass lands. That phrase
-does not retract the discharged links: they say what the *assumptions* rest on, not
-that nothing else is touched.
+The operation rows of the report (`half_adder`, `full_adder`, `add4`: one row per
+operation, not per claim, section 5.4) show the minimum over their claims, here
+`unattributed (own: exhaustive)`.
 
-If `logic-gates` had, say, a `randomized` truth-table suite only, the three links
-would be discharged at `randomized`, every `arithmetic` claim would be capped at
-`randomized` (`limited_by` naming the weak link), and `add4_modular_sum` would
-print `randomized` even though its own suite is `exhaustive`.
+**After the reach pass** (slice 4), each claim is attributed to the lower
+operations it uses (`half_adder` uses `xor_gate` and `and_gate`; `full_adder`
+also `or_gate`; the ripple chain uses all three). Each use is `covered (domain
+unchecked)` by the matching link, so:
+
+| Published claim | Uses | Strength | `conditional_on` |
+|---|---|---|---|
+| `half_adder_sum_carry` | `xor_gate`, `and_gate` | `exhaustive` (`min(exhaustive, exhaustive, exhaustive)`) | inherited unverified `rust/transistors` |
+| `full_adder_sum_carry` | `xor_gate`, `and_gate`, `or_gate` | `exhaustive` | as above |
+| `add4_modular_sum` | the same three | `exhaustive` | as above |
+
+printed as `exhaustive, conditional on 1 unverified dependency (inherited)`, with
+`reach` `call-level` only if no use is `unresolved` or `opaque`, else
+`call-level-partial`.
+
+**The same claims if `arithmetic` had assumed only `not_truth_table`** (review item
+C1): the links are discharged, but `xor_gate`, `and_gate` and `or_gate` are
+`uncontracted-op`. Each adder claim keeps its own strength, prints
+`conditional_on` the three uncontracted operations, and takes **no** strength from
+the `not` link; the dependency-level value `linked` is true and tells the reader
+nothing about the adders.
+
+**Caller domain.** `add4_modular_sum` is proved over nibbles (`a < 16u8`). If
+`intel4004-gatelevel` calls the same export on 12-bit values, the use is
+`covered (domain unchecked)`. Nothing compares the 12-bit values with the claim's
+refinement (section 15, limit 9; question VQ12).
+
+If `logic-gates` had only a `randomized` truth-table suite for `xor_truth_table`,
+that link would be discharged at `randomized`, and after slice 4 every claim that
+uses `xor_gate` would be capped at `randomized` (`limited_by` naming the link),
+while a claim that uses only `and_gate` would not be.
 
 ### 12.5 If `logic-gates`' manifest changes
 
-| Change in `logic-gates` | `arithmetic` `--check` | `arithmetic` `--generate` |
+| Change in `logic-gates` | `arithmetic` `--check` | `arithmetic` `--generate`, and the CI regression gate |
 |---|---|---|
-| An unrelated claim is added; manifest and `.warrant` are regenerated | `ContractPinMismatch`: `spec_sha256` and `manifests.test` differ; the message adds that `claim_sha256` and `claim_entries_sha256` of the three pinned claims are unchanged | Succeeds; the diff shows only the two changed pins. Strength unchanged. |
+| An unrelated claim is added; manifest and `.warrant` are regenerated | `ContractPinMismatch`: `spec_sha256` and `manifests.test` differ; the message adds that `claim_sha256` and `claim_entries_sha256` of the three pinned claims are unchanged | Succeeds; the diff shows only the changed pins. Strength unchanged, so the gate (section 5.3.1) passes with no trailer. |
 | `xor_truth_table` is renamed `xor_table` | (cannot get that far) | `ContractUnknownClaim`, naming the package and listing its claims; no alias is tried |
-| The `xor_truth_table` formula is tightened, name unchanged | `ContractPinMismatch` including `claim_sha256` | Succeeds; the diff shows a new `claim_sha256`: the reviewer sees the claim changed |
-| The exhaustive suite for `xor_truth_table` is removed; property and fuzz remain | `ContractPinMismatch` (manifest digest) | Succeeds with strength `randomized`; every `arithmetic` claim is now capped at `randomized` |
-| An exhaustive suite for `xor_truth_table` fails (verdict `fail`) | `ContractDischargeMismatch` if the checked-in report still says discharged | The link is `open`, reason `suite-failed` (and `lower-report-fails-check` in `also`); the claims print `exhaustive, conditional on 1 open contract` |
+| The `xor_truth_table` formula is tightened, name unchanged | `ContractPinMismatch` including `claim_sha256` | Succeeds, but the gate **fails** (`claim_sha256` changed) unless a commit carries `Contract-Change-Accepted: contract.logic-gates.xor_truth_table: <reason>` |
+| The exhaustive suite for `xor_truth_table` is removed; property and fuzz remain | `ContractPinMismatch` (manifest digest) | Succeeds with strength `randomized`; the gate **fails** (strength decreased) without the trailer, so a downgrade cannot be regenerated into a green build unseen |
+| An exhaustive suite for `xor_truth_table` fails (verdict `fail`) | `ContractDischargeMismatch` if the checked-in report still says discharged | The link is `open`, reason `suite-failed` (and `lower-report-fails-check` in `also`); the gate fails (discharged to open) without the trailer; the claims print `conditional on 1 open contract` |
+| `transistors`, which `logic-gates` stands on without a contract, is edited | `ContractPinMismatch` on `unverified_deps` | Succeeds; the gate passes. The change is visible in the diff of the pin. |
 | `logic-gates` is edited by hand so a manifest entry claims `pass` | `ContractPinMismatch` for the pinned digest; if the upper report was also regenerated, `lower-report-fails-check`, because the lower `--check` finds `source_sha256` or `spec_sha256` stale (VER04h section 9, check 5 and 12) | Open, `lower-report-fails-check` |
-| `arithmetic` removes `logic-gates` from `[dependencies]` | `ContractNotDependency` | `ContractNotDependency` |
+| `arithmetic` removes `logic-gates` from `[dependencies]`, or points it at a fork by `path` or `package =` | `ContractNotDependency` | `ContractNotDependency` |
+| `arithmetic` enables a feature on `logic-gates` that its evidence build did not | (valid report) | The links are `open`, reason `build-config-unpinned` |
 
 ---
 
@@ -1017,9 +1254,9 @@ number, not a promise.
 | Slice | Scope | Would-build (estimate) |
 |---|---|---|
 | 1. Id parsing | `warrant-grammar`: contextual `contract_id` at a platform row (section 3.3), shape validation (`ContractIdMalformed` at parse), duplicate diagnostic, v0 rejection (`W0101`); fixtures in `code/specs/fixtures/warrant-syntax-v1/`; VER04 amendment A | about 7: `warrant-grammar`, its Cargo dependents `ca-assurance-report` and `warrant-ir`, and the four adopters re-selected by LV-002 for a grammar change |
-| 2. Resolution and discharge | `ca-assurance-report`: read upper `Cargo.toml` dependencies; resolve against the lower `.warrant`, test manifest and report; conditions a-e; pins; `contracts` block; strength labels; `published`; `dependencies` and `external`; checks of section 5.2; flags of section 5.6; VER13 amendment B. Timing, resource and capability ids resolve to `kind-not-yet-published`. | about 5: `ca-assurance-report` and the four adopters whose reports regenerate (each gains a `contracts` block and a `published` list); the first real upper package (`arithmetic`) joins with LV-006 |
-| 3. CI re-selection | build-tool consumer rule of section 11.2 (link-edge scan, `.warrant` and `evidence/**` mapping), on top of LV-002; conformance test script | 1 Go package plus the build-tool conformance scripts; verify that a build-tool edit does not force a wider rebuild before relying on this number |
-| 4. Reach-around check | `ca-capability-analyzer`: `--emit-uses` mode; `ca-assurance-report`: classification of section 8.3, `reach.state: call-level` with pass digest, `--require-closed` | about 6: the analyzer, `ca-assurance-report`, the four adopters. The mode is additive, so no other package's BUILD output changes (a requirement of the slice, with a test). |
+| 2. Resolution and discharge | `ca-assurance-report`: read upper `Cargo.toml` dependencies; resolve against the lower `.warrant`, test manifest and report; conditions a-e including the in-tree binding of section 5.1.1; pins including `Cargo.toml`, `build.rs`, unverified path dependencies and toolchain; the lower-report check with carried `unverified::` ids (section 5.1.2); `contracts` block; strength labels; `unattributed` state; the `state none` binding key (section 6.2); `published`; `dependencies` and `external`; checks of section 5.2; flags of section 5.6; VER13 amendment B. Timing, resource and capability ids resolve to `kind-not-yet-published`. | about 5: `ca-assurance-report` and the four adopters whose reports regenerate (each gains a `contracts` block and a `published` list); the first real upper package (`arithmetic`) joins with LV-006 |
+| 3. CI re-selection | build-tool consumer rule of section 11.2 (link-edge scan, `.warrant`, `evidence/**`, pinned-dependency and generator-change mapping), on top of LV-002; `contract_regression_gate` and the `Contract-Change-Accepted` trailer (section 5.3.1); conformance test script | 1 Go package plus the build-tool conformance scripts; verify that a build-tool edit does not force a wider rebuild before relying on this number |
+| 4. Reach-around check | `ca-capability-analyzer`: `--emit-uses` mode resolving through the lower crate's module tree and `pub use` (section 8.2); `ca-assurance-report`: classification of section 8.3 including `opaque`, per-claim attribution, `reach.state` `call-level-partial` or `call-level` with pass digest, `--require-closed` | about 6: the analyzer, `ca-assurance-report`, the four adopters. The mode is additive, so no other package's BUILD output changes (a requirement of the slice, with a test). |
 | 5. Amendments and closure | the parts of the amendments not already landed in slices 1 and 2; VER27 C14 closed and the section 4.14 pointer; VER01 `contracts` schema; backlog; LG01's "pending LV-005" header; `README` | docs only; `VER04` is a `warrant-grammar` input (about 3 selected) |
 
 The brief listed the amendments last. Applying each amendment in the slice whose
@@ -1037,8 +1274,8 @@ gate, as in VER04h section 6.
 
 * Positive: the three adopters' documents parse and check byte-identically
   (VER04j section 1.3); a v1 document with each id shape of section 3.1 parses.
-* Negative: `contract.rust.logic-gates` (three segments); an empty segment; an
-  uppercase lane; a 257-byte id; an id with a space inside; `contract.rust..x.y`;
+* Negative: `contract.logic-gates` (three segments); an empty segment; an
+  an id carrying a lane segment (`contract.rust.logic-gates.x`); a 257-byte id; an id with a space inside; `contract..x`;
   a contract id in a v0 document (`W0101`); the same id twice (duplicate
   diagnostic); a model with a binder named `contract` that projects a field still
   parses as an expression.
@@ -1064,16 +1301,38 @@ gate, as in VER04h section 6.
   (an upper claim row labelled `exhaustive` over a `randomized` link) fails
   `ContractStrengthOverclaim`; a **kind overclaim** (a timing strength resting
   only on functional links) fails `ContractKindOverclaim`; a **cycle** between two
-  fixture packages fails `ContractCycle`; a **self-link** and a **lane mismatch**
-  fail as named; a **sampled domain** (`n: Nat set(65)`, `v: U64 edge(377)`) is
+  fixture packages fails `ContractCycle`; a **self-link** fails as named, and an id whose package exists only in another lane fails `ContractUnknownClaim`; a **sampled domain** (`n: Nat set(65)`, `v: U64 edge(377)`) is
   `exhaustive-sampled`, never `exhaustive`; unparseable `domain` text falls to
   `exhaustive-sampled`.
+* **Binding controls (C4):** a `path` to a copy of the lower crate outside
+  `code/packages/<lane>/<package>`; a `package =` rename; a registry or git
+  dependency; a `[patch]` entry; an `optional = true` entry; a `[target.*]` entry; a
+  `features =` key (open with `build-config-unpinned`); a `build.rs` or `Cargo.toml`
+  edit in the lower crate changes the pin.
+* **Attribution controls (C1, C2):** an upper package that assumes one contract of a
+  dependency and uses a different operation has `unattributed` strength and prints no
+  contract label; a functional claim over a contract-less dependency prints with
+  `conditional_on`, a timing claim over one is withheld (also for an external crate
+  and for `std`); an operation row never reads stronger than the weakest of its
+  claims (a fixture with 6 operations and mixed-domain claims).
+* **Lower-report controls (H1):** a lower report with `unverified::` ids yields a
+  `conditional_on` entry for each; a report that drops one fails the check.
+* **Label controls (H2, H3):** `bounded-proof(k=128)` ranks below `exhaustive` and
+  always prints `k`; an operation without `state none`, and one that wraps a
+  stateful object, is at most `exhaustive-sampled`.
+* **Downgrade control (H4):** regenerating after a strength decrease, a
+  discharged-to-open change or a `claim_sha256` change fails the gate without the
+  trailer and passes with it.
+* **Pin controls:** an edit to `transistors` changes `unverified_deps`; a different
+  toolchain id fails the check.
 * Property tests: effective strength never exceeds own strength or any cap
   (for random chains); regenerating a report is a fixed point.
 
 **Slice 3**
 
-* Positive: a `.warrant` edit of a lower selects the link check of exactly the
+* Positive: an edit of the generator, prelude or report tool selects every link
+  check; a change under a pinned unverified dependency selects the assuming link
+  checks; a `.warrant` edit of a lower selects the link check of exactly the
   assuming packages and not its 47 dependents; an `evidence/**` edit selects the
   same; a source edit selects dependents through the graph as before.
 * Negative: the build tool fails closed (selects everything it cannot classify)
@@ -1083,16 +1342,19 @@ gate, as in VER04h section 6.
 
 **Slice 4**
 
-* Positive: `arithmetic`'s `adders.rs` uses resolve to `covered` for `and_gate`,
-  `or_gate`, `xor_gate` (through `gates::`); the `intel4004-gatelevel` fixture lists
+* Positive: `arithmetic`'s `adders.rs` uses resolve to `covered (domain
+  unchecked)` for `and_gate`, `or_gate`, `xor_gate` (through `gates::`, one
+  definition with the root re-export); the `intel4004-gatelevel` fixture lists
   `bits::int_to_bits` as `uncontracted-helper`.
 * Negative controls: an upper operation calling a lower operation with no assumed
   contract is `uncontracted-op`; a use of an unbound item (`MAX_DECODER_WIDTH`) is
   `unbound-item`; a method call on a lower type is counted `unresolved`; a report
-  claiming `call-level` without the pass digest fails `ReachClaimUnsupported`; a
-  glob import and an alias rename of a lower function are still resolved (the
-  analyzer's own corpus cases are reused); `--require-closed` fails on each listed
-  class.
+  claiming `call-level` or `call-level-partial` without the pass digest fails
+  `ReachClaimUnsupported`; a glob import and an alias rename of a lower function are
+  still resolved (the analyzer's own corpus cases are reused); a same-named function
+  in another module of the lower crate is **not** matched; `build.rs`, `include!`,
+  `#[path]` and a macro-expanded call are `opaque` and force `call-level-partial`;
+  `--require-closed` fails on each listed class and on `call-level-partial`.
 
 ---
 
@@ -1110,10 +1372,13 @@ argument sound.
 
 **Conditions under which composition replaces the miter** (all are necessary):
 
-1. **Every contract in the chain is `exhaustive` or stronger, and none is
-   sampled or randomized.** A miter is a proof over all inputs. Section 6's
-   minimum rule means a single `randomized` or `exhaustive-sampled` link anywhere
-   caps the top claim below the standard a miter meets, so the label alone refuses
+1. **Every contract in the chain is `proved` or `exhaustive` (a complete
+   domain, stateless deterministic binding), and none is `bounded-proof(k=K)`,
+   sampled or randomized.** A miter is a proof over all inputs. A bounded proof
+   (rank below `exhaustive`, section 6.1) is not enough: it says nothing past `K`.
+   Section 6's minimum rule means a single `bounded-proof`, `randomized` or
+   `exhaustive-sampled` link anywhere caps the top claim below the standard a miter
+   meets, so the label alone refuses
    the replacement when it is not earned. For gates and a 4-bit adder
    (4 and 512 cases) this holds; for a width-64 datapath it does not, until the
    contract is a proof (a bit-blasted or inductive one), not an enumeration.
@@ -1140,14 +1405,32 @@ argument sound.
 5. **Stateful layers have trace contracts.** Flip-flops and registers need a
    step-relation contract and a statement of the clocking abstraction
    (`gate.sequential.ideal-dff`). A truth table covers combinational blocks only.
-6. **The netlist is the composition.** A miter is about one concrete netlist; a
+6. **Every caller satisfies each contract's refinement and domain** (review item
+   C1). A contract proved over nibbles says nothing about a 12-bit use, and `covered`
+   does not check it (section 7.2.2). A composition proof needs, for each use, a
+   proof that the actual argument lies in the contract's domain and meets its
+   preconditions.
+7. **The evidence and the composition use the same build configuration and
+   binary.** Features, `cfg` flags, `build.rs` output, toolchain and optimisation
+   level that differ between the lower evidence build and the artefact the
+   composition is about make the contract a statement about a different program
+   (section 5.1.1 pins the manifest-level part; the binary-level part is not pinned).
+8. **The code is pure and deterministic.** No clock, random source, global state or
+   history: a contract over a stateful operation proved from one initial state
+   (section 6.2) does not compose.
+9. **Panics and rejections are part of the contract actually used.** The gate
+   contract says a non-bit panics, normalised by the binding to `INVALID_INPUT`; an
+   upper layer that relies on a result must also account for the rejection path of
+   every operation it calls, and the contract used must be the one that states it
+   (for `logic-gates`, `*_rejects_non_bit` is a separate claim from `*_truth_table`).
+10. **The netlist is the composition.** A miter is about one concrete netlist; a
    composition argument is about a model assembled from contracts. Replacing the
    first by the second needs a claim that the netlist (or the simulator the
    netlist is traced from, VER13 section 4.4) is that assembly: an extraction
    fidelity claim. No contract in this specification states it, and no tool checks
    it.
 
-**What remains assumed even when all six hold:** the host language and toolchain
+**What remains assumed even when all ten hold:** the host language and toolchain
 (the evidence runs compiled code, VER27 section 5); Warrant and its evidence
 generator (`tcb`); the datasheet transcription at the CPU layer; the soundness of
 the abstraction step (that an abstract function with only the contract's constraints
@@ -1157,10 +1440,11 @@ contract is evidence about an *implementation in a simulator*, not about silicon
 
 **Verdict.** The answer the specification can support is **conditional, and
 currently not met for RV32I**: composition may replace the miter for a layer whose
-contracts are `exhaustive` or stronger, whose composition is proved with abstract
-lower operations, and whose reach-around check and trace/timing coverage are clean
-(conditions 1 to 6). The 4004 chain meets condition 1 for its lowest layers
-today, and none of 2 to 6. Recommendation, not a decision (open question VQ4, for
+contracts are `exhaustive` or `proved`, whose composition is proved with abstract
+lower operations, and whose reach-around check, caller domains, build
+configuration, purity, rejection paths and trace/timing coverage are clean
+(conditions 1 to 10). The 4004 chain meets condition 1 for its lowest layers
+at most (and only once their bindings declare `state none`), and none of 2 to 10. Recommendation, not a decision (open question VQ4, for
 the owner): when the chain has a composition proof for one small layer (the 4-bit
 adder over the gates), **compute the miter for the same layer and compare the two
 verdicts**. That calibrates Q8 on a stack where both are cheap, which is what
@@ -1173,7 +1457,7 @@ VER27 asked the chain to do.
 **Not goals.**
 
 * Cross-lane links (a Perl package assuming a Rust contract through a cdylib). The
-  lane mismatch is an error. It is a real shape in this repository and deserves its
+  resolution is an error (`ContractUnknownClaim` or `ContractNotDependency`). It is a real shape in this repository and deserves its
   own design.
 * Packages published and versioned independently (a registry release of the lower
   package). Digests identify checked-in files, and the resolution reads sibling
@@ -1200,10 +1484,12 @@ VER27 asked the chain to do.
 2. **Strength is only as good as the classification.** `exhaustive` is conservative
    (section 6.2) and depends on a free-text `domain` until the manifest gains
    structured binders.
-3. **Package-wide attribution** over-caps (section 6.4); per-operation attribution
-   needs section 8's pass.
-4. **The reach pass is lexical.** Method calls, trait objects, function pointers
-   and macros are not resolved; they are counted as `unresolved`, not cleared.
+3. **Before the reach pass no contract strength is taken at all** (section 6.4: the
+   state is `unattributed`); attribution needs section 8's pass, and the pass is
+   lexical (limit 4).
+4. **The reach pass is lexical.** Method calls, trait objects, function pointers,
+   macros, `build.rs`, `OUT_DIR`, `include!` and `#[path]` are not resolved; they are
+   counted as `unresolved` or `opaque` and keep the state at `call-level-partial`.
 5. **A dependency is not a use.** Condition (a) says the upper package is allowed to
    link to the lower; it does not say the upper code calls it, and a link to a
    dependency the code never touches is harmless but uninformative.
@@ -1216,6 +1502,16 @@ VER27 asked the chain to do.
 8. **`unverified dependency` includes `std` and third-party crates.** They are listed
    as external and carry no contract; the VER13 `src` and `cc` families are where
    their assumptions live.
+9. **Caller-side refinements and domains are never checked.** `covered` means the
+   operation used has a contract. A claim proved over nibbles (`a < 16u8`) is
+   `covered` for a 12-bit caller; nothing compares the caller's argument domain with
+   the contract's refinement, and the preconditions a contract states by `rejects`
+   rows are not checked against the caller (section 7.2.2; VQ12).
+10. **`proved` is not exhaustive evidence of the build you ship.** Features, `cfg`,
+    `build.rs` output and the binary are pinned only at manifest level
+    (section 5.1.1); the binary the composition is about is not.
+11. **An assumed claim's own suite is not shown able to fail**, only that some claim
+    of its operation catches each fault (section 5.5, VQ11).
 
 ---
 
@@ -1236,9 +1532,9 @@ with
 > Platform entries are of two forms. A *catalogue entry* is a dotted identifier
 > that must resolve to the shared versioned VER13 catalogue and its lane
 > conformance evidence. A *contract entry*, allowed in v1 documents only, is a
-> contract id (`contract.<lane>.<package>.<claim>` or a longer form of VER29
-> section 3.1) naming a claim that another package's own Warrant document
-> declares. The Warrant checker validates a contract entry's shape only. The
+> contract id (`contract.<package>.<claim>` or a longer form of VER29
+> section 3.1; no lane segment, the lane is that of the report that resolves it)
+> naming a claim that another package's own Warrant document declares. The Warrant checker validates a contract entry's shape only. The
 > assurance report resolves it from the named package's evidence, fail closed
 > (VER29 section 5): the entry counts as discharged only if that evidence proves
 > the claim at the pinned digests, and a name that resolves to nothing is an
@@ -1316,24 +1612,33 @@ Section 8 (relationships): add a row for VER29.
 | # | What | Why |
 |---|---|---|
 | D1 | The document number is `VER29`, not `VER28`. | VER28 is reserved by existing citations (section "Why the number"). |
-| D2 | Non-functional kinds get id shapes of 5 and 6 segments (`timing`, `resource`, `capability`). | The brief names the kinds but only the functional id form; named claims cannot cover obligations that are not `claim` blocks. |
+| D2 | Non-functional kinds get id shapes of 4 and 5 segments (`timing`, `capability`; `resource`), against 3 for functional. | The brief names the kinds but only the functional id form; named claims cannot cover obligations that are not `claim` blocks. |
 | D3 | The kind is derived from the evidence source, never declared. | A declared kind could be wrong with nothing to catch it. |
 | D4 | Unresolvable id is an **error**; resolvable but unproved is **open**. | Rule (c) says a rename breaks the link loudly; open does not fail a build. The brief said "otherwise open", which would let a rename silently downgrade a link. |
-| D5 | Two additional strength rungs: `bounded-proof` and `exhaustive-sampled`. | VER13 already has `bounded(k)`; VER04h section 3 makes most "exhaustive" suites sampled. |
+| D5 | Two additional strength rungs: `bounded-proof(k=K)` (below `exhaustive`, `K` always printed; review H2) and `exhaustive-sampled`. The order is a convention for taking a minimum, not an implication. | VER13 already has `bounded(k)`; VER04h section 3 makes most "exhaustive" suites sampled. |
 | D6 | "Weakest evidence kind behind the claim" is read as weakest across the chain of contracts, with a claim's own strength being its strongest passing suite. | Taking the minimum over a claim's sibling suites would label every claim `randomized`. |
 | D7 | Two pins beyond the brief's three: `claim_sha256` and `claim_entries_sha256`. No git revision. | Exactness of the claim itself; a report cannot contain its own commit. |
 | D8 | Condition (e) also covers a failing `negctl` for the claim's operation. | A suite not shown to detect a fault is not evidence (VER04h section 6). Stricter than the brief's wording. |
-| D9 | The lower claim's own links must be discharged, and stacks must agree, for a discharge. | Otherwise a discharge says less than it appears to (VER13 AC-7). |
+| D9 | The lower claim's own links must be discharged, stacks must agree per claim proof, and the build configuration must be pinned, for a discharge. | Otherwise a discharge says less than it appears to (VER13 AC-7). |
 | D10 | Contract ids are recognised contextually at a platform row, not as a global token; v1 documents only. | A global token breaks a binder named `contract`; VER04j section 1.2 requires no change to valid existing documents. |
 | D11 | Reach pass: a new additive mode built on the analyzer's lexer and binding closure, not the analyzer's "call graph". | The analyzer has none (VER08a section 8). |
 | D12 | `dependencies` and `unverified` are reported from the first slice, without call analysis. | Gives rule (b) a dependency-level floor before the pass exists. |
 | D13 | Open links do not block by default; `--require-contracts` is recommended for adopters' BUILD and `--require-closed` for the publish gate. | Matches `--allow-unverified` and `--strict`. |
-| D14 | Strength attribution is package-wide until the reach pass can attribute. | `assume platform` is document-level. |
+| D14 | Revised after review (C1): until the reach pass attributes uses, an upper claim takes **no** contract strength (`unattributed (own: ...)`). The first draft's package-wide cap is withdrawn. | `assume platform` is document-level, and a strength from a contract for a different operation is wrong. |
 | D15 | A link edge for CI is derived from `.warrant` text, not Cargo edges; link-check selection, not full rebuild. | Section 11.3. |
 | D16 | Amendments land with the slices that make them true, not all last. | Avoids a window of contradiction. |
 | D17 | A dev-dependency or build-dependency does not count as a dependency for condition (a). | The shipped artefact does not contain it. Open question VQ3 revisits. |
 | D18 | No `publish` list, no alias or deprecation, and examples are not published. | Sections 3.5 and 9.1. |
 | D19 | The report field is `contracts` with `published` rows in the lower report, so each layer reads the one below. | Composition by one-step reads (section 6.3). |
+| D20 | **Ids are lane-less**: `contract.<package>.<claim>`, resolved per the report's own lane; cross-lane resolution is an error (review H5). **Deviation from the coordinator's design** (`contract.<lane>.<package>.<claim>`). | The `.warrant` is language-neutral and shared by every lane; a lane in the id would make one file say different things per lane. |
+| D21 | `linked` (dependency level) versus `covered` (call level, domain unchecked) (review C1). | A dependency with some contract is not covered. |
+| D22 | One rule for contract-less dependencies: functional strengths print with `conditional_on`; timing, resource and capability are withheld, including for external crates and `std` (C2). | The first draft contradicted itself. |
+| D23 | Per-claim strength lives in `published`; an operation row shows the minimum (C3). | Report rows are per operation, not per claim. |
+| D24 | Condition (a) binds to the in-tree path package; `Cargo.toml` and `build.rs` are pinned; differing features give `build-config-unpinned` (C4). | A name is not an identity. |
+| D25 | The lower report is checked with its own BUILD's flags and its `unverified::` ids are carried into `conditional_on` (H1). | Works today; never inherits silently. |
+| D26 | `exhaustive` requires a stateless, deterministic binding (`state none`) (H3). | One initial state proves one transition. |
+| D27 | Regeneration cannot accept a downgrade silently: CI gate against the diff base, accepted by a `Contract-Change-Accepted` commit trailer (H4). | A regenerated pin would otherwise hide a weakened claim. |
+| D28 | Reach resolution is by defining path through `pub use`; `call-level-partial` unless unresolved and opaque uses are 0; pins gain `unverified_deps` and toolchain; generator and tooling changes select all link checks (review medium items). | Last-segment matching and a `call-level` that ignores unresolved uses were unsound. |
 
 ---
 
@@ -1344,7 +1649,7 @@ For the owner or the coordinator. None blocks slices 1 to 3.
 | # | Question | Default until decided |
 |---|---|---|
 | VQ1 | Should an opt-in `export` list be added so internal claims stay private? | No; implicit publication (section 3.5). |
-| VQ2 | `assume platform` is document-level, so strength is capped package-wide. Is the cap acceptable, or should a per-operation attribution come from the reach pass alone (no keyword), or from a per-claim annotation? | Package-wide, then per-operation from the pass. |
+| VQ2 | `assume platform` is document-level, so no contract strength is taken until the reach pass attributes uses (section 6.4). Should attribution come from the pass alone (no keyword), or from a per-claim annotation? | `unattributed` until the pass. |
 | VQ3 | Do dev-dependencies and build-dependencies count as link targets? Tests run against a dev-dependency, but the shipped artefact does not contain it. Separately: does `gate.primitives.correct` become `discharged_by` the gate contract set, partially, given its transistor-equivalence half is open? | Neither counts; the catalogue entry is unchanged. |
 | VQ4 | Q8: run the miter and the composition proof for one small layer of the 4004 chain and compare, as the calibration (section 14)? | Yes, recommended. |
 | VQ5 | How is a capability contract's strength classified? The analyzer is lexical and incomplete (VER08a section 8), the effect certificate is audited, runtime conformance is observed. | Capability ids stay `kind-not-yet-published`. |
@@ -1352,7 +1657,11 @@ For the owner or the coordinator. None blocks slices 1 to 3.
 | VQ7 | Pin granularity: `source_sha256` covers all of `src/`, so any lower edit regenerates every assuming report. Is a per-claim slice (spec text of the claim plus its manifest entries, without the source) enough, given the lower report already pins its own source? | Whole-file pins, as the brief requires. |
 | VQ8 | If packages are ever versioned and published independently, an alias with an expiry may be needed. Revisit then. | No alias. |
 | VQ9 | Should `--require-contracts` be on by default for any package whose `.warrant` assumes a contract id, rather than a BUILD choice? | BUILD choice, recommended on. |
-| VQ10 | Cross-lane links (native bridges): a design of their own, or never? | Error `ContractLaneMismatch`. |
+| VQ10 | Cross-lane links (native bridges): a design of their own, or never? With lane-less ids (D20) the id could name a package in any lane, so a design would have to add a lane qualifier at resolution, not in the `.warrant`. | Error (section 3.4). |
+| VQ11 | Require a negative control that targets the assumed claim itself (a fault only that claim can catch), so a passing control shows that claim's suite can fail? Today controls are per operation (section 5.5). | No; documented as a limit. |
+| VQ12 | A domain-compatibility check: compare the caller's argument domain with the contract's refinement and rejection rows (for example from a call-site claim, or a type)? Needed for Q8 condition 6. | None; `covered (domain unchecked)`. |
+| VQ13 | What justification lets a package with `build.rs`, `include!`, `#[path]`, macros or generics reach `call-level` rather than `call-level-partial`? | Never; partial. |
+| VQ14 | Record the features and `cfg` list of the evidence build in the manifests so `build-config-unpinned` can be decided exactly rather than treating any `features` key as a mismatch (section 5.1.1)? | Treat any `features` or `default-features` key as a mismatch. |
 
 ---
 
