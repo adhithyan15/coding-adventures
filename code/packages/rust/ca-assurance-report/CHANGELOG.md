@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a separate strict parser for `warrant-lane-evidence-v1` manifests and
+  the per-corpus consumer registry. This structural API does not run bindings,
+  attest source/build/toolchain freshness, or change the Rust-only legacy loader.
 - Regenerate `effect_certificate.json` with the hardened analyzer 0.3.0: both entry points (`generate_ct_compare_report`, `generate_package_report`) now carry the declared effect set (the analyzer requires entry-point effects to equal `declared_effects`).
 
 ## 0.2.0 (2026-11-10)

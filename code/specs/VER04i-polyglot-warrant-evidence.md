@@ -1013,7 +1013,8 @@ its second is the binding and corpus run.
 ### 13.3 After `ct-compare`: the other leaf libraries
 
 `gf256` is the second package, chosen because its claims are relational
-(§4's per-op scoping) and because it exists in 18 lanes:
+(§4's per-op scoping) and because it exists in 17 of the 18 rollout lanes;
+the OCaml package port is still missing:
 `mul_commutes`, `mul_assoc`, `add_self_is_zero`, `div_inverts`, and
 `mul` agreeing with a `model` shift-and-reduce reference for all 65,536
 `(U8, U8)` pairs. That is *under* the 400,000 budget and exhaustive over the

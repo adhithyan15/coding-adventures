@@ -48,3 +48,13 @@ cause. Preserve dated snapshots as historical evidence, use this shard as the
 current operational record, and link to it from VER-BACKLOG and VER04i rather
 than copying detailed receipts into both. Do not duplicate WX-001 or VER-CI001
 ownership.
+
+The canonical package inventory at
+[`package_parity_report.py`](../../scripts/package_parity_report.py) shows
+`gf256` in 17 of the 18 VER04i rollout lanes. The complete OCaml package tree
+has no `gf256` port, and no existing owner was found. Track a narrow OCaml
+`gf256` package-port prerequisite after the first real ct-compare lane runner
+and before a separate GF256 portable-corpus rollout. This is package-parity
+work, not a Warrant syntax, compiler, or report port. The missing Warrant
+language features remain WX-D, WX-F, and WX-G under their existing WX owner and
+IDs.
