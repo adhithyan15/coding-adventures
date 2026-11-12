@@ -395,3 +395,12 @@ func TestReadVectorFile(t *testing.T) {
 		}
 	}
 }
+
+func TestValidatePath(t *testing.T) {
+	if err := ValidatePath("src/a.go"); err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidatePath("../a"); err == nil {
+		t.Fatal("expected error")
+	}
+}
