@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `BUILD_windows` now runs the busted suite (`cd tests && busted . --verbose --pattern=test_`) instead of skipping, mirroring the Unix `BUILD`.
+
 ## 0.1.0
 
 - add the Lua port of `cowsay`, parsing `code/specs/cowsay.json` via
