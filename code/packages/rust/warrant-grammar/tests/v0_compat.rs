@@ -4,13 +4,19 @@
 //! 1. the layout tokens, parsed declarations and checker output of the two
 //!    repository specifications hash to the values the *pre-change* crate
 //!    produced (printed from `origin/main` before the change and pinned here);
-//! 2. every `.warrant` file under `code/specs` parses as a v0 document and
-//!    type-checks;
+//! 2. every `.warrant` file under `code/specs` parses and type-checks, and the
+//!    documents that existed before WX-B (`V0_DOCUMENTS`) are still v0;
 //! 3. for every package that binds a specification (`evidence.bindings`),
 //!    regenerating the evidence harness reproduces the checked-in file byte for
 //!    byte (the same drift check as `gen_evidence --check`), so no v0 evidence
 //!    changed -- examples, exhaustive, property, fuzz and negative-control
 //!    suites, and the manifest code, are all in that text.
+//!
+//! The first v1 adopter (`wasm-leb128.warrant`, which carries the `v1` header)
+//! is held to the same standard in its own lane: it must type-check, and its
+//! harness must regenerate byte for byte with the bindings' host lines (exactly
+//! what `gen_evidence --check` does).  It never relaxes the v0 assertions: the
+//! v0 documents are pinned by name, so a v0 document cannot silently become v1.
 
 use std::path::{Path, PathBuf};
 
@@ -29,6 +35,10 @@ fn repo_root() -> PathBuf {
         .expect("repository root")
         .to_path_buf()
 }
+
+/// The documents that existed before WX-B and WX-C.  They must stay v0: that
+/// is what "no existing document changes meaning" rests on.
+const V0_DOCUMENTS: [&str; 2] = ["ct-compare", "gf256"];
 
 fn warrant_files() -> Vec<PathBuf> {
     let mut out: Vec<PathBuf> = std::fs::read_dir(repo_root().join("code/specs"))
@@ -86,29 +96,38 @@ fn the_repository_specifications_hash_as_they_did_before_wx_b_and_wx_c() {
 }
 
 #[test]
-fn every_warrant_file_in_the_repository_is_a_v0_document_that_still_checks() {
+fn every_warrant_file_in_the_repository_still_checks_and_the_v0_ones_stay_v0() {
     let files = warrant_files();
     assert!(
         files.len() >= 2,
         "ct-compare.warrant and gf256.warrant at least"
     );
+    let mut v0_seen = Vec::new();
     for path in files {
         let bytes = std::fs::read(&path).unwrap();
         let doc = SourceDocument::admit(&bytes, SourceLimits::default()).unwrap();
         let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
         let file = parse_document(&layout, &doc, ParserLimits::default())
             .unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
-        // None of today's documents carries the `v1` header: that is what
-        // "no existing document changes meaning" rests on.
-        assert_eq!(file.version, Version::V0, "{}", path.display());
+        let stem = path.file_stem().unwrap().to_string_lossy().into_owned();
+        // None of the documents that predate WX-B carries the `v1` header:
+        // that is what "no existing document changes meaning" rests on.  A
+        // newer document may be v1 (it opts in explicitly with the header).
+        if V0_DOCUMENTS.contains(&stem.as_str()) {
+            assert_eq!(file.version, Version::V0, "{}", path.display());
+            v0_seen.push(stem);
+        }
         check_warrant(&file).unwrap_or_else(|e| panic!("{}: {e:?}", path.display()));
     }
+    v0_seen.sort();
+    assert_eq!(v0_seen, V0_DOCUMENTS, "every pinned v0 document is present");
 }
 
 #[test]
 fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
     let root = repo_root();
     let mut checked_packages = 0;
+    let mut v1_packages = 0;
     let mut dirs: Vec<PathBuf> = std::fs::read_dir(root.join("code/packages/rust"))
         .unwrap()
         .filter_map(|e| e.ok())
@@ -127,8 +146,37 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
         let doc = SourceDocument::admit(&spec, SourceLimits::default()).unwrap();
         let layout = capture_layout(&doc, LayoutLimits::default()).unwrap();
         let file = parse_document(&layout, &doc, ParserLimits::default()).unwrap();
-        assert_eq!(file.version, Version::V0, "{package}'s document is v0");
+        let stem = Path::new(&b.spec).file_stem().unwrap().to_string_lossy().into_owned();
+        if V0_DOCUMENTS.contains(&stem.as_str()) {
+            assert_eq!(file.version, Version::V0, "{package}'s document is v0");
+        }
         let checked = check_warrant(&file).unwrap();
+        if file.version == Version::V1 {
+            // A v1 adopter: regenerate exactly as `gen_evidence` does, host
+            // lines included, and require the checked-in file byte for byte.
+            let options = EvidenceOptions {
+                package_crate: b.manifest.package.clone(),
+                spec_path: b.spec.clone(),
+                spec_sha256: sha256_hex(&spec),
+                seed: b.seed,
+                property_cases: b.property_cases,
+                fuzz_iterations: b.fuzz_iterations,
+                negctl_fuzz_iterations: b.negctl_fuzz_iterations,
+                exhaustive_budget: b.exhaustive_budget,
+                arg_types: b.arg_types.clone(),
+                hosts: b.hosts.clone(),
+            };
+            let text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &options)
+                .unwrap_or_else(|e| panic!("{package}: {e}"));
+            let on_disk = std::fs::read(root.join(&b.output)).unwrap();
+            assert!(
+                on_disk == text.as_bytes(),
+                "{package}: the checked-in v1 evidence drifted from the generator"
+            );
+            assert!(text.contains("warrant_version"), "{package}: a v1 harness records its version");
+            v1_packages += 1;
+            continue;
+        }
         let options = EvidenceOptions {
             package_crate: b.manifest.package.clone(),
             spec_path: b.spec.clone(),
@@ -148,6 +196,16 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
             on_disk == text.as_bytes(),
             "{package}: the checked-in evidence drifted from the generator"
         );
+        // `gen_evidence` now passes the bindings' host lines through (gf256's
+        // `args=u8,u32` is one).  For a v0 document that must not change a
+        // byte: the v0 adapters read `arg_types`, never `hosts`.
+        let with_hosts = EvidenceOptions {
+            hosts: b.hosts.clone(),
+            ..options
+        };
+        let driver_text = compile_rust_evidence_harness(&file, &checked, &b.manifest, &with_hosts)
+            .unwrap_or_else(|e| panic!("{package}: {e}"));
+        assert!(driver_text == text, "{package}: passing the host lines changed a v0 harness");
         // The v1 machinery must not leak into a v0 harness.
         for needle in [
             "F::U8",
@@ -169,4 +227,5 @@ fn every_bound_package_regenerates_its_checked_in_evidence_byte_for_byte() {
         checked_packages >= 2,
         "ct-compare and gf256 bind specifications"
     );
+    assert!(v1_packages >= 1, "wasm-leb128 binds a v1 specification");
 }

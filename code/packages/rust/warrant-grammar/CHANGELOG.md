@@ -20,6 +20,15 @@
   checked-in ct-compare and gf256 harnesses regenerate byte-identically
   (`gen_evidence --check gf256 ct-compare`, `v0_compat`, and the wave-3 regen
   tests). `generate_one` became `pub(crate)` for the test; nothing else changed.
+- **`tests/v0_compat.rs` admits the first v1 adopter without relaxing v0.** It
+  asserted that every `code/specs/*.warrant` and every bound package's document
+  is v0, which `wasm-leb128.warrant` (header `warrant wasm_leb128 v1`) broke.
+  The pre-WX-B documents (`ct-compare`, `gf256`) are now pinned by name and must
+  still be v0 and present; every document must type-check; a v1 adopter's
+  harness must regenerate byte for byte with its bindings' host lines, exactly as
+  `gen_evidence --check` does, and record `warrant_version`; and for each v0
+  package the harness generated with the host lines passed (the driver's path
+  since the fix above) must equal the one generated without them.
 
 ## 0.5.0 - Warrant v1: WX-D1 slice S1 (checker and ground evaluator)
 
