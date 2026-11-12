@@ -198,7 +198,7 @@ func (pl *planner) record(p int) (Record, error) {
 	hard := false
 	// Escape, indirection and unscanned rules (KILN03 6).  Hard reasons, but
 	// the key is still computed below: measurement never stops.
-	scan, err := pl.scanReasons(p, members, items)
+	scan, err := pl.scanReasons(members, items)
 	if err != nil {
 		return Record{}, err
 	}

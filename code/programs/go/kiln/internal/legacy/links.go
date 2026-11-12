@@ -21,7 +21,6 @@ import (
 	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
 )
 
 // maxLinkHops is the most links one resolution may follow (Linux allows 40).
@@ -60,8 +59,8 @@ func (pl *planner) linksOf(it readItem) ([]string, error) {
 
 // target returns the target text of the link at p.
 func (pl *planner) target(p string) (string, error) {
-	info, err := pl.linkInfo.get(p, func() (source.Info, error) { return pl.opt.Source.Describe(p) })
-	return info.Target, err
+	r, err := pl.entryFull(p)
+	return r.target, err
 }
 
 // isLink reports whether p is a listed symlink.  Directories are not listed
@@ -77,10 +76,11 @@ func (pl *planner) isLink(p string) (bool, error) {
 // absoluteTarget reports a link target that names a place outside the
 // repository by construction: a rooted path or a Windows drive path.
 func absoluteTarget(t string) bool {
-	return t == "" || strings.HasPrefix(t, "/") || (len(t) >= 2 && t[1] == ':' && (t[0]|0x20 >= 'a' && t[0]|0x20 <= 'z'))
+	return t == "" || strings.Contains(t, `\`) || strings.HasPrefix(t, "/") || (len(t) >= 2 && t[1] == ':' && (t[0]|0x20 >= 'a' && t[0]|0x20 <= 'z'))
 }
 
-// resolveLink resolves the link at l (a listed path).  It is the classic
+// resolveLink resolves a path (a listed link, or a `../` target) through any
+// symlinks it crosses.  It is the classic
 // realpath loop: keep a stack of path components still to walk; a component
 // that is a link is replaced by its target's components (spending one hop), ".."
 // pops the resolved prefix, anything else extends it.  A loop never ends, so

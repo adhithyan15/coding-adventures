@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"io"
 	"path"
 	"runtime"
 	"sort"
@@ -118,14 +117,15 @@ type planner struct {
 	bounds    []boundary
 	items     [][]readItem
 
-	entries   memo[entryResult]
-	trees     memo[[32]byte]
-	resolves  memo[resolved]
-	itemFs    memo[[]string]       // files behind a read item
-	itemLinks memo[[]string]       // symlinks among them
-	linkRes   memo[linkResolution] // where a symlink finally points
-	linkInfo  memo[source.Info]    // Describe of a link, once
-	ownDigest [][32]byte
+	entries    memo[entryResult]
+	trees      memo[[32]byte]
+	resolves   memo[resolved]
+	itemFs     memo[[]string]       // files behind a read item
+	itemLinks  memo[[]string]       // symlinks among them
+	linkRes    memo[linkResolution] // where a symlink finally points
+	memberSums memo[scanSummary]    // scan facts of a package's own files
+	itemSums   memo[scanSummary]    // scan facts of a read item's files
+	ownDigest  [][32]byte
 
 	toolOnce sync.Once
 	tool     [32]byte
@@ -309,11 +309,14 @@ func (pl *planner) closure(p int) []int {
 }
 
 // entryResult is what reading one listed path yields: its KILN02 inputs entry
-// and, for a regular file that some package owns, the scan facts of KILN03 6,
-// gathered in the SAME pass over the bytes that produced the digest.
+// the scan facts of KILN03 6 for a regular file (gathered in the SAME pass over
+// the bytes that produced the digest), and for a link its target text, from the
+// same Describe that produced the digest, so resolution can never disagree with
+// what was hashed.
 type entryResult struct {
-	e     key.FileEntry
-	facts fileFacts
+	e      key.FileEntry
+	facts  fileFacts
+	target string
 }
 
 // entry builds the KILN02 inputs entry of one listed path: kind, executable
@@ -325,9 +328,8 @@ func (pl *planner) entry(p string) (key.FileEntry, error) {
 	return r.e, err
 }
 
-// entryFull is entry plus the scan facts.  Whether facts are gathered depends
-// only on the path (does some package own it?), never on who asked first, so
-// the memoised result is the same whichever caller gets there first.
+// entryFull is entry plus the scan facts and link target.  Facts are gathered
+// for EVERY regular file that is hashed: own files, read files and the rest.
 func (pl *planner) entryFull(p string) (entryResult, error) {
 	return pl.entries.get(p, func() (entryResult, error) {
 		info, err := pl.opt.Source.Describe(p)
@@ -337,19 +339,14 @@ func (pl *planner) entryFull(p string) (entryResult, error) {
 		h := sha256.New()
 		if info.Link {
 			h.Write([]byte(info.Target))
-			return entryResult{e: key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}}, nil
+			return entryResult{e: key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}, target: info.Target}, nil
 		}
 		rc, err := pl.opt.Source.Open(p)
 		if err != nil {
 			return entryResult{}, err
 		}
 		defer rc.Close()
-		var facts fileFacts
-		if _, owned := pl.ownerOf(p); owned {
-			facts, err = hashAndScan(rc, h, info.Exec, path.Dir(p))
-		} else {
-			_, err = io.Copy(h, rc)
-		}
+		facts, err := hashAndScan(rc, h, info.Exec, path.Dir(p))
 		if err != nil {
 			return entryResult{}, fmt.Errorf("%s: %w", short(p), err)
 		}

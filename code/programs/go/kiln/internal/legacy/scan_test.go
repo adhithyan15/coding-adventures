@@ -170,7 +170,7 @@ func TestIndirectionInBuildAndOtherFiles(t *testing.T) {
 		"git rev-parse --show-toplevel", "git   ls-files", "x=$(dirname $0)", "realpath .", "readlink -f x",
 		"cd $(pwd)", "$(pwd -P)", "`pwd`", "echo $PWD", "echo ${PWD}", "echo $OLDPWD", "echo ${OLDPWD}",
 		"echo $0", "echo ${0%/*}", "${BASH_SOURCE[0]}", "$BASH_SOURCE", "echo $HOME", "echo ${HOME}",
-		"cp ~/x .", "cd ..", "cd ../", "cd .. && make", `cd ".."`, "(cd ..; make)", "cd ..\n",
+		"cp ~/x .", "cd ..", "cd ../", "cd .. && make", `cd ".."`, "(cd ..; make)", "cd ..\n", "cd..", "https://x/../y",
 		"/usr/bin/foo", "/tmp", "/etc/passwd", "/opt/x", "//server/share", "/foo/bar", "#!/bin/bash", "-I/usr/include", "--prefix=/opt/x", "///etc/x",
 		"%~dp0", "%CD%", "$PSScriptRoot", "const d = __dirname;",
 	}
@@ -192,8 +192,8 @@ func TestIndirectionInBuildAndOtherFiles(t *testing.T) {
 func TestIndirectionNegatives(t *testing.T) {
 	for _, c := range []string{
 		"echo hi", "#!/bin/sh", "#!/usr/bin/env bash", "cmd >/dev/null 2>&1", "x=/dev/null",
-		"// a comment", "//go:build linux", "/* block */", "a / b", "https://example.com/a/b/../c",
-		"http://x/usr/bin", "/^re+$/", "cd ../x", "abcd ..", "cd..", "git status", "git ls", "say $01",
+		"// a comment", "//go:build linux", "/* block */", "a / b",
+		"http://x/usr/bin", "/^re+$/", "cd ../x", "abcd ..", "git status", "git ls", "say $01",
 		"wait.. what", "a..b", "x ... y", "/", "/// doc comment", "</ItemGroup>", "<p>x</p>", "cl /permissive- /W4", "echo \"$HOMEDIR\"x",
 	} {
 		// Note "$01" and "$HOMEDIR" DO match the substring markers `$0` and
@@ -225,7 +225,7 @@ func TestTokenisation(t *testing.T) {
 		{in: `'../x'`, refs: []string{"a/b/x"}},
 		{in: "--flag=../x", refs: []string{"a/b/x"}},
 		{in: "-I../inc", refs: []string{"a/b/inc"}},
-		{in: "$(cd ..)", ind: true},
+		{in: "$(cd ..)", refs: []string{"a/b"}, ind: true},
 		{in: "$(cat ../x)", refs: []string{"a/b/x"}},
 		{in: "PATH=../b:../c", refs: []string{"a/b/b", "a/b/c"}},
 		{in: "f(../x,../y)", refs: []string{"a/b/x", "a/b/y"}},
@@ -236,8 +236,8 @@ func TestTokenisation(t *testing.T) {
 		{in: "a/..", refs: []string{"a/b/c"}},
 		{in: "x/../y", refs: []string{"a/b/c/y"}},
 		{in: strings.Repeat("../", 5) + "x", refs: []string{"../../x"}},
-		{in: "https://x/../y"},
-		{in: "see https://x/../y and ../z", refs: []string{"a/b/z"}},
+		{in: "https://x/../y", ind: true},
+		{in: "see https://x/../y and ../z", refs: []string{"a/b/z"}, ind: true},
 		{in: `"https://x/";cat ../z`, refs: []string{"a/b/z"}},
 		{in: "file://../x", ind: true},
 		{in: "wait..", refs: nil},
@@ -336,47 +336,70 @@ func TestOverCapTextIsUnscanned(t *testing.T) {
 func TestExecutableBinaryIsUnscanned(t *testing.T) {
 	f := newFixture(t)
 	f.write(pz+"/prog", "\x7fELF\x00\x01\x02")
-	f.write(pz+"/data.bin", "\x89PNG\x00\x00")
+	f.write(pz+"/data.bin", "\x89PNG\r\n\x1a\n\x00")
 	f.write(pz+"/script.sh", "#!/bin/sh\necho hi\n")
 	f.write(pz+"/bigbin", strings.Repeat("\x00", 3*maxScanBytes))
-	f.write(pz+"/bigdata", strings.Repeat("\x00", 3*maxScanBytes))
+	f.write(pz+"/bigdata", "\x89PNG\r\n\x1a\n"+strings.Repeat("\x00", 3*maxScanBytes))
 	f.chmodExec("code/packages/x/z/prog")
 	f.chmodExec("code/packages/x/z/script.sh")
+	f.write(pz+"/blob", "\x01\x02\x00\x03") // non-text, not a known inert format, not executable
+	f.write(pz+"/pngexec", "\x89PNG\r\n\x1a\n\x00")
 	f.chmodExec("code/packages/x/z/bigbin")
-	// data.bin and bigdata: binary, not executable -> hashed, not scanned.
+	f.chmodExec("code/packages/x/z/pngexec")
+	// data.bin and bigdata: inert image magic, not executable -> hashed, not scanned.
 	// script.sh: executable TEXT -> scanned, clean.
-	wantReasons(t, scanReasonsOf(t, f, "x/z"), "unscanned:"+pz+"/bigbin", "unscanned:"+pz+"/prog")
+	// blob: unknown binary -> unscanned even though it is not executable.
+	// pngexec: inert magic but executable -> unscanned.
+	wantReasons(t, scanReasonsOf(t, f, "x/z"), "unscanned:"+pz+"/bigbin", "unscanned:"+pz+"/blob",
+		"unscanned:"+pz+"/pngexec", "unscanned:"+pz+"/prog")
 }
 
 func TestBinaryContentIsNotScannedForMarkers(t *testing.T) {
 	f := newFixture(t)
-	f.write(pz+"/img.bin", "\x00$0 ../../../etc/passwd /usr/bin/x dirname")
+	f.write(pz+"/img.bin", "\x89PNG\r\n\x1a\n\x00$0 ../../../etc/passwd /usr/bin/x dirname")
 	wantReasons(t, scanReasonsOf(t, f, "x/z"))
 }
 
-func TestIsText(t *testing.T) {
-	multi := "é" // 2 bytes
-	window := strings.Repeat("a", headBytes-1) + multi
+func TestKindOf(t *testing.T) {
+	webp := append([]byte("RIFF\x10\x00\x00\x00WEBP"), 0, 0)
 	for name, tc := range map[string]struct {
 		in   []byte
-		want bool
+		want contentKind
 	}{
-		"empty":                     {nil, true},
-		"ascii":                     {[]byte("hello\n"), true},
-		"utf8":                      {[]byte("héllo ✓"), true},
-		"nul":                       {[]byte("a\x00b"), false},
-		"invalid utf8":              {[]byte("a\xffb"), false},
-		"lone continuation":         {[]byte("\x80"), false},
-		"cut char at window end":    {[]byte(window[:headBytes]), true},
-		"whole char at window end":  {[]byte(strings.Repeat("a", headBytes-2) + multi), true},
-		"bad byte at window end":    {append([]byte(strings.Repeat("a", headBytes-1)), 0xff), false},
-		"short truncated char":      {[]byte("a\xc3"), false},
-		"window of continuations":   {bytes.Repeat([]byte{0x80}, headBytes), false},
-		"cut 3 byte char at window": {[]byte(strings.Repeat("a", headBytes-2) + "✓"[:2]), true},
+		"empty":         {nil, kindText},
+		"ascii":         {[]byte("hello\n"), kindText},
+		"utf8":          {[]byte("héllo ✓"), kindText},
+		"invalid utf8":  {[]byte("a\xffb\x80"), kindText}, // no NUL: still scanned as bytes
+		"nul":           {[]byte("a\x00b"), kindBinary},
+		"elf":           {[]byte("\x7fELF\x00\x01"), kindBinary},
+		"utf16 le":      {[]byte("\xff\xfea\x00"), kindUTF16},
+		"utf16 be":      {[]byte("\xfe\xff\x00a"), kindUTF16},
+		"png":           {[]byte("\x89PNG\r\n\x1a\n\x00"), kindInert},
+		"png lookalike": {[]byte("\x89PNG\x00\x00"), kindBinary},
+		"jpeg":          {[]byte("\xff\xd8\xff\xe0\x00"), kindInert},
+		"gif":           {[]byte("GIF89a\x00"), kindInert},
+		"webp":          {webp, kindInert},
+		"riff not webp": {[]byte("RIFF\x10\x00\x00\x00WAVE\x00"), kindBinary},
+		"riff short":    {[]byte("RIFF\x00"), kindBinary},
+		"ico":           {[]byte("\x00\x00\x01\x00\x01"), kindInert},
+		"pdf":           {[]byte("%PDF-1.7\n\x00"), kindInert},
+		"ttf":           {[]byte("\x00\x01\x00\x00\x00"), kindInert},
+		"otf":           {[]byte("OTTO\x00"), kindInert},
+		"woff":          {[]byte("wOFF\x00"), kindInert},
+		"woff2":         {[]byte("wOF2\x00"), kindInert},
 	} {
-		if got := isText(tc.in); got != tc.want {
-			t.Errorf("%s: isText = %v, want %v", name, got, tc.want)
+		if got := kindOf(tc.in); got != tc.want {
+			t.Errorf("%s: kindOf = %v, want %v", name, got, tc.want)
 		}
+	}
+}
+
+func TestDecodeUTF16(t *testing.T) {
+	if got := decodeUTF16([]byte("\xff\xfeh\x00i\x00\x3d\xd8\x00\xde")); got != "hi\U0001F600" {
+		t.Fatalf("le: %q", got)
+	}
+	if got := decodeUTF16([]byte("\xfe\xff\x00h\x00i\x00")); got != "hi" { // odd trailing byte dropped
+		t.Fatalf("be: %q", got)
 	}
 }
 

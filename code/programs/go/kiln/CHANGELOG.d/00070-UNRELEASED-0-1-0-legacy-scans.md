@@ -31,3 +31,16 @@
   `///` comment leaders, XML closing tags (`</p>`), and MSVC flags (`/W4`) are
   ignored; a one-slash token needs a well-known root (`/tmp`) or two segments
   (`/a/b`), and a two-slash token needs two segments (`//server/share`).
+- Security review of the scan rules (KILN03 section 12 items 13 to 20): the
+  rules now apply to every closure member and every read file, so a dependency's
+  indirection, unscanned file or escape reaches its dependents; non-text files
+  are `unscanned` unless a known inert image, PDF or font format; UTF-16 files
+  are decoded and scanned; invalid UTF-8 is scanned as bytes; markers cover
+  non-shell location idioms (`__file__`, `__dir__`, `CARGO_MANIFEST_DIR`,
+  `getcwd`, ...), PowerShell variables case-insensitively, and `cd..`,
+  `pushd`, `chdir` and friends; a bare `..` token is the parent directory; the
+  absolute-path rule sees `${X:-/tmp}`, `-isystem/usr/include`, drive and UNC
+  paths, `//tmp` and `~user`; `../` targets are walked through symlinks; a
+  read glob admits a directory only when every file under it matches; link
+  targets with a backslash are refused; link resolution reuses the target
+  text that was hashed.

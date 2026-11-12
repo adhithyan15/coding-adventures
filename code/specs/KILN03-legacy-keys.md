@@ -277,6 +277,11 @@ uses two cheap, conservative rules. Both are heuristics; §8 is the real check.
    point: these rules are heuristics, so their blind spots must cost hit rate,
    not correctness.
 
+The implementation widens the three rules beyond P's own files: they apply to
+every closure member's files and to every read file, and non-text files are
+`unscanned` unless a known inert format. §12 items 13 to 20 are normative for
+the exact definitions.
+
 ## 7. Cacheability classes
 
 Keys are **always** computed. Cacheability only gates **reuse** (M3), never
@@ -434,73 +439,102 @@ must match them.
 
 ## 12. Implementation decisions (7c-2: escape and indirection scans)
 
-13. **Scope and timing.** Only the package's *own* files (§3.1) are scanned,
-    never closure members' (their own digests are in the key; their escapes
-    are their own packages' reasons). The scan runs in the same pass that
-    hashes each file, so no file is read twice. A symlink is never opened, so
-    its target's content is not scanned; the link-target rule is what covers it.
-14. **Text.** A file is text when the first 8 KiB (all of it when shorter) has
-    no NUL byte and is valid UTF-8; a character cut by the end of that window
-    is not an error. Text up to 256 KiB (262,144 bytes, inclusive) is scanned;
-    larger text is `unscanned:<file>`. Non-text is `unscanned:<file>` only if
-    it carries an executable bit; a non-executable binary (an image, an
-    archive) is hashed but neither scanned nor reported. Scanning works on raw
-    bytes: every marker and delimiter is ASCII.
+13. **Scope and timing.** The files examined are every closure member's own
+    files (§3.1; the package's own among them) and every read file (a read
+    file, every file under a read directory, every glob match, ancestor
+    configuration). A dependency's indirection, unscanned file, dynamic `../`
+    token or escaping link therefore makes each dependent uncacheable, and the
+    reason names the member's file (`indirect:<member file>`). `../` targets
+    and links from ALL examined files are re-judged against the dependent's own
+    allowed region (item 17). Per-file facts are computed once, in the same pass
+    that hashes the file, and summarised once per member and per read item. A
+    symlink is never opened, so its target's content is not scanned; the
+    link-target rule covers it.
+14. **Text.** The kind of a file comes from its first 8 KiB (all of it when
+    shorter), in this order: (1) a UTF-16 byte order mark (`FF FE` or `FE FF`):
+    the file is decoded to text and scanned; (2) the magic bytes of an inert
+    format (PNG, JPEG, GIF, WebP, ICO, PDF, TrueType, OpenType, WOFF, WOFF2):
+    hashed but not scanned, unless the file is executable, in which case it is
+    `unscanned`; (3) a NUL byte: binary, always `unscanned`; (4) otherwise text,
+    scanned as bytes whether or not it is valid UTF-8. Text up to 256 KiB
+    (262,144 bytes, inclusive) is scanned; larger text is `unscanned:<file>`.
+    Residual risk, accepted: a script that begins with an inert magic and is run
+    as `sh file.png` is not seen. Scanning works on bytes (or the decoded
+    UTF-16): every marker and delimiter is ASCII.
 15. **Tokens.** A token is a maximal run of bytes that are not whitespace,
     `"`, `'`, `` ` ``, `=`, `(`, `)`, `,`, `;`, `:`, `<`, `>`, `|` or `&`.
     Before tokenising, URLs (`scheme://` up to the next whitespace, quote,
-    bracket or operator) are removed, so `https://x/../y` is ignored; the
-    `file:` scheme is the exception and is kept (it names a path).
+    bracket or operator) are removed, so `https://x/y` is ignored. Kept (so
+    scanned as ordinary text): `file:` URLs, which name a path, and any URL
+    containing `..`.
 16. **`../` tokens.** A token counts when, with `\` read as `/`, it contains
-    `../` or ends in `/..` (so `..` must be a whole segment next to a `/`:
-    `wait..`, `a..b` and a bare `..` such as Lua's concatenation do not
-    count; a bare `cd ..` is the marker rule's). A glued flag prefix without a
+    `../`, ends in `/..`, or is exactly `..`, `../` or `..\` (the parent of the
+    file's directory; Lua's spaced concatenation `a .. b` is an accepted false
+    positive). `wait..` and `a..b` do not count. A glued flag prefix without a
     slash is dropped (`-I../inc` is `../inc`). The token is resolved against
     the file's directory and cleaned; a result that climbs above the repository
     root is an escape. A token containing any of `$ * ? [ ] { } ~ %` cannot be
     resolved and is an escape as written. Absolute tokens are not resolved:
     the absolute-path rule owns them. The reason names the cleaned target.
+    Before the region check every target is walked through any symlinks it
+    crosses (the walk of item 20); the walked path is what is checked.
 17. **Allowed region.** A target is inside when it equals or lies under the
-    package's `rel_path`, any closure member's `rel_path`, or a read path
-    (file or directory), or it matches a read glob. A directory that merely
-    contains the package (`../` from its root) is outside.
-18. **Markers** are case-sensitive substrings, deliberately without word
+    package's `rel_path`, any closure member's `rel_path`, or a read path (file
+    or directory). A read glob admits a target only when the target is a listed
+    file the glob matches, or a directory with at least one file all of whose
+    files match. A directory that merely contains the package (`../` from its
+    root) is outside.
+18. **Markers.** Case-sensitive substrings, deliberately without word
     boundaries (`__dirname`, `os.path.realpath`, `$0` inside `$01` all hit):
-    `dirname`, `realpath`, `readlink`, `$(pwd`, `` `pwd` ``, `$PWD`, `${PWD`,
-    `$OLDPWD`, `${OLDPWD`, `$0`, `${0`, `$BASH_SOURCE`, `${BASH_SOURCE`, `$HOME`,
-    `${HOME`, `~/`; `git`, whitespace, `rev-parse` or `ls-files` (any
-    whitespace run); and a bare `cd ..`: the word `cd` not glued to a longer
-    word, whitespace, an optional quote, `..`, any number of `/`, an optional
-    quote, then whitespace, `;`, `&`, `|`, `)` or the end (so `cd ../x` is not
-    a marker, it is a `../` token). Beyond the list above, three Windows and
-    PowerShell analogues are included: `%~dp0`, `%CD%`/`%cd%`, `$PSScriptRoot`.
-19. **Absolute paths.** After dropping a leading `#!` and a glued single-letter
-    flag such as `-I`/`-L`, a token that is not exactly `/dev/null`,
-    `/usr/bin/env` or `/bin/sh` is an absolute path outside the allowlist when it
-    starts with `/` and: it contains `..`; or it starts with exactly one slash
-    and its first segment is a well-known filesystem root (`etc usr opt home
-    Users tmp var private Library System Applications Volumes mnt media proc
-    sys dev root nix bin sbin lib lib64 snap srv run workspace github runner
-    __w Windows`) or it has at least two non-empty segments (`/a/b`); or it
-    starts with exactly two slashes and has at least two non-empty segments
-    once they are removed (`//server/share`); three or more leading slashes
-    (the tail of `file:///etc/x`) are judged as the one-slash case on what
-    follows. A token made only of slashes (`//`, `///` comment leaders) is never
-    a path, and neither are one-segment tokens with an unknown root: a closing
-    tag `</p>` (the token `/p`), `/W4`, `/permissive-`, `/*`, `/^re/`. So
-    `#!/bin/bash`, `/tmp`, `/foo/bar` and `-I/usr/include` are `indirect`;
-    `#!/bin/sh` and `#!/usr/bin/env` are not. (Narrowed after the first run on
-    the real graph, where Rust `///` doc comments, XML closing tags and MSVC
-    flags dominated the hits.)
+    - shell: `dirname`, `realpath`, `readlink`, `$0`, `${0`, `$BASH_SOURCE`,
+      `${BASH_SOURCE`, `~/`, `pushd`, `Set-Location`, `Push-Location`, `chdir`,
+      `Chdir`;
+    - a file's own location: `__file__`, `__dir__`, `__FILE__`, `__filename`,
+      `import.meta`, `CARGO_MANIFEST_DIR`, `MyInvocation`, `PSCommandPath`,
+      `$PSScriptRoot`;
+    - the working directory: `getcwd`, `Getwd`, `cwd()`, `Dir.pwd`,
+      `current_dir`, `set_current_dir`, `filepath.Dir`, `filepath.Abs`,
+      `runtime.Caller`, `Get-Location`;
+    - CI checkouts: `GITHUB_WORKSPACE`, `RUNNER_`; Windows: `%~dp0`, `%CD%`.
+
+    Matched case-insensitively (PowerShell variables are case-insensitive):
+    `$(pwd`, `` `pwd` ``, `$pwd`, `${pwd`, `$oldpwd`, `${oldpwd`, `$home`,
+    `${home`, `$psscriptroot`, `%~dp0`, `%cd%`. Also `git`, whitespace,
+    `rev-parse` or `ls-files` (any whitespace run); and a bare `cd ..`: the
+    word `cd` or `sl` not glued to a longer word, optional whitespace (so
+    `cd..` counts), an optional quote, `..`, any number of `/`, an optional
+    quote, then whitespace, `;`, `&`, `|`, `)` or the end (`cd ../x` is not a
+    marker, it is a `../` token).
+19. **Absolute paths.** A token is examined after: reading `\` as `/`; dropping
+    a leading `#!`; dropping a leading run of `- + @ [ {` (so `${TMPDIR:-/tmp}`,
+    `@/etc/x` and `[/etc` are seen); for a token that began with `-`, dropping
+    the flag name up to the first `/` (`-isystem/usr/include`); and dropping
+    trailing `} ) ]`. It is an absolute path outside the allowlist
+    (`/dev/null`, `/usr/bin/env`, `/bin/sh`) when it starts with `~` and a
+    letter or `_` (`~user/x`), or starts with `/` and: it contains `..`; or it
+    starts with exactly one slash and its first segment (cut at the first
+    character other than a letter, digit, `_`, `.`, `-`) is a well-known
+    filesystem root (`etc usr opt home Users tmp var private Library System
+    Applications Volumes mnt media proc sys dev root nix bin sbin lib lib64 snap
+    srv run workspace github runner __w Windows`) or it has at least two
+    non-empty segments (`/a/b`); or it starts with exactly two slashes and has
+    at least two non-empty segments once they are removed (`//server/share`)
+    or its first segment is a filesystem root (`//tmp`); three or more leading
+    slashes (the tail of `file:///etc/x`) are judged as the one-slash case on
+    what follows. A token made only of slashes is never a path, and neither
+    are one-segment tokens with an unknown root: `</p>` (the token `/p`), `/W4`,
+    `/permissive-`, `/*`, `/^re/`. Separately, before tokenising, a Windows
+    drive prefix (a single letter not glued to a longer word, then `:` and `\`
+    or `/`) or a `\\host\` UNC path anywhere in the text is indirection.
 20. **Symlinks.** Resolved like a kernel (a stack of components; a link
     component is replaced by its target's components and costs one hop; `..`
     pops), over the listed tree: at most 40 hops, so a loop fails by running
-    out. Refused (reason `escape:<link>`): a rooted or Windows-drive target,
-    climbing above the repository root, a regular file used as a directory, an
-    exhausted hop budget; or a final path outside the allowed region (17). A
-    dangling target inside the region is fine. The links checked are those in
-    the package's own files and in every read (a read file, every file under a
-    read directory, every glob match), each resolved once per run.
+    out. Refused (reason `escape:<link>`): an empty, rooted, Windows-drive or
+    backslash-containing target, climbing above the repository root, a regular
+    file used as a directory, an exhausted hop budget; or a final path outside
+    the allowed region (17). A dangling target inside the region is fine. The
+    links checked are those in every examined file set of item 13. The target
+    text comes from the same `Describe` that produced the link's digest.
 21. **Reasons.** `escape:<path>` (the cleaned `../` target, the dynamic token,
     or the link), `indirect:<file>`, `unscanned:<file>`, with control
     characters removed. At most 16 of each kind are recorded per package (the
