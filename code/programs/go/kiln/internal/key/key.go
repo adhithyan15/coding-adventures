@@ -427,13 +427,7 @@ func Preimage(a Action) ([]byte, error) {
 	b = putFiles(b, "inputs", a.Inputs)
 	b = putFiles(b, "reads", a.Reads)
 
-	b = putStr(b, "consumed")
-	b = putU64(b, uint64(len(a.Consumed)))
-	for _, e := range a.Consumed {
-		b = putStr(b, e.Target)
-		b = putStr(b, e.Phase)
-		b = putBytes(b, e.Key)
-	}
+	b = putConsumed(b, a.Consumed)
 
 	b = putStr(b, "tools")
 	b = putU64(b, uint64(len(a.Tools)))
@@ -452,6 +446,42 @@ func Preimage(a Action) ([]byte, error) {
 		b = putU8(b, e.Origin)
 	}
 	return b, nil
+}
+
+func putConsumed(b []byte, es []Consumed) []byte {
+	b = putStr(b, "consumed")
+	b = putU64(b, uint64(len(es)))
+	for _, e := range es {
+		b = putStr(b, e.Target)
+		b = putStr(b, e.Phase)
+		b = putBytes(b, e.Key)
+	}
+	return b
+}
+
+// FilesDigest is SHA-256 of one files section exactly as Preimage encodes it,
+// str(section) || list(entries), after the same validation (sorted, unique,
+// well-formed paths, 32-byte digests).  Legacy keys (KILN03) use it with the
+// section name "inputs" for a package's own digest and for tree digests, and
+// with "reads" for a component digest, so every digest in a plan is built by
+// the one encoder that builds keys.  section must be "inputs" or "reads".
+func FilesDigest(section string, es []FileEntry) ([32]byte, error) {
+	if section != "inputs" && section != "reads" {
+		return [32]byte{}, fmt.Errorf("files digest: unknown section %q", section)
+	}
+	if err := validateFiles(section, es); err != nil {
+		return [32]byte{}, err
+	}
+	return sha256.Sum256(putFiles(nil, section, es)), nil
+}
+
+// ConsumedDigest is SHA-256 of the consumed section exactly as Preimage
+// encodes it, after the same validation.
+func ConsumedDigest(es []Consumed) ([32]byte, error) {
+	if err := validateConsumed(es); err != nil {
+		return [32]byte{}, err
+	}
+	return sha256.Sum256(putConsumed(nil, es)), nil
 }
 
 func putFiles(b []byte, section string, es []FileEntry) []byte {
