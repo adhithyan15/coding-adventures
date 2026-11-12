@@ -57,6 +57,40 @@ macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
 | W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
 | W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS | W1-W4 |
 
+### W2 recipe contract (pure-Perl packages)
+
+The Windows runner image carries two Perls and a bare `perl` resolves to the
+wrong one: Git for Windows' MSYS Perl (POSIX `PERL5LIB`, no `cpanm`, no
+`Test2::V0`) comes before Strawberry Perl (`C:\Strawberry`). Evidence from the
+first full build: the packages whose `BUILD_windows` passed sibling libraries as
+`-I..\dep\lib` to the PATH `perl` failed with `Can't locate ...pm in @INC`
+(`perl/tree-set`, `perl/bloom-filter`), while `x509-extension`, which selects
+`C:\Strawberry\perl\bin\perl.exe` explicitly, passed.
+
+So every pure-Perl package uses one shared helper,
+`code/scripts/run-perl-tests-windows.ps1`, invoked as
+
+```
+REM prereqs: ../grammar-tools ../algol-lexer
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps grammar-tools,algol-lexer
+```
+
+The helper picks Strawberry Perl (falling back to the PATH `perl`), puts its bin
+directories first on `PATH` so `prove`/`cpanm` follow, installs `Test2::V0` only
+if `perl -MTest2::V0` fails, resolves each `-Deps` name to the absolute
+`code\packages\perl\<name>\lib` (failing loudly if it is missing, so a renamed
+sibling cannot silently drop out of `@INC`), and runs `prove -I... -l -v t`.
+The `REM prereqs:` line is load-bearing: the build-tool validator requires
+Perl `BUILD*` files to mention every transitive sibling, and the `-Deps` value
+alone does not look like a `../name` reference. The `-Deps` list is the same
+set the Unix `BUILD` puts on `PERL5LIB`/`-I`.
+
+Left as hand-written recipes for now (not mechanical): packages whose Unix
+`BUILD` installs a sibling with `cpanm .`, uses `mise`/`uname`, builds a Rust
+extension, or shells out (`tcp-client` fork, `content-addressable-storage`
+rename-over-existing, `zstd`, `ls00`, `process-manager`, `virtual-memory`,
+`rpc`).
+
 ## Done
 
 Every package either passes its real build and tests on all three OSes, or is
