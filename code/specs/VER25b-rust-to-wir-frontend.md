@@ -76,3 +76,29 @@ The lowered WIR programs are validated differentially against native compiled Ru
 - **Zero External Dependencies:** Built solely with standard Rust and internal workspace crates (`warrant-ir`).
 - **Strict Coverage Thresholds:** ≥ 90% Line Coverage AND ≥ 90% Branch Coverage across all new lowering modules.
 - **Fail-Closed Lowering:** Unrecognized AST constructs return structured `LoweringError` without panicking.
+
+---
+
+## 5. Note (RS01, 2026-11-12): lowering over CST views
+
+When the confined subset moves onto the RS01 grammars ([VER25a §5](VER25a-rust-subset-grammar.md#5-amendment-rs01-2026-11-12)),
+this lowering will **walk the CST through borrowed views**, as LANG84 C1.6
+defines them, instead of converting it into `rust_subset::ast` first. RS01
+decision Q5 applies LANG84 C1 and C2 (no typed lifts, no hand-written
+parsers) to the WIR front end, although it is not an IIR front end.
+
+- A view is a thin accessor over one grammar rule's children (for example an
+  `IfView<'a>` with `cond()` and `then_block()`); it allocates no owned tree
+  and does not desugar.
+- Analyses the lowering needs (types of locals, free variables) run over the
+  CST and produce side tables keyed by CST node identity.
+- The lowering keeps its fail-closed rule: an unrecognized CST shape is a
+  structured `LoweringError`, and anything the `rs-confined` gate admits but
+  the lowering cannot model is refused the same way.
+- For gf256 (RS01 §7.2, slice B4), a `static` initialized by a `const fn`
+  call is lowered by lowering that `const fn` and running it, bounded, to
+  initialize the WIR global. `OnceLock` and other lazy statics are not
+  modelled and are refused.
+- §3's differential contract is unchanged, and the RS01 differential adds
+  one more check: the WIR lowered from the CST must be byte-identical to the
+  WIR this front end lowers from the hand-written AST today.

@@ -638,6 +638,23 @@ representations. It refuses Teletex comparison rather than inventing a T.61
 mapping. It performs no RFC 4518 StringPrep, case folding, normalization,
 insignificant-space handling, or attribute-OID schema selection, so it is not
 yet a complete value policy for issuer linking or path validation.
+A bounded `x509-name-value-policy` layer now validates at most 64
+caller-supplied attribute-type OID rules and binds each exact identifier to
+either canonical DER element equality or exact Unicode-scalar equality across
+the supported DirectoryString encodings. It preflights every attribute in both
+bounded Names before structural comparison, so an unconfigured attribute type
+fails closed. Under the DirectoryString-scalar rule, malformed values and
+TeletexString without a repository-owned T.61 mapping also fail closed with a
+payload-free error; the exact-DER rule intentionally treats its complete value
+element as opaque. The policy removes executable value callbacks from later
+issuer-link and path-construction callers while keeping the registry data
+driven. It embeds no attribute OID registry and does not perform RFC 4518
+StringPrep, normalization, case folding, insignificant-space processing, or
+schema-specific matching, so it is not complete RFC 5280 Name equality and is
+not yet suitable to authorize concrete path validation.
+The pure public-certificate-data operation performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect.
 A bounded `x509-certificate` structural composition now decodes complete RFC
 5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
 retains the exact signed bytes, composes the shipped field decoders, validates

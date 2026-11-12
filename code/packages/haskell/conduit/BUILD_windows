@@ -1,1 +1,6 @@
-echo "Haskell conduit uses GHC FFI against the Rust cdylib — skipping on Windows (requires cross-compile setup for conduit_capi.dll)"
+# Windows: build conduit-capi (Rust) and run the Cabal tests through GHC FFI.
+# tools\run-tests.ps1 stages the MSVC DLL plus its import library in a private
+# directory so GHC's MinGW-style link never picks the static conduit_capi.lib.
+# Each BUILD line runs in its own cmd shell, so the whole recipe is one line.
+# build-tool: deps=rust/conduit-capi
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
