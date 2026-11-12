@@ -277,11 +277,17 @@ var allowedAbsolute = map[string]bool{"/dev/null": true, "/usr/bin/env": true, "
 //
 //   - a leading "#!" (a shebang) is ignored, so `#!/bin/bash` is the path /bin/bash;
 //   - a compiler-style flag glued to a path (`-I/usr/include`) counts as that path;
-//   - the token must start with "/" followed by a letter, digit or one of
-//     . _ ~ $ @ % + -   (so a lone "/", "/*" and "/^regex/" are not paths);
-//   - a token starting with exactly two slashes is a comment marker
-//     (`//go:build`) and is ignored, unless it contains ".." or has three or
-//     more slashes (`///etc/x`, the tail of a file:// URL).
+//   - a token made only of slashes is never a path (`//`, `///` comment leaders);
+//   - a token containing ".." that starts with "/" is always reported;
+//   - a token starting with ONE slash is a path when its first segment is a
+//     well-known filesystem root (fsRoots), or when it has at least two
+//     non-empty segments (`/a/b`).  `</p>` (the tag `/p`), `/W4` and
+//     `/permissive-` have one segment and an unknown root, so they are not paths;
+//   - a token starting with exactly TWO slashes (UNC-like) is a path when, with
+//     the slashes removed, it has at least two non-empty segments
+//     (`//server/share`); `//go:build` and `//TODO` are comments;
+//   - three or more leading slashes (the tail of `file:///etc/x`) are judged as
+//     the single-slash case on what follows them.
 func absoluteOutside(tok string) bool {
 	t := strings.TrimPrefix(tok, "#!")
 	if len(t) >= 3 && t[0] == '-' && (t[1]|0x20 >= 'a' && t[1]|0x20 <= 'z') && t[2] == '/' {
@@ -290,17 +296,40 @@ func absoluteOutside(tok string) bool {
 	if len(t) < 2 || t[0] != '/' || allowedAbsolute[t] {
 		return false
 	}
-	switch c := t[1]; {
-	case c == '/':
-		return (len(t) >= 3 && t[2] == '/') || strings.Contains(t, "..")
-	case c == '*':
+	rest := strings.TrimLeft(t, "/")
+	if rest == "" {
 		return false
-	case c >= '0' && c <= '9', c|0x20 >= 'a' && c|0x20 <= 'z':
-		return true
-	default:
-		return strings.IndexByte("._~$@%+-", c) >= 0
 	}
+	if strings.Contains(t, "..") {
+		return true
+	}
+	lead := len(t) - len(rest)
+	segs := 0
+	first := ""
+	for _, s := range strings.Split(rest, "/") {
+		if s != "" {
+			if segs == 0 {
+				first = s
+			}
+			segs++
+		}
+	}
+	if lead == 2 {
+		return segs >= 2
+	}
+	return fsRoots[first] || segs >= 2
 }
+
+// fsRoots are first path segments that name a real filesystem root, so a
+// one-segment token such as `/tmp` is a path while `/p` or `/W4` is not.
+var fsRoots = func() map[string]bool {
+	m := map[string]bool{}
+	for _, r := range strings.Fields("etc usr opt home Users tmp var private Library System Applications " +
+		"Volumes mnt media proc sys dev root nix bin sbin lib lib64 snap srv run workspace github runner __w Windows") {
+		m[r] = true
+	}
+	return m
+}()
 
 // scanContent is the per-file scan of a text file in directory dir.
 func scanContent(dir, s string) fileFacts {

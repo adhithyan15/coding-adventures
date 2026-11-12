@@ -24,3 +24,10 @@
 - `m1-incomplete:scans` is gone; `m1-incomplete:tools-env` remains, so still no
   package is `cacheable`. The histogram groups `escape:`, `indirect:` and
   `unscanned:` reasons by prefix.
+
+### Fixed
+
+- The absolute-path indirection rule no longer treats non-paths as paths:
+  `///` comment leaders, XML closing tags (`</p>`), and MSVC flags (`/W4`) are
+  ignored; a one-slash token needs a well-known root (`/tmp`) or two segments
+  (`/a/b`), and a two-slash token needs two segments (`//server/share`).

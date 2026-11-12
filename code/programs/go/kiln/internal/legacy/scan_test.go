@@ -171,7 +171,7 @@ func TestIndirectionInBuildAndOtherFiles(t *testing.T) {
 		"cd $(pwd)", "$(pwd -P)", "`pwd`", "echo $PWD", "echo ${PWD}", "echo $OLDPWD", "echo ${OLDPWD}",
 		"echo $0", "echo ${0%/*}", "${BASH_SOURCE[0]}", "$BASH_SOURCE", "echo $HOME", "echo ${HOME}",
 		"cp ~/x .", "cd ..", "cd ../", "cd .. && make", `cd ".."`, "(cd ..; make)", "cd ..\n",
-		"/usr/bin/foo", "#!/bin/bash", "-I/usr/include", "--prefix=/opt/x", "///etc/x",
+		"/usr/bin/foo", "/tmp", "/etc/passwd", "/opt/x", "//server/share", "/foo/bar", "#!/bin/bash", "-I/usr/include", "--prefix=/opt/x", "///etc/x",
 		"%~dp0", "%CD%", "$PSScriptRoot", "const d = __dirname;",
 	}
 	for _, c := range cases {
@@ -194,7 +194,7 @@ func TestIndirectionNegatives(t *testing.T) {
 		"echo hi", "#!/bin/sh", "#!/usr/bin/env bash", "cmd >/dev/null 2>&1", "x=/dev/null",
 		"// a comment", "//go:build linux", "/* block */", "a / b", "https://example.com/a/b/../c",
 		"http://x/usr/bin", "/^re+$/", "cd ../x", "abcd ..", "cd..", "git status", "git ls", "say $01",
-		"wait.. what", "a..b", "x ... y", "/", "echo \"$HOMEDIR\"x",
+		"wait.. what", "a..b", "x ... y", "/", "/// doc comment", "</ItemGroup>", "<p>x</p>", "cl /permissive- /W4", "echo \"$HOMEDIR\"x",
 	} {
 		// Note "$01" and "$HOMEDIR" DO match the substring markers `$0` and
 		// `$HOME`: they are the documented false positives, asserted below.
@@ -259,11 +259,14 @@ func TestTokenisation(t *testing.T) {
 func TestAbsolutePathRule(t *testing.T) {
 	for tok, want := range map[string]bool{
 		"/dev/null": false, "/usr/bin/env": false, "/bin/sh": false,
-		"/bin/bash": true, "/etc": true, "/0": true, "/.git": true, "/_x": true, "/~x": true,
-		"/$X": true, "/@x": true, "/%x": true, "/+x": true, "/-x": true,
-		"/": false, "//": false, "//TODO": false, "///x": true, "//a/../b": true,
+		"/bin/bash": true, "/etc": true, "/tmp": true, "/etc/passwd": true, "/opt/x": true, "/foo/bar": true,
+		"/Windows": true, "/__w": true, "/0": false, "/.git": false, "/_x": false, "/$X": false, "/W4": false,
+		"/permissive-": false, "/p": false, "/ItemGroup": false, "/td": false, "/tmpx": false,
+		"/": false, "//": false, "///": false, "////": false, "//TODO": false, "//go": false, "///doc": false,
+		"///x": false, "///etc/x": true, "//server/share": true, "//a/../b": true, "/x/..": true, "/..": true,
 		"/*": false, "/^x": false, "/(": false, "/{": false,
-		"#!/bin/sh": false, "#!/bin/bash": true, "-L/opt/lib": true, "-9/x": false, "-/x": false,
+		"#!/bin/sh": false, "#!/bin/bash": true, "#!/usr/bin/env": false, "-I/usr/include": true, "-L/opt/lib": true,
+		"-9/x": false, "-/x": false, "-W/p": false,
 		"relative/x": false, "": false, "x": false,
 	} {
 		if got := absoluteOutside(tok); got != want {

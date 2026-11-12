@@ -474,14 +474,24 @@ must match them.
     quote, then whitespace, `;`, `&`, `|`, `)` or the end (so `cd ../x` is not
     a marker, it is a `../` token). Beyond the list above, three Windows and
     PowerShell analogues are included: `%~dp0`, `%CD%`/`%cd%`, `$PSScriptRoot`.
-19. **Absolute paths.** A token is an absolute path outside the allowlist when
-    (after dropping a leading `#!`, and after a glued single-letter flag such as
-    `-I`/`-L`) it starts with `/` followed by a letter, digit or one of
-    `. _ ~ $ @ % + -`, and is not exactly `/dev/null`, `/usr/bin/env` or
-    `/bin/sh`. Not paths: a lone `/`, `/*`, `/^re/`; a token starting with
-    exactly two slashes is a comment marker (`//go:build`) unless it contains
-    `..` or has three or more slashes (the tail of `file:///etc/x`). So
-    `#!/bin/bash` is `indirect` and `#!/bin/sh` and `#!/usr/bin/env` are not.
+19. **Absolute paths.** After dropping a leading `#!` and a glued single-letter
+    flag such as `-I`/`-L`, a token that is not exactly `/dev/null`,
+    `/usr/bin/env` or `/bin/sh` is an absolute path outside the allowlist when it
+    starts with `/` and: it contains `..`; or it starts with exactly one slash
+    and its first segment is a well-known filesystem root (`etc usr opt home
+    Users tmp var private Library System Applications Volumes mnt media proc
+    sys dev root nix bin sbin lib lib64 snap srv run workspace github runner
+    __w Windows`) or it has at least two non-empty segments (`/a/b`); or it
+    starts with exactly two slashes and has at least two non-empty segments
+    once they are removed (`//server/share`); three or more leading slashes
+    (the tail of `file:///etc/x`) are judged as the one-slash case on what
+    follows. A token made only of slashes (`//`, `///` comment leaders) is never
+    a path, and neither are one-segment tokens with an unknown root: a closing
+    tag `</p>` (the token `/p`), `/W4`, `/permissive-`, `/*`, `/^re/`. So
+    `#!/bin/bash`, `/tmp`, `/foo/bar` and `-I/usr/include` are `indirect`;
+    `#!/bin/sh` and `#!/usr/bin/env` are not. (Narrowed after the first run on
+    the real graph, where Rust `///` doc comments, XML closing tags and MSVC
+    flags dominated the hits.)
 20. **Symlinks.** Resolved like a kernel (a stack of components; a link
     component is replaced by its target's components and costs one hop; `..`
     pops), over the listed tree: at most 40 hops, so a loop fails by running
