@@ -660,6 +660,180 @@ fn operation_discovery_enters_list_literals_in_v1_and_v0_is_unchanged() {
 }
 
 // ---------------------------------------------------------------------------
+// A dotted name is an error case or a projection, nothing else (E21)
+// ---------------------------------------------------------------------------
+//
+// VER04k section 9.1, E21.  A reference of two or more segments means exactly
+// one of two things:
+//
+// ```text
+//   E.CASE      E a declared error, CASE one of its cases     v0 and v1
+//   x.f.g       x a binder in scope, f and g fields           v1 only
+//   anything else                                             W0202, v0 and v1
+// ```
+//
+// The checker used to resolve every other dotted name by its *first* segment
+// alone -- a binder, a built-in (`Some`, `None`, `len`, ...), a model or an
+// operation -- and type it as that, while the ground evaluator turned any
+// two-segment name it did not recognise into the error value
+// `Err((seg0, seg1))` and ignored the arguments.  So `g.x(a)`, with `g` a
+// model, was typed as `g(a)` and evaluated to `Err(("g", "x"))`; and an
+// example `op(..) == m.FORGED(..)` produced a test vector naming an error case
+// `FORGED` that no declaration has.  The evidence generator already refused
+// such names (fail closed); the checker now does too.
+
+mod dotted_names {
+    use std::collections::HashMap;
+
+    use coding_adventures_warrant_grammar::checker::{
+        check_warrant, CheckerError, CheckerErrorKind, DiagnosticCode,
+    };
+    use coding_adventures_warrant_grammar::codegen::{
+        compile_warrant_to_tfv, CodegenLimits, EvalValue, Evaluator,
+    };
+    use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
+    use coding_adventures_warrant_grammar::parser::{
+        parse_document, Declaration, ParserLimits, WarrantFile,
+    };
+    use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
+
+    fn with_doc<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> R {
+        let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).expect("admit");
+        let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+        let file = parse_document(&layout, &doc, ParserLimits::default())
+            .unwrap_or_else(|e| panic!("parse: {e}\n{src}"));
+        f(&file)
+    }
+
+    /// The checker's verdict on `src`.
+    fn check(src: &str) -> Result<(), CheckerError> {
+        with_doc(src, |file| check_warrant(file).map(|_| ()))
+    }
+
+    /// `src` must be refused as W0202 UnboundName of the whole dotted name.
+    fn refused(src: &str, dotted: &str) {
+        let e = check(src).expect_err(src);
+        assert_eq!(e.code, DiagnosticCode::W0202, "{src}: {e:?}");
+        assert_eq!(
+            e.kind,
+            CheckerErrorKind::UnboundName(dotted.to_string()),
+            "{src}"
+        );
+    }
+
+    /// Check `src`, then evaluate every example body: what a document that
+    /// checks means.
+    fn check_and_eval(src: &str) -> Vec<EvalValue> {
+        with_doc(src, |file| {
+            check_warrant(file).unwrap_or_else(|e| panic!("checker: {e:?}\n{src}"));
+            let mut ev = Evaluator::new(file, CodegenLimits::default());
+            file.declarations
+                .iter()
+                .filter_map(|d| match d {
+                    Declaration::Example(e) => Some(&e.body),
+                    _ => None,
+                })
+                .map(|b| ev.eval(b, &HashMap::new()).expect("eval"))
+                .collect()
+        })
+    }
+
+    #[test]
+    fn a_v1_dotted_name_headed_by_a_model_or_built_in_is_w0202() {
+        let m = |params: &str, ret: &str, body: &str| {
+            format!("warrant t v1\n  error E = BAD\n  model g(a: U8) -> U8 = a\n  model f({params}) -> {ret} = {body}\n")
+        };
+        for (src, dotted) in [
+            // A model head: was typed `U8` and evaluated to Err(("g","x")).
+            (m("a: U8", "U8", "g.x(a)"), "g.x"),
+            (m("a: U8", "U8", "g.x.y(a)"), "g.x.y"),
+            // Built-in heads.
+            (m("a: U8", "Option<U8>", "Some.x(a)"), "Some.x"),
+            (m("a: U8", "Option<U8>", "None.x"), "None.x"),
+            (m("a: Bytes", "Nat", "len.x(a)"), "len.x"),
+            (m("a: U8", "Result<U8, E>", "Ok.x(a)"), "Ok.x"),
+        ] {
+            refused(&src, dotted);
+        }
+        // An operation head, in an example.
+        refused(
+            "warrant t v1\n  op h(a: U8) -> U8\n  labels h:\n    a public\n  example e:\n    h.x(1u8) == 1u8\n",
+            "h.x",
+        );
+        // Three segments under an error head: refused before too, but as the
+        // unbound head `E`; the whole dotted name is reported now.
+        refused(
+            "warrant t v1\n  error E = BAD\n  model f(a: U8) -> Result<U8, E> = Err(E.BAD.x)\n",
+            "E.BAD.x",
+        );
+    }
+
+    #[test]
+    fn a_v0_dotted_name_headed_by_a_binder_is_w0202() {
+        // v0 has no projection: `a.foo` was typed as `a` and evaluated to
+        // Err(("a","foo")).
+        refused("warrant t\n  model f(a: U8) -> U8 = a.foo\n", "a.foo");
+        refused(
+            "warrant t\n  model g(a: U8) -> U8 = a\n  model f(a: U8) -> U8 = g.x(a)\n",
+            "g.x",
+        );
+        refused(
+            "warrant t\n  model f(a: U8) -> Option<U8> = Some.x(a)\n",
+            "Some.x",
+        );
+    }
+
+    /// The corpus case: a checked document whose example names an error case
+    /// nobody declared.  Before E21 the checker accepted it and the TFV
+    /// compiler emitted the forged id `FORGED`; now the checker refuses it, so
+    /// a pipeline that checks before it compiles emits no vector.
+    #[test]
+    fn a_forged_error_case_never_reaches_a_test_vector() {
+        for version in ["", " v1"] {
+            let src = format!(
+                "warrant t{version}\n  error E = BAD\n  op select_bytes(a: Bytes, b: Bytes, choice: Bool) -> Result<Bytes, E>\n  labels select_bytes:\n    a public\n    b public\n    choice public\n  model m(x: Bytes) -> Result<Bytes, E> = Ok(x)\n  example forged:\n    select_bytes(b\"01\", b\"02\", true) == m.FORGED(b\"01\")\n"
+            );
+            let emitted = with_doc(&src, |file| {
+                check_warrant(file)
+                    .map(|_| compile_warrant_to_tfv(file, CodegenLimits::default()).ok())
+            });
+            match emitted {
+                Ok(tfv) => panic!("checked{version}; vector emitted: {tfv:?}"),
+                Err(e) => {
+                    assert_eq!(e.code, DiagnosticCode::W0202, "{version}: {e:?}");
+                    assert_eq!(e.kind, CheckerErrorKind::UnboundName("m.FORGED".into()));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn error_cases_and_v1_projections_still_check_and_evaluate() {
+        // Each example is a Bool; a wrong expectation evaluates to false, so
+        // the error value and the projected field are the ones meant.
+        const T: EvalValue = EvalValue::Bool(true);
+        const F: EvalValue = EvalValue::Bool(false);
+        for version in ["", " v1"] {
+            let src = format!(
+                "warrant t{version}\n  error E = BAD | WORSE\n  model f(a: U8) -> Result<U8, E> = Err(E.WORSE)\n  example e0:\n    f(1u8) == Err(E.WORSE)\n  example e1:\n    f(1u8) == Err(E.BAD)\n"
+            );
+            assert_eq!(check_and_eval(&src), [T, F], "{version}");
+            // An undeclared case of a declared error is still
+            // UnboundConstructor, as before.
+            let e = check(&format!(
+                "warrant t{version}\n  error E = BAD\n  model f(a: U8) -> Result<U8, E> = Err(E.NOPE)\n"
+            ))
+            .expect_err("E.NOPE");
+            assert_eq!(e.code, DiagnosticCode::W0202);
+            assert_eq!(e.kind, CheckerErrorKind::UnboundConstructor("E.NOPE".into()));
+        }
+        // v1 binder projection, one and two levels deep.
+        let src = "warrant t v1\n  record In(v: U8)\n  record Out(i: In, w: U8)\n  model f(o: Out) -> U8 = o.i.v\n  model g(o: Out) -> U8 = o.w\n  example e0:\n    f(Out(In(7u8), 9u8)) == 7u8\n  example e1:\n    g(Out(In(7u8), 9u8)) == 9u8\n  example e2:\n    f(Out(In(7u8), 9u8)) == 9u8\n";
+        assert_eq!(check_and_eval(src), [T, T, F]);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Generation still refuses the new forms (fail closed until slice S2a)
 // ---------------------------------------------------------------------------
 

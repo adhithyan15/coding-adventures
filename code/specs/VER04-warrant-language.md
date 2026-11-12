@@ -508,6 +508,11 @@ and source span. Cross-language adoption remains owned by package parity.
   operations. Separates logical Bytes equality from fresh-output ownership.
 - Defines hostile-input checks, secrecy projections and fail-closed incomplete
   solver/binding/observer evidence without claiming these tools already exist.
+- VER04k §9.1 E21 (WX-D1 S1 security review), a v0 deviation: a reference of
+  more than one segment is only `E.CASE` (a declared error and one of its
+  cases) or, in v1, a projection from a binder in scope. Any other dotted name
+  is W0202 in v0 too. Such v0 documents used to check by the name's first
+  segment but evaluated to a forged error value; none is in the repository.
 
 ## 11. Grammar artifacts and syntax-corpus staging (P006)
 

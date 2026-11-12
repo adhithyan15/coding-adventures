@@ -44,7 +44,7 @@ them). `CheckedWarrantModule`, `CodegenLimits` and `EvalValue` keep their shape.
   data; both caps; depth 64/65; short-circuit; two mutant oracles killed) and
   `wxd_alloc_probe` (a counting global allocator: refused requests allocate
   nothing before W0703). `wxh_front` now expects 45 v1 functions.
-- **Security review fixes** (VER04k section 9.1, E20).
+- **Security review fixes** (VER04k section 9.1, E20 and E21).
   - `dsize` counts the bytes of the names a value stores: `len(T) + len(C)` for
     a constructor (nullary ones included) and `len(E) + len(CASE)` for an error
     value, which also charges its names when it is built. Before,
@@ -64,6 +64,19 @@ them). `CheckedWarrantModule`, `CodegenLimits` and `EvalValue` keep their shape.
     does, in v0 too (a v0 `len(len)` with a `len: Bytes` parameter is now the
     `Nat` the checker typed instead of the parameter).
   - A v0 evaluation no longer computes data charges it discards.
+  - A dotted name is an error case or a projection, nothing else (VER04k
+    section 9.1, E21). A reference of more than one segment that is neither
+    `E.CASE` (a declared error and case) nor a v1 projection from a binder is
+    W0202 `UnboundName` of the whole dotted name, in v0 and v1. Before, the
+    checker typed it by its first segment (v1 `g.x(a)`, `g` a model, as `U8`;
+    `Some.x(a)`, `None.x`, `len.x(a)`; v0 `a.foo` as the binder `a`) while the
+    evaluator made it the error value `Err(("g", "x"))`, so an example
+    `select_bytes(..) == m.FORGED(..)` checked and `compile_warrant_to_tfv`
+    emitted an error id `FORGED` no declaration has. This is a v0 deviation,
+    but only for documents that never meant what they checked as: no
+    in-repository document uses such a name, and `v0_compat` and the four
+    regeneration tests are byte-identical. The evidence generator already
+    refused these names; the lanes now agree.
   - Known open hazard: reads deep-copy and charge no data, so the 64 MiB
     counter bounds each value, not an evaluation's memory (VER04k note on E4,
     backlog WX-RD1).

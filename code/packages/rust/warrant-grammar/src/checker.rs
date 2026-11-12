@@ -2306,6 +2306,29 @@ impl<'a> Checker<'a> {
             }
         }
 
+        // E21 (VER04k section 9.1): a dotted name is an error case (above) or
+        // a v1 binder projection (above), nothing else.  Every later step
+        // resolves a name by its first segment, so without this refusal
+        // `g.x(a)` would be typed as the model call `g(a)`, `a.foo` as the
+        // binder `a` and `Some.x(a)` as `Some(a)` -- while the evaluator reads
+        // any unrecognised two-segment name as the error value
+        // `Err(("g", "x"))`, which an example would then carry into a test
+        // vector as an error id no declaration has.  v0 and v1 alike: such a
+        // v0 document checked but never meant what its type said.
+        //
+        //   segments   head                          meaning
+        //   1          anything                      steps 1-4 below
+        //   2          a declared error E            E.CASE (above)
+        //   >= 2       a binder in scope (v1 only)   projection (above)
+        //   >= 2       anything else                 W0202 UnboundName
+        if name.segments.len() != 1 {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0202,
+                kind: CheckerErrorKind::UnboundName(name.segments.join(".")),
+                span,
+            });
+        }
+
         let first = name.segments[0];
 
         // 1. Check local environment binders
