@@ -3875,7 +3875,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          # Shallow: the build runs from the detect job's build-plan.json and
+          # needs no git history. Only the plan-less fallback in the build
+          # steps below deepens the clone first.
+          fetch-depth: 1
           persist-credentials: false
           # The corpus is needed only when a package that reads it is in this build,
           # or on a full build (see the human-language-corpus gate).
@@ -3893,7 +3896,10 @@ jobs:
         uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
-          cache-dependency-path: 'code/**/go.sum'
+          # The build tool's own go.sum is enough unless Go packages are
+          # affected; hashing and restoring every go.sum under code/ cost
+          # 60s+ on macOS and Windows.
+          cache-dependency-path: ${{ needs.detect.outputs.needs_go == 'true' && 'code/**/go.sum' || 'code/programs/go/build-tool/go.sum' }}
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
@@ -4854,31 +4860,42 @@ jobs:
           set -euo pipefail
           echo "Disk before cleanup:"
           df -h /
-          # Keep the pre-installed Android SDK when Kotlin (Android) builds are
-          # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
-          # builds an Android APK too (UI89 §3.4).
-          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
-            sudo rm -rf /usr/local/lib/android || true
-          fi
-          docker system prune --all --force || true
-          sudo apt-get clean
-          # The CodeQL bundles in the tool cache serve only codeql.yml, which
-          # runs on its own runners; nothing in this job reads them.
-          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-          echo "Disk after cleanup:"
-          df -h /
-          # Most ubuntu-latest runners have a 145G root disk; some have 72G
-          # (/dev/mapper/cow-root) and keep only ~20G free here, which a
-          # large Rust affected set can fill (#18787). Flag them so a later
-          # ENOSPC is read as a runner-size problem, not a code one.
+          # Most ubuntu-latest runners have a 145G root disk with ~80G free;
+          # some have 72G (/dev/mapper/cow-root) and keep only ~20G free here,
+          # which a large Rust affected set can fill (#18787). Only the small
+          # ones need the cleanup. Deleting the Android SDK and pruning docker
+          # cost ~160s on a runner that already had 81G free, so measure first
+          # and skip the deletions when there is room.
+          threshold_kb=$((40 * 1024 * 1024))
           free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
-          if [ "${free_kb:-0}" -lt $((40 * 1024 * 1024)) ]; then
-            echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+          if [ "${free_kb:-0}" -ge "$threshold_kb" ]; then
+            echo "$((free_kb / 1024 / 1024))G free on / (>= 40G): skipping disk cleanup"
+          else
+            # Keep the pre-installed Android SDK when Kotlin (Android) builds are
+            # needed — deleting it forces a full re-download later, wasting several
+            # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+            # builds an Android APK too (UI89 §3.4).
+            if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
+              sudo rm -rf /usr/local/lib/android || true
+            fi
+            docker system prune --all --force || true
+            sudo apt-get clean
+            # The CodeQL bundles in the tool cache serve only codeql.yml, which
+            # runs on its own runners; nothing in this job reads them.
+            sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+            echo "Disk after cleanup:"
+            df -h /
+            free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
+            # Still short after cleanup: flag it so a later ENOSPC is read as a
+            # runner-size problem, not a code one.
+            if [ "${free_kb:-0}" -lt "$threshold_kb" ]; then
+              echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+              # What the image still carries, largest first, so the next reclaim
+              # can be chosen from evidence rather than guessed (#17652). Only
+              # worth its ~90s on a runner that is actually short of space.
+              sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
+            fi
           fi
-          # What the image still carries, largest first, so the next reclaim
-          # can be chosen from evidence rather than guessed (#17652).
-          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
 
       # ── Android SDK (Kotlin / Android) ────────────────────────
       #
@@ -4901,6 +4918,10 @@ jobs:
           if (Test-Path 'build-plan.json') {
             Write-Host 'Using pre-computed build plan'
             $planFlag = @('-plan-file', 'build-plan.json')
+          } elseif ((git rev-parse --is-shallow-repository) -eq 'true') {
+            # Shallow checkout and no plan: the git-diff fallback needs history.
+            Write-Host '::warning::build-plan.json missing; deepening shallow clone for git-diff fallback'
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           }
           $shardFlag = @()
           if ('${{ matrix.sharded }}' -eq 'true') {
@@ -6013,6 +6034,12 @@ jobs:
           if [ -f build-plan.json ]; then
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
+          elif [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            # The checkout is shallow; without a plan the build tool diffs
+            # against origin/main and needs the history plus that ref (a depth-1
+            # checkout creates no refs/remotes/origin/main).
+            echo "::warning::build-plan.json missing; deepening shallow clone for git-diff fallback"
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           fi
           $BT \
             -root . \
