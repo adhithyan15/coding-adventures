@@ -210,10 +210,19 @@ defmodule IdTest do
       assert String.length(info.uid_name) > 0
     end
 
-    test "returns non-empty group list" do
+    test "returns a group list" do
       info = UnixTools.IdTool.get_user_info()
       assert is_list(info.group_list)
-      assert length(info.group_list) > 0
+    end
+
+    # Git for Windows' `id` reports the user but can print an empty
+    # `groups=` field for a CI service account, so "at least one group"
+    # is a POSIX guarantee only. Same guard as chmod_test's Unix-only block.
+    if :os.type() != {:win32, :nt} do
+      test "returns non-empty group list" do
+        info = UnixTools.IdTool.get_user_info()
+        assert length(info.group_list) > 0
+      end
     end
   end
 end

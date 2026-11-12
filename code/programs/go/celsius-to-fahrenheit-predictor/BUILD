@@ -1,2 +1,2 @@
-go mod tidy
+go mod tidy -diff
 go run main.go

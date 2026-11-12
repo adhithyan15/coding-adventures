@@ -367,6 +367,11 @@ fn exemption_selector(id: &str) -> Option<Selector> {
         // (not-live obligations), not a reliance on assumptions.
         return Some(Box::new(|_| false));
     }
+    if id == crate::evidence::NOT_APPLICABLE_208_EXEMPTION {
+        // The class does not apply (no secret operand, no constant-time
+        // obligation), so nothing is assumed about timing: the empty list.
+        return Some(Box::new(|_| false));
+    }
     // The section 3.9 row names 416/415/476/190 (ct-compare today); the
     // matrix emits the same unsafe-exception record for 125/787 when the
     // bounds-checked proofs are unproven, so the row covers every

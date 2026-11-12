@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **`verify_evidence` step 6b closes the converse forgery**: a CWE-208 row that cites
+  the attestation `warrant-spec::all-operands-public` is now rejected
+  (`EvidenceMismatch`) unless the report also carries the not-applicable exemption
+  `EXEMPT-CWE-208-NO-SECRET-OPERANDS`. Before, the facts were re-derived only when
+  that exemption id was present, so the attestation could be cited under another
+  exemption id (e.g. `EXEMPT-CWE-208-GATE-LEVEL`) and pass. Test:
+  `the_attestation_cannot_be_cited_under_a_different_exemption_id` (written first,
+  failed before the fix). Security-review finding, low severity. `effect_certificate.json`
+  re-emitted for the new source digest (no other change).
+- **CWE-208 "not applicable" for a document with no secret operand** (first adopter
+  `rust/wasm-leb128`; VER04h section 9 item 20). The matrix knew a live constant-time
+  proof (gate-level exemption) and a `not-live` one ("applicable and unaddressed");
+  a document labelling every operand `public` has neither and got an open row. New
+  derived attestation `warrant-spec::all-operands-public` (`Evidence::attestation_ids`,
+  reserved in `ATTESTATION_IDS`), present only while the spec on disk declares an
+  operation and every parameter of every operation has a `labels` row and none is
+  `secret` (`OpFacts::labelled_public`; an unlabelled parameter does not count as
+  public). With it and no constant-time entry at all, CWE-208 is the unapproved
+  exemption `EXEMPT-CWE-208-NO-SECRET-OPERANDS` (kind `not-applicable`, empty derived
+  assumption list). An exemption, not an exclusion: the registry has no safe subset
+  for CWE-208. It is a separate branch keyed on a new `AuditEvidence::
+  no_secret_operand_ids` field whose default (empty) keeps the row open, so nothing
+  that was fail-closed became permissive. `verify_evidence` refuses the exemption
+  id unless both facts hold (`EvidenceMismatch`), and citing the attestation where
+  it does not hold is `UnknownEvidence`. Tests: `tests/test_no_secret_operands.rs`
+  (matrix branches, default fail-closed, forged gf256 reports).
+- **`AuditProfile::VarintCodec` (`--profile varint-codec`)**: true CWE-326/327/407
+  sentences for a LEB128 codec instead of the GF(2^8) or comparison ones.
+- The ct-compare and gf256 reports regenerate byte-identically (`--generate` with
+  their recorded `--commit` and profile, then `git diff`: no change).
+- `effect_certificate.json` regenerated for the new source digest.
+
 - Regenerate `effect_certificate.json` with the hardened analyzer 0.3.0: both entry points (`generate_ct_compare_report`, `generate_package_report`) now carry the declared effect set (the analyzer requires entry-point effects to equal `declared_effects`).
 
 ## 0.2.0 (2026-11-10)

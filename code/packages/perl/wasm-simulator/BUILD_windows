@@ -1,2 +1,2 @@
 REM prereqs: ../wasm-leb128 ../wasm-module-parser ../wasm-types
-echo Perl testing is not supported on Windows - skipping
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps wasm-leb128,wasm-types,wasm-module-parser

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `BUILD_windows` now runs the busted suite (`cd tests && busted . --verbose --pattern=test_`) instead of skipping, mirroring the Unix `BUILD`.
+- Made the end-to-end tests portable to Windows: arguments are double-quoted under `cmd.exe` (single quotes only on POSIX), stdin comes from `NUL`, the exit status comes from `popen:close()` instead of `echo EXIT:$?`, and the shell-special-characters `mkdir` test quotes its path per platform. Behaviour on POSIX is unchanged.
+
 ## 0.1.0
 
 - add the Lua port of `cowsay`, parsing `code/specs/cowsay.json` via

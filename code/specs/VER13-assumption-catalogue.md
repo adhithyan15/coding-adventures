@@ -270,6 +270,7 @@ from* catalogue ids and must list them (rule AC-13):
 |---|---|
 | `EXEMPT-CWE-208-GATE-LEVEL` | everything below the label's layer: today `compiler.preserves_timing` (all refinements), `mc.isa.timing-data-independent`, `uarch.*`, `gate.*`, `phys.*`, `wir.cost.step-model` |
 | `EXEMPT-CWE-416-UNSAFE-EXCEPTION`, `-415-`, `-476-`, `-190-` | `src.rust.unsafe-region.sound`, `wir.lowering.volatile-by-name` |
+| `EXEMPT-CWE-208-NO-SECRET-OPERANDS` | nothing: the class does not apply (every operand labelled `public`, no constant-time obligation; VER04h section 9 item 20). First used by `rust/wasm-leb128`. |
 
 **Order of attack.** Tiers are ordered by leverage per unit effort and by
 the rule "work starts at the leaves and climbs" (VER-BACKLOG, AS):
@@ -811,7 +812,9 @@ reading was taken; each item says which.
     the matrix can emit (`125` and `787` as well as `416/415/476/190`).
     `EXEMPT-CWE-400-NO-STEP-PROOF`, and a CWE-208 exemption on a package with
     no live proof claim, record an absence of proof and derive the empty
-    list. Any other exemption id has no rule and fails.
+    list. `EXEMPT-CWE-208-NO-SECRET-OPERANDS` records that the class does not
+    apply (no secret operand) and also derives the empty list. Any other
+    exemption id has no rule and fails.
 16. **Order and integration.** `--check` runs the rules in the order
     AC-14, 1, 11, 2, 7, 8, 6, 3, 9, 4, 5, 12, 13, 10, inside the evidence
     cross-check and before the field-by-field comparison with the derived

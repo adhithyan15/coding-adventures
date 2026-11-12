@@ -1,1 +1,1 @@
-echo "Skipping Lua scaffold generator on Windows CI"
+lua scaffold.lua --help

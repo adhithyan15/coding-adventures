@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 18)
-        self.assertEqual(summary["repository_source_input_count"], 20)
+        self.assertEqual(summary["repository_source_boundary_count"], 19)
+        self.assertEqual(summary["repository_source_input_count"], 25)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -444,15 +444,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 18,
-                "input_count": 20,
-                "scope_count": 490,
-                "authorization_count": 492,
+                "boundary_count": 19,
+                "input_count": 25,
+                "scope_count": 491,
+                "authorization_count": 497,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78",
+            "07e5699b8e9b4a6cacfe3ce9dfd6a845ab03ec7f5bf8f4ec4b439e0cc90917f0",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -3518,6 +3518,43 @@ class PureDomainValidationTests(unittest.TestCase):
             **self._schema_args(),
             repository_source_input_boundary=boundary,
         )
+
+    def test_warrant_corpus_inputs_select_grammar_package(self) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        options = copy.deepcopy(
+            load_case("diff-selection-shared-input-multiconsumer.json")["input"][
+                "options"
+            ]
+        )
+        options["packages"] = [
+            {
+                "name": "rust/warrant-grammar",
+                "rel_path": "code/packages/rust/warrant-grammar",
+                "source_mode": "strict_globs",
+                "source_globs": ["src/**/*.rs", "examples/**/*.rs", "tests/**/*.rs"],
+            }
+        ]
+        options["edges"] = []
+
+        inputs = [
+            "code/scripts/tests/test_warrant_corpus_oracle.py",
+            "code/scripts/warrant_corpus_oracle.py",
+            "code/specs/ct-compare.warrant",
+            "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+            "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+        ]
+        for changed_path in inputs:
+            with self.subTest(changed_path=changed_path):
+                self.assertEqual(
+                    runner._expected_diff_selection(options, [changed_path], boundary),
+                    (
+                        {"rust/warrant-grammar"},
+                        {"rust/warrant-grammar"},
+                        set(),
+                    ),
+                )
 
     def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
         case = load_case("hashing-cache-local-boundary-union.json")

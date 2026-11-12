@@ -1,0 +1,675 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/encode_unsigned_624485",
+        "warrant/wasm_leb128/example/encode_unsigned_u32_max",
+        "warrant/wasm_leb128/example/encode_unsigned_u64_max",
+        "warrant/wasm_leb128/example/encode_unsigned_zero",
+        "warrant/wasm_leb128/exhaustive/encode_unsigned_at_most_ten_bytes",
+        "warrant/wasm_leb128/exhaustive/encode_unsigned_length_formula",
+        "warrant/wasm_leb128/exhaustive/encode_unsigned_matches_canonical_model",
+        "warrant/wasm_leb128/fuzz/encode_unsigned_at_most_ten_bytes",
+        "warrant/wasm_leb128/fuzz/encode_unsigned_length_formula",
+        "warrant/wasm_leb128/fuzz/encode_unsigned_matches_canonical_model",
+        "warrant/wasm_leb128/negctl/example/encode_unsigned/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/example/encode_unsigned/flip-result-bit",
+        "warrant/wasm_leb128/negctl/exhaustive/encode_unsigned/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/exhaustive/encode_unsigned/flip-result-bit",
+        "warrant/wasm_leb128/negctl/fuzz/encode_unsigned/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/fuzz/encode_unsigned/flip-result-bit",
+        "warrant/wasm_leb128/negctl/property/encode_unsigned/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/property/encode_unsigned/flip-result-bit",
+        "warrant/wasm_leb128/property/encode_unsigned_at_most_ten_bytes",
+        "warrant/wasm_leb128/property/encode_unsigned_length_formula",
+        "warrant/wasm_leb128/property/encode_unsigned_matches_canonical_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1131,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "encode_unsigned_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "encode_unsigned"
+    },
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/encode_signed_i32_min",
+        "warrant/wasm_leb128/example/encode_signed_i64_max",
+        "warrant/wasm_leb128/example/encode_signed_i64_min",
+        "warrant/wasm_leb128/example/encode_signed_minus_two",
+        "warrant/wasm_leb128/example/encode_signed_sixty_four_needs_a_sign_byte",
+        "warrant/wasm_leb128/exhaustive/encode_signed_at_most_ten_bytes",
+        "warrant/wasm_leb128/exhaustive/encode_signed_length_formula",
+        "warrant/wasm_leb128/exhaustive/encode_signed_matches_canonical_model",
+        "warrant/wasm_leb128/fuzz/encode_signed_at_most_ten_bytes",
+        "warrant/wasm_leb128/fuzz/encode_signed_length_formula",
+        "warrant/wasm_leb128/fuzz/encode_signed_matches_canonical_model",
+        "warrant/wasm_leb128/negctl/example/encode_signed/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/example/encode_signed/flip-result-bit",
+        "warrant/wasm_leb128/negctl/exhaustive/encode_signed/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/exhaustive/encode_signed/flip-result-bit",
+        "warrant/wasm_leb128/negctl/fuzz/encode_signed/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/fuzz/encode_signed/flip-result-bit",
+        "warrant/wasm_leb128/negctl/property/encode_signed/drop-last-result-byte",
+        "warrant/wasm_leb128/negctl/property/encode_signed/flip-result-bit",
+        "warrant/wasm_leb128/property/encode_signed_at_most_ten_bytes",
+        "warrant/wasm_leb128/property/encode_signed_length_formula",
+        "warrant/wasm_leb128/property/encode_signed_matches_canonical_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1869,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "encode_signed_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "encode_signed"
+    },
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/decode_unsigned_624485",
+        "warrant/wasm_leb128/example/decode_unsigned_after_offset",
+        "warrant/wasm_leb128/example/decode_unsigned_eleven_bytes_overlong",
+        "warrant/wasm_leb128/example/decode_unsigned_empty",
+        "warrant/wasm_leb128/example/decode_unsigned_offset_out_of_bounds",
+        "warrant/wasm_leb128/example/decode_unsigned_padded_zero_is_legal",
+        "warrant/wasm_leb128/example/decode_unsigned_two_to_the_64_too_large",
+        "warrant/wasm_leb128/example/decode_unsigned_u64_max",
+        "warrant/wasm_leb128/example/decode_unsigned_unterminated",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_consumed_is_bounded",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_empty_input_rejected",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_ignores_trailing_bytes",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_offset_past_end_rejected",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_one_byte",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_round_trip",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_round_trip_after_prefix",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_ten_byte_boundary",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_three_bytes",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_two_bytes",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_consumed_is_bounded",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_empty_input_rejected",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_ignores_trailing_bytes",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_offset_past_end_rejected",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_one_byte",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_round_trip",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_round_trip_after_prefix",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_ten_byte_boundary",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_three_bytes",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_two_bytes",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned/drop-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned/missing-error",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned/ok-as-err",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned/drop-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned/missing-error",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned/ok-as-err",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned/drop-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned/missing-error",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned/ok-as-err",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned/drop-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned/missing-error",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned/ok-as-err",
+        "warrant/wasm_leb128/property/decode_unsigned_consumed_is_bounded",
+        "warrant/wasm_leb128/property/decode_unsigned_empty_input_rejected",
+        "warrant/wasm_leb128/property/decode_unsigned_ignores_trailing_bytes",
+        "warrant/wasm_leb128/property/decode_unsigned_offset_past_end_rejected",
+        "warrant/wasm_leb128/property/decode_unsigned_one_byte",
+        "warrant/wasm_leb128/property/decode_unsigned_round_trip",
+        "warrant/wasm_leb128/property/decode_unsigned_round_trip_after_prefix",
+        "warrant/wasm_leb128/property/decode_unsigned_ten_byte_boundary",
+        "warrant/wasm_leb128/property/decode_unsigned_three_bytes",
+        "warrant/wasm_leb128/property/decode_unsigned_two_bytes"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 17246170,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 50000,
+        "status": "pass"
+      },
+      "id": "decode_unsigned_soundness",
+      "proof": null,
+      "property": {
+        "cases": 40960,
+        "status": "pass"
+      },
+      "symbol": "decode_unsigned"
+    },
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/decode_signed_i64_min",
+        "warrant/wasm_leb128/example/decode_signed_minus_one",
+        "warrant/wasm_leb128/example/decode_signed_padding_not_sign",
+        "warrant/wasm_leb128/example/decode_signed_padding_set_on_positive",
+        "warrant/wasm_leb128/exhaustive/decode_signed_consumed_is_bounded",
+        "warrant/wasm_leb128/exhaustive/decode_signed_empty_input_rejected",
+        "warrant/wasm_leb128/exhaustive/decode_signed_ignores_trailing_bytes",
+        "warrant/wasm_leb128/exhaustive/decode_signed_offset_past_end_rejected",
+        "warrant/wasm_leb128/exhaustive/decode_signed_one_byte",
+        "warrant/wasm_leb128/exhaustive/decode_signed_round_trip",
+        "warrant/wasm_leb128/exhaustive/decode_signed_round_trip_after_prefix",
+        "warrant/wasm_leb128/exhaustive/decode_signed_ten_byte_boundary",
+        "warrant/wasm_leb128/exhaustive/decode_signed_three_bytes",
+        "warrant/wasm_leb128/exhaustive/decode_signed_two_bytes",
+        "warrant/wasm_leb128/fuzz/decode_signed_consumed_is_bounded",
+        "warrant/wasm_leb128/fuzz/decode_signed_empty_input_rejected",
+        "warrant/wasm_leb128/fuzz/decode_signed_ignores_trailing_bytes",
+        "warrant/wasm_leb128/fuzz/decode_signed_offset_past_end_rejected",
+        "warrant/wasm_leb128/fuzz/decode_signed_one_byte",
+        "warrant/wasm_leb128/fuzz/decode_signed_round_trip",
+        "warrant/wasm_leb128/fuzz/decode_signed_round_trip_after_prefix",
+        "warrant/wasm_leb128/fuzz/decode_signed_ten_byte_boundary",
+        "warrant/wasm_leb128/fuzz/decode_signed_three_bytes",
+        "warrant/wasm_leb128/fuzz/decode_signed_two_bytes",
+        "warrant/wasm_leb128/negctl/example/decode_signed/drop-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_signed/missing-error",
+        "warrant/wasm_leb128/negctl/example/decode_signed/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_signed/ok-as-err",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed/drop-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed/missing-error",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed/ok-as-err",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed/drop-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed/missing-error",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed/ok-as-err",
+        "warrant/wasm_leb128/negctl/property/decode_signed/drop-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_signed/missing-error",
+        "warrant/wasm_leb128/negctl/property/decode_signed/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_signed/ok-as-err",
+        "warrant/wasm_leb128/property/decode_signed_consumed_is_bounded",
+        "warrant/wasm_leb128/property/decode_signed_empty_input_rejected",
+        "warrant/wasm_leb128/property/decode_signed_ignores_trailing_bytes",
+        "warrant/wasm_leb128/property/decode_signed_offset_past_end_rejected",
+        "warrant/wasm_leb128/property/decode_signed_one_byte",
+        "warrant/wasm_leb128/property/decode_signed_round_trip",
+        "warrant/wasm_leb128/property/decode_signed_round_trip_after_prefix",
+        "warrant/wasm_leb128/property/decode_signed_ten_byte_boundary",
+        "warrant/wasm_leb128/property/decode_signed_three_bytes",
+        "warrant/wasm_leb128/property/decode_signed_two_bytes"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 17417140,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 50000,
+        "status": "pass"
+      },
+      "id": "decode_signed_soundness",
+      "proof": null,
+      "property": {
+        "cases": 40960,
+        "status": "pass"
+      },
+      "symbol": "decode_signed"
+    },
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_overlong_for_u32",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_padded_in_budget",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_two_to_the_32_too_large",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_u32_max",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_width_65_rejected",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_width_66_does_not_truncate_to_u64_max",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_width_71_eleven_bytes_rejected",
+        "warrant/wasm_leb128/example/decode_unsigned_bounded_width_u32_max_rejected",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_at_64_is_decode_unsigned",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_rejects_max_width",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_result_fits_width",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_two_bytes_every_width",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_at_64_is_decode_unsigned",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_rejects_max_width",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_result_fits_width",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_two_bytes_every_width",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_unsigned_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_unsigned_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_unsigned_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_unsigned_bounded/ok-as-err",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_at_64_is_decode_unsigned",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_rejects_max_width",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_result_fits_width",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/property/decode_unsigned_bounded_two_bytes_every_width"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 5941815,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 40000,
+        "status": "pass"
+      },
+      "id": "decode_unsigned_bounded_soundness",
+      "proof": null,
+      "property": {
+        "cases": 32768,
+        "status": "pass"
+      },
+      "symbol": "decode_unsigned_bounded"
+    },
+    {
+      "evidence": [
+        "warrant/wasm_leb128/example/decode_signed_bounded_i32_max",
+        "warrant/wasm_leb128/example/decode_signed_bounded_i32_min",
+        "warrant/wasm_leb128/example/decode_signed_bounded_two_to_the_31_too_large",
+        "warrant/wasm_leb128/example/decode_signed_bounded_width_65_rejected",
+        "warrant/wasm_leb128/example/decode_signed_bounded_width_66_does_not_truncate",
+        "warrant/wasm_leb128/example/decode_signed_bounded_width_71_eleven_bytes_rejected",
+        "warrant/wasm_leb128/example/decode_signed_bounded_width_u32_max_rejected",
+        "warrant/wasm_leb128/example/decode_signed_bounded_zero_width_admits_zero",
+        "warrant/wasm_leb128/example/decode_signed_bounded_zero_width_rejects_minus_one",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_at_64_is_decode_signed",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_rejects_max_width",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_result_fits_width",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/exhaustive/decode_signed_bounded_two_bytes_every_width",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_at_64_is_decode_signed",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_rejects_max_width",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_result_fits_width",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/fuzz/decode_signed_bounded_two_bytes_every_width",
+        "warrant/wasm_leb128/negctl/example/decode_signed_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_signed_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/example/decode_signed_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/example/decode_signed_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/exhaustive/decode_signed_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/fuzz/decode_signed_bounded/ok-as-err",
+        "warrant/wasm_leb128/negctl/property/decode_signed_bounded/drop-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_signed_bounded/missing-error",
+        "warrant/wasm_leb128/negctl/property/decode_signed_bounded/off-by-one-consumed",
+        "warrant/wasm_leb128/negctl/property/decode_signed_bounded/ok-as-err",
+        "warrant/wasm_leb128/property/decode_signed_bounded_at_64_is_decode_signed",
+        "warrant/wasm_leb128/property/decode_signed_bounded_one_byte_every_width",
+        "warrant/wasm_leb128/property/decode_signed_bounded_rejects_max_width",
+        "warrant/wasm_leb128/property/decode_signed_bounded_rejects_width_above_64",
+        "warrant/wasm_leb128/property/decode_signed_bounded_result_fits_width",
+        "warrant/wasm_leb128/property/decode_signed_bounded_round_trip_iff_fits",
+        "warrant/wasm_leb128/property/decode_signed_bounded_ten_byte_input_rejected_above_64",
+        "warrant/wasm_leb128/property/decode_signed_bounded_two_bytes_every_width"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 5957805,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 40000,
+        "status": "pass"
+      },
+      "id": "decode_signed_bounded_soundness",
+      "proof": null,
+      "property": {
+        "cases": 32768,
+        "status": "pass"
+      },
+      "symbol": "decode_signed_bounded"
+    }
+  ],
+  "closure": [
+    "rust/wasm-leb128"
+  ],
+  "commit": "df621fd51d3",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
+      "kind": "no-live-proof",
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:85:42: Unexpected byte: ''' (line: `fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {`); per export, decode_signed: alone: parse refused (Expected LBrace, found Lt); decode_signed_bounded: alone: parse refused (Unexpected byte: '?'); decode_unsigned: alone: parse refused (Expected LBrace, found Lt); decode_unsigned_bounded: alone: parse refused (Unexpected byte: '?'); encode_signed: alone: parse refused (Expected ';' after expression, found LBrace); encode_unsigned: alone: parse refused (Expected ';' after expression, found LBrace))"
+    },
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
+      "kind": "not-applicable",
+      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
+    }
+  ],
+  "package": "rust/wasm-leb128",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.2.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:85:42: Unexpected byte: ''' (line: `fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {`); per export, decode_signed: alone: parse refused (Expected LBrace, found Lt); decode_signed_bounded: alone: parse refused (Unexpected byte: '?'); decode_unsigned: alone: parse refused (Expected LBrace, found Lt); decode_unsigned_bounded: alone: parse refused (Unexpected byte: '?'); encode_signed: alone: parse refused (Expected ';' after expression, found LBrace); encode_unsigned: alone: parse refused (Expected ';' after expression, found LBrace))",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 407,
+      "evidence": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
+      "status": "exemption"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}

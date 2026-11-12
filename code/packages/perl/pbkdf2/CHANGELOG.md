@@ -1,5 +1,14 @@
 # Changelog — CodingAdventures::PBKDF2 (Perl)
 
+## [Unreleased]
+
+### Fixed
+
+- Declared the real dependency on `CodingAdventures::HMAC` in `cpanfile` and made the Unix `BUILD` put hmac/md5/sha1/sha256/sha512 on `PERL5LIB` (it previously relied on modules installed globally by other packages' builds), so the build-tool validator and Windows recipe can see the dependency edge.
+
+### Added
+- `BUILD_windows` added, running the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries). The Windows build previously fell back to the POSIX-only `BUILD`.
+
 ## 0.1.0 — 2026-04-11
 
 ### Added
