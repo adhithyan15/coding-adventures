@@ -271,14 +271,21 @@ On Windows, use the compiled `.exe`:
 as plain data, so Kiln's core never has to parse a manifest. For every
 package (including ones that only have a BUILD file for another OS) it lists
 the selected BUILD file per OS (or `null`), direct dependencies per OS,
-`dev_deps` (the Cargo test-trigger relation, inverted), `repo_inputs` (paths
-declared by the repository-input consumer table) and `extra_toolchains`.
+`dev_deps` (the Cargo test-trigger relation, inverted), `repo_inputs` (every
+external input the change selector uses: the repository-input consumer table,
+the native fixture readers, the external corpora and the CV02 spec; built in
+`external_inputs.go` from the selector's own tables so they cannot drift) and `extra_toolchains`.
 Lists are sorted and de-duplicated, so output is byte-identical for a tree.
 See `kiln_graph.go` for the field-by-field contract and
 `testdata/kiln-legacy-graph.golden.json` for the pinned format. `repo_input_globs`
 holds pattern-valued inputs (`**` any depth, `*` within a segment), e.g. the
 Mosaic guard's `code/**/?*.mll`; `repo_inputs_unknown` is set only for a
-consumer that declares neither.
+consumer that declares neither (none today).
+
+The CLI fails closed: it exits non-zero if no packages are found, if a
+selector relation names a package discovery did not find, if a package path
+cannot be made repo-relative, or if the output path is a symlink. The file is
+written atomically (temp file, fsync, rename).
 
 ### Sharding v1 and v2
 
