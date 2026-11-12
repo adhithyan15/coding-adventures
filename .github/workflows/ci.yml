@@ -4735,31 +4735,42 @@ jobs:
           set -euo pipefail
           echo "Disk before cleanup:"
           df -h /
-          # Keep the pre-installed Android SDK when Kotlin (Android) builds are
-          # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
-          # builds an Android APK too (UI89 §3.4).
-          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
-            sudo rm -rf /usr/local/lib/android || true
-          fi
-          docker system prune --all --force || true
-          sudo apt-get clean
-          # The CodeQL bundles in the tool cache serve only codeql.yml, which
-          # runs on its own runners; nothing in this job reads them.
-          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-          echo "Disk after cleanup:"
-          df -h /
-          # Most ubuntu-latest runners have a 145G root disk; some have 72G
-          # (/dev/mapper/cow-root) and keep only ~20G free here, which a
-          # large Rust affected set can fill (#18787). Flag them so a later
-          # ENOSPC is read as a runner-size problem, not a code one.
+          # Most ubuntu-latest runners have a 145G root disk with ~80G free;
+          # some have 72G (/dev/mapper/cow-root) and keep only ~20G free here,
+          # which a large Rust affected set can fill (#18787). Only the small
+          # ones need the cleanup. Deleting the Android SDK and pruning docker
+          # cost ~160s on a runner that already had 81G free, so measure first
+          # and skip the deletions when there is room.
+          threshold_kb=$((40 * 1024 * 1024))
           free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
-          if [ "${free_kb:-0}" -lt $((40 * 1024 * 1024)) ]; then
-            echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+          if [ "${free_kb:-0}" -ge "$threshold_kb" ]; then
+            echo "$((free_kb / 1024 / 1024))G free on / (>= 40G): skipping disk cleanup"
+          else
+            # Keep the pre-installed Android SDK when Kotlin (Android) builds are
+            # needed — deleting it forces a full re-download later, wasting several
+            # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+            # builds an Android APK too (UI89 §3.4).
+            if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
+              sudo rm -rf /usr/local/lib/android || true
+            fi
+            docker system prune --all --force || true
+            sudo apt-get clean
+            # The CodeQL bundles in the tool cache serve only codeql.yml, which
+            # runs on its own runners; nothing in this job reads them.
+            sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+            echo "Disk after cleanup:"
+            df -h /
+            free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
+            # Still short after cleanup: flag it so a later ENOSPC is read as a
+            # runner-size problem, not a code one.
+            if [ "${free_kb:-0}" -lt "$threshold_kb" ]; then
+              echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+              # What the image still carries, largest first, so the next reclaim
+              # can be chosen from evidence rather than guessed (#17652). Only
+              # worth its ~90s on a runner that is actually short of space.
+              sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
+            fi
           fi
-          # What the image still carries, largest first, so the next reclaim
-          # can be chosen from evidence rather than guessed (#17652).
-          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
 
       # ── Android SDK (Kotlin / Android) ────────────────────────
       #
