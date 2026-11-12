@@ -59,7 +59,7 @@ It lists **every** discovered package for all three platforms at once
 | `build_files` | `GetBuildFileForPlatform` candidate order (`BUILD_mac`, `BUILD_linux`, `BUILD_mac_and_linux`, `BUILD_windows`, `BUILD`) | The single file each OS runs, relative to `rel_path`, or `null`. |
 | `deps` | resolver graph incl. platform overrides | **Direct** build/runtime edges. |
 | `dev_deps` | the test-trigger relation, inverted | Packages this package's tests link against (Cargo dev-deps and equivalents). |
-| `repo_inputs` | the `repositoryInputConsumers` table | Repo-relative paths outside the package that it reads. |
+| `repo_inputs` | **every** package-to-external-input relation the old tool's selection uses: the `repositoryInputConsumers` table, the fixture-consumer tables (discovery, CI-gate, test-trigger, package-metadata, toolchain-detection, source-collection, graph-diff), the native-fixture reader and case maps, and hard-coded seeds | Repo-relative paths outside the package that it reads. |
 | `repo_input_globs` | the same table, for consumers whose inputs are a predicate over the whole tree | Repo-relative glob patterns (`**` any depth, `*` any run and `?` exactly one character within a segment — the same matcher as the `Source` layer), e.g. `code/**/?*.mll` (the `?` keeps a bare `.mll` out, as the old predicate does). |
 | `extra_toolchains` | `discovery.Package.ExtraToolchains` | Toolchains beyond its own language. |
 
@@ -68,7 +68,16 @@ golden fixture pins the format. Discovery for the export looks at all three
 platforms' BUILD variants at once, so a package whose only BUILD file is
 `BUILD_windows` is still listed when the export runs on Linux or macOS.
 
-A consumer in the old table that declares neither paths nor globs cannot be
+The export must cover every relation the old tool's own selection relies on,
+not only the first table: a package whose tests read a fixture under
+`code/specs` (outside every package) is otherwise keyed without it, and a
+Go test that builds the path with `filepath.Join("..", "..")` has no `../`
+token for §6 to find. A test enumerates every entry of every such table and
+asserts the export gives it inputs or the unknown flag, and each relation's
+paths live in one place that both selection and the export read, so they
+cannot drift.
+
+A consumer that declares neither paths nor globs cannot be
 keyed; the export lists it with `"repo_inputs_unknown": true`, and Kiln marks
 every package whose closure contains it `uncacheable` (reason
 `unknown-repo-inputs:<name>`).
