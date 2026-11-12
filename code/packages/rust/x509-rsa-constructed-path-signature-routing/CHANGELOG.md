@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.16.0 - 2026-11-11
+
+### Added
+
+- Added ordered evaluation of every retained intermediate's critical supported
+  DNS/IP NameConstraints against each target-nearer non-self-issued
+  intermediate certificate's optional Subject Alternative Name.
+- Added synthetic broad-to-narrow, self-issued-skip, absent-SAN, and
+  subordinate-name violation coverage plus retained real-chain coverage.
+
+### Security
+
+- Certificates, traversal order, complete policy, and self-issued
+  classifications come only from the consumed proof. Existing path and ASN.1
+  ceilings bound the repeated public-certificate evaluation.
+- This does not constrain subordinate distinguished names, apply reviewed
+  anchor constraints to subordinate CAs, support every GeneralName, establish
+  complete path/name validation, check revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
 ## 0.15.0 - 2026-11-11
 
 ### Added
