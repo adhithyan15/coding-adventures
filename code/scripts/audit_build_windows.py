@@ -365,6 +365,16 @@ POSIX_CONSTRUCTS = [
     ("${...}", re.compile(r"\$\{")),
     ("[ ... ] test", re.compile(WORD_START + r"\[\[?(?:\s|$)")),
     ("; then/fi/do/done/esac", re.compile(r";\s*(?:then|fi|do|done|esac)(?:[\s;)]|$)")),
+    # A command run from a POSIX virtualenv: `.venv/bin/python`, or the same
+    # reached through `../`. Windows virtualenvs put executables in
+    # `.venv\Scripts`, so cmd reports "'.venv' is not recognized". This
+    # pattern was missing, and 19 Python packages with no BUILD_windows
+    # failed the first time the dependency-pinning work rebuilt them on
+    # Windows. Each path segment is `[\w.-]+/` (which also covers `../`), and
+    # a segment cannot contain `/`, so the match is unambiguous and linear.
+    # A separate `(?:\.\./)*` group would overlap it and backtrack
+    # quadratically on a long `../../..` line.
+    (".venv/bin/", re.compile(r"(?:^|[\s(&|;=])(?:[\w.-]+/)*\.venv/bin/")),
 ]
 
 
