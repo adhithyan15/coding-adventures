@@ -740,6 +740,24 @@ jobs:
           # both lists against DOC_SHARD_PLANS so they cannot drift again.
           npm run check:doc-shards --silent
 
+      - name: Verify Cargo lockfiles are current
+        # Every Cargo root that resolves a crates.io (or git) package commits
+        # its Cargo.lock; see code/scripts/cargo_lockfiles.py. Lives in this
+        # job because it has no `if:`: a native-extension crate under
+        # python/ruby/elixir may trip none of the Rust needs_* outputs. The
+        # script installs the exact rust version pinned in mise.toml itself.
+        # Pull requests check only roots whose manifests (or path-dependency
+        # manifests) changed; pushes check every root. A failure prints the
+        # exact `cargo update --workspace` to run.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            python3 code/scripts/cargo_lockfiles.py check
+          else
+            python3 code/scripts/cargo_lockfiles.py check --changed-since origin/main
+          fi
+
       - name: Verify repo-wide metadata contracts
         run: |
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
@@ -4100,24 +4118,6 @@ jobs:
           # machine usually has the component installed already, so omitting it
           # fails only on CI.
           components: clippy,llvm-tools
-
-      - name: Verify Cargo lockfiles are current
-        # Every Cargo root that resolves a crates.io (or git) package commits
-        # its Cargo.lock; see code/scripts/cargo_lockfiles.py. Cargo.lock is
-        # platform-independent, so one Linux run proves it for all shards.
-        # Pull requests check only the roots whose manifests (or path-dependency
-        # manifests) changed; pushes to main and full builds check every root.
-        # A failure prints the exact `cargo update --workspace` to run.
-        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true') && runner.os == 'Linux'
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          FULL_BUILD: ${{ needs.detect.outputs.full_build }}
-        run: |
-          if [ "$EVENT_NAME" = "push" ] || [ "$FULL_BUILD" = "true" ]; then
-            python3 code/scripts/cargo_lockfiles.py check
-          else
-            python3 code/scripts/cargo_lockfiles.py check --changed-since origin/main
-          fi
 
       - name: Install native Paint VM dependencies
         # needs_mosaic_qt_runtime is its own condition, independent of

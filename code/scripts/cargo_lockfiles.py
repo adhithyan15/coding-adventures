@@ -105,6 +105,7 @@ import argparse
 import concurrent.futures
 import glob
 import os
+import re
 import subprocess
 import sys
 import tomllib
@@ -115,6 +116,55 @@ DEP_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
 
 # The command that proves a lock is current (see "How currency is checked").
 CHECK_CMD = ["cargo", "update", "--workspace", "--locked"]
+
+
+# ---------------------------------------------------------------------------
+# toolchain selection
+# ---------------------------------------------------------------------------
+#
+# The lock format and resolver behaviour vary between Cargo releases, so the
+# check must run the toolchain the repository pins: the ``rust`` entry of the
+# ``[tools]`` table in the root ``mise.toml``.  An exact ``MAJOR.MINOR.PATCH``
+# is used as ``cargo +<version>`` (installed on demand with rustup, minimal
+# profile).  Anything else ("stable", "latest", ...) falls back to plain
+# ``cargo``, whatever the machine provides.
+
+EXACT_VERSION = re.compile(r"^\d+\.\d+\.\d+$")
+
+# Set by main(); None means "plain cargo".
+TOOLCHAIN: str | None = None
+
+
+def pinned_rust_version(repo: Path) -> str | None:
+    """The exact Rust version pinned in mise.toml, or None."""
+    try:
+        with open(repo / "mise.toml", "rb") as fh:
+            value = tomllib.load(fh).get("tools", {}).get("rust")
+    except (OSError, tomllib.TOMLDecodeError):
+        return None
+    if isinstance(value, str) and EXACT_VERSION.match(value):
+        return value
+    return None
+
+
+def ensure_toolchain(version: str) -> None:
+    """Install `version` with rustup (minimal profile) if it is missing."""
+    listed = subprocess.run(
+        ["rustup", "toolchain", "list"], capture_output=True, text=True,
+    ).stdout
+    if any(line.split("-")[0] == version for line in listed.splitlines()):
+        return
+    subprocess.run(
+        ["rustup", "toolchain", "install", version, "--profile", "minimal"],
+        check=True,
+    )
+
+
+def cargo_argv(args: list[str]) -> list[str]:
+    """Prefix `cargo` with +<toolchain> when one is selected."""
+    if TOOLCHAIN and args and args[0] == "cargo":
+        return [args[0], f"+{TOOLCHAIN}", *args[1:]]
+    return args
 
 
 def repo_root() -> Path:
@@ -353,7 +403,7 @@ def affected(root: Root, changed: list[Path]) -> bool:
 def run_cargo(root: Root, args: list[str]) -> tuple[int, str]:
     env = dict(os.environ, CARGO_TERM_COLOR="never")
     r = subprocess.run(
-        args, cwd=root.path, env=env, capture_output=True, text=True,
+        cargo_argv(args), cwd=root.path, env=env, capture_output=True, text=True,
     )
     return r.returncode, (r.stdout + r.stderr).strip()
 
@@ -373,6 +423,14 @@ def rel(repo: Path, p: Path) -> str:
     return str(p.relative_to(repo))
 
 
+def select_toolchain(repo: Path) -> None:
+    """Pick (and install if needed) the pinned toolchain; once per run."""
+    global TOOLCHAIN
+    TOOLCHAIN = pinned_rust_version(repo)
+    if TOOLCHAIN:
+        ensure_toolchain(TOOLCHAIN)
+
+
 def cmd_roots(repo: Path, roots: list[Root], _args) -> int:
     for r in roots:
         print(("* " if r.needs_lock else "  ") + rel(repo, r.path))
@@ -389,6 +447,8 @@ def parallel(roots, fn, jobs):
 def cmd_generate(repo: Path, roots: list[Root], args) -> int:
     chosen = select(roots, repo, [args.root] if args.root else None)
     chosen = [r for r in chosen if r.needs_lock or r.lock.exists() or args.root]
+    if chosen:
+        select_toolchain(repo)
 
     def one(r: Root):
         argv = (["cargo", "update", "--workspace"] if r.lock.exists()
@@ -433,6 +493,8 @@ def cmd_check(repo: Path, roots: list[Root], args) -> int:
         else:
             chosen = [r for r in chosen if affected(r, changed)]
     chosen = [r for r in chosen if r.needs_lock or r.lock.exists()]
+    if chosen:
+        select_toolchain(repo)
     errors = [e for e in parallel(chosen, lambda r: check_one(repo, r), args.jobs) if e]
     for e in errors:
         print(e)

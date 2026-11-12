@@ -6,6 +6,7 @@ wherever a test only needs the static "this root needs a lock" answer.
 """
 
 import shutil
+import unittest.mock as mock
 import subprocess
 import sys
 import tempfile
@@ -131,6 +132,56 @@ class CheckTests(Fixture):
         self.assertIsNotNone(msg)
         self.assertIn("stale", msg)
         self.assertIn("cargo update --workspace", msg)
+
+
+class ToolchainTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = Path(self.tmp.name)
+        self.addCleanup(setattr, cl, "TOOLCHAIN", cl.TOOLCHAIN)
+
+    def mise(self, rust):
+        (self.repo / "mise.toml").write_text(f'[tools]\nrust = "{rust}"\n')
+
+    def test_exact_pin_is_used(self):
+        self.mise("1.99.1")
+        self.assertEqual(cl.pinned_rust_version(self.repo), "1.99.1")
+
+    def test_non_exact_values_fall_back(self):
+        for value in ("stable", "latest", "1.99", "nightly-2026-01-01"):
+            self.mise(value)
+            self.assertIsNone(cl.pinned_rust_version(self.repo), value)
+
+    def test_missing_mise_falls_back(self):
+        self.assertIsNone(cl.pinned_rust_version(self.repo))
+
+    def test_cargo_argv(self):
+        cl.TOOLCHAIN = "1.99.1"
+        self.assertEqual(cl.cargo_argv(["cargo", "update"]),
+                         ["cargo", "+1.99.1", "update"])
+        cl.TOOLCHAIN = None
+        self.assertEqual(cl.cargo_argv(["cargo", "update"]), ["cargo", "update"])
+
+    def test_installs_only_when_missing(self):
+        listed = mock.Mock(stdout="stable-x86_64-unknown-linux-gnu (default)\n")
+        with mock.patch.object(cl.subprocess, "run", return_value=listed) as run:
+            cl.ensure_toolchain("1.99.1")
+        self.assertEqual(run.call_args_list[-1].args[0][:3],
+                         ["rustup", "toolchain", "install"])
+        listed = mock.Mock(stdout="1.99.1-x86_64-unknown-linux-gnu\n")
+        with mock.patch.object(cl.subprocess, "run", return_value=listed) as run:
+            cl.ensure_toolchain("1.99.1")
+        self.assertEqual(run.call_count, 1)
+
+    def test_no_roots_means_no_install(self):
+        self.mise("1.99.1")
+        with mock.patch.object(cl, "ensure_toolchain") as ens:
+            cl.select_toolchain  # selection is only reached with roots
+            args = mock.Mock(root=None, changed_since=None, jobs=1)
+            with mock.patch.object(cl, "select", return_value=[]):
+                cl.cmd_check(self.repo, [], args)
+        ens.assert_not_called()
 
 
 if __name__ == "__main__":
