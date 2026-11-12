@@ -547,9 +547,10 @@ when the fix is merged and verified on fetched main.
 | P2 / SEC-004 | elixir lz77 decode O(n^2) list appends |
 | P2 / SEC-006 | **FIXED on branch claude/warrant-adopt-wasm-leb128**: rust wasm-leb128 `decode_*_bounded` now reject `max_bits > 64` before decoding (previously 66..=70 silently dropped data bits above 64 and >= 71 with an 11-byte input shifted a u64 by 70). `wasm-leb128.warrant` has the `rejects` row and width claims (LEB01 "Findings") |
 | P1 / SEC-005 | Run the C#, F#, Dart, Swift, Haskell, Elixir, Lua lz* fixes in CI or a local toolchain; perl Test2::V0 suites; ruby standardrb |
-| P1 / CAP-RT-004 | CI wiring: set RCG_STRICT=1 and RCG_REQUIRE_DOCKER=1 on Linux runners once strace/Docker availability is confirmed |
+| P1 / CAP-RT-004 | CI wiring: set RCG_STRICT=1 and RCG_REQUIRE_DOCKER=1 on Linux runners once strace/Docker availability is confirmed. Partly done on branch claude/warrant-adopt-wasm-leb128: ci.yml installs strace on Linux and wasm-leb128's `BUILD_linux` runs the gate with RCG_STRICT=1 (macOS `BUILD` runs it plain). RCG_REQUIRE_DOCKER stays unset: the container ring has not yet been seen live on a CI runner |
 | P2 / CAP-RT-005 | Coverage of sandboxed child code (flush profile before arming or via pre-opened fd); crate at 72.7% < 80% |
 | P2 / CAP-RT-006 | vDSO-backed time reads are invisible to both rings; document as residual or detect via vDSO unmapping |
+| P2 / AR-001 | `ca-assurance-report --check` does not re-derive the `--profile` or prose `reason` text; a report generated with another profile, or with edited reason text, passes `--check`. Fix: `--check` regenerates with the profile recorded in the report and compares |
 | P2 / WD-005 | Non-trivial 2-safety miters (current DRAT certificates are the fixed x and not-x refutation); prover support for traps as path outcomes; heap/depth bound proofs |
 | P2 / WD-006 | Single binding table: op->export map duplicated in gen_evidence.rs and warrant_proofs.rs |
 | P2 / WD-007 | Retire or derive remaining hand-written ct-compare tests (conformance, fuzz_targets, optimized_ir) |
