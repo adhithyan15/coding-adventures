@@ -1,1 +1,7 @@
-echo "haskell support not enabled in windows CI yet -- skipping"
+# Windows runs the same Cabal command as the Unix BUILD. This replaces a recipe that
+# only echoed "haskell support not enabled in windows CI yet -- skipping": the
+# toolchain (GHC 9.4 and Cabal 3.10 through haskell-actions/setup, see ci.yml) is
+# installed on Windows, and a recipe that probes for cabal at a fixed path can
+# pass without testing anything. Each line of a BUILD file runs in its own shell,
+# so the command stays on one line.
+cabal test

@@ -8,8 +8,9 @@ decisions of the S0 review (section 9.1, 2026-11-11) are applied to the text
 below; WX-D1 lands in the slices of section 8.1. Each extension below is a
 separately landable slice (section 8). None changes the meaning of a v0
 document, and none changes the meaning of a valid v1 document written for the
-wave-3 tool (section 1); the one wave-3 v1 refusal this wave adds (list literals
-above 4,096 elements, S0 E8) is recorded in 1.2.
+wave-3 tool (section 1); the two wave-3 v1 refusals this wave adds (list
+literals above 4,096 elements, S0 E8, and identifiers longer than 128 bytes,
+E20) are recorded in 1.2.
 
 **Parent:** [VER04 §2–§8](VER04-warrant-language.md),
 [VER04d](VER04d-warrant-type-system.md), [VER04e](VER04e-warrant-codegen.md),
@@ -73,6 +74,7 @@ multi-character operators. A v0 document means exactly what it did.
 | `fold map count all any take drop slice replicate range to_list to_bytes` | v1 built-in function names (WX-D) | ordinary identifiers. A call of an undeclared one is **W0202** (unbound name), exactly as for `bit_xor` today (VER04j §14 item 9 and the checker's `V1_FUNCTIONS` gating); a v0 model *named* `count` keeps meaning its own definition | reserved, all twelve, from WX-D1 on (S0 E7): a v1 model, op, binder or constructor of that name is **W0201**/**W0203** as for every other v1 built-in. Until WX-D2 lands, a call (or any other use) of `fold`, `map`, `count`, `all` or `any` is **W0202** with the message "reserved built-in `<name>` is not yet implemented in this version" |
 | `and`, `or`, `=>` in the ground evaluator | evaluation rule (S0 E2) | **eager**, unchanged: both operands are evaluated and charged. This is a recorded deviation from VER04 §4, kept so that v0 output stays byte-identical (2.6) | **short-circuit**, as VER04 §4 says and as the generated code already does |
 | a list literal of more than 4,096 elements | checker cap (S0 E8) | accepted by the checker, unchanged (the ground evaluator still refuses more than 65,536 elements with W0703) | **W0602** at checking, anywhere in the document |
+| an identifier longer than 128 bytes (`MAX_IDENTIFIER_BYTES`) | checker cap (E20) | accepted, unchanged: v0 names stay unbounded | **W0602** at checking, in any position (a declaration, a parameter, a field, a constructor, an error case, a binder, any segment of a reference) |
 | a list literal around an operation call (`to_bytes([f(a)]) == b`) | operation discovery (S0 E13) | unchanged: discovery does not look inside list literals | discovery descends into list-literal elements (2.11) |
 | a function reference `f` or `f(e, ...)` in the function position of a WX-D call | checker rule, no syntax | unreachable (the WX-D names are unbound) | W0712 if it is not a first-order model reference (section 2.3) |
 | list literals and WX-D forms inside generated evidence bodies | generator capability | v0 generation unchanged (still W0701 for list literals) | translated (section 2.11) |
@@ -92,7 +94,9 @@ in WX-D2, so that the break happens once (S0 E7). Reserving them now answers
 only that much of open question 3: it does not freeze v1. The new list-literal
 cap (S0 E8) is the same kind of break for a v1 document holding a literal of
 4,097 to 65,536 elements, which the wave-3 checker accepted; none of the four
-documents has a list literal at all.
+documents has a list literal at all. The identifier cap (E20) is the same kind
+of break for a v1 document with a name longer than 128 bytes; the longest
+identifier in the four documents is 53 bytes (in `wxv`).
 
 ### 1.3 What "means the same" is tested by
 
@@ -140,7 +144,7 @@ Reused codes (each row cites the section that uses it):
 | W0501 | a malformed `driver` line or `inout=` option, or a binding-file cap exceeded (section 6.3) |
 | W0502 | a driver operation whose `faults=` omits an applicable driver fault (3.6) |
 | W0601 | a driver operation that no claim or example drives with two or more non-empty elements (3.5); an `ensures` row contradicted by the operation's own example (4.7) |
-| W0602 | higher-order nesting deeper than 4 (2.8), a list literal longer than 4,096 elements in a v1 document, at checking (2.11, S0 E8), more than 32 `ensures` rows (4.2), a symbolic unrolling that exceeds its caps (2.10) |
+| W0602 | higher-order nesting deeper than 4 (2.8), a list literal longer than 4,096 elements in a v1 document, at checking (2.11, S0 E8), an identifier longer than 128 bytes in a v1 document, at checking (E20), more than 32 `ensures` rows (4.2), a symbolic unrolling that exceeds its caps (2.10) |
 | W0701 | a fault that does not apply to the operation's shape (for the list result faults, 2.12); a lane that has no driver or inout adapter (target `not-live`) |
 | W0703 | ground-evaluator exhaustion of any counter or cap of the v1 meter (2.7): work, depth, sequence elements, composite leaves or data, inside or outside a WX-D form |
 | W0704 | an `inout` host form that cannot carry the parameter's Warrant type |
@@ -433,10 +437,23 @@ model exact:
 
 | Value | `dsize` |
 |---|---|
-| `Bool`, `Nat`, `Int`, a fixed-width integer, `None`, a nullary constructor, `Err(E.CASE)` | 0: its storage is the slot that holds it |
+| `Bool`, `Nat`, `Int`, a fixed-width integer, `None` | 0: its storage is the slot that holds it |
 | `Bytes` or `Bytes<N>` of length `L` | `L` |
-| a `List`, a tuple, or a constructor with fields, with components `c1 .. cn` | `Σ (VALUE_OVERHEAD + dsize(ci))`, `VALUE_OVERHEAD = 32` |
+| a `List` or a tuple with components `c1 .. cn` | `Σ (VALUE_OVERHEAD + dsize(ci))`, `VALUE_OVERHEAD = 32` |
+| a constructor `C` of type `T` (a record, or a variant constructor with or without fields), with fields `c1 .. cn` | `len(T) + len(C) + Σ (VALUE_OVERHEAD + dsize(ci))` (E20) |
+| `Err(E.CASE)`, and the error value `E.CASE` | `len(E) + len(CASE)` (E20) |
 | `Some(x)`, `Ok(x)` | `VALUE_OVERHEAD + dsize(x)` |
+
+`len(T)`, `len(C)`, `len(E)` and `len(CASE)` are the byte lengths of the names
+as written in the document (E20). The ground evaluator's constructor and error
+values own those names, so every copy allocates them again; a name priced at 0
+let `replicate(C, 65536)` with a 10,000-byte `C` allocate about 660 MB while the
+meter saw 2 MiB. With the names counted, the charge is never below what a copy
+allocates beyond its fixed-size slot. (The slot itself is larger than
+`VALUE_OVERHEAD` in the ground evaluator, 96 bytes on a 64-bit host, so the real
+footprint of a value is within a small constant factor of its `dsize`, about 3×
+at worst for a list of scalars.) Every implementation charges the names,
+generated code included, so the meter stays identical across them.
 
 A `List<U8>` of `L` elements is `32 L` bytes, a `Bytes` of `L` bytes is `L`,
 and a `List<Bytes>` counts its elements' payloads as well as their slots. The
@@ -453,7 +470,8 @@ are a binder reference (including a dotted projection path), a projection, `if`,
 and `fold` (its value is the last accumulator). A node whose value is a scalar
 charges 0 by the table above, so the rule needs no list of scalar built-ins. The
 nodes that charge something are therefore exactly those that build a sequence or
-composite: list literals, tuples, records and constructors with fields, `Some`,
+composite: list literals, tuples, records and constructors (with or without
+fields, since a constructor stores its names, E20), error values `E.CASE`, `Some`,
 `Ok`, `Bytes` literals, `concat`, `be_bytes`, `le_bytes`, `fixed<N>`, `at` (the
 `Some` around the element), the `Option`-valued v1 built-ins (`try`,
 `checked_*`, `div`), the seven WX-D1 forms and `map`.
@@ -465,9 +483,10 @@ an implementation that shares storage charges the same ("charges as if it
 copied", 2.6). Reading a value charges nothing. A binder reference or a
 projection may copy in one implementation and share in another. A
 charge on reads would make the meter depend on that choice, and on how often a
-body mentions a name. The memory a copying implementation spends on reads is a
-pre-existing property of the ground evaluator, not of this wave (section 9.1,
-note on E4).
+body mentions a name. The memory a copying implementation spends on reads is
+therefore not bounded by the data counter. It is a pre-existing property of the
+ground evaluator, not of this wave, and an **open hazard**: section 9.1's note
+on E4 gives the measured cost and the intended fix (backlog WX-RD1).
 
 **When data is charged.** A node that knows its result length in advance
 reserves its data in step 2 of the order below. Every other node charges as soon
@@ -1659,8 +1678,9 @@ allocation or recursion it would drive.**
 | evaluation depth (nested node evaluations, across model calls) | 64 levels | every evaluator | each node entry | same |
 | elements per sequence value | 65,536 | every evaluator | allocation (2.7 step 1) | same |
 | leaves per tuple, record or constructor value | 65,536 | every evaluator | returning the composite (2.7) | same |
-| owned data per evaluation, cumulative (`dsize`) | 64 MiB | every evaluator, for v1 documents | allocation (2.7 step 2) | same |
+| owned data per evaluation, cumulative (`dsize`, stored constructor and error names included, E20) | 64 MiB | every evaluator, for v1 documents | allocation (2.7 step 2) | same |
 | list literal | 4,096 elements | checker, v1 documents | checking | W0602 |
+| identifier, in any position | 128 bytes | checker, v1 documents | every other check (pass 0) | W0602 |
 | section bound arguments | 8 | checker | — | W0712 |
 | higher-order nesting | 4 | checker | — | W0602 |
 | model graph cycle detection | linear in edges | checker (charged to `max_work`) | — | W0602 |
@@ -1866,18 +1886,38 @@ edit.
 | E17 | How is a reserved-but-unimplemented name reported, and what does a WX-D call node cost? | A D2 name used in v1 is W0202 with the exact text "reserved built-in `<name>` is not yet implemented in this version" (a distinct checker kind, so D2 can remove it cleanly). A WX-D call node costs its ordinary node charge of 1 work unit; the form's own work charges are added to that | coordinator-decided (S1, override welcome) | 2.7, 2.15 |
 | E18 | Which element cap applies under a stricter profile, and when is data charged during construction? | The evaluator's element cap is the smaller of 65,536 and the profile's `max_value_bytes`, so a stricter profile is never loosened. List literals, tuples and constructors charge data after their components exist and before work; tuples and constructors then also go through the leaves check. `concat` charges before building. A bytes literal charges `len/2` before decoding. After a refused reservation the counter keeps the overshooting total; the instance has already failed | coordinator-decided (S1, override welcome) | 2.7, 6.2 |
 | E19 | What does D1 test from §2.15, and what moves later? | Two items move. The quadratic-accumulator work-boundary bisection needs `fold`, so it moves to D2. Admission-in-meter (E14) needs nothing in the ground evaluator, which never evaluates admission predicates, so it moves to S2b with the generated meter | coordinator-decided (S1) | 2.15, 8.1 |
+| E20 | The S1 security review: `dsize` priced a nullary constructor and `Err(E.CASE)` at 0, but constructor and error values own their names, so `replicate(<10,000-byte constructor>, 65536)` allocated about 660 MB (peaking at 1.3 GB) with 2 MiB charged; list literals and `concat` did the same, in v0 and v1. Identifiers had no length cap | `dsize` counts the bytes of the stored names: `len(T) + len(C)` for a constructor of type `T`, nullary ones included, and `len(E) + len(CASE)` for an error value, so the charge is never below what a copy allocates. Every implementation charges them, generated code included. In v1 documents the checker also caps every identifier at 128 bytes (`MAX_IDENTIFIER_BYTES`, the binding parser's path-segment cap), as W0602 with the message "an identifier of N bytes is longer than the 128 bytes a v1 document allows", in a pass before every other check, so an over-long reference is refused before resolution. The cap is defence in depth: the name charge is what bounds the copies. v0 is unchanged (no data counter, no cap) | coordinator-decided (S1 security review, override welcome) | Status, 1.2, 1.4, 2.7, 6.2 |
+| E21 | The S1 security review: the checker resolved a dotted name by its first segment alone (a binder, a built-in such as `Some`, `None` or `len`, a model or an operation) and typed it as that, while the ground evaluator turns any two-segment name it does not recognise into the error value `Err((seg0, seg1))` and ignores the arguments. So v1 `g.x(a)`, `g` a model, was typed `U8` and evaluated to `Err(("g", "x"))`; `Some.x(a)`, `None.x` and `len.x(a)` likewise; v0 `a.foo` was typed as the binder `a`. An example `select_bytes(..) == m.FORGED(..)` checked, and `compile_warrant_to_tfv` emitted the error id `FORGED`, which no declaration has. The evidence generator already refused such names, so the lanes disagreed | A reference of more than one segment is exactly one of two things: `E.CASE`, with `E` a declared error and `CASE` one of its cases (v0 and v1), or a v1 projection `x.f.g` from a binder `x` in scope. Anything else is W0202 `UnboundName` of the whole dotted name, in v0 and in v1, refused before any first-segment lookup. This is a **v0 deviation**: such v0 documents used to check, but evaluated to a forged error value, never to what their type said. No in-repository document uses one (`git ls-files '*.warrant'`: the only dotted references are `E.CASE` and the v1 projection `b.tag` in `wxa`; `labels` and `input` lines name operation parameters, not references), and every v0 output, the v0 compatibility pin and the regenerated harnesses are byte-identical | coordinator-decided (S1 security review, override welcome) | 9.1; VER04 §10 |
 
-**Note on E4: reads.** Reads charge no data, because a charge per read would make
-the meter depend on whether an implementation copies or shares, and on how often
-a body names a value. The ground evaluator's reads clone `EvalValue` deeply. The
-memory those transient copies take is bounded by the depth limit, the number of
-values each pending node holds, and the largest value. That hazard is older than
-this wave. In v0 and wave-3 evaluation no data counter bounds the largest value:
-the element cap allows a list of 65,536 strings of 65,536 bytes each, about
-4 GiB, built by repeated `concat` well inside the work budget. WX-D1's data
-counter caps any v1 value at 64 MiB, which narrows the hazard. Closing it needs
-shared storage in the evaluator, which this wave does not change (8.1). It is
-recorded for the owner, not settled here.
+**Note on E4: reads (an open hazard).** Reads charge no data, because a charge
+per read would make the meter depend on whether an implementation copies or
+shares, and on how often a body names a value. But the ground evaluator's reads
+clone `EvalValue` deeply, and those copies are not small. The S1 security review
+measured them:
+
+* a list literal of 48 references to one binder whose value was charged about
+  16 MB peaked at **2.4 GB** before the literal's own charge failed with W0703;
+* a model call with 48 such arguments peaked at **2.4 GB** and **succeeded**,
+  with `data_used` at only 16 MB, because a call is a pass-through node and its
+  arguments are reads;
+* each such clone costs about 33 ms of CPU for about 3 work units, so the work
+  meter does not bound the time either;
+* the worst case, many references to a value near the 64 MiB budget, inside a
+  bounded nesting of calls, is hundreds of GB.
+
+So the data counter's claim is narrower than the first draft of this note put
+it: **it caps the `dsize` of any one v1 value at 64 MiB, per value; it does not
+bound the total memory of an evaluation**, since uncharged read copies of an
+admitted value can be made many times over. The hazard is older than this wave
+(in v0 and wave-3 evaluation no counter bounds even one value: the element cap
+allows a list of 65,536 strings of 65,536 bytes, about 4 GiB, built by repeated
+`concat` within the work budget), and WX-D1 narrows it without closing it. It is
+**open**. The fix is one of: shared storage in `EvalValue` (`Rc`/`Arc` for
+sequences, composites and names, so a read is a reference-count increment and
+the meter's "charges as if it copied" rule becomes exact), or a host-side guard
+that bounds the memory of the reads themselves. Either is a change to the
+evaluator's representation, which this wave does not make (8.1). It is tracked
+as backlog **WX-RD1** (P1) and recorded for the owner, not settled here.
 
 **Slices.** The S0 review also split WX-D1 into the slices of 8.1. Each
 coordinator decision above is listed in the S0 pull request for owner override.
@@ -1894,6 +1934,14 @@ coordinator decision above is listed in the S0 pull request for owner override.
 | a `v2` header | open question 3 |
 
 ## 11. Specification change record
+
+- S1 security review (2026-11-12), recorded in 9.1 as E20: `dsize` counts the
+  stored names of constructor and error values, and v1 identifiers are capped at
+  128 bytes (W0602); the note on E4 now records the measured cost of uncharged
+  read copies as an open hazard (backlog WX-RD1) and limits the data counter's
+  claim to a per-value bound. The S1 implementation also enforces the existing
+  §1.2 rule that a v1 parameter or quantifier binder may not spell a reserved
+  built-in (W0203); no text changed for that.
 
 - Initial VER04k: normative WX-D (in three slices), WX-F and WX-G, replacing the
   non-normative sketches of VER04j §7. Departures from those sketches, each

@@ -638,6 +638,23 @@ representations. It refuses Teletex comparison rather than inventing a T.61
 mapping. It performs no RFC 4518 StringPrep, case folding, normalization,
 insignificant-space handling, or attribute-OID schema selection, so it is not
 yet a complete value policy for issuer linking or path validation.
+A bounded `x509-name-value-policy` layer now validates at most 64
+caller-supplied attribute-type OID rules and binds each exact identifier to
+either canonical DER element equality or exact Unicode-scalar equality across
+the supported DirectoryString encodings. It preflights every attribute in both
+bounded Names before structural comparison, so an unconfigured attribute type
+fails closed. Under the DirectoryString-scalar rule, malformed values and
+TeletexString without a repository-owned T.61 mapping also fail closed with a
+payload-free error; the exact-DER rule intentionally treats its complete value
+element as opaque. The policy removes executable value callbacks from later
+issuer-link and path-construction callers while keeping the registry data
+driven. It embeds no attribute OID registry and does not perform RFC 4518
+StringPrep, normalization, case folding, insignificant-space processing, or
+schema-specific matching, so it is not complete RFC 5280 Name equality and is
+not yet suitable to authorize concrete path validation.
+The pure public-certificate-data operation performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect.
 A bounded `x509-certificate` structural composition now decodes complete RFC
 5280 `Certificate` and `TBSCertificate` values under one shared DER budget. It
 retains the exact signed bytes, composes the shipped field decoders, validates
@@ -1754,6 +1771,39 @@ network access, or other external effect. It does not validate the anchor
 self-signature, check revocation, compose TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
+
+A bounded reviewed-anchor subordinate-name-policy follow-up consumes that
+exact subordinate-intermediate policy result and derives the reviewed
+anchor's optional constraint bytes, every complete intermediate policy,
+certificate, anchor-to-target order, and self-issued classification only from
+retained evidence. An unconstrained reviewed snapshot entry succeeds without
+reading any subordinate Subject Alternative Name. When the reviewed entry
+carries its supported permitted-DNS constraint contents, the composition
+decodes those bytes once under caller-owned limits and visits every retained
+intermediate in the already-proved order. Each non-self-issued subordinate
+certificate's optional Subject Alternative Name must decode under separate
+caller-owned limits, and every retained dNSName must satisfy the reviewed
+anchor constraint. An absent subordinate Subject Alternative Name contributes
+an empty supported name set. Non-final self-issued intermediate certificates
+are skipped under the RFC 5280 exception. Success retains the complete
+subordinate-intermediate policy plus payload-free counts of reviewed-anchor
+constraint applications and repeated DNS-name evaluations. Callers cannot
+substitute the reviewed anchor, constraint bytes, subordinate certificates,
+SAN values, order, or self-issued classifications.
+
+The consumed target-anchor policy already proves the same reviewed constraint
+against the exact final target, and the consumed subordinate-intermediate
+policy already applies supported intermediate constraints across the path.
+This additive slice does not constrain subordinate subject distinguished
+names, support directoryName or other GeneralName forms, add excluded or
+non-DNS reviewed-anchor constraints, or establish complete Name or path
+validation. It performs only pure public-certificate-data processing with no
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not validate the anchor self-signature, check revocation,
+compose TLS or HTTP, authorize OAuth transport, or grant network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target

@@ -4,6 +4,8 @@
 
 ### Changed
 
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
 - Return `atan x` unchanged for `|x| <= 2^-27` before half-angle reduction,
   preserving the exact binary64 small-argument identity.
 - Normalize square-root inputs by powers of four before Newton iteration so the

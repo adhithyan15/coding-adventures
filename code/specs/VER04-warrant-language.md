@@ -521,6 +521,11 @@ and source span. Cross-language adoption remains owned by package parity.
 - Records the v0 ground evaluator's eager `and`/`or`/`=>` and its lack of a
   cumulative data counter as implementation deviations from §4 and §2, kept
   frozen for v0 byte identity; v1 corrects both (VER04k §9.1, E2 and E4).
+- VER04k §9.1 E21 (WX-D1 S1 security review), a v0 deviation: a reference of
+  more than one segment is only `E.CASE` (a declared error and one of its
+  cases) or, in v1, a projection from a binder in scope. Any other dotted name
+  is W0202 in v0 too. Such v0 documents used to check by the name's first
+  segment but evaluated to a forged error value; none is in the repository.
 
 ## 11. Grammar artifacts and syntax-corpus staging (P006)
 
