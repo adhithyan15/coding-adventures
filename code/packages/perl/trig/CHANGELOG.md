@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
 - Return `atan($x)` unchanged for `|x| <= 2^-27` before half-angle reduction,
   preserving the exact binary64 small-argument identity.
 - Normalize square-root inputs by powers of four before Newton iteration so the

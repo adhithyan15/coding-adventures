@@ -15,7 +15,42 @@ implementation, built up one spec at a time.
 - Golden vectors at
   [`code/specs/fixtures/kiln/key-vectors-v1.json`](../../../specs/fixtures/kiln/key-vectors-v1.json)
   that any implementation must reproduce.
+- `internal/source` - the **`Source`** interface of KILN00 section 13 (which
+  files are we building, what is their snapshot id, what changed). `Git`
+  shells out to `git` (never via a shell, NUL-separated output); `Folder` walks
+  a plain directory honouring a `.kilnignore`, never following symlinks, and
+  derives its `Revision` from file contents. Both share one glob language
+  (`*`, `?`, whole-segment `**`) and return key-ready paths.
+- `internal/host` - the **`Host`** interface (identity, host fingerprint,
+  trust, shard, work dir, reporting). `Trusted()` means "may write the
+  SHARED ledger" (KILN00 section 10.2). `GitHub` implements it exactly: the
+  ref must be `refs/heads/<default branch>`, where the default branch comes
+  from the GitHub-generated event JSON (`GITHUB_EVENT_PATH`,
+  `repository.default_branch`) and `KILN_DEFAULT_BRANCH` can only narrow it,
+  AND the event must be `push`, `schedule` or `workflow_dispatch`; everything
+  else, including any error, is untrusted. That answer is only meaningful in a
+  job that has run no untrusted code. `Local` (a developer machine) is never
+  trusted but `WritesLocalLedger()`; `Untrusted` is what `Detect` returns when
+  any CI indicator (`CI`, `GITHUB_*`, `RUNNER_*`, ...) is present but the
+  environment is not exactly GitHub Actions, so a CI run is never mistaken for
+  a laptop. Reports strip control characters and defang `::` / `##[` so
+  untrusted text cannot inject workflow commands.
+- `internal/envscrub` - `ScrubSecrets`: drops credentials (tokens, keys,
+  passwords, `ACTIONS_*`, `INPUT_*`, `GITHUB_ENV`/`PATH`/`OUTPUT`/...) from a
+  child environment (section 9.6 item 3). Git is always run with it, with all
+  `GIT_*` removed and repo-configured hooks/fsmonitor disabled.
 - A tiny CLI.
+
+`Ledger` and `Tools` (the other two section 13 interfaces) are not built yet.
+
+### `.kilnignore`
+
+One glob per line, `#` comments and blank lines skipped, matched against the
+whole repo-relative path (at most 64 KiB, 1000 patterns, 64 segments each; the
+file is never followed through a symlink; no negation, no basename shortcut, no trailing `/`).
+`*` stays inside a segment, `**` as a whole segment spans directories. A path
+is ignored if it or any directory above it matches, so `build` ignores the
+whole tree and `**/*.log` ignores logs at any depth. `.git` is always skipped.
 
 It uses only the Go standard library and depends on no other package in this
 repository.
@@ -49,6 +84,10 @@ in KILN02 first.
 ```
 go vet ./... && go test ./... -cover
 ```
+
+Source paths are stricter than KILN02 keys: a backslash, a colon or a Windows
+reserved device name (`CON`, `NUL`, `COM1`, ...) in any path is refused on
+every platform so listings, and therefore keys, agree across operating systems.
 
 ## Ledger
 
@@ -88,3 +127,41 @@ Hashes and provenance only; no build output.
   while reading.
 - Segment names are pattern-checked before any path is built; symlinks and
   non-regular files are refused (regular-file check on the open descriptor).
+
+## Legacy keys (`legacy-plan`)
+
+`internal/legacy` implements the core of [KILN03](../../../specs/KILN03-legacy-keys.md):
+keys for today's shell BUILD files, in **shadow mode** (nothing is skipped).
+
+```
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder]
+kiln explain --plan <plan.json> <package>
+```
+
+- The graph is the `kiln-legacy-graph/1` export of the old build tool. It is
+  loaded strictly (schema, unknown fields, size cap, sorted and unique lists,
+  every edge names a listed package, every path valid per KILN02).
+- Per package: the **closure** (the package, its `dev_deps`, and everything
+  reachable through `deps[OS]`, nested packages and enclosing packages, for
+  every member), each member's **own digest** (every file under its directory
+  except nested packages'), and its **reads** (`repo_inputs`, globs, the
+  repository-source-input boundary file, and configuration files sitting in
+  ancestor directories). Directory and glob reads become one `consumed` entry
+  holding a tree digest that covers paths, kinds, executable bits and content.
+  `tool:build-tool` digests the old build tool's source, its in-repo `replace`
+  targets, `go.work` and `vendor/`.
+- The key is a KILN02 key with **semantics version 0**. Tools and env are empty
+  in this milestone, so every package carries `m1-incomplete:tools-env` and
+  `m1-incomplete:scans` and none is `cacheable` yet. Packages whose closure has
+  an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
+  `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
+  for the OS are `uncacheable`.
+- The Git source refuses to plan when any untracked, non-ignored file exists
+  (build products would enter the digests). `--source folder` has no such
+  check: it prints a warning to stderr and keeps going (shadow mode), so run it
+  only on a tree that is known to be clean. Output is deterministic JSON,
+  written atomically, ending with a histogram of classes, reasons and closure
+  sizes.
+- Glob semantics are pinned by
+  [`glob-cases-v1.json`](../../../specs/fixtures/kiln/glob-cases-v1.json), which
+  the old build tool's matcher must also satisfy.

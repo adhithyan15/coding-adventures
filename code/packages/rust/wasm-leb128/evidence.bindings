@@ -1,0 +1,46 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/wasm-leb128.warrant.
+#
+# One line per Warrant operation: the public export that implements it, its
+# host signature where the Warrant type is not the default one, and the
+# deliberate faults the generated negative controls attack it with (VER04h
+# section 6, VER04j section 4.8).
+#
+# Encoders: `encode_unsigned(u64) -> Vec<u8>`, `encode_signed(i64) -> Vec<u8>`;
+# the defaults (u64 / i64 in, bytes out) are the host types, so no args=/ret=.
+#
+# Decoders: `(&[u8], usize[, u32]) -> Result<(u64 | i64, usize), Leb128Error>`.
+# `Leb128Error` is a struct { message: String, offset: usize } with no error
+# kind, so errors= maps the whole struct to the single Warrant case MALFORMED
+# (the generated adapter matches `wasm_leb128::Leb128Error { .. }`); the
+# message and offset are not observed.  Nat parameters bind to usize and
+# Warrant's `(U64, Nat)` result to the host tuple `(u64, usize)`.
+#
+# proofs_not_live=<reason> is the package's declaration that this operation's
+# steps-bound obligation cannot be run: the Rust-subset front end refuses
+# src/lib.rs (warrant-ir/tests/wasm_leb128_proofs.rs records its message).  Only
+# an operation listed here may have a `not-live` entry in
+# evidence/proof-manifest.json; `ca-assurance-report --check` rejects any other
+# (VER04h section 9, check 18).
+#
+# exhaustive_budget is 2^24: decode_unsigned_three_bytes and
+# decode_signed_three_bytes enumerate every 3-byte input (a U16 times a U8).
+# Together with the empty, 1-byte and 2-byte claims that is every input of
+# length <= 3 (1 + 256 + 65,536 + 16,777,216 = 16,843,009) for each decoder.
+# The measured wall-clock cost is recorded in code/specs/LEB01-wasm-leb128.md.
+package wasm_leb128
+revision 0.2.0
+spec code/specs/wasm-leb128.warrant
+output code/packages/rust/wasm-leb128/tests/generated/warrant_evidence.rs
+seed 0x4c45_4231_3238_5f57
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+op encode_unsigned export=encode_unsigned faults=flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op encode_signed export=encode_signed faults=flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op decode_unsigned export=decode_unsigned args=bytes,usize ret=(u64,usize) errors=wasm_leb128/Leb128Error=MALFORMED faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op decode_signed export=decode_signed args=bytes,usize ret=(i64,usize) errors=wasm_leb128/Leb128Error=MALFORMED faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op decode_unsigned_bounded export=decode_unsigned_bounded args=bytes,usize,u32 ret=(u64,usize) errors=wasm_leb128/Leb128Error=MALFORMED faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib
+op decode_signed_bounded export=decode_signed_bounded args=bytes,usize,u32 ret=(i64,usize) errors=wasm_leb128/Leb128Error=MALFORMED faults=off-by-one-consumed,drop-consumed,ok-as-err,missing-error proofs_not_live=frontend-refuses-lib

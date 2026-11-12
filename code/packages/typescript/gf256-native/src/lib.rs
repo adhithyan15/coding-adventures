@@ -52,6 +52,15 @@ use std::ptr;
 // (u32 because JS numbers are f64, and bitwise u8 values are all < 256),
 // and `napi_create_int32` for the module constants.
 
+// On Windows a DLL may not leave an import undefined: every napi_* symbol must
+// name the module that exports it, which is the host `node.exe`.  node-bridge
+// does this with a raw-dylib import table for the functions it declares; the
+// extras declared here need the same attribute or the cdylib fails to link with
+// `rust-lld: error: undefined symbol: napi_...` (see node-bridge/src/lib.rs).
+#[cfg_attr(
+    windows,
+    link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim")
+)]
 extern "C" {
     fn napi_get_value_uint32(
         env: napi_env,

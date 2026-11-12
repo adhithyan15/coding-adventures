@@ -39,12 +39,24 @@ local LUA = "lua"
 -- Tests run with cwd = tests/ (this package's BUILD does `cd tests &&
 -- busted ...`, same convention as code/programs/lua/parrot), so main.lua is
 -- one level up.
+local IS_WINDOWS = sep == "\\"
+
+-- Quote one fixed test argument for the platform's shell.  POSIX shells use
+-- single quotes (with the '\'' escape for embedded quotes); cmd.exe has no
+-- single-quote quoting, so Windows uses double quotes.  Tests only pass fixed,
+-- non-attacker-controlled strings (no quotes, %, ^ or & in them), so this
+-- simple quoting is sufficient on both platforms.
+local function quote_arg(a)
+    if IS_WINDOWS then
+        return '"' .. a .. '"'
+    end
+    return "'" .. a:gsub("'", "'\\''") .. "'"
+end
+
 local function run_cowsay(args, stdin_content)
-    local cmd = LUA .. " ../main.lua"
+    local cmd = LUA .. " .." .. sep .. "main.lua"
     for _, a in ipairs(args) do
-        -- Tests only pass fixed, non-attacker-controlled argument strings
-        -- (see each test below), so simple quoting is sufficient here.
-        cmd = cmd .. " '" .. a:gsub("'", "'\\''") .. "'"
+        cmd = cmd .. " " .. quote_arg(a)
     end
 
     -- Route stdin through a temp file rather than a heredoc: a heredoc's
@@ -59,19 +71,31 @@ local function run_cowsay(args, stdin_content)
         f:close()
         cmd = cmd .. ' < "' .. stdin_path .. '"'
     else
-        cmd = cmd .. " </dev/null"
+        cmd = cmd .. (IS_WINDOWS and " <NUL" or " </dev/null")
     end
 
-    local handle = io.popen(cmd .. " 2>&1; echo EXIT:$?")
-    local output = handle:read("a")
-    handle:close()
+    local output, exit_code
+    if IS_WINDOWS then
+        -- cmd.exe has no `$?`, and `%errorlevel%` would be expanded before the
+        -- command runs.  popen's close() reports the child's real exit status.
+        local handle = io.popen(cmd .. " 2>&1")
+        output = handle:read("a")
+        local _, _, code = handle:close()
+        exit_code = code
+        output = output:gsub("\r\n", "\n")
+    else
+        local handle = io.popen(cmd .. " 2>&1; echo EXIT:$?")
+        output = handle:read("a")
+        handle:close()
+        exit_code = tonumber(output:match("EXIT:(%d+)%s*$"))
+        output = output:gsub("EXIT:%d+%s*$", "")
+    end
 
     if stdin_path then
         os.remove(stdin_path)
     end
 
-    local exit_code = tonumber(output:match("EXIT:(%d+)%s*$"))
-    local body = output:gsub("EXIT:%d+%s*$", "")
+    local body = output
     -- Strip exactly one trailing newline added by `echo`/print, so callers
     -- can compare against the program's own output shape.
     body = body:gsub("\n$", "")
