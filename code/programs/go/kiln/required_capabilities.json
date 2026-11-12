@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/kiln",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "`kiln verify-vectors <path>` reads the golden-vector file named on the command line."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI prints its version and verification results."
+    }
+  ],
+  "justification": "Kiln's key encoder is pure computation; only the CLI reads a vector file and prints results."
+}
