@@ -99,6 +99,27 @@ class ChangedSinceTests(Fixture):
         self.assertTrue(cl.affected(roots["lib"], changed))
         self.assertFalse(cl.affected(roots["other"], changed))
 
+    def test_main_workspace_is_checked_even_when_unchanged(self):
+        # Merging main can make the main workspace lock stale with nothing
+        # in the branch's own diff, so --changed-since always keeps it.
+        self.add("code/packages/rust", '[workspace]\nmembers = []\n')
+        self.add("other", package("other", 'serde = "1"'))
+        self.add("third", package("third", 'serde = "1"'))
+        write(self.repo / "code/packages/rust/Cargo.lock", "version = 4\n")
+        roots = self.roots()
+        seen = []
+        args = mock.Mock(root=None, changed_since="origin/main", jobs=1)
+        with mock.patch.object(cl, "changed_files",
+                               return_value=[self.repo / "other" / "Cargo.toml"]), \
+                mock.patch.object(cl, "select_toolchain"), \
+                mock.patch.object(cl, "check_one",
+                                  side_effect=lambda repo, r: seen.append(r.path)):
+            cl.cmd_check(self.repo, list(roots.values()), args)
+        checked = {p.relative_to(self.repo).as_posix() for p in seen}
+        self.assertIn("other", checked)
+        self.assertNotIn("third", checked)
+        self.assertIn("code/packages/rust", checked)
+
     def test_source_files_do_not_matter(self):
         self.add("lib", package("lib"))
         roots = self.roots()

@@ -188,6 +188,10 @@ def tracked_manifests(repo: Path) -> list[Path]:
     return sorted(set(dirs))
 
 
+# The repository's main Cargo workspace (about 1,450 member crates).
+MAIN_WORKSPACE = Path("code/packages/rust")
+
+
 @dataclass
 class Root:
     path: Path
@@ -491,7 +495,17 @@ def cmd_check(repo: Path, roots: list[Root], args) -> int:
         if changed is None:
             print(f"cannot diff against {args.changed_since}; checking all roots")
         else:
-            chosen = [r for r in chosen if affected(r, changed)]
+            # The main workspace is always checked, even when this branch
+            # changed none of its manifests. Merging main brings in other
+            # PRs' new crates, which makes the branch's copy of
+            # code/packages/rust/Cargo.lock stale without any file in the
+            # branch's own diff. The Release TaskApp build caught exactly
+            # that (`git diff --exit-code` after cargo rewrote the lock).
+            # The check costs about 3s.
+            chosen = [
+                r for r in chosen
+                if affected(r, changed) or r.path.resolve() == (repo / MAIN_WORKSPACE).resolve()
+            ]
     chosen = [r for r in chosen if r.needs_lock or r.lock.exists()]
     if chosen:
         select_toolchain(repo)

@@ -15785,11 +15785,12 @@ dependencies = [
 
 [[package]]
 name = "x509-certificate-issuer-candidate-selection"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "der-asn1",
  "x509-certificate",
  "x509-name",
+ "x509-name-value-policy",
 ]
 
 [[package]]
