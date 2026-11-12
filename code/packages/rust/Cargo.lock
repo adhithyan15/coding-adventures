@@ -15086,6 +15086,11 @@ dependencies = [
 [[package]]
 name = "wasm-leb128"
 version = "0.2.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "wasm-module-encoder"
@@ -15795,12 +15800,13 @@ dependencies = [
 
 [[package]]
 name = "x509-certificate-path-construction"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "der-asn1",
  "x509-certificate",
  "x509-certificate-issuer-candidate-selection",
  "x509-name",
+ "x509-name-value-policy",
 ]
 
 [[package]]
@@ -15816,13 +15822,14 @@ dependencies = [
 
 [[package]]
 name = "x509-certificate-path-reviewed-anchor-binding"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "der-asn1",
  "x509-certificate",
  "x509-certificate-path-construction",
  "x509-certificate-path-length-policy",
  "x509-certificate-policy",
+ "x509-name-value-policy",
  "x509-webpki-root-anchor-selection",
  "x509-webpki-roots-snapshot",
 ]
