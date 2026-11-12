@@ -1,1 +1,2 @@
-prove -I..\hyperloglog\lib -I..\in-memory-data-store-protocol\lib -l -v t\
+REM prereqs: ../hyperloglog ../in-memory-data-store-protocol
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps hyperloglog,in-memory-data-store-protocol
