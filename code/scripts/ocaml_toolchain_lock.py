@@ -1275,9 +1275,9 @@ def validate_generic_ci_workflow_text(
     checkout_inputs = _workflow_mapping(
         checkout.get("with"), "jobs.build.checkout.with"
     )
-    if checkout_inputs != {"fetch-depth": "0", "persist-credentials": "false"}:
+    if checkout_inputs != {"fetch-depth": "1", "persist-credentials": "false"}:
         raise ContractError(
-            "generic CI checkout must fetch history without persisting credentials"
+            "generic CI checkout must use shallow history without persisting credentials"
         )
 
     setup = _workflow_mapping(
