@@ -438,10 +438,30 @@ Further checks added by the security review (each has a falsification test in
     and the `<package>` argument is a plain directory name.  `--generate` reads the
     package version from the `[package]` table of `Cargo.toml` only.
 
+20. **CWE-208 on a document with no secret operand** (first adopter
+    `wasm-leb128`).  The attestation `warrant-spec::all-operands-public` exists
+    only while the spec on disk declares at least one operation and every
+    parameter of every operation has a `labels` row and no row is `secret` (an
+    unlabelled parameter is unclassified, not public).  With that attestation
+    and *no* constant-time obligation in the proof manifest, the CWE-208 row is
+    an unapproved exemption `EXEMPT-CWE-208-NO-SECRET-OPERANDS` (kind
+    `not-applicable`, reason "not applicable: no secret operands ...", evidence
+    the attestation, derived assumption list empty): not `excluded`, because the
+    registry gives CWE-208 no safe subset (VER15 section 4).  It is a separate
+    branch, not a relaxation: any constant-time entry, proven or not, keeps the
+    earlier outcomes (a gate-level exemption, "applicable and unaddressed", or an
+    open row), and without the attestation the row stays open.  `--check`
+    re-derives it: citing the attestation where it does not hold is
+    `UnknownEvidence`, and the exemption id without both facts is
+    `EvidenceMismatch`.  The id is reserved, so no manifest entry may use it.
+    The audit profile that picks the static CWE-326/327/407 sentences gains
+    `varint-codec`.
+
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the
 effect certificate (`effect-certificate::proved`, `capability-audit::*-empty`,
-`analyzer::no-unsafe-or-ffi` only while no unsafe exception is declared), and
+`analyzer::no-unsafe-or-ffi` only while no unsafe exception is declared) or from
+the Warrant document (`warrant-spec::all-operands-public`, item 20), and
 `unverified::<id>` static claims that no tool in the repository checks. The last
 group is accepted but counted and printed by `--check`, and the row's reason says
 so. Each failure mode has a falsification test (`tests/test_evidence.rs`).
