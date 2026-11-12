@@ -870,7 +870,9 @@ class EditionHeaderTest(Fixture):
         firsts, errors = release_inventory.parse_editions_header([FIRSTS])
         self.assertEqual(firsts, {"2015": "a2", "2018": "a4"})
         self.assertEqual(errors, [])
-        self.assertEqual(release_inventory.parse_editions_header(["# other"]), (None, []))
+        self.assertEqual(
+            release_inventory.parse_editions_header(["# other"]), (None, [])
+        )
 
     def test_malformed_header_is_refused(self) -> None:
         for comment, fragment in (
@@ -936,12 +938,16 @@ class EditionDerivationTest(Fixture):
     def test_wrong_column_is_an_error(self) -> None:
         lines = edition_lines()
         lines[5] = erow("a3", "2000-03-01", "a2", "2015;2018")
-        self.assert_error(lines, "(a3): editions '2015;2018' but lineage derives '2015'")
+        self.assert_error(
+            lines, "(a3): editions '2015;2018' but lineage derives '2015'"
+        )
 
     def test_late_patch_listing_a_new_edition_is_an_error(self) -> None:
         lines = edition_lines()
         lines[6] = erow("a3p", "2000-05-01", "a3", "2015;2018")
-        self.assert_error(lines, "(a3p): editions '2015;2018' but lineage derives '2015'")
+        self.assert_error(
+            lines, "(a3p): editions '2015;2018' but lineage derives '2015'"
+        )
 
     def test_dash_is_for_editionless_rows_only(self) -> None:
         lines = edition_lines()
@@ -992,13 +998,15 @@ class UniformClaimsTest(Fixture):
     def test_pair_for_an_unlisted_edition_is_an_error(self) -> None:
         self.touch("langa3-e2018")
         self.assert_error(
-            edition_lines(), "pair file langa3-e2018.* names edition 2018, which a3 "
-            "does not list"
+            edition_lines(),
+            "pair file langa3-e2018.* names edition 2018, which a3 does not list",
         )
 
     def test_edition_pair_of_an_editionless_release_is_an_error(self) -> None:
         self.touch("langa1-e2015")
-        self.assert_error(edition_lines(), "pair file langa1-e2015.* names edition 2015")
+        self.assert_error(
+            edition_lines(), "pair file langa1-e2015.* names edition 2015"
+        )
 
     def test_plain_stem_of_an_edition_release_is_an_error(self) -> None:
         self.touch("langa3")
@@ -1021,7 +1029,9 @@ class UniformClaimsTest(Fixture):
 
     def test_unknown_release_pair_still_has_no_row(self) -> None:
         self.touch("langzz-e2015")
-        self.assert_error(edition_lines(), "pair file langzz-e2015.* has no releases.csv row")
+        self.assert_error(
+            edition_lines(), "pair file langzz-e2015.* has no releases.csv row"
+        )
 
 
 class PairOverrideTest(Fixture):
@@ -1114,7 +1124,9 @@ class AllowlistTest(Fixture):
         (self.root / "lang" / "s.allowlist").symlink_to(outside)
         for suffix in ("tokens", "grammar"):
             (self.root / "lang" / f"lang1.0.{suffix}").write_text("")
-        self.assert_error(self.lines("partial,P,s,-,-,-"), "allowlist 's.allowlist' is a symlink")
+        self.assert_error(
+            self.lines("partial,P,s,-,-,-"), "allowlist 's.allowlist' is a symlink"
+        )
 
     def test_allowlist_is_not_a_corpus_case(self) -> None:
         self.declare_one("s.allowlist")
@@ -1142,9 +1154,6 @@ class RustInventoryTest(Fixture):
             out.append(line)
         return out
 
-    COLUMN = {name: i for i, name in enumerate(release_inventory.REQUIRED)}
-    COLUMN.update({"date_source": 12, "lineage": 13, "editions": 14})
-
     def test_real_inventory_is_clean(self) -> None:
         report = release_inventory.check_inventory(self.REAL)
         self.assertEqual(report.errors, [])
@@ -1153,7 +1162,13 @@ class RustInventoryTest(Fixture):
     def test_pair_count_is_347(self) -> None:
         rows = release_inventory.read_inventory(self.REAL)[2]
         derived = release_inventory.derive_editions(
-            rows, {"2015": "1.0.0-alpha", "2018": "1.31.0", "2021": "1.56.0", "2024": "1.85.0"}
+            rows,
+            {
+                "2015": "1.0.0-alpha",
+                "2018": "1.31.0",
+                "2021": "1.56.0",
+                "2024": "1.85.0",
+            },
         )
         self.assertEqual(release_inventory.count_pairs(derived), 347)
         by_set: dict[tuple[str, ...], int] = {}
@@ -1209,12 +1224,9 @@ class RustInventoryTest(Fixture):
             "1.85.0.1",
             "0.1.0-alpha",
         ):
+            cells = "https://example.invalid/x," + SHA + ",1.99.1,pending,none,-,-,-,-"
             lines = self.real_lines() + [
-                ",".join(
-                    [bogus, "2026-11-12", "final", "https://example.invalid/x", SHA,
-                     "1.99.1", "pending", "none", "-", "-", "-", "-", "releases-md",
-                     "line", "2015;2018;2021;2024"]
-                )
+                f"{bogus},2026-11-12,final,{cells},releases-md,line,2015;2018;2021;2024"
             ]
             self.assert_rust_error(lines, f"({bogus}): not a published Rust release ID")
 
@@ -1227,13 +1239,19 @@ class RustInventoryTest(Fixture):
             ("1.0.0-beta", "alpha", "beta"),
         ):
             lines = self.mutated(release, lambda c, ch=channel: c.__setitem__(2, ch))
-            self.assert_rust_error(lines, f"({release}): channel {channel!r} must be {wanted!r}")
+            self.assert_rust_error(
+                lines, f"({release}): channel {channel!r} must be {wanted!r}"
+            )
 
     def test_wrong_predecessor_is_refused(self) -> None:
         lines = self.mutated("1.99.1", lambda c: c.__setitem__(5, "1.98.1"))
-        self.assert_rust_error(lines, "(1.99.1): predecessor '1.98.1' but RS01 lineage says '1.99.0'")
+        self.assert_rust_error(
+            lines, "(1.99.1): predecessor '1.98.1' but RS01 lineage says '1.99.0'"
+        )
         lines = self.mutated("0.4", lambda c: c.__setitem__(5, "0.3.1"))
-        self.assert_rust_error(lines, "(0.4): predecessor '0.3.1' but RS01 lineage says '0.3'")
+        self.assert_rust_error(
+            lines, "(0.4): predecessor '0.3.1' but RS01 lineage says '0.3'"
+        )
 
     def test_out_of_order_predecessor_is_refused(self) -> None:
         # 1.50.0 pointing at a LATER row (1.51.0) is not an earlier row.
@@ -1250,7 +1268,9 @@ class RustInventoryTest(Fixture):
 
     def test_lineage_must_agree_with_the_predecessor(self) -> None:
         lines = self.mutated("1.99.1", lambda c: c.__setitem__(13, "branch-point"))
-        self.assert_rust_error(lines, "(1.99.1): lineage 'branch-point' but RS01 lineage says 'line'")
+        self.assert_rust_error(
+            lines, "(1.99.1): lineage 'branch-point' but RS01 lineage says 'line'"
+        )
         lines = self.mutated("1.50.0", lambda c: c.__setitem__(13, "bogus"))
         self.assert_rust_error(lines, "(1.50.0): lineage 'bogus'")
 
@@ -1300,7 +1320,9 @@ class OtherLanguagesUnchangedTest(Fixture):
 
     def test_subsets_without_allowlist_column_still_load(self) -> None:
         self.declare("plain", [SUBSETS_HEADER, subset_row("s")])
-        self.assertEqual(self.errors("plain", [HEADER, row("1.0", "1990-01-01", "")]), [])
+        self.assertEqual(
+            self.errors("plain", [HEADER, row("1.0", "1990-01-01", "")]), []
+        )
 
 
 if __name__ == "__main__":
