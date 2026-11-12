@@ -437,6 +437,55 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### Leaving the human-languages corpus out of most checkouts
+
+`code/learning/human-languages` is about 740 MB in 313,000 files, roughly 60% of
+the repository, and almost nothing reads it. Checking it out cost a Linux job
+about 210 s, a macOS job 320 s and a Windows job 390 s before any work began, on
+every job, every push. `ci.yml` now defines `LEAN_SPARSE_PATTERNS` once at the
+top and uses it as a non-cone sparse checkout (cone mode cannot say "everything
+except this directory"):
+
+```text
+/*
+!/code/learning/human-languages/
+/code/learning/human-languages/_fonts/
+```
+
+`_fonts` (2.4 MB) stays because `rust/font-subset`, `glyph-parser` and `pdf`
+read it. Every sparse checkout also sets `filter: blob:none`; without it git
+still downloads every blob and only the working tree shrinks.
+
+Who gets the full tree:
+
+| Job | Checkout |
+|---|---|
+| `detect` | sparse. The planner needs file names and the `ci.yml` diff, not corpus contents; the plan and all seven acceptance outputs were byte-identical with and without the corpus, including for a diff that changes it |
+| `contracts` | full, always. It runs the tests that read the corpus and, now, the double-encoding scan of the corpus (`check_mojibake.py` used to scan it in `detect`) |
+| `build` | sparse, unless the `human-language-corpus` gate fires or the run is a full build |
+| every other gated job | sparse |
+| `ocaml-capability-gate` | unchanged: its checkout inputs are a reviewed OCaml contract |
+
+The `human-language-corpus` gate lists the packages that read the corpus
+(`typescript/human-language-data`, `typescript/programs/language-ladder`,
+`typescript/script-ductus`). It fires whenever one of them is in the affected
+closure, on every `ci.yml` change, and on forced and main builds. It has no path
+glob for the corpus on purpose: a corpus-only change affects no package, so its
+build needs no corpus, and a glob would fire the gate for every such diff,
+which `TestPathShardedLanguageDiffsStaySelective` forbids, and exceed the
+matcher's work limit at about 10,000 changed corpus paths.
+
+`code/scripts/tests/test_human_language_corpus_consumers.py` keeps the list
+honest. It finds every package or program that mentions the corpus (other than
+`_fonts`) and fails unless the package is in the gate or in a short
+`MENTION_ONLY` list of build tools that only carry the path as data. A new
+reader that is not listed would pass locally and fail in CI, so this test makes
+the omission fail on the PR that introduces it.
+
+For a local clone, the same idea works with
+`git clone --filter=blob:none --sparse` and
+`git sparse-checkout set --no-cone '/*' '!/code/learning/human-languages/'`.
+
 ### D18S Windows applier native acceptance
 
 The `build-windows-os-suites` gate MUST also include affected packages

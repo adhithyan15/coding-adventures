@@ -1,5 +1,7 @@
 # B01 — BUILD.lark: The Starlark Build Configuration Format
 
+> **Status: SUPERSEDED by [KILN00](KILN00-kiln-build-system.md) (2026-11-11).** Kept for history. The Starlark migration stalled at 85 files because its rules declared only sources and dependencies; Kiln replaces it with hashed keys, isolated work roots and a language-agnostic rule language.
+
 ## 1. Overview
 
 This specification defines **BUILD.lark**, a declarative build configuration
