@@ -1,5 +1,7 @@
 # B02 — Hermetic Build Sandbox
 
+> **Status: SUPERSEDED by [KILN00](KILN00-kiln-build-system.md) (2026-11-11).** Kept for history. The Starlark migration stalled at 85 files because its rules declared only sources and dependencies; Kiln replaces it with hashed keys, isolated work roots and a language-agnostic rule language.
+
 ## 1. Overview
 
 A build system is only as trustworthy as its isolation guarantees. If a package

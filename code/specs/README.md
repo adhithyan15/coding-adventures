@@ -37,6 +37,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 |---|------|---------|
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
+| KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
 
 **Interactive hardware specs**:
 | # | Spec | Purpose |
