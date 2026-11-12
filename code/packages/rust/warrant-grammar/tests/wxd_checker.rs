@@ -17,6 +17,8 @@
 //!   silently treated as a user model or an unbound name;
 //! * the **list-literal cap** (section 2.11): a v1 list literal of more than
 //!   4,096 elements is W0602; v0 is unchanged;
+//! * the **identifier cap** (section 9.1, E20): a v1 identifier of more than
+//!   128 bytes, in any position, is W0602; v0 is unchanged;
 //! * a **mechanical scan** that no in-repository v1 document uses one of the
 //!   twelve names as an identifier (section 1.2: "the WX-D1 slice re-checks
 //!   mechanically").
@@ -25,7 +27,7 @@ use std::path::{Path, PathBuf};
 
 use coding_adventures_warrant_grammar::checker::{
     check_warrant, CheckedWarrantModule, CheckerError, CheckerErrorKind, DiagnosticCode, Type,
-    MAX_LIST_LITERAL, V1_FUNCTIONS,
+    MAX_IDENTIFIER_BYTES, MAX_LIST_LITERAL, V1_FUNCTIONS,
 };
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits, LayoutTokenKind};
 use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits, Version};
@@ -399,6 +401,92 @@ fn the_list_cap_applies_wherever_a_literal_appears_in_v1() {
         format!("warrant t v1\n  example e:\n    len([[{items}]]) == 1\n"),
     ] {
         assert_eq!(rejected(&src).code, DiagnosticCode::W0602);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// The identifier cap (VER04k section 9.1, E20)
+// ---------------------------------------------------------------------------
+//
+// A v1 identifier is at most 128 bytes, the cap the binding parser already
+// puts on a path segment.  The data meter charges stored names since E20, so
+// the cap is defence in depth: it bounds what one name can cost in every value,
+// diagnostic and generated artifact that repeats it.  v0 is unchanged.
+
+/// A valid identifier of exactly `n` bytes starting with `first`.
+fn ident(first: char, n: usize) -> String {
+    let mut s = String::with_capacity(n);
+    s.push(first);
+    s.extend(std::iter::repeat_n('x', n - 1));
+    s
+}
+
+/// One document per identifier position, each naming `{N}` there.
+fn every_position(n: usize) -> Vec<(&'static str, String)> {
+    let lo = ident('a', n);
+    let up = ident('A', n);
+    let docs = [
+        ("module", format!("warrant {lo} v1\n  model m(a: U8) -> U8 = a\n")),
+        ("model", format!("warrant t v1\n  model {lo}(a: U8) -> U8 = a\n")),
+        ("alias", format!("warrant t v1\n  model {up} = Bytes\n  model m(a: {up}) -> {up} = a\n")),
+        ("parameter", format!("warrant t v1\n  model m({lo}: U8) -> U8 = {lo}\n")),
+        ("operation", format!("warrant t v1\n  op {lo}(a: U8) -> U8\n  labels {lo}:\n    a public\n")),
+        ("op parameter", format!("warrant t v1\n  op f({lo}: U8) -> U8\n  labels f:\n    {lo} public\n")),
+        ("error", format!("warrant t v1\n  error {up} = BAD\n  model m(a: U8) -> Result<U8, {up}> = Ok(a)\n")),
+        ("error case", format!("warrant t v1\n  error E = {up}\n  model m(a: U8) -> Result<U8, E> = Err(E.{up})\n")),
+        ("record", format!("warrant t v1\n  record {up}(a: U8)\n  model m(a: U8) -> {up} = {up}(a)\n")),
+        ("field", format!("warrant t v1\n  record P({lo}: U8)\n  model m(p: P) -> U8 = p.{lo}\n")),
+        ("variant", format!("warrant t v1\n  variant {up} = C | D\n  model m(a: U8) -> {up} = C\n")),
+        ("constructor", format!("warrant t v1\n  variant V = {up} | D\n  model m(a: U8) -> V = {up}\n")),
+        ("example", format!("warrant t v1\n  example {lo}:\n    1 == 1\n")),
+        ("claim", format!("warrant t v1\n  claim {lo}:\n    forall a: U8. a == a\n")),
+        ("binder", format!("warrant t v1\n  claim c:\n    forall {lo}: U8. {lo} == {lo}\n")),
+        ("arm binder", format!("warrant t v1\n  model m(o: Option<U8>) -> U8 = match o with None -> 0u8 | Some({lo}) -> {lo}\n")),
+    ];
+    docs.into_iter().collect()
+}
+
+#[test]
+fn a_v1_identifier_longer_than_128_bytes_is_w0602_and_v0_is_unchanged() {
+    assert_eq!(MAX_IDENTIFIER_BYTES, 128);
+    for (what, src) in every_position(128) {
+        check(&src).unwrap_or_else(|e| panic!("a 128-byte {what} must check: {e:?}"));
+    }
+    for (what, src) in every_position(129) {
+        let e = rejected(&src);
+        assert_eq!(e.code, DiagnosticCode::W0602, "{what}: {e:?}");
+        assert_eq!(
+            e.kind,
+            CheckerErrorKind::IdentifierTooLong {
+                len: 129,
+                limit: 128
+            },
+            "{what}"
+        );
+        // The message says what is wrong without echoing the name.
+        assert_eq!(
+            e.to_string(),
+            "W0602: an identifier of 129 bytes is longer than the 128 bytes a v1 document allows",
+            "{what}"
+        );
+    }
+    // An unbound name is refused for its length before it is resolved.
+    let long = ident('a', 129);
+    let e = rejected(&format!("warrant t v1\n  model m(a: U8) -> U8 = {long}\n"));
+    assert_eq!(e.code, DiagnosticCode::W0602, "{e:?}");
+
+    // v0 has no cap: the same long names keep checking (v0 has no records,
+    // variants or arm binders over options of its own, so the positions it
+    // can spell are tested).
+    let v0 = ident('a', 10_000);
+    for src in [
+        format!("warrant {v0}\n  model m(a: U8) -> U8 = a\n"),
+        format!("warrant t\n  model {v0}(a: U8) -> U8 = a\n"),
+        format!("warrant t\n  model m({v0}: U8) -> U8 = {v0}\n"),
+        format!("warrant t\n  claim c:\n    forall {v0}: U8. {v0} == {v0}\n"),
+        format!("warrant t\n  example {v0}:\n    1 == 1\n"),
+    ] {
+        check(&src).unwrap_or_else(|e| panic!("v0 must keep long names: {e:?}"));
     }
 }
 

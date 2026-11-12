@@ -9,7 +9,8 @@
 //! twelve sequence names reserved in [`V1_FUNCTIONS`], the typing of the seven
 //! D1 forms (`typecheck_wxd_d1`, with the expected type threaded inward), the
 //! W0202 "not yet implemented in this version" refusal of the five D2 names,
-//! and the [`MAX_LIST_LITERAL`] cap (W0602).
+//! the [`MAX_LIST_LITERAL`] cap (W0602), and (security review, E20) the
+//! [`MAX_IDENTIFIER_BYTES`] cap on every identifier (W0602).
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
@@ -132,6 +133,11 @@ const WXD_D2: [&str; 5] = ["fold", "map", "count", "all", "any"];
 /// evidence copies into Rust source and every lane's corpus, so its size is a
 /// cost paid in every artifact, not once in one evaluation.
 pub const MAX_LIST_LITERAL: usize = 4096;
+
+/// Longest identifier of a v1 document, in bytes (VER04k section 9.1, E20).
+/// Over it is W0602.  The same 128 bytes the binding parser allows a path
+/// segment (VER04k section 6.2).  v0 documents keep their unbounded names.
+pub const MAX_IDENTIFIER_BYTES: usize = 128;
 
 /// Is `name` a built-in reserved in a document of version `version`?
 fn is_reserved_builtin(version: Version, name: &str) -> bool {
@@ -267,6 +273,12 @@ pub enum CheckerErrorKind {
         len: usize,
         limit: usize,
     },
+    /// E20: a v1 identifier longer than [`MAX_IDENTIFIER_BYTES`].  Carries
+    /// the length, not the name, so the diagnostic stays small.
+    IdentifierTooLong {
+        len: usize,
+        limit: usize,
+    },
 }
 
 /// Semantic checking error with source span.
@@ -285,6 +297,11 @@ impl fmt::Display for CheckerError {
             CheckerErrorKind::NotYetImplemented(name) => write!(
                 f,
                 "{}: reserved built-in `{name}` is not yet implemented in this version",
+                self.code
+            ),
+            CheckerErrorKind::IdentifierTooLong { len, limit } => write!(
+                f,
+                "{}: an identifier of {len} bytes is longer than the {limit} bytes a v1 document allows",
                 self.code
             ),
             kind => write!(f, "{}: {:?}", self.code, kind),
@@ -581,6 +598,11 @@ impl<'a> Checker<'a> {
 
     /// Primary entry point: perform all checking passes.
     pub fn check(mut self) -> Result<CheckedWarrantModule, CheckerError> {
+        // Pass 0 (v1 only, E20): no identifier longer than 128 bytes.
+        if self.file.version == Version::V1 {
+            check_identifier_lengths(self.file)?;
+        }
+
         // Pass 1: Catalog declarations into namespaces and detect duplicates
         self.catalog_declarations()?;
 
@@ -3775,6 +3797,246 @@ fn has_symbolic_width(t: &TypeExpr<'_>) -> bool {
         TypeExpr::Tuple { elems, .. } => elems.iter().any(has_symbolic_width),
         TypeExpr::Named { .. } => false,
     }
+}
+
+// ── Pass 0 (v1): the identifier cap (VER04k section 9.1, E20) ─────────────
+//
+// Every identifier of a v1 document is at most `MAX_IDENTIFIER_BYTES` (128)
+// bytes.  Why a cap, when the data meter already charges the names a value
+// stores (E20)?  Because a name is copied into more places than values: into
+// diagnostics, into generated evidence source, into every lane's corpus.  The
+// cap is defence in depth, and the same 128 bytes the binding parser allows a
+// path segment, so a name that a binding can splice is a name a document can
+// declare.
+//
+// The pass visits *every* identifier the parser kept, declared or merely
+// mentioned, before any other pass looks at the document:
+//
+// ```text
+//   declarations   module, model, alias, error and its cases, op and its static
+//                  and ordinary parameters, record, variant, constructor,
+//                  field, example, claim, labels, bound and its rows, input,
+//                  assumptions, vectors and its columns
+//   types          named types, a `Result`'s error name, symbolic widths
+//   expressions    every segment of a reference, projection fields, symbolic
+//                  widths, quantifier binders
+//   patterns       constructor names, arm binders
+// ```
+//
+// So an over-long *reference* is refused before it is resolved, and the
+// diagnostic is the same whether or not the name was ever declared.  The walk
+// is linear in the size of the tree the parser built (the parser's node and
+// depth limits bound both), so it charges no checker work: a document that
+// checked before checks with the same work count now.  A v0 document is not
+// visited at all; its names stay unbounded, as they always were.
+
+/// Refuse `name` if it is longer than [`MAX_IDENTIFIER_BYTES`].
+fn ident_ok(name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
+    if name.len() > MAX_IDENTIFIER_BYTES {
+        return Err(CheckerError {
+            code: DiagnosticCode::W0602,
+            kind: CheckerErrorKind::IdentifierTooLong {
+                len: name.len(),
+                limit: MAX_IDENTIFIER_BYTES,
+            },
+            span,
+        });
+    }
+    Ok(())
+}
+
+/// Every segment of a dotted name (`E.CASE`, `x.f.g`, `op.param`).
+fn ident_qname(name: &QualifiedName<'_>) -> Result<(), CheckerError> {
+    name.segments
+        .iter()
+        .try_for_each(|seg| ident_ok(seg, name.span))
+}
+
+fn ident_width(width: &Width<'_>, span: (usize, usize)) -> Result<(), CheckerError> {
+    match width {
+        Width::Named(n) => ident_ok(n, span),
+        Width::Literal(_) => Ok(()),
+    }
+}
+
+fn ident_type(ty: &TypeExpr<'_>) -> Result<(), CheckerError> {
+    match ty {
+        TypeExpr::Bytes { width, span } => width.as_ref().map_or(Ok(()), |w| ident_width(w, *span)),
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => ident_type(inner),
+        TypeExpr::Result {
+            ok_type,
+            err_name,
+            span,
+        } => {
+            ident_ok(err_name, *span)?;
+            ident_type(ok_type)
+        }
+        TypeExpr::Named { name, span } => ident_ok(name, *span),
+        TypeExpr::Tuple { elems, .. } => elems.iter().try_for_each(ident_type),
+    }
+}
+
+fn ident_param(p: &crate::parser::Parameter<'_>) -> Result<(), CheckerError> {
+    ident_ok(p.name, p.span)?;
+    ident_type(&p.param_type)?;
+    p.refinement.as_ref().map_or(Ok(()), ident_expr)
+}
+
+fn ident_fields(fields: &[FieldDecl<'_>]) -> Result<(), CheckerError> {
+    fields.iter().try_for_each(|f| {
+        ident_ok(f.name, f.span)?;
+        ident_type(&f.ty)
+    })
+}
+
+/// A pattern's constructor names and binders (a binder is a one-segment
+/// `Ctor` without arguments, so both carry the name's own span).
+fn ident_pattern(pat: &Pattern<'_>) -> Result<(), CheckerError> {
+    match pat {
+        Pattern::None | Pattern::Wild | Pattern::Bool(_) => Ok(()),
+        Pattern::Some(inner) | Pattern::Ok(inner) | Pattern::Err(inner) => ident_pattern(inner),
+        Pattern::Tuple(items) => items.iter().try_for_each(ident_pattern),
+        Pattern::Ctor { name, args } => {
+            ident_qname(name)?;
+            args.iter().try_for_each(ident_pattern)
+        }
+    }
+}
+
+fn ident_expr(expr: &Expression<'_>) -> Result<(), CheckerError> {
+    match expr {
+        Expression::Quantified { binders, body, .. } => {
+            binders.iter().try_for_each(ident_param)?;
+            ident_expr(body)
+        }
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            ident_expr(condition)?;
+            ident_expr(then_branch)?;
+            ident_expr(else_branch)
+        }
+        Expression::Match { target, arms, .. } => {
+            ident_expr(target)?;
+            arms.iter().try_for_each(|arm| {
+                ident_pattern(&arm.pattern)?;
+                ident_expr(&arm.body)
+            })
+        }
+        Expression::Binary { left, right, .. } => {
+            ident_expr(left)?;
+            ident_expr(right)
+        }
+        Expression::Unary { operand, .. } => ident_expr(operand),
+        Expression::Grouped { inner, .. } => ident_expr(inner),
+        Expression::Literal { .. } => Ok(()),
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            elements.iter().try_for_each(ident_expr)
+        }
+        Expression::Reference {
+            name,
+            widths,
+            args,
+            span,
+        } => {
+            ident_qname(name)?;
+            widths.iter().try_for_each(|w| ident_width(w, *span))?;
+            args.iter().flatten().try_for_each(ident_expr)
+        }
+        Expression::Project { base, key, span } => {
+            if let ProjKey::Field(f) = key {
+                ident_ok(f, *span)?;
+            }
+            ident_expr(base)
+        }
+    }
+}
+
+/// Pass 0 for a v1 document: refuse the first identifier over the cap.
+fn check_identifier_lengths(file: &WarrantFile<'_>) -> Result<(), CheckerError> {
+    ident_ok(file.name, file.span)?;
+    for decl in &file.declarations {
+        match decl {
+            Declaration::Model(m) => {
+                ident_ok(m.name, m.span)?;
+                m.params.iter().try_for_each(ident_param)?;
+                ident_type(&m.target_type)?;
+                m.body.as_ref().map_or(Ok(()), ident_expr)?;
+            }
+            Declaration::Error(e) => {
+                ident_ok(e.name, e.span)?;
+                e.variants.iter().try_for_each(|v| ident_ok(v, e.span))?;
+            }
+            Declaration::Op(op) => {
+                ident_ok(op.name, op.span)?;
+                op.static_params.iter().try_for_each(|sp| {
+                    ident_ok(sp.name, sp.span)?;
+                    ident_ok(sp.type_name, sp.span)
+                })?;
+                op.params.iter().try_for_each(ident_param)?;
+                ident_type(&op.return_type)?;
+            }
+            Declaration::Example(e) => {
+                ident_ok(e.name, e.span)?;
+                ident_expr(&e.body)?;
+            }
+            Declaration::Claim(c) => {
+                ident_ok(c.name, c.span)?;
+                ident_expr(&c.body)?;
+            }
+            Declaration::Assumptions(AssumptionsDecl::Platform { rows, .. }) => {
+                rows.iter().try_for_each(ident_qname)?;
+            }
+            Declaration::Assumptions(AssumptionsDecl::Environment { rows, .. }) => {
+                rows.iter().try_for_each(|r| {
+                    ident_ok(r.name, r.span)?;
+                    ident_expr(&r.expr)
+                })?;
+            }
+            Declaration::Labels(l) => {
+                ident_ok(l.name, l.span)?;
+                l.rows.iter().try_for_each(|r| ident_qname(&r.name))?;
+            }
+            Declaration::Input(i) => {
+                ident_qname(&i.target)?;
+                i.rejections.iter().try_for_each(|r| {
+                    ident_expr(&r.condition)?;
+                    ident_qname(&r.error_variant)
+                })?;
+                i.ensures.iter().try_for_each(|n| ident_ok(n, i.span))?;
+            }
+            Declaration::Bound(b) => {
+                ident_ok(b.name, b.span)?;
+                b.rows.iter().try_for_each(|r| {
+                    ident_ok(r.name, r.span)?;
+                    ident_expr(&r.bound)
+                })?;
+            }
+            Declaration::Record(r) => {
+                ident_ok(r.name, r.span)?;
+                ident_fields(&r.fields)?;
+            }
+            Declaration::Variant(v) => {
+                ident_ok(v.name, v.span)?;
+                v.ctors.iter().try_for_each(|c| {
+                    ident_ok(c.name, c.span)?;
+                    ident_fields(&c.fields)
+                })?;
+            }
+            Declaration::Vectors(v) => {
+                ident_ok(v.name, v.span)?;
+                v.columns.iter().try_for_each(|c| {
+                    ident_ok(c.name, c.span)?;
+                    ident_type(&c.ty)
+                })?;
+                ident_expr(&v.holds)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 fn type_expr_span(ty: &TypeExpr<'_>) -> (usize, usize) {
