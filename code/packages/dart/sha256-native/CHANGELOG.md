@@ -1,5 +1,11 @@
 # Changelog — coding_adventures_sha256_native
 
+## Unreleased
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through `tools\run-tests.ps1` (builds the Rust cdylib, points `dart:ffi` at the built DLL via the package's `*_NATIVE_PATH` variable, then `dart pub get` and `dart test`), mirroring `tools/run-tests.sh`, instead of skipping.
+
 ## 0.1.0 — 2026-07-11
 
 ### Added
