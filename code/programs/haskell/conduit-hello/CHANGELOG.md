@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed
+
+- Windows now builds conduit-capi with the shared
+  `code/scripts/stage-conduit-capi-windows.ps1` helper and runs the Cabal tests
+  through `tools\run-tests.ps1`, instead of skipping. `BUILD_windows` was
+  replaced to call the script; `tools/run-tests.ps1` stages the DLL and import
+  library in a conduit-hello-specific directory.
+
 ### Fixed
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir
