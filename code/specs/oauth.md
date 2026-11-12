@@ -1638,6 +1638,19 @@ available Name rules remain incomplete for RFC 5280 Name equality, and binding
 does not authenticate any link, validate certificate roles or a complete path,
 apply anchor constraints, check revocation, perform TLS or HTTP, authorize OAuth
 transport, or open a network connection.
+A distinct policy-backed role-policy follow-up consumes that complete
+Name-policy-backed reviewed-terminal evidence together with certificate-wide
+role-policy evidence. It fails closed unless the role evidence retains the
+identical decoded reviewed-root object and authorizes that object as an issuing
+CA, then retains the complete Name-policy-backed construction, reviewed-root
+selection, critical-extension recognition, and role proof in one non-copyable
+result. Generic reviewed-terminal evidence cannot produce this stronger result,
+and neither a byte-equal independent decode nor end-entity role evidence can be
+substituted. This provenance-preserving composition still does not define
+complete RFC 5280 Name equality, authenticate a path link, validate the anchor
+self-signature or algorithm, apply anchor constraints, check time or
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate

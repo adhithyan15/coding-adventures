@@ -6,6 +6,23 @@ documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-11-12
+
+### Added
+
+- Added a distinct issuing-CA role-policy binder for complete policy-backed
+  reviewed-terminal evidence.
+- Added non-copyable evidence retaining the exact Name-policy-backed
+  construction, reviewed-root selection, and certificate-wide role policy.
+
+### Security
+
+- Policy-backed role binding rejects role evidence from a byte-equal
+  independent decode and rejects end-entity policy for the exact terminal.
+- Generic reviewed-terminal evidence cannot produce the stronger result, and
+  success grants no complete Name equality, path validation, revocation, TLS,
+  HTTP, OAuth, or network authority.
+
 ## [0.2.0] - 2026-11-12
 
 ### Added
