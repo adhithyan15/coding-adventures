@@ -96,11 +96,29 @@ Windows leg (the `barcode-2d` dependents `aztec-code`, `data-matrix`,
 `micro-qr`, `pdf417`, `qr-code` had no `BUILD_windows`), so convert a package's
 dependents in the same PR.
 
-Left as hand-written recipes for now (not mechanical): packages whose Unix
-`BUILD` installs a sibling with `cpanm .`, uses `mise`/`uname`, builds a Rust
-extension, or shells out (`tcp-client` fork, `content-addressable-storage`
-rename-over-existing, `zstd`, `ls00`, `process-manager`, `virtual-memory`,
-`rpc`).
+Batch 2 converts every remaining mechanical package (about 210, including the
+older hand-written recipes that ran a bare `perl`/`prove`, so there is one
+recipe shape) and checks mechanically that each `-Deps` list and `REM prereqs:`
+line equals the set of `../<name>` siblings in the package's Unix `BUILD`.
+
+`barcode-layout-1d` keeps its echo-skip for now: its package tree is pinned by the
+lane-evidence contract in `code/specs/fixtures/barcode-layout-1d-v1/targets.json`
+(`package_tree`, `verified_revision`, and the owner item's
+`implementation_revision` in `.claude/package-parity-loop-state.json`), so any
+change to it must re-run the lane's tests and update that evidence in the same
+PR. Its Windows run also showed a real portability bug (`File::Temp::tempfile()`
+dies with "Permission denied" in the runner's `%TEMP%`; `tempdir(CLEANUP => 1)`
+works), so it gets its own PR that fixes the test, converts the recipe and
+attests the evidence after the lane's tests pass.
+
+Still hand-written or skipped (tracked in W2/W4): `tcp-client` and
+`process-manager` (sockets, fork and signals need a Windows design), `barcode-1d`
+(its Unix `BUILD` stages the macOS-only Metal and PNG native extensions),
+`aes-modes` (`Makefile.PL`/`make test`), `der-asn1`, `der-tlv` and
+`x509-extension` (explicit-Strawberry compile checks that already pass), and the
+native extensions `conduit`, `irc-server-native`, `gf256_native`,
+`polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
+(Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
 
 ## Done
 

@@ -1,1 +1,2 @@
-perl -Ilib -I..\hash-map\lib -I..\hash-functions\lib t/00-load.t && perl -Ilib -I..\hash-map\lib -I..\hash-functions\lib t/01-hash-set.t
+REM prereqs: ../hash-map ../hash-functions
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps hash-map,hash-functions
