@@ -45,10 +45,10 @@ reviews_of: [AR-C02-maa, AR-C02-anta-anti]
 ## You'll want to know — The letters in this word
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-KAYFA-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* **ك** (*kāf*) and **ي** (*yāʾ*) you have written —
+**ك** (*kāf*) and **ي** (*yāʾ*) you have written —
 *kāf* in the writing set, *yāʾ* in **اسمي**. The last letter, **ف** (*fāʾ*, the
-*f*), is **new**; the writing track hasn't reached it yet, so read it for now and
-draw it later.
+*f*), is **new**; the writing track hasn't reached it yet. For now, hear its
+*f* sound. Its written shape can wait for a later lesson.
 
 Right to left: **ك · ي · ف** → *kay-fa*.
 
