@@ -96,6 +96,27 @@
       ]
     },
     {
+      "name": "rust/programs/closurec",
+      "rel_path": "code/programs/rust/closurec",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [
+        "code/specs/CV02-checked-bounded-provenance-graphs.md"
+      ],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
       "name": "rust/rng",
       "rel_path": "code/packages/rust/rng",
       "language": "rust",

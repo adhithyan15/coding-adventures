@@ -87,6 +87,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
@@ -146,7 +147,7 @@ func buildKilnLegacyGraph(packages []discovery.Package, repoRoot string) (*kilnL
 	}
 
 	for _, goos := range kilnGraphPlatforms {
-		platformPackages := packagesForPlatform(packages, goos)
+		platformPackages := kilnPackagesForPlatform(packages, goos)
 		graph, triggers, err := resolver.ResolveWithTestTriggersAgainst(platformPackages, platformPackages)
 		if err != nil {
 			return nil, fmt.Errorf("resolving %s graph: %w", goos, err)
@@ -181,11 +182,12 @@ func buildKilnLegacyGraph(packages []discovery.Package, repoRoot string) (*kilnL
 		}
 	}
 
+	inputsByPackage := repositoryInputsByPackage()
 	out := &kilnLegacyGraph{Schema: kilnGraphSchema, Packages: make([]kilnLegacyPackage, 0, len(packages))}
 	for _, pkg := range packages {
 		rel, err := filepath.Rel(repoRoot, pkg.Path)
 		if err != nil {
-			rel = pkg.Path
+			return nil, fmt.Errorf("package %s: path %s is not under %s: %w", pkg.Name, pkg.Path, repoRoot, err)
 		}
 		entry := kilnLegacyPackage{
 			Name:            pkg.Name,
@@ -207,16 +209,12 @@ func buildKilnLegacyGraph(packages []discovery.Package, repoRoot string) (*kilnL
 			}
 			entry.Deps[goos] = sortedUnique(deps[goos][pkg.Name])
 		}
-		// A repo-input entry belongs to the package it names (and, as in
-		// repositoryInputConsumersForChange, only when the language matches).
-		for _, consumer := range repositoryInputConsumers {
-			if consumer.name == pkg.Name && consumer.language == pkg.Language {
-				entry.RepoInputs = append(entry.RepoInputs, consumer.paths...)
-				entry.RepoInputGlobs = append(entry.RepoInputGlobs, consumer.globs...)
-				if len(consumer.paths) == 0 && len(consumer.globs) == 0 {
-					entry.RepoInputsUnknown = true
-				}
-			}
+		// Every selector relation that names this package (external
+		// fixtures, corpora, specs, repository guards); see external_inputs.go.
+		if in := inputsByPackage[pkg.Name]; in != nil {
+			entry.RepoInputs = append(entry.RepoInputs, in.paths...)
+			entry.RepoInputGlobs = append(entry.RepoInputGlobs, in.globs...)
+			entry.RepoInputsUnknown = in.unknown
 		}
 		entry.RepoInputs = sortedUnique(stringSet(entry.RepoInputs))
 		entry.RepoInputGlobs = sortedUnique(stringSet(entry.RepoInputGlobs))
@@ -244,8 +242,121 @@ func marshalKilnLegacyGraph(graph *kilnLegacyGraph) ([]byte, error) {
 	return append(data, '\n'), nil
 }
 
-// emitKilnLegacyGraph writes the export for packages to outputPath.
-func emitKilnLegacyGraph(packages []discovery.Package, repoRoot, outputPath string) int {
+// kilnPackagesForPlatform is packagesForPlatform for the export. The only
+// difference: a Starlark host package is NOT skipped. Its BuildCommands stay
+// Starlark-generated, but when the OS selects a different file (say a shell
+// BUILD_windows beside a Starlark BUILD) that file's directives, toolchains
+// and commands are what that OS runs, so they are read from it.
+func kilnPackagesForPlatform(packages []discovery.Package, goos string) []discovery.Package {
+	out := packagesForPlatform(packages, goos)
+	for i := range out {
+		pkg := &out[i]
+		if !pkg.IsStarlark {
+			continue
+		}
+		buildFile := discovery.GetBuildFileForPlatform(pkg.Path, goos)
+		if buildFile == "" {
+			continue
+		}
+		data, err := os.ReadFile(buildFile)
+		if err != nil {
+			continue
+		}
+		content := string(data)
+		pkg.ExtraToolchains = discovery.ExtraToolchainsForSnapshot(
+			map[string]string{filepath.Base(buildFile): content}, goos)
+		if filepath.Base(buildFile) == "BUILD" {
+			continue // the Starlark file itself: keep its evaluated targets
+		}
+		// A different (shell) file wins on this OS.
+		pkg.IsStarlark = false
+		pkg.DeclaredSrcs, pkg.DeclaredDeps = nil, nil
+		pkg.BuildContent = content
+		if commands := discovery.ReadLines(buildFile); len(commands) > 0 {
+			pkg.BuildCommands = commands
+		}
+	}
+	return out
+}
+
+// missingExternalConsumers names every {package, language} a selector relation
+// or repository guard refers to that discovery did not find. On the real
+// repository that is an error: a row naming a vanished package would export
+// silently without its inputs.
+func missingExternalConsumers(packages []discovery.Package) []string {
+	have := make(map[string]bool, len(packages))
+	for _, pkg := range packages {
+		have[pkg.Name] = true
+	}
+	var missing []string
+	for name := range repositoryInputsByPackage() {
+		if !have[name] {
+			missing = append(missing, name)
+		}
+	}
+	sort.Strings(missing)
+	return missing
+}
+
+// writeFileAtomically writes data next to path and renames it into place so a
+// reader never sees a partial export. A symlink at path is refused rather than
+// followed.
+func writeFileAtomically(path string, data []byte) error {
+	if info, err := os.Lstat(path); err == nil {
+		if info.Mode()&os.ModeSymlink != 0 {
+			return fmt.Errorf("refusing to write through symlink %s", path)
+		}
+		if !info.Mode().IsRegular() {
+			return fmt.Errorf("%s exists and is not a regular file", path)
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	tmp, err := os.CreateTemp(filepath.Dir(path), ".kiln-graph-*.tmp")
+	if err != nil {
+		return err
+	}
+	tmpName := tmp.Name()
+	cleanup := func() { _ = os.Remove(tmpName) }
+	if _, err := tmp.Write(data); err != nil {
+		tmp.Close()
+		cleanup()
+		return err
+	}
+	if err := tmp.Sync(); err != nil {
+		tmp.Close()
+		cleanup()
+		return err
+	}
+	if err := tmp.Close(); err != nil {
+		cleanup()
+		return err
+	}
+	if err := os.Chmod(tmpName, 0o644); err != nil {
+		cleanup()
+		return err
+	}
+	if err := os.Rename(tmpName, path); err != nil {
+		cleanup()
+		return err
+	}
+	return nil
+}
+
+// emitKilnLegacyGraph writes the export for packages to outputPath. With
+// requireConsumers (the real CLI) a selector relation naming an undiscovered
+// package is an error; fixture-tree tests pass false.
+func emitKilnLegacyGraph(packages []discovery.Package, repoRoot, outputPath string, requireConsumers bool) int {
+	if len(packages) == 0 {
+		fmt.Fprintln(os.Stderr, "Error: no packages to export.")
+		return 1
+	}
+	if requireConsumers {
+		if missing := missingExternalConsumers(packages); len(missing) > 0 {
+			fmt.Fprintf(os.Stderr, "Error: repository-input relations name packages that were not discovered: %s\n", strings.Join(missing, ", "))
+			return 1
+		}
+	}
 	graph, err := buildKilnLegacyGraph(packages, repoRoot)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error building Kiln legacy graph: %v\n", err)
@@ -256,7 +367,7 @@ func emitKilnLegacyGraph(packages []discovery.Package, repoRoot, outputPath stri
 		fmt.Fprintf(os.Stderr, "Error encoding Kiln legacy graph: %v\n", err)
 		return 1
 	}
-	if err := os.WriteFile(outputPath, data, 0o644); err != nil {
+	if err := writeFileAtomically(outputPath, data); err != nil {
 		fmt.Fprintf(os.Stderr, "Error writing Kiln legacy graph %s: %v\n", outputPath, err)
 		return 1
 	}

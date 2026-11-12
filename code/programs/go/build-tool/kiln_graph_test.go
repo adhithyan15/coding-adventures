@@ -56,8 +56,10 @@ func kilnFixtureTree(t *testing.T) string {
 		"code/packages/rust/win-only/BUILD_windows": "cargo test\n",
 		"code/packages/rust/win-only/Cargo.toml":    "[package]\nname = \"win-only\"\nversion = \"0.1.0\"\n",
 
-		"code/packages/rust/rng/BUILD":      "cargo test\n",
-		"code/packages/rust/rng/Cargo.toml": "[package]\nname = \"rng\"\nversion = \"0.1.0\"\n",
+		"code/programs/rust/closurec/BUILD":      "cargo test\n",
+		"code/programs/rust/closurec/Cargo.toml": "[package]\nname = \"closurec\"\nversion = \"0.1.0\"\n",
+		"code/packages/rust/rng/BUILD":           "cargo test\n",
+		"code/packages/rust/rng/Cargo.toml":      "[package]\nname = \"rng\"\nversion = \"0.1.0\"\n",
 	}
 	for rel, content := range files {
 		full := filepath.Join(repoRoot, filepath.FromSlash(rel))
@@ -78,7 +80,7 @@ func kilnExportBytes(t *testing.T, repoRoot string) []byte {
 		t.Fatal(err)
 	}
 	out := filepath.Join(t.TempDir(), "graph.json")
-	if code := emitKilnLegacyGraph(packages, repoRoot, out); code != 0 {
+	if code := emitKilnLegacyGraph(packages, repoRoot, out, false); code != 0 {
 		t.Fatalf("emitKilnLegacyGraph exited %d", code)
 	}
 	data, err := os.ReadFile(out)
@@ -136,7 +138,7 @@ func TestKilnGraphSemantics(t *testing.T) {
 	for _, p := range graph.Packages {
 		byName[p.Name] = p
 	}
-	if len(byName) != 8 {
+	if len(byName) != 9 {
 		t.Fatalf("want every discovered package, got %d", len(byName))
 	}
 
@@ -182,6 +184,9 @@ func TestKilnGraphSemantics(t *testing.T) {
 
 	if got := byName["rust/rng"].RepoInputs; !reflect.DeepEqual(got, []string{"code/specs/fixtures/rng-v1"}) {
 		t.Errorf("rng repo_inputs = %v", got)
+	}
+	if got := byName["rust/programs/closurec"].RepoInputs; !reflect.DeepEqual(got, []string{closureProvenanceSpecPath}) {
+		t.Errorf("closurec repo_inputs = %v", got)
 	}
 	if byName["rust/core"].RepoInputs == nil || byName["rust/core"].DevDeps == nil {
 		t.Error("empty lists must be non-nil so they serialize as []")
