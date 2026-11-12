@@ -107,16 +107,22 @@ str("recipe") || bytes(canonical_recipe)
 
 The canonical expanded recipe of **this phase only**, as produced by
 expansion (KILN01). KILN02 treats it as opaque bytes. For a legacy action
-(KILN00 §15.1) it is the concatenation, framed, of the legacy files:
+(KILN00 §15.1, KILN03) it is the concatenation, framed, of the legacy files
+given, in the order given:
 
 ```
-canonical_recipe = str("legacy-shell") || list([ file(BUILD), file(BUILD_windows)? ])
-file(name)       = str(name) || bytes(contents)
+canonical_recipe = str("legacy-shell") || list([ file(name₁, contents₁), … ])
+file(name, c)    = str(name) || bytes(c)
 ```
 
-where `BUILD_windows` is included only if it exists. An existing but empty
-`BUILD_windows` is included (as an empty file) and so gives a different
-recipe from an absent one.
+KILN03 passes exactly one file: the BUILD variant the platform actually runs
+(`BUILD`, `BUILD_linux`, `BUILD_mac`, `BUILD_mac_and_linux` or
+`BUILD_windows`), under its own name. A file's name is part of the encoding,
+so the same text under two names gives two recipes, and an existing but
+empty file differs from an absent one. (Revision note, 2026-11-12: the first
+version of this section hard-coded the pair `BUILD` + optional
+`BUILD_windows`; the general list encodes those two cases to the same bytes,
+so the existing golden vectors are unchanged.)
 
 ### 3.5 `inputs` and 3.6 `reads`
 
@@ -210,6 +216,14 @@ Two things are deliberately **allowed**:
 - **`semantics_version`** belongs to KILN01 (expansion). It changes when the
   same BUILD and rule files would expand to different canonical recipes.
   Until KILN01 is accepted it is `0`, which only legacy actions use.
+- **Under semantics version 0** (legacy, KILN03 §3.5) a `consumed` entry's
+  `key` is a 32-byte **content digest** — a package's own digest, a
+  directory's tree digest, or a tool's source digest — not another action's
+  key, and its `phase` is the nominal `build`. Targets carry a `pkg:`,
+  `dir:` or `tool:` prefix so the three kinds never collide. The encoding is
+  unchanged; only the meaning of the 32 bytes differs, and because the
+  semantics version is in the preamble a legacy key can never equal a real
+  one. A golden vector pins this case.
 
 Bumping either version changes every key, which empties the ledger. That is
 deliberate: it is the only safe response to a change in meaning.
