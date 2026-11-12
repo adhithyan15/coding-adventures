@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"io"
 	"os"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -384,8 +385,9 @@ func TestReadVectorFile(t *testing.T) {
 	if MaxVectorFileBytes != 16<<20 {
 		t.Error("production limit must stay 16 MiB")
 	}
-	// Unreadable file: stat succeeds, open fails.
-	if os.Getuid() != 0 {
+	// Unreadable file: stat succeeds, open fails. Skipped on Windows, where
+	// mode 0o000 only sets the read-only attribute and os.Getuid() returns -1.
+	if runtime.GOOS != "windows" && os.Getuid() != 0 {
 		q := dir + "/noread.json"
 		os.WriteFile(q, []byte("x"), 0o000)
 		if _, err := ReadVectorFile(q); err == nil {
