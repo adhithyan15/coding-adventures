@@ -1,10 +1,8 @@
-# Windows: TypeScript native Node.js addons require node.lib to link against.
-# conduit_native_node declares the N-API symbols (napi_wrap, napi_unwrap, ...)
-# through node-bridge's extern "C" block and expects the host node process to
-# supply them at load time. ELF (Linux) allows that by default and macOS gets
-# `-undefined dynamic_lookup` from build.rs, but the Windows linker must resolve
-# every import at link time, so without node.lib the cdylib fails to link
-# (`rust-lld: error: undefined symbol: napi_wrap`). Providing node.lib on
-# Windows CI is not configured; this package is covered by the Linux and macOS
-# runners, matching typescript/irc-server-native.
-echo Skipping typescript/conduit on Windows — Node.js import library not configured for CI
+# Windows build: same steps as the Unix BUILD.  The N-API symbols are imported from
+# node.exe through node-bridge's raw-dylib table, so no node.lib is needed.
+cd ext\conduit_native_node && cargo build --release && cd ..\..
+node -e "const {execSync}=require('child_process'),p='ext/conduit_native_node/target/release/',os=process.platform,src=os==='darwin'?p+'libconduit_native_node.dylib':os==='win32'?p+'conduit_native_node.dll':p+'libconduit_native_node.so',fs=require('fs');if(!fs.existsSync(src))throw new Error('Built .node not found at '+src);fs.copyFileSync(src,'conduit_native_node.node');console.log('Copied',src,'-> conduit_native_node.node');"
+npm ci --quiet
+npx tsc --project tsconfig.json
+npx tsc --project tsconfig.test.json --noEmit
+npx vitest run
