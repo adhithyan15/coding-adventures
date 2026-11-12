@@ -716,6 +716,14 @@ only; they cannot authorize a passing lane result. WD-004a registers
 `python/ct-compare` as `planned`; no entry becomes active until its binding,
 runner, evidence manifest, and build routing exist.
 
+Registry path values are normalized, slash-separated repository-relative paths
+with no empty, `.` or `..` component, no backslash, and no symlink traversal.
+Every file path must be beneath its row's exact `package_root`; the evidence
+manifest path is exactly `<package_root>/evidence/test-manifest.json`. The
+registry's `consumer_count` equals the row count, and `active_consumer_count`
+equals the number of rows whose status is `active`. WD-004a parses these
+relationships but does not check path existence or attest a real active run.
+
 WD-004a closes the first parser profile to the exact keys shown in §8,
 including the nested `runner`, `toolchain`, and test-kind objects.
 `evidence_seed` is a canonical decimal string in `[0, 2^64-1]`; JSON numeric
@@ -963,12 +971,14 @@ VER00 publishing checklist (README, CHANGELOG, BUILD/BUILD_windows,
 ### 13.2 Order
 
 Phase 1 uses lanes that have a toolchain in CI *and* a `ct-compare` port
-today. The Rust lane migrates its manifest to the new schema in step 0 so the
-checker has one code path.
+today. WD-004a parses the new lane schema independently while the existing
+Rust loader continues to consume `warrant-test-evidence-v1`. The Rust lane's
+manifest migration and any Rust-only legacy acceptance window are deferred to
+WD-004b, which must define the transition before report integration.
 
 | Step | Lane | ct-compare port | Why this position | Per-lane runner notes | Gate beyond §13.1 |
 |---|---|---|---|---|---|
-| 0 | rust | yes (reference) | owns the compiler; emits `corpus.json`; manifest schema migration | already has generated suites; add `gen_corpus` | rust runner consumes the same corpus (a *second* implementation of the check; proves the Rust compiler's generators agree with its corpus) |
+| 0 | rust | yes (reference) | owns the compiler; emits `corpus.json`; legacy manifest remains on the Rust-only loader pending WD-004b | already has generated suites; add `gen_corpus` | rust runner consumes the same corpus (a *second* implementation of the check; proves the Rust compiler's generators agree with its corpus) |
 | 1 | python | yes | stdlib only; arbitrary-precision ints; fastest to write and review; hosts `warrant_corpus_oracle.py`'s sibling | `hashlib`; closures | first lane: its runner conformance fixture is the template for every other lane |
 | 2 | typescript | yes | TF01a bootstrap exists; BigInt for U64 | `node:crypto` | layer B first (VER05a/VER06b exist) |
 | 3 | go | yes | stdlib `testing`, `crypto/sha256`, `math/bits`; fast enumeration | `(value, error)` normalisation | exhaustive runtime budget set from here |

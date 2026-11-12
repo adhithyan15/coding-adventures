@@ -32,7 +32,7 @@
     },
     "file_path": {
       "type": "string",
-      "pattern": "^code/packages/[a-z]+/[a-z0-9-]+/[A-Za-z0-9_.@+/-]+$"
+      "pattern": "^code/packages/[a-z]+/[a-z0-9-]+/(?:[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*(?:/[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*)*)$"
     },
     "consumer": {
       "type": "object",
