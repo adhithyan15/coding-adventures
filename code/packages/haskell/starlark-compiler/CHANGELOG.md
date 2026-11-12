@@ -2,6 +2,11 @@
 
 ## Unreleased — 2026-10-25
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
+
 ### Fixed
 
 - Scoped Darwin Cabal execution to Command Line Tools so the linker matches

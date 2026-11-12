@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
+
 ### Security
 
 - No code change: no allocation is sized from the header; the decoded length is checked against it. NOT RUN locally (toolchain unavailable in the review environment).

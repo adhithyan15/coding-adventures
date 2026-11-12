@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
+
 ### Security
 
 - decode stops once the declared length is reached (a hostile chain of tokens previously expanded quadratically through list appends before the final trim). Header validation was already strict (exact wire length). NOT RUN locally (toolchain unavailable in the review environment).
