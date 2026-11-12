@@ -76,6 +76,10 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_check_typeddata", false),
         ("rb_raise", false),
         ("rb_str_strlen", false),
+        // ruby-bridge reads nil/true through rb_eval_string. Without this entry
+        // the symbol stays unresolved under /FORCE:UNRESOLVED and the first
+        // call that touches nil or true jumps to address 0 (segfault).
+        ("rb_eval_string", false),
         ("rb_cObject", true),
         ("rb_eStandardError", true),
         ("rb_eArgError", true),
