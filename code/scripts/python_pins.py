@@ -111,6 +111,32 @@ class PinsError(Exception):
 # ---------------------------------------------------------------------------
 
 
+def reject_unsafe_requirement(spec: str, source: str) -> None:
+    """Refuse requirement strings that could steer `uv pip compile` elsewhere.
+
+    The requirement lines are written, one per line, into a requirements file
+    that uv parses in CI.  A requirement that smuggles in a newline, starts with
+    ``-`` (``--index-url ...``, ``--extra-index-url ...``), names a direct URL
+    (``pkg @ https://...``) or contains ``://`` would be read as a requirements
+    -file option or a non-registry source instead of a plain package, so it is
+    an error naming the offending manifest.
+    """
+
+    reasons = []
+    if "\n" in spec or "\r" in spec:
+        reasons.append("contains a line break")
+    if spec.lstrip().startswith("-"):
+        reasons.append("starts with '-' (looks like a requirements-file option)")
+    if " @ " in spec or re.search(r"@\s*\w+://", spec):
+        reasons.append("is a direct reference ('name @ url')")
+    if "://" in spec:
+        reasons.append("contains a URL")
+    if reasons:
+        raise PinsError(
+            f"{source}: unsafe requirement {spec!r}: " + "; ".join(reasons) + "."
+        )
+
+
 class Requirements:
     """Requirement strings per normalised name, with where each came from.
 
@@ -124,6 +150,7 @@ class Requirements:
         self.sources: dict[str, set[str]] = {}
 
     def add(self, name: str, spec: str, source: str) -> None:
+        reject_unsafe_requirement(spec, source)
         self.specs.setdefault(name, set()).add(spec)
         self.sources.setdefault(name, set()).add(source)
 
@@ -332,6 +359,48 @@ def parse_pins(text: str) -> set[tuple[str, str]]:
     return pins
 
 
+# One pin line: `name==version`, optional ` ; marker`, optional trailing ` \`.
+PIN_BLOCK_LINE = re.compile(
+    r"^[A-Za-z0-9][A-Za-z0-9._-]*==[A-Za-z0-9][A-Za-z0-9._+!-]*"
+    r"(?: ; [^\\\r\n]+?)?(?: \\)?$"
+)
+HASH_LINE = re.compile(r"^    --hash=sha256:[0-9a-f]{64}(?: \\)?$")
+
+
+def validate_constraints_text(text: str) -> list[str]:
+    """Check a constraints file line by line; return problems (empty = ok).
+
+    The file is read by uv with authority, so beyond `name==version` pins and
+    `--hash=sha256:` continuations nothing may appear except comments and blank
+    lines: no `--index-url`, no URLs, no extra requirement-file options.  Every
+    pin must also carry at least one hash, or hash verification would be a no-op
+    for that package.
+    """
+
+    problems: list[str] = []
+    current: tuple[int, str] | None = None
+    hashes = 0
+
+    def close() -> None:
+        if current is not None and hashes == 0:
+            problems.append(f"line {current[0]}: pin {current[1]!r} has no hash.")
+
+    for number, line in enumerate(text.splitlines(), 1):
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        if HASH_LINE.match(line):
+            if current is None:
+                problems.append(f"line {number}: hash with no preceding pin.")
+            hashes += 1
+        elif PIN_BLOCK_LINE.match(line):
+            close()
+            current, hashes = (number, line.split("==")[0]), 0
+        else:
+            problems.append(f"line {number}: unexpected content {line!r}.")
+    close()
+    return problems
+
+
 # ---------------------------------------------------------------------------
 # Step 3: the generated files and the staleness check
 # ---------------------------------------------------------------------------
@@ -405,7 +474,12 @@ def check_one(
         return [f"{display} does not exist."]
     existing = parse_pins(constraint_file.read_text(encoding="utf-8"))
     pinned_names = {name for name, _ in existing}
-    problems: list[str] = []
+    problems: list[str] = [
+        f"{display}: {problem}"
+        for problem in validate_constraints_text(
+            constraint_file.read_text(encoding="utf-8")
+        )
+    ]
 
     # Completeness first.  uv lets an unlisted name float without a word, so a
     # name missing here is the dangerous failure and gets its own message.

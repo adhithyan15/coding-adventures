@@ -178,6 +178,79 @@ class DeriveRequirementsTests(unittest.TestCase):
         )
 
 
+class UnsafeRequirementTests(unittest.TestCase):
+    def reject(self, spec):
+        with self.assertRaises(python_pins.PinsError) as caught:
+            python_pins.Requirements().add("x", spec, "evil/pyproject.toml")
+        self.assertIn("evil/pyproject.toml", str(caught.exception))
+
+    def test_newline_injection_is_rejected(self):
+        self.reject("requests\n--extra-index-url https://evil.example/simple")
+
+    def test_carriage_return_is_rejected(self):
+        self.reject("requests\r--index-url x")
+
+    def test_leading_dash_is_rejected(self):
+        self.reject("--index-url=https://evil.example")
+
+    def test_direct_url_reference_is_rejected(self):
+        self.reject("requests @ https://evil.example/requests.whl")
+
+    def test_url_anywhere_is_rejected(self):
+        self.reject("requests@https://evil.example/x.whl")
+
+    def test_ordinary_requirement_is_accepted(self):
+        python_pins.Requirements().add(
+            "requests", "requests[socks]>=2 ; python_version >= '3.9'", "a"
+        )
+
+
+class ValidateConstraintsTests(unittest.TestCase):
+    def test_well_formed_file_passes(self):
+        text = (
+            "# header\n\nfoo==1.0 \\\n" + GOOD_HASH + " \\\n" + GOOD_HASH + "\n"
+            "bar==2 ; sys_platform == 'win32' \\\n" + GOOD_HASH + "\n"
+        )
+        self.assertEqual(python_pins.validate_constraints_text(text), [])
+
+    def test_url_line_is_rejected(self):
+        problems = python_pins.validate_constraints_text(
+            "foo==1 \\\n" + GOOD_HASH + "\nhttps://evil.example/foo.whl\n"
+        )
+        self.assertTrue(any("unexpected content" in p for p in problems))
+
+    def test_index_option_is_rejected(self):
+        problems = python_pins.validate_constraints_text(
+            "--index-url https://evil.example\n"
+        )
+        self.assertEqual(len(problems), 1)
+
+    def test_pin_without_hash_is_rejected(self):
+        problems = python_pins.validate_constraints_text(
+            "foo==1\nbar==2 \\\n" + GOOD_HASH + "\n"
+        )
+        self.assertEqual(problems, ["line 1: pin 'foo' has no hash."])
+
+    def test_trailing_pin_without_hash_is_rejected(self):
+        problems = python_pins.validate_constraints_text("foo==1\n")
+        self.assertEqual(len(problems), 1)
+
+    def test_short_hash_is_rejected(self):
+        problems = python_pins.validate_constraints_text(
+            "foo==1 \\\n    --hash=sha256:abc\n"
+        )
+        self.assertTrue(problems)
+
+    def test_check_one_surfaces_file_format_problems(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            path = Path(scratch) / "c.txt"
+            path.write_text("pytest==9.0\n", encoding="utf-8")
+            problems = python_pins.check_one(
+                requirements_of("pytest"), path, Path("c.txt"), FakeUv("pytest==9.0\n")
+            )
+        self.assertTrue(any("has no hash" in p for p in problems), problems)
+
+
 class ParsePinsTests(unittest.TestCase):
     def test_reads_names_versions_markers_and_ignores_hashes(self):
         text = (
@@ -209,6 +282,9 @@ class FakeUv:
         return self.output
 
 
+GOOD_HASH = "    --hash=sha256:" + "a" * 64
+
+
 def requirements_of(*names):
     requirements = python_pins.Requirements()
     for name in names:
@@ -233,7 +309,7 @@ class CheckOneTests(unittest.TestCase):
 
     def test_up_to_date_file_passes_and_hash_lists_are_ignored(self):
         problems = self.check(
-            "pytest==9.0 \\\n    --hash=sha256:aa\n",
+            "pytest==9.0 \\\n" + GOOD_HASH + "\n",
             ["pytest"],
             "pytest==9.0\n",
         )
@@ -263,7 +339,8 @@ class CheckOneTests(unittest.TestCase):
 
     def test_extra_pin_no_longer_required_is_reported(self):
         problems = self.check(
-            "pytest==9.0\nold==1\n", ["pytest"], "pytest==9.0\n"
+            "pytest==9.0 \\\n" + GOOD_HASH + "\nold==1 \\\n" + GOOD_HASH + "\n",
+            ["pytest"], "pytest==9.0\n"
         )
         self.assertEqual(problems, ["constraints.txt: old==1 is no longer needed."])
 
