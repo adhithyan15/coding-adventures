@@ -674,11 +674,17 @@ about 200 bytes; tens of thousands fit in a few megabytes.
 
 ### 10.2 Trust
 
-- Only runs the `Host` reports as **trusted** (§13) write to the shared
+- Only runs the `Host` reports as **trusted** (§13) write to the **shared**
   ledger. On GitHub, trusted means exactly: the ref is the default branch
   **and** the event is `push` or `schedule`. `workflow_dispatch` is trusted
   only on the default ref; `pull_request`, `pull_request_target` and
-  merge-queue refs are never trusted.
+  merge-queue refs are never trusted. The default branch is read from the
+  GitHub-generated event payload (`GITHUB_EVENT_PATH`,
+  `repository.default_branch`); `KILN_DEFAULT_BRANCH` may only narrow it
+  (a mismatch is untrusted). Any missing or unreadable value is untrusted. A
+  developer machine is never trusted for the shared ledger; it writes only its
+  own local ledger directory. The answer is only meaningful in a job that has
+  run no untrusted code (§9.6).
 - Pull-request runs **read** the shared ledger and never write to it. A PR
   that edits its workflow to fake passes can only skip its own checks — which
   is possible today anyway — and main re-checks every key it has not recorded
@@ -891,10 +897,11 @@ type Source interface {
 type Host interface {
     Identity() Identity   // revision, branch, event, run id, OS, arch
     ImageID() string      // OS version + runner image id, for the host fingerprint (§8)
-    Trusted() bool        // may this run write to the shared ledger? (§10.2)
+    Trusted() bool        // may this run write to the SHARED ledger? (§10.2); Local: false
+    WritesLocalLedger() bool // may it write the local ledger directory? (Local only)
     Shard() (index, count int)
-    WorkDir() string      // where work roots go
-    Report(Event)         // summaries, annotations, log groups
+    WorkDir() (string, error) // fresh private (0700) dir for work roots; no fallback
+    Report(Event)         // summaries, annotations, log groups (text is sanitised)
 }
 
 // Ledger stores pass records. Hashes only.
@@ -912,9 +919,29 @@ type Tools interface {
 | Interface | Implementations at launch | Later |
 |---|---|---|
 | `Source` | Git (`ls-files`, `diff --name-only`, `rev-parse`); **plain folder** (walks the tree with a `.kilnignore`; `Changed` returns unknown) | Perforce, others |
-| `Host` | GitHub Actions; Local | Any CI |
+| `Host` | GitHub Actions; Local; Untrusted (fail-closed fallback) | Any CI |
 | `Ledger` | Directory of record files (used directly locally; on GitHub the directory is restored and saved by `actions/cache` in one composite action) | Object store, HTTP |
 | `Tools` | Managed (download pinned archive, verify SHA-256, unpack into a tool store); Host (use what is installed after checking the version) | — |
+
+**Host detection.** `Detect` returns GitHub Actions only when
+`GITHUB_ACTIONS` is exactly `true`. If any other CI indicator is present
+(`CI`, any `GITHUB_*` or `RUNNER_*` variable, `GITHUB_ACTIONS` in another form)
+it returns the **Untrusted** host, which can write neither ledger. Only an
+environment with no CI indicators is Local, so a CI run is never mistaken for
+a laptop.
+
+**Source paths.** Every path a `Source` returns is repo-relative,
+`/`-separated and valid under KILN02 §3.5, and additionally contains no `\`,
+no `:` and no Windows reserved device name (`CON`, `PRN`, `AUX`, `NUL`,
+`COM1-9`, `LPT1-9`, any extension, any case), so listings and keys agree on
+every OS. This policy lives in the `Source` layer; the key encoding stays
+permissive. Opens never follow a symlink out of the root.
+
+**Plain-folder ignore file.** `.kilnignore` holds one glob per line (`#`
+comments, blank lines skipped), matched against the whole repo-relative path:
+`*` and `?` stay inside a segment, `**` as a whole segment spans directories;
+no negation. A path is ignored if it or any parent directory matches. Limits:
+64 KiB, 1000 patterns, 64 segments per pattern. `.git` is always skipped.
 
 `Changed()` is used only to explain results ("this PR changed
 `parser/src/lexer.rs`, so these 139 targets have new keys") and to skip
