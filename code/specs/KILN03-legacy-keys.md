@@ -378,3 +378,40 @@ kiln explain --plan <plan.json> <package>
   its key is still computed.
 - A dirty tree is refused.
 - Determinism: two runs produce byte-identical plans.
+
+## 11. Implementation decisions (7c-1)
+
+Points the first implementation had to settle; every other implementation
+must match them.
+
+1. **Digest encodings.** A package's own digest `D(p)` and every tree or glob
+   digest is SHA-256 of the full KILN02 section encoding
+   `str("inputs") || list(entries)`. The plan's component digests use the
+   section encodings of `reads` and `consumed` from the key encoder.
+2. **Class precedence.** The temporary `m1-incomplete:*` reasons (present
+   until escape scans and tool/env identity land) do not count when choosing
+   between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
+   `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
+   unpinned closure language gives `unpinned`; `cacheable` needs no reason at
+   all, so it is unreachable while any `m1-incomplete` reason remains.
+3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
+   an empty key and reason `no-build-file:<os>`, but remains a closure member
+   for others.
+4. **Missing read paths.** A read path that names neither a file nor a
+   directory is encoded as `dir:<path>` with the empty-tree digest, so the
+   path appearing later changes the key.
+5. **Boundary roots.** A descendant root includes the root itself;
+   `excluded_roots` removes a root and everything under it.
+6. **Policy files are required.** A missing or malformed `pinned.json`,
+   `never.json` or boundary file is an error, every `never.json` name must be
+   a package in the graph, and lists must be sorted.
+7. **Build-tool digest** follows `go.mod` `replace` targets transitively (with
+   a cycle guard) and includes `go.work`, `go.work.sum` and `vendor/` when
+   present.
+8. **Executable bit.** The Git `Source` takes it from the index mode; the
+   plain-folder `Source` from the file system (always `0` on Windows). Plans
+   from the two adapters agree on Unix; on Windows only the Git adapter is
+   authoritative.
+9. **Plan schema** is `kiln-legacy-plan/1`: `os`, `arch`, `host`, `packages`
+   sorted by name, and `histogram` (named reasons grouped by prefix, except
+   `unpinned:<language>`).
