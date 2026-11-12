@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Build uses the pinned toolchain.** `BUILD` and `BUILD_windows` call
+  `cargo` directly instead of `rustup run stable cargo`. CI now installs the
+  exact Rust release named in the root `mise.toml` rather than the floating
+  `stable` channel, so naming `stable` here would have run a different
+  compiler (or none) from the rest of the build.
+
 - **Windows test expectations.** Five `serial_usb_artifact` tests asserted
   Unix-formatted paths (`/`, no `.exe`) for a planner that correctly builds
   native paths, so they failed on Windows (backslash separators and `.exe`).
