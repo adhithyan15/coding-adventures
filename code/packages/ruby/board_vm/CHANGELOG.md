@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Tests: the Pico UF2 mount tests now expect the platform's native separator
+  before the volume label. The Rust discovery code returns `<root>\RPI-RP2` on
+  Windows while Ruby's `File.join` builds `<root>/RPI-RP2`, so four assertions
+  failed on Windows only (no production change; every assertion still checks
+  the full mount path).
+
 - Windows: the generated MSVC import library for the Ruby DLL now exports
   `rb_eval_string`. `ruby-bridge` obtains `nil`/`true` through it, so with the
   symbol missing (left unresolved by `/FORCE:UNRESOLVED`) the first native call

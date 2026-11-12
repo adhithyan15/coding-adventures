@@ -6,6 +6,14 @@ require "test_helper"
 module CodingAdventures
   module BoardVM
     class TestBoardVM < Minitest::Test
+      # The Rust discovery code appends the volume label with the platform's
+      # native separator, so on Windows a mount comes back as
+      # "<root>\\RPI-RP2" (root untouched) even though Ruby's File.join built
+      # "<root>/RPI-RP2".  Expect the native spelling of that last join.
+      def native_mount(root)
+        "#{root}#{File::ALT_SEPARATOR || File::SEPARATOR}RPI-RP2"
+      end
+
       def test_connect_yields_connection_without_flashing_by_default
         runner = FakeRunner.new
         yielded = nil
@@ -603,7 +611,7 @@ module CodingAdventures
           File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
           Dir.mkdir(File.join(root, "NOT-PICO"))
 
-          assert_equal [mount], BoardVM.pico_uf2_mounts(roots: [root])
+          assert_equal [native_mount(root)], BoardVM.pico_uf2_mounts(roots: [root])
         end
       end
 
@@ -614,7 +622,7 @@ module CodingAdventures
           File.write(File.join(mount, "INFO_UF2.TXT"), "UF2 Bootloader\nModel: Raspberry Pi RP2\n")
           File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
 
-          assert_equal mount, BoardVM.pico_uf2_mount(roots: [root])
+          assert_equal native_mount(root), BoardVM.pico_uf2_mount(roots: [root])
         end
       end
 
@@ -633,8 +641,8 @@ module CodingAdventures
               BoardVM.pico_uf2_mount(roots: [root_a, root_b])
             end
             assert_match(/Multiple Pico BOOTSEL UF2 mounts/, error.message)
-            assert_includes error.message, mount_a
-            assert_includes error.message, mount_b
+            assert_includes error.message, native_mount(root_a)
+            assert_includes error.message, native_mount(root_b)
           end
         end
       end
@@ -958,7 +966,7 @@ module CodingAdventures
             "--",
             "pico-uf2",
             "--image", "/tmp/board-vm-pico-w.uf2",
-            "--mount", mount
+            "--mount", native_mount(root)
           ], runner.calls.first[:argv]
         end
       end
