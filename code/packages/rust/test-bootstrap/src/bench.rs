@@ -728,7 +728,17 @@ pub fn percentile_sorted(sorted: &[f64], p: f64) -> f64 {
     // invariant `bootstrap_median_ci_95` and the result shape rely on.
     let lo = sorted[lower_idx];
     let hi = sorted[upper_idx];
-    (lo + (hi - lo) * weight).clamp(lo, hi)
+    let value = lo + (hi - lo) * weight;
+    // `f64::clamp` panics when lo > hi or either bound is NaN. The harness
+    // never produces either (finite timings, sorted with `total_cmp`), but
+    // this function is public, so a caller's unsorted or NaN input degrades to
+    // the unclamped value instead of panicking. `lo <= hi` is false for NaN,
+    // so this one comparison covers both cases.
+    if lo <= hi {
+        value.clamp(lo, hi)
+    } else {
+        value
+    }
 }
 
 /// Compute the median of an already-sorted slice of floats.
