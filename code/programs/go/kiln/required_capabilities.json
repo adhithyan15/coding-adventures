@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "go/kiln",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "`kiln verify-vectors <path>` reads the vector file named on the command line; the Source adapters read the source tree (through os.Root, never following symlinks out of it) and, for GitHub trust, the GitHub-generated event JSON at GITHUB_EVENT_PATH (size-capped)."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "The CLI prints its version and verification results."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "git",
+      "justification": "The Git Source runs the `git` binary (ls-files, rev-parse, diff) with an argument vector and never through a shell."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_*, RUNNER_TEMP, ImageOS, ImageVersion, KILN_*",
+      "justification": "The GitHub Host reads its identity, trust inputs and shard from the runner environment. The whole environment is forwarded to `git` only after credentials and every GIT_* variable are scrubbed."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "OS temp directory",
+      "justification": "The Local Host creates a private work directory under the OS temp dir."
+    }
+  ],
+  "justification": "Kiln's key encoder is pure computation; the CLI reads a vector file and prints results; the Source and Host adapters run git, read the CI environment and walk the source tree."
+}

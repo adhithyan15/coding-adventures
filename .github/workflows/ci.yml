@@ -3859,6 +3859,17 @@ jobs:
     # native-debug-info and aot-debug write DWARF for generated code.
     env:
       CARGO_PROFILE_DEV_DEBUG: line-tables-only
+      # Go may never edit go.mod/go.sum while building. This is already the
+      # default; it is spelled out so a stale manifest fails the build instead
+      # of being fixed in place. The Go BUILD files used to run `go mod tidy`,
+      # which rewrote manifests silently; they now run `go mod tidy -diff`,
+      # which exits non-zero if tidy would change anything.
+      #
+      # GOPROXY is deliberately NOT turned off: build-tool needs
+      # golang.org/x/text and ir-to-jvm-class-file (and its dependents)
+      # need golang.org/x/sys, neither of which has a local `replace`. Their
+      # go.sum files are the reviewed record of those downloads.
+      GOFLAGS: -mod=readonly
 
     steps:
       - name: Checkout
@@ -4321,6 +4332,18 @@ jobs:
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh libudev-dev
+
+      # wasm-leb128's VER08b runtime-capability gate (BUILD_linux runs it with
+      # RCG_STRICT=1) has an independent `strace` observer. With strace absent
+      # the strict gate FAILS (RCG013) rather than skipping -- correct, but it
+      # means the runner has to provide it. Linux only: the gate's jail
+      # (seccomp/Landlock) and its observer exist nowhere else, and macOS runs
+      # the plain BUILD, where the gate reports NOT-LIVE without failing.
+      - name: Install strace for the cargo runtime capability gate
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh strace
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'

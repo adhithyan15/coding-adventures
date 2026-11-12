@@ -1,1 +1,6 @@
-echo C# Conduit uses P/Invoke against the Rust cdylib — skipping on Windows (requires cross-compile setup for libconduit_capi.dll)
+# Windows: build conduit-capi (Rust) with the shared helper, point
+# CONDUIT_CAPI_PATH at the staged conduit_capi.dll and run the same dotnet test
+# as the Unix recipe (C# Conduit calls the DLL by P/Invoke).
+# Each BUILD line runs in its own cmd shell, so the whole recipe is one line.
+# build-tool: deps=rust/conduit-capi
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

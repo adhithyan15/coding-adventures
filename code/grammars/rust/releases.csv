@@ -1,0 +1,175 @@
+# LANG84 release inventory: Rust (code/specs/LANG84-grammar-driven-versioned-frontends.md, RS01).
+# Retrieved 2026-11-12: `git ls-remote --tags https://github.com/rust-lang/rust` listed 165 tags; 158 are rows and 7 are excluded below.
+# Rows by channel: alpha 2, beta 1, final 112, patch 43 (the 42 1.x patches and 0.3.1).
+# source_ref is the upstream tag URL; source_sha is the commit the tag names (peeled for annotated tags).
+# Release IDs are the upstream tag names, except 0.3.1 (tag release-0.3.1). They are never compared as semantic versions.
+# date: the `Version X (YYYY-MM-DD)` heading of RELEASES.md (date_source releases-md). 0.3.1 is not in RELEASES.md and is dated 2012-07? from its tag (tag-commit); 1.0.0-beta (2015-04-03) is not in RELEASES.md and is dated from the release announcement (announcement). See README.md.
+# predecessor/lineage: 1.x minor: previous X.Y.0 (branch-point); 1.x patch: X.Y.(z-1), or X.Y.0 for the first patch (line); 1.0.0-alpha: 0.12.0; 0.3.1: 0.3 (line). Pre-1.0 finals branch from the previous final.
+# editions: 2015@1.0.0-alpha 2018@1.31.0 2021@1.56.0 2024@1.85.0
+# 1.100.0 is listed in RELEASES.md (2026-11-12) but has no tag yet, so it is not a row (RS01 decision Q13).
+# excluded: release-0.1 16e4369fe3b5f00aa3cdc584a4e41c51c0d3ca8a -- alias: points at exactly the same commit as tag 0.1, which is the row
+# excluded: release-0.2 0622a74c48a708aec28d25964f4e9b4489580bc7 -- alias: points at exactly the same commit as tag 0.2, which is the row
+# excluded: release-0.3 2f32a1581f522e524009138b33b1c7049ced668d -- alias: points at exactly the same commit as tag 0.3, which is the row
+# excluded: release-0.4 39c0d3591e0326874b7263a621ce09ecd64f0eb2 -- alias: points at exactly the same commit as tag 0.4, which is the row
+# excluded: release-0.5 8b98e5a296d95c5e832db0756828e5bec31c6f50 -- alias: points at exactly the same commit as tag 0.5, which is the row
+# excluded: release-0.6 00dbbd01c2aee72982b3e0f9511ae1d4428c3ba9 -- alias: points at exactly the same commit as tag 0.6, which is the row
+# excluded: release-0.7 a2db7c15ce9f586164cabb15d83fb3f6bbeb3cf5 -- alias: points at exactly the same commit as tag 0.7, which is the row
+release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile,date_source,lineage,editions
+0.1,2012-01-20,final,https://github.com/rust-lang/rust/tree/0.1,16e4369fe3b5f00aa3cdc584a4e41c51c0d3ca8a,,pending,none,-,-,-,-,releases-md,first,-
+0.2,2012-03-29,final,https://github.com/rust-lang/rust/tree/0.2,0622a74c48a708aec28d25964f4e9b4489580bc7,0.1,pending,none,-,-,-,-,releases-md,branch-point,-
+0.3,2012-07-12,final,https://github.com/rust-lang/rust/tree/0.3,2f32a1581f522e524009138b33b1c7049ced668d,0.2,pending,none,-,-,-,-,releases-md,branch-point,-
+0.3.1,2012-07?,patch,https://github.com/rust-lang/rust/tree/release-0.3.1,33a055638c637d2f63d1d7a18b235c93c08d10b8,0.3,pending,none,-,-,-,-,tag-commit,line,-
+0.4,2012-10-15,final,https://github.com/rust-lang/rust/tree/0.4,39c0d3591e0326874b7263a621ce09ecd64f0eb2,0.3,pending,none,-,-,-,-,releases-md,branch-point,-
+0.5,2012-12-21,final,https://github.com/rust-lang/rust/tree/0.5,8b98e5a296d95c5e832db0756828e5bec31c6f50,0.4,pending,none,-,-,-,-,releases-md,branch-point,-
+0.6,2013-04-03,final,https://github.com/rust-lang/rust/tree/0.6,00dbbd01c2aee72982b3e0f9511ae1d4428c3ba9,0.5,pending,none,-,-,-,-,releases-md,branch-point,-
+0.7,2013-07-03,final,https://github.com/rust-lang/rust/tree/0.7,a2db7c15ce9f586164cabb15d83fb3f6bbeb3cf5,0.6,pending,none,-,-,-,-,releases-md,branch-point,-
+0.8,2013-09-26,final,https://github.com/rust-lang/rust/tree/0.8,8a4f0fa6c518eb634687abe9659601d9d2a61899,0.7,pending,none,-,-,-,-,releases-md,branch-point,-
+0.9,2014-01-09,final,https://github.com/rust-lang/rust/tree/0.9,7613b15fdbbb9bf770a2c731f4135886b0ff3cf0,0.8,pending,none,-,-,-,-,releases-md,branch-point,-
+0.10,2014-04-03,final,https://github.com/rust-lang/rust/tree/0.10,46867cc3e4ddcbb1d359a315805de00094dacaf9,0.9,pending,none,-,-,-,-,releases-md,branch-point,-
+0.11.0,2014-07-02,final,https://github.com/rust-lang/rust/tree/0.11.0,aa1163b92de7717eb7c5eba002b4012e0574a7fe,0.10,pending,none,-,-,-,-,releases-md,branch-point,-
+0.12.0,2014-10-09,final,https://github.com/rust-lang/rust/tree/0.12.0,ba4081a5a8573875fed17545846f6f6902c8ba8d,0.11.0,pending,none,-,-,-,-,releases-md,branch-point,-
+1.0.0-alpha,2015-01-09,alpha,https://github.com/rust-lang/rust/tree/1.0.0-alpha,44a287e6eb22ec3c2a687fc156813577464017f7,0.12.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.0.0-alpha.2,2015-02-20,alpha,https://github.com/rust-lang/rust/tree/1.0.0-alpha.2,522d09dfecbeca1595f25ac58c6d0178bbd21d7d,1.0.0-alpha,pending,none,-,-,-,-,releases-md,line,2015
+1.0.0-beta,2015-04-03,beta,https://github.com/rust-lang/rust/tree/1.0.0-beta,9854143cba679834bc4ef932858cd5303f015a0e,1.0.0-alpha.2,pending,none,-,-,-,-,announcement,line,2015
+1.0.0,2015-05-15,final,https://github.com/rust-lang/rust/tree/1.0.0,a59de37e99060162a2674e3ff45409ac73595c0e,1.0.0-beta,pending,none,-,-,-,-,releases-md,line,2015
+1.1.0,2015-06-25,final,https://github.com/rust-lang/rust/tree/1.1.0,35ceea3997c79a3b7562e89b462ab76af5b86b22,1.0.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.2.0,2015-08-07,final,https://github.com/rust-lang/rust/tree/1.2.0,082e4763615bdbe7b4dd3dfd6fc2210b7773edf5,1.1.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.3.0,2015-09-17,final,https://github.com/rust-lang/rust/tree/1.3.0,9a92aaf19a64603b02b4130fe52958cc12488900,1.2.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.4.0,2015-10-29,final,https://github.com/rust-lang/rust/tree/1.4.0,8ab8581f6921bc7a8e3fa4defffd2814372dcb15,1.3.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.5.0,2015-12-10,final,https://github.com/rust-lang/rust/tree/1.5.0,3d7cd77e442ce34eaac8a176ae8be17669498ebc,1.4.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.6.0,2016-01-21,final,https://github.com/rust-lang/rust/tree/1.6.0,c30b771ad9d44ab84f8c88b80c25fcfde2433126,1.5.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.7.0,2016-03-03,final,https://github.com/rust-lang/rust/tree/1.7.0,a5d1e7a59a2a3413c377b003075349f854304b5e,1.6.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.8.0,2016-04-14,final,https://github.com/rust-lang/rust/tree/1.8.0,db2939409db26ab4904372c82492cd3488e4c44e,1.7.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.9.0,2016-05-26,final,https://github.com/rust-lang/rust/tree/1.9.0,e4e8b666850a763fdf1c3c2c142856ab51e32779,1.8.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.10.0,2016-07-07,final,https://github.com/rust-lang/rust/tree/1.10.0,cfcb716cf0961a7e3a4eceac828d94805cf8140b,1.9.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.11.0,2016-08-18,final,https://github.com/rust-lang/rust/tree/1.11.0,9b21dcd6a89f38e8ceccb2ede8c9027cb409f6e3,1.10.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.12.0,2016-09-29,final,https://github.com/rust-lang/rust/tree/1.12.0,3191fbae9da539442351f883bdabcad0d72efcb6,1.11.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.12.1,2016-10-20,patch,https://github.com/rust-lang/rust/tree/1.12.1,d4f39402a0c2c2b94ec0375cd7f7f6d7918113cd,1.12.0,pending,none,-,-,-,-,releases-md,line,2015
+1.13.0,2016-11-10,final,https://github.com/rust-lang/rust/tree/1.13.0,2c6933acc05c61e041be764cb1331f6281993f3f,1.12.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.14.0,2016-12-22,final,https://github.com/rust-lang/rust/tree/1.14.0,e8a0123241f0d397d39cd18fcc4e5e7edde22730,1.13.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.15.0,2017-02-02,final,https://github.com/rust-lang/rust/tree/1.15.0,10893a9a349cdd423f2490a6984acb5b3b7c8046,1.14.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.15.1,2017-02-09,patch,https://github.com/rust-lang/rust/tree/1.15.1,021bd294c039bd54aa5c4aa85bcdffb0d24bc892,1.15.0,pending,none,-,-,-,-,releases-md,line,2015
+1.16.0,2017-03-16,final,https://github.com/rust-lang/rust/tree/1.16.0,30cf806ef8881c41821fbd43e5cf3699c5290c16,1.15.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.17.0,2017-04-27,final,https://github.com/rust-lang/rust/tree/1.17.0,56124baa9e73f28c0709e59e74783cf234a978cf,1.16.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.18.0,2017-06-08,final,https://github.com/rust-lang/rust/tree/1.18.0,03fc9d622e0ea26a3d37f5ab030737fcca6928b9,1.17.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.19.0,2017-07-20,final,https://github.com/rust-lang/rust/tree/1.19.0,0ade339411587887bf01bcfa2e9ae4414c8900d4,1.18.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.20.0,2017-08-31,final,https://github.com/rust-lang/rust/tree/1.20.0,f3d6973f41a7d1fb83029c9c0ceaf0f5d4fd7208,1.19.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.21.0,2017-10-12,final,https://github.com/rust-lang/rust/tree/1.21.0,3b72af97e42989b2fe104d8edbaee123cdf7c58f,1.20.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.22.0,2017-11-22,final,https://github.com/rust-lang/rust/tree/1.22.0,328886ba2eaf0d3ac7e78ef3ba27eb296d0af3c0,1.21.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.22.1,2017-11-22,patch,https://github.com/rust-lang/rust/tree/1.22.1,05e2e1c41414e8fc73d0f267ea8dab1a3eeeaa99,1.22.0,pending,none,-,-,-,-,releases-md,line,2015
+1.23.0,2018-01-04,final,https://github.com/rust-lang/rust/tree/1.23.0,766bd11c8a3c019ca53febdcd77b2215379dd67d,1.22.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.24.0,2018-02-15,final,https://github.com/rust-lang/rust/tree/1.24.0,4d90ac38c0b61bb69470b61ea2cccea0df48d9e5,1.23.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.24.1,2018-03-01,patch,https://github.com/rust-lang/rust/tree/1.24.1,d3ae9a9e08edf12de0ed82af57ba2a56c26496ea,1.24.0,pending,none,-,-,-,-,releases-md,line,2015
+1.25.0,2018-03-29,final,https://github.com/rust-lang/rust/tree/1.25.0,84203cac67e65ca8640b8392348411098c856985,1.24.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.26.0,2018-05-10,final,https://github.com/rust-lang/rust/tree/1.26.0,a7756804103447ea4e68a71ccf071e7ad8f7a03e,1.25.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.26.1,2018-05-29,patch,https://github.com/rust-lang/rust/tree/1.26.1,827013a31b88e536e85b8e6ceb5b9988042ec335,1.26.0,pending,none,-,-,-,-,releases-md,line,2015
+1.26.2,2018-06-05,patch,https://github.com/rust-lang/rust/tree/1.26.2,594fb253c2b02b320c728391a425d028e6dc7a09,1.26.1,pending,none,-,-,-,-,releases-md,line,2015
+1.27.0,2018-06-21,final,https://github.com/rust-lang/rust/tree/1.27.0,3eda71b00ad48d7bf4eef4c443e7f611fd061418,1.26.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.27.1,2018-07-10,patch,https://github.com/rust-lang/rust/tree/1.27.1,5f2b325f64ed6caa7179f3e04913db437656ec7e,1.27.0,pending,none,-,-,-,-,releases-md,line,2015
+1.27.2,2018-07-20,patch,https://github.com/rust-lang/rust/tree/1.27.2,58cc626de3301192d5d8c6dcbde43b5b44211ae2,1.27.1,pending,none,-,-,-,-,releases-md,line,2015
+1.28.0,2018-08-02,final,https://github.com/rust-lang/rust/tree/1.28.0,9634041f0e8c0f3191d2867311276f19d0a42564,1.27.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.29.0,2018-09-13,final,https://github.com/rust-lang/rust/tree/1.29.0,aa3ca1994904f2e056679fce1f185db8c7ed2703,1.28.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.29.1,2018-09-25,patch,https://github.com/rust-lang/rust/tree/1.29.1,b801ae66425cf7c3c71052b19ef8f145b0d0513d,1.29.0,pending,none,-,-,-,-,releases-md,line,2015
+1.29.2,2018-10-11,patch,https://github.com/rust-lang/rust/tree/1.29.2,17a9dc7513b9fea883dc9505f09f97c63d1d601b,1.29.1,pending,none,-,-,-,-,releases-md,line,2015
+1.30.0,2018-10-25,final,https://github.com/rust-lang/rust/tree/1.30.0,da5f414c2c0bfe5198934493f04c676e2b23ff2e,1.29.0,pending,none,-,-,-,-,releases-md,branch-point,2015
+1.30.1,2018-11-08,patch,https://github.com/rust-lang/rust/tree/1.30.1,1433507eba7d1a114e4c6f27ae0e1a74f60f20de,1.30.0,pending,none,-,-,-,-,releases-md,line,2015
+1.31.0,2018-12-06,final,https://github.com/rust-lang/rust/tree/1.31.0,abe02cefd6cd1916df62ad7dc80161bea50b72e8,1.30.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.31.1,2018-12-20,patch,https://github.com/rust-lang/rust/tree/1.31.1,b6c32da9b0481e3e9d737153286b3ff8aa39a22c,1.31.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.32.0,2019-01-17,final,https://github.com/rust-lang/rust/tree/1.32.0,9fda7c2237db910e41d6a712e9a2139b352e558b,1.31.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.33.0,2019-02-28,final,https://github.com/rust-lang/rust/tree/1.33.0,2aa4c46cfdd726e97360c2734835aa3515e8c858,1.32.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.34.0,2019-04-11,final,https://github.com/rust-lang/rust/tree/1.34.0,91856ed52c58aa5ba66a015354d1cc69e9779bdf,1.33.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.34.1,2019-04-25,patch,https://github.com/rust-lang/rust/tree/1.34.1,fc50f328b0353b285421b8ff5d4100966387a997,1.34.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.34.2,2019-05-14,patch,https://github.com/rust-lang/rust/tree/1.34.2,6c2484dc3c532c052f159264e970278d8b77cdc9,1.34.1,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.35.0,2019-05-23,final,https://github.com/rust-lang/rust/tree/1.35.0,3c235d5600393dfe6c36eeed34042efad8d4f26e,1.34.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.36.0,2019-07-04,final,https://github.com/rust-lang/rust/tree/1.36.0,a53f9df32fbb0b5f4382caaad8f1a46f36ea887c,1.35.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.37.0,2019-08-15,final,https://github.com/rust-lang/rust/tree/1.37.0,eae3437dfe991621e8afdc82734f4a172d7ddf9b,1.36.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.38.0,2019-09-26,final,https://github.com/rust-lang/rust/tree/1.38.0,625451e376bb2e5283fc4741caa0a3e8a2ca4d54,1.37.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.39.0,2019-11-07,final,https://github.com/rust-lang/rust/tree/1.39.0,4560ea788cb760f0a34127156c78e2552949f734,1.38.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.40.0,2019-12-19,final,https://github.com/rust-lang/rust/tree/1.40.0,73528e339aae0f17a15ffa49a8ac608f50c6cf14,1.39.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.41.0,2020-01-30,final,https://github.com/rust-lang/rust/tree/1.41.0,5e1a799842ba6ed4a57e91f7ab9435947482f7d8,1.40.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.41.1,2020-02-27,patch,https://github.com/rust-lang/rust/tree/1.41.1,f3e1a954d2ead4e2fc197c7da7d71e6c61bad196,1.41.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.42.0,2020-03-12,final,https://github.com/rust-lang/rust/tree/1.42.0,b8cedc00407a4c56a3bda1ed605c6fc166655447,1.41.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.43.0,2020-04-23,final,https://github.com/rust-lang/rust/tree/1.43.0,4fb7144ed159f94491249e86d5bbd033b5d60550,1.42.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.43.1,2020-05-07,patch,https://github.com/rust-lang/rust/tree/1.43.1,8d69840ab92ea7f4d323420088dd8c9775f180cd,1.43.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.44.0,2020-06-04,final,https://github.com/rust-lang/rust/tree/1.44.0,49cae55760da0a43428eba73abcb659bb70cf2e4,1.43.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.44.1,2020-06-18,patch,https://github.com/rust-lang/rust/tree/1.44.1,c7087fe00d2ba919df1d813c040a5d47e43b0fe7,1.44.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.45.0,2020-07-16,final,https://github.com/rust-lang/rust/tree/1.45.0,5c1f21c3b82297671ad3ae1e8c942d2ca92e84f2,1.44.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.45.1,2020-07-30,patch,https://github.com/rust-lang/rust/tree/1.45.1,c367798cfd3817ca6ae908ce675d1d99242af148,1.45.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.45.2,2020-08-03,patch,https://github.com/rust-lang/rust/tree/1.45.2,d3fb005a39e62501b8b0b356166e515ae24e2e54,1.45.1,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.46.0,2020-08-27,final,https://github.com/rust-lang/rust/tree/1.46.0,04488afe34512aa4c33566eb16d8c912a3ae04f9,1.45.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.47.0,2020-10-08,final,https://github.com/rust-lang/rust/tree/1.47.0,18bf6b4f01a6feaf7259ba7cdae58031af1b7b39,1.46.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.48.0,2020-11-19,final,https://github.com/rust-lang/rust/tree/1.48.0,7eac88abb2e57e752f3302f02be5f3ce3d7adfb4,1.47.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.49.0,2020-12-31,final,https://github.com/rust-lang/rust/tree/1.49.0,e1884a8e3c3e813aada8254edfa120e85bf5ffca,1.48.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.50.0,2021-02-11,final,https://github.com/rust-lang/rust/tree/1.50.0,cb75ad5db02783e8b0222fee363c5f63f7e2cf5b,1.49.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.51.0,2021-03-25,final,https://github.com/rust-lang/rust/tree/1.51.0,2fd73fabe469357a12c2c974c140f67e7cdd76d0,1.50.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.52.0,2021-05-06,final,https://github.com/rust-lang/rust/tree/1.52.0,88f19c6dab716c6281af7602e30f413e809c5974,1.51.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.52.1,2021-05-10,patch,https://github.com/rust-lang/rust/tree/1.52.1,9bc8c42bb2f19e745a63f3445f1ac248fb015e53,1.52.0,pending,none,-,-,-,-,releases-md,line,2015;2018
+1.53.0,2021-06-17,final,https://github.com/rust-lang/rust/tree/1.53.0,53cb7b09b00cbea8754ffb78e7e3cb521cb8af4b,1.52.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.54.0,2021-07-29,final,https://github.com/rust-lang/rust/tree/1.54.0,a178d0322ce20e33eac124758e837cbd80a6f633,1.53.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.55.0,2021-09-09,final,https://github.com/rust-lang/rust/tree/1.55.0,c8dfcfe046a7680554bf4eb612bad840e7631c4b,1.54.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018
+1.56.0,2021-10-21,final,https://github.com/rust-lang/rust/tree/1.56.0,09c42c45858d5f3aedfa670698275303a3d19afa,1.55.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.56.1,2021-11-01,patch,https://github.com/rust-lang/rust/tree/1.56.1,59eed8a2aac0230a8b53e89d4e99d55912ba6b35,1.56.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.57.0,2021-12-02,final,https://github.com/rust-lang/rust/tree/1.57.0,f1edd0429582dd29cccacaf50fd134b05593bd9c,1.56.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.58.0,2022-01-13,final,https://github.com/rust-lang/rust/tree/1.58.0,02072b482a8b5357f7fb5e5637444ae30e423c40,1.57.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.58.1,2022-01-20,patch,https://github.com/rust-lang/rust/tree/1.58.1,db9d1b20bba1968c1ec1fc49616d4742c1725b4b,1.58.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.59.0,2022-02-24,final,https://github.com/rust-lang/rust/tree/1.59.0,9d1b2106e23b1abd32fce1f17267604a5102f57a,1.58.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.60.0,2022-04-07,final,https://github.com/rust-lang/rust/tree/1.60.0,7737e0b5c4103216d6fd8cf941b7ab9bdbaace7c,1.59.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.61.0,2022-05-19,final,https://github.com/rust-lang/rust/tree/1.61.0,fe5b13d681f25ee6474be29d748c65adcd91f69e,1.60.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.62.0,2022-06-30,final,https://github.com/rust-lang/rust/tree/1.62.0,a8314ef7d0ec7b75c336af2c9857bfaf43002bfc,1.61.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.62.1,2022-07-19,patch,https://github.com/rust-lang/rust/tree/1.62.1,e092d0b6b43f2de967af0887873151bb1c0b18d3,1.62.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.63.0,2022-08-11,final,https://github.com/rust-lang/rust/tree/1.63.0,4b91a6ea7258a947e59c6522cd5898e7c0a6a88f,1.62.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.64.0,2022-09-22,final,https://github.com/rust-lang/rust/tree/1.64.0,a55dd71d5fb0ec5a6a3a9e8c27b2127ba491ce52,1.63.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.65.0,2022-11-03,final,https://github.com/rust-lang/rust/tree/1.65.0,897e37553bba8b42751c67658967889d11ecd120,1.64.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.66.0,2022-12-15,final,https://github.com/rust-lang/rust/tree/1.66.0,69f9c33d71c871fc16ac445211281c6e7a340943,1.65.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.66.1,2023-01-10,patch,https://github.com/rust-lang/rust/tree/1.66.1,90743e7298aca107ddaa0c202a4d3604e29bfeb6,1.66.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.67.0,2023-01-26,final,https://github.com/rust-lang/rust/tree/1.67.0,fc594f15669680fa70d255faec3ca3fb507c3405,1.66.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.67.1,2023-02-09,patch,https://github.com/rust-lang/rust/tree/1.67.1,d5a82bbd26e1ad8b7401f6a718a9c57c96905483,1.67.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.68.0,2023-03-09,final,https://github.com/rust-lang/rust/tree/1.68.0,2c8cc343237b8f7d5a3c3703e3a87f2eb2c54a74,1.67.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.68.1,2023-03-23,patch,https://github.com/rust-lang/rust/tree/1.68.1,8460ca823e8367a30dda430efda790588b8c84d3,1.68.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.68.2,2023-03-28,patch,https://github.com/rust-lang/rust/tree/1.68.2,9eb3afe9ebe9c7d2b84b71002d44f4a0edac95e0,1.68.1,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.69.0,2023-04-20,final,https://github.com/rust-lang/rust/tree/1.69.0,84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc,1.68.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.70.0,2023-06-01,final,https://github.com/rust-lang/rust/tree/1.70.0,90c541806f23a127002de5b4038be731ba1458ca,1.69.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.71.0,2023-07-13,final,https://github.com/rust-lang/rust/tree/1.71.0,8ede3aae28fe6e4d52b38157d7bfe0d3bceef225,1.70.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.71.1,2023-08-03,patch,https://github.com/rust-lang/rust/tree/1.71.1,eb26296b556cef10fb713a38f3d16b9886080f26,1.71.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.72.0,2023-08-24,final,https://github.com/rust-lang/rust/tree/1.72.0,5680fa18feaa87f3ff04063800aec256c3d4b4be,1.71.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.72.1,2023-09-19,patch,https://github.com/rust-lang/rust/tree/1.72.1,d5c2e9c342b358556da91d61ed4133f6f50fc0c3,1.72.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.73.0,2023-10-05,final,https://github.com/rust-lang/rust/tree/1.73.0,cc66ad468955717ab92600c770da8c1601a4ff33,1.72.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.74.0,2023-11-16,final,https://github.com/rust-lang/rust/tree/1.74.0,79e9716c980570bfd1f666e3b16ac583f0168962,1.73.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.74.1,2023-12-07,patch,https://github.com/rust-lang/rust/tree/1.74.1,a28077b28a02b92985b3a3faecf92813155f1ea1,1.74.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.75.0,2023-12-28,final,https://github.com/rust-lang/rust/tree/1.75.0,82e1608dfa6e0b5569232559e3d385fea5a93112,1.74.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.76.0,2024-02-08,final,https://github.com/rust-lang/rust/tree/1.76.0,07dca489ac2d933c78d3c5158e3f43beefeb02ce,1.75.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.77.0,2024-03-21,final,https://github.com/rust-lang/rust/tree/1.77.0,aedd173a2c086e558c2b66d3743b344f977621a7,1.76.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.77.1,2024-03-28,patch,https://github.com/rust-lang/rust/tree/1.77.1,7cf61ebde7b22796c69757901dd346d0fe70bd97,1.77.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.77.2,2024-04-09,patch,https://github.com/rust-lang/rust/tree/1.77.2,25ef9e3d85d934b27d9dada2f9dd52b1dc63bb04,1.77.1,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.78.0,2024-05-02,final,https://github.com/rust-lang/rust/tree/1.78.0,9b00956e56009bab2aa15d7bff10916599e3d6d6,1.77.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.79.0,2024-06-13,final,https://github.com/rust-lang/rust/tree/1.79.0,129f3b9964af4d4a709d1383930ade12dfe7c081,1.78.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.80.0,2024-07-25,final,https://github.com/rust-lang/rust/tree/1.80.0,051478957371ee0084a7c0913941d2a8c4757bb9,1.79.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.80.1,2024-08-08,patch,https://github.com/rust-lang/rust/tree/1.80.1,3f5fd8dd41153bc5fdca9427e9e05be2c767ba23,1.80.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.81.0,2024-09-05,final,https://github.com/rust-lang/rust/tree/1.81.0,eeb90cda1969383f56a2637cbd3037bdf598841c,1.80.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.82.0,2024-10-17,final,https://github.com/rust-lang/rust/tree/1.82.0,f6e511eec7342f59a25f7c0534f1dbea00d01b14,1.81.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.83.0,2024-11-28,final,https://github.com/rust-lang/rust/tree/1.83.0,90b35a6239c3d8bdabc530a6a0816f7ff89a0aaf,1.82.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.84.0,2025-01-09,final,https://github.com/rust-lang/rust/tree/1.84.0,9fc6b43126469e3858e2fe86cafb4f0fd5068869,1.83.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021
+1.84.1,2025-01-30,patch,https://github.com/rust-lang/rust/tree/1.84.1,e71f9a9a98b0faf423844bf0ba7438f29dc27d58,1.84.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021
+1.85.0,2025-02-20,final,https://github.com/rust-lang/rust/tree/1.85.0,4d91de4e48198da2e33413efdcd9cd2cc0c46688,1.84.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.85.1,2025-03-18,patch,https://github.com/rust-lang/rust/tree/1.85.1,4eb161250e340c8f48f66e2b929ef4a5bed7c181,1.85.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.86.0,2025-04-03,final,https://github.com/rust-lang/rust/tree/1.86.0,05f9846f893b09a1be1fc8560e33fc3c815cfecb,1.85.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.87.0,2025-05-15,final,https://github.com/rust-lang/rust/tree/1.87.0,17067e9ac6d7ecb70e50f92c1944e545188d2359,1.86.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.88.0,2025-06-26,final,https://github.com/rust-lang/rust/tree/1.88.0,6b00bc3880198600130e1cf62b8f8a93494488cc,1.87.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.89.0,2025-08-07,final,https://github.com/rust-lang/rust/tree/1.89.0,29483883eed69d5fb4db01964cdf2af4d86e9cb2,1.88.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.90.0,2025-09-18,final,https://github.com/rust-lang/rust/tree/1.90.0,1159e78c4747b02ef996e55082b704c09b970588,1.89.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.91.0,2025-10-30,final,https://github.com/rust-lang/rust/tree/1.91.0,f8297e351a40c1439a467bbbb6879088047f50b3,1.90.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.91.1,2025-11-10,patch,https://github.com/rust-lang/rust/tree/1.91.1,ed61e7d7e242494fb7057f2657300d9e77bb4fcb,1.91.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.92.0,2025-12-11,final,https://github.com/rust-lang/rust/tree/1.92.0,ded5c06cf21d2b93bffd5d884aa6e96934ee4234,1.91.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.93.0,2026-01-22,final,https://github.com/rust-lang/rust/tree/1.93.0,254b59607d4417e9dffbc307138ae5c86280fe4c,1.92.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.93.1,2026-02-12,patch,https://github.com/rust-lang/rust/tree/1.93.1,01f6ddf7588f42ae2d7eb0a2f21d44e8e96674cf,1.93.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.94.0,2026-03-05,final,https://github.com/rust-lang/rust/tree/1.94.0,4a4ef493e3a1488c6e321570238084b38948f6db,1.93.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.94.1,2026-03-26,patch,https://github.com/rust-lang/rust/tree/1.94.1,e408947bfd200af42db322daf0fadfe7e26d3bd1,1.94.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.95.0,2026-04-16,final,https://github.com/rust-lang/rust/tree/1.95.0,59807616e1fa2540724bfbac14d7976d7e4a3860,1.94.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.96.0,2026-05-28,final,https://github.com/rust-lang/rust/tree/1.96.0,ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96,1.95.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.96.1,2026-06-30,patch,https://github.com/rust-lang/rust/tree/1.96.1,31fca3adb283cc9dfd56b49cdee9a96eb9c96ffd,1.96.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.97.0,2026-07-09,final,https://github.com/rust-lang/rust/tree/1.97.0,2d8144b7880597b6e6d3dfd63a9a9efae3f533d3,1.96.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.97.1,2026-07-16,patch,https://github.com/rust-lang/rust/tree/1.97.1,8bab26f4f68e0e26f0bb7960be334d5b520ea452,1.97.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.98.0,2026-08-20,final,https://github.com/rust-lang/rust/tree/1.98.0,88d9e12ae178fab0fb5cc050a94da85685d449ea,1.97.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.98.1,2026-09-03,patch,https://github.com/rust-lang/rust/tree/1.98.1,48a229ceaefd4985c50990b14116b6d856af0985,1.98.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024
+1.99.0,2026-10-01,final,https://github.com/rust-lang/rust/tree/1.99.0,b940084d7eb6a299eb4bfeb8e34901bc051e7ac4,1.98.0,pending,none,-,-,-,-,releases-md,branch-point,2015;2018;2021;2024
+1.99.1,2026-10-15,patch,https://github.com/rust-lang/rust/tree/1.99.1,58cf8f9c35b355199727627d07ae34a4e2846d67,1.99.0,pending,none,-,-,-,-,releases-md,line,2015;2018;2021;2024

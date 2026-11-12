@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **Windows no longer skips.** Windows now builds conduit-capi with the shared helper (`code/scripts/stage-conduit-capi-windows.ps1`), points `CONDUIT_CAPI_PATH` at the staged `conduit_capi.dll` and runs the same `dotnet test` as the Unix recipe (new `tools/run-tests.ps1`), instead of skipping.
+
 ### Fixed
 
 - **Double free of every handler `GCHandle`.** `Application.Dispose()` freed
