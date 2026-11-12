@@ -291,6 +291,105 @@ impl fmt::Debug
     }
 }
 
+/// Policy-backed construction-derived path-length capacity.
+///
+/// This evidence derives the initial capacity from the complete
+/// Name-policy-backed construction and retains that construction, its exact
+/// reviewed terminal, and certificate-wide issuing-CA policy beside the
+/// derived state. Generic reviewed-terminal evidence cannot produce this
+/// stronger result. This does not authenticate a path link, process an
+/// intermediate, define complete Name equality, or establish path validity.
+pub struct InitializedNamePolicyReviewedConstructedX509CertificatePathLength<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    reviewed_path: BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    InitializedNamePolicyReviewedConstructedX509CertificatePathLength<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the complete policy-backed reviewed-terminal role proof.
+    #[must_use]
+    pub const fn reviewed_path(
+        &self,
+    ) -> &BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.reviewed_path
+    }
+
+    /// Return the initial capacity derived from the retained construction.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for InitializedNamePolicyReviewedConstructedX509CertificatePathLength<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("InitializedNamePolicyReviewedConstructedX509CertificatePathLength")
+    }
+}
+
 /// Non-copyable reviewed-terminal evidence with exact issuing-CA role policy.
 ///
 /// The retained reviewed path preserves the target, candidate pool, ordered
@@ -726,6 +825,66 @@ pub fn bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy<
             anchor_role_policy,
         },
     )
+}
+
+/// Initialize path-length state from one policy-backed reviewed construction.
+///
+/// The retained construction has selected at least one issuer and has bound
+/// its final issuer to the exact reviewed trust anchor with issuing-CA policy.
+/// Subtracting that anchor from the issuer count therefore yields the number
+/// of prospective intermediate certificates. Success retains the complete
+/// Name-policy-backed provenance with the derived state; generic reviewed
+/// evidence cannot produce this stronger result.
+///
+/// This is initialization only. It does not define complete Name equality,
+/// authenticate a path link, apply an intermediate transition, validate a
+/// complete path, check revocation, or provide TLS, HTTP, OAuth, or network
+/// authority.
+#[must_use]
+pub fn initialize_name_policy_reviewed_constructed_x509_certificate_path_length<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    reviewed_path: BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+) -> InitializedNamePolicyReviewedConstructedX509CertificatePathLength<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    let issuer_count = reviewed_path
+        .reviewed_path()
+        .constructed_path_with_name_policy()
+        .constructed_path()
+        .issuer_count();
+    let intermediate_count = issuer_count.saturating_sub(1) as u64;
+
+    InitializedNamePolicyReviewedConstructedX509CertificatePathLength {
+        reviewed_path,
+        path_length_state: X509CertificatePathLengthState::new(intermediate_count),
+    }
 }
 
 /// Initialize path-length state from one exact reviewed construction.
