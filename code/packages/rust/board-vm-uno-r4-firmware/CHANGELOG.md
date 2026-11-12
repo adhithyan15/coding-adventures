@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **One more Windows test expectation.** `parses_print_upload_and_smoke_options`
+  still compared `arm_gxx` and `arm_ar` against Unix-formatted paths; they now
+  use the same `native_tool` helper as `arm_gcc` (`\\` separators and `.exe` on
+  Windows). Found when this package next ran on the Windows lane.
+
 - **Build uses the pinned toolchain.** `BUILD` and `BUILD_windows` call
   `cargo` directly instead of `rustup run stable cargo`. CI now installs the
   exact Rust release named in the root `mise.toml` rather than the floating
