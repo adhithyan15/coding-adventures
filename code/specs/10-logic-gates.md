@@ -417,6 +417,17 @@ Combinational circuit tests:
 - Tri-state: verify output matches data when enabled, returns None when disabled
 - Edge cases: MUX with all-0 inputs, all-1 inputs, decoder with all-0 input
 
+## Verification (Warrant, LG01)
+
+The stateless half of the Rust implementation (the gates and the combinational
+blocks, not `sequential`) has an executable contract:
+[LG01](LG01-logic-gates-contract.md) and [`logic-gates.warrant`](logic-gates.warrant),
+checked by enumeration of every input of the stated domains. Two decisions it
+fixed that this document leaves open: in Rust, "inputs outside {0, 1} should
+raise an error" is a **panic in every build profile** (a release build used to
+accept them silently), and a decoder or demultiplexer has **at most 16**
+inputs, because its output has 2^n lines.
+
 ## Future Extensions
 
 - **Gate delay simulation**: Model propagation delay through gates (useful for understanding timing in real circuits)
