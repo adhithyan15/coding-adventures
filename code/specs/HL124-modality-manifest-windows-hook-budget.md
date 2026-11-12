@@ -16,11 +16,17 @@ alone when warm while failing under cold or whole-suite disk load.
 The hook must still derive a manifest from every real lesson and independently
 read every committed modality owner through the anchored, guarded route. Its
 later assertions must compare the same complete reports; no owner, track, or
-lesson may be removed or mocked. The test-only lesson parse cache may be used
-through the synchronous `loadLessons` route if a measured comparison shows it
-avoids the overhead of per-file async reads on Windows. Both lesson routes must
-retain their existing source-byte cache keys, parse parity, track ordering, and
-symlink/junction refusals. No production loader behavior changes are required.
+lesson may be removed or mocked. The test-only lesson parse cache and the
+pinned-owner reader must retain their source-byte identity, parse parity,
+track ordering, and symlink/junction refusals. No production loader behavior
+changes are required unless profiling proves the change preserves them.
+
+A measured synchronous-loader substitution is **not** the fix: on the same
+Windows host, `loadLessons()` alone took 20.9 seconds and the pure derivation
+finished at 26.2 seconds, leaving less than four seconds for the independent
+owner read. Starting the child first was worse: synchronous Node work stopped
+draining its stdout and triggered the child's existing 20-second deadline.
+The original test source was restored after this diagnostic.
 
 The test, hook, worker, heap, and coverage budgets remain unchanged. Temporary
 timing instrumentation is not part of the committed test or package output.
