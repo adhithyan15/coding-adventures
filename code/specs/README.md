@@ -37,6 +37,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 |---|------|---------|
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
+| KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
 
 **Interactive hardware specs**:
 | # | Spec | Purpose |
@@ -59,6 +60,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
+| [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template
