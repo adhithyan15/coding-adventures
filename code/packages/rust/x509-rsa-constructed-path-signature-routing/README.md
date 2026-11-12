@@ -67,6 +67,31 @@ bound the existing supported permitted-DNS evaluator. An unconstrained
 snapshot entry retains the complete closure without new DNS evidence; a
 constrained entry succeeds only after every retained target dNSName satisfies
 that supported subset.
+An ordered intermediate-policy follow-up consumes that reviewed-anchor result
+and visits every complete intermediate policy retained by the accumulator in
+its already-proved anchor-to-target order. The exact target and validated SAN
+index still come only from the closure. Each present intermediate
+NameConstraints extension must be critical, decode as the supported
+permitted-and-excluded DNS/IP subset, and admit every exact target dNSName and
+iPAddress under separate caller-owned decoder limits. The earlier accumulator
+ceiling bounds visits. Success retains the full prior proof, the number of
+constrained intermediates, and only payload-free target DNS/IP counts.
+An ordered subordinate-CA follow-up consumes that target policy and derives
+the same complete intermediate policies, exact certificates, traversal order,
+and self-issued classifications only from retained evidence. Each
+intermediate's critical supported DNS/IP constraints are applied to every
+target-nearer intermediate's optional SAN, excluding non-final self-issued
+subordinate CAs. An absent subordinate SAN is an empty supported-name set; a
+present SAN must decode under caller-owned limits. Success retains the entire
+target policy and only payload-free application and repeated-name counts.
+A reviewed-anchor subordinate-CA follow-up consumes that result and derives
+the reviewed snapshot's optional constraint bytes through the retained
+terminal proof. An unconstrained entry succeeds without reading subordinate
+SANs. A constrained entry decodes its supported permitted-DNS contents once,
+then applies them to every retained non-self-issued intermediate's optional
+SAN in the already-proved order. An absent SAN is an empty supported-name set;
+success retains the complete prior proof and payload-free application and
+repeated-DNS counts.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -113,14 +138,17 @@ evidence only after the combined evaluation succeeds.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result, ordered transitions, intermediate accumulator, target
-signature closure, and arbitrary-depth reviewed-anchor policy do not validate
-the anchor's self-signature, establish complete generalized path validation,
-define full Name comparison, apply all NameConstraints or GeneralName forms,
-check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
-network connection. Target identity, time, purpose, routed selected-adjacency
-RSA signatures, construction-derived path-length state, and the supported
-reviewed-anchor DNS and intermediate DNS/IP subsets do not make the whole path
-valid. This does not make concrete HTTPS or live-provider use ready.
+signature closure, arbitrary-depth reviewed-anchor policy, and ordered target
+identity checks against intermediate constraints do not validate the anchor's
+self-signature, constrain subordinate CA distinguished names, establish
+complete generalized path validation, define full Name comparison, apply
+excluded or non-DNS reviewed-anchor constraints, apply all NameConstraints or
+GeneralName forms, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection. Target identity, time, purpose,
+routed selected-adjacency RSA signatures, construction-derived path-length
+state, and the supported reviewed-anchor DNS and intermediate DNS/IP subsets
+do not make the whole path valid. This does not make concrete HTTPS or
+live-provider use ready.
 
 ## Validation
 

@@ -414,14 +414,18 @@ describe("the plan CLI", () => {
   it("refuses an inventory whose points lost their probe key", () => {
     // `covered` is `probe !== null && …`, and a missing key is `undefined`, which
     // is not `null` — so an inventory with every probe deleted reported 100% and
-    // suppressed its own work item. It never reached the try/catch.
-    const root = sharedRoot;
+    // suppressed its own work item. It never reached the try/catch. This is an
+    // inventory schema refusal, not a lesson-coverage assertion: keep the real
+    // inventory and registry but do not reparse every lesson under full-suite
+    // load just to reach the same error. The clean-corpus cases above still
+    // exercise the complete lesson path.
+    const root = inventoriesOnlyCorpus();
     editInventory(root, "exam-inventory-french-a1.json", (doc) => {
       for (const point of doc.points as Record<string, unknown>[]) delete point.probe;
     });
     const { code, err } = run(root);
     expect(code).toBe(1);
-    expect(err).toMatch(/has no usable probe/);
+    expect(err).toMatch(/french A1 inventory exists but could not be read.*has no usable probe/);
   }, 120_000);
 
   it("counts a duplicated inventory once", () => {

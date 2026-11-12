@@ -1,5 +1,65 @@
 # Changelog
 
+## 0.17.0 - 2026-11-11
+
+### Added
+
+- Added reviewed-anchor permitted-DNS evaluation over every retained
+  non-self-issued intermediate certificate's optional Subject Alternative
+  Name.
+- Added constrained success, self-issued skip, absent-SAN, unconstrained
+  short-circuit, violation, and retained real-chain coverage.
+
+### Security
+
+- Constraint bytes, certificates, order, complete policy, and self-issued
+  classifications come only from the consumed proof. Existing path and ASN.1
+  ceilings bound all public-certificate evaluation.
+- This does not constrain subordinate distinguished names, add excluded or
+  non-DNS reviewed-anchor constraints, support every GeneralName, establish
+  complete path/name validation, check revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
+## 0.16.0 - 2026-11-11
+
+### Added
+
+- Added ordered evaluation of every retained intermediate's critical supported
+  DNS/IP NameConstraints against each target-nearer non-self-issued
+  intermediate certificate's optional Subject Alternative Name.
+- Added synthetic broad-to-narrow, self-issued-skip, absent-SAN, and
+  subordinate-name violation coverage plus retained real-chain coverage.
+
+### Security
+
+- Certificates, traversal order, complete policy, and self-issued
+  classifications come only from the consumed proof. Existing path and ASN.1
+  ceilings bound the repeated public-certificate evaluation.
+- This does not constrain subordinate distinguished names, apply reviewed
+  anchor constraints to subordinate CAs, support every GeneralName, establish
+  complete path/name validation, check revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
+## 0.15.0 - 2026-11-11
+
+### Added
+
+- Added ordered evaluation of every retained intermediate policy's supported
+  critical DNS/IP NameConstraints against the exact target identities in an
+  arbitrary-depth routed closure.
+- Added fixed two-intermediate public-certificate coverage plus synthetic
+  ordered broad-to-narrow DNS/IP success and later-exclusion failure coverage.
+
+### Security
+
+- The exact target, validated SAN index, intermediate certificates, and
+  anchor-to-target traversal order are derived only from the consumed proof
+  chain. The earlier accumulator ceiling bounds visits, and caller-owned ASN.1
+  limits bound every repository-owned decode.
+- This does not constrain subordinate CA names, support every GeneralName,
+  establish complete path/name validation, check revocation, perform TLS or
+  HTTP, authorize OAuth transport, or grant network authority.
+
 ## 0.14.0 - 2026-11-11
 
 ### Added

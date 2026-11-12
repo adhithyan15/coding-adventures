@@ -95,7 +95,6 @@ $$\text{nMAD} = 1.4826 \times \text{MAD}$$
 
 ### 3.3 Percentiles ($p_{25}, p_{75}, p_{95}, p_{99}$)
 Using the standard continuous linear interpolation method across sorted sample ranks $r = p \times (K - 1) + 1$.
-When the two bracketing samples are equal, return their value exactly.
 
 ### 3.4 Bootstrap Confidence Intervals
 To quantify estimation uncertainty without assuming parametric normality:
