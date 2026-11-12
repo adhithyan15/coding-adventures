@@ -32,15 +32,28 @@ func OlderThan(cutoff time.Time) func(Record) bool {
 // trusted run's delta file into the newest snapshot directory and writes the
 // result as a new, compacted snapshot in outDir.
 //
+// TRUST.  auth must permit shared-ledger writes (Authority.Trusted()).  Merge
+// ASSUMES the delta artifact came from a run the Host marked trusted; it cannot
+// check that itself.  A compromised trusted job can therefore still forge
+// passes.  Three things bound the damage: the delta's timestamps are
+// overwritten (below), so a forger cannot outrank a tombstone; the daily
+// uncached run finds a false pass and writes a tombstone; and tombstones win
+// ties.
+//
 //   - The delta is validated strictly BEFORE anything is written: one invalid
 //     record rejects the whole delta (a half-trusted delta is not trusted).
 //     The snapshot is validated just as strictly.  Both are read with the
 //     segment caps, never unbounded.
+//   - RE-STAMPING.  Ordering trusts At, so a writer must not choose its own
+//     time relative to tombstones.  Every delta record's At is replaced by now
+//     (UTC, whole seconds).  now is a parameter, never read from the clock, so
+//     the output stays deterministic.  A snapshot record dated more than
+//     MaxClockSkew after now is an error (fail closed): it is either forged or
+//     the clock is badly wrong.
 //   - Compaction keeps ONE record per key: the newest by the ordering rule of
-//     entry.newer.  The delta counts as newer than every snapshot segment for
-//     tie-breaking.  Keeping the newest tombstone (rather than dropping it once
-//     the older pass is gone) is what stops a stale delta from reviving a
-//     revoked key later, since the stale pass's At is older than the tombstone.
+//     entry.newer (equal At: tombstone wins; the delta outranks the snapshot).
+//     Keeping the newest tombstone (rather than dropping it once the older
+//     pass is gone) stops a stale delta from reviving a revoked key later.
 //   - prune, if non-nil, drops winning records it selects (typically
 //     OlderThan).  A tombstone is NEVER dropped while some pass for its key
 //     survives the predicate: that tombstone still shadows a pass.  (With
@@ -50,10 +63,23 @@ func OlderThan(cutoff time.Time) func(Record) bool {
 //     most MaxRecordsPerSegment, named from the content, so merging the same
 //     inputs twice yields byte-identical files.
 //
-// outDir must not exist or must be empty, and must differ from snapshotDir, so
-// a failed merge can never damage the snapshot it started from.
-func Merge(snapshotDir, deltaFile, outDir string, prune func(Record) bool) (MergeStats, error) {
-	var st MergeStats
+// outDir must not exist or must be empty, and must differ from snapshotDir
+// (after resolving symlinks), so a failed merge can never damage the snapshot
+// it started from.  The new snapshot is built in a sibling directory
+// "<outDir>.partial-<random>" and renamed into place at the end, so outDir is
+// either absent/empty or complete; the partial directory is removed on error.
+func Merge(snapshotDir, deltaFile, outDir string, auth Authority, now time.Time, prune func(Record) bool) (MergeStats, error) {
+	return merge(realFS, snapshotDir, deltaFile, outDir, auth, now, prune)
+}
+
+func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now time.Time, prune func(Record) bool) (st MergeStats, err error) {
+	if err := authorize(auth, Shared); err != nil {
+		return st, err
+	}
+	now = now.UTC().Truncate(time.Second)
+	if now.IsZero() || now.Year() > 9999 {
+		return st, errors.New("ledger: merge needs a valid now")
+	}
 	if err := checkOutDir(snapshotDir, outDir); err != nil {
 		return st, err
 	}
@@ -61,13 +87,21 @@ func Merge(snapshotDir, deltaFile, outDir string, prune func(Record) bool) (Merg
 	if err != nil {
 		return st, fmt.Errorf("snapshot: %w", err)
 	}
-	deltaRecs, err := readRecordFile(deltaFile)
+	for _, e := range snap {
+		if e.rec.At.After(now.Add(MaxClockSkew)) {
+			return st, fmt.Errorf("snapshot: %s: record for %s is dated %s, after now",
+				e.name, e.rec.Hex(), e.rec.At.Format(time.RFC3339))
+		}
+	}
+	deltaRecs, _, err := readRecordFile(deltaFile, MaxSegmentBytes)
 	if err != nil {
 		return st, fmt.Errorf("delta: %w", err)
 	}
 	st.Snapshot, st.Delta = len(snap), len(deltaRecs)
-	all := snap
+	all := make([]entry, len(snap), len(snap)+len(deltaRecs))
+	copy(all, snap)
 	for i, r := range deltaRecs {
+		r.At = now // re-stamp: the writer does not choose its own time
 		all = append(all, entry{r, math.MaxUint64, "", i + 1})
 	}
 
@@ -80,8 +114,9 @@ func Merge(snapshotDir, deltaFile, outDir string, prune func(Record) bool) (Merg
 			}
 		}
 	}
-	var out []Record
-	for k, e := range newest(all) {
+	best := newest(all)
+	out := make([]Record, 0, len(best))
+	for k, e := range best {
 		drop := prune != nil && prune(e.rec)
 		if drop && e.rec.Kind == KindTombstone && survivingPass[k] {
 			drop = false
@@ -95,9 +130,6 @@ func Merge(snapshotDir, deltaFile, outDir string, prune func(Record) bool) (Merg
 	sort.Slice(out, func(i, j int) bool { return bytes.Compare(out[i].Key[:], out[j].Key[:]) < 0 })
 	st.Kept = len(out)
 
-	if err := os.MkdirAll(outDir, 0o755); err != nil {
-		return st, err
-	}
 	// The new snapshot continues the sequence, so "newest snapshot" stays
 	// meaningful by sequence alone.
 	var next uint64 = 1
@@ -105,30 +137,73 @@ func Merge(snapshotDir, deltaFile, outDir string, prune func(Record) bool) (Merg
 	if n := len(segs); n > 0 {
 		next = segs[n-1].seq + 1
 	}
+
+	rnd, err := randHexString(randHex)
+	if err != nil {
+		return st, err
+	}
+	partial := outDir + ".partial-" + rnd
+	if err := os.MkdirAll(partial, 0o755); err != nil {
+		return st, err
+	}
+	defer func() {
+		if err != nil {
+			_ = os.RemoveAll(partial) // our own scratch directory
+		}
+	}()
 	for len(out) > 0 {
 		n := min(len(out), MaxRecordsPerSegment)
-		data, err := EncodeSegment(out[:n])
-		if err != nil {
-			return st, err
+		data, encErr := EncodeSegment(out[:n])
+		if encErr != nil {
+			return st, encErr
 		}
 		if next > maxSeq {
 			return st, errors.New("ledger: segment sequence exhausted")
 		}
 		sum := sha256.Sum256(data)
 		name := segmentName(next, hex.EncodeToString(sum[:randHex/2]))
-		if err := writeAtomic(realFS, outDir, name, data); err != nil {
+		if err = writeAtomic(o, partial, name, data); err != nil {
 			return st, err
 		}
 		out, next = out[n:], next+1
 	}
-	return st, nil
+	// An existing empty outDir is removed so the rename also works on Windows.
+	// If it is not empty after all, the rename below fails and nothing is lost.
+	_ = os.Remove(outDir)
+	if err = o.rename(partial, outDir); err != nil {
+		return st, err
+	}
+	err = o.syncDir(filepath.Dir(outDir))
+	return st, err
 }
 
-// checkOutDir refuses an output directory that is the snapshot itself or that
-// already holds anything.
+// resolvePath makes p absolute and resolves symlinks in its longest existing
+// prefix, so two spellings of one directory compare equal even when the
+// directory itself does not exist yet.
+func resolvePath(p string) (string, error) {
+	abs, err := filepath.Abs(p)
+	if err != nil {
+		return "", err
+	}
+	rest := ""
+	for cur := abs; ; {
+		if r, err := filepath.EvalSymlinks(cur); err == nil {
+			return filepath.Join(r, rest), nil
+		}
+		parent := filepath.Dir(cur)
+		if parent == cur { // reached the root without finding anything
+			return abs, nil
+		}
+		rest = filepath.Join(filepath.Base(cur), rest)
+		cur = parent
+	}
+}
+
+// checkOutDir refuses an output directory that is the snapshot itself (under
+// any alias) or that already holds anything.
 func checkOutDir(snapshotDir, outDir string) error {
-	a, errA := filepath.Abs(snapshotDir)
-	b, errB := filepath.Abs(outDir)
+	a, errA := resolvePath(snapshotDir)
+	b, errB := resolvePath(outDir)
 	if errA != nil || errB != nil {
 		return errors.New("ledger: cannot resolve merge directories")
 	}

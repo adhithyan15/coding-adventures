@@ -13,6 +13,16 @@ import (
 
 var t0 = time.Date(2026, 11, 11, 23, 24, 1, 0, time.UTC)
 
+// nowT is "now" for the tests: after every timestamp the tests use.
+var nowT = t0.Add(2 * time.Hour)
+
+type fakeAuth struct{ trusted, local bool }
+
+func (a fakeAuth) Trusted() bool           { return a.trusted }
+func (a fakeAuth) WritesLocalLedger() bool { return a.local }
+
+var trusted = fakeAuth{trusted: true}
+
 func key(b byte) [32]byte {
 	var k [32]byte
 	for i := range k {
@@ -236,19 +246,19 @@ func TestSegmentNames(t *testing.T) {
 
 func TestStoreLookupAndShadowing(t *testing.T) {
 	dir := filepath.Join(t.TempDir(), "ledger") // does not exist yet
-	s := Open(dir)
+	s := Open(dir, Shared)
 	got, err := s.Lookup([][32]byte{key(1)})
 	if err != nil || len(got) != 0 {
 		t.Fatalf("missing dir should be empty: %v %v", got, err)
 	}
-	if err := s.Record(nil, true); err != nil { // empty batch: no-op
+	if err := s.Record(nil, trusted, nowT); err != nil { // empty batch: no-op
 		t.Fatal(err)
 	}
 	if _, err := os.Stat(dir); err == nil {
 		t.Fatal("empty batch created the directory")
 	}
 
-	if err := s.Record([]Record{pass(1, t0), pass(2, t0)}, true); err != nil {
+	if err := s.Record([]Record{pass(1, t0), pass(2, t0)}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	got, _ = s.Lookup([][32]byte{key(1), key(2), key(3)})
@@ -257,7 +267,7 @@ func TestStoreLookupAndShadowing(t *testing.T) {
 	}
 
 	// A newer tombstone hides the pass.
-	if err := s.Record([]Record{tomb(1, t0.Add(time.Minute))}, true); err != nil {
+	if err := s.Record([]Record{tomb(1, t0.Add(time.Minute))}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	got, _ = s.Lookup([][32]byte{key(1), key(2)})
@@ -266,14 +276,14 @@ func TestStoreLookupAndShadowing(t *testing.T) {
 	}
 	// A pass OLDER than the tombstone, in a LATER segment, stays hidden:
 	// At decides before segment order.
-	if err := s.Record([]Record{pass(1, t0.Add(30*time.Second))}, true); err != nil {
+	if err := s.Record([]Record{pass(1, t0.Add(30*time.Second))}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	if got, _ = s.Lookup([][32]byte{key(1)}); len(got) != 0 {
 		t.Fatalf("stale pass revived key: %v", got)
 	}
 	// A newer pass un-shadows.
-	if err := s.Record([]Record{pass(1, t0.Add(time.Hour))}, true); err != nil {
+	if err := s.Record([]Record{pass(1, t0.Add(time.Hour))}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	if got, _ = s.Lookup([][32]byte{key(1)}); len(got) != 1 {
@@ -305,7 +315,7 @@ func TestNewerTieBreaks(t *testing.T) {
 	dir := t.TempDir()
 	data, _ := EncodeSegment([]Record{pass(1, t0), tomb(1, t0)})
 	writeFile(t, dir, segmentName(1, "0123456789abcdef"), data)
-	if got, err := Open(dir).Lookup([][32]byte{key(1)}); err != nil || len(got) != 0 {
+	if got, err := Open(dir, Shared).Lookup([][32]byte{key(1)}); err != nil || len(got) != 0 {
 		t.Fatalf("later line tombstone should win: %v %v", got, err)
 	}
 }
@@ -321,7 +331,7 @@ func writeFile(t *testing.T, dir, name string, data []byte) string {
 
 func TestRecordRefusedWhenUntrusted(t *testing.T) {
 	dir := t.TempDir()
-	err := Open(dir).Record([]Record{pass(1, t0)}, false)
+	err := Open(dir, Shared).Record([]Record{pass(1, t0)}, nil, nowT)
 	if !errors.Is(err, ErrUntrusted) {
 		t.Fatalf("got %v", err)
 	}
@@ -334,7 +344,7 @@ func TestRecordRefusesInvalidBatchWhole(t *testing.T) {
 	dir := t.TempDir()
 	bad := pass(2, t0)
 	bad.Kind = "x"
-	if err := Open(dir).Record([]Record{pass(1, t0), bad}, true); err == nil {
+	if err := Open(dir, Shared).Record([]Record{pass(1, t0), bad}, trusted, nowT); err == nil {
 		t.Fatal("invalid batch accepted")
 	}
 	if ents, _ := os.ReadDir(dir); len(ents) != 0 {
@@ -345,7 +355,7 @@ func TestRecordRefusesInvalidBatchWhole(t *testing.T) {
 func TestRecordErrors(t *testing.T) {
 	// The ledger path is a regular file: MkdirAll fails.
 	f := writeFile(t, t.TempDir(), "file", nil)
-	if err := Open(f).Record([]Record{pass(1, t0)}, true); err == nil {
+	if err := Open(f, Shared).Record([]Record{pass(1, t0)}, trusted, nowT); err == nil {
 		t.Error("MkdirAll on a file succeeded")
 	}
 	// A bad segment in the directory blocks writing too (fail closed).
@@ -353,13 +363,13 @@ func TestRecordErrors(t *testing.T) {
 	if err := os.Mkdir(filepath.Join(dir, segmentName(1, "0123456789abcdef")), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if err := Open(dir).Record([]Record{pass(1, t0)}, true); err == nil {
+	if err := Open(dir, Shared).Record([]Record{pass(1, t0)}, trusted, nowT); err == nil {
 		t.Error("directory-as-segment accepted")
 	}
 	// Sequence exhaustion.
 	dir = t.TempDir()
 	writeFile(t, dir, segmentName(maxSeq, "0123456789abcdef"), nil)
-	if err := Open(dir).Record([]Record{pass(1, t0)}, true); err == nil {
+	if err := Open(dir, Shared).Record([]Record{pass(1, t0)}, trusted, nowT); err == nil {
 		t.Error("exhausted sequence accepted")
 	}
 }
@@ -408,8 +418,9 @@ func TestAtomicWriteFailuresLeaveNothing(t *testing.T) {
 		}
 	}
 	cases["rename"] = fsOps{
-		create: realFS.create,
-		rename: func(string, string) error { return errors.New("rename failed") },
+		create:  realFS.create,
+		syncDir: realFS.syncDir,
+		rename:  func(string, string) error { return errors.New("rename failed") },
 	}
 	for mode, ops := range cases {
 		dir := t.TempDir()
@@ -420,7 +431,7 @@ func TestAtomicWriteFailuresLeaveNothing(t *testing.T) {
 			t.Errorf("%s: left files behind: %v", mode, ents)
 		}
 		// And the ledger still reads cleanly.
-		if got, err := Open(dir).Lookup([][32]byte{key(1)}); err != nil || len(got) != 0 {
+		if got, err := Open(dir, Shared).Lookup([][32]byte{key(1)}); err != nil || len(got) != 0 {
 			t.Errorf("%s: %v %v", mode, got, err)
 		}
 	}
@@ -431,9 +442,9 @@ func TestAtomicWriteFailuresLeaveNothing(t *testing.T) {
 	}
 	// Through the Store: an injected failure surfaces from Record.
 	dir := t.TempDir()
-	s := Open(dir)
+	s := Open(dir, Shared)
 	s.fs = cases["write"]
-	if err := s.Record([]Record{pass(1, t0)}, true); err == nil {
+	if err := s.Record([]Record{pass(1, t0)}, trusted, nowT); err == nil {
 		t.Error("Record swallowed write failure")
 	}
 }
@@ -442,8 +453,8 @@ func TestInterruptedWriteTempIgnored(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, ".tmp-123", []byte("garbage, half a rec"))
 	writeFile(t, dir, "README", []byte("hi"))
-	s := Open(dir)
-	if err := s.Record([]Record{pass(1, t0)}, true); err != nil {
+	s := Open(dir, Shared)
+	if err := s.Record([]Record{pass(1, t0)}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	if got, err := s.Lookup([][32]byte{key(1)}); err != nil || len(got) != 1 {
@@ -455,8 +466,8 @@ func TestInterruptedWriteTempIgnored(t *testing.T) {
 
 func TestLookupFailsClosedOnBadSegment(t *testing.T) {
 	dir := t.TempDir()
-	s := Open(dir)
-	if err := s.Record([]Record{pass(1, t0)}, true); err != nil {
+	s := Open(dir, Shared)
+	if err := s.Record([]Record{pass(1, t0)}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	writeFile(t, dir, segmentName(2, "0123456789abcdef"), []byte("not a record\n"))
@@ -472,7 +483,7 @@ func TestSymlinkedSegmentRejected(t *testing.T) {
 	if err := os.Symlink(target, filepath.Join(dir, segmentName(1, "0123456789abcdef"))); err != nil {
 		t.Skipf("symlinks unsupported here: %v", err)
 	}
-	if got, err := Open(dir).Lookup([][32]byte{key(1)}); err == nil {
+	if got, err := Open(dir, Shared).Lookup([][32]byte{key(1)}); err == nil {
 		t.Fatalf("symlinked segment followed: %v", got)
 	}
 }
@@ -482,20 +493,42 @@ func TestDirectoryAsSegmentRejected(t *testing.T) {
 	if err := os.Mkdir(filepath.Join(dir, segmentName(1, "0123456789abcdef")), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := Open(dir).Lookup(nil); err == nil || !strings.Contains(err.Error(), "regular") {
+	if _, err := Open(dir, Shared).Lookup(nil); err == nil || !strings.Contains(err.Error(), "regular") {
 		t.Fatalf("got %v", err)
 	}
 }
 
 func TestReadRecordFileErrors(t *testing.T) {
 	dir := t.TempDir()
-	if _, err := readRecordFile(filepath.Join(dir, "missing")); err == nil {
+	if _, _, err := readRecordFile(filepath.Join(dir, "missing"), 1<<20); err == nil {
 		t.Error("missing file accepted")
 	}
-	// Opening a directory succeeds on unix; the descriptor check refuses it.
-	// (On Windows the open itself fails.  Either way: an error.)
-	if _, err := readRecordFile(dir); err == nil {
+	// The Lstat check refuses a directory before it is opened.
+	if _, _, err := readRecordFile(dir, 1<<20); err == nil {
 		t.Error("directory accepted")
+	}
+	// The descriptor check (the TOCTOU defence) refuses one that slips past.
+	d, err := os.Open(dir)
+	if err != nil {
+		t.Skipf("cannot open a directory here: %v", err)
+	}
+	defer d.Close()
+	if _, err := requireRegular(d); err == nil {
+		t.Error("directory descriptor accepted")
+	}
+	closed, _ := os.Open(dir)
+	closed.Close()
+	if _, err := requireRegular(closed); err == nil { // Stat on a closed file
+		t.Error("closed file accepted")
+	}
+	// Per-file budget.
+	data, _ := EncodeSegment([]Record{pass(1, t0)})
+	p := writeFile(t, dir, "seg", data)
+	if _, _, err := readRecordFile(p, int64(len(data))-1); err == nil || !strings.Contains(err.Error(), "budget") {
+		t.Errorf("budget: %v", err)
+	}
+	if _, n, err := readRecordFile(p, int64(len(data))); err != nil || n != int64(len(data)) {
+		t.Errorf("at budget: %v", err)
 	}
 }
 
@@ -531,7 +564,7 @@ func snapshotWith(t *testing.T, recs ...Record) string {
 	t.Helper()
 	dir := t.TempDir()
 	if len(recs) > 0 {
-		if err := Open(dir).Record(recs, true); err != nil {
+		if err := Open(dir, Shared).Record(recs, trusted, nowT); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -563,19 +596,19 @@ func dirBytes(t *testing.T, dir string) string {
 
 func TestMergeUnionsAndCompacts(t *testing.T) {
 	snap := snapshotWith(t, pass(1, t0), pass(2, t0))
-	if err := Open(snap).Record([]Record{pass(1, t0.Add(time.Minute))}, true); err != nil {
+	if err := Open(snap, Shared).Record([]Record{pass(1, t0.Add(time.Minute))}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
 	delta := deltaFile(t, pass(3, t0), tomb(2, t0.Add(time.Hour)))
 	out := filepath.Join(t.TempDir(), "out")
-	st, err := Merge(snap, delta, out, nil)
+	st, err := Merge(snap, delta, out, trusted, nowT, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if st.Snapshot != 3 || st.Delta != 2 || st.Kept != 3 || st.Pruned != 0 {
 		t.Fatalf("stats: %+v", st)
 	}
-	got, err := Open(out).Lookup([][32]byte{key(1), key(2), key(3)})
+	got, err := Open(out, Shared).Lookup([][32]byte{key(1), key(2), key(3)})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -597,20 +630,20 @@ func TestMergeUnionsAndCompacts(t *testing.T) {
 
 func TestMergeEmptySnapshotAndEmptyResult(t *testing.T) {
 	out := filepath.Join(t.TempDir(), "o")
-	st, err := Merge(filepath.Join(t.TempDir(), "none"), deltaFile(t, pass(1, t0)), out, nil)
+	st, err := Merge(filepath.Join(t.TempDir(), "none"), deltaFile(t, pass(1, t0)), out, trusted, nowT, nil)
 	if err != nil || st.Kept != 1 {
 		t.Fatal(st, err)
 	}
 	// Empty delta, empty snapshot: an empty (but created) output directory.
 	out2 := filepath.Join(t.TempDir(), "o2")
-	if _, err := Merge(snapshotWith(t), deltaFile(t), out2, nil); err != nil {
+	if _, err := Merge(snapshotWith(t), deltaFile(t), out2, trusted, nowT, nil); err != nil {
 		t.Fatal(err)
 	}
 	if ents, err := os.ReadDir(out2); err != nil || len(ents) != 0 {
 		t.Fatal(ents, err)
 	}
 	// An existing empty output directory is fine.
-	if _, err := Merge(snapshotWith(t), deltaFile(t, pass(1, t0)), t.TempDir(), nil); err != nil {
+	if _, err := Merge(snapshotWith(t), deltaFile(t, pass(1, t0)), t.TempDir(), trusted, nowT, nil); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -620,7 +653,7 @@ func TestMergeRejectsDeltaWithOneBadRecord(t *testing.T) {
 	bad := append(append([]byte{}, good...), []byte(strings.Replace(goodLine(t), `"pass"`, `"bogus"`, 1)+"\n")...)
 	delta := writeFile(t, t.TempDir(), "delta.jsonl", bad)
 	out := filepath.Join(t.TempDir(), "out")
-	if _, err := Merge(snapshotWith(t, pass(9, t0)), delta, out, nil); err == nil ||
+	if _, err := Merge(snapshotWith(t, pass(9, t0)), delta, out, trusted, nowT, nil); err == nil ||
 		!strings.Contains(err.Error(), "delta") {
 		t.Fatalf("got %v", err)
 	}
@@ -632,32 +665,32 @@ func TestMergeRejectsDeltaWithOneBadRecord(t *testing.T) {
 func TestMergeErrors(t *testing.T) {
 	snap := snapshotWith(t, pass(1, t0))
 	delta := deltaFile(t, pass(2, t0))
-	if _, err := Merge(snap, delta, snap, nil); err == nil {
+	if _, err := Merge(snap, delta, snap, trusted, nowT, nil); err == nil {
 		t.Error("output == snapshot accepted")
 	}
 	nonEmpty := snapshotWith(t, pass(3, t0))
-	if _, err := Merge(snap, delta, nonEmpty, nil); err == nil {
+	if _, err := Merge(snap, delta, nonEmpty, trusted, nowT, nil); err == nil {
 		t.Error("non-empty output accepted")
 	}
-	if _, err := Merge(snap, filepath.Join(t.TempDir(), "nodelta"), filepath.Join(t.TempDir(), "o"), nil); err == nil {
+	if _, err := Merge(snap, filepath.Join(t.TempDir(), "nodelta"), filepath.Join(t.TempDir(), "o"), trusted, nowT, nil); err == nil {
 		t.Error("missing delta accepted")
 	}
 	badSnap := t.TempDir()
 	writeFile(t, badSnap, segmentName(1, "0123456789abcdef"), []byte("junk\n"))
-	if _, err := Merge(badSnap, delta, filepath.Join(t.TempDir(), "o"), nil); err == nil ||
+	if _, err := Merge(badSnap, delta, filepath.Join(t.TempDir(), "o"), trusted, nowT, nil); err == nil ||
 		!strings.Contains(err.Error(), "snapshot") {
 		t.Errorf("bad snapshot: %v", err)
 	}
 	file := writeFile(t, t.TempDir(), "f", nil)
-	if _, err := Merge(snap, delta, file, nil); err == nil { // ReadDir on a file
+	if _, err := Merge(snap, delta, file, trusted, nowT, nil); err == nil { // ReadDir on a file
 		t.Error("file as output accepted")
 	}
-	if _, err := Merge(snap, delta, filepath.Join(file, "sub"), nil); err == nil { // MkdirAll under a file
+	if _, err := Merge(snap, delta, filepath.Join(file, "sub"), trusted, nowT, nil); err == nil { // MkdirAll under a file
 		t.Error("uncreatable output accepted")
 	}
 	exhausted := t.TempDir()
 	writeFile(t, exhausted, segmentName(maxSeq, "0123456789abcdef"), nil)
-	if _, err := Merge(exhausted, delta, filepath.Join(t.TempDir(), "o"), nil); err == nil {
+	if _, err := Merge(exhausted, delta, filepath.Join(t.TempDir(), "o"), trusted, nowT, nil); err == nil {
 		t.Error("exhausted sequence accepted")
 	}
 }
@@ -667,7 +700,7 @@ func TestMergeDeterministic(t *testing.T) {
 	delta := deltaFile(t, pass(3, t0), tomb(1, t0.Add(time.Hour)), pass(9, t0))
 	run := func() string {
 		out := filepath.Join(t.TempDir(), "out")
-		if _, err := Merge(snap, delta, out, nil); err != nil {
+		if _, err := Merge(snap, delta, out, trusted, nowT, nil); err != nil {
 			t.Fatal(err)
 		}
 		return dirBytes(t, out)
@@ -698,7 +731,7 @@ func TestMergeSplitsLargeOutput(t *testing.T) {
 	delta := writeFile(t, t.TempDir(), "d", data)
 	snap := snapshotWith(t, recs[MaxRecordsPerSegment])
 	out := filepath.Join(t.TempDir(), "out")
-	st, err := Merge(snap, delta, out, nil)
+	st, err := Merge(snap, delta, out, trusted, nowT, nil)
 	if err != nil || st.Kept != n {
 		t.Fatal(st, err)
 	}
@@ -717,7 +750,7 @@ func TestMergePruning(t *testing.T) {
 		tomb(3, t0),                               // ... shadowed by a fresh tombstone: tombstone kept
 		pass(4, old), tomb(4, old.Add(time.Hour)), // old tombstone over old pass: both pruned
 	)
-	st, err := Merge(snap, deltaFile(t), filepath.Join(t.TempDir(), "o"), OlderThan(cutoff))
+	st, err := Merge(snap, deltaFile(t), filepath.Join(t.TempDir(), "o"), trusted, nowT, OlderThan(cutoff))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -730,20 +763,20 @@ func TestMergePruning(t *testing.T) {
 	byRevision := func(r Record) bool { return r.Kind == KindTombstone } // selects only tombstones
 	out := filepath.Join(t.TempDir(), "o2")
 	snap2 := snapshotWith(t, pass(7, old), tomb(7, t0))
-	st, err = Merge(snap2, deltaFile(t, pass(8, t0)), out, byRevision)
+	st, err = Merge(snap2, deltaFile(t, pass(8, t0)), out, trusted, nowT, byRevision)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if st.Pruned != 0 || st.Kept != 2 {
 		t.Fatalf("shadowing tombstone dropped: %+v", st)
 	}
-	if got, _ := Open(out).Lookup([][32]byte{key(7)}); len(got) != 0 {
+	if got, _ := Open(out, Shared).Lookup([][32]byte{key(7)}); len(got) != 0 {
 		t.Fatal("pruning un-shadowed key 7")
 	}
 	// But a tombstone is dropped when no pass for the key survives.
 	out3 := filepath.Join(t.TempDir(), "o3")
 	snap3 := snapshotWith(t, tomb(9, t0))
-	st, err = Merge(snap3, deltaFile(t), out3, byRevision)
+	st, err = Merge(snap3, deltaFile(t), out3, trusted, nowT, byRevision)
 	if err != nil || st.Pruned != 1 || st.Kept != 0 {
 		t.Fatal(st, err)
 	}
@@ -752,10 +785,10 @@ func TestMergePruning(t *testing.T) {
 func TestMergeDeltaWinsTies(t *testing.T) {
 	snap := snapshotWith(t, pass(1, t0))
 	out := filepath.Join(t.TempDir(), "out")
-	if _, err := Merge(snap, deltaFile(t, tomb(1, t0)), out, nil); err != nil {
+	if _, err := Merge(snap, deltaFile(t, tomb(1, t0)), out, trusted, nowT, nil); err != nil {
 		t.Fatal(err)
 	}
-	if got, _ := Open(out).Lookup([][32]byte{key(1)}); len(got) != 0 {
+	if got, _ := Open(out, Shared).Lookup([][32]byte{key(1)}); len(got) != 0 {
 		t.Fatal("delta tombstone at equal At should win")
 	}
 }
@@ -766,7 +799,7 @@ func TestMergeSymlinkedDeltaRejected(t *testing.T) {
 	if err := os.Symlink(real, link); err != nil {
 		t.Skipf("symlinks unsupported here: %v", err)
 	}
-	if _, err := Merge(snapshotWith(t), link, filepath.Join(t.TempDir(), "o"), nil); err == nil {
-		t.Skip("platform follows symlinks on open (no O_NOFOLLOW)")
+	if _, err := Merge(snapshotWith(t), link, filepath.Join(t.TempDir(), "o"), trusted, nowT, nil); err == nil {
+		t.Fatal("symlinked delta followed")
 	}
 }

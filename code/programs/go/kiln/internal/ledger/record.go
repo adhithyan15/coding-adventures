@@ -76,7 +76,9 @@ type wire struct {
 	Kind     string `json:"kind"`
 }
 
-// checkText accepts valid UTF-8 without control characters (C0, DEL, C1) and
+// checkText accepts valid UTF-8 without control characters (C0, DEL, C1) or
+// invisible format characters (category Cf: zero-width and bidirectional
+// overrides, which can make a printed label read differently from its bytes),
 // within max bytes.  Required fields must also be non-empty.
 func checkText(name, s string, max int, required bool) error {
 	switch {
@@ -88,8 +90,8 @@ func checkText(name, s string, max int, required bool) error {
 		return fmt.Errorf("%s is not valid UTF-8", name)
 	}
 	for _, r := range s {
-		if unicode.IsControl(r) {
-			return fmt.Errorf("%s contains control character U+%04X", name, r)
+		if unicode.IsControl(r) || unicode.Is(unicode.Cf, r) {
+			return fmt.Errorf("%s contains control or format character U+%04X", name, r)
 		}
 	}
 	return nil
