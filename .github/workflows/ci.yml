@@ -3773,7 +3773,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          # Shallow: the build runs from the detect job's build-plan.json and
+          # needs no git history. Only the plan-less fallback in the build
+          # steps below deepens the clone first.
+          fetch-depth: 1
           persist-credentials: false
 
       # ── Language toolchains (conditional) ───────────────────────
@@ -4793,6 +4796,10 @@ jobs:
           if (Test-Path 'build-plan.json') {
             Write-Host 'Using pre-computed build plan'
             $planFlag = @('-plan-file', 'build-plan.json')
+          } elseif ((git rev-parse --is-shallow-repository) -eq 'true') {
+            # Shallow checkout and no plan: the git-diff fallback needs history.
+            Write-Host '::warning::build-plan.json missing; deepening shallow clone for git-diff fallback'
+            git fetch --no-tags --unshallow origin
           }
           $shardFlag = @()
           if ('${{ matrix.sharded }}' -eq 'true') {
@@ -5905,6 +5912,11 @@ jobs:
           if [ -f build-plan.json ]; then
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
+          elif [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            # The checkout is shallow; without a plan the build tool diffs
+            # against origin/main and needs the history.
+            echo "::warning::build-plan.json missing; deepening shallow clone for git-diff fallback"
+            git fetch --no-tags --unshallow origin
           fi
           $BT \
             -root . \
