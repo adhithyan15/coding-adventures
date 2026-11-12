@@ -81,7 +81,7 @@ from pathlib import Path
 # tool installed by a shell command.  Reusing it keeps the two inventories
 # from ever disagreeing about what "third-party" means.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import third_party_dependency_policy as policy  # noqa: E402
+import third_party_dependency_policy as policy
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = Path("code/specs/data/third-party-dependencies")
@@ -257,7 +257,7 @@ def run_uv(arguments: list[str]) -> str:
     """Run uv for real and return stdout, surfacing uv's own error text."""
 
     command = [find_uv(), *arguments]
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         raise PinsError(
             f"`uv {' '.join(arguments[:2])}` failed (exit {result.returncode}):\n"
