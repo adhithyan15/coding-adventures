@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:160ca762deffc33f",
+  "sourceHash": "fnv1a64:8ba5ca7f640c88ef",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d53335e671d6379f",
+      "sourceHash": "fnv1a64:6b522d898759ed07",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +524,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) ك (kāf) and ي (yāʾ) you have written — kāf in the writing set, yāʾ in اسمي. The last letter, ف (fāʾ, the f), is new; the writing track hasn't reached it yet, so read it for now and draw it later."
+              "text": "ك (kāf) and ي (yāʾ) you have written — kāf in the writing set, yāʾ in اسمي. The last letter, ف (fāʾ, the f), is new; the writing track hasn't reached it yet. For now, hear its f sound. Its written shape can wait for a later lesson."
             },
             {
               "kind": "speech",
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e46c5cdadc33313b",
+      "sourceHash": "fnv1a64:b9127abd34fba7b7",
       "notice": null,
       "blocks": [
         {
@@ -668,7 +668,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Three letters, all already yours: ح (ḥāʾ, the deep throat h, from the hook-family lesson), ا (alif), ل (lām)."
+              "text": "Three letters, all already yours: ح (ḥāʾ, the deep throat h, from the hook-family lesson), ا (alif), ل (lām)."
             },
             {
               "kind": "speech",
@@ -683,7 +683,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the payoff. حال (ḥāl) comes from the root ḥ–w–l, \"to turn, to change.\" Look what grows from it:"
+              "text": "Here is the payoff. حال (ḥāl) comes from the root ḥ–w–l, \"to turn, to change.\" Several words grow from it:"
             },
             {
               "kind": "table",
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c55e777776d001b2",
+      "sourceHash": "fnv1a64:ed5fa96a8ebf7314",
       "notice": null,
       "blocks": [
         {
@@ -989,7 +989,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them a letter you have already written. The chapter's last writing lesson joins them into خير (khayr, bi-khayr) and then بخير (bi-khayr), letter by letter. Right to left: ب, خ, ي, ر."
+              "text": "ب (bāʾ), خ (khāʾ), ي (yāʾ), ر (rāʾ) — every one of them a letter you have already written. The chapter's last writing lesson joins them into خير (khayr, bi-khayr) and then بخير (bi-khayr), letter by letter. Right to left: ب, خ, ي, ر."
             }
           ]
         },
@@ -1134,7 +1134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d18121f4282411b9",
+      "sourceHash": "fnv1a64:40403f2cc04fe0c1",
       "notice": null,
       "blocks": [
         {
@@ -1161,7 +1161,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) ا ل ح م د and ل ل ه — every letter is one you have written: alif, lām, ḥāʾ, mīm, dāl, hāʾ. Nothing new to draw."
+              "text": "ا ل ح م د and ل ل ه — every letter is one you have written: alif, lām, ḥāʾ, mīm, dāl, hāʾ. Nothing new to draw."
             }
           ]
         },
