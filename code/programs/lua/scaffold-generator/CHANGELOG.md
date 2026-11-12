@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs `lua scaffold.lua --help` on Windows, mirroring the Unix `BUILD`, instead of skipping.
+
 ## 0.1.0 — 2026-03-23
 
 ### Added
