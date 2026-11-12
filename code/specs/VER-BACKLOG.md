@@ -359,6 +359,25 @@ review; publish a dependent draft, then retarget/mark ready after P003's merge i
 verified (now done). Reprioritize again after P004's actual merge before selecting
 P005. The local Warrant notes are preparation, not an accepted spec or code.
 
+## Layered validation roadmap (VER27)
+
+[VER27](VER27-layered-validation-roadmap.md) records the owner's vision for
+Warrant (one `.warrant` file, evidence in all eighteen lanes, explicit
+assumptions discharged down or up the stack, self-hosting with an independent
+oracle, adoption before features, every language version) and maps the
+programmes below onto a ten-layer ladder from gates to system integration.
+Its section 8 is the recommended order across them; its section 10 lists
+conflicts with rows here (notably AS-004's CPU target and the WX slices that
+landed before any adopter). The rows below are the new work it proposes; every
+other id it orders already exists in this file.
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P2 / LV-001 | VER13 slice: per-lane language assumptions (`src.<lane>.semantics-as-specified`, `cc.<lane>.implementation-conforms`, `cc.<lane>.version-pinned`) and widening the `cc` layer text to cover interpreters and VMs (VER27 §5.2). Rust umbrella first; each other lane's entries land with its first manifest (pin) or first proof label (semantics) | proposed; regenerates the ct-compare and gf256 reports when the Rust umbrella lands |
+| P1 / LV-002 | CI re-selects every adopter when its `.warrant`, a pinned fixture, `warrant-grammar`, `warrant-ir` or `ca-assurance-report` changes (build-tool consumer rule) | proposed; can ship inside the first leaf conversion's enablement PR |
+| P3 / LV-003 | Per-lane assumption-conformance tests (VER00 §7.5.3) written as small Warrant files and run through the VER04i corpus, moving `src.<lane>.<construct>` entries to `evidenced` | proposed; after the lane's WD-1xx runner exists |
+| P3 / LV-004 | Write VER14 (per-lane WIR front ends over LANG84 versioned grammars, with the LP-001a differential method as the template) | proposed; after LP-001a has run once on gf256 |
+
 ## Polyglot Warrant-derived evidence (coordinator queue)
 
 Goal: a Warrant spec is the single source that is mechanically translated into
