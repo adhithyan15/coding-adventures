@@ -28,8 +28,16 @@ same exact target object and returns one non-copyable result retaining the
 constructed path, reviewed root selection, and complete target policy. A
 byte-equal target from an independent decode is rejected.
 
+`bind_name_policy_reviewed_constructed_x509_certificate_path_to_server_policy`
+provides a distinct boundary for policy-backed reviewed construction. It
+consumes and retains the complete stronger input, so its exact validated
+Name-value policy remains attached to the reviewed root and complete target
+server policy. Generic callback construction and generic reviewed-path
+evidence cannot produce this stronger result.
+
 The crate performs no certificate parsing, issuer-link authentication,
 algorithm routing, trust-anchor validation, path-length or name-constraint
 processing, revocation, TLS, HTTP, OAuth transport, or network access. It is
 one evidence-integrity prerequisite for later complete path validation and does
 not make concrete HTTPS available.
+The available Name rules also remain incomplete for RFC 5280 Name equality.

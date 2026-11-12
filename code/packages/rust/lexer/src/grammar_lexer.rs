@@ -1756,7 +1756,7 @@ impl<'a> GrammarLexer<'a> {
     /// - At each logical line start, counts leading spaces and emits
     ///   INDENT/DEDENT tokens as needed
     /// - Suppresses NEWLINE/INDENT/DEDENT inside brackets
-    /// - Skips blank lines and comment-only lines
+    /// - Skips blank lines and recognized hash comments
     /// - Rejects tabs in leading indentation
     fn tokenize_indentation(&mut self) -> Result<Vec<Token>, LexerError> {
         let mut tokens = Vec::new();
@@ -1791,19 +1791,31 @@ impl<'a> GrammarLexer<'a> {
                     self.space_before_next = true;
                 }
 
-                // Check for blank line or comment-only line.
-                let is_blank_or_comment = if self.char_pos >= self.chars.len() {
-                    true
-                } else {
-                    let ch = self.chars[self.char_pos];
-                    ch == '\n' || ch == '\r' || ch == '#'
+                // A leading hash only takes the trivia path when the
+                // grammar actually consumes it. Otherwise leave the hash
+                // for normal indentation and token matching.
+                let is_blank_or_comment = match self.chars.get(self.char_pos).copied() {
+                    None | Some('\n' | '\r') => {
+                        self.try_skip();
+                        true
+                    }
+                    Some('#') => {
+                        let start = self.char_pos;
+                        let skipped = self.try_skip();
+                        if skipped && self.char_pos == start {
+                            return Err(LexerError {
+                                message: "Zero-width skip match in indentation".to_string(),
+                                line: self.line,
+                                column: self.column,
+                            });
+                        }
+                        skipped
+                    }
+                    _ => false,
                 };
 
-                // Handle blank/comment lines — skip them without emitting
-                // NEWLINE, but consume through the end of line.
+                // Consume blank/comment lines without emitting NEWLINE.
                 if is_blank_or_comment {
-                    // Try skip patterns (for comments).
-                    self.try_skip();
                     // Consume the newline if present.
                     if self.char_pos < self.chars.len() {
                         let ch = self.chars[self.char_pos];
@@ -1900,6 +1912,15 @@ impl<'a> GrammarLexer<'a> {
             if let Some((name, alias, matched)) = self.try_match_token() {
                 let start_line = self.line;
                 let start_col = self.column;
+                // Emitting an empty token would grow the output without
+                // consuming input, so reject it before building the token.
+                if matched.is_empty() {
+                    return Err(LexerError {
+                        message: "Zero-width token match in indentation".to_string(),
+                        line: start_line,
+                        column: start_col,
+                    });
+                }
 
                 let (token_type, type_name) = self.resolve_token_type(
                     &name,

@@ -2,11 +2,16 @@ use der_asn1::{Asn1Decoder, Asn1Limits};
 use tls_server_identity::{MatchKind, ReferenceIdentity};
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
-    construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
+    construct_unique_x509_certificate_path_by,
+    construct_unique_x509_certificate_path_with_name_policy, ConstructedX509CertificatePath,
 };
-use x509_certificate_path_reviewed_anchor_binding::bind_constructed_x509_certificate_path_to_reviewed_anchor;
+use x509_certificate_path_reviewed_anchor_binding::{
+    bind_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor,
+};
 use x509_certificate_path_server_policy_binding::{
     bind_constructed_x509_certificate_path_to_server_policy,
+    bind_name_policy_reviewed_constructed_x509_certificate_path_to_server_policy,
     bind_reviewed_constructed_x509_certificate_path_to_server_policy,
     X509CertificatePathServerPolicyBindingErrorKind,
 };
@@ -14,6 +19,9 @@ use x509_certificate_policy::{
     validate_certificate_algorithm_policy, validate_certificate_role_policy,
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificatePurposePolicy,
     X509CertificateRole,
+};
+use x509_name_value_policy::{
+    X509NameValueComparisonRule, X509NameValuePolicy, X509NameValuePolicyEntry,
 };
 use x509_server_certificate_policy::{
     validate_x509_server_certificate_policy, ValidatedX509ServerCertificatePolicy,
@@ -164,6 +172,52 @@ fn reviewed_server_path<'target, 'target_encoded, 'candidates, 'candidate_encode
     let path = constructed_path(target, candidates);
     let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
     bind_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor).unwrap()
+}
+
+fn name_policy_reviewed_server_path<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+>(
+    target: &'target X509Certificate<'target_encoded>,
+    candidates: &'candidates [X509Certificate<'candidate_encoded>],
+    name_policy: X509NameValuePolicy<'policy>,
+) -> x509_certificate_path_reviewed_anchor_binding::BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'candidates,
+    'candidate_encoded,
+>{
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        target,
+        candidates,
+        4,
+        4,
+        |certificate| std::ptr::eq(certificate, &candidates[0]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(path, reviewed_anchor)
+        .unwrap()
+}
+
+fn subject_attribute_types(certificate: &X509Certificate<'_>) -> Vec<Vec<u64>> {
+    let mut attribute_types = Vec::new();
+    for rdn in certificate.tbs_certificate().subject().rdns() {
+        for attribute in rdn.iter() {
+            let arcs = attribute.attribute_type().arcs().collect::<Vec<_>>();
+            if !attribute_types.contains(&arcs) {
+                attribute_types.push(arcs);
+            }
+        }
+    }
+    attribute_types
 }
 
 fn issuer_certificate() -> Vec<u8> {
@@ -333,6 +387,101 @@ fn reviewed_terminal_binding_rejects_byte_equal_policy_for_another_target_decode
     let wrong_policy = server_policy(&independently_decoded_target);
 
     let error = bind_reviewed_constructed_x509_certificate_path_to_server_policy(
+        reviewed_path,
+        wrong_policy,
+    )
+    .expect_err("byte-equal target policy from another decode must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathServerPolicyBindingErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 certificate path server-policy binding error EvidenceMismatch"
+    );
+    assert!(!error.to_string().contains("api.example.test"));
+}
+
+#[test]
+fn binds_name_policy_reviewed_path_and_server_policy_without_detaching_provenance() {
+    let anchor = first_reviewed_anchor();
+    let target_encoded = server_certificate_for_reviewed_anchor(&anchor);
+    let root_encoded = reviewed_root_certificate(&anchor);
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let candidates = [decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap()];
+    let attribute_types = subject_attribute_types(&candidates[0]);
+    let policy_entries = attribute_types
+        .iter()
+        .map(|attribute_type| {
+            X509NameValuePolicyEntry::new(attribute_type, X509NameValueComparisonRule::ExactDer)
+        })
+        .collect::<Vec<_>>();
+    let name_policy = X509NameValuePolicy::new(&policy_entries).unwrap();
+    let reviewed_path = name_policy_reviewed_server_path(&target, &candidates, name_policy);
+    let policy = server_policy(&target);
+
+    let bound = bind_name_policy_reviewed_constructed_x509_certificate_path_to_server_policy(
+        reviewed_path,
+        policy,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .constructed_path()
+            .target_certificate(),
+        bound.server_policy().certificate()
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .constructed_path()
+            .issuer_certificate(0)
+            .unwrap(),
+        bound
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate()
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy"
+    );
+}
+
+#[test]
+fn name_policy_reviewed_binding_rejects_byte_equal_policy_for_another_target_decode() {
+    let anchor = first_reviewed_anchor();
+    let target_encoded = server_certificate_for_reviewed_anchor(&anchor);
+    let root_encoded = reviewed_root_certificate(&anchor);
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let independently_decoded_target =
+        decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let candidates = [decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap()];
+    let attribute_types = subject_attribute_types(&candidates[0]);
+    let policy_entries = attribute_types
+        .iter()
+        .map(|attribute_type| {
+            X509NameValuePolicyEntry::new(attribute_type, X509NameValueComparisonRule::ExactDer)
+        })
+        .collect::<Vec<_>>();
+    let name_policy = X509NameValuePolicy::new(&policy_entries).unwrap();
+    let reviewed_path = name_policy_reviewed_server_path(&target, &candidates, name_policy);
+    let wrong_policy = server_policy(&independently_decoded_target);
+
+    let error = bind_name_policy_reviewed_constructed_x509_certificate_path_to_server_policy(
         reviewed_path,
         wrong_policy,
     )

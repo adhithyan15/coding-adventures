@@ -1,1 +1,4 @@
-echo "sha1-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for sha1_native.dll)"
+# Windows build: builds the Rust cdylib and runs the Dart tests through
+# tools\run-tests.ps1 (the counterpart of tools/run-tests.sh).
+# build-tool: deps=rust/sha1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

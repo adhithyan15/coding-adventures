@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased — indentation progress
+
+### Fixed
+
+- Leading hashes in indentation mode enter the comment path only when a skip
+  pattern consumes input. Otherwise the lexer matches the hash as a token or
+  returns the normal lexer error. A zero-width skip at a leading hash returns
+  an error instead of repeating the line-start loop. Indentation mode rejects
+  zero-width token matches before appending a token.
+
 ## Unreleased — LANG84 E6 automatic insertion
 
 ### Added
