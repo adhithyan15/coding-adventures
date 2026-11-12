@@ -9,11 +9,45 @@
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const EXPORTED_SYMBOL: &str = "coding_adventures_tls13_derive_traffic_key_material_ir_audit";
+
+/// Finds the optimized LLVM IR file Cargo emitted for the library under test.
+///
+/// Where Cargo parks `--emit=llvm-ir` output depends on its build-dir layout.
+/// Through Cargo 1.97 it was `<target>/release/deps/<crate>-<hash>.ll`; Cargo
+/// 1.100 uses the new layout, `<target>/release/build/<crate>/<hash>/out/
+/// <crate>-<hash>.ll`, and `release/deps` no longer exists. The gate cares
+/// only about the IR itself, so search the whole release tree (skipping the
+/// incremental cache, which holds no `.ll` files) rather than hard-coding
+/// either layout. Candidates are sorted so the choice is deterministic.
+fn find_llvm_ir(release_dir: &Path, prefix: &str) -> Option<PathBuf> {
+    let mut pending = vec![release_dir.to_path_buf()];
+    let mut found = Vec::new();
+    while let Some(dir) = pending.pop() {
+        let Ok(entries) = fs::read_dir(&dir) else {
+            continue;
+        };
+        for path in entries.filter_map(Result::ok).map(|entry| entry.path()) {
+            if path.is_dir() {
+                if path.file_name().is_some_and(|name| name != "incremental") {
+                    pending.push(path);
+                }
+            } else if path.extension().is_some_and(|extension| extension == "ll")
+                && path
+                    .file_name()
+                    .is_some_and(|name| name.to_string_lossy().starts_with(prefix))
+            {
+                found.push(path);
+            }
+        }
+    }
+    found.sort();
+    found.into_iter().next()
+}
 
 #[test]
 fn optimized_derivation_scrubs_staging_without_returning_or_allocating_it() {
@@ -52,18 +86,7 @@ fn optimized_derivation_scrubs_staging_without_returning_or_allocating_it() {
         String::from_utf8_lossy(&compilation.stderr)
     );
 
-    let deps_dir = target_dir.join("release/deps");
-    let ir_path = fs::read_dir(&deps_dir)
-        .expect("release dependency directory must exist")
-        .filter_map(Result::ok)
-        .map(|entry| entry.path())
-        .find(|path| {
-            path.extension().is_some_and(|extension| extension == "ll")
-                && path.file_name().is_some_and(|name| {
-                    name.to_string_lossy()
-                        .starts_with("tls13_traffic_key_material-")
-                })
-        })
+    let ir_path = find_llvm_ir(&target_dir.join("release"), "tls13_traffic_key_material-")
         .expect("Cargo must emit traffic-key LLVM IR");
     let ir = fs::read_to_string(ir_path).expect("optimized LLVM IR must be readable");
     fs::remove_dir_all(&target_dir).expect("temporary codegen directory must be removable");
