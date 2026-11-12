@@ -78,16 +78,16 @@ try {
         Write-Host '==> Strawberry Perl not found; falling back to the perl on PATH'
     }
     # A stray POSIX-style PERL5LIB (MSYS ':' separators) would confuse Strawberry.
-    Remove-Item Env:PERL5LIB -ErrorAction SilentlyContinue
+    foreach ($v in 'PERL5LIB', 'PERL5OPT', 'PERLLIB') { Remove-Item "Env:$v" -ErrorAction SilentlyContinue }
 
     Write-Host "==> perl        : $perl"
-    $rc = Invoke-Native { & $perl -e 'print "perl $^V at $^X\n"' }
+    $rc = Invoke-Native { & $perl -e 'print qq{perl $^V at $^X\n}' }
     if ($rc -ne 0) { throw "perl could not be started (exit code $rc)" }
 
     # ---- 2. Make sure the test framework is available -------------------------
     # Same intent as the Unix `cpanm --notest --quiet Test2::V0` line, but only
     # install when it is missing: a bundled Test2::V0 makes this a no-op.
-    $rc = Invoke-Native { & $perl -MTest2::V0 -e 'print "Test2::V0 $Test2::V0::VERSION is available\n"' }
+    $rc = Invoke-Native { & $perl -MTest2::V0 -e 'print qq{Test2::V0 $Test2::V0::VERSION is available\n}' }
     if ($rc -ne 0) {
         Write-Host '==> Test2::V0 missing; installing with cpanm'
         $rc = Invoke-Native { & cpanm --notest --quiet Test2::V0 }
@@ -97,7 +97,10 @@ try {
     # ---- 3. Sibling library paths ---------------------------------------------
     $includes = @()
     foreach ($name in ($Deps -split ',' | Where-Object { $_.Trim() -ne '' })) {
-        $lib = Join-Path (Join-Path $perlRoot $name.Trim()) 'lib'
+        $name = $name.Trim()
+        # A bare package directory name only: no separators, no '..'.
+        if ($name -notmatch '^[A-Za-z0-9._-]+$' -or $name -eq '.' -or $name -eq '..') { throw "Invalid -Deps entry: '$name'" }
+        $lib = Join-Path (Join-Path $perlRoot $name) 'lib'
         if (-not (Test-Path -LiteralPath $lib)) { throw "Missing sibling library directory: $lib" }
         $includes += "-I$lib"
     }
@@ -110,7 +113,7 @@ try {
     if ($rc -ne 0) {
         Write-Host "==> prove FAILED with exit code $rc"
         Write-Host '==> @INC the tests ran with:'
-        Invoke-Native { & $perl @includes -Ilib -e 'print "  $_\n" for @INC' } | Out-Null
+        Invoke-Native { & $perl @includes -Ilib -e 'print qq{  $_\n} for @INC' } | Out-Null
         exit $rc
     }
     Write-Host '==> prove passed'
