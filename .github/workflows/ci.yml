@@ -4333,6 +4333,18 @@ jobs:
         run: |
           bash code/scripts/ci/apt-install.sh libudev-dev
 
+      # wasm-leb128's VER08b runtime-capability gate (BUILD_linux runs it with
+      # RCG_STRICT=1) has an independent `strace` observer. With strace absent
+      # the strict gate FAILS (RCG013) rather than skipping -- correct, but it
+      # means the runner has to provide it. Linux only: the gate's jail
+      # (seccomp/Landlock) and its observer exist nowhere else, and macOS runs
+      # the plain BUILD, where the gate reports NOT-LIVE without failing.
+      - name: Install strace for the cargo runtime capability gate
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh strace
+
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06 # v4.5.0

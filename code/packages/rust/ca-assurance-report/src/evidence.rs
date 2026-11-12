@@ -114,9 +114,19 @@ pub const MAX_MANIFEST_BYTES: u64 = 16 * 1024 * 1024;
 /// Largest DIMACS or DRAT certificate file we will read.
 pub const MAX_CERTIFICATE_BYTES: u64 = 64 * 1024 * 1024;
 
-/// Attestation ids derived from the effect certificate.  A manifest entry may
-/// not use one of these ids, or it could vouch for them by itself.
-pub const ATTESTATION_IDS: [&str; 12] = [
+/// Attestation that the Warrant document labels every operand of every
+/// operation `public` (derived from the spec on disk by [`Evidence::load`];
+/// see [`OpFacts::labelled_public`]).  It backs the "not applicable" CWE-208 row.
+pub const NO_SECRET_OPERANDS_ATTESTATION: &str = "warrant-spec::all-operands-public";
+
+/// The computed exemption that records CWE-208 as not applicable (no secret
+/// operand, no constant-time obligation).  `--check` re-derives both facts.
+pub const NOT_APPLICABLE_208_EXEMPTION: &str = "EXEMPT-CWE-208-NO-SECRET-OPERANDS";
+
+/// Attestation ids derived from the effect certificate or the Warrant
+/// document.  A manifest entry may not use one of these ids, or it could vouch
+/// for them by itself.
+pub const ATTESTATION_IDS: [&str; 13] = [
     "effect-certificate::proved",
     "analyzer::no-unsafe-or-ffi",
     "effect-certificate::unsafe-exception",
@@ -129,6 +139,7 @@ pub const ATTESTATION_IDS: [&str; 12] = [
     "capability-audit::no-external-resources",
     "capability-audit::no-database-sinks",
     "capability-audit::banned-constructs-clean",
+    NO_SECRET_OPERANDS_ATTESTATION,
 ];
 
 #[derive(Clone, Debug, Default)]
@@ -175,6 +186,11 @@ pub struct OpFacts {
     pub name: String,
     pub has_secret: bool,
     pub has_steps_bound: bool,
+    /// Every parameter of the operation has a `labels` row naming it (or one
+    /// of its projections), and no row of the operation is `secret`.  An
+    /// unlabelled parameter is *unclassified*, not public, so it leaves this
+    /// `false`.
+    pub labelled_public: bool,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -337,10 +353,18 @@ fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
                 let has_steps_bound = file.declarations.iter().any(|x| {
                     matches!(x, Declaration::Bound(b) if b.name == o.name && b.rows.iter().any(|r| r.name == "steps"))
                 });
+                let labelled = |param: &str| {
+                    file.declarations.iter().any(|x| {
+                        matches!(x, Declaration::Labels(l) if l.name == o.name
+                            && l.rows.iter().any(|r| r.name.segments.first() == Some(&param)))
+                    })
+                };
+                let labelled_public = !has_secret && o.params.iter().all(|p| labelled(p.name));
                 facts.ops.push(OpFacts {
                     name: o.name.to_string(),
                     has_secret,
                     has_steps_bound,
+                    labelled_public,
                 });
             }
             _ => {}
@@ -954,7 +978,17 @@ impl Evidence {
         if self.cert.other_exceptions.is_empty() {
             ids.insert("capability-audit::banned-constructs-clean".into());
         }
+        if self.spec_all_operands_public() {
+            ids.insert(NO_SECRET_OPERANDS_ATTESTATION.into());
+        }
         ids
+    }
+
+    /// Does the Warrant document declare at least one operation and label
+    /// every operand of every operation `public`?  (Read from the spec on disk,
+    /// so a report cannot assert it.)
+    pub fn spec_all_operands_public(&self) -> bool {
+        !self.spec.ops.is_empty() && self.spec.ops.iter().all(|o| o.labelled_public)
     }
 
     fn entries<'a>(&'a self, kind: &'a str, op: &'a str) -> impl Iterator<Item = &'a TestEntry> {
@@ -1045,6 +1079,11 @@ impl Evidence {
             ct_not_live: ct_nl.iter().map(|p| p.id.clone()).collect(),
             step_not_live: steps_nl.iter().map(|p| p.id.clone()).collect(),
             not_live_note: notes.join(" | "),
+            no_secret_operand_ids: if self.spec_all_operands_public() {
+                vec![NO_SECRET_OPERANDS_ATTESTATION.to_string()]
+            } else {
+                Vec::new()
+            },
             profile,
         };
         PackageAuditContext {
@@ -1631,6 +1670,40 @@ pub fn verify_evidence(
                     unproven.join(", ")
                 )));
             }
+        }
+    }
+    // 6b. The "not applicable" CWE-208 exemption is re-derived, not taken
+    //     from the report: the spec on disk must label every operand public
+    //     and the proof manifest must hold no constant-time obligation at all.
+    //     (Citing the attestation where it does not hold already failed step 4
+    //     as an unknown id; this catches the exemption id used without it.)
+    //
+    //     Both directions are closed: the exemption id re-derives the facts, and
+    //     a CWE-208 row citing the attestation must carry that exemption (the
+    //     attestation is evidence for "not applicable" and for nothing else, so
+    //     citing it under, say, the gate-level exemption is a forged
+    //     classification even when every fact it names is true).
+    let cites_attestation = report
+        .weaknesses
+        .iter()
+        .any(|w| w.cwe == 208 && w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION));
+    let has_not_applicable = report.exemptions.iter().any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION);
+    if cites_attestation && !has_not_applicable {
+        return Err(E::EvidenceMismatch(format!(
+            "a CWE-208 row cites {NO_SECRET_OPERANDS_ATTESTATION} but the report does not carry \
+             {NOT_APPLICABLE_208_EXEMPTION}; the attestation supports only that exemption"
+        )));
+    }
+    if has_not_applicable {
+        let ct: Vec<&str> =
+            ev.proofs.iter().filter(|p| p.kind == "constant-time").map(|p| p.id.as_str()).collect();
+        if !ev.spec_all_operands_public() || !ct.is_empty() {
+            return Err(E::EvidenceMismatch(format!(
+                "{NOT_APPLICABLE_208_EXEMPTION} needs every operand labelled public and no constant-time \
+                 obligation, but the spec {} and the proof manifest has {} constant-time obligation(s)",
+                if ev.spec_all_operands_public() { "does" } else { "does not" },
+                ct.len()
+            )));
         }
     }
     let want_rungs = ev.rungs();

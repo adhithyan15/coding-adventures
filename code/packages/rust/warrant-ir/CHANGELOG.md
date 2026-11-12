@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `tests/wasm_leb128_proofs.rs` (VER04h, wasm-leb128), a copy of `gf256_proofs.rs` with the package constants changed, deliberately not a shared parameterised target so gf256's target and manifest stay untouched. `code/specs/wasm-leb128.warrant` labels every operand `public`, so there is no constant-time obligation; its `steps` rows are attempted on the real `wasm-leb128/src/lib.rs`, which the Rust-subset front end refuses (`parse refused at src/lib.rs:85:42`, the anonymous lifetime in `fmt::Formatter<'_>`, plus a per-export probe), so every steps-bound obligation is recorded `not-live` with that message and heap/depth rows `unchecked`. The encoders' heap notes say the generated harness observes those rows live. The `lowering-blocker` test fails the day the front end accepts the file.
 - `tests/gf256_proofs.rs` records `source_sha256` over every `gf256/src/**/*.rs` with the shared `warrant-src-v1` framing (`manifest::source_tree_framing`), like `warrant_proofs.rs`.
 - Round-2: `tests/warrant_proofs.rs` records `source_sha256` over every `ct-compare/src/**/*.rs` (framing `warrant-src-v1` from test-bootstrap) instead of `lib.rs` alone.
 - `tests/warrant_proofs.rs` records `obligation_sha256` per discharged proof entry: SHA-256 of the canonical text of the lowered, inlined WIR function plus the textual obligation (security review B4c). `ca-assurance-report --check` verifies it is present and well formed; recomputation is follow-up WD-009.
