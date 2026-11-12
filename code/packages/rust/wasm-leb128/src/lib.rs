@@ -191,6 +191,12 @@ pub fn decode_unsigned(data: &[u8], offset: usize) -> Result<(u64, usize), Leb12
 ///     one bit past what a u32 can hold.
 /// ```
 ///
+/// ## Width limit
+///
+/// `max_bits` must be at most 64: the decoder accumulates into a `u64`, so a
+/// wider width is rejected up front (before any byte is read) instead of
+/// silently truncating or overflowing a shift.
+///
 /// # Examples
 ///
 /// ```rust
@@ -301,6 +307,12 @@ pub fn decode_signed(data: &[u8], offset: usize) -> Result<(i64, usize), Leb128E
 /// `decode_signed(&[0x7F], 0)` agree: both return `-1`, not some
 /// 7-bit-truncated bit pattern.
 ///
+/// ## Width limit
+///
+/// `max_bits` must be at most 64: the decoder accumulates into a `u64`, so a
+/// wider width is rejected up front (before any byte is read) instead of
+/// silently truncating or overflowing a shift.
+///
 /// # Examples
 ///
 /// ```rust
@@ -354,6 +366,33 @@ pub fn decode_signed_bounded(data: &[u8], offset: usize, max_bits: u32) -> Resul
 ///   position from which the caller should OR in `!0u64 << bit_position` to
 ///   finish sign-extending to a full 64 bits.
 fn decode_bits_core(data: &[u8], offset: usize, max_bits: u32, signed: bool) -> Result<(u64, usize, Option<u32>), Leb128Error> {
+    // ---- the width guard (SEC-006) ------------------------------------------
+    //
+    // The accumulator below is a `u64`, so it can hold at most 64 value bits.
+    // A wider `max_bits` cannot be honoured, and without this guard it fails
+    // in two different, equally bad ways:
+    //
+    //   * 65 < max_bits <= 70: the byte budget `ceil(max_bits / 7)` is 10, the
+    //     tenth byte's shift is 63, and the accumulator silently drops every
+    //     data bit above bit 63 -- `FF x9 7F` would "decode" to `u64::MAX`;
+    //   * max_bits >= 71: the budget is 11 or more, so an 11-byte input shifts
+    //     a `u64` by 70: a panic in a debug build, a wrong value in release
+    //     (`80 x10 01` came back as `(64, 11)`).
+    //
+    // WebAssembly never needs more than 64 bits (`u32`, `u64`, `s33`, `s64`),
+    // so we refuse early, before the bounds check and before any shift, with
+    // an error that names the actual problem.  The check is first so the
+    // reported fault does not depend on the data.  `max_bits = 0` is NOT
+    // rejected here: it is a legal (degenerate) width admitting only 0.
+    if max_bits > 64 {
+        return Err(Leb128Error {
+            message: format!(
+                "max_bits {max_bits} exceeds the 64-bit accumulator: a LEB128 width must be at most 64"
+            ),
+            offset,
+        });
+    }
+
     if offset >= data.len() {
         return Err(Leb128Error {
             message: format!(
@@ -982,5 +1021,74 @@ mod tests {
             offset: 0,
         });
         assert!(err.to_string().contains("boxed"));
+    }
+
+    // ---- SEC-006: widths beyond the 64-bit accumulator are rejected ----------
+
+    /// Every width a `u64`/`i64` accumulator cannot hold, including the first
+    /// one past it (65), the two silent-truncation zone ends (66, 70), the
+    /// first width whose 11-byte input shifts by >= 64 (71), and the extremes.
+    const TOO_WIDE: [u32; 8] = [65, 66, 70, 71, 128, 1 << 16, u32::MAX - 1, u32::MAX];
+
+    #[test]
+    fn bounded_unsigned_rejects_width_above_64() {
+        let input = [0xFFu8, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01];
+        for w in TOO_WIDE {
+            let err = decode_unsigned_bounded(&input, 0, w).unwrap_err();
+            assert!(err.message.contains("max_bits"), "width {w}: {}", err.message);
+            assert_eq!(err.offset, 0);
+        }
+    }
+
+    #[test]
+    fn bounded_signed_rejects_width_above_64() {
+        let input = [0xFFu8, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F];
+        for w in TOO_WIDE {
+            let err = decode_signed_bounded(&input, 0, w).unwrap_err();
+            assert!(err.message.contains("max_bits"), "width {w}: {}", err.message);
+            assert_eq!(err.offset, 0);
+        }
+    }
+
+    #[test]
+    fn width_check_precedes_input_checks() {
+        // Even with empty data or an out-of-range offset the width is the
+        // reported fault, and nothing panics.
+        assert!(decode_unsigned_bounded(&[], 0, 65).unwrap_err().message.contains("max_bits"));
+        assert!(decode_signed_bounded(&[0], 9, u32::MAX).unwrap_err().message.contains("max_bits"));
+    }
+
+    #[test]
+    fn nine_ff_then_7f_is_not_silently_truncated_to_u64_max() {
+        // Before the fix this decoded to u64::MAX at width 66..=70, dropping
+        // data bits above bit 64.
+        let mut input = [0xFFu8; 10];
+        input[9] = 0x7F;
+        for w in 66..=70 {
+            assert!(decode_unsigned_bounded(&input, 0, w).is_err(), "width {w}");
+            assert!(decode_signed_bounded(&input, 0, w).is_err(), "width {w}");
+        }
+    }
+
+    #[test]
+    fn eleven_byte_input_at_width_71_does_not_shift_out_of_range() {
+        // 80 x10 01: before the fix this shifted a u64 by 70 (debug panic,
+        // release value (64, 11)).
+        let mut input = [0x80u8; 11];
+        input[10] = 0x01;
+        for w in [71u32, 77, 128] {
+            assert!(decode_unsigned_bounded(&input, 0, w).is_err(), "width {w}");
+            assert!(decode_signed_bounded(&input, 0, w).is_err(), "width {w}");
+        }
+    }
+
+    #[test]
+    fn widths_zero_through_64_keep_their_behaviour() {
+        // 64 is the last accepted width; 0 keeps its existing behaviour (it
+        // admits only the value 0, per LEB01), so it is not the new check.
+        assert_eq!(decode_unsigned_bounded(&[0x05], 0, 64).unwrap(), (5, 1));
+        assert_eq!(decode_signed_bounded(&[0x7F], 0, 64).unwrap(), (-1, 1));
+        assert_eq!(decode_unsigned_bounded(&[0x00], 0, 0).unwrap(), (0, 1));
+        assert!(decode_unsigned_bounded(&[0x01], 0, 0).is_err());
     }
 }
