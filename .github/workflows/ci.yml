@@ -3789,7 +3789,10 @@ jobs:
         uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
-          cache-dependency-path: 'code/**/go.sum'
+          # The build tool's own go.sum is enough unless Go packages are
+          # affected; hashing and restoring every go.sum under code/ cost
+          # 60s+ on macOS and Windows.
+          cache-dependency-path: ${{ needs.detect.outputs.needs_go == 'true' && 'code/**/go.sum' || 'code/programs/go/build-tool/go.sum' }}
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
