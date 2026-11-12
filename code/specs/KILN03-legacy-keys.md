@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-11-12), after one adversarial design review. Implements
+Accepted (2026-11-12), after an adversarial design review and a security review. Implements
 KILN00 §15.1 on top of KILN02 key encoding, the `Source`/`Host` interfaces
 (KILN00 §13) and the pass ledger (§10). **Shadow mode only:** nothing in M1
 or M2 skips a build; keys are computed, recorded and compared.
@@ -80,12 +80,15 @@ a BUILD can read.
 ### 3.2 Closure
 
 ```
-closure(P, OS) = {P} ∪ N(P) ∪ deps*( deps[OS](P) ∪ dev_deps(P) ∪ N(P) )
+closure(P, OS) = {P} ∪ N(P) ∪ E(P) ∪ deps*( deps[OS](P) ∪ dev_deps(P) ∪ N(P) ∪ E(P) )
 ```
 
 - `deps*` is the transitive closure over `deps[OS]` edges only.
 - `N(P)` is every package whose `rel_path` lies under P's — containment is an
   edge, because a BUILD can `cd ext/foo && cargo build` with no `../` at all.
+- `E(P)` is every package whose `rel_path` *encloses* P's. Tools search
+  upward, so an enclosing package's own manifest (`Cargo.toml`,
+  `package.json`, `go.mod`, `tsconfig.json`) is configuration for P.
 - `dev_deps` apply at P only: only P's own tests run, so only P's test-only
   dependencies are linked. Applying them at every member would merge large
   parts of the graph through dev-dependency cycles.
@@ -109,8 +112,15 @@ closure(P, OS) = {P} ∪ N(P) ∪ deps*( deps[OS](P) ∪ dev_deps(P) ∪ N(P) )
 
 A read path that is a file is encoded as a KILN02 `reads` entry. A read path
 that is a directory is encoded as **one** `consumed` entry (§3.4) carrying
-the digest of its file list, so `code/grammars/**` costs 32 bytes per key,
-not thousands of entries.
+its **tree digest**: SHA-256 of the KILN02 `inputs`-list encoding of every
+file under it — paths, kinds, executable bits *and content digests*, never
+paths alone. So `code/grammars/**` costs 32 bytes per key, not thousands of
+entries.
+
+**Symlinks.** A link entry's digest covers only its target *path*. So every
+symlink in P's inputs, and in every read, is resolved: a target inside P, a
+closure member or a read path is already covered; any other target makes P
+uncacheable with reason `escape:<link>`.
 
 ### 3.4 Key fields
 
@@ -122,7 +132,7 @@ not thousands of entries.
 | `recipe` | `LegacyRecipe([(name, contents)])` of the single file `build_files[OS]` (KILN02 §3.4, generalised) |
 | `inputs` | P's own files (full entries) |
 | `reads` | the file-valued reads of §3.3 |
-| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `tool:build-tool` → own digest of `code/programs/go/build-tool` (the executor rewrites and splits BUILD lines, so its source is part of what runs) |
+| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `tool:build-tool` → tree digest of `code/programs/go/build-tool` **plus every in-repo module it imports** (its `go.mod` `replace` targets) — the executor rewrites and splits BUILD lines, so its source is part of what runs |
 | `tools` | §4 |
 | `env` | §5 |
 
@@ -159,12 +169,20 @@ languages.
 - **Identity** (in the key): the pins, plus `Host.ImageID()` for anything
   pinned to `"image"` (the runner image supplies it), plus the digest of
   `toolchains.json` itself.
-- **Probes** (verification): when a tool is present, its probe runs (no
-  shell, scrubbed environment, 10 s timeout). Output is normalised: stdout
-  and stderr captured, absolute paths and timestamps stripped. If the
-  normalised output does not contain the pinned version, the package is
-  marked `probe-mismatch` — a real error in M3, a reported disagreement in
-  M2. An absent tool is not an error; its identity still comes from the pin.
+- **Probes** (verification): when a tool is present, its probe runs with no
+  shell, a scrubbed environment, a 10 s timeout, output capped at 64 KiB, and
+  a **fixed minimal `PATH`** (the toolchain install directories, never `.`,
+  `node_modules/.bin` or shims). A probe whose resolved binary lies inside
+  the checkout is refused — otherwise the PR under test would choose what
+  runs at planning time. Probes never run in a job that holds secrets or
+  ledger-write credentials. Output is normalised (stdout and stderr captured,
+  absolute paths and timestamps stripped) and must contain the pinned
+  version **as a whole token** (so `1.83.0` does not match `11.83.01`);
+  otherwise the package is marked `probe-mismatch` — a real error in M3, a
+  reported disagreement in M2. An absent tool is not an error; its identity
+  still comes from the pin. Because the key records the pin, not the
+  installed version, a drifted toolchain is only caught by this probe, which
+  is why `probe-mismatch` must be fatal before M3 enables reuse.
 - Every closure member's language and extra toolchains must have an entry; a
   missing entry makes P uncacheable (`unknown-toolchain:<name>`), never "no
   tools".
@@ -181,10 +199,26 @@ to find.
 Legacy BUILDs inherit the job's environment. `code/kiln/legacy/env.json`
 lists the variable names whose values can change a build or test result
 (`RUSTFLAGS`, `CARGO_*`, `NODE_OPTIONS`, `DEVELOPER_DIR`, `PYTHON*`,
-`JAVA_HOME`, `DOTNET_*`, `CI`, `GOFLAGS`, …; trailing `*` matches a prefix).
-Each matching name goes into the `env` section with its value, or the
-literal value `<unset>`; the list's own digest is in every key. Secrets are
-never listed (KILN00 §6.2 `pass` rules apply).
+`JAVA_HOME`, `DOTNET_*`, `CI`, `GOFLAGS`, `LANG`, `TZ`, …; trailing `*`
+matches a prefix). Each matching name that is set goes into the `env`
+section with its value; an unset name is simply omitted (absence means
+unset, and an empty value stays distinct from unset — no sentinel string
+that a real value could collide with). The list's own digest is in every
+key.
+
+**Secrets.** After wildcard expansion, any name containing `TOKEN`,
+`SECRET`, `PASSWORD`, `PASSWD`, `CREDENTIAL` or ending in `_KEY` is an
+**error**, not a silent skip (`CARGO_*` would otherwise pull in
+`CARGO_REGISTRY_TOKEN` and put a brute-forceable hash of it in the plan).
+
+**The allowlist is complete by construction, not by hope.** A BUILD can read
+any variable it likes, and no syscall trace can see a `getenv`. So in M2 the
+allowlist is a measurement, and **before M3 enables reuse, legacy BUILDs run
+with their environment scrubbed to exactly the key's `env` section** plus
+`PATH`, `HOME` and `TMPDIR`. Whatever a BUILD cannot see cannot change its
+result. M2 runs a scrubbed shadow execution on the full-build shards and
+reports every package whose result changes, which is how the allowlist is
+grown.
 
 ## 6. Escapes and indirection
 
@@ -197,11 +231,20 @@ uses two cheap, conservative rules. Both are heuristics; §8 is the real check.
    inside P is fine (source-relative imports stay quiet); a result inside
    another closure member or a read path is fine; anything else makes P
    uncacheable with reason `escape:<path>`.
-2. **Indirection markers in the selected BUILD.** `git rev-parse`,
-   `dirname`, `$(pwd)`, `$PWD`, `$HOME`, `~/`, or an absolute path outside a
-   small allowlist (`/dev/null`, `/usr/bin/env`, `/bin/sh`) make P
-   uncacheable with reason `indirect`. In particular the ~301 packages whose
-   BUILD is `sh tools/run.sh` stay uncacheable until the audit proves them.
+2. **Indirection markers in every scanned file.** The selected BUILD *and*
+   every text file in P's own inputs are scanned for: `git rev-parse`,
+   `git ls-files`, `dirname`, `realpath`, `readlink`, `$(pwd)`, `$PWD`,
+   `$OLDPWD`, `$0`, `${BASH_SOURCE`, `$HOME`, `~/`, a bare `cd ..` (with or
+   without a trailing `/` or separator), or an absolute path outside a small
+   allowlist (`/dev/null`, `/usr/bin/env`, `/bin/sh`). Any hit makes P
+   uncacheable with reason `indirect:<file>`. In particular the ~301
+   packages whose BUILD is `sh tools/run.sh` stay uncacheable until the
+   audit proves them.
+3. **Unscanned means uncacheable.** A text file over the 256 KiB cap, or a
+   file with an executable bit that is not text, cannot be scanned, so it
+   makes P uncacheable with reason `unscanned:<file>`. Failing closed is the
+   point: these rules are heuristics, so their blind spots must cost hit rate,
+   not correctness.
 
 ## 7. Cacheability classes
 
@@ -233,9 +276,26 @@ is the measured value of M0.
 - **The resolver is the trust root.** Every edge comes from the old tool,
   which KILN00 §2 records has missed dependents before. The definitive check
   is an M2 audit: on one Linux full-build shard set, run each BUILD under
-  `strace -f -e trace=open,openat,execve`, map opened repository paths to
-  packages, and diff against `closure ∪ reads`. Every miss is a bug to fix
-  in the export or in this spec.
+  `strace -f -e trace=%file,%process,connect -e signal=none` — `%file`
+  includes `stat`, `access`, `readlink` and directory listing, so existence
+  checks and globs are seen, not only opens; `connect` finds network use.
+  Map every touched repository path to a package and diff against
+  `closure ∪ reads`; every miss is a bug in the export or in this spec, and
+  every package that connects to the network joins `never.json`
+  automatically instead of by hand.
+- **Audit hygiene.** strace runs unprivileged (no `--privileged`, no added
+  `SYS_PTRACE`, no `sudo`), without `-v` and with a short `-s`, because
+  verbose `execve` lines print the whole environment. Its logs are treated
+  as sensitive and never uploaded as artifacts; only the derived
+  path-to-package diff is.
+- **Gate for M3.** Reuse is not enabled until the audit is clean (no
+  unexplained misses), the scrubbed-environment shadow run (§5) shows no
+  result changes, and `probe-mismatch` is fatal.
+- **Ignored and ignore-listed files.** Files Git ignores are invisible to
+  `Source`, so they are outside every key; this is safe only on fresh
+  runners, which is why reuse is CI-only. The ancestor-directory ignore list
+  (`*.md`, `LICENSE*`, `CHANGELOG*`) is a hit-rate choice; a test that reads
+  such a file is a false-hit source the audit will report.
 
 ## 9. Commands and output
 
@@ -271,8 +331,18 @@ kiln explain --plan <plan.json> <package>
   component).
 - Dependency and dev-dependency cycles terminate and are order-independent.
 - `../` escapes are detected in a non-BUILD text file; in-package and
-  in-closure `../` are allowed; each indirection marker makes the package
-  uncacheable.
+  in-closure `../` are allowed; each indirection marker, in the BUILD or in
+  any other text file, makes the package uncacheable; an over-cap text file
+  and an executable binary each make it `unscanned`.
+- A symlink whose target leaves the closure and read paths makes the
+  package uncacheable; one pointing inside the closure does not.
+- An enclosing package's manifest change changes the nested package's key.
+- An unset allowlisted variable and one set to any string (including
+  `<unset>` and the empty string) give three different keys; a secret-like
+  name after wildcard expansion is an error.
+- A probe whose binary resolves inside the checkout is refused; a pinned
+  version that only appears as a substring of a longer version is a
+  mismatch.
 - An unpinned language makes the package `unpinned`, not `uncacheable`, and
   its key is still computed.
 - A dirty tree is refused.
