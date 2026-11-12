@@ -47,6 +47,7 @@ It lists **every** discovered package for all three platforms at once
       "deps":     {"linux": ["rust/lexer"], "darwin": ["rust/lexer"], "windows": ["rust/lexer"]},
       "dev_deps": ["rust/test-support"],
       "repo_inputs": ["code/grammars/ruby"],
+      "repo_input_globs": [],
       "extra_toolchains": ["dotnet"]
     }
   ]
@@ -59,10 +60,18 @@ It lists **every** discovered package for all three platforms at once
 | `deps` | resolver graph incl. platform overrides | **Direct** build/runtime edges. |
 | `dev_deps` | the test-trigger relation, inverted | Packages this package's tests link against (Cargo dev-deps and equivalents). |
 | `repo_inputs` | the `repositoryInputConsumers` table | Repo-relative paths outside the package that it reads. |
+| `repo_input_globs` | the same table, for consumers whose inputs are a predicate over the whole tree | Repo-relative glob patterns (`**` any depth, `*` within a segment), e.g. `code/**/*.mll`. |
 | `extra_toolchains` | `discovery.Package.ExtraToolchains` | Toolchains beyond its own language. |
 
 Lists are sorted and de-duplicated; output is deterministic for a tree. A
-golden fixture pins the format.
+golden fixture pins the format. Discovery for the export looks at all three
+platforms' BUILD variants at once, so a package whose only BUILD file is
+`BUILD_windows` is still listed when the export runs on Linux or macOS.
+
+A consumer in the old table that declares neither paths nor globs cannot be
+keyed; the export lists it with `"repo_inputs_unknown": true`, and Kiln marks
+every package whose closure contains it `uncacheable` (reason
+`unknown-repo-inputs:<name>`).
 
 ## 3. The legacy key
 
@@ -98,7 +107,9 @@ closure(P, OS) = {P} ∪ N(P) ∪ E(P) ∪ deps*( deps[OS](P) ∪ dev_deps(P) �
 
 `reads(P)` is the union, over every closure member q, of:
 
-1. q's `repo_inputs`;
+1. q's `repo_inputs`, and q's `repo_input_globs` — each glob is encoded as
+   one `consumed` entry `glob:<pattern>` whose digest is the tree digest of
+   every file `Source.Files` matches;
 2. the inputs of every boundary in
    `code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json`
    whose `applies_to` matches q (an extra source, not the only one);
@@ -132,7 +143,7 @@ uncacheable with reason `escape:<link>`.
 | `recipe` | `LegacyRecipe([(name, contents)])` of the single file `build_files[OS]` (KILN02 §3.4, generalised) |
 | `inputs` | P's own files (full entries) |
 | `reads` | the file-valued reads of §3.3 |
-| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `tool:build-tool` → tree digest of `code/programs/go/build-tool` **plus every in-repo module it imports** (its `go.mod` `replace` targets) — the executor rewrites and splits BUILD lines, so its source is part of what runs |
+| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `glob:<pattern>` → tree digest of its matches; `tool:build-tool` → tree digest of `code/programs/go/build-tool` **plus every in-repo module it imports** (its `go.mod` `replace` targets) — the executor rewrites and splits BUILD lines, so its source is part of what runs |
 | `tools` | §4 |
 | `env` | §5 |
 
@@ -144,7 +155,7 @@ anywhere in the closure changes. Each digest is computed once per run.
 Under semantics version 0, a `consumed` entry's `key` is a **content
 digest** (an own digest, a tree digest or a tool-source digest), not another
 action's key, and its `phase` is nominal (`build`). Targets are prefixed
-`pkg:`, `dir:` or `tool:` so the three kinds can never collide. The version
+`pkg:`, `dir:`, `glob:` or `tool:` so the four kinds can never collide. The version
 sits in the key preamble, so a legacy key can never equal a real one. KILN02
 records this and pins it with a golden vector.
 

@@ -219,8 +219,8 @@ Two things are deliberately **allowed**:
 - **Under semantics version 0** (legacy, KILN03 §3.5) a `consumed` entry's
   `key` is a 32-byte **content digest** — a package's own digest, a
   directory's tree digest, or a tool's source digest — not another action's
-  key, and its `phase` is the nominal `build`. Targets carry a `pkg:`,
-  `dir:` or `tool:` prefix so the three kinds never collide. The encoding is
+  key, and its `phase` is the nominal `build`. Targets carry a `pkg:`, `glob:`,
+  `dir:` or `tool:` prefix so the four kinds never collide. The encoding is
   unchanged; only the meaning of the 32 bytes differs, and because the
   semantics version is in the preamble a legacy key can never equal a real
   one. A golden vector pins this case.
