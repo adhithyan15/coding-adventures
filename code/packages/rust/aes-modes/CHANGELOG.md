@@ -17,6 +17,17 @@
   output. This primitive is not a combined AES-GCM, TLS, HTTP, or OAuth
   transport boundary.
 
+### Fixed
+
+- Fixed the optimized-IR gate (`tests/optimized_ir.rs`) on Rust/Cargo 1.100:
+  Cargo's new build-dir layout emits `--emit=llvm-ir` output under
+  `release/build/<crate>/<hash>/out/` instead of `release/deps/`, so the gate
+  failed with "release dependency directory must exist" before inspecting any
+  IR. The gate now locates the `.ll` file by searching the release tree. No
+  assertion was changed or weakened; the IR shape checks pass unmodified on
+  both 1.97 and 1.100.
+
+
 ## 0.1.0 — 2026-04-12
 
 ### Added

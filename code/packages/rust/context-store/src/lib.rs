@@ -1532,10 +1532,7 @@ fn session_matches_list_options(session: &ContextSession, options: &SessionListO
             return false;
         }
     }
-    if !options.statuses.is_empty() && !options.statuses.contains(&session.status) {
-        return false;
-    }
-    true
+    options.statuses.is_empty() || options.statuses.contains(&session.status)
 }
 
 fn snapshot_matches_list_options(
