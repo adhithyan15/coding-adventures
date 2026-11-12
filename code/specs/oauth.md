@@ -1573,6 +1573,20 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
+A bounded policy-backed follow-up now lets the same selector consume one
+validated `X509NameValuePolicy` directly. Candidate limits fail before policy
+evaluation; the first unconfigured or malformed Name value aborts with a
+payload-free category; and successful comparisons still scan the complete pool
+to reject ambiguity. Distinct non-copyable success evidence retains the exact
+validated policy as well as the child, candidate, and index, preventing generic
+callback selection evidence from substituting at a later policy-requiring
+boundary. This removes executable attribute-value callbacks from the concrete
+selector boundary, but the available exact-DER and exact-Unicode-scalar rules
+do not implement RFC 4518 normalization, case or whitespace folding,
+schema-specific matching, or TeletexString mapping. It therefore does not
+establish complete RFC 5280 Name equality, authenticate a selected link,
+construct or validate a path, recognize trust, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or open a network connection.
 A bounded `x509-certificate-path-construction` follow-up now repeats that unique
 issuer selection into one caller-bounded target-to-terminal chain. Candidate
 pool size and requested path depth are rejected before policy callbacks;

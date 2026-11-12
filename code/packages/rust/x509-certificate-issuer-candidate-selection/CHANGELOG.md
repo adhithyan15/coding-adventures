@@ -6,6 +6,26 @@ documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-11-11
+
+### Added
+
+- Added unique issuer-candidate selection under a validated, bounded,
+  data-driven `X509NameValuePolicy`.
+- Added distinct non-copyable success evidence retaining the exact validated
+  policy so generic callback evidence cannot substitute for it.
+- Added stable payload-free categories that distinguish selection failures
+  from Name comparison failures.
+
+### Security
+
+- Candidate limits are enforced before Name policy evaluation, and the first
+  policy error aborts the scan without retaining certificate or OID data.
+- Successful comparisons still scan the complete accepted pool so later
+  duplicate matches fail closed.
+- Policy-backed selection does not claim complete RFC 5280 Name equality or
+  grant certificate, path, trust, revocation, TLS, HTTP, or network authority.
+
 ## [0.1.0] - 2026-10-20
 
 ### Added
