@@ -157,6 +157,12 @@ pub struct AuditEvidence {
     pub step_not_live: Vec<String>,
     /// The blocker text the manifest recorded for the not-live obligations.
     pub not_live_note: String,
+    /// Evidence ids attesting that the Warrant document labels every operand
+    /// of every operation `public` (today the single derived attestation
+    /// [`crate::evidence::NO_SECRET_OPERANDS_ATTESTATION`]).  Empty -- the
+    /// default -- means "not attested", never "no secrets": with no
+    /// constant-time evidence either, the CWE-208 row stays open.
+    pub no_secret_operand_ids: Vec<String>,
     /// What kind of package the three attestation rows (CWE-326/327/407)
     /// describe; see [`AuditProfile`].
     pub profile: AuditProfile,
@@ -173,6 +179,9 @@ pub enum AuditProfile {
     Comparison,
     /// Table-driven finite-field arithmetic (rust/gf256).
     FieldArithmetic,
+    /// A variable-length integer codec (rust/wasm-leb128): bytes in, integers
+    /// out and back, no key material, no cryptography.
+    VarintCodec,
 }
 
 impl std::str::FromStr for AuditProfile {
@@ -181,7 +190,10 @@ impl std::str::FromStr for AuditProfile {
         match s {
             "comparison" => Ok(AuditProfile::Comparison),
             "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
-            other => Err(format!("unknown profile `{other}` (comparison | field-arithmetic)")),
+            "varint-codec" => Ok(AuditProfile::VarintCodec),
+            other => Err(format!(
+                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec)"
+            )),
         }
     }
 }
@@ -459,6 +471,7 @@ fn evaluate_row(
                 reason: match ctx.evidence.profile {
                     AuditProfile::Comparison => "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
                     AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
+                    AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
                 }
                 .into(),
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
@@ -502,6 +515,28 @@ fn evaluate_row(
                     ),
                     evidence: vec![],
                 })
+            } else if !ctx.evidence.no_secret_operand_ids.is_empty()
+                && ctx.evidence.ct_proof_ids.is_empty()
+                && ctx.evidence.ct_unproven.is_empty()
+                && ctx.evidence.ct_not_live.is_empty()
+            {
+                // Not applicable: the document labels every operand public, so
+                // it states no constant-time obligation, and the proof manifest
+                // holds none.  This is a separate branch with its own
+                // precondition (an attestation the checker re-derives from the
+                // spec on disk), not a relaxation of the two above: any
+                // constant-time entry at all, proven or not, keeps the old
+                // outcome.  The registry gives CWE-208 no safe subset, so the
+                // row cannot be `excluded` (VER15 section 4, rule 2); it is an
+                // unapproved exemption whose reason says why it does not apply.
+                Ok(WeaknessRow {
+                    cwe: 208,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms".into(),
+                    evidence: ctx.evidence.no_secret_operand_ids.clone(),
+                })
             } else {
                 Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks WIR or benchmark evidence".into()))
             }
@@ -529,6 +564,7 @@ fn evaluate_row(
                 reason: match ctx.evidence.profile {
                     AuditProfile::Comparison => "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers",
                     AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
+                    AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
                 }
                 .into(),
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
@@ -543,6 +579,7 @@ fn evaluate_row(
                 reason: match ctx.evidence.profile {
                     AuditProfile::Comparison => "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys",
                     AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
+                    AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
                 }
                 .into(),
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],
