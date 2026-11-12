@@ -405,6 +405,77 @@ fn the_list_cap_applies_wherever_a_literal_appears_in_v1() {
 }
 
 // ---------------------------------------------------------------------------
+// Binders may not be named like a v1 built-in (section 1.2)
+// ---------------------------------------------------------------------------
+//
+// Section 1.2: a v1 *binder* of a reserved name is W0203, as a match-arm
+// binder already was.  Parameters and quantifier binders used to be checked
+// only against constructor names, and the checker skips the binder when a
+// name is applied (`take(..)` is always the built-in), while the evaluator
+// took the binder.  So `model exp(take: List<U8>) -> List<U8> = take(take, 0)`
+// type-checked as the built-in and evaluated to the parameter.
+
+#[test]
+fn a_v1_parameter_or_quantifier_binder_named_like_a_built_in_is_w0203() {
+    let op = |p: &str| format!("warrant t v1\n  op f({p}: U8) -> U8\n  labels f:\n    {p} public\n");
+    for (what, src) in [
+        (
+            "take(take, 0)",
+            "warrant t v1\n  model exp(take: List<U8>) -> List<U8> = take(take, 0)\n".to_string(),
+        ),
+        (
+            "range parameter",
+            "warrant t v1\n  model exp(range: Bool) -> List<Nat> = range(5)\n".to_string(),
+        ),
+        ("map parameter", v1_model("map: U8", "U8", "map")),
+        (
+            "fold binder",
+            "warrant t v1\n  claim c:\n    forall fold: U8. fold == fold\n".to_string(),
+        ),
+        (
+            "map binder in a model",
+            v1_model("a: U8", "Bool", "forall map: U8. map == a"),
+        ),
+        // Every reserved v1 built-in, not only the twelve WX-D names.
+        ("popcount parameter", v1_model("popcount: U8", "U8", "popcount")),
+        ("len parameter", v1_model("len: Bytes", "Nat", "len(len)")),
+        ("U16 parameter", v1_model("U16: U8", "U8", "U16")),
+        ("Some binder", v1_model("a: U8", "Bool", "forall Some: U8. a == a")),
+        ("op parameter", op("rem")),
+    ] {
+        let e = rejected(&src);
+        assert_eq!(e.code, DiagnosticCode::W0203, "{what}: {e:?}");
+        assert!(
+            matches!(e.kind, CheckerErrorKind::ShadowedBinding(_)),
+            "{what}: {e:?}"
+        );
+    }
+    // The twelve and the older v1 names, as parameters.
+    for name in all_twelve().chain(V1_FUNCTIONS.iter().copied()) {
+        let e = rejected(&v1_model(&format!("{name}: U8"), "U8", "0u8"));
+        assert_eq!(e.code, DiagnosticCode::W0203, "{name}: {e:?}");
+        assert_eq!(e.kind, CheckerErrorKind::ShadowedBinding(name.to_string()));
+    }
+}
+
+#[test]
+fn a_v0_binder_may_still_spell_a_v1_name() {
+    // v1 built-ins are ordinary identifiers in v0 (section 1.2).
+    for src in [
+        "warrant t\n  model m(map: U8) -> U8 = map\n",
+        "warrant t\n  model exp(take: Bytes) -> Bytes = take\n",
+        "warrant t\n  model m(a: U8) -> Bool = forall fold: U8. fold == a\n",
+        "warrant t\n  model m(popcount: U8) -> U8 = popcount\n",
+        // A v0 parameter may even spell a v0 built-in, as it always could;
+        // an applied `len(..)` is the built-in (the evaluator agrees, see
+        // `tests/wxd_semantics.rs`).
+        "warrant t\n  model m(len: Bytes) -> Nat = len(len)\n",
+    ] {
+        check(src).unwrap_or_else(|e| panic!("v0 must accept {src}: {e:?}"));
+    }
+}
+
+// ---------------------------------------------------------------------------
 // The identifier cap (VER04k section 9.1, E20)
 // ---------------------------------------------------------------------------
 //

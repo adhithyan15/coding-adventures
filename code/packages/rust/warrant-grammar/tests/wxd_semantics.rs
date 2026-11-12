@@ -840,3 +840,50 @@ fn v0_still_evaluates_both_operands_eagerly() {
         }
     });
 }
+
+// ---------------------------------------------------------------------------
+// An applied name is never a binder (security review)
+// ---------------------------------------------------------------------------
+//
+// The checker resolves `f(..)` without looking at the binders in scope, so
+// the evaluator must not either: `take(take, 0)` with a parameter `take` is
+// the built-in.  In v1 the checker now also refuses such a parameter (W0203);
+// the evaluator is held to the checker's reading anyway, because it can be
+// handed a document that was never checked.  In v0, where a parameter may
+// still spell a built-in, `len(len)` was typed `Nat` by the checker and
+// evaluated to the `Bytes` parameter; it is now the `Nat` the checker typed.
+
+#[test]
+fn an_applied_name_is_the_built_in_or_model_not_the_binder_of_that_name() {
+    let src = "warrant shadow v1\n  model exp(take: List<U8>) -> List<U8> = take(take, 0)\n  model r(range: Bool) -> List<Nat> = range(2)\n  model t(take: List<U8>) -> List<U8> = take\n  example e0:\n    exp([1u8, 2u8])\n  example e1:\n    r(true)\n  example e2:\n    t([3u8])\n";
+    with_doc(src, |file| {
+        let e = bodies(file);
+        let mut ev = Evaluator::new(file, CodegenLimits::default());
+        let env: Env = HashMap::new();
+        assert_eq!(
+            ev.eval(e[0], &env).expect("exp"),
+            EvalValue::List(vec![]),
+            "take(take, 0) is the built-in"
+        );
+        assert_eq!(
+            ev.eval(e[1], &env).expect("r"),
+            EvalValue::List(vec![EvalValue::Nat(0), EvalValue::Nat(1)]),
+            "range(2) is the built-in"
+        );
+        // A bare name is still the binder.
+        assert_eq!(
+            ev.eval(e[2], &env).expect("t"),
+            EvalValue::List(vec![EvalValue::U8(3)])
+        );
+    });
+    let v0 = "warrant shadow\n  model f(len: Bytes) -> Nat = len(len)\n  example e0:\n    f(b\"0102\")\n";
+    with_doc(v0, |file| {
+        let e = bodies(file);
+        let mut ev = Evaluator::new(file, CodegenLimits::default());
+        assert_eq!(
+            ev.eval(e[0], &HashMap::new()).expect("f"),
+            EvalValue::Nat(2),
+            "len(len) is the built-in the checker typed"
+        );
+    });
+}

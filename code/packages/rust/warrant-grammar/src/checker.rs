@@ -1121,10 +1121,24 @@ impl<'a> Checker<'a> {
         }
     }
 
-    /// A binder (parameter, quantifier binder or pattern variable) may not
-    /// spell a constructor (VER04j section 4.2): W0203.
-    fn check_not_ctor(&self, name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
-        if self.ctor_index.contains_key(name) {
+    /// A binder (parameter or quantifier binder; pattern variables and table
+    /// columns go through [`Self::check_arm_binder`]) may not spell a
+    /// constructor (VER04j section 4.2), nor, in a v1 document, a reserved
+    /// built-in (VER04k section 1.2): W0203 either way.
+    ///
+    /// The built-in half closes a checker/evaluator split.  The checker reads
+    /// an *applied* name, `take(..)`, as the built-in and never as a binder,
+    /// so with a parameter called `take` the body `take(take, 0)` was typed
+    /// as the built-in's `List<U8>` while the evaluator returned the
+    /// parameter, and `model exp(range: Bool) -> List<Nat> = range(5)` was
+    /// typed `List<Nat>` and evaluated to `Bool(true)`.  Refusing the binder
+    /// removes the ambiguity for every reserved v1 name, the older WX-B/C/H
+    /// built-ins and the v0 ones included.  A v0 binder may still spell any
+    /// v1 name, which is an ordinary identifier there.
+    fn check_binder_name(&self, name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
+        if self.ctor_index.contains_key(name)
+            || (self.file.version == Version::V1 && is_reserved_builtin(Version::V1, name))
+        {
             return Err(CheckerError {
                 code: DiagnosticCode::W0203,
                 kind: CheckerErrorKind::ShadowedBinding(name.to_string()),
@@ -1287,7 +1301,7 @@ impl<'a> Checker<'a> {
                         span: p.span,
                     });
                 }
-                self.check_not_ctor(p.name, p.span)?;
+                self.check_binder_name(p.name, p.span)?;
                 let ty = self.resolve_type(&p.param_type, &static_params)?;
                 env.insert(p.name.to_string(), ty.clone());
                 params.push((p.name.to_string(), ty));
@@ -1342,7 +1356,7 @@ impl<'a> Checker<'a> {
                         span: p.span,
                     });
                 }
-                self.check_not_ctor(p.name, p.span)?;
+                self.check_binder_name(p.name, p.span)?;
                 let param_type = self.resolve_type(&p.param_type, &[])?;
                 env.insert(p.name.to_string(), param_type.clone());
                 params.push((p.name.to_string(), param_type));
@@ -1987,7 +2001,7 @@ impl<'a> Checker<'a> {
                             span: b.span,
                         });
                     }
-                    this.check_not_ctor(b.name, b.span)?;
+                    this.check_binder_name(b.name, b.span)?;
                     let b_type = this.resolve_type(&b.param_type, &[])?;
                     if let Some(refinement) = &b.refinement {
                         let mut ref_env = local_env.clone();

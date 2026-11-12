@@ -764,8 +764,14 @@ impl<'a> Evaluator<'a> {
             } => {
                 let first = name.segments[0];
                 if name.segments.len() == 1 {
-                    if let Some(val) = env.get(first) {
-                        return Ok(val.clone());
+                    // A binder only when the name is not applied, exactly as
+                    // the checker reads it (`typecheck_reference`, step 1):
+                    // `take(take, 0)` is the built-in even where a binder is
+                    // called `take`, so the value is the one the checker typed.
+                    if args.is_none() && widths.is_empty() {
+                        if let Some(val) = env.get(first) {
+                            return Ok(val.clone());
+                        }
                     }
                     // WX-A constructors: `C(e1, ..., en)` and the bare nullary `C`.
                     if let Some(&(ty, index, record)) = self.ctors.get(first) {
