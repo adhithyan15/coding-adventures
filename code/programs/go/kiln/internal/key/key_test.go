@@ -330,6 +330,17 @@ func TestTargetAndTargetHexTogetherRefused(t *testing.T) {
 	}
 }
 
+func TestRequireRegularStatError(t *testing.T) {
+	f, err := os.Open(os.Args[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	f.Close() // Stat on a closed file fails.
+	if requireRegular(f) == nil {
+		t.Error("closed file accepted")
+	}
+}
+
 type failingReader struct{}
 
 func (failingReader) Read([]byte) (int, error) { return 0, os.ErrClosed }

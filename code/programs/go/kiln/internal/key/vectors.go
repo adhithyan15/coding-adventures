@@ -24,25 +24,38 @@ func ReadVectorFile(path string) ([]byte, error) {
 // readVectorFile is ReadVectorFile with the limit injectable so tests need not
 // build a 16 MiB file.  Two guards run before any parsing:
 //
-//   - the path must be a regular file: a directory, FIFO or device would
-//     either fail oddly or block forever, so they are refused up front;
+//   - the opened file must be a regular file: a directory, FIFO or device
+//     would either fail oddly or block forever, so they are refused.  The
+//     open itself is non-blocking where the OS supports it (openNoBlock),
+//     because opening a FIFO for reading otherwise waits for a writer;
 //   - at most limit bytes are read.  We ask for limit+1 so that "exactly
 //     limit" is accepted while "one byte more" is detectable and refused,
 //     rather than silently truncated into a confusing parse error.
 func readVectorFile(path string, limit int64) ([]byte, error) {
-	info, err := os.Stat(path)
-	if err != nil {
-		return nil, err
-	}
-	if !info.Mode().IsRegular() {
-		return nil, fmt.Errorf("%s: not a regular file", path)
-	}
-	f, err := os.Open(path)
+	f, err := openNoBlock(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
+	if err := requireRegular(f); err != nil {
+		return nil, err
+	}
 	return readLimited(f, limit)
+}
+
+// requireRegular refuses anything but a regular file.  The type is checked on
+// the descriptor we already hold: a separate os.Stat of the path would leave a
+// window in which the path is swapped for a FIFO or device before the open (a
+// TOCTOU race); f.Stat describes exactly what we are about to read.
+func requireRegular(f *os.File) error {
+	info, err := f.Stat()
+	if err != nil {
+		return err
+	}
+	if !info.Mode().IsRegular() {
+		return fmt.Errorf("%s: not a regular file", f.Name())
+	}
+	return nil
 }
 
 // readLimited reads r fully but refuses more than limit bytes.
