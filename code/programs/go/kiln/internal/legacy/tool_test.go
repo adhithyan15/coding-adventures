@@ -65,7 +65,7 @@ func TestBuildToolFilesVariants(t *testing.T) {
 		}
 	}
 	// A replace cycle terminates.
-	f.write("code/packages/go/other/go.mod", "module other\nreplace lib => ../lib\nreplace root => ../../../..\n")
+	f.write("code/packages/go/other/go.mod", "module other\nreplace lib => ../lib\n")
 	_ = tool(f)
 }
 
@@ -84,5 +84,84 @@ func TestBuildToolErrors(t *testing.T) {
 	f.write("code/packages/go/lib/go.mod", "replace a => ..\\x\n")
 	if _, err := BuildPlan(baseGraph(), f.opts("linux")); err == nil {
 		t.Fatal("backslash replace in a replaced module accepted")
+	}
+}
+
+func TestGoWorkDirs(t *testing.T) {
+	got, err := goWorkDirs("go 1.26\n\nuse ./a\nuse \"./q\" // c\nuse (\n\t./b\n\t// ./no\n)\nreplace x => ./r\n")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, []string{"./a", "./q", "./b", "./r"}) {
+		t.Fatalf("got %v", got)
+	}
+	if _, err := goWorkDirs("use .\\a\n"); err == nil {
+		t.Fatal("backslash use accepted")
+	}
+	if _, err := goWorkDirs("replace a => ..\\x\n"); err == nil {
+		t.Fatal("backslash replace accepted")
+	}
+}
+
+func TestBuildToolFollowsGoWork(t *testing.T) {
+	f := newFixture(t)
+	f.write("go.work", "go 1.26\nuse (\n\t./code/packages/go/w1\n)\nuse ./code/packages/go/w2\n")
+	f.write("code/packages/go/w1/w.go", "package w\n")
+	f.write("code/packages/go/w1/go.mod", "module w1\nreplace z => ../w3\n")
+	f.write("code/packages/go/w2/w.go", "package w\n")
+	f.write("code/packages/go/w2/go.mod", "module w2\nreplace z => ../w1\n") // cycle with w1
+	f.write("code/packages/go/w3/w.go", "package w3\n")
+	pl, err := f.planner()
+	if err != nil {
+		t.Fatal(err)
+	}
+	files, err := pl.buildToolFiles()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, w := range []string{"code/packages/go/w1/w.go", "code/packages/go/w2/w.go", "code/packages/go/w3/w.go"} {
+		if !contains(files, w) {
+			t.Fatalf("%s missing: %v", w, files)
+		}
+	}
+	// A change in a go.work module changes every key.
+	a := f.plan(baseGraph()).rec(t, "x/z").Key
+	f.write("code/packages/go/w3/w.go", "package w3 // changed\n")
+	if f.plan(baseGraph()).rec(t, "x/z").Key == a {
+		t.Fatal("go.work module not in the tool digest")
+	}
+}
+
+func TestBuildToolRefusesTargetsOutsideTheRepo(t *testing.T) {
+	cases := map[string]map[string]string{
+		"go.mod leaves the repo":  {BuildToolPath + "/go.mod": "module bt\nreplace a => ../../../../../elsewhere\n"},
+		"go.mod names the root":   {BuildToolPath + "/go.mod": "module bt\nreplace a => ../../../..\n"},
+		"go.mod names parent":     {BuildToolPath + "/go.mod": "module bt\nreplace a => ../../../../..\n"},
+		"go.work leaves the repo": {"go.work": "use ../outside\n"},
+		"go.work names the root":  {"go.work": "use .\n"},
+		"go.work bad backslash":   {"go.work": "use .\\a\n"},
+		"replaced module leaves":  {"code/packages/go/lib/go.mod": "module lib\nreplace a => ../../../../../x\n"},
+	}
+	for name, files := range cases {
+		t.Run(name, func(t *testing.T) {
+			f := newFixture(t)
+			for p, c := range files {
+				f.write(p, c)
+			}
+			if _, err := BuildPlan(baseGraph(), f.opts("linux")); err == nil {
+				t.Fatal("accepted")
+			}
+		})
+	}
+	f := newFixture(t)
+	f.write("go.work", "use ./code/packages/go/lib\n")
+	f.remove("go.work")
+	f.write("go.work", "use ./code/packages/go/lib\n")
+	f.write("code/packages/go/lib/go.mod", "module lib\n")
+	// And an unreadable go.work is an error too.
+	o := f.opts("linux")
+	o.Source = &faulty{Source: o.Source, failOpen: map[string]bool{"go.work": true}}
+	if _, err := BuildPlan(baseGraph(), o); err == nil {
+		t.Fatal("unreadable go.work accepted")
 	}
 }

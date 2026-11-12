@@ -33,6 +33,14 @@ const GraphSchema = "kiln-legacy-graph/1"
 const (
 	MaxGraphBytes = 64 << 20 // 64 MiB of JSON
 	MaxNameBytes  = 512
+	MaxPackages   = 100_000   // packages in one export
+	MaxEdges      = 5_000_000 // deps across all OSes plus dev_deps, in total
+)
+
+// The limits as enforced; tests lower them instead of building huge graphs.
+var (
+	packageLimit = MaxPackages
+	edgeLimit    = MaxEdges
 )
 
 // OSes are the platforms a graph describes, in the export's own spelling.
@@ -130,6 +138,19 @@ func short(s string) string {
 }
 
 func (g *Graph) validate() error {
+	if len(g.Packages) > packageLimit {
+		return fmt.Errorf("%d packages exceed the limit of %d", len(g.Packages), packageLimit)
+	}
+	edges := 0
+	for _, p := range g.Packages {
+		for _, d := range p.Deps {
+			edges += len(d)
+		}
+		edges += len(p.DevDeps)
+		if edges > edgeLimit {
+			return fmt.Errorf("more than %d edges (deps and dev_deps)", edgeLimit)
+		}
+	}
 	names := make(map[string]bool, len(g.Packages))
 	paths := make(map[string]string, len(g.Packages))
 	for i, p := range g.Packages {
@@ -193,6 +214,11 @@ func checkPackage(p Package, names map[string]bool) error {
 	}
 	if err := checkSorted("extra_toolchains", p.ExtraToolchains); err != nil {
 		return err
+	}
+	for _, tc := range p.ExtraToolchains {
+		if tc == "" || !utf8.ValidString(tc) || strings.ContainsFunc(tc, unicode.IsControl) {
+			return fmt.Errorf("extra_toolchains: invalid entry %q", short(tc))
+		}
 	}
 	if err := checkSorted("repo_inputs", p.RepoInputs); err != nil {
 		return err

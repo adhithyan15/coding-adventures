@@ -249,6 +249,13 @@ func (pl *planner) record(p int) (Record, error) {
 	if bf := pkg.BuildFiles[pl.opt.OS]; bf == nil {
 		reasons["no-build-file:"+pl.opt.OS] = true
 		hard = true
+	} else if info, err := pl.opt.Source.Describe(pkg.RelPath + "/" + *bf); err != nil {
+		return Record{}, err
+	} else if info.Link {
+		// A symlinked BUILD file could point anywhere.  Fail closed for THIS
+		// package (no key) and keep planning the others.
+		reasons["escape:"+*bf] = true
+		hard = true
 	} else {
 		contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
 		if err != nil {

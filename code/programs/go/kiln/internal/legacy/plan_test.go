@@ -376,3 +376,28 @@ func TestForEachAndWorkers(t *testing.T) {
 		t.Fatal("keyOS")
 	}
 }
+
+func TestSymlinkedBuildFileIsPerPackageEscape(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("symlinks need privileges on Windows")
+	}
+	f := newFixture(t)
+	f.remove("code/packages/x/z/BUILD")
+	if err := os.Symlink("../a/BUILD", filepath.Join(f.dir, "code/packages/x/z/BUILD")); err != nil {
+		t.Fatal(err)
+	}
+	p := f.plan(baseGraph()) // must not abort
+	r := p.rec(t, "x/z")
+	if r.Key != "" || r.Class != ClassUncacheable || !contains(r.Reasons, "escape:BUILD") || r.Components.Recipe != "" {
+		t.Fatalf("%+v", r)
+	}
+	if p.rec(t, "x/a").Key == "" {
+		t.Fatal("other packages must still be keyed")
+	}
+	// A BUILD that cannot be described at all is still a hard error.
+	o := f.opts("linux")
+	o.Source = &faulty{Source: o.Source, failDescribe: map[string]bool{"code/packages/x/a/BUILD": true}}
+	if _, err := BuildPlan(baseGraph(), o); err == nil {
+		t.Fatal("describe failure accepted")
+	}
+}

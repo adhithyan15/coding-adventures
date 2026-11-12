@@ -43,6 +43,8 @@ func runLegacyPlan(args []string, stdout, stderr io.Writer) int {
 		src = source.NewGit(*root)
 	case "folder":
 		src = source.NewFolder(*root)
+		fmt.Fprintln(stderr, "kiln: warning: --source folder cannot check that the tree is clean; "+
+			"build products or other stray files in the folder will enter the keys (shadow mode continues)")
 	default:
 		fmt.Fprintf(stderr, "kiln: unknown --source %q (want git or folder)\n", *kind)
 		return 2

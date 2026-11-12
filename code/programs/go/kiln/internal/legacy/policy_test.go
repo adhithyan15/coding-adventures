@@ -132,7 +132,7 @@ func TestBoundaryAppliesTo(t *testing.T) {
 	b := boundary{exact: []string{"a/exact"}, descendant: []string{"a/tree"}, excluded: []string{"a/tree/skip"}}
 	for rel, want := range map[string]bool{
 		"a/exact": true, "a/exact/child": false, "a/tree": true, "a/tree/x/y": true,
-		"a/tree/skip": false, "a/tree/skip/deep": false, "a/tree/skipper": true, "a/treehouse": false, "b": false,
+		"a/tree/skip": true, "a/tree/skip/deep": true, "a/tree/skipper": true, "a/treehouse": false, "b": false,
 	} {
 		if got := b.appliesTo(rel); got != want {
 			t.Errorf("appliesTo(%q) = %v, want %v", rel, got, want)
@@ -140,8 +140,9 @@ func TestBoundaryAppliesTo(t *testing.T) {
 	}
 }
 
-// A package under a descendant root picks up the boundary input; one under the
-// excluded root does not.
+// A package under a descendant root picks up the boundary input, and so does
+// one under the excluded root: exclusions are ignored for reads, because
+// honouring them could only drop an input.
 func TestBoundaryDescendantAndExcluded(t *testing.T) {
 	f := newFixture(t)
 	f.write("code/packages/y/in/BUILD", "x")
@@ -151,11 +152,10 @@ func TestBoundaryDescendantAndExcluded(t *testing.T) {
 	base := f.plan(g)
 	f.write("code/shared/y.json", "changed")
 	p := f.plan(g)
-	if p.rec(t, "y/in").Key == base.rec(t, "y/in").Key {
-		t.Fatal("descendant boundary input ignored")
-	}
-	if p.rec(t, "y/skip").Key != base.rec(t, "y/skip").Key {
-		t.Fatal("excluded root still read the boundary input")
+	for _, n := range []string{"y/in", "y/skip"} {
+		if p.rec(t, n).Key == base.rec(t, n).Key {
+			t.Fatalf("%s: boundary input ignored (excluded roots must not drop reads)", n)
+		}
 	}
 }
 

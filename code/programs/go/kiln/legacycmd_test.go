@@ -53,6 +53,9 @@ func TestLegacyPlanAndExplain(t *testing.T) {
 		t.Fatal(err)
 	}
 	code, out, errs := runCLI("legacy-plan", "--graph", graph, "--out", plan, "--root", repo, "--source", "folder", "--os", "linux")
+	if !strings.Contains(errs, "cannot check that the tree is clean") {
+		t.Fatalf("no folder warning: %q", errs)
+	}
 	if code != 0 || !strings.Contains(out, "ok: 1 packages") {
 		t.Fatalf("code %d out %q err %q", code, out, errs)
 	}

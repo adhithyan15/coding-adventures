@@ -79,16 +79,13 @@ func under(rel, root string) bool {
 
 // appliesTo reports whether the boundary covers the package directory rel.
 //
-// Reading choices, all toward over-approximation: a descendant root includes
-// the root itself, and an excluded root removes the root and everything under
-// it (the one place a boundary can REMOVE reads; shared ancestor files are
-// still picked up by the ancestor-configuration rule).
+// A descendant root includes the root itself.  excluded_roots is parsed and
+// validated but deliberately IGNORED here: honouring an exclusion could only
+// DROP a read from a key, and a dropped read is the one error a key must not
+// make, while ignoring it merely costs a little hit rate (the package gets an
+// input it may not use).  So the inputs of every boundary whose exact or
+// descendant roots match are united, exclusions notwithstanding.
 func (b boundary) appliesTo(rel string) bool {
-	for _, x := range b.excluded {
-		if under(rel, x) {
-			return false
-		}
-	}
 	for _, x := range b.exact {
 		if rel == x {
 			return true

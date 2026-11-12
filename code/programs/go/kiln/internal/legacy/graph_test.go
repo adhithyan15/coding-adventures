@@ -63,6 +63,8 @@ func TestParseGraphRejects(t *testing.T) {
 		"unsorted inputs":     mut(`"repo_inputs":["code/x"]`, `"repo_inputs":["code/y","code/x"]`),
 		"bad glob":            mut(`"code/**/?*.mll"`, `"/abs/*"`),
 		"unsorted globs":      mut(`"repo_input_globs":["code/**/?*.mll"]`, `"repo_input_globs":["b","a"]`),
+		"empty toolchain":     mut(`"extra_toolchains":["dotnet"]`, `"extra_toolchains":[""]`),
+		"control toolchain":   mut(`"extra_toolchains":["dotnet"]`, `"extra_toolchains":["dot\u0007net"]`),
 		"unsorted toolchains": mut(`"extra_toolchains":["dotnet"]`, `"extra_toolchains":["z","a"]`),
 	}
 	for name, in := range bad {
@@ -107,5 +109,26 @@ func TestShortSanitises(t *testing.T) {
 	}
 	if got := short(strings.Repeat("x", 100)); len(got) > 50 {
 		t.Fatal("not truncated")
+	}
+}
+
+func TestGraphLimits(t *testing.T) {
+	defer func(p, e int) { packageLimit, edgeLimit = p, e }(packageLimit, edgeLimit)
+	packageLimit = 1
+	if _, err := ParseGraph([]byte(okGraph)); err == nil || !strings.Contains(err.Error(), "packages exceed") {
+		t.Fatalf("package cap: %v", err)
+	}
+	packageLimit = MaxPackages
+	// okGraph has 1 dev_dep and 1 dep: two edges.
+	edgeLimit = 1
+	if _, err := ParseGraph([]byte(okGraph)); err == nil || !strings.Contains(err.Error(), "edges") {
+		t.Fatalf("edge cap: %v", err)
+	}
+	edgeLimit = 2
+	if _, err := ParseGraph([]byte(okGraph)); err != nil {
+		t.Fatalf("at the cap: %v", err)
+	}
+	if MaxPackages != 100_000 || MaxEdges != 5_000_000 {
+		t.Fatal("limits changed")
 	}
 }

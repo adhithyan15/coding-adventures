@@ -52,7 +52,7 @@ func newFixture(t *testing.T) *fixture {
 	f.write("code/kiln/legacy/pinned.json", `{"languages": []}`)
 	f.write("code/kiln/legacy/never.json", `{"packages": []}`)
 	f.write(BoundaryPath, baseBoundary)
-	f.write(BuildToolPath+"/go.mod", "module example.com/bt\n\ngo 1.26\n\nreplace example.com/lib => ../../../packages/go/lib // in repo\n\nreplace example.com/far => ../../../../../elsewhere\n")
+	f.write(BuildToolPath+"/go.mod", "module example.com/bt\n\ngo 1.26\n\nreplace example.com/lib => ../../../packages/go/lib // in repo\n")
 	f.write(BuildToolPath+"/main.go", "package main\n")
 	f.write("code/packages/go/lib/lib.go", "package lib\n")
 	f.write("go.work", "go 1.26\n")

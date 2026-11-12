@@ -157,7 +157,9 @@ kiln explain --plan <plan.json> <package>
   `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
   for the OS are `uncacheable`.
 - The Git source refuses to plan when any untracked, non-ignored file exists
-  (build products would enter the digests). Output is deterministic JSON,
+  (build products would enter the digests). `--source folder` has no such
+  check: it prints a warning to stderr and keeps going (shadow mode), so run it
+  only on a tree that is known to be clean. Output is deterministic JSON,
   written atomically, ending with a histogram of classes, reasons and closure
   sizes.
 - Glob semantics are pinned by

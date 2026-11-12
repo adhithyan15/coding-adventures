@@ -66,22 +66,98 @@ func goModReplaces(gomod string) ([]string, error) {
 	return out, nil
 }
 
+// goWorkDirs returns the directories a go.work names (relative to the
+// directory holding it): every `use` target, in both forms,
+//
+//	use ./a
+//	use (
+//	    ./b
+//	)
+//
+// plus the local targets of its `replace` directives.  Targets are returned
+// exactly as written; the caller resolves and checks them.
+func goWorkDirs(gowork string) ([]string, error) {
+	var out []string
+	inUse := false
+	for _, raw := range strings.Split(gowork, "\n") {
+		line := raw
+		if i := strings.Index(line, "//"); i >= 0 {
+			line = line[:i]
+		}
+		line = strings.TrimSpace(line)
+		switch {
+		case line == "":
+		case inUse && line == ")":
+			inUse = false
+		case !inUse && (line == "use (" || line == "use("):
+			inUse = true
+		case inUse:
+			out = append(out, unquote(line))
+		case strings.HasPrefix(line, "use ") || strings.HasPrefix(line, "use\t"):
+			out = append(out, unquote(strings.TrimSpace(line[len("use"):])))
+		}
+	}
+	reps, err := goModReplaces(gowork)
+	if err != nil {
+		return nil, err
+	}
+	for _, d := range out {
+		if strings.Contains(d, "\\") {
+			return nil, fmt.Errorf("go.work use target %q contains a backslash", short(d))
+		}
+	}
+	return append(out, reps...), nil
+}
+
+func unquote(s string) string { return strings.Trim(s, "\"`") }
+
 // buildToolFiles lists the repository files that make up "the old build tool's
 // source" for the tool:build-tool consumed entry (KILN03 3.4): every file of
 // code/programs/go/build-tool, every file of each in-repo module its go.mod
-// (transitively) replaces, plus go.work, go.work.sum and vendor/ when present.
-// The result is sorted and unique.  A missing build tool is an error, because
-// an empty digest would make every key blind to the tool.
+// (transitively) replaces, every directory a root go.work `use`s or replaces
+// (transitively), plus go.work, go.work.sum and vendor/ when present.  The
+// result is sorted and unique.
+//
+// Fail closed: a missing build tool, a replace or use target that leaves the
+// repository or names the repository root itself, and a backslash in a target
+// are all errors, never silently skipped, because a skipped dependency would
+// be a dependency the key cannot see.
 func (pl *planner) buildToolFiles() ([]string, error) {
 	dirs := []string{BuildToolPath}
 	seen := map[string]bool{BuildToolPath: true}
+	add := func(base, target, from string) error {
+		dir := path.Join(base, target)
+		if dir == "." || dir == ".." || strings.HasPrefix(dir, "../") {
+			return fmt.Errorf("%s: target %q leaves the repository or names its root", from, short(target))
+		}
+		if !seen[dir] {
+			seen[dir] = true
+			dirs = append(dirs, dir)
+		}
+		return nil
+	}
+	if pl.fileSet["go.work"] {
+		data, err := readSmall(pl.opt.Source, "go.work", maxPolicyBytes)
+		if err != nil {
+			return nil, err
+		}
+		targets, err := goWorkDirs(string(data))
+		if err != nil {
+			return nil, fmt.Errorf("go.work: %w", err)
+		}
+		for _, t := range targets {
+			if err := add(".", t, "go.work"); err != nil {
+				return nil, err
+			}
+		}
+	}
 	for i := 0; i < len(dirs); i++ {
 		mod := dirs[i] + "/go.mod"
 		if !pl.fileSet[mod] {
-			if i == 0 {
+			if dirs[i] == BuildToolPath {
 				return nil, fmt.Errorf("%s: not in the source tree", mod)
 			}
-			continue // a replaced directory without go.mod is still hashed
+			continue // a used or replaced directory without go.mod is still hashed
 		}
 		data, err := readSmall(pl.opt.Source, mod, maxPolicyBytes)
 		if err != nil {
@@ -92,12 +168,9 @@ func (pl *planner) buildToolFiles() ([]string, error) {
 			return nil, fmt.Errorf("%s: %w", mod, err)
 		}
 		for _, t := range targets {
-			dir := path.Join(dirs[i], t)
-			if dir == ".." || strings.HasPrefix(dir, "../") || dir == "." || seen[dir] {
-				continue // outside the repository (or the whole repository: refused)
+			if err := add(dirs[i], t, mod); err != nil {
+				return nil, err
 			}
-			seen[dir] = true
-			dirs = append(dirs, dir)
 		}
 	}
 	set := map[string]bool{}
