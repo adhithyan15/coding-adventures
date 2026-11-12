@@ -24,6 +24,7 @@ import (
 // contents, never from Revision, so this only affects explanations.
 type Git struct {
 	dir string
+	tm  treeModes // lazily loaded index modes, see Describe
 }
 
 // NewGit returns a Source for the work tree at dir.
