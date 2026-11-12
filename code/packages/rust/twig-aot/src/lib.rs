@@ -2507,6 +2507,39 @@ const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 4] = [
     "legacy_stdio_definitions.lib",
 ];
 
+/// Win32 import libraries the embedded gc-core-capi staticlib needs, because
+/// that archive carries Rust `std` and a staticlib does not record its own
+/// system-library dependencies for a foreign linker.  `rustc --print
+/// native-static-libs` lists what std wants; this is that list, kept by hand.
+///
+/// | import library      | why it is needed                                         |
+/// |---------------------|----------------------------------------------------------|
+/// | `kernel32.lib`      | core Win32: heap, threads, TLS, files, `GetLastError`    |
+/// | `ws2_32.lib`        | Winsock, pulled in by std's `net` module                 |
+/// | `userenv.lib`       | `GetUserProfileDirectoryW` (`std::env::home_dir`)        |
+/// | `advapi32.lib`      | registry / security APIs, `SystemFunction036` (RNG)      |
+/// | `bcrypt.lib`        | `BCryptGenRandom` for `HashMap`'s random seeds           |
+/// | `ntdll.lib`         | `NtReadFile`/`NtWriteFile` and friends used by std I/O   |
+/// | `synchronization.lib` | `WaitOnAddress`, `WakeByAddressSingle`, `WakeByAddressAll` -- the futex-style parking behind std's `Mutex`, `Condvar`, `Once` and thread parker |
+///
+/// `synchronization.lib` is the easy one to forget: the three functions live in
+/// the API set `api-ms-win-core-synch-l1-2-0`, not in kernel32's import library.
+/// Rust 1.100.0 (released 2026-11-12) emits plain `__imp_WaitOnAddress`
+/// references in its std objects, and without this library `link.exe` fails
+/// with `LNK2019: unresolved external symbol __imp_WakeByAddressSingle` (and
+/// `...All`, `...WaitOnAddress`) -- every `windows_x86_64_smoke` test dies at
+/// link time.  Order is irrelevant for import libraries.
+#[cfg(any(target_os = "windows", test))]
+const MSVC_SYSTEM_LIBRARIES: [&str; 7] = [
+    "kernel32.lib",
+    "ws2_32.lib",
+    "userenv.lib",
+    "advapi32.lib",
+    "bcrypt.lib",
+    "ntdll.lib",
+    "synchronization.lib",
+];
+
 /// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
 /// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
 /// → `gcc.exe`). Embeds the twig-aot runtime archive.
@@ -2583,15 +2616,10 @@ pub fn link_windows_x86_64_executable(
                 // definitions conflict with the dynamic import libraries. In
                 // particular, libvcruntime's winapi_downlevel.obj duplicates
                 // __vcrt_InitializeCriticalSectionEx from vcruntime.lib.
-                // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the
-                // Win32 API surface gc-core-capi's Rust std pulls in.
+                // MSVC_SYSTEM_LIBRARIES covers the Win32 API surface
+                // gc-core-capi's Rust std pulls in (see its table).
                 .args(MSVC_DYNAMIC_CRT_LIBRARIES)
-                .arg("kernel32.lib")
-                .arg("ws2_32.lib")
-                .arg("userenv.lib")
-                .arg("advapi32.lib")
-                .arg("bcrypt.lib")
-                .arg("ntdll.lib")
+                .args(MSVC_SYSTEM_LIBRARIES)
                 .output()
         }
         WinLinkerKind::Gcc => {
@@ -4848,6 +4876,17 @@ mod tests {
                 "legacy_stdio_definitions.lib",
             ],
         );
+    }
+
+    /// Regression pin (runs on every host): Rust std's Windows futex locks need
+    /// `WaitOnAddress`/`WakeByAddress*`, which only `synchronization.lib`
+    /// provides.  Dropping it breaks every Windows native link on Rust >= 1.100.
+    #[test]
+    fn msvc_system_libraries_include_synchronization() {
+        assert!(MSVC_SYSTEM_LIBRARIES.contains(&"synchronization.lib"));
+        for lib in ["kernel32.lib", "ws2_32.lib", "userenv.lib", "advapi32.lib", "bcrypt.lib", "ntdll.lib"] {
+            assert!(MSVC_SYSTEM_LIBRARIES.contains(&lib), "missing {lib}");
+        }
     }
 
     // ── LANG83 PR1b: the native runtime's trap-kind table ─────────────────────
