@@ -30,8 +30,8 @@
 # separate terminal during code review.
 #
 # Requirements:
-#   - rustup with nightly toolchain installed
-#   - Miri component installed: `rustup +nightly component add miri`
+#   - rustup with nightly toolchain installed (the dated one in MIRI_NIGHTLY below)
+#   - Miri component installed: `rustup "+${MIRI_NIGHTLY}" component add miri`
 #
 # If those are missing, the script prints actionable instructions
 # rather than failing opaquely.
@@ -49,14 +49,18 @@ if ! command -v rustup >/dev/null 2>&1; then
     exit 1
 fi
 
-if ! rustup toolchain list | grep -q nightly; then
-    echo "Installing Rust nightly toolchain..."
-    rustup toolchain install nightly --component miri
+# The nightly is pinned to the same dated toolchain CI uses (see
+# code/specs/data/toolchain-pins.json), so a local run reproduces CI exactly.
+MIRI_NIGHTLY="nightly-2026-11-10"
+
+if ! rustup toolchain list | grep -q "^${MIRI_NIGHTLY}"; then
+    echo "Installing Rust ${MIRI_NIGHTLY} toolchain..."
+    rustup toolchain install "${MIRI_NIGHTLY}" --component miri
 fi
 
-if ! rustup +nightly component list --installed 2>/dev/null | grep -q '^miri'; then
+if ! rustup "+${MIRI_NIGHTLY}" component list --installed 2>/dev/null | grep -q '^miri'; then
     echo "Installing Miri component..."
-    rustup +nightly component add miri
+    rustup "+${MIRI_NIGHTLY}" component add miri
 fi
 
 # ── Configuration ────────────────────────────────────────────────────
@@ -83,15 +87,15 @@ cd "${PACKAGES_RUST}"
 # Miri fails, twig-vm Miri will fail too — surface the smaller
 # failure first.
 echo "→ Miri lang-runtime-core (fast, ~13s)..."
-cargo +nightly miri test -p lang-runtime-core --no-fail-fast
+cargo "+${MIRI_NIGHTLY}" miri test -p lang-runtime-core --no-fail-fast
 
 echo
 echo "→ Miri dynval-runtime (fast, ~13s)..."
-cargo +nightly miri test -p dynval-runtime --no-fail-fast
+cargo "+${MIRI_NIGHTLY}" miri test -p dynval-runtime --no-fail-fast
 
 echo
 echo "→ Miri twig-vm (slow, 30-90 min)..."
-cargo +nightly miri test -p twig-vm --no-fail-fast
+cargo "+${MIRI_NIGHTLY}" miri test -p twig-vm --no-fail-fast
 
 echo
 echo "═══════════════════════════════════════════════════════════════════"
