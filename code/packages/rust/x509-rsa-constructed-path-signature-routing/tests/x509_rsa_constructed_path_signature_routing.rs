@@ -35,6 +35,7 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
+    validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_intermediate_name_constraints_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy,
@@ -1211,6 +1212,31 @@ fn accumulates_every_ordered_intermediate_with_bounded_retained_evidence() {
     assert_eq!(
         format!("{subordinate_name_policy:?}"),
         "ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy"
+    );
+
+    let subordinate_anchor_policy =
+        validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy(
+            subordinate_name_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    assert_eq!(subordinate_anchor_policy.constraint_application_count(), 0);
+    assert_eq!(subordinate_anchor_policy.dns_name_evaluation_count(), 0);
+    assert_eq!(
+        subordinate_anchor_policy
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .processed_intermediate_count(),
+        2
+    );
+    assert_eq!(
+        format!("{subordinate_anchor_policy:?}"),
+        "ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy"
     );
 }
 

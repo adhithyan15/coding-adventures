@@ -8,12 +8,12 @@
 //!
 //! It also composes reviewed construction, ordered intermediate path-length
 //! evidence, the exact depth-zero target signature with complete server policy,
-//! the reviewed snapshot's supported anchor DNS constraints, and every retained
+//! the reviewed snapshot's supported anchor DNS constraints against the exact
+//! target and retained non-self-issued intermediate SANs, and every retained
 //! intermediate's supported DNS/IP constraints against the exact target and
 //! target-nearer non-self-issued intermediate SANs. This does not constrain
-//! subordinate distinguished names, apply reviewed-anchor constraints to
-//! subordinate CAs, validate a complete path, establish trust, check
-//! revocation, perform TLS or HTTP, or grant OAuth or network authority.
+//! subordinate distinguished names, validate a complete path, establish trust,
+//! check revocation, perform TLS or HTTP, or grant OAuth or network authority.
 
 #![deny(unsafe_code)]
 
@@ -416,6 +416,10 @@ pub enum X509RsaConstructedPathReviewedServerPolicyErrorKind {
     SubordinateIntermediateIpNameConstraints(IpConstraintErrorKind),
     /// Bounded repeated-evaluation counts could not be represented by `usize`.
     SubordinateNameEvaluationCountOverflow,
+    /// A subordinate intermediate dNSName violated the reviewed anchor's constraints.
+    SubordinateIntermediateAnchorDnsNameConstraints(DnsConstraintErrorKind),
+    /// Bounded reviewed-anchor subordinate-name counts could not be represented by `usize`.
+    SubordinateAnchorNameEvaluationCountOverflow,
 }
 
 /// A redacted reviewed server-path binding failure.
@@ -2144,6 +2148,128 @@ impl fmt::Debug
     }
 }
 
+/// Arbitrary-depth closure after reviewed-anchor subordinate-CA DNS policy.
+///
+/// The reviewed anchor's supported permitted-DNS constraint has been applied
+/// to every retained non-self-issued intermediate certificate's optional
+/// Subject Alternative Name. The consumed policy already proves the anchor
+/// constraint against the final target and supported intermediate constraints
+/// across the path. This does not constrain subordinate distinguished names,
+/// support every GeneralName, establish complete path validity, check
+/// revocation, or authorize transport.
+pub struct ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    subordinate_policy:
+        ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_application_count: usize,
+    dns_name_evaluation_count: usize,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the consumed subordinate-intermediate constraints policy.
+    #[must_use]
+    pub const fn subordinate_policy(
+        &self,
+    ) -> &ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >{
+        &self.subordinate_policy
+    }
+
+    /// Return reviewed-anchor to subordinate-CA constraint applications.
+    #[must_use]
+    pub const fn constraint_application_count(&self) -> usize {
+        self.constraint_application_count
+    }
+
+    /// Return total reviewed-anchor subordinate dNSName evaluations.
+    #[must_use]
+    pub const fn dns_name_evaluation_count(&self) -> usize {
+        self.dns_name_evaluation_count
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy",
+        )
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -3292,6 +3418,91 @@ pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_inter
     )
 }
 
+/// Apply the reviewed anchor's supported DNS constraint to subordinate CAs.
+///
+/// Constraint bytes, certificates, anchor-to-target order, and self-issued
+/// classifications come only from the consumed proof. An unconstrained
+/// reviewed snapshot entry succeeds without reading subordinate SANs.
+/// Non-final self-issued intermediates are skipped; the consumed target-anchor
+/// policy already covers the final target.
+pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    subordinate_policy:
+        ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let accumulated_intermediates = subordinate_policy
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .accumulated_intermediates();
+    let intermediate_policies = accumulated_intermediates.intermediate_policies();
+    let name_constraints = accumulated_intermediates
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let (constraint_application_count, dns_name_evaluation_count) =
+        evaluate_selected_anchor_subordinate_intermediate_dns_policy(
+            intermediate_policies.len(),
+            |index| intermediate_policies[index].certificate(),
+            |index| {
+                intermediate_policies[index]
+                    .self_issued_classification()
+                    .is_self_issued()
+            },
+            name_constraints,
+            constraint_limits,
+            subject_alt_name_limits,
+        )?;
+
+    Ok(
+        ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy {
+            subordinate_policy,
+            constraint_application_count,
+            dns_name_evaluation_count,
+        },
+    )
+}
+
 /// Bind one exact routed target -> intermediate -> reviewed-root construction.
 ///
 /// The authenticated intermediate must be the depth-zero projection and the
@@ -3898,9 +4109,101 @@ where
     ))
 }
 
+fn evaluate_selected_anchor_subordinate_intermediate_dns_policy<
+    'certificate,
+    'encoded,
+    CertificateAt,
+    IsSelfIssuedAt,
+>(
+    intermediate_count: usize,
+    certificate_at: CertificateAt,
+    is_self_issued_at: IsSelfIssuedAt,
+    name_constraints: Option<&[u8]>,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<(usize, usize), X509RsaConstructedPathReviewedServerPolicyError>
+where
+    'encoded: 'certificate,
+    CertificateAt: Fn(usize) -> &'certificate x509_certificate::X509Certificate<'encoded>,
+    IsSelfIssuedAt: Fn(usize) -> bool,
+{
+    let Some(encoded_constraints) = name_constraints else {
+        return Ok((0, 0));
+    };
+
+    let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+    let constraints =
+        decode_name_constraints_contents(&mut constraint_decoder, encoded_constraints).map_err(
+            |error| {
+                X509RsaConstructedPathReviewedServerPolicyError::new(
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidAnchorNameConstraints(
+                error.kind(),
+            ),
+        )
+            },
+        )?;
+    let mut constraint_application_count = 0usize;
+    let mut dns_name_evaluation_count = 0usize;
+
+    for intermediate_index in 0..intermediate_count {
+        if is_self_issued_at(intermediate_index) {
+            continue;
+        }
+        let intermediate_certificate = certificate_at(intermediate_index);
+        let subject_alt_name_extension = intermediate_certificate
+            .tbs_certificate()
+            .extensions()
+            .and_then(|extensions| {
+                extensions
+                    .iter()
+                    .find(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+            });
+        let constrained_dns_names = match subject_alt_name_extension {
+            None => evaluate_dns_names(&constraints, &[]),
+            Some(extension) => {
+                let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+                let subject_alt_name =
+                    decode_subject_alt_name(&mut subject_alt_name_decoder, extension).map_err(
+                        |error| {
+                            X509RsaConstructedPathReviewedServerPolicyError::new(
+                                X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidSubordinateIntermediateSubjectAlternativeName(
+                                    error.kind(),
+                                ),
+                            )
+                        },
+                    )?;
+                evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+            }
+        }
+        .map_err(|error| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateIntermediateAnchorDnsNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+        constraint_application_count = constraint_application_count
+            .checked_add(1)
+            .ok_or_else(subordinate_anchor_name_evaluation_count_overflow)?;
+        dns_name_evaluation_count = dns_name_evaluation_count
+            .checked_add(constrained_dns_names.count())
+            .ok_or_else(subordinate_anchor_name_evaluation_count_overflow)?;
+    }
+
+    Ok((constraint_application_count, dns_name_evaluation_count))
+}
+
 fn subordinate_name_evaluation_count_overflow() -> X509RsaConstructedPathReviewedServerPolicyError {
     X509RsaConstructedPathReviewedServerPolicyError::new(
         X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateNameEvaluationCountOverflow,
+    )
+}
+
+fn subordinate_anchor_name_evaluation_count_overflow(
+) -> X509RsaConstructedPathReviewedServerPolicyError {
+    X509RsaConstructedPathReviewedServerPolicyError::new(
+        X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateAnchorNameEvaluationCountOverflow,
     )
 }
 
@@ -4131,6 +4434,26 @@ mod tests {
             intermediates.len(),
             |index| &intermediates[index],
             |index| self_issued[index],
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
+
+    fn evaluate_anchor_subordinate_intermediates(
+        intermediate_encoded: &[Vec<u8>],
+        self_issued: &[bool],
+        name_constraints: Option<&[u8]>,
+    ) -> Result<(usize, usize), X509RsaConstructedPathReviewedServerPolicyError> {
+        assert_eq!(intermediate_encoded.len(), self_issued.len());
+        let intermediates = intermediate_encoded
+            .iter()
+            .map(|encoded| decode_x509_certificate(encoded, Asn1Limits::default()).unwrap())
+            .collect::<Vec<_>>();
+        evaluate_selected_anchor_subordinate_intermediate_dns_policy(
+            intermediates.len(),
+            |index| &intermediates[index],
+            |index| self_issued[index],
+            name_constraints,
             Asn1Limits::default(),
             Asn1Limits::default(),
         )
@@ -4380,6 +4703,133 @@ mod tests {
         ));
         let diagnostic = format!("{error:?} {error}");
         assert!(!diagnostic.contains("30 01 82"));
+    }
+
+    #[test]
+    fn reviewed_anchor_constraints_apply_to_non_self_issued_subordinate_ca_sans() {
+        let intermediates = [
+            certificate(&[subject_alt_name(&[dns_name("policy.example.test")])]),
+            certificate(&[subject_alt_name(&[dns_name("issuing.example.test")])]),
+        ];
+        let constraints = permitted_dns_subtrees(&[b".test"]);
+
+        let (applications, dns_evaluations) = evaluate_anchor_subordinate_intermediates(
+            &intermediates,
+            &[false, false],
+            Some(&constraints),
+        )
+        .unwrap();
+
+        assert_eq!(applications, 2);
+        assert_eq!(dns_evaluations, 2);
+    }
+
+    #[test]
+    fn reviewed_anchor_constraints_skip_self_issued_subordinate_ca() {
+        let intermediates = [
+            certificate(&[subject_alt_name(&[dns_name("outside.invalid")])]),
+            certificate(&[subject_alt_name(&[dns_name("issuing.example.test")])]),
+        ];
+        let constraints = permitted_dns_subtrees(&[b".test"]);
+
+        let (applications, dns_evaluations) = evaluate_anchor_subordinate_intermediates(
+            &intermediates,
+            &[true, false],
+            Some(&constraints),
+        )
+        .unwrap();
+
+        assert_eq!(applications, 1);
+        assert_eq!(dns_evaluations, 1);
+    }
+
+    #[test]
+    fn reviewed_anchor_constraints_treat_absent_subordinate_san_as_empty() {
+        let intermediates = [certificate(&[])];
+        let constraints = permitted_dns_subtrees(&[b".test"]);
+
+        let (applications, dns_evaluations) =
+            evaluate_anchor_subordinate_intermediates(&intermediates, &[false], Some(&constraints))
+                .unwrap();
+
+        assert_eq!(applications, 1);
+        assert_eq!(dns_evaluations, 0);
+    }
+
+    #[test]
+    fn unconstrained_reviewed_anchor_does_not_read_subordinate_sans() {
+        let malformed_subject_alt_name = [0x30, 0x01, 0x82];
+        let intermediates = [certificate(&[extension(
+            SUBJECT_ALT_NAME_OID_DER,
+            &malformed_subject_alt_name,
+        )])];
+
+        let counts =
+            evaluate_anchor_subordinate_intermediates(&intermediates, &[false], None).unwrap();
+
+        assert_eq!(counts, (0, 0));
+    }
+
+    #[test]
+    fn malformed_reviewed_anchor_subordinate_san_fails_closed_and_redacted() {
+        let malformed_subject_alt_name = [0x30, 0x01, 0x82];
+        let intermediates = [certificate(&[extension(
+            SUBJECT_ALT_NAME_OID_DER,
+            &malformed_subject_alt_name,
+        )])];
+        let constraints = permitted_dns_subtrees(&[b".test"]);
+
+        let error =
+            evaluate_anchor_subordinate_intermediates(&intermediates, &[false], Some(&constraints))
+                .unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidSubordinateIntermediateSubjectAlternativeName(_)
+        ));
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("30 01 82"));
+    }
+
+    #[test]
+    fn malformed_reviewed_anchor_subordinate_constraint_fails_closed_and_redacted() {
+        let malformed_name_constraints = [0xa0, 0x01, 0x30];
+        let intermediates = [certificate(&[])];
+
+        let error = evaluate_anchor_subordinate_intermediates(
+            &intermediates,
+            &[false],
+            Some(&malformed_name_constraints),
+        )
+        .unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidAnchorNameConstraints(_)
+        ));
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("a0 01 30"));
+    }
+
+    #[test]
+    fn reviewed_anchor_subordinate_constraint_violation_fails_closed_and_redacted() {
+        let intermediates = [certificate(&[subject_alt_name(&[dns_name(
+            "secret.invalid",
+        )])])];
+        let constraints = permitted_dns_subtrees(&[b".test"]);
+
+        let error =
+            evaluate_anchor_subordinate_intermediates(&intermediates, &[false], Some(&constraints))
+                .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateIntermediateAnchorDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
+            )
+        );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("secret.invalid"));
     }
 
     #[test]

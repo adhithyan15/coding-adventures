@@ -206,7 +206,9 @@ fn imin_and_imax_reject_other_operands_and_arities() {
 #[test]
 fn imin_and_imax_are_reserved_in_v1_and_free_in_v0() {
     assert!(V1_FUNCTIONS.contains(&"imin") && V1_FUNCTIONS.contains(&"imax"));
-    assert_eq!(V1_FUNCTIONS.len(), 33);
+    // 33 through WX-H; WX-D1 reserves its twelve sequence names (VER04k
+    // section 1.2), see tests/wxd_checker.rs.
+    assert_eq!(V1_FUNCTIONS.len(), 45);
     for name in ["imin", "imax"] {
         let v1 = format!("warrant t v1\n  model {name}(a: Nat) -> Nat = a\n");
         assert_eq!(code_of(&v1), DiagnosticCode::W0201, "{name} in v1");
