@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed — Windows build
+
+- The Windows cgo link line now includes `-lsynchronization`. Rust 1.100's std uses
+  `WaitOnAddress`/`WakeByAddressSingle`/`WakeByAddressAll` for its futex Mutex/Condvar,
+  so linking the GNU staticlib failed with ~50 undefined references on a 1.100 toolchain
+  (`--print native-static-libs` for 1.100.0 lists `-lsynchronization`; 1.97 did not).
+  Reproduced locally with Rust 1.100.0 and mingw-w64: undefined references before, a
+  linked test binary after.
+
 ### Added
 
 - **Real Windows recipe.** `BUILD_windows` was an echo-skip; it now runs

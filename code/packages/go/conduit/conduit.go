@@ -29,9 +29,11 @@ package conduit
 // NOT the MSVC conduit_capi.lib. The system libraries are the ones rustc reports
 // via `--print native-static-libs` for that target: Rust std's sockets
 // (ws2_32), process/user lookups (userenv), NT calls (ntdll), RNG (bcrypt),
-// registry/security (advapi32) and backtraces (dbghelp). -lgcc_eh supplies the
+// registry/security (advapi32), backtraces (dbghelp) and, since Rust 1.100, the
+// futex-based Mutex/Condvar (synchronization: WaitOnAddress/WakeByAddress*).
+// -lgcc_eh supplies the
 // _Unwind_* symbols the staticlib's panic machinery references.
-#cgo windows LDFLAGS: ${SRCDIR}/../../rust/target/x86_64-pc-windows-gnu/release/libconduit_capi.a -lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32 -lgcc_eh -static
+#cgo windows LDFLAGS: ${SRCDIR}/../../rust/target/x86_64-pc-windows-gnu/release/libconduit_capi.a -lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32 -lsynchronization -lgcc_eh -static
 
 #include <stdlib.h>
 #include "conduit_capi.h"
