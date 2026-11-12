@@ -1,3 +1,6 @@
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
 cargo test -q -p wasm-leb128 --lib -- --nocapture
 cargo test -q -p wasm-leb128 --doc
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .

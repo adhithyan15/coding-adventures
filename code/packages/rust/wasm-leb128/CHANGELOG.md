@@ -56,8 +56,10 @@ unreleased and the version is bumped at release.)
   public operations, including the `max_bits > 64` rejection, run inside a
   seccomp/Landlock jail derived from `required_capabilities.json`
   (`capabilities: []`), watched by an independent `strace -f`, with the 18
-  negative controls and a Docker ring. Linux only (NOT-LIVE elsewhere). BUILD
-  runs it with `RCG_STRICT=1`; `RCG_REQUIRE_DOCKER` is not set.
+  negative controls and a Docker ring. Linux only (NOT-LIVE elsewhere). `BUILD_linux`
+  runs it with `RCG_STRICT=1` (CI installs `strace` on Linux for this); the plain
+  `BUILD`, which macOS uses, runs it without, so a macOS NOT-LIVE gate does not
+  fail the build; `BUILD_windows` does not run it. `RCG_REQUIRE_DOCKER` is not set.
 
 ### Changed
 
