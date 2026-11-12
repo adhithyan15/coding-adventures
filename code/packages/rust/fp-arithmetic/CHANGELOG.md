@@ -2,6 +2,13 @@
 
 All notable changes to the `fp-arithmetic` crate will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- The pipelined-adder test walks `adder.results` with an iterator instead of
+  an index loop (Rust 1.100 clippy `needless_range_loop`). Behaviour unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added
