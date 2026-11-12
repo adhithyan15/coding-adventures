@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the seeded-register loop in the differential test(s) to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ## 0.1.0
 
 - Add the exact 526,401-DFF gate-level partner for Spec 07y.

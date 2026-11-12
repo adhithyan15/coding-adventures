@@ -19,8 +19,8 @@ fn decode_hex(text: &str) -> Vec<u8> {
 
 fn seeded_state(cpu: &Armv7AGateLevel, raw: &[u8], seed: usize) -> Armv7AState {
     let mut state = cpu.get_state();
-    for index in 0..15 {
-        state.registers[index] = seed_register(seed, index);
+    for (index, register) in state.registers.iter_mut().enumerate().take(15) {
+        *register = seed_register(seed, index);
     }
     state.pc = 0;
     state.registers[PC] = 0;

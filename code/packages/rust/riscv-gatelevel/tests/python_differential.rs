@@ -8,8 +8,8 @@ fn seed_register(seed: usize, index: usize) -> u32 {
 
 fn seeded_state(cpu: &Rv32IGateLevel, name: &str, raw: u32, seed: usize) -> Rv32IState {
     let mut state = cpu.get_state();
-    for index in 1..32 {
-        state.registers[index] = seed_register(seed, index);
+    for (index, register) in state.registers.iter_mut().enumerate().take(32).skip(1) {
+        *register = seed_register(seed, index);
     }
     state.registers[2] = 0x200;
     state.pc = 0;

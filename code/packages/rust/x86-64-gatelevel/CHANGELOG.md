@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the seeded-register loop in the differential test(s) to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ## [0.1.1] — 2026-10-26
 
 ### Fixed

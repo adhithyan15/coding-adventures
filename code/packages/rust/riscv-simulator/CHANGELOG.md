@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Rewrite the seeded-register loop in the differential test(s) to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
+## Unreleased
+
 - Added the normative `Rv32ISimulator` machine boundary with exact 64 KiB
   state, five M-mode CSRs, checked origin-aware loading and restore/direct
   access, typed fail-closed faults, complete transition traces, atomic steps,
