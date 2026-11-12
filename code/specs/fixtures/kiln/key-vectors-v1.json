@@ -1,0 +1,1101 @@
+{
+  "schema_version": 1,
+  "valid": [
+    {
+      "name": "minimal",
+      "description": "Every list empty, no host fingerprint (KILN02 6.1).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "2f68669eec24af063d9fed01898b10e650840c30e7ed2b3d4a715c1591b848a2"
+    },
+    {
+      "name": "collision-env-a",
+      "description": "Env pair A of the comma collision: name 'a,b' value 'test'. Differs from collision-env-b (6.2).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": [
+          {
+            "name": "a,b",
+            "value": "test",
+            "origin": 0
+          }
+        ]
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e7600000000000000010000000000000003612c6200000000000000047465737400",
+      "key_hex": "d0dc87208124a1f7c5ca932db7f588029a0d55299d8661921336d146b2437e14"
+    },
+    {
+      "name": "collision-env-b",
+      "description": "Env pair B: name 'a' value 'b,test'. A comma-joined encoding would equal collision-env-a; length framing must not.",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": [
+          {
+            "name": "a",
+            "value": "b,test",
+            "origin": 0
+          }
+        ]
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e7600000000000000010000000000000001610000000000000006622c7465737400",
+      "key_hex": "852cde07005046b5be80b3aaa72faa3a91c5168d9728276d38754e1dd52a0ac7"
+    },
+    {
+      "name": "collision-target-a",
+      "description": "Target 'a,b' phase 'test'. Phase is a closed enum so the spec's literal target/phase pair cannot be built; see KILN02 6.2 note in the implementation report.",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "a,b",
+        "phase": "test",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e0000000000000003612c6200000000000000047465737400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "be58e34b78ff1820cad212ee42188854a8ede5de8eb17d48b67a1b565848d6f2"
+    },
+    {
+      "name": "collision-target-b",
+      "description": "Target 'a' phase 'test': differs from collision-target-a.",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "a",
+        "phase": "test",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000016100000000000000047465737400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "20eeb871e3bff51df37e68a5a24349dfa3e4b6bc03781b7633936815c9905fa1"
+    },
+    {
+      "name": "unicode-and-byte-order",
+      "description": "Non-ASCII paths; 'B' (0x42) sorts before 'a' (0x61), which a case-insensitive order would reverse (6.3).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "B",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          },
+          {
+            "path": "café/menu.txt",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0303030303030303030303030303030303030303030303030303030303030303"
+          },
+          {
+            "path": "日本/語.txt",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0404040404040404040404040404040404040404040404040404040404040404"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e707574730000000000000004000000000000000142010000000000000000200101010101010101010101010101010101010101010101010101010101010101000000000000000161010000000000000000200202020202020202020202020202020202020202020202020202020202020202000000000000000e636166c3a92f6d656e752e747874010000000000000000200303030303030303030303030303030303030303030303030303030303030303000000000000000ee697a5e69cac2fe8aa9e2e7478740100000000000000002004040404040404040404040404040404040404040404040404040404040404040000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "ceacea58b55dae574be62b64a16312c3e4759e69839dd7525d503e9dc6c7e524"
+    },
+    {
+      "name": "link-and-exec",
+      "description": "A symbolic link and an executable file among inputs, plus a read (6.4).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "bin/run.sh",
+            "kind": 1,
+            "exec": 1,
+            "digest_hex": "0505050505050505050505050505050505050505050505050505050505050505"
+          },
+          {
+            "path": "lib/current",
+            "kind": 2,
+            "exec": 0,
+            "digest_hex": "0606060606060606060606060606060606060606060606060606060606060606"
+          },
+          {
+            "path": "src/main.go",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0707070707070707070707070707070707070707070707070707070707070707"
+          }
+        ],
+        "reads": [
+          {
+            "path": "data/x.txt",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0808080808080808080808080808080808080808080808080808080808080808"
+          }
+        ],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e707574730000000000000003000000000000000a62696e2f72756e2e7368010100000000000000200505050505050505050505050505050505050505050505050505050505050505000000000000000b6c69622f63757272656e74020000000000000000200606060606060606060606060606060606060606060606060606060606060606000000000000000b7372632f6d61696e2e676f010000000000000000200707070707070707070707070707070707070707070707070707070707070707000000000000000572656164730000000000000001000000000000000a646174612f782e7478740100000000000000002008080808080808080808080808080808080808080808080808080808080808080000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "0a78b86b9998f42ec18aca739b6134c7d7d25c36cc03fff2ee4eb1153a965dd9"
+    },
+    {
+      "name": "tools-every-kind",
+      "description": "One tool of each kind 0..3 (6.5).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "absent-tool",
+            "version": "1.0",
+            "kind": 0,
+            "identity_hex": ""
+          },
+          {
+            "name": "go",
+            "version": "1.26.2",
+            "kind": 1,
+            "identity_hex": "0909090909090909090909090909090909090909090909090909090909090909"
+          },
+          {
+            "name": "make",
+            "version": "GNU Make 4.3",
+            "kind": 2,
+            "identity_hex": "474e55204d616b6520342e330a4275696c7420666f72207838365f36342d70632d6c696e75782d676e750a"
+          },
+          {
+            "name": "protoc-gen-kiln",
+            "version": "0",
+            "kind": 3,
+            "identity_hex": "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+          }
+        ],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c730000000000000004000000000000000b616273656e742d746f6f6c0000000000000003312e300000000000000000000000000000000002676f0000000000000006312e32362e32010000000000000020090909090909090909090909090909090909090909090909090909090909090900000000000000046d616b65000000000000000c474e55204d616b6520342e3302000000000000002b474e55204d616b6520342e330a4275696c7420666f72207838365f36342d70632d6c696e75782d676e750a000000000000000f70726f746f632d67656e2d6b696c6e0000000000000001300300000000000000200a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0000000000000003656e760000000000000000",
+      "key_hex": "b5bbdc62e44b94f4407eea078a7e18947317fa58992d495a8d6c4731d4dec289"
+    },
+    {
+      "name": "host-absent",
+      "description": "Same action as host-present but without a host fingerprint (6.6).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "2f68669eec24af063d9fed01898b10e650840c30e7ed2b3d4a715c1591b848a2"
+    },
+    {
+      "name": "host-present",
+      "description": "Host fingerprint present: must give a different key from host-absent.",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": "ubuntu-24.04-image-7",
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f73740100000000000000147562756e74752d32342e30342d696d6167652d370000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "f6fa91239527da3390166b5617a9fac2deab4216e6c7d41dd00beb8153b171d1"
+    },
+    {
+      "name": "legacy-build-only",
+      "description": "Legacy recipe with BUILD only (6.7).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000024676f206275696c64202e2f2e2e2e0a676f2074657374202e2f2e2e2e202d636f7665720a",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000055000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000024676f206275696c64202e2f2e2e2e0a676f2074657374202e2f2e2e2e202d636f7665720a0000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "11786bd983594c12b19afc475ec41db0329ffd6ecc47dd23df8639ed6f8c7de0"
+    },
+    {
+      "name": "legacy-build-and-windows",
+      "description": "Legacy recipe with BUILD and BUILD_windows (6.7).",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "000000000000000c6c65676163792d7368656c6c000000000000000200000000000000054255494c440000000000000024676f206275696c64202e2f2e2e2e0a676f2074657374202e2f2e2e2e202d636f7665720a000000000000000d4255494c445f77696e646f77730000000000000010676f206275696c64202e2f2e2e2e0d0a",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000000000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000082000000000000000c6c65676163792d7368656c6c000000000000000200000000000000054255494c440000000000000024676f206275696c64202e2f2e2e2e0a676f2074657374202e2f2e2e2e202d636f7665720a000000000000000d4255494c445f77696e646f77730000000000000010676f206275696c64202e2f2e2e2e0d0a0000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000000000000000000005746f6f6c7300000000000000000000000000000003656e760000000000000000",
+      "key_hex": "ebe2d62e3ac4239301732ee6d6a5faa7458c0201f475d965bfff4890f8325ae7"
+    },
+    {
+      "name": "consumed-env-semantics",
+      "description": "Consumed entries (sorted by target then phase), env with both origins, non-zero semantics version, macOS/arm64.",
+      "action": {
+        "semantics_version": 2,
+        "os": "macos",
+        "arch": "arm64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "code/packages/go/a:lib",
+            "phase": "build",
+            "key_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"
+          },
+          {
+            "target": "code/packages/go/a:lib",
+            "phase": "test",
+            "key_hex": "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c"
+          },
+          {
+            "target": "code/packages/go/b:lib",
+            "phase": "build",
+            "key_hex": "0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d"
+          }
+        ],
+        "tools": [],
+        "env": [
+          {
+            "name": "CI",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "HOME",
+            "value": "",
+            "origin": 1
+          }
+        ]
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000020000000000000008706c6174666f726d00000000000000056d61636f73000000000000000561726d36340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000030000000000000016636f64652f7061636b616765732f676f2f613a6c696200000000000000056275696c6400000000000000200b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0000000000000016636f64652f7061636b616765732f676f2f613a6c696200000000000000047465737400000000000000200c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000000000016636f64652f7061636b616765732f676f2f623a6c696200000000000000056275696c6400000000000000200d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0000000000000005746f6f6c7300000000000000000000000000000003656e76000000000000000200000000000000024349000000000000000131000000000000000004484f4d45000000000000000001",
+      "key_hex": "3b72afdadd657c5cc152b26feb0ac57d9e09f49eef36b92d479e6d5100308938"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "unsorted-inputs",
+      "description": "inputs out of bytewise order ('b' before 'a')",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "b",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "not sorted"
+    },
+    {
+      "name": "case-insensitive-order",
+      "description": "'a' before 'B' is locale order, not bytewise",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "path": "B",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "not sorted"
+    },
+    {
+      "name": "duplicate-input",
+      "description": "same path twice",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "duplicate"
+    },
+    {
+      "name": "duplicate-tool",
+      "description": "same tool name twice",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "go",
+            "version": "1",
+            "kind": 1,
+            "identity_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "name": "go",
+            "version": "2",
+            "kind": 1,
+            "identity_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "env": []
+      },
+      "error": "duplicate"
+    },
+    {
+      "name": "unsorted-tools",
+      "description": "tools out of order",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "z",
+            "version": "1",
+            "kind": 1,
+            "identity_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "name": "a",
+            "version": "1",
+            "kind": 1,
+            "identity_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "env": []
+      },
+      "error": "not sorted"
+    },
+    {
+      "name": "dotdot-path",
+      "description": "'..' segment",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a/../b",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "malformed path"
+    },
+    {
+      "name": "dot-path",
+      "description": "'.' segment",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a/./b",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "malformed path"
+    },
+    {
+      "name": "leading-slash",
+      "description": "absolute path",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "/etc/passwd",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "leading slash"
+    },
+    {
+      "name": "trailing-slash",
+      "description": "directory-like path",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a/",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "trailing slash"
+    },
+    {
+      "name": "empty-segment",
+      "description": "'//' in path",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [
+          {
+            "path": "a//b",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "empty segment"
+    },
+    {
+      "name": "empty-path",
+      "description": "empty path",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "empty"
+    },
+    {
+      "name": "short-digest",
+      "description": "31-byte digest",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a",
+            "kind": 1,
+            "exec": 0,
+            "digest_hex": "01010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "exactly 32 bytes"
+    },
+    {
+      "name": "unknown-phase",
+      "description": "phase 'deploy'",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "deploy",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "unknown phase"
+    },
+    {
+      "name": "unknown-os",
+      "description": "os 'plan9'",
+      "action": {
+        "semantics_version": 0,
+        "os": "plan9",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "unknown os"
+    },
+    {
+      "name": "unknown-arch",
+      "description": "arch 'riscv'",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "riscv",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "unknown arch"
+    },
+    {
+      "name": "unknown-entry-kind",
+      "description": "entry kind 3",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "a",
+            "kind": 3,
+            "exec": 0,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "unknown kind"
+    },
+    {
+      "name": "unknown-tool-kind",
+      "description": "tool kind 9",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "x",
+            "version": "1",
+            "kind": 9,
+            "identity_hex": ""
+          }
+        ],
+        "env": []
+      },
+      "error": "unknown kind"
+    },
+    {
+      "name": "invalid-utf8-target",
+      "description": "target bytes ff fe",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "",
+        "target_hex": "fffe",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "not valid UTF-8"
+    },
+    {
+      "name": "exec-link",
+      "description": "a symbolic link marked executable",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [
+          {
+            "path": "l",
+            "kind": 2,
+            "exec": 1,
+            "digest_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": []
+      },
+      "error": "exec=0"
+    },
+    {
+      "name": "unsorted-consumed",
+      "description": "consumed out of order",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "b",
+            "phase": "build",
+            "key_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "target": "a",
+            "phase": "build",
+            "key_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "tools": [],
+        "env": []
+      },
+      "error": "not sorted"
+    },
+    {
+      "name": "duplicate-consumed",
+      "description": "same (target, phase) twice",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "a",
+            "phase": "build",
+            "key_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "target": "a",
+            "phase": "build",
+            "key_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "tools": [],
+        "env": []
+      },
+      "error": "duplicate"
+    },
+    {
+      "name": "consumed-phase-order",
+      "description": "same target, 'test' before 'build'",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "a",
+            "phase": "test",
+            "key_hex": "0101010101010101010101010101010101010101010101010101010101010101"
+          },
+          {
+            "target": "a",
+            "phase": "build",
+            "key_hex": "0202020202020202020202020202020202020202020202020202020202020202"
+          }
+        ],
+        "tools": [],
+        "env": []
+      },
+      "error": "not sorted"
+    },
+    {
+      "name": "short-consumed-key",
+      "description": "31-byte consumed key",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "a",
+            "phase": "build",
+            "key_hex": "01010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "tools": [],
+        "env": []
+      },
+      "error": "exactly 32 bytes"
+    },
+    {
+      "name": "duplicate-env",
+      "description": "same env name twice",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": [
+          {
+            "name": "A",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "A",
+            "value": "2",
+            "origin": 0
+          }
+        ]
+      },
+      "error": "duplicate"
+    },
+    {
+      "name": "bad-env-origin",
+      "description": "origin 2",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [],
+        "env": [
+          {
+            "name": "A",
+            "value": "1",
+            "origin": 2
+          }
+        ]
+      },
+      "error": "unknown origin"
+    },
+    {
+      "name": "absent-tool-with-identity",
+      "description": "kind 0 must have empty identity",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "x",
+            "version": "1",
+            "kind": 0,
+            "identity_hex": "00"
+          }
+        ],
+        "env": []
+      },
+      "error": "empty identity"
+    },
+    {
+      "name": "short-managed-identity",
+      "description": "managed tool identity of 31 bytes",
+      "action": {
+        "semantics_version": 0,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": null,
+        "target": "t",
+        "phase": "build",
+        "recipe_hex": "72",
+        "inputs": [],
+        "reads": [],
+        "consumed": [],
+        "tools": [
+          {
+            "name": "x",
+            "version": "1",
+            "kind": 1,
+            "identity_hex": "01010101010101010101010101010101010101010101010101010101010101"
+          }
+        ],
+        "env": []
+      },
+      "error": "exactly 32 bytes"
+    }
+  ]
+}

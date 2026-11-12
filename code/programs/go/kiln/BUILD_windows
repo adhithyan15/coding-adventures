@@ -1,0 +1,3 @@
+go build -o kiln.exe .
+go vet ./...
+go test ./... -cover

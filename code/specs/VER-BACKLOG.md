@@ -5,6 +5,11 @@ Implementation queue for VER00 and the Rust VER26 pilot. Reconcile fetched
 `462710b53fc`, bootstrap PR #18807 at `4e608afe3bc9`. Local tests, an open PR
 and a verified merge are different completion states.
 
+For portable Warrant, [portable-warrant.md](VER-BACKLOG.d/portable-warrant.md)
+is the current status, receipt, and discovery record. The coordinator rows and
+dated snapshots below are historical overview; use the shard for current
+implementation state.
+
 ## Delivery and prioritization
 
 One bounded change per PR, spec committed before tests/code, meaningful local
@@ -359,6 +364,25 @@ review; publish a dependent draft, then retarget/mark ready after P003's merge i
 verified (now done). Reprioritize again after P004's actual merge before selecting
 P005. The local Warrant notes are preparation, not an accepted spec or code.
 
+## Layered validation roadmap (VER27)
+
+[VER27](VER27-layered-validation-roadmap.md) records the owner's vision for
+Warrant (one `.warrant` file, evidence in all eighteen lanes, explicit
+assumptions discharged down or up the stack, self-hosting with an independent
+oracle, adoption before features, every language version) and maps the
+programmes below onto a ten-layer ladder from gates to system integration.
+Its section 8 is the recommended order across them; its section 10 lists
+conflicts with rows here (notably AS-004's CPU target and the WX slices that
+landed before any adopter). The rows below are the new work it proposes; every
+other id it orders already exists in this file.
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P2 / LV-001 | VER13 slice: per-lane language assumptions (`src.<lane>.semantics-as-specified`, `cc.<lane>.implementation-conforms`, `cc.<lane>.version-pinned`) and widening the `cc` layer text to cover interpreters and VMs (VER27 §5.2). Rust umbrella first; each other lane's entries land with its first manifest (pin) or first proof label (semantics) | proposed; regenerates the ct-compare and gf256 reports when the Rust umbrella lands |
+| P1 / LV-002 | CI re-selects every adopter when its `.warrant`, a pinned fixture, `warrant-grammar`, `warrant-ir` or `ca-assurance-report` changes (build-tool consumer rule) | proposed; can ship inside the first leaf conversion's enablement PR |
+| P3 / LV-003 | Per-lane assumption-conformance tests (VER00 §7.5.3) written as small Warrant files and run through the VER04i corpus, moving `src.<lane>.<construct>` entries to `evidenced` | proposed; after the lane's WD-1xx runner exists |
+| P3 / LV-004 | Write VER14 (per-lane WIR front ends over LANG84 versioned grammars, with the LP-001a differential method as the template) | proposed; after LP-001a has run once on gf256 |
+
 ## Polyglot Warrant-derived evidence (coordinator queue)
 
 Goal: a Warrant spec is the single source that is mechanically translated into
@@ -385,11 +409,12 @@ swift, dart, ocaml (need a CT01 ct-compare port first).
 
 | Priority / ID | Work | State / acceptance |
 |---|---|---|
-| P0 / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | in PR; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
-| P1 / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | waiting WD-001 |
-| P1 / WD-003 | Rust Warrant compiler emits the language-neutral expanded corpus for ct-compare + Python reference validator + regeneration check | waiting WD-002 |
-| P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | waiting WD-002 |
-| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | waiting WD-003/004 |
+| done / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | merged #19054 (`2ff2db8cb02`), verified on main; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
+| done / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | merged #19078; corrected contract is tracked in VER04i |
+| P1 / WD-003 | Rust Warrant compiler emits the language-neutral corpus for ct-compare Warrant v0; independent stdlib-only Python semantic/digest validator; byte-stable regeneration and falsification checks | PR #19177: WD-003 plus the #19209 Warrant WX-D1 S1 main integration; after the merge, local corpus regeneration/oracle, routing, and Rust package checks pass; hosted checks for the integrated head are pending. Explicitly unsharded. [Current queue, receipts, and discoveries](VER-BACKLOG.d/portable-warrant.md) |
+| P1 / WD-908 | Route Linux Lua prerequisites through bounded apt install retries after repeated CI DNS failures | CI runs #65010 and #65018 failed the Lua prerequisite step resolving Ubuntu archive hosts; both Linux Lua setup paths bypassed the existing retrying `code/scripts/ci/apt-install.sh`. PR #19177 attempt 5 passed at its prior exact head; merged-head checks remain pending. Retain `libreadline-dev`/`libncurses-dev`; regression checks both paths and timeouts. See [portable Warrant receipts](VER-BACKLOG.d/portable-warrant.md) |
+| P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | after WD-003: WD-004a defines strict lane-manifest schema and consumer registry; WD-004b integrates report generalization; then Python L0 runner. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
+| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | after WD-003 and WD-004a/004b; Python runner follows report/manifest contract. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
 | P3 / WD-2xx | Native Warrant backends emitting L2 PBT/fuzz suites per lane (TypeScript first: engines exist) | waiting WD-1xx per lane |
 | P3 / WD-3xx | CT01 ct-compare ports for lua, perl, haskell, swift, dart, ocaml, then their WD-1xx lanes | independent |
 | P4 / WD-4xx | Proof lanes via WIR front ends (VER14), C first | waiting VER14 spec |
@@ -430,12 +455,29 @@ in the trust base, malicious build hooks) until the owner resolves it.
 | P2 / LP-006 | Add missing `required_capabilities.json` (sha512 found without one); audit all leaves | independent, small (haiku) |
 | P2 / LP-007 | Negative/malformed-input tests absent in lzss, lz77, lz78, sha1, md5, x25519, range-coder, caesar/atbash, irc-framing | folded into each LP item |
 
-Warrant extensions, cheapest unlock-per-cost first (from survey): WX-B fixed-width
+Warrant extensions, cheapest unlock-per-cost first (from survey; active ordering and status are maintained in the [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md)): WX-B fixed-width
 ints U16/U32/I64; WX-C bitwise ops; WX-A tuples/records/non-recursive sums;
 WX-E external oracle / vector-table construct + per-language fixture generator;
 WX-F binding-level sequence drivers for stateful objects; WX-D bounded
 fold/count/map; WX-G in-out postconditions; WX-H `max_output` bounds;
 WX-I recursive sums; WX-J strings/floats/maps/stateful models (Tier 3).
+
+### Missing Warrant v1 implementation features (user direction 2026-11-11)
+
+VER04k already specifies the next language features; this queue records
+implementation work against those existing WX IDs rather than opening duplicate
+specs. WX-B/C/A/E/H are implemented in `warrant-grammar`; WX-D/F/G remain
+spec-only. Keep the corpus profile honest: Warrant v1-only constructs are not
+accepted by WD-003's Warrant v0 corpus until their compiler and evaluator work
+lands.
+
+| Priority / ID | Work and affected evidence | Dependency and acceptance |
+|---|---|---|
+| P1 / WX-D1 | Implement VER04k §2.1 sequence constructors `take`, `drop`, `slice`, `replicate`, `range`, `to_list`, `to_bytes`; unlocks a faithful `gf256` multiply model, general `wasm-leb128` model, and sequence pre/postconditions for streaming hashes and writers | WX-H/WX-E merged #19121; alongside WX-F/G baseline work; compiler/checker/evaluator/corpus update with boundary and negative tests per VER04k §2.15 |
+| P1 / WX-F | Implement VER04k §3 binding-level constructor/step/finish drivers; enables real streaming SHA-family, range-coder and rANS sequences | alongside WX-D1 and WX-G; split-point sweeps that use `slice` follow WX-D1; each driver is binding-validated, runs subject operations across every sequence element, and kills missing/reordered/duplicated-step controls |
+| P1 / WX-G | Implement VER04k §4 `inout` and `ensures`; enables zeroize post-state evidence and output-buffer writers such as sqlite-file varint and TLS ALPN | alongside WX-D1 and WX-F; sequence postconditions that use list/byte built-ins follow WX-D1; checker rejects inadmissible/hidden post-state, generator binds mutable adapter slots, and both true and false postconditions are falsified |
+| P2 / WX-D2 | Implement VER04k §2.2 first-order bounded `fold`, `map`, `count`, `all`, `any`; enables reusable list/byte reference models for hashes, codecs and bitset | after WX-D1, WX-F and WX-G; validate typing, model purity, and evaluator budget exhaustion as specified |
+| P2 / WX-D3 | Implement VER04k §2.3 bounded symbolic unrolling for sequence forms; enables selected WIR proofs over loop-based `gf256` and codec implementations | after WX-D2 and the corresponding WIR lowering; proof rows remain `unchecked` until source lowering and certificates are independently verified |
 
 ### Bottom-up hardening and self-hosting (user direction 2026-11-09)
 
@@ -581,7 +623,7 @@ when the fix is merged and verified on fetched main.
 | P1 / LP-001a | Rust-subset front end (VER25a/b): lifetimes, struct field + index, `return if/else` expressions, OnceLock tables, so gf256 proofs go live. **Now delivered as [RS01](RS01-rust-grammars.md) phase B (RS-B1..RS-B5, below); `OnceLock` replaced by compile-time tables (LP-001c), by owner decision 2026-11-12** | after LP-001 |
 | P2 / LP-001b | `Field::new` accepts any u16 polynomial without validation; capabilities.rs witness + `--verify-cert` for gf256 (E0 currently rests on an unverified cert) | backlog |
 | P2 / OPS-003 | Agent worktrees are created from origin/main, not the current branch; briefs that need unmerged work must say so (lesson recorded by LP-001) | apply in briefs |
-| done-local / WD-002 | VER04i polyglot spec: branch worktree-agent-a9f43bf58278f3a70 (commit 5d1187fbda). `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and a stdlib Python oracle (materialising ct-compare would be ~28 MB/library); 256 biased property cases per claim materialised; binding wrappers for per-op sabotage; `warrant-lane-evidence-v1` manifests; 9 new fail-closed checks; rollout python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir, then lua, perl, haskell, swift, dart, ocaml | queued for PR |
+| merged / WD-002 | VER04i polyglot spec: merged in #19078. `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and stdlib Python oracle; per-lane rollout and manifest/report contract remain queued in WD-1xx/004 |
 
 Provisional decisions on VER04i §14 (coordinator defaults, pending owner review):
 1. Runner lives in each lane's test-bootstrap package (create one per lane as needed), not a separate warrant-corpus package.
@@ -653,7 +695,7 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | P3 / SEC-003c | C and C++ huffman encoders hold codes in 32-bit integers; an extremely skewed distribution needs longer codes | open |
 | P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
 | P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
-| spec / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713. Implementation follows after the WX-H/WX-E branch (`claude/warrant-wx-h-e`) merges, in the order D1, F and G (parallel), D2, D3 | open; 13 owner questions in VER04k section 9 |
+| spec / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713 | spec merged #19115; WX-H/WX-E prerequisites merged #19121; WX-D1 S1 checker and ground evaluator merged #19209; WX-D1 S0 errata PR #19204 remains open; evidence-generator/corpus translation S2a is outstanding. Keep the existing D1/F/G/D2/D3 sequence and resolve the VER04k §9 questions during implementation. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
 | P1 / WX-RD1 | Security (WX-D1 S1 review): the Warrant ground evaluator's reads deep-clone `EvalValue` and charge no data (VER04k §9.1, note on E4), so the 64 MiB data counter bounds each v1 value, not an evaluation's memory. Measured: a list literal of 48 references to a value charged about 16 MB peaked at 2.4 GB before W0703; a model call with 48 such arguments peaked at 2.4 GB and succeeded with `data_used` 16 MB; about 33 ms of CPU per clone at about 3 work units; worst case hundreds of GB. Fix: shared storage (`Rc`/`Arc`) in `EvalValue`, or a host-side read guard; whichever lands, generated code and the lanes keep the same meter charges. Also (S1 security review, round 2): even a charged value costs more than its charge. The meter counts 32 bytes per value slot (`32 + dsize`), but an `EvalValue` is 96 bytes, and every `String` it owns (bytes, constructor and error names) is a separate heap allocation with its own malloc chunk overhead. So the real memory of a charged list or composite is about 3-5 times its `data_used`, still bounded, because the charge is, by the 64 MiB budget (a few hundred MB per value). The `Rc`/`Arc` fix should re-measure the slot size, or the slot charge should rise to match | open |
 
 ### Rust capability analyzer: open gaps after the third security review (2026-11-11)

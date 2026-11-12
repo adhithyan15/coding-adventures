@@ -1645,7 +1645,7 @@ jobs:
 
       - name: Install Lua build prerequisites
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: sudo apt-get install -qy libreadline-dev libncurses-dev
+        run: bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
 
       - name: Install pinned Lua 5.4.7 from verified mirrors
         run: python3 code/scripts/setup_lua.py --prefix .lua
@@ -4036,7 +4036,7 @@ jobs:
             if [ "$RUNNER_OS" = "macOS" ]; then
               brew install readline ncurses
             else
-              sudo apt-get install -qy libreadline-dev libncurses-dev
+              bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
             fi
             python3 code/scripts/setup_lua.py --prefix .lua
           fi

@@ -846,6 +846,46 @@ class WorkflowConsistencyTests(unittest.TestCase):
             "code/scripts/ci/apt-install.sh:\n  " + "\n  ".join(offenders),
         )
 
+    def test_lua_build_prerequisites_use_the_retrying_apt_wrapper(self) -> None:
+        workflow = WORKFLOWS / "ci.yml"
+        lines = workflow.read_text().splitlines()
+        installs = []
+        for number, line in enumerate(lines):
+            if "libreadline-dev" not in line or "libncurses-dev" not in line:
+                continue
+            start, body = _step_around(lines, number)
+            step = "\n".join(body)
+            self.assertIn(
+                "bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev",
+                line,
+                f"Lua prerequisites bypass the retrying apt wrapper at {workflow}:{number + 1}",
+            )
+            self.assertNotIn("apt-get install", line)
+            timeout = re.search(r"^\s*timeout-minutes:\s*(\d+)", step, re.MULTILINE)
+            self.assertIsNotNone(timeout, f"Lua apt step has no timeout at {workflow}:{start + 1}")
+            name = re.search(r"^\s*- name:\s*(.+)$", step, re.MULTILINE)
+            self.assertIsNotNone(name, f"Lua apt step has no name at {workflow}:{start + 1}")
+            installs.append((name.group(1), timeout.group(1)))
+
+        self.assertEqual(
+            len(installs),
+            2,
+            "both Linux Lua setup paths must install these packages exactly once",
+        )
+        self.assertEqual(
+            len({name for name, _ in installs}),
+            len(installs),
+            "Lua prerequisite install step names must be unique",
+        )
+        self.assertEqual(
+            dict(installs),
+            {
+                "Install Lua build prerequisites": "10",
+                "Install pinned Lua 5.4.7 from verified mirrors": "15",
+            },
+            "both Linux Lua paths must keep their existing install timeouts",
+        )
+
     def test_every_apt_get_install_assumes_yes(self) -> None:
         # `-q` is QUIET, not assume-yes. Two sites passed `-q` alone, and a
         # non-interactive `apt-get install` cannot complete an install that

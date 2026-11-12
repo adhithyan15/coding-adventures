@@ -1,0 +1,3 @@
+go build -o kiln .
+go vet ./...
+go test ./... -cover
