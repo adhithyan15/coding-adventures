@@ -1,10 +1,10 @@
 # Changelog — `twig-aot`
 
-## Unreleased — Windows link: add `synchronization.lib` (Rust 1.100.0)
+## Unreleased — Windows AOT linker imports
 
-- **Fix.** Rust 1.100.0 (released 2026-11-12; CI's unpinned `stable` picked it up the same day) makes the std objects inside the embedded gc-core-capi staticlib reference `WaitOnAddress`, `WakeByAddressSingle` and `WakeByAddressAll` (Windows futex `Mutex`/`Condvar`). Those live in `synchronization.lib` (API set `api-ms-win-core-synch-l1-2-0`), which was not on the hand-maintained `link.exe` list, so 7 of 8 `windows_x86_64_smoke` tests failed with `LNK2019 ... __imp_WakeByAddressSingle` / `LNK1120: 3 unresolved externals`.
-- The system import libraries now live in one documented const, `MSVC_SYSTEM_LIBRARIES` (a table explains why each is needed), instead of six inline `.arg(...)` calls. The same library is added to `lang-aot/tests/common/mod.rs::gc_link_args`, which has its own copy of the list.
-- Test: `tests::msvc_system_libraries_include_synchronization` (runs on Linux CI) pins the list.
+- Add `Synchronization.lib` to the MSVC/LldLink system import libraries so
+  Rust standard-library references to `WaitOnAddress` and `WakeByAddress*`
+  resolve in generated Windows executables.
 
 ## Unreleased — #18779: lower const Str in variables and preserve heap defs in stack maps
 
