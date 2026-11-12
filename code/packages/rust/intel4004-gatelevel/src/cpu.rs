@@ -342,21 +342,15 @@ impl Intel4004GateLevel {
         self.stack.restore(&state.hw_stack, state.stack_pointer);
         for bank in 0..4 {
             for register in 0..4 {
-                for character in 0..16 {
-                    self.ram.write_main(
-                        bank,
-                        register,
-                        character,
-                        state.ram[bank][register][character],
-                    );
+                for (character, &value) in
+                    state.ram[bank][register].iter().enumerate().take(16)
+                {
+                    self.ram.write_main(bank, register, character, value);
                 }
-                for status in 0..4 {
-                    self.ram.write_status(
-                        bank,
-                        register,
-                        status,
-                        state.ram_status[bank][register][status],
-                    );
+                for (status, &value) in
+                    state.ram_status[bank][register].iter().enumerate().take(4)
+                {
+                    self.ram.write_status(bank, register, status, value);
                 }
             }
             self.ram.write_output(bank, state.ram_output[bank]);

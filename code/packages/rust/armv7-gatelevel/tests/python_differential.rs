@@ -3,8 +3,8 @@ use armv7_gatelevel::Armv7GateLevel;
 
 fn seeded_state(cpu: &Armv7GateLevel, raw: u32, seed: usize) -> ArmState {
     let mut state = cpu.get_state();
-    for index in 0..15 {
-        state.registers[index] = ((seed as u32 + 1).wrapping_mul(0x9e37_79b9))
+    for (index, reg) in state.registers.iter_mut().enumerate().take(15) {
+        *reg = ((seed as u32 + 1).wrapping_mul(0x9e37_79b9))
             ^ (index as u32).wrapping_mul(0xd1b5_4a33);
     }
     for (address, byte) in state.memory.iter_mut().enumerate() {

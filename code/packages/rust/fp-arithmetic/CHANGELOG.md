@@ -2,6 +2,12 @@
 
 All notable changes to the `fp-arithmetic` crate will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/pipeline.rs (tests)`: `needless_range_loop`: test iterates `adder.results` with `iter().enumerate()`; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

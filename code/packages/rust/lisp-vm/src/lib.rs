@@ -490,8 +490,8 @@ impl LispVm {
                 let mut params = Vec::new();
                 if param_count > 0 && func_code.constants.len() >= param_count {
                     let start = func_code.constants.len() - param_count;
-                    for i in start..func_code.constants.len() {
-                        if let Value::String(name) = &func_code.constants[i] {
+                    for (i, constant) in func_code.constants.iter().enumerate().skip(start) {
+                        if let Value::String(name) = constant {
                             params.push(name.clone());
                         } else {
                             params.push(format!("_p{}", i - start));

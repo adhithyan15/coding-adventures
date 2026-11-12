@@ -2,6 +2,12 @@
 
 All notable changes to this crate will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: `read_directory_entries` iterates `direct_blocks` directly; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

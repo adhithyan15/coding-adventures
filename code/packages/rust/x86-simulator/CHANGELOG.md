@@ -1,5 +1,11 @@
 # Changelog — x86-simulator
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed the GPRs with `iter_mut().enumerate()`; behaviour unchanged.
+
 ## 0.8.0 — 2026-08-31 — complete Spec 07w functional machine
 
 - Add a separate `X86FunctionalSimulator` boundary with exact owned 64 KiB
