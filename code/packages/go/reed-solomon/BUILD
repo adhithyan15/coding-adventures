@@ -1,3 +1,3 @@
-go mod tidy
+go mod tidy -diff
 go test ./... -v -cover
 go vet ./...

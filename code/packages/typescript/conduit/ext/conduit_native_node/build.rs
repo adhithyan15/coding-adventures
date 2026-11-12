@@ -22,8 +22,9 @@ fn main() {
             // default — the dynamic linker resolves them when Node.js loads
             // the .node addon.
             //
-            // Windows: would need node.lib from the Node.js installation.
-            // CI skips Windows for this package (BUILD_windows stubs it out).
+            // Windows: a PE/COFF DLL may not leave imports undefined, so the
+            // napi_* symbols are imported from node.exe through node-bridge's
+            // `raw-dylib` table (see node-bridge/src/lib.rs); no node.lib needed.
         }
     }
 }

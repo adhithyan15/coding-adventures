@@ -7,6 +7,11 @@ documented in this file.
 
 ### Added
 
+- Added a distinct policy-backed reviewed-endpoints result that retains the
+  exact Name-value policy used for construction with reviewed-root selection
+  and complete target server policy.
+- Rejected byte-equal target policy from an independent decode at the stronger
+  policy-backed boundary without exposing certificate payloads.
 - Added a combined non-copyable result that retains reviewed-terminal path
   evidence and complete server policy for the path's exact target object.
 - Rejected byte-equal target policy from an independent decode before either

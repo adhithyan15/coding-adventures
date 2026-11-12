@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now builds the N-API addon and runs the tests on Windows (same steps as the Unix `BUILD`) instead of skipping. The N-API symbols are imported from `node.exe` through `node-bridge`'s `raw-dylib` table, so no `node.lib` is needed; the stale `build.rs` comment saying otherwise is corrected.
+
 ## [0.1.0] - 2026-06-14
 
 ### Added

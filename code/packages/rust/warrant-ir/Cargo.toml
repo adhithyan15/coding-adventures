@@ -31,3 +31,11 @@ harness = false
 name = "gf256_proofs"
 path = "tests/gf256_proofs.rs"
 harness = false
+
+# wasm-leb128: no secret labels, so only the steps/heap/depth rows, attempted on
+# the real wasm-leb128 source.  The front end refuses the file, so this target
+# records the steps-bound obligations `not-live` with the precise blocker.
+[[test]]
+name = "wasm_leb128_proofs"
+path = "tests/wasm_leb128_proofs.rs"
+harness = false

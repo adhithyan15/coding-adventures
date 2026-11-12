@@ -1327,7 +1327,15 @@ The numbering continues from the WX-B/WX-C items above.
     variant is matched with `{ .. }`).  A value a host integer cannot hold is
     *unreachable by type*: the adapter raises a private panic that the claim wrapper
     turns into a vacuous pass, counted as `unreachable_by_type` in the manifest;
-    nothing is narrowed.
+    nothing is narrowed.  Because the variant is matched with `{ .. }`, the path
+    may also name a host error *struct* (`errors=wasm_leb128/Leb128Error=MALFORMED`
+    matches `wasm_leb128::Leb128Error { .. }`); every value of that struct is then
+    the one mapped case.  *Correction (wasm-leb128 adoption):* the
+    `gen_evidence` example that every package `BUILD` runs used to build its
+    options with empty `hosts`, so these lines reached the generator only through
+    in-test drivers; it now passes them through, and
+    `tests/gen_evidence_driver.rs` drives the example itself on a bindings file
+    with `struct`, `enum`, composite `args=`, `ret=` and `errors=` lines.
 23. **Faults** (4.8) are rewrites of the adapter's result.  `off-by-one-consumed`
     adds 1 to an even second component and subtracts 1 from an odd one (so both
     directions of "`+ 1` / `- 1`" occur and a claim that pins `consumed` on every

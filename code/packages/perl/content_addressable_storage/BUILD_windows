@@ -1,2 +1,2 @@
-: ../sha1
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../sha1
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps sha1

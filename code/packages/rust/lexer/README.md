@@ -45,6 +45,16 @@ EQUALS = "="
 let tokens = GrammarLexer::new("x = 1 + 2", &grammar).tokenize().unwrap();
 ```
 
+### Leading hash in indentation mode
+
+A grammar that uses `mode: indentation` can discard a hash-prefixed comment
+with a `skip:` rule such as `COMMENT = /#[^\r\n]*/`. The comment preserves
+the indentation stack. Without a matching skip rule, a leading hash proceeds
+through normal token matching and can be emitted by a rule like `HASH = "#"`.
+An unrecognized hash or a zero-width skip match at that position returns a
+`LexerError`. Indentation-mode token patterns must consume at least one
+character when they match.
+
 ### Token flags: the gap before each token (F11)
 
 Each token from the grammar-driven lexer records what was consumed between it

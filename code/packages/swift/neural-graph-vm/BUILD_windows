@@ -1,1 +1,1 @@
-echo "swift support not enabled in windows CI yet -- skipping"
+where swift >nul 2>nul && swift test || echo Swift not available on this runner - skipping

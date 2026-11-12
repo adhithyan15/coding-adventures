@@ -14,6 +14,7 @@ pub mod catalogue;
 pub mod checker;
 pub mod evidence;
 pub mod json;
+pub mod lane_evidence;
 pub mod matrix;
 pub mod registry;
 pub mod report;
@@ -90,7 +91,10 @@ pub fn generate_package_report(
         .iter()
         .filter(|w| w.status == WeaknessStatus::Exemption)
         .map(|w| {
-            let (id, kind) = if w.cwe == 208 {
+            let not_applicable = w.evidence.iter().any(|e| e == evidence::NO_SECRET_OPERANDS_ATTESTATION);
+            let (id, kind) = if w.cwe == 208 && not_applicable {
+                (evidence::NOT_APPLICABLE_208_EXEMPTION.to_string(), "not-applicable")
+            } else if w.cwe == 208 {
                 ("EXEMPT-CWE-208-GATE-LEVEL".to_string(), "weakness-floor")
             } else if w.cwe == 400 {
                 ("EXEMPT-CWE-400-NO-STEP-PROOF".to_string(), "no-live-proof")

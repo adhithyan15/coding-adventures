@@ -6,6 +6,7 @@ All notable changes to this package are documented here.
 
 ### Changed
 
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
 - **Eliminated runtime grammar-file disk reads.** `_grammar()` previously
   opened `code/grammars/ruby/ruby.tokens` off disk (via `_grammars_dir()`
   climbing 5 directory levels from `__FILE__` with `File::Basename::dirname`
