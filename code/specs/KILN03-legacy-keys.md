@@ -388,12 +388,15 @@ must match them.
    digest is SHA-256 of the full KILN02 section encoding
    `str("inputs") || list(entries)`. The plan's component digests use the
    section encodings of `reads` and `consumed` from the key encoder.
-2. **Class precedence.** The temporary `m1-incomplete:*` reasons (present
-   until escape scans and tool/env identity land) do not count when choosing
+2. **Class precedence.** The temporary `m1-incomplete:*` reason (present
+   until tool/env identity lands; the escape scans landed in 7c-2, so
+   `m1-incomplete:scans` no longer exists) does not count when choosing
    between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
    `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
    unpinned closure language gives `unpinned`; `cacheable` needs no reason at
-   all, so it is unreachable while any `m1-incomplete` reason remains.
+   all, so it is unreachable while any `m1-incomplete` reason remains. Hard reasons now
+   also include `escape:`, `indirect:` and `unscanned:`; a package carrying one
+   still gets its key.
 3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
    an empty key and reason `no-build-file:<os>`, but remains a closure member
    for others.
@@ -428,3 +431,70 @@ must match them.
     without control characters.
 12. **Folder source.** The plain-folder `Source` cannot check for a clean tree;
     `legacy-plan` warns on stderr and continues.
+
+## 12. Implementation decisions (7c-2: escape and indirection scans)
+
+13. **Scope and timing.** Only the package's *own* files (§3.1) are scanned,
+    never closure members' (their own digests are in the key; their escapes
+    are their own packages' reasons). The scan runs in the same pass that
+    hashes each file, so no file is read twice. A symlink is never opened, so
+    its target's content is not scanned; the link-target rule is what covers it.
+14. **Text.** A file is text when the first 8 KiB (all of it when shorter) has
+    no NUL byte and is valid UTF-8; a character cut by the end of that window
+    is not an error. Text up to 256 KiB (262,144 bytes, inclusive) is scanned;
+    larger text is `unscanned:<file>`. Non-text is `unscanned:<file>` only if
+    it carries an executable bit; a non-executable binary (an image, an
+    archive) is hashed but neither scanned nor reported. Scanning works on raw
+    bytes: every marker and delimiter is ASCII.
+15. **Tokens.** A token is a maximal run of bytes that are not whitespace,
+    `"`, `'`, `` ` ``, `=`, `(`, `)`, `,`, `;`, `:`, `<`, `>`, `|` or `&`.
+    Before tokenising, URLs (`scheme://` up to the next whitespace, quote,
+    bracket or operator) are removed, so `https://x/../y` is ignored; the
+    `file:` scheme is the exception and is kept (it names a path).
+16. **`../` tokens.** A token counts when, with `\` read as `/`, it contains
+    `../` or ends in `/..` (so `..` must be a whole segment next to a `/`:
+    `wait..`, `a..b` and a bare `..` such as Lua's concatenation do not
+    count; a bare `cd ..` is the marker rule's). A glued flag prefix without a
+    slash is dropped (`-I../inc` is `../inc`). The token is resolved against
+    the file's directory and cleaned; a result that climbs above the repository
+    root is an escape. A token containing any of `$ * ? [ ] { } ~ %` cannot be
+    resolved and is an escape as written. Absolute tokens are not resolved:
+    the absolute-path rule owns them. The reason names the cleaned target.
+17. **Allowed region.** A target is inside when it equals or lies under the
+    package's `rel_path`, any closure member's `rel_path`, or a read path
+    (file or directory), or it matches a read glob. A directory that merely
+    contains the package (`../` from its root) is outside.
+18. **Markers** are case-sensitive substrings, deliberately without word
+    boundaries (`__dirname`, `os.path.realpath`, `$0` inside `$01` all hit):
+    `dirname`, `realpath`, `readlink`, `$(pwd`, `` `pwd` ``, `$PWD`, `${PWD`,
+    `$OLDPWD`, `${OLDPWD`, `$0`, `${0`, `$BASH_SOURCE`, `${BASH_SOURCE`, `$HOME`,
+    `${HOME`, `~/`; `git`, whitespace, `rev-parse` or `ls-files` (any
+    whitespace run); and a bare `cd ..`: the word `cd` not glued to a longer
+    word, whitespace, an optional quote, `..`, any number of `/`, an optional
+    quote, then whitespace, `;`, `&`, `|`, `)` or the end (so `cd ../x` is not
+    a marker, it is a `../` token). Beyond the list above, three Windows and
+    PowerShell analogues are included: `%~dp0`, `%CD%`/`%cd%`, `$PSScriptRoot`.
+19. **Absolute paths.** A token is an absolute path outside the allowlist when
+    (after dropping a leading `#!`, and after a glued single-letter flag such as
+    `-I`/`-L`) it starts with `/` followed by a letter, digit or one of
+    `. _ ~ $ @ % + -`, and is not exactly `/dev/null`, `/usr/bin/env` or
+    `/bin/sh`. Not paths: a lone `/`, `/*`, `/^re/`; a token starting with
+    exactly two slashes is a comment marker (`//go:build`) unless it contains
+    `..` or has three or more slashes (the tail of `file:///etc/x`). So
+    `#!/bin/bash` is `indirect` and `#!/bin/sh` and `#!/usr/bin/env` are not.
+20. **Symlinks.** Resolved like a kernel (a stack of components; a link
+    component is replaced by its target's components and costs one hop; `..`
+    pops), over the listed tree: at most 40 hops, so a loop fails by running
+    out. Refused (reason `escape:<link>`): a rooted or Windows-drive target,
+    climbing above the repository root, a regular file used as a directory, an
+    exhausted hop budget; or a final path outside the allowed region (17). A
+    dangling target inside the region is fine. The links checked are those in
+    the package's own files and in every read (a read file, every file under a
+    read directory, every glob match), each resolved once per run.
+21. **Reasons.** `escape:<path>` (the cleaned `../` target, the dynamic token,
+    or the link), `indirect:<file>`, `unscanned:<file>`, with control
+    characters removed. At most 16 of each kind are recorded per package (the
+    first in sorted order); the cap bounds plan size and changes no class.
+    All are hard reasons (class `uncacheable`) and the key is still computed.
+    The histogram counts each of the three kinds once per package, under its
+    prefix.

@@ -152,10 +152,20 @@ kiln explain --plan <plan.json> <package>
   targets, `go.work` and `vendor/`.
 - The key is a KILN02 key with **semantics version 0**. Tools and env are empty
   in this milestone, so every package carries `m1-incomplete:tools-env` and
-  `m1-incomplete:scans` and none is `cacheable` yet. Packages whose closure has
+  none is `cacheable` yet. Packages whose closure has
   an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
   `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
   for the OS are `uncacheable`.
+- **Escape scans** (KILN03 section 6) look at each package's own files, in the
+  same pass that hashes them: a `../` path that leaves the package, closure and
+  reads is `escape:<path>`; indirection markers (`dirname`, `$PWD`,
+  `git rev-parse`, a bare `cd ..`, an absolute path, ...) are `indirect:<file>`;
+  text over 256 KiB or an executable that is not text is `unscanned:<file>`; a
+  symlink (in the package or in a read) that does not resolve, through any chain
+  or directory link, to the package, closure or reads is `escape:<link>`. All
+  make the package `uncacheable`; its key is still computed. The rules are
+  deliberately over-eager: a false positive costs hit rate, a false negative
+  would be a false hit.
 - The Git source refuses to plan when any untracked, non-ignored file exists
   (build products would enter the digests). `--source folder` has no such
   check: it prints a warning to stderr and keeps going (shadow mode), so run it

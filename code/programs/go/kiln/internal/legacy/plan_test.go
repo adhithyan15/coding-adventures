@@ -344,7 +344,7 @@ func TestHistogramAndClasses(t *testing.T) {
 	if classify(true, true) != ClassUncacheable || classify(false, true) != ClassUnpinned || classify(false, false) != ClassUncacheable {
 		t.Fatal("classify")
 	}
-	if reasonGroup("never:x") != "never" || reasonGroup(ReasonScans) != ReasonScans {
+	if reasonGroup("never:x") != "never" || reasonGroup(ReasonToolsEnv) != ReasonToolsEnv {
 		t.Fatal("reasonGroup")
 	}
 }

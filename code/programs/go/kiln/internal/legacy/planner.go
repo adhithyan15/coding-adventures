@@ -118,9 +118,13 @@ type planner struct {
 	bounds    []boundary
 	items     [][]readItem
 
-	entries   memo[key.FileEntry]
+	entries   memo[entryResult]
 	trees     memo[[32]byte]
 	resolves  memo[resolved]
+	itemFs    memo[[]string]       // files behind a read item
+	itemLinks memo[[]string]       // symlinks among them
+	linkRes   memo[linkResolution] // where a symlink finally points
+	linkInfo  memo[source.Info]    // Describe of a link, once
 	ownDigest [][32]byte
 
 	toolOnce sync.Once
@@ -304,34 +308,56 @@ func (pl *planner) closure(p int) []int {
 	return out
 }
 
+// entryResult is what reading one listed path yields: its KILN02 inputs entry
+// and, for a regular file that some package owns, the scan facts of KILN03 6,
+// gathered in the SAME pass over the bytes that produced the digest.
+type entryResult struct {
+	e     key.FileEntry
+	facts fileFacts
+}
+
 // entry builds the KILN02 inputs entry of one listed path: kind, executable
 // bit (from the Source, never the disk) and content digest (a link's digest
 // covers its target TEXT only).  Memoised, so a file shared by many reads is
 // hashed once.
 func (pl *planner) entry(p string) (key.FileEntry, error) {
-	return pl.entries.get(p, func() (key.FileEntry, error) {
+	r, err := pl.entryFull(p)
+	return r.e, err
+}
+
+// entryFull is entry plus the scan facts.  Whether facts are gathered depends
+// only on the path (does some package own it?), never on who asked first, so
+// the memoised result is the same whichever caller gets there first.
+func (pl *planner) entryFull(p string) (entryResult, error) {
+	return pl.entries.get(p, func() (entryResult, error) {
 		info, err := pl.opt.Source.Describe(p)
 		if err != nil {
-			return key.FileEntry{}, err
+			return entryResult{}, err
 		}
 		h := sha256.New()
 		if info.Link {
 			h.Write([]byte(info.Target))
-			return key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}, nil
+			return entryResult{e: key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}}, nil
 		}
 		rc, err := pl.opt.Source.Open(p)
 		if err != nil {
-			return key.FileEntry{}, err
+			return entryResult{}, err
 		}
 		defer rc.Close()
-		if _, err := io.Copy(h, rc); err != nil {
-			return key.FileEntry{}, fmt.Errorf("%s: %w", short(p), err)
+		var facts fileFacts
+		if _, owned := pl.ownerOf(p); owned {
+			facts, err = hashAndScan(rc, h, info.Exec, path.Dir(p))
+		} else {
+			_, err = io.Copy(h, rc)
+		}
+		if err != nil {
+			return entryResult{}, fmt.Errorf("%s: %w", short(p), err)
 		}
 		e := key.FileEntry{Path: p, Kind: key.KindFile, Digest: h.Sum(nil)}
 		if info.Exec {
 			e.Exec = 1
 		}
-		return e, nil
+		return entryResult{e: e, facts: facts}, nil
 	})
 }
 
@@ -440,22 +466,45 @@ func (pl *planner) resolve(it readItem) (resolved, error) {
 		id = "g:" + it.path
 	}
 	return pl.resolves.get(id, func() (resolved, error) {
-		switch {
-		case it.glob:
-			var hits []string
-			for _, f := range pl.files {
-				if source.Match(it.path, f) {
-					hits = append(hits, f)
-				}
-			}
-			d, err := pl.treeDigest(hits)
-			return resolved{consumed: &key.Consumed{Target: "glob:" + it.path, Phase: key.PhaseBuild, Key: d[:]}}, err
-		case pl.fileSet[it.path]:
+		if !it.glob && pl.fileSet[it.path] {
 			e, err := pl.entry(it.path)
 			return resolved{file: &e}, err
 		}
-		d, err := pl.treeDigest(pl.under(it.path))
-		return resolved{consumed: &key.Consumed{Target: "dir:" + it.path, Phase: key.PhaseBuild, Key: d[:]}}, err
+		files, err := pl.itemFiles(it)
+		if err != nil {
+			return resolved{}, err
+		}
+		d, err := pl.treeDigest(files)
+		if err != nil {
+			return resolved{}, err
+		}
+		target := "dir:" + it.path
+		if it.glob {
+			target = "glob:" + it.path
+		}
+		return resolved{consumed: &key.Consumed{Target: target, Phase: key.PhaseBuild, Key: d[:]}}, nil
+	})
+}
+
+// itemFiles lists the files a read item stands for: the file itself, every
+// file under a directory, or every file a glob matches.  Memoised, because the
+// link check asks again for every package that reads the item.
+func (pl *planner) itemFiles(it readItem) ([]string, error) {
+	id := "p:" + it.path
+	if it.glob {
+		id = "g:" + it.path
+	}
+	return pl.itemFs.get(id, func() ([]string, error) {
+		if !it.glob {
+			return pl.under(it.path), nil
+		}
+		var hits []string
+		for _, f := range pl.files {
+			if source.Match(it.path, f) {
+				hits = append(hits, f)
+			}
+		}
+		return hits, nil
 	})
 }
 

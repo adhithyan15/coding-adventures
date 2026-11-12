@@ -31,15 +31,12 @@ const (
 	ClassUncacheable = "uncacheable"
 )
 
-// Reasons that mark work 7c-1 deliberately leaves undone.  Until the tools,
-// environment and escape scans exist, no package may be called cacheable, so
-// every package carries both.  They are "incomplete" reasons, not hard ones:
-// they stop a package being cacheable but do not hide the more informative
-// `unpinned` class.
-const (
-	ReasonToolsEnv = "m1-incomplete:tools-env"
-	ReasonScans    = "m1-incomplete:scans"
-)
+// ReasonToolsEnv marks work still undone (7c-3).  Until tool and environment
+// identity exist, no package may be called cacheable, so every package carries
+// it.  It is an "incomplete" reason, not a hard one: it stops a package being
+// cacheable but does not hide the more informative `unpinned` class.  (The
+// escape scans landed in 7c-2; their reasons are hard.)
+const ReasonToolsEnv = "m1-incomplete:tools-env"
 
 // Components are the digests a key is made of, so two plans can be compared
 // to see WHICH part changed (KILN03 section 9).  Tools and env are empty in
@@ -197,8 +194,18 @@ func (pl *planner) record(p int) (Record, error) {
 			consumed = append(consumed, *r.consumed)
 		}
 	}
-	reasons := map[string]bool{ReasonToolsEnv: true, ReasonScans: true}
+	reasons := map[string]bool{ReasonToolsEnv: true}
 	hard := false
+	// Escape, indirection and unscanned rules (KILN03 6).  Hard reasons, but
+	// the key is still computed below: measurement never stops.
+	scan, err := pl.scanReasons(p, members, items)
+	if err != nil {
+		return Record{}, err
+	}
+	for _, r := range scan {
+		reasons[r] = true
+		hard = true
+	}
 	unpinned := false
 	for _, q := range members {
 		m := pl.g.Packages[q]
