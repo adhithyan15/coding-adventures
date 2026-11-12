@@ -1625,6 +1625,19 @@ to a different path certificate. The binding does not authenticate any path
 link, validate the terminal certificate's role or self-signature, apply anchor
 constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
 transport, or network authority.
+A distinct policy-backed reviewed-terminal binding follow-up now consumes the
+complete `ConstructedX509CertificatePathWithNamePolicy` evidence together with
+reviewed-root selection evidence. It applies the same nontrivial-path and exact
+decoded-terminal object checks without extracting or recreating generic path
+evidence, then retains the complete policy-backed construction and reviewed
+anchor in one non-copyable result. Generic callback construction evidence
+cannot produce this result, and the exact validated `X509NameValuePolicy` that
+governed every issuer-selection step remains available from the retained
+construction. This is provenance-preserving evidence composition only: the
+available Name rules remain incomplete for RFC 5280 Name equality, and binding
+does not authenticate any link, validate certificate roles or a complete path,
+apply anchor constraints, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
