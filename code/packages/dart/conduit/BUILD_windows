@@ -1,1 +1,6 @@
-echo "Dart Conduit uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for libconduit_capi.dll and libconduit_dart_bridge.dll)"
+# Windows: build conduit-capi and conduit-dart-bridge (Rust), then run the Dart
+# tests through dart:ffi.  tools\run-tests.ps1 stages both DLLs in a private
+# directory and sets CONDUIT_CAPI_PATH / CONDUIT_DART_BRIDGE_PATH to them.
+# Each BUILD line runs in its own cmd shell, so the whole recipe is one line.
+# build-tool: deps=rust/conduit-capi,rust/conduit-dart-bridge
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

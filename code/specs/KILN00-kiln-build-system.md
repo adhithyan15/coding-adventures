@@ -666,8 +666,36 @@ this skipped?":
 
 ```json
 {"key":"9f2c…","target":"rust/parser:test","os":"linux","arch":"x64",
- "kiln":"1.0.0","revision":"0bf84a8…","run":"43117337685","at":"2026-11-11T23:24:01Z"}
+ "kiln":"1.0.0","revision":"0bf84a8…","run":"43117337685","at":"2026-11-11T23:24:01Z",
+ "kind":"pass"}
 ```
+
+`kind` is required and is `pass` or `tombstone` (§10.5). Records are stored
+as JSON lines in immutable segment files. Decoding is strict and canonical:
+the key is 64 lowercase hex characters, text is UTF-8 without control
+characters, `target` is at most 512 bytes and the other text fields at most
+128, `at` is UTC in whole seconds, unknown fields are refused, and each line
+must equal the canonical re-encoding of the record it parses to (so every
+record has exactly one spelling). Caps, enforced while reading: 4 KiB per
+line, 50,000 records and 16 MiB per segment, 10,000 segments and 1,000,000
+records per directory.
+
+**Which record is newer.** For one key the newest record wins: later `at`,
+then higher segment sequence, then higher segment name, then later line. A
+delta being merged outranks every snapshot segment on ties. A tombstone that
+wins hides the key; a newer pass un-shadows it. **If `at` is equal and the
+kinds differ, the tombstone wins**, before any other tie-break: when in doubt
+the key is a miss.
+
+**A writer does not choose its own time.** A forged far-future `at` would
+outrank every tombstone, so `ledger-merge` restamps the delta using its own
+`now` (passed in, never read from the clock, so output stays deterministic):
+a delta **pass** keeps its own earlier `at`, capped at `now`, so a job that
+started before a tombstone cannot undo it by merging after it; a delta
+**tombstone** is stamped `now`, so it outranks every earlier pass and forces
+at least one fresh run. A delta record dated more than five minutes after
+`now` rejects the delta, and so does any such snapshot record. A direct
+`Record` call allows only one minute of future skew.
 
 No build outputs, `node_modules` or tool state are ever stored. Records are
 about 200 bytes; tens of thousands fit in a few megabytes.
@@ -693,7 +721,9 @@ about 200 bytes; tens of thousands fit in a few megabytes.
   option.
 - A **missed** record only costs time. A **false** record is the real danger,
   so every design choice favours misses, and any doubt about a key makes it
-  uncacheable.
+  uncacheable. Hence `Lookup` and `Record` fail closed on any malformed or
+  non-regular segment instead of skipping it: a skipped segment might hold
+  the tombstone that revokes a pass.
 - **Results that are never recorded:** SKIPPED (an optional tool was absent),
   failures, and anything from an untrusted run.
 
@@ -714,10 +744,19 @@ tightly:
   shards). It runs only when the ref is the default branch and the event is
   `push` or `schedule`. It never runs from `workflow_run`,
   `pull_request` or `pull_request_target` triggers.
+- The ledger code takes an `Authority` (`Trusted()` and `WritesLocalLedger()`,
+  implemented by the Host) rather than a bare flag: a shared ledger needs
+  `Trusted()`, a local one `WritesLocalLedger()`, and `Merge` needs
+  `Trusted()`. `Merge` assumes the delta artifact came from a run the Host
+  marked trusted; a compromised trusted job can still forge passes, and the
+  re-stamping, the daily uncached run and tombstones bound the damage.
 - It uses code from that trusted checkout and consumes **only artifacts of
   its own run id**.
-- It validates every record strictly before merging: a 64-hex key, bounded
-  field lengths, a known schema, and caps on record count and delta size.
+- It validates every record strictly before merging (§10.1): a 64-hex key,
+  bounded field lengths, a known kind, canonical form, and caps on record
+  count and delta size. One bad record rejects the whole delta.
+- It compacts to the newest record per key and never drops a tombstone that
+  still shadows a pass surviving pruning.
 - **PR runs never save caches**, only restore, so they cannot evict main's
   snapshots by filling the quota.
 
@@ -1117,6 +1156,9 @@ library.
 8. **Owner review for `code/kiln/**` and workflow files.** Recommended by
    the security review; it conflicts with the repo's auto-merge practice for a
    solo owner, so it is the owner's call.
+9. **Snapshot rollback.** An attacker able to restore an older snapshot
+   resurrects revoked passes. Candidate fix: a high-water mark, refusing any
+   snapshot older than the last merge.
 
 ---
 
