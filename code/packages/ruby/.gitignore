@@ -1,8 +1,5 @@
 # Ruby / Bundler
 Gemfile.lock
-# ...except the one central, checksummed lock that pins every third-party gem
-# (see third-party/Gemfile and code/scripts/ruby_gem_mirror.py).
-!/third-party/Gemfile.lock
 .bundle/
 vendor/
 

@@ -113,7 +113,7 @@ class CheckTests(unittest.TestCase):
         (root / pins.THIRD_PARTY_DIR / "Gemfile").write_text(gemfile)
         (root / pins.THIRD_PARTY_DIR / "Gemfile.lock").write_text(lock)
         allow = root / pins.ALLOWLIST
-        allow.parent.mkdir(parents=True)
+        allow.parent.mkdir(parents=True, exist_ok=True)
         allow.write_text(
             json.dumps({"allowed_dependency_names": ["minitest", "rake", "rspec"]})
         )

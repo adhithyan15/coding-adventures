@@ -4117,7 +4117,7 @@ jobs:
 
       # Every Ruby BUILD runs an unchanged `bundle install`. This makes the
       # only gems Bundler can see the ones pinned, with checksums, in
-      # code/packages/ruby/third-party/Gemfile.lock: the script downloads
+      # code/specs/data/third-party-dependencies/ruby/Gemfile.lock: the script downloads
       # them under BUNDLE_FROZEN (failing if the lock is stale or a checksum
       # is wrong), indexes them into a local mirror, and points
       # mirror.https://rubygems.org at it. Ruby's default/bundled gems

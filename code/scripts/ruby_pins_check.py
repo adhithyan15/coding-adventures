@@ -2,7 +2,7 @@
 """Fail when the central Ruby gem lock is stale relative to the repo.
 
 The repository pins every third-party gem with ONE checksummed lock,
-``code/packages/ruby/third-party/Gemfile.lock``, served to all packages
+``code/specs/data/third-party-dependencies/ruby/Gemfile.lock``, served to all packages
 through a local gem mirror (see ``ruby_gem_mirror.rb``).  The lock is only
 trustworthy if it keeps agreeing with what the 290-odd package Gemfiles and
 gemspecs ask for.  This check runs in the cheap contracts job, with no Ruby
@@ -24,7 +24,7 @@ exists: ``ruby_gem_mirror.rb`` runs ``bundle cache`` under BUNDLE_FROZEN.
 
 Refreshing the lock::
 
-    cd code/packages/ruby/third-party
+    cd code/specs/data/third-party-dependencies/ruby
     bundle lock --add-checksums     # after editing Gemfile
 """
 
@@ -39,7 +39,7 @@ from pathlib import Path
 
 import third_party_dependency_policy as policy
 
-THIRD_PARTY_DIR = Path("code/packages/ruby/third-party")
+THIRD_PARTY_DIR = Path("code/specs/data/third-party-dependencies/ruby")
 ALLOWLIST = Path("code/specs/data/third-party-dependencies/ruby-allowlist.json")
 REQUIRED_PLATFORMS = ("x86_64-linux", "x64-mingw-ucrt", "arm64-darwin", "x86_64-darwin")
 
@@ -337,7 +337,7 @@ def main(argv: list[str] | None = None) -> int:
         for problem in problems:
             print(f"  - {problem}", file=sys.stderr)
         print(
-            "Edit code/packages/ruby/third-party/Gemfile and run "
+            "Edit code/specs/data/third-party-dependencies/ruby/Gemfile and run "
             "`bundle lock --add-checksums` there.",
             file=sys.stderr,
         )

@@ -14,7 +14,7 @@ rejects it ("gemspecs for path gems changed") when any of them changes. With
 about 990 path references, one gemspec bump would invalidate every dependent's
 lock.
 
-What works: ONE central lock, `code/packages/ruby/third-party/Gemfile.lock`
+What works: ONE central lock, `code/specs/data/third-party-dependencies/ruby/Gemfile.lock`
 (Gemfile lists the allowlisted gems with the union of all ranges; generated
 with `bundle lock --add-checksums` and the CI platforms). CI runs
 `code/scripts/ruby_gem_mirror.rb`: `BUNDLE_FROZEN=true bundle cache

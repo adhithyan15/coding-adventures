@@ -14,7 +14,7 @@
 # A per-package Gemfile.lock would fix that, but frozen locks embed the
 # version and dependency list of every path gem, so any gemspec bump would
 # invalidate every dependent's lock (292 Gemfiles, ~990 path references).
-# Instead there is ONE central lock, code/packages/ruby/third-party/
+# Instead there is ONE central lock, code/specs/data/third-party-dependencies/ruby/
 # Gemfile.lock, and this script makes it the only thing Bundler can see:
 #
 #   1. `bundle cache --all-platforms --no-install` under BUNDLE_FROZEN=true
@@ -142,7 +142,7 @@ def build_index(gem_files, mirror)
 end
 
 options = {
-  third_party: File.join(REPO_ROOT, "code", "packages", "ruby", "third-party"),
+  third_party: File.join(REPO_ROOT, "code", "specs", "data", "third-party-dependencies", "ruby"),
   mirror: File.join(ENV.fetch("RUNNER_TEMP", Dir.tmpdir), "ruby-gem-mirror"),
   global_config: false,
   github_env: false
