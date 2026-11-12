@@ -3054,6 +3054,7 @@ S4 for S1.
 | VER24 | Capability proof certificates and information flow: effect-type certificates and their small checker; taint tracking and noninterference proofs over WIR; declassification; required flow claims for dangerous capability combinations |
 | VER25 | The Warrant IR (WIR): formal semantics, mandatory types, cost and label annotations, explicit implicit calls, reference interpreter, and the first language front ends |
 | VER26 | The `ct-compare` pilot: the whole ladder on one package in Rust, the quirks log, and the deferred-languages record (Nib, Oct and Twig, with the Busicom-to-gates pilot next) |
+| VER27 | Layered validation roadmap: the owner's vision for Warrant, the layer ladder from gates to integration, per-language assumption tiers, and the order of the threads (roadmap, not a component spec) |
 
 ## 12. Open decisions
 
