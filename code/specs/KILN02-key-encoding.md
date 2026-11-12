@@ -19,8 +19,8 @@ turned into the byte string that SHA-256 hashes. A careless encoding — say,
 joining fields with commas — lets two different actions collide:
 
 ```
-target "a,b" + phase "test"   →  "a,b,test"
-target "a"   + phase "b,test" →  "a,b,test"     ← same bytes, different work
+env name "a,b" = value "test"    →  "a,b,test"
+env name "a"   = value "b,test"  →  "a,b,test"     ← same bytes, different work
 ```
 
 So the rule throughout this spec is: **every variable-length value carries
@@ -114,7 +114,9 @@ canonical_recipe = str("legacy-shell") || list([ file(BUILD), file(BUILD_windows
 file(name)       = str(name) || bytes(contents)
 ```
 
-where `BUILD_windows` is included only if it exists.
+where `BUILD_windows` is included only if it exists. An existing but empty
+`BUILD_windows` is included (as an empty file) and so gives a different
+recipe from an absent one.
 
 ### 3.5 `inputs` and 3.6 `reads`
 
@@ -161,6 +163,9 @@ entry = str(name) || str(version) || u8(kind) || bytes(identity)
 | `2` | Supplied by the host | the full output of the tool's check command, byte-exact |
 | `3` | Built in this repository | the 32-byte key of the action that built it |
 
+The identity's length is checked against its kind: empty for kind `0`,
+exactly 32 bytes for kinds `1` and `3`, any length for kind `2`.
+
 Sorted by `name`, comparing bytes. A duplicate name is an error.
 
 ### 3.9 `env`
@@ -175,10 +180,27 @@ Sorted by `name`, comparing bytes. A duplicate name is an error.
 ## 4. Errors are errors
 
 An implementation must **refuse** to produce a key, never repair its input,
-when it sees: an unknown `os`, `arch`, `phase` or `kind`; invalid UTF-8; a
-malformed path; a digest that is not exactly 32 bytes; an unsorted or
-duplicated list. Silently fixing an input would let two implementations
-disagree about which action they keyed.
+when it sees:
+
+- an unknown `os`, `arch`, `phase`, entry `kind` or tool `kind`;
+- an `exec` or `origin` byte other than `0` or `1`, or `exec = 1` on a link;
+- invalid UTF-8 in any string;
+- a malformed path (§3.5), including the empty path;
+- a digest or consumed key that is not exactly 32 bytes, or a tool identity
+  of the wrong length for its kind (§3.8);
+- a list that is not **strictly** ascending by bytes. An equal neighbour is a
+  duplicate, a descending pair is unsorted, and both are errors.
+
+These rules apply to every section, `consumed` included. Silently fixing an
+input would let two implementations disagree about which action they keyed.
+
+Two things are deliberately **allowed**:
+
+- Empty strings other than paths: an empty target, tool name, tool version,
+  env name or env value is valid, because nothing here forbids it and
+  framing keeps it unambiguous.
+- A backslash in a path is an ordinary byte, not a separator. `Source`
+  always reports `/`-separated paths, so `a\b` is a single segment.
 
 ## 5. Versions
 
@@ -200,7 +222,10 @@ vector exactly, and must reject every entry in its `invalid` list. The
 vectors cover at least:
 
 1. The minimal action: every list empty, no host fingerprint.
-2. The comma-collision pair from §1, which must produce **different** keys.
+2. The comma-collision pair from §1, plus the same shape on tool name and
+   version, each of which must produce **different** keys. (A pair split
+   across target and phase is impossible to build, because `phase` only
+   admits three values.)
 3. Non-ASCII paths and a path whose byte order differs from its
    case-insensitive order (`B` sorts before `a`).
 4. A link entry and an executable file.
@@ -209,6 +234,17 @@ vectors cover at least:
 7. A legacy recipe with and without `BUILD_windows`.
 8. Invalid inputs: unsorted inputs, a duplicate tool, a `..` path, a
    31-byte digest, an unknown phase, invalid UTF-8.
+
+The file's format: a top-level `schema_version` (must equal this spec's), a
+`valid` array of `{name, description, action, preimage_hex, key_hex}`, and an
+`invalid` array of `{name, action, error}` where `error` is a substring of the
+expected refusal. Byte strings in an action are hex (`recipe_hex`,
+`digest_hex`, `key_hex`, `identity_hex`). Because JSON strings cannot carry
+invalid UTF-8, an action may give `target_hex` to override `target`. Unknown
+fields are rejected.
+
+The Go vectors were cross-checked against an independent encoder written
+from this spec alone; all 13 valid vectors matched byte for byte.
 
 CI checks that the Go implementation reproduces the file (KILN00 §10.2:
 golden vectors are what stop a change to key computation from shipping
