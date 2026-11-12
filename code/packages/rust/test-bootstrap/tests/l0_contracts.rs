@@ -48,30 +48,15 @@ fn text_of(source: &str) -> Value {
     records[0].fields[0].1.clone()
 }
 
-/// Newest executable in this test binary's directory named `<name>-<hash>`.
+/// Cargo supplies absolute paths for package binaries when compiling tests.
+/// Keep this lookup independent of the integration-test executable's location:
+/// Cargo may place test executables in per-target `OUT_DIR` directories.
 fn sibling_binary(name: &str) -> PathBuf {
-    let dir = std::env::current_exe()
-        .expect("current_exe")
-        .parent()
-        .expect("deps dir")
-        .to_path_buf();
-    let prefix = format!("{name}-");
-    let mut best: Option<(std::time::SystemTime, PathBuf)> = None;
-    for entry in std::fs::read_dir(&dir).expect("read deps dir").flatten() {
-        let path = entry.path();
-        let file = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
-        let ext = path.extension().and_then(|e| e.to_str());
-        if file.starts_with(&prefix) && matches!(ext, None | Some("exe")) {
-            let modified = entry.metadata().and_then(|m| m.modified()).expect("mtime");
-            if best.as_ref().is_none_or(|(t, _)| modified > *t) {
-                best = Some((modified, path));
-            }
-        }
+    match name {
+        "self_corpus" => PathBuf::from(env!("CARGO_BIN_EXE_self_corpus")),
+        "exit_fixture" => PathBuf::from(env!("CARGO_BIN_EXE_exit_fixture")),
+        other => panic!("unregistered binary {other:?}"),
     }
-    best.unwrap_or_else(|| {
-        panic!("no built {name} binary in {dir:?}; run `cargo test` for the whole package")
-    })
-    .1
 }
 
 fn spawn_fixture(mode: &str, args: &[&str]) -> Output {

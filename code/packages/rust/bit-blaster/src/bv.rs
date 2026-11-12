@@ -144,9 +144,11 @@ pub fn mul(aig: &mut Aig, a: &BitVec, b: &BitVec) -> BitVec {
     same_width(a, b);
     let w = a.width();
     let mut acc = BitVec::constant(w, 0);
-    for i in 0..w {
+    for (i, &bit) in b.bits.iter().enumerate() {
         let shifted = shl_const(a, i);
-        let row = BitVec { bits: shifted.bits.iter().map(|&x| aig.and(x, b.bits[i])).collect() };
+        let row = BitVec {
+            bits: shifted.bits.iter().map(|&x| aig.and(x, bit)).collect(),
+        };
         acc = add(aig, &acc, &row);
     }
     acc

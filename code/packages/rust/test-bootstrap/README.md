@@ -107,6 +107,10 @@ being tested, so the harness is not the thing reporting on itself.
   failures; exact TAP bytes; real-process exit statuses 0, 1 and 2;
   `/dev/full` and a closed pipe are not passes; the sabotaged self-corpus fails
   *exactly* the expected-fail cases.
+  `src/bin/exit_fixture.rs` and `src/bin/self_corpus.rs` expose the same
+  harness-free test programs as Cargo binary targets so integration tests use
+  Cargo's `CARGO_BIN_EXE_*` paths instead of assuming test executables share a
+  directory.
 - `tests/tfv_exhaustive.rs`: 364,413 bounded-exhaustive TFV documents and a
   220,900-pair deep-equality universe, with hand-written oracles and the
   canonical-spelling property. With `TFV_DIFFERENTIAL_OUT=<path>` it also dumps

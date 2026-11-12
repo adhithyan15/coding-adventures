@@ -36,6 +36,19 @@ implementation.
 
 ## Receipts and status
 
+- PR #19264's first Ubuntu attempt exposed two Rust 1.100 stable compatibility
+  issues in unchanged prerequisites. Cargo 1.99 emitted test executables into
+  `target/debug/deps`; Cargo 1.100 emits separate targets under
+  `target/debug/build/<package>/<fingerprint>/out`, so `test-bootstrap`'s
+  same-directory sibling scan failed. The fix uses Cargo `CARGO_BIN_EXE_*`
+  paths while retaining the existing harness-free self-corpus test and BUILD
+  sabotage pipeline. The same Ubuntu job found a new Clippy
+  `needless_range_loop` warning in `bit-blaster::bv::mul`; iterating operand
+  bits with `enumerate` preserves the shift/AND construction. Both findings
+  were reproduced locally on Rust 1.100.0; package tests and Clippy also pass
+  on the previous stable toolchain 1.99.1. This records the observed fix, not a
+  guarantee about future stable-toolchain changes.
+
 - PR #19177 exact merge receipt: integrated head `7d2c92409b15fb19ea82a6cb892eaed44067975c`, run 43144592253 attempt 1, gate job 130981923321, merged at 2026-11-12T05:34:56Z as `d746f3b16bbbc78781ade0987abd88bc5a953e37`. The gate waited queued for about 36 minutes after all substantive jobs passed, then completed successfully; no retry was needed. Do not use earlier-head successes as evidence for this receipt.
 - PR #19236 exact merge receipt: head `0c3676504666241a2815b0ecff4b6fbc924cd316`, CI run 43235519556 attempt 2 (14 successful jobs, 13 expected skips, gate 131346046024 passed), Swift Apps run 43235520086 attempt 2 (both jobs passed), Books run 43235520098 (2 passed, 5 skipped), merged at 2026-11-12T17:05:10Z as `28572c410df730098f7bf92c390c07237aa80591`. Attempt 1 Windows job 131243804408 failed with Node `spawnSync ETIMEDOUT` at `discovery.test.ts:551` and `resolver.test.ts:478`; the one authorized failed-only retry job 131304632677 passed. Swift Apps Hello World job 131241710684 was cancelled before runner acquisition; annotations reported hosted macOS arm64 capacity constraints. Its one job-specific retry 131316867122 passed while Notifications job 131316870768 remained successful. No source changes or assertions were made for these retries.
 - The Windows TypeScript ETIMEDOUT recurred across two heads: job 130798040371 on `2ad2f78b...` and job 131243804408 on PR #19236 head `0c367650...`; both had a successful same-head retry. No root cause is established. The failing fixtures request a 5-second wall-time limit, and the conformance contract includes adapter plus child process tree time. `plan.test.ts` uses `max(fixture.limits.wall_time_ms, 30_000)` for a process-free plan check, but no spec defines a launch-free execution timer. Do not raise the 5-second process-tree bound to mask CLI startup time. Track clarification/diagnosis under separate `VER-CI002`, not macOS-only `VER-CI001`.
