@@ -4,11 +4,6 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
-### Changed
-
-- `t/02-conformance.t`: the on-disk fixture-ceiling subtest writes its files into a `tempdir(CLEANUP => 1)` instead of using `File::Temp::tempfile()`, which failed with "Permission denied" in the Windows runner's temp directory. What the subtest checks is unchanged.
-- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
-
 - Add strict v1 binary, width, layout, and scene facades while preserving the
   legacy calling conventions used by downstream symbologies.
 - Dynamically execute all 56 language-neutral fixtures, including stable

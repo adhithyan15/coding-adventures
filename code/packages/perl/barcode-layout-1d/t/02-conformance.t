@@ -6,7 +6,7 @@ use Digest::SHA qw(sha256_hex);
 use FindBin;
 use JSON::PP;
 use File::Spec;
-use File::Temp qw(tempdir);
+use File::Temp qw(tempfile);
 
 use lib '../paint-instructions/lib';
 require CodingAdventures::BarcodeLayout1D;
@@ -390,28 +390,21 @@ subtest 'bounded loader rejects hostile envelopes before dispatch' => sub {
 };
 
 subtest 'on-disk fixture reads stop at the byte ceiling' => sub {
-    # A private temp directory (removed at exit) instead of File::Temp::tempfile():
-    # tempfile() failed with "Permission denied" creating its file in the Windows
-    # runner's %TEMP%, while tempdir() plus ordinary open() works there.
-    my $dir = tempdir(CLEANUP => 1);
-
-    my $exact_path = File::Spec->catfile($dir, 'exact.json');
-    open my $exact_handle, '>:raw', $exact_path
-        or die "cannot create $exact_path: $!";
+    my ($exact_handle, $exact_path) = tempfile();
+    binmode $exact_handle, ':raw';
     print {$exact_handle} $encoded;
     print {$exact_handle} ' ' x ($MAX_FIXTURE_BYTES - length($encoded));
-    close $exact_handle or die "cannot close $exact_path: $!";
+    close $exact_handle;
     my $exact = read_fixture_file($exact_path);
     is(length($exact), $MAX_FIXTURE_BYTES, 'exact byte ceiling is accepted');
     is(load_fixture_document($schema_encoded, $exact)->{profile},
         'barcode-layout-1d-v1', 'exact byte ceiling remains parseable');
     unlink $exact_path;
 
-    my $oversized_path = File::Spec->catfile($dir, 'oversized.json');
-    open my $oversized_handle, '>:raw', $oversized_path
-        or die "cannot create $oversized_path: $!";
+    my ($oversized_handle, $oversized_path) = tempfile();
+    binmode $oversized_handle, ':raw';
     print {$oversized_handle} ' ' x ($MAX_FIXTURE_BYTES + 1);
-    close $oversized_handle or die "cannot close $oversized_path: $!";
+    close $oversized_handle;
     like(dies { read_fixture_file($oversized_path) }, qr/fixture-size-limit/);
     unlink $oversized_path;
 };
