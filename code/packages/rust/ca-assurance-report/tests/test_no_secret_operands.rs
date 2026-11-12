@@ -323,3 +323,24 @@ fn the_varint_profile_parses_and_unknown_profiles_list_it() {
     let err = "lzw".parse::<AuditProfile>().unwrap_err();
     assert!(err.contains("varint-codec"), "{err}");
 }
+
+/// wasm-leb128's genuine report with the CWE-208 exemption relabelled to the
+/// gate-level id while the row keeps citing the (really present) attestation.
+/// Every individual fact still holds; what is forged is the *classification*:
+/// the attestation is evidence for "not applicable" and for nothing else.
+fn leb_attestation_under_another_exemption() -> (AssuranceReport, Evidence) {
+    let ev = Evidence::load(&pkg_dir("wasm-leb128")).unwrap();
+    let mut report = leb_report(&ev);
+    let x = report.exemptions.iter_mut().find(|x| x.id == NA_ID).unwrap();
+    x.id = "EXEMPT-CWE-208-GATE-LEVEL".into();
+    (report, ev)
+}
+
+#[test]
+fn the_attestation_cannot_be_cited_under_a_different_exemption_id() {
+    let (report, ev) = leb_attestation_under_another_exemption();
+    assert!(
+        matches!(verify_evidence(&report, &ev), Err(E::EvidenceMismatch(m)) if m.contains(ATTEST)),
+        "a CWE-208 row citing {ATTEST} must carry the not-applicable exemption"
+    );
+}

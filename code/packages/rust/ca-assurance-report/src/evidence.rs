@@ -1677,7 +1677,24 @@ pub fn verify_evidence(
     //     and the proof manifest must hold no constant-time obligation at all.
     //     (Citing the attestation where it does not hold already failed step 4
     //     as an unknown id; this catches the exemption id used without it.)
-    if report.exemptions.iter().any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION) {
+    //
+    //     Both directions are closed: the exemption id re-derives the facts, and
+    //     a CWE-208 row citing the attestation must carry that exemption (the
+    //     attestation is evidence for "not applicable" and for nothing else, so
+    //     citing it under, say, the gate-level exemption is a forged
+    //     classification even when every fact it names is true).
+    let cites_attestation = report
+        .weaknesses
+        .iter()
+        .any(|w| w.cwe == 208 && w.evidence.iter().any(|e| e == NO_SECRET_OPERANDS_ATTESTATION));
+    let has_not_applicable = report.exemptions.iter().any(|x| x.id == NOT_APPLICABLE_208_EXEMPTION);
+    if cites_attestation && !has_not_applicable {
+        return Err(E::EvidenceMismatch(format!(
+            "a CWE-208 row cites {NO_SECRET_OPERANDS_ATTESTATION} but the report does not carry \
+             {NOT_APPLICABLE_208_EXEMPTION}; the attestation supports only that exemption"
+        )));
+    }
+    if has_not_applicable {
         let ct: Vec<&str> =
             ev.proofs.iter().filter(|p| p.kind == "constant-time").map(|p| p.id.as_str()).collect();
         if !ev.spec_all_operands_public() || !ct.is_empty() {

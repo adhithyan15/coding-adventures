@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **`verify_evidence` step 6b closes the converse forgery**: a CWE-208 row that cites
+  the attestation `warrant-spec::all-operands-public` is now rejected
+  (`EvidenceMismatch`) unless the report also carries the not-applicable exemption
+  `EXEMPT-CWE-208-NO-SECRET-OPERANDS`. Before, the facts were re-derived only when
+  that exemption id was present, so the attestation could be cited under another
+  exemption id (e.g. `EXEMPT-CWE-208-GATE-LEVEL`) and pass. Test:
+  `the_attestation_cannot_be_cited_under_a_different_exemption_id` (written first,
+  failed before the fix). Security-review finding, low severity. `effect_certificate.json`
+  re-emitted for the new source digest (no other change).
 - **CWE-208 "not applicable" for a document with no secret operand** (first adopter
   `rust/wasm-leb128`; VER04h section 9 item 20). The matrix knew a live constant-time
   proof (gate-level exemption) and a `not-live` one ("applicable and unaddressed");
