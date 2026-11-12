@@ -87,6 +87,22 @@ Each selected group is split into bounded PRs if its implementation requires it.
 Critical path: P003 -> P004 -> P005-011 -> P021-025. Fuzzing and measurements
 can progress independently once their prerequisites are available.
 
+### Shared lexer discoveries from P006b1
+
+- **P1 / VER-LEX001** — Rust shared indentation lexer can stall on a leading
+  hash when the grammar does not consume it as trivia. The original canonical
+  Warrant probe timed out after one second while its valid control returned in
+  0.187 seconds. The unchanged-cursor path is still present on fetched main
+  `57bfc809e3eb`. See [the lexer progress contract](02-lexer.md#leading-hash-in-grammar-driven-indentation-mode).
+  Validate unsupported input, an explicit hash token and legacy hash comments.
+  BUILD-001 landed in #19086, so validate a fresh spreadsheet WASM and VisiCalc
+  bundle with the build-at-use scripts. The generated outputs are ignored.
+- **P006b2/P006b3 reconciliation** — #18992 and #18996 landed with a dedicated
+  bounded Warrant layout scanner. It classifies `--` comment-only lines before
+  comparing indentation. The shared lexer's treatment of other comment
+  markers is a separate concern for grammars that use that API. Warrant's
+  guarded parser does not depend on changing it.
+
 ## Later families and explicit deferrals
 
 | Families | Work and prerequisite |

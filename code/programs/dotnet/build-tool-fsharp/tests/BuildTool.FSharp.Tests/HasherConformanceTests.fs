@@ -120,7 +120,7 @@ let ``F sharp facade consumes every neutral source collection case`` () =
                 $"{path}\u0000{digest}")
             |> Seq.toArray
 
-        Assert.Equal<string array>(expected, actual)
+        Assert.Equal<string>(expected, actual)
 
 [<Fact>]
 let ``F sharp facade proves exact production registry projections`` () =

@@ -1,4 +1,4 @@
-python -m venv .venv --clear
-.venv\Scripts\pip install pytest pytest-cov ruff --quiet
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv pytest pytest-cov ruff --quiet
 cargo build --release
 .venv\Scripts\python scripts\check_staged_extension.py

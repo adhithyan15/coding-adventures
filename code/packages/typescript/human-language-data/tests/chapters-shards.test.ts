@@ -44,9 +44,15 @@ describe("the chapters.d migration covers what it claims to", () => {
     expect(CHAPTER_PLANS.map((plan) => plan.path).sort()).toEqual(expected);
   });
 
-  it("passes --check for every sharded ledger", () => {
-    expect(runShardCli(["--check"])).toBe(0);
-  });
+  // The generic CLI suite owns the one complete all-plan check. Keep this
+  // migration suite responsible for every chapter plan: each scoped check
+  // still reads its real owners and reports the failing track by name.
+  it.each(CHAPTER_PLANS.map((plan) => plan.path))(
+    "%s: passes its own --check",
+    (path) => {
+      expect(runShardCli(["--check", path])).toBe(0);
+    },
+  );
 
   it.each(CHAPTER_PLANS.map((plan) => plan.path))(
     "%s: the compatibility monolith is absent",
