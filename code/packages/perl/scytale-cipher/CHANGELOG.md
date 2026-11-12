@@ -2,6 +2,10 @@
 
 ## Unreleased - 2026-08-26
 
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
+
 - Add a generated native consumer for all 18 language-neutral Scytale fixture cases.
 - Align grid cells with CR02 Unicode scalar values, including decomposed combining sequences.
 - Define ragged-ciphertext decryption and remove only trailing U+0020 padding.

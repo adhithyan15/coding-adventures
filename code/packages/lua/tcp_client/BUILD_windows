@@ -1,1 +1,4 @@
-echo "SKIP: luasocket native compilation not supported on Windows CI"
+# Windows build: tools\run-tests.ps1 installs luasocket (a C module, built with MSVC) into
+# the luarocks tree and runs the same busted command as the Unix BUILD.  It first drops
+# Git for Windows' usr\bin from PATH so `link` is MSVC's, not GNU coreutils' link.exe.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

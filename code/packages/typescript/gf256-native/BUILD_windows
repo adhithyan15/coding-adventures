@@ -1,4 +1,4 @@
-# Windows: TypeScript native Node.js addons require node.lib to link against.
-# Providing node.lib on Windows CI is complex; this package is covered by
-# Linux and macOS CI runners.
-echo Skipping typescript/gf256-native on Windows — Node.js import library not configured for CI
+npm ci --quiet
+cargo build --release --manifest-path Cargo.toml
+if exist target\release\gf256_native_node.dll copy target\release\gf256_native_node.dll gf256_native_node.node
+npx vitest run --coverage

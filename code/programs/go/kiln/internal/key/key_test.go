@@ -2,6 +2,7 @@ package key
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/hex"
 	"io"
 	"os"
@@ -402,5 +403,65 @@ func TestValidatePath(t *testing.T) {
 	}
 	if err := ValidatePath("../a"); err == nil {
 		t.Fatal("expected error")
+	}
+}
+
+func TestLegacyRecipeFilesMatchesLegacyRecipe(t *testing.T) {
+	b, w := []byte("build\n"), []byte("win\r\n")
+	got, err := LegacyRecipeFiles([]NamedFile{{"BUILD", b}, {"BUILD_windows", w}})
+	if err != nil || !bytes.Equal(got, LegacyRecipe(b, w)) {
+		t.Errorf("two files: %x %v", got, err)
+	}
+	got, err = LegacyRecipeFiles([]NamedFile{{"BUILD", b}})
+	if err != nil || !bytes.Equal(got, LegacyRecipe(b, nil)) {
+		t.Errorf("build only: %x %v", got, err)
+	}
+	other, _ := LegacyRecipeFiles([]NamedFile{{"BUILD_linux", b}})
+	if bytes.Equal(other, got) {
+		t.Error("file name must be part of the recipe")
+	}
+}
+
+func TestLegacyRecipeFilesRefusals(t *testing.T) {
+	c := []byte("x")
+	cases := map[string][]NamedFile{
+		"empty list":     nil,
+		"empty name":     {{"", c}},
+		"invalid utf8":   {{"B\xff", c}},
+		"slash":          {{"a/BUILD", c}},
+		"backslash":      {{"a\\BUILD", c}},
+		"duplicate name": {{"BUILD", c}, {"BUILD", c}},
+	}
+	for name, files := range cases {
+		if _, err := LegacyRecipeFiles(files); err == nil {
+			t.Errorf("%s: expected error", name)
+		}
+	}
+}
+
+func TestSectionDigests(t *testing.T) {
+	d := bytes.Repeat([]byte{7}, 32)
+	es := []FileEntry{{Path: "a", Kind: KindFile, Digest: d}, {Path: "b", Kind: KindLink, Digest: d}}
+	want := sha256.Sum256(putFiles(nil, "inputs", es))
+	got, err := FilesDigest("inputs", es)
+	if err != nil || got != want {
+		t.Fatalf("FilesDigest = %x, %v", got, err)
+	}
+	if r, _ := FilesDigest("reads", es); r == got {
+		t.Fatal("section name must be part of the digest")
+	}
+	if _, err := FilesDigest("tools", es); err == nil {
+		t.Fatal("unknown section accepted")
+	}
+	if _, err := FilesDigest("inputs", []FileEntry{es[1], es[0]}); err == nil {
+		t.Fatal("unsorted accepted")
+	}
+	cs := []Consumed{{Target: "pkg:a", Phase: PhaseBuild, Key: d}}
+	cd, err := ConsumedDigest(cs)
+	if err != nil || cd != sha256.Sum256(putConsumed(nil, cs)) {
+		t.Fatalf("ConsumedDigest = %x, %v", cd, err)
+	}
+	if _, err := ConsumedDigest([]Consumed{{Target: "x", Phase: "nope", Key: d}}); err == nil {
+		t.Fatal("bad phase accepted")
 	}
 }

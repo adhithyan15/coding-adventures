@@ -62,9 +62,15 @@ describe("the curriculum.d migration covers what it claims to", () => {
     expect(CURRICULUM_PLANS.map((plan) => plan.path).sort(codeUnit)).toEqual(expected);
   });
 
-  it("passes --check for every sharded ledger", () => {
-    expect(runShardCli(["--check"])).toBe(0);
-  });
+  // The generic CLI suite owns the one complete all-plan check. Check every
+  // curriculum plan here through the public single-plan path so a failing
+  // track is named without repeating unrelated owner reads.
+  it.each(CURRICULUM_PLANS.map((plan) => plan.path))(
+    "%s: passes its own --check",
+    (path) => {
+      expect(runShardCli(["--check", path])).toBe(0);
+    },
+  );
 
   it.each(CURRICULUM_PLANS.map((p) => p.path))(
     "%s: the compatibility monolith is absent",

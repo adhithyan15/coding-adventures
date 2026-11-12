@@ -1,2 +1,2 @@
 REM prereqs: ../grammar-tools ../verilog-lexer
-echo Perl testing is not supported on Windows - skipping
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps grammar-tools,verilog-lexer

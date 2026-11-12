@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/ca-assurance-report",
-  "source_digest": "7ba2f1476e04a1fe7dc4c9a18f9e9df306410a2d59f96059f00dfdf6e6dbdb2f",
+  "source_digest": "bb2a3e0642732000ad22a764b3ce6a92c26847f94bf5f675a6f4f3704e920a32",
   "manifest_digest": "76b295ae5d9c1a4663b58384c8a19d9d1080c7d11a87a709f6bd152a89ad20ca",
   "declared_effects": [
     "fs:read:*",

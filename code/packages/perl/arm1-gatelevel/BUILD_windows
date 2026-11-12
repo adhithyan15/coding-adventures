@@ -1,2 +1,2 @@
 REM prereqs: ../transistors ../logic-gates ../arithmetic ../arm1-simulator
-echo Perl testing is not supported on Windows - skipping
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps transistors,logic-gates,arithmetic,arm1-simulator

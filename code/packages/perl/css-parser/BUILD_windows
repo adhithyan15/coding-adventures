@@ -1,2 +1,2 @@
 REM prereqs: ../css-lexer ../grammar-tools
-echo Perl testing is not supported on Windows - skipping
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps grammar-tools,css-lexer
