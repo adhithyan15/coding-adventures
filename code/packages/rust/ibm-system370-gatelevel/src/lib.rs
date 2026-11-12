@@ -293,6 +293,12 @@ impl System370GateLevel {
                 return false;
             }
         }
+        // The oracle's memory is a Vec, so its length is not fixed by the type.
+        // The old index loop panicked on a short oracle; `take` alone would
+        // quietly compare fewer bytes and call the states equal. Fail closed.
+        if oracle.memory.len() < MEMORY_BYTES {
+            return false;
+        }
         let mut writes = settled.memory_writes.iter().peekable();
         for (address, &oracle_byte) in oracle.memory.iter().enumerate().take(MEMORY_BYTES) {
             let expected = if writes.peek().is_some_and(|(next, _)| *next == address) {
