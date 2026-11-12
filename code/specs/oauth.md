@@ -1587,6 +1587,21 @@ schema-specific matching, or TeletexString mapping. It therefore does not
 establish complete RFC 5280 Name equality, authenticate a selected link,
 construct or validate a path, recognize trust, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or open a network connection.
+A bounded policy-backed path-construction follow-up now repeats that direct
+selector across one caller-bounded target-to-terminal chain. All candidate and
+path limits fail before terminal or Name-policy evaluation; every non-terminal
+step uses the same exact validated `X509NameValuePolicy`; and the first
+selection or Name-comparison failure aborts with a stable payload-free nested
+category. Distinct non-copyable success evidence retains both the constructed
+target, candidate pool, and ordered indices and the exact Name policy that
+governed them, so generic callback construction evidence cannot substitute at
+a later policy-requiring boundary. The available exact-DER and
+exact-Unicode-scalar rules still do not implement RFC 4518 normalization, case
+or whitespace folding, schema-specific matching, or TeletexString mapping.
+This follow-up therefore does not establish complete RFC 5280 Name equality,
+authenticate any selected link, validate the constructed path, recognize
+trust, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+open a network connection.
 A bounded `x509-certificate-path-construction` follow-up now repeats that unique
 issuer selection into one caller-bounded target-to-terminal chain. Candidate
 pool size and requested path depth are rejected before policy callbacks;
