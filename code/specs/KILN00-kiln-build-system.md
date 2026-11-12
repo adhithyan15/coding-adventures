@@ -627,8 +627,9 @@ as this boundary, so Kiln requires the following.
 1. **Actions cannot reach Kiln's own state.** No action may write the ledger
    directory, the delta, or the tool store, or read Kiln's environment or
    `/proc`. On Linux, actions run under a dedicated unprivileged user and in
-   new user, mount and PID namespaces, with the real repository, the ledger
-   and the tool store absent or read-only.
+   new user, mount and PID namespaces. The real repository is absent (or, for
+   `isolation: none`, mounted writable — item 5), the tool store is mounted
+   read-only, and the ledger and delta are absent.
 2. **Kiln writes results itself.** Pass records are held in Kiln's memory and
    written to the delta only after an action's whole process group has
    exited and been killed, to a path no action can reach.
@@ -845,8 +846,15 @@ largest download saving. A `fetch` that a miss consumes still runs (§14).
 no-build, no-script modes (`npm ci --ignore-scripts`,
 `uv sync --no-build --no-install-project`) and run install scripts and build
 backends offline in `build`. `fetch` actions receive no `pass` variables. On
-Linux, a fetch's egress is limited to a per-ecosystem allowlist of registry
-hosts, and link-local and cloud-metadata addresses are blocked.
+Linux, a fetch's egress goes through a Kiln-run proxy that allows only a
+per-ecosystem list of registry hosts, resolving and pinning their addresses
+itself rather than trusting DNS inside the namespace; link-local and
+cloud-metadata addresses are blocked.
+
+The allowlists in `code/kiln/lint.toml` (`pass` names, registry hosts,
+locked-mode commands) protect against a malicious PR only if the PR cannot
+edit them. On trusted runs Kiln therefore reads `lint.toml` from the base
+branch's revision via `Source`, not from the working tree.
 
 **"Pinned" is checked, not taken on trust.** Kiln does not parse lockfiles,
 so it verifies pinning another way:
