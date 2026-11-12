@@ -21,11 +21,6 @@
       "class": "nif-erts-import-library"
     },
     {
-      "root": "code/packages/elixir/gf256_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
       "root": "code/packages/elixir/irc-server-native",
       "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
       "class": "nif-erts-import-library"
