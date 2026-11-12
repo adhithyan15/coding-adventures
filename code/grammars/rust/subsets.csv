@@ -1,0 +1,3 @@
+subset,description,corpus_dir,spec,allowlist
+rs-token-trees,RS01 lexical-pair probes: token trees plus delimiter balance only (slice A4),corpus/rs-token-trees,RS01,-
+rs-confined,VER25a confined Rust subset (proof front end),corpus/rs-confined,VER25a,rs-confined.allowlist
