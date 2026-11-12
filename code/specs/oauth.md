@@ -1867,6 +1867,18 @@ consumption of the non-copyable path or allowing either endpoint to be silently
 discarded. The composition does not authenticate path links, apply issuer,
 anchor, path-length, or name-constraint policy, check revocation, or provide
 complete path validation, TLS, HTTP, OAuth transport, or network authority.
+A distinct policy-backed reviewed-endpoints follow-up now consumes the complete
+Name-policy-backed reviewed-terminal evidence together with validated server-
+certificate policy. It applies the same exact decoded target-object check, then
+retains the policy-backed construction, its exact validated
+`X509NameValuePolicy`, reviewed-root selection, and complete target policy in
+one non-copyable result. Generic callback construction or generic reviewed-path
+evidence cannot produce this stronger result, and callers cannot discard the
+Name policy while keeping both endpoint proofs. This provenance-preserving
+composition does not make the available Name rules complete RFC 5280 Name
+equality, authenticate path links, apply issuer or anchor constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded adjacent-link projection now borrows one exact constructed path and
 one selected-issuer depth below its retained issuer count. Depth zero derives
 the target as child; every later depth derives the preceding selected candidate

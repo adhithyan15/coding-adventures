@@ -57,7 +57,20 @@ extern "C" {
         value: f64,
         result: *mut napi_value,
     ) -> napi_status;
+}
 
+// node-bridge already imports the two double functions above from `node.exe`
+// on Windows.  This one it does not declare, so it needs its own import table.
+// On Windows a DLL may not leave an import undefined: every napi_* symbol must
+// name the module that exports it, which is the host `node.exe`.  node-bridge
+// does this with a raw-dylib import table for the functions it declares; the
+// extras declared here need the same attribute or the cdylib fails to link with
+// `rust-lld: error: undefined symbol: napi_...` (see node-bridge/src/lib.rs).
+#[cfg_attr(
+    windows,
+    link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim")
+)]
+extern "C" {
     fn napi_create_array_with_length(
         env: napi_env,
         length: usize,

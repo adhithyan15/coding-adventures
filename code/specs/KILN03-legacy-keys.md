@@ -378,3 +378,53 @@ kiln explain --plan <plan.json> <package>
   its key is still computed.
 - A dirty tree is refused.
 - Determinism: two runs produce byte-identical plans.
+
+## 11. Implementation decisions (7c-1)
+
+Points the first implementation had to settle; every other implementation
+must match them.
+
+1. **Digest encodings.** A package's own digest `D(p)` and every tree or glob
+   digest is SHA-256 of the full KILN02 section encoding
+   `str("inputs") || list(entries)`. The plan's component digests use the
+   section encodings of `reads` and `consumed` from the key encoder.
+2. **Class precedence.** The temporary `m1-incomplete:*` reasons (present
+   until escape scans and tool/env identity land) do not count when choosing
+   between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
+   `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
+   unpinned closure language gives `unpinned`; `cacheable` needs no reason at
+   all, so it is unreachable while any `m1-incomplete` reason remains.
+3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
+   an empty key and reason `no-build-file:<os>`, but remains a closure member
+   for others.
+4. **Missing read paths.** A read path that names neither a file nor a
+   directory is encoded as `dir:<path>` with the empty-tree digest, so the
+   path appearing later changes the key.
+5. **Boundary roots.** A descendant root includes the root itself.
+   `excluded_roots` is parsed and validated but ignored for key reads: honouring
+   an exclusion could only drop a read, which is the error a key must not make,
+   while ignoring it costs only hit rate. A package's boundary inputs are the
+   union over every boundary whose exact or descendant roots match it.
+6. **Policy files are required.** A missing or malformed `pinned.json`,
+   `never.json` or boundary file is an error, every `never.json` name must be
+   a package in the graph, and lists must be sorted.
+7. **Build-tool digest** follows `go.mod` `replace` targets transitively (with
+   a cycle guard), follows the `use` and `replace` directories of a root
+   `go.work` the same way, and includes `go.work`, `go.work.sum` and `vendor/`
+   when present. A target that leaves the repository, names the repository
+   root, or contains a backslash is an error, never skipped.
+8. **Executable bit.** The Git `Source` takes it from the index mode; the
+   plain-folder `Source` from the file system (always `0` on Windows). Plans
+   from the two adapters agree on Unix; on Windows only the Git adapter is
+   authoritative.
+9. **Plan schema** is `kiln-legacy-plan/1`: `os`, `arch`, `host`, `packages`
+   sorted by name, and `histogram` (named reasons grouped by prefix, except
+   `unpinned:<language>`).
+10. **Symlinked BUILD.** A selected BUILD file that is a symlink makes that
+    package `uncacheable` with reason `escape:<build-file>` and no key; the
+    rest of the plan is still produced.
+11. **Graph limits.** At most 100,000 packages and 5,000,000 edges (deps over
+    all OSes plus dev_deps); `extra_toolchains` entries are non-empty UTF-8
+    without control characters.
+12. **Folder source.** The plain-folder `Source` cannot check for a clean tree;
+    `legacy-plan` warns on stderr and continues.

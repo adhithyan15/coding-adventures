@@ -15836,7 +15836,7 @@ dependencies = [
 
 [[package]]
 name = "x509-certificate-path-server-policy-binding"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "der-asn1",
  "tls-server-identity",
@@ -15844,6 +15844,7 @@ dependencies = [
  "x509-certificate-path-construction",
  "x509-certificate-path-reviewed-anchor-binding",
  "x509-certificate-policy",
+ "x509-name-value-policy",
  "x509-server-certificate-policy",
  "x509-time",
  "x509-webpki-root-anchor-selection",
