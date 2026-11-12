@@ -3018,10 +3018,7 @@ impl Compiler {
             .flatten();
         let inside_standard_function = if let Some(name) = &call_name {
             let target = self.resolve_procedure_identity(name);
-            if self.proc_sigs.contains_key(&target) || !is_supported_standard_function(&target) {
-                return false;
-            }
-            true
+            !self.proc_sigs.contains_key(&target) && is_supported_standard_function(&target)
         } else {
             inside_standard_function
         };
