@@ -369,7 +369,19 @@ fn validate_and_convert_manifest(val: JsonValue) -> Result<ManifestData, Manifes
                 )));
             }
 
-            let key = format!("rust:{}", construct.to_lowercase().trim());
+            let norm = construct.to_lowercase();
+            let norm = norm.trim();
+            if !matches!(norm, "unsafe_code" | "inline_assembly" | "foreign_linkage") {
+                return Err(ManifestError::Validation(format!(
+                    "banned_construct_exceptions[{i}].construct '{construct}' is not a Rust construct id (unsafe_code, inline_assembly, foreign_linkage)"
+                )));
+            }
+            let key = format!("rust:{norm}");
+            if banned_exceptions.contains_key(&key) {
+                return Err(ManifestError::Validation(format!(
+                    "duplicate banned_construct_exceptions entry '{norm}'"
+                )));
+            }
             banned_exceptions.insert(
                 key,
                 BannedConstructException {
@@ -481,7 +493,8 @@ impl<'a> JsonParser<'a> {
 
     fn skip_whitespace(&mut self) {
         while let Some(c) = self.peek() {
-            if c.is_whitespace() {
+            // RFC 8259 whitespace only (not Unicode whitespace).
+            if matches!(c, ' ' | '\t' | '\n' | '\r') {
                 self.pos += 1;
             } else {
                 break;
@@ -523,7 +536,10 @@ impl<'a> JsonParser<'a> {
                 return Err(format!("expected ':' after key at {}", self.pos));
             }
             let val = self.parse_value(depth)?;
-            map.insert(key, val);
+            // Duplicate keys are a parser differential: refuse them (VER08a §2).
+            if map.insert(key.clone(), val).is_some() {
+                return Err(format!("duplicate object key '{key}'"));
+            }
 
             self.skip_whitespace();
             match self.next_char() {
@@ -591,6 +607,9 @@ impl<'a> JsonParser<'a> {
                         other => return Err(format!("invalid escape '\\{other}'")),
                     }
                 }
+                control if (control as u32) < 0x20 => {
+                    return Err("raw control character in string".into());
+                }
                 normal => out.push(normal),
             }
         }
@@ -620,23 +639,54 @@ impl<'a> JsonParser<'a> {
         }
     }
 
+    /// Strict RFC 8259 number: `-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?`.
     fn parse_number(&mut self) -> Result<JsonValue, String> {
         let start = self.pos;
-        if let Some('-') = self.peek() {
+        let digits = |p: &mut Self| -> usize {
+            let s0 = p.pos;
+            while p.peek().is_some_and(|c| c.is_ascii_digit()) {
+                p.pos += 1;
+            }
+            p.pos - s0
+        };
+        if self.peek() == Some('-') {
             self.pos += 1;
         }
-        while let Some(c) = self.peek() {
-            if c.is_ascii_digit() || c == '.' || c == 'e' || c == 'E' || c == '+' || c == '-' {
+        match self.peek() {
+            Some('0') => {
                 self.pos += 1;
-            } else {
-                break;
+                if self.peek().is_some_and(|c| c.is_ascii_digit()) {
+                    return Err(format!("leading zero in number at {start}"));
+                }
+            }
+            Some(c) if c.is_ascii_digit() => {
+                digits(self);
+            }
+            _ => return Err(format!("invalid number at {start}")),
+        }
+        let mut is_int = true;
+        if self.peek() == Some('.') {
+            is_int = false;
+            self.pos += 1;
+            if digits(self) == 0 {
+                return Err(format!("invalid fraction at {start}"));
+            }
+        }
+        if matches!(self.peek(), Some('e') | Some('E')) {
+            is_int = false;
+            self.pos += 1;
+            if matches!(self.peek(), Some('+') | Some('-')) {
+                self.pos += 1;
+            }
+            if digits(self) == 0 {
+                return Err(format!("invalid exponent at {start}"));
             }
         }
         let raw: String = self.chars[start..self.pos].iter().collect();
         let float_val: f64 = raw
             .parse()
             .map_err(|_| format!("invalid number '{raw}' at {start}"))?;
-        let int_val: Option<i64> = raw.parse().ok();
+        let int_val: Option<i64> = if is_int { raw.parse().ok() } else { None };
         Ok(JsonValue::Number(float_val, int_val))
     }
 }

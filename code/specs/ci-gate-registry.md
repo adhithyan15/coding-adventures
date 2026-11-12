@@ -468,9 +468,12 @@ Who gets the full tree:
 
 The `human-language-corpus` gate lists the packages that read the corpus
 (`typescript/human-language-data`, `typescript/programs/language-ladder`,
-`typescript/script-ductus`) and the path `code/learning/human-languages/**`. It
-fires on a change to the corpus, whenever one of those packages is in the
-affected closure, on every `ci.yml` change, and on forced and main builds.
+`typescript/script-ductus`). It fires whenever one of them is in the affected
+closure, on every `ci.yml` change, and on forced and main builds. It has no path
+glob for the corpus on purpose: a corpus-only change affects no package, so its
+build needs no corpus, and a glob would fire the gate for every such diff,
+which `TestPathShardedLanguageDiffsStaySelective` forbids, and exceed the
+matcher's work limit at about 10,000 changed corpus paths.
 
 `code/scripts/tests/test_human_language_corpus_consumers.py` keeps the list
 honest. It finds every package or program that mentions the corpus (other than
@@ -512,6 +515,30 @@ A TypeScript change sets no Windows toolchain flag, and main builds only on
 Linux, so without the gate that walk runs natively only when some unrelated
 gated package happens to share the PR. That is how its original breakage sat
 latent from #829 until #17722.
+
+### Windows recipe changes prove themselves on the pull request
+
+The `build-windows-recipes` gate (BUILD-002) has no `packages`, only `paths`:
+`code/packages/**/BUILD_windows` and `code/programs/**/BUILD_windows`. A pull
+request that changes any Windows recipe therefore sets
+`run_build_windows_recipes`, which does two things in `ci.yml`: it adds the
+Windows leg to the pull-request build matrix, and it lets that leg's "Build and
+test affected packages" step run. Both used to depend on a native toolchain
+flag, so a recipe edit could merge without ever running on Windows and was only
+exercised by the next daily cross-OS build, a day later.
+
+What the Windows leg builds is the planner's own Windows closure
+(`platform_overrides.windows.affected_packages`): the package whose recipe
+changed plus its dependents. The Linux closure is unaffected, because a
+`BUILD_windows` file is not read there. Toolchains follow the same closure
+(`languages_needed` is computed across platforms), so editing a Haskell recipe
+installs GHC on the Windows runner. A change to an ordinary `BUILD`,
+`BUILD_mac_and_linux` or a source file does not fire the gate, so pull requests
+that do not touch a Windows recipe pay nothing.
+
+Size a change to what one runner can prove: a recipe edit across dozens of
+packages builds all of them and their dependents on one Windows runner, under
+the step's 300 minute ceiling. Roll large recipe changes out in batches.
 
 ### Closure compiler native Windows acceptance
 

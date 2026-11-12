@@ -9,10 +9,11 @@
 //! It also composes reviewed construction, ordered intermediate path-length
 //! evidence, the exact depth-zero target signature with complete server policy,
 //! the reviewed snapshot's supported anchor DNS constraints, and every retained
-//! intermediate's supported DNS/IP constraints against the exact target. This
-//! does not constrain subordinate CA names, validate a complete path, establish
-//! trust, check revocation, perform TLS or HTTP, or grant OAuth or network
-//! authority.
+//! intermediate's supported DNS/IP constraints against the exact target and
+//! target-nearer non-self-issued intermediate SANs. This does not constrain
+//! subordinate distinguished names, apply reviewed-anchor constraints to
+//! subordinate CAs, validate a complete path, establish trust, check
+//! revocation, perform TLS or HTTP, or grant OAuth or network authority.
 
 #![deny(unsafe_code)]
 
@@ -41,7 +42,9 @@ use x509_rsa_signature_routing::{
     X509RsaSignatureRoutingErrorKind,
 };
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
-use x509_subject_alt_name::{decode_subject_alt_name, SubjectAltNameErrorKind};
+use x509_subject_alt_name::{
+    decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
+};
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
 
 /// Stable, payload-free constructed-path RSA routing failures.
@@ -405,6 +408,14 @@ pub enum X509RsaConstructedPathReviewedServerPolicyErrorKind {
     TargetIntermediateDnsNameConstraints(DnsConstraintErrorKind),
     /// A target iPAddress violated the exact intermediate's IP constraints.
     TargetIntermediateIpNameConstraints(IpConstraintErrorKind),
+    /// A subordinate intermediate's present Subject Alternative Name was malformed.
+    InvalidSubordinateIntermediateSubjectAlternativeName(SubjectAltNameErrorKind),
+    /// A subordinate intermediate dNSName violated an ancestor intermediate's constraints.
+    SubordinateIntermediateDnsNameConstraints(DnsConstraintErrorKind),
+    /// A subordinate intermediate iPAddress violated an ancestor intermediate's constraints.
+    SubordinateIntermediateIpNameConstraints(IpConstraintErrorKind),
+    /// Bounded repeated-evaluation counts could not be represented by `usize`.
+    SubordinateNameEvaluationCountOverflow,
 }
 
 /// A redacted reviewed server-path binding failure.
@@ -2004,6 +2015,135 @@ impl fmt::Debug
     }
 }
 
+/// Arbitrary-depth closure after supported subordinate-CA SAN constraints.
+///
+/// Each retained intermediate's supported DNS/IP constraints have been
+/// applied to every target-nearer, non-self-issued intermediate certificate's
+/// optional Subject Alternative Name. The consumed target policy separately
+/// proves the same constraints against the final target. This does not
+/// constrain subordinate distinguished names, apply reviewed-anchor
+/// constraints to subordinate CAs, support every GeneralName, establish
+/// complete path validity, check revocation, or authorize transport.
+pub struct ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    target_policy:
+        ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_application_count: usize,
+    dns_name_evaluation_count: usize,
+    ip_address_evaluation_count: usize,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the consumed exact-target intermediate-constraints policy.
+    #[must_use]
+    pub const fn target_policy(
+        &self,
+    ) -> &ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >{
+        &self.target_policy
+    }
+
+    /// Return successful ancestor-constraint to subordinate-CA applications.
+    #[must_use]
+    pub const fn constraint_application_count(&self) -> usize {
+        self.constraint_application_count
+    }
+
+    /// Return total repeated subordinate dNSName evaluations.
+    #[must_use]
+    pub const fn dns_name_evaluation_count(&self) -> usize {
+        self.dns_name_evaluation_count
+    }
+
+    /// Return total repeated subordinate iPAddress evaluations.
+    #[must_use]
+    pub const fn ip_address_evaluation_count(&self) -> usize {
+        self.ip_address_evaluation_count
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy",
+        )
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -3072,6 +3212,86 @@ pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_target_intermedia
     )
 }
 
+/// Apply each intermediate's supported constraints to subordinate CA SANs.
+///
+/// All certificates, their anchor-to-target order, and their self-issued
+/// classifications come only from the consumed proof. A constraining
+/// intermediate is never applied to itself. Target-nearer self-issued
+/// intermediates are skipped as required for non-final self-issued
+/// certificates; the consumed target policy already covers the final target.
+pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_intermediate_name_constraints_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    target_policy:
+        ValidatedAccumulatedReviewedX509RsaConstructedPathTargetIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let intermediate_policies = target_policy
+        .anchor_policy()
+        .target_signature_closure()
+        .accumulated_intermediates()
+        .intermediate_policies();
+    let (constraint_application_count, dns_name_evaluation_count, ip_address_evaluation_count) =
+        evaluate_ordered_subordinate_intermediate_name_constraints_policy(
+            intermediate_policies.len(),
+            |index| intermediate_policies[index].certificate(),
+            |index| {
+                intermediate_policies[index]
+                    .self_issued_classification()
+                    .is_self_issued()
+            },
+            constraint_limits,
+            subject_alt_name_limits,
+        )?;
+
+    Ok(
+        ValidatedAccumulatedReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy {
+            target_policy,
+            constraint_application_count,
+            dns_name_evaluation_count,
+            ip_address_evaluation_count,
+        },
+    )
+}
+
 /// Bind one exact routed target -> intermediate -> reviewed-root construction.
 ///
 /// The authenticated intermediate must be the depth-zero projection and the
@@ -3563,6 +3783,127 @@ where
     ))
 }
 
+fn evaluate_ordered_subordinate_intermediate_name_constraints_policy<
+    'certificate,
+    'encoded,
+    CertificateAt,
+    IsSelfIssuedAt,
+>(
+    intermediate_count: usize,
+    certificate_at: CertificateAt,
+    is_self_issued_at: IsSelfIssuedAt,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<(usize, usize, usize), X509RsaConstructedPathReviewedServerPolicyError>
+where
+    'encoded: 'certificate,
+    CertificateAt: Fn(usize) -> &'certificate x509_certificate::X509Certificate<'encoded>,
+    IsSelfIssuedAt: Fn(usize) -> bool,
+{
+    let mut constraint_application_count = 0usize;
+    let mut dns_name_evaluation_count = 0usize;
+    let mut ip_address_evaluation_count = 0usize;
+
+    for constraining_index in 0..intermediate_count {
+        let constraining_certificate = certificate_at(constraining_index);
+        let Some(extension) = constraining_certificate
+            .tbs_certificate()
+            .extensions()
+            .and_then(|extensions| {
+                extensions
+                    .iter()
+                    .find(|extension| extension.extension_id().equals(NAME_CONSTRAINTS_OID))
+            })
+        else {
+            continue;
+        };
+        if !extension.critical() {
+            return Err(X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::NonCriticalIntermediateNameConstraints,
+            ));
+        }
+        let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+        let constraints =
+            decode_name_constraints(&mut constraint_decoder, extension.extension_value())
+                .map_err(|error| {
+                    X509RsaConstructedPathReviewedServerPolicyError::new(
+                        X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidIntermediateNameConstraints(
+                            error.kind(),
+                        ),
+                    )
+                })?;
+
+        for subordinate_index in (constraining_index + 1)..intermediate_count {
+            if is_self_issued_at(subordinate_index) {
+                continue;
+            }
+            let subordinate_certificate = certificate_at(subordinate_index);
+            let subject_alt_name_extension = subordinate_certificate
+                .tbs_certificate()
+                .extensions()
+                .and_then(|extensions| {
+                    extensions
+                        .iter()
+                        .find(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+                });
+            let constrained_names = match subject_alt_name_extension {
+                None => evaluate_dns_and_ip_names(&constraints, &[], &[]),
+                Some(extension) => {
+                    let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+                    let subject_alt_name =
+                        decode_subject_alt_name(&mut subject_alt_name_decoder, extension).map_err(
+                            |error| {
+                                X509RsaConstructedPathReviewedServerPolicyError::new(
+                                    X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidSubordinateIntermediateSubjectAlternativeName(
+                                        error.kind(),
+                                    ),
+                                )
+                            },
+                        )?;
+                    evaluate_dns_and_ip_names(
+                        &constraints,
+                        subject_alt_name.dns_names(),
+                        subject_alt_name.ip_addresses(),
+                    )
+                }
+            }
+            .map_err(|error| {
+                let kind = match error.kind() {
+                    NameConstraintEvaluationErrorKind::Dns(kind) => {
+                        X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateIntermediateDnsNameConstraints(kind)
+                    }
+                    NameConstraintEvaluationErrorKind::Ip(kind) => {
+                        X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateIntermediateIpNameConstraints(kind)
+                    }
+                };
+                X509RsaConstructedPathReviewedServerPolicyError::new(kind)
+            })?;
+
+            constraint_application_count = constraint_application_count
+                .checked_add(1)
+                .ok_or_else(subordinate_name_evaluation_count_overflow)?;
+            dns_name_evaluation_count = dns_name_evaluation_count
+                .checked_add(constrained_names.dns_count())
+                .ok_or_else(subordinate_name_evaluation_count_overflow)?;
+            ip_address_evaluation_count = ip_address_evaluation_count
+                .checked_add(constrained_names.ip_count())
+                .ok_or_else(subordinate_name_evaluation_count_overflow)?;
+        }
+    }
+
+    Ok((
+        constraint_application_count,
+        dns_name_evaluation_count,
+        ip_address_evaluation_count,
+    ))
+}
+
+fn subordinate_name_evaluation_count_overflow() -> X509RsaConstructedPathReviewedServerPolicyError {
+    X509RsaConstructedPathReviewedServerPolicyError::new(
+        X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateNameEvaluationCountOverflow,
+    )
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     core::ptr::eq(left, right)
 }
@@ -3777,6 +4118,24 @@ mod tests {
         )
     }
 
+    fn evaluate_ordered_subordinate_intermediates(
+        intermediate_encoded: &[Vec<u8>],
+        self_issued: &[bool],
+    ) -> Result<(usize, usize, usize), X509RsaConstructedPathReviewedServerPolicyError> {
+        assert_eq!(intermediate_encoded.len(), self_issued.len());
+        let intermediates = intermediate_encoded
+            .iter()
+            .map(|encoded| decode_x509_certificate(encoded, Asn1Limits::default()).unwrap())
+            .collect::<Vec<_>>();
+        evaluate_ordered_subordinate_intermediate_name_constraints_policy(
+            intermediates.len(),
+            |index| &intermediates[index],
+            |index| self_issued[index],
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
+
     #[test]
     fn exact_object_identity_rejects_byte_equal_distinct_values() {
         let left = [1_u8, 2, 3];
@@ -3916,6 +4275,111 @@ mod tests {
         );
         let diagnostic = format!("{error:?} {error}");
         assert!(!diagnostic.contains("api.example.test"));
+    }
+
+    #[test]
+    fn ordered_constraints_apply_to_target_nearer_non_self_issued_ca_sans() {
+        let broad_ip = [192, 0, 0, 0, 255, 255, 0, 0];
+        let narrow_ip = [192, 0, 2, 0, 255, 255, 255, 0];
+        let intermediates = [
+            certificate(&[mixed_name_constraints(
+                &[b".test"],
+                &[&broad_ip],
+                &[],
+                &[],
+                true,
+            )]),
+            certificate(&[
+                subject_alt_name(&[dns_name("ca.example.test"), ip_address(&[192, 0, 2, 1])]),
+                mixed_name_constraints(&[b".example.test"], &[&narrow_ip], &[], &[], true),
+            ]),
+            certificate(&[subject_alt_name(&[
+                dns_name("issuing.example.test"),
+                ip_address(&[192, 0, 2, 2]),
+            ])]),
+        ];
+
+        let (applications, dns_evaluations, ip_evaluations) =
+            evaluate_ordered_subordinate_intermediates(&intermediates, &[false, false, false])
+                .unwrap();
+
+        assert_eq!(applications, 3);
+        assert_eq!(dns_evaluations, 3);
+        assert_eq!(ip_evaluations, 3);
+    }
+
+    #[test]
+    fn self_issued_subordinate_ca_is_skipped_but_later_ca_is_constrained() {
+        let intermediates = [
+            certificate(&[name_constraints(&[b".test"], &[], true)]),
+            certificate(&[subject_alt_name(&[dns_name("outside.invalid")])]),
+            certificate(&[subject_alt_name(&[dns_name("issuing.example.test")])]),
+        ];
+
+        let (applications, dns_evaluations, ip_evaluations) =
+            evaluate_ordered_subordinate_intermediates(&intermediates, &[false, true, false])
+                .unwrap();
+
+        assert_eq!(applications, 1);
+        assert_eq!(dns_evaluations, 1);
+        assert_eq!(ip_evaluations, 0);
+    }
+
+    #[test]
+    fn absent_subordinate_ca_san_is_an_empty_supported_name_set() {
+        let intermediates = [
+            certificate(&[name_constraints(&[b".test"], &[], true)]),
+            certificate(&[]),
+        ];
+
+        let (applications, dns_evaluations, ip_evaluations) =
+            evaluate_ordered_subordinate_intermediates(&intermediates, &[false, false]).unwrap();
+
+        assert_eq!(applications, 1);
+        assert_eq!(dns_evaluations, 0);
+        assert_eq!(ip_evaluations, 0);
+    }
+
+    #[test]
+    fn subordinate_ca_constraint_violation_fails_closed_and_redacted() {
+        let intermediates = [
+            certificate(&[name_constraints(&[b".test"], &[], true)]),
+            certificate(&[subject_alt_name(&[dns_name("secret.invalid")])]),
+        ];
+
+        let error = evaluate_ordered_subordinate_intermediates(&intermediates, &[false, false])
+            .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::SubordinateIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
+            )
+        );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("secret.invalid"));
+    }
+
+    #[test]
+    fn malformed_subordinate_ca_san_fails_closed_and_redacted() {
+        let malformed_subject_alt_name = [0x30, 0x01, 0x82];
+        let intermediates = [
+            certificate(&[name_constraints(&[b".test"], &[], true)]),
+            certificate(&[extension(
+                SUBJECT_ALT_NAME_OID_DER,
+                &malformed_subject_alt_name,
+            )]),
+        ];
+
+        let error = evaluate_ordered_subordinate_intermediates(&intermediates, &[false, false])
+            .unwrap_err();
+
+        assert!(matches!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidSubordinateIntermediateSubjectAlternativeName(_)
+        ));
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("30 01 82"));
     }
 
     #[test]

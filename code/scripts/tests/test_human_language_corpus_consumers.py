@@ -4,7 +4,7 @@ CI checks the repository out WITHOUT ``code/learning/human-languages`` (about 74
 MB in 313,000 files, 60% of the repository) except where a job needs it. The
 build job restores it only when the ``human-language-corpus`` gate in
 ``code/specs/data/ci-gates.json`` fires, which happens when one of the gate's
-``packages`` is part of the build or the corpus itself changes.
+``packages`` is part of the build. It deliberately has no path glob for the corpus.
 
 That only works while the gate's package list is complete. If a new package or
 program starts reading the corpus and is not listed, its tests pass locally
@@ -127,10 +127,20 @@ class HumanLanguageCorpusConsumers(unittest.TestCase):
         stale = sorted(set(MENTION_ONLY) - set(mentions))
         self.assertEqual([], stale, "MENTION_ONLY lists a package that mentions nothing")
 
-    def test_gate_also_fires_on_corpus_paths(self) -> None:
+    def test_gate_has_no_corpus_path_glob(self) -> None:
+        # Deliberate. A glob such as code/learning/human-languages/** makes the
+        # gate fire for every corpus-only change, which the selectivity test in
+        # cigates_test.go (TestPathShardedLanguageDiffsStaySelective) forbids, and
+        # at ~10,000 changed corpus paths it exceeds the matcher's work limit
+        # (CI_GATE_MATCH_LIMIT_EXCEEDED). The gate only has to answer "is a
+        # package that reads the corpus being built", which `packages` does: a
+        # corpus-only change affects no package, so its build needs no corpus.
         registry = json.loads(GATE_FILE.read_text(encoding="utf-8"))
-        self.assertIn(
-            "code/learning/human-languages/**", registry["gates"][GATE_ID]["paths"]
+        paths = registry["gates"][GATE_ID].get("paths", [])
+        self.assertEqual(
+            [],
+            [p for p in paths if "human-languages" in p],
+            "do not add a corpus path glob to this gate; see this test's comment",
         )
 
 

@@ -133,9 +133,12 @@ GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
     # The daily cross-OS full build adds only the CROSS_OS_FULL branch that
     # appends macOS/Windows shard entries to a forced full build, plus a comment
-    # on needs_macos. OCaml predicates/bootstrap/mutation rejection remain
+    # on needs_macos. The build-windows-recipes gate (BUILD-002) adds only the
+    # RUN_WINDOWS_RECIPES environment flag and one `or flag(...)` term to
+    # needs_windows(), so a pull request that changes a BUILD_windows recipe
+    # gets a Windows leg. OCaml predicates/bootstrap/mutation rejection remain
     # unchanged and pinned.
-    "6794fcd5db936716e39dd7bc777069a27b48a46236404ff1a29e23bfbb0152b2"
+    "3f1380940a30c5b97c3418a9034373eb53cf25a3ad1c49e508e50dae88141bd6"
 )
 # The build job's checkout. History and credential handling are unchanged:
 # full history, and credentials are not persisted. The three sparse inputs leave

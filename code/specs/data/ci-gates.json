@@ -532,14 +532,11 @@
     },
     "human-language-corpus": {
       "scope": "step",
-      "description": "Build jobs check out without the ~740 MB human-languages corpus; this gate restores it when a package that reads the corpus is built or the corpus changes. Full builds always restore it.",
+      "description": "Build jobs check out without the ~740 MB human-languages corpus; this gate restores it when a package that reads the corpus is built. Full builds always restore it.",
       "packages": [
         "typescript/human-language-data",
         "typescript/programs/language-ladder",
         "typescript/script-ductus"
-      ],
-      "paths": [
-        "code/learning/human-languages/**"
       ]
     },
     "build-linux-os-suites": {
@@ -564,6 +561,14 @@
         "code/scripts/adj_stdlib_provenance.py",
         "code/scripts/tests/test_adj_stdlib_provenance.py",
         "code/specs/FM02-forme-plugin-host.md"
+      ]
+    },
+    "build-windows-recipes": {
+      "scope": "step",
+      "description": "Runs the Windows affected-package build when a pull request changes any BUILD_windows recipe, so a Windows fix is proven on that PR instead of by the next daily cross-OS build.",
+      "paths": [
+        "code/packages/**/BUILD_windows",
+        "code/programs/**/BUILD_windows"
       ]
     },
     "build-windows-os-suites": {
