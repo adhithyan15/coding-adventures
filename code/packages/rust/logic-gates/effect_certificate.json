@@ -1,0 +1,11 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/logic-gates",
+  "source_digest": "e3ed1f2cab70feb22d2dd83de340666f1293f34087a13b868fb1731ed492b5ce",
+  "manifest_digest": "a1892f72dd40846f654436c8b89fdf5e5a86ab1d05ffe638320d2853b5b5c628",
+  "declared_effects": [],
+  "entry_points": [],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

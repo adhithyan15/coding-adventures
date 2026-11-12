@@ -64,6 +64,9 @@ fn panics<R>(f: impl FnOnce() -> R) -> bool {
     panicked
 }
 
+/// A two-input gate as a function pointer, so one loop can attack all of them.
+type TwoInputGate = fn(u8, u8) -> u8;
+
 /// Values that are not bits: the smallest, a mid value, and the largest.
 const GARBAGE: [u8; 3] = [2, 17, 255];
 
@@ -72,7 +75,7 @@ fn every_scalar_gate_rejects_a_non_bit_in_either_position() {
     for g in GARBAGE {
         assert!(panics(|| not_gate(g)), "not_gate({g})");
         assert!(panics(|| nand_not(g)), "nand_not({g})");
-        let two_input: [(&str, fn(u8, u8) -> u8); 9] = [
+        let two_input: [(&str, TwoInputGate); 9] = [
             ("and_gate", and_gate),
             ("or_gate", or_gate),
             ("xor_gate", xor_gate),
