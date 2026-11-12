@@ -749,6 +749,13 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Mix has no environment variable for `deps.get --check-locked`, and
+          # 350+ BUILD files run plain `mix deps.get`, which silently re-resolves
+          # a missing or stale mix.lock. This static check is the enforcement:
+          # every project that reaches a Hex dependency must have a tracked
+          # lock that satisfies mix.exs, with checksums, agreeing across the repo.
+          python3 code/scripts/elixir_locks.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_locks.py'
           # Almost no PR runs the Windows shard, so a BUILD_windows that has
           # drifted from its BUILD (vitest left behind after a node --test
           # migration, `set PERL5LIB=`, standardrb without the EndOfLine
