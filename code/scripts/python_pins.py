@@ -67,6 +67,7 @@ Only the standard library is imported (uv is run as a subprocess).
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 import subprocess
@@ -257,7 +258,17 @@ def run_uv(arguments: list[str]) -> str:
     """Run uv for real and return stdout, surfacing uv's own error text."""
 
     command = [find_uv(), *arguments]
-    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    # CI exports UV_CONSTRAINT / UV_BUILD_CONSTRAINT for the whole workflow.
+    # Left in place they would silently pre-constrain `generate` (so it could
+    # never move a pin) and double up on `check`, so compile hermetically.
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in ("UV_CONSTRAINT", "UV_BUILD_CONSTRAINT")
+    }
+    result = subprocess.run(
+        command, capture_output=True, text=True, check=False, env=environment
+    )
     if result.returncode != 0:
         raise PinsError(
             f"`uv {' '.join(arguments[:2])}` failed (exit {result.returncode}):\n"

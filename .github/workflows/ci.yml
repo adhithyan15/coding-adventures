@@ -85,6 +85,19 @@ concurrency:
 permissions:
   contents: read
 
+# Every third-party Python package resolves to the version, and sha256 hash,
+# pinned in these two generated files. uv reads both variables on every
+# `uv pip install` / `uv venv` build, so no BUILD file refers to them.
+# UV_CONSTRAINT covers what lands in package venvs; UV_BUILD_CONSTRAINT covers
+# uv's isolated build environments (hatchling, setuptools, maturin).
+# UV_REQUIRE_HASHES is deliberately NOT set: it rejects the editable installs
+# the monorepo uses to link its own packages. Hashes listed in a constraints
+# file are still verified. A name absent from the file would float silently,
+# which is why the contracts job runs `python_pins.py check`.
+env:
+  UV_CONSTRAINT: ${{ github.workspace }}/code/specs/data/third-party-dependencies/python-constraints.txt
+  UV_BUILD_CONSTRAINT: ${{ github.workspace }}/code/specs/data/third-party-dependencies/python-build-constraints.txt
+
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
   #
@@ -740,6 +753,12 @@ jobs:
           # both lists against DOC_SHARD_PLANS so they cannot drift again.
           npm run check:doc-shards --silent
 
+      # `python_pins.py check` shells out to `uv pip compile`, so this job needs uv.
+      - name: Install uv for the Python pin check
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+
       - name: Verify repo-wide metadata contracts
         run: |
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
@@ -749,6 +768,11 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Every third-party Python package is pinned with hashes in two
+          # generated constraints files. This fails when they are stale or when a
+          # dependency has no pin (an unlisted name would float silently).
+          python3 code/scripts/python_pins.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_python_pins.py'
           # Almost no PR runs the Windows shard, so a BUILD_windows that has
           # drifted from its BUILD (vitest left behind after a node --test
           # migration, `set PERL5LIB=`, standardrb without the EndOfLine
