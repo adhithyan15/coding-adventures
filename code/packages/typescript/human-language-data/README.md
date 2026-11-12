@@ -93,6 +93,11 @@ loader and `--write`/recovery path remain available. The awaitable committed
 manifest loader uses the same pinned batch reader for narration identities
 only, after checking the complete owner-language set against the registry;
 unrelated generated-book hashes are not a prerequisite.
+On Unix the pinned reader opens listed owners nonblocking before checking they
+are regular files, so a FIFO swapped in after listing is rejected instead of
+stalling a worker. Each Python child has a 20-second deadline and is killed
+and awaited on timeout; neither timeout nor a refused owner returns a partial
+manifest.
 Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`

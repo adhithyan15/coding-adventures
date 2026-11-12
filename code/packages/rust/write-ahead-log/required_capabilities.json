@@ -1,1 +1,26 @@
-{}
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/write-ahead-log",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "WalWriter::new opens the log with OpenOptions create(true), creating it if it does not exist."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "WalWriter::append_record appends length-prefixed records to the log file."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "WalReader::new opens the log with File::open to replay records."
+    }
+  ],
+  "justification": "Append-only write-ahead log persisted to a caller-supplied file path. No network, process, or environment access."
+}

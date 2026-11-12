@@ -25,6 +25,12 @@ or linted it.
   existing breakage when you start watching a long-unwatched package" rule in
   `lessons.md`.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] — 2026-05-14
 
 ### Added (LANG50 — Generic Grammar Type Checker)

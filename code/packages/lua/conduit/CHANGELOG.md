@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Fixed — Windows build
+
+- The extension's `build.rs` now finds `lua54.lib` next to the `lua.exe` on `PATH`
+  (`<prefix>\lib`, the layout `scripts/setup_lua.py` produces) when `LUA_LIB_PATH`
+  is unset. It only looked in `LUA_LIB_PATH` and two fixed folders that do not exist
+  on the CI runner, so the first Windows full build failed with
+  `rust-lld: could not open 'lua54.lib'`.
+
 ## Unreleased
 
 ### Fixed

@@ -12,7 +12,7 @@
     },
     {
       "name": "ct_eq_fixed",
-      "signature": "pub fn ct_eq_fixed<const N: usize>(a: &[u8",
+      "signature": "pub fn ct_eq_fixed<const N: usize>(a: &[u8; N], b: &[u8; N]) -> bool",
       "effects": []
     },
     {

@@ -1,5 +1,11 @@
 # Changelog — ge225-encoder
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## v0.1.0 — 2026-06-02 — initial carve-out from `iir-to-ge225` v0.9.0
 
 Phase 1 of the historical-arch backend migration (see

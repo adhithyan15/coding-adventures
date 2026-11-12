@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Regenerate `effect_certificate.json` with the hardened analyzer 0.3.0: both entry points (`generate_ct_compare_report`, `generate_package_report`) now carry the declared effect set (the analyzer requires entry-point effects to equal `declared_effects`).
+
 ## 0.2.0 (2026-11-10)
 
 VER13 AS-001a part 2: reports cite the assumption catalogue, pin it, and

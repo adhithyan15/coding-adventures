@@ -4,6 +4,12 @@
 
 **Status:** Design specification. WD-003 first implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. Lane runners, manifest migration, report generalization, native suites, samples, and proofs remain later work; no non-Rust lane has Warrant-derived evidence today.
 
+**Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
+CI receipts, and subsequent discoveries are maintained in the
+[portable Warrant backlog shard](VER-BACKLOG.d/portable-warrant.md). This
+shard is authoritative for current implementation status; the design and
+historical rollout snapshots below remain part of this specification.
+
 ## 0. Why this exists
 
 VER04h made one lane honest. For `rust/ct-compare`, every number in the

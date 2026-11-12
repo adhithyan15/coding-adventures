@@ -15,12 +15,26 @@
     {
       "name": "generate_ct_compare_report",
       "signature": "pub fn generate_ct_compare_report( commit_sha: &str, registry: &WeaknessRegistry, evidence: &Evidence, ) -> Result<AssuranceReport, MatrixError>",
-      "effects": []
+      "effects": [
+        "fs:read:*",
+        "fs:list:*",
+        "fs:write:*",
+        "stdout:write:*",
+        "env:read:*",
+        "proc:signal:*"
+      ]
     },
     {
       "name": "generate_package_report",
       "signature": "pub fn generate_package_report( package: &str, version: &str, commit_sha: &str, registry: &WeaknessRegistry, evidence: &Evidence, profile: AuditProfile, ) -> Result<AssuranceReport, MatrixError>",
-      "effects": []
+      "effects": [
+        "fs:read:*",
+        "fs:list:*",
+        "fs:write:*",
+        "stdout:write:*",
+        "env:read:*",
+        "proc:signal:*"
+      ]
     }
   ],
   "unconditional_roots": [],

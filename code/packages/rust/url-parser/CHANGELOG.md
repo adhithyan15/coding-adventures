@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json declaring only the capabilities used by #[cfg(test)] modules (the analyzer scans cfg(test) code); production code is pure.
+
+### Fixed
+
+- required_capabilities.json no longer declares a false `fs:list` ("Path::canonicalize resolves fixture paths"). The hits were `Url::canonicalize()` calls on this crate's own type, matched by the analyzer's `.canonicalize()` heuristic. The analyzer now resolves the receiver (`Url::parse(..).unwrap().canonicalize()` reaches the inherent `Url::canonicalize`), and the crate is declared pure (`capabilities: []`).
+
 ## [0.2.0] - 2026-08-27
 
 ### Added

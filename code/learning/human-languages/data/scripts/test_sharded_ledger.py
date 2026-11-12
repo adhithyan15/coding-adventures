@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import textwrap
 import threading
 import unittest
 from pathlib import Path
@@ -262,6 +263,42 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 else:
                     os.unlink(directory)
                 os.rename(moved, directory)
+
+    @unittest.skipUnless(os.name != "nt" and hasattr(os, "mkfifo"), "Unix FIFO required")
+    def test_modality_owner_cli_refuses_fifo_swapped_after_listing(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside owner", encoding="utf-8")
+        request = {"root": str(self.root), "language": "spanish", "names": ["_meta.json"]}
+        # The injected helper runs *after* the pinned reader has listed the
+        # exact owner set. A five-second subprocess deadline makes the old
+        # blocking open a deterministic test failure rather than a hung suite.
+        script = textwrap.dedent("""
+            import os
+            import sys
+            import modality_owner_read
+            import sharded_ledger
+
+            owner = os.path.join(sys.argv[1], "_meta.json")
+            original = sharded_ledger._read_pinned_regular_batch
+
+            def swap(parent, names, read_one):
+                os.unlink(owner)
+                os.mkfifo(owner)
+                return original(parent, names, read_one)
+
+            sharded_ledger._read_pinned_regular_batch = swap
+            sys.exit(modality_owner_read.main())
+        """)
+        result = subprocess.run(
+            [sys.executable, "-c", script, str(directory)],
+            input=json.dumps(request).encode("utf-8"),
+            capture_output=True, timeout=5, check=False,
+            cwd=Path(__file__).resolve().parent,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(json.loads(result.stdout)["error"]["kind"], "ValueError")
+        self.assertNotIn(b"inside owner", result.stdout + result.stderr)
 
     def test_modality_owner_cli_transports_exact_unicode_bytes_and_scrubs_errors(self):
         directory = self.root / "core" / "lesson-modality" / "spanish.d"

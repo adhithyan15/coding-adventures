@@ -5,6 +5,11 @@ Implementation queue for VER00 and the Rust VER26 pilot. Reconcile fetched
 `462710b53fc`, bootstrap PR #18807 at `4e608afe3bc9`. Local tests, an open PR
 and a verified merge are different completion states.
 
+For portable Warrant, [portable-warrant.md](VER-BACKLOG.d/portable-warrant.md)
+is the current status, receipt, and discovery record. The coordinator rows and
+dated snapshots below are historical overview; use the shard for current
+implementation state.
+
 ## Delivery and prioritization
 
 One bounded change per PR, spec committed before tests/code, meaningful local
@@ -387,10 +392,10 @@ swift, dart, ocaml (need a CT01 ct-compare port first).
 |---|---|---|
 | done / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | merged #19054 (`2ff2db8cb02`), verified on main; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
 | done / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | merged #19078; corrected contract is tracked in VER04i |
-| P1 / WD-003 | Rust Warrant compiler emits the language-neutral corpus for ct-compare Warrant v0; independent stdlib-only Python semantic/digest validator; byte-stable regeneration and falsification checks | active PR #19177: Rust producer, independent Python oracle, falsification, repository/build routing, and the focused Lua apt-retry routing fix; explicitly unsharded; Python lane binding/report remains WD-1xx/004 |
-| P1 / WD-908 | Route Linux Lua prerequisites through bounded apt install retries after repeated CI DNS failures | CI runs #65010 and #65018 failed the Lua prerequisite step resolving Ubuntu archive hosts; both Linux Lua setup paths bypassed the existing retrying `code/scripts/ci/apt-install.sh`. In PR #19177, retain `libreadline-dev`/`libncurses-dev` and route both paths through the wrapper; regression checks both paths and timeouts; close after exact-head CI succeeds or one targeted retry succeeds |
-| P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | waiting WD-003 merge; first define strict lane-manifest schema and consumer registry, then report integration |
-| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | waiting WD-003/004 |
+| P1 / WD-003 | Rust Warrant compiler emits the language-neutral corpus for ct-compare Warrant v0; independent stdlib-only Python semantic/digest validator; byte-stable regeneration and falsification checks | PR #19177: Rust producer, independent Python oracle, falsification, repository/build routing, and focused Lua apt-retry routing fix; attempt 5 passed at the prior exact head, merged-head checks pending; explicitly unsharded. [Current queue, receipts, and discoveries](VER-BACKLOG.d/portable-warrant.md) |
+| P1 / WD-908 | Route Linux Lua prerequisites through bounded apt install retries after repeated CI DNS failures | CI runs #65010 and #65018 failed the Lua prerequisite step resolving Ubuntu archive hosts; both Linux Lua setup paths bypassed the existing retrying `code/scripts/ci/apt-install.sh`. PR #19177 attempt 5 passed at its prior exact head; merged-head checks remain pending. Retain `libreadline-dev`/`libncurses-dev`; regression checks both paths and timeouts. See [portable Warrant receipts](VER-BACKLOG.d/portable-warrant.md) |
+| P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | after WD-003: WD-004a defines strict lane-manifest schema and consumer registry; WD-004b integrates report generalization; then Python L0 runner. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
+| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | after WD-003 and WD-004a/004b; Python runner follows report/manifest contract. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
 | P3 / WD-2xx | Native Warrant backends emitting L2 PBT/fuzz suites per lane (TypeScript first: engines exist) | waiting WD-1xx per lane |
 | P3 / WD-3xx | CT01 ct-compare ports for lua, perl, haskell, swift, dart, ocaml, then their WD-1xx lanes | independent |
 | P4 / WD-4xx | Proof lanes via WIR front ends (VER14), C first | waiting VER14 spec |
@@ -431,7 +436,7 @@ in the trust base, malicious build hooks) until the owner resolves it.
 | P2 / LP-006 | Add missing `required_capabilities.json` (sha512 found without one); audit all leaves | independent, small (haiku) |
 | P2 / LP-007 | Negative/malformed-input tests absent in lzss, lz77, lz78, sha1, md5, x25519, range-coder, caesar/atbash, irc-framing | folded into each LP item |
 
-Warrant extensions, cheapest unlock-per-cost first (from survey): WX-B fixed-width
+Warrant extensions, cheapest unlock-per-cost first (from survey; active ordering and status are maintained in the [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md)): WX-B fixed-width
 ints U16/U32/I64; WX-C bitwise ops; WX-A tuples/records/non-recursive sums;
 WX-E external oracle / vector-table construct + per-language fixture generator;
 WX-F binding-level sequence drivers for stateful objects; WX-D bounded
@@ -671,4 +676,18 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | P3 / SEC-003c | C and C++ huffman encoders hold codes in 32-bit integers; an extremely skewed distribution needs longer codes | open |
 | P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
 | P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
-| done / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713 | merged as #19115; 13 owner questions in VER04k section 9 remain for resolution before implementation |
+| done / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713 | merged as #19115; WX-H/WX-E prerequisites merged #19121; implementation is queued D1, F/G in parallel, D2, then D3; 13 owner questions in VER04k section 9 remain for resolution during implementation |
+
+### Rust capability analyzer: open gaps after the third security review (2026-11-11)
+
+The branch `claude/ver-cap-split-a-analyzer` closes the cheap third-review
+cases (VER08a D43-D49, including review G-A, associated-type projections) and
+the four shapes a follow-up review found those fixes missed (D50-D53).
+These false negatives stay open; each has an example, root cause and intended
+fix in [VER08a §8.1](VER08a-rust-capability-analyzer.md#81-known-open-gaps-security-review-round-3).
+
+| Priority / id | Item | Status |
+|---|---|---|
+| P1 / CA-OG1 | Review G-C: a type alias's generic parameter default is never bound, so `type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)` is pure (case `alias-default-param`). Fix: bind the alias to every path inside a parameter default in `type_alias_leaves`, as for the right-hand side; a default that is a metavariable or a macro invocation (`type F<P = $t> = P;`, `P = ty!()`) binds the alias to the unknown type; an undelimitable default is CAP003 | open |
+| P1 / CA-OG2 | Review G-E: the local-receiver waiver (L4) is bypassed when the local type derefs to `Path` (cases `waiver-cfg-out`, `waiver-macro-body`, `waiver-generic-instance`, `waiver-ctor-wrong-type`, `waiver-same-name-module`, `waiver-arbitrary-self`, `og2_private2`); `collect_local_types` keys by bare name and ignores cfg, macro bodies, generic arguments, modules, arbitrary self types and visibility (a private inherent method in another module, skipped by method lookup at the call site). Fix: refuse the waiver when any `Deref`/`DerefMut` impl for `<Name>` exists, including ones not spelled `impl Deref for Name` (derive macros such as `derive_more::Deref` and `shrinkwraprs`, `macro_rules!`-generated impls, a renamed trait `use std::ops::Deref as D; impl D for L`, an impl through a type alias), failing closed when the type has any non-std derive or macro-generated impl; otherwise require one unique definition, a non-generic inherent impl outside macro bodies and cfg, a method visible at the call site, and a plain receiver | open |
+| P3 / CA-IPC | The Spec 13 capability taxonomy has no IPC category, so `std::io::pipe` and `PipeReader`/`PipeWriter` are classified as `ffi:call` (VER08a D47, the row for raw OS handles) as a stand-in. Add an IPC category (pipes, Unix-domain socket pairs, shared memory) to the taxonomy and move them there | open |
