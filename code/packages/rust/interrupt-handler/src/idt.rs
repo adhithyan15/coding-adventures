@@ -76,9 +76,8 @@ impl InterruptDescriptorTable {
     /// Serialize the IDT into a byte slice at the given base address.
     /// Uses little-endian format (RISC-V convention).
     pub fn write_to_memory(&self, memory: &mut [u8], base_address: usize) {
-        for i in 0..256 {
+        for (i, entry) in self.entries.iter().enumerate().take(256) {
             let offset = base_address + i * IDT_ENTRY_SIZE;
-            let entry = &self.entries[i];
 
             // Bytes 0-3: ISR address (little-endian)
             let addr_bytes = entry.isr_address.to_le_bytes();
@@ -98,7 +97,7 @@ impl InterruptDescriptorTable {
 
     /// Deserialize the IDT from a byte slice at the given base address.
     pub fn load_from_memory(&mut self, memory: &[u8], base_address: usize) {
-        for i in 0..256 {
+        for (i, entry) in self.entries.iter_mut().enumerate().take(256) {
             let offset = base_address + i * IDT_ENTRY_SIZE;
 
             // Bytes 0-3: ISR address (little-endian)
@@ -115,7 +114,7 @@ impl InterruptDescriptorTable {
             // Byte 5: Privilege level
             let privilege_level = memory[offset + 5];
 
-            self.entries[i] = IDTEntry {
+            *entry = IDTEntry {
                 isr_address,
                 present,
                 privilege_level,

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the IDT serialise/deserialise loops in `idt.rs` to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added
