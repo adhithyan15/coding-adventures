@@ -147,9 +147,11 @@ func (j ActionJSON) ToAction() (Action, error) {
 		Phase:            j.Phase,
 	}
 	var err error
-	// NOTE: the golden file's "invalid-utf8-target" vector sets both "target"
-	// (the generator's default "t") and "target_hex"; target_hex wins.  A
-	// "not both" refusal would need that fixture regenerated first.
+	// Two spellings of one field would make the vector ambiguous (which one
+	// wins?), so supplying both is refused rather than resolved silently.
+	if j.TargetHex != "" && j.Target != "" {
+		return a, errors.New("set target or target_hex, not both")
+	}
 	if j.TargetHex != "" {
 		raw, err := hex.DecodeString(j.TargetHex)
 		if err != nil {

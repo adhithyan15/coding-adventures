@@ -151,7 +151,7 @@ func invalidDefs() []struct {
 		{namedVec{"unknown-tool-kind", "tool kind 9", with(func(a *ActionJSON) {
 			a.Tools = []ToolJSON{{"x", "1", 9, ""}}
 		})}, "unknown kind"},
-		{namedVec{"invalid-utf8-target", "target bytes ff fe", with(func(a *ActionJSON) { a.TargetHex = "fffe" })}, "not valid UTF-8"},
+		{namedVec{"invalid-utf8-target", "target bytes ff fe", with(func(a *ActionJSON) { a.Target = ""; a.TargetHex = "fffe" })}, "not valid UTF-8"},
 		{namedVec{"exec-link", "a symbolic link marked executable", with(func(a *ActionJSON) {
 			a.Inputs = []FileJSON{f("l", 2, 1, dg(1))}
 		})}, "exec=0"},

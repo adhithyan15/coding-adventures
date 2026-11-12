@@ -270,7 +270,7 @@ func TestVerifyDetectsProblems(t *testing.T) {
 	vf.Invalid[0].Error = "no such text"
 	vf.Invalid[1].Action = with(func(a *ActionJSON) {}) // valid action in invalid list
 	vf.Valid[2].Action.RecipeHex = "zz"
-	vf.Invalid[2].Action.TargetHex = "zz"
+	vf.Invalid[2].Action.Target, vf.Invalid[2].Action.TargetHex = "", "zz"
 	vf.Valid[3].Action.OS = "plan9"
 	out := strings.Join(vf.Verify(), "\n")
 	for _, w := range []string{"key mismatch", "preimage mismatch", "does not contain", "accepted but must be refused", "recipe_hex", "target_hex", "unexpected error"} {
@@ -318,6 +318,15 @@ func TestVerifyRejectsEmptyErrorExpectation(t *testing.T) {
 	out := strings.Join(vf.Verify(), "\n")
 	if !strings.Contains(out, `empty "error" field`) {
 		t.Errorf("empty error accepted:\n%s", out)
+	}
+}
+
+func TestTargetAndTargetHexTogetherRefused(t *testing.T) {
+	j := with(func(a *ActionJSON) {})
+	j.Target = "t"
+	j.TargetHex = "74"
+	if _, err := j.ToAction(); err == nil || !strings.Contains(err.Error(), "not both") {
+		t.Errorf("both target fields accepted: %v", err)
 	}
 }
 

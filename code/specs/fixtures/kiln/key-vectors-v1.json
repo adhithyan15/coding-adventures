@@ -837,7 +837,7 @@
         "os": "linux",
         "arch": "x64",
         "host_image_id": null,
-        "target": "t",
+        "target": "",
         "target_hex": "fffe",
         "phase": "build",
         "recipe_hex": "72",
