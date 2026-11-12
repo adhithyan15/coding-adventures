@@ -1,1 +1,4 @@
-echo "caesar-cipher-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for caesar_cipher_native.dll)"
+# Windows build: builds the Rust cdylib and runs the Dart tests through
+# tools\run-tests.ps1 (the counterpart of tools/run-tests.sh).
+# build-tool: deps=rust/caesar-cipher
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

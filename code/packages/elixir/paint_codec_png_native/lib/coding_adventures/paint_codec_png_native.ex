@@ -56,7 +56,18 @@ defmodule CodingAdventures.PaintCodecPngNative do
   defp nif_file_exists? do
     case nif_base_path() do
       nil -> false
-      base_path -> File.exists?(base_path <> ".so")
+      base_path -> File.exists?(base_path <> nif_extension())
+    end
+  end
+
+  # `:erlang.load_nif/2` appends the platform's extension itself: ".dll" on
+  # Windows, ".so" everywhere else (including macOS, where the BUILD copies the
+  # .dylib to priv/paint_codec_png_native.so).  The existence check must look for
+  # the same file or `available?/0` is false on Windows.
+  defp nif_extension do
+    case :os.type() do
+      {:win32, _} -> ".dll"
+      _ -> ".so"
     end
   end
 

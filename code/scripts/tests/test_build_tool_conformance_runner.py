@@ -161,7 +161,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
         self.assertEqual(summary["repository_source_boundary_count"], 19)
-        self.assertEqual(summary["repository_source_input_count"], 25)
+        self.assertEqual(summary["repository_source_input_count"], 27)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -445,14 +445,14 @@ class CorpusTests(unittest.TestCase):
             summary,
             {
                 "boundary_count": 19,
-                "input_count": 25,
-                "scope_count": 491,
-                "authorization_count": 497,
+                "input_count": 27,
+                "scope_count": 492,
+                "authorization_count": 506,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "07e5699b8e9b4a6cacfe3ce9dfd6a845ab03ec7f5bf8f4ec4b439e0cc90917f0",
+            "4569b53118a279164c56a36142ff8f65a672edc533265ee146e4ca7385cde6a2",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -3519,7 +3519,7 @@ class PureDomainValidationTests(unittest.TestCase):
             repository_source_input_boundary=boundary,
         )
 
-    def test_warrant_corpus_inputs_select_grammar_package(self) -> None:
+    def test_warrant_corpus_inputs_select_both_rust_consumers(self) -> None:
         boundary = runner.load_document(
             FIXTURE_ROOT / "repository-source-input-boundary.json"
         )
@@ -3534,7 +3534,13 @@ class PureDomainValidationTests(unittest.TestCase):
                 "rel_path": "code/packages/rust/warrant-grammar",
                 "source_mode": "strict_globs",
                 "source_globs": ["src/**/*.rs", "examples/**/*.rs", "tests/**/*.rs"],
-            }
+            },
+            {
+                "name": "rust/ca-assurance-report",
+                "rel_path": "code/packages/rust/ca-assurance-report",
+                "source_mode": "strict_globs",
+                "source_globs": ["src/**/*.rs", "tests/**/*.rs"],
+            },
         ]
         options["edges"] = []
 
@@ -3544,14 +3550,16 @@ class PureDomainValidationTests(unittest.TestCase):
             "code/specs/ct-compare.warrant",
             "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
             "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+            "code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+            "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
         ]
         for changed_path in inputs:
             with self.subTest(changed_path=changed_path):
                 self.assertEqual(
                     runner._expected_diff_selection(options, [changed_path], boundary),
                     (
-                        {"rust/warrant-grammar"},
-                        {"rust/warrant-grammar"},
+                        {"rust/warrant-grammar", "rust/ca-assurance-report"},
+                        {"rust/warrant-grammar", "rust/ca-assurance-report"},
                         set(),
                     ),
                 )

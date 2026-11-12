@@ -1,1 +1,4 @@
-echo "activation-functions-native uses dart:ffi against the Rust cdylib — skipping on Windows (requires cross-compile setup for activation_functions_native.dll)"
+# Windows build: builds the Rust cdylib and runs the Dart tests through
+# tools\run-tests.ps1 (the counterpart of tools/run-tests.sh).
+# build-tool: deps=rust/activation-functions
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

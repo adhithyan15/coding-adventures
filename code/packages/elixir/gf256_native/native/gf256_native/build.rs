@@ -22,7 +22,8 @@ fn main() {
         }
         _ => {
             // Linux/Unix: ELF allows undefined symbols by default.
-            // Windows: NIF support on Windows is not yet implemented.
+            // Windows: nothing to link.  The DLL leaves no `enif_*` import; erl-nif-bridge
+            // calls through the callback table the BEAM passes to nif_init.
         }
     }
 }

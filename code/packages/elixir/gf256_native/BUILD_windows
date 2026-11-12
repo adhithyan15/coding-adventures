@@ -1,2 +1,8 @@
-# build-tool: unsupported=ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE
-echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped
+# Windows build: same steps as the Unix BUILD, in cmd syntax (the build tool runs each line
+# as its own cmd /C).  The NIF DLL has no enif_* imports: erl-nif-bridge calls through the
+# callback table the BEAM passes to nif_init (see its win_dyn module).  A Windows NIF is
+# a .dll, and :erlang.load_nif appends the extension itself, so it lands at priv\gf256_native.dll.
+cd native\gf256_native && cargo build --release
+if not exist priv mkdir priv
+copy /Y native\gf256_native\target\release\gf256_native.dll priv\gf256_native.dll
+mix deps.get --quiet && mix compile && mix test
