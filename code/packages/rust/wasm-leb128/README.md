@@ -108,16 +108,60 @@ assert!(result.is_err());
 println!("{}", result.unwrap_err()); // "LEB128 error at offset 0: unexpected end of data …"
 ```
 
+`max_bits` must be at most 64 (every WebAssembly width is 1..=64). A wider
+value is not rejected today: see "Known limitation" below.
+
+## Verification
+
+The six public operations are specified by
+[`code/specs/wasm-leb128.warrant`](../../../specs/wasm-leb128.warrant), a
+Warrant v1 document, with the prose contract in
+[LEB01](../../../specs/LEB01-wasm-leb128.md). `tests/generated/warrant_evidence.rs`
+is *generated* from it and `evidence.bindings` (never edit it; `BUILD` fails if
+it drifts) and runs against the real exports:
+
+- **examples:** the 624485 vector, the `u32`/`u64`/`i32`/`i64` extremes, a
+  padded zero, `2^64`/`2^32`/`2^31` too large, an eleven-byte overlong input,
+  truncation, empty input, offset out of range, width 0;
+- **exhaustive suites:** every input of length 0 to 3 for each 64-bit decoder
+  (16,843,009 inputs each), every one- and two-byte input at every width
+  0..=64 for each bounded decoder, the ten-byte boundary, round trips over the
+  `U64`/`I64` edge sets (also after every prefix and with every suffix of the
+  `Bytes` domain), and the encoders against independent canonical models;
+- **property and fuzz suites** for every claim, and **sabotage controls** that
+  inject wrong consumed counts, dropped counts, success reported as an error,
+  a missing error, a flipped result bit and a dropped last byte, and must fail.
+
+`evidence/test-manifest.json` is written by that run; `assurance_report.json`
+is derived from it (verdict `report-only`). What is *not* claimed: the
+step-bound proofs are **not live** (the WIR front end cannot parse
+`src/lib.rs`; `evidence/proof-manifest.json` records the blocker), the error
+kind and offset are not observed (`Leb128Error` has no kind, so every error is
+one Warrant case), and CWE-208 is recorded as not applicable because every
+operand is public.
+
+## Known limitation
+
+`decode_unsigned_bounded`/`decode_signed_bounded` do not reject
+`max_bits > 64`: widths 66..=70 silently drop data bits above bit 64, and
+widths of 71 or more with an eleven-byte input overflow a shift (a panic in a
+debug build, a wrong value in release). Pass a width of at most 64. Tracked as
+backlog SEC-006 (LEB01 "Findings").
+
 ## Development
 
 ```bash
-# Run tests
-cargo test -p wasm-leb128
+# Run tests (unit and doc tests; the generated evidence target is separate)
+cargo test -p wasm-leb128 --lib
+cargo test -p wasm-leb128 --doc
+
+# Regenerate the Warrant evidence harness after editing the .warrant document
+cargo run -p coding_adventures_warrant_grammar --example gen_evidence -- wasm-leb128
 
 # Lint
 cargo clippy -p wasm-leb128
 
-# Via build script
+# Everything CI runs, including the evidence, sabotage and report checks
 bash BUILD
 ```
 

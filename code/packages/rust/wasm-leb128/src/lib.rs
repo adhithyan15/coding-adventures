@@ -618,7 +618,11 @@ mod tests {
         assert!(result.is_err());
         let err = result.unwrap_err();
         assert_eq!(err.offset, 0);
-        println!("unterminated error: {}", err);
+        // Check the message instead of printing it: the capability analyzer
+        // reads test code too, and a `println!` here would make this pure
+        // library declare `stdout:write` (see the 0.2.0 Warrant entry in
+        // CHANGELOG.md).
+        assert!(err.to_string().contains("unterminated"), "{err}");
     }
 
     #[test]
@@ -943,7 +947,9 @@ mod tests {
         let s = format!("{}", err);
         assert!(s.contains("42"));
         assert!(s.contains("test error"));
-        println!("{}", err);
+        // The exact rendering, rather than printing it (no stdout in tests:
+        // the capability analyzer counts test code).
+        assert_eq!(s, "LEB128 error at offset 42: test error");
     }
 
     #[test]

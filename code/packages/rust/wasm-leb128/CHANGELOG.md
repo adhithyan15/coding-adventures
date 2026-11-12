@@ -2,6 +2,58 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] — Warrant-derived evidence (LEB01, VER04h)
+
+No change to the public API or to the behaviour of any export.
+
+### Added
+
+- `code/specs/LEB01-wasm-leb128.md` (the package had no spec) and
+  `code/specs/wasm-leb128.warrant`, the first Warrant v1 document of a real
+  package: canonical-encoder models, round trips, every decoder input of length
+  <= 3 (16,843,009 per 64-bit decoder), the ten-byte boundary, the bounded
+  decoders at every width 0..=64, and the bytes-consumed bound under hostile
+  input.
+- `evidence.bindings`: the first package binding of host composites
+  (`args=bytes,usize[,u32] ret=(u64|i64,usize)
+  errors=wasm_leb128/Leb128Error=MALFORMED`) and of the WX-A faults
+  `off-by-one-consumed`, `drop-consumed`, `ok-as-err`, `missing-error` plus
+  `flip-result-bit`/`drop-last-result-byte` on the encoders.
+- `tests/warrant_evidence.rs` (shim) and the generated
+  `tests/generated/warrant_evidence.rs`: 31 examples, 36 claims each with an
+  exhaustive, a property (4,096 cases) and a fuzz (5,000 iterations) suite, and
+  80 negative controls; `evidence/test-manifest.json` is written from a real run.
+- `evidence/proof-manifest.json` (from `warrant-ir --test wasm_leb128_proofs`):
+  every steps-bound obligation `not-live` (the Rust-subset front end refuses
+  `src/lib.rs` at the anonymous lifetime `Formatter<'_>`), heap/depth rows
+  `unchecked`.
+- `effect_certificate.json` (`ca-capability-analyzer --emit-cert`: no effects,
+  label `proved`) and `assurance_report.json` (`--profile varint-codec`, verdict
+  `report-only`; CWE-208 "not applicable: no secret operands", CWE-400 an
+  unapproved exemption quoting the front end's blocker).
+- `BUILD`/`BUILD_windows`: unit tests and doc tests run separately from the
+  evidence target; the capability check; the drift check; the manifest run; 20
+  sabotage runs (each fault against each operation it is bound to); the proof
+  target; `ca-assurance-report --check`.
+- `Cargo.toml`: dev-dependencies `coding_adventures_test_bootstrap` and
+  `coding_adventures_sha256`, and the `warrant_evidence` test target
+  (`harness = false`).
+
+### Changed
+
+- Two unit tests printed an error with `println!`; they now assert its text
+  instead (`decode_unsigned_unterminated` checks for "unterminated",
+  `error_display` pins the exact rendering). The capability analyzer reads test
+  code, and the `println!` made this pure library need `stdout:write`, which
+  blocks the effect certificate and would have opened CWE-117. Test-only; no
+  export changes.
+
+### Found (not fixed here)
+
+- `decode_*_bounded` accept `max_bits > 64` (66..=70 drop data bits above 64;
+  >= 71 overflow a shift on an eleven-byte input: debug panic, wrong value in
+  release). Backlog SEC-006; the Warrant document refines `max_bits <= 64`.
+
 ## [0.2.0] - 2026-08-31 — LEB128/malformed-binary hardening
 
 Real bug, found while vendoring the official WebAssembly testsuite's

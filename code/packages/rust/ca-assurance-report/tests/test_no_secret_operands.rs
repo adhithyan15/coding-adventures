@@ -30,11 +30,12 @@
 //! The same file pins the `varint-codec` audit profile, whose static sentences
 //! (CWE-326/327/407) describe LEB128 rather than GF(2^8) or comparisons.
 
+use std::fs;
 use std::path::{Path, PathBuf};
 
 use coding_adventures_ca_assurance_report::{
-    build_weakness_matrix, generate_package_report, verify_evidence, AssuranceReport,
-    AuditEvidence, AuditProfile, Evidence, EvidenceCheckError as E,
+    build_weakness_matrix, generate_package_report, verify_assurance_report, verify_evidence,
+    AssuranceReport, AuditEvidence, AuditProfile, CheckVerdict, Evidence, EvidenceCheckError as E,
     PackageAuditContext, WeaknessRegistry, WeaknessStatus,
 };
 
@@ -43,6 +44,18 @@ const NA_ID: &str = "EXEMPT-CWE-208-NO-SECRET-OPERANDS";
 
 fn pkg_dir(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("..").join(name)
+}
+
+fn leb_report(ev: &Evidence) -> AssuranceReport {
+    generate_package_report(
+        "rust/wasm-leb128",
+        "0.2.0",
+        "c0ffee",
+        &WeaknessRegistry::embedded(),
+        ev,
+        AuditProfile::VarintCodec,
+    )
+    .expect("report derives from the wasm-leb128 manifests")
 }
 
 fn gf_report(ev: &Evidence) -> AssuranceReport {
@@ -133,6 +146,137 @@ fn a_failed_constant_time_obligation_is_never_not_applicable() {
     })
     .expect_err("a failed CT obligation with no live proof is an open row");
     assert!(err.contains("CWE-208"), "{err}");
+}
+
+// ---------------------------------------------------------------------------
+// The attestation is derived from the spec on disk
+// ---------------------------------------------------------------------------
+
+#[test]
+fn the_attestation_exists_only_for_an_all_public_document() {
+    let leb = Evidence::load(&pkg_dir("wasm-leb128")).expect("wasm-leb128 evidence loads");
+    assert!(leb.attestation_ids().contains(ATTEST), "every operand of wasm-leb128 is labelled public");
+    let gf = Evidence::load(&pkg_dir("gf256")).unwrap();
+    assert!(!gf.attestation_ids().contains(ATTEST), "gf256 labels its operands secret");
+    let ct = Evidence::load(&pkg_dir("ct-compare")).unwrap();
+    assert!(!ct.attestation_ids().contains(ATTEST), "ct-compare labels its operands secret");
+}
+
+/// A throw-away copy of a package's evidence inputs, for edits.
+struct Copy {
+    root: PathBuf,
+    pkg: PathBuf,
+}
+
+impl Copy {
+    fn new(name: &str, spec: &str, tag: &str) -> Copy {
+        let real = pkg_dir(name);
+        let root = std::env::temp_dir().join(format!("ver04h-nosecret-{tag}-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        let pkg = root.join("code/packages/rust").join(name);
+        fs::create_dir_all(pkg.join("evidence")).unwrap();
+        for f in ["test-manifest.json", "proof-manifest.json"] {
+            fs::copy(real.join("evidence").join(f), pkg.join("evidence").join(f)).unwrap();
+        }
+        fs::create_dir_all(pkg.join("src")).unwrap();
+        for entry in fs::read_dir(real.join("src")).unwrap() {
+            let entry = entry.unwrap();
+            if entry.file_type().unwrap().is_file() {
+                fs::copy(entry.path(), pkg.join("src").join(entry.file_name())).unwrap();
+            }
+        }
+        for f in ["effect_certificate.json", "evidence.bindings", "Cargo.toml"] {
+            fs::copy(real.join(f), pkg.join(f)).unwrap();
+        }
+        fs::create_dir_all(root.join("code/specs")).unwrap();
+        fs::copy(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../specs").join(spec),
+            root.join("code/specs").join(spec),
+        )
+        .unwrap();
+        let assumptions = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../assumptions");
+        fs::create_dir_all(root.join("code/assumptions")).unwrap();
+        for f in ["catalogue-v1.json", "evidence-kinds.json", "non-claims.json"] {
+            fs::copy(assumptions.join(f), root.join("code/assumptions").join(f)).unwrap();
+        }
+        Copy { root, pkg }
+    }
+    fn edit_spec(&self, spec: &str, from: &str, to: &str) {
+        let p = self.root.join("code/specs").join(spec);
+        let s = fs::read_to_string(&p).unwrap();
+        assert!(s.contains(from), "{spec} must contain {from:?}");
+        fs::write(p, s.replacen(from, to, 1)).unwrap();
+    }
+}
+
+impl Drop for Copy {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.root);
+    }
+}
+
+#[test]
+fn one_secret_label_or_one_unlabelled_operand_withdraws_the_attestation() {
+    let cp = Copy::new("wasm-leb128", "wasm-leb128.warrant", "secret");
+    cp.edit_spec("wasm-leb128.warrant", "labels decode_signed:\n    data public", "labels decode_signed:\n    data secret");
+    let ev = Evidence::load(&cp.pkg).unwrap();
+    assert!(!ev.attestation_ids().contains(ATTEST), "a secret label withdraws it");
+
+    let cp = Copy::new("wasm-leb128", "wasm-leb128.warrant", "unlabelled");
+    cp.edit_spec("wasm-leb128.warrant", "    max_bits public\n  labels decode_signed_bounded:", "  labels decode_signed_bounded:");
+    let ev = Evidence::load(&cp.pkg).unwrap();
+    assert!(
+        !ev.attestation_ids().contains(ATTEST),
+        "an operand with no label row is unclassified, not public"
+    );
+}
+
+// ---------------------------------------------------------------------------
+// The real adopter, end to end
+// ---------------------------------------------------------------------------
+
+#[test]
+fn wasm_leb128_report_derives_verifies_and_matches_the_checked_in_file() {
+    let dir = pkg_dir("wasm-leb128");
+    let ev = Evidence::load(&dir).expect("wasm-leb128 manifests load");
+    let report = leb_report(&ev);
+    verify_evidence(&report, &ev).expect("a derived report must verify");
+    assert!(matches!(
+        verify_assurance_report(&report, &WeaknessRegistry::embedded()),
+        Ok(CheckVerdict::ReportOnly(_))
+    ));
+    assert_eq!(report.verdict, "report-only");
+    assert_eq!(report.claims.len(), 6, "one claim per Warrant operation");
+
+    let r208 = report.weaknesses.iter().find(|w| w.cwe == 208).unwrap();
+    assert_eq!(r208.status, WeaknessStatus::Exemption);
+    assert!(r208.reason.starts_with("not applicable: no secret operands"), "{}", r208.reason);
+    assert_eq!(r208.evidence, vec![ATTEST.to_string()]);
+    let na = report.exemptions.iter().find(|x| x.id == NA_ID).expect("not-applicable exemption");
+    assert_eq!((na.cwe, na.approved, na.kind.as_str()), (208, false, "not-applicable"));
+    assert!(na.assumptions.is_empty(), "an inapplicable class relies on no assumption");
+    assert!(report.exemptions.iter().any(|x| x.id == "EXEMPT-CWE-400-NO-STEP-PROOF"));
+
+    // The static rows describe a varint codec, not GF(2^8) or comparisons.
+    for cwe in [326, 327, 407] {
+        let row = report.weaknesses.iter().find(|w| w.cwe == cwe).unwrap();
+        assert!(row.reason.contains("LEB128"), "CWE-{cwe}: {}", row.reason);
+        assert!(!row.reason.contains("GF(2^8)") && !row.reason.contains("comparison"), "CWE-{cwe}");
+    }
+
+    let text = fs::read_to_string(dir.join("assurance_report.json")).unwrap();
+    let on_disk = AssuranceReport::from_json_str(&text).unwrap();
+    verify_evidence(&on_disk, &ev).expect("assurance_report.json must agree with the manifests");
+    let fresh = generate_package_report(
+        "rust/wasm-leb128",
+        "0.2.0",
+        &on_disk.commit,
+        &WeaknessRegistry::embedded(),
+        &ev,
+        AuditProfile::VarintCodec,
+    )
+    .unwrap();
+    assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
 }
 
 // ---------------------------------------------------------------------------
