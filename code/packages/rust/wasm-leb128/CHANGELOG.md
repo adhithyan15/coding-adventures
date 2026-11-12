@@ -2,6 +2,74 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased] — Warrant-derived evidence (LEB01, VER04h)
+
+No change to the public API. One behaviour fix (SEC-006, below): the bounded
+decoders reject `max_bits > 64`. (Cargo.toml stays at 0.2.0: this whole entry is
+unreleased and the version is bumped at release.)
+
+### Fixed
+
+- `decode_unsigned_bounded` / `decode_signed_bounded` now return `Err` for
+  `max_bits > 64`, before any other check. Previously widths 66..=70 silently
+  dropped data bits above bit 64 (`FF x9 7F` decoded to `u64::MAX`) and widths
+  >= 71 with an eleven-byte input shifted a `u64` by 70 (debug panic, wrong
+  value in release: `80 x10 01` gave `(64, 11)`). `max_bits = 0` unchanged.
+  Unit tests added first; Warrant document gains the `rejects max_bits > 64u32`
+  row, 8 examples and 6 claims (evidence 219 -> 245 entries).
+
+### Added
+
+- `code/specs/LEB01-wasm-leb128.md` (the package had no spec) and
+  `code/specs/wasm-leb128.warrant`, the first Warrant v1 document of a real
+  package: canonical-encoder models, round trips, every decoder input of length
+  <= 3 (16,843,009 per 64-bit decoder), the ten-byte boundary, the bounded
+  decoders at every width 0..=64, and the bytes-consumed bound under hostile
+  input.
+- `evidence.bindings`: the first package binding of host composites
+  (`args=bytes,usize[,u32] ret=(u64|i64,usize)
+  errors=wasm_leb128/Leb128Error=MALFORMED`) and of the WX-A faults
+  `off-by-one-consumed`, `drop-consumed`, `ok-as-err`, `missing-error` plus
+  `flip-result-bit`/`drop-last-result-byte` on the encoders.
+- `tests/warrant_evidence.rs` (shim) and the generated
+  `tests/generated/warrant_evidence.rs`: 31 examples, 36 claims each with an
+  exhaustive, a property (4,096 cases) and a fuzz (5,000 iterations) suite, and
+  80 negative controls; `evidence/test-manifest.json` is written from a real run.
+- `evidence/proof-manifest.json` (from `warrant-ir --test wasm_leb128_proofs`):
+  every steps-bound obligation `not-live` (the Rust-subset front end refuses
+  `src/lib.rs` at the anonymous lifetime `Formatter<'_>`), heap/depth rows
+  `unchecked`.
+- `effect_certificate.json` (`ca-capability-analyzer --emit-cert`: no effects,
+  label `proved`) and `assurance_report.json` (`--profile varint-codec`, verdict
+  `report-only`; CWE-208 "not applicable: no secret operands", CWE-400 an
+  unapproved exemption quoting the front end's blocker).
+- `BUILD`/`BUILD_windows`: unit tests and doc tests run separately from the
+  evidence target; the capability check; the drift check; the manifest run; 20
+  sabotage runs (each fault against each operation it is bound to); the proof
+  target; `ca-assurance-report --check`.
+- `Cargo.toml`: dev-dependencies `coding_adventures_test_bootstrap` and
+  `coding_adventures_sha256`, and the `warrant_evidence` test target
+  (`harness = false`).
+
+- VER08b runtime capability conformance gate (`tests/runtime_capability.rs`,
+  `harness = false`, dev-dependency `capability-runtime-conformance`): all six
+  public operations, including the `max_bits > 64` rejection, run inside a
+  seccomp/Landlock jail derived from `required_capabilities.json`
+  (`capabilities: []`), watched by an independent `strace -f`, with the 18
+  negative controls and a Docker ring. Linux only (NOT-LIVE elsewhere). `BUILD_linux`
+  runs it with `RCG_STRICT=1` (CI installs `strace` on Linux for this); the plain
+  `BUILD`, which macOS uses, runs it without, so a macOS NOT-LIVE gate does not
+  fail the build; `BUILD_windows` does not run it. `RCG_REQUIRE_DOCKER` is not set.
+
+### Changed
+
+- Two unit tests printed an error with `println!`; they now assert its text
+  instead (`decode_unsigned_unterminated` checks for "unterminated",
+  `error_display` pins the exact rendering). The capability analyzer reads test
+  code, and the `println!` made this pure library need `stdout:write`, which
+  blocks the effect certificate and would have opened CWE-117. Test-only; no
+  export changes.
+
 ## [0.2.0] - 2026-08-31 — LEB128/malformed-binary hardening
 
 Real bug, found while vendoring the official WebAssembly testsuite's

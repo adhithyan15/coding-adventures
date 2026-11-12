@@ -31,7 +31,11 @@ use coding_adventures_warrant_grammar::vectors::{ensure_no_symlinks, read_fixtur
 /// component, a regular file.
 const MAX_DRIVER_READ: u64 = 4 * MAX_TABLE_FILE_BYTES;
 
-fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<(), Box<dyn std::error::Error>> {
+/// Generate (or, with `check`, compare) the harness of one package under the
+/// repository root `root`.  `pub(crate)` only so that
+/// `tests/gen_evidence_driver.rs` can drive this exact function on a scratch
+/// repository; the example's own `main` is its only other caller.
+pub(crate) fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<(), Box<dyn std::error::Error>> {
     // The package name is joined into filesystem paths: refuse anything but a
     // plain directory name before it is used.
     if !is_package_dir_name(package) {
@@ -61,7 +65,14 @@ fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<()
         negctl_fuzz_iterations: b.negctl_fuzz_iterations,
         exhaustive_budget: b.exhaustive_budget,
         arg_types: b.arg_types.clone(),
-        hosts: Default::default(),
+        // The WX-A host lines (`struct`, `enum`, and `args=`/`ret=`/`errors=` on
+        // an `op` line) are part of the bindings and must reach the generator.
+        // This used to be `Default::default()`, which silently dropped them:
+        // every host-composite operation then failed with W0701/W0704 here while
+        // the in-test drivers, which pass them, succeeded
+        // (tests/gen_evidence_driver.rs).  A bindings file with no host lines
+        // parses to the default, so ct-compare and gf256 generate byte-identically.
+        hosts: b.hosts.clone(),
     };
     // WX-E: verify every pinned table (digest before parse, size and row caps,
     // no symlinks, every row decoded) and let the harness embed its copy.  A

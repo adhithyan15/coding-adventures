@@ -1,5 +1,12 @@
 # conduit-dart-bridge Changelog
 
+## Unreleased
+
+### Changed
+- Now built on Windows by the Dart recipes (`conduit` and `conduit-hello`
+  `tools/run-tests.ps1`), which stage `conduit_dart_bridge.dll` and set
+  `CONDUIT_DART_BRIDGE_PATH`.
+
 ## 0.1.0 — 2026-06-14
 
 ### Added

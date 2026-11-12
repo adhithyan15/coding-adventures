@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs the tests on Windows (same steps as the Unix `BUILD`), now that `typescript/conduit` builds its native addon there, instead of skipping.
+
 ### Fixed
 
 - Added a `BUILD_windows` skip stub. The program needs `typescript/conduit`'s

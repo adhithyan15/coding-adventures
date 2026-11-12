@@ -1,3 +1,2 @@
-REM Prerequisite (not installed on Windows): ../cpu-pipeline
-REM Prerequisite (not installed on Windows): ../cpu-simulator
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../cpu-pipeline ../cpu-simulator
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps cpu-pipeline,cpu-simulator

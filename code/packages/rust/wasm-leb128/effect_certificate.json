@@ -1,0 +1,42 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/wasm-leb128",
+  "source_digest": "32135329feb9b453c29c0f09ef1cdfefa5599927a293b6160970fb48c055c41c",
+  "manifest_digest": "573ff47ee484693e640fac191d2821644bfc4386ec914f6b6b4a790c147bc296",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "decode_unsigned",
+      "signature": "pub fn decode_unsigned(data: &[u8], offset: usize) -> Result<(u64, usize), Leb128Error>",
+      "effects": []
+    },
+    {
+      "name": "decode_unsigned_bounded",
+      "signature": "pub fn decode_unsigned_bounded(data: &[u8], offset: usize, max_bits: u32) -> Result<(u64, usize), Leb128Error>",
+      "effects": []
+    },
+    {
+      "name": "decode_signed",
+      "signature": "pub fn decode_signed(data: &[u8], offset: usize) -> Result<(i64, usize), Leb128Error>",
+      "effects": []
+    },
+    {
+      "name": "decode_signed_bounded",
+      "signature": "pub fn decode_signed_bounded(data: &[u8], offset: usize, max_bits: u32) -> Result<(i64, usize), Leb128Error>",
+      "effects": []
+    },
+    {
+      "name": "encode_unsigned",
+      "signature": "pub fn encode_unsigned(mut value: u64) -> Vec<u8>",
+      "effects": []
+    },
+    {
+      "name": "encode_signed",
+      "signature": "pub fn encode_signed(mut value: i64) -> Vec<u8>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

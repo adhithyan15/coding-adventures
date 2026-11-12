@@ -1,1 +1,2 @@
-perl -Ilib t/00-load.t && perl -Ilib t/01-radix-tree.t
+REM prereqs: (none)
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1

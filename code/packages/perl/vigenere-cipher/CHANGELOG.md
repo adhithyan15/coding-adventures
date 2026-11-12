@@ -2,6 +2,10 @@
 
 ## Unreleased - 2026-08-26
 
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
+
 - Execute all 26 normative Vigenere fixture objects through the generated native consumer.
 - Align Vigenere transforms and cryptanalysis with CR03 ASCII, limit, ordering, 90%-threshold, tie, and exact-key-length behavior.
 - Add direct native regressions for Unicode pass-through, preflight limits, and deterministic low-signal analysis.

@@ -1,1 +1,2 @@
-perl -Ilib -I..\avl-tree\lib t/00-load.t && perl -Ilib -I..\avl-tree\lib t/01-tree-set.t
+REM prereqs: ../avl-tree
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps avl-tree

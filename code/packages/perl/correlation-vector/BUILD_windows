@@ -1,2 +1,2 @@
 REM prereqs: ../sha256 ../grammar-tools ../json-lexer ../json-parser ../json-value ../json-serializer
-echo Perl testing is not supported on Windows - skipping
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps sha256,grammar-tools,json-lexer,json-parser,json-value,json-serializer

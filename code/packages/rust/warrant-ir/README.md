@@ -20,3 +20,10 @@ real source and proves 2-safety / step bounds for every length shape up to a
 stated bound, writing content-addressed DRAT files and a manifest when
 `WARRANT_PROOF_OUT=<dir>` is set. Labels are `bounded(K)`, never `proved`, for
 byte-slice operations.
+
+`tests/gf256_proofs.rs` and `tests/wasm_leb128_proofs.rs` do the same for
+`gf256.warrant` and `wasm-leb128.warrant`. The front end refuses both real
+sources, so they record every constant-time and steps-bound obligation
+`not-live` with the front end's own message (and heap/depth rows `unchecked`)
+rather than a proof; each has a `lowering-blocker` test that fails the day the
+source becomes lowerable.

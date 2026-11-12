@@ -24,6 +24,10 @@
 //! follow-up binder consumes that complete value and server policy directly.
 //! Its result retains the path, reviewed-root selection, and exact target
 //! policy together without requiring a second consumable path value.
+//! A distinct policy-backed binder consumes the stronger reviewed-terminal
+//! value that also owns the exact Name-value policy used for construction.
+//! Its result keeps that policy provenance with both endpoint proofs; generic
+//! callback construction cannot substitute.
 //!
 //! Binding is not path validation. Success authenticates no issuer link,
 //! grants no trust anchor, applies no path-length or name constraint, checks no
@@ -33,7 +37,10 @@
 
 use core::fmt;
 use x509_certificate_path_construction::ConstructedX509CertificatePath;
-use x509_certificate_path_reviewed_anchor_binding::BoundConstructedX509CertificatePathToReviewedAnchor;
+use x509_certificate_path_reviewed_anchor_binding::{
+    BoundConstructedX509CertificatePathToReviewedAnchor,
+    BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor,
+};
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
 
 /// Stable, payload-free constructed-target binding failures.
@@ -209,6 +216,100 @@ impl fmt::Debug
     }
 }
 
+/// Policy-backed reviewed endpoints around one exact constructed path.
+///
+/// This result remains distinct from
+/// [`BoundReviewedConstructedX509CertificatePathToServerPolicy`]. It retains
+/// the complete policy-backed construction, reviewed-root selection, and
+/// complete target server policy, so the exact Name-value policy cannot be
+/// detached while keeping both endpoint proofs.
+pub struct BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'name_policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'policy_certificate,
+    'policy_encoded,
+> {
+    reviewed_path: BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'policy_certificate, 'policy_encoded>,
+}
+
+impl<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'policy_certificate,
+        'policy_encoded,
+    >
+    BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'policy_certificate,
+        'policy_encoded,
+    >
+{
+    /// Return the complete policy-backed reviewed path retained here.
+    pub const fn reviewed_path(
+        &self,
+    ) -> &BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    > {
+        &self.reviewed_path
+    }
+
+    /// Return the exact complete target server policy retained here.
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'policy_certificate, 'policy_encoded> {
+        &self.server_policy
+    }
+}
+
+impl fmt::Debug
+    for BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy")
+    }
+}
+
 /// Bind complete server policy to a constructed path's exact target object.
 ///
 /// The identity check happens before either evidence value is moved into the
@@ -308,4 +409,66 @@ pub fn bind_reviewed_constructed_x509_certificate_path_to_server_policy<
         reviewed_path,
         server_policy,
     })
+}
+
+/// Bind policy-backed reviewed construction to policy for its exact target.
+///
+/// This boundary consumes the stronger reviewed-terminal evidence directly.
+/// A byte-equal target from an independent decode is rejected before either
+/// input moves into the result. Success preserves the exact Name-value policy
+/// used for construction but does not authenticate links, validate a complete
+/// path, or grant TLS, HTTP, OAuth, or network authority.
+pub fn bind_name_policy_reviewed_constructed_x509_certificate_path_to_server_policy<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'name_policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'policy_certificate,
+    'policy_encoded,
+>(
+    reviewed_path: BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >,
+    server_policy: ValidatedX509ServerCertificatePolicy<'policy_certificate, 'policy_encoded>,
+) -> Result<
+    BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'name_policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'policy_certificate,
+        'policy_encoded,
+    >,
+    X509CertificatePathServerPolicyBindingError,
+> {
+    if !core::ptr::eq(
+        reviewed_path
+            .constructed_path_with_name_policy()
+            .constructed_path()
+            .target_certificate(),
+        server_policy.certificate(),
+    ) {
+        return Err(X509CertificatePathServerPolicyBindingError::new(
+            X509CertificatePathServerPolicyBindingErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(
+        BoundNamePolicyReviewedConstructedX509CertificatePathToServerPolicy {
+            reviewed_path,
+            server_policy,
+        },
+    )
 }

@@ -15,7 +15,9 @@
 #![deny(unsafe_code)]
 
 use core::fmt;
-use x509_certificate_path_construction::ConstructedX509CertificatePath;
+use x509_certificate_path_construction::{
+    ConstructedX509CertificatePath, ConstructedX509CertificatePathWithNamePolicy,
+};
 use x509_certificate_path_length_policy::X509CertificatePathLengthState;
 use x509_certificate_policy::{ValidatedCertificateRolePolicy, X509CertificateRole};
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
@@ -116,6 +118,80 @@ impl<
 impl fmt::Debug for BoundConstructedX509CertificatePathToReviewedAnchor<'_, '_, '_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundConstructedX509CertificatePathToReviewedAnchor")
+    }
+}
+
+/// Policy-backed construction bound to its exact reviewed terminal object.
+///
+/// This evidence remains distinct from
+/// [`BoundConstructedX509CertificatePathToReviewedAnchor`]. The complete
+/// policy-backed construction is consumed and retained, so generic callback
+/// construction cannot substitute and the exact Name-value policy cannot be
+/// detached after binding.
+pub struct BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+> {
+    constructed_path_with_name_policy: ConstructedX509CertificatePathWithNamePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+    >,
+    reviewed_anchor: SelectedReviewedWebPkiRootAnchor<'anchor_certificate, 'anchor_encoded>,
+}
+
+impl<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >
+    BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >
+{
+    /// Return the complete policy-backed construction retained by this evidence.
+    pub const fn constructed_path_with_name_policy(
+        &self,
+    ) -> &ConstructedX509CertificatePathWithNamePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+    > {
+        &self.constructed_path_with_name_policy
+    }
+
+    /// Return the exact reviewed-root selection retained by this evidence.
+    pub const fn reviewed_anchor(
+        &self,
+    ) -> &SelectedReviewedWebPkiRootAnchor<'anchor_certificate, 'anchor_encoded> {
+        &self.reviewed_anchor
+    }
+}
+
+impl fmt::Debug
+    for BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<'_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor")
     }
 }
 
@@ -330,6 +406,80 @@ pub fn bind_constructed_x509_certificate_path_to_reviewed_anchor<
     >,
     X509CertificatePathReviewedAnchorBindingError,
 > {
+    validate_constructed_path_reviewed_anchor_binding(&constructed_path, &reviewed_anchor)?;
+
+    Ok(BoundConstructedX509CertificatePathToReviewedAnchor {
+        constructed_path,
+        reviewed_anchor,
+    })
+}
+
+/// Bind one policy-backed construction to its exact reviewed terminal object.
+///
+/// The same nontrivial-path and exact decoded-object checks as the generic
+/// binder apply, but success consumes and retains the complete
+/// [`ConstructedX509CertificatePathWithNamePolicy`]. No conversion from generic
+/// construction evidence is available. The retained Name rules remain
+/// incomplete for RFC 5280 Name equality, and success does not authenticate a
+/// link, validate a path, or grant TLS, HTTP, OAuth, or network authority.
+pub fn bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+>(
+    constructed_path_with_name_policy: ConstructedX509CertificatePathWithNamePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+    >,
+    reviewed_anchor: SelectedReviewedWebPkiRootAnchor<'anchor_certificate, 'anchor_encoded>,
+) -> Result<
+    BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >,
+    X509CertificatePathReviewedAnchorBindingError,
+> {
+    validate_constructed_path_reviewed_anchor_binding(
+        constructed_path_with_name_policy.constructed_path(),
+        &reviewed_anchor,
+    )?;
+
+    Ok(
+        BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor {
+            constructed_path_with_name_policy,
+            reviewed_anchor,
+        },
+    )
+}
+
+fn validate_constructed_path_reviewed_anchor_binding<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'anchor_certificate,
+    'anchor_encoded,
+>(
+    constructed_path: &ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    reviewed_anchor: &SelectedReviewedWebPkiRootAnchor<'anchor_certificate, 'anchor_encoded>,
+) -> Result<(), X509CertificatePathReviewedAnchorBindingError> {
     let Some(terminal_depth) = constructed_path.issuer_count().checked_sub(1) else {
         return Err(X509CertificatePathReviewedAnchorBindingError::new(
             X509CertificatePathReviewedAnchorBindingErrorKind::TargetIsTerminal,
@@ -350,10 +500,7 @@ pub fn bind_constructed_x509_certificate_path_to_reviewed_anchor<
         ));
     }
 
-    Ok(BoundConstructedX509CertificatePathToReviewedAnchor {
-        constructed_path,
-        reviewed_anchor,
-    })
+    Ok(())
 }
 
 /// Bind complete issuing-CA role policy to the exact reviewed terminal.
