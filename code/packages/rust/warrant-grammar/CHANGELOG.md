@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.5.0 - Warrant v1: WX-D1 slice S1 (checker and ground evaluator)
+
+Implements the checker and ground-evaluator half of VER04k WX-D1 (slice S1 of
+section 8.1), following the S0 errata of section 9.1. All of it is under the `v1`
+header: a v0 document means exactly what it did, the checker's `Debug` output for
+`ct-compare`/`gf256` is unchanged (`v0_compat`), and every generated harness
+(`wx_regen`, `wxa_regen`, `wxh_regen`, `wxv_regen`) is byte-identical. Generation
+still refuses the new forms and list literals with W0701 (slice S2a translates
+them). `CheckedWarrantModule`, `CodegenLimits` and `EvalValue` keep their shape.
+
+- **Checker.** `V1_FUNCTIONS` grows from 33 to 45 names: the seven D1 forms
+  `take drop slice replicate range to_list to_bytes` and the five D2 names
+  `fold map count all any`, all reserved in v1 (a v1 declaration so named is
+  W0201) and still free in v0 (a call is W0202, a v0 model of that name keeps its
+  meaning). The D2 names are refused in v1 with W0202 "reserved built-in `<name>`
+  is not yet implemented in this version" (`CheckerErrorKind::NotYetImplemented`,
+  S0 E7). The section 2.4 typing of the seven forms, with the expected type
+  threaded into `typecheck_v1_builtin`, so `to_bytes([])` and `replicate([], n)`
+  type-check; counts are `Int` (`Nat` widens). A v1 list literal of more than
+  4,096 elements is W0602 at the literal's span, before its elements are typed
+  (`MAX_LIST_LITERAL`, `CheckerErrorKind::ListLiteralTooLong`, S0 E8).
+- **Ground evaluator.** The seven forms, with negative counts clamped to zero on
+  the exact `i128` count and the check-before-allocate order of section 2.7:
+  element cap (`MAX_SEQ_ELEMENTS` = 65,536), then data reservation, then work,
+  then allocation. A cumulative per-instance data counter (`DATA_BUDGET_BYTES` =
+  64 MiB, reset by `reset_work`) charges, in every v1 evaluation, the `dsize` of
+  each node's value except the pass-through nodes (S0 E4), with deep-copy charges
+  for `take`/`drop`/`slice`/`replicate` (S0 E5). New `CodegenErrorKind::
+  {SequenceTooLong, DataBudgetExceeded}` (both W0703) and the accessors
+  `Evaluator::{work_used, data_used}`. `and`, `or` and `=>` short-circuit in v1;
+  v0 stays eager (S0 E2).
+- **Operation discovery.** New `codegen::find_operation_for_version`: in a v1
+  document the argument search also enters list-literal elements (S0 E13); claim
+  extraction and the table vacuity check use it. `find_operation_in_expr` is
+  unchanged (the evidence generator keeps it until S2a).
+- **Tests.** `wxd_syntax` (no grammar change: forms parse as calls; token and
+  grammar files pinned by SHA-256), `wxd_checker` (typing, W0301/W0201/W0202/
+  W0602 negatives, discovery, generation still W0701, a mechanical scan of the
+  in-repository v1 documents), `wxd_semantics` (every form over every list of
+  length 0..=4 on a 3-symbol alphabet and as `Bytes` against native iterators;
+  counts -2..2, len +/- 1 and 2^70; 1,000/65,536/65,537 elements; pinned work and
+  data; both caps; depth 64/65; short-circuit; two mutant oracles killed) and
+  `wxd_alloc_probe` (a counting global allocator: refused requests allocate
+  nothing before W0703). `wxh_front` now expects 45 v1 functions.
+
 ## 0.4.0 - Warrant v1: WX-H (output bounds) and WX-E (pinned external tables)
 
 Implements VER04j sections 5 and 6 (sections 14.2 and 14.3 list every deviation).
