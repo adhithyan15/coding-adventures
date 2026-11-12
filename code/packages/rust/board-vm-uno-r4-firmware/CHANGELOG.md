@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Test fix (Windows): `parses_print_upload_and_smoke_options` expected the `arm-none-eabi-g++` and `-ar` paths without the platform executable suffix, so it failed on Windows (`...g++.exe` vs `...g++`); both assertions now go through `native_tool`, as the `-gcc` one already did.
+
 - BUILD / BUILD_windows no longer name the `stable` toolchain (`rustup run stable cargo`, `--toolchain stable`): they use the default toolchain, which CI now pins to an exact Rust version. A pinned default is not the `stable` alias, so naming `stable` would run a second, unpinned toolchain without the targets added by `rustup target add`.
 
 - **Windows test expectations.** Five `serial_usb_artifact` tests asserted
