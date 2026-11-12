@@ -722,7 +722,7 @@ changed by this document except where section 12 says so.
 
 | Id | Conflict | Recommended resolution |
 |---|---|---|
-| C1 | **Which CPU for gate-level constant time.** The owner's example and VER13 §4.4 choose RV32I on `riscv-gatelevel`. Backlog row AS-004 says "compile ct-compare's kernel to the repo's gate/CPU simulators (Busicom/Intel 4004 track, VER18)", and VER26 §8.1 calls the Busicom-to-gates pilot "the only route to meeting the CWE-208 floor". The id AS-004 is also used for two rows (AS-006 records that). | RV32I is the constant-time ladder for ct-compare; the Busicom/Nib pilot proves a different program and stays a separate owned-language pilot. Fix AS-004's text and split the duplicate id under AS-006. |
+| C1 | **Which CPU for gate-level constant time.** The owner's example and VER13 §4.4 choose RV32I on `riscv-gatelevel`. Backlog row AS-004 says "compile ct-compare's kernel to the repo's gate/CPU simulators (Busicom/Intel 4004 track, VER18)", and VER26 §8.1 calls the Busicom-to-gates pilot "the only route to meeting the CWE-208 floor". The id AS-004 is also used for two rows (AS-006 records that). | RV32I is the constant-time ladder for ct-compare; the Busicom/Nib pilot proves a different program and stays a separate owned-language pilot. Fix AS-004's text and split the duplicate id under AS-006. **Resolved 2026-11-12:** RV32I first (see 11.1). |
 | C2 | **No runtime/VM layer in VER13.** The vision's "one layer down (runtime/VM)" has no layer key; `cc` is described as "the compiler and its IR". | Widen `cc` to "the language implementation" (section 5.2); decide whether a label such as `proved-to-vm` is needed (section 11, Q2). |
 | C3 | **No system/integration layer.** Every catalogue entry is per package; Warrant v0 has no imports. | Leave the catalogue as is until a named cross-package adopter (reed-solomon or hmac) needs it (P7). |
 | C4 | **Id style for per-language assumptions.** VER00 §7.5.2 uses examples such as `i64.wraps` and `sort.stable`; VER13 uses `src.rust.int-semantics`. | Follow VER13 (`src.<lane>.<construct>`); VER00's are illustrative. |
@@ -761,6 +761,20 @@ changed by this document except where section 12 says so.
    WIR-level reference semantics)?
 7. **Q7 Freeze.** Do you confirm the freeze on new WX slices until an adopter
    PR names them (C5)?
+
+### 11.1 Owner decisions (2026-11-12)
+
+| Question | Decision | By |
+|---|---|---|
+| Q1 Stack policy | The CWE-208 gate-level exemption retires only for the stack actually proved (e.g. `owned-rv32i`). A host-build row stays open, and the report names the stack. | owner |
+| Q2 Runtime label | Open. Default until decided: keep `proved` and name the stack (`owned-<lane>-vm`). | coordinator default |
+| Q3 Release coverage | Each PR runs a lane's evidence on the newest release plus the oldest release the package declares. A nightly job sweeps every supported release. | owner |
+| Q4 LANG84 on the WIR path | LANG84 C1/C2 apply to proof front ends. Lowering walks CST views (RS01). | coordinator default, owner override welcome |
+| Q5 Release order for Rust | Value first: modern proof subset, then the full modern grammar, then 1.x newest to oldest, then 0.x oldest to newest. Recorded as a deviation from LANG84. | owner |
+| Q6 The up route | Not yet. Lanes with no owned runtime keep the "semantics as specified" assumption until an owned runtime discharges it (the down route). | owner |
+| Q7 Freeze | Confirmed. No new WX slice is implemented until an adopter PR names it. | owner |
+
+Conflict C1 is resolved: the first gate-level constant-time proof targets RV32I on `riscv-gatelevel` (owner, 2026-11-12). The Busicom/4004 track remains a second, independent stack. VER26 §8.1's "only route" wording and backlog row AS-004 are to be updated in a follow-up.
 
 ---
 
