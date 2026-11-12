@@ -2,7 +2,7 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** Design specification. WD-003 first implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. Lane runners, manifest migration, report generalization, native suites, samples, and proofs remain later work; no non-Rust lane has Warrant-derived evidence today.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a specifies a strict lane-manifest and consumer-registry contract with structural validation; parser code, lane runners, lane manifests, native suites, samples, and proofs are not delivered yet, and no non-Rust lane has Warrant-derived execution evidence today.
 
 **Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
 CI receipts, and subsequent discoveries are maintained in the
@@ -132,7 +132,7 @@ file because exhaustive suites are generators, not lists):
 code/specs/fixtures/<module>-warrant-v1/
   corpus.json        authority: suites, domains, model IR, faults, digests
   cases.tfv          TFV v1: examples, materialised sample, sabotage probes
-  consumers.json     lane list: binding path, runner entry, evidence path
+  consumers.json     registered lane consumers, with planned/active status
   schema.json  consumers.schema.json  README.md  CHANGELOG.md
 ```
 
@@ -663,14 +663,17 @@ polyglot check needs:
   "evidence_seed": "<u64>",
   "faulted": false,
   "tests": [
+    { "id": "warrant/ct_compare/example/eq_empty", "layer": "portable",
+      "kind": "example", "op": "eq", "cases": 1, "verdict": "pass" },
     { "id": "warrant/ct_compare/exhaustive/eq_agrees", "layer": "portable",
       "kind": "exhaustive", "op": "eq", "claim": "eq_agrees",
-      "cases": 120409, "discarded": 0, "calls": 240818,
+      "cases": 120409, "discarded": 0, "calls": 120409,
       "inputs_sha256": "<hex>", "expected_sha256": "<hex>",
       "domain": "Bytes[347] x Bytes[347]", "verdict": "pass" },
     { "id": "warrant/ct_compare/negctl/exhaustive/eq/ignore-last-byte",
       "layer": "portable", "kind": "negctl", "fault": "ignore-last-byte",
-      "op": "eq", "target": "exhaustive", "caught_by": ["eq_agrees"],
+      "op": "eq", "target": "exhaustive",
+      "caught_by": ["warrant/ct_compare/exhaustive/eq_agrees"],
       "verdict": "pass" }
   ]
 }
@@ -681,6 +684,54 @@ kind is added for the materialised sample (`cases`, `equal_cases`,
 `seed`). The manifest is deterministic: sorted keys and entries, no timestamps
 and no absolute paths. The lane `toolchain` is included for diagnosis and
 is not part of equality across lanes.
+
+For the WD-004a `ct-compare-v0` profile, the exact top-level manifest keys are
+`schema`, `lane`, `package`, `module`, `spec`, `spec_sha256`, `corpus`,
+`corpus_sha256`, `cases_sha256`, `runner`, `binding_sha256`, `source_sha256`,
+`toolchain`, `evidence_seed`, `faulted`, and `tests`; the nested `runner`,
+`toolchain`, and test-entry keys are closed as well. The only accepted test
+kinds are `example`, `exhaustive`, and `negctl`, all with `layer: "portable"`;
+native, sample, property, and fuzz entries are rejected. An example row has
+exactly `id`, `layer`, `kind`, `op`, `cases`, and `verdict`. Every corpus
+example appears once with its exact id and op and `cases: 1`. An exhaustive
+row has exactly the keys shown in the first example row above; each exhaustive
+suite appears once with its exact id, op, claim, domain, case/discard/call
+counts, and input/reference digests. A negative-control row has exactly the
+keys shown in the second example row above. Every generated control appears
+once. Its manifest `target` value equals the corpus control's `target_kind`,
+and `caught_by` contains one or more full claim IDs from that control's
+`required_claims` list, with no duplicates. A short display name is not a
+claim ID.
+
+`consumers.json` is the per-corpus identity registry, not a list of supported
+languages. Its exact top-level keys are `schema_version`, `profile`,
+`corpus`, `consumer_count`, `active_consumer_count`, and `consumers`. A row's
+exact keys are `lane`, `package`, `module`, `package_root`, `binding`,
+`runner_entry`, `evidence_manifest`, `build_files`, and `status`.
+`package` is `<lane>/<name>`; rows are unique and sorted by package. The
+`warrant-lane-consumers-v1` profile records the lane, package root, binding
+path, runner entry, evidence-manifest path, build files, and
+`status: "planned"|"active"`. Planned entries reserve identity and paths
+only; they cannot authorize a passing lane result. WD-004a registers
+`python/ct-compare` as `planned`; no entry becomes active until its binding,
+runner, evidence manifest, and build routing exist.
+
+WD-004a closes the first parser profile to the exact keys shown in §8,
+including the nested `runner`, `toolchain`, and test-kind objects.
+`evidence_seed` is a canonical decimal string in `[0, 2^64-1]`; JSON numeric
+values are not accepted for this field. Hash fields are lowercase 64-character
+SHA-256 hex. Manifest, registry, corpus, spec, and TFV bytes are size-capped
+before parse; the existing JSON parser rejects duplicate keys and enforces its
+depth cap.
+
+The WD-004a Rust API parses bounded manifest/registry bytes using the existing
+duplicate-key-rejecting JSON parser, then validates typed values against the
+registered consumer and the checked-in corpus profile. Structural checks join
+exact IDs, counts, domains, digests, and controls. Synthetic active-consumer
+test values exercise successful joins, but no checked-in manifest or report
+claims a real Python run. This parser does not verify source/build/toolchain
+freshness, execute a binding, produce an assurance report, or change the
+Rust-only legacy evidence loader; those remain later WD-004b/WD-1xx work.
 
 ### 8.1 `source_sha256` and the per-language source tree
 
@@ -750,16 +801,20 @@ where they make sense; ids are never accepted from a different lane):
 19. **Stream agreement.** For every `exhaustive` entry, `cases`, `inputs_sha256`
     and `expected_sha256` equal the corpus suite's (`StreamMismatch`); `calls`
     equals the corpus `expected_calls` (`CallCountMismatch`).
-20. **Coverage by join.** The set of `warrant/<module>/exhaustive/*` and
-    `example/*` ids in the lane manifest equals the set in the corpus
-    (`UncoveredClaim`); extra ids (`UnknownEvidence`).
+20. **Coverage by join.** The set of exhaustive-suite and example IDs in the
+    lane manifest equals the corresponding corpus ID sets (`UncoveredClaim`);
+    extra ids (`UnknownEvidence`). For WD-004a's ct-compare-v0 profile, this
+    means exactly 9 exhaustive suites and 12 examples, with exact op and
+    expected case counts.
 21. **Negative controls complete.** The control set in the manifest equals
     the corpus's generated `controls` rows, each appears exactly once and
-    passes with a non-empty `caught_by` subset of that row's required claim
-    ids. A registry fault with no catching claim fails generation unless the
+    passes with a non-empty `caught_by` subset of that row's full required
+    claim IDs. The manifest's `target` equals the row's `target_kind`. A
+    registry fault with no catching claim fails generation unless the
     spec explicitly lists it in `accepted_blind_faults` (`UncaughtFault`).
 22. **Faulted or partial manifests are rejected** (`faulted: true`, or a
-    filter/shard record in the manifest).
+    filter/shard record in the manifest). The WD-004a profile also rejects
+    unrecognized fields and unsupported native/sample/property/fuzz kinds.
 23. **Source freshness.** `source_sha256` equals the recomputed
     `warrant-src-v1` digest of the lane source tree (§8.1); editing a source
     file without rerunning makes `--check` fail, as `src/capabilities.rs` does
@@ -987,8 +1042,11 @@ dependency graph.
 
 ## 15. Divergences and follow-ups
 
-* VER04h §8's manifest schema stays for Rust until step 0 migrates it to
-  `warrant-lane-evidence-v1`; the checker accepts both during the migration.
+* WD-004a defines a strict parser for `warrant-lane-evidence-v1` and a
+  planned-only consumer registry. It does not migrate Rust's existing
+  `warrant-test-evidence-v1` manifests or change the legacy loader. WD-004b
+  must specify any Rust-only compatibility window before report integration;
+  a legacy Rust manifest is never inferred as a non-Rust lane manifest.
 * VER04h §6's fault names are a subset of §4.2's registry; VER04h is updated
   to say its table is the ct-compare slice of the portable registry.
 * `ca-assurance-report`'s `rust/`-only `package` check
