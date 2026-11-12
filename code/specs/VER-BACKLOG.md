@@ -578,7 +578,7 @@ when the fix is merged and verified on fetched main.
 | P3 / WD-011 | `ca-assurance-report/src/report.rs` ~395/410/428 `as_i64().unwrap_or(0) as u64` wraps negative counts (pre-existing); use u64::try_from | backlog |
 | P3 / WD-012 | `ct-compare/tests/sabotage_guard.rs` uses predictable temp dir in /tmp with remove_dir_all+create_dir_all; move under CARGO_TARGET_TMPDIR | backlog |
 | done-local / LP-001 | gf256 Warrant conversion: branch worktree-agent-a88d5407e27ca898b (5 commits on 21d86a2323, pre-security-fix base; rebase onto merged #19054). READY-WITH-CAVEATS: 38 claims, 51,472,354 exhaustive cases incl. all 2^24 triples, 7 scoped sabotage faults caught, model oracles pin polynomial 0x11D; data-driven bindings (ct-compare output byte-identical); package-agnostic ca-assurance-report. No gf256 bug; spec/README corrected (AES values, 0^0). Proofs not-live: WIR front end rejects `&'static`, struct-field index, `return if..else` | queued for PR after #19054 |
-| P1 / LP-001a | Rust-subset front end (VER25a/b): lifetimes, struct field + index, `return if/else` expressions, OnceLock tables, so gf256 proofs go live | after LP-001 |
+| P1 / LP-001a | Rust-subset front end (VER25a/b): lifetimes, struct field + index, `return if/else` expressions, OnceLock tables, so gf256 proofs go live. **Now delivered as [RS01](RS01-rust-grammars.md) phase B (RS-B1..RS-B5, below); `OnceLock` replaced by compile-time tables (LP-001c), by owner decision 2026-11-12** | after LP-001 |
 | P2 / LP-001b | `Field::new` accepts any u16 polynomial without validation; capabilities.rs witness + `--verify-cert` for gf256 (E0 currently rests on an unverified cert) | backlog |
 | P2 / OPS-003 | Agent worktrees are created from origin/main, not the current branch; briefs that need unmerged work must say so (lesson recorded by LP-001) | apply in briefs |
 | done-local / WD-002 | VER04i polyglot spec: branch worktree-agent-a9f43bf58278f3a70 (commit 5d1187fbda). `warrant-corpus-v1`: exhaustive suites enumerated in-lane from domain descriptors with inputs/expected SHA-256 digests cross-checked against the Rust compiler and a stdlib Python oracle (materialising ct-compare would be ~28 MB/library); 256 biased property cases per claim materialised; binding wrappers for per-op sabotage; `warrant-lane-evidence-v1` manifests; 9 new fail-closed checks; rollout python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir, then lua, perl, haskell, swift, dart, ocaml | queued for PR |
@@ -669,3 +669,55 @@ fix in [VER08a §8.1](VER08a-rust-capability-analyzer.md#81-known-open-gaps-secu
 | P1 / CA-OG1 | Review G-C: a type alias's generic parameter default is never bound, so `type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)` is pure (case `alias-default-param`). Fix: bind the alias to every path inside a parameter default in `type_alias_leaves`, as for the right-hand side; a default that is a metavariable or a macro invocation (`type F<P = $t> = P;`, `P = ty!()`) binds the alias to the unknown type; an undelimitable default is CAP003 | open |
 | P1 / CA-OG2 | Review G-E: the local-receiver waiver (L4) is bypassed when the local type derefs to `Path` (cases `waiver-cfg-out`, `waiver-macro-body`, `waiver-generic-instance`, `waiver-ctor-wrong-type`, `waiver-same-name-module`, `waiver-arbitrary-self`, `og2_private2`); `collect_local_types` keys by bare name and ignores cfg, macro bodies, generic arguments, modules, arbitrary self types and visibility (a private inherent method in another module, skipped by method lookup at the call site). Fix: refuse the waiver when any `Deref`/`DerefMut` impl for `<Name>` exists, including ones not spelled `impl Deref for Name` (derive macros such as `derive_more::Deref` and `shrinkwraprs`, `macro_rules!`-generated impls, a renamed trait `use std::ops::Deref as D; impl D for L`, an impl through a type alias), failing closed when the type has any non-std derive or macro-generated impl; otherwise require one unique definition, a non-generic inherent impl outside macro bodies and cfg, a method visible at the call site, and a plain receiver | open |
 | P3 / CA-IPC | The Spec 13 capability taxonomy has no IPC category, so `std::io::pipe` and `PipeReader`/`PipeWriter` are classified as `ffi:call` (VER08a D47, the row for raw OS handles) as a stand-in. Add an IPC category (pipes, Unix-domain socket pairs, shared memory) to the taxonomy and move them there | open |
+
+## Versioned Rust grammars (RS01)
+
+[RS01](RS01-rust-grammars.md) (slice A1, spec only) defines a `.tokens`/`.grammar`
+pair for every published Rust release, 0.1 to the newest tag, per edition from
+1.0. Order is value first by owner decision (2026-11-12): phases A and B are
+milestone 1, need no engine change, and deliver LP-001a; then the full modern
+grammar (C), the engine batch (D), macro expansion (E), 1.x newest to oldest (F)
+and pre-1.0 oldest to newest (G). One slice per PR.
+
+| Priority / id | Work | State / prerequisite |
+|---|---|---|
+| P1 / LP-001c | gf256: build the log/antilog tables at compile time (`const fn`, `static TABLES: Tables = build_tables();`) instead of `OnceLock`; regenerate its Warrant evidence, assurance report and effect certificate (OPS-005); about 95 dependents. Owner decision 2026-11-12; `OnceLock` and lazy statics stay unsupported in `rs-confined` | separate PR, before RS-B4 |
+| P1 / RS-A2 | Inventory: `code/grammars/rust/releases.csv` (158 rows; 1.100.0 when tagged), README, `editions` column, `subsets.csv` with `allowlist`; `release_inventory.py` edition stems, uniform claims, `.reject@<release>-e<edition>` | after RS01 (A1) |
+| P1 / RS-A3 | Evidence tooling `rust_release_pairs.py` (`reviewed`, `copy:`, `semantic-copy:`; `check` mode); first `pair-evidence.csv` rows | after RS-A2 |
+| P1 / RS-A4 | Modern lexical pairs `rust1.97.0-e{2015,2018,2021,2024}` (subset `rs-token-trees`); generated raw-string arms and per-Unicode XID classes; verify the section 4.3 comment design | after RS-A3 |
+| P1 / RS-A5 | Crates `rustlang-lexer`/`rustlang-parser`, the two Rust C3 hooks, `release_probes`, hostile probes, host-gated token oracle; `ci-gates.json` edit (all gates run) | after RS-A4 |
+| P1 / RS-B1 | `rs-confined` grammar in the 1.97.0 pairs, `rs-confined.allowlist` subset gate, corpus with rustc-run `.expect` (LP-001a) | after RS-A5 |
+| P1 / RS-B2 | `warrant-ir` grammar path; differential against the VER25a parser (byte-identical WIR, rejection parity, mutation fuzz) (LP-001a) | after RS-B1 |
+| P1 / RS-B3 | gf256 grammar and gate coverage (RS01 section 7.2) (LP-001a) | after RS-B2 |
+| P1 / RS-B4 | VER25b lowering over CST views; `const fn` table initialization; `gf256_proofs` (38 claims) live (LP-001a) | after RS-B3 and LP-001c |
+| P1 / RS-B5 | Retire the hand-written VER25a parser after the parity window (LP-001a) | after RS-B4 + parity window |
+| P2 / RS-C1 | Full grammar for the newest release in four editions; `rs-syntax` corpus; repository self-corpus | after phase B |
+| P2 / RS-C2 | Oracle harness `rust_oracle.py`: pinned toolchains (SHA-256), `cfg(FALSE)` + token dumper, scheduled (daily) non-blocking sweep | after RS-A5 |
+| P2 / RS-C3 | `rustlang-cfg`: the L1 `cfg` evaluator with per-release `CfgSet` rules | after RS-C1 |
+| P2 / RS-C4 | Capability analyzer step 1: shared lexer, dual-lex for unknown editions, parity suite; own security review (changes a CAP003 class) | after RS-A5 |
+| P2 / RS-D1 | Engine batch, lexer side (`ci-full-build`, ~5,300 packages): X1 nested scanner, X3 shebang guard, optional X2; delete the Rust C3 hooks | after phase C |
+| P2 / RS-D2 | Engine batch, parser side (`ci-full-build`): X4 parse-rule/prefix API, X5 synthetic tokens, optional X6 | after RS-D1 |
+| P2 / RS-E1 | `rustlang-macros`: `macro_rules!` definition checker (per-release fragments, follow sets, 1.89 rule) | after RS-D2 |
+| P2 / RS-E2 | Matcher, transcriber, invisible-delimiter interpolation, expansion budgets | after RS-E1 |
+| P2 / RS-E3 | Hygiene side table; textual and path scoping; `$crate`; `#[macro_use]`/`#[macro_export]` | after RS-E2 |
+| P2 / RS-E4 | Builtins per release; `std` macro definitions extracted per release as data; `include*`/`env!` opaque | after RS-E3 |
+| P2 / RS-E5 | Optional builtin derives; the `Unexpanded` fail-closed contract | after RS-E4 |
+| P2 / RS-E6 | Consumers adopt expansion (proof front end: local `macro_rules!`; analyzer: fewer CAP003) | after RS-E5 |
+| P3 / RS-F1 | 1.x back-fill: 1.85–1.99 (2024 era) | after phase E |
+| P3 / RS-F2 | 1.x back-fill: 1.56–1.84 (2021 era) | after RS-F1 |
+| P3 / RS-F3 | 1.x back-fill: 1.31–1.55 (2018 era) | after RS-F2 |
+| P3 / RS-F4 | 1.x back-fill: 1.13–1.30 | after RS-F3 |
+| P3 / RS-F5 | 1.x back-fill: 1.0.0–1.12 | after RS-F4 |
+| P3 / RS-F6 | 1.x back-fill: 1.0.0-alpha, 1.0.0-alpha.2, 1.0.0-beta | after RS-F5 |
+| P3 / RS-G1 | Pre-1.0: 0.1 (`#name(exprs)` extensions; `.rc` files via X4; optional ast-mbe `#macro`) | after phase F |
+| P3 / RS-G2 | Pre-1.0: 0.2 | after RS-G1 |
+| P3 / RS-G3 | Pre-1.0: 0.3 and 0.3.1 (`copy:0.3`) | after RS-G2 |
+| P3 / RS-G4 | Pre-1.0: 0.4 | after RS-G3 |
+| P3 / RS-G5 | Pre-1.0: 0.5 | after RS-G4 |
+| P3 / RS-G6 | Pre-1.0: 0.6 | after RS-G5 |
+| P3 / RS-G7 | Pre-1.0: 0.7 | after RS-G6 |
+| P3 / RS-G8 | Pre-1.0: 0.8 | after RS-G7 |
+| P3 / RS-G9 | Pre-1.0: 0.9 | after RS-G8 |
+| P3 / RS-G10 | Pre-1.0: 0.10 | after RS-G9 |
+| P3 / RS-G11 | Pre-1.0: 0.11.0 | after RS-G10 |
+| P3 / RS-G12 | Pre-1.0: 0.12.0 (joins 1.0.0-alpha) | after RS-G11 |
