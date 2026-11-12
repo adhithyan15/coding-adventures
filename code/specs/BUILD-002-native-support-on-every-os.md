@@ -1,0 +1,64 @@
+# BUILD-002 — Every language is supported natively on Linux, macOS and Windows
+
+**Status:** roadmap, in progress. **Owner decision (2026-11-11):** "support all
+languages natively on all the OSes." A package is supported on an OS when its
+real build and tests run there and pass. An `echo ... skipping` recipe is a gap
+to close, not a form of support.
+
+## Why a spec
+
+Windows support had drifted into a long list of silent skips. Each skip was
+reasonable when written ("not enabled in CI yet") and none had an owner. Fixes
+that were made shipped blind, because a Windows recipe could merge without ever
+running on Windows. This document fixes the order of work so each step can be
+proven before the next relies on it.
+
+## Inventory (origin/main, 2026-11-11)
+
+3,842 `BUILD_windows` files. 336 are echo-only skips; Linux has none.
+
+| Language | Skips | Reason recorded in the recipe |
+|---|---|---|
+| haskell | 158 | "haskell support not enabled in windows CI yet". The toolchain is already installed on Windows by `ci.yml`. |
+| perl | 114 | 100 "Perl testing is not supported on Windows" (no Windows Perl toolchain in `ci.yml`); the rest are native extensions |
+| native bridges (lua, dart, elixir, go, ruby, typescript, python, csharp, fsharp, cpp, rust) | about 40 | import library or loader not configured for CI; `ELIXIR_WINDOWS_NIF_*`; P/Invoke needs cross-compile |
+| rust | 14 | `tcp-reactor` needs Unix fds; `unix-tools`; Metal |
+| swift, starlark, other | 8 | "swift support not enabled in windows CI yet"; prerequisite chains |
+
+macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
+4, 9, 12 and 14 of the first cross-OS full build.
+
+## Principles
+
+1. **Prove before you merge.** A Windows recipe change runs on its own pull
+   request (the `build-windows-recipes` gate, see `ci-gate-registry.md`).
+   Nothing below may be rolled out blind.
+2. **Batches a runner can prove.** One Windows runner builds the Windows
+   closure of the changed recipes, so a change spanning dozens of packages
+   builds all of them and their dependents. Keep batches small enough for the
+   step's 300 minute ceiling.
+3. **Make the work cheaper rather than skip it.** A slow suite
+   (`typescript/human-language-data`: 66 minutes on macOS against 24 on Linux)
+   is fixed by shrinking its fixtures, not by opting a platform out.
+4. **Measure with the daily cross-OS full build.** Do not dispatch extra full
+   builds; runner capacity is shared.
+5. **Intrinsic limits are named, not hidden.** Anything bound to a platform API
+   (the four Metal packages) is listed with its reason and an owner decision.
+
+## Workstreams
+
+| Id | Work | Depends on |
+|---|---|---|
+| W0 | Windows recipe changes prove themselves on the PR (`build-windows-recipes`) | none (this change) |
+| W1 | Haskell on Windows: real `BUILD_windows` for the 158 packages, proving a leaf, a mid-stack package and `conduit` (network/hsc2hs linking) first | W0 |
+| W2 | Perl on Windows: install Strawberry Perl and `Test2::V0` when Perl is needed, then real recipes for 100 pure-Perl packages; finish the native extensions (`perl-bridge` shim compile) | W0 |
+| W3 | Native bridges: one language at a time (node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF link, Go cgo, Ruby MinGW vs MSVC ABI, .NET P/Invoke) | W0 |
+| W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (IOCP path), `unix-tools`, prerequisite-chain skips; decide Metal | W1-W3 |
+| W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
+| W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS | W1-W4 |
+
+## Done
+
+Every package either passes its real build and tests on all three OSes, or is
+on the W6 allowlist with a named platform limit. The daily cross-OS full build
+is green, and the allowlist contains only intrinsic limits.
