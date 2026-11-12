@@ -148,7 +148,8 @@ try {
         }
         Write-Host "config file: $cfg"
         if (Test-Path -LiteralPath $cfg) {
-            Select-String -LiteralPath $cfg -Pattern 'extra-prog-path|extra-lib-dirs|extra-include-dirs|store-dir|^\s*repository|^\s*remote-repo-cache' |
+            # Anchored: a line that merely contains one of these words (for example in a URL or credential) is not printed.
+            Select-String -LiteralPath $cfg -Pattern '^\s*(extra-prog-path|extra-lib-dirs|extra-include-dirs|store-dir|remote-repo-cache)\s*:|^\s*repository\s' |
                 ForEach-Object { $_.Line }
         } else {
             Write-Host 'config file does not exist'
@@ -169,7 +170,16 @@ try {
         # The -v3 rerun is for diagnostics only; its exit code is ignored and the
         # ORIGINAL failure code is what we report.
         Write-Host '==> Re-running the build with -v3 to show the failing compiler/linker command'
-        $null = Invoke-Native { & cabal build --enable-tests @flags -v3 }
+        # WHY: at -v3 Cabal may print the child-process environment, so the rerun
+        # is skipped whenever the job holds anything that looks like a secret.
+        # This pull_request job has none, but the script may be reused elsewhere.
+        # Names only are collected and printed, never values.
+        $sensitive = @(Get-ChildItem Env: | Where-Object { $_.Name -match 'TOKEN|SECRET|PASSWORD|CREDENTIAL|PRIVATE|_KEY$' -and $_.Name -ne 'GITHUB_ACTIONS' } | ForEach-Object { $_.Name })
+        if ($sensitive.Count -eq 0) {
+            $null = Invoke-Native { & cabal build --enable-tests @flags -v3 }
+        } else {
+            Write-Host "==> NOT re-running with -v3: at -v3 Cabal can print the process environment, and these secret-looking variables are set: $($sensitive -join ', ')"
+        }
         Show-CabalLogTail
         exit $rc
     }
