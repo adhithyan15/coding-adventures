@@ -213,21 +213,11 @@ let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
 let committedManifestOnce: Promise<ModalityManifest> | undefined;
 beforeAll(async () => {
-  // Both independent owner reads stay inside this hook's unchanged budget.
-  // Overlap their bounded I/O so later assertions compare completed reports
-  // without opening another corpus under the per-test timeout.
-  committedManifestOnce = loadModalityManifestAsync();
-  // Attach a rejection handler before the independent lesson read can suspend;
-  // the awaited original promise below still propagates manifest failures.
-  void committedManifestOnce.catch(() => undefined);
-  try {
-    realLessons = await loadLessonsAsync();
-    realManifest = buildModalityManifest(realLessons);
-    await committedManifestOnce;
-  } catch (error) {
-    await committedManifestOnce.catch(() => undefined);
-    throw error;
-  }
+  // This hook derives every lesson, but does not contend with a second
+  // whole-corpus reader for the same cold disk. The independent committed
+  // owners are loaded once, lazily, by the two assertions that need them.
+  realLessons = await loadLessonsAsync();
+  realManifest = buildModalityManifest(realLessons);
 });
 
 // The COMMITTED manifest, read from disk at most once per file.
@@ -241,8 +231,9 @@ beforeAll(async () => {
 // in this file writes; the two reads inside "carries the marker into the committed
 // manifest" were that case's entire cost, and it timed out at 30 s on CI.
 //
-// The guarded async route bounds those opens, and the shared hook overlaps
-// this independent read with lesson loading under its unchanged timeout.
+// The guarded async route bounds those opens and each anchored track child
+// retains its 20-second deadline. The first consumer's unchanged 30-second
+// test budget still measures the entire multi-track read, not one child.
 // Read-only for the same reason as `realManifest` above: every use filters or
 // maps a copy.
 function committedManifest(): Promise<ModalityManifest> {

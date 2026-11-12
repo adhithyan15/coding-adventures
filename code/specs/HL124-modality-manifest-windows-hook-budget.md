@@ -30,10 +30,11 @@ The original test source was restored after this diagnostic.
 
 The next bounded change keeps the async lesson loader but moves the independent
 committed-owner read from the shared hook to the first assertion that actually
-uses it. That read remains a single lazy promise for both consumers, with its
-own anchored-reader 20-second child deadline; neither consumer may use a mock
-or a partial owner set. The hook's 30-second budget then measures only the
-complete source derivation, without two large readers contending over cold
+uses it. That read remains a single lazy promise for both consumers, with the
+existing 20-second deadline on each anchored track child; neither consumer
+may use a mock or a partial owner set. The first consumer's 30-second test
+budget still measures the entire multi-track read. The hook's 30-second budget
+measures only the complete source derivation, without two readers contending over cold
 disk I/O. The committed-marker case retains its own 30-second test budget,
 and the end-to-end `--check` case retains its 60-second budget.
 
