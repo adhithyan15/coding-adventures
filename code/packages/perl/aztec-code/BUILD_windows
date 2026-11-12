@@ -1,0 +1,2 @@
+REM prereqs: ../paint-instructions ../barcode-2d
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps paint-instructions,barcode-2d

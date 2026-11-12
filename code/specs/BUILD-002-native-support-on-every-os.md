@@ -85,6 +85,17 @@ Perl `BUILD*` files to mention every transitive sibling, and the `-Deps` value
 alone does not look like a `../name` reference. The `-Deps` list is the same
 set the Unix `BUILD` puts on `PERL5LIB`/`-I`.
 
+Proof (PR #19234, Windows leg): all 13 batch-1 packages built with real durations
+(1.5-11.9 s; `x25519` 403.5 s because its big-integer tests are slow on
+Windows), including the four that failed before (`tree-set`, `bloom-filter`,
+`hash-map`, `in-memory-data-store-engine`). The same run showed the MSYS-perl
+hazard directly: `in-memory-data-store`'s older recipe ran Strawberry's `prove`
+script under MSYS perl and died with `Can't locate TAP/Harness/Env.pm`. Any
+dependent of a converted package that still lacks a working recipe fails the
+Windows leg (the `barcode-2d` dependents `aztec-code`, `data-matrix`,
+`micro-qr`, `pdf417`, `qr-code` had no `BUILD_windows`), so convert a package's
+dependents in the same PR.
+
 Left as hand-written recipes for now (not mechanical): packages whose Unix
 `BUILD` installs a sibling with `cpanm .`, uses `mise`/`uname`, builds a Rust
 extension, or shells out (`tcp-client` fork, `content-addressable-storage`
