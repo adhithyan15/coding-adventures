@@ -18,7 +18,7 @@ const METHOD_HASHES: &[(&str, u64)] = &[
     ("load_at_checked", 0x8670_3e95_f689_6cf5),
     ("raise_irq", 0xe25d_d1ad_75a7_90c5),
     ("raise_fiq", 0xbb1b_d6b1_aad1_835e),
-    ("step", 0x2b6d_b91d_0539_55d3),
+    ("step", 0x1804_c519_7fe0_21e1),
     ("run", 0xd76b_46a2_c1cd_e4c5),
     ("step_checked", 0x0e26_5ee8_47fe_2cd9),
     ("run_loaded_checked", 0xf419_cac7_6a31_2d00),

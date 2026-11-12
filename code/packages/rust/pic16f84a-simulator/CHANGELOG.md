@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the return-stack check loop in `tests.rs` to satisfy Rust 1.100 clippy (`needless_range_loop`) with iterators;
+  behaviour is unchanged.
+
 ## 0.1.0
 
 - Add the source-pinned PIC16F84A classic mid-range functional CPU model.

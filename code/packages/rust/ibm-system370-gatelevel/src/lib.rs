@@ -277,30 +277,30 @@ impl System370GateLevel {
         settled: &engine::SettledExtension,
         oracle: &System370State,
     ) -> bool {
-        for register in 0..16 {
+        for (register, &oracle_value) in oracle.gprs.iter().enumerate() {
             let mut expected = self.core.gpr_q(register);
             for &(updated, value) in &settled.gpr_updates[..settled.gpr_count] {
                 if updated == register {
                     expected = value;
                 }
             }
-            if oracle.gprs[register] != expected {
+            if oracle_value != expected {
                 return false;
             }
         }
-        for slot in 0..4 {
-            if oracle.fprs[slot] != self.core.fpr_q(slot) {
+        for (slot, &oracle_value) in oracle.fprs.iter().enumerate() {
+            if oracle_value != self.core.fpr_q(slot) {
                 return false;
             }
         }
         let mut writes = settled.memory_writes.iter().peekable();
-        for address in 0..MEMORY_BYTES {
+        for (address, &oracle_byte) in oracle.memory.iter().enumerate().take(MEMORY_BYTES) {
             let expected = if writes.peek().is_some_and(|(next, _)| *next == address) {
                 writes.next().expect("peeked write exists").1
             } else {
                 self.core.memory_q(address)
             };
-            if oracle.memory[address] != expected {
+            if oracle_byte != expected {
                 return false;
             }
         }

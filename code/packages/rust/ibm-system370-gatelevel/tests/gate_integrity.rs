@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-const LIB_LOCK: u64 = 0x1f6b_b5a1_17cf_64ec;
+const LIB_LOCK: u64 = 0x4d87_c575_0506_200d;
 const ENGINE_LOCK: u64 = 0x8314_ccdc_a068_c535;
 const GATES_LOCK: u64 = 0x6b10_8fb1_b7a0_9416;
 const ALLOCATION_LOCK: u64 = 0xae2a_d6b9_ccb8_7638;

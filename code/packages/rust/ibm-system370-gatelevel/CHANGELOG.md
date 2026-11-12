@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Rewrite the oracle-comparison loops in `settled_matches_oracle` to satisfy Rust 1.100 clippy (`needless_range_loop`) with iterators;
+  behaviour is unchanged.
+- Re-pin the `lib.rs` parsed-token lock in `tests/gate_integrity.rs` after the iterator rewrite (the gate route itself is untouched).
+
 ## [0.1.0] - 2026-10-26
 
 ### Added

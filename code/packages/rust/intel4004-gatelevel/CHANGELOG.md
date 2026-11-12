@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- Rewrite the RAM restore loops in `cpu.rs` and the return-stack reset/read loops in `stack.rs` to satisfy Rust 1.100 clippy (`needless_range_loop`) with iterators;
+  behaviour is unchanged.
+
 ### Added
 
 - Exact 1,428-DFF persistent-state topology and owned full-machine snapshots.

@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Rewrite the register-file `dump`/`dump_all` loops to satisfy Rust 1.100 clippy (`needless_range_loop`) with iterators;
+  behaviour is unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

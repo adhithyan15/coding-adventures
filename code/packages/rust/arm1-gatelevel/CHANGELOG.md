@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Rewrite the post-execution register capture in `step` to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+- Re-pin the reviewed HALT-authority hash of `step` after the iterator rewrite (the HALT transition chain itself is untouched).
+
 ## [0.3.0] - 2026-10-26
 
 ### Fixed
