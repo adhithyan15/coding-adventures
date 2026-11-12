@@ -15,7 +15,9 @@ and no network, and verifies:
    so adding a new range anywhere forces a deliberate lock refresh;
 3. the version locked for each gem satisfies every requirement string;
 4. the central Gemfile only names allowlisted gems;
-5. the lock records checksums for every spec and covers the CI platforms.
+5. no tracked BUILD file runs `gem install` except for Bundler at an exact
+   version (a bare `gem install minitest` would bypass lock and mirror);
+6. the lock records checksums for every spec and covers the CI platforms.
 
 Whether the lock itself matches the central Gemfile is checked where Bundler
 exists: ``ruby_gem_mirror.rb`` runs ``bundle cache`` under BUNDLE_FROZEN.
@@ -211,6 +213,49 @@ def gemfile_requirements(text: str) -> dict[str, set[str]]:
     return declared
 
 
+# --- BUILD files must not bypass Bundler -------------------------------------
+#
+# `gem install minitest rake` ignores the Gemfile, the lock and the local
+# mirror, so the gem floats.  The only `gem install` a BUILD or workflow-style
+# BUILD_windows may run is Bundler itself, at an exact version.
+
+_GEM_INSTALL = re.compile(r"\bgem\s+install\b(?P<args>.*)$")
+_BUNDLER_EXACT = re.compile(
+    r"^\s*bundler\s+(?:--version|-v)[ =]\s*['\"]?\d+(?:\.\d+)+['\"]?(?:\s+--[\w-]+)*\s*$"
+)
+
+
+def build_file_problems(root: Path) -> list[str]:
+    import subprocess
+
+    listed = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/BUILD", ":(glob)**/BUILD_*"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    ).stdout.split(b"\0")
+    problems: list[str] = []
+    for raw in listed:
+        if not raw:
+            continue
+        relative = raw.decode("utf-8", errors="surrogateescape")
+        path = root / relative
+        if not path.is_file():
+            continue
+        for number, line in enumerate(
+            path.read_text(encoding="utf-8", errors="replace").splitlines(), 1
+        ):
+            if line.lstrip().startswith("#"):
+                continue
+            match = _GEM_INSTALL.search(line)
+            if match is not None and not _BUNDLER_EXACT.match(match.group("args")):
+                problems.append(
+                    f"{relative}:{number} runs `gem install` outside Bundler "
+                    f"({line.strip()}); use `bundle install` so the pinned mirror applies"
+                )
+    return problems
+
+
 # --- The check --------------------------------------------------------------
 
 
@@ -278,6 +323,7 @@ def check(root: Path, manifests: Iterable[Path] | None = None) -> list[str]:
     for platform in REQUIRED_PLATFORMS:
         if platform not in lock["platforms"]:
             problems.append(f"lock is missing platform {platform}")
+    problems.extend(build_file_problems(root))
     return problems
 
 

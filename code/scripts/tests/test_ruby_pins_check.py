@@ -169,6 +169,23 @@ class CheckTests(unittest.TestCase):
         root = self.build_repo(extra='gem "minitest", ">= 0"\n')
         self.assertEqual(pins.check(root), [])
 
+    def test_gem_install_in_build_files_is_reported(self) -> None:
+        root = self.build_repo()
+        (root / "pkg" / "BUILD_windows").write_text("gem install minitest rake --quiet\n")
+        (root / "pkg" / "BUILD").write_text(
+            "gem install bundler --version 4.0.24\nbundle install --quiet\n"
+        )
+        subprocess.run(["git", "add", "."], cwd=root, check=True)
+        problems = pins.check(root)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("pkg/BUILD_windows:1", problems[0])
+
+    def test_unpinned_bundler_install_is_reported(self) -> None:
+        root = self.build_repo()
+        (root / "pkg" / "BUILD").write_text("gem install bundler\n")
+        subprocess.run(["git", "add", "."], cwd=root, check=True)
+        self.assertTrue(any("pkg/BUILD:1" in p for p in pins.check(root)))
+
     def test_missing_lock(self) -> None:
         root = self.build_repo()
         (root / pins.THIRD_PARTY_DIR / "Gemfile.lock").unlink()
