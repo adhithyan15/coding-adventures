@@ -12,13 +12,15 @@
 #   conduit_capi.dll.lib     the MSVC IMPORT library for that DLL (small, ~KBs)
 #   conduit_capi.lib         the STATIC library (crate-type includes staticlib)
 #
-# GHC on Windows links with its bundled MinGW ld, and `-lconduit_capi` makes ld
-# look for libconduit_capi.dll.a / conduit_capi.lib / ... in the lib dirs.  If
-# target\release itself is a lib dir, the STATIC conduit_capi.lib can win, and
-# it drags MSVC CRT symbols into a MinGW link, which fails.  So we never expose
-# target\release.  Instead we build a tiny, fresh "stage" directory holding only
-# the DLL and the import library renamed to the MinGW spelling
-# (libconduit_capi.dll.a).  GNU ld reads MSVC import libraries fine.
+# GHC 9.4.8 on Windows links with clang + lld (through the MinGW driver), and
+# `-lconduit_capi` makes the linker look for libconduit_capi.dll.a first and
+# then conduit_capi.lib in the lib dirs.  lld reads MSVC import libraries
+# natively, so the import library only needs the MinGW spelling to be found.
+# If target\release itself is a lib dir, the STATIC conduit_capi.lib can win,
+# and it drags MSVC CRT symbols into a MinGW link, which fails.  So we never
+# expose target\release.  Instead we build a tiny, fresh "stage" directory
+# holding only the DLL and the import library renamed to the MinGW spelling
+# (libconduit_capi.dll.a), which is probed before the .lib name.
 #
 # The caller passes the stage dir to GHC as --extra-lib-dirs and puts it FIRST
 # on PATH so the finished test executable can find conduit_capi.dll at run time.
@@ -141,12 +143,26 @@ Invoke-Diag 'ghc --info (platform and toolchain)' {
     } else { 'ghc not found on PATH' }
 }
 Invoke-Diag 'where.exe conduit_capi.dll (current PATH)' { & where.exe conduit_capi.dll }
-Invoke-Diag 'DLL exports' {
+# Exports AND the runtime DLLs this library depends on: a missing dependency is
+# what produces 0xC0000135 (STATUS_DLL_NOT_FOUND) when the test exe starts.
+# llvm-objdump -p prints PE headers followed by the export and import tables, so
+# filter to the interesting lines instead of truncating blindly.
+Invoke-Diag 'DLL exports and dependencies' {
     if (Get-Command dumpbin.exe -ErrorAction SilentlyContinue) {
-        & dumpbin.exe /exports $dll | Select-Object -First 80
+        & dumpbin.exe /exports $dll
+        & dumpbin.exe /dependents $dll
     } elseif (Get-Command llvm-objdump.exe -ErrorAction SilentlyContinue) {
-        & llvm-objdump.exe -p $dll | Select-Object -First 80
+        & llvm-objdump.exe -p $dll | Select-String -Pattern 'DLL Name|conduit_' |
+            ForEach-Object { $_.Line.Trim() } | Select-Object -First 60
     } else { 'neither dumpbin nor llvm-objdump is on PATH' }
+}
+# Prove the staged .a really is the small IMPORT library and not the static
+# library: an import library lists a few __imp_/thunk symbols per export, while
+# the static one would be full of MSVC CRT and Rust runtime symbols.
+Invoke-Diag 'staged import library symbols' {
+    if (Get-Command llvm-nm.exe -ErrorAction SilentlyContinue) {
+        & llvm-nm.exe (Join-Path $StageDir 'libconduit_capi.dll.a') | Select-Object -First 20
+    } else { 'llvm-nm not on PATH' }
 }
 
 Write-Host "STAGE_DIR=$StageDir"

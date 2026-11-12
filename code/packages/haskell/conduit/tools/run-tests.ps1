@@ -29,6 +29,45 @@ function Invoke-Native([scriptblock]$Command) {
     return [int]$global:LASTEXITCODE
 }
 
+# Diagnostics must never fail the build: run a block under a heading, swallow
+# any error, and keep going.  (Copied from stage-conduit-capi-windows.ps1; the
+# scripts are separate powershell.exe processes and share no code.)
+function Invoke-Diag([string]$Title, [scriptblock]$Block) {
+    Write-Host "---- $Title"
+    $saved = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try { & $Block | Out-Host }
+    catch { Write-Host "(diagnostic failed: $($_.Exception.Message))" }
+    finally { $ErrorActionPreference = $saved }
+}
+
+# A failing `network` configure step (or any other dependency build) is logged
+# to a per-package build log under the Cabal logs directory, NOT to the console,
+# so after a failed build print the tail of the newest log.  Best effort: any
+# error here is swallowed so the original cabal exit code is what gets reported.
+function Show-CabalLogTail {
+    $saved = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $logDir = Join-Path $env:APPDATA 'cabal\logs'
+        if (Test-Path -LiteralPath $logDir) {
+            $f = Get-ChildItem -LiteralPath $logDir -Recurse -Filter '*.log' -ErrorAction SilentlyContinue |
+                Sort-Object LastWriteTime -Descending |
+                Select-Object -First 1
+            if ($f) {
+                Write-Host "==> newest cabal log: $($f.FullName)"
+                Get-Content -LiteralPath $f.FullName -Tail 150 | Out-Host
+            } else {
+                Write-Host "==> no *.log files under $logDir"
+            }
+        } else {
+            Write-Host "==> no cabal log directory at $logDir"
+        }
+    }
+    catch { Write-Host "(could not show cabal log: $($_.Exception.Message))" }
+    finally { $ErrorActionPreference = $saved }
+}
+
 try {
     # tools\ -> conduit -> haskell -> packages -> code -> repo root.
     $packageDir = Split-Path -Parent $PSScriptRoot
@@ -37,7 +76,9 @@ try {
     $includeDir = Join-Path $repoRoot 'code\packages\rust\conduit-capi\include'
     $stageHelper = Join-Path $repoRoot 'code\scripts\stage-conduit-capi-windows.ps1'
     $tempRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
-    $stageDir = Join-Path $tempRoot 'conduit-capi-stage'
+    # Language-specific leaf name: the helper wipes and recreates this directory,
+    # so another language reusing the helper must never share (and race on) it.
+    $stageDir = Join-Path $tempRoot 'conduit-capi-stage-haskell'
 
     Write-Host "==> package dir : $packageDir"
     Write-Host "==> repo root   : $repoRoot"
@@ -85,23 +126,61 @@ try {
     Write-Host '==> where.exe conduit_capi.dll (PATH as cabal will see it)'
     $null = Invoke-Native { & where.exe conduit_capi.dll }
 
-    # ---- 3. cabal test ---------------------------------------------------------
+    # ---- 3. Toolchain diagnostics (best effort) --------------------------------
+    # Which tools cabal/GHC will pick up, in PATH order.  A stray gcc, ld, perl,
+    # sh or clang earlier on PATH than GHC's own bundled toolchain is the usual
+    # cause of confusing configure and link failures.
+    Invoke-Diag 'tools that can shadow GHC toolchain (PATH order)' {
+        Get-Command -All sh.exe, gcc.exe, clang.exe, ld.exe, perl.exe -ErrorAction SilentlyContinue |
+            ForEach-Object { $_.Source }
+    }
+    Invoke-Diag 'ghc --version and cabal --version' {
+        & ghc --version
+        & cabal --version
+    }
+    # Only the Cabal config lines that change where tools, libraries and package
+    # indexes come from; the rest of the (long, commented) file is noise.
+    Invoke-Diag 'cabal config (relevant lines)' {
+        $cfg = if ($env:CABAL_CONFIG -and (Test-Path -LiteralPath $env:CABAL_CONFIG)) {
+            $env:CABAL_CONFIG
+        } else {
+            Join-Path $env:APPDATA 'cabal\config'
+        }
+        Write-Host "config file: $cfg"
+        if (Test-Path -LiteralPath $cfg) {
+            Select-String -LiteralPath $cfg -Pattern 'extra-prog-path|extra-lib-dirs|extra-include-dirs|store-dir|^\s*repository|^\s*remote-repo-cache' |
+                ForEach-Object { $_.Line }
+        } else {
+            Write-Host 'config file does not exist'
+        }
+    }
+
+    # ---- 4. cabal build, then cabal test ----------------------------------------
+    # Two phases so a compile/link failure is separated from a test failure.  The
+    # flags MUST be identical in both phases, otherwise Cabal sees a changed
+    # configuration and reconfigures (rebuilding dependencies) between them.
     Set-Location -LiteralPath $packageDir
-    $cabalArgs = @(
-        'test',
-        "--extra-lib-dirs=$stageDir",
-        "--extra-include-dirs=$includeDir",
-        '--test-show-details=always'
-    )
-    Write-Host "==> cabal $($cabalArgs -join ' ')"
-    $rc = Invoke-Native { & cabal @cabalArgs }
+    $flags = @("--extra-lib-dirs=$stageDir", "--extra-include-dirs=$includeDir")
+
+    Write-Host "==> cabal build --enable-tests $($flags -join ' ')"
+    $rc = Invoke-Native { & cabal build --enable-tests @flags }
     if ($rc -ne 0) {
-        Write-Host "==> cabal test FAILED with exit code $(Format-ExitCode $rc)"
-        # Second run is for diagnostics only; its exit code is ignored and the
+        Write-Host "==> cabal build FAILED with exit code $(Format-ExitCode $rc)"
+        # The -v3 rerun is for diagnostics only; its exit code is ignored and the
         # ORIGINAL failure code is what we report.
-        Write-Host '==> Re-running with -v2 for diagnostics'
-        $verboseArgs = $cabalArgs + '-v2'
-        $null = Invoke-Native { & cabal @verboseArgs }
+        Write-Host '==> Re-running the build with -v3 to show the failing compiler/linker command'
+        $null = Invoke-Native { & cabal build --enable-tests @flags -v3 }
+        Show-CabalLogTail
+        exit $rc
+    }
+
+    # 'direct' streams the test's output as it runs, so a hung test still shows
+    # how far it got ('always' would buffer it until the test finished).
+    Write-Host "==> cabal test $($flags -join ' ') --test-show-details=direct"
+    $rc = Invoke-Native { & cabal test @flags --test-show-details=direct }
+    if ($rc -ne 0) {
+        # No rerun: the tests already ran with full output above.
+        Write-Host "==> cabal test FAILED with exit code $(Format-ExitCode $rc)"
         exit $rc
     }
     Write-Host '==> cabal test passed'
