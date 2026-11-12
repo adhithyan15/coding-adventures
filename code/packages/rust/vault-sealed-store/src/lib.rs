@@ -362,11 +362,17 @@ impl SealedStore {
     /// Whether this store writes and checks vault ids (F12). Always true
     /// outside tests.
     fn binds_vaults(&self) -> bool {
+        // One expression per cfg arm (rather than an early `return false`
+        // followed by `true`) so clippy's `needless_bool` stays quiet in the
+        // test build, where the `pre_f12` arm is compiled in.
         #[cfg(test)]
-        if self.pre_f12 {
-            return false;
+        {
+            !self.pre_f12
         }
-        true
+        #[cfg(not(test))]
+        {
+            true
+        }
     }
 
     /// Wrap a backend, with a freshness anchor kept outside it (VLT01 F11).
