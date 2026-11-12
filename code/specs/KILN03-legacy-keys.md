@@ -88,20 +88,28 @@ a BUILD can read.
 
 ### 3.2 Closure
 
-```
-closure(P, OS) = {P} ∪ N(P) ∪ E(P) ∪ deps*( deps[OS](P) ∪ dev_deps(P) ∪ N(P) ∪ E(P) )
-```
+`closure(P, OS)` is the **least set** that contains `{P} ∪ dev_deps(P)` and
+is closed under three relations — for every member q, all of these are
+members too:
 
-- `deps*` is the transitive closure over `deps[OS]` edges only.
-- `N(P)` is every package whose `rel_path` lies under P's — containment is an
-  edge, because a BUILD can `cd ext/foo && cargo build` with no `../` at all.
-- `E(P)` is every package whose `rel_path` *encloses* P's. Tools search
+- `deps[OS](q)` — q's direct build/runtime dependencies;
+- `N(q)` — every package whose `rel_path` lies under q's. Containment is an
+  edge, because a BUILD can `cd ext/foo && cargo build` with no `../` at all,
+  and `D(q)` deliberately excludes nested packages' files (§3.1);
+- `E(q)` — every package whose `rel_path` *encloses* q's. Tools search
   upward, so an enclosing package's own manifest (`Cargo.toml`,
-  `package.json`, `go.mod`, `tsconfig.json`) is configuration for P.
-- `dev_deps` apply at P only: only P's own tests run, so only P's test-only
-  dependencies are linked. Applying them at every member would merge large
-  parts of the graph through dev-dependency cycles.
-- The closure is a set, so cycles are harmless and order-independent.
+  `package.json`, `go.mod`, `tsconfig.json`) is configuration for q.
+
+It is computed by a worklist until nothing new is added. All three relations
+apply to **every** member, not only to P: P's BUILD can `cd ../dep/ext/foo`,
+or build a dependency that is itself nested inside another package, and the
+`../` scan (§6) cannot catch either because the path lands inside a closure
+member.
+
+`dev_deps` are seeded **once, at P**: only P's own tests run, so only P's
+test-only dependencies are linked. Applying them at every member would merge
+large parts of the graph through dev-dependency cycles. The closure is a set,
+so cycles in any relation are harmless and order-independent.
 
 ### 3.3 Reads
 
@@ -129,8 +137,10 @@ paths alone. So `code/grammars/**` costs 32 bytes per key, not thousands of
 entries.
 
 **Symlinks.** A link entry's digest covers only its target *path*. So every
-symlink in P's inputs, and in every read, is resolved: a target inside P, a
-closure member or a read path is already covered; any other target makes P
+symlink in P's inputs, and in every read, is **fully** resolved — following
+chains and directory links, with a 40-hop limit and loops refused — and the
+final target is checked: inside P, a closure member or a read path is
+already covered; anything else, a loop, or an exhausted hop limit makes P
 uncacheable with reason `escape:<link>`.
 
 ### 3.4 Key fields
@@ -143,7 +153,7 @@ uncacheable with reason `escape:<link>`.
 | `recipe` | `LegacyRecipe([(name, contents)])` of the single file `build_files[OS]` (KILN02 §3.4, generalised) |
 | `inputs` | P's own files (full entries) |
 | `reads` | the file-valued reads of §3.3 |
-| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `glob:<pattern>` → tree digest of its matches; `tool:build-tool` → tree digest of `code/programs/go/build-tool` **plus every in-repo module it imports** (its `go.mod` `replace` targets) — the executor rewrites and splits BUILD lines, so its source is part of what runs |
+| `consumed` | `pkg:<q.name>` → `D(q)` for every member q ≠ P; `dir:<path>` → tree digest for every directory-valued read; `glob:<pattern>` → tree digest of its matches; `tool:build-tool` → tree digest of `code/programs/go/build-tool` **plus every in-repo module it imports** (its `go.mod` `replace` targets) and, when present, `go.work` and `vendor/` — the executor rewrites and splits BUILD lines, so its source is part of what runs |
 | `tools` | §4 |
 | `env` | §5 |
 
@@ -183,7 +193,7 @@ languages.
 - **Probes** (verification): when a tool is present, its probe runs with no
   shell, a scrubbed environment, a 10 s timeout, output capped at 64 KiB, and
   a **fixed minimal `PATH`** (the toolchain install directories, never `.`,
-  `node_modules/.bin` or shims). A probe whose resolved binary lies inside
+  `node_modules/.bin` or shims). A probe whose resolved binary (after following symlinks) lies inside
   the checkout is refused — otherwise the PR under test would choose what
   runs at planning time. Probes never run in a job that holds secrets or
   ledger-write credentials. Output is normalised (stdout and stderr captured,
@@ -217,9 +227,10 @@ unset, and an empty value stays distinct from unset — no sentinel string
 that a real value could collide with). The list's own digest is in every
 key.
 
-**Secrets.** After wildcard expansion, any name containing `TOKEN`,
-`SECRET`, `PASSWORD`, `PASSWD`, `CREDENTIAL` or ending in `_KEY` is an
-**error**, not a silent skip (`CARGO_*` would otherwise pull in
+**Secrets.** After wildcard expansion, any name containing — compared
+case-insensitively — `TOKEN`, `SECRET`, `PASSWORD`, `PASSWD`, `CREDENTIAL`,
+`AUTH`, `PRIVATE`, or ending in `_KEY` or `_PAT`, is an **error**, not a
+silent skip (`CARGO_*` would otherwise pull in
 `CARGO_REGISTRY_TOKEN` and put a brute-forceable hash of it in the plan).
 
 **The allowlist is complete by construction, not by hope.** A BUILD can read
@@ -347,7 +358,7 @@ kiln explain --plan <plan.json> <package>
   and an executable binary each make it `unscanned`.
 - A symlink whose target leaves the closure and read paths makes the
   package uncacheable; one pointing inside the closure does not.
-- An enclosing package's manifest change changes the nested package's key.
+- An enclosing package's manifest change changes the nested package's key; a change in a package nested inside, or enclosing, a *dependency* of P changes P's key.
 - An unset allowlisted variable and one set to any string (including
   `<unset>` and the empty string) give three different keys; a secret-like
   name after wildcard expansion is an error.
