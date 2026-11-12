@@ -4802,7 +4802,7 @@ jobs:
           } elseif ((git rev-parse --is-shallow-repository) -eq 'true') {
             # Shallow checkout and no plan: the git-diff fallback needs history.
             Write-Host '::warning::build-plan.json missing; deepening shallow clone for git-diff fallback'
-            git fetch --no-tags --unshallow origin
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           }
           $shardFlag = @()
           if ('${{ matrix.sharded }}' -eq 'true') {
@@ -5917,9 +5917,10 @@ jobs:
             echo "Using pre-computed build plan"
           elif [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
             # The checkout is shallow; without a plan the build tool diffs
-            # against origin/main and needs the history.
+            # against origin/main and needs the history plus that ref (a depth-1
+            # checkout creates no refs/remotes/origin/main).
             echo "::warning::build-plan.json missing; deepening shallow clone for git-diff fallback"
-            git fetch --no-tags --unshallow origin
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           fi
           $BT \
             -root . \
