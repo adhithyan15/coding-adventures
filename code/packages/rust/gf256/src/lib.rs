@@ -71,6 +71,11 @@
 //!
 //! Tables are precomputed once at first use via [`std::sync::OnceLock`].
 
+/// The sealed capability witness generated from `required_capabilities.json`
+/// (`ca-capability-analyzer --generate-module`). gf256 declares no ambient
+/// capabilities, so the module exposes only the pure-computation token.
+pub mod capabilities;
+
 use std::sync::OnceLock;
 
 /// The additive identity element.

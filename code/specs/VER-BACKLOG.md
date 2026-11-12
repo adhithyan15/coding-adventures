@@ -654,3 +654,17 @@ below map items to PRs and log what the wave discovered. Status `PR` means
 | P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
 | P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
 | spec / WX-001 | VER04k (`code/specs/VER04k-warrant-v1-wave4.md`): normative WX-D (bounded sequence combinators, in slices D1/D2/D3), WX-F (binding-level sequence drivers) and WX-G (in-out postconditions); new diagnostics W0711-W0713. Implementation follows after the WX-H/WX-E branch (`claude/warrant-wx-h-e`) merges, in the order D1, F and G (parallel), D2, D3 | open; 13 owner questions in VER04k section 9 |
+
+### Rust capability analyzer: open gaps after the third security review (2026-11-11)
+
+The branch `claude/ver-cap-split-a-analyzer` closes the cheap third-review
+cases (VER08a D43-D49, including review G-A, associated-type projections) and
+the four shapes a follow-up review found those fixes missed (D50-D53).
+These false negatives stay open; each has an example, root cause and intended
+fix in [VER08a §8.1](VER08a-rust-capability-analyzer.md#81-known-open-gaps-security-review-round-3).
+
+| Priority / id | Item | Status |
+|---|---|---|
+| P1 / CA-OG1 | Review G-C: a type alias's generic parameter default is never bound, so `type F<P: ?Sized = std::path::Path> = P; <F>::exists(p)` is pure (case `alias-default-param`). Fix: bind the alias to every path inside a parameter default in `type_alias_leaves`, as for the right-hand side; a default that is a metavariable or a macro invocation (`type F<P = $t> = P;`, `P = ty!()`) binds the alias to the unknown type; an undelimitable default is CAP003 | open |
+| P1 / CA-OG2 | Review G-E: the local-receiver waiver (L4) is bypassed when the local type derefs to `Path` (cases `waiver-cfg-out`, `waiver-macro-body`, `waiver-generic-instance`, `waiver-ctor-wrong-type`, `waiver-same-name-module`, `waiver-arbitrary-self`, `og2_private2`); `collect_local_types` keys by bare name and ignores cfg, macro bodies, generic arguments, modules, arbitrary self types and visibility (a private inherent method in another module, skipped by method lookup at the call site). Fix: refuse the waiver when any `Deref`/`DerefMut` impl for `<Name>` exists, including ones not spelled `impl Deref for Name` (derive macros such as `derive_more::Deref` and `shrinkwraprs`, `macro_rules!`-generated impls, a renamed trait `use std::ops::Deref as D; impl D for L`, an impl through a type alias), failing closed when the type has any non-std derive or macro-generated impl; otherwise require one unique definition, a non-generic inherent impl outside macro bodies and cfg, a method visible at the call site, and a plain receiver | open |
+| P3 / CA-IPC | The Spec 13 capability taxonomy has no IPC category, so `std::io::pipe` and `PipeReader`/`PipeWriter` are classified as `ffi:call` (VER08a D47, the row for raw OS handles) as a stand-in. Add an IPC category (pipes, Unix-domain socket pairs, shared memory) to the taxonomy and move them there | open |

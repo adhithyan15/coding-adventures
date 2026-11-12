@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_ca_capability_analyzer"
-version = "0.2.0"
+version = "0.3.2"
 edition = "2021"
 description = "Static capability analyzer and deny-by-default name allowlist for Rust packages (VER08 / VER08a / VER-P027a)"
 
