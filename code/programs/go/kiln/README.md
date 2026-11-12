@@ -127,3 +127,39 @@ Hashes and provenance only; no build output.
   while reading.
 - Segment names are pattern-checked before any path is built; symlinks and
   non-regular files are refused (regular-file check on the open descriptor).
+
+## Legacy keys (`legacy-plan`)
+
+`internal/legacy` implements the core of [KILN03](../../../specs/KILN03-legacy-keys.md):
+keys for today's shell BUILD files, in **shadow mode** (nothing is skipped).
+
+```
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder]
+kiln explain --plan <plan.json> <package>
+```
+
+- The graph is the `kiln-legacy-graph/1` export of the old build tool. It is
+  loaded strictly (schema, unknown fields, size cap, sorted and unique lists,
+  every edge names a listed package, every path valid per KILN02).
+- Per package: the **closure** (the package, its `dev_deps`, and everything
+  reachable through `deps[OS]`, nested packages and enclosing packages, for
+  every member), each member's **own digest** (every file under its directory
+  except nested packages'), and its **reads** (`repo_inputs`, globs, the
+  repository-source-input boundary file, and configuration files sitting in
+  ancestor directories). Directory and glob reads become one `consumed` entry
+  holding a tree digest that covers paths, kinds, executable bits and content.
+  `tool:build-tool` digests the old build tool's source, its in-repo `replace`
+  targets, `go.work` and `vendor/`.
+- The key is a KILN02 key with **semantics version 0**. Tools and env are empty
+  in this milestone, so every package carries `m1-incomplete:tools-env` and
+  `m1-incomplete:scans` and none is `cacheable` yet. Packages whose closure has
+  an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
+  `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
+  for the OS are `uncacheable`.
+- The Git source refuses to plan when any untracked, non-ignored file exists
+  (build products would enter the digests). Output is deterministic JSON,
+  written atomically, ending with a histogram of classes, reasons and closure
+  sizes.
+- Glob semantics are pinned by
+  [`glob-cases-v1.json`](../../../specs/fixtures/kiln/glob-cases-v1.json), which
+  the old build tool's matcher must also satisfy.

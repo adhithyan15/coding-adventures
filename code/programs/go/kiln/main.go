@@ -5,6 +5,8 @@
 //
 //	kiln version                   print the version and key schema
 //	kiln verify-vectors <path>     check every golden vector; non-zero on mismatch
+//	kiln legacy-plan ...           compute legacy keys for every package (KILN03)
+//	kiln explain ...               print one package's record from a plan
 package main
 
 import (
@@ -25,7 +27,7 @@ func main() {
 // run executes the CLI and returns the process exit code.
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: kiln <version|verify-vectors <path>>")
+		fmt.Fprintln(stderr, "usage: kiln <version|verify-vectors <path>|legacy-plan|explain>")
 		return 2
 	}
 	switch args[0] {
@@ -55,6 +57,10 @@ func run(args []string, stdout, stderr io.Writer) int {
 		}
 		fmt.Fprintf(stdout, "ok: %d valid, %d invalid vectors\n", len(vf.Valid), len(vf.Invalid))
 		return 0
+	case "legacy-plan":
+		return runLegacyPlan(args[1:], stdout, stderr)
+	case "explain":
+		return runExplain(args[1:], stdout, stderr)
 	}
 	fmt.Fprintf(stderr, "kiln: unknown command %q\n", args[0])
 	return 2

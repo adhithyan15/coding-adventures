@@ -7,7 +7,13 @@
       "category": "fs",
       "action": "read",
       "target": "*",
-      "justification": "`kiln verify-vectors <path>` reads the vector file named on the command line; the Source adapters read the source tree (through os.Root, never following symlinks out of it) and, for GitHub trust, the GitHub-generated event JSON at GITHUB_EVENT_PATH (size-capped)."
+      "justification": "`kiln verify-vectors <path>` reads the vector file named on the command line; the Source adapters read the source tree (through os.Root, never following symlinks out of it) and, for GitHub trust, the GitHub-generated event JSON at GITHUB_EVENT_PATH (size-capped). `kiln legacy-plan` also reads the graph export named by --graph and the committed policy files through the Source."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "the --out path",
+      "justification": "`kiln legacy-plan` writes its plan file through a temporary file in the same directory (fsync, rename); an existing symlink target is refused."
     },
     {
       "category": "stdout",
