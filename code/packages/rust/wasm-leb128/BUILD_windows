@@ -1,1 +1,30 @@
-cargo test -p wasm-leb128 -- --nocapture
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
+cargo test -q -p wasm-leb128 --lib -- --nocapture
+cargo test -q -p wasm-leb128 --doc
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check wasm-leb128
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p wasm-leb128 --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encode_unsigned_matches_canonical_model&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encode_unsigned_matches_canonical_model&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encode_signed_matches_canonical_model&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encode_signed_matches_canonical_model&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ok-as-err&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_empty_input_rejected&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ok-as-err&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_one_byte&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_empty_input_rejected&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ok-as-err&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_unsigned_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ok-as-err&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decode_signed_bounded_one_byte_every_width&& cargo test -q -p wasm-leb128 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test wasm_leb128_proofs
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified
