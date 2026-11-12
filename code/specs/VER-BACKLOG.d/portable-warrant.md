@@ -48,6 +48,15 @@ implementation.
   were reproduced locally on Rust 1.100.0; package tests and Clippy also pass
   on the previous stable toolchain 1.99.1. This records the observed fix, not a
   guarantee about future stable-toolchain changes.
+- PR #19264's follow-up Windows job 131411314817 newly selected the LANG native
+  executable smoke tests and failed to link the generated PE: MSVC reported
+  unresolved `WaitOnAddress` and `WakeByAddressSingle/All` imports from Rust
+  `std`. Microsoft Learn identifies `Synchronization.lib` as the import
+  library for these APIs; the `twig-aot` MSVC/LldLink command already supplied
+  `kernel32.lib` but omitted that library. The current change adds it to the
+  shared system-import list. The previous Windows jobs had skipped this LANG
+  step, so this is a newly exercised dependency gap, not a confirmed toolchain
+  regression. The exact-head hosted Windows acceptance remains required.
 
 - PR #19177 exact merge receipt: integrated head `7d2c92409b15fb19ea82a6cb892eaed44067975c`, run 43144592253 attempt 1, gate job 130981923321, merged at 2026-11-12T05:34:56Z as `d746f3b16bbbc78781ade0987abd88bc5a953e37`. The gate waited queued for about 36 minutes after all substantive jobs passed, then completed successfully; no retry was needed. Do not use earlier-head successes as evidence for this receipt.
 - PR #19236 exact merge receipt: head `0c3676504666241a2815b0ecff4b6fbc924cd316`, CI run 43235519556 attempt 2 (14 successful jobs, 13 expected skips, gate 131346046024 passed), Swift Apps run 43235520086 attempt 2 (both jobs passed), Books run 43235520098 (2 passed, 5 skipped), merged at 2026-11-12T17:05:10Z as `28572c410df730098f7bf92c390c07237aa80591`. Attempt 1 Windows job 131243804408 failed with Node `spawnSync ETIMEDOUT` at `discovery.test.ts:551` and `resolver.test.ts:478`; the one authorized failed-only retry job 131304632677 passed. Swift Apps Hello World job 131241710684 was cancelled before runner acquisition; annotations reported hosted macOS arm64 capacity constraints. Its one job-specific retry 131316867122 passed while Notifications job 131316870768 remained successful. No source changes or assertions were made for these retries.
