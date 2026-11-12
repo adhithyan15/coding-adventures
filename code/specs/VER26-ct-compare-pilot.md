@@ -264,8 +264,11 @@ better than the Rust pilot does.
 gates: the **Busicom 141-PF calculator** written in Nib, compiled by our Nib
 compiler to the 4004, and checked against the repository's gate-level 4004.
 It exercises the whole owned-layer chain: Nib source, our compiler, our 4004
-netlist, gates. It is also the only route to meeting the CWE-208 floor for
-constant time, which needs a proof down to the gate-level CPU.
+netlist, gates. The first route to meeting the CWE-208 floor for constant time, which needs a
+proof down to the gate-level CPU, is RV32I on `riscv-gatelevel` (owner,
+2026-11-12; [VER13](VER13-assumption-catalogue.md) §4.4). The Busicom/4004
+track is a second, independent stack beside it
+([VER27](VER27-layered-validation-roadmap.md) §4.15).
 
 ### 8.2 Starlark and Mosaic: excluded
 
@@ -300,8 +303,9 @@ small filesystem package, is needed before they can be considered proven:
 - the locked box (VER22), beyond recording a runtime baseline;
 - capability diffs and generated modules with real functions in them (VER23).
 
-The pilot also does not reach the CWE-208 floor. That needs the Busicom
-pilot's proof down to gates (§8.1).
+The pilot also does not reach the CWE-208 floor. That needs a proof down to
+gates: RV32I on `riscv-gatelevel` first, with the Busicom pilot a second,
+independent stack (§8.1).
 
 ## 10. Decisions the owner still has to make
 

@@ -19,6 +19,15 @@ An exact complete-certificate DER repeat is a cycle even when it came from a
 separate decode. A non-terminal certificate at the active depth limit also
 fails before another selection.
 
+An additive policy-backed entry point replaces the Boolean Name callback with
+one validated `X509NameValuePolicy`. It delegates every non-terminal step to
+the policy-backed unique selector, propagates the first payload-free
+Name-comparison or selection failure, and still scans every accepted candidate
+to detect ambiguity. Its distinct non-copyable success value retains both the
+constructed path and that exact policy. Generic callback construction evidence
+therefore cannot substitute at a later boundary that requires repository-owned
+Name-policy provenance.
+
 Success returns non-copyable borrowed evidence retaining the exact target,
 candidate slice, and ordered selected indices. A later validator can therefore
 consume the constructed chain without accepting a caller-substituted pool.
@@ -32,10 +41,12 @@ consume the exact ordered pair without rerunning Name policy or accepting
 caller-supplied endpoints.
 
 This crate does not search ambiguous alternate branches, implement complete
-RFC 5280 distinguished-name equality, decide that a terminal is trusted,
-authenticate a link, or apply role, algorithm, validity, path-length,
-name-constraint, hostname, or revocation policy. It performs no TLS, HTTP,
-OAuth transport, filesystem, clock, credential, signing, or network effect.
+RFC 5280 distinguished-name equality, RFC 4518 normalization, case or
+whitespace folding, schema-specific matching, or TeletexString mapping. It
+does not decide that a terminal is trusted, authenticate a link, or apply role,
+algorithm, validity, path-length, name-constraint, hostname, or revocation
+policy. It performs no TLS, HTTP, OAuth transport, filesystem, clock,
+credential, signing, or network effect.
 
 ## Validation
 
