@@ -14,6 +14,7 @@ pub mod catalogue;
 pub mod checker;
 pub mod evidence;
 pub mod json;
+pub mod lane_evidence;
 pub mod matrix;
 pub mod registry;
 pub mod report;
