@@ -81,7 +81,7 @@ jobs:
         run: |
           python -m pip install --no-deps -e ../matrix
           python -m pip install --no-deps -e .
-          python -m pip install pytest pytest-cov ruff build
+          python -m pip install pytest==9.2.0 pytest-cov==7.1.0 ruff==0.17.4 build==1.6.1
           ruff check src tests examples
           python -m pytest
           python -m build --wheel
