@@ -205,4 +205,43 @@ What the document cannot say, stated rather than approximated:
    derived attestation `warrant-spec::all-operands-public` (VER04h section 9),
    not as a constant-time claim.
 
-Measured evidence is recorded below once generated.
+### Measured evidence
+
+Read from `code/packages/rust/wasm-leb128/evidence/test-manifest.json` (written
+by the generated test target; 219 entries, all `pass`), debug profile:
+
+* 31 examples;
+* 36 claims, each with an exhaustive, a property (4,096 cases) and a fuzz
+  (5,000 iterations) suite: **46,261,530 exhaustive cases** in total, 0
+  unreachable by type; the only discards are the 540 tuples per decoder that the
+  refinement `o >= len(d)` of the offset-past-end claims excludes;
+* per operation (the report's `exhaustive.cases`): `encode_unsigned` 1,131,
+  `encode_signed` 1,869, `decode_unsigned` 17,246,170, `decode_signed`
+  17,417,140, `decode_unsigned_bounded` 5,789,615, `decode_signed_bounded`
+  5,805,605;
+* 80 negative controls (6 operations x their faults x example/exhaustive/
+  property/fuzz), each catching its fault by a named claim (`caught_by`), plus
+  20 BUILD-level sabotage runs (each fault against each operation it is bound
+  to), each printing exactly one `not ok`;
+* the encoders' heap rows: 1,714,606 observed instances, peak 26 bytes against
+  the bound of 64;
+* wall clock of the whole target on the authoring machine: about 140 s, of
+  which the two 2^24-input claims take 26 s (`decode_unsigned_three_bytes`) and
+  29 s (`decode_signed_three_bytes`), each two-byte-at-every-width claim about
+  8 s, the fuzz suites together about 13 s and the property suites about 3 s.
+  The `exhaustive_budget` is raised to 2^24 (from the default 400,000) for
+  exactly those two three-byte claims, as gf256 does for its `U8^3` claims.
+
+Also checked by hand, not committed: mutating `src/lib.rs` so that the overlong
+cap is off by one, the signed encoder ignores the sign bit of its last group, or
+the signed padding check accepts anything, makes named claims fail
+(`decode_unsigned_eleven_bytes_overlong` and
+`decode_unsigned_bounded_two_bytes_every_width`;
+`encode_signed_matches_canonical_model` and the signed round trips;
+`decode_signed_ten_byte_boundary` and
+`decode_signed_bounded_one_byte_every_width`).
+
+The assurance report (`--profile varint-codec`) is `report-only`: rungs E0, E1,
+E3 and E4 `pass`, E2 and E5 `not-live`; CWE-208 is the not-applicable exemption
+above and CWE-400 the unapproved "no step-bound proof is live" exemption quoting
+the front end's message; every other row is excluded as for gf256.
