@@ -109,7 +109,12 @@ println!("{}", result.unwrap_err()); // "LEB128 error at offset 0: unexpected en
 ```
 
 `max_bits` must be at most 64 (every WebAssembly width is 1..=64). A wider
-value is not rejected today: see "Known limitation" below.
+width is rejected with an `Err` before any byte is read, because the decoder
+accumulates into a `u64`:
+
+```rust
+assert!(wasm_leb128::decode_unsigned_bounded(&[0x01], 0, 65).is_err());
+```
 
 ## Verification
 
@@ -139,14 +144,6 @@ step-bound proofs are **not live** (the WIR front end cannot parse
 kind and offset are not observed (`Leb128Error` has no kind, so every error is
 one Warrant case), and CWE-208 is recorded as not applicable because every
 operand is public.
-
-## Known limitation
-
-`decode_unsigned_bounded`/`decode_signed_bounded` do not reject
-`max_bits > 64`: widths 66..=70 silently drop data bits above bit 64, and
-widths of 71 or more with an eleven-byte input overflow a shift (a panic in a
-debug build, a wrong value in release). Pass a width of at most 64. Tracked as
-backlog SEC-006 (LEB01 "Findings").
 
 ## Development
 

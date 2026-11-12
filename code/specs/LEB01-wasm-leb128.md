@@ -111,27 +111,28 @@ pub fn decode_signed_bounded(data: &[u8], offset: usize, max_bits: u32)
   byte); `message` names the rule (it is for humans and is not part of the
   contract). There is no error *kind*: callers cannot distinguish the rules
   programmatically.
-* **Hostile input.** For `max_bits <= 64`, every `data` and every `offset`
+* **Hostile input.** For every `max_bits` (a width above 64 is rejected), every `data` and every `offset`
   yields `Ok` or `Err`: no panic, and at most `max(1, ceil(max_bits / 7))`
   bytes are inspected.
-* **Width precondition.** `max_bits` must be at most 64. See Findings.
+* **Width precondition.** `max_bits` must be at most 64; a wider width is
+  rejected (`Err`) before any byte is read. See Findings.
 
 ## Findings
 
-Recorded while writing the Warrant document; not fixed here (the conversion
-changes no behaviour of the crate):
+Recorded while writing the Warrant document.
 
-1. **`max_bits > 64` is not rejected (backlog SEC-006).** `decode_*_bounded`
-   with `max_bits` in `66..=70` accepts a ten-byte encoding whose data bits
-   above bit 64 are set and silently drops them (`FF x9 7F` decodes to
-   `u64::MAX` at width 70); with `max_bits >= 71` an eleven-byte input reaches
-   `value |= data_bits << 70`, which panics in a debug build ("attempt to shift
-   left with overflow") and yields a wrong value in release (`80 x10 01` decodes
-   to `(64, 11)`). WebAssembly only uses widths 1..=64, and every caller in the
-   repository passes a constant, so this is a contract gap rather than an
-   exploitable path today. The fix is a one-line rejection (`max_bits > 64` is an
-   error); the Warrant document then gains a `rejects max_bits > 64u32` row and
-   the claims can quantify over every `u32` width.
+1. **`max_bits > 64` was not rejected (backlog SEC-006) -- FIXED in this
+   branch.** `decode_*_bounded` with `max_bits` in `66..=70` accepted a
+   ten-byte encoding whose data bits above bit 64 are set and silently dropped
+   them (`FF x9 7F` decoded to `u64::MAX` at width 70); with `max_bits >= 71`
+   an eleven-byte input reached `value |= data_bits << 70`, which panics in a
+   debug build ("attempt to shift left with overflow") and yielded a wrong
+   value in release (`80 x10 01` decoded to `(64, 11)`). `decode_bits_core`
+   now returns `Err` for `max_bits > 64` before any other check (so the
+   reported fault does not depend on `data` or `offset`); `max_bits = 0` is
+   unchanged (it admits only the value 0). The Warrant document has the
+   `rejects max_bits > 64u32 with Leb128Error.MALFORMED` row, and claims over
+   every width 65..=255, the `2^k` widths up to `2^31`, and `u32::MAX`.
 2. **The error carries no kind.** A caller (or a specification) can only say
    "rejected". Adding a kind field is an API change across 17 ports and is out
    of scope.
@@ -164,7 +165,7 @@ integers, WX-C bit operations) is the specification of the six operations;
   ten-byte boundary (nine continued bytes carrying any 63 bits, then every
   possible tenth byte: only `00`/`01` are accepted unsigned, only `00`/`7F`
   signed, a set bit 7 is overlong);
-* **bounded decoders, every width 0..=64:** every one- and two-byte input
+* **bounded decoders, every width 0..=64 (and widths above 64 rejected):** every one- and two-byte input
   equals a width-parameterised model (65 widths x 65,536 two-byte inputs per
   decoder); at 64 they equal the plain decoders on every input of the `Bytes`
   domain; the encoder's output decodes at width `n` exactly when the value fits
@@ -187,8 +188,10 @@ What the document cannot say, stated rather than approximated:
 3. **Exhaustiveness stops at length 3.** All inputs of length 4..=10 are
    `2^80`; they are covered by the boundary claim above, the `Bytes` domain
    (constant fills to length 8, 347 strings), and property/fuzz suites.
-4. **`max_bits <= 64`** is a parameter refinement, with no `rejects` row
-   (finding 1). No claim exercises a wider width.
+4. **Widths above 64 are sampled, not enumerated.** The `rejects` row and the
+   width claims state the rejection for every `u32`, but the exhaustive domain
+   of a `U64` binder is `0..=255`, every single-bit value and `MAX ^ (1<<i)`;
+   the suites bound it to 65..=2^32-1, and `u32::MAX` is a literal claim.
 5. **No proofs.** The steps rows are declarations: the Rust-subset front end
    refuses `src/lib.rs` (the anonymous lifetime in
    `fmt::Formatter<'_>`), so `evidence/proof-manifest.json` records every
@@ -208,17 +211,18 @@ What the document cannot say, stated rather than approximated:
 ### Measured evidence
 
 Read from `code/packages/rust/wasm-leb128/evidence/test-manifest.json` (written
-by the generated test target; 219 entries, all `pass`), debug profile:
+by the generated test target; 245 entries (219 before the SEC-006 fix), all `pass`), debug profile:
 
-* 31 examples;
-* 36 claims, each with an exhaustive, a property (4,096 cases) and a fuzz
-  (5,000 iterations) suite: **46,261,530 exhaustive cases** in total, 0
-  unreachable by type; the only discards are the 540 tuples per decoder that the
-  refinement `o >= len(d)` of the offset-past-end claims excludes;
+* 39 examples;
+* 42 claims, each with an exhaustive, a property (4,096 cases) and a fuzz
+  (5,000 iterations) suite: **46,565,930 exhaustive cases** in total, 0
+  unreachable by type; the only discards are the 540 tuples per plain decoder that the
+  refinement `o >= len(d)` of the offset-past-end claims excludes and, per
+  bounded decoder, the tuples outside the width refinement (56,214 and 41,472);
 * per operation (the report's `exhaustive.cases`): `encode_unsigned` 1,131,
   `encode_signed` 1,869, `decode_unsigned` 17,246,170, `decode_signed`
-  17,417,140, `decode_unsigned_bounded` 5,789,615, `decode_signed_bounded`
-  5,805,605;
+  17,417,140, `decode_unsigned_bounded` 5,941,815, `decode_signed_bounded`
+  5,957,805;
 * 80 negative controls (6 operations x their faults x example/exhaustive/
   property/fuzz), each catching its fault by a named claim (`caught_by`), plus
   20 BUILD-level sabotage runs (each fault against each operation it is bound

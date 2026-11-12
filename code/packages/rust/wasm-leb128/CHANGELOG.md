@@ -4,7 +4,19 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased] — Warrant-derived evidence (LEB01, VER04h)
 
-No change to the public API or to the behaviour of any export.
+No change to the public API. One behaviour fix (SEC-006, below): the bounded
+decoders reject `max_bits > 64`. (Cargo.toml stays at 0.2.0: this whole entry is
+unreleased and the version is bumped at release.)
+
+### Fixed
+
+- `decode_unsigned_bounded` / `decode_signed_bounded` now return `Err` for
+  `max_bits > 64`, before any other check. Previously widths 66..=70 silently
+  dropped data bits above bit 64 (`FF x9 7F` decoded to `u64::MAX`) and widths
+  >= 71 with an eleven-byte input shifted a `u64` by 70 (debug panic, wrong
+  value in release: `80 x10 01` gave `(64, 11)`). `max_bits = 0` unchanged.
+  Unit tests added first; Warrant document gains the `rejects max_bits > 64u32`
+  row, 8 examples and 6 claims (evidence 219 -> 245 entries).
 
 ### Added
 
@@ -47,12 +59,6 @@ No change to the public API or to the behaviour of any export.
   code, and the `println!` made this pure library need `stdout:write`, which
   blocks the effect certificate and would have opened CWE-117. Test-only; no
   export changes.
-
-### Found (not fixed here)
-
-- `decode_*_bounded` accept `max_bits > 64` (66..=70 drop data bits above 64;
-  >= 71 overflow a shift on an eleven-byte input: debug panic, wrong value in
-  release). Backlog SEC-006; the Warrant document refines `max_bits <= 64`.
 
 ## [0.2.0] - 2026-08-31 — LEB128/malformed-binary hardening
 
