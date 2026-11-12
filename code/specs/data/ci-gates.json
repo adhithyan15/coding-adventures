@@ -554,6 +554,14 @@
         "code/specs/FM02-forme-plugin-host.md"
       ]
     },
+    "build-windows-recipes": {
+      "scope": "step",
+      "description": "Runs the Windows affected-package build when a pull request changes any BUILD_windows recipe, so a Windows fix is proven on that PR instead of by the next daily cross-OS build.",
+      "paths": [
+        "code/packages/**/BUILD_windows",
+        "code/programs/**/BUILD_windows"
+      ]
+    },
     "build-windows-os-suites": {
       "scope": "step",
       "description": "Native Windows suites: Closure compiler publication/ACL regressions, native Perl XS consumers, the D18S AppContainer applier and the Windows broker (key files, key adoption, launch, supervised end to end), independent of any toolchain flag.",

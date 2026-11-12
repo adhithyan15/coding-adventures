@@ -1725,6 +1725,35 @@ public-certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Concrete HTTPS and
 live-provider readiness remain unavailable.
+A bounded subordinate-intermediate name-policy follow-up consumes that exact
+ordered target-policy result and derives every complete intermediate policy,
+certificate, and self-issued classification only from its retained
+accumulator. For each intermediate that carries critical supported DNS/IP
+NameConstraints, it visits every target-nearer intermediate in the already-
+proved anchor-to-target order. The constraint is applied to each such
+intermediate unless that subordinate certificate is self-issued, matching the
+RFC 5280 exception for non-final self-issued certificates. An absent
+subordinate Subject Alternative Name contributes an empty supported name set;
+a present extension must decode under caller-owned limits, and every retained
+dNSName and iPAddress must satisfy the constraining ancestor before traversal
+continues. The earlier path and intermediate ceilings bound certificates and
+constraint applications, while separate caller-owned limits bound every
+repository-owned decode. Success retains the complete target-policy result
+plus payload-free counts of constraint applications and repeated DNS/IP name
+evaluations. Callers cannot substitute or reorder constraints, subordinate
+certificates, SAN values, or self-issued classifications.
+
+The previously consumed target-policy result still proves every intermediate
+constraint against the exact final target. This additive slice does not apply
+the reviewed anchor's out-of-band constraints to subordinate CAs, constrain
+subject distinguished names, support directoryName or other GeneralName forms,
+or establish complete Name or path validation. It performs only pure public-
+certificate-data processing with no credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It does not validate the anchor
+self-signature, check revocation, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target

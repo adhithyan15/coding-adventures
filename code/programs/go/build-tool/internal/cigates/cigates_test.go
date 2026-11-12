@@ -925,6 +925,35 @@ func TestMSVCBootstrapChangeKeepsWindowsLeg(t *testing.T) {
 	}
 }
 
+// Windows pull-request legs skip the generic package build unless a gate or a
+// native toolchain flag fires, so a BUILD_windows fix used to be provable only
+// by the next daily cross-OS build. A changed Windows recipe must schedule the
+// Windows build of the packages it affects, and an ordinary BUILD (Unix) change
+// must not, or every pull request would pay for a Windows leg.
+func TestWindowsRecipeChangeSchedulesWindowsBuild(t *testing.T) {
+	reg := loadRealRegistry(t)
+	tests := []struct {
+		name  string
+		files []string
+		want  bool
+	}{
+		{"package recipe", []string{"code/packages/haskell/sha1/BUILD_windows"}, true},
+		{"program recipe", []string{"code/programs/rust/build-tool/BUILD_windows"}, true},
+		{"nested package recipe", []string{"code/packages/typescript/forme/sandbox/BUILD_windows"}, true},
+		{"unix recipe only", []string{"code/packages/haskell/sha1/BUILD"}, false},
+		{"mac and linux recipe only", []string{"code/packages/rust/tcp-reactor/BUILD_mac_and_linux"}, false},
+		{"source file only", []string{"code/packages/haskell/sha1/src/Sha1.hs"}, false},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := mustEvaluate(t, reg, map[string]bool{}, tc.files, false)
+			if got["build-windows-recipes"] != tc.want {
+				t.Errorf("build-windows-recipes = %v, want %v for %v", got["build-windows-recipes"], tc.want, tc.files)
+			}
+		})
+	}
+}
+
 // A Windows job can be green while its general Rust test step is skipped.
 // Exercise the checked-in gate, rather than a stand-in registry, so Closure's
 // native ACL tests remain selected after compiler or dependency changes.

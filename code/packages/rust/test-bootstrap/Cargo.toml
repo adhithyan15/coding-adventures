@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_test_bootstrap"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2021"
 description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output, VER05 property testing engine, VER06 coverage-guided fuzz engine, and VER07 microbenchmark harness"
 

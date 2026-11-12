@@ -2,7 +2,7 @@
   "evidence_seed": "5135847629189502785",
   "module": "gf256",
   "schema": "warrant-test-evidence-v1",
-  "source_sha256": "6ec361a42aed5ac75c954d20ef921e51d0fc88a6c6c5b0ce626180f0396f5ed0",
+  "source_sha256": "645e8a86f7438fb33e046be332ce9931c185fff9f47c6435ffb4dbc85314520b",
   "spec": "code/specs/gf256.warrant",
   "spec_sha256": "fecd88bc5101f9cc58115108b4618bc2818f7786cf98b960822d04502dc541bb",
   "tests": [
