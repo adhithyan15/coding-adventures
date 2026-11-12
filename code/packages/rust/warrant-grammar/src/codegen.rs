@@ -278,6 +278,95 @@ pub enum EvalValue {
     },
 }
 
+/// Fixed host-side charge for one copied `EvalValue` node. This is separate
+/// from the portable Warrant data-meter charge below.
+const READ_COPY_NODE_BYTES: usize = 96;
+const MAX_READ_COPY_CHARGE_BYTES: usize = 64 * 1024 * 1024;
+const _: () = assert!(std::mem::size_of::<EvalValue>() <= READ_COPY_NODE_BYTES);
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ReadCopyFootprintError {
+    OverBudget,
+    TooDeep,
+}
+
+fn add_read_copy_footprint(
+    total: &mut usize,
+    amount: usize,
+    remaining: usize,
+) -> Result<(), ReadCopyFootprintError> {
+    *total = total
+        .checked_add(amount)
+        .filter(|&sum| sum <= remaining)
+        .ok_or(ReadCopyFootprintError::OverBudget)?;
+    Ok(())
+}
+
+/// Compute a bounded deep-copy footprint without allocating. The `remaining`
+/// argument makes wide values stop as soon as they cannot fit the budget.
+fn read_copy_footprint(
+    value: &EvalValue,
+    container_depth: usize,
+    remaining: usize,
+) -> Result<usize, ReadCopyFootprintError> {
+    let is_container = matches!(
+        value,
+        EvalValue::List(_)
+            | EvalValue::Tuple(_)
+            | EvalValue::Option(_)
+            | EvalValue::Result(_)
+            | EvalValue::Con { .. }
+    );
+    let child_depth = container_depth + usize::from(is_container);
+    if child_depth > TFV_MAX_DEPTH {
+        return Err(ReadCopyFootprintError::TooDeep);
+    }
+
+    let mut total = READ_COPY_NODE_BYTES;
+    add_read_copy_footprint(&mut total, 0, remaining)?;
+
+    let children: &[EvalValue] = match value {
+        EvalValue::Bytes(bytes) => {
+            add_read_copy_footprint(&mut total, bytes.len(), remaining)?;
+            &[]
+        }
+        EvalValue::Option(Some(inner)) | EvalValue::Result(Ok(inner)) => {
+            let child = read_copy_footprint(inner, child_depth, remaining - total)?;
+            add_read_copy_footprint(&mut total, child, remaining)?;
+            &[]
+        }
+        EvalValue::Result(Err((ty, case))) => {
+            add_read_copy_footprint(&mut total, ty.len(), remaining)?;
+            add_read_copy_footprint(&mut total, case.len(), remaining)?;
+            &[]
+        }
+        EvalValue::Con {
+            ty, ctor, fields, ..
+        } => {
+            add_read_copy_footprint(&mut total, ty.len(), remaining)?;
+            add_read_copy_footprint(&mut total, ctor.len(), remaining)?;
+            for child in fields {
+                let cost = read_copy_footprint(child, child_depth, remaining - total)?;
+                add_read_copy_footprint(&mut total, cost, remaining)?;
+            }
+            &[]
+        }
+        EvalValue::List(items) | EvalValue::Tuple(items) => items,
+        EvalValue::Option(None)
+        | EvalValue::Bool(_)
+        | EvalValue::Int(_)
+        | EvalValue::Nat(_)
+        | EvalValue::U8(_)
+        | EvalValue::U64(_)
+        | EvalValue::Fixed(_, _) => &[],
+    };
+    for child in children {
+        let cost = read_copy_footprint(child, child_depth, remaining - total)?;
+        add_read_copy_footprint(&mut total, cost, remaining)?;
+    }
+    Ok(total)
+}
+
 /// TFV's container nesting limit (`test-bootstrap` `tfv::MAX_DEPTH`).
 pub const TFV_MAX_DEPTH: usize = 64;
 
@@ -435,7 +524,8 @@ impl EvalValue {
 
     /// Container nesting of the portable encoding (a scalar is 0).
     pub fn container_depth(&self) -> usize {
-        let max_of = |items: &[EvalValue]| items.iter().map(Self::container_depth).max().unwrap_or(0);
+        let max_of =
+            |items: &[EvalValue]| items.iter().map(Self::container_depth).max().unwrap_or(0);
         match self {
             Self::List(items) | Self::Tuple(items) => 1 + max_of(items),
             Self::Option(None) => 1,
@@ -549,6 +639,8 @@ pub struct Evaluator<'a> {
     /// (cumulative, never refunded; reset with the work counter per instance).
     /// Only a v1 document charges it.
     data: u64,
+    /// Host-side deep-copy footprint charged since the current top-level eval.
+    read_copy: usize,
     /// The document is a v1 document: the WX-B/WX-C built-ins are in scope and
     /// numeric equality compares by mathematical value.
     v1: bool,
@@ -592,10 +684,112 @@ impl<'a> Evaluator<'a> {
             depth: 0,
             work: 0,
             data: 0,
+            read_copy: 0,
             v1: file.version == Version::V1,
             ctors,
             adts,
         }
+    }
+
+    fn read_copy_error(&self, error: ReadCopyFootprintError, span: (usize, usize)) -> CodegenError {
+        CodegenError {
+            code: DiagnosticCode::W0703,
+            kind: match error {
+                ReadCopyFootprintError::OverBudget => {
+                    CodegenErrorKind::EvaluationError("read-copy budget exceeded".into())
+                }
+                ReadCopyFootprintError::TooDeep => CodegenErrorKind::RecursionDepthExceeded,
+            },
+            span,
+        }
+    }
+
+    fn reserve_read_copy_charge(
+        &mut self,
+        charge: usize,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        let total = self.read_copy.checked_add(charge);
+        let Some(total) = total.filter(|&n| n <= MAX_READ_COPY_CHARGE_BYTES) else {
+            return Err(self.read_copy_error(ReadCopyFootprintError::OverBudget, span));
+        };
+        self.read_copy = total;
+        Ok(())
+    }
+
+    /// Preflight every value in a multi-input copy before any operand is cloned.
+    fn reserve_read_copies<'v>(
+        &mut self,
+        values: impl IntoIterator<Item = &'v EvalValue>,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        let mut total = 0usize;
+        for value in values {
+            let remaining = MAX_READ_COPY_CHARGE_BYTES
+                .saturating_sub(self.read_copy)
+                .saturating_sub(total);
+            let cost = read_copy_footprint(value, 0, remaining)
+                .map_err(|e| self.read_copy_error(e, span))?;
+            total = total
+                .checked_add(cost)
+                .ok_or_else(|| self.read_copy_error(ReadCopyFootprintError::OverBudget, span))?;
+        }
+        self.reserve_read_copy_charge(total, span)
+    }
+
+    fn copy_value(
+        &mut self,
+        value: &EvalValue,
+        span: (usize, usize),
+    ) -> Result<EvalValue, CodegenError> {
+        self.reserve_read_copies(std::iter::once(value), span)?;
+        Ok(value.clone())
+    }
+
+    fn copy_environment<'e>(
+        &mut self,
+        env: &'e HashMap<&'a str, EvalValue>,
+        span: (usize, usize),
+    ) -> Result<HashMap<&'a str, EvalValue>, CodegenError> {
+        self.reserve_read_copies(env.values(), span)?;
+        Ok(env.clone())
+    }
+
+    fn reserve_read_copy_sequence<'v>(
+        &mut self,
+        items: impl IntoIterator<Item = &'v EvalValue>,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        let mut total = READ_COPY_NODE_BYTES;
+        for item in items {
+            let remaining = MAX_READ_COPY_CHARGE_BYTES
+                .saturating_sub(self.read_copy)
+                .saturating_sub(total);
+            let cost = read_copy_footprint(item, 1, remaining)
+                .map_err(|e| self.read_copy_error(e, span))?;
+            total = total
+                .checked_add(cost)
+                .ok_or_else(|| self.read_copy_error(ReadCopyFootprintError::OverBudget, span))?;
+        }
+        self.reserve_read_copy_charge(total, span)
+    }
+
+    fn reserve_repeated_read_copy(
+        &mut self,
+        value: &EvalValue,
+        count: usize,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        if count == 0 {
+            return Ok(());
+        }
+        let remaining = MAX_READ_COPY_CHARGE_BYTES.saturating_sub(self.read_copy);
+        let one =
+            read_copy_footprint(value, 0, remaining).map_err(|e| self.read_copy_error(e, span))?;
+        let charge = one
+            .checked_mul(count)
+            .ok_or_else(|| self.read_copy_error(ReadCopyFootprintError::OverBudget, span))?;
+        self.reserve_read_copy_charge(charge, span)
     }
 
     fn charge_work(&mut self, amount: usize, span: (usize, usize)) -> Result<(), CodegenError> {
@@ -611,14 +805,14 @@ impl<'a> Evaluator<'a> {
     }
 
     fn enter_scope(&mut self, span: (usize, usize)) -> Result<(), CodegenError> {
-        self.depth += 1;
-        if self.depth > self.limits.max_depth {
+        if self.depth >= self.limits.max_depth {
             return Err(CodegenError {
                 code: DiagnosticCode::W0703,
                 kind: CodegenErrorKind::RecursionDepthExceeded,
                 span,
             });
         }
+        self.depth += 1;
         Ok(())
     }
 
@@ -626,11 +820,13 @@ impl<'a> Evaluator<'a> {
         self.depth = self.depth.saturating_sub(1);
     }
 
-    /// Start a new instance: the work meter and the WX-D data meter are both
-    /// per evaluation (VER04k section 2.7).
+    /// Reset the work, WX-D data and host read-copy meters before a new
+    /// instance. The read-copy meter also resets automatically for each
+    /// top-level call to [`Evaluator::eval`].
     pub fn reset_work(&mut self) {
         self.work = 0;
         self.data = 0;
+        self.read_copy = 0;
     }
 
     /// Work units charged since the last [`Evaluator::reset_work`].
@@ -719,6 +915,9 @@ impl<'a> Evaluator<'a> {
         expr: &Expression<'a>,
         env: &HashMap<&'a str, EvalValue>,
     ) -> Result<EvalValue, CodegenError> {
+        if self.depth == 0 {
+            self.read_copy = 0;
+        }
         self.charge_work(1, expr_span(expr))?;
         self.enter_scope(expr_span(expr))?;
         let res = self.eval_internal(expr, env);
@@ -777,7 +976,7 @@ impl<'a> Evaluator<'a> {
                     // called `take`, so the value is the one the checker typed.
                     if args.is_none() && widths.is_empty() {
                         if let Some(val) = env.get(first) {
-                            return Ok(val.clone());
+                            return self.copy_value(val, *span);
                         }
                     }
                     // WX-A constructors: `C(e1, ..., en)` and the bare nullary `C`.
@@ -810,7 +1009,7 @@ impl<'a> Evaluator<'a> {
                 // WX-A: `x.f.g` with a binder head is projection.
                 if self.v1 {
                     if let Some(head) = env.get(first) {
-                        let mut v = head.clone();
+                        let mut v = self.copy_value(head, *span)?;
                         for seg in &name.segments[1..] {
                             v = self.project(&v, ProjKey::Field(seg), *span)?;
                         }
@@ -1044,11 +1243,16 @@ impl<'a> Evaluator<'a> {
                 .and_then(|pos| fields.get(pos)),
             _ => None,
         };
-        found.cloned().ok_or_else(|| CodegenError {
-            code: DiagnosticCode::W0702,
-            kind: CodegenErrorKind::EvaluationError("projection of a non-composite value".into()),
-            span,
-        })
+        match found {
+            Some(value) => self.copy_value(value, span),
+            None => Err(CodegenError {
+                code: DiagnosticCode::W0702,
+                kind: CodegenErrorKind::EvaluationError(
+                    "projection of a non-composite value".into(),
+                ),
+                span,
+            }),
+        }
     }
 
     fn eval_call(
@@ -1137,7 +1341,8 @@ impl<'a> Evaluator<'a> {
                     }
                     EvalValue::List(l) => {
                         if idx < l.len() {
-                            Ok(EvalValue::Option(Some(Box::new(l[idx].clone()))))
+                            self.copy_value(&l[idx], span)
+                                .map(|v| EvalValue::Option(Some(Box::new(v))))
                         } else {
                             Ok(EvalValue::Option(None))
                         }
@@ -1169,6 +1374,13 @@ impl<'a> Evaluator<'a> {
                         }
                         self.charge_data_v1(|| total_len as u128, span)?;
                         self.charge_work(total_len, span)?;
+                        let copy_charge = READ_COPY_NODE_BYTES.checked_add(total_len);
+                        let Some(copy_charge) = copy_charge else {
+                            return Err(
+                                self.read_copy_error(ReadCopyFootprintError::OverBudget, span)
+                            );
+                        };
+                        self.reserve_read_copy_charge(copy_charge, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
                         Ok(EvalValue::Bytes(res))
@@ -1186,6 +1398,7 @@ impl<'a> Evaluator<'a> {
                         let copied = || dsize_items(a).saturating_add(dsize_items(b));
                         self.charge_data_v1(copied, span)?;
                         self.charge_work(total_len, span)?;
+                        self.reserve_read_copy_sequence(a.iter().chain(b.iter()), span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
                         Ok(EvalValue::List(res))
@@ -1222,6 +1435,7 @@ impl<'a> Evaluator<'a> {
                 match &evaled_args[0] {
                     EvalValue::Bytes(b) => {
                         if b.len() as u64 == target_width {
+                            self.reserve_read_copies(std::iter::once(&evaled_args[0]), span)?;
                             Ok(EvalValue::Option(Some(Box::new(EvalValue::Bytes(
                                 b.clone(),
                             )))))
@@ -1651,8 +1865,11 @@ impl<'a> Evaluator<'a> {
                 EvalValue::Int(if name == "imin" { a.min(b) } else { a.max(b) })
             }
             "unwrap_or" => match args.first() {
-                Some(EvalValue::Option(Some(v))) => (**v).clone(),
-                Some(EvalValue::Option(None)) => args.get(1).cloned().ok_or_else(|| bad("arity"))?,
+                Some(EvalValue::Option(Some(v))) => self.copy_value(v, span)?,
+                Some(EvalValue::Option(None)) => match args.get(1) {
+                    Some(value) => self.copy_value(value, span)?,
+                    None => return Err(bad("arity")),
+                },
                 _ => return Err(bad("Option operand expected")),
             },
             "bit_and" | "bit_or" | "bit_xor" => {
@@ -1789,6 +2006,13 @@ impl<'a> Evaluator<'a> {
                     Some(EvalValue::Bytes(b)) => {
                         let part = &b[start..start + l];
                         self.seq_reserve(l, l as u128, span)?;
+                        let copy_charge = READ_COPY_NODE_BYTES.checked_add(part.len());
+                        let Some(copy_charge) = copy_charge else {
+                            return Err(
+                                self.read_copy_error(ReadCopyFootprintError::OverBudget, span)
+                            );
+                        };
+                        self.reserve_read_copy_charge(copy_charge, span)?;
                         Ok(EvalValue::Bytes(part.to_vec()))
                     }
                     Some(EvalValue::List(xs)) => {
@@ -1796,6 +2020,7 @@ impl<'a> Evaluator<'a> {
                         // Charged as if copied (section 2.6), payload and all.
                         let data = dsize_items(part);
                         self.seq_reserve(l, data, span)?;
+                        self.reserve_read_copy_sequence(part.iter(), span)?;
                         Ok(EvalValue::List(part.to_vec()))
                     }
                     _ => Err(bad("sequence operand expected")),
@@ -1808,7 +2033,10 @@ impl<'a> Evaluator<'a> {
                 let l = self.seq_cap(count(1)?, span)?;
                 let each = NODE_BYTES.saturating_add(dsize(x));
                 self.seq_reserve(l, (l as u128).saturating_mul(each), span)?;
-                Ok(EvalValue::List(vec![x.clone(); l]))
+                self.reserve_repeated_read_copy(x, l, span)?;
+                Ok(EvalValue::List(
+                    std::iter::repeat_with(|| x.clone()).take(l).collect(),
+                ))
             }
             "range" => {
                 let l = self.seq_cap(count(0)?, span)?;
@@ -1861,7 +2089,8 @@ impl<'a> Evaluator<'a> {
                 _ => false,
             },
             (EvalValue::Result(Ok(x)), EvalValue::Result(Ok(y))) => self.values_equal(x, y),
-            (EvalValue::List(a), EvalValue::List(b)) | (EvalValue::Tuple(a), EvalValue::Tuple(b)) => {
+            (EvalValue::List(a), EvalValue::List(b))
+            | (EvalValue::Tuple(a), EvalValue::Tuple(b)) => {
                 a.len() == b.len() && a.iter().zip(b).all(|(x, y)| self.values_equal(x, y))
             }
             (
@@ -1905,8 +2134,8 @@ impl<'a> Evaluator<'a> {
             | (Pattern::Ok(q), EvalValue::Result(Ok(inner))) => {
                 self.match_pattern(q, inner, binds, span)?
             }
-            (Pattern::Err(q), EvalValue::Result(Err((t, c)))) => {
-                let err_value = EvalValue::Result(Err((t.clone(), c.clone())));
+            (Pattern::Err(q), EvalValue::Result(Err(_))) => {
+                let err_value = self.copy_value(v, span)?;
                 self.match_pattern(q, &err_value, binds, span)?
             }
             (Pattern::Bool(b), EvalValue::Bool(x)) => b == x,
@@ -1941,7 +2170,8 @@ impl<'a> Evaluator<'a> {
                         _ => false,
                     }
                 } else {
-                    binds.push((name.segments[0], v.clone()));
+                    let copied = self.copy_value(v, span)?;
+                    binds.push((name.segments[0], copied));
                     true
                 }
             }
@@ -1959,7 +2189,7 @@ impl<'a> Evaluator<'a> {
         for arm in arms {
             let mut binds = Vec::new();
             if self.match_pattern(&arm.pattern, &target, &mut binds, arm.span)? {
-                let mut arm_env = env.clone();
+                let mut arm_env = self.copy_environment(env, arm.span)?;
                 for (n, v) in binds {
                     arm_env.insert(n, v);
                 }
@@ -2273,10 +2503,8 @@ fn find_operation_shallow<'a>(
             }
             None
         }
-        Expression::Binary { left, right, .. } => {
-            find_operation_shallow(left, op_names)
-                .or_else(|| find_operation_shallow(right, op_names))
-        }
+        Expression::Binary { left, right, .. } => find_operation_shallow(left, op_names)
+            .or_else(|| find_operation_shallow(right, op_names)),
         Expression::Unary { operand, .. } => find_operation_shallow(operand, op_names),
         Expression::Conditional {
             condition,
@@ -2305,10 +2533,7 @@ fn is_bytes_type(param_type: &crate::parser::TypeExpr) -> bool {
     matches!(
         param_type,
         crate::parser::TypeExpr::Bytes { .. }
-            | crate::parser::TypeExpr::Named {
-                name: "Bytes",
-                ..
-            }
+            | crate::parser::TypeExpr::Named { name: "Bytes", .. }
     )
 }
 
@@ -2325,20 +2550,14 @@ fn is_u64_type(param_type: &crate::parser::TypeExpr) -> bool {
 fn is_bool_type(param_type: &crate::parser::TypeExpr) -> bool {
     matches!(
         param_type,
-        crate::parser::TypeExpr::Named {
-            name: "Bool",
-            ..
-        }
+        crate::parser::TypeExpr::Named { name: "Bool", .. }
     )
 }
 
 fn is_u8_type(param_type: &crate::parser::TypeExpr) -> bool {
     matches!(
         param_type,
-        crate::parser::TypeExpr::Named {
-            name: "U8",
-            ..
-        }
+        crate::parser::TypeExpr::Named { name: "U8", .. }
     )
 }
 
@@ -2398,7 +2617,8 @@ fn generate_claim_helper(
             ((shrunk_a, shrunk_b), steps_a + steps_b)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &(Vec<u8>, Vec<u8>)| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &(Vec<u8>, Vec<u8>)| -> bool {{
             let a = &cand.0;
             let b = &cand.1;
             let mut got = {op_export}(a, b);
@@ -2408,7 +2628,8 @@ fn generate_claim_helper(
             let expected = a == b;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else if is_first_u64 && is_second_u64 {
             let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok((gen_u64(rng), gen_u64(rng)))\n        };\n";
@@ -2419,7 +2640,8 @@ fn generate_claim_helper(
             ((shrunk_a as u64, shrunk_b as u64), steps_a + steps_b)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &(u64, u64)| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &(u64, u64)| -> bool {{
             let a = cand.0;
             let b = cand.1;
             let mut got = {op_export}(a, b);
@@ -2429,7 +2651,8 @@ fn generate_claim_helper(
             let expected = a == b;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else if is_first_u8 && is_second_u8 {
             let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok((gen_u8(rng), gen_u8(rng)))\n        };\n";
@@ -2440,7 +2663,8 @@ fn generate_claim_helper(
             ((shrunk_a as u8, shrunk_b as u8), steps_a + steps_b)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &(u8, u8)| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &(u8, u8)| -> bool {{
             let a = cand.0;
             let b = cand.1;
             let mut got = {op_export}(a, b);
@@ -2450,7 +2674,8 @@ fn generate_claim_helper(
             let expected = a == b;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else {
             return Err(CodegenError {
@@ -2470,7 +2695,8 @@ fn generate_claim_helper(
             shrink_bytes(&cand, |a| prop(&a.to_vec()), 1000)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &Vec<u8>| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &Vec<u8>| -> bool {{
             let a = cand;
             let mut got = {op_export}(a, a);
             if matches!(fault, Fault::Equality) {{
@@ -2479,7 +2705,8 @@ fn generate_claim_helper(
             let expected = true;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else if is_first_u64 {
             let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok(gen_u64(rng))\n        };\n";
@@ -2488,7 +2715,8 @@ fn generate_claim_helper(
             (shrunk as u64, steps)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &u64| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &u64| -> bool {{
             let a = *cand;
             let mut got = {op_export}(a, a);
             if matches!(fault, Fault::Equality) {{
@@ -2497,7 +2725,8 @@ fn generate_claim_helper(
             let expected = true;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else if is_first_bool {
             let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok(gen_bool(rng))\n        };\n";
@@ -2505,7 +2734,8 @@ fn generate_claim_helper(
             (cand, 0)
         };
 "#;
-            let prop = format!(r#"        let prop = |cand: &bool| -> bool {{
+            let prop = format!(
+                r#"        let prop = |cand: &bool| -> bool {{
             let a = *cand;
             let mut got = {op_export}(a);
             if matches!(fault, Fault::Equality) {{
@@ -2514,7 +2744,8 @@ fn generate_claim_helper(
             let expected = a;
             got == expected
         }};
-"#);
+"#
+            );
             (gen, shrink.to_string(), prop)
         } else {
             return Err(CodegenError {
@@ -2529,10 +2760,18 @@ fn generate_claim_helper(
     };
 
     let mut out = String::new();
-    out.push_str(&format!("fn check_claim_{}(ctx: &Ctx, fault: Fault) -> Verdict {{\n", claim.id));
+    out.push_str(&format!(
+        "fn check_claim_{}(ctx: &Ctx, fault: Fault) -> Verdict {{\n",
+        claim.id
+    ));
     out.push_str("    let options = PbtOptions::default();\n");
-    out.push_str(&format!("    let claim_tag = \"claim/{}_{}\";\n", file.name, claim.id));
-    out.push_str("    let claim_sub_seed = coding_adventures_test_bootstrap::prng::SplitMix64::new(\n");
+    out.push_str(&format!(
+        "    let claim_tag = \"claim/{}_{}\";\n",
+        file.name, claim.id
+    ));
+    out.push_str(
+        "    let claim_sub_seed = coding_adventures_test_bootstrap::prng::SplitMix64::new(\n",
+    );
     out.push_str("        ctx.seed() ^ coding_adventures_test_bootstrap::prng::fnv1a64(claim_tag.as_bytes())\n");
     out.push_str("    ).next_u64();\n\n");
     out.push_str(gen_code);
@@ -2967,9 +3206,15 @@ pub fn compile_rust_l0_harness(
     for claim in &claim_cases {
         let test_name = format!("{}/claim_{}", file.name, claim.id);
         out.push_str(&format!("    suite.add(\"{test_name}\", |ctx| {{\n"));
-        out.push_str(&format!("        check_claim_{}(ctx, Fault::None)\n", claim.id));
+        out.push_str(&format!(
+            "        check_claim_{}(ctx, Fault::None)\n",
+            claim.id
+        ));
         out.push_str("    });\n");
-        out.push_str(&format!("    suite.add(\"claim_sabotage/{}_broken_impl\", |ctx| {{\n", claim.id));
+        out.push_str(&format!(
+            "    suite.add(\"claim_sabotage/{}_broken_impl\", |ctx| {{\n",
+            claim.id
+        ));
         out.push_str(&format!("        reject_claim_after_baseline(ctx, |c, f| check_claim_{}(c, f), Fault::Equality)\n", claim.id));
         out.push_str("    });\n\n");
     }
@@ -3136,4 +3381,122 @@ pub fn verify_regeneration(target: &Path, content: &str) -> Result<bool, String>
     let existing =
         std::fs::read_to_string(target).map_err(|e| format!("Failed to read target: {e}"))?;
     Ok(existing == content)
+}
+
+#[cfg(test)]
+mod read_copy_guard_tests {
+    use super::*;
+    use crate::parser::{Expression, Literal, QualifiedName};
+
+    #[test]
+    fn footprint_counts_nested_nodes_payloads_and_owned_names() {
+        let value = EvalValue::Option(Some(Box::new(EvalValue::List(vec![
+            EvalValue::Bool(true),
+            EvalValue::Bytes(vec![1, 2]),
+            EvalValue::Result(Err(("E".into(), "X".into()))),
+        ]))));
+        // Option + List + Bool + Bytes(2) + Err(E, X).
+        assert_eq!(read_copy_footprint(&value, 0, usize::MAX), Ok(484));
+        assert_eq!(
+            read_copy_footprint(&value, 0, 483),
+            Err(ReadCopyFootprintError::OverBudget)
+        );
+    }
+
+    #[test]
+    fn footprint_accepts_exact_container_depth_and_rejects_one_more() {
+        let mut within = EvalValue::Bool(true);
+        for _ in 0..TFV_MAX_DEPTH {
+            within = EvalValue::Option(Some(Box::new(within)));
+        }
+        assert_eq!(within.container_depth(), TFV_MAX_DEPTH);
+        assert_eq!(
+            read_copy_footprint(&within, 0, usize::MAX),
+            Ok((TFV_MAX_DEPTH + 1) * READ_COPY_NODE_BYTES)
+        );
+
+        let too_deep = EvalValue::Option(Some(Box::new(within)));
+        assert_eq!(
+            read_copy_footprint(&too_deep, 0, usize::MAX),
+            Err(ReadCopyFootprintError::TooDeep)
+        );
+    }
+
+    #[test]
+    fn failed_depth_entry_unwinds_and_a_new_top_level_eval_resets_copy_budget() {
+        let limits = CodegenLimits {
+            max_depth: 2,
+            ..CodegenLimits::default()
+        };
+        let mut evaluator = Evaluator {
+            models: HashMap::new(),
+            limits,
+            depth: 0,
+            work: 0,
+            data: 0,
+            read_copy: 0,
+            v1: false,
+            ctors: HashMap::new(),
+            adts: HashMap::new(),
+        };
+        let span = (0, 0);
+        let binder_ref = || Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["b"],
+                span,
+            },
+            widths: Vec::new(),
+            args: None,
+            span,
+        };
+        let nested = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["concat"],
+                span,
+            },
+            widths: Vec::new(),
+            args: Some(vec![
+                binder_ref(),
+                Expression::Grouped {
+                    inner: Box::new(Expression::Literal {
+                        lit: Literal::Bool(true),
+                        span,
+                    }),
+                    span,
+                },
+            ]),
+            span,
+        };
+        let env = HashMap::from([("b", EvalValue::Bytes(vec![1]))]);
+
+        let err = evaluator
+            .eval(&nested, &env)
+            .expect_err("nested depth is refused after the first argument copy");
+        assert_eq!(err.kind, CodegenErrorKind::RecursionDepthExceeded);
+        assert_eq!(
+            evaluator.depth, 0,
+            "failed entry must not poison later evals"
+        );
+        assert_eq!(
+            evaluator.read_copy, 97,
+            "the earlier successful copy stays charged"
+        );
+
+        assert_eq!(
+            evaluator.eval(&binder_ref(), &env),
+            Ok(EvalValue::Bytes(vec![1]))
+        );
+        assert_eq!(
+            evaluator.read_copy, 97,
+            "the next root eval gets a fresh budget"
+        );
+
+        evaluator.reset_work();
+        assert_eq!(evaluator.read_copy, 0, "reset_work clears the copy budget");
+        assert_eq!(
+            evaluator.eval(&binder_ref(), &env),
+            Ok(EvalValue::Bytes(vec![1]))
+        );
+        assert_eq!(evaluator.read_copy, 97);
+    }
 }
