@@ -467,6 +467,30 @@ Linux, so without the gate that walk runs natively only when some unrelated
 gated package happens to share the PR. That is how its original breakage sat
 latent from #829 until #17722.
 
+### Windows recipe changes prove themselves on the pull request
+
+The `build-windows-recipes` gate (BUILD-002) has no `packages`, only `paths`:
+`code/packages/**/BUILD_windows` and `code/programs/**/BUILD_windows`. A pull
+request that changes any Windows recipe therefore sets
+`run_build_windows_recipes`, which does two things in `ci.yml`: it adds the
+Windows leg to the pull-request build matrix, and it lets that leg's "Build and
+test affected packages" step run. Both used to depend on a native toolchain
+flag, so a recipe edit could merge without ever running on Windows and was only
+exercised by the next daily cross-OS build, a day later.
+
+What the Windows leg builds is the planner's own Windows closure
+(`platform_overrides.windows.affected_packages`): the package whose recipe
+changed plus its dependents. The Linux closure is unaffected, because a
+`BUILD_windows` file is not read there. Toolchains follow the same closure
+(`languages_needed` is computed across platforms), so editing a Haskell recipe
+installs GHC on the Windows runner. A change to an ordinary `BUILD`,
+`BUILD_mac_and_linux` or a source file does not fire the gate, so pull requests
+that do not touch a Windows recipe pay nothing.
+
+Size a change to what one runner can prove: a recipe edit across dozens of
+packages builds all of them and their dependents on one Windows runner, under
+the step's 300 minute ceiling. Roll large recipe changes out in batches.
+
 ### Closure compiler native Windows acceptance
 
 The Windows general package-test step is conditional on

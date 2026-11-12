@@ -157,6 +157,7 @@ jobs:
       run_build_linux_os_suites: ${{ steps.detect.outputs.run_build_linux_os_suites }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+      run_build_windows_recipes: ${{ steps.detect.outputs.run_build_windows_recipes }}
       run_forme_release_platform: ${{ steps.detect.outputs.run_forme_release_platform }}
     steps:
       - name: Checkout
@@ -459,6 +460,7 @@ jobs:
           NEEDS_MOSAIC_SWIFT_RUNTIME: ${{ steps.mosaic-swift-runtime.outputs.required }}
           RUN_MACOS_OS_SUITES: ${{ steps.detect.outputs.run_build_macos_os_suites }}
           RUN_WINDOWS_OS_SUITES: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+          RUN_WINDOWS_RECIPES: ${{ steps.detect.outputs.run_build_windows_recipes }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
@@ -528,6 +530,7 @@ jobs:
               or cpp_bounded_json_windows
               or cpp_neural_framework_windows
               or flag("RUN_WINDOWS_OS_SUITES")
+              or flag("RUN_WINDOWS_RECIPES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
               or flag("NEEDS_OCAML")
@@ -5867,7 +5870,7 @@ jobs:
       # well inside the 360-minute job limit, with room for the ~25 minutes
       # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
-        if: needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
+        if: needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.run_build_windows_recipes == 'true')
         timeout-minutes: 300
         shell: bash
         run: |
