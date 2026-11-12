@@ -818,6 +818,12 @@ def erow(release: str, date: str, predecessor: str, editions: str, tail: str = P
     return row(release, date, predecessor, tail) + f",{editions}"
 
 
+def put(lines: list[str], release: str, new: str) -> None:
+    """Replace the row of `release` in `lines`, in place."""
+    index = next(i for i, line in enumerate(lines) if line.startswith(release + ","))
+    lines[index] = new
+
+
 def edition_lines(extra: list[str] | None = None) -> list[str]:
     """a1 has no editions; a2 gains 2015; a3 inherits; a4 gains 2018; a3p is a
     late patch of a3, released after a4, which must NOT gain 2018."""
@@ -901,16 +907,14 @@ class EditionHeaderTest(Fixture):
         lines[0] = "# editions: 2015@a2 2018@nope"
         self.assert_error(lines, "first release 'nope' is not a releases.csv row")
 
-    def test_edition_must_not_pre_exist_on_its_first_release(self) -> None:
-        # 2018 cannot start at a4 if a4's predecessor already has it.
+    def test_first_releases_may_move(self) -> None:
+        # Editions start wherever the header says; the column follows.
         lines = edition_lines()
         lines[0] = "# editions: 2015@a2 2018@a3 2021@a4"
-        lines[5] = erow("a3", "2000-03-01", "a2", "2015;2018")
-        lines[6] = erow("a4", "2000-04-01", "a3", "2015;2018;2021")
-        lines[7] = erow("a3p", "2000-05-01", "a3", "2015;2018")
+        put(lines, "a3", erow("a3", "2000-03-01", "a2", "2015;2018"))
+        put(lines, "a4", erow("a4", "2000-04-01", "a3", "2015;2018;2021"))
+        put(lines, "a3p", erow("a3p", "2000-05-01", "a3", "2015;2018"))
         self.assertEqual(self.errors("lang", lines), [])
-        lines[0] = "# editions: 2015@a2 2018@a4 2021@a4"
-        self.assert_error(lines, "is not the declared first release")
 
     def test_release_ids_ending_in_an_edition_are_refused(self) -> None:
         lines = edition_lines([erow("a5-e2021", "2000-06-01", "a4", "2015;2018")])
@@ -937,27 +941,27 @@ class EditionDerivationTest(Fixture):
 
     def test_wrong_column_is_an_error(self) -> None:
         lines = edition_lines()
-        lines[5] = erow("a3", "2000-03-01", "a2", "2015;2018")
+        put(lines, "a3", erow("a3", "2000-03-01", "a2", "2015;2018"))
         self.assert_error(
             lines, "(a3): editions '2015;2018' but lineage derives '2015'"
         )
 
     def test_late_patch_listing_a_new_edition_is_an_error(self) -> None:
         lines = edition_lines()
-        lines[6] = erow("a3p", "2000-05-01", "a3", "2015;2018")
+        put(lines, "a3p", erow("a3p", "2000-05-01", "a3", "2015;2018"))
         self.assert_error(
             lines, "(a3p): editions '2015;2018' but lineage derives '2015'"
         )
 
     def test_dash_is_for_editionless_rows_only(self) -> None:
         lines = edition_lines()
-        lines[4] = erow("a2", "2000-02-01", "a1", "-")
+        put(lines, "a2", erow("a2", "2000-02-01", "a1", "-"))
         self.assert_error(lines, "(a2): editions '-' but lineage derives '2015'")
 
     def test_editions_must_be_ascending_and_well_formed(self) -> None:
         for cell in ("2018;2015", "2015;2015", "20x5", "2015;", ""):
             lines = edition_lines()
-            lines[5] = erow("a3", "2000-03-01", "a2", cell)
+            put(lines, "a3", erow("a3", "2000-03-01", "a2", cell))
             self.assert_error(lines, "(a3): editions")
 
     def test_missing_predecessor_does_not_crash(self) -> None:
@@ -969,6 +973,7 @@ class UniformClaimsTest(Fixture):
     """A row's claim holds for every edition it lists (R1.3)."""
 
     def touch(self, *stems: str) -> None:
+        (self.root / "lang").mkdir(parents=True, exist_ok=True)
         for stem in stems:
             for suffix in ("tokens", "grammar"):
                 (self.root / "lang" / f"{stem}.{suffix}").write_text("")
@@ -976,7 +981,7 @@ class UniformClaimsTest(Fixture):
     def claimed(self, tail: str = "partial,P,s,-,-,-") -> list[str]:
         self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
         lines = edition_lines()
-        lines[7] = erow("a4", "2000-04-01", "a3", "2015;2018", tail)
+        put(lines, "a4", erow("a4", "2000-04-01", "a3", "2015;2018", tail))
         return lines
 
     def test_complete_set_of_pairs_passes(self) -> None:
@@ -1022,7 +1027,7 @@ class UniformClaimsTest(Fixture):
     def test_editionless_claim_needs_the_plain_pair(self) -> None:
         lines = edition_lines()
         self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
-        lines[2] = erow("a1", "2000-01-01", "", "-", "partial,P,s,-,-,-")
+        put(lines, "a1", erow("a1", "2000-01-01", "", "-", "partial,P,s,-,-,-"))
         self.assert_error(lines, "a1: claims a stage but langa1.tokens is missing")
         self.touch("langa1")
         self.assertEqual(self.errors("lang", lines), [])
@@ -1041,7 +1046,11 @@ class PairOverrideTest(Fixture):
         self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
         self.case("lang", "s", "x", "rb", "expect", "cite", *suffixes)
         lines = edition_lines()
-        lines[7] = erow("a4", "2000-04-01", "a3", "2015;2018", "partial,P,s,s,-,p")
+        put(
+            lines,
+            "a4",
+            erow("a4", "2000-04-01", "a3", "2015;2018", "partial,P,s,s,-,p"),
+        )
         for stem in ("langa4-e2015", "langa4-e2018"):
             for suffix in ("tokens", "grammar"):
                 (self.root / "lang" / f"{stem}.{suffix}").write_text("")

@@ -72,6 +72,58 @@ and its oracle record `<name>.cite`; a negative case is `<name>.<ext>` plus
 `<name>.reject@<profile>` (outside the subset under that profile, LANG84 4c),
 and the profile must be defined in a `profiles.rs`.
 
+THE EDITION AXIS (RS01, LANG84 "Amendment RS01" R1)
+===================================================
+
+Rust has a second selection input besides the release: the edition (2015,
+2018, 2021, 2024). One release compiles under several editions, and an edition
+changes the lexer and the parser, so a release has ONE PAIR PER EDITION:
+
+    rust0.4.tokens                  pre-1.0: no editions, plain stem
+    rust1.85.0-e2021.tokens         release 1.85.0, edition 2021
+
+An inventory opts in by having an `editions` column and a header comment that
+says where each edition starts:
+
+    # editions: 2015@1.0.0-alpha 2018@1.31.0 2021@1.56.0 2024@1.85.0
+
+The checker does not trust the column; it DERIVES it. A row's editions are its
+`predecessor`'s editions plus any edition whose first release is this row.
+Lineage carries the set, not the date, so a 1.30.1 patch released after 1.31.0
+never gains 2018:
+
+    1.30.0  2015
+    1.31.0  2015;2018      (2018 starts here)
+    1.30.1  2015           (predecessor is 1.30.0)
+
+Three more rules follow from it:
+
+    stems         split from the RIGHT: a trailing `-e` plus exactly four
+                  digits is the edition. So a release ID ending in `-e<digits>`
+                  would be ambiguous and is refused in an edition-axis
+                  inventory.
+    uniform       a row's status holds for EVERY edition it lists: a claimed
+    claims        row needs both files for each edition, and a pair file for
+                  an edition the row does not list is an error.
+    overrides     a corpus override key may name a pair:
+                  `<case>.reject@1.85.0-e2021`.
+
+For the directory named `rust` the checker also enforces RS01 section 1:
+release IDs are the published ones (nightly or beta-looking IDs are refused),
+each row's channel, `predecessor` and `lineage` follow RS01's rules, and no two
+rows continue the same predecessor on the same lineage. Every other inventory
+is checked exactly as before.
+
+SUBSET GATES (`allowlist` column)
+=================================
+
+`subsets.csv` may carry a fifth column, `allowlist`: `-` (no gate) or the name
+of a `*.allowlist` file in the grammar directory itself (never under
+`corpus/`, where it would read as a corpus case). Membership in a gated subset
+is the release grammar plus that checked-in gate (RS01 section 7.1). The file
+must exist only once a row claims the subset; until then (slice A2 declares
+`rs-confined`, slice B1 writes its allowlist) a missing file is fine.
+
 THE MATRIX CHECK (`--matrix`)
 =============================
 
@@ -109,6 +161,7 @@ from __future__ import annotations
 import argparse
 import bisect
 import csv
+import itertools
 import re
 import sys
 from dataclasses import dataclass, field
@@ -175,6 +228,38 @@ CLASS_RE = re.compile(r"^(?:[0-9a-f]{12,64}|rejected)\Z")
 # `\Z`, not `$`: Python's `$` also matches before a trailing newline, so
 # `"1.0\n"` (a quoted CSV cell, or a file name) would pass as `1.0`.
 PROFILE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*\Z")
+# Edition axis (RS01). `EDITION_STEM_RE` splits a pair stem from the right.
+# `\Z`, not `$`, for the same reason as above.
+EDITION_STEM_RE = re.compile(r"^(.*)-e([0-9]{4})\Z")
+EDITION_RE = re.compile(r"^[0-9]{4}\Z")
+EDITIONS_HEADER_RE = re.compile(r"^#\s*editions:(.*)$")
+EDITION_FIRST_RE = re.compile(r"^([0-9]{4})@([A-Za-z0-9._-]+)\Z")
+# A gate file name: a plain file name in the grammar directory.
+ALLOWLIST_RE = re.compile(r"^[A-Za-z0-9_-][A-Za-z0-9._-]*\.allowlist\Z")
+
+# Rust's published releases before 1.x, in lineage order (RS01 section 1.2).
+# 0.3.1 is the one pre-1.0 patch. The three 1.0 pre-releases are the only
+# published semver pre-release versions; there are no others, so a beta.2, an
+# rc, or a nightly is not an inventory row.
+RUST_PRE_1_0 = [
+    "0.1",
+    "0.2",
+    "0.3",
+    "0.3.1",
+    "0.4",
+    "0.5",
+    "0.6",
+    "0.7",
+    "0.8",
+    "0.9",
+    "0.10",
+    "0.11.0",
+    "0.12.0",
+]
+RUST_PRE_RELEASES = ["1.0.0-alpha", "1.0.0-alpha.2", "1.0.0-beta"]
+RUST_1X_RE = re.compile(r"^1\.(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})\Z")
+LINEAGES = {"first", "line", "branch-point"}
+
 # A grammar directory name is the first thing on every printed line.
 DIRECTORY_RE = re.compile(r"^[a-z0-9_-]+\Z")
 
@@ -354,6 +439,15 @@ def read_subsets(report: Report, directory: Path) -> dict[str, dict[str, str]]:
             report.error(f"{where}: corpus_dir must be corpus/{name}")
         if not SPEC_RE.match(row["spec"]) or not spec_exists(row["spec"]):
             report.error(f"{where}: spec {row['spec']!r} is not a file in code/specs")
+        if "allowlist" in row:
+            cell = row["allowlist"]
+            if cell is None:
+                report.error(f"{where}: allowlist cell is missing")
+            elif cell != "-" and not ALLOWLIST_RE.match(cell):
+                report.error(
+                    f"{where}: allowlist {printable(repr(cell))} must be '-' or a "
+                    "plain *.allowlist file name in the grammar directory"
+                )
         subsets[name] = row
     return subsets
 
@@ -367,7 +461,10 @@ def corpus_cases(
     probe is `<name>.<ext>` + `<name>.reject`. Overrides `<name>.expect@<p>`
     and `<name>.reject@<p>` need the plain `.expect`. `<p>` is a profile
     that some `profiles.rs` defines (Perl's `reject@perl_nv`) or a row of
-    this language's `releases.csv` (Python's `int_underscores.reject@3.0a1`).
+    this language's `releases.csv` (Python's `int_underscores.reject@3.0a1`),
+    or, on an edition axis, a (release, edition) pair written
+    `<release>-e<edition>` (Rust's `x.reject@1.85.0-e2021`). The caller puts
+    the valid pair names in `releases` next to the release IDs.
     Only positive cases need backend coverage.
     """
     corpus = directory / "corpus" / subset
@@ -419,7 +516,9 @@ def corpus_cases(
             report.error(f"{where}: a profile override needs the plain .expect")
         targets = [o.partition("@")[2] for o in overrides]
         for target in sorted({t for t in targets if targets.count(t) > 1}):
-            report.error(f"{where}: more than one override for {printable(repr(target))}")
+            report.error(
+                f"{where}: more than one override for {printable(repr(target))}"
+            )
         for override in sorted(overrides):
             target = override.partition("@")[2]
             is_profile = bool(PROFILE_RE.match(target)) and known_profile(target)
@@ -559,7 +658,11 @@ def check_status(
 
 
 def check_claimed_corpora(
-    report: Report, directory: Path, rows: list[dict[str, str]], subsets: set[str]
+    report: Report,
+    directory: Path,
+    rows: list[dict[str, str]],
+    subsets: set[str],
+    editions: dict[str, tuple[str, ...]] | None = None,
 ) -> dict[str, set[str]]:
     """Stages I and B are measured on a corpus, so a claimed subset needs one.
 
@@ -570,6 +673,9 @@ def check_claimed_corpora(
         if not row.get("__malformed__"):
             claimed |= split_list(row["iir_status"]) | split_list(row["backend_status"])
     releases = {row["release"] for row in rows if not row.get("__malformed__")}
+    # On an edition axis an override may also name a pair (R1.6).
+    for release, listed in (editions or {}).items():
+        releases |= {f"{release}-e{edition}" for edition in listed}
     cases: dict[str, set[str]] = {}
     for subset in sorted(claimed & subsets):
         found = corpus_cases(report, directory, subset, releases)
@@ -587,8 +693,14 @@ def check_pairs(
     directory: Path,
     rows: list[dict[str, str]],
     legacy: set[str],
+    editions: dict[str, tuple[str, ...]] | None = None,
 ) -> None:
-    """Every claimed pair exists, and every versioned pair file has a row."""
+    """Every claimed pair exists, and every versioned pair file has a row.
+
+    With `editions` (an edition-axis inventory, see the module docstring) a
+    release has one pair per listed edition, and the claim is uniform: a
+    claimed row needs ALL of them. Without it this is the original check.
+    """
     prefix = PAIR_PREFIX.get(directory.name, directory.name)
     releases = {row["release"]: row for row in rows if not row.get("__malformed__")}
     for release, row in releases.items():
@@ -596,20 +708,338 @@ def check_pairs(
             continue
         if not RELEASE_RE.match(release) or ".." in release:
             continue  # already an error; never build a path from it
-        for suffix in (".tokens", ".grammar"):
-            if not (directory / f"{prefix}{release}{suffix}").is_file():
-                report.error(
-                    f"{release}: claims a stage but {prefix}{release}{suffix} is missing"
-                )
+        # A release with no editions (or any release of an ordinary
+        # inventory) has the single plain pair.
+        listed: tuple[str | None, ...] = tuple((editions or {}).get(release, ())) or (
+            None,
+        )
+        for edition in listed:
+            stem = pair_stem(prefix, release, edition)
+            note = f" (edition {edition})" if edition else ""
+            for suffix in (".tokens", ".grammar"):
+                if not (directory / f"{stem}{suffix}").is_file():
+                    report.error(
+                        f"{release}: claims a stage but {stem}{suffix} is missing{note}"
+                    )
     stems = {path.stem for path in directory.glob("*.tokens")}
     stems |= {path.stem for path in directory.glob("*.grammar")}
     for stem in sorted(stems):
         if stem == prefix or stem in legacy:
             continue  # the unversioned pair, or a declared legacy pair
-        if not stem.startswith(prefix) or stem[len(prefix) :] not in releases:
+        if not stem.startswith(prefix):
             report.error(f"pair file {stem}.* has no releases.csv row")
+        elif editions is None:
+            if stem[len(prefix) :] not in releases:
+                report.error(f"pair file {stem}.* has no releases.csv row")
+        else:
+            check_edition_stem(report, stem, stem[len(prefix) :], releases, editions)
     for stem in sorted(legacy - stems):
         report.error(f"legacy pair {stem} is declared but has no files")
+
+
+def check_edition_stem(
+    report: Report,
+    stem: str,
+    rest: str,
+    releases: dict[str, dict[str, str]],
+    editions: dict[str, tuple[str, ...]],
+) -> None:
+    """One pair file of an edition-axis inventory (`rest` is the stem minus
+    the language prefix): its release is a row, and its edition (or lack of
+    one) is exactly what that row lists."""
+    split = split_pair_stem(rest)
+    if split is None or split[0] not in releases:
+        report.error(f"pair file {stem}.* has no releases.csv row")
+        return
+    release, edition = split
+    listed = editions.get(release, ())
+    if edition is None and listed:
+        report.error(
+            f"pair file {stem}.* needs an edition ({release} lists {';'.join(listed)})"
+        )
+    elif edition is not None and edition not in listed:
+        report.error(
+            f"pair file {stem}.* names edition {edition}, which {release} does not list"
+        )
+
+
+# ---------------------------------------------------------------------------
+# The edition axis (RS01)
+# ---------------------------------------------------------------------------
+
+
+def split_pair_stem(text: str) -> tuple[str, str | None] | None:
+    """Split a pair stem (without the language prefix) from the RIGHT.
+
+        "0.4"                  -> ("0.4", None)
+        "1.85.0-e2021"         -> ("1.85.0", "2021")
+        "1.0.0-alpha.2-e2015"  -> ("1.0.0-alpha.2", "2015")
+        "1.85.0-e21"           -> ("1.85.0-e21", None)   (not an edition)
+        "-e2021"               -> None                   (no release)
+
+    Only a trailing `-e` plus exactly four digits is an edition. Splitting
+    from the right is what lets a release ID contain hyphens (`1.0.0-beta`).
+    """
+    match = EDITION_STEM_RE.match(text)
+    if match:
+        release, edition = match.groups()
+        return (release, edition) if release else None
+    return (text, None) if text else None
+
+
+def pair_stem(prefix: str, release: str, edition: str | None) -> str:
+    """The file stem of one pair: `rust0.4` or `rust1.85.0-e2021`."""
+    return f"{prefix}{release}" if edition is None else f"{prefix}{release}-e{edition}"
+
+
+def parse_editions_header(
+    comments: list[str],
+) -> tuple[dict[str, str] | None, list[str]]:
+    """The `# editions: 2015@1.0.0-alpha 2018@1.31.0 ...` header comment.
+
+    Returns ({edition: first release}, errors), or (None, []) when the
+    inventory has no such comment (it is then not an edition-axis inventory).
+    Editions must be listed ascending, each once.
+    """
+    lines = [m for c in comments if (m := EDITIONS_HEADER_RE.match(c))]
+    if not lines:
+        return None, []
+    errors: list[str] = []
+    if len(lines) > 1:
+        errors.append("more than one `# editions:` header comment")
+    firsts: dict[str, str] = {}
+    entries = lines[0].group(1).split()
+    if not entries:
+        errors.append("`# editions:` declares no edition")
+    previous = ""
+    for entry in entries:
+        match = EDITION_FIRST_RE.match(entry)
+        if not match:
+            errors.append(
+                f"`# editions:` entry {printable(repr(entry))} must look like "
+                "2015@<release>"
+            )
+            continue
+        edition, first = match.groups()
+        if edition in firsts:
+            errors.append(f"`# editions:` edition {edition} is declared twice")
+        elif edition < previous:
+            errors.append("`# editions:` editions must be listed ascending")
+        firsts.setdefault(edition, first)
+        previous = max(previous, edition)
+    return firsts, errors
+
+
+def derive_editions(
+    rows: list[dict[str, str]], firsts: dict[str, str]
+) -> dict[str, tuple[str, ...]]:
+    """Each release's editions, derived along `predecessor` lineage.
+
+    A row has its predecessor's editions plus every edition that starts at
+    it. Never by date or by comparing release IDs: a patch to an old line
+    released after a newer minor keeps its own line's editions.
+    """
+    derived: dict[str, tuple[str, ...]] = {}
+    for row in rows:
+        if row.get("__malformed__"):
+            continue
+        editions = set(derived.get(row["predecessor"], ()))
+        editions |= {
+            edition for edition, first in firsts.items() if first == row["release"]
+        }
+        derived[row["release"]] = tuple(sorted(editions))
+    return derived
+
+
+def count_pairs(derived: dict[str, tuple[str, ...]]) -> int:
+    """Pairs in the inventory: one per edition, one for an editionless release."""
+    return sum(max(1, len(editions)) for editions in derived.values())
+
+
+def check_editions(
+    report: Report,
+    comments: list[str],
+    header: list[str],
+    rows: list[dict[str, str]],
+) -> dict[str, tuple[str, ...]] | None:
+    """Validate the edition axis; return the derived editions per release, or
+    None when the inventory has no edition axis (or its declaration is broken
+    beyond use)."""
+    has_column = "editions" in header
+    firsts, problems = parse_editions_header(comments)
+    if firsts is None and not has_column:
+        return None
+    if firsts is None:
+        report.error(
+            "the `editions` column needs a `# editions:` header comment "
+            "declaring each edition's first release"
+        )
+        return None
+    if not has_column:
+        report.error("has an `# editions:` header but no `editions` column")
+        return None
+    for problem in problems:
+        report.error(problem)
+    known = {row["release"] for row in rows if not row.get("__malformed__")}
+    for edition, first in sorted(firsts.items()):
+        if first not in known:
+            report.error(
+                f"`# editions:` edition {edition}: first release {first!r} is "
+                "not a releases.csv row"
+            )
+    derived = derive_editions(rows, firsts)
+    for row in rows:
+        if row.get("__malformed__"):
+            continue
+        release = row["release"]
+        where = f"line {row['__line__']} ({release})"
+        if EDITION_STEM_RE.match(release):
+            report.error(
+                f"{where}: release ID must not end in -e<edition>; a pair stem "
+                "is split from the right, so the split would be ambiguous"
+            )
+        cell = row["editions"]
+        parts = cell.split(";")
+        ordered = all(a < b for a, b in itertools.pairwise(parts))
+        if cell != "-" and not (all(EDITION_RE.match(p) for p in parts) and ordered):
+            report.error(
+                f"{where}: editions {printable(repr(cell))} must be '-' or "
+                "';'-separated ascending four-digit editions"
+            )
+            continue
+        expected = ";".join(derived[release]) or "-"
+        if cell != expected:
+            report.error(
+                f"{where}: editions {cell!r} but lineage derives {expected!r} "
+                "(an edition is inherited from the predecessor and starts at "
+                "its `# editions:` first release)"
+            )
+    report.notes.append(
+        f"editions: {len(derived)} releases, {count_pairs(derived)} pairs"
+    )
+    return derived
+
+
+# ---------------------------------------------------------------------------
+# Rust's release rules (RS01 section 1)
+# ---------------------------------------------------------------------------
+
+
+def rust_expected(release: str) -> tuple[str, str, str] | None:
+    """(channel, predecessor, lineage) RS01 prescribes for a published Rust
+    release, or None when `release` is not a published release ID.
+
+    1.x minor X.Y.0     predecessor 1.(Y-1).0           branch-point
+    1.x patch X.Y.1     predecessor X.Y.0               line
+    1.x patch X.Y.z     predecessor X.Y.(z-1)           line
+    1.0.0               predecessor 1.0.0-beta          line
+    1.0.0-alpha         predecessor 0.12.0              branch-point
+    0.3.1               predecessor 0.3                 line
+    0.4                 predecessor 0.3 (not 0.3.1)     branch-point
+    every other 0.N     the previous final              branch-point
+    """
+    if release in RUST_PRE_1_0:
+        finals = [r for r in RUST_PRE_1_0 if r != "0.3.1"]
+        if release == "0.1":
+            return "final", "", "first"
+        if release == "0.3.1":
+            return "patch", "0.3", "line"
+        return "final", finals[finals.index(release) - 1], "branch-point"
+    if release in RUST_PRE_RELEASES:
+        channel = "beta" if release.endswith("beta") else "alpha"
+        if release == "1.0.0-alpha":
+            return channel, "0.12.0", "branch-point"
+        return channel, RUST_PRE_RELEASES[RUST_PRE_RELEASES.index(release) - 1], "line"
+    match = RUST_1X_RE.match(release)
+    if not match:
+        return None
+    minor, patch = int(match.group(1)), int(match.group(2))
+    if patch == 0:
+        if minor == 0:
+            return "final", "1.0.0-beta", "line"
+        return "final", f"1.{minor - 1}.0", "branch-point"
+    return "patch", f"1.{minor}.{patch - 1 if patch > 1 else 0}", "line"
+
+
+def check_rust(
+    report: Report, header: list[str], rows: list[dict[str, str]], axis: bool
+) -> None:
+    """RS01 section 1: published releases only, and their prescribed channel,
+    predecessor and lineage."""
+    if not axis:
+        report.error(
+            "the Rust inventory declares an edition axis: an `editions` column "
+            "and a `# editions:` header comment (RS01 section 2.3)"
+        )
+    if "lineage" not in header:
+        report.error("the Rust inventory needs a `lineage` column (RS01 section 1.2)")
+        return
+    seen: dict[tuple[str, str], str] = {}
+    for row in rows:
+        if row.get("__malformed__"):
+            continue
+        release = row["release"]
+        where = f"line {row['__line__']} ({release})"
+        expected = rust_expected(release)
+        if expected is None:
+            report.error(
+                f"{where}: not a published Rust release ID (0.1 ... 0.12.0, "
+                "1.0.0-alpha, 1.0.0-alpha.2, 1.0.0-beta or 1.Y.Z; nightly, "
+                "beta-channel and release-candidate versions are out of scope)"
+            )
+            continue
+        channel, predecessor, lineage = expected
+        if row["channel"] != channel:
+            report.error(f"{where}: channel {row['channel']!r} must be {channel!r}")
+        if row["predecessor"] != predecessor:
+            report.error(
+                f"{where}: predecessor {row['predecessor']!r} but RS01 lineage "
+                f"says {predecessor!r}"
+            )
+        if row["lineage"] != lineage:
+            report.error(
+                f"{where}: lineage {printable(repr(row['lineage']))} but RS01 "
+                f"lineage says {lineage!r}"
+            )
+        key = (row["predecessor"], row["lineage"])
+        if row["predecessor"] and key in seen:
+            report.error(
+                f"{where}: same predecessor and lineage as {seen[key]} "
+                f"({row['predecessor']!r}, {row['lineage']!r})"
+            )
+        seen.setdefault(key, release)
+
+
+def check_allowlists(
+    report: Report,
+    directory: Path,
+    rows: list[dict[str, str]],
+    subsets: dict[str, dict[str, str]],
+) -> None:
+    """A claimed subset's gate file exists, and is a plain file.
+
+    Declared-but-unclaimed gates may be absent: the declaration comes first,
+    the gate with the subset's first claim.
+    """
+    claimed: set[str] = set()
+    for row in rows:
+        if row.get("__malformed__"):
+            continue
+        claimed |= split_list(row["iir_status"]) | split_list(row["backend_status"])
+        if row["grammar_status"] == "partial":
+            claimed.add(row["grammar_subset"])
+    for name, declared in sorted(subsets.items()):
+        cell = declared.get("allowlist")
+        if name not in claimed or not cell or cell == "-":
+            continue
+        if not ALLOWLIST_RE.match(cell):
+            continue  # already an error from read_subsets
+        where = f"subsets.csv line {declared['__line__']} ({name})"
+        path = directory / cell
+        if path.is_symlink():
+            report.error(f"{where}: allowlist {cell!r} is a symlink")
+        elif not path.is_file():
+            report.error(f"{where}: allowlist {cell!r} does not exist")
 
 
 # ---------------------------------------------------------------------------
@@ -880,10 +1310,15 @@ def check_inventory(path: Path, matrix: list[dict[str, str]] | None = None) -> R
     if not rows:
         report.error("inventory has no rows")
         return report
-    subsets = set(read_subsets(report, directory))
+    declared = read_subsets(report, directory)
+    subsets = set(declared)
     check_rows(report, rows, subsets)
-    cases = check_claimed_corpora(report, directory, rows, subsets)
-    check_pairs(report, directory, rows, legacy_pairs(comments))
+    editions = check_editions(report, comments, header, rows)
+    if directory.name == "rust":
+        check_rust(report, header, rows, editions is not None)
+    check_allowlists(report, directory, rows, declared)
+    cases = check_claimed_corpora(report, directory, rows, subsets, editions)
+    check_pairs(report, directory, rows, legacy_pairs(comments), editions)
     if matrix is not None:
         check_matrix(report, directory, rows, cases, matrix)
     return report
