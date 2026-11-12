@@ -1,0 +1,10 @@
+REM conduit-hello is a runnable program, not an installable package.  It borrows
+REM the conduit package's virtualenv.  The POSIX BUILD runs `bash BUILD` in the
+REM conduit package, which on Windows would look for libconduit_native (cargo
+REM names the Windows cdylib conduit_native.dll, with no "lib" prefix) and call
+REM .venv/bin/python.  So mirror conduit's own BUILD_windows steps here.
+cd ..\..\..\packages\python\conduit\ext\conduit_native && cargo build --release
+cd ..\..\..\packages\python\conduit && uv venv --quiet --clear
+cd ..\..\..\packages\python\conduit && .venv\Scripts\python.exe -c "import sysconfig, shutil; shutil.copy('ext/conduit_native/target/release/conduit_native.dll', 'src/coding_adventures/conduit/conduit_native' + sysconfig.get_config_var('EXT_SUFFIX'))"
+cd ..\..\..\packages\python\conduit && uv pip install -e .[dev] --quiet
+..\..\..\packages\python\conduit\.venv\Scripts\python.exe -m pytest tests\ -v
