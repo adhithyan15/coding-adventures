@@ -43,6 +43,9 @@ func TestVerifyVectorsFailures(t *testing.T) {
 	if c, _, _ := do("verify-vectors", filepath.Join(dir, "missing.json")); c != 1 {
 		t.Errorf("missing file: %d", c)
 	}
+	if c, _, e := do("verify-vectors", dir); c != 1 || !strings.Contains(e, "not a regular file") {
+		t.Errorf("directory: %d %q", c, e)
+	}
 	bad := filepath.Join(dir, "bad.json")
 	os.WriteFile(bad, []byte("{"), 0o644)
 	if c, _, _ := do("verify-vectors", bad); c != 1 {

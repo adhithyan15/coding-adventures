@@ -467,8 +467,14 @@ func Key(a Action) ([32]byte, error) {
 	if err != nil {
 		return [32]byte{}, err
 	}
-	return sha256.Sum256(p), nil
+	return KeyOfPreimage(p), nil
 }
+
+// KeyOfPreimage hashes an already-built preimage.  It exists so a caller that
+// has just obtained a preimage successfully (the vector verifier) can derive
+// the key without calling Key and having to discard an error that cannot
+// occur: Key fails only when Preimage fails, and that has been ruled out.
+func KeyOfPreimage(preimage []byte) [32]byte { return sha256.Sum256(preimage) }
 
 // Hex renders a key as 64 lowercase hex characters.
 func Hex(k [32]byte) string { return hex.EncodeToString(k[:]) }

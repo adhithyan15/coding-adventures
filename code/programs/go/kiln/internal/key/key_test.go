@@ -3,6 +3,7 @@ package key
 import (
 	"bytes"
 	"encoding/hex"
+	"io"
 	"os"
 	"strings"
 	"testing"
@@ -290,6 +291,85 @@ func TestParseVectorsErrors(t *testing.T) {
 	} {
 		if _, err := ParseVectors([]byte(s)); err == nil {
 			t.Errorf("%s accepted", name)
+		}
+	}
+}
+
+func TestParseVectorsTrailingData(t *testing.T) {
+	for name, s := range map[string]string{
+		"second-document": `{"schema_version":1} {"schema_version":1}`,
+		"garbage-after":   `{"schema_version":1} x`,
+	} {
+		_, err := ParseVectors([]byte(s))
+		if err == nil || !strings.Contains(err.Error(), "trailing data after vector document") {
+			t.Errorf("%s: %v", name, err)
+		}
+	}
+	// Trailing whitespace is not data.
+	if _, err := ParseVectors([]byte("{\"schema_version\":1}\n\n")); err != nil {
+		t.Errorf("trailing whitespace refused: %v", err)
+	}
+}
+
+func TestVerifyRejectsEmptyErrorExpectation(t *testing.T) {
+	data, _ := os.ReadFile(vectorPath)
+	vf, _ := ParseVectors(data)
+	vf.Invalid[0].Error = ""
+	out := strings.Join(vf.Verify(), "\n")
+	if !strings.Contains(out, `empty "error" field`) {
+		t.Errorf("empty error accepted:\n%s", out)
+	}
+}
+
+type failingReader struct{}
+
+func (failingReader) Read([]byte) (int, error) { return 0, os.ErrClosed }
+
+func TestReadLimited(t *testing.T) {
+	if _, err := readLimited(failingReader{}, 10); err == nil {
+		t.Error("read error swallowed")
+	}
+	// A reader longer than the production cap is refused without a big file.
+	big := io.LimitReader(zeroReader{}, MaxVectorFileBytes+10)
+	if _, err := readLimited(big, MaxVectorFileBytes); err == nil || !strings.Contains(err.Error(), "larger than") {
+		t.Errorf("oversized input accepted: %v", err)
+	}
+}
+
+type zeroReader struct{}
+
+func (zeroReader) Read(p []byte) (int, error) { clear(p); return len(p), nil }
+
+func TestReadVectorFile(t *testing.T) {
+	dir := t.TempDir()
+	if _, err := ReadVectorFile(dir); err == nil || !strings.Contains(err.Error(), "not a regular file") {
+		t.Errorf("directory accepted: %v", err)
+	}
+	if _, err := ReadVectorFile(dir + "/missing"); err == nil {
+		t.Error("missing file accepted")
+	}
+	p := dir + "/v.json"
+	if err := os.WriteFile(p, []byte("12345"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if b, err := readVectorFile(p, 5); err != nil || string(b) != "12345" {
+		t.Errorf("exactly-at-limit refused: %q %v", b, err)
+	}
+	if _, err := readVectorFile(p, 4); err == nil || !strings.Contains(err.Error(), "larger than") {
+		t.Errorf("over-limit accepted: %v", err)
+	}
+	if b, err := ReadVectorFile(p); err != nil || len(b) != 5 {
+		t.Errorf("production read: %q %v", b, err)
+	}
+	if MaxVectorFileBytes != 16<<20 {
+		t.Error("production limit must stay 16 MiB")
+	}
+	// Unreadable file: stat succeeds, open fails.
+	if os.Getuid() != 0 {
+		q := dir + "/noread.json"
+		os.WriteFile(q, []byte("x"), 0o000)
+		if _, err := ReadVectorFile(q); err == nil {
+			t.Error("unreadable file accepted")
 		}
 	}
 }

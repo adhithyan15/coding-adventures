@@ -1,11 +1,61 @@
 package key
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 )
+
+// MaxVectorFileBytes caps how much of a vector file is read.  The real file is
+// a few tens of kilobytes; the cap only stops a mistaken or hostile path
+// (a huge file, a device that never ends) from exhausting memory.
+const MaxVectorFileBytes = 16 << 20
+
+// ReadVectorFile reads a vector file with the production size cap.
+func ReadVectorFile(path string) ([]byte, error) {
+	return readVectorFile(path, MaxVectorFileBytes)
+}
+
+// readVectorFile is ReadVectorFile with the limit injectable so tests need not
+// build a 16 MiB file.  Two guards run before any parsing:
+//
+//   - the path must be a regular file: a directory, FIFO or device would
+//     either fail oddly or block forever, so they are refused up front;
+//   - at most limit bytes are read.  We ask for limit+1 so that "exactly
+//     limit" is accepted while "one byte more" is detectable and refused,
+//     rather than silently truncated into a confusing parse error.
+func readVectorFile(path string, limit int64) ([]byte, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if !info.Mode().IsRegular() {
+		return nil, fmt.Errorf("%s: not a regular file", path)
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return readLimited(f, limit)
+}
+
+// readLimited reads r fully but refuses more than limit bytes.
+func readLimited(r io.Reader, limit int64) ([]byte, error) {
+	data, err := io.ReadAll(io.LimitReader(r, limit+1))
+	if err != nil {
+		return nil, err
+	}
+	if int64(len(data)) > limit {
+		return nil, fmt.Errorf("input larger than %d bytes", limit)
+	}
+	return data, nil
+}
 
 // This file reads the golden-vector file (code/specs/fixtures/kiln/
 // key-vectors-v1.json).  The JSON form of an action is deliberately plain:
@@ -97,6 +147,9 @@ func (j ActionJSON) ToAction() (Action, error) {
 		Phase:            j.Phase,
 	}
 	var err error
+	// NOTE: the golden file's "invalid-utf8-target" vector sets both "target"
+	// (the generator's default "t") and "target_hex"; target_hex wins.  A
+	// "not both" refusal would need that fixture regenerated first.
 	if j.TargetHex != "" {
 		raw, err := hex.DecodeString(j.TargetHex)
 		if err != nil {
@@ -149,10 +202,16 @@ func filesFromJSON(in []FileJSON) ([]FileEntry, error) {
 // typo in the file cannot silently weaken a vector.
 func ParseVectors(data []byte) (VectorFile, error) {
 	var vf VectorFile
-	dec := json.NewDecoder(strings.NewReader(string(data)))
+	dec := json.NewDecoder(bytes.NewReader(data))
 	dec.DisallowUnknownFields()
 	if err := dec.Decode(&vf); err != nil {
 		return vf, fmt.Errorf("parse vectors: %w", err)
+	}
+	// A second JSON value after the document would be ignored by Decode, so a
+	// spliced-in or concatenated file could pass with unchecked content.  The
+	// next Decode must hit a clean end of input.
+	if err := dec.Decode(&struct{}{}); err != io.EOF {
+		return vf, errors.New("parse vectors: trailing data after vector document")
 	}
 	if vf.SchemaVersion != SchemaVersion {
 		return vf, fmt.Errorf("vector file schema_version %d, want %d", vf.SchemaVersion, SchemaVersion)
@@ -182,12 +241,19 @@ func (vf VectorFile) Verify() []string {
 		if got := hex.EncodeToString(pre); got != v.PreimageHex {
 			fails = append(fails, fmt.Sprintf("valid %s: preimage mismatch\n  got  %s\n  want %s", v.Name, got, v.PreimageHex))
 		}
-		k, _ := Key(a)
-		if got := Hex(k); got != v.KeyHex {
+		// Preimage just succeeded, so hash its result directly instead of
+		// calling Key and discarding an error that cannot happen.
+		if got := Hex(KeyOfPreimage(pre)); got != v.KeyHex {
 			fails = append(fails, fmt.Sprintf("valid %s: key mismatch: got %s want %s", v.Name, got, v.KeyHex))
 		}
 	}
 	for _, v := range vf.Invalid {
+		// strings.Contains(msg, "") is always true, so an empty expectation
+		// would make the vector pass vacuously for any refusal.  Require one.
+		if v.Error == "" {
+			fails = append(fails, fmt.Sprintf("invalid %s: empty \"error\" field", v.Name))
+			continue
+		}
 		a, err := v.Action.ToAction()
 		if err != nil {
 			fails = append(fails, fmt.Sprintf("invalid %s: %v", v.Name, err))

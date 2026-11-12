@@ -37,7 +37,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 			fmt.Fprintln(stderr, "usage: kiln verify-vectors <path>")
 			return 2
 		}
-		data, err := os.ReadFile(args[1])
+		data, err := key.ReadVectorFile(args[1])
 		if err != nil {
 			fmt.Fprintf(stderr, "kiln: %v\n", err)
 			return 1
