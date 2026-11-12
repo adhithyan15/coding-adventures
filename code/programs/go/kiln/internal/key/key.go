@@ -217,6 +217,10 @@ func checkPath(p string) error {
 	return nil
 }
 
+// ValidatePath reports whether p is a valid Kiln path (KILN02 section 3.5).
+// Source implementations use it so every path they return is key-ready.
+func ValidatePath(p string) error { return checkPath(p) }
+
 func checkDigest(what string, d []byte) error {
 	if len(d) != DigestLength {
 		return fmt.Errorf("%s must be exactly %d bytes, got %d", what, DigestLength, len(d))

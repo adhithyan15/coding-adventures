@@ -14,7 +14,25 @@
       "action": "write",
       "target": "*",
       "justification": "The CLI prints its version and verification results."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "git",
+      "justification": "The Git Source runs the `git` binary (ls-files, rev-parse, diff) with an argument vector and never through a shell."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_*, RUNNER_TEMP, ImageOS, ImageVersion, KILN_*",
+      "justification": "The GitHub Host reads its identity, trust inputs and shard from the runner environment; Local passes the environment through to git."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "OS temp directory",
+      "justification": "The Local Host creates a private work directory under the OS temp dir."
     }
   ],
-  "justification": "Kiln's key encoder is pure computation; only the CLI reads a vector file and prints results."
+  "justification": "Kiln's key encoder is pure computation; the CLI reads a vector file and prints results; the Source and Host adapters run git, read the CI environment and walk the source tree."
 }
