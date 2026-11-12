@@ -1,5 +1,15 @@
 # Changelog — conduit-hello (Go)
 
+## [Unreleased]
+
+### Added
+
+- **Real Windows recipe.** `BUILD_windows` was an echo-skip; it now runs
+  `tools\run-tests.ps1`, which builds the GNU-ABI Rust `conduit-capi`
+  staticlib, puts MinGW-w64 gcc on PATH and runs `go test ./... -v` (the
+  smoke test), mirroring the Unix recipe. The cgo link line is in the
+  `go/conduit` package.
+
 ## [0.1.0] — 2026-06-14
 
 ### Added

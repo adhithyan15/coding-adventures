@@ -3,6 +3,22 @@
 All notable changes to the `conduit` Go package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- **Real Windows recipe.** `BUILD_windows` was an echo-skip; it now runs
+  `tools\run-tests.ps1`, which builds the Rust `conduit-capi` staticlib for
+  `x86_64-pc-windows-gnu`, puts MinGW-w64 gcc on PATH and runs
+  `go test ./... -v -cover`, the same command as the Unix recipe. The shared
+  helper is `code/scripts/build-conduit-capi-windows-gnu.ps1`.
+- `#cgo windows LDFLAGS` in `conduit.go` links
+  `target/x86_64-pc-windows-gnu/release/libconduit_capi.a` plus the Windows
+  system libraries Rust std needs (`ws2_32`, `userenv`, `bcrypt`, `ntdll`,
+  `advapi32`, `dbghelp`, `kernel32`), `-lgcc_eh` for unwinding and `-static`.
+  Verified by cross-compiling with MinGW-w64 and running the test binary
+  (including the HTTP end-to-end test) under Wine.
+
 ## [0.1.1] — 2026-10-23
 
 ### Fixed

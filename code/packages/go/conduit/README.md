@@ -182,6 +182,24 @@ CGO_ENABLED=1 go test ./... -v -cover
 Requires `libconduit_capi.a` at
 `../../rust/target/release/libconduit_capi.a` (relative to this package).
 
+### Windows
+
+cgo on Windows uses MinGW-w64 gcc, so the Rust library must be the GNU-ABI
+staticlib, not the MSVC one:
+
+```powershell
+rustup target add x86_64-pc-windows-gnu
+cd code\packages\rust\conduit-capi
+cargo rustc --release --target x86_64-pc-windows-gnu --lib --crate-type staticlib
+# with MinGW-w64 gcc first on PATH:
+cd ..\..\go\conduit
+go test ./... -v -cover
+```
+
+This needs `libconduit_capi.a` at
+`..\..\rust\target\x86_64-pc-windows-gnu\release\libconduit_capi.a`. The
+build tool runs the same steps through `tools\run-tests.ps1`.
+
 ## Test coverage
 
 14 tests including 8 end-to-end subtests against a live background server with a

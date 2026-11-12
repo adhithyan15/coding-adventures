@@ -24,6 +24,14 @@ package conduit
 // static linking. The trailing libs are the Rust staticlib's native deps.
 #cgo darwin LDFLAGS: ${SRCDIR}/../../rust/target/release/libconduit_capi.a -liconv
 #cgo linux  LDFLAGS: ${SRCDIR}/../../rust/target/release/libconduit_capi.a -lpthread -ldl -lm -lrt -lutil
+// Windows links through MinGW-w64 gcc, so it needs the GNU-ABI staticlib
+// (cargo --target x86_64-pc-windows-gnu puts it in a target-triple subdirectory),
+// NOT the MSVC conduit_capi.lib. The system libraries are the ones rustc reports
+// via `--print native-static-libs` for that target: Rust std's sockets
+// (ws2_32), process/user lookups (userenv), NT calls (ntdll), RNG (bcrypt),
+// registry/security (advapi32) and backtraces (dbghelp). -lgcc_eh supplies the
+// _Unwind_* symbols the staticlib's panic machinery references.
+#cgo windows LDFLAGS: ${SRCDIR}/../../rust/target/x86_64-pc-windows-gnu/release/libconduit_capi.a -lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32 -lgcc_eh -static
 
 #include <stdlib.h>
 #include "conduit_capi.h"
