@@ -659,13 +659,20 @@ impl<'a> Evaluator<'a> {
         Ok(())
     }
 
-    /// Charge `amount` bytes only in a v1 document (VER04k section 9.1, S0
+    /// Charge `amount()` bytes only in a v1 document (VER04k section 9.1, S0
     /// E4): the values every v1 evaluation builds count toward the data meter,
     /// so a sequence built by `concat` or literals cannot dodge it; v0 has no
     /// data meter and stays byte-identical.
-    fn charge_data_v1(&mut self, amount: u128, span: (usize, usize)) -> Result<(), CodegenError> {
+    ///
+    /// The amount is a closure so that a v0 evaluation does not even compute
+    /// it: `dsize` walks the whole value, and v0 has no counter to feed.
+    fn charge_data_v1(
+        &mut self,
+        amount: impl FnOnce() -> u128,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
         if self.v1 {
-            self.charge_data(amount, span)
+            self.charge_data(amount(), span)
         } else {
             Ok(())
         }
@@ -733,7 +740,7 @@ impl<'a> Evaluator<'a> {
                 Literal::Int(n) => Ok(EvalValue::Int(*n as i128)),
                 Literal::Bytes(hex_str) => {
                     // A v1 bytes literal produces `len` bytes of owned data.
-                    self.charge_data_v1((hex_str.len() / 2) as u128, *span)?;
+                    self.charge_data_v1(|| (hex_str.len() / 2) as u128, *span)?;
                     let bytes = hex_decode(hex_str, *span)?;
                     Ok(EvalValue::Bytes(bytes))
                 }
@@ -752,7 +759,7 @@ impl<'a> Evaluator<'a> {
                     list.push(self.eval(el, env)?);
                 }
                 // v1: the literal's value is new, `sum (32 + dsize(ei))`.
-                self.charge_data_v1(dsize_items(&list), *span)?;
+                self.charge_data_v1(|| dsize_items(&list), *span)?;
                 self.charge_work(elements.len(), *span)?;
                 Ok(EvalValue::List(list))
             }
@@ -813,10 +820,8 @@ impl<'a> Evaluator<'a> {
                 // Qualified name: Error.Case constructor
                 if name.segments.len() == 2 {
                     // v1 data (E20): the value owns both names.
-                    self.charge_data_v1(
-                        names_size(name.segments[0], name.segments[1]),
-                        *span,
-                    )?;
+                    let (ty, case) = (name.segments[0], name.segments[1]);
+                    self.charge_data_v1(|| names_size(ty, case), *span)?;
                     let type_name = name.segments[0].to_string();
                     let case_name = name.segments[1].to_string();
                     return Ok(EvalValue::Result(Err((type_name, case_name))));
@@ -953,7 +958,7 @@ impl<'a> Evaluator<'a> {
                 // v1 data: the components exist, so the tuple's dsize is
                 // known before it is built (and the leaves cap of `bounded`
                 // still applies after, S0 E6).
-                self.charge_data_v1(dsize_items(&items), *span)?;
+                self.charge_data_v1(|| dsize_items(&items), *span)?;
                 self.charge_work(1 + items.len(), *span)?;
                 self.bounded(EvalValue::Tuple(items), *span)
             }
@@ -996,7 +1001,7 @@ impl<'a> Evaluator<'a> {
         // v1 data: the fields' slots and payloads, and the two names the
         // value owns (E20), so a nullary constructor is not free either.
         self.charge_data_v1(
-            names_size(ty, ctor).saturating_add(dsize_items(&fields)),
+            || names_size(ty, ctor).saturating_add(dsize_items(&fields)),
             span,
         )?;
         self.charge_work(1 + fields.len(), span)?;
@@ -1162,7 +1167,7 @@ impl<'a> Evaluator<'a> {
                                 span,
                             });
                         }
-                        self.charge_data_v1(total_len as u128, span)?;
+                        self.charge_data_v1(|| total_len as u128, span)?;
                         self.charge_work(total_len, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
@@ -1178,7 +1183,7 @@ impl<'a> Evaluator<'a> {
                             });
                         }
                         // Both operands are copied element by element.
-                        let copied = dsize_items(a).saturating_add(dsize_items(b));
+                        let copied = || dsize_items(a).saturating_add(dsize_items(b));
                         self.charge_data_v1(copied, span)?;
                         self.charge_work(total_len, span)?;
                         let mut res = a.clone();
@@ -1340,7 +1345,7 @@ impl<'a> Evaluator<'a> {
         };
         let value = result?;
         if builds {
-            self.charge_data_v1(dsize(&value), span)?;
+            self.charge_data_v1(|| dsize(&value), span)?;
         }
         Ok(value)
     }
