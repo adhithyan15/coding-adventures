@@ -4,6 +4,10 @@
 
 ### Fixed
 
+- Windows now builds `conduit-capi` and runs the Cabal tests through
+  `tools\run-tests.ps1` instead of skipping. The script stages the MSVC DLL and
+  import library so GHC's MinGW-style link does not pick the static library.
+
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir
   (`DEVELOPER_DIR=/Library/Developer/CommandLineTools`), so GHC 9.4.8's CLT SDK
   sysroot gets the matching linker on macOS CI with Command Line Tools 27.
