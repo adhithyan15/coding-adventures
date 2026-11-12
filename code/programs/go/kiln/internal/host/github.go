@@ -73,7 +73,7 @@ func (g *GitHub) eventDefaultBranch() (string, error) {
 	if path == "" {
 		return "", fmt.Errorf("GITHUB_EVENT_PATH is not set")
 	}
-	f, err := os.Open(path)
+	f, err := openEvent(path)
 	if err != nil {
 		return "", err
 	}
