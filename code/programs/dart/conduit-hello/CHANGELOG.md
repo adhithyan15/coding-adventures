@@ -1,5 +1,13 @@
 # Changelog — conduit-hello (Dart)
 
+## Unreleased
+
+- Windows now builds conduit-capi (shared helper
+  `code/scripts/stage-conduit-capi-windows.ps1`) and conduit-dart-bridge, sets
+  `CONDUIT_CAPI_PATH` and `CONDUIT_DART_BRIDGE_PATH` to the staged absolute DLL
+  paths, and runs the same dart tests as the Unix recipe, instead of skipping
+  (`BUILD_windows` + `tools/run-tests.ps1`).
+
 ## 0.1.0 — 2026-06-14
 
 Initial release (WEB17).
