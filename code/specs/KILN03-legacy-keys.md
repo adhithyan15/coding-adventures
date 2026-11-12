@@ -60,7 +60,7 @@ It lists **every** discovered package for all three platforms at once
 | `deps` | resolver graph incl. platform overrides | **Direct** build/runtime edges. |
 | `dev_deps` | the test-trigger relation, inverted | Packages this package's tests link against (Cargo dev-deps and equivalents). |
 | `repo_inputs` | the `repositoryInputConsumers` table | Repo-relative paths outside the package that it reads. |
-| `repo_input_globs` | the same table, for consumers whose inputs are a predicate over the whole tree | Repo-relative glob patterns (`**` any depth, `*` within a segment), e.g. `code/**/*.mll`. |
+| `repo_input_globs` | the same table, for consumers whose inputs are a predicate over the whole tree | Repo-relative glob patterns (`**` any depth, `*` any run and `?` exactly one character within a segment — the same matcher as the `Source` layer), e.g. `code/**/?*.mll` (the `?` keeps a bare `.mll` out, as the old predicate does). |
 | `extra_toolchains` | `discovery.Package.ExtraToolchains` | Toolchains beyond its own language. |
 
 Lists are sorted and de-duplicated; output is deterministic for a tree. A
