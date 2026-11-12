@@ -711,7 +711,8 @@ exact keys are `lane`, `package`, `module`, `package_root`, `binding`,
 `package` is `<lane>/<name>`; rows are unique and sorted by package. The
 `warrant-lane-consumers-v1` profile records the lane, package root, binding
 path, runner entry, evidence-manifest path, build files, and
-`status: "planned"|"active"`. Planned entries reserve identity and paths
+`status: "planned"|"active"`. In this first profile, each `build_files` array
+contains one or two unique paths. Planned entries reserve identity and paths
 only; they cannot authorize a passing lane result. WD-004a registers
 `python/ct-compare` as `planned`; no entry becomes active until its binding,
 runner, evidence manifest, and build routing exist.
