@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fix two F# conformance tests to pass string element types to xUnit array
+  equality assertions, preserving ordered sequence comparison.
+
 - From the shared C# engine: Cargo continuation lines are joined in linear
   time, quoted `path`/`package` keys count, and a crate that resolves itself
   is `DEPENDENCY_SELF_EDGE` with exit status 2 (see the C# build tool's

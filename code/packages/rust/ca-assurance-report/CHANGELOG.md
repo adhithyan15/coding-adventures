@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a separate strict parser for `warrant-lane-evidence-v1` manifests and
+  the per-corpus consumer registry. This structural API does not run bindings,
+  attest source/build/toolchain freshness, or change the Rust-only legacy loader.
 - **`verify_evidence` step 6b closes the converse forgery**: a CWE-208 row that cites
   the attestation `warrant-spec::all-operands-public` is now rejected
   (`EvidenceMismatch`) unless the report also carries the not-applicable exemption
