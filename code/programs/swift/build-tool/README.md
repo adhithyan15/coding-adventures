@@ -203,7 +203,7 @@ and an unmatched `[` is literal. Descending ranges and ambiguous `--`, `&&`,
 
 Package-tree traversal deliberately remains below the package root. A second
 generated, source-embedded projection consumes the complete checked repository-
-relative boundary registry: 18 reviewed boundaries, 21 registrations, and 19
+relative boundary registry: 19 reviewed boundaries, 25 exact inputs, and 23
 exact tracked paths. The engine verifies both pinned registry digests, maps only
 exact or strict-descendant consumers with exact exclusions, and reaches a
 generated-pruning exception by its registered path without unpruning or walking

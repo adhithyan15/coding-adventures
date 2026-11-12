@@ -1,5 +1,46 @@
 # Changelog
 
+## Unreleased — VER04i WD-003 portable corpus
+
+- Add a closed ct-compare Warrant v0 corpus profile generated from the checked
+  Warrant source, with distinct subject-operation and pure-model IR, canonical
+  admitted-case enumeration, independent input/result SHA-256 streams, generated
+  examples and sabotage-control descriptors, and byte-stable `--check` support.
+- Add a stdlib-only Python oracle that independently validates source-bound
+  declarations, suite semantics, corpus digests and TFV examples, with mutation
+  tests for incomplete or misbound evidence. The first profile rejects sharding
+  and unsupported Warrant constructs; it does not claim to execute a lane.
+- Route the corpus generator, oracle and their tests through package BUILD and
+  repository-input selection.
+
+- **`gen_evidence` passes the bindings' host lines through (fix).** The example
+  that every package `BUILD` runs (`--example gen_evidence -- [--check] <pkg>`)
+  built its `EvidenceOptions` with `hosts: Default::default()`, so the WX-A host
+  lines of `evidence.bindings` (`struct`, `enum`, and `args=`/`ret=`/`errors=` on
+  an `op` line) were parsed and then dropped. Only the in-test drivers passed
+  them, so no real package could bind a host composite: an operation returning
+  `Result<(u64, usize), Leb128Error>` failed with W0701 ("an args= entry is not a
+  host type") or W0704 ("neither error normalization nor errors="). The driver
+  now passes `b.hosts.clone()`. New `tests/gen_evidence_driver.rs` compiles the
+  example into the test crate (`#[path]`) and drives `generate_one` on a scratch
+  repository built from the WX-A fixture (`struct`/`enum` lines, composite
+  `args=`, tuple and record `ret=`, `errors=`): generation succeeds, equals the
+  in-test driver's output byte for byte, `--check` passes, and a hand edit is
+  reported as drift. Before the fix the first two tests failed with the W0701
+  above. A bindings file without host lines parses to the default, so the
+  checked-in ct-compare and gf256 harnesses regenerate byte-identically
+  (`gen_evidence --check gf256 ct-compare`, `v0_compat`, and the wave-3 regen
+  tests). `generate_one` became `pub(crate)` for the test; nothing else changed.
+- **`tests/v0_compat.rs` admits the first v1 adopter without relaxing v0.** It
+  asserted that every `code/specs/*.warrant` and every bound package's document
+  is v0, which `wasm-leb128.warrant` (header `warrant wasm_leb128 v1`) broke.
+  The pre-WX-B documents (`ct-compare`, `gf256`) are now pinned by name and must
+  still be v0 and present; every document must type-check; a v1 adopter's
+  harness must regenerate byte for byte with its bindings' host lines, exactly as
+  `gen_evidence --check` does, and record `warrant_version`; and for each v0
+  package the harness generated with the host lines passed (the driver's path
+  since the fix above) must equal the one generated without them.
+
 ## 0.5.0 - Warrant v1: WX-D1 slice S1 (checker and ground evaluator)
 
 Implements the checker and ground-evaluator half of VER04k WX-D1 (slice S1 of

@@ -2,6 +2,12 @@
 
 All notable changes to `CodingAdventures::AztecCode` are documented here.
 
+## [Unreleased]
+
+### Added
+
+- `BUILD_windows` runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries). The Windows build previously fell back to the POSIX-only `BUILD`, which fails under `cmd`.
+
 ## [0.1.0] — 2026-04-26
 
 ### Added

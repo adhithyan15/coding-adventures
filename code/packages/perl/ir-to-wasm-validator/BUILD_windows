@@ -1,1 +1,2 @@
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../compiler-ir ../ir-to-wasm-compiler ../wasm-leb128 ../wasm-opcodes ../wasm-types
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps compiler-ir,ir-to-wasm-compiler,wasm-leb128,wasm-opcodes,wasm-types

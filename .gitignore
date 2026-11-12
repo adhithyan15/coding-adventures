@@ -229,3 +229,4 @@ code/programs/rust/closurec/tests/oracle/.upstream-refusals-*.json
 /code/packages/rust/task-wasm/pkg/
 /code/packages/rust/engram-wasm/pkg/
 /code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js
+/code/programs/go/scaffold-generator/scaffold-generator.exe

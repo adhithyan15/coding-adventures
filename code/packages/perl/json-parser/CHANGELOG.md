@@ -1,5 +1,11 @@
 # Changelog — CodingAdventures::JsonParser
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries, with `grammar-tools` and `json-lexer` as dependencies) instead of skipping.
+
 ## [0.01] - 2026-03-29
 
 ### Added

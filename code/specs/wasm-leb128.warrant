@@ -1,0 +1,443 @@
+-- LEB01 -- LEB128 variable-length integers (WebAssembly binary format).
+--
+-- Warrant document for rust/wasm-leb128 (VER04h; the first Warrant-derived
+-- package written in Warrant v1, and the first to bind host composites).  Every
+-- example and claim below is compiled into tests/generated/warrant_evidence.rs
+-- and executed against the real public exports of the `wasm_leb128` crate:
+-- encode_unsigned, encode_signed, decode_unsigned, decode_signed,
+-- decode_unsigned_bounded, decode_signed_bounded.  The prose contract, and the
+-- reasons behind every limitation stated here, are in LEB01-wasm-leb128.md.
+--
+-- The format, as the oracle models below implement it (written from the
+-- WebAssembly core specification's `uN`/`sN` grammar, never from the crate):
+--
+--   value bits:  ... g2 g2 g2 g2 g2 g2 g2 g1 g1 g1 g1 g1 g1 g1 g0 g0 g0 g0 g0 g0 g0
+--   bytes:       [1 g0 g0 g0 g0 g0 g0 g0] [1 g1 ... g1] ... [0 gk ... gk]
+--                 ^ continuation bit          (little-endian 7-bit groups;
+--                                              the last byte has bit 7 clear)
+--
+--   * an unsigned N-bit value takes at most ceil(N / 7) bytes, and on the last
+--     byte the data bits above bit N must be zero ("integer too large");
+--     a continuation bit on the byte that the width says must be the last is
+--     "integer representation too long" (overlong);
+--   * a signed N-bit value is two's complement: the last byte's data bits above
+--     bit N must repeat the sign bit (bit N - 1), and the decoded value is
+--     sign-extended from the last group;
+--   * padding inside that budget is legal: 0x80 0x00 is a two-byte zero.  The
+--     ENCODERS never pad: they emit the unique shortest (canonical) form.
+--
+-- Error model.  `Leb128Error` is a struct holding a message `String` and the
+-- starting `offset`; the Rust API exposes no error kind.  The binding maps every
+-- Leb128Error to the single case MALFORMED, so the claims below distinguish
+-- "accepted with this value and this byte count" from "rejected", but cannot
+-- distinguish truncated / overlong / too large / offset-out-of-range from one
+-- another, and do not observe the reported offset.  That is a limitation of
+-- what the public API makes observable, recorded rather than worked around
+-- (LEB01 "Verification status").
+--
+-- Width.  The bounded decoders take `max_bits: u32` and accumulate into a u64, so
+-- a width above 64 cannot be honoured.  Before SEC-006 the crate accepted one:
+-- 66..=70 accepted a 10-byte value whose bits above 64 were silently discarded,
+-- and >= 71 with an 11-byte input shifted a u64 by 70 (a panic in a debug build,
+-- a wrong value in release).  The crate now rejects `max_bits > 64` before it
+-- reads any byte, so the input contract states it as a `rejects` row (no
+-- refinement on the parameter) and the claims below pin it for every width
+-- 65..=128, for u32::MAX, and for the two concrete byte strings that exposed it.
+-- `max_bits = 0` is unchanged: it is the degenerate width admitting only 0.
+--
+-- Not expressible here (Warrant v1 wave 3, evidence generator), recorded, not
+-- faked: indexing a Bytes value (`at` and `fixed` are W0701 in evidence
+-- generation), so "every byte but the last has bit 7 set" is stated by an
+-- encoder model instead of by inspection; quantifying over all byte strings of
+-- length 4..=10 (the exhaustive domain of `Bytes` stops at constant fills of
+-- length 4..=8, so the 10-byte boundary is reached by a claim that builds the
+-- input from a U64 and a U8); and the error kind and offset (above).
+warrant wasm_leb128 v1
+  error Leb128Error = MALFORMED
+
+  -- ---- byte-level helpers -------------------------------------------------
+  -- The seven data bits of a byte, as a 64-bit group value.
+  model low7(b: U8) -> U64 = widen<U64>(bit_and(b, 127u8))
+  -- The two bytes of a U16, most significant first (be_bytes order).
+  model hi8(w: U16) -> U8 = wrap<U8>(shr(w, 8))
+  model lo8(w: U16) -> U8 = wrap<U8>(w)
+  -- The 7-bit group of v at bit s, as a final byte (bit 7 clear) and as a
+  -- continued byte (bit 7 set).
+  model grp(v: U64, s: Nat) -> Bytes = be_bytes(wrap<U8>(bit_and(shr(v, s), 127u64)))
+  model cgrp(v: U64, s: Nat) -> Bytes = be_bytes(bit_or(wrap<U8>(bit_and(shr(v, s), 127u64)), 128u8))
+  -- Nine continued bytes carrying bits 0..62 of v: the longest prefix a 64-bit
+  -- decoder may accept before the byte that must be the last.
+  model cont9(v: U64) -> Bytes = concat(concat(concat(cgrp(v, 0), cgrp(v, 7)), concat(cgrp(v, 14), cgrp(v, 21))), concat(concat(concat(cgrp(v, 28), cgrp(v, 35)), concat(cgrp(v, 42), cgrp(v, 49))), cgrp(v, 56)))
+  -- Bits 0..62 of v.
+  model low63(v: U64) -> U64 = bit_and(v, 9223372036854775807u64)
+
+  -- ---- canonical encoders (the unique shortest form) ----------------------
+  -- Unsigned: group i is final exactly when no bit of v at or above 7(i+1) is
+  -- set.  eu0 is the whole encoding; the chain is unrolled because a model may
+  -- not recurse.
+  model eu9(v: U64) -> Bytes = grp(v, 63)
+  model eu8(v: U64) -> Bytes = if shr(v, 63) == 0u64 then grp(v, 56) else concat(cgrp(v, 56), eu9(v))
+  model eu7(v: U64) -> Bytes = if shr(v, 56) == 0u64 then grp(v, 49) else concat(cgrp(v, 49), eu8(v))
+  model eu6(v: U64) -> Bytes = if shr(v, 49) == 0u64 then grp(v, 42) else concat(cgrp(v, 42), eu7(v))
+  model eu5(v: U64) -> Bytes = if shr(v, 42) == 0u64 then grp(v, 35) else concat(cgrp(v, 35), eu6(v))
+  model eu4(v: U64) -> Bytes = if shr(v, 35) == 0u64 then grp(v, 28) else concat(cgrp(v, 28), eu5(v))
+  model eu3(v: U64) -> Bytes = if shr(v, 28) == 0u64 then grp(v, 21) else concat(cgrp(v, 21), eu4(v))
+  model eu2(v: U64) -> Bytes = if shr(v, 21) == 0u64 then grp(v, 14) else concat(cgrp(v, 14), eu3(v))
+  model eu1(v: U64) -> Bytes = if shr(v, 14) == 0u64 then grp(v, 7) else concat(cgrp(v, 7), eu2(v))
+  model eu0(v: U64) -> Bytes = if shr(v, 7) == 0u64 then grp(v, 0) else concat(cgrp(v, 0), eu1(v))
+
+  -- Signed: group i (bits 7i..7i+6 of the two's-complement pattern) is final
+  -- exactly when the rest of the value, sar(v, 7(i+1)), is all sign bits AND
+  -- the group's own top bit (bit 7i+6) already carries that sign, so a decoder
+  -- sign-extending from it reconstructs v.
+  model sgrp(v: I64, s: Nat) -> U8 = wrap<U8>(bit_and(sar(v, s), 127i64))
+  model sfin(v: I64, s: Nat) -> Bytes = be_bytes(sgrp(v, s))
+  model scont(v: I64, s: Nat) -> Bytes = be_bytes(bit_or(sgrp(v, s), 128u8))
+  model sdone(v: I64, rest: Nat, top: Nat) -> Bool = (sar(v, rest) == 0i64 and not bit(v, top)) or (sar(v, rest) == -1i64 and bit(v, top))
+  model es9(v: I64) -> Bytes = sfin(v, 63)
+  model es8(v: I64) -> Bytes = if sdone(v, 63, 62) then sfin(v, 56) else concat(scont(v, 56), es9(v))
+  model es7(v: I64) -> Bytes = if sdone(v, 56, 55) then sfin(v, 49) else concat(scont(v, 49), es8(v))
+  model es6(v: I64) -> Bytes = if sdone(v, 49, 48) then sfin(v, 42) else concat(scont(v, 42), es7(v))
+  model es5(v: I64) -> Bytes = if sdone(v, 42, 41) then sfin(v, 35) else concat(scont(v, 35), es6(v))
+  model es4(v: I64) -> Bytes = if sdone(v, 35, 34) then sfin(v, 28) else concat(scont(v, 28), es5(v))
+  model es3(v: I64) -> Bytes = if sdone(v, 28, 27) then sfin(v, 21) else concat(scont(v, 21), es4(v))
+  model es2(v: I64) -> Bytes = if sdone(v, 21, 20) then sfin(v, 14) else concat(scont(v, 14), es3(v))
+  model es1(v: I64) -> Bytes = if sdone(v, 14, 13) then sfin(v, 7) else concat(scont(v, 7), es2(v))
+  model es0(v: I64) -> Bytes = if sdone(v, 7, 6) then sfin(v, 0) else concat(scont(v, 0), es1(v))
+
+  -- ---- decoders of short inputs at the full 64-bit width ------------------
+  -- Inputs of at most three bytes can only be truncated (every byte continues)
+  -- or well formed: at 64 bits the byte cap is 10 and no padding rule applies
+  -- below bit 21.  The value is the OR of the groups; consumed is the index of
+  -- the first byte with bit 7 clear, plus one.
+  model du1(b0: U8) -> Result<(U64, Nat), Leb128Error> = if b0 < 128u8 then Ok((low7(b0), 1)) else Err(Leb128Error.MALFORMED)
+  model du2(b0: U8, b1: U8) -> Result<(U64, Nat), Leb128Error> = if b0 < 128u8 then Ok((low7(b0), 1)) else (if b1 < 128u8 then Ok((bit_or(low7(b0), shl(low7(b1), 7)), 2)) else Err(Leb128Error.MALFORMED))
+  model du3(b0: U8, b1: U8, b2: U8) -> Result<(U64, Nat), Leb128Error> = if b0 < 128u8 or b1 < 128u8 then du2(b0, b1) else (if b2 < 128u8 then Ok((bit_or(bit_or(low7(b0), shl(low7(b1), 7)), shl(low7(b2), 14)), 3)) else Err(Leb128Error.MALFORMED))
+  -- Signed: sign-extend the raw groups r from width w when the last group's top
+  -- bit is set.
+  model sx(r: U64, w: Nat, neg: Bool) -> I64 = wrap<I64>(if neg then bit_or(r, shl(max_value<U64>(), w)) else r)
+  model ds1(b0: U8) -> Result<(I64, Nat), Leb128Error> = if b0 < 128u8 then Ok((sx(low7(b0), 7, bit(b0, 6)), 1)) else Err(Leb128Error.MALFORMED)
+  model ds2(b0: U8, b1: U8) -> Result<(I64, Nat), Leb128Error> = if b0 < 128u8 then ds1(b0) else (if b1 < 128u8 then Ok((sx(bit_or(low7(b0), shl(low7(b1), 7)), 14, bit(b1, 6)), 2)) else Err(Leb128Error.MALFORMED))
+  model ds3(b0: U8, b1: U8, b2: U8) -> Result<(I64, Nat), Leb128Error> = if b0 < 128u8 or b1 < 128u8 then ds2(b0, b1) else (if b2 < 128u8 then Ok((sx(bit_or(bit_or(low7(b0), shl(low7(b1), 7)), shl(low7(b2), 14)), 21, bit(b2, 6)), 3)) else Err(Leb128Error.MALFORMED))
+
+  -- ---- the 10-byte boundary at 64 bits -------------------------------------
+  -- After cont9(v) (bits 0..62) the tenth byte x must be the last (bit 7 clear,
+  -- else overlong) and carries bit 63 in its lowest data bit.  Unsigned: the six
+  -- data bits above bit 63 must be zero, so only x = 0 or 1 is accepted.
+  -- Signed: they must repeat bit 63, so only x = 0x00 (non-negative) or 0x7f
+  -- (negative) is accepted.
+  model du10(v: U64, x: U8) -> Result<(U64, Nat), Leb128Error> = if x < 2u8 then Ok((bit_or(low63(v), shl(widen<U64>(x), 63)), 10)) else Err(Leb128Error.MALFORMED)
+  model ds10(v: U64, x: U8) -> Result<(I64, Nat), Leb128Error> = if x == 0u8 then Ok((wrap<I64>(low63(v)), 10)) else (if x == 127u8 then Ok((wrap<I64>(bit_or(low63(v), shl(1u64, 63))), 10)) else Err(Leb128Error.MALFORMED))
+
+  -- ---- bounded decoders at width n (0..=64) ---------------------------------
+  -- A byte at index i (0-based) may carry the continuation bit only while
+  -- 7(i+1) < n (the cap ceil(n/7)).  Unsigned: the accepted value must be below
+  -- 2^n.  Signed: on a last group at bit s with n < s + 7 the bits n-1 .. s+6 of
+  -- the raw groups r must all be equal (hi is the all-ones pattern of those
+  -- s + 7 bits), and the value is sign-extended from bit n - 1; with n >= s + 7
+  -- the ordinary rule applies (sign-extend from the group's top bit).  Bit n - 1
+  -- is read as bit n of shl(r, 1) because a shift count must be a Nat.
+  model fitsu(r: U64, n: Nat) -> Bool = shr(r, n) == 0u64
+  model dbu1(b0: U8, n: Nat) -> Result<(U64, Nat), Leb128Error> = if b0 < 128u8 and fitsu(low7(b0), n) then Ok((low7(b0), 1)) else Err(Leb128Error.MALFORMED)
+  model dbu2(b0: U8, b1: U8, n: Nat) -> Result<(U64, Nat), Leb128Error> = if b0 < 128u8 then dbu1(b0, n) else (if n > 7 and b1 < 128u8 and fitsu(bit_or(low7(b0), shl(low7(b1), 7)), n) then Ok((bit_or(low7(b0), shl(low7(b1), 7)), 2)) else Err(Leb128Error.MALFORMED))
+  model snarrow(r: U64, n: Nat, hi: U64) -> Bool = if bit(shl(r, 1), n) then shr(r, n) == shr(hi, n) else shr(r, n) == 0u64
+  model slast(r: U64, n: Nat, w: Nat, top: Nat, hi: U64, k: Nat) -> Result<(I64, Nat), Leb128Error> = if n >= w then Ok((sx(r, w, bit(r, top)), k)) else (if snarrow(r, n, hi) then Ok((sx(r, n, bit(shl(r, 1), n)), k)) else Err(Leb128Error.MALFORMED))
+  model dbs1(b0: U8, n: Nat) -> Result<(I64, Nat), Leb128Error> = if b0 < 128u8 then slast(low7(b0), n, 7, 6, 127u64, 1) else Err(Leb128Error.MALFORMED)
+  model dbs2(b0: U8, b1: U8, n: Nat) -> Result<(I64, Nat), Leb128Error> = if b0 < 128u8 then dbs1(b0, n) else (if n > 7 and b1 < 128u8 then slast(bit_or(low7(b0), shl(low7(b1), 7)), n, 14, 13, 16383u64, 2) else Err(Leb128Error.MALFORMED))
+  -- v fits an n-bit two's-complement field: everything from bit n - 1 up is
+  -- sign.  n = 0 admits only 0; n >= 64 admits every I64.
+  model fitss(v: I64, n: Nat) -> Bool = n >= 64 or (sar(v, n) == 0i64 and not bit(shl(v, 1), n)) or (sar(v, n) == -1i64 and bit(shl(v, 1), n))
+  -- The canonical byte count of a signed value: one sign bit plus its
+  -- significant bits, seven per byte.
+  model slen(v: I64) -> Int = unwrap_or(div(71 - clz(if v < 0i64 then bit_not(v) else v), 7), 0)
+
+  op encode_unsigned(value: U64) -> Bytes
+  op encode_signed(value: I64) -> Bytes
+  op decode_unsigned(data: Bytes, offset: Nat) -> Result<(U64, Nat), Leb128Error>
+  op decode_signed(data: Bytes, offset: Nat) -> Result<(I64, Nat), Leb128Error>
+  op decode_unsigned_bounded(data: Bytes, offset: Nat, max_bits: U32) -> Result<(U64, Nat), Leb128Error>
+  op decode_signed_bounded(data: Bytes, offset: Nat, max_bits: U32) -> Result<(I64, Nat), Leb128Error>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Nothing here is secret: LEB128 encodes public structure (counts, indices,
+  -- sizes, immediates) of a WebAssembly module.  With no secret operand there is
+  -- no constant-time obligation, and the assurance report records CWE-208 as
+  -- not applicable rather than as an open row.
+  labels encode_unsigned:
+    value public
+  labels encode_signed:
+    value public
+  labels decode_unsigned:
+    data public
+    offset public
+  labels decode_signed:
+    data public
+    offset public
+  labels decode_unsigned_bounded:
+    data public
+    offset public
+    max_bits public
+  labels decode_signed_bounded:
+    data public
+    offset public
+    max_bits public
+
+  input encode_unsigned.value:
+    hostile
+    ensures no_panic, terminates
+  input encode_signed.value:
+    hostile
+    ensures no_panic, terminates
+  input decode_unsigned.data:
+    hostile
+    ensures no_panic, terminates
+  input decode_unsigned.offset:
+    hostile
+    rejects offset >= len(data) with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+  input decode_signed.data:
+    hostile
+    ensures no_panic, terminates
+  input decode_signed.offset:
+    hostile
+    rejects offset >= len(data) with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+  input decode_unsigned_bounded.data:
+    hostile
+    ensures no_panic, terminates
+  input decode_unsigned_bounded.offset:
+    hostile
+    rejects offset >= len(data) with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+  input decode_unsigned_bounded.max_bits:
+    hostile
+    rejects max_bits > 64u32 with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+  input decode_signed_bounded.data:
+    hostile
+    ensures no_panic, terminates
+  input decode_signed_bounded.offset:
+    hostile
+    rejects offset >= len(data) with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+  input decode_signed_bounded.max_bits:
+    hostile
+    rejects max_bits > 64u32 with Leb128Error.MALFORMED
+    ensures no_panic, terminates
+
+  -- Declared bounds.  Every operation touches at most ten bytes (an encoder
+  -- writes at most ceil(64 / 7) = 10, a decoder reads at most ceil(max_bits / 7)
+  -- <= 10 from `offset`), so steps are constant.  The steps rows are
+  -- declarations: no step-bound prover run backs them (the proof manifest
+  -- records them not-live).  The encoders' heap rows are checked live: every
+  -- encoder instance runs under the generated harness's allocation observer.
+  -- The decoders allocate only a message String on their error path; they have
+  -- no heap row because the observer runs each call on a worker thread, which
+  -- the 2^24-case suites cannot afford (LEB01 "Verification status").
+  bound encode_unsigned:
+    steps <= 1024
+    heap <= 64
+    depth <= 8
+  bound encode_signed:
+    steps <= 1024
+    heap <= 64
+    depth <= 8
+  bound decode_unsigned:
+    steps <= 1024
+    depth <= 8
+  bound decode_signed:
+    steps <= 1024
+    depth <= 8
+  bound decode_unsigned_bounded:
+    steps <= 1024
+    depth <= 8
+  bound decode_signed_bounded:
+    steps <= 1024
+    depth <= 8
+
+  -- ---- known values ---------------------------------------------------------
+  -- 624485 = 0x98765 is the Wikipedia/DWARF example; its correct encoding is
+  -- e5 8e 26 (the often-quoted e5 88 26 decodes to 623717).
+  example encode_unsigned_zero:
+    encode_unsigned(0u64) == b"00"
+  example encode_unsigned_624485:
+    encode_unsigned(624485u64) == b"e58e26"
+  example encode_unsigned_u32_max:
+    encode_unsigned(4294967295u64) == b"ffffffff0f"
+  example encode_unsigned_u64_max:
+    encode_unsigned(18446744073709551615u64) == b"ffffffffffffffffff01"
+  example encode_signed_minus_two:
+    encode_signed(-2i64) == b"7e"
+  example encode_signed_sixty_four_needs_a_sign_byte:
+    encode_signed(64i64) == b"c000"
+  example encode_signed_i32_min:
+    encode_signed(-2147483648i64) == b"8080808078"
+  example encode_signed_i64_min:
+    encode_signed(-9223372036854775808i64) == b"8080808080808080807f"
+  example encode_signed_i64_max:
+    encode_signed(9223372036854775807i64) == b"ffffffffffffffffff00"
+
+  example decode_unsigned_624485:
+    decode_unsigned(b"e58e26", 0) == Ok((624485u64, 3))
+  example decode_unsigned_after_offset:
+    decode_unsigned(b"0000e58e26", 2) == Ok((624485u64, 3))
+  example decode_unsigned_padded_zero_is_legal:
+    decode_unsigned(b"8000", 0) == Ok((0u64, 2))
+  example decode_unsigned_u64_max:
+    decode_unsigned(b"ffffffffffffffffff01", 0) == Ok((18446744073709551615u64, 10))
+  example decode_unsigned_two_to_the_64_too_large:
+    decode_unsigned(b"ffffffffffffffffff02", 0) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_eleven_bytes_overlong:
+    decode_unsigned(b"8080808080808080808000", 0) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_unterminated:
+    decode_unsigned(b"80", 0) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_empty:
+    decode_unsigned(b"", 0) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_offset_out_of_bounds:
+    decode_unsigned(b"01", 5) == Err(Leb128Error.MALFORMED)
+  example decode_signed_minus_one:
+    decode_signed(b"7f", 0) == Ok((-1i64, 1))
+  example decode_signed_i64_min:
+    decode_signed(b"8080808080808080807f", 0) == Ok((-9223372036854775808i64, 10))
+  example decode_signed_padding_not_sign:
+    decode_signed(b"ffffffffffffffffff01", 0) == Err(Leb128Error.MALFORMED)
+  example decode_signed_padding_set_on_positive:
+    decode_signed(b"8080808080808080807e", 0) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_padded_in_budget:
+    decode_unsigned_bounded(b"8280808000", 0, 32u32) == Ok((2u64, 5))
+  example decode_unsigned_bounded_overlong_for_u32:
+    decode_unsigned_bounded(b"828080808000", 0, 32u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_two_to_the_32_too_large:
+    decode_unsigned_bounded(b"8080808010", 0, 32u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_u32_max:
+    decode_unsigned_bounded(b"ffffffff0f", 0, 32u32) == Ok((4294967295u64, 5))
+  example decode_signed_bounded_i32_min:
+    decode_signed_bounded(b"8080808078", 0, 32u32) == Ok((-2147483648i64, 5))
+  example decode_signed_bounded_i32_max:
+    decode_signed_bounded(b"ffffffff07", 0, 32u32) == Ok((2147483647i64, 5))
+  example decode_signed_bounded_two_to_the_31_too_large:
+    decode_signed_bounded(b"ffffffff0f", 0, 32u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_zero_width_admits_zero:
+    decode_signed_bounded(b"00", 0, 0u32) == Ok((0i64, 1))
+  example decode_signed_bounded_zero_width_rejects_minus_one:
+    decode_signed_bounded(b"7f", 0, 0u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_65_rejected:
+    decode_unsigned_bounded(b"01", 0, 65u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_66_does_not_truncate_to_u64_max:
+    decode_unsigned_bounded(b"ffffffffffffffffff7f", 0, 66u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_71_eleven_bytes_rejected:
+    decode_unsigned_bounded(b"8080808080808080808001", 0, 71u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_u32_max_rejected:
+    decode_unsigned_bounded(b"01", 0, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_65_rejected:
+    decode_signed_bounded(b"7f", 0, 65u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_66_does_not_truncate:
+    decode_signed_bounded(b"ffffffffffffffffff7f", 0, 66u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_71_eleven_bytes_rejected:
+    decode_signed_bounded(b"8080808080808080808001", 0, 71u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_u32_max_rejected:
+    decode_signed_bounded(b"7f", 0, 4294967295u32) == Err(Leb128Error.MALFORMED)
+
+  -- ---- claims -----------------------------------------------------------------
+  -- Order inside each operation group is deliberate: a negative control stops at
+  -- the first claim that catches its fault, so the cheap model-pinned claims come
+  -- first and the large exhaustive enumerations last.
+
+  -- Encoders: equal to the canonical model, and its length formula.
+  claim encode_unsigned_matches_canonical_model:
+    forall v: U64. encode_unsigned(v) == eu0(v)
+  claim encode_unsigned_length_formula:
+    forall v: U64. len(encode_unsigned(v)) == imax(1, unwrap_or(div(70 - clz(v), 7), 0))
+  claim encode_unsigned_at_most_ten_bytes:
+    forall v: U64. len(encode_unsigned(v)) >= 1 and len(encode_unsigned(v)) <= 10
+  claim encode_signed_matches_canonical_model:
+    forall v: I64. encode_signed(v) == es0(v)
+  claim encode_signed_length_formula:
+    forall v: I64. len(encode_signed(v)) == slen(v)
+  claim encode_signed_at_most_ten_bytes:
+    forall v: I64. len(encode_signed(v)) >= 1 and len(encode_signed(v)) <= 10
+
+  -- decode_unsigned (64 bits).
+  claim decode_unsigned_empty_input_rejected:
+    forall o: Nat. decode_unsigned(b"", o) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_one_byte:
+    forall x: U8. decode_unsigned(be_bytes(x), 0) == du1(x)
+  claim decode_unsigned_round_trip:
+    forall v: U64. decode_unsigned(encode_unsigned(v), 0) == Ok((v, len(encode_unsigned(v))))
+  claim decode_unsigned_round_trip_after_prefix:
+    forall p: Bytes, v: U64. decode_unsigned(concat(p, encode_unsigned(v)), len(p)) == Ok((v, len(encode_unsigned(v))))
+  claim decode_unsigned_ignores_trailing_bytes:
+    forall v: U64, t: Bytes. decode_unsigned(concat(encode_unsigned(v), t), 0) == Ok((v, len(encode_unsigned(v))))
+  claim decode_unsigned_offset_past_end_rejected:
+    forall d: Bytes, o: Nat | o >= len(d). decode_unsigned(d, o) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_consumed_is_bounded:
+    forall d: Bytes, o: Nat. match decode_unsigned(d, o) with Ok((v, k)) -> k >= 1 and k <= 10 and o + k <= len(d) | Err(e) -> true
+  claim decode_unsigned_ten_byte_boundary:
+    forall v: U64, x: U8. decode_unsigned(concat(cont9(v), be_bytes(x)), 0) == du10(v, x)
+  claim decode_unsigned_two_bytes:
+    forall w: U16. decode_unsigned(be_bytes(w), 0) == du2(hi8(w), lo8(w))
+  claim decode_unsigned_three_bytes:
+    forall w: U16, x: U8. decode_unsigned(concat(be_bytes(w), be_bytes(x)), 0) == du3(hi8(w), lo8(w), x)
+
+  -- decode_signed (64 bits).
+  claim decode_signed_empty_input_rejected:
+    forall o: Nat. decode_signed(b"", o) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_one_byte:
+    forall x: U8. decode_signed(be_bytes(x), 0) == ds1(x)
+  claim decode_signed_round_trip:
+    forall v: I64. decode_signed(encode_signed(v), 0) == Ok((v, len(encode_signed(v))))
+  claim decode_signed_round_trip_after_prefix:
+    forall p: Bytes, v: I64. decode_signed(concat(p, encode_signed(v)), len(p)) == Ok((v, len(encode_signed(v))))
+  claim decode_signed_ignores_trailing_bytes:
+    forall v: I64, t: Bytes. decode_signed(concat(encode_signed(v), t), 0) == Ok((v, len(encode_signed(v))))
+  claim decode_signed_offset_past_end_rejected:
+    forall d: Bytes, o: Nat | o >= len(d). decode_signed(d, o) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_consumed_is_bounded:
+    forall d: Bytes, o: Nat. match decode_signed(d, o) with Ok((v, k)) -> k >= 1 and k <= 10 and o + k <= len(d) | Err(e) -> true
+  claim decode_signed_ten_byte_boundary:
+    forall v: U64, x: U8. decode_signed(concat(cont9(v), be_bytes(x)), 0) == ds10(v, x)
+  claim decode_signed_two_bytes:
+    forall w: U16. decode_signed(be_bytes(w), 0) == ds2(hi8(w), lo8(w))
+  claim decode_signed_three_bytes:
+    forall w: U16, x: U8. decode_signed(concat(be_bytes(w), be_bytes(x)), 0) == ds3(hi8(w), lo8(w), x)
+
+  -- decode_unsigned_bounded: every width 0..=64.
+  claim decode_unsigned_bounded_one_byte_every_width:
+    forall x: U8, n: Nat | n <= 64. decode_unsigned_bounded(be_bytes(x), 0, wrap<U32>(n)) == dbu1(x, n)
+  claim decode_unsigned_bounded_at_64_is_decode_unsigned:
+    forall d: Bytes, o: Nat. decode_unsigned_bounded(d, o, 64u32) == decode_unsigned(d, o)
+  claim decode_unsigned_bounded_round_trip_iff_fits:
+    forall v: U64, n: Nat | n <= 64. decode_unsigned_bounded(encode_unsigned(v), 0, wrap<U32>(n)) == (if fitsu(v, n) then Ok((v, len(encode_unsigned(v)))) else Err(Leb128Error.MALFORMED))
+  claim decode_unsigned_bounded_result_fits_width:
+    forall d: Bytes, o: Nat, n: Nat | n <= 64. match decode_unsigned_bounded(d, o, wrap<U32>(n)) with Ok((v, k)) -> fitsu(v, n) and k >= 1 and 7 * k <= imax(7, n + 6) and o + k <= len(d) | Err(e) -> true
+  claim decode_unsigned_bounded_two_bytes_every_width:
+    forall w: U16, n: Nat | n <= 64. decode_unsigned_bounded(be_bytes(w), 0, wrap<U32>(n)) == dbu2(hi8(w), lo8(w), n)
+
+  claim decode_unsigned_bounded_rejects_width_above_64:
+    forall d: Bytes, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_unsigned_bounded(d, 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_bounded_rejects_max_width:
+    forall d: Bytes, o: Nat. decode_unsigned_bounded(d, o, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_bounded_ten_byte_input_rejected_above_64:
+    forall x: U8, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_unsigned_bounded(concat(cont9(18446744073709551615u64), be_bytes(x)), 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+
+  -- decode_signed_bounded: every width 0..=64.
+  claim decode_signed_bounded_one_byte_every_width:
+    forall x: U8, n: Nat | n <= 64. decode_signed_bounded(be_bytes(x), 0, wrap<U32>(n)) == dbs1(x, n)
+  claim decode_signed_bounded_at_64_is_decode_signed:
+    forall d: Bytes, o: Nat. decode_signed_bounded(d, o, 64u32) == decode_signed(d, o)
+  claim decode_signed_bounded_round_trip_iff_fits:
+    forall v: I64, n: Nat | n <= 64. decode_signed_bounded(encode_signed(v), 0, wrap<U32>(n)) == (if fitss(v, n) then Ok((v, len(encode_signed(v)))) else Err(Leb128Error.MALFORMED))
+  claim decode_signed_bounded_result_fits_width:
+    forall d: Bytes, o: Nat, n: Nat | n <= 64. match decode_signed_bounded(d, o, wrap<U32>(n)) with Ok((v, k)) -> fitss(v, n) and k >= 1 and 7 * k <= imax(7, n + 6) and o + k <= len(d) | Err(e) -> true
+  claim decode_signed_bounded_two_bytes_every_width:
+    forall w: U16, n: Nat | n <= 64. decode_signed_bounded(be_bytes(w), 0, wrap<U32>(n)) == dbs2(hi8(w), lo8(w), n)
+  claim decode_signed_bounded_rejects_width_above_64:
+    forall d: Bytes, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_signed_bounded(d, 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_bounded_rejects_max_width:
+    forall d: Bytes, o: Nat. decode_signed_bounded(d, o, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_bounded_ten_byte_input_rejected_above_64:
+    forall x: U8, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_signed_bounded(concat(cont9(18446744073709551615u64), be_bytes(x)), 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)

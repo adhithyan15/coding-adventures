@@ -1,4 +1,8 @@
-# Windows: TypeScript native Node.js addons require node.lib to link against.
-# Providing node.lib on Windows CI is complex; this package is covered by
-# Linux and macOS CI runners.
-echo Skipping typescript/irc-server-native on Windows — Node.js import library not configured for CI
+# Windows build: same steps as the Unix BUILD.  The N-API symbols are imported from
+# node.exe through node-bridge's raw-dylib table, so no node.lib is needed.
+cd ext\irc_native_node && cargo build --release && cd ..\..
+node -e "const p='ext/irc_native_node/target/release/',os=process.platform,src=os==='darwin'?p+'libirc_native_node.dylib':os==='win32'?p+'irc_native_node.dll':p+'libirc_native_node.so',fs=require('fs');if(!fs.existsSync(src))throw new Error('Built .node not found at '+src);fs.copyFileSync(src,'irc_native_node.node');console.log('Copied',src,'-> irc_native_node.node');"
+npm ci --quiet
+npx tsc --project tsconfig.json
+npx tsc --project tsconfig.test.json --noEmit
+npx vitest run

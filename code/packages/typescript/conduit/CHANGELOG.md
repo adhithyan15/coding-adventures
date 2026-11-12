@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now builds the N-API addon and runs the tests on Windows (same steps as the Unix `BUILD`) instead of skipping. The N-API symbols are imported from `node.exe` through `node-bridge`'s `raw-dylib` table, so no `node.lib` is needed; the stale `build.rs` comment saying otherwise is corrected.
+
 ### Fixed
 
 - Added the `BUILD_windows` skip stub that `ext/conduit_native_node/build.rs`

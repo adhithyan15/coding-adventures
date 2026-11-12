@@ -1,5 +1,7 @@
 # B03 — Build Vendoring
 
+> **Status: SUPERSEDED by [KILN00](KILN00-kiln-build-system.md) (2026-11-11).** Kept for history. The Starlark migration stalled at 85 files because its rules declared only sources and dependencies; Kiln replaces it with hashed keys, isolated work roots and a language-agnostic rule language.
+
 ## Overview
 
 Vendoring is the practice of pre-downloading all external dependencies into a

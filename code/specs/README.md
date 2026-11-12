@@ -37,6 +37,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 |---|------|---------|
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
+| KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
 
 **Interactive hardware specs**:
 | # | Spec | Purpose |
@@ -57,8 +58,11 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER26](VER26-ct-compare-pilot.md) | Rust ct-compare pilot and evidence requirements |
 | [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
+| [LEB01](LEB01-wasm-leb128.md) | LEB128 contract (canonical encoders, malformed-input rules, bytes-consumed bound) and its Warrant document [`wasm-leb128.warrant`](wasm-leb128.warrant) |
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
+| [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
+| [VER29](VER29-layer-contract-linking.md) | Layer contract linking (LV-005): `contract.<lane>.<package>.<claim>` ids, the generated `contract` family, fail-closed discharge, strength propagation, coverage and reach-around rules, CI re-selection, implementation slices; amendments to VER04 and VER13 as text |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template

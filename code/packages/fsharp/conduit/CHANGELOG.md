@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Windows now builds conduit-capi with the shared helper (`code/scripts/stage-conduit-capi-windows.ps1`), points `CONDUIT_CAPI_PATH` at the staged `conduit_capi.dll` and runs the same `dotnet test` as the Unix recipe (new `tools/run-tests.ps1`), instead of skipping.
 - Fix a double free of every handler `GCHandle`: `Application`'s `Dispose`
   freed the handles again after Rust's `CtxFree` had freed them (via
   `conduit_app_free` or a consumed `bind`). The slot returned to the handle

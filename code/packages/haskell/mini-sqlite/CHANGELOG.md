@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all --test-show-details=direct` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
+
 ### Fixed
 
 - The Darwin BUILD now runs Cabal with the Command Line Tools developer dir

@@ -1,2 +1,2 @@
-REM Prerequisite (not installed on Windows): ../transistors
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../transistors
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps transistors

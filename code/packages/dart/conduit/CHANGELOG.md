@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Windows now builds conduit-capi (shared helper
+  `code/scripts/stage-conduit-capi-windows.ps1`) and conduit-dart-bridge, sets
+  `CONDUIT_CAPI_PATH` and `CONDUIT_DART_BRIDGE_PATH` to the staged absolute DLL
+  paths, and runs the same dart tests as the Unix recipe, instead of skipping
+  (`BUILD_windows` + `tools/run-tests.ps1`).
+
 - Fix a double free of `current` in `dispatchAfter`: when an after-hook
   threw (including `HaltException`), the response that had already been
   freed was freed again, which is a native double free. It is now freed only
