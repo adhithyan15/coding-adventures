@@ -318,6 +318,13 @@ fn a_package_with_secrets_cannot_use_the_not_applicable_exemption() {
 }
 
 #[test]
+fn the_boolean_logic_profile_parses_and_unknown_profiles_list_it() {
+    assert_eq!("boolean-logic".parse::<AuditProfile>(), Ok(AuditProfile::BooleanLogic));
+    let err = "lzw".parse::<AuditProfile>().unwrap_err();
+    assert!(err.contains("boolean-logic"), "{err}");
+}
+
+#[test]
 fn the_varint_profile_parses_and_unknown_profiles_list_it() {
     assert_eq!("varint-codec".parse::<AuditProfile>(), Ok(AuditProfile::VarintCodec));
     let err = "lzw".parse::<AuditProfile>().unwrap_err();
