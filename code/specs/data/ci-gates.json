@@ -530,6 +530,15 @@
         "code/scripts/tests/test_setup_msvc_dev_cmd.py"
       ]
     },
+    "human-language-corpus": {
+      "scope": "step",
+      "description": "Build jobs check out without the ~740 MB human-languages corpus; this gate restores it when a package that reads the corpus is built. Full builds always restore it.",
+      "packages": [
+        "typescript/human-language-data",
+        "typescript/programs/language-ladder",
+        "typescript/script-ductus"
+      ]
+    },
     "build-linux-os-suites": {
       "scope": "step",
       "description": "Suites that require Linux kernel isolation primitives and a delegated cgroup-v2 root.",

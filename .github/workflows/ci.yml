@@ -85,6 +85,19 @@ concurrency:
 permissions:
   contents: read
 
+# Patterns for a sparse checkout that leaves out the human-languages corpus.
+# code/learning/human-languages is ~740 MB in ~313,000 files, about 60% of the
+# repository, and almost no job reads it. Non-cone mode is required: cone mode
+# cannot express "everything except this directory". The 2.4 MB _fonts folder
+# stays because rust/font-subset, glyph-parser and pdf read it. Jobs that do read
+# the corpus keep a full checkout: the contracts job always, and the build job
+# when the human-language-corpus gate fires. See code/specs/ci-gate-registry.md.
+env:
+  LEAN_SPARSE_PATTERNS: |
+    /*
+    !/code/learning/human-languages/
+    /code/learning/human-languages/_fonts/
+
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
   #
@@ -158,12 +171,16 @@ jobs:
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
       run_build_windows_recipes: ${{ steps.detect.outputs.run_build_windows_recipes }}
+      run_human_language_corpus: ${{ steps.detect.outputs.run_human_language_corpus }}
       run_forme_release_platform: ${{ steps.detect.outputs.run_forme_release_platform }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Reject double-encoded UTF-8
         shell: bash
@@ -674,6 +691,13 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
+      # The detect job checks the repository out without the human-languages
+      # corpus (about 60% of it), so it cannot scan that directory. This job
+      # always has the whole tree, on every event, so the corpus keeps the same
+      # double-encoding check it had when detect scanned the full tree.
+      - name: Reject double-encoded UTF-8 in the human-languages corpus
+        run: python3 code/scripts/check_mojibake.py code/learning/human-languages
+
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -1085,6 +1109,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1108,6 +1136,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1168,6 +1200,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1228,6 +1264,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1295,6 +1335,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1366,6 +1410,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
@@ -1417,6 +1465,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Build grammar-tools
         run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
@@ -1460,6 +1512,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Build grammar-tools
         run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
@@ -1511,6 +1567,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Fail if any embedded Swift grammar is stale
         run: |
@@ -1532,6 +1592,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1559,10 +1623,13 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Install Lua build prerequisites
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: sudo apt-get install -qy libreadline-dev libncurses-dev
+        run: bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
 
       - name: Install pinned Lua 5.4.7 from verified mirrors
         run: python3 code/scripts/setup_lua.py --prefix .lua
@@ -1592,6 +1659,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Verify reviewed Perl 5.38.2 runtime
         run: |
@@ -1618,6 +1688,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Haskell toolchain
         id: haskell
@@ -1655,6 +1728,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       # The conformance check below requires exactly Swift 6.3.3. It used to
       # rely on the Swift that GitHub preinstalls on ubuntu-24.04, so every
@@ -1710,6 +1786,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Dart toolchain
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1754,6 +1833,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Dart toolchain
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1799,6 +1881,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -2181,6 +2266,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Require every supported host
         shell: bash
@@ -2246,6 +2334,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -3782,6 +3873,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          # The corpus is needed only when a package that reads it is in this build,
+          # or on a full build (see the human-language-corpus gate).
+          sparse-checkout: ${{ !(needs.detect.outputs.run_human_language_corpus == 'true' || needs.detect.outputs.full_build == 'true') && env.LEAN_SPARSE_PATTERNS || '' }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       # ── Language toolchains (conditional) ───────────────────────
       #
@@ -3924,7 +4020,7 @@ jobs:
             if [ "$RUNNER_OS" = "macOS" ]; then
               brew install readline ncurses
             else
-              sudo apt-get install -qy libreadline-dev libncurses-dev
+              bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
             fi
             python3 code/scripts/setup_lua.py --prefix .lua
           fi
