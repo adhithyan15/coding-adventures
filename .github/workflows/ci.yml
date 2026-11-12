@@ -3768,6 +3768,17 @@ jobs:
     # native-debug-info and aot-debug write DWARF for generated code.
     env:
       CARGO_PROFILE_DEV_DEBUG: line-tables-only
+      # Go may never edit go.mod/go.sum while building. This is already the
+      # default; it is spelled out so a stale manifest fails the build instead
+      # of being fixed in place. The Go BUILD files used to run `go mod tidy`,
+      # which rewrote manifests silently; they now run `go mod tidy -diff`,
+      # which exits non-zero if tidy would change anything.
+      #
+      # GOPROXY is deliberately NOT turned off: build-tool needs
+      # golang.org/x/text and ir-to-jvm-class-file (and its dependents)
+      # need golang.org/x/sys, neither of which has a local `replace`. Their
+      # go.sum files are the reviewed record of those downloads.
+      GOFLAGS: -mod=readonly
 
     steps:
       - name: Checkout
