@@ -716,13 +716,18 @@ only; they cannot authorize a passing lane result. WD-004a registers
 `python/ct-compare` as `planned`; no entry becomes active until its binding,
 runner, evidence manifest, and build routing exist.
 
-Registry path values are normalized, slash-separated repository-relative paths
-with no empty, `.` or `..` component, no backslash, and no symlink traversal.
-Every file path must be beneath its row's exact `package_root`; the evidence
-manifest path is exactly `<package_root>/evidence/test-manifest.json`. The
-registry's `consumer_count` equals the row count, and `active_consumer_count`
-equals the number of rows whose status is `active`. WD-004a parses these
-relationships but does not check path existence or attest a real active run.
+Registry path values are lexically normalized, slash-separated,
+repository-relative paths with no empty, `.` or `..` component and no
+backslash. The declared `package_root` must equal the path derived from
+`package` (for example, `python/ct-compare` maps to
+`code/packages/python/ct-compare`). Every file path must be beneath that exact
+root; the evidence-manifest path is exactly
+`<package_root>/evidence/test-manifest.json`. The registry's `consumer_count`
+equals the row count, and `active_consumer_count` equals the number of rows
+whose status is `active`. WD-004a checks these strings and joins only; it does
+not open paths, verify symlinks or path existence, or attest a real active run.
+Filesystem-safe opening and active-consumer readiness belong to the later
+runner/report integration.
 
 WD-004a closes the first parser profile to the exact keys shown in §8,
 including the nested `runner`, `toolchain`, and test-kind objects.
