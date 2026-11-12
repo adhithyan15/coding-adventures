@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
 - Replace midpoint-only recursive flattening with bounded, iterative G2D02
   subdivision using finite-segment control-point error.
 - Return deterministic `FlatteningError` values for invalid tolerance,

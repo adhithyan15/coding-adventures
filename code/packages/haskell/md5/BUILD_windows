@@ -1,1 +1,8 @@
-if exist "%ProgramFiles%\\cabal\\bin\\cabal.exe" (cabal test all) else (echo cabal not found -- skipping)
+# Windows runs the same Cabal command as the Unix BUILD. This replaces a recipe that
+# ran Cabal only if %ProgramFiles%\cabal\bin\cabal.exe existed. The setup step
+# installs Cabal with ghcup under C:\ghcup\bin, so that file never exists on the
+# runner, the recipe printed "cabal not found -- skipping", and the package passed
+# without running a single test (it finished in under a second). A missing cabal
+# now fails visibly. Each line of a BUILD file runs in its own shell, so the
+# command stays on one line.
+cabal test all

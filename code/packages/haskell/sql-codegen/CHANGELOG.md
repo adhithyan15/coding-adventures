@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all --test-show-details=direct` unconditionally. It used to run Cabal only if
+  `%ProgramFiles%\cabal\bin\cabal.exe` existed, which it never does on the CI runner, so the
+  tests were silently skipped on Windows.
+
 - `BUILD_windows` runs under `cmd.exe`: the POSIX `sh` form (`command -v`, `/dev/null`) failed there, so it now uses the repo's `if exist "%ProgramFiles%\cabal\bin\cabal.exe" (...)` idiom.
 
 ### Fixed
