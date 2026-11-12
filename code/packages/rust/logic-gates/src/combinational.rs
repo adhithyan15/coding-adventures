@@ -43,6 +43,16 @@
 
 use crate::gates::{and_gate, not_gate, or_gate};
 
+/// The widest decoder (and the most select lines of a demux) this crate builds.
+///
+/// A decoder with `n` inputs has `2^n` outputs, so `n` multiplies the work and
+/// the memory: 16 inputs are 65,536 lines, 40 would be a terabyte.  Beyond the
+/// cap `decoder` and `demux` panic, in every build profile, instead of
+/// attempting the allocation (finding SEC-008).  Sixteen is far above any use in
+/// this repository (the Intel 4004 decodes four bits) while staying cheap enough
+/// to test at the boundary.
+pub const MAX_DECODER_WIDTH: usize = 16;
+
 // ===========================================================================
 // Helper — bit validation (reuses the same pattern as gates.rs)
 // ===========================================================================
@@ -289,8 +299,10 @@ fn mux_n_inner(inputs: &[u8], sel: &[u8]) -> u8 {
 ///
 /// # Panics
 ///
-/// Panics if `n_outputs` is not a power of 2 >= 2, or if `sel` length
-/// does not equal log2(n_outputs).
+/// Panics if `n_outputs` is not a power of 2 >= 2, if `sel` length
+/// does not equal log2(n_outputs), if a bit is not 0 or 1, or if there are more
+/// than [`MAX_DECODER_WIDTH`] select lines (the decoder underneath has `2^n`
+/// outputs).
 ///
 /// # Example
 ///
@@ -360,7 +372,9 @@ pub fn demux(data: u8, sel: &[u8], n_outputs: usize) -> Vec<u8> {
 ///
 /// # Panics
 ///
-/// Panics if `inputs` is empty.
+/// Panics if `inputs` is empty, if any input is not 0 or 1, or if there are
+/// more than [`MAX_DECODER_WIDTH`] inputs (the output has `2^n` lines, so an
+/// unbounded `n` is an unbounded allocation).
 ///
 /// # Example
 ///
@@ -371,6 +385,14 @@ pub fn demux(data: u8, sel: &[u8], n_outputs: usize) -> Vec<u8> {
 /// ```
 pub fn decoder(inputs: &[u8]) -> Vec<u8> {
     assert!(!inputs.is_empty(), "inputs must be non-empty");
+    // Bound the width BEFORE `1 << n`: n is the caller's amplification factor on
+    // the allocation below, and for n >= 64 the shift itself is undefined work
+    // (a panic in debug, a silent wrap to 1 in release).  SEC-008.
+    assert!(
+        inputs.len() <= MAX_DECODER_WIDTH,
+        "a decoder has at most {MAX_DECODER_WIDTH} inputs, got {}",
+        inputs.len()
+    );
     validate_bits(inputs, "inputs");
 
     let n = inputs.len();
