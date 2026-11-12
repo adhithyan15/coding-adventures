@@ -1,1 +1,4 @@
-echo "SKIP: luasocket native compilation not supported on Windows CI"
+# Windows build: luasocket is a C module; luarocks compiles it with the MSVC toolchain CI
+# already sets up for the Lua natives, into the same tree that busted was installed in
+# (so no --local and no extra LUA_CPATH, unlike the Unix BUILD).
+luarocks install luasocket && cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;;" && busted . --verbose --pattern=test_

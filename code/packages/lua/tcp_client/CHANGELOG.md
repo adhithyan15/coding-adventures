@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+### Changed
+- `BUILD_windows` now installs luasocket with luarocks and runs the busted suite on Windows (same test command as the Unix `BUILD`) instead of skipping with "luasocket native compilation not supported on Windows CI". CI already builds Lua C modules there (the Lua natives and `lua/conduit`).
+
 ## [0.1.0] - 2026-04-12
 ### Added
 - `M.connect(host, port, options)` -- DNS resolution + TCP connect with configurable timeout, returns TcpConnection
