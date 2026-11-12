@@ -365,6 +365,13 @@ POSIX_CONSTRUCTS = [
     ("${...}", re.compile(r"\$\{")),
     ("[ ... ] test", re.compile(WORD_START + r"\[\[?(?:\s|$)")),
     ("; then/fi/do/done/esac", re.compile(r";\s*(?:then|fi|do|done|esac)(?:[\s;)]|$)")),
+    # A command run from a POSIX virtualenv: `.venv/bin/python`, or the same
+    # reached through `../`. Windows virtualenvs put executables in
+    # `.venv\Scripts`, so cmd reports "'.venv' is not recognized". This
+    # pattern was missing, and 19 Python packages with no BUILD_windows
+    # failed the first time the dependency-pinning work rebuilt them on
+    # Windows.
+    (".venv/bin/", re.compile(r"(?:^|[\s(])(?:\.\./)*(?:[\w.-]+/)*\.venv/bin/")),
 ]
 
 
@@ -398,6 +405,10 @@ KNOWN_POSIX_FALLBACKS = {
     # Copies a cargo-built .dylib/.so/.dll with `2>/dev/null ||` fallbacks;
     # needs a Windows-specific copy of the native addon (a design decision).
     "packages/typescript/matrix-rust-napi",
+    # Runs its dependency's POSIX BUILD via `bash BUILD` and then that
+    # package's `.venv/bin/python`; a Windows version has to call conduit's
+    # BUILD_windows and its `.venv\Scripts\python` instead.
+    "programs/python/conduit-hello",
 }
 
 

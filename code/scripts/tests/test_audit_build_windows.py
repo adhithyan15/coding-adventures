@@ -36,8 +36,10 @@ class Tree:
     def close(self) -> None:
         self._tmp.cleanup()
 
-    def package(self, language: str, name: str, files: dict[str, str]) -> Path:
-        directory = self.root / "code" / "packages" / language / name
+    def package(
+        self, language: str, name: str, files: dict[str, str], kind: str = "packages"
+    ) -> Path:
+        directory = self.root / "code" / kind / language / name
         directory.mkdir(parents=True)
         for filename, content in files.items():
             (directory / filename).write_text(content, encoding="utf-8")
@@ -230,9 +232,24 @@ class PosixFallbackTest(AuditTestCase):
             "command -v perl",
             "X=$(pwd)",
             "echo ${HOME}",
+            ".venv/bin/python -m pytest tests/ -v",
+            ".venv/bin/ruff check src/",
+            "../../../packages/python/conduit/.venv/bin/python -m pytest",
         ):
             with self.subTest(line=line):
                 self.assertTrue(audit.posix_construct(line))
+
+    def test_windows_venv_scripts_path_is_not_posix(self) -> None:
+        self.assertEqual(audit.posix_construct(r".venv\Scripts\python -m pytest"), "")
+        self.assertEqual(audit.posix_construct("uv venv .venv --quiet --no-project"), "")
+
+    def test_python_build_without_build_windows_is_reported(self) -> None:
+        self.tree.package(
+            "python",
+            "p",
+            {"BUILD": "uv venv --quiet --clear\n.venv/bin/python -m pytest tests/ -v\n"},
+        )
+        self.assertEqual(self.tree.classes(), [("E", False)])
 
     def test_double_quoted_payload_is_not_read(self) -> None:
         self.assertEqual(
@@ -253,8 +270,8 @@ class PosixFallbackTest(AuditTestCase):
 
     def test_known_exceptions_are_advisory(self) -> None:
         for rel in audit.KNOWN_POSIX_FALLBACKS:
-            language, name = rel.split("/")[1:]
-            self.tree.package(language, name, {"BUILD": "x >/dev/null\n"})
+            kind, language, name = rel.split("/")
+            self.tree.package(language, name, {"BUILD": "x >/dev/null\n"}, kind)
         classes = self.tree.classes()
         self.assertEqual(len(classes), len(audit.KNOWN_POSIX_FALLBACKS))
         self.assertTrue(all(advisory for _, advisory in classes))
