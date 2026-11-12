@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Rewrite the post-execution register capture in `step` to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ## [0.2.0] - 2026-08-28
 
 ### Changed

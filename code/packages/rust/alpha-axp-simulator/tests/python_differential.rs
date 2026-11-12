@@ -2,8 +2,8 @@ use alpha_axp_simulator::{AlphaSimulator, AlphaState};
 
 fn seeded_state(cpu: &AlphaSimulator, raw: u32, seed: usize) -> AlphaState {
     let mut state = cpu.get_state();
-    for index in 0..31 {
-        state.regs[index] = ((seed as u64 + 1).wrapping_mul(0x9e37_79b9_7f4a_7c15))
+    for (index, register) in state.regs.iter_mut().enumerate().take(31) {
+        *register = ((seed as u64 + 1).wrapping_mul(0x9e37_79b9_7f4a_7c15))
             ^ (index as u64).wrapping_mul(0xd1b5_4a32_d192_ed03);
     }
     state.regs[1] = [0, 1, u64::MAX, 0x8000_0000_0000_0000][seed];

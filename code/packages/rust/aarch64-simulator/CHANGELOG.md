@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Rewrite the seeded-register loop in `tests/python_differential.rs` to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ## 0.1.0 (2026-09-07)
 
 - Added exact 64 KiB AArch64 architectural state with 32 64-bit GPR slots,

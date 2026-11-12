@@ -1,5 +1,11 @@
 # Changelog — x86-simulator
 
+## Unreleased
+
+- Rewrite the seeded-register loop in `tests/python_differential.rs` to satisfy
+  Rust 1.100 clippy (`needless_range_loop`) with an iterator; behaviour is
+  unchanged.
+
 ## 0.8.0 — 2026-08-31 — complete Spec 07w functional machine
 
 - Add a separate `X86FunctionalSimulator` boundary with exact owned 64 KiB

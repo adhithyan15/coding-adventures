@@ -1650,8 +1650,8 @@ impl ARM1 {
         }
 
         // Capture state after execution
-        for i in 0..16 {
-            trace.regs_after[i] = self.read_register(i);
+        for (i, slot) in trace.regs_after.iter_mut().enumerate() {
+            *slot = self.read_register(i);
         }
         trace.flags_after = self.flags();
 

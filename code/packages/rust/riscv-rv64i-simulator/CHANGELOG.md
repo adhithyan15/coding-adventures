@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Rewrite the seeded-register loop in `tests/python_differential.rs` to satisfy Rust 1.100 clippy (`needless_range_loop`) with an iterator;
+  behaviour is unchanged.
+
 ### Added
 
 - Add required_capabilities.json (pure computation).
