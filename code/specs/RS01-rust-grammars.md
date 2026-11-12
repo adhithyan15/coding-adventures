@@ -1335,6 +1335,50 @@ recommendations: they are **coordinator-decided, owner override welcome**.
 | Q14 | Engine batch | Two PRs: lexer side (D1) and parser side (D2) | coordinator-decided, owner override welcome |
 | gf256 | `OnceLock` tables | Refactor gf256 to compile-time `const fn` tables in a separate PR; `OnceLock` and lazy statics stay unsupported and fail closed | owner-decided |
 
+### A2 decisions (inventory slice)
+
+Slice A2 wrote `code/grammars/rust/{releases.csv,subsets.csv,README.md}` and
+the checker support. Where this spec was silent or ambiguous, A2 took the
+conservative reading:
+
+1. **Dates.** Section 1.2 names `RELEASES.md` as the source but tabulates no
+   dates. A2 read the `Version X (YYYY-MM-DD)` headings of `RELEASES.md` on
+   2026-11-12 for 156 rows and copied the two stated exceptions exactly:
+   0.3.1 is `2012-07?` and 1.0.0-beta is `2015-04-03`. The 1.0.0-beta date is
+   taken from this spec, not re-verified against the announcement.
+2. **Columns.** After the twelve required columns, `releases.csv` has
+   `date_source` (`releases-md`, `tag-commit` for 0.3.1, `announcement` for
+   1.0.0-beta), `lineage` and `editions`, following Python's layout plus
+   section 2.3. `source_sha` is the commit each tag names (peeled for
+   annotated tags); `source_ref` is the tag URL (`release-0.3.1` for 0.3.1).
+3. **Lineage the spec leaves open.** Section 1.2 does not say what follows
+   1.0.0-alpha. A2 chains 1.0.0-alpha.2 to 1.0.0-alpha, 1.0.0-beta to
+   1.0.0-alpha.2 and 1.0.0 to 1.0.0-beta (all `line`), so 2015 reaches 1.0.0 by
+   lineage. Each pre-1.0 final follows the previous final, so 0.4 follows 0.3,
+   not 0.3.1. 1.0.0-alpha and every other final's first row of a line is a
+   `branch-point`; the first row is `first`.
+4. **The allowlist file.** A2 declares `rs-confined.allowlist` in
+   `subsets.csv` but does not create it: the gate is slice B1's work (see the
+   backlog). The checker therefore requires an allowlist file to exist only
+   once a row claims the subset (`partial` with that `grammar_subset`, or an
+   `iir_status`/`backend_status` claim). A declared name must be a plain
+   `*.allowlist` file name in the grammar directory; a symlink is refused.
+5. **No `release_classes.csv`.** Nothing claims a backend, so there are no
+   classes to record.
+6. **Checker scope.** The edition mechanics (header, column, derivation,
+   stems, uniform claims, pair overrides) apply to any inventory that has an
+   `editions` column or a `# editions:` comment, and to nothing else. The
+   Rust-only rules (published IDs only, prescribed channel, predecessor and
+   lineage, no two rows with the same predecessor and lineage) apply to the
+   directory named `rust`, which must also declare the axis. The only
+   published pre-releases are 1.0.0-alpha, 1.0.0-alpha.2 and 1.0.0-beta, so
+   any other pre-release, nightly or `release-` looking ID is refused.
+7. **Pair count.** The checker reports the derived count (347) as a note
+   instead of hard-coding it; a unit test pins 347 and the per-era split
+   (13, 45, 34, 43, 23 releases).
+8. **`rs-token-trees`.** Section 6.2 names the subset but no spec for
+   `subsets.csv`; A2 gives it spec `RS01` and `allowlist` `-`.
+
 ---
 
 ## 11. Not verified
