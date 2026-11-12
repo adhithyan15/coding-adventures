@@ -140,15 +140,16 @@ GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # unchanged and pinned.
     "3f1380940a30c5b97c3418a9034373eb53cf25a3ad1c49e508e50dae88141bd6"
 )
-# The build job's checkout. History and credential handling are unchanged:
-# full history, and credentials are not persisted. The three sparse inputs leave
+# The build job's checkout: shallow (depth 1, the build runs from the detect
+# job's build-plan.json and only the plan-less fallback deepens history), and
+# credentials are not persisted. The three sparse inputs leave
 # the ~740 MB human-languages corpus out of the working tree unless the
 # human-language-corpus gate or a full build asks for it, and `filter: blob:none`
 # keeps the excluded blobs from being downloaded at all. Nothing here touches
 # what the OCaml legs build or bootstrap; the exact strings are pinned so a later
 # edit to the expression must update this reviewed contract.
 GENERIC_BUILD_CHECKOUT_INPUTS = {
-    "fetch-depth": "0",
+    "fetch-depth": "1",
     "persist-credentials": "false",
     "filter": "blob:none",
     "sparse-checkout-cone-mode": "false",
@@ -1295,7 +1296,7 @@ def validate_generic_ci_workflow_text(
     )
     if checkout_inputs != GENERIC_BUILD_CHECKOUT_INPUTS:
         raise ContractError(
-            "generic CI checkout must fetch history without persisting credentials"
+            "generic CI checkout must use shallow history without persisting credentials"
         )
 
     setup = _workflow_mapping(
