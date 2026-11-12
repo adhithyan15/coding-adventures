@@ -244,6 +244,40 @@ The shipped fixtures are synthetic (`warrant-vectors-synthetic-v1`, README there
 records provenance); adding a NIST/RFC set is an owner decision and the loader is
 the hook.
 
+## Warrant v1: sequence built-ins, checker and evaluator (VER04k WX-D1)
+
+```text
+model last_two(b: Bytes) -> Bytes = drop(b, len(b) - 2)       -- clamps at 0
+model zeros(n: Int) -> Bytes = to_bytes(replicate(0u8, n))
+claim prefix: forall b: Bytes, n: Nat. to_bytes(take(to_list(b), n)) == take(b, n)
+```
+
+Seven sequence forms are v1 built-ins: `take drop slice replicate range to_list
+to_bytes` (VER04k section 2.2). Counts are `Int`; a negative count means zero and
+a count past the end means "all of it", so `take(xs, -1) == []` and
+`range(-3) == []`. `take`/`drop`/`slice` of any `Bytes` give a dynamic `Bytes`;
+an empty list literal gets its element type from its position, so `to_bytes([])`
+and `replicate([], n)` type-check. The five higher-order names `fold map count
+all any` are reserved too, and refused with W0202 "not yet implemented in this
+version" until WX-D2. In v0 all twelve stay ordinary identifiers. A v1 list
+literal has at most 4,096 elements (W0602), a v1 identifier at most 128 bytes
+(W0602), and a v1 parameter or quantifier binder may not spell any reserved
+built-in (W0203).
+
+The ground evaluator meters every v1 evaluation with work, depth, a cumulative
+64 MiB data counter (each constructing node pays the `dsize` of its value,
+including the type, constructor and error names a value stores) and a
+65,536-element cap per sequence. A form checks the cap on the exact count, then
+reserves its data, then charges its work, and only then allocates, so
+`replicate(0u8, 2^70)` fails with W0703 having allocated nothing
+(`tests/wxd_alloc_probe.rs`). `and`, `or` and `=>` short-circuit in v1. Generated
+evidence still refuses the forms (W0701) until slice S2a.
+
+The data counter bounds each value, not the memory of a whole evaluation: a read
+of a binder deep-copies its value and charges nothing, so many reads of one
+large value can take far more memory than its charge. VER04k section 9.1 (note
+on E4) records this as an open hazard, tracked as backlog WX-RD1.
+
 ## Tests and regeneration
 
 From the Rust workspace:

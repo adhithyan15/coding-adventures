@@ -716,7 +716,29 @@ pub fn percentile_sorted(sorted: &[f64], p: f64) -> f64 {
     let lower_idx = index.floor() as usize;
     let upper_idx = (lower_idx + 1).min(n - 1);
     let weight = index - lower_idx as f64;
-    sorted[lower_idx] * (1.0 - weight) + sorted[upper_idx] * weight
+    // Interpolate as `lo + (hi - lo) * w`, not `lo * (1 - w) + hi * w`.
+    //
+    // The two are equal on paper but not in floating point. With lo == hi
+    // the second form adds two separately rounded products, and the sum can
+    // land one ulp ABOVE lo (e.g. 236322.0 at w = 0.225 gives
+    // 236322.00000000003). This form returns lo exactly when hi - lo == 0.
+    // The final clamp then guarantees, for every weight, that a percentile
+    // never leaves the closed interval of its two neighbouring samples, so
+    // the quantile chain stays ordered and inside [min, max]. That is the
+    // invariant `bootstrap_median_ci_95` and the result shape rely on.
+    let lo = sorted[lower_idx];
+    let hi = sorted[upper_idx];
+    let value = lo + (hi - lo) * weight;
+    // `f64::clamp` panics when lo > hi or either bound is NaN. The harness
+    // never produces either (finite timings, sorted with `total_cmp`), but
+    // this function is public, so a caller's unsorted or NaN input degrades to
+    // the unclamped value instead of panicking. `lo <= hi` is false for NaN,
+    // so this one comparison covers both cases.
+    if lo <= hi {
+        value.clamp(lo, hi)
+    } else {
+        value
+    }
 }
 
 /// Compute the median of an already-sorted slice of floats.

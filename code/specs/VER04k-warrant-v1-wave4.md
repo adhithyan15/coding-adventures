@@ -1,12 +1,16 @@
 # VER04k — Warrant v1, Wave 4 (WX-D, WX-F, WX-G)
 
-**Status:** Specification only. Nothing here is implemented. Implementation
-starts after the WX-H/WX-E slice of [VER04j](VER04j-warrant-v1-extensions.md)
-merges (branch `claude/warrant-wx-h-e`), because every adapter shape, fault
-mechanism and observer this document extends lives on that branch. Each
-extension below is a separately landable slice (section 8). None changes the
-meaning of a v0 document, and none changes the meaning of a valid v1 document
-written for the wave-3 tool (section 1).
+**Status:** Specification only. Nothing here is implemented. The precondition,
+the WX-H/WX-E slice of [VER04j](VER04j-warrant-v1-extensions.md) (branch
+`claude/warrant-wx-h-e`, #19121), has merged, so every adapter shape, fault
+mechanism and observer this document extends is on `main`. The WX-D1 errata and
+decisions of the S0 review (section 9.1, 2026-11-11) are applied to the text
+below; WX-D1 lands in the slices of section 8.1. Each extension below is a
+separately landable slice (section 8). None changes the meaning of a v0
+document, and none changes the meaning of a valid v1 document written for the
+wave-3 tool (section 1); the two wave-3 v1 refusals this wave adds (list
+literals above 4,096 elements, S0 E8, and identifiers longer than 128 bytes,
+E20) are recorded in 1.2.
 
 **Parent:** [VER04 §2–§8](VER04-warrant-language.md),
 [VER04d](VER04d-warrant-type-system.md), [VER04e](VER04e-warrant-codegen.md),
@@ -67,7 +71,11 @@ multi-character operators. A v0 document means exactly what it did.
 
 | Element | Kind | In a v0 document | In a v1 document |
 |---|---|---|---|
-| `fold map count all any take drop slice replicate range to_list to_bytes` | v1 built-in function names (WX-D) | ordinary identifiers. A call of an undeclared one is **W0202** (unbound name), exactly as for `bit_xor` today (VER04j §14 item 9 and the checker's `V1_FUNCTIONS` gating); a v0 model *named* `count` keeps meaning its own definition | reserved: a v1 model, op, binder or constructor of that name is **W0201**/**W0203** as for every other v1 built-in |
+| `fold map count all any take drop slice replicate range to_list to_bytes` | v1 built-in function names (WX-D) | ordinary identifiers. A call of an undeclared one is **W0202** (unbound name), exactly as for `bit_xor` today (VER04j §14 item 9 and the checker's `V1_FUNCTIONS` gating); a v0 model *named* `count` keeps meaning its own definition | reserved, all twelve, from WX-D1 on (S0 E7): a v1 model, op, binder or constructor of that name is **W0201**/**W0203** as for every other v1 built-in. Until WX-D2 lands, a call (or any other use) of `fold`, `map`, `count`, `all` or `any` is **W0202** with the message "reserved built-in `<name>` is not yet implemented in this version" |
+| `and`, `or`, `=>` in the ground evaluator | evaluation rule (S0 E2) | **eager**, unchanged: both operands are evaluated and charged. This is a recorded deviation from VER04 §4, kept so that v0 output stays byte-identical (2.6) | **short-circuit**, as VER04 §4 says and as the generated code already does |
+| a list literal of more than 4,096 elements | checker cap (S0 E8) | accepted by the checker, unchanged (the ground evaluator still refuses more than 65,536 elements with W0703) | **W0602** at checking, anywhere in the document |
+| an identifier longer than 128 bytes (`MAX_IDENTIFIER_BYTES`) | checker cap (E20) | accepted, unchanged: v0 names stay unbounded | **W0602** at checking, in any position (a declaration, a parameter, a field, a constructor, an error case, a binder, any segment of a reference) |
+| a list literal around an operation call (`to_bytes([f(a)]) == b`) | operation discovery (S0 E13) | unchanged: discovery does not look inside list literals | discovery descends into list-literal elements (2.11) |
 | a function reference `f` or `f(e, ...)` in the function position of a WX-D call | checker rule, no syntax | unreachable (the WX-D names are unbound) | W0712 if it is not a first-order model reference (section 2.3) |
 | list literals and WX-D forms inside generated evidence bodies | generator capability | v0 generation unchanged (still W0701 for list literals) | translated (section 2.11) |
 | `inout` before a parameter type (`buf: inout Bytes`) | contextual word (WX-G) | **W0101** (`V1ConstructInV0`); no valid v0 text has two NAMEs after `:` | parameter mode |
@@ -81,6 +89,14 @@ one of them as a model name. The four in-repository v1 documents
 (`warrant-grammar/tests/fixtures/{wx_fixed,wxa,wxh,wxv}.warrant`) use none of
 them (checked when this specification was written; the WX-D1 slice re-checks
 mechanically, section 2.15). This is the same trade VER04j made for `imin`/`imax`.
+All twelve names are reserved in the first slice (WX-D1), not five of them later
+in WX-D2, so that the break happens once (S0 E7). Reserving them now answers
+only that much of open question 3: it does not freeze v1. The new list-literal
+cap (S0 E8) is the same kind of break for a v1 document holding a literal of
+4,097 to 65,536 elements, which the wave-3 checker accepted; none of the four
+documents has a list literal at all. The identifier cap (E20) is the same kind
+of break for a v1 document with a name longer than 128 bytes; the longest
+identifier in the four documents is 53 bytes (in `wxv`).
 
 ### 1.3 What "means the same" is tested by
 
@@ -92,7 +108,13 @@ mechanically, section 2.15). This is the same trade VER04j made for `imin`/`imax
    monitor) is gated like the `comp`/`obs` parts of VER04j §14 items 25 and 33:
    emitted only for a document that uses the feature.
 3. The checker's `Debug` output for the two checked-in v0 specifications is
-   unchanged (VER04j §14 item 26).
+   unchanged (VER04j §14 item 26). No slice adds a field to
+   `CheckedWarrantModule`: new checker data stays inside the private checker
+   (the lesson recorded when WX-A broke this gate).
+4. The ground evaluator's v0 behaviour is unchanged, including its eager
+   `and`/`or`/`=>` (2.6) and the absence of a data counter (2.7). Every v1-only
+   evaluator change (short-circuit, the data counter, the WX-D forms) is keyed on
+   the document version, exactly as the `Int` overflow code is (VER04j §2.5).
 
 ### 1.4 Diagnostics
 
@@ -115,18 +137,18 @@ Reused codes (each row cites the section that uses it):
 |---|---|
 | W0101 | `inout` and `ensures NAME:` in a v0 document (1.2) |
 | W0201 | two `ensures` blocks for one operation; a v1 declaration named like a WX-D built-in |
-| W0202 | a WX-D built-in called in a v0 document that does not define it |
+| W0202 | a WX-D built-in called in a v0 document that does not define it; until WX-D2, any use of `fold`, `map`, `count`, `all` or `any` in a v1 document ("not yet implemented in this version", S0 E7) |
 | W0203 | a cycle through a function reference (2.8); an operation parameter named `result` on an operation with an `ensures` block (4.3) |
 | W0301 | ordinary type errors inside WX-D calls, `ensures` rows and `inout` signatures |
 | W0401 | `ensures` naming an undeclared operation |
 | W0501 | a malformed `driver` line or `inout=` option, or a binding-file cap exceeded (section 6.3) |
 | W0502 | a driver operation whose `faults=` omits an applicable driver fault (3.6) |
 | W0601 | a driver operation that no claim or example drives with two or more non-empty elements (3.5); an `ensures` row contradicted by the operation's own example (4.7) |
-| W0602 | higher-order nesting deeper than 4 (2.8), a list literal longer than 4,096 elements (2.11), more than 32 `ensures` rows (4.2), a symbolic unrolling that exceeds its caps (2.10) |
-| W0701 | a fault that does not apply to the operation's shape; a lane that has no driver or inout adapter (target `not-live`) |
-| W0703 | ground-evaluator exhaustion inside a WX-D form (2.7) |
+| W0602 | higher-order nesting deeper than 4 (2.8), a list literal longer than 4,096 elements in a v1 document, at checking (2.11, S0 E8), an identifier longer than 128 bytes in a v1 document, at checking (E20), more than 32 `ensures` rows (4.2), a symbolic unrolling that exceeds its caps (2.10) |
+| W0701 | a fault that does not apply to the operation's shape (for the list result faults, 2.12); a lane that has no driver or inout adapter (target `not-live`) |
+| W0703 | ground-evaluator exhaustion of any counter or cap of the v1 meter (2.7): work, depth, sequence elements, composite leaves or data, inside or outside a WX-D form |
 | W0704 | an `inout` host form that cannot carry the parameter's Warrant type |
-| W0706 | a split or hint domain over the exhaustive budget (2.9, 3.7) |
+| W0706 | a split or hint domain over the exhaustive budget (2.9, 3.7); a split-domain binder whose count flows into conflicting domain rules (2.9, S0 E9) |
 
 ## 2. WX-D — bounded sequence combinators
 
@@ -205,7 +227,15 @@ a deliberate, total choice that differs from Python's negative slicing
 counts from the end); section 2.13 makes lanes implement it explicitly. It also
 closes, for the sequence built-ins, the gap of VER04j §14 item 5: `Nat + Nat` is
 `Int` in the checker, so `drop(xs, len(xs) - 1)` would otherwise be a type error.
-Open question 2 records the alternative.
+Open question 2 recorded the alternative; the owner accepted `Int` counts with
+negatives as zero, as drafted (section 9.1, E-Q2).
+
+**Typing in context.** Every count, start and length argument is checked with
+expected type `Int`, and `replicate`'s element and `to_bytes`'s list are checked
+with the expected type their position implies (2.4), so a literal such as `[]` or
+`3` takes its type from the call. The checker threads that expected type into
+the v1 built-in rule (`typecheck_v1_builtin` takes none today); this is the
+"checked with expected type" of 2.4, not a new rule.
 
 **Why no `Bytes<N>` result for `take`.** The length of `take(b, n)` depends on a
 runtime `n`; `fixed<N>` recovers a static width with an explicit `Option`, as in
@@ -314,14 +344,29 @@ wave-3 v1 text changes meaning.
   arguments of a section are evaluated **once**, after `xs` and `init` and before
   the first element, and **even when `xs` is empty**, so their charges and any
   exhaustion they cause do not depend on the data.
-* **Iteration, not recursion.** Every implementation must iterate. A fold is one
-  model frame per element call, pushed and popped in turn; the frame depth is the
-  static nesting of calls, never the length of `xs`. An implementation that
-  recurses on the tail would exhaust the 64-frame limit at the 65th element and
-  is non-conforming (the differential tests of 2.15 include 1,000-element folds).
+* **Iteration, not recursion.** Every implementation must iterate. A fold makes
+  one model call per element, entered and left in turn, so the evaluation depth
+  it reaches (2.7) is fixed by the static nesting of the expressions and calls,
+  never by the length of `xs`. An implementation that recurses on the tail adds
+  at least one depth level per element, so it exceeds the 64-level limit within
+  the first 64 elements and is non-conforming (the differential tests of 2.15
+  include 1,000-element folds).
 * **Short-circuit.** `all` and `any` stop at the deciding element. Elements after
   it are neither evaluated nor charged. `count`, `map` and `fold` visit every
   element.
+* **Short-circuit of `and`, `or` and `=>` (S0 E2).** In a v1 document every
+  evaluator evaluates the right operand only when the left one does not decide
+  the result: `false and q`, `true or q` and `false => q` do not evaluate `q`, and
+  `q` is neither charged nor able to exhaust or fail. This is what VER04 §4 says
+  and what generated Rust (`&&`, `||`) already does; the ground evaluator on
+  `main` evaluates both operands. The fix is **v1 only**. The v0 ground evaluator stays
+  eager, a deviation from VER04 §4 recorded there, because changing it would
+  change v0 charges and diagnostics and v0 output must stay byte-identical (1.3).
+  Eager evaluation can only add work, exhaustion or an evaluation error to what
+  short-circuit evaluation does; when both succeed they give the same Bool, so the
+  v0 deviation never accepts what VER04 §4 would reject. The fix changes no
+  wave-3 v1 output: an evaluation that succeeded eagerly gives the same value
+  short-circuited, and one that failed was refused at generation.
 * **Sequences are values.** `take`/`drop`/`slice` produce new values. An
   implementation may share storage internally, but charges as if it copied
   (2.7), so every implementation reaches exhaustion at the same point.
@@ -334,45 +379,167 @@ This is the design VER04j §7.2 deferred. One meter, three implementations (the
 ground evaluator, the generated model code, each lane's IR evaluator), identical
 charges.
 
-**The meter.** One evaluation (an example's expected value, one claim instance
-including every result conversion and postcondition check it performs, one table
-row, one synthesized-suite instance) owns one meter with four counters:
+**The meter.** One evaluation owns one meter: an example's expected value; one
+claim instance, that is one assignment of the binders, including its admission
+predicate (below) and every result conversion and postcondition check it
+performs; one table row; one synthesized-suite instance. The meter has three
+counters and two per-value caps:
 
-| Counter | Limit (reference profile) | Source of the limit |
+| Counter or cap | Limit (reference profile) | Source of the limit |
 |---|---|---|
 | work units | 1,000,000 | VER04 §2, VER04e §2.3 |
-| active model frames | 64 | VER04 §2 |
-| elements in any one sequence value | 65,536 (`MAX_SEQ_ELEMENTS`) | the ground evaluator's `max_value_bytes` (VER04j §14 item 18); now also the generated code's |
-| owned data, cumulative | 64 MiB (`DATA_BUDGET_BYTES`) | VER04 §2 ("64 MiB of owned intermediate/output data") |
+| evaluation depth: nested node evaluations, across model calls | 64 levels | VER04 §2 ("64 active model/expression frames"), as the ground evaluator implements it (`max_depth`, S0 E1) |
+| owned data, cumulative | 64 MiB = 2^26 bytes (`DATA_BUDGET_BYTES`) | VER04 §2 ("64 MiB of owned intermediate/output data") |
+| elements in any one sequence value (`List` or `Bytes`) | 65,536 (`MAX_SEQ_ELEMENTS`) | the ground evaluator's per-sequence check against `max_value_bytes` (list literals, `concat`); now also the generated code's |
+| leaves of any one tuple, record or constructor value | 65,536 (`MAX_VALUE_LEAVES`) | the ground evaluator's `bounded()` check of `leaves()` (VER04j §14 item 18); now also the generated code's |
+
+The new constants are constants of the meter, not fields of `CodegenLimits`,
+whose shape stays as it is (section 8.1).
+
+**Evaluation depth (S0 E1).** The depth counter is the ground evaluator's, not a
+count of model frames. Every node evaluation (a literal, a reference, a call, an
+operator, `if`, `match`, a tuple, a projection, a list literal, a parenthesised
+group) enters one level and leaves it when the node's value is known, and a
+model call's body is evaluated one level below the call node. So the depth
+inside a model is the depth of the call plus the nesting within the body.
+Entering level 65 is exhaustion. For the WX-D forms, the bound arguments of a
+section are evaluated one level below the form node, each per-element model call
+occupies one level below the form node, exactly where a call node would be, and
+the callee's body is one level below that. VER04 §2 says "model/expression
+frames"; nesting inside one body counts, so this is the reading that matches it
+and the evaluator that already exists. Generated code keeps the same counter.
+
+**Parenthesised groups (S0 E3).** A parenthesised expression is a node. It
+charges 1 work unit and one depth level, as the ground evaluator does. The
+generator drops the parentheses when it emits Rust, so it emits the charge and
+the depth step for every group explicitly, under the meter. `((x))` costs 3
+units and 3 levels in every implementation.
+
+**Two caps, not one (S0 E6).** The element cap bounds every `List` and `Bytes`
+value a node produces. It is checked before the allocation, from the length the
+node knows in advance (the check-before-allocate order below), and it is the only
+size cap on a sequence. The leaves cap bounds every tuple, record and
+constructor value. It is checked where the ground evaluator checks it today: after
+the components exist and before the composite is returned. The composite's own
+allocation is one slot per component, so this check comes after no unbounded
+allocation. The leaves cap is not applied to lists. A list of 65,536 scalars has
+65,537 leaves, so applying it would quietly lower the element cap to 65,535; the
+data counter bounds what a list's elements hold. Generated code checks both caps
+at the same points.
 
 *Owned data* is measured as **cumulative allocation, never refunded**, for
 determinism: live-data accounting would depend on when each implementation frees
 memory. Cumulative allocation over-approximates live data, so the cap remains a
-sound bound. Byte costs are those of VER04h §3: 1 byte per `Bytes` element and
-`VALUE_OVERHEAD = 32` bytes per list element container (the element's own
-payload was charged when that element value was produced).
+sound bound. (The owner accepted this as drafted: section 9.1, E-Q4.)
+
+**Data size.** The byte cost of a value, `dsize(v)`, makes VER04h §3's cost
+model exact:
+
+| Value | `dsize` |
+|---|---|
+| `Bool`, `Nat`, `Int`, a fixed-width integer, `None` | 0: its storage is the slot that holds it |
+| `Bytes` or `Bytes<N>` of length `L` | `L` |
+| a `List` or a tuple with components `c1 .. cn` | `Σ (VALUE_OVERHEAD + dsize(ci))`, `VALUE_OVERHEAD = 32` |
+| a constructor `C` of type `T` (a record, or a variant constructor with or without fields), with fields `c1 .. cn` | `len(T) + len(C) + Σ (VALUE_OVERHEAD + dsize(ci))` (E20) |
+| `Err(E.CASE)`, and the error value `E.CASE` | `len(E) + len(CASE)` (E20) |
+| `Some(x)`, `Ok(x)` | `VALUE_OVERHEAD + dsize(x)` |
+
+`len(T)`, `len(C)`, `len(E)` and `len(CASE)` are the byte lengths of the names
+as written in the document (E20). The ground evaluator's constructor and error
+values own those names, so every copy allocates them again; a name priced at 0
+let `replicate(C, 65536)` with a 10,000-byte `C` allocate about 660 MB while the
+meter saw 2 MiB. With the names counted, the charge is never below what a copy
+allocates beyond its fixed-size slot. (The slot itself is larger than
+`VALUE_OVERHEAD` in the ground evaluator, 96 bytes on a 64-bit host, so the real
+footprint of a value is within a small constant factor of its `dsize`, about 3×
+at worst for a list of scalars.) Every implementation charges the names,
+generated code included, so the meter stays identical across them.
+
+A `List<U8>` of `L` elements is `32 L` bytes, a `Bytes` of `L` bytes is `L`,
+and a `List<Bytes>` counts its elements' payloads as well as their slots. The
+first draft charged a list only for its slots, assuming "the element's own
+payload was charged when that element value was produced". That assumption does
+not hold for a form that copies its elements, and the ground evaluator's
+`EvalValue` copies deeply. So it is withdrawn (S0 E5).
+
+**Which nodes charge data (S0 E4).** In a v1 evaluation, every evaluated node
+charges `dsize` of its value, except the *pass-through* nodes. A pass-through node
+returns a value that already exists and charges no data. The pass-through nodes
+are a binder reference (including a dotted projection path), a projection, `if`,
+`match`, a group, a model call (its body's nodes charge), a call of `unwrap_or`,
+and `fold` (its value is the last accumulator). A node whose value is a scalar
+charges 0 by the table above, so the rule needs no list of scalar built-ins. The
+nodes that charge something are therefore exactly those that build a sequence or
+composite: list literals, tuples, records and constructors (with or without
+fields, since a constructor stores its names, E20), error values `E.CASE`, `Some`,
+`Ok`, `Bytes` literals, `concat`, `be_bytes`, `le_bytes`, `fixed<N>`, `at` (the
+`Some` around the element), the `Option`-valued v1 built-ins (`try`,
+`checked_*`, `div`), the seven WX-D1 forms and `map`.
+
+This over-charges on purpose. A tuple is charged again for components that were
+charged when they were built. `take`, `drop`, `slice` and `replicate` are charged
+for full copies of their elements, which is what the ground evaluator allocates;
+an implementation that shares storage charges the same ("charges as if it
+copied", 2.6). Reading a value charges nothing. A binder reference or a
+projection may copy in one implementation and share in another. A
+charge on reads would make the meter depend on that choice, and on how often a
+body mentions a name. The memory a copying implementation spends on reads is
+therefore not bounded by the data counter. It is a pre-existing property of the
+ground evaluator, not of this wave, and an **open hazard**: section 9.1's note
+on E4 gives the measured cost and the intended fix (backlog WX-RD1).
+
+**When data is charged.** A node that knows its result length in advance
+reserves its data in step 2 of the order below. Every other node charges as soon
+as its components exist and before it builds its value: for a tuple, list
+literal or constructor the components are already values, so `dsize` of the
+result is a sum over them, and for `concat` it is `dsize(a) + dsize(b)`.
+Computing `dsize` is linear in the value. Each slot it visits adds at least 32
+bytes to the charge, so the cost of the computation is bounded by the data
+budget. An implementation may stop summing as soon as the sum exceeds the
+remaining budget, since the outcome is the same exhaustion.
+
+**Scope of the data counter.** The ground evaluator keeps the data counter for
+every evaluation of a v1 document, with or without WX-D forms. It resets the
+counter wherever it resets the work counter. A v0 evaluation has no data
+counter, as before (1.3). In generated code the whole meter, the data counter
+included, exists only under the `seq` gate (below).
+
+**Admission inside the meter (S0 E14).** A claim instance's meter starts before
+its binders' admission predicates (type refinements and the `|` filters of the
+quantifier) are evaluated, and their charges count. There is one meter per case:
+in an exhaustive suite, each enumerated assignment; in a property or fuzz suite,
+each drawn candidate. A candidate that the predicate rejects is discarded with
+its meter. Exhaustion while the predicate is evaluated is **not** a rejection:
+the instance fails with `model-budget-exhausted`, as for exhaustion in the body.
+Otherwise a predicate that exhausts would silently remove cases from the domain.
 
 **Charges** (units), in addition to the existing per-node charges of VER04e §2.3
 and VER04j §2.5/§3.5/§4.5:
 
 | Form | Work | Data, reserved before allocation |
 |---|---|---|
-| any WX-D call node | 1 | — |
-| `fold`, `map`, `count`, `all`, `any` | per **visited** element: 1 (iteration) + 1 (the model call, as for any call) + the callee body's own charges | `map`: the result container, `len(xs)` × unit, reserved before the first element |
-| section bound arguments | their own expression charges, once | — |
-| `take`, `drop`, `slice` | + `L`, the result length | `L` × unit |
-| `replicate(x, n)`, `range(n)` | + `max(0, n)` | `max(0, n)` × unit |
-| `to_list`, `to_bytes` | + `len` | `len` × unit |
+| any node, including a WX-D call node and a parenthesised group | 1 | `dsize` of its value, unless it is pass-through (above). The rows below spell that one charge out for the forms that reserve it; it is charged once, not once per row |
+| list literal `[e1, ..., en]` | + `n` (the ground evaluator's existing charge) | `Σ (32 + dsize(ei))` |
+| `concat(a, b)` | + `len(a) + len(b)` (existing) | `dsize(a) + dsize(b)` |
+| `fold`, `map`, `count`, `all`, `any` | per **visited** element: 1 (iteration) + 1 (the model call, as for any call) + the callee body's own charges | `map`: the result container, `len(xs)` × 32 for a `List` result and `len(xs)` for a `Bytes` result, reserved before the first element (each element value is charged by the body nodes that build it) |
+| section bound arguments | their own expression charges, once | their own |
+| `take`, `drop`, `slice` | + `L`, the result length | `L` for a `Bytes` result; for a `List` result, `Σ (32 + dsize(e))` over the `L` elements selected (S0 E5) |
+| `replicate(x, n)` | + `max(0, n)` | `max(0, n) × (32 + dsize(x))` (S0 E5) |
+| `range(n)` | + `max(0, n)` | `max(0, n) × 32` |
+| `to_list(b)` | + `len(b)` | `len(b) × 32` |
+| `to_bytes(xs)` | + `len(xs)` | `len(xs)` |
 
 **Check before allocation.** Every form that produces a sequence knows its result
 length `L` before producing it (`len(xs)` for `map`, `clamp(n)` for `take`,
 `max(0, n)` for `replicate`/`range`). The implementation must, in this order:
-(1) check `L <= MAX_SEQ_ELEMENTS`; (2) charge the data reservation; (3) charge
-the work; (4) only then allocate. A `replicate(0u8, 10^12)` therefore fails at
-step 1 having allocated nothing, and a count read from hostile data cannot make
-any implementation allocate first and fail later. `n` is an exact `Int`, so the
-comparison in step 1 must be done on the exact value (no narrowing of `n` to a
-host integer before the check).
+(1) check `L <= MAX_SEQ_ELEMENTS`; (2) compute the data reservation of the table
+above from `L` and the source elements (a sum over the selected elements for
+`take`/`drop`/`slice` of a list), with checked arithmetic, and charge it; (3)
+charge the work; (4) only then allocate. A `replicate(0u8, 10^12)` therefore
+fails at step 1 having allocated nothing, and a count read from hostile data
+cannot make any implementation allocate first and fail later. `n` is an exact
+`Int`, so the comparison in step 1 must be done on the exact value (no narrowing
+of `n` to a host integer before the check).
 
 **Exhaustion** is never a truncated value, a skipped element, a skipped case or a
 proof:
@@ -385,31 +552,45 @@ proof:
 
 **What the budgets admit** (illustrative arithmetic, not normative):
 
-| Workload | Approximate cost | Fits 1,000,000 units? |
+| Workload | Approximate cost | Fits? |
 |---|---|---|
-| `count(b, is_zero)` over 65,536 bytes, `is_zero(x) = x == 0u8` | 3 per element + 1 ≈ 196,609 | yes; the element cap, not work, is the limit |
-| a fold over 65,536 elements with a body of `c` charged nodes | `65,536 × (2 + c)` | yes for `c <= 13` |
-| `gmul` via `fold(range(8), ...)` | ≈ 130 per instance | yes (65,536 instances of a `U8 × U8` claim each get their own meter) |
-| `leb_encode(v)` (2.1) | ≈ 10 × 25 ≈ 250 | yes |
-| one SHA-256 compression (schedule + 64 rounds) | ≈ 3,500 per 64-byte block | ≈ 280 blocks ≈ 18 KiB of message; property inputs are at most 64 bytes (two blocks with padding) |
+| `count(b, is_zero)` over 65,536 bytes, `is_zero(x) = x == 0u8` | 5 per element (iteration, call, and the three body nodes `==`, `x`, `0u8`) ≈ 327,680 work; no data (scalars) | yes; the element cap, not work, is the limit |
+| a fold over 65,536 elements with a body of `c` charged nodes | `65,536 × (2 + c)` work | yes for `c <= 13` |
+| `gmul` via `fold(range(8), ...)` | ≈ 130 work per instance | yes (65,536 instances of a `U8 × U8` claim each get their own meter) |
+| `leb_encode(v)` (2.1) | ≈ 10 × 25 ≈ 250 work | yes |
+| one SHA-256 compression (schedule + 64 rounds) | ≈ 3,500 work per 64-byte block | ≈ 280 blocks ≈ 18 KiB of message; property inputs are at most 64 bytes (two blocks with padding) |
+| `replicate(b, n)` for a 65,536-byte binder `b` | ≈ `n` work, `n × 65,568` bytes of data | data: fails at `n = 1,024` (`1,024 × 65,568 = 67,141,632 > 2^26`; `n = 1,023` reserves 67,076,064) |
 
-**Why both a work meter and a data meter.** The quadratic accumulator
+**Why both a work meter and a data meter.** Work bounds steps, data bounds
+memory, and neither implies the other. For byte strings, the per-element work
+charge of `concat` (VER04e §2.3) already makes the quadratic accumulator
 
 ```text
 model push(acc: Bytes, x: U8) -> Bytes = concat(acc, to_bytes([x]))
 model copy(b: Bytes) -> Bytes = fold(b, b"", push)
 ```
 
-costs about 6 work units per element but allocates `1 + 2 + ... + n` bytes.
-The data meter stops it at `n(n+1)/2 > 2^26`, that is at about **11,585**
-elements, long before the work meter would (≈ 70,000 units). Without the data
-meter, the same document would allocate 2 GiB at `n = 65,536`.
+quadratic in *work*. Step `k` charges about `k + 8` units (`k` for the
+`concat`), so the work meter stops `copy` at about 1,400 elements
+(`Σ k ≈ 10^6`), while its data (`k + 33` bytes at step `k`: 32 for `[x]`, 1 for
+`to_bytes`, `k` for the `concat`) is still about 1 MB. The first draft of this
+section said that the data meter stops `copy` at about 11,585 elements, "long
+before the work meter would". That ignored `concat`'s existing work charge (S0
+E4). The data meter stops forms whose memory grows faster than their work.
+`replicate(b, n)` with a 65,536-byte `b` costs about `n` units but reserves
+`n × 65,568` bytes, so it fails at `n = 1,024` having allocated nothing; without
+the data meter it would allocate 4 GiB at `n = 65,536` well inside the work
+budget. `take`/`drop`/`slice` of a list of large elements, list literals and
+tuples of large values, and a fold whose accumulator is a list of large elements
+behave the same way.
 
 **Scope of the new meter in generated code.** Generated model code had no meter
 in wave 3: without iteration, a model's cost was bounded by its static size. The
-meter (charging every node, with the ground evaluator's charges) is emitted only
-for documents that use a WX-D form (a `seq` prelude part, gated like `comp`), so
-wave-3 documents regenerate byte-identically (1.3).
+meter is emitted only for documents that use a WX-D form (a `seq` prelude part,
+gated like `comp`), so wave-3 documents regenerate byte-identically (1.3). It
+charges every node with the ground evaluator's charges, including the group
+charges of S0 E3 and the short-circuit of S0 E2, and it keeps every counter and
+both caps of the table above.
 
 ### 2.8 Termination by construction and the acyclic-model rule
 
@@ -456,24 +637,60 @@ graph, linear in its size.
    should prefer the WX-D form for index properties.
 4. **Domains for binders that feed a WX-D form** (the VER04j §3.6 "flows
    directly" idea, applied to sequences):
-   * *Sequence-aware lists.* A `List<T>` binder that flows directly into the
-     sequence argument of a WX-D form keeps its exhaustive domain (VER04j §4.7:
-     lengths 0..=3) but its property generator draws the length from `0..=3`
-     with probability 1/2 and uniformly from `0..=64` otherwise. The manifest
-     domain text says `seq-aware`.
-   * *Split domain.* A `Nat` binder `k` that flows directly as the count of
-     `take`/`drop`, or as the start or length of `slice`, whose sequence argument
-     is a binder `m` declared earlier, gets the **dependent** exhaustive domain
-     `0..=len(m) + 1` (one past the end exercises the clamp) instead of `0..=64`.
-     The case count is `Σ over m ∈ D(m) of (len(m) + 2)`; for `D(Bytes)` (347
-     strings: 1 of length 0, 256 of length 1, 16 of length 2, 64 of length 3 and
-     2 of each length 4..=8) that is **1,234** cases, against `347 × 65 = 22,555`
-     for the undependent product. The budget is checked, with checked arithmetic
-     and before enumeration, against the upper bound `|D(m)| × (maxlen + 2)`.
-     The property generator draws `k` as `0` (1/4), `len(m)` (1/4), uniform in
-     `0..=len(m)` (1/4), `len(m) + 1` (1/8) and uniform in `0..=64` (1/8). The
-     manifest domain text says `k: split(m)`. This is a domain *choice*, honestly
-     labelled; it is not a claim that larger `k` were checked.
+   * *Sequence-aware lists (S0 E10).* A `List<T>` binder that flows directly
+     into the sequence argument of a WX-D form keeps its exhaustive domain
+     (VER04j §4.7: lengths 0..=3) but its property generator draws the length
+     from `0..=3` with probability 1/2 and uniformly from `0..=64` otherwise. The
+     manifest domain text says `seq-aware`. Only `List<T>` binders change: the
+     `Bytes` generator already draws lengths uniformly from `0..=64`. The
+     sequence-aware generator, shrinker (2.11) and fuzz decoder are emitted in
+     the `seq` prelude part and apply only to sequence-aware binders; every other
+     `List<T>` binder keeps the `comp` generator (lengths 0..=3) and the `comp`
+     shrinker (the empty list, then each element removed, then element-wise).
+     Changing the shrinker for every list would change the generated evidence of
+     `wxa` and break 1.3.
+   * *Split domain (S0 E9).* A `Nat` binder `k` that flows directly as the count
+     of `take`/`drop`, or as the start or length of `slice`, whose sequence
+     argument is a binder `m` of the same quantifier declared earlier, gets the
+     **dependent** exhaustive domain `0..=len(m) + 1` (one past the end
+     exercises the clamp) instead of `0..=64`. The exact case count of the pair
+     `(m, k)` is `Σ over m ∈ D(m) of (len(m) + 2)`, and the budget is checked
+     against the upper bound `|D(m)| × (maxlen(D(m)) + 2)`:
+
+     | `m`'s type | `D(m)` | exact pairs | budget bound |
+     |---|---|---|---|
+     | `Bytes` | 347 strings: 1 of length 0, 256 of length 1, 16 of length 2, 64 of length 3, 2 of each length 4..=8 | **1,234** | 347 × 10 = **3,470** |
+     | `Bytes<N>` | `s` strings, every one of length `N`, where `s` is the size of `D(Bytes<N>)` (VER04h §3) | `s × (N + 2)` | the same |
+     | `List<T>` | lengths 0..=3: 1 empty, `d` of length 1, `d²` of length 2, `e³` of length 3, with `d = min(t, 16)`, `e = min(t, 4)` and `t` the size of `D(T)` (VER04j §4.7) | `2 + 3d + 4d² + 5e³` (1,394 for `List<U8>`) | `(1 + d + d² + e³) × 5` (1,685 for `List<U8>`) |
+
+     For `D(Bytes)` the undependent product would be `347 × 65 = 22,555`. The
+     bound enters the exhaustive budget product of the claim in place of `k`'s own
+     domain size (a factor of `maxlen(D(m)) + 2`), with checked arithmetic and
+     before enumeration; over budget is W0706, as for any domain.
+     **Enumeration order** is the existing exhaustive order: binders in
+     declaration order, the first outermost, with `k`'s range recomputed from the
+     current `m` and taken in ascending order. So `m` is outer and `k` ascends:
+     for `forall m: Bytes, k: Nat` the first tuple is `(b"", 0)` and the last is
+     `(a5 × 8, 9)`. The property generator draws `k` as `0` (1/4), `len(m)` (1/4),
+     uniform in `0..=len(m)` (1/4), `len(m) + 1` (1/8) and uniform in `0..=64`
+     (1/8). The **manifest** domain text of `k` is `k: Nat split(m)(<pairs>)`,
+     where `<pairs>` is the exact pair count (`k: Nat split(m)(1234)` for
+     `m: Bytes`), not the 3,470 bound and not a factor of a product; the suite's
+     case count records what actually ran. Two split binders over the same `m`
+     (`i` and `j` in 3.7) each get their own entry, and their joint enumeration
+     is `Σ (len(m) + 2)^2` pairs (4,824 for `D(Bytes)`, budget bound
+     347 × 10 × 10 = 34,700). This is a domain *choice*, honestly labelled; it
+     is not a claim that larger `k` were checked.
+     **Conflicts are refused, never resolved by guessing.** When `k` flows
+     directly into split positions over two different sequence binders, or into
+     a split position and a shift count (the `NatCount` domain of VER04j §3.6),
+     there is no single honest domain. The intersection would drop the clamp
+     boundary of the longer sequence, and any other choice is a guess, so
+     generation fails with **W0706** naming `k` and both uses. The author splits
+     `k` into two binders. A `k` whose split position takes a sequence that is not
+     an earlier binder of the same quantifier (an expression, or a binder declared
+     after `k`) gets no split domain and keeps its type's ordinary domain; that is
+     the existing rule, not a conflict.
 5. **Symbolic discharge** of a claim with a fold over a binder of symbolic length
    is `bounded(K)` by unrolling and never `proved` (2.10).
 
@@ -539,36 +756,83 @@ both: **a WX-D form is encoded by unrolling it at concrete lengths.**
 
 * **Translation.** List literals, the twelve built-ins and function references
   are translated in model, claim, table `holds` and `ensures` bodies (lifting the
-  W0701 of VER04j §14 item 24 for list literals in v1 documents). A list literal
-  has at most 4,096 elements (`MAX_LIST_LITERAL`; W0602 above it). The generated
-  model code iterates over `V::List`/`V::Bytes` with the meter of 2.7.
+  W0701 of VER04j §14 item 24 for list literals in v1 documents). WX-D1
+  translates list literals and the seven non-higher-order forms; WX-D2 adds the
+  other five and function references. The generated model code iterates over
+  `V::List`/`V::Bytes` with the meter of 2.7.
+* **List-literal cap (S0 E8).** A list literal has at most 4,096 elements
+  (`MAX_LIST_LITERAL`). The **checker** enforces the cap, in v1 documents only,
+  for every list literal anywhere in the document (models, claims, examples,
+  tables, refinements, `ensures` rows): more is **W0602**, reported at the
+  literal's span before its elements are type checked. The first draft placed the
+  cap at generation here and in the checker in 6.2; the checker is the single
+  place. A v0 document is unchanged: the v0 checker has no cap. The ground
+  evaluator keeps its own refusal of more than 65,536 elements (W0703) as defence
+  in depth, for v0 documents and for any path that bypasses the checker.
+* **Operation discovery (S0 E13).** In a v1 document, the search that finds the
+  operation a claim, example or table calls descends into list-literal elements,
+  treating each element like a call argument. So `to_bytes([f(a)]) == b` and
+  `[f(a)] == [b]` both name `f`. Without this, they are refused with "claim calls
+  no operation". The search keeps its order: the shallow search first (the v0
+  behaviour), then arguments and list elements left to right, first match wins. A
+  v0 document keeps today's search, which does not look inside list literals.
 * **Domains, generators, shrinkers.** As 2.9 (sequence-aware lists, the split
-  domain). Shrinkers: a list shrinks toward shorter lists (drop the last element,
-  then halve) before element-wise shrinking; a split-domain `k` shrinks within
+  domain). Shrinkers: a sequence-aware list shrinks toward shorter lists (drop
+  the last element, then halve) before element-wise shrinking. Every other list
+  keeps the `comp` shrinker (2.9, S0 E10). A split-domain `k` shrinks within
   `0..=len(m)` after `m` has shrunk.
 * **Fuzz decoding** of a sequence-aware list binder reads a length byte, taken
-  modulo 65, then each element with its type's decoder.
-* **Manifests.** Domain text gains `seq-aware` and `split(<binder>)`; nothing
-  else changes.
+  modulo 65, then each element with its type's decoder. Other list binders keep
+  the `comp` decoding.
+* **Manifests.** Domain text gains `seq-aware` and `split(<binder>)(<pairs>)`
+  (2.9); nothing else changes.
 
 ### 2.12 Sabotage implications
 
 WX-D adds model vocabulary; faults attack subjects, not models. Two consequences:
 
-1. **New result faults** become meaningful because `List` results can now be
-   checked element-wise: `drop-last-result-element` (the last element of a
-   `List<T>` result, inside an `Ok` or `Some`, is removed) and
-   `reverse-result-list` (the elements of a `List<T>` result are reversed;
-   applies to results of length at least 2). They are rewrites of the composite
-   adapter, like WX-E's `drop-last-result-byte` (VER04j §14 item 46), checked
-   against the result type at generation (W0701).
+1. **New result faults (S0 E11)** become meaningful because `List` results can
+   now be checked element-wise. They are rewrites of the composite adapter's
+   result, like WX-E's `drop-last-result-byte` (VER04j §14 item 46), and they
+   apply to the operation they are bound to only.
+   * **Where a fault applies is decided by type, at generation.** Take the
+     operation's declared result type, remove at most one `Result` layer (keeping
+     the `Ok` payload) and then at most one `Option` layer (keeping the `Some`
+     payload). This is the *core* type the existing composite faults are checked
+     against. A list fault applies iff the core type is `List<T>`. Any other
+     binding of a list fault is **W0701**. That includes a `List` nested in a
+     tuple, a record, a variant or another list's elements: out of scope for
+     WX-D1, and W0701 rather than a guess at which list was meant.
+   * **What each fault does is decided by value, at run time.**
+     `drop-last-result-element` removes the last element of the core list.
+     `reverse-result-list` reverses the core list. On an `Err` or `None` result
+     either fault does nothing. Each fault also does nothing where it would not
+     change the value: an empty list has no last element to lose, so
+     `drop-last-result-element` leaves `[]` unchanged (unlike
+     `drop-last-result-byte`, it does not invent an element, which would need a
+     value of `T` the tool chose), and reversing a list of length 0 or 1 (or a
+     palindrome) is the identity. "Length at least 2" in the first draft was this
+     run-time fact, not a generation-time condition.
+   * As for the driver faults (3.6), catching a list fault relies on the domain
+     containing inputs where it changes the value. The runtime control, under
+     which a fault that no suite catches fails its control, is the fail-closed
+     backstop.
+   * The fault variants and their prelude functions are emitted only for an
+     operation whose binding lists them, as for the WX-E faults, so wave-3 output
+     is unchanged (1.3).
 2. **Evaluator mutants** are the WX-D analogue of VER04j §10.3's killed mutants:
    a fold that skips the last element, a fold that visits in reverse, `all`
    without short-circuit (detected by the charge comparison, not the value),
    `take` that does not clamp negative counts, `range(n)` that includes `n`, a
-   recursive fold (detected by the 1,000-element case hitting the frame limit),
+   recursive fold (detected by the 1,000-element case hitting the depth limit),
    and a meter that charges after allocating (detected by an allocation probe in
-   the Rust evaluator). Each must make the differential suite fail.
+   the Rust evaluator). The S0 errata add four for WX-D1: an eager `and`/`or`/`=>`
+   in a v1 evaluation, a group that charges nothing, `take`/`drop`/`slice`/
+   `replicate` charging `L × 32` instead of the deep copy, and an admission
+   predicate charged outside the instance meter. The first three are detected by
+   the charge comparison; the last by an instance whose admission predicate
+   exhausts the meter and must fail. Each must make the differential suite
+   fail. The `fold` and `all` mutants belong to WX-D2.
 
 ### 2.13 Cross-language portability (VER04i)
 
@@ -581,7 +845,10 @@ Requirements on VER04i, which owns the corpus encoding:
    `F = ["fnref", "<model>", [bound...]]`. A lane evaluator rejects an unknown tag
    with a hard error (VER04i §2.5).
 2. **The meter is part of the IR semantics.** Each lane evaluator implements the
-   charges and caps of 2.7. Because the corpus generator evaluates every
+   charges and caps of 2.7, including the depth rule, the group charge, `dsize`
+   data charges and the short-circuit `and`/`or`/`=>` of the S0 errata (a lane
+   IR that lowers `and` to an ordinary two-argument call would charge both
+   operands and is non-conforming). Because the corpus generator evaluates every
    materialised and enumerated case in Rust and **refuses to emit a corpus in
    which any case exhausted** (W0703 at corpus generation), a lane never needs to
    agree on an exhaustion boundary to pass; the meter is its fail-closed
@@ -603,51 +870,119 @@ The canonical stream (VER04i §2.6) already encodes `List` as `30` and `Bytes` a
 
 ### 2.14 Compatibility
 
-The twelve names are v1 built-ins (1.2). A v0 document is unaffected. A v1
-document that does not use them generates byte-identical evidence (1.3).
+The twelve names are v1 built-ins (1.2), all reserved from WX-D1 on. A v0
+document is unaffected. A v1 document that does not use them generates
+byte-identical evidence (1.3). The S0 errata add three v1-only checker and
+evaluator changes that a wave-3 v1 document can observe, but never as a
+different value: the list-literal cap (W0602) and the data counter (W0703) can
+add a refusal, and short-circuit `and`/`or`/`=>` can remove one and lowers
+charges (1.2).
 
 ### 2.15 Test plan (WX-D)
+
+Each bullet names the slice that owns it (section 8.1); "WX-D2" and "WX-D3"
+items wait for those slices.
 
 * **Syntax** (Rust tests over the real parser, as VER04j §14 item 11 did; no
   corpus file): every form parses as a call; a section parses; the grammar
   files are unchanged.
-* **Checker negatives** (one case each, pinning ID and span): an operation as the
-  function argument (W0712); a built-in (`fold(xs, 0, len)`, W0712); a binder
-  (W0712); an `if` in the function position (W0712); a section with too many and
-  too few bound arguments (W0712); a step whose accumulator type is `Int` where
-  the result is `Nat` (W0712, exact tail types); a model with static parameters
-  (W0712); a predicate that reaches a quantifier through a helper model (W0712);
-  self and mutual cycles through function references (W0203); nesting depth 5
-  (W0602); `take(xs, true)` and `fold` over a `Bool` (W0301); comparing
-  `to_list(b)` with `b` (W0301); a v1 model named `count` (W0201); `fold(...)` in
-  a v0 document (W0202) and a v0 model named `fold` (accepted). A mutant checker
-  that drops rule 5 or rule 6 of 2.3 must fail a case (VER04 §9).
-* **Evaluator differential.** Three implementations (ground evaluator,
-  generated model code, an independent Python reference written from this text)
-  must agree on the **triple** `(value, work units, data bytes)` for: every form
-  over every list of length 0..=4 over a 3-element alphabet; sequences of length
-  1,000 and 65,536; counts `-2, -1, 0, len - 1, len, len + 1, 2^70`; sections with
-  0 and 8 bound arguments; nesting depth 4; and the quadratic accumulator at the
-  exhaustion boundary (both sides of 11,585). Native Rust iterator equivalents
-  (`iter().fold`, `take`, `skip`, `all`, `any`) are a third oracle for the
-  values. The mutants of 2.12 must be killed.
-* **Generator.** Split-domain size 1,234 for `D(Bytes)`; first and last tuples of
-  the split enumeration pinned; the dependent budget check rejects an over-budget
-  product before materialising it (W0706); sequence-aware property lengths reach
-  64; the two new result faults yield `not ok` under `WARRANT_EVIDENCE_FAULT`;
-  wave-3 fixtures regenerate byte-identically; an instance whose claim body
-  exhausts fails with `model-budget-exhausted` and never passes.
+* **Checker negatives, WX-D1** (one case each, pinning ID and span): a list
+  literal of 4,096 elements accepted and one of 4,097 refused with W0602 at the
+  literal's span in a v1 document, and the same 4,097-element literal accepted by
+  the v0 checker (S0 E8); a call of each of `fold`, `map`, `count`, `all` and
+  `any` in a v1 document is W0202 with "not yet implemented in this version", and
+  a v1 model named `fold` is W0201 (S0 E7); `take(xs, true)` (W0301); comparing
+  `to_list(b)` with `b` (W0301); a v1 model named `count` (W0201); `take(...)` in
+  a v0 document (W0202) and a v0 model named `take` (accepted); a literal
+  argument typed from its position (`replicate([], 3)` where a
+  `List<List<U8>>` is expected). A mechanical scan confirms that none of the four
+  wave-3 v1 documents declares one of the twelve names or holds a list literal.
+* **Checker negatives, WX-D2:** an operation as the function argument (W0712); a
+  built-in (`fold(xs, 0, len)`, W0712); a binder (W0712); an `if` in the function
+  position (W0712); a section with too many and too few bound arguments (W0712); a
+  step whose accumulator type is `Int` where the result is `Nat` (W0712, exact
+  tail types); a model with static parameters (W0712); a predicate that reaches a
+  quantifier through a helper model (W0712); self and mutual cycles through
+  function references (W0203); nesting depth 5 (W0602); `fold` over a `Bool`
+  (W0301); `fold(...)` in a v0 document (W0202) and a v0 model named `fold`
+  (accepted). A mutant checker that drops rule 5 or rule 6 of 2.3 must fail a
+  case (VER04 §9).
+* **Evaluator differential, WX-D1 (S0 E12).** Two implementations, the ground
+  evaluator and the generated model code, must agree on the **triple**
+  `(value, work units, data bytes)`, and on which counter or cap exhausts. The
+  native Rust iterator equivalents (`iter().take`, `skip`, `repeat`) are an
+  oracle for the values. A small set of triples computed by hand from this text
+  is pinned as the independent check until the Python reference evaluator lands
+  with WX-D2: `((x))` costs 3 units, and `replicate(b, 1023)` and
+  `replicate(b, 1024)` on a 65,536-byte binder sit on either side of the data
+  budget (2.7). The cases:
+  * every WX-D1 form over every list of length 0..=4 over a 3-element alphabet;
+  * sequences of length 1,000 and 65,536, and 65,537 refused at step 1 of 2.7
+    with nothing allocated (an allocation probe in the Rust evaluator);
+  * counts `-2, -1, 0, len - 1, len, len + 1, 2^70`;
+  * the quadratic accumulator `copy` of 2.7 on both sides of its *work* boundary.
+    The boundary (about 1,400 elements) is found by bisection on the ground
+    evaluator and pinned in the test; it changes only if a charge changes.
+  * the data charge of every constructing node (`concat`, a list literal, a
+    tuple, `be_bytes`, `at`, `Some`, each WX-D1 form, including the deep copy of
+    `take` and `replicate` over a `List<Bytes>`), and no data charge for the
+    pass-through nodes (S0 E4, E5);
+  * depth 64 accepted and depth 65 refused, through nested groups and through
+    model calls (S0 E1, E3);
+  * the two caps: a `Bytes` and a `List` of 65,536 elements accepted and of
+    65,537 refused, and a tuple of 65,536 leaves accepted and of 65,537 refused
+    (S0 E6);
+  * short-circuit in v1: `false and q`, `true or q` and `false => q`, where `q`
+    would exhaust or fail, all succeed and do not charge `q`; the same
+    expressions in a v0 document keep today's eager result and diagnostics,
+    pinned (S0 E2);
+  * admission: an exhaustive and a property instance whose refinement exhausts
+    the meter fails with `model-budget-exhausted` and is not counted as
+    discarded (S0 E14).
+
+  The suites run with and without `CI=true` (the generated prelude reads `CI`).
+  The mutants of 2.12 that belong to WX-D1 must be killed.
+* **Evaluator differential, WX-D2.** The Python reference evaluator, written
+  from this text, joins as the third implementation and covers the WX-D1 forms
+  too. The cases add the higher-order forms over the same lists, sections with 0
+  and 8 bound arguments, nesting depth 4 and 1,000-element folds. Native Rust
+  iterator equivalents (`iter().fold`, `all`, `any`) are an oracle for the
+  values. The remaining mutants of 2.12 must be killed.
+* **Generator, WX-D1.** List literals and the seven forms translate in every body
+  kind (S2a); the pinned refusals of list literals in v1 bodies flip to
+  translations, and a v0 document still refuses them (W0701). Operation discovery:
+  `to_bytes([f(a)]) == b` and `[f(a)] == [b]` name `f` in a v1 document, and the
+  v0 search is unchanged (S0 E13). Gating: wave-3 fixtures regenerate
+  byte-identically. An instance whose claim body exhausts fails with
+  `model-budget-exhausted` and never passes (S2b). The two list result faults
+  (S4) yield `not ok` under `WARRANT_EVIDENCE_FAULT` for a `List<T>` and a
+  `Result<List<T>, E>` result; `drop-last-result-element` leaves `[]`, and
+  `reverse-result-list` leaves a one-element list, unchanged; a list fault bound
+  to `(List<U8>, Nat)` is W0701 (S0 E11).
+* **Generator, split domain and sequence-aware lists (S3).** The split domain of
+  `forall m: Bytes, k: Nat` has 1,234 pairs, its budget bound is 3,470, and the
+  manifest text is `k: Nat split(m)(1234)`. Its first tuple is `(b"", 0)` and its
+  last is `(a5 × 8, 9)`, both pinned. `List<U8>` has 1,394 pairs, and
+  `Bytes<4>` has 16 × 6 = 96. Two split binders over one `m` enumerate 4,824
+  joint pairs before filtering. The dependent budget check rejects an
+  over-budget product before materialising it (W0706). A `k` used in split
+  positions over two sequence binders, or in a split position and a shift
+  count, is W0706 (S0 E9). Sequence-aware property lengths reach 64 for a
+  `List<T>` binder. In the same document, a list binder that feeds no WX-D form
+  keeps the `comp` generator and shrinker (S0 E10).
 * **Symbolic (WX-D3).** The fold `gmul` against the gf256 export's lowered WIR
   at `proved` (static lengths, fixed layout); `leb_encode` labelled `unknown`
   (data-dependent accumulator length); a fixed-width fold over `m: Bytes` at
   `bounded(16)`, never `proved`; a symbolic count (`take(m, to_int(x))`)
   labelled `unknown`; each cap exceeded once, each giving `unknown` with the cap
   recorded.
-* **Conversion pilot.** `wasm-leb128`: the `encode_matches_model` claim of 2.1
-  over the full `U64` edge domain (377 values), plus `decode_unsigned` round trips
-  (WX-A), with the `off-by-one-consumed` control of VER04j §4.8 failing. Second
-  pilot: the gf256 document's `gmul` rewritten as the fold of 2.1, every previous
-  verdict kept.
+* **Conversion pilots.** WX-D1: the `wxd` fixture document and its subject (S2a),
+  regenerated and checked in like `wxa`/`wxh`/`wxv`. WX-D2: `wasm-leb128`, with
+  the `encode_matches_model` claim of 2.1 over the full `U64` edge domain (377
+  values), plus `decode_unsigned` round trips (WX-A), with the
+  `off-by-one-consumed` control of VER04j §4.8 failing. Second WX-D2 pilot: the
+  gf256 document's `gmul` rewritten as the fold of 2.1, every previous verdict
+  kept.
 
 ## 3. WX-F — binding-level sequence drivers
 
@@ -1340,10 +1675,12 @@ allocation or recursion it would drive.**
 | Cap | Value | Where enforced | Checked before | On exceed |
 |---|---|---|---|---|
 | work per evaluation | 1,000,000 units | every evaluator | each charge | W0703 / `model-budget-exhausted` |
-| model frames | 64 | every evaluator | each call | same |
+| evaluation depth (nested node evaluations, across model calls) | 64 levels | every evaluator | each node entry | same |
 | elements per sequence value | 65,536 | every evaluator | allocation (2.7 step 1) | same |
-| owned data per evaluation, cumulative | 64 MiB | every evaluator | allocation | same |
-| list literal | 4,096 elements | checker | generation | W0602 |
+| leaves per tuple, record or constructor value | 65,536 | every evaluator | returning the composite (2.7) | same |
+| owned data per evaluation, cumulative (`dsize`, stored constructor and error names included, E20) | 64 MiB | every evaluator, for v1 documents | allocation (2.7 step 2) | same |
+| list literal | 4,096 elements | checker, v1 documents | checking | W0602 |
+| identifier, in any position | 128 bytes | checker, v1 documents | every other check (pass 0) | W0602 |
 | section bound arguments | 8 | checker | — | W0712 |
 | higher-order nesting | 4 | checker | — | W0602 |
 | model graph cycle detection | linear in edges | checker (charged to `max_work`) | — | W0602 |
@@ -1423,7 +1760,9 @@ Per-extension plans are in 2.15, 3.11 and 4.11. Cross-cutting:
    one per row of 6.4.
 3. **Independence:** the Python reference evaluator for WX-D and `ensures` rows is
    written from this text, not from the Rust code (closing, for this wave, the
-   gap VER04j §14 item 12 recorded for wave 1).
+   gap VER04j §14 item 12 recorded for wave 1). It lands with WX-D2, as section 8
+   always placed it, and then covers the WX-D1 forms too. Until then the
+   hand-computed triples of 2.15 are WX-D1's independent check (S0 E12).
 
 ## 8. Recommended implementation order
 
@@ -1431,7 +1770,7 @@ Precondition: the WX-H/WX-E branch (`claude/warrant-wx-h-e`) has merged.
 
 | Step | Slice | Contents | Size (engineer-days) | Depends on |
 |---|---|---|---|---|
-| 1 | **WX-D1** sequence core | `take drop slice replicate range to_list to_bytes`; list literals in evidence bodies; the meter in generated code (gated); sequence-aware lists; the split domain; the two result faults | 4–6 | — |
+| 1 | **WX-D1** sequence core | the twelve names reserved; `take drop slice replicate range to_list to_bytes`; list literals in evidence bodies; the meter in generated code (gated); sequence-aware lists; the split domain; the two result faults; in the slices S0–S4 of 8.1 | 4–6 | — |
 | 2 | **WX-F** drivers | schema (JSON + line form), validation, driver adapter, obligations and their controls, six faults, hints, sha1 pilot | 5–7 | D1 (list literals, split sweeps) |
 | 3 | **WX-G** in-out postconditions | `inout`, slot resolution, `ensures`, monitoring, inout adapters, five faults, zeroize pilot | 5–7 | D1 (`replicate`, `take`, `drop`) |
 | 4 | **WX-D2** higher-order forms | `fold map count all any`, sections, W0712, acyclicity through references, nesting cap, Python reference evaluator, wasm-leb128 pilot | 6–9 | D1 |
@@ -1447,6 +1786,23 @@ higher-order part follows F and G so that the two unlocks with real pilots
 (streaming digests, zeroize) are not held behind the slice with the most design
 risk.
 
+### 8.1 WX-D1 slices (S0 review)
+
+WX-D1 lands in five slices, all in `rust/warrant-grammar` except S0. Each is one
+pull request; each keeps v0 output and wave-3 v1 output byte-identical (1.3).
+
+| Slice | Contents | Depends on |
+|---|---|---|
+| **S0** | This errata: the decisions of section 9.1 applied to the text, and the VER04 §4 deviation note. `code/specs` only | — |
+| **S1** checker and ground evaluator | Reserve the twelve names (W0201/W0203); W0202 "not yet implemented in this version" for `fold map count all any`. The typing of 2.4 for the seven forms, with an expected type threaded into `typecheck_v1_builtin`. The v1 list-literal cap (W0602). The seven forms in the ground evaluator with check-before-allocate (element cap, then data reservation, then work, then allocation) on exact `i128` counts. The data counter with `dsize` and the pass-through rule. Short-circuit `and`/`or`/`=>` in v1. Operation discovery into list literals in v1. Generation still refuses the forms with W0701. No field is added to `CheckedWarrantModule` (the `v0_compat` `Debug` hash); `CodegenLimits` and `EvalValue` keep their shape, and the new limits are constants | S0 |
+| **S2a** generator | Translate list literals and the seven forms. The gated `seq` prelude part with both caps and the data reservation. The `wxd` fixture, subject and regeneration. Flip the pinned W0701 refusals of list literals in v1 bodies and the pinned "lists are not searched" discovery assertion (`tests/wx_generator.rs`) | S1 |
+| **S2b** meter parity | The full meter in generated code: work, depth, data, groups, short-circuit, admission inside the meter. The `model-budget-exhausted` note. The `(value, work, data)` differential of 2.15, run with and without `CI=true` | S2a |
+| **S3** domains | Sequence-aware lists and the split domain (2.9), gated to `seq`, with the conflict refusal (W0706) and the manifest text | S2a |
+| **S4** result faults | `drop-last-result-element` and `reverse-result-list` (2.12). They rewrite the adapter's result and need no WX-D form, so they are independent of S1–S3 | S0 |
+
+Order: S0, then S1, then S2a; S2b and S3 after S2a, in either order or in
+parallel; S4 at any time after S0.
+
 ## 9. Open questions for the owner
 
 1. **Sections.** Function arguments may bind leading arguments (`gmul_step(b)`),
@@ -1456,12 +1812,18 @@ risk.
 2. **Count arguments.** `take`/`drop`/`slice`/`replicate`/`range` take `Int` and
    treat negatives as zero (2.2). The alternative is `Nat` counts plus a typing
    change `Nat + Nat : Nat` (which would also close VER04j §14 item 5 for shift
-   counts) or a `to_nat` on `Int`. Choose.
+   counts) or a `to_nat` on `Int`. Choose. **Resolved (owner, 2026-11-11):
+   accepted as drafted**, `Int` counts with negatives as zero (9.1, E-Q2).
 3. **v1 stability.** This wave reserves twelve more names in v1. Freeze v1 after
    this wave (any later name needs a `v2` header), or keep v1 as an evolving
-   profile with a mechanical scan of in-repository v1 documents?
+   profile with a mechanical scan of in-repository v1 documents? **Partly
+   decided (owner, 2026-11-11):** all twelve names are reserved in WX-D1, so this
+   wave reserves names once rather than in two steps (9.1, E7). Whether v1 is
+   frozen after this wave is still open; the reservation does not freeze it.
 4. **Data accounting.** Cumulative allocation (deterministic, over-approximate)
-   rather than peak live data (2.7). Confirm.
+   rather than peak live data (2.7). Confirm. **Resolved (owner, 2026-11-11):
+   accepted as drafted**, cumulative per evaluation with the 64 MiB budget (9.1,
+   E-Q4).
 5. **Double-finish** is an obligation with its own control, not a fault (3.5).
    Confirm this reading of the VER04j sketch.
 6. **Mandatory driver faults.** Every applicable driver fault must be listed
@@ -1489,6 +1851,77 @@ risk.
     needed by the pilots; each costs an IR tag and a differential suite in every
     lane. Add any now?
 
+### 9.1 Errata and decisions (S0, 2026-11-11)
+
+The S0 review checked the WX-D1 part of this document against the code on
+`main` (`rust/warrant-grammar`: `codegen.rs`, `checker.rs`, `evidence.rs`, the
+evidence prelude and their tests). It found fourteen places where the text was
+ambiguous, contradicted itself, or contradicted the code it builds on. Each is
+settled below and in the section the last column names. The owner decided the
+two open questions and items E2 and E7. The coordinator settled the rest under
+one rule: **when in doubt, over-charge and fail closed.** Each of those choices
+is open to override by the owner; an override is a new erratum, not a silent
+edit.
+
+| ID | Issue | Decision | Decided by | Sections changed |
+|---|---|---|---|---|
+| E-Q2 | Count arguments (open question 2) | `Int` counts; a negative count means zero. Accepted as drafted | owner-decided | 2.2, 9 |
+| E-Q4 | Data accounting (open question 4) | Cumulative allocation per evaluation, never refunded, with the 64 MiB budget. Accepted as drafted | owner-decided | 2.7, 9 |
+| E1 | "64 active model frames" against the evaluator, which counts expression nesting (`enter_scope` on every node) | The limit is 64 levels of nested node evaluation across model calls, exactly the ground evaluator's `max_depth` rule. Groups count; a model body is one level below its call; a WX-D per-element call is one level below the form and its body one below that. Generated code mirrors it | coordinator-decided (conservative, override welcome) | 2.6, 2.7, 2.12, 2.15, 6.2 |
+| E2 | The ground evaluator evaluates `and`/`or`/`=>` eagerly (`codegen.rs`, the `Expression::Binary` arm), while VER04 §4 says short-circuit and generated Rust short-circuits | Short-circuit in every v1 evaluation. The v0 ground evaluator stays eager, a recorded deviation from VER04 §4, so v0 output stays byte-identical. Eager evaluation never accepts what short-circuit rejects | owner-decided | 1.2, 1.3, 2.6, 2.12, 2.13, 2.14, 2.15, 8.1; VER04 §4, §10 |
+| E3 | Parenthesised groups: the evaluator charges 1 per `Grouped` node, while the generator's `emit` drops the parentheses | A group is a node in every implementation: 1 work unit and one depth level. The generator emits the charge under the meter | coordinator-decided (conservative, override welcome) | 2.7, 2.12, 2.15 |
+| E4 | Data-meter coverage: the charge table covered only WX-D forms, and the quadratic-accumulator boundary of 11,585 assumed `concat` charges data but little work | Every evaluated node charges `dsize` of its value except the pass-through nodes (references, projections, `if`, `match`, groups, model calls, `unwrap_or`, `fold`). That covers `concat`, list literals, tuples, records, `Some`/`Ok`, `be_bytes`/`le_bytes`, `at` and the WX-D forms. The ground evaluator keeps the data counter for every v1 evaluation; v0 has none. `concat` already charges work per element, so the work meter, not data, stops the accumulator, at about 1,400 elements; the data example is now `replicate`, which fails at `n = 1,024`. Reads charge no data (note below) | coordinator-decided (conservative, override welcome) | 1.3, 2.7, 2.14, 2.15, 6.2 |
+| E5 | `replicate`/`take`/`drop`/`slice` of non-scalar elements were charged `L` × unit, while `EvalValue` deep-clones them | Charge the deep copy: `Σ (32 + dsize(e))` over the selected elements, `max(0, n) × (32 + dsize(x))` for `replicate`. The draft's assumption that the payload was charged when the element was built is withdrawn | coordinator-decided (conservative, override welcome) | 2.7, 2.12, 2.15 |
+| E6 | Two caps: `MAX_SEQ_ELEMENTS` per sequence against the existing per-composite leaves cap (`bounded()`/`leaves()`, VER04j §14 item 18) | Both stand. 65,536 elements per `List`/`Bytes`, checked before allocation. 65,536 leaves per tuple, record or constructor, checked where the evaluator checks it today. The leaves cap is not applied to lists, since it would lower the element cap to 65,535. Generated code mirrors both | coordinator-decided (conservative, override welcome) | 2.7, 2.15, 6.2 |
+| E7 | Reserved names: reserve twelve now, or the five WX-D2 names later | All twelve reserved in WX-D1. Until WX-D2, any use of `fold`, `map`, `count`, `all` or `any` in a v1 document is W0202 "reserved built-in `<name>` is not yet implemented in this version". Tied to open question 3 without freezing v1 | owner-decided (the reservation); coordinator-decided (W0202 as the code: the name is reserved but has no meaning in this tool version; override welcome) | 1.2, 1.4, 2.15, 8, 8.1, 9 |
+| E8 | List-literal cap at generation (2.11) or in the checker (6.2). Today only the evaluator refuses, above 65,536 (W0703) | The checker, in v1 documents only, for every literal anywhere: W0602 above 4,096, before the elements are typed. v0 is unchanged. The evaluator's 65,536 refusal stays as defence in depth | coordinator-decided (conservative, override welcome) | Status, 1.2, 1.4, 2.11, 2.14, 2.15, 6.2 |
+| E9 | Split-domain gaps: `k` over two sequence binders; `k` also a shift count (`NatCount`); `D(m)` for `List<T>` and `Bytes<N>`; enumeration order; the number the manifest shows | Exact pair counts and budget bounds per type (1,234 and 3,470 for `Bytes`). Order: `m` outer, `k` ascending. The manifest shows the exact pair count, `split(m)(1234)`. A `k` that two domain rules claim is refused with W0706. The intersection was rejected, because it drops the clamp boundary of the longer sequence | coordinator-decided (conservative, override welcome) | 1.4, 2.9, 2.11, 2.15 |
+| E10 | Sequence-aware lists: the new shrinker order differs from the `comp` list shrinker, and changing all lists would alter `wxa`'s generated evidence | Only `List<T>` binders that feed a WX-D form, and only in the `seq` part. Every other list keeps the `comp` generator, shrinker and fuzz decoding. `Bytes` is unchanged, since it already draws lengths 0..=64 | coordinator-decided (conservative, override welcome) | 2.9, 2.11, 2.15 |
+| E11 | Result-fault edges: an empty list under `drop-last-result-element`; "length at least 2"; lists nested in tuples | Applicability is decided by the core result type at generation; anything else, including a list nested in a tuple, record, variant or list, is W0701. At run time a fault is the identity where it cannot change the value (`[]`, length below 2, a palindrome), and no element is invented. The runtime control is the backstop | coordinator-decided (conservative, override welcome) | 1.4, 2.12, 2.15 |
+| E12 | The Python reference evaluator: in the WX-D differential (2.15, 7 item 3) or in WX-D2 (8) | WX-D2, where section 8 placed it; it then covers the WX-D1 forms too. WX-D1's differential is the ground evaluator against generated code, with the native-iterator value oracle and hand-computed pinned triples | coordinator-decided (conservative, override welcome) | 2.15, 7 |
+| E13 | Operation discovery skips list literals (`find_operation_*`), so `to_bytes([f(a)]) == b` reports "claim calls no operation" | In v1 the argument search descends into list-literal elements like call arguments, after the unchanged shallow search, first match wins. v0 is unchanged | coordinator-decided (conservative, override welcome) | 1.2, 2.11, 2.15, 8.1 |
+| E14 | Are admission and refinement predicates inside the instance meter? | Yes. One meter per case; a rejected candidate is discarded with its meter. Exhaustion during admission fails the instance with `model-budget-exhausted`; it is never treated as a rejection | coordinator-decided (conservative, override welcome) | 2.7, 2.12, 2.15 |
+| E15 | Does an unsuffixed integer literal take its type from a sequence context (`to_bytes([0, 1])`)? | No. Unsuffixed integer literals stay `Int` (VER04 §2: only `Nat` is contextual), so `to_bytes([0, 1])` is W0301. Write `to_bytes([0u8, 1u8])`, or bind the elements as `U8`. `to_bytes([])` type-checks. Contextual `U8` literals would be a language change and are not part of WX-D | coordinator-decided (S1, override welcome) | 2.4 |
+| E16 | How do expected types flow into the forms? | `replicate(x, n)` has type `List<type(x)>`. The expected element type is passed to `x` as a hint (so `replicate([], n)` types), and the result is never widened to the expected type. This matches v0 list literals. For `take`, `drop` and `slice`, an expected `List<T>` is passed into the sequence operand; an expected `Bytes` is not | coordinator-decided (S1, override welcome) | 2.4 |
+| E17 | How is a reserved-but-unimplemented name reported, and what does a WX-D call node cost? | A D2 name used in v1 is W0202 with the exact text "reserved built-in `<name>` is not yet implemented in this version" (a distinct checker kind, so D2 can remove it cleanly). A WX-D call node costs its ordinary node charge of 1 work unit; the form's own work charges are added to that | coordinator-decided (S1, override welcome) | 2.7, 2.15 |
+| E18 | Which element cap applies under a stricter profile, and when is data charged during construction? | The evaluator's element cap is the smaller of 65,536 and the profile's `max_value_bytes`, so a stricter profile is never loosened. List literals, tuples and constructors charge data after their components exist and before work; tuples and constructors then also go through the leaves check. `concat` charges before building. A bytes literal charges `len/2` before decoding. After a refused reservation the counter keeps the overshooting total; the instance has already failed | coordinator-decided (S1, override welcome) | 2.7, 6.2 |
+| E19 | What does D1 test from §2.15, and what moves later? | Two items move. The quadratic-accumulator work-boundary bisection needs `fold`, so it moves to D2. Admission-in-meter (E14) needs nothing in the ground evaluator, which never evaluates admission predicates, so it moves to S2b with the generated meter | coordinator-decided (S1) | 2.15, 8.1 |
+| E20 | The S1 security review: `dsize` priced a nullary constructor and `Err(E.CASE)` at 0, but constructor and error values own their names, so `replicate(<10,000-byte constructor>, 65536)` allocated about 660 MB (peaking at 1.3 GB) with 2 MiB charged; list literals and `concat` did the same, in v0 and v1. Identifiers had no length cap | `dsize` counts the bytes of the stored names: `len(T) + len(C)` for a constructor of type `T`, nullary ones included, and `len(E) + len(CASE)` for an error value, so the charge is never below what a copy allocates. Every implementation charges them, generated code included. In v1 documents the checker also caps every identifier at 128 bytes (`MAX_IDENTIFIER_BYTES`, the binding parser's path-segment cap), as W0602 with the message "an identifier of N bytes is longer than the 128 bytes a v1 document allows", in a pass before every other check, so an over-long reference is refused before resolution. The cap is defence in depth: the name charge is what bounds the copies. v0 is unchanged (no data counter, no cap) | coordinator-decided (S1 security review, override welcome) | Status, 1.2, 1.4, 2.7, 6.2 |
+| E21 | The S1 security review: the checker resolved a dotted name by its first segment alone (a binder, a built-in such as `Some`, `None` or `len`, a model or an operation) and typed it as that, while the ground evaluator turns any two-segment name it does not recognise into the error value `Err((seg0, seg1))` and ignores the arguments. So v1 `g.x(a)`, `g` a model, was typed `U8` and evaluated to `Err(("g", "x"))`; `Some.x(a)`, `None.x` and `len.x(a)` likewise; v0 `a.foo` was typed as the binder `a`. An example `select_bytes(..) == m.FORGED(..)` checked, and `compile_warrant_to_tfv` emitted the error id `FORGED`, which no declaration has. The evidence generator already refused such names, so the lanes disagreed | A reference of more than one segment is exactly one of two things: `E.CASE`, with `E` a declared error and `CASE` one of its cases (v0 and v1), or a v1 projection `x.f.g` from a binder `x` in scope. Anything else is W0202 `UnboundName` of the whole dotted name, in v0 and in v1, refused before any first-segment lookup. This is a **v0 deviation**: such v0 documents used to check, but evaluated to a forged error value, never to what their type said. No in-repository document uses one (`git ls-files '*.warrant'`: the only dotted references are `E.CASE` and the v1 projection `b.tag` in `wxa`; `labels` and `input` lines name operation parameters, not references), and every v0 output, the v0 compatibility pin and the regenerated harnesses are byte-identical | coordinator-decided (S1 security review, override welcome) | 9.1; VER04 §10 |
+
+**Note on E4: reads (an open hazard).** Reads charge no data, because a charge
+per read would make the meter depend on whether an implementation copies or
+shares, and on how often a body names a value. But the ground evaluator's reads
+clone `EvalValue` deeply, and those copies are not small. The S1 security review
+measured them:
+
+* a list literal of 48 references to one binder whose value was charged about
+  16 MB peaked at **2.4 GB** before the literal's own charge failed with W0703;
+* a model call with 48 such arguments peaked at **2.4 GB** and **succeeded**,
+  with `data_used` at only 16 MB, because a call is a pass-through node and its
+  arguments are reads;
+* each such clone costs about 33 ms of CPU for about 3 work units, so the work
+  meter does not bound the time either;
+* the worst case, many references to a value near the 64 MiB budget, inside a
+  bounded nesting of calls, is hundreds of GB.
+
+So the data counter's claim is narrower than the first draft of this note put
+it: **it caps the `dsize` of any one v1 value at 64 MiB, per value; it does not
+bound the total memory of an evaluation**, since uncharged read copies of an
+admitted value can be made many times over. The hazard is older than this wave
+(in v0 and wave-3 evaluation no counter bounds even one value: the element cap
+allows a list of 65,536 strings of 65,536 bytes, about 4 GiB, built by repeated
+`concat` within the work budget), and WX-D1 narrows it without closing it. It is
+**open**. The fix is one of: shared storage in `EvalValue` (`Rc`/`Arc` for
+sequences, composites and names, so a read is a reference-count increment and
+the meter's "charges as if it copied" rule becomes exact), or a host-side guard
+that bounds the memory of the reads themselves. Either is a change to the
+evaluator's representation, which this wave does not make (8.1). It is tracked
+as backlog **WX-RD1** (P1) and recorded for the owner, not settled here.
+
+**Slices.** The S0 review also split WX-D1 into the slices of 8.1. Each
+coordinator decision above is listed in the S0 pull request for owner override.
+
 ## 10. Out of scope, and why
 
 | Item | Why |
@@ -1502,6 +1935,14 @@ risk.
 
 ## 11. Specification change record
 
+- S1 security review (2026-11-12), recorded in 9.1 as E20: `dsize` counts the
+  stored names of constructor and error values, and v1 identifiers are capped at
+  128 bytes (W0602); the note on E4 now records the measured cost of uncharged
+  read copies as an open hazard (backlog WX-RD1) and limits the data counter's
+  claim to a per-value bound. The S1 implementation also enforces the existing
+  §1.2 rule that a v1 parameter or quantifier binder may not spell a reserved
+  built-in (W0203); no text changed for that.
+
 - Initial VER04k: normative WX-D (in three slices), WX-F and WX-G, replacing the
   non-normative sketches of VER04j §7. Departures from those sketches, each
   justified in the section cited: function arguments may be sections (2.3);
@@ -1509,3 +1950,15 @@ risk.
   obligation, not a fault, and three further driver faults are added (3.5, 3.6);
   WX-D is split so its non-higher-order part precedes WX-F (8). New diagnostics
   W0711–W0713. No v0 text and no wave-3 v1 meaning changes; VER04j is not edited.
+- S0 errata and decisions (2026-11-11), recorded in 9.1: open questions 2 and 4
+  resolved as drafted, and question 3 partly decided (all twelve names reserved
+  in WX-D1, v1 not frozen); the short-circuit fix for v1 with the v0 deviation
+  recorded in VER04 §4; the evaluation-depth reading of the 64-level limit; group
+  charges; `dsize` data charges for every constructing node and for deep copies;
+  the two per-value caps; the list-literal cap moved to the v1 checker; the
+  split-domain rules and conflict refusal; sequence-aware lists gated to `seq`;
+  the list result-fault edges; the Python reference evaluator placed in WX-D2;
+  operation discovery into list literals; admission inside the instance meter;
+  and the WX-D1 slices of 8.1. Corrected: the quadratic-accumulator example of
+  2.7 (the work meter, not the data meter, stops it, at about 1,400 elements
+  rather than 11,585) and the `count` cost of 2.7 (5, not 3, units per element).
