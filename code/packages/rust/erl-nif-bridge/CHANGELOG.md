@@ -21,5 +21,7 @@
 
 ### Changed
 
+- Fixed `ERL_NIF_UTF8`: it was 4, the real `erl_nif.h` value is 2 (found while checking the header; nothing in the repository used the constant).
+- `win_init` copies the OTP 27 table size, so Windows needs OTP 27 or newer (the repository's CI pins 27.3.4.11); older releases have a shorter table.
 - The `extern "C"` block is now `#[cfg(not(windows))]`; behaviour on Linux and macOS
   is unchanged.

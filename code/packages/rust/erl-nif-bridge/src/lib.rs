@@ -179,7 +179,7 @@ pub const ERL_NIF_RT_TAKEOVER: ErlNifResourceFlags = 2;
 ///
 /// Latin-1 is the original encoding; UTF-8 is preferred for new code.
 pub const ERL_NIF_LATIN1: c_int = 1;
-pub const ERL_NIF_UTF8: c_int = 4;
+pub const ERL_NIF_UTF8: c_int = 2;
 
 /// A binary (byte string) value returned by `enif_inspect_binary` or
 /// allocated by `enif_alloc_binary`.
