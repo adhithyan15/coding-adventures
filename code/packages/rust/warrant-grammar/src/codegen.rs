@@ -309,15 +309,18 @@ fn read_copy_footprint(
     container_depth: usize,
     remaining: usize,
 ) -> Result<usize, ReadCopyFootprintError> {
-    let is_container = matches!(
-        value,
+    // Match the portable TFV encoding: a record is one list container, while
+    // a variant is an outer pair plus its field-list container.
+    let depth_increment = match value {
+        EvalValue::Con { record: false, .. } => 2,
         EvalValue::List(_)
-            | EvalValue::Tuple(_)
-            | EvalValue::Option(_)
-            | EvalValue::Result(_)
-            | EvalValue::Con { .. }
-    );
-    let child_depth = container_depth + usize::from(is_container);
+        | EvalValue::Tuple(_)
+        | EvalValue::Option(_)
+        | EvalValue::Result(_)
+        | EvalValue::Con { record: true, .. } => 1,
+        _ => 0,
+    };
+    let child_depth = container_depth + depth_increment;
     if child_depth > TFV_MAX_DEPTH {
         return Err(ReadCopyFootprintError::TooDeep);
     }
@@ -3418,6 +3421,52 @@ mod read_copy_guard_tests {
         let too_deep = EvalValue::Option(Some(Box::new(within)));
         assert_eq!(
             read_copy_footprint(&too_deep, 0, usize::MAX),
+            Err(ReadCopyFootprintError::TooDeep)
+        );
+
+        let mut variant = EvalValue::Con {
+            ty: "Shape".into(),
+            index: 0,
+            ctor: "Circle".into(),
+            record: false,
+            fields: vec![EvalValue::Bool(true)],
+        };
+        for _ in 0..(TFV_MAX_DEPTH - 2) {
+            variant = EvalValue::Option(Some(Box::new(variant)));
+        }
+        assert_eq!(variant.container_depth(), TFV_MAX_DEPTH);
+        assert!(read_copy_footprint(&variant, 0, usize::MAX).is_ok());
+
+        let variant_too_deep = EvalValue::Option(Some(Box::new(variant)));
+        assert_eq!(variant_too_deep.container_depth(), TFV_MAX_DEPTH + 1);
+        assert_eq!(
+            read_copy_footprint(&variant_too_deep, 0, usize::MAX),
+            Err(ReadCopyFootprintError::TooDeep)
+        );
+
+        let mut record_variant = EvalValue::Con {
+            ty: "Envelope".into(),
+            index: 0,
+            ctor: "Envelope".into(),
+            record: true,
+            fields: vec![EvalValue::Con {
+                ty: "Shape".into(),
+                index: 0,
+                ctor: "Circle".into(),
+                record: false,
+                fields: vec![EvalValue::Bool(true)],
+            }],
+        };
+        for _ in 0..(TFV_MAX_DEPTH - 3) {
+            record_variant = EvalValue::Option(Some(Box::new(record_variant)));
+        }
+        assert_eq!(record_variant.container_depth(), TFV_MAX_DEPTH);
+        assert!(read_copy_footprint(&record_variant, 0, usize::MAX).is_ok());
+
+        let mixed_too_deep = EvalValue::Option(Some(Box::new(record_variant)));
+        assert_eq!(mixed_too_deep.container_depth(), TFV_MAX_DEPTH + 1);
+        assert_eq!(
+            read_copy_footprint(&mixed_too_deep, 0, usize::MAX),
             Err(ReadCopyFootprintError::TooDeep)
         );
     }
