@@ -1173,7 +1173,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1237,7 +1237,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1301,7 +1301,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1372,7 +1372,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1409,7 +1409,7 @@ jobs:
           filter: blob:none
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -4101,7 +4101,7 @@ jobs:
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
