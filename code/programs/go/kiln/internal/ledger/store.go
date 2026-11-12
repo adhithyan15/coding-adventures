@@ -19,10 +19,14 @@ import (
 // (KILN00 section 10.2): only trusted runs may write to the shared ledger.
 var ErrUntrusted = errors.New("ledger: refusing to write: the run is not authorised")
 
-// MaxClockSkew is how far after "now" a record's At may be.  Ordering trusts
+// MaxClockSkew is how far after "now" a snapshot or delta record's At may be.  Ordering trusts
 // At, so a far-future At would outrank every tombstone; anything beyond this
 // slack is refused.
 const MaxClockSkew = 5 * time.Minute
+
+// MaxRecordSkew is the tighter slack for Store.Record, where the record's
+// writer and the clock are the same machine.
+const MaxRecordSkew = time.Minute
 
 // MaxDirBytes caps the total bytes read from one ledger directory.
 const MaxDirBytes = 256 << 20
@@ -323,9 +327,9 @@ func (s *Store) Record(records []Record, auth Authority, now time.Time) error {
 		return nil
 	}
 	for i, r := range records {
-		if r.At.After(now.Add(MaxClockSkew)) {
+		if r.At.After(now.Add(MaxRecordSkew)) {
 			return fmt.Errorf("ledger: record %d is dated %s, more than %s after now", i+1,
-				r.At.Format(time.RFC3339), MaxClockSkew)
+				r.At.Format(time.RFC3339), MaxRecordSkew)
 		}
 	}
 	data, err := EncodeSegment(records)

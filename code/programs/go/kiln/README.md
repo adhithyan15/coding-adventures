@@ -67,12 +67,13 @@ Hashes and provenance only; no build output.
   `Authority` (`Trusted()`, `WritesLocalLedger()`, implemented by the Host): a
   shared ledger needs `Trusted()`, a local one `WritesLocalLedger()`, and nil or
   anything else yields `ErrUntrusted`. Records dated more than `MaxClockSkew`
-  (5 minutes) after `now` are refused.
+  (1 minute, `MaxRecordSkew`) after `now` are refused.
 - `ledger.Merge(snapshotDir, deltaFile, outDir, auth, now, prune)` is the core
   of the `ledger-merge` job: it needs `auth.Trusted()`, strictly validates the
-  delta (one bad record rejects it all), re-stamps every delta record's `at` to
-  `now` (a writer cannot choose its own ordering against tombstones; `now` is a
-  parameter, so output stays deterministic), refuses snapshot records dated
+  delta (one bad record rejects it all), restamps the delta (a pass keeps its
+  earlier `at`, capped at `now`, so a stale pass cannot undo a newer tombstone;
+  a tombstone is stamped `now`; `now` is a parameter, so output stays
+  deterministic), refuses snapshot records dated
   after `now` plus the skew, unions with the snapshot, keeps one record per key,
   and writes deterministic sorted output to a `<outDir>.partial-*` sibling that
   is renamed into place (removed on error). Merge assumes the delta came from a

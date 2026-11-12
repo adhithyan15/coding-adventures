@@ -45,8 +45,11 @@ func OlderThan(cutoff time.Time) func(Record) bool {
 //     The snapshot is validated just as strictly.  Both are read with the
 //     segment caps, never unbounded.
 //   - RE-STAMPING.  Ordering trusts At, so a writer must not choose its own
-//     time relative to tombstones.  Every delta record's At is replaced by now
-//     (UTC, whole seconds).  now is a parameter, never read from the clock, so
+//     time relative to tombstones.  A delta pass keeps its At, capped at now
+//     (so a stale pass stays behind a newer tombstone); a delta tombstone's At
+//     becomes now (so it outranks every earlier pass).  A delta record dated
+//     more than MaxClockSkew after now rejects the delta.  now is UTC, whole
+//     seconds.  now is a parameter, never read from the clock, so
 //     the output stays deterministic.  A snapshot record dated more than
 //     MaxClockSkew after now is an error (fail closed): it is either forged or
 //     the clock is badly wrong.
@@ -76,6 +79,7 @@ func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now t
 	if err := authorize(auth, Shared); err != nil {
 		return st, err
 	}
+	outDir = filepath.Clean(outDir) // "out/" and "out" must name one directory
 	now = now.UTC().Truncate(time.Second)
 	if now.IsZero() || now.Year() > 9999 {
 		return st, errors.New("ledger: merge needs a valid now")
@@ -101,7 +105,16 @@ func merge(o fsOps, snapshotDir, deltaFile, outDir string, auth Authority, now t
 	all := make([]entry, len(snap), len(snap)+len(deltaRecs))
 	copy(all, snap)
 	for i, r := range deltaRecs {
-		r.At = now // re-stamp: the writer does not choose its own time
+		if r.At.After(now.Add(MaxClockSkew)) {
+			return st, fmt.Errorf("delta: line %d is dated %s, after now", i+1, r.At.Format(time.RFC3339))
+		}
+		// Re-stamp: the writer does not choose its own time.  A pass keeps
+		// its own (earlier) time, capped at now, so a job that started before
+		// a tombstone cannot undo it by merging after it; a tombstone is
+		// stamped now, so it outranks every pass from before the merge.
+		if r.Kind == KindTombstone || r.At.After(now) {
+			r.At = now
+		}
 		all = append(all, entry{r, math.MaxUint64, "", i + 1})
 	}
 

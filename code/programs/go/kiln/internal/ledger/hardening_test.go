@@ -65,10 +65,10 @@ func TestFormatCharactersRejected(t *testing.T) {
 
 func TestRecordClockSkew(t *testing.T) {
 	s := Open(t.TempDir(), Shared)
-	if err := s.Record([]Record{pass(1, nowT.Add(MaxClockSkew))}, trusted, nowT); err != nil {
+	if err := s.Record([]Record{pass(1, nowT.Add(MaxRecordSkew))}, trusted, nowT); err != nil {
 		t.Fatalf("at the boundary: %v", err)
 	}
-	if err := s.Record([]Record{pass(2, nowT.Add(MaxClockSkew+time.Second))}, trusted, nowT); err == nil {
+	if err := s.Record([]Record{pass(2, nowT.Add(MaxRecordSkew+time.Second))}, trusted, nowT); err == nil {
 		t.Fatal("one second past the boundary accepted")
 	}
 	far := time.Date(9999, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -82,25 +82,77 @@ func TestRecordClockSkew(t *testing.T) {
 
 func TestMergeRestampsDelta(t *testing.T) {
 	far := time.Date(9999, 1, 1, 0, 0, 0, 0, time.UTC)
-	// A forged year-9999 pass and a tombstone in the same delta: both are
-	// stamped now, the tombstone wins the tie, the forger gains nothing.
-	delta := deltaFile(t, pass(1, far), tomb(1, t0))
+	// A delta record dated far ahead rejects the whole delta.
 	out := filepath.Join(t.TempDir(), "out")
+	if _, err := Merge(snapshotWith(t), deltaFile(t, pass(1, far)), out, trusted, nowT, nil); err == nil {
+		t.Fatal("far-future delta accepted")
+	}
+	// A pass inside the skew window is capped at now and then loses the tie
+	// to a tombstone in the same delta.
+	delta := deltaFile(t, pass(1, nowT.Add(time.Minute)), tomb(1, t0))
+	out = filepath.Join(t.TempDir(), "out2")
 	if _, err := Merge(snapshotWith(t, pass(2, t0)), delta, out, trusted, nowT, nil); err != nil {
 		t.Fatal(err)
 	}
-	got, _ := Open(out, Shared).Lookup([][32]byte{key(1), key(2)})
-	if _, hit := got[key(1)]; hit {
-		t.Fatal("forged far-future pass outranked a tombstone")
+	if got, _ := Open(out, Shared).Lookup([][32]byte{key(1)}); len(got) != 0 {
+		t.Fatal("forged future pass outranked a tombstone")
 	}
-	// Surviving delta records carry now, not the writer's time.
-	out2 := filepath.Join(t.TempDir(), "out2")
-	if _, err := Merge(snapshotWith(t), deltaFile(t, pass(5, far)), out2, trusted, nowT.Add(500*time.Millisecond), nil); err != nil {
+	// A surviving pass is capped at now (or keeps its earlier time).
+	out = filepath.Join(t.TempDir(), "out3")
+	if _, err := Merge(snapshotWith(t), deltaFile(t, pass(5, nowT.Add(time.Minute)), pass(6, t0)), out, trusted, nowT, nil); err != nil {
 		t.Fatal(err)
 	}
-	got, _ = Open(out2, Shared).Lookup([][32]byte{key(5)})
-	if !got[key(5)].At.Equal(nowT) {
-		t.Fatalf("At = %v, want %v", got[key(5)].At, nowT)
+	got, _ := Open(out, Shared).Lookup([][32]byte{key(5), key(6)})
+	if !got[key(5)].At.Equal(nowT) || !got[key(6)].At.Equal(t0) {
+		t.Fatalf("passes: %v %v", got[key(5)].At, got[key(6)].At)
+	}
+	// A tombstone is stamped now whatever its own time.
+	out = filepath.Join(t.TempDir(), "out4")
+	if _, err := Merge(snapshotWith(t), deltaFile(t, tomb(7, t0)), out, trusted, nowT, nil); err != nil {
+		t.Fatal(err)
+	}
+	es, _ := loadDir(out)
+	if len(es) != 1 || !es[0].rec.At.Equal(nowT) {
+		t.Fatalf("tombstone not stamped now: %v", es)
+	}
+}
+
+func TestStalePassStaysBehindTombstone(t *testing.T) {
+	// The tombstone is already in the snapshot at t0+1h; a pass from a job
+	// that started before it is merged afterwards: still shadowed.
+	snap := snapshotWith(t, pass(1, t0), tomb(1, t0.Add(time.Hour)))
+	out := filepath.Join(t.TempDir(), "out")
+	if _, err := Merge(snap, deltaFile(t, pass(1, t0.Add(30*time.Minute))), out, trusted, nowT, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got, _ := Open(out, Shared).Lookup([][32]byte{key(1)}); len(got) != 0 {
+		t.Fatal("stale pass undid a tombstone")
+	}
+	// A pass dated after the tombstone un-shadows.
+	out = filepath.Join(t.TempDir(), "out2")
+	if _, err := Merge(snap, deltaFile(t, pass(1, t0.Add(90*time.Minute))), out, trusted, nowT, nil); err != nil {
+		t.Fatal(err)
+	}
+	if got, _ := Open(out, Shared).Lookup([][32]byte{key(1)}); len(got) != 1 {
+		t.Fatal("fresh pass did not un-shadow")
+	}
+}
+
+func TestMergeCleansOutDir(t *testing.T) {
+	parent := t.TempDir()
+	sep := string(filepath.Separator)
+	snap := filepath.Join(parent, "snap")
+	if _, err := Merge(snap, deltaFile(t, pass(1, t0)), snap+sep, trusted, nowT, nil); err == nil {
+		t.Error("snapshot with trailing separator accepted as output")
+	}
+	if _, err := Merge(snap, deltaFile(t, pass(1, t0)), filepath.Join(parent, "out")+sep, trusted, nowT, nil); err != nil {
+		t.Fatal(err)
+	}
+	if p := partials(parent); len(p) != 0 {
+		t.Errorf("partial next to a trailing-separator outDir: %v", p)
+	}
+	if got, _ := Open(filepath.Join(parent, "out"), Shared).Lookup([][32]byte{key(1)}); len(got) != 1 {
+		t.Fatal("output missing")
 	}
 }
 

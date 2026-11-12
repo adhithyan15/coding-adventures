@@ -688,10 +688,14 @@ kinds differ, the tombstone wins**, before any other tie-break: when in doubt
 the key is a miss.
 
 **A writer does not choose its own time.** A forged far-future `at` would
-outrank every tombstone, so `ledger-merge` re-stamps every delta record with
-the merge's own `now` (passed in, never read from the clock, so output stays
-deterministic). A direct `Record` call rejects an `at` more than five minutes
-after `now`, and `Merge` fails on any snapshot record that far ahead.
+outrank every tombstone, so `ledger-merge` restamps the delta using its own
+`now` (passed in, never read from the clock, so output stays deterministic):
+a delta **pass** keeps its own earlier `at`, capped at `now`, so a job that
+started before a tombstone cannot undo it by merging after it; a delta
+**tombstone** is stamped `now`, so it outranks every earlier pass and forces
+at least one fresh run. A delta record dated more than five minutes after
+`now` rejects the delta, and so does any such snapshot record. A direct
+`Record` call allows only one minute of future skew.
 
 No build outputs, `node_modules` or tool state are ever stored. Records are
 about 200 bytes; tens of thousands fit in a few megabytes.
