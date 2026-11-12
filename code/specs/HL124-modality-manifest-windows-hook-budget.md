@@ -28,6 +28,15 @@ owner read. Starting the child first was worse: synchronous Node work stopped
 draining its stdout and triggered the child's existing 20-second deadline.
 The original test source was restored after this diagnostic.
 
+The next bounded change keeps the async lesson loader but moves the independent
+committed-owner read from the shared hook to the first assertion that actually
+uses it. That read remains a single lazy promise for both consumers, with its
+own anchored-reader 20-second child deadline; neither consumer may use a mock
+or a partial owner set. The hook's 30-second budget then measures only the
+complete source derivation, without two large readers contending over cold
+disk I/O. The committed-marker case retains its own 30-second test budget,
+and the end-to-end `--check` case retains its 60-second budget.
+
 The test, hook, worker, heap, and coverage budgets remain unchanged. Temporary
 timing instrumentation is not part of the committed test or package output.
 
