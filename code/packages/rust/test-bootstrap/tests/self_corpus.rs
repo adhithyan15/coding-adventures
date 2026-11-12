@@ -25,7 +25,7 @@ use coding_adventures_test_bootstrap::Verdict;
 
 const CORPUS: &str = include_str!("../../../../specs/fixtures/test-bootstrap-v1/cases.tfv");
 
-fn main() {
+pub(crate) fn main() {
     let records = match tfv::parse_file(CORPUS) {
         Ok(records) => records,
         Err(error) => {

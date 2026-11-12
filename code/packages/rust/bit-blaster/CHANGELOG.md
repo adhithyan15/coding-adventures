@@ -1,5 +1,11 @@
 # Changelog — `bit-blaster`
 
+## Unreleased
+
+- Keep the multiply circuit's row index paired with the corresponding operand
+  bit through iteration, satisfying the current Rust stable Clippy lint without
+  changing the generated circuit.
+
 ## 0.2.0 — 2026-11-09
 
 Faithfulness audit (VER10 §9). No bug was found in the existing encoding:
