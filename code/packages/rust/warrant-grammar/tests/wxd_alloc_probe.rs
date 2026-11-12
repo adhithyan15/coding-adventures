@@ -24,6 +24,7 @@ use std::collections::HashMap;
 
 use coding_adventures_warrant_grammar::codegen::{
     CodegenErrorKind, CodegenLimits, DiagnosticCode as CgCode, EvalValue, Evaluator,
+    DATA_BUDGET_BYTES,
 };
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{
@@ -87,8 +88,7 @@ fn measured<R>(f: impl FnOnce() -> R) -> (R, usize, usize) {
 }
 
 // 65,536 copies of e2's 1 KiB operand are over the data budget.
-const _: () =
-    assert!(65_536 * (32 + 1024) > coding_adventures_warrant_grammar::codegen::DATA_BUDGET_BYTES);
+const _: () = assert!(65_536 * (32 + 1024) > DATA_BUDGET_BYTES);
 
 /// The most a refused request may allocate: the argument vector of one call
 /// and the diagnostic, never a result-sized buffer.
@@ -142,4 +142,127 @@ fn refused_sequence_requests_allocate_nothing_before_w0703() {
         largest >= floor && total >= floor,
         "the probe missed a {floor}-byte result (largest {largest}, total {total})"
     );
+}
+
+// ---------------------------------------------------------------------------
+// Stored names are data (VER04k section 9.1, E20)
+// ---------------------------------------------------------------------------
+//
+// A constructor value carries its type and constructor names, and an error
+// value `E.CASE` its error and case names, as owned `String`s, so every copy
+// of such a value allocates the names again:
+//
+// ```text
+//   EvalValue::Con { ty: "V", ctor: "Cxxxx...x" (10,000 bytes), fields: [] }
+//   replicate(that, 65536)  ->  65,536 x 10,001 name bytes  ~  655 MB
+// ```
+//
+// The security review measured that request peaking at 1.3 GB while the data
+// meter, which priced a nullary constructor at 0, reported 2 MiB.  E20 makes
+// `dsize` count the stored name bytes, so the meter's charge is never below
+// what a copy allocates.  The probe below holds the evaluator to that: for
+// each admitted form the bytes really requested stay within a small constant
+// factor of the charge, and the reviewer's request is refused before it
+// allocates anything result-sized.
+
+/// Bytes in each long name: far past the v1 checker's 128-byte identifier cap
+/// (E20), which the evaluator does not rely on, since it may be handed a
+/// document that never went through the checker.
+const LONG: usize = 10_000;
+
+/// A constructor or error-case name of [`LONG`] bytes.
+fn long_name(first: char) -> String {
+    let mut s = String::with_capacity(LONG);
+    s.push(first);
+    s.extend(std::iter::repeat_n('x', LONG - 1));
+    s
+}
+
+/// The most bytes a correctly charged evaluation may request per byte charged.
+/// An `EvalValue` slot is 96 bytes on a 64-bit host against a 32-byte
+/// `VALUE_OVERHEAD`, so a value with short names really costs up to about
+/// 3 x its charge; one with long names approaches 1 x.  Measured before the
+/// E20 fix, with names priced at 0, the ratio here was 210 to 316.
+const FACTOR: usize = 4;
+
+#[test]
+fn stored_names_are_charged_as_data_so_copies_cannot_outrun_the_meter() {
+    let ctor = long_name('C');
+    let case = long_name('K');
+    let ty = long_name('T');
+    let src = format!(
+        "warrant probe v1\n  variant V = {ctor} | B\n  variant {ty} = D | F\n  error E = {case} | SHORT\n  \
+         example e0:\n    replicate({ctor}, 1000)\n  \
+         example e1:\n    [{ctor}, {ctor}, {ctor}, {ctor}]\n  \
+         example e2:\n    concat([{ctor}], [{ctor}, {ctor}])\n  \
+         example e3:\n    replicate(Err(E.{case}), 1000)\n  \
+         example e4:\n    replicate(D, 1000)\n  \
+         example e5:\n    replicate({ctor}, 65536)\n  \
+         example e6:\n    replicate({ctor}, 6687)\n  \
+         example e7:\n    replicate({ctor}, 6688)\n"
+    );
+    let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    let bodies: Vec<&Expression> = file
+        .declarations
+        .iter()
+        .filter_map(|d| match d {
+            Declaration::Example(e) => Some(&e.body),
+            _ => None,
+        })
+        .collect();
+    let mut ev = Evaluator::new(&file, CodegenLimits::default());
+    let env: HashMap<&str, EvalValue> = HashMap::new();
+
+    // Admitted forms: the real allocation is bounded by the charge.  Each
+    // copies [`LONG`]-byte names at least three times, so an evaluator that
+    // priced the names at 0 is far outside the factor.
+    for (i, copies) in [(0, 1000), (1, 4), (2, 3), (3, 1000), (4, 1000)] {
+        ev.reset_work();
+        let (res, total, _) = measured(|| ev.eval(bodies[i], &env));
+        let v = res.unwrap_or_else(|e| panic!("example e{i}: {e:?}"));
+        let EvalValue::List(items) = v else {
+            panic!("example e{i}: not a list")
+        };
+        assert_eq!(items.len(), copies, "example e{i}");
+        let charged = usize::try_from(ev.data_used()).expect("fits");
+        // Each element holds one long name, and the meter saw every copy.
+        assert!(
+            charged >= copies * LONG,
+            "example e{i}: {charged} bytes charged for {copies} copies of a {LONG}-byte name"
+        );
+        assert!(
+            total <= FACTOR * charged,
+            "example e{i} allocated {total} bytes but the meter charged {charged}"
+        );
+    }
+
+    // The reviewer's request: 65,536 x (32 + 1 + 10,000) bytes is about
+    // 657 MB, so the 64 MiB budget refuses it before the copies exist.
+    ev.reset_work();
+    let (res, total, largest) = measured(|| ev.eval(bodies[5], &env));
+    let err = res.expect_err("replicate(<long ctor>, 65536) must be refused");
+    assert_eq!(
+        (err.code, err.kind),
+        (CgCode::W0703, CodegenErrorKind::DataBudgetExceeded)
+    );
+    assert!(
+        largest < LONG + SMALL && total < 2 * LONG + 4 * SMALL,
+        "allocated {total} bytes (largest single request {largest}) before W0703"
+    );
+
+    // The exact boundary.  Building the constructor charges its names
+    // (1 + 10,000 = 10,001 bytes); each copy is 32 + 10,001 = 10,033.
+    //   10,001 + 6,687 x 10,033 = 67,100,672 <= 2^26 = 67,108,864
+    //   10,001 + 6,688 x 10,033 = 67,110,705 >  2^26
+    const _: () = assert!(10_001 + 6_687 * 10_033 <= DATA_BUDGET_BYTES);
+    const _: () = assert!(10_001 + 6_688 * 10_033 > DATA_BUDGET_BYTES);
+    ev.reset_work();
+    let fits = ev.eval(bodies[6], &env).expect("6,687 copies fit");
+    assert_eq!(ev.data_used(), 10_001 + 6_687 * 10_033);
+    drop(fits);
+    ev.reset_work();
+    let err = ev.eval(bodies[7], &env).expect_err("6,688 copies do not");
+    assert_eq!(err.kind, CodegenErrorKind::DataBudgetExceeded);
 }

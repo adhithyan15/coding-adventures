@@ -151,10 +151,12 @@ pub struct CodegenLimits {
 // ```
 //
 // A node whose value is a scalar charges 0, so in practice the payers are the
-// nodes that build something: list literals, tuples, records, constructors,
+// nodes that build something: list literals, tuples, records, constructors
+// (nullary ones too, for the names they store: E20), error values `E.C`,
 // `Some`/`Ok`, bytes literals, `concat`, `be_bytes`/`le_bytes`, `fixed<N>`,
 // `at`, the `Option`-valued v1 built-ins and the seven WX-D1 forms.  Reads
-// charge nothing (VER04k section 9.1, note on E4).
+// charge nothing (VER04k section 9.1, note on E4, which records the memory an
+// uncharged deep-copying read can still take as an open hazard).
 
 /// Most elements one sequence value may have (VER04k `MAX_SEQ_ELEMENTS`).
 pub const MAX_SEQ_ELEMENTS: usize = 65_536;
@@ -172,10 +174,11 @@ const NODE_BYTES: u128 = crate::evidence::VALUE_OVERHEAD as u128;
 /// size"):
 ///
 /// ```text
-///   Bool, Int, Nat, U8, ..., None, Err(E.C),
-///   a nullary constructor                     0     (its storage is its slot)
+///   Bool, Int, Nat, U8, ..., None             0     (its storage is its slot)
 ///   Bytes(b), Bytes<N>                        len(b)
-///   List / tuple / constructor fields c1..cn  sum of (32 + dsize(ci))
+///   List / tuple c1..cn                       sum of (32 + dsize(ci))
+///   constructor T.C(c1..cn), nullary too      len(T) + len(C) + sum of (32 + dsize(ci))
+///   Err(E.C)                                  len(E) + len(C)
 ///   Some(x), Ok(x)                            32 + dsize(x)
 /// ```
 ///
@@ -183,17 +186,33 @@ const NODE_BYTES: u128 = crate::evidence::VALUE_OVERHEAD as u128;
 /// `List<Bytes>` pays for its elements' bytes too (S0 E5): the evaluator's
 /// values are deep copies, and the meter charges what the copy costs.
 ///
-/// `[b"0102", b"03"]` is `(32 + 2) + (32 + 1) = 67` bytes; `(1, 2)` is 64.
+/// **Names are data (E20).**  A constructor value owns its type and
+/// constructor names, and an error value its error and case names, as
+/// `String`s, so every copy allocates them again.  Pricing them at 0 let
+/// `replicate(C, 65536)` with a 10,000-byte `C` allocate 660 MB while the
+/// meter saw 2 MiB.  Counting the name bytes keeps the charge at or above the
+/// real allocation (up to the fixed size of a slot), whatever the names are.
+///
+/// `[b"0102", b"03"]` is `(32 + 2) + (32 + 1) = 67` bytes; `(1, 2)` is 64;
+/// `Circle(5u8)` of `variant Shape` is `5 + 6 + 32 = 43`.
 fn dsize(v: &EvalValue) -> u128 {
     match v {
         EvalValue::Bytes(b) => b.len() as u128,
         EvalValue::List(xs) | EvalValue::Tuple(xs) => dsize_items(xs),
-        EvalValue::Con { fields, .. } => dsize_items(fields),
+        EvalValue::Con {
+            ty, ctor, fields, ..
+        } => names_size(ty, ctor).saturating_add(dsize_items(fields)),
+        EvalValue::Result(Err((ty, case))) => names_size(ty, case),
         EvalValue::Option(Some(x)) | EvalValue::Result(Ok(x)) => {
             NODE_BYTES.saturating_add(dsize(x))
         }
         _ => 0,
     }
+}
+
+/// The bytes of the two names a constructor or error value stores (E20).
+fn names_size(ty: &str, name: &str) -> u128 {
+    (ty.len() as u128).saturating_add(name.len() as u128)
 }
 
 /// `sum over xs of (32 + dsize(x))`: the cost of a container holding `xs`, or
@@ -787,6 +806,11 @@ impl<'a> Evaluator<'a> {
                 }
                 // Qualified name: Error.Case constructor
                 if name.segments.len() == 2 {
+                    // v1 data (E20): the value owns both names.
+                    self.charge_data_v1(
+                        names_size(name.segments[0], name.segments[1]),
+                        *span,
+                    )?;
                     let type_name = name.segments[0].to_string();
                     let case_name = name.segments[1].to_string();
                     return Ok(EvalValue::Result(Err((type_name, case_name))));
@@ -963,7 +987,12 @@ impl<'a> Evaluator<'a> {
         for a in args {
             fields.push(self.eval(a, env)?);
         }
-        self.charge_data_v1(dsize_items(&fields), span)?;
+        // v1 data: the fields' slots and payloads, and the two names the
+        // value owns (E20), so a nullary constructor is not free either.
+        self.charge_data_v1(
+            names_size(ty, ctor).saturating_add(dsize_items(&fields)),
+            span,
+        )?;
         self.charge_work(1 + fields.len(), span)?;
         self.bounded(
             EvalValue::Con {

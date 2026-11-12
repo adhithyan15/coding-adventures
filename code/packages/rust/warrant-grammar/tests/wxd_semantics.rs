@@ -440,7 +440,8 @@ fn every_constructing_node_charges_its_dsize_in_v1_and_pass_through_nodes_charge
     // `dsize` of its value, except the pass-through nodes (references,
     // projections, `if`, `match`, groups, model calls, `unwrap_or`).
     //   dsize: scalar 0; Bytes len; List/tuple/fields sum(32 + dsize);
-    //          Some(x)/Ok(x) 32 + dsize(x).
+    //          Some(x)/Ok(x) 32 + dsize(x); and (E20) a constructor or an
+    //          error value `E.C` also the bytes of the two names it stores.
     // b = 1,000 bytes, o = Some(3 bytes), t = (5 bytes, 1u8).
     let cases: &[(&str, u64)] = &[
         ("[1u8, 2u8]", 2 * 32),
@@ -454,7 +455,16 @@ fn every_constructing_node_charges_its_dsize_in_v1_and_pass_through_nodes_charge
         ("[b\"0102\", b\"03\"]", 2 + 1 + (32 + 2) + (32 + 1)),
         ("(1, 2)", 2 * 32),
         ("(b, 1)", (32 + 1000) + 32),
-        ("P(1u8, b\"0102\")", 2 + (32 + (32 + 2))),
+        // E20: record `P` stores its type and constructor names, `P` and `P`.
+        ("P(1u8, b\"0102\")", 2 + (1 + 1) + (32 + (32 + 2))),
+        // A nullary constructor is its names: `Sh` + `Dot`.
+        ("Dot", 2 + 3),
+        ("Box2(1u8)", (2 + 4) + 32),
+        ("[Dot, Dot]", 5 + 5 + 2 * (32 + 5)),
+        // An error value is its names, `Er` + `BAD`; `Err(..)` charges them
+        // again, as `Some(x)` charges `x` again (over-charging on purpose).
+        ("Er.BAD", 5),
+        ("Err(Er.BAD)", 5 + 5),
         ("be_bytes(5u32)", 4),
         ("le_bytes(5u16)", 2),
         ("Some(b)", 32 + 1000),
@@ -483,6 +493,7 @@ fn every_constructing_node_charges_its_dsize_in_v1_and_pass_through_nodes_charge
     let texts: Vec<&str> = cases.iter().map(|c| c.0).collect();
     let mut src = doc_of(" v1", &texts);
     src.push_str("  record P(a: U8, b: Bytes)\n  model id(x: Bytes) -> Bytes = x\n");
+    src.push_str("  variant Sh = Dot | Box2(w: U8)\n  error Er = BAD\n");
     with_doc(&src, |file| {
         let e = bodies(file);
         let mut ev = Evaluator::new(file, CodegenLimits::default());
