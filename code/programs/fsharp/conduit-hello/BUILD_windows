@@ -1,1 +1,6 @@
-echo F# conduit-hello uses P/Invoke — skipping on Windows (requires libconduit_capi.dll cross-compile setup)
+# Windows: build conduit-capi (Rust) with the shared helper, point
+# CONDUIT_CAPI_PATH at the staged conduit_capi.dll and run the same dotnet test
+# as the Unix recipe (F# conduit-hello calls the DLL by P/Invoke).
+# Each BUILD line runs in its own cmd shell, so the whole recipe is one line.
+# build-tool: deps=fsharp/conduit,rust/conduit-capi
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
