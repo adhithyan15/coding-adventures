@@ -1102,9 +1102,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ and npm node_modules/ once it has built, when no package depends on it (CI disk budget; X-7)")
+	emitKilnGraph := flag.String("emit-kiln-graph", "", "Write the kiln-legacy-graph/1 export (every package, all OSes; implies -force and -language all) to this path, then exit")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
+
+	// -emit-kiln-graph describes the whole repository, not a diff or a
+	// language slice (see kiln_graph.go): it implies -force and -language all.
+	if *emitKilnGraph != "" {
+		if *planFile != "" {
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-graph cannot be combined with -plan-file (it needs full discovery).")
+			return 1
+		}
+		*force = true
+		*language = "all"
+	}
 
 	// Step 1: Find the repo root.
 	repoRoot := *root
@@ -1314,7 +1326,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 
 	if !usedPlan {
 		// Step 2: Discover packages.
-		packages, err = discovery.DiscoverPackages(codeRoot)
+		if *emitKilnGraph != "" {
+			// The export covers every OS, including packages that only
+			// have a BUILD file for another one.
+			packages, err = discovery.DiscoverPackagesAllPlatforms(codeRoot)
+		} else {
+			packages, err = discovery.DiscoverPackages(codeRoot)
+		}
 		if err != nil {
 			message, exitCode := formatDiscoveryError(err)
 			fmt.Fprintln(os.Stderr, message)
@@ -1542,6 +1560,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// ── Emit plan and/or detect languages ─────────────────────────
 	//
 	// These are early-exit modes that compute metadata but don't build.
+
+	if *emitKilnGraph != "" {
+		return emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph)
+	}
 
 	if *emitPlan != "" {
 		return emitBuildPlanAgainst(

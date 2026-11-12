@@ -263,6 +263,20 @@ On Windows, use the compiled `.exe`:
 | `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
 | `-shard-index` | -1 | With `-plan-file`, run only that shard |
 | `-prune-leaf-targets` | false | Delete a leaf package's own Cargo `target/` once it has built (CI disk budget) |
+| `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
+
+### Kiln legacy graph export
+
+`-emit-kiln-graph out.json` hands the repository's language knowledge to Kiln
+as plain data, so Kiln's core never has to parse a manifest. For every
+package (including ones that only have a BUILD file for another OS) it lists
+the selected BUILD file per OS (or `null`), direct dependencies per OS,
+`dev_deps` (the Cargo test-trigger relation, inverted), `repo_inputs` (paths
+declared by the repository-input consumer table) and `extra_toolchains`.
+Lists are sorted and de-duplicated, so output is byte-identical for a tree.
+See `kiln_graph.go` for the field-by-field contract and
+`testdata/kiln-legacy-graph.golden.json` for the pinned format. Mosaic's
+repository guard is predicate-only and exports no paths.
 
 ### Sharding v1 and v2
 
