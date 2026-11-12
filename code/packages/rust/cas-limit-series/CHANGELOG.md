@@ -1,5 +1,11 @@
 # Changelog — cas-limit-series (Rust)
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/series_limit.rs`: `needless_range_loop`: `compose_with_zero_constant` iterates `coeffs` with `iter().enumerate()`; behaviour unchanged.
+
 ## [0.3.0] - 2026-05-29
 
 ### Added

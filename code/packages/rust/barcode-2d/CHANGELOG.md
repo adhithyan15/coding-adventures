@@ -1,5 +1,11 @@
 # Changelog — barcode-2d (Rust)
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs (tests)`: `needless_range_loop`: iterate the module grid directly in `make_module_grid_all_light`; behaviour unchanged.
+
 ## 0.2.0 — 2026-05-11
 
 ### Added

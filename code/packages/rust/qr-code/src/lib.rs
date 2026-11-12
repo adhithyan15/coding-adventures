@@ -615,10 +615,10 @@ fn place_timing(g: &mut WorkGrid) {
 
 fn reserve_format_info(g: &mut WorkGrid) {
     let sz = g.size;
-    for c in 0..=8 { if c != 6 { g.reserved[8][c] = true; } }
-    for r in 0..=8 { if r != 6 { g.reserved[r][8] = true; } }
-    for r in (sz - 7)..sz { g.reserved[r][8] = true; }
-    for c in (sz - 8)..sz { g.reserved[8][c] = true; }
+    for (c, cell) in g.reserved[8].iter_mut().enumerate().take(9) { if c != 6 { *cell = true; } }
+    for (r, row) in g.reserved.iter_mut().enumerate().take(9) { if r != 6 { row[8] = true; } }
+    for row in g.reserved.iter_mut().take(sz).skip(sz - 7) { row[8] = true; }
+    for cell in g.reserved[8].iter_mut().take(sz).skip(sz - 8) { *cell = true; }
 }
 
 fn compute_format_bits(ecc: EccLevel, mask: u32) -> u32 {
@@ -665,8 +665,12 @@ fn write_format_info(g: &mut WorkGrid, fmt: u32) {
 fn reserve_version_info(g: &mut WorkGrid, version: usize) {
     if version < 7 { return; }
     let sz = g.size;
-    for r in 0..6 { for dc in 0..3 { g.reserved[r][sz - 11 + dc] = true; } }
-    for dr in 0..3 { for c in 0..6 { g.reserved[sz - 11 + dr][c] = true; } }
+    for row in g.reserved.iter_mut().take(6) {
+        for cell in row.iter_mut().skip(sz - 11).take(3) { *cell = true; }
+    }
+    for dr in 0..3 {
+        for cell in g.reserved[sz - 11 + dr].iter_mut().take(6) { *cell = true; }
+    }
 }
 
 fn compute_version_bits(version: usize) -> u32 {
@@ -1197,8 +1201,12 @@ mod tests {
     fn timing_strips_correct() {
         let grid = encode("HELLO WORLD", EccLevel::M).unwrap();
         let sz = grid.rows as usize;
-        for c in 8..=(sz - 9) { assert_eq!(grid.modules[6][c], c % 2 == 0); }
-        for r in 8..=(sz - 9) { assert_eq!(grid.modules[r][6], r % 2 == 0); }
+        for (c, &module) in grid.modules[6].iter().enumerate().take(sz - 8).skip(8) {
+            assert_eq!(module, c % 2 == 0);
+        }
+        for (r, row) in grid.modules.iter().enumerate().take(sz - 8).skip(8) {
+            assert_eq!(row[6], r % 2 == 0);
+        }
     }
 
     #[test]
