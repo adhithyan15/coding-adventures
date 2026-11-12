@@ -173,7 +173,7 @@
   ],
   "schema": "warrant-proof-evidence-v1",
   "source": "code/packages/rust/wasm-leb128/src/lib.rs",
-  "source_sha256": "6db9a86a5fa3c89e12ee87eec175b782de3f4371bb6d1737b9bca1f48f5b2bfc",
+  "source_sha256": "638248669c21a2e0898b411b06c8610e9554127adce2c25ebb4d1dc1934d381c",
   "spec": "code/specs/wasm-leb128.warrant",
-  "spec_sha256": "6903a4ccb7056519da56664d2783f9fab8094c99aa0557cac2edc404e9db6c4c"
+  "spec_sha256": "44a4947940443abc2de802a6d26aca719e3d8fdcac276961a1e01cc86c14f59d"
 }

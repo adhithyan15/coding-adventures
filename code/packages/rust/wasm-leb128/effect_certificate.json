@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/wasm-leb128",
-  "source_digest": "33634e420560b438e2b77a7e45f63a459bcc142aa44ac0fc0580ec74f55a1a2b",
+  "source_digest": "32135329feb9b453c29c0f09ef1cdfefa5599927a293b6160970fb48c055c41c",
   "manifest_digest": "573ff47ee484693e640fac191d2821644bfc4386ec914f6b6b4a790c147bc296",
   "declared_effects": [],
   "entry_points": [

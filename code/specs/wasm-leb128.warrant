@@ -35,13 +35,15 @@
 -- what the public API makes observable, recorded rather than worked around
 -- (LEB01 "Verification status").
 --
--- Width.  The bounded decoders take `max_bits: u32`.  Their contract holds for
--- max_bits <= 64 only, which is the refinement on the parameter.  The crate does
--- not reject a wider max_bits: 66..=70 accept a 10-byte value whose bits above
--- 64 are silently discarded, and >= 71 with an 11-byte input shifts a u64 by 70
--- (a panic in a debug build, a wrong value in release).  A `rejects max_bits >
--- 64u32 with ...` row would be false, so the document does not write one; the
--- claims quantify only over widths 0..=64 (LEB01 "Findings").
+-- Width.  The bounded decoders take `max_bits: u32` and accumulate into a u64, so
+-- a width above 64 cannot be honoured.  Before SEC-006 the crate accepted one:
+-- 66..=70 accepted a 10-byte value whose bits above 64 were silently discarded,
+-- and >= 71 with an 11-byte input shifted a u64 by 70 (a panic in a debug build,
+-- a wrong value in release).  The crate now rejects `max_bits > 64` before it
+-- reads any byte, so the input contract states it as a `rejects` row (no
+-- refinement on the parameter) and the claims below pin it for every width
+-- 65..=128, for u32::MAX, and for the two concrete byte strings that exposed it.
+-- `max_bits = 0` is unchanged: it is the degenerate width admitting only 0.
 --
 -- Not expressible here (Warrant v1 wave 3, evidence generator), recorded, not
 -- faked: indexing a Bytes value (`at` and `fixed` are W0701 in evidence
@@ -153,8 +155,8 @@ warrant wasm_leb128 v1
   op encode_signed(value: I64) -> Bytes
   op decode_unsigned(data: Bytes, offset: Nat) -> Result<(U64, Nat), Leb128Error>
   op decode_signed(data: Bytes, offset: Nat) -> Result<(I64, Nat), Leb128Error>
-  op decode_unsigned_bounded(data: Bytes, offset: Nat, max_bits: U32 | max_bits <= 64u32) -> Result<(U64, Nat), Leb128Error>
-  op decode_signed_bounded(data: Bytes, offset: Nat, max_bits: U32 | max_bits <= 64u32) -> Result<(I64, Nat), Leb128Error>
+  op decode_unsigned_bounded(data: Bytes, offset: Nat, max_bits: U32) -> Result<(U64, Nat), Leb128Error>
+  op decode_signed_bounded(data: Bytes, offset: Nat, max_bits: U32) -> Result<(I64, Nat), Leb128Error>
 
   assume platform:
     none
@@ -213,6 +215,7 @@ warrant wasm_leb128 v1
     ensures no_panic, terminates
   input decode_unsigned_bounded.max_bits:
     hostile
+    rejects max_bits > 64u32 with Leb128Error.MALFORMED
     ensures no_panic, terminates
   input decode_signed_bounded.data:
     hostile
@@ -223,6 +226,7 @@ warrant wasm_leb128 v1
     ensures no_panic, terminates
   input decode_signed_bounded.max_bits:
     hostile
+    rejects max_bits > 64u32 with Leb128Error.MALFORMED
     ensures no_panic, terminates
 
   -- Declared bounds.  Every operation touches at most ten bytes (an encoder
@@ -321,6 +325,22 @@ warrant wasm_leb128 v1
     decode_signed_bounded(b"00", 0, 0u32) == Ok((0i64, 1))
   example decode_signed_bounded_zero_width_rejects_minus_one:
     decode_signed_bounded(b"7f", 0, 0u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_65_rejected:
+    decode_unsigned_bounded(b"01", 0, 65u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_66_does_not_truncate_to_u64_max:
+    decode_unsigned_bounded(b"ffffffffffffffffff7f", 0, 66u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_71_eleven_bytes_rejected:
+    decode_unsigned_bounded(b"8080808080808080808001", 0, 71u32) == Err(Leb128Error.MALFORMED)
+  example decode_unsigned_bounded_width_u32_max_rejected:
+    decode_unsigned_bounded(b"01", 0, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_65_rejected:
+    decode_signed_bounded(b"7f", 0, 65u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_66_does_not_truncate:
+    decode_signed_bounded(b"ffffffffffffffffff7f", 0, 66u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_71_eleven_bytes_rejected:
+    decode_signed_bounded(b"8080808080808080808001", 0, 71u32) == Err(Leb128Error.MALFORMED)
+  example decode_signed_bounded_width_u32_max_rejected:
+    decode_signed_bounded(b"7f", 0, 4294967295u32) == Err(Leb128Error.MALFORMED)
 
   -- ---- claims -----------------------------------------------------------------
   -- Order inside each operation group is deliberate: a negative control stops at
@@ -397,6 +417,13 @@ warrant wasm_leb128 v1
   claim decode_unsigned_bounded_two_bytes_every_width:
     forall w: U16, n: Nat | n <= 64. decode_unsigned_bounded(be_bytes(w), 0, wrap<U32>(n)) == dbu2(hi8(w), lo8(w), n)
 
+  claim decode_unsigned_bounded_rejects_width_above_64:
+    forall d: Bytes, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_unsigned_bounded(d, 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_bounded_rejects_max_width:
+    forall d: Bytes, o: Nat. decode_unsigned_bounded(d, o, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  claim decode_unsigned_bounded_ten_byte_input_rejected_above_64:
+    forall x: U8, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_unsigned_bounded(concat(cont9(18446744073709551615u64), be_bytes(x)), 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+
   -- decode_signed_bounded: every width 0..=64.
   claim decode_signed_bounded_one_byte_every_width:
     forall x: U8, n: Nat | n <= 64. decode_signed_bounded(be_bytes(x), 0, wrap<U32>(n)) == dbs1(x, n)
@@ -408,3 +435,9 @@ warrant wasm_leb128 v1
     forall d: Bytes, o: Nat, n: Nat | n <= 64. match decode_signed_bounded(d, o, wrap<U32>(n)) with Ok((v, k)) -> fitss(v, n) and k >= 1 and 7 * k <= imax(7, n + 6) and o + k <= len(d) | Err(e) -> true
   claim decode_signed_bounded_two_bytes_every_width:
     forall w: U16, n: Nat | n <= 64. decode_signed_bounded(be_bytes(w), 0, wrap<U32>(n)) == dbs2(hi8(w), lo8(w), n)
+  claim decode_signed_bounded_rejects_width_above_64:
+    forall d: Bytes, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_signed_bounded(d, 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_bounded_rejects_max_width:
+    forall d: Bytes, o: Nat. decode_signed_bounded(d, o, 4294967295u32) == Err(Leb128Error.MALFORMED)
+  claim decode_signed_bounded_ten_byte_input_rejected_above_64:
+    forall x: U8, w: U64 | w >= 65u64 and w <= 4294967295u64. decode_signed_bounded(concat(cont9(18446744073709551615u64), be_bytes(x)), 0, wrap<U32>(w)) == Err(Leb128Error.MALFORMED)

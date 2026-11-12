@@ -2,9 +2,9 @@
   "evidence_seed": "5495871699338944343",
   "module": "wasm_leb128",
   "schema": "warrant-test-evidence-v1",
-  "source_sha256": "6db9a86a5fa3c89e12ee87eec175b782de3f4371bb6d1737b9bca1f48f5b2bfc",
+  "source_sha256": "638248669c21a2e0898b411b06c8610e9554127adce2c25ebb4d1dc1934d381c",
   "spec": "code/specs/wasm-leb128.warrant",
-  "spec_sha256": "6903a4ccb7056519da56664d2783f9fab8094c99aa0557cac2edc404e9db6c4c",
+  "spec_sha256": "44a4947940443abc2de802a6d26aca719e3d8fdcac276961a1e01cc86c14f59d",
   "tests": [
     {
       "bound_at_max": 64,
@@ -277,6 +277,70 @@
       "cases": 1,
       "claim": "",
       "id": "warrant/wasm_leb128/example/decode_signed_bounded_zero_width_rejects_minus_one",
+      "kind": "example",
+      "op": "decode_signed_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_unsigned_bounded_width_65_rejected",
+      "kind": "example",
+      "op": "decode_unsigned_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_unsigned_bounded_width_66_does_not_truncate_to_u64_max",
+      "kind": "example",
+      "op": "decode_unsigned_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_unsigned_bounded_width_71_eleven_bytes_rejected",
+      "kind": "example",
+      "op": "decode_unsigned_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_unsigned_bounded_width_u32_max_rejected",
+      "kind": "example",
+      "op": "decode_unsigned_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_signed_bounded_width_65_rejected",
+      "kind": "example",
+      "op": "decode_signed_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_signed_bounded_width_66_does_not_truncate",
+      "kind": "example",
+      "op": "decode_signed_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_signed_bounded_width_71_eleven_bytes_rejected",
+      "kind": "example",
+      "op": "decode_signed_bounded",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/wasm_leb128/example/decode_signed_bounded_width_u32_max_rejected",
       "kind": "example",
       "op": "decode_signed_bounded",
       "verdict": "pass"
@@ -1484,6 +1548,111 @@
       "verdict": "pass"
     },
     {
+      "cases": 74605,
+      "claim": "decode_unsigned_bounded_rejects_width_above_64",
+      "demoted": [],
+      "discarded": 56214,
+      "domain": "d: Bytes set(347); w: U64 edge(377)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_rejects_width_above_64",
+      "kind": "exhaustive",
+      "op": "decode_unsigned_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_unsigned_bounded_rejects_width_above_64",
+      "discarded": 7037,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_unsigned_bounded_rejects_width_above_64",
+      "kind": "property",
+      "op": "decode_unsigned_bounded",
+      "seed": "9403958321607486886",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 456,
+      "claim": "decode_unsigned_bounded_rejects_width_above_64",
+      "id": "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_rejects_width_above_64",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_unsigned_bounded",
+      "seed": "1233158635358361479",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 22555,
+      "claim": "decode_unsigned_bounded_rejects_max_width",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "d: Bytes set(347); o: Nat set(65)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_rejects_max_width",
+      "kind": "exhaustive",
+      "op": "decode_unsigned_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_unsigned_bounded_rejects_max_width",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_unsigned_bounded_rejects_max_width",
+      "kind": "property",
+      "op": "decode_unsigned_bounded",
+      "seed": "10952082738771493632",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "decode_unsigned_bounded_rejects_max_width",
+      "id": "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_rejects_max_width",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_unsigned_bounded",
+      "seed": "15288244545480297179",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 55040,
+      "claim": "decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "demoted": [],
+      "discarded": 41472,
+      "domain": "x: U8 full(256); w: U64 edge(377)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "kind": "exhaustive",
+      "op": "decode_unsigned_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "discarded": 7870,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "kind": "property",
+      "op": "decode_unsigned_bounded",
+      "seed": "14329795427080397789",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 1252,
+      "claim": "decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "id": "warrant/wasm_leb128/fuzz/decode_unsigned_bounded_ten_byte_input_rejected_above_64",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_unsigned_bounded",
+      "seed": "4929224524743907830",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
       "cases": 16640,
       "claim": "decode_signed_bounded_one_byte_every_width",
       "demoted": [],
@@ -1664,6 +1833,111 @@
       "kind": "fuzz",
       "op": "decode_signed_bounded",
       "seed": "16029844155925878995",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 74605,
+      "claim": "decode_signed_bounded_rejects_width_above_64",
+      "demoted": [],
+      "discarded": 56214,
+      "domain": "d: Bytes set(347); w: U64 edge(377)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_signed_bounded_rejects_width_above_64",
+      "kind": "exhaustive",
+      "op": "decode_signed_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_signed_bounded_rejects_width_above_64",
+      "discarded": 7137,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_signed_bounded_rejects_width_above_64",
+      "kind": "property",
+      "op": "decode_signed_bounded",
+      "seed": "12624877199810016909",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 572,
+      "claim": "decode_signed_bounded_rejects_width_above_64",
+      "id": "warrant/wasm_leb128/fuzz/decode_signed_bounded_rejects_width_above_64",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_signed_bounded",
+      "seed": "7980885557247082242",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 22555,
+      "claim": "decode_signed_bounded_rejects_max_width",
+      "demoted": [],
+      "discarded": 0,
+      "domain": "d: Bytes set(347); o: Nat set(65)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_signed_bounded_rejects_max_width",
+      "kind": "exhaustive",
+      "op": "decode_signed_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_signed_bounded_rejects_max_width",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_signed_bounded_rejects_max_width",
+      "kind": "property",
+      "op": "decode_signed_bounded",
+      "seed": "11847650785349210558",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "decode_signed_bounded_rejects_max_width",
+      "id": "warrant/wasm_leb128/fuzz/decode_signed_bounded_rejects_max_width",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_signed_bounded",
+      "seed": "9640727884745541250",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 55040,
+      "claim": "decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "demoted": [],
+      "discarded": 41472,
+      "domain": "x: U8 full(256); w: U64 edge(377)",
+      "id": "warrant/wasm_leb128/exhaustive/decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "kind": "exhaustive",
+      "op": "decode_signed_bounded",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "discarded": 7734,
+      "equal_cases": 0,
+      "id": "warrant/wasm_leb128/property/decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "kind": "property",
+      "op": "decode_signed_bounded",
+      "seed": "11116612030923305433",
+      "unreachable_by_type": 0,
+      "verdict": "pass"
+    },
+    {
+      "admitted": 1154,
+      "claim": "decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "id": "warrant/wasm_leb128/fuzz/decode_signed_bounded_ten_byte_input_rejected_above_64",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "decode_signed_bounded",
+      "seed": "12709227415541997414",
       "unreachable_by_type": 0,
       "verdict": "pass"
     },
