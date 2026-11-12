@@ -195,6 +195,102 @@ impl fmt::Debug
     }
 }
 
+/// Policy-backed reviewed-terminal evidence with exact issuing-CA role policy.
+///
+/// This value retains the complete Name-policy-backed construction rather than
+/// generic callback construction, its exact reviewed-root selection, and the
+/// certificate-wide issuing-CA policy for that same decoded terminal object.
+/// It does not authenticate a path link or establish complete path validity.
+pub struct BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    reviewed_path: BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >,
+    anchor_role_policy: ValidatedCertificateRolePolicy<'role_certificate, 'role_encoded>,
+}
+
+impl<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the exact policy-backed reviewed-terminal path.
+    #[must_use]
+    pub const fn reviewed_path(
+        &self,
+    ) -> &BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    > {
+        &self.reviewed_path
+    }
+
+    /// Return complete issuing-CA role policy for the exact reviewed terminal.
+    #[must_use]
+    pub const fn anchor_role_policy(
+        &self,
+    ) -> &ValidatedCertificateRolePolicy<'role_certificate, 'role_encoded> {
+        &self.anchor_role_policy
+    }
+}
+
+impl fmt::Debug
+    for BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy")
+    }
+}
+
 /// Non-copyable reviewed-terminal evidence with exact issuing-CA role policy.
 ///
 /// The retained reviewed path preserves the target, candidate pool, ordered
@@ -460,6 +556,72 @@ pub fn bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor<
         BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor {
             constructed_path_with_name_policy,
             reviewed_anchor,
+        },
+    )
+}
+
+/// Bind complete issuing-CA role policy to one policy-backed reviewed terminal.
+///
+/// Object identity is checked before the role, and success retains the complete
+/// Name-policy-backed construction instead of extracting generic construction
+/// evidence. Generic reviewed-terminal evidence cannot produce this result.
+/// Success verifies no signature and grants no complete path, TLS, HTTP, OAuth,
+/// or network authority.
+pub fn bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy<
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    reviewed_path: BoundNamePolicyConstructedX509CertificatePathToReviewedAnchor<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+    >,
+    anchor_role_policy: ValidatedCertificateRolePolicy<'role_certificate, 'role_encoded>,
+) -> Result<
+    BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509CertificatePathReviewedAnchorBindingError,
+> {
+    if !core::ptr::eq(
+        reviewed_path.reviewed_anchor().candidate_certificate(),
+        anchor_role_policy.certificate(),
+    ) {
+        return Err(X509CertificatePathReviewedAnchorBindingError::new(
+            X509CertificatePathReviewedAnchorBindingErrorKind::RoleEvidenceMismatch,
+        ));
+    }
+    if anchor_role_policy.role_extensions().role()
+        != X509CertificateRole::IssuingCertificateAuthority
+    {
+        return Err(X509CertificatePathReviewedAnchorBindingError::new(
+            X509CertificatePathReviewedAnchorBindingErrorKind::AnchorNotCertificateAuthority,
+        ));
+    }
+
+    Ok(
+        BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy {
+            reviewed_path,
+            anchor_role_policy,
         },
     )
 }

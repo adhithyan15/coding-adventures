@@ -19,6 +19,13 @@ Name-value policy with the reviewed anchor. Generic callback construction
 cannot produce this stronger result, and callers cannot detach the policy while
 keeping its reviewed-terminal binding.
 
+A distinct policy-backed role follow-up consumes that stronger reviewed path
+together with certificate-wide role-policy evidence for the exact terminal
+object. It rejects byte-equal re-decodes and end-entity role evidence, then
+retains the complete Name-policy-backed construction, reviewed-root selection,
+and issuing-CA policy together. Generic reviewed-terminal evidence cannot
+produce this result.
+
 A stronger follow-up consumes that reviewed-terminal-bound path together with
 certificate-wide role-policy evidence for the exact terminal object. It
 rejects byte-equal re-decodes and requires the retained role to be issuing CA,
@@ -41,7 +48,7 @@ algorithms, validity, path-length transitions, name constraints, hostname,
 revocation, or any other complete path policy. Issuing-CA role binding and
 construction-derived initialization do not make a path suitable for TLS, HTTP,
 OAuth transport, or live-provider use.
-The policy-backed binding also does not make the available exact-DER and exact
+The policy-backed bindings also do not make the available exact-DER and exact
 Unicode-scalar Name rules complete RFC 5280 Name equality.
 The crate performs no filesystem, clock, credential, signing, or network
 effect.
