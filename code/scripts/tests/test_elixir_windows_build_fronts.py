@@ -19,11 +19,7 @@ import validate_elixir_windows_build_fronts as audit
 EXPECTED_EXCEPTIONS = {
     "code/packages/elixir/conduit": ("ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE"),
     "code/packages/elixir/irc-server-native": ("ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE"),
-    "code/packages/elixir/paint_codec_png_native": (
-        "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE"
-    ),
     "code/packages/elixir/paint_vm_metal_native": ("ELIXIR_WINDOWS_METAL_UNAVAILABLE"),
-    "code/packages/elixir/polynomial_native": ("ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE"),
     "code/programs/elixir/conduit-hello": ("ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE"),
 }
 
@@ -134,11 +130,11 @@ class RepositoryAuditTests(unittest.TestCase):
             {
                 "canonical_fallbacks": 159,
                 "declarative_starlark": 9,
-                "native": 283,
+                "native": 285,
                 "package_roots": 279,
                 "program_roots": 10,
                 "total_roots": 289,
-                "unsupported": 6,
+                "unsupported": 4,
                 "windows_overrides": 130,
             },
         )
@@ -189,7 +185,7 @@ class RepositoryAuditTests(unittest.TestCase):
     def test_markdown_is_a_rendering_of_the_same_report(self) -> None:
         markdown = audit.render_markdown(self.report)
         self.assertIn("| Total Elixir roots | 289 |", markdown)
-        self.assertIn("| Native Windows fronts | 283 |", markdown)
+        self.assertIn("| Native Windows fronts | 285 |", markdown)
         self.assertIn("`ELIXIR_WINDOWS_METAL_UNAVAILABLE`", markdown)
 
     def test_cli_renders_both_formats_and_fails_closed(self) -> None:

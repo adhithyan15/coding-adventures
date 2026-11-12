@@ -4,7 +4,8 @@
 
 - Removed the `code/packages/elixir/gf256_native` exception: its NIF now builds and
   tests natively on Windows (OTP passes the NIF a callback table instead of an import
-  library, which `erl-nif-bridge` now uses). Six exceptions remain: four direct NIF-link, one transitive NIF-dependency and the Metal one.
+  library, which `erl-nif-bridge` now uses). Four exceptions remain: two direct NIF-link (`conduit`, `irc-server-native`), one transitive NIF-dependency and the Metal one.
+- Removed the `polynomial_native` and `paint_codec_png_native` exceptions: both NIFs now build and test natively on Windows through the same callback table.
 
 ## 1.0.0 — 2026-08-27
 
