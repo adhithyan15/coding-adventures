@@ -1,3 +1,3 @@
-cd ../heap && npm install --quiet
-npm install --quiet
+cd ../heap && npm ci --quiet
+npm ci --quiet
 npx vitest run --coverage

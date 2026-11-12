@@ -1,3 +1,3 @@
-npm install --prefix ../sha512 --silent
-npm install --silent
+npm ci --prefix ../sha512 --silent
+npm ci --silent
 npx vitest run --coverage

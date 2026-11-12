@@ -22,4 +22,4 @@ cd ../../../packages/typescript/forme-doc-search-client-js && npm ci --quiet
 cd ../../../packages/typescript/forme-aot-page-bundle-emitter && npm ci --quiet
 cd ../../../packages/typescript/forme-aot-html-doc-emitter && npm ci --quiet
 cd ../../../packages/typescript/forme-doc-site-emitter && npm ci --quiet
-npm install --silent && npx vitest run --coverage
+npm ci --silent && npx vitest run --coverage

@@ -1,4 +1,4 @@
-cd ../pixel-container && npm install --silent
+cd ../pixel-container && npm ci --silent
 cd ../directed-graph && npm ci --quiet
 cd ../cli-builder && npm ci --quiet
 cd ../grammar-tools && npm ci --quiet
@@ -13,5 +13,5 @@ cd ../paint-vm-ascii && npm ci --quiet
 cd ../format-doc && npm ci --quiet
 cd ../format-doc-std && npm ci --quiet
 cd ../format-doc-to-paint && npm ci --quiet
-npm install --include=dev --silent
+npm ci --include=dev --silent
 npx vitest run --coverage

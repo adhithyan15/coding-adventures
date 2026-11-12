@@ -1,23 +1,23 @@
-cd ../../../packages/typescript/directed-graph && npm install --quiet
-cd ../../../packages/typescript/cli-builder && npm install --quiet
-cd ../../../packages/typescript/grammar-tools && npm install --quiet
-cd ../../../packages/typescript/lexer && npm install --quiet
-cd ../../../packages/typescript/state-machine && npm install --quiet
-cd ../../../packages/typescript/parser && npm install --quiet
-cd ../../../packages/typescript/sql-lexer && npm install --quiet
-cd ../../../packages/typescript/sql-parser && npm install --quiet
-cd ../../../packages/typescript/sql-execution-engine && npm install --quiet
-cd ../../../packages/typescript/storage && npm install --quiet
-cd ../../../packages/typescript/lattice-lexer && npm install --quiet
-cd ../../../packages/typescript/lattice-parser && npm install --quiet
-cd ../../../packages/typescript/lattice-ast-to-css && npm install --quiet
-cd ../../../packages/typescript/lattice-transpiler && npm install --quiet
-cd ../../../packages/typescript/indexeddb && npm install --quiet
-cd ../../../packages/typescript/store && npm install --quiet
-cd ../../../packages/typescript/pixel-container && npm install --quiet
-cd ../../../packages/typescript/paint-instructions && npm install --quiet
-cd ../../../packages/typescript/paint-vm && npm install --quiet
-cd ../../../packages/typescript/paint-vm-canvas && npm install --quiet
-cd ../../../packages/typescript/ui-components && npm install --quiet
-npm install --quiet
+cd ../../../packages/typescript/directed-graph && npm ci --quiet
+cd ../../../packages/typescript/cli-builder && npm ci --quiet
+cd ../../../packages/typescript/grammar-tools && npm ci --quiet
+cd ../../../packages/typescript/lexer && npm ci --quiet
+cd ../../../packages/typescript/state-machine && npm ci --quiet
+cd ../../../packages/typescript/parser && npm ci --quiet
+cd ../../../packages/typescript/sql-lexer && npm ci --quiet
+cd ../../../packages/typescript/sql-parser && npm ci --quiet
+cd ../../../packages/typescript/sql-execution-engine && npm ci --quiet
+cd ../../../packages/typescript/storage && npm ci --quiet
+cd ../../../packages/typescript/lattice-lexer && npm ci --quiet
+cd ../../../packages/typescript/lattice-parser && npm ci --quiet
+cd ../../../packages/typescript/lattice-ast-to-css && npm ci --quiet
+cd ../../../packages/typescript/lattice-transpiler && npm ci --quiet
+cd ../../../packages/typescript/indexeddb && npm ci --quiet
+cd ../../../packages/typescript/store && npm ci --quiet
+cd ../../../packages/typescript/pixel-container && npm ci --quiet
+cd ../../../packages/typescript/paint-instructions && npm ci --quiet
+cd ../../../packages/typescript/paint-vm && npm ci --quiet
+cd ../../../packages/typescript/paint-vm-canvas && npm ci --quiet
+cd ../../../packages/typescript/ui-components && npm ci --quiet
+npm ci --quiet
 npx vitest run

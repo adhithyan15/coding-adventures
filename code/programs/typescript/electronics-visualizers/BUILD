@@ -1,10 +1,10 @@
-cd ../../../packages/typescript/analog-waveform && npm install --quiet
-cd ../../../packages/typescript/pixel-container && npm install --quiet
-cd ../../../packages/typescript/paint-instructions && npm install --quiet
-cd ../../../packages/typescript/paint-vm && npm install --quiet
-cd ../../../packages/typescript/paint-vm-canvas && npm install --quiet
-cd ../../../packages/typescript/ui-components && npm install --quiet
-cd ../../../packages/typescript/power-supply && npm install --quiet
-cd ../../../packages/typescript/electronics && npm install --quiet
-npm install --quiet
+cd ../../../packages/typescript/analog-waveform && npm ci --quiet
+cd ../../../packages/typescript/pixel-container && npm ci --quiet
+cd ../../../packages/typescript/paint-instructions && npm ci --quiet
+cd ../../../packages/typescript/paint-vm && npm ci --quiet
+cd ../../../packages/typescript/paint-vm-canvas && npm ci --quiet
+cd ../../../packages/typescript/ui-components && npm ci --quiet
+cd ../../../packages/typescript/power-supply && npm ci --quiet
+cd ../../../packages/typescript/electronics && npm ci --quiet
+npm ci --quiet
 npx vitest run
