@@ -7,6 +7,7 @@ package source
 import (
 	"fmt"
 	"strings"
+	"unicode"
 )
 
 // Match reports whether the "/"-separated path matches the glob pattern.
@@ -30,35 +31,56 @@ func Match(pattern, path string) bool {
 	return matchSegs(strings.Split(pattern, "/"), strings.Split(path, "/"))
 }
 
+// matchSegs is a dynamic program over (pattern segment i, path segment j):
+//
+//	ok[i][j] = "pat[i:] matches p[j:]"
+//
+// filled from the end, so each cell is computed once.  The earlier recursive
+// version retried every split point for every "**", which is exponential for
+// a pattern such as "**/**/**/.../x" against a deep path; this one is
+// O(len(pat) * len(p)) segment comparisons.
+//
+//	pat[i] is "**" and only "**" remain:  matches iff at least one segment is left
+//	pat[i] is "**" otherwise:             zero segments (ok[i+1][j]) or
+//	                                      swallow one and stay on "**" (ok[i][j+1])
+//	pat[i] is an ordinary segment:        matchSeg, then ok[i+1][j+1]
 func matchSegs(pat, p []string) bool {
-	for len(pat) > 0 {
-		if pat[0] == "**" {
-			// Collapse runs of "**" and try every possible split point.
-			for len(pat) > 1 && pat[1] == "**" {
-				pat = pat[1:]
-			}
-			if len(pat) == 1 {
-				return len(p) > 0 // "x/**" needs at least one more segment
-			}
-			for i := 0; i <= len(p); i++ {
-				if matchSegs(pat[1:], p[i:]) {
-					return true
-				}
-			}
-			return false
-		}
-		if len(p) == 0 || !matchSeg(pat[0], p[0]) {
-			return false
-		}
-		pat, p = pat[1:], p[1:]
+	P, S := len(pat), len(p)
+	prunes := make([][]rune, S)
+	for j, seg := range p {
+		prunes[j] = []rune(seg)
 	}
-	return len(p) == 0
+	ok := make([][]bool, P+1)
+	for i := range ok {
+		ok[i] = make([]bool, S+1)
+	}
+	ok[P][S] = true
+	onlyStars := true // true while every pattern segment from i on is "**"
+	for i := P - 1; i >= 0; i-- {
+		if pat[i] != "**" {
+			onlyStars = false
+		}
+		var pr []rune
+		if pat[i] != "**" {
+			pr = []rune(pat[i])
+		}
+		for j := S; j >= 0; j-- {
+			switch {
+			case pat[i] == "**" && onlyStars:
+				ok[i][j] = j < S
+			case pat[i] == "**":
+				ok[i][j] = ok[i+1][j] || (j < S && ok[i][j+1])
+			default:
+				ok[i][j] = j < S && matchSeg(pr, prunes[j]) && ok[i+1][j+1]
+			}
+		}
+	}
+	return ok[0][0]
 }
 
 // matchSeg matches one segment with "*" and "?" using the classic
 // two-pointer backtracking algorithm (linear space, no recursion).
-func matchSeg(pat, s string) bool {
-	pr, sr := []rune(pat), []rune(s)
+func matchSeg(pr, sr []rune) bool {
 	pi, si := 0, 0
 	star, mark := -1, 0
 	for si < len(sr) {
@@ -83,18 +105,42 @@ func matchSeg(pat, s string) bool {
 	return pi == len(pr)
 }
 
+// MaxPatternSegments caps the "/"-separated segments of one pattern.
+const MaxPatternSegments = 64
+
+// short returns at most 40 runes of s with control characters removed, for
+// error messages: a hostile file must not be able to inject terminal escapes
+// or flood a log through an error.
+func short(s string) string {
+	r := []rune(strings.Map(func(r rune) rune {
+		if unicode.IsControl(r) {
+			return -1
+		}
+		return r
+	}, s))
+	if len(r) > 40 {
+		return string(r[:40]) + "..."
+	}
+	return string(r)
+}
+
 // ValidatePattern rejects patterns that could never be meaningful: empty,
-// absolute, or containing empty / ".." segments.
+// absolute, with empty / ".." segments, or with more than MaxPatternSegments
+// segments.
 func ValidatePattern(pattern string) error {
 	if pattern == "" {
 		return fmt.Errorf("empty pattern")
 	}
 	if pattern[0] == '/' {
-		return fmt.Errorf("pattern %q: leading slash", pattern)
+		return fmt.Errorf("pattern %q: leading slash", short(pattern))
 	}
-	for _, seg := range strings.Split(pattern, "/") {
+	segs := strings.Split(pattern, "/")
+	if len(segs) > MaxPatternSegments {
+		return fmt.Errorf("pattern %q: more than %d segments", short(pattern), MaxPatternSegments)
+	}
+	for _, seg := range segs {
 		if seg == "" || seg == ".." {
-			return fmt.Errorf("pattern %q: empty or %q segment", pattern, "..")
+			return fmt.Errorf("pattern %q: empty or %q segment", short(pattern), "..")
 		}
 	}
 	return nil

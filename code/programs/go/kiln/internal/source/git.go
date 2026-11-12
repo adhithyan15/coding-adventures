@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
 )
 
 // Git is a Source backed by a Git work tree.  It shells out to the `git`
@@ -31,15 +31,55 @@ func NewGit(dir string) *Git { return &Git{dir: dir} }
 
 // run executes git in the work tree and returns stdout.
 func (g *Git) run(args ...string) ([]byte, error) {
-	full := append([]string{"-C", g.dir}, args...)
+	full := append(gitHardening(), "-C", g.dir)
+	full = append(full, args...)
 	cmd := exec.Command("git", full...)
-	cmd.Env = append(os.Environ(), "GIT_OPTIONAL_LOCKS=0", "LC_ALL=C")
+	cmd.Env = gitEnv(os.Environ())
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	if err := cmd.Run(); err != nil {
 		return nil, fmt.Errorf("git %s: %w: %s", args[0], err, strings.TrimSpace(errb.String()))
 	}
 	return out.Bytes(), nil
+}
+
+// gitHardening are options placed before every subcommand.  None is needed
+// for correctness; each closes a way a repository's own configuration could
+// run code or reach out:
+//
+//	--no-pager                 never spawn a pager
+//	core.fsmonitor=false       a repo config could name a program to run
+//	core.hooksPath=<null>      no hooks, whatever the repo says
+//	protocol.file.allow=never  no local-file transport from submodule tricks
+//
+// The null device is os.DevNull ("/dev/null" or "NUL").  `--end-of-options` is
+// deliberately not used: older gits lack it, and the two places a caller's
+// text reaches git are already safe (a leading "-" is rejected, and the text
+// is first resolved to a hex object id, then `--` precedes pathspecs).
+func gitHardening() []string {
+	return []string{"--no-pager",
+		"-c", "core.fsmonitor=false",
+		"-c", "core.hooksPath=" + os.DevNull,
+		"-c", "protocol.file.allow=never"}
+}
+
+// gitEnv builds git's environment: the caller's, minus credentials
+// (ScrubSecrets), minus EVERY GIT_* variable, plus a few fixed ones.
+//
+// Why drop all GIT_*: GIT_DIR, GIT_WORK_TREE, GIT_INDEX_FILE, GIT_EXEC_PATH,
+// GIT_SSH_COMMAND, GIT_CONFIG_* and friends can each redirect git to other
+// files or make it run another program.  The only selector Kiln wants is the
+// explicit `-C <dir>`, so no GIT_* variable is whitelisted.
+func gitEnv(environ []string) []string {
+	out := []string{}
+	for _, e := range envscrub.Scrub(environ) {
+		name := strings.ToUpper(envscrub.EntryName(e))
+		if strings.HasPrefix(name, "GIT_") || name == "LC_ALL" {
+			continue
+		}
+		out = append(out, e)
+	}
+	return append(out, "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C")
 }
 
 // splitNUL splits NUL-terminated output into its records.
@@ -117,7 +157,7 @@ func (g *Git) Changed(since string) ([]string, bool, error) {
 	}
 	paths := splitNUL(out)
 	for _, p := range paths {
-		if err := key.ValidatePath(p); err != nil {
+		if err := checkSourcePath(p); err != nil {
 			return nil, false, err
 		}
 	}
@@ -125,33 +165,40 @@ func (g *Git) Changed(since string) ([]string, bool, error) {
 	return paths, true, nil
 }
 
-// openRegular opens dir/path if and only if it is a regular file reached
-// without crossing a symbolic link out of dir.  path must be a valid Kiln
-// path, so it cannot contain ".." or start with "/".
+// openRegular opens dir/path if and only if it is a regular file inside dir.
+// It uses os.Root, so the kernel-level lookup refuses ".." and any symlink
+// that leaves dir atomically (no check-then-open window), then insists the
+// leaf is not itself a symlink and that the opened HANDLE is a regular file
+// (so a FIFO or device swapped in later is refused).
 func openRegular(dir, path string) (io.ReadCloser, error) {
-	if err := key.ValidatePath(path); err != nil {
+	root, err := os.OpenRoot(dir)
+	if err != nil {
 		return nil, err
 	}
-	full := filepath.Join(dir, filepath.FromSlash(path))
-	fi, err := os.Lstat(full)
+	defer root.Close()
+	return openRegularIn(root, path)
+}
+
+func openRegularIn(root *os.Root, path string) (*os.File, error) {
+	if err := checkSourcePath(path); err != nil {
+		return nil, err
+	}
+	name := filepath.FromSlash(path)
+	fi, err := root.Lstat(name)
 	if err != nil {
 		return nil, err
 	}
 	if !fi.Mode().IsRegular() {
-		return nil, fmt.Errorf("%s: not a regular file (symlinks are not followed)", path)
+		return nil, fmt.Errorf("%s: not a regular file (symlinks are not followed)", short(path))
 	}
-	// A directory above the file may itself be a symlink that leaves dir.
-	realRoot, err := filepath.EvalSymlinks(dir)
+	f, err := root.Open(name)
 	if err != nil {
 		return nil, err
 	}
-	realParent, err := filepath.EvalSymlinks(filepath.Dir(full))
-	if err != nil {
-		return nil, err
+	hi, err := f.Stat()
+	if err != nil || !hi.Mode().IsRegular() {
+		f.Close()
+		return nil, fmt.Errorf("%s: not a regular file", short(path))
 	}
-	rel, err := filepath.Rel(realRoot, realParent)
-	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
-		return nil, fmt.Errorf("%s: resolves outside the source root", path)
-	}
-	return os.Open(full)
+	return f, nil
 }

@@ -1,10 +1,10 @@
 package host
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"runtime"
 	"strings"
 )
@@ -14,6 +14,7 @@ import (
 type GitHub struct {
 	getenv Getenv
 	out    io.Writer
+	scratch
 }
 
 // NewGitHub returns a GitHub Actions host writing workflow commands to out.
@@ -36,34 +37,84 @@ func (g *GitHub) Identity() Identity {
 	}
 }
 
-// ImageID is "github/<os>/<arch>/<ImageOS>/<ImageVersion>".  GitHub sets
-// ImageOS and ImageVersion on hosted runners only; on a self-hosted runner a
-// missing value becomes "unknown" so the fingerprint is stable but plainly
-// weak, never an accidental empty match.
-func (g *GitHub) ImageID() string {
-	or := func(v string) string {
-		if v == "" {
-			return "unknown"
-		}
-		return v
+// safeComponent keeps [A-Za-z0-9._-]; anything else becomes "_", and empty
+// becomes "unknown", so the fingerprint is stable, printable and never
+// accidentally empty.
+func safeComponent(s string) string {
+	if s == "" {
+		return "unknown"
 	}
-	return strings.Join([]string{"github", runtime.GOOS, runtime.GOARCH,
-		or(g.getenv("ImageOS")), or(g.getenv("ImageVersion"))}, "/")
+	return strings.Map(func(r rune) rune {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '.', r == '_', r == '-':
+			return r
+		}
+		return '_'
+	}, s)
 }
 
-// DefaultBranch is KILN_DEFAULT_BRANCH, or "main" when unset or empty.
-func (g *GitHub) DefaultBranch() string {
-	if b := g.getenv("KILN_DEFAULT_BRANCH"); b != "" {
-		return b
+// ImageID is "github/<os>/<arch>/<ImageOS>/<ImageVersion>".  GitHub sets
+// ImageOS and ImageVersion on hosted runners only; on a self-hosted runner a
+// missing value becomes "unknown" (see safeComponent).
+func (g *GitHub) ImageID() string {
+	return strings.Join([]string{"github", safeComponent(runtime.GOOS), safeComponent(runtime.GOARCH),
+		safeComponent(g.getenv("ImageOS")), safeComponent(g.getenv("ImageVersion"))}, "/")
+}
+
+// maxEventBytes caps how much of GITHUB_EVENT_PATH is read.
+const maxEventBytes = 8 << 20
+
+// eventDefaultBranch reads repository.default_branch from the JSON file GitHub
+// writes at GITHUB_EVENT_PATH.  The file is opened first and the HANDLE is
+// checked (regular file, bounded size), so there is no check-then-open race.
+// Any problem returns an error and the caller fails closed.
+func (g *GitHub) eventDefaultBranch() (string, error) {
+	path := g.getenv("GITHUB_EVENT_PATH")
+	if path == "" {
+		return "", fmt.Errorf("GITHUB_EVENT_PATH is not set")
 	}
-	return "main"
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	fi, err := f.Stat()
+	if err != nil {
+		return "", err
+	}
+	if !fi.Mode().IsRegular() {
+		return "", fmt.Errorf("event file is not a regular file")
+	}
+	data, err := io.ReadAll(io.LimitReader(f, maxEventBytes+1))
+	if err != nil {
+		return "", err
+	}
+	if len(data) > maxEventBytes {
+		return "", fmt.Errorf("event file exceeds %d bytes", maxEventBytes)
+	}
+	var ev struct {
+		Repository struct {
+			DefaultBranch string `json:"default_branch"`
+		} `json:"repository"`
+	}
+	if err := json.Unmarshal(data, &ev); err != nil {
+		return "", err
+	}
+	if ev.Repository.DefaultBranch == "" {
+		return "", fmt.Errorf("event file has no repository.default_branch")
+	}
+	return ev.Repository.DefaultBranch, nil
 }
 
 // Trusted implements KILN00 section 10.2 exactly.  A run is trusted only if
-// ALL of these hold; every missing or unexpected value means NOT trusted
-// (fail closed):
+// ALL of these hold; every missing, unreadable or unexpected value means NOT
+// trusted (fail closed):
 //
 //	GITHUB_ACTIONS  == "true"
+//	default branch  = repository.default_branch from the GitHub-generated
+//	                  JSON at GITHUB_EVENT_PATH.  KILN_DEFAULT_BRANCH is NOT a
+//	                  source of truth: if set it may only NARROW, i.e. it must
+//	                  equal the event file's value or the run is untrusted.
 //	GITHUB_REF      == "refs/heads/" + default branch   (so merge-queue refs
 //	                   "refs/heads/gh-readonly-queue/..." and "refs/pull/N/merge"
 //	                   can never match)
@@ -79,11 +130,25 @@ func (g *GitHub) DefaultBranch() string {
 //	schedule           trusted          no
 //	workflow_dispatch  trusted          no
 //	pull_request(_target), merge_group, unknown, empty: no
+//
+// LIMIT OF THIS CHECK.  Trusted() reads the process environment and a file
+// path from it.  A step that ran earlier in the SAME JOB can forge both
+// (through $GITHUB_ENV, or by rewriting the file), so the answer is only
+// meaningful in a job that has executed no untrusted code before Kiln starts
+// (KILN00 section 9.6: untrusted actions run in their own job, with secrets
+// scrubbed; section 10.2: only such runs write the shared ledger).
 func (g *GitHub) Trusted() bool {
 	if g.getenv("GITHUB_ACTIONS") != "true" {
 		return false
 	}
-	if g.getenv("GITHUB_REF") != "refs/heads/"+g.DefaultBranch() {
+	def, err := g.eventDefaultBranch()
+	if err != nil {
+		return false
+	}
+	if narrow := g.getenv("KILN_DEFAULT_BRANCH"); narrow != "" && narrow != def {
+		return false
+	}
+	if g.getenv("GITHUB_REF") != "refs/heads/"+def {
 		return false
 	}
 	switch g.getenv("GITHUB_EVENT_NAME") {
@@ -93,16 +158,21 @@ func (g *GitHub) Trusted() bool {
 	return false
 }
 
+// WritesLocalLedger is false: a CI runner has no local ledger of its own;
+// its ledger is restored and saved by the CI cache (KILN00 section 13).
+func (g *GitHub) WritesLocalLedger() bool { return false }
+
 // Shard reads KILN_SHARD_INDEX and KILN_SHARD_COUNT (0/1 when absent or bad).
 func (g *GitHub) Shard() (int, int) { return shardFrom(g.getenv) }
 
-// WorkDir is RUNNER_TEMP (else the OS temp dir) plus "kiln".
-func (g *GitHub) WorkDir() string {
+// WorkDir creates (once) a 0700 directory under RUNNER_TEMP, else the OS temp
+// dir.
+func (g *GitHub) WorkDir() (string, error) {
 	base := g.getenv("RUNNER_TEMP")
 	if base == "" {
 		base = os.TempDir()
 	}
-	return filepath.Join(base, "kiln")
+	return g.get(base)
 }
 
 // escapeData escapes the message part of a workflow command, per GitHub's
@@ -118,27 +188,27 @@ func escapeProperty(s string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(escapeData(s), ":", "%3A"), ",", "%2C")
 }
 
-// plainLine makes arbitrary text safe to print as an ordinary log line: a
-// line that begins with "::" (or the legacy "##[") would be run as a workflow
-// command, so such lines get a visible prefix.
-func plainLine(l string) string {
-	t := strings.TrimLeft(l, " \t")
-	if strings.HasPrefix(t, "::") || strings.HasPrefix(t, "##[") {
-		return "kiln: " + l
-	}
-	return l
+// cleanKeepNL is clean() that keeps CR and LF, which a workflow command
+// then escapes to %0D / %0A instead of dropping them.
+func cleanKeepNL(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r == '\r' || r == '\n' {
+			return r
+		}
+		return cleanRune(r)
+	}, s)
 }
 
 // Report prints the event as a workflow command.  Untrusted text can never
-// start a command of its own: "%", CR and LF are escaped inside commands, and
-// plain lines are defused by plainLine.
+// start a command of its own: control characters are stripped, "%", CR and
+// LF are escaped inside commands, and plain lines are defused by plainLine.
 func (g *GitHub) Report(e Event) {
 	cmd := func(name string) {
 		props := ""
 		if e.Title != "" {
-			props = " title=" + escapeProperty(e.Title)
+			props = " title=" + escapeProperty(cleanKeepNL(e.Title))
 		}
-		fmt.Fprintf(g.out, "::%s%s::%s\n", name, props, escapeData(e.Message))
+		fmt.Fprintf(g.out, "::%s%s::%s\n", name, props, escapeData(cleanKeepNL(e.Message)))
 	}
 	switch e.Level {
 	case Error:
@@ -148,11 +218,11 @@ func (g *GitHub) Report(e Event) {
 	case Notice:
 		cmd("notice")
 	case GroupStart:
-		fmt.Fprintf(g.out, "::group::%s\n", escapeData(e.Message))
+		fmt.Fprintf(g.out, "::group::%s\n", escapeData(cleanKeepNL(e.Message)))
 	case GroupEnd:
 		fmt.Fprintln(g.out, "::endgroup::")
 	default:
-		for _, l := range strings.Split(strings.ReplaceAll(strings.ReplaceAll(e.Message, "\r\n", "\n"), "\r", "\n"), "\n") {
+		for _, l := range lines(e.Message) {
 			fmt.Fprintln(g.out, plainLine(l))
 		}
 	}

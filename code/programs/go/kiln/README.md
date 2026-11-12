@@ -22,10 +22,23 @@ implementation, built up one spec at a time.
   derives its `Revision` from file contents. Both share one glob language
   (`*`, `?`, whole-segment `**`) and return key-ready paths.
 - `internal/host` - the **`Host`** interface (identity, host fingerprint,
-  trust, shard, work dir, reporting). `GitHub` implements the KILN00 section
-  10.2 trust rule exactly (default-branch ref AND push/schedule/dispatch, fail
-  closed), `Local` is the developer's machine, `Detect` picks one, and
-  `ScrubSecrets` drops credentials from a child environment (section 9.6).
+  trust, shard, work dir, reporting). `Trusted()` means "may write the
+  SHARED ledger" (KILN00 section 10.2). `GitHub` implements it exactly: the
+  ref must be `refs/heads/<default branch>`, where the default branch comes
+  from the GitHub-generated event JSON (`GITHUB_EVENT_PATH`,
+  `repository.default_branch`) and `KILN_DEFAULT_BRANCH` can only narrow it,
+  AND the event must be `push`, `schedule` or `workflow_dispatch`; everything
+  else, including any error, is untrusted. That answer is only meaningful in a
+  job that has run no untrusted code. `Local` (a developer machine) is never
+  trusted but `WritesLocalLedger()`; `Untrusted` is what `Detect` returns when
+  any CI indicator (`CI`, `GITHUB_*`, `RUNNER_*`, ...) is present but the
+  environment is not exactly GitHub Actions, so a CI run is never mistaken for
+  a laptop. Reports strip control characters and defang `::` / `##[` so
+  untrusted text cannot inject workflow commands.
+- `internal/envscrub` - `ScrubSecrets`: drops credentials (tokens, keys,
+  passwords, `ACTIONS_*`, `INPUT_*`, `GITHUB_ENV`/`PATH`/`OUTPUT`/...) from a
+  child environment (section 9.6 item 3). Git is always run with it, with all
+  `GIT_*` removed and repo-configured hooks/fsmonitor disabled.
 - A tiny CLI.
 
 `Ledger` and `Tools` (the other two section 13 interfaces) are not built yet.
@@ -33,7 +46,8 @@ implementation, built up one spec at a time.
 ### `.kilnignore`
 
 One glob per line, `#` comments and blank lines skipped, matched against the
-whole repo-relative path (no negation, no basename shortcut, no trailing `/`).
+whole repo-relative path (at most 64 KiB, 1000 patterns, 64 segments each; the
+file is never followed through a symlink; no negation, no basename shortcut, no trailing `/`).
 `*` stays inside a segment, `**` as a whole segment spans directories. A path
 is ignored if it or any directory above it matches, so `build` ignores the
 whole tree and `**/*.log` ignores logs at any depth. `.git` is always skipped.
@@ -70,3 +84,7 @@ in KILN02 first.
 ```
 go vet ./... && go test ./... -cover
 ```
+
+Source paths are stricter than KILN02 keys: a backslash, a colon or a Windows
+reserved device name (`CON`, `NUL`, `COM1`, ...) in any path is refused on
+every platform so listings, and therefore keys, agree across operating systems.

@@ -1,10 +1,10 @@
 package source
 
 import (
-	"bufio"
 	"crypto/sha256"
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -29,7 +29,9 @@ import (
 // repo-relative path (there are no negations and no basename shortcuts: "*.log"
 // matches only top-level .log files).  A path is ignored when the path itself,
 // or any directory above it, matches a line.  Surrounding whitespace is
-// trimmed, and a ".git" directory is always skipped.
+// trimmed, and a ".git" directory is always skipped.  Limits: 64 KiB, 1000
+// patterns, 64 segments per pattern; exceeding any is an error.  The file is
+// opened without following symlinks.
 const IgnoreFile = ".kilnignore"
 
 // Folder is the plain-folder Source: it walks a directory, with no history.
@@ -42,28 +44,55 @@ type Folder struct {
 // NewFolder returns a Source for the directory dir.
 func NewFolder(dir string) *Folder { return &Folder{dir: dir} }
 
+// Limits on .kilnignore, so a hostile or accidental file cannot make planning
+// slow or memory-hungry.
+const (
+	MaxIgnoreBytes    = 64 << 10 // 64 KiB
+	MaxIgnorePatterns = 1000
+)
+
+// loadIgnore reads .kilnignore through os.Root with the regular-file-only
+// open: a symlinked or special .kilnignore is an error, never followed.
 func (f *Folder) loadIgnore() ([]string, error) {
-	file, err := os.Open(filepath.Join(f.dir, IgnoreFile))
-	if os.IsNotExist(err) {
+	root, err := os.OpenRoot(f.dir)
+	if err != nil {
+		return nil, err
+	}
+	defer root.Close()
+	return loadIgnoreIn(root)
+}
+
+func loadIgnoreIn(root *os.Root) ([]string, error) {
+	if _, err := root.Lstat(IgnoreFile); errors.Is(err, fs.ErrNotExist) {
 		return nil, nil
 	}
+	file, err := openRegularIn(root, IgnoreFile)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
+	data, err := io.ReadAll(io.LimitReader(file, MaxIgnoreBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > MaxIgnoreBytes {
+		return nil, fmt.Errorf("%s exceeds the %d byte limit", IgnoreFile, MaxIgnoreBytes)
+	}
 	var pats []string
-	sc := bufio.NewScanner(file)
-	for n := 1; sc.Scan(); n++ {
-		line := strings.TrimSpace(sc.Text())
+	for n, raw := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(raw)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 		if err := ValidatePattern(line); err != nil {
-			return nil, fmt.Errorf("%s line %d: %w", IgnoreFile, n, err)
+			return nil, fmt.Errorf("%s line %d: %w", IgnoreFile, n+1, err)
+		}
+		if len(pats) == MaxIgnorePatterns {
+			return nil, fmt.Errorf("%s has more than %d patterns", IgnoreFile, MaxIgnorePatterns)
 		}
 		pats = append(pats, line)
 	}
-	return pats, sc.Err()
+	return pats, nil
 }
 
 // ignored reports whether path, or any directory above it, matches a pattern.
@@ -141,11 +170,18 @@ func (f *Folder) Revision() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	root, err := os.OpenRoot(f.dir)
+	if err != nil {
+		return "", err
+	}
+	defer root.Close()
 	h := sha256.New()
 	var n [8]byte
 	for _, p := range files {
-		full := filepath.Join(f.dir, filepath.FromSlash(p))
-		kind, digest, err := digestEntry(full)
+		if err := checkSourcePath(p); err != nil {
+			return "", err
+		}
+		kind, digest, err := digestEntry(root, filepath.FromSlash(p))
 		if err != nil {
 			return "", err
 		}
@@ -159,22 +195,23 @@ func (f *Folder) Revision() (string, error) {
 }
 
 // digestEntry hashes a regular file's bytes (kind 1) or a symlink's target
-// text (kind 2), mirroring KILN02's file kinds.
-func digestEntry(full string) (byte, []byte, error) {
-	fi, err := os.Lstat(full)
+// text (kind 2), mirroring KILN02's file kinds.  Everything goes through
+// os.Root, so nothing outside the folder can be read.
+func digestEntry(root *os.Root, name string) (byte, []byte, error) {
+	fi, err := root.Lstat(name)
 	if err != nil {
 		return 0, nil, err
 	}
 	h := sha256.New()
 	if fi.Mode()&fs.ModeSymlink != 0 {
-		target, err := os.Readlink(full)
+		target, err := root.Readlink(name)
 		if err != nil {
 			return 0, nil, err
 		}
 		h.Write([]byte(filepath.ToSlash(target)))
 		return 2, h.Sum(nil), nil
 	}
-	file, err := os.Open(full)
+	file, err := openRegularIn(root, filepath.ToSlash(name))
 	if err != nil {
 		return 0, nil, err
 	}

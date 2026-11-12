@@ -7,7 +7,7 @@
       "category": "fs",
       "action": "read",
       "target": "*",
-      "justification": "`kiln verify-vectors <path>` reads the golden-vector file named on the command line."
+      "justification": "`kiln verify-vectors <path>` reads the vector file named on the command line; the Source adapters read the source tree (through os.Root, never following symlinks out of it) and, for GitHub trust, the GitHub-generated event JSON at GITHUB_EVENT_PATH (size-capped)."
     },
     {
       "category": "stdout",
@@ -25,7 +25,7 @@
       "category": "env",
       "action": "read",
       "target": "GITHUB_*, RUNNER_TEMP, ImageOS, ImageVersion, KILN_*",
-      "justification": "The GitHub Host reads its identity, trust inputs and shard from the runner environment; Local passes the environment through to git."
+      "justification": "The GitHub Host reads its identity, trust inputs and shard from the runner environment. The whole environment is forwarded to `git` only after credentials and every GIT_* variable are scrubbed."
     },
     {
       "category": "fs",

@@ -8,11 +8,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
 	"sync"
+	"unicode"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
 )
 
 // Identity is who is running: the commit, branch, triggering event and run.
@@ -38,9 +40,9 @@ const (
 	GroupEnd                // end the current group
 )
 
-// Event is something worth telling the human.  Both fields may contain
-// arbitrary, even hostile, text (file names, tool output); adapters must make
-// it harmless.
+// Event is something worth telling the human.  Both text fields may contain
+// arbitrary, even hostile, text (file names, tool output); every Host makes
+// them harmless before printing.
 type Event struct {
 	Level   Level
 	Title   string // optional heading for annotations
@@ -51,15 +53,20 @@ type Event struct {
 type Host interface {
 	Identity() Identity
 	// ImageID is OS version plus runner image id: the host fingerprint of
-	// KILN00 section 8 item 3.
+	// KILN00 section 8 item 3.  Only [A-Za-z0-9._-/] appear in it.
 	ImageID() string
-	// Trusted says whether this run may write the shared ledger (section
-	// 10.2).  Implementations fail closed.
+	// Trusted says whether this run may write the SHARED ledger (section
+	// 10.2).  Implementations fail closed.  Only a trusted GitHub run is ever
+	// trusted; a developer's machine is NOT.
 	Trusted() bool
+	// WritesLocalLedger says whether the run may write the local ledger
+	// directory on this machine (never uploaded as the shared ledger).
+	WritesLocalLedger() bool
 	// Shard is this runner's slice: index in [0, count).
 	Shard() (index, count int)
-	// WorkDir is where work roots go.
-	WorkDir() string
+	// WorkDir returns a fresh private directory for work roots.  There is no
+	// predictable fallback: failure is an error.
+	WorkDir() (string, error)
 	Report(Event)
 }
 
@@ -67,11 +74,41 @@ type Host interface {
 // never touch the real environment.
 type Getenv func(string) string
 
-// Detect returns the GitHub Actions host when GITHUB_ACTIONS is exactly
-// "true", otherwise the Local host.
-func Detect(getenv Getenv) Host {
+// ciNames are well-known CI indicators beyond the GITHUB_/RUNNER_ families.
+var ciNames = []string{"CI", "TF_BUILD", "JENKINS_URL", "BUILDKITE", "GITLAB_CI", "CIRCLECI", "TRAVIS", "TEAMCITY_VERSION"}
+
+// inCI reports whether the environment shows ANY sign of a CI system.
+func inCI(getenv Getenv, environ []string) bool {
+	for _, n := range ciNames {
+		if getenv(n) != "" {
+			return true
+		}
+	}
+	for _, e := range environ {
+		n := strings.ToUpper(envscrub.EntryName(e))
+		if strings.HasPrefix(n, "GITHUB_") || strings.HasPrefix(n, "RUNNER_") {
+			return true
+		}
+	}
+	return false
+}
+
+// Detect chooses the Host.  environ is the full "NAME=value" environment
+// (os.Environ()) so GITHUB_* and RUNNER_* names can be enumerated.
+//
+//	GITHUB_ACTIONS is exactly "true"        -> GitHub
+//	any other CI indicator is present       -> Untrusted (fail closed)
+//	a clean environment, no CI indicators   -> Local
+//
+// The middle row matters: a CI system Kiln does not know, or a GitHub runner
+// whose GITHUB_ACTIONS was tampered with, must never be mistaken for a
+// developer's laptop.
+func Detect(getenv Getenv, environ []string) Host {
 	if getenv("GITHUB_ACTIONS") == "true" {
 		return NewGitHub(getenv, os.Stdout)
+	}
+	if inCI(getenv, environ) || strings.EqualFold(getenv("GITHUB_ACTIONS"), "true") {
+		return NewUntrusted(os.Stdout)
 	}
 	return NewLocal(os.Stdout)
 }
@@ -88,21 +125,37 @@ func shardFrom(getenv Getenv) (int, int) {
 	return idx, cnt
 }
 
-// Local is a developer's own machine.
-//
-// Trusted is true because a local run writes only the LOCAL ledger directory;
-// nothing a laptop records is ever uploaded as the shared ledger (that
-// happens only from a trusted GitHub run).
-type Local struct {
-	out io.Writer
-
+// scratch lazily creates one private (mode 0700) directory.
+type scratch struct {
+	mkdirTemp func(dir, pattern string) (string, error)
 	once      sync.Once
 	dir       string
-	mkdirTemp func(dir, pattern string) (string, error)
+	err       error
+}
+
+func (s *scratch) get(base string) (string, error) {
+	s.once.Do(func() {
+		mk := s.mkdirTemp
+		if mk == nil {
+			mk = os.MkdirTemp
+		}
+		s.dir, s.err = mk(base, "kiln-")
+	})
+	return s.dir, s.err
+}
+
+// Local is a developer's own machine.
+//
+// Trusted is FALSE: "trusted" means "may write the SHARED ledger", and
+// nothing a laptop records may reach it.  Local runs use the local ledger
+// directory only, which WritesLocalLedger reports.
+type Local struct {
+	out io.Writer
+	scratch
 }
 
 // NewLocal returns a Local host printing to out.
-func NewLocal(out io.Writer) *Local { return &Local{out: out, mkdirTemp: os.MkdirTemp} }
+func NewLocal(out io.Writer) *Local { return &Local{out: out} }
 
 // Identity reports only the OS and architecture.
 func (l *Local) Identity() Identity { return Identity{OS: runtime.GOOS, Arch: runtime.GOARCH} }
@@ -110,87 +163,109 @@ func (l *Local) Identity() Identity { return Identity{OS: runtime.GOOS, Arch: ru
 // ImageID is "local/<os>/<arch>".
 func (l *Local) ImageID() string { return "local/" + runtime.GOOS + "/" + runtime.GOARCH }
 
-// Trusted is always true; see the type comment.
-func (l *Local) Trusted() bool { return true }
+// Trusted is always false; see the type comment.
+func (l *Local) Trusted() bool { return false }
+
+// WritesLocalLedger is true: the local ledger is the point of a local run.
+func (l *Local) WritesLocalLedger() bool { return true }
 
 // Shard is always the whole job.
 func (l *Local) Shard() (int, int) { return 0, 1 }
 
-// WorkDir creates (once) a private directory under the OS temp dir.  If
-// creation fails it falls back to a fixed name under the temp dir.
-func (l *Local) WorkDir() string {
-	l.once.Do(func() {
-		d, err := l.mkdirTemp(os.TempDir(), "kiln-")
-		if err != nil {
-			d = filepath.Join(os.TempDir(), "kiln")
-		}
-		l.dir = d
-	})
-	return l.dir
+// WorkDir creates (once) a 0700 directory under the OS temp dir.
+func (l *Local) WorkDir() (string, error) { return l.get(os.TempDir()) }
+
+// Report prints plainly (see reportPlain).
+func (l *Local) Report(e Event) { reportPlain(l.out, e) }
+
+// Untrusted is the fail-closed host for any CI Kiln does not recognise (or a
+// tampered GitHub environment).  It can neither write the shared ledger nor
+// the local one.
+type Untrusted struct {
+	out io.Writer
+	scratch
 }
 
-// Report prints plainly: no markup, one line per message line.
-func (l *Local) Report(e Event) {
+// NewUntrusted returns an Untrusted host printing to out.
+func NewUntrusted(out io.Writer) *Untrusted { return &Untrusted{out: out} }
+
+// Identity reports only the OS and architecture.
+func (u *Untrusted) Identity() Identity { return Identity{OS: runtime.GOOS, Arch: runtime.GOARCH} }
+
+// ImageID is "untrusted/<os>/<arch>".
+func (u *Untrusted) ImageID() string { return "untrusted/" + runtime.GOOS + "/" + runtime.GOARCH }
+
+// Trusted is always false.
+func (u *Untrusted) Trusted() bool { return false }
+
+// WritesLocalLedger is always false.
+func (u *Untrusted) WritesLocalLedger() bool { return false }
+
+// Shard is always the whole job.
+func (u *Untrusted) Shard() (int, int) { return 0, 1 }
+
+// WorkDir creates (once) a 0700 directory under the OS temp dir.
+func (u *Untrusted) WorkDir() (string, error) { return u.get(os.TempDir()) }
+
+// Report prints plainly (see reportPlain).
+func (u *Untrusted) Report(e Event) { reportPlain(u.out, e) }
+
+// ScrubSecrets removes credentials from a child environment; see the
+// envscrub package for the exact list.
+func ScrubSecrets(env []string) []string { return envscrub.Scrub(env) }
+
+// clean removes every C0 and C1 control character (and the Unicode line and
+// paragraph separators) except TAB, so no escape sequence, backspace, bell or
+// stray line break can survive into a terminal or a log parser.
+func clean(s string) string { return strings.Map(cleanRune, s) }
+
+func cleanRune(r rune) rune {
+	if r == '\t' {
+		return r
+	}
+	if unicode.IsControl(r) || r == 0x2028 || r == 0x2029 {
+		return -1
+	}
+	return r
+}
+
+// lines splits text into lines (CRLF, CR and LF all separate) and cleans
+// each; empty input yields one empty line.
+func lines(s string) []string {
+	s = strings.ReplaceAll(strings.ReplaceAll(s, "\r\n", "\n"), "\r", "\n")
+	parts := strings.Split(s, "\n")
+	for i, p := range parts {
+		parts[i] = clean(p)
+	}
+	return parts
+}
+
+// plainLine defuses a line destined for an ordinary log.  A runner executes a
+// line as a workflow command if it starts (after optional whitespace) with
+// "::" or "##[".  Rather than reason about every runner's whitespace rules,
+// ANY line containing either sequence anywhere gets a visible prefix.
+func plainLine(l string) string {
+	if strings.Contains(l, "::") || strings.Contains(l, "##[") {
+		return "kiln: " + l
+	}
+	return l
+}
+
+// reportPlain is the shared plain-text Report.
+func reportPlain(out io.Writer, e Event) {
 	switch e.Level {
 	case GroupStart:
-		fmt.Fprintf(l.out, "== %s ==\n", e.Message)
+		for _, l := range lines(e.Message) {
+			fmt.Fprintln(out, plainLine("== "+l+" =="))
+		}
 	case GroupEnd:
 	default:
 		prefix := map[Level]string{Warning: "warning: ", Error: "error: ", Notice: "note: "}[e.Level]
 		if e.Title != "" {
-			prefix += e.Title + ": "
+			prefix += strings.Join(lines(e.Title), " ") + ": "
 		}
-		fmt.Fprintf(l.out, "%s%s\n", prefix, e.Message)
-	}
-}
-
-// secretSuffixes and secretNames document what ScrubSecrets removes.
-var (
-	secretNames    = []string{"GITHUB_TOKEN", "ACTIONS_RUNTIME_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_TOKEN", "ACTIONS_ID_TOKEN_REQUEST_URL"}
-	secretSuffixes = []string{"_TOKEN", "_SECRET", "_PASSWORD"}
-	secretPrefixes = []string{"INPUT_"}
-)
-
-// ScrubSecrets returns env ("NAME=value" entries) without anything that looks
-// like a credential (KILN00 section 9.6 item 3), preserving order.  Removed:
-//
-//	GITHUB_TOKEN, ACTIONS_RUNTIME_TOKEN,
-//	ACTIONS_ID_TOKEN_REQUEST_TOKEN, ACTIONS_ID_TOKEN_REQUEST_URL,
-//	any name ending in _TOKEN, _SECRET or _PASSWORD,
-//	any name starting with INPUT_ (action inputs may carry secrets).
-//
-// Names compare case-insensitively because Windows environment names are.
-// Over-removal only costs a child process a variable it should not have had.
-func ScrubSecrets(env []string) []string {
-	out := make([]string, 0, len(env))
-	for _, e := range env {
-		name := e
-		// Start at 1 so Windows' "=C:=C:\dir" pseudo-entries keep their name.
-		if i := strings.Index(e[min(1, len(e)):], "="); i >= 0 {
-			name = e[:i+min(1, len(e))]
-		}
-		if !isSecretName(strings.ToUpper(name)) {
-			out = append(out, e)
+		for _, l := range lines(e.Message) {
+			fmt.Fprintln(out, plainLine(prefix+l))
 		}
 	}
-	return out
-}
-
-func isSecretName(n string) bool {
-	for _, s := range secretNames {
-		if n == s {
-			return true
-		}
-	}
-	for _, s := range secretSuffixes {
-		if strings.HasSuffix(n, s) {
-			return true
-		}
-	}
-	for _, s := range secretPrefixes {
-		if strings.HasPrefix(n, s) {
-			return true
-		}
-	}
-	return false
 }

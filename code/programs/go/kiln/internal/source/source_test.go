@@ -6,8 +6,10 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestMatch(t *testing.T) {
@@ -344,15 +346,131 @@ func TestFolderMissingDir(t *testing.T) {
 	}
 }
 
-func TestFolderUnreadableIgnoreIsDir(t *testing.T) {
-	// A directory named .kilnignore cannot be read as a file: error on all
-	// platforms (reading a directory fails), without chmod tricks.
+func TestIgnoreFileMustBeRegular(t *testing.T) {
 	dir := t.TempDir()
 	if err := os.Mkdir(filepath.Join(dir, IgnoreFile), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := NewFolder(dir).Files("", nil); err == nil {
-		t.Skip("platform allows reading a directory as a file")
+		t.Fatal("directory accepted as .kilnignore")
+	}
+}
+
+func TestIgnoreFileSymlinkRefused(t *testing.T) {
+	dir, outside := t.TempDir(), t.TempDir()
+	writeTree(t, outside, map[string]string{"ign": "*\n"})
+	if err := os.Symlink(filepath.Join(outside, "ign"), filepath.Join(dir, IgnoreFile)); err != nil {
+		t.Skipf("cannot create symlinks here: %v", err)
+	}
+	if _, err := NewFolder(dir).Files("", nil); err == nil {
+		t.Fatal("symlinked .kilnignore followed")
+	}
+}
+
+func TestIgnoreLimits(t *testing.T) {
+	cases := map[string]string{
+		"too big":        strings.Repeat("# padding padding\n", 5000),
+		"too many":       strings.Repeat("x\n", MaxIgnorePatterns+1),
+		"too deep":       strings.Repeat("a/", MaxPatternSegments) + "a\n",
+		"huge one-liner": strings.Repeat("a", MaxIgnoreBytes+1),
+	}
+	for name, body := range cases {
+		dir := t.TempDir()
+		writeTree(t, dir, map[string]string{IgnoreFile: body})
+		if _, err := NewFolder(dir).Files("", nil); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
+	}
+	// Exactly at the caps is fine.
+	dir := t.TempDir()
+	writeTree(t, dir, map[string]string{IgnoreFile: strings.Repeat("x\n", MaxIgnorePatterns-1) + strings.Repeat("a/", MaxPatternSegments-1) + "a"})
+	if _, err := NewFolder(dir).Files("", nil); err != nil {
+		t.Fatalf("at the caps: %v", err)
+	}
+}
+
+func TestBadIgnoreErrorIsSanitised(t *testing.T) {
+	dir := t.TempDir()
+	writeTree(t, dir, map[string]string{IgnoreFile: "/\x1b[31m" + strings.Repeat("z", 500) + "\n"})
+	_, err := NewFolder(dir).Files("", nil)
+	if err == nil || strings.ContainsRune(err.Error(), 0x1b) || len(err.Error()) > 200 {
+		t.Fatalf("error not sanitised: %v", err)
+	}
+}
+
+func TestMatchIsNotExponential(t *testing.T) {
+	pat := strings.Repeat("**/", 30) + "x"
+	path := strings.Repeat("d/", 39) + "y"
+	start := time.Now()
+	if Match(pat, path) {
+		t.Fatal("should not match")
+	}
+	if !Match(pat, strings.Repeat("d/", 39)+"x") {
+		t.Fatal("should match")
+	}
+	if el := time.Since(start); el > 2*time.Second {
+		t.Fatalf("matching took %v", el)
+	}
+}
+
+func TestPortablePaths(t *testing.T) {
+	bad := []string{"a\\b", "a:b", "C:/x", "con", "CON.txt", "dir/nul.tar.gz", "Aux", "com1", "LPT9.x", "prn ", "x/COM5/y"}
+	for _, p := range bad {
+		if checkSourcePath(p) == nil {
+			t.Errorf("%q accepted", p)
+		}
+		if _, err := filter([]string{p}, "", nil); err == nil {
+			t.Errorf("filter accepted %q", p)
+		}
+	}
+	for _, p := range []string{"console", "com0", "com10", "lpt", "comm1", "a.con", "src/a.go", "-dash", "é"} {
+		if err := checkSourcePath(p); err != nil {
+			t.Errorf("%q rejected: %v", p, err)
+		}
+	}
+	if _, err := normRoot("a:b"); err == nil {
+		t.Fatal("root a:b accepted")
+	}
+}
+
+func TestGitEnvAndArgs(t *testing.T) {
+	in := []string{"PATH=/bin", "HOME=/h", "GIT_DIR=/evil", "git_work_tree=/evil", "GIT_SSH_COMMAND=x", "GITHUB_TOKEN=t",
+		"GIT_CONFIG_GLOBAL=/evil", "NPM_TOKEN=t", "GIT_CONFIG_NOSYSTEM=0", "LC_ALL=de"}
+	got := gitEnv(in)
+	joined := "\n" + strings.Join(got, "\n") + "\n"
+	for _, bad := range []string{"GIT_DIR=/evil", "git_work_tree", "GIT_SSH_COMMAND", "GITHUB_TOKEN", "GIT_CONFIG_GLOBAL", "NPM_TOKEN", "NOSYSTEM=0", "LC_ALL=de"} {
+		if strings.Contains(joined, bad) {
+			t.Errorf("%s survived: %v", bad, got)
+		}
+	}
+	for _, want := range []string{"PATH=/bin", "HOME=/h", "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C"} {
+		if !strings.Contains(joined, "\n"+want+"\n") {
+			t.Errorf("missing %s", want)
+		}
+	}
+	h := strings.Join(gitHardening(), " ")
+	for _, want := range []string{"--no-pager", "core.fsmonitor=false", "core.hooksPath=" + os.DevNull, "protocol.file.allow=never"} {
+		if !strings.Contains(h, want) {
+			t.Errorf("hardening lacks %s", want)
+		}
+	}
+}
+
+func TestGitHostileRepoConfigDoesNotRun(t *testing.T) {
+	skipIfNoGit(t)
+	if runtime.GOOS == "windows" {
+		t.Skip("uses a POSIX shell script")
+	}
+	dir := newRepo(t, map[string]string{"a.txt": "1"})
+	marker := filepath.Join(t.TempDir(), "ran")
+	hook := filepath.Join(t.TempDir(), "mon.sh")
+	os.WriteFile(hook, []byte("#!/bin/sh\ntouch '"+marker+"'\n"), 0o755)
+	gitRun(t, dir, "config", "core.fsmonitor", hook)
+	if _, err := NewGit(dir).Files("", nil); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(marker); err == nil {
+		t.Fatal("repo-configured fsmonitor ran")
 	}
 }
 
@@ -446,7 +564,12 @@ func TestGitAndFolderAgree(t *testing.T) {
 
 func TestIOErrorPaths(t *testing.T) {
 	dir := t.TempDir()
-	if _, _, err := digestEntry(filepath.Join(dir, "missing")); err == nil {
+	root, err := os.OpenRoot(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer root.Close()
+	if _, _, err := digestEntry(root, "missing"); err == nil {
 		t.Fatal("digest of a missing file succeeded")
 	}
 	writeTree(t, dir, map[string]string{"a": "x"})
