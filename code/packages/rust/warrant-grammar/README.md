@@ -260,15 +260,23 @@ an empty list literal gets its element type from its position, so `to_bytes([])`
 and `replicate([], n)` type-check. The five higher-order names `fold map count
 all any` are reserved too, and refused with W0202 "not yet implemented in this
 version" until WX-D2. In v0 all twelve stay ordinary identifiers. A v1 list
-literal has at most 4,096 elements (W0602).
+literal has at most 4,096 elements (W0602), a v1 identifier at most 128 bytes
+(W0602), and a v1 parameter or quantifier binder may not spell any reserved
+built-in (W0203).
 
 The ground evaluator meters every v1 evaluation with work, depth, a cumulative
-64 MiB data counter (each constructing node pays the `dsize` of its value) and a
+64 MiB data counter (each constructing node pays the `dsize` of its value,
+including the type, constructor and error names a value stores) and a
 65,536-element cap per sequence. A form checks the cap on the exact count, then
 reserves its data, then charges its work, and only then allocates, so
 `replicate(0u8, 2^70)` fails with W0703 having allocated nothing
 (`tests/wxd_alloc_probe.rs`). `and`, `or` and `=>` short-circuit in v1. Generated
 evidence still refuses the forms (W0701) until slice S2a.
+
+The data counter bounds each value, not the memory of a whole evaluation: a read
+of a binder deep-copies its value and charges nothing, so many reads of one
+large value can take far more memory than its charge. VER04k section 9.1 (note
+on E4) records this as an open hazard, tracked as backlog WX-RD1.
 
 ## Tests and regeneration
 

@@ -44,6 +44,29 @@ them). `CheckedWarrantModule`, `CodegenLimits` and `EvalValue` keep their shape.
   data; both caps; depth 64/65; short-circuit; two mutant oracles killed) and
   `wxd_alloc_probe` (a counting global allocator: refused requests allocate
   nothing before W0703). `wxh_front` now expects 45 v1 functions.
+- **Security review fixes** (VER04k section 9.1, E20).
+  - `dsize` counts the bytes of the names a value stores: `len(T) + len(C)` for
+    a constructor (nullary ones included) and `len(E) + len(CASE)` for an error
+    value, which also charges its names when it is built. Before,
+    `replicate(<10,000-byte constructor>, 65536)` was admitted with 2 MiB
+    charged and requested 661,727,185 bytes; it is now refused with W0703
+    after requesting 10,193. `wxd_alloc_probe` holds real allocation within 4x
+    the charge for replicate, list literals, `concat`, `Err(E.C)` and long type
+    names (it was 210x to 316x), and pins the budget boundary.
+  - A v1 identifier longer than 128 bytes (`MAX_IDENTIFIER_BYTES`) is W0602,
+    `CheckerErrorKind::IdentifierTooLong { len, limit }`, checked in a pass
+    over every identifier before any other check. v0 is unchanged.
+  - A v1 parameter or quantifier binder named like any reserved built-in is
+    W0203 (`ShadowedBinding`), as pattern binders already were; before,
+    `model exp(take: List<U8>) -> List<U8> = take(take, 0)` type-checked as
+    the built-in and evaluated to the parameter. The evaluator now reads a
+    name from the environment only when it is not applied, as the checker
+    does, in v0 too (a v0 `len(len)` with a `len: Bytes` parameter is now the
+    `Nat` the checker typed instead of the parameter).
+  - A v0 evaluation no longer computes data charges it discards.
+  - Known open hazard: reads deep-copy and charge no data, so the 64 MiB
+    counter bounds each value, not an evaluation's memory (VER04k note on E4,
+    backlog WX-RD1).
 
 ## 0.4.0 - Warrant v1: WX-H (output bounds) and WX-E (pinned external tables)
 
