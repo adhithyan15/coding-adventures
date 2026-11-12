@@ -50,14 +50,14 @@ jobs:
       - name: Validate native Go matrix foundation
         working-directory: code/packages/go/matrix
         run: |
-          go mod tidy
+          go mod tidy -diff
           go vet ./...
           go test ./...
           go build ./...
       - name: Validate native Go framework
         working-directory: code/packages/go/neural-framework
         run: |
-          go mod tidy
+          go mod tidy -diff
           test -z "$(gofmt -l .)"
           go vet ./...
           go test ./... -cover
