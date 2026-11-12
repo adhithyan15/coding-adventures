@@ -2,11 +2,29 @@ use der_asn1::Asn1Limits;
 use std::cell::RefCell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_issuer_candidate_selection::{
-    select_unique_x509_issuer_candidate_by, X509IssuerCandidateSelectionErrorKind,
+    select_unique_x509_issuer_candidate_by, select_unique_x509_issuer_candidate_with_name_policy,
+    X509IssuerCandidateSelectionErrorKind, X509NamePolicyIssuerCandidateSelectionErrorKind,
+};
+use x509_name_value_policy::{
+    X509NameValueComparisonErrorKind, X509NameValueComparisonRule, X509NameValuePolicy,
+    X509NameValuePolicyEntry,
 };
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
 const KEY_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+const COMMON_NAME: &[u64] = &[2, 5, 4, 3];
+const COMMON_NAME_OID: &[u8] = &[0x55, 0x04, 0x03];
+const COUNTRY_NAME_OID: &[u8] = &[0x55, 0x04, 0x06];
+const EXACT_POLICY_ENTRIES: [X509NameValuePolicyEntry<'static>; 1] =
+    [X509NameValuePolicyEntry::new(
+        COMMON_NAME,
+        X509NameValueComparisonRule::ExactDer,
+    )];
+const DIRECTORY_STRING_POLICY_ENTRIES: [X509NameValuePolicyEntry<'static>; 1] =
+    [X509NameValuePolicyEntry::new(
+        COMMON_NAME,
+        X509NameValueComparisonRule::DirectoryStringScalar,
+    )];
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(value.len() + 4);
@@ -30,9 +48,21 @@ fn algorithm(oid: &[u8]) -> Vec<u8> {
 }
 
 fn name(common_name: &[u8]) -> Vec<u8> {
-    let mut attribute = der(0x06, &[0x55, 0x04, 0x03]);
-    attribute.extend(der(0x0c, common_name));
+    name_value(COMMON_NAME_OID, 0x0c, common_name)
+}
+
+fn name_value(oid: &[u8], value_tag: u8, value: &[u8]) -> Vec<u8> {
+    let mut attribute = der(0x06, oid);
+    attribute.extend(der(value_tag, value));
     der(0x30, &der(0x31, &der(0x30, &attribute)))
+}
+
+fn name_policy(rule: X509NameValueComparisonRule) -> X509NameValuePolicy<'static> {
+    let entries = match rule {
+        X509NameValueComparisonRule::ExactDer => &EXACT_POLICY_ENTRIES,
+        X509NameValueComparisonRule::DirectoryStringScalar => &DIRECTORY_STRING_POLICY_ENTRIES,
+    };
+    X509NameValuePolicy::new(entries).unwrap()
 }
 
 fn certificate(serial: u8, issuer: &[u8], subject: &[u8]) -> Vec<u8> {
@@ -184,4 +214,188 @@ fn rejects_pool_larger_than_positive_limit_before_name_policy() {
         error.kind(),
         X509IssuerCandidateSelectionErrorKind::CandidateLimitExceeded
     );
+}
+
+#[test]
+fn policy_backed_selection_retains_exact_unique_candidate() {
+    let wanted = name(b"issuing-ca");
+    let child = decoded_certificate(1, &wanted, &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &name(b"root"), &name(b"other-ca")),
+        decoded_certificate(3, &name(b"root"), &wanted),
+        decoded_certificate(4, &name(b"root"), &name(b"last-ca")),
+    ];
+
+    let selected = select_unique_x509_issuer_candidate_with_name_policy(
+        &child,
+        &candidates,
+        3,
+        name_policy(X509NameValueComparisonRule::ExactDer),
+    )
+    .unwrap();
+
+    assert_eq!(selected.candidate_index(), 1);
+    assert!(std::ptr::eq(selected.child_certificate(), &child));
+    assert!(std::ptr::eq(
+        selected.candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        selected.name_policy(),
+        name_policy(X509NameValueComparisonRule::ExactDer)
+    );
+    assert_eq!(
+        format!("{selected:?}"),
+        "SelectedX509IssuerCandidateWithNamePolicy"
+    );
+}
+
+#[test]
+fn policy_backed_selection_uses_directory_string_scalar_rule() {
+    let utf8 = name_value(COMMON_NAME_OID, 0x0c, "Aé".as_bytes());
+    let bmp = name_value(COMMON_NAME_OID, 0x1e, &[0x00, 0x41, 0x00, 0xe9]);
+    let child = decoded_certificate(1, &utf8, &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &name(b"root"), &name(b"other")),
+        decoded_certificate(3, &name(b"root"), &bmp),
+    ];
+
+    let selected = select_unique_x509_issuer_candidate_with_name_policy(
+        &child,
+        &candidates,
+        2,
+        name_policy(X509NameValueComparisonRule::DirectoryStringScalar),
+    )
+    .unwrap();
+
+    assert_eq!(selected.candidate_index(), 1);
+}
+
+#[test]
+fn policy_backed_selection_maps_absence_and_ambiguity() {
+    let wanted = name(b"issuing-ca");
+    let child = decoded_certificate(1, &wanted, &name(b"service"));
+    let policy = name_policy(X509NameValueComparisonRule::ExactDer);
+
+    let no_match = vec![decoded_certificate(2, &name(b"root"), &name(b"other"))];
+    assert_eq!(
+        select_unique_x509_issuer_candidate_with_name_policy(&child, &no_match, 1, policy)
+            .unwrap_err()
+            .kind(),
+        X509NamePolicyIssuerCandidateSelectionErrorKind::Selection(
+            X509IssuerCandidateSelectionErrorKind::NoMatch
+        )
+    );
+
+    let ambiguous = vec![
+        decoded_certificate(3, &name(b"root"), &wanted),
+        decoded_certificate(4, &name(b"root"), &wanted),
+    ];
+    assert_eq!(
+        select_unique_x509_issuer_candidate_with_name_policy(&child, &ambiguous, 2, policy)
+            .unwrap_err()
+            .kind(),
+        X509NamePolicyIssuerCandidateSelectionErrorKind::Selection(
+            X509IssuerCandidateSelectionErrorKind::AmbiguousMatch
+        )
+    );
+}
+
+#[test]
+fn policy_backed_limits_win_before_name_policy_evaluation() {
+    let child = decoded_certificate(1, &name(b"issuer"), &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &name(b"root"), &name(b"issuer")),
+        decoded_certificate(3, &name(b"root"), &name(b"issuer")),
+    ];
+    let empty_policy = X509NameValuePolicy::new(&[]).unwrap();
+
+    assert_eq!(
+        select_unique_x509_issuer_candidate_with_name_policy(
+            &child,
+            &candidates[..1],
+            0,
+            empty_policy,
+        )
+        .unwrap_err()
+        .kind(),
+        X509NamePolicyIssuerCandidateSelectionErrorKind::Selection(
+            X509IssuerCandidateSelectionErrorKind::InvalidCandidateLimit
+        )
+    );
+    assert_eq!(
+        select_unique_x509_issuer_candidate_with_name_policy(&child, &candidates, 1, empty_policy,)
+            .unwrap_err()
+            .kind(),
+        X509NamePolicyIssuerCandidateSelectionErrorKind::Selection(
+            X509IssuerCandidateSelectionErrorKind::CandidateLimitExceeded
+        )
+    );
+}
+
+#[test]
+fn policy_backed_selection_propagates_first_name_failure_without_payloads() {
+    let child = decoded_certificate(1, &name(b"secret-issuer"), &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(
+            2,
+            &name(b"root"),
+            &name_value(COUNTRY_NAME_OID, 0x13, b"SECRET-COUNTRY"),
+        ),
+        decoded_certificate(
+            3,
+            &name(b"root"),
+            &name_value(COMMON_NAME_OID, 0x16, b"SECRET-MALFORMED"),
+        ),
+    ];
+
+    let error = select_unique_x509_issuer_candidate_with_name_policy(
+        &child,
+        &candidates,
+        2,
+        name_policy(X509NameValueComparisonRule::DirectoryStringScalar),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509NamePolicyIssuerCandidateSelectionErrorKind::NameComparison(
+            X509NameValueComparisonErrorKind::UnconfiguredAttributeType
+        )
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 Name-policy issuer-candidate selection error NameComparison(UnconfiguredAttributeType)"
+    );
+    assert!(!error.to_string().contains("secret-issuer"));
+    assert!(!error.to_string().contains("SECRET"));
+}
+
+#[test]
+fn policy_backed_selection_propagates_directory_string_failures() {
+    let child = decoded_certificate(1, &name(b"issuer"), &name(b"service"));
+    let policy = name_policy(X509NameValueComparisonRule::DirectoryStringScalar);
+
+    for (tag, expected) in [
+        (
+            0x16,
+            X509NameValueComparisonErrorKind::InvalidDirectoryString,
+        ),
+        (
+            0x14,
+            X509NameValueComparisonErrorKind::UnsupportedTeletexString,
+        ),
+    ] {
+        let candidates = vec![decoded_certificate(
+            2,
+            &name(b"root"),
+            &name_value(COMMON_NAME_OID, tag, b"issuer"),
+        )];
+        assert_eq!(
+            select_unique_x509_issuer_candidate_with_name_policy(&child, &candidates, 1, policy,)
+                .unwrap_err()
+                .kind(),
+            X509NamePolicyIssuerCandidateSelectionErrorKind::NameComparison(expected)
+        );
+    }
 }

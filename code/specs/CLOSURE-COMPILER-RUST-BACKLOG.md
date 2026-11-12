@@ -182,7 +182,7 @@ Ranking:
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
 | 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Decision — phase 1 waits for the owner to confirm F12's *Decisions* section |
 | 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. #17914 (the `-->` test262 regression fix) merged on 2026-10-24. | Ready |
-| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (#17876), slice 2 (#18162), slice 3 (`super` outside a method, `simple-super`). Next: `with`, `import.meta`, module paths. | Ready |
+| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (#17876), slice 2 (#18162), slice 3 (#19150), slice 4 (`with` statement, `simple-with`). Next: `import.meta`, module paths. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
 

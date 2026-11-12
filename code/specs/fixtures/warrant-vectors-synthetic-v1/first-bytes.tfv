@@ -1,0 +1,10 @@
+tfv 1
+# synthetic Result vectors: the first byte of a message, or EMPTY
+case-0 R2 Kmsg X Kout M1 S657272 S454d505459
+case-1 R2 Kmsg X00 Kout M1 S6f6b I0
+case-2 R2 Kmsg X01 Kout M1 S6f6b I1
+case-3 R2 Kmsg X7f Kout M1 S6f6b I127
+case-4 R2 Kmsg X80 Kout M1 S6f6b I128
+case-5 R2 Kmsg Xff Kout M1 S6f6b I255
+case-6 R2 Kmsg X4142 Kout M1 S6f6b I65
+case-7 R2 Kmsg Xfefefefefefefefefe Kout M1 S6f6b I254

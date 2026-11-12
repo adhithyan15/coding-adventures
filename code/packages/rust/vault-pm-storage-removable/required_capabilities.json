@@ -2,6 +2,61 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/vault-pm-storage-removable",
-  "capabilities": ["filesystem"],
-  "justification": "Scans a caller-supplied vault-pm object-store root directory for symptoms of third-party sync-tool interference (VLT-PM00 §12, §23 item 14), and copies an object root's committed files to another caller-supplied root for `storage migrate`. No network, process, environment, clock, entropy, cryptography, key, or custody authority."
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "*",
+      "justification": "scan and copy use read_dir/symlink_metadata to enumerate bucket and object entries."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "copy reads source object files (File::open, with O_NOFOLLOW on Unix) to migrate them."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "copy creates target bucket directories (fs::create_dir / create_dir_all)."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "copy writes objects via a staging file then fs::rename into place."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "copy removes a stale staging file left by an earlier interrupted migration."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc",
+      "justification": "open_nofollow uses libc::O_NOFOLLOW and libc::ELOOP constants on Unix to refuse symlinked source files."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Test-only (#[cfg(test)] TempDir helper): SystemTime::now makes unique scratch directory names. Declared because the lexical analyzer ignores cfg."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "TMPDIR",
+      "justification": "Test-only (#[cfg(test)] TempDir helper): std::env::temp_dir locates scratch space. Declared because the lexical analyzer ignores cfg."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Test-only (#[cfg(test)] TempDir helper): std::process::id (current pid, spawns nothing) disambiguates scratch directories. Declared because the lexical analyzer ignores cfg."
+    }
+  ],
+  "justification": "Scans a caller-supplied vault-pm object-store root directory for symptoms of third-party sync-tool interference (VLT-PM00 s12, s23 item 14), and copies an object root's committed files to another caller-supplied root for `storage migrate`. No network, process, environment, clock, entropy, cryptography, key, or custody authority in non-test code."
 }

@@ -85,6 +85,19 @@ concurrency:
 permissions:
   contents: read
 
+# Patterns for a sparse checkout that leaves out the human-languages corpus.
+# code/learning/human-languages is ~740 MB in ~313,000 files, about 60% of the
+# repository, and almost no job reads it. Non-cone mode is required: cone mode
+# cannot express "everything except this directory". The 2.4 MB _fonts folder
+# stays because rust/font-subset, glyph-parser and pdf read it. Jobs that do read
+# the corpus keep a full checkout: the contracts job always, and the build job
+# when the human-language-corpus gate fires. See code/specs/ci-gate-registry.md.
+env:
+  LEAN_SPARSE_PATTERNS: |
+    /*
+    !/code/learning/human-languages/
+    /code/learning/human-languages/_fonts/
+
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
   #
@@ -143,6 +156,7 @@ jobs:
       run_ruby_grammar_regen_check: ${{ steps.detect.outputs.run_ruby_grammar_regen_check }}
       run_mosaic_grammar_regen_check: ${{ steps.detect.outputs.run_mosaic_grammar_regen_check }}
       run_rust_grammar_regen_check: ${{ steps.detect.outputs.run_rust_grammar_regen_check }}
+      run_swift_grammar_regen_check: ${{ steps.detect.outputs.run_swift_grammar_regen_check }}
       run_unicode17_elixir_conformance: ${{ steps.detect.outputs.run_unicode17_elixir_conformance }}
       run_unicode17_lua_conformance: ${{ steps.detect.outputs.run_unicode17_lua_conformance }}
       run_unicode17_perl_conformance: ${{ steps.detect.outputs.run_unicode17_perl_conformance }}
@@ -156,12 +170,17 @@ jobs:
       run_build_linux_os_suites: ${{ steps.detect.outputs.run_build_linux_os_suites }}
       run_build_macos_os_suites: ${{ steps.detect.outputs.run_build_macos_os_suites }}
       run_build_windows_os_suites: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+      run_build_windows_recipes: ${{ steps.detect.outputs.run_build_windows_recipes }}
+      run_human_language_corpus: ${{ steps.detect.outputs.run_human_language_corpus }}
       run_forme_release_platform: ${{ steps.detect.outputs.run_forme_release_platform }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Reject double-encoded UTF-8
         shell: bash
@@ -458,6 +477,7 @@ jobs:
           NEEDS_MOSAIC_SWIFT_RUNTIME: ${{ steps.mosaic-swift-runtime.outputs.required }}
           RUN_MACOS_OS_SUITES: ${{ steps.detect.outputs.run_build_macos_os_suites }}
           RUN_WINDOWS_OS_SUITES: ${{ steps.detect.outputs.run_build_windows_os_suites }}
+          RUN_WINDOWS_RECIPES: ${{ steps.detect.outputs.run_build_windows_recipes }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
@@ -527,6 +547,7 @@ jobs:
               or cpp_bounded_json_windows
               or cpp_neural_framework_windows
               or flag("RUN_WINDOWS_OS_SUITES")
+              or flag("RUN_WINDOWS_RECIPES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
               or flag("NEEDS_OCAML")
@@ -670,6 +691,13 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
+      # The detect job checks the repository out without the human-languages
+      # corpus (about 60% of it), so it cannot scan that directory. This job
+      # always has the whole tree, on every event, so the corpus keeps the same
+      # double-encoding check it had when detect scanned the full tree.
+      - name: Reject double-encoded UTF-8 in the human-languages corpus
+        run: python3 code/scripts/check_mojibake.py code/learning/human-languages
+
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -745,6 +773,20 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Mix has no environment variable for `deps.get --check-locked`, and
+          # 350+ BUILD files run plain `mix deps.get`, which silently re-resolves
+          # a missing or stale mix.lock. This static check is the enforcement:
+          # every project that reaches a Hex dependency must have a tracked
+          # lock that satisfies mix.exs, with checksums, agreeing across the repo.
+          python3 code/scripts/elixir_locks.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_locks.py'
+          # Almost no PR runs the Windows shard, so a BUILD_windows that has
+          # drifted from its BUILD (vitest left behind after a node --test
+          # migration, `set PERL5LIB=`, standardrb without the EndOfLine
+          # exemption, ...) stays latent until an unrelated PR rebuilds the
+          # package as a dependent. Find it here instead.
+          python3 code/scripts/audit_build_windows.py --check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_audit_build_windows.py'
           # VER13 assumption catalogue: ids unique, depends_on/refines resolve
           # and are acyclic, every discharge.backlog names a VER-BACKLOG row, and
           # spec section 3 equals the JSON (AC-14). Prints the SHA-256 a report
@@ -1067,6 +1109,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Dart
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1090,6 +1136,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1150,6 +1200,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1210,6 +1264,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1277,6 +1335,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -1348,6 +1410,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
@@ -1399,6 +1465,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Build grammar-tools
         run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
@@ -1442,6 +1512,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Build grammar-tools
         run: cargo build --release --manifest-path code/programs/rust/grammar-tools/Cargo.toml
@@ -1472,6 +1546,41 @@ jobs:
           fi
           echo "All reconciled Rust compiled grammars are up to date."
 
+  # ── Job 7d: Swift compiled-grammar regeneration check ──────────
+  #
+  # Every Swift lexer/parser embeds its grammar in a generated _Grammar.swift.
+  # swift/grammar-tools's BUILD already runs `regen-embedded-grammars.sh
+  # --check`, but a .tokens/.grammar edit maps to no package, so a grammar-only
+  # change never scheduled that BUILD on its pull request: three ecmascript
+  # lexers drifted and every periodic full build then failed on swift/grammar-tools.
+  # This job runs the same guard whenever one of the grammars it covers, the
+  # generator, or a generated file changes (see ci-gates.json). It uses the
+  # Swift that ubuntu-latest preinstalls, as the Linux build shards do.
+  swift-grammar-regen-check:
+    name: Swift embedded-grammar regeneration check
+    needs: detect
+    if: needs.detect.outputs.run_swift_grammar_regen_check == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Fail if any embedded Swift grammar is stale
+        run: |
+          if ! bash code/packages/swift/grammar-tools/regen-embedded-grammars.sh --check; then
+            echo "::error::An embedded Swift grammar (_Grammar.swift) differs from its canonical .tokens/.grammar source."
+            echo "Run 'code/packages/swift/grammar-tools/regen-embedded-grammars.sh' locally and commit the result."
+            exit 1
+          fi
+          echo "All embedded Swift grammars are up to date."
+
   # ── Job 8: Unicode 17 generated Elixir conformance ─────────────
   unicode17-elixir-conformance:
     name: Unicode 17 generated Elixir conformance
@@ -1483,6 +1592,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1510,10 +1623,13 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Install Lua build prerequisites
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: sudo apt-get install -qy libreadline-dev libncurses-dev
+        run: bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
 
       - name: Install pinned Lua 5.4.7 from verified mirrors
         run: python3 code/scripts/setup_lua.py --prefix .lua
@@ -1543,6 +1659,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Verify reviewed Perl 5.38.2 runtime
         run: |
@@ -1569,6 +1688,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Haskell toolchain
         id: haskell
@@ -1606,6 +1728,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       # The conformance check below requires exactly Swift 6.3.3. It used to
       # rely on the Swift that GitHub preinstalls on ubuntu-24.04, so every
@@ -1661,6 +1786,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Dart toolchain
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1705,6 +1833,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up pinned Dart toolchain
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
@@ -1750,6 +1881,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -2132,6 +2266,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Require every supported host
         shell: bash
@@ -2197,6 +2334,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -3726,13 +3866,32 @@ jobs:
     # native-debug-info and aot-debug write DWARF for generated code.
     env:
       CARGO_PROFILE_DEV_DEBUG: line-tables-only
+      # Go may never edit go.mod/go.sum while building. This is already the
+      # default; it is spelled out so a stale manifest fails the build instead
+      # of being fixed in place. The Go BUILD files used to run `go mod tidy`,
+      # which rewrote manifests silently; they now run `go mod tidy -diff`,
+      # which exits non-zero if tidy would change anything.
+      #
+      # GOPROXY is deliberately NOT turned off: build-tool needs
+      # golang.org/x/text and ir-to-jvm-class-file (and its dependents)
+      # need golang.org/x/sys, neither of which has a local `replace`. Their
+      # go.sum files are the reviewed record of those downloads.
+      GOFLAGS: -mod=readonly
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
+          # Shallow: the build runs from the detect job's build-plan.json and
+          # needs no git history. Only the plan-less fallback in the build
+          # steps below deepens the clone first.
+          fetch-depth: 1
           persist-credentials: false
+          # The corpus is needed only when a package that reads it is in this build,
+          # or on a full build (see the human-language-corpus gate).
+          sparse-checkout: ${{ !(needs.detect.outputs.run_human_language_corpus == 'true' || needs.detect.outputs.full_build == 'true') && env.LEAN_SPARSE_PATTERNS || '' }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
 
       # ── Language toolchains (conditional) ───────────────────────
       #
@@ -3744,7 +3903,10 @@ jobs:
         uses: actions/setup-go@v7
         with:
           go-version: '1.26.1'
-          cache-dependency-path: 'code/**/go.sum'
+          # The build tool's own go.sum is enough unless Go packages are
+          # affected; hashing and restoring every go.sum under code/ cost
+          # 60s+ on macOS and Windows.
+          cache-dependency-path: ${{ needs.detect.outputs.needs_go == 'true' && 'code/**/go.sum' || 'code/programs/go/build-tool/go.sum' }}
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
@@ -3875,7 +4037,7 @@ jobs:
             if [ "$RUNNER_OS" = "macOS" ]; then
               brew install readline ncurses
             else
-              sudo apt-get install -qy libreadline-dev libncurses-dev
+              bash code/scripts/ci/apt-install.sh libreadline-dev libncurses-dev
             fi
             python3 code/scripts/setup_lua.py --prefix .lua
           fi
@@ -3934,6 +4096,31 @@ jobs:
           luarocks install luacov
           luarocks install luacheck
           for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
+
+      # The Unix leg gets LUA_PATH/LUA_CPATH from leafo/gh-actions-luarocks, so a
+      # plain `lua` finds rocks installed with `luarocks make --local`. The Windows
+      # leg only put luarocks' bin directory on PATH, so `busted` (a luarocks
+      # wrapper that sets its own paths) passed while the follow-up
+      # `lua installed_runtime_smoke.lua` in json_value, lattice_parser and
+      # nib_type_checker could not `require` the module it had just installed
+      # ("module 'coding_adventures.json_value' not found"). Export what
+      # `luarocks path` prints for cmd (`SET "NAME=value"`) to later steps.
+      - name: Export the LuaRocks module paths (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $exported = 0
+          luarocks path | ForEach-Object {
+            if ($_ -match '^SET\s+"?(LUA_PATH|LUA_CPATH)=(.*?)"?\s*$') {
+              "$($Matches[1])=$($Matches[2])" | Add-Content -Path $env:GITHUB_ENV
+              $exported++
+            }
+          }
+          # Not fatal: every Windows Lua job runs this step, and the packages whose
+          # BUILD runs a plain `lua` fail loudly on their own if the paths are absent.
+          if ($exported -ne 2) {
+            Write-Warning "Expected LUA_PATH and LUA_CPATH from luarocks path, exported $exported"
+          }
 
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
@@ -4158,6 +4345,18 @@ jobs:
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh libudev-dev
+
+      # wasm-leb128's VER08b runtime-capability gate (BUILD_linux runs it with
+      # RCG_STRICT=1) has an independent `strace` observer. With strace absent
+      # the strict gate FAILS (RCG013) rather than skipping -- correct, but it
+      # means the runner has to provide it. Linux only: the gate's jail
+      # (seccomp/Landlock) and its observer exist nowhere else, and macOS runs
+      # the plain BUILD, where the gate reports NOT-LIVE without failing.
+      - name: Install strace for the cargo runtime capability gate
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh strace
 
       - name: Install Venture Qt acceptance dependencies
         if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
@@ -4581,6 +4780,17 @@ jobs:
               Add-Content -Path $env:GITHUB_PATH -Value $_
             }
           }
+          # Prepending msys64\usr\bin puts MSYS2's coreutils `link.exe` (the
+          # hard-link creator) ahead of MSVC's linker. rustc and cl then run it
+          # as a linker and every crate that links fails with "linking with
+          # `link.exe` failed": 33 wasm/* packages in the first Windows full
+          # build, the only run that installs Ruby and Rust together. Nothing in
+          # this job calls coreutils `link` (scripts use `ln`), so rename it and
+          # let the MSVC `link.exe` that the MSVC bootstrap put on PATH win.
+          $coreutilsLink = Join-Path $env:RUBY_PREFIX 'msys64\usr\bin\link.exe'
+          if (Test-Path $coreutilsLink) {
+            Rename-Item -LiteralPath $coreutilsLink -NewName 'link.exe.msys-coreutils'
+          }
 
       # ── Verify toolchains ────────────────────────────────────
       - name: Verify tools
@@ -4657,31 +4867,42 @@ jobs:
           set -euo pipefail
           echo "Disk before cleanup:"
           df -h /
-          # Keep the pre-installed Android SDK when Kotlin (Android) builds are
-          # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
-          # builds an Android APK too (UI89 §3.4).
-          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
-            sudo rm -rf /usr/local/lib/android || true
-          fi
-          docker system prune --all --force || true
-          sudo apt-get clean
-          # The CodeQL bundles in the tool cache serve only codeql.yml, which
-          # runs on its own runners; nothing in this job reads them.
-          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-          echo "Disk after cleanup:"
-          df -h /
-          # Most ubuntu-latest runners have a 145G root disk; some have 72G
-          # (/dev/mapper/cow-root) and keep only ~20G free here, which a
-          # large Rust affected set can fill (#18787). Flag them so a later
-          # ENOSPC is read as a runner-size problem, not a code one.
+          # Most ubuntu-latest runners have a 145G root disk with ~80G free;
+          # some have 72G (/dev/mapper/cow-root) and keep only ~20G free here,
+          # which a large Rust affected set can fill (#18787). Only the small
+          # ones need the cleanup. Deleting the Android SDK and pruning docker
+          # cost ~160s on a runner that already had 81G free, so measure first
+          # and skip the deletions when there is room.
+          threshold_kb=$((40 * 1024 * 1024))
           free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
-          if [ "${free_kb:-0}" -lt $((40 * 1024 * 1024)) ]; then
-            echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+          if [ "${free_kb:-0}" -ge "$threshold_kb" ]; then
+            echo "$((free_kb / 1024 / 1024))G free on / (>= 40G): skipping disk cleanup"
+          else
+            # Keep the pre-installed Android SDK when Kotlin (Android) builds are
+            # needed — deleting it forces a full re-download later, wasting several
+            # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+            # builds an Android APK too (UI89 §3.4).
+            if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
+              sudo rm -rf /usr/local/lib/android || true
+            fi
+            docker system prune --all --force || true
+            sudo apt-get clean
+            # The CodeQL bundles in the tool cache serve only codeql.yml, which
+            # runs on its own runners; nothing in this job reads them.
+            sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+            echo "Disk after cleanup:"
+            df -h /
+            free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
+            # Still short after cleanup: flag it so a later ENOSPC is read as a
+            # runner-size problem, not a code one.
+            if [ "${free_kb:-0}" -lt "$threshold_kb" ]; then
+              echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+              # What the image still carries, largest first, so the next reclaim
+              # can be chosen from evidence rather than guessed (#17652). Only
+              # worth its ~90s on a runner that is actually short of space.
+              sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
+            fi
           fi
-          # What the image still carries, largest first, so the next reclaim
-          # can be chosen from evidence rather than guessed (#17652).
-          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
 
       # ── Android SDK (Kotlin / Android) ────────────────────────
       #
@@ -4704,6 +4925,10 @@ jobs:
           if (Test-Path 'build-plan.json') {
             Write-Host 'Using pre-computed build plan'
             $planFlag = @('-plan-file', 'build-plan.json')
+          } elseif ((git rev-parse --is-shallow-repository) -eq 'true') {
+            # Shallow checkout and no plan: the git-diff fallback needs history.
+            Write-Host '::warning::build-plan.json missing; deepening shallow clone for git-diff fallback'
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           }
           $shardFlag = @()
           if ('${{ matrix.sharded }}' -eq 'true') {
@@ -5792,7 +6017,7 @@ jobs:
       # well inside the 360-minute job limit, with room for the ~25 minutes
       # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
-        if: needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')
+        if: needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.run_build_windows_recipes == 'true')
         timeout-minutes: 300
         shell: bash
         run: |
@@ -5816,6 +6041,12 @@ jobs:
           if [ -f build-plan.json ]; then
             PLAN_FLAG="-plan-file build-plan.json"
             echo "Using pre-computed build plan"
+          elif [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            # The checkout is shallow; without a plan the build tool diffs
+            # against origin/main and needs the history plus that ref (a depth-1
+            # checkout creates no refs/remotes/origin/main).
+            echo "::warning::build-plan.json missing; deepening shallow clone for git-diff fallback"
+            git fetch --no-tags --unshallow origin +refs/heads/main:refs/remotes/origin/main
           fi
           $BT \
             -root . \
@@ -5899,7 +6130,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5928,6 +6159,7 @@ jobs:
           RUBY_GRAMMAR_REGEN_RESULT: ${{ needs['ruby-grammar-regen-check'].result }}
           MOSAIC_GRAMMAR_REGEN_RESULT: ${{ needs['mosaic-grammar-regen-check'].result }}
           RUST_GRAMMAR_REGEN_RESULT: ${{ needs['rust-grammar-regen-check'].result }}
+          SWIFT_GRAMMAR_REGEN_RESULT: ${{ needs['swift-grammar-regen-check'].result }}
           UNICODE17_ELIXIR_RESULT: ${{ needs['unicode17-elixir-conformance'].result }}
           UNICODE17_LUA_RESULT: ${{ needs['unicode17-lua-conformance'].result }}
           UNICODE17_PERL_RESULT: ${{ needs['unicode17-perl-conformance'].result }}
@@ -5966,7 +6198,7 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
           # A selected conformance job may not silently skip: missing training
           # evidence must not become a green required check.
@@ -5974,7 +6206,7 @@ jobs:
             true:success|false:success|false:skipped) ;;
             *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
           esac
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

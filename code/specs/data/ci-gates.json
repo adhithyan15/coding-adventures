@@ -254,6 +254,30 @@
         "code/packages/rust/python-parser/src/_grammar.rs"
       ]
     },
+    "swift-grammar-regen-check": {
+      "scope": "job",
+      "description": "Regenerates every Swift lexer/parser _Grammar.swift from its canonical .tokens/.grammar source and rejects a stale committed file; grammar-only edits map to no package, so the BUILD guard never ran on the PR.",
+      "packages": [
+        "swift/grammar-tools",
+        "swift/algol-lexer",
+        "swift/algol-parser",
+        "swift/dartmouth-basic-lexer",
+        "swift/dartmouth-basic-parser",
+        "swift/ecmascript-es1-lexer",
+        "swift/ecmascript-es3-lexer",
+        "swift/ecmascript-es5-lexer",
+        "swift/toml-lexer",
+        "swift/xml-lexer"
+      ],
+      "paths": [
+        "code/grammars/algol/**",
+        "code/grammars/dartmouth_basic/**",
+        "code/grammars/ecmascript/**",
+        "code/grammars/toml/**",
+        "code/grammars/xml/**",
+        "code/packages/swift/grammar-tools/**"
+      ]
+    },
     "unicode17-elixir-conformance": {
       "scope": "job",
       "description": "Generated Elixir Unicode 17 tables against every official normalization/casing vector.",
@@ -506,6 +530,15 @@
         "code/scripts/tests/test_setup_msvc_dev_cmd.py"
       ]
     },
+    "human-language-corpus": {
+      "scope": "step",
+      "description": "Build jobs check out without the ~740 MB human-languages corpus; this gate restores it when a package that reads the corpus is built. Full builds always restore it.",
+      "packages": [
+        "typescript/human-language-data",
+        "typescript/programs/language-ladder",
+        "typescript/script-ductus"
+      ]
+    },
     "build-linux-os-suites": {
       "scope": "step",
       "description": "Suites that require Linux kernel isolation primitives and a delegated cgroup-v2 root.",
@@ -528,6 +561,14 @@
         "code/scripts/adj_stdlib_provenance.py",
         "code/scripts/tests/test_adj_stdlib_provenance.py",
         "code/specs/FM02-forme-plugin-host.md"
+      ]
+    },
+    "build-windows-recipes": {
+      "scope": "step",
+      "description": "Runs the Windows affected-package build when a pull request changes any BUILD_windows recipe, so a Windows fix is proven on that PR instead of by the next daily cross-OS build.",
+      "paths": [
+        "code/packages/**/BUILD_windows",
+        "code/programs/**/BUILD_windows"
       ]
     },
     "build-windows-os-suites": {

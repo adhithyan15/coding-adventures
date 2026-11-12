@@ -6,6 +6,24 @@ documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-11-12
+
+### Added
+
+- Added a distinct reviewed-anchor binder for complete
+  `ConstructedX509CertificatePathWithNamePolicy` evidence.
+- Added non-copyable evidence retaining the exact Name-policy-backed
+  construction and reviewed-root selection together.
+
+### Security
+
+- The policy-backed binder shares the generic binder's target-only rejection
+  and exact decoded-terminal object-identity check, including rejection of a
+  byte-equal independent decode.
+- Generic callback construction evidence cannot substitute for policy-backed
+  reviewed-anchor evidence, and binding grants no complete Name equality, path
+  validation, revocation, TLS, HTTP, OAuth, or network authority.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added
@@ -16,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   payload-free errors for target-only paths and evidence mismatches.
 - Added exact-object binding between reviewed-terminal evidence and complete
   certificate-wide issuing-CA role-policy evidence.
+- Added non-copyable construction-derived path-length initialization that
+  retains the exact reviewed path and anchor role proof with its initial state.
 
 ### Security
 
@@ -23,5 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   independently decoded certificates fail closed.
 - Reviewed-terminal role policy for another decoded object and exact terminal
   end-entity role evidence fail closed.
+- Callers of the construction-bound initializer cannot select or inflate its
+  path-length capacity: the retained construction fixes the intermediate count.
 - Binding grants no link authentication, self-signature, algorithm, validity,
   constraint, hostname, revocation, TLS, HTTP, OAuth, or network authority.

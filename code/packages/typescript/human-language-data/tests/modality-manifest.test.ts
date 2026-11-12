@@ -211,9 +211,11 @@ afterEach(() => {
 // pushed this hook past its 30 s budget, while the manifest itself built in seconds.
 let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
+let committedManifestOnce: Promise<ModalityManifest> | undefined;
 beforeAll(async () => {
-  // The source bytes still determine each cache key. Bounded overlapping reads
-  // shorten the Windows file-open wall time without trusting mtime or size.
+  // This hook derives every lesson, but does not contend with a second
+  // whole-corpus reader for the same cold disk. The independent committed
+  // owners are loaded once, lazily, by the two assertions that need them.
   realLessons = await loadLessonsAsync();
   realManifest = buildModalityManifest(realLessons);
 });
@@ -229,11 +231,11 @@ beforeAll(async () => {
 // in this file writes; the two reads inside "carries the marker into the committed
 // manifest" were that case's entire cost, and it timed out at 30 s on CI.
 //
-// The guarded async route bounds those opens. Lazy rather than in `beforeAll`,
-// so the cost stays with the cases that use it
-// (and inside their budgets) instead of moving into the shared hook. Read-only for
-// the same reason as `realManifest` above: every use filters or maps a copy.
-let committedManifestOnce: Promise<ModalityManifest> | undefined;
+// The guarded async route bounds those opens and each anchored track child
+// retains its 20-second deadline. The first consumer's unchanged 30-second
+// test budget still measures the entire multi-track read, not one child.
+// Read-only for the same reason as `realManifest` above: every use filters or
+// maps a copy.
 function committedManifest(): Promise<ModalityManifest> {
   committedManifestOnce ??= loadModalityManifestAsync();
   return committedManifestOnce;

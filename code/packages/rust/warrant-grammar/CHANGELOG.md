@@ -1,5 +1,178 @@
 # Changelog
 
+## Unreleased — VER04i WD-003 portable corpus
+
+- Add a closed ct-compare Warrant v0 corpus profile generated from the checked
+  Warrant source, with distinct subject-operation and pure-model IR, canonical
+  admitted-case enumeration, independent input/result SHA-256 streams, generated
+  examples and sabotage-control descriptors, and byte-stable `--check` support.
+- Add a stdlib-only Python oracle that independently validates source-bound
+  declarations, suite semantics, corpus digests and TFV examples, with mutation
+  tests for incomplete or misbound evidence. The first profile rejects sharding
+  and unsupported Warrant constructs; it does not claim to execute a lane.
+- Route the corpus generator, oracle and their tests through package BUILD and
+  repository-input selection.
+
+- **`gen_evidence` passes the bindings' host lines through (fix).** The example
+  that every package `BUILD` runs (`--example gen_evidence -- [--check] <pkg>`)
+  built its `EvidenceOptions` with `hosts: Default::default()`, so the WX-A host
+  lines of `evidence.bindings` (`struct`, `enum`, and `args=`/`ret=`/`errors=` on
+  an `op` line) were parsed and then dropped. Only the in-test drivers passed
+  them, so no real package could bind a host composite: an operation returning
+  `Result<(u64, usize), Leb128Error>` failed with W0701 ("an args= entry is not a
+  host type") or W0704 ("neither error normalization nor errors="). The driver
+  now passes `b.hosts.clone()`. New `tests/gen_evidence_driver.rs` compiles the
+  example into the test crate (`#[path]`) and drives `generate_one` on a scratch
+  repository built from the WX-A fixture (`struct`/`enum` lines, composite
+  `args=`, tuple and record `ret=`, `errors=`): generation succeeds, equals the
+  in-test driver's output byte for byte, `--check` passes, and a hand edit is
+  reported as drift. Before the fix the first two tests failed with the W0701
+  above. A bindings file without host lines parses to the default, so the
+  checked-in ct-compare and gf256 harnesses regenerate byte-identically
+  (`gen_evidence --check gf256 ct-compare`, `v0_compat`, and the wave-3 regen
+  tests). `generate_one` became `pub(crate)` for the test; nothing else changed.
+- **`tests/v0_compat.rs` admits the first v1 adopter without relaxing v0.** It
+  asserted that every `code/specs/*.warrant` and every bound package's document
+  is v0, which `wasm-leb128.warrant` (header `warrant wasm_leb128 v1`) broke.
+  The pre-WX-B documents (`ct-compare`, `gf256`) are now pinned by name and must
+  still be v0 and present; every document must type-check; a v1 adopter's
+  harness must regenerate byte for byte with its bindings' host lines, exactly as
+  `gen_evidence --check` does, and record `warrant_version`; and for each v0
+  package the harness generated with the host lines passed (the driver's path
+  since the fix above) must equal the one generated without them.
+
+## 0.5.0 - Warrant v1: WX-D1 slice S1 (checker and ground evaluator)
+
+Implements the checker and ground-evaluator half of VER04k WX-D1 (slice S1 of
+section 8.1), following the S0 errata of section 9.1. All of it is under the `v1`
+header: a v0 document means exactly what it did, the checker's `Debug` output for
+`ct-compare`/`gf256` is unchanged (`v0_compat`), and every generated harness
+(`wx_regen`, `wxa_regen`, `wxh_regen`, `wxv_regen`) is byte-identical. Generation
+still refuses the new forms and list literals with W0701 (slice S2a translates
+them). `CheckedWarrantModule`, `CodegenLimits` and `EvalValue` keep their shape.
+
+- **Checker.** `V1_FUNCTIONS` grows from 33 to 45 names: the seven D1 forms
+  `take drop slice replicate range to_list to_bytes` and the five D2 names
+  `fold map count all any`, all reserved in v1 (a v1 declaration so named is
+  W0201) and still free in v0 (a call is W0202, a v0 model of that name keeps its
+  meaning). The D2 names are refused in v1 with W0202 "reserved built-in `<name>`
+  is not yet implemented in this version" (`CheckerErrorKind::NotYetImplemented`,
+  S0 E7). The section 2.4 typing of the seven forms, with the expected type
+  threaded into `typecheck_v1_builtin`, so `to_bytes([])` and `replicate([], n)`
+  type-check; counts are `Int` (`Nat` widens). A v1 list literal of more than
+  4,096 elements is W0602 at the literal's span, before its elements are typed
+  (`MAX_LIST_LITERAL`, `CheckerErrorKind::ListLiteralTooLong`, S0 E8).
+- **Ground evaluator.** The seven forms, with negative counts clamped to zero on
+  the exact `i128` count and the check-before-allocate order of section 2.7:
+  element cap (`MAX_SEQ_ELEMENTS` = 65,536), then data reservation, then work,
+  then allocation. A cumulative per-instance data counter (`DATA_BUDGET_BYTES` =
+  64 MiB, reset by `reset_work`) charges, in every v1 evaluation, the `dsize` of
+  each node's value except the pass-through nodes (S0 E4), with deep-copy charges
+  for `take`/`drop`/`slice`/`replicate` (S0 E5). New `CodegenErrorKind::
+  {SequenceTooLong, DataBudgetExceeded}` (both W0703) and the accessors
+  `Evaluator::{work_used, data_used}`. `and`, `or` and `=>` short-circuit in v1;
+  v0 stays eager (S0 E2).
+- **Operation discovery.** New `codegen::find_operation_for_version`: in a v1
+  document the argument search also enters list-literal elements (S0 E13); claim
+  extraction and the table vacuity check use it. `find_operation_in_expr` is
+  unchanged (the evidence generator keeps it until S2a).
+- **Tests.** `wxd_syntax` (no grammar change: forms parse as calls; token and
+  grammar files pinned by SHA-256), `wxd_checker` (typing, W0301/W0201/W0202/
+  W0602 negatives, discovery, generation still W0701, a mechanical scan of the
+  in-repository v1 documents), `wxd_semantics` (every form over every list of
+  length 0..=4 on a 3-symbol alphabet and as `Bytes` against native iterators;
+  counts -2..2, len +/- 1 and 2^70; 1,000/65,536/65,537 elements; pinned work and
+  data; both caps; depth 64/65; short-circuit; two mutant oracles killed) and
+  `wxd_alloc_probe` (a counting global allocator: refused requests allocate
+  nothing before W0703). `wxh_front` now expects 45 v1 functions.
+- **Security review fixes** (VER04k section 9.1, E20 and E21).
+  - `dsize` counts the bytes of the names a value stores: `len(T) + len(C)` for
+    a constructor (nullary ones included) and `len(E) + len(CASE)` for an error
+    value, which also charges its names when it is built. Before,
+    `replicate(<10,000-byte constructor>, 65536)` was admitted with 2 MiB
+    charged and requested 661,727,185 bytes; it is now refused with W0703
+    after requesting 10,193. `wxd_alloc_probe` holds real allocation within 4x
+    the charge for replicate, list literals, `concat`, `Err(E.C)` and long type
+    names (it was 210x to 316x), and pins the budget boundary.
+  - A v1 identifier longer than 128 bytes (`MAX_IDENTIFIER_BYTES`) is W0602,
+    `CheckerErrorKind::IdentifierTooLong { len, limit }`, checked in a pass
+    over every identifier before any other check. v0 is unchanged.
+  - A v1 parameter or quantifier binder named like any reserved built-in is
+    W0203 (`ShadowedBinding`), as pattern binders already were; before,
+    `model exp(take: List<U8>) -> List<U8> = take(take, 0)` type-checked as
+    the built-in and evaluated to the parameter. The evaluator now reads a
+    name from the environment only when it is not applied, as the checker
+    does, in v0 too (a v0 `len(len)` with a `len: Bytes` parameter is now the
+    `Nat` the checker typed instead of the parameter).
+  - A v0 evaluation no longer computes data charges it discards.
+  - A dotted name is an error case or a projection, nothing else (VER04k
+    section 9.1, E21). A reference of more than one segment that is neither
+    `E.CASE` (a declared error and case) nor a v1 projection from a binder is
+    W0202 `UnboundName` of the whole dotted name, in v0 and v1. Before, the
+    checker typed it by its first segment (v1 `g.x(a)`, `g` a model, as `U8`;
+    `Some.x(a)`, `None.x`, `len.x(a)`; v0 `a.foo` as the binder `a`) while the
+    evaluator made it the error value `Err(("g", "x"))`, so an example
+    `select_bytes(..) == m.FORGED(..)` checked and `compile_warrant_to_tfv`
+    emitted an error id `FORGED` no declaration has. This is a v0 deviation,
+    but only for documents that never meant what they checked as: no
+    in-repository document uses such a name, and `v0_compat` and the four
+    regeneration tests are byte-identical. The evidence generator already
+    refused these names; the lanes now agree.
+  - Known open hazard: reads deep-copy and charge no data, so the 64 MiB
+    counter bounds each value, not an evaluation's memory (VER04k note on E4,
+    backlog WX-RD1).
+
+## 0.4.0 - Warrant v1: WX-H (output bounds) and WX-E (pinned external tables)
+
+Implements VER04j sections 5 and 6 (sections 14.2 and 14.3 list every deviation).
+All of it is under the `v1` header; a v0 document means exactly what it did
+(`output` in a v0 `bound` and `vectors` in a v0 document are `W0101`), and every
+generated harness of `ct-compare`, `gf256` and the earlier v1 fixtures is
+byte-identical (the new prelude parts are gated by features a document must use).
+
+- **Parser.** `output` as a bound metric; `vectors NAME:` with the contextual row
+  words `source`, `sha256`, `rows`, `column`, `holds` (path alphabet and shape,
+  64-hex pin, plain decimal row count, at most 32 unique columns); new
+  `Declaration::Vectors`, `VectorsDecl`, `ColumnDecl`, `valid_table_path`,
+  `Expression::mentioned_names`, `ParserErrorKind::TableIntegrity` (W0708).
+- **Checker.** `output` needs a `Bytes`/`Bytes<N>`/`List<T>` result or a `Result`
+  of one (W0301); `imin`/`imax` built-ins (`V1_FUNCTIONS` is now 33 names); tables
+  share the test-name namespace, are capped at 100,000 rows each and 250,000 per
+  document with saturating arithmetic (W0602), empty or vacuous tables are W0601,
+  unused or undecodable columns W0710, shadowing W0203. New `DiagnosticCode::{W0601,
+  W0710}`, `CheckerErrorKind::{TableRows, VacuousTable, UnusedColumn,
+  UndecodableColumn}`, `MAX_TABLE_ROWS`, `MAX_DOCUMENT_ROWS`.
+- **Evaluator / model code.** `imin`, `imax`, and byte-string `concat` in the
+  generated model translation.
+- **Evidence generator (WX-H).** The allocation observer (counting global
+  allocator, per-call window, containment by a parked worker, per-test latch, 64
+  workers / 1 GiB process cap), bounds as functions of the call arguments (a
+  negative or unevaluable bound fails the instance), the synthesized
+  `<op>/output-bound` suites, manifest `instances_observed` / `max_observed_heap` /
+  `bound_at_max`, relation bias for a limit parameter, the faults `ignore-limit`,
+  `off-by-one-limit`, `limit-after-alloc`, `truncate-silently`, and the composite
+  adapter as the fallback shape for other v1 signatures (`Bytes` results,
+  `Bytes<N>` results, `fresh`).
+- **Evidence generator (WX-E).** `vectors::{load_table, read_fixture, Shape,
+  check_value, expected_column, is_constant_output}`, `evidence::{TableSet,
+  load_document_tables, compile_rust_evidence_harness_with_tables,
+  generate_evidence_harness_with_tables}`, the generated table runner and manifest
+  entry, the `table` negative-control kind, the discrimination check, the faults
+  `flip-result-bit` and `drop-last-result-byte`, and `gen_evidence` materialising
+  and drift-checking `tests/generated/tables/<name>.tfv`.
+- **Dependencies.** `coding_adventures_test_bootstrap` and `coding_adventures_sha256`
+  are now regular dependencies (the loader hashes and parses fixtures).
+  `required_capabilities.json` now declares `fs:read` (it was already read by
+  `codegen::verify_regeneration`).
+- **Fixtures.** `code/specs/fixtures/warrant-vectors-synthetic-v1/` (synthetic
+  messages, hashlib digests, stdlib-only generator with a drift check). The build
+  tool maps that directory to this package.
+- **Tests.** `wxh_front`, `wxh_generator`, `wxh_evidence` (generated pilot harness,
+  observer, every fault, ground-evaluator versus generated model differential),
+  `wxh_vulnerable`, `wxh_wasteful`, `wxh_caps`, `wxh_caps_count`, `wxh_regen`,
+  `wxe_front`, `wxe_loader`, `wxe_evidence` (including a differential run against
+  Python `hashlib`), `wxe_edges`, `wxv_regen`.
+
 ## 0.3.0 - Warrant v1: WX-A (tuples, records and non-recursive sum types)
 
 Implements VER04j section 4 (its section 14.1 lists every deviation). All of it

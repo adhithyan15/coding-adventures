@@ -1,8 +1,8 @@
 # VER04j — Warrant v1 Extensions (WX-B, WX-C, WX-A, WX-E, WX-H; sketches WX-F, WX-D)
 
-**Status:** WX-B, WX-C and WX-A are **implemented** in `rust/warrant-grammar`
-(section 14 lists exactly where the implementation deviates from, or
-sharpens, the text below). WX-E, WX-H and the sketches WX-F and WX-D are
+**Status:** WX-B, WX-C, WX-A, WX-E and WX-H are **implemented** in
+`rust/warrant-grammar` (section 14 lists exactly where the implementation
+deviates from, or sharpens, the text below). The sketches WX-F and WX-D are
 specification only. Each extension is a separately landable slice; none
 changes the meaning of a v0 document (section 1).
 
@@ -1163,6 +1163,10 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   survey and the `gf256` conversion's forced workarounds. No v0 text is changed;
   section 1.4 records the one evaluator conformance fix against existing v0 text
   (non-wrapping `U8` in the generated evaluator).
+- WX-H and WX-E implemented (`rust/warrant-grammar` 0.4.0): see sections 14.2 and
+  14.3 for the deviations and clarifications this forced; sections 5 and 6 are
+  unchanged except where 14.2/14.3 say a sentence has no antecedent in the checker
+  or names a vocabulary the harness does not have.
 - WX-A implemented (`rust/warrant-grammar` 0.3.0): see section 14.1 for the
   deviations and clarifications this forced; section 4 itself is unchanged except
   that nothing in it was found wrong.
@@ -1171,7 +1175,7 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   corrected in place: the `U16 x U16` demotion example, the list of values the edge
   domains guarantee, and the operator-qualified fault names.
 
-## 14. Implementation status and deviations (WX-B, WX-C, WX-A)
+## 14. Implementation status and deviations (WX-B, WX-C, WX-A, WX-H, WX-E)
 
 Where the code departs from, or must decide something the text leaves open:
 
@@ -1323,7 +1327,15 @@ The numbering continues from the WX-B/WX-C items above.
     variant is matched with `{ .. }`).  A value a host integer cannot hold is
     *unreachable by type*: the adapter raises a private panic that the claim wrapper
     turns into a vacuous pass, counted as `unreachable_by_type` in the manifest;
-    nothing is narrowed.
+    nothing is narrowed.  Because the variant is matched with `{ .. }`, the path
+    may also name a host error *struct* (`errors=wasm_leb128/Leb128Error=MALFORMED`
+    matches `wasm_leb128::Leb128Error { .. }`); every value of that struct is then
+    the one mapped case.  *Correction (wasm-leb128 adoption):* the
+    `gen_evidence` example that every package `BUILD` runs used to build its
+    options with empty `hosts`, so these lines reached the generator only through
+    in-test drivers; it now passes them through, and
+    `tests/gen_evidence_driver.rs` drives the example itself on a bindings file
+    with `struct`, `enum`, composite `args=`, `ret=` and `errors=` lines.
 23. **Faults** (4.8) are rewrites of the adapter's result.  `off-by-one-consumed`
     adds 1 to an even second component and subtracts 1 from an odd one (so both
     directions of "`+ 1` / `- 1`" occur and a claim that pins `consumed` on every
@@ -1373,3 +1385,201 @@ The numbering continues from the WX-B/WX-C items above.
     three arms plus a fixed-seed sample of four-arm sequences on the
     three-component type of section 4.11, and every sequence up to four arms on
     single-column types.
+
+### 14.2 WX-H (output-size bounds and parameterised bounds)
+
+The numbering continues from 14.1.
+
+28. **Gating and typing.** `output` as the metric of a `bound` row is W0101
+    (`ParserErrorKind::V1ConstructInV0`) from the parser in a v0 document, where
+    it used to be the checker's W0401 "unknown metric" (a valid v0 document is
+    unaffected).  In a v1 document the checker accepts `output` only when the
+    operation's result is `Bytes`, `Bytes<N>`, `List<T>` or a `Result` whose `Ok`
+    payload is one of those; an `Option`, a tuple, a record, a variant and a scalar
+    are W0301.  An unknown metric stays W0401.
+29. **`imin`/`imax`** are v1 built-ins typed `(Int | Nat, Int | Nat) -> Int` and are
+    usable in any expression, not only in a bound; `V1_FUNCTIONS` grows from 31 to
+    33 names (a v1 model called `imin` is now W0201, exactly as for the other
+    built-ins).  The ground evaluator and the generated model code implement them
+    and the differential tests of section 10.3 cover them.
+30. **What is evaluated.** The generator evaluates `output` and `heap` rows (over the
+    operation's parameters, with the ordinary model translation).  `steps` and
+    `depth` stay prover obligations.  The text "a bound mentioning a secret-labelled
+    value is unchanged (W0402)" has no antecedent: the checker never rejected a
+    secret value in a bound (VER04d does not say it should, and `ct-compare` bounds
+    `len` of secret parameters), so nothing changed and no W0402 is raised.
+31. **Negative bounds.** "Nonnegative on the admitted domain" is checked per
+    instance, not statically: an instance at which an `output` or `heap` bound
+    evaluates below zero fails with the note `bound-negative` (a defect of the
+    document, never of the subject).  An unevaluable bound (a model that panics,
+    arithmetic overflow) fails the instance the same way.
+32. **Generated property.** For every operation with an `output` row the generator
+    registers `exhaustive`, `property` and `fuzz` suites with the ids
+    `warrant/<module>/<kind>/<op>/output-bound` and `claim` field `<op>/output-bound`.
+    The property is `match op(args) with Ok(r) -> size(r) <= e | Err(_) -> true`;
+    a non-`Result` operation has size `len(result)`.  The suites take the operation's
+    parameters (with their refinements) as binders, so every binder domain, budget,
+    demotion and cap of VER04h applies (an operation whose parameters are too many
+    or too wide for the exhaustive budget is therefore W0706 for this suite, as for a
+    written claim; an operation with static widths is W0701); relation bias draws an unsigned limit
+    parameter from the boundary list of section 6.3 whenever the claim also has a
+    `Bytes` binder (only for documents with an `output` or `heap` row, so every other
+    generated harness is byte-identical).
+33. **Observer.** A document with an `output` or `heap` row on some operation gets the
+    `obs` part of the prelude: a counting `#[global_allocator]` plus a per-thread
+    allocation window.  `GlobalAlloc` may neither panic nor, on stable Rust, return
+    null without the process aborting (`handle_alloc_error`), so the cap is enforced
+    by *containment*: an observed adapter call runs on a worker thread; when it asks
+    for memory beyond the cap (default 64 MiB, `OBSERVER_CAP_BYTES`) the allocator
+    records the attempted peak, wakes the caller and parks that worker forever, and
+    the caller fails the instance with `bound-heap-exceeded` and the measured peak.
+    A test that has tripped once fails its later observed calls without running them
+    (a shrinker would otherwise abandon one worker per candidate), and at most 64
+    workers holding at most 1 GiB between them are ever abandoned in one process
+    (`OBS_MAX_ABANDONED`, `OBS_MAX_HELD`); after that an observed call is refused with
+    the same failure instead of being started.  The
+    window is the whole adapter call (argument conversion, the export, result
+    conversion), so the adapter's copy of the result counts: a `heap` bound must
+    leave room for one extra copy of the output, as the spec's own example
+    (`2 * to_int(max_output)`) does.  The measured peak is compared with the `heap`
+    row evaluated at the call's arguments; a call over the row fails.
+34. **Failure vocabulary.** `bound-heap-exceeded` is not in the closed TF01 section 5.3
+    failure-id vocabulary and `test-bootstrap`'s vocabulary is not changed here.  The
+    failing verdict therefore carries a registered id (`not-deep-equal` for an
+    example, `property-counterexample`, `fuzz-crash` or `corpus-mismatch` as the
+    suite runner chooses) and the observer's text is the note
+    (`bound-heap-exceeded`, `bound-negative`, `output-bound-exceeded`).  The manifest
+    entry records `max_observed_heap`, `bound_at_max` and `instances_observed` on every
+    observed example, exhaustive, property, fuzz and table entry.
+35. **Adapter shape.** A v1 operation whose signature has no scalar or byte-pair
+    adapter (any `Bytes` result, a `Bytes` parameter beside a numeric one) is adapted
+    by the composite adapter of WX-A, including its host `Result`/`errors=` binding
+    forms; the prelude's `comp` part is emitted for it.  Before this, such a
+    signature was W0701.  A `fresh` result is satisfied by construction there (a host
+    `Vec<u8>` cannot alias its input) and is no longer refused.  The model translation
+    gained `concat` of two byte strings (it was W0701 before, although VER04 reserves
+    it), so a claim can build a well-formed input for the operation; its prelude part
+    is emitted only when a body uses it, like `imin`/`imax`.
+36. **Faults.** `ignore-limit`, `off-by-one-limit`, `limit-after-alloc` and
+    `truncate-silently` are rewrites of the composite adapter.  The *limit
+    parameter* is the one unsigned numeric parameter the operation's `output` row
+    mentions (none or several is W0701 at generation).  `ignore-limit` replaces it
+    with the host type's maximum, `off-by-one-limit` adds one (saturating),
+    `limit-after-alloc` holds a zeroed `Vec<u8>` of that many bytes across the
+    call, and `truncate-silently` turns an `Err` into `Ok` of the first `limit`
+    bytes of the first `Bytes` parameter (the adapter cannot recover what an
+    erroring subject would have produced; it needs a `Bytes` parameter and a
+    `Result<Bytes, E>` result, W0701 otherwise).
+37. **Pilot.** `tests/fixtures/wxh.warrant` (a four-byte length header plus run-length
+    body, `decompress(data, max_output)`) with an in-test vulnerable subject (sizes
+    `Vec::with_capacity` from the header) and its fix.  It is synthetic: no `lz*`
+    API is touched (open question 6 stays with the owner).
+
+### 14.3 WX-E (external known-answer tables)
+
+38. **Gating and syntax.** In a v0 document `vectors` is W0101.  `PATH_LITERAL` is
+    the lexer's quoted text token; an unterminated quote is W0001.  The five row
+    words (`source sha256 rows column holds`) are contextual and recognised only in
+    that position and order.  The path rules of section 5.2 (alphabet
+    `[A-Za-z0-9_./-]`, at most 256 bytes, no leading `/`, no `.`/`..`/empty segment)
+    are W0708 from the parser.  The test plan's "uppercase" negative is read as an
+    uppercase *hex digit in the `sha256` literal* (the path alphabet explicitly
+    allows `A-Z`); a `sha256` literal that is not exactly 32 bytes is W0708, an
+    unterminated one (`b"01`) and a non-decimal or suffixed `rows` are W0001.
+39. **Namespaces and checking.** A table name shares the test-name namespace
+    (W0201 on a clash).  `holds` is typed as a Bool in the claim environment (columns
+    bound to their declared types, operations allowed); a `holds` that calls no
+    operation is W0601 (as is `rows 0`: nothing to check) and a column it never
+    mentions is W0710.  `rows` above 100,000,
+    and above 250,000 summed over a document, are W0602 from the checker; a duplicate
+    column is W0201.  A column type with a symbolic width (`Bytes<n>`) is W0710.
+40. **Where fixtures live.** `code/specs/fixtures/` is the fixtures root (a tool
+    profile constant, `FIXTURES_ROOT`); a package's `evidence.bindings` does not name
+    it.  The synthetic fixtures of this slice are
+    `code/specs/fixtures/warrant-vectors-synthetic-v1/` (its README is the provenance
+    record).  NIST/RFC vector sets are an owner decision (open question 9); the
+    loader is the hook, and the README says how a vetted set is added (the file, its
+    pin in the warrant, a regenerated copy).
+41. **Loading (fail closed).** `vectors::load_tables` reads each table once: every
+    path component is checked with `symlink_metadata` (a symlink anywhere is W0708),
+    the file is opened, its metadata re-checked against the open handle (a regular
+    file; on Unix the device and inode must match the earlier `lstat`), at most
+    16 MiB + 1 byte are read, and the SHA-256 is compared with the pin *before* any
+    parsing.  Only then is the TFV parsed (by `test-bootstrap`'s parser, whose
+    duplicate-id check is now linear) and every row checked: exactly `rows` records,
+    exactly the declared columns (no missing, no extra), each value decoded by its
+    column type (integers range-checked, `Bytes<N>` length-checked, constructor
+    names for variants, `Result` in the VER04i `M` form).  A row-level mismatch is
+    W0710; a map with more than one entry has no Warrant type and is W0709 (it is
+    refused from a token scan *before* parsing, because the TFV parser's pairwise
+    key check is quadratic in the entries of one map); nesting beyond 64 is W0709;
+    the row budget (100,000 per table, 250,000 per document, summed with
+    saturating arithmetic) is checked before any file is read and is W0602.
+    Nothing is ever fetched from the network.
+42. **Materialisation.** `evidence_tables` returns, for each table, the verified bytes
+    and digest; the `gen_evidence` driver writes `<dir of output>/tables/<name>.tfv`
+    byte-identically and `--check` compares it.  The generated harness embeds the
+    copy with `include_bytes!` from its own crate tree, hashes it at the start of the
+    table's test and fails with `corpus-malformed` on a mismatch.
+43. **Execution and manifest.** One suite test per table,
+    `warrant/<module>/table/<name>`; inside it every row is one case
+    `vectors/<name>/<row id>` and the entry records `kind: "table"`, `cases`,
+    `table_sha256`, `rows_pinned`, `verdict` and `failed_ids` (first 16 row ids;
+    when the `CI` variable is set only the count is kept).  The entry carries the
+    observer fields of item 34 when the operation is observed.
+44. **Discrimination.** Negative controls run per (operation, fault) with kind
+    `table`; the control passes iff at least one row fails.  At generation time a table
+    whose `holds` is `<expr> == <column>` (or the mirror) and whose `<column>` is the
+    same value in every row of a table with at least two rows is W0601 "table is not
+    discriminating": the subject cannot be told apart from a constant function, and no
+    fault could fail a table that a constant function passes.  Other tables rely on the
+    runtime control.
+45. **Not implemented.** Seeding the fuzz corpus from table rows (5.3 item 5, optional),
+    the lane registry of VER04i, and every lane but Rust (the loader is language
+    independent data; the runner is the Rust prelude).
+46. **Faults for byte results.** VER04h section 6 has no fault for a digest-like
+    operation, so a pinned digest table would have nothing to fail.  Two composite
+    faults are added: `flip-result-bit` (the lowest bit of the first byte of a
+    `Bytes`/`Bytes<N>` result, inside an `Ok` or `Some`; an empty result gains a
+    byte) and `drop-last-result-byte`.  They apply to the operation they are bound
+    to only and are checked against the result type at generation (W0701).  A
+    `Bytes<N>` result (never a parameter) is now accepted by the composite adapter,
+    with the same host mapping as `Bytes`.
+47. **Rows are cases, a table is one test.**  The suite registers one test per table,
+    `warrant/<module>/table/<name>`; each row is a case named `vectors/<name>/<row id>`
+    in the failure message and in `failed_ids`.  A row whose `holds` panics, or
+    whose value the host integer cannot hold, fails (it is not skipped as
+    unreachable-by-type: a pinned datum the subject cannot take is a finding).  A
+    copy that no longer matches its pin, or whose rows no longer decode, fails the
+    whole table with `corpus-malformed`.
+48. **Build and capability plumbing.**  `coding_adventures_test_bootstrap` and
+    `coding_adventures_sha256` become regular dependencies of the crate;
+    `required_capabilities.json` declares `fs:read` (the crate already read a file in
+    `codegen::verify_regeneration` without declaring it, so the capability analyzer
+    failed on the previous slice too; the declaration needs the usual signed
+    approval); the Go build tool maps `code/specs/fixtures/warrant-vectors-synthetic-v1/`
+    to `rust/warrant-grammar`.
+49. **Pilot.** `tests/fixtures/wxv.warrant` pins two synthetic tables (SHA-256 of
+    made-up messages, `Result<U8, E>` answers) against an in-test subject; the
+    differential test recomputes every digest with Python `hashlib` over the same
+    rows and compares it with the pinned data and with the subject.
+
+50. **Observer scope (WX-H).** The window accounts only allocations made through the
+    global allocator *on the calling (worker) thread*: memory a subject allocates on
+    threads it spawns, or maps directly (`mmap`, a foreign allocator), is not charged
+    and not contained.  The cap is a guard against the common bomb, a `Vec` sized
+    from a header, not a sandbox.
+51. **What kills `truncate-silently`.** The synthesized `output-bound` claim cannot:
+    a truncated `Ok` is within the bound.  It is caught by a *written* claim or
+    example that expects `Err(E.OUTPUT_LIMIT)` (the pilot's
+    `one_byte_over_the_limit` and `empty_input_is_corrupt_under_any_limit`).
+52. **Memory caps of the loader (WX-E).** A document may declare at most 16 tables
+    (`MAX_DOCUMENT_TABLES`), its tables may hold at most 64 MiB together
+    (`MAX_DOCUMENT_BYTES`) and a record line at most 65,536 tokens
+    (`MAX_ROW_TOKENS`), each W0602; the first token of a record line (its id) is not
+    scanned as a map header; the fixture is opened non-blocking and must be a regular
+    file by `fstat` (a FIFO swapped in after the `lstat` cannot hang the generator);
+    all-dot path segments (`...`) are refused like `..`; the generator refuses to
+    write a table copy or harness through a symlink at any level; the capability
+    manifest narrows `fs:read` to `code/specs/fixtures/**` and
+    `code/packages/rust/*/tests/generated/**`.

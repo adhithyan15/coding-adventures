@@ -30,11 +30,11 @@ int main() {
     }
 
     // Single-bit round trips.
-    round_trip({{true, 128}});
-    round_trip({{false, 128}});
+    round_trip({{true, static_cast<std::uint8_t>(128)}});
+    round_trip({{false, static_cast<std::uint8_t>(128)}});
 
     // Mixed sequence.
-    round_trip({{true, 128}, {false, 200}, {true, 64}, {false, 128}});
+    round_trip({{true, static_cast<std::uint8_t>(128)}, {false, static_cast<std::uint8_t>(200)}, {true, static_cast<std::uint8_t>(64)}, {false, static_cast<std::uint8_t>(128)}});
 
     // Long sequence across many probabilities.
     {
@@ -47,8 +47,8 @@ int main() {
     }
 
     // Skewed probabilities.
-    round_trip({{false, 250}, {false, 250}, {false, 250},
-                {true, 5}, {false, 250}, {false, 250}});
+    round_trip({{false, static_cast<std::uint8_t>(250)}, {false, static_cast<std::uint8_t>(250)}, {false, static_cast<std::uint8_t>(250)},
+                {true, static_cast<std::uint8_t>(5)}, {false, static_cast<std::uint8_t>(250)}, {false, static_cast<std::uint8_t>(250)}});
 
     // write_bits / read_bits for u8, u16, u32.
     {

@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 197)
+        self.assertEqual(summary["case_count"], 204)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -160,8 +160,8 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(summary["conformance_status"], "not-run")
         self.assertEqual(summary["source_input_language_count"], 23)
         self.assertEqual(len(summary["source_input_registry_sha256"]), 64)
-        self.assertEqual(summary["repository_source_boundary_count"], 18)
-        self.assertEqual(summary["repository_source_input_count"], 20)
+        self.assertEqual(summary["repository_source_boundary_count"], 19)
+        self.assertEqual(summary["repository_source_input_count"], 27)
         self.assertEqual(len(summary["repository_source_boundary_sha256"]), 64)
         self.assertEqual(
             summary["domains"],
@@ -444,15 +444,15 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary,
             {
-                "boundary_count": 18,
-                "input_count": 20,
-                "scope_count": 490,
-                "authorization_count": 492,
+                "boundary_count": 19,
+                "input_count": 27,
+                "scope_count": 492,
+                "authorization_count": 506,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78",
+            "4569b53118a279164c56a36142ff8f65a672edc533265ee146e4ca7385cde6a2",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -3519,6 +3519,51 @@ class PureDomainValidationTests(unittest.TestCase):
             repository_source_input_boundary=boundary,
         )
 
+    def test_warrant_corpus_inputs_select_both_rust_consumers(self) -> None:
+        boundary = runner.load_document(
+            FIXTURE_ROOT / "repository-source-input-boundary.json"
+        )
+        options = copy.deepcopy(
+            load_case("diff-selection-shared-input-multiconsumer.json")["input"][
+                "options"
+            ]
+        )
+        options["packages"] = [
+            {
+                "name": "rust/warrant-grammar",
+                "rel_path": "code/packages/rust/warrant-grammar",
+                "source_mode": "strict_globs",
+                "source_globs": ["src/**/*.rs", "examples/**/*.rs", "tests/**/*.rs"],
+            },
+            {
+                "name": "rust/ca-assurance-report",
+                "rel_path": "code/packages/rust/ca-assurance-report",
+                "source_mode": "strict_globs",
+                "source_globs": ["src/**/*.rs", "tests/**/*.rs"],
+            },
+        ]
+        options["edges"] = []
+
+        inputs = [
+            "code/scripts/tests/test_warrant_corpus_oracle.py",
+            "code/scripts/warrant_corpus_oracle.py",
+            "code/specs/ct-compare.warrant",
+            "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+            "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+            "code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+            "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+        ]
+        for changed_path in inputs:
+            with self.subTest(changed_path=changed_path):
+                self.assertEqual(
+                    runner._expected_diff_selection(options, [changed_path], boundary),
+                    (
+                        {"rust/warrant-grammar", "rust/ca-assurance-report"},
+                        {"rust/warrant-grammar", "rust/ca-assurance-report"},
+                        set(),
+                    ),
+                )
+
     def test_hashing_cache_sorts_local_and_boundary_union_by_raw_utf8(self) -> None:
         case = load_case("hashing-cache-local-boundary-union.json")
         expected = case["expected"]["result"]
@@ -3968,6 +4013,105 @@ class PureDomainValidationTests(unittest.TestCase):
             raised.exception.code,
             "EXPECTED_TEST_TRIGGER_RESULT_INVALID",
         )
+
+    def test_package_metadata_selection_keeps_metadata_local(self) -> None:
+        # The package_local metadata variant: root changelog/capability
+        # manifest/certificate/assurance report/evidence-data changes select
+        # their package and its prerequisites but never its dependents.
+        fixtures = sorted(CASES_ROOT.glob("package-metadata-selection-*.json"))
+        self.assertEqual(
+            [path.name for path in fixtures],
+            [
+                "package-metadata-selection-boundary-consumer.json",
+                "package-metadata-selection-build-front.json",
+                "package-metadata-selection-disallowed-types.json",
+                "package-metadata-selection-local-only.json",
+                "package-metadata-selection-lookalikes.json",
+                "package-metadata-selection-source-propagates.json",
+                "package-metadata-selection-strict-and-forced.json",
+            ],
+        )
+        for path in fixtures:
+            with self.subTest(path=path.name):
+                case = load_case(path.name)
+                self.assertEqual(
+                    case["input"]["options"]["metadata_policy"], "package_local"
+                )
+                runner.validate_case_document(case, **self._schema_args())
+                runner.assert_result_matches(
+                    case,
+                    case["expected"],
+                    **self._result_schema_args(),
+                )
+
+        local_only = load_case("package-metadata-selection-local-only.json")
+        options = local_only["input"]["options"]
+        changed_paths = local_only["input"]["changed_paths"]
+        self.assertEqual(
+            runner._expected_diff_selection(options, changed_paths),
+            ({"rust/meta"}, {"rust/meta"}, {"rust/pre"}),
+        )
+        # Without the policy the same paths are ordinary package-prefix
+        # changes and reach the dependent, exactly as before.
+        legacy = {k: v for k, v in options.items() if k != "metadata_policy"}
+        self.assertEqual(
+            runner._expected_diff_selection(legacy, changed_paths),
+            ({"rust/meta"}, {"rust/dep", "rust/meta"}, {"rust/pre"}),
+        )
+
+        # An expectation that still propagates metadata is rejected.
+        propagating = copy.deepcopy(local_only)
+        propagating["expected"]["result"]["affected_packages"] = [
+            "rust/dep",
+            "rust/meta",
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(propagating, **self._schema_args())
+        self.assertEqual(raised.exception.code, "EXPECTED_DIFF_RESULT_INVALID")
+
+        # The policy is a closed constant, and only the variant schema allows it.
+        for policy in ("propagate", "Package_Local", ""):
+            with self.subTest(policy=policy):
+                unknown = copy.deepcopy(local_only)
+                unknown["input"]["options"]["metadata_policy"] = policy
+                with self.assertRaises(runner.ConformanceError):
+                    runner.validate_case_document(unknown, **self._schema_args())
+
+        for relative, expected in (
+            ("CHANGELOG.md", True),
+            ("CHANGELOG.d/_meta.md", True),
+            ("required_capabilities.json", True),
+            ("effect_certificate.json", True),
+            ("assurance_report.json", True),
+            ("evidence/test-manifest.json", True),
+            ("evidence/proofs/a.cnf", True),
+            ("evidence/proofs/a.drat", True),
+            ("README.md", False),
+            ("CHANGELOG.d/nested/a.md", False),
+            ("CHANGELOG.d/run.sh", False),
+            ("CHANGELOG.d/.md", False),
+            ("evidence/run.sh", False),
+            ("evidence/x.json.py", False),
+            ("evidence/README.md", False),
+            ("evidence//x.json", False),
+            ("evidence/../x.json", False),
+            ("x/evidence/y.json", False),
+            ("x/CHANGELOG.d/y.md", False),
+            ("sub/required_capabilities.json", False),
+            ("changelog.md", False),
+            ("", False),
+            ("src/lib.rs", False),
+            ("docs/README.md", False),
+            ("readme.md", False),
+            ("README.md.bak", False),
+            ("CHANGELOG.d", False),
+            ("CHANGELOG.d/", False),
+            ("evidence", False),
+            ("evidence.bindings", False),
+            ("evidence\\x.json", False),
+        ):
+            with self.subTest(relative=relative):
+                self.assertIs(runner._is_package_local_metadata(relative), expected)
 
     def test_cargo_manifest_snapshot_oracle_is_strict_and_bounded(self) -> None:
         fixtures = sorted(CASES_ROOT.glob("cargo-manifest-snapshot-*.json"))
@@ -4870,7 +5014,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 197)
+        self.assertEqual(summary["case_count"], 204)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

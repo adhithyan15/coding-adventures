@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `required_capabilities.json` rewritten to the canonical schema-v1 shape (version, package, capabilities objects, justification) so the hardened capability analyzer accepts it.
+
 ### Added
 
 - Execute all six normative `classical-ciphers-v1` Atbash objects in generated,

@@ -13,7 +13,18 @@ import { Window } from "happy-dom";
 
 export const MAX_DIAGNOSTICS = 20;
 export const MAX_FALLBACK_HTML_BYTES = 1_048_576;
-export const LIGHTHOUSE_SAMPLE_COUNT = 3;
+/**
+ * Fresh-process Lighthouse audits per route; the median is gated.
+ *
+ * Three samples let two slow audits on a busy hosted runner fail a release that
+ * scores 0.98 on every ordinary run (the landing page failed on macOS at 0.83,
+ * 0.89 and 0.92 while the same bytes passed elsewhere).  Five samples need
+ * three slow audits to move the median, which is far rarer, while the 0.95
+ * threshold, the exact browser pins, and the fail-closed accessibility and
+ * resource aggregation are unchanged.  The count must be odd so the median is
+ * a measured sample, and `forme_release_gate.py` pins the same number.
+ */
+export const LIGHTHOUSE_SAMPLE_COUNT = 5;
 export const QUALITY_CONTENT_SECURITY_POLICY = [
   "default-src 'none'",
   "base-uri 'none'",
@@ -222,7 +233,7 @@ export function evaluateLighthouseResult(
   };
 }
 
-/** Reduce exactly three independent audits to conservative release evidence. */
+/** Reduce exactly `LIGHTHOUSE_SAMPLE_COUNT` independent audits to conservative release evidence. */
 export function aggregateLighthouseReports(
   target: QualityTarget,
   reports: readonly LighthouseReport[],
@@ -265,12 +276,17 @@ export function aggregateLighthouseReports(
   }
 
   const orderedPerformance = [...performanceSamples].sort((left, right) => left - right);
-  const performance = orderedPerformance[1];
+  const performance = orderedPerformance[(LIGHTHOUSE_SAMPLE_COUNT - 1) / 2];
   if (performance === undefined) throw new Error("Lighthouse median performance is unavailable");
   const accessibility = Math.min(...accessibilitySamples);
   if (performance < target.performanceMinimum) {
+    // Name every sample in run order: a failure that cannot show whether the
+    // first audit was cold or all of them were slow cannot be diagnosed from
+    // the log, and the attestation that carries the samples is only written
+    // after a pass.
     diagnostics.add(
-      `performance median score ${performance} < ${target.performanceMinimum}`,
+      `performance median score ${performance} < ${target.performanceMinimum}` +
+      ` (samples ${performanceSamples.join("/")})`,
     );
   }
   if (accessibility < target.accessibilityMinimum) {

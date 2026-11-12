@@ -814,6 +814,71 @@
         }
       }
     },
+    "package_metadata_selection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options",
+        "changed_paths"
+      ],
+      "properties": {
+        "operation": {
+          "const": "diff_selection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "edges",
+            "forced_packages",
+            "unknown_path_policy",
+            "metadata_policy"
+          ],
+          "properties": {
+            "packages": {
+              "type": "array",
+              "maxItems": 4096,
+              "items": {
+                "$ref": "#/$defs/diff_package"
+              }
+            },
+            "edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            },
+            "forced_packages": {
+              "$ref": "#/$defs/package_names"
+            },
+            "unknown_path_policy": {
+              "enum": [
+                "all",
+                "error"
+              ]
+            },
+            "boundary_sha256": {
+              "$ref": "#/$defs/digest"
+            },
+            "metadata_policy": {
+              "const": "package_local"
+            }
+          }
+        },
+        "changed_paths": {
+          "type": "array",
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/safe_path"
+          }
+        }
+      }
+    },
     "diff_selection_input": {
       "oneOf": [
         {
@@ -821,6 +886,9 @@
         },
         {
           "$ref": "#/$defs/test_trigger_selection_input"
+        },
+        {
+          "$ref": "#/$defs/package_metadata_selection_input"
         }
       ]
     },

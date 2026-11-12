@@ -4,6 +4,13 @@
 //! acyclic model definitions, strict subtyping (Nat <: Int, Bytes<N> <: Bytes),
 //! operator typing, exhaustive matches, contract admissibility, and stable diagnostics
 //! (`W0201`, `W0202`, `W0203`, `W0301`, `W0401`, `W0602`).
+//!
+//! WX-D1 (VER04k sections 1.2, 2.4 and 2.11) adds, in v1 documents only: the
+//! twelve sequence names reserved in [`V1_FUNCTIONS`], the typing of the seven
+//! D1 forms (`typecheck_wxd_d1`, with the expected type threaded inward), the
+//! W0202 "not yet implemented in this version" refusal of the five D2 names,
+//! the [`MAX_LIST_LITERAL`] cap (W0602), and (security review, E20) the
+//! [`MAX_IDENTIFIER_BYTES`] cap on every identifier (W0602).
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt;
@@ -12,7 +19,7 @@ use crate::fixed::FixedTy;
 use crate::parser::{
     AssumptionsDecl, BinaryOp, BoundDecl, Declaration, Expression, FieldDecl, InputDecl,
     LabelsDecl, Literal, MatchArm, ModelDecl, OpDecl, Pattern, ProjKey, QualifiedName, TypeExpr,
-    UnaryOp, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
+    UnaryOp, VectorsDecl, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
 };
 use crate::patterns::{self, PTy, Pat};
 
@@ -21,6 +28,13 @@ pub const MAX_SHAPE_NODES: usize = 4096;
 
 /// Most arms one `match` may have (VER04j section 4.3).
 pub const MAX_MATCH_ARMS: usize = 256;
+
+/// Most rows one `vectors` table may declare (VER04j section 5.2: a tool-profile
+/// constant; exhaustion is W0602).
+pub const MAX_TABLE_ROWS: u64 = 100_000;
+
+/// Most rows all the tables of one document may declare together.
+pub const MAX_DOCUMENT_ROWS: u64 = 250_000;
 
 /// Names reserved in every document (VER04 section 2).
 const V0_BUILTINS: [&str; 18] = [
@@ -31,10 +45,21 @@ const V0_BUILTINS: [&str; 18] = [
 /// The six types WX-B adds; reserved only in v1 documents.
 const V1_TYPES: [&str; 6] = ["U16", "U32", "I8", "I16", "I32", "I64"];
 
-/// The v1 built-in *functions* (WX-B and WX-C).  Reserved, and in scope, only
-/// in v1 documents (VER04j section 1.2): a v0 document may still define its
-/// own model called `rem` or `shl` and keeps meaning that definition.
-pub const V1_FUNCTIONS: [&str; 31] = [
+/// The v1 built-in *functions* (WX-B, WX-C, WX-H and WX-D).  Reserved, and in
+/// scope, only in v1 documents (VER04j section 1.2, VER04k section 1.2): a v0
+/// document may still define its own model called `rem`, `shl` or `take` and
+/// keeps meaning that definition.
+///
+/// The last twelve are the WX-D sequence names.  All twelve are reserved from
+/// slice D1 on, so that no v1 document written between D1 and D2 can claim
+/// one of the D2 names for itself and then change meaning when D2 lands:
+///
+/// ```text
+///   D1, implemented here      take drop slice replicate range to_list to_bytes
+///   D2, reserved, refused     fold map count all any
+///                             ("not yet implemented in this version", W0202)
+/// ```
+pub const V1_FUNCTIONS: [&str; 45] = [
     "widen",
     "wrap",
     "try",
@@ -66,7 +91,53 @@ pub const V1_FUNCTIONS: [&str; 31] = [
     "le_bytes",
     "from_be",
     "from_le",
+    "imin",
+    "imax",
+    // WX-D1 (VER04k section 2.2): typed below, evaluated by `codegen`.
+    "take",
+    "drop",
+    "slice",
+    "replicate",
+    "range",
+    "to_list",
+    "to_bytes",
+    // WX-D2: reserved now, implemented later.
+    "fold",
+    "map",
+    "count",
+    "all",
+    "any",
 ];
+
+/// The seven WX-D1 sequence built-ins this tool version implements.
+const WXD_D1: [&str; 7] = [
+    "take",
+    "drop",
+    "slice",
+    "replicate",
+    "range",
+    "to_list",
+    "to_bytes",
+];
+
+/// The five higher-order WX-D2 names: reserved in v1, not yet implemented.
+const WXD_D2: [&str; 5] = ["fold", "map", "count", "all", "any"];
+
+/// Most elements one list literal of a v1 document may have (VER04k section
+/// 2.11, `MAX_LIST_LITERAL`).  Over it is W0602.  The cap is a *checker* rule
+/// and applies only to v1 documents: a v0 document keeps its old behaviour,
+/// where only the evaluator's 65,536-element guard applies.
+///
+/// Why a literal needs a cap at all when every sequence value is already
+/// capped at 65,536 elements: a literal is source text that generated
+/// evidence copies into Rust source and every lane's corpus, so its size is a
+/// cost paid in every artifact, not once in one evaluation.
+pub const MAX_LIST_LITERAL: usize = 4096;
+
+/// Longest identifier of a v1 document, in bytes (VER04k section 9.1, E20).
+/// Over it is W0602.  The same 128 bytes the binding parser allows a path
+/// segment (VER04k section 6.2).  v0 documents keep their unbounded names.
+pub const MAX_IDENTIFIER_BYTES: usize = 128;
 
 /// Is `name` a built-in reserved in a document of version `version`?
 fn is_reserved_builtin(version: Version, name: &str) -> bool {
@@ -109,8 +180,14 @@ pub enum DiagnosticCode {
     W0501,
     /// W0502: Failed binding negative control or fresh-output requirement.
     W0502,
+    /// W0601: A vacuous contract: a `vectors` table whose `holds` calls no
+    /// operation, or one with no rows (VER04j section 5.2).
+    W0601,
     /// W0602: Incomplete mandatory solver/analyzer/observer evidence; budget exhaustion.
     W0602,
+    /// W0710: Column/type mismatch of a `vectors` table: an unused column or a
+    /// column type with no TFV decoding (VER04j section 5.4).
+    W0710,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -124,7 +201,9 @@ impl fmt::Display for DiagnosticCode {
             Self::W0402 => write!(f, "W0402"),
             Self::W0501 => write!(f, "W0501"),
             Self::W0502 => write!(f, "W0502"),
+            Self::W0601 => write!(f, "W0601"),
             Self::W0602 => write!(f, "W0602"),
+            Self::W0710 => write!(f, "W0710"),
         }
     }
 }
@@ -177,6 +256,29 @@ pub enum CheckerErrorKind {
     NullaryWithParens(String),
     /// WX-A: a match with more than [`MAX_MATCH_ARMS`] arms.
     TooManyArms,
+    /// WX-E: a table, or a document's tables together, declare more rows than the
+    /// tool profile allows.
+    TableRows { rows: u64, limit: u64 },
+    /// WX-E: a table with `rows 0`, or whose `holds` calls no operation.
+    VacuousTable(String),
+    /// WX-E: a column the `holds` expression never mentions.
+    UnusedColumn(String),
+    /// WX-E: a column type that a TFV row cannot carry (a symbolic width).
+    UndecodableColumn(String),
+    /// WX-D: a reserved v1 built-in that this tool version does not implement
+    /// yet (the five D2 names, VER04k section 8).  Carries the built-in's name.
+    NotYetImplemented(String),
+    /// WX-D: a v1 list literal with more than [`MAX_LIST_LITERAL`] elements.
+    ListLiteralTooLong {
+        len: usize,
+        limit: usize,
+    },
+    /// E20: a v1 identifier longer than [`MAX_IDENTIFIER_BYTES`].  Carries
+    /// the length, not the name, so the diagnostic stays small.
+    IdentifierTooLong {
+        len: usize,
+        limit: usize,
+    },
 }
 
 /// Semantic checking error with source span.
@@ -189,7 +291,21 @@ pub struct CheckerError {
 
 impl fmt::Display for CheckerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}: {:?}", self.code, self.kind)
+        match &self.kind {
+            // Spelled out, because "unbound name" alone would send an author
+            // looking for a missing declaration they are not allowed to write.
+            CheckerErrorKind::NotYetImplemented(name) => write!(
+                f,
+                "{}: reserved built-in `{name}` is not yet implemented in this version",
+                self.code
+            ),
+            CheckerErrorKind::IdentifierTooLong { len, limit } => write!(
+                f,
+                "{}: an identifier of {len} bytes is longer than the {limit} bytes a v1 document allows",
+                self.code
+            ),
+            kind => write!(f, "{}: {:?}", self.code, kind),
+        }
     }
 }
 
@@ -418,6 +534,9 @@ pub struct Checker<'a> {
     // Test namespace symbols
     test_symbols: HashSet<String>,
 
+    // WX-E: the document's tables, in declaration order.
+    vectors: Vec<&'a VectorsDecl<'a>>,
+
     // Contracts
     labels: BTreeMap<String, &'a LabelsDecl<'a>>,
     bounds: BTreeMap<String, &'a BoundDecl<'a>>,
@@ -441,6 +560,7 @@ impl<'a> Checker<'a> {
             adts: BTreeMap::new(),
             ctor_index: BTreeMap::new(),
             test_symbols: HashSet::new(),
+            vectors: Vec::new(),
             labels: BTreeMap::new(),
             bounds: BTreeMap::new(),
             inputs: BTreeMap::new(),
@@ -478,6 +598,11 @@ impl<'a> Checker<'a> {
 
     /// Primary entry point: perform all checking passes.
     pub fn check(mut self) -> Result<CheckedWarrantModule, CheckerError> {
+        // Pass 0 (v1 only, E20): no identifier longer than 128 bytes.
+        if self.file.version == Version::V1 {
+            check_identifier_lengths(self.file)?;
+        }
+
         // Pass 1: Catalog declarations into namespaces and detect duplicates
         self.catalog_declarations()?;
 
@@ -667,6 +792,17 @@ impl<'a> Checker<'a> {
                             span: cl.span,
                         });
                     }
+                }
+                // WX-E: a table shares the test-name namespace (section 5.2).
+                Declaration::Vectors(v) => {
+                    if !self.test_symbols.insert(v.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateTestName(v.name.to_string()),
+                            span: v.span,
+                        });
+                    }
+                    self.vectors.push(v);
                 }
                 Declaration::Labels(lbl) => {
                     if self.labels.insert(lbl.name.to_string(), lbl).is_some() {
@@ -985,10 +1121,24 @@ impl<'a> Checker<'a> {
         }
     }
 
-    /// A binder (parameter, quantifier binder or pattern variable) may not
-    /// spell a constructor (VER04j section 4.2): W0203.
-    fn check_not_ctor(&self, name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
-        if self.ctor_index.contains_key(name) {
+    /// A binder (parameter or quantifier binder; pattern variables and table
+    /// columns go through [`Self::check_arm_binder`]) may not spell a
+    /// constructor (VER04j section 4.2), nor, in a v1 document, a reserved
+    /// built-in (VER04k section 1.2): W0203 either way.
+    ///
+    /// The built-in half closes a checker/evaluator split.  The checker reads
+    /// an *applied* name, `take(..)`, as the built-in and never as a binder,
+    /// so with a parameter called `take` the body `take(take, 0)` was typed
+    /// as the built-in's `List<U8>` while the evaluator returned the
+    /// parameter, and `model exp(range: Bool) -> List<Nat> = range(5)` was
+    /// typed `List<Nat>` and evaluated to `Bool(true)`.  Refusing the binder
+    /// removes the ambiguity for every reserved v1 name, the older WX-B/C/H
+    /// built-ins and the v0 ones included.  A v0 binder may still spell any
+    /// v1 name, which is an ordinary identifier there.
+    fn check_binder_name(&self, name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
+        if self.ctor_index.contains_key(name)
+            || (self.file.version == Version::V1 && is_reserved_builtin(Version::V1, name))
+        {
             return Err(CheckerError {
                 code: DiagnosticCode::W0203,
                 kind: CheckerErrorKind::ShadowedBinding(name.to_string()),
@@ -1151,7 +1301,7 @@ impl<'a> Checker<'a> {
                         span: p.span,
                     });
                 }
-                self.check_not_ctor(p.name, p.span)?;
+                self.check_binder_name(p.name, p.span)?;
                 let ty = self.resolve_type(&p.param_type, &static_params)?;
                 env.insert(p.name.to_string(), ty.clone());
                 params.push((p.name.to_string(), ty));
@@ -1206,7 +1356,7 @@ impl<'a> Checker<'a> {
                         span: p.span,
                     });
                 }
-                self.check_not_ctor(p.name, p.span)?;
+                self.check_binder_name(p.name, p.span)?;
                 let param_type = self.resolve_type(&p.param_type, &[])?;
                 env.insert(p.name.to_string(), param_type.clone());
                 params.push((p.name.to_string(), param_type));
@@ -1295,6 +1445,95 @@ impl<'a> Checker<'a> {
                     }
                 }
                 _ => {}
+            }
+        }
+        self.typecheck_vectors()
+    }
+
+    /// WX-E (VER04j section 5.2): the row budget, the columns, and the `holds`
+    /// expression of every `vectors` table.
+    ///
+    /// ```text
+    /// rows <= 100,000 per table, 250,000 per document   W0602
+    /// rows 0                                            W0601 (nothing to check)
+    /// column of a symbolic width (Bytes<n>)             W0710 (no TFV decoding)
+    /// column named like a model, op, constructor, ...   W0203
+    /// holds: Bool over exactly the columns              W0301 / W0710 (unused)
+    /// holds calls no operation                          W0601 (vacuous)
+    /// ```
+    fn typecheck_vectors(&mut self) -> Result<(), CheckerError> {
+        let tables = self.vectors.clone();
+        let mut total: u64 = 0;
+        for v in tables {
+            self.charge_work(v.span)?;
+            total = total.saturating_add(v.rows);
+            if v.rows > MAX_TABLE_ROWS || total > MAX_DOCUMENT_ROWS {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0602,
+                    kind: CheckerErrorKind::TableRows {
+                        rows: v.rows,
+                        limit: if v.rows > MAX_TABLE_ROWS {
+                            MAX_TABLE_ROWS
+                        } else {
+                            MAX_DOCUMENT_ROWS
+                        },
+                    },
+                    span: v.span,
+                });
+            }
+            if v.rows == 0 {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0601,
+                    kind: CheckerErrorKind::VacuousTable(format!("table {} declares no rows", v.name)),
+                    span: v.span,
+                });
+            }
+            let mut env: HashMap<String, Type> = HashMap::new();
+            for c in &v.columns {
+                self.check_arm_binder(c.name, c.span, &env)?;
+                if has_symbolic_width(&c.ty) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0710,
+                        kind: CheckerErrorKind::UndecodableColumn(c.name.to_string()),
+                        span: c.span,
+                    });
+                }
+                let ty = self.resolve_type(&c.ty, &[])?;
+                env.insert(c.name.to_string(), ty);
+            }
+            let ty = self.typecheck_expression(&v.holds, &env, Some(&Type::Bool), true)?;
+            if ty != Type::Bool {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::TypeMismatch {
+                        expected: "Bool".to_string(),
+                        actual: ty.display_name(),
+                    },
+                    span: v.span,
+                });
+            }
+            let ops: HashSet<&str> = self.operations.keys().map(String::as_str).collect();
+            if crate::codegen::find_operation_for_version(&v.holds, &ops, self.file.version)
+                .is_none()
+            {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0601,
+                    kind: CheckerErrorKind::VacuousTable(format!(
+                        "table {} never calls an operation",
+                        v.name
+                    )),
+                    span: v.span,
+                });
+            }
+            let cols: HashSet<&str> = v.columns.iter().map(|c| c.name).collect();
+            let mut seen = BTreeSet::new();
+            v.holds.mentioned_names(&cols, &mut seen);
+            if let Some(c) = v.columns.iter().find(|c| !seen.contains(c.name)) {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0710,
+                    kind: CheckerErrorKind::UnusedColumn(c.name.to_string()),
+                    span: c.span,
+                });
             }
         }
         Ok(())
@@ -1415,6 +1654,7 @@ impl<'a> Checker<'a> {
             })?;
 
             let op_params = op.params.clone();
+            let op_return = op.return_type.clone();
             let op_static_params: Vec<String> = op
                 .static_params
                 .iter()
@@ -1427,7 +1667,10 @@ impl<'a> Checker<'a> {
             }
 
             for row in &bnd.rows {
-                if row.name != "steps" && row.name != "heap" && row.name != "depth" {
+                // `output` exists only in a v1 document (the parser already
+                // refused it in a v0 one, W0101).
+                let v1_metric = self.file.version == Version::V1 && row.name == "output";
+                if row.name != "steps" && row.name != "heap" && row.name != "depth" && !v1_metric {
                     return Err(CheckerError {
                         code: DiagnosticCode::W0401,
                         kind: CheckerErrorKind::InvalidContract(format!(
@@ -1436,6 +1679,37 @@ impl<'a> Checker<'a> {
                         )),
                         span: row.span,
                     });
+                }
+                if v1_metric {
+                    // WX-H (section 6.2): the size of a successful result is
+                    // defined for byte strings and lists, and for a `Result`
+                    // of one of them (its `Ok` payload).
+                    let ret = self.resolve_type(&op_return, &op_static_params)?;
+                    let sized = |t: &Type| {
+                        matches!(
+                            t,
+                            Type::Bytes
+                                | Type::FixedBytes(_)
+                                | Type::FixedBytesParam(_)
+                                | Type::List(_)
+                        )
+                    };
+                    let ok = match &ret {
+                        Type::Result(inner, _) => sized(inner),
+                        other => sized(other),
+                    };
+                    if !ok {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bytes, Bytes<N>, List<T> or a Result of one of them \
+                                           for an `output` bound"
+                                    .to_string(),
+                                actual: ret.display_name(),
+                            },
+                            span: row.span,
+                        });
+                    }
                 }
                 let bound_ty =
                     self.typecheck_expression(&row.bound, &env, Some(&Type::Int), false)?;
@@ -1727,7 +2001,7 @@ impl<'a> Checker<'a> {
                             span: b.span,
                         });
                     }
-                    this.check_not_ctor(b.name, b.span)?;
+                    this.check_binder_name(b.name, b.span)?;
                     let b_type = this.resolve_type(&b.param_type, &[])?;
                     if let Some(refinement) = &b.refinement {
                         let mut ref_env = local_env.clone();
@@ -1783,6 +2057,18 @@ impl<'a> Checker<'a> {
                 this.project_type(&base_ty, *key, *span)
             }
             Expression::List { elements, span } => {
+                // WX-D (VER04k section 2.11): a v1 literal is capped before
+                // any element is looked at.  v0 is unchanged.
+                if this.file.version == Version::V1 && elements.len() > MAX_LIST_LITERAL {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0602,
+                        kind: CheckerErrorKind::ListLiteralTooLong {
+                            len: elements.len(),
+                            limit: MAX_LIST_LITERAL,
+                        },
+                        span: *span,
+                    });
+                }
                 if elements.is_empty() {
                     if let Some(Type::List(inner)) = expected {
                         return Ok(Type::List(inner.clone()));
@@ -2020,6 +2306,29 @@ impl<'a> Checker<'a> {
             }
         }
 
+        // E21 (VER04k section 9.1): a dotted name is an error case (above) or
+        // a v1 binder projection (above), nothing else.  Every later step
+        // resolves a name by its first segment, so without this refusal
+        // `g.x(a)` would be typed as the model call `g(a)`, `a.foo` as the
+        // binder `a` and `Some.x(a)` as `Some(a)` -- while the evaluator reads
+        // any unrecognised two-segment name as the error value
+        // `Err(("g", "x"))`, which an example would then carry into a test
+        // vector as an error id no declaration has.  v0 and v1 alike: such a
+        // v0 document checked but never meant what its type said.
+        //
+        //   segments   head                          meaning
+        //   1          anything                      steps 1-4 below
+        //   2          a declared error E            E.CASE (above)
+        //   >= 2       a binder in scope (v1 only)   projection (above)
+        //   >= 2       anything else                 W0202 UnboundName
+        if name.segments.len() != 1 {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0202,
+                kind: CheckerErrorKind::UnboundName(name.segments.join(".")),
+                span,
+            });
+        }
+
         let first = name.segments[0];
 
         // 1. Check local environment binders
@@ -2039,7 +2348,7 @@ impl<'a> Checker<'a> {
             && name.segments.len() == 1
             && (V1_FUNCTIONS.contains(&first) || first == "div")
         {
-            return self.typecheck_v1_builtin(first, widths, args, env, allow_ops, span);
+            return self.typecheck_v1_builtin(first, widths, args, env, expected, allow_ops, span);
         }
 
         // 2. Built-in constructors and functions
@@ -2526,6 +2835,7 @@ impl<'a> Checker<'a> {
     ///                        signed: rejected (floor vs trunc is a trap)
     /// div_trunc rem_trunc    signed T, T                      -> Option<T>
     /// unwrap_or(o, d)        Option<T>, T                     -> T
+    /// imin(a, b)  imax(a, b) Int|Nat, Int|Nat                 -> Int
     /// bit_and(a, b) ...      T, T                             -> T
     /// shl(a, n) shr rotl ... T, Nat                           -> T
     /// sar(a, n)              signed T, Nat                    -> T
@@ -2534,15 +2844,29 @@ impl<'a> Checker<'a> {
     /// be_bytes(a) le_bytes   T                                -> Bytes<w/8>
     /// from_be<T>(b)          Bytes<w/8>                       -> T
     /// ```
+    #[allow(clippy::too_many_arguments)]
     fn typecheck_v1_builtin(
         &mut self,
         name: &str,
         widths: &[Width<'a>],
         args: Option<&[Expression<'a>]>,
         env: &HashMap<String, Type>,
+        expected: Option<&Type>,
         allow_ops: bool,
         span: (usize, usize),
     ) -> Result<Type, CheckerError> {
+        // WX-D: the five D2 names are reserved but refused, before any operand
+        // is looked at; the seven D1 forms have their own rules below.
+        if WXD_D2.contains(&name) {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0202,
+                kind: CheckerErrorKind::NotYetImplemented(name.to_string()),
+                span,
+            });
+        }
+        if WXD_D1.contains(&name) {
+            return self.typecheck_wxd_d1(name, widths, args, env, expected, allow_ops, span);
+        }
         let mismatch = |expected: &str, actual: String| CheckerError {
             code: DiagnosticCode::W0301,
             kind: CheckerErrorKind::TypeMismatch {
@@ -2663,6 +2987,16 @@ impl<'a> Checker<'a> {
                     )),
                 }
             }
+            // WX-H: total `Int` helpers for bound expressions (section 6.2).
+            "imin" | "imax" => {
+                for operand in list {
+                    let t = self.typecheck_expression(operand, env, Some(&Type::Int), allow_ops)?;
+                    if !t.is_assignable_to(&Type::Int) {
+                        return Err(mismatch("Int or Nat operand", t.display_name()));
+                    }
+                }
+                Ok(Type::Int)
+            }
             "unwrap_or" => {
                 let o = self.typecheck_expression(&list[0], env, None, allow_ops)?;
                 let Type::Option(inner) = o else {
@@ -2744,6 +3078,154 @@ impl<'a> Checker<'a> {
                 }
                 Ok(if name == "bit" { Type::Bool } else { a })
             }
+        }
+    }
+
+    // ── WX-D1 sequence built-ins (VER04k sections 2.2 and 2.4) ──────────────
+
+    /// Type a call to one of the seven D1 sequence built-ins.
+    ///
+    /// ```text
+    ///   Seq = List<T> | Bytes | Bytes<N>     elem(List<T>) = T, elem(Bytes..) = U8
+    ///   D(List<T>) = List<T>                 D(Bytes) = D(Bytes<N>) = Bytes
+    ///
+    ///   take(xs, n)      xs: Seq, n: Int     -> D(Seq)
+    ///   drop(xs, n)      xs: Seq, n: Int     -> D(Seq)
+    ///   slice(xs, s, n)  xs: Seq, s n: Int   -> D(Seq)
+    ///   replicate(x, n)  x: T, n: Int        -> List<T>
+    ///   range(n)         n: Int              -> List<Nat>
+    ///   to_list(b)       b: Bytes | Bytes<N> -> List<U8>
+    ///   to_bytes(xs)     xs: List<U8>        -> Bytes
+    /// ```
+    ///
+    /// Every count is an `Int`, and a `Nat` widens to it as everywhere in v0;
+    /// a negative count is legal and means zero at evaluation (section 2.2).
+    ///
+    /// **Expected types flow inward**, which is what lets an empty list literal
+    /// appear as an operand: `[]` has no type of its own (as in v0), so
+    ///
+    /// ```text
+    ///   to_bytes([])                  []  is checked against List<U8>
+    ///   replicate([], n) : List<List<U8>>   []  is checked against List<U8>
+    ///   take([], n)      : List<U8>         []  is checked against List<U8>
+    /// ```
+    ///
+    /// An unsuffixed integer literal stays an `Int` even where a `U8` is
+    /// expected (VER04 section 2: only `Nat` is contextual), so
+    /// `to_bytes([0, 1])` is W0301 and is written `to_bytes([0u8, 1u8])`.
+    #[allow(clippy::too_many_arguments)]
+    fn typecheck_wxd_d1(
+        &mut self,
+        name: &str,
+        widths: &[Width<'a>],
+        args: Option<&[Expression<'a>]>,
+        env: &HashMap<String, Type>,
+        expected: Option<&Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        let mismatch = |expected: &str, actual: String| CheckerError {
+            code: DiagnosticCode::W0301,
+            kind: CheckerErrorKind::TypeMismatch {
+                expected: expected.to_string(),
+                actual,
+            },
+            span,
+        };
+        let arity_error = |expected: usize, actual: usize| CheckerError {
+            code: DiagnosticCode::W0301,
+            kind: CheckerErrorKind::ArityMismatch { expected, actual },
+            span,
+        };
+        // No D1 form takes a static argument (`take<U8>(..)` is an error).
+        if !widths.is_empty() {
+            return Err(arity_error(0, widths.len()));
+        }
+        let arity = match name {
+            "range" | "to_list" | "to_bytes" => 1,
+            "slice" => 3,
+            _ => 2,
+        };
+        let list = args.ok_or_else(|| arity_error(arity, 0))?;
+        if list.len() != arity {
+            return Err(arity_error(arity, list.len()));
+        }
+        match name {
+            "take" | "drop" | "slice" => {
+                // The result has the sequence's own type for a list, so a
+                // List<T> expectation is a hint for the sequence operand.
+                let hint = match expected {
+                    Some(t @ Type::List(_)) => Some(t),
+                    _ => None,
+                };
+                let seq = self.typecheck_expression(&list[0], env, hint, allow_ops)?;
+                let result = match seq {
+                    Type::List(_) => seq,
+                    Type::Bytes | Type::FixedBytes(_) | Type::FixedBytesParam(_) => Type::Bytes,
+                    other => {
+                        return Err(mismatch(
+                            "a sequence (List<T>, Bytes or Bytes<N>)",
+                            other.display_name(),
+                        ))
+                    }
+                };
+                for count in &list[1..] {
+                    self.wxd_count(count, env, allow_ops, span)?;
+                }
+                Ok(result)
+            }
+            "replicate" => {
+                let hint = match expected {
+                    Some(Type::List(inner)) => Some(inner.as_ref()),
+                    _ => None,
+                };
+                let elem = self.typecheck_expression(&list[0], env, hint, allow_ops)?;
+                self.wxd_count(&list[1], env, allow_ops, span)?;
+                Ok(Type::List(Box::new(elem)))
+            }
+            "range" => {
+                self.wxd_count(&list[0], env, allow_ops, span)?;
+                Ok(Type::List(Box::new(Type::Nat)))
+            }
+            "to_list" => {
+                let b = self.typecheck_expression(&list[0], env, None, allow_ops)?;
+                if !b.is_assignable_to(&Type::Bytes) {
+                    return Err(mismatch("Bytes or Bytes<N>", b.display_name()));
+                }
+                Ok(Type::List(Box::new(Type::U8)))
+            }
+            // "to_bytes"
+            _ => {
+                let want = Type::List(Box::new(Type::U8));
+                let xs = self.typecheck_expression(&list[0], env, Some(&want), allow_ops)?;
+                if xs != want {
+                    return Err(mismatch("List<U8>", xs.display_name()));
+                }
+                Ok(Type::Bytes)
+            }
+        }
+    }
+
+    /// A WX-D count operand: an `Int`, or a `Nat` that widens to one.
+    fn wxd_count(
+        &mut self,
+        e: &Expression<'a>,
+        env: &HashMap<String, Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<(), CheckerError> {
+        let t = self.typecheck_expression(e, env, Some(&Type::Int), allow_ops)?;
+        if t.is_assignable_to(&Type::Int) {
+            Ok(())
+        } else {
+            Err(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::TypeMismatch {
+                    expected: "Int or Nat count".to_string(),
+                    actual: t.display_name(),
+                },
+                span,
+            })
         }
     }
 
@@ -3340,6 +3822,258 @@ fn body_span(expr: &Expression<'_>) -> (usize, usize) {
         | Expression::Tuple { span, .. }
         | Expression::Project { span, .. } => *span,
     }
+}
+
+/// Does a type mention a symbolic width (`Bytes<n>`) anywhere?  A TFV row has
+/// no way to carry one, so a `vectors` column may not (W0710).
+fn has_symbolic_width(t: &TypeExpr<'_>) -> bool {
+    match t {
+        TypeExpr::Bytes { width, .. } => matches!(width, Some(Width::Named(_))),
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => has_symbolic_width(inner),
+        TypeExpr::Result { ok_type, .. } => has_symbolic_width(ok_type),
+        TypeExpr::Tuple { elems, .. } => elems.iter().any(has_symbolic_width),
+        TypeExpr::Named { .. } => false,
+    }
+}
+
+// ── Pass 0 (v1): the identifier cap (VER04k section 9.1, E20) ─────────────
+//
+// Every identifier of a v1 document is at most `MAX_IDENTIFIER_BYTES` (128)
+// bytes.  Why a cap, when the data meter already charges the names a value
+// stores (E20)?  Because a name is copied into more places than values: into
+// diagnostics, into generated evidence source, into every lane's corpus.  The
+// cap is defence in depth, and the same 128 bytes the binding parser allows a
+// path segment, so a name that a binding can splice is a name a document can
+// declare.
+//
+// The pass visits *every* identifier the parser kept, declared or merely
+// mentioned, before any other pass looks at the document:
+//
+// ```text
+//   declarations   module, model, alias, error and its cases, op and its static
+//                  and ordinary parameters, record, variant, constructor,
+//                  field, example, claim, labels, bound and its rows, input,
+//                  assumptions, vectors and its columns
+//   types          named types, a `Result`'s error name, symbolic widths
+//   expressions    every segment of a reference, projection fields, symbolic
+//                  widths, quantifier binders
+//   patterns       constructor names, arm binders
+// ```
+//
+// So an over-long *reference* is refused before it is resolved, and the
+// diagnostic is the same whether or not the name was ever declared.  The walk
+// is linear in the size of the tree the parser built (the parser's node and
+// depth limits bound both), so it charges no checker work: a document that
+// checked before checks with the same work count now.  A v0 document is not
+// visited at all; its names stay unbounded, as they always were.
+
+/// Refuse `name` if it is longer than [`MAX_IDENTIFIER_BYTES`].
+fn ident_ok(name: &str, span: (usize, usize)) -> Result<(), CheckerError> {
+    if name.len() > MAX_IDENTIFIER_BYTES {
+        return Err(CheckerError {
+            code: DiagnosticCode::W0602,
+            kind: CheckerErrorKind::IdentifierTooLong {
+                len: name.len(),
+                limit: MAX_IDENTIFIER_BYTES,
+            },
+            span,
+        });
+    }
+    Ok(())
+}
+
+/// Every segment of a dotted name (`E.CASE`, `x.f.g`, `op.param`).
+fn ident_qname(name: &QualifiedName<'_>) -> Result<(), CheckerError> {
+    name.segments
+        .iter()
+        .try_for_each(|seg| ident_ok(seg, name.span))
+}
+
+fn ident_width(width: &Width<'_>, span: (usize, usize)) -> Result<(), CheckerError> {
+    match width {
+        Width::Named(n) => ident_ok(n, span),
+        Width::Literal(_) => Ok(()),
+    }
+}
+
+fn ident_type(ty: &TypeExpr<'_>) -> Result<(), CheckerError> {
+    match ty {
+        TypeExpr::Bytes { width, span } => width.as_ref().map_or(Ok(()), |w| ident_width(w, *span)),
+        TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => ident_type(inner),
+        TypeExpr::Result {
+            ok_type,
+            err_name,
+            span,
+        } => {
+            ident_ok(err_name, *span)?;
+            ident_type(ok_type)
+        }
+        TypeExpr::Named { name, span } => ident_ok(name, *span),
+        TypeExpr::Tuple { elems, .. } => elems.iter().try_for_each(ident_type),
+    }
+}
+
+fn ident_param(p: &crate::parser::Parameter<'_>) -> Result<(), CheckerError> {
+    ident_ok(p.name, p.span)?;
+    ident_type(&p.param_type)?;
+    p.refinement.as_ref().map_or(Ok(()), ident_expr)
+}
+
+fn ident_fields(fields: &[FieldDecl<'_>]) -> Result<(), CheckerError> {
+    fields.iter().try_for_each(|f| {
+        ident_ok(f.name, f.span)?;
+        ident_type(&f.ty)
+    })
+}
+
+/// A pattern's constructor names and binders (a binder is a one-segment
+/// `Ctor` without arguments, so both carry the name's own span).
+fn ident_pattern(pat: &Pattern<'_>) -> Result<(), CheckerError> {
+    match pat {
+        Pattern::None | Pattern::Wild | Pattern::Bool(_) => Ok(()),
+        Pattern::Some(inner) | Pattern::Ok(inner) | Pattern::Err(inner) => ident_pattern(inner),
+        Pattern::Tuple(items) => items.iter().try_for_each(ident_pattern),
+        Pattern::Ctor { name, args } => {
+            ident_qname(name)?;
+            args.iter().try_for_each(ident_pattern)
+        }
+    }
+}
+
+fn ident_expr(expr: &Expression<'_>) -> Result<(), CheckerError> {
+    match expr {
+        Expression::Quantified { binders, body, .. } => {
+            binders.iter().try_for_each(ident_param)?;
+            ident_expr(body)
+        }
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            ident_expr(condition)?;
+            ident_expr(then_branch)?;
+            ident_expr(else_branch)
+        }
+        Expression::Match { target, arms, .. } => {
+            ident_expr(target)?;
+            arms.iter().try_for_each(|arm| {
+                ident_pattern(&arm.pattern)?;
+                ident_expr(&arm.body)
+            })
+        }
+        Expression::Binary { left, right, .. } => {
+            ident_expr(left)?;
+            ident_expr(right)
+        }
+        Expression::Unary { operand, .. } => ident_expr(operand),
+        Expression::Grouped { inner, .. } => ident_expr(inner),
+        Expression::Literal { .. } => Ok(()),
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            elements.iter().try_for_each(ident_expr)
+        }
+        Expression::Reference {
+            name,
+            widths,
+            args,
+            span,
+        } => {
+            ident_qname(name)?;
+            widths.iter().try_for_each(|w| ident_width(w, *span))?;
+            args.iter().flatten().try_for_each(ident_expr)
+        }
+        Expression::Project { base, key, span } => {
+            if let ProjKey::Field(f) = key {
+                ident_ok(f, *span)?;
+            }
+            ident_expr(base)
+        }
+    }
+}
+
+/// Pass 0 for a v1 document: refuse the first identifier over the cap.
+fn check_identifier_lengths(file: &WarrantFile<'_>) -> Result<(), CheckerError> {
+    ident_ok(file.name, file.span)?;
+    for decl in &file.declarations {
+        match decl {
+            Declaration::Model(m) => {
+                ident_ok(m.name, m.span)?;
+                m.params.iter().try_for_each(ident_param)?;
+                ident_type(&m.target_type)?;
+                m.body.as_ref().map_or(Ok(()), ident_expr)?;
+            }
+            Declaration::Error(e) => {
+                ident_ok(e.name, e.span)?;
+                e.variants.iter().try_for_each(|v| ident_ok(v, e.span))?;
+            }
+            Declaration::Op(op) => {
+                ident_ok(op.name, op.span)?;
+                op.static_params.iter().try_for_each(|sp| {
+                    ident_ok(sp.name, sp.span)?;
+                    ident_ok(sp.type_name, sp.span)
+                })?;
+                op.params.iter().try_for_each(ident_param)?;
+                ident_type(&op.return_type)?;
+            }
+            Declaration::Example(e) => {
+                ident_ok(e.name, e.span)?;
+                ident_expr(&e.body)?;
+            }
+            Declaration::Claim(c) => {
+                ident_ok(c.name, c.span)?;
+                ident_expr(&c.body)?;
+            }
+            Declaration::Assumptions(AssumptionsDecl::Platform { rows, .. }) => {
+                rows.iter().try_for_each(ident_qname)?;
+            }
+            Declaration::Assumptions(AssumptionsDecl::Environment { rows, .. }) => {
+                rows.iter().try_for_each(|r| {
+                    ident_ok(r.name, r.span)?;
+                    ident_expr(&r.expr)
+                })?;
+            }
+            Declaration::Labels(l) => {
+                ident_ok(l.name, l.span)?;
+                l.rows.iter().try_for_each(|r| ident_qname(&r.name))?;
+            }
+            Declaration::Input(i) => {
+                ident_qname(&i.target)?;
+                i.rejections.iter().try_for_each(|r| {
+                    ident_expr(&r.condition)?;
+                    ident_qname(&r.error_variant)
+                })?;
+                i.ensures.iter().try_for_each(|n| ident_ok(n, i.span))?;
+            }
+            Declaration::Bound(b) => {
+                ident_ok(b.name, b.span)?;
+                b.rows.iter().try_for_each(|r| {
+                    ident_ok(r.name, r.span)?;
+                    ident_expr(&r.bound)
+                })?;
+            }
+            Declaration::Record(r) => {
+                ident_ok(r.name, r.span)?;
+                ident_fields(&r.fields)?;
+            }
+            Declaration::Variant(v) => {
+                ident_ok(v.name, v.span)?;
+                v.ctors.iter().try_for_each(|c| {
+                    ident_ok(c.name, c.span)?;
+                    ident_fields(&c.fields)
+                })?;
+            }
+            Declaration::Vectors(v) => {
+                ident_ok(v.name, v.span)?;
+                v.columns.iter().try_for_each(|c| {
+                    ident_ok(c.name, c.span)?;
+                    ident_type(&c.ty)
+                })?;
+                ident_expr(&v.holds)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 fn type_expr_span(ty: &TypeExpr<'_>) -> (usize, usize) {

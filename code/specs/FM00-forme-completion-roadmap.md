@@ -254,12 +254,12 @@ images, the blog index to 160 KiB total transfer, and the enhanced article to
 page and blog index admit no script bytes at all.
 
 Because a single hosted-runner Lighthouse observation is noisy, each route is
-audited by exactly three fresh browser processes and the performance contract
-applies to their median score. This changes neither the `0.95` budget nor the
+audited by exactly five fresh browser processes and the performance contract
+applies to their median score (three until 2026-11-11; see the decision log). This changes neither the `0.95` budget nor the
 audited bytes. Accessibility and resource evidence remain fail-closed across
 every sample: the retained aggregate uses the lowest accessibility score and
 the largest observed transfer count for each resource type, while preserving
-the bounded union of sample diagnostics. The summary records the three bounded
+the bounded union of sample diagnostics. The summary records the five bounded
 performance samples alongside that conservative aggregate; no raw trace is
 retained.
 
@@ -492,6 +492,7 @@ work.
 | 2026-10-25 | After FM-B075 merged, a fresh audit found no open Forme pull request or issue among 25 open pull requests and 340 open issues, and all 75 existing roadmap rows were done. A broader namespace scan found three stale package claims: `forme-aot-page-bundle-emitter` still called the shipped deploy-manifest emitter planned, while two DOC00 READMEs still called already-shipped search/site packages remaining. `DOC00-docs-vision.md` likewise remained phrased as a pre-implementation plan even though all eleven packages exist. | Add FM-B076 as the sole active item. Reconcile only stale completion language, retain documented v1+ simplifications as intentional non-goals, and pin the shipped package inventory plus forbidden stale claims in `test_forme_spec_map.py`. |
 | 2026-10-25 | Mandatory security review found that the first FM-B076 draft changed only status wording while the normative vision still promised unshipped TextMate colouring, bloom/forward/fuzzy indexes, BM25 ranking, and a styled interactive shell. A deeper package-by-package comparison also found historical “next package” wording and one incorrect heading-collision suffix comment. | Keep FM-B076 open until the vision and every package surface state the actual v0 contracts, pin those boundaries in the repository regression, and require a new exact-head security approval before push. |
 | 2026-10-25 | FM-B076 reconciled the DOC00 vision and all eleven package READMEs with the shipped documentation cluster, recorded the actual plain-span highlighting, exact-token search, caller-owned UI, and shard-partition boundaries, retained intentional v1+ exclusions, and added regression coverage for the exact package inventory and stale completion phrases. | Close FM-B076. All 76 roadmap items are done, no item is active, and the audited Forme completion backlog is clear. |
+| 2026-11-11 | The `landing` route failed the macOS release lane at median Lighthouse performance `0.83`, `0.89`, and `0.92` on unchanged site bytes, including twice on a CI-only pull request, while passing at `0.98` (samples `0.92/0.98/0.98`) on other heads; Linux and Windows did not fail on scores. Two slow audits out of three were enough to fail a host, and the failure message printed only the median, so neither a cold first audit nor uniformly slow audits could be told apart. | Keep the `0.95` budget, the exact browser pins, and the fail-closed accessibility and resource aggregation. Take exactly five fresh-process samples and gate their median, so three slow audits are needed to move it; report every sample in run order in the failing diagnostic; keep `LIGHTHOUSE_SAMPLE_COUNT` in `web-quality.ts` and in `forme_release_gate.py` equal and odd. Lighthouse's default throttling (mobile slow 4G with a 4x CPU slowdown, since only `formFactor: desktop` is overridden) is deliberately left unchanged because pinning desktop throttling would change what the `0.95` score means; revisit with the per-sample evidence this change produces. |
 
 ## Loop protocol
 

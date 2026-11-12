@@ -1,0 +1,12 @@
+{
+  "schema": "ver13-non-claims-v1",
+  "non_claims": [
+    {
+      "package": "rust/gf256",
+      "cwe": 208,
+      "claim": "constant-time",
+      "source": "code/specs/MA01-gf256.md",
+      "statement": "Not constant time, and not claimed to be: multiply, divide, power and inverse branch on zero operands and index the LOG/ALOG tables with operand-derived values (MA01, \"Constant-time status (CWE-208)\"). The CWE-208 row stays applicable and unaddressed."
+    }
+  ]
+}

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
+
 ### Security
 
 - Hardening (CWE-789): _deserialise_tokens clamps the untrusted header count to the complete tokens present instead of looping over the claimed count. decode stops at an invalid (zero or too-large) offset instead of reading undef / wrapped indexes.

@@ -47,6 +47,8 @@ impl Sandbox {
             root.join("code/specs/ct-compare.warrant"),
         )
         .unwrap();
+        // The VER13 catalogue is found above the package, like the spec.
+        copy_dir(&manifest.join("../../../assumptions"), &root.join("code/assumptions"));
         Sandbox { root, pkg }
     }
 
@@ -54,6 +56,11 @@ impl Sandbox {
     pub fn src_digest(&self) -> String {
         let framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(&self.pkg.join("src")).unwrap();
         coding_adventures_sha256::sha256_hex(&framed)
+    }
+
+    /// Path of a file under the sandbox's `code/assumptions/`.
+    pub fn assumptions(&self, rel: &str) -> PathBuf {
+        self.root.join("code/assumptions").join(rel)
     }
 
     pub fn spec(&self) -> PathBuf {

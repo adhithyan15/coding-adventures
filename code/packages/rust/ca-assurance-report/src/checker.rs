@@ -238,8 +238,14 @@ pub fn verify_assurance_report(
             }
             // A `pass` verdict may not rest on obligations the prover did not
             // discharge; under `report-only` they stay visible as assumptions.
+            // Catalogue ids spell them `wir.bound.*-unchecked`; the legacy
+            // `<kind>:unchecked` spelling is refused too.
             if report.verdict == "pass" {
-                if let Some(a) = proof.assumptions.iter().find(|a| a.ends_with(":unchecked")) {
+                if let Some(a) = proof
+                    .assumptions
+                    .iter()
+                    .find(|a| a.ends_with(":unchecked") || a.ends_with("-unchecked"))
+                {
                     return Err(CheckError::FailingClaim(format!(
                         "claim '{}' has the unchecked assumption '{a}', which a 'pass' verdict cannot carry",
                         claim.id

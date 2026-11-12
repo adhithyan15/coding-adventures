@@ -1,0 +1,49 @@
+# Run the unchanged, complete human-language-data coverage suite on Apple
+# Silicon when validating the macOS budget tracked by #18852 and #18947.
+# This is deliberately manual: the full corpus is too expensive for every PR.
+name: Human Language Data macOS Full Corpus
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-corpus:
+    name: Full corpus with coverage (macOS arm64)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Record source and runner architecture
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(uname -m)" = arm64
+          echo "Source: $GITHUB_SHA"
+          echo "Runner: $(sw_vers -productVersion) $(uname -m)"
+          python3 --version
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22.23.2"
+
+      - name: Install local dependencies and compile
+        working-directory: code/packages/typescript/human-language-data
+        run: |
+          set -euo pipefail
+          (cd ../pixel-container && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-instructions && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-vm && npm ci --omit=dev --ignore-scripts)
+          (cd ../paint-vm-svg && npm ci --omit=dev --ignore-scripts)
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Test complete corpus with unchanged coverage settings
+        working-directory: code/packages/typescript/human-language-data
+        run: npm run test:coverage -- --reporter=dot

@@ -302,7 +302,7 @@ FdDoc *fd_concat(FdDoc **parts, size_t n) {
     }
     FdDoc *d = alloc_doc(FD_CONCAT);
     if (d == NULL) {
-        for (size_t i = 0; i < flen; i++) fd_free(flat[i]);
+        for (size_t j = 0; j < flen; j++) fd_free(flat[j]);
         free(flat);
         return NULL;
     }

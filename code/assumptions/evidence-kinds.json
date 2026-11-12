@@ -1,0 +1,825 @@
+{
+  "schema": "ver13-evidence-kinds-v1",
+  "kinds": [
+    {
+      "kind": "all-refinements-discharged",
+      "manifest": "planned",
+      "patterns": [
+        "catalogue/refinements/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Umbrella discharge: every refined_by child discharged (AC-6)."
+    },
+    {
+      "kind": "asm-taint-analysis",
+      "manifest": "planned",
+      "patterns": [
+        "cc/*/asm-taint/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Taint analysis of the emitted assembly for one pinned build (R1)."
+    },
+    {
+      "kind": "banned-construct-scan",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/banned-construct-scan/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Banned-construct scan bound to a source digest."
+    },
+    {
+      "kind": "body-lowering",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/body-lowering/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Lowering of the unsafe body itself instead of a name-matched model."
+    },
+    {
+      "kind": "build-config-pin",
+      "manifest": "planned",
+      "patterns": [
+        "cc/*/build-config/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Examined and pinned build configuration (RUSTFLAGS, .cargo/config.toml)."
+    },
+    {
+      "kind": "build-time-authority-analysis",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/build-time-authority/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Analysis of tests, benches and examples under a build-time policy."
+    },
+    {
+      "kind": "cache-model-run",
+      "manifest": "planned",
+      "patterns": [
+        "uarch/*/cache-model/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Run on a modelled cache (cpu-cache)."
+    },
+    {
+      "kind": "call-graph-proof",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/call-graph/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Closed-world call-graph proof (no dynamic dispatch)."
+    },
+    {
+      "kind": "catalogue-citation-check",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/catalogue-citation/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Each excluded weakness row cites the analyzer caveats it depends on."
+    },
+    {
+      "kind": "catalogue-hash-pin",
+      "manifest": "planned",
+      "patterns": [
+        "gov/*/catalogue-pin/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Catalogue digest pinned in the report and checked."
+    },
+    {
+      "kind": "checker-corpus",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/checker-corpus/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Checker corpus with negatives."
+    },
+    {
+      "kind": "checker-fuzzing",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/fuzzing/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Property-based fuzzing of the report checker."
+    },
+    {
+      "kind": "ci-regeneration-gate",
+      "manifest": "planned",
+      "patterns": [
+        "ci/*/regeneration/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "CI regenerates the artefact and diffs it."
+    },
+    {
+      "kind": "concrete-two-run-cross-check",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/two-run/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Concrete two-run execution cross-check of the symbolic engine."
+    },
+    {
+      "kind": "conformance-suite",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/conformance/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Subset conformance suite with negative cases."
+    },
+    {
+      "kind": "corpus-label-diff",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/label-diff/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Secret-label set derived from the CT01 corpus and compared with the Warrant labels."
+    },
+    {
+      "kind": "dependency-closure-check",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/dependency-closure/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Dependency closure asserted (empty for ct-compare) as a checked fact."
+    },
+    {
+      "kind": "differential-run",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/differential/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Differential execution against an independent implementation."
+    },
+    {
+      "kind": "digest-coverage-check",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/digest-coverage/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Effect-certificate digests cover every behaviour-determining input."
+    },
+    {
+      "kind": "diverse-double-compilation",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/ddc/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Diverse double compilation of the small checker."
+    },
+    {
+      "kind": "drat-certificate",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/drat/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "DRAT certificate of a gate-level miter."
+    },
+    {
+      "kind": "exhaustive-differential-test",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/exhaustive-differential/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Exhaustive differential test at small widths."
+    },
+    {
+      "kind": "exhaustive-truth-table",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/truth-table/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Exhaustive truth tables of the gate primitives."
+    },
+    {
+      "kind": "expanded-code-analysis",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/expanded-code/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Analysis of macro-expanded code or MIR."
+    },
+    {
+      "kind": "falsification-test",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/falsification/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Checker falsification test (positive and negative)."
+    },
+    {
+      "kind": "gate-level-equivalence-check",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/gate-equivalence/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Encoder equivalence-checked against gate-level adders."
+    },
+    {
+      "kind": "hardware-key-approval",
+      "manifest": "planned",
+      "patterns": [
+        "gov/*/approval/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Hardware-token-backed exemption approval (VER00 section 9.1)."
+    },
+    {
+      "kind": "host-counter-run",
+      "manifest": "bench",
+      "patterns": [
+        "bench/counters/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Retired-instruction counters on a host that provides them."
+    },
+    {
+      "kind": "independent-checker-cross-check",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/cross-check/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Cross-check against an independent implementation."
+    },
+    {
+      "kind": "independent-cnf-rederivation",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/cnf-rederivation/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Miter CNF rebuilt independently and compared."
+    },
+    {
+      "kind": "ir-taint-analysis",
+      "manifest": "planned",
+      "patterns": [
+        "cc/*/ir-taint/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Taint analysis of the optimised LLVM IR for one pinned build (R1)."
+    },
+    {
+      "kind": "ir-volatile-cycle-check",
+      "manifest": "planned",
+      "patterns": [
+        "cc/*/ir-volatile/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Volatile access on every CFG cycle of the optimised IR, pinned build."
+    },
+    {
+      "kind": "isa-conformance-vectors",
+      "manifest": "planned",
+      "patterns": [
+        "isa/*/conformance/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "ISA conformance vectors (riscv-arch-test style)."
+    },
+    {
+      "kind": "language-property-fact",
+      "manifest": "planned",
+      "patterns": [
+        "lang/*/property/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Language-property fact from the per-language catalogue."
+    },
+    {
+      "kind": "launch-env-allowlist",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/env-allowlist/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Launch-time environment allowlist."
+    },
+    {
+      "kind": "loop-invariant-proof",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/induction"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Loop-invariant / induction proof lifting bounded(k) to all lengths."
+    },
+    {
+      "kind": "manifest-binding-check",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/manifest-binding/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Manifest package bound to its directory and crate name."
+    },
+    {
+      "kind": "matcher-property-test",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/matcher-property/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Property test of the analyzer name matcher."
+    },
+    {
+      "kind": "mechanised-checker",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/mechanised/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Mechanised (proof-assistant) checker."
+    },
+    {
+      "kind": "mir-translation-validation",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/mir-tv/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Translation validation of the WIR lowering against rustc MIR."
+    },
+    {
+      "kind": "miri-run",
+      "manifest": "planned",
+      "patterns": [
+        "miri/*/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Miri run over the package's tests, bound to the source digest."
+    },
+    {
+      "kind": "model-validation-test",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/model-validation/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Test relating a name-matched WIR model to the real body."
+    },
+    {
+      "kind": "negative-control",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/negctl/*/*/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Generated negative control (a deliberate fault the suite must catch)."
+    },
+    {
+      "kind": "netlist-extraction",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/netlist/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Netlist extracted from the gate-level engine."
+    },
+    {
+      "kind": "no-allocator-owned-lane",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/no-allocator/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Owned lane with no allocator."
+    },
+    {
+      "kind": "no-std-owned-lane",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/no-std/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Owned lane is core-only (no_std)."
+    },
+    {
+      "kind": "non-collapsed-negative-control",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proofneg/*/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Proof-level sabotage control whose miter did not collapse and was falsified as expected."
+    },
+    {
+      "kind": "obligation-redigest",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/obligation-binding"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Recomputed obligation digest matched against the certificate CNF (WD-009)."
+    },
+    {
+      "kind": "obs-event-extension",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/obs-event/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Observation event set extended (e.g. fetch pc) and proofs re-run."
+    },
+    {
+      "kind": "obs-model-extension",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/obs-model/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Observation model extended with a cache model."
+    },
+    {
+      "kind": "one-step-miter",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/step-equivalence/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "One-step equivalence miter between netlist and ISA model."
+    },
+    {
+      "kind": "per-lane-baseline",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/syscall-baseline/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Per-lane syscall baseline with version string."
+    },
+    {
+      "kind": "per-platform-gate",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/platform-gate/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Runtime gate per platform."
+    },
+    {
+      "kind": "per-run-translation-validation",
+      "manifest": "planned",
+      "patterns": [
+        "isa/*/tv/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Per-run translation validation of one compiled artefact (R1/R2)."
+    },
+    {
+      "kind": "per-target-memory-model",
+      "manifest": "planned",
+      "patterns": [
+        "isa/*/memory-model/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "WIR provenance model instantiated for a target (R2)."
+    },
+    {
+      "kind": "port-cut-proof",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/port-cut/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Memory cut at the ports; the core exposes only (addr, we, wdata)."
+    },
+    {
+      "kind": "replacement-by-lower-layer-cost",
+      "manifest": "planned",
+      "patterns": [
+        "isa/*/cost/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Step count replaced by retired instructions or clock cycles lower down."
+    },
+    {
+      "kind": "run-digest-binding",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/run-digest/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Manifest bound to the digest of the run that produced it."
+    },
+    {
+      "kind": "runtime-gate-observation",
+      "manifest": "planned",
+      "patterns": [
+        "runtime/*/observation/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Armed-phase runtime gate observation (VER08b)."
+    },
+    {
+      "kind": "runtime-path-allowlist",
+      "manifest": "planned",
+      "patterns": [
+        "runtime/*/path-allowlist/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Runtime path allowlist (Landlock)."
+    },
+    {
+      "kind": "sabotage-control",
+      "manifest": "planned",
+      "patterns": [
+        "tcb/*/sabotage/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Engine sabotage control."
+    },
+    {
+      "kind": "sabotage-corpus",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/sabotage/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Conformance corpus sabotage controls."
+    },
+    {
+      "kind": "signature-bound-check",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/signature-bound/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Public signatures checked against the Warrant bound rows."
+    },
+    {
+      "kind": "simulator-step-count",
+      "manifest": "planned",
+      "patterns": [
+        "isa/*/step-count/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Exact retired-instruction count from the simulator."
+    },
+    {
+      "kind": "single-core-machine-statement",
+      "manifest": "planned",
+      "patterns": [
+        "uarch/*/single-core/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Deployment statement: single-core simulated machine."
+    },
+    {
+      "kind": "size-only-allocator-trace",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/allocator-trace/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Allocator trace shows size-only behaviour."
+    },
+    {
+      "kind": "spec-sync-test",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/spec-sync/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Spec-sync test that maps normative text to claims or catalogue ids."
+    },
+    {
+      "kind": "step-function-differential-run",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/step-differential/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Netlist step function differential-tested against the engine."
+    },
+    {
+      "kind": "steps-bound-obligation",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/steps-bound"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Proved step-bound obligation (steps <= c*n + d)."
+    },
+    {
+      "kind": "structural-netlist-proof",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/structural/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Structural proof on the extracted netlist."
+    },
+    {
+      "kind": "toolchain-tuple-manifest",
+      "manifest": "planned",
+      "patterns": [
+        "cc/*/toolchain/*"
+      ],
+      "verdict": "pass",
+      "per_run": true,
+      "description": "Recorded toolchain tuple (rustc, target, opt-level, flags)."
+    },
+    {
+      "kind": "transistor-model-equivalence",
+      "manifest": "planned",
+      "patterns": [
+        "gate/*/transistor/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Primitives simulated in the CMOS transistor model."
+    },
+    {
+      "kind": "type-level-enforcement",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/type-level/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Type-level enforcement of the effect witness."
+    },
+    {
+      "kind": "type-resolved-analysis",
+      "manifest": "planned",
+      "patterns": [
+        "src/*/type-resolved/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Analysis resolved through rustc type information."
+    },
+    {
+      "kind": "vdso-unmapped-run",
+      "manifest": "planned",
+      "patterns": [
+        "os/*/vdso-unmapped/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Runtime gate run with the vDSO unmapped."
+    },
+    {
+      "kind": "warrant-assume-sync",
+      "manifest": "test",
+      "patterns": [
+        "warrant/*/assume-sync/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "`assume platform:` lists equal the report's catalogue ids."
+    },
+    {
+      "kind": "wir-alias-split-proof",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/alias-split"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "WIR proof of an obligation under both aliasing cases (VER13 AS-002)."
+    },
+    {
+      "kind": "wir-call-graph-acyclic",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/depth-bound"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Depth-bound obligation discharged from an acyclic WIR call graph."
+    },
+    {
+      "kind": "wir-heap-bound-proof",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/heap-bound"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Discharged heap-bound obligation (today recorded unchecked)."
+    },
+    {
+      "kind": "wir-memory-safety-proof",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/memory-safety"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "WIR obligation that every index is in range on all paths, at an unbounded label."
+    },
+    {
+      "kind": "wir-panic-branch-proof",
+      "manifest": "proof",
+      "patterns": [
+        "warrant/*/proof/*/panic-public"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Proof that every panic branch sits under a public condition."
+    },
+    {
+      "kind": "wir-trace-reproof",
+      "manifest": "planned",
+      "patterns": [
+        "wir/*/trace-reproof/*"
+      ],
+      "verdict": "pass",
+      "per_run": false,
+      "description": "Re-proof with an extended observation event set."
+    }
+  ]
+}

@@ -7,7 +7,7 @@
     "otp_version": "27.3.4.11",
     "version_type": "strict",
     "setup_condition": "needs.detect.outputs.needs_elixir == 'true'",
-    "affected_build_condition": "needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true')"
+    "affected_build_condition": "needs.detect.outputs.full_build != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.run_build_windows_recipes == 'true')"
   },
   "unsupported_protocol": {
     "directive_prefix": "# build-tool: unsupported=",
@@ -16,39 +16,9 @@
   },
   "exceptions": [
     {
-      "root": "code/packages/elixir/conduit",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
-      "root": "code/packages/elixir/gf256_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
-      "root": "code/packages/elixir/irc-server-native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
-      "root": "code/packages/elixir/paint_codec_png_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
       "root": "code/packages/elixir/paint_vm_metal_native",
       "code": "ELIXIR_WINDOWS_METAL_UNAVAILABLE",
       "class": "target-specific-metal"
-    },
-    {
-      "root": "code/packages/elixir/polynomial_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
-      "root": "code/programs/elixir/conduit-hello",
-      "code": "ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE",
-      "class": "nif-erts-import-library"
     }
   ]
 }

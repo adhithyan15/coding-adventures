@@ -542,7 +542,7 @@ bvm_error_t bvm_decoder_read_value(bvm_decoder_t *dec, bvm_value_t *out) {
 /* ================================================================== */
 
 static bvm_error_t bvm_validate_flags(uint8_t flags) {
-    if ((flags & (uint8_t)~BVM_ALLOWED_V1_FLAGS) != 0) {
+    if ((flags & (uint8_t)(~BVM_ALLOWED_V1_FLAGS & 0xFFu)) != 0) {
         return BVM_ERR_RESERVED_FLAGS;
     }
     return BVM_OK;
@@ -1188,7 +1188,7 @@ bvm_error_t bvm_decode_program_end(const uint8_t *bytes, size_t len, bvm_program
 bvm_error_t bvm_encode_run_request(const bvm_run_request_t *v, uint8_t *out, size_t out_len, size_t *written) {
     bvm_encoder_t enc;
     bvm_error_t err;
-    if ((v->flags & (uint8_t)~BVM_ALLOWED_RUN_FLAGS) != 0) {
+    if ((v->flags & (uint8_t)(~BVM_ALLOWED_RUN_FLAGS & 0xFFu)) != 0) {
         return BVM_ERR_RESERVED_FLAGS;
     }
     enc = bvm_encoder_new(out, out_len);
@@ -1225,7 +1225,7 @@ bvm_error_t bvm_decode_run_request(const uint8_t *bytes, size_t len, bvm_run_req
     if (err != BVM_OK) {
         return err;
     }
-    if ((flags & (uint8_t)~BVM_ALLOWED_RUN_FLAGS) != 0) {
+    if ((flags & (uint8_t)(~BVM_ALLOWED_RUN_FLAGS & 0xFFu)) != 0) {
         return BVM_ERR_RESERVED_FLAGS;
     }
     out->program_id = program_id;

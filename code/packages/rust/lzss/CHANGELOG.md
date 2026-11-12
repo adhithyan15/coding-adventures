@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ### Security
 
 - CWE-789: `decode` no longer uses the untrusted `original_length` header (up to 4 GiB) as the output capacity; the hint is capped at 4 bytes per token and the buffer grows on demand. Decoding stops once the declared length is reached.

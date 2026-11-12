@@ -37,8 +37,19 @@ pub enum DiagnosticCode {
     /// domain would allocate `O(width^2)` bytes.
     W0707,
     /// W0709: A value nests deeper than TFV's 64-container limit (VER04j
-    /// section 4.9) and cannot be encoded into a corpus.
+    /// section 4.9) and cannot be encoded into a corpus; or a table row has a
+    /// shape no Warrant type has (WX-E).
     W0709,
+    /// W0601: A table that cannot discriminate (VER04j section 5.3 item 4).
+    W0601,
+    /// W0602: A budget is exhausted: more table rows than the tool profile
+    /// allows (VER04j section 5.2).
+    W0602,
+    /// W0708: Table integrity: bad path, symlink, size limit, digest mismatch,
+    /// row-count mismatch, malformed TFV (VER04j section 5.4).
+    W0708,
+    /// W0710: A table row whose fields or values do not fit the declared columns.
+    W0710,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -52,6 +63,10 @@ impl fmt::Display for DiagnosticCode {
             Self::W0706 => write!(f, "W0706"),
             Self::W0707 => write!(f, "W0707"),
             Self::W0709 => write!(f, "W0709"),
+            Self::W0601 => write!(f, "W0601"),
+            Self::W0602 => write!(f, "W0602"),
+            Self::W0708 => write!(f, "W0708"),
+            Self::W0710 => write!(f, "W0710"),
         }
     }
 }
@@ -68,6 +83,13 @@ pub enum CodegenErrorKind {
     EvaluationError(String),
     InvalidHexLiteral(String),
     DivisionByZero,
+    /// WX-D (VER04k section 2.7, step 1): a sequence result would have more
+    /// than [`MAX_SEQ_ELEMENTS`] elements.  Refused before anything is
+    /// charged or allocated for it.
+    SequenceTooLong,
+    /// WX-D (VER04k section 2.7, step 2): the evaluation's cumulative owned
+    /// data would pass [`DATA_BUDGET_BYTES`].  Refused before allocating.
+    DataBudgetExceeded,
 }
 
 /// Codegen and compilation error.
@@ -92,6 +114,127 @@ pub struct CodegenLimits {
     pub max_depth: usize,
     pub max_work: usize,
     pub max_value_bytes: usize,
+}
+
+// ---------------------------------------------------------------------------
+// WX-D: the sequence caps of the meter (VER04k section 2.7)
+// ---------------------------------------------------------------------------
+//
+// One evaluation (an example's expected value, one claim instance, one table
+// row) owns one meter.  WX-D adds two counters to the work and depth counters
+// the evaluator already had:
+//
+// ```text
+//   counter                         limit                 exceeded is
+//   work units                      1,000,000 (limits)    W0703 WorkBudgetExceeded
+//   nesting depth                   64        (limits)    W0703 RecursionDepthExceeded
+//   elements in one sequence value  65,536    (below)     W0703 SequenceTooLong
+//   owned data, cumulative          64 MiB    (below)     W0703 DataBudgetExceeded
+// ```
+//
+// The two new limits are constants, not `CodegenLimits` fields, so the public
+// limits struct (and every caller that builds one) is unchanged.  A caller
+// that lowers `max_value_bytes` lowers the element cap with it: the cap used is
+// the smaller of the two, so a stricter profile is never loosened.
+//
+// *Owned data* is cumulative allocation, never refunded (live-data accounting
+// would depend on when an implementation frees memory, so it would not be
+// deterministic across implementations).  What a value costs is its `dsize`
+// (below), and which evaluation steps pay it is VER04k section 2.7 (S0 E4):
+//
+// ```text
+//   every node, in a v1 evaluation, charges dsize(its value) ...
+//   ... except the pass-through nodes, which hand on a value that exists:
+//       a binder reference or projection path, a projection, `if`, `match`,
+//       a parenthesised group, a model call (its body's nodes pay), `unwrap_or`
+//       (and, from WX-D2, `fold`)
+// ```
+//
+// A node whose value is a scalar charges 0, so in practice the payers are the
+// nodes that build something: list literals, tuples, records, constructors
+// (nullary ones too, for the names they store: E20), error values `E.C`,
+// `Some`/`Ok`, bytes literals, `concat`, `be_bytes`/`le_bytes`, `fixed<N>`,
+// `at`, the `Option`-valued v1 built-ins and the seven WX-D1 forms.  Reads
+// charge nothing (VER04k section 9.1, note on E4, which records the memory an
+// uncharged deep-copying read can still take as an open hazard).
+
+/// Most elements one sequence value may have (VER04k `MAX_SEQ_ELEMENTS`).
+pub const MAX_SEQ_ELEMENTS: usize = 65_536;
+
+/// Most owned data, in bytes, one evaluation may produce in total (VER04k
+/// `DATA_BUDGET_BYTES`, VER04 section 2: "64 MiB of owned intermediate/output
+/// data").
+pub const DATA_BUDGET_BYTES: u64 = 64 * 1024 * 1024;
+
+/// The bytes charged for one container node: the same constant the evidence
+/// generator's domain budget uses (VER04h section 3).
+const NODE_BYTES: u128 = crate::evidence::VALUE_OVERHEAD as u128;
+
+/// `dsize(v)`, the owned-data cost of a value (VER04k section 2.7, "Data
+/// size"):
+///
+/// ```text
+///   Bool, Int, Nat, U8, ..., None             0     (its storage is its slot)
+///   Bytes(b), Bytes<N>                        len(b)
+///   List / tuple c1..cn                       sum of (32 + dsize(ci))
+///   constructor T.C(c1..cn), nullary too      len(T) + len(C) + sum of (32 + dsize(ci))
+///   Err(E.C)                                  len(E) + len(C)
+///   Some(x), Ok(x)                            32 + dsize(x)
+/// ```
+///
+/// So `replicate(x, n)` reserves `n x (32 + dsize(x))` and `take` of a
+/// `List<Bytes>` pays for its elements' bytes too (S0 E5): the evaluator's
+/// values are deep copies, and the meter charges what the copy costs.
+///
+/// **Names are data (E20).**  A constructor value owns its type and
+/// constructor names, and an error value its error and case names, as
+/// `String`s, so every copy allocates them again.  Pricing them at 0 let
+/// `replicate(C, 65536)` with a 10,000-byte `C` allocate 660 MB while the
+/// meter saw 2 MiB.  Counting the name bytes keeps the charge at or above the
+/// real allocation (up to the fixed size of a slot), whatever the names are.
+///
+/// `[b"0102", b"03"]` is `(32 + 2) + (32 + 1) = 67` bytes; `(1, 2)` is 64;
+/// `Circle(5u8)` of `variant Shape` is `5 + 6 + 32 = 43`.
+fn dsize(v: &EvalValue) -> u128 {
+    match v {
+        EvalValue::Bytes(b) => b.len() as u128,
+        EvalValue::List(xs) | EvalValue::Tuple(xs) => dsize_items(xs),
+        EvalValue::Con {
+            ty, ctor, fields, ..
+        } => names_size(ty, ctor).saturating_add(dsize_items(fields)),
+        EvalValue::Result(Err((ty, case))) => names_size(ty, case),
+        EvalValue::Option(Some(x)) | EvalValue::Result(Ok(x)) => {
+            NODE_BYTES.saturating_add(dsize(x))
+        }
+        _ => 0,
+    }
+}
+
+/// The bytes of the two names a constructor or error value stores (E20).
+fn names_size(ty: &str, name: &str) -> u128 {
+    (ty.len() as u128).saturating_add(name.len() as u128)
+}
+
+/// `sum over xs of (32 + dsize(x))`: the cost of a container holding `xs`, or
+/// of a deep copy of the elements `xs`.  Saturating, so an absurd sum is
+/// simply over budget.
+fn dsize_items(xs: &[EvalValue]) -> u128 {
+    xs.iter().fold(0u128, |acc, x| {
+        acc.saturating_add(NODE_BYTES.saturating_add(dsize(x)))
+    })
+}
+
+/// `clamp(n) = max(0, min(n, len))` on the exact count (VER04k section 2.2):
+/// a negative count means zero, a count past the end means "all of it".
+/// Nothing is narrowed before the comparison, so `2^70` clamps to `len`.
+fn clamp_count(n: i128, len: usize) -> usize {
+    if n <= 0 {
+        0
+    } else if n >= len as i128 {
+        len
+    } else {
+        n as usize
+    }
 }
 
 impl Default for CodegenLimits {
@@ -402,6 +545,10 @@ pub struct Evaluator<'a> {
     limits: CodegenLimits,
     depth: usize,
     work: usize,
+    /// WX-D: owned data produced by this evaluation so far, in bytes
+    /// (cumulative, never refunded; reset with the work counter per instance).
+    /// Only a v1 document charges it.
+    data: u64,
     /// The document is a v1 document: the WX-B/WX-C built-ins are in scope and
     /// numeric equality compares by mathematical value.
     v1: bool,
@@ -444,6 +591,7 @@ impl<'a> Evaluator<'a> {
             limits,
             depth: 0,
             work: 0,
+            data: 0,
             v1: file.version == Version::V1,
             ctors,
             adts,
@@ -478,8 +626,81 @@ impl<'a> Evaluator<'a> {
         self.depth = self.depth.saturating_sub(1);
     }
 
+    /// Start a new instance: the work meter and the WX-D data meter are both
+    /// per evaluation (VER04k section 2.7).
     pub fn reset_work(&mut self) {
         self.work = 0;
+        self.data = 0;
+    }
+
+    /// Work units charged since the last [`Evaluator::reset_work`].
+    pub fn work_used(&self) -> usize {
+        self.work
+    }
+
+    /// Owned-data bytes charged since the last [`Evaluator::reset_work`]
+    /// (always 0 in a v0 document, which has no data meter).
+    pub fn data_used(&self) -> u64 {
+        self.data
+    }
+
+    /// Reserve `amount` bytes of owned data (step 2 of VER04k section 2.7),
+    /// saturating, so an absurd request is simply over budget.
+    fn charge_data(&mut self, amount: u128, span: (usize, usize)) -> Result<(), CodegenError> {
+        let total = u128::from(self.data).saturating_add(amount);
+        self.data = u64::try_from(total).unwrap_or(u64::MAX);
+        if total > u128::from(DATA_BUDGET_BYTES) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0703,
+                kind: CodegenErrorKind::DataBudgetExceeded,
+                span,
+            });
+        }
+        Ok(())
+    }
+
+    /// Charge `amount()` bytes only in a v1 document (VER04k section 9.1, S0
+    /// E4): the values every v1 evaluation builds count toward the data meter,
+    /// so a sequence built by `concat` or literals cannot dodge it; v0 has no
+    /// data meter and stays byte-identical.
+    ///
+    /// The amount is a closure so that a v0 evaluation does not even compute
+    /// it: `dsize` walks the whole value, and v0 has no counter to feed.
+    fn charge_data_v1(
+        &mut self,
+        amount: impl FnOnce() -> u128,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        if self.v1 {
+            self.charge_data(amount(), span)
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Step 1 of VER04k section 2.7: the element cap, on the exact length.
+    fn seq_cap(&self, len: i128, span: (usize, usize)) -> Result<usize, CodegenError> {
+        let cap = MAX_SEQ_ELEMENTS.min(self.limits.max_value_bytes);
+        if len > cap as i128 {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0703,
+                kind: CodegenErrorKind::SequenceTooLong,
+                span,
+            });
+        }
+        Ok(len.max(0) as usize)
+    }
+
+    /// Steps 2 and 3: reserve the data, then charge `L` work units.  The
+    /// caller allocates (step 4) only after this returns `Ok`.
+    fn seq_reserve(
+        &mut self,
+        len: usize,
+        data: u128,
+        span: (usize, usize),
+    ) -> Result<(), CodegenError> {
+        self.charge_data(data, span)?;
+        self.charge_work(len, span)
     }
 
     /// The diagnostic for an `Int` operation whose exact result leaves `i128`.
@@ -518,6 +739,8 @@ impl<'a> Evaluator<'a> {
                 Literal::Fixed(ty, v) => Ok(EvalValue::Fixed(*ty, *v)),
                 Literal::Int(n) => Ok(EvalValue::Int(*n as i128)),
                 Literal::Bytes(hex_str) => {
+                    // A v1 bytes literal produces `len` bytes of owned data.
+                    self.charge_data_v1(|| (hex_str.len() / 2) as u128, *span)?;
                     let bytes = hex_decode(hex_str, *span)?;
                     Ok(EvalValue::Bytes(bytes))
                 }
@@ -535,6 +758,8 @@ impl<'a> Evaluator<'a> {
                 for el in elements {
                     list.push(self.eval(el, env)?);
                 }
+                // v1: the literal's value is new, `sum (32 + dsize(ei))`.
+                self.charge_data_v1(|| dsize_items(&list), *span)?;
                 self.charge_work(elements.len(), *span)?;
                 Ok(EvalValue::List(list))
             }
@@ -546,8 +771,14 @@ impl<'a> Evaluator<'a> {
             } => {
                 let first = name.segments[0];
                 if name.segments.len() == 1 {
-                    if let Some(val) = env.get(first) {
-                        return Ok(val.clone());
+                    // A binder only when the name is not applied, exactly as
+                    // the checker reads it (`typecheck_reference`, step 1):
+                    // `take(take, 0)` is the built-in even where a binder is
+                    // called `take`, so the value is the one the checker typed.
+                    if args.is_none() && widths.is_empty() {
+                        if let Some(val) = env.get(first) {
+                            return Ok(val.clone());
+                        }
                     }
                     // WX-A constructors: `C(e1, ..., en)` and the bare nullary `C`.
                     if let Some(&(ty, index, record)) = self.ctors.get(first) {
@@ -588,6 +819,9 @@ impl<'a> Evaluator<'a> {
                 }
                 // Qualified name: Error.Case constructor
                 if name.segments.len() == 2 {
+                    // v1 data (E20): the value owns both names.
+                    let (ty, case) = (name.segments[0], name.segments[1]);
+                    self.charge_data_v1(|| names_size(ty, case), *span)?;
                     let type_name = name.segments[0].to_string();
                     let case_name = name.segments[1].to_string();
                     return Ok(EvalValue::Result(Err((type_name, case_name))));
@@ -652,6 +886,38 @@ impl<'a> Evaluator<'a> {
                 right,
                 span,
             } => {
+                // v1: `and`, `or` and `=>` short-circuit, as VER04 section 4
+                // says and as generated code always did.  The deciding left
+                // operand ends the evaluation: the right one is neither
+                // evaluated nor charged.
+                //
+                // ```text
+                //   false and _  = false      true or _  = true      false => _ = true
+                // ```
+                //
+                // v0 keeps its eager evaluation of both operands (a recorded
+                // deviation from VER04 section 4) so every v0 artifact, and
+                // every v0 work count, stays byte-identical.
+                if self.v1 && matches!(op, BinaryOp::And | BinaryOp::Or | BinaryOp::Implies) {
+                    let l = self.eval(left, env)?;
+                    let a = l.as_bool().ok_or_else(|| CodegenError {
+                        code: DiagnosticCode::W0702,
+                        kind: CodegenErrorKind::EvaluationError(
+                            "logical operator expects Bool".into(),
+                        ),
+                        span: *span,
+                    })?;
+                    let decided = match op {
+                        BinaryOp::And => (!a).then_some(false),
+                        BinaryOp::Or => a.then_some(true),
+                        _ => (!a).then_some(true),
+                    };
+                    if let Some(v) = decided {
+                        return Ok(EvalValue::Bool(v));
+                    }
+                    let r = self.eval(right, env)?;
+                    return self.eval_binary(*op, l, r, *span);
+                }
                 let l = self.eval(left, env)?;
                 let r = self.eval(right, env)?;
                 self.eval_binary(*op, l, r, *span)
@@ -689,6 +955,10 @@ impl<'a> Evaluator<'a> {
                 for el in elements {
                     items.push(self.eval(el, env)?);
                 }
+                // v1 data: the components exist, so the tuple's dsize is
+                // known before it is built (and the leaves cap of `bounded`
+                // still applies after, S0 E6).
+                self.charge_data_v1(|| dsize_items(&items), *span)?;
                 self.charge_work(1 + items.len(), *span)?;
                 self.bounded(EvalValue::Tuple(items), *span)
             }
@@ -728,6 +998,12 @@ impl<'a> Evaluator<'a> {
         for a in args {
             fields.push(self.eval(a, env)?);
         }
+        // v1 data: the fields' slots and payloads, and the two names the
+        // value owns (E20), so a nullary constructor is not free either.
+        self.charge_data_v1(
+            || names_size(ty, ctor).saturating_add(dsize_items(&fields)),
+            span,
+        )?;
         self.charge_work(1 + fields.len(), span)?;
         self.bounded(
             EvalValue::Con {
@@ -791,11 +1067,34 @@ impl<'a> Evaluator<'a> {
         // v1 built-ins cannot be shadowed (the checker reserves their names).
         if self.v1 && (V1_FUNCTIONS.contains(&name) || name == "div") {
             if let Some(v) = self.eval_v1_call(name, widths, &evaled_args, span)? {
+                // Data (S0 E4): the value is new unless the built-in passes
+                // one through (`unwrap_or`); the WX-D1 forms reserved theirs
+                // before allocating (`eval_wxd_d1`).
+                if !matches!(
+                    name,
+                    "unwrap_or"
+                        | "take"
+                        | "drop"
+                        | "slice"
+                        | "replicate"
+                        | "range"
+                        | "to_list"
+                        | "to_bytes"
+                ) {
+                    self.charge_data(dsize(&v), span)?;
+                }
                 return Ok(v);
             }
         }
 
-        match name {
+        // The v0 built-ins build a new value; any other name is a model call,
+        // a pass-through node whose body's nodes pay for what they build.
+        // `concat` reserves its data itself, before building (below).
+        let builds = matches!(
+            name,
+            "len" | "at" | "fixed" | "div" | "Some" | "None" | "Ok" | "Err"
+        );
+        let result = match name {
             "len" => {
                 if evaled_args.len() != 1 {
                     return Err(CodegenError {
@@ -868,6 +1167,7 @@ impl<'a> Evaluator<'a> {
                                 span,
                             });
                         }
+                        self.charge_data_v1(|| total_len as u128, span)?;
                         self.charge_work(total_len, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
@@ -882,6 +1182,9 @@ impl<'a> Evaluator<'a> {
                                 span,
                             });
                         }
+                        // Both operands are copied element by element.
+                        let copied = || dsize_items(a).saturating_add(dsize_items(b));
+                        self.charge_data_v1(copied, span)?;
                         self.charge_work(total_len, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
@@ -1039,7 +1342,12 @@ impl<'a> Evaluator<'a> {
 
                 self.eval(body, &new_env)
             }
+        };
+        let value = result?;
+        if builds {
+            self.charge_data_v1(|| dsize(&value), span)?;
         }
+        Ok(value)
     }
 
     fn eval_binary(
@@ -1214,6 +1522,12 @@ impl<'a> Evaluator<'a> {
         args: &[EvalValue],
         span: (usize, usize),
     ) -> Result<Option<EvalValue>, CodegenError> {
+        if matches!(
+            name,
+            "take" | "drop" | "slice" | "replicate" | "range" | "to_list" | "to_bytes"
+        ) {
+            return self.eval_wxd_d1(name, args, span).map(Some);
+        }
         let bad = |msg: &str| CodegenError {
             code: DiagnosticCode::W0702,
             kind: CodegenErrorKind::EvaluationError(format!("{name}: {msg}")),
@@ -1332,6 +1646,10 @@ impl<'a> Evaluator<'a> {
                     ty,
                 )
             }
+            "imin" | "imax" => {
+                let (a, b) = (int(0)?, int(1)?);
+                EvalValue::Int(if name == "imin" { a.min(b) } else { a.max(b) })
+            }
             "unwrap_or" => match args.first() {
                 Some(EvalValue::Option(Some(v))) => (**v).clone(),
                 Some(EvalValue::Option(None)) => args.get(1).cloned().ok_or_else(|| bad("arity"))?,
@@ -1405,6 +1723,124 @@ impl<'a> Evaluator<'a> {
             }
             _ => return Ok(None),
         }))
+    }
+
+    /// The seven WX-D1 sequence forms (VER04k sections 2.2, 2.6 and 2.7) over
+    /// already evaluated operands.
+    ///
+    /// Every form knows its result length `L` before it builds anything, and
+    /// the order below is the specification's, and the point of this
+    /// function:
+    ///
+    /// ```text
+    ///   1. L <= MAX_SEQ_ELEMENTS, compared on the exact i128 count
+    ///      (a 2^70 count is refused here, never narrowed to a small one)
+    ///   2. reserve the data:  L x unit (+ the payload of copied elements)
+    ///   3. charge the work:   L
+    ///   4. only then allocate the result
+    /// ```
+    ///
+    /// so a `replicate(0u8, 10^12)` allocates nothing at all, and a count read
+    /// from hostile data cannot make the evaluator allocate first and fail
+    /// later.  `tests/wxd_alloc_probe.rs` holds this with a counting
+    /// allocator.  The call node's own unit was charged by `eval`.
+    fn eval_wxd_d1(
+        &mut self,
+        name: &str,
+        args: &[EvalValue],
+        span: (usize, usize),
+    ) -> Result<EvalValue, CodegenError> {
+        let bad = |msg: &str| CodegenError {
+            code: DiagnosticCode::W0702,
+            kind: CodegenErrorKind::EvaluationError(format!("{name}: {msg}")),
+            span,
+        };
+        let count = |i: usize| -> Result<i128, CodegenError> {
+            args.get(i)
+                .and_then(EvalValue::as_i128)
+                .ok_or_else(|| bad("integer count expected"))
+        };
+        match name {
+            "take" | "drop" | "slice" => {
+                let len = match args.first() {
+                    Some(EvalValue::Bytes(b)) => b.len(),
+                    Some(EvalValue::List(xs)) => xs.len(),
+                    _ => return Err(bad("sequence operand expected")),
+                };
+                // [start, start + l) of the input, from the clamped counts:
+                //   take(xs, n)      = [0, clamp(n))
+                //   drop(xs, n)      = [clamp(n), len)
+                //   slice(xs, s, n)  = take(drop(xs, s), n)
+                let (start, l) = match name {
+                    "take" => (0, clamp_count(count(1)?, len)),
+                    "drop" => {
+                        let s = clamp_count(count(1)?, len);
+                        (s, len - s)
+                    }
+                    _ => {
+                        let s = clamp_count(count(1)?, len);
+                        (s, clamp_count(count(2)?, len - s))
+                    }
+                };
+                // Step 1 cannot fail for a sub-sequence of a capped value,
+                // but it is the same check everywhere.
+                let l = self.seq_cap(l as i128, span)?;
+                match args.first() {
+                    Some(EvalValue::Bytes(b)) => {
+                        let part = &b[start..start + l];
+                        self.seq_reserve(l, l as u128, span)?;
+                        Ok(EvalValue::Bytes(part.to_vec()))
+                    }
+                    Some(EvalValue::List(xs)) => {
+                        let part = &xs[start..start + l];
+                        // Charged as if copied (section 2.6), payload and all.
+                        let data = dsize_items(part);
+                        self.seq_reserve(l, data, span)?;
+                        Ok(EvalValue::List(part.to_vec()))
+                    }
+                    _ => Err(bad("sequence operand expected")),
+                }
+            }
+            "replicate" => {
+                let x = args
+                    .first()
+                    .ok_or_else(|| bad("element operand expected"))?;
+                let l = self.seq_cap(count(1)?, span)?;
+                let each = NODE_BYTES.saturating_add(dsize(x));
+                self.seq_reserve(l, (l as u128).saturating_mul(each), span)?;
+                Ok(EvalValue::List(vec![x.clone(); l]))
+            }
+            "range" => {
+                let l = self.seq_cap(count(0)?, span)?;
+                self.seq_reserve(l, l as u128 * NODE_BYTES, span)?;
+                Ok(EvalValue::List((0..l as u64).map(EvalValue::Nat).collect()))
+            }
+            "to_list" => {
+                let Some(EvalValue::Bytes(b)) = args.first() else {
+                    return Err(bad("Bytes operand expected"));
+                };
+                let l = self.seq_cap(b.len() as i128, span)?;
+                self.seq_reserve(l, l as u128 * NODE_BYTES, span)?;
+                Ok(EvalValue::List(
+                    b.iter().map(|&x| EvalValue::U8(x)).collect(),
+                ))
+            }
+            // "to_bytes"
+            _ => {
+                let Some(EvalValue::List(xs)) = args.first() else {
+                    return Err(bad("List<U8> operand expected"));
+                };
+                let l = self.seq_cap(xs.len() as i128, span)?;
+                self.seq_reserve(l, l as u128, span)?;
+                xs.iter()
+                    .map(|x| match x {
+                        EvalValue::U8(v) => Ok(*v),
+                        _ => Err(bad("U8 element expected")),
+                    })
+                    .collect::<Result<Vec<u8>, _>>()
+                    .map(EvalValue::Bytes)
+            }
+        }
     }
 
     /// Value equality.  In a v1 document the numeric tower is compared by
@@ -1714,16 +2150,16 @@ pub fn extract_claim_cases<'a>(
                         });
                     }
 
-                    let op_name = find_operation_in_expr(body.as_ref(), &op_names).ok_or_else(
-                        || CodegenError {
-                            code: DiagnosticCode::W0702,
-                            kind: CodegenErrorKind::NonGroundTerm(format!(
-                                "Claim {} does not invoke a recognized subject operation",
-                                c.name
-                            )),
-                            span: *span,
-                        },
-                    )?;
+                    let op_name =
+                        find_operation_for_version(body.as_ref(), &op_names, file.version)
+                            .ok_or_else(|| CodegenError {
+                                code: DiagnosticCode::W0702,
+                                kind: CodegenErrorKind::NonGroundTerm(format!(
+                                    "Claim {} does not invoke a recognized subject operation",
+                                    c.name
+                                )),
+                                span: *span,
+                            })?;
 
                     claims.push(ClaimCase {
                         id: c.name,
@@ -1749,41 +2185,77 @@ pub fn extract_claim_cases<'a>(
     Ok(claims)
 }
 
+/// The subject operation an expression calls, if any: the search every
+/// version used before WX-D, and still the v0 search (and the one the evidence
+/// generator uses until it translates list literals, VER04k section 8.1, S2a).
+///
+/// ```text
+///   1. shallow     operators, conditionals, matches, tuples
+///   2. arguments   only if 1 found nothing: inside the arguments of
+///                  non-operation calls, so `popcount(op(a)) == 3` names `op`
+/// ```
 pub fn find_operation_in_expr<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
 ) -> Option<&'a str> {
-    // The shallow search is the v0 behaviour and keeps its answer whenever it
-    // has one; only when it finds nothing does the search look inside call
-    // arguments, so a v1 claim such as `popcount(op(a)) == 3` still names its
-    // subject operation.
-    find_operation_shallow(expr, op_names).or_else(|| find_operation_in_args(expr, op_names))
+    find_operation_with(expr, op_names, false)
+}
+
+/// [`find_operation_in_expr`] for a document of version `version`.
+///
+/// In a v1 document (VER04k section 9.1, S0 E13) step 2 also descends into
+/// the elements of a list literal, exactly as it descends into call
+/// arguments, so `to_bytes([f(a)]) == b` and `[f(a)] == [b]` name `f` instead
+/// of "calls no operation".  The shallow step is unchanged and still runs
+/// first, and the first match wins.  A v0 document gets the v0 search.
+pub fn find_operation_for_version<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+    version: Version,
+) -> Option<&'a str> {
+    find_operation_with(expr, op_names, version == Version::V1)
+}
+
+/// Step 1, then step 2; `lists` makes step 2 enter list literals.
+fn find_operation_with<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+    lists: bool,
+) -> Option<&'a str> {
+    find_operation_shallow(expr, op_names).or_else(|| find_operation_in_args(expr, op_names, lists))
 }
 
 fn find_operation_in_args<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
+    lists: bool,
 ) -> Option<&'a str> {
     match expr {
         Expression::Reference {
             args: Some(args), ..
-        } => args.iter().find_map(|a| find_operation_in_expr(a, op_names)),
-        Expression::Binary { left, right, .. } => find_operation_in_args(left, op_names)
-            .or_else(|| find_operation_in_args(right, op_names)),
-        Expression::Unary { operand, .. } => find_operation_in_args(operand, op_names),
-        Expression::Grouped { inner, .. } => find_operation_in_args(inner, op_names),
-        Expression::Project { base, .. } => find_operation_in_args(base, op_names),
+        } => args
+            .iter()
+            .find_map(|a| find_operation_with(a, op_names, lists)),
+        // v1 (S0 E13): a list literal's elements are searched like arguments.
+        Expression::List { elements, .. } if lists => elements
+            .iter()
+            .find_map(|e| find_operation_with(e, op_names, lists)),
+        Expression::Binary { left, right, .. } => find_operation_in_args(left, op_names, lists)
+            .or_else(|| find_operation_in_args(right, op_names, lists)),
+        Expression::Unary { operand, .. } => find_operation_in_args(operand, op_names, lists),
+        Expression::Grouped { inner, .. } => find_operation_in_args(inner, op_names, lists),
+        Expression::Project { base, .. } => find_operation_in_args(base, op_names, lists),
         Expression::Tuple { elements, .. } => elements
             .iter()
-            .find_map(|e| find_operation_in_args(e, op_names)),
+            .find_map(|e| find_operation_in_args(e, op_names, lists)),
         Expression::Conditional {
             condition,
             then_branch,
             else_branch,
             ..
-        } => find_operation_in_args(condition, op_names)
-            .or_else(|| find_operation_in_args(then_branch, op_names))
-            .or_else(|| find_operation_in_args(else_branch, op_names)),
+        } => find_operation_in_args(condition, op_names, lists)
+            .or_else(|| find_operation_in_args(then_branch, op_names, lists))
+            .or_else(|| find_operation_in_args(else_branch, op_names, lists)),
         _ => None,
     }
 }

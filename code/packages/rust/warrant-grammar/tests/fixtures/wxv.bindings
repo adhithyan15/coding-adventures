@@ -1,0 +1,13 @@
+# VER04j WX-E test fixture: how the in-test subject (`wxv_subject`) implements
+# the operations of wxv.warrant, and which faults attack them (section 14.3).
+package wxv_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxv.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxv_evidence.rs
+seed 0x5758565f45564944
+property_cases 512
+fuzz_iterations 300
+negctl_fuzz_iterations 200
+exhaustive_budget 400000
+op digest export=digest faults=flip-result-bit,drop-last-result-byte
+op first_byte export=first_byte errors=wxv_subject::EmptyErr/Empty=EMPTY faults=missing-error

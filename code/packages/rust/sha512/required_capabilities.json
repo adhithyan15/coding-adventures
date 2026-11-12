@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/sha512",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: reads the shared sha512-v1 fixture file."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: creates a temporary oversized fixture file."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: removes the temporary fixture file."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: std::env::temp_dir locates the temporary file."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: std::process::id makes the temp file name unique (flagged as proc:exec by the analyzer)."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "*",
+      "justification": "Only inside #[cfg(test)] unit tests: SystemTime::now makes the temp file name unique."
+    }
+  ],
+  "justification": "Production code is pure computation; the declared capabilities are used only by #[cfg(test)] modules, which the analyzer scans conservatively (cfg is ignored)."
+}

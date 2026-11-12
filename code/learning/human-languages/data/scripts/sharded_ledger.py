@@ -656,7 +656,13 @@ def read_track_regular_texts(root, track, directory_parts, names, *, owner_kind=
             raise ValueError("modality owner set has missing or extra files")
 
         def read_unix(directory_fd, name):
-            descriptor = os.open(name, os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+            # A listed JSON owner can be swapped for a FIFO before this open.
+            # O_NONBLOCK lets the descriptor reach fstat, where the regular-file
+            # check below rejects it, instead of parking a worker in open(2).
+            # Regular-file reads are unchanged by this flag.
+            descriptor = os.open(
+                name, os.O_RDONLY | os.O_NONBLOCK | NOFOLLOW, dir_fd=directory_fd,
+            )
             with os.fdopen(descriptor, encoding="utf-8") as handle:
                 if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
                     raise ValueError(f"refusing non-file modality owner: {name}")

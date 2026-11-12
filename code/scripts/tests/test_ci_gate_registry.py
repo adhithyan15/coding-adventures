@@ -207,6 +207,13 @@ class CIGateRegistryTests(unittest.TestCase):
             self.assertIn(artifact, body)
         self.assertIn("exit 1", body)
 
+    def test_swift_grammar_job_runs_the_embedded_grammar_drift_guard(self) -> None:
+        # A wired gate that only builds grammar-tools would pass with a stale
+        # _Grammar.swift. Pin the actual source-to-artifact assertion.
+        body = self._job_body("swift-grammar-regen-check")
+        self.assertIn("regen-embedded-grammars.sh --check", body)
+        self.assertIn("exit 1", body)
+
     def test_forme_release_installs_browser_runtime_without_disabling_sandbox(self) -> None:
         body = self._job_body("forme-release-platform")
         self.assertIn("install-dependencies: true", body)

@@ -2,6 +2,37 @@
   "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
   "version": 1,
   "package": "rust/csprng",
-  "capabilities": ["os_random"],
-  "justification": "Reads bytes from the operating-system CSPRNG (/dev/urandom on Unix, BCryptGenRandom on Windows). No filesystem writes, no network, no process spawning."
+  "capabilities": [
+    {
+      "category": "rand",
+      "action": "read",
+      "target": "*",
+      "justification": "fill_random obtains cryptographically secure bytes from the OS entropy source."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "/dev/urandom",
+      "justification": "The Unix backend opens /dev/urandom with File::open and read_exact to obtain kernel entropy."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "bcrypt",
+      "justification": "The Windows backend calls BCryptGenRandom through an extern \"system\" block linked against bcrypt."
+    }
+  ],
+  "justification": "Reads bytes from the operating-system CSPRNG (/dev/urandom on Unix, BCryptGenRandom on Windows). No filesystem writes, no network, no process spawning.",
+  "banned_construct_exceptions": [
+    {
+      "construct": "unsafe_code",
+      "language": "rust",
+      "justification": "Windows backend calls the BCryptGenRandom FFI function inside an unsafe block with a SAFETY comment: null algorithm handle with BCRYPT_USE_SYSTEM_PREFERRED_RNG and a valid writable chunk pointer."
+    },
+    {
+      "construct": "foreign_linkage",
+      "language": "rust",
+      "justification": "Windows backend declares #[link(name = \"bcrypt\")] extern \"system\" to reach BCryptGenRandom; the standard library has no OS entropy API without an external crate."
+    }
+  ]
 }

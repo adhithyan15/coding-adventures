@@ -1,5 +1,168 @@
 # Changelog
 
+## 0.17.0 - 2026-11-11
+
+### Added
+
+- Added reviewed-anchor permitted-DNS evaluation over every retained
+  non-self-issued intermediate certificate's optional Subject Alternative
+  Name.
+- Added constrained success, self-issued skip, absent-SAN, unconstrained
+  short-circuit, violation, and retained real-chain coverage.
+
+### Security
+
+- Constraint bytes, certificates, order, complete policy, and self-issued
+  classifications come only from the consumed proof. Existing path and ASN.1
+  ceilings bound all public-certificate evaluation.
+- This does not constrain subordinate distinguished names, add excluded or
+  non-DNS reviewed-anchor constraints, support every GeneralName, establish
+  complete path/name validation, check revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
+## 0.16.0 - 2026-11-11
+
+### Added
+
+- Added ordered evaluation of every retained intermediate's critical supported
+  DNS/IP NameConstraints against each target-nearer non-self-issued
+  intermediate certificate's optional Subject Alternative Name.
+- Added synthetic broad-to-narrow, self-issued-skip, absent-SAN, and
+  subordinate-name violation coverage plus retained real-chain coverage.
+
+### Security
+
+- Certificates, traversal order, complete policy, and self-issued
+  classifications come only from the consumed proof. Existing path and ASN.1
+  ceilings bound the repeated public-certificate evaluation.
+- This does not constrain subordinate distinguished names, apply reviewed
+  anchor constraints to subordinate CAs, support every GeneralName, establish
+  complete path/name validation, check revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
+## 0.15.0 - 2026-11-11
+
+### Added
+
+- Added ordered evaluation of every retained intermediate policy's supported
+  critical DNS/IP NameConstraints against the exact target identities in an
+  arbitrary-depth routed closure.
+- Added fixed two-intermediate public-certificate coverage plus synthetic
+  ordered broad-to-narrow DNS/IP success and later-exclusion failure coverage.
+
+### Security
+
+- The exact target, validated SAN index, intermediate certificates, and
+  anchor-to-target traversal order are derived only from the consumed proof
+  chain. The earlier accumulator ceiling bounds visits, and caller-owned ASN.1
+  limits bound every repository-owned decode.
+- This does not constrain subordinate CA names, support every GeneralName,
+  establish complete path/name validation, check revocation, perform TLS or
+  HTTP, authorize OAuth transport, or grant network authority.
+
+## 0.14.0 - 2026-11-11
+
+### Added
+
+- Added reviewed-anchor DNS-policy evaluation over the arbitrary-depth routed
+  target-signature closure.
+- Added fixed public-certificate coverage proving that an unconstrained
+  reviewed snapshot entry retains the complete signature closure without
+  caller-supplied target, SAN-index, anchor, or constraint inputs.
+
+### Security
+
+- The exact target, already-validated SAN index, and reviewed anchor constraint
+  bytes are derived only through the consumed closure before the existing
+  bounded permitted-DNS evaluator runs.
+- This applies only the reviewed snapshot's supported permitted-DNS subset. It
+  does not apply every intermediate NameConstraints value, excluded or non-DNS
+  anchor constraints, complete path/name policy, revocation, TLS, HTTP, OAuth,
+  or network authority.
+
+## 0.13.0 - 2026-11-11
+
+### Added
+
+- Added an exact-object closure that consumes accumulated reviewed intermediate
+  evidence, the construction's routed depth-zero target signature, and complete
+  server policy for that exact target.
+- Added fixed public-certificate coverage for the retained closure, nonzero
+  target depth, detached construction, and byte-equal independently decoded
+  target policy.
+
+### Security
+
+- Closure requires construction identity, the exact depth-zero target child,
+  issuer continuity with the accumulated target-nearest intermediate, and
+  exact-object target-policy identity before retaining all evidence together.
+- This supplies repository-owned routed RSA evidence for each selected
+  child-to-issuer adjacency only. It does not validate the anchor's
+  self-signature, generalized path or name constraints, hostname, revocation,
+  TLS, HTTP, OAuth, or network authority.
+
+## 0.12.0 - 2026-11-11
+
+### Added
+
+- Added an allocation-free ordered accumulator for every intermediate on one
+  already constructed path, bounded by a caller-owned nonzero intermediate
+  ceiling.
+- Added fixed public-certificate chain coverage for a one-intermediate empty
+  follow-on slice, multi-intermediate evidence retention, exact evidence
+  counts, ordered depths, detached construction, and child-policy binding.
+
+### Security
+
+- The accumulator derives the intermediate count from the exact construction,
+  requires exact signature and policy counts, and applies each transition only
+  after construction identity, depth, issuer continuity, and authenticated
+  child-policy identity checks pass.
+- This accumulates only intermediate path-length state. It stops before the
+  target signature and does not establish complete validation, check names or
+  revocation, perform TLS or HTTP, authorize OAuth, or grant network authority.
+
+## 0.11.0 - 2026-11-11
+
+### Added
+
+- Added the immediately target-nearer ordered path-length transition after the
+  root-authenticated first intermediate.
+- Added fixed public-certificate chain coverage for retained two-step evidence,
+  exact depth order, detached-construction rejection, and child-policy binding.
+
+### Security
+
+- The second transition requires the same exact construction, the immediately
+  preceding issuer depth, the already processed intermediate as issuer, and
+  complete policy for the exact authenticated candidate child before advancing
+  retained state.
+- This proves exactly two public-certificate transitions. It does not iterate
+  over arbitrary paths, establish complete validation, check revocation,
+  perform TLS or HTTP, authorize OAuth, or grant network authority.
+
+## 0.10.0 - 2026-11-11
+
+### Added
+
+- Added the first trust-anchor-to-target path-length transition from exact
+  reviewed construction-derived initialization and one routed authenticated
+  intermediate.
+- Added coverage for retained initial and advanced evidence, target-nearer
+  anchor-nearest selection on a longer construction, rejection of proof from a
+  distinct construction object, and rejection of policy for another child.
+
+### Security
+
+- The transition requires the initializer and terminal proof to retain the
+  identical constructed path, authenticates the anchor-nearest intermediate as
+  the reviewed root's exact child, and binds complete intermediate policy to
+  that child before applying path length.
+- This is only one ordered public-certificate transition. It does not
+  accumulate remaining intermediates, establish complete path validation,
+  check names or revocation, perform TLS or HTTP, authorize OAuth, or grant
+  network authority.
+
 ## 0.9.0 - 2026-11-03
 
 ### Added

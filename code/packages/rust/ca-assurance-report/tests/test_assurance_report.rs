@@ -24,11 +24,12 @@ fn real_evidence() -> Evidence {
 }
 
 /// A fully live report has discharged every obligation, so no claim carries an
-/// `:unchecked` assumption any more (a `pass` verdict may not carry one).
+/// unchecked-row assumption any more (a `pass` verdict may not carry one).
+/// Catalogue ids spell them `wir.bound.*-unchecked`.
 fn discharge_unchecked(report: &mut AssuranceReport) {
     for c in &mut report.claims {
         if let Some(p) = c.proof.as_mut() {
-            p.assumptions.retain(|a| !a.ends_with(":unchecked"));
+            p.assumptions.retain(|a| !a.ends_with(":unchecked") && !a.ends_with("-unchecked"));
         }
     }
 }

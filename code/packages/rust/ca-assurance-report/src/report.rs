@@ -36,15 +36,42 @@ pub struct FuzzEvidence {
     pub status: String,
 }
 
+/// One assumption a claim no longer relies on, with the evidence that
+/// discharged it (VER13 section 4.6).  Checked by rules AC-3 and AC-6..AC-9.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DischargedAssumption {
+    /// Canonical catalogue id.
+    pub id: String,
+    /// Rung (`R0+`..`R4`) at which the evidence discharges it.
+    pub rung: String,
+    /// The stack the evidence is about; must equal the claim's stack (AC-7).
+    pub stack: String,
+    /// Manifest ids of the discharging evidence (AC-3).
+    pub evidence: Vec<String>,
+    /// For per-run evidence: the pinned build tuple (AC-9); empty otherwise.
+    pub pinned: BTreeMap<String, String>,
+    /// For per-run evidence: `for build <artefact_sha256>` (AC-9); empty otherwise.
+    pub scope: String,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ProofEvidence {
     pub label: String,
+    /// Catalogue ids the label still rests on, sorted (VER13 section 5.3).
     pub assumptions: Vec<String>,
     pub certificate: String,
     /// `"trivial-miter"` when any backing certificate is a collapsed miter (the
     /// proof is valid but vacuous at the SAT level), `"miter"` otherwise.
     /// Absent in legacy reports (parsed as `""`).
     pub certificate_kind: String,
+    /// Which artefact the guarantee describes (`host-rustc`, `owned-rv32i`).
+    pub stack: String,
+    /// Ladder rung of the claim (`R0` = WIR self-composition today).
+    pub rung: String,
+    /// Assumptions removed by checked evidence (empty until AS-002).
+    pub discharged: Vec<DischargedAssumption>,
+    /// How many listed assumptions sit at each layer (derived, VER13 4.6).
+    pub remaining_by_layer: BTreeMap<String, u64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -79,6 +106,22 @@ pub struct ComputedExemption {
     pub approved: bool,
     pub rationale: String,
     pub evidence: Vec<String>,
+    /// The catalogue ids the exemption is derived from (VER13 section 3.9,
+    /// rule AC-13): an exemption is a record *about* assumptions, never a
+    /// silent extra one.
+    pub assumptions: Vec<String>,
+}
+
+/// The pin of the catalogue files a report was generated against (VER13
+/// section 5.3).  `--check` fails when any digest differs from the files on
+/// disk (AC-14, `CatalogueDrift`).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CatalogueRef {
+    pub schema: String,
+    pub path: String,
+    pub sha256: String,
+    pub evidence_kinds_sha256: String,
+    pub non_claims_sha256: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -86,6 +129,12 @@ pub struct AssuranceReport {
     pub package: String,
     pub version: String,
     pub commit: String,
+    /// The pinned assumption catalogue (VER13 section 5.3).
+    pub catalogue: CatalogueRef,
+    /// Report-scope assumptions: catalogue entries about the weakness matrix,
+    /// the capability evidence and the verdict (`applies_to.claims` of
+    /// `weakness-row`, `capability`, `report`), which no single claim owns.
+    pub assumptions: Vec<String>,
     pub closure: Vec<String>,
     pub capabilities: CapabilitiesSummary,
     pub weaknesses: Vec<WeaknessRow>,
@@ -119,6 +168,21 @@ impl AssuranceReport {
         map.insert("package".into(), JsonValue::String(self.package.clone()));
         map.insert("version".into(), JsonValue::String(self.version.clone()));
         map.insert("commit".into(), JsonValue::String(self.commit.clone()));
+
+        let mut cat = BTreeMap::new();
+        cat.insert("schema".into(), JsonValue::String(self.catalogue.schema.clone()));
+        cat.insert("path".into(), JsonValue::String(self.catalogue.path.clone()));
+        cat.insert("sha256".into(), JsonValue::String(self.catalogue.sha256.clone()));
+        cat.insert(
+            "evidence_kinds_sha256".into(),
+            JsonValue::String(self.catalogue.evidence_kinds_sha256.clone()),
+        );
+        cat.insert(
+            "non_claims_sha256".into(),
+            JsonValue::String(self.catalogue.non_claims_sha256.clone()),
+        );
+        map.insert("catalogue".into(), JsonValue::Object(cat));
+        map.insert("assumptions".into(), strings(&self.assumptions));
 
         let closure_arr = self
             .closure
@@ -217,6 +281,22 @@ impl AssuranceReport {
                     "certificate_kind".into(),
                     JsonValue::String(proof.certificate_kind.clone()),
                 );
+                p_map.insert("stack".into(), JsonValue::String(proof.stack.clone()));
+                p_map.insert("rung".into(), JsonValue::String(proof.rung.clone()));
+                p_map.insert(
+                    "discharged".into(),
+                    JsonValue::Array(proof.discharged.iter().map(discharged_to_json).collect()),
+                );
+                p_map.insert(
+                    "remaining_by_layer".into(),
+                    JsonValue::Object(
+                        proof
+                            .remaining_by_layer
+                            .iter()
+                            .map(|(k, v)| (k.clone(), JsonValue::Number(*v as f64)))
+                            .collect(),
+                    ),
+                );
                 c_map.insert("proof".into(), JsonValue::Object(p_map));
             } else {
                 c_map.insert("proof".into(), JsonValue::Null);
@@ -262,6 +342,7 @@ impl AssuranceReport {
                 .map(|e| JsonValue::String(e.clone()))
                 .collect();
             ex_map.insert("evidence".into(), JsonValue::Array(ev_arr));
+            ex_map.insert("assumptions".into(), strings(&ex.assumptions));
             ex_arr.push(JsonValue::Object(ex_map));
         }
         map.insert("exemptions".into(), JsonValue::Array(ex_arr));
@@ -302,6 +383,34 @@ impl AssuranceReport {
             .and_then(|v| v.as_str())
             .unwrap_or("")
             .to_string();
+
+        // The catalogue pin and the report-scope assumptions are required:
+        // a report without them predates VER13 and cannot be checked against
+        // the catalogue, so it is refused rather than read as "no assumptions".
+        let cat_obj = obj
+            .get("catalogue")
+            .and_then(|v| v.as_object())
+            .ok_or_else(|| ReportError::Validation("missing 'catalogue' object (VER13 section 5.3)".into()))?;
+        exact_keys(
+            cat_obj,
+            &["schema", "path", "sha256", "evidence_kinds_sha256", "non_claims_sha256"],
+            "catalogue",
+        )?;
+        let cat_text = |k: &str| -> Result<String, ReportError> {
+            cat_obj
+                .get(k)
+                .and_then(|v| v.as_str())
+                .map(String::from)
+                .ok_or_else(|| ReportError::Validation(format!("catalogue.{k} must be a string")))
+        };
+        let catalogue = CatalogueRef {
+            schema: cat_text("schema")?,
+            path: cat_text("path")?,
+            sha256: cat_text("sha256")?,
+            evidence_kinds_sha256: cat_text("evidence_kinds_sha256")?,
+            non_claims_sha256: cat_text("non_claims_sha256")?,
+        };
+        let assumptions = strict_strings(obj.get("assumptions"), "assumptions")?;
 
         let closure = obj
             .get("closure")
@@ -445,11 +554,38 @@ impl AssuranceReport {
                     .and_then(|v| v.as_str())
                     .unwrap_or("proved")
                     .to_string();
-                let assumptions = p_obj
-                    .get("assumptions")
-                    .and_then(|v| v.as_array())
-                    .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
-                    .unwrap_or_default();
+                // Strict: a missing or mistyped list is an error, never "no
+                // assumptions" (an empty list is still rejected by AC-2).
+                let assumptions = strict_strings(p_obj.get("assumptions"), "proof.assumptions")?;
+                let stack = strict_text(p_obj.get("stack"), "proof.stack")?;
+                let rung = strict_text(p_obj.get("rung"), "proof.rung")?;
+                let discharged = match p_obj.get("discharged").and_then(|v| v.as_array()) {
+                    Some(items) if items.len() <= MAX_REPORT_LIST => {
+                        items.iter().map(discharged_from_json).collect::<Result<Vec<_>, _>>()?
+                    }
+                    _ => {
+                        return Err(ReportError::Validation(
+                            "proof.discharged must be a list of at most 4096 objects".into(),
+                        ))
+                    }
+                };
+                let remaining_by_layer = match p_obj.get("remaining_by_layer").and_then(|v| v.as_object()) {
+                    Some(m) => {
+                        let mut out = BTreeMap::new();
+                        for (k, v) in m {
+                            let n = v.as_i64().and_then(|n| u64::try_from(n).ok()).ok_or_else(|| {
+                                ReportError::Validation(format!("proof.remaining_by_layer.{k} must be a count"))
+                            })?;
+                            out.insert(k.clone(), n);
+                        }
+                        out
+                    }
+                    None => {
+                        return Err(ReportError::Validation(
+                            "proof.remaining_by_layer must be an object".into(),
+                        ))
+                    }
+                };
                 let cert = p_obj
                     .get("certificate")
                     .and_then(|v| v.as_str())
@@ -465,6 +601,10 @@ impl AssuranceReport {
                     assumptions,
                     certificate: cert,
                     certificate_kind,
+                    stack,
+                    rung,
+                    discharged,
+                    remaining_by_layer,
                 })
             } else {
                 None
@@ -531,6 +671,8 @@ impl AssuranceReport {
                 .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
                 .unwrap_or_default();
 
+            let assumptions = strict_strings(ex_obj.get("assumptions"), "exemption.assumptions")?;
+
             exemptions.push(ComputedExemption {
                 id,
                 kind,
@@ -538,6 +680,7 @@ impl AssuranceReport {
                 approved,
                 rationale,
                 evidence,
+                assumptions,
             });
         }
 
@@ -551,6 +694,8 @@ impl AssuranceReport {
             package,
             version,
             commit,
+            catalogue,
+            assumptions,
             closure,
             capabilities,
             weaknesses,
@@ -561,4 +706,95 @@ impl AssuranceReport {
             verdict,
         })
     }
+}
+
+// ---------------------------------------------------------------------------
+// Strict helpers for the VER13 fields.  The older fields above keep their
+// lenient defaults for compatibility; everything the assumption rules read is
+// parsed strictly, because a dropped or mistyped id would be a silent drop.
+// ---------------------------------------------------------------------------
+
+/// Upper bound on the length of any id list in a report.
+pub const MAX_REPORT_LIST: usize = 4096;
+
+fn strings(items: &[String]) -> JsonValue {
+    JsonValue::Array(items.iter().map(|s| JsonValue::String(s.clone())).collect())
+}
+
+fn strict_text(v: Option<&JsonValue>, what: &str) -> Result<String, ReportError> {
+    v.and_then(|x| x.as_str())
+        .map(String::from)
+        .ok_or_else(|| ReportError::Validation(format!("{what} must be a string")))
+}
+
+/// A list of strings; absence, a non-list, or a non-string item is an error.
+fn strict_strings(v: Option<&JsonValue>, what: &str) -> Result<Vec<String>, ReportError> {
+    let items = v
+        .and_then(|x| x.as_array())
+        .ok_or_else(|| ReportError::Validation(format!("{what} must be a list of strings")))?;
+    if items.len() > MAX_REPORT_LIST {
+        return Err(ReportError::Validation(format!("{what} has more than {MAX_REPORT_LIST} items")));
+    }
+    items
+        .iter()
+        .map(|x| {
+            x.as_str()
+                .map(String::from)
+                .ok_or_else(|| ReportError::Validation(format!("{what} items must be strings")))
+        })
+        .collect()
+}
+
+fn exact_keys(
+    obj: &BTreeMap<String, JsonValue>,
+    keys: &[&str],
+    what: &str,
+) -> Result<(), ReportError> {
+    for k in obj.keys() {
+        if !keys.contains(&k.as_str()) {
+            return Err(ReportError::Validation(format!("{what} has unknown field '{k}'")));
+        }
+    }
+    Ok(())
+}
+
+fn discharged_to_json(d: &DischargedAssumption) -> JsonValue {
+    let mut m = BTreeMap::new();
+    m.insert("id".into(), JsonValue::String(d.id.clone()));
+    m.insert("rung".into(), JsonValue::String(d.rung.clone()));
+    m.insert("stack".into(), JsonValue::String(d.stack.clone()));
+    m.insert("evidence".into(), strings(&d.evidence));
+    if !d.pinned.is_empty() {
+        m.insert(
+            "pinned".into(),
+            JsonValue::Object(d.pinned.iter().map(|(k, v)| (k.clone(), JsonValue::String(v.clone()))).collect()),
+        );
+    }
+    if !d.scope.is_empty() {
+        m.insert("scope".into(), JsonValue::String(d.scope.clone()));
+    }
+    JsonValue::Object(m)
+}
+
+fn discharged_from_json(v: &JsonValue) -> Result<DischargedAssumption, ReportError> {
+    let o = v
+        .as_object()
+        .ok_or_else(|| ReportError::Validation("proof.discharged items must be objects".into()))?;
+    exact_keys(o, &["id", "rung", "stack", "evidence", "pinned", "scope"], "proof.discharged item")?;
+    let pinned = match o.get("pinned") {
+        None => BTreeMap::new(),
+        Some(p) => crate::catalogue::parse_pinned_object(p, "proof.discharged", false)
+            .map_err(|e| ReportError::Validation(e.0))?,
+    };
+    Ok(DischargedAssumption {
+        id: strict_text(o.get("id"), "proof.discharged.id")?,
+        rung: strict_text(o.get("rung"), "proof.discharged.rung")?,
+        stack: strict_text(o.get("stack"), "proof.discharged.stack")?,
+        evidence: strict_strings(o.get("evidence"), "proof.discharged.evidence")?,
+        pinned,
+        scope: match o.get("scope") {
+            None => String::new(),
+            Some(s) => strict_text(Some(s), "proof.discharged.scope")?,
+        },
+    })
 }

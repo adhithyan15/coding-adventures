@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "profile": "warrant-lane-consumers-v1",
+  "corpus": "code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+  "consumer_count": 1,
+  "active_consumer_count": 0,
+  "consumers": [
+    {
+      "lane": "python",
+      "package": "python/ct-compare",
+      "module": "ct_compare",
+      "package_root": "code/packages/python/ct-compare",
+      "binding": "code/packages/python/ct-compare/evidence.bindings",
+      "runner_entry": "code/packages/python/ct-compare/tests/warrant_evidence.py",
+      "evidence_manifest": "code/packages/python/ct-compare/evidence/test-manifest.json",
+      "build_files": [
+        "code/packages/python/ct-compare/BUILD",
+        "code/packages/python/ct-compare/BUILD_windows"
+      ],
+      "status": "planned"
+    }
+  ]
+}

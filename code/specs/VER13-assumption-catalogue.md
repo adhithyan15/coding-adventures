@@ -1,6 +1,6 @@
 # VER13: Assumption Catalogue and Discharge Ladder
 
-**Status:** Draft specification (spec-only; no implementation yet)
+**Status:** Draft specification. Implemented so far: the catalogue data and its integrity checker (AS-001a part 1) and the report-side rules AC-1..AC-14 in `ca-assurance-report` (AS-001a part 2); see the implementation clarifications in section 5.2.
 **Authority:** VER00 §7.5 (assume-guarantee), §7.5.2, §7.5.6, §7.6.1, §7.6.5; VER01, VER04h §9-10, VER15, VER18 (planned), VER20, VER26 §3, §8.1
 **Backlog:** AS-001 (this spec), AS-002..AS-005 (VER-BACKLOG, "Assumption reduction, programs to logic gates")
 **Direction (user, 2026-11-09):** slowly pare the assumptions back, from programs down to logic gates, until a claim such as "this runs in constant time" is proved on a simulated netlist rather than assumed below WIR.
@@ -270,6 +270,7 @@ from* catalogue ids and must list them (rule AC-13):
 |---|---|
 | `EXEMPT-CWE-208-GATE-LEVEL` | everything below the label's layer: today `compiler.preserves_timing` (all refinements), `mc.isa.timing-data-independent`, `uarch.*`, `gate.*`, `phys.*`, `wir.cost.step-model` |
 | `EXEMPT-CWE-416-UNSAFE-EXCEPTION`, `-415-`, `-476-`, `-190-` | `src.rust.unsafe-region.sound`, `wir.lowering.volatile-by-name` |
+| `EXEMPT-CWE-208-NO-SECRET-OPERANDS` | nothing: the class does not apply (every operand labelled `public`, no constant-time obligation; VER04h section 9 item 20). First used by `rust/wasm-leb128`. |
 
 **Order of attack.** Tiers are ordered by leverage per unit effort and by
 the rule "work starts at the leaves and climbs" (VER-BACKLOG, AS):
@@ -596,6 +597,7 @@ and `remaining_by_layer` contains only `gate`/`phys` floor entries".
 ```
 code/assumptions/catalogue-v1.json     the catalogue (this spec §3 as data)
 code/assumptions/evidence-kinds.json   evidence id patterns and what proves what
+code/assumptions/non-claims.json       declared non-claims (rule AC-12; added by AS-001a part 2)
 code/assumptions/CHANGELOG.d/          one shard per change (lessons.d style)
 ```
 
@@ -683,6 +685,145 @@ committed file is not exactly what that script produces.
 `evidence-kinds.json` maps each evidence-id pattern to the manifest that
 must contain it and the verdict it must carry (reusing VER04h's manifest
 resolution: `warrant/...`, `bench/...`, `isa/...`, `gate/...`, `cc/...`).
+
+Implementation clarifications (AS-001a part 2, `ca-assurance-report` 0.2.0).
+Where the text above is underspecified or contradicts itself, the stricter
+reading was taken; each item says which.
+
+1. **Where the pin lives.** The report's `catalogue` object (section 5.3) pins
+   all three data files: `{"schema", "path", "sha256",
+   "evidence_kinds_sha256", "non_claims_sha256"}`. `--check` recomputes the
+   digests of the files on disk and fails with `CatalogueDrift` (AC-14) on any
+   difference. The tool loads `code/assumptions/` from the repository root
+   at which it found the package's Warrant document, and that root must be a
+   strict ancestor of the package directory, so a package cannot ship its own
+   catalogue and be checked against it; nothing is embedded in the binary. CI (`code/scripts/assumption_catalogue.py`, run on every
+   PR) also checks that every committed `code/packages/*/*/assurance_report.json`
+   pins the current digests, so a catalogue edit cannot leave a report stale
+   until the next PR that happens to rebuild that package.
+2. **Fail closed on the files.** The tool re-validates the catalogue's
+   structure, identity, graph and shape rules (the twin of the Python
+   checker, minus spec sync and backlog lookup) and refuses a missing,
+   unreadable, non-UTF-8 or malformed file. Size caps are enforced while
+   reading: catalogue 1 MiB, `evidence-kinds.json` 256 KiB,
+   `non-claims.json` 64 KiB; at most 4096 entries, 256 items per list, 4096
+   evidence-id patterns in total and 4096 bytes per string. The Python
+   checker applies the same file and count caps and the same whole-string
+   patterns (no trailing newline).
+3. **Aliases (AC-1).** Section 5.2 says aliases are "accepted in reports";
+   section 5.3 says "reports cite catalogue ids only". Stricter reading: an
+   alias in a claim's `assumptions`, `discharged`, an exemption's or the
+   report's list is `UnknownAssumption` (the message names the id to cite).
+   Aliases are resolved only for `unverified::` evidence ids (AC-11, the
+   transition period) and, in the generator, for the legacy strings the
+   evidence layer emits. An id listed twice, or both under `assumptions` and
+   `discharged`, is also `UnknownAssumption`.
+4. **What "applies_to matches" means (AC-4).** An entry matches a claim when
+   it names the package (or `*`), the claim's label matches one of
+   `applies_to.labels` (`bounded(k)` matches every ranked `bounded(N)`), and
+   the claim's kinds intersect `applies_to.claims`. A claim's kinds come from
+   its evidence: `functional` always, `constant-time` when its operation has a
+   constant-time obligation, `bound` when it has any `*-bound` obligation.
+   AC-4 says "assumed/attested", but AC-2 and the section 4.6 R0 row require
+   floor entries to be listed: every matching entry that is not discharged
+   (assumed, attested, evidenced or floor) is required. The closure walks
+   `depends_on`, `refines` *and* `refined_by` (listing the umbrella forces its
+   refinements), never expands past a discharged entry, and a discharged
+   entry it reaches must appear under `discharged`. Consequence: the
+   catalogue scopes `memory.unaliased` by label only, so `ct_eq_u64` (no
+   buffers) now lists it too; narrowing that is a catalogue edit.
+5. **Report-scope assumptions.** Entries whose `applies_to.claims` are
+   `weakness-row`, `capability` or `report` belong to no claim, and section
+   5.3 has no place for them. The report gains a top-level `assumptions`
+   list with the same rule (no label test), plus every attestation a row,
+   claim or exemption cites through an `unverified::` alias, even when the
+   catalogue scopes that attestation to another package (gf256 cites
+   ct-compare-scoped attestations), closed over the catalogue edges.
+6. **The proof object.** `stack`, `rung`, `discharged` and
+   `remaining_by_layer` (section 4.6) are required, never defaulted. The
+   stack of today's claims is `host-rustc`, not `host-x86_64` (section 4.3):
+   an R0 claim is about WIR and the host build of any target (CI also runs on
+   arm64 macOS). Stacks are `host-rustc` and `owned-rv32i`; anything else is
+   `StackMismatch` (AC-7). The R0 rung is `R0`, ranked below `R0+`; a
+   discharge's rung must be at least `R0+` and at least the catalogue's
+   `discharge.rung`. `remaining_by_layer` counts every listed assumption,
+   floor entries included (section 4.6 counts `phys.silicon.realization`), and
+   a value that disagrees with the list is `LabelOutranksAssumptions`.
+7. **AC-5 and the WIR labels.** Reading `proved`/`bounded(k)` as
+   "`proved-to-wir`, nothing above `wir` assumed" contradicts AC-4, which
+   makes every R0 claim list `spec.*` and `src.*` entries. So AC-5 applies to
+   `proved-per-run` and `proved-to-isa` (`L` = `mc`) and to
+   `proved-to-gate-level` (`L` = `gate`). Within those, the stricter reading of
+   "above `L`" is used: *any* undischarged non-floor entry at a stack layer
+   above `L` fails, including `spec`, `src` and `wir` entries that the
+   section 4.3, 4.4 and 4.6 examples leave remaining. `os`/`gov` entries have
+   no stack position.
+8. **Evidence kinds (AC-3).** `code/assumptions/evidence-kinds.json`
+   (schema `code/specs/schemas/ver13-evidence-kinds-v1.schema.json`) has one
+   row per kind: `kind`, `manifest` (`test`, `proof`, `bench`, or `planned`
+   when no manifest produces the kind yet), `patterns`, `verdict` (`pass`),
+   `per_run`, `description`. A pattern is 1..16 `/`-separated segments, each
+   a literal or `*` (exactly one segment), with a literal namespace first:
+   `warrant` for test/proof kinds, `bench` for bench kinds, anything else for
+   planned kinds. Every kind the catalogue names is defined, every defined
+   kind is named, and no two patterns can match one id. A discharge's
+   evidence id must match exactly one kind, that kind must be one the entry
+   accepts, and that kind's manifest must hold the id with verdict `pass`; a
+   planned kind can never discharge. A catalogue entry with status
+   `discharged` that names the package is checked the same way, and its
+   `discharged_by.digest` must be `sha256:` of the manifest file's bytes.
+9. **Pinning (AC-9).** Per-run kinds: `ir-taint-analysis`,
+   `asm-taint-analysis`, `ir-volatile-cycle-check`,
+   `toolchain-tuple-manifest`, `per-run-translation-validation`,
+   `host-counter-run`. "The current build tuple" is the tuple the manifest
+   entry recorded for the run (`pinned`: `toolchain`, `target`, `flags`,
+   `artefact_sha256`). The discharge must carry an identical `pinned` object
+   and `scope: "for build <artefact_sha256>"`. No manifest records a tuple
+   today, so no per-run discharge can pass until AS-003a writes one.
+10. **Umbrellas (AC-6).** A refinement counts as discharged when it is under
+    the same claim's `discharged` or discharged in the catalogue for the
+    claim's stack. `cc.caller-context` is a floor entry, so
+    `compiler.preserves_timing` can never be discharged (as section 4.2 says).
+11. **Floor (AC-8)** also covers `kind: physical` (as the catalogue rule
+    does) and any entry whose `discharge` is null.
+12. **Unused (AC-10)** judges only entries that name the package (or `*`):
+    an entry scoped to another package is not this report's concern. It is a
+    warning, and an error under the new `--strict` flag. ct-compare uses all
+    84 entries; gf256 (no live proof claims) leaves `tcb.report.checker-correct`
+    unused.
+13. **Attestations (AC-11).** An `unverified::` id that is no catalogue alias
+    is `UnknownAssumption`. The owner's status must be exactly `attested`. The
+    catalogue loader already refuses an attestation in any other status, so
+    the report-side rule is defence in depth.
+14. **Non-claims (AC-12)** are data: `code/assumptions/non-claims.json`
+    (schema `ver13-non-claims-v1`), rows `{package, cwe, claim, source,
+    statement}`. For each row naming the report's package, no proof
+    obligation of the non-claimed kind may pass with a ranked label, and the
+    CWE row may be neither `discharged` nor `excluded`, and may not cite such a
+    proof. The first row is gf256's CWE-208 (MA01, "Constant-time status").
+15. **Derived exemptions (AC-13).** An exemption's list is the section 3.9
+    selector applied to the union of the claims' listed (undischarged)
+    assumptions. The `EXEMPT-CWE-208-GATE-LEVEL` selector is "layer `cc`, `mc`,
+    `uarch`, `gate` or `phys`, or `wir.cost.step-model`" (the table's
+    "everything below the label's layer"). `memory.unaliased` is a WIR
+    assumption of the proof itself, so AS-002 acceptance 4 ("the CWE-208
+    exemption's derived list loses `memory.unaliased`") does not apply; the
+    table governs. The unsafe-exception row covers every memory-safety class
+    the matrix can emit (`125` and `787` as well as `416/415/476/190`).
+    `EXEMPT-CWE-400-NO-STEP-PROOF`, and a CWE-208 exemption on a package with
+    no live proof claim, record an absence of proof and derive the empty
+    list. `EXEMPT-CWE-208-NO-SECRET-OPERANDS` records that the class does not
+    apply (no secret operand) and also derives the empty list. Any other
+    exemption id has no rule and fails.
+16. **Order and integration.** `--check` runs the rules in the order
+    AC-14, 1, 11, 2, 7, 8, 6, 3, 9, 4, 5, 12, 13, 10, inside the evidence
+    cross-check and before the field-by-field comparison with the derived
+    report, so a broken list is named by the rule it breaks. Falsification
+    tests: `ca-assurance-report/tests/test_assumptions.rs`.
+17. **Build inputs.** The crate reads `code/assumptions/` at run time, not
+    through `include_str!`, like `code/specs/*.warrant`; the build-tool
+    source-input boundary is unchanged, and the CI pin check (item 1) is the
+    guard against a stale pin.
 
 ### 5.3 Report side
 

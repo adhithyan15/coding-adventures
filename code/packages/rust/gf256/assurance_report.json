@@ -1,9 +1,30 @@
 {
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
   "capabilities": {
     "analyzer": "pass",
     "certificate": "proved",
     "declared": [],
     "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
   },
   "claims": [
     {
@@ -347,19 +368,21 @@
   "exemptions": [
     {
       "approved": false,
+      "assumptions": [],
       "cwe": 400,
       "evidence": [],
       "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
       "kind": "no-live-proof",
-      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))"
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))"
     },
     {
       "approved": false,
+      "assumptions": [],
       "cwe": 208,
       "evidence": [],
       "id": "EXEMPT-CWE-208-GATE-LEVEL",
       "kind": "weakness-floor",
-      "rationale": "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists (parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))"
+      "rationale": "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists (parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))"
     }
   ],
   "package": "rust/gf256",
@@ -502,7 +525,7 @@
       "approved": false,
       "cwe": 400,
       "name": "Uncontrolled Resource Consumption",
-      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))",
       "status": "exemption"
     },
     {
@@ -545,7 +568,7 @@
       "approved": false,
       "cwe": 208,
       "name": "Observable Timing Discrepancy",
-      "reason": "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists (parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))",
+      "reason": "computed exemption (unapproved): applicable and unaddressed; operands are labelled secret but no constant-time proof is live and no benchmark evidence exists (parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body))",
       "status": "exemption"
     },
     {

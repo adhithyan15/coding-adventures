@@ -38,6 +38,19 @@ var expectedDiffFixtures = []string{
 	"diff-selection-unknown-error.json",
 }
 
+// The package_local metadata variant has its own filename prefix, so the
+// twelve-case diff-selection roster above (shared by every native reader)
+// stays unchanged.
+var expectedPackageMetadataFixtures = []string{
+	"package-metadata-selection-boundary-consumer.json",
+	"package-metadata-selection-build-front.json",
+	"package-metadata-selection-disallowed-types.json",
+	"package-metadata-selection-local-only.json",
+	"package-metadata-selection-lookalikes.json",
+	"package-metadata-selection-source-propagates.json",
+	"package-metadata-selection-strict-and-forced.json",
+}
+
 type neutralFixture struct {
 	ID    string `json:"id"`
 	Input struct {
@@ -48,6 +61,7 @@ type neutralFixture struct {
 			ForcedPackages    []string          `json:"forced_packages"`
 			UnknownPathPolicy string            `json:"unknown_path_policy"`
 			BoundarySHA256    string            `json:"boundary_sha256"`
+			MetadataPolicy    string            `json:"metadata_policy"`
 		} `json:"options"`
 		ChangedPaths []string `json:"changed_paths"`
 	} `json:"input"`
@@ -150,6 +164,7 @@ func diffInput(t *testing.T, fixture neutralFixture) DiffSelectionInput {
 		UnknownPathPolicy: fixture.Input.Options.UnknownPathPolicy,
 		ChangedPaths:      fixture.Input.ChangedPaths,
 		BoundarySHA256:    fixture.Input.Options.BoundarySHA256,
+		MetadataPolicy:    fixture.Input.Options.MetadataPolicy,
 	}
 	if input.BoundarySHA256 != "" {
 		boundary := loadBoundary(t)
@@ -217,6 +232,56 @@ func TestConsumesEveryNeutralDiffFixture(t *testing.T) {
 				t.Fatalf("result = %#v, want %#v", actual, fixture.Expected.Result)
 			}
 		})
+	}
+}
+
+func TestConsumesEveryPackageMetadataFixture(t *testing.T) {
+	if got := fixtureNames(t, "package-metadata-selection-*.json"); !reflect.DeepEqual(got, expectedPackageMetadataFixtures) {
+		t.Fatalf("package-metadata fixture roster = %v, want %v", got, expectedPackageMetadataFixtures)
+	}
+	for _, name := range expectedPackageMetadataFixtures {
+		fixture := loadFixture(t, name)
+		t.Run(fixture.ID, func(t *testing.T) {
+			if fixture.Input.Options.MetadataPolicy != MetadataPolicyPackageLocal {
+				t.Fatalf("metadata_policy = %q, want %q", fixture.Input.Options.MetadataPolicy, MetadataPolicyPackageLocal)
+			}
+			actual, err := EvaluateDiffSelection(diffInput(t, fixture))
+			if err != nil {
+				t.Fatalf("EvaluateDiffSelection: %v", err)
+			}
+			if actual.ErrorCode != "" || !reflect.DeepEqual(actual.ChangedPackages, fixture.Expected.Result.ChangedPackages) || !reflect.DeepEqual(actual.AffectedPackages, fixture.Expected.Result.AffectedPackages) || !reflect.DeepEqual(actual.PrerequisitePackages, fixture.Expected.Result.PrerequisitePackages) {
+				t.Fatalf("result = %#v, want %#v", actual, fixture.Expected.Result)
+			}
+		})
+	}
+}
+
+// The policy, not the file names, is what stops propagation: the same
+// metadata-only input under the original (empty) policy selects the
+// dependent, and an unknown policy is a structural error.
+func TestPackageMetadataPolicyIsExplicitAndClosed(t *testing.T) {
+	input := diffInput(t, loadFixture(t, "package-metadata-selection-local-only.json"))
+	input.MetadataPolicy = ""
+	legacy, err := EvaluateDiffSelection(input)
+	if err != nil || !reflect.DeepEqual(legacy.AffectedPackages, []string{"rust/dep", "rust/meta"}) {
+		t.Fatalf("legacy policy result = %#v, err = %v", legacy, err)
+	}
+	input.MetadataPolicy = "Package_Local"
+	if _, err := EvaluateDiffSelection(input); err == nil || err.Error() != "DIFF_METADATA_POLICY_INVALID" {
+		t.Fatalf("unknown policy error = %v, want DIFF_METADATA_POLICY_INVALID", err)
+	}
+}
+
+// An unknown path under the "all" policy selects every package as an
+// ordinary root, so nothing stays local.
+func TestPackageMetadataUnknownAllPropagatesEverything(t *testing.T) {
+	input := diffInput(t, loadFixture(t, "package-metadata-selection-local-only.json"))
+	input.UnknownPathPolicy = "all"
+	input.ChangedPaths = append(input.ChangedPaths, "code/elsewhere/file.txt")
+	got, err := EvaluateDiffSelection(input)
+	want := []string{"rust/dep", "rust/meta", "rust/pre"}
+	if err != nil || !reflect.DeepEqual(got.ChangedPackages, want) || !reflect.DeepEqual(got.AffectedPackages, want) || len(got.PrerequisitePackages) != 0 {
+		t.Fatalf("unknown-all result = %#v, err = %v", got, err)
 	}
 }
 
@@ -318,7 +383,7 @@ func TestBoundaryDigestAndCallerInputsAreStable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if digest != "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78" {
+	if digest != "4569b53118a279164c56a36142ff8f65a672edc533265ee146e4ca7385cde6a2" {
 		t.Fatalf("boundary digest = %s", digest)
 	}
 

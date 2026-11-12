@@ -9,7 +9,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "add",
       "runs": 0,
       "verdict": "not-live"
@@ -45,7 +45,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "add",
       "runs": 0,
       "verdict": "not-live"
@@ -57,7 +57,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "divide",
       "runs": 0,
       "verdict": "not-live"
@@ -93,7 +93,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "divide",
       "runs": 0,
       "verdict": "not-live"
@@ -105,7 +105,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "inverse",
       "runs": 0,
       "verdict": "not-live"
@@ -141,7 +141,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "inverse",
       "runs": 0,
       "verdict": "not-live"
@@ -153,7 +153,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "multiply",
       "runs": 0,
       "verdict": "not-live"
@@ -189,7 +189,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "multiply",
       "runs": 0,
       "verdict": "not-live"
@@ -201,7 +201,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "power",
       "runs": 0,
       "verdict": "not-live"
@@ -237,7 +237,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "power",
       "runs": 0,
       "verdict": "not-live"
@@ -249,7 +249,7 @@
       "kind": "constant-time",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "subtract",
       "runs": 0,
       "verdict": "not-live"
@@ -285,7 +285,7 @@
       "kind": "steps-bound",
       "label": "not-live",
       "max_len": 0,
-      "note": "parse refused at src/lib.rs:188:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
+      "note": "parse refused at src/lib.rs:193:17: Unexpected byte: ''' (line: `fn tables() -> &'static Tables {`); per export, add: alone: lowers (loop-free, table-free body); divide: alone: lowering refused (Unsupported method call 'log' in WIR lowering); inverse: alone: lowering refused (Unsupported method call 'log' in WIR lowering); multiply: alone: lowering refused (Unsupported method call 'log' in WIR lowering); power: alone: lowering refused (Unsupported expression variant in WIR lowering); subtract: alone: lowers (loop-free, table-free body)",
       "op": "subtract",
       "runs": 0,
       "verdict": "not-live"
@@ -293,7 +293,7 @@
   ],
   "schema": "warrant-proof-evidence-v1",
   "source": "code/packages/rust/gf256/src/lib.rs",
-  "source_sha256": "6ec361a42aed5ac75c954d20ef921e51d0fc88a6c6c5b0ce626180f0396f5ed0",
+  "source_sha256": "645e8a86f7438fb33e046be332ce9931c185fff9f47c6435ffb4dbc85314520b",
   "spec": "code/specs/gf256.warrant",
   "spec_sha256": "fecd88bc5101f9cc58115108b4618bc2818f7786cf98b960822d04502dc541bb"
 }

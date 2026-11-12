@@ -409,6 +409,47 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             16384,
         )
 
+    def test_package_metadata_selection_schema_is_closed(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        fixtures = [
+            example
+            for example in self.examples
+            if example["id"].startswith("diff-selection/package-metadata-")
+        ]
+        self.assertEqual(len(fixtures), 7)
+        for example in fixtures:
+            with self.subTest(case=example["id"]):
+                record = {
+                    "domain": example["domain"],
+                    "outcome": example["expected"]["outcome"],
+                    "input": copy.deepcopy(example["input"]),
+                    "result": example["expected"]["result"],
+                }
+                self.assertEqual(list(validator.iter_errors(record)), [])
+                # The policy is one closed constant ...
+                record["input"]["options"]["metadata_policy"] = "propagate"
+                self.assertNotEqual(list(validator.iter_errors(record)), [])
+                # ... and without it the record is an ordinary path selection,
+                # which every diff-selection-* reader replays.
+                del record["input"]["options"]["metadata_policy"]
+                self.assertEqual(list(validator.iter_errors(record)), [])
+
+        variant = self.pure_schema["$defs"]["package_metadata_selection_input"]
+        legacy = self.pure_schema["$defs"]["diff_path_selection_input"]
+        variant_options = variant["properties"]["options"]
+        self.assertFalse(variant["additionalProperties"])
+        self.assertFalse(variant_options["additionalProperties"])
+        self.assertIn("metadata_policy", variant_options["required"])
+        self.assertEqual(
+            variant_options["properties"]["metadata_policy"],
+            {"const": "package_local"},
+        )
+        self.assertNotIn(
+            "metadata_policy", legacy["properties"]["options"]["properties"]
+        )
+
     def test_cargo_manifest_snapshot_schema_is_closed_and_bounded(self) -> None:
         import jsonschema
 

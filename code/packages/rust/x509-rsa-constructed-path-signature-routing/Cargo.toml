@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-constructed-path-signature-routing"
-version = "0.9.0"
+version = "0.17.0"
 edition = "2021"
 description = "Bind data-driven RSA verification to exact constructed X.509 path adjacencies"
 
@@ -10,6 +10,7 @@ rsa-public-operation = { path = "../rsa-public-operation" }
 x509-certificate = { path = "../x509-certificate" }
 x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
 x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
+x509-certificate-path-reviewed-anchor-binding = { path = "../x509-certificate-path-reviewed-anchor-binding" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
 x509-name-constraints = { path = "../x509-name-constraints" }

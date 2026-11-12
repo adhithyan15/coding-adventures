@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `BUILD_windows` now runs `cabal test all` instead of skipping with "haskell support
+  not enabled in windows CI yet", so this package is built and tested on Windows.
+
 ### Security
 
 - No code change: the header count is validated against the payload length before any token is parsed, and invalid offsets return Left. NOT RUN locally (toolchain unavailable in the review environment).

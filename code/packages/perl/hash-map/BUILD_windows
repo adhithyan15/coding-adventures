@@ -1,1 +1,2 @@
-set PERL5LIB=..\hash-functions\lib && perl -Ilib t/00-load.t && perl -Ilib t/01-hash-map.t
+REM prereqs: ../hash-functions
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps hash-functions

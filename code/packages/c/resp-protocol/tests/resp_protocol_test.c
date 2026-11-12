@@ -134,10 +134,10 @@ int main(void) {
 
     /* Malformed inputs return ERROR. */
     {
-        const char inv_simple[] = {'+', (char)0xff, '\r', '\n'};
-        const char inv_error[] = {'-', (char)0xff, '\r', '\n'};
-        const char inv_bulklen[] = {'$', (char)0xff, '\r', '\n'};
-        const char inv_arrlen[] = {'*', (char)0xff, '\r', '\n'};
+        const char inv_simple[] = {'+', '\xff', '\r', '\n'};
+        const char inv_error[] = {'-', '\xff', '\r', '\n'};
+        const char inv_bulklen[] = {'$', '\xff', '\r', '\n'};
+        const char inv_arrlen[] = {'*', '\xff', '\r', '\n'};
         ISO_CHECK_EQ_INT((int)decode_status(inv_simple, 4),
                          (int)RESP_DECODE_ERROR);
         ISO_CHECK_EQ_INT((int)decode_status(inv_error, 4),

@@ -242,8 +242,16 @@ let consumes_every_shared_fixture () =
                let options = fixture |> member "input" |> member "options" in
                (* This closed variant uses package-name strings rather than the
                   legacy path-selection package records consumed here. *)
-               match member "trigger_relations" options with
-               | `Null ->
+               (* The package_local metadata variant keeps root changelog,
+                  capability and evidence-data edits from reaching
+                  dependents. This core does not model that policy, so it
+                  skips the variant instead of replaying it as legacy
+                  selection. *)
+               match
+                 ( member "trigger_relations" options,
+                   member "metadata_policy" options )
+               with
+               | `Null, `Null ->
                    seen :=
                      String_set.add (fixture |> member "id" |> to_string) !seen;
                    let digest =

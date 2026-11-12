@@ -1,1 +1,2 @@
-set "PERL5LIB=lib;..\hyperloglog\lib;..\in-memory-data-store-engine\lib;..\in-memory-data-store-protocol\lib;..\resp-protocol\lib" && prove -l -v t\
+REM prereqs: ../hyperloglog ../in-memory-data-store-engine ../in-memory-data-store-protocol ../resp-protocol
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps hyperloglog,in-memory-data-store-engine,in-memory-data-store-protocol,resp-protocol

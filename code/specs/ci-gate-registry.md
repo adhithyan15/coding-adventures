@@ -203,6 +203,28 @@ affected sets and Go/Rust toolchain flags demonstrate native scheduling with
 source-reference drift test together.
 
 The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/package-metadata-selection-*.json`
+(the `metadata_policy: "package_local"` diff-selection variant) has its own
+direct-native-consumer relation: `<language>/programs/build-tool` for Dart,
+Go, Java, Kotlin and OCaml. Go replays the cases; the JVM, Dart and OCaml
+cores dispatch every flat case by domain and must prove they skip the variant.
+Any exact flat JSON case addition, edit, deletion, or renamed source MUST seed
+those roots before affected and prerequisite closure on detect and every
+platform override, united with ordinary changed roots. Empty stems, nested
+paths, backslash spellings, case variants and backups MUST NOT trigger it, an
+explicit single-language plan seeds only its own reader, and an applicable
+missing reader MUST fail planning without writing a partial plan. A new direct
+reader must update the relation and its source-reference drift test together.
+
+Package-local metadata also narrows what gates see. Adding or editing a
+package's root `CHANGELOG.md`, `CHANGELOG.d/*.md`, `required_capabilities.json`,
+`effect_certificate.json`, `assurance_report.json` or `evidence/` data
+affects that package and its prerequisites but not its dependents
+(`code/specs/12-build-system.md`, "Package-local metadata"). A gate still
+fires on the file's path or on the owning package; a gate that only listed a
+dependent of the owner no longer fires for such a change.
+
+The exact flat case family
 `code/specs/fixtures/build-tool-v1/cases/toolchain-detection-*.json` MUST
 likewise seed every direct native toolchain-detection reader before affected
 and prerequisite closure. Its current consumers are
@@ -415,6 +437,55 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### Leaving the human-languages corpus out of most checkouts
+
+`code/learning/human-languages` is about 740 MB in 313,000 files, roughly 60% of
+the repository, and almost nothing reads it. Checking it out cost a Linux job
+about 210 s, a macOS job 320 s and a Windows job 390 s before any work began, on
+every job, every push. `ci.yml` now defines `LEAN_SPARSE_PATTERNS` once at the
+top and uses it as a non-cone sparse checkout (cone mode cannot say "everything
+except this directory"):
+
+```text
+/*
+!/code/learning/human-languages/
+/code/learning/human-languages/_fonts/
+```
+
+`_fonts` (2.4 MB) stays because `rust/font-subset`, `glyph-parser` and `pdf`
+read it. Every sparse checkout also sets `filter: blob:none`; without it git
+still downloads every blob and only the working tree shrinks.
+
+Who gets the full tree:
+
+| Job | Checkout |
+|---|---|
+| `detect` | sparse. The planner needs file names and the `ci.yml` diff, not corpus contents; the plan and all seven acceptance outputs were byte-identical with and without the corpus, including for a diff that changes it |
+| `contracts` | full, always. It runs the tests that read the corpus and, now, the double-encoding scan of the corpus (`check_mojibake.py` used to scan it in `detect`) |
+| `build` | sparse, unless the `human-language-corpus` gate fires or the run is a full build |
+| every other gated job | sparse |
+| `ocaml-capability-gate` | unchanged: its checkout inputs are a reviewed OCaml contract |
+
+The `human-language-corpus` gate lists the packages that read the corpus
+(`typescript/human-language-data`, `typescript/programs/language-ladder`,
+`typescript/script-ductus`). It fires whenever one of them is in the affected
+closure, on every `ci.yml` change, and on forced and main builds. It has no path
+glob for the corpus on purpose: a corpus-only change affects no package, so its
+build needs no corpus, and a glob would fire the gate for every such diff,
+which `TestPathShardedLanguageDiffsStaySelective` forbids, and exceed the
+matcher's work limit at about 10,000 changed corpus paths.
+
+`code/scripts/tests/test_human_language_corpus_consumers.py` keeps the list
+honest. It finds every package or program that mentions the corpus (other than
+`_fonts`) and fails unless the package is in the gate or in a short
+`MENTION_ONLY` list of build tools that only carry the path as data. A new
+reader that is not listed would pass locally and fail in CI, so this test makes
+the omission fail on the PR that introduces it.
+
+For a local clone, the same idea works with
+`git clone --filter=blob:none --sparse` and
+`git sparse-checkout set --no-cone '/*' '!/code/learning/human-languages/'`.
+
 ### D18S Windows applier native acceptance
 
 The `build-windows-os-suites` gate MUST also include affected packages
@@ -444,6 +515,30 @@ A TypeScript change sets no Windows toolchain flag, and main builds only on
 Linux, so without the gate that walk runs natively only when some unrelated
 gated package happens to share the PR. That is how its original breakage sat
 latent from #829 until #17722.
+
+### Windows recipe changes prove themselves on the pull request
+
+The `build-windows-recipes` gate (BUILD-002) has no `packages`, only `paths`:
+`code/packages/**/BUILD_windows` and `code/programs/**/BUILD_windows`. A pull
+request that changes any Windows recipe therefore sets
+`run_build_windows_recipes`, which does two things in `ci.yml`: it adds the
+Windows leg to the pull-request build matrix, and it lets that leg's "Build and
+test affected packages" step run. Both used to depend on a native toolchain
+flag, so a recipe edit could merge without ever running on Windows and was only
+exercised by the next daily cross-OS build, a day later.
+
+What the Windows leg builds is the planner's own Windows closure
+(`platform_overrides.windows.affected_packages`): the package whose recipe
+changed plus its dependents. The Linux closure is unaffected, because a
+`BUILD_windows` file is not read there. Toolchains follow the same closure
+(`languages_needed` is computed across platforms), so editing a Haskell recipe
+installs GHC on the Windows runner. A change to an ordinary `BUILD`,
+`BUILD_mac_and_linux` or a source file does not fire the gate, so pull requests
+that do not touch a Windows recipe pay nothing.
+
+Size a change to what one runner can prove: a recipe edit across dozens of
+packages builds all of them and their dependents on one Windows runner, under
+the step's 300 minute ceiling. Roll large recipe changes out in batches.
 
 ### Closure compiler native Windows acceptance
 

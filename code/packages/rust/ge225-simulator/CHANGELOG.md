@@ -4,6 +4,10 @@ All notable changes to the ge225-simulator Rust package will be documented in th
 
 ## [Unreleased]
 
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ### Changed
 - Implement the optional AAU as separate 40-bit AX/BX/QX/IX state with fixed,
   normalized floating, and unnormalized floating calculation modes; exact

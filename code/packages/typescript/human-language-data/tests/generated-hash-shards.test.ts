@@ -16,6 +16,7 @@ import {
   generatedNarrationHashOwnerContents,
   listGeneratedBookHashOwnerLanguages,
   narrationLessonIdentityIndex,
+  narrationLessonIdentityIndexBatch,
   prepareGeneratedHashOwnerWrite,
   readGeneratedBookHashManifest,
   readGeneratedHashManifestsBatch,
@@ -181,6 +182,11 @@ describe("generated chapter hash shard loader", () => {
     const batch = readGeneratedHashManifestsBatch(root, ["test"]);
     expect(batch.book.get("test")).toEqual(book);
     expect(batch.narration.get("test")).toEqual(narration);
+    const narrationOnly = readGeneratedHashManifestsBatch(
+      root, ["test"], ["generated-narration-hashes"],
+    );
+    expect(narrationOnly.book.size).toBe(0);
+    expect(narrationOnly.narration.get("test")).toEqual(narration);
   });
 
   it("keeps exact owner-set and dangerous-key refusals in the pinned batch", () => {
@@ -464,9 +470,49 @@ describe("generated chapter hash shard loader", () => {
       "TEST-C02-alpha",
       "TEST-C02-zed",
     ]);
+    // No book-hash owners exist in this fixture: the async modality path
+    // must not silently acquire an unrelated generated-book prerequisite.
+    expect([...narrationLessonIdentityIndexBatch(root, ["test", "alpha"])]).toEqual([...index]);
     expect([
       ...modalityNarrationLessonIds(root, ["test", "alpha"]).keys(),
     ]).toEqual(["test", "alpha"]);
+  });
+
+  it("keeps exact language closure and corrupt-owner refusal in the narration-only batch", () => {
+    const root = fixture();
+    writeOwners(root, generatedNarrationHashOwnerContents("test", narrationManifest()));
+    writeOwners(root, generatedNarrationHashOwnerContents("extra", narrationFor("extra", ["EXTRA-C02-one"])));
+    writeFileSync(join(root, GENERATED_NARRATION_HASH_DIR, "test.d", "0002.json"), "not json\n");
+    expect(() => narrationLessonIdentityIndexBatch(root, ["test"])).toThrow(/extra: extra/);
+    expect(() => narrationLessonIdentityIndexBatch(root, ["test", "extra"])).toThrow(/malformed JSON/);
+
+    const collisionRoot = fixture();
+    writeOwners(collisionRoot, generatedNarrationHashOwnerContents(
+      "alpha", narrationFor("alpha", ["SHARED-C02-One"]),
+    ));
+    writeOwners(collisionRoot, generatedNarrationHashOwnerContents(
+      "test", narrationFor("test", ["shared-c02-one"]),
+    ));
+    expect(() => narrationLessonIdentityIndexBatch(collisionRoot, ["alpha", "test"]))
+      .toThrow(/case-fold collision across languages/);
+  });
+
+  it("indexes more than one bounded narration batch with global collision checks", () => {
+    const root = fixture();
+    const languages = Array.from({ length: 33 }, (_, index) =>
+      `l${String(index + 1).padStart(2, "0")}`,
+    );
+    for (const language of languages) {
+      writeOwners(root, generatedNarrationHashOwnerContents(
+        language, narrationFor(language, [`${language.toUpperCase()}-C02-one`]),
+      ));
+    }
+    expect(narrationLessonIdentityIndexBatch(root, languages).size).toBe(33);
+    writeOwners(root, generatedNarrationHashOwnerContents(
+      "l33", narrationFor("l33", ["L01-C02-ONE"]),
+    ));
+    expect(() => narrationLessonIdentityIndexBatch(root, languages))
+      .toThrow(/case-fold collision across languages 'l01' and 'l33'/);
   });
 
   it("proves exact language closure before opening owner bytes", () => {

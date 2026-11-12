@@ -6,6 +6,11 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+/// Directories skipped at the package root only (VER08a §5).  Root-level
+/// source files must not reach them through `mod` (`parser.rs`,
+/// `check_root_level_mods`), nor Cargo `path` keys (`cargo.rs`).
+pub const SKIPPED_ROOT_DIRS: &[&str] = &["target", "node_modules", "_build", "tests", "benches", "examples"];
+
 /// Resource limits (VER08a §5).
 pub const MAX_SOURCE_FILES: usize = 10_000;
 pub const MAX_FILE_SIZE_BYTES: u64 = 4 * 1024 * 1024; // 4 MiB
@@ -128,15 +133,16 @@ fn collect_rs_files(
 
         let name = entry.file_name().to_string_lossy().to_string();
 
-        // Skip ignored directories
+        // Skip ignored directories.
+        //
+        // Hidden directories cannot be named by `mod` (a module name is an
+        // identifier), so they are only reachable through `#[path]`, which the
+        // parser reports as CAP003.  The build/vendor/test directories are
+        // skipped at the package ROOT only: a nested `src/target/mod.rs` is an
+        // ordinary module (`mod target;`) and must be scanned.
         if meta.is_dir() {
-            if name.starts_with('.')
-                || name == "target"
-                || name == "node_modules"
-                || name == "_build"
-                || (current_dir == root
-                    && (name == "tests" || name == "benches" || name == "examples"))
-            {
+            let at_root = current_dir == root;
+            if name.starts_with('.') || (at_root && SKIPPED_ROOT_DIRS.contains(&name.as_str())) {
                 continue;
             }
             collect_rs_files(root, &path, depth + 1, out)?;

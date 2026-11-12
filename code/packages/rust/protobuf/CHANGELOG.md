@@ -1,5 +1,11 @@
 # Changelog — protobuf
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] — Unreleased
 
 Initial release: a zero-dependency Protocol Buffers **wire-format** codec.

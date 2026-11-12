@@ -2,7 +2,13 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** Draft. Design only: nothing here is implemented, and no lane other than Rust has Warrant-derived evidence today.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a specifies a strict lane-manifest and consumer-registry contract with structural validation; parser code, lane runners, lane manifests, native suites, samples, and proofs are not delivered yet, and no non-Rust lane has Warrant-derived execution evidence today.
+
+**Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
+CI receipts, and subsequent discoveries are maintained in the
+[portable Warrant backlog shard](VER-BACKLOG.d/portable-warrant.md). This
+shard is authoritative for current implementation status; the design and
+historical rollout snapshots below remain part of this specification.
 
 ## 0. Why this exists
 
@@ -126,7 +132,7 @@ file because exhaustive suites are generators, not lists):
 code/specs/fixtures/<module>-warrant-v1/
   corpus.json        authority: suites, domains, model IR, faults, digests
   cases.tfv          TFV v1: examples, materialised sample, sabotage probes
-  consumers.json     lane list: binding path, runner entry, evidence path
+  consumers.json     registered lane consumers, with planned/active status
   schema.json  consumers.schema.json  README.md  CHANGELOG.md
 ```
 
@@ -173,7 +179,7 @@ Identity is the VER04h evidence id, which is itself derived from the spec:
 | sabotage control | `warrant/<module>/negctl/<kind>/<op>/<fault>` | op + fault registry |
 
 A single exhaustive *case* is addressed as `<suite id>@<i>` where `i` is the
-0-based index in enumeration order, so a failure message is
+0-based admitted-case ordinal after refinements, so a failure message is
 `warrant/ct_compare/exhaustive/eq_agrees@7021` and can be reproduced in any
 lane, or in Rust, by index. The ids used in lane manifests are *the same
 strings* that Rust manifests use, which is what makes "lane X covers claim C"
@@ -204,9 +210,9 @@ a join over equal keys (§9) and not a naming convention.
       "kind": "exhaustive", "claim": "eq_agrees", "ops": ["eq"],
       "binders": [["a", {"domain":"bytes_d1"}], ["b", {"domain":"bytes_d1"}]],
       "admit": ["bool", true],
-      "lhs": ["op", "eq", [["var","a"],["var","b"]]],
-      "rhs": ["call", "same", [["var","a"],["var","b"]]],
-      "cases": 120409, "discarded": 0,
+      "lhs": ["subject_op", "eq", [["var","a"],["var","b"]]],
+      "rhs": ["model_call", "same", [["var","a"],["var","b"]]],
+      "cases": 120409, "discarded": 0, "expected_calls": 120409,
       "domain_text": "Bytes[347] x Bytes[347]",
       "inputs_sha256": "<hex>", "expected_sha256": "<hex>"
     }
@@ -216,18 +222,35 @@ a join over equal keys (§9) and not a naming convention.
 }
 ```
 
-Model IR node forms are exactly VER04h §2.1's supported expressions, as
-`[tag, ...]` arrays: `lit`, `var`, `op` (calls the *binding*, i.e. the real
-export), `call` (calls a `model`), `ok`, `err`, `name`, `len`, comparisons,
-`+ - *` (width semantics in §2.7), `and or not implies`, `if`. Anything
-outside that set fails the *compiler* with `W0701`, as in VER04h, so a lane
-interpreter never meets an unknown node. A lane's evaluator rejects an unknown
-tag with a hard error (never "skip").
+`expected_calls` is the exact number of subject-operation invocations in an
+unfaulted complete run of the suite. WD-003's equality-only v0 profile permits
+one subject call per admitted case, so `expected_calls == cases`; a later
+profile that admits multiple subject calls must count them from the checked
+subject expression and include the count in the corpus.
 
-The suite's verdict for a case is `eval(lhs)` deep-equals `eval(rhs)` for
-claims of shape `lhs == rhs`, or `eval(body)` is `true` for any other claim
-body; `lhs`/`rhs` are provided only as a convenience so a failure can report
-both sides.
+IR calls have separate subject and oracle forms. `subject_op(name, args)` is
+the only node that dispatches through a lane's binding table to the real
+export. It is forbidden inside every model body. `model_call(name, args)` is
+the only node that invokes a named, pure model; model bodies can use only
+`lit`, `var`, `model_call`, `ok`, `err`, `name`, `len`, pure comparisons and
+arithmetic (`+ - *`, with width semantics in §2.7), `and or not implies`, and
+`if`. Built-in pure operators such as `eq` and `lt` are IR tags, not operation
+names and never resolve through the binding table. The `same` model above is
+therefore `['eq', ['var','a'], ['var','b']]`; the subject side of a claim is
+`['subject_op','eq', ...]`. This rejects the overloaded `['op', ...]` form.
+The compiler fails unsupported operations or nodes with `W0701`; every
+consumer rejects an unknown tag and never skips it.
+
+WD-003's first profile accepts only equality claims with exactly one subject
+expression and one pure reference expression (the sides may appear in either
+order). It rejects claims with no pure reference side or with subject calls
+on both sides; there is no implementation-independent expected value for
+those forms in this profile. For each case, the consumer evaluates the subject
+expression through the real export and the reference expression through pure
+models. The corpus oracle evaluates and records only the pure reference
+result. A wrong subject result cannot change the oracle value and must fail
+the case comparison. The shared conformance fixture includes a deliberately
+wrong subject result to prove this separation.
 
 ### 2.6 Domains, enumeration order and the canonical stream
 
@@ -246,10 +269,20 @@ name and *defined once, here and in VER04h*, never re-described per lane:
 
 The Cartesian product enumerates binders left to right, the **last binder
 varying fastest** (row-major). Refinements filter in that order; a discarded
-tuple is counted, not indexed.
+tuple is counted and receives no case id. A case index `@i` is the zero-based
+ordinal among admitted cases after refinement.
 
-The canonical stream encoding (`warrant-stream-v1`), hashed with SHA-256 after
-the header `"warrant-stream-v1\0"`:
+The canonical stream encoding (`warrant-stream-v1`) uses two independent
+SHA-256 streams. Both start with the same context prefix. After the header
+`"warrant-stream-v1\0"`, encode the suite context as a
+u32-LE byte length plus the UTF-8 suite id, a u32-LE binder count, then for
+each binder a u32-LE byte length plus its canonical Warrant type name; finish
+the context with the same length-prefixed canonical result type name. For each
+admitted case, append its typed binder values in order to `inputs_sha256`, and
+append only its typed pure-model result to `expected_sha256`. The fixed suite
+context and binder/result types define case boundaries; stream position is
+the admitted-case ordinal. There are no per-case delimiters or ordinal bytes.
+Hash each stream separately:
 
 | Value | Bytes |
 |---|---|
@@ -261,8 +294,10 @@ the header `"warrant-stream-v1\0"`:
 | `Ok(v)` / `Err(E.V)` | `50` + inner / `51`, u32-LE length, UTF-8 variant name |
 | a tuple | concatenation of its elements |
 
-The lane hashes each case's input tuple, and the *model's* result (not the
-implementation's), in enumeration order. All lanes ship (or implement once in
+The lane hashes each admitted case's input tuple and the *model's* result (not
+the implementation's), in enumeration order. The suite descriptor, type
+schema, and admitted-case ordinal define each stream's context and boundaries.
+All lanes ship (or implement once in
 `warrant-corpus`) a streaming SHA-256; none of them may depend on a third-party
 digest library in the bootstrap layer, and every lane in §13 has SHA-256 in its
 standard library or platform (Lua, Perl and OCaml included: Digest::SHA is
@@ -310,6 +345,16 @@ case, not a code review.
 
 ### 2.8 Regeneration and drift checks
 
+**WD-003 first slice:** the Rust generator emits the `ct-compare` Warrant v0
+examples, exhaustive suite descriptors and digests, plus generated control
+rows. The independent Python validator uses only the standard library and
+re-enumerates/re-evaluates that profile from the checked-in Warrant source. It
+does not call Rust or consume Rust-generated expected values as its oracle.
+This slice generates no materialised samples and executes no lane binding;
+sample generation and Python L0 execution remain separate rollout work.
+Unsupported `--shard` arguments, Warrant v1-only forms, and unknown IR nodes
+are hard errors in the generator and validator.
+
 | Check | Command (CI, in the corpus package BUILD) | Fails when |
 |---|---|---|
 | Regenerate | `cargo run -p coding_adventures_warrant_grammar --example gen_corpus -- --check` | the checked-in `corpus.json`/`cases.tfv` differ byte-for-byte from the compiler's output for the current spec (VER04h's `gen_evidence --check` pattern) |
@@ -321,9 +366,9 @@ The corpus package BUILD declares the `.warrant` file and `warrant-grammar`
 as dependencies, so a spec edit rebuilds the corpus and, through the
 dependency graph, every lane that consumes it.
 
-### 2.9 Sampled (property-shaped) cases are materialised, small, and labelled honestly
+### 2.9 Later extension: sampled (property-shaped) cases are materialised, small, and labelled honestly
 
-Layer A also carries a *sample* per claim: `samples.per_claim = 256` cases drawn
+After the WD-003 first slice, Layer A may carry a *sample* per claim: `samples.per_claim = 256` cases drawn
 with VER04h §4's relation-biased generator, using the per-claim seed
 `SplitMix64(evidence_seed ^ fnv1a64("claim/" || module || "/" || claim))`,
 written into `cases.tfv` with expected values. Measured at about 160 B/case for
@@ -342,9 +387,11 @@ bias is checkable (VER04h §4).
 * **Runtime ceiling.** `corpus.json` records `cases` per suite; each lane's
   `consumers.json` entry has `max_wall_seconds` (default 120). A lane that
   cannot meet it for a given suite (slow interpreters on a 140,000-case
-  suite) keeps the *full* enumeration but may shard across processes
-  (`--shard i/n`; shards must jointly cover `[0, cases)` and the manifest
-  merges their per-shard digest chain, see §8), never silently trim.
+  suite) keeps the *full* enumeration. `warrant-corpus-v1` WD-003 is
+  unsharded: `--shard` is rejected with a usage error. A later profile must
+  define mergeable chunk commitments before any consumer accepts sharding;
+  SHA-256 final digests cannot be merged to obtain the digest of a combined
+  stream.
 * **Descriptor sanity.** A descriptor whose product overflows, or that
   produces zero admitted cases, fails *generation* (so a refinement that
   excludes everything cannot pass vacuously, as in VER04h).
@@ -370,7 +417,8 @@ the ambiguity.
 
 ### 4.1 Rule: faults are per (suite kind, operation, fault)
 
-A negative control is the triple *(suite, op, fault)*. For a claim that
+A negative control is a generated row for the triple *(target suite kind, op,
+fault)*. For a claim that
 mentions ops `o1..ok` there are `k` controls per applicable fault, each
 perturbing **exactly one** op's binding. A control passes iff the suite, run
 with that single-op fault, **fails with a registered failure id**. The
@@ -399,10 +447,14 @@ that callable:
 | `truncate-last` | op returns `Bytes` | drop the final byte |
 | `drop-to-none` | op returns `Option` | `None` |
 
-The registry lives in `corpus.json.faults` as
-`{"fault": "...", "op": "...", "applies": "output|input"}` rows, produced by the
-compiler from the op signatures: new Warrant ops get controls without
-touching any lane. A lane implements the ten transformers once in
+`corpus.json.faults` is the transformer registry: each row declares a fault
+and its signature-based applicability. The compiler separately derives a
+`controls` array with one row per applicable `(target_kind, op, fault)`, a
+stable id `warrant/<module>/negctl/<target_kind>/<op>/<fault>`, and the claim
+ids that the control is required to falsify. Manifest `caught_by` must be
+nonempty and a subset of those required claim ids; an unrelated failure cannot
+credit a control. BUILD reruns exactly the listed target suites. A lane
+implements the ten transformers once in
 `warrant-corpus` (about 60 lines); the binding table is just a record/map of
 callables in every lane, so wrapping is idiomatic everywhere:
 
@@ -611,14 +663,17 @@ polyglot check needs:
   "evidence_seed": "<u64>",
   "faulted": false,
   "tests": [
+    { "id": "warrant/ct_compare/example/eq_empty", "layer": "portable",
+      "kind": "example", "op": "eq", "cases": 1, "verdict": "pass" },
     { "id": "warrant/ct_compare/exhaustive/eq_agrees", "layer": "portable",
       "kind": "exhaustive", "op": "eq", "claim": "eq_agrees",
-      "cases": 120409, "discarded": 0, "calls": 240818,
+      "cases": 120409, "discarded": 0, "calls": 120409,
       "inputs_sha256": "<hex>", "expected_sha256": "<hex>",
       "domain": "Bytes[347] x Bytes[347]", "verdict": "pass" },
     { "id": "warrant/ct_compare/negctl/exhaustive/eq/ignore-last-byte",
       "layer": "portable", "kind": "negctl", "fault": "ignore-last-byte",
-      "op": "eq", "target": "exhaustive", "caught_by": ["eq_agrees"],
+      "op": "eq", "target": "exhaustive",
+      "caught_by": ["warrant/ct_compare/exhaustive/eq_agrees"],
       "verdict": "pass" }
   ]
 }
@@ -629,6 +684,68 @@ kind is added for the materialised sample (`cases`, `equal_cases`,
 `seed`). The manifest is deterministic: sorted keys and entries, no timestamps
 and no absolute paths. The lane `toolchain` is included for diagnosis and
 is not part of equality across lanes.
+
+For the WD-004a `ct-compare-v0` profile, the exact top-level manifest keys are
+`schema`, `lane`, `package`, `module`, `spec`, `spec_sha256`, `corpus`,
+`corpus_sha256`, `cases_sha256`, `runner`, `binding_sha256`, `source_sha256`,
+`toolchain`, `evidence_seed`, `faulted`, and `tests`; the nested `runner`,
+`toolchain`, and test-entry keys are closed as well. The only accepted test
+kinds are `example`, `exhaustive`, and `negctl`, all with `layer: "portable"`;
+native, sample, property, and fuzz entries are rejected. An example row has
+exactly `id`, `layer`, `kind`, `op`, `cases`, and `verdict`. Every corpus
+example appears once with its exact id and op and `cases: 1`. An exhaustive
+row has exactly the keys shown in the first example row above; each exhaustive
+suite appears once with its exact id, op, claim, domain, case/discard/call
+counts, and input/reference digests. A negative-control row has exactly the
+keys shown in the second example row above. Every generated control appears
+once. Its manifest `target` value equals the corpus control's `target_kind`,
+and `caught_by` contains one or more full claim IDs from that control's
+`required_claims` list, with no duplicates. A short display name is not a
+claim ID.
+
+`consumers.json` is the per-corpus identity registry, not a list of supported
+languages. Its exact top-level keys are `schema_version`, `profile`,
+`corpus`, `consumer_count`, `active_consumer_count`, and `consumers`. A row's
+exact keys are `lane`, `package`, `module`, `package_root`, `binding`,
+`runner_entry`, `evidence_manifest`, `build_files`, and `status`.
+`package` is `<lane>/<name>`; rows are unique and sorted by package. The
+`warrant-lane-consumers-v1` profile records the lane, package root, binding
+path, runner entry, evidence-manifest path, build files, and
+`status: "planned"|"active"`. In this first profile, each `build_files` array
+contains one or two unique paths. Planned entries reserve identity and paths
+only; they cannot authorize a passing lane result. WD-004a registers
+`python/ct-compare` as `planned`; no entry becomes active until its binding,
+runner, evidence manifest, and build routing exist.
+
+Registry path values are lexically normalized, slash-separated,
+repository-relative paths with no empty, `.` or `..` component and no
+backslash. The declared `package_root` must equal the path derived from
+`package` (for example, `python/ct-compare` maps to
+`code/packages/python/ct-compare`). Every file path must be beneath that exact
+root; the evidence-manifest path is exactly
+`<package_root>/evidence/test-manifest.json`. The registry's `consumer_count`
+equals the row count, and `active_consumer_count` equals the number of rows
+whose status is `active`. WD-004a checks these strings and joins only; it does
+not open paths, verify symlinks or path existence, or attest a real active run.
+Filesystem-safe opening and active-consumer readiness belong to the later
+runner/report integration.
+
+WD-004a closes the first parser profile to the exact keys shown in §8,
+including the nested `runner`, `toolchain`, and test-kind objects.
+`evidence_seed` is a canonical decimal string in `[0, 2^64-1]`; JSON numeric
+values are not accepted for this field. Hash fields are lowercase 64-character
+SHA-256 hex. Manifest, registry, corpus, spec, and TFV bytes are size-capped
+before parse; the existing JSON parser rejects duplicate keys and enforces its
+depth cap.
+
+The WD-004a Rust API parses bounded manifest/registry bytes using the existing
+duplicate-key-rejecting JSON parser, then validates typed values against the
+registered consumer and the checked-in corpus profile. Structural checks join
+exact IDs, counts, domains, digests, and controls. Synthetic active-consumer
+test values exercise successful joins, but no checked-in manifest or report
+claims a real Python run. This parser does not verify source/build/toolchain
+freshness, execute a binding, produce an assurance report, or change the
+Rust-only legacy evidence loader; those remain later WD-004b/WD-1xx work.
 
 ### 8.1 `source_sha256` and the per-language source tree
 
@@ -698,14 +815,20 @@ where they make sense; ids are never accepted from a different lane):
 19. **Stream agreement.** For every `exhaustive` entry, `cases`, `inputs_sha256`
     and `expected_sha256` equal the corpus suite's (`StreamMismatch`); `calls`
     equals the corpus `expected_calls` (`CallCountMismatch`).
-20. **Coverage by join.** The set of `warrant/<module>/exhaustive/*` and
-    `example/*` ids in the lane manifest equals the set in the corpus
-    (`UncoveredClaim`); extra ids (`UnknownEvidence`).
-21. **Negative controls complete.** The control set in the manifest equals the
-    corpus's `faults` rows, each `pass` with a non-empty `caught_by`, unless
-    covered by the spec's `accepted_blind_faults` (`UncaughtFault`).
+20. **Coverage by join.** The set of exhaustive-suite and example IDs in the
+    lane manifest equals the corresponding corpus ID sets (`UncoveredClaim`);
+    extra ids (`UnknownEvidence`). For WD-004a's ct-compare-v0 profile, this
+    means exactly 9 exhaustive suites and 12 examples, with exact op and
+    expected case counts.
+21. **Negative controls complete.** The control set in the manifest equals
+    the corpus's generated `controls` rows, each appears exactly once and
+    passes with a non-empty `caught_by` subset of that row's full required
+    claim IDs. The manifest's `target` equals the row's `target_kind`. A
+    registry fault with no catching claim fails generation unless the
+    spec explicitly lists it in `accepted_blind_faults` (`UncaughtFault`).
 22. **Faulted or partial manifests are rejected** (`faulted: true`, or a
-    filter/shard record in the manifest).
+    filter/shard record in the manifest). The WD-004a profile also rejects
+    unrecognized fields and unsupported native/sample/property/fuzz kinds.
 23. **Source freshness.** `source_sha256` equals the recomputed
     `warrant-src-v1` digest of the lane source tree (§8.1); editing a source
     file without rerunning makes `--check` fail, as `src/capabilities.rs` does
@@ -854,12 +977,14 @@ VER00 publishing checklist (README, CHANGELOG, BUILD/BUILD_windows,
 ### 13.2 Order
 
 Phase 1 uses lanes that have a toolchain in CI *and* a `ct-compare` port
-today. The Rust lane migrates its manifest to the new schema in step 0 so the
-checker has one code path.
+today. WD-004a parses the new lane schema independently while the existing
+Rust loader continues to consume `warrant-test-evidence-v1`. The Rust lane's
+manifest migration and any Rust-only legacy acceptance window are deferred to
+WD-004b, which must define the transition before report integration.
 
 | Step | Lane | ct-compare port | Why this position | Per-lane runner notes | Gate beyond §13.1 |
 |---|---|---|---|---|---|
-| 0 | rust | yes (reference) | owns the compiler; emits `corpus.json`; manifest schema migration | already has generated suites; add `gen_corpus` | rust runner consumes the same corpus (a *second* implementation of the check; proves the Rust compiler's generators agree with its corpus) |
+| 0 | rust | yes (reference) | owns the compiler; emits `corpus.json`; legacy manifest remains on the Rust-only loader pending WD-004b | already has generated suites; add `gen_corpus` | rust runner consumes the same corpus (a *second* implementation of the check; proves the Rust compiler's generators agree with its corpus) |
 | 1 | python | yes | stdlib only; arbitrary-precision ints; fastest to write and review; hosts `warrant_corpus_oracle.py`'s sibling | `hashlib`; closures | first lane: its runner conformance fixture is the template for every other lane |
 | 2 | typescript | yes | TF01a bootstrap exists; BigInt for U64 | `node:crypto` | layer B first (VER05a/VER06b exist) |
 | 3 | go | yes | stdlib `testing`, `crypto/sha256`, `math/bits`; fast enumeration | `(value, error)` normalisation | exhaustive runtime budget set from here |
@@ -888,7 +1013,8 @@ its second is the binding and corpus run.
 ### 13.3 After `ct-compare`: the other leaf libraries
 
 `gf256` is the second package, chosen because its claims are relational
-(§4's per-op scoping) and because it exists in 18 lanes:
+(§4's per-op scoping) and because it exists in 17 of the 18 rollout lanes;
+the OCaml package port is still missing:
 `mul_commutes`, `mul_assoc`, `add_self_is_zero`, `div_inverts`, and
 `mul` agreeing with a `model` shift-and-reduce reference for all 65,536
 `(U8, U8)` pairs. That is *under* the 400,000 budget and exhaustive over the
@@ -933,8 +1059,11 @@ dependency graph.
 
 ## 15. Divergences and follow-ups
 
-* VER04h §8's manifest schema stays for Rust until step 0 migrates it to
-  `warrant-lane-evidence-v1`; the checker accepts both during the migration.
+* WD-004a defines a strict parser for `warrant-lane-evidence-v1` and a
+  planned-only consumer registry. It does not migrate Rust's existing
+  `warrant-test-evidence-v1` manifests or change the legacy loader. WD-004b
+  must specify any Rust-only compatibility window before report integration;
+  a legacy Rust manifest is never inferred as a non-Rust lane manifest.
 * VER04h §6's fault names are a subset of §4.2's registry; VER04h is updated
   to say its table is the ct-compare slice of the portable registry.
 * `ca-assurance-report`'s `rust/`-only `package` check

@@ -494,7 +494,8 @@ fn b2_checker_requires_exhaustive_pass_ranked_labels_and_no_unchecked_on_pass() 
     r.exemptions.clear();
     r.rungs.e2 = "pass".into();
     r.verdict = "pass".into();
-    assert!(r.claims.iter().any(|c| c.proof.as_ref().unwrap().assumptions.iter().any(|a| a.ends_with(":unchecked"))));
+    // Unchecked rows are cited by catalogue id (`wir.bound.heap-unchecked`).
+    assert!(r.claims.iter().any(|c| c.proof.as_ref().unwrap().assumptions.iter().any(|a| a.ends_with("-unchecked"))));
     assert!(matches!(verify_assurance_report(&r, &registry), Err(CheckError::FailingClaim(m)) if m.contains("unchecked")));
 }
 

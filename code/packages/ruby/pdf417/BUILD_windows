@@ -1,0 +1,1 @@
+bundle install --quiet && bundle exec standardrb --no-fix --except Layout/EndOfLine lib/ && bundle exec rspec

@@ -14,6 +14,7 @@
 
 #![deny(unsafe_code)]
 
+pub mod cargo;
 pub mod certificate;
 pub mod generator;
 pub mod manifest;
@@ -35,8 +36,12 @@ pub use generator::{
     capabilities_module_path, check_module_on_disk, generate_module_source, write_module_to_disk,
 };
 pub use manifest::{load_manifest, Capability, ManifestData, ManifestError};
-pub use parser::{scan_source, ScanResult, SourceBannedConstruct, SourceDetection};
-pub use report::{AnalysisReport, Violation};
+pub use cargo::{analyze_cargo_toml, CargoFacts};
+pub use parser::{
+    scan_source, scan_sources, scan_sources_with_edition, Edition, ScanResult, SourceBannedConstruct, SourceDetection,
+    SourceUnanalyzable,
+};
+pub use report::{AnalysisReport, ConstructStatus, ExceptedConstruct, Violation};
 pub use scanner::{discover_sources, ScanError};
 pub use sha256::{sha256, sha256_hex, Sha256};
 
@@ -73,6 +78,11 @@ impl From<ScanError> for AnalyzerError {
 }
 
 /// Analyze a Rust package located in `package_dir`.
+///
+/// Pipeline (VER08a): manifest -> source discovery -> package-wide lexical scan
+/// -> `Cargo.toml` facts -> compare against the manifest.  Every `.rs` file the
+/// scanner returns is scanned, including the generated `src/capabilities.rs`
+/// (it used to be skipped, which let an edited generated file hide anything).
 pub fn analyze_package(
     package_dir: &Path,
     _verbose: bool,
@@ -83,53 +93,82 @@ pub fn analyze_package(
     // 2. Discover and read all Rust source files
     let sources = discover_sources(package_dir)?;
 
+    // 3. Scan all files as one package so `use` bindings are shared across files
+    let files: Vec<(&str, &str)> = sources
+        .iter()
+        .map(|s| (s.rel_path.as_str(), s.content.as_str()))
+        .collect();
+    let total_bytes: u64 = sources.iter().map(|s| s.size_bytes).sum();
+
+    // 4. Cargo.toml facts (proc-macro, escaping paths, dependencies, edition).
+    //    Read before the scan: the edition decides how `cr#"..."#` is lexed.
+    let cargo = analyze_cargo_toml(package_dir).map_err(AnalyzerError::Parse)?;
+    let scan_result = scan_sources_with_edition(&files, cargo.edition).map_err(AnalyzerError::Parse)?;
+
     let mut violations = Vec::new();
+    let mut excepted_constructs = Vec::new();
     let mut detected_capabilities = BTreeSet::new();
-    let mut total_bytes = 0;
 
-    // 3. Scan each source file
-    for source in &sources {
-        // Skip scanning generated capabilities.rs to avoid circularity
-        if source.rel_path == "src/capabilities.rs" {
-            continue;
-        }
+    // A. Capability checks (CAP001)
+    for det in scan_result.detections {
+        let cap_str = format!("{}:{}:*", det.category, det.action);
+        detected_capabilities.insert(cap_str.clone());
 
-        total_bytes += source.size_bytes;
-        let scan_result = scan_source(&source.rel_path, &source.content)
-            .map_err(|e| AnalyzerError::Parse(format!("{}: {e}", source.rel_path)))?;
-
-        // A. Capability checks (CAP001)
-        for det in scan_result.detections {
-            let cap_str = format!("{}:{}:*", det.category, det.action);
-            detected_capabilities.insert(cap_str.clone());
-
-            if !manifest.covers_capability(det.category, det.action) {
-                violations.push(Violation::UndeclaredCapability {
-                    capability: cap_str,
-                    file: det.file,
-                    line: det.line,
-                    col: det.col,
-                    evidence: det.evidence,
-                });
-            }
-        }
-
-        // B. Banned construct checks (CAP002)
-        for banned in scan_result.banned {
-            if !manifest.is_construct_exempt(banned.construct) {
-                violations.push(Violation::BannedConstruct {
-                    construct: banned.construct.to_string(),
-                    file: banned.file,
-                    line: banned.line,
-                    col: banned.col,
-                    evidence: banned.evidence,
-                });
-            }
+        if !manifest.covers_capability(det.category, det.action) {
+            violations.push(Violation::UndeclaredCapability {
+                capability: cap_str,
+                file: det.file,
+                line: det.line,
+                col: det.col,
+                evidence: det.evidence,
+            });
         }
     }
 
-    // Deterministic sort of violations by file, line, col
+    // B. Banned construct checks (CAP002); waived constructs stay visible.
+    for banned in scan_result.banned {
+        if manifest.is_construct_exempt(banned.construct) {
+            excepted_constructs.push(ExceptedConstruct {
+                construct: banned.construct.to_string(),
+                file: banned.file,
+                line: banned.line,
+                col: banned.col,
+                evidence: banned.evidence,
+            });
+        } else {
+            violations.push(Violation::BannedConstruct {
+                construct: banned.construct.to_string(),
+                file: banned.file,
+                line: banned.line,
+                col: banned.col,
+                evidence: banned.evidence,
+            });
+        }
+    }
+
+    // C. Unanalysable constructs (CAP003): never waivable.
+    for u in scan_result.unanalyzable {
+        violations.push(Violation::Unanalyzable {
+            reason: u.reason,
+            file: u.file,
+            line: u.line,
+            col: u.col,
+            evidence: u.evidence,
+        });
+    }
+    for f in cargo.findings {
+        violations.push(Violation::Unanalyzable {
+            reason: f.reason,
+            file: "Cargo.toml".to_string(),
+            line: f.line,
+            col: 0,
+            evidence: f.evidence,
+        });
+    }
+
+    // Deterministic sort by file, line, col
     violations.sort();
+    excepted_constructs.sort();
 
     Ok(AnalysisReport {
         package: manifest.package,
@@ -138,5 +177,7 @@ pub fn analyze_package(
         detected_capabilities,
         scanned_files_count: sources.len(),
         total_bytes_scanned: total_bytes,
+        excepted_constructs,
+        unanalyzed_dependencies: cargo.dependencies,
     })
 }

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/package-metadata-local-only",
+  "domain": "diff_selection",
+  "summary": "Root changelog and shards, capability manifest, certificate, assurance report and evidence data select their package and its prerequisites but no dependent.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "diff_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": [
+        {
+          "name": "rust/pre",
+          "rel_path": "code/packages/rust/pre",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/meta",
+          "rel_path": "code/packages/rust/meta",
+          "source_mode": "package_prefix"
+        },
+        {
+          "name": "rust/dep",
+          "rel_path": "code/packages/rust/dep",
+          "source_mode": "package_prefix"
+        }
+      ],
+      "edges": [
+        [
+          "rust/pre",
+          "rust/meta"
+        ],
+        [
+          "rust/meta",
+          "rust/dep"
+        ]
+      ],
+      "forced_packages": [],
+      "unknown_path_policy": "error",
+      "metadata_policy": "package_local"
+    },
+    "changed_paths": [
+      "code/packages/rust/meta/CHANGELOG.md",
+      "code/packages/rust/meta/CHANGELOG.d/2026-11-11-0123abcd-capabilities.md",
+      "code/packages/rust/meta/required_capabilities.json",
+      "code/packages/rust/meta/effect_certificate.json",
+      "code/packages/rust/meta/assurance_report.json",
+      "code/packages/rust/meta/evidence/test-manifest.json",
+      "code/packages/rust/meta/evidence/proofs/0123abcd.cnf",
+      "code/packages/rust/meta/evidence/proofs/0123abcd.drat"
+    ]
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/package-metadata-local-only",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": [
+        "rust/meta"
+      ],
+      "affected_packages": [
+        "rust/meta"
+      ],
+      "prerequisite_packages": [
+        "rust/pre"
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

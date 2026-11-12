@@ -10,6 +10,12 @@ All notable changes to this package will be documented in this file.
   fixtures, including compressed PTR record-data parsing and helper accessors
   for PTR answers and service records.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

@@ -1,1 +1,2 @@
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../pixel-container
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps pixel-container

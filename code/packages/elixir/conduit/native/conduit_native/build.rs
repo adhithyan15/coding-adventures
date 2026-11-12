@@ -7,7 +7,8 @@
 //
 // - macOS: explicit `-undefined dynamic_lookup` flag for ld
 // - Linux: ELF allows undefined symbols by default in shared objects
-// - Windows: the BEAM exports erts.dll; not yet wired up here
+// - Windows: nothing to link; erl-nif-bridge calls through the callback table the BEAM
+//   passes to nif_init (beam.smp.dll exports no enif_* names)
 
 fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();

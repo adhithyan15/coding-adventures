@@ -30,7 +30,7 @@ int main() {
         ISO_CHECK(u.scheme == "http");
         ISO_CHECK(u.userinfo == Opt("alice:secret"));
         ISO_CHECK(u.host == Opt("www.example.com"));
-        ISO_CHECK(u.port == std::optional<std::uint16_t>(8080));
+        ISO_CHECK(u.port == std::optional<std::uint16_t>(static_cast<std::uint16_t>(8080)));
         ISO_CHECK(u.path == "/docs/page.html");
         ISO_CHECK(u.query == Opt("q=hello"));
         ISO_CHECK(u.fragment == Opt("section2"));
@@ -55,14 +55,14 @@ int main() {
     // effective_port.
     {
         ISO_CHECK(url::Url::parse("http://example.com").effective_port() ==
-                  std::optional<std::uint16_t>(80));
+                  std::optional<std::uint16_t>(static_cast<std::uint16_t>(80)));
         ISO_CHECK(url::Url::parse("https://x.com/login").effective_port() ==
-                  std::optional<std::uint16_t>(443));
+                  std::optional<std::uint16_t>(static_cast<std::uint16_t>(443)));
         ISO_CHECK(url::Url::parse("ftp://x.com/y").effective_port() ==
-                  std::optional<std::uint16_t>(21));
+                  std::optional<std::uint16_t>(static_cast<std::uint16_t>(21)));
         url::Url u = url::Url::parse("http://example.com:9090");
-        ISO_CHECK(u.port == std::optional<std::uint16_t>(9090));
-        ISO_CHECK(u.effective_port() == std::optional<std::uint16_t>(9090));
+        ISO_CHECK(u.port == std::optional<std::uint16_t>(static_cast<std::uint16_t>(9090)));
+        ISO_CHECK(u.effective_port() == std::optional<std::uint16_t>(static_cast<std::uint16_t>(9090)));
     }
 
     // authority().

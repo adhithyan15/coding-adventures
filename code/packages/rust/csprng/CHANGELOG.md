@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `required_capabilities.json` rewritten to the canonical schema-v1 shape (version, package, capabilities objects, justification) so the hardened capability analyzer accepts it.
+
 - Removed the third-party `getrandom` dependency.
 - Added a repository-owned platform boundary using `/dev/urandom` through
   safe standard-library I/O on Unix and a single documented

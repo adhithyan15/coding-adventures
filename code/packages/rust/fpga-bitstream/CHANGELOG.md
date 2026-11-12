@@ -1,5 +1,11 @@
 # Changelog — fpga-bitstream
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (declares fs write for write_bin).
+
 ## [0.1.0] — 2026-06-13
 
 ### Added

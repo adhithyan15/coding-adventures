@@ -171,7 +171,7 @@ public:
     // On each rising edge, exactly one phase is high; the active phase rotates.
     void on_edge(const ClockEdge& edge) {
         if (edge.is_rising) {
-            std::fill(phase_values_.begin(), phase_values_.end(), 0);
+            std::fill(phase_values_.begin(), phase_values_.end(), static_cast<std::uint8_t>(0));
             phase_values_[active_phase_] = 1;
             active_phase_ = (active_phase_ + 1) % phases_;
         }

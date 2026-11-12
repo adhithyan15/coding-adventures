@@ -1,5 +1,11 @@
 # Changelog — `aarch64-encoder`
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## Unreleased — 2026-10-20 (LANG83 PR4 — flag-setting arithmetic)
 
 ### Added

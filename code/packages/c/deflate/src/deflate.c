@@ -1122,7 +1122,7 @@ static int plan_dynamic(const LzssToken *tokens, size_t count, DynamicPlan *plan
     {
         unsigned long bits = 3; /* BFINAL + BTYPE */
         bits += 5 + 5 + 4;      /* HLIT + HDIST + HCLEN */
-        bits += plan->cl_order_count * 3;
+        bits += (unsigned long)(plan->cl_order_count * 3);
         for (i = 0; i < plan->rle.count; i++) {
             bits += plan->cl_lengths[plan->rle.items[i].sym];
             bits += plan->rle.items[i].extra_bits;

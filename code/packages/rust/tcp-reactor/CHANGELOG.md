@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Added `BUILD_windows` declaring the crate unsupported on Windows
+  (`BUILD_TOOL_UNSUPPORTED:RUST_TCP_REACTOR_REQUIRES_UNIX_FDS`). The crate is
+  `compile_error!`-gated on `unix` because it is built on raw file descriptors, so
+  the first Windows full build failed it on every run. It has no dependents.
+
 ## [0.1.0] - 2026-04-17
 
 ### Added

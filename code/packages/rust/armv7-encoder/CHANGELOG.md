@@ -1,5 +1,11 @@
 # Changelog — armv7-encoder
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## v0.1.0 — 2026-06-03 — initial carve-out
 
 Phase 5 of the historical-arch backend migration.  Pure encoder

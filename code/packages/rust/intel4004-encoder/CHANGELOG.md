@@ -1,5 +1,11 @@
 # Changelog — intel4004-encoder
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## v0.2.0 — 2026-08-31 — RAM addressing and data operations
 
 Adds pure encoders for `FIM`, `SRC`, `DCL`, `WRM`, `RDM`, and the four

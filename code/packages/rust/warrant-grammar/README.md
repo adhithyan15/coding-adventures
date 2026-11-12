@@ -187,6 +187,119 @@ op classify export=classify ret=Shape faults=wrong-ctor
   `tests/wxa_evidence.rs` also runs the ground evaluator against the generated
   model code on every composite domain within budget.
 
+## Warrant v1: output bounds (VER04j WX-H)
+
+A v1 `bound` block gains a fourth metric, `output`, that bounds the *size of the
+successful result* (a `Bytes` length, a list's element count, the `Ok` payload of
+a `Result`); a bound expression may use parameters, `len`, `to_int`, `unwrap_or`
+and the new total helpers `imin`/`imax`.
+
+```text
+op decompress(data: Bytes, max_output: U32) -> Result<Bytes, LzError> fresh
+bound decompress:
+  output <= to_int(max_output)
+  heap   <= 2 * to_int(max_output) + 8 * len(data) + 4096
+```
+
+For every operation with an `output` or `heap` row the generator registers
+`exhaustive`/`property`/`fuzz` suites named `<op>/output-bound` and runs *every*
+instance of the operation under an **allocation observer**: a counting global
+allocator and a per-call window. The cap (64 MiB) is enforced by containment, not
+by failing the allocation (a `GlobalAlloc` may not unwind, and a null return aborts
+the process on stable Rust): the over-cap request is never made, its worker thread
+is parked and abandoned, and the instance fails with `bound-heap-exceeded` and the
+size it asked for. A test that tripped once fails its later observed instances
+without running them, and at most 64 workers holding 1 GiB are ever abandoned.
+The faults `ignore-limit`, `off-by-one-limit`, `limit-after-alloc` and
+`truncate-silently` attack the limit parameter the `output` row mentions.
+`tests/fixtures/wxh.warrant` (a toy run-length decompressor) with a vulnerable, a
+wasteful and a capped subject is the pilot (`wxh_evidence`, `wxh_vulnerable`,
+`wxh_wasteful`, `wxh_caps*`); no `lz*` API is touched.
+
+## Warrant v1: pinned external tables (VER04j WX-E)
+
+```text
+vectors synthetic_digests:
+  source "warrant-vectors-synthetic-v1/digests.tfv"
+  sha256 b"<64 lowercase hex digits: SHA-256 of the file>"
+  rows 23
+  column msg: Bytes
+  column md: Bytes<32>
+  holds digest(msg) == md
+```
+
+The data lives in a TF01 TFV fixture under `code/specs/fixtures/`; the document
+pins its identity. `evidence::load_document_tables` is the tool half
+(`src/vectors.rs`): it checks the path rules, refuses symlinks, caps the file at
+16 MiB and the table at 100,000 rows (250,000 per document), compares the SHA-256
+**before** parsing, refuses maps with more than one entry, parses with the lane's
+own TFV parser and decodes every row against its column types (W0708 / W0709 /
+W0710); it never touches the network. The generator copies the verified bytes into
+the package (`tests/generated/tables/<name>.tfv`, embedded with `include_bytes!`),
+the generated test hashes the copy again (`corpus-malformed` on a mismatch), runs
+`holds` per row, and records one manifest entry per table (`kind: "table"`,
+`cases`, `rows_pinned`, `table_sha256`, `failed_ids`). `gen_evidence` materialises
+and drift-checks the copies. A table whose expected column is constant is W0601.
+The shipped fixtures are synthetic (`warrant-vectors-synthetic-v1`, README there
+records provenance); adding a NIST/RFC set is an owner decision and the loader is
+the hook.
+
+## Warrant v1: sequence built-ins, checker and evaluator (VER04k WX-D1)
+
+```text
+model last_two(b: Bytes) -> Bytes = drop(b, len(b) - 2)       -- clamps at 0
+model zeros(n: Int) -> Bytes = to_bytes(replicate(0u8, n))
+claim prefix: forall b: Bytes, n: Nat. to_bytes(take(to_list(b), n)) == take(b, n)
+```
+
+Seven sequence forms are v1 built-ins: `take drop slice replicate range to_list
+to_bytes` (VER04k section 2.2). Counts are `Int`; a negative count means zero and
+a count past the end means "all of it", so `take(xs, -1) == []` and
+`range(-3) == []`. `take`/`drop`/`slice` of any `Bytes` give a dynamic `Bytes`;
+an empty list literal gets its element type from its position, so `to_bytes([])`
+and `replicate([], n)` type-check. The five higher-order names `fold map count
+all any` are reserved too, and refused with W0202 "not yet implemented in this
+version" until WX-D2. In v0 all twelve stay ordinary identifiers. A v1 list
+literal has at most 4,096 elements (W0602), a v1 identifier at most 128 bytes
+(W0602), and a v1 parameter or quantifier binder may not spell any reserved
+built-in (W0203).
+
+The ground evaluator meters every v1 evaluation with work, depth, a cumulative
+64 MiB data counter (each constructing node pays the `dsize` of its value,
+including the type, constructor and error names a value stores) and a
+65,536-element cap per sequence. A form checks the cap on the exact count, then
+reserves its data, then charges its work, and only then allocates, so
+`replicate(0u8, 2^70)` fails with W0703 having allocated nothing
+(`tests/wxd_alloc_probe.rs`). `and`, `or` and `=>` short-circuit in v1. Generated
+evidence still refuses the forms (W0701) until slice S2a.
+
+The data counter bounds each value, not the memory of a whole evaluation: a read
+of a binder deep-copies its value and charges nothing, so many reads of one
+large value can take far more memory than its charge. VER04k section 9.1 (note
+on E4) records this as an open hazard, tracked as backlog WX-RD1.
+
+## Portable corpus (VER04i WD-003)
+
+`examples/gen_corpus.rs` compiles the checked `ct-compare` Warrant v0 source into
+`code/specs/fixtures/ct-compare-warrant-v1/`. The generated corpus separates
+`subject_op` calls from pure `model_call` reference expressions, enumerates the
+closed supported domains in canonical order, and pins independent input and
+expected-result digest streams. The first profile includes examples, exhaustive
+suites and their required negative-control descriptors; it rejects sharding and
+Warrant constructs outside the explicitly supported profile.
+
+The independent stdlib-only validator is `code/scripts/warrant_corpus_oracle.py`.
+It derives the accepted declarations and suite shape from the Warrant source,
+then independently recomputes domains, refinements, example records and digest
+streams. The Python BUILD tests also mutate the artifact to ensure missing or
+misbound evidence is rejected. This validates corpus generation; it does not
+run a subject lane or establish a proof.
+
+```sh
+cargo run -p coding_adventures_warrant_grammar --example gen_corpus -- --check
+python3 ../../../scripts/warrant_corpus_oracle.py
+python3 -m unittest discover -s ../../../scripts/tests -p test_warrant_corpus_oracle.py
+```
 ## Tests and regeneration
 
 From the Rust workspace:

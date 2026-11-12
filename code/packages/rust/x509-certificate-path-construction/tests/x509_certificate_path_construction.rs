@@ -1,14 +1,23 @@
 use der_asn1::Asn1Limits;
 use std::cell::RefCell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
-use x509_certificate_issuer_candidate_selection::X509IssuerCandidateSelectionErrorKind;
+use x509_certificate_issuer_candidate_selection::{
+    X509IssuerCandidateSelectionErrorKind, X509NamePolicyIssuerCandidateSelectionErrorKind,
+};
 use x509_certificate_path_construction::{
-    construct_unique_x509_certificate_path_by, X509CertificatePathConstructionErrorKind,
+    construct_unique_x509_certificate_path_by,
+    construct_unique_x509_certificate_path_with_name_policy,
+    X509CertificatePathConstructionErrorKind, X509NamePolicyCertificatePathConstructionErrorKind,
     MAX_X509_CONSTRUCTED_PATH_CERTIFICATES,
+};
+use x509_name_value_policy::{
+    X509NameValueComparisonErrorKind, X509NameValueComparisonRule, X509NameValuePolicy,
+    X509NameValuePolicyEntry,
 };
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
 const KEY_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+const COMMON_NAME_OID: &[u64] = &[2, 5, 4, 3];
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(value.len() + 4);
@@ -124,6 +133,229 @@ fn constructs_one_unique_target_to_terminal_chain_in_order() {
     ));
     assert!(!path.target_is_terminal());
     assert_eq!(format!("{path:?}"), "ConstructedX509CertificatePath");
+}
+
+#[test]
+fn constructs_one_chain_under_the_exact_validated_name_policy() {
+    let root_name = name(b"root");
+    let intermediate_name = name(b"intermediate");
+    let target = decoded_certificate(1, &intermediate_name, &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &root_name, &name(b"unrelated")),
+        decoded_certificate(3, &root_name, &root_name),
+        decoded_certificate(4, &root_name, &intermediate_name),
+    ];
+    let entries = [X509NameValuePolicyEntry::new(
+        COMMON_NAME_OID,
+        X509NameValueComparisonRule::DirectoryStringScalar,
+    )];
+    let name_policy = X509NameValuePolicy::new(&entries).unwrap();
+
+    let evidence = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        3,
+        4,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        name_policy,
+    )
+    .unwrap();
+
+    assert_eq!(evidence.name_policy(), name_policy);
+    assert_eq!(
+        format!("{evidence:?}"),
+        "ConstructedX509CertificatePathWithNamePolicy"
+    );
+    let path = evidence.constructed_path();
+    assert_eq!(path.certificate_count(), 3);
+    assert_eq!(path.candidate_indices().collect::<Vec<_>>(), vec![2, 1]);
+    assert!(std::ptr::eq(path.target_certificate(), &target));
+    assert!(std::ptr::eq(
+        path.candidate_certificates(),
+        candidates.as_slice()
+    ));
+}
+
+#[test]
+fn policy_backed_construction_rejects_bounds_before_terminal_policy() {
+    let target = decoded_certificate(1, &name(b"issuer"), &name(b"service"));
+    let candidates = vec![decoded_certificate(2, &name(b"root"), &name(b"issuer"))];
+    let entries = [X509NameValuePolicyEntry::new(
+        COMMON_NAME_OID,
+        X509NameValueComparisonRule::DirectoryStringScalar,
+    )];
+    let name_policy = X509NameValuePolicy::new(&entries).unwrap();
+
+    for (candidate_limit, path_limit, expected) in [
+        (
+            0,
+            1,
+            X509NamePolicyCertificatePathConstructionErrorKind::InvalidCandidateLimit,
+        ),
+        (
+            1,
+            0,
+            X509NamePolicyCertificatePathConstructionErrorKind::InvalidPathCertificateLimit,
+        ),
+        (
+            1,
+            MAX_X509_CONSTRUCTED_PATH_CERTIFICATES + 1,
+            X509NamePolicyCertificatePathConstructionErrorKind::UnsupportedPathCertificateLimit,
+        ),
+    ] {
+        let result = construct_unique_x509_certificate_path_with_name_policy(
+            &target,
+            &candidates,
+            candidate_limit,
+            path_limit,
+            |_| panic!("invalid bounds must reject before terminal policy"),
+            name_policy,
+        );
+        let Err(error) = result else {
+            panic!("invalid bounds must fail")
+        };
+        assert_eq!(error.kind(), expected);
+    }
+
+    let oversized_candidates = vec![
+        decoded_certificate(3, &name(b"root-a"), &name(b"issuer")),
+        decoded_certificate(4, &name(b"root-b"), &name(b"issuer")),
+    ];
+    let result = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &oversized_candidates,
+        1,
+        2,
+        |_| panic!("an oversized pool must reject before terminal policy"),
+        name_policy,
+    );
+    let Err(error) = result else {
+        panic!("an oversized pool must fail")
+    };
+    assert_eq!(
+        error.kind(),
+        X509NamePolicyCertificatePathConstructionErrorKind::CandidateLimitExceeded
+    );
+}
+
+#[test]
+fn policy_backed_construction_propagates_the_first_name_comparison_failure() {
+    let target = decoded_certificate(1, &name(b"secret-issuer"), &name(b"secret-service"));
+    let candidates = vec![decoded_certificate(
+        2,
+        &name(b"secret-root"),
+        &name(b"secret-issuer"),
+    )];
+    let entries = [];
+    let name_policy = X509NameValuePolicy::new(&entries).unwrap();
+
+    let result = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        1,
+        2,
+        |_| false,
+        name_policy,
+    );
+    let Err(error) = result else {
+        panic!("an unconfigured attribute type must fail")
+    };
+    assert_eq!(
+        error.kind(),
+        X509NamePolicyCertificatePathConstructionErrorKind::IssuerSelection(
+            X509NamePolicyIssuerCandidateSelectionErrorKind::NameComparison(
+                X509NameValueComparisonErrorKind::UnconfiguredAttributeType,
+            ),
+        )
+    );
+    assert!(!error.to_string().contains("secret"));
+}
+
+#[test]
+fn policy_backed_construction_scans_the_complete_pool_to_reject_ambiguity() {
+    let issuer_name = name(b"issuer");
+    let target = decoded_certificate(1, &issuer_name, &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &name(b"root-a"), &issuer_name),
+        decoded_certificate(3, &name(b"root-b"), &issuer_name),
+    ];
+    let entries = [X509NameValuePolicyEntry::new(
+        COMMON_NAME_OID,
+        X509NameValueComparisonRule::DirectoryStringScalar,
+    )];
+    let name_policy = X509NameValuePolicy::new(&entries).unwrap();
+
+    let result = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        2,
+        2,
+        |_| false,
+        name_policy,
+    );
+    let Err(error) = result else {
+        panic!("multiple policy matches must fail")
+    };
+    assert_eq!(
+        error.kind(),
+        X509NamePolicyCertificatePathConstructionErrorKind::IssuerSelection(
+            X509NamePolicyIssuerCandidateSelectionErrorKind::Selection(
+                X509IssuerCandidateSelectionErrorKind::AmbiguousMatch,
+            ),
+        )
+    );
+}
+
+#[test]
+fn policy_backed_construction_preserves_cycle_and_depth_guards() {
+    let name_a = name(b"a");
+    let name_b = name(b"b");
+    let target = decoded_certificate(1, &name_b, &name_a);
+    let cyclic_candidates = vec![decoded_certificate(2, &name_a, &name_b), target.clone()];
+    let entries = [X509NameValuePolicyEntry::new(
+        COMMON_NAME_OID,
+        X509NameValueComparisonRule::DirectoryStringScalar,
+    )];
+    let name_policy = X509NameValuePolicy::new(&entries).unwrap();
+
+    let cycle_result = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &cyclic_candidates,
+        2,
+        4,
+        |_| false,
+        name_policy,
+    );
+    let Err(cycle_error) = cycle_result else {
+        panic!("an exact certificate repeat must fail")
+    };
+    assert_eq!(
+        cycle_error.kind(),
+        X509NamePolicyCertificatePathConstructionErrorKind::CertificateCycle
+    );
+
+    let root_name = name(b"root");
+    let intermediate_name = name(b"intermediate");
+    let depth_target = decoded_certificate(3, &intermediate_name, &name(b"service"));
+    let depth_candidates = vec![
+        decoded_certificate(4, &root_name, &root_name),
+        decoded_certificate(5, &root_name, &intermediate_name),
+    ];
+    let depth_result = construct_unique_x509_certificate_path_with_name_policy(
+        &depth_target,
+        &depth_candidates,
+        2,
+        2,
+        |_| false,
+        name_policy,
+    );
+    let Err(depth_error) = depth_result else {
+        panic!("a non-terminal certificate at the depth ceiling must fail")
+    };
+    assert_eq!(
+        depth_error.kind(),
+        X509NamePolicyCertificatePathConstructionErrorKind::PathCertificateLimitExceeded
+    );
 }
 
 #[test]

@@ -1,5 +1,11 @@
 # Changelog — dsp-wavelets
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## 0.4.0 — 2026-05-17
 
 ### Added — DSP06 Phase 4a (2-D DWT for orthogonal wavelets)

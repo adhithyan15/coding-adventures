@@ -133,10 +133,32 @@ GENERIC_MATRIX_PLAN_RUN_SHA256 = (
     # NN51 adds only native C++ dense training's dependency-aware Windows lane.
     # The daily cross-OS full build adds only the CROSS_OS_FULL branch that
     # appends macOS/Windows shard entries to a forced full build, plus a comment
-    # on needs_macos. OCaml predicates/bootstrap/mutation rejection remain
+    # on needs_macos. The build-windows-recipes gate (BUILD-002) adds only the
+    # RUN_WINDOWS_RECIPES environment flag and one `or flag(...)` term to
+    # needs_windows(), so a pull request that changes a BUILD_windows recipe
+    # gets a Windows leg. OCaml predicates/bootstrap/mutation rejection remain
     # unchanged and pinned.
-    "6794fcd5db936716e39dd7bc777069a27b48a46236404ff1a29e23bfbb0152b2"
+    "3f1380940a30c5b97c3418a9034373eb53cf25a3ad1c49e508e50dae88141bd6"
 )
+# The build job's checkout: shallow (depth 1, the build runs from the detect
+# job's build-plan.json and only the plan-less fallback deepens history), and
+# credentials are not persisted. The three sparse inputs leave
+# the ~740 MB human-languages corpus out of the working tree unless the
+# human-language-corpus gate or a full build asks for it, and `filter: blob:none`
+# keeps the excluded blobs from being downloaded at all. Nothing here touches
+# what the OCaml legs build or bootstrap; the exact strings are pinned so a later
+# edit to the expression must update this reviewed contract.
+GENERIC_BUILD_CHECKOUT_INPUTS = {
+    "fetch-depth": "1",
+    "persist-credentials": "false",
+    "filter": "blob:none",
+    "sparse-checkout-cone-mode": "false",
+    "sparse-checkout": (
+        "${{ !(needs.detect.outputs.run_human_language_corpus == 'true' || "
+        "needs.detect.outputs.full_build == 'true') && "
+        "env.LEAN_SPARSE_PATTERNS || '' }}"
+    ),
+}
 EXPECTED_RUN_METADATA = {
     "contract.validate": {"shell": None, "env": None},
     "fresh.bootstrap": {
@@ -1272,9 +1294,9 @@ def validate_generic_ci_workflow_text(
     checkout_inputs = _workflow_mapping(
         checkout.get("with"), "jobs.build.checkout.with"
     )
-    if checkout_inputs != {"fetch-depth": "0", "persist-credentials": "false"}:
+    if checkout_inputs != GENERIC_BUILD_CHECKOUT_INPUTS:
         raise ContractError(
-            "generic CI checkout must fetch history without persisting credentials"
+            "generic CI checkout must use shallow history without persisting credentials"
         )
 
     setup = _workflow_mapping(

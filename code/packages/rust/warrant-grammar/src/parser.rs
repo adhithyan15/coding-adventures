@@ -60,6 +60,9 @@ pub enum ParserErrorKind {
     /// WX-A: a duplicate field, constructor-field or constructor name inside one
     /// `record` or `variant` declaration (VER04j section 14.1, item 13).
     DuplicateName,
+    /// WX-E: a `vectors` source path or `sha256` pin that breaks the rules of
+    /// VER04j section 5.2 (W0708).
+    TableIntegrity,
 }
 
 /// Parser error with a stable diagnostic code and safe message: `W0001` for
@@ -82,6 +85,7 @@ impl ParserError {
             | ParserErrorKind::V1ConstructInV0
             | ParserErrorKind::LiteralOutOfRange => "W0101",
             ParserErrorKind::DuplicateName => "W0201",
+            ParserErrorKind::TableIntegrity => "W0708",
             _ => "W0001",
         }
     }
@@ -109,6 +113,7 @@ impl fmt::Display for ParserError {
             ParserErrorKind::V1ConstructInV0 => "v1 construct in a v0 document",
             ParserErrorKind::LiteralOutOfRange => "literal out of range for its type",
             ParserErrorKind::DuplicateName => "duplicate name in a declaration",
+            ParserErrorKind::TableIntegrity => "malformed table source path or sha256 pin",
         };
         write!(f, "{}: {msg}", self.code())
     }
@@ -166,6 +171,61 @@ pub enum Declaration<'a> {
     Record(RecordDecl<'a>),
     /// WX-A: `variant Name = C1(f: T) | C2 | ...` (v1 only).
     Variant(VariantDecl<'a>),
+    /// WX-E: `vectors Name:` with a pinned external table (v1 only).
+    Vectors(VectorsDecl<'a>),
+}
+
+/// `vectors NAME:` (VER04j section 5.2): a table of known answers kept in a
+/// fixture file whose identity the document pins.
+///
+/// ```text
+/// vectors sha256_cavs_short:
+///   source "sha256-cavs-v1/short.tfv"
+///   sha256 b"<64 lowercase hex digits>"
+///   rows 65
+///   column msg: Bytes
+///   column md: Bytes<32>
+///   holds sha256_digest(msg) == md
+/// ```
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VectorsDecl<'a> {
+    pub name: &'a str,
+    /// The path relative to the fixtures root, already checked by
+    /// [`valid_table_path`].
+    pub source: &'a str,
+    /// The 64 lowercase hex digits of the pinned SHA-256.
+    pub sha256: &'a str,
+    /// The number of records the file must hold.
+    pub rows: u64,
+    pub columns: Vec<ColumnDecl<'a>>,
+    pub holds: Expression<'a>,
+    pub span: (usize, usize),
+}
+
+/// `column NAME: type` of a `vectors` table.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ColumnDecl<'a> {
+    pub name: &'a str,
+    pub ty: TypeExpr<'a>,
+    pub span: (usize, usize),
+}
+
+/// Longest `source` path of a table, in bytes (VER04j section 5.2).
+pub const MAX_PATH_BYTES: usize = 256;
+
+/// The path rules of VER04j section 5.2: `[A-Za-z0-9_./-]+`, at most
+/// [`MAX_PATH_BYTES`] bytes, no leading `/`, and no empty, `.` or `..` segment.
+/// A backslash, a space, a NUL or any non-ASCII byte is outside the alphabet.
+pub fn valid_table_path(path: &str) -> bool {
+    !path.is_empty()
+        && path.len() <= MAX_PATH_BYTES
+        && path
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'_' | b'.' | b'/' | b'-'))
+        && path
+            .split('/')
+            // No empty segment and no all-dot segment (`.`, `..`, `...`).
+            .all(|seg| !seg.is_empty() && !seg.bytes().all(|b| b == b'.'))
 }
 
 /// One `name: type` field of a record or constructor (VER04j section 4.2).
@@ -431,6 +491,64 @@ pub enum Expression<'a> {
         key: ProjKey<'a>,
         span: (usize, usize),
     },
+}
+
+impl<'a> Expression<'a> {
+    /// The names among `names` that the expression mentions as the first segment
+    /// of a reference (a column of a `vectors` table, a parameter of an
+    /// operation's bound).  Patterns bind fresh names, which the checker has
+    /// already kept distinct from every name in scope.
+    pub fn mentioned_names(&self, names: &std::collections::HashSet<&str>, out: &mut std::collections::BTreeSet<String>) {
+        match self {
+            Expression::Reference { name, args, .. } => {
+                if let Some(first) = name.segments.first() {
+                    if names.contains(first) {
+                        out.insert((*first).to_string());
+                    }
+                }
+                for a in args.iter().flat_map(|l| l.iter()) {
+                    a.mentioned_names(names, out);
+                }
+            }
+            Expression::Grouped { inner, .. } => inner.mentioned_names(names, out),
+            Expression::Unary { operand, .. } => operand.mentioned_names(names, out),
+            Expression::Binary { left, right, .. } => {
+                left.mentioned_names(names, out);
+                right.mentioned_names(names, out);
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                condition.mentioned_names(names, out);
+                then_branch.mentioned_names(names, out);
+                else_branch.mentioned_names(names, out);
+            }
+            Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
+                for x in elements {
+                    x.mentioned_names(names, out);
+                }
+            }
+            Expression::Project { base, .. } => base.mentioned_names(names, out),
+            Expression::Match { target, arms, .. } => {
+                target.mentioned_names(names, out);
+                for a in arms {
+                    a.body.mentioned_names(names, out);
+                }
+            }
+            Expression::Quantified { binders, body, .. } => {
+                for b in binders {
+                    if let Some(r) = &b.refinement {
+                        r.mentioned_names(names, out);
+                    }
+                }
+                body.mentioned_names(names, out);
+            }
+            Expression::Literal { .. } => {}
+        }
+    }
 }
 
 /// The selector of an [`Expression::Project`].
@@ -820,6 +938,7 @@ impl<'a> Parser<'a> {
                 Declaration::Bound(b) => b.span,
                 Declaration::Record(r) => r.span,
                 Declaration::Variant(v) => v.span,
+                Declaration::Vectors(v) => v.span,
             })
             .unwrap_or(start_span);
 
@@ -857,6 +976,10 @@ impl<'a> Parser<'a> {
             Some(LayoutTokenKind::Word("variant")) => {
                 self.require_v1()?;
                 self.parse_variant_decl().map(Declaration::Variant)
+            }
+            Some(LayoutTokenKind::Word("vectors")) => {
+                self.require_v1()?;
+                self.parse_vectors_decl().map(Declaration::Vectors)
             }
             Some(_) => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
@@ -1231,6 +1354,11 @@ impl<'a> Parser<'a> {
                 break;
             }
             let (var_name, sp_start) = self.expect_name()?;
+            // WX-H: `output` is a contextual metric, legal in a v1 document
+            // only (VER04j sections 1.2 and 6.6).
+            if var_name == "output" {
+                self.require_v1()?;
+            }
             self.expect_symbol("<=")?;
             let bound_expr = self.parse_expression()?;
             self.expect_newline()?;
@@ -1364,6 +1492,144 @@ impl<'a> Parser<'a> {
         Ok(VariantDecl {
             name,
             ctors,
+            span: (start_span.0, end.1),
+        })
+    }
+
+    // ── WX-E declarations (VER04j section 5.2) ─────────────────────────────
+
+    /// `source "<path>"`'s operand: a quoted text token that is terminated and
+    /// obeys [`valid_table_path`] (W0708; an unterminated quote is W0001).
+    fn expect_table_path(&mut self) -> Result<&'a str, ParserError> {
+        match self.peek() {
+            Some(tok) => match (tok.kind, tok.span) {
+                (LayoutTokenKind::Text(text), TokenSpan::Real { start, end }) => {
+                    let span = self.token_span_range(tok);
+                    self.advance()?;
+                    // The lexer keeps an unterminated quote as a Text token whose
+                    // range lacks the closing quote.
+                    if end - start != text.len() + 2 {
+                        return Err(ParserError::new(ParserErrorKind::UnexpectedToken, Some(span)));
+                    }
+                    if !valid_table_path(text) {
+                        return Err(ParserError::new(ParserErrorKind::TableIntegrity, Some(span)));
+                    }
+                    Ok(text)
+                }
+                _ => Err(ParserError::new(
+                    ParserErrorKind::UnexpectedToken,
+                    self.current_raw_span(),
+                )),
+            },
+            None => Err(ParserError::new(ParserErrorKind::UnexpectedEof, None)),
+        }
+    }
+
+    /// `sha256 b"<hex>"`'s operand: exactly 64 lowercase hex digits (32 bytes).
+    fn expect_table_digest(&mut self) -> Result<&'a str, ParserError> {
+        match self.peek_kind() {
+            Some(LayoutTokenKind::Bytes(raw)) => {
+                let tok = self.advance()?.unwrap();
+                let span = self.token_span_range(tok);
+                if raw.len() < 3 || !raw.starts_with("b\"") || !raw.ends_with('"') {
+                    return Err(ParserError::new(ParserErrorKind::UnexpectedToken, Some(span)));
+                }
+                let hex = &raw[2..raw.len() - 1];
+                if hex.len() != 64 || !hex.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
+                    return Err(ParserError::new(ParserErrorKind::TableIntegrity, Some(span)));
+                }
+                Ok(hex)
+            }
+            Some(_) => Err(ParserError::new(
+                ParserErrorKind::UnexpectedToken,
+                self.current_raw_span(),
+            )),
+            None => Err(ParserError::new(ParserErrorKind::UnexpectedEof, None)),
+        }
+    }
+
+    /// `rows N`'s operand: a plain decimal literal (no suffix, no sign, no
+    /// leading zero) that fits a `u64`.
+    fn expect_row_count(&mut self) -> Result<u64, ParserError> {
+        match self.peek_kind() {
+            Some(LayoutTokenKind::Number(n)) => {
+                let tok = self.advance()?.unwrap();
+                let span = self.token_span_range(tok);
+                let plain = !n.is_empty()
+                    && n.bytes().all(|b| b.is_ascii_digit())
+                    && (n == "0" || !n.starts_with('0'));
+                match (plain, n.parse::<u64>()) {
+                    (true, Ok(v)) => Ok(v),
+                    _ => Err(ParserError::new(ParserErrorKind::UnexpectedToken, Some(span))),
+                }
+            }
+            Some(_) => Err(ParserError::new(
+                ParserErrorKind::UnexpectedToken,
+                self.current_raw_span(),
+            )),
+            None => Err(ParserError::new(ParserErrorKind::UnexpectedEof, None)),
+        }
+    }
+
+    /// `vectors NAME:` block (see [`VectorsDecl`]); the five row words are
+    /// contextual and appear once each, in this order.
+    fn parse_vectors_decl(&mut self) -> Result<VectorsDecl<'a>, ParserError> {
+        let start_tok = self.expect_word("vectors")?;
+        let start_span = self.token_span_range(start_tok);
+        let (name, _) = self.expect_name()?;
+        self.expect_symbol(":")?;
+        self.expect_newline()?;
+        self.expect_indent()?;
+
+        self.expect_word("source")?;
+        let source = self.expect_table_path()?;
+        self.expect_newline()?;
+        self.expect_word("sha256")?;
+        let sha256 = self.expect_table_digest()?;
+        self.expect_newline()?;
+        self.expect_word("rows")?;
+        let rows = self.expect_row_count()?;
+        self.expect_newline()?;
+
+        // At least one column; none may repeat a name.
+        let mut columns: Vec<ColumnDecl<'a>> = Vec::new();
+        loop {
+            self.count_node()?;
+            let kw = self.expect_word("column")?;
+            let kw_span = self.token_span_range(kw);
+            let (cname, _) = self.expect_name()?;
+            self.expect_symbol(":")?;
+            let ty = self.parse_type()?;
+            self.expect_newline()?;
+            let span = (kw_span.0, self.type_span(&ty).1);
+            if columns.iter().any(|c| c.name == cname) {
+                return Err(ParserError::new(ParserErrorKind::DuplicateName, Some(span)));
+            }
+            if columns.len() == MAX_FIELDS {
+                return Err(ParserError::new(ParserErrorKind::UnexpectedToken, Some(span)));
+            }
+            columns.push(ColumnDecl {
+                name: cname,
+                ty,
+                span,
+            });
+            if !matches!(self.peek_kind(), Some(LayoutTokenKind::Word("column"))) {
+                break;
+            }
+        }
+
+        self.expect_word("holds")?;
+        let holds = self.parse_expression()?;
+        self.expect_newline()?;
+        let end = self.expr_span(&holds);
+        self.expect_dedent()?;
+        Ok(VectorsDecl {
+            name,
+            source,
+            sha256,
+            rows,
+            columns,
+            holds,
             span: (start_span.0, end.1),
         })
     }

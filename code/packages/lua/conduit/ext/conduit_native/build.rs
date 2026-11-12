@@ -31,12 +31,16 @@ fn main() {
         }
         "windows" => {
             // On Windows we need to link against the Lua 5.4 import library.
-            // Try LUA_LIB_PATH first, then fall back to common mise paths.
+            // Order: LUA_LIB_PATH, then the lib directory of the `lua.exe` on
+            // PATH (CI installs Lua with scripts/setup_lua.py, which puts
+            // lua54.lib in <prefix>\lib next to <prefix>\bin\lua.exe), then a
+            // few fixed locations. Without a search path rust-lld fails with
+            // "could not open 'lua54.lib'".
             if let Ok(lib_path) = std::env::var("LUA_LIB_PATH") {
                 println!("cargo:rustc-link-search={lib_path}");
+            } else if let Some(dir) = lua_lib_dir_from_path() {
+                println!("cargo:rustc-link-search={}", dir.display());
             } else {
-                // leafo/gh-actions-lua on Windows puts Lua in %USERPROFILE%\AppData\Roaming
-                // or the GitHub Actions tool cache. Try a few common locations.
                 for candidate in &[
                     "C:\\tools\\lua54",
                     "C:\\Lua\\5.4",
@@ -52,4 +56,25 @@ fn main() {
         }
         _ => {}
     }
+}
+
+/// Find the directory holding `lua54.lib` next to the `lua.exe` on PATH:
+/// `<bin>/../lib` (the layout `setup_lua.py` and LuaRocks use) or `<bin>` itself.
+fn lua_lib_dir_from_path() -> Option<std::path::PathBuf> {
+    let path = std::env::var_os("PATH")?;
+    for dir in std::env::split_paths(&path) {
+        if !dir.join("lua.exe").is_file() {
+            continue;
+        }
+        let mut candidates = vec![dir.clone()];
+        if let Some(parent) = dir.parent() {
+            candidates.insert(0, parent.join("lib"));
+        }
+        for candidate in candidates {
+            if candidate.join("lua54.lib").is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+    None
 }

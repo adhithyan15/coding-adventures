@@ -1,18 +1,20 @@
 [package]
 name = "coding_adventures_warrant_grammar"
-version = "0.3.0"
+version = "0.5.0"
 edition = "2021"
-description = "Warrant v0/v1 grammar artifacts, bounded source admission, layout, parser, type checker, evaluator, evidence generator and bindings"
+description = "Warrant v0/v1 grammar artifacts, bounded source admission, layout, parser, type checker, evaluator, evidence generator, pinned vector tables and bindings"
 license = "MIT"
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }
+# WX-E: the table loader hashes fixtures with SHA-256 and parses them with the
+# TF01 TFV parser every lane already has, so both are real dependencies now.
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
 
 [dev-dependencies]
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
-coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
-coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_ct_compare = { path = "../ct-compare" }
 
 [[test]]

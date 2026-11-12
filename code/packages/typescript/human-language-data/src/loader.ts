@@ -46,7 +46,10 @@ import {
 } from "./modality-shards.js";
 import type { TrackGentleRamp } from "./gentle-ramp.js";
 import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
-import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
+import {
+  narrationLessonIdentityIndex,
+  narrationLessonIdentityIndexBatch,
+} from "./generated-hash-shards.js";
 import { buildCurriculumGapReport, type CurriculumGapReportInput } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import { lessonCacheFor, type LessonCache } from "./lesson-cache.js";
@@ -1029,7 +1032,7 @@ export async function loadModalityManifestAsync(
   registry = loadLanguageRegistry(root),
 ): Promise<ModalityManifest> {
   const languages = registry.languages.map((language) => language.id);
-  const expectedLessonIds = narrationLessonIdentityIndex(root, languages);
+  const expectedLessonIds = narrationLessonIdentityIndexBatch(root, languages);
   return readModalityManifestOwnersAsync(root, {
     expectedLanguages: languages,
     expectedLessonIds,

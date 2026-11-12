@@ -11,8 +11,8 @@ use std::path::PathBuf;
 use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
-    generate_package_report, verify_assurance_report, verify_evidence, AssuranceReport,
-    AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
+    check_assumptions, generate_package_report, verify_assurance_report, verify_evidence,
+    AssuranceReport, AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
 };
 
 /// `rust/<directory name>` and the `version = "..."` of the package's
@@ -43,12 +43,17 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
-    eprintln!("  --profile <P>          comparison (default) | field-arithmetic: which true sentence the");
+    eprintln!("  --profile <P>          comparison (default) | field-arithmetic | varint-codec: which true sentence the");
     eprintln!("                         static attestation rows (CWE-326/327/407) carry");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
     eprintln!("                         without it --check fails on any such id");
     eprintln!("                         (temporary; tracked by backlog item WD-008; every accepted id is printed)");
+    eprintln!("  --strict               Fail on VER13 rule AC-10 (a catalogue entry naming the package that");
+    eprintln!("                         no claim uses) instead of printing a warning");
+    eprintln!();
+    eprintln!("The VER13 assumption catalogue (code/assumptions/) is found above the package directory;");
+    eprintln!("--check fails closed when the report's catalogue pin differs from it (AC-14).");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
     eprintln!("  --help                 Display this help message");
@@ -91,6 +96,7 @@ fn main() {
     let mut check_file: Option<PathBuf> = None;
     let mut generate = false;
     let mut allow_unverified = false;
+    let mut strict = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
     let mut profile = AuditProfile::Comparison;
@@ -119,6 +125,9 @@ fn main() {
             }
             "--allow-unverified" => {
                 allow_unverified = true;
+            }
+            "--strict" => {
+                strict = true;
             }
             "--profile" => {
                 i += 1;
@@ -231,6 +240,22 @@ fn main() {
                     for id in &unverified {
                         println!("  accepted unverified: {id}");
                     }
+                }
+            }
+            Err(e) => {
+                eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+                exit(1);
+            }
+        }
+
+        // VER13 AC-10: entries naming this package that nothing in the report
+        // uses are flagged for removal (VER00 section 7.5.2): a warning by
+        // default, an error under --strict.  (verify_evidence already ran
+        // every other assumption rule.)
+        match check_assumptions(&report, &evidence, strict) {
+            Ok(summary) => {
+                for id in &summary.unused {
+                    println!("warning: AC-10 UnusedAssumption: {id} names {} but matches no claim", report.package);
                 }
             }
             Err(e) => {

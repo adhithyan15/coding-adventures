@@ -1,0 +1,12 @@
+# VER04j WX-H test fixture: how the in-test subject (`wxh_subject`) implements
+# the operation of wxh.warrant, and which faults attack it (section 14.2).
+package wxh_subject
+revision 0.0.0
+spec code/packages/rust/warrant-grammar/tests/fixtures/wxh.warrant
+output code/packages/rust/warrant-grammar/tests/generated/wxh_evidence.rs
+seed 0x5758485f45564944
+property_cases 2048
+fuzz_iterations 1200
+negctl_fuzz_iterations 800
+exhaustive_budget 400000
+op decompress export=decompress fresh errors=wxh_subject::LzErr/OutputLimit=OUTPUT_LIMIT,Corrupt=CORRUPT faults=ignore-limit,off-by-one-limit,limit-after-alloc,truncate-silently,missing-error

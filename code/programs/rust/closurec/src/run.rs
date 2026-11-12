@@ -1244,7 +1244,7 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
                 kind: e.kind(),
                 message: e.to_string(),
             })?;
-            let found = crate::refusals::scan(files.len(), &contents, es_version);
+            let found = crate::refusals::scan(files.len(), &contents, es_version, config.compilation.level);
             if !found.is_empty() {
                 refused.extend(found);
             }

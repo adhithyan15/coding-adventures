@@ -741,6 +741,18 @@ mod tests {
         }
     }
 
+    /// Build the expected text of a relative path the way the planner does, so
+    /// the assertion holds on Windows (`\\` separators) as well as Unix.
+    fn native_path(parts: &[&str]) -> String {
+        parts.iter().collect::<PathBuf>().to_string_lossy().into_owned()
+    }
+
+    /// The expected tool path: `dir` joined with `name` plus the host's
+    /// executable suffix (`.exe` on Windows, empty elsewhere).
+    fn native_tool(dir: &str, name: &str) -> PathBuf {
+        Path::new(dir).join(format!("{name}{}", std::env::consts::EXE_SUFFIX))
+    }
+
     fn args(command: &CommandSpec) -> Vec<String> {
         command
             .args
@@ -845,8 +857,8 @@ mod tests {
             [
                 "-O",
                 "binary",
-                "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server",
-                "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin",
+                &native_path(&["target", "thumbv7em-none-eabihf", "release", "uno-r4-wifi-serialusb-server"]),
+                &native_path(&["target", "thumbv7em-none-eabihf", "release", "uno-r4-wifi-serialusb-server.bin"]),
             ]
         );
     }
@@ -869,7 +881,7 @@ mod tests {
                 "-b",
                 UNO_R4_WIFI_FQBN,
                 "-i",
-                "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin",
+                &native_path(&["target", "thumbv7em-none-eabihf", "release", "uno-r4-wifi-serialusb-server.bin"]),
                 "--upload-property",
                 "runtime.tools.bossac-1.9.1-arduino5.path=/tmp/arduino-bossa/bin",
             ]
@@ -929,7 +941,7 @@ mod tests {
                 "-b",
                 UNO_R4_WIFI_FQBN,
                 "-i",
-                "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin",
+                &native_path(&["target", "thumbv7em-none-eabihf", "release", "uno-r4-wifi-serialusb-server.bin"]),
                 "--upload-property",
                 "runtime.tools.bossac-1.9.1-arduino5.path=/Arduino15/packages/arduino/tools/bossac/1.9.1-arduino5",
             ]
@@ -1132,7 +1144,7 @@ mod tests {
         assert_eq!(run.options.rustc, Some(PathBuf::from("/rustc")));
         assert_eq!(
             run.options.arm_gcc,
-            Some(PathBuf::from("/native/bin/arm-none-eabi-gcc"))
+            Some(native_tool("/native/bin", "arm-none-eabi-gcc"))
         );
         assert_eq!(
             run.options.arm_gxx,
@@ -1197,9 +1209,12 @@ mod tests {
                 "aarch64-apple-darwin",
             )
             .unwrap(),
-            PathBuf::from(
-                "/toolchains/stable-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/llvm-objcopy"
-            )
+            Path::new("/toolchains/stable-aarch64-apple-darwin")
+                .join("lib")
+                .join("rustlib")
+                .join("aarch64-apple-darwin")
+                .join("bin")
+                .join(format!("llvm-objcopy{}", std::env::consts::EXE_SUFFIX))
         );
     }
 

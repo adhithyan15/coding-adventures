@@ -1,1 +1,2 @@
-prove -I..\lzss\lib -l -v t
+REM prereqs: ../lzss
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps lzss

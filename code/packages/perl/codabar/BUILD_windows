@@ -1,1 +1,2 @@
-echo Skipping perl/codabar on Windows -- prerequisite refs: ..\barcode-layout-1d ..\paint-instructions
+REM prereqs: ../paint-instructions ../barcode-layout-1d
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps paint-instructions,barcode-layout-1d

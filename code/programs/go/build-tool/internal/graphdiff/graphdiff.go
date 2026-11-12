@@ -16,6 +16,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/pkgmeta"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/unicode/norm"
 )
@@ -101,6 +102,10 @@ type RepositoryBoundary struct {
 	Boundaries                        []BoundaryRule `json:"boundaries"`
 }
 
+// MetadataPolicyPackageLocal is the only non-empty MetadataPolicy. The empty
+// policy is the original contract: every package-prefix path propagates.
+const MetadataPolicyPackageLocal = "package_local"
+
 type DiffSelectionInput struct {
 	Packages          []PackageSpec
 	Edges             []Edge
@@ -109,6 +114,11 @@ type DiffSelectionInput struct {
 	ChangedPaths      []string
 	BoundarySHA256    string
 	Boundary          *RepositoryBoundary
+	// MetadataPolicy is "" or MetadataPolicyPackageLocal. Under the latter, a
+	// package_prefix package whose only selected paths are package-local
+	// metadata (internal/pkgmeta) is changed but not propagated: it joins
+	// affected_packages without its dependents.
+	MetadataPolicy string
 }
 
 type DiffSelectionResult struct {
@@ -188,7 +198,10 @@ func EvaluateDiffSelection(input DiffSelectionInput) (DiffSelectionResult, error
 		}
 	}
 
+	// changed holds propagating seeds; local holds package_prefix packages
+	// selected only by package-local metadata under the package_local policy.
 	changed := makeSet(input.ForcedPackages)
+	local := map[string]struct{}{}
 	unknown := false
 	for _, path := range input.ChangedPaths {
 		consumers := boundaryConsumers[path]
@@ -211,7 +224,12 @@ func EvaluateDiffSelection(input DiffSelectionInput) (DiffSelectionResult, error
 					}
 				}
 			}
-			if selected {
+			if !selected {
+				continue
+			}
+			if pkg.SourceMode == "package_prefix" && input.MetadataPolicy == MetadataPolicyPackageLocal && pkgmeta.IsPackageLocal(relative) {
+				local[pkg.Name] = struct{}{}
+			} else {
 				changed[pkg.Name] = struct{}{}
 			}
 		}
@@ -229,7 +247,19 @@ func EvaluateDiffSelection(input DiffSelectionInput) (DiffSelectionResult, error
 		}
 	}
 
+	// One propagating change makes the whole package propagating. What stays
+	// local joins the affected set without its dependents:
+	//
+	//	affected      = dependents*(changed) ∪ local
+	//	prerequisites = prerequisites*(affected) − affected
+	for name := range changed {
+		delete(local, name)
+	}
 	affected := closure(changed, graph.dependents)
+	for name := range local {
+		affected[name] = struct{}{}
+		changed[name] = struct{}{}
+	}
 	prerequisites := closure(affected, graph.prerequisites)
 	for name := range affected {
 		delete(prerequisites, name)
@@ -471,6 +501,9 @@ func validateDiffInput(input DiffSelectionInput, graph validatedGraph) (map[stri
 	}
 	if input.UnknownPathPolicy != "all" && input.UnknownPathPolicy != "error" {
 		return nil, errors.New("DIFF_POLICY_INVALID")
+	}
+	if input.MetadataPolicy != "" && input.MetadataPolicy != MetadataPolicyPackageLocal {
+		return nil, errors.New("DIFF_METADATA_POLICY_INVALID")
 	}
 	if len(input.ForcedPackages) > MaxPackages || hasDuplicateStrings(input.ForcedPackages) {
 		return nil, errors.New("DIFF_FORCED_PACKAGE_INVALID")

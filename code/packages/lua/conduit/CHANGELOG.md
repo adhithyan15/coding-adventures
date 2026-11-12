@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Changed — Windows build
+
+- `BUILD_windows` now runs `tools\run-tests.ps1`, which builds the extension, installs
+  luasocket and **requires it to load** before running busted. `tests/test_server.lua`
+  (the end-to-end suite) calls `pending(...)` when luasocket is missing, and the previous
+  recipe (`luarocks install luasocket 2>NUL || echo ... skipped`) swallowed a failed install,
+  so the server tests could be silently skipped while the package showed green. The script
+  also removes Git for Windows' `usr\bin` from `PATH` for its own process so `link` is
+  MSVC's linker (Git's GNU `link.exe` shadows it and breaks luasocket's link step).
+
+### Fixed — Windows build
+
+- The extension's `build.rs` now finds `lua54.lib` next to the `lua.exe` on `PATH`
+  (`<prefix>\lib`, the layout `scripts/setup_lua.py` produces) when `LUA_LIB_PATH`
+  is unset. It only looked in `LUA_LIB_PATH` and two fixed folders that do not exist
+  on the CI runner, so the first Windows full build failed with
+  `rust-lld: could not open 'lua54.lib'`.
+
 ## Unreleased
 
 ### Fixed

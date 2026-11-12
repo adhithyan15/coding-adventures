@@ -1,7 +1,7 @@
 {
   "schema_version": "ver24-effect-cert-v1",
   "package": "rust/gf256",
-  "source_digest": "fe39fb457f2380361ec052e80cabf6e48ed5190931980d82bc8ba74bd3e0c9aa",
+  "source_digest": "00e72e1531010f1bd392248353b71f3f76b9851eb79e7bf7be19c4ce28d413f4",
   "manifest_digest": "429764146cf7e7c14146d245a7799aeadf19886b2f074f3b9361c89cd923cf73",
   "declared_effects": [],
   "entry_points": [

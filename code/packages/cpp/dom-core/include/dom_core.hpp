@@ -101,9 +101,9 @@ struct Node {
     }
 };
 
-inline const std::string* Element::attribute(const std::string& name) const {
+inline const std::string* Element::attribute(const std::string& attribute_name) const {
     for (const Attribute& a : attributes) {
-        if (a.name == name) return &a.value;
+        if (a.name == attribute_name) return &a.value;
     }
     return nullptr;
 }

@@ -758,6 +758,9 @@ function readShardedNarration(
 export function readGeneratedHashManifestsBatch(
   root: string,
   languages: readonly string[],
+  kinds: readonly ("generated-book-hashes" | "generated-narration-hashes")[] = [
+    "generated-book-hashes", "generated-narration-hashes",
+  ],
 ): {
   book: Map<string, LoadedGeneratedHashManifest<GeneratedBookHashManifest>>;
   narration: Map<string, LoadedGeneratedHashManifest<GeneratedNarrationHashManifest>>;
@@ -767,11 +770,16 @@ export function readGeneratedHashManifestsBatch(
       new Set(languages).size !== languages.length) {
     throw new Error("generated hash batch requires distinct safe languages");
   }
+  if (kinds.length === 0 || kinds.length > 2 ||
+      new Set(kinds).size !== kinds.length ||
+      kinds.some((kind) => kind !== "generated-book-hashes" && kind !== "generated-narration-hashes")) {
+    throw new Error("generated hash batch requires distinct known owner kinds");
+  }
   const tasks: Array<{
     kind: "generated-book-hashes" | "generated-narration-hashes";
     language: string;
   }> = [];
-  for (const kind of ["generated-book-hashes", "generated-narration-hashes"] as const) {
+  for (const kind of kinds) {
     for (const language of languages) {
       tasks.push({ kind, language });
     }
@@ -996,21 +1004,14 @@ function assertExactNarrationLanguages(
  * and globally unique under case folding, including across chapter and language
  * boundaries.
  */
-export function narrationLessonIdentityIndex(
-  root: string,
-  expectedLanguages: readonly string[],
+function narrationLessonIdentityIndexFrom(
+  ownerLanguages: readonly string[],
+  manifestFor: (language: string) => GeneratedNarrationHashManifest,
 ): ReadonlyMap<string, readonly string[]> {
-  const directory = join(root, GENERATED_NARRATION_HASH_DIR);
-  const ownerLanguages = listLanguages(directory);
-  assertExactNarrationLanguages(ownerLanguages, expectedLanguages);
-
   const out = new Map<string, readonly string[]>();
   const globalOwners = new Map<string, { id: string; language: string }>();
   for (const language of ownerLanguages) {
-    const loaded = readGeneratedNarrationHashManifest(
-      join(directory, `${language}.json`),
-    );
-    const ids = loaded.manifest.chapters.flatMap((chapter) => chapter.lessonIds);
+    const ids = manifestFor(language).chapters.flatMap((chapter) => chapter.lessonIds);
     for (const id of ids) {
       if (!safeLessonIdentity(id)) {
         throw new Error(`narration lesson id '${id}' is unsafe or reserved`);
@@ -1032,6 +1033,49 @@ export function narrationLessonIdentityIndex(
     out.set(language, [...ids].sort());
   }
   return out;
+}
+
+export function narrationLessonIdentityIndex(
+  root: string,
+  expectedLanguages: readonly string[],
+): ReadonlyMap<string, readonly string[]> {
+  const directory = join(root, GENERATED_NARRATION_HASH_DIR);
+  const ownerLanguages = listLanguages(directory);
+  assertExactNarrationLanguages(ownerLanguages, expectedLanguages);
+  return narrationLessonIdentityIndexFrom(
+    ownerLanguages,
+    (language) => readGeneratedNarrationHashManifest(join(directory, `${language}.json`)).manifest,
+  );
+}
+
+/** Same strict index from pinned, bounded narration-owner reads only. */
+export function narrationLessonIdentityIndexBatch(
+  root: string,
+  expectedLanguages: readonly string[],
+): ReadonlyMap<string, readonly string[]> {
+  const directory = join(root, GENERATED_NARRATION_HASH_DIR);
+  const ownerLanguages = listLanguages(directory);
+  // This independent registry comparison precedes every owner byte read.
+  assertExactNarrationLanguages(ownerLanguages, expectedLanguages);
+  const loaded = new Map<string, LoadedGeneratedHashManifest<GeneratedNarrationHashManifest>>();
+  // The batch transport bounds task count; do not cap the public index at that
+  // implementation limit as the registry grows past today's track count.
+  for (let offset = 0; offset < ownerLanguages.length; offset += 32) {
+    const slice = ownerLanguages.slice(offset, offset + 32);
+    const batch = readGeneratedHashManifestsBatch(
+      root, slice, ["generated-narration-hashes"],
+    ).narration;
+    for (const language of slice) {
+      const owner = batch.get(language);
+      if (!owner) throw new Error(`missing pinned narration owner for '${language}'`);
+      loaded.set(language, owner);
+    }
+  }
+  return narrationLessonIdentityIndexFrom(ownerLanguages, (language) => {
+    const owner = loaded.get(language);
+    if (!owner) throw new Error(`missing pinned narration owner for '${language}'`);
+    return owner.manifest;
+  });
 }
 
 /** Strict, name-only generated-book ownership discovery for eager consumers. */

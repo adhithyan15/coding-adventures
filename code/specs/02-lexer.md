@@ -62,6 +62,21 @@ Keywords (if, else, while, def, return) are lexed as NAME tokens first, then che
 
 Whitespace (spaces, tabs) is consumed but not emitted as tokens (except NEWLINE which has syntactic meaning in Python-like languages). Comments (# ...) are consumed and discarded.
 
+### Leading hash in grammar-driven indentation mode
+
+After counting leading spaces at the start of a logical line, the Rust
+grammar-driven lexer can skip a hash-prefixed comment when a grammar skip
+pattern consumes input starting at the hash. A matching comment is trivia
+and preserves the existing indentation stack.
+
+If no skip rule matches, the hash is subject to normal indentation and token
+matching. A grammar with a hash token can emit it. Otherwise the lexer returns
+its ordinary unexpected-character error at the hash's line and column when the
+indentation is valid. A skip match that consumes zero characters at this
+position returns a lexer error. Indentation-mode token matches must also
+consume input. If a token pattern matches an empty string, the lexer returns
+an error at that position before appending a token.
+
 ### Token flags: what came before a token
 
 Grammar-driven tokens carry an optional `flags` bitmask describing the gap

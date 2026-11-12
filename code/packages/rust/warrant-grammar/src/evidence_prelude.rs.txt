@@ -17,6 +17,9 @@ use coding_adventures_test_bootstrap::pbt::{
 };
 use coding_adventures_test_bootstrap::prng::{fnv1a64, SplitMix64};
 use coding_adventures_test_bootstrap::run::{self, Outcome, Suite};
+//@if vec
+use coding_adventures_test_bootstrap::tfv::{self, Value};
+//@endif
 use coding_adventures_test_bootstrap::Verdict;
 use std::cell::Cell;
 use std::collections::BTreeMap;
@@ -361,6 +364,29 @@ impl V {
         let ok = y != 0 && !(y == -1 && x == f.min());
         V::opt(ok.then(|| if div { x / y } else { x % y }), f)
     }
+//@if concat
+    /// `concat(a, b)` of two byte strings.
+    pub fn concat(a: &V, b: &V) -> V {
+        match (a, b) {
+            (V::Bytes(x), V::Bytes(y)) => {
+                let mut out = Vec::with_capacity(x.len() + y.len());
+                out.extend_from_slice(x);
+                out.extend_from_slice(y);
+                V::Bytes(out)
+            }
+            _ => panic!("concat of byte strings expected"),
+        }
+    }
+//@endif
+//@if minmax
+    /// `imin`/`imax` (WX-H): the smaller / larger of two `Int` values.
+    pub fn imin(a: &V, b: &V) -> V {
+        V::Int(a.int().min(b.int()))
+    }
+    pub fn imax(a: &V, b: &V) -> V {
+        V::Int(a.int().max(b.int()))
+    }
+//@endif
     pub fn unwrap_or(o: &V, d: &V) -> V {
         match o {
             V::Opt(Some(v)) => (**v).clone(),
@@ -731,6 +757,669 @@ fn attacking<T>(op: &'static str, body: impl FnOnce() -> T) -> T {
     ATTACK_OP.with(|a| *a.borrow_mut() = Some(op));
     let _reset = Reset;
     body()
+}
+
+//@endif
+//@if obs
+// ---------------------------------------------------------------------------
+// WX-H: the allocation observer (VER04j sections 6.3 and 14.2 item 33).
+//
+// Every adapter call of an operation that has a `heap` or `output` bound runs
+// on a worker thread inside an *allocation window*.  A counting global
+// allocator charges every allocation made on a thread whose window is open.
+//
+//   supervisor thread            worker thread (window open)
+//   -----------------            ---------------------------
+//   obs_exec(job) --job--------> job()      alloc  alloc  free ...
+//        |                                     |
+//        |  (waits)                            +-- over the cap? record the
+//        v                                         attempted size, wake the
+//   Finished(result, peak)  <---- done            supervisor, park FOREVER
+//   or Tripped(attempted)   <---- trip
+//
+// Why park instead of failing the allocation?  A `GlobalAlloc` may not unwind,
+// and on stable Rust an allocation that returns null aborts the process
+// (`handle_alloc_error`), which is exactly the CI failure a bomb must not
+// cause.  The over-cap request is therefore never made: its thread is parked,
+// the supervisor fails the instance, and the parked worker (holding at most
+// the cap) is abandoned.  A test that has tripped once fails its later observed
+// instances without running them (so a shrinker cannot abandon a worker per
+// candidate), and at most `OBS_MAX_ABANDONED` workers, holding at most
+// `OBS_MAX_HELD` bytes between them, are ever abandoned in one process.
+// ---------------------------------------------------------------------------
+
+use std::alloc::{GlobalAlloc, Layout, System};
+
+/// Workers that may be abandoned before observed calls are refused outright.
+const OBS_MAX_ABANDONED: usize = 64;
+/// Bytes the abandoned workers may hold between them (they are never freed).
+const OBS_MAX_HELD: u64 = 1 << 30;
+
+/// The panic payload an observed instance raises when the observer fails it
+/// (`bound-heap-exceeded`, `bound-negative`, `output-bound-exceeded`).
+#[derive(Debug)]
+pub struct ObsFailure(pub String);
+
+struct Window {
+    active: Cell<bool>,
+    cur: Cell<u64>,
+    peak: Cell<u64>,
+    slot: Cell<Option<&'static Slot>>,
+}
+
+thread_local! {
+    // `const` and without a destructor: touching it from inside the allocator
+    // can neither allocate nor register a destructor.
+    static WIN: Window = const {
+        Window {
+            active: Cell::new(false),
+            cur: Cell::new(0),
+            peak: Cell::new(0),
+            slot: Cell::new(None),
+        }
+    };
+}
+
+enum ObsReply {
+    Done(Result<V, Box<dyn std::any::Any + Send>>, u64),
+    /// The size the call asked for in total, and what it already held.
+    Tripped(u64, u64),
+}
+
+struct Slot {
+    state: Mutex<Option<ObsReply>>,
+    ready: std::sync::Condvar,
+}
+
+struct Observer;
+
+fn obs_charge(n: u64) {
+    let _ = WIN.try_with(|w| {
+        if !w.active.get() {
+            return;
+        }
+        let cur = w.cur.get().saturating_add(n);
+        if cur > OBSERVER_CAP_BYTES {
+            // Nothing below this line is observed (it must not charge itself).
+            w.active.set(false);
+            obs_trip(w, cur, w.cur.get());
+        }
+        w.cur.set(cur);
+        if cur > w.peak.get() {
+            w.peak.set(cur);
+        }
+    });
+}
+
+fn obs_release(n: u64) {
+    let _ = WIN.try_with(|w| {
+        if w.active.get() {
+            w.cur.set(w.cur.get().saturating_sub(n));
+        }
+    });
+}
+
+/// Report the attempted peak to the supervisor and park this thread forever.
+fn obs_trip(w: &Window, attempted: u64, held: u64) -> ! {
+    if let Some(slot) = w.slot.get() {
+        if let Ok(mut g) = slot.state.lock() {
+            *g = Some(ObsReply::Tripped(attempted, held));
+        }
+        slot.ready.notify_one();
+    }
+    loop {
+        std::thread::park();
+    }
+}
+
+// SAFETY: every method forwards to `System` unchanged after accounting; the
+// accounting touches only `const` thread-locals and never allocates or unwinds.
+#[allow(unsafe_op_in_unsafe_fn)]
+unsafe impl GlobalAlloc for Observer {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        obs_charge(layout.size() as u64);
+        System.alloc(layout)
+    }
+    unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
+        obs_charge(layout.size() as u64);
+        System.alloc_zeroed(layout)
+    }
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+        obs_release(layout.size() as u64);
+        System.dealloc(ptr, layout)
+    }
+    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+        if new_size > layout.size() {
+            obs_charge((new_size - layout.size()) as u64);
+        } else {
+            obs_release((layout.size() - new_size) as u64);
+        }
+        System.realloc(ptr, layout, new_size)
+    }
+}
+
+#[global_allocator]
+static OBSERVER: Observer = Observer;
+
+type ObsJob = Box<dyn FnOnce() + Send>;
+
+struct Worker {
+    jobs: std::sync::mpsc::Sender<ObsJob>,
+    slot: &'static Slot,
+}
+
+fn obs_spawn() -> Worker {
+    let slot: &'static Slot = Box::leak(Box::new(Slot {
+        state: Mutex::new(None),
+        ready: std::sync::Condvar::new(),
+    }));
+    let (jobs, rx) = std::sync::mpsc::channel::<ObsJob>();
+    std::thread::Builder::new()
+        .name("warrant-observer".into())
+        .stack_size(16 << 20)
+        .spawn(move || {
+            WIN.with(|w| w.slot.set(Some(slot)));
+            while let Ok(job) = rx.recv() {
+                job();
+            }
+        })
+        .expect("cannot start the allocation observer worker");
+    Worker { jobs, slot }
+}
+
+static OBS_ABANDONED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+static OBS_HELD: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+thread_local! {
+    static OBS_WORKER: std::cell::RefCell<Option<Worker>> = const { std::cell::RefCell::new(None) };
+}
+
+/// The result of one observed call.
+enum Exec {
+    /// The call returned (or panicked) inside the cap; the peak it reached.
+    Finished(Result<V, Box<dyn std::any::Any + Send>>, u64),
+    /// The call asked for more than the cap; the size it reached.
+    Tripped(u64),
+    /// Too many workers (or bytes) are already abandoned: the call was not started.
+    Refused,
+}
+
+/// Run `job` on the observer worker inside an allocation window.
+fn obs_exec(job: impl FnOnce() -> V + Send + 'static) -> Exec {
+    if OBS_ABANDONED.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_ABANDONED
+        || OBS_HELD.load(std::sync::atomic::Ordering::SeqCst) >= OBS_MAX_HELD
+    {
+        return Exec::Refused;
+    }
+    OBS_WORKER.with(|cell| {
+        let mut held = cell.borrow_mut();
+        let worker = held.get_or_insert_with(obs_spawn);
+        let slot = worker.slot;
+        *slot.state.lock().unwrap() = None;
+        let wrapped: ObsJob = Box::new(move || {
+            WIN.with(|w| {
+                w.cur.set(0);
+                w.peak.set(0);
+                w.active.set(true);
+            });
+            let r = catch_unwind(AssertUnwindSafe(job));
+            let peak = WIN.with(|w| {
+                w.active.set(false);
+                w.peak.get()
+            });
+            *slot.state.lock().unwrap() = Some(ObsReply::Done(r, peak));
+            slot.ready.notify_one();
+        });
+        worker.jobs.send(wrapped).expect("the observer worker is alive");
+        let mut g = slot.state.lock().unwrap();
+        while g.is_none() {
+            g = slot.ready.wait(g).unwrap();
+        }
+        let reply = g.take().expect("reply present");
+        drop(g);
+        match reply {
+            ObsReply::Done(r, peak) => Exec::Finished(r, peak),
+            ObsReply::Tripped(peak, bytes) => {
+                // The worker is parked inside the allocator for good.
+                *held = None;
+                OBS_ABANDONED.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                OBS_HELD.fetch_add(bytes, std::sync::atomic::Ordering::SeqCst);
+                Exec::Tripped(peak)
+            }
+        }
+    })
+}
+
+/// What the observer saw during one test (an example, a suite, a table).
+#[derive(Clone, Debug, Default)]
+struct ObsAgg {
+    instances: u64,
+    max_peak: u64,
+    bound_at_max: Option<i128>,
+    /// The first failure the observer raised during the test.
+    note: String,
+    /// An earlier instance of this test exceeded the cap: later observed
+    /// instances fail without running.
+    latched: bool,
+}
+
+thread_local! {
+    static OBS_AGG: std::cell::RefCell<ObsAgg> = std::cell::RefCell::new(ObsAgg::default());
+}
+
+static OBS_STATS: Mutex<BTreeMap<String, ObsAgg>> = Mutex::new(BTreeMap::new());
+
+fn obs_begin_test() {
+    OBS_AGG.with(|a| *a.borrow_mut() = ObsAgg::default());
+}
+
+fn obs_end_test() -> ObsAgg {
+    OBS_AGG.with(|a| std::mem::take(&mut *a.borrow_mut()))
+}
+
+fn obs_record(peak: u64, bound: Option<i128>) {
+    OBS_AGG.with(|a| {
+        let mut a = a.borrow_mut();
+        a.instances += 1;
+        if peak >= a.max_peak {
+            a.max_peak = peak;
+            a.bound_at_max = bound;
+        }
+    });
+}
+
+fn obs_note(msg: &str) {
+    OBS_AGG.with(|a| {
+        let mut a = a.borrow_mut();
+        if a.note.is_empty() {
+            a.note = msg.to_string();
+        }
+    });
+}
+
+/// Fail the current instance (caught by the claim or example wrapper).
+fn obs_fail(msg: String) -> ! {
+    std::panic::panic_any(ObsFailure(msg))
+}
+
+/// A claim or example wrapper caught an [`ObsFailure`]: remember why, and
+/// report the instance as failed.
+fn obs_failed(payload: Box<dyn std::any::Any + Send>) -> bool {
+    match payload.downcast::<ObsFailure>() {
+        Ok(f) => obs_note(&f.0),
+        Err(other) => std::panic::resume_unwind(other),
+    }
+    false
+}
+
+/// Evaluate a bound expression; a negative or unevaluable bound is a defect of
+/// the document and fails the instance (VER04j section 14.2 item 31).
+fn obs_bound(what: &str, f: impl FnOnce() -> V) -> i128 {
+    match catch_unwind(AssertUnwindSafe(|| f().int())) {
+        Ok(n) if n >= 0 => n,
+        Ok(n) => obs_fail(format!("bound-negative: the {what} is {n} at this instance")),
+        Err(_) => obs_fail(format!("bound-negative: the {what} cannot be evaluated at this instance")),
+    }
+}
+
+/// An operation's adapter, observed: run `job` (the real adapter) in a window,
+/// then compare the measured peak with the `heap` row evaluated at the
+/// arguments.  A call that exceeds the cap or the row fails the instance.
+fn obs_observe(op: &str, heap: Option<i128>, job: impl FnOnce() -> V + Send + 'static) -> V {
+    if OBS_AGG.with(|a| a.borrow().latched) {
+        obs_fail(format!(
+            "bound-heap-exceeded: `{op}` not run, an earlier instance of this test exceeded the allocation cap"
+        ));
+    }
+    match obs_exec(job) {
+        Exec::Finished(Ok(v), peak) => {
+            obs_record(peak, heap);
+            if let Some(b) = heap {
+                if i128::from(peak) > b {
+                    obs_fail(format!(
+                        "bound-heap-exceeded: `{op}` reached {peak} bytes against a heap bound of {b}"
+                    ));
+                }
+            }
+            v
+        }
+        Exec::Finished(Err(p), peak) => {
+            obs_record(peak, heap);
+            std::panic::resume_unwind(p)
+        }
+        Exec::Tripped(peak) => {
+            obs_record(peak, heap);
+            OBS_AGG.with(|a| a.borrow_mut().latched = true);
+            obs_fail(format!(
+                "bound-heap-exceeded: `{op}` asked for {peak} bytes; the allocation cap is {OBSERVER_CAP_BYTES}"
+            ))
+        }
+        Exec::Refused => {
+            OBS_AGG.with(|a| a.borrow_mut().latched = true);
+            obs_fail(format!(
+                "bound-heap-exceeded: `{op}` not run, earlier calls in this process already exceeded the allocation cap"
+            ))
+        }
+    }
+}
+
+/// The size of a successful result (VER04j section 6.2): the byte length of a
+/// `Bytes`, the element count of a list, the size of the `Ok` payload of a
+/// `Result`; an `Err` has size 0.
+fn obs_size(v: &V) -> i128 {
+    match v {
+        V::Bytes(b) => b.len() as i128,
+        V::List(l) => l.len() as i128,
+        V::Ok(x) => obs_size(x),
+        V::Err(_) => 0,
+        other => panic!("`output` is not defined for {other:?}"),
+    }
+}
+
+/// The generated property of an `output` row: `size(result) <= bound`.
+fn obs_output_ok(result: V, bound: i128) -> bool {
+    let size = obs_size(&result);
+    if size > bound {
+        obs_note(&format!("output-bound-exceeded: result size {size} is over the bound {bound}"));
+        return false;
+    }
+    true
+}
+
+/// A failed observed suite keeps the observer's first note in its message.
+fn obs_annotate(v: Verdict, note: &str) -> Verdict {
+    match v {
+        Verdict::Fail { failure_id, message } if !note.is_empty() => {
+            Verdict::fail(failure_id, format!("{note}; {message}"))
+        }
+        other => other,
+    }
+}
+
+/// Fault `truncate-silently`: an `Err` becomes `Ok` of the first `limit` bytes
+/// of `source` (VER04j section 14.2 item 36).
+fn fault_truncate_silently(v: V, source: &[u8], limit: i128) -> V {
+    match v {
+        V::Err(_) => {
+            let n = usize::try_from(limit.max(0)).unwrap_or(usize::MAX).min(source.len());
+            V::Ok(Box::new(V::Bytes(source[..n].to_vec())))
+        }
+        other => other,
+    }
+}
+
+/// Relation bias for a limit parameter (VER04j section 6.3): when a claim has a
+/// `Bytes` binder and an unsigned numeric binder, half of the draws replace the
+/// number by a value that sits on the boundary of the byte string's length.
+fn obs_limit_bias(tys: &[Ty], env: &mut [V], src: &mut dyn Src) {
+    let Some(b) = tys.iter().position(|t| matches!(t, Ty::Bytes)) else {
+        return;
+    };
+    let len = match &env[b] {
+        V::Bytes(x) => x.len() as i128,
+        _ => return,
+    };
+    for (j, t) in tys.iter().enumerate() {
+        let max = match t {
+            Ty::Fx(f) | Ty::FxEdge(f) if matches!(f, F::U16 | F::U32 | F::U64) => f.max(),
+            Ty::Nat => i128::from(u32::MAX),
+            _ => continue,
+        };
+        if src.bounded(2) != 0 {
+            continue;
+        }
+        let pick = match src.bounded(9) {
+            0 => 0,
+            1 => 1,
+            2 => (len - 1).max(0),
+            3 => len,
+            4 => 2 * len,
+            5 => 255,
+            6 => 256,
+            7 => 65535,
+            _ => max,
+        }
+        .min(max);
+        env[j] = match t {
+            Ty::Fx(f) | Ty::FxEdge(f) => V::Fixed(*f, pick),
+            _ => V::Int(pick),
+        };
+    }
+}
+
+//@endif
+//@if vec
+// ---------------------------------------------------------------------------
+// WX-E: pinned known-answer tables (VER04j section 5).
+//
+// The generator copied the verified fixture into the crate and embedded it with
+// `include_bytes!`; the table's test hashes that copy first and fails
+// `corpus-malformed` if it no longer matches the pin, then reads the rows with
+// the same TF01 TFV parser every lane uses and runs `holds` once per row.
+// ---------------------------------------------------------------------------
+
+/// Counters of one table run, for the manifest.
+#[derive(Clone, Debug, Default)]
+pub struct TableStats {
+    /// Rows run.
+    pub cases: u64,
+    /// Rows the document pins.
+    pub rows_pinned: u64,
+    /// SHA-256 of the checked-in copy.
+    pub sha256: String,
+    /// Rows whose `holds` was false (or that panicked).
+    pub failed: u64,
+    /// The first 16 failing rows as `vectors/<table>/<row id>`; empty in CI mode
+    /// (VER00 section 7.3: the data is not echoed).
+    pub failed_ids: Vec<String>,
+}
+
+/// Stats of the fault-free run of each table, by table name.
+static TABLE_STATS: Mutex<BTreeMap<String, TableStats>> = Mutex::new(BTreeMap::new());
+
+/// Decode one TFV value as a model value of type `ty` (VER04j section 4.9).
+/// Integers are range-checked, `Bytes<N>` length-checked; constructors are
+/// found by *name*.  The generator already verified every row of the file, so
+/// a failure here means the checked-in copy was altered after generation.
+fn table_value(v: &Value, ty: Ty, depth: usize) -> Result<V, String> {
+    if depth > 64 {
+        return Err("nests too deeply".into());
+    }
+    let int = |t: &str| t.parse::<i128>().map_err(|_| "integer out of range".to_string());
+    match (ty, v) {
+        (Ty::Bool, Value::Bool(b)) => Ok(V::Bool(*b)),
+        (Ty::Fx(f) | Ty::FxEdge(f), Value::Int(t)) => {
+            let n = int(t)?;
+            if n < f.min() || n > f.max() {
+                return Err("integer out of range".into());
+            }
+            Ok(V::Fixed(f, n))
+        }
+        (Ty::Nat | Ty::NatCount, Value::Int(t)) => {
+            let n = int(t)?;
+            if n < 0 {
+                return Err("negative Nat".into());
+            }
+            Ok(V::Int(n))
+        }
+        (Ty::Bytes, Value::Bytes(b)) => Ok(V::Bytes(b.clone())),
+        (Ty::BytesN(n), Value::Bytes(b)) if b.len() == n => Ok(V::Bytes(b.clone())),
+//@if comp
+        (Ty::Tuple(cs), Value::List(items)) if items.len() == cs.len() => {
+            let mut out = Vec::with_capacity(cs.len());
+            for (c, x) in cs.iter().zip(items) {
+                out.push(table_value(x, *c, depth + 1)?);
+            }
+            Ok(V::Tup(out))
+        }
+        (Ty::Opt(t), Value::List(items)) => match items.as_slice() {
+            [] => Ok(V::Opt(None)),
+            [x] => Ok(V::Opt(Some(Box::new(table_value(x, *t, depth + 1)?)))),
+            _ => Err("an Option is L0 or L1 x".into()),
+        },
+        (Ty::List(t), Value::List(items)) => {
+            let mut out = Vec::with_capacity(items.len());
+            for x in items {
+                out.push(table_value(x, *t, depth + 1)?);
+            }
+            Ok(V::List(out))
+        }
+        // A record (one constructor) is its field list; a variant is
+        // `L2 S<ctor> L<k> fields`, by constructor *name*.
+        (Ty::Data(name, ctors), Value::List(items)) if ctors.len() == 1 => {
+            let (cname, shapes) = ctors[0];
+            if items.len() != shapes.len() {
+                return Err("wrong number of fields".into());
+            }
+            let mut out = Vec::with_capacity(shapes.len());
+            for (s, x) in shapes.iter().zip(items) {
+                out.push(table_value(x, *s, depth + 1)?);
+            }
+            Ok(V::Con(name, 0, cname, out))
+        }
+        (Ty::Data(name, ctors), Value::List(items)) => {
+            let [Value::Text(c), Value::List(fields)] = items.as_slice() else {
+                return Err("a variant is L2 S<ctor> L<k> ...".into());
+            };
+            let Some(i) = ctors.iter().position(|(n, _)| *n == c.as_str()) else {
+                return Err("unknown constructor".into());
+            };
+            let (cname, shapes) = ctors[i];
+            if fields.len() != shapes.len() {
+                return Err("wrong number of fields".into());
+            }
+            let mut out = Vec::with_capacity(shapes.len());
+            for (s, x) in shapes.iter().zip(fields) {
+                out.push(table_value(x, *s, depth + 2)?);
+            }
+            Ok(V::Con(name, i, cname, out))
+        }
+        (Ty::Res(t, cases), Value::Map(pairs)) => match pairs.as_slice() {
+            [(Value::Text(k), payload)] if k == "ok" => {
+                Ok(V::Ok(Box::new(table_value(payload, *t, depth + 1)?)))
+            }
+            [(Value::Text(k), Value::Text(case))] if k == "err" && cases.contains(&case.as_str()) => {
+                Ok(V::Err(case.clone()))
+            }
+            _ => Err("a Result is M1 S\"ok\" v or M1 S\"err\" S<CASE>".into()),
+        },
+//@endif
+        _ => Err("a value that does not fit its column".into()),
+    }
+}
+
+/// Run one table: check the pin, read the rows, evaluate `holds` for each.
+pub fn run_table(
+    name: &str,
+    bytes: &[u8],
+    pinned: &str,
+    rows_pinned: usize,
+    cols: &[(&str, Ty)],
+    holds: Holds,
+    fault: Fault,
+) -> (Verdict, TableStats) {
+    let mut stats = TableStats {
+        rows_pinned: rows_pinned as u64,
+        sha256: sha256_hex(bytes),
+        ..TableStats::default()
+    };
+    let malformed = |why: String| Verdict::fail("corpus-malformed", format!("table {name}: {why}"));
+    // The pin comes first: nothing in the copy is read until it matches.
+    if stats.sha256 != pinned {
+        return (malformed("the checked-in copy does not match its sha256 pin".into()), stats);
+    }
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return (malformed("the checked-in copy is not UTF-8".into()), stats);
+    };
+    let records = match tfv::parse_file(text) {
+        Ok(r) => r,
+        Err(e) => return (malformed(format!("malformed TFV, {e}")), stats),
+    };
+    if records.len() != rows_pinned {
+        return (
+            malformed(format!("{} records, {rows_pinned} pinned", records.len())),
+            stats,
+        );
+    }
+    let in_ci = std::env::var("CI").is_ok();
+    for rec in &records {
+        if rec.fields.len() != cols.len() {
+            return (malformed(format!("row {:?} does not have the declared columns", rec.id)), stats);
+        }
+        let mut env = Vec::with_capacity(cols.len());
+        for (cname, ty) in cols {
+            let Some(value) = rec.field(cname) else {
+                return (malformed(format!("row {:?} is missing a column", rec.id)), stats);
+            };
+            match table_value(value, *ty, 0) {
+                Ok(v) => env.push(v),
+                Err(why) => return (malformed(format!("row {:?}: {why}", rec.id)), stats),
+            }
+        }
+        stats.cases += 1;
+        // A panicking row fails (the subject is not trusted to be total); one
+        // that cannot be handed to the host at all fails too.
+        let held = catch_unwind(AssertUnwindSafe(|| holds(&env, fault))).unwrap_or(false);
+        if !held {
+            stats.failed += 1;
+            if !in_ci && stats.failed_ids.len() < 16 {
+                stats.failed_ids.push(format!("vectors/{name}/{}", rec.id));
+            }
+        }
+    }
+    if fault == Fault::None {
+        TABLE_STATS.lock().unwrap().insert(name.to_string(), stats.clone());
+    }
+    if stats.failed == 0 {
+        return (Verdict::Pass, stats);
+    }
+    let first = if stats.failed_ids.is_empty() {
+        String::new()
+    } else {
+        format!("; first: {}", stats.failed_ids.join(", "))
+    };
+    (
+        Verdict::fail(
+            "not-deep-equal",
+            format!("table {name}: {} of {} rows failed{first}", stats.failed, stats.cases),
+        ),
+        stats,
+    )
+}
+
+//@endif
+//@if bytefaults
+/// Fault `flip-result-bit`: the lowest bit of the first byte of a byte-string
+/// result (inside an `Ok` or a `Some`) is flipped; an empty result gains a byte.
+fn fault_flip_result_bit(v: V) -> V {
+    match v {
+        V::Bytes(mut b) => {
+            match b.first_mut() {
+                Some(x) => *x ^= 1,
+                None => b.push(1),
+            }
+            V::Bytes(b)
+        }
+        V::Ok(x) => V::Ok(Box::new(fault_flip_result_bit(*x))),
+        V::Opt(Some(x)) => V::Opt(Some(Box::new(fault_flip_result_bit(*x)))),
+        other => other,
+    }
+}
+
+/// Fault `drop-last-result-byte`: the last byte of a byte-string result is
+/// lost; an empty result gains a byte.
+fn fault_drop_last_result_byte(v: V) -> V {
+    match v {
+        V::Bytes(mut b) => {
+            if b.pop().is_none() {
+                b.push(0);
+            }
+            V::Bytes(b)
+        }
+        V::Ok(x) => V::Ok(Box::new(fault_drop_last_result_byte(*x))),
+        V::Opt(Some(x)) => V::Opt(Some(Box::new(fault_drop_last_result_byte(*x)))),
+        other => other,
+    }
 }
 
 //@endif
@@ -1452,6 +2141,9 @@ fn build(tys: &[Ty], src: &mut dyn Src, mode: u8) -> Vec<V> {
         };
         env.push(v);
     }
+//@if obs
+    obs_limit_bias(tys, &mut env, src);
+//@endif
     env
 }
 
@@ -1871,9 +2563,20 @@ fn reg(
         }
     }
     let id = meta.id.clone();
+//@if obs
+    let observed = meta.kind != "negctl";
+//@endif
     META.lock().unwrap().push(meta);
     suite.add(id.clone(), move |_ctx| {
+//@if obs
+        obs_begin_test();
+//@endif
         let (verdict, stats, note) = body();
+//@if obs
+        let agg = obs_end_test();
+        let verdict = if observed { obs_annotate(verdict, &agg.note) } else { verdict };
+        OBS_STATS.lock().unwrap().insert(id.clone(), agg);
+//@endif
         STATS.lock().unwrap().insert(id.clone(), (stats, note));
         verdict
     });
@@ -1904,6 +2607,9 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
     let metas = META.lock().unwrap().clone();
     let stats = STATS.lock().unwrap().clone();
+//@if obs
+    let obs_stats = OBS_STATS.lock().unwrap().clone();
+//@endif
     let mut tests: Vec<Json> = Vec::new();
     for m in metas {
         let verdict = outcomes
@@ -1912,6 +2618,12 @@ fn write_manifest(outcomes: &[Outcome]) {
             .map(|o| if o.passed() { "pass" } else { "fail" })
             .unwrap_or("not-run");
         let (s, note) = stats.get(&m.id).cloned().unwrap_or_default();
+//@if obs
+        let obs_entry = obs_stats.get(&m.id).cloned();
+//@endif
+//@if vec
+        let table_stat = TABLE_STATS.lock().unwrap().get(&m.claim).cloned();
+//@endif
         let mut e: BTreeMap<String, Json> = BTreeMap::new();
         e.insert("id".into(), Json::Str(m.id));
         e.insert("kind".into(), Json::str(m.kind));
@@ -1953,12 +2665,38 @@ fn write_manifest(outcomes: &[Outcome]) {
 //@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
+//@if vec
+            "table" => {
+                let t = table_stat.unwrap_or_default();
+                e.insert("cases".into(), Json::Num(t.cases));
+                e.insert("rows_pinned".into(), Json::Num(t.rows_pinned));
+                e.insert("table_sha256".into(), Json::Str(t.sha256));
+                if t.failed > 0 {
+                    e.insert("failed_rows".into(), Json::Num(t.failed));
+                    e.insert(
+                        "failed_ids".into(),
+                        Json::Arr(t.failed_ids.into_iter().map(Json::Str).collect()),
+                    );
+                }
+            }
+//@endif
             _ => {
                 e.insert("fault".into(), Json::Str(m.fault));
                 e.insert("target".into(), Json::Str(m.target));
                 e.insert("caught_by".into(), Json::Str(note));
             }
         }
+//@if obs
+        if m.kind != "negctl" {
+            if let Some(a) = obs_entry.filter(|a| a.instances > 0) {
+                e.insert("instances_observed".into(), Json::Num(a.instances));
+                e.insert("max_observed_heap".into(), Json::Num(a.max_peak));
+                if let Some(b) = a.bound_at_max {
+                    e.insert("bound_at_max".into(), Json::Num(u64::try_from(b).unwrap_or(u64::MAX)));
+                }
+            }
+        }
+//@endif
         tests.push(Json::Obj(e));
     }
     let doc = Json::obj([

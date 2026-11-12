@@ -137,6 +137,16 @@ arbitrary host code and dynamic evaluation are absent. Arguments are evaluated
 left to right; `if`, `and`, `or` and `=>` evaluate only the required branch.
 Each branch remains statically type checked even when unreachable.
 
+*Implementation deviation (v0, recorded 2026-11-11).* The v0 ground evaluator in
+`rust/warrant-grammar` evaluates both operands of `and`, `or` and `=>` and charges
+both. Generated evidence short-circuits. Eager evaluation can only add work,
+exhaustion or an evaluation error; when both orders succeed they give the same
+Bool, so the deviation never accepts what this section rejects. It is kept so that
+v0 output stays byte-identical. Likewise, the v0 evaluator enforces §2's 64 MiB
+owned-data budget only through per-value element and leaf caps, not a cumulative
+counter. Warrant v1 short-circuits and counts data
+([VER04k](VER04k-warrant-v1-wave4.md) §2.6, §2.7, §9.1).
+
 Precedence, highest first: call/type application; unary `not`/minus;
 `*`; `+`/`-`; comparisons/equality; `and`; `or`; `=>`; quantification.
 Arithmetic operators are left associative; implication is right associative.
@@ -508,6 +518,14 @@ and source span. Cross-language adoption remains owned by package parity.
   operations. Separates logical Bytes equality from fresh-output ownership.
 - Defines hostile-input checks, secrecy projections and fail-closed incomplete
   solver/binding/observer evidence without claiming these tools already exist.
+- Records the v0 ground evaluator's eager `and`/`or`/`=>` and its lack of a
+  cumulative data counter as implementation deviations from §4 and §2, kept
+  frozen for v0 byte identity; v1 corrects both (VER04k §9.1, E2 and E4).
+- VER04k §9.1 E21 (WX-D1 S1 security review), a v0 deviation: a reference of
+  more than one segment is only `E.CASE` (a declared error and one of its
+  cases) or, in v1, a projection from a binder in scope. Any other dotted name
+  is W0202 in v0 too. Such v0 documents used to check by the name's first
+  segment but evaluated to a forged error value; none is in the repository.
 
 ## 11. Grammar artifacts and syntax-corpus staging (P006)
 
