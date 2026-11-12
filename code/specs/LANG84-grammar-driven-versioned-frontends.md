@@ -74,6 +74,7 @@ serve as an oracle. It never executes a compiled program.
 | lexer-parser-hooks.md | Defines pre/post hook signatures. LANG84 restricts which hooks an IIR frontend may register. |
 | PREP01 | Generic source preprocessor (MacroOct, MacroNib). See [Preprocessor dialects](#preprocessor-dialects). |
 | compiled-grammars.md | `_grammar.rs` generation. LANG84 drives the version list from `releases.csv` and adds content deduplication. |
+| RS01 | Versioned Rust grammars, 0.1 to today. Adds an edition axis, two Rust C3 hooks, a macro expander under the preprocessor-dialect exception, `semantic-copy` evidence and a value-first order. See [Amendment RS01](#amendment-rs01-2026-11-12-rust-editions-hooks-expander-copies-and-order). |
 
 ## The Frontend Contract
 
@@ -190,6 +191,8 @@ define "small":
 | COBOL-60 | `strip_cobol_columns` | pre-tokenize | E1 column guards (optional) |
 | Dartmouth BASIC | `relabel_line_numbers`, `suppress_rem_content` | post-tokenize | none planned; stays a hook |
 | Derive, Wolfram | `drop_bracketed_newlines` | post-tokenize | E3 depth-conditional skip |
+| Rust (RS01 amendment) | `rust_block_comments`: drops the tokens of a nested non-doc block comment (depth tracked by an F10 group) and plain line comments, and marks the next token as spaced | post-tokenize | RS01 X1 nested delimited scanner |
+| Rust (RS01 amendment) | `rust_strip_shebang`: blanks line 1 when `#!` is not followed, after whitespace and non-doc comments, by `[` | pre-tokenize | RS01 X3 shebang guard |
 
 The hooks listed in the table above are compliant today. When an extension
 that replaces a hook lands, the hook SHOULD be removed in a follow-up PR, but
@@ -217,6 +220,9 @@ replacing it is not mandatory.
 5. Once a language has a versioned pair covering the IIR subset, the IIR path
    MUST NOT use the unversioned `<lang>.tokens`/`<lang>.grammar`. The
    unversioned pair MAY remain for non-IIR consumers until they migrate.
+6. For a language with an edition axis (Rust), the key is (release, edition)
+   and no edition is ever defaulted. See
+   [Amendment RS01, R1](#r1-the-edition-axis). *(Added by RS01.)*
 
 ### C5. Budgets for untrusted input
 
@@ -2978,6 +2984,7 @@ A later PREP spec MAY move directive syntax into its own
 | Language | Directory | Approximate rows | Source of truth | Cross-check |
 | --- | --- | --- | --- | --- |
 | Ruby | `ruby/` | ≈1,196 tags: ≈178 final teeny (`vX_Y_Z`/`vX.Y.Z`, latest `v4.0.7`), 853 patch-level (`vX_Y_Z_P` → `X.Y.Z-pP`), ≈96 preview/rc | `git ls-remote --tags https://github.com/ruby/ruby` | ruby-lang.org `/en/downloads/releases/`; tags that are not releases are excluded with reasons |
+| Rust (RS01 amendment) | `rust/` | 158 tags (13 pre-1.0, 3 pre-releases, 142 1.x); 1.100.0 when tagged; 351 (release, edition) pairs then | `git ls-remote --tags https://github.com/rust-lang/rust`; `release-0.1` … `release-0.7` excluded as aliases; nightly and beta-channel builds are not releases and are out of scope (RS01 §1.1) | `RELEASES.md`; 1.0.0-beta from the release announcement |
 | Python | `python/` | ≈677 tags: ≈301 final, the rest a/b/c/rc | `git ls-remote --tags https://github.com/python/cpython` | python.org/downloads; the earliest tag (0.9.x line) is recorded as found |
 | Perl | `perl/` | 776 rows exist | pinned `perlhist.pod` plus annotated tags (LANG82) | Reconcile against 272 `vX.Y.Z`, 120 RC and ≈90 legacy `perl-*` tags. Every tag maps to a row or an excluded-with-reason line |
 | JavaScript | `ecmascript/` | 29: ECMA-262 editions 1, 2, 3, 5, 5.1, 2015–2026 (17; ES4 abandoned and excluded with reason) and Netscape/Mozilla JavaScript 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.8.1, 1.8.2, 1.8.5 (12) | ECMA archive PDFs (editions 1–5.1), tc39/ecma262 tags `es2016`…`es2026`, MDN and SpiderMonkey release notes and source | The repo has no pairs for es2, es5.1, es2026 or any Netscape version |
@@ -3032,10 +3039,150 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0; 6a, the F10 table in es2015–es2024 replacing the `REGEX` deletion, done in `javascript-iir-compiler` 0.4.0). **6f planned:** `es-string-log` (string literals, `+` concatenation, `.length` in UTF-16 units, `console.log` of strings) on LANG83 PR5a–PR5c; needs a string-building `__js_number_to_string` (PR7c-js's layout over `i64_to_str`) for `"n=" + 1.5`; see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c slice 1 done:** Python 2 (`py2-int-print`: print statement, classic `/`) on 2.2 and 2.7.18, B for both. **7c slice 2 done:** Python 2 octal, hex and long literals; releases 2.4, 2.6, 3.5.10 and 3.6.0 (four classes, representatives 3.0a1, 3.6.0, 2.2 and 2.6), B for all eleven. **7c slice 3 done:** `py-float-print` (IEEE floats, true `/`, `repr` output) on the six `py3` releases, I and B; 3.0a1 moves to profile `py30`. **7c rest:** more releases, multi-item `print` (needs catchable traps), float `//`/`%`, and floats on 3.0a1 and Python 2 (a `%.12g` writer). **7d planned:** `py-str-print` on LANG83 PR5a–PR5c: 7d-1 string literals, `+`, `len` (code points), `str(int)` (`i64_to_str`); 7d-2 f-strings, which need `FSTRING_*` tokens in the 3.6+ pairs and a string-building `__py_float_to_str` (PR7c-py's layout); see [LANG83 "PR5 — runtime strings"](LANG83-iir-standard-operation-registry.md#pr5--runtime-strings) | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
-| 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
+| 9 | ongoing | Release backfill, earliest first (Rust excepted: [Amendment RS01, R5](#r5-value-first-order-for-rust)): per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
 Phases 4 and 5 may start once 2b (and, for Ruby, 3.2) has landed. They do not
 wait for the rest of phase 3.
+
+## Amendment RS01 (2026-11-12): Rust editions, hooks, expander, copies and order
+
+*This section amends LANG84 for [RS01](RS01-rust-grammars.md), the
+versioned Rust grammars. It changes nothing for any other language. Where it
+and an earlier section disagree for Rust, this section wins.*
+
+Rust needs five things LANG84 did not foresee: a second selection axis (the
+edition), two hooks for lexical rules no regular expression can express, a
+macro expander that works on token trees rather than text, an evidence basis
+for releases whose parser source changes even when their syntax does not,
+and permission to start with the newest releases. RS01 also applies C1 and
+C2 to the Warrant WIR proof front end, which is not an IIR frontend (RS01
+decision Q5); so the hook and expander rules below bind that path too.
+
+### R1. The edition axis
+
+A language MAY declare an **edition axis**: a second, opt-in selection input
+that changes lexing or parsing within one release. Rust is the only such
+language today (editions 2015, 2018, 2021, 2024).
+
+1. **Pairs.** An edition-axis release has one materialized pair per edition
+   it supports, with stem `<prefix><release>-e<edition>`
+   (`rust1.85.0-e2021.tokens`). Releases from before the language had
+   editions keep the plain stem (`rust0.4.tokens`). A stem is split from the
+   right; a release ID ending in `-e<digits>` is refused in an edition-axis
+   inventory so the split cannot be ambiguous. "No aliases" still holds:
+   every (release, edition) pair is its own files.
+2. **Inventory.** `releases.csv` keeps one row per release and gains an
+   `editions` column (`-`, or `;`-separated editions ascending). A header
+   comment declares each edition's first release
+   (`# editions: 2015@1.0.0-alpha 2018@1.31.0 2021@1.56.0 2024@1.85.0`), and
+   the checker derives each row's expected editions along `predecessor`
+   lineage, never by date or version comparison.
+3. **Uniform claims.** A row's `grammar_status`, `grammar_stage` and
+   `grammar_subset` hold for **every** edition the row lists. A non-pending
+   row needs both files for each of its editions; a pair file for an edition
+   the row does not list is an error. Per-pair evidence goes in
+   `pair-evidence.csv`, one row per (release, edition).
+4. **Selection (amends C4).** The selection key is (release, edition),
+   written `rust@1.85.0/2021`. An edition-axis release selected without an
+   edition is a typed error (`EditionRequired`); an edition the row does not
+   list, or any edition on a pre-edition release, is `UnknownEdition`. There
+   is **no default edition**, ever. `DEFAULT_RELEASE` is still an exact
+   release ID. A frontend that emits IIR records the edition beside the
+   release (`IIRModule.edition: Option<String>`), added by the first such
+   frontend; diagnostics name both.
+5. **Compiled tables.** The generator's release family gains edition stems:
+   `token_grammar(release, edition)` and `parser_grammar(release, edition)`.
+   Content deduplication (`g_<hash>`) is unchanged and spans editions.
+6. **Corpus overrides.** An override key `<x>` in `<name>.expect@<x>` or
+   `<name>.reject@<x>` may also name a pair, `<release>-e<edition>`.
+7. **Checker.** `release_inventory.py` learns rules 1–3 and 6 in RS01 slice
+   A2. Its existing behaviour for other inventories is unchanged.
+
+### R2. Rust C3 hooks
+
+The C3 table lists two Rust hooks. Both are interim, and both meet the C3
+criteria:
+
+| Hook | Bounded concern | Size target | Deleted by |
+| --- | --- | --- | --- |
+| `rust_block_comments` (post-tokenize) | Nesting block comments. An F10 group tracks the depth declaratively; the hook only deletes the comment's tokens (and plain line comments, which are tokens in nesting releases so that a global skip cannot fire inside a block comment), and marks the next token as preceded by space for F11. It reads no source text. | under 80 lines | X1 (RS01 slice D1) |
+| `rust_strip_shebang` (pre-tokenize) | `rustc`'s current shebang rule: `#!` at input start (after an optional BOM) is a shebang unless the next token after whitespace and non-doc comments is `[`. Blanks line 1 with spaces, preserving offsets. Scans only whitespace and comments. | under 100 lines | X3 (RS01 slice D1) |
+
+Neither recognizes the language's general token set (C3 criterion 3): the
+first deletes token types the lexer already classified, and the second
+stops at the first character that is neither whitespace nor a comment. Both
+enforce a block-comment depth budget of 256 and carry hostile probes.
+
+### R3. The preprocessor-dialect exception, token-tree form
+
+[Preprocessor dialects](#preprocessor-dialects) describes a **text** layer
+(PREP01). A language MAY instead have a **token-tree** layer, a macro
+expander, under all of the following conditions:
+
+1. **Grammar first.** The release grammar parses every macro invocation,
+   attribute and macro definition, as token trees or structurally. The
+   expander never sees characters.
+2. **No parsing of its own.** Every fragment the expander must recognize
+   (`$e:expr`, `$t:ty`, …) and every expansion it produces is parsed by the
+   **same release's** `GrammarParser`, from a named rule (RS01 extension X4).
+   The matcher MAY run a token-tree pattern interpreter (an NFA over token
+   trees that commits to each fragment parse), because the language defines
+   macro matching that way. Its precedence, associativity and fragment
+   boundaries all come from the grammar. A matcher that parsed a fragment
+   itself would be a hand-written parser and is forbidden.
+3. **Typed seams.** Interpolated fragments are delimited by **declared
+   synthetic tokens** (RS01 extension X5), which no source text can produce.
+4. **No IIR**, and no lowering: the expander's output is CST fragments plus
+   side tables (provenance, hygiene), keyed as C1.7 requires.
+5. **Fail closed.** Anything the expander cannot expand without running code
+   or reading files (procedural macros, compiler plugins, `include!`) is an
+   opaque `Unexpanded` node, and every consumer that needs expanded code
+   refuses it.
+6. **Budgets** (C5): expansion depth, expanded tokens, invocation count and
+   matcher work per step, each a typed `Budget` error.
+7. **Identity.** An oracle test ties expansions to the language's own
+   expander output (for Rust, `rustc -Zunpretty=expanded` in oracle jobs
+   only).
+
+`cfg` evaluation is not a preprocessor under this reading: it is an analysis
+pass over the CST that produces a side table of stripped nodes, which C1.7
+already allows.
+
+### R4. The `semantic-copy` evidence basis
+
+[Materialized pair per release](#materialized-pair-per-release) allows a
+mechanical copy when a release's syntax blobs equal its predecessor's. Rust's
+parser source changes in every 1.x minor release, even when no syntax does,
+so that rule almost never applies to a 1.x minor. By owner decision
+(2026-11-12) a third basis exists for Rust 1.x minors, beside `reviewed` and
+`copy:<pair>`:
+
+**`semantic-copy:<pair>`.** The pair is a copy of its predecessor's pair, and
+**all three** of these hold, each recorded in `pair-evidence.csv`:
+
+1. the release's `rustc_feature` accepted-feature list has no feature
+   stabilized in this release that changes syntax (the list's blob and the
+   features checked are recorded);
+2. the release's `RELEASES.md` "Language" section has no grammar-visible
+   entry (blob and section recorded);
+3. a per-release oracle sweep with that release's pinned `rustc` agrees with
+   the copied pair on the whole conformance corpus for that edition (toolchain
+   SHA-256 and result digest recorded).
+
+If any condition fails or lacks a record, the pair needs a `reviewed` delta.
+Another language may adopt `semantic-copy` only through its own amendment,
+which names its equivalent of the three sources.
+
+### R5. Value-first order for Rust
+
+Rule 4 and phase 9 say grammars are written earliest release first. **Rust
+is an exception, by owner decision (2026-11-12):** the modern proof subset
+comes first, then the full modern grammar in four editions, the engine
+extensions, macro expansion, 1.x releases from newest to oldest, and finally
+the pre-1.0 releases from oldest to newest. The reason is value: the Warrant
+proof front end and the capability analyzer need a modern grammar now, and
+each 1.x step backwards is a delta from a grammar already checked against an
+executable oracle. Every other language keeps earliest-first.
 
 ## Open questions
 
@@ -3055,7 +3202,9 @@ wait for the rest of phase 3.
    `twig-type-checker`.
 3. **The preprocessor exception.** Is PREP01's hand-written directive layer
    acceptable under the conditions in
-   [Preprocessor dialects](#preprocessor-dialects)?
+   [Preprocessor dialects](#preprocessor-dialects)? *(Amendment RS01 adds a
+   second, token-tree form of the exception for Rust's macro expander; this
+   question still covers both.)*
 4. **Release versus language identity.** Are ALGOL 58/60/68, LISP 1/1.5, and
    Macsyma versus Maxima one language with releases or separate languages?
    LANG84 assumes ALGOL 60 report revisions and LISP 1/1.5 are releases, and
@@ -3072,7 +3221,9 @@ wait for the rest of phase 3.
    (`releases-1x`, `releases-2x`, …) with the default release always built?
 8. **Mechanical materialization.** `release_evidence.py` copies pairs for
    blob-identical releases. Is that sufficient LANG82 evidence, or must each
-   release still get an individual review note?
+   release still get an individual review note? *(Answered for Rust by
+   Amendment RS01: blob-identical copies and, for 1.x minors, `semantic-copy`
+   with three recorded conditions, by owner decision of 2026-11-12.)*
 9. **Exact Ruby binding rules.** Named regex captures (`/(?<x>…)/ =~ s`
    declares `x`), `for x in`, `rescue => e`, pattern-matching captures, and
    numbered and `it` parameters need `@declare` placements. They are
