@@ -1,2 +1,7 @@
-# build-tool: unsupported=ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE
-echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE -- skipped
+# Windows build: same steps as the Unix BUILD, in cmd syntax (the build tool runs each line
+# as its own cmd /C).  The NIF DLL has no enif_* imports: erl-nif-bridge calls through the
+# callback table the BEAM passes to nif_init.  :erlang.load_nif appends ".dll" itself.
+cd native\paint_codec_png_native && cargo build --release
+if not exist priv mkdir priv
+copy /Y native\paint_codec_png_native\target\release\paint_codec_png_native.dll priv\paint_codec_png_native.dll
+mix deps.get --quiet && mix compile && mix test

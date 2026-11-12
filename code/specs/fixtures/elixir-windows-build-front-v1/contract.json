@@ -26,19 +26,9 @@
       "class": "nif-erts-import-library"
     },
     {
-      "root": "code/packages/elixir/paint_codec_png_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
-    },
-    {
       "root": "code/packages/elixir/paint_vm_metal_native",
       "code": "ELIXIR_WINDOWS_METAL_UNAVAILABLE",
       "class": "target-specific-metal"
-    },
-    {
-      "root": "code/packages/elixir/polynomial_native",
-      "code": "ELIXIR_WINDOWS_NIF_LINK_UNAVAILABLE",
-      "class": "nif-erts-import-library"
     },
     {
       "root": "code/programs/elixir/conduit-hello",
