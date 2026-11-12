@@ -666,19 +666,53 @@ this skipped?":
 
 ```json
 {"key":"9f2c…","target":"rust/parser:test","os":"linux","arch":"x64",
- "kiln":"1.0.0","revision":"0bf84a8…","run":"43117337685","at":"2026-11-11T23:24:01Z"}
+ "kiln":"1.0.0","revision":"0bf84a8…","run":"43117337685","at":"2026-11-11T23:24:01Z",
+ "kind":"pass"}
 ```
+
+`kind` is required and is `pass` or `tombstone` (§10.5). Records are stored
+as JSON lines in immutable segment files. Decoding is strict and canonical:
+the key is 64 lowercase hex characters, text is UTF-8 without control
+characters, `target` is at most 512 bytes and the other text fields at most
+128, `at` is UTC in whole seconds, unknown fields are refused, and each line
+must equal the canonical re-encoding of the record it parses to (so every
+record has exactly one spelling). Caps, enforced while reading: 4 KiB per
+line, 50,000 records and 16 MiB per segment, 10,000 segments and 1,000,000
+records per directory.
+
+**Which record is newer.** For one key the newest record wins: later `at`,
+then higher segment sequence, then higher segment name, then later line. A
+delta being merged outranks every snapshot segment on ties. A tombstone that
+wins hides the key; a newer pass un-shadows it. **If `at` is equal and the
+kinds differ, the tombstone wins**, before any other tie-break: when in doubt
+the key is a miss.
+
+**A writer does not choose its own time.** A forged far-future `at` would
+outrank every tombstone, so `ledger-merge` restamps the delta using its own
+`now` (passed in, never read from the clock, so output stays deterministic):
+a delta **pass** keeps its own earlier `at`, capped at `now`, so a job that
+started before a tombstone cannot undo it by merging after it; a delta
+**tombstone** is stamped `now`, so it outranks every earlier pass and forces
+at least one fresh run. A delta record dated more than five minutes after
+`now` rejects the delta, and so does any such snapshot record. A direct
+`Record` call allows only one minute of future skew.
 
 No build outputs, `node_modules` or tool state are ever stored. Records are
 about 200 bytes; tens of thousands fit in a few megabytes.
 
 ### 10.2 Trust
 
-- Only runs the `Host` reports as **trusted** (§13) write to the shared
+- Only runs the `Host` reports as **trusted** (§13) write to the **shared**
   ledger. On GitHub, trusted means exactly: the ref is the default branch
   **and** the event is `push` or `schedule`. `workflow_dispatch` is trusted
   only on the default ref; `pull_request`, `pull_request_target` and
-  merge-queue refs are never trusted.
+  merge-queue refs are never trusted. The default branch is read from the
+  GitHub-generated event payload (`GITHUB_EVENT_PATH`,
+  `repository.default_branch`); `KILN_DEFAULT_BRANCH` may only narrow it
+  (a mismatch is untrusted). Any missing or unreadable value is untrusted. A
+  developer machine is never trusted for the shared ledger; it writes only its
+  own local ledger directory. The answer is only meaningful in a job that has
+  run no untrusted code (§9.6).
 - Pull-request runs **read** the shared ledger and never write to it. A PR
   that edits its workflow to fake passes can only skip its own checks — which
   is possible today anyway — and main re-checks every key it has not recorded
@@ -687,7 +721,9 @@ about 200 bytes; tens of thousands fit in a few megabytes.
   option.
 - A **missed** record only costs time. A **false** record is the real danger,
   so every design choice favours misses, and any doubt about a key makes it
-  uncacheable.
+  uncacheable. Hence `Lookup` and `Record` fail closed on any malformed or
+  non-regular segment instead of skipping it: a skipped segment might hold
+  the tombstone that revokes a pass.
 - **Results that are never recorded:** SKIPPED (an optional tool was absent),
   failures, and anything from an untrusted run.
 
@@ -708,10 +744,19 @@ tightly:
   shards). It runs only when the ref is the default branch and the event is
   `push` or `schedule`. It never runs from `workflow_run`,
   `pull_request` or `pull_request_target` triggers.
+- The ledger code takes an `Authority` (`Trusted()` and `WritesLocalLedger()`,
+  implemented by the Host) rather than a bare flag: a shared ledger needs
+  `Trusted()`, a local one `WritesLocalLedger()`, and `Merge` needs
+  `Trusted()`. `Merge` assumes the delta artifact came from a run the Host
+  marked trusted; a compromised trusted job can still forge passes, and the
+  re-stamping, the daily uncached run and tombstones bound the damage.
 - It uses code from that trusted checkout and consumes **only artifacts of
   its own run id**.
-- It validates every record strictly before merging: a 64-hex key, bounded
-  field lengths, a known schema, and caps on record count and delta size.
+- It validates every record strictly before merging (§10.1): a 64-hex key,
+  bounded field lengths, a known kind, canonical form, and caps on record
+  count and delta size. One bad record rejects the whole delta.
+- It compacts to the newest record per key and never drops a tombstone that
+  still shadows a pass surviving pruning.
 - **PR runs never save caches**, only restore, so they cannot evict main's
   snapshots by filling the quota.
 
@@ -891,10 +936,11 @@ type Source interface {
 type Host interface {
     Identity() Identity   // revision, branch, event, run id, OS, arch
     ImageID() string      // OS version + runner image id, for the host fingerprint (§8)
-    Trusted() bool        // may this run write to the shared ledger? (§10.2)
+    Trusted() bool        // may this run write to the SHARED ledger? (§10.2); Local: false
+    WritesLocalLedger() bool // may it write the local ledger directory? (Local only)
     Shard() (index, count int)
-    WorkDir() string      // where work roots go
-    Report(Event)         // summaries, annotations, log groups
+    WorkDir() (string, error) // fresh private (0700) dir for work roots; no fallback
+    Report(Event)         // summaries, annotations, log groups (text is sanitised)
 }
 
 // Ledger stores pass records. Hashes only.
@@ -912,9 +958,29 @@ type Tools interface {
 | Interface | Implementations at launch | Later |
 |---|---|---|
 | `Source` | Git (`ls-files`, `diff --name-only`, `rev-parse`); **plain folder** (walks the tree with a `.kilnignore`; `Changed` returns unknown) | Perforce, others |
-| `Host` | GitHub Actions; Local | Any CI |
+| `Host` | GitHub Actions; Local; Untrusted (fail-closed fallback) | Any CI |
 | `Ledger` | Directory of record files (used directly locally; on GitHub the directory is restored and saved by `actions/cache` in one composite action) | Object store, HTTP |
 | `Tools` | Managed (download pinned archive, verify SHA-256, unpack into a tool store); Host (use what is installed after checking the version) | — |
+
+**Host detection.** `Detect` returns GitHub Actions only when
+`GITHUB_ACTIONS` is exactly `true`. If any other CI indicator is present
+(`CI`, any `GITHUB_*` or `RUNNER_*` variable, `GITHUB_ACTIONS` in another form)
+it returns the **Untrusted** host, which can write neither ledger. Only an
+environment with no CI indicators is Local, so a CI run is never mistaken for
+a laptop.
+
+**Source paths.** Every path a `Source` returns is repo-relative,
+`/`-separated and valid under KILN02 §3.5, and additionally contains no `\`,
+no `:` and no Windows reserved device name (`CON`, `PRN`, `AUX`, `NUL`,
+`COM1-9`, `LPT1-9`, any extension, any case), so listings and keys agree on
+every OS. This policy lives in the `Source` layer; the key encoding stays
+permissive. Opens never follow a symlink out of the root.
+
+**Plain-folder ignore file.** `.kilnignore` holds one glob per line (`#`
+comments, blank lines skipped), matched against the whole repo-relative path:
+`*` and `?` stay inside a segment, `**` as a whole segment spans directories;
+no negation. A path is ignored if it or any parent directory matches. Limits:
+64 KiB, 1000 patterns, 64 segments per pattern. `.git` is always skipped.
 
 `Changed()` is used only to explain results ("this PR changed
 `parser/src/lexer.rs`, so these 139 targets have new keys") and to skip
@@ -1090,6 +1156,9 @@ library.
 8. **Owner review for `code/kiln/**` and workflow files.** Recommended by
    the security review; it conflicts with the repo's auto-merge practice for a
    solo owner, so it is the owner's call.
+9. **Snapshot rollback.** An attacker able to restore an older snapshot
+   resurrects revoked passes. Candidate fix: a high-water mark, refusing any
+   snapshot older than the last merge.
 
 ---
 

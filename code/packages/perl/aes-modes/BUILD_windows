@@ -1,1 +1,2 @@
-prove -I..\aes\lib -l -v t\
+REM prereqs: ../aes
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps aes

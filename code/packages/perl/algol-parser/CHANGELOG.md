@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries, with `grammar-tools` and `algol-lexer` as dependencies) instead of skipping.
+
 ## [0.01] — 2026-04-06
 
 ### Added

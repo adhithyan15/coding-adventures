@@ -57,6 +57,69 @@ macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
 | W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
 | W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS | W1-W4 |
 
+### W2 recipe contract (pure-Perl packages)
+
+The Windows runner image carries two Perls and a bare `perl` resolves to the
+wrong one: Git for Windows' MSYS Perl (POSIX `PERL5LIB`, no `cpanm`, no
+`Test2::V0`) comes before Strawberry Perl (`C:\Strawberry`). Evidence from the
+first full build: the packages whose `BUILD_windows` passed sibling libraries as
+`-I..\dep\lib` to the PATH `perl` failed with `Can't locate ...pm in @INC`
+(`perl/tree-set`, `perl/bloom-filter`), while `x509-extension`, which selects
+`C:\Strawberry\perl\bin\perl.exe` explicitly, passed.
+
+So every pure-Perl package uses one shared helper,
+`code/scripts/run-perl-tests-windows.ps1`, invoked as
+
+```
+REM prereqs: ../grammar-tools ../algol-lexer
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps grammar-tools,algol-lexer
+```
+
+The helper picks Strawberry Perl (falling back to the PATH `perl`), puts its bin
+directories first on `PATH` so `prove`/`cpanm` follow, installs `Test2::V0` only
+if `perl -MTest2::V0` fails, resolves each `-Deps` name to the absolute
+`code\packages\perl\<name>\lib` (failing loudly if it is missing, so a renamed
+sibling cannot silently drop out of `@INC`), and runs `prove -I... -l -v t`.
+The `REM prereqs:` line is load-bearing: the build-tool validator requires
+Perl `BUILD*` files to mention every transitive sibling, and the `-Deps` value
+alone does not look like a `../name` reference. The `-Deps` list is the same
+set the Unix `BUILD` puts on `PERL5LIB`/`-I`.
+
+Proof (PR #19234, Windows leg): all 13 batch-1 packages built with real durations
+(1.5-11.9 s; `x25519` 403.5 s because its big-integer tests are slow on
+Windows), including the four that failed before (`tree-set`, `bloom-filter`,
+`hash-map`, `in-memory-data-store-engine`). The same run showed the MSYS-perl
+hazard directly: `in-memory-data-store`'s older recipe ran Strawberry's `prove`
+script under MSYS perl and died with `Can't locate TAP/Harness/Env.pm`. Any
+dependent of a converted package that still lacks a working recipe fails the
+Windows leg (the `barcode-2d` dependents `aztec-code`, `data-matrix`,
+`micro-qr`, `pdf417`, `qr-code` had no `BUILD_windows`), so convert a package's
+dependents in the same PR.
+
+Batch 2 converts every remaining mechanical package (about 210, including the
+older hand-written recipes that ran a bare `perl`/`prove`, so there is one
+recipe shape) and checks mechanically that each `-Deps` list and `REM prereqs:`
+line equals the set of `../<name>` siblings in the package's Unix `BUILD`.
+
+`barcode-layout-1d` keeps its echo-skip for now: its package tree is pinned by the
+lane-evidence contract in `code/specs/fixtures/barcode-layout-1d-v1/targets.json`
+(`package_tree`, `verified_revision`, and the owner item's
+`implementation_revision` in `.claude/package-parity-loop-state.json`), so any
+change to it must re-run the lane's tests and update that evidence in the same
+PR. Its Windows run also showed a real portability bug (`File::Temp::tempfile()`
+dies with "Permission denied" in the runner's `%TEMP%`; `tempdir(CLEANUP => 1)`
+works), so it gets its own PR that fixes the test, converts the recipe and
+attests the evidence after the lane's tests pass.
+
+Still hand-written or skipped (tracked in W2/W4): `tcp-client` and
+`process-manager` (sockets, fork and signals need a Windows design), `barcode-1d`
+(its Unix `BUILD` stages the macOS-only Metal and PNG native extensions),
+`aes-modes` (`Makefile.PL`/`make test`), `der-asn1`, `der-tlv` and
+`x509-extension` (explicit-Strawberry compile checks that already pass), and the
+native extensions `conduit`, `irc-server-native`, `gf256_native`,
+`polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
+(Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
+
 ## Done
 
 Every package either passes its real build and tests on all three OSes, or is

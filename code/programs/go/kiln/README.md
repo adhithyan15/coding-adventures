@@ -15,7 +15,42 @@ implementation, built up one spec at a time.
 - Golden vectors at
   [`code/specs/fixtures/kiln/key-vectors-v1.json`](../../../specs/fixtures/kiln/key-vectors-v1.json)
   that any implementation must reproduce.
+- `internal/source` - the **`Source`** interface of KILN00 section 13 (which
+  files are we building, what is their snapshot id, what changed). `Git`
+  shells out to `git` (never via a shell, NUL-separated output); `Folder` walks
+  a plain directory honouring a `.kilnignore`, never following symlinks, and
+  derives its `Revision` from file contents. Both share one glob language
+  (`*`, `?`, whole-segment `**`) and return key-ready paths.
+- `internal/host` - the **`Host`** interface (identity, host fingerprint,
+  trust, shard, work dir, reporting). `Trusted()` means "may write the
+  SHARED ledger" (KILN00 section 10.2). `GitHub` implements it exactly: the
+  ref must be `refs/heads/<default branch>`, where the default branch comes
+  from the GitHub-generated event JSON (`GITHUB_EVENT_PATH`,
+  `repository.default_branch`) and `KILN_DEFAULT_BRANCH` can only narrow it,
+  AND the event must be `push`, `schedule` or `workflow_dispatch`; everything
+  else, including any error, is untrusted. That answer is only meaningful in a
+  job that has run no untrusted code. `Local` (a developer machine) is never
+  trusted but `WritesLocalLedger()`; `Untrusted` is what `Detect` returns when
+  any CI indicator (`CI`, `GITHUB_*`, `RUNNER_*`, ...) is present but the
+  environment is not exactly GitHub Actions, so a CI run is never mistaken for
+  a laptop. Reports strip control characters and defang `::` / `##[` so
+  untrusted text cannot inject workflow commands.
+- `internal/envscrub` - `ScrubSecrets`: drops credentials (tokens, keys,
+  passwords, `ACTIONS_*`, `INPUT_*`, `GITHUB_ENV`/`PATH`/`OUTPUT`/...) from a
+  child environment (section 9.6 item 3). Git is always run with it, with all
+  `GIT_*` removed and repo-configured hooks/fsmonitor disabled.
 - A tiny CLI.
+
+`Ledger` and `Tools` (the other two section 13 interfaces) are not built yet.
+
+### `.kilnignore`
+
+One glob per line, `#` comments and blank lines skipped, matched against the
+whole repo-relative path (at most 64 KiB, 1000 patterns, 64 segments each; the
+file is never followed through a symlink; no negation, no basename shortcut, no trailing `/`).
+`*` stays inside a segment, `**` as a whole segment spans directories. A path
+is ignored if it or any directory above it matches, so `build` ignores the
+whole tree and `**/*.log` ignores logs at any depth. `.git` is always skipped.
 
 It uses only the Go standard library and depends on no other package in this
 repository.
@@ -49,3 +84,46 @@ in KILN02 first.
 ```
 go vet ./... && go test ./... -cover
 ```
+
+Source paths are stricter than KILN02 keys: a backslash, a colon or a Windows
+reserved device name (`CON`, `NUL`, `COM1`, ...) in any path is refused on
+every platform so listings, and therefore keys, agree across operating systems.
+
+## Ledger
+
+`internal/ledger` is the directory ledger of KILN00 section 10: a directory of
+immutable JSON-lines segment files (`<10-digit sequence>-<16 hex>.jsonl`) that
+record which action keys passed (`pass`) or were revoked (`tombstone`).
+Hashes and provenance only; no build output.
+
+- `Open(dir, ledger.Shared|ledger.Local).Lookup(keys)` returns each key's newest record if it is a pass.
+  Newest means: later `at`, then higher segment sequence, then higher segment
+  name, then later line; at equal `at` a tombstone beats a pass. A newer tombstone hides a pass; a newer pass un-shadows
+  the key. Any unreadable or invalid segment fails the whole lookup (a skipped
+  segment could hide a tombstone and resurrect a false hit).
+- `Store.Record(records, auth, now)` writes one new segment atomically (temp
+  file in the same directory, fsync, rename, directory fsync). `auth` is an
+  `Authority` (`Trusted()`, `WritesLocalLedger()`, implemented by the Host): a
+  shared ledger needs `Trusted()`, a local one `WritesLocalLedger()`, and nil or
+  anything else yields `ErrUntrusted`. Records dated more than `MaxClockSkew`
+  (1 minute, `MaxRecordSkew`) after `now` are refused.
+- `ledger.Merge(snapshotDir, deltaFile, outDir, auth, now, prune)` is the core
+  of the `ledger-merge` job: it needs `auth.Trusted()`, strictly validates the
+  delta (one bad record rejects it all), restamps the delta (a pass keeps its
+  earlier `at`, capped at `now`, so a stale pass cannot undo a newer tombstone;
+  a tombstone is stamped `now`; `now` is a parameter, so output stays
+  deterministic), refuses snapshot records dated
+  after `now` plus the skew, unions with the snapshot, keeps one record per key,
+  and writes deterministic sorted output to a `<outDir>.partial-*` sibling that
+  is renamed into place (removed on error). Merge assumes the delta came from a
+  run the Host marked trusted; a compromised trusted job can still forge passes,
+  which re-stamping, the daily uncached run and tombstones bound. `OlderThan(cutoff)` prunes, but never drops a tombstone
+  while a pass for its key survives.
+- Decoding is strict and canonical: lowercase 64-hex key, known kind, UTF-8
+  without control characters, target at most 512 bytes and other fields at most
+  128, UTC whole-second `at`, no unknown fields, one JSON value per line that
+  must equal the canonical encoding. Caps: 50,000 records and 16 MiB per
+  segment, 10,000 segments and 1,000,000 records per directory, all enforced
+  while reading.
+- Segment names are pattern-checked before any path is built; symlinks and
+  non-regular files are refused (regular-file check on the open descriptor).

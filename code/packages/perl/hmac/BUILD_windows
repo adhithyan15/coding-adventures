@@ -1,2 +1,2 @@
-cpanm --notest --quiet Test2::V0
-prove -I..\md5\lib -I..\sha1\lib -I..\sha256\lib -I..\sha512\lib -l -v t\
+REM prereqs: ../md5 ../sha1 ../sha256 ../sha512
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps md5,sha1,sha256,sha512

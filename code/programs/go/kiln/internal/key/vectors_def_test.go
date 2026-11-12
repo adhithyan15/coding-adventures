@@ -81,6 +81,22 @@ func validDefs() []namedVec {
 			with(func(a *ActionJSON) { a.RecipeHex = hex.EncodeToString(LegacyRecipe(legacyBuild, nil)) })},
 		{"legacy-build-and-windows", "Legacy recipe with BUILD and BUILD_windows (6.7).",
 			with(func(a *ActionJSON) { a.RecipeHex = hex.EncodeToString(LegacyRecipe(legacyBuild, legacyWin)) })},
+		{"legacy-build-mac-and-linux", "Legacy recipe of the single file BUILD_mac_and_linux, semantics 0 (KILN03 3.4).",
+			with(func(a *ActionJSON) { a.RecipeHex = hex.EncodeToString(mustRecipe(legacyBuild, "BUILD_mac_and_linux")) })},
+		{"legacy-semantics0-consumed-digests", "Semantics 0: consumed entries are content digests with dir:/pkg:/tool: targets, phase build, sorted bytewise (KILN02 3.5).",
+			with(func(a *ActionJSON) {
+				a.RecipeHex = hex.EncodeToString(mustRecipe(legacyBuild, "BUILD"))
+				a.SemanticsVersion = 0
+				a.HostImageID = &host
+				a.Consumed = []ConsumedJSON{
+					{"dir:code/grammars/ruby", "build", dg(21)},
+					{"pkg:rust/lexer", "build", dg(22)},
+					{"tool:build-tool", "build", dg(23)},
+				}
+				a.Env = []EnvJSON{{"CI", "1", 0}}
+			})},
+		{"legacy-same-text-different-name", "Same contents as legacy-build-only under the name BUILD_linux: the key must differ.",
+			with(func(a *ActionJSON) { a.RecipeHex = hex.EncodeToString(mustRecipe(legacyBuild, "BUILD_linux")) })},
 		{"consumed-env-semantics", "Consumed entries (sorted by target then phase), env with both origins, non-zero semantics version, macOS/arm64.",
 			with(func(a *ActionJSON) {
 				a.OS = "macos"
@@ -217,4 +233,13 @@ func TestGenerateVectors(t *testing.T) {
 	if err := os.WriteFile(vectorPath, append(data, '\n'), 0o644); err != nil {
 		t.Fatal(err)
 	}
+}
+
+// mustRecipe builds a one-file legacy recipe, panicking on the impossible.
+func mustRecipe(contents []byte, name string) []byte {
+	r, err := LegacyRecipeFiles([]NamedFile{{name, contents}})
+	if err != nil {
+		panic(err)
+	}
+	return r
 }

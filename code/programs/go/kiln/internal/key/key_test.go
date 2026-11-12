@@ -395,3 +395,45 @@ func TestReadVectorFile(t *testing.T) {
 		}
 	}
 }
+
+func TestValidatePath(t *testing.T) {
+	if err := ValidatePath("src/a.go"); err != nil {
+		t.Fatal(err)
+	}
+	if err := ValidatePath("../a"); err == nil {
+		t.Fatal("expected error")
+	}
+}
+
+func TestLegacyRecipeFilesMatchesLegacyRecipe(t *testing.T) {
+	b, w := []byte("build\n"), []byte("win\r\n")
+	got, err := LegacyRecipeFiles([]NamedFile{{"BUILD", b}, {"BUILD_windows", w}})
+	if err != nil || !bytes.Equal(got, LegacyRecipe(b, w)) {
+		t.Errorf("two files: %x %v", got, err)
+	}
+	got, err = LegacyRecipeFiles([]NamedFile{{"BUILD", b}})
+	if err != nil || !bytes.Equal(got, LegacyRecipe(b, nil)) {
+		t.Errorf("build only: %x %v", got, err)
+	}
+	other, _ := LegacyRecipeFiles([]NamedFile{{"BUILD_linux", b}})
+	if bytes.Equal(other, got) {
+		t.Error("file name must be part of the recipe")
+	}
+}
+
+func TestLegacyRecipeFilesRefusals(t *testing.T) {
+	c := []byte("x")
+	cases := map[string][]NamedFile{
+		"empty list":     nil,
+		"empty name":     {{"", c}},
+		"invalid utf8":   {{"B\xff", c}},
+		"slash":          {{"a/BUILD", c}},
+		"backslash":      {{"a\\BUILD", c}},
+		"duplicate name": {{"BUILD", c}, {"BUILD", c}},
+	}
+	for name, files := range cases {
+		if _, err := LegacyRecipeFiles(files); err == nil {
+			t.Errorf("%s: expected error", name)
+		}
+	}
+}

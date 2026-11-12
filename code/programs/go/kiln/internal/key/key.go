@@ -42,6 +42,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -216,6 +217,10 @@ func checkPath(p string) error {
 	}
 	return nil
 }
+
+// ValidatePath reports whether p is a valid Kiln path (KILN02 section 3.5).
+// Source implementations use it so every path they return is key-ready.
+func ValidatePath(p string) error { return checkPath(p) }
 
 func checkDigest(what string, d []byte) error {
 	if len(d) != DigestLength {
@@ -479,27 +484,70 @@ func KeyOfPreimage(preimage []byte) [32]byte { return sha256.Sum256(preimage) }
 // Hex renders a key as 64 lowercase hex characters.
 func Hex(k [32]byte) string { return hex.EncodeToString(k[:]) }
 
-// LegacyRecipe builds the canonical recipe of a legacy shell action
-// (KILN02 section 3.4):
+// NamedFile is one file of a legacy recipe: its base name in the package
+// directory and its exact bytes.
+type NamedFile struct {
+	Name     string
+	Contents []byte
+}
+
+// LegacyRecipeFiles builds the canonical recipe of a legacy shell action from
+// an ordered list of named files (KILN02 section 3.4, generalised):
 //
-//	str("legacy-shell") || list([ file(BUILD), file(BUILD_windows)? ])
-//	file(name) = str(name) || bytes(contents)
+//	str("legacy-shell") || list([ str(name) || bytes(contents), ... ])
 //
-// buildWindows is nil when BUILD_windows does not exist.  An existing but
-// empty file is a non-nil empty slice and IS included: absent and empty are
-// different recipes.
-func LegacyRecipe(build []byte, buildWindows []byte) []byte {
-	count := uint64(1)
-	if buildWindows != nil {
-		count = 2
+// Files are encoded in exactly the order given; the caller decides the order
+// (KILN03 fixes it per platform), we never sort, because the order is part of
+// the recipe.  We refuse, rather than repair, an empty list, an empty name, a
+// name that is not valid UTF-8, a name containing '/' or '\\' (a name is a
+// base name, never a path, so it cannot smuggle a directory), and duplicate
+// names (two files cannot share a name, so a duplicate is a caller bug).
+//
+// Why both this and LegacyRecipe exist: the original recipe was exactly
+// BUILD plus an optional BUILD_windows, and LegacyRecipe(build, windows) is
+// that shape, kept so existing callers and golden vectors are unchanged.
+// Later legacy platforms select other files (BUILD_mac_and_linux, BUILD_linux,
+// ...), which only a list of named files can express.  LegacyRecipe is now a
+// thin wrapper, so the two can never drift apart.
+func LegacyRecipeFiles(files []NamedFile) ([]byte, error) {
+	if len(files) == 0 {
+		return nil, fmt.Errorf("legacy recipe: no files")
+	}
+	seen := make(map[string]bool, len(files))
+	for _, f := range files {
+		if f.Name == "" {
+			return nil, fmt.Errorf("legacy recipe: empty file name")
+		}
+		if err := checkUTF8("legacy recipe file name", f.Name); err != nil {
+			return nil, err
+		}
+		if strings.ContainsAny(f.Name, "/\\") {
+			return nil, fmt.Errorf("legacy recipe: file name %q contains a path separator", f.Name)
+		}
+		if seen[f.Name] {
+			return nil, fmt.Errorf("legacy recipe: duplicate file name %q", f.Name)
+		}
+		seen[f.Name] = true
 	}
 	b := putStr(nil, "legacy-shell")
-	b = putU64(b, count)
-	b = putStr(b, "BUILD")
-	b = putBytes(b, build)
-	if buildWindows != nil {
-		b = putStr(b, "BUILD_windows")
-		b = putBytes(b, buildWindows)
+	b = putU64(b, uint64(len(files)))
+	for _, f := range files {
+		b = putStr(b, f.Name)
+		b = putBytes(b, f.Contents)
 	}
+	return b, nil
+}
+
+// LegacyRecipe builds the original two-file legacy recipe: BUILD, then
+// BUILD_windows when it exists.  buildWindows is nil when BUILD_windows does
+// not exist.  An existing but empty file is a non-nil empty slice and IS
+// included: absent and empty are different recipes.
+func LegacyRecipe(build []byte, buildWindows []byte) []byte {
+	files := []NamedFile{{"BUILD", build}}
+	if buildWindows != nil {
+		files = append(files, NamedFile{"BUILD_windows", buildWindows})
+	}
+	// Cannot fail: names are distinct, non-empty, valid, separator-free.
+	b, _ := LegacyRecipeFiles(files)
 	return b
 }

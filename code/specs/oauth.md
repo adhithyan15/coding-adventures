@@ -1587,6 +1587,21 @@ schema-specific matching, or TeletexString mapping. It therefore does not
 establish complete RFC 5280 Name equality, authenticate a selected link,
 construct or validate a path, recognize trust, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or open a network connection.
+A bounded policy-backed path-construction follow-up now repeats that direct
+selector across one caller-bounded target-to-terminal chain. All candidate and
+path limits fail before terminal or Name-policy evaluation; every non-terminal
+step uses the same exact validated `X509NameValuePolicy`; and the first
+selection or Name-comparison failure aborts with a stable payload-free nested
+category. Distinct non-copyable success evidence retains both the constructed
+target, candidate pool, and ordered indices and the exact Name policy that
+governed them, so generic callback construction evidence cannot substitute at
+a later policy-requiring boundary. The available exact-DER and
+exact-Unicode-scalar rules still do not implement RFC 4518 normalization, case
+or whitespace folding, schema-specific matching, or TeletexString mapping.
+This follow-up therefore does not establish complete RFC 5280 Name equality,
+authenticate any selected link, validate the constructed path, recognize
+trust, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+open a network connection.
 A bounded `x509-certificate-path-construction` follow-up now repeats that unique
 issuer selection into one caller-bounded target-to-terminal chain. Candidate
 pool size and requested path depth are rejected before policy callbacks;
@@ -1610,6 +1625,19 @@ to a different path certificate. The binding does not authenticate any path
 link, validate the terminal certificate's role or self-signature, apply anchor
 constraints, or provide complete path validation, revocation, TLS, HTTP, OAuth
 transport, or network authority.
+A distinct policy-backed reviewed-terminal binding follow-up now consumes the
+complete `ConstructedX509CertificatePathWithNamePolicy` evidence together with
+reviewed-root selection evidence. It applies the same nontrivial-path and exact
+decoded-terminal object checks without extracting or recreating generic path
+evidence, then retains the complete policy-backed construction and reviewed
+anchor in one non-copyable result. Generic callback construction evidence
+cannot produce this result, and the exact validated `X509NameValuePolicy` that
+governed every issuer-selection step remains available from the retained
+construction. This is provenance-preserving evidence composition only: the
+available Name rules remain incomplete for RFC 5280 Name equality, and binding
+does not authenticate any link, validate certificate roles or a complete path,
+apply anchor constraints, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or open a network connection.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate

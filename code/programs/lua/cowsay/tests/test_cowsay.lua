@@ -256,7 +256,14 @@ describe("cowsay", function()
             -- inside them, so this actually creates a directory with the
             -- literal name `weird_dir` names, rather than one with "$vars"
             -- silently substituted away by the shell.
-            local quoted = "'" .. weird_dir:gsub("'", "'\\''") .. "'"
+            local quoted
+            if sep == "\\" then
+                -- cmd.exe has no single-quote quoting; "'" and "$" are legal
+                -- characters inside a double-quoted Windows path.
+                quoted = '"' .. weird_dir .. '"'
+            else
+                quoted = "'" .. weird_dir:gsub("'", "'\\''") .. "'"
+            end
             os.execute("mkdir " .. quoted)
             write_file(weird_dir .. sep .. "default.cow", "")
             assert.same({ "default" }, cowsay.list_cow_files(weird_dir))
