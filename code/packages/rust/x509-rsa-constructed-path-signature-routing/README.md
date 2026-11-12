@@ -84,6 +84,14 @@ target-nearer intermediate's optional SAN, excluding non-final self-issued
 subordinate CAs. An absent subordinate SAN is an empty supported-name set; a
 present SAN must decode under caller-owned limits. Success retains the entire
 target policy and only payload-free application and repeated-name counts.
+A reviewed-anchor subordinate-CA follow-up consumes that result and derives
+the reviewed snapshot's optional constraint bytes through the retained
+terminal proof. An unconstrained entry succeeds without reading subordinate
+SANs. A constrained entry decodes its supported permitted-DNS contents once,
+then applies them to every retained non-self-issued intermediate's optional
+SAN in the already-proved order. An absent SAN is an empty supported-name set;
+success retains the complete prior proof and payload-free application and
+repeated-DNS counts.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -132,9 +140,9 @@ Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result, ordered transitions, intermediate accumulator, target
 signature closure, arbitrary-depth reviewed-anchor policy, and ordered target
 identity checks against intermediate constraints do not validate the anchor's
-self-signature, constrain subordinate CA distinguished names, apply reviewed
-anchor constraints to subordinate CAs, establish complete generalized path
-validation, define full Name comparison, apply all NameConstraints or
+self-signature, constrain subordinate CA distinguished names, establish
+complete generalized path validation, define full Name comparison, apply
+excluded or non-DNS reviewed-anchor constraints, apply all NameConstraints or
 GeneralName forms, check revocation, perform TLS or HTTP, authorize OAuth
 transport, or open a network connection. Target identity, time, purpose,
 routed selected-adjacency RSA signatures, construction-derived path-length

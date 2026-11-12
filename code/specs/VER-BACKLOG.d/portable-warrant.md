@@ -10,18 +10,20 @@ remain historical and must not be read as the current queue.
 
 | Order | Work | State / dependency |
 |---|---|---|
-| WD-003 | Rust Warrant v0 corpus producer, independent Python semantic and digest oracle, byte-stable regeneration and falsification, consumer/build routing | PR #19177. The implementation is explicitly unsharded and does not execute a Python lane binding. The focused Linux Lua apt-retry routing fix is included in the PR. |
+| WD-003 | Rust Warrant v0 corpus producer, independent Python semantic and digest oracle, byte-stable regeneration and falsification, consumer/build routing | PR #19177 includes the #19209 Warrant WX-D1 S1 main integration. Local corpus regeneration/oracle, source-routing, and Rust package checks pass after integration; exact integrated-head hosted checks are pending. The implementation is explicitly unsharded and does not execute a Python lane binding. The focused Linux Lua apt-retry routing fix is included. |
 | WD-004a | Define the strict per-lane manifest schema and consumer registry | After WD-003 lands. Establish the manifest and consumer contract before report integration. |
 | WD-004b | Generalize `ca-assurance-report` beyond `rust/`, with honest not-live rungs | After WD-004a. |
 | Python L0 runner | Execute portable corpus cases against the Python binding, with sabotage, manifest, and report | After WD-004a and WD-004b; then continue the per-lane WD-1xx sequence. |
 
 WX implementation continues under the existing WX owner and IDs; this shard
 does not create a duplicate WX-001 owner. WX-H and WX-E prerequisites merged
-in #19121. The implementation sequence is WX-D1, WX-F and WX-G in parallel,
-WX-D2, then WX-D3. WX-F/G work may start alongside D1, while their sequence
-operations that rely on D1's constructors follow D1. D2 follows D1 and the
-F/G baseline; D3 follows D2 and the corresponding WIR lowering. The open
-owner questions remain in VER04k section 9.
+in #19121. WX-D1 S1 (checker and ground evaluator) merged as #19209; the S0
+errata PR #19204 remains open. D1 S2a evidence-generator/corpus translation is
+still outstanding, so WD-003's ct-compare Warrant v0 corpus remains unchanged.
+WX-F/G may proceed alongside the remaining D1 work, with sequence operations
+that rely on D1 constructors following D1; D2 follows D1 and the F/G baseline,
+then D3 follows D2 and the corresponding WIR lowering. The 13 open owner
+questions remain in VER04k section 9.
 
 ## Receipts and status
 
