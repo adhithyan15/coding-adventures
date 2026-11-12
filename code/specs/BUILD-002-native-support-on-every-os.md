@@ -96,11 +96,19 @@ Windows leg (the `barcode-2d` dependents `aztec-code`, `data-matrix`,
 `micro-qr`, `pdf417`, `qr-code` had no `BUILD_windows`), so convert a package's
 dependents in the same PR.
 
-Left as hand-written recipes for now (not mechanical): packages whose Unix
-`BUILD` installs a sibling with `cpanm .`, uses `mise`/`uname`, builds a Rust
-extension, or shells out (`tcp-client` fork, `content-addressable-storage`
-rename-over-existing, `zstd`, `ls00`, `process-manager`, `virtual-memory`,
-`rpc`).
+Batch 2 converts every remaining mechanical package (about 210, including the
+older hand-written recipes that ran a bare `perl`/`prove`, so there is one
+recipe shape) and checks mechanically that each `-Deps` list and `REM prereqs:`
+line equals the set of `../<name>` siblings in the package's Unix `BUILD`.
+
+Still hand-written or skipped (tracked in W2/W4): `tcp-client` and
+`process-manager` (sockets, fork and signals need a Windows design), `barcode-1d`
+(its Unix `BUILD` stages the macOS-only Metal and PNG native extensions),
+`aes-modes` (`Makefile.PL`/`make test`), `der-asn1`, `der-tlv` and
+`x509-extension` (explicit-Strawberry compile checks that already pass), and the
+native extensions `conduit`, `irc-server-native`, `gf256_native`,
+`polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
+(Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
 
 ## Done
 

@@ -1,1 +1,2 @@
-echo Skipping perl/barcode-layout-1d on Windows -- prerequisite refs: ..\paint-instructions
+REM prereqs: ../paint-instructions
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps paint-instructions

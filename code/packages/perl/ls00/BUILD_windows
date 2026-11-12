@@ -1,1 +1,2 @@
-cd ../json-rpc && echo Perl dep installed && cd ../ls00 && echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../json-rpc
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps json-rpc

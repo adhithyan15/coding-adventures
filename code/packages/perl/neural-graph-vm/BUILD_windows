@@ -1,1 +1,2 @@
-prove -I..\neural-network\lib -l t
+REM prereqs: ../neural-network
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps neural-network

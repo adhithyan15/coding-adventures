@@ -1,2 +1,2 @@
-cpanm --installdeps --quiet .
-prove -l -v t/
+REM prereqs: (none)
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1
