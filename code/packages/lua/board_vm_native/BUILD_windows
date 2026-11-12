@@ -1,1 +1,3 @@
-echo Skipping lua/board_vm_native on Windows -- Lua native extension requires a Lua import library
+# Windows build: the Rust cdylib links against lua54.lib (found by build.rs next to
+# the lua.exe on PATH); the Lua loader then finds target\release\board_vm_native.dll.
+cargo build --release && cd tests && busted . --verbose --pattern=test_

@@ -23,15 +23,19 @@ fn main() {
             println!("cargo:rustc-cdylib-link-arg=dynamic_lookup");
         }
         "windows" => {
-            // On Windows, all symbols must be resolved at link time.
-            // We need to link against lua5.4.dll's import library.
-            if let Some(lua_lib_dir) = find_lua_lib_dir() {
-                println!("cargo:rustc-link-search=native={}", lua_lib_dir);
+            // A PE/COFF DLL must resolve every import at link time, so link
+            // against the Lua 5.4 import library `lua54.lib`.  Search order:
+            // LUA_LIB_PATH, then the directory holding `lua54.lib` next to the
+            // `lua.exe` on PATH (CI installs Lua with scripts/setup_lua.py, which
+            // puts it in <prefix>\lib beside <prefix>\bin\lua.exe).  Only the
+            // `lua54` name exists; the old `lua5.4` and `lua-5.4` names do not,
+            // and rustc fails on a missing `-l` library.
+            if let Ok(lib_path) = std::env::var("LUA_LIB_PATH") {
+                println!("cargo:rustc-link-search=native={lib_path}");
+            } else if let Some(dir) = lua_lib_dir_from_path() {
+                println!("cargo:rustc-link-search=native={}", dir.display());
             }
-            // Try common Lua import library names used by LuaBinaries and luarocks.
-            for name in &["lua5.4", "lua54", "lua-5.4"] {
-                println!("cargo:rustc-link-lib={}", name);
-            }
+            println!("cargo:rustc-link-lib=lua54");
         }
         _ => {
             // Linux and other Unix: ELF allows undefined symbols in shared
@@ -40,31 +44,22 @@ fn main() {
     }
 }
 
-/// Try to locate the Lua library directory on Windows by asking lua.exe for
-/// its LUA_LIBDIR configuration.
-fn find_lua_lib_dir() -> Option<String> {
-    // On GitHub Actions Windows runners, Lua is installed in the repo's
-    // .lua/ directory. Try finding lua.exe in PATH.
-    let lua_exe = find_exe("lua")?;
-    let parent = std::path::Path::new(&lua_exe).parent()?;
-    // The DLL is typically next to the executable.
-    Some(parent.to_string_lossy().to_string())
-}
-
-fn find_exe(name: &str) -> Option<String> {
-    let output = std::process::Command::new("where")
-        .arg(name)
-        .output()
-        .ok()?;
-    if output.status.success() {
-        let path = String::from_utf8_lossy(&output.stdout)
-            .lines()
-            .next()
-            .unwrap_or("")
-            .trim()
-            .to_string();
-        if !path.is_empty() {
-            return Some(path);
+/// Find the directory holding `lua54.lib` next to the `lua.exe` on PATH:
+/// `<bin>/../lib` (the layout `setup_lua.py` and LuaRocks use) or `<bin>` itself.
+fn lua_lib_dir_from_path() -> Option<std::path::PathBuf> {
+    let path = std::env::var_os("PATH")?;
+    for dir in std::env::split_paths(&path) {
+        if !dir.join("lua.exe").is_file() {
+            continue;
+        }
+        let mut candidates = vec![dir.clone()];
+        if let Some(parent) = dir.parent() {
+            candidates.insert(0, parent.join("lib"));
+        }
+        for candidate in candidates {
+            if candidate.join("lua54.lib").is_file() {
+                return Some(candidate);
+            }
         }
     }
     None
