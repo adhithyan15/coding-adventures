@@ -40,6 +40,64 @@ fn fast(sample_count: usize) -> BenchmarkHarness {
 // Hand-computed statistics
 // ---------------------------------------------------------------------------
 
+/// REGRESSION: the interpolation used to be `lo * (1 - w) + hi * w`. With
+/// `lo == hi` that is not exactly `lo`: the two rounded products can sum one
+/// ulp ABOVE it. On a coarse clock many samples are identical, so the 97.5th
+/// percentile of the bootstrap medians came out one ulp above the run's own
+/// maximum, and `every_run_has_ordered_quantiles_and_honours_its_bounds`
+/// failed on a macOS runner. A percentile must lie between its two neighbours
+/// exactly, and equal them when they are equal.
+#[test]
+fn a_percentile_between_equal_neighbours_is_exactly_that_value() {
+    // (value, sample count, p): each rounded above `value` under the old
+    // formula.
+    let cases: [(f64, usize, f64); 5] = [
+        (236_322.0, 10, 0.025),
+        (118_448.666_666_666_67, 33, 0.025),
+        (7_013.058_375_011_717_5, 2, 0.95),
+        (123_905.666_666_666_67, 10, 0.025),
+        (7_062.909_211_004_13, 33, 0.975),
+    ];
+    for (value, n, p) in cases {
+        let flat = vec![value; n];
+        assert_eq!(
+            percentile_sorted(&flat, p),
+            value,
+            "p{p} of {n} copies of {value}"
+        );
+    }
+}
+
+/// Every interpolated percentile stays inside the closed interval of its two
+/// neighbouring samples, for awkward magnitudes and weights alike.
+#[test]
+fn an_interpolated_percentile_never_leaves_its_neighbours() {
+    let ps = [0.0, 0.01, 0.025, 0.25, 0.5, 0.75, 0.95, 0.975, 0.99, 1.0];
+    let mut x = 0.1_f64;
+    for step in 0..2_000u32 {
+        // A deterministic spread of values from tiny to large, with near-equal
+        // and equal neighbours mixed in.
+        x = (x * 1.75 + f64::from(step) * 0.37) % 1.0e6;
+        let lo = x;
+        let hi = if step % 3 == 0 {
+            x
+        } else {
+            x + (step % 7) as f64 * 1e-9 * x
+        };
+        for n in [2usize, 3, 10, 33] {
+            let mut sorted = vec![lo; n / 2];
+            sorted.extend(std::iter::repeat_n(hi, n - n / 2));
+            for p in ps {
+                let v = percentile_sorted(&sorted, p);
+                assert!(
+                    lo <= v && v <= hi,
+                    "p{p} = {v} outside [{lo}, {hi}] (n={n})"
+                );
+            }
+        }
+    }
+}
+
 #[test]
 fn percentiles_by_linear_interpolation_match_hand_values() {
     // VER07 §3.3: rank r = p (K - 1) + 1, linear between neighbours.
