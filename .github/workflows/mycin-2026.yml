@@ -84,7 +84,7 @@ jobs:
       - name: Install Python 3.12
         uses: actions/setup-python@v7
         with:
-          python-version: '3.12.10'
+          python-version: '3.12.16'
 
       - name: Build the native adj-lang engine (debug)
         # The tests resolve the CLI at code/packages/rust/target/debug/adj-lang-cli.

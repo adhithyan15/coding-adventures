@@ -140,30 +140,30 @@
       "file": ".github/workflows/matrix-rust-python.yml",
       "input": "python-version",
       "value": "3.10.11",
-      "reason": "Python ABI matrix deliberately tests each supported CPython minor; each is the newest patch with Linux, macOS and Windows builds in actions/python-versions."
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
     },
     {
       "file": ".github/workflows/matrix-rust-python.yml",
       "input": "python-version",
       "value": "3.11.9",
-      "reason": "Python ABI matrix deliberately tests each supported CPython minor; each is the newest patch with Linux, macOS and Windows builds in actions/python-versions."
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
     },
     {
       "file": ".github/workflows/matrix-rust-python.yml",
       "input": "python-version",
       "value": "3.12.10",
-      "reason": "Python ABI matrix deliberately tests each supported CPython minor; each is the newest patch with Linux, macOS and Windows builds in actions/python-versions."
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
     },
     {
       "file": ".github/workflows/mycin-2026.yml",
       "input": "python-version",
-      "value": "3.12.10",
-      "reason": "MYCIN 2026 runs on the CPython minor it was written against (previously the range 3.12)."
+      "value": "3.12.16",
+      "reason": "MYCIN 2026 runs on the CPython minor it was written against (previously the range 3.12); newest 3.12 patch built for Ubuntu 26.04."
     },
     {
       "file": ".github/workflows/neural-framework.yml",
       "input": "python-version",
-      "value": "3.12.10",
+      "value": "3.12.16",
       "reason": "Neural framework lanes run on the minors they were qualified on (previously 3.12 and Node 24)."
     },
     {
@@ -171,6 +171,24 @@
       "input": "node-version",
       "value": "24.22.3",
       "reason": "Neural framework lanes run on the minors they were qualified on (previously 3.12 and Node 24)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.10.22",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.11.18",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.12.16",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
     }
   ]
 }
