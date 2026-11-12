@@ -2,6 +2,11 @@ cargo test -q -p wasm-leb128 --lib -- --nocapture
 cargo test -q -p wasm-leb128 --doc
 # The library is pure: no capability, test code included (the analyzer reads it).
 cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+# VER08b: the whole public API (including the max_bits > 64 rejection) runs inside a
+# seccomp/Landlock jail derived from required_capabilities.json (no capabilities),
+# watched by an independent strace; RCG_STRICT=1 makes a NOT-LIVE gate a failure.
+# The container ring is skipped, not failed, where no Docker daemon is reachable.
+RCG_STRICT=1 cargo test -q -p wasm-leb128 --test runtime_capability
 # VER04h: the evidence harness is generated from code/specs/wasm-leb128.warrant and
 # evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence
 # manifest from a real run, and prove each sabotage mode makes a model-pinned

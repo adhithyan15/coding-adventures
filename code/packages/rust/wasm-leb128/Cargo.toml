@@ -10,10 +10,19 @@ description = "LEB128 variable-length integer encoding for WASM binary format. v
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 # The generated evidence harness hashes the spec and the source tree.
 coding_adventures_sha256 = { path = "../sha256" }
+# VER08b: runtime capability conformance (a sandboxed run of the whole public API).
+capability-runtime-conformance = { path = "../capability-runtime-conformance" }
 
 # Generated from code/specs/wasm-leb128.warrant (VER04h): examples, bounded
 # exhaustive suites, property suites, fuzz suites and sabotage controls.
 [[test]]
 name = "warrant_evidence"
 path = "tests/warrant_evidence.rs"
+harness = false
+
+# VER08b: runs the full public API inside a process sandboxed, from
+# required_capabilities.json, to the minimal baseline (the library is pure).
+[[test]]
+name = "runtime_capability"
+path = "tests/runtime_capability.rs"
 harness = false

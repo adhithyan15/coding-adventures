@@ -236,6 +236,26 @@ by the generated test target; 245 entries (219 before the SEC-006 fix), all `pas
   The `exhaustive_budget` is raised to 2^24 (from the default 400,000) for
   exactly those two three-byte claims, as gf256 does for its `U8^3` claims.
 
+### Runtime capability evidence (VER08b)
+
+`required_capabilities.json` declares `"capabilities": []`; the static analyzer
+agrees (`effect_certificate.json`). `tests/runtime_capability.rs` adds the
+run-time half: phase A builds the vectors unconstrained, phase B arms a
+seccomp-bpf + Landlock jail derived mechanically from the manifest (minimal
+baseline: allocator, `write` of TAP lines, `exit_group`) and calls every public
+operation -- both encoders (boundary and extreme round trips, known vectors),
+both plain decoders (padding, offset, trailing bytes, `2^64`, overlong,
+unterminated, empty, offset out of range) and both bounded decoders (u32/i32
+extremes, width 0, width 64 equal to the plain decoder, and `max_bits > 64`
+rejected including `u32::MAX`, on `FF x9 7F` and `80 x10 01`). 12 named checks
+pass. An independent `strace -f` observer sees only `write` and `exit_group`
+after arming and agrees, and 18 negative controls (file, socket, process,
+time, random, stdin, thread, executable mapping, io_uring, bpf, ...) are each
+caught by both rings. The container ring is `NOT-LIVE` where no Docker daemon
+is reachable (recorded in the evidence file, not counted as a pass). BUILD runs
+the gate with `RCG_STRICT=1`. Known residual: vDSO time reads are invisible to
+both rings (backlog CAP-RT-006).
+
 Also checked by hand, not committed: mutating `src/lib.rs` so that the overlong
 cap is off by one, the signed encoder ignores the sign bit of its last group, or
 the signed padding check accepts anything, makes named claims fail

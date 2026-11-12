@@ -51,6 +51,14 @@ unreleased and the version is bumped at release.)
   `coding_adventures_sha256`, and the `warrant_evidence` test target
   (`harness = false`).
 
+- VER08b runtime capability conformance gate (`tests/runtime_capability.rs`,
+  `harness = false`, dev-dependency `capability-runtime-conformance`): all six
+  public operations, including the `max_bits > 64` rejection, run inside a
+  seccomp/Landlock jail derived from `required_capabilities.json`
+  (`capabilities: []`), watched by an independent `strace -f`, with the 18
+  negative controls and a Docker ring. Linux only (NOT-LIVE elsewhere). BUILD
+  runs it with `RCG_STRICT=1`; `RCG_REQUIRE_DOCKER` is not set.
+
 ### Changed
 
 - Two unit tests printed an error with `println!`; they now assert its text

@@ -145,6 +145,15 @@ kind and offset are not observed (`Leb128Error` has no kind, so every error is
 one Warrant case), and CWE-208 is recorded as not applicable because every
 operand is public.
 
+## Runtime capability conformance
+
+The library is pure (`required_capabilities.json` declares no capabilities).
+`cargo test -p wasm-leb128 --test runtime_capability` proves it at run time on
+Linux: every public operation runs inside a seccomp/Landlock sandbox derived
+from that manifest while an independent `strace` observer confirms nothing but
+`write`/`exit_group` happens (VER08b). Set `RCG_STRICT=1` to fail instead of
+reporting NOT-LIVE where the sandbox is unavailable.
+
 ## Development
 
 ```bash
