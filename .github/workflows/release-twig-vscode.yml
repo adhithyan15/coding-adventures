@@ -103,7 +103,7 @@ jobs:
 
       - name: Package .vsix
         working-directory: code/packages/typescript/twig-vscode
-        run: npx --yes @vscode/vsce package --allow-missing-repository
+        run: npx --yes @vscode/vsce@4.1.0 package --allow-missing-repository
 
       - name: Upload .vsix as workflow artifact
         uses: actions/upload-artifact@v7

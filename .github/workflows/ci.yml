@@ -749,6 +749,11 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # Every BUILD must install with `npm ci`, and every lock it relies
+          # on must exist, match its package.json and name only registry
+          # URLs with integrity hashes.
+          python3 code/scripts/npm_lockfiles.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_npm_lockfiles.py'
           # Almost no PR runs the Windows shard, so a BUILD_windows that has
           # drifted from its BUILD (vitest left behind after a node --test
           # migration, `set PERL5LIB=`, standardrb without the EndOfLine
@@ -4627,7 +4632,7 @@ jobs:
             uv pip install --system pytest
           fi
           if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
-            npm install -g jest
+            npm install -g jest@29.7.0
           fi
 
       - name: Restore selected Ruby to Windows PATH
