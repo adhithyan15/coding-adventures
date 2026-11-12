@@ -231,7 +231,7 @@ tables:
 | `outputs` | Files or directories copied back to `<pkg>/.build/out/` after success. |
 | `provides` | What a consumer receives when it depends on this target (§7.2). Default: the build-phase `inputs` plus `outputs`, which is what source nesting needs (`path = "../D"` must find D's source). |
 | `env` | `NAME = "value"` pairs. Everything else in the environment is scrubbed. |
-| `pass` | Host environment variable names allowed through unchanged, hashed by value. Values that differ on every run (run ids, timestamps) are rejected; note that a secret passed this way contributes its hash to the key. |
+| `pass` | Host environment variable names allowed through unchanged, hashed by value. Only names on an allowlist in `code/kiln/lint.toml` may be passed, so a BUILD file in an untrusted PR cannot pull a secret into an action. Names that look like secrets are rejected, values that differ on every run (run ids, timestamps) are rejected, and values are never printed in plans, explanations or logs. `fetch` actions receive no `pass` variables at all. |
 | `state` | Tool-state directories (§9.5). Experimental. |
 | `cache` | `on` (default) or `off` (§12). |
 | `timeout` | e.g. `20m`. |
@@ -351,7 +351,10 @@ rule python_library(extra = "dev", test_args = (tests/ -v)):
   fetch:
     network: on
     pinned-by: uv.lock
-    uv sync --locked --extra $extra
+    # wheels only, dependencies only: no build backend runs with network on
+    uv sync --locked --extra $extra --no-install-project --no-build
+  build:
+    uv sync --locked --offline --extra $extra
   test:
     uv run --locked --offline pytest $test_args
 ```
@@ -519,12 +522,14 @@ Rules for computing it:
 
 ### 9.1 The work root
 
-Each action runs in a fresh directory **outside the repository**
-(`$TMPDIR/kiln/<first 12 hex of key>/` by default, overridable by the `Host`).
-Outside, because cargo, npm, tsc, git and mise walk up parent directories
-looking for configuration; a work root inside the repo would find the real
-tree's configuration and break isolation. A short path also keeps Windows
-under its 260-character limit.
+Each action runs in a fresh directory **outside the repository**, created per
+run with an exclusive, owner-checked, mode-0700 create under a short base
+directory the `Host` chooses (`os.MkdirTemp` semantics: a random name, never
+derived from the key; the key is used only for lookup). Kiln refuses to run
+if the directory already exists. Outside the repository, because cargo, npm,
+tsc, git and mise walk up parent directories looking for configuration; a
+work root inside the repo would find the real tree's configuration and break
+isolation. A short path also keeps Windows under its 260-character limit.
 
 The work root mirrors repo-relative layout:
 
@@ -546,6 +551,24 @@ real file. Kiln uses the cheapest safe copy each OS offers: `clonefile` on
 APFS, reflinks where the filesystem supports them, plain copies elsewhere.
 After an action succeeds, its `outputs` are copied back to
 `<pkg>/.build/out/` — the only place Kiln ever writes in the repository.
+
+Rules that keep staging and copy-back from becoming an escape route:
+
+- **Containment.** Every path in `outputs`, `provides`, `in` and the built-in
+  steps (`copy`, `mkdir`, `remove`, `write`) is cleaned, must be relative, and
+  must stay inside the work root (or, for copy-back, inside
+  `<pkg>/.build/out/`). Absolute paths and `..` are errors — including after
+  `$name` interpolation.
+- **No link following.** Staging and copy-back never follow symlinks: they
+  walk with `lstat` and no-follow opens. A symlink in `outputs` or `provides`
+  is rejected, unless it is a relative link that resolves inside the same
+  tree, in which case it is recreated as that link and never dereferenced.
+- **Regular files and directories only.** Device files, FIFOs and sockets are
+  rejected; setuid and setgid bits are stripped.
+- **Verify while copying.** Kiln hashes each input as it copies it into the
+  work root and aborts if the digest differs from the one in the planned key.
+  What runs is therefore exactly what was keyed, even if the real tree changes
+  between planning and execution.
 
 ### 9.3 Environment
 
@@ -592,6 +615,45 @@ persisted between CI runs, and never part of a key.
    (§10.5) always runs with `--strict`, which ignores `state` entirely, so
    every state-assisted pass is re-checked without it at least daily.
 
+### 9.6 The security boundary
+
+A work root controls what an action can **see**. On its own it does not stop
+a malicious step — a compromised third-party package's install script, say —
+from reaching beyond it, because by default the action runs as the same user
+as Kiln. "No shell" reduces injection risk but is not a sandbox either:
+`node`, `uv` and `npx` run arbitrary code. The ledger is only as trustworthy
+as this boundary, so Kiln requires the following.
+
+1. **Actions cannot reach Kiln's own state.** No action may write the ledger
+   directory, the delta, or the tool store, or read Kiln's environment or
+   `/proc`. On Linux, actions run under a dedicated unprivileged user and in
+   new user, mount and PID namespaces, with the real repository, the ledger
+   and the tool store absent or read-only.
+2. **Kiln writes results itself.** Pass records are held in Kiln's memory and
+   written to the delta only after an action's whole process group has
+   exited and been killed, to a path no action can reach.
+3. **Kiln drops secrets before spawning.** Tokens such as `GITHUB_TOKEN` are
+   removed from Kiln's own environment before the first child starts; only
+   the CI steps that need them (cache and artifact upload) see them.
+4. **Tools are immutable once provided.** The tool store is made read-only
+   after unpacking, and its tree digest is recorded and re-verified before
+   each run, so tampering after unpack is detected.
+5. **No enforcement, no trust.** A run on a host where items 1–4 cannot be
+   enforced — today macOS and Windows — is **never trusted** and never writes
+   the shared ledger, whatever its branch. `isolation: none` (legacy actions
+   running in place, §15.1) skips only the private work-root copy, not items
+   1–4: on Linux such an action still runs as the dedicated user inside the
+   namespaces, with the repository mounted writable and the ledger, delta and
+   tool store absent. Because it runs in the shared tree, Kiln also re-hashes
+   every keyed input after it finishes and records nothing if any digest
+   changed.
+6. **`shell:` steps get no extra privilege** and are never cacheable unless
+   the same confinement applies to them.
+
+Consequence for M1–M3: shared-ledger hits come from Linux main runs first.
+macOS and Windows targets get hits only once their confinement is in place
+(open question 7).
+
 ---
 
 ## 10. The ledger: CI caching with hashes only
@@ -636,7 +698,35 @@ group per OS that never cancels in progress, restores the newest snapshot,
 merges the delta and saves a new snapshot. Shards of one run contribute to
 the same delta. Snapshots are named by sequence so old ones can be pruned
 within the repository's cache quota; if a restore fails, the run simply
-treats every key as a miss.
+treats every key as a miss, and a failed restore on main raises an alert.
+
+`ledger-merge` is the most trusted step in the system, so it is pinned down
+tightly:
+
+- It is a job in the **same workflow run** as the build (`needs:` the
+  shards). It runs only when the ref is the default branch and the event is
+  `push` or `schedule`. It never runs from `workflow_run`,
+  `pull_request` or `pull_request_target` triggers.
+- It uses code from that trusted checkout and consumes **only artifacts of
+  its own run id**.
+- It validates every record strictly before merging: a 64-hex key, bounded
+  field lengths, a known schema, and caps on record count and delta size.
+- **PR runs never save caches**, only restore, so they cannot evict main's
+  snapshots by filling the quota.
+
+**Kiln checking Kiln.** Kiln is compiled from source in every job,
+including from a PR's checkout, so a PR that changes key computation or
+trust logic is also the code that runs on main after the merge. Three
+safeguards keep a self-validating change from hiding itself:
+
+- The key-schema and expansion-semantics versions are enforced by golden
+  vectors (§16) in CI. A change to key computation without a version bump
+  fails.
+- The daily `--ignore-ledger --strict` run is built from a **pinned
+  prior-main** Kiln commit, not from the code it is checking.
+- Required checks come from workflows defined on the base branch, not the PR
+  head, where the host supports it. Requiring owner review for changes under
+  `code/kiln/**` and the workflow files is recommended (open question 8).
 
 ### 10.3 Selection replaces `git diff`
 
@@ -700,6 +790,14 @@ tool latexmk:
   available: linux
 ```
 
+**Managed downloads** are fetched over HTTPS only, and the SHA-256 of the
+downloaded bytes is verified **before** anything is unpacked. Extraction
+rejects `..`, absolute paths and link entries that would escape the
+destination, and caps total size. **Host-provided tools** (whatever the runner
+has installed) are allowed only on hosted, ephemeral runners: their `check`
+output is spoofable by a tampered binary, which is acceptable only where the
+image itself is the trust root and is part of the host fingerprint (§8).
+
 Tools built in this repo are named by target: `//code/programs/go/grammar-gen`.
 Their identity is their own build action's key, so changing the tool's source
 re-runs everything that uses it.
@@ -743,9 +841,24 @@ read-only into every work root that needs it. A target whose whole subtree is
 a ledger hit — no miss anywhere above it — downloads nothing, which is the
 largest download saving. A `fetch` that a miss consumes still runs (§14).
 
-`fetch` steps must not run third-party install scripts while the network is
-on; rules disable them (`npm ci --ignore-scripts`) and run them offline in
-`build`. Because the planner sees
+**Third-party code never runs with the network on.** `fetch` recipes use
+no-build, no-script modes (`npm ci --ignore-scripts`,
+`uv sync --no-build --no-install-project`) and run install scripts and build
+backends offline in `build`. `fetch` actions receive no `pass` variables. On
+Linux, a fetch's egress is limited to a per-ecosystem allowlist of registry
+hosts, and link-local and cloud-metadata addresses are blocked.
+
+**"Pinned" is checked, not taken on trust.** Kiln does not parse lockfiles,
+so it verifies pinning another way:
+
+- `pinned-by` is accepted only when the fetch step matches a locked-mode
+  command allowlisted for that rule family in `code/kiln/lint.toml`
+  (`cargo fetch --locked`, `npm ci`, `uv sync --locked`, …). A `fetch` that
+  names a lockfile but runs `npm install` is treated as unpinned.
+- A per-ecosystem lint, run as a scanner tool, rejects lockfile entries that
+  lack integrity hashes (an npm `resolved` with no `integrity`, a git
+  dependency pinned to a branch).
+- The digest of each fetch's output tree is recorded for audit. Because the planner sees
 every `fetch`, `kiln plan --third-party` prints the complete list of
 third-party packages still being downloaded — a live B06 report.
 
@@ -963,6 +1076,12 @@ library.
    grammar regeneration checks): most should become ordinary targets with
    rules; a few may stay as `cache: off` targets.
 6. **The value of N** in M2's exit criterion, and how long shadow mode runs.
+7. **Confinement on macOS and Windows** (§9.6): which mechanism (a separate
+   user account, App Sandbox profiles, Windows job objects with a restricted
+   token) lets those runs become trusted.
+8. **Owner review for `code/kiln/**` and workflow files.** Recommended by
+   the security review; it conflicts with the repo's auto-merge practice for a
+   solo owner, so it is the owner's call.
 
 ---
 
