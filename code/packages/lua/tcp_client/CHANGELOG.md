@@ -3,7 +3,7 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 ### Changed
-- `BUILD_windows` now installs luasocket with luarocks and runs the busted suite on Windows (same test command as the Unix `BUILD`) instead of skipping with "luasocket native compilation not supported on Windows CI". CI already builds Lua C modules there (the Lua natives and `lua/conduit`).
+- `BUILD_windows` now installs luasocket with luarocks and runs the busted suite on Windows (same test command as the Unix `BUILD`) through `tools\run-tests.ps1`, instead of skipping with "luasocket native compilation not supported on Windows CI". CI already builds Lua C modules there (the Lua natives and `lua/conduit`). The script first removes Git for Windows' `usr\bin` from PATH, because its GNU coreutils `link.exe` shadowed MSVC's linker and broke luasocket's link step (`link: unknown option -- d`).
 
 ## [0.1.0] - 2026-04-12
 ### Added

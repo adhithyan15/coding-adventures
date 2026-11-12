@@ -1,4 +1,4 @@
-# Windows build: luasocket is a C module; luarocks compiles it with the MSVC toolchain CI
-# already sets up for the Lua natives, into the same tree that busted was installed in
-# (so no --local and no extra LUA_CPATH, unlike the Unix BUILD).
-luarocks install luasocket && cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;;" && busted . --verbose --pattern=test_
+# Windows build: tools\run-tests.ps1 installs luasocket (a C module, built with MSVC) into
+# the luarocks tree and runs the same busted command as the Unix BUILD.  It first drops
+# Git for Windows' usr\bin from PATH so `link` is MSVC's, not GNU coreutils' link.exe.
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
