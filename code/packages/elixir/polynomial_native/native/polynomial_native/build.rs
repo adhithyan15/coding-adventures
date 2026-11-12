@@ -5,7 +5,7 @@
 //
 // - macOS: `-undefined dynamic_lookup` — resolve ERTS symbols at load time
 // - Linux: ELF allows undefined symbols by default
-// - Windows: not yet implemented
+// - Windows: nothing to link; erl-nif-bridge calls through the callback table the BEAM passes to nif_init
 
 fn main() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();

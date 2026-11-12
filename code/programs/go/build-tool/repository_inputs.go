@@ -258,6 +258,26 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
 	},
+	{
+		name:     "rust/ca-assurance-report",
+		language: "rust",
+		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
+		matches:  isWarrantAssuranceInput,
+	},
+}
+
+// The assurance report validates the shared Warrant lane artifacts directly.
+func isWarrantAssuranceInput(changed string) bool {
+	switch changed {
+	case "code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/scripts/tfv.py":
+		return true
+	}
+	return false
 }
 
 // Canonical inputs live outside the Rust artifact package. Exact file paths
@@ -272,6 +292,11 @@ func isWarrantGrammarInput(changed string) bool {
 		changed == "code/scripts/warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tfv.py" ||
+		changed == "code/specs/ct-compare.warrant" ||
+		changed == "code/specs/fixtures/ct-compare-warrant-v1/cases.tfv" ||
+		changed == "code/specs/fixtures/ct-compare-warrant-v1/corpus.json" ||
+		changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.json" ||
+		changed == "code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json" ||
 		changed == "code/specs/VER04-warrant-language.md" ||
 		changed == "code/specs/VER04a-warrant-source-admission.md"
 }

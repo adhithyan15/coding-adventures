@@ -92,11 +92,23 @@ permissions:
 # stays because rust/font-subset, glyph-parser and pdf read it. Jobs that do read
 # the corpus keep a full checkout: the contracts job always, and the build job
 # when the human-language-corpus gate fires. See code/specs/ci-gate-registry.md.
+#
+# Every third-party Python package resolves to the version, and sha256 hash,
+# pinned in these two generated files. uv reads both variables on every
+# `uv pip install` / `uv venv` build, so no BUILD file refers to them.
+# UV_CONSTRAINT covers what lands in package venvs; UV_BUILD_CONSTRAINT covers
+# uv's isolated build environments (hatchling, setuptools, maturin).
+# UV_REQUIRE_HASHES is deliberately NOT set: it rejects the editable installs
+# the monorepo uses to link its own packages. Hashes listed in a constraints
+# file are still verified. A name absent from the file would float silently,
+# which is why the contracts job runs `python_pins.py check`.
 env:
   LEAN_SPARSE_PATTERNS: |
     /*
     !/code/learning/human-languages/
     /code/learning/human-languages/_fonts/
+  UV_CONSTRAINT: ${{ github.workspace }}/code/specs/data/third-party-dependencies/python-constraints.txt
+  UV_BUILD_CONSTRAINT: ${{ github.workspace }}/code/specs/data/third-party-dependencies/python-build-constraints.txt
 
 jobs:
   # ── Job 1: Detect which languages need toolchains ────────────
@@ -764,6 +776,12 @@ jobs:
           # both lists against DOC_SHARD_PLANS so they cannot drift again.
           npm run check:doc-shards --silent
 
+      # `python_pins.py check` shells out to `uv pip compile`, so this job needs uv.
+      - name: Install uv for the Python pin check
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+
       - name: Verify repo-wide metadata contracts
         run: |
           # `lessons.d/` is one file per lesson so concurrent PRs cannot
@@ -777,6 +795,11 @@ jobs:
           # gemspec's third-party gems (names, requirement ranges, checksums).
           python3 code/scripts/ruby_pins_check.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_ruby_pins_check.py'
+          # Every third-party Python package is pinned with hashes in two
+          # generated constraints files. This fails when they are stale or when a
+          # dependency has no pin (an unlisted name would float silently).
+          python3 code/scripts/python_pins.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_python_pins.py'
           # Mix has no environment variable for `deps.get --check-locked`, and
           # 350+ BUILD files run plain `mix deps.get`, which silently re-resolves
           # a missing or stale mix.lock. This static check is the enforcement:

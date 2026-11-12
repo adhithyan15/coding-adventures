@@ -321,7 +321,21 @@ static NIF_ENTRY: NifEntry = NifEntry(erl_nif_bridge::ErlNifEntry {
 ///
 /// # Safety
 /// The returned pointer is valid for the lifetime of the process.
+#[cfg(not(windows))]
 #[no_mangle]
 pub unsafe extern "C" fn nif_init() -> *const erl_nif_bridge::ErlNifEntry {
+    &NIF_ENTRY.0
+}
+
+/// Windows form of the entry point: the BEAM passes its table of `enif_*`
+/// function pointers (`TWinDynNifCallbacks`) because `beam.smp.dll` exports no
+/// `enif_*` names.  Store it before any NIF can run (see erl-nif-bridge's
+/// `win_dyn` module).
+#[cfg(windows)]
+#[no_mangle]
+pub unsafe extern "C" fn nif_init(
+    callbacks: *const erl_nif_bridge::win_dyn::TWinDynNifCallbacks,
+) -> *const erl_nif_bridge::ErlNifEntry {
+    erl_nif_bridge::win_dyn::win_init(callbacks);
     &NIF_ENTRY.0
 }
