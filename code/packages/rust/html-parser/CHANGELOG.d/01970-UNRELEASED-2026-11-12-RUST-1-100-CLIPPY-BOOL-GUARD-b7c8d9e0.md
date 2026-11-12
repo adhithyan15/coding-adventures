@@ -1,7 +1,4 @@
-## Unreleased - 2026-11-12 - Rust 1.100 clippy
-
-### Changed
-
-- Simplify the autofill-token field predicate (in `src/lib.rs` and the matching
-  test oracle in `tests/browser_readiness_test.rs`) to one boolean expression
-  (Rust 1.100 clippy bool-literal guard lint); behaviour is unchanged.
+- **Rust 1.100 clippy: the autofill-token field predicate is one boolean
+  expression** (in `src/lib.rs` and the matching test oracle in
+  `tests/browser_readiness_test.rs`), replacing an `if` guard that returned a
+  bool literal; behaviour is unchanged.
