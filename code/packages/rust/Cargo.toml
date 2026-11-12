@@ -852,6 +852,7 @@ members = [
     "x509-certificate-version",
     "x509-name",
     "x509-name-comparison",
+    "x509-name-value-policy",
     "x509-directory-string",
     "x509-certificate",
     "x509-certificate-policy",
