@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- BUILD / BUILD_windows no longer name the `stable` toolchain (`rustup run stable cargo`, `--toolchain stable`): they use the default toolchain, which CI now pins to an exact Rust version. A pinned default is not the `stable` alias, so naming `stable` would run a second, unpinned toolchain without the targets added by `rustup target add`.
+
 - **Schematic import and export work natively.** They now use UI87's standard
   `files.open` / `files.save` kinds with `accept: ["application/json"]`. The
   retired singular `file.*` kinds were answered only by the browser executor,

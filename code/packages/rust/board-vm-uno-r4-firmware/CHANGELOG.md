@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- BUILD / BUILD_windows no longer name the `stable` toolchain (`rustup run stable cargo`, `--toolchain stable`): they use the default toolchain, which CI now pins to an exact Rust version. A pinned default is not the `stable` alias, so naming `stable` would run a second, unpinned toolchain without the targets added by `rustup target add`.
+
 - **Windows test expectations.** Five `serial_usb_artifact` tests asserted
   Unix-formatted paths (`/`, no `.exe`) for a planner that correctly builds
   native paths, so they failed on Windows (backslash separators and `.exe`).
