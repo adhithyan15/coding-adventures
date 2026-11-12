@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- No source change; the clippy 1.100 `needless_bool` failure came from the
+  `context-store` dependency, fixed there.
+
 ## [0.1.0] - 2026-05-18
 
 ### Added

@@ -1,5 +1,52 @@
 # Changelog
 
+## Unreleased — Kiln export covers every selector relation
+
+- **`repo_inputs` now includes every package -> external input relation the
+  selector uses**, not only `repositoryInputConsumers`: the shared/duplicate
+  discovery, CI-gate, test-trigger, package-metadata, toolchain-detection,
+  source-collection, graph/diff and per-case resolution, hashing-cache,
+  validation and plan fixtures, plus the STP01, BF03, TE04, G2D02 corpora and
+  the CV02 spec. The relations are built in `external_inputs.go` from the very
+  variables and constants `selectPackageRoots` reads (the hardcoded seeds were
+  hoisted into named constants and consumer lists; behaviour is unchanged), so
+  they cannot drift. Real repo: 53 packages with inputs, 0 unknown. Consumers
+  are keyed by package name, as the selector does (the .NET fronts are
+  language `dotnet` although their table rows say csharp/fsharp).
+- **Tests:** every consumer the selector can seed must export inputs or
+  `repo_inputs_unknown`; every file a repository-input predicate accepts
+  (real checkout plus synthetic names) must be covered by a declared path or
+  glob; fixture-family globs cover the selector helpers.
+- **Export hardening:** atomic temp-file write, symlink targets refused,
+  empty package set and un-relativizable package paths are errors, per-OS
+  `needs-toolchain` read for Starlark host packages (shell `BUILD_windows`),
+  and the real-repo run fails if any relation names an undiscovered package.
+
+## Unreleased — glob-valued repository inputs
+
+- **`repo_input_globs` and `repo_inputs_unknown`.** Each exported package gains
+  a sorted `repo_input_globs` list; `rust/mosaic-package-resolver` exports the
+  globs equivalent to its predicate (`code/**/?*.mil|mll|msl`,
+  `code/**/mosaic-package.toml`; `?*` because the predicate rejects an empty
+  stem). `repo_inputs_unknown` is omitted unless a consumer declares neither
+  paths nor globs. Tests pin globs to the predicate over a candidate tree and
+  require every table row to declare something.
+
+## Unreleased — Kiln legacy graph export
+
+- **`-emit-kiln-graph <path>`.** Writes the `kiln-legacy-graph/1` document
+  (KILN03 section 2): every package with per-OS BUILD file names (or `null`),
+  per-OS direct deps, `dev_deps` (inverted test triggers), `repo_inputs` and
+  `extra_toolchains`. Implies `-force` and `-language all`, honours
+  `-validate-build-files`, and is deterministic. Go-only by design; the
+  educational ports are frozen (KILN00 section 16).
+- **Discovery across OSes.** New `discovery.DiscoverPackagesAllPlatforms`
+  so a package whose only file is `BUILD_windows` (python/starlark-compiler)
+  is not invisible on a Linux or macOS host. Normal discovery is unchanged.
+- **Repository-input consumers declare paths.** Each table row gains a
+  `paths` list mirroring its predicate, pinned by a test; the Mosaic guard is
+  predicate-only and has none.
+
 ## Unreleased — package-local metadata second review
 
 - **An empty diff is "no answer" again.** `parseNameStatus` returned a
