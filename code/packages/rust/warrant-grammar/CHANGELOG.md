@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+- **`gen_evidence` passes the bindings' host lines through (fix).** The example
+  that every package `BUILD` runs (`--example gen_evidence -- [--check] <pkg>`)
+  built its `EvidenceOptions` with `hosts: Default::default()`, so the WX-A host
+  lines of `evidence.bindings` (`struct`, `enum`, and `args=`/`ret=`/`errors=` on
+  an `op` line) were parsed and then dropped. Only the in-test drivers passed
+  them, so no real package could bind a host composite: an operation returning
+  `Result<(u64, usize), Leb128Error>` failed with W0701 ("an args= entry is not a
+  host type") or W0704 ("neither error normalization nor errors="). The driver
+  now passes `b.hosts.clone()`. New `tests/gen_evidence_driver.rs` compiles the
+  example into the test crate (`#[path]`) and drives `generate_one` on a scratch
+  repository built from the WX-A fixture (`struct`/`enum` lines, composite
+  `args=`, tuple and record `ret=`, `errors=`): generation succeeds, equals the
+  in-test driver's output byte for byte, `--check` passes, and a hand edit is
+  reported as drift. Before the fix the first two tests failed with the W0701
+  above. A bindings file without host lines parses to the default, so the
+  checked-in ct-compare and gf256 harnesses regenerate byte-identically
+  (`gen_evidence --check gf256 ct-compare`, `v0_compat`, and the wave-3 regen
+  tests). `generate_one` became `pub(crate)` for the test; nothing else changed.
+
 ## 0.5.0 - Warrant v1: WX-D1 slice S1 (checker and ground evaluator)
 
 Implements the checker and ground-evaluator half of VER04k WX-D1 (slice S1 of
