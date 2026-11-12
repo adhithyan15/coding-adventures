@@ -121,6 +121,8 @@ pub fn gc_link_args() -> Vec<String> {
             "advapi32",
             "bcrypt",
             "ntdll",
+            // WaitOnAddress/WakeByAddress* (std's futex Mutex); Rust >= 1.100.
+            "synchronization",
         ] {
             args.push(format!("-l{lib}"));
         }

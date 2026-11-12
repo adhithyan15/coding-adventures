@@ -2507,6 +2507,17 @@ const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 4] = [
     "legacy_stdio_definitions.lib",
 ];
 
+#[cfg(any(target_os = "windows", test))]
+const MSVC_WINDOWS_API_LIBRARIES: [&str; 7] = [
+    "kernel32.lib",
+    "ws2_32.lib",
+    "userenv.lib",
+    "advapi32.lib",
+    "bcrypt.lib",
+    "ntdll.lib",
+    "Synchronization.lib",
+];
+
 /// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
 /// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
 /// → `gcc.exe`). Embeds the twig-aot runtime archive.
@@ -2583,15 +2594,11 @@ pub fn link_windows_x86_64_executable(
                 // definitions conflict with the dynamic import libraries. In
                 // particular, libvcruntime's winapi_downlevel.obj duplicates
                 // __vcrt_InitializeCriticalSectionEx from vcruntime.lib.
-                // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the
-                // Win32 API surface gc-core-capi's Rust std pulls in.
+                // The Windows system import libraries cover the Win32 API
+                // surface gc-core-capi's Rust std pulls in; Synchronization.lib
+                // provides WaitOnAddress and its WakeByAddress counterparts.
                 .args(MSVC_DYNAMIC_CRT_LIBRARIES)
-                .arg("kernel32.lib")
-                .arg("ws2_32.lib")
-                .arg("userenv.lib")
-                .arg("advapi32.lib")
-                .arg("bcrypt.lib")
-                .arg("ntdll.lib")
+                .args(MSVC_WINDOWS_API_LIBRARIES)
                 .output()
         }
         WinLinkerKind::Gcc => {
@@ -4846,6 +4853,22 @@ mod tests {
                 "vcruntime.lib",
                 "ucrt.lib",
                 "legacy_stdio_definitions.lib",
+            ],
+        );
+    }
+
+    #[test]
+    fn msvc_windows_api_libraries_cover_the_system_imports() {
+        assert_eq!(
+            MSVC_WINDOWS_API_LIBRARIES,
+            [
+                "kernel32.lib",
+                "ws2_32.lib",
+                "userenv.lib",
+                "advapi32.lib",
+                "bcrypt.lib",
+                "ntdll.lib",
+                "Synchronization.lib",
             ],
         );
     }

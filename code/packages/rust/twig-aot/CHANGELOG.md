@@ -1,5 +1,11 @@
 # Changelog — `twig-aot`
 
+## Unreleased — Windows AOT linker imports
+
+- Add `Synchronization.lib` to the MSVC/LldLink system import libraries so
+  Rust standard-library references to `WaitOnAddress` and `WakeByAddress*`
+  resolve in generated Windows executables.
+
 ## Unreleased — #18779: lower const Str in variables and preserve heap defs in stack maps
 
 - **Lower `const Str` / `const Bytes` literals identically to `str_const`.**
