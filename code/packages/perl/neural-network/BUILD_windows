@@ -1,1 +1,2 @@
-prove -l t
+REM prereqs: (none)
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1

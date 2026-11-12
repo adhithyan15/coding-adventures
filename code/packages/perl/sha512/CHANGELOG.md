@@ -2,6 +2,12 @@
 
 All notable changes to the SHA-512 Perl package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for sibling libraries) instead of the previous skip or bare-`perl` recipe.
+
 ## [0.02] - Unreleased
 
 - Consume the bounded HF04 corpus and encode the full 128-bit length field with checked arbitrary-precision accounting.

@@ -1,1 +1,2 @@
-cd ..\heap && cd ..\huffman-tree && cd ..\huffman-compression && perl -I..\heap\lib -I..\huffman-tree\lib -Ilib t\00-load.t && perl -I..\heap\lib -I..\huffman-tree\lib -Ilib t\01-huffman-compression.t
+REM prereqs: ../huffman-tree ../heap
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps huffman-tree,heap
