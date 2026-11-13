@@ -79,5 +79,28 @@ ok($srv, 'a new server binds after the failed bind');
 ok(CodingAdventures::Conduit::Native::server_local_port($srv) > 0, 'it reports a real port');
 CodingAdventures::Conduit::Native::dispose_server($srv);
 
+# The same failure through the public wrapper.  A failed bind must leave the
+# app handle owned by the Conduit object: its DESTROY then disposes of the app
+# exactly once.  (If new_server freed the app before the bind succeeded, that
+# DESTROY would free it a second time and corrupt the heap.)
+{
+    my $wrapped = CodingAdventures::Conduit->new;
+    $wrapped->get('/ping', sub { return [200, {}, 'pong'] });
+    $wrapped->set('name', 'conduit');
+    my $bound = eval { $wrapped->bind('127.0.0.1', $busy_port, 8); 1 };
+    ok(!$bound, 'Conduit->bind on an occupied port dies');
+    like($@, qr/conduit: bind failed: /, 'the wrapper surfaces the bind error');
+    is($wrapped->get_setting('name'), 'conduit',
+       'the app is still intact after the failed bind');
+}    # $wrapped is destroyed here: dispose_app must run once, on a live handle
+pass('destroying the Conduit object after a failed bind does not crash');
+
+# A second attempt on a free port still works end to end.
+my $retry = CodingAdventures::Conduit->new;
+$retry->get('/ping', sub { return [200, {}, 'pong'] });
+my $retry_srv = $retry->bind('127.0.0.1', 0, 8);
+ok($retry_srv->local_port > 0, 'bind succeeds on a free port after a failed one');
+undef $retry_srv;
+
 close $blocker;
 done_testing();

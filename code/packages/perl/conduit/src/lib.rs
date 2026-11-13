@@ -369,13 +369,19 @@ unsafe fn pin_coderef(app: &mut NativeApp, sv: *mut SV) -> SendSV {
 // closure has returned and its locals are dropped, the XSUB itself raises the
 // Perl exception.  The XSUB is `extern "C-unwind"` (and registered with
 // `newXS_unwind`) so the Windows unwind is allowed to cross it; on Unix the ABI
-// is identical.  A panic caught by `catch_unwind` is deliberately swallowed, as
-// it always was: unwinding a Rust panic into Perl would be undefined behaviour.
+// is identical.  A panic is caught by `catch_unwind` (unwinding a Rust panic into
+// Perl would be undefined behaviour) and reported as a Perl error instead of
+// being silently swallowed, which would hand Perl its own arguments as return
+// values.  The message is still a live `String` when `die` runs, so on Unix, where
+// `die` is a `longjmp`, those few bytes leak per error; on Windows the unwind
+// frees them.
 
 macro_rules! die_if_failed {
     ($outcome:expr) => {
-        if let Ok(Some(message)) = $outcome {
-            perl_bridge::die(&message);
+        match $outcome {
+            Ok(Some(message)) => perl_bridge::die(&message),
+            Err(_) => perl_bridge::die("conduit: internal error"),
+            Ok(None) => {}
         }
     };
 }
@@ -523,16 +529,17 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
         let max_iv = arg_iv(f.base, f.ax, 3);
         let max_conn = if max_iv > 0 { max_iv as usize } else { 128 };
 
-        let app_box = Box::from_raw(app_ptr);
-        let NativeApp {
-            routes,
-            befores,
-            afters,
-            not_found,
-            error_handler,
-            settings,
-            refs,
-        } = *app_box;
+        // Borrow the application; do NOT take ownership yet.  A failed bind
+        // raises a Perl error and the Perl wrapper's `DESTROY` then disposes of
+        // this very handle (`dispose_app`), so the app must still be intact and
+        // owned by that handle until the server has actually been created.
+        let app = &*app_ptr;
+        let routes = &app.routes;
+        let befores = &app.befores;
+        let afters = &app.afters;
+        let not_found = app.not_found;
+        let error_handler = app.error_handler;
+        let settings = &app.settings;
 
         // Capture the interpreter context + lock NOW, on the main Perl thread.
         let ctx = Arc::new(Ctx {
@@ -541,12 +548,12 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
         });
 
         let mut web_app = ConduitApp::new();
-        for (k, v) in &settings {
+        for (k, v) in settings {
             web_app.set(k.clone(), v.clone());
         }
 
         let eh = error_handler;
-        for (method, pattern, cr) in &routes {
+        for (method, pattern, cr) in routes {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             let err = eh;
@@ -567,7 +574,7 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
                 }
             });
         }
-        for cr in &befores {
+        for cr in befores {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             web_app.before(move |req| match dispatch(&c, handler.get(), req, None) {
@@ -576,7 +583,7 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
                 Outcome::Err(msg) => Some(WebResponse::internal_error(&msg)),
             });
         }
-        for cr in &afters {
+        for cr in afters {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             web_app.after_response(move |req, prev| match dispatch(&c, handler.get(), req, None) {
@@ -607,6 +614,9 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
                 return Some(format!("conduit: bind failed: {e}"));
             }
         };
+        // The server exists: only now does it take over the app's pinned
+        // coderefs, and the app allocation is released.
+        let NativeApp { refs, .. } = *Box::from_raw(app_ptr);
         let bound = server.local_addr().port();
         let stop = server.stop_handle();
         let native = NativeServer {
