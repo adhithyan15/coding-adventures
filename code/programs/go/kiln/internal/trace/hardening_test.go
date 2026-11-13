@@ -521,3 +521,29 @@ func TestPidnsNoteIsExact(t *testing.T) {
 		t.Errorf("%+v %q", r, why)
 	}
 }
+
+func TestPidnsNoteBoundsAndPlacement(t *testing.T) {
+	// L1: no leading zero, at most 9 digits.
+	for _, note := range []string{" /* 007 in strace's PID NS */", " /* 0012 in strace's PID NS */", " /* 1234567890 in strace's PID NS */", " /* 99999999999999999999 in strace's PID NS */"} {
+		if _, _, ok := parsePidnsNote(note); ok {
+			t.Errorf("%q accepted", note)
+		}
+		wantReasonOpts(t, helperRootSetup+"11  fork() = 2"+note+"\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, helperOpts, reasonResult)
+	}
+	for _, note := range []string{" /* 7 in strace's PID NS */", " /* 999999999 in strace's PID NS */"} {
+		if n, _, ok := parsePidnsNote(note); !ok || n <= 0 {
+			t.Errorf("%q refused", note)
+		}
+	}
+	// L2: only a spawn (or a wait that returns a pid) may carry the note.
+	note := " /* 12 in strace's PID NS */"
+	for _, call := range []string{`stat("/x", 0x1)`, `openat(AT_FDCWD, "/x", O_RDONLY)`, `execve("/x", ["x"], 0x0)`, `chdir("/x")`, `getdents64(3</d>, 0x1, 32768)`} {
+		wantReasonOpts(t, helperRootSetup+"11  "+call+" = 3"+note+"\n"+helperExec+helperEnd, helperOpts, reasonResult)
+	}
+	// ... also outside helper mode, and on an ignored-class call that is not a wait.
+	if _, err := parseAt(t, "/r", "1  getcwd(\"/r\", 4096) = 3"+note+"\n1  +++ exited with 0 +++\n", Options{}); err == nil || err.Error() != "trace-incomplete:result" {
+		t.Errorf("%v", err)
+	}
+	// A wait returns a pid; strace translates it too.
+	mustHelper(t, helperExec[:0]+helperRootSetup+"11  wait4(-1, 0x1, 0, NULL) = 2"+note+"\n"+helperExec+helperEnd)
+}

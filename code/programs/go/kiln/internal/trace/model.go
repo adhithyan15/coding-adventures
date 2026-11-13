@@ -353,6 +353,9 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if !c.ret.hasVal || c.ret.value <= 0 || c.ret.value > 1<<30 {
 			return incomplete(recs[i].line, reasonResult)
 		}
+		if c.ret.hasHost && (c.ret.host <= 0 || c.ret.host > 1<<30) {
+			return incomplete(recs[i].line, reasonResult)
+		}
 		child := c.ret.pid()
 		if m.opts.HelperRoot && !c.ret.hasHost {
 			// Judged below: inside the sandbox's PID namespace a returned pid is

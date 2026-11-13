@@ -117,7 +117,9 @@ func parsePidnsNote(s string) (n int64, rest string, ok bool) {
 	for k < len(t) && t[k] >= '0' && t[k] <= '9' {
 		k++
 	}
-	if k == 0 || k > 10 || !strings.HasPrefix(t[k:], tail) {
+	// At most 9 digits (below 1<<30, the bound local pids have), and no leading
+	// zero: "007" is not how strace prints a pid.
+	if k == 0 || k > 9 || (k > 1 && t[0] == '0') || !strings.HasPrefix(t[k:], tail) {
 		return 0, s, false
 	}
 	v, err := strconv.ParseInt(t[:k], 10, 64)
@@ -455,6 +457,9 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 	return recs, st.root, nil
 }
 
+// isWaitName: the ignored-class calls whose result is a pid.
+func isWaitName(n string) bool { return n == "wait4" || n == "waitid" || n == "waitpid" }
+
 func isExecName(n string) bool { return n == "execve" || n == "execveat" }
 
 // readLine reads one line (including its '\n') of at most max bytes.
@@ -572,6 +577,12 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 // With HelperRoot, unknown and refused names are kept and judged in pass 2
 // (deferClass), where the sandbox helper's setup calls can be told apart.
 func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record, *Error) {
+	// The PID-namespace note belongs on the calls that return a pid: the
+	// spawns, and the waits that hand one back.  On any other call it means the
+	// line is not what we think it is.
+	if call.ret.hasHost && !isSpawn(call.name) && !isWaitName(call.name) {
+		return nil, incomplete(lineNo, reasonResult)
+	}
 	if !deferClass {
 		if e := classifyName(call.name, lineNo); e != nil {
 			return nil, e
