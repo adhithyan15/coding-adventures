@@ -364,6 +364,62 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
 }
 
 #[test]
+fn the_bit_arithmetic_profile_parses_and_unknown_profiles_list_it() {
+    assert_eq!("bit-arithmetic".parse::<AuditProfile>(), Ok(AuditProfile::BitArithmetic));
+    let err = "lzw".parse::<AuditProfile>().unwrap_err();
+    assert!(err.contains("bit-arithmetic"), "{err}");
+}
+
+#[test]
+fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manifests() {
+    let ev = Evidence::load(&pkg_dir("arithmetic")).unwrap();
+    let report = generate_package_report(
+        "rust/arithmetic",
+        "0.1.0",
+        "c0ffee",
+        &WeaknessRegistry::embedded(),
+        &ev,
+        AuditProfile::BitArithmetic,
+    )
+    .expect("report derives from the arithmetic manifests");
+    for cwe in [326, 327, 407] {
+        let row = report.weaknesses.iter().find(|w| w.cwe == cwe).unwrap();
+        // None of the other profiles' subjects may leak into an adder library's report;
+        // in particular the boolean-logic sentences ("single-bit values only", a 2^n
+        // decoder bound) would be false for an adder over a 16-bit operand.
+        for foreign in [
+            "LEB128",
+            "GF(2^8)",
+            "comparison",
+            "integer encoding",
+            "single-bit values only",
+            "decoder",
+            "CMOS",
+        ] {
+            assert!(!row.reason.contains(foreign), "CWE-{cwe} names {foreign}: {}", row.reason);
+        }
+    }
+    let row = report.weaknesses.iter().find(|w| w.cwe == 407).unwrap();
+    assert!(row.reason.contains("linear in the operand length"), "{}", row.reason);
+    // The CWE-208 row is the not-applicable exemption: every operand is public.
+    assert!(report.exemptions.iter().any(|x| x.id == NA_ID));
+    // And the checked-in report is exactly what the manifests derive.
+    let text = fs::read_to_string(pkg_dir("arithmetic").join("assurance_report.json")).unwrap();
+    let on_disk = AssuranceReport::from_json_str(&text).unwrap();
+    verify_evidence(&on_disk, &ev).expect("assurance_report.json must agree with the manifests");
+    let fresh = generate_package_report(
+        "rust/arithmetic",
+        "0.1.0",
+        &on_disk.commit,
+        &WeaknessRegistry::embedded(),
+        &ev,
+        AuditProfile::BitArithmetic,
+    )
+    .unwrap();
+    assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
+}
+
+#[test]
 fn the_varint_profile_parses_and_unknown_profiles_list_it() {
     assert_eq!("varint-codec".parse::<AuditProfile>(), Ok(AuditProfile::VarintCodec));
     let err = "lzw".parse::<AuditProfile>().unwrap_err();

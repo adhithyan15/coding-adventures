@@ -15,6 +15,19 @@
   (`the_boolean_logic_profile_...`). The ct-compare, gf256 and wasm-leb128 reports
   regenerate byte-identically. `effect_certificate.json` regenerated for the new
   source digest.
+- **`AuditProfile::BitArithmetic` (`--profile bit-arithmetic`)**: true CWE-400/326/327/407
+  sentences for adders and an ALU over bit vectors (first adopter `rust/arithmetic`).
+  A new profile is genuinely needed: the `boolean-logic` sentences say "logic gates and
+  combinational blocks over single-bit values only" and bound a 2^n decoder, both false
+  for a 16-bit adder, and the `varint-codec` ones name LEB128. CWE-400 states the real
+  bound (a fixed number of gate evaluations per adder stage, a constant number of
+  passes linear in the operand length, a result exactly as long as the operands, no
+  width-driven allocation). The profile changes wording only, never the verdict logic.
+  Parsed by `--profile`, listed in the unknown-profile error. Tests:
+  `tests/test_no_secret_operands.rs` (`the_bit_arithmetic_profile_...`,
+  `the_arithmetic_report_...`). The ct-compare, gf256, wasm-leb128 and logic-gates
+  reports regenerate byte-identically. `effect_certificate.json` regenerated for the
+  new source digest.
 - **`verify_evidence` step 6b closes the converse forgery**: a CWE-208 row that cites
   the attestation `warrant-spec::all-operands-public` is now rejected
   (`EvidenceMismatch`) unless the report also carries the not-applicable exemption

@@ -185,6 +185,12 @@ pub enum AuditProfile {
     /// Pure Boolean logic (rust/logic-gates): logic gates and combinational
     /// blocks over single-bit values.  No bytes-as-keys, no cryptography.
     BooleanLogic,
+    /// Adders and an arithmetic logic unit over bit vectors (rust/arithmetic):
+    /// a bit vector of the caller's width in, a bit vector of the same width out.
+    /// No bytes-as-keys, no cryptography.  Distinct from `BooleanLogic`, whose
+    /// sentences say "single-bit values only" and name a 2^n decoder bound, both
+    /// false for an adder over a 16-bit operand.
+    BitArithmetic,
 }
 
 impl std::str::FromStr for AuditProfile {
@@ -195,8 +201,9 @@ impl std::str::FromStr for AuditProfile {
             "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
             "varint-codec" => Ok(AuditProfile::VarintCodec),
             "boolean-logic" => Ok(AuditProfile::BooleanLogic),
+            "bit-arithmetic" => Ok(AuditProfile::BitArithmetic),
             other => Err(format!(
-                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic)"
+                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic)"
             )),
         }
     }
@@ -477,6 +484,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
                     AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
                     AuditProfile::BooleanLogic => "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration",
+                    AuditProfile::BitArithmetic => "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration",
                 }
                 .into(),
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
@@ -571,6 +579,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
                     AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
                     AuditProfile::BooleanLogic => "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC",
+                    AuditProfile::BitArithmetic => "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC",
                 }
                 .into(),
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
@@ -587,6 +596,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
                     AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
                     AuditProfile::BooleanLogic => "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength",
+                    AuditProfile::BitArithmetic => "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength",
                 }
                 .into(),
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],

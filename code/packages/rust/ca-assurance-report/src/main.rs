@@ -43,7 +43,7 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
-    eprintln!("  --profile <P>          comparison (default) | field-arithmetic | varint-codec | boolean-logic: which true sentence the");
+    eprintln!("  --profile <P>          comparison (default) | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic: which true sentence the");
     eprintln!("                         static attestation rows (CWE-326/327/407) carry");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
