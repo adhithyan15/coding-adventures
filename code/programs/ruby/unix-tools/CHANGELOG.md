@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `test_printenv.rb` `test_print_all_sorted` parsed every output line as `NAME=value`, so an environment value containing a newline (the CI runner exports a few) produced lines that are not variable names and the test failed (`comparison of NilClass with String`). It now looks only at lines that start a `NAME=value` entry and asserts there is at least one. Found when the Rakefile change made this suite run on the Linux CI leg.
+
 ### Changed — a counted Windows subset replaces the Windows skip
 
 `BUILD_windows` was an `echo` ("Skipping ruby unix-tools on Windows ..."); it is
