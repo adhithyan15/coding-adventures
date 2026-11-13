@@ -443,13 +443,14 @@ func TestGitEnvAndArgs(t *testing.T) {
 			t.Errorf("%s survived: %v", bad, got)
 		}
 	}
-	for _, want := range []string{"PATH=/bin", "HOME=/h", "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C"} {
+	for _, want := range []string{"PATH=/bin", "HOME=/h", "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C",
+		"GIT_NO_REPLACE_OBJECTS=1", "GIT_NO_LAZY_FETCH=1"} {
 		if !strings.Contains(joined, "\n"+want+"\n") {
 			t.Errorf("missing %s", want)
 		}
 	}
 	h := strings.Join(gitHardening(), " ")
-	for _, want := range []string{"--no-pager", "core.fsmonitor=false", "core.hooksPath=" + os.DevNull, "protocol.file.allow=never"} {
+	for _, want := range []string{"--no-pager", "--no-replace-objects", "core.fsmonitor=false", "core.hooksPath=" + os.DevNull, "protocol.file.allow=never"} {
 		if !strings.Contains(h, want) {
 			t.Errorf("hardening lacks %s", want)
 		}
