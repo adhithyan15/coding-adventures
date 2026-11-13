@@ -5,7 +5,8 @@ import (
 	"io"
 )
 
-// Paths of the committed policy files (KILN03 section 7).  They have
+// Paths of the first committed policy files (KILN03 section 7); toolchains.json,
+// env.json and host-roots.json (toolchains.go) are the other three.  They have
 // different owners and are deliberately separate files.
 const (
 	PinnedPath = "code/kiln/legacy/pinned.json"
@@ -24,6 +25,10 @@ const (
 type policy struct {
 	pinned map[string]bool // languages whose toolchain pinning has landed
 	never  map[string]bool // packages that are always uncacheable
+
+	tc    *Toolchains // toolchains.json: pins, probes, roots (KILN03 4)
+	env   *EnvPolicy  // env.json: the environment allowlist (KILN03 5)
+	roots *HostRoots  // host-roots.json: digest only for now (KILN04 5.3)
 }
 
 type pinnedFile struct {
@@ -51,7 +56,8 @@ func readSmall(src Source, path string, limit int64) ([]byte, error) {
 	return data, nil
 }
 
-// loadPolicy reads pinned.json and never.json.  A missing or malformed file is
+// loadPolicy reads pinned.json, never.json, toolchains.json, env.json and
+// host-roots.json.  A missing or malformed file is
 // an error: treating "no file" as "nothing pinned, nothing banned" would let a
 // deleted never.json silently re-admit a network-dependent package.  Every
 // never-listed name must be a package of the graph, so a typo cannot silently
@@ -63,7 +69,7 @@ func loadPolicy(src Source, names map[string]bool) (*policy, error) {
 		return nil, err
 	}
 	var pf pinnedFile
-	if err := strictDecode(data, &pf); err != nil {
+	if err := policyDecode(data, &pf); err != nil {
 		return nil, fmt.Errorf("%s: %w", PinnedPath, err)
 	}
 	if err := checkSorted(PinnedPath+" languages", pf.Languages); err != nil {
@@ -77,7 +83,7 @@ func loadPolicy(src Source, names map[string]bool) (*policy, error) {
 		return nil, err
 	}
 	var nf neverFile
-	if err := strictDecode(data, &nf); err != nil {
+	if err := policyDecode(data, &nf); err != nil {
 		return nil, fmt.Errorf("%s: %w", NeverPath, err)
 	}
 	if err := checkNameList(NeverPath+" packages", nf.Packages, names); err != nil {
@@ -85,6 +91,24 @@ func loadPolicy(src Source, names map[string]bool) (*policy, error) {
 	}
 	for _, n := range nf.Packages {
 		pol.never[n] = true
+	}
+	if data, err = readSmall(src, ToolchainsPath, maxPolicyBytes); err != nil {
+		return nil, err
+	}
+	if pol.tc, err = ParseToolchains(data); err != nil {
+		return nil, fmt.Errorf("%s: %w", ToolchainsPath, err)
+	}
+	if data, err = readSmall(src, EnvPath, maxPolicyBytes); err != nil {
+		return nil, err
+	}
+	if pol.env, err = ParseEnvPolicy(data); err != nil {
+		return nil, fmt.Errorf("%s: %w", EnvPath, err)
+	}
+	if data, err = readSmall(src, HostRootsPath, maxPolicyBytes); err != nil {
+		return nil, err
+	}
+	if pol.roots, err = ParseHostRoots(data, pol.tc); err != nil {
+		return nil, fmt.Errorf("%s: %w", HostRootsPath, err)
 	}
 	return pol, nil
 }

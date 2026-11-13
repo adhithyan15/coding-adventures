@@ -123,6 +123,25 @@ type segInfo struct {
 	seq  uint64
 }
 
+// checkPlainDir refuses a ledger directory that is a symlink (or any other
+// non-directory).  os.Open, ReadDir and MkdirAll all follow a final symlink
+// silently, so a ledger directory swapped for a link would redirect every read
+// and write to wherever it points.  Lstat reports the entry itself.  A missing
+// directory is fine: it is an empty ledger.  Only the final component is
+// checked; the path leading to it is the operator's own.
+func checkPlainDir(dir string) error {
+	li, err := os.Lstat(dir)
+	switch {
+	case errors.Is(err, fs.ErrNotExist):
+		return nil
+	case err != nil:
+		return err
+	case !li.IsDir():
+		return fmt.Errorf("ledger: %s is not a plain directory", filepath.Base(dir))
+	}
+	return nil
+}
+
 // listSegments lists the valid segment files of dir, in segment order
 // (sequence, then name).  Entries whose names do not match the pattern (temp
 // files of an interrupted write, a README) are ignored: they are never read.
@@ -130,6 +149,9 @@ type segInfo struct {
 // file is an error.  ReadDir reports each entry's own type without following
 // symlinks, so a symlinked segment is seen as a symlink.
 func listSegments(dir string) ([]segInfo, error) {
+	if err := checkPlainDir(dir); err != nil {
+		return nil, err
+	}
 	d, err := os.Open(dir)
 	if errors.Is(err, fs.ErrNotExist) {
 		return nil, nil
@@ -334,6 +356,9 @@ func (s *Store) Record(records []Record, auth Authority, now time.Time) error {
 	}
 	data, err := EncodeSegment(records)
 	if err != nil {
+		return err
+	}
+	if err := checkPlainDir(s.dir); err != nil { // MkdirAll follows a symlink silently
 		return err
 	}
 	if err := os.MkdirAll(s.dir, 0o755); err != nil {

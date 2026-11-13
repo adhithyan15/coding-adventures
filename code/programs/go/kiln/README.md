@@ -128,13 +128,38 @@ Hashes and provenance only; no build output.
 - Segment names are pattern-checked before any path is built; symlinks and
   non-regular files are refused (regular-file check on the open descriptor).
 
+## Manifest store (`internal/ledger`, KILN04 stage 2)
+
+Manifests are a store-only record kind in a `manifests/` subdirectory of the
+ledger directory: for one weak key, the sorted names (`pkg:`, `path:`,
+`list:`) a traced build read. They hold names only, never digests, and can
+never cause a hit by themselves (the strong key still needs a pass record).
+The pass-ledger reader never opens that subdirectory, and a manifest line
+dropped among pass segments is refused (and the reverse).
+
+- `OpenManifests(ledgerDir, scope).Record(manifests, auth, now)` writes one
+  immutable segment through the same `Authority` gate as passes. Manifests
+  are not restamped. A record over 8,192 entries, 512 bytes per name or 1 MiB
+  per line is refused with `ErrManifestTooLarge` (`manifest-too-large`).
+- `.Load(now)` returns a `ManifestSet`; `Manifests(weak)` gives at most 4
+  manifests, newest first by `(run, at)`, with distinct ids (the id is the
+  SHA-256 of the entries list, verified on read). Records older than 30 days
+  are dropped, and a re-recorded id does not crowd out other read-sets.
+- Reader policy: an over-cap record or segment is dropped and reported in the
+  `ManifestReport`; structural corruption (non-canonical line, unknown field,
+  id mismatch, bad entry, a store over 256 MiB) makes the whole store
+  unusable and `Load` returns an error, so there are no hits.
+- `MergeManifests(snapshotDir, deltaFile, outDir, auth, now)` is the manifest
+  half of `ledger-merge`: it needs `Trusted()`, reads the delta strictly,
+  applies retention, and writes a deterministic new snapshot.
+
 ## Legacy keys (`legacy-plan`)
 
 `internal/legacy` implements the core of [KILN03](../../../specs/KILN03-legacy-keys.md):
 keys for today's shell BUILD files, in **shadow mode** (nothing is skipped).
 
 ```
-kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder]
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder] [--probe]
 kiln explain --plan <plan.json> <package>
 ```
 
@@ -150,12 +175,42 @@ kiln explain --plan <plan.json> <package>
   holding a tree digest that covers paths, kinds, executable bits and content.
   `tool:build-tool` digests the old build tool's source, its in-repo `replace`
   targets, `go.work` and `vendor/`.
-- The key is a KILN02 key with **semantics version 0**. Tools and env are empty
-  in this milestone, so every package carries `m1-incomplete:tools-env` and
-  `m1-incomplete:trace` and none is `cacheable` yet. Packages whose closure has
-  an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
-  `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
-  for the OS are `uncacheable`.
+- The key is a KILN02 key with **semantics version 0**. Every package carries
+  `m1-incomplete:trace` (no traced read-set exists yet, KILN04), so none is
+  `cacheable` yet. Packages whose closure has an unpinned language
+  (`code/kiln/legacy/pinned.json`) are class `unpinned`;
+  `unknown-repo-inputs:<name>`, `unknown-toolchain:<name>`, `never.json`
+  entries and a missing BUILD file for the OS are `uncacheable`.
+- **Tools** (KILN03 section 4). `code/kiln/legacy/toolchains.json` maps each
+  closure language and extra toolchain to `pins` (an exact version from the
+  repository's committed pins, or `image`, meaning the runner image supplies it
+  and `Host.ImageID()` is the identity), `probes` and `roots` (the directories
+  of each tool, for `ConstructPATH`). The `tools` section of the key holds the
+  pins of every language in the package's closure plus the always-included set
+  (`sh`/`bash`, `cc`, `ld`, `strace` on Linux, `xcode-select` on macOS) as KILN02
+  kind-2 entries; `policy:toolchains.json` is a consumed entry. A closure
+  language or extra toolchain with no entry is the hard reason
+  `unknown-toolchain:<name>`, never "no tools". `ToolsFor` and `ConstructPATH`
+  are plain functions for the KILN04 weak key.
+- **Probes** (`--probe`, off by default, only for the platform the machine
+  runs). Each probe runs with no shell, an environment of just a fixed `PATH`
+  (toolchain directories only), `LANG=C`, `TZ=UTC` and a private `HOME` and
+  working directory, a 10 s timeout and 64 KiB of output; a binary that resolves
+  inside the checkout is refused. Output must carry the pin as a whole token, or
+  the package gets the soft reason `probe-mismatch:<tool>` (reported, never a
+  class). An absent tool is not an error. The plan's `probes` array shows each
+  tool's status.
+- **Environment** (KILN03 section 5). `code/kiln/legacy/env.json` is a strict
+  allowlist (a trailing `*` makes a prefix). Each set, matching variable goes
+  into the `env` section with its value; an unset one is omitted. A name
+  containing `:` is reserved, and a name that is secret-like after expansion is
+  an error that names the variable. `policy:env.json` is a consumed entry. Plans
+  and `kiln explain` show tool names (`name@pin`), env variable names and the
+  tools and env component **digests**, never values.
+- `code/kiln/legacy/host-roots.json` (KILN04 section 5.3: `roots`, `ephemeral`,
+  `absent-ok`) has a strict loader that cross-checks tool names against
+  `toolchains.json`. Only its digest is for the KILN04 weak key; nothing in the
+  static key reads it yet.
 - **Advisory hints** (KILN03 section 6) come from static scans of each
   package's own files, its closure members' files and its reads, in the same
   pass that hashes them: a `../` path that leaves the package, closure and
@@ -183,3 +238,86 @@ kiln explain --plan <plan.json> <package>
 - Glob semantics are pinned by
   [`glob-cases-v1.json`](../../../specs/fixtures/kiln/glob-cases-v1.json), which
   the old build tool's matcher must also satisfy.
+
+## Trace parser (`internal/trace`, KILN04 stage 1a)
+
+`internal/trace` is the pure parser for traced read-sets: it turns the text
+written by `strace -f --quiet=attach -y -s 4096 -o <file>` into an ordered list
+of path events plus the process tree. It never runs `strace` and never touches
+the filesystem.
+
+```go
+tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
+// tr.Events: Pid, Syscall, Kind, Path, Path2, DirfdPath, ReturnFDPath, Result, Flags, Addr
+// tr.Procs / tr.Exits: the process tree and exit statuses
+```
+
+- **Closed table.** Every syscall name is handled (open, metadata, listing,
+  directory, write, process, network), ignored (no path), or refused. An
+  unknown name is `trace-incomplete:unknown-syscall:<name>`, a refused one
+  `trace-incomplete:refused:<name>`; `clone` with `CLONE_UNTRACED` or any
+  `CLONE_NEW*` is `trace-incomplete:clone-flags`.
+- **A real scanner, no regular expressions.** `<unfinished ...>` and
+  `<... X resumed>` halves are paired per pid; strings are unescaped exactly
+  (`\"`, `\\`, `\n`, octal, hex); `-y` annotations such as `3</a b/c>` are read
+  with their `\<` and `\>` escapes. Truncated (`"..."...`), non-UTF-8,
+  `(deleted)` and ambiguous paths are errors.
+- **Process model.** Each process has a working directory (copied by
+  fork/clone, shared under `CLONE_FS`, changed by `chdir`/`fchdir`). Every pid
+  must have an exit line and every split call must be resumed.
+- **Fail closed.** Every refusal is a `*trace.Error` whose message is
+  `trace-incomplete:<detail>`, with a stable detail and no path text. Line,
+  total-byte and record caps (defaults 1 MiB, 64 MiB, 1M records, a
+  resident-memory bound) give `trace-incomplete:size`; argument counts are
+  bounded while scanning (`arity`).
+- **Working directory.** A child's cwd is snapshotted when the parent's
+  `fork`/`clone` succeeds; a split call uses the cwd at its start; a `chdir`
+  on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
+  last line lacks its newline is incomplete.
+- **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true, HelperExe: kiln})`
+  models the helper tree: the root (and its threads) spawns exactly one init
+  child, which sets up, may re-exec `HelperExe`, and then execs the step; the
+  first successful exec of a non-Kiln path is the step. Root events and the
+  init child's setup are discarded (failed execs of other paths are kept);
+  `unshare`, `mount`, `pivot_root` and the like are tolerated there only. The
+  step's cwd must equal `cwd`. `Trace.StepExit` and `Trace.InitPid` give the
+  init child's status and pid. Violations are `helper-spawn`,
+  `helper-activity`, `helper-exe`, `helper-no-init`, `helper-no-exec`,
+  `helper-cwd` and `helper-config` (KILN04 section 4.5).
+- **Boundary.** Paths are reported as printed, with the working directory or
+  `dirfd` path they are relative to. Resolving them against a tree (symlinks,
+  `..`, stability) is stage 1b.
+
+Fixtures in `internal/trace/testdata/` are hand-written in strace 6.x format;
+`FuzzParse` checks the parser never panics and only ever returns
+`trace-incomplete` errors.
+
+## Traced keys (`internal/key/traced.go`, `internal/legacy/traced.go`, KILN04 stage 1b-ii)
+
+A traced action has two KILN02 keys of semantics version 2. The **weak key**
+covers what a trace cannot see (platform, image, BUILD recipe, the
+`tool:build-tool` and `policy:` digests, the static closure's tool pins, and the
+scrubbed environment). The **strong key** is the weak key with `consumed`
+replaced by `weak:` -> W plus one entry per manifest entry, each paired with its
+digest as it is now.
+
+```go
+tr, err := legacy.NewTraced(graph, opts, "/abs/checkout", []string{"-exec-wrapper=/k"})
+w, err := tr.WeakKey("code/packages/go/example") // *legacy.Refusal if not traceable
+env := w.Environ()                               // exactly what the recorder runs with
+s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py", "list:code/shared"})
+```
+
+- **Digests** (`internal/key`): `path:` states `00` absent, `01` directory,
+  `02||exec||SHA-256(content)` file, `03||bytes(target)` link; the missing-package
+  digest; the sorted listing digest; and `T(q)`, which adds the names of directly
+  nested packages to `D(q)`.
+- **Digest provider** (`Traced.CurrentDigests`): memoised, reads only the tracked
+  tree through `Source`, never the disk.
+- **`ScrubbedEnv`**: allowlist, then `HOME`/`TMPDIR`, then a constructed `PATH`,
+  then `LANG=C.UTF-8` and `TZ=UTC`, later steps winning. One source of truth for
+  the key and the recorder.
+- Only strong keys hold `weak:`, so the two can never collide. An entry that is
+  not `pkg:`, `path:` or `list:` is refused.
+- Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
+  verify-vectors` checks them.

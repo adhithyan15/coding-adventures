@@ -457,6 +457,213 @@
       },
       "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000020000000000000008706c6174666f726d00000000000000056d61636f73000000000000000561726d36340000000000000004686f7374000000000000000006616374696f6e00000000000000017400000000000000056275696c6400000000000000067265636970650000000000000001720000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d656400000000000000030000000000000016636f64652f7061636b616765732f676f2f613a6c696200000000000000056275696c6400000000000000200b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0000000000000016636f64652f7061636b616765732f676f2f613a6c696200000000000000047465737400000000000000200c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0000000000000016636f64652f7061636b616765732f676f2f623a6c696200000000000000056275696c6400000000000000200d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0d0000000000000005746f6f6c7300000000000000000000000000000003656e76000000000000000200000000000000024349000000000000000131000000000000000004484f4d45000000000000000001",
       "key_hex": "3b72afdadd657c5cc152b26feb0ac57d9e09f49eef36b92d479e6d5100308938"
+    },
+    {
+      "name": "traced-weak-key",
+      "description": "A KILN04 weak key: semantics 2, empty inputs and reads, tool:/policy: consumed entries, scrubbed env plus kiln:root, kiln:recorder and kiln:executor-args (KILN04 3.1).",
+      "action": {
+        "semantics_version": 2,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": "ubuntu-24.04-image-7",
+        "target": "code/packages/go/example",
+        "phase": "test",
+        "recipe_hex": "000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000015676f2074657374202e2f2e2e2e202d636f7665720a",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "policy:env.json",
+            "phase": "build",
+            "key_hex": "1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f"
+          },
+          {
+            "target": "policy:git",
+            "phase": "build",
+            "key_hex": "2020202020202020202020202020202020202020202020202020202020202020"
+          },
+          {
+            "target": "policy:host-roots.json",
+            "phase": "build",
+            "key_hex": "2121212121212121212121212121212121212121212121212121212121212121"
+          },
+          {
+            "target": "tool:build-tool",
+            "phase": "build",
+            "key_hex": "2222222222222222222222222222222222222222222222222222222222222222"
+          }
+        ],
+        "tools": [
+          {
+            "name": "cc",
+            "version": "image",
+            "kind": 2,
+            "identity_hex": "7562756e74752d32342e30342d696d6167652d37"
+          },
+          {
+            "name": "go",
+            "version": "1.26.2",
+            "kind": 2,
+            "identity_hex": "312e32362e32"
+          },
+          {
+            "name": "sh",
+            "version": "image",
+            "kind": 2,
+            "identity_hex": "7562756e74752d32342e30342d696d6167652d37"
+          }
+        ],
+        "env": [
+          {
+            "name": "CI",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "HOME",
+            "value": "/home/runner",
+            "origin": 0
+          },
+          {
+            "name": "LANG",
+            "value": "C.UTF-8",
+            "origin": 0
+          },
+          {
+            "name": "PATH",
+            "value": "/opt/hostedtoolcache/go/1.26.2/x64/bin:/usr/bin",
+            "origin": 0
+          },
+          {
+            "name": "TZ",
+            "value": "UTC",
+            "origin": 0
+          },
+          {
+            "name": "kiln:executor-args",
+            "value": "\"-emit-results=/r.json\" \"-exec-wrapper=/k\"",
+            "origin": 0
+          },
+          {
+            "name": "kiln:recorder",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "kiln:root",
+            "value": "/home/runner/work/repo/repo",
+            "origin": 0
+          }
+        ]
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000020000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f73740100000000000000147562756e74752d32342e30342d696d6167652d370000000000000006616374696f6e0000000000000018636f64652f7061636b616765732f676f2f6578616d706c6500000000000000047465737400000000000000067265636970650000000000000046000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000015676f2074657374202e2f2e2e2e202d636f7665720a0000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d65640000000000000004000000000000000f706f6c6963793a656e762e6a736f6e00000000000000056275696c6400000000000000201f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f000000000000000a706f6c6963793a67697400000000000000056275696c64000000000000002020202020202020202020202020202020202020202020202020202020202020200000000000000016706f6c6963793a686f73742d726f6f74732e6a736f6e00000000000000056275696c6400000000000000202121212121212121212121212121212121212121212121212121212121212121000000000000000f746f6f6c3a6275696c642d746f6f6c00000000000000056275696c64000000000000002022222222222222222222222222222222222222222222222222222222222222220000000000000005746f6f6c730000000000000003000000000000000263630000000000000005696d6167650200000000000000147562756e74752d32342e30342d696d6167652d370000000000000002676f0000000000000006312e32362e32020000000000000006312e32362e32000000000000000273680000000000000005696d6167650200000000000000147562756e74752d32342e30342d696d6167652d370000000000000003656e76000000000000000800000000000000024349000000000000000131000000000000000004484f4d45000000000000000c2f686f6d652f72756e6e65720000000000000000044c414e470000000000000007432e5554462d3800000000000000000450415448000000000000002f2f6f70742f686f73746564746f6f6c63616368652f676f2f312e32362e322f7836342f62696e3a2f7573722f62696e000000000000000002545a00000000000000035554430000000000000000126b696c6e3a6578656375746f722d61726773000000000000002a222d656d69742d726573756c74733d2f722e6a736f6e2220222d657865632d777261707065723d2f6b2200000000000000000d6b696c6e3a7265636f726465720000000000000001310000000000000000096b696c6e3a726f6f74000000000000001b2f686f6d652f72756e6e65722f776f726b2f7265706f2f7265706f00",
+      "key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb"
+    },
+    {
+      "name": "traced-strong-key",
+      "description": "The strong key of traced-weak-key with four manifest entries (pkg:, path:, list:, and a missing package): consumed is weak: -\u003e W plus the entries, everything else identical (KILN04 3.2). Its key differs from the weak key's.",
+      "action": {
+        "semantics_version": 2,
+        "os": "linux",
+        "arch": "x64",
+        "host_image_id": "ubuntu-24.04-image-7",
+        "target": "code/packages/go/example",
+        "phase": "test",
+        "recipe_hex": "000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000015676f2074657374202e2f2e2e2e202d636f7665720a",
+        "inputs": [],
+        "reads": [],
+        "consumed": [
+          {
+            "target": "list:code/shared",
+            "phase": "build",
+            "key_hex": "d1df2e84060accd8a9f6e28a580e9e6e55330d46b2ad9643e6523fd98888d8ba"
+          },
+          {
+            "target": "path:code/scripts/helper.py",
+            "phase": "build",
+            "key_hex": "b29bd42b8763a9c65970fe790614a130ea71a00fbb7f0024e15d04ac33839756"
+          },
+          {
+            "target": "pkg:code/packages/go/dep",
+            "phase": "build",
+            "key_hex": "4e8f73b6aa1c4cff73cbf2ffa7cac0733fc9b9a535c12680db95d8370a328ea2"
+          },
+          {
+            "target": "pkg:code/packages/go/gone",
+            "phase": "build",
+            "key_hex": "0ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a8"
+          },
+          {
+            "target": "weak:",
+            "phase": "build",
+            "key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb"
+          }
+        ],
+        "tools": [
+          {
+            "name": "cc",
+            "version": "image",
+            "kind": 2,
+            "identity_hex": "7562756e74752d32342e30342d696d6167652d37"
+          },
+          {
+            "name": "go",
+            "version": "1.26.2",
+            "kind": 2,
+            "identity_hex": "312e32362e32"
+          },
+          {
+            "name": "sh",
+            "version": "image",
+            "kind": 2,
+            "identity_hex": "7562756e74752d32342e30342d696d6167652d37"
+          }
+        ],
+        "env": [
+          {
+            "name": "CI",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "HOME",
+            "value": "/home/runner",
+            "origin": 0
+          },
+          {
+            "name": "LANG",
+            "value": "C.UTF-8",
+            "origin": 0
+          },
+          {
+            "name": "PATH",
+            "value": "/opt/hostedtoolcache/go/1.26.2/x64/bin:/usr/bin",
+            "origin": 0
+          },
+          {
+            "name": "TZ",
+            "value": "UTC",
+            "origin": 0
+          },
+          {
+            "name": "kiln:executor-args",
+            "value": "\"-emit-results=/r.json\" \"-exec-wrapper=/k\"",
+            "origin": 0
+          },
+          {
+            "name": "kiln:recorder",
+            "value": "1",
+            "origin": 0
+          },
+          {
+            "name": "kiln:root",
+            "value": "/home/runner/work/repo/repo",
+            "origin": 0
+          }
+        ]
+      },
+      "preimage_hex": "00000000000000086b696c6e2d6b6579000000000000000100000000000000020000000000000008706c6174666f726d00000000000000056c696e757800000000000000037836340000000000000004686f73740100000000000000147562756e74752d32342e30342d696d6167652d370000000000000006616374696f6e0000000000000018636f64652f7061636b616765732f676f2f6578616d706c6500000000000000047465737400000000000000067265636970650000000000000046000000000000000c6c65676163792d7368656c6c000000000000000100000000000000054255494c440000000000000015676f2074657374202e2f2e2e2e202d636f7665720a0000000000000006696e7075747300000000000000000000000000000005726561647300000000000000000000000000000008636f6e73756d6564000000000000000500000000000000106c6973743a636f64652f73686172656400000000000000056275696c640000000000000020d1df2e84060accd8a9f6e28a580e9e6e55330d46b2ad9643e6523fd98888d8ba000000000000001b706174683a636f64652f736372697074732f68656c7065722e707900000000000000056275696c640000000000000020b29bd42b8763a9c65970fe790614a130ea71a00fbb7f0024e15d04ac338397560000000000000018706b673a636f64652f7061636b616765732f676f2f64657000000000000000056275696c6400000000000000204e8f73b6aa1c4cff73cbf2ffa7cac0733fc9b9a535c12680db95d8370a328ea20000000000000019706b673a636f64652f7061636b616765732f676f2f676f6e6500000000000000056275696c6400000000000000200ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a800000000000000057765616b3a00000000000000056275696c640000000000000020eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb0000000000000005746f6f6c730000000000000003000000000000000263630000000000000005696d6167650200000000000000147562756e74752d32342e30342d696d6167652d370000000000000002676f0000000000000006312e32362e32020000000000000006312e32362e32000000000000000273680000000000000005696d6167650200000000000000147562756e74752d32342e30342d696d6167652d370000000000000003656e76000000000000000800000000000000024349000000000000000131000000000000000004484f4d45000000000000000c2f686f6d652f72756e6e65720000000000000000044c414e470000000000000007432e5554462d3800000000000000000450415448000000000000002f2f6f70742f686f73746564746f6f6c63616368652f676f2f312e32362e322f7836342f62696e3a2f7573722f62696e000000000000000002545a00000000000000035554430000000000000000126b696c6e3a6578656375746f722d61726773000000000000002a222d656d69742d726573756c74733d2f722e6a736f6e2220222d657865632d777261707065723d2f6b2200000000000000000d6b696c6e3a7265636f726465720000000000000001310000000000000000096b696c6e3a726f6f74000000000000001b2f686f6d652f72756e6e65722f776f726b2f7265706f2f7265706f00",
+      "key_hex": "baf4ba91c84c5317175e545b05e4786061346213798c716e4e044ccfca817326"
     }
   ],
   "invalid": [
@@ -1178,6 +1385,275 @@
         "env": []
       },
       "error": "exactly 32 bytes"
+    }
+  ],
+  "digests": [
+    {
+      "name": "state-absent",
+      "description": "A path with nothing tracked: SHA-256 of the single byte 00.",
+      "kind": "state-absent",
+      "digest_hex": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "name": "state-directory",
+      "description": "A directory: SHA-256 of the single byte 01.",
+      "kind": "state-directory",
+      "digest_hex": "4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a"
+    },
+    {
+      "name": "state-file",
+      "description": "A regular file, not executable: SHA-256 of 02 || 00 || SHA-256(content).",
+      "kind": "state-file",
+      "content_hex": "ab08508fdf5ca4da5c4995987bc41c56c048aaa5eeb046417ae4049b7d40286e",
+      "digest_hex": "9484e4ebfd989889628fc4c5f51597f8a3d34f3cfbce72abb72aa5a214515ee9"
+    },
+    {
+      "name": "state-file-exec",
+      "description": "The same content, executable: differs from state-file.",
+      "kind": "state-file",
+      "exec": 1,
+      "content_hex": "ab08508fdf5ca4da5c4995987bc41c56c048aaa5eeb046417ae4049b7d40286e",
+      "digest_hex": "e4ce096ee8f15d192c3274ade55155c6c25709a76dd6a7614f446ce351b45657"
+    },
+    {
+      "name": "state-link",
+      "description": "A symbolic link: SHA-256 of 03 || bytes(target).",
+      "kind": "state-link",
+      "target": "../lib/real.so",
+      "digest_hex": "499336773d78da5826673a1b36fdc2b34eabdc21297b165bf7f760c8faee1681"
+    },
+    {
+      "name": "missing-package",
+      "description": "A package that no longer exists: SHA-256 of str(\"kiln-missing-package\").",
+      "kind": "missing-package",
+      "digest_hex": "0ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a8"
+    },
+    {
+      "name": "listing-not-directory",
+      "description": "A path that is not a directory in the tracked tree (absent, file or link): SHA-256 of the single byte 11.",
+      "kind": "listing-not-directory",
+      "digest_hex": "4a64a107f0cb32536e5bce6c98c393db21cca7f4ea187ba8c4dca8b51d4ea80a"
+    },
+    {
+      "name": "listing-mixed",
+      "description": "A tracked directory (tag 10): a file, a link and a directory; names sorted bytewise ('B' before 'a'), non-ASCII included.",
+      "kind": "listing",
+      "entries": [
+        {
+          "name": "B",
+          "kind": 1
+        },
+        {
+          "name": "a",
+          "kind": 3
+        },
+        {
+          "name": "café",
+          "kind": 2
+        },
+        {
+          "name": "x.txt",
+          "kind": 1
+        }
+      ],
+      "digest_hex": "648320ccf793b8441a775994b12ae03b7f8dc5e1b862cd72b0195a2c42de6d42"
+    },
+    {
+      "name": "listing-kind-matters",
+      "description": "Same names as listing-mixed with 'a' a file instead of a directory: the digest differs.",
+      "kind": "listing",
+      "entries": [
+        {
+          "name": "B",
+          "kind": 1
+        },
+        {
+          "name": "a",
+          "kind": 1
+        },
+        {
+          "name": "café",
+          "kind": 2
+        },
+        {
+          "name": "x.txt",
+          "kind": 1
+        }
+      ],
+      "digest_hex": "7d9a31312cef8fb50f508a23608db9c4f185169d154168e3dc3b27f852350f03"
+    },
+    {
+      "name": "traced-package-no-nested",
+      "description": "T(q) of a package with no nested package.",
+      "kind": "traced-package",
+      "own_digest_hex": "a5d8ecc2fd608d3646221a1d03b81109cac5bd11a0921f8b893bf391cdfc6e26",
+      "digest_hex": "503f25fb582d4d68f073974b5c0ec2ae8b26dcbfc04143a02665cd185f5b61d2"
+    },
+    {
+      "name": "traced-package-nested",
+      "description": "T(q) of the same D(q) with two directly nested packages: differs from traced-package-no-nested (KILN04 5.2).",
+      "kind": "traced-package",
+      "own_digest_hex": "a5d8ecc2fd608d3646221a1d03b81109cac5bd11a0921f8b893bf391cdfc6e26",
+      "nested": [
+        "code/packages/go/q/ext/a",
+        "code/packages/go/q/ext/b"
+      ],
+      "digest_hex": "bda1584e5533c50f668891bf2d334b9ab5e13af9106255f128257a82ebfd9bb0"
+    }
+  ],
+  "strong_consumed": [
+    {
+      "name": "strong-consumed-sorted",
+      "description": "Entries given out of order come out sorted bytewise (list:, path:, pkg:, then weak:); every phase is build.",
+      "weak_key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb",
+      "entries": [
+        {
+          "name": "pkg:code/packages/go/dep",
+          "digest_hex": "4e8f73b6aa1c4cff73cbf2ffa7cac0733fc9b9a535c12680db95d8370a328ea2"
+        },
+        {
+          "name": "path:code/scripts/helper.py",
+          "digest_hex": "b29bd42b8763a9c65970fe790614a130ea71a00fbb7f0024e15d04ac33839756"
+        },
+        {
+          "name": "list:code/shared",
+          "digest_hex": "d1df2e84060accd8a9f6e28a580e9e6e55330d46b2ad9643e6523fd98888d8ba"
+        },
+        {
+          "name": "pkg:code/packages/go/gone",
+          "digest_hex": "0ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a8"
+        }
+      ],
+      "consumed": [
+        {
+          "target": "list:code/shared",
+          "phase": "build",
+          "key_hex": "d1df2e84060accd8a9f6e28a580e9e6e55330d46b2ad9643e6523fd98888d8ba"
+        },
+        {
+          "target": "path:code/scripts/helper.py",
+          "phase": "build",
+          "key_hex": "b29bd42b8763a9c65970fe790614a130ea71a00fbb7f0024e15d04ac33839756"
+        },
+        {
+          "target": "pkg:code/packages/go/dep",
+          "phase": "build",
+          "key_hex": "4e8f73b6aa1c4cff73cbf2ffa7cac0733fc9b9a535c12680db95d8370a328ea2"
+        },
+        {
+          "target": "pkg:code/packages/go/gone",
+          "phase": "build",
+          "key_hex": "0ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a8"
+        },
+        {
+          "target": "weak:",
+          "phase": "build",
+          "key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb"
+        }
+      ]
+    },
+    {
+      "name": "strong-consumed-empty-manifest",
+      "description": "A manifest with no entries: consumed holds only weak: -\u003e W.",
+      "weak_key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb",
+      "entries": [],
+      "consumed": [
+        {
+          "target": "weak:",
+          "phase": "build",
+          "key_hex": "eac9949d00c78275ae544eb02a9ec8a25e62be4ec56cdada28711f1d134317fb"
+        }
+      ]
+    }
+  ],
+  "refused_entries": [
+    {
+      "name": "refused-weak-prefix",
+      "description": "A manifest entry with the weak: prefix could forge the strong key's own entry.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "weak:d9298a10d1b0735837dc4bd85dac641b0f3cef27a47e5d53a54f2f3f5b2fcffa",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "prefix is not pkg:, path: or list:"
+    },
+    {
+      "name": "refused-bare-weak",
+      "description": "The bare target weak: is not a manifest entry either.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "weak:",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "prefix is not pkg:, path: or list:"
+    },
+    {
+      "name": "refused-unknown-prefix",
+      "description": "tool: is a weak-key entry, not a manifest entry.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "tool:build-tool",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "prefix is not pkg:, path: or list:"
+    },
+    {
+      "name": "refused-no-prefix",
+      "description": "An entry with no prefix.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "code/x",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "prefix is not pkg:, path: or list:"
+    },
+    {
+      "name": "refused-dotdot",
+      "description": "A path entry that leaves the repository.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "path:../etc/passwd",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "malformed path"
+    },
+    {
+      "name": "refused-duplicate",
+      "description": "The same entry twice.",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "path:a",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        },
+        {
+          "name": "path:a",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "appears twice"
+    },
+    {
+      "name": "refused-path-root",
+      "description": "path:. is not a path (only list:. names the root).",
+      "weak_key_hex": "481ba4019c9d2710c3386537382592c093ef02bf5b056c30237b3d92b0e19a1d",
+      "entries": [
+        {
+          "name": "path:.",
+          "digest_hex": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+        }
+      ],
+      "error": "malformed path"
     }
   ]
 }
