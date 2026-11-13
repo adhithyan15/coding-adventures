@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.19.0 - 2026-11-12
+
+### Added
+
+- Added a second ordered intermediate path-length transition that consumes the
+  stronger Name-policy-backed first-step result.
+- Added retained-policy success and detached-construction rejection coverage
+  over a checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The new transition shares the generic second step's exact-construction,
+  immediate-depth, issuer-continuity, authenticated-child, complete-policy,
+  and path-length checks while retaining the exact Name-value policy, reviewed
+  anchor, anchor role policy, both routed signatures, and both intermediate
+  policies through the result.
+- This proves exactly two routed public-certificate transitions. It does not
+  define complete RFC 5280 Name equality, generalize arbitrary traversal,
+  validate the whole path, apply name constraints or revocation, perform TLS
+  or HTTP, authorize OAuth transport, or grant network authority.
+
 ## 0.18.0 - 2026-11-12
 
 ### Added
