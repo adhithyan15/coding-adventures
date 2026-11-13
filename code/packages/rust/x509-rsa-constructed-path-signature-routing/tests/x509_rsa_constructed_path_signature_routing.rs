@@ -40,6 +40,7 @@ use x509_rsa_constructed_path_signature_routing::{
     advance_next_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_x509_rsa_constructed_path_intermediate_path_length,
+    bind_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_signature,
     bind_accumulated_reviewed_x509_rsa_constructed_path_target_signature,
     bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_constructed_path_intermediate_policy,
@@ -1582,6 +1583,90 @@ fn accumulates_name_policy_backed_ordered_intermediates_without_losing_provenanc
     assert_eq!(
         format!("{accumulated:?}"),
         "AccumulatedNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength"
+    );
+
+    let detached_accumulated =
+        accumulate_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+            &initialized,
+            &reviewed_terminal,
+            &ordered_signatures,
+            &policies,
+            2,
+        )
+        .unwrap();
+    let detached_target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        detached_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let error = bind_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_signature(
+        detached_accumulated,
+        detached_target_signature,
+        server_policy_for(&target, "sectigo.com", &time(b"\x17\x0d261112000000Z")),
+    )
+    .expect_err("a target signature from another construction remains detached evidence");
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathTargetSignatureClosureErrorKind::EvidenceMismatch
+    );
+
+    let target_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &routes,
+        limits(),
+    )
+    .unwrap();
+    let closed = bind_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_signature(
+        accumulated,
+        target_signature,
+        server_policy_for(&target, "sectigo.com", &time(b"\x17\x0d261112000000Z")),
+    )
+    .unwrap();
+
+    assert_eq!(
+        closed
+            .accumulated_intermediates()
+            .processed_intermediate_count(),
+        2
+    );
+    assert!(std::ptr::eq(
+        closed
+            .accumulated_intermediates()
+            .initialized_path_length()
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert!(std::ptr::eq(
+        closed
+            .accumulated_intermediates()
+            .initialized_path_length()
+            .reviewed_path()
+            .anchor_role_policy()
+            .certificate(),
+        &candidates[2]
+    ));
+    assert_eq!(closed.target_signature().adjacent_link().issuer_depth(), 0);
+    assert!(std::ptr::eq(closed.server_policy().certificate(), &target));
+    assert_eq!(
+        format!("{closed:?}"),
+        "BoundAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetSignature"
     );
 }
 
