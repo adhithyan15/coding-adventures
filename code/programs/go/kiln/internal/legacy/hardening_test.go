@@ -39,7 +39,7 @@ func TestProbeNeedsARoot(t *testing.T) {
 func TestRelativeHomeIsDropped(t *testing.T) {
 	tc := mustToolchains(t, sampleToolchains)
 	tools, _ := tc.ToolsFor([]string{"rust"}, "linux", "i")
-	for _, home := range []string{"home", "../x", ".", "/h/../x", "/h/", "/h:/evil", "/h;/evil", "//h", `C:\Users\u`} {
+	for _, home := range []string{"home", "../x", ".", "/h/../x", "/h/", "/h:/evil", "/h;/evil", "//h", `C:\Users\u`, `/h\..\..\x`, "/"} {
 		if p := tc.ConstructPATH(tools, home); strings.Contains(p, ".cargo") {
 			t.Errorf("home %q put %q on the PATH", home, p)
 		}

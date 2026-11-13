@@ -224,8 +224,12 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	}
 	used, _ := t.selected(names, osName)
 	tools, _ := t.ToolsFor(names, osName, "")
-	pathVar := t.ConstructPATH(tools, opt.Home) // drops a home that is not absolute and clean
-	var dirs []string                           // ConstructPATH uses POSIX ':' on every host
+	home := opt.Home
+	if home != "" && inside(home, root) {
+		home = "" // a HOME inside the checkout would put checkout directories on the PATH
+	}
+	pathVar := t.ConstructPATH(tools, home) // drops a home that is not absolute and clean
+	var dirs []string                       // ConstructPATH uses POSIX ':' on every host
 	if pathVar != "" {
 		dirs = strings.Split(pathVar, posixListSep)
 	}

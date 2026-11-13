@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"path"
-	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -456,8 +455,8 @@ const posixListSep = ":"
 // or odd HOME would put a relative directory on the PATH, which is the
 // checkout when the probe runs.
 func validHome(home string) bool {
-	return home != "" && path.IsAbs(home) && path.Clean(home) == home &&
-		!strings.ContainsAny(home, ":;")
+	return home != "" && home != "/" && path.IsAbs(home) && path.Clean(home) == home &&
+		!strings.ContainsAny(home, ":;\\")
 }
 
 // ConstructPATH builds a PATH from the roots of exactly the given tools
@@ -485,7 +484,7 @@ func (t *Toolchains) ConstructPATH(tools []key.Tool, home string) string {
 				if home == "" {
 					continue
 				}
-				d = filepath.ToSlash(home) + d[len("$HOME"):]
+				d = home + d[len("$HOME"):] // validHome: POSIX-absolute, no backslash
 			}
 			if seen[d] {
 				continue
