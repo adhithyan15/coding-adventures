@@ -539,8 +539,10 @@ func TestSandboxStraceTraceSetNamesAreValid(t *testing.T) {
 	if err != nil {
 		skipOrFail(t, "strace is not installed")
 	}
-	names := strings.Split(requiredTraceSet, ",")
-	if len(names) < 20 {
+	// The names come from the exported argv the recorder uses (S3), so this
+	// checks the set it will really run, plus strace's classes.
+	names := append(strings.Split(sandbox.TraceSet(), ",")[:3:3], sandbox.TraceNames()...)
+	if len(names) < 40 {
 		t.Fatalf("the trace set has only %d names", len(names))
 	}
 	// The options the recorder relies on, too.
@@ -555,14 +557,15 @@ func TestSandboxStraceTraceSetNamesAreValid(t *testing.T) {
 			t.Errorf("strace does not accept trace=%s: %v: %s", name, err, strings.TrimSpace(string(out)))
 		}
 	}
+	// And the whole argv, as the recorder passes it, around a harmless command.
+	args, err := sandbox.StraceArgs(os.DevNull)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out, err := exec.Command(straceBin, append(args, "true")...).CombinedOutput(); err != nil {
+		t.Errorf("strace does not accept the recorder's argv: %v: %s", err, strings.TrimSpace(string(out)))
+	}
 }
-
-// requiredTraceSet is the -e trace= set of KILN04 section 4.3.
-const requiredTraceSet = "%file,%process,%network,getdents,getdents64,fchdir," +
-	"io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount," +
-	"fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace," +
-	"process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark," +
-	"fchmod,fchown,fsetxattr,fremovexattr"
 
 // TestSandboxRealStrace runs the sandbox under the real strace the way the
 // recorder will, and parses the trace with the stage 1a parser in helper mode.
@@ -600,9 +603,12 @@ func TestSandboxRealStrace(t *testing.T) {
 		t.Fatal(err)
 	}
 	trf := filepath.Join(f.base, "trace.txt")
-	args := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "--pidns-translation", "-e", "signal=none",
-		"-e", "trace=" + requiredTraceSet, "-o", trf, "--",
-		f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat " + data}
+	// The exported argv, exactly what the recorder runs (KILN04 section 4.3).
+	args, err := sandbox.StraceArgs(trf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	args = append(args, f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat "+data)
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, straceBin, args...)
