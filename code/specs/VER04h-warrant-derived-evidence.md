@@ -456,6 +456,29 @@ Further checks added by the security review (each has a falsification test in
     `EvidenceMismatch`.  The id is reserved, so no manifest entry may use it.
     The audit profile that picks the static CWE-326/327/407 sentences gains
     `varint-codec`.
+21. **CWE-409 (decompression bomb) is derived, and never excluded for a package
+    that decompresses** (first adopter `lzw`).  The matrix used to print one row
+    for every package, *excluded*, "implements no decompression or archive
+    decoding routines": true for the earlier adopters, false for a decompressor.
+    The row is now `excluded` only when the audit profile does not decompress
+    *and* the document declares no `output` bound row (WX-H, VER04j section 6).
+    Otherwise it is derived from the document and the test manifest: every
+    operation with an `output` row must also declare a `heap` row, the manifest
+    must hold passing exhaustive, property and fuzz suites named
+    `<op>/output-bound` for it (the generated property: an `Ok` result is no
+    larger than the row), and no observed manifest entry of the operation may have
+    `max_observed_heap > bound_at_max` (the allocation observer's measurement
+    against the `heap` row).  Complete evidence is `discharged`, labelled bounded
+    (VER15 `bounded(k)`: the bound is checked on enumerated and sampled inputs and
+    on the document's declared bomb examples, not proved for every input), and
+    cites exactly those suites.  Any missing, failing or over-bound fact is an
+    open row, so no report is generated.  The profile `lossless-compression`
+    applies the class even to a document with no `output` row (that is an open
+    row), and an `output` row applies it under any profile.  `--check` re-derives
+    the facts in both directions: a report that excludes the class for a document
+    with an `output` row, discharges it on evidence the manifest does not support,
+    cites a different id set, or records an exemption, is `EvidenceMismatch`.
+    The audit profile gains `lossless-compression`.
 
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the

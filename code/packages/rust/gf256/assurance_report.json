@@ -386,6 +386,7 @@
     }
   ],
   "package": "rust/gf256",
+  "profile": "field-arithmetic",
   "public_symbols_without_claims": [],
   "rungs": {
     "E0": "pass",

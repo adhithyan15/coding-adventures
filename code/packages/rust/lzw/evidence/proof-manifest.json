@@ -1,0 +1,83 @@
+{
+  "max_len": 0,
+  "module": "lzw",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "compress",
+      "id": "warrant/lzw/proof/compress/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "compress",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "compress",
+      "id": "warrant/lzw/proof/compress/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
+      "op": "compress",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "compress",
+      "id": "warrant/lzw/proof/compress/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?')",
+      "op": "compress",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "decompress",
+      "id": "warrant/lzw/proof/decompress/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "decompress",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "decompress",
+      "id": "warrant/lzw/proof/decompress/heap-bound",
+      "kind": "heap-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "no prover tracks this resource; the generated harness runs every instance of this operation under its allocation observer (VER04j section 6.3) and records max_observed_heap in evidence/test-manifest.json",
+      "op": "decompress",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "decompress",
+      "id": "warrant/lzw/proof/decompress/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?')",
+      "op": "decompress",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/lzw/src/lib.rs",
+  "source_sha256": "4ec066cc48608866ff55fa59ac41d18dde6f031abe4539996d587a642f807ad6",
+  "spec": "code/specs/lzw.warrant",
+  "spec_sha256": "7edc8f9cfd43e6c469652e8fc3e6cc8e3f0900b00e2a0a7d3ffed1c6e5caa193"
+}
