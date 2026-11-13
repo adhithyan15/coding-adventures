@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -204,6 +205,23 @@ func severity(s string) int {
 // tools, ConstructPATH), `LANG=C`, `TZ=UTC` and a private HOME and working
 // directory, a 10 s timeout and 64 KiB of output.  A binary whose real path
 // (after symlinks) lies inside opt.Root is never run.
+// homeInsideRoot reports whether a POSIX-form HOME (validHome's rules) lies
+// in or under the checkout root. It compares POSIX strings, not filepath.Rel:
+// on Windows the root carries a volume ("C:\\...") that a POSIX HOME never
+// has, so Rel would error and every HOME would be dropped, changing the PATH.
+// A root with a volume therefore cannot contain a POSIX HOME. Case-folded on
+// darwin and windows, whose default filesystems ignore case.
+func homeInsideRoot(home, root string) bool {
+	if filepath.VolumeName(root) != "" {
+		return false
+	}
+	h, r := path.Clean(home), path.Clean(filepath.ToSlash(root))
+	if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
+		h, r = strings.ToLower(h), strings.ToLower(r)
+	}
+	return h == r || r == "/" || strings.HasPrefix(h, r+"/")
+}
+
 func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res []ProbeResult, err error) {
 	run := opt.Run
 	if run == nil {
@@ -225,7 +243,7 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	used, _ := t.selected(names, osName)
 	tools, _ := t.ToolsFor(names, osName, "")
 	home := opt.Home
-	if home != "" && inside(home, root) {
+	if home != "" && homeInsideRoot(home, root) {
 		home = "" // a HOME inside the checkout would put checkout directories on the PATH
 	}
 	pathVar := t.ConstructPATH(tools, home) // drops a home that is not absolute and clean

@@ -293,3 +293,21 @@ func TestPolicyFilesAreCaseExactAndDuplicateFree(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestHomeInsideRootComparesPOSIXStrings(t *testing.T) {
+	cases := []struct {
+		home, root string
+		want       bool
+	}{
+		{"/w/repo", "/w/repo", true},
+		{"/w/repo/sub", "/w/repo", true},
+		{"/w/repository", "/w/repo", false},
+		{"/home/u", "/w/repo", false},
+		{"/home/u", `C:\work\repo`, false}, // a volume root cannot contain a POSIX HOME
+	}
+	for _, c := range cases {
+		if got := homeInsideRoot(c.home, c.root); got != c.want {
+			t.Errorf("homeInsideRoot(%q, %q) = %v, want %v", c.home, c.root, got, c.want)
+		}
+	}
+}
