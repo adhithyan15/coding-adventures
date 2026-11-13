@@ -74,7 +74,7 @@ func TestCommittedPolicyFiles(t *testing.T) {
 	if got := strings.Join(names, " "); got != "bash cc ld sh strace" {
 		t.Fatalf("always-included tools on linux = %q", got)
 	}
-	if mac, _ := tc.ToolsFor(nil, "darwin", "img"); len(mac) != 5 || mac[len(mac)-1].Name != "xcode-select" {
+	if mac, _ := tc.ToolsFor(nil, "darwin", "img"); len(mac) != 6 || mac[len(mac)-1].Name != "xcode-select" {
 		t.Fatalf("darwin: %+v", mac)
 	}
 
