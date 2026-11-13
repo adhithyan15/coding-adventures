@@ -667,6 +667,12 @@ mod linux {
         }
     }
 
+    #[cfg(test)]
+    thread_local! {
+        /// Test-only: make the OS randomness source fail on this thread.
+        static RANDOM_FAILS: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+    }
+
     fn random_hex() -> String {
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
@@ -1651,6 +1657,32 @@ mod linux {
             assert!(result.is_err());
             assert!(!path.exists(), "unwinding left {}", path.display());
             let _ = std::fs::remove_dir_all(config.evidence_dir.unwrap());
+        }
+
+        #[test]
+        fn no_os_randomness_fails_closed_with_not_live_rcg013() {
+            const PURE: &str = r#"{"version":1,"package":"rust/harness-unit","capabilities":[],"justification":"unit"}"#;
+            let dir = scratch("norandom");
+            let config = pure_config(dir.clone(), PURE);
+            RANDOM_FAILS.with(|f| f.set(true));
+            let created = ScratchDir::new(&config, "rcg-scratch");
+            let code = run(&config);
+            RANDOM_FAILS.with(|f| f.set(false));
+            let err = created.err().expect("weak name accepted").to_string();
+            assert!(err.contains("no OS randomness"), "{err}");
+            assert_eq!(code, i32::from(strict()));
+            let evidence =
+                std::fs::read_to_string(dir.join("capability_runtime_evidence.json")).unwrap();
+            assert!(evidence.contains("\"overall\": \"not-live\""), "{evidence}");
+            assert!(evidence.contains("RCG013"), "{evidence}");
+            assert!(evidence.contains("no OS randomness"), "{evidence}");
+            let left: Vec<_> = std::fs::read_dir(&dir)
+                .unwrap()
+                .filter_map(|e| e.ok())
+                .filter(|e| e.file_name().to_string_lossy().starts_with("rcg-scratch"))
+                .collect();
+            assert!(left.is_empty(), "left {left:?}");
+            let _ = std::fs::remove_dir_all(dir);
         }
     }
 }
