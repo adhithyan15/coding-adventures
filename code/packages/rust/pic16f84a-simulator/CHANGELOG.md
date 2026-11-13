@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/tests.rs`: `needless_range_loop`: return-stack test iterates the stack with `iter().enumerate()`; behaviour unchanged.
+
 ## 0.1.0
 
 - Add the source-pinned PIC16F84A classic mid-range functional CPU model.

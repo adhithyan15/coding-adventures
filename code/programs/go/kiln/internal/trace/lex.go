@@ -397,3 +397,42 @@ func fdPathText(ann []byte, requireAbs bool) (string, string) {
 	}
 	return s, ""
 }
+
+// parseArgv decodes the argv argument of an exec call: ["sh", "-c", "make"].
+// Only an exact decoding is returned.  A truncated string, a bare "..." element
+// (strace prints the first 32 elements, then "..."), a pointer or anything
+// unexpected gives nil: the caller must not trust a partial argument vector.
+func parseArgv(raw string) []string {
+	raw = strings.TrimSpace(raw)
+	if len(raw) < 2 || raw[0] != '[' || raw[len(raw)-1] != ']' {
+		return nil
+	}
+	body := raw[1 : len(raw)-1]
+	out := []string{}
+	for i := 0; i < len(body); {
+		if body[i] != '"' {
+			return nil
+		}
+		val, trunc, end, r := decodeString(body, i)
+		if r != "" || trunc {
+			return nil
+		}
+		s, r := pathBytes(val)
+		if r != "" {
+			return nil
+		}
+		out = append(out, s)
+		i = end
+		if i == len(body) {
+			break
+		}
+		if !strings.HasPrefix(body[i:], ", ") {
+			return nil
+		}
+		i += 2
+		if i >= len(body) {
+			return nil
+		}
+	}
+	return out
+}

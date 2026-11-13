@@ -63,10 +63,14 @@ type Result struct {
 // Event is one observation or write attempt.  A failed path call is still an
 // event (an ENOENT is an observation that the path was absent).
 type Event struct {
-	Line    int    // 1-based line of the trace where the call completed
-	Pid     int    // process (thread) that made the call
-	Syscall string // e.g. "openat"
-	Kind    Kind
+	Line int // 1-based line of the trace where the call completed
+	// StartLine is the line where the call STARTED: the "<unfinished ...>" line
+	// of a split call, else Line.  A lookup that ran while another process
+	// completed a rename is ordered by its start, not its completion.
+	StartLine int
+	Pid       int    // process (thread) that made the call
+	Syscall   string // e.g. "openat"
+	Kind      Kind
 	// Cwd is the process's working directory expression when the call ran.
 	Cwd string
 	// Path is the primary path argument, as printed (unresolved).  For
@@ -95,6 +99,15 @@ type Event struct {
 	Flags string
 	// Addr is the destination of a network call; nil when there is none.
 	Addr *Addr
+	// SockPath is the -y name of the socket a network call used
+	// ("socket:[123]"), or of the descriptor socket() returned; "" when the
+	// annotation was absent.
+	SockPath string
+	// Argv is the argument vector of an execve/execveat call, decoded exactly.
+	// It is nil when it could not be decoded exactly (a truncated string, a
+	// trailing "..." that means strace printed only the first elements, a
+	// pointer): the recipe comparison (stage 1b) then fails closed.
+	Argv []string
 }
 
 // Exit is a process's exit line.
@@ -142,6 +155,25 @@ func (t *Trace) StepExit() *Exit {
 	return nil
 }
 
+// StepEvent returns the exec event that started the step: the first
+// SUCCESSFUL execve/execveat of the process whose exit status is the step's
+// (the init child under HelperRoot, else the root).  Failed execs before it are
+// ENOENT probes of the shell's PATH search and are not the step.  It returns
+// nil when there is none.
+func (t *Trace) StepEvent() *Event {
+	pid := t.RootPid
+	if t.InitPid != 0 {
+		pid = t.InitPid
+	}
+	for i := range t.Events {
+		e := &t.Events[i]
+		if e.Pid == pid && e.Kind == KindProcess && isExecName(e.Syscall) && e.Result.OK {
+			return e
+		}
+	}
+	return nil
+}
+
 // cwdCell is the filesystem context (the working directory) that processes
 // created with CLONE_FS share.  refs counts the LIVE processes using it.
 type cwdCell struct {
@@ -151,11 +183,12 @@ type cwdCell struct {
 
 type proc struct {
 	*Process
-	cwd      *cwdCell
-	exited   bool
-	startCwd string // cwd sampled at the "<unfinished ...>" line of a split call
-	hasStart bool
-	grp      helperGroup
+	cwd       *cwdCell
+	exited    bool
+	startCwd  string // cwd sampled at the "<unfinished ...>" line of a split call
+	startLine int    // the line of that "<unfinished ...>" marker
+	hasStart  bool
+	grp       helperGroup
 }
 
 // helperGroup says which part of the sandbox helper a process belongs to.
@@ -526,7 +559,7 @@ func (m *model) apply(rec *record) *Error {
 		return incomplete(rec.line, reasonHelperActivity)
 	}
 	if rec.start {
-		p.startCwd, p.hasStart = p.cwd.path, true
+		p.startCwd, p.startLine, p.hasStart = p.cwd.path, rec.line, true
 		return nil
 	}
 	c := rec.call
@@ -705,17 +738,29 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		return fail(reasonResult)
 	}
 	// A split call ran in the directory that was current when it STARTED.
-	cwdAtCall := p.cwd.path
+	cwdAtCall, startLine := p.cwd.path, rec.line
 	if rec.split && p.hasStart {
-		cwdAtCall = p.startCwd
+		cwdAtCall, startLine = p.startCwd, p.startLine
 	}
 	p.hasStart = false
-	ev := Event{Line: rec.line, Pid: rec.pid, Syscall: c.name, Kind: ent.kind, Cwd: cwdAtCall, Result: toResult(c.ret)}
+	ev := Event{Line: rec.line, StartLine: startLine, Pid: rec.pid, Syscall: c.name, Kind: ent.kind, Cwd: cwdAtCall, Result: toResult(c.ret)}
 	arg := func(i int) string { return c.args[i-1] }
+
+	if ent.kind == KindNetwork {
+		// The socket's own -y name (socket:[inode]) lets a later stage tell one
+		// socket from another and read its type from the socket() call.
+		if ent.role == roleSocket {
+			if c.ret.hasAnn {
+				ev.SockPath, _ = fdPathText(c.ret.ann, false)
+			}
+		} else if f, r := parseFD(arg(1)); r == "" && f.hasAnn {
+			ev.SockPath, _ = fdPathText(f.ann, false)
+		}
+	}
 
 	var r string
 	switch ent.role {
-	case roleListing, roleFchdir:
+	case roleListing, roleFchdir, roleFdPath:
 		f, r := parseFD(arg(1))
 		if r != "" {
 			return fail(r)
@@ -795,6 +840,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 				return fail(reasonCwdTooLong)
 			}
 			p.cwd.path = n
+		}
+		if ent.role == roleExec {
+			ai := 2
+			if c.name == "execveat" {
+				ai = 3
+			}
+			ev.Argv = parseArgv(c.args[ai-1])
 		}
 		if ent.role == roleExec && c.ret.ok() {
 			p.LastExec = ev.Path

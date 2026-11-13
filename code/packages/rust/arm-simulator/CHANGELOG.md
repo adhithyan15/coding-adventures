@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed registers with `iter_mut().enumerate().take(15)`; behaviour unchanged.
+
 ## [0.2.0] - 2026-09-01
 
 ### Added

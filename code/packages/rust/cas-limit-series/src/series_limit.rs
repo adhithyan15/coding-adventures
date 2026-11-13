@@ -262,9 +262,9 @@ impl Series {
         let n = self.order;
         let mut result = Self::constant(Frac::zero(), n);
         let mut inner_pow = Self::constant(Frac::one(), n);
-        for k in 0..=n {
-            if !self.coeffs[k].is_zero() {
-                result = result.add(&inner_pow.scaled(self.coeffs[k]));
+        for (k, &coeff) in self.coeffs.iter().enumerate().take(n + 1) {
+            if !coeff.is_zero() {
+                result = result.add(&inner_pow.scaled(coeff));
             }
             if k < n {
                 inner_pow = inner_pow.mul(inner);

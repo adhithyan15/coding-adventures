@@ -898,10 +898,13 @@ impl Bitset {
         let num_words = self.words.len();
 
         // Check all full words (all bits must be 1 = u64::MAX).
-        for i in 0..num_words.saturating_sub(1) {
-            if self.words[i] != u64::MAX {
-                return false;
-            }
+        if self
+            .words
+            .iter()
+            .take(num_words.saturating_sub(1))
+            .any(|&word| word != u64::MAX)
+        {
+            return false;
         }
 
         // Check the last word: only the bits within `len` matter.
@@ -1019,10 +1022,8 @@ impl Bitset {
         }
 
         // Check that all words beyond the first are zero.
-        for i in 1..self.words.len() {
-            if self.words[i] != 0 {
-                return None;
-            }
+        if self.words.iter().skip(1).any(|&word| word != 0) {
+            return None;
         }
 
         Some(self.words[0])

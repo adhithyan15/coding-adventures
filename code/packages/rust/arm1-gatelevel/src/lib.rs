@@ -974,8 +974,8 @@ impl ARM1GateLevel {
             }
         }
 
-        for i in 0..16 {
-            trace.regs_after[i] = self.read_reg(i);
+        for (i, reg) in trace.regs_after.iter_mut().enumerate() {
+            *reg = self.read_reg(i);
         }
         trace.flags_after = self.flags();
         trace

@@ -425,8 +425,7 @@ pub fn counter(clock: u8, reset: u8, state: &mut CounterState) -> Vec<u8> {
         // Increment: add 1 using a chain of half-adders
         let mut result = Vec::with_capacity(width);
         let mut carry: u8 = 1; // carry_in = 1 means "add 1"
-        for i in 0..width {
-            let bit = state.value[i];
+        for &bit in state.value.iter() {
             let sum_bit = xor_gate(bit, carry);
             carry = and_gate(bit, carry);
             result.push(sum_bit);
