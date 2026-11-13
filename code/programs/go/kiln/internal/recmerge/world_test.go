@@ -140,7 +140,7 @@ func sl(v ...string) []string {
 func (w *world) input() Input {
 	return Input{Run: w.run, Expected: Expected{GraphSHA256: dGraph, StepsSHA256: dSteps, Plan: w.plan, Steps: w.steps},
 		Shards: w.shards, Keys: w.keys, Now: time.Date(2026, 11, 13, 1, 2, 3, 999, time.UTC),
-		Kiln: "kiln/0.1.0 traced/2 recorder/1", HonourWritesComplete: w.honour}
+		Kiln: "kiln/0.1.0 traced/2 recorder/2", HonourWritesComplete: w.honour}
 }
 
 func (w *world) merge() Result { return Merge(w.input()) }

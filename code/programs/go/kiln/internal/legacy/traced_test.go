@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -154,7 +155,7 @@ func TestWeakKeyEnvironment(t *testing.T) {
 	if len(keyed) != len(w.Scrubbed)+3 {
 		t.Errorf("keyed env has %d names for %d scrubbed", len(keyed), len(w.Scrubbed))
 	}
-	if keyed[EnvRoot] != f.root() || keyed[EnvRecorder] != "1" {
+	if keyed[EnvRoot] != f.root() || keyed[EnvRecorder] != strconv.Itoa(RecorderVersion) {
 		t.Errorf("kiln entries: %v", keyed)
 	}
 	if keyed[EnvExecutorArgs] != `"-emit-results=/r" "-exec-wrapper=/k"` {

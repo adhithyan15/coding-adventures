@@ -117,7 +117,7 @@ type Input struct {
 	// Now stamps the manifests and passes (whole seconds, UTC).
 	Now time.Time
 	// Kiln is the ledger record's "kiln" field, e.g. "kiln/0.1.0 traced/2
-	// recorder/1".
+	// recorder/2".
 	Kiln string
 	// HonourWritesComplete is the PR 4 switch (section 7.1, G1).  False (the
 	// only production setting until the classifier reports writes_complete):
