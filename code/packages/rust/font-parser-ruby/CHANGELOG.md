@@ -1,5 +1,39 @@
 # Changelog — font-parser-ruby (Rust)
 
+## [Unreleased]
+
+### Fixed — the extension could not be loaded, and every call misread its arguments
+
+The crate had only ever been compiled, never `require`d.  Loading it into a real
+Ruby (3.3.6) exposed three defects, all fixed:
+
+- **`undefined symbol: rb_data_object_get`.**  It is a `static inline` function
+  in Ruby's headers, so no libruby exports it.  `unwrap_font` now reads the
+  pointer with `ruby_bridge::unwrap_data` after the `rb_obj_is_kind_of` check.
+- **Receiver and arguments were swapped.**  `rb_define_module_function` calls the
+  C function as `(self, arg1, ..., argN)`; the functions were written
+  `(arg1, ..., argN, self)`, so every call raised
+  `TypeError: no implicit conversion of Module into String`.
+- **`nil` was a hard-coded constant.**  `QNIL = 0x08` is wrong on Ruby 3.2+
+  (`Qnil` is `0x04`), so a missing glyph came back as a bogus object.  Returns
+  now use `ruby_bridge::nil_value()`.
+
+`FontFile` also calls `rb_undef_alloc_func`, silencing Ruby's "undefining the
+allocator of T_DATA class" warning and making `FontFile.new` raise.
+
+### Added — real Windows link and a smoke test on every OS
+
+- `build.rs` links Ruby's DLL on Windows: it writes a `.def` file from the
+  `rb_*` declarations in this crate and ruby-bridge (scanned, not hand-listed),
+  and has MSVC `lib.exe` (from PATH, else via vswhere) turn it into an import
+  library; the GNU target links RubyInstaller's `.dll.a` directly.  macOS gets
+  `-undefined dynamic_lookup`.
+- `tests/smoke_test.rb` requires the built extension into Ruby and checks Inter's
+  metrics, glyph lookup, `nil` for a missing glyph, kerning, GC survival and the
+  error paths.  `BUILD` and `BUILD_windows` were `echo` ("compile-only crate");
+  they now build into the package's own `target/`, run `cargo clippy -D
+  warnings`, and run the smoke test.
+
 ## [0.1.0] — 2026-04-01
 
 ### Added

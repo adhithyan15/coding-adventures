@@ -43,6 +43,21 @@ cp target/release/libfont_parser_native.dylib font_parser_native.node  # macOS
 # or .so on Linux, .dll on Windows
 ```
 
+## Testing
+
+There are no Rust unit tests: the shim is only meaningful inside Node.js, so the
+test loads the built library into a real `node` and calls it.
+
+```bash
+cargo build --release -p font-parser-node --target-dir target
+node tests/smoke.test.js
+```
+
+Each crate builds into its own `target/` (`--target-dir target`) because font-parser-node,
+font-parser-python and font-parser-ruby all emit a cdylib named `font_parser_native`.
+On Windows this also proves the `node.exe` raw-dylib import table (see
+`node-bridge`) resolves when Node loads the addon.
+
 ## License
 
 MIT

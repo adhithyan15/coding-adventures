@@ -84,6 +84,15 @@ use font_parser::{self as fp, FontError};
 // Additional N-API functions not in node-bridge
 // ─────────────────────────────────────────────────────────────────────────────
 
+// On Windows a PE/COFF DLL must name the module behind every import, so this
+// block needs the same `node.exe` raw-dylib marker as node-bridge's own
+// `extern` block (see the long comment there).  Without it, linking the cdylib
+// ends in `undefined reference to napi_get_value_int64`.  Linux and macOS
+// ignore the attribute (it is `cfg(windows)` only).
+#[cfg_attr(
+    windows,
+    link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim")
+)]
 extern "C" {
     fn napi_create_object(env: napi_env, result: *mut napi_value) -> napi_status;
     fn napi_get_value_int64(env: napi_env, value: napi_value, result: *mut i64) -> napi_status;

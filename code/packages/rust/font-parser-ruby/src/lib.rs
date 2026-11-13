@@ -49,9 +49,10 @@
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 
 use ruby_bridge::{
-    VALUE, QNIL, QFALSE,
+    VALUE, QFALSE,
     define_module, define_module_under,
     define_class_under, define_module_function_raw,
+    nil_value, unwrap_data,
     str_to_rb,
     raise_arg_error, raise_runtime_error,
     object_class,
@@ -77,7 +78,10 @@ extern "C" {
     // rb_string_value_ptr: coerce the VALUE to a String and return its C buffer.
     fn rb_string_value_ptr(ptr: *mut VALUE) -> *const c_char;
 
-    // rb_str_strlen: return byte length of a Ruby String.
+    // rb_str_strlen: return the length of a Ruby String in *characters*.  For the
+    // binary (ASCII-8BIT) strings `File.binread` returns that equals the byte
+    // length; for a multibyte UTF-8 string it is shorter, which only ever makes
+    // the parse see less data (an error), never more.
     fn rb_str_strlen(str_val: VALUE) -> c_long;
 
     // rb_fix2int: convert a Fixnum VALUE to a C int.
@@ -96,9 +100,16 @@ extern "C" {
         dfree: Option<unsafe extern "C" fn(*mut c_void)>,
     ) -> VALUE;
 
-    // rb_data_object_get: extract the C pointer stored by rb_data_object_wrap.
-    // This is the counterpart to rb_data_object_wrap and is ABI-stable.
-    fn rb_data_object_get(obj: VALUE) -> *mut c_void;
+    // rb_undef_alloc_func: make `FontFile.new` raise.  Without it Ruby warns
+    // "undefining the allocator of T_DATA class" the first time an instance is
+    // wrapped, and then removes the allocator itself.
+    fn rb_undef_alloc_func(klass: VALUE);
+
+    // NOTE: there is deliberately no `rb_data_object_get` here.  In Ruby's
+    // headers it is a `static inline` function, so no libruby exports it and a
+    // declaration of it fails at `require` time with
+    // "undefined symbol: rb_data_object_get".  The pointer is read with
+    // `ruby_bridge::unwrap_data` instead (see `unwrap_font`).
 
     // rb_obj_is_kind_of: type-safe class membership check.
     // Returns Qtrue if `obj` is an instance of `klass` or a subclass; Qfalse otherwise.
@@ -135,7 +146,7 @@ unsafe fn metrics_to_hash(m: &fp::FontMetrics) -> VALUE {
         ($key:expr, $val:expr) => {
             let v = match $val {
                 Some(n) => rb_int2inum(n as c_long),
-                None => QNIL,
+                None => nil_value(),
             };
             rb_hash_aset(h, sym($key), v);
         };
@@ -211,7 +222,8 @@ unsafe extern "C" fn free_font_file_data(ptr: *mut c_void) {
 /// Returns an opaque `FontFile` Data object.
 /// Raises `RuntimeError` on parse failure, `ArgumentError` on wrong type.
 ///
-/// Ruby calls this as `fn(data: VALUE, self: VALUE) -> VALUE` (argc = 1).
+/// Ruby calls this as `fn(self: VALUE, data: VALUE) -> VALUE` (argc = 1): the
+/// receiver always comes FIRST, then the arguments.
 ///
 /// ## Security
 ///
@@ -223,7 +235,7 @@ unsafe extern "C" fn free_font_file_data(ptr: *mut c_void) {
 /// We use `rb_data_object_wrap` directly with the live pointer (never null),
 /// which is the only sanctioned Ruby C API for Data objects. This avoids the
 /// unsafe "allocate null then write to offset-4" anti-pattern.
-unsafe extern "C" fn rb_load(data: VALUE, _self: VALUE) -> VALUE {
+unsafe extern "C" fn rb_load(_self: VALUE, data: VALUE) -> VALUE {
     // Coerce argument to a String and get its buffer pointer + length.
     let mut v = data;
     let ptr = rb_string_value_ptr(&mut v);
@@ -250,14 +262,14 @@ unsafe extern "C" fn rb_load(data: VALUE, _self: VALUE) -> VALUE {
 }
 
 /// `CodingAdventures::FontParserNative.font_metrics(font) → Hash`
-unsafe extern "C" fn rb_font_metrics(font_obj: VALUE, _self: VALUE) -> VALUE {
+unsafe extern "C" fn rb_font_metrics(_self: VALUE, font_obj: VALUE) -> VALUE {
     let font = unwrap_font(font_obj);
     let m = fp::font_metrics(font);
     metrics_to_hash(&m)
 }
 
 /// `CodingAdventures::FontParserNative.glyph_id(font, codepoint) → Integer | nil`
-unsafe extern "C" fn rb_glyph_id(font_obj: VALUE, cp_val: VALUE, _self: VALUE) -> VALUE {
+unsafe extern "C" fn rb_glyph_id(_self: VALUE, font_obj: VALUE, cp_val: VALUE) -> VALUE {
     let font = unwrap_font(font_obj);
 
     // SECURITY: validate range to prevent silent u16 truncation.
@@ -268,12 +280,12 @@ unsafe extern "C" fn rb_glyph_id(font_obj: VALUE, cp_val: VALUE, _self: VALUE) -
 
     match fp::glyph_id(font, cp_raw as u32) {
         Some(gid) => rb_int2inum(gid as c_long),
-        None => QNIL,
+        None => nil_value(),
     }
 }
 
 /// `CodingAdventures::FontParserNative.glyph_metrics(font, glyph_id) → Hash | nil`
-unsafe extern "C" fn rb_glyph_metrics(font_obj: VALUE, gid_val: VALUE, _self: VALUE) -> VALUE {
+unsafe extern "C" fn rb_glyph_metrics(_self: VALUE, font_obj: VALUE, gid_val: VALUE) -> VALUE {
     let font = unwrap_font(font_obj);
 
     // SECURITY: validate range before casting to u16.
@@ -284,16 +296,16 @@ unsafe extern "C" fn rb_glyph_metrics(font_obj: VALUE, gid_val: VALUE, _self: VA
 
     match fp::glyph_metrics(font, gid_raw as u16) {
         Some(gm) => glyph_metrics_to_hash(&gm),
-        None => QNIL,
+        None => nil_value(),
     }
 }
 
 /// `CodingAdventures::FontParserNative.kerning(font, left, right) → Integer`
 unsafe extern "C" fn rb_kerning(
+    _self: VALUE,
     font_obj: VALUE,
     left_val: VALUE,
     right_val: VALUE,
-    _self: VALUE,
 ) -> VALUE {
     let font = unwrap_font(font_obj);
 
@@ -318,19 +330,20 @@ unsafe extern "C" fn rb_kerning(
 /// This prevents type-confusion attacks where an attacker passes
 /// an arbitrary Ruby object to a module function.
 ///
-/// Uses `rb_data_object_get` (the official Ruby C API accessor) instead
-/// of manual pointer arithmetic — the only safe way to read the pointer.
+/// Reads the pointer with `ruby_bridge::unwrap_data`, which indexes the
+/// documented `RData` layout (`flags`, `klass`, `dmark`, `dfree`, `data`: the
+/// pointer is the fifth machine word).  `rb_data_object_get` cannot be used:
+/// it is a `static inline` function in Ruby's headers, so libruby does not
+/// export it.  The kind check above is what makes the layout read safe: the
+/// only objects of this class are the ones `rb_load` built with
+/// `rb_data_object_wrap`.
 unsafe fn unwrap_font(obj: VALUE) -> &'static fp::FontFile {
     // SECURITY: type-check before dereferencing.
     if rb_obj_is_kind_of(obj, FONT_FILE_CLASS) == QFALSE {
         raise_runtime_error("expected a FontFile object");
     }
 
-    let raw = rb_data_object_get(obj) as *const fp::FontFile;
-    if raw.is_null() {
-        raise_runtime_error("FontFile: internal data pointer is null");
-    }
-    &*raw
+    unwrap_data::<fp::FontFile>(obj)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -352,16 +365,20 @@ pub unsafe extern "C" fn Init_font_parser_native() {
     let ca  = define_module("CodingAdventures");
     let fpn = define_module_under(ca, "FontParserNative");
 
-    // Define the opaque FontFile class. No alloc func — instances are only
+    // Define the opaque FontFile class. No alloc func (undefined just below) — instances are only
     // created via load(), never via FontFile.new. The dfree is registered
     // per-object by rb_data_object_wrap inside rb_load.
     let ff_class = define_class_under(fpn, "FontFile", object_class());
     FONT_FILE_CLASS = ff_class;
+    rb_undef_alloc_func(ff_class);
 
     // Bind module functions with fixed arity.
     //
     // Ruby's rb_define_module_function with argc=N means the Rust function
-    // receives (arg1, ..., argN, self_module) — N named args plus self.
+    // receives (self_module, arg1, ..., argN) — the receiver first, then N
+    // named args.  (The first version of this file had the receiver last, so
+    // every call read `self` as its first argument and raised TypeError; it only
+    // showed up once tests/smoke_test.rb loaded the extension into a real Ruby.)
 
     define_module_function_raw(fpn, "load",         rb_load as *const c_void, 1);
     define_module_function_raw(fpn, "font_metrics",  rb_font_metrics as *const c_void, 1);

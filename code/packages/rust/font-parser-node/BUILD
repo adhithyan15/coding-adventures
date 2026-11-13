@@ -1,2 +1,7 @@
-echo "font-parser-node: compile-only crate (requires Node.js dev headers to link)"
-echo "  To build: cargo build -p font-parser-node --release"
+# build-tool: deps=typescript/font-parser
+# Own target dir: font-parser-node, font-parser-python and font-parser-ruby all
+# produce a cdylib called font_parser_native, so sharing the workspace target
+# directory would let parallel builds overwrite each other's library.
+cargo build --release -p font-parser-node --target-dir target
+cargo clippy -p font-parser-node --all-targets --target-dir target -- -D warnings
+node tests/smoke.test.js
