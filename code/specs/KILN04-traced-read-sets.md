@@ -1222,8 +1222,8 @@ left open above:
 `kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
 
 - the weak key, how many manifests it has, and the result: `hit`; `miss`,
-  with the first entry whose digest differs, for `kiln explain`; or
-  `no-manifest`;
+  with the manifests tried and each entry's state now, for `kiln explain`
+  (§9.1: the first differing entry is not computable); or `no-manifest`;
 - the static class and reasons of KILN03, which are now a **diagnostic
   upper bound**: the static closure is what the old graph claims P can
   read;
@@ -1231,6 +1231,91 @@ left open above:
 - every traced `pkg:` entry that is **not** in P's static closure. Each
   one is a dependency the old build tool does not know about, and so a bug
   in the old graph (stage 5).
+
+### 9.1 Lookup decisions (stage 5a)
+
+Stage 5a is `kiln legacy-plan --ledger <dir> --scope shared|local`. It is
+**report-only**: it skips nothing and changes no class. Without `--ledger`
+the plan is byte for byte what it was. The plan schema stays
+`kiln-legacy-plan/1`; everything below is an additive field, since nothing
+consumes the plan yet.
+
+- **Order.** For each package on a Linux plan (another OS gives
+  `untraced-os`): gate first, then the weak key, then the manifests, then
+  the strong keys, then one pass-ledger read for the whole plan.
+- **Gating comes before any key or ledger read** (§13 item 5, §11.1 item 13).
+  A package on the never list, with a KILN03 hard reason or precondition
+  (`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`,
+  `no-build-file:`), or with a `probe-mismatch`, `probe-timeout` or
+  `probe-refused` result when `--probe` ran, gets `ineligible:<reason>` and
+  no lookup, even if a hit is waiting. If several apply the reported one is
+  fixed: the never list, then the other hard reasons, then probes, each sorted
+  bytewise. A refused weak key (`host-unknown`) is `ineligible:<refusal>`.
+  A probe refusal gates but is **not** added to the record's `reasons`, so a
+  plan made without `--ledger` does not change.
+- **Results.** `hit` (with the manifest id and the pass record), `miss`,
+  `no-manifest`, `untraced-os` and `ineligible:<reason>`. At most K = 4
+  manifests are tried, newest first, and the tried list stops at the hit.
+  The histogram counts each class; reasons that embed a name are grouped by
+  prefix (`ineligible:never`), as for KILN03.
+- **A miss cannot name the differing entry.** Manifests store names and the
+  pass ledger stores only strong keys (§8), so what an entry's digest was
+  when the pass was recorded is unknowable at plan time. A miss therefore
+  lists, for each manifest tried, the strong key that was looked up and the
+  entries in stored order, each with its **state in this tree** (`present`,
+  `absent`, `directory`, `no-package`, `not-directory`; `unknown` if it could
+  not be digested). That describes today's tree. It is not a comparison and
+  the plan says so. This replaces §9's "the first entry whose digest
+  differs".
+- **Outside the static closure.** Per package with manifests, the traced
+  `pkg:` entries (of any retained manifest, tried or not) that are not in its
+  static closure are listed as `outside_static_closure`, and the histogram
+  counts the packages that have any. A `pkg:` entry for a path that is no
+  package is listed too: the trace read something the graph does not know.
+- **Memory (D11).** The manifest reader takes the set of weak keys the plan
+  computed and ignores every other record as it parses it, so the heap is
+  bounded by the plan's packages, not the store (`ManifestReport.Ignored`
+  counts them). `nil` keeps everything, which is what merge uses. Structure
+  and caps are still judged for ignored records. The verified `id` is
+  computed once when a record is retained and kept with it, not recomputed
+  per comparison.
+- **Unusable stores.** A manifest-store error makes every package that got a
+  weak key `ineligible:manifest-store-unusable`; a pass-ledger error makes
+  those with manifests `ineligible:pass-ledger-unusable`. The plan says which
+  in `lookup.errors`. Nothing is a hit.
+- **The recorder's identity is in the key.** `kiln:root` is the absolute
+  `--root` and `kiln:executor-args` is the repeatable `--executor-arg`
+  flags. A lookup that differs from the recorder in either gets
+  `no-manifest`, never a hit.
+- **Plan size.** Each tried manifest lists at most 256 entries
+  (`entries`), with `entry_count` and `entries_truncated`; the strong key and
+  `outside_static_closure` always use the full list. `kiln explain` shows only
+  what the plan holds and says when it was truncated.
+- **Scope and probes.** The plan's `lookup.scope` comes from the stores
+  themselves (both must have the same scope; `NewLookupOptions` opens them
+  together). `lookup.probes_ran` says whether `--probe` ran.
+- **Junk manifests.** A flood of forged or junk manifests can only fill the
+  four slots of a weak key and force misses; it cannot produce a hit, because
+  a hit needs a pass for the strong key (§8, Poisoning).
+- **Before any skip mode exists (M3 requirements from the review).** Skipping
+  requires: (a) the policy files (`never.json`, `pinned.json`,
+  `toolchains.json`, `env.json`, `host-roots.json`) read from the base
+  revision, enforced in code, not by convention; (b) `probes_ran == true`,
+  since without probes a `probe-mismatch` gate cannot fire; (c) an explicit
+  decision on whether `unpinned:<lang>` gates lookup. **This is open**: 5a
+  does not gate on it, and the keys carry pins only.
+- **Trust boundary (§3.3).** Lookup reads the policy files (`env.json`,
+  `host-roots.json`, `never.json`, `pinned.json`, `toolchains.json`) through
+  the existing loaders, from whatever tree it is given. That is acceptable
+  only because 5a reports. **Skipping (M3) must run the Kiln binary and read
+  the policy built from the base revision**, as §3.3 says; 5a does not
+  establish that and must not be wired to a skip.
+- **The tree must be vouched for.** `--ledger` is refused (exit 2, nothing
+  written) with `--source folder`, and the library refuses any `Source` that
+  is not a `source.Cleaner`: a plain folder cannot list untracked files, so a
+  build product could enter a digest and the result would describe a tree
+  nobody committed. The plain plan only warns, because its keys are not a
+  claim about the ledger.
 
 ## 10. What stays from KILN03
 
@@ -1498,6 +1583,9 @@ point, not a measurement.
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
    only and none of these (§11.1).
+6. skipping reads policy from the base revision, enforced in code before any
+   skip mode exists; it requires `probes_ran == true`; and the open question
+   of whether `unpinned:<lang>` gates is decided (§9.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this
