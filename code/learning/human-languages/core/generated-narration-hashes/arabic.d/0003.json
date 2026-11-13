@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 3,
-  "sourceHash": "fnv1a64:160ca762deffc33f",
+  "sourceHash": "fnv1a64:8ba5ca7f640c88ef",
   "lessonIds": [
     "AR-C03-haajj",
     "AR-W07-hook-family-ha-kha",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "arabic/narration/ch03.txt",
   "json": "arabic/narration/ch03.json",
-  "textHash": "fnv1a64:66ab7ce6179cc3fe",
-  "jsonHash": "fnv1a64:3697c5a4a8fbbfda",
+  "textHash": "fnv1a64:d32de0e47094dc6e",
+  "jsonHash": "fnv1a64:1cc36bf9bd71c0ab",
   "findings": []
 }

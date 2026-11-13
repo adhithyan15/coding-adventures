@@ -43,7 +43,7 @@ chapter.
 ## You'll want to know — The letters
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-MAA-WITH-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* **م** (*mīm*) from Lesson 3 of the writing set, and
+**م** (*mīm*) from Lesson 3 of the writing set, and
 **ع** (*ʿayn*) from Lesson 10 — the throat sound whose Phoenician ancestor meant
 "**eye**," and which the Greeks recycled into the vowel **O**.
 

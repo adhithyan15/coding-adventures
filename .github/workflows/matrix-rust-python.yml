@@ -111,28 +111,28 @@ jobs:
         include:
           # ── ubuntu-latest × py 3.10/3.11/3.12 ────────────────
           - os: ubuntu-latest
-            python-version: '3.10'
+            python-version: '3.10.22'
             cdylib_filename: libmatrix_rust_python.so
             staged_filename: matrix_rust_python.so
           - os: ubuntu-latest
-            python-version: '3.11'
+            python-version: '3.11.18'
             cdylib_filename: libmatrix_rust_python.so
             staged_filename: matrix_rust_python.so
           - os: ubuntu-latest
-            python-version: '3.12'
+            python-version: '3.12.16'
             cdylib_filename: libmatrix_rust_python.so
             staged_filename: matrix_rust_python.so
           # ── macos-latest × py 3.10/3.11/3.12 ─────────────────
           - os: macos-latest
-            python-version: '3.10'
+            python-version: '3.10.11'
             cdylib_filename: libmatrix_rust_python.dylib
             staged_filename: matrix_rust_python.so
           - os: macos-latest
-            python-version: '3.11'
+            python-version: '3.11.9'
             cdylib_filename: libmatrix_rust_python.dylib
             staged_filename: matrix_rust_python.so
           - os: macos-latest
-            python-version: '3.12'
+            python-version: '3.12.10'
             cdylib_filename: libmatrix_rust_python.dylib
             staged_filename: matrix_rust_python.so
           # ── windows-latest × py 3.10/3.11/3.12 ───────────────
@@ -141,15 +141,15 @@ jobs:
           # right Python's `libs/` on the linker search path via the
           # PYO3_PYTHON env we set in the build step.
           - os: windows-latest
-            python-version: '3.10'
+            python-version: '3.10.11'
             cdylib_filename: matrix_rust_python.dll
             staged_filename: matrix_rust_python.pyd
           - os: windows-latest
-            python-version: '3.11'
+            python-version: '3.11.9'
             cdylib_filename: matrix_rust_python.dll
             staged_filename: matrix_rust_python.pyd
           - os: windows-latest
-            python-version: '3.12'
+            python-version: '3.12.10'
             cdylib_filename: matrix_rust_python.dll
             staged_filename: matrix_rust_python.pyd
     # Run every script step via bash so the same `set -eu` + `mkdir`
@@ -167,6 +167,8 @@ jobs:
         # (no fmt/clippy gates in this workflow; those run via the
         # main CI job).  Cache via the workspace target directory.
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Cache cargo registry + git + target
         uses: actions/cache@v6
