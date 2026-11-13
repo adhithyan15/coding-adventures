@@ -99,3 +99,9 @@ func checkExactKeys(raw []byte, t reflect.Type) error {
 	}
 	return nil
 }
+
+// PolicyDecode is policyDecode for other Kiln packages: the strict decoder
+// (unknown fields, trailing data, duplicate keys and case-inexact keys all
+// refused) that KILN04 stage 4's record formats share with the policy files,
+// so a record file and a policy file can never be read two different ways.
+func PolicyDecode(data []byte, v any) error { return policyDecode(data, v) }

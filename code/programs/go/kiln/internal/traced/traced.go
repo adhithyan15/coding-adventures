@@ -354,3 +354,13 @@ func sanitize(s string) string {
 	}
 	return b.String()
 }
+
+// Sanitize is sanitize for the merge job (KILN04 stage 4), which builds
+// reasons from repository paths and must make them as printable as the
+// classifier's own.
+func Sanitize(s string) string { return sanitize(s) }
+
+// CapReasons is capReasons for the merge job: it sorts a reason set and keeps
+// at most 16 of each kind, exactly as the classifier does, so a merged
+// reason list obeys the same cap as a raw record's.
+func CapReasons(m map[string]bool) []string { return capReasons(m) }
