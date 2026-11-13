@@ -5,13 +5,18 @@
 //! since chown is a Unix-specific operation.
 
 use unix_tools::chown_tool::*;
+// The helpers below are only used by the Unix-only tests; gate them (and their imports)
+// so a Windows build has no dead code under the CI `-D warnings` clippy gate.
+#[cfg(unix)]
 use std::fs;
+#[cfg(unix)]
 use std::path::Path;
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
+#[cfg(unix)]
 fn temp_path(name: &str) -> String {
     std::env::temp_dir()
         .join(format!("chown_integ_{}", name))
@@ -19,6 +24,7 @@ fn temp_path(name: &str) -> String {
         .into_owned()
 }
 
+#[cfg(unix)]
 fn cleanup(path: &str) {
     let p = Path::new(path);
     if p.is_dir() {

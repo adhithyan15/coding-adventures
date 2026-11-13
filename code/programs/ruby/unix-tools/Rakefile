@@ -1,16 +1,47 @@
 # frozen_string_literal: true
 
-# Rakefile -- Task definitions for the Ruby pwd tool
-# ===================================================
+# Rakefile -- Task definitions for the Ruby unix-tools
+# ====================================================
 #
 # The primary task is `test`, which runs the Minitest suite. We also define
 # a default task that runs tests, so `bundle exec rake` does the right thing.
+#
+# === Windows ===
+#
+# These tools reimplement POSIX utilities, and most of their tests exercise
+# POSIX behaviour: permission bits and chown, symlinks, /dev/null and /tmp,
+# user and group lookup, tty detection, fork/exec, and path semantics. On
+# Windows we run the test files whose tools are pure stream transformers: they
+# touch no filesystem, user database, terminal or child process, so a Windows
+# result means the same thing as a Linux one. The rest are held back, and the
+# run says so out loud (how many files ran, which were held back) instead of
+# quietly passing. Moving a file into WINDOWS_TEST_FILES is how a tool is
+# declared portable; do it after a Windows run shows its test file passing.
 
 require "rake/testtask"
 
+WINDOWS_TEST_FILES = %w[
+  echo expand false fold nl seq sleep tr true unexpand uniq yes
+].map { |tool| "test/test_#{tool}.rb" }.freeze
+
+all_test_files = FileList["test/test_*.rb"]
+test_files = all_test_files
+
+if Gem.win_platform?
+  unknown = WINDOWS_TEST_FILES - all_test_files
+  abort "WINDOWS_TEST_FILES names files that do not exist: #{unknown.join(", ")}" unless unknown.empty?
+
+  held_back = all_test_files.to_a - WINDOWS_TEST_FILES
+  puts "unix-tools on Windows: running #{WINDOWS_TEST_FILES.size} of #{all_test_files.size} test files; " \
+       "holding back #{held_back.size} that depend on Unix-only filesystem, user/group, tty or " \
+       "path behaviour:"
+  puts "  held back: #{held_back.map { |f| File.basename(f, ".rb").delete_prefix("test_") }.join(" ")}"
+  test_files = FileList[*WINDOWS_TEST_FILES]
+end
+
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
-  t.test_files = FileList["test/test_*.rb"]
+  t.test_files = test_files
   t.warning = false
 end
 

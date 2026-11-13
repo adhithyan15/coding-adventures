@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "policy": "BUILD-002 W6. A package whose Windows recipe runs nothing must be listed here with a category, a reason and evidence. The list can only shrink: converting a package makes its entry stale and the audit then demands its removal, and code/scripts/audit_build_windows.py ALLOWLIST_CAPS fixes the entry count per category, so a new entry fails until a cap is raised in the same reviewed diff. Do not add entries to make the audit pass; give the package a real recipe.",
+  "categories": {
+    "intrinsic-apple": "needs Apple frameworks (Metal, Objective-C); the package itself must say so",
+    "intrinsic-platform": "bound to a platform API with no equivalent on the others (reasoned, owner decision)",
+    "no-tests-by-design": "nothing to run: rule definitions, placeholder shell packages, notes-only BUILD",
+    "tracked-follow-up": "a real gap with a plan; these entries are the debt and must only shrink"
+  },
+  "entries": {
+    "packages/elixir/paint_vm_metal_native": {
+      "category": "intrinsic-apple",
+      "reason": "Elixir NIF over Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/go/paint-vm-metal-native": {
+      "category": "intrinsic-apple",
+      "reason": "Go cgo binding to Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/lua/paint_vm_metal_native": {
+      "category": "intrinsic-apple",
+      "reason": "Lua binding to Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/perl/barcode-layout-1d": {
+      "category": "tracked-follow-up",
+      "reason": "Windows recipe is still an echo skip. Its package tree is pinned by the barcode lane-evidence registry, so converting it needs its own PR that registers a dedicated owner item, fixes a File::Temp tempfile portability bug and re-pins the tree.",
+      "evidence": "BUILD-002 W2 section on barcode-layout-1d (code/specs/fixtures/barcode-layout-1d-v1/targets.json)"
+    },
+    "packages/perl/paint_vm_metal_native": {
+      "category": "intrinsic-apple",
+      "reason": "Perl XS binding to Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/python/assembler": {
+      "category": "no-tests-by-design",
+      "reason": "Shell package: a placeholder package with no tests by design; its BUILD installs dependencies and echoes that there are no tests.",
+      "evidence": "packages/python/assembler/BUILD (identical echo on every OS)"
+    },
+    "packages/python/html-renderer": {
+      "category": "no-tests-by-design",
+      "reason": "Shell package: a placeholder package with no tests by design; its BUILD installs dependencies and echoes that there are no tests.",
+      "evidence": "packages/python/html-renderer/BUILD (identical echo on every OS)"
+    },
+    "packages/python/paint-vm-metal-native": {
+      "category": "intrinsic-apple",
+      "reason": "Python extension over Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/python/starlark-compiler": {
+      "category": "no-tests-by-design",
+      "reason": "Shell package: a placeholder package with no tests by design; its BUILD installs dependencies and echoes that there are no tests.",
+      "evidence": "packages/python/starlark-compiler/BUILD (identical echo on every OS)"
+    },
+    "packages/ruby/paint_vm_metal_native": {
+      "category": "intrinsic-apple",
+      "reason": "Ruby extension over Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/rust/erl-nif-bridge": {
+      "category": "tracked-follow-up",
+      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Erlang/OTP link step (headers or import library) wired up per OS.",
+      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
+    },
+    "packages/rust/lua-bridge": {
+      "category": "tracked-follow-up",
+      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Lua 5.4 link step (headers or import library) wired up per OS.",
+      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
+    },
+    "packages/rust/metal-compute": {
+      "category": "intrinsic-apple",
+      "reason": "Metal compute bindings; requires macOS/Apple frameworks.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/rust/objc-bridge": {
+      "category": "intrinsic-apple",
+      "reason": "Objective-C runtime bridge; requires macOS/Apple frameworks.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/rust/paint-metal": {
+      "category": "intrinsic-apple",
+      "reason": "Metal paint backend; requires macOS/Apple frameworks.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/rust/paint-vm-metal-c": {
+      "category": "intrinsic-apple",
+      "reason": "C ABI over the Metal Paint VM; builds only on macOS arm64.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "packages/rust/perl-bridge": {
+      "category": "tracked-follow-up",
+      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Perl link step (headers or import library) wired up per OS.",
+      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
+    },
+    "packages/rust/tcp-reactor": {
+      "category": "intrinsic-platform",
+      "reason": "Readiness reactor built on Unix file descriptors (poll/kqueue/epoll); Windows has no equivalent of that API. rust/tcp-runtime is the cross-platform counterpart and runs its real tests on Windows. Policy decision pending on whether an IOCP path belongs in this crate.",
+      "evidence": "BUILD-002 W4 (tcp-reactor, IOCP path); recipe directive build-tool: unsupported=RUST_TCP_REACTOR_REQUIRES_UNIX_FDS"
+    },
+    "packages/starlark/builtins": {
+      "category": "no-tests-by-design",
+      "reason": "Holds only .star rule definitions that the build tool loads and validates itself; there is no code to test.",
+      "evidence": "packages/starlark/builtins/BUILD (comment says no build commands needed)"
+    },
+    "packages/starlark/library-rules": {
+      "category": "no-tests-by-design",
+      "reason": "Holds only .star rule definitions that the build tool loads and validates itself; there is no code to test.",
+      "evidence": "packages/starlark/library-rules/BUILD (comment says no build commands needed)"
+    },
+    "packages/starlark/program-rules": {
+      "category": "no-tests-by-design",
+      "reason": "Holds only .star rule definitions that the build tool loads and validates itself; there is no code to test.",
+      "evidence": "packages/starlark/program-rules/BUILD (comment says no build commands needed)"
+    },
+    "packages/swift/PaintVmMetalNative": {
+      "category": "intrinsic-apple",
+      "reason": "Swift wrapper over the Metal C bridge; supported on macOS arm64 only.",
+      "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
+    },
+    "programs/typescript/visicalc-deno": {
+      "category": "no-tests-by-design",
+      "reason": "Desktop shell around the visicalc-html engine whose BUILD holds only usage notes (deno task wasm/desktop/build); the engine it embeds is tested in its own package.",
+      "evidence": "programs/typescript/visicalc-deno/BUILD; BUILD-001"
+    }
+  }
+}

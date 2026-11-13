@@ -742,6 +742,40 @@ func TestGeneratePerl(t *testing.T) {
 	}
 }
 
+// BUILD-002 W6: a generated Perl package must not start life as an echo skip.
+// Its BUILD_windows runs the shared Strawberry-Perl helper, and its REM
+// prereqs line and -Deps list name the same siblings the Unix BUILD walks.
+func TestGeneratePerlWindowsRecipeIsReal(t *testing.T) {
+	tmpDir := t.TempDir()
+	deps := []string{"logic-gates", "arithmetic"}
+	if err := generatePerl(tmpDir, "test-pkg", "A test package", "", deps, deps); err != nil {
+		t.Fatalf("generatePerl: %v", err)
+	}
+	got, err := os.ReadFile(filepath.Join(tmpDir, "BUILD_windows"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD_windows: %v", err)
+	}
+	want := "REM prereqs: ../logic-gates ../arithmetic\n" +
+		"powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\..\\scripts\\run-perl-tests-windows.ps1 -Deps logic-gates,arithmetic\n"
+	if string(got) != want {
+		t.Errorf("BUILD_windows = %q, want %q", got, want)
+	}
+	if strings.Contains(string(got), "echo") {
+		t.Errorf("BUILD_windows must not be an echo skip: %q", got)
+	}
+
+	noDeps := t.TempDir()
+	if err := generatePerl(noDeps, "solo", "Solo", "", nil, nil); err != nil {
+		t.Fatalf("generatePerl: %v", err)
+	}
+	got, _ = os.ReadFile(filepath.Join(noDeps, "BUILD_windows"))
+	want = "REM prereqs: (none)\n" +
+		"powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\..\\scripts\\run-perl-tests-windows.ps1\n"
+	if string(got) != want {
+		t.Errorf("BUILD_windows = %q, want %q", got, want)
+	}
+}
+
 func TestGeneratePerlNoDeps(t *testing.T) {
 	tmpDir := t.TempDir()
 	err := generatePerl(tmpDir, "my-pkg", "My package", "", nil, nil)
@@ -941,8 +975,9 @@ func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 			t.Errorf("BUILD_windows = %q must not contain %q", buildWindows, forbidden)
 		}
 	}
-	if string(buildWindows) != "echo \"haskell support not enabled in windows CI yet -- skipping\"\n" {
-		t.Errorf("BUILD_windows = %q, want the existing Windows skip record", buildWindows)
+	// BUILD-002 W6: the recipe is the real Cabal command, never an echo skip.
+	if string(buildWindows) != "cabal test all\n" {
+		t.Errorf("BUILD_windows = %q, want the plain Cabal command", buildWindows)
 	}
 
 	capabilityPath := filepath.Join(tmpDir, "required_capabilities.json")

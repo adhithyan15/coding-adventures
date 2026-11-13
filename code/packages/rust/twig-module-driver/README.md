@@ -174,3 +174,19 @@ root.tw  →  BFS discovery
 - `twig-ir-compiler` — lower Twig AST to `IIRModule`
 - `iir-linker` — merge `[IIRModule]` into one
 - `interpreter-ir` — `IIRModule`, `IIRExport` types
+
+## Testing
+
+```bash
+RUST_MIN_STACK=67108864 cargo test -p twig-module-driver   # Unix
+set RUST_MIN_STACK=67108864&& cargo test -p twig-module-driver   # Windows cmd
+```
+
+The self-compile tests interpret the Twig compiler, which recurses once per
+source character, so they run on dedicated 768 MiB and 3 GiB threads
+(`run_in_large_stack`, `run_in_xlarge_stack`); libtest's own threads get 64 MiB
+from `RUST_MIN_STACK`.  The same suite runs on Linux, macOS and Windows: stacks
+are address-space reservations committed only as used, and the whole suite peaks
+at about 1.3 GiB resident.  Tests that embed a source directory in Twig strip the
+Windows `\\?\` prefix first (`strip_verbatim_prefix`), because the Twig compiler
+appends `"/"` and Win32 rejects that inside a verbatim path.

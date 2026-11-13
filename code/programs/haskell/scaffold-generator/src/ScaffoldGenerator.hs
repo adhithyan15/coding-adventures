@@ -547,12 +547,13 @@ haskellDarwinCltPrefix :: String
 haskellDarwinCltPrefix =
     "if [ \"$(uname -s)\" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; "
 
--- | The generated @BUILD_windows@: the existing Windows skip record. Windows
+-- | The generated @BUILD_windows@: the real Cabal command, never an echo skip
+-- (BUILD-002 W6; @audit_build_windows.py@ fails on an unlisted skip). Windows
 -- runs BUILD lines under @cmd /C@, which cannot parse the POSIX prefix above,
--- so this file must never carry it.
+-- so this file must never carry it, and it must not probe for @cabal@ either:
+-- a missing Cabal has to fail visibly rather than pass without testing.
 buildWindowsFileContents :: String
-buildWindowsFileContents =
-    "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
+buildWindowsFileContents = "cabal test all\n"
 
 capabilityManifestContents :: String -> String -> String
 capabilityManifestContents packageType pkgName =

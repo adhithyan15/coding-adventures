@@ -161,16 +161,51 @@ mod building {
 mod execution {
     use super::*;
 
+    /// A command that succeeds, for tests that really spawn a child process.
+    ///
+    /// On Unix that is the real `echo`/`false`.  Windows has neither as an
+    /// executable (`echo` is a cmd.exe builtin, `false` does not exist), so there
+    /// the test executable itself stands in: libtest's `--list` prints the test
+    /// names and exits 0, and an unknown flag makes it exit with 101.  Either way
+    /// the code under test still does a genuine spawn-and-wait.
+    #[cfg(unix)]
+    fn succeeding_command() -> Vec<String> {
+        vec!["echo".into()]
+    }
+
+    #[cfg(not(unix))]
+    fn succeeding_command() -> Vec<String> {
+        vec![
+            std::env::current_exe().unwrap().to_string_lossy().into_owned(),
+            "--list".into(),
+        ]
+    }
+
+    /// A command that exits non-zero (see [`succeeding_command`]).
+    #[cfg(unix)]
+    fn failing_command() -> Vec<String> {
+        vec!["false".into()]
+    }
+
+    #[cfg(not(unix))]
+    fn failing_command() -> Vec<String> {
+        vec![
+            std::env::current_exe().unwrap().to_string_lossy().into_owned(),
+            "--definitely-not-a-flag".into(),
+        ]
+    }
+
     #[test]
     fn execute_echo_succeeds() {
-        let args = vec!["echo".into(), "test".into()];
+        let mut args = succeeding_command();
+        args.push("test".into());
         let result = execute_command(&args, false);
         assert_eq!(result.unwrap(), 0);
     }
 
     #[test]
     fn execute_false_returns_nonzero() {
-        let args = vec!["false".into()];
+        let args = failing_command();
         let result = execute_command(&args, false);
         assert_ne!(result.unwrap(), 0);
     }
@@ -198,9 +233,29 @@ mod execution {
 mod pipeline {
     use super::*;
 
+    /// A command that succeeds, for tests that really spawn a child process.
+    ///
+    /// On Unix that is the real `echo`/`false`.  Windows has neither as an
+    /// executable (`echo` is a cmd.exe builtin, `false` does not exist), so there
+    /// the test executable itself stands in: libtest's `--list` prints the test
+    /// names and exits 0, and an unknown flag makes it exit with 101.  Either way
+    /// the code under test still does a genuine spawn-and-wait.
+    #[cfg(unix)]
+    fn succeeding_command() -> Vec<String> {
+        vec!["echo".into()]
+    }
+
+    #[cfg(not(unix))]
+    fn succeeding_command() -> Vec<String> {
+        vec![
+            std::env::current_exe().unwrap().to_string_lossy().into_owned(),
+            "--list".into(),
+        ]
+    }
+
     #[test]
     fn run_xargs_echo() {
-        let result = run_xargs("a b c", &["echo".into()], &XargsOptions::default());
+        let result = run_xargs("a b c", &succeeding_command(), &XargsOptions::default());
         assert_eq!(result.unwrap(), 0);
     }
 
@@ -214,7 +269,7 @@ mod pipeline {
     #[test]
     fn run_xargs_with_max_args() {
         let opts = XargsOptions { max_args: Some(1), ..Default::default() };
-        let result = run_xargs("a b c", &["echo".into()], &opts);
+        let result = run_xargs("a b c", &succeeding_command(), &opts);
         assert_eq!(result.unwrap(), 0);
     }
 
@@ -225,7 +280,9 @@ mod pipeline {
             max_args: Some(1),
             ..Default::default()
         };
-        let result = run_xargs("hello world", &["echo".into(), "item: {}".into()], &opts);
+        let mut command = succeeding_command();
+        command.push("item: {}".into());
+        let result = run_xargs("hello world", &command, &opts);
         assert_eq!(result.unwrap(), 0);
     }
 }

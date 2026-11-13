@@ -6,7 +6,8 @@ type CoreTreeSet = tree_set::AvlTreeSet<i64>;
 
 extern "C" {
     fn rb_num2long(val: VALUE) -> c_long;
-    fn rb_int2inum(v: c_long) -> VALUE;
+    // intptr_t, not long: `long` is 32 bits on 64-bit Windows.
+    fn rb_int2inum(v: isize) -> VALUE;
     fn rb_block_given_p() -> c_int;
     fn rb_yield(val: VALUE) -> VALUE;
 }
@@ -31,7 +32,7 @@ fn to_i64(value: VALUE) -> i64 {
 }
 
 fn from_i64(value: i64) -> VALUE {
-    unsafe { rb_int2inum(value as c_long) }
+    unsafe { rb_int2inum(value as isize) }
 }
 
 fn to_values(values: VALUE) -> Vec<i64> {

@@ -1131,14 +1131,16 @@ this rule does not change:
 
 Windows runs BUILD lines under `cmd /C`, which cannot parse the POSIX prefix,
 so every Haskell scaffold MUST also emit a `BUILD_windows` that does not
-contain it. The Go and native Haskell generators keep their existing skip
-record (`echo "haskell support not enabled in windows CI yet -- skipping"`).
-The Python, Ruby, Rust, TypeScript, and Elixir generators previously emitted no
-`BUILD_windows`, so Windows ran their plain `BUILD`; they now emit a
-`BUILD_windows` holding exactly that plain command (`cabal test all`), which
-keeps their Windows behaviour unchanged. Generator tests MUST assert that the
-generated `BUILD` carries the Darwin prefix and that the generated
-`BUILD_windows` does not.
+contain it, and that `BUILD_windows` MUST be a real recipe, never an echo skip:
+the Go and native Haskell generators emit `cabal test all`, the same line the
+Python, Ruby, Rust, TypeScript, and Elixir generators already emit (their plain
+`BUILD` command). It must not probe for `cabal` either, because a recipe that
+prints "cabal not found -- skipping" passes without testing anything. (Until
+BUILD-002 W6 the Go and native Haskell generators emitted
+`echo "haskell support not enabled in windows CI yet -- skipping"`; an unlisted
+echo-only `BUILD_windows` is now a blocking `audit_build_windows.py` finding.)
+Generator tests MUST assert that the generated `BUILD` carries the Darwin
+prefix and that the generated `BUILD_windows` does not.
 
 ### 5.9 Common Files (All Languages)
 
