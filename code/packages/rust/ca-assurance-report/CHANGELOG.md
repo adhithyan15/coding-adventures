@@ -5,6 +5,35 @@
 - Add a separate strict parser for `warrant-lane-evidence-v1` manifests and
   the per-corpus consumer registry. This structural API does not run bindings,
   attest source/build/toolchain freshness, or change the Rust-only legacy loader.
+- **CWE-409 (decompression bomb) is derived, never excluded, for a decompressor**
+  (first adopter `rust/lzw`; VER04h section 9, VER04j section 6, VER15 `bounded(k)`).
+  The matrix used to print the same row for every package: *excluded*, "package
+  implements no decompression or archive decoding routines". True for a LEB128 codec
+  or a gate library, false for `lzw`, whose `decompress` turned a 15 KB stream into
+  40 MB (SEC-002). The row is now `cwe_409` in `matrix.rs`:
+  excluded only when the profile does not decompress AND the Warrant document declares
+  no `output` bound row (so neither a wrong `--profile` nor an absent flag can hide an
+  amplifier); otherwise it is derived from the document and the test manifest
+  (`Evidence::decompression_bounds`): every operation with an `output` row must also
+  have a `heap` row, passing exhaustive + property + fuzz `<op>/output-bound` suites,
+  and no observed entry whose `max_observed_heap` exceeds its `bound_at_max`
+  (`TestEntry` gains both as optional fields). Complete evidence gives a *bounded*
+  discharge that cites the suites and says "not proved for every input"; anything
+  missing, failing or over its bound is an open row, so no report is generated (the
+  same fail-closed outcome as the other rows). New profile `AuditProfile::LosslessCompression`
+  (`--profile lossless-compression`): true CWE-400/326/327/407 sentences for a
+  compressor, and CWE-409 is applicable under it even for a document with no `output`
+  row. `verify_evidence` step 6c re-derives the facts in both directions: a report that
+  excludes CWE-409 for a document with an `output` row, discharges it on evidence the
+  manifest does not support, cites a different id set than the passing suites, or
+  records an exemption, is `EvidenceMismatch`. The ct-compare, gf256, wasm-leb128 and
+  logic-gates reports regenerate byte-identically (their documents have no `output`
+  row). Tests: `tests/test_decompression_bomb.rs` (matrix pass cases, one fail-closed case
+  per missing fact, the profile, the earlier adopters keep their exclusion) and
+  `tests/test_lzw_report.rs` (the real `lzw` manifests: discharge, byte-for-byte
+  regeneration, generation refused on a mutated manifest, `--check` refusals at
+  both the assumption rules and step 6c). `effect_certificate.json` re-emitted
+  for the new source digest.
 - **`AuditProfile::BooleanLogic` (`--profile boolean-logic`)**: true CWE-400/326/327/407
   sentences for pure Boolean logic (first adopter `rust/logic-gates`: gates and
   combinational blocks over single bits). The `varint-codec` sentences name LEB128, so
