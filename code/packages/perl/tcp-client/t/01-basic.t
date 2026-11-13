@@ -428,6 +428,33 @@ subtest 'connection refused' => sub {
 };
 
 # ============================================================================
+# Test 13b: a constructor that hands back an UNCONNECTED socket is an error
+# ============================================================================
+#
+# IO::Socket::INET->new with a Timeout connects non-blocking and select()s for
+# writability.  A refused connect is also "writable", and on macOS the object
+# comes back as a success with the error still pending (the macOS CI leg saw
+# connect() to a closed loopback port return a connection).  We simulate that
+# here on every OS by making the constructor return a socket that never
+# connected; connect() must notice (getpeername fails with ENOTCONN) and throw.
+
+subtest 'unconnected socket from the constructor is rejected' => sub {
+    my $unconnected = IO::Socket::INET->new(Proto => 'tcp')
+        or die "Cannot create an unconnected socket: $!";
+
+    no warnings 'redefine';
+    local *IO::Socket::INET::new = sub { $unconnected };
+
+    eval { connect('127.0.0.1', 9) };
+    my $err = $@;
+    ok(ref $err && $err->isa('CodingAdventures::TcpClient::TcpError'),
+       'an unconnected socket throws TcpError')
+        or diag("got: " . (defined $err && length $err ? "'$err'" : 'no exception'));
+    like(ref $err ? $err->type() : '', qr/^(connection_refused|io_error|timeout)$/,
+         'error type reflects a failed connect');
+};
+
+# ============================================================================
 # Test 14: DNS resolution failure
 # ============================================================================
 #
