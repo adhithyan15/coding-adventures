@@ -34,7 +34,7 @@ func TestUnpinnedClassKeepsKey(t *testing.T) {
 	if r.Class != ClassUnpinned || r.Key == "" {
 		t.Fatalf("%+v", r)
 	}
-	for _, want := range []string{"unpinned:x", ReasonToolsEnv, ReasonScans} {
+	for _, want := range []string{"unpinned:x", ReasonToolsEnv} {
 		if !contains(r.Reasons, want) {
 			t.Fatalf("missing reason %s in %v", want, r.Reasons)
 		}

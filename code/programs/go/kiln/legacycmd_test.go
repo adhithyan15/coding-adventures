@@ -67,7 +67,8 @@ func TestLegacyPlanAndExplain(t *testing.T) {
 		t.Fatal("two runs wrote different plans")
 	}
 	code, out, errs = runCLI("explain", "--plan", plan, "go/a")
-	if code != 0 || !strings.Contains(out, `"key"`) || !strings.Contains(out, `"closure_size": 1`) {
+	if code != 0 || !strings.Contains(out, `"key"`) || !strings.Contains(out, `"closure_size": 1`) ||
+		!strings.Contains(out, `"advisory_hints"`) || !strings.Contains(out, "advisory only") {
 		t.Fatalf("code %d out %q err %q", code, out, errs)
 	}
 	if code, _, _ := runCLI("explain", "--plan", plan, "nope"); code != 1 {
