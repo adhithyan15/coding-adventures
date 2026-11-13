@@ -510,11 +510,26 @@ Rules for computing it:
   ledger survives a move away from Git.
 - **Nothing undeclared enters the work root**, so anything an action can read
   is in its key. That is the property isolation (§9) exists to guarantee. The
-  two exceptions are named: the host fingerprint (item 3) covers what the
-  runner image provides, and tool state (§9.5) is unkeyed and audited.
+  three exceptions are named: the host fingerprint (item 3) covers what the
+  runner image provides; tool state (§9.5) is unkeyed and audited; and a
+  traced legacy action's inputs are discovered, not declared (below and
+  KILN04).
 - An action whose key cannot be fully determined — an unpinned download,
   `cache: off`, a `shell:` step marked `impure` — is **uncacheable**, and so
   is everything that consumes it.
+
+**Discovered inputs (legacy actions only).** A legacy BUILD (§15.1) runs in
+place and declares nothing, so what it reads cannot be known before it runs.
+For those actions, the key is split in two (KILN04):
+
+- a **weak key** over everything a tracer cannot see: platform, host, recipe,
+  tools, the scrubbed environment, and the executor;
+- a **strong key** over the weak key plus the **manifest**, the read-set a
+  trusted run observed under a tracer, with each entry's current digest.
+
+The ledger stores passes under strong keys; manifests are stored beside it
+(§10.1). Real Kiln actions never need this, because isolation makes the
+declared inputs complete.
 
 ---
 
@@ -647,7 +662,15 @@ as this boundary, so Kiln requires the following.
    namespaces, with the repository mounted writable and the ledger, delta and
    tool store absent. Because it runs in the shared tree, Kiln also re-hashes
    every keyed input after it finishes and records nothing if any digest
-   changed.
+   changed. An `isolation: none` action records a pass **only with a
+   complete trace** (KILN04 §6): its key has no other way to cover what it
+   read. The tracer runs outside the action's namespaces, so the action
+   cannot forge its own trace. Three differences apply to traced legacy
+   recording (KILN04 §4.3, §5.1, §7):
+   - Integrity rests on the mount and PID namespaces alone, because an
+     unprivileged user namespace cannot provide a second uid.
+   - An allowlisted set of `/proc/self` and `/sys` entries is readable.
+   - The re-hash of tracked files happens once per job, not per action.
 6. **`shell:` steps get no extra privilege** and are never cacheable unless
    the same confinement applies to them.
 
@@ -699,6 +722,21 @@ at least one fresh run. A delta record dated more than five minutes after
 
 No build outputs, `node_modules` or tool state are ever stored. Records are
 about 200 bytes; tens of thousands fit in a few megabytes.
+
+**Manifests (legacy actions).** Beside the pass records, the ledger
+directory holds a `manifests/` subdirectory with the **manifests** of
+traced legacy actions (KILN04 §8). For each weak key there are up to four
+distinct lists of entry **names**: packages, repository paths and listed
+directories that a trusted run observed. Digests are never stored; they
+are recomputed at lookup, so a stale or forged manifest can only cause a
+miss.
+
+A manifest is a store-only record kind, not a ledger kind. It has its own
+caps (1 MiB per line, not 4 KiB), is ordered by `(run, at)` and is not
+restamped. Only trusted runs write manifests, and the same merge job
+merges them. So the
+ledger stores **hashes and repository path names**: never file contents,
+out-of-repository paths or environment values.
 
 ### 10.2 Trust
 
@@ -881,6 +919,7 @@ the tests would run nowhere.
 | `fetch` with `network: on` and `pinned-by: <lockfile>` | Cacheable; the lockfile is in the key and the tool verifies its integrity hashes (npm's `integrity`, cargo's checksums, uv's hashes). Kiln never parses lockfile formats. |
 | `fetch` with `network: on` and no `pinned-by` | Runs, but it and everything downstream are uncacheable, and `kiln plan` lists it as unpinned. |
 | `shell: impure """…"""` | Uncacheable, as above. |
+| a legacy action (`isolation: none`) | Cacheable only through a traced manifest (KILN04). A run records nothing (KILN04 §6) when any of these holds: it was not traced; its trace is incomplete; it read another action's products; it read outside the declared host roots; it used the network outside a pinned fetch; it involved a long-lived daemon; it read under `.git/`; it wrote a tracked file. Legacy BUILDs are the one exception to the network rules below: they run with the network on, as today, and the trace classifies every connection (KILN04 §5.4). |
 
 Each distinct `fetch` key runs once per run; its output directory is staged
 read-only into every work root that needs it. A target whose whole subtree is
@@ -1046,25 +1085,33 @@ file is rewritten.
 |---|---|---|
 | **M0 — Pin** | Commit `Cargo.lock`, `uv.lock`, `Gemfile.lock`, `mix.lock`; exact tool versions. (In progress in a separate session.) | Every download is pinned; CI fails on a stale lockfile. |
 | **M1 — Keys for legacy BUILDs** | The smallest Kiln that can cache: the key encoding with golden vectors, legacy key composition (below), the directory ledger with the `ledger-merge` job, the host fingerprint, the Git `Source` and the GitHub and Local `Host`s, and the shadow-comparison harness. **Not in M1:** the BUILD/rule language beyond what `legacy_shell` needs, scanners, `state`, optional tools, Managed tool provisioning, the plain-folder `Source`, `Changed()`, sharding changes and per-component explanations. | `kiln plan` over the whole repo is deterministic, and its package set matches the old tool's. |
-| **M2 — Shadow** | CI computes keys beside the old flow and writes a ledger on main, but skips nothing. Before each 6-hourly forced full build, Kiln snapshots its predictions; afterwards every predicted hit is compared with the target's actual result. Each disagreement is re-run at the same commit: a pass means a flaky test, a repeat failure means an undeclared input to fix. Mutation tests touch a sibling file, a global file and a tool version and assert that the expected keys change. Each PR also reports "key hit but diff-affected": it should be near-empty, and every entry is a lead on a missing input. | At least N forced full builds per OS with zero unexplained disagreements. |
-| **M3 — Skip** | CI skips ledger hits behind the `kiln-gate` required check. The daily `--ignore-ledger --strict` run and tombstones start. | CI time and queue time measurably down. |
+| **M2 — Shadow** | CI computes keys beside the old flow and writes a ledger on main, but skips nothing. A non-gating `kiln-record` job runs the scheduled Linux full build under a tracer with a scrubbed environment and writes manifests and passes to a shadow scope (KILN04 §13). Before each 6-hourly forced full build, Kiln snapshots its traced predictions; afterwards every predicted hit is compared with the target's actual result. Each disagreement is re-run at the same commit: a pass means a flaky test, a repeat failure means a soundness bug to fix. Mutation tests touch a traced file (must miss) and an untraced file inside the static closure (must still hit and still pass on re-run). Each PR also reports traced reads outside the static closure: every entry is a dependency the old graph is missing. | At least N forced full builds per OS with zero unexplained disagreements on traced predictions. |
+| **M3 — Skip** | CI skips ledger hits behind the `kiln-gate` required check, per language, once KILN04 §13's gate holds for it. The daily `--ignore-ledger --strict` run and tombstones start. | CI time and queue time measurably down. |
 | **M4 — Isolation + language** | Work roots, staging, scrubbed environment, network rules. Rule files for the most uniform languages first; a translator converts legacy BUILDs (strip dependency chains, match rules, map idioms such as `command -v X` → optional tool, `uname` → platform file, `a && b` → two steps, `cd d && x` → `in d: x`). `BUILD_windows` is translated separately and diffed, which should surface real drift bugs. | Per language: shadow-run old and new; switch when they agree. |
 | **M5 — Tools + fetch** | `code/kiln/TOOLS`, managed provisioning, `fetch` semantics, network off elsewhere. `ci.yml` toolchain setup collapses to "provide what the plan needs". | — |
 | **M6 — Retire** | Delete `BUILD_windows`, the `legacy_shell` path and the old build tool's selection logic; `ci.yml` becomes a thin wrapper around `kiln plan` / `kiln build`. | — |
 
 ### 15.1 Keys for legacy shell BUILDs (M1)
 
-Legacy BUILDs still run **in place**, without isolation, so their keys must
-over-approximate everything they might read. They are expressed as an
-ordinary rule file, `code/kiln/rules/legacy_shell.rule`, which declares
-`isolation: none` — a mode only legacy actions may use — so no ecosystem
-knowledge enters the Go core. A legacy action's key contains:
+Legacy BUILDs still run **in place**, without isolation, so no declaration
+says what they read. They are expressed as an ordinary rule file,
+`code/kiln/rules/legacy_shell.rule`, which declares `isolation: none` — a
+mode only legacy actions may use — so no ecosystem knowledge enters the Go
+core.
+
+*Revision (2026-11-12).* Reuse is decided by **traced read-sets**
+(KILN04): what a trusted run actually read, recorded as a manifest and
+re-checked at lookup. The static key below (KILN03) is kept as a
+**diagnostic upper bound**: the closure the old graph claims, compared with
+what the tracer saw. Item 6's lexical check became advisory hints (KILN03
+§6); static scans could not bound a program's reads. The static key
+contains:
 
 1. **Every non-ignored file** of the package *and of every transitive
    dependency*, not filtered by file extension.
 2. **The relations the current build tool already knows**: the dependency
    graph, the repository-input boundary and the test-trigger relations,
-   imported from the old tool's plan output.
+   imported from the old tool's graph export (KILN03 §2).
 3. **Ecosystem globals**: `code/packages/rust/Cargo.toml` and its lockfile,
    shared `tsconfig` bases, and similar files, listed in the rule.
 4. **The legacy `BUILD` and `BUILD_windows` text**, the old build tool's
@@ -1074,8 +1121,9 @@ knowledge enters the Go core. A legacy action's key contains:
    …), plus the host fingerprint (§8 item 3). The digest of today's
    `mise.toml` is **not** enough: it says `latest`, so it would not change
    when the toolchain does.
-6. **A lexical check**: every `../` path in the BUILD must resolve inside the
-   keyed closure. If one does not, the action is uncacheable.
+6. ~~A lexical check~~ — now an **advisory hint** (KILN03 §6): a `../`
+   path that leaves the closure is reported, but no longer decides
+   cacheability. The tracer does.
 
 **Downloads.** Legacy BUILDs install with the network on (`npm install`,
 `uv pip install`, `bundle install`, `cpanm`, `luarocks`). By §12's rule those
@@ -1159,6 +1207,15 @@ library.
 9. **Snapshot rollback.** An attacker able to restore an older snapshot
    resurrects revoked passes. Candidate fix: a high-water mark, refusing any
    snapshot older than the last merge.
+10. **Tracer** (KILN04 §15). Is `strace` enough, or is an own stdlib ptrace
+    tracer needed? Is `--seccomp-bpf` safe to use?
+11. **Product provenance** (KILN04 §7). Should a read of another action's
+    products union that writer's manifest instead of recording nothing?
+    Rust's shared `target/` probably needs this to get any hits.
+12. ~~Runner user namespaces.~~ Answered: hosted Ubuntu runners restrict
+    them through AppArmor. A setup step lifts this with
+    `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0`, as
+    `ci.yml` already does for the Forme sandbox (KILN04 §4.3).
 
 ---
 
