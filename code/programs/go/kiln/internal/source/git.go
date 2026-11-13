@@ -44,6 +44,14 @@ func (g *Git) run(args ...string) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
+// Output runs one git subcommand in the work tree, with the same hardening
+// and scrubbed environment as every other call here, and returns its stdout.
+// It exists for internal/record, which needs plumbing (`ls-tree`, `ls-files
+// --stage`, `config`) that Source has no reason to expose. There is no shell:
+// each element of args is one argv element. A non-zero exit is an error that
+// wraps the *exec.ExitError.
+func (g *Git) Output(args ...string) ([]byte, error) { return g.run(args...) }
+
 // gitHardening are options placed before every subcommand.  None is needed
 // for correctness; each closes a way a repository's own configuration could
 // run code or reach out:
