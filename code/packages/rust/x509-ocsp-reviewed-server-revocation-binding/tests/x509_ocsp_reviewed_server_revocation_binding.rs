@@ -60,6 +60,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     validate_x509_ocsp_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_reviewed_responder_no_check_policy,
+    validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy,
@@ -1622,8 +1623,21 @@ fn binds_routed_issuer_revocation_to_the_same_exact_strong_name_policy_path_inne
         format!("{responder_path:?}"),
         "BoundX509OcspReviewedResponderPath"
     );
+    let anchor_policy =
+        validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+    assert_eq!(
+        format!("{anchor_policy:?}"),
+        "ValidatedX509OcspReviewedResponderAnchorDnsPolicy"
+    );
+    assert_eq!(anchor_policy.constrained_dns_names(), None);
     assert!(std::ptr::eq(
-        responder_path
+        anchor_policy
+            .responder_path()
             .reviewed_server_revocation()
             .strong_name_policy_path()
             .subordinate_policy()
