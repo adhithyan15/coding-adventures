@@ -4,6 +4,21 @@ All notable changes to the `unix-tools` package (Ruby) will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed — a counted Windows subset replaces the Windows skip
+
+`BUILD_windows` was an `echo` ("Skipping ruby unix-tools on Windows ..."); it is
+now `bundle install --quiet && bundle exec rake test`, the same as `BUILD`.  The
+`Rakefile` runs every test file on Unix, and on Windows (`Gem.win_platform?`)
+the twelve files whose tools are pure stream transformers (`echo expand false
+fold nl seq sleep tr true unexpand uniq yes`: no filesystem, user database,
+terminal or child process, so a Windows result means what a Linux one does).
+The run prints how many of the 56 files ran and names the 44 held back, so the
+gate is visible in the log.  A tool joins `WINDOWS_TEST_FILES` once a Windows run
+shows its file passing.  Not verified here: no Windows Ruby was runnable in the
+authoring environment, so the first execution of the subset is the Windows CI leg.
+
 ## [1.0.0] - 2026-03-21
 
 ### Added
