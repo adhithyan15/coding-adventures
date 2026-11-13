@@ -28,6 +28,19 @@ policy, and advanced state together. That lower-level transition remains
 available for generalized traversal code, but it cannot directly create the
 fixed reviewed two-link result.
 
+A distinct ordered-transition entry point accepts only the stronger
+Name-policy-backed reviewed-construction initializer. It requires the same
+exact terminal routed proof and complete anchor-nearest intermediate policy as
+the generic entry point, advances through the same shared checks, and retains
+the initializer's exact validated Name-value policy, reviewed-root selection,
+certificate-wide anchor role policy, construction-derived capacity, terminal
+signature, child policy, and advanced state together. A generic initializer or
+proof from another construction cannot produce this result. This is only the
+first ordered public-certificate transition; the available Name rules remain
+incomplete for RFC 5280 Name equality, and no later transition, complete path
+validation, constraint, revocation, TLS, HTTP, OAuth, or network authority is
+added.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the
