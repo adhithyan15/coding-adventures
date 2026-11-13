@@ -45,9 +45,9 @@ use std::sync::{Arc, Mutex};
 use conduit::{Application as ConduitApp, Server as ConduitServer};
 use embeddable_http_server::HttpServerOptions;
 use perl_bridge::{
-    call_coderef, get_context, hv_store, new_hv, new_rv_inc, newSViv, newSVpvn, newXS, set_context,
-    sv_2iv, sv_to_string, warn, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return, CallResult,
-    CV, IV, SV,
+    call_coderef, get_context, hv_store, newSViv, newSVpvn, newXS_unwind, new_hv, new_rv_inc,
+    set_context, sv_2iv, sv_to_string, warn, xs_boot_finish, xs_bootstrap, xsub_frame, xsub_return,
+    CallResult, CV, IV, SV,
 };
 use web_core::{WebRequest, WebResponse};
 
@@ -360,23 +360,51 @@ unsafe fn pin_coderef(app: &mut NativeApp, sv: *mut SV) -> SendSV {
     s
 }
 
+// ── Raising Perl exceptions from an XSUB ────────────────────────────────────
+//
+// `die` is `longjmp` on Unix and an SEH unwind on Windows.  Either way it must
+// never run while a `catch_unwind` frame, or any Rust frame that still owns
+// state, sits between the XSUB and Perl.  So the body of every XSUB runs inside
+// `catch_unwind` and *returns* the error message as `Some(String)`; once that
+// closure has returned and its locals are dropped, the XSUB itself raises the
+// Perl exception.  The XSUB is `extern "C-unwind"` (and registered with
+// `newXS_unwind`) so the Windows unwind is allowed to cross it; on Unix the ABI
+// is identical.  A panic is caught by `catch_unwind` (unwinding a Rust panic into
+// Perl would be undefined behaviour) and reported as a Perl error instead of
+// being silently swallowed, which would hand Perl its own arguments as return
+// values.  The message is still a live `String` when `die` runs, so on Unix, where
+// `die` is a `longjmp`, those few bytes leak per error; on Windows the unwind
+// frees them.
+
+macro_rules! die_if_failed {
+    ($outcome:expr) => {
+        match $outcome {
+            Ok(Some(message)) => perl_bridge::die(&message),
+            Err(_) => perl_bridge::die("conduit: internal error"),
+            Ok(None) => {}
+        }
+    };
+}
+
 // ── XSUBs ───────────────────────────────────────────────────────────────────
 
-extern "C" fn xs_new_app(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_new_app(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let app = Box::new(NativeApp::new());
         let iv = Box::into_raw(app) as IV;
         set_return(f.base, f.ax, 0, newSViv(iv));
         xsub_return(1, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_add_route(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_add_route(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 4 {
-            perl_bridge::die("app_add_route(app, method, pattern, coderef)");
+            return Some("app_add_route(app, method, pattern, coderef)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let method = arg_string(f.base, f.ax, 1);
@@ -384,80 +412,92 @@ extern "C" fn xs_app_add_route(_cv: *mut CV) {
         let cr = pin_coderef(app, arg_sv(f.base, f.ax, 3));
         app.routes.push((method, pattern, cr));
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_add_before(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_add_before(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 2 {
-            perl_bridge::die("app_add_before(app, coderef)");
+            return Some("app_add_before(app, coderef)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let cr = pin_coderef(app, arg_sv(f.base, f.ax, 1));
         app.befores.push(cr);
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_add_after(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_add_after(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 2 {
-            perl_bridge::die("app_add_after(app, coderef)");
+            return Some("app_add_after(app, coderef)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let cr = pin_coderef(app, arg_sv(f.base, f.ax, 1));
         app.afters.push(cr);
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_set_not_found(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_set_not_found(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 2 {
-            perl_bridge::die("app_set_not_found(app, coderef)");
+            return Some("app_set_not_found(app, coderef)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let cr = pin_coderef(app, arg_sv(f.base, f.ax, 1));
         app.not_found = Some(cr);
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_set_error_handler(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_set_error_handler(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 2 {
-            perl_bridge::die("app_set_error_handler(app, coderef)");
+            return Some("app_set_error_handler(app, coderef)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let cr = pin_coderef(app, arg_sv(f.base, f.ax, 1));
         app.error_handler = Some(cr);
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_set_setting(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_set_setting(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 3 {
-            perl_bridge::die("app_set_setting(app, key, value)");
+            return Some("app_set_setting(app, key, value)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let key = arg_string(f.base, f.ax, 1);
         let value = arg_string(f.base, f.ax, 2);
         app.settings.insert(key, value);
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_app_get_setting(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_app_get_setting(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 2 {
-            perl_bridge::die("app_get_setting(app, key)");
+            return Some("app_get_setting(app, key)".to_string());
         }
         let app = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeApp);
         let key = arg_string(f.base, f.ax, 1);
@@ -470,15 +510,17 @@ extern "C" fn xs_app_get_setting(_cv: *mut CV) {
                 // Return an empty list → undef in Perl scalar context.
                 xsub_return(0, f.ax);
             }
-        }
+        };
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_new_server(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         if f.items < 4 {
-            perl_bridge::die("new_server(app, host, port, max_conn)");
+            return Some("new_server(app, host, port, max_conn)".to_string());
         }
         let app_ptr = arg_iv(f.base, f.ax, 0) as *mut NativeApp;
         let host = arg_string(f.base, f.ax, 1);
@@ -487,16 +529,17 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
         let max_iv = arg_iv(f.base, f.ax, 3);
         let max_conn = if max_iv > 0 { max_iv as usize } else { 128 };
 
-        let app_box = Box::from_raw(app_ptr);
-        let NativeApp {
-            routes,
-            befores,
-            afters,
-            not_found,
-            error_handler,
-            settings,
-            refs,
-        } = *app_box;
+        // Borrow the application; do NOT take ownership yet.  A failed bind
+        // raises a Perl error and the Perl wrapper's `DESTROY` then disposes of
+        // this very handle (`dispose_app`), so the app must still be intact and
+        // owned by that handle until the server has actually been created.
+        let app = &*app_ptr;
+        let routes = &app.routes;
+        let befores = &app.befores;
+        let afters = &app.afters;
+        let not_found = app.not_found;
+        let error_handler = app.error_handler;
+        let settings = &app.settings;
 
         // Capture the interpreter context + lock NOW, on the main Perl thread.
         let ctx = Arc::new(Ctx {
@@ -505,12 +548,12 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
         });
 
         let mut web_app = ConduitApp::new();
-        for (k, v) in &settings {
+        for (k, v) in settings {
             web_app.set(k.clone(), v.clone());
         }
 
         let eh = error_handler;
-        for (method, pattern, cr) in &routes {
+        for (method, pattern, cr) in routes {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             let err = eh;
@@ -531,7 +574,7 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
                 }
             });
         }
-        for cr in &befores {
+        for cr in befores {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             web_app.before(move |req| match dispatch(&c, handler.get(), req, None) {
@@ -540,7 +583,7 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
                 Outcome::Err(msg) => Some(WebResponse::internal_error(&msg)),
             });
         }
-        for cr in &afters {
+        for cr in afters {
             let c = Arc::clone(&ctx);
             let handler = *cr;
             web_app.after_response(move |req, prev| match dispatch(&c, handler.get(), req, None) {
@@ -568,9 +611,15 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
         let server = match ConduitServer::bind_with_options(&host, port, opts, web_app) {
             Ok(s) => s,
             Err(e) => {
-                perl_bridge::die(&format!("conduit: bind failed: {e}"));
+                return Some(format!("conduit: bind failed: {e}"));
             }
         };
+        // The server exists.  Everything below that can fail runs while the app is
+        // still owned by the caller's handle; the app is released only as the very
+        // last step, once the new server handle has been handed to Perl.  `refs`
+        // is a list of raw SV pointers, so the server takes a copy of it (the
+        // refcounts they pin move with it: the app's own `Vec` is dropped without
+        // touching them).
         let bound = server.local_addr().port();
         let stop = server.stop_handle();
         let native = NativeServer {
@@ -580,15 +629,18 @@ extern "C" fn xs_new_server(_cv: *mut CV) {
             running: Arc::new(AtomicBool::new(false)),
             bg: None,
             ctx,
-            refs,
+            refs: app.refs.clone(),
         };
         set_return(f.base, f.ax, 0, newSViv(Box::into_raw(Box::new(native)) as IV));
+        drop(Box::from_raw(app_ptr));
         xsub_return(1, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_server_serve(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_server_serve(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let srv = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeServer);
         if let Some(mut s) = srv.server.take() {
@@ -597,11 +649,13 @@ extern "C" fn xs_server_serve(_cv: *mut CV) {
             srv.running.store(false, Ordering::SeqCst);
         }
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_server_serve_background(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_server_serve_background(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let srv = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeServer);
         // Defense-in-depth: serve_background spawns an OS thread that dispatches
@@ -618,7 +672,7 @@ extern "C" fn xs_server_serve_background(_cv: *mut CV) {
                  refusing to spawn on a single-interpreter build — use serve() in the foreground",
             );
             xsub_return(0, f.ax);
-            return;
+            return None;
         }
         if let Some(mut s) = srv.server.take() {
             let running = Arc::clone(&srv.running);
@@ -630,11 +684,13 @@ extern "C" fn xs_server_serve_background(_cv: *mut CV) {
             srv.bg = Some(h);
         }
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_server_stop(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_server_stop(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let srv = &mut *(arg_iv(f.base, f.ax, 0) as *mut NativeServer);
         srv.stop.stop();
@@ -642,30 +698,36 @@ extern "C" fn xs_server_stop(_cv: *mut CV) {
             let _ = h.join();
         }
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_server_local_port(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_server_local_port(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let srv = &*(arg_iv(f.base, f.ax, 0) as *mut NativeServer);
         set_return(f.base, f.ax, 0, newSViv(srv.port as IV));
         xsub_return(1, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_server_running(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_server_running(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let srv = &*(arg_iv(f.base, f.ax, 0) as *mut NativeServer);
         let r = if srv.running.load(Ordering::SeqCst) { 1 } else { 0 };
         set_return(f.base, f.ax, 0, newSViv(r));
         xsub_return(1, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_dispose_server(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_dispose_server(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let iv = arg_iv(f.base, f.ax, 0);
         if iv != 0 {
@@ -679,11 +741,13 @@ extern "C" fn xs_dispose_server(_cv: *mut CV) {
             }
         }
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
-extern "C" fn xs_dispose_app(_cv: *mut CV) {
-    let _ = catch_unwind(|| unsafe {
+unsafe extern "C-unwind" fn xs_dispose_app(_cv: *mut CV) {
+    let outcome: std::thread::Result<Option<String>> = catch_unwind(|| unsafe {
         let f = xsub_frame();
         let iv = arg_iv(f.base, f.ax, 0);
         if iv != 0 {
@@ -693,7 +757,9 @@ extern "C" fn xs_dispose_app(_cv: *mut CV) {
             }
         }
         xsub_return(0, f.ax);
+        None
     });
+    die_if_failed!(outcome);
 }
 
 // ── Boot ────────────────────────────────────────────────────────────────────
@@ -703,8 +769,8 @@ pub unsafe extern "C" fn boot_CodingAdventures__Conduit(cv: *mut CV) {
     let file = b"Conduit.so\0".as_ptr() as *const c_char;
     let ax = xs_bootstrap(cv, file);
 
-    let reg = |name: &[u8], sub: extern "C" fn(*mut CV)| {
-        newXS(name.as_ptr() as *const c_char, sub, file);
+    let reg = |name: &[u8], sub: unsafe extern "C-unwind" fn(*mut CV)| {
+        newXS_unwind(name.as_ptr() as *const c_char, sub, file);
     };
     reg(b"CodingAdventures::Conduit::Native::new_app\0", xs_new_app);
     reg(b"CodingAdventures::Conduit::Native::app_add_route\0", xs_app_add_route);

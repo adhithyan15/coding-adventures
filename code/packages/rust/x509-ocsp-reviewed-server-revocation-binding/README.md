@@ -105,6 +105,21 @@ intermediate DNS, no-check, responder or intermediate revocation, complete
 revocation or Name/path validation, TLS, HTTP, OAuth, network, or live-provider
 readiness.
 
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy`
+consumes that complete strong anchor-policy proof and derives both the exact
+fully routed authenticated responder and the exact target-nearest intermediate
+through the retained non-copyable evidence. An absent intermediate
+NameConstraints extension succeeds without reading responder Subject
+Alternative Name. A present extension must be critical and decode as the
+supported permitted-and-excluded-DNS subset under separate caller-owned
+limits; every responder `dNSName` must comply. The entry point reuses the
+existing private evaluator and stable payload-free intermediate-policy errors,
+and retains only count evidence with the complete prior proof. No responder,
+SAN, intermediate, path, algorithm, key, signature, status, or time can be
+supplied independently. This policy performs no external effect and stops
+before no-check, responder or intermediate revocation, complete revocation or
+Name/path validation, TLS, HTTP, OAuth, network, or live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

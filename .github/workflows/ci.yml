@@ -162,6 +162,7 @@ jobs:
       run_phy00_phy01_fixture_consumers: ${{ steps.detect.outputs.run_phy00_phy01_fixture_consumers }}
       run_neural_framework_conformance: ${{ steps.detect.outputs.run_neural_framework_conformance }}
       run_d18f_message_conformance: ${{ steps.detect.outputs.run_d18f_message_conformance }}
+      run_kiln_sandbox: ${{ steps.detect.outputs.run_kiln_sandbox }}
       run_d18p_channel_conformance: ${{ steps.detect.outputs.run_d18p_channel_conformance }}
       run_d18q_channel_key_grant_conformance: ${{ steps.detect.outputs.run_d18q_channel_key_grant_conformance }}
       run_d18t_durable_epoch_activation_conformance: ${{ steps.detect.outputs.run_d18t_durable_epoch_activation_conformance }}
@@ -778,6 +779,23 @@ jobs:
           # both lists against DOC_SHARD_PLANS so they cannot drift again.
           npm run check:doc-shards --silent
 
+      - name: Verify Cargo lockfiles are current
+        # Every Cargo root that resolves a crates.io (or git) package commits
+        # its Cargo.lock; see code/scripts/cargo_lockfiles.py. Lives in this
+        # job because it has no `if:`: a native-extension crate under
+        # python/ruby/elixir may trip none of the Rust needs_* outputs. The
+        # script installs the exact rust version pinned in mise.toml itself.
+        # Pull requests check only roots whose manifests (or path-dependency
+        # manifests) changed; pushes check every root. A failure prints the
+        # exact `cargo update --workspace` to run.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            python3 code/scripts/cargo_lockfiles.py check
+          else
+            python3 code/scripts/cargo_lockfiles.py check --changed-since origin/main
+          fi
       # `python_pins.py check` shells out to `uv pip compile`, so this job needs uv.
       - name: Install uv for the Python pin check
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
@@ -793,6 +811,7 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_cargo_lockfiles.py'
           # Every BUILD must install with `npm ci`, and every lock it relies
           # on must exist, match its package.json and name only registry
           # URLs with integrity hashes.
@@ -1171,6 +1190,75 @@ jobs:
           (cd code/packages/dart/wave && dart pub get && dart test test/conformance_fixture_test.dart)
 
   # ── Job 3: D18F six-language message conformance ───────────────
+  # Kiln's sandbox (KILN04 stage 3b) needs unprivileged user, mount, PID and
+  # network namespaces. Its integration tests SKIP where the kernel refuses
+  # them, which on a CI runner would be a green run that tested nothing, so
+  # this job lifts the AppArmor restriction unconditionally, sets
+  # KILN_REQUIRE_SANDBOX=1 (every skip becomes a failure) and then asserts from
+  # the JSON test stream that every named test ran and passed. It also runs the
+  # real strace around the sandbox and parses the trace in helper mode.
+  #
+  # The gate flag is true for the scheduled and manually dispatched full builds
+  # too (detect passes -force on them, which makes every registry flag true), so
+  # a runner image, kernel or strace change is caught within hours, not at the
+  # next Kiln change.
+  kiln-sandbox:
+    name: Kiln sandbox (linux/amd64)
+    needs: detect
+    if: needs.detect.outputs.run_kiln_sandbox == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: ${{ env.LEAN_SPARSE_PATTERNS }}
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13.17'
+          allow-prereleases: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
+
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Install strace for the real-strace sandbox test
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh strace
+
+      - name: Run the sandbox tests (skips are failures)
+        working-directory: code/programs/go/kiln
+        env:
+          KILN_REQUIRE_SANDBOX: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          strace --version | head -1
+          uname -r
+          go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
+
+      # Runs even when the tests failed: the JSON stream is the only record of
+      # which test failed and why, and this step prints it. It also fails the
+      # job when a test was skipped or did not run.
+      - name: Assert every sandbox test ran and passed
+        if: always()
+        shell: bash
+        run: |
+          python3 "$GITHUB_WORKSPACE/code/programs/go/kiln/ci/assert_sandbox_tests.py" "$RUNNER_TEMP/kiln-sandbox.json"
+
   d18f-message-conformance:
     name: D18F message conformance
     needs: detect
@@ -6221,7 +6309,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, kiln-sandbox, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, swift-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime, neural-framework-conformance]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -6243,6 +6331,7 @@ jobs:
           NEURAL_FRAMEWORK_RESULT: ${{ needs['neural-framework-conformance'].result }}
           OCAML_CAPABILITY_RESULT: ${{ needs['ocaml-capability-gate'].result }}
           PHY_RESULT: ${{ needs['phy00-phy01-fixture-consumers'].result }}
+          KILN_SANDBOX_RESULT: ${{ needs['kiln-sandbox'].result }}
           D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
           D18P_RESULT: ${{ needs['d18p-channel-conformance'].result }}
           D18Q_RESULT: ${{ needs['d18q-channel-key-grant-conformance'].result }}
@@ -6289,7 +6378,7 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT kiln_sandbox=$KILN_SANDBOX_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT swift_grammar_regen=$SWIFT_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
           # A selected conformance job may not silently skip: missing training
           # evidence must not become a green required check.
@@ -6297,7 +6386,7 @@ jobs:
             true:success|false:success|false:skipped) ;;
             *) echo "::error::neural framework conformance did not pass (required: $NEURAL_FRAMEWORK_REQUIRED, result: $NEURAL_FRAMEWORK_RESULT)"; fail=1 ;;
           esac
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$KILN_SANDBOX_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$SWIFT_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

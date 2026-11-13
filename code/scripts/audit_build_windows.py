@@ -464,10 +464,6 @@ KNOWN_POSIX_FALLBACKS = {
     # Copies a cargo-built .dylib/.so/.dll with `2>/dev/null ||` fallbacks;
     # needs a Windows-specific copy of the native addon (a design decision).
     "packages/typescript/matrix-rust-napi",
-    # Runs its dependency's POSIX BUILD via `bash BUILD` and then that
-    # package's `.venv/bin/python`; a Windows version has to call conduit's
-    # BUILD_windows and its `.venv\Scripts\python` instead.
-    "programs/python/conduit-hello",
 }
 
 
