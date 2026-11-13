@@ -5531,6 +5531,138 @@ pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_respond
     })
 }
 
+/// Apply the exact retained intermediate's supported critical DNS policy to
+/// the responder retained by the strongest Name-policy path bridge.
+///
+/// This consumes the complete strong selected-anchor responder-policy proof.
+/// The fully routed authenticated responder and target-nearest intermediate
+/// are derived only through that retained non-copyable proof. An absent
+/// intermediate NameConstraints extension succeeds without reading responder
+/// SAN. A present extension must be critical and decode as the supported
+/// permitted-and-excluded-DNS subset under separate caller-owned limits.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before no-check, responder or intermediate revocation, complete Name/path
+/// or revocation validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    X509OcspReviewedResponderIntermediateDnsPolicyError,
+>{
+    let strong_binding = anchor_policy.responder_path().reviewed_server_revocation();
+    let authenticated_revocation = strong_binding.authenticated_revocation();
+    let responder_certificate = authenticated_revocation
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let intermediate_certificate = authenticated_revocation
+        .target_issuer_signature()
+        .issuer_rsa_algorithm_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_responder_intermediate_dns_policy(
+        responder_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+        anchor_policy,
+        constrained_dns_names,
+    })
+}
+
 /// Apply the exact routed intermediate's supported critical DNS policy.
 ///
 /// This consumes the complete routed selected-anchor responder-policy proof.

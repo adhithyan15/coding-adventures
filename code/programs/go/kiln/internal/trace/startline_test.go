@@ -25,7 +25,9 @@ func TestStartLineAndDescriptorWrites(t *testing.T) {
 	}
 	// Metadata writes through a descriptor use the -y path.
 	args := map[string]string{"fchmod": "3</r/a>, 0755", "fchown": "3</r/a>, 1, 2", "fsetxattr": `3</r/a>, "u.x", "v", 1, 0`,
-		"fremovexattr": `3</r/a>, "u.x"`, "futimens": "3</r/a>, NULL"}
+		"fremovexattr": `3</r/a>, "u.x"`, "utimensat": "3</r/a>, NULL, NULL, 0"}
+	// futimens is not a system call on x86-64: glibc makes it utimensat on a
+	// descriptor with a NULL path, which is what the trace shows.
 	for name, a := range args {
 		got := mustParse(t, wrap(name+"("+a+") = 0"))
 		if e := got.Events[0]; e.Kind != KindWrite || e.Path != "/r/a" {

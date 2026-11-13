@@ -1,0 +1,9 @@
+INNER_BC_OPEN /*!
++BC_TEXT inner 
+BC_CLOSE */
++KEYWORD fn
++NAME f
+LPAREN (
+RPAREN )
++LBRACE {
+RBRACE }

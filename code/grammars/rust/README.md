@@ -3,16 +3,26 @@
 This directory will hold the versioned Rust front ends of
 [RS01](../../specs/RS01-rust-grammars.md): one `.tokens` and one `.grammar`
 file for every published Rust release, and for every edition that release
-supports. **Slices A2 and A3 wrote the inventory and the evidence tooling.**
-There are no grammar files yet; every row is `pending`.
+supports. **Slices A2 and A3 wrote the inventory and the evidence tooling;
+slice A4 wrote the first four pairs, the lexical pairs of release 1.97.0.**
+Only the 1.97.0 row has left `none` (it is at stage `G`, still `pending`);
+every other row is `pending`.
 
 What is here today:
 
 - `releases.csv`: the LANG84 release inventory, 158 rows.
 - `subsets.csv`: the two subsets RS01 names, `rs-token-trees` and
   `rs-confined`, with the new `allowlist` column.
-- `pair-evidence.csv`: header only, until the first pair files exist (see
+- `pair-evidence.csv`: four `reviewed` rows, one per edition of 1.97.0 (see
   "Pair evidence").
+- `rust1.97.0-e{2015,2018,2021,2024}.{tokens,grammar}`: the first pairs (see
+  "Pair files").
+- `unicode/xid-17.0.0.ranges`: the `XID_Start` and `XID_Continue` ranges the
+  pairs' identifier classes are built from.
+- `corpus/rs-token-trees/`: 56 cases that probe the lexical pairs.
+
+The pair files and the Unicode data are **generated** by
+`code/scripts/rust_lexical_pairs.py`. Do not edit them by hand.
 
 `code/scripts/release_inventory.py check` validates both on every pull
 request. See [LANG84](../../specs/LANG84-grammar-driven-versioned-frontends.md)
@@ -90,8 +100,11 @@ edition that starts at the row. Lineage carries the set, so 1.30.1 stays
 
 `pair-evidence.csv` holds one row per (release, edition) pair that has files
 here, and `code/scripts/rust_release_pairs.py` keeps the rows and the files
-honest. There are no rows yet: slice A3 (this change) adds the tooling and the
-header-only file, and slice A4 writes the first pairs.
+honest. Slice A3 added the tooling and slice A4 the first four rows, the
+`reviewed` pairs of 1.97.0: the same seven `syntax_blobs` (the lexer, symbol,
+accepted-feature, parser, macro-by-example and `Cargo.lock` objects of tag
+1.97.0, from a blobless depth-1 fetch), one note per edition, and `-` for the
+oracle until slice C2.
 
 Each row has one of three bases (RS01 section 6.3):
 
@@ -120,11 +133,77 @@ cyclic, a pair file has no row, or a row has no files. It reads only local
 files, refuses symlinks and paths that leave this directory, and runs in CI
 beside `release_inventory.py check`.
 
-## Pair files (none yet)
+## Pair files
 
 Pre-1.0 releases will use `rust<release>.tokens` and `.grammar`; 1.0 and later
 use `rust<release>-e<edition>.*`. A row's claims hold for every edition it
-lists, so a non-pending row needs both files for each of its editions.
+lists, so a row past stage `none` needs both files for each of its editions.
+
+**The four 1.97.0 pairs** (slice A4) are complete lexers and token-tree
+grammars (the `rs-token-trees` subset): the `.tokens` file produces every token
+`rustc_lexer` does, and the `.grammar` accepts token trees and delimiter
+balance and nothing else. They are at stage `G`: `grammar-tools validate`
+passes (its "defined but never used" warnings are intended; the `.grammar`
+header says why) and each header cites the tag, its commit and the syntax
+blobs. Stage `P` needs `release_probes` (slice A5), so the row cannot be
+`partial` yet.
+
+| Pair | Keywords added | Lexical differences |
+| --- | --- | --- |
+| `-e2015` | (base set; `dyn` is a soft keyword) | `async`, `await`, `try` are identifiers |
+| `-e2018` | `async await dyn try` | |
+| `-e2021` | | C strings and raw C strings, raw lifetimes `'r#a`, reserved prefixes (`k#x`, `k"x"`, `k'x'`, `'a#`) refused |
+| `-e2024` | `gen` | guarded strings `#"x"#` and `##` refused |
+
+What the lexers do that is worth knowing:
+
+- **Block comments nest**, tracked by lexer groups; line comments are tokens
+  that the A5 hook `rust_block_comments` deletes. Neither that hook nor
+  `rust_strip_shebang` exists yet, so a raw lexer run leaves comment tokens in
+  the stream and lexes `#!/usr/bin/env x` as punctuation.
+- **Raw strings** have one regex arm per hash count, 0 to 255.
+- **Identifiers** use explicit `XID_Start` and `XID_Continue` classes for Unicode
+  17.0.0, never `\p{XID_Start}`.
+- **Malformed input is a refused token**, not an `errors:` entry: the engine
+  never reads `errors:`.
+- **A decoder still has work to do**: the lexer accepts `0b102`, `'ab'` and bad
+  escapes as tokens (RS01 divergence RD6).
+
+### Generating and checking
+
+```text
+python3 code/scripts/rust_lexical_pairs.py write        # rewrite the eight pair files
+python3 code/scripts/rust_lexical_pairs.py check        # fail if any differs; CI runs this
+python3 code/scripts/rust_lexical_pairs.py import-xid TABLES_RS
+                                                        # regenerate unicode/xid-17.0.0.ranges
+python3 -m unittest discover -s code/scripts/tests -p 'test_rust_lexical_pairs.py'
+```
+
+The generator reads `releases.csv` and `pair-evidence.csv` for each header, so
+the files are byte-reproducible. `import-xid` takes `src/tables.rs` of the
+`unicode-ident` 1.0.24 crate (it is in the cargo registry once any Rust crate
+that depends on it has been built) and refuses a file whose SHA-256 is not the
+pinned one. Nothing is downloaded.
+
+## The `rs-token-trees` corpus
+
+`corpus/rs-token-trees/` holds one case per RS01 section 4.2 hard case, or
+several: nested and doc block comments, strings that contain `/*`, shebangs,
+raw strings with 0 to 255 hashes, byte and C strings, lifetimes against
+characters, numeric suffixes and forms, raw identifiers, per-edition keywords
+and reserved prefixes. A case is:
+
+| File | Meaning |
+| --- | --- |
+| `<name>.rs` | the source |
+| `<name>.expect` | the tokens, one per line: `TYPE value`, with a leading `+` when the token follows trivia (RS01's F11 flag). Values escape `\n \r \t \\` and `\u{..}`, so the file is ASCII. The tokens are those after the two C3 hooks of slice A5 |
+| `<name>.expect@1.97.0-e2021` | the tokens for one pair, when it differs |
+| `<name>.reject@1.97.0-e2021` | `Lex` or `Parse`: that pair refuses the case |
+| `<name>.reject` | every pair refuses it (`doc-block-nested-refused`: `rustc` accepts, divergence RD4) |
+| `<name>.cite` | the oracle record: `rustc 1.97.0 (2d8144b78)`'s verdict per edition, and the pair's |
+
+Every case agrees with `rustc` 1.97.0 in every edition, except the one RD4
+case. A5's lexer tests must reproduce the `.expect` files.
 
 ## Subsets
 
