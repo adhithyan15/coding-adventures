@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 113,
-  "sourceHash": "fnv1a64:a98ba4d1954d2fef",
+  "sourceHash": "fnv1a64:2ac124c926901b45",
   "lessonIds": [
     "KA-C113-asti",
     "KA-C113-yajamana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch113.txt",
   "json": "kannada/narration/ch113.json",
-  "textHash": "fnv1a64:977ea45cce3b1260",
-  "jsonHash": "fnv1a64:80b1726c4870c70e",
+  "textHash": "fnv1a64:b2789d55c98ced43",
+  "jsonHash": "fnv1a64:2d5cc406ecf55b0a",
   "findings": []
 }

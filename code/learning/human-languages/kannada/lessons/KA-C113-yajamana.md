@@ -37,7 +37,7 @@ reviews_of: [KA-C113-asti, KA-C108-movement]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
 
-[PAUSE 2s] Before the new one: say the Kannada for a tool, then property. Reach back to chapter 108: say “I go to school” with **ಶಾಲೆಗೆ**.
+[PAUSE 2s] Before the new one: say the Kannada for a tool, then property. Recall the school-destination sentence: say “I go to school” with **ಶಾಲೆಗೆ**.
 
 ## You'll want to know: ಯಜಮಾನ
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-02]; assesses=[] -->

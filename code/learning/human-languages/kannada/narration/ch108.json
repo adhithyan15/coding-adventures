@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Below, Outside, In front, In the middle, Road",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:829ebb7d78b7d24b",
+  "sourceHash": "fnv1a64:4769480e435202c0",
   "lessons": [
     {
       "id": "KA-C108-kelage",
@@ -698,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e17394d3cfcffcb1",
+      "sourceHash": "fnv1a64:e0760d797681b913",
       "notice": null,
       "blocks": [
         {
@@ -748,7 +748,7 @@
             },
             {
               "kind": "speech",
-              "text": "The destination ends in -ಗೆ; the starting place ends in -ಇಂದ. You already learned the whole Bengaluru answer in chapter 103. Listen for the difference, then say each sentence once. Do not swap “to” and “from”."
+              "text": "The destination ends in -ಗೆ; the starting place ends in -ಇಂದ. You already learned the whole Bengaluru answer. Listen for the difference, then say each sentence once. Do not swap “to” and “from”."
             }
           ]
         },

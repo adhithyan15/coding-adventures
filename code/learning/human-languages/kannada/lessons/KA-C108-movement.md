@@ -63,7 +63,7 @@ or conjugate every verb.
 > **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.** — I have come **from** Bengaluru.
 
 The destination ends in **-ಗೆ**; the starting place ends in **-ಇಂದ**. You
-already learned the whole Bengaluru answer in chapter 103. Listen for the
+already learned the whole Bengaluru answer. Listen for the
 difference, then say each sentence once. Do not swap “to” and “from”.
 
 ## Guided practice
