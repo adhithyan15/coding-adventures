@@ -33,3 +33,13 @@
   returns manifests with their ids) instead of re-hashing per comparison.
 - KILN04 gains section 9.1 (lookup decisions) and its section 9 wording for a
   miss is corrected to match.
+
+### Review fixes
+
+- Each tried manifest lists at most 256 entries, with `entry_count` and
+  `entries_truncated`; keys and `outside_static_closure` use the full list, and
+  `kiln explain` notes truncation.
+- `lookup.probes_ran` added; `lookup.scope` is derived from the stores
+  (`LookupOptions.Scope` removed, `NewLookupOptions` added).
+- Removed a stray `manifest_test.go-E`; `*-E` is now ignored.
+- KILN04 9.1 and the M3 gate list record the requirements for skipping.

@@ -75,6 +75,14 @@ func TestLegacyPlanLookupAndExplain(t *testing.T) {
 		t.Fatalf("explain: code %d out %s err %s", code, out, errs)
 	}
 
+	// A truncated manifest is said to be truncated in `kiln explain`.
+	tr := t.TempDir()
+	plp := filepath.Join(tr, "p.json")
+	_ = os.WriteFile(plp, []byte(`{"schema":"kiln-legacy-plan/1","os":"linux","arch":"x64","host":"h","env":[],"packages":[{"name":"go/a","key":"","class":"uncacheable","reasons":[],"hints":[],"closure_size":1,"tools":[],"components":{"own":"","reads":"","consumed":"","recipe":"","tools":"","env":""},"lookup":{"result":"miss","manifests":[{"id":"i","run":"1","at":"t","revision":"r","entry_count":999,"entries_truncated":true,"entries":[]}]}}],"histogram":{"classes":{},"reasons":{},"hints":{},"closure_sizes":{"min":0,"median":0,"p90":0,"max":0}}}`), 0o644)
+	if code, out, errs := runCLI("explain", "--plan", plp, "go/a"); code != 0 || !strings.Contains(out, "lookup_note") || !strings.Contains(out, "entry_count") {
+		t.Fatalf("truncation note: code %d %s %s", code, out, errs)
+	}
+
 	// Without --ledger the plan and the explanation carry no lookup at all.
 	if code, _, _ := runCLI("legacy-plan", "--graph", graph, "--out", plan, "--root", repo, "--os", "linux"); code != 0 {
 		t.Fatal("plain plan failed")

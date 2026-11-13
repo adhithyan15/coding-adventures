@@ -115,10 +115,7 @@ func runLegacyPlan(args []string, stdout, stderr io.Writer) int {
 		if *scope == "shared" {
 			sc = ledger.Shared
 		}
-		opt.Lookup = &legacy.LookupOptions{
-			Manifests: ledger.OpenManifests(*ledgerDir, sc), Passes: ledger.Open(*ledgerDir, sc),
-			Scope: *scope, Now: time.Now().UTC(), Root: abs, ExecutorFlags: execArgs,
-		}
+		opt.Lookup = legacy.NewLookupOptions(*ledgerDir, sc, time.Now().UTC(), abs, execArgs)
 	}
 	plan, err := legacy.BuildPlan(g, opt)
 	if err != nil {
@@ -202,7 +199,10 @@ func runExplain(args []string, stdout, stderr io.Writer) int {
 		// with --ledger: the weak key, the manifests tried (entry lists
 		// included), the hit's pass record and the traced packages outside the
 		// static closure.  LookupInfo says what was read and that it is shadow.
+		// Each manifest's entries are only what the plan holds (at most
+		// legacy.MaxPlanEntries); LookupNote says when that is a truncation.
 		Lookup     *legacy.Lookup     `json:"lookup,omitempty"`
+		LookupNote string             `json:"lookup_note,omitempty"`
 		LookupInfo *legacy.LookupInfo `json:"lookup_info,omitempty"`
 		Advisory   struct {
 			Note  string   `json:"note"`
@@ -211,6 +211,14 @@ func runExplain(args []string, stdout, stderr io.Writer) int {
 	}{OS: plan.OS, Arch: plan.Arch, Host: plan.Host, Env: plan.Env, Probes: plan.Probes,
 		Lookup: rec.Lookup, LookupInfo: plan.Lookup,
 		Record: recordView{rec.Name, rec.Key, rec.Class, rec.Reasons, rec.ClosureSize, rec.Tools, rec.Components}}
+	if rec.Lookup != nil {
+		for _, m := range rec.Lookup.Manifests {
+			if m.EntriesTruncated {
+				out.LookupNote = fmt.Sprintf("some manifests list only the first %d of their entries (see entry_count); the plan does not hold the rest", legacy.MaxPlanEntries)
+				break
+			}
+		}
+	}
 	if out.Env == nil {
 		out.Env = []string{}
 	}

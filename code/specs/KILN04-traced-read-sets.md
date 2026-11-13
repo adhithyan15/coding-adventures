@@ -1185,6 +1185,23 @@ consumes the plan yet.
   `--root` and `kiln:executor-args` is the repeatable `--executor-arg`
   flags. A lookup that differs from the recorder in either gets
   `no-manifest`, never a hit.
+- **Plan size.** Each tried manifest lists at most 256 entries
+  (`entries`), with `entry_count` and `entries_truncated`; the strong key and
+  `outside_static_closure` always use the full list. `kiln explain` shows only
+  what the plan holds and says when it was truncated.
+- **Scope and probes.** The plan's `lookup.scope` comes from the stores
+  themselves (both must have the same scope; `NewLookupOptions` opens them
+  together). `lookup.probes_ran` says whether `--probe` ran.
+- **Junk manifests.** A flood of forged or junk manifests can only fill the
+  four slots of a weak key and force misses; it cannot produce a hit, because
+  a hit needs a pass for the strong key (§8, Poisoning).
+- **Before any skip mode exists (M3 requirements from the review).** Skipping
+  requires: (a) the policy files (`never.json`, `pinned.json`,
+  `toolchains.json`, `env.json`, `host-roots.json`) read from the base
+  revision, enforced in code, not by convention; (b) `probes_ran == true`,
+  since without probes a `probe-mismatch` gate cannot fire; (c) an explicit
+  decision on whether `unpinned:<lang>` gates lookup. **This is open**: 5a
+  does not gate on it, and the keys carry pins only.
 - **Trust boundary (§3.3).** Lookup reads the policy files (`env.json`,
   `host-roots.json`, `never.json`, `pinned.json`, `toolchains.json`) through
   the existing loaders, from whatever tree it is given. That is acceptable
@@ -1464,6 +1481,9 @@ point, not a measurement.
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
    only and none of these (§11.1).
+6. skipping reads policy from the base revision, enforced in code before any
+   skip mode exists; it requires `probes_ran == true`; and the open question
+   of whether `unpinned:<lang>` gates is decided (§9.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this

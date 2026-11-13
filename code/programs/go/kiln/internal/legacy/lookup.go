@@ -57,6 +57,10 @@ const (
 	ResultIneligible = "ineligible:"
 )
 
+// MaxPlanEntries caps the entries emitted per tried manifest (a manifest may
+// hold 8,192, and each package may try 4).
+const MaxPlanEntries = 256
+
 // MaxLookupManifests is K of KILN04 3.3: at most this many manifests are tried.
 const MaxLookupManifests = ledger.ManifestKeep
 
@@ -71,8 +75,6 @@ type LookupOptions struct {
 	// Manifests and Passes are the two stores of one ledger directory.
 	Manifests *ledger.ManifestStore
 	Passes    *ledger.Store
-	// Scope labels the ledger in the plan ("shared" or "local").
-	Scope string
 	// Now is the clock for manifest retention (a parameter, never read here).
 	Now time.Time
 	// Root is the absolute checkout path the recorder keyed (`kiln:root`);
@@ -81,6 +83,13 @@ type LookupOptions struct {
 	// weak key.
 	Root          string
 	ExecutorFlags []string
+}
+
+// NewLookupOptions opens both stores from one directory and scope, so they
+// cannot diverge.
+func NewLookupOptions(dir string, scope ledger.Scope, now time.Time, root string, flags []string) *LookupOptions {
+	return &LookupOptions{Manifests: ledger.OpenManifests(dir, scope), Passes: ledger.Open(dir, scope),
+		Now: now, Root: root, ExecutorFlags: flags}
 }
 
 // check validates the options and refuses a tree that cannot be vouched for.
@@ -94,8 +103,10 @@ func (lo *LookupOptions) check(src Source) error {
 	if lo.Manifests == nil || lo.Passes == nil {
 		return fmt.Errorf("legacy plan: lookup needs a manifest store and a pass ledger")
 	}
-	if lo.Scope != "shared" && lo.Scope != "local" {
-		return fmt.Errorf("legacy plan: lookup scope %q (want shared or local)", short(lo.Scope))
+	// The scope comes from the stores themselves, and the two must agree, so a
+	// plan can never be labelled with a scope its stores do not have.
+	if lo.Manifests.Scope() != lo.Passes.Scope() || (lo.Passes.Scope() != ledger.Shared && lo.Passes.Scope() != ledger.Local) {
+		return fmt.Errorf("legacy plan: the manifest store and the pass ledger must have one scope, shared or local")
 	}
 	if lo.Now.IsZero() {
 		return fmt.Errorf("legacy plan: lookup needs a clock for manifest retention")
@@ -127,9 +138,15 @@ type ManifestTry struct {
 	Revision string `json:"revision"`
 	// Strong is the strong key looked up; empty with Error when an entry could
 	// not be digested.
-	Strong  string       `json:"strong,omitempty"`
-	Error   string       `json:"error,omitempty"`
-	Entries []EntryState `json:"entries"`
+	Strong string `json:"strong,omitempty"`
+	Error  string `json:"error,omitempty"`
+	// EntryCount is the manifest's real entry count.  Entries holds at most
+	// MaxPlanEntries of them, in stored order, so a plan stays small;
+	// EntriesTruncated says some were left out.  The strong key and
+	// outside_static_closure always use the full list.
+	EntryCount       int          `json:"entry_count"`
+	EntriesTruncated bool         `json:"entries_truncated"`
+	Entries          []EntryState `json:"entries"`
 }
 
 // PassView is the ledger's pass record that a hit found.
@@ -179,7 +196,10 @@ type ManifestsInfo struct {
 
 // LookupInfo is the plan-level record of a lookup run.
 type LookupInfo struct {
-	Scope     string        `json:"scope"`
+	Scope string `json:"scope"`
+	// ProbesRan says whether `--probe` ran.  Without it, a probe disagreement
+	// could not gate anything, so skipping (M3) must require it (KILN04 9.1).
+	ProbesRan bool          `json:"probes_ran"`
 	Note      string        `json:"note"`
 	Manifests ManifestsInfo `json:"manifests"`
 	// Errors are store failures; each makes the affected packages ineligible
@@ -264,7 +284,7 @@ func ineligible(weak *WeakKey, reason string) *Lookup {
 
 // lookup fills every record's Lookup, the plan's lookup info and the histogram.
 func (pl *planner) lookup(plan *Plan, lo *LookupOptions) error {
-	info := &LookupInfo{Scope: lo.Scope, Note: lookupNote}
+	info := &LookupInfo{Scope: lo.Passes.Scope().String(), Note: lookupNote, ProbesRan: pl.opt.Probe != nil}
 	plan.Lookup = info
 	recs := plan.Packages
 	defer func() { plan.Histogram.Lookup, plan.Histogram.OutsideStaticClosure = lookupHistogram(recs) }()
@@ -345,7 +365,7 @@ func (pl *planner) lookup(plan *Plan, lo *LookupOptions) error {
 		for _, rm := range rms {
 			c := candidate{id: rm.ID, try: ManifestTry{
 				ID: key.Hex(rm.ID), Run: rm.Manifest.Run, Revision: rm.Manifest.Revision,
-				At: rm.Manifest.At.UTC().Format(time.RFC3339),
+				At: rm.Manifest.At.UTC().Format(time.RFC3339), EntryCount: len(rm.Manifest.Entries),
 			}}
 			for _, e := range rm.Manifest.Entries {
 				if rel, ok := strings.CutPrefix(e, key.EntryPackage); ok && !inClosure[rel] {
@@ -355,7 +375,7 @@ func (pl *planner) lookup(plan *Plan, lo *LookupOptions) error {
 			ds, err := tr.CurrentDigests(rm.Manifest.Entries)
 			if err != nil {
 				c.try.Error = short(err.Error())
-				for _, e := range rm.Manifest.Entries {
+				for _, e := range rm.Manifest.Entries[:min(len(rm.Manifest.Entries), MaxPlanEntries)] {
 					c.try.Entries = append(c.try.Entries, EntryState{Name: e, Now: "unknown"})
 				}
 			} else if sk, err := w.Strong(ds); err != nil {
@@ -365,10 +385,11 @@ func (pl *planner) lookup(plan *Plan, lo *LookupOptions) error {
 				c.try.Strong = key.Hex(sk.Key)
 			}
 			if err == nil {
-				for _, d := range ds {
+				for _, d := range ds[:min(len(ds), MaxPlanEntries)] {
 					c.try.Entries = append(c.try.Entries, EntryState{Name: d.Name, Now: entryState(d.Name, d.Digest)})
 				}
 			}
+			c.try.EntriesTruncated = len(rm.Manifest.Entries) > MaxPlanEntries
 			cands[i] = append(cands[i], c)
 		}
 		for rel := range out {

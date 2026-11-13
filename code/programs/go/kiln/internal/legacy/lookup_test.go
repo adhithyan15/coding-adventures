@@ -127,7 +127,7 @@ func sortedCopy(in []string) []string {
 func (e *lkEnv) lookupOpts() *LookupOptions {
 	return &LookupOptions{
 		Manifests: ledger.OpenManifests(e.dir, ledger.Local), Passes: ledger.Open(e.dir, ledger.Local),
-		Scope: "local", Now: lkNow, Root: e.f.root(), ExecutorFlags: e.flags,
+		Now: lkNow, Root: e.f.root(), ExecutorFlags: e.flags,
 	}
 }
 
@@ -175,7 +175,7 @@ func TestLookupHit(t *testing.T) {
 	if got := p.Histogram.Lookup; got[ResultHit] != 1 || got[ResultNoManifest] != len(p.Packages)-1 {
 		t.Errorf("histogram %v", got)
 	}
-	if p.Lookup == nil || p.Lookup.Scope != "local" || p.Lookup.Manifests.Retained != 1 || p.Lookup.Manifests.Ignored != 0 || p.Lookup.Note == "" {
+	if p.Lookup == nil || p.Lookup.Scope != "local" || p.Lookup.ProbesRan || p.Lookup.Manifests.Retained != 1 || p.Lookup.Manifests.Ignored != 0 || p.Lookup.Note == "" {
 		t.Errorf("plan lookup info %+v", p.Lookup)
 	}
 	// Lookup skips nothing and changes nothing else: the classes still say
@@ -536,7 +536,8 @@ func TestLookupOptionsAreValidated(t *testing.T) {
 	for name, mod := range map[string]func(*LookupOptions){
 		"no manifests": func(l *LookupOptions) { l.Manifests = nil },
 		"no passes":    func(l *LookupOptions) { l.Passes = nil },
-		"scope":        func(l *LookupOptions) { l.Scope = "global" },
+		"scope":        func(l *LookupOptions) { l.Passes = ledger.Open(e.dir, ledger.Shared) },
+		"bad scope":    func(l *LookupOptions) { l.Manifests, l.Passes = ledger.OpenManifests(e.dir, 0), ledger.Open(e.dir, 0) },
 		"clock":        func(l *LookupOptions) { l.Now = time.Time{} },
 		"relative":     func(l *LookupOptions) { l.Root = "rel/path" },
 		"flags":        func(l *LookupOptions) { l.ExecutorFlags = []string{"bad"} },
@@ -689,5 +690,51 @@ func TestGateOrdering(t *testing.T) {
 	g.add(gateNever, "never:a")
 	if g.first() != "never:a" {
 		t.Errorf("%s", g.first())
+	}
+}
+
+func TestLookupTruncatesEntriesButNotTheKeyOrTheClosureDiff(t *testing.T) {
+	e := newLk(t)
+	n := MaxPlanEntries + 44
+	entries := []string{entZ, "pkg:code/packages/x/zzz-last"} // the out-of-closure one sorts last
+	for i := 0; i < n; i++ {
+		entries = append(entries, fmt.Sprintf("path:code/packages/x/z/f%04d", i))
+	}
+	e.manifest(relZ, entries...)
+	k := e.pass(relZ, entries...)
+	l := lk(t, e.plan(), "x/z")
+	m := l.Manifests[0]
+	if l.Result != ResultHit || l.Hit.Pass.Key != key.Hex(k) {
+		t.Fatalf("the strong key must use every entry: %+v", l)
+	}
+	if m.EntryCount != n+2 || !m.EntriesTruncated || len(m.Entries) != MaxPlanEntries {
+		t.Fatalf("count %d truncated %v emitted %d", m.EntryCount, m.EntriesTruncated, len(m.Entries))
+	}
+	if !reflect.DeepEqual(l.OutsideStaticClosure, []string{"pkg:code/packages/x/zzz-last"}) {
+		t.Errorf("the closure diff must see the full list: %v", l.OutsideStaticClosure)
+	}
+	// A small manifest is not truncated.
+	e2 := newLk(t)
+	e2.manifest(relZ, entZ)
+	if m := lk(t, e2.plan(), "x/z").Manifests[0]; m.EntriesTruncated || m.EntryCount != 1 {
+		t.Errorf("%+v", m)
+	}
+}
+
+func TestLookupProbesRan(t *testing.T) {
+	e := newLk(t)
+	e.probeEnv(false, "xtool 1.2.3")
+	if p := e.plan(); !p.Lookup.ProbesRan {
+		t.Error("probes_ran is false though --probe ran")
+	}
+}
+
+func TestNewLookupOptionsAgreesOnScope(t *testing.T) {
+	lo := NewLookupOptions(t.TempDir(), ledger.Shared, lkNow, "/r", nil)
+	if lo.Manifests.Scope() != ledger.Shared || lo.Passes.Scope() != ledger.Shared {
+		t.Fatal("scopes diverge")
+	}
+	if ledger.Scope(0).String() != "invalid" || ledger.Local.String() != "local" {
+		t.Error("scope names")
 	}
 }
