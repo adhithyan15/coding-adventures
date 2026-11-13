@@ -1,6 +1,7 @@
-python -m pip install --no-deps -e ../matrix
-python -m pip install --no-deps -e .
-python -m pip install pytest pytest-cov ruff
-ruff check src tests examples
-python -m pytest
-python examples/xor.py
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv --no-deps -e ../matrix --quiet
+uv pip install --python .venv --no-deps -e . --quiet
+uv pip install --python .venv pytest pytest-cov ruff --quiet
+.venv\Scripts\python.exe -m ruff check src tests examples
+.venv\Scripts\python.exe -m pytest
+.venv\Scripts\python.exe examples\xor.py

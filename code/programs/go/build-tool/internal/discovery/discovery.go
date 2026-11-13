@@ -407,13 +407,19 @@ func fileExists(path string) bool {
 // look inside it for sub-packages. This keeps the model simple — a
 // package is a leaf in the directory tree.
 func walkDirs(directory string, packages *[]Package) {
+	walkDirsForPlatform(directory, runtime.GOOS, packages)
+}
+
+// walkDirsForPlatform is walkDirs as seen from the named OS: a directory is a
+// package when GetBuildFileForPlatform(directory, goos) finds a file.
+func walkDirsForPlatform(directory, goos string, packages *[]Package) {
 	// Check if this directory's name is in the skip list.
 	dirName := filepath.Base(directory)
 	if skipDirs[dirName] {
 		return
 	}
 
-	buildFile := getBuildFile(directory)
+	buildFile := GetBuildFileForPlatform(directory, goos)
 
 	if buildFile != "" {
 		// This directory is a package. Read the BUILD commands and register it.
@@ -447,7 +453,7 @@ func walkDirs(directory string, packages *[]Package) {
 	for _, entry := range entries {
 		if entry.IsDir() {
 			subdirPath := filepath.Join(directory, entry.Name())
-			walkDirs(subdirPath, packages)
+			walkDirsForPlatform(subdirPath, goos, packages)
 		}
 	}
 }
@@ -461,6 +467,39 @@ func walkDirs(directory string, packages *[]Package) {
 func DiscoverPackages(root string) ([]Package, error) {
 	var packages []Package
 	walkDirs(root, &packages)
+	return finishDiscovery(root, packages)
+}
+
+// DiscoverPackagesAllPlatforms discovers the union of the packages visible on
+// linux, darwin and windows. Ordinary discovery sees only the host OS's BUILD
+// files, so a package whose sole file is BUILD_windows does not exist on a
+// Linux or macOS host. The Kiln legacy graph export (-emit-kiln-graph)
+// describes every OS at once and must not lose such packages. A directory
+// found on several OSes is kept once, from the host OS's view when it has one.
+func DiscoverPackagesAllPlatforms(root string) ([]Package, error) {
+	order := []string{runtime.GOOS}
+	for _, goos := range []string{"linux", "darwin", "windows"} {
+		if goos != runtime.GOOS {
+			order = append(order, goos)
+		}
+	}
+	seen := make(map[string]bool)
+	var packages []Package
+	for _, goos := range order {
+		var found []Package
+		walkDirsForPlatform(root, goos, &found)
+		for _, pkg := range found {
+			if !seen[pkg.Path] {
+				seen[pkg.Path] = true
+				packages = append(packages, pkg)
+			}
+		}
+	}
+	return finishDiscovery(root, packages)
+}
+
+// finishDiscovery sorts by name and rejects duplicate package identities.
+func finishDiscovery(root string, packages []Package) ([]Package, error) {
 	sort.Slice(packages, func(i, j int) bool {
 		if packages[i].Name == packages[j].Name {
 			return packages[i].Path < packages[j].Path

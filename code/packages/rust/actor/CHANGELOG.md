@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Replaced an index loop in the channel recovery-order test with
+  `iter().enumerate().take(100)` to satisfy clippy 1.100
+  `needless_range_loop`; behavior unchanged.
+
 ## [0.1.0] - 2026-03-22
 
 ### Added

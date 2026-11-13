@@ -1638,6 +1638,37 @@ available Name rules remain incomplete for RFC 5280 Name equality, and binding
 does not authenticate any link, validate certificate roles or a complete path,
 apply anchor constraints, check revocation, perform TLS or HTTP, authorize OAuth
 transport, or open a network connection.
+A distinct policy-backed role-policy follow-up consumes that complete
+Name-policy-backed reviewed-terminal evidence together with certificate-wide
+role-policy evidence. It fails closed unless the role evidence retains the
+identical decoded reviewed-root object and authorizes that object as an issuing
+CA, then retains the complete Name-policy-backed construction, reviewed-root
+selection, critical-extension recognition, and role proof in one non-copyable
+result. Generic reviewed-terminal evidence cannot produce this stronger result,
+and neither a byte-equal independent decode nor end-entity role evidence can be
+substituted. This provenance-preserving composition still does not define
+complete RFC 5280 Name equality, authenticate a path link, validate the anchor
+self-signature or algorithm, apply anchor constraints, check time or
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+A distinct policy-backed path-length initialization follow-up consumes that
+complete Name-policy-backed reviewed-terminal issuing-CA proof and derives RFC
+5280's initial capacity only from its retained construction. The final selected
+issuer is already bound to the reviewed trust anchor, so subtracting that
+anchor from the selected-issuer count yields the exact prospective intermediate
+count. The non-copyable result retains the complete Name-policy-backed
+construction, reviewed-root selection, certificate-wide anchor role policy,
+and derived state together. Generic reviewed-terminal evidence cannot produce
+this stronger result, and callers cannot detach the exact Name-value policy,
+inflate the capacity, or attach it to another construction. This pure public-
+certificate-data composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not define complete RFC 5280 Name equality, authenticate an
+adjacency, apply an intermediate transition, generalize full path validation,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
@@ -1867,6 +1898,18 @@ consumption of the non-copyable path or allowing either endpoint to be silently
 discarded. The composition does not authenticate path links, apply issuer,
 anchor, path-length, or name-constraint policy, check revocation, or provide
 complete path validation, TLS, HTTP, OAuth transport, or network authority.
+A distinct policy-backed reviewed-endpoints follow-up now consumes the complete
+Name-policy-backed reviewed-terminal evidence together with validated server-
+certificate policy. It applies the same exact decoded target-object check, then
+retains the policy-backed construction, its exact validated
+`X509NameValuePolicy`, reviewed-root selection, and complete target policy in
+one non-copyable result. Generic callback construction or generic reviewed-path
+evidence cannot produce this stronger result, and callers cannot discard the
+Name policy while keeping both endpoint proofs. This provenance-preserving
+composition does not make the available Name rules complete RFC 5280 Name
+equality, authenticate path links, apply issuer or anchor constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded adjacent-link projection now borrows one exact constructed path and
 one selected-issuer depth below its retained issuer count. Depth zero derives
 the target as child; every later depth derives the preceding selected candidate

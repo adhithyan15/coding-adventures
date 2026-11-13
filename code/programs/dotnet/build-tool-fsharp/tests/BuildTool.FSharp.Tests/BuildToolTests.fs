@@ -108,7 +108,7 @@ let ``discovery language registry is reachable through the F sharp facade`` () =
                 ))
             |> Seq.toArray
 
-        Assert.Equal<string array>(expected, actual)
+        Assert.Equal<string>(expected, actual)
     finally
         if Directory.Exists(root) then
             Directory.Delete(root, true)

@@ -43,7 +43,7 @@ is what comes back. It also hides the best root story in the chapter.
 ## You'll want to know — The letters
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-AL-HAMDU-LILLAH-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* **ا ل ح م د** and **ل ل ه** — **every letter is one
+**ا ل ح م د** and **ل ل ه** — **every letter is one
 you have written**: *alif*, *lām*, *ḥāʾ*, *mīm*, *dāl*, *hāʾ*. Nothing new to
 draw.
 

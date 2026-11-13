@@ -62,6 +62,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
 | [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
+| [VER29](VER29-layer-contract-linking.md) | Layer contract linking (LV-005): `contract.<lane>.<package>.<claim>` ids, the generated `contract` family, fail-closed discharge, strength propagation, coverage and reach-around rules, CI re-selection, implementation slices; amendments to VER04 and VER13 as text |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template

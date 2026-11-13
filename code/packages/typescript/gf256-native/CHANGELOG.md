@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now builds the Rust N-API addon and runs the vitest suite on Windows (same steps as `bitset-native`, `graph-native` and the other native addons that already run there) instead of skipping. The old skip's premise (no `node.lib`) no longer holds: `node-bridge` links the Node host symbols with `raw-dylib`.
+- Fixed the Windows link: this crate declares its own extra N-API externs (`napi_get_value_uint32` and `napi_create_int32`) that `node-bridge` does not, so that `extern` block now carries the same `raw-dylib` import of `node.exe` (the first Windows run failed with `rust-lld: error: undefined symbol: napi_...`). No effect on Linux or macOS.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added
