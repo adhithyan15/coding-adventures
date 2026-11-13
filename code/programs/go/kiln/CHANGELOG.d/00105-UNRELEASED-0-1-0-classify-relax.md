@@ -30,6 +30,14 @@
 
 ### Fixed
 
+- An `O_PATH` open is a plain observation (the kernel ignores `O_CREAT`; with
+  `O_NOFOLLOW` it opens a link itself), and `O_NOFOLLOW` opens are never
+  `O_CREAT` log entries, so they cannot satisfy the open-only or removed-name
+  rules. The removed-name rule now covers any stopped component, and only
+  clean creations and keyed `O_CREAT` opens count as "made". Listing `$HOME`
+  stays allowed (spec 5.5(c)). The differential model gains `O_PATH` and
+  `O_NOFOLLOW` open modes.
+
 - A successful followed call (stat, chdir, chmod, ...) on a name the post-run
   disk shows absent, that the action never made, is now `unstable-path`. The
   stability rule had a hole: stat through an untracked leftover link, then
