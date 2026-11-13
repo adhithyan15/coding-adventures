@@ -66,6 +66,18 @@ processed count, and final state. It stops before the target signature and does
 not add complete RFC 5280 Name or path validation, constraints, revocation,
 TLS, HTTP, OAuth, or network authority.
 
+A matching stronger target-signature closure accepts only that Name-policy-
+backed accumulator. It applies the same shared exact-construction, depth-zero,
+construction-target, target-nearest issuer, and exact server-policy checks as
+the generic closure, then retains the policy-backed accumulator, routed target
+signature, and complete server policy together. The generic accumulator cannot
+produce this result. Success preserves the exact Name-value policy,
+reviewed-root selection, certificate-wide anchor-role policy, complete ordered
+intermediate evidence, final path-length state, and target authentication in
+one value. This still does not define complete Name comparison, validate the
+whole path, apply every constraint or revocation policy, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the
