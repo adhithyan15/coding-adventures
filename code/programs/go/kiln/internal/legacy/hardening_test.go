@@ -39,8 +39,7 @@ func TestProbeNeedsARoot(t *testing.T) {
 func TestRelativeHomeIsDropped(t *testing.T) {
 	tc := mustToolchains(t, sampleToolchains)
 	tools, _ := tc.ToolsFor([]string{"rust"}, "linux", "i")
-	sep := string(filepath.ListSeparator)
-	for _, home := range []string{"home", "../x", ".", "/h/../x", "/h/", "/h" + sep + "/evil", "//h"} {
+	for _, home := range []string{"home", "../x", ".", "/h/../x", "/h/", "/h:/evil", "/h;/evil", "//h", `C:\Users\u`} {
 		if p := tc.ConstructPATH(tools, home); strings.Contains(p, ".cargo") {
 			t.Errorf("home %q put %q on the PATH", home, p)
 		}
@@ -111,7 +110,10 @@ func TestOverallProbeDeadline(t *testing.T) {
 func TestProbeTimeoutIsASoftReason(t *testing.T) {
 	f := newFixture(t)
 	p, err := f.planOpts(baseGraph(), func(o *Options) {
-		o.Probe = &ProbeOptions{Root: f.dir, Total: time.Nanosecond, Run: func(ProbeRun) ([]byte, error) { return nil, nil }}
+		t0 := time.Unix(0, 0)
+		calls := 0
+		clock := func() time.Time { calls++; return t0.Add(time.Duration(calls) * time.Second) }
+		o.Probe = &ProbeOptions{Root: f.dir, Total: time.Nanosecond, now: clock, Run: func(ProbeRun) ([]byte, error) { return nil, nil }}
 	})
 	if err != nil {
 		t.Fatal(err)

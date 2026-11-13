@@ -59,6 +59,9 @@ type ProbeOptions struct {
 	Run  ProbeRunner // nil: execute for real
 	// Total bounds all probes together; 0 means ProbeTotalTimeout.
 	Total time.Duration
+	// now is the clock, for tests: Windows' coarse timer can report no time
+	// passing between two calls, which made a 1 ns deadline flaky there.
+	now func() time.Time
 }
 
 // ProbeResult is the outcome of one tool's probes (the worst of them, when a
@@ -222,7 +225,10 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	used, _ := t.selected(names, osName)
 	tools, _ := t.ToolsFor(names, osName, "")
 	pathVar := t.ConstructPATH(tools, opt.Home) // drops a home that is not absolute and clean
-	dirs := filepath.SplitList(pathVar)
+	var dirs []string                           // ConstructPATH uses POSIX ':' on every host
+	if pathVar != "" {
+		dirs = strings.Split(pathVar, posixListSep)
+	}
 	dir, err := os.MkdirTemp("", "kiln-probe-")
 	if err != nil {
 		return nil, fmt.Errorf("probe: %w", err)
@@ -237,7 +243,11 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	if total <= 0 {
 		total = ProbeTotalTimeout
 	}
-	start := time.Now()
+	now := opt.now
+	if now == nil {
+		now = time.Now
+	}
+	start := now()
 
 	worst := map[string]string{}
 	detail := map[string]string{}
@@ -249,7 +259,7 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	for _, e := range used {
 		for _, argv := range e.Probes {
 			tool := argv[0]
-			if time.Since(start) > total {
+			if now().Sub(start) > total {
 				note(tool, ProbeTimedOut)
 				continue
 			}
