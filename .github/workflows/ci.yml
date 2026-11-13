@@ -880,6 +880,11 @@ jobs:
           # all three conditions, and the rows cover exactly the pair files.
           python3 code/scripts/rust_release_pairs.py check
           python3 -m unittest discover -s code/scripts/tests -p 'test_rust_release_pairs.py'
+          # RS01 modern lexical pairs (`code/grammars/rust/rust1.97.0-e*`): the
+          # generator's `check` rebuilds all eight files from the evidence and
+          # the pinned Unicode data and fails on any byte of difference.
+          python3 code/scripts/rust_lexical_pairs.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_rust_lexical_pairs.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           # The native GFM reader trusts only the corpus accepted by this

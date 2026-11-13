@@ -469,6 +469,7 @@ grammar rejects), and once configured in (where both reject).
 | RD3 | Invalid literals inside `cfg(FALSE)` code | rejects | accepts | 1.67 |
 | RD4 | A nested `/*` inside a doc block comment (`/** a /* b */ c */`) | refuses (typed lexer error), until X1 | accepts | interim (section 4.2) |
 | RD5 | `.rc` crate files, 0.1–0.4 | refuses, until X4 adds a second start rule | accepts | 0.1–0.4 |
+| RD6 | Literal values that only a decoder can check: a base-2, base-8 or base-16 literal with no digit or a bad digit (`0b102`, `0o78`, `0x`), a `_`-only suffix (`"a"_`), a character literal of several code points or with an unescaped quote, newline or tab (`'ab'`), a lifetime that starts with a digit (`'1a`), an invalid escape, a non-ASCII byte, a bare CR in a doc comment | accepts (the token is lexically well formed) | rejects (`rustc_parse` cooks the literal while lexing) | all pairs (A4) |
 
 A consumer that hits a divergence gets a typed refusal, never a different
 parse. Inside macro token trees the question does not arise: a token tree
@@ -505,26 +506,54 @@ These come from the `grammar-tools`, `lexer` and `parser` sources on
   refusal transitions. LANG84's E2–E5 and E7 are specified but not
   implemented, so RS01 does not use them.
 
+Slice A4 ran the lexer against the real engine and found six more facts
+(section 4.3 has the evidence). They changed the design where noted:
+
+- **`errors:` is never consulted.** The section is parsed, validated and
+  compiled into the tables, but `GrammarLexer` does not read it: with
+  `errors: BAD = /@+/`, the input `@@` lexes as two ordinary `@` tokens. A
+  malformed construct is therefore written as a token whose only job is to be
+  refused (`on TOKEN -> refuse`, an E8 rule). Every "`errors:` entry" in the
+  table below means that.
+- **An empty pattern group is a `validate` error**, so a flat mode that adds no
+  pattern of its own still needs one definition (a pattern that matches
+  nothing, `[^\s\S]`).
+- **A push has no depth limit.** `group_stack` is an unbounded `Vec`; see 4.3.
+- **`on TOKEN="value" -> refuse` works for any token**, not only keywords
+  (`on RAW_IDENT="r#crate"`).
+- **Two zero-width assertions are available** although lookahead is not:
+  `(?m:$)` (a line end) and `\z` (the end of the input). They let a doc comment
+  say "`///` and then not a fourth `/`" and an exponent say "and then no
+  digit".
+- **Cost.** `GrammarLexer::new` compiles every pattern: about 125 ms for the
+  2015 and 2018 pairs and 175 ms for 2021 and 2024 on an idle 4-core host, almost
+  all of it the Unicode classes (about 23 KB of regex text per use) and the
+  three raw-string regexes (about 36 ms each). A5 should build the lexer once
+  per (release, edition) and reuse it.
+
 ### 4.2 The hard cases
 
-Every case below has a probe fixture in slice A4 and a positive and negative
-corpus case in `rs-syntax`.
+Every case below has a probe fixture in slice A4 (the `rs-token-trees` corpus,
+section 6.2) and a positive and negative corpus case in `rs-syntax`.
+Slice A4 also checked each pair against `rustc 1.97.0`, the release's own
+compiler, on about 2,700 random token soups and 56 hand-written cases per
+edition (section 4.3, "Differential").
 
 | # | Case | How it is expressed | Releases |
 | --- | --- | --- | --- |
 | 1 | **Nested block comments** `/* a /* b */ c */` | Not expressible by a regex (it cannot count). **Interim:** an F10 group tracks depth (`on BC_OPEN -> push bc`, `on BC_CLOSE -> pop`), and the C3 post-tokenize hook `rust_block_comments` removes the comment's tokens (section 4.3). **Later:** X1. | 0.1–0.3, 0.9 onward; 0.4–0.8 use a plain non-nesting skip regex |
-| 2 | **Raw strings** `r#"…"#`, `br##"…"##`, `cr#"…"#` | One generated regex with an arm per hash count, 0–255 (about 68 KB). `r#"a"##` lexes as a raw string plus `#`, as `rustc_lexer` does; `r#ident` falls through to `RAW_IDENT`. Later, optionally, X2. | 0.9 onward; `cr` in 2021+ from 1.77 |
-| 3 | **Lifetime or char** `'a`, `'a'`, `'\''` | `CHAR_LIT` ordered before `LIFETIME`. Raw lifetimes `'r#a` in 2021+ files from 1.83; the 2021 reserved `'ident#` is an `errors:` entry. | `LIFETIME` from 0.6 |
+| 2 | **Raw strings** `r#"…"#`, `br##"…"##`, `cr#"…"#` | One generated regex with an arm per hash count, 0–255 (about 43 KB per prefix with its suffix class; the pair has three, `r`, `br`, `cr`). An arm is `#{n}"` CHARS (`"` `#{0,n-1}` [other CHARS])* `"#{n}`; `r#"a"##` lexes as a raw string plus `#`, as `rustc_lexer` does. `r#ident` falls through to `RAW_IDENT`; anything else that starts `r#` or `r"` is refused (unterminated, 256 hashes). Tested against a port of `rustc_lexer`'s scanner on every string of up to 9 characters over `#`, `"`, `a`. Later, optionally, X2. | 0.9 onward; `cr` in 2021+ from 1.77 |
+| 3 | **Lifetime or char** `'a`, `'a'`, `'\''` | `CHAR_LIT` ordered before `LIFETIME`. Raw lifetimes `'r#a` in 2021+ files from 1.83 (`'r#a'` is refused); the 2021 reserved `'ident#` is a refusal token. | `LIFETIME` from 0.6 |
 | 4 | **`>>`, `>=`, `>>=` inside generics** | Every punctuation character is its own token, and the grammar composes operators with F11: `shr = GT @no_space_before GT !(@no_space_before EQ)`. This is exactly `proc_macro`'s Joint/Alone spacing. | all |
 | 5 | **Turbofish** `f::<T>()` | Expression paths require `COLON @no_space_before COLON LT`; type paths do not (`::` optional before `<` in types from 1.21). | all |
 | 6 | **Struct literal or block** in `if`/`while`/`match`/`for` heads | A duplicated "no struct literal" expression ladder (`expr_ns`). Statement-level block-like expressions (`{ 1 } - 1` is two statements; `match x {..} + 1;` is an error) are PEG statement rules with lookaheads. Later, optionally, X6. | restriction from 0.11.0 |
 | 7 | **Shebang** | 0.3–0.9: `/#![^\n]*/ @input_start`. 1.0: `#!` not immediately followed by `[` (an `@input_start` regex). **Current rule:** `#!` is a shebang unless the next token after whitespace and *non-doc* comments is `[`. A regex cannot skip nested comments, so the C3 pre-tokenize hook `rust_strip_shebang` handles it (section 4.3). **Later:** X3. | current rule from a release not yet pinned (see "Not verified") |
-| 8 | **XID identifiers** | Explicit code-point classes per Unicode version, generated from that version's `DerivedCoreProperties.txt` (X7), never `\p{XID_*}`, whose tables drift with the `regex-syntax` crate. Non-ASCII identifiers are a refused token in stable pairs 0.9–1.52 (gated) and `NAME` from 1.53. | XID from 0.1 |
-| 9 | **Raw identifiers** `r#async` | `RAW_IDENT` before `NAME`; `keywords:` reclassifies only `NAME`, so `r#async` stays an identifier; `r#crate`, `r#self`, `r#super`, `r#Self`, `r#_` are `errors:` entries. | 1.30 onward |
-| 10 | **Suffixes and number forms** `1f32`, `0x1F_u8`, `1.0e-3_f64` | `INT_LIT`/`FLOAT_LIT` with an optional XID suffix. A trailing-dot float `1.` is **not** a token (no lookahead), so `1.foo()` and `0..1` lex correctly and the grammar composes `INT_LIT @no_space_before DOT`. `1e` is an `errors:` entry; `0b102` is one token whose digits the decoder validates (1.0). | all, per era |
-| 10b | **Tuple index** `x.0.1` | An F10 mode after `DOT` lexes digits as `INT_LIT`, giving `INT 0 DOT INT 1`, which is `rustc`'s post-split view. | 1.46 onward; earlier pairs omit the mode |
+| 8 | **XID identifiers** | Explicit code-point classes per Unicode version, generated from that version's `DerivedCoreProperties.txt` (X7), never `\p{XID_*}`, whose tables drift with the `regex-syntax` crate. Non-ASCII identifiers are a refused token in stable pairs 0.9–1.52 (gated) and `NAME` from 1.53. A4 builds the classes from the `unicode-ident` table (Unicode 17.0.0) that the repository already pins in its `Cargo.lock` files, decoded to `code/grammars/rust/unicode/xid-17.0.0.ranges`; `rustc` 1.97.0 pins `unicode-ident` 1.0.22, which has the same two sets. | XID from 0.1 |
+| 9 | **Raw identifiers** `r#async` | `RAW_IDENT` before `NAME`; `keywords:` reclassifies only `NAME`, so `r#async` stays an identifier; `r#crate`, `r#self`, `r#super`, `r#Self`, `r#_` are refused by `on RAW_IDENT="r#crate" -> refuse`. | 1.30 onward |
+| 10 | **Suffixes and number forms** `1f32`, `0x1F_u8`, `1.0e-3_f64` | `INT_LIT`/`FLOAT_LIT` with an optional XID suffix. A trailing-dot float `1.` is **not** a token (no lookahead), so `1.foo()` and `0..1` lex correctly and the grammar composes `INT_LIT @no_space_before DOT`. `1e`, `1.5e+` and `1else` (an exponent with no digit) are a refusal token tried before the number regexes, so a suffix `e` cannot hide them; `0b102` is one token whose digits the decoder validates (1.0; RD6). | all, per era |
+| 10b | **Tuple index** `x.0.1` | An F10 flat mode `after_dot` lexes a digit run (with its suffix) as `INT_LIT`, giving `INT 0 DOT INT 1`, which is `rustc`'s post-split view. A second mode `after_dots`, entered by a second `.` in a row, leaves `0..1.5` alone, so the float `1.5` stays a float. The mode repeats the two number refusals that the integer would otherwise hide. | 1.46 onward; earlier pairs omit the mode |
 | 11 | **Doc comments** `///`, `//!`, `/** */`, `/*! */` | Line forms are tokens (`OUTER_DOC`, `INNER_DOC`); `////` is a plain comment. Block forms ride on case 1. The grammar accepts a doc comment wherever an attribute of the same kind is allowed. | 0.3 onward |
-| 12 | **Edition keywords, reserved prefixes, guarded strings** | Per-edition `.tokens` files: `keywords:` and `soft_keywords:` (`union`, `macro_rules`, `safe`, `raw`, `auto`, `default`, 2015 `dyn`). 2021 prefixes and 2024 `#"`/`##` are `errors:` regexes ordered after the raw, byte and C-string forms. **`reserved:` is never used**: it raises a lexer error, but every keyword is valid inside a token tree (`quote! { abstract }`). | per edition |
+| 12 | **Edition keywords, reserved prefixes, guarded strings** | Per-edition `.tokens` files: `keywords:` and `soft_keywords:` (`union`, `macro_rules`, `safe`, `raw`, `auto`, `default`, 2015 `dyn`). 2021 prefixes and 2024 `#"`/`##` are refusal tokens ordered after the raw, byte and C-string forms. **`reserved:` is never used**: it raises a lexer error, but every keyword is valid inside a token tree (`quote! { abstract }`). | per edition |
 | 13 | **Pre-1.0 tokens** | `#`, `#{`, `#<`, `<-`, `<->`, `>>>`, `@` and `~` sigils are ordinary tokens; `#[a];` is grammar; integer suffixes `u`, `i`, `u8` are regex. | 0.1–0.12.0 |
 
 Three more input rules, none of which needs a hook:
@@ -598,6 +627,66 @@ Input starts at offset 0, or after a BOM:
 
 Size target: under 100 lines. The two hooks together stay well inside
 LANG84's 400-line limit.
+
+#### Verified by slice A4
+
+Slice A4 built the four 1.97.0 pairs on this design and ran them through the
+real `GrammarLexer` and `GrammarParser`, with throwaway Rust prototypes of both
+hooks (about 60 lines each; slice A5 writes the real ones). The pairs write
+the group tokens as `BC_OPEN_NESTED`, `BC_CLOSE_IN_DOC` and so on, each
+aliased to the names above, because a group needs its own definition names.
+
+| Claim of this section | Verdict | Evidence |
+| --- | --- | --- |
+| An F10 group tracks block-comment depth, so the lexer alone knows where a comment ends | **verified** | `/* a /* b */ c */ x` lexes as `BC_OPEN BC_TEXT BC_OPEN BC_TEXT BC_CLOSE BC_TEXT BC_CLOSE NAME`; three levels, `/**/`, `/***/` and `/*/` (unterminated) agree with `rustc` |
+| `"/*"` in a string or raw string, and `/* // */`, do not confuse it | **verified** | corpus `bc-slash-star-in-string`, `bc-in-raw-string`, `bc-line-comment-inside`; each agrees with `rustc` 1.97.0 in all four editions |
+| Line comments must be tokens in nesting releases, because `skip:` is global | **verified, and the trap shown** | with `LINE_COMMENT` moved into `skip:`, `/* // */ z` leaves the comment open (the skip eats `// */ z`); as a token it closes and `z` is lexed |
+| A post-tokenize hook can set the F11 flag of a token | **verified** | `Token.flags` is public: after `>/**/>` the second `GT` carries `TOKEN_PRECEDED_BY_SPACE`; in `>>` it does not (corpus `bc-adjacent-gt`, `bc-joint-gt`) |
+| The hook deletes plain runs, keeps doc runs, deletes line comments | **verified** | the same prototype, 57 corpus cases and the differential below |
+| An E8 refusal fires on a token inside an F10 group | **verified** | `on BC_OPEN in doc_bc -> refuse` stops `/** a /* b */ c */` with `token BC_OPEN ("/*") is not supported in mode 'doc_bc'` at the right line and column. The `in doc_bc` rule must come BEFORE `on BC_OPEN -> push bc`: the first matching rule wins |
+| F10's push stack has the section 8 depth budget (256) | **refuted: it has none** | `group_stack` is an unbounded `Vec`: 1,000,000 nested `/*` lex and parse in 1.0 s and 419 MB (4 MB of input). Lexing is linear, so the source-size budget bounds the damage, but there is no typed `Budget` error |
+| A hook can report an unterminated comment | **needs an engine extension** | a post-tokenize hook is `Fn(Vec<Token>) -> Vec<Token>` and cannot fail. The prototype leaves an unmatched `BC_OPEN` in place and the grammar rejects it, which is fail-closed but is a `Parse` error, not the `Lex` error `rustc` gives |
+
+**Smallest changes for the two open items** (for D1, or sooner if A5 needs
+them):
+
+- *Depth budget.* A constant `MAX_GROUP_DEPTH` checked where `apply_transitions`
+  executes `push`, returning a `LexerError`. It changes nothing for grammars
+  that never nest that deep. Until then, A5's `rust_block_comments` counts
+  depth while it deletes and, past 256, leaves the run undeleted so the
+  grammar refuses it.
+- *Hook errors.* `add_post_tokenize_checked(Fn(Vec<Token>) -> Result<Vec<Token>,
+  LexerError>)` beside the existing method. Until then, the unterminated
+  comment is a `Parse` refusal and the corpus case is rejected as such.
+
+**RD4 can be lifted with no new definition.** The `doc_bc` group already has a
+`/*` definition (it exists so the refusal can fire). Deleting the one rule
+`on BC_OPEN in doc_bc -> refuse` lets the nested comment push `bc` and pop back
+into `doc_bc`; a hook that deletes plain runs even inside a doc run then keeps
+only the doc comment's own tokens. Verified on `/** a /* b */ c */ x` and
+`/*! /* /* d */ */ */ y`. A4 keeps the refusal, as this section specifies;
+whoever lifts RD4 also moves `doc-block-nested-refused` from `.reject` to
+`.expect`.
+
+**Shebang hook.** The prototype of `rust_strip_shebang` agrees with `rustc`
+1.97.0 on 34 prefixes (`#!`, comments of every kind between `#!` and `[`,
+nested comments, an unterminated comment, `\r\n`, U+2028, U+0085, a BOM, a
+non-breaking space): for each, whether the inner attribute `#![deny(dead_code)]`
+survived was read from `rustc`'s lint error and compared with whether the
+tokens start with `#`. A doc comment after `#!` does not count as skipped, as
+specified (`#! /** d */ [a]` is a shebang).
+
+**Differential.** `rustc 1.97.0 (2d8144b78)` is the release's own compiler, and
+is installed on the CI-class host, so it is the oracle for the token-tree
+level: a source `S` is wrapped as `macro_rules! m { ($($t:tt)*) => {} } m!{ S }`
+and compiled with `--crate-type lib --emit=metadata`; the pair accepts `S` iff
+the lexer, both hooks and the token-tree grammar accept it. Over 2,700 random
+strings built from 75 lexically interesting fragments (quotes, hashes, `r`,
+`b`, `c`, comment openers, digits, `e`, dots, underscores, non-ASCII), in all
+four editions, the only disagreements are the RD6 family (literal values) and
+RD4. That run found two real lexer bugs, both fixed and tested: an exponent
+sign (`1.5e-3` was refused as a bad exponent) and a literal suffix after a
+tuple index (`x.9r#`).
 
 These hooks also close two capability-analyzer findings by construction:
 VER08a D25 (a shebang line `#!/x"` that opened a string and hid code) and,
@@ -908,7 +997,7 @@ All under `code/grammars/rust/corpus/`:
 
 | Corpus | Kind | Contents |
 | --- | --- | --- |
-| `rs-token-trees/` | `subsets.csv` subset | probes for the lexical pairs of A4, whose grammar is token trees plus delimiter balance only |
+| `rs-token-trees/` | `subsets.csv` subset | probes for the lexical pairs of A4, whose grammar is token trees plus delimiter balance only. `<name>.rs`, `<name>.expect` (one token per line, `TYPE value`, a leading `+` when the token follows trivia, values escaped `\n \r \t \\ \u{..}` so the file is ASCII), `<name>.cite` (the oracle record: the compiler, its verdict per edition and the pair's). `.expect@<release>-e<edition>` is the stream for one pair when it differs, `.reject@<release>-e<edition>` (`Lex` or `Parse`) a pair that refuses the case. A case every pair refuses is a plain `.reject`; slice A4 has one, `doc-block-nested-refused`, which `rustc` accepts (RD4). The expected tokens are those after the two C3 hooks |
 | `rs-confined/` | `subsets.csv` subset | the proof subset: `<name>.rs`, `<name>.expect` (stdout of a harness run under the oracle `rustc`), `<name>.reject` (`Lex`, `Parse` or `Unsupported`), `<name>.cite`. Every `.reject` must be a program `rustc` **accepts** (lesson `a-language-corpus-reject-case-must-be-a-program-the-real-language`); programs `rustc` refuses belong in parser tests |
 | `rs-syntax/` | parse-only conformance corpus, **not** a `subsets.csv` subset (it has no `.expect`) | `<name>.rs` + `<name>.cite`, plus `<name>.reject` (`Lex` or `Parse`) for a case rejected everywhere. A case accepted only by some pairs carries `<name>.gate` instead: `first` and `last` release IDs (resolved through `predecessor` lineage, never by version comparison), `editions`, and `outside` (`Lex` or `Parse`), the category every other pair must reject it with. One positive and one negative case per class boundary of section 2.7, every hard case of section 4.2, every divergence of section 3, and edition pairs such as `async fn` (gate `first=1.39.0 editions=2018;2021;2024 outside=Parse`) and `k#x` (a 2021 lexer error). Checked by `release_probes` |
 | repository self-corpus | positive only | every `.rs` under `code/` (about 1,480 crates; 1,476 declare 2021, 4 declare 2024) must lex and parse under the newest release's matching pair. It walks the whole tree, so it needs a `repository_inputs.go` consumer row |
@@ -1444,6 +1533,95 @@ silent or ambiguous, A3 took the conservative reading:
    The `ci.yml` build-tool classifier reports that edit as shared, which keeps
    package-scoped selection on a pull request: would-build is 0 packages.
 
+### A4 decisions (modern lexical pairs slice)
+
+Slice A4 wrote `code/grammars/rust/rust1.97.0-e{2015,2018,2021,2024}.{tokens,grammar}`,
+`code/scripts/rust_lexical_pairs.py` (with `write`, `check` and `import-xid`), the
+Unicode data `code/grammars/rust/unicode/xid-17.0.0.ranges`, four rows of
+`pair-evidence.csv` and the `rs-token-trees` corpus. Where this spec was silent
+or ambiguous, A4 took the conservative reading:
+
+1. **Evidence.** The four rows are `reviewed`, with the same seven
+   `syntax_blobs` from a blobless depth-1 fetch of tag 1.97.0 (commit
+   `2d8144b7`): `rustc_lexer/src/lib.rs`, the trees `rustc_parse/src/lexer`
+   and `rustc_parse/src/parser`, `rustc_span/src/symbol.rs`,
+   `rustc_feature/src/accepted.rs`, the tree `rustc_expand/src/mbe`, and the
+   root `Cargo.lock` (the record of the XID crate version). `oracle` is `-`
+   until slice C2. The file headers are produced by `rust_release_pairs.py`'s
+   own `render_header`, so its `check` stays the one authority on them.
+2. **Status.** The 1.97.0 row becomes `grammar_stage=G`, `grammar_status=pending`,
+   `grammar_subset=-`. Stage G is what section 6.1 lets A4 claim: `grammar-tools
+   validate` and cross-validation pass on all four pairs and each header cites
+   `source_ref`, `source_sha` and the syntax blobs. `partial` with
+   `rs-token-trees` needs stage P, which needs A5's `release_probes`.
+   `1.97.1` and every later row stay `none`.
+3. **Unicode data.** "The Unicode data the repository already pins" is the
+   `unicode-ident 1.0.24` crate (Unicode 17.0.0), which five `Cargo.lock`
+   files pin. `import-xid` decodes its `tables.rs` (SHA-256 pinned in the
+   script) into code point ranges. `rustc` 1.97.0 pins `unicode-ident` 1.0.22; A4
+   downloaded that one crate once, only to compare, and the two sets are
+   identical range by range (691 `XID_Start` and 806 `XID_Continue` ranges). No
+   other data was fetched, and nothing from 1.0.22 is stored.
+4. **What the generator writes.** Both files of each pair, from one table of
+   definitions and an `Edition` record of six switches. It writes the raw-string
+   regexes (arms 0 to 255, counted `#{n}` repetition), the identifier classes as
+   numeric escapes (so a pair never holds a raw invisible character) and the
+   `.grammar`. `check` rebuilds all eight files in memory and compares bytes; CI
+   runs it and the 41 unit tests in the repo-wide metadata step.
+5. **The grammar's `leaf` rule** lists every token except the six delimiters and
+   the tokens that must never reach the parser: `LINE_COMMENT` and `BC_OPEN` (the
+   hook deletes them; an unterminated comment leaves a `BC_OPEN`, which the
+   grammar must reject), the refusal tokens and the inert group filler. Section
+   5.3's "every token type except the delimiters" would accept that `BC_OPEN`.
+   The price is eight to eleven "token defined but never used" warnings from
+   `grammar-tools validate`, which exits 0; an unreachable rule that names them
+   is an error, so the warnings stay and the `.grammar` header says why.
+6. **Refusals and `errors:`.** Because the engine ignores `errors:` (4.1), a
+   malformed construct is a token plus an E8 `refuse`: unterminated strings and
+   raw strings, `b'`, a bad exponent, a based float, reserved prefixes (2021+),
+   `'a#` (2021+), `'r#a'` (2021+), guarded strings (2024), frontmatter and the
+   five non-raw identifiers. `rustc` rejects each in the editions that refuse it
+   here (the differential, 4.3).
+7. **Literal values are the decoder's (RD6).** A4 refuses only what its
+   regexes decide exactly without decoding escapes. A `rustc` error that comes
+   from cooking a literal's value stays an accepted token, as 4.2 case 10 says of
+   `0b102`; RD6 lists them. The only bare-CR rule is the literals' own.
+8. **Number order.** A suffix is part of its literal and uses the full XID class.
+   `FLOAT_BAD_EXP` and `BASED_FLOAT_BAD` are tried before `FLOAT_LIT` and
+   `INT_LIT`; that order, not a second "suffix that cannot start with `e`" class
+   (which would add three more 23 KB copies of the class to each pair), is what keeps `1else` an error. The
+   order is a stated invariant of the file.
+9. **Shebang and BOM.** The pairs have no shebang token: without A5's
+   `rust_strip_shebang`, `#!/x` lexes as `#`, `!`, `/`, `x`. The BOM is a skip
+   entry with an `@input_start` guard. Frontmatter (`---` at offset 0) is
+   refused, but not after a BOM or leading blank lines: it is unstable at 1.97,
+   and `rustc` accepts `---` anywhere but the start.
+10. **Soft keywords** are `union`, `macro_rules`, `safe`, `raw`, `auto`,
+    `default`, plus `dyn` in 2015. The unstable weak keywords of `symbol.rs`
+    (`builtin`, `catch`, `reuse`, `yeet`, `contract_*`) are not in a stable pair.
+    `reserved:` is not used.
+11. **Corpus.** 56 cases: 55 with `.expect` (16 per-pair overrides) and one plain
+    `.reject`. `.reject@<pair>` records that this pair refuses the case, including
+    an edition-gated lexical error that `rustc` also gives (`k#x` in 2021): the
+    subset's oracle is `rustc`'s token-stream acceptance, not execution, so the
+    `.reject`-must-be-accepted lesson (`a-language-corpus-reject-case-must-be-a-program-the-real-language`)
+    applies to `rs-confined`, not here. The plain `.reject` is a program `rustc`
+    accepts. A CRLF case was dropped because git normalizes it to LF, and BOM and
+    U+200E cases because a corpus file must not hold invisible characters; the
+    generator tests and the differential cover them.
+12. **The test harness is not committed.** The throwaway prototypes of both
+    hooks and the batch driver (about 150 lines of Rust over `lexer` and
+    `parser`, and two Python scripts) live outside the repository; adding a crate
+    to the workspace would be an A5 decision. The corpus `.expect` files are the
+    contract A5's tests must reproduce, and 4.3 records the commands and results.
+13. **CI.** `rust_lexical_pairs.py check` and its tests are two lines in the
+    existing metadata step, beside A3's, so `ci.yml` is still classified as a
+    shared-file edit that does not select every package (would-build: 0
+    packages, confirmed by a dry run).
+14. **The oracle.** `rustc 1.97.0 (2d8144b78 2026-07-07)` on the host is the
+    tag's own compiler, so `.cite` files and 4.3 name it. It is not yet a pinned
+    toolchain with a recorded digest (slice C2).
+
 ---
 
 ## 11. Not verified
@@ -1459,8 +1637,9 @@ These are stated plainly so that no later slice treats them as facts.
   the oldest 1.x binaries do.
 - Every "candidate semantic copy" in section 2.7. They come from two upstream
   documents, not from running each release's compiler.
-- The exact XID crate and Unicode version per release (to be read from
-  `Cargo.lock` at each tag).
+- The exact XID crate and Unicode version per release other than 1.97.0
+  (to be read from `Cargo.lock` at each tag). A4 read 1.97.0: `unicode-ident`
+  1.0.22, Unicode 17.0.0.
 - The 2015-era `?` separator ambiguity and per-era follow-set rules; only the
   current Reference was read.
 - Whether `# ! [attr]` with spaces is accepted in every era.
@@ -1470,12 +1649,22 @@ These are stated plainly so that no later slice treats them as facts.
   token-skipping rule.
 - The would-build numbers: estimates from the build-tool source, the gate
   registry and lessons; no dry run was possible before a branch existed.
-- For the interim comment design of section 4.3, which was designed after the
-  probes rather than probed itself: that F10's push stack has, or can be
-  given, the depth budget of section 8; that an E8 refusal can fire on a
-  token inside an F10 group; that a post-tokenize hook can set the F11 flag
-  of a token; and that keeping line comments as tokens in nesting releases
-  avoids the global-skip trap. The probe showed only that an F10 group tracks
-  nesting correctly. Slice A4 verifies the rest before A5 registers the hook.
+- For the interim comment design of section 4.3, slice A4 verified everything
+  but two items (see "Verified by slice A4"): F10's push stack has **no** depth
+  budget, and a post-tokenize hook cannot raise a typed error, so an
+  unterminated comment is a `Parse` refusal. Both need the small engine changes
+  named there, or the stopgaps.
+- That the A4 pairs and the differential cover what matters beyond 1.97.0: only
+  that release's lexer was read and run. The random differential is 2,700
+  strings of at most seven fragments, not an exhaustive search, and compares
+  acceptance at the token-tree level, not token boundaries (`1.` is `INT DOT`
+  here and one float for `rustc`; `x.0.1` is three tokens here and `rustc`'s
+  lexer sees a float).
+- Whether `rustc_parse` accepts a literal suffix on a tuple index anywhere but a
+  macro (the A4 mode lexes `x.0u8` as one token, as `rustc_lexer` does).
+- Whether frontmatter `---` after a BOM or blank lines is lexed as frontmatter
+  by 1.97.0 (A4 refuses it only at offset 0).
+- The cost figures in section 4.1 and the 1,000,000-deep comment run were
+  measured once, on one host.
 - Whether pre-1.0 `rustc` archives come with upstream `.sha256` files to pin
   against.

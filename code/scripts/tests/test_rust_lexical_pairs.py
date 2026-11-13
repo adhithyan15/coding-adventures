@@ -171,6 +171,11 @@ class XidData(unittest.TestCase):
                 f"{first:X}-{last:X} is XID_Start but not XID_Continue",
             )
 
+    @unittest.skipIf(
+        tuple(int(part) for part in unicodedata.unidata_version.split("."))
+        > (17, 0, 0),
+        "this Python's Unicode is newer than the pinned 17.0.0",
+    )
     def test_committed_data_contains_pythons_older_unicode(self) -> None:
         """Unicode only adds XID characters (stability), so Python's set is inside ours."""
         start, cont = rlp.load_xid(RUST)
