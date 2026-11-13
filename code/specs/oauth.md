@@ -2065,6 +2065,23 @@ validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded responder-path projection follow-up consumes only that exact strong
+Name-policy path/fully routed OCSP binding and nominally reifies the delegated
+responder's already-authenticated responder-to-issuer-to-reviewed-root suffix.
+It accepts no caller-supplied certificate, path, algorithm, key, signature,
+time, or policy input, performs no additional validation, and retains the
+complete non-copyable strong binding intact. The generic older routed-path
+binding cannot substitute for this stronger projection.
+
+This pure public-data composition performs no parsing, cryptography, credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It does
+not apply responder DNS or no-check policy, establish separately authenticated
+responder or intermediate status, complete revocation or Name/path validation,
+validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
