@@ -6,6 +6,14 @@ name = "erl-nif-bridge"
 version = "0.1.0"
 edition = "2021"
 description = "Thin safe Rust wrapper over Erlang's erl_nif C API — zero dependencies, no Rustler, no macros"
+build = "build.rs"
 
 [dependencies]
 # None. That's the point.
+
+# The smoke NIF: a real NIF library built on this crate and loaded into a real BEAM
+# by tests/smoke.escript (see BUILD).  An example, so it is built only on request
+# and never ships with the library.
+[[example]]
+name = "nif_smoke"
+crate-type = ["cdylib"]

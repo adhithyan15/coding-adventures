@@ -1,0 +1,12 @@
+# needs-toolchain: elixir
+# Same steps as the Unix BUILD (every line is plain cmd syntax).  On Windows the
+# smoke library is a DLL with no enif_* imports: the BEAM passes nif_init a table
+# of function pointers and win_dyn calls through it, so this run is also the proof
+# that the table's order matches the pinned OTP 27.  escript.exe comes from the
+# Erlang/OTP that setup-beam installs; escript copies the DLL to
+# nif_smoke_loadable.dll and erlang:load_nif/2 loads it.
+cargo test -p erl-nif-bridge
+cargo build --release -p erl-nif-bridge
+cargo clippy -p erl-nif-bridge --all-targets -- -D warnings
+cargo build --release -p erl-nif-bridge --example nif_smoke --target-dir target
+escript tests/smoke.escript target/release/examples
