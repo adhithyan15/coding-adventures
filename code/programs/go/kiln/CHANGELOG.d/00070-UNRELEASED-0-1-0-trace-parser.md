@@ -35,4 +35,8 @@
   and violations are `helper-spawn`, `helper-activity`, `helper-exe`,
   `helper-no-init`, `helper-no-exec`, `helper-cwd` and `helper-config`.
   `AT_EMPTY_PATH` is decoded from numeric flags too (`flags` otherwise).
+- Root-group membership is memoised per pid, so deep thread chains with many
+  spawns stay linear; KILN04 section 4.5 lists the requirements on the stage 3
+  helper (thread-group-leader exec, setup `chdir` timing, no root calls after
+  the spawn, `HelperExe` outside the repository).
 - KILN04 section 4.5 records the parser decisions of stage 1a.

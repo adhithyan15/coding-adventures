@@ -223,10 +223,12 @@ type model struct {
 	procs      map[int]*proc
 	spawns     map[int]spawn
 	spawnList  []int
-	initPid    int  // helper mode: the root's one non-thread child
-	stepExec   bool // helper mode: the init child has exec'd the step
-	rootSpawn  bool // helper mode: the root group has spawned the init child
-	rootExeced bool // helper mode: the root group has had its one exec
+	initPid    int          // helper mode: the root's one non-thread child
+	stepExec   bool         // helper mode: the init child has exec'd the step
+	rootSpawn  bool         // helper mode: the root group has spawned the init child
+	rootExeced bool         // helper mode: the root group has had its one exec
+	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
+	walkSteps  int          // thread-chain steps taken (a test watches this stays linear)
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -252,12 +254,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	if root == 0 {
 		return nil, incomplete(0, reasonEmpty)
 	}
-	m := &model{
-		lim: lim, opts: opts, root: root, initCwd: initialCwd,
-		trace:  &Trace{RootPid: root, Procs: map[int]*Process{}},
-		procs:  map[int]*proc{},
-		spawns: map[int]spawn{},
-	}
+	m := newModel(lim, opts, root, initialCwd)
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
 	}
@@ -271,6 +268,16 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	}
 	m.trace.InitPid = m.initPid
 	return m.trace, nil
+}
+
+func newModel(lim Limits, opts Options, root int, initialCwd string) *model {
+	return &model{
+		lim: lim, opts: opts, root: root, initCwd: initialCwd,
+		trace:    &Trace{RootPid: root, Procs: map[int]*Process{}},
+		procs:    map[int]*proc{},
+		spawns:   map[int]spawn{},
+		rootMemo: map[int]bool{},
+	}
 }
 
 // buildSpawns scans every completed fork/vfork/clone for the child pid it
@@ -339,18 +346,36 @@ func (m *model) buildSpawns(recs []record) *Error {
 // inRootGroup reports whether pid is the helper root or a CLONE_THREAD thread
 // (transitively) of it.  It uses only the spawn records, so it is valid before
 // pass 2.
+//
+// Every answer is memoised for every pid on the walked chain, so a chain of
+// thousands of threads is walked once in total, not once per spawn that asks
+// about its end.  (Without the memo, a 4095-deep thread chain that forks a
+// million times would cost billions of lookups.)  A chain deeper than
+// maxProcessDepth is "not in the group", which fails closed.
 func (m *model) inRootGroup(pid int) bool {
-	for n := 0; n < maxProcessDepth; n++ {
-		if pid == m.root {
-			return true
+	var path []int
+	res := false
+	for cur, n := pid, 0; ; n++ {
+		if v, ok := m.rootMemo[cur]; ok {
+			res = v
+			break
 		}
-		sp, ok := m.spawns[pid]
-		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") {
-			return false
+		m.walkSteps++
+		path = append(path, cur)
+		if cur == m.root {
+			res = true
+			break
 		}
-		pid = sp.parent
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") || n >= maxProcessDepth {
+			break
+		}
+		cur = sp.parent
 	}
-	return false
+	for _, p := range path {
+		m.rootMemo[p] = res
+	}
+	return res
 }
 
 // analyzeClone reads the flags= argument of a clone call.  A clone that could

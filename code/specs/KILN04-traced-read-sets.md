@@ -474,6 +474,20 @@ first successful exec of a non-Kiln path is the step.**
   must equal the `initialCwd` given to `Parse`, for every path form,
   absolute included; otherwise `helper-cwd`. A setup `chdir` is fine only
   if it ends back there.
+- **Requirements on the stage 3 helper.** The parser models the shape
+  above and cannot enforce how the helper reaches it, so the helper must:
+  - exec the step from the init **thread-group leader** (the Go helper
+    locks the main goroutine's thread with `runtime.LockOSThread` before the
+    exec), because an exec by another thread changes the pid strace prints;
+  - do its setup `chdir`s before any thread starts, or after
+    `unshare(CLONE_FS)`, which the parser does not model, so avoid
+    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` a
+    `cwd-race`;
+  - make **no traced call in the root group after the spawn**. Go runtime
+    thread creation is a `clone`, so the helper starts all the threads it
+    will need before it spawns the init child;
+  - live at a `HelperExe` path **outside the repository tree**. The parser
+    only compares paths; the caller verifies this.
 - **Flags.** `AT_EMPTY_PATH` is read from a numeric or hex flags value too
   (bit `0x1000`); a flags field that cannot be decoded is `flags`.
 - **Exit status and daemons.** The step's status is the init child's

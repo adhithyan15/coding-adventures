@@ -411,3 +411,39 @@ func wantReasonOpts(t *testing.T, text string, opts Options, reason string) {
 		t.Fatalf("want %s, got %v", reason, err)
 	}
 }
+
+func TestRootGroupWalkIsLinear(t *testing.T) {
+	// A deep chain of init-group threads whose last thread forks many times:
+	// every fork asks whether its parent is in the root group, and the answer
+	// must come from the memo, not from re-walking the chain.
+	const depth, forks = 3000, 5000
+	var b strings.Builder
+	b.WriteString("10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11\n")
+	for k := 11; k < 11+depth; k++ {
+		fmt.Fprintf(&b, "%d  clone(child_stack=0x1, flags=%s, parent_tid=[%d], tls=0x1) = %d\n", k, threadFlags, k+1, k+1)
+	}
+	deepest := 11 + depth
+	for i := 0; i < forks; i++ {
+		fmt.Fprintf(&b, "%d  fork() = %d\n", deepest, 100000+i)
+	}
+	lim := Limits{}.withDefaults()
+	recs, root, e := readRecords(strings.NewReader(b.String()), lim, true)
+	if e != nil {
+		t.Fatal(e)
+	}
+	m := newModel(lim, helperOpts, root, "/start")
+	if e := m.buildSpawns(recs); e != nil {
+		t.Fatal(e)
+	}
+	if m.initPid != 11 {
+		t.Fatalf("init %d", m.initPid)
+	}
+	if m.walkSteps > 4*(depth+forks) {
+		t.Fatalf("%d walk steps for %d threads and %d forks: not linear", m.walkSteps, depth, forks)
+	}
+	// And the answers are right: the chain is not the root group (the init is a
+	// non-thread child), the root's own threads are.
+	if m.inRootGroup(deepest) || !m.inRootGroup(10) {
+		t.Fatal("group membership")
+	}
+}
