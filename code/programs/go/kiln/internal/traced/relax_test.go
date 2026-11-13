@@ -179,6 +179,8 @@ func TestOpenOnlyBoundaries(t *testing.T) {
 			open1, stat(f), unlinkOf(f), created(f, "O_WRONLY|O_CREAT|O_TRUNC"), unlinkOf(f)}, false},
 		"an exchange": {[]trace.Event{
 			open1, created(g, "O_WRONLY|O_CREAT|O_EXCL"), exchange(f, g), stat(f)}, true},
+		"the disk shows the file despite an unlink": {[]trace.Event{
+			open1, stat(f), unlinkOf(f)}, true},
 		"an O_CREAT without a path from the kernel": {[]trace.Event{
 			open("code/p/a/out.o", "O_WRONLY|O_CREAT", "pipe:[1]"), stat(f)}, true},
 	} {
@@ -313,6 +315,9 @@ func TestSuccessfulLookupOfARemovedLeftover(t *testing.T) {
 	const l = "code/p/a/leftlnk"
 	h := quiet(t)
 	wantUnstable(t, "stat then unlink", h.run(stat(l), unlinkOf(l)))
+	// A successful stat of an absent name nothing ever made or removed.
+	h = quiet(t)
+	wantUnstable(t, "stat of a name that is not there", h.run(stat(l)))
 	// A name the action made is judged by its change log instead.
 	h = quiet(t)
 	wantStable(t, "own", h.run(created(l, "O_WRONLY|O_CREAT|O_EXCL"), stat(l), unlinkOf(l)))
