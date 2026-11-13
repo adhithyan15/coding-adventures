@@ -366,10 +366,13 @@ impl SystolicArray {
     /// result matrix. PE(r, c) holds C[r][c].
     pub fn drain_outputs(&self) -> Vec<Vec<f64>> {
         let mut result: Vec<Vec<f64>> = Vec::new();
-        for r in 0..self.config.rows {
+        // Slicing (rather than `take`) keeps the original fail-closed
+        // behaviour: a grid shorter than `rows` (or a row shorter than
+        // `cols`) still panics instead of silently passing.
+        for grid_row in &self.grid[..self.config.rows] {
             let mut row: Vec<f64> = Vec::new();
-            for c in 0..self.config.cols {
-                row.push(bits_to_float(&self.grid[r][c].accumulator));
+            for pe in &grid_row[..self.config.cols] {
+                row.push(bits_to_float(&pe.accumulator));
             }
             result.push(row);
         }

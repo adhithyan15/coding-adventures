@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `SystolicArray::drain_outputs` walks the grid with iterators over
+  `[..rows]` / `[..cols]` slices instead of index loops (Rust 1.100 clippy
+  `needless_range_loop`). Behaviour unchanged; a short grid or row still
+  panics.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added
