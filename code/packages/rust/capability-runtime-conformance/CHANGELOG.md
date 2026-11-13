@@ -4,6 +4,11 @@
 
 ### Fixed
 
+- No weak randomness. `random_hex()` no longer falls back to a clock/address
+  mix when `getrandom` fails or reads short; it returns an error. The private
+  directory creation reports NOT-LIVE `RCG013` ("no OS randomness"), and a
+  nonce that cannot be drawn mid-run stops the gate with a panic rather than
+  proceeding with a predictable value.
 - Private working directories are now created exclusively and removed on every
   exit path. (1) The `rcg-scratch` / `rcg-container` directory name is
   `<name>-<pid>-<64 random bits>` (the same source as the run nonces) and is

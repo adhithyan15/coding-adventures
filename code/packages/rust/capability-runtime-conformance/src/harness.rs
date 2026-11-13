@@ -605,12 +605,12 @@ mod linux {
     /// same source as the run nonces, and the directory is only ever made by
     /// [`create_private_dir`], which refuses anything already there.
     /// Only `capability_runtime_evidence.json` stays at a fixed path.
-    fn private_dir(config: &GateConfig, leaf: &str) -> PathBuf {
-        config
+    fn private_dir(config: &GateConfig, leaf: &str) -> Result<PathBuf, String> {
+        Ok(config
             .evidence_dir
             .clone()
             .unwrap_or_else(std::env::temp_dir)
-            .join(format!("{leaf}-{}-{}", std::process::id(), random_hex()))
+            .join(format!("{leaf}-{}-{}", std::process::id(), random_hex()?)))
     }
 
     /// Create `path` as a brand-new directory, mode 0700, or fail.
@@ -650,7 +650,7 @@ mod linux {
 
     impl ScratchDir {
         fn new(config: &GateConfig, leaf: &str) -> std::io::Result<ScratchDir> {
-            let path = private_dir(config, leaf);
+            let path = private_dir(config, leaf).map_err(std::io::Error::other)?;
             create_private_dir(&path)?;
             Ok(ScratchDir { path })
         }
@@ -673,25 +673,36 @@ mod linux {
         static RANDOM_FAILS: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
     }
 
-    fn random_hex() -> String {
+    /// 64 bits from the OS, or an error. There is deliberately NO fallback:
+    /// a clock/address mix is guessable, and these bits name a directory an
+    /// attacker may race and mark the trace that proves the jail held. A weak
+    /// value must stop the gate, not silently degrade it.
+    fn random_hex() -> Result<String, String> {
+        #[cfg(test)]
+        if RANDOM_FAILS.with(|f| f.get()) {
+            return Err("no OS randomness (injected failure)".to_string());
+        }
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
         let got = unsafe { libc::getrandom(bytes.as_mut_ptr().cast(), bytes.len(), 0) };
         if got != bytes.len() as isize {
-            // getrandom essentially cannot fail on Linux >= 3.17; if it does,
-            // fall back to clock and address bits rather than all zeros.
-            let nanos = std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .map(|d| d.as_nanos() as u64)
-                .unwrap_or(0);
-            let here = &bytes as *const _ as u64;
-            bytes = (nanos ^ here.rotate_left(32)).to_le_bytes();
+            return Err(format!(
+                "no OS randomness (getrandom returned {got}: {})",
+                std::io::Error::last_os_error()
+            ));
         }
-        bytes.iter().map(|b| format!("{b:02x}")).collect()
+        Ok(bytes.iter().map(|b| format!("{b:02x}")).collect())
     }
 
+    /// A run nonce. `ScratchDir::new` (the first thing `parent_main` and the
+    /// container ring do) has already proved the OS source works, so a failure
+    /// here means it broke mid-run; stopping with a panic is the fail-closed
+    /// outcome (the `ScratchDir` guards still clean up while unwinding).
     fn random_nonce(tag: &str) -> String {
-        format!("{tag}-{}", random_hex())
+        match random_hex() {
+            Ok(hex) => format!("{tag}-{hex}"),
+            Err(error) => panic!("{error}: refusing to continue with a predictable nonce"),
+        }
     }
 
     fn command_line(program: &str, args: &[&str]) -> Option<String> {
@@ -1632,8 +1643,8 @@ mod linux {
         #[test]
         fn private_dir_names_are_unpredictable_but_carry_the_pid() {
             let config = pure_config(scratch("names"), "{}");
-            let a = private_dir(&config, "rcg-scratch");
-            let b = private_dir(&config, "rcg-scratch");
+            let a = private_dir(&config, "rcg-scratch").unwrap();
+            let b = private_dir(&config, "rcg-scratch").unwrap();
             assert_ne!(a, b, "the name must not be predictable from the pid alone");
             let pid = std::process::id().to_string();
             assert!(a.file_name().unwrap().to_string_lossy().contains(&pid));
