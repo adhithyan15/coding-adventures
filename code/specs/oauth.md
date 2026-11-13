@@ -1909,7 +1909,11 @@ intermediate ceiling bounds the number of visits; the new caller-owned limits
 bound each repository-owned decode. Success retains the complete reviewed-
 anchor policy result, the number of constrained intermediates, and only
 payload-free target DNS/IP counts. Callers cannot substitute another target,
-SAN index, intermediate, or traversal order.
+SAN index, intermediate, or traversal order. The generic ordered target-policy
+result cannot construct this stronger result. The strong and generic entry
+points must share the same private ordered evaluator so supported constraint
+semantics, decoder-limit propagation, stable failure kinds, and payload
+redaction cannot drift between them.
 
 This composes supported intermediate constraints only against the exact target
 identities. It does not apply constraints to subordinate CA subject or SAN

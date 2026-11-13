@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-constructed-path-signature-routing"
-version = "0.22.0"
+version = "0.23.0"
 edition = "2021"
 description = "Bind data-driven RSA verification to exact constructed X.509 path adjacencies"
 
