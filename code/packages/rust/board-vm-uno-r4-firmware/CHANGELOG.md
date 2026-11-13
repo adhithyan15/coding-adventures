@@ -2,9 +2,16 @@
 
 ## Unreleased
 
-- Test fix (Windows): `parses_print_upload_and_smoke_options` expected the `arm-none-eabi-g++` and `-ar` paths without the platform executable suffix, so it failed on Windows (`...g++.exe` vs `...g++`); both assertions now go through `native_tool`, as the `-gcc` one already did.
+- **One more Windows test expectation.** `parses_print_upload_and_smoke_options`
+  still compared `arm_gxx` and `arm_ar` against Unix-formatted paths; they now
+  use the same `native_tool` helper as `arm_gcc` (`\\` separators and `.exe` on
+  Windows). Found when this package next ran on the Windows lane.
 
-- BUILD / BUILD_windows no longer name the `stable` toolchain (`rustup run stable cargo`, `--toolchain stable`): they use the default toolchain, which CI now pins to an exact Rust version. A pinned default is not the `stable` alias, so naming `stable` would run a second, unpinned toolchain without the targets added by `rustup target add`.
+- **Build uses the pinned toolchain.** `BUILD` and `BUILD_windows` call
+  `cargo` directly instead of `rustup run stable cargo`. CI now installs the
+  exact Rust release named in the root `mise.toml` rather than the floating
+  `stable` channel, so naming `stable` here would have run a different
+  compiler (or none) from the rest of the build.
 
 - **Windows test expectations.** Five `serial_usb_artifact` tests asserted
   Unix-formatted paths (`/`, no `.exe`) for a planner that correctly builds

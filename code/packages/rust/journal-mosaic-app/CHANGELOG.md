@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-- BUILD / BUILD_windows no longer name the `stable` toolchain (`rustup run stable cargo`, `--toolchain stable`): they use the default toolchain, which CI now pins to an exact Rust version. A pinned default is not the `stable` alias, so naming `stable` would run a second, unpinned toolchain without the targets added by `rustup target add`.
+- **Build uses the pinned toolchain.** `BUILD` and `BUILD_windows` call
+  `cargo` directly instead of `rustup run stable cargo`. CI now installs the
+  exact Rust release named in the root `mise.toml` rather than the floating
+  `stable` channel, so naming `stable` here would have run a different
+  compiler (or none) from the rest of the build.
 
 - **Reachability tests for the scrolling pane (JO-5).** The tests prove that
   `journal-app`'s pane now scrolls, so an entry below the fold can be reached.

@@ -1651,6 +1651,24 @@ complete RFC 5280 Name equality, authenticate a path link, validate the anchor
 self-signature or algorithm, apply anchor constraints, check time or
 revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS remains unavailable.
+A distinct policy-backed path-length initialization follow-up consumes that
+complete Name-policy-backed reviewed-terminal issuing-CA proof and derives RFC
+5280's initial capacity only from its retained construction. The final selected
+issuer is already bound to the reviewed trust anchor, so subtracting that
+anchor from the selected-issuer count yields the exact prospective intermediate
+count. The non-copyable result retains the complete Name-policy-backed
+construction, reviewed-root selection, certificate-wide anchor role policy,
+and derived state together. Generic reviewed-terminal evidence cannot produce
+this stronger result, and callers cannot detach the exact Name-value policy,
+inflate the capacity, or attach it to another construction. This pure public-
+certificate-data composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not define complete RFC 5280 Name equality, authenticate an
+adjacency, apply an intermediate transition, generalize full path validation,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
