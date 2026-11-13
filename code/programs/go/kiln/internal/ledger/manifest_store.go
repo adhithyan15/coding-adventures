@@ -33,6 +33,7 @@ type ManifestReport struct {
 	Future     int            // accepted records dated after now plus MaxClockSkew (dropped; also listed in Dropped)
 	Superseded int            // accepted records beyond the newest K distinct ids, or repeating an id
 	Retained   int            // records kept
+	Ignored    int            // accepted records of a weak key the caller did not ask for (Load's wanted set)
 }
 
 // manifestLimits are the segment-level caps, injectable so tests need not
@@ -124,7 +125,7 @@ func parseManifestSegment(name string, seq uint64, data []byte, lim manifestLimi
 		case err != nil:
 			return nil, fmt.Errorf("ledger: manifest segment %s line %d: %w", name, n, err)
 		}
-		out = append(out, mEntry{m, seq, name, n})
+		out = append(out, mEntry{m: m, seq: seq, name: name, line: n})
 	}
 	return out, nil
 }
@@ -139,21 +140,33 @@ func parseManifestSegment(name string, seq uint64, data []byte, lim manifestLimi
 // therefore never uses a second slot.  The outcome equals sorting everything
 // and cutting afterwards: the order is total, and an id's newest instance is
 // the only one that can matter.
+//
+// With a wanted set (stage 5a), records of any other weak key are ignored on
+// arrival, before the id is even computed, so the heap is bounded by the keys
+// asked for, never by the size of the store.  A nil set keeps everything.
 type retainer struct {
 	now        time.Time
 	failFuture bool // a far-future record is an error (merge snapshots), not a drop
+	wanted     map[[32]byte]struct{}
+	ignored    int
 	by         map[[32]byte][]mEntry
 	seen       int
 	expired    int
 	drops      []ManifestDrop // far-future records
 }
 
-func newRetainer(now time.Time, failFuture bool) *retainer {
-	return &retainer{now: now.UTC(), failFuture: failFuture, by: map[[32]byte][]mEntry{}}
+func newRetainer(now time.Time, failFuture bool, wanted map[[32]byte]struct{}) *retainer {
+	return &retainer{now: now.UTC(), failFuture: failFuture, wanted: wanted, by: map[[32]byte][]mEntry{}}
 }
 
 func (r *retainer) add(e mEntry) error {
 	r.seen++
+	if r.wanted != nil {
+		if _, ok := r.wanted[e.m.Weak]; !ok {
+			r.ignored++
+			return nil
+		}
+	}
 	if e.m.At.After(r.now.Add(MaxClockSkew)) {
 		if r.failFuture {
 			return fmt.Errorf("ledger: manifest segment %s line %d is dated %s, after now",
@@ -167,10 +180,13 @@ func (r *retainer) add(e mEntry) error {
 		r.expired++
 		return nil
 	}
-	w, id := e.m.Weak, e.m.ID()
+	// The id is the SHA-256 of the whole entries list, so it is computed once
+	// per record and kept (mEntry.id); retained ones are never re-hashed.
+	w := e.m.Weak
+	e.id = e.m.ID()
 	list := r.by[w]
 	for i := range list {
-		if list[i].m.ID() == id {
+		if list[i].id == e.id {
 			if e.newer(list[i]) {
 				list[i] = e
 				sortNewestFirst(list)
@@ -198,8 +214,8 @@ func (r *retainer) finish(rep *ManifestReport) map[[32]byte][]mEntry {
 	for _, l := range r.by {
 		retained += len(l)
 	}
-	rep.Expired, rep.Future, rep.Retained = r.expired, len(r.drops), retained
-	rep.Superseded = r.seen - r.expired - len(r.drops) - retained
+	rep.Expired, rep.Future, rep.Retained, rep.Ignored = r.expired, len(r.drops), retained, r.ignored
+	rep.Superseded = r.seen - r.ignored - r.expired - len(r.drops) - retained
 	rep.Dropped = append(rep.Dropped, r.drops...)
 	return r.by
 }
@@ -263,6 +279,28 @@ func (s *ManifestSet) Manifests(weak [32]byte) []Manifest {
 	return out
 }
 
+// RetainedManifest is a retained manifest with its verified id, which the
+// retainer computed once while loading.
+type RetainedManifest struct {
+	Manifest Manifest
+	ID       [32]byte
+}
+
+// Retained is Manifests with each id attached (computed once at load, not per
+// call).  The caller owns the returned slice.
+func (s *ManifestSet) Retained(weak [32]byte) []RetainedManifest {
+	es := s.byWeak[weak]
+	if len(es) == 0 {
+		return nil
+	}
+	out := make([]RetainedManifest, len(es))
+	for i, e := range es {
+		out[i] = RetainedManifest{Manifest: e.m, ID: e.id}
+		out[i].Manifest.Entries = slices.Clone(e.m.Entries)
+	}
+	return out
+}
+
 // ManifestStore is the manifests/ directory of a ledger directory.
 type ManifestStore struct {
 	root  string // the ledger directory, checked to be a plain directory
@@ -278,14 +316,24 @@ func OpenManifests(ledgerDir string, scope Scope) *ManifestStore {
 	return &ManifestStore{root: ledgerDir, dir: filepath.Join(ledgerDir, ManifestsDir), scope: scope, fs: realFS}
 }
 
+// Scope reports which kind of ledger this store belongs to.
+func (s *ManifestStore) Scope() Scope { return s.scope }
+
 // Load reads the store under the reader policy and applies retention relative
 // to now (a parameter, never the clock).  On an error (structural corruption,
 // an over-cap store) the set is nil and the caller must treat it as no hits.
-func (s *ManifestStore) Load(now time.Time) (*ManifestSet, ManifestReport, error) {
+//
+// wanted is optional.  nil keeps every weak key (what merge needs); a non-nil
+// set, even an empty one, keeps only those weak keys and ignores every other
+// record as it is parsed (ManifestReport.Ignored counts them), so memory is
+// bounded by the caller's packages rather than the store's size (KILN04 9.1).
+// Structure and caps are still judged for ignored records: a corrupt store is
+// unusable whatever was asked for.
+func (s *ManifestStore) Load(now time.Time, wanted map[[32]byte]struct{}) (*ManifestSet, ManifestReport, error) {
 	if err := checkPlainDir(s.root); err != nil {
 		return nil, ManifestReport{}, err
 	}
-	acc := newRetainer(now, false)
+	acc := newRetainer(now, false, wanted)
 	rep, err := loadManifestDir(s.dir, defaultManifestLimits, acc)
 	if err != nil {
 		return nil, rep, err
@@ -427,7 +475,7 @@ func mergeManifests(o fsOps, lim manifestLimits, snapshotDir, deltaFile, outDir 
 	}
 	// A far-future snapshot record is an error (as in the pass Merge), not a
 	// drop: it is forged or the clock is badly wrong.
-	acc := newRetainer(now, true)
+	acc := newRetainer(now, true, nil)
 	snapRep, err := loadManifestDir(snapshotDir, lim, acc)
 	if err != nil {
 		return st, fmt.Errorf("snapshot: %w", err)

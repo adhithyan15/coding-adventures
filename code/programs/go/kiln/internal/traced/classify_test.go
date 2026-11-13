@@ -46,6 +46,7 @@ func TestAbsence(t *testing.T) {
 
 func TestFailedCallsAreObservationsNotWrites(t *testing.T) {
 	h := newHarness(t)
+	h.fs.file(abs("code/p/b/x")) // EACCES says it is there
 	rec := h.run(
 		fail(mkdir("code/p/a/out"), "EEXIST"),               // present, untracked
 		fail(write("unlink", "code/scripts/zzz"), "ENOENT"), // absent
@@ -197,6 +198,10 @@ func TestWritesAreCoarsenedToWriteRoots(t *testing.T) {
 
 func TestUnlinkRmdirAndChangesInPlace(t *testing.T) {
 	h := newHarness(t)
+	// A call that changes an object in place succeeded, so the object is on the
+	// disk afterwards (a name the action never made, and the disk shows absent,
+	// is a contradiction: see the "gone" rule in checkStability).
+	h.fs.file(abs("code/p/a/t")).file(abs("code/p/a/x")).file(abs("code/p/a/u"))
 	rec := h.run(
 		write("unlink", "code/p/a/old.o"),
 		write("rmdir", "code/p/a/olddir"),

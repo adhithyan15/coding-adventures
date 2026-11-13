@@ -39,6 +39,9 @@ type Options struct {
 	// Probe, when set, runs the toolchain probes (KILN03 4, `--probe`); nil
 	// leaves the tools to their pins alone.
 	Probe *ProbeOptions
+	// Lookup, when set, adds the KILN04 stage 5a lookup report to the plan
+	// (`--ledger`).  It reports and skips nothing.
+	Lookup *LookupOptions
 }
 
 // keyOS maps the graph's OS name to KILN02's.
@@ -144,6 +147,7 @@ type planner struct {
 	probes    []ProbeResult
 	mismatch  map[string]bool
 	timedOut  map[string]bool
+	refused   map[string]bool
 }
 
 // workers returns the pool size: at most the caller's choice, else the CPU
