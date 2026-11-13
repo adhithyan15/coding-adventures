@@ -4,6 +4,7 @@
 
 ### Changed
 
+- `--language perl` now also writes a real `BUILD_windows` (the `REM prereqs:` line the validator needs plus `run-perl-tests-windows.ps1 -Deps ...`, the same shape as the Go generator). Before, a generated Perl package had no `BUILD_windows`, so Windows fell back to the Unix `BUILD` (`cpanm`, `prove` under the wrong Perl). Validated by generating a Perl and a Lua package and running the build tool's `-validate-build-files` over them (BUILD_linux copy trick).
 - Generated packages now get a real `BUILD_windows` (the same `busted` run as
   their Unix `BUILD`) instead of `echo "Skipping Lua on Windows CI"`. An
   unlisted echo-only `BUILD_windows` fails `audit_build_windows.py --check`
