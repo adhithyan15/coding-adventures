@@ -1126,6 +1126,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	emitKilnGraph := flag.String("emit-kiln-graph", "", "Write the kiln-legacy-graph/1 export (every package, all OSes; implies -force and -language all) to this path, then exit")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 	execWrapperFlag := flag.String("exec-wrapper", "", "JSON array of strings: a prefix for every BUILD step's command, run as `wrapper... sh -c <line>` with KILN_ACTION, KILN_STEP and KILN_STEP_COUNT in the wrapper's environment (Kiln tracing; incompatible with -clippy and -prune-leaf-targets)")
+	emitKilnSteps := flag.String("emit-kiln-steps", "", "With -emit-kiln-graph only: also write the kiln-legacy-steps/1 export (the lines executor.EffectiveStepLines returns for this OS, per package) to this path, from the same discovery pass")
 	emitResults := flag.String("emit-results", "", "After the run, write the kiln-legacy-results/1 record (status and step counts per package) to this path")
 
 	flag.Parse()
@@ -1163,6 +1164,35 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// did not complete", never a stale record from an earlier run.
 		if rerr := os.Remove(*emitResults); rerr != nil && !os.IsNotExist(rerr) {
 			fmt.Fprintf(os.Stderr, "Error: -emit-results: %v\n", rerr)
+			return 1
+		}
+	}
+
+	// -emit-kiln-steps rides on the graph export (see kiln_steps.go): the
+	// two files must come from one discovery pass, before any BUILD runs.
+	if flagGiven["emit-kiln-steps"] {
+		if *emitKilnSteps == "" {
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-steps needs a path.")
+			return 1
+		}
+		if *emitKilnGraph == "" {
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-steps is only valid together with -emit-kiln-graph (the two exports must come from one discovery pass).")
+			return 1
+		}
+		if samePath(*emitKilnGraph, *emitKilnSteps) {
+			// Both writers are atomic renames: with one path the second
+			// would silently replace the first.
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-steps and -emit-kiln-graph name the same file.")
+			return 1
+		}
+		if cerr := checkResultsPath(*emitKilnSteps); cerr != nil {
+			fmt.Fprintf(os.Stderr, "Error: -emit-kiln-steps: %v\n", cerr)
+			return 1
+		}
+		// Remove an older file now, as -emit-results does: a missing file
+		// then means "this run did not finish", never a stale export.
+		if rerr := os.Remove(*emitKilnSteps); rerr != nil && !os.IsNotExist(rerr) {
+			fmt.Fprintf(os.Stderr, "Error: -emit-kiln-steps: %v\n", rerr)
 			return 1
 		}
 	}
@@ -1626,7 +1656,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// These are early-exit modes that compute metadata but don't build.
 
 	if *emitKilnGraph != "" {
-		return emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph, true)
+		if code := emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph, requireKilnConsumers); code != 0 {
+			return code
+		}
+		if *emitKilnSteps != "" {
+			return emitKilnLegacySteps(triggerKnown, repoRoot, *emitKilnSteps)
+		}
+		return 0
 	}
 
 	if *emitPlan != "" {
