@@ -614,9 +614,12 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
                 return Some(format!("conduit: bind failed: {e}"));
             }
         };
-        // The server exists: only now does it take over the app's pinned
-        // coderefs, and the app allocation is released.
-        let NativeApp { refs, .. } = *Box::from_raw(app_ptr);
+        // The server exists.  Everything below that can fail runs while the app is
+        // still owned by the caller's handle; the app is released only as the very
+        // last step, once the new server handle has been handed to Perl.  `refs`
+        // is a list of raw SV pointers, so the server takes a copy of it (the
+        // refcounts they pin move with it: the app's own `Vec` is dropped without
+        // touching them).
         let bound = server.local_addr().port();
         let stop = server.stop_handle();
         let native = NativeServer {
@@ -626,9 +629,10 @@ unsafe extern "C-unwind" fn xs_new_server(_cv: *mut CV) {
             running: Arc::new(AtomicBool::new(false)),
             bg: None,
             ctx,
-            refs,
+            refs: app.refs.clone(),
         };
         set_return(f.base, f.ax, 0, newSViv(Box::into_raw(Box::new(native)) as IV));
+        drop(Box::from_raw(app_ptr));
         xsub_return(1, f.ax);
         None
     });
