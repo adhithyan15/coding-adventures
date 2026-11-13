@@ -11,6 +11,13 @@ sh tools/run.sh           # builds the C ABI + demo, runs the smoke test
 ./_build/conduit-hello 8080
 ```
 
+On Windows (MSVC, from a Developer prompt with Rust installed):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run.ps1   # builds, runs the smoke test
+.\_build\conduit-hello.exe 8080
+```
+
 ## Routes
 
 | Route | Shows |

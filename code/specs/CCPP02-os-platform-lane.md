@@ -146,8 +146,9 @@ created.
   x25519, chacha20-poly1305, hmac, hkdf) already exist, so it is feasible later.
 - **GPU** (CUDA/Metal), **GUI** (Qt/Cocoa/X11), and full **FFI bridges** beyond
   the one `dlopen` representative — SDK/environment-bound; each will get a
-  per-OS BUILD that detects the SDK and skips gracefully (the `cpp/conduit`
-  `BUILD_windows` skip precedent).
+  per-OS BUILD that detects the SDK and skips gracefully. (`cpp/conduit` used to
+  be the precedent, with an echo-skip `BUILD_windows`; it now builds and tests
+  for real on Windows, so only an SDK that is genuinely absent justifies a skip.)
 
 ## Verification
 
