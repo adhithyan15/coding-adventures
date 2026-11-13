@@ -174,6 +174,10 @@ func TestPOCDaemon(t *testing.T) {
 	rec := h.wc(unix("connect", "/var/run/docker.sock"))
 	wantReason(t, rec, "daemon:/var/run/docker.sock")
 	wantComplete(t, "host unix daemon", rec, false)
+	// Fail closed: without a fresh network namespace a loopback or abstract
+	// peer nobody bound may be a host daemon (M6).
+	wantComplete(t, "loopback daemon, no netns", h.wc(inet("connect", "127.0.0.1", 5432)), false)
+	h.netns = true
 	wantComplete(t, "loopback daemon (own netns, M4)", h.wc(inet("connect", "127.0.0.1", 5432)), true)
 	ab := unix("connect", "dbus")
 	ab.Addr.Abstract = true
@@ -364,13 +368,14 @@ func hasGone(m map[string]goneLook, k string) bool {
 // daemon reason remains.
 func TestR2EphemeralPort(t *testing.T) {
 	h := newHarness(t)
+	h.netns = true
 	rec := h.wc(sockEv("socket:[1]", "SOCK_STREAM"), inet("bind", "127.0.0.1", 0), inet("connect", "127.0.0.1", 41234), mkdir(abs("code/p/a/out")))
 	wantReason(t, rec, "daemon:127.0.0.1:41234")
 	wantComplete(t, "bind :0, connect :41234", rec, true)
-	// A pathname peer inside the repository or the scratch directories is
-	// another action's, not a host daemon.
+	// L7: a pathname peer inside the repository that nobody in the trace bound
+	// is a host process (earlier steps' processes are dead).
 	h.fs.file(abs("code/p/b/live.sock"))
-	wantComplete(t, "in-repo pathname peer", h.wc(unix("connect", abs("code/p/b/live.sock"))), true)
+	wantComplete(t, "in-repo pathname peer nobody bound", h.wc(unix("connect", abs("code/p/b/live.sock"))), false)
 	// A host pathname peer that answered is untraced code with write access.
 	h.fs.file("/var/run/docker.sock")
 	wantComplete(t, "host pathname peer", h.wc(unix("connect", "/var/run/docker.sock")), false)
@@ -399,4 +404,36 @@ func TestR2DaemonSpoof(t *testing.T) {
 	// The honest shape stays complete.
 	h := newHarness(t)
 	wantComplete(t, "honest own server", h.runNet(unix("bind", "/tmp/kiln-1/s"), unix("connect", "/tmp/kiln-1/s")), true)
+}
+
+// M6: the per-step network namespace is a precondition the classifier cannot
+// check, so it is an input that fails closed (Input.StepNetNS, default false).
+func TestR3(t *testing.T) {
+	sk := sockEv("socket:[1]", "SOCK_STREAM")
+	ab := unix("connect", "sccache")
+	ab.Addr.Abstract = true
+	for _, netns := range []bool{false, true} {
+		h := newHarness(t)
+		h.noSettle = true
+		h.netns = netns
+		// A host daemon on loopback (sccache server) or in the abstract
+		// namespace, started before the BUILDs, that nobody here bound.
+		wantComplete(t, "connect 127.0.0.1:4226 never bound", h.wc(sk, inet("connect", "127.0.0.1", 4226)), netns)
+		wantComplete(t, "abstract peer never bound", h.wc(sk, ab), netns)
+		// What the namespace never excuses.
+		h.fs.file("/var/run/docker.sock")
+		wantComplete(t, "host pathname socket", h.wc(sk, unix("connect", "/var/run/docker.sock")), false)
+		wantComplete(t, "connect host socket EAGAIN is not a success", h.wc(sk, fail(unix("connect", "/var/run/docker.sock"), "EAGAIN")), true)
+		h.fs.link(abs("code/p/a/dk"), "/var/run/docker.sock")
+		wantComplete(t, "pre-existing repo symlink to a host socket", h.wc(sk, unix("connect", abs("code/p/a/dk"))), false)
+		wantComplete(t, "sendto a host socket", h.wc(sockEv("socket:[1]", "SOCK_DGRAM"), unix("sendto", "/var/run/docker.sock")), false)
+		// The own server and the ephemeral port stay complete under a namespace.
+		wantComplete(t, "bind :0, connect :41234", h.wc(sk, inet("bind", "127.0.0.1", 0), inet("connect", "127.0.0.1", 41234)), netns)
+		// The rename variant of the spoof.
+		for _, P := range []string{abs("code/p/a/s"), "/tmp/kiln-1/s"} {
+			h.fs.info[P] = FileInfo{Kind: KindOther, Ctime: oldCtime}
+			Q := P + ".bak"
+			wantComplete(t, "spoof by rename "+P, h.wc(sk, unix("bind", P), rename(P, Q), symlink("/var/run/docker.sock", P), unix("connect", P), write("unlink", P), rename(Q, P)), false)
+		}
+	}
 }

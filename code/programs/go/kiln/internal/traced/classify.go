@@ -227,6 +227,8 @@ type classifier struct {
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
 	execReads map[string]pos
 
+	// netns is Input.StepNetNS.
+	netns bool
 	// incomplete is the negation of RawRecord.WritesComplete: set the moment
 	// something happens that could hide a write from Writes/TrackedWrites.
 	// Every setter says which trigger of KILN04 section 5.5 it is.

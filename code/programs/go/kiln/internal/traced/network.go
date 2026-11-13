@@ -163,9 +163,13 @@ func (c *classifier) inetPeer(t *trace.Trace, ev *trace.Event) {
 	if expectedFailure(ev.Result) || c.bound(ip, a.Port, c.sockType(ev)) {
 		return
 	}
-	// A loopback peer nobody here bound lives in the step's own network
-	// namespace (KILN04 4.7), so it cannot be a host daemon: only the reason.
+	// A loopback peer nobody here bound is a host daemon unless the step ran
+	// in a fresh network namespace (Input.StepNetNS), where it cannot be: then
+	// only the reason (W11).
 	c.reason("daemon:" + sanitize(addrText(ip, a.Port)))
+	if !c.netns {
+		c.incomplete = true
+	}
 }
 
 func addrText(ip netip.Addr, port int) string {
@@ -226,8 +230,12 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		if expectedFailure(ev.Result) || c.unixBound("@"+a.Address, c.sockType(ev)) {
 			return
 		}
-		// The abstract namespace is per network namespace too: only the reason.
+		// The abstract namespace belongs to the network namespace: as for a
+		// loopback peer, only a fresh one makes this just a reason.
 		c.reason("daemon:" + sanitize("@"+a.Address))
+		if !c.netns {
+			c.incomplete = true
+		}
 		return
 	}
 	if a.Address == "" {
@@ -254,12 +262,14 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		return
 	}
 	c.reason("daemon:" + c.redact(tg.abs))
-	// L2 (M4): a connect that SUCCEEDED to a pathname socket outside the
-	// repository and outside the fresh HOME and TMPDIR reached a host
-	// process, which may write the repository for the action.  Peers inside
-	// the repository or the scratch directories are another action's (the
-	// cross-action rule M13 handles those).
-	if _, in := c.rel(tg.abs); !in && ev.Result.OK && !c.underTmp(tg.abs) && !c.isTmpRoot(tg.abs) {
+	// L2, L7: a connect that SUCCEEDED to a pathname socket nobody in the
+	// trace bound, outside the fresh HOME and TMPDIR, reached a host process
+	// (or an alias of one), which may write the repository for the action.
+	// Every earlier step's processes are dead and a listener in this step
+	// would have its bind in the trace, so an unbound peer inside the
+	// repository is no other action's: it is a host process too.  TMPDIR is a
+	// fresh tmpfs per step.
+	if ev.Result.OK && !c.underTmp(tg.abs) && !c.isTmpRoot(tg.abs) {
 		c.incomplete = true
 	}
 }

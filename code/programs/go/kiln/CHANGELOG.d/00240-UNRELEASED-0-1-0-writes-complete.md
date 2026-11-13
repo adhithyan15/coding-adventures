@@ -55,3 +55,20 @@
   execution (M-1), not as an unknown write set. A built record with a false or
   missing key is still unknown. The contract is in KILN04 7.1 and 4.8.
 - The fuzz model gains port-0 bind plus connect and SIGPIPE child death.
+
+### Fixed (third review round)
+
+- **M6** `traced.Input.StepNetNS` (default false, fail closed) carries the
+  per-step network namespace precondition. Without it a successful connect to
+  a loopback or abstract peer the action did not bind makes the write set
+  unknown; with it only the `daemon:` reason remains. The recorder is the only
+  setter. The bare references to KILN04 section 4.7 are now conditional.
+- **L7** A successful connect to an in-repository pathname socket that nobody in
+  the trace bound is a host process: the write set is unknown (TMPDIR peers
+  stay as they are).
+- **L8** Only a record that ran nothing (`steps_run == 0`, not built) may carry
+  an explicit `writes_complete: false` without a raw record; any record that ran
+  a step, failed or built, must agree with the classifier and a false or missing
+  key is `unkHard`.
+- Regression tests `TestR3` and `TestR3Parser`; a fuzz model op connects to an
+  unbound loopback peer with `StepNetNS` false (must be incomplete).

@@ -693,13 +693,17 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   recorder must not substitute an empty record.
 - The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
   raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
-  stays required on the wire for every record. A record that did not run to
-  completion (`status` other than `built`: failed, refused, gated) was never
-  classified, so the writer sets an explicit `false` for it, which
-  `CheckComplete` accepts without a raw record; the merge charges such a record
-  as a truncated execution (M-1: strict void, relaxed charges the action), not
-  as an unknown write set. A built record with a `false` or missing key is
-  unknown (§7.1, G1).
+  stays required on the wire for every record. A record that ran nothing
+  (`steps_run == 0` and not built: refused or gated) was never classified, so
+  the writer sets an explicit `false` for it, which `CheckComplete` accepts
+  without a raw record; the merge charges such a record as a truncated
+  execution (M-1: strict void, relaxed charges the action). Any record that ran
+  a step, failed or built, was classified: its key must agree with the
+  classifier, and a `false` or missing one is an unknown write set (§7.1, G1).
+- The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
+  true only when the step ran under `kiln sandbox-exec` (which unshares `NET`);
+  anywhere else it stays false, and an unbound loopback or abstract peer makes
+  the write set unknown (W11).
 - Classify each action before a later action can change the tree: M8's
   cross-action `unstable-path` does not feed G1, so an action classified after
   another one rewrote links it traversed would see a different disk.
@@ -1245,18 +1249,30 @@ write could exist that the lists do not show.
   recorder reports those as `unknown_writes` and `clean: false`, which the
   merge already treats as unknown.
 
-**W11. An untraced host peer.** A `connect` or send that *succeeded* to a
-pathname `AF_UNIX` socket that resolves outside the repository and outside the
-fresh `HOME` and `TMPDIR`, and that the action did not bind itself: a host
-process, outside the trace, may write the repository on the action's behalf.
-Loopback inet peers and abstract Unix peers are in the step's own network
-namespace (§4.7) and so cannot be host daemons; pathname peers inside the
-repository or the scratch directories are another action's, which the
-cross-action rule (M13) handles. All of them keep the plain `daemon:<address>`
-reason. "The action bound it itself" is believed only while the bound name is
-stable: the peer's lookups are judged with the write set's (L5), so an action
-that swaps the bound name for a link to a host daemon's socket and back is
-incomplete.
+**W11. An untraced peer.** The write set is unknown after a connect or send
+that *succeeded* to a peer the action did not bind itself and that may be a
+host process, outside the trace, writing the repository on the action's
+behalf:
+
+- a pathname `AF_UNIX` socket outside the fresh `HOME` and `TMPDIR`, **inside
+  or outside the repository**: every earlier step's processes are dead and a
+  listener in the same step would have its bind in the trace, so an unbound
+  in-repository peer is no other action's but a host process or an alias of
+  one (L7);
+- a loopback inet or abstract Unix peer, **unless the step ran in a fresh
+  network namespace of its own** (`Input.StepNetNS`, below).
+
+`Input.StepNetNS` is a precondition the classifier cannot check, so it is an
+input that fails closed: the default `false` treats unbound inet and abstract
+peers as W11. Only the recorder sets it, and only when the step ran under the
+stage-3b sandbox (`kiln sandbox-exec`, which unshares `NET`; KILN04 §4.7 once
+that section is merged). Under a fresh namespace a loopback or abstract peer
+nobody bound cannot be a host daemon and keeps just the plain
+`daemon:<address>` reason, which the cross-action rule M13 handles; TMPDIR is
+a fresh tmpfs per step. "The action bound it itself" is believed only while the
+bound name is stable: the peer's lookups are judged with the write set's (L5),
+so an action that swaps the bound name for a link to a host daemon's socket and
+back is incomplete.
 
 **M3. A reason always accompanies an unknown write set.** Whenever the write
 set is unknown and the record would otherwise carry no `trace-incomplete`
@@ -1444,10 +1460,12 @@ read-only `unstable-path`, and so on). **A recipe mismatch is never
 excused**: when the steps that ran are not the steps the weak key's recipe
 covers (B6, or the classifier's `trace-incomplete:recipe-mismatch`), the
 trace says nothing about what the recipe writes. `writes_complete` is
-required on the wire; a built record whose key is false or missing is unknown,
-while a record that did not run to completion (never classified) carries an
-explicit `false` and is a truncated execution (below), so the relaxed verdict
-charges only that action. A step whose tracer did not finish cleanly
+required on the wire; a record that ran any step (`steps_run > 0`, built or
+failed: it was classified) whose key is false or missing is an unknown write
+set, so a hostile BUILD cannot choose a nonzero exit to downgrade it. Only a
+record that ran nothing (`steps_run == 0`, refused or gated: never classified)
+carries an explicit `false`, and that is a truncated execution (below), so the
+relaxed verdict charges only that action. A step whose tracer did not finish cleanly
 (`clean: false`) is likewise unknown, and a record must
 carry exactly one step summary per step that ran (`len(steps) ==
 steps_run`).
@@ -1540,8 +1558,9 @@ every other action with a non-empty `Binds`, gets
 `daemon` and `daemon-left` both count (`daemon-left` is also a truncated
 execution, M-1). This is a superset of the address match only for binds the
 record lists: `Binds` omits port 0 and abstract sockets. That gap is vacuous
-under §4.7, where every step has its own network namespace (G10), so no
-marker is added; only a pathname socket inside the checkout crosses
+only when the step ran in a fresh network namespace of its own (G10; the
+stage-3b sandbox, KILN04 §4.7 once merged; the classifier's `StepNetNS`), so no
+marker is added in that case; only a pathname socket inside the checkout crosses
 actions, and the untracked-overlap half catches it.
 
 **The rules.** Notation: `anc(p, q)` is `p == q` or `p` is a *path*-prefix

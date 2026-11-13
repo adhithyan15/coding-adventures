@@ -142,6 +142,16 @@ type Input struct {
 	// from the BUILD variant Source holds.  It is required: without it nothing
 	// shows the traced steps are the ones the weak key's recipe covers.
 	Recipe []string
+	// StepNetNS says every step ran in a fresh network namespace of its own
+	// (the stage-3b sandbox, `kiln sandbox-exec`, which unshares NET).  It is
+	// a PRECONDITION the classifier cannot check, so it fails closed: the
+	// default false treats a loopback or abstract peer nobody in the trace
+	// bound as a host process that may write the repository (W11).  Only the
+	// recorder (stage 4 PR 2b) sets it, and only when the step really ran
+	// under the sandbox.  Under a fresh namespace such a peer cannot be a host
+	// daemon, and keeps just the plain daemon: reason (the cross-action rule
+	// M13 covers it).
+	StepNetNS bool
 }
 
 // RawRecord is the output (KILN04 section 7, item 1).  Every slice is sorted
@@ -222,6 +232,7 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 		}
 	}
 	c := newClassifier(p)
+	c.netns = in.StepNetNS
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}

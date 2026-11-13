@@ -90,6 +90,7 @@ type model struct {
 	opStart         int      // index of the first touch of the current operation
 	core            bool     // a process dumped core (L1)
 	sigpipe         bool     // a child was killed by SIGPIPE (M5)
+	noNetNS         bool     // the run has no fresh network namespace (W11)
 }
 
 func (m *model) mkpath(abs string, n *mnode) {
@@ -1024,6 +1025,16 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 				c.SockPath = "socket:[1]"
 				return []trace.Event{m.event(pid, b, ""), m.event(pid, c, "")}
 			}
+		case 114:
+			// a loopback peer nobody bound, with no network-namespace
+			// guarantee (StepNetNS false): a host daemon may answer (W11)
+			o.run = func() []trace.Event {
+				m.noNetNS = true
+				c := base("connect", trace.KindNetwork, "")
+				c.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: 4226}
+				c.SockPath = "socket:[1]"
+				return []trace.Event{m.event(pid, c, "")}
+			}
 		case 113:
 			// a child killed by SIGPIPE (yes | head): hides no write (M5)
 			o.run = func() []trace.Event { m.sigpipe = true; return nil }
@@ -1055,7 +1066,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % (32 + len(bursts))
+		kind := next() % (33 + len(bursts))
 		if kind >= 18+len(bursts) {
 			add(100+kind-18-len(bursts), m.path(data, i), "")
 			continue
@@ -1251,7 +1262,7 @@ func runDifferential(t *testing.T, data []byte) {
 		// The last byte picks a whole-trace perturbation (W10).  Each must make
 		// WritesComplete false; the writes-complete oracle is then moot.
 		cut := perturbTrace(data[len(data)-1], steps, recipe)
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS})
 		if err != nil {
 			// The action moved or removed the checkout's own directories: the
 			// post-run disk no longer shows a real Root, which is refused.
@@ -1262,6 +1273,9 @@ func runDifferential(t *testing.T, data []byte) {
 				t.Fatalf("%s must make WritesComplete false", cut)
 			}
 			return
+		}
+		if m.noNetNS && rec.WritesComplete {
+			t.Fatal("an unbound loopback peer without a network namespace must make WritesComplete false")
 		}
 		if m.core && rec.WritesComplete {
 			t.Fatal("a process that dumped core must make WritesComplete false")

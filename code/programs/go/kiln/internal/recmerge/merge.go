@@ -780,14 +780,14 @@ func (m *merger) unknown(c *copyRec) (string, int) {
 	switch {
 	case r.Unknown != "":
 		return "unknown_writes " + r.Unknown, unkHard
-	case r.Complete == nil && r.Status == recfmt.StatusBuilt:
+	case r.Complete == nil && (r.Status == recfmt.StatusBuilt || r.StepsRun > 0):
 		// Recorder version 2 requires the key (M3).  A built record that lacks
 		// it, by whatever route it got here, never proved its write set
 		// complete, and the absence of a trace-incomplete reason proves
 		// nothing.  (A record that did not run to completion was never
 		// classified: it is a truncated execution below, L6.)
 		return "writes_complete is missing", unkHard
-	case r.Complete != nil && !*r.Complete && r.Status == recfmt.StatusBuilt:
+	case r.Complete != nil && !*r.Complete && (r.Status == recfmt.StatusBuilt || r.StepsRun > 0):
 		return "writes_complete is false", unkHard
 	case c.recipeBad || hasReason(r.Record.Reasons, "trace-incomplete:recipe-mismatch"):
 		// The steps that ran are not the steps the weak key's recipe covers, so
