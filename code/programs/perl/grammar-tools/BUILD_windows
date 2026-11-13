@@ -1,1 +1,3 @@
-echo Perl testing is not supported on Windows - skipping
+# build-tool: deps=perl/grammar-tools
+REM prereqs: ../../../packages/perl/grammar-tools
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps grammar-tools

@@ -52,6 +52,6 @@ mood flags have `--long` forms in `cowsay.json`, short-only).
 bash BUILD
 ```
 
-Installs `Test2::V0` and runs the test suite via `prove`. Perl testing is
-skipped on Windows CI (see `BUILD_windows`), matching every other Perl
-package in this repo.
+Installs `Test2::V0` and runs the test suite via `prove`. On Windows,
+`BUILD_windows` runs the same suite through the shared
+`code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl).

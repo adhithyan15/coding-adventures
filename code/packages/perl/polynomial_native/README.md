@@ -38,6 +38,16 @@ cp target/release/libPolynomialNative.so \
    blib/arch/auto/CodingAdventures/PolynomialNative/PolynomialNative.so
 ```
 
+## Windows
+
+`BUILD_windows` runs `code/scripts/check-perl-extension-windows.ps1`, which
+picks the native Strawberry Perl (never Git for Windows' MSYS Perl), builds the
+Rust cdylib with `cargo build --release`, stages `target\release\PolynomialNative.dll`
+as `lib\auto\CodingAdventures\PolynomialNative\PolynomialNative.<dlext>` (Strawberry's
+`$Config{dlext}` is `xs.dll`), and runs `prove -v t/` against it. `perl-bridge`
+compiles its C shim with that Perl's own compiler configuration and links the
+interpreter's CORE import library.
+
 ## Notes
 
 - The XS calling convention (`dXSARGS`, `ST(n)`, `XSRETURN`) is routed
