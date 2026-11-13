@@ -15,7 +15,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use coding_adventures_ca_assurance_report::{
-    generate_package_report, verify_assurance_report, verify_evidence, AssuranceReport,
+    generate_package_report, verify_assurance_report, verify_evidence, verify_profile, AssuranceReport,
     AuditProfile, CheckVerdict, Evidence, EvidenceCheckError as E, WeaknessRegistry, WeaknessStatus,
 };
 
@@ -279,4 +279,78 @@ fn check_rejects_an_exemption_for_cwe_409() {
     row.status = WeaknessStatus::Exemption;
     row.approved = Some(false);
     assert!(verify_evidence(&report, &ev).is_err());
+}
+
+// ---- the audit profile is recorded in the report and checked ----------------
+//
+// CWE-409 review finding 1: the profile was not in the report, so a decompressor whose Warrant
+// document has no `output` row, generated with the default `comparison` profile, produced and
+// verified an `Excluded` CWE-409 row; nothing tied "this package decompresses" to the profile.
+
+/// lzw's evidence with the `output` rows removed: a decompressor whose document forgot them.
+fn lzw_without_output_rows() -> Evidence {
+    let mut ev = Evidence::load(&pkg_dir("lzw")).unwrap();
+    for op in ev.spec.ops.iter_mut() {
+        op.has_output_bound = false;
+    }
+    ev
+}
+
+fn generate_with(ev: &Evidence, profile: AuditProfile) -> AssuranceReport {
+    generate_package_report("rust/lzw", "0.1.0", "c0ffee", &WeaknessRegistry::embedded(), ev, profile)
+        .expect("report generates")
+}
+
+#[test]
+fn the_report_records_its_profile_and_the_json_round_trips_it() {
+    let (report, _) = good();
+    assert_eq!(report.profile, AuditProfile::LosslessCompression);
+    let json = report.to_json_string();
+    assert!(json.contains("\"profile\": \"lossless-compression\""), "{json}");
+    let back = AssuranceReport::from_json_str(&json).unwrap();
+    assert_eq!(back.profile, AuditProfile::LosslessCompression);
+    assert_eq!(back.to_json_string(), json, "byte-stable");
+}
+
+#[test]
+fn a_report_with_no_or_an_unknown_profile_is_refused() {
+    let (report, _) = good();
+    let json = report.to_json_string();
+    let missing = json.replace("  \"profile\": \"lossless-compression\",\n", "");
+    assert_ne!(missing, json, "the fixture must remove the line");
+    assert!(AssuranceReport::from_json_str(&missing).is_err(), "a pre-profile report cannot be checked");
+    let unknown = json.replace("lossless-compression\",", "lossless-compressionx\",");
+    assert!(AssuranceReport::from_json_str(&unknown).is_err());
+}
+
+#[test]
+fn check_rejects_an_excluded_cwe_409_row_under_the_lossless_compression_profile() {
+    // Control: the honest comparison-profile report of the output-row-less document is excluded and
+    // verifies (that is the old hole: nothing says the package decompresses)...
+    let ev = lzw_without_output_rows();
+    let mut report = generate_with(&ev, AuditProfile::Comparison);
+    let row = report.weaknesses.iter().find(|w| w.cwe == 409).unwrap();
+    assert_eq!(row.status, WeaknessStatus::Excluded);
+    verify_evidence(&report, &ev).expect("a comparison-profile exclusion is internally consistent");
+    // ...but the same row in a report recorded as lossless-compression is refused.
+    report.profile = AuditProfile::LosslessCompression;
+    assert!(
+        matches!(verify_evidence(&report, &ev), Err(E::EvidenceMismatch(m)) if m.contains("CWE-409") && m.contains("lossless-compression")),
+        "{:?}",
+        verify_evidence(&report, &ev)
+    );
+}
+
+#[test]
+fn check_rejects_a_recorded_profile_that_differs_from_the_requested_one() {
+    // The generator under the default profile records `comparison`; BUILD checks with
+    // `--profile lossless-compression`, so this is the mismatch it must catch.
+    let ev = lzw_without_output_rows();
+    let report = generate_with(&ev, AuditProfile::Comparison);
+    assert!(matches!(
+        verify_profile(&report, Some(AuditProfile::LosslessCompression)),
+        Err(E::EvidenceMismatch(m)) if m.contains("comparison") && m.contains("lossless-compression")
+    ));
+    assert!(verify_profile(&report, Some(AuditProfile::Comparison)).is_ok());
+    assert!(verify_profile(&report, None).is_ok(), "no profile requested: the recorded one stands");
 }
