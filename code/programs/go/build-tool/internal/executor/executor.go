@@ -50,6 +50,7 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -69,7 +70,28 @@ type BuildResult struct {
 	Stdout      string  // Combined stdout from all BUILD commands
 	Stderr      string  // Combined stderr from all BUILD commands
 	ReturnCode  int     // Exit code of the last failing command, or 0
+	StepsRun    int     // BUILD steps started (the failing step counts as run)
+	StepsTotal  int     // BUILD steps in the list that was executed (0 if none ran)
 }
+
+// ExecWrapper, when non-empty, is a prefix for every BUILD step's command:
+// each step runs as `ExecWrapper... sh -c <line>` (or `... cmd /C <line>` on
+// Windows) instead of `sh -c <line>`. It is process state set once by main
+// from -exec-wrapper, like PruneLeafCargoTargets. Nil leaves behaviour
+// byte-identical to a build without the flag.
+//
+// The wrapper process, not the BUILD line, receives three extra variables:
+//
+//	KILN_ACTION      the package path relative to ExecWrapperRepoRoot
+//	KILN_STEP        the 0-based index of the step within the package
+//	KILN_STEP_COUNT  how many steps the package runs
+//
+// They are for the wrapper (e.g. `kiln sandbox-exec`, which scrubs them
+// before the step runs); a BUILD must never rely on them.
+var ExecWrapper []string
+
+// ExecWrapperRepoRoot is the repository root that KILN_ACTION is relative to.
+var ExecWrapperRepoRoot string
 
 var unsupportedBuildCommandRe = regexp.MustCompile(
 	`^echo BUILD_TOOL_UNSUPPORTED:([A-Z][A-Z0-9_]{2,63}) -- skipped$`,
@@ -363,8 +385,12 @@ func runsCargo(command string) bool {
 func runCommands(pkg discovery.Package, commands []string, start time.Time) BuildResult {
 	var allStdout, allStderr []string
 
-	for _, command := range commands {
+	for i, command := range commands {
 		cmd := shellCommand(command)
+		if len(ExecWrapper) > 0 {
+			cmd = wrapCommand(cmd, ExecWrapper)
+			cmd.Env = wrapperEnv(os.Environ(), execWrapperAction(pkg), i, len(commands))
+		}
 		cmd.Dir = pkg.Path
 
 		var stdout, stderr strings.Builder
@@ -388,6 +414,8 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 				Stdout:      strings.Join(allStdout, ""),
 				Stderr:      strings.Join(allStderr, ""),
 				ReturnCode:  exitCode,
+				StepsRun:    i + 1,
+				StepsTotal:  len(commands),
 			}
 		}
 	}
@@ -400,7 +428,53 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		Stdout:      strings.Join(allStdout, ""),
 		Stderr:      strings.Join(allStderr, ""),
 		ReturnCode:  0,
+		StepsRun:    len(commands),
+		StepsTotal:  len(commands),
 	}
+}
+
+// wrapCommand rebuilds cmd so it runs behind the wrapper argv: the process
+// started is wrapper[0], with wrapper[1:] followed by the shell command's
+// own argv (`sh -c <line>`, or `cmd /C <line>`). The BUILD line is passed
+// through unchanged as the last argument. On Windows the raw command line
+// override of the unwrapped command no longer applies (the wrapper is the
+// process Windows launches), so the arguments take Go's standard quoting.
+func wrapCommand(cmd *exec.Cmd, wrapper []string) *exec.Cmd {
+	args := make([]string, 0, len(wrapper)-1+len(cmd.Args))
+	args = append(args, wrapper[1:]...)
+	args = append(args, cmd.Args...)
+	return exec.Command(wrapper[0], args...)
+}
+
+// execWrapperAction is the KILN_ACTION value for pkg: its path relative to
+// the repository root, with forward slashes.
+func execWrapperAction(pkg discovery.Package) string {
+	if ExecWrapperRepoRoot != "" {
+		if rel, err := filepath.Rel(ExecWrapperRepoRoot, pkg.Path); err == nil {
+			return filepath.ToSlash(rel)
+		}
+	}
+	return filepath.ToSlash(pkg.Path)
+}
+
+// wrapperEnv returns base plus the KILN_* variables for one step. Any
+// KILN_ACTION, KILN_STEP or KILN_STEP_COUNT already in base is dropped so the
+// wrapper never sees a stale or forged value from the caller's environment.
+func wrapperEnv(base []string, action string, step, count int) []string {
+	env := make([]string, 0, len(base)+3)
+	for _, kv := range base {
+		if strings.HasPrefix(kv, "KILN_ACTION=") ||
+			strings.HasPrefix(kv, "KILN_STEP=") ||
+			strings.HasPrefix(kv, "KILN_STEP_COUNT=") {
+			continue
+		}
+		env = append(env, kv)
+	}
+	return append(env,
+		"KILN_ACTION="+action,
+		"KILN_STEP="+strconv.Itoa(step),
+		"KILN_STEP_COUNT="+strconv.Itoa(count),
+	)
 }
 
 // shellCommand returns an exec.Cmd that runs the given command string in

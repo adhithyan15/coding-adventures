@@ -1125,8 +1125,37 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ and npm node_modules/ once it has built, when no package depends on it (CI disk budget; X-7)")
 	emitKilnGraph := flag.String("emit-kiln-graph", "", "Write the kiln-legacy-graph/1 export (every package, all OSes; implies -force and -language all) to this path, then exit")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
+	execWrapperFlag := flag.String("exec-wrapper", "", "JSON array of strings: a prefix for every BUILD step's command, run as `wrapper... sh -c <line>` with KILN_ACTION, KILN_STEP and KILN_STEP_COUNT in the wrapper's environment (Kiln tracing; incompatible with -clippy and -prune-leaf-targets)")
+	emitResults := flag.String("emit-results", "", "After the run, write the kiln-legacy-results/1 record (status and step counts per package) to this path")
 
 	flag.Parse()
+
+	// -exec-wrapper and -emit-results (KILN04 section 4.3).
+	var execWrapper []string
+	flagGiven := map[string]bool{}
+	flag.Visit(func(f *flag.Flag) { flagGiven[f.Name] = true })
+	if flagGiven["exec-wrapper"] {
+		var werr error
+		execWrapper, werr = parseExecWrapper(*execWrapperFlag)
+		if werr != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", werr)
+			return 1
+		}
+		if *clippy || *pruneLeafTargets {
+			fmt.Fprintln(os.Stderr, "Error: -exec-wrapper cannot be combined with -clippy or -prune-leaf-targets (recording needs both off).")
+			return 1
+		}
+	}
+	if flagGiven["emit-results"] {
+		if *emitResults == "" {
+			fmt.Fprintln(os.Stderr, "Error: -emit-results needs a path.")
+			return 1
+		}
+		if cerr := checkResultsPath(*emitResults); cerr != nil {
+			fmt.Fprintf(os.Stderr, "Error: -emit-results: %v\n", cerr)
+			return 1
+		}
+	}
 
 	// -emit-kiln-graph describes the whole repository, not a diff or a
 	// language slice (see kiln_graph.go): it implies -force and -language all.
@@ -1650,6 +1679,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	}
 
 	executor.PruneLeafCargoTargets = *pruneLeafTargets
+	executor.ExecWrapper = execWrapper
+	executor.ExecWrapperRepoRoot = repoRoot
 	results := executor.ExecuteBuilds(
 		packages,
 		graph,
@@ -1677,6 +1708,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 
 	// Step 10: Print report.
 	reporter.PrintReport(results, nil)
+
+	if *emitResults != "" {
+		if err := writeKilnResults(packages, repoRoot, results, *emitResults); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing %s: %v\n", *emitResults, err)
+			return 1
+		}
+	}
 
 	// Step 11: Exit with code 1 if any builds failed.
 	for _, r := range results {
