@@ -4,6 +4,15 @@
 
 ### Fixed
 
+- Fail closed on a missing trace. An observed run whose strace trace was
+  absent, unreadable or empty used to be analysed as an empty string, i.e.
+  "observed nothing, saw no violations". The main run, every control run
+  (full and observe-only), the env-leak run and the known-gap run now add an
+  `RCG013` failure ("observer produced no trace (<which run>: <why>)"), in
+  strict and non-strict mode alike. Regression test
+  `tests/selftest_fail_closed.rs` (a `strace` shim that leaves no trace,
+  either always or only for controls). `RCG013` keeps its id; its meaning now
+  covers an unusable trace, documented in the README and VER08b.
 - Scratch (`rcg-scratch`) and container (`rcg-container`) working directories
   are now private to each gate process (`<name>-<pid>`). They live under the
   adopter's `evidence_dir`, which for Rust adopters is the workspace-wide
