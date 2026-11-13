@@ -1,1 +1,4 @@
-if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then REPO_ROOT=$(git rev-parse --show-toplevel) && (cd "$REPO_ROOT/code/packages/rust/paint-codec-png-c" && cargo build --release) && CGO_ENABLED=1 go test ./... -v -cover; else echo Skipping go/paint-codec-png-native on non-macOS-arm64; fi
+# build-tool: deps=rust/paint-codec-png-c
+# Linux and macOS: build the Rust C-ABI crate, then run the real cgo tests.
+# (Windows has its own recipe in BUILD_windows / tools\run-tests.ps1.)
+(cd ../../rust/paint-codec-png-c && cargo build --release) && CGO_ENABLED=1 go test ./... -v -cover

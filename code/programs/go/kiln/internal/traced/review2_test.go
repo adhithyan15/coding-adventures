@@ -46,8 +46,11 @@ func TestFuzzFindingsRemovedOrReplacedLinks(t *testing.T) {
 	h = newHarness(t)
 	h.fs.file(abs("code/p/a/built"))
 	wantNoReasons(t, h.run(stat("code/p/a/built")))
+	// (Relaxed by the open-only rule of section 5.5: the stat follows a name
+	// whose whole change log is an O_CREAT open that completed first.  The
+	// negative cases are in relax_test.go.)
 	rec = h.run(open("code/p/a/built", "O_WRONLY|O_CREAT|O_TRUNC", abs("code/p/a/built")), stat("code/p/a/built"))
-	wantReason(t, rec, "trace-incomplete:unstable-path")
+	wantNoReasons(t, rec)
 	// A successful open's -y path settles its final component.
 	rec = h.run(open("code/p/a/built", "O_WRONLY|O_CREAT|O_TRUNC", abs("code/p/a/built")),
 		open("code/p/a/built", "O_RDONLY", abs("code/p/a/built")))

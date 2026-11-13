@@ -22,7 +22,7 @@ func flagSet(text string) map[string]bool {
 
 // openFlags is the part of an open's flags that matters here.
 type openFlags struct {
-	wronly, rdwr, creat, excl, trunc, nofollow, tmpfile bool
+	wronly, rdwr, creat, excl, trunc, nofollow, tmpfile, path bool
 }
 
 // openat2Field returns the text of a field ("flags", "resolve") of the struct
@@ -47,10 +47,18 @@ func parseOpenFlags(text string) openFlags {
 		text = openat2Field(text, "flags")
 	}
 	s := flagSet(text)
-	return openFlags{
+	f := openFlags{
 		wronly: s["O_WRONLY"], rdwr: s["O_RDWR"], creat: s["O_CREAT"], excl: s["O_EXCL"],
-		trunc: s["O_TRUNC"], nofollow: s["O_NOFOLLOW"], tmpfile: s["O_TMPFILE"],
+		trunc: s["O_TRUNC"], nofollow: s["O_NOFOLLOW"], tmpfile: s["O_TMPFILE"], path: s["O_PATH"],
 	}
+	if f.path {
+		// The kernel ignores every flag but O_DIRECTORY, O_NOFOLLOW and
+		// O_CLOEXEC under O_PATH: nothing is created, truncated or written, and
+		// with O_NOFOLLOW a final symlink is opened itself.  It is a plain
+		// observation of the name.
+		f.wronly, f.rdwr, f.creat, f.excl, f.trunc, f.tmpfile = false, false, false, false, false, false
+	}
+	return f
 }
 
 // writes reports whether the open can change the file: a write access mode,
@@ -107,9 +115,11 @@ func (c *classifier) open(ev *trace.Event) {
 			c.reason(rResolveFlags)
 		}
 	}
-	c.noFinals = ev.Result.OK && strings.HasPrefix(ev.ReturnFDPath, "/")
+	if ev.Result.OK && strings.HasPrefix(ev.ReturnFDPath, "/") {
+		c.openRet = ev.ReturnFDPath
+	}
 	tg, ok := c.targetOf(ev, !f.nofollow && !(f.creat && f.excl))
-	c.noFinals = false
+	c.openRet = ""
 	if !ok {
 		return
 	}
@@ -127,7 +137,7 @@ func (c *classifier) open(ev *trace.Event) {
 		// The descriptor is a pipe, a socket or an anonymous inode, so the
 		// kernel gives no path to prefer.  A FIFO or socket FILE opened by name
 		// is still a path the action looked at: classify the walked one.
-		c.openResolved(abs, f, ev.Syscall == "creat")
+		c.openResolved(abs, f, ev.Syscall == "creat", false)
 		return
 	}
 	if ret != abs {
@@ -138,7 +148,7 @@ func (c *classifier) open(ev *trace.Event) {
 		}
 		abs = ret
 	}
-	c.openResolved(abs, f, ev.Syscall == "creat")
+	c.openResolved(abs, f, ev.Syscall == "creat", true)
 }
 
 // parentTrusted says an ENOENT on a child of abs's parent can be believed: the
@@ -154,8 +164,9 @@ func (c *classifier) parentTrusted(abs string) bool {
 }
 
 // openResolved applies the created-from-empty rule to a successfully opened
-// path and records the write, if any.
-func (c *classifier) openResolved(abs string, f openFlags, creat bool) {
+// path and records the write, if any.  byRet says abs is the descriptor's own
+// -y path, which is what the open-only rule needs of an O_CREAT entry.
+func (c *classifier) openResolved(abs string, f openFlags, creat, byRet bool) {
 	at, seenAbsent := c.absent[abs]
 	wasAbsent := seenAbsent && at.before(c.start) && c.parentTrusted(abs)
 	clean := !f.tmpfile && (creat || (f.creat && f.excl) || f.trunc || (f.creat && wasAbsent))
@@ -177,7 +188,7 @@ func (c *classifier) openResolved(abs string, f openFlags, creat bool) {
 	if f.creat || creat {
 		// An O_CREAT open may have made the name: a namespace change.  Only
 		// with O_EXCL does the result prove it did.
-		c.nsChange(abs, f.creat && f.excl)
+		c.nsChange(abs, f.creat && f.excl, byRet && !f.tmpfile && !f.nofollow && !f.path)
 	}
 	if f.writes() || creat {
 		c.writePath(abs)
@@ -190,7 +201,7 @@ func (c *classifier) openResolved(abs string, f openFlags, creat bool) {
 func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	if isFDLink(tg.abs) {
 		if strings.HasPrefix(ev.ReturnFDPath, "/") {
-			c.openResolved(ev.ReturnFDPath, f, false)
+			c.openResolved(ev.ReturnFDPath, f, false, false)
 		}
 		return
 	}
@@ -270,7 +281,7 @@ func (c *classifier) write(ev *trace.Event) {
 	case "unlink", "unlinkat", "rmdir":
 		c.observeSelf(tg.abs, true)
 		c.writePath(tg.abs)
-		c.markRemoved(tg.abs)
+		c.markRemoved(tg.abs, ev.Syscall == "unlink" || (ev.Syscall == "unlinkat" && !flagSet(ev.Flags)["AT_REMOVEDIR"]))
 	default:
 		// chmod, chown, truncate, utimes, setxattr, fchmod, ...: the object is
 		// changed in place, so it existed and its first-touch state is not ours.
@@ -321,8 +332,8 @@ func (c *classifier) rename(ev *trace.Event) {
 		// Both names existed before and still do: neither is created.
 		c.observeSelf(dst.abs, true)
 		dstLink, dstIsLink := c.links[dst.abs]
-		c.nsChange(src.abs, false)
-		c.nsChange(dst.abs, false)
+		c.nsChange(src.abs, false, false)
+		c.nsChange(dst.abs, false, false)
 		// Everything under either name now lives under the other: nothing the
 		// action made there is provably its own any more.
 		c.forgetCreated(src.abs)
@@ -338,7 +349,7 @@ func (c *classifier) rename(ev *trace.Event) {
 		return
 	}
 	srcDir := c.dirs[src.abs]
-	c.markRemoved(src.abs)
+	c.markRemoved(src.abs, false)
 	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink

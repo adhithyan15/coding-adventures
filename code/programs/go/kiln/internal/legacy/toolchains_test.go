@@ -1,7 +1,6 @@
 package legacy
 
 import (
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -172,10 +171,9 @@ func TestConstructPATH(t *testing.T) {
 	tc := mustToolchains(t, sampleToolchains)
 	tools, _ := tc.ToolsFor([]string{"rust", "go"}, "linux", "i")
 	got := tc.ConstructPATH(tools, "/home/u")
+	// POSIX ':' on every host: this PATH is for the Linux recording
+	// environment (KILN04 4.2), not the machine running the test.
 	want := "/home/u/.cargo/bin:/opt/hostedtoolcache/go/1.26.1/x64/bin:/usr/bin"
-	if sep := string(filepath.ListSeparator); sep != ":" {
-		want = strings.ReplaceAll(want, ":", sep)
-	}
 	if got != want {
 		t.Fatalf("PATH = %q, want %q", got, want)
 	}

@@ -1,0 +1,11 @@
+# RS01 pair evidence for code/grammars/rust (see README.md, "Pair evidence"; RS01 section 6.3).
+# One row per (release, edition) pair that has files on disk; `edition` is `-` before 1.0. Rows follow releases.csv order, then edition.
+# syntax_blobs: `;`-separated `<path>=<git blob or tree ID>` entries from a blobless depth-1 fetch of the tag (`-` = path absent at that tag).
+# basis: `reviewed` | `copy:<pair>` | `semantic-copy:<pair>`, where <pair> is `<release>` before 1.0 and `<release>-e<edition>` from 1.0.
+#   copy: every syntax blob equals the source's; the body is copied byte for byte by code/scripts/rust_release_pairs.py.
+#   semantic-copy: a 1.x minor that copies its direct predecessor's pair for the same edition; needs all six semantic columns.
+# accepted_blob, accepted_features (`none` if no feature had since = this release), releases_md_blob, releases_md_section,
+#   sweep_toolchain_sha256 and sweep_digest are the three recorded conditions of a semantic-copy and `-` on every other row.
+# oracle: the oracle record that backs the pair (`-` until slice C2 writes records). note: what changed, or why nothing did.
+# No pair files exist yet (slice A3 is tooling only); slice A4 writes the first rows.
+release,edition,commit,syntax_blobs,basis,accepted_blob,accepted_features,releases_md_blob,releases_md_section,sweep_toolchain_sha256,sweep_digest,oracle,note

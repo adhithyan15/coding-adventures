@@ -323,16 +323,17 @@ func writeFileAtomically(path string, data []byte) error {
 		cleanup()
 		return err
 	}
+	if err := tmp.Chmod(0o644); err != nil {
+		tmp.Close()
+		cleanup()
+		return err
+	}
 	if err := tmp.Sync(); err != nil {
 		tmp.Close()
 		cleanup()
 		return err
 	}
 	if err := tmp.Close(); err != nil {
-		cleanup()
-		return err
-	}
-	if err := os.Chmod(tmpName, 0o644); err != nil {
 		cleanup()
 		return err
 	}

@@ -4,7 +4,10 @@ import (
 	"debug/elf"
 	"encoding/binary"
 	"io/fs"
+	"math/rand"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -507,16 +510,19 @@ var contents = [][]byte{nil, nil, nil, []byte("garbage")}
 
 func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 	pr := m.procs[pid]
-	flags := []string{"O_RDONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_WRONLY|O_CREAT|O_EXCL", "O_WRONLY|O_CREAT", "O_WRONLY|O_TRUNC"}[mode]
-	create := mode == 1 || mode == 2 || mode == 3
-	writes := mode != 0
-	r := m.resolve(p, pr.cwdPath, mode != 2)
+	flags := []string{"O_RDONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_WRONLY|O_CREAT|O_EXCL", "O_WRONLY|O_CREAT", "O_WRONLY|O_TRUNC",
+		"O_RDONLY|O_CREAT|O_NOFOLLOW|O_PATH", "O_RDONLY|O_CREAT|O_NOFOLLOW"}[mode]
+	// Modes 5 and 6 do not follow a final link; O_PATH (5) ignores O_CREAT and
+	// opens a link itself.
+	create := mode == 1 || mode == 2 || mode == 3 || mode == 6
+	writes := mode != 0 && mode != 5
+	r := m.resolve(p, pr.cwdPath, mode != 2 && mode < 5)
 	m.look(r, create && r.stop == "", false, false)
 	errno := r.errno
 	final := r.final
 	made := false
 	switch {
-	case errno == "" && r.node != nil && r.node.kind == KindLink:
+	case errno == "" && r.node != nil && r.node.kind == KindLink && mode != 5:
 		errno = "ELOOP"
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
@@ -731,34 +737,93 @@ type mop struct {
 	events             []trace.Event
 }
 
+// burstOp is one operation of a burst: an operation kind of runStep's switch
+// and the name it acts on, relative to the burst's base directory.
+type burstOp struct {
+	kind   int
+	suffix string
+	// inRoot says suffix is a path under the checkout, not under the base.
+	inRoot bool
+}
+
+// bursts are the build patterns that KILN04 section 5.5 relaxes.  A burst
+// issues the operations of a pattern on ONE name, each with its own random
+// process, duration, start offset and effect point, so the fuzzer sees the
+// pattern in order, interleaved and overlapped.
+//
+//	0  mkdir out; create+truncate out/x; read it; stat it     (a kept output)
+//	1  create+truncate t.o; read it; unlink it                (a temporary)
+//	2  create exclusively t.o; stat it; unlink it
+//	3  plain O_CREAT t.o; stat it; unlink it
+//	4  create+truncate t.o with contents; exec it; unlink it
+//	5  create+truncate t.o; stat it twice
+//	6  stat of the base directory itself ($HOME, $TMPDIR, the checkout, ...)
+//	7  stat a leftover link; unlink it; create a file in its place; stat again
+//	8  the same for an untracked leftover file and a tracked link
+//	9  mkdir o; symlink o/l; create through the link; stat the link
+var bursts = [][]burstOp{
+	{{0, "/o", false}, {8, "/o/x", false}, {7, "/o/x", false}, {12, "/o/x", false}},
+	{{8, "/t.o", false}, {7, "/t.o", false}, {5, "/t.o", false}},
+	{{9, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{10, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{8, "/t.o", false}, {15, "/t.o", false}, {5, "/t.o", false}},
+	{{8, "/t.o", false}, {12, "/t.o", false}, {12, "/t.o", false}},
+	{{12, "", false}},
+	{{12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}, {8, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}},
+	{{12, "/code/p/a/left.txt", true}, {5, "/code/p/a/left.txt", true}, {10, "/code/p/a/left.txt", true}, {12, "/code/p/a/left.txt", true}},
+	{{0, "/o", false}, {1, "/o/l", false}, {8, "/o/l", false}, {12, "/o/l", false}},
+	{{100, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{100, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
+	{{101, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
+}
+
+// perturbations are the operations a burst may be followed by, aimed at the
+// burst's name (a bare kind, or a rename INTO the name when swap is set): the
+// negative cases of the relaxations.  q is the burst's second name.
+var perturbations = []struct {
+	kind int
+	swap bool
+}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}}
+
+func (m *model) burstBase(b byte) string {
+	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
+		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b"}[int(b)%10]
+}
+
 // runStep schedules, executes and serialises one BUILD step's operations.
 func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 	var ops []*mop
 	free := map[int]int{}
-	for k := 0; k < count && *i < len(data); k++ {
-		kind := int(data[*i%len(data)]) % 18
+	next := func() int {
+		b := int(data[*i%len(data)])
 		*i++
-		pid := 1 + int(data[*i%len(data)])%2
-		*i++
-		dur := int(data[*i%len(data)]) % 5
-		*i++
-		off := int(data[*i%len(data)]) % 3
-		*i++
-		eff := int(data[*i%len(data)]) % (dur + 1)
-		*i++
-		p := m.path(data, i)
+		return b
+	}
+	// add schedules one operation of the given kind on p (and q, for the calls
+	// that take a second name; "" reads one from the data).
+	add := func(kind int, p, q string) {
+		pid := 1 + next()%2
+		dur := next() % 5
+		off := next() % 3
+		eff := next() % (dur + 1)
 		start := free[pid] + off
 		end := start + dur
 		free[pid] = end + 1
 		o := &mop{pid: pid, start: start, effect: start + eff, end: end}
+		second := func() string {
+			if q != "" {
+				return q
+			}
+			return m.path(data, i)
+		}
 		switch kind {
 		case 0:
 			o.run = func() []trace.Event { return m.doMkdirLike(pid, "mkdir", p, "") }
 		case 1:
-			t := m.path(data, i)
+			t := second()
 			o.run = func() []trace.Event { return m.doMkdirLike(pid, "symlink", p, t) }
 		case 2, 3, 4:
-			q := m.path(data, i)
+			q := second()
 			o.run = func() []trace.Event {
 				return m.doRenameLink(pid, map[int]string{2: "rename", 3: "rename", 4: "link"}[kind], p, q, kind == 3)
 			}
@@ -769,18 +834,19 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		case 7:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 0, -1) }
 		case 8:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 1, c) }
 		case 9:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 2, c) }
 		case 10:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 3, -1) }
+		case 100:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 5, -1) }
+		case 101:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 6, -1) }
 		case 11:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
 		case 12:
 			o.run = func() []trace.Event { return m.doStat(pid, p, true) }
@@ -793,8 +859,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		case 16:
 			o.run = func() []trace.Event { return m.doList(pid, p) }
 		default:
-			d := m.dirs[int(data[*i%len(data)])%len(m.dirs)]
-			*i++
+			d := m.dirs[next()%len(m.dirs)]
 			rel := m.path(data, i)
 			if strings.HasPrefix(rel, "/") {
 				rel = strings.TrimLeft(rel, "/")
@@ -802,6 +867,44 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 			o.run = func() []trace.Event { return m.doDirStat(pid, d, rel) }
 		}
 		ops = append(ops, o)
+	}
+	for k := 0; k < count && *i < len(data); k++ {
+		kind := next() % (20 + len(bursts))
+		if kind >= 18+len(bursts) {
+			add(100+kind-18-len(bursts), m.path(data, i), "")
+			continue
+		}
+		if kind < 18 {
+			add(kind, m.path(data, i), "")
+			continue
+		}
+		b := bursts[(kind-18)%len(bursts)]
+		base := m.burstBase(byte(next()))
+		alt := base + "/u.o"
+		full := func(op burstOp) string {
+			if op.inRoot {
+				return m.root + op.suffix
+			}
+			return base + op.suffix
+		}
+		for _, op := range b {
+			add(op.kind, full(op), alt)
+		}
+		if next()%3 == 0 {
+			pt := perturbations[next()%len(perturbations)]
+			name := full(b[len(b)-1])
+			if next()%3 == 0 {
+				// Aim at a directory the name goes through instead.
+				if q := parentOf(name); q != "" {
+					name = q
+				}
+			}
+			if pt.swap {
+				add(pt.kind, alt, name)
+			} else {
+				add(pt.kind, name, alt)
+			}
+		}
 	}
 	// Effects land in effect-time order.
 	order := make([]int, len(ops))
@@ -902,7 +1005,40 @@ func FuzzDifferential(f *testing.F) {
 	f.Add([]byte{1, 0, 2, 3, 4, 0, 5, 7, 0, 1, 2, 3})
 	f.Add([]byte{3, 5, 5, 5, 9, 2, 2, 2, 7, 6, 6, 6, 2, 1, 1, 1})
 	f.Add([]byte("mkdir symlink rename link unlink open stat chdir exec"))
-	f.Fuzz(func(t *testing.T, data []byte) {
+	f.Fuzz(runDifferential)
+}
+
+// TestDifferentialSeeded runs the differential oracle over pseudo-random
+// inputs, so the ordinary test run (and a mutation check of the classifier)
+// exercises it without the fuzzing engine.  The seeds are fixed: a failure
+// reproduces.
+func TestDifferentialSeeded(t *testing.T) {
+	n := 4000
+	if testing.Short() {
+		n = 400
+	}
+	if v, err := strconv.Atoi(os.Getenv("KILN_DIFF_SEEDS")); err == nil && v > 0 {
+		n = v // for mutation checks: a long deterministic run
+	}
+	for seed := 0; seed < n; seed++ {
+		r := rand.New(rand.NewSource(int64(seed)))
+		data := make([]byte, 40+r.Intn(260))
+		for i := range data {
+			data[i] = byte(r.Intn(256))
+		}
+		t.Run("", func(t *testing.T) {
+			defer func() {
+				if t.Failed() {
+					t.Logf("seed %d", seed)
+				}
+			}()
+			runDifferential(t, data)
+		})
+	}
+}
+
+func runDifferential(t *testing.T, data []byte) {
+	{
 		if len(data) < 4 {
 			return
 		}
@@ -926,7 +1062,7 @@ func FuzzDifferential(f *testing.F) {
 			return // a record with a reason is never trusted: always safe
 		}
 		check(t, m, tree, rec)
-	})
+	}
 }
 
 func inSet(set []string, v string) bool {

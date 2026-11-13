@@ -521,6 +521,51 @@ line, 64 MiB in total and 1,000,000 records, and every record counts
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
 is `size` or `arity`. A caller with a larger measured budget raises them.
 
+### 4.6 Wiring decisions (stage 3a)
+
+Stage 3a added `-exec-wrapper` and `-emit-results` to the old Go build tool
+(`code/programs/go/build-tool/`). These are the choices it made where §4.3
+left room; the code is authoritative.
+
+- **Argument syntax.** `-exec-wrapper` takes a JSON array of non-empty
+  strings with no NUL. An empty, invalid or trailing-data value is a usage
+  error. The step runs as `wrapper... sh -c <line>` (`wrapper... cmd /C
+  <line>` on Windows, with Go's standard argument quoting).
+- **Environment.** The wrapper receives `KILN_ACTION` (the package's
+  repo-relative path, forward slashes), `KILN_STEP` (0-based) and
+  `KILN_STEP_COUNT`. §4.3 named only the first two; the count lets the
+  wrapper report a missing step. Caller values of these three names are
+  replaced. They are for the wrapper: `kiln sandbox-exec` scrubs them before
+  the step runs.
+- **Mutual exclusion.** `-exec-wrapper` with `-clippy` or
+  `-prune-leaf-targets` exits 1 before any work.
+- **Results.** `status` is the executor's own status, unchanged: `built`,
+  `failed`, `skipped`, `dep-skipped`, `unsupported`, `dep-unsupported`,
+  `would-build`. `steps_run` counts steps started, so a failing step counts
+  as run and `steps_run < steps_total` marks a mid-package failure; a package
+  that never ran has `steps_run` 0 and its BUILD's step count as
+  `steps_total`. Packages are keyed by repo-relative path and sorted. The file
+  is written after the run, even when a package failed.
+- **Freshness.** `-emit-results` removes any existing file at its path
+  before doing any work, so early exits (no packages, hash failure, usage
+  errors after the check) leave no file. Consumers must require exit 0 **and**
+  a file written by this run.
+- **The wrapper program.** `wrapper[0]` is resolved at startup: a relative
+  path containing a separator is rejected, a bare name goes through
+  `exec.LookPath` and must resolve to an absolute path, and the absolute path
+  is what runs. A BUILD can therefore never supply the wrapper through the
+  package working directory. A wrapper that cannot start reports `failed` with
+  `steps_run` equal to the step's index (it never started).
+- **The line the wrapper sees.** The executor rewrites some lines
+  deterministically before running them (the Swift native build-system pin;
+  on Windows the inline-env rewrite), so the wrapper's `sh -c` argument can
+  differ from the BUILD text. The stage 3b recipe check must compare with the
+  line after those rewrites; `executor.EffectiveStepLines(pkg)` returns exactly
+  those lines. The rewrites depend only on the line and the build-tool source,
+  which is in the weak key.
+- **Output path.** A symlink or non-regular `-emit-results` path is refused
+  before the build starts (and again by the atomic writer).
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation
@@ -574,6 +619,8 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   Everything else gives `trace-incomplete:unstable-path`: an untracked
   leftover of an earlier action, a component created after the lookup began
   or twice, a renamed link. There is no "did not exist yet" exception.
+  Three narrow exceptions for the FINAL component of a successful open, stat
+  or exec, and for `$HOME` itself, are in §5.5 ("Relaxations").
 - A `..` after a component the walk could not enter (missing, or not a
   directory) cannot be placed. On a failed call, the call looked at that
   component, which is observed; on a successful call, the result is
@@ -582,6 +629,19 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   walk still runs to find the links on the way. If either path is in the
   repository and they disagree, the post-run disk no longer shows what the call
   saw: `unstable-path`.
+- **A followed call whose final name is absent on the post-run disk** was
+  removed afterwards, or was never there. If the call found something there (it
+  succeeded, or failed with an errno other than `ENOENT`/`ENOTDIR`), the action
+  must have made the name, the creation completing before the lookup started;
+  else `unstable-path`. And a removal of a name the action had not yet made
+  (an untracked leftover) that completed after the lookup started gives
+  `unstable-path` too: the lookup may have gone through a link there that the
+  disk no longer shows. The removal rule applies to **any** component at which
+  a walk stopped (a missing parent as in `stat("L/x")` followed by
+  `unlink(L)`), not only the final one. Only a clean creation (`mkdir`,
+  `symlink`, `O_CREAT|O_EXCL`) or an `O_CREAT` open keyed by a kernel path
+  counts as "the action made the name". A successful open whose `-y` path is the name is exempt
+  (§5.5(a)).
 - **A successful call whose walk stopped before its final component**, at a
   component the disk shows missing or not a directory, contradicts the disk:
   `unstable-path`. This holds with no change of the action's own.
@@ -850,8 +910,8 @@ tracked tree for a path the disk lost. The strict stability rule of §5.1
 replaces any use of "what the trace knew at the time": the disk must vouch for
 every traversed component. Simulating renames, hard links and concurrent
 lookups exactly is unbounded work and every gap is a false hit, so builds that
-churn temporary directories lose their records; the M2 reason histogram
-measures that cost. `/proc` and `/dev/fd` are never walked. `Config.Root` must
+churn temporary directories lose their records (the relaxations below recover
+the common cases); the M2 reason histogram measures what is left. `/proc` and `/dev/fd` are never walked. `Config.Root` must
 be a real path, and `prepare` checks that every prefix of it is a real
 directory on the disk. `openat2` with a non-zero `resolve=` is
 `trace-incomplete:resolve-flags`.
@@ -905,11 +965,48 @@ exit with 0 gives `failed`. After the init child's exit line, a process
 killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
-**Known cost.** The strict stability rule refuses common patterns: a
-compiler output that is created and then stat'ed, a temp file that is created,
-read and unlinked, and `stat($HOME)` when the checkout is under `$HOME`. Narrow
-relaxations ("opens settle the final name", "open-only change logs",
-"`$HOME` itself") are planned as a separate follow-up with their own review.
+**Relaxations.** The strict rule of §5.1 refuses several very common
+patterns: a compiler output that is created and then stat'ed, a temporary that
+is created, read and unlinked, and `stat($HOME)` when the checkout lies under
+`$HOME`. Three narrow relaxations admit them. Each applies only when its
+precondition provably holds; anything else stays on the strict rule.
+
+- **(a) Opens settle the final name.** For a **successful** open whose `-y`
+  path equals the walked path, the final component is neither noted as a
+  followed final nor as a missing stop. The kernel's own path proves that the
+  name was not a link at the moment of the open. Intermediate components, and
+  every link the walk crossed, keep the full rule. A `-y` path that differs
+  from the walked path, a failed open, and an open of `/proc/self/fd/N` settle
+  nothing.
+- **(b) Open-only change logs.** Take a followed final name of a **successful**
+  `stat` (or other metadata call that follows links) or `exec` whose post-run
+  disk state is a regular file. It is accepted when its **whole** change log
+  is `O_CREAT` opens keyed by their `-y` path (an `O_CREAT` open through a
+  link is logged at the link's target, so an entry at the name proves it was
+  no link; an `O_PATH` open is never an `O_CREAT` entry, since the kernel
+  ignores `O_CREAT` there, and an `O_NOFOLLOW` open does not prove the name was
+  not a link, so neither is one), optionally ended by exactly **one** `unlink`/`unlinkat` that
+  **started after the latest lookup of the name completed**; and
+  - the first open **completed before** the earliest such lookup **started**;
+  - the disk agrees with the log: the name is present if there was no unlink,
+    and absent if there was one (a name absent on the disk is then not a
+    "missing stop" of the lookup);
+  - the name was never a `link`/`linkat` source or destination.
+
+  Any other entry keeps the strict rule for that name: a `rename` (either end),
+  `RENAME_EXCHANGE`, `link`, `symlink`, `mkdir`, `mknod`, an `unlink` before
+  or overlapping a lookup, a second `unlink`, an `O_CREAT` open that is not
+  keyed by a kernel path, or a lookup that began before the first open
+  completed. The ancestors need no extra rule: every lookup went through them,
+  so each already had to be stable by §5.1 (a created directory needs exactly
+  one `mkdir` that completed before the first lookup). Other followed lookups
+  (`chmod`, a failed call, `chdir`) are not relaxed.
+- **(c) `$HOME` itself.** A stat or listing of the `Home` directory node is
+  allowed even when the checkout lies beneath it (hosted runners). It is the
+  sandbox's tmpfs mount point, the same node in every run. Listing it is
+  allowed too: it is the fresh tmpfs, whose contents are the same in every
+  run apart from the mounts the sandbox itself makes. Only the node: the
+  checkout's other ancestors and everything under `$HOME` stay `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
@@ -918,11 +1015,16 @@ of each call's interval; events are in completion order with `StartLine`),
 one or two steps, a randomised `Root` (also under `HOME`), `HOME` and `TMPDIR`,
 tracked files, pre-existing untracked leftovers (file, directory, link), host
 files, changing file contents, `RENAME_EXCHANGE`, `O_TRUNC` without `O_CREAT`,
-dirfd-relative lookups and listings. When the record has no reason, every path
+dirfd-relative lookups and listings. "Bursts" issue the patterns of the
+relaxations (a kept output, a temporary, an exclusive temporary, an exec of an
+output, a stat of `$HOME`) on one name, each operation with its own process and
+overlap, and may add a perturbation (rename onto the name, hard link, symlink,
+exchange, second unlink). When the record has no reason, every path
 the model really looked at must be the action's own or be covered by an entry,
 an untracked observation or a `list:` entry; every absence must be in
 `AbsentObservations`; and every write must lie under a write root. A mutation
-check (disabling the overlap logic) makes it fail.
+check makes it fail when the overlap logic is disabled, and likewise when any
+one precondition of a relaxation is dropped.
 
 ## 6. When nothing is recorded
 
@@ -1120,8 +1222,8 @@ left open above:
 `kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
 
 - the weak key, how many manifests it has, and the result: `hit`; `miss`,
-  with the first entry whose digest differs, for `kiln explain`; or
-  `no-manifest`;
+  with the manifests tried and each entry's state now, for `kiln explain`
+  (§9.1: the first differing entry is not computable); or `no-manifest`;
 - the static class and reasons of KILN03, which are now a **diagnostic
   upper bound**: the static closure is what the old graph claims P can
   read;
@@ -1129,6 +1231,91 @@ left open above:
 - every traced `pkg:` entry that is **not** in P's static closure. Each
   one is a dependency the old build tool does not know about, and so a bug
   in the old graph (stage 5).
+
+### 9.1 Lookup decisions (stage 5a)
+
+Stage 5a is `kiln legacy-plan --ledger <dir> --scope shared|local`. It is
+**report-only**: it skips nothing and changes no class. Without `--ledger`
+the plan is byte for byte what it was. The plan schema stays
+`kiln-legacy-plan/1`; everything below is an additive field, since nothing
+consumes the plan yet.
+
+- **Order.** For each package on a Linux plan (another OS gives
+  `untraced-os`): gate first, then the weak key, then the manifests, then
+  the strong keys, then one pass-ledger read for the whole plan.
+- **Gating comes before any key or ledger read** (§13 item 5, §11.1 item 13).
+  A package on the never list, with a KILN03 hard reason or precondition
+  (`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`,
+  `no-build-file:`), or with a `probe-mismatch`, `probe-timeout` or
+  `probe-refused` result when `--probe` ran, gets `ineligible:<reason>` and
+  no lookup, even if a hit is waiting. If several apply the reported one is
+  fixed: the never list, then the other hard reasons, then probes, each sorted
+  bytewise. A refused weak key (`host-unknown`) is `ineligible:<refusal>`.
+  A probe refusal gates but is **not** added to the record's `reasons`, so a
+  plan made without `--ledger` does not change.
+- **Results.** `hit` (with the manifest id and the pass record), `miss`,
+  `no-manifest`, `untraced-os` and `ineligible:<reason>`. At most K = 4
+  manifests are tried, newest first, and the tried list stops at the hit.
+  The histogram counts each class; reasons that embed a name are grouped by
+  prefix (`ineligible:never`), as for KILN03.
+- **A miss cannot name the differing entry.** Manifests store names and the
+  pass ledger stores only strong keys (§8), so what an entry's digest was
+  when the pass was recorded is unknowable at plan time. A miss therefore
+  lists, for each manifest tried, the strong key that was looked up and the
+  entries in stored order, each with its **state in this tree** (`present`,
+  `absent`, `directory`, `no-package`, `not-directory`; `unknown` if it could
+  not be digested). That describes today's tree. It is not a comparison and
+  the plan says so. This replaces §9's "the first entry whose digest
+  differs".
+- **Outside the static closure.** Per package with manifests, the traced
+  `pkg:` entries (of any retained manifest, tried or not) that are not in its
+  static closure are listed as `outside_static_closure`, and the histogram
+  counts the packages that have any. A `pkg:` entry for a path that is no
+  package is listed too: the trace read something the graph does not know.
+- **Memory (D11).** The manifest reader takes the set of weak keys the plan
+  computed and ignores every other record as it parses it, so the heap is
+  bounded by the plan's packages, not the store (`ManifestReport.Ignored`
+  counts them). `nil` keeps everything, which is what merge uses. Structure
+  and caps are still judged for ignored records. The verified `id` is
+  computed once when a record is retained and kept with it, not recomputed
+  per comparison.
+- **Unusable stores.** A manifest-store error makes every package that got a
+  weak key `ineligible:manifest-store-unusable`; a pass-ledger error makes
+  those with manifests `ineligible:pass-ledger-unusable`. The plan says which
+  in `lookup.errors`. Nothing is a hit.
+- **The recorder's identity is in the key.** `kiln:root` is the absolute
+  `--root` and `kiln:executor-args` is the repeatable `--executor-arg`
+  flags. A lookup that differs from the recorder in either gets
+  `no-manifest`, never a hit.
+- **Plan size.** Each tried manifest lists at most 256 entries
+  (`entries`), with `entry_count` and `entries_truncated`; the strong key and
+  `outside_static_closure` always use the full list. `kiln explain` shows only
+  what the plan holds and says when it was truncated.
+- **Scope and probes.** The plan's `lookup.scope` comes from the stores
+  themselves (both must have the same scope; `NewLookupOptions` opens them
+  together). `lookup.probes_ran` says whether `--probe` ran.
+- **Junk manifests.** A flood of forged or junk manifests can only fill the
+  four slots of a weak key and force misses; it cannot produce a hit, because
+  a hit needs a pass for the strong key (§8, Poisoning).
+- **Before any skip mode exists (M3 requirements from the review).** Skipping
+  requires: (a) the policy files (`never.json`, `pinned.json`,
+  `toolchains.json`, `env.json`, `host-roots.json`) read from the base
+  revision, enforced in code, not by convention; (b) `probes_ran == true`,
+  since without probes a `probe-mismatch` gate cannot fire; (c) an explicit
+  decision on whether `unpinned:<lang>` gates lookup. **This is open**: 5a
+  does not gate on it, and the keys carry pins only.
+- **Trust boundary (§3.3).** Lookup reads the policy files (`env.json`,
+  `host-roots.json`, `never.json`, `pinned.json`, `toolchains.json`) through
+  the existing loaders, from whatever tree it is given. That is acceptable
+  only because 5a reports. **Skipping (M3) must run the Kiln binary and read
+  the policy built from the base revision**, as §3.3 says; 5a does not
+  establish that and must not be wired to a skip.
+- **The tree must be vouched for.** `--ledger` is refused (exit 2, nothing
+  written) with `--source folder`, and the library refuses any `Source` that
+  is not a `source.Cleaner`: a plain folder cannot list untracked files, so a
+  build product could enter a digest and the result would describe a tree
+  nobody committed. The plain plan only warns, because its keys are not a
+  claim about the ledger.
 
 ## 10. What stays from KILN03
 
@@ -1396,6 +1583,9 @@ point, not a measurement.
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
    only and none of these (§11.1).
+6. skipping reads policy from the base revision, enforced in code before any
+   skip mode exists; it requires `probes_ran == true`; and the open question
+   of whether `unpinned:<lang>` gates is decided (§9.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this
