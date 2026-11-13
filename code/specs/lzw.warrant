@@ -1,0 +1,318 @@
+-- LZ01 -- LZW lossless compression (CMP03), the byte API of rust/lzw.
+--
+-- Warrant document for rust/lzw (VER04h; the third Warrant v1 adopter, after wasm-leb128 and
+-- logic-gates, and the first decompressor: a function whose input is hostile by definition).
+-- Every example and claim below is compiled into tests/generated/warrant_evidence.rs and
+-- executed against the real public exports of the `lzw` crate: `compress` and `decompress`.
+-- The prose contract, the findings and the reasons behind every limitation stated here are in
+-- LZ01-lzw-contract.md; the algorithm is CMP03-lzw.md.
+--
+-- The wire format, as the models and examples below assume it (written from CMP03; the
+-- known-answer vectors come from an independent implementation of the spec, never from the
+-- crate):
+--
+--     bytes 0..3   original_length, big-endian u32 (an UPPER BOUND on what is delivered)
+--     bytes 4..    codes, LSB-first, 9 bits growing to 16:  CLEAR(256) ... STOP(257)
+--
+-- What this document says, in three groups:
+--
+--   1. Round trip.  For every byte string d, decompress(compress(d)) == Ok(d).  The generated
+--      exhaustive suite enumerates the `Bytes` domain of the generator (the strings of length
+--      0..=3 and the constant fills of length 4..=8), the property suite draws 4,096 cases
+--      and the fuzz suite 5,000.  Run patterns (every byte value repeated 16 and 1,024 times, every
+--      byte pair repeated eight times), which exercise the tricky token, are enumerated
+--      separately.
+--
+--   2. Hostile input.  decompress never panics, always terminates, and rejects what is not a
+--      stream: every input of length 0..=3 (no 4-byte header), a missing CLEAR code at the
+--      start, an invalid first data code.  The exhaustive claims cover ALL 16,843,009 inputs
+--      of length <= 3 (1 + 256 + 65,536 + 16,777,216) and all 65,536 two-byte payloads
+--      behind a zero header.  The error is the single case CORRUPT: the Rust API returns a
+--      `String`, so the binding (evidence.bindings `errors=std::string/String=CORRUPT`) maps
+--      every Err to it and the message is not observed (LZ01 "Limitations").
+--
+--   3. Bounds.  The output of decompress is at most min(16 MiB, 32,768 * len(data)) bytes
+--      and the live heap of one call is bounded by a multiple of that (WX-H).  This is the
+--      group that found SEC-002.  The honest ratio for an LZW decoder is 32,768 (a 16-bit
+--      code can stand for a 65,279-byte string), so a ratio bound alone allows a 64 KB stream
+--      to deliver 2 GB.  Before the fix the document could be written but not satisfied: the
+--      stream built below (a real decompression bomb, 1,024 chained units, 285 KB, 31 MB of
+--      output) made `decompress` allocate past the observer's 64 MiB cap.  The fix is the
+--      absolute cap MAX_OUTPUT_LEN = 16 MiB in the crate (backlog SEC-002), and the bound row
+--      is `output <= imin(16777216, 32768 * len(data))`.
+--
+-- Not expressible here (Warrant v1 wave 3, evidence generator), recorded, not faked:
+--   * indexing a Bytes value (`at` is W0701), so the content of a stream is described by
+--     constructing it (concat of known pieces) rather than by inspecting it;
+--   * an error kind and message: Err(String) carries only "an error", so claims distinguish
+--     "accepted with this value" from "rejected" and nothing finer;
+--   * a decompression bomb larger than the evaluator budget: the bomb below is 285 KB built
+--     by doubling a 279-byte unit; the 2 GB bomb of the finding is in
+--     tests/decompression_cap.rs.
+warrant lzw v1
+  error LzwError = CORRUPT
+
+  -- ---- stream-building helpers ---------------------------------------------
+  -- One decompression-bomb unit: CLEAR, 'A' (65), then 246 "tricky token" codes 258..503, all
+  -- at 9 bits (279 bytes, byte aligned: 248 codes * 9 bits = 2,232 bits).  Decoded, the 'A'
+  -- is 1 byte and code 258 + i is a run of i + 2 'A's, so one unit delivers
+  -- 1 + (2 + 3 + ... + 247) = 30,628 bytes.  The next unit's CLEAR resets the dictionary and
+  -- the code width, so units can be concatenated freely: n units deliver 30,628 * n bytes.
+  -- (Built by an independent Python implementation of CMP03, not by the crate.)
+  model unit() -> Bytes = b"0083081c48b0a0c18308132a5cc8b0a1c38710234a9c48b1a2c58b18336adcc8b1a3c78f20438a1c49b2a4c9932853aa5cc9b2a5cb973063ca9c49b3a6cd9b3873eadcc9b3a7cf9f40830a1d4ab4a8d1a348932a5dcab4a9d3a750a34a9d4ab5aad5ab58b36addcab5abd7af60c38a1d4bb6acd9b368d3aa5dcbb6addbb770e3ca9d4bb7aeddbb78f3eaddcbb7afdfbf80030b1e4cb8b0e1c388132b5eccb8b1e3c790234b9e4cb9b2e5cb98336bdeccb9b3e7cfa0438b1e4dbab4e9d3a853ab5ecdbab5ebd7b063cb9e4dbbb6eddbb873ebdecdbbb7efdfc0830b1f4ebcb8f1e3c8932b5fcebcb9f3e7d0a34b9f4ebdbaf5ebd8b36bdfcebdbbf7efe0c38b1f4fbebcf9f3e8d3ab5fcfbebdfbf7f0e3cb9f4fbfbefdfb"
+  model units2() -> Bytes = concat(unit(), unit())
+  model units4() -> Bytes = concat(units2(), units2())
+  model units8() -> Bytes = concat(units4(), units4())
+  model units16() -> Bytes = concat(units8(), units8())
+  model units32() -> Bytes = concat(units16(), units16())
+  model units64() -> Bytes = concat(units32(), units32())
+  model units128() -> Bytes = concat(units64(), units64())
+  model units256() -> Bytes = concat(units128(), units128())
+  model units512() -> Bytes = concat(units256(), units256())
+  model units1024() -> Bytes = concat(units512(), units512())
+  -- STOP_CODE (257) at 9 bits, zero padded: 0x01 0x01.
+  model stop9() -> Bytes = b"0101"
+  -- A whole bomb stream with the declared length n: header, units, STOP.
+  model bomb512(n: U32) -> Bytes = concat(be_bytes(n), concat(units512(), stop9()))
+  model bomb1024(n: U32) -> Bytes = concat(be_bytes(n), concat(units1024(), stop9()))
+  -- The first code of a payload is its low 9 bits.
+  model starts_with_clear(w: U16) -> Bool = bit_and(w, 511u16) == 256u16
+  -- A payload of CLEAR (256) followed by the data code 258 + k, both at 9 bits: 18 bits,
+  -- little-endian in a U32 (the top 14 bits are padding).
+  model clear_then(k: U8) -> Bytes = le_bytes(bit_or(256u32, shl(widen<U32>(k) + 258u32, 9)))
+  -- Every byte pair repeated: 16 bytes of w w w w w w w w (big-endian pair).
+  model pair2(w: U16) -> Bytes = concat(be_bytes(w), be_bytes(w))
+  model pair4(w: U16) -> Bytes = concat(pair2(w), pair2(w))
+  model pair8(w: U16) -> Bytes = concat(pair4(w), pair4(w))
+  -- The first min(h, 7) bytes of "AAAAAAA" (0x41 seven times).
+  model a_prefix(h: U32) -> Bytes = if h == 0u32 then b"" else (if h == 1u32 then b"41" else (if h == 2u32 then b"4141" else (if h == 3u32 then b"414141" else (if h == 4u32 then b"41414141" else (if h == 5u32 then b"4141414141" else (if h == 6u32 then b"414141414141" else b"41414141414141"))))))
+  -- What compress writes for one byte x: the header 00 00 00 01, then CLEAR (256), x and STOP
+  -- (257), each at 9 bits, packed LSB first.  27 bits, so the code stream is the 4 bytes of the
+  -- little-endian integer 256 + x * 2^9 + 257 * 2^18 (the top 5 bits are zero padding).
+  model stream1(x: U8) -> Bytes = concat(b"00000001", le_bytes(bit_or(bit_or(256u32, shl(widen<U32>(x), 9)), shl(257u32, 18))))
+  -- And for two bytes x y: CLEAR, x, y, STOP is 36 bits, 5 bytes.  (No string can repeat yet,
+  -- so a pair is always two literal codes, equal bytes or not: the dictionary entry "xy" is
+  -- added only after x is emitted.)
+  model bits2(x: U8, y: U8) -> U64 = bit_or(bit_or(256u64, shl(widen<U64>(x), 9)), bit_or(shl(widen<U64>(y), 18), shl(257u64, 27)))
+  model stream2(x: U8, y: U8) -> Bytes = concat(b"00000002", concat(le_bytes(wrap<U32>(bits2(x, y))), be_bytes(wrap<U8>(shr(bits2(x, y), 32)))))
+  -- A run: the byte x repeated 2, 4, ... 1,024 times.  (Runs make the encoder emit the
+  -- "tricky token" the decoder must resolve before it has built the entry.)
+  model rep2(x: U8) -> Bytes = concat(be_bytes(x), be_bytes(x))
+  model rep4(x: U8) -> Bytes = concat(rep2(x), rep2(x))
+  model rep8(x: U8) -> Bytes = concat(rep4(x), rep4(x))
+  model rep16(x: U8) -> Bytes = concat(rep8(x), rep8(x))
+  model rep64(x: U8) -> Bytes = concat(concat(rep16(x), rep16(x)), concat(rep16(x), rep16(x)))
+  model rep256(x: U8) -> Bytes = concat(concat(rep64(x), rep64(x)), concat(rep64(x), rep64(x)))
+  model rep1024(x: U8) -> Bytes = concat(concat(rep256(x), rep256(x)), concat(rep256(x), rep256(x)))
+
+  op compress(data: Bytes) -> Bytes
+  op decompress(data: Bytes) -> Result<Bytes, LzwError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Nothing here is secret: LZW compresses and decompresses public data, and no operand
+  -- is labelled secret, so there is no constant-time obligation (CWE-208 is not applicable).
+  labels compress:
+    data public
+  labels decompress:
+    data public
+
+  input compress.data:
+    hostile
+    ensures no_panic, terminates
+  -- Every stream starts with a 4-byte header, so anything shorter is rejected.
+  input decompress.data:
+    hostile
+    rejects len(data) < 4 with LzwError.CORRUPT
+    ensures no_panic, terminates
+
+  -- Declared bounds (WX-H).  `output` and `heap` are checked live: every instance of both
+  -- operations runs under the generated harness's allocation observer (cap 64 MiB per call),
+  -- so a bomb is a failed instance, not an out-of-memory kill.  `steps` and `depth` are
+  -- declarations: no step-bound prover run backs them (the proof manifest records them
+  -- not-live).
+  --
+  -- compress: one code of at most 16 bits per input byte, plus a CLEAR per 65,278 codes, the
+  -- 4-byte header, STOP and padding: well under 3 * len + 16 bytes.  Heap is the output (a Vec
+  -- may hold twice its length), the harness's copy of it, the harness's copy of the input and
+  -- the 65,536-entry dictionary (a hash table of 4-byte keys, about 1.2 MB, 1.8 MB while it
+  -- resizes): 12 * len + 4 MiB covers them with room.
+  bound compress:
+    output <= 3 * len(data) + 16
+    steps <= 64 * len(data) + 4096
+    heap <= 12 * len(data) + 4194304
+    depth <= 8
+  -- decompress: a code of c bits stands for at most 65,279 bytes, and a code is at least 9
+  -- bits, but a long string needs a long chain, hence a wide code; the largest ratio is a
+  -- 16-bit code for a 65,279-byte string, about 32,640 bytes per input byte, so 32,768 is a
+  -- sound ratio.  Alone it allows 2 GB from 64 KB, which is why the crate also caps the
+  -- delivered output at 16 MiB.  Heap: the output (twice its length at worst, as a Vec
+  -- grows), the harness's copy of it, the input copy and the 8-byte-per-entry dictionary
+  -- (at most 512 KiB, 768 KiB while it grows).
+  bound decompress:
+    output <= imin(16777216, 32768 * len(data))
+    steps <= 8 * imin(16777216, 32768 * len(data)) + 64 * len(data) + 4096
+    heap <= 4 * imin(16777216, 32768 * len(data)) + 4 * len(data) + 2097152
+    depth <= 8
+
+  -- ---- known values (independent implementation of CMP03) --------------------
+  -- Vector 1, empty input: CLEAR, STOP.
+  example compress_empty:
+    compress(b"") == b"00000000000302"
+  -- Vector 2, one byte: CLEAR, 65, STOP.
+  example compress_one_byte:
+    compress(b"41") == b"0000000100830404"
+  -- Vector 3, two distinct bytes: CLEAR, 65, 66, STOP (258 = "AB" is added, never emitted).
+  example compress_two_distinct_bytes:
+    compress(b"4142") == b"000000020083080908"
+  -- Vector 4, "ABABAB": CLEAR, 65, 66, 258, 258, STOP.
+  example compress_ababab:
+    compress(b"414241424142") == b"0000000600830811283020"
+  -- Vector 5, "AAAAAAA": CLEAR, 65, 258, 259, 65, STOP.  The decoder meets the tricky token.
+  example compress_seven_a:
+    compress(b"41414141414141") == b"000000070083081c182420"
+  -- The classic "TOBEORNOTTOBEORTOBEORNOT" (24 bytes).
+  example compress_tobeornot:
+    compress(b"544f42454f524e4f54544f42454f52544f42454f524e4f54") == b"0000001800a93c1152e48914274fa80824687061c183090302"
+
+  -- 512 bytes: every byte value twice.  The first 256 are 256 literal codes (the dictionary
+  -- grows, no string repeats), the second pass emits the pair codes built by the first, and
+  -- the code width grows from 9 to 10 bits when next_code passes 512.
+  example compress_every_byte_value_twice:
+    compress(b"000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff") == b"0000020000010410308040010307102450b0804103070f204490308142050b173064d0b08143070f1f40841031824409132750a450b182450b172f60c4903183460d1b3770e4d0b183470f1f3f800411328448112347902451b2844913274fa0449132854a152b57b064d1b2854b172f5fc0841133864c193367d0a451b3864d1b376fe0c49133874e1d3b77f0e4d1b3874f1f3f7f000512348850214387102552b4885123478f204592348952254b973065d2b48953274f9f408512358a542953a750a552b58a552b57af60c592358b562d5bb770e5d2b58b572f5fbf800513368c583163c7902553b68c593367cfa04593368d5a356bd7b065d3b68d5b376fdfc08513378e5c3973e7d0a553b78e5d3b77efe0c593378f5e3d7bf7f0e5d3b78f5f3f7fff084490410829c4904310494491451869c49147208944924928a9c4924b30c944934d38e9c4934f40094594514829c5945350494595555869c59557608945965968a9c5965b70c945975d78e9c5975f80094698618829c6986390494699659869c69967a089469a69a8a9c69a6bb0c9469b6db8e9c69b6fc009479c71c829c79c73d049479d75d869c79d77e089479e79e8a9c79e7bf0c9479f7df8e9c79f7f000604"
+
+  example decompress_empty_stream:
+    decompress(b"00000000000302") == Ok(b"")
+  example decompress_one_byte:
+    decompress(b"0000000100830404") == Ok(b"41")
+  example decompress_ababab:
+    decompress(b"0000000600830811283020") == Ok(b"414241424142")
+  example decompress_seven_a_tricky_token:
+    decompress(b"000000070083081c182420") == Ok(b"41414141414141")
+  example decompress_tobeornot:
+    decompress(b"0000001800a93c1152e48914274fa80824687061c183090302") == Ok(b"544f42454f524e4f54544f42454f52544f42454f524e4f54")
+  -- A CLEAR in the middle of the stream resets the dictionary and the code width:
+  -- CLEAR, 'A', CLEAR, 'A', STOP with declared length 2.
+  example decompress_mid_stream_clear:
+    decompress(b"000000020083000c1210") == Ok(b"4141")
+
+  -- Rejections.
+  example decompress_empty_input:
+    decompress(b"") == Err(LzwError.CORRUPT)
+  example decompress_three_bytes_no_header:
+    decompress(b"000000") == Err(LzwError.CORRUPT)
+  example decompress_header_only:
+    decompress(b"00000000") == Err(LzwError.CORRUPT)
+  example decompress_first_code_is_not_clear:
+    decompress(b"00000001ff0000") == Err(LzwError.CORRUPT)
+  -- CLEAR, then code 259 while the dictionary holds 258 entries: neither known nor the
+  -- next entry to be built.
+  example decompress_invalid_code:
+    decompress(b"0000000100070200") == Err(LzwError.CORRUPT)
+
+  -- ---- the declared length is an upper bound, never an allocation size (SEC-001) ----
+  -- A 4 GiB declaration on a small, valid stream delivers the small stream.
+  example a_huge_declared_length_on_a_small_stream:
+    decompress(b"ffffffff00830404") == Ok(b"41")
+  -- A short declaration stops the decoder early, mid-entry: 5 of the 7 A's.
+  example a_short_declared_length_cuts_the_output:
+    decompress(b"000000050083081c182420") == Ok(b"4141414141")
+  example a_zero_declared_length_delivers_nothing:
+    decompress(b"000000000083081c182420") == Ok(b"")
+
+  -- ---- decompression bombs (SEC-002, CWE-409) ---------------------------------
+  -- Real streams built from the unit above.  512 units are 142,848 bytes and deliver
+  -- 15,681,536 bytes, just under the 16 MiB cap, so they must still decode; 1,024 units are
+  -- 285,696 bytes and would deliver 31,363,072 bytes, so they must be rejected, whatever
+  -- length the header declares.
+  example bomb_512_units_is_under_the_cap_and_decodes:
+    match decompress(bomb512(4294967295u32)) with Ok(r) -> len(r) == 15681536 | Err(e) -> false
+  example bomb_1024_units_is_rejected:
+    decompress(bomb1024(4294967295u32)) == Err(LzwError.CORRUPT)
+  example bomb_1024_units_declaring_one_byte_over_the_cap_is_rejected:
+    decompress(bomb1024(16777217u32)) == Err(LzwError.CORRUPT)
+  example bomb_1024_units_declaring_one_gibibyte_is_rejected:
+    decompress(bomb1024(1073741824u32)) == Err(LzwError.CORRUPT)
+  -- Only delivered bytes count: declaring exactly the cap stops the same stream at the cap
+  -- (31 MB expanded, 16 MiB delivered), which is allowed.
+  example bomb_1024_units_declaring_exactly_the_cap_delivers_the_cap:
+    match decompress(bomb1024(16777216u32)) with Ok(r) -> len(r) == 16777216 | Err(e) -> false
+  -- A small declaration stops a bomb at once: 1,024 of its 31 million bytes.
+  example bomb_1024_units_declaring_1024_bytes_delivers_them:
+    decompress(bomb1024(1024u32)) == Ok(rep1024(65u8))
+
+  -- ---- claims -----------------------------------------------------------------
+  -- Order inside each group is deliberate: a negative control stops at the first claim that
+  -- catches its fault, so the cheap model-pinned claims come first and the large exhaustive
+  -- enumerations last.
+
+  -- compress: never shorter than header + CLEAR + STOP (4 + 3 bytes), and the exact wire image of
+  -- one- and two-byte inputs (a byte of a Bytes value cannot be inspected, so a claim cannot
+  -- say "the first four bytes are the length"; the model builds the whole expected stream).
+  claim compress_is_at_least_seven_bytes:
+    forall d: Bytes. len(compress(d)) >= 7
+  -- The whole wire image of every one-byte and every two-byte input (256 + 65,536 cases):
+  -- the length header, the CLEAR and STOP codes, the 9-bit LSB-first packing and the
+  -- padding.  This is the claim that pins the header: the decoder treats the declared
+  -- length as an upper bound, so a corrupted header does not change a round trip.
+  claim compress_one_byte_matches_the_model:
+    forall x: U8. compress(be_bytes(x)) == stream1(x)
+  claim compress_two_bytes_match_the_model:
+    forall x: U8, y: U8. compress(concat(be_bytes(x), be_bytes(y))) == stream2(x, y)
+
+  -- The round trip.
+  claim round_trip:
+    forall d: Bytes. decompress(compress(d)) == Ok(d)
+  claim round_trip_of_short_runs:
+    forall x: U8. decompress(compress(rep16(x))) == Ok(rep16(x))
+  claim round_trip_of_long_runs:
+    forall x: U8. decompress(compress(rep1024(x))) == Ok(rep1024(x))
+  claim round_trip_of_repeated_byte_pairs:
+    forall w: U16. decompress(compress(pair8(w))) == Ok(pair8(w))
+  claim round_trip_after_a_prefix:
+    forall p: Bytes, d: Bytes. decompress(compress(concat(p, d))) == Ok(concat(p, d))
+
+  -- The declared length is an upper bound on what is delivered, whatever the stream: the
+  -- code stream of "AAAAAAA" (CLEAR, 65, 258, 259, 65, STOP) behind every header.  The
+  -- expected value is the first min(h, 7) bytes.
+  claim declared_length_cuts_the_output:
+    forall h: U32. decompress(concat(be_bytes(h), b"0083081c182420")) == Ok(a_prefix(h))
+  -- And a 4 GiB declaration is not an allocation size: any header from 0xFF000000 up, on a
+  -- valid stream, delivers the stream.
+  claim a_huge_declared_length_is_harmless:
+    forall h: U16. decompress(concat(be_bytes(bit_or(4278190080u32, widen<U32>(h))), b"0083081c182420")) == Ok(b"41414141414141")
+
+  -- Hostile input: every input of length <= 3 has no header.
+  claim decompress_empty_input_rejected:
+    forall o: Nat. decompress(b"") == Err(LzwError.CORRUPT)
+  claim decompress_one_byte_rejected:
+    forall x: U8. decompress(be_bytes(x)) == Err(LzwError.CORRUPT)
+  claim decompress_header_only_rejected:
+    forall n: U32. decompress(be_bytes(n)) == Err(LzwError.CORRUPT)
+  claim decompress_one_payload_byte_rejected:
+    forall n: U32, x: U8. decompress(concat(be_bytes(n), be_bytes(x))) == Err(LzwError.CORRUPT)
+  -- A two-byte payload holds one 9-bit code and 7 bits: CLEAR is accepted and then the stream
+  -- ends (documented leniency: a stream that ends early is not an error, LZ01 "Limitations");
+  -- anything else is rejected.
+  claim decompress_two_byte_payload_model:
+    forall n: U32, w: U16. decompress(concat(be_bytes(n), le_bytes(w))) == (if starts_with_clear(w) then Ok(b"") else Err(LzwError.CORRUPT))
+  claim decompress_missing_clear_rejected:
+    forall n: U32, w: U16 | not starts_with_clear(w). decompress(concat(be_bytes(n), concat(le_bytes(w), b"0083081c182420"))) == Err(LzwError.CORRUPT)
+  -- After CLEAR the dictionary has 258 entries, so a first data code of 258 (the tricky
+  -- token with no previous string) or above is invalid.
+  claim decompress_invalid_first_code_rejected:
+    forall n: U32, k: U8. decompress(concat(be_bytes(bit_or(n, 1u32)), clear_then(bit_and(k, 127u8)))) == Err(LzwError.CORRUPT)
+  claim decompress_invalid_first_code_every_value:
+    forall k: U8. decompress(concat(be_bytes(1u32), clear_then(bit_and(k, 127u8)))) == Err(LzwError.CORRUPT)
+
+  -- The big exhaustive enumerations: all 65,536 two-byte payloads behind a zero header, and
+  -- every input of length 2 and 3 (no header).
+  claim decompress_zero_header_two_byte_payload_model:
+    forall w: U16. decompress(concat(be_bytes(0u32), le_bytes(w))) == (if starts_with_clear(w) then Ok(b"") else Err(LzwError.CORRUPT))
+  claim decompress_two_bytes_rejected:
+    forall w: U16. decompress(be_bytes(w)) == Err(LzwError.CORRUPT)
+  claim decompress_three_bytes_rejected:
+    forall w: U16, x: U8. decompress(concat(be_bytes(w), be_bytes(x))) == Err(LzwError.CORRUPT)
