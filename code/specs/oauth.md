@@ -1874,6 +1874,26 @@ certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Concrete HTTPS and
 live-provider readiness remain unavailable.
+A stronger reviewed-anchor DNS-policy follow-up consumes only the Name-policy-
+backed target-signature closure with the same separate caller-owned decoder
+limits. It derives the exact target, already-validated SAN extension index,
+reviewed anchor, and optional reviewed-anchor constraint bytes only through
+that stronger retained evidence, then applies the identical supported
+permitted-DNS evaluator as the generic follow-up. Success retains the exact
+Name-value policy, reviewed trust-root selection, certificate-wide anchor-role
+policy, construction-derived path-length state, complete ordered intermediate
+and target-signature evidence, complete target policy, and any payload-free
+constrained-name count in one non-copyable result. A generic target-signature
+closure cannot produce this stronger policy result. This preserves stronger
+policy provenance through the supported reviewed-anchor DNS subset only; it
+does not define complete RFC 5280 Name equality, apply excluded or non-DNS
+anchor constraints or every intermediate constraint, validate a complete
+path, check time, hostname, or revocation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. The pure public-certificate-data
+composition performs no credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded ordered-intermediate name-policy follow-up now consumes that exact
 reviewed-anchor policy result together with separate caller-owned limits for
 each intermediate NameConstraints decoder and each target Subject Alternative
