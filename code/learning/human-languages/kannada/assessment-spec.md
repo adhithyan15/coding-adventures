@@ -105,10 +105,13 @@ Sources checked 2026-11-04:
 
 The A1 inventory still marks `KA-A1-POST-02` and `KA-A1-POST-03` uncovered,
 but its claim that no spatial relator occurs in the corpus is stale. The
-curriculum membership and extension files put chapter 100's **ಹತ್ತಿರ**
+curriculum extension files declare **pre-A1** for chapter 100's **ಹತ್ತಿರ**
 (*hattira*, near), chapter 107's **ಮೇಲೆ** (*mēle*, above/on top), and chapter
-108's **ಕೆಳಗೆ** (*keḷage*, below) at **pre-A1**. Their current word lessons
-introduce and retrieve the isolated expressions, not a scored frame locating
+108's **ಕೆಳಗೆ** (*keḷage*, below). That declaration is not the book filter:
+`lessonsUpToLevel` derives the effective level from the owning spine node.
+Chapter 100 is pre-A1 by that measure, while chapters 107 and 108 belong to
+the A1 `SPINE-ASK-LOCATION` node. Their current word lessons introduce and
+retrieve the isolated expressions, not a scored frame locating
 one named thing relative to another. Chapter 103's A1 origin bridge already
 teaches **-ಇಂದ** (*-inda*, from); do not duplicate it. The first step is to
 reconcile the stale inventory note against these exact owners, not to award

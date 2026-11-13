@@ -117,6 +117,35 @@ describe("the committed Kannada A1 inventory", () => {
     }
   });
 
+  it("distinguishes mapped A1 spatial words from the untaught relational frame", () => {
+    // Issue #19319 audits the actual spine-derived book level. The extension
+    // stage is pre-A1 for all three words, but the spine places two at A1.
+    // A chapter number or isolated word is not an assessed composition.
+    const lessons = loadTrackLessons("kannada");
+    const curriculum = loadTrackLanguageCurriculum("kannada");
+    expect(curriculum).toBeDefined();
+    const throughPreA1 = new Set(
+      lessonsUpToLevel(lessons, [curriculum!], loadCurriculumSpine(), "pre-A1")
+        .map((lesson) => lesson.realization.lessonId),
+    );
+    expect(throughPreA1.has("KA-C100-near")).toBe(true);
+    for (const id of ["KA-C107-mele", "KA-C108-kelage"]) {
+      expect(throughPreA1.has(id), `${id} is unexpectedly pre-A1`).toBe(false);
+    }
+    const throughA1 = new Set(
+      lessonsUpToLevel(lessons, [curriculum!], loadCurriculumSpine(), "A1")
+        .map((lesson) => lesson.realization.lessonId),
+    );
+    for (const id of ["KA-C100-near", "KA-C107-mele", "KA-C108-kelage"]) {
+      expect(throughA1.has(id), `${id} is missing from A1`).toBe(true);
+    }
+    const spatial = inventory.points.find((point) => point.id === "KA-A1-POST-02");
+    expect(spatial?.probe).toBeNull();
+    expect(spatial?.note).toMatch(/hattira/);
+    expect(spatial?.note).toMatch(/isolated|word/);
+    expect(spatial?.note).not.toMatch(/Not one spatial relator/);
+  });
+
   it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
     // The 2026-11-04 source audit found that the old inventory notes were stale:
     // uuru, nagara, deesha and raajya already have direct owners. The missing

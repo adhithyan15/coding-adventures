@@ -1469,7 +1469,7 @@
         "A1-NG3-02",
         "A1-NG3-03"
       ],
-      "note": "Untaught, entirely. Not one spatial relator -- mele, kelage, olage, hattira -- is in the corpus, so nothing can be located relative to anything else."
+      "note": "Uncovered as a relational composition, not absent as vocabulary. The A1 edition already teaches isolated hattira (near), mele (above/on top) and kelage (below): chapter 100 is pre-A1 by its spine node, and chapters 107-108 are A1 under SPINE-ASK-LOCATION. Their word drills do not yet assess a named object located relative to a named reference place. The wider near/far/on/under/inside set remains incomplete, so probe stays null."
     },
     {
       "id": "KA-A1-POST-03",
