@@ -609,6 +609,29 @@ mod linux {
             .join(format!("{leaf}-{}", std::process::id()))
     }
 
+    /// STUB (test-first commit): the old behaviour, so the new tests can fail
+    /// for the right reason. Replaced by the exclusive creation in the fix.
+    fn create_private_dir(path: &Path) -> std::io::Result<()> {
+        std::fs::create_dir_all(path)
+    }
+
+    /// STUB (test-first commit): a guard that does not yet clean up.
+    struct ScratchDir {
+        path: PathBuf,
+    }
+
+    impl ScratchDir {
+        fn new(config: &GateConfig, leaf: &str) -> std::io::Result<ScratchDir> {
+            let path = private_dir(config, leaf);
+            create_private_dir(&path)?;
+            Ok(ScratchDir { path })
+        }
+
+        fn path(&self) -> &Path {
+            &self.path
+        }
+    }
+
     fn random_nonce(tag: &str) -> String {
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
@@ -1493,6 +1516,79 @@ mod linux {
             assert!(evidence.contains("\"overall\": \"fail\""), "{evidence}");
             assert!(evidence.contains("RCG006"), "{evidence}");
             let _ = std::fs::remove_dir_all(dir);
+        }
+
+        // ---- private working directories (symlink safety, cleanup) ----
+
+        #[test]
+        fn private_dir_refuses_a_preplanted_symlink_and_never_writes_through_it() {
+            let base = scratch("symlink");
+            std::fs::create_dir_all(&base).unwrap();
+            let victim = base.join("victim");
+            std::fs::create_dir_all(&victim).unwrap();
+            let link = base.join("rcg-scratch-planted");
+            std::os::unix::fs::symlink(&victim, &link).unwrap();
+            assert!(create_private_dir(&link).is_err(), "followed a symlink");
+            std::fs::write(victim.join("sentinel"), b"x").unwrap();
+            assert!(std::fs::symlink_metadata(&link).unwrap().file_type().is_symlink());
+            let entries: Vec<_> = std::fs::read_dir(&victim).unwrap().collect();
+            assert_eq!(entries.len(), 1, "something was created through the link");
+            let _ = std::fs::remove_dir_all(base);
+        }
+
+        #[test]
+        fn private_dir_refuses_an_existing_file_and_an_existing_directory() {
+            let base = scratch("existing");
+            std::fs::create_dir_all(&base).unwrap();
+            let file = base.join("a-file");
+            std::fs::write(&file, b"keep").unwrap();
+            assert!(create_private_dir(&file).is_err());
+            assert_eq!(std::fs::read(&file).unwrap(), b"keep");
+            let dir = base.join("a-dir");
+            std::fs::create_dir(&dir).unwrap();
+            assert!(create_private_dir(&dir).is_err(), "reused a directory");
+            let _ = std::fs::remove_dir_all(base);
+        }
+
+        #[test]
+        fn private_dir_is_mode_0700() {
+            use std::os::unix::fs::PermissionsExt;
+            let base = scratch("mode");
+            let path = base.join("fresh");
+            create_private_dir(&path).unwrap();
+            let mode = std::fs::metadata(&path).unwrap().permissions().mode() & 0o777;
+            assert_eq!(mode, 0o700, "mode {mode:o}");
+            let _ = std::fs::remove_dir_all(base);
+        }
+
+        #[test]
+        fn private_dir_names_are_unpredictable_but_carry_the_pid() {
+            let config = pure_config(scratch("names"), "{}");
+            let a = private_dir(&config, "rcg-scratch");
+            let b = private_dir(&config, "rcg-scratch");
+            assert_ne!(a, b, "the name must not be predictable from the pid alone");
+            let pid = std::process::id().to_string();
+            assert!(a.file_name().unwrap().to_string_lossy().contains(&pid));
+        }
+
+        #[test]
+        fn scratch_guard_removes_the_directory_on_drop_and_on_panic() {
+            let config = pure_config(scratch("guard"), "{}");
+            let guard = ScratchDir::new(&config, "rcg-scratch").unwrap();
+            let path = guard.path().to_path_buf();
+            std::fs::write(path.join("trace-x.txt"), b"x").unwrap();
+            drop(guard);
+            assert!(!path.exists(), "drop left {}", path.display());
+
+            let guard = ScratchDir::new(&config, "rcg-scratch").unwrap();
+            let path = guard.path().to_path_buf();
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
+                let _guard = guard;
+                panic!("simulated panic in the gate");
+            }));
+            assert!(result.is_err());
+            assert!(!path.exists(), "unwinding left {}", path.display());
+            let _ = std::fs::remove_dir_all(config.evidence_dir.unwrap());
         }
     }
 }

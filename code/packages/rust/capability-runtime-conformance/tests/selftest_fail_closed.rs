@@ -84,6 +84,50 @@ fn write_shim(dir: &std::path::Path, real: &std::path::Path, trace_main: bool) {
     }
 }
 
+/// Every scratch or container directory a gate left under `dir`.
+fn leftovers(dir: &std::path::Path) -> Vec<String> {
+    std::fs::read_dir(dir)
+        .map(|entries| {
+            entries
+                .filter_map(|e| e.ok())
+                .map(|e| e.file_name().to_string_lossy().into_owned())
+                .filter(|n| n.starts_with("rcg-scratch") || n.starts_with("rcg-container"))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+/// Early NOT-LIVE returns happen AFTER the scratch directory exists. Each one
+/// used to leave `rcg-scratch-<pid>` behind. `kind` picks the return path:
+/// no strace on PATH at all, or a strace whose start-up probe fails.
+fn cleanup_after_early_return(exe: &std::path::Path, kind: &str) {
+    let dir = out_dir(kind).join("shim");
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = if kind == "cleanup-no-strace" {
+        // An empty directory: `which("strace")` finds nothing.
+        std::env::join_paths([dir.clone()]).unwrap()
+    } else {
+        std::fs::write(dir.join("strace"), "#!/bin/sh\nexit 1\n").unwrap();
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            std::fs::set_permissions(dir.join("strace"), std::fs::Permissions::from_mode(0o755))
+                .unwrap();
+        }
+        std::env::join_paths([dir.clone()]).unwrap()
+    };
+    let out = Command::new(exe)
+        .env("PATH", path)
+        .env("RCG_SELFTEST_ROLE", kind)
+        .env_remove("RCG_STRICT")
+        .output()
+        .unwrap();
+    let text = String::from_utf8_lossy(&out.stdout);
+    assert!(text.contains("NOT-LIVE"), "{kind}: expected NOT-LIVE:\n{text}");
+    let left = leftovers(&out_dir(kind));
+    assert!(left.is_empty(), "{kind}: gate left {left:?} behind:\n{text}");
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if let Some(tag) = std::env::var_os("RCG_SELFTEST_ROLE") {
@@ -95,11 +139,14 @@ fn main() {
     if !cfg!(target_os = "linux") {
         return;
     }
+    let exe = std::env::current_exe().unwrap();
+    // These two need no real strace: they ARE the "strace is unusable" case.
+    cleanup_after_early_return(&exe, "cleanup-no-strace");
+    cleanup_after_early_return(&exe, "cleanup-probe-fails");
     let Some(real) = find_strace() else {
         println!("no strace here: gate is NOT-LIVE, nothing to prove");
         return;
     };
-    let exe = std::env::current_exe().unwrap();
     for (tag, trace_main) in [("no-trace-at-all", false), ("controls-only", true)] {
         let shim_dir = out_dir(tag).join("shim");
         write_shim(&shim_dir, &real, trace_main);
