@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind a separate fully routed authenticated OCSP proof to the exact delegated
+  responder, target-nearest intermediate, and original observation time
+  retained by the strongest Name-policy path bridge.
+- Reuse the existing stable target-issuer-time validator, retain both complete
+  non-copyable proofs, and stop before further revocation, complete path
+  validation, TLS, HTTP, OAuth, or network readiness.
 - Apply exact RFC 6960 no-check policy to the delegated responder retained by
   the strongest Name-policy path/fully routed OCSP bridge after both responder
   DNS-policy gates.
