@@ -9,6 +9,11 @@
 //! selection. The target and issuer must be the same exact decoded certificate
 //! objects in both inputs.
 //! Byte-equal independent decodes are rejected.
+//! The fully routed proof can also bind to the strongest supported Name-policy-
+//! backed arbitrary-depth path after target, intermediate, subordinate-CA, and
+//! reviewed-anchor Name-constraint processing. That bridge retains both
+//! complete inputs plus exact-observation target and target-nearest issuer
+//! validity without authorizing the responder path or completing revocation.
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
@@ -58,7 +63,10 @@ use x509_ocsp_authenticated_target_revocation::{
     AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation,
     AuthenticatedX509OcspRsaSha256TargetRevocation, AuthenticatedX509OcspRsaTargetRevocation,
 };
-use x509_rsa_constructed_path_signature_routing::ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy;
+use x509_rsa_constructed_path_signature_routing::{
+    ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy,
+    ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy,
+};
 use x509_rsa_sha256_reviewed_server_link::ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy;
 use x509_subject_alt_name::{
     decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
@@ -710,6 +718,71 @@ pub struct BoundX509OcspRoutedIssuerReviewedServerRevocation<
     issuer_validity_at_observation: ValidatedCertificateValidity,
 }
 
+/// Fully routed OCSP status bound to the strongest supported Name-policy path.
+///
+/// The concrete producer accepts only a fully routed authenticated OCSP target-
+/// revocation proof and the complete Name-policy-backed arbitrary-depth path
+/// after supported target, intermediate, subordinate-CA, and reviewed-anchor
+/// Name constraints. It requires exact target and target-nearest issuer object
+/// identity, then validates both path certificates at the retained OCSP
+/// observation time.
+///
+/// This non-copyable wrapper does not fetch status, authorize the delegated
+/// responder path, establish status for every non-root certificate, complete
+/// Name or path validation, or grant TLS, HTTP, OAuth, or network authority.
+pub struct BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+    Revocation,
+    StrongNamePolicyPath,
+> {
+    authenticated_revocation: Revocation,
+    strong_name_policy_path: StrongNamePolicyPath,
+    target_validity_at_observation: ValidatedCertificateValidity,
+    issuer_validity_at_observation: ValidatedCertificateValidity,
+}
+
+impl<Revocation, StrongNamePolicyPath>
+    BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        Revocation,
+        StrongNamePolicyPath,
+    >
+{
+    /// Return the consumed fully routed authenticated target-revocation proof.
+    #[must_use]
+    pub const fn authenticated_revocation(&self) -> &Revocation {
+        &self.authenticated_revocation
+    }
+
+    /// Return the consumed strongest supported Name-policy path proof.
+    #[must_use]
+    pub const fn strong_name_policy_path(&self) -> &StrongNamePolicyPath {
+        &self.strong_name_policy_path
+    }
+
+    /// Return target-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn target_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.target_validity_at_observation
+    }
+
+    /// Return issuer-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn issuer_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.issuer_validity_at_observation
+    }
+}
+
+impl<Revocation, StrongNamePolicyPath> fmt::Debug
+    for BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        Revocation,
+        StrongNamePolicyPath,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation")
+    }
+}
+
 impl<
         'binding,
         'basic_response,
@@ -1274,6 +1347,148 @@ pub fn bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path<
         target_validity_at_observation,
         issuer_validity_at_observation,
     })
+}
+
+/// Bind fully routed OCSP status to the strongest supported Name-policy path.
+///
+/// Failure order is stable: target identity, issuer identity, target validity,
+/// then issuer validity. The target comes only from the retained complete
+/// server policy, while the target-nearest issuer comes only from the retained
+/// depth-zero routed signature. Independently decoded byte-equal certificates
+/// cannot cross this boundary. Success retains both complete non-copyable
+/// inputs and exact-time validity evidence without external effects.
+///
+/// This does not fetch status, authorize or reify responder-path policy,
+/// establish status for every non-root certificate, complete Name or path
+/// validation, perform TLS or HTTP, authorize OAuth transport, or grant network
+/// authority.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    authenticated_revocation: AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'revocation_target,
+        'revocation_target_encoded,
+        'revocation_issuer,
+        'revocation_issuer_encoded,
+    >,
+    strong_name_policy_path:
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+) -> Result<
+    BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'revocation_target,
+            'revocation_target_encoded,
+            'revocation_issuer,
+            'revocation_issuer_encoded,
+        >,
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    >,
+    X509OcspReviewedServerRevocationBindingError,
+>{
+    let target_signature = authenticated_revocation.target_issuer_signature();
+    let revocation_target = target_signature.child_algorithm_policy().certificate();
+    let target_closure = strong_name_policy_path
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure();
+    let path_target = target_closure.server_policy().certificate();
+    if !std::ptr::eq(revocation_target, path_target) {
+        return Err(X509OcspReviewedServerRevocationBindingError::target_mismatch());
+    }
+
+    let revocation_issuer = target_signature.issuer_rsa_algorithm_policy().certificate();
+    let path_issuer = target_closure
+        .target_signature()
+        .signature()
+        .issuer_rsa_algorithm_policy()
+        .certificate();
+    if !std::ptr::eq(revocation_issuer, path_issuer) {
+        return Err(X509OcspReviewedServerRevocationBindingError::issuer_mismatch());
+    }
+
+    let observation_time = authenticated_revocation.revocation().observation_time();
+    let (target_validity_at_observation, issuer_validity_at_observation) =
+        retain_path_validity_at_observation(
+            validate_certificate_validity_at(path_target, &observation_time)
+                .map_err(|error| error.kind()),
+            || {
+                validate_certificate_validity_at(path_issuer, &observation_time)
+                    .map_err(|error| error.kind())
+            },
+        )?;
+
+    Ok(
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation {
+            authenticated_revocation,
+            strong_name_policy_path,
+            target_validity_at_observation,
+            issuer_validity_at_observation,
+        },
+    )
 }
 
 /// Non-copyable evidence extending one reviewed revocation proof to its responder.

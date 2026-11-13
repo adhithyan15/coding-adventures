@@ -57,6 +57,29 @@ non-copyable result preserves both complete inputs and fresh exact-observation
 validity for the same exact target and intermediate objects. It does not enter
 routed responder-path policy.
 
+The stronger
+`bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path`
+boundary consumes the same fully routed authenticated OCSP proof together with
+`ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy`.
+That path retains its exact validated Name-value policy, reviewed root and
+certificate-wide root role, arbitrary-depth routed signatures, complete
+intermediate and server policy, construction-derived path-length state, and
+the supported target and subordinate Name-constraint evaluations. The binder
+derives the target only from retained complete server policy and derives its
+target-nearest issuer only from the retained depth-zero routed signature. It
+then applies the same stable target-identity, issuer-identity, target-validity,
+and issuer-validity checks at the OCSP observation time. Success retains both
+complete non-copyable inputs and the two exact-time validity tokens.
+
+This stronger bridge performs no credential access or editing, signing,
+storage, clock acquisition, provider action, audit or trace emission, I/O,
+network access, or other external effect. It does not fetch status, authorize
+or reify the delegated responder path, apply responder DNS or no-check policy,
+establish status for every non-root certificate, complete Name or path
+validation, validate the anchor self-signature, provide TLS or HTTP, authorize
+OAuth transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind fully routed authenticated OCSP target status to the strongest supported
+  Name-policy-backed arbitrary-depth reviewed-server path by exact target and
+  target-nearest issuer object identity.
+- Retain both complete non-copyable inputs and exact-observation target/issuer
+  validity while stopping before responder authorization, complete revocation,
+  complete Name/path validation, TLS, HTTP, OAuth, or network readiness.
 - Complete revocation policy for the exact default-source recursive fixed path
   after every non-root certificate is covered by authenticated good-and-fresh
   status or exact RFC 6960 no-check policy.
