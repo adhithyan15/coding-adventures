@@ -5,7 +5,9 @@ import (
 	"encoding/binary"
 	"io/fs"
 	"math/rand"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -1000,6 +1002,9 @@ func TestDifferentialSeeded(t *testing.T) {
 	n := 4000
 	if testing.Short() {
 		n = 400
+	}
+	if v, err := strconv.Atoi(os.Getenv("KILN_DIFF_SEEDS")); err == nil && v > 0 {
+		n = v // for mutation checks: a long deterministic run
 	}
 	for seed := 0; seed < n; seed++ {
 		r := rand.New(rand.NewSource(int64(seed)))
