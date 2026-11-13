@@ -236,3 +236,26 @@ func wantEmitted(t *testing.T, r Result, actions ...string) {
 		t.Fatalf("emitted %v, want %v (run void: %v; outcomes %+v)", got, sl(actions...), r.RunVoid, r.Outcomes)
 	}
 }
+
+// relaxedOK: the run is not void in the relaxed (report-only) verdict, where
+// truncated executions and order dependence cost only their action.
+func (r Result) relaxedOK() bool { return r.RelaxedRunVoidCount == 0 }
+
+func (r Result) relaxedActions() []string {
+	var out []string
+	for _, o := range r.Outcomes {
+		if o.RelaxedEmittable {
+			out = append(out, o.Action)
+		}
+	}
+	return out
+}
+
+// wantRelaxed checks the exact set of actions the relaxed verdict would emit.
+func wantRelaxed(t *testing.T, r Result, actions ...string) {
+	t.Helper()
+	got := r.relaxedActions()
+	if strings.Join(got, ",") != strings.Join(sl(actions...), ",") {
+		t.Fatalf("relaxed-emittable %v, want %v (relaxed void: %v; outcomes %+v)", got, sl(actions...), r.RelaxedRunVoid, r.Outcomes)
+	}
+}

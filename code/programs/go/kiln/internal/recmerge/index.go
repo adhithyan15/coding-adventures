@@ -50,14 +50,33 @@ func anc(p, q string) bool {
 // overlap is anc in either direction.
 func overlap(p, q string) bool { return anc(p, q) || anc(q, p) }
 
+// meter is the global work budget (KILN04 7.1, L-3).  Every node an overlap
+// walk visits, and every list element a rule looks at, spends from one shared
+// counter.  Once it is exhausted every walk stops at its next step and the
+// merge reports run-void "size", so a crafted record (1,500 nested probes
+// over 60,000 writes) costs a bounded amount of time.  A nil meter is
+// unlimited, for tests of the index alone.
+type meter struct{ spent, max int64 }
+
+func (m *meter) spend(n int64) bool {
+	if m == nil {
+		return true
+	}
+	m.spent += n
+	return m.spent <= m.max
+}
+
+func (m *meter) over() bool { return m != nil && m.spent > m.max }
+
 // pathIndex maps a path to the ids of the actions that hold it.
 type pathIndex struct {
 	owners map[string][]int
 	sorted []string
 	built  bool
+	mt     *meter
 }
 
-func newPathIndex() *pathIndex { return &pathIndex{owners: map[string][]int{}} }
+func newPathIndex(mt *meter) *pathIndex { return &pathIndex{owners: map[string][]int{}, mt: mt} }
 
 // add records that action id holds p.  Ids must be added action by action (all
 // of one id's paths before the next id's), which keeps each owner list sorted
@@ -94,9 +113,17 @@ func (x *pathIndex) ancestors(q string, fn walk) bool {
 		if q[i] != '/' {
 			continue
 		}
+		// A probe hashes the prefix, so its cost is its LENGTH, not 1: a long
+		// path probed at every level is quadratic in its length.
+		if !x.mt.spend(int64(1 + i/32)) {
+			return false
+		}
 		if o, ok := x.owners[q[:i]]; ok && !fn(q[:i], o) {
 			return false
 		}
+	}
+	if !x.mt.spend(int64(1 + len(q)/32)) {
+		return false
 	}
 	if o, ok := x.owners[q]; ok && !fn(q, o) {
 		return false
@@ -110,7 +137,7 @@ func (x *pathIndex) descendants(q string, strict bool, fn walk) bool {
 	x.freeze()
 	if q == "." {
 		for _, p := range x.sorted {
-			if !fn(p, x.owners[p]) {
+			if !x.mt.spend(1) || !fn(p, x.owners[p]) {
 				return false
 			}
 		}
@@ -123,7 +150,7 @@ func (x *pathIndex) descendants(q string, strict bool, fn walk) bool {
 	}
 	prefix := q + "/"
 	for i := sort.SearchStrings(x.sorted, prefix); i < len(x.sorted) && strings.HasPrefix(x.sorted[i], prefix); i++ {
-		if !fn(x.sorted[i], x.owners[x.sorted[i]]) {
+		if !x.mt.spend(1) || !fn(x.sorted[i], x.owners[x.sorted[i]]) {
 			return false
 		}
 	}
@@ -152,8 +179,8 @@ func anyOther(owners []int, self int) bool {
 // tainted set).
 type pathSet struct{ x *pathIndex }
 
-func newPathSet(paths []string) pathSet {
-	x := newPathIndex()
+func newPathSet(paths []string, mt *meter) pathSet {
+	x := newPathIndex(mt)
 	for _, p := range paths {
 		x.add(p, 0)
 	}

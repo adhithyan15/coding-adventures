@@ -4,22 +4,29 @@ package recmerge
 //
 // FuzzMerge builds a random but BINDING-VALID world from the fuzzer's bytes
 // (so every B check passes and only the rules M1-M15 decide), runs Merge, and
-// compares the emitted set with an independent oracle.
+// compares both verdicts with an independent oracle: the STRICT one (what
+// becomes a manifest) and the RELAXED, report-only one.
 //
 // "Independent" is the point.  The oracle shares nothing with the merge:
 //
 //   - paths are compared as SEGMENT LISTS, not as strings with a "/" check;
-//   - there is no index: every rule is a plain nested loop over every
-//     record, O(n squared) and proud of it;
-//   - it is written from the rule table of KILN04 section 7.1, not from
-//     merge.go.
+//   - there is no index and no work budget: every rule is a plain nested
+//     loop over every record, O(n squared) and proud of it;
+//   - it is written from the rule table of KILN04 section 7.1.
 //
-// The stated invariant it checks is the plan's: if action a is emitted then no
-// path in any of a's observation lists overlaps another action's write, the
-// pre-BUILD inventory, or the tainted set, and the run has no unknown write
-// set.  The oracle goes further and demands the SAME emitted set, so a rule
-// that is too strict (a lost pass) fails the fuzz target as surely as one that
-// is too lax (a false hit).
+// On top of the equality it states, in its own words, the invariants that make
+// the strict verdict sound.  If ANY action is emitted then:
+//
+//	I1  no action in the run was truncated (status other than built, steps_run
+//	    below steps_total, a daemon-left reason): its missing steps could have
+//	    written anything (M-1);
+//	I2  no action in the run is order-dependent: none observed a path, listing
+//	    or tracked file that another action wrote or changed, so every
+//	    recorded write set is the write set in any order (M-3);
+//	I3  no shard reports tracked changes that no record explains (M-2) or
+//	    writes no trace explains (M3), and no write set is otherwise unknown;
+//	I4  the emitted action itself has no observation overlapping another
+//	    action's write, the inventory or the tainted set.
 //
 // A short seed corpus runs in plain `go test`; `go test -fuzz FuzzMerge
 // ./internal/recmerge` explores further.
@@ -35,7 +42,7 @@ import (
 var vocab = []string{".gitignore", "a", "a/b", "a/b/c", "a/bc", "ab", "b", "b/c", "c/d", "c/d/e",
 	"code/kiln/x", "pkg/a/BUILD", "pkg/b"}
 
-var reasonVocab = []string{"daemon:x", "network:y", "trace-incomplete:size", "host-read:z"}
+var reasonVocab = []string{"daemon-left", "daemon:x", "network:y", "trace-incomplete:size", "host-read:z"}
 var bindVocab = []string{"stream/1.1.1.1:1", "stream/1.1.1.1:2", "dgram/1.1.1.1:1"}
 
 type bits struct {
@@ -51,6 +58,9 @@ func (b *bits) next() bool {
 	}
 	return b.data[i]>>(uint(b.pos-1)%8)&1 == 1
 }
+
+// rare is true about one time in eight.
+func (b *bits) rare() bool { return b.next() && b.next() && b.next() }
 
 func (b *bits) subset(from []string, sparse bool) []string {
 	var out []string
@@ -72,7 +82,17 @@ func genWorld(t *testing.T, data []byte) *world {
 	b := &bits{data: data}
 	allowUntracked := b.next()
 	w.honour = b.next()
-	for si, sh := range w.shards {
+	// A refusal is per action (the merge's keys must refuse it too).
+	for _, a := range []string{"pkg/a", "pkg/b", "pkg/c", "pkg/d"} {
+		if b.rare() {
+			if w.keys.refuse == nil {
+				w.keys.refuse = map[string]string{}
+			}
+			w.keys.refuse[a] = "host-unknown"
+			w.all(a, func(r *recfmt.ShardRecord) { r.Weak, r.Refusal = "", "host-unknown" })
+		}
+	}
+	for _, sh := range w.shards {
 		if b.next() {
 			sh.Inventory.Paths = b.subset(vocab[1:10], true)
 		}
@@ -80,6 +100,9 @@ func genWorld(t *testing.T, data []byte) *world {
 			if b.next() && b.next() {
 				sh.Header.Void = sl(append(sh.Header.Void, tok)...)
 			}
+		}
+		if b.rare() {
+			sh.Header.TrackedChangedUnexplained = 1
 		}
 		for i := range sh.Records {
 			r := &sh.Records[i]
@@ -108,17 +131,34 @@ func genWorld(t *testing.T, data []byte) *world {
 				}
 			}
 			rr.Entries = sl(ents...)
-			if b.next() && b.next() && b.next() {
+			if b.rare() {
 				r.Status = "failed"
 			}
-			if b.next() && b.next() && b.next() {
+			if b.rare() {
+				r.Gate = "submodule"
+			}
+			if b.rare() {
 				r.Unknown = "tracer:status"
+			}
+			// Steps: how many ran, how many exist, which were clean.
+			r.StepsRun, r.StepsTotal = 1, 1
+			if b.rare() {
+				r.StepsRun = 0
+			}
+			if b.rare() {
+				r.StepsTotal = 2
+			}
+			r.Steps = make([]recfmt.Step, r.StepsRun)
+			for k := range r.Steps {
+				r.Steps[k].Clean = !b.rare()
+			}
+			if b.rare() && r.Status == recfmt.StatusBuilt {
+				r.StepsSHA = dGraph // not the regenerated recipe: B6
 			}
 			if b.next() && b.next() {
 				y := b.next()
 				r.Complete = &y
 			}
-			_ = si
 		}
 	}
 	return w
@@ -155,32 +195,39 @@ type orec struct {
 	r     *recfmt.ShardRecord
 }
 
-// oracle returns whether the run is void and the set of emitted actions.
-func oracle(w *world) (bool, map[string]bool) {
+type verdict struct {
+	strictVoid, relaxedVoid bool
+	strict, relaxed         map[string]bool
+	truncated, order        map[string]bool
+}
+
+// oracle decides both verdicts.
+func oracle(w *world) verdict {
 	var recs []orec
 	for i, s := range w.shards {
 		for k := range s.Records {
 			recs = append(recs, orec{i, &s.Records[k]})
 		}
 	}
-	void := false
+	v := verdict{strict: map[string]bool{}, relaxed: map[string]bool{}, truncated: map[string]bool{}, order: map[string]bool{}}
+	hard := false
 	shardVoid := map[int]bool{}
 	for i, s := range w.shards {
-		if s.Header.PostInventoryUnexplained > 0 {
-			void = true
+		if s.Header.PostInventoryUnexplained > 0 || s.Header.TrackedChangedUnexplained > 0 {
+			hard = true
 		}
 		for _, tok := range s.Header.Void {
 			switch tok {
 			case "tracked-changed", "state-preloaded":
 				shardVoid[i] = true
 			default:
-				void = true
+				hard = true
 			}
 		}
 	}
-	hasTI := func(r *recfmt.ShardRecord) bool {
+	has := func(r *recfmt.ShardRecord, prefix string) bool {
 		for _, x := range r.Record.Reasons {
-			if strings.HasPrefix(x, "trace-incomplete") {
+			if strings.HasPrefix(x, prefix) {
 				return true
 			}
 		}
@@ -188,11 +235,19 @@ func oracle(w *world) (bool, map[string]bool) {
 	}
 	for _, c := range recs {
 		r := c.r
+		unclean := false
+		for _, st := range r.Steps {
+			unclean = unclean || !st.Clean
+		}
 		switch {
-		case r.Unknown != "", r.StepsRun < r.StepsTotal, r.Complete != nil && !*r.Complete:
-			void = true
-		case hasTI(r) && (!w.honour || r.Complete == nil):
-			void = true
+		case r.Unknown != "", r.Complete != nil && !*r.Complete, unclean,
+			r.Status == recfmt.StatusBuilt && r.StepsSHA != w.steps[r.Action], has(r, "trace-incomplete:recipe-mismatch"):
+			hard = true
+		case has(r, "trace-incomplete") && (!w.honour || r.Complete == nil):
+			hard = true
+		}
+		if r.Status != recfmt.StatusBuilt || r.StepsRun < r.StepsTotal || has(r, "daemon-left") {
+			v.truncated[r.Action] = true
 		}
 	}
 	// M2.
@@ -211,7 +266,7 @@ func oracle(w *world) (bool, map[string]bool) {
 				}
 			}
 			if !explained {
-				void = true
+				hard = true
 			}
 		}
 	}
@@ -236,32 +291,32 @@ func oracle(w *world) (bool, map[string]bool) {
 	daemonAction := map[string]bool{}
 	for _, c := range recs {
 		for _, x := range c.r.Record.Reasons {
-			if strings.HasPrefix(x, "daemon:") || x == "daemon" {
+			if strings.HasPrefix(x, "daemon:") || x == "daemon" || x == "daemon-left" {
 				daemonAction[c.r.Action] = true
 			}
 		}
 	}
-	emitted := map[string]bool{}
+	own := map[string]bool{}
 	for a := range writes {
-		hit := false
+		dep := false // order dependence: M5-M14
 		for _, c := range recs {
 			if c.r.Action != a {
 				continue
 			}
 			r := c.r
-			if len(r.Record.Reasons) > 0 || r.Status != recfmt.StatusBuilt {
-				hit = true
+			if len(r.Record.Reasons) > 0 || r.Status != recfmt.StatusBuilt || r.Gate != "" || r.Refusal != "" {
+				own[a] = true
 			}
 			inv := w.shards[c.shard].Inventory.Paths
 			seen := append(append([]string{}, r.Record.UntrackedObservations...), r.Record.AbsentObservations...)
 			for _, u := range seen {
 				for b, ws := range writes {
 					for _, wr := range ws {
-						hit = hit || (b != a && isOv(u, wr))
+						dep = dep || (b != a && isOv(u, wr))
 					}
 				}
 				for _, i := range inv {
-					hit = hit || isOv(u, i)
+					dep = dep || isOv(u, i)
 				}
 			}
 			for _, tr := range r.Record.Traversed {
@@ -270,11 +325,11 @@ func oracle(w *world) (bool, map[string]bool) {
 						continue
 					}
 					for _, wr := range append(append([]string{}, writes[b]...), tracked[b]...) {
-						hit = hit || isAnc(wr, tr)
+						dep = dep || isAnc(wr, tr)
 					}
 				}
 				for _, i := range inv {
-					hit = hit || isAnc(i, tr)
+					dep = dep || isAnc(i, tr)
 				}
 			}
 			for _, e := range r.Record.Entries {
@@ -283,16 +338,16 @@ func oracle(w *world) (bool, map[string]bool) {
 					d := e[5:]
 					for b, ws := range writes {
 						for _, wr := range ws {
-							hit = hit || (b != a && wr != d && isAnc(d, wr))
+							dep = dep || (b != a && isOv(d, wr))
 						}
 					}
 					for _, tn := range tainted {
-						hit = hit || isAnc(d, tn)
+						dep = dep || isOv(d, tn)
 					}
 				default:
 					p := e[strings.IndexByte(e, ':')+1:]
 					for _, tn := range tainted {
-						hit = hit || isOv(p, tn)
+						dep = dep || isOv(p, tn)
 					}
 				}
 			}
@@ -300,12 +355,12 @@ func oracle(w *world) (bool, map[string]bool) {
 		for _, w1 := range writes[a] {
 			for b, ws := range writes {
 				for _, w2 := range ws {
-					hit = hit || (b != a && isOv(w1, w2))
+					dep = dep || (b != a && isOv(w1, w2))
 				}
 			}
 		}
 		for _, tn := range tainted {
-			hit = hit || isOv(a, tn) || tn == ".gitignore" || strings.HasSuffix(tn, "/.gitignore") ||
+			dep = dep || isOv(a, tn) || tn == ".gitignore" || strings.HasSuffix(tn, "/.gitignore") ||
 				isOv("code/programs/go/build-tool", tn) || isOv("code/kiln", tn)
 		}
 		// M13 is per ACTION: a daemon reported by any copy makes the action a
@@ -316,81 +371,102 @@ func oracle(w *world) (bool, map[string]bool) {
 			}
 			for _, u := range c.r.Record.UntrackedObservations {
 				for _, wr := range writes[a] {
-					hit = hit || isOv(u, wr)
+					dep = dep || isOv(u, wr)
 				}
 			}
-			hit = hit || len(binds[a]) > 0
+			dep = dep || len(binds[a]) > 0
 		}
 		for b, bs := range binds {
 			for _, x := range bs {
 				for _, y := range binds[a] {
-					hit = hit || (b != a && x == y)
+					dep = dep || (b != a && x == y)
 				}
 			}
 		}
-		s, ok := assigned[a]
-		emitted[a] = !void && ok && !shardVoid[s] && !hit
+		if dep {
+			v.order[a] = true
+		}
 	}
-	return void, emitted
+	for a := range v.truncated {
+		_ = a
+	}
+	v.relaxedVoid = hard
+	v.strictVoid = hard || len(v.order) > 0 || len(v.truncated) > 0
+	for a := range writes {
+		s, ok := assigned[a]
+		base := ok && !shardVoid[s] && !own[a] && !v.order[a]
+		v.strict[a] = !v.strictVoid && base
+		v.relaxed[a] = !v.relaxedVoid && base && !v.truncated[a]
+	}
+	return v
 }
 
 // check runs the merge and the oracle on a world and compares them.
 func check(t *testing.T, w *world) {
 	t.Helper()
 	r := w.merge()
-	void, want := oracle(w)
-	if r.Emitted == void {
-		t.Fatalf("run void: merge says %v (%v), oracle says %v", !r.Emitted, r.RunVoid, void)
+	v := oracle(w)
+	if r.Emitted == v.strictVoid {
+		t.Fatalf("strict run void: merge says %v (%v), oracle says %v", !r.Emitted, r.RunVoid, v.strictVoid)
 	}
-	got := map[string]bool{}
+	if r.relaxedOK() == v.relaxedVoid {
+		t.Fatalf("relaxed run void: merge says %v (%v), oracle says %v", !r.relaxedOK(), r.RelaxedRunVoid, v.relaxedVoid)
+	}
+	n := 0
 	for _, o := range r.Outcomes {
+		if o.Emitted != v.strict[o.Action] {
+			t.Fatalf("action %s: merge emitted=%v, oracle says %v\nresult %+v", o.Action, o.Emitted, v.strict[o.Action], r.Outcomes)
+		}
+		if o.RelaxedEmittable != v.relaxed[o.Action] {
+			t.Fatalf("action %s: merge relaxed=%v, oracle says %v\nresult %+v", o.Action, o.RelaxedEmittable, v.relaxed[o.Action], r.Outcomes)
+		}
 		if o.Emitted {
-			got[o.Action] = true
+			n++
 		}
 	}
-	for a, e := range want {
-		if e != got[a] {
-			t.Fatalf("action %s: merge emitted=%v, oracle says %v\nresult %+v", a, got[a], e, r.Outcomes)
-		}
+	// The relaxed verdict never produces output: manifests and passes are the
+	// strict emissions, exactly.
+	if len(r.Manifests) != n || len(r.Passes) != n {
+		t.Fatalf("%d manifests for %d strict emissions", len(r.Manifests), n)
 	}
-	// The stated invariant, directly: an emitted action has no unknown write
-	// set anywhere and no observation overlapping a write, the inventory or
-	// the tainted set.  (The equality above implies it; this keeps the
-	// sentence of the plan under test in its own words.)
-	for a := range got {
-		if void {
-			t.Fatalf("%s emitted in a void run", a)
+	// The invariants I1-I4, directly.
+	if n > 0 {
+		if r.RunVoidCount != 0 || len(v.truncated) != 0 || len(v.order) != 0 {
+			t.Fatalf("something was emitted in a run with truncated or order-dependent actions: %v %v", v.truncated, v.order)
 		}
-		for _, c := range func() []orec {
-			var o []orec
+		for _, s := range w.shards {
+			if s.Header.TrackedChangedUnexplained != 0 || s.Header.PostInventoryUnexplained != 0 {
+				t.Fatal("something was emitted although a shard has unexplained changes")
+			}
+		}
+		for _, o := range r.Outcomes {
+			if !o.Emitted {
+				continue
+			}
 			for i, s := range w.shards {
 				for k := range s.Records {
-					if s.Records[k].Action == a {
-						o = append(o, orec{i, &s.Records[k]})
-					}
-				}
-			}
-			return o
-		}() {
-			obs := append(append([]string{}, c.r.Record.UntrackedObservations...), c.r.Record.AbsentObservations...)
-			for _, o := range w.shards {
-				for k := range o.Records {
-					if o.Records[k].Action == a {
+					if s.Records[k].Action != o.Action {
 						continue
 					}
+					obs := append(append([]string{}, s.Records[k].Record.UntrackedObservations...), s.Records[k].Record.AbsentObservations...)
 					for _, u := range obs {
-						for _, wr := range o.Records[k].Record.Writes {
-							if isOv(u, wr) {
-								t.Fatalf("emitted %s observes %s, written by %s", a, u, o.Records[k].Action)
+						for _, other := range w.shards {
+							for j := range other.Records {
+								if other.Records[j].Action == o.Action {
+									continue
+								}
+								for _, wr := range other.Records[j].Record.Writes {
+									if isOv(u, wr) {
+										t.Fatalf("emitted %s observes %s, written by %s", o.Action, u, other.Records[j].Action)
+									}
+								}
 							}
 						}
-					}
-				}
-			}
-			for _, u := range obs {
-				for _, i := range w.shards[c.shard].Inventory.Paths {
-					if isOv(u, i) {
-						t.Fatalf("emitted %s observes %s, which pre-existed", a, u)
+						for _, p := range w.shards[i].Inventory.Paths {
+							if isOv(u, p) {
+								t.Fatalf("emitted %s observes %s, which pre-existed", o.Action, u)
+							}
+						}
 					}
 				}
 			}
@@ -417,6 +493,7 @@ func FuzzMerge(f *testing.F) {
 		[]byte("\x01\x00\x80\x40\x20\x10\x08\x04\x02\x01\x80\x40\x20\x10\x08\x04\x02\x01"),
 		{0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55, 0xaa, 0x55},
 		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff},
+		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	} {
 		f.Add(seed)
 	}
@@ -431,7 +508,7 @@ func FuzzMerge(f *testing.F) {
 // The path index against a brute-force scan, over every pair from the vocabulary.
 func TestIndexAgainstBruteForce(t *testing.T) {
 	paths := append(append([]string{}, vocab...), "a/b/c/d", "a/b/d", "c", "c/d/e/f")
-	x := newPathIndex()
+	x := newPathIndex(nil)
 	for i, p := range paths {
 		x.add(p, i)
 		x.add(p, i) // a repeated add of the same id is a no-op
@@ -480,7 +557,7 @@ func TestIndexAgainstBruteForce(t *testing.T) {
 		}
 	}
 	// A pathSet answers the same questions without owners.
-	s := newPathSet([]string{"a", "a/b", "c"})
+	s := newPathSet([]string{"a", "a/b", "c"}, nil)
 	var got []string
 	s.overlapping("a/b/x", func(p string) bool { got = append(got, p); return true })
 	s.under("a", func(p string) bool { got = append(got, "u:"+p); return true })

@@ -14,6 +14,7 @@ import (
 	"io"
 	"reflect"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
@@ -38,6 +39,15 @@ var DefaultLimits = Limits{MaxLine: 256 << 20, MaxFile: 2 << 30}
 //     nothing");
 //   - a slice may not be null, for the same reason.
 func decodeStrict(data []byte, v any) error {
+	// One canonical spelling: valid UTF-8 (the decoder would turn a bad byte
+	// into U+FFFD and the merge would then see a path the shard never wrote),
+	// and no whitespace before or after the value (BOM, CR, padding).
+	if !utf8.Valid(data) {
+		return fmt.Errorf("not valid UTF-8")
+	}
+	if n := len(data); n > 0 && (data[0] <= ' ' || data[n-1] <= ' ') {
+		return fmt.Errorf("leading or trailing whitespace")
+	}
 	if err := legacy.PolicyDecode(data, v); err != nil {
 		return err
 	}
@@ -65,6 +75,9 @@ func requireKeys(raw []byte, t reflect.Type) error {
 				name = f.Name
 			}
 			val, ok := members[name]
+			if ok && string(bytes.TrimSpace(val)) == "null" && strings.Contains(opts, "omitempty") {
+				return fmt.Errorf("%s: null is not a value (leave the key out)", name)
+			}
 			if !ok {
 				if strings.Contains(opts, "omitempty") {
 					continue

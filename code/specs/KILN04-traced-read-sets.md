@@ -1161,9 +1161,57 @@ shard record line and a switch of `Merge`
 `trace-incomplete` reason is unknown; with it on, a record that says
 `writes_complete: true` loses only its own manifest, while one that omits
 the field is still unknown. The classifier does not emit the field yet
-(stage 4, PR 4). A record whose `steps_run` is below `steps_total` is
-unknown whatever its status: the steps that never ran wrote an unknown
-amount, and the untraced build on `main` runs them.
+(stage 4, PR 4). The read-side reasons that `writes_complete: true` may
+excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
+read-only `unstable-path`, and so on). **A recipe mismatch is never
+excused**: when the steps that ran are not the steps the weak key's recipe
+covers (B6, or the classifier's `trace-incomplete:recipe-mismatch`), the
+trace says nothing about what the recipe writes. A step whose tracer did
+not finish cleanly (`clean: false`) is likewise unknown, and a record must
+carry exactly one step summary per step that ran (`len(steps) ==
+steps_run`).
+
+**Truncated executions (M-1).** A copy that did not run to completion has
+an unknown write set: `status` other than `built` (a failed action stopped
+part way even when every step ran, and the untraced build on `main`, which
+does not fail here, would have run further), `steps_run` below
+`steps_total`, or a `daemon-left` reason (a survivor may still write).
+This is run-void.
+
+**Unexplained tracked changes (M-2).** The shard's post-build backstop
+counts the tracked paths that changed and that no record's `tracked_writes`
+covers, as the header field `tracked_changed_unexplained` (a required key).
+A non-zero count is a write no trace saw: run-void, like
+`post_inventory_unexplained`. A `tracked-changed` void token whose changes
+are all explained is only the shard-level void (M4).
+
+**Second-order order dependence (M-3).** An action whose own record
+depended on another action's recorded writes (any `reads-product` or
+`unstable-path` reason derived by M5 to M14, or one already in its record)
+would write something else if the order changed, so its recorded write set
+is one of several possible. Every cross-action rule quantifies over write
+sets, so one such action makes every other action's check unreliable. The
+strict verdict therefore treats it as an unknown write set: **run-void**.
+That closes the class for emission. It is expected to zero the yield of
+the first runs; any relaxation of it needs a lookup-time rule first (the M3
+spec: an action that would have been order-dependent in the lookup job must
+run), and that is the second-order item of §14.
+
+**The relaxed verdict (report only).** `Merge` also computes, for the M2
+report, what would be emitted if the M-1 and M-3 classes cost only their
+action instead of the run (`Outcome.RelaxedEmittable`,
+`Result.RelaxedRunVoid`). Every other cause stays run-void in it. It is
+**never** turned into a manifest, a pass or a ledger record; only the
+strict verdict feeds emission, and a test holds that line.
+
+**Resource bounds.** A record path is at most 4,096 bytes and 128 segments,
+holds no NUL and no U+FFFD, and every line is valid UTF-8 with no padding
+(a BOM, CR or whitespace around the value is refused). The merge counts
+every node and comparison of all its overlap walks against one work budget
+(500 million units, ancestor probes weighted by prefix length) and holds at
+most 4 GiB of path text; exceeding either is run-void `size`. A record that
+fails validation voids the run and nothing further is analysed. Cause text
+is deterministic (validators report the first failure in a fixed order).
 
 **G3. Shards are prerequisite-closed.** A shard runs its assigned packages
 and their prerequisites (`ShardEntry.PackageNames`), so an action has a raw
@@ -1187,7 +1235,13 @@ matched against `Binds`. If any copy of action C has a reason of kind
 `daemon`, every other action with `overlap(u, w)` for `u` in the
 untracked observations of any copy of C and `w` in its own writes, and
 every other action with a non-empty `Binds`, gets
-`reads-product:daemon-peer`. This is a superset of the address match.
+`reads-product:daemon-peer`. The reason kinds are decided explicitly:
+`daemon` and `daemon-left` both count (`daemon-left` is also a truncated
+execution, M-1). This is a superset of the address match only for binds the
+record lists: `Binds` omits port 0 and abstract sockets. That gap is vacuous
+under §4.7, where every step has its own network namespace (G10), so no
+marker is added; only a pathname socket inside the checkout crosses
+actions, and the untracked-overlap half catches it.
 
 **The rules.** Notation: `anc(p, q)` is `p == q` or `p` is a *path*-prefix
 ancestor of `q` (so `a/b` is not an ancestor of `a/bc`); `overlap` is `anc`
@@ -1203,22 +1257,27 @@ pre-BUILD inventory.
 | B3 | run | `repository`, `run`, `revision`, `recorder` match; `attempt` is at most the merge's; `graph_sha256`, `steps_sha256` and `partition_sha256` equal the regenerated ones; `host_facts_sha256` and `inventory_sha256` are those of the files beside the binding. |
 | B4 | run | Every record line carries its shard's `binding_id` and is well-formed; the shard's actions are exactly `PackageNames(s)`, once each. |
 | B5 | run | Weak keys recompute (G4). |
-| B6 | action (run until `writes_complete`) | A `built` record's `steps_sha256` equals the digest of the regenerated step lines, else `trace-incomplete:recipe-mismatch`. |
-| M1 | run | Any unknown write set (G1). |
+| B6 | run | A `built` record's `steps_sha256` equals the digest of the regenerated step lines, else `trace-incomplete:recipe-mismatch`, an unknown write set that `writes_complete` never excuses. |
+| M1 | run | Any unknown write set (G1), including truncated executions (M-1) and an unclean step. |
 | M2 | run | An untracked observation explained by neither `Inv(s)` nor another record's write **in the same shard**. |
+| M2b | run | `tracked_changed_unexplained > 0` (M-2). |
 | M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. |
 | M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. |
 | M5 | action | An untracked observation overlaps `W(b)`, `b != a`: `reads-product`. |
 | M6 | action | An absent observation overlaps `W(b)`: `reads-product`. |
-| M7 | action | `list:d` with `w` in `W(b)`, `anc(d, w)`, `w != d`: `reads-product`. |
+| M7 | action | `list:d` with `w` in `W(b)`, `overlap(d, w)`: `reads-product`. |
 | M8 | action | A traversed `t` with `w` in `W(b)` or `TW(b)`, `anc(w, t)`: `trace-incomplete:unstable-path`. |
 | M9 | action | An inventory path overlapping an untracked or absent observation: `reads-product`; one that is an ancestor of a traversed path: `unstable-path`. |
 | M10 | action | `overlap(w1, w2)` for `w1` in `W(a)`, `w2` in `W(b)`: `reads-product`. An action's own copies never collide. |
-| M11 | action | A tainted `t` overlapping a `pkg:` or `path:` entry, or beneath a `list:` entry: `reads-product`. |
+| M11 | action | A tainted `t` overlapping a `pkg:`, `path:` or `list:` entry: `reads-product`. |
 | M12 | action | A tainted path overlapping the action's package, a `.gitignore`, the build tool or `code/kiln`: `reads-product`. |
 | M13 | action | Daemons (G11). |
 | M14 | action | Two actions with the same `Binds` string (type, address, port): `reads-product:shared-port`. |
 | M15 | action | The record's own reasons, a status other than `built`, a gate, a refusal. |
+| M-3 | run (strict) | Any action that received a reason from M5 to M14 (or carries `reads-product` or `unstable-path` itself). |
+
+M5 to M14 are the order-dependence reasons; M15's reasons describe the
+action's own environment and are not.
 
 An action is emitted only when the run is not void, its assigned shard is
 not void, no copy gave it a reason, and its assigned record's entries pass
@@ -1749,6 +1808,22 @@ These are known and named. They are measured rather than closed.
   connect to a port the action bound and released is then allowed. A bind to
   port 0 matches nothing. The merge job's shared-port rule (§7) is the
   partial defence.
+- **Second-order order dependence.** An action that depended on another's
+  output has a recorded write set that is only one of several; the other
+  actions' checks quantify over write sets. The strict merge closes this for
+  emission by voiding the run (§7.1, M-3), which probably zeroes the yield of
+  the first runs. The relaxed verdict reports what is lost. The M3 spec must
+  add a lookup-time rule (an action that would be order-dependent in the
+  lookup job runs) before any relaxation.
+- **A compromised shard** can under-report its own copies' `Writes` and
+  choose its own host facts for its own actions. The merge cannot see either,
+  because it has only the shard's records and the facts the weak key needs.
+  This is inherent, and is mitigated by trusted runs only (the job `if:`,
+  `Trusted()` and the cache scope). `kiln_sha256`, `build_tool_sha256` and
+  `sandbox_config_sha256` in the binding are self-attested and
+  report-only: they are not compared across shards, because a compromised
+  shard would simply write the same value. The guards are
+  `recorder == RecorderVersion` and B5/B6.
 - **Tool build caches** declared as `state` are trusted the way KILN00
   §9.5 trusts tool state.
 - **Linux only.** macOS and Windows get no hits from this bridge.

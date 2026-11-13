@@ -125,23 +125,30 @@ func TestRecipeMismatchOnABuiltAction(t *testing.T) {
 	if !r.out(t, "pkg/c").has("trace-incomplete:recipe-mismatch") {
 		t.Error("the reason is missing")
 	}
-	// With the PR 4 switch and a complete write set only the action is lost.
+	// L-1: not even writes_complete=true and the PR 4 switch repair a recipe
+	// mismatch.  The steps that ran are not the steps the weak key covers, so
+	// the trace says nothing about what the recipe writes.
 	w = std(t)
 	w.honour = true
 	yes := true
 	w.rec(1, "pkg/c").StepsSHA = recfmt.StepsDigest([]string{"echo rewritten"})
 	w.rec(1, "pkg/c").Complete = &yes
-	r = w.merge()
-	if !r.Emitted {
-		t.Fatal(r.RunVoid)
+	wantVoid(t, "PoC5 mismatch with honour", w.merge(), "recipe-mismatch")
+	if w.merge().relaxedOK() {
+		t.Error("a recipe mismatch must void the run in the relaxed verdict too")
 	}
-	wantEmitted(t, r, "pkg/a", "pkg/b", "pkg/d")
+	// The classifier's own recipe-mismatch reason is the same.
+	w = std(t)
+	w.honour = true
+	w.rec(2, "pkg/d").Record.Reasons = sl("trace-incomplete:recipe-mismatch")
+	w.rec(2, "pkg/d").Complete = &yes
+	wantVoid(t, "classifier recipe-mismatch", w.merge(), "recipe-mismatch")
 	// A non-built action's steps are not compared.
 	w = std(t)
 	w.rec(1, "pkg/c").Status = "failed"
 	w.rec(1, "pkg/c").StepsSHA = dGraph
-	if r := w.merge(); !r.Emitted {
-		t.Errorf("%v", r.RunVoid)
+	if r := w.merge(); !r.relaxedOK() {
+		t.Errorf("%v", r.RelaxedRunVoid)
 	}
 	// A package the regenerated steps do not know is a mismatch too.
 	w = std(t)
@@ -189,7 +196,7 @@ func TestOutputIsIndependentOfInputOrder(t *testing.T) {
 	w.rec(2, "pkg/d").Record.Binds = sl("stream/1.1.1.1:1")
 	w.rec(2, "pkg/d").Record.TrackedWrites = sl("cfg/x")
 	want := w.merge()
-	if want.out(t, "pkg/a").Emitted || len(want.emittedActions()) != 1 {
+	if want.out(t, "pkg/a").RelaxedEmittable || len(want.relaxedActions()) != 1 {
 		t.Fatalf("a poor fixture: %+v", want.Outcomes)
 	}
 	for _, p := range [][]int{{0, 1, 2}, {2, 1, 0}, {1, 0, 2}, {2, 0, 1}} {
@@ -221,10 +228,14 @@ func equalResult(a, b Result) bool {
 		len(a.Outcomes) != len(b.Outcomes) || len(a.Manifests) != len(b.Manifests) || len(a.ShardVoid) != len(b.ShardVoid) {
 		return false
 	}
+	if a.RelaxedRunVoidCount != b.RelaxedRunVoidCount || strings.Join(a.RelaxedRunVoid, "\n") != strings.Join(b.RelaxedRunVoid, "\n") {
+		return false
+	}
 	for i := range a.Outcomes {
 		x, y := a.Outcomes[i], b.Outcomes[i]
 		if x.Action != y.Action || x.Assigned != y.Assigned || x.Recordable != y.Recordable || x.Emitted != y.Emitted ||
-			x.ShardVoid != y.ShardVoid || strings.Join(x.Reasons, "\n") != strings.Join(y.Reasons, "\n") {
+			x.ShardVoid != y.ShardVoid || x.Truncated != y.Truncated || x.OrderDependent != y.OrderDependent ||
+			x.RelaxedEmittable != y.RelaxedEmittable || strings.Join(x.Reasons, "\n") != strings.Join(y.Reasons, "\n") {
 			return false
 		}
 	}
@@ -274,7 +285,7 @@ func TestReviewerEmptyListsWithUnknownWrites(t *testing.T) {
 func TestPartlyRunStepsAreUnknown(t *testing.T) {
 	w := std(t)
 	w.rec(0, "pkg/b").StepsTotal = 3
-	w.rec(0, "pkg/b").StepsRun = 2
+	w.rec(0, "pkg/b").StepsRun, w.rec(0, "pkg/b").Steps = 2, []recfmt.Step{{Clean: true}, {Clean: true}}
 	wantVoid(t, "steps", w.merge(), "steps-missing")
 }
 

@@ -17,7 +17,7 @@ func TestCleanWorldEmitsEveryAction(t *testing.T) {
 	if !r.Emitted || r.RunVoidCount != 0 || len(r.RunVoid) != 0 {
 		t.Fatalf("%+v", r.RunVoid)
 	}
-	wantEmitted(t, r, "pkg/a", "pkg/b", "pkg/c", "pkg/d")
+	wantRelaxed(t, r, "pkg/a", "pkg/b", "pkg/c", "pkg/d")
 	if len(r.Manifests) != 4 || len(r.Passes) != 4 {
 		t.Fatalf("%d manifests, %d passes", len(r.Manifests), len(r.Passes))
 	}
@@ -44,7 +44,7 @@ func TestOnlyTheAssignedCopyIsEmitted(t *testing.T) {
 	w.entries(0, "pkg/a", "path:from/shard0")
 	w.entries(1, "pkg/a", "path:from/shard1")
 	r := w.merge()
-	wantEmitted(t, r, "pkg/a", "pkg/b", "pkg/c", "pkg/d")
+	wantRelaxed(t, r, "pkg/a", "pkg/b", "pkg/c", "pkg/d")
 	m := r.Manifests[0]
 	if m.Target != "pkg/a" || strings.Join(m.Entries, ",") != "path:from/shard0,pkg:pkg/a" {
 		t.Fatalf("%v", m.Entries)
@@ -71,10 +71,10 @@ func TestReasonOnAPrerequisiteCopyVoidsTheAction(t *testing.T) {
 	w := std(t)
 	w.rec(1, "pkg/a").Record.Reasons = []string{"network:connect"}
 	r := w.merge()
-	if !r.Emitted {
+	if !r.relaxedOK() {
 		t.Fatalf("a per-action reason must not void the run: %v", r.RunVoid)
 	}
-	wantEmitted(t, r, "pkg/b", "pkg/c", "pkg/d")
+	wantRelaxed(t, r, "pkg/b", "pkg/c", "pkg/d")
 	if !r.out(t, "pkg/a").has("network:connect") {
 		t.Error("the reason did not reach the action")
 	}
@@ -93,10 +93,10 @@ func TestPerCopyStatusGateAndRefusal(t *testing.T) {
 		w := std(t)
 		mut(w)
 		r := w.merge()
-		if !r.Emitted {
+		if !r.relaxedOK() {
 			t.Fatalf("%s: %v", name, r.RunVoid)
 		}
-		wantEmitted(t, r, "pkg/b", "pkg/c", "pkg/d")
+		wantRelaxed(t, r, "pkg/b", "pkg/c", "pkg/d")
 		if r.out(t, "pkg/a").Recordable {
 			t.Errorf("%s: recordable", name)
 		}
@@ -118,7 +118,6 @@ func TestEmissionRefusals(t *testing.T) {
 		"long name": {func(w *world) {
 			w.entries(1, "pkg/c", "path:"+strings.Repeat("x", 600))
 		}, "manifest-too-large"},
-		"bad name": {func(w *world) { w.entries(1, "pkg/c", "weak:abc") }, "manifest-invalid"},
 		"no own pkg": {func(w *world) {
 			w.rec(1, "pkg/c").Record.Entries = []string{"path:x"}
 		}, "manifest-invalid"},
@@ -128,11 +127,11 @@ func TestEmissionRefusals(t *testing.T) {
 		w := std(t)
 		c.mut(w)
 		r := w.merge()
-		if !r.Emitted {
+		if !r.relaxedOK() {
 			t.Fatalf("%s: run void %v", name, r.RunVoid)
 		}
 		got := r.out(t, "pkg/c")
-		if got.Emitted || !got.hasKind(c.want) {
+		if got.RelaxedEmittable || !got.hasKind(c.want) {
 			t.Errorf("%s: %+v", name, got)
 		}
 		if !got.Recordable && name != "strong key fails" {
@@ -161,15 +160,15 @@ func TestM5UntrackedObservationOfAnotherActionsWrite(t *testing.T) {
 		w.rec(0, p.writer).Record.Writes = sl("out/x")
 		w.rec(0, p.reader).Record.UntrackedObservations = sl("out/x")
 		r := w.merge()
-		if !r.Emitted {
+		if !r.relaxedOK() {
 			t.Fatalf("%v", r.RunVoid)
 		}
-		if got := r.out(t, p.reader); got.Emitted || !got.has("reads-product:out/x") {
+		if got := r.out(t, p.reader); got.RelaxedEmittable || !got.has("reads-product:out/x") {
 			t.Errorf("%s did not lose: %+v", p.reader, got)
 		}
 		// The writer is not a reader, so it is not voided by M5 (M10 would need
 		// an overlapping write root).
-		if !r.out(t, p.writer).Emitted {
+		if !r.out(t, p.writer).RelaxedEmittable {
 			t.Errorf("%s was voided", p.writer)
 		}
 	}
@@ -185,7 +184,7 @@ func TestM5OverlapGoesBothWays(t *testing.T) {
 		w.rec(0, "pkg/b").Record.Writes = sl(c.write)
 		w.rec(0, "pkg/a").Record.UntrackedObservations = sl(c.observe)
 		r := w.merge()
-		if got := r.out(t, "pkg/a"); got.Emitted || !got.has("reads-product:"+c.write) {
+		if got := r.out(t, "pkg/a"); got.RelaxedEmittable || !got.has("reads-product:"+c.write) {
 			t.Errorf("%s: %+v", name, got)
 		}
 	}
@@ -207,7 +206,7 @@ func TestPathPrefixConfusionIsNotAnOverlap(t *testing.T) {
 	if !r.out(t, "pkg/a").has("reads-product:out/x") {
 		t.Error("the inventory hit is missing")
 	}
-	if !r.out(t, "pkg/b").Emitted {
+	if !r.out(t, "pkg/b").RelaxedEmittable {
 		t.Error("b was voided by a name that only shares a prefix")
 	}
 	// anc is exact.
@@ -234,13 +233,13 @@ func TestM5AcrossShards(t *testing.T) {
 	w.rec(1, "pkg/c").Record.Writes = sl("out/x")
 	w.rec(0, "pkg/b").Record.UntrackedObservations = sl("out/x")
 	r := w.merge()
-	if !r.Emitted {
+	if !r.relaxedOK() {
 		t.Fatalf("%v", r.RunVoid)
 	}
-	if got := r.out(t, "pkg/b"); got.Emitted || !got.has("reads-product:out/x") || !got.has("reads-product:out") {
+	if got := r.out(t, "pkg/b"); got.RelaxedEmittable || !got.has("reads-product:out/x") || !got.has("reads-product:out") {
 		t.Errorf("%+v", got)
 	}
-	if !r.out(t, "pkg/c").Emitted {
+	if !r.out(t, "pkg/c").RelaxedEmittable {
 		t.Error("the writer was voided")
 	}
 }
@@ -252,10 +251,10 @@ func TestM5WriterIsAPrerequisiteCopyInTheReadersShard(t *testing.T) {
 	w.rec(1, "pkg/a").Record.Writes = sl("gen/out")
 	w.rec(1, "pkg/c").Record.AbsentObservations = sl("gen/out")
 	r := w.merge()
-	if got := r.out(t, "pkg/c"); got.Emitted || !got.has("reads-product:gen/out") {
+	if got := r.out(t, "pkg/c"); got.RelaxedEmittable || !got.has("reads-product:gen/out") {
 		t.Errorf("%+v", got)
 	}
-	if !r.out(t, "pkg/a").Emitted {
+	if !r.out(t, "pkg/a").RelaxedEmittable {
 		t.Error("a was voided by its own write")
 	}
 }
@@ -270,7 +269,7 @@ func TestM6AbsentName(t *testing.T) {
 		w.rec(p.wshard, p.writer).Record.Writes = sl("tmp/made")
 		w.rec(p.rshard, p.reader).Record.AbsentObservations = sl("tmp/made/x")
 		r := w.merge()
-		if got := r.out(t, p.reader); got.Emitted || !got.has("reads-product:tmp/made") {
+		if got := r.out(t, p.reader); got.RelaxedEmittable || !got.has("reads-product:tmp/made") {
 			t.Errorf("%+v: %+v", p, got)
 		}
 	}
@@ -278,7 +277,7 @@ func TestM6AbsentName(t *testing.T) {
 	w := std(t)
 	w.rec(1, "pkg/c").Record.Writes = sl("tmp/other")
 	w.rec(0, "pkg/b").Record.AbsentObservations = sl("tmp/made")
-	if r := w.merge(); !r.out(t, "pkg/b").Emitted || !r.out(t, "pkg/c").Emitted {
+	if r := w.merge(); !r.out(t, "pkg/b").RelaxedEmittable || !r.out(t, "pkg/c").RelaxedEmittable {
 		t.Error("a non-overlapping probe was voided")
 	}
 }
@@ -306,7 +305,7 @@ func TestM7ChangedListing(t *testing.T) {
 			w.rec(0, p[1]).Record.Writes = sl(c.writes)
 			r := w.merge()
 			got := r.out(t, p[0])
-			if got.hasKind("reads-product") != c.hit || got.Emitted == c.hit {
+			if got.hasKind("reads-product") != c.hit || got.RelaxedEmittable == c.hit {
 				t.Errorf("%s %v: %+v", name, p, got)
 			}
 			if c.hit && !got.has("reads-product:"+c.writes) {
@@ -318,7 +317,7 @@ func TestM7ChangedListing(t *testing.T) {
 	w := std(t)
 	w.entries(0, "pkg/b", "list:dir")
 	w.rec(2, "pkg/d").Record.Writes = sl("dir/new")
-	if r := w.merge(); r.out(t, "pkg/b").Emitted || !r.out(t, "pkg/b").has("reads-product:dir/new") {
+	if r := w.merge(); r.out(t, "pkg/b").RelaxedEmittable || !r.out(t, "pkg/b").has("reads-product:dir/new") {
 		t.Error("a listing changed by another shard's write was kept")
 	}
 }
@@ -331,13 +330,13 @@ func TestM8TraversedComponentReplacedInAnotherShard(t *testing.T) {
 	w.rec(0, "pkg/b").Record.Traversed = sl("link", "link/sub")
 	w.rec(1, "pkg/c").Record.Writes = sl("link") // unlinked and re-created
 	r := w.merge()
-	if !r.Emitted {
+	if !r.relaxedOK() {
 		t.Fatalf("an unstable path is the action's problem, not the run's: %v", r.RunVoid)
 	}
-	if got := r.out(t, "pkg/b"); got.Emitted || !got.has("trace-incomplete:unstable-path") {
+	if got := r.out(t, "pkg/b"); got.RelaxedEmittable || !got.has("trace-incomplete:unstable-path") {
 		t.Errorf("%+v", got)
 	}
-	if !r.out(t, "pkg/c").Emitted {
+	if !r.out(t, "pkg/c").RelaxedEmittable {
 		t.Error("the replacer was voided")
 	}
 }
@@ -347,7 +346,7 @@ func TestM8TrackedDirectoryRenamedByAnotherAction(t *testing.T) {
 	w.rec(0, "pkg/a").Record.Traversed = sl("tdir", "tdir/inner")
 	w.rec(0, "pkg/b").Record.TrackedWrites = sl("tdir")
 	r := w.merge()
-	if got := r.out(t, "pkg/a"); got.Emitted || !got.has("trace-incomplete:unstable-path") {
+	if got := r.out(t, "pkg/a"); got.RelaxedEmittable || !got.has("trace-incomplete:unstable-path") {
 		t.Errorf("%+v", got)
 	}
 }
@@ -359,7 +358,7 @@ func TestM8NegativesAndOwnWrites(t *testing.T) {
 	w.rec(0, "pkg/a").Record.Traversed = sl("link2", "d/e")
 	w.rec(1, "pkg/c").Record.Writes = sl("d/e/f") // beneath the traversed component, not above it
 	r := w.merge()
-	if !r.out(t, "pkg/b").Emitted {
+	if !r.out(t, "pkg/b").RelaxedEmittable {
 		t.Errorf("an action was voided by its own write: %+v", r.out(t, "pkg/b"))
 	}
 	if r.out(t, "pkg/a").hasKind("trace-incomplete") {
@@ -399,7 +398,7 @@ func TestM9InventoryAgainstEachObservationList(t *testing.T) {
 			if list == "untracked" && !c.hit && !r.cause("M2") {
 				t.Errorf("%s/%s: an unexplained observation must void the run", list, name)
 			}
-			if list == "absent" && !c.hit && !got.Emitted {
+			if list == "absent" && !c.hit && !got.RelaxedEmittable {
 				t.Errorf("%s/%s: %+v", list, name, got)
 			}
 		}
@@ -408,7 +407,7 @@ func TestM9InventoryAgainstEachObservationList(t *testing.T) {
 	w := std(t)
 	w.inv(1, "nm")
 	w.rec(0, "pkg/b").Record.AbsentObservations = sl("nm")
-	if r := w.merge(); !r.out(t, "pkg/b").Emitted {
+	if r := w.merge(); !r.out(t, "pkg/b").RelaxedEmittable {
 		t.Error("another shard's inventory was applied")
 	}
 }
@@ -452,7 +451,7 @@ func TestM10OverlappingWriteRoots(t *testing.T) {
 		w.rec(0, "pkg/b").Record.Writes = sl(c.b)
 		r := w.merge()
 		for _, who := range []string{"pkg/a", "pkg/b"} {
-			if got := r.out(t, who); got.hasKind("reads-product") != c.hit || got.Emitted == c.hit {
+			if got := r.out(t, who); got.hasKind("reads-product") != c.hit || got.RelaxedEmittable == c.hit {
 				t.Errorf("%s %s: %+v", name, who, got)
 			}
 		}
@@ -466,7 +465,7 @@ func TestM10SharedRustTargetVoidsAllThree(t *testing.T) {
 	w.rec(0, "pkg/b").Record.Writes = sl(target)
 	w.rec(1, "pkg/c").Record.Writes = sl(target)
 	r := w.merge()
-	wantEmitted(t, r, "pkg/d")
+	wantRelaxed(t, r, "pkg/d")
 	for _, a := range []string{"pkg/a", "pkg/b", "pkg/c"} {
 		if !r.out(t, a).has("reads-product:" + target) {
 			t.Errorf("%s: %+v", a, r.out(t, a))
@@ -483,7 +482,7 @@ func TestAnActionNeverVoidsItselfThroughItsOwnWrites(t *testing.T) {
 	w.all("pkg/a", func(r *recfmt.ShardRecord) { r.Record.Entries = sl("pkg:pkg/a", "list:gen") })
 	w.all("pkg/a", func(r *recfmt.ShardRecord) { r.Record.Traversed = sl("gen") })
 	r := w.merge()
-	if !r.out(t, "pkg/a").Emitted {
+	if !r.out(t, "pkg/a").RelaxedEmittable {
 		t.Fatalf("%+v", r.out(t, "pkg/a"))
 	}
 }
@@ -497,17 +496,19 @@ func TestM11TaintedSet(t *testing.T) {
 		tainted string
 		hit     bool
 	}{
-		"path equal":             {"path:cfg/x.json", "cfg/x.json", true},
-		"path under tainted":     {"path:cfg/sub/y", "cfg/sub", true},
-		"path above tainted":     {"path:cfg", "cfg/x.json", true},
-		"path sibling":           {"path:cfg/x", "cfg/xy", false},
-		"pkg overlap":            {"pkg:lib/q", "lib/q/src/main.go", true},
-		"pkg nested package":     {"pkg:lib/q", "lib/q/inner/f", true},
-		"pkg sibling":            {"pkg:lib/q", "lib/qq/f", false},
-		"list above":             {"list:cfg", "cfg/x.json", true},
-		"list root":              {"list:.", "cfg/x.json", true},
-		"list exact":             {"list:cfg/x.json", "cfg/x.json", true},
-		"list below the tainted": {"list:cfg/x.json/inside", "cfg/x.json", false},
+		"path equal":         {"path:cfg/x.json", "cfg/x.json", true},
+		"path under tainted": {"path:cfg/sub/y", "cfg/sub", true},
+		"path above tainted": {"path:cfg", "cfg/x.json", true},
+		"path sibling":       {"path:cfg/x", "cfg/xy", false},
+		"pkg overlap":        {"pkg:lib/q", "lib/q/src/main.go", true},
+		"pkg nested package": {"pkg:lib/q", "lib/q/inner/f", true},
+		"pkg sibling":        {"pkg:lib/q", "lib/qq/f", false},
+		"list above":         {"list:cfg", "cfg/x.json", true},
+		"list root":          {"list:.", "cfg/x.json", true},
+		"list exact":         {"list:cfg/x.json", "cfg/x.json", true},
+		// L-6: a directory listed BENEATH a tainted path overlaps it (the
+		// tainted path may be a directory that was moved away).
+		"list below the tainted": {"list:cfg/x.json/inside", "cfg/x.json", true},
 		"list sibling":           {"list:cfg/sub", "cfg/x.json", false},
 		"list prefix":            {"list:cf", "cfg/x.json", false},
 	} {
@@ -517,7 +518,7 @@ func TestM11TaintedSet(t *testing.T) {
 			w.entries(0, p[0], c.entry)
 			w.rec(0, p[1]).Record.TrackedWrites = sl(c.tainted)
 			got := w.merge().out(t, p[0])
-			if got.hasKind("reads-product") != c.hit || got.Emitted == c.hit {
+			if got.hasKind("reads-product") != c.hit || got.RelaxedEmittable == c.hit {
 				t.Errorf("%s %v: %+v", name, p, got)
 			}
 			if c.hit && !got.has("reads-product:"+c.tainted) {
@@ -529,13 +530,13 @@ func TestM11TaintedSet(t *testing.T) {
 	w := std(t)
 	w.entries(0, "pkg/b", "path:cfg/x")
 	w.rec(2, "pkg/d").Record.TrackedWrites = sl("cfg/x")
-	if r := w.merge(); r.out(t, "pkg/b").Emitted {
+	if r := w.merge(); r.out(t, "pkg/b").RelaxedEmittable {
 		t.Error("another shard's tracked write was ignored")
 	}
 	w = std(t)
 	w.entries(0, "pkg/b", "path:cfg/x")
 	w.rec(0, "pkg/b").Record.TrackedWrites = sl("cfg/x")
-	if r := w.merge(); r.out(t, "pkg/b").Emitted {
+	if r := w.merge(); r.out(t, "pkg/b").RelaxedEmittable {
 		t.Error("an action that rewrote a tracked file it read was kept")
 	}
 }
@@ -568,7 +569,7 @@ func TestM12TaintedRecipeAndMetadata(t *testing.T) {
 			lose[a] = true
 		}
 		for _, a := range []string{"pkg/a", "pkg/b", "pkg/c", "pkg/d"} {
-			if got := r.out(t, a); got.Emitted == lose[a] {
+			if got := r.out(t, a); got.RelaxedEmittable == lose[a] {
 				t.Errorf("%s: %s: %+v", name, a, got)
 			}
 		}
@@ -590,16 +591,16 @@ func TestM13DaemonPeers(t *testing.T) {
 	w := setup()
 	w.rec(2, "pkg/d").Record.Writes = sl("srv")
 	r := w.merge()
-	if got := r.out(t, "pkg/d"); got.Emitted || !got.has("reads-product:daemon-peer") {
+	if got := r.out(t, "pkg/d"); got.RelaxedEmittable || !got.has("reads-product:daemon-peer") {
 		t.Errorf("%+v", got)
 	}
-	if got := r.out(t, "pkg/b"); !got.Emitted {
+	if got := r.out(t, "pkg/b"); !got.RelaxedEmittable {
 		t.Errorf("an unrelated action was voided: %+v", got)
 	}
 	// Another action that only bound a port.
 	w = setup()
 	w.rec(0, "pkg/b").Record.Binds = sl("stream/127.0.0.1:8080")
-	if got := w.merge().out(t, "pkg/b"); got.Emitted || !got.has("reads-product:daemon-peer") {
+	if got := w.merge().out(t, "pkg/b"); got.RelaxedEmittable || !got.has("reads-product:daemon-peer") {
 		t.Errorf("%+v", got)
 	}
 	// The daemon action alone is not its own peer.
@@ -652,17 +653,17 @@ func TestM14SharedPorts(t *testing.T) {
 	w.rec(0, "pkg/b").Record.Binds = sl("dgram/127.0.0.1:8080") // same port, another socket type
 	r := w.merge()
 	for _, a := range []string{"pkg/a", "pkg/d"} {
-		if got := r.out(t, a); got.Emitted || !got.has("reads-product:shared-port") {
+		if got := r.out(t, a); got.RelaxedEmittable || !got.has("reads-product:shared-port") {
 			t.Errorf("%s: %+v", a, got)
 		}
 	}
-	if got := r.out(t, "pkg/b"); !got.Emitted {
+	if got := r.out(t, "pkg/b"); !got.RelaxedEmittable {
 		t.Errorf("another socket type is not a shared port: %+v", got)
 	}
 	// Two copies of one action binding the same port are not two actions.
 	w = std(t)
 	w.all("pkg/a", func(r *recfmt.ShardRecord) { r.Record.Binds = sl("stream/127.0.0.1:9") })
-	if got := w.merge().out(t, "pkg/a"); !got.Emitted {
+	if got := w.merge().out(t, "pkg/a"); !got.RelaxedEmittable {
 		t.Errorf("an action shared a port with itself: %+v", got)
 	}
 }
@@ -685,7 +686,7 @@ func TestM1UnknownWriteSetVoidsTheWholeRun(t *testing.T) {
 	for name, mut := range cases {
 		w := std(t)
 		mut2 := mut
-		w.rec(2, "pkg/d").StepsRun = 0
+		w.rec(2, "pkg/d").StepsRun, w.rec(2, "pkg/d").Steps = 0, nil
 		w.rec(2, "pkg/d").StepsTotal = 0
 		mut2(w.rec(2, "pkg/d"))
 		r := w.merge()
@@ -730,10 +731,10 @@ func TestWritesCompleteSwitch(t *testing.T) {
 	}
 	// Switch on and the record says its writes are complete: only d is lost.
 	r := mk(true, &yes)
-	if !r.Emitted {
+	if !r.relaxedOK() {
 		t.Fatalf("%v", r.RunVoid)
 	}
-	wantEmitted(t, r, "pkg/a", "pkg/b", "pkg/c")
+	wantRelaxed(t, r, "pkg/a", "pkg/b", "pkg/c")
 	if !r.out(t, "pkg/d").hasKind("trace-incomplete") {
 		t.Error("the reason is missing")
 	}
@@ -791,7 +792,7 @@ func TestM2UnexplainedObservation(t *testing.T) {
 		if name == "ancestor" {
 			w.rec(0, "pkg/b").Record.UntrackedObservations = sl("gh/x")
 		}
-		if r := w.merge(); !r.Emitted || r.out(t, "pkg/b").Emitted {
+		if r := w.merge(); !r.relaxedOK() || r.out(t, "pkg/b").RelaxedEmittable {
 			t.Errorf("%s: %v %+v", name, r.RunVoid, r.out(t, "pkg/b"))
 		}
 	}
@@ -814,12 +815,12 @@ func TestM3AndM4HeaderVoids(t *testing.T) {
 		w := std(t)
 		w.shards[0].Header.Void = sl(tok)
 		r := w.merge()
-		if !r.Emitted {
+		if !r.relaxedOK() {
 			t.Fatalf("%s: %v", tok, r.RunVoid)
 		}
 		// Shard 0 is void: nothing ASSIGNED to it is emitted.  pkg/a's copy in
 		// shard 1 is not an emission; pkg/c and pkg/d are unaffected.
-		wantEmitted(t, r, "pkg/c", "pkg/d")
+		wantRelaxed(t, r, "pkg/c", "pkg/d")
 		if !r.out(t, "pkg/a").ShardVoid || r.out(t, "pkg/c").ShardVoid {
 			t.Error("ShardVoid is wrong")
 		}
@@ -829,7 +830,7 @@ func TestM3AndM4HeaderVoids(t *testing.T) {
 		// A shard-void shard's records still take part in the rules.
 		w.rec(0, "pkg/b").Record.Writes = sl("out")
 		w.rec(1, "pkg/c").Record.AbsentObservations = sl("out")
-		if r := w.merge(); r.out(t, "pkg/c").Emitted {
+		if r := w.merge(); r.out(t, "pkg/c").RelaxedEmittable {
 			t.Error("a void shard's writes were ignored")
 		}
 	}
@@ -846,14 +847,14 @@ func TestExecThenRewriteOwnProductByAnotherAction(t *testing.T) {
 	w.rec(1, "pkg/c").Record.Writes = sl("build/bin") // rewrites it
 	r := w.merge()
 	for _, a := range []string{"pkg/a", "pkg/c"} {
-		if got := r.out(t, a); got.Emitted || !got.has("reads-product:build/bin") {
+		if got := r.out(t, a); got.RelaxedEmittable || !got.has("reads-product:build/bin") {
 			t.Errorf("%s: %+v", a, got)
 		}
 	}
 	w = std(t)
 	w.rec(0, "pkg/a").Record.Writes = sl("build")
 	w.rec(1, "pkg/c").Record.Writes = sl("build") // removes it (a root holds no tracked file)
-	if r := w.merge(); r.out(t, "pkg/a").Emitted || r.out(t, "pkg/c").Emitted {
+	if r := w.merge(); r.out(t, "pkg/a").RelaxedEmittable || r.out(t, "pkg/c").RelaxedEmittable {
 		t.Error("nested rewrite not voided")
 	}
 }
@@ -864,14 +865,14 @@ func TestExecThenRewriteTrackedFile(t *testing.T) {
 	w := std(t)
 	w.entries(0, "pkg/a", "path:tools/run.sh")
 	w.rec(0, "pkg/b").Record.TrackedWrites = sl("tools/run.sh")
-	if got := w.merge().out(t, "pkg/a"); got.Emitted || !got.has("reads-product:tools/run.sh") {
+	if got := w.merge().out(t, "pkg/a"); got.RelaxedEmittable || !got.has("reads-product:tools/run.sh") {
 		t.Errorf("%+v", got)
 	}
 	// ...also when B restored it (the record cannot tell, and need not).
 	w = std(t)
 	w.entries(0, "pkg/a", "pkg:tools")
 	w.rec(2, "pkg/d").Record.TrackedWrites = sl("tools/run.sh")
-	if got := w.merge().out(t, "pkg/a"); got.Emitted {
+	if got := w.merge().out(t, "pkg/a"); got.RelaxedEmittable {
 		t.Errorf("%+v", got)
 	}
 }
@@ -894,7 +895,7 @@ func TestExecOfAnUntrackedFileAdidNotMake(t *testing.T) {
 			}
 			continue
 		}
-		if r.out(t, "pkg/a").Emitted {
+		if r.out(t, "pkg/a").RelaxedEmittable {
 			t.Errorf("%s: kept", name)
 		}
 	}

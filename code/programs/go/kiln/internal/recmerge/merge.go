@@ -125,7 +125,20 @@ type Input struct {
 	// read-side trace-incomplete reasons; a record without the field is still
 	// unknown.
 	HonourWritesComplete bool
+	// WorkBudget bounds the visited nodes and comparisons of every overlap
+	// walk together (0 means DefaultWorkBudget).  Exceeding it is run-void
+	// "size": a hostile record cannot make the merge quadratic.
+	WorkBudget int64
+	// MaxRetainedBytes bounds the path and entry text the merge holds
+	// (0 means DefaultMaxRetainedBytes), as KILN04 2.7 asks.
+	MaxRetainedBytes int64
 }
+
+// Defaults of the two bounds above.
+const (
+	DefaultWorkBudget       int64 = 500_000_000
+	DefaultMaxRetainedBytes int64 = 4 << 30
+)
 
 // Outcome is the verdict on one action.
 type Outcome struct {
@@ -142,6 +155,17 @@ type Outcome struct {
 	ShardVoid bool
 	// Emitted is true when the action became a manifest and a pass.
 	Emitted bool
+	// Truncated: a copy of the action did not run to completion (status other
+	// than built, steps_run below steps_total, daemon-left): M-1.
+	Truncated bool
+	// OrderDependent: the action's behaviour depended on another action's
+	// recorded writes: M-3.  Its writes in another order are not the recorded
+	// ones, so under the strict verdict it voids the whole run.
+	OrderDependent bool
+	// RelaxedEmittable is the REPORT-ONLY verdict: would the action be
+	// emitted if the M-1 and M-3 classes cost only the action itself?  It is
+	// never turned into a manifest or a pass (see Result.RelaxedRunVoid).
+	RelaxedEmittable bool
 }
 
 // Result is the whole verdict.  Every slice is sorted, so equal inputs give
@@ -157,9 +181,21 @@ type Result struct {
 	// ShardVoid maps a shard index to its void tokens.
 	ShardVoid map[int][]string
 	Outcomes  []Outcome
-	// Manifests and Passes are index-aligned and sorted by action.
+	// Manifests and Passes are index-aligned and sorted by action.  They come
+	// from the STRICT verdict only.
 	Manifests []ledger.Manifest
 	Passes    []ledger.Record
+	// RelaxedRunVoid and RelaxedRunVoidCount are the causes that remain when
+	// the M-1 (truncated execution) and M-3 (order dependence) classes are
+	// charged to their action instead of the run.  Every other cause stays.
+	//
+	// THE RELAXED VERDICT IS REPORT-ONLY.  It exists so the M2 report can say
+	// what action-level handling would yield; no manifest, pass or ledger
+	// record is ever derived from it, and a test holds that line
+	// (TestRelaxedVerdictNeverEmits).  Whether a relaxed rule is sound is a
+	// separate question (KILN04 section 14, second-order order dependence).
+	RelaxedRunVoid      []string
+	RelaxedRunVoidCount int
 }
 
 // MaxCauses bounds Result.RunVoid.
@@ -180,6 +216,17 @@ const (
 type reasons struct {
 	m   map[string]bool
 	any bool
+	// order is set when a reason means the action's behaviour depended on
+	// another action's recorded writes (M-3).
+	order bool
+}
+
+// dep adds an order-dependence reason: reads-product (M5-M7, M9-M14) or
+// unstable-path (M8, M9).  Exactly the reasons the merge derives from
+// OTHER actions' records are these, so this is the whole M-3 list.
+func (r *reasons) dep(s string) {
+	r.order = true
+	r.add(s)
 }
 
 func (r *reasons) add(s string) {
@@ -197,7 +244,7 @@ func (r *reasons) add(s string) {
 	}
 }
 
-func (r *reasons) product(path string) { r.add("reads-product:" + traced.Sanitize(path)) }
+func (r *reasons) product(path string) { r.dep("reads-product:" + traced.Sanitize(path)) }
 
 type copyRec struct {
 	sh  *recfmt.Shard
@@ -218,8 +265,14 @@ type act struct {
 
 type merger struct {
 	in     Input
-	causes map[string]bool
-	n      int // shard count
+	causes map[string]bool // strict verdict: every cause
+	// relaxed holds the causes that are NOT charged to an action in the
+	// relaxed (report-only) verdict.
+	relaxed   map[string]bool
+	relaxLost map[string]string // action -> why (M-1 and M-3 classes)
+	mt        *meter
+	malformed bool
+	n         int // shard count
 
 	shards    []*recfmt.Shard
 	byIndex   map[int]*recfmt.Shard // artifact index -> shard (first of any duplicates)
@@ -236,20 +289,48 @@ type merger struct {
 	tainted   pathSet
 }
 
+// void records a cause that voids the run in BOTH verdicts.
 func (m *merger) void(format string, args ...any) {
+	c := traced.Sanitize(fmt.Sprintf(format, args...))
+	m.causes[c] = true
+	m.relaxed[c] = true
+}
+
+// voidStrict records a cause of the M-1 / M-3 classes: it voids the run in the
+// strict verdict and only costs the action in the relaxed one.
+func (m *merger) voidStrict(action, class, format string, args ...any) {
 	m.causes[traced.Sanitize(fmt.Sprintf(format, args...))] = true
+	if m.relaxLost[action] == "" {
+		m.relaxLost[action] = class
+	}
 }
 
 // Merge applies B1-B6 and M1-M15 to the shards and returns the verdict.
 func Merge(in Input) Result {
 	m := &merger{
-		in: in, causes: map[string]bool{}, byIndex: map[int]*recfmt.Shard{},
+		in: in, causes: map[string]bool{}, relaxed: map[string]bool{}, relaxLost: map[string]string{}, byIndex: map[int]*recfmt.Shard{},
 		assigned: map[string]int{}, shardVoid: map[int]map[string]bool{}, acts: map[string]*act{},
 		shardW: map[*recfmt.Shard]*pathIndex{}, shardInv: map[*recfmt.Shard]pathSet{},
 	}
+	budget := in.WorkBudget
+	if budget <= 0 {
+		budget = DefaultWorkBudget
+	}
+	m.mt = &meter{max: budget}
 	m.checkPlan()
 	m.collectShards()
 	m.checkBindings()
+	if m.malformed {
+		// A record that fails validation was not written by the classifier; the
+		// run is void and nothing below is worth analysing (or worth the time a
+		// hostile record could make it cost).
+		return m.finish()
+	}
+	if m.tooBig() {
+		// Nothing below can be trusted to finish in bounded memory.
+		m.void("size: the records hold more than the retained-text cap")
+		return m.finish()
+	}
 	m.buildActions()
 	m.checkWeakKeys()
 	m.checkRecipes()
@@ -260,6 +341,10 @@ func Merge(in Input) Result {
 	m.sharedPorts()
 	m.daemons()
 	m.taintedMetadata()
+	m.orderDependence()
+	if m.mt.over() {
+		m.void("size: the overlap walks exceeded the work budget")
+	}
 	return m.finish()
 }
 
@@ -359,6 +444,7 @@ func (m *merger) checkBindings() {
 		for _, err := range []error{b.Validate(), s.Header.Validate(), s.Facts.Validate(), s.Inventory.Validate()} {
 			if err != nil {
 				bad(err.Error())
+				m.malformed = true
 			}
 		}
 		switch {
@@ -416,6 +502,7 @@ func (m *merger) checkRecordSet(s *recfmt.Shard) {
 		r := &s.Records[k]
 		if err := r.Validate(); err != nil {
 			m.void("binding shard %d: B4 %v", i, err)
+			m.malformed = true
 			continue
 		}
 		switch {
@@ -553,6 +640,9 @@ func (m *merger) checkHeaders() {
 		if h.PostInventoryUnexplained > 0 { // M3
 			m.void("M3 shard %d: %d paths on the disk after the build are explained by no trace", i, h.PostInventoryUnexplained)
 		}
+		if h.TrackedChangedUnexplained > 0 { // M-2
+			m.void("M2b shard %d: %d changed tracked paths are covered by no tracked_writes", i, h.TrackedChangedUnexplained)
+		}
 		for _, tok := range h.Void {
 			switch tok {
 			case "survivor", "records-too-large": // M3
@@ -573,7 +663,7 @@ func (m *merger) checkHeaders() {
 // Indexes.
 
 func (m *merger) buildIndexes() {
-	m.wIx, m.twIx = newPathIndex(), newPathIndex()
+	m.wIx, m.twIx = newPathIndex(m.mt), newPathIndex(m.mt)
 	taint := map[string]bool{}
 	for _, a := range m.ordered {
 		for _, p := range a.w {
@@ -586,12 +676,12 @@ func (m *merger) buildIndexes() {
 	}
 	m.wIx.freeze()
 	m.twIx.freeze()
-	m.tainted = newPathSet(keys(taint))
+	m.tainted = newPathSet(keys(taint), m.mt)
 	for _, s := range m.shards {
 		if _, ok := m.shardInv[s]; !ok {
-			m.shardInv[s] = newPathSet(s.Inventory.Paths)
+			m.shardInv[s] = newPathSet(s.Inventory.Paths, m.mt)
 		}
-		ix := newPathIndex()
+		ix := newPathIndex(m.mt)
 		for _, a := range m.ordered {
 			for _, c := range a.copies {
 				if c.sh != s {
@@ -619,35 +709,84 @@ func hasKind(l []string, kind string) bool {
 	return false
 }
 
-// unknown says why a copy's write set is unknown, or "" when it is known.
-func (m *merger) unknown(c *copyRec) string {
+// Classes of unknown write set.
+const (
+	unkNone      = iota
+	unkHard      // the trace or the record cannot be trusted: run-void in both verdicts
+	unkTruncated // the action did not run to completion (M-1): run-void when strict
+)
+
+// isDaemonKind lists the reason kinds that mean a process outlived a step.
+// "daemon" is a server the action started (and bound or reached); "daemon-left"
+// is a process still running when the step ended.  Both matter to M13; the
+// second is also a truncated execution, because the survivor may still write.
+func isDaemonKind(k string) bool { return k == "daemon" || k == "daemon-left" }
+
+func hasDaemon(l []string) bool {
+	for _, r := range l {
+		if isDaemonKind(recfmt.ReasonKind(r)) {
+			return true
+		}
+	}
+	return false
+}
+
+// unknown says why a copy's write set is unknown, and in which class.
+func (m *merger) unknown(c *copyRec) (string, int) {
 	r := c.rec
 	switch {
 	case r.Unknown != "":
-		return "unknown_writes " + r.Unknown
-	case r.StepsRun < r.StepsTotal:
-		// A partly run action (a failure, a skipped dependent, a shard cut
-		// short) wrote an unknown amount in the steps that never ran.  The
-		// untraced build on main runs them.
-		return "steps-missing"
+		return "unknown_writes " + r.Unknown, unkHard
 	case r.Complete != nil && !*r.Complete:
-		return "writes_complete is false"
-	case hasKind(r.Record.Reasons, "trace-incomplete") || c.recipeBad:
+		return "writes_complete is false", unkHard
+	case c.recipeBad || hasReason(r.Record.Reasons, "trace-incomplete:recipe-mismatch"):
+		// The steps that ran are not the steps the weak key's recipe covers, so
+		// what was traced says nothing about what the recipe writes.  No
+		// writes_complete claim can repair that (L-1).
+		return "recipe-mismatch", unkHard
+	case hasKind(r.Record.Reasons, "trace-incomplete"):
 		if !m.in.HonourWritesComplete {
-			return "trace-incomplete (the classifier does not report writes_complete yet)"
+			return "trace-incomplete (the classifier does not report writes_complete yet)", unkHard
 		}
 		if r.Complete == nil {
-			return "trace-incomplete without writes_complete"
+			return "trace-incomplete without writes_complete", unkHard
 		}
 	}
-	return ""
+	for _, st := range r.Steps {
+		if !st.Clean {
+			return "a step's tracer did not finish cleanly", unkHard
+		}
+	}
+	switch {
+	case r.Status != recfmt.StatusBuilt:
+		// A failed action stopped part way, whatever steps_run says: the build
+		// on main, which does not fail here, would have run the rest (M-1).
+		return "status " + r.Status, unkTruncated
+	case r.StepsRun < r.StepsTotal:
+		return "steps-missing", unkTruncated
+	case hasKind(r.Record.Reasons, "daemon-left"):
+		return "daemon-left", unkTruncated
+	}
+	return "", unkNone
+}
+
+func hasReason(l []string, want string) bool {
+	for _, r := range l {
+		if r == want {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *merger) completeness() {
 	for _, a := range m.ordered {
 		for _, c := range a.copies {
-			if why := m.unknown(c); why != "" { // M1
+			switch why, class := m.unknown(c); class { // M1
+			case unkHard:
 				m.void("M1 shard %d: %s: %s", c.sh.ArtifactIndex, why, a.name)
+			case unkTruncated:
+				m.voidStrict(a.name, "truncated", "M1 shard %d: %s: %s", c.sh.ArtifactIndex, why, a.name)
 			}
 			// M2: an untracked path the action observed and did not make must be
 			// explained by the pre-BUILD inventory or by another record's write
@@ -655,6 +794,9 @@ func (m *merger) completeness() {
 			// another shard explains nothing here).
 			inv, sw := m.shardInv[c.sh], m.shardW[c.sh]
 			for _, u := range c.rec.Record.UntrackedObservations {
+				if !m.mt.spend(1) {
+					return
+				}
 				explained := false
 				inv.overlapping(u, func(string) bool { explained = true; return false })
 				if !explained {
@@ -691,10 +833,16 @@ func others(self int, walkFn func(fn walk) bool, hit func(p string)) {
 
 func (m *merger) perAction() {
 	for _, a := range m.ordered {
+		if m.mt.over() {
+			return
+		}
 		for _, c := range a.copies {
 			rec := &c.rec.Record
 			// M15: the record's own reasons, a failed status, a gate, a refusal.
 			for _, r := range rec.Reasons {
+				if recfmt.ReasonKind(r) == "reads-product" || recfmt.ReasonKind(r) == "unstable-path" {
+					a.rs.order = true // a record that already says so (M-3)
+				}
 				a.rs.add(r)
 			}
 			if c.rec.Status != recfmt.StatusBuilt {
@@ -714,6 +862,9 @@ func (m *merger) perAction() {
 			// probed directory and a probed name under a written root both count.
 			for _, list := range [][]string{rec.UntrackedObservations, rec.AbsentObservations} {
 				for _, u := range list {
+					if !m.mt.spend(1) {
+						return
+					}
 					others(a.id, func(fn walk) bool { return m.wIx.overlapping(u, fn) },
 						func(w string) { a.rs.product(w) })
 				}
@@ -726,26 +877,36 @@ func (m *merger) perAction() {
 				}
 			}
 			for _, t := range rec.Traversed {
+				if !m.mt.spend(1) {
+					return
+				}
 				// M9 (traversed): a pre-existing leftover that is, or contains, a
 				// component the action walked through.
-				inv.ancestors(t, func(string) bool { a.rs.add("trace-incomplete:unstable-path"); return false })
+				inv.ancestors(t, func(string) bool { a.rs.dep("trace-incomplete:unstable-path"); return false })
 				// M8: a component another action replaced or removed.
 				for _, ix := range []*pathIndex{m.wIx, m.twIx} {
 					others(a.id, func(fn walk) bool { return ix.ancestors(t, fn) },
-						func(string) { a.rs.add("trace-incomplete:unstable-path") })
+						func(string) { a.rs.dep("trace-incomplete:unstable-path") })
 				}
 			}
 			for _, e := range rec.Entries {
+				if !m.mt.spend(1) {
+					return
+				}
 				switch {
 				case strings.HasPrefix(e, key.EntryList):
 					d := e[len(key.EntryList):]
 					// M7: a listing in which another action created or removed an
-					// entry (anything strictly beneath it; d == "." is everything).
-					others(a.id, func(fn walk) bool { return m.wIx.descendants(d, true, fn) },
+					// entry.  Any write root that overlaps d counts: beneath d (an
+					// entry changed), equal to d, or ABOVE d (the directory itself
+					// lies in another action's output).  d == "." is everything.
+					others(a.id, func(fn walk) bool { return m.wIx.overlapping(d, fn) },
 						func(w string) { a.rs.product(w) })
-					// M11 (list): a tainted path beneath the listed directory.
+					// M11 (list): a tainted path that overlaps the listed
+					// directory: beneath it (an entry changed) OR above it (the
+					// directory itself was moved or replaced).
 					n := 0
-					m.tainted.under(d, func(t string) bool { a.rs.product(t); n++; return n < maxHits })
+					m.tainted.overlapping(d, func(t string) bool { a.rs.product(t); n++; return n < maxHits })
 				case strings.HasPrefix(e, key.EntryPackage), strings.HasPrefix(e, key.EntryPath):
 					p := e[strings.IndexByte(e, ':')+1:]
 					// M11 (pkg and path): a tainted path overlapping the entry.
@@ -758,6 +919,9 @@ func (m *merger) perAction() {
 		// copy of THIS action is used, and "another action" excludes this
 		// action's own copies, so an action never voids itself.
 		for _, w := range a.w {
+			if !m.mt.spend(1) {
+				return
+			}
 			others(a.id, func(fn walk) bool { return m.wIx.overlapping(w, fn) },
 				func(p string) { a.rs.product(p) })
 		}
@@ -776,7 +940,7 @@ func (m *merger) sharedPorts() {
 	for _, h := range holders {
 		if len(h) > 1 {
 			for _, a := range h {
-				a.rs.add("reads-product:shared-port")
+				a.rs.dep("reads-product:shared-port")
 			}
 		}
 	}
@@ -784,15 +948,23 @@ func (m *merger) sharedPorts() {
 
 // M13 (G11): the record carries only a SANITISED, CAPPED reason list, so a
 // daemon's address cannot be matched against other actions' binds.  The rule
-// is the conservative superset: when action C reported a daemon, every other
-// action whose writes overlap something C observed untracked, and every other
-// action that bound a port at all, is voided.  Only the KIND survives the cap
-// (traced.CapReasons keeps one reason of every kind), which is all this needs.
+// is: when action C reported a daemon (kind "daemon" or "daemon-left", which
+// survive the cap because traced.CapReasons keeps one reason of every kind),
+// every other action whose writes overlap something C observed untracked, and
+// every other action that bound a port, is voided.
+//
+// It is a superset of an address match ONLY for binds the record lists:
+// RawRecord.Binds omits port 0 and abstract or unnamed sockets, so a server
+// reached through one of those is not covered.  That is vacuous under §4.7:
+// every step has its own network namespace (G10), so two actions can never
+// share an inet port or an abstract socket; only a pathname socket inside the
+// checkout crosses actions, and that is what the untracked-overlap half
+// catches.  No marker is added for it.
 func (m *merger) daemons() {
 	var ds []*act
 	for _, a := range m.ordered {
 		for _, c := range a.copies {
-			if hasKind(c.rec.Record.Reasons, "daemon") {
+			if hasDaemon(c.rec.Record.Reasons) {
 				ds = append(ds, a)
 				break
 			}
@@ -801,10 +973,13 @@ func (m *merger) daemons() {
 	for _, d := range ds {
 		for _, c := range d.copies {
 			for _, u := range c.rec.Record.UntrackedObservations {
+				if !m.mt.spend(1) {
+					return
+				}
 				m.wIx.overlapping(u, func(_ string, o []int) bool {
 					for _, id := range o {
 						if id != d.id {
-							m.ordered[id].rs.add("reads-product:daemon-peer")
+							m.ordered[id].rs.dep("reads-product:daemon-peer")
 						}
 					}
 					return true
@@ -812,8 +987,11 @@ func (m *merger) daemons() {
 			}
 		}
 		for _, a := range m.ordered {
+			if !m.mt.spend(1) {
+				return
+			}
 			if a != d && len(a.binds) > 0 {
-				a.rs.add("reads-product:daemon-peer")
+				a.rs.dep("reads-product:daemon-peer")
 			}
 		}
 	}
@@ -844,11 +1022,61 @@ func (m *merger) taintedMetadata() {
 		for _, t := range common {
 			a.rs.product(t)
 		}
+		_ = m.mt.spend(int64(len(ignores)%maxHits + len(common) + 1))
 	}
 }
 
 // ---------------------------------------------------------------------------
 // Emission.
+
+// orderDependence is M-3.  An action whose own behaviour depended on another
+// action's recorded writes (a reads-product or unstable-path reason derived by
+// M5-M14, or already in its record) would write something else in another
+// order, so its recorded write set is only one of several possible.  Every
+// cross-action rule quantifies over write sets, so one such action is a
+// second-order unknown: the strict verdict voids the run.  The relaxed,
+// report-only verdict charges it to the action alone.
+func (m *merger) orderDependence() {
+	for _, a := range m.ordered {
+		if a.rs.order {
+			m.voidStrict(a.name, "order", "M3 order-dependent: %s read another action's output or listing", a.name)
+		}
+	}
+}
+
+// tooBig is the retained-text cap of KILN04 2.7: the merge holds every path
+// and entry of every record, so their total length is bounded.
+func (m *merger) tooBig() bool {
+	limit := m.in.MaxRetainedBytes
+	if limit <= 0 {
+		limit = DefaultMaxRetainedBytes
+	}
+	var n int64
+	add := func(l []string) {
+		for _, s := range l {
+			n += int64(len(s)) + 16
+		}
+	}
+	for _, s := range m.shards {
+		add(s.Inventory.Paths)
+		for k := range s.Records {
+			r := &s.Records[k]
+			n += int64(len(r.Action))
+			add(r.Record.Entries)
+			add(r.Record.Writes)
+			add(r.Record.TrackedWrites)
+			add(r.Record.AbsentObservations)
+			add(r.Record.UntrackedObservations)
+			add(r.Record.Traversed)
+			add(r.Record.Binds)
+			add(r.Record.Reasons)
+		}
+		if n > limit {
+			return true
+		}
+	}
+	return n > limit
+}
 
 func (m *merger) finish() Result {
 	res := Result{ShardVoid: map[int][]string{}}
@@ -857,19 +1085,31 @@ func (m *merger) finish() Result {
 	if len(res.RunVoid) > MaxCauses {
 		res.RunVoid = res.RunVoid[:MaxCauses]
 	}
+	res.RelaxedRunVoidCount = len(m.relaxed)
+	res.RelaxedRunVoid = keys(m.relaxed)
+	if len(res.RelaxedRunVoid) > MaxCauses {
+		res.RelaxedRunVoid = res.RelaxedRunVoid[:MaxCauses]
+	}
 	res.Emitted = len(m.causes) == 0
+	relaxedOK := len(m.relaxed) == 0
 	for i, toks := range m.shardVoid {
 		res.ShardVoid[i] = keys(toks)
 	}
 	at := m.in.Now.UTC().Truncate(time.Second)
 	for _, a := range m.ordered {
-		o := Outcome{Action: a.name, Assigned: a.assigned, Recordable: !a.rs.any}
+		o := Outcome{Action: a.name, Assigned: a.assigned, Recordable: !a.rs.any,
+			Truncated: m.relaxLost[a.name] == "truncated", OrderDependent: a.rs.order}
 		o.ShardVoid = a.assigned >= 0 && len(m.shardVoid[a.assigned]) > 0
-		if res.Emitted && !a.rs.any && !o.ShardVoid && a.assigned >= 0 {
+		if (res.Emitted || relaxedOK) && m.in.Keys != nil && !a.rs.any && !o.ShardVoid && a.assigned >= 0 {
 			if man, pass, why := m.emit(a, at); why == "" {
-				o.Emitted = true
-				res.Manifests = append(res.Manifests, man)
-				res.Passes = append(res.Passes, pass)
+				// The relaxed verdict only needs to know the action COULD be
+				// emitted; nothing is appended unless the strict run is clean.
+				o.RelaxedEmittable = relaxedOK && m.relaxLost[a.name] == ""
+				if res.Emitted {
+					o.Emitted = true
+					res.Manifests = append(res.Manifests, man)
+					res.Passes = append(res.Passes, pass)
+				}
 			} else {
 				a.rs.add(why)
 			}

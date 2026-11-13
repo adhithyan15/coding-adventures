@@ -68,6 +68,12 @@ const (
 	MaxList = 1 << 16
 	// MaxInventory bounds the pre-BUILD inventory.
 	MaxInventory = 1 << 21
+	// MaxPath bounds one path of a record (a PATH_MAX is 4096).
+	MaxPath = 4096
+	// MaxDepth bounds the segments of one path.  No real checkout nests
+	// 128 deep; a path of 1,500 one-letter segments only exists to make every
+	// ancestor probe of the merge hash a long prefix.
+	MaxDepth = 128
 	// MaxText bounds a free-text field.
 	MaxText = 4096
 	// MaxSteps bounds the per-step summaries of one action.
@@ -151,6 +157,10 @@ type ShardHeader struct {
 	// "tracked-changed", "state-preloaded", "survivor", "records-too-large".
 	Void                     []string `json:"void"`
 	PostInventoryUnexplained int      `json:"post_inventory_unexplained"`
+	// TrackedChangedUnexplained counts the tracked paths the shard's backstop
+	// found changed that no record's tracked_writes covers (KILN04 7.1, M-2).
+	// A tracked file changed by something no trace saw is an unknown write.
+	TrackedChangedUnexplained int `json:"tracked_changed_unexplained"`
 }
 
 // Step is the per-step summary a record carries; the merge only counts them.
@@ -274,11 +284,28 @@ func pathList(what string, l []string, max int) error {
 		return fmt.Errorf("%s has %d entries, limit %d", what, len(l), max)
 	}
 	for _, p := range l {
-		if err := key.ValidatePath(p); err != nil {
+		if err := checkPath(p); err != nil {
 			return fmt.Errorf("%s: %v", what, err)
 		}
 	}
 	return sortedUnique(what, l)
+}
+
+// checkPath is key.ValidatePath plus what a record path must also satisfy: a
+// length cap, no NUL (a C string ends there, so two paths could read as one)
+// and no U+FFFD (what the JSON decoder substitutes for a byte that is not
+// UTF-8, so the path the merge sees would not be the path the shard wrote).
+func checkPath(p string) error {
+	if len(p) > MaxPath {
+		return fmt.Errorf("path is %d bytes, limit %d", len(p), MaxPath)
+	}
+	if strings.Count(p, "/") >= MaxDepth {
+		return fmt.Errorf("path is more than %d segments deep", MaxDepth)
+	}
+	if strings.ContainsRune(p, 0) || strings.ContainsRune(p, utf8.RuneError) {
+		return fmt.Errorf("path %q holds a NUL or an invalid byte", short(p))
+	}
+	return key.ValidatePath(p)
 }
 
 func textList(what string, l []string, max, maxLen int) error {
@@ -315,18 +342,21 @@ func (b *Binding) Validate() error {
 	case b.JobStart < 0:
 		return fmt.Errorf("binding: job_start %d", b.JobStart)
 	}
-	for name, d := range map[string]string{
-		"graph_sha256": b.GraphSHA256, "steps_sha256": b.StepsSHA256, "partition_sha256": b.PartitionSHA256,
-		"host_facts_sha256": b.HostFactsSHA256, "inventory_sha256": b.InventorySHA256,
-		"sandbox_config_sha256": b.SandboxConfigSHA256, "kiln_sha256": b.KilnSHA256,
-		"build_tool_sha256": b.BuildToolSHA256,
+	// Ordered slices, not maps: the FIRST failure is the one reported, and a
+	// cause text must be the same bytes on every run (merge output is compared
+	// byte for byte).
+	for _, f := range []struct{ name, v string }{
+		{"graph_sha256", b.GraphSHA256}, {"steps_sha256", b.StepsSHA256}, {"partition_sha256", b.PartitionSHA256},
+		{"host_facts_sha256", b.HostFactsSHA256}, {"inventory_sha256", b.InventorySHA256},
+		{"sandbox_config_sha256", b.SandboxConfigSHA256}, {"kiln_sha256", b.KilnSHA256},
+		{"build_tool_sha256", b.BuildToolSHA256},
 	} {
-		if !isDigest(d) {
-			return fmt.Errorf("binding: %s is not a SHA-256 in lowercase hex", name)
+		if !isDigest(f.v) {
+			return fmt.Errorf("binding: %s is not a SHA-256 in lowercase hex", f.name)
 		}
 	}
-	for name, s := range map[string]string{"strace_version": b.StraceVersion, "kernel": b.Kernel, "prepared_at": b.PreparedAt} {
-		if err := printable("binding "+name, s, 200); err != nil {
+	for _, f := range []struct{ name, v string }{{"strace_version", b.StraceVersion}, {"kernel", b.Kernel}, {"prepared_at", b.PreparedAt}} {
+		if err := printable("binding "+f.name, f.v, 200); err != nil {
 			return err
 		}
 	}
@@ -403,8 +433,8 @@ func (h *ShardHeader) Validate() error {
 		return fmt.Errorf("shard header: binding_id is not a SHA-256 in lowercase hex")
 	case h.ShardCount < 1 || h.ShardCount > MaxShards || h.ShardIndex < 0 || h.ShardIndex >= h.ShardCount:
 		return fmt.Errorf("shard header: shard %d of %d", h.ShardIndex, h.ShardCount)
-	case h.PostInventoryUnexplained < 0:
-		return fmt.Errorf("shard header: post_inventory_unexplained %d", h.PostInventoryUnexplained)
+	case h.PostInventoryUnexplained < 0 || h.TrackedChangedUnexplained < 0:
+		return fmt.Errorf("shard header: a negative count (%d, %d)", h.PostInventoryUnexplained, h.TrackedChangedUnexplained)
 	}
 	return textList("shard header void", h.Void, 64, 64)
 }
@@ -432,17 +462,19 @@ func (r *ShardRecord) Validate() error {
 	if r.Record.Package != r.Action {
 		return fmt.Errorf("record %q: its raw record is for package %q", short(r.Action), short(r.Record.Package))
 	}
-	for name, s := range map[string]string{
-		"language": r.Language, "status": r.Status, "refusal": r.Refusal, "gate": r.Gate, "unknown_writes": r.Unknown,
+	for _, f := range []struct{ name, v string }{
+		{"language", r.Language}, {"status", r.Status}, {"refusal", r.Refusal}, {"gate", r.Gate}, {"unknown_writes", r.Unknown},
 	} {
-		if err := printable(name, s, 200); err != nil {
+		if err := printable(f.name, f.v, 200); err != nil {
 			return fmt.Errorf("record %q: %v", short(r.Action), err)
 		}
 	}
-	if r.Status == "" {
-		return fmt.Errorf("record %q: status is empty", short(r.Action))
+	if !statusOK(r.Status) {
+		return fmt.Errorf("record %q: status %q is not a lowercase word", short(r.Action), short(r.Status))
 	}
-	if r.StepsRun < 0 || r.StepsTotal < 0 || r.StepsRun > r.StepsTotal || r.StepsTotal > MaxSteps || len(r.Steps) > MaxSteps {
+	if r.StepsRun < 0 || r.StepsTotal < 0 || r.StepsRun > r.StepsTotal || r.StepsTotal > MaxSteps || len(r.Steps) != r.StepsRun {
+		// One summary per step that RAN: a shorter list would hide an unclean
+		// tracer, a longer one would claim steps that never ran.
 		return fmt.Errorf("record %q: steps_run %d of %d with %d summaries", short(r.Action), r.StepsRun, r.StepsTotal, len(r.Steps))
 	}
 	if r.StepsSHA != "" && !isDigest(r.StepsSHA) {
@@ -472,6 +504,14 @@ func (r *ShardRecord) Validate() error {
 	if err := textList(fmt.Sprintf("record %q entries", short(r.Action)), rr.Entries, MaxList, MaxText); err != nil {
 		return err
 	}
+	for _, e := range rr.Entries {
+		// The manifest allowlist (pkg:, path:, list: and a valid path) applies
+		// at decode, so no rule ever sees an entry of another shape.  Length
+		// and count caps of the ledger are checked at emission.
+		if err := key.CheckEntryName(e); err != nil {
+			return fmt.Errorf("record %q: %v", short(r.Action), err)
+		}
+	}
 	if err := textList(fmt.Sprintf("record %q binds", short(r.Action)), rr.Binds, MaxList, 512); err != nil {
 		return err
 	}
@@ -493,4 +533,17 @@ func sortedCopy(l []string) []string {
 	copy(c, l)
 	sort.Strings(c)
 	return c
+}
+
+// statusOK: a status is a short lowercase word ("built", "failed", "not-run").
+func statusOK(s string) bool {
+	if s == "" || len(s) > 32 {
+		return false
+	}
+	for i := 0; i < len(s); i++ {
+		if c := s[i]; !(c >= 'a' && c <= 'z' || c == '-') {
+			return false
+		}
+	}
+	return true
 }
