@@ -617,7 +617,8 @@ func TestLookupRootAndFlagsAreInTheKey(t *testing.T) {
 	// the executor flags cannot see its manifests: a miss of the weak key,
 	// never a hit.
 	for name, mod := range map[string]func(*LookupOptions){
-		"root":  func(l *LookupOptions) { l.Root = "/elsewhere/checkout" },
+		// filepath.Abs makes it absolute on the host too (C:\elsewhere\... on Windows).
+		"root":  func(l *LookupOptions) { l.Root, _ = filepath.Abs("/elsewhere/checkout") },
 		"flags": func(l *LookupOptions) { l.ExecutorFlags = []string{"-exec-wrapper=/other"} },
 	} {
 		p, err := e.planOS("linux", mod)
