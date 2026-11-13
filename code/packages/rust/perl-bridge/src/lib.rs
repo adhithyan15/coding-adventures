@@ -188,6 +188,21 @@ pub const SVs_TEMP: u32 = 0x00000800;
 // underlying function-equivalents here. Where Perl only provides a macro, we
 // implement it manually below.
 
+// croak and warn can unwind: `croak` ends in a `longjmp` back to the enclosing `eval`,
+// and a `$SIG{__WARN__}` handler may itself `die`.  On Windows `longjmp` is implemented
+// as an SEH unwind, so it walks through every Rust frame between Perl and the croak.
+// Rust aborts ("panic in a function that cannot unwind") when an unwind reaches a plain
+// `extern "C"` frame, so the declarations here are `"C-unwind"`, and an XSUB that can
+// reach them must be `unsafe extern "C-unwind" fn` registered with [`newXS_unwind`].
+// (On Unix the `longjmp` does not unwind, so both ABIs behave the same there.)
+#[allow(non_snake_case)]
+extern "C-unwind" {
+    #[link_name = "perl_bridge_croak_message"]
+    fn raw_croak_message(msg: *const c_char) -> !;
+    #[link_name = "perl_bridge_warn_message"]
+    fn raw_warn_message(msg: *const c_char);
+}
+
 #[allow(non_snake_case)]
 extern "C" {
     #[link_name = "perl_bridge_newSViv"]
@@ -234,10 +249,6 @@ extern "C" {
     fn raw_SvRV(sv: *mut SV) -> *mut SV;
     #[link_name = "perl_bridge_sv_rok"]
     fn raw_SvROK(sv: *mut SV) -> c_int;
-    #[link_name = "perl_bridge_croak_message"]
-    fn raw_croak_message(msg: *const c_char) -> !;
-    #[link_name = "perl_bridge_warn_message"]
-    fn raw_warn_message(msg: *const c_char);
     // -- Conduit (WEB11) additions ----------------------------------------
     #[link_name = "perl_bridge_call_coderef"]
     fn raw_call_coderef(
@@ -387,6 +398,28 @@ pub unsafe fn newXS(
     subaddr: unsafe extern "C" fn(*mut CV),
     filename: *const c_char,
 ) -> *mut CV {
+    raw_newXS(name, subaddr, filename)
+}
+
+/// Register an XSUB that may unwind (call [`die`], `croak`, or anything that does).
+///
+/// Same as [`newXS`], but the function is `extern "C-unwind"`.  An XSUB that can reach
+/// [`die`] must use this: on Windows the `longjmp` Perl's `croak` performs is an SEH
+/// unwind that crosses the XSUB's frame, and Rust aborts if that frame is plain
+/// `extern "C"`.  A `"C-unwind"` and a `"C"` function pointer have the same calling
+/// convention; only the unwind behaviour differs, which is the point.  Keep such XSUBs
+/// free of live locals that own resources across the call to `die` where you can:
+/// on Unix the `longjmp` skips destructors, on Windows the unwind runs them.
+pub unsafe fn newXS_unwind(
+    name: *const c_char,
+    subaddr: unsafe extern "C-unwind" fn(*mut CV),
+    filename: *const c_char,
+) -> *mut CV {
+    // SAFETY: identical ABI; the difference is only whether an unwind may pass through.
+    let subaddr = std::mem::transmute::<
+        unsafe extern "C-unwind" fn(*mut CV),
+        unsafe extern "C" fn(*mut CV),
+    >(subaddr);
     raw_newXS(name, subaddr, filename)
 }
 

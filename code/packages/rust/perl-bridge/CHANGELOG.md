@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Fixed (Windows, found by the first real Windows run of the smoke test):** `die`
+  from Rust aborted the process with "panic in a function that cannot unwind". Perl's
+  `croak` ends in a `longjmp`, which on Windows is an SEH unwind, and it crossed the
+  XSUB's plain `extern "C"` frame; Rust aborts when an unwind reaches such a frame.
+  The shim's croak and warn declarations are now `extern "C-unwind"`, and there is a
+  new `newXS_unwind` that registers an `unsafe extern "C-unwind" fn(*mut CV)` XSUB
+  (the existing `newXS` is unchanged, so current extensions keep compiling, but an
+  XSUB registered with it must not reach `die` on Windows). Tests 1-42 of the smoke
+  test, everything up to the first `die`, had already passed on the real Windows Perl.
+  Linux and the Wine/GNU run are unaffected because there `longjmp` does not unwind.
+  **Known follow-up:** the XSUBs in `perl/conduit` call `perl_bridge::die` for
+  argument-count misuse from plain `extern "C"` functions and should move to
+  `extern "C-unwind"` + `newXS_unwind`; no test reaches those paths today.
+
 - `BUILD`/`BUILD_windows` build, lint and test instead of echoing. Both recipes were
   `echo "perl-bridge: compile-only crate (requires Perl shared library to link)"`, so
   CI never compiled the crate on its own. They now run `cargo test`, `cargo build

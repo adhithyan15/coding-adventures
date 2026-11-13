@@ -13,7 +13,7 @@
 // ----------
 // tests/lib/PerlBridgeSmoke.pm calls DynaLoader's `bootstrap`, which finds the
 // staged library at auto/PerlBridgeSmoke/PerlBridgeSmoke.<dlext> and calls the
-// exported `boot_PerlBridgeSmoke` below; that registers each XSUB with `newXS`.
+// exported `boot_PerlBridgeSmoke` below; that registers each XSUB with `newXS_unwind` (these XSUBs may `die`, so they are `extern "C-unwind"`).
 //
 // The error paths use `croak` (through `die`), which unwinds with `longjmp`
 // across these Rust frames.  Every function that dies holds no value with a
@@ -51,7 +51,7 @@ unsafe fn need_args(frame: &XsubFrame, n: i32, name: &str) {
 // -- numbers ----------------------------------------------------------------
 
 /// `add_iv($a, $b)`: integer addition through `sv_2iv` / `newSViv`.
-unsafe extern "C" fn xs_add_iv(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_add_iv(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 2, "add_iv");
     let sum = sv_2iv(arg(&f, 0)).wrapping_add(sv_2iv(arg(&f, 1)));
@@ -60,7 +60,7 @@ unsafe extern "C" fn xs_add_iv(_cv: *mut CV) {
 }
 
 /// `add_nv($a, $b)`: float addition through `sv_2nv` / `newSVnv`.
-unsafe extern "C" fn xs_add_nv(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_add_nv(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 2, "add_nv");
     let sum = sv_2nv(arg(&f, 0)) + sv_2nv(arg(&f, 1));
@@ -69,14 +69,14 @@ unsafe extern "C" fn xs_add_nv(_cv: *mut CV) {
 }
 
 /// `max_uv()`: the largest unsigned integer, through `newSVuv`.
-unsafe extern "C" fn xs_max_uv(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_max_uv(_cv: *mut CV) {
     let f = xsub_frame();
     set_return(&f, 0, newSVuv(UV::MAX));
     xsub_return(1, f.ax);
 }
 
 /// `to_i64($v)` / `from_i64($v)`: the `i64` conversion helpers.
-unsafe extern "C" fn xs_round_trip_i64(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_round_trip_i64(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "round_trip_i64");
     set_return(&f, 0, i64_to_sv(sv_to_i64(arg(&f, 0))));
@@ -84,7 +84,7 @@ unsafe extern "C" fn xs_round_trip_i64(_cv: *mut CV) {
 }
 
 /// `round_trip_f64($v)`: the `f64` conversion helpers.
-unsafe extern "C" fn xs_round_trip_f64(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_round_trip_f64(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "round_trip_f64");
     set_return(&f, 0, f64_to_sv(sv_to_f64(arg(&f, 0))));
@@ -96,7 +96,7 @@ unsafe extern "C" fn xs_round_trip_f64(_cv: *mut CV) {
 /// `echo($s)`: the string back through `sv_to_string` / `newSVpvn` (byte exact,
 /// embedded NULs included); undef when the bytes are not UTF-8 (the helper's
 /// contract), with a replacement marker string.
-unsafe extern "C" fn xs_echo(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_echo(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "echo");
     let sv = match sv_to_string(arg(&f, 0)) {
@@ -109,7 +109,7 @@ unsafe extern "C" fn xs_echo(_cv: *mut CV) {
 
 /// `cstring($s)`: the string through `newSVpv` with an explicit length (a length of
 /// zero would mean `strlen`, so a non-empty input is required).
-unsafe extern "C" fn xs_cstring(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_cstring(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "cstring");
     let mut len: usize = 0;
@@ -123,7 +123,7 @@ unsafe extern "C" fn xs_cstring(_cv: *mut CV) {
 
 /// `flags($v)`: which `Sv*OK` / `SvTRUE` / `SvROK` predicates hold, as a string of
 /// 0 and 1 in the order IOK, NOK, POK, TRUE, ROK.
-unsafe extern "C" fn xs_flags(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_flags(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "flags");
     let sv = arg(&f, 0);
@@ -134,7 +134,7 @@ unsafe extern "C" fn xs_flags(_cv: *mut CV) {
 }
 
 /// `count_args(...)`: the number of arguments, from `XsubFrame::items`.
-unsafe extern "C" fn xs_count_args(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_count_args(_cv: *mut CV) {
     let f = xsub_frame();
     set_return(&f, 0, newSViv(f.items as IV));
     xsub_return(1, f.ax);
@@ -143,7 +143,7 @@ unsafe extern "C" fn xs_count_args(_cv: *mut CV) {
 // -- arrays and hashes ------------------------------------------------------
 
 /// `sum_array(\@numbers)`: the sum, through `SvROK`, `SvRV` and `av_to_f64_vec`.
-unsafe extern "C" fn xs_sum_array(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_sum_array(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "sum_array");
     let r = arg(&f, 0);
@@ -159,7 +159,7 @@ unsafe extern "C" fn xs_sum_array(_cv: *mut CV) {
 }
 
 /// `range(n)`: `[1, 2, ..., n]` as floats, through `f64_vec_to_av` / `newRV_noinc`.
-unsafe extern "C" fn xs_range(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_range(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "range");
     let n = sv_2iv(arg(&f, 0)).max(0);
@@ -172,7 +172,7 @@ unsafe extern "C" fn xs_range(_cv: *mut CV) {
 /// `array_ops()`: pushes 10, 20, 30, pops one, and reports `[length_after_pushes,
 /// popped, length_after_pop, element_0]` (`newAV`, `av_push`, `av_len`, `av_pop`,
 /// `av_fetch`).
-unsafe extern "C" fn xs_array_ops(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_array_ops(_cv: *mut CV) {
     let f = xsub_frame();
     let av = newAV();
     for v in [10, 20, 30] {
@@ -202,7 +202,7 @@ unsafe extern "C" fn xs_array_ops(_cv: *mut CV) {
 
 /// `make_hash()`: `{ answer => 42, name => "perl-bridge", list => [1, 2] }`
 /// (`new_hv`, `hv_store`, `newRV_inc` of an array also kept elsewhere).
-unsafe extern "C" fn xs_make_hash(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_make_hash(_cv: *mut CV) {
     let f = xsub_frame();
     let hv = new_hv();
     hv_store(hv, "answer", newSViv(42));
@@ -215,7 +215,7 @@ unsafe extern "C" fn xs_make_hash(_cv: *mut CV) {
 }
 
 /// `refcount_dance($v)`: bumps and drops a reference to `$v` and returns it.
-unsafe extern "C" fn xs_refcount_dance(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_refcount_dance(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "refcount_dance");
     let sv = arg(&f, 0);
@@ -234,7 +234,7 @@ unsafe extern "C" fn xs_refcount_dance(_cv: *mut CV) {
 ///
 /// Perl may reallocate its argument stack during the call, which would leave
 /// `frame.base` stale; the callbacks the test passes are tiny, so it never does.
-unsafe extern "C" fn xs_call(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_call(_cv: *mut CV) {
     let f = xsub_frame();
     if f.items < 1 {
         die("call: expected a code reference");
@@ -255,7 +255,7 @@ unsafe extern "C" fn xs_call(_cv: *mut CV) {
 /// `context_round_trip()`: 1 when the interpreter context captured with
 /// `get_context` can be bound again with `set_context` (a non-threaded Perl has no
 /// context: both are no-ops and the result is still 1).
-unsafe extern "C" fn xs_context_round_trip(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_context_round_trip(_cv: *mut CV) {
     let f = xsub_frame();
     let ctx: *mut c_void = get_context();
     set_context(ctx);
@@ -267,7 +267,7 @@ unsafe extern "C" fn xs_context_round_trip(_cv: *mut CV) {
 // -- errors -----------------------------------------------------------------
 
 /// `die_with($message)`: `die` through `perl_bridge_croak_message`.
-unsafe extern "C" fn xs_die_with(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_die_with(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "die_with");
     match sv_to_string(arg(&f, 0)) {
@@ -277,7 +277,7 @@ unsafe extern "C" fn xs_die_with(_cv: *mut CV) {
 }
 
 /// `warn_with($message)`: `warn` through `perl_bridge_warn_message`; returns 1.
-unsafe extern "C" fn xs_warn_with(_cv: *mut CV) {
+unsafe extern "C-unwind" fn xs_warn_with(_cv: *mut CV) {
     let f = xsub_frame();
     need_args(&f, 1, "warn_with");
     if let Some(message) = sv_to_string(arg(&f, 0)) {
@@ -302,7 +302,7 @@ pub unsafe extern "C" fn boot_PerlBridgeSmoke(cv: *mut CV) {
 
     macro_rules! register {
         ($name:literal, $func:ident) => {
-            newXS(
+            newXS_unwind(
                 concat!("PerlBridgeSmoke::", $name, "\0").as_ptr() as *const c_char,
                 $func,
                 file,

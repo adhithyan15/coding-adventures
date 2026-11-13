@@ -16,6 +16,16 @@ preserving Perl's allocator choice when a handler throws an exception.
 On Unix the existing C compiler/archive build is retained. macOS extension
 crates enable dynamic lookup for Perl's host-provided symbols.
 
+## XSUBs that can die
+
+Perl's `croak` (what `die` calls) ends in a `longjmp`. On Unix that just jumps; on
+Windows it is an SEH unwind that walks through every Rust frame in between, and Rust
+aborts ("panic in a function that cannot unwind") if the unwind reaches a plain
+`extern "C"` frame. An XSUB that can reach `die` therefore has to be
+`unsafe extern "C-unwind" fn(*mut CV)` and registered with `newXS_unwind` (the
+existing `newXS` takes a plain `extern "C"` function and is unchanged). The smoke
+example does this for every XSUB.
+
 ## Testing
 
 `BUILD` (Unix) and `BUILD_windows` (which runs `tests\run-windows.ps1`, so the native
