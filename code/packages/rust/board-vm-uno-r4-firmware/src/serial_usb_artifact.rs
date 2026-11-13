@@ -1148,11 +1148,11 @@ mod tests {
         );
         assert_eq!(
             run.options.arm_gxx,
-            Some(PathBuf::from("/native/bin/arm-none-eabi-g++"))
+            Some(native_tool("/native/bin", "arm-none-eabi-g++"))
         );
         assert_eq!(
             run.options.arm_ar,
-            Some(PathBuf::from("/native/bin/arm-none-eabi-ar"))
+            Some(native_tool("/native/bin", "arm-none-eabi-ar"))
         );
         assert_eq!(run.options.arm_compat_root, Some(PathBuf::from("/compat")));
         assert_eq!(run.options.target_dir, PathBuf::from("out"));

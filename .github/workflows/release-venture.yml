@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
-          toolchain: "1.98"
+          toolchain: "1.98.1"
       - id: version
         name: Validate semantic release
         shell: bash
@@ -40,7 +40,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
-          toolchain: "1.98"
+          toolchain: "1.98.1"
       - name: Install Cairo
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: bash code/scripts/ci/apt-install.sh libcairo2-dev
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
-          toolchain: "1.98"
+          toolchain: "1.98.1"
       - name: Install Cairo
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: bash code/scripts/ci/apt-install.sh libcairo2-dev
@@ -89,7 +89,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
-          toolchain: "1.98"
+          toolchain: "1.98.1"
       - name: Build Metal bridge
         working-directory: code/packages/rust
         run: cargo build --release -p venture-browser-macos
@@ -112,7 +112,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master
         with:
-          toolchain: "1.98"
+          toolchain: "1.98.1"
       - name: Build Direct2D bridge
         working-directory: code/packages/rust
         run: cargo build --release -p venture-browser-windows
