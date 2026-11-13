@@ -3039,10 +3039,12 @@ check responder or intermediate revocation, generalize path construction or
 validation, implement TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
-A second bounded routed-policy follow-up consumes that complete selected-anchor
-responder-policy proof and applies the exact retained intermediate's supported
-critical DNS constraints to the exact authenticated responder certificate. Both
-certificates are derived exclusively through the consumed fully routed proof;
+A second bounded routed-policy follow-up,
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy`,
+consumes that complete selected-anchor responder-policy proof and applies the
+exact retained intermediate's supported critical DNS constraints to the exact
+authenticated responder certificate. Both certificates are derived exclusively
+through the consumed fully routed strongest-Name-policy proof;
 callers cannot substitute a responder, SAN collection, intermediate, path,
 algorithm, key, signature, or time. An absent intermediate NameConstraints
 extension succeeds without reading Subject Alternative Name. A present
