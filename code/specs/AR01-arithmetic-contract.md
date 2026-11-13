@@ -258,9 +258,17 @@ The claims fall in five families:
 | `alu_rejects_non_bit_in_a` | `alu` | 16,640 | j: U8 full(256); k: Nat set(65) |
 | `alu_rejects_non_bit_in_b` | `alu` | 16,640 | j: U8 full(256); k: Nat set(65) |
 
-Total: **2,655,437 exhaustive cases over 63 claims** (559,276 more were discarded
-by a refinement, all in the unequal-length claims), 53 examples, 52 negative
-controls.
+Total: **2,655,437 cases over 63 claims run in the generator's "exhaustive"
+mode, of which 859,848 are exhaustive (every input of the stated domain),
+1,279,161 are sampled (the seven `*_16_bit_sampled` claims, a 377-value boundary
+domain) and 516,428 are bounded-set (the Bytes claims over a fixed set of 347
+byte strings: unequal lengths, empty `a`, `alu_not_ignores_b`).** The 859,848
+include the 133,120 cases of the six non-bit rejection claims, whose position
+`k` ranges over 0..64 (`Nat set(65)`) and whose byte `j` is all 256 values.
+The generator and the report count every case of an "exhaustive" run as
+exhaustive; this split was audited per claim from the manifest by hand.
+A further 559,276 cases were discarded by a refinement, all in the
+unequal-length claims. There are 53 examples and 52 negative controls.
 
 A claim's formula is in the Warrant file under the same name; the text of an
 upper layer's assumption must be that formula, not a paraphrase (VER27 rule (c)).
@@ -349,7 +357,8 @@ this contract.
 1. **Examples and claims.** 53 examples (the half and full adder tables as a
    datasheet prints them, worked 4- and 8-bit sums with their flags, rejections)
    and 63 claims, each with an exhaustive, a property and a fuzz suite.
-2. **Exhaustive means exhaustive.** 2,655,437 cases in the debug profile, 0
+2. **Say which kind of enumeration.** 2,655,437 cases in the debug profile
+   (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set), 0
    unreachable by type. The largest are `ripple_carry_adder_with_carry_16_bit_sampled`
    (284,258, sampled) and `ripple_carry_adder_with_carry_8_bit_exhaustive`
    (131,072: every 8-bit pair and carry-in).

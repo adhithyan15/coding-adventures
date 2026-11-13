@@ -12,7 +12,7 @@ entry is unreleased and the version is bumped at release.)
 
 - **`code/specs/arithmetic.warrant` and `AR01-arithmetic-contract.md`**: the
   executable specification (Warrant v1) and its prose contract. 5 operations, 53
-  examples, 63 claims, 2,655,437 exhaustive cases: every input of the half and full
+  examples, 63 claims, 2,655,437 cases run in the generator's "exhaustive" mode (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set; see AR01 section on the case count): every input of the half and full
   adder; both ripple-carry adders for every input at 1, 2, 3, 4 and 8 bits (the 4-bit
   adder with a carry-in is the 512 cases of VER27 4.15, with carry out and signed
   overflow); the six ALU operations with all four flags at 4 and 8 bits (Add and Sub

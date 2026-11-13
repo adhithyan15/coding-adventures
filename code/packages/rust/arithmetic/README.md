@@ -58,19 +58,21 @@ v1 document, with the prose contract in
 `evidence.bindings` (never edit it; `BUILD` fails if it drifts) and runs against
 the real exports:
 
-- **exhaustive suites, 2,655,437 cases in 63 claims:** the half and full adder
+- **enumerated suites, 2,655,437 cases in 63 claims (859,848 exhaustive + 1,279,161 sampled + 516,428 bounded-set):** the *exhaustive* part is the half and full adder
   truth tables (a Boolean oracle and, independently, an arithmetic one); both
   ripple-carry adders at **every** input for 1, 2, 3, 4 and 8 bits (the 4-bit
   adder with a carry-in is the 512 cases `(a + b + cin) mod 16` plus carry and
   signed overflow); each of the six ALU operations with all four flags at 4 and 8
-  bits (Add and Sub also at 1 to 3); and the rejection of every non-bit at each of
-  eight positions, of unequal lengths and of an empty operand. The oracle is
+  bits (Add and Sub also at 1 to 3); and the rejection of every non-bit byte at
+  each of eight positions. The *bounded-set* part is the rejection of unequal
+  lengths, of an empty `a`, and `alu_not_ignores_b`, which run over a fixed set
+  of 347 byte strings, not every byte string. The oracle is
   Warrant's own integers (the subtraction is `a - b`, not `a + NOT(b) + 1`),
   never the crate. That is proof by enumeration of the Rust function as compiled;
   it assumes the host language and toolchain, and `logic-gates`/`transistors` are
   under test, not an oracle (AR01 "Trust boundary");
-- **16 bits is sampled, and named so** (`*_16_bit_sampled`: the 377-value
-  boundary domain squared); nothing is claimed above 16 bits;
+- **16 bits is sampled, and named so** (`*_16_bit_sampled`, 1,279,161 cases: the
+  377-value boundary domain squared); nothing is claimed above 16 bits;
 - **property and fuzz suites** for every claim, and **sabotage controls** that
   inject wrong results and a swallowed rejection, and must fail. The generator's
   faults need a numeric or bytes result, so the ALU's only control is a swallowed
