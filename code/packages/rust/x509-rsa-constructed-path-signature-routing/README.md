@@ -78,6 +78,19 @@ one value. This still does not define complete Name comparison, validate the
 whole path, apply every constraint or revocation policy, perform TLS or HTTP,
 authorize OAuth transport, or grant network authority.
 
+A matching stronger reviewed-anchor DNS-policy result accepts only the Name-
+policy-backed target-signature closure. It derives the exact target, validated
+SAN index, reviewed anchor, and optional constraint bytes only through that
+closure, then invokes the same bounded supported permitted-DNS evaluator as the
+generic result. Success retains the exact Name-value policy, reviewed-root
+selection, certificate-wide anchor-role policy, complete ordered intermediate
+and target-signature evidence, complete server policy, and any payload-free
+constrained-name count together. A generic target closure cannot produce this
+result. This covers only the supported reviewed-anchor DNS subset; it does not
+define complete Name comparison, validate the whole path, apply excluded or
+non-DNS anchor constraints or every intermediate constraint, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or grant network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

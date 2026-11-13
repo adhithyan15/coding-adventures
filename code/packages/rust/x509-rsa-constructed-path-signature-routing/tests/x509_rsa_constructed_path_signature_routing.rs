@@ -46,6 +46,7 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
+    validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_anchor_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_subordinate_intermediate_name_constraints_policy,
     validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_policy,
@@ -1667,6 +1668,48 @@ fn accumulates_name_policy_backed_ordered_intermediates_without_losing_provenanc
     assert_eq!(
         format!("{closed:?}"),
         "BoundAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetSignature"
+    );
+
+    let anchor_policy =
+        validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_anchor_policy(
+            closed,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+    assert_eq!(anchor_policy.constrained_dns_names(), None);
+    assert!(std::ptr::eq(
+        anchor_policy
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .initialized_path_length()
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert!(std::ptr::eq(
+        anchor_policy
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .initialized_path_length()
+            .reviewed_path()
+            .anchor_role_policy()
+            .certificate(),
+        &candidates[2]
+    ));
+    assert_eq!(
+        anchor_policy
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .processed_intermediate_count(),
+        2
+    );
+    assert_eq!(
+        format!("{anchor_policy:?}"),
+        "ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy"
     );
 }
 

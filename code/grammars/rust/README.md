@@ -3,14 +3,16 @@
 This directory will hold the versioned Rust front ends of
 [RS01](../../specs/RS01-rust-grammars.md): one `.tokens` and one `.grammar`
 file for every published Rust release, and for every edition that release
-supports. **Slice A2 (this change) writes the inventory only.** There are no
-grammar files yet; every row is `pending`.
+supports. **Slices A2 and A3 wrote the inventory and the evidence tooling.**
+There are no grammar files yet; every row is `pending`.
 
 What is here today:
 
 - `releases.csv`: the LANG84 release inventory, 158 rows.
 - `subsets.csv`: the two subsets RS01 names, `rs-token-trees` and
   `rs-confined`, with the new `allowlist` column.
+- `pair-evidence.csv`: header only, until the first pair files exist (see
+  "Pair evidence").
 
 `code/scripts/release_inventory.py check` validates both on every pull
 request. See [LANG84](../../specs/LANG84-grammar-driven-versioned-frontends.md)
@@ -83,6 +85,40 @@ edition that starts at the row. Lineage carries the set, so 1.30.1 stays
 | 1.56.0 ... 1.84.x | 2015, 2018, 2021 | 43 | 129 |
 | 1.85.0 ... 1.99.1 | 2015, 2018, 2021, 2024 | 23 | 92 |
 | **Total** | | **158** | **347** |
+
+## Pair evidence
+
+`pair-evidence.csv` holds one row per (release, edition) pair that has files
+here, and `code/scripts/rust_release_pairs.py` keeps the rows and the files
+honest. There are no rows yet: slice A3 (this change) adds the tooling and the
+header-only file, and slice A4 writes the first pairs.
+
+Each row has one of three bases (RS01 section 6.3):
+
+| Basis | Meaning | Who writes the files |
+| --- | --- | --- |
+| `reviewed` | written by hand from the tag's sources, as a reviewed delta | a person |
+| `copy:<pair>` | every recorded syntax blob equals the source pair's | `rust_release_pairs.py write` |
+| `semantic-copy:<pair>` | a 1.x minor that copies its predecessor's pair; the `accepted.rs` blob and features, the `RELEASES.md` blob and section, and the oracle sweep's toolchain SHA-256 and result digest are all recorded | `rust_release_pairs.py write` |
+
+A pair is named `<release>` before 1.0 and `<release>-e<edition>` from 1.0,
+for example `0.4` or `1.85.0-e2021`. A source must be an earlier edition of
+the same release, or the same edition of a release on the target's
+`predecessor` chain; a `semantic-copy` must be a 1.x minor and name its direct
+predecessor.
+
+```text
+python3 code/scripts/rust_release_pairs.py check   # verify; exit 1 on any violation
+python3 code/scripts/rust_release_pairs.py write   # (re)write copy and semantic-copy files
+```
+
+A copy's header names its own release and edition and cites its evidence, and
+its body is its source's, byte for byte. `check` fails when a copy's body or
+header drifts, a `semantic-copy` lacks any of its three conditions, a
+`reviewed` row lacks its blobs, note or commit, a source is missing, later or
+cyclic, a pair file has no row, or a row has no files. It reads only local
+files, refuses symlinks and paths that leave this directory, and runs in CI
+beside `release_inventory.py check`.
 
 ## Pair files (none yet)
 

@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	"path/filepath"
+	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -444,12 +444,19 @@ func systemDir(d string) bool {
 	return false
 }
 
+// posixListSep separates PATH entries. The PATH ConstructPATH builds is for
+// the Linux recording environment (KILN04 4.2) and its roots are POSIX paths,
+// so it uses POSIX rules on every host: on Windows, filepath.IsAbs("/usr/bin")
+// is false and the host separator is ';', which would key a different value.
+const posixListSep = ":"
+
 // validHome says whether home may be spliced into a PATH: absolute, already
-// clean, and free of list separators. A relative or odd HOME would put a
-// relative directory on the PATH, which is the checkout when the probe runs.
+// clean (both by POSIX rules), and free of either list separator. A relative
+// or odd HOME would put a relative directory on the PATH, which is the
+// checkout when the probe runs.
 func validHome(home string) bool {
-	return home != "" && filepath.IsAbs(home) && filepath.Clean(home) == home &&
-		!strings.ContainsRune(home, filepath.ListSeparator)
+	return home != "" && home != "/" && path.IsAbs(home) && path.Clean(home) == home &&
+		!strings.ContainsAny(home, ":;\\")
 }
 
 // ConstructPATH builds a PATH from the roots of exactly the given tools
@@ -477,7 +484,7 @@ func (t *Toolchains) ConstructPATH(tools []key.Tool, home string) string {
 				if home == "" {
 					continue
 				}
-				d = filepath.ToSlash(home) + d[len("$HOME"):]
+				d = home + d[len("$HOME"):] // validHome: POSIX-absolute, no backslash
 			}
 			if seen[d] {
 				continue
@@ -490,5 +497,5 @@ func (t *Toolchains) ConstructPATH(tools []key.Tool, home string) string {
 			}
 		}
 	}
-	return strings.Join(append(first, last...), string(filepath.ListSeparator))
+	return strings.Join(append(first, last...), posixListSep)
 }

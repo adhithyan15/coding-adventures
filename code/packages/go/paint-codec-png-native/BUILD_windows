@@ -1,1 +1,5 @@
-echo Skipping go/paint-codec-png-native on Windows for now
+# Windows: cgo needs MinGW-w64 gcc, so tools\run-tests.ps1 builds the Rust
+# paint-codec-png-c staticlib for x86_64-pc-windows-gnu, puts MinGW gcc on PATH and
+# runs `go test ./... -v -cover` (see code\scripts\build-conduit-capi-windows-gnu.ps1).
+# build-tool: deps=rust/paint-codec-png-c
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
