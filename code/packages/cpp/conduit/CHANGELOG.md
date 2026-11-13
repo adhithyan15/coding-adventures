@@ -1,5 +1,44 @@
 # Changelog — Conduit (C++)
 
+## [0.1.2] - 2026-11-13
+
+### Added
+
+- **Real Windows build.** `BUILD_windows` used to be an echo-skip ("tests use POSIX
+  sockets"); it now runs `tools\run-tests.ps1`, which mirrors `tools/run-tests.sh`
+  with MSVC: it builds the MSVC-ABI `conduit_capi.lib` (default Rust toolchain, so no
+  GNU target), compiles `tests/test_*.cpp` with `cl.exe` (`/std:c++17 /EHsc /W4 /MD`),
+  links the system libraries a Rust staticlib needs (`kernel32 advapi32 ntdll userenv
+  bcrypt ws2_32 synchronization`; `synchronization.lib` holds `WaitOnAddress` /
+  `WakeByAddress*`) and runs every suite, including the end-to-end server test. A
+  failing suite fails the recipe with its exit code; nothing is skipped.
+- `code/scripts/build-conduit-capi-windows-msvc.ps1`, shared with `cpp/conduit-hello`:
+  drops Git for Windows' `usr\bin` from `PATH` so a bare `link` is MSVC's linker (and
+  asserts it), asserts `cl`/`cargo`/`rustc` and an `x86_64-pc-windows-msvc` host,
+  builds only the staticlib (`cargo rustc --release --crate-type staticlib -- --print
+  native-static-libs`) and merges the libraries rustc reports with the fixed list above.
+- `tests/net_compat.h`: a small shim so the E2E HTTP client builds on BSD sockets and
+  Winsock (`WSAStartup`/`WSACleanup` once, `SOCKET`/`INVALID_SOCKET`, `closesocket`,
+  int-sized `send`/`recv`, and `SO_RCVTIMEO` as a DWORD of milliseconds rather than a
+  `timeval`, which Winsock would silently read as 5 ms). On Unix each wrapper is the
+  same system call as before.
+
+### Changed
+
+- `CMakeLists.txt` picks the library per platform: `target/release/libconduit_capi.a`
+  (unchanged on Unix), `target/release/conduit_capi.lib` on MSVC, and the
+  `x86_64-pc-windows-gnu` archive on MinGW, adding the Windows system libraries on
+  `WIN32`.
+- `tests/test_server.cpp`: no direct POSIX includes; the header-name lowercasing now
+  casts through `unsigned char` before `std::tolower`.
+
+### Verification
+
+Unix `sh tools/run-tests.sh` passes (3/3 suites). The Windows-shimmed tests were also
+compiled with `-Wall -Wextra -Wpedantic -Werror` and linked with mingw-w64 against the
+`x86_64-pc-windows-gnu` staticlib, and ran green under Wine (Winsock loopback E2E
+included). The MSVC/PowerShell path itself runs only on the Windows CI leg.
+
 ## [0.1.1] - 2026-10-23
 
 ### Fixed

@@ -1,14 +1,14 @@
-cd ../directed-graph && npm install --silent
-cd ../cli-builder && npm install --silent
-cd ../grammar-tools && npm install --silent
-cd ../lexer && npm install --silent
-cd ../state-machine && npm install --silent
-cd ../toml-lexer && npm install --silent
-cd ../parser && npm install --silent
-cd ../toml-parser && npm install --silent
-cd ../document-ast && npm install --silent
-cd ../forme-types && npm install --silent
-cd ../forme-errors && npm install --silent
-cd ../forme-capability && npm install --silent
-cd ../forme-stage && npm install --silent
-npm install --silent && npx vitest run --coverage
+cd ../directed-graph && npm ci --silent
+cd ../cli-builder && npm ci --silent
+cd ../grammar-tools && npm ci --silent
+cd ../lexer && npm ci --silent
+cd ../state-machine && npm ci --silent
+cd ../toml-lexer && npm ci --silent
+cd ../parser && npm ci --silent
+cd ../toml-parser && npm ci --silent
+cd ../document-ast && npm ci --silent
+cd ../forme-types && npm ci --silent
+cd ../forme-errors && npm ci --silent
+cd ../forme-capability && npm ci --silent
+cd ../forme-stage && npm ci --silent
+npm ci --silent && npx vitest run --coverage

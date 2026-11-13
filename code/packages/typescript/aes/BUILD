@@ -1,3 +1,3 @@
-npm install --prefix ../gf256 --silent
-npm install --silent
+npm ci --prefix ../gf256 --silent
+npm ci --silent
 npx vitest run --coverage

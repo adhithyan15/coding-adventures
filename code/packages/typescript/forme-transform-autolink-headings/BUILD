@@ -1,2 +1,2 @@
-cd ../document-ast && npm install --silent
-npm install --silent && npx vitest run --coverage
+cd ../document-ast && npm ci --silent
+npm ci --silent && npx vitest run --coverage

@@ -5,9 +5,15 @@ use sha256::sha256;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
-    construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
+    construct_unique_x509_certificate_path_by,
+    construct_unique_x509_certificate_path_with_name_policy, ConstructedX509CertificatePath,
 };
 use x509_certificate_path_length_policy::X509CertificatePathLengthState;
+use x509_certificate_path_reviewed_anchor_binding::{
+    bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
+    initialize_name_policy_reviewed_constructed_x509_certificate_path_length,
+};
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_role_policy, ValidatedCertificateAlgorithmPolicy,
@@ -15,6 +21,9 @@ use x509_certificate_policy::{
     X509CertificatePurposePolicy, X509CertificateRole,
 };
 use x509_intermediate_certificate_policy::validate_x509_intermediate_certificate_policy;
+use x509_name_value_policy::{
+    X509NameValueComparisonRule, X509NameValuePolicy, X509NameValuePolicyEntry,
+};
 use x509_ocsp_authenticated_responder::{
     authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
     X509OcspRsaResponderPolicy, X509OcspRsaSha256ResponderPolicy,
@@ -42,6 +51,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_responder_revocation,
+    bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path,
     bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path,
     bind_x509_ocsp_routed_response_to_routed_reviewed_server_path,
     reify_x509_ocsp_reviewed_responder_path, reify_x509_ocsp_routed_issuer_reviewed_responder_path,
@@ -64,10 +74,16 @@ use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 use x509_rsa_constructed_path_signature_routing::{
+    accumulate_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_lengths,
+    bind_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_signature,
     bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
+    validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy,
+    validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subordinate_intermediate_name_constraints_policy,
+    validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_anchor_policy,
+    validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy,
     validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy,
     validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy,
     verify_x509_rsa_constructed_path_policy_signature,
@@ -111,6 +127,10 @@ const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
 const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const SHA1_OID: &[u64] = &[1, 3, 14, 3, 2, 26];
 const SERVER_AUTH_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 3, 1];
+const COUNTRY_NAME_OID: &[u64] = &[2, 5, 4, 6];
+const ORGANIZATION_NAME_OID: &[u64] = &[2, 5, 4, 10];
+const ORGANIZATIONAL_UNIT_NAME_OID: &[u64] = &[2, 5, 4, 11];
+const COMMON_NAME_OID: &[u64] = &[2, 5, 4, 3];
 const NULL_DER: &[u8] = &[0x05, 0x00];
 const ALLOWED_EXPONENTS: &[u64] = &[65_537];
 const FIXTURE_PROOF_STACK_BYTES: usize = 16 * 1024 * 1024;
@@ -724,6 +744,128 @@ macro_rules! routed_reviewed_server_path {
         let $validated =
             validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy(
                 anchor,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap();
+    };
+}
+
+macro_rules! accumulated_name_policy_reviewed_server_path {
+    ($validated:ident, $target:expr, $candidates:expr) => {
+        let name_policy_entries = [
+            X509NameValuePolicyEntry::new(
+                COUNTRY_NAME_OID,
+                X509NameValueComparisonRule::ExactDer,
+            ),
+            X509NameValuePolicyEntry::new(
+                ORGANIZATION_NAME_OID,
+                X509NameValueComparisonRule::ExactDer,
+            ),
+            X509NameValuePolicyEntry::new(
+                ORGANIZATIONAL_UNIT_NAME_OID,
+                X509NameValueComparisonRule::ExactDer,
+            ),
+            X509NameValuePolicyEntry::new(
+                COMMON_NAME_OID,
+                X509NameValueComparisonRule::ExactDer,
+            ),
+        ];
+        let name_policy = X509NameValuePolicy::new(&name_policy_entries).unwrap();
+        let constructed = construct_unique_x509_certificate_path_with_name_policy(
+            $target,
+            $candidates,
+            2,
+            3,
+            |certificate| std::ptr::eq(certificate, &$candidates[1]),
+            name_policy,
+        )
+        .unwrap();
+        let reviewed = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+            constructed,
+            select_reviewed_webpki_root_anchor(&$candidates[1]).unwrap(),
+        )
+        .unwrap();
+        let reviewed_role =
+            bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+                reviewed,
+                issuing_ca_role_policy(&$candidates[1]),
+            )
+            .unwrap();
+        let initialized =
+            initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+                reviewed_role,
+            );
+        let retained_path = initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .constructed_path();
+        let profiles = algorithm_profiles();
+        let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+            retained_path.adjacent_link(1).unwrap(),
+            algorithm_policy(&$candidates[0], &profiles),
+            issuing_ca_role_policy(&$candidates[1]),
+            rsa_policy(&$candidates[1], &profiles),
+            &[route()],
+            operation_limits(),
+        )
+        .unwrap();
+        let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+            terminal_signature,
+            select_reviewed_webpki_root_anchor(&$candidates[1]).unwrap(),
+        )
+        .unwrap();
+        let intermediate_policies = [intermediate_policy(&$candidates[0])];
+        let accumulated =
+            accumulate_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_lengths(
+                &initialized,
+                &reviewed_terminal,
+                &[],
+                &intermediate_policies,
+                1,
+            )
+            .unwrap();
+        let target_signature = verify_x509_rsa_constructed_path_policy_signature(
+            retained_path.adjacent_link(0).unwrap(),
+            algorithm_policy($target, &profiles),
+            issuing_ca_role_policy(&$candidates[0]),
+            rsa_policy(&$candidates[0], &profiles),
+            &[route()],
+            operation_limits(),
+        )
+        .unwrap();
+        let target_closure =
+            bind_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_signature(
+                accumulated,
+                target_signature,
+                server_policy($target),
+            )
+            .unwrap();
+        let anchor_policy =
+            validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_anchor_policy(
+                target_closure,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap();
+        let target_name_policy =
+            validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_intermediate_name_constraints_policy(
+                anchor_policy,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap();
+        let subordinate_policy =
+            validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subordinate_intermediate_name_constraints_policy(
+                target_name_policy,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap();
+        let $validated =
+            validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy(
+                subordinate_policy,
                 Asn1Limits::default(),
                 Asn1Limits::default(),
             )
@@ -1404,6 +1546,147 @@ fn binds_routed_issuer_revocation_to_the_same_exact_routed_reviewed_server_path_
     let _ = bound.issuer_validity_at_observation();
     let _ = binding;
     let _ = path;
+}
+
+#[test]
+fn binds_routed_issuer_revocation_to_the_same_exact_strong_name_policy_path() {
+    run_fixture_proof_test(
+        binds_routed_issuer_revocation_to_the_same_exact_strong_name_policy_path_inner,
+    );
+}
+
+fn binds_routed_issuer_revocation_to_the_same_exact_strong_name_policy_path_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_issuer_revocation!(
+        binding,
+        authenticated,
+        &response,
+        &leaf,
+        &candidates[0]
+    );
+    accumulated_name_policy_reviewed_server_path!(strong_path, &leaf, &candidates);
+
+    let bound = bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path(
+        authenticated,
+        strong_path,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .server_policy()
+            .certificate(),
+        &leaf
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .target_signature()
+            .signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation"
+    );
+    assert_eq!(
+        format!("{:?}", bound.target_validity_at_observation()),
+        "ValidatedCertificateValidity { private: () }"
+    );
+    assert_eq!(
+        bound.issuer_validity_at_observation(),
+        ValidatedCertificateValidity::clone(&bound.issuer_validity_at_observation())
+    );
+    let _ = binding;
+}
+
+#[test]
+fn strong_name_policy_binding_rejects_a_byte_equal_distinct_target_before_issuer() {
+    run_fixture_proof_test(
+        strong_name_policy_binding_rejects_a_byte_equal_distinct_target_before_issuer_inner,
+    );
+}
+
+fn strong_name_policy_binding_rejects_a_byte_equal_distinct_target_before_issuer_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let ocsp_leaf = decode(&leaf_encoded);
+    let path_leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_issuer_revocation!(
+        binding,
+        authenticated,
+        &response,
+        &ocsp_leaf,
+        &candidates[0]
+    );
+    accumulated_name_policy_reviewed_server_path!(strong_path, &path_leaf, &candidates);
+
+    let error = bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path(
+        authenticated,
+        strong_path,
+    )
+    .expect_err("byte-equal distinct target objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::TargetMismatch
+    );
+    assert!(!format!("{error:?} {error}").contains("apple"));
+    let _ = binding;
+}
+
+#[test]
+fn strong_name_policy_binding_rejects_a_byte_equal_distinct_issuer_after_target() {
+    run_fixture_proof_test(
+        strong_name_policy_binding_rejects_a_byte_equal_distinct_issuer_after_target_inner,
+    );
+}
+
+fn strong_name_policy_binding_rejects_a_byte_equal_distinct_issuer_after_target_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let ocsp_issuer = decode(&intermediate_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_issuer_revocation!(binding, authenticated, &response, &leaf, &ocsp_issuer);
+    accumulated_name_policy_reviewed_server_path!(strong_path, &leaf, &candidates);
+
+    let error = bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path(
+        authenticated,
+        strong_path,
+    )
+    .expect_err("byte-equal distinct issuer objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::IssuerMismatch
+    );
+    assert!(!format!("{error:?} {error}").contains("apple"));
+    let _ = binding;
 }
 
 #[test]

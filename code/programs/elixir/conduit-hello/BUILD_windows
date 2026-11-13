@@ -1,2 +1,3 @@
-# build-tool: unsupported=ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE
-echo BUILD_TOOL_UNSUPPORTED:ELIXIR_WINDOWS_NIF_DEPENDENCY_UNAVAILABLE -- skipped
+# Windows build: same as the Unix BUILD.  The program loads elixir/conduit's NIF, which
+# conduit's own BUILD_windows now builds (priv\conduit_native.dll).
+mix deps.get --quiet && mix compile && mix test --no-color

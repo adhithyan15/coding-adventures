@@ -1,6 +1,6 @@
 [package]
 name = "x509-rsa-constructed-path-signature-routing"
-version = "0.17.0"
+version = "0.25.0"
 edition = "2021"
 description = "Bind data-driven RSA verification to exact constructed X.509 path adjacencies"
 
@@ -22,5 +22,6 @@ x509-webpki-root-anchor-selection = { path = "../x509-webpki-root-anchor-selecti
 
 [dev-dependencies]
 tls-server-identity = { path = "../tls-server-identity" }
+x509-name-value-policy = { path = "../x509-name-value-policy" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 x509-time = { path = "../x509-time" }

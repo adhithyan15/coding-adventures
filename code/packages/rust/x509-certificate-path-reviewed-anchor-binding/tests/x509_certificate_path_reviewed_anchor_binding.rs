@@ -7,7 +7,9 @@ use x509_certificate_path_construction::{
 use x509_certificate_path_reviewed_anchor_binding::{
     bind_constructed_x509_certificate_path_to_reviewed_anchor,
     bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
     bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
+    initialize_name_policy_reviewed_constructed_x509_certificate_path_length,
     initialize_reviewed_constructed_x509_certificate_path_length,
     X509CertificatePathReviewedAnchorBindingErrorKind,
 };
@@ -307,6 +309,352 @@ fn policy_backed_binding_rejects_a_byte_equal_terminal_from_another_decode() {
     assert_eq!(
         error.kind(),
         X509CertificatePathReviewedAnchorBindingErrorKind::EvidenceMismatch
+    );
+}
+
+#[test]
+fn binds_policy_backed_reviewed_terminal_to_complete_issuing_ca_role_policy() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = reviewed_root_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        1,
+        2,
+        |certificate| std::ptr::eq(certificate, &candidates[0]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        reviewed_anchor,
+    )
+    .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let bound = bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        role_policy,
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        bound.anchor_role_policy().certificate()
+    ));
+    assert_eq!(
+        bound.anchor_role_policy().role_extensions().role(),
+        X509CertificateRole::IssuingCertificateAuthority
+    );
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundNamePolicyReviewedConstructedX509CertificatePathToAnchorRolePolicy"
+    );
+}
+
+#[test]
+fn initializes_policy_backed_direct_path_without_detaching_name_policy() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = reviewed_root_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        1,
+        2,
+        |certificate| std::ptr::eq(certificate, &candidates[0]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        reviewed_anchor,
+    )
+    .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let reviewed_role_path =
+        bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+            reviewed_path,
+            role_policy,
+        )
+        .unwrap();
+
+    let initialized = initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+        reviewed_role_path,
+    );
+
+    assert_eq!(
+        initialized
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert!(std::ptr::eq(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        initialized
+            .reviewed_path()
+            .anchor_role_policy()
+            .certificate()
+    ));
+    assert_eq!(
+        format!("{initialized:?}"),
+        "InitializedNamePolicyReviewedConstructedX509CertificatePathLength"
+    );
+}
+
+#[test]
+fn derives_policy_backed_intermediate_capacity_from_retained_construction() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let intermediate_subject = name_contents(b"intermediate.example");
+    let intermediate_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &intermediate_subject,
+        &test_subject_public_key_info_contents(),
+    );
+    let target_encoded = certificate(
+        &intermediate_subject,
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [decoded(&intermediate_encoded), root];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = reviewed_root_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[1]).unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        reviewed_anchor,
+    )
+    .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+    let reviewed_role_path =
+        bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+            reviewed_path,
+            role_policy,
+        )
+        .unwrap();
+
+    let initialized = initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+        reviewed_role_path,
+    );
+
+    assert_eq!(
+        initialized
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        1
+    );
+    assert_eq!(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .constructed_path()
+            .candidate_indices()
+            .collect::<Vec<_>>(),
+        vec![0, 1]
+    );
+    assert!(std::ptr::eq(
+        initialized
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+}
+
+#[test]
+fn policy_backed_role_binding_rejects_a_byte_equal_distinct_terminal_decode() {
+    let root_encoded = fixture(ISRG_ROOT_X1_HEX);
+    let root = decoded(&root_encoded);
+    let detached_root = decoded(&root_encoded);
+    let target_encoded = certificate(
+        root.tbs_certificate().subject().contents(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [root];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = reviewed_root_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        1,
+        2,
+        |certificate| std::ptr::eq(certificate, &candidates[0]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        reviewed_anchor,
+    )
+    .unwrap();
+    let detached_role_policy = validate_certificate_role_policy(
+        &detached_root,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let error = bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        detached_role_policy,
+    )
+    .expect_err("policy-backed role binding must reject another decoded terminal object");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathReviewedAnchorBindingErrorKind::RoleEvidenceMismatch
+    );
+    assert!(!error.to_string().contains("target.example"));
+}
+
+#[test]
+fn policy_backed_role_binding_rejects_exact_terminal_end_entity_policy() {
+    let anchor = first_reviewed_anchor();
+    let root_encoded = certificate(
+        anchor.subject(),
+        anchor.subject(),
+        anchor.subject_public_key_info(),
+    );
+    let target_encoded = certificate(
+        anchor.subject(),
+        &name_contents(b"target.example"),
+        &test_subject_public_key_info_contents(),
+    );
+    let target = decoded(&target_encoded);
+    let candidates = [decoded(&root_encoded)];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = reviewed_root_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        1,
+        2,
+        |certificate| std::ptr::eq(certificate, &candidates[0]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_anchor = select_reviewed_webpki_root_anchor(&candidates[0]).unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        reviewed_anchor,
+    )
+    .unwrap();
+    let end_entity_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let error = bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+        reviewed_path,
+        end_entity_policy,
+    )
+    .expect_err("policy-backed reviewed terminal must retain issuing-CA role evidence");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathReviewedAnchorBindingErrorKind::AnchorNotCertificateAuthority
     );
 }
 

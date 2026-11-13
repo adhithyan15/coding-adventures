@@ -43,14 +43,29 @@
 
 use crate::gates::{and_gate, not_gate, or_gate};
 
+/// The widest decoder (and the most select lines of a demux) this crate builds.
+///
+/// A decoder with `n` inputs has `2^n` outputs, so `n` multiplies the work and
+/// the memory: 16 inputs are 65,536 lines, 40 would be a terabyte.  Beyond the
+/// cap `decoder` and `demux` panic, in every build profile, instead of
+/// attempting the allocation (finding SEC-008).  Sixteen is far above any use in
+/// this repository (the Intel 4004 decodes four bits) while staying cheap enough
+/// to test at the boundary.
+pub const MAX_DECODER_WIDTH: usize = 16;
+
 // ===========================================================================
 // Helper — bit validation (reuses the same pattern as gates.rs)
 // ===========================================================================
 
-/// Panics (in debug mode) if the value is not 0 or 1.
+/// Panics, in every build profile, if the value is not 0 or 1.
+///
+/// This was a `debug_assert!`.  In a release build `tri_state(2, 1)` then
+/// returned `Some(2)` and `priority_encoder` read a 2 as an inactive input
+/// (finding SEC-007).  A plain `assert!` makes the rejection independent of the
+/// optimisation level.
 #[inline]
 fn validate_bit(value: u8, name: &str) {
-    debug_assert!(
+    assert!(
         value == 0 || value == 1,
         "{name} must be 0 or 1, got {value}"
     );
@@ -284,8 +299,10 @@ fn mux_n_inner(inputs: &[u8], sel: &[u8]) -> u8 {
 ///
 /// # Panics
 ///
-/// Panics if `n_outputs` is not a power of 2 >= 2, or if `sel` length
-/// does not equal log2(n_outputs).
+/// Panics if `n_outputs` is not a power of 2 >= 2, if `sel` length
+/// does not equal log2(n_outputs), if a bit is not 0 or 1, or if there are more
+/// than [`MAX_DECODER_WIDTH`] select lines (the decoder underneath has `2^n`
+/// outputs).
 ///
 /// # Example
 ///
@@ -355,7 +372,9 @@ pub fn demux(data: u8, sel: &[u8], n_outputs: usize) -> Vec<u8> {
 ///
 /// # Panics
 ///
-/// Panics if `inputs` is empty.
+/// Panics if `inputs` is empty, if any input is not 0 or 1, or if there are
+/// more than [`MAX_DECODER_WIDTH`] inputs (the output has `2^n` lines, so an
+/// unbounded `n` is an unbounded allocation).
 ///
 /// # Example
 ///
@@ -366,6 +385,14 @@ pub fn demux(data: u8, sel: &[u8], n_outputs: usize) -> Vec<u8> {
 /// ```
 pub fn decoder(inputs: &[u8]) -> Vec<u8> {
     assert!(!inputs.is_empty(), "inputs must be non-empty");
+    // Bound the width BEFORE `1 << n`: n is the caller's amplification factor on
+    // the allocation below, and for n >= 64 the shift itself is undefined work
+    // (a panic in debug, a silent wrap to 1 in release).  SEC-008.
+    assert!(
+        inputs.len() <= MAX_DECODER_WIDTH,
+        "a decoder has at most {MAX_DECODER_WIDTH} inputs, got {}",
+        inputs.len()
+    );
     validate_bits(inputs, "inputs");
 
     let n = inputs.len();
@@ -448,7 +475,11 @@ pub fn encoder(inputs: &[u8]) -> Vec<u8> {
     validate_bits(inputs, "inputs");
 
     // Validate one-hot: exactly one bit must be 1
-    let active_count: u8 = inputs.iter().sum();
+    // Count in `usize`: a `u8` sum wraps, so 257 active inputs would count as 1
+    // and pass this check in a release build (SEC-007), while a debug build
+    // would panic on the overflow instead.  Every element is 0 or 1 here, so a
+    // `usize` sum cannot overflow for any slice that fits in memory.
+    let active_count: usize = inputs.iter().map(|&b| usize::from(b)).sum();
     assert!(
         active_count == 1,
         "inputs must be one-hot (exactly one bit = 1), got {active_count} active bits"

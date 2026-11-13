@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"io"
 	"path"
 	"runtime"
 	"sort"
@@ -34,6 +33,15 @@ type Options struct {
 	OS      string // linux | darwin | windows (the graph's spelling)
 	Arch    string // x64 | arm64 (KILN02 spelling)
 	Workers int    // hashing parallelism; 0 means a default bounded by CPU count
+	// Environ is the process environment ("NAME=value"), from which env.json
+	// selects the key's env section (KILN03 5).  nil means an empty one.
+	Environ []string
+	// Probe, when set, runs the toolchain probes (KILN03 4, `--probe`); nil
+	// leaves the tools to their pins alone.
+	Probe *ProbeOptions
+	// Lookup, when set, adds the KILN04 stage 5a lookup report to the plan
+	// (`--ledger`).  It reports and skips nothing.
+	Lookup *LookupOptions
 }
 
 // keyOS maps the graph's OS name to KILN02's.
@@ -118,14 +126,28 @@ type planner struct {
 	bounds    []boundary
 	items     [][]readItem
 
-	entries   memo[key.FileEntry]
-	trees     memo[[32]byte]
-	resolves  memo[resolved]
-	ownDigest [][32]byte
+	entries    memo[entryResult]
+	trees      memo[[32]byte]
+	resolves   memo[resolved]
+	itemFs     memo[[]string]       // files behind a read item
+	itemLinks  memo[[]string]       // symlinks among them
+	linkRes    memo[linkResolution] // where a symlink finally points
+	memberSums memo[scanSummary]    // scan facts of a package's own files
+	itemSums   memo[scanSummary]    // scan facts of a read item's files
+	ownDigest  [][32]byte
 
 	toolOnce sync.Once
 	tool     [32]byte
 	toolErr  error
+
+	tools     memo[toolsResult] // per distinct set of closure language names
+	envVars   []key.EnvVar
+	envNames  []string
+	envDigest [32]byte
+	probes    []ProbeResult
+	mismatch  map[string]bool
+	timedOut  map[string]bool
+	refused   map[string]bool
 }
 
 // workers returns the pool size: at most the caller's choice, else the CPU
@@ -304,34 +326,53 @@ func (pl *planner) closure(p int) []int {
 	return out
 }
 
+// entryResult is what reading one listed path yields: its KILN02 inputs entry
+// the scan facts of KILN03 6 for a regular file (gathered in the SAME pass over
+// the bytes that produced the digest), and for a link its target text, from the
+// same Describe that produced the digest, so resolution can never disagree with
+// what was hashed.
+type entryResult struct {
+	e      key.FileEntry
+	facts  fileFacts
+	target string
+}
+
 // entry builds the KILN02 inputs entry of one listed path: kind, executable
 // bit (from the Source, never the disk) and content digest (a link's digest
 // covers its target TEXT only).  Memoised, so a file shared by many reads is
 // hashed once.
 func (pl *planner) entry(p string) (key.FileEntry, error) {
-	return pl.entries.get(p, func() (key.FileEntry, error) {
+	r, err := pl.entryFull(p)
+	return r.e, err
+}
+
+// entryFull is entry plus the scan facts and link target.  Facts are gathered
+// for EVERY regular file that is hashed: own files, read files and the rest.
+func (pl *planner) entryFull(p string) (entryResult, error) {
+	return pl.entries.get(p, func() (entryResult, error) {
 		info, err := pl.opt.Source.Describe(p)
 		if err != nil {
-			return key.FileEntry{}, err
+			return entryResult{}, err
 		}
 		h := sha256.New()
 		if info.Link {
 			h.Write([]byte(info.Target))
-			return key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}, nil
+			return entryResult{e: key.FileEntry{Path: p, Kind: key.KindLink, Digest: h.Sum(nil)}, target: info.Target}, nil
 		}
 		rc, err := pl.opt.Source.Open(p)
 		if err != nil {
-			return key.FileEntry{}, err
+			return entryResult{}, err
 		}
 		defer rc.Close()
-		if _, err := io.Copy(h, rc); err != nil {
-			return key.FileEntry{}, fmt.Errorf("%s: %w", short(p), err)
+		facts, err := hashAndScan(rc, h, info.Exec, path.Dir(p))
+		if err != nil {
+			return entryResult{}, fmt.Errorf("%s: %w", short(p), err)
 		}
 		e := key.FileEntry{Path: p, Kind: key.KindFile, Digest: h.Sum(nil)}
 		if info.Exec {
 			e.Exec = 1
 		}
-		return e, nil
+		return entryResult{e: e, facts: facts}, nil
 	})
 }
 
@@ -440,22 +481,45 @@ func (pl *planner) resolve(it readItem) (resolved, error) {
 		id = "g:" + it.path
 	}
 	return pl.resolves.get(id, func() (resolved, error) {
-		switch {
-		case it.glob:
-			var hits []string
-			for _, f := range pl.files {
-				if source.Match(it.path, f) {
-					hits = append(hits, f)
-				}
-			}
-			d, err := pl.treeDigest(hits)
-			return resolved{consumed: &key.Consumed{Target: "glob:" + it.path, Phase: key.PhaseBuild, Key: d[:]}}, err
-		case pl.fileSet[it.path]:
+		if !it.glob && pl.fileSet[it.path] {
 			e, err := pl.entry(it.path)
 			return resolved{file: &e}, err
 		}
-		d, err := pl.treeDigest(pl.under(it.path))
-		return resolved{consumed: &key.Consumed{Target: "dir:" + it.path, Phase: key.PhaseBuild, Key: d[:]}}, err
+		files, err := pl.itemFiles(it)
+		if err != nil {
+			return resolved{}, err
+		}
+		d, err := pl.treeDigest(files)
+		if err != nil {
+			return resolved{}, err
+		}
+		target := "dir:" + it.path
+		if it.glob {
+			target = "glob:" + it.path
+		}
+		return resolved{consumed: &key.Consumed{Target: target, Phase: key.PhaseBuild, Key: d[:]}}, nil
+	})
+}
+
+// itemFiles lists the files a read item stands for: the file itself, every
+// file under a directory, or every file a glob matches.  Memoised, because the
+// link check asks again for every package that reads the item.
+func (pl *planner) itemFiles(it readItem) ([]string, error) {
+	id := "p:" + it.path
+	if it.glob {
+		id = "g:" + it.path
+	}
+	return pl.itemFs.get(id, func() ([]string, error) {
+		if !it.glob {
+			return pl.under(it.path), nil
+		}
+		var hits []string
+		for _, f := range pl.files {
+			if source.Match(it.path, f) {
+				hits = append(hits, f)
+			}
+		}
+		return hits, nil
 	})
 }
 

@@ -1,2 +1,5 @@
 kiln
 kiln.exe
+
+# BSD sed -i leftovers
+*-E

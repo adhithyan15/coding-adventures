@@ -78,191 +78,314 @@ type repositoryInputConsumer struct {
 	language string // its discovery language, for -language filtering
 	inputs   string // human description, printed when the consumer is selected
 	matches  func(changed string) bool
+	// paths declares the same inputs as `matches`, as repo-relative paths
+	// (a file, or a directory meaning "everything beneath it"). The
+	// -emit-kiln-graph export publishes these so Kiln can key the consumer on
+	// their content. A predicate that cannot be written as a finite path list
+	// (the Mosaic walk: any .mll/.mil/.msl/mosaic-package.toml under code/)
+	// leaves this nil; the export then lists no paths for it. A test pins
+	// every declared path to its predicate so the two cannot drift.
+	paths []string
+	// globs declares inputs that are a pattern rather than a finite list
+	// (`**` any depth including none, `*` within one segment), for
+	// predicates such as the Mosaic walk. A test pins them to the predicate
+	// over a fixture tree. A row must declare paths, globs, or both; the
+	// export marks one that declares neither repo_inputs_unknown so a future
+	// predicate-only row cannot silently export an empty list.
+	globs []string
 }
+
+// mosaicRepositoryGlobs is exactly isMosaicRepositorySource as globs.
+var mosaicRepositoryGlobs = []string{
+	"code/**/?*.mil",
+	"code/**/?*.mll",
+	"code/**/?*.msl",
+	"code/**/mosaic-package.toml",
+}
+
+// Declared input path sets, one per predicate in this file. They mirror the
+// predicates exactly (see TestRepositoryInputPathsAgreeWithPredicates).
+var (
+	nativePerlBuildPaths = []string{
+		"code/scripts/check-perl-extension-windows.ps1",
+		"code/packages/rust/perl-bridge/Cargo.toml",
+		"code/packages/rust/perl-bridge/build.rs",
+		"code/packages/rust/perl-bridge/src",
+	}
+	ctCompareInputPaths = []string{
+		"code/specs/fixtures/ct-compare-v1",
+		"code/scripts/ct_compare_tfv.py",
+		"code/scripts/ct_compare_conformance.py",
+		"code/scripts/tfv.py",
+	}
+	ctCompareCorpusPaths = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
+	// kilnToolchainPinPaths are the pin sources Kiln's committed
+	// code/kiln/legacy/toolchains.json is checked against by its drift test
+	// (realpolicy_test.go). A toolchain bump that edits only these files must
+	// still re-run Kiln's tests, or the drift goes unnoticed until the next
+	// Kiln change (#19269 bumped Rust without touching toolchains.json).
+	kilnToolchainPinPaths = []string{
+		"mise.toml",
+		"code/specs/data/toolchain-pins.json",
+		".github/workflows/ci.yml",
+	}
+	testBootstrapPaths = []string{
+		"code/specs/fixtures/test-bootstrap-v1",
+		"code/scripts/tfv.py",
+		"code/scripts/bootstrap_harness_conformance.py",
+	}
+	rngCorpusPaths      = []string{"code/specs/fixtures/rng-v1"}
+	warrantGrammarPaths = []string{
+		"code/grammars/warrant",
+		"code/specs/fixtures/warrant-syntax-v1",
+		"code/specs/fixtures/warrant-vectors-synthetic-v1",
+		"code/scripts/warrant_syntax_corpus.py",
+		"code/scripts/tests/test_warrant_syntax_corpus.py",
+		"code/scripts/tfv.py",
+		"code/specs/VER04-warrant-language.md",
+		"code/specs/VER04a-warrant-source-admission.md",
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+	}
+	// warrantAssurancePaths are the shared Warrant lane artifacts the
+	// assurance report validates directly (see isWarrantAssuranceInput).
+	// The Kiln graph export reads them, so they must list every path the
+	// predicate accepts; TestRepositoryInputPredicatesAreCoveredByDeclaredInputs
+	// enforces that.
+	warrantAssurancePaths = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/scripts/tfv.py",
+	}
+)
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
 		name: "perl/conduit", language: "perl",
 		inputs:  "the native Perl build helper and shared Rust XS bridge",
 		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
 	},
 	{
 		name: "perl/irc-server-native", language: "perl",
 		inputs:  "the native Perl build helper and shared Rust XS bridge",
 		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
 	},
 	{
 		name: "perl/programs/conduit-hello", language: "perl",
 		inputs:  "the native Perl build helper and shared Rust XS bridge",
 		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
 	},
 	{
 		name:     "rust/ct-compare",
 		language: "rust",
 		inputs:   "the CT01 corpus, L0 transport and independent projection",
 		matches:  isCtCompareInput,
+		paths:    ctCompareInputPaths,
 	},
 	{
 		name:     "dart/ct-compare",
 		language: "dart",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "haskell/ct-compare",
 		language: "haskell",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "lua/ct-compare",
 		language: "lua",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "ocaml/ct-compare",
 		language: "ocaml",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "perl/ct-compare",
 		language: "perl",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "swift/ct-compare",
 		language: "swift",
 		inputs:   "the CT01 corpus",
 		matches:  isCtCompareCorpus,
+		paths:    ctCompareCorpusPaths,
 	},
 	{
 		name:     "rust/mosaic-package-resolver",
 		language: "rust",
 		inputs:   "Mosaic manifests and sources under code/",
 		matches:  isMosaicRepositorySource,
+		globs:    mosaicRepositoryGlobs,
 	},
 	{
 		name:     "python/rng",
 		language: "python",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "rust/rng",
 		language: "rust",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "go/rng",
 		language: "go",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "c/rng",
 		language: "c",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "cpp/rng",
 		language: "cpp",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "swift/rng",
 		language: "swift",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "typescript/rng",
 		language: "typescript",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "java/rng",
 		language: "java",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "kotlin/rng",
 		language: "kotlin",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "csharp/rng",
 		language: "csharp",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "fsharp/rng",
 		language: "fsharp",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "dart/rng",
 		language: "dart",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "ruby/rng",
 		language: "ruby",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "elixir/rng",
 		language: "elixir",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "lua/rng",
 		language: "lua",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "perl/rng",
 		language: "perl",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
 	},
 	{
 		name:     "haskell/rng",
 		language: "haskell",
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
+		paths:    rngCorpusPaths,
+	},
+	{
+		name:     "go/programs/kiln",
+		language: "go",
+		inputs:   "the toolchain pin sources its toolchains.json drift test reads",
+		matches:  isKilnToolchainPinInput,
+		paths:    kilnToolchainPinPaths,
 	},
 	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
+		paths:    testBootstrapPaths,
 	},
 	{
 		name:     "rust/warrant-grammar",
 		language: "rust",
 		inputs:   "canonical Warrant grammars, syntax corpus, vector fixtures and transport gate",
 		matches:  isWarrantGrammarInput,
+		paths:    warrantGrammarPaths,
 	},
 	{
 		name:     "rust/ca-assurance-report",
 		language: "rust",
 		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
 		matches:  isWarrantAssuranceInput,
+		paths:    warrantAssurancePaths,
 	},
 }
 
@@ -353,6 +476,16 @@ func isTestBootstrapInput(changed string) bool {
 		return true
 	}
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
+// isKilnToolchainPinInput reports whether a changed path is one of the pin
+// sources Kiln's toolchains.json must agree with.
+func isKilnToolchainPinInput(changed string) bool {
+	switch changed {
+	case "mise.toml", "code/specs/data/toolchain-pins.json", ".github/workflows/ci.yml":
+		return true
+	}
+	return false
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,

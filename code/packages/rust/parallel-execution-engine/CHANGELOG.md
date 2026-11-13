@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/systolic_array.rs`: `needless_range_loop`: `drain_outputs` iterates the PE grid directly; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

@@ -263,6 +263,59 @@ On Windows, use the compiled `.exe`:
 | `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
 | `-shard-index` | -1 | With `-plan-file`, run only that shard |
 | `-prune-leaf-targets` | false | Delete a leaf package's own Cargo `target/` once it has built (CI disk budget) |
+| `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
+| `-exec-wrapper` | (none) | JSON array of strings: a prefix for every BUILD step, run as `wrapper... sh -c <line>`. The wrapper (not the BUILD) gets `KILN_ACTION`, `KILN_STEP`, `KILN_STEP_COUNT`. Incompatible with `-clippy` and `-prune-leaf-targets` |
+| `-emit-results` | (none) | After the run, write the `kiln-legacy-results/1` record (status and step counts per package) to this path |
+
+### Kiln legacy graph export
+
+`-emit-kiln-graph out.json` hands the repository's language knowledge to Kiln
+as plain data, so Kiln's core never has to parse a manifest. For every
+package (including ones that only have a BUILD file for another OS) it lists
+the selected BUILD file per OS (or `null`), direct dependencies per OS,
+`dev_deps` (the Cargo test-trigger relation, inverted), `repo_inputs` (every
+external input the change selector uses: the repository-input consumer table,
+the native fixture readers, the external corpora and the CV02 spec; built in
+`external_inputs.go` from the selector's own tables so they cannot drift) and `extra_toolchains`.
+Lists are sorted and de-duplicated, so output is byte-identical for a tree.
+See `kiln_graph.go` for the field-by-field contract and
+`testdata/kiln-legacy-graph.golden.json` for the pinned format. `repo_input_globs`
+holds pattern-valued inputs (`**` any depth, `*` within a segment), e.g. the
+Mosaic guard's `code/**/?*.mll`; `repo_inputs_unknown` is set only for a
+consumer that declares neither (none today).
+
+The CLI fails closed: it exits non-zero if no packages are found, if a
+selector relation names a package discovery did not find, if a package path
+cannot be made repo-relative, or if the output path is a symlink. The file is
+written atomically (temp file, fsync, rename).
+
+### Kiln tracing hooks
+
+Kiln traces legacy BUILD steps (KILN04 section 4.3) by running this tool with
+two flags.
+
+`-exec-wrapper '["kiln","sandbox-exec","--"]'` puts the wrapper argv in front
+of every step: `kiln sandbox-exec -- sh -c <line>` (`cmd /C <line>` on
+Windows). The value is a JSON array of non-empty strings; anything else is a
+usage error, as is combining it with `-clippy` or `-prune-leaf-targets`
+(recording needs both off). The BUILD line is passed through unchanged. The
+wrapper process receives `KILN_ACTION` (package path relative to the repo
+root), `KILN_STEP` (0-based) and `KILN_STEP_COUNT`; these are for the
+wrapper, which must scrub them before the step runs, and a BUILD must never
+read them. Without the flag nothing changes.
+
+`-emit-results out.json` writes, atomically (temp file, fsync, rename; a
+symlink path is refused), after the run and even if a package failed:
+
+```json
+{"schema":"kiln-legacy-results/1","packages":[{"package":"code/packages/go/demo","status":"built","steps_run":3,"steps_total":3}]}
+```
+
+`status` is the executor's own status (`built`, `failed`, `skipped`,
+`dep-skipped`, `unsupported`, `dep-unsupported`, `would-build`). `steps_run`
+counts steps started, so a failure in step 2 of 3 reports 2 of 3; a package
+that never ran reports 0 of its BUILD's step count. Packages are sorted by
+path. It works with or without `-exec-wrapper`.
 
 ### Sharding v1 and v2
 

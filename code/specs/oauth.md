@@ -1638,6 +1638,83 @@ available Name rules remain incomplete for RFC 5280 Name equality, and binding
 does not authenticate any link, validate certificate roles or a complete path,
 apply anchor constraints, check revocation, perform TLS or HTTP, authorize OAuth
 transport, or open a network connection.
+A distinct policy-backed role-policy follow-up consumes that complete
+Name-policy-backed reviewed-terminal evidence together with certificate-wide
+role-policy evidence. It fails closed unless the role evidence retains the
+identical decoded reviewed-root object and authorizes that object as an issuing
+CA, then retains the complete Name-policy-backed construction, reviewed-root
+selection, critical-extension recognition, and role proof in one non-copyable
+result. Generic reviewed-terminal evidence cannot produce this stronger result,
+and neither a byte-equal independent decode nor end-entity role evidence can be
+substituted. This provenance-preserving composition still does not define
+complete RFC 5280 Name equality, authenticate a path link, validate the anchor
+self-signature or algorithm, apply anchor constraints, check time or
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS remains unavailable.
+A distinct policy-backed path-length initialization follow-up consumes that
+complete Name-policy-backed reviewed-terminal issuing-CA proof and derives RFC
+5280's initial capacity only from its retained construction. The final selected
+issuer is already bound to the reviewed trust anchor, so subtracting that
+anchor from the selected-issuer count yields the exact prospective intermediate
+count. The non-copyable result retains the complete Name-policy-backed
+construction, reviewed-root selection, certificate-wide anchor role policy,
+and derived state together. Generic reviewed-terminal evidence cannot produce
+this stronger result, and callers cannot detach the exact Name-value policy,
+inflate the capacity, or attach it to another construction. This pure public-
+certificate-data composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not define complete RFC 5280 Name equality, authenticate an
+adjacency, apply an intermediate transition, generalize full path validation,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A distinct policy-backed ordered-transition follow-up now borrows that stronger
+initializer and consumes one already routed terminal proof only when both
+retain the same exact constructed-path object. The terminal proof authenticates
+the anchor-nearest intermediate as the reviewed root's exact child, and
+complete intermediate policy must retain that same decoded child before a
+private working state is recreated from the construction-derived capacity and
+advanced. The non-copyable result retains the Name-policy-backed initializer,
+its exact validated `X509NameValuePolicy`, reviewed-root selection,
+certificate-wide anchor role policy, terminal repository-owned RSA signature
+evidence, complete intermediate policy, and advanced path-length state
+together. Generic initialization evidence cannot produce this stronger result;
+proofs from another construction and policy for another certificate fail
+closed. This pure public-certificate-data composition performs no new parsing
+or signature verification, credential access or editing, signing, storage,
+clock acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It proves only the first ordered
+anchor-to-target intermediate transition. The available Name-value rules still
+do not define complete RFC 5280 Name equality, and this boundary does not
+process remaining intermediates, validate the whole path, apply name
+constraints, check revocation, perform TLS or HTTP, authorize OAuth transport,
+or grant network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A bounded second policy-backed ordered-transition follow-up consumes that
+stronger first-step result together with one already routed proof for the
+immediately target-nearer intermediate. It fails closed unless the new proof
+retains the same exact constructed-path object, occupies the depth immediately
+preceding the reviewed terminal, uses the already processed anchor-nearest
+intermediate as its exact issuer object, authenticates another selected
+candidate child, and complete intermediate policy retains that exact child.
+Only then is the retained path-length state recreated privately and advanced.
+The non-copyable result retains the complete first-step proof, including its
+exact validated `X509NameValuePolicy`, reviewed-root selection, anchor role
+policy, terminal repository-owned RSA signature, and first intermediate
+policy, together with the second routed RSA signature, second intermediate
+policy, and twice-advanced state. Generic first-step evidence, detached
+constructions, skipped depths, disconnected issuers, target children, and
+cross-certificate policy cannot produce this stronger result. This pure
+public-certificate-data composition performs no new parsing or signature
+verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It proves exactly two ordered anchor-to-target
+intermediate transitions. The available Name-value rules still do not define
+complete RFC 5280 Name equality, and this boundary does not generalize
+arbitrary traversal, validate the whole path, apply name constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
@@ -1718,6 +1795,26 @@ or other external effect. It does not check target authentication, complete
 Name semantics, time, hostname, revocation, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger bounded arbitrary-depth entry point now accepts only the retained
+Name-policy-backed initializer together with the same reviewed terminal,
+ordered routed-signature slice, ordered complete-intermediate-policy slice,
+and nonzero caller ceiling. It applies the identical construction-derived
+count, ceiling, exact-object, immediate-depth, issuer-continuity,
+authenticated-child, complete-policy, and path-length checks as the generic
+accumulator. Success retains the exact Name-value policy, reviewed trust-root
+selection, certificate-wide anchor-role policy, construction-derived initial
+capacity, both complete borrowed evidence slices, processed count, and final
+path-length state in one non-copyable result. A generic initializer or evidence
+from another construction cannot produce that result. This preserves stronger
+policy provenance through arbitrary-depth intermediate traversal only; it does
+not close the target signature, define complete RFC 5280 Name equality, apply
+all certificate or Name constraints, validate a complete path, check time,
+hostname, or revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. The pure public-certificate-data composition performs
+no parsing, new signature verification, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. Concrete HTTPS and live-provider
+readiness remain unavailable.
 A bounded target-signature closure now consumes that arbitrary-depth
 intermediate accumulator together with one already routed depth-zero signature
 proof and complete server-certificate policy. It fails closed unless the
@@ -1734,6 +1831,25 @@ closure only: it does not validate the anchor self-signature, generalize all
 certificate or Name policy across an arbitrary path, apply every intermediate
 NameConstraints value, verify the requested hostname, check revocation, or
 compose TLS, HTTP, OAuth transport, or network authority. The pure public-
+certificate-data composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A stronger target-signature closure follow-up consumes only the Name-policy-
+backed arbitrary-depth accumulator together with the same already routed depth-
+zero signature proof and complete server-certificate policy. It applies the
+identical exact-construction, depth-zero, exact-target-child, target-nearest-
+issuer, and exact-server-policy checks as the generic closure. Success retains
+the exact Name-value policy, reviewed trust-root selection, certificate-wide
+anchor-role policy, construction-derived path-length state, complete ordered
+intermediate evidence, target signature, and complete target policy in one
+non-copyable result. A generic accumulator cannot produce this stronger
+closure, and a target proof or policy from another construction fails closed
+even when its certificate bytes compare equal. This preserves stronger policy
+provenance across target-signature closure only; it does not define complete
+RFC 5280 Name equality, apply all certificate or Name constraints, validate a
+complete path, check time, hostname, or revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
 certificate-data composition performs no parsing, new signature verification,
 credential access or editing, signing, storage, clock acquisition, provider
 action, audit event, trace emission, I/O, network access, or other external
@@ -1758,6 +1874,26 @@ certificate-data composition performs no credential access or editing,
 signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Concrete HTTPS and
 live-provider readiness remain unavailable.
+A stronger reviewed-anchor DNS-policy follow-up consumes only the Name-policy-
+backed target-signature closure with the same separate caller-owned decoder
+limits. It derives the exact target, already-validated SAN extension index,
+reviewed anchor, and optional reviewed-anchor constraint bytes only through
+that stronger retained evidence, then applies the identical supported
+permitted-DNS evaluator as the generic follow-up. Success retains the exact
+Name-value policy, reviewed trust-root selection, certificate-wide anchor-role
+policy, construction-derived path-length state, complete ordered intermediate
+and target-signature evidence, complete target policy, and any payload-free
+constrained-name count in one non-copyable result. A generic target-signature
+closure cannot produce this stronger policy result. This preserves stronger
+policy provenance through the supported reviewed-anchor DNS subset only; it
+does not define complete RFC 5280 Name equality, apply excluded or non-DNS
+anchor constraints or every intermediate constraint, validate a complete
+path, check time, hostname, or revocation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. The pure public-certificate-data
+composition performs no credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded ordered-intermediate name-policy follow-up now consumes that exact
 reviewed-anchor policy result together with separate caller-owned limits for
 each intermediate NameConstraints decoder and each target Subject Alternative
@@ -1773,7 +1909,11 @@ intermediate ceiling bounds the number of visits; the new caller-owned limits
 bound each repository-owned decode. Success retains the complete reviewed-
 anchor policy result, the number of constrained intermediates, and only
 payload-free target DNS/IP counts. Callers cannot substitute another target,
-SAN index, intermediate, or traversal order.
+SAN index, intermediate, or traversal order. The generic ordered target-policy
+result cannot construct this stronger result. The strong and generic entry
+points must share the same private ordered evaluator so supported constraint
+semantics, decoder-limit propagation, stable failure kinds, and payload
+redaction cannot drift between them.
 
 This composes supported intermediate constraints only against the exact target
 identities. It does not apply constraints to subordinate CA subject or SAN
@@ -1814,6 +1954,34 @@ self-signature, check revocation, compose TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A Name-policy-backed subordinate-intermediate follow-up consumes the exact
+strong ordered target-policy result and derives every complete intermediate
+policy, certificate, anchor-to-target order, and self-issued classification
+only from its retained accumulator. It applies the same supported DNS/IP
+constraints to the same target-nearer, non-self-issued subordinate
+intermediates under the same independent caller-owned decoder limits as the
+generic follow-up. Success retains the complete strong target policy plus only
+payload-free counts of constraint applications and repeated DNS/IP name
+evaluations. The generic subordinate-intermediate result cannot construct or
+substitute for this stronger result. The strong and generic entry points must
+share the exact private ordered subordinate evaluator so traversal, the
+self-issued exception, decoder-limit propagation, stable failure kinds, and
+payload redaction cannot drift between them.
+
+This preserves the exact Name-value policy, reviewed trust-root selection,
+certificate-wide anchor-role policy, construction-derived path-length state,
+complete ordered intermediate and target-signature evidence, complete target
+policy, and both target and subordinate supported Name-constraint evaluations
+in one non-copyable result. It still does not apply reviewed-anchor constraints
+to subordinate CAs, constrain subject distinguished names, support every
+GeneralName form, establish complete Name or path validation, validate the
+anchor self-signature, check revocation, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. The pure public-certificate-data
+composition performs no credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 A bounded reviewed-anchor subordinate-name-policy follow-up consumes that
 exact subordinate-intermediate policy result and derives the reviewed
 anchor's optional constraint bytes, every complete intermediate policy,
@@ -1845,6 +2013,57 @@ action, audit event, trace emission, I/O, network access, or other external
 effect. It does not validate the anchor self-signature, check revocation,
 compose TLS or HTTP, authorize OAuth transport, or grant network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
+
+A Name-policy-backed reviewed-anchor subordinate-name-policy follow-up consumes
+the exact strong subordinate-intermediate result and derives the reviewed
+anchor's optional constraint bytes, every complete intermediate certificate,
+anchor-to-target order, and self-issued classification only through that
+retained evidence. It applies the same supported permitted-DNS contents under
+the same independent caller-owned decoder limits as the generic reviewed-anchor
+follow-up. Success retains the complete strong subordinate-intermediate policy
+plus only payload-free counts of reviewed-anchor constraint applications and
+repeated DNS-name evaluations. The generic reviewed-anchor subordinate result
+cannot construct or substitute for this stronger result. The strong and generic
+entry points must share the exact private reviewed-anchor subordinate evaluator
+so unconstrained short-circuiting, traversal, the self-issued exception,
+decoder-limit propagation, stable failure kinds, and payload redaction cannot
+drift between them.
+
+This preserves the exact Name-value policy, reviewed trust-root selection,
+certificate-wide anchor-role policy, construction-derived path-length state,
+complete ordered intermediate and target-signature evidence, complete target
+policy, and all supported target and subordinate Name-constraint evaluations in
+one non-copyable result. It still does not constrain subordinate subject
+distinguished names, support every GeneralName form, add excluded or non-DNS
+reviewed-anchor constraints, establish complete Name or path validation,
+validate the anchor self-signature, check revocation, compose TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
+certificate-data composition performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+A bounded revocation-binding follow-up consumes that exact strongest supported
+Name-policy-backed path result together with one fully routed authenticated
+OCSP target-revocation proof. The target certificate is derived only from the
+retained complete server policy, and the target-nearest issuer is derived only
+from the retained depth-zero routed signature. Binding requires the OCSP proof
+to retain those same exact decoded certificate objects, then validates both
+path certificates at the OCSP proof's retained observation time. Failure order
+is stable: target identity, issuer identity, target validity, then issuer
+validity. Success retains both complete non-copyable inputs plus the two exact-
+time validity tokens; byte-equal independent decodes, detached issuers, and
+cross-time evidence cannot substitute.
+
+This is pure public-certificate and signed-response evidence composition. It
+performs no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not fetch revocation data, reify or authorize the
+delegated responder path, apply responder DNS or no-check policy, establish
+status for every non-root certificate, complete Name or path validation,
+validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
 
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails

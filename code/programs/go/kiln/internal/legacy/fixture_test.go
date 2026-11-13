@@ -39,6 +39,20 @@ const baseBoundary = `{
 }
 `
 
+// The fixture's policy files: language "x" pins one tool, "other" is a second
+// language, and `sh` plus `cc` are always included.
+const (
+	baseToolchains = `{
+  "cc": {"always": true, "pins": {"cc": "image"}, "probes": [["cc", "--version"]], "roots": {"cc": ["/nonexistent/kiln-test-bin"]}},
+  "other": {"pins": {"otool": "image"}},
+  "sh": {"always": true, "pins": {"sh": "image"}},
+  "x": {"pins": {"xtool": "1.2.3"}, "probes": [["xtool", "--version"]], "roots": {"xtool": ["/opt/x/bin"]}}
+}
+`
+	baseEnv       = `{"names": ["FIXTURE_*", "LANG"]}`
+	baseHostRoots = `{"roots": [{"path": "/usr", "kind": "image"}], "ephemeral": ["/dev/null"], "absent-ok": []}`
+)
+
 // newFixture writes the baseline tree: the policy files, the boundary file, a
 // build tool (with a replaced in-repo module) and the packages of baseGraph.
 //
@@ -51,6 +65,9 @@ func newFixture(t *testing.T) *fixture {
 	f := &fixture{t: t, dir: t.TempDir()}
 	f.write("code/kiln/legacy/pinned.json", `{"languages": []}`)
 	f.write("code/kiln/legacy/never.json", `{"packages": []}`)
+	f.write(ToolchainsPath, baseToolchains)
+	f.write(EnvPath, baseEnv)
+	f.write(HostRootsPath, baseHostRoots)
 	f.write(BoundaryPath, baseBoundary)
 	f.write(BuildToolPath+"/go.mod", "module example.com/bt\n\ngo 1.26\n\nreplace example.com/lib => ../../../packages/go/lib // in repo\n")
 	f.write(BuildToolPath+"/main.go", "package main\n")
@@ -122,7 +139,8 @@ func baseGraph() *Graph {
 }
 
 func (f *fixture) opts(osName string) Options {
-	return Options{Source: source.NewFolder(f.dir), Host: imager("test/image"), OS: osName, Arch: "x64", Workers: 3}
+	return Options{Source: source.NewFolder(f.dir), Host: imager("test/image"), OS: osName, Arch: "x64", Workers: 3,
+		Environ: []string{"FIXTURE_A=1", "OTHER=2", "LANG=C"}}
 }
 
 func (f *fixture) plan(g *Graph) *Plan {
@@ -130,6 +148,18 @@ func (f *fixture) plan(g *Graph) *Plan {
 	p, err := BuildPlan(g, f.opts("linux"))
 	if err != nil {
 		f.t.Fatalf("BuildPlan: %v", err)
+	}
+	// Every plan any test builds: nothing is cacheable until traced read-sets
+	// exist (KILN04), and no hint ever appears among the reasons.
+	for _, r := range p.Packages {
+		if r.Class == ClassCacheable {
+			f.t.Fatalf("%s is cacheable with no traced read-set", r.Name)
+		}
+		for _, h := range r.Hints {
+			if contains(r.Reasons, h) {
+				f.t.Fatalf("%s: hint %q is also a reason", r.Name, h)
+			}
+		}
 	}
 	return p
 }

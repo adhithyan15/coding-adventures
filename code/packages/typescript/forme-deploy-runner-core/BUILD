@@ -1,1 +1,1 @@
-npm install --silent && npm run build && npx vitest run --coverage
+npm ci --silent && npm run build && npx vitest run --coverage

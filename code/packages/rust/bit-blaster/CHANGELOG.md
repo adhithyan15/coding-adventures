@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- Keep the multiply circuit's row index paired with the corresponding operand
-  bit through iteration, satisfying the current Rust stable Clippy lint without
-  changing the generated circuit.
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/bv.rs`: `needless_range_loop`: `mul` walks the multiplier bits with `iter().enumerate()`; behaviour unchanged.
 
 ## 0.2.0 — 2026-11-09
 

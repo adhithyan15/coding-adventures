@@ -1,0 +1,88 @@
+# BUILD_linux is BUILD plus ONE change: the VER08b runtime-capability line runs with
+# RCG_STRICT=1.  The build tool picks BUILD_linux first on Linux, BUILD on macOS
+# (BUILD_mac / BUILD_mac_and_linux do not exist here) and BUILD_windows on Windows.
+# KEEP THE REST OF THIS FILE IN SYNC WITH BUILD.
+cargo test -q -p logic-gates --lib -- --nocapture
+cargo test -q -p logic-gates --doc
+cargo test -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
+# SEC-007: the bit domain is also checked in the RELEASE profile, where the crate's own
+# validation used to be compiled away (a debug-only `debug_assert!`).  The same file passes
+# in both profiles or the build fails.
+cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
+# ... and the whole generated Warrant harness (every rejection row included) in release too.
+cargo test -q -p logic-gates --release --test warrant_evidence
+# The library is pure: no capability, test code included (the analyzer reads it).
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+# VER08b: every public stateless operation (the gates and the combinational blocks) runs
+# inside a seccomp/Landlock jail derived from required_capabilities.json (no capabilities),
+# watched by an independent strace; RCG_STRICT=1 makes a NOT-LIVE gate a failure.
+# The container ring is skipped, not failed, where no Docker daemon is reachable.
+RCG_STRICT=1 cargo test -q -p logic-gates --test runtime_capability
+# VER04h: the evidence harness is generated from code/specs/logic-gates.warrant and
+# evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence
+# manifest from a real run, and prove each sabotage mode makes a model-pinned
+# exhaustive suite of each operation report `not ok` (each filter names the cheap
+# claim that pins the faulted behaviour; a fault applies to every operation that
+# lists it, and the filter selects which operation's claim is attacked).
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p logic-gates --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nor_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-sub WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=shift-mask WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/and_n_rejects_a_short_input cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/or_n_rejects_a_short_input cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/xor_n_rejects_a_short_input cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_rejects_non_bit_d0 cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=saturate-add WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_truth_table cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux4_rejects_non_bit_d0 cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/mux_n_rejects_non_bit_input_0 cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/demux_rejects_non_bit_data cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_rejects_non_bit_alone cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_rejects_no_active_input cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=flip-result-bit WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-last-result-byte WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_rejects_non_bit_first cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8 cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/tri_state_rejects_non_bit_data cargo test -q -p logic-gates --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+# No operand is secret, so there is no constant-time obligation; the steps rows are
+# attempted on the real source, the front end refuses it, and the proof manifest
+# records every steps-bound obligation `not-live` with the blocker.
+WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test logic_gates_proofs
+# VER04h: the report is derived from the manifests written above; --check
+# cross-checks it against them and fails closed on any disagreement.
+# --allow-unverified: the report still cites `unverified::` static attestations
+# (AST audits no tool re-runs, same rows as gf256, ct-compare and wasm-leb128).
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

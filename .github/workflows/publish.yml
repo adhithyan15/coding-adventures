@@ -184,10 +184,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
 
       - name: Install build tools
-        run: pip install build
+        run: pip install --disable-pip-version-check build==1.6.1
 
       - name: Build sdist and wheel
         env:
@@ -299,9 +299,9 @@ jobs:
           persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
 
       - name: Build gem
         env:

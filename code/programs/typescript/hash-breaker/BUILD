@@ -1,1 +1,1 @@
-cd ../../../packages/typescript/md5 && npm install --silent && cd - && npm install --silent && npx tsx src/main.ts
+cd ../../../packages/typescript/md5 && npm ci --silent && cd - && npm ci --silent && npx tsx src/main.ts

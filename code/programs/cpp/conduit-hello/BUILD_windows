@@ -1,1 +1,6 @@
-echo C++ conduit-hello uses POSIX sockets — skipping on Windows
+# Windows: tools\run.ps1 builds the Rust conduit-capi staticlib with the default
+# MSVC toolchain (conduit_capi.lib), compiles the demo and the smoke test with
+# cl.exe (/MD) and runs the smoke test over a Winsock loopback client (see
+# code\scripts\build-conduit-capi-windows-msvc.ps1 and tests\net_compat.h).
+# build-tool: deps=rust/conduit-capi cpp/conduit
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run.ps1

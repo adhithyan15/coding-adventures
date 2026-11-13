@@ -38,6 +38,9 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
 | KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
+| KILN02 | Kiln Key Encoding | Byte-exact, length-framed key preimage with golden vectors |
+| KILN03 | Kiln Legacy Keys | Keys for today's shell BUILDs from the old tool's graph export |
+| KILN04 | Kiln Traced Read-Sets | Reuse legacy passes only when every traced read would see the same thing again |
 
 **Interactive hardware specs**:
 | # | Spec | Purpose |
@@ -58,6 +61,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER26](VER26-ct-compare-pilot.md) | Rust ct-compare pilot and evidence requirements |
 | [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
+| [LG01](LG01-logic-gates-contract.md) | Stateless logic-gate and combinational-block contract (bit domain, shapes, decoder width cap, the claims a later layer links to) and its Warrant document [`logic-gates.warrant`](logic-gates.warrant); layer 1 of the Intel 4004 chain |
 | [LEB01](LEB01-wasm-leb128.md) | LEB128 contract (canonical encoders, malformed-input rules, bytes-consumed bound) and its Warrant document [`wasm-leb128.warrant`](wasm-leb128.warrant) |
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |

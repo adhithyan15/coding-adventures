@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: stride computation in `softmax` and the gradient code iterates `shape` with `enumerate().skip()`; behaviour unchanged.
+
 ## 0.1.0 — 2026-03-21
 
 ### Added

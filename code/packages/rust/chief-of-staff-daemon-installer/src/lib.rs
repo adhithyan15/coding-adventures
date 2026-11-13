@@ -640,17 +640,22 @@ fn verify_directory_permissions(metadata: &fs::Metadata) -> Result<(), InstallEr
 }
 
 fn metadata_is_link(metadata: &fs::Metadata) -> bool {
-    if metadata.file_type().is_symlink() {
-        return true;
-    }
+    let is_symlink = metadata.file_type().is_symlink();
+    // Windows junctions and other reparse points are not reported as
+    // symlinks by `file_type()`, so check the attribute bit as well.  Each
+    // cfg arm is a single expression (rather than an early `return true`
+    // followed by `false`) so clippy's `needless_bool` does not fire on the
+    // non-Windows build, where the Windows arm is compiled out.
     #[cfg(windows)]
     {
         use std::os::windows::fs::MetadataExt;
         const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x400;
-        metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
+        is_symlink || metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
     }
     #[cfg(not(windows))]
-    false
+    {
+        is_symlink
+    }
 }
 
 #[cfg(test)]

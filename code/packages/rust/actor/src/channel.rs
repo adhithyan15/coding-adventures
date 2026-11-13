@@ -448,8 +448,8 @@ mod tests {
 
         let recovered = Channel::recover(&dir, "order-test").unwrap();
         assert_eq!(recovered.len(), 100);
-        for i in 0..100 {
-            assert_eq!(recovered.log[i].payload_text(), format!("msg_{}", i));
+        for (i, message) in recovered.log.iter().enumerate().take(100) {
+            assert_eq!(message.payload_text(), format!("msg_{}", i));
         }
         cleanup_tempdir(&dir);
     }

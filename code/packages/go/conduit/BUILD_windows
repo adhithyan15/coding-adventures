@@ -1,1 +1,5 @@
-echo Go Conduit uses CGO + the Rust static lib — skipping on Windows (requires cl.exe / clang-cl setup)
+# Windows: cgo needs MinGW-w64 gcc, so tools\run-tests.ps1 builds the Rust
+# conduit-capi staticlib for x86_64-pc-windows-gnu, puts MinGW gcc on PATH and
+# runs `go test ./... -v -cover` (see code\scripts\build-conduit-capi-windows-gnu.ps1).
+# build-tool: deps=rust/conduit-capi
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

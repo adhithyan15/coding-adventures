@@ -1,3 +1,3 @@
-cd ../lzss && npm install --quiet
-npm install --quiet
+cd ../lzss && npm ci --quiet
+npm ci --quiet
 npx vitest run --coverage

@@ -5,6 +5,16 @@
 - Add a separate strict parser for `warrant-lane-evidence-v1` manifests and
   the per-corpus consumer registry. This structural API does not run bindings,
   attest source/build/toolchain freshness, or change the Rust-only legacy loader.
+- **`AuditProfile::BooleanLogic` (`--profile boolean-logic`)**: true CWE-400/326/327/407
+  sentences for pure Boolean logic (first adopter `rust/logic-gates`: gates and
+  combinational blocks over single bits). The `varint-codec` sentences name LEB128, so
+  using that profile for a gate library would have put a false sentence in a report.
+  CWE-400 states the real bound (fixed CMOS evaluations per gate, linear n-input
+  gates and multiplexers, 2^n lines for at most 16 decoder inputs). Parsed by
+  `--profile`, listed in the unknown-profile error. Tests: `tests/test_no_secret_operands.rs`
+  (`the_boolean_logic_profile_...`). The ct-compare, gf256 and wasm-leb128 reports
+  regenerate byte-identically. `effect_certificate.json` regenerated for the new
+  source digest.
 - **`verify_evidence` step 6b closes the converse forgery**: a CWE-208 row that cites
   the attestation `warrant-spec::all-operands-public` is now rejected
   (`EvidenceMismatch`) unless the report also carries the not-applicable exemption

@@ -1,4 +1,4 @@
-cd ../analog-waveform && npm install --silent
-cd ../power-supply && npm install --silent
-npm install --silent
+cd ../analog-waveform && npm ci --silent
+cd ../power-supply && npm ci --silent
+npm ci --silent
 npx vitest run

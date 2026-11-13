@@ -1,10 +1,12 @@
 # Changelog — `twig-aot`
 
-## Unreleased — Windows AOT linker imports
+## Unreleased — Rust 1.100 toolchain pin: link `synchronization.lib` on Windows
 
-- Add `Synchronization.lib` to the MSVC/LldLink system import libraries so
-  Rust standard-library references to `WaitOnAddress` and `WakeByAddress*`
-  resolve in generated Windows executables.
+- The MSVC arm of the Windows AOT link now passes `synchronization.lib`. The
+  runtime/gc-core staticlibs are built by the CI Rust toolchain, and Rust 1.100's
+  std uses `WaitOnAddress`/`WakeByAddressSingle`/`WakeByAddressAll` for its futex
+  Mutex/Condvar, so the hand-written library list left three `__imp_` symbols
+  unresolved (LNK1120) and every `windows_x86_64_smoke` end-to-end test failed.
 
 ## Unreleased — #18779: lower const Str in variables and preserve heap defs in stack maps
 

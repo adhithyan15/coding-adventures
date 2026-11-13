@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Restructured `metadata_is_link` so each cfg arm is a single expression,
+  satisfying clippy 1.100 `needless_bool` on non-Windows builds; behavior
+  unchanged on all platforms.
+
 ## 0.1.0 - 2026-08-03
 
 - Add validated install plans for launchd, systemd user services, and Windows

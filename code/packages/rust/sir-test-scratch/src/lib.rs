@@ -171,17 +171,31 @@ pub fn create_new(path: impl AsRef<Path>) -> io::Result<File> {
 /// where `<profile dir>` is the cargo target directory's `debug/` (or
 /// `release/`, …) that holds the running test binary.
 ///
-/// A test binary lives at `<target>/<profile>/deps/<name>-<hash>`, and a
-/// binary built by `cargo build` at `<target>/<profile>/<name>`; both map to
+/// A test binary lives at `<target>/<profile>/deps/<name>-<hash>` (Cargo up to
+/// 1.97) or at `<target>/<profile>/build/<name>/<hash>/out/<name>-<hash>`
+/// (Cargo 1.100's build-dir layout), and a binary built by `cargo build` at
+/// `<target>/<profile>/<name>`; all three map to
 /// `<target>/<profile>/sir-go-build-cache`.  `None` when the running
 /// executable's path is unknown; [`go_command`] then leaves `GOCACHE` alone.
 pub fn go_build_cache() -> Option<PathBuf> {
     let exe = std::env::current_exe().ok()?;
-    let mut dir = exe.parent()?;
-    if dir.file_name().is_some_and(|n| n == "deps") {
-        dir = dir.parent()?;
-    }
-    Some(dir.join("sir-go-build-cache"))
+    let dir = exe.parent()?;
+    let profile_dir = if dir.file_name().is_some_and(|n| n == "deps") {
+        dir.parent()?
+    } else if dir.file_name().is_some_and(|n| n == "out") {
+        // `out` / `<hash>` / `<name>` / `build` / `<profile>`: only when the
+        // path really has that shape, so a plain binary that happens to sit
+        // in a directory called `out` is not mistaken for it.
+        let build = dir.parent()?.parent()?.parent()?;
+        if build.file_name().is_some_and(|n| n == "build") {
+            build.parent()?
+        } else {
+            dir
+        }
+    } else {
+        dir
+    };
+    Some(profile_dir.join("sir-go-build-cache"))
 }
 
 /// `go` with its build cache set to [`go_build_cache`], so that no
@@ -270,9 +284,18 @@ mod tests {
     fn the_go_build_cache_lives_in_the_target_profile_directory() {
         let cache = go_build_cache().expect("a test binary knows its own path");
         assert!(cache.ends_with("sir-go-build-cache"), "{}", cache.display());
-        // This test binary is `<target>/<profile>/deps/sir_test_scratch-<hash>`.
+        // The cache sits in the profile directory that holds this test binary,
+        // whichever Cargo layout put it there (`deps/` through Cargo 1.97,
+        // `build/<name>/<hash>/out/` from 1.100): the directory is an ancestor
+        // of the running executable and has Cargo's `deps` or `build` inside it.
         let exe = std::env::current_exe().unwrap();
-        assert_eq!(Some(cache.parent().unwrap()), exe.parent().and_then(Path::parent));
+        let profile = cache.parent().unwrap();
+        assert!(exe.starts_with(profile), "{} is not under {}", exe.display(), profile.display());
+        assert!(
+            profile.join("deps").is_dir() || profile.join("build").is_dir(),
+            "{} does not look like a cargo profile directory",
+            profile.display()
+        );
         let cmd = go_command();
         let gocache = cmd.get_envs().find(|(k, _)| *k == "GOCACHE").and_then(|(_, v)| v);
         assert_eq!(gocache, Some(cache.as_os_str()));

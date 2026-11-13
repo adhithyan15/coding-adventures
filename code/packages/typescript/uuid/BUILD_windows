@@ -1,4 +1,4 @@
-cd ../md5 && npm install --silent
-cd ../sha1 && npm install --silent
-npm install --silent
+cd ../md5 && npm ci --silent
+cd ../sha1 && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

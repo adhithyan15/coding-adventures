@@ -120,6 +120,106 @@ native extensions `conduit`, `irc-server-native`, `gf256_native`,
 `polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
 (Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
 
+### W3 progress: Go cgo (`go/conduit`, `go/conduit-hello`)
+
+Done. Both recipes were echo-skips and now run `go test` for real on Windows.
+Go's cgo drives MinGW-w64 gcc (never `cl.exe`), and a gcc/ld link needs a
+GNU-ABI library, so the recipe does not use the MSVC `conduit_capi.lib` or the
+DLL that the Haskell recipe stages:
+
+- `code/scripts/build-conduit-capi-windows-gnu.ps1` (shared by both recipes)
+  runs `rustup target add x86_64-pc-windows-gnu`, then
+  `cargo rustc --release --target x86_64-pc-windows-gnu --lib --crate-type staticlib`.
+  Asking for the staticlib alone avoids linking the crate's `cdylib`, which
+  would need a MinGW linker for rustc; the result is
+  `target\x86_64-pc-windows-gnu\release\libconduit_capi.a`.
+- The same helper then picks a MinGW-w64 gcc (`C:\mingw64\bin` first, other
+  known MinGW locations next, then any `gcc` on PATH; Ruby's UCRT gcc is not a
+  candidate because Rust's GNU std links the msvcrt runtime), prepends it to
+  PATH only after cargo has run, sets `CC=gcc`, and asserts gcc is an x86_64
+  MinGW and Go is `windows/amd64`.
+- `conduit.go` gains `#cgo windows LDFLAGS:` naming that archive by full path
+  plus `-lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32
+  -lgcc_eh -static` (the libraries `rustc --print native-static-libs` reports
+  for the GNU target, plus `libgcc_eh` for the `_Unwind_*` symbols; `-static`
+  keeps `libwinpthread` from becoming a runtime DLL dependency).
+- `tools\run-tests.ps1` in each package mirrors `tools/run-tests.sh`, and the
+  recipe is `powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1`.
+
+### W3 progress: C++ (`cpp/conduit`, `cpp/conduit-hello`)
+
+Done. Both recipes were echo-skips ("uses POSIX sockets") and now build and run
+the same tests as their Unix `BUILD` on Windows. Unlike Go's cgo, `cl.exe` links
+the default MSVC Rust output, so no GNU target is involved:
+
+- `code/scripts/build-conduit-capi-windows-msvc.ps1` (shared by both recipes)
+  drops Git for Windows' `usr\bin` from `PATH` (a bare `link` would be GNU
+  coreutils', see `lessons.d/on-the-windows-runner-a-bare-link-is-git-s-gnu-coreutils.md`),
+  asserts `cl`/`link`/`cargo` and an `x86_64-pc-windows-msvc` rustc host, runs
+  `cargo rustc --release --crate-type staticlib -- --print native-static-libs`
+  (the staticlib alone, as on Unix) and returns `conduit_capi.lib`, its header
+  directory and the system libraries to link: `kernel32 advapi32 ntdll userenv
+  bcrypt ws2_32 synchronization`, merged with whatever rustc reports except the
+  cargo-private `windows.0.52.0.lib`. `synchronization.lib` holds
+  `WaitOnAddress`/`WakeByAddress*`; without it the link ends in LNK2019/LNK1120.
+- `tools\run-tests.ps1` (`cpp/conduit`) and `tools\run.ps1` (`cpp/conduit-hello`)
+  mirror the Unix scripts: `cl.exe /std:c++17 /EHsc /W4 /MD` (dynamic CRT, which
+  is what Rust's MSVC std uses), each suite run in turn and any failure turned
+  into a non-zero exit. The recipes are
+  `powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1` /
+  `...tools\run.ps1` and keep the Unix `# build-tool: deps=` directive.
+- The E2E clients (`tests/test_server.cpp`, `tests/smoke.cpp`) go through a small
+  `tests/net_compat.h` (BSD sockets on Unix, Winsock on Windows: `WSAStartup`
+  once, `SOCKET`/`closesocket`, int-sized `send`/`recv`, and `SO_RCVTIMEO` as a
+  DWORD of milliseconds instead of a `timeval`). Unix behaviour is unchanged.
+- `CMakeLists.txt` selects `conduit_capi.lib` + the system libraries under MSVC
+  and the `x86_64-pc-windows-gnu` archive under MinGW; the Unix result is the
+  same `libconduit_capi.a` as before.
+
+Proof so far: Unix scripts pass; the shimmed tests compile with
+`-Wall -Wextra -Wpedantic -Werror` under mingw-w64, link against the GNU-target
+staticlib and pass under Wine (loopback E2E included); the build tool's
+`-validate-build-files` accepts both `BUILD_windows` files. The MSVC/PowerShell
+path itself is first exercised by the Windows CI leg.
+
+### W3 progress: Go cgo (`go/paint-codec-png-native`)
+
+Done; this was the last Go cgo consumer, so Go cgo in W3 is complete. The package
+used to link and test only on macOS arm64 (`darwin_arm64.go` plus a `uname`-gated
+`BUILD` and a Windows echo-skip). It now has one cgo file under
+`cgo && (linux || darwin || (windows && amd64))` with per-OS `#cgo LDFLAGS`, and a
+stub for everything else (and for `CGO_ENABLED=0`); `SupportedRuntime()` and
+`Available()` report a single `nativeLinked` constant defined beside the tags.
+
+- Linux links `target/release/libpaint_codec_png_c.a` by full path (so the linker
+  cannot pick the cdylib `.so` that `cargo build` also writes) plus
+  `-lgcc_s -lutil -lrt -lpthread -lm -ldl -lc`, which is what
+  `cargo rustc ... -- --print native-static-libs` reports for this crate on
+  Rust 1.100.0. `BUILD` is now `deps=rust/paint-codec-png-c`, `cargo build
+  --release`, `CGO_ENABLED=1 go test ./... -v -cover` with no `uname` gating.
+- macOS keeps the flags that already worked (`-L... -lpaint_codec_png_c`); the
+  tag now covers arm64 and amd64 with the same flags. amd64 is unverified
+  locally and is first exercised by the macOS CI leg.
+- Windows reuses the go/conduit recipe: `tools\run-tests.ps1` calls
+  `code\scripts\build-conduit-capi-windows-gnu.ps1`, which gained `-CrateDir`
+  and `-ArchiveName` parameters (defaults unchanged, so go/conduit is
+  byte-for-byte the same), to build the `x86_64-pc-windows-gnu` staticlib and put
+  MinGW gcc on `PATH`. For this crate rustc reports only
+  `-lkernel32 -lntdll -luserenv -lws2_32 -ldbghelp -lsynchronization`; the link
+  line adds `-lgcc_eh -static`, as for conduit.
+- Tests assert the PNG signature, IHDR dimensions and a pixel-exact round trip
+  through `image/png` wherever the codec is linked, and cover the nil, inconsistent
+  and empty error paths everywhere.
+
+Proof so far: `go test` passes natively on Linux; the Windows test binary
+cross-compiles with mingw-w64 against the Rust 1.100.0 GNU staticlib and passes
+under Wine; `go/conduit` still cross-compiles; the build tool's
+`-validate-build-files` accepts both recipes. The PowerShell wrapper itself and
+macOS amd64 are first exercised by CI.
+
+Remaining in W3: node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF
+link, Ruby MinGW vs MSVC ABI and .NET P/Invoke.
+
 ## Done
 
 Every package either passes its real build and tests on all three OSes, or is

@@ -931,6 +931,8 @@ One row per (release, edition) pair, following Python's layout:
 | `oracle` | the oracle record that backs the pair (section 6.4/6.5) |
 | `note` | what changed, or why nothing did |
 
+Slice A3 fixes the exact, era-neutral column layout (section 10, A3 decisions).
+
 Blob and tree IDs come from a blobless, depth-1 fetch per tag.
 
 **The bases:**
@@ -1378,6 +1380,69 @@ conservative reading:
    (13, 45, 34, 43, 23 releases).
 8. **`rs-token-trees`.** Section 6.2 names the subset but no spec for
    `subsets.csv`; A2 gives it spec `RS01` and `allowlist` `-`.
+
+### A3 decisions (evidence tooling slice)
+
+Slice A3 wrote `code/scripts/rust_release_pairs.py` (modes `check` and
+`write`), its tests, and the header-only `code/grammars/rust/pair-evidence.csv`.
+No pair file exists yet, so the evidence file has no rows and `check` passes on
+the empty state; slice A4 writes the first pairs and rows. Where this spec was
+silent or ambiguous, A3 took the conservative reading:
+
+1. **Columns.** Section 6.3 lists "syntax-file blob columns" that differ by
+   era. A3 fixes one era-neutral layout:
+   `release,edition,commit,syntax_blobs,basis,accepted_blob,accepted_features,releases_md_blob,releases_md_section,sweep_toolchain_sha256,sweep_digest,oracle,note`.
+   `syntax_blobs` is `;`-separated `<path>=<blob or tree ID>` entries (`-` for a
+   path absent at the tag); the XID crate version is recorded as the
+   `Cargo.lock` blob. The six `accepted_*`, `releases_md_*` and `sweep_*`
+   columns are the three `semantic-copy` conditions and must be `-` on every
+   other basis, so stale evidence cannot linger on a row that no longer relies
+   on it.
+2. **What "copy" copies.** Section 2.2 says each header names its own release
+   and edition, and section 2.5 says `check` fails when a copy's *body* drifts.
+   A3 therefore copies the body (everything after the header block's blank
+   line) byte for byte, and generates the header from `releases.csv` and the
+   evidence row. A copy's file is never byte-identical to its source's: only
+   its body is, and `check` compares the whole file with the bytes `write`
+   would produce.
+3. **Which sources are allowed.** `copy:<pair>` may name (a) the same release
+   at an earlier edition (a sibling) or (b) a release on the target's
+   `predecessor` chain at the **same** edition. An edition-less pre-1.0 pair
+   never seeds an edition pair, and an edition pair never seeds a different
+   edition of another release. `copy:` also needs the recorded `syntax_blobs`
+   to equal the source row's exactly.
+4. **`semantic-copy` eligibility.** Only a 1.x minor (`1.Y.0`) may use it, only
+   from its direct `predecessor` release, and only for the same edition.
+   Patches use `copy:`. All six condition columns must be present and
+   well formed (blobs 40 or 64 hex, digests 64 hex, `accepted_features` either
+   `none`, meaning no feature had `since` equal to this release, or a
+   `;`-list of feature identifiers, and a non-empty RELEASES.md section).
+   `check` verifies that the evidence is recorded, not that it is true: it
+   uses no network and runs no toolchain, so the blobs, the toolchain digest
+   and the sweep result are re-established by slice C2's oracle harness.
+5. **What a `reviewed` row names.** Its inventory commit, at least one
+   `syntax_blobs` entry, a note saying what changed (section 6.3's "reviewed
+   delta from its predecessor") and an `oracle` cell, which may be `-` until
+   slice C2 writes records. The script never writes a reviewed file; `check`
+   requires its header to cite `# source_sha:` equal to the row's commit and
+   to carry a `# basis: reviewed` line.
+6. **Coverage and order.** Evidence rows cover exactly the pair files on disk:
+   a file with no row, a row with no files, and a pair with one of its two
+   files are errors. A3 does **not** require evidence for every inventory pair
+   yet (none exist); the inventory's own check still requires files for any
+   non-pending release. Rows are listed in `releases.csv` order, then by
+   edition, so the file has one canonical form.
+7. **Hostile input.** The tool opens every file with `O_NOFOLLOW` and requires
+   a regular file, refuses a symlinked grammar directory, builds paths only
+   from stems that matched a strict pattern (and re-checks that they are direct
+   children of the directory), caps file, row and cell sizes, refuses control
+   and bidi characters in any cell, and prints messages through
+   `release_inventory.printable`. It reuses `release_inventory`'s stem parser,
+   editions header and edition derivation rather than duplicating them.
+8. **CI.** `rust_release_pairs.py check` and its unit tests run in the
+   repository-wide metadata contract step beside `release_inventory.py check`.
+   The `ci.yml` build-tool classifier reports that edit as shared, which keeps
+   package-scoped selection on a pull request: would-build is 0 packages.
 
 ---
 

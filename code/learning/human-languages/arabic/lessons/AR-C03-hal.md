@@ -44,7 +44,7 @@ open.
 ## You'll want to know — The letters in this word
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-HAL-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* Three letters, **all already yours**: **ح**
+Three letters, **all already yours**: **ح**
 (*ḥāʾ*, the deep throat *h*, from the hook-family lesson), **ا** (*alif*), **ل**
 (*lām*).
 
@@ -55,7 +55,7 @@ Right to left: **ح · ا · ل** → *ḥāl*. And remember from the writing se
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-HAL-02]; assesses=[] -->
 
 Here is the payoff. **حال** comes from the root **ḥ–w–l**, "**to turn, to
-change**." Look what grows from it:
+change**." Several words grow from it:
 
 | word | meaning | the turning inside |
 |---|---|---|

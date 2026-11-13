@@ -1,4 +1,4 @@
-(cd ../trig && npm install --silent --legacy-peer-deps)
-(cd ../point2d && npm install --silent --legacy-peer-deps)
-npm install --silent --legacy-peer-deps
+(cd ../trig && npm ci --silent)
+(cd ../point2d && npm ci --silent)
+npm ci --silent
 npx vitest run --coverage
