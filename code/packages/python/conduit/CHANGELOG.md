@@ -10,6 +10,10 @@
   relied on a `PYTHON_LIB_PATH` nobody set, so linking failed with
   `could not open 'python3.lib'`. `build.rs` now asks the interpreter for
   `<base_prefix>\libs` when `PYTHON_LIB_PATH` is unset.
+- The extension now calls `PyUnicode_AsUTF8AndSize` instead of
+  `PyUnicode_AsUTF8`. Windows links `python3.lib` (the stable ABI), which does
+  not export `PyUnicode_AsUTF8`, so the link failed with
+  `undefined symbol: PyUnicode_AsUTF8`.
 
 
 ### Tests — real-socket server E2E (parity with the other ports)

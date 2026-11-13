@@ -24,7 +24,18 @@ foreach ($candidate in $candidates) {
 }
 if (-not $nativePerl) { throw 'Native Strawberry Perl is required on PATH (or in PERL_BIN)' }
 $env:PERL_BIN = $nativePerl
-$env:PATH = "$(Split-Path -Parent $nativePerl);$env:PATH"
+# Strawberry Perl ships its own MinGW gcc in <root>\c\bin, and ExtUtils::CBuilder
+# (used by perl-bridge's build.rs) runs whatever "gcc" is first on PATH. Later
+# setup steps (setup-ruby's MSYS2, ghcup's MinGW) put other gcc builds ahead of
+# it, and a mismatched gcc fails with no diagnostic ("error building xs.dll").
+# Put Strawberry's own toolchain first, next to its perl.
+$perlBin = Split-Path -Parent $nativePerl
+$strawberryRoot = Split-Path -Parent (Split-Path -Parent $perlBin)
+$toolDirs = @($perlBin, (Join-Path $strawberryRoot 'c\bin')) | Where-Object { Test-Path -LiteralPath $_ }
+$env:PATH = "$($toolDirs -join ';');$env:PATH"
+# Log which compiler the shim build will use, so a failure is diagnosable.
+$gcc = Get-Command gcc.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($gcc) { Write-Host "gcc: $($gcc.Source)"; & $gcc.Source --version | Select-Object -First 1 } else { Write-Host 'gcc: not found on PATH' }
 
 Push-Location -LiteralPath $ExtensionDir
 try {
