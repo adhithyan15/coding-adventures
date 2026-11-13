@@ -380,24 +380,32 @@ so that the trace is the whole story: the build tool's `-exec-wrapper` is
   "repo_root": "/home/runner/work/repo",
   "home": "/home/runner",
   "tmpdir": "/home/runner/_tmp",
+  "ro_roots": ["/usr", "/etc", "/bin", "/lib", "/lib64", "/opt/hostedtoolcache/go/1.26.1"],
   "state_roots": ["/home/runner/.cargo/registry"],
-  "masks": ["/home/runner/work/repo/.git", "/home/runner/work/_temp"],
+  "masks": ["/home/runner/work/repo/.git"],
   "env_by_action": {"code/packages/go/a": ["HOME=/home/runner", "PATH=/usr/bin:/bin"]},
   "kiln_exe": "/opt/kiln/bin/kiln"
 }
 ```
 
-The step sees a read-only copy of `/` with the checkout writable at its own
-absolute path, fresh empty tmpfs `$HOME` and `TMPDIR`, writable `state` roots,
-the masked paths empty, and its own `/proc` (`hidepid=2`). It runs as uid 1000
-in a new user namespace with no capabilities, `no_new_privs` and a seccomp
-filter (EPERM for the refused calls of KILN04 section 4.4, for `CLONE_UNTRACED`
-and for every `CLONE_NEW*`; ENOSYS for `clone3`; any non-x86-64 ABI is killed).
-Its environment is exactly the configured list, standard input is `/dev/null`,
-and when it exits (it is PID 1) the kernel kills everything left behind.
+The new root is an **allowlist**, built on an empty tmpfs. The step sees only
+the `ro_roots` (the `image` and `tool` roots of `host-roots.json`, read-only;
+a symlink such as `/bin` is recreated), the checkout writable at its own
+absolute path, the writable `state` roots, fresh empty tmpfs for `$HOME`,
+`TMPDIR`, `/tmp`, `/var/tmp` and `/run`, a minimal `/dev`, and its own `/proc`
+(`hidepid=2`). Nothing else of the host is there, because a pathname Unix
+socket or FIFO is reachable through the filesystem whatever the mount flags.
+`masks` are the checkout's own direct children (`.git`) made empty; a path
+outside the checkout is simply absent unless it is under an allowed root, and
+the configuration refuses a mask there. The step runs as uid 1000 in a new user
+namespace with no capabilities, `no_new_privs` and a seccomp filter (EPERM for
+the refused calls of KILN04 section 4.4, for `CLONE_UNTRACED` and for every
+`CLONE_NEW*`; ENOSYS for `clone3`; any non-x86-64 ABI is killed). Its
+environment is exactly the configured list, standard input is `/dev/null`, and
+when it exits (it is PID 1) the kernel kills everything left behind.
 
 - **No network, no host IPC.** The step runs in empty network, IPC and UTS
-  namespaces (only `lo`, up), `/run` and `/var/run` are empty, `/dev` holds
+  namespaces (only `lo`, up), `/run` is empty, `/dev` holds
   only `null`, `zero`, `full`, `random`, `urandom` and `tty`, and it runs in a
   session of its own, so it cannot signal strace. The recorder runs strace with
   `--kill-on-exit` and must make the step's descriptors 1 and 2 pipes.

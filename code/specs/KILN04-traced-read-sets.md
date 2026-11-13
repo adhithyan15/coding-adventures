@@ -254,30 +254,39 @@ steps, then `execve`s the step:
    has only a loopback, brought up: **network is isolated for every action in
    v1** (§4.7). §5.4 gives network use no record until stage 5's fetchers, so
    the isolation costs no soundness.
-2. **A read-only filesystem.** It builds the view from a read-only root,
-   an allowlist rather than a denylist. The whole filesystem is mounted
-   read-only, except for:
+2. **An allowlist root.** The new root is an **empty tmpfs**, and only what
+   is named is put into it. It is not a copy of `/` with some paths masked: a
+   pathname Unix socket or FIFO belongs to the filesystem, not to the network
+   namespace, and a read-only bind does not stop `connect()` or an open for
+   writing. The runner's .NET diagnostic socket in `/tmp`, for one, lets a
+   step make `Runner.Worker` load a library. What the step sees:
+   - the `image` and `tool` roots of `host-roots.json` (`/usr`, `/etc`,
+     `/lib*`, `/bin`, `/sbin`, the pinned toolchains), **read-only**, passed in
+     the configuration as `ro_roots` (a symlink such as `/bin` is recreated);
    - the repository, which is writable and stays at **the same absolute
      path**;
-   - a fresh, empty tmpfs for `$HOME` and `TMPDIR`;
-   - the `state` roots (§5.3).
+   - the `state` roots (§5.3), writable;
+   - a fresh, empty tmpfs for `$HOME`, `TMPDIR`, `/tmp`, `/var/tmp` and `/run`
+     (the host's service sockets, `docker.sock` and D-Bus, live in `/run`);
+     the missing parent directories of the checkout are created in the tmpfs,
+     so a checkout under `$HOME` sits under the `home` tmpfs;
+   - `/dev`, a minimal tmpfs (`null`, `zero`, `full`, `random`, `urandom`,
+     `tty`, and the `fd`/`stdin`/`stdout`/`stderr` links);
+   - `/proc` (step 3).
 
-   `/dev` is a minimal tmpfs (`null`, `zero`, `full`, `random`, `urandom`,
-   `tty`, and the `fd`/`stdin`/`stdout`/`stderr` links), and `/run` and
-   `/var/run` are empty: the host's service sockets (`docker.sock`, D-Bus) live
-   there. After the pivot the helper checks that none exists and refuses to run
-   (exit 125) otherwise.
-
-   These are **absent** (an empty over-mount): `.git`, the trace
-   directory, the raw-records and results directories, the ledger and
-   Kiln's state, and the runner's `_temp` and file-command directories
-   (`$GITHUB_ENV`, `$GITHUB_PATH`). The Kiln and `strace` binaries live
-   outside the repository and are read-only.
-3. **`/proc`.** It mounts a fresh `/proc` for the new PID namespace with
+   Everything else is **absent**, not masked: `.git` aside, the trace
+   directory, the raw-records and results directories, the ledger and Kiln's
+   state, the runner's `_temp` and file-command directories (`$GITHUB_ENV`,
+   `$GITHUB_PATH`) and the Kiln and `strace` binaries are not in the root.
+   The recorder must not list a root that contains any of them. The only
+   masks are the checkout's own direct children (`.git`), made empty. After
+   the pivot the helper checks that `/run/docker.sock`, `/var/run/docker.sock`,
+   `/run/user` and `/run/dbus` do not exist, and refuses to run (exit 125)
+   otherwise: a `ro_roots` entry such as `/var` must not bring them back.3. **`/proc`.** It mounts a fresh `/proc` for the new PID namespace with
    `hidepid=2`.
 4. **No privileges.** It sets `PR_SET_NO_NEW_PRIVS` and clears the
    effective, permitted, inheritable, ambient and bounding capability
-   sets. It sets `RLIMIT_CORE` to 0, so a crash never invokes the host's
+   sets. It sets `RLIMIT_CORE` to 1 (soft and hard), so a crash never invokes the host's
    `core_pattern` handler.
 5. **A seccomp filter.** It installs one that returns `EPERM` for:
    - every refused call (§4.4);
@@ -556,27 +565,37 @@ list the configuration holds for `KILN_ACTION`, exactly, and an action the
 configuration does not name is an error.
 
 **The configuration** is strict JSON, written by the recorder: `repo_root`,
-`home`, `tmpdir`, `state_roots`, `masks`, `env_by_action` and `kiln_exe`. It
-is read with a size cap by both helper processes; the root passes its SHA-256
-to the init, which refuses a file that changed in between. Unknown keys,
-differently-cased keys, duplicate keys and trailing data are refused. Every
-path is absolute and clean, is not `/`, and holds no `:` (the list separator),
-`,` (the mount-option separator), control character or non-UTF-8 byte. Further
-rules:
+`home`, `tmpdir`, `ro_roots`, `state_roots`, `masks`, `env_by_action` and
+`kiln_exe`. It is read with a size cap by both helper processes; the root
+passes its SHA-256 to the init, which refuses a file that changed in between.
+Unknown keys, differently-cased keys, duplicate keys and trailing data are
+refused. Every path is absolute and clean, is not `/`, and holds no `:` (the
+list separator), `,` (the mount-option separator), control character or
+non-UTF-8 byte. Further rules:
 - `home` and `tmpdir` are not inside `repo_root`, and differ;
 - `repo_root` is not inside `tmpdir`, because `tmpdir` is where the new root
   is assembled (below), so nothing bound from the host may live under it;
 - a state root overlaps neither the checkout nor `tmpdir` and does not cover
   `home`;
-- no mask covers the checkout, `home`, `tmpdir` or a state root;
+- `ro_roots` is not empty, has no duplicates, and no entry overlaps (equals,
+  contains or lies inside) the checkout, `home`, `tmpdir` or a state root, or
+  lies inside `/dev`, `/run`, `/var/run`, `/proc`, `/tmp` or `/var/tmp`, which
+  the sandbox builds itself;
+- no configured path lies inside `/dev`, `/run`, `/var/run` or `/proc`;
+- **a mask is a direct child of `repo_root`**, and nothing else is a mask.
+  A path outside the checkout is already absent unless it is under an allowed
+  root, so a mask there (under `home`, `tmpdir`, `/run`, `/dev`) could only
+  fail; the configuration refuses it with that message;
 - an `env_by_action` key is a clean relative path (`.` is the checkout), and
   no entry names a `KILN_` variable;
 - `kiln_exe` equals `/proc/self/exe`, and neither it nor its resolved path is
-  inside `repo_root`.
+  inside `repo_root`, a state root or `tmpdir`.
 
 Against the real filesystem the helper additionally requires that `repo_root`,
 `home`, `tmpdir`, the working directory and every state root (or its nearest
 existing ancestor) are canonical directories (no symlink in any component),
+and that every `ro_roots` entry exists and is either a symlink (the entry
+itself) or a canonical directory or file,
 because the mounts are made at `<new root>/<path>` and an absolute symlink in a
 component would resolve against the host's root; that no mask target is a
 symlink; that every mask target exists; that the configuration file is not inside the checkout,
@@ -616,36 +635,45 @@ avoid `unshare(CLONE_FS)`. Every other `chdir` is a setup `chdir` that ends
 back at the package directory.
 
 **Mount order** (`Plan`; each step needs the ones before it). Paths in steps 2
-and 3 are host paths; every later path is placed under the new root.
+and 3 are host paths; the host paths that are bound later (`ro_roots`,
+`repo_root`, state roots) are read from the old root, and every target is placed
+under the new root.
 1. `mount("", "/", MS_REC|MS_PRIVATE)`: nothing propagates to the host.
-2. Create each `state` root on the host (the filesystem is still writable).
+2. Create each `state` root on the host.
 3. Mount the staging tmpfs on the host's `tmpdir`
-   (`MS_NOSUID|MS_NODEV`, `mode=0755,uid=1000,gid=1000`) and create
-   `tmpdir/.kiln-newroot` in it.
-4. `mount("/", tmpdir/.kiln-newroot, MS_BIND|MS_REC)`, then
-   `mount_setattr(.., MOUNT_ATTR_RDONLY, AT_RECURSIVE)`. This sets only the one
-   attribute on every mount of the copy; a plain remount would have to repeat
-   each inherited flag, which a user namespace locks.
-4a. Replace `/dev` with the minimal tmpfs, and mask `/run` and `/var/run`
-    (optional: skipped when absent or a symlink).
-5. Fresh tmpfs on `home` (`0755`) and on `tmpdir` (`1777`), both
-   `MS_NOSUID|MS_NODEV` and owned by uid 1000, the shallower first, creating
-   the mount point where it does not exist.
-6. Bind `repo_root` writable at the same path.
-7. Bind each state root writable.
-8. Mask, shallowest first, in this order: each mask target is opened then.
-   A directory gets an empty read-only tmpfs
+   (`MS_NOSUID|MS_NODEV`, `mode=0755,uid=1000,gid=1000`), create
+   `tmpdir/.kiln-newroot` in it, and mount the **new root**, an empty tmpfs
+   (same options), on that directory.
+4. Each `ro_roots` entry, shallowest first: a symlink is recreated; a directory
+   or file gets its missing parents created on the root tmpfs, is bound
+   `MS_BIND` (**non-recursively**, so no mount beneath it comes along, and a
+   locked one is a failure), then `mount_setattr(.., MOUNT_ATTR_RDONLY)` on
+   that one mount (a plain remount would have to repeat each inherited flag,
+   which a user namespace locks).
+5. Fresh tmpfs, each preceded by creating the mount point (and parents), the
+   shallower first and no path twice: `home` (`0755`), `tmpdir` (`1777`),
+   `/tmp` (`1777`), `/var/tmp` (`1777`) and `/run` (`0755`); all
+   `MS_NOSUID|MS_NODEV`, owned by uid 1000.
+6. The minimal `/dev` (`MS_NOSUID|MS_NOEXEC`, `size=64k,nr_inodes=64`), with
+   the six device nodes bound from the host's and the links, then remounted
+   read-only.
+7. Bind `repo_root` writable at the same path, then each state root.
+8. Mask each configured mask (direct children of the checkout), in sorted order:
+   each target is opened once with `O_PATH|O_NOFOLLOW` and mounted over through
+   `/proc/self/fd/N`. A directory gets an empty read-only tmpfs
    (`MS_RDONLY|MS_NOSUID|MS_NODEV|MS_NOEXEC`, `size=4k,nr_inodes=2`); anything
-   else gets `/dev/null` bound over it (so `$GITHUB_ENV` can be read, empty,
-   and written, to nowhere). A symlink and a missing target are refused.
+   else gets `/dev/null` bound over it. A symlink and a missing target are
+   refused.
 9. Fresh `proc` on `/proc` (`MS_NOSUID|MS_NODEV|MS_NOEXEC`, `hidepid=2`).
-10. `chdir(new root)`, `pivot_root(".", ".")`, `umount2(".", MNT_DETACH)`,
+10. Seal the new root read-only (`MS_REMOUNT|MS_RDONLY`), then
+    `chdir(new root)`, `pivot_root(".", ".")`, `umount2(".", MNT_DETACH)`,
     `chdir("/")`, then verify that no host IPC path exists.
 
-`home` and `tmpdir` precede the checkout and state roots because the checkout
-may live under `$HOME`, where the tmpfs would hide a bind made earlier. A
-checkout under `$HOME` therefore persists, and so do the ancestor directories
-the plan creates in the tmpfs.
+The scratch tmpfs precede the checkout and state roots because the checkout may
+live under `$HOME` (or `/tmp`), where a tmpfs would hide a bind made earlier;
+the checkout's missing parents are created in the tmpfs. A checkout under
+`$HOME` therefore persists, and so do the ancestor directories the plan
+creates.
 
 **Privilege drop** (`PrivSteps`, then checked by reading the state back):
 1. `prctl(PR_SET_NO_NEW_PRIVS, 1)`;
@@ -717,24 +745,36 @@ version of this section led to these. Each is a decision, not a sketch.
   socket, with `CAP_NET_ADMIN` as one more ambient capability): a test that
   binds and connects on `127.0.0.1` inside the step still works, and nothing
   reaches the host's loopback services or abstract sockets (those are per
-  network namespace). `/run` and `/var/run` are always masked, with an empty
-  read-only tmpfs (`/var/run` is skipped when it is a symlink); after the
-  pivot `/run/docker.sock`, `/var/run/docker.sock`, `/run/user`, `/run/dbus`
-  and `/var/run/dbus` must be absent. `/dev` is replaced by a tmpfs holding
+  network namespace). Namespaces do not cover the filesystem, though: see the
+  next bullet. `/run` is a fresh tmpfs; after the pivot `/run/docker.sock`,
+  `/var/run/docker.sock`, `/run/user`, `/run/dbus` and `/var/run/dbus` must be
+  absent. `/dev` is replaced by a tmpfs holding
   only `null`, `zero`, `full`, `random`, `urandom` and `tty` (bound from the
   host), and the symlinks `fd`, `stdin`, `stdout` and `stderr` (remounted
   read-only): no `/dev/kvm`, `/dev/fuse`, disks or `/dev/pts`. No configured path
-  may lie under `/dev`, `/run` or `/var/run`. `RLIMIT_CORE` is 0. Stage 5
-  revisits the network for fetchers (§14), probably through a proxy.
+  may lie under `/dev`, `/run`, `/var/run` or `/proc`. `RLIMIT_CORE` is 1: a limit of 0 would not stop a piped
+  `core_pattern` handler (a pipe ignores the limit), but the kernel skips a
+  piped dump when the limit is exactly 1 (soft and hard, so the step cannot raise
+  it). Stage 5 revisits the network for fetchers (§14), probably through a proxy.
+- **An allowlist root, not a masked copy.** A pathname Unix socket or FIFO
+  belongs to the filesystem, and a read-only bind does not stop `connect()` or an
+  open for writing. The runner's .NET diagnostic socket,
+  `/tmp/dotnet-diagnostic-<pid>-...-socket`, lets a step make `Runner.Worker`
+  load a library: code execution outside the sandbox. So the root is an empty
+  tmpfs holding only the `ro_roots`, the checkout, the state roots and fresh
+  scratch tmpfs (steps 3 to 7 above), and masks apply only inside the checkout.
+  Test `TestSandboxNoReachableSocketsOrFifos` walks every mount of a running
+  sandbox, finds no socket or FIFO, and checks that ones the test makes in the
+  host's `/tmp` and `/var/tmp` are not visible.
 - **One spawn in the root.** `os.StartProcess` probes pidfd support with a
   throwaway `clone` (`os/pidfd_linux.go`), a second non-thread spawn in the
   root, which §4.5 refuses (`helper-spawn`). The root uses `syscall.ForkExec`
   and `syscall.Wait4` with no pidfd. Nothing else in the root clones a process
   before the spawn; its threads are `CLONE_THREAD` clones.
-- **Masks cannot be renamed around.** A mask inside the checkout must be a
-  **direct child** of `repo_root` (a step may rename an ancestor of a mount
-  point, not a mount point), and no mask may lie inside a state root. Every
-  mask must exist; a missing one is refused wherever it is. The mask is opened
+- **Masks cannot be renamed around.** A mask is a **direct child** of
+  `repo_root` (a step may rename an ancestor of a mount point, not a mount
+  point), and a mask anywhere else is refused (it is already absent). Every
+  mask must exist. The mask is opened
   once with `O_PATH|O_NOFOLLOW` and mounted through `/proc/self/fd/N`, so
   what was inspected (a directory or a file, never a symlink) is what is
   mounted over, with no look-then-mount race.
@@ -1659,6 +1699,14 @@ action that relied on them might now fail. The M3 spec must settle this
 before any skipping. The likely rule: do not skip an action whose write
 roots a running action read in its latest trace.
 
+**Before recording.** The sandbox tests skip where the kernel refuses
+unprivileged namespaces, and a runner image, kernel or `strace` can change
+under a green CI. The `kiln-record` job (stage 4) must therefore run the same
+probe before it records anything: a trivial step through `kiln sandbox-exec`
+with the real configuration, which fails the job (records nothing) when the
+sandbox cannot be built. The required `kiln-sandbox` CI job also runs on every
+scheduled and dispatched full build.
+
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
@@ -1704,6 +1752,13 @@ These are known and named. They are measured rather than closed.
   it (§5.4). Stage 5 must give fetchers a way out that the sandbox can still
   account for, probably a proxy the helper reaches through a Unix socket it
   owns, and revisit this isolation then.
+- **Allowed roots are trusted.** The sandbox root holds only `ro_roots`, the
+  checkout and the state roots, but a socket or FIFO inside one of those is
+  reachable, and a runner-image directory could hold one. The recorder must
+  list roots from `host-roots.json` that hold none (stage 4 should assert it
+  with the same walk as `TestSandboxNoReachableSocketsOrFifos`), and a root such
+  as `/var` that might bring back a host service path is caught only by the
+  post-pivot check of §4.3.
 - **Linux only.** macOS and Windows get no hits from this bridge.
 
 ## 15. Open questions

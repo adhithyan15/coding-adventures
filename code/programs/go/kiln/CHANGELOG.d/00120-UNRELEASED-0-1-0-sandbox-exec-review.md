@@ -13,7 +13,7 @@ decisions"):
   brought up with `SIOCSIFFLAGS`), always masks `/run` and `/var/run`, verifies
   that `docker.sock`, `/run/user` and `/run/dbus` are absent, replaces `/dev`
   with a minimal tmpfs (`null`, `zero`, `full`, `random`, `urandom`, `tty`, the
-  `fd`/`stdin`/`stdout`/`stderr` links) and sets `RLIMIT_CORE` to 0. Network is
+  `fd`/`stdin`/`stdout`/`stderr` links) and sets `RLIMIT_CORE` to 1. Network is
   isolated for every action in v1; stage 5 revisits it for fetchers.
 - The root spawns with `syscall.ForkExec` and `syscall.Wait4`, not
   `os.StartProcess`, whose pidfd probe is a second non-thread spawn that the

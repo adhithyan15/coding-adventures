@@ -33,10 +33,31 @@ REQUIRED = (
     "TestSandboxInitRefusesToRunOutsideANamespace",
     "TestSandboxStepCannotSignalOutside",
     "TestSandboxNoHostIPC",
+    "TestSandboxNoReachableSocketsOrFifos",
     "TestSandboxRealStrace",
 )
 
 FINAL = {"pass", "fail", "skip"}
+
+
+def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
+    """The output of every test that failed, for the log: the JSON stream is the
+    only place it is, and the job that produced it did not print it."""
+    final: dict[str, str] = {}
+    out: dict[str, list[str]] = {}
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        test = event.get("Test")
+        if not test:
+            continue
+        if event.get("Action") == "output":
+            out.setdefault(test, []).append(event.get("Output", "").rstrip("\n"))
+        elif event.get("Action") in FINAL:
+            final[test] = event["Action"]
+    return {t: o[-limit:] for t, o in out.items() if final.get(t) == "fail"}
 
 
 def check(lines: list[str]) -> list[str]:
@@ -83,6 +104,10 @@ def main(argv: list[str]) -> int:
         print(f"error: {error}", file=sys.stderr)
         return 2
     problems = check(lines)
+    for test, output in sorted(failing_output(lines).items()):
+        print(f"::group::output of failing test {test}")
+        print("\n".join(output))
+        print("::endgroup::")
     for problem in problems:
         print(f"::error::{problem}")
     if problems:

@@ -2,6 +2,7 @@ package sandbox
 
 import (
 	"encoding/json"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -13,7 +14,8 @@ func goodConfig() *Config {
 		Home:       "/home/runner",
 		Tmpdir:     "/home/runner/_tmp",
 		StateRoots: []string{"/home/runner/.cargo/registry"},
-		Masks:      []string{"/home/runner/work/repo/.git", "/home/runner/work/_temp", "/home/runner/kiln-state"},
+		RoRoots:    []string{"/usr", "/etc", "/bin", "/lib", "/lib64", "/opt/hostedtoolcache/go/1.26.1"},
+		Masks:      []string{"/home/runner/work/repo/.git"},
 		EnvByAction: map[string][]string{
 			"code/packages/go/a": {"HOME=/home/runner", "LANG=C.UTF-8", "PATH=/usr/bin:/bin", "TZ=UTC"},
 			".":                  {"PATH=/usr/bin"},
@@ -127,24 +129,53 @@ func TestValidateRefusals(t *testing.T) {
 			c.StateRoots = []string{c.Home}
 		}, "covers home"},
 		{"dup state", func(c *Config) { c.StateRoots = append(c.StateRoots, c.StateRoots[0]) }, "duplicate state"},
-		{"mask covers repo", func(c *Config) { c.Masks = []string{"/home/runner/work"} }, "covers"},
-		{"mask is repo", func(c *Config) { c.Masks = []string{c.RepoRoot} }, "covers"},
-		{"mask covers home", func(c *Config) { c.Masks = []string{"/home"} }, "covers"},
-		{"mask is tmpdir", func(c *Config) { c.Masks = []string{c.Tmpdir} }, "covers"},
-		{"mask covers state", func(c *Config) { c.Masks = []string{"/home/runner/.cargo"} }, "covers"},
+		// Masks are the checkout's own direct children and nothing else.
+		{"mask covers repo", func(c *Config) { c.Masks = []string{"/home/runner/work"} }, "direct child"},
+		{"mask is repo", func(c *Config) { c.Masks = []string{c.RepoRoot} }, "direct child"},
+		{"mask covers home", func(c *Config) { c.Masks = []string{"/home"} }, "direct child"},
+		{"mask is tmpdir", func(c *Config) { c.Masks = []string{c.Tmpdir} }, "direct child"},
+		{"mask covers state", func(c *Config) { c.Masks = []string{"/home/runner/.cargo"} }, "direct child"},
 		{"mask deep in repo", func(c *Config) { c.Masks = []string{c.RepoRoot + "/a/.git"} }, "direct child"},
-		{"mask in state root", func(c *Config) { c.Masks = []string{c.StateRoots[0] + "/x"} }, "state root"},
+		{"mask in state root", func(c *Config) { c.Masks = []string{c.StateRoots[0] + "/x"} }, "direct child"},
+		{"mask under home", func(c *Config) { c.Masks = []string{"/home/runner/kiln-state"} }, "already absent"},
+		{"mask under tmpdir", func(c *Config) { c.Masks = []string{c.Tmpdir + "/x"} }, "already absent"},
+		{"mask under /run", func(c *Config) { c.Masks = []string{"/run/x"} }, "already absent"},
+		{"mask under /dev", func(c *Config) { c.Masks = []string{"/dev/kvm"} }, "already absent"},
+		{"mask the runner temp", func(c *Config) { c.Masks = []string{"/home/runner/work/_temp"} }, "direct child"},
+		// ro_roots: the allowlist.
+		{"no ro roots", func(c *Config) { c.RoRoots = nil }, "ro_roots is empty"},
+		{"relative ro root", func(c *Config) { c.RoRoots = []string{"usr"} }, "not absolute"},
+		{"root ro root", func(c *Config) { c.RoRoots = []string{"/"} }, "filesystem root"},
+		{"dup ro root", func(c *Config) { c.RoRoots = []string{"/usr", "/usr"} }, "duplicate ro root"},
+		{"ro root is repo", func(c *Config) { c.RoRoots = []string{c.RepoRoot} }, "overlaps"},
+		{"ro root holds repo", func(c *Config) { c.RoRoots = []string{"/home"} }, "overlaps"},
+		{"ro root holds home", func(c *Config) { c.RoRoots = []string{"/home/runner"} }, "overlaps"},
+		{"ro root in home", func(c *Config) { c.RoRoots = []string{c.Home + "/.cargo"} }, "overlaps"},
+		{"ro root is tmpdir", func(c *Config) { c.RoRoots = []string{c.Tmpdir} }, "overlaps"},
+		{"ro root holds state", func(c *Config) { c.RoRoots = []string{"/home/runner/.cargo"} }, "overlaps"},
+		{"ro root in /tmp", func(c *Config) { c.RoRoots = []string{"/tmp/tools"} }, "builds itself"},
+		{"ro root /var/tmp", func(c *Config) { c.RoRoots = []string{"/var/tmp"} }, "builds itself"},
+		{"ro root in /run", func(c *Config) { c.RoRoots = []string{"/run/x"} }, "builds itself"},
+		{"ro root /dev", func(c *Config) { c.RoRoots = []string{"/dev"} }, "builds itself"},
+		{"ro root /proc", func(c *Config) { c.RoRoots = []string{"/proc"} }, "builds itself"},
+		{"ro root list separator", func(c *Config) { c.RoRoots = []string{"/opt/a:b"} }, "separator"},
+		{"too many ro roots", func(c *Config) {
+			c.RoRoots = nil
+			for i := 0; i <= maxRoRoots; i++ {
+				c.RoRoots = append(c.RoRoots, "/r"+strings.Repeat("x", i/26)+string(rune('a'+i%26)))
+			}
+		}, "too many"},
 		{"kiln in state root", func(c *Config) { c.KilnExe = c.StateRoots[0] + "/kiln" }, "kiln_exe"},
 		{"kiln in tmpdir", func(c *Config) { c.KilnExe = c.Tmpdir + "/kiln" }, "kiln_exe"},
 		{"repo in /run", func(c *Config) { c.RepoRoot, c.Masks = "/run/work", nil }, "replaces"},
 		{"home in /dev", func(c *Config) { c.Home, c.Masks = "/dev/home", nil }, "replaces"},
 		{"tmpdir in /var/run", func(c *Config) { c.Tmpdir = "/var/run/t" }, "replaces"},
 		{"state in /run", func(c *Config) { c.StateRoots = []string{"/run/state"} }, "replaces"},
-		{"dup mask", func(c *Config) { c.Masks = []string{"/a", "/a"} }, "duplicate mask"},
+		{"dup mask", func(c *Config) { c.Masks = []string{c.RepoRoot + "/.git", c.RepoRoot + "/.git"} }, "duplicate mask"},
 		{"too many masks", func(c *Config) {
 			c.Masks = nil
 			for i := 0; i <= maxMasks; i++ {
-				c.Masks = append(c.Masks, "/m"+strings.Repeat("x", i%7)+string(rune('a'+i%26))+strings.Repeat("y", i/26))
+				c.Masks = append(c.Masks, c.RepoRoot+"/m"+strings.Repeat("x", i%7)+string(rune('a'+i%26))+strings.Repeat("y", i/26))
 			}
 		}, "too many"},
 		{"no actions", func(c *Config) { c.EnvByAction = map[string][]string{} }, "empty"},
@@ -225,5 +256,34 @@ func TestEnvFor(t *testing.T) {
 func TestClip(t *testing.T) {
 	if clip("short") != "short" || len(clip(strings.Repeat("x", 100))) != 67 {
 		t.Error("clip")
+	}
+}
+
+// The configuration shown in the README must be one the sandbox accepts: an
+// example that fails its own validator is a trap.
+func TestReadmeConfigIsValid(t *testing.T) {
+	readme, err := os.ReadFile("../../README.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	text := string(readme)
+	i := strings.Index(text, "## Sandbox (`kiln sandbox-exec`")
+	if i < 0 {
+		t.Fatal("the README has no sandbox section")
+	}
+	_, rest, ok := strings.Cut(text[i:], "```json\n")
+	if !ok {
+		t.Fatal("the README sandbox section has no JSON example")
+	}
+	block, _, ok := strings.Cut(rest, "```")
+	if !ok {
+		t.Fatal("unterminated JSON example")
+	}
+	c, err := ParseConfig([]byte(block))
+	if err != nil {
+		t.Fatalf("the README example is refused: %v", err)
+	}
+	if _, err := Plan(c); err != nil {
+		t.Fatalf("the README example cannot be planned: %v", err)
 	}
 }

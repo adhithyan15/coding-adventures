@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 	"runtime/debug"
 	"strconv"
@@ -215,8 +216,11 @@ func RunInit(args []string, stderr io.Writer) int {
 	if err := checkRootAlive(); err != nil {
 		return fail(err)
 	}
-	// A crashing step must never invoke the host's core_pattern handler.
-	if err := syscall.Setrlimit(syscall.RLIMIT_CORE, &syscall.Rlimit{}); err != nil {
+	// A crashing step must never invoke the host's core_pattern handler.  A
+	// limit of 0 would not stop a piped handler (a pipe ignores the limit);
+	// the kernel treats the value 1 specially and skips a piped dump.  Soft and
+	// hard are both 1, so the step cannot raise it.
+	if err := syscall.Setrlimit(syscall.RLIMIT_CORE, &syscall.Rlimit{Cur: 1, Max: 1}); err != nil {
 		return fail(fmt.Errorf("RLIMIT_CORE: %v", err))
 	}
 	if err := mapIDs(ia.UID, ia.GID); err != nil {
@@ -326,10 +330,10 @@ func applyPlan(c *Config, plan []Mount) error {
 			err = syscall.Mount(m.FSType, m.Target, m.FSType, m.Flags, m.Data)
 		case KindStageDir:
 			err = os.Mkdir(m.Target, 0o755)
-		case KindRootBind:
-			err = syscall.Mount(m.Source, m.Target, "", m.Flags, "")
-		case KindReadOnly:
-			err = setReadOnlyRecursive(m.Target)
+		case KindRootTmpfs:
+			err = syscall.Mount(m.FSType, m.Target, m.FSType, m.Flags, m.Data)
+		case KindRORoot:
+			err = applyRORoot(m.Source, at(m.Target))
 		case KindTmpfs:
 			err = syscall.Mount(m.FSType, at(m.Target), m.FSType, m.Flags, m.Data)
 		case KindEnsureDir:
@@ -342,6 +346,8 @@ func applyPlan(c *Config, plan []Mount) error {
 			err = applyDev(at(m.Target), m)
 		case KindVerifyAbsent:
 			err = verifyAbsent()
+		case KindSeal:
+			err = syscall.Mount("", m.Target, "", m.Flags, "")
 		case KindProc:
 			err = syscall.Mount(m.Source, at(m.Target), m.FSType, m.Flags, m.Data)
 		case KindPivot:
@@ -356,17 +362,17 @@ func applyPlan(c *Config, plan []Mount) error {
 	return nil
 }
 
-// setReadOnlyRecursive makes a mount tree read-only in one call.  A plain
-// remount of each bind would have to repeat every inherited mount flag (they
-// are locked in a user namespace); mount_setattr only sets the one attribute.
-func setReadOnlyRecursive(target string) error {
+// setReadOnly makes one mount read-only with mount_setattr, which sets only
+// that attribute.  A plain remount would have to repeat every inherited mount
+// flag, and a user namespace locks them.
+func setReadOnly(target string) error {
 	p, err := syscall.BytePtrFromString(target)
 	if err != nil {
 		return err
 	}
 	attr := struct{ set, clr, propagation, userns uint64 }{set: mountAttrRdonly}
 	dirfd := atFdcwd
-	_, _, e := syscall.Syscall6(sysMountSetattr, uintptr(dirfd), uintptr(unsafe.Pointer(p)), atRecursive,
+	_, _, e := syscall.Syscall6(sysMountSetattr, uintptr(dirfd), uintptr(unsafe.Pointer(p)), 0,
 		uintptr(unsafe.Pointer(&attr)), unsafe.Sizeof(attr), 0)
 	if e != 0 {
 		return e
@@ -374,18 +380,52 @@ func setReadOnlyRecursive(target string) error {
 	return nil
 }
 
+// applyRORoot makes one allowed host root visible, read-only, at the same path
+// in the new root.  A symlink (/bin on most images) is recreated, its target
+// resolving inside the new root; a directory or file is bound, NON-recursively
+// (a bind that would carry a mount beneath it along, which the kernel refuses
+// when that mount is locked, is a failure rather than a surprise), then made
+// read-only.  The missing parents are made on the root tmpfs.
+func applyRORoot(src, dst string) error {
+	st, err := os.Lstat(src)
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
+		return err
+	}
+	if st.Mode()&os.ModeSymlink != 0 {
+		target, err := os.Readlink(src)
+		if err != nil {
+			return err
+		}
+		return os.Symlink(target, dst)
+	}
+	if st.IsDir() {
+		if err := os.Mkdir(dst, 0o755); err != nil && !errors.Is(err, os.ErrExist) {
+			return err
+		}
+	} else {
+		f, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY, 0o644)
+		if err != nil {
+			return err
+		}
+		f.Close()
+	}
+	if err := syscall.Mount(src, dst, "", MsBind, ""); err != nil {
+		return err
+	}
+	return setReadOnly(dst)
+}
+
 // applyMask hides target: an empty read-only tmpfs over a directory, the empty
 // /dev/null over anything else.  The target is opened ONCE, O_PATH|O_NOFOLLOW,
 // and everything after goes through that descriptor (/proc/self/fd/N), so what
 // was inspected is what is mounted over: there is no look-then-mount race.  A
-// symlink is refused (skipped when Optional); an absent target is refused
-// (skipped when Optional).
+// symlink is refused, and so is an absent target.
 func applyMask(target string, m Mount) error {
 	fd, err := syscall.Open(target, oPath|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
 	if err != nil {
-		if errors.Is(err, syscall.ENOENT) && m.Optional {
-			return nil
-		}
 		return err
 	}
 	defer syscall.Close(fd)
@@ -396,9 +436,6 @@ func applyMask(target string, m Mount) error {
 	fdPath := "/proc/self/fd/" + strconv.Itoa(fd)
 	switch st.Mode & syscall.S_IFMT {
 	case syscall.S_IFLNK:
-		if m.Optional {
-			return nil
-		}
 		return errors.New("is a symlink")
 	case syscall.S_IFDIR:
 		return syscall.Mount(m.FSType, fdPath, m.FSType, m.Flags, m.Data)

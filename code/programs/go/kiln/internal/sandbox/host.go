@@ -49,6 +49,11 @@ func (c *Config) CheckHost(action string, h HostFacts) error {
 			return err
 		}
 	}
+	for _, r := range c.RoRoots {
+		if err := checkRoRoot(r); err != nil {
+			return err
+		}
+	}
 	for _, s := range c.StateRoots {
 		if err := canonicalOrCreatable("state root", s); err != nil {
 			return err
@@ -151,4 +156,18 @@ func checkMaskTarget(m string) error {
 		return fmt.Errorf("sandbox-exec: mask %q is a symlink", clip(m))
 	}
 	return mustBeCanonical("mask", m)
+}
+
+// checkRoRoot requires an allowed read-only root to exist, and to be either a
+// symlink (the entry itself, recreated in the new root) or a canonical
+// directory or file.
+func checkRoRoot(p string) error {
+	st, err := os.Lstat(p)
+	if err != nil {
+		return fmt.Errorf("sandbox-exec: ro root %q: %v", clip(p), err)
+	}
+	if st.Mode()&os.ModeSymlink != 0 {
+		return nil
+	}
+	return mustBeCanonical("ro root", p)
 }

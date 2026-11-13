@@ -13,6 +13,7 @@ const (
 	MsNosuid  = 0x2
 	MsNodev   = 0x4
 	MsNoexec  = 0x8
+	MsRemount = 0x20
 	MsBind    = 0x1000
 	MsRec     = 0x4000
 	MsPrivate = 0x40000
@@ -26,34 +27,40 @@ const (
 	// nothing below propagates to the host (MS_REC|MS_PRIVATE on "/").
 	KindMakePrivate MountKind = "make-private"
 	// KindHostMkdir creates a state root (and its parents) on the host, in the
-	// old root, before the filesystem is made read-only.
+	// old root, before anything is mounted.
 	KindHostMkdir MountKind = "host-mkdir"
-	// KindStageTmpfs mounts the scratch tmpfs on the host's TMPDIR, the one
+	// KindStageTmpfs mounts the staging tmpfs on the host's TMPDIR, the one
 	// place the new root is assembled.
 	KindStageTmpfs MountKind = "stage-tmpfs"
-	// KindStageDir creates the directory the new root is built in.
+	// KindStageDir creates the directory the new root is built on.
 	KindStageDir MountKind = "stage-dir"
-	// KindRootBind makes the new root: a recursive bind of "/".
-	KindRootBind MountKind = "root-bind"
-	// KindReadOnly makes the new root, and every mount beneath it, read-only
-	// (mount_setattr with MOUNT_ATTR_RDONLY and AT_RECURSIVE).
-	KindReadOnly MountKind = "read-only"
+	// KindRootTmpfs mounts the new root itself: an EMPTY tmpfs.  The new root is
+	// an allowlist, not a copy of "/": a pathname Unix socket or FIFO anywhere
+	// in the host's tree is reachable by connect() or open() whatever the mount
+	// flags, so nothing is visible that was not named.
+	KindRootTmpfs MountKind = "root-tmpfs"
+	// KindRORoot binds one allowed host root (a tool or image root from
+	// host-roots.json) read-only into the new root: a directory or file is
+	// bound, non-recursively (so no mount beneath it is carried along), and a
+	// symlink such as /bin is recreated.
+	KindRORoot MountKind = "ro-root"
 	// KindTmpfs mounts a fresh tmpfs inside the new root.
 	KindTmpfs MountKind = "tmpfs"
-	// KindEnsureDir creates a mount point inside the new root, where it is
-	// writable (an ancestor is a tmpfs of ours).
+	// KindEnsureDir creates a mount point (and its parents) inside the new
+	// root, where it is writable because an ancestor is a tmpfs of ours.
 	KindEnsureDir MountKind = "ensure-dir"
 	// KindBind binds a host path, writable, over a path of the new root.
 	KindBind MountKind = "bind"
-	// KindMask makes a path of the new root absent: an empty read-only tmpfs
-	// over a directory, an empty file over anything else.  Which one is
-	// decided when the target is looked at.
+	// KindMask makes a path of the checkout absent: an empty read-only tmpfs
+	// over a directory, an empty file over anything else.
 	KindMask MountKind = "mask"
 	// KindDev replaces /dev with a minimal tmpfs: the DevNodes bound from the
 	// host's, the DevLinks, nothing else (no /dev/kvm, /dev/fuse, /dev/pts).
 	KindDev MountKind = "dev"
 	// KindProc mounts a fresh /proc for the new PID namespace.
 	KindProc MountKind = "proc"
+	// KindSeal makes the new root read-only, once everything is in place.
+	KindSeal MountKind = "seal"
 	// KindPivot makes the new root the root and detaches the old one.
 	KindPivot MountKind = "pivot"
 	// KindVerifyAbsent checks, after the pivot, that none of HostIPCPaths exists.
@@ -71,22 +78,28 @@ var DevLinks = []DevLink{
 	{"fd", "/proc/self/fd"}, {"stdin", "/proc/self/fd/0"}, {"stdout", "/proc/self/fd/1"}, {"stderr", "/proc/self/fd/2"},
 }
 
-// RunDirs are masked, empty, in every sandbox: the host's service sockets live
-// there (/run/docker.sock is host root to anything that can connect to it).
-var RunDirs = []string{"/run", "/var/run"}
+// ScratchDirs are fresh, empty tmpfs in every sandbox besides $HOME and TMPDIR:
+// the places a program expects to write, and where the host's service sockets
+// and diagnostic sockets live.
+var ScratchDirs = []string{"/tmp", "/var/tmp", "/run"}
 
 // HostIPCPaths must not exist in the sandbox once it is built.  The helper
-// refuses to run the step (exit 125) if any does.
+// refuses to run the step (exit 125) if any does: a read-only root that came
+// to include one (say /var as a root, with its /var/run) must not be run.
 var HostIPCPaths = []string{"/run/docker.sock", "/var/run/docker.sock", "/run/user", "/run/dbus", "/var/run/dbus"}
 
-// reserved are the places no configured path may lie in: the sandbox replaces
-// them.
-var reserved = []string{"/dev", "/run", "/var/run"}
+// replaced are the places the sandbox builds itself: no configured path may lie
+// inside them.
+var replaced = []string{"/dev", "/run", "/var/run", "/proc"}
 
-// Mount is one step of the plan.  Target is where it acts: for the "stage"
-// kinds and KindMakePrivate, KindHostMkdir and KindRootBind's source, a path
-// of the OLD root; otherwise a path as the step will see it, to be placed
-// under the new root.
+// scratchRoots are the places that are fresh tmpfs: a read-only root inside one
+// would be hidden by it.
+var scratchRoots = []string{"/tmp", "/var/tmp"}
+
+// Mount is one step of the plan.  Target is where it acts: for KindMakePrivate,
+// KindHostMkdir and the stage kinds, a path of the OLD root; for KindRORoot and
+// KindBind, Source is a path of the old root; every other Target is a path as
+// the step will see it, to be placed under the new root.
 type Mount struct {
 	Kind   MountKind
 	Source string
@@ -94,16 +107,9 @@ type Mount struct {
 	FSType string
 	Flags  uintptr
 	Data   string
-	// InRepo marks a KindMask whose target lies inside the checkout, where a
-	// missing target is a refusal (the step could create it).
-	InRepo bool
-	// Optional marks a KindMask that is skipped when the target is absent or a
-	// symlink (/var/run is usually a symlink to /run).  Configured masks are
-	// never optional.
-	Optional bool
 }
 
-// StageDirName is the directory, under TMPDIR, the new root is built in.
+// StageDirName is the directory, under TMPDIR, the new root is built on.
 const StageDirName = ".kiln-newroot"
 
 // StageRoot is the path, in the old root, where the new root is built.
@@ -116,11 +122,11 @@ func tmpfsData(mode string) string {
 	return fmt.Sprintf("mode=%s,uid=%d,gid=%d", mode, InsideID, InsideID)
 }
 
-// maskData bounds a mask's tmpfs to one page and one inode: it only has to be
-// empty.
 // devData bounds the minimal /dev and makes it the step's.
 var devData = fmt.Sprintf("mode=0755,size=64k,nr_inodes=64,uid=%d,gid=%d", InsideID, InsideID)
 
+// maskData bounds a mask's tmpfs to one page and one inode: it only has to be
+// empty.
 const maskData = "mode=0555,size=4k,nr_inodes=2"
 
 // Plan returns the ordered mount steps for a configuration.  It is pure: the
@@ -129,19 +135,21 @@ const maskData = "mode=0555,size=4k,nr_inodes=2"
 //
 //  1. Make every mount private.
 //  2. Create the state roots on the host.
-//  3. Mount the staging tmpfs on TMPDIR and create the new root's directory.
-//  4. Recursively bind "/" onto it and make that whole tree read-only.
-//     4a. Replace /dev with a minimal tmpfs, and mask /run and /var/run.
-//  5. Mount fresh tmpfs over HOME and TMPDIR (the shallower first).
-//  6. Bind the repository, writable, at its own path.
-//  7. Bind each state root, writable.
-//  8. Mask: .git, the trace and ledger directories, and the rest, shallowest
-//     first.
-//  9. Mount a fresh /proc with hidepid=2.
-//  10. Pivot into the new root, then verify no host IPC path exists.
+//  3. Mount the staging tmpfs on TMPDIR, create the new root's directory in it,
+//     and mount the new root, an empty tmpfs, there.
+//  4. Bind each allowed read-only root into it (shallowest first), creating the
+//     missing parent directories on the root tmpfs.
+//  5. Fresh tmpfs for HOME, TMPDIR, /tmp, /var/tmp and /run, shallowest first.
+//  6. The minimal /dev.
+//  7. Bind the repository, writable, at its own path, and then each state root.
+//  8. Mask the checkout's own files (.git and the like), which are direct
+//     children of it.
+//  9. A fresh /proc with hidepid=2.
+//  10. Seal the root read-only, pivot into it, verify no host IPC path exists.
 //
-// Home and TMPDIR come before the repository and the state roots because the
-// checkout may live under $HOME: the tmpfs would hide a bind made earlier.
+// The scratch tmpfs come before the checkout and the state roots because the
+// checkout may live under $HOME (or /tmp): the missing parents are created in
+// the tmpfs, and a bind made earlier would be hidden by it.
 func Plan(c *Config) ([]Mount, error) {
 	if err := c.Validate(); err != nil {
 		return nil, err
@@ -154,22 +162,35 @@ func Plan(c *Config) ([]Mount, error) {
 	plan = append(plan,
 		Mount{Kind: KindStageTmpfs, Target: c.Tmpdir, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData("0755")},
 		Mount{Kind: KindStageDir, Target: stage},
-		Mount{Kind: KindRootBind, Source: "/", Target: stage, Flags: MsBind | MsRec},
-		Mount{Kind: KindReadOnly, Target: stage},
+		Mount{Kind: KindRootTmpfs, Target: stage, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData("0755")},
 	)
-	plan = append(plan, Mount{Kind: KindDev, Target: "/dev", FSType: "tmpfs", Flags: MsNosuid | MsNoexec, Data: devData})
-	for _, d := range RunDirs {
-		plan = append(plan, Mount{Kind: KindMask, Target: d, FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: maskData, Optional: true})
+	for _, r := range sortedByDepth(c.RoRoots) {
+		plan = append(plan, Mount{Kind: KindRORoot, Source: r, Target: r, Flags: MsBind})
 	}
-	scratch := []struct{ p, mode string }{{c.Home, "0755"}, {c.Tmpdir, "1777"}}
-	if within(c.Home, c.Tmpdir) {
-		scratch[0], scratch[1] = scratch[1], scratch[0] // mount the parent first
+	// The scratch tmpfs, deduplicated (TMPDIR may be /tmp) and shallowest first
+	// so a parent is mounted before what is created inside it.
+	mode := map[string]string{c.Home: "0755", c.Tmpdir: "1777"}
+	for _, d := range ScratchDirs {
+		if _, ok := mode[d]; !ok {
+			mode[d] = "1777"
+			if d == "/run" {
+				mode[d] = "0755"
+			}
+		}
 	}
-	for _, s := range scratch {
-		plan = append(plan, Mount{Kind: KindEnsureDir, Target: s.p})
-		plan = append(plan, Mount{Kind: KindTmpfs, Target: s.p, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData(s.mode)})
+	scratch := make([]string, 0, len(mode))
+	for p := range mode {
+		scratch = append(scratch, p)
+	}
+	for _, p := range sortedByDepth(scratch) {
+		plan = append(plan,
+			Mount{Kind: KindEnsureDir, Target: p},
+			Mount{Kind: KindTmpfs, Target: p, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData(mode[p])},
+		)
 	}
 	plan = append(plan,
+		Mount{Kind: KindEnsureDir, Target: "/dev"},
+		Mount{Kind: KindDev, Target: "/dev", FSType: "tmpfs", Flags: MsNosuid | MsNoexec, Data: devData},
 		Mount{Kind: KindEnsureDir, Target: c.RepoRoot},
 		Mount{Kind: KindBind, Source: c.RepoRoot, Target: c.RepoRoot, Flags: MsBind},
 	)
@@ -179,22 +200,29 @@ func Plan(c *Config) ([]Mount, error) {
 			Mount{Kind: KindBind, Source: s, Target: s, Flags: MsBind},
 		)
 	}
-	masks := append([]string{}, c.Masks...)
-	sort.Slice(masks, func(i, j int) bool {
-		if di, dj := depth(masks[i]), depth(masks[j]); di != dj {
-			return di < dj
-		}
-		return masks[i] < masks[j]
-	})
-	for _, m := range masks {
-		plan = append(plan, Mount{Kind: KindMask, Target: m, FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: maskData, InRepo: within(m, c.RepoRoot)})
+	for _, m := range sortedByDepth(c.Masks) {
+		plan = append(plan, Mount{Kind: KindMask, Target: m, FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: maskData})
 	}
 	plan = append(plan,
+		Mount{Kind: KindEnsureDir, Target: "/proc"},
 		Mount{Kind: KindProc, Source: "proc", Target: "/proc", FSType: "proc", Flags: MsNosuid | MsNodev | MsNoexec, Data: "hidepid=2"},
+		Mount{Kind: KindSeal, Target: stage, Flags: MsRemount | MsRdonly | MsNosuid | MsNodev},
 		Mount{Kind: KindPivot, Target: stage},
 		Mount{Kind: KindVerifyAbsent},
 	)
 	return plan, nil
+}
+
+// sortedByDepth returns a copy of paths ordered by depth, then name.
+func sortedByDepth(paths []string) []string {
+	out := append([]string{}, paths...)
+	sort.Slice(out, func(i, j int) bool {
+		if di, dj := depth(out[i]), depth(out[j]); di != dj {
+			return di < dj
+		}
+		return out[i] < out[j]
+	})
+	return out
 }
 
 // depth counts a clean absolute path's components.

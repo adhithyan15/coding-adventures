@@ -16,6 +16,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -111,6 +112,19 @@ func probe(out *os.File) int {
 	return 0
 }
 
+// imageRoots are the system directories a step needs, as the recorder would
+// list them from host-roots.json: those of /usr, /bin, /sbin, /lib*, /etc that
+// exist on this machine.  /bin and /lib are symlinks on most images.
+func imageRoots() []string {
+	var out []string
+	for _, p := range []string{"/usr", "/bin", "/sbin", "/lib", "/lib32", "/lib64", "/libx32", "/etc"} {
+		if _, err := os.Lstat(p); err == nil {
+			out = append(out, p)
+		}
+	}
+	return out
+}
+
 type sandboxFixture struct {
 	base, repo, pkg, home, tmp, state, git, cfg string
 	exe                                         string
@@ -155,6 +169,7 @@ func (f *sandboxFixture) writeConfig(t *testing.T, edit func(*sandbox.Config)) {
 	t.Helper()
 	c := &sandbox.Config{
 		RepoRoot: f.repo, Home: f.home, Tmpdir: f.tmp,
+		RoRoots:     imageRoots(),
 		StateRoots:  []string{f.state},
 		Masks:       []string{f.git},
 		EnvByAction: map[string][]string{"pkg": f.env},
@@ -291,7 +306,17 @@ func TestSandboxFilesystem(t *testing.T) {
 
 func TestSandboxSeccompRefusals(t *testing.T) {
 	f := newSandboxFixture(t)
-	r := f.sandboxRun(t, "pkg", f.exe, probeCommand)
+	// The test binary lives under /tmp, which the step does not see: run a copy
+	// from inside the checkout.
+	self, err := os.ReadFile(f.exe)
+	if err != nil {
+		t.Fatal(err)
+	}
+	probeBin := filepath.Join(f.pkg, "probe-bin")
+	if err := os.WriteFile(probeBin, self, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	r := f.sandboxRun(t, "pkg", probeBin, probeCommand)
 	if r.code != 0 {
 		t.Fatalf("exit %d: %s\n%s", r.code, r.stderr, r.stdout)
 	}
@@ -460,8 +485,8 @@ func TestSandboxNoHostIPC(t *testing.T) {
 		`echo "dev:$(ls -A /dev | tr '\n' ' ')"`,
 		`echo x > /dev/null && echo devnull-ok`,
 		`if echo x > /dev/leak 2>/dev/null; then echo dev-writable; else echo dev-readonly; fi`,
-		`if echo x > /run/leak 2>/dev/null; then echo run-writable; else echo run-readonly; fi`,
-		`echo "core:$(ulimit -c)"`,
+		`if echo x > /run/own 2>/dev/null; then echo run-writable; else echo run-readonly; fi`,
+		`echo "core:$(awk '/core file/{print $5,$6}' /proc/self/limits)"`,
 		`echo "ipc:$(cat /proc/sysvipc/shm | wc -l)"`,
 	}, "; ")
 	r := f.sandboxRun(t, "pkg", "sh", "-c", script)
@@ -475,7 +500,7 @@ func TestSandboxNoHostIPC(t *testing.T) {
 	if strings.Contains(out, "present:") {
 		t.Errorf("a host service path exists:\n%s", out)
 	}
-	for _, want := range []string{"run:0", "dev:fd full null random stderr stdin stdout tty urandom zero ", "devnull-ok", "dev-readonly", "run-readonly", "core:0", "ipc:1"} {
+	for _, want := range []string{"run:0", "dev:fd full null random stderr stdin stdout tty urandom zero ", "devnull-ok", "dev-readonly", "run-writable", "core:1 1", "ipc:1"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("output lacks %q:\n%s", want, out)
 		}
@@ -556,5 +581,60 @@ func TestSandboxRealStrace(t *testing.T) {
 	}
 	if !sawCatExec || !sawRead {
 		t.Errorf("exec of cat: %v, read of %s: %v", sawCatExec, data, sawRead)
+	}
+}
+
+// TestSandboxNoReachableSocketsOrFifos: a pathname Unix socket or FIFO belongs
+// to the filesystem, not to the network namespace, and a read-only bind does
+// not stop connect() or an open for writing.  The runner's .NET diagnostic
+// socket in /tmp lets a step make Runner.Worker load a library.  So the new
+// root is an allowlist; this test walks EVERY mount of the sandbox and finds no
+// socket or FIFO at all (the step creates none), and checks that sockets and
+// FIFOs the test makes on the host, in the places such things live, are not
+// visible.
+func TestSandboxNoReachableSocketsOrFifos(t *testing.T) {
+	f := newSandboxFixture(t)
+	// Host sockets and FIFOs, outside the sandbox, where the runner's own
+	// live: /tmp (the .NET diagnostic socket), /var/tmp, and a pretend /run.
+	var hostPaths []string
+	stamp := strconv.Itoa(os.Getpid()) + "-" + strconv.FormatInt(time.Now().UnixNano(), 36)
+	for _, dir := range []string{"/tmp", "/var/tmp"} {
+		sock := filepath.Join(dir, "kiln-sbx-"+stamp+".sock")
+		ln, err := net.Listen("unix", sock)
+		if err != nil {
+			t.Logf("cannot make a socket in %s: %v", dir, err)
+			continue
+		}
+		defer ln.Close()
+		defer os.Remove(sock)
+		fifo := filepath.Join(dir, "kiln-sbx-"+stamp+".fifo")
+		if err := syscall.Mkfifo(fifo, 0o600); err != nil {
+			t.Logf("cannot make a FIFO in %s: %v", dir, err)
+			continue
+		}
+		defer os.Remove(fifo)
+		hostPaths = append(hostPaths, sock, fifo)
+	}
+	if len(hostPaths) == 0 {
+		t.Fatal("no host socket or FIFO could be created to test with")
+	}
+	script := strings.Join([]string{
+		`for p in ` + strings.Join(hostPaths, " ") + `; do if test -e "$p"; then echo "visible:$p"; fi; done`,
+		`n=0; for m in $(awk '{print $5}' /proc/self/mountinfo); do n=$((n+1)); find "$m" -xdev \( -type s -o -type p \) -print 2>/dev/null | sed 's/^/found:/'; done`,
+		`echo "mounts:$n"`,
+	}, "; ")
+	r := f.sandboxRun(t, "pkg", "sh", "-c", script)
+	if r.code != 0 {
+		t.Fatalf("exit %d: %s", r.code, r.stderr)
+	}
+	if strings.Contains(r.stdout, "visible:") || strings.Contains(r.stdout, "found:") {
+		t.Errorf("a socket or FIFO is reachable from the sandbox:\n%s", r.stdout)
+	}
+	m := regexp.MustCompile(`mounts:(\d+)`).FindStringSubmatch(r.stdout)
+	if m == nil {
+		t.Fatalf("no mount count in %q", r.stdout)
+	}
+	if n, _ := strconv.Atoi(m[1]); n < 8 {
+		t.Errorf("only %d mounts walked; the walk did not cover the sandbox", n)
 	}
 }

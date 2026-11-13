@@ -31,6 +31,7 @@ const (
 	maxPath       = 4096
 	maxStateRoots = 64
 	maxMasks      = 256
+	maxRoRoots    = 256
 	maxActions    = 100000
 	maxEnvEntries = 4096
 )
@@ -51,11 +52,20 @@ type Config struct {
 	// mounted as a fresh, empty tmpfs.
 	Home   string `json:"home"`
 	Tmpdir string `json:"tmpdir"`
+	// RoRoots are the host paths the step may see, read-only: the `image` and
+	// `tool` roots of host-roots.json (/usr, /etc, /lib*, /bin, /sbin, the
+	// pinned toolchains).  The new root is an allowlist, so this is all of the
+	// host it gets besides the checkout and the state roots.  An entry may be a
+	// symlink (/bin is one on most images), which is recreated.
+	RoRoots []string `json:"ro_roots"`
 	// StateRoots are the declared `state` host roots (KILN04 section 5.3),
 	// bound writable.
 	StateRoots []string `json:"state_roots"`
-	// Masks are paths made absent: an empty read-only tmpfs over a directory,
-	// an empty file over a file.
+	// Masks are the checkout's own files made absent (.git and the like): each
+	// a direct child of repo_root, an empty read-only tmpfs over a directory or
+	// an empty file over a file.  Nothing outside the checkout needs a mask:
+	// the sandbox root holds only what is named, so a path that is not under
+	// RoRoots, StateRoots or the checkout is already absent.
 	Masks []string `json:"masks"`
 	// EnvByAction maps a package rel_path (the KILN_ACTION the build tool
 	// passes) to the exact scrubbed environment of its steps.
@@ -66,7 +76,7 @@ type Config struct {
 
 // configFields are the only top-level keys, spelled exactly.
 var configFields = map[string]bool{
-	"repo_root": true, "home": true, "tmpdir": true, "state_roots": true,
+	"repo_root": true, "home": true, "tmpdir": true, "ro_roots": true, "state_roots": true,
 	"masks": true, "env_by_action": true, "kiln_exe": true,
 }
 
@@ -220,8 +230,16 @@ func (c *Config) Validate() error {
 			return err
 		}
 	}
-	if len(c.StateRoots) > maxStateRoots || len(c.Masks) > maxMasks {
-		return errors.New("config: too many state_roots or masks")
+	if len(c.StateRoots) > maxStateRoots || len(c.Masks) > maxMasks || len(c.RoRoots) > maxRoRoots {
+		return errors.New("config: too many ro_roots, state_roots or masks")
+	}
+	if len(c.RoRoots) == 0 {
+		return errors.New("config: ro_roots is empty: the step would have no /usr to run anything from")
+	}
+	for _, p := range c.RoRoots {
+		if err := checkPath("ro root", p); err != nil {
+			return err
+		}
 	}
 	for _, p := range c.StateRoots {
 		if err := checkPath("state root", p); err != nil {
@@ -241,14 +259,14 @@ func (c *Config) Validate() error {
 	// /dev, /run and /var/run are replaced by the sandbox, so nothing
 	// configured can live there.
 	for _, f := range []struct{ what, p string }{{"repo_root", c.RepoRoot}, {"home", c.Home}, {"tmpdir", c.Tmpdir}} {
-		for _, r := range reserved {
+		for _, r := range replaced {
 			if within(f.p, r) {
 				return fmt.Errorf("config: %s %q lies inside %s, which the sandbox replaces", f.what, clip(f.p), r)
 			}
 		}
 	}
 	for _, s := range c.StateRoots {
-		for _, r := range reserved {
+		for _, r := range replaced {
 			if within(s, r) {
 				return fmt.Errorf("config: state root %q lies inside %s, which the sandbox replaces", clip(s), r)
 			}
@@ -281,6 +299,25 @@ func (c *Config) Validate() error {
 		seen[s] = true
 	}
 	seen = map[string]bool{}
+	for _, r := range c.RoRoots {
+		if seen[r] {
+			return fmt.Errorf("config: duplicate ro root %q", clip(r))
+		}
+		seen[r] = true
+		// A read-only root that overlaps a writable or scratch place would
+		// either expose it read-only or be hidden by it: refuse both ways.
+		for _, o := range append([]string{c.RepoRoot, c.Home, c.Tmpdir}, c.StateRoots...) {
+			if within(r, o) || within(o, r) {
+				return fmt.Errorf("config: ro root %q overlaps %q", clip(r), clip(o))
+			}
+		}
+		for _, o := range append(append([]string{}, replaced...), scratchRoots...) {
+			if within(r, o) {
+				return fmt.Errorf("config: ro root %q lies inside %s, which the sandbox builds itself", clip(r), o)
+			}
+		}
+	}
+	seen = map[string]bool{}
 	for _, m := range c.Masks {
 		if seen[m] {
 			return fmt.Errorf("config: duplicate mask %q", clip(m))
@@ -290,13 +327,8 @@ func (c *Config) Validate() error {
 		// an ancestor of a mount point around the mask, and may not rename a
 		// mount point itself.  No mask lies inside a state root, which is
 		// writable for the same reason.
-		if within(m, c.RepoRoot) && m != c.RepoRoot && path.Dir(m) != c.RepoRoot {
-			return fmt.Errorf("config: mask %q is inside the checkout but not a direct child of it", clip(m))
-		}
-		for _, s := range c.StateRoots {
-			if within(m, s) {
-				return fmt.Errorf("config: mask %q lies inside the state root %q", clip(m), clip(s))
-			}
+		if path.Dir(m) != c.RepoRoot {
+			return fmt.Errorf("config: mask %q is not a direct child of repo_root; the sandbox root holds only the checkout, ro_roots and state_roots, so a path outside them is already absent", clip(m))
 		}
 		// A mask hides what it covers; covering the checkout, the scratch
 		// directories or a state root would make the step unrunnable.

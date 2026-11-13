@@ -1169,6 +1169,11 @@ jobs:
   # KILN_REQUIRE_SANDBOX=1 (every skip becomes a failure) and then asserts from
   # the JSON test stream that every named test ran and passed. It also runs the
   # real strace around the sandbox and parses the trace in helper mode.
+  #
+  # The gate flag is true for the scheduled and manually dispatched full builds
+  # too (detect passes -force on them, which makes every registry flag true), so
+  # a runner image, kernel or strace change is caught within hours, not at the
+  # next Kiln change.
   kiln-sandbox:
     name: Kiln sandbox (linux/amd64)
     needs: detect
@@ -1214,7 +1219,16 @@ jobs:
         run: |
           set -euo pipefail
           strace --version | head -1
-          go test -count=1 -run Sandbox -v -json . | tee "$RUNNER_TEMP/kiln-sandbox.json" > /dev/null
+          uname -r
+          go test -count=1 -run Sandbox -v -json . > "$RUNNER_TEMP/kiln-sandbox.json"
+
+      # Runs even when the tests failed: the JSON stream is the only record of
+      # which test failed and why, and this step prints it. It also fails the
+      # job when a test was skipped or did not run.
+      - name: Assert every sandbox test ran and passed
+        if: always()
+        shell: bash
+        run: |
           python3 "$GITHUB_WORKSPACE/code/programs/go/kiln/ci/assert_sandbox_tests.py" "$RUNNER_TEMP/kiln-sandbox.json"
 
   d18f-message-conformance:

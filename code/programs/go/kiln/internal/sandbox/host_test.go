@@ -44,7 +44,8 @@ func newHostFixture(t *testing.T) *hostFixture {
 		Home:        filepath.Join(base, "home"),
 		Tmpdir:      filepath.Join(base, "tmp"),
 		StateRoots:  []string{filepath.Join(base, "state"), filepath.Join(base, "state2", "deeper")},
-		Masks:       []string{filepath.Join(repo, ".git"), filepath.Join(base, "home", "present-mask")},
+		RoRoots:     []string{"/usr", "/bin"},
+		Masks:       []string{filepath.Join(repo, ".git")},
 		EnvByAction: map[string][]string{"pkg": {"A=b"}},
 		KilnExe:     f.exe,
 	}
@@ -125,6 +126,14 @@ func TestCheckHostRefusals(t *testing.T) {
 		{"mask missing inside the checkout", func(f *hostFixture, h *HostFacts) {
 			os.RemoveAll(filepath.Join(f.cfg.RepoRoot, ".git"))
 		}, "does not exist"},
+		{"ro root missing", func(f *hostFixture, h *HostFacts) {
+			f.cfg.RoRoots = []string{"/usr", filepath.Join(f.base, "no-such-root")}
+		}, "no such file"},
+		{"ro root behind a symlinked ancestor", func(f *hostFixture, h *HostFacts) {
+			os.MkdirAll(filepath.Join(f.base, "ro1"), 0o755)
+			os.Symlink(f.base, filepath.Join(f.base, "viaroot"))
+			f.cfg.RoRoots = []string{filepath.Join(f.base, "viaroot", "ro1")}
+		}, "not canonical"},
 		{"mask missing outside the checkout", func(f *hostFixture, h *HostFacts) {
 			f.cfg.Masks = []string{filepath.Join(f.base, "nope")}
 		}, "does not exist"},
@@ -187,5 +196,19 @@ func TestDeepestExisting(t *testing.T) {
 	}
 	if got, err := deepestExisting("relative/none/x"); err != nil || got != "." {
 		t.Errorf("a relative path ends at the current directory: %q %v", got, err)
+	}
+}
+
+func TestCheckHostRoRootMayBeASymlinkOrAFile(t *testing.T) {
+	f := newHostFixture(t)
+	// A symlink root (/bin on most images) is recreated, never followed.
+	os.MkdirAll(filepath.Join(f.base, "ro1"), 0o755)
+	link := filepath.Join(f.base, "rolink")
+	os.Symlink(filepath.Join(f.base, "ro1"), link)
+	file := filepath.Join(f.base, "rofile")
+	os.WriteFile(file, nil, 0o644)
+	f.cfg.RoRoots = []string{"/usr", link, file}
+	if err := f.cfg.CheckHost("pkg", f.facts()); err != nil {
+		t.Fatal(err)
 	}
 }

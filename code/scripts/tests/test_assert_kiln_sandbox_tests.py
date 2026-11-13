@@ -98,9 +98,33 @@ class CiWiring(unittest.TestCase):
         self.assertIn("KILN_REQUIRE_SANDBOX: '1'", body)
         self.assertIn("go test -count=1 -run Sandbox -v -json .", body)
         self.assertIn("assert_sandbox_tests.py", body)
+        # The assertion is its own step and runs even when the tests failed, so
+        # the failing output is printed rather than discarded.
+        step = body.split("      - name: Assert every sandbox test ran and passed\n", 1)[1]
+        self.assertIn("        if: always()\n", step.split("\n      - name:", 1)[0])
+        self.assertNotIn("/dev/null", body.split("Assert every sandbox test", 1)[0].split("go test", 1)[1])
         self.assertIn("set -euo pipefail", body)
         self.assertNotIn("continue-on-error", body)
         self.assertIn("persist-credentials: false", body)
+
+    def test_scheduled_and_dispatched_full_builds_force_every_gate(self) -> None:
+        # The job's `if:` is the registry flag; detect makes every flag true on a
+        # forced full build (schedule, workflow_dispatch, ci-full-build label).
+        self.assertIn("if: needs.detect.outputs.run_kiln_sandbox == 'true'", self.job())
+        self.assertIn('if [ "$EVENT_NAME" = "schedule" ] || [ "$MANUAL_FULL_BUILD" = "true" ]; then', CI)
+        self.assertIn("force_flag=(-force)", CI)
+        self.assertIn("schedule:", CI.split("jobs:", 1)[0])
+        self.assertIn("workflow_dispatch:", CI.split("jobs:", 1)[0])
+
+    def test_failing_output_is_reported(self) -> None:
+        lines = [
+            json.dumps({"Action": "run", "Test": "TestSandboxNoHostIPC"}),
+            json.dumps({"Action": "output", "Test": "TestSandboxNoHostIPC", "Output": "boom: exit 125\n"}),
+            json.dumps({"Action": "fail", "Test": "TestSandboxNoHostIPC"}),
+            json.dumps({"Action": "output", "Test": "TestSandboxFilesystem", "Output": "fine\n"}),
+            json.dumps({"Action": "pass", "Test": "TestSandboxFilesystem"}),
+        ]
+        self.assertEqual(mod.failing_output(lines), {"TestSandboxNoHostIPC": ["boom: exit 125"]})
 
     def test_ci_gate_waits_for_the_job_and_rejects_nonsuccess(self) -> None:
         gate = CI.split("\n  ci-gate:\n", 1)[1]
