@@ -466,6 +466,26 @@ mod linux {
         }
     }
 
+    /// Why an observed run's trace cannot be trusted, if it cannot.
+    ///
+    /// An absent, unreadable or empty trace is not "no violations"; it is an
+    /// observer that saw nothing, and counting it as a clean observation
+    /// would fail open. Callers turn `Some` into an `RCG013` failure.
+    fn trace_problem(outcome: &RunOutcome) -> Option<&'static str> {
+        match outcome.trace.as_deref() {
+            None => Some("trace file absent or unreadable"),
+            Some(trace) if trace.trim().is_empty() => Some("trace file empty"),
+            Some(_) => None,
+        }
+    }
+
+    fn no_trace_failure(what: &str, why: &str) -> String {
+        format!(
+            "{}: observer produced no trace ({what}: {why})",
+            FailureId::Rcg013
+        )
+    }
+
     struct Runner<'a> {
         exe: PathBuf,
         strace: Option<PathBuf>,
@@ -569,6 +589,26 @@ mod linux {
         }
     }
 
+    /// A working directory that belongs to THIS gate process alone.
+    ///
+    /// `evidence_dir` is shared: Cargo's `CARGO_TARGET_TMPDIR`, which every
+    /// Rust adopter passes, is one directory per workspace, and the build
+    /// tool runs independent packages in parallel. The scratch and container
+    /// directories are deleted with `remove_dir_all` (at the end of the run,
+    /// and at the start of the container ring), so with a fixed name the
+    /// first gate to finish deleted the directory a slower gate was still
+    /// writing `strace -o` traces into. Every later observed run then had no
+    /// trace and RCG009 reported its controls as "NOT detected" (PR #19314,
+    /// `rust/gf256`, CI only). The process id makes the name private to this
+    /// run; only `capability_runtime_evidence.json` stays at a fixed path.
+    fn private_dir(config: &GateConfig, leaf: &str) -> PathBuf {
+        config
+            .evidence_dir
+            .clone()
+            .unwrap_or_else(std::env::temp_dir)
+            .join(format!("{leaf}-{}", std::process::id()))
+    }
+
     fn random_nonce(tag: &str) -> String {
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
@@ -662,11 +702,7 @@ mod linux {
                 return 1;
             }
         };
-        let scratch = config
-            .evidence_dir
-            .clone()
-            .unwrap_or_else(std::env::temp_dir)
-            .join("rcg-scratch");
+        let scratch = private_dir(config, "rcg-scratch");
         let _ = std::fs::create_dir_all(&scratch);
         let exe = match std::env::current_exe() {
             Ok(exe) => exe,
@@ -741,15 +777,20 @@ mod linux {
                 if tap_ok == 0 {
                     failures.push("no checks ran".to_string());
                 }
+                let trace_missing = trace_problem(&outcome);
+                if let Some(why) = trace_missing {
+                    println!("  OBSERVER BROKEN: {why}");
+                    failures.push(no_trace_failure("main run", why));
+                }
                 observed = analysis.post_arm.clone();
-                main_pass = judgement.pass() && tap_ok > 0;
+                main_pass = judgement.pass() && tap_ok > 0 && trace_missing.is_none();
                 let (enforcement_kind, observation_kind) = (
                     if judgement.enforcement_pass {
                         "pass"
                     } else {
                         "fail"
                     },
-                    if judgement.observation_pass {
+                    if judgement.observation_pass && trace_missing.is_none() {
                         "pass"
                     } else {
                         "fail"
@@ -826,6 +867,12 @@ mod linux {
         let mut known_gaps = Vec::new();
         for control in CONTROLS.iter().filter(|_| config.rings.controls) {
             let result = run_control(&runner, &policy, control);
+            for (run, why) in &result.trace_problems {
+                failures.push(no_trace_failure(
+                    &format!("control {}, {run} run", control.name),
+                    why,
+                ));
+            }
             if !result.all_detected() {
                 failures.push(format!(
                     "{}: negative control {} NOT detected",
@@ -849,6 +896,9 @@ mod linux {
             let leak = runner.run(&nonce, true, None, &[("RCG_CANARY", "leaked")], true);
             let (enforced, observed_env, ids) = match leak {
                 Ok(outcome) => {
+                    if let Some(why) = trace_problem(&outcome) {
+                        failures.push(no_trace_failure("control env-leak", why));
+                    }
                     let analysis =
                         analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, &policy);
                     let env_hits = analysis
@@ -900,6 +950,9 @@ mod linux {
             let nonce = random_nonce("gap");
             let detected = match runner.run(&nonce, true, Some(sabotage::TIME_VDSO), &[], true) {
                 Ok(outcome) => {
+                    if let Some(why) = trace_problem(&outcome) {
+                        failures.push(no_trace_failure("known gap time-vdso", why));
+                    }
                     let analysis =
                         analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, &policy);
                     !analysis.violations.is_empty()
@@ -1043,6 +1096,8 @@ mod linux {
         observe_only: bool,
         enforce_only: bool,
         full_observed_name: String,
+        /// Observed runs whose trace was absent or empty (`RCG013`).
+        trace_problems: Vec<(&'static str, &'static str)>,
     }
 
     impl ControlResult {
@@ -1100,10 +1155,14 @@ mod linux {
             observe_only: false,
             enforce_only: false,
             full_observed_name: String::new(),
+            trace_problems: Vec::new(),
         };
         // Full: filter on + strace.
         let nonce = random_nonce("full");
         if let Ok(outcome) = runner.run(&nonce, true, Some(control.name), &[], true) {
+            if let Some(why) = trace_problem(&outcome) {
+                result.trace_problems.push(("full", why));
+            }
             let analysis = analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, policy);
             let judgement = judge(&analysis, &outcome.status, true, policy);
             result.full_enforced = judgement.killed_by_sigsys
@@ -1118,6 +1177,9 @@ mod linux {
         // (the process survives) AND the observer must still flag it.
         let nonce = random_nonce("obs");
         if let Ok(outcome) = runner.run(&nonce, false, Some(control.name), &[], true) {
+            if let Some(why) = trace_problem(&outcome) {
+                result.trace_problems.push(("observe-only", why));
+            }
             let analysis = analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, policy);
             let judgement = judge(&analysis, &outcome.status, false, policy);
             result.observe_only = observed_expected(&analysis, control.expected).is_some()
@@ -1208,11 +1270,7 @@ mod linux {
             }
             Err(error) => return not_live(error),
         }
-        let work = config
-            .evidence_dir
-            .clone()
-            .unwrap_or_else(std::env::temp_dir)
-            .join("rcg-container");
+        let work = private_dir(config, "rcg-container");
         let _ = std::fs::remove_dir_all(&work);
         let rootfs = work.join("rootfs");
         if let Err(error) = std::fs::create_dir_all(rootfs.join("rcg")) {
