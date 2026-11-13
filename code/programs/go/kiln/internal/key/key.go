@@ -429,23 +429,52 @@ func Preimage(a Action) ([]byte, error) {
 
 	b = putConsumed(b, a.Consumed)
 
+	b = putTools(b, a.Tools)
+	b = putEnv(b, a.Env)
+	return b, nil
+}
+
+func putTools(b []byte, es []Tool) []byte {
 	b = putStr(b, "tools")
-	b = putU64(b, uint64(len(a.Tools)))
-	for _, e := range a.Tools {
+	b = putU64(b, uint64(len(es)))
+	for _, e := range es {
 		b = putStr(b, e.Name)
 		b = putStr(b, e.Version)
 		b = putU8(b, e.Kind)
 		b = putBytes(b, e.Identity)
 	}
+	return b
+}
 
+func putEnv(b []byte, es []EnvVar) []byte {
 	b = putStr(b, "env")
-	b = putU64(b, uint64(len(a.Env)))
-	for _, e := range a.Env {
+	b = putU64(b, uint64(len(es)))
+	for _, e := range es {
 		b = putStr(b, e.Name)
 		b = putStr(b, e.Value)
 		b = putU8(b, e.Origin)
 	}
-	return b, nil
+	return b
+}
+
+// ToolsDigest is SHA-256 of the tools section exactly as Preimage encodes it
+// (KILN02 section 3.8), after the same validation.  Plans use it as the tools
+// component digest, so a plan never carries the section itself.
+func ToolsDigest(es []Tool) ([32]byte, error) {
+	if err := validateTools(es); err != nil {
+		return [32]byte{}, err
+	}
+	return sha256.Sum256(putTools(nil, es)), nil
+}
+
+// EnvDigest is SHA-256 of the env section exactly as Preimage encodes it
+// (KILN02 section 3.9), after the same validation.  Values never leave the
+// key: a plan shows this digest and the variable names only.
+func EnvDigest(es []EnvVar) ([32]byte, error) {
+	if err := validateEnv(es); err != nil {
+		return [32]byte{}, err
+	}
+	return sha256.Sum256(putEnv(nil, es)), nil
 }
 
 func putConsumed(b []byte, es []Consumed) []byte {

@@ -87,11 +87,14 @@ func TestTraceReasonReplacesScansAndNothingIsCacheable(t *testing.T) {
 		if contains(r.Reasons, "m1-incomplete:scans") {
 			t.Fatalf("%s still carries m1-incomplete:scans", r.Name)
 		}
-		if !contains(r.Reasons, ReasonToolsEnv) || !contains(r.Reasons, "m1-incomplete:trace") {
-			t.Fatalf("%s lost a standing reason: %v", r.Name, r.Reasons)
+		if contains(r.Reasons, "m1-incomplete:tools-env") {
+			t.Fatalf("%s still carries m1-incomplete:tools-env", r.Name)
+		}
+		if !contains(r.Reasons, ReasonTrace) {
+			t.Fatalf("%s lost the standing trace reason: %v", r.Name, r.Reasons)
 		}
 		if r.Class == ClassCacheable {
-			t.Fatalf("%s is cacheable while tools-env is outstanding", r.Name)
+			t.Fatalf("%s is cacheable while the trace is outstanding", r.Name)
 		}
 	}
 }

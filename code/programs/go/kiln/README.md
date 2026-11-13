@@ -134,7 +134,7 @@ Hashes and provenance only; no build output.
 keys for today's shell BUILD files, in **shadow mode** (nothing is skipped).
 
 ```
-kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder]
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder] [--probe]
 kiln explain --plan <plan.json> <package>
 ```
 
@@ -150,12 +150,42 @@ kiln explain --plan <plan.json> <package>
   holding a tree digest that covers paths, kinds, executable bits and content.
   `tool:build-tool` digests the old build tool's source, its in-repo `replace`
   targets, `go.work` and `vendor/`.
-- The key is a KILN02 key with **semantics version 0**. Tools and env are empty
-  in this milestone, so every package carries `m1-incomplete:tools-env` and
-  `m1-incomplete:trace` and none is `cacheable` yet. Packages whose closure has
-  an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
-  `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
-  for the OS are `uncacheable`.
+- The key is a KILN02 key with **semantics version 0**. Every package carries
+  `m1-incomplete:trace` (no traced read-set exists yet, KILN04), so none is
+  `cacheable` yet. Packages whose closure has an unpinned language
+  (`code/kiln/legacy/pinned.json`) are class `unpinned`;
+  `unknown-repo-inputs:<name>`, `unknown-toolchain:<name>`, `never.json`
+  entries and a missing BUILD file for the OS are `uncacheable`.
+- **Tools** (KILN03 section 4). `code/kiln/legacy/toolchains.json` maps each
+  closure language and extra toolchain to `pins` (an exact version from the
+  repository's committed pins, or `image`, meaning the runner image supplies it
+  and `Host.ImageID()` is the identity), `probes` and `roots` (the directories
+  of each tool, for `ConstructPATH`). The `tools` section of the key holds the
+  pins of every language in the package's closure plus the always-included set
+  (`sh`/`bash`, `cc`, `ld`, `strace` on Linux, `xcode-select` on macOS) as KILN02
+  kind-2 entries; `policy:toolchains.json` is a consumed entry. A closure
+  language or extra toolchain with no entry is the hard reason
+  `unknown-toolchain:<name>`, never "no tools". `ToolsFor` and `ConstructPATH`
+  are plain functions for the KILN04 weak key.
+- **Probes** (`--probe`, off by default, only for the platform the machine
+  runs). Each probe runs with no shell, an environment of just a fixed `PATH`
+  (toolchain directories only), `LANG=C`, `TZ=UTC` and a private `HOME` and
+  working directory, a 10 s timeout and 64 KiB of output; a binary that resolves
+  inside the checkout is refused. Output must carry the pin as a whole token, or
+  the package gets the soft reason `probe-mismatch:<tool>` (reported, never a
+  class). An absent tool is not an error. The plan's `probes` array shows each
+  tool's status.
+- **Environment** (KILN03 section 5). `code/kiln/legacy/env.json` is a strict
+  allowlist (a trailing `*` makes a prefix). Each set, matching variable goes
+  into the `env` section with its value; an unset one is omitted. A name
+  containing `:` is reserved, and a name that is secret-like after expansion is
+  an error that names the variable. `policy:env.json` is a consumed entry. Plans
+  and `kiln explain` show tool names (`name@pin`), env variable names and the
+  tools and env component **digests**, never values.
+- `code/kiln/legacy/host-roots.json` (KILN04 section 5.3: `roots`, `ephemeral`,
+  `absent-ok`) has a strict loader that cross-checks tool names against
+  `toolchains.json`. Only its digest is for the KILN04 weak key; nothing in the
+  static key reads it yet.
 - **Advisory hints** (KILN03 section 6) come from static scans of each
   package's own files, its closure members' files and its reads, in the same
   pass that hashes them: a `../` path that leaves the package, closure and
