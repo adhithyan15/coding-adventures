@@ -738,3 +738,26 @@ func TestNewLookupOptionsAgreesOnScope(t *testing.T) {
 		t.Error("scope names")
 	}
 }
+
+func TestLookupOutsideListIsBoundedButCountedInFull(t *testing.T) {
+	e := newLk(t)
+	entries := []string{entZ}
+	for i := 0; i < MaxPlanEntries+10; i++ {
+		entries = append(entries, fmt.Sprintf("pkg:code/packages/x/ghost%04d", i))
+	}
+	e.manifest(relZ, entries...)
+	p := e.plan()
+	l := lk(t, p, "x/z")
+	if len(l.OutsideStaticClosure) != MaxPlanEntries || l.OutsideCount != MaxPlanEntries+10 || !l.OutsideTruncated {
+		t.Fatalf("emitted %d count %d truncated %v", len(l.OutsideStaticClosure), l.OutsideCount, l.OutsideTruncated)
+	}
+	if l.OutsideStaticClosure[0] != "pkg:code/packages/x/ghost0000" || p.Histogram.OutsideStaticClosure != 1 {
+		t.Errorf("first %s, histogram %d", l.OutsideStaticClosure[0], p.Histogram.OutsideStaticClosure)
+	}
+	// A short list is complete and says nothing about truncation.
+	e2 := newLk(t)
+	e2.manifest(relZ, entZ, "pkg:code/packages/x/ghost")
+	if l := lk(t, e2.plan(), "x/z"); l.OutsideTruncated || l.OutsideCount != 1 {
+		t.Errorf("%+v", l)
+	}
+}

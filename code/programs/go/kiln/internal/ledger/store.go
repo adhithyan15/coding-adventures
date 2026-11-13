@@ -115,6 +115,8 @@ type Store struct {
 
 // Open returns a Store over dir.  The directory need not exist yet; a missing
 // directory is an empty ledger.
+func Open(dir string, scope Scope) *Store { return &Store{dir: dir, scope: scope, fs: realFS} }
+
 // Scope reports which kind of ledger this store is.
 func (s *Store) Scope() Scope { return s.scope }
 
@@ -128,8 +130,6 @@ func (s Scope) String() string {
 	}
 	return "invalid"
 }
-
-func Open(dir string, scope Scope) *Store { return &Store{dir: dir, scope: scope, fs: realFS} }
 
 // segInfo names one valid segment file.
 type segInfo struct {

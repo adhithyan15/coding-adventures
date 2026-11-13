@@ -179,7 +179,13 @@ type Lookup struct {
 	// OutsideStaticClosure lists the traced `pkg:` entries (of any retained
 	// manifest) that are not in the package's static closure: dependencies the
 	// old build tool does not know about, so bugs in the old graph (KILN04 9).
+	//
+	// The list holds at most MaxPlanEntries names (sorted, so the first ones);
+	// OutsideCount is the full number and OutsideTruncated says some were left
+	// out.  The histogram counts from the full set.
 	OutsideStaticClosure []string `json:"outside_static_closure,omitempty"`
+	OutsideCount         int      `json:"outside_count,omitempty"`
+	OutsideTruncated     bool     `json:"outside_truncated,omitempty"`
 }
 
 // ManifestsInfo is what loading the manifest store did.
@@ -423,7 +429,10 @@ func (pl *planner) lookup(plan *Plan, lo *LookupOptions) error {
 		if len(cs) == 0 {
 			continue
 		}
-		l := &Lookup{Weak: key.Hex(weaks[i].Key), OutsideStaticClosure: outside[i]}
+		l := &Lookup{Weak: key.Hex(weaks[i].Key), OutsideStaticClosure: outside[i], OutsideCount: len(outside[i])}
+		if len(outside[i]) > MaxPlanEntries {
+			l.OutsideStaticClosure, l.OutsideTruncated = outside[i][:MaxPlanEntries], true
+		}
 		recs[i].Lookup = l
 		if passErr != nil {
 			l.Result = ResultIneligible + "pass-ledger-unusable"
@@ -458,7 +467,7 @@ func lookupHistogram(recs []Record) (map[string]int, int) {
 			class = ResultIneligible + reasonGroup(rest)
 		}
 		h[class]++
-		if len(r.Lookup.OutsideStaticClosure) > 0 {
+		if r.Lookup.OutsideCount > 0 {
 			out++
 		}
 	}

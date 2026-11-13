@@ -312,12 +312,12 @@ type ManifestStore struct {
 // OpenManifests returns the manifest store of the ledger directory ledgerDir,
 // that is, ledgerDir/manifests.  The directory need not exist.  The pass-ledger
 // reader ignores it: "manifests" does not match the segment-name pattern.
-// Scope reports which kind of ledger this store belongs to.
-func (s *ManifestStore) Scope() Scope { return s.scope }
-
 func OpenManifests(ledgerDir string, scope Scope) *ManifestStore {
 	return &ManifestStore{root: ledgerDir, dir: filepath.Join(ledgerDir, ManifestsDir), scope: scope, fs: realFS}
 }
+
+// Scope reports which kind of ledger this store belongs to.
+func (s *ManifestStore) Scope() Scope { return s.scope }
 
 // Load reads the store under the reader policy and applies retention relative
 // to now (a parameter, never the clock).  On an error (structural corruption,
