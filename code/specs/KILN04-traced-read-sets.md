@@ -126,7 +126,9 @@ otherwise: miss
 ```
 
 Lookup runs no BUILD. It reads only the tree, the manifest store and the
-pass ledger.
+pass ledger. Trying several manifests matters because one BUILD can take
+different paths: a feature probe that flips, or a test filtered by a
+changed file. Each path that passed is recorded once.
 
 **Trust boundary on PR runs.** A PR can change Kiln, its policy files and
 the old build tool. So:
@@ -141,9 +143,7 @@ the old build tool. So:
   PR changes any of them, the weak key changes and lookup misses.
 - The graph export and static closure come from the PR tree. They choose
   which tool pins enter `tools`, which is safe because a different choice
-  only changes the weak key. Trying several manifests matters because one BUILD can take
-different paths: a feature probe that flips, or a test filtered by a
-changed file. Each path that passed is recorded once.
+  only changes the weak key.
 
 ## 4. Recording
 
@@ -224,9 +224,19 @@ process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark \
 - **Disk.** strace runs with `RLIMIT_FSIZE` set, and writes to a
   size-limited tmpfs. The interim cap is 2 GiB per step; reaching it gives
   `trace-incomplete:size`. The cap is revised from the M2 measurements.
-- **Completeness of the run.** An action passed only if strace exited 0
-  with empty standard error, and the number of traced steps equals the
-  step count in `kiln-legacy-results`.
+- **Completeness of the run.** An action passed only if:
+  - strace exited 0 with empty standard error;
+  - the number of traced steps equals the step count in
+    `kiln-legacy-results`;
+  - the `sh -c` line of every traced step equals, byte for byte, the
+    matching step line of the BUILD variant from `Source` that the weak
+    key's `recipe` covers. The wrapper passes the expected line index, and
+    the parser compares each step's `argv` with it. A mismatch gives
+    `trace-incomplete:recipe-mismatch`.
+
+  The executor reads BUILD files from the writable disk, outside any
+  trace. This check stops an earlier BUILD from rewriting a later
+  package's steps.
 
 **The sandbox helper.** `kiln sandbox-exec` prepares the sandbox in six
 steps, then `execve`s the step:
@@ -259,7 +269,15 @@ steps, then `execve`s the step:
      `CLONE_NEWIPC`;
 
    and `ENOSYS` for `clone3`, whose flags a filter cannot inspect, so
-   libc falls back to `clone`. Enforcement must not rest on refusing a
+   libc falls back to `clone`.
+
+   The filter's first instructions check two things: that
+   `seccomp_data.arch` is `AUDIT_ARCH_X86_64`, and that the syscall number
+   lacks `__X32_SYSCALL_BIT`. Any other architecture or ABI kills the
+   process (`SECCOMP_RET_KILL_PROCESS`). Without this check, a 32-bit or
+   x32 `clone` would match none of the x86-64 rules. A non-native ABI is
+   therefore impossible, not merely detected. A change to the filter bumps
+   `kiln:recorder`. Enforcement must not rest on refusing a
    trace after the fact: a `CLONE_UNTRACED` child is never attached by
    `strace -f`, so it would leave no lines at all.
 6. **No inherited descriptors.** It closes every file descriptor ≥ 3.
@@ -390,17 +408,19 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   matches the kernel. `L/../x`, where `L` is a link, means `x` beside L's
   target.
 - Every link traversed is itself an observation.
-- If any traversed component was created, renamed, unlinked or re-linked
-  by any action in the run, and so could have differed at the moment of
-  the call, the result is `trace-incomplete:unstable-path`.
+- A traversed component is **unstable** when, after its creation as the
+  trace orders events, any action renamed, unlinked or re-linked it, so
+  it could have differed at the moment of the call. A component that this
+  action itself created, and that nobody re-linked afterwards, is stable.
+  An unstable component gives `trace-incomplete:unstable-path`.
 
 **Exec.** `execve(path)` is a read of `path`. The kernel then loads,
 invisibly, the interpreter of a `#!` script and the `PT_INTERP` loader of
 an ELF file. The parser adds both as reads, following `#!` up to four
 levels deep as the kernel does.
 
-**`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) allows the
-ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
+**`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
+authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
 `/proc/{meminfo,stat,cpuinfo}`, `/sys/devices/system/cpu/**`,
 `/sys/fs/cgroup/**` and `/dev/fd/N`.
 
@@ -470,8 +490,27 @@ its lockfile is caught this way. Any other action that observed that path
 gets `reads-product`, whether through a `pkg:`, `path:` or `list:`
 entry, in any shard, and **even if the final content is unchanged**: a
 write followed by a restore leaves the same hash, yet a reader in between
-saw the edited bytes. After the job, the recorder also re-hashes every
-tracked file as a backstop.
+saw the edited bytes.
+
+**The tainted set.** Every tracked path that any action in the run wrote
+joins a run-wide *tainted* set, even if it was restored afterwards. A
+package loses every record (`reads-product`) when either of these holds:
+- its BUILD variants, or any other file the executor reads untraced
+  (package metadata, `.gitignore`), are tainted;
+- any of its `pkg:`, `path:` or `list:` entries covers a tainted path.
+
+**The backstop.** After the job, the recorder also re-hashes every
+tracked file. If any changed, the **whole shard** emits nothing.
+
+That re-hash runs on a tree the BUILDs controlled, so it is defensive:
+- each file is checked with `lstat` and then opened with
+  `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY`;
+- anything other than a regular file or a symlink gives
+  `trace-incomplete:non-regular`;
+- the bytes read per file are capped;
+- the whole step runs within a wall-clock budget per shard.
+
+The post-run `lstat` walk of §5.1 follows the same rules.
 
 ### 5.3 Reads outside the repository
 
@@ -487,8 +526,10 @@ Manifests never store out-of-repository paths. Instead,
     {"path": "$HOME/.cargo/registry", "kind": "state", "ecosystem": "rust",
      "fetchers": ["/opt/hostedtoolcache/rust/1.99.1/bin/cargo"]}
   ],
-  "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*", "/proc/self/exe",
-                "/proc/cpuinfo", "/sys/devices/system/cpu/**"],
+  "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*",
+                "/proc/self/exe", "/proc/self/maps", "/proc/self/cgroup",
+                "/proc/self/mountinfo", "/proc/meminfo", "/proc/stat",
+                "/proc/cpuinfo", "/sys/devices/system/cpu/**", "/sys/fs/cgroup/**"],
   "absent-ok": ["$HOME/.config", "$HOME/.npmrc"]
 }
 ```
@@ -653,10 +694,10 @@ and order is `(run, at)`.
     length) is checked when the record is emitted. A violation gives
     `manifest-too-large` for that action.
   - **Readers.** A reader that finds an over-cap record or segment drops
-    only that record or segment and reports it. It treats the **whole
-    store** as unusable, so there are no hits, only on structural
-    corruption: a non-canonical line, an unknown field, an over-cap
-    store.
+    only that record or segment and reports it. Only structural
+    corruption makes it treat the **whole store** as unusable, so there
+    are no hits. Structural corruption means a non-canonical line, an
+    unknown field, or an over-cap store.
 - **Names.** Entry names are repository paths and package paths. KILN00
   §10.1's "hashes only" becomes "hashes and repository path names": no
   file content, no out-of-repository path and no environment value is
@@ -745,6 +786,12 @@ Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
 
   B writes a tracked file and restores it, while A reads it in between:
   A gets `reads-product`.
+  A rewrites B's BUILD, with or without restoring it afterwards: B is not
+  recorded, through either the recipe mismatch or the tainted set.
+- **ABI.** Any 32-bit or x32 syscall, including a 32-bit
+  `clone(CLONE_UNTRACED)`, kills the process.
+- **Hostile tree.** A tracked path replaced by a FIFO, a device node or a
+  symlink loop gives `non-regular` or `unstable-path`, never a hang.
 - **Working tree.** A `.gitattributes` change that alters checked-out
   bytes changes the weak key. A working tree that differs from `Source`
   blocks recording and lookup.
