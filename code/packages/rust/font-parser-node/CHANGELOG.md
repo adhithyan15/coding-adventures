@@ -1,5 +1,25 @@
 # Changelog — font-parser-node (Rust)
 
+## [Unreleased]
+
+### Fixed — the addon did not link on Windows
+
+The five extra `napi_*` functions declared in this crate's own `extern "C"`
+block (`napi_get_value_int64` among them) lacked the `node.exe` raw-dylib marker
+that node-bridge's block carries, so a Windows link ended in `undefined reference
+to napi_get_value_int64`.  Reproduced with a cross-link for
+`x86_64-pc-windows-gnu`; the block now carries
+`#[cfg_attr(windows, link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim"))]`
+and the cross-link produces a DLL whose import table names `node.exe`.
+
+### Added — a real build-and-load test on every OS
+
+`tests/smoke.test.js` loads the built cdylib into Node.js and checks Inter's
+metrics, glyph lookup, `null` for a missing glyph, kerning, and that bad input
+throws.  `BUILD`/`BUILD_windows` were `echo` ("compile-only crate"); they now
+build into the package's own `target/` (three crates emit `font_parser_native`),
+run `cargo clippy -D warnings`, and run the smoke test.
+
 ## [0.2.0] — 2026-05-19
 
 ### Fixed — latent `napi_value` → `napi_ref` storage bug

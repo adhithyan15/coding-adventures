@@ -48,6 +48,25 @@ class Tree:
     def classes(self) -> list[tuple[str, bool]]:
         return [(f.cls, f.advisory) for f in audit.audit(self.root)]
 
+    def allow(self, entries: dict[str, dict]) -> None:
+        """Write the W6 allowlist for this tree."""
+        path = self.root.joinpath(*audit.ALLOWLIST_PATH)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"version": 1, "entries": entries}), encoding="utf-8")
+
+    def findings(self, cls: str) -> list[audit.Finding]:
+        return [f for f in audit.audit(self.root) if f.cls == cls]
+
+
+def entry(category: str = "no-tests-by-design", **overrides: str) -> dict:
+    base = {
+        "category": category,
+        "reason": "nothing to run on this platform for a stated reason",
+        "evidence": "BUILD-002 W6 test fixture",
+    }
+    base.update(overrides)
+    return base
+
 
 class AuditTestCase(unittest.TestCase):
     def setUp(self) -> None:
@@ -72,7 +91,8 @@ class BuildFileSelectionTest(AuditTestCase):
             "go", "p", {"BUILD_mac_and_linux": "if [ -f x ]; then y; fi"}
         )
         self.assertIsNone(audit.effective_build_file(pkg, audit.WINDOWS_CANDIDATES))
-        self.assertEqual(self.tree.classes(), [])
+        # No Windows build at all is a skip like any other: class F (W6).
+        self.assertEqual(self.tree.classes(), [("F", False)])
 
 
 class VitestDriftTest(AuditTestCase):
@@ -186,7 +206,8 @@ class RunnerMismatchTest(AuditTestCase):
                 "BUILD_windows": "echo Perl testing is not supported on Windows - skipping\n",
             },
         )
-        self.assertEqual(self.tree.classes(), [])
+        # No runner is swapped (class D stays quiet); the stub itself is class F.
+        self.assertEqual(self.tree.classes(), [("F", False)])
 
     def test_dropped_runner_is_advisory(self) -> None:
         self.tree.package(
@@ -323,6 +344,310 @@ class DriverTest(AuditTestCase):
 
     def test_empty_tree_is_clean(self) -> None:
         self.assertEqual(audit.main(["--root", str(self.tree.root), "--check"]), 0)
+
+
+class WindowsSkipTest(AuditTestCase):
+    """Class F: a Windows recipe that runs nothing, unless allowlisted."""
+
+    def skip_of(self, files: dict[str, str], name: str = "p") -> tuple[str, str] | None:
+        pkg = self.tree.package("go", name, files)
+        return audit.windows_skip_shape(pkg)
+
+    def test_new_echo_only_recipe_blocks(self) -> None:
+        self.tree.package(
+            "go",
+            "p",
+            {"BUILD": "go test ./...\n", "BUILD_windows": 'echo "skipping on windows"\n'},
+        )
+        found = self.tree.findings("F")
+        self.assertEqual([(f.package, f.file, f.advisory) for f in found],
+                         [("packages/go/p", "BUILD_windows", False)])
+        self.assertIn("echo-only", found[0].detail)
+        self.assertEqual(audit.main(["--root", str(self.tree.root), "--check"]), 1)
+
+    def test_real_recipe_passes(self) -> None:
+        self.tree.package(
+            "go",
+            "p",
+            {"BUILD": "go test ./...\n", "BUILD_windows": "go test ./... -cover\n"},
+        )
+        self.assertEqual(self.tree.classes(), [])
+
+    def test_recipe_that_echoes_and_then_tests_is_real(self) -> None:
+        self.assertIsNone(
+            self.skip_of({"BUILD_windows": "echo building\ngo test ./...\n"})
+        )
+
+    def test_comments_rem_and_blank_lines_are_not_commands(self) -> None:
+        # Only comments around a real command: still a real recipe.
+        self.assertIsNone(
+            self.skip_of(
+                {"BUILD_windows": "# note\nREM note\n@rem note\n:: note\n\ngo test ./...\n"}
+            )
+        )
+
+    def test_comments_around_echo_do_not_hide_the_skip(self) -> None:
+        shape = self.skip_of(
+            {"BUILD_windows": "# build-tool: unsupported=X\nREM why\n:: why\necho skipped\n"}
+        )
+        self.assertIsNotNone(shape)
+        self.assertEqual(shape[0], "BUILD_windows")
+
+    def test_comment_only_recipe_is_empty(self) -> None:
+        shape = self.skip_of({"BUILD_windows": "# nothing here\nREM nor here\n"})
+        self.assertEqual(shape, ("BUILD_windows", "empty recipe (no commands)"))
+
+    def test_other_skip_shapes(self) -> None:
+        for line in (
+            "@echo off",
+            "echo.",
+            "exit 0",
+            "exit /b 0",
+            "exit /b",
+            "cmd /c exit 0",
+            "cmd.exe /c exit",
+            "cmd /c echo skipped",
+            "type nul",
+            "ver >nul",
+            "call echo skipped",
+            "goto :eof",
+            "if not exist x echo skipped",
+            'if "%CI%"=="" echo not in CI',
+            "if exist foo (echo have foo)",
+            "if errorlevel 1 (echo cabal not found) else (echo fine)",
+            "(echo skipped & exit /b 0)",
+            "echo a && echo b",
+            "if /i not defined X echo no X",
+            'powershell -NoProfile -Command "Write-Host skipping"',
+            "pwsh -c 'Write-Output skipped'",
+        ):
+            with self.subTest(line=line):
+                self.assertTrue(audit.is_noop_line(line), line)
+
+    def test_two_noop_lines_are_still_a_skip(self) -> None:
+        self.assertIsNotNone(self.skip_of({"BUILD_windows": "echo a\nexit /b 0\n"}))
+        shape = self.skip_of({"BUILD_windows": "echo a\nexit 0\n"}, name="q")
+        self.assertIn("no-op only", shape[1])
+
+    def test_real_commands_are_never_noops(self) -> None:
+        for line in (
+            "go test ./...",
+            "cargo test -p x -- --nocapture",
+            "exit 1",
+            "exit /b 1",
+            "echo y | cargo publish",
+            'echo "a && b" && cargo test',
+            "if exist x (cargo test) else (echo skipped)",
+            "if exist x (echo have) else (cargo test)",
+            "echo started & cargo test",
+            "where swift >nul 2>nul && swift test || echo not available",
+            'powershell -File run.ps1 -Name "Write-Host"',
+            "powershell -Command \"Write-Host start; cargo test\"",
+            "echoing.exe",
+            "exit1.bat",
+            '"C:\\Program Files (x86)\\tool.exe" --run',
+            "set FOO=1",
+            "cd tests",
+        ):
+            with self.subTest(line=line):
+                self.assertFalse(audit.is_noop_line(line), line)
+
+    def test_quoted_separators_do_not_split(self) -> None:
+        self.assertEqual(audit.split_segments('echo "a && b" && echo c'), ['echo "a && b"', "echo c"])
+        self.assertEqual(audit.split_segments("echo a | more"), ["echo a | more"])
+
+    def test_fallback_build_counts_when_windows_runs_it(self) -> None:
+        # No BUILD_windows: Windows runs BUILD, so an echo-only BUILD is a skip.
+        self.tree.package("rust", "p", {"BUILD": 'echo "compile-only crate"\n'})
+        found = self.tree.findings("F")
+        self.assertEqual([f.file for f in found], ["BUILD"])
+
+    def test_package_with_no_windows_build_file_is_a_skip(self) -> None:
+        self.tree.package("go", "p", {"BUILD_mac_and_linux": "go test ./...\n"})
+        found = self.tree.findings("F")
+        self.assertEqual([f.file for f in found], ["(none)"])
+        self.assertIn("no Windows build file", found[0].detail)
+
+    def test_starlark_build_is_never_a_skip(self) -> None:
+        self.tree.package("go", "p", {"BUILD": 'go_library(name = "p")\n'})
+        self.assertEqual(self.tree.findings("F"), [])
+
+    def test_hostile_long_line_is_linear_and_not_a_skip(self) -> None:
+        import time
+
+        line = "if " + "a" * 200_000 + " echo x"
+        started = time.perf_counter()
+        self.assertFalse(audit.is_noop_line(line))
+        self.assertLess(time.perf_counter() - started, 1.0)
+        started = time.perf_counter()
+        audit.is_noop_line("if " + '"' * 1500 + "==" + "\\ " * 20)
+        self.assertLess(time.perf_counter() - started, 1.0)
+
+    def test_allowlisted_skip_passes(self) -> None:
+        self.tree.package(
+            "rust", "p", {"BUILD": "cargo test\n", "BUILD_windows": "echo skip\n"}
+        )
+        self.tree.allow({"packages/rust/p": entry("no-tests-by-design")})
+        self.assertEqual(self.tree.classes(), [])
+
+
+class SkipAllowlistTest(AuditTestCase):
+    """Class G: the allowlist may only shrink and must stay honest."""
+
+    def skip_package(self, name: str = "p", build: str = "cargo test\n") -> None:
+        self.tree.package(
+            "rust", name, {"BUILD": build, "BUILD_windows": "echo skip\n"}
+        )
+
+    def test_stale_entry_blocks(self) -> None:
+        self.tree.package(
+            "rust", "p", {"BUILD": "cargo test\n", "BUILD_windows": "cargo test\n"}
+        )
+        self.tree.allow({"packages/rust/p": entry()})
+        found = self.tree.findings("G")
+        self.assertEqual([f.package for f in found], ["packages/rust/p"])
+        self.assertIn("stale entry", found[0].detail)
+        self.assertIn("real Windows recipe", found[0].detail)
+        self.assertFalse(found[0].advisory)
+
+    def test_entry_for_a_deleted_package_blocks(self) -> None:
+        self.tree.allow({"packages/rust/gone": entry()})
+        found = self.tree.findings("G")
+        self.assertIn("no longer exists", found[0].detail)
+
+    def test_new_entry_beyond_the_cap_blocks(self) -> None:
+        self.skip_package("a")
+        self.skip_package("b")
+        self.tree.allow({"packages/rust/a": entry(), "packages/rust/b": entry()})
+        saved = dict(audit.ALLOWLIST_CAPS)
+        self.addCleanup(lambda: audit.ALLOWLIST_CAPS.update(saved))
+        audit.ALLOWLIST_CAPS["no-tests-by-design"] = 1
+        found = self.tree.findings("G")
+        self.assertEqual(len(found), 1)
+        self.assertIn("cap is 1", found[0].detail)
+        # Raising the cap is the explicit, reviewable act that clears it.
+        audit.ALLOWLIST_CAPS["no-tests-by-design"] = 2
+        self.assertEqual(self.tree.findings("G"), [])
+
+    def test_unlisted_skip_still_blocks_even_with_cap_room(self) -> None:
+        self.skip_package("a")
+        self.skip_package("b")
+        self.tree.allow({"packages/rust/a": entry()})
+        self.assertEqual([f.package for f in self.tree.findings("F")], ["packages/rust/b"])
+
+    def test_malformed_entries_block(self) -> None:
+        self.skip_package()
+        for bad, expect in (
+            (entry(category="whatever"), "category must be one of"),
+            (entry(reason="short"), "`reason` must be"),
+            (entry(evidence=""), "`evidence` must be"),
+            ("not an object", "must be an object"),
+        ):
+            with self.subTest(expect=expect):
+                self.tree.allow({"packages/rust/p": bad})
+                details = " ".join(f.detail for f in self.tree.findings("G"))
+                self.assertIn(expect, details)
+
+    def test_invalid_or_misshapen_allowlist_file_blocks(self) -> None:
+        path = self.tree.root.joinpath(*audit.ALLOWLIST_PATH)
+        path.parent.mkdir(parents=True)
+        path.write_text("{not json", encoding="utf-8")
+        self.assertIn("not valid JSON", self.tree.findings("G")[0].detail)
+        path.write_text('{"entries": []}', encoding="utf-8")
+        self.assertIn("`entries` object", self.tree.findings("G")[0].detail)
+
+    def test_missing_allowlist_is_empty_not_an_error(self) -> None:
+        self.assertEqual(audit.load_allowlist(self.tree.root), ({}, []))
+
+    def test_metal_category_must_be_backed_by_the_package(self) -> None:
+        self.tree.package(
+            "rust",
+            "paint-metal",
+            {
+                "BUILD": 'if [ "$(uname)" = "Darwin" ]; then cargo test; fi\n',
+                "BUILD_windows": "echo Metal is macOS only\n",
+            },
+        )
+        self.skip_package("plain")
+        self.tree.allow(
+            {
+                "packages/rust/paint-metal": entry("intrinsic-apple"),
+                "packages/rust/plain": entry("intrinsic-apple"),
+            }
+        )
+        found = self.tree.findings("G")
+        self.assertEqual([f.package for f in found], ["packages/rust/plain"])
+        self.assertIn("nothing in the package names Metal", found[0].detail)
+
+    def test_every_category_has_a_cap(self) -> None:
+        self.assertEqual(set(audit.CATEGORIES), set(audit.ALLOWLIST_CAPS))
+
+
+class ConditionalSkipTest(AuditTestCase):
+    """Class H: a real recipe that quietly passes when the toolchain is absent."""
+
+    def test_probe_with_echo_skipping_fallback_is_advisory(self) -> None:
+        self.tree.package(
+            "swift",
+            "p",
+            {
+                "BUILD": "swift test\n",
+                "BUILD_windows": "where swift >nul 2>nul && swift test || echo not available - skipping\n",
+            },
+        )
+        self.assertEqual(self.tree.classes(), [("H", True)])
+        self.assertEqual(audit.main(["--root", str(self.tree.root), "--check"]), 0)
+
+    def test_if_else_form_is_detected(self) -> None:
+        self.tree.package(
+            "haskell",
+            "p",
+            {
+                "BUILD": "cabal test all\n",
+                "BUILD_windows": "if errorlevel 1 (echo cabal not found -- skipping) else (cabal test all)\n",
+            },
+        )
+        self.assertEqual(self.tree.classes(), [("H", True)])
+
+    def test_plain_real_recipe_and_plain_skip_are_not_h(self) -> None:
+        self.tree.package("go", "a", {"BUILD": "x\n", "BUILD_windows": "go test ./...\n"})
+        self.tree.package("go", "b", {"BUILD": "x\n", "BUILD_windows": "echo skipping\n"})
+        self.assertEqual([c for c, _ in self.tree.classes()], ["F"])
+
+    def test_render_summarises_h_unless_verbose(self) -> None:
+        self.tree.package(
+            "swift",
+            "p",
+            {"BUILD": "x\n", "BUILD_windows": "where swift && swift test || echo no - skipping\n"},
+        )
+        findings = audit.audit(self.tree.root)
+        self.assertIn("by language: swift: 1", audit.render(findings, verbose=False))
+        self.assertIn("packages/swift/p/BUILD_windows", audit.render(findings, verbose=True))
+
+
+class RepositoryAllowlistTest(unittest.TestCase):
+    """The committed allowlist, against the real tree."""
+
+    def setUp(self) -> None:
+        self.entries, problems = audit.load_allowlist(REPO)
+        self.assertEqual(problems, [])
+
+    def test_allowlist_matches_the_caps_exactly(self) -> None:
+        # Equality, not <=: a stale cap is slack that would let an entry in
+        # unreviewed, so lowering the list means lowering the cap with it.
+        counts: dict[str, int] = {}
+        for entry_ in self.entries.values():
+            counts[entry_["category"]] = counts.get(entry_["category"], 0) + 1
+        self.assertEqual(counts, audit.ALLOWLIST_CAPS)
+
+    def test_every_metal_package_is_apple_intrinsic(self) -> None:
+        for rel, entry_ in self.entries.items():
+            if "metal" in rel.lower() or "objc" in rel.lower():
+                self.assertEqual(entry_["category"], "intrinsic-apple", rel)
+
+    def test_real_repository_has_no_unlisted_windows_skip(self) -> None:
+        offenders = [f for f in audit.audit(REPO) if f.cls in ("F", "G")]
+        self.assertEqual(offenders, [], audit.render(offenders))
 
 
 class RepositoryTest(unittest.TestCase):

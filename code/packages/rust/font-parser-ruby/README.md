@@ -41,6 +41,22 @@ garbage-collected, which runs `Box::from_raw` and drops the Rust memory.
 cargo build -p font-parser-ruby --release
 ```
 
+## Testing
+
+There are no Rust unit tests: the shim is only meaningful inside Ruby, so the
+test requires the built library into a real interpreter and calls it.
+
+```bash
+cargo build --release -p font-parser-ruby --target-dir target
+ruby tests/smoke_test.rb
+```
+
+Each crate builds into its own `target/` (`--target-dir target`) because font-parser-node,
+font-parser-python and font-parser-ruby all emit a cdylib named `font_parser_native`.
+On Windows, `build.rs` writes a `.def` file from the `rb_*` declarations and has
+MSVC `lib.exe` build an import library for Ruby's DLL (set `RUBY` to pick a
+specific interpreter).
+
 ## License
 
 MIT

@@ -306,7 +306,16 @@ module CodingAdventures
     end
 
     def pico_uf2_mounts(roots: nil)
-      Native.pico_uf2_mounts(roots&.map(&:to_s))
+      Native.pico_uf2_mounts(roots&.map(&:to_s)).map { |mount| ruby_path(mount) }
+    end
+
+    # The Rust side joins path components with the host separator, so on Windows a
+    # mount comes back as `D:/tmp/x\RPI-RP2`.  Ruby itself (File.join, Dir) uses `/`
+    # on Windows too, and callers compare and embed these paths next to Ruby-built
+    # ones, so hand them back in Ruby's form.  `File::ALT_SEPARATOR` is nil on Unix,
+    # where a backslash is an ordinary filename character and must be left alone.
+    def ruby_path(path)
+      File::ALT_SEPARATOR ? path.tr(File::ALT_SEPARATOR, File::SEPARATOR) : path
     end
 
     def pico_uf2_mount(roots: nil)

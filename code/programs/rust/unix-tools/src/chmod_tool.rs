@@ -62,7 +62,11 @@
 
 #[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
+// Only the Unix code paths (and the Unix-only tests) touch these, so a Windows build
+// would otherwise warn about unused imports (and the CI clippy gate is -D warnings).
+#[cfg(unix)]
 use std::fs;
+#[cfg(unix)]
 use std::path::Path;
 
 // ---------------------------------------------------------------------------

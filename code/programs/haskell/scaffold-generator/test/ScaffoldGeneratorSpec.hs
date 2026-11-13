@@ -61,9 +61,9 @@ scaffoldGeneratorSpec = do
                     ]
 
     describe "buildWindowsFileContents" $ do
-        it "keeps the Windows skip record without the POSIX prefix" $ do
-            buildWindowsFileContents
-                `shouldBe` "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
+        it "is the real Cabal command, not a skip record, without the POSIX prefix" $ do
+            buildWindowsFileContents `shouldBe` "cabal test all\n"
+            buildWindowsFileContents `shouldNotSatisfy` containsText "echo"
             buildWindowsFileContents `shouldNotSatisfy` containsText "uname"
             buildWindowsFileContents `shouldNotSatisfy` containsText "DEVELOPER_DIR"
 

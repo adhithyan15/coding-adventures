@@ -1,5 +1,19 @@
 # Changelog — font-parser-python (Rust)
 
+## [Unreleased]
+
+### Added — real Windows link and a smoke test on every OS
+
+- `build.rs` links `pythonXY.lib` (found by asking a real interpreter for
+  `sys.base_prefix`) on Windows, and passes `-undefined dynamic_lookup` on
+  macOS, as the `python/*-native` packages already do.  Without it the cdylib
+  could not link on Windows.
+- `tests/smoke_test.py` imports the built extension into CPython and checks
+  Inter's metrics, glyph lookup, kerning and the error path.  `BUILD` and
+  `BUILD_windows` were `echo` ("compile-only crate"); they now build into the
+  package's own `target/` (three crates emit `font_parser_native`), run
+  `cargo clippy -D warnings`, and run the smoke test.
+
 ## [0.1.0] — 2026-04-01
 
 ### Added

@@ -1,1 +1,6 @@
-echo "SKIP: twig-module-driver's self-compile tests reserve 768 MiB and 3 GiB thread stacks (run_in_large_stack / run_in_xlarge_stack), which fail to spawn on Windows hosts; the full suite runs on Linux and macOS through BUILD"
+# The self-compile tests interpret the Twig compiler, which recurses deeply.
+# libtest's default 2 MiB test-thread stack is too small, so give every test
+# thread 64 MiB (the deepest tests still spawn their own 768 MiB / 3 GiB threads
+# via run_in_large_stack / run_in_xlarge_stack; on Windows a thread stack is an
+# address-space reservation, committed only as it is used).
+set RUST_MIN_STACK=67108864&& cargo test -p twig-module-driver -- --nocapture

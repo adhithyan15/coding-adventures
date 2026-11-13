@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected Mozilla-reviewed root's supported out-of-band permitted-
+  DNS constraints to the exact delegated responder retained by the strongest
+  Name-policy path/fully routed OCSP bridge.
+- Derive both policy inputs only through the non-copyable strong projection,
+  reuse the existing redacted evaluator, and stop before intermediate DNS,
+  no-check, revocation completion, TLS, HTTP, OAuth, or network readiness.
 - Reify the authenticated responder-to-reviewed-root suffix retained by the
   strongest Name-policy path/fully routed OCSP bridge without detached inputs.
 - Bind fully routed authenticated OCSP target status to the strongest supported

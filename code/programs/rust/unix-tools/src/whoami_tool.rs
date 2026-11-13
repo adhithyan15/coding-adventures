@@ -77,6 +77,8 @@ pub fn get_username() -> Result<String, String> {
 
 #[cfg(test)]
 mod tests {
+    // Every test in here is `#[cfg(unix)]`, so on Windows nothing uses the glob.
+    #[cfg(unix)]
     use super::*;
 
     #[cfg(unix)]
