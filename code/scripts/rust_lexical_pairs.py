@@ -309,6 +309,14 @@ class Classes:
 # Raw strings: one arm per hash count
 # ---------------------------------------------------------------------------
 
+# What may follow `e` in an exponent that has NO digit, ending at the first
+# character that proves it: after a sign, underscores and then a non-digit; with
+# no sign, one or more underscores and then a non-digit, or at once a character
+# that is not a digit, an underscore or a sign. (The sign is part of the
+# exponent when present: `1e-3` is fine, so `-` must not count as "the
+# non-digit" there.)
+EXPONENT_WITHOUT_DIGITS = "(?:[+-]_*(?:[^0-9_]|\\z)|_+(?:[^0-9_]|\\z)|[^0-9_+\\-]|\\z)"
+
 # A raw-string body character: anything but `"`, and a carriage return only as
 # part of CRLF (`rustc` turns CRLF into LF and rejects a bare CR in a literal).
 RAW_CHAR = '(?:[^"\\r]|\\r\\n)'
@@ -898,7 +906,7 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
     d.append(
         Def(
             "FLOAT_BAD_EXP",
-            f"{decimal}(?:\\.{decimal})?[eE][+-]?_*(?:[^0-9_]|\\z)",
+            f"{decimal}(?:\\.{decimal})?[eE]{EXPONENT_WITHOUT_DIGITS}",
             refusal=True,
             notes=(
                 "`1e`, `1.5e+`, `1else`: an exponent with no digit is an error. It",

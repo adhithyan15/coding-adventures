@@ -132,7 +132,7 @@ BASED_FLOAT_BAD = /0[bo][0-9_]*[eE]|0[box][0-9a-fA-F_]*\.(?:\z|[^.A-Za-z_\x80-\U
 # is tried before FLOAT_LIT and INT_LIT so that a suffix starting with
 # `e` cannot hide it: what reaches them is never `digits` then `e`
 # without a valid exponent.
-FLOAT_BAD_EXP = /[0-9][0-9_]*(?:\.[0-9][0-9_]*)?[eE][+-]?_*(?:[^0-9_]|\z)/
+FLOAT_BAD_EXP = /[0-9][0-9_]*(?:\.[0-9][0-9_]*)?[eE](?:[+-]_*(?:[^0-9_]|\z)|_+(?:[^0-9_]|\z)|[^0-9_+\-]|\z)/
 # A decimal float: a fraction, an exponent, or both. `1.` with no
 # digit after the dot is NOT a float here (no lookahead): it is INT
 # then DOT, so `1.foo()` and `1..2` lex correctly and the grammar
