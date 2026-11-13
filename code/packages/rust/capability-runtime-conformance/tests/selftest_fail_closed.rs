@@ -101,6 +101,8 @@ fn leftovers(dir: &std::path::Path) -> Vec<String> {
 /// used to leave `rcg-scratch-<pid>` behind. `kind` picks the return path:
 /// no strace on PATH at all, or a strace whose start-up probe fails.
 fn cleanup_after_early_return(exe: &std::path::Path, kind: &str) {
+    // Start clean: CARGO_TARGET_TMPDIR persists between runs.
+    let _ = std::fs::remove_dir_all(out_dir(kind));
     let dir = out_dir(kind).join("shim");
     std::fs::create_dir_all(&dir).unwrap();
     let path = if kind == "cleanup-no-strace" {
@@ -123,9 +125,15 @@ fn cleanup_after_early_return(exe: &std::path::Path, kind: &str) {
         .output()
         .unwrap();
     let text = String::from_utf8_lossy(&out.stdout);
-    assert!(text.contains("NOT-LIVE"), "{kind}: expected NOT-LIVE:\n{text}");
+    assert!(
+        text.contains("NOT-LIVE"),
+        "{kind}: expected NOT-LIVE:\n{text}"
+    );
     let left = leftovers(&out_dir(kind));
-    assert!(left.is_empty(), "{kind}: gate left {left:?} behind:\n{text}");
+    assert!(
+        left.is_empty(),
+        "{kind}: gate left {left:?} behind:\n{text}"
+    );
 }
 
 fn main() {

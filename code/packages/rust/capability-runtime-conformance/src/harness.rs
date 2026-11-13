@@ -589,33 +589,61 @@ mod linux {
         }
     }
 
-    /// A working directory that belongs to THIS gate process alone.
+    /// A working directory name that belongs to THIS gate process alone.
     ///
     /// `evidence_dir` is shared: Cargo's `CARGO_TARGET_TMPDIR`, which every
     /// Rust adopter passes, is one directory per workspace, and the build
-    /// tool runs independent packages in parallel. The scratch and container
-    /// directories are deleted with `remove_dir_all` (at the end of the run,
-    /// and at the start of the container ring), so with a fixed name the
-    /// first gate to finish deleted the directory a slower gate was still
-    /// writing `strace -o` traces into. Every later observed run then had no
-    /// trace and RCG009 reported its controls as "NOT detected" (PR #19314,
-    /// `rust/gf256`, CI only). The process id makes the name private to this
-    /// run; only `capability_runtime_evidence.json` stays at a fixed path.
+    /// tool runs independent packages in parallel. A fixed name let the
+    /// first gate to finish delete the directory a slower gate was still
+    /// writing `strace -o` traces into (PR #19314, `rust/gf256`, CI only), so
+    /// the name carries the process id.
+    ///
+    /// The process id alone is *predictable*, and when `evidence_dir` is
+    /// `None` the directory sits under shared `/tmp`, where another local
+    /// user could plant a symlink at `rcg-scratch-<pid>` and have strace
+    /// write through it. So the name also carries 64 random bits from the
+    /// same source as the run nonces, and the directory is only ever made by
+    /// [`create_private_dir`], which refuses anything already there.
+    /// Only `capability_runtime_evidence.json` stays at a fixed path.
     fn private_dir(config: &GateConfig, leaf: &str) -> PathBuf {
         config
             .evidence_dir
             .clone()
             .unwrap_or_else(std::env::temp_dir)
-            .join(format!("{leaf}-{}", std::process::id()))
+            .join(format!("{leaf}-{}-{}", std::process::id(), random_hex()))
     }
 
-    /// STUB (test-first commit): the old behaviour, so the new tests can fail
-    /// for the right reason. Replaced by the exclusive creation in the fix.
+    /// Create `path` as a brand-new directory, mode 0700, or fail.
+    ///
+    /// ```text
+    /// create_dir_all(path)   follows a symlink at `path`  -> writes land
+    ///                        wherever the attacker pointed it
+    /// mkdir(path, 0700)      EEXIST for a symlink, a file or a directory;
+    ///                        the final component is never followed
+    /// ```
+    ///
+    /// Only the *parent* is created recursively (it is the adopter's shared
+    /// evidence directory, or `/tmp`, never a name we invented). The leaf is
+    /// created non-recursively and exclusively, so an existing path of any
+    /// kind is refused rather than reused, and the 0700 mode keeps other
+    /// users out of the traces even for the instant before anything is
+    /// written. A refusal is the caller's NOT-LIVE, never a fallback.
     fn create_private_dir(path: &Path) -> std::io::Result<()> {
-        std::fs::create_dir_all(path)
+        use std::os::unix::fs::DirBuilderExt as _;
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+        std::fs::DirBuilder::new().mode(0o700).create(path)
     }
 
-    /// STUB (test-first commit): a guard that does not yet clean up.
+    /// A private directory that deletes itself.
+    ///
+    /// The gate has many early returns after the directory exists (`NOT-LIVE`
+    /// because strace is missing or cannot trace, a child that will not
+    /// spawn, ...), and a panic unwinds through all of them. Cleaning up by
+    /// hand at the end only covered the happy path; `Drop` covers every
+    /// return and every unwind. A SIGKILL cannot be caught by anything, so a
+    /// killed gate can still leave its (private, unpredictable) directory.
     struct ScratchDir {
         path: PathBuf,
     }
@@ -632,14 +660,32 @@ mod linux {
         }
     }
 
-    fn random_nonce(tag: &str) -> String {
+    impl Drop for ScratchDir {
+        fn drop(&mut self) {
+            // `remove_dir_all` does not follow a symlink at the top path.
+            let _ = std::fs::remove_dir_all(&self.path);
+        }
+    }
+
+    fn random_hex() -> String {
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
-        unsafe {
-            libc::getrandom(bytes.as_mut_ptr().cast(), bytes.len(), 0);
+        let got = unsafe { libc::getrandom(bytes.as_mut_ptr().cast(), bytes.len(), 0) };
+        if got != bytes.len() as isize {
+            // getrandom essentially cannot fail on Linux >= 3.17; if it does,
+            // fall back to clock and address bits rather than all zeros.
+            let nanos = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos() as u64)
+                .unwrap_or(0);
+            let here = &bytes as *const _ as u64;
+            bytes = (nanos ^ here.rotate_left(32)).to_le_bytes();
         }
-        let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();
-        format!("{tag}-{hex}")
+        bytes.iter().map(|b| format!("{b:02x}")).collect()
+    }
+
+    fn random_nonce(tag: &str) -> String {
+        format!("{tag}-{}", random_hex())
     }
 
     fn command_line(program: &str, args: &[&str]) -> Option<String> {
@@ -725,8 +771,18 @@ mod linux {
                 return 1;
             }
         };
-        let scratch = private_dir(config, "rcg-scratch");
-        let _ = std::fs::create_dir_all(&scratch);
+        // Removed by Drop on every return path (and on unwind).
+        let scratch_guard = match ScratchDir::new(config, "rcg-scratch") {
+            Ok(guard) => guard,
+            Err(error) => {
+                return not_live(
+                    config,
+                    &format!("cannot create private scratch directory: {error}"),
+                    FailureId::Rcg013,
+                )
+            }
+        };
+        let scratch = scratch_guard.path().to_path_buf();
         let exe = match std::env::current_exe() {
             Ok(exe) => exe,
             Err(error) => {
@@ -992,7 +1048,7 @@ mod linux {
                 ("note", Json::str("Instant::now() is served by the vDSO without a syscall; neither seccomp nor strace can see it")),
             ]));
         }
-        let _ = std::fs::remove_dir_all(&scratch);
+        drop(scratch_guard); // free the traces before the (slow) container ring
 
         // ---- container ring ----
         let container = if config.rings.container {
@@ -1293,8 +1349,11 @@ mod linux {
             }
             Err(error) => return not_live(error),
         }
-        let work = private_dir(config, "rcg-container");
-        let _ = std::fs::remove_dir_all(&work);
+        let work_guard = match ScratchDir::new(config, "rcg-container") {
+            Ok(guard) => guard,
+            Err(error) => return not_live(format!("cannot create container work dir: {error}")),
+        };
+        let work = work_guard.path().to_path_buf();
         let rootfs = work.join("rootfs");
         if let Err(error) = std::fs::create_dir_all(rootfs.join("rcg")) {
             return not_live(format!("cannot create {}: {error}", work.display()));
@@ -1397,7 +1456,7 @@ mod linux {
             );
         }
         let _ = docker_ok(&docker, &["rmi", "-f", &image]);
-        let _ = std::fs::remove_dir_all(&work);
+        drop(work_guard);
         ContainerResult {
             verdict,
             detail,
@@ -1530,7 +1589,10 @@ mod linux {
             std::os::unix::fs::symlink(&victim, &link).unwrap();
             assert!(create_private_dir(&link).is_err(), "followed a symlink");
             std::fs::write(victim.join("sentinel"), b"x").unwrap();
-            assert!(std::fs::symlink_metadata(&link).unwrap().file_type().is_symlink());
+            assert!(std::fs::symlink_metadata(&link)
+                .unwrap()
+                .file_type()
+                .is_symlink());
             let entries: Vec<_> = std::fs::read_dir(&victim).unwrap().collect();
             assert_eq!(entries.len(), 1, "something was created through the link");
             let _ = std::fs::remove_dir_all(base);
