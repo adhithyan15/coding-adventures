@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reify the authenticated responder-to-reviewed-root suffix retained by the
+  strongest Name-policy path/fully routed OCSP bridge without detached inputs.
 - Bind fully routed authenticated OCSP target status to the strongest supported
   Name-policy-backed arbitrary-depth reviewed-server path by exact target and
   target-nearest issuer object identity.

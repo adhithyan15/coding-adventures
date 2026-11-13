@@ -80,6 +80,15 @@ validation, validate the anchor self-signature, provide TLS or HTTP, authorize
 OAuth transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+`reify_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_path`
+nominally projects that exact strong bridge into the authenticated responder's
+already-proven responder-to-issuer-to-reviewed-root suffix. It retains the
+complete non-copyable bridge and accepts no detached certificate, path,
+algorithm, key, signature, time, or policy input. The projection performs no
+new validation or external effect and stops before responder DNS, no-check,
+responder or intermediate revocation, complete revocation or Name/path
+validation, TLS, HTTP, OAuth, network, or live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

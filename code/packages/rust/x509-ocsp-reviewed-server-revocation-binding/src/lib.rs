@@ -1679,6 +1679,37 @@ pub fn reify_x509_ocsp_routed_issuer_reviewed_responder_path<
     }
 }
 
+/// Reify the authenticated responder suffix retained by the strong path bridge.
+///
+/// The consumed binding can only be produced after fully routed OCSP target
+/// status is joined by exact target and target-nearest issuer identity to the
+/// strongest supported Name-policy reviewed-server path. This infallible
+/// nominal projection retains that complete non-copyable binding and accepts
+/// no detached evidence.
+///
+/// This performs no validation, parsing, cryptography, clock acquisition, I/O,
+/// or other external effect. It stops before responder DNS, no-check, responder
+/// or intermediate revocation, complete Name/path or revocation validation,
+/// TLS, HTTP, OAuth readiness, or network authority.
+pub const fn reify_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_path<
+    Revocation,
+    StrongNamePolicyPath,
+>(
+    strong_binding: BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        Revocation,
+        StrongNamePolicyPath,
+    >,
+) -> BoundX509OcspReviewedResponderPath<
+    BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        Revocation,
+        StrongNamePolicyPath,
+    >,
+> {
+    BoundX509OcspReviewedResponderPath {
+        reviewed_server_revocation: strong_binding,
+    }
+}
+
 /// Stable payload-free selected-anchor DNS-policy failure categories.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum X509OcspReviewedResponderAnchorDnsPolicyErrorKind {
