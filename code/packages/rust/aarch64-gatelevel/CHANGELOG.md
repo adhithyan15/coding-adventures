@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed the register file with `iter_mut().enumerate()`; behaviour unchanged.
+
 ## 0.1.0
 
 - Add the exact 526,469-DFF gate-level partner for Spec 07v.

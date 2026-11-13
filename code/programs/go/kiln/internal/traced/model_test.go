@@ -1,0 +1,1025 @@
+package traced
+
+import (
+	"debug/elf"
+	"encoding/binary"
+	"io/fs"
+	"sort"
+	"strings"
+	"testing"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
+)
+
+// A DIFFERENTIAL FUZZER for the classifier.
+//
+// An in-memory filesystem MODEL executes random operations with Linux-like
+// semantics, so it knows the TRUTH: which path each call really resolved to and
+// which symlinks it really crossed.  It emits the trace events a tracer would
+// see (true results, -y paths) and hands its FINAL state to the classifier as
+// the post-run disk.
+//
+// What it models:
+//
+//   - two processes whose calls overlap in time: each operation has an
+//     interval [start, end], its effect lands at a random point inside it, and
+//     events are emitted in completion order, a long call carrying the line of
+//     its "<unfinished ...>" marker as StartLine;
+//   - one or two BUILD steps, each with its own trace, over one filesystem;
+//   - randomised Root (also beneath HOME, as on hosted runners), HOME and TMPDIR;
+//   - tracked files and links, pre-existing UNTRACKED leftovers (file,
+//     directory, link), host files, and files whose contents change so a later
+//     exec reads different bytes;
+//   - mkdir, symlink, rename, RENAME_EXCHANGE, link, unlink, rmdir, open (read,
+//     truncate+create, exclusive create, create, truncate only), stat, lstat,
+//     chdir, exec, directory listings and dirfd-relative lookups.
+//
+// The oracle (KILN04 sections 5.1, 5.2, 7): when the record carries NO reason,
+// every path the model really looked at must be the action's own or be covered
+// by an entry (pkg:, path: on a prefix, an untracked observation, list: for a
+// listing), every in-repository absence must appear in AbsentObservations,
+// and every write must lie under a write root.  A record with a reason is never
+// turned into a manifest, so it is always safe; the fuzzer hunts for records
+// WITHOUT reasons that miss something.
+
+type mnode struct {
+	kind   NodeKind
+	kids   map[string]*mnode
+	target string
+	data   []byte
+}
+
+func mdir() *mnode { return &mnode{kind: KindDir, kids: map[string]*mnode{}} }
+
+type frame struct {
+	n    *mnode
+	path string
+}
+
+type touch struct {
+	path   string
+	create bool
+	own    bool
+	absent bool
+	list   bool
+	write  bool
+	wonly  bool // a write record only: coverage is judged by the lookup's own touch
+}
+
+type mproc struct{ cwdPath, cwdExpr string }
+
+type model struct {
+	root, home, tmp string
+	top             *mnode
+	procs           map[int]*mproc
+	own             map[string]bool
+	touches         []touch
+	dirs            []string // candidate directory descriptors
+	opStart         int      // index of the first touch of the current operation
+}
+
+func (m *model) mkpath(abs string, n *mnode) {
+	parts := splitPath(abs)
+	cur := m.top
+	for i, p := range parts {
+		if i == len(parts)-1 {
+			cur.kids[p] = n
+			return
+		}
+		next := cur.kids[p]
+		if next == nil {
+			next = mdir()
+			cur.kids[p] = next
+		}
+		cur = next
+	}
+}
+
+// byPath finds a node by an already-resolved path (no link is followed).
+func (m *model) byPath(abs string) *mnode {
+	cur := m.top
+	for _, p := range splitPath(abs) {
+		if cur.kind != KindDir {
+			return nil
+		}
+		cur = cur.kids[p]
+		if cur == nil {
+			return nil
+		}
+	}
+	return cur
+}
+
+type mres struct {
+	node   *mnode
+	parent *mnode
+	name   string
+	final  string
+	stop   string
+	errno  string
+	links  []string
+	isDot  bool
+}
+
+func (m *model) framesAt(path string) []frame {
+	fr := []frame{{m.top, ""}}
+	cur := m.top
+	p := ""
+	for _, c := range splitPath(path) {
+		cur = cur.kids[c]
+		if cur == nil {
+			break
+		}
+		p += "/" + c
+		fr = append(fr, frame{cur, p})
+	}
+	return fr
+}
+
+func pathOrRoot(p string) string {
+	if p == "" {
+		return "/"
+	}
+	return p
+}
+
+// resolve is the model's namei, from the directory at path `from` for a
+// relative p.
+func (m *model) resolve(p, from string, follow bool) mres {
+	var r mres
+	if p == "" {
+		r.errno = "ENOENT"
+		return r
+	}
+	trailing := strings.HasSuffix(p, "/")
+	if trailing {
+		follow = true
+	}
+	var stack []frame
+	if strings.HasPrefix(p, "/") {
+		stack = []frame{{m.top, ""}}
+	} else {
+		stack = m.framesAt(from)
+	}
+	queue := reverse(splitPath(p))
+	hops := 0
+	for len(queue) > 0 {
+		name := queue[len(queue)-1]
+		queue = queue[:len(queue)-1]
+		last := len(queue) == 0
+		top := stack[len(stack)-1]
+		switch name {
+		case ".":
+			if last {
+				r.isDot = true
+				r.node, r.final = top.n, pathOrRoot(top.path)
+			}
+			continue
+		case "..":
+			if len(stack) > 1 {
+				stack = stack[:len(stack)-1]
+			}
+			top = stack[len(stack)-1]
+			if last {
+				r.isDot = true
+				r.node, r.final = top.n, pathOrRoot(top.path)
+			}
+			continue
+		}
+		child := top.n.kids[name]
+		full := top.path + "/" + name
+		if child == nil {
+			r.parent, r.name, r.final = top.n, name, full
+			r.errno = "ENOENT"
+			if !last {
+				r.stop = full
+			}
+			return r
+		}
+		switch child.kind {
+		case KindLink:
+			if last && !follow {
+				r.node, r.parent, r.name, r.final = child, top.n, name, full
+				return r
+			}
+			hops++
+			if hops > maxHops {
+				r.errno, r.stop = "ELOOP", full
+				return r
+			}
+			r.links = append(r.links, full)
+			if strings.HasPrefix(child.target, "/") {
+				stack = []frame{{m.top, ""}}
+			}
+			queue = append(queue, reverse(splitPath(child.target))...)
+			if strings.HasSuffix(child.target, "/") && last {
+				trailing = true
+			}
+		case KindDir:
+			stack = append(stack, frame{child, full})
+			if last {
+				r.node, r.parent, r.name, r.final = child, top.n, name, full
+				return r
+			}
+		default:
+			if !last || trailing {
+				r.errno, r.stop = "ENOTDIR", full
+				r.final = full
+				return r
+			}
+			r.node, r.parent, r.name, r.final = child, top.n, name, full
+			return r
+		}
+	}
+	top := stack[len(stack)-1]
+	r.node, r.final = top.n, pathOrRoot(top.path)
+	if len(stack) > 1 {
+		r.parent = stack[len(stack)-2].n
+	}
+	return r
+}
+
+func (m *model) owned(p string) bool {
+	for q := p; q != ""; q = parentOf(q) {
+		if m.own[q] {
+			return true
+		}
+	}
+	return false
+}
+
+// disown drops ownership of p and everything beneath it.
+func (m *model) disown(p string) {
+	for q := range m.own {
+		if q == p || strings.HasPrefix(q, p+"/") {
+			delete(m.own, q)
+		}
+	}
+}
+
+func (m *model) add(t touch) {
+	t.own = m.owned(t.path)
+	m.touches = append(m.touches, t)
+}
+
+// look records what a lookup really looked at.
+func (m *model) look(r mres, create, write, absent bool) {
+	for _, l := range r.links {
+		m.add(touch{path: l})
+	}
+	switch {
+	case r.stop != "":
+		m.add(touch{path: r.stop, absent: r.errno == "ENOENT"})
+	case r.final != "":
+		m.add(touch{path: r.final, create: create, write: write, absent: absent || r.errno == "ENOENT"})
+	}
+}
+
+func (m *model) readOnlyHost(p string) bool {
+	for _, d := range []string{"/usr", "/etc", "/lib64", "/bin"} {
+		if p == d || strings.HasPrefix(p, d+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *model) underCwd(abs string) bool {
+	for _, pr := range m.procs {
+		if abs != "" && (pr.cwdPath == abs || strings.HasPrefix(pr.cwdPath, abs+"/")) {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *model) event(pid int, e trace.Event, errno string) trace.Event {
+	if errno != "" && errno != "ENOENT" {
+		// The call failed for another reason: what it found at a name it never
+		// got to judge is not an observation of absence.
+		for i := m.opStart; i < len(m.touches); i++ {
+			m.touches[i].absent = false
+		}
+	}
+	e.Cwd = m.procs[pid].cwdExpr
+	e.Pid = pid
+	e.Result = trace.Result{OK: errno == "", Errno: errno}
+	return e
+}
+
+func (m *model) doStat(pid int, p string, follow bool) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, follow)
+	m.look(r, false, false, false)
+	sys := "stat"
+	if !follow {
+		sys = "lstat"
+	}
+	return []trace.Event{m.event(pid, base(sys, trace.KindMetadata, p), r.errno)}
+}
+
+func (m *model) doDirStat(pid int, dir, p string) []trace.Event {
+	d := m.byPath(dir)
+	if d == nil || d.kind != KindDir || strings.HasPrefix(p, "/") {
+		return m.doStat(pid, p, true)
+	}
+	r := m.resolve(p, dir, true)
+	m.look(r, false, false, false)
+	e := base("newfstatat", trace.KindMetadata, p)
+	e.DirfdPath = dir
+	e.Flags = "0"
+	return []trace.Event{m.event(pid, e, r.errno)}
+}
+
+func (m *model) doChdir(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	m.look(r, false, false, false)
+	errno := r.errno
+	if errno == "" && (r.node == nil || r.node.kind != KindDir) {
+		errno = "ENOTDIR"
+	}
+	e := m.event(pid, base("chdir", trace.KindDirectory, p), errno)
+	if errno == "" {
+		pr.cwdPath = r.final
+		if pr.cwdPath == "/" {
+			pr.cwdPath = ""
+		}
+		if strings.HasPrefix(p, "/") {
+			pr.cwdExpr = p
+		} else {
+			pr.cwdExpr = strings.TrimRight(pr.cwdExpr, "/") + "/" + p
+		}
+	}
+	return []trace.Event{e}
+}
+
+func (m *model) doMkdirLike(pid int, sys, p, target string) []trace.Event {
+	pr := m.procs[pid]
+	orig := p
+	if sys == "mkdir" {
+		p = stripSlashes(p)
+	}
+	r := m.resolve(p, pr.cwdPath, false)
+	create := r.errno == "ENOENT" && r.stop == "" && !r.isDot
+	m.look(r, create, false, false)
+	errno := r.errno
+	switch {
+	case errno == "" && r.node != nil:
+		errno = "EEXIST"
+	case errno == "" && r.node == nil:
+		errno = "EINVAL"
+	}
+	if sys == "symlink" && strings.HasSuffix(p, "/") && errno != "" {
+		errno = "ENOENT"
+	}
+	if errno == "ENOENT" && create && !(sys == "symlink" && strings.HasSuffix(p, "/")) {
+		if m.readOnlyHost(r.final) {
+			errno = "EROFS"
+		} else {
+			errno = ""
+			n := mdir()
+			if sys == "symlink" {
+				n = &mnode{kind: KindLink, target: target}
+			}
+			r.parent.kids[r.name] = n
+			m.add(touch{path: r.final, write: true, wonly: true})
+			m.own[r.final] = true
+		}
+	}
+	e := base(sys, trace.KindWrite, orig)
+	e.Target = target
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+func (m *model) doUnlink(pid int, sys, p string) []trace.Event {
+	pr := m.procs[pid]
+	orig := p
+	if sys == "rmdir" {
+		p = stripSlashes(p)
+	}
+	r := m.resolve(p, pr.cwdPath, false)
+	m.look(r, false, false, false)
+	errno := r.errno
+	if errno == "" {
+		switch {
+		case r.isDot || r.node == nil || r.parent == nil:
+			errno = "EINVAL"
+		case m.readOnlyHost(r.final):
+			errno = "EROFS"
+		case sys == "unlink" && r.node.kind == KindDir:
+			errno = "EISDIR"
+		case sys == "rmdir" && r.node.kind != KindDir:
+			errno = "ENOTDIR"
+		case sys == "rmdir" && len(r.node.kids) > 0:
+			errno = "ENOTEMPTY"
+		case sys == "rmdir" && m.underCwd(r.final):
+			errno = "EBUSY"
+		}
+	}
+	if errno == "" {
+		delete(r.parent.kids, r.name)
+		m.add(touch{path: r.final, write: true, wonly: true})
+		m.disown(r.final)
+	}
+	return []trace.Event{m.event(pid, base(sys, trace.KindWrite, orig), errno)}
+}
+
+func (m *model) doRenameLink(pid int, sys, a, b string, exchange bool) []trace.Event {
+	pr := m.procs[pid]
+	src := m.resolve(a, pr.cwdPath, false)
+	dst := m.resolve(b, pr.cwdPath, false)
+	m.look(src, false, false, false)
+	m.look(dst, true, false, false)
+	errno := ""
+	switch {
+	case src.errno != "":
+		errno = src.errno
+	case dst.errno != "" && dst.errno != "ENOENT":
+		errno = dst.errno
+	case dst.errno == "ENOENT" && dst.stop != "":
+		errno = "ENOENT"
+	case src.isDot || dst.isDot || src.node == nil || src.parent == nil:
+		errno = "EINVAL"
+	case m.readOnlyHost(src.final) || m.readOnlyHost(dst.final):
+		errno = "EROFS"
+	case exchange:
+		if dst.node == nil {
+			errno = "ENOENT"
+		} else if m.underCwd(src.final) || m.underCwd(dst.final) ||
+			strings.HasPrefix(dst.final, src.final+"/") || strings.HasPrefix(src.final, dst.final+"/") {
+			errno = "EBUSY"
+		}
+	case sys == "link" && src.node.kind == KindDir:
+		errno = "EPERM"
+	case sys == "link" && dst.node != nil:
+		errno = "EEXIST"
+	case sys == "rename":
+		switch {
+		case m.underCwd(src.final):
+			errno = "EBUSY"
+		case src.node.kind == KindDir && (dst.final == src.final || strings.HasPrefix(dst.final, src.final+"/")):
+			errno = "EINVAL"
+		case dst.node != nil && src.node == dst.node:
+			errno = "NOOP"
+		case dst.node != nil && src.node.kind == KindDir && dst.node.kind != KindDir:
+			errno = "ENOTDIR"
+		case dst.node != nil && src.node.kind != KindDir && dst.node.kind == KindDir:
+			errno = "EISDIR"
+		case dst.node != nil && dst.node.kind == KindDir && len(dst.node.kids) > 0:
+			errno = "ENOTEMPTY"
+		}
+	}
+	if errno == "" || errno == "NOOP" {
+		if strings.HasSuffix(a, "/") || strings.HasSuffix(b, "/") {
+			errno = "ENOTDIR"
+		}
+	}
+	e := base(sys, trace.KindWrite, a)
+	e.Path2 = b
+	if exchange {
+		e.Syscall, e.Flags = "renameat2", "RENAME_EXCHANGE"
+	}
+	if errno == "NOOP" {
+		return []trace.Event{m.event(pid, e, "")}
+	}
+	if errno == "" {
+		m.add(touch{path: src.final, write: true, wonly: true})
+		m.add(touch{path: dst.final, write: true, wonly: true})
+		switch {
+		case exchange:
+			src.parent.kids[src.name], dst.parent.kids[dst.name] = dst.node, src.node
+			m.disown(src.final)
+			m.disown(dst.final)
+		default:
+			if sys == "rename" {
+				delete(src.parent.kids, src.name)
+				m.disown(src.final)
+			}
+			dst.parent.kids[dst.name] = src.node
+			m.own[dst.final] = true
+		}
+	}
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+var contents = [][]byte{nil, nil, nil, []byte("garbage")}
+
+func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
+	pr := m.procs[pid]
+	flags := []string{"O_RDONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_WRONLY|O_CREAT|O_EXCL", "O_WRONLY|O_CREAT", "O_WRONLY|O_TRUNC"}[mode]
+	create := mode == 1 || mode == 2 || mode == 3
+	writes := mode != 0
+	r := m.resolve(p, pr.cwdPath, mode != 2)
+	m.look(r, create && r.stop == "", false, false)
+	errno := r.errno
+	final := r.final
+	made := false
+	switch {
+	case errno == "" && r.node != nil && r.node.kind == KindLink:
+		errno = "ELOOP"
+	case errno == "" && r.node == nil:
+		errno = "EINVAL"
+	case errno == "" && mode == 2:
+		errno = "EEXIST"
+	case errno == "" && r.node.kind == KindDir && writes:
+		errno = "EISDIR"
+	case errno == "" && writes && m.readOnlyHost(final):
+		errno = "EROFS"
+	case errno == "ENOENT" && r.stop == "" && create && strings.HasSuffix(p, "/"):
+		errno = "EISDIR"
+	case errno == "ENOENT" && r.stop == "" && create && !r.isDot:
+		if m.readOnlyHost(final) {
+			errno = "EROFS"
+		} else {
+			errno = ""
+			made = true
+			r.parent.kids[r.name] = &mnode{kind: KindFile}
+			m.own[final] = true
+			r.node = r.parent.kids[r.name]
+		}
+	}
+	if errno == "" && writes {
+		m.add(touch{path: final, write: true, wonly: true})
+		if (mode == 1 || mode == 4) && !made && r.node != nil && r.node.kind == KindFile {
+			r.node.data = nil
+		}
+		if r.node != nil && r.node.kind == KindFile && content >= 0 {
+			switch content % 4 {
+			case 0:
+				r.node.data = buildELFStatic()
+			case 1:
+				r.node.data = []byte("#!" + m.root + "/code/p/a/f1\n")
+			case 2:
+				r.node.data = []byte("#!" + m.root + "/code/p/b/f2\n")
+			default:
+				r.node.data = []byte("garbage")
+			}
+		}
+	}
+	e := base("openat", trace.KindOpen, p)
+	e.Flags = flags
+	if errno == "" {
+		e.ReturnFDPath = final
+	}
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+func (m *model) doList(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	if r.errno != "" || r.node == nil || r.node.kind != KindDir {
+		return nil
+	}
+	m.add(touch{path: r.final, list: true})
+	e := base("getdents64", trace.KindListing, r.final)
+	return []trace.Event{m.event(pid, e, "")}
+}
+
+// execChain follows the kernel's loading chain of an exec.
+func (m *model) execChain(pid int, p string, depth int) string {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	m.look(r, false, false, false)
+	if r.errno != "" {
+		return r.errno
+	}
+	if r.node == nil || r.node.kind != KindFile {
+		return "EACCES"
+	}
+	switch {
+	case strings.HasPrefix(string(r.node.data), "#!"):
+		if depth >= 5 {
+			return "ELOOP"
+		}
+		interp, ok := shebangInterpreter(r.node.data)
+		if !ok {
+			return "ENOEXEC"
+		}
+		return m.execChain(pid, interp, depth+1)
+	case len(r.node.data) >= 4 && string(r.node.data[:4]) == elf.ELFMAG:
+		return ""
+	}
+	return "ENOEXEC"
+}
+
+func (m *model) doExec(pid int, p string) []trace.Event {
+	errno := m.execChain(pid, p, 0)
+	e := base("execve", trace.KindProcess, p)
+	e.Argv = []string{"x"}
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+// modelFS is the model's final state as the post-run disk.
+type modelFS struct{ m *model }
+
+func (f modelFS) Lstat(p string) (FileInfo, error) {
+	n := f.m.byPath(p)
+	if n == nil {
+		return FileInfo{}, fs.ErrNotExist
+	}
+	return FileInfo{Kind: n.kind, Ctime: oldCtime}, nil
+}
+
+func (f modelFS) Readlink(p string) (string, error) {
+	n := f.m.byPath(p)
+	if n == nil || n.kind != KindLink {
+		return "", fs.ErrNotExist
+	}
+	return n.target, nil
+}
+
+func (f modelFS) ReadHead(p string, n int) ([]byte, error) {
+	x := f.m.byPath(p)
+	if x == nil || x.kind != KindFile {
+		return nil, fs.ErrNotExist
+	}
+	if len(x.data) > n {
+		return x.data[:n], nil
+	}
+	return x.data, nil
+}
+
+var (
+	rootChoices = []func(home string) string{
+		func(string) string { return "/w/repo" },
+		func(home string) string { return home + "/work/repo" },
+	}
+	homeChoices = []string{"/home/runner", "/hh"}
+	tmpChoices  = []string{"/tmp/kiln-1", "/tmp/t2"}
+)
+
+// newModel seeds the repository, leftovers, image files and scratch
+// directories; it returns the tracked tree of the initial state.
+func newModel(root, home, tmp string) (*model, *memTree) {
+	m := &model{root: root, home: home, tmp: tmp, top: mdir(), own: map[string]bool{},
+		procs: map[int]*mproc{1: {root, root}, 2: {root, root}}}
+	tree := newMemTree()
+	elfStatic := buildELFStatic()
+	tracked := func(rel string, n *mnode) {
+		m.mkpath(root+"/"+rel, n)
+		if n.kind == KindLink {
+			tree.link(rel, n.target)
+		} else {
+			tree.add(rel, Node{Kind: KindFile}, string(n.data))
+		}
+	}
+	tracked("code/p/a/f1", &mnode{kind: KindFile, data: elfStatic})
+	tracked("code/p/a/lnk", &mnode{kind: KindLink, target: "../b"})
+	tracked("code/p/b/f2", &mnode{kind: KindFile, data: []byte("#!" + root + "/code/p/a/f1\n")})
+	tracked("code/p/b/g", &mnode{kind: KindFile, data: []byte("data")})
+	tracked("code/scripts/s.sh", &mnode{kind: KindFile, data: []byte("#!" + root + "/code/p/b/f2\n")})
+	tracked("go.work", &mnode{kind: KindFile, data: []byte("go 1.26\n")})
+	// Pre-existing untracked leftovers of earlier actions.
+	m.mkpath(root+"/code/p/a/left.txt", &mnode{kind: KindFile, data: elfStatic})
+	m.mkpath(root+"/code/p/a/leftdir/f", &mnode{kind: KindFile})
+	m.mkpath(root+"/code/p/a/leftlnk", &mnode{kind: KindLink, target: "../b"})
+	m.mkpath(root+"/junk", &mnode{kind: KindFile})
+	m.mkpath("/usr/bin/sh", &mnode{kind: KindFile, data: buildELF(loader, elf.ELFCLASS64, binary.LittleEndian)})
+	m.mkpath(loader, &mnode{kind: KindFile, data: []byte("ld")})
+	m.mkpath("/usr/lib/x", &mnode{kind: KindFile})
+	m.mkpath("/etc/x", &mnode{kind: KindFile})
+	m.mkpath(tmp+"/.keep", &mnode{kind: KindFile})
+	delete(m.byPath(tmp).kids, ".keep")
+	m.mkpath(home+"/.keep", &mnode{kind: KindFile})
+	delete(m.byPath(home).kids, ".keep")
+	m.dirs = []string{root, root + "/code", root + "/code/p/a", root + "/code/p/b", tmp, home, "/etc"}
+	return m, tree
+}
+
+var modelNames = []string{"code", "p", "a", "b", "f1", "f2", "g", "lnk", "L", "M", "n", "x", "y", "..", ".", "scripts",
+	"s.sh", "go.work", "new", "left.txt", "leftdir", "leftlnk", "junk", "d1", "d2"}
+
+// modelPath builds a path from bytes.
+func (m *model) path(data []byte, i *int) string {
+	next := func() byte {
+		b := data[*i%len(data)]
+		*i++
+		return b
+	}
+	var prefix string
+	switch next() % 9 {
+	case 0, 1:
+		prefix = m.root + "/"
+	case 2:
+		prefix = m.tmp + "/"
+	case 3:
+		prefix = parentOf(m.root) + "/"
+	case 4:
+		prefix = m.home + "/"
+	case 5:
+		prefix = "/usr/lib/"
+	case 6:
+		prefix = "/etc/"
+	}
+	n := int(next()%4) + 1
+	parts := make([]string, n)
+	for k := range parts {
+		parts[k] = modelNames[int(next())%len(modelNames)]
+	}
+	p := prefix + strings.Join(parts, "/")
+	if next()%8 == 0 {
+		p += "/"
+	}
+	return p
+}
+
+type mop struct {
+	pid                int
+	start, effect, end int
+	run                func() []trace.Event
+	events             []trace.Event
+}
+
+// runStep schedules, executes and serialises one BUILD step's operations.
+func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
+	var ops []*mop
+	free := map[int]int{}
+	for k := 0; k < count && *i < len(data); k++ {
+		kind := int(data[*i%len(data)]) % 18
+		*i++
+		pid := 1 + int(data[*i%len(data)])%2
+		*i++
+		dur := int(data[*i%len(data)]) % 5
+		*i++
+		off := int(data[*i%len(data)]) % 3
+		*i++
+		eff := int(data[*i%len(data)]) % (dur + 1)
+		*i++
+		p := m.path(data, i)
+		start := free[pid] + off
+		end := start + dur
+		free[pid] = end + 1
+		o := &mop{pid: pid, start: start, effect: start + eff, end: end}
+		switch kind {
+		case 0:
+			o.run = func() []trace.Event { return m.doMkdirLike(pid, "mkdir", p, "") }
+		case 1:
+			t := m.path(data, i)
+			o.run = func() []trace.Event { return m.doMkdirLike(pid, "symlink", p, t) }
+		case 2, 3, 4:
+			q := m.path(data, i)
+			o.run = func() []trace.Event {
+				return m.doRenameLink(pid, map[int]string{2: "rename", 3: "rename", 4: "link"}[kind], p, q, kind == 3)
+			}
+		case 5:
+			o.run = func() []trace.Event { return m.doUnlink(pid, "unlink", p) }
+		case 6:
+			o.run = func() []trace.Event { return m.doUnlink(pid, "rmdir", p) }
+		case 7:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 0, -1) }
+		case 8:
+			c := int(data[*i%len(data)])
+			*i++
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 1, c) }
+		case 9:
+			c := int(data[*i%len(data)])
+			*i++
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 2, c) }
+		case 10:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 3, -1) }
+		case 11:
+			c := int(data[*i%len(data)])
+			*i++
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
+		case 12:
+			o.run = func() []trace.Event { return m.doStat(pid, p, true) }
+		case 13:
+			o.run = func() []trace.Event { return m.doStat(pid, p, false) }
+		case 14:
+			o.run = func() []trace.Event { return m.doChdir(pid, p) }
+		case 15:
+			o.run = func() []trace.Event { return m.doExec(pid, p) }
+		case 16:
+			o.run = func() []trace.Event { return m.doList(pid, p) }
+		default:
+			d := m.dirs[int(data[*i%len(data)])%len(m.dirs)]
+			*i++
+			rel := m.path(data, i)
+			if strings.HasPrefix(rel, "/") {
+				rel = strings.TrimLeft(rel, "/")
+			}
+			o.run = func() []trace.Event { return m.doDirStat(pid, d, rel) }
+		}
+		ops = append(ops, o)
+	}
+	// Effects land in effect-time order.
+	order := make([]int, len(ops))
+	for k := range order {
+		order[k] = k
+	}
+	sort.SliceStable(order, func(a, b int) bool { return ops[order[a]].effect < ops[order[b]].effect })
+	for _, k := range order {
+		m.opStart = len(m.touches)
+		ops[k].events = ops[k].run()
+	}
+	// Lines: a long call is split into an "<unfinished ...>" line and a
+	// "resumed" line.
+	type entry struct {
+		tick  int
+		end   bool
+		op    int
+		start bool
+	}
+	var es []entry
+	for k, o := range ops {
+		if len(o.events) == 0 {
+			continue
+		}
+		if o.end > o.start {
+			es = append(es, entry{o.start, false, k, true})
+		}
+		es = append(es, entry{o.end, true, k, false})
+	}
+	sort.SliceStable(es, func(a, b int) bool {
+		if es[a].tick != es[b].tick {
+			return es[a].tick < es[b].tick
+		}
+		return !es[a].end && es[b].end
+	})
+	startLine := map[int]int{}
+	endLine := map[int]int{}
+	for ln, e := range es {
+		if e.end {
+			endLine[e.op] = ln + 2
+		} else {
+			startLine[e.op] = ln + 2
+		}
+	}
+	sh := execve("/usr/bin/sh", "sh", "-c", "step")
+	sh.Pid, sh.Line, sh.StartLine, sh.Cwd = 1, 1, 1, m.root
+	tr := &trace.Trace{
+		RootPid: 1,
+		Procs:   map[int]*trace.Process{1: {Pid: 1, Exit: &trace.Exit{Pid: 1}}, 2: {Pid: 2, Parent: 1, Exit: &trace.Exit{Pid: 2}}},
+		Exits:   []trace.Exit{{Pid: 2}, {Pid: 1}},
+	}
+	tr.Events = append(tr.Events, sh)
+	type placed struct {
+		e    trace.Event
+		line int
+	}
+	var ps []placed
+	for k, o := range ops {
+		for _, e := range o.events {
+			e.Line = endLine[k]
+			e.StartLine = e.Line
+			if s, ok := startLine[k]; ok {
+				e.StartLine = s
+			}
+			ps = append(ps, placed{e, e.Line})
+		}
+	}
+	sort.SliceStable(ps, func(a, b int) bool { return ps[a].line < ps[b].line })
+	for _, p := range ps {
+		tr.Events = append(tr.Events, p.e)
+	}
+	return tr
+}
+
+// buildModel runs the whole action from data.
+func buildModel(data []byte) (m *model, tree *memTree, steps []*trace.Trace) {
+	b := data[0]
+	home := homeChoices[int(b>>1)%2]
+	root := rootChoices[int(b)%2](home)
+	tmp := tmpChoices[int(b>>2)%2]
+	m, tree = newModel(root, home, tmp)
+	i := 1
+	total := 0
+	for i < len(data) && total < 48 {
+		n := 6 + int(data[i%len(data)])%12
+		i++
+		steps = append(steps, m.runStep(data, &i, n))
+		total += n
+		if len(steps) == 2 {
+			break
+		}
+	}
+	return m, tree, steps
+}
+
+func FuzzDifferential(f *testing.F) {
+	f.Add([]byte{0, 3, 1, 1, 0, 7, 0, 2, 1})
+	f.Add([]byte{1, 0, 2, 3, 4, 0, 5, 7, 0, 1, 2, 3})
+	f.Add([]byte{3, 5, 5, 5, 9, 2, 2, 2, 7, 6, 6, 6, 2, 1, 1, 1})
+	f.Add([]byte("mkdir symlink rename link unlink open stat chdir exec"))
+	f.Fuzz(func(t *testing.T, data []byte) {
+		if len(data) < 4 {
+			return
+		}
+		m, tree, steps := buildModel(data)
+		h := newHarness(t)
+		h.cfg.Root, h.cfg.Home, h.cfg.Tmpdir = m.root, m.home, m.tmp
+		h.cfg.Packages = NewPackageIndex([]string{"code/p/a", "code/p/b"})
+		h.cfg.Tree = tree
+		h.cfg.FS = modelFS{m}
+		recipe := make([]string, len(steps))
+		for i := range recipe {
+			recipe[i] = "step"
+		}
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
+		if err != nil {
+			// The action moved or removed the checkout's own directories: the
+			// post-run disk no longer shows a real Root, which is refused.
+			return
+		}
+		if len(rec.Reasons) > 0 {
+			return // a record with a reason is never trusted: always safe
+		}
+		check(t, m, tree, rec)
+	})
+}
+
+func inSet(set []string, v string) bool {
+	for _, s := range set {
+		if s == v {
+			return true
+		}
+	}
+	return false
+}
+
+func underAny(set []string, rel string) bool {
+	for _, s := range set {
+		if rel == s || strings.HasPrefix(rel, s+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
+	t.Helper()
+	fail := func(tc touch, what string) {
+		t.Fatalf("%s: looked at %s %+v\nroot %s home %s tmp %s\nentries %q absent %q untracked %q writes %q",
+			what, tc.path, tc, m.root, m.home, m.tmp, rec.Entries, rec.AbsentObservations, rec.UntrackedObservations, rec.Writes)
+	}
+	for _, tc := range m.touches {
+		if tc.path == "" || tc.path == m.root {
+			continue
+		}
+		rel, in := strings.CutPrefix(tc.path, m.root+"/")
+		if tc.wonly {
+			if in && !underAny(rec.Writes, rel) && !m.readOnlyHost(tc.path) {
+				fail(tc, "write not under a write root")
+			}
+			continue
+		}
+		if !in {
+			if tc.own || tc.create || tc.path == m.tmp || tc.path == m.home || m.readOnlyHost(tc.path) {
+				continue
+			}
+			fail(tc, "outside the repository, but the record has no reason")
+		}
+		if tc.write && !underAny(rec.Writes, rel) {
+			fail(tc, "write not under a write root")
+		}
+		if tc.own {
+			continue
+		}
+		if tc.list {
+			if !inSet(rec.Entries, "list:"+rel) {
+				fail(tc, "listing not covered")
+			}
+			continue
+		}
+		if !covered(rec, rel) {
+			fail(tc, "path not covered")
+		}
+		if tc.absent && tree.Stat(rel).Kind == KindAbsent && !underAny(rec.AbsentObservations, rel) {
+			// An absence is covered by an absent observation on a prefix.
+			ok := false
+			for _, a := range rec.AbsentObservations {
+				ok = ok || rel == a || strings.HasPrefix(rel, a+"/")
+			}
+			if !ok {
+				fail(tc, "absence not recorded")
+			}
+		}
+	}
+}
+
+func covered(rec *RawRecord, rel string) bool {
+	has := map[string]bool{}
+	for _, e := range rec.Entries {
+		has[e] = true
+	}
+	for _, u := range rec.UntrackedObservations {
+		if u == rel {
+			return true
+		}
+	}
+	ix := NewPackageIndex([]string{"code/p/a", "code/p/b"})
+	if q, ok := ix.Enclosing(rel); ok {
+		return has["pkg:"+q]
+	}
+	for p := rel; ; {
+		if has["path:"+p] {
+			return true
+		}
+		i := strings.LastIndexByte(p, '/')
+		if i < 0 {
+			return false
+		}
+		p = p[:i]
+	}
+}

@@ -3016,15 +3016,16 @@ impl Compiler {
                     .map(|token| token.value.clone())
             })
             .flatten();
-        let inside_standard_function = if let Some(name) = &call_name {
+        // A call to a user procedure, or to an unsupported standard function,
+        // disqualifies the whole expression; a supported standard-function
+        // call makes everything beneath it count as "inside" one.
+        if let Some(name) = &call_name {
             let target = self.resolve_procedure_identity(name);
             if self.proc_sigs.contains_key(&target) || !is_supported_standard_function(&target) {
                 return false;
             }
-            true
-        } else {
-            inside_standard_function
-        };
+        }
+        let inside_standard_function = inside_standard_function || call_name.is_some();
         if direct_tokens(node)
             .into_iter()
             .filter(|token| {

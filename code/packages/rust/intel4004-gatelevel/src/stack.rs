@@ -74,9 +74,9 @@ impl HardwareStack {
 
     /// Reset all stack levels to 0 and pointer to 0.
     pub fn reset(&mut self) {
-        for i in 0..3 {
-            register(&[0; 12], 0, &mut self.levels[i]);
-            register(&[0; 12], 1, &mut self.levels[i]);
+        for level in self.levels.iter_mut().take(3) {
+            register(&[0; 12], 0, level);
+            register(&[0; 12], 1, level);
         }
         self.pointer.reset();
     }
@@ -104,8 +104,8 @@ impl HardwareStack {
     /// Read all stack level values (for inspection only).
     pub fn read_levels(&self) -> Vec<u16> {
         let mut values = Vec::with_capacity(3);
-        for i in 0..3 {
-            let mut state = self.levels[i].clone();
+        for level in self.levels.iter().take(3) {
+            let mut state = level.clone();
             let output = register(&[0; 12], 0, &mut state);
             values.push(bits_to_int(&output));
         }
