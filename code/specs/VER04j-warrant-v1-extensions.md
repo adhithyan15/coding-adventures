@@ -1475,6 +1475,24 @@ The numbering continues from 14.1.
     `Vec::with_capacity` from the header) and its fix.  It is synthetic: no `lz*`
     API is touched (open question 6 stays with the owner).
 
+53. **Real adopter (`lzw`).** The first document with `output` rows on a real package
+    (`lzw.warrant`: `compress` `output <= 3 * len + 16`, `decompress` `output <=
+    imin(16777216, 32768 * len)`, each with a `heap` row).  Two findings about the
+    section 6 prediction.  (a) "No sound ratio exists" was too strong: a 16-bit code
+    stands for at most 65,279 bytes, so 32,768 is a sound ratio, but it allows 2 GB
+    from 64 KB and constrains nothing, which is the finding; the document is
+    satisfiable only because the crate also caps delivered output at 16 MiB, an
+    absolute constant, so the `max_output` parameter was not needed to state it
+    (it is still the better API, LP-003).  (b) The `heap` row, not the `output` row,
+    exposed the quadratic dictionary: observed peak was 3.4 times the output.  Two
+    generator limits met on the way, both recorded as lessons: a `model` may not
+    call an operation (W0301), and `take`, `drop`, `slice`, `replicate` and
+    `to_bytes` are checked and evaluated but not yet emitted by the Rust generator
+    (W0701), so streams are built from hex literals and `concat`, and a bomb of
+    285 KB is a ten-fold `concat` doubling of a 279-byte unit.  The observer's
+    64 MiB cap is what makes the pre-fix bomb examples fail instead of exhausting
+    memory.
+
 ### 14.3 WX-E (external known-answer tables)
 
 38. **Gating and syntax.** In a v0 document `vectors` is W0101.  `PATH_LITERAL` is

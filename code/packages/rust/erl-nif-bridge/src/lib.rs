@@ -542,8 +542,6 @@ extern "C" {
         term: ERL_NIF_TERM,
         pid: *mut ErlNifPid,
     ) -> c_int;
-    /// Build a term from a pid (for sending pids back to Elixir code).
-    pub fn enif_make_pid(env: ErlNifEnv, pid: *const ErlNifPid) -> ERL_NIF_TERM;
     /// Send `msg` (allocated in `msg_env`) to `to_pid`. Returns 1 on
     /// success, 0 if the destination process is dead.
     ///
@@ -638,6 +636,24 @@ pub const ERL_NIF_MAP_ITERATOR_FIRST: c_int = 1;
 #[derive(Clone, Copy)]
 pub struct ErlNifPid {
     pub pid: ERL_NIF_TERM,
+}
+
+/// Build a term from a pid (for sending pids back to Elixir code).
+///
+/// `enif_make_pid` is a header macro (in the OTP 25 and 27 `erl_nif_api_funcs.h`), not an exported
+/// function: `#define enif_make_pid(ENV, PID) ((const ERL_NIF_TERM)((PID)->pid))`.
+/// It used to be declared in the `extern "C"` block above, so a NIF that called it
+/// failed to load with `undefined symbol: enif_make_pid`. (Windows gets the same
+/// definition from `win_dyn`.)
+///
+/// # Safety
+///
+/// `pid` must point to a valid `ErlNifPid` (from `enif_self` or
+/// `enif_get_local_pid`).
+#[cfg(not(windows))]
+#[inline]
+pub unsafe fn enif_make_pid(_env: ErlNifEnv, pid: *const ErlNifPid) -> ERL_NIF_TERM {
+    (*pid).pid
 }
 
 // ---------------------------------------------------------------------------

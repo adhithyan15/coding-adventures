@@ -75,6 +75,33 @@ pub const INITIAL_CODE_SIZE: u8 = 9;
 /// `next_code` would exceed 65 535 the encoder emits CLEAR_CODE and resets.
 pub const MAX_CODE_SIZE: u8 = 16;
 
+/// The most bytes [`decompress`] will ever deliver: 16 MiB.
+///
+/// # Why a cap exists (SEC-002)
+///
+/// LZW has no upper bound on how much a short stream can expand to.  The code
+/// for "the previous string plus its own first byte" (the *tricky token*, see
+/// [`decompress`]) makes the dictionary entry grow by one byte per code, so `k`
+/// codes expand to about `k * k / 2` bytes: a 13 KB stream is 32 MiB, a 128 KB
+/// one is two gigabytes.  The header's `original_length` cannot be trusted to
+/// stop that, because the attacker writes it.  This is a *decompression bomb*
+/// (CWE-409).
+///
+/// With no `max_output` parameter in the API (adding one is a breaking change
+/// across every port, backlog LP-003), the only fail-closed defence that needs
+/// no API change is an absolute cap: `decompress` returns `Err` instead of
+/// delivering more than this many bytes.  Only *delivered* bytes count, so a
+/// header that asks for fewer bytes than the stream could produce still
+/// succeeds.
+///
+/// `compress` is not limited: it cannot return an error.  An input longer than
+/// this makes a stream that `decompress` rejects, which fails closed.
+///
+/// 16 MiB is also what the Warrant document's allocation observer can watch
+/// (its cap is 64 MiB per call and the decoder holds the output once plus the
+/// copy the harness makes).
+pub const MAX_OUTPUT_LEN: usize = 16 * 1024 * 1024;
+
 // ─── Bit writer ───────────────────────────────────────────────────────────────
 
 /// Accumulates variable-width codes into a byte stream, LSB-first.
@@ -182,13 +209,43 @@ impl<'a> BitReader<'a> {
 
 // ─── Encoder ─────────────────────────────────────────────────────────────────
 
+/// The `original_length` header field for an input of `len` bytes.
+///
+/// The header is a 32-bit big-endian integer, so an input of 4 GiB or more
+/// does not fit.  The first encoder wrote `len as u32`, which *wraps*: a
+/// 4 GiB + 10 byte input got the header `10`, and `decompress` then returned
+/// the first ten bytes and called it a success (SEC-002a).  Saturating at
+/// `u32::MAX` instead makes the header a lie that is at least a *loud* one:
+/// `u32::MAX` is far above [`MAX_OUTPUT_LEN`], so the decoder rejects the
+/// stream rather than silently truncating it.
+fn header_length(len: usize) -> u32 {
+    u32::try_from(len).unwrap_or(u32::MAX)
+}
+
 /// Compress bytes using LZW and return the CMP03 wire-format bytes.
 ///
-/// The encoder maintains a dictionary of `Vec<u8> → code` mappings, seeded
-/// with all 256 single-byte sequences. It greedily extends the current prefix
-/// `w` with each incoming byte until no dictionary entry matches, then emits
-/// the code for `w`, adds `w + [b]` to the dictionary, and restarts with
-/// `w = [b]`.
+/// The encoder greedily extends a current prefix `w` with each incoming byte
+/// until the dictionary has no entry for `w + [b]`, then emits the code for
+/// `w`, adds `w + [b]` to the dictionary, and restarts with `w = [b]`.  The
+/// dictionary is pre-seeded with all 256 single-byte sequences, whose codes are
+/// simply their byte values.
+///
+/// # How the dictionary is keyed (SEC-002a)
+///
+/// The textbook description keeps `w` as a byte string and looks it up whole.
+/// That hashes the entire prefix for every input byte, and on redundant input
+/// the prefix grows by a byte per emitted code, so the total cost is the sum of
+/// the prefix lengths (quadratic).  But every dictionary entry is by
+/// construction *some earlier entry plus one byte*, so the pair
+/// `(code of the prefix, next byte)` identifies it just as well:
+///
+/// ```text
+///   w = "AAA"  (code 260)        key (260, 'A')  ->  261   means  "AAAA"
+/// ```
+///
+/// The key is a constant 3 bytes however long `w` is, so each input byte costs
+/// one lookup.  The emitted codes are exactly the same; the encoder test suite
+/// compares the output byte for byte with the string-keyed algorithm.
 ///
 /// Code width starts at 9 bits and grows by 1 each time `next_code` crosses
 /// the next power-of-two boundary. When `next_code` would reach 2^16 the
@@ -202,13 +259,10 @@ impl<'a> BitReader<'a> {
 /// assert_eq!(decompress(&compress(b"ABABAB")).unwrap(), b"ABABAB");
 /// ```
 pub fn compress(data: &[u8]) -> Vec<u8> {
-    // ── Build encoder dictionary ──────────────────────────────────────────────
-    // Keys are byte sequences; values are assigned codes. Pre-seeded with
-    // all 256 single-byte sequences (the key LZW innovation over LZ78).
-    let mut dict: HashMap<Vec<u8>, u16> = HashMap::with_capacity(4096);
-    for b in 0u16..=255 {
-        dict.insert(vec![b as u8], b);
-    }
+    // ── The encoder dictionary ────────────────────────────────────────────────
+    // `(prefix code, next byte) -> code` for every multi-byte entry.  The 256
+    // single-byte entries need no storage: the code of the string `[b]` is `b`.
+    let mut dict: HashMap<(u16, u8), u16> = HashMap::with_capacity(4096);
 
     let mut next_code: u32 = INITIAL_NEXT_CODE as u32;
     let mut code_size: u8 = INITIAL_CODE_SIZE;
@@ -218,54 +272,54 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
     // initialise its state without out-of-band knowledge.
     writer.write(CLEAR_CODE, code_size);
 
-    // `w` holds the longest current prefix that is in the dictionary.
-    let mut w: Vec<u8> = Vec::new();
+    // `w` is the longest current prefix that is in the dictionary, held as its
+    // code.  `None` only before the first byte.
+    let mut w: Option<u16> = None;
 
     for &b in data {
-        w.push(b);
+        let Some(prefix) = w else {
+            // The first byte: the single-byte string `[b]`, whose code is `b`.
+            w = Some(b as u16);
+            continue;
+        };
 
-        if !dict.contains_key(&w) {
-            // `w` is not in the dict. Pop `b` — `w[..-1]` IS in the dict.
-            w.pop();
-            let code = dict[&w];
-            writer.write(code, code_size);
-
-            // Add `w + [b]` to the dictionary if below the 2^MAX_CODE_SIZE cap.
-            let max_entry = 1u32 << MAX_CODE_SIZE; // 65 536
-            if next_code < max_entry {
-                let mut new_entry = w.clone();
-                new_entry.push(b);
-                dict.insert(new_entry, next_code as u16);
-                next_code += 1;
-
-                // Grow code width when `next_code` crosses a power-of-two.
-                // Example: when next_code becomes 513, codes 0–512 fit in 9
-                // bits, but code 513 needs 10. We bump code_size when
-                // next_code > 2^code_size.
-                if next_code > (1u32 << code_size) && code_size < MAX_CODE_SIZE {
-                    code_size += 1;
-                }
-            } else {
-                // Dictionary is full — reset and start fresh. The decoder will
-                // mirror this reset when it reads CLEAR_CODE.
-                writer.write(CLEAR_CODE, code_size);
-                dict.clear();
-                for b2 in 0u16..=255 {
-                    dict.insert(vec![b2 as u8], b2);
-                }
-                next_code = INITIAL_NEXT_CODE as u32;
-                code_size = INITIAL_CODE_SIZE;
-            }
-
-            // Restart prefix with the unmatched byte.
-            w = vec![b];
+        if let Some(&code) = dict.get(&(prefix, b)) {
+            // `w + [b]` is still in the dictionary: keep extending the prefix.
+            w = Some(code);
+            continue;
         }
-        // If `w` IS still in the dict, continue extending the prefix.
+
+        // `w + [b]` is not in the dictionary: emit the code for `w`.
+        writer.write(prefix, code_size);
+
+        // Add `w + [b]` to the dictionary if below the 2^MAX_CODE_SIZE cap.
+        let max_entry = 1u32 << MAX_CODE_SIZE; // 65 536
+        if next_code < max_entry {
+            dict.insert((prefix, b), next_code as u16);
+            next_code += 1;
+
+            // Grow code width when `next_code` crosses a power-of-two.
+            // Example: when next_code becomes 513, codes 0–512 fit in 9
+            // bits, but code 513 needs 10. We bump code_size when
+            // next_code > 2^code_size.
+            if next_code > (1u32 << code_size) && code_size < MAX_CODE_SIZE {
+                code_size += 1;
+            }
+        } else {
+            // Dictionary is full — reset and start fresh. The decoder will
+            // mirror this reset when it reads CLEAR_CODE.
+            writer.write(CLEAR_CODE, code_size);
+            dict.clear();
+            next_code = INITIAL_NEXT_CODE as u32;
+            code_size = INITIAL_CODE_SIZE;
+        }
+
+        // Restart the prefix with the unmatched byte.
+        w = Some(b as u16);
     }
 
     // Flush the last prefix (the greedy loop always leaves a pending prefix).
-    if !w.is_empty() {
-        let code = dict[&w];
+    if let Some(code) = w {
         writer.write(code, code_size);
     }
 
@@ -274,21 +328,80 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 
     // ── Assemble CMP03 wire format ────────────────────────────────────────────
     let bit_bytes = writer.into_bytes();
-    let original_length = data.len() as u32;
 
     // The 4-byte big-endian header lets the decoder trim zero-padding
     // artefacts from the final partial byte of the bit stream.
     let mut out = Vec::with_capacity(4 + bit_bytes.len());
-    out.extend_from_slice(&original_length.to_be_bytes());
+    out.extend_from_slice(&header_length(data.len()).to_be_bytes());
     out.extend_from_slice(&bit_bytes);
     out
 }
 
 // ─── Decoder ─────────────────────────────────────────────────────────────────
 
+/// One decoder dictionary entry, stored as a link in a chain rather than as a
+/// string (SEC-002).
+///
+/// Every entry the decoder adds is *the previous entry plus one byte*, so a
+/// whole string is redundant: `(prefix code, last byte)` says it all.  The
+/// first decoder stored a `Vec<u8>` per entry, and because each entry is one
+/// byte longer than the one before it, a chain of `k` entries held `k²/2`
+/// bytes.  Linked entries cost a constant 8 bytes each, so the dictionary is
+/// at most 65 536 × 8 = 512 KiB whatever the stream says.
+///
+/// ```text
+///   code 65   = "A"              prefix -    first 'A'  last 'A'  len 1
+///   code 258  = "AA"             prefix 65   first 'A'  last 'A'  len 2
+///   code 259  = "AAA"            prefix 258  first 'A'  last 'A'  len 3
+/// ```
+#[derive(Clone, Copy)]
+struct Entry {
+    /// Code of the string without its last byte.  Meaningless when `len == 1`.
+    prefix: u16,
+    /// First byte of the string (the next entry copies it, see below).
+    first: u8,
+    /// Last byte of the string.
+    last: u8,
+    /// Length of the string, 1 to 65 279.  0 marks the two control slots.
+    len: u32,
+}
+
+impl Entry {
+    /// The entry of the single-byte string `[b]`.
+    fn single(b: u8) -> Entry {
+        Entry { prefix: 0, first: b, last: b, len: 1 }
+    }
+}
+
+/// Append the first `take` bytes of the string for `code` to `out`.
+///
+/// The string is only reachable from its *end* (each entry knows its last byte
+/// and its prefix), so the bytes are written back to front into space reserved
+/// in `out`, walking the prefix chain once.  `take` is at most the entry's
+/// length; when it is shorter (the declared length ends mid-entry) the
+/// surplus trailing entries are skipped first, because the first `take` bytes
+/// of a string are the string of the entry `len - take` links up the chain.
+///
+/// The work is `O(len)` per call, and each call delivers `take` bytes, so the
+/// total is proportional to the output (which [`MAX_OUTPUT_LEN`] caps), plus at
+/// most one skip of fewer than 65 279 links.
+fn expand(dict: &[Entry], code: usize, take: usize, out: &mut Vec<u8>) {
+    let mut cur = code;
+    for _ in take..dict[cur].len as usize {
+        cur = dict[cur].prefix as usize;
+    }
+    let start = out.len();
+    out.resize(start + take, 0);
+    for slot in out[start..].iter_mut().rev() {
+        *slot = dict[cur].last;
+        cur = dict[cur].prefix as usize;
+    }
+}
+
 /// Decompress CMP03 wire-format bytes back to the original data.
 ///
-/// Returns `Ok(Vec<u8>)` on success, `Err(String)` on malformed input.
+/// Returns `Ok(Vec<u8>)` on success, `Err(String)` on malformed input or when
+/// the stream would expand past [`MAX_OUTPUT_LEN`].
 ///
 /// The decoder maintains a dictionary indexed by code number. It is seeded
 /// with the same 256 single-byte sequences as the encoder. Each step:
@@ -311,6 +424,22 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 ///
 /// This works because any self-referential code must represent a sequence
 /// that starts and ends with the same byte as the previous match.
+///
+/// ## Hostile input
+///
+/// The stream is untrusted, and the header's `original_length` is the least
+/// trustworthy part of it.  Three rules keep a hostile stream cheap:
+///
+/// * nothing is sized from the header: the output grows only as bytes are
+///   actually delivered;
+/// * the decoder stops as soon as `original_length` bytes are out, so a small
+///   declared length bounds the work even for a stream that could say more;
+/// * delivering more than [`MAX_OUTPUT_LEN`] bytes is an error (SEC-002).
+///
+/// A stream that ends before `original_length` bytes were produced, or without
+/// a STOP code, is **not** an error: the declared length is an upper bound
+/// (SEC-001 pinned this, `max_declared_length_on_small_stream`).  That leniency
+/// is recorded in LZ01 as a limitation, not hidden.
 ///
 /// # Examples
 ///
@@ -335,15 +464,16 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     let payload = &data[4..];
 
     // ── Build decoder dictionary ──────────────────────────────────────────────
-    // Indexed by code; value is the byte sequence that code represents.
-    // Slots 256 and 257 are reserved for CLEAR_CODE / STOP_CODE — we store
-    // empty vecs there so the index arithmetic stays simple.
-    let mut dict: Vec<Vec<u8>> = Vec::with_capacity(4096);
+    // Indexed by code.  Slots 256 and 257 are reserved for CLEAR_CODE /
+    // STOP_CODE; they hold a zero-length placeholder so the index arithmetic
+    // stays simple (they are never resolved: the control codes are handled
+    // before any lookup).
+    let mut dict: Vec<Entry> = Vec::with_capacity(4096);
     for b in 0u8..=255 {
-        dict.push(vec![b]);
+        dict.push(Entry::single(b));
     }
-    dict.push(vec![]); // slot 256 = CLEAR_CODE placeholder
-    dict.push(vec![]); // slot 257 = STOP_CODE placeholder
+    dict.push(Entry { prefix: 0, first: 0, last: 0, len: 0 }); // 256 = CLEAR_CODE
+    dict.push(Entry { prefix: 0, first: 0, last: 0, len: 0 }); // 257 = STOP_CODE
 
     // `next_code` tracks the code-size boundary — it is incremented for
     // EVERY data code received, mirroring the encoder's emit-side counter.
@@ -369,14 +499,14 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 
     // ── Main decode loop ──────────────────────────────────────────────────────
     loop {
-        // Security: `original_length` is untrusted, but it bounds the output
-        // we will ever keep (see the final truncate).  Stop as soon as it is
-        // reached so a tiny stream of long dictionary entries cannot expand
-        // far beyond it (each code can emit up to ~4 KiB).  Valid streams are
-        // unaffected: the truncate would have discarded the extra anyway.
+        // `original_length` is untrusted, but it bounds the output we will ever
+        // keep.  Stop as soon as it is reached so a tiny stream of long
+        // dictionary entries cannot expand far beyond it.  Valid streams are
+        // unaffected.  Past this check, `remaining` is at least 1.
         if output.len() >= original_length {
             break;
         }
+        let remaining = original_length - output.len();
 
         let code = match reader.read(code_size) {
             Some(c) => c as usize,
@@ -408,19 +538,16 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         //
         // Any self-referential code must represent a sequence that starts and
         // ends with the same byte as the previous match (by construction).
+        //
+        // Here an entry is a link, not a string, so "resolving" means learning
+        // its length and first byte; the bytes are written by `expand` below.
 
-        let entry: Vec<u8> = if code < dict.len() {
-            dict[code].clone()
+        let (entry_len, entry_first) = if code < dict.len() {
+            (dict[code].len as usize, dict[code].first)
         } else if code == dict.len() {
             // Tricky token: dict.len() is exactly the next-to-be-added slot.
             let prev = prev_code.ok_or("tricky token but no prev_code")?;
-            if dict[prev].is_empty() {
-                return Err("tricky token: prev entry is empty".into());
-            }
-            let first_byte = dict[prev][0];
-            let mut e = dict[prev].clone();
-            e.push(first_byte);
-            e
+            (dict[prev].len as usize + 1, dict[prev].first)
         } else {
             return Err(format!(
                 "invalid code {}: dict.len() is {} (not a tricky token)",
@@ -429,7 +556,18 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
             ));
         };
 
-        output.extend_from_slice(&entry);
+        // ── The output cap (SEC-002) ──────────────────────────────────────────
+        //
+        // Only bytes that will be delivered count: the entry may run past the
+        // declared length, in which case just its first `remaining` bytes are
+        // kept.  A bomb that would deliver more than MAX_OUTPUT_LEN fails here,
+        // before any of the entry is written.
+        let take = entry_len.min(remaining);
+        if output.len() + take > MAX_OUTPUT_LEN {
+            return Err(format!(
+                "decompressed output would exceed the {MAX_OUTPUT_LEN}-byte limit"
+            ));
+        }
 
         // ── Update code_size tracking ─────────────────────────────────────────
         //
@@ -448,21 +586,25 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
         //
         // New entry = dict[prev_code] + [entry[0]]. Only possible when
         // prev_code is set (i.e., not on the first data code after CLEAR).
+        // It is added *before* the bytes are written so that a tricky token,
+        // which names exactly this new slot, can be expanded like any other.
         if let Some(prev) = prev_code {
             if dict.len() < (1usize << MAX_CODE_SIZE) {
-                let first_byte = entry[0];
-                let mut new_entry = dict[prev].clone();
-                new_entry.push(first_byte);
-                dict.push(new_entry);
+                let p = dict[prev];
+                dict.push(Entry {
+                    prefix: prev as u16,
+                    first: p.first,
+                    last: entry_first,
+                    len: p.len + 1,
+                });
             }
         }
 
+        expand(&dict, code, take, &mut output);
         prev_code = Some(code);
     }
 
-    // Trim to the original length (removes zero-padding artefacts from the
-    // final partial byte of the bit stream).
-    output.truncate(original_length);
+    // `output.len() <= original_length` by construction: no truncate is needed.
     Ok(output)
 }
 
@@ -819,5 +961,40 @@ mod tests {
 
         let result = decompress(&payload).unwrap();
         assert_eq!(result, b"AA");
+    }
+    // ── The header never wraps (SEC-002a) ─────────────────────────────────────
+
+    /// An input of 4 GiB or more cannot be tested directly (it would need 4 GiB
+    /// of memory), so the header rule is a function and is tested on its own.
+    #[test]
+    fn test_header_length_saturates_instead_of_wrapping() {
+        assert_eq!(header_length(0), 0);
+        assert_eq!(header_length(17), 17);
+        assert_eq!(header_length(u32::MAX as usize), u32::MAX);
+        if usize::BITS > 32 {
+            // The old `len as u32` gave 10 here, and `decompress` then
+            // returned ten bytes as if the whole input had round-tripped.
+            let four_gib_plus_ten = (1usize << 32) + 10;
+            assert_eq!(header_length(four_gib_plus_ten), u32::MAX);
+            assert_eq!(header_length(usize::MAX), u32::MAX);
+        }
+    }
+
+    /// The saturated header is far above the output cap, so a stream whose true
+    /// length did not fit is rejected, not silently truncated.
+    #[test]
+    fn test_saturated_header_is_above_the_cap() {
+        assert!(u32::MAX as usize > MAX_OUTPUT_LEN);
+    }
+
+    /// `expand` on a partial take: the first `take` bytes of an entry are the
+    /// string of the entry `len - take` links up the chain.
+    #[test]
+    fn test_decompress_declared_length_cuts_an_entry_short() {
+        // "ABABABAB..." makes entries "AB", "BA", "ABA", ...; ask for 5 bytes.
+        let data = b"ABABABABABABABAB";
+        let mut stream = compress(data);
+        stream[..4].copy_from_slice(&5u32.to_be_bytes());
+        assert_eq!(decompress(&stream).unwrap(), b"ABABA");
     }
 }

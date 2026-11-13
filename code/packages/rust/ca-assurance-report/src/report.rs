@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 
 use crate::json::JsonValue;
-use crate::matrix::WeaknessRow;
+use crate::matrix::{AuditProfile, WeaknessRow};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct CapabilitiesSummary {
@@ -129,6 +129,11 @@ pub struct AssuranceReport {
     pub package: String,
     pub version: String,
     pub commit: String,
+    /// The audit profile the report was generated under (`--profile`), recorded so that
+    /// `--check` can hold the report to it: a profile that decompresses may not exclude
+    /// CWE-409, and a profile the checker is told to expect must match this one.  It is
+    /// emitted as one string field, so the JSON stays deterministic and byte-stable.
+    pub profile: AuditProfile,
     /// The pinned assumption catalogue (VER13 section 5.3).
     pub catalogue: CatalogueRef,
     /// Report-scope assumptions: catalogue entries about the weakness matrix,
@@ -168,6 +173,7 @@ impl AssuranceReport {
         map.insert("package".into(), JsonValue::String(self.package.clone()));
         map.insert("version".into(), JsonValue::String(self.version.clone()));
         map.insert("commit".into(), JsonValue::String(self.commit.clone()));
+        map.insert("profile".into(), JsonValue::String(self.profile.as_str().into()));
 
         let mut cat = BTreeMap::new();
         cat.insert("schema".into(), JsonValue::String(self.catalogue.schema.clone()));
@@ -383,6 +389,15 @@ impl AssuranceReport {
             .and_then(|v| v.as_str())
             .unwrap_or("")
             .to_string();
+
+        // The profile is required: a report that does not say which profile it was generated
+        // under cannot be held to it, so it is refused rather than read as `comparison`.
+        let profile: AuditProfile = obj
+            .get("profile")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| ReportError::Validation("missing 'profile' (the audit profile the report was generated under)".into()))?
+            .parse()
+            .map_err(|e: String| ReportError::Validation(format!("profile: {e}")))?;
 
         // The catalogue pin and the report-scope assumptions are required:
         // a report without them predates VER13 and cannot be checked against
@@ -694,6 +709,7 @@ impl AssuranceReport {
             package,
             version,
             commit,
+            profile,
             catalogue,
             assumptions,
             closure,

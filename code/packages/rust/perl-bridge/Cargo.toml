@@ -7,3 +7,10 @@ edition = "2021"
 description = "Thin safe Rust wrapper over Perl's C API — zero dependencies, no XS toolchain, no macros"
 
 [dependencies]
+
+# The smoke extension: a real XS module built on this crate and loaded into a real
+# Perl by tests/smoke.pl (see BUILD).  An example, so it is built only on request
+# and never ships with the library.
+[[example]]
+name = "perl_bridge_smoke"
+crate-type = ["cdylib"]

@@ -58,16 +58,6 @@
       "reason": "Ruby extension over Metal: Metal exists only on Apple platforms, so there is nothing to build or test on Windows.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
     },
-    "packages/rust/erl-nif-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Erlang/OTP link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
-    "packages/rust/lua-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Lua 5.4 link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
     "packages/rust/metal-compute": {
       "category": "intrinsic-apple",
       "reason": "Metal compute bindings; requires macOS/Apple frameworks.",
@@ -87,11 +77,6 @@
       "category": "intrinsic-apple",
       "reason": "C ABI over the Metal Paint VM; builds only on macOS arm64.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
-    },
-    "packages/rust/perl-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Perl link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
     },
     "packages/rust/tcp-reactor": {
       "category": "intrinsic-platform",

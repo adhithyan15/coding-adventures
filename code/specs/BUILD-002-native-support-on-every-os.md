@@ -297,6 +297,34 @@ The echo-skips left in `code/packages/rust` and `code/programs/rust` were
   MSVC-linked cdylib loads into RubyInstaller's MinGW Ruby 3.4, that
   `rb_raise`'s longjmp across the Rust frames is clean there, and that
   `lib.exe` is found.
+- **The compile-only bridges (converted): `erl-nif-bridge`, `lua-bridge`,
+  `perl-bridge`.** The last three echo-only crates, which CI never even compiled. Each
+  now runs its unit tests, `cargo build --release`, `cargo clippy --all-targets -D
+  warnings` and a smoke test on every OS, and declares the interpreter it needs
+  (`# needs-toolchain: elixir` for Erlang/OTP, `lua`, `perl`). The smoke test is an
+  `examples/` cdylib built on the crate (a NIF library, a Lua C module, an XS
+  extension) loaded into the real BEAM, Lua or Perl by `tests/smoke.escript`,
+  `tests/smoke.lua` and `tests/smoke.pl`, each checking every wrapped call from the
+  host-language side; the cdylib goes into the package's own `--target-dir target`.
+  `perl-bridge`'s Windows recipe is `tests\run-windows.ps1` (inside the package, so it
+  needs no repository-input registration), which picks the native Strawberry Perl
+  before Git Bash's MSYS Perl, as `check-perl-extension-windows.ps1` does for the XS
+  packages. As with the font-parser bridges the skips hid real defects: `lua-bridge`
+  declared `lua_insert`, `lua_remove`, `lua_isboolean`, `luaL_getmetatable` and
+  `luaL_checkstring` (C macros in Lua 5.4) and a misspelt `lua_newmetatable` (it is
+  `luaL_newmetatable`) as exported functions, so any module using them failed to load
+  with `undefined symbol` (they are now inline Rust functions with the macros'
+  definitions, and the missing `lua_rotate` and `luaL_checklstring` are declared);
+  `erl-nif-bridge` declared `enif_make_pid`, a header macro, as an exported function
+  (now inline, as on Windows). `perl-bridge` needed no fix; its first real load passed.
+  Validated off-CI on Linux (OTP 25, Lua 5.4.6, Perl 5.38.2), and for the
+  `x86_64-pc-windows-gnu` target under Wine against the real Windows OTP 27.3.4.11
+  (ERTS 15.2.7.8, through `win_dyn`'s callback table), a MinGW build of Lua 5.4.7
+  and Strawberry Perl 5.42.0.1. **Only CI can prove:** the MSVC-linked cdylibs on
+  Windows (`lua54.lib`, the Strawberry `libperl542.a` import library, and
+  `ps1`-driven Perl selection); macOS (`-undefined dynamic_lookup` for all three, and
+  Lua's `lua`/Perl's `.bundle` loading); and the pinned toolchains CI installs
+  (Lua 5.4.7, OTP 27.3.4.11, the runner's Perl).
 - **`os-kernel` (converted).** The skip said it cannot be built on a std host;
   the binary cannot, the package can. The recipe adds the
   `x86_64-unknown-uefi` target, runs the `Kernel` unit tests on the host,
@@ -375,7 +403,7 @@ path to `{category, reason, evidence}`. Categories:
 | `intrinsic-apple` | Needs Apple frameworks (Metal, Objective-C); the audit checks the package itself names them | 11 |
 | `intrinsic-platform` | Bound to a platform API with no equivalent (`rust/tcp-reactor`; `rust/tcp-runtime` is its Windows counterpart) | 1 |
 | `no-tests-by-design` | Nothing to run: Starlark rule packages, the Python shell packages, `visicalc-deno`'s notes-only BUILD | 7 |
-| `tracked-follow-up` | A real gap with a plan: `perl/barcode-layout-1d` (own PR: dedicated registry owner item) and the three compile-only bridge crates that have no `BUILD_windows` and echo on every OS (`erl-nif-bridge`, `lua-bridge`, `perl-bridge`) | 4 |
+| `tracked-follow-up` | A real gap with a plan: `perl/barcode-layout-1d` (own PR: dedicated registry owner item) | 1 |
 
 **Policy: the list only shrinks.**
 
@@ -398,8 +426,10 @@ Rust native-extension bridges (`font-parser-{node,python,ruby}`, `node-bridge`,
 verbatim `\\?\` path, not thread-stack size), `os-kernel` (a UEFI-target cross
 build is its real recipe) and both `unix-tools` packages all run real recipes on
 Windows, so ten entries were deleted and the `tracked-follow-up` cap went from
-14 to 4. What is left of the debt: `barcode-layout-1d`, and `erl-nif-bridge`,
-`lua-bridge` and `perl-bridge`, whose plain `BUILD` echoes on every OS.
+14 to 4. The three compile-only bridge crates that were left (`erl-nif-bridge`,
+`lua-bridge`, `perl-bridge`, whose plain `BUILD` echoed on every OS) were converted
+next (see "The compile-only bridges" above), which deleted their entries and took the
+cap from 4 to 1. What is left of the debt: `barcode-layout-1d`.
 
 The scaffold generators no longer create the shapes the audit rejects: Haskell
 (Go and native generators), Perl (Go generator) and Lua now emit a real
