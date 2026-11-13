@@ -576,6 +576,25 @@ func TestSandboxRealStrace(t *testing.T) {
 		skipOrFail(t, "strace is not installed")
 	}
 	f := newSandboxFixture(t)
+	// Trace an UNINSTRUMENTED kiln.  Under -cover the test binary writes its
+	// coverage files when the root exits, which are traced calls by the root
+	// after the spawn: helper-activity, rightly.  So build the real binary
+	// (outside the checkout, the state root and tmpdir: its own temp directory)
+	// and make it both the strace target and the configured kiln_exe.
+	goBin, err := exec.LookPath("go")
+	if err != nil {
+		skipOrFail(t, "the go tool is not available to build an uninstrumented kiln")
+	}
+	kiln := filepath.Join(t.TempDir(), "kiln")
+	build := exec.Command(goBin, "build", "-o", kiln, ".")
+	if out, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build: %v\n%s", err, out)
+	}
+	if kiln, err = filepath.EvalSymlinks(kiln); err != nil {
+		t.Fatal(err)
+	}
+	f.exe = kiln
+	f.writeConfig(t, nil)
 	data := filepath.Join(f.pkg, "data.txt")
 	if err := os.WriteFile(data, []byte("hello\n"), 0o644); err != nil {
 		t.Fatal(err)
@@ -588,7 +607,7 @@ func TestSandboxRealStrace(t *testing.T) {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, straceBin, args...)
 	cmd.Dir = f.pkg
-	cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"})
+	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
 	var out, eb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &eb
 	if err := cmd.Run(); err != nil {
