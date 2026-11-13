@@ -165,3 +165,40 @@ kiln explain --plan <plan.json> <package>
 - Glob semantics are pinned by
   [`glob-cases-v1.json`](../../../specs/fixtures/kiln/glob-cases-v1.json), which
   the old build tool's matcher must also satisfy.
+
+## Trace parser (`internal/trace`, KILN04 stage 1a)
+
+`internal/trace` is the pure parser for traced read-sets: it turns the text
+written by `strace -f --quiet=attach -y -s 4096 -o <file>` into an ordered list
+of path events plus the process tree. It never runs `strace` and never touches
+the filesystem.
+
+```go
+tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
+// tr.Events: Pid, Syscall, Kind, Path, Path2, DirfdPath, ReturnFDPath, Result, Flags, Addr
+// tr.Procs / tr.Exits: the process tree and exit statuses
+```
+
+- **Closed table.** Every syscall name is handled (open, metadata, listing,
+  directory, write, process, network), ignored (no path), or refused. An
+  unknown name is `trace-incomplete:unknown-syscall:<name>`, a refused one
+  `trace-incomplete:refused:<name>`; `clone` with `CLONE_UNTRACED` or any
+  `CLONE_NEW*` is `trace-incomplete:clone-flags`.
+- **A real scanner, no regular expressions.** `<unfinished ...>` and
+  `<... X resumed>` halves are paired per pid; strings are unescaped exactly
+  (`\"`, `\\`, `\n`, octal, hex); `-y` annotations such as `3</a b/c>` are read
+  with their `\<` and `\>` escapes. Truncated (`"..."...`), non-UTF-8,
+  `(deleted)` and ambiguous paths are errors.
+- **Process model.** Each process has a working directory (copied by
+  fork/clone, shared under `CLONE_FS`, changed by `chdir`/`fchdir`). Every pid
+  must have an exit line and every split call must be resumed.
+- **Fail closed.** Every refusal is a `*trace.Error` whose message is
+  `trace-incomplete:<detail>`, with a stable detail and no path text. Line and
+  total-byte caps give `trace-incomplete:size`.
+- **Boundary.** Paths are reported as printed, with the working directory or
+  `dirfd` path they are relative to. Resolving them against a tree (symlinks,
+  `..`, stability) is stage 1b.
+
+Fixtures in `internal/trace/testdata/` are hand-written in strace 6.x format;
+`FuzzParse` checks the parser never panics and only ever returns
+`trace-incomplete` errors.
