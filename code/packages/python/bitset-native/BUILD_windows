@@ -1,5 +1,5 @@
-python -m venv .venv --clear
-.venv\Scripts\pip install pytest --quiet
+uv venv .venv --quiet --no-project --clear
+uv pip install --python .venv pytest --quiet
 cargo build --release
 if exist target\release\bitset_native.dll copy target\release\bitset_native.dll src\bitset_native\bitset_native.pyd
 set PYTHONPATH=src&& .venv\Scripts\python -m pytest tests\ -v

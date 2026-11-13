@@ -2585,6 +2585,11 @@ pub fn link_windows_x86_64_executable(
                 // __vcrt_InitializeCriticalSectionEx from vcruntime.lib.
                 // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the
                 // Win32 API surface gc-core-capi's Rust std pulls in.
+                // synchronization.lib supplies WaitOnAddress/WakeByAddress*,
+                // which Rust 1.100's std uses for its futex-based Mutex and
+                // Condvar (older std reached them through a different import,
+                // so the first 1.100 run died with LNK2019 on
+                // __imp_WaitOnAddress / __imp_WakeByAddressSingle/All).
                 .args(MSVC_DYNAMIC_CRT_LIBRARIES)
                 .arg("kernel32.lib")
                 .arg("ws2_32.lib")
@@ -2592,6 +2597,7 @@ pub fn link_windows_x86_64_executable(
                 .arg("advapi32.lib")
                 .arg("bcrypt.lib")
                 .arg("ntdll.lib")
+                .arg("synchronization.lib")
                 .output()
         }
         WinLinkerKind::Gcc => {

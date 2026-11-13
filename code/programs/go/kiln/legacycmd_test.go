@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -22,6 +23,9 @@ func cmdRepo(t *testing.T) string {
 	for p, c := range map[string]string{
 		"code/kiln/legacy/pinned.json":                                            `{"languages": []}`,
 		"code/kiln/legacy/never.json":                                             `{"packages": []}`,
+		"code/kiln/legacy/toolchains.json":                                        `{"go": {"pins": {"go": "1.26.1"}, "probes": [["go", "version"]]}, "sh": {"always": true, "pins": {"sh": "image"}}}`,
+		"code/kiln/legacy/env.json":                                               `{"names": ["LANG"]}`,
+		"code/kiln/legacy/host-roots.json":                                        `{"roots": [], "ephemeral": [], "absent-ok": []}`,
 		"code/specs/fixtures/build-tool-v1/repository-source-input-boundary.json": `{"schema_version":1,"boundaries":[]}`,
 		"code/programs/go/build-tool/go.mod":                                      "module bt\n",
 		"code/programs/go/build-tool/main.go":                                     "package main\n",
@@ -45,6 +49,7 @@ func runCLI(args ...string) (int, string, string) {
 }
 
 func TestLegacyPlanAndExplain(t *testing.T) {
+	t.Setenv("LANG", "test-lang-value")
 	repo := cmdRepo(t)
 	work := t.TempDir()
 	graph := filepath.Join(work, "graph.json")
@@ -67,14 +72,51 @@ func TestLegacyPlanAndExplain(t *testing.T) {
 		t.Fatal("two runs wrote different plans")
 	}
 	code, out, errs = runCLI("explain", "--plan", plan, "go/a")
-	if code != 0 || !strings.Contains(out, `"key"`) || !strings.Contains(out, `"closure_size": 1`) {
+	if code != 0 || !strings.Contains(out, `"key"`) || !strings.Contains(out, `"closure_size": 1`) ||
+		!strings.Contains(out, `"advisory_hints"`) || !strings.Contains(out, "advisory only") {
 		t.Fatalf("code %d out %q err %q", code, out, errs)
+	}
+	// Tools and env components show as names plus digests, never env values.
+	for _, want := range []string{`"tools": [`, `"go@1.26.1"`, `"sh@image"`, `"env": [`, `"LANG"`} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("explain output lacks %s: %s", want, out)
+		}
+	}
+	for _, bad := range []string{"m1-incomplete:tools-env", "test-lang-value"} {
+		if strings.Contains(out, bad) {
+			t.Fatalf("explain output has %s", bad)
+		}
 	}
 	if code, _, _ := runCLI("explain", "--plan", plan, "nope"); code != 1 {
 		t.Fatalf("unknown package: code %d", code)
 	}
 	if code, _, _ := runCLI("explain", "--plan", filepath.Join(work, "none"), "go/a"); code != 1 {
 		t.Fatalf("missing plan: code %d", code)
+	}
+}
+
+func TestLegacyPlanProbeFlag(t *testing.T) {
+	repo := cmdRepo(t)
+	work := t.TempDir()
+	graph := filepath.Join(work, "graph.json")
+	plan := filepath.Join(work, "plan.json")
+	_ = os.WriteFile(graph, []byte(cmdGraph), 0o644)
+	other := "linux"
+	if runtime.GOOS == "linux" {
+		other = "darwin"
+	}
+	if code, _, errs := runCLI("legacy-plan", "--graph", graph, "--out", plan, "--root", repo, "--source", "folder", "--os", other, "--probe"); code != 2 || !strings.Contains(errs, "--probe needs --os") {
+		t.Fatalf("probe for another platform: code %d %s", code, errs)
+	}
+	if code, _, errs := runCLI("legacy-plan", "--graph", graph, "--out", plan, "--root", repo, "--source", "folder", "--os", runtime.GOOS, "--probe"); code != 0 {
+		t.Fatalf("probe run: code %d %s", code, errs)
+	}
+	p, err := os.ReadFile(plan)
+	if err != nil || !strings.Contains(string(p), `"probes"`) {
+		t.Fatalf("no probe section: %v %.300s", err, p)
+	}
+	if code, _, errs := runCLI("legacy-plan", "--graph", graph, "--out", plan, "--root", filepath.Join(work, "gone"), "--source", "folder", "--os", runtime.GOOS, "--probe"); code != 1 {
+		t.Fatalf("probe with a missing root: code %d %s", code, errs)
 	}
 }
 

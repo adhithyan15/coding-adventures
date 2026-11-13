@@ -43,8 +43,8 @@ Spanish.
 ## You'll want to know — A note on the letters
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-ILA-LIQAA-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* Two pieces here are **beyond what the writing track
-has covered**, so read them for now and draw them later:
+Two pieces here are **beyond what the writing track has covered**. Their sounds
+are enough for this listening lesson; their shapes belong to later writing lessons:
 
 - **ق** (*qāf*) — a *k* made far back against the soft palate, deeper than **ك**
   (*kāf*). It is **not** in the letter set you have been writing from.

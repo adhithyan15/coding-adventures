@@ -2056,7 +2056,15 @@ pub mod windows {
             address: SocketAddr,
             options: ListenerOptions,
         ) -> Result<(), PlatformError> {
-            socket.set_reuse_address(options.reuse_address)?;
+            // `SO_REUSEADDR` means something different on Windows than on Unix.
+            // On Unix it only lets a listener rebind while old connections sit in
+            // TIME_WAIT.  On Windows it lets a SECOND socket bind a port that a
+            // live listener already holds (the newer socket then steals the
+            // traffic), so honouring `reuse_address` here would make "port already
+            // in use" undetectable.  Windows already lets a listener rebind a port
+            // whose connections are in TIME_WAIT, so we leave the option off and
+            // keep an in-use bind an error, matching the Unix behaviour callers see.
+            let _ = options.reuse_address;
             if address.is_ipv6() {
                 socket.set_only_v6(true)?;
             }
@@ -3501,6 +3509,25 @@ mod tests {
     mod windows_tests {
         use super::*;
         use crate::windows::WindowsTransportPlatform;
+
+        #[test]
+        fn binding_a_port_that_is_already_listening_fails() {
+            let mut platform = WindowsTransportPlatform::new().expect("create platform");
+            let first = platform
+                .bind_listener(
+                    BindAddress::Ip("127.0.0.1:0".parse().unwrap()),
+                    ListenerOptions::default(),
+                )
+                .expect("first bind");
+            let port = platform.local_addr(first).expect("local addr").port();
+            // Default options ask for SO_REUSEADDR, which on Windows would let the
+            // second bind hijack the port; it must be refused instead.
+            let second = platform.bind_listener(
+                BindAddress::Ip(format!("127.0.0.1:{port}").parse().unwrap()),
+                ListenerOptions::default(),
+            );
+            assert!(second.is_err(), "second bind to a live listener must fail");
+        }
 
         #[test]
         fn accepts_reads_and_writes_multiple_streams() {

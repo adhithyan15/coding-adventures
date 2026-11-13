@@ -64,6 +64,11 @@ this whole entry is unreleased and the version is bumped at release.)
   `coding_adventures_sha256` and `capability-runtime-conformance`, and the
   `warrant_evidence` and `runtime_capability` test targets (`harness = false`).
 
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/sequential.rs`: `needless_range_loop`: the counter increment iterates `state.value` directly; behaviour unchanged.
+
 ## [0.4.0] - 2026-04-12
 
 ### Added

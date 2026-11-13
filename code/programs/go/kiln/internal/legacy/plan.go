@@ -31,34 +31,38 @@ const (
 	ClassUncacheable = "uncacheable"
 )
 
-// Reasons that mark work 7c-1 deliberately leaves undone.  Until the tools,
-// environment and escape scans exist, no package may be called cacheable, so
-// every package carries both.  They are "incomplete" reasons, not hard ones:
-// they stop a package being cacheable but do not hide the more informative
-// `unpinned` class.
-const (
-	ReasonToolsEnv = "m1-incomplete:tools-env"
-	ReasonScans    = "m1-incomplete:scans"
-)
+// ReasonTrace marks work still undone (KILN04): no traced read-set manifest
+// exists yet, and soundness for reuse comes only from one.  Every package
+// carries it, so none is ever `cacheable`.  It is an "incomplete" reason, not a
+// hard one: it stops a package being cacheable but does not hide the more
+// informative `unpinned` class.  (Its sibling `m1-incomplete:tools-env` was
+// retired by 7c-3, when tool and environment identity landed.)
+const ReasonTrace = "m1-incomplete:trace"
 
 // Components are the digests a key is made of, so two plans can be compared
-// to see WHICH part changed (KILN03 section 9).  Tools and env are empty in
-// 7c-1 and therefore not listed.
+// to see WHICH part changed (KILN03 section 9).  A plan shows digests, never
+// the sections themselves: environment values stay out of it (KILN04 4.3).
 type Components struct {
 	Own      string `json:"own"`
 	Reads    string `json:"reads"`
 	Consumed string `json:"consumed"`
 	Recipe   string `json:"recipe"`
+	Tools    string `json:"tools"`
+	Env      string `json:"env"`
 }
 
 // Record is one package's entry in a plan.
 type Record struct {
-	Name        string     `json:"name"`
-	Key         string     `json:"key"`
-	Class       string     `json:"class"`
-	Reasons     []string   `json:"reasons"`
-	ClosureSize int        `json:"closure_size"`
-	Components  Components `json:"components"`
+	Name        string   `json:"name"`
+	Key         string   `json:"key"`
+	Class       string   `json:"class"`
+	Reasons     []string `json:"reasons"`
+	Hints       []string `json:"hints"`
+	ClosureSize int      `json:"closure_size"`
+	// Tools names the tool entries of the key as `name@pin`; the identity
+	// behind each (the pin, or the image id) is covered by Components.Tools.
+	Tools      []string   `json:"tools"`
+	Components Components `json:"components"`
 }
 
 // Sizes summarises closure sizes.
@@ -73,17 +77,23 @@ type Sizes struct {
 type Histogram struct {
 	Classes      map[string]int `json:"classes"`
 	Reasons      map[string]int `json:"reasons"`
+	Hints        map[string]int `json:"hints"`
 	ClosureSizes Sizes          `json:"closure_sizes"`
 }
 
 // Plan is the output of `kiln legacy-plan`.
 type Plan struct {
-	Schema    string    `json:"schema"`
-	OS        string    `json:"os"`
-	Arch      string    `json:"arch"`
-	Host      string    `json:"host"`
-	Packages  []Record  `json:"packages"`
-	Histogram Histogram `json:"histogram"`
+	Schema string `json:"schema"`
+	OS     string `json:"os"`
+	Arch   string `json:"arch"`
+	Host   string `json:"host"`
+	// Env names the variables that entered every key; their values never
+	// leave the key, only Components.Env digests them.
+	Env []string `json:"env"`
+	// Probes is present only when `--probe` ran (KILN03 4).
+	Probes    []ProbeResult `json:"probes,omitempty"`
+	Packages  []Record      `json:"packages"`
+	Histogram Histogram     `json:"histogram"`
 }
 
 // refuseDirty fails if the Source can report untracked, non-ignored files and
@@ -144,6 +154,9 @@ func BuildPlan(g *Graph, opt Options) (*Plan, error) {
 	if pl.bounds, err = parseBoundaries(data); err != nil {
 		return nil, err
 	}
+	if err := pl.prepareToolsEnv(); err != nil {
+		return nil, err
+	}
 	if err := pl.computeOwn(); err != nil {
 		return nil, err
 	}
@@ -164,7 +177,7 @@ func BuildPlan(g *Graph, opt Options) (*Plan, error) {
 	}
 	return &Plan{
 		Schema: PlanSchema, OS: opt.OS, Arch: opt.Arch, Host: opt.Host.ImageID(),
-		Packages: recs, Histogram: histogram(recs),
+		Env: pl.envNames, Probes: pl.probes, Packages: recs, Histogram: histogram(recs),
 	}, nil
 }
 
@@ -197,8 +210,19 @@ func (pl *planner) record(p int) (Record, error) {
 			consumed = append(consumed, *r.consumed)
 		}
 	}
-	reasons := map[string]bool{ReasonToolsEnv: true, ReasonScans: true}
+	reasons := map[string]bool{ReasonTrace: true}
 	hard := false
+	// Symlink rules are hard reasons (KILN03 6); the text scans are advisory
+	// hints only and never touch `reasons` or the class.  The key is computed
+	// below either way: measurement never stops.
+	symlinks, hints, err := pl.scanFindings(members, items)
+	if err != nil {
+		return Record{}, err
+	}
+	for _, r := range symlinks {
+		reasons[r] = true
+		hard = true
+	}
 	unpinned := false
 	for _, q := range members {
 		m := pl.g.Packages[q]
@@ -223,7 +247,29 @@ func (pl *planner) record(p int) (Record, error) {
 	if err != nil {
 		return Record{}, err
 	}
-	consumed = append(consumed, key.Consumed{Target: "tool:build-tool", Phase: key.PhaseBuild, Key: td[:]})
+	consumed = append(consumed,
+		key.Consumed{Target: "tool:build-tool", Phase: key.PhaseBuild, Key: td[:]},
+		key.Consumed{Target: "policy:toolchains.json", Phase: key.PhaseBuild, Key: pl.pol.tc.Digest[:]},
+		key.Consumed{Target: "policy:env.json", Phase: key.PhaseBuild, Key: pl.pol.env.Digest[:]})
+	// Tools: the pins of every closure language and extra toolchain, plus the
+	// always-included set (KILN03 4).  An entry that does not exist is a hard
+	// reason, never "no tools".
+	ts, err := pl.toolsOf(pl.closureNames(members))
+	if err != nil {
+		return Record{}, err
+	}
+	for _, n := range ts.unknown {
+		reasons["unknown-toolchain:"+n] = true
+		hard = true
+	}
+	for _, tl := range ts.tools {
+		if pl.mismatch[tl.Name] {
+			reasons["probe-mismatch:"+tl.Name] = true // soft: reported, never a class
+		}
+		if pl.timedOut[tl.Name] {
+			reasons["probe-timeout:"+tl.Name] = true // soft, like probe-mismatch
+		}
+	}
 
 	sort.Slice(reads, func(a, b int) bool { return reads[a].Path < reads[b].Path })
 	sort.Slice(consumed, func(a, b int) bool { return consumed[a].Target < consumed[b].Target })
@@ -245,26 +291,18 @@ func (pl *planner) record(p int) (Record, error) {
 		return Record{}, err
 	}
 	rec.Components.Consumed = hexOf(cd[:])
+	rec.Components.Tools = hexOf(ts.digest[:])
+	rec.Components.Env = hexOf(pl.envDigest[:])
+	rec.Tools = ts.labels
 
-	if bf := pkg.BuildFiles[pl.opt.OS]; bf == nil {
-		reasons["no-build-file:"+pl.opt.OS] = true
-		hard = true
-	} else if info, err := pl.opt.Source.Describe(pkg.RelPath + "/" + *bf); err != nil {
+	recipe, why, err := pl.buildRecipe(pkg)
+	if err != nil {
 		return Record{}, err
-	} else if info.Link {
-		// A symlinked BUILD file could point anywhere.  Fail closed for THIS
-		// package (no key) and keep planning the others.
-		reasons["escape:"+*bf] = true
+	}
+	if why != "" {
+		reasons[why] = true
 		hard = true
 	} else {
-		contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
-		if err != nil {
-			return Record{}, err
-		}
-		recipe, err := key.LegacyRecipeFiles([]key.NamedFile{{Name: *bf, Contents: contents}})
-		if err != nil {
-			return Record{}, err
-		}
 		rs := sha256.Sum256(recipe)
 		rec.Components.Recipe = hexOf(rs[:])
 		image := pl.opt.Host.ImageID()
@@ -274,6 +312,7 @@ func (pl *planner) record(p int) (Record, error) {
 			HostImageID: &image,
 			Target:      pkg.Name, Phase: key.PhaseTest,
 			Recipe: recipe, Inputs: inputs, Reads: reads, Consumed: consumed,
+			Tools: ts.tools, Env: pl.envVars,
 		})
 		if err != nil {
 			return Record{}, err
@@ -285,14 +324,42 @@ func (pl *planner) record(p int) (Record, error) {
 		rec.Reasons = append(rec.Reasons, r)
 	}
 	sort.Strings(rec.Reasons)
+	rec.Hints = append([]string{}, hints...)
+	sort.Strings(rec.Hints)
 	rec.Class = classify(hard, unpinned)
 	return rec, nil
 }
 
+// buildRecipe is the canonical legacy recipe of the BUILD variant this OS runs
+// (KILN03 3.4), shared by the static key and the KILN04 weak key.  A package
+// with no usable BUILD has no recipe: why then names the hard reason
+// (`no-build-file:<os>` or `symlink:<file>`) and the error is nil, so the caller
+// can fail closed for this package and carry on with the others.
+func (pl *planner) buildRecipe(pkg Package) (recipe []byte, why string, err error) {
+	bf := pkg.BuildFiles[pl.opt.OS]
+	if bf == nil {
+		return nil, "no-build-file:" + pl.opt.OS, nil
+	}
+	info, err := pl.opt.Source.Describe(pkg.RelPath + "/" + *bf)
+	if err != nil {
+		return nil, "", err
+	}
+	if info.Link {
+		// A symlinked BUILD file could point anywhere.
+		return nil, "symlink:" + *bf, nil
+	}
+	contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
+	if err != nil {
+		return nil, "", err
+	}
+	recipe, err = key.LegacyRecipeFiles([]key.NamedFile{{Name: *bf, Contents: contents}})
+	return recipe, "", err
+}
+
 // classify implements KILN03 section 7 for 7c-1.  A hard reason makes a
 // package uncacheable; failing that, an unpinned language makes it `unpinned`;
-// failing that, the standing m1-incomplete reasons keep it uncacheable.
-// `cacheable` is unreachable until those reasons are retired (7c-3).
+// failing that, the standing m1-incomplete reason (no trace) keeps it
+// uncacheable.  `cacheable` is unreachable until KILN04's manifests exist.
 func classify(hard, unpinned bool) string {
 	switch {
 	case hard:
@@ -306,7 +373,7 @@ func classify(hard, unpinned bool) string {
 // reasonGroup collapses a reason to the kind the histogram counts: reasons
 // that embed a package or file name are grouped by their prefix.
 func reasonGroup(r string) string {
-	for _, p := range []string{"unknown-repo-inputs:", "never:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:"} {
+	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:"} {
 		if strings.HasPrefix(r, p) {
 			return p[:len(p)-1]
 		}
@@ -315,7 +382,7 @@ func reasonGroup(r string) string {
 }
 
 func histogram(recs []Record) Histogram {
-	h := Histogram{Classes: map[string]int{}, Reasons: map[string]int{}}
+	h := Histogram{Classes: map[string]int{}, Reasons: map[string]int{}, Hints: map[string]int{}}
 	sizes := make([]int, 0, len(recs))
 	for _, r := range recs {
 		h.Classes[r.Class]++
@@ -325,6 +392,13 @@ func histogram(recs []Record) Histogram {
 		}
 		for g := range groups {
 			h.Reasons[g]++
+		}
+		hgroups := map[string]bool{}
+		for _, hint := range r.Hints {
+			hgroups[reasonGroup(hint)] = true
+		}
+		for g := range hgroups {
+			h.Hints[g]++
 		}
 		sizes = append(sizes, r.ClosureSize)
 	}

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed registers x1..x31 with `iter_mut().enumerate().skip(1)`; behaviour unchanged.
+
 ## [Unreleased]
 
 ### Added
