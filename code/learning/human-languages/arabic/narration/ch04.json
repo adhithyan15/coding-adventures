@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1d3f8ffceeb9a699",
+  "sourceHash": "fnv1a64:9f38f484c0d66629",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10828b63690e3620",
+      "sourceHash": "fnv1a64:2f4089fdd7087436",
       "notice": null,
       "blocks": [
         {
@@ -601,7 +601,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) م (mīm) from Lesson 3 of the writing set, and ع (ʿayn) from Lesson 10 — the throat sound whose Phoenician ancestor meant \"eye,\" and which the Greeks recycled into the vowel O."
+              "text": "م (mīm) from Lesson 3 of the writing set, and ع (ʿayn) from Lesson 10 — the throat sound whose Phoenician ancestor meant \"eye,\" and which the Greeks recycled into the vowel O."
             },
             {
               "kind": "speech",
@@ -1104,7 +1104,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d89b0d56cc749200",
+      "sourceHash": "fnv1a64:adf640fc682364d2",
       "notice": null,
       "blocks": [
         {
@@ -1131,7 +1131,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Two pieces here are beyond what the writing track has covered, so read them for now and draw them later:"
+              "text": "Two pieces here are beyond what the writing track has covered. Their sounds are enough for this listening lesson; their shapes belong to later writing lessons:"
             },
             {
               "kind": "speech",

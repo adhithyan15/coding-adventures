@@ -19,6 +19,12 @@ All notable changes to this package will be documented in this file.
   lifecycle, transcript, checkpoint, and compaction-attention rollups over
   selected sessions.
 
+### Fixed
+
+- Simplified the status filter in `session_matches_list_options` to a single
+  boolean expression (clippy 1.100 `needless_bool`); behavior unchanged.
+
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
