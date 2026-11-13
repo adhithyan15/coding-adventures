@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.18.0 - 2026-11-12
+
+### Added
+
+- Added a first ordered intermediate path-length transition that accepts only
+  the Name-policy-backed reviewed-construction initializer.
+- Added retained-policy success and detached-construction rejection coverage
+  over a fixed public-certificate chain.
+
+### Security
+
+- The transition shares the existing exact-construction, authenticated-child,
+  complete intermediate-policy, and construction-derived capacity checks while
+  retaining the exact Name-value policy, reviewed anchor, and anchor role
+  policy through the result.
+- This proves only the first routed public-certificate transition. It does not
+  define complete RFC 5280 Name equality, process later intermediates, validate
+  the whole path, apply name constraints or revocation, perform TLS or HTTP,
+  authorize OAuth transport, or grant network authority.
+
 ## 0.17.0 - 2026-11-11
 
 ### Added

@@ -3,14 +3,18 @@ use rsa_public_operation::RsaPublicOperationLimits;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
-    construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
+    construct_unique_x509_certificate_path_by,
+    construct_unique_x509_certificate_path_with_name_policy, ConstructedX509CertificatePath,
 };
 use x509_certificate_path_length_policy::{
     X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
 };
 use x509_certificate_path_reviewed_anchor_binding::{
     bind_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor,
+    bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
     bind_reviewed_constructed_x509_certificate_path_to_anchor_role_policy,
+    initialize_name_policy_reviewed_constructed_x509_certificate_path_length,
     initialize_reviewed_constructed_x509_certificate_path_length,
 };
 use x509_certificate_policy::{
@@ -22,11 +26,15 @@ use x509_certificate_policy::{
 use x509_intermediate_certificate_policy::{
     validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
 };
+use x509_name_value_policy::{
+    X509NameValueComparisonRule, X509NameValuePolicy, X509NameValuePolicyEntry,
+};
 use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 use x509_rsa_constructed_path_signature_routing::{
     accumulate_reviewed_x509_rsa_constructed_path_intermediate_path_lengths,
+    advance_initialized_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length,
     advance_x509_rsa_constructed_path_intermediate_path_length,
@@ -86,6 +94,9 @@ const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
 const SHA384_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 12];
 const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const SERVER_AUTH_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 3, 1];
+const COUNTRY_NAME_OID: &[u64] = &[2, 5, 4, 6];
+const ORGANIZATION_NAME_OID: &[u64] = &[2, 5, 4, 10];
+const COMMON_NAME_OID: &[u64] = &[2, 5, 4, 3];
 const NULL_DER: &[u8] = &[0x05, 0x00];
 
 fn fixture(hexadecimal: &str) -> Vec<u8> {
@@ -209,6 +220,12 @@ fn sha384_route() -> X509RsaSignatureRoute {
 
 fn limits() -> RsaPublicOperationLimits {
     RsaPublicOperationLimits::new(512).unwrap()
+}
+
+fn exact_der_name_policy<'policy>(
+    entries: &'policy [X509NameValuePolicyEntry<'policy>],
+) -> X509NameValuePolicy<'policy> {
+    X509NameValuePolicy::new(entries).unwrap()
 }
 
 fn observed_time() -> X509Time {
@@ -634,6 +651,221 @@ fn binds_routed_intermediate_policy_and_advances_path_length() {
     assert_eq!(
         format!("{advanced:?}"),
         "ValidatedX509RsaConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn advances_policy_backed_initialized_path_length_without_detaching_name_policy() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = [profile()];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = exact_der_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path =
+        bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+            reviewed_path,
+            role_policy(
+                &candidates[1],
+                X509CertificateRole::IssuingCertificateAuthority,
+            ),
+        )
+        .unwrap();
+    let initialized = initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+        reviewed_role_path,
+    );
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path_with_name_policy()
+        .constructed_path();
+
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+
+    let advanced =
+        advance_initialized_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+            &initialized,
+            reviewed_terminal,
+            intermediate_policy(&candidates[0], &profiles, false),
+        )
+        .unwrap();
+
+    assert!(std::ptr::eq(
+        advanced.initialized_path_length(),
+        &initialized
+    ));
+    assert!(std::ptr::eq(
+        advanced
+            .initialized_path_length()
+            .reviewed_path()
+            .reviewed_path()
+            .constructed_path_with_name_policy()
+            .name_policy()
+            .entries(),
+        name_policy.entries()
+    ));
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert_eq!(
+        advanced
+            .reviewed_terminal()
+            .verified_terminal_signature()
+            .adjacent_link()
+            .issuer_depth(),
+        1
+    );
+    assert!(std::ptr::eq(
+        advanced.intermediate_policy().certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "AdvancedInitializedNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn policy_backed_initialized_transition_rejects_another_construction() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let profiles = [profile()];
+    let policy_entries = [
+        X509NameValuePolicyEntry::new(COUNTRY_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(ORGANIZATION_NAME_OID, X509NameValueComparisonRule::ExactDer),
+        X509NameValuePolicyEntry::new(COMMON_NAME_OID, X509NameValueComparisonRule::ExactDer),
+    ];
+    let name_policy = exact_der_name_policy(&policy_entries);
+    let path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        name_policy,
+    )
+    .unwrap();
+    let detached_path = construct_unique_x509_certificate_path_with_name_policy(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        name_policy,
+    )
+    .unwrap();
+    let reviewed_path = bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+        path,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+    let reviewed_role_path =
+        bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+            reviewed_path,
+            role_policy(
+                &candidates[1],
+                X509CertificateRole::IssuingCertificateAuthority,
+            ),
+        )
+        .unwrap();
+    let initialized = initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+        reviewed_role_path,
+    );
+    let detached_reviewed_path =
+        bind_name_policy_constructed_x509_certificate_path_to_reviewed_anchor(
+            detached_path,
+            select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+        )
+        .unwrap();
+    let detached_reviewed_role_path =
+        bind_name_policy_reviewed_constructed_x509_certificate_path_to_anchor_role_policy(
+            detached_reviewed_path,
+            role_policy(
+                &candidates[1],
+                X509CertificateRole::IssuingCertificateAuthority,
+            ),
+        )
+        .unwrap();
+    let detached_initialized =
+        initialize_name_policy_reviewed_constructed_x509_certificate_path_length(
+            detached_reviewed_role_path,
+        );
+    let retained_path = initialized
+        .reviewed_path()
+        .reviewed_path()
+        .constructed_path_with_name_policy()
+        .constructed_path();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        retained_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let reviewed_terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+
+    let error =
+        advance_initialized_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_length(
+            &detached_initialized,
+            reviewed_terminal,
+            intermediate_policy(&candidates[0], &profiles, false),
+        )
+        .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathInitializedIntermediatePathLengthErrorKind::EvidenceMismatch
     );
 }
 

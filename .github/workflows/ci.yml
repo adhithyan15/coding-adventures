@@ -798,6 +798,10 @@ jobs:
           # URLs with integrity hashes.
           python3 code/scripts/npm_lockfiles.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_npm_lockfiles.py'
+          # The central Gemfile.lock must keep agreeing with every Gemfile and
+          # gemspec's third-party gems (names, requirement ranges, checksums).
+          python3 code/scripts/ruby_pins_check.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_ruby_pins_check.py'
           # Every toolchain version is exact, and every workflow's version
           # inputs agree with mise.toml (or a reasoned deviation in
           # code/specs/data/toolchain-pins.json). A floating `stable` or
@@ -4183,6 +4187,21 @@ jobs:
         if: needs.detect.outputs.needs_ruby == 'true'
         shell: bash
         run: gem install bundler --version 4.0.24
+
+      # Every Ruby BUILD runs an unchanged `bundle install`. This makes the
+      # only gems Bundler can see the ones pinned, with checksums, in
+      # code/specs/data/third-party-dependencies/ruby/Gemfile.lock: the script downloads
+      # them under BUNDLE_FROZEN (failing if the lock is stale or a checksum
+      # is wrong), indexes them into a local mirror, and points
+      # mirror.https://rubygems.org at it. Ruby's default/bundled gems
+      # (minitest, rake, json) remain candidates; Ruby itself is pinned.
+      - name: Serve pinned gems from a local mirror
+        if: needs.detect.outputs.needs_ruby == 'true'
+        shell: bash
+        run: |
+          ruby code/scripts/ruby_gem_mirror.rb --global-config
+          # CI logs must show the mirror took effect.
+          bundle config get mirror.https://rubygems.org
 
       - name: Set up Node.js
         if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'

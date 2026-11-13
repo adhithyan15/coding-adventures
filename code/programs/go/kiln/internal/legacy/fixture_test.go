@@ -131,6 +131,18 @@ func (f *fixture) plan(g *Graph) *Plan {
 	if err != nil {
 		f.t.Fatalf("BuildPlan: %v", err)
 	}
+	// Every plan any test builds: nothing is cacheable until traced read-sets
+	// exist (KILN04), and no hint ever appears among the reasons.
+	for _, r := range p.Packages {
+		if r.Class == ClassCacheable {
+			f.t.Fatalf("%s is cacheable with no traced read-set", r.Name)
+		}
+		for _, h := range r.Hints {
+			if contains(r.Reasons, h) {
+				f.t.Fatalf("%s: hint %q is also a reason", r.Name, h)
+			}
+		}
+	}
 	return p
 }
 
