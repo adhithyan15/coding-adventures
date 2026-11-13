@@ -146,6 +146,45 @@ describe("the committed Kannada A1 inventory", () => {
     expect(spatial?.note).not.toMatch(/Not one spatial relator/);
   });
 
+  it("teaches the A1 to/from movement contrast after the place vocabulary", () => {
+    // Issue #19319 reuses the chapter 103 ablative rather than inventing a
+    // second source marker. An isolated go/come or school word is not enough.
+    const lessons = loadTrackLessons("kannada");
+    const movement = lessons.find(
+      (lesson) => lesson.realization.lessonId === "KA-C108-movement",
+    );
+    expect(movement).toBeDefined();
+    expect(movement?.frontmatter["introduces.knowledge"]).toContain(
+      "KA-GRAMMAR-C108-DESTINATION-GE-06",
+    );
+    expect(movement?.frontmatter["practises.knowledge"]).toContain(
+      "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+    );
+    expect(movement?.body).toContain("ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ");
+    expect(movement?.body).toContain("ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ");
+    expect(Number(movement?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+
+    const point = inventory.points.find((entry) => entry.id === "KA-A1-POST-03");
+    expect(point?.probe).toEqual([
+      "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+      "KA-GRAMMAR-C108-DESTINATION-GE-06",
+    ]);
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage.points.find((entry) => entry.id === point?.id)?.covered).toBe(true);
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(46);
+
+    const curriculum = loadTrackLanguageCurriculum("kannada");
+    expect(curriculum).toBeDefined();
+    expect(lessonsUpToLevel(lessons, [curriculum!], loadCurriculumSpine(), "A1")
+      .some((lesson) => lesson.realization.lessonId === "KA-C108-movement")).toBe(true);
+    const chapter108 = loadTrackChapters()
+      .find((track) => track.language === "kannada")
+      ?.chapters.find((chapter) => chapter.chapter === 108);
+    expect(chapter108?.payoff?.lesson).toBe("KA-C108-movement");
+    expect(chapter108?.payoff?.assesses).toContain("KA-GRAMMAR-C108-DESTINATION-GE-06");
+  }, 60_000);
+
   it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
     // The 2026-11-04 source audit found that the old inventory notes were stale:
     // uuru, nagara, deesha and raajya already have direct owners. The missing
