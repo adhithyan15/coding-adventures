@@ -106,6 +106,21 @@ subordinate CA names, support every GeneralName, establish complete Name or
 path validity, check revocation, perform TLS or HTTP, authorize OAuth
 transport, or grant network authority.
 
+A matching stronger subordinate-intermediate policy accepts only that strong
+ordered target policy. It derives every complete intermediate policy, exact
+certificate, anchor-to-target order, and self-issued classification only
+through the retained strong evidence, then invokes the same bounded private
+subordinate DNS/IP NameConstraints evaluator as the generic result. Success
+retains the exact Name-value policy, reviewed-root selection, certificate-wide
+anchor-role policy, complete ordered signature and intermediate evidence,
+target authentication, reviewed-anchor and target-intermediate policy, and
+only payload-free subordinate application and repeated-name counts together.
+The generic subordinate policy cannot produce this stronger result. This does
+not apply reviewed-anchor constraints to subordinate CAs, constrain subject
+distinguished names, support every GeneralName, establish complete Name or
+path validity, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

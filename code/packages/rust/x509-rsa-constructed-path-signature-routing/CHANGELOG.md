@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.24.0 - 2026-11-13
+
+### Added
+
+- Added subordinate-intermediate NameConstraints evaluation that accepts only
+  the Name-policy-backed ordered target policy result.
+- Added retained Name-policy, reviewed-root, anchor-role, ordered target and
+  subordinate constraint, and payload-free evaluation-count coverage over a
+  checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic entry points derive the intermediate certificates,
+  anchor-to-target order, and self-issued classifications only through their
+  consumed evidence, then use the same bounded repository-owned subordinate
+  constraint evaluator.
+- The strong result retains the exact Name-value policy through supported
+  subordinate-CA SAN constraints. It does not apply reviewed-anchor constraints
+  to subordinate CAs, constrain subject distinguished names, establish complete
+  Name or path validity, check revocation, perform TLS or HTTP, authorize OAuth
+  transport, or grant network authority.
+
 ## 0.23.0 - 2026-11-13
 
 ### Added
