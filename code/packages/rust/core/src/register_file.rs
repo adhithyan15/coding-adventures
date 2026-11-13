@@ -134,9 +134,9 @@ impl fmt::Display for RegisterFile {
     /// Format: `RegisterFile(16x32): R1=42 R2=100 ...`
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "RegisterFile({}x{}):", self.config.count, self.config.width)?;
-        for i in 0..self.config.count {
-            if self.values[i] != 0 {
-                write!(f, " R{}={}", i, self.values[i])?;
+        for (i, value) in self.values.iter().enumerate().take(self.config.count) {
+            if *value != 0 {
+                write!(f, " R{}={}", i, value)?;
             }
         }
         Ok(())

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: parameter-name extraction iterates `constants` with `enumerate().skip()`; behaviour unchanged.
+
 ## 0.1.0 -- 2026-03-21
 
 ### Added

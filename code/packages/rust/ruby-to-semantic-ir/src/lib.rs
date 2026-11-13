@@ -5290,10 +5290,9 @@ mod tests {
             ),
             other => panic!("expected LetStarBinding(temp, rhs), got {:?}", other),
         }
-        for i in 1..=2 {
+        for (i, stmt) in body.stmts.iter().enumerate().skip(1).take(2) {
             if let Stmt::LetBinding { value: Expr::SeqIndex { seq, .. }, .. }
-            | Stmt::LetStarBinding { value: Expr::SeqIndex { seq, .. }, .. } =
-                &body.stmts[i]
+            | Stmt::LetStarBinding { value: Expr::SeqIndex { seq, .. }, .. } = stmt
             {
                 assert!(
                     matches!(seq.as_ref(), Expr::VarRef { .. }),
@@ -5302,7 +5301,7 @@ mod tests {
                     seq
                 );
             } else {
-                panic!("stmt[{}] expected LetBinding(SeqIndex), got {:?}", i, body.stmts[i]);
+                panic!("stmt[{}] expected LetBinding(SeqIndex), got {:?}", i, stmt);
             }
         }
     }

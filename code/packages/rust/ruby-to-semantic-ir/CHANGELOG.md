@@ -2,6 +2,12 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — Rust 1.100 clippy drift
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs (tests)`: `needless_range_loop`: multi-assign test iterates `body.stmts` with `enumerate().skip().take()`; behaviour unchanged.
+
 ## Unreleased — Ruby display, `#{true}`, early `return`/`break`/`next`, a `begin`/`rescue` value (#18798, items 11–15 and 19)
 
 ### Fixed

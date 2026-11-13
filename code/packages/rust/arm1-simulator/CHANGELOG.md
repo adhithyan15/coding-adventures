@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: capture `regs_after` in `step` with `iter_mut().enumerate()`; behaviour unchanged.
+
 ## [0.2.0] - 2026-08-28
 
 ### Changed

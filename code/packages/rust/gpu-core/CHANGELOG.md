@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/registers.rs`: `needless_range_loop`: `dump` and `dump_all` iterate the register values with `iter().enumerate()`; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

@@ -1,5 +1,11 @@
 # Changelog — qr-code (Rust)
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: format/version reservation and timing-strip tests iterate grid rows and cells directly; behaviour unchanged.
+
 ## 0.3.0 — 2026-09-07
 
 Purely-additive `pub` surface extension per `code/specs/MA04-qr-decoder.md`
