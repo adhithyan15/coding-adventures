@@ -216,9 +216,34 @@ const (
 type reasons struct {
 	m   map[string]bool
 	any bool
+	mt  *meter
 	// order is set when a reason means the action's behaviour depended on
 	// another action's recorded writes (M-3).
 	order bool
+}
+
+// intraActionKind is the M-3 ALLOW-LIST: the reason kinds of a shard's own
+// record that describe the action's own environment and nothing about other
+// actions.  Every other kind, including a daemon, any spelling of
+// reads-product or unstable-path, and a kind this code has never heard of,
+// marks the action order-dependent (fail closed).  Checked against the
+// classifier's kinds (internal/traced) and the reasons the merge itself adds.
+func intraActionKind(k string) bool {
+	switch k {
+	case "failed", // its BUILD exited non-zero
+		"precondition",     // a gate or refusal (KILN03 hard reason, probe, no key)
+		"network",          // it used the network (section 5.4)
+		"host-read",        // it read outside the repository (5.3)
+		"state-write",      // it wrote a declared host state root
+		"writes-tracked",   // it wrote a tracked path (a taint source, not a reader)
+		"vcs-read",         // it read .git
+		"trace-visible",    // it noticed it was traced
+		"unscrubbed",       // the environment was not the scrubbed one
+		"trace-incomplete", // the trace is partial (M1 decides the run)
+		"daemon-left":      // a process outlived a step (M-1 decides the run)
+		return true
+	}
+	return strings.HasPrefix(k, "manifest-") // too large or invalid manifest
 }
 
 // dep adds an order-dependence reason: reads-product (M5-M7, M9-M14) or
@@ -231,6 +256,9 @@ func (r *reasons) dep(s string) {
 
 func (r *reasons) add(s string) {
 	r.any = true
+	// Each reason costs a sanitise, a map insert and, now and then, a sort:
+	// charge it, so a world with millions of hits ends as run-void "size".
+	r.mt.spend(int64(16 + len(s)/8))
 	if r.m == nil {
 		r.m = map[string]bool{}
 	}
@@ -539,6 +567,7 @@ func (m *merger) buildActions() {
 	sort.Strings(sorted)
 	for id, n := range sorted {
 		a := &act{name: n, id: id, assigned: -1}
+		a.rs.mt = m.mt
 		if s, ok := m.assigned[n]; ok {
 			a.assigned = s
 		}
@@ -840,8 +869,8 @@ func (m *merger) perAction() {
 			rec := &c.rec.Record
 			// M15: the record's own reasons, a failed status, a gate, a refusal.
 			for _, r := range rec.Reasons {
-				if recfmt.ReasonKind(r) == "reads-product" || recfmt.ReasonKind(r) == "unstable-path" {
-					a.rs.order = true // a record that already says so (M-3)
+				if !intraActionKind(recfmt.ReasonKind(r)) {
+					a.rs.order = true // M-3: an allow-list, see intraActionKind
 				}
 				a.rs.add(r)
 			}

@@ -1187,12 +1187,20 @@ are all explained is only the shard-level void (M4).
 
 **Second-order order dependence (M-3).** An action whose own record
 depended on another action's recorded writes (any `reads-product` or
-`unstable-path` reason derived by M5 to M14, or one already in its record)
-would write something else if the order changed, so its recorded write set
+`unstable-path` reason derived by M5 to M14, or any reason in its own record
+whose kind is not on the allow-list below) would write something else if the order changed, so its recorded write set
 is one of several possible. Every cross-action rule quantifies over write
 sets, so one such action makes every other action's check unreliable. The
 strict verdict therefore treats it as an unknown write set: **run-void**.
-That closes the class for emission. It is expected to zero the yield of
+The allow-list of own-record reason kinds that describe only the action's own
+environment, and so do not mark it order-dependent: `failed` (its BUILD
+exited non-zero), `precondition` (a gate or refusal), `network`,
+`host-read`, `state-write`, `writes-tracked` (a taint source, not a
+reader), `vcs-read`, `trace-visible`, `unscrubbed`, `trace-incomplete` (M1
+decides the run), `daemon-left` (M-1 decides the run) and `manifest-*`.
+Every other kind, a `daemon:<addr>` on the client, any spelling of
+`reads-product` or `unstable-path`, and a kind the merge has never seen, is
+order dependence (fail closed). That closes the class for emission. It is expected to zero the yield of
 the first runs; any relaxation of it needs a lookup-time rule first (the M3
 spec: an action that would have been order-dependent in the lookup job must
 run), and that is the second-order item of §14.
@@ -1205,10 +1213,13 @@ action instead of the run (`Outcome.RelaxedEmittable`,
 strict verdict feeds emission, and a test holds that line.
 
 **Resource bounds.** A record path is at most 4,096 bytes and 128 segments,
-holds no NUL and no U+FFFD, and every line is valid UTF-8 with no padding
+holds no NUL and no U+FFFD (the same checks apply to the path part of every entry and to
+the action name), a field may not be `null`, and every line is valid UTF-8 with no padding
 (a BOM, CR or whitespace around the value is refused). The merge counts
 every node and comparison of all its overlap walks against one work budget
-(500 million units, ancestor probes weighted by prefix length) and holds at
+(500 million units: ancestor probes weighted by prefix length, every visited
+node by its owner count, descendant nodes by the query length, every reason
+added by its length) and holds at
 most 4 GiB of path text; exceeding either is run-void `size`. A record that
 fails validation voids the run and nothing further is analysed. Cause text
 is deterministic (validators report the first failure in a fixed order).

@@ -456,7 +456,7 @@ func (r *ShardRecord) Validate() error {
 	if !isDigest(r.BindingID) {
 		return fmt.Errorf("record: binding_id is not a SHA-256 in lowercase hex")
 	}
-	if err := key.ValidatePath(r.Action); err != nil {
+	if err := checkPath(r.Action); err != nil {
 		return fmt.Errorf("record action: %v", err)
 	}
 	if r.Record.Package != r.Action {
@@ -510,6 +510,14 @@ func (r *ShardRecord) Validate() error {
 		// and count caps of the ledger are checked at emission.
 		if err := key.CheckEntryName(e); err != nil {
 			return fmt.Errorf("record %q: %v", short(r.Action), err)
+		}
+		// The path part gets every check a path gets: the caps, NUL and
+		// U+FFFD (a lone surrogate escape decodes to U+FFFD).  "list:." names
+		// the root and has no path part.
+		if rest := e[strings.IndexByte(e, ':')+1:]; e != key.EntryList+"." {
+			if err := checkPath(rest); err != nil {
+				return fmt.Errorf("record %q entry: %v", short(r.Action), err)
+			}
 		}
 	}
 	if err := textList(fmt.Sprintf("record %q binds", short(r.Action)), rr.Binds, MaxList, 512); err != nil {

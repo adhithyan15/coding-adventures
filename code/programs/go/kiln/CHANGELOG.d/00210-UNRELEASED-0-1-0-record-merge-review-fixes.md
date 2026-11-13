@@ -38,3 +38,17 @@ verdict, the only one that produces manifests and passes, is now stricter.
 - Spec: section 7.1 gains M-1, M-2, M-3, the relaxed verdict and the resource
   bounds; section 14 names second-order order dependence, shard
   under-reporting and the report-only binary digests.
+
+### Round 2 (D13 re-review, four LOW findings)
+
+- The work meter now charges the owner lists of every visited node, the
+  `HasPrefix` cost of descendant walks and every reason added, so many actions
+  sharing many writes end as run-void `size` or finish quickly.
+- The M-3 own-record rule is an allow-list (`intraActionKind`): `failed`,
+  `precondition`, `network`, `host-read`, `state-write`, `writes-tracked`,
+  `vcs-read`, `trace-visible`, `unscrubbed`, `trace-incomplete`, `daemon-left`
+  and `manifest-*`. Everything else, including a daemon client and any unknown
+  kind, is order dependence. The dead `unstable-path` check is gone.
+- `null` is refused for every field of every record type, not only lists.
+- The path part of every entry and the action name get the same checks as other
+  paths (length, depth, NUL, U+FFFD).

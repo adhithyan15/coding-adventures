@@ -307,6 +307,18 @@ func oracle(w *world) verdict {
 			if len(r.Record.Reasons) > 0 || r.Status != recfmt.StatusBuilt || r.Gate != "" || r.Refusal != "" {
 				own[a] = true
 			}
+			// M-3 allow-list, restated: only these kinds are the action's own
+			// environment; anything else (a daemon client, reads-product, an
+			// unknown kind) is order dependence.
+			for _, x := range r.Record.Reasons {
+				kind, _, _ := strings.Cut(x, ":")
+				switch kind {
+				case "failed", "precondition", "network", "host-read", "state-write", "writes-tracked",
+					"vcs-read", "trace-visible", "unscrubbed", "trace-incomplete", "daemon-left":
+				default:
+					dep = true
+				}
+			}
 			inv := w.shards[c.shard].Inventory.Paths
 			seen := append(append([]string{}, r.Record.UntrackedObservations...), r.Record.AbsentObservations...)
 			for _, u := range seen {

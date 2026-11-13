@@ -75,8 +75,11 @@ func requireKeys(raw []byte, t reflect.Type) error {
 				name = f.Name
 			}
 			val, ok := members[name]
-			if ok && string(bytes.TrimSpace(val)) == "null" && strings.Contains(opts, "omitempty") {
-				return fmt.Errorf("%s: null is not a value (leave the key out)", name)
+			// null is refused for EVERY field: Go would decode it as the zero
+			// value, so {"tracked_changed_unexplained": null} would read as 0
+			// and {"unknown_writes": null} as "" (nothing unknown).
+			if ok && string(bytes.TrimSpace(val)) == "null" {
+				return fmt.Errorf("%s: null is not a value (leave an optional key out)", name)
 			}
 			if !ok {
 				if strings.Contains(opts, "omitempty") {

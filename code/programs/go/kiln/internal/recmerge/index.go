@@ -118,14 +118,14 @@ func (x *pathIndex) ancestors(q string, fn walk) bool {
 		if !x.mt.spend(int64(1 + i/32)) {
 			return false
 		}
-		if o, ok := x.owners[q[:i]]; ok && !fn(q[:i], o) {
+		if o, ok := x.owners[q[:i]]; ok && (!x.mt.spend(int64(len(o))) || !fn(q[:i], o)) {
 			return false
 		}
 	}
 	if !x.mt.spend(int64(1 + len(q)/32)) {
 		return false
 	}
-	if o, ok := x.owners[q]; ok && !fn(q, o) {
+	if o, ok := x.owners[q]; ok && (!x.mt.spend(int64(len(o))) || !fn(q, o)) {
 		return false
 	}
 	return true
@@ -137,7 +137,7 @@ func (x *pathIndex) descendants(q string, strict bool, fn walk) bool {
 	x.freeze()
 	if q == "." {
 		for _, p := range x.sorted {
-			if !x.mt.spend(1) || !fn(p, x.owners[p]) {
+			if !x.mt.spend(1+int64(len(x.owners[p]))) || !fn(p, x.owners[p]) {
 				return false
 			}
 		}
@@ -150,7 +150,9 @@ func (x *pathIndex) descendants(q string, strict bool, fn walk) bool {
 	}
 	prefix := q + "/"
 	for i := sort.SearchStrings(x.sorted, prefix); i < len(x.sorted) && strings.HasPrefix(x.sorted[i], prefix); i++ {
-		if !x.mt.spend(1) || !fn(x.sorted[i], x.owners[x.sorted[i]]) {
+		// One unit per node, one per owner (the callback does work for each),
+		// and the HasPrefix comparison costs the length of the query.
+		if !x.mt.spend(1+int64(len(x.owners[x.sorted[i]]))+int64(len(q)/32)) || !fn(x.sorted[i], x.owners[x.sorted[i]]) {
 			return false
 		}
 	}

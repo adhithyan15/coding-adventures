@@ -402,3 +402,101 @@ func TestInfoBinaryDigestsAreReportOnly(t *testing.T) {
 }
 
 // L-1 is in TestRecipeMismatchOnABuiltAction; L-7 is in the recfmt tests.
+
+// Round 2, LOW-1: the work meter charges the owner lists a walk touches, so
+// many actions sharing many write paths cannot dodge the budget.
+func TestR2OwnerListWorkIsMetered(t *testing.T) {
+	x := newPathIndex(&meter{max: 1 << 40})
+	for id := 0; id < 400; id++ {
+		x.add("z/y", id)
+		x.add("z/y/x", id)
+	}
+	x.freeze()
+	if n := spent(x, func() { x.ancestors("z/y/x", func(string, []int) bool { return true }) }); n < 800 {
+		t.Errorf("ancestors charged %d for 2 nodes of 400 owners", n)
+	}
+	if n := spent(x, func() { x.descendants("z", true, func(string, []int) bool { return true }) }); n < 800 {
+		t.Errorf("descendants charged %d for 2 nodes of 400 owners", n)
+	}
+	// The descendant comparison also costs the length of the query.
+	long := strings.Repeat("q", 3200)
+	y := newPathIndex(&meter{max: 1 << 40})
+	y.add(long+"/a", 0)
+	y.freeze()
+	if n := spent(y, func() { y.descendants(long, true, func(string, []int) bool { return true }) }); n < 100 {
+		t.Errorf("descendants ignored the query length: %d", n)
+	}
+}
+
+func spent(x *pathIndex, walk func()) int64 { x.mt.spent = 0; walk(); return x.mt.spent }
+
+// The review's world (400 actions x 2,000 shared writes, a daemon, three
+// untracked observations) ends as run-void "size" under a budget the real
+// work exceeds, whatever the clock says.
+func TestR2ManyOwnersDoSIsBounded(t *testing.T) {
+	var names []string
+	for i := 0; i < 400; i++ {
+		names = append(names, "pkg/p"+strings.Repeat("0", 4-len(itoa(i)))+itoa(i))
+	}
+	w := newWorld(t, shardSpec{names, names})
+	var ws []string
+	for i := 0; i < 2000; i++ {
+		ws = append(ws, "z/y/x/"+strings.Repeat("0", 5-len(itoa(i)))+itoa(i))
+	}
+	ws = sl(ws...)
+	for i := range w.shards[0].Records {
+		r := &w.shards[0].Records[i]
+		r.Record.Writes = ws
+		r.Record.UntrackedObservations = sl("z", "z/y", "z/y/x")
+		r.Record.Reasons = sl("daemon:x")
+	}
+	w.inv(0, "z")
+	in := w.input()
+	in.WorkBudget = 50_000_000
+	start := time.Now()
+	r := Merge(in)
+	wantVoid(t, "owners", r, "work budget")
+	if r.Emitted || len(r.Manifests) != 0 {
+		t.Error("emitted")
+	}
+	if d := time.Since(start); d > 5*time.Second {
+		t.Errorf("took %v", d)
+	}
+}
+
+// Round 2, LOW-2: the M-3 allow-list.
+func TestR2OwnReasonAllowList(t *testing.T) {
+	intra := []string{"failed", "precondition:x", "network:curl", "host-read:/var/x", "host-read:setup-modified:/x",
+		"state-write:/x", "writes-tracked:a", "vcs-read", "trace-visible:/proc/x", "unscrubbed",
+		"trace-incomplete:size", "daemon-left", "manifest-too-large", "manifest-invalid:x"}
+	for _, reason := range intra {
+		w := std(t)
+		w.honour = true
+		yes := true
+		w.rec(2, "pkg/d").Complete = &yes
+		w.rec(2, "pkg/d").Record.Reasons = sl(reason)
+		if r := w.merge(); r.out(t, "pkg/d").OrderDependent {
+			t.Errorf("%q is intra-action but marked order-dependent", reason)
+		}
+	}
+	for _, reason := range []string{"daemon:127.0.0.1:5432", "daemon:@abs", "daemon", "reads-product:x", "Reads-product:x",
+		"reads-product", "unstable-path", "unstable-path:x", "brand-new-kind:x", "Network:x", "FAILED"} {
+		w := std(t)
+		w.rec(2, "pkg/d").Record.Reasons = sl(reason)
+		r := w.merge()
+		if !r.out(t, "pkg/d").OrderDependent {
+			t.Errorf("%q was not marked order-dependent", reason)
+		}
+		if r.Emitted || len(r.Manifests) != 0 {
+			t.Errorf("%q: emitted", reason)
+		}
+	}
+	for _, k := range []string{"manifest-", "manifest-x"} {
+		if !intraActionKind(k) {
+			t.Error(k)
+		}
+	}
+	if intraActionKind("manifest") || intraActionKind("") {
+		t.Error("manifest kind prefix")
+	}
+}
