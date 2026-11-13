@@ -23,6 +23,18 @@ func (h *harness) wc(events ...trace.Event) *RawRecord {
 	return h.run(events...)
 }
 
+// noUnknown drops the writes-unknown reason, which the classifier adds when an
+// unknown write set would otherwise leave no trace-incomplete reason.
+func noUnknown(rs []string) []string {
+	var out []string
+	for _, r := range rs {
+		if r != rWritesUnknown {
+			out = append(out, r)
+		}
+	}
+	return out
+}
+
 func wantComplete(t *testing.T, what string, rec *RawRecord, want bool) {
 	t.Helper()
 	if rec.WritesComplete != want {
@@ -171,7 +183,7 @@ func TestWritesCompleteW5Virtual(t *testing.T) {
 	wantComplete(t, "write via an fd link with a path", rec, true)
 	h.has(rec, rec.Writes, "code/p/a/out")
 	// ... but not one that returns no path.
-	wantComplete(t, "write via an fd link without a path", h.wc(open("/proc/self/fd/3", "O_WRONLY", "pipe:[1]")), false)
+	wantComplete(t, "write via an fd link without a path", h.wc(open("/proc/self/fd/3", "O_WRONLY", "weird:[1]")), false)
 	// A descriptor link whose -y path is itself virtual names nothing real.
 	wantComplete(t, "write via an fd link to a virtual path", h.wc(open("/proc/self/fd/3", "O_WRONLY", "/dev/fd/9")), false)
 	// O_TMPFILE is unnamed until linked, and linking is a /proc write.

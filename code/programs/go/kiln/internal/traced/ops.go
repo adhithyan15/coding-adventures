@@ -145,7 +145,12 @@ func (c *classifier) openCall(ev *trace.Event, f openFlags) {
 		// W5: only an open of /proc/self/fd/N (or /dev/fd/N) that returned a
 		// real -y path is classified by that path (openVirtual); any other
 		// virtual name that can write says nothing about the object.
-		if c.inWrite && !(isFDLink(tg.abs) && strings.HasPrefix(ev.ReturnFDPath, "/")) {
+		//
+		// The exception (M2): re-opening a descriptor that is a pipe, a socket
+		// or an anonymous inode (`> /dev/stderr`, `> /dev/stdout`) cannot name a
+		// repository file, so it hides no write.  Any other annotation that is
+		// not an absolute path stays unknown.
+		if c.inWrite && !(isFDLink(tg.abs) && (strings.HasPrefix(ev.ReturnFDPath, "/") || anonymousFD(ev.ReturnFDPath))) {
 			c.incomplete = true
 		}
 		c.openVirtual(ev, tg, f)
@@ -228,6 +233,17 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	c.observe(tg.abs, true, false)
 }
 
+// anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
+// inode: an object with no place in any directory.
+func anonymousFD(ret string) bool {
+	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
+		if strings.HasPrefix(ret, p) {
+			return true
+		}
+	}
+	return false
+}
+
 // isFDLink matches /proc/self/fd/N and /dev/fd/N.
 func isFDLink(abs string) bool {
 	rest, ok := strings.CutPrefix(abs, "/proc/self/fd/")
@@ -261,13 +277,20 @@ func (c *classifier) write(ev *trace.Event) {
 		return
 	}
 	follow := writeFollow(ev)
+	parentBased := false
 	switch ev.Syscall {
 	case "mkdir", "mkdirat", "mknod", "mknodat", "symlink", "symlinkat", "unlink", "unlinkat", "rmdir":
-		follow = false
+		follow, parentBased = false, true
 	}
-	if !follow && ev.Result.OK {
-		// A call that succeeded on a name it does not follow treated a trailing
-		// slash as "this must be a directory", not as "follow the link".
+	if parentBased && ev.Result.OK {
+		// A create or remove call works on a NAME in its parent: a trailing
+		// slash only means "this must be a directory", never "follow the
+		// link".  Every OTHER no-follow call (lchown, lsetxattr, lremovexattr,
+		// and utimensat/fchownat/fchmodat2 with AT_SYMLINK_NOFOLLOW) looks the
+		// path up like a stat does, and the kernel's lookup of a final name
+		// that ends in a slash always follows a symlink there (and demands a
+		// directory), so the slash stays and walk's "a trailing slash always
+		// follows" rule gives the directory the call really changed (M1).
 		e2 := *ev
 		e2.Path = stripSlashes(ev.Path)
 		ev = &e2

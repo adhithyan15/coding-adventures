@@ -26,6 +26,7 @@ const (
 	rExecDepth      = "trace-incomplete:exec-depth"
 	rExecELF        = "trace-incomplete:exec-elf"
 	rRecipe         = "trace-incomplete:recipe-mismatch"
+	rWritesUnknown  = "trace-incomplete:writes-unknown"
 	rVCSRead        = "vcs-read"
 	rFailed         = "failed"
 	rDaemonLeft     = "daemon-left"
@@ -87,6 +88,97 @@ type goneLook struct {
 // ever adds reasons.
 type span struct{ s, e pos }
 
+// lookupSet is every lookup the stability rule judges, keyed by the absolute
+// path looked up.  It is the ONLY place these maps are written (the methods
+// below), so the classifier can keep two of them in step: one for every call,
+// one for the calls that can write.  A test scans the package to keep it so.
+type lookupSet struct {
+	// seen maps each component the action's paths went through to the START
+	// of the earliest lookup that went through it.
+	seen map[string]pos
+	// seenAbsent holds the places a walk stopped because the disk showed
+	// nothing there, with the interval of the lookups; see noteMissing.
+	seenAbsent map[string]span
+	// ownSeen holds the created paths a call treated as "the action's own"
+	// (and so did not observe), with the interval of the calls that did.  A
+	// change to such a path that overlaps one of those calls may have landed
+	// first, so the call may have seen something else (see judge).
+	ownSeen map[string]span
+	// seenFile holds the places a walk stopped at a file.
+	seenFile map[string]bool
+	// seenFinal holds followed final components, with the start of the earliest
+	// lookup that followed them.
+	seenFinal map[string]pos
+	// relFinal and relAbs hold the followed final names of a successful stat or
+	// exec that the open-only rule (section 5.5) may accept: relFinal those the
+	// post-run disk shows as a file, relAbs those it shows absent.  The span is
+	// the earliest start and the latest completion of such lookups.
+	relFinal, relAbs map[string]span
+	// gone holds the followed final names the post-run disk shows absent, with
+	// the start of the earliest lookup and whether any call found something
+	// there (it succeeded, or failed with an errno that says so).  See judge.
+	gone map[string]goneLook
+}
+
+func newLookupSet() lookupSet {
+	return lookupSet{
+		seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{},
+		seenFile: map[string]bool{}, seenFinal: map[string]pos{},
+		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
+	}
+}
+
+// widen grows the interval of m[abs] to cover [start, cur].
+func widen(m map[string]span, abs string, start, cur pos) {
+	sp, ok := m[abs]
+	if !ok || start.before(sp.s) {
+		sp.s = start
+	}
+	if !ok || sp.e.before(cur) {
+		sp.e = cur
+	}
+	m[abs] = sp
+}
+
+func (l *lookupSet) traversal(abs string, start pos) {
+	if p, ok := l.seen[abs]; !ok || start.before(p) {
+		l.seen[abs] = start
+	}
+}
+
+func (l *lookupSet) final(abs string, start pos) {
+	if p, ok := l.seenFinal[abs]; !ok || start.before(p) {
+		l.seenFinal[abs] = start
+	}
+}
+
+func (l *lookupSet) missing(abs string, isFile bool, start, cur pos) {
+	if isFile {
+		l.seenFile[abs] = true
+		return
+	}
+	widen(l.seenAbsent, abs, start, cur)
+}
+
+func (l *lookupSet) rel(abs string, absent bool, start, cur pos) {
+	if absent {
+		widen(l.relAbs, abs, start, cur)
+	} else {
+		widen(l.relFinal, abs, start, cur)
+	}
+}
+
+func (l *lookupSet) goneAt(abs string, start pos, present bool) {
+	g, ok := l.gone[abs]
+	if !ok || start.before(g.from) {
+		g.from = start
+	}
+	g.present = g.present || present
+	l.gone[abs] = g
+}
+
+func (l *lookupSet) own(p string, start, cur pos) { widen(l.ownSeen, p, start, cur) }
+
 // classifier is the state of one action across all of its steps.
 //
 // The sets that make "written, then read" work (created, absent) are kept in
@@ -119,34 +211,16 @@ type classifier struct {
 	hard map[string]bool
 	// wlog logs every write to a path, for the exec-then-rewrite rule.
 	wlog map[string][]pos
-	// seen maps each component the action's paths went through to the START
-	// of the earliest lookup that went through it.
-	seen map[string]pos
-	// seenAbsent holds the places a walk stopped because the disk showed
-	// nothing (or a file) there; see noteMissing.
-	seenAbsent map[string]span
-	// ownSeen holds the created paths a call treated as "the action's own"
-	// (and so did not observe), with the interval of the calls that did.  A
-	// change to such a path that overlaps one of those calls may have landed
-	// first, so the call may have seen something else (see checkStability).
-	ownSeen map[string]span
 	// binds are the loopback or wildcard inet addresses the action bound, as
 	// "<type>/<address>:<port>"; see RawRecord.Binds.
-	binds    map[string]bool
-	seenFile map[string]bool
-	// seenFinal holds followed final components, with the start of the earliest
-	// lookup that followed them.
-	seenFinal map[string]pos
-	// relFinal and relAbs hold the followed final names of a successful stat or
-	// exec that the open-only rule (section 5.5) may accept: relFinal those the
-	// post-run disk shows as a file, relAbs those it shows absent.  The span is
-	// the earliest start and the latest completion of such lookups.
-	relFinal, relAbs map[string]span
-	// gone holds the followed final names the post-run disk shows absent, with
-	// the start of the earliest lookup and whether any call found something
-	// there (it succeeded, or failed with an errno that says so).  See
-	// checkStability.
-	gone map[string]goneLook
+	binds map[string]bool
+	// lookupSet (embedded) holds every lookup the stability rule judges (seen,
+	// seenAbsent, ownSeen, seenFile, seenFinal, relFinal, relAbs, gone); wr
+	// holds only the lookups made by calls that can WRITE.  The same rule is
+	// applied to both: the first set explains the unstable-path reason, the
+	// second says whether a write may have landed somewhere else (W8).
+	lookupSet
+	wr lookupSet
 	// relax is set while a successful stat or exec target is resolved.
 	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
@@ -162,16 +236,10 @@ type classifier struct {
 	// lookup, an unstable direct check) is a reason the WRITE could not be
 	// placed, so it sets incomplete too (W8).
 	inWrite bool
-	// wtouch holds the paths a write call's resolution touched, in any of the
-	// maps checkStability later judges (seen, seenFinal, seenAbsent, ...).
-	// checkStability turns an unstable verdict on one of them into incomplete
-	// (W8); an unstable path only reads went through costs nothing here.
-	wtouch map[string]bool
-
-	step   int
-	cur    pos // completion of the current call
-	start  pos // start of the current call
-	callOK bool
+	step    int
+	cur     pos // completion of the current call
+	start   pos // start of the current call
+	callOK  bool
 	// callPresent says the call found something at its path (presence).
 	callPresent bool
 	// openRet is the -y path of the descriptor while the path of a successful
@@ -196,10 +264,9 @@ func newClassifier(p *prepared) *classifier {
 		untracked: map[string]bool{}, absentObs: map[string]bool{}, reasons: map[string]bool{},
 		created: map[string]pos{}, absent: map[string]pos{}, links: map[string]string{},
 		dirs: map[string]bool{}, cache: map[string]node{}, mods: map[string][]mod{},
-		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
-		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
+		hard: map[string]bool{}, wlog: map[string][]pos{}, binds: map[string]bool{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
-		wtouch: map[string]bool{},
+		lookupSet: newLookupSet(), wr: newLookupSet(),
 	}
 }
 
@@ -219,23 +286,6 @@ func (c *classifier) writing(f func()) {
 	c.inWrite = true
 	defer func() { c.inWrite = old }()
 	f()
-}
-
-// touchW remembers that the write call being processed touched abs.
-func (c *classifier) touchW(abs string) {
-	if c.inWrite {
-		c.wtouch[abs] = true
-	}
-}
-
-// unstable raises the unstable-path reason for p, the key of the lookup the
-// stability rule rejected.  If a write call's resolution touched p, the write
-// may have landed elsewhere: the write set is unknown (W8).
-func (c *classifier) unstable(p string) {
-	c.reason(rUnstable)
-	if c.wtouch[p] {
-		c.incomplete = true
-	}
 }
 
 // budgetOut raises the size reason when the stability pass runs out of
@@ -311,7 +361,15 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 		c.incomplete = true
 	}
 	for _, p := range t.Procs {
-		if p == nil || p.Exit == nil {
+		if p == nil || p.Exit == nil || p.Exit.Killed || p.Exit.CoreDumped {
+			c.incomplete = true
+		}
+	}
+	// L1: a process killed by a signal, whichever process it was, may have been
+	// cut off with work unseen; and the kernel writes a core file for a
+	// process that dumps core with NO system call, so no trace shows it.
+	for _, ex := range t.Exits {
+		if ex.Killed || ex.CoreDumped {
 			c.incomplete = true
 		}
 	}
@@ -378,15 +436,10 @@ func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
 		if at, ok := c.created[p]; ok && at.before(c.start) {
 			if !c.noOwnSeen {
-				c.touchW(p)
-				sp, seen := c.ownSeen[p]
-				if !seen || c.start.before(sp.s) {
-					sp.s = c.start
+				c.lookupSet.own(p, c.start, c.cur)
+				if c.inWrite {
+					c.wr.own(p, c.start, c.cur)
 				}
-				if !seen || sp.e.before(c.cur) {
-					sp.e = c.cur
-				}
-				c.ownSeen[p] = sp
 			}
 			return true
 		}
@@ -563,17 +616,13 @@ func (c *classifier) nsChange(abs string, clean, opened bool) {
 }
 
 // noteRel records a followed final name of a successful stat or exec for the
-// open-only rule.
-func (c *classifier) noteRel(m map[string]span, abs string) {
-	c.touchW(abs)
-	sp, ok := m[abs]
-	if !ok || c.start.before(sp.s) {
-		sp.s = c.start
+// open-only rule: absent says the post-run disk shows it absent (relAbs), else
+// it is a file (relFinal).
+func (c *classifier) noteRel(abs string, absent bool) {
+	c.lookupSet.rel(abs, absent, c.start, c.cur)
+	if c.inWrite {
+		c.wr.rel(abs, absent, c.start, c.cur)
 	}
-	if !ok || sp.e.before(c.cur) {
-		sp.e = c.cur
-	}
-	m[abs] = sp
 }
 
 // openOnly is the open-only change-log rule of section 5.5.  A final name p
@@ -618,9 +667,9 @@ func (c *classifier) openOnly(p string, sp span, absent bool) bool {
 
 // noteFinal records a followed final component that the disk shows present.
 func (c *classifier) noteFinal(abs string) {
-	c.touchW(abs)
-	if p, ok := c.seenFinal[abs]; !ok || c.start.before(p) {
-		c.seenFinal[abs] = c.start
+	c.lookupSet.final(abs, c.start)
+	if c.inWrite {
+		c.wr.final(abs, c.start)
 	}
 }
 
@@ -632,19 +681,18 @@ func (c *classifier) noteFinal(abs string) {
 // unstable when the last change to it before the lookup was a creation; a file
 // there is unstable if the action touched it at all.
 func (c *classifier) noteMissing(abs string, isFile bool) {
-	c.touchW(abs)
-	if isFile {
-		c.seenFile[abs] = true
-		return
+	c.lookupSet.missing(abs, isFile, c.start, c.cur)
+	if c.inWrite {
+		c.wr.missing(abs, isFile, c.start, c.cur)
 	}
-	sp, ok := c.seenAbsent[abs]
-	if !ok || c.start.before(sp.s) {
-		sp.s = c.start
+}
+
+// noteGone records a followed final name that the post-run disk shows absent.
+func (c *classifier) noteGone(abs string) {
+	c.lookupSet.goneAt(abs, c.start, c.callPresent)
+	if c.inWrite {
+		c.wr.goneAt(abs, c.start, c.callPresent)
 	}
-	if !ok || sp.e.before(c.cur) {
-		sp.e = c.cur
-	}
-	c.seenAbsent[abs] = sp
 }
 
 // markCreated records that the action made abs, from empty, now.
@@ -671,9 +719,9 @@ func (c *classifier) markRemoved(abs string, unlink bool) {
 // start of the current call.  Only the earliest lookup matters: if the rule
 // holds for it, it holds for every later one.
 func (c *classifier) noteTraversal(abs string) {
-	c.touchW(abs)
-	if p, ok := c.seen[abs]; !ok || c.start.before(p) {
-		c.seen[abs] = c.start
+	c.lookupSet.traversal(abs, c.start)
+	if c.inWrite {
+		c.wr.traversal(abs, c.start)
 	}
 }
 
@@ -746,14 +794,42 @@ func (c *classifier) touchedAfterParents(abs string, after pos) bool {
 // checkStability applies the rule to every component any path went through,
 // and the exec rule: a file read for its "#!" line or ELF header must not be
 // changed afterwards, or the post-run bytes are not the bytes the kernel read.
+//
+// The rule runs twice, over the same change log: over every lookup (an
+// unstable one is the unstable-path reason) and over the lookups of calls
+// that can write alone (an unstable one means a write may have landed
+// somewhere else: W8).  A lookup that only a read made, however unstable,
+// costs a write nothing.  Judging the write lookups on their own intervals
+// is as sound as judging them within the wider set: the verdicts are
+// monotone in the interval (a shorter span, or a later first lookup, can only
+// be safer), and what a write's placement depends on is exactly its own
+// lookups.
 func (c *classifier) checkStability() {
-	for p, at := range c.seen {
-		if !c.stable(p, at) {
-			c.unstable(p)
+	idx := map[string]*modIndex{}
+	c.judge(&c.lookupSet, idx, func() { c.reason(rUnstable) })
+	c.judge(&c.wr, idx, func() { c.incomplete = true })
+	for p, from := range c.execReads {
+		// Measured from the FIRST exec's start: any change that completed after
+		// it began may have altered the bytes the kernel read.
+		bad := c.touchedFrom(p, from)
+		if w := c.wlog[p]; len(w) > 0 && !w[len(w)-1].before(from) {
+			bad = true
+		}
+		if bad {
+			c.reason(rExecUnreadable)
 		}
 	}
-	idx := map[string]*modIndex{}
-	for p, sp := range c.seenAbsent {
+}
+
+// judge applies the stability rule to the lookups in l; bad is called once
+// for each lookup that is unstable.
+func (c *classifier) judge(l *lookupSet, idx map[string]*modIndex, bad func()) {
+	for p, at := range l.seen {
+		if !c.stable(p, at) {
+			bad()
+		}
+	}
+	for p, sp := range l.seenAbsent {
 		c.steps += 8
 		if c.steps > walkBudget {
 			c.budgetOut()
@@ -769,25 +845,25 @@ func (c *classifier) checkStability() {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) || removedBeforeMade(ms, c.firstMade(ms), sp.s) {
-			c.unstable(p)
+			bad()
 		}
 	}
-	for p, at := range c.seenFinal {
+	for p, at := range l.seenFinal {
 		// A path the action never changed is what the disk says (an untracked
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
 		if len(c.mods[p]) > 0 && !c.createdOnce(p, at) {
-			c.unstable(p)
+			bad()
 		}
 	}
 	// The followed finals of a successful stat or exec: the open-only rule,
 	// else the strict rules they would have met as ordinary lookups.
-	for p, sp := range c.relFinal {
+	for p, sp := range l.relFinal {
 		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
-			c.unstable(p)
+			bad()
 		}
 	}
-	for p, sp := range c.relAbs {
+	for p, sp := range l.relAbs {
 		ms := c.mods[p]
 		if len(ms) == 0 || c.openOnly(p, sp, true) {
 			continue
@@ -803,7 +879,7 @@ func (c *classifier) checkStability() {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) {
-			c.unstable(p)
+			bad()
 		}
 	}
 	// A followed final name that the post-run disk shows absent was removed, or
@@ -812,22 +888,22 @@ func (c *classifier) checkStability() {
 	// lookup began.  And a removal of a name the action had NOT made yet, that
 	// completed after the earliest lookup began, may have taken a link or file
 	// the lookup went through (a pre-existing object the disk no longer shows).
-	for p, g := range c.gone {
+	for p, g := range l.gone {
 		ms := c.mods[p]
 		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
-			c.unstable(p)
+			bad()
 		}
 		if removedBeforeMade(ms, firstMade, g.from) {
-			c.unstable(p)
+			bad()
 		}
 	}
-	for p := range c.seenFile {
+	for p := range l.seenFile {
 		if c.touchedAfter(p, pos{}, true) {
-			c.unstable(p)
+			bad()
 		}
 	}
-	for p, sp := range c.ownSeen {
+	for p, sp := range l.ownSeen {
 		// Anything that may have taken effect while such a call ran: a change
 		// to the path or an ancestor that completed after the call began and
 		// began before it ended.
@@ -847,20 +923,9 @@ func (c *classifier) checkStability() {
 				idx[q] = mi
 			}
 			if mi.overlaps(ms, sp.s, sp.e) {
-				c.unstable(p)
+				bad()
 				break
 			}
-		}
-	}
-	for p, from := range c.execReads {
-		// Measured from the FIRST exec's start: any change that completed after
-		// it began may have altered the bytes the kernel read.
-		bad := c.touchedFrom(p, from)
-		if w := c.wlog[p]; len(w) > 0 && !w[len(w)-1].before(from) {
-			bad = true
-		}
-		if bad {
-			c.reason(rExecUnreadable)
 		}
 	}
 }
@@ -940,6 +1005,23 @@ func (c *classifier) record(pkg string) *RawRecord {
 	}
 	if len(trav) > maxListed {
 		c.reason(rSize)
+	}
+	// The invariant the merge job leans on (KILN04 7.1, G1): an unknown write
+	// set always leaves a trace-incomplete reason in the record.  Several
+	// triggers (a write to the root, a failed unplaceable call, a core dump, a
+	// daemon peer) leave none of their own, so say it here.  The reason cap
+	// keeps one reason of every kind, so it survives capReasons.
+	if c.incomplete {
+		has := false
+		for r := range c.reasons {
+			if strings.HasPrefix(r, "trace-incomplete:") {
+				has = true
+				break
+			}
+		}
+		if !has {
+			c.reasons[rWritesUnknown] = true
+		}
 	}
 	// W9: the write lists are never truncated, but a record this large is
 	// refused like the other lists (the size reason), and says its write set

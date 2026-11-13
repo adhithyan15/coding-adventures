@@ -113,13 +113,18 @@ func newWorld(t *testing.T, specs ...shardSpec) *world {
 			sh.Records = append(sh.Records, recfmt.ShardRecord{
 				BindingID: sh.BindingID, Action: pkg, Language: "go", Status: recfmt.StatusBuilt,
 				StepsRun: 1, StepsTotal: 1, Steps: []recfmt.Step{{Clean: true}}, StepsSHA: w.steps[pkg],
-				Weak:   hex.EncodeToString(wk[:]),
-				Record: recfmt.Normalize(recfmt.RawRecord{Package: pkg, Entries: []string{"pkg:" + pkg}})})
+				Weak:     hex.EncodeToString(wk[:]),
+				Complete: complete(),
+				Record:   recfmt.Normalize(recfmt.RawRecord{Package: pkg, Entries: []string{"pkg:" + pkg}})})
 		}
 		w.shards = append(w.shards, sh)
 	}
 	return w
 }
+
+// complete is a classified record's writes_complete: true (the key is
+// required, and an ordinary action's write set is complete).
+func complete() *bool { v := true; return &v }
 
 func sha(b []byte) string { d := sha256.Sum256(b); return hex.EncodeToString(d[:]) }
 

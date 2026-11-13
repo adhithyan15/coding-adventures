@@ -164,6 +164,7 @@ func (c *classifier) inetPeer(t *trace.Trace, ev *trace.Event) {
 		return
 	}
 	c.reason("daemon:" + sanitize(addrText(ip, a.Port)))
+	c.incomplete = true // L2: an untraced peer may write the repository
 }
 
 func addrText(ip netip.Addr, port int) string {
@@ -225,6 +226,7 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 			return
 		}
 		c.reason("daemon:" + sanitize("@"+a.Address))
+		c.incomplete = true // L2
 		return
 	}
 	if a.Address == "" {
@@ -244,6 +246,7 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		return
 	}
 	c.reason("daemon:" + c.redact(tg.abs))
+	c.incomplete = true // L2
 }
 
 // unixBound says the action bound this Unix address on a socket of this type.

@@ -365,7 +365,7 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 		switch {
 		case settled:
 		case c.relax && c.lookup(f).kind == KindFile:
-			c.noteRel(c.relFinal, f)
+			c.noteRel(f, false)
 		default:
 			c.noteFinal(f)
 		}
@@ -373,18 +373,12 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	if w.stop != "" && !w.stopFinal {
 		last := w.stop == w.final && !w.stopMid
 		if last && !w.stopPresent && !settled {
-			c.touchW(w.stop)
-			g, ok := c.gone[w.stop]
-			if !ok || c.start.before(g.from) {
-				g.from = c.start
-			}
-			g.present = g.present || c.callPresent
-			c.gone[w.stop] = g
+			c.noteGone(w.stop)
 		}
 		switch {
 		case last && settled:
 		case last && c.relax && !w.stopPresent:
-			c.noteRel(c.relAbs, w.stop)
+			c.noteRel(w.stop, true)
 		default:
 			c.noteMissing(w.stop, w.stopPresent)
 		}

@@ -780,6 +780,11 @@ func (m *merger) unknown(c *copyRec) (string, int) {
 	switch {
 	case r.Unknown != "":
 		return "unknown_writes " + r.Unknown, unkHard
+	case r.Complete == nil:
+		// Recorder version 2 requires the key (M3).  A record that lacks it, by
+		// whatever route it got here, never proved its write set complete, and
+		// the absence of a trace-incomplete reason proves nothing.
+		return "writes_complete is missing", unkHard
 	case r.Complete != nil && !*r.Complete:
 		return "writes_complete is false", unkHard
 	case c.recipeBad || hasReason(r.Record.Reasons, "trace-incomplete:recipe-mismatch"):
@@ -790,9 +795,6 @@ func (m *merger) unknown(c *copyRec) (string, int) {
 	case hasKind(r.Record.Reasons, "trace-incomplete"):
 		if !m.in.HonourWritesComplete {
 			return "trace-incomplete (the classifier does not report writes_complete yet)", unkHard
-		}
-		if r.Complete == nil {
-			return "trace-incomplete without writes_complete", unkHard
 		}
 	}
 	for _, st := range r.Steps {

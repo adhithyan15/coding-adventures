@@ -199,10 +199,14 @@ type ShardRecord struct {
 	Record     RawRecord `json:"record"`
 	// Complete is the optional "writes_complete" switch of KILN04 section 7.1
 	// (G1).  The classifier computes it (traced.RawRecord.WritesComplete, a
-	// Go-only field); the recorder sets it from CompleteOf.  Absent means
-	// "unknown", and the merge honours the key only when
+	// Go-only field); the shard writer MUST derive it with CompleteOf, and
+	// EncodeRecord refuses a record where it is missing or disagrees
+	// (CheckComplete).  For recorder version 2 the key is REQUIRED on the
+	// wire (no omitempty): a record without it is not decoded, and one that
+	// reaches the merge in memory without it is an unknown write set whatever
+	// its reasons say.  The merge honours a true value only when
 	// Input.HonourWritesComplete is on.
-	Complete *bool `json:"writes_complete,omitempty"`
+	Complete *bool `json:"writes_complete"`
 }
 
 // RawRecord is the classifier's output, unchanged (internal/traced).  The wire
@@ -217,6 +221,22 @@ type RawRecord = traced.RawRecord
 func CompleteOf(r RawRecord) *bool {
 	v := r.WritesComplete
 	return &v
+}
+
+// CheckComplete is the check the shard writer's record must pass: the
+// "writes_complete" key is present, and it says what the classifier said
+// (r.Record.WritesComplete, available only in memory: it is not on the wire).
+// A writer that forgot the key, defaulted it, or set it from anything but the
+// classifier would hand the merge a claim nobody computed.
+func CheckComplete(r ShardRecord) error {
+	if r.Complete == nil {
+		return fmt.Errorf("record %q: writes_complete is missing (derive it with CompleteOf)", short(r.Action))
+	}
+	if *r.Complete != r.Record.WritesComplete {
+		return fmt.Errorf("record %q: writes_complete %v disagrees with the classifier's %v (derive it with CompleteOf)",
+			short(r.Action), *r.Complete, r.Record.WritesComplete)
+	}
+	return nil
 }
 
 // Shard is one decoded shard artifact: its four files plus the artifact's own
