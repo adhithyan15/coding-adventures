@@ -141,7 +141,11 @@ dropped among pass segments is refused (and the reverse).
   immutable segment through the same `Authority` gate as passes. Manifests
   are not restamped. A record over 8,192 entries, 512 bytes per name or 1 MiB
   per line is refused with `ErrManifestTooLarge` (`manifest-too-large`).
-- `.Load(now)` returns a `ManifestSet`; `Manifests(weak)` gives at most 4
+- `.Load(now, wanted)` returns a `ManifestSet`; `wanted` is an optional set of
+  weak keys (`nil` keeps everything; a non-nil set ignores every other record
+  while parsing, so memory follows the caller's packages, not the store), and
+  `Retained(weak)` is `Manifests` with each verified id, computed once at load.
+  `Manifests(weak)` gives at most 4
   manifests, newest first by `(run, at)`, with distinct ids (the id is the
   SHA-256 of the entries list, verified on read). Records older than 30 days
   are dropped, and a re-recorded id does not crowd out other read-sets.
@@ -324,7 +328,10 @@ rec, err := traced.Classify(cfg, traced.Input{
 - **Resolution** walks each path through the post-run disk, expanding symlinks
   (40 hops) and applying `..` to the resolved directory. Every crossed link is
   an observation. A component that may have changed under the action is
-  `trace-incomplete:unstable-path`.
+  `trace-incomplete:unstable-path`, with three narrow exceptions (KILN04 5.5):
+  a successful open settles its own final name, a stat or exec of a name whose
+  whole change log is `O_CREAT` opens (and at most one later `unlink`) is
+  accepted, and `$HOME` itself may be stat'ed when the checkout is under it.
 - **Exec** reads the program, its `#!` chain and the ELF loader. `/proc` and
   `/dev/fd` follow the ephemeral list. Reads outside the repository follow
   `host-roots.json`. Network use is judged by address.
@@ -367,3 +374,40 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
   not `pkg:`, `path:` or `list:` is refused.
 - Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
   verify-vectors` checks them.
+
+## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
+
+```
+kiln legacy-plan --graph g.json --out plan.json --root . --os linux \
+    --ledger <ledger-dir> --scope shared|local [--executor-arg -flag=value]...
+kiln explain --plan plan.json <package>
+```
+
+Shadow only: it reports predicted hits and **skips nothing**; without
+`--ledger` the plan is unchanged. Each Linux package gets one result (other
+OSes: `untraced-os`):
+
+- `ineligible:<reason>`: the never list, a KILN03 hard reason or precondition,
+  a `probe-mismatch`/`probe-timeout`/`probe-refused` (with `--probe`), or a
+  refused weak key such as `host-unknown`. Gating is applied **first**, before
+  any key or ledger read, because the traced keys carry pins only.
+- `no-manifest`: nothing recorded under the weak key.
+- `hit`: a retained manifest (newest first, at most 4) whose strong key, from
+  the entries' **current** digests, has a pass. The manifest id and pass record
+  are shown.
+- `miss`: otherwise. Manifests store names, not digests, so the *first
+  differing entry* cannot be computed; a miss lists each manifest tried, the
+  strong key looked up and every entry with its state in this tree (`present`,
+  `absent`, `directory`, `no-package`, `not-directory`). That is a description,
+  not a diff.
+
+Each package with manifests also lists `outside_static_closure`: traced `pkg:`
+entries the old graph does not know about (bugs in the old graph). The
+histogram counts every class and those packages.
+
+`--ledger` is refused with `--source folder` (a plain folder cannot vouch for a
+clean tree). The weak key contains `kiln:root` (the absolute `--root`) and
+`kiln:executor-args` (the `--executor-arg` flags), so they must match the
+recorder or every lookup says `no-manifest`. Skipping (M3) must run Kiln and its
+policy from the base revision; this stage reads whatever tree it is given. See
+KILN04 section 9.1.

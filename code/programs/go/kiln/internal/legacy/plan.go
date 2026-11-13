@@ -63,6 +63,12 @@ type Record struct {
 	// behind each (the pin, or the image id) is covered by Components.Tools.
 	Tools      []string   `json:"tools"`
 	Components Components `json:"components"`
+	// Lookup is the KILN04 stage 5a result; present only with --ledger.
+	Lookup *Lookup `json:"lookup,omitempty"`
+	// gate is the reason lookup must not be tried (KILN04 13 item 5): the
+	// never list, a KILN03 hard reason or precondition, or a probe that
+	// disagreed.  Empty when lookup may run.  It is not part of the plan file.
+	gate string
 }
 
 // Sizes summarises closure sizes.
@@ -79,6 +85,12 @@ type Histogram struct {
 	Reasons      map[string]int `json:"reasons"`
 	Hints        map[string]int `json:"hints"`
 	ClosureSizes Sizes          `json:"closure_sizes"`
+	// Lookup counts lookup results per class (`hit`, `miss`, `no-manifest`,
+	// `untraced-os`, `ineligible:<reason>`); present only with --ledger.
+	Lookup map[string]int `json:"lookup,omitempty"`
+	// OutsideStaticClosure counts the packages with at least one traced pkg:
+	// entry outside their static closure (KILN04 9): old-graph bugs.
+	OutsideStaticClosure int `json:"outside_static_closure,omitempty"`
 }
 
 // Plan is the output of `kiln legacy-plan`.
@@ -94,6 +106,8 @@ type Plan struct {
 	Probes    []ProbeResult `json:"probes,omitempty"`
 	Packages  []Record      `json:"packages"`
 	Histogram Histogram     `json:"histogram"`
+	// Lookup describes the stores a lookup run read; present only with --ledger.
+	Lookup *LookupInfo `json:"lookup,omitempty"`
 }
 
 // refuseDirty fails if the Source can report untracked, non-ignored files and
@@ -136,6 +150,11 @@ func BuildPlan(g *Graph, opt Options) (*Plan, error) {
 	if err := refuseDirty(opt.Source); err != nil {
 		return nil, err
 	}
+	if opt.Lookup != nil {
+		if err := opt.Lookup.check(opt.Source); err != nil {
+			return nil, err
+		}
+	}
 	pl, err := newPlanner(g, opt)
 	if err != nil {
 		return nil, err
@@ -175,10 +194,16 @@ func BuildPlan(g *Graph, opt Options) (*Plan, error) {
 	}); err != nil {
 		return nil, err
 	}
-	return &Plan{
+	plan := &Plan{
 		Schema: PlanSchema, OS: opt.OS, Arch: opt.Arch, Host: opt.Host.ImageID(),
 		Env: pl.envNames, Probes: pl.probes, Packages: recs, Histogram: histogram(recs),
-	}, nil
+	}
+	if opt.Lookup != nil {
+		if err := pl.lookup(plan, opt.Lookup); err != nil {
+			return nil, err
+		}
+	}
+	return plan, nil
 }
 
 // record builds one package's key and classification.
@@ -212,6 +237,7 @@ func (pl *planner) record(p int) (Record, error) {
 	}
 	reasons := map[string]bool{ReasonTrace: true}
 	hard := false
+	gate := gates{}
 	// Symlink rules are hard reasons (KILN03 6); the text scans are advisory
 	// hints only and never touch `reasons` or the class.  The key is computed
 	// below either way: measurement never stops.
@@ -222,6 +248,7 @@ func (pl *planner) record(p int) (Record, error) {
 	for _, r := range symlinks {
 		reasons[r] = true
 		hard = true
+		gate.add(gateHard, r)
 	}
 	unpinned := false
 	for _, q := range members {
@@ -233,6 +260,7 @@ func (pl *planner) record(p int) (Record, error) {
 		if m.RepoInputsUnknown {
 			reasons["unknown-repo-inputs:"+m.Name] = true
 			hard = true
+			gate.add(gateHard, "unknown-repo-inputs:"+m.Name)
 		}
 		if !pl.pol.pinned[m.Language] {
 			reasons["unpinned:"+m.Language] = true
@@ -242,6 +270,7 @@ func (pl *planner) record(p int) (Record, error) {
 	if pl.pol.never[pkg.Name] {
 		reasons["never:"+pkg.Name] = true
 		hard = true
+		gate.add(gateNever, "never:"+pkg.Name)
 	}
 	td, err := pl.buildToolDigest()
 	if err != nil {
@@ -261,13 +290,21 @@ func (pl *planner) record(p int) (Record, error) {
 	for _, n := range ts.unknown {
 		reasons["unknown-toolchain:"+n] = true
 		hard = true
+		gate.add(gateHard, "unknown-toolchain:"+n)
 	}
 	for _, tl := range ts.tools {
 		if pl.mismatch[tl.Name] {
 			reasons["probe-mismatch:"+tl.Name] = true // soft: reported, never a class
+			gate.add(gateProbe, "probe-mismatch:"+tl.Name)
 		}
 		if pl.timedOut[tl.Name] {
 			reasons["probe-timeout:"+tl.Name] = true // soft, like probe-mismatch
+			gate.add(gateProbe, "probe-timeout:"+tl.Name)
+		}
+		if pl.refused[tl.Name] {
+			// Reported by the probe list, not as a reason (the plan's reasons
+			// are unchanged without --ledger), but lookup must not skip on it.
+			gate.add(gateProbe, "probe-refused:"+tl.Name)
 		}
 	}
 
@@ -302,6 +339,7 @@ func (pl *planner) record(p int) (Record, error) {
 	if why != "" {
 		reasons[why] = true
 		hard = true
+		gate.add(gateHard, why)
 	} else {
 		rs := sha256.Sum256(recipe)
 		rec.Components.Recipe = hexOf(rs[:])
@@ -327,6 +365,7 @@ func (pl *planner) record(p int) (Record, error) {
 	rec.Hints = append([]string{}, hints...)
 	sort.Strings(rec.Hints)
 	rec.Class = classify(hard, unpinned)
+	rec.gate = gate.first()
 	return rec, nil
 }
 
@@ -373,7 +412,7 @@ func classify(hard, unpinned bool) string {
 // reasonGroup collapses a reason to the kind the histogram counts: reasons
 // that embed a package or file name are grouped by their prefix.
 func reasonGroup(r string) string {
-	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:"} {
+	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:", "probe-refused:"} {
 		if strings.HasPrefix(r, p) {
 			return p[:len(p)-1]
 		}
