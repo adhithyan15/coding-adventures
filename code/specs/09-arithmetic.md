@@ -142,6 +142,16 @@ All bit lists are LSB-first (least significant bit at index 0).
 - Verify subtraction works via two's complement (A - B = A + NOT(B) + 1)
 - Verify all flags are set correctly
 
+## Verification (Warrant, AR01)
+
+The Rust implementation (the adders and the ALU) has an executable contract:
+[AR01](AR01-arithmetic-contract.md) and [`arithmetic.warrant`](arithmetic.warrant),
+checked by enumeration of every input at 1 to 4 and 8 bits and by a boundary-rich
+sample at 16 bits. Decisions it fixed that this document leaves open: in Rust, a
+value that is not a bit, operands of unequal length and an empty operand are a
+**panic in every build profile**; `AluOp::Not` **never reads `b`**; and the ALU's
+`carry` after a `Sub` means **no borrow** (`a >= b`), the carry of `A + NOT(B) + 1`.
+
 ## Future Extensions
 
 - **Carry lookahead adder**: Faster than ripple carry — computes carries in parallel
