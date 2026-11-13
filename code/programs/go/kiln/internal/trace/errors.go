@@ -53,4 +53,7 @@ const (
 	reasonCwdTooLong     = "cwd-too-long"
 	reasonResult         = "result"
 	reasonRead           = "read"
+	reasonCwdRace        = "cwd-race"
+	reasonHelperSpawn    = "helper-spawn"
+	reasonHelperNoExec   = "helper-no-exec"
 )

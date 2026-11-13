@@ -126,41 +126,71 @@ type Trace struct {
 	Exits   []Exit // exit lines in trace order
 }
 
-// cwdCell is shared between processes that share a filesystem context.
-type cwdCell struct{ path string }
+// cwdCell is the filesystem context (the working directory) that processes
+// created with CLONE_FS share.  refs counts the LIVE processes using it.
+type cwdCell struct {
+	path string
+	refs int
+}
 
 type proc struct {
 	*Process
-	cwd    *cwdCell
-	exited bool
+	cwd      *cwdCell
+	exited   bool
+	startCwd string // cwd sampled at the "<unfinished ...>" line of a split call
+	hasStart bool
 }
 
 type spawn struct {
 	parent  int
 	shareFS bool
 	flags   string
+	line    int // line of the parent's completed fork/clone
+}
+
+// maxProcessDepth bounds the parent chain walked when a process is created.
+const maxProcessDepth = 4096
+
+// Options configures ParseOptions.
+type Options struct {
+	Limits Limits
+	// HelperRoot says the first (root) process is `kiln sandbox-exec`, the
+	// sandbox helper of KILN04 §4.3.  Everything the helper does before its first
+	// successful execve (unshare, mount, pivot_root, capability and seccomp
+	// setup) is setup, not the build step: those events are discarded and calls
+	// the table would refuse or not know are tolerated.  The parser then
+	// REQUIRES that the exec happens (helper-no-exec) and that the helper has not
+	// spawned a child before it (helper-spawn).  From the exec onward the root
+	// is an ordinary process and refused calls are refused as usual.
+	HelperRoot bool
 }
 
 type model struct {
-	lim       Limits
-	root      int
-	initCwd   string
-	trace     *Trace
-	procs     map[int]*proc
-	spawns    map[int]spawn
-	spawnList []int
-	visiting  map[int]bool
+	lim        Limits
+	opts       Options
+	root       int
+	initCwd    string
+	trace      *Trace
+	procs      map[int]*proc
+	spawns     map[int]spawn
+	spawnList  []int
+	helperDone bool
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
 // the first process (absolute).  Zero fields of limits take DefaultLimits.
 // Every failure is an *Error whose message begins "trace-incomplete:".
 func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
-	lim := limits.withDefaults()
+	return ParseOptions(r, initialCwd, Options{Limits: limits})
+}
+
+// ParseOptions is Parse with options.
+func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
+	lim := opts.Limits.withDefaults()
 	if !strings.HasPrefix(initialCwd, "/") || strings.IndexByte(initialCwd, 0) >= 0 || len(initialCwd) > 4096 {
 		return nil, incomplete(0, reasonInitialCwd)
 	}
-	recs, root, e := readRecords(r, lim)
+	recs, root, e := readRecords(r, lim, opts.HelperRoot)
 	if e != nil {
 		return nil, e
 	}
@@ -168,11 +198,11 @@ func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
 		return nil, incomplete(0, reasonEmpty)
 	}
 	m := &model{
-		lim: lim, root: root, initCwd: initialCwd,
-		trace:    &Trace{RootPid: root, Procs: map[int]*Process{}},
-		procs:    map[int]*proc{},
-		spawns:   map[int]spawn{},
-		visiting: map[int]bool{},
+		lim: lim, opts: opts, root: root, initCwd: initialCwd,
+		trace:      &Trace{RootPid: root, Procs: map[int]*Process{}},
+		procs:      map[int]*proc{},
+		spawns:     map[int]spawn{},
+		helperDone: !opts.HelperRoot,
 	}
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
@@ -221,7 +251,7 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
 		}
-		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags}
+		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags, line: recs[i].line}
 		m.spawnList = append(m.spawnList, child)
 	}
 	return nil
@@ -254,41 +284,64 @@ func analyzeClone(args []string) (flags string, shareFS bool, reason string) {
 	return "", false, reasonCloneFlags
 }
 
-// get returns the state of pid, creating it from its spawn record (or as the
-// root) the first time it is seen.
+// get returns the state of pid, creating it the first time it is seen.
+//
+// A child is normally created the moment its parent's fork/vfork/clone
+// SUCCEEDS (see apply), which snapshots the parent's working directory right
+// then; a later chdir by the parent must not leak into the child.  The only
+// time get itself creates a child is when the child's lines were printed
+// BEFORE the parent's return line (the parent is still blocked inside the
+// call, so its cwd is the clone-time cwd).  That is only possible while the
+// spawn record is still ahead of the current line; otherwise the child should
+// already exist and the pid is an orphan.
+//
+// The parent chain is walked iteratively with a depth cap, so a crafted chain
+// of a million pids cannot exhaust the stack.
 func (m *model) get(pid, line int) (*proc, *Error) {
 	if p := m.procs[pid]; p != nil {
 		return p, nil
 	}
-	if m.visiting[pid] {
-		return nil, incomplete(line, reasonProcessCycle)
-	}
-	p := &proc{Process: &Process{Pid: pid}}
-	if pid == m.root {
-		p.cwd = &cwdCell{path: m.initCwd}
-	} else {
-		sp, ok := m.spawns[pid]
-		if !ok {
+	var chain []int
+	seen := map[int]bool{}
+	cur := pid
+	for m.procs[cur] == nil && cur != m.root {
+		sp, ok := m.spawns[cur]
+		if !ok || sp.line < line {
 			return nil, incomplete(line, reasonOrphanPid)
 		}
-		m.visiting[pid] = true
-		parent, e := m.get(sp.parent, line)
-		delete(m.visiting, pid)
-		if e != nil {
-			return nil, e
+		if seen[cur] || len(chain) >= maxProcessDepth {
+			return nil, incomplete(line, reasonProcessCycle)
 		}
-		p.Parent, p.ShareFS, p.CloneFlags = sp.parent, sp.shareFS, sp.flags
+		seen[cur] = true
+		chain = append(chain, cur)
+		cur = sp.parent
+	}
+	if m.procs[cur] == nil { // the root
+		m.add(&proc{Process: &Process{Pid: cur}, cwd: &cwdCell{path: m.initCwd, refs: 1}})
+	}
+	for k := len(chain) - 1; k >= 0; k-- {
+		child := chain[k]
+		sp := m.spawns[child]
+		parent := m.procs[sp.parent]
+		p := &proc{Process: &Process{Pid: child, Parent: sp.parent, ShareFS: sp.shareFS, CloneFlags: sp.flags}}
 		if sp.shareFS {
 			p.cwd = parent.cwd
+			p.cwd.refs++
 		} else {
-			p.cwd = &cwdCell{path: parent.cwd.path}
+			p.cwd = &cwdCell{path: parent.cwd.path, refs: 1}
 		}
+		m.add(p)
 	}
-	m.procs[pid] = p
-	m.trace.Procs[pid] = p.Process
-	m.trace.Order = append(m.trace.Order, pid)
-	return p, nil
+	return m.procs[pid], nil
 }
+
+func (m *model) add(p *proc) {
+	m.procs[p.Pid] = p
+	m.trace.Procs[p.Pid] = p.Process
+	m.trace.Order = append(m.trace.Order, p.Pid)
+}
+
+func (m *model) inHelper(pid int) bool { return !m.helperDone && pid == m.root }
 
 func (m *model) apply(rec *record) *Error {
 	p, e := m.get(rec.pid, rec.line)
@@ -300,17 +353,42 @@ func (m *model) apply(rec *record) *Error {
 			return incomplete(rec.line, reasonDuplicateExit)
 		}
 		p.exited = true
-		ex := *rec.exit
-		m.trace.Exits = append(m.trace.Exits, ex)
-		p.Exit = &m.trace.Exits[len(m.trace.Exits)-1]
+		p.cwd.refs--
+		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		p.Exit = rec.exit // its own allocation: never aliases the slice above
 		return nil
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
 	}
+	if rec.start {
+		p.startCwd, p.hasStart = p.cwd.path, true
+		return nil
+	}
 	evs, e := m.call(p, rec)
 	if e != nil {
 		return e
+	}
+	c := rec.call
+	switch c.name {
+	case "fork", "vfork", "clone":
+		if c.ret.ok() {
+			if m.inHelper(rec.pid) {
+				return incomplete(rec.line, reasonHelperSpawn)
+			}
+			// Create the child NOW, copying (or sharing) the parent's cwd as
+			// it is at this moment.
+			if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+				return e
+			}
+		}
+	}
+	if m.inHelper(rec.pid) {
+		if isExecName(c.name) && c.ret.ok() {
+			m.helperDone = true // keep the exec event itself
+		} else {
+			evs = nil // helper setup: not part of the step
+		}
 	}
 	if len(m.trace.Events)+len(evs) > m.lim.MaxEvents {
 		return incomplete(rec.line, reasonSize)
@@ -339,6 +417,9 @@ func (m *model) finish() *Error {
 		if !m.procs[pid].exited {
 			return incomplete(0, reasonMissingExit)
 		}
+	}
+	if !m.helperDone {
+		return incomplete(0, reasonHelperNoExec)
 	}
 	return nil
 }
@@ -384,7 +465,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 	if c.ret.unknown {
 		return fail(reasonResult)
 	}
-	ev := Event{Line: rec.line, Pid: rec.pid, Syscall: c.name, Kind: ent.kind, Cwd: p.cwd.path, Result: toResult(c.ret)}
+	// A split call ran in the directory that was current when it STARTED.
+	cwdAtCall := p.cwd.path
+	if rec.split && p.hasStart {
+		cwdAtCall = p.startCwd
+	}
+	p.hasStart = false
+	ev := Event{Line: rec.line, Pid: rec.pid, Syscall: c.name, Kind: ent.kind, Cwd: cwdAtCall, Result: toResult(c.ret)}
 	arg := func(i int) string { return c.args[i-1] }
 
 	var r string
@@ -402,6 +489,9 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			return fail(r)
 		}
 		if ent.role == roleFchdir && c.ret.ok() {
+			if p.cwd.refs > 1 {
+				return fail(reasonCwdRace)
+			}
 			p.cwd.path = ev.Path
 		}
 	case roleFork:
@@ -413,13 +503,16 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 		}
 	case roleSocket:
 		ev.Flags = strings.Join(c.args, ", ")
-		if strings.HasPrefix(arg(1), "AF_") && isErrnoName(arg(1)) {
-			ev.Addr = &Addr{Family: arg(1), Port: -1}
+		// The domain must be a symbolic AF_* name; a number or pointer means
+		// strace could not name the address family, so we cannot classify it.
+		if !strings.HasPrefix(arg(1), "AF_") || !isErrnoName(arg(1)) {
+			return fail(reasonSockaddr)
 		}
+		ev.Addr = &Addr{Family: arg(1), Port: -1}
 	case roleListen:
 		ev.Flags = arg(2)
 	case roleSockaddr:
-		ev.Addr, r = parseSockaddr(arg(ent.addr))
+		ev.Addr, r = parseSockaddr(arg(ent.addr), c.name == "sendto")
 		if r != "" {
 			return fail(r)
 		}
@@ -436,7 +529,7 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			}
 			seen[s] = true
 			e2 := ev
-			if e2.Addr, r = parseSockaddr(s); r != "" {
+			if e2.Addr, r = parseSockaddr(s, false); r != "" {
 				return fail(r)
 			}
 			evs = append(evs, e2)
@@ -453,7 +546,12 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 			ev.Flags = "O_CREAT|O_WRONLY|O_TRUNC"
 		}
 		if ent.role == roleChdir && c.ret.ok() {
-			n, ok := joinCwd(p.cwd.path, ev.Path)
+			if p.cwd.refs > 1 {
+				// Another live process shares this cwd (CLONE_FS): its
+				// relative paths would silently change under our feet.
+				return fail(reasonCwdRace)
+			}
+			n, ok := joinCwd(cwdAtCall, ev.Path)
 			if !ok {
 				return fail(reasonCwdTooLong)
 			}
@@ -508,6 +606,11 @@ rest:
 			return r
 		}
 	}
+	if ev.Path == "" && ev.DirfdPath != "" && ent.flags > 0 && hasFlag(args[ent.flags-1], "AT_EMPTY_PATH") {
+		// fexecve, fstat-by-statx and friends: the descriptor itself is the
+		// object, so its -y path is the path.
+		ev.Path, ev.DirfdPath = ev.DirfdPath, ""
+	}
 	if ent.pth2 > 0 {
 		if ev.Path2, r = pathArg(args[ent.pth2-1]); r != "" {
 			return r
@@ -522,4 +625,14 @@ rest:
 		ev.Flags = args[ent.flags-1]
 	}
 	return ""
+}
+
+// hasFlag reports whether the "A|B|C" flag text names flag.
+func hasFlag(text, flag string) bool {
+	for _, f := range strings.Split(text, "|") {
+		if strings.TrimSpace(f) == flag {
+			return true
+		}
+	}
+	return false
 }

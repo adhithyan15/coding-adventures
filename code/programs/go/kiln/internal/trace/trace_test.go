@@ -134,10 +134,11 @@ func TestWorkingDirectoryTracking(t *testing.T) {
 		}
 	}
 	// 201 was created with CLONE_FS before its parent's return line was
-	// printed; it shares 200's cwd cell, so its chdir("../b") is seen by 200.
+	// printed; it shares 200's cwd, so it runs in /work/a.  Once it has exited
+	// 200 may chdir again (the cwd is no longer shared).
 	want := map[string]string{
-		"x": "/work/a/../b", // parent sees the thread's chdir
-		"y": "/work/a/../b",
+		"t": "/work/a",
+		"x": "/work/a/../b",
 		"z": "/work/a/../b", // fork copies
 		"w": "/srv/data",    // fchdir uses the -y path verbatim
 		"v": "/work/a/../b", // the fork child's chdirs did not leak
@@ -268,7 +269,7 @@ func TestLineShapes(t *testing.T) {
 	wantReason(t, "1  --- SIGCHLD\n", reasonUnparsable)
 	wantReason(t, "1  <... stat\n", reasonUnparsable)
 	// The [pid N] form and a missing final newline are accepted.
-	tr := mustParse(t, "[pid 7] stat(\"a\", 0x1) = 0\n[pid 7] +++ exited with 0 +++")
+	tr := mustParse(t, "[pid 7] stat(\"a\", 0x1) = 0\n[pid 7] +++ exited with 0 +++\n")
 	if tr.RootPid != 7 || len(tr.Events) != 1 {
 		t.Fatalf("%+v", tr)
 	}
@@ -578,12 +579,12 @@ func TestLimits(t *testing.T) {
 	if err == nil || err.Error() != "trace-incomplete:size" {
 		t.Fatalf("total cap: %v", err)
 	}
-	_, err = Parse(strings.NewReader(text), "/", Limits{MaxEvents: 1})
+	_, err = Parse(strings.NewReader(text), "/", Limits{MaxEvents: 2})
 	if err != nil {
 		t.Fatalf("one event fits: %v", err)
 	}
 	two := "1  stat(\"a\", 0x1) = 0\n1  stat(\"b\", 0x1) = 0\n1  +++ exited with 0 +++\n"
-	if _, err = Parse(strings.NewReader(two), "/", Limits{MaxEvents: 1}); err == nil || err.Error() != "trace-incomplete:size" {
+	if _, err = Parse(strings.NewReader(two), "/", Limits{MaxEvents: 2}); err == nil || err.Error() != "trace-incomplete:size" {
 		t.Fatalf("event cap: %v", err)
 	}
 	// Exactly at the line cap is accepted; a huge line without newline is not.

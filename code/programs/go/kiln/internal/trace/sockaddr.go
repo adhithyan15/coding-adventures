@@ -23,16 +23,23 @@ type Addr struct {
 	Abstract bool
 }
 
-// parseSockaddr parses one "{sa_family=..., ...}" struct.  "NULL" gives nil.
-func parseSockaddr(raw string) (*Addr, string) {
+const maxSockaddrItems = 16
+
+// parseSockaddr parses one "{sa_family=..., ...}" struct.  "NULL" gives nil
+// when allowNull (only sendto may legitimately have no address); for connect
+// and bind a NULL address is not a call we understand, so it is an error.
+func parseSockaddr(raw string, allowNull bool) (*Addr, string) {
 	raw = strings.TrimSpace(raw)
 	if raw == "NULL" {
-		return nil, ""
+		if allowNull {
+			return nil, ""
+		}
+		return nil, reasonSockaddr
 	}
 	if len(raw) < 2 || raw[0] != '{' || raw[len(raw)-1] != '}' {
 		return nil, reasonSockaddr
 	}
-	res, r := scanItems(raw[1:len(raw)-1], 0, false)
+	res, r := scanItems(raw[1:len(raw)-1], 0, false, maxSockaddrItems)
 	if r != "" {
 		return nil, r
 	}
@@ -93,7 +100,7 @@ func parseSockaddr(raw string) (*Addr, string) {
 		if !ok {
 			return nil, reasonSockaddr
 		}
-		inner, r := scanItems("inet_pton("+v, len("inet_pton("), true)
+		inner, r := scanItems("inet_pton("+v, len("inet_pton("), true, 3)
 		if r != "" || len(inner.items) != 3 {
 			return nil, reasonSockaddr
 		}
@@ -187,6 +194,12 @@ func findSockaddrs(raw string) ([]string, string) {
 				continue
 			}
 			return nil, reasonSockaddr
+		case '.':
+			// A bare "..." element of an array means strace truncated the list:
+			// destinations beyond it are unseen.
+			if strings.HasPrefix(raw[j:], "...") && len(stack) > 0 && raw[stack[len(stack)-1].at] == '[' {
+				return nil, reasonSockaddr
+			}
 		case '{', '[', '(':
 			stack = append(stack, open{at: j})
 			if c == '{' && strings.HasPrefix(raw[j+1:], "sa_family=") {

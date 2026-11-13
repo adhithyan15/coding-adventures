@@ -207,11 +207,14 @@ type scanResult struct {
 // the "<unfinished ...>" marker, which strace prints when a call is
 // interrupted by another process's output.
 //
+// maxItems bounds the number of top-level items: a line of a million commas
+// must not become a million-element slice.  Exceeding it is an arity error.
+//
 // A '<' is an annotation only when it immediately follows a token character
 // (3<, AT_FDCWD<).  The unfinished marker is always preceded by a space or a
 // comma, so a path that merely contains the text "<unfinished ...>" can never
 // be mistaken for it.
-func scanItems(s string, i int, stopAtParen bool) (scanResult, string) {
+func scanItems(s string, i int, stopAtParen bool, maxItems int) (scanResult, string) {
 	var res scanResult
 	var stack []byte
 	itemStart := i
@@ -222,6 +225,9 @@ func scanItems(s string, i int, stopAtParen bool) (scanResult, string) {
 				return "" // f() has no arguments
 			}
 			return reasonUnparsable
+		}
+		if len(res.items) >= maxItems {
+			return reasonArity // stop before an attacker-sized slice is built
 		}
 		res.items = append(res.items, item)
 		return ""

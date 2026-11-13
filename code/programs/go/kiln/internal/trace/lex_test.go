@@ -190,7 +190,10 @@ func FuzzParse(f *testing.F) {
 		f.Add(s)
 	}
 	f.Fuzz(func(t *testing.T, in string) {
-		tr, err := Parse(strings.NewReader(in), "/w", Limits{MaxLineBytes: 1 << 16, MaxTotalBytes: 1 << 20, MaxEvents: 1 << 12})
+		tr, err := ParseOptions(strings.NewReader(in), "/w", Options{
+			HelperRoot: len(in)%2 == 0,
+			Limits:     Limits{MaxLineBytes: 1 << 16, MaxTotalBytes: 1 << 20, MaxEvents: 1 << 12},
+		})
 		if err != nil {
 			var e *Error
 			if !errors.As(err, &e) || !strings.HasPrefix(err.Error(), "trace-incomplete:") {

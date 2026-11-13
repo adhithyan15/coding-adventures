@@ -52,11 +52,17 @@ type Limits struct {
 	MaxEvents     int   // number of events produced
 }
 
-// DefaultLimits returns the caps used for zero fields.  The total is a memory
-// bound for the parser (records are kept for the second pass), not the
-// recorder's disk cap; callers with a bigger budget set it explicitly.
+// DefaultLimits returns the caps used for zero fields.
+//
+// They are a RESIDENT-MEMORY bound for the parser, not the recorder's 2 GiB
+// disk cap.  Pass 1 keeps every non-ignored record until pass 2, and each kept
+// record retains its whole source line.  So memory is roughly
+// MaxTotalBytes (the lines) plus about 200 bytes and a few slice headers per
+// record (MaxEvents of them): with the defaults below, a few hundred MiB at
+// the very worst, which a CI runner can afford.  A caller that has measured a
+// bigger trace and a bigger budget raises them explicitly.
 func DefaultLimits() Limits {
-	return Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: 256 << 20, MaxEvents: 4_000_000}
+	return Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: 64 << 20, MaxEvents: 1_000_000}
 }
 
 func (l Limits) withDefaults() Limits {
@@ -94,10 +100,19 @@ type rawCall struct {
 
 // record is one completed observation, in trace order.
 type record struct {
-	line int
-	pid  int
-	call *rawCall // nil for exit lines
-	exit *Exit
+	line  int
+	pid   int
+	call  *rawCall // nil for exit lines and start markers
+	exit  *Exit
+	start bool // a handled call began (its "<unfinished ...>" line); call is nil
+	split bool // this completed call was split: its cwd was sampled at the start record
+}
+
+// lineState is what the line handler carries between lines.
+type lineState struct {
+	pend   map[int]*pending
+	root   int  // pid of the first line
+	helper bool // HelperRoot is set and the root has not yet exec'd
 }
 
 type pending struct {
@@ -105,6 +120,9 @@ type pending struct {
 	prefix string
 	line   int
 }
+
+// maxUnknownItems caps the arguments of a name outside the handled table.
+const maxUnknownItems = 16
 
 func validName(n string) bool {
 	if n == "" || len(n) > 64 {
@@ -126,7 +144,13 @@ func parseCall(s string) (call rawCall, unfinished bool, prefix string, reason s
 		return call, false, "", reasonUnparsable
 	}
 	call.name = s[:j]
-	res, r := scanItems(s, j+1, true)
+	// A handled call has a known arity; anything else gets a generous global
+	// cap.  Either way the bound is enforced WHILE scanning.
+	maxItems := maxUnknownItems
+	if ent := lookup(call.name); ent.class == classHandled {
+		maxItems = ent.max
+	}
+	res, r := scanItems(s, j+1, true, maxItems)
 	if r != "" {
 		return call, false, "", r
 	}
@@ -314,7 +338,7 @@ func parsePid(line string) (int, string, bool) {
 }
 
 func atoiPid(s string) (int, bool) {
-	if s == "" || len(s) > 9 {
+	if s == "" || len(s) > 9 || (len(s) > 1 && s[0] == '0') {
 		return 0, false
 	}
 	n, err := strconv.Atoi(s)
@@ -325,13 +349,14 @@ func atoiPid(s string) (int, bool) {
 }
 
 // readRecords is pass 1.  It also returns the pid of the first line, which is
-// the root of the process tree.
-func readRecords(r io.Reader, lim Limits) ([]record, int, *Error) {
+// the root of the process tree.  Every record (calls, start markers and exit
+// lines alike) counts against MaxEvents.
+func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 	br := bufio.NewReaderSize(r, 64<<10)
 	var recs []record
-	pend := map[int]*pending{}
+	st := &lineState{pend: map[int]*pending{}, helper: helper}
 	var total int64
-	lineNo, root, calls := 0, 0, 0
+	lineNo := 0
 	for {
 		line, err := readLine(br, lim.MaxLineBytes)
 		if err != nil && !errors.Is(err, io.EOF) {
@@ -342,9 +367,13 @@ func readRecords(r io.Reader, lim Limits) ([]record, int, *Error) {
 			}
 			return nil, 0, &Error{Reason: reasonRead, Line: lineNo + 1, Err: err}
 		}
-		atEOF := errors.Is(err, io.EOF)
-		if atEOF && line == "" {
-			break
+		if errors.Is(err, io.EOF) {
+			if line == "" {
+				break
+			}
+			// The last line has no newline: strace was cut off (or the file
+			// was truncated) and the line may be a prefix of a different one.
+			return nil, 0, incomplete(lineNo+1, reasonUnparsable)
 		}
 		lineNo++
 		total += int64(len(line))
@@ -352,33 +381,38 @@ func readRecords(r io.Reader, lim Limits) ([]record, int, *Error) {
 			return nil, 0, incomplete(lineNo, reasonSize)
 		}
 		text := strings.TrimSuffix(line, "\n")
-		if root == 0 {
+		if st.root == 0 {
 			if pid, _, ok := parsePid(text); ok {
-				root = pid
+				st.root = pid
 			}
 		}
-		rec, e := handleLine(text, lineNo, pend)
+		rec, e := handleLine(text, lineNo, st)
 		if e != nil {
 			return nil, 0, e
 		}
 		if rec != nil {
 			recs = append(recs, *rec)
-			if rec.call != nil {
-				calls++
-			}
-			if calls > lim.MaxEvents {
+			if len(recs) > lim.MaxEvents {
 				return nil, 0, incomplete(lineNo, reasonSize)
 			}
-		}
-		if atEOF {
-			break
+			if st.helper && rec.call != nil && rec.pid == st.root && isExecName(rec.call.name) && rec.call.ret.ok() {
+				st.helper = false
+			}
 		}
 	}
-	for _, p := range pend {
-		return nil, 0, incomplete(p.line, reasonUnresumed)
+	var first *pending
+	for _, p := range st.pend {
+		if first == nil || p.line < first.line {
+			first = p
+		}
 	}
-	return recs, root, nil
+	if first != nil {
+		return nil, 0, incomplete(first.line, reasonUnresumed)
+	}
+	return recs, st.root, nil
 }
+
+func isExecName(n string) bool { return n == "execve" || n == "execveat" }
 
 // readLine reads one line (including its '\n') of at most max bytes.
 func readLine(br *bufio.Reader, max int) (string, error) {
@@ -402,7 +436,8 @@ func readLine(br *bufio.Reader, max int) (string, error) {
 
 // handleLine classifies one line.  It returns the completed record (nil when
 // the line completes nothing, e.g. an unfinished call or a signal line).
-func handleLine(text string, lineNo int, pend map[int]*pending) (*record, *Error) {
+func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
+	pend := st.pend
 	if text == "" {
 		return nil, incomplete(lineNo, reasonUnparsable)
 	}
@@ -463,7 +498,7 @@ func handleLine(text string, lineNo int, pend map[int]*pending) (*record, *Error
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		return finishCall(pid, lineNo, call)
+		return finishCall(pid, lineNo, call, true, st.helper && pid == st.root)
 	}
 	call, unfinished, prefix, r := parseCall(body)
 	if r != "" {
@@ -472,23 +507,39 @@ func handleLine(text string, lineNo int, pend map[int]*pending) (*record, *Error
 	if pend[pid] != nil {
 		return nil, incomplete(lineNo, reasonInterleaved)
 	}
+	setup := st.helper && pid == st.root
 	if unfinished {
-		if e := classifyName(call.name, lineNo); e != nil {
-			return nil, e
+		if !setup {
+			if e := classifyName(call.name, lineNo); e != nil {
+				return nil, e
+			}
 		}
 		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+		if lookup(call.name).class == classHandled {
+			// The working directory a split call runs in is the one at its
+			// START; pass 2 samples it when it meets this marker.
+			return &record{line: lineNo, pid: pid, start: true}, nil
+		}
 		return nil, nil
 	}
-	return finishCall(pid, lineNo, call)
+	return finishCall(pid, lineNo, call, false, setup)
 }
 
 // finishCall checks the closed table and keeps the call unless it is ignored.
-func finishCall(pid, lineNo int, call rawCall) (*record, *Error) {
-	if e := classifyName(call.name, lineNo); e != nil {
+//
+// With HelperRoot, the helper's own setup calls (unshare, mount, pivot_root,
+// anything unknown) are discarded instead of refused until it has exec'd: that
+// is what `setup` means.
+func finishCall(pid, lineNo int, call rawCall, split, setup bool) (*record, *Error) {
+	if setup {
+		if c := lookup(call.name).class; c == classUnknown || c == classRefused {
+			return nil, nil
+		}
+	} else if e := classifyName(call.name, lineNo); e != nil {
 		return nil, e
 	}
 	if lookup(call.name).class == classIgnored {
 		return nil, nil
 	}
-	return &record{line: lineNo, pid: pid, call: &call}, nil
+	return &record{line: lineNo, pid: pid, call: &call, split: split}, nil
 }
