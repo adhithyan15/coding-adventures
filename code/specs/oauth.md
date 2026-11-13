@@ -1691,6 +1691,30 @@ process remaining intermediates, validate the whole path, apply name
 constraints, check revocation, perform TLS or HTTP, authorize OAuth transport,
 or grant network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded second policy-backed ordered-transition follow-up consumes that
+stronger first-step result together with one already routed proof for the
+immediately target-nearer intermediate. It fails closed unless the new proof
+retains the same exact constructed-path object, occupies the depth immediately
+preceding the reviewed terminal, uses the already processed anchor-nearest
+intermediate as its exact issuer object, authenticates another selected
+candidate child, and complete intermediate policy retains that exact child.
+Only then is the retained path-length state recreated privately and advanced.
+The non-copyable result retains the complete first-step proof, including its
+exact validated `X509NameValuePolicy`, reviewed-root selection, anchor role
+policy, terminal repository-owned RSA signature, and first intermediate
+policy, together with the second routed RSA signature, second intermediate
+policy, and twice-advanced state. Generic first-step evidence, detached
+constructions, skipped depths, disconnected issuers, target children, and
+cross-certificate policy cannot produce this stronger result. This pure
+public-certificate-data composition performs no new parsing or signature
+verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It proves exactly two ordered anchor-to-target
+intermediate transitions. The available Name-value rules still do not define
+complete RFC 5280 Name equality, and this boundary does not generalize
+arbitrary traversal, validate the whole path, apply name constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
