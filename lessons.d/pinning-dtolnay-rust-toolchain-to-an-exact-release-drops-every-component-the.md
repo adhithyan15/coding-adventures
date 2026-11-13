@@ -19,8 +19,16 @@ happened to rebuild there.
 
 Fix: `components: clippy,llvm-tools,rustfmt` on the build job's Rust step.
 
+**Targets go the same way.** The next Windows run failed three Ruby native
+gems (conduit, irc-server-native, mini_redis_native) with "can't find crate
+for `core`": they cross-compile with `--target x86_64-pc-windows-gnu` to match
+RubyInstaller's MinGW Ruby, and the runner's preinstalled stable had that
+target's std while the fresh 1.99.1 had only the host's. Fix: a Windows-only
+step that runs `rustup target add x86_64-pc-windows-gnu` on the pinned
+toolchain.
+
 Next time: when you replace a floating toolchain with an exact one, list
-every component the old setup got implicitly. Check by running the step's
+every component **and target** the old setup got implicitly. Check by running the step's
 toolchain locally (`rustup component list --toolchain <ver> --installed`)
 and comparing with what the BUILDs invoke (`cargo fmt`, `cargo clippy`,
 `llvm-cov`, ...). A green PR proves only the packages it rebuilt.
