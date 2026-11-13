@@ -2544,6 +2544,126 @@ impl fmt::Debug
     }
 }
 
+/// Name-policy-backed routed closure after reviewed-anchor DNS policy.
+///
+/// This stronger result retains the exact Name-value policy and all reviewed
+/// construction, anchor-role, ordered intermediate, target-signature, and
+/// complete server-policy evidence while applying the same supported reviewed-
+/// anchor permitted-DNS subset as the generic result. It does not establish
+/// complete Name or path validity, revocation, TLS, HTTP, OAuth, or network
+/// authority.
+pub struct ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    target_signature_closure:
+        BoundAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetSignature<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the complete consumed Name-policy-backed target closure.
+    #[must_use]
+    pub const fn target_signature_closure(
+        &self,
+    ) -> &BoundAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.target_signature_closure
+    }
+
+    /// Return DNS evidence when the reviewed snapshot entry carried constraints.
+    #[must_use]
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy",
+        )
+    }
+}
+
 /// Arbitrary-depth closure after every retained intermediate name policy.
 ///
 /// Complete intermediate policies are visited only in the anchor-to-target
@@ -4442,6 +4562,87 @@ pub fn validate_accumulated_reviewed_x509_rsa_constructed_path_target_anchor_pol
 
     Ok(
         ValidatedAccumulatedReviewedX509RsaConstructedPathTargetAnchorPolicy {
+            target_signature_closure,
+            constrained_dns_names,
+        },
+    )
+}
+
+/// Apply reviewed-anchor DNS policy to a Name-policy-backed target closure.
+///
+/// The exact target and validated SAN index are derived only from the complete
+/// server policy retained by the stronger closure. Optional constraint bytes
+/// are derived only from its reviewed anchor. The same repository-owned
+/// supported permitted-DNS evaluator and caller-owned limits used by the
+/// generic result apply here, while success retains the stronger closure.
+pub fn validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_target_anchor_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    target_signature_closure:
+        BoundAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetSignature<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let certificate = target_signature_closure.server_policy().certificate();
+    let subject_alt_name_extension_index = target_signature_closure
+        .server_policy()
+        .identity()
+        .extension_index();
+    let name_constraints = target_signature_closure
+        .accumulated_intermediates()
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        subject_alt_name_extension_index,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathTargetAnchorPolicy {
             target_signature_closure,
             constrained_dns_names,
         },
