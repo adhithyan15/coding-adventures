@@ -25,6 +25,11 @@
   them). The vector file gains `digests`, `strong_consumed` and `refused_entries`
   arrays; `kiln verify-vectors` checks them and reports their counts.
 
+- Review fixes: the listing digest is tagged (`10` directory, `11` not a
+  tracked directory) so `list:` needs no paired `path:`; `NewTraced` refuses a
+  graph that disagrees with `Source` on BUILD files; `WeakKey` and `Strong`
+  return deep copies (`key.Action.Clone`).
+
 ### Changed
 
 - `legacy.buildRecipe` is the one place the selected BUILD becomes a recipe; the

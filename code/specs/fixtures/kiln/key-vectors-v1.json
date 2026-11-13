@@ -1429,14 +1429,14 @@
       "digest_hex": "0ce1a689c7d1e18a00fb3afd2c26ed10d4fdd9dbefd553178046ce54163c97a8"
     },
     {
-      "name": "listing-empty",
-      "description": "A directory with no tracked children.",
-      "kind": "listing",
-      "digest_hex": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      "name": "listing-not-directory",
+      "description": "A path that is not a directory in the tracked tree (absent, file or link): SHA-256 of the single byte 11.",
+      "kind": "listing-not-directory",
+      "digest_hex": "4a64a107f0cb32536e5bce6c98c393db21cca7f4ea187ba8c4dca8b51d4ea80a"
     },
     {
       "name": "listing-mixed",
-      "description": "A file, a link and a directory; names sorted bytewise ('B' before 'a'), non-ASCII included.",
+      "description": "A tracked directory (tag 10): a file, a link and a directory; names sorted bytewise ('B' before 'a'), non-ASCII included.",
       "kind": "listing",
       "entries": [
         {
@@ -1456,7 +1456,7 @@
           "kind": 1
         }
       ],
-      "digest_hex": "a5d7049c70a51776bbf9c98afd22e14b742dc179edcaba2282ffd9f9172db0e1"
+      "digest_hex": "648320ccf793b8441a775994b12ae03b7f8dc5e1b862cd72b0195a2c42de6d42"
     },
     {
       "name": "listing-kind-matters",
@@ -1480,7 +1480,7 @@
           "kind": 1
         }
       ],
-      "digest_hex": "97d39620e658b50e57865ca9556892c98c94863dbfcb723deb8d72d518ad79e7"
+      "digest_hex": "7d9a31312cef8fb50f508a23608db9c4f185169d154168e3dc3b27f852350f03"
     },
     {
       "name": "traced-package-no-nested",

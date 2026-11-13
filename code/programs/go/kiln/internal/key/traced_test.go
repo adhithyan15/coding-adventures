@@ -64,20 +64,51 @@ func TestListingDigest(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := sha256.Sum256([]byte("\x00\x00\x00\x00\x00\x00\x00\x02" +
+	want := sha256.Sum256([]byte("\x10\x00\x00\x00\x00\x00\x00\x00\x02" +
 		"\x00\x00\x00\x00\x00\x00\x00\x01B\x01" + "\x00\x00\x00\x00\x00\x00\x00\x01a\x03"))
 	if d != want {
 		t.Fatalf("got %x want %x", d, want)
 	}
-	empty, err := ListingDigest(nil)
-	if err != nil || empty != sha256.Sum256(make([]byte, 8)) {
-		t.Fatalf("empty listing: %x %v", empty, err)
+	notDir := NotDirectoryListingDigest()
+	if notDir != sha256.Sum256([]byte{0x11}) {
+		t.Fatal("not-a-directory digest is not SHA-256(11)")
+	}
+	// Tagged: no listing equals the not-a-directory digest or any state digest.
+	for _, o := range [][32]byte{notDir, AbsentDigest(), DirectoryDigest(), MissingPackageDigest()} {
+		if d == o {
+			t.Fatal("listing digest collides with a tagged digest")
+		}
+	}
+	if notDir == AbsentDigest() {
+		t.Fatal("not-a-directory listing equals the absent state")
+	}
+	if _, err := ListingDigest(nil); err == nil {
+		t.Fatal("a tracked directory with no children was accepted")
 	}
 	// A kind change and a name change both move the digest.
 	k, _ := ListingDigest([]ListingEntry{{"B", ListFile}, {"a", ListFile}})
 	n, _ := ListingDigest([]ListingEntry{{"B", ListFile}, {"b", ListDir}})
 	if k == d || n == d || k == n {
 		t.Fatal("listing digest ignores a kind or a name")
+	}
+}
+
+func TestActionCloneIsDeep(t *testing.T) {
+	host := "h"
+	a := Action{HostImageID: &host, Recipe: []byte{1}, Inputs: []FileEntry{{Path: "a", Digest: []byte{1}}},
+		Reads: []FileEntry{{Path: "b", Digest: []byte{2}}}, Consumed: []Consumed{{Target: "t", Key: []byte{3}}},
+		Tools: []Tool{{Name: "n", Identity: []byte{4}}}, Env: []EnvVar{{Name: "e", Value: "v"}}}
+	c := a.Clone()
+	*c.HostImageID = "x"
+	c.Recipe[0], c.Inputs[0].Digest[0], c.Reads[0].Digest[0] = 9, 9, 9
+	c.Consumed[0].Key[0], c.Tools[0].Identity[0] = 9, 9
+	c.Env[0].Value = "x"
+	if host != "h" || a.Recipe[0] != 1 || a.Inputs[0].Digest[0] != 1 || a.Reads[0].Digest[0] != 2 ||
+		a.Consumed[0].Key[0] != 3 || a.Tools[0].Identity[0] != 4 || a.Env[0].Value != "v" {
+		t.Fatal("Clone shares memory with the original")
+	}
+	if z := (Action{}).Clone(); z.HostImageID != nil || z.Inputs != nil || z.Consumed != nil || z.Tools != nil {
+		t.Fatal("Clone of an empty action invents sections")
 	}
 }
 
@@ -260,6 +291,8 @@ func TestDigestVectorErrors(t *testing.T) {
 		"short content":    {Kind: DigestFile, ContentHex: "00"},
 		"non-hex content":  {Kind: DigestFile, ContentHex: "zz"},
 		"bad link":         {Kind: DigestLink, Target: "a\xff"},
+		"stray entries 2":  {Kind: DigestNotDir, Entries: []ListingJSON{{"a", 1}}},
+		"empty listing":    {Kind: DigestListing},
 		"bad own":          {Kind: DigestTracedPkg, OwnDigestHex: "0"},
 		"unsorted nested":  {Kind: DigestTracedPkg, OwnDigestHex: good, Nested: []string{"b", "a"}},
 		"unsorted listing": {Kind: DigestListing, Entries: []ListingJSON{{"b", 1}, {"a", 1}}},
@@ -298,7 +331,7 @@ func TestCommittedTracedVectors(t *testing.T) {
 	for _, d := range vf.Digests {
 		kinds[d.Kind] = true
 	}
-	for _, k := range []string{DigestAbsent, DigestDirectory, DigestFile, DigestLink, DigestMissingPkg, DigestListing, DigestTracedPkg} {
+	for _, k := range []string{DigestAbsent, DigestDirectory, DigestFile, DigestLink, DigestMissingPkg, DigestListing, DigestNotDir, DigestTracedPkg} {
 		if !kinds[k] {
 			t.Errorf("no %s vector", k)
 		}

@@ -113,13 +113,32 @@ type ListingEntry struct {
 	Kind uint8 // ListFile, ListLink or ListDir
 }
 
-// ListingDigest is SHA-256 of list([str(name) || u8(kind)]).  The names are
+// Tag bytes of the listing digests.  Like the state digests they are tagged, so
+// "this is a directory with these children" and "this is not a directory in the
+// tracked tree" can never share a digest, and a `list:` entry stands on its own
+// without a paired `path:` entry.  Both differ from the state tags 00 to 03.
+const (
+	listDirectory    byte = 0x10
+	listNotDirectory byte = 0x11
+)
+
+// NotDirectoryListingDigest is the listing digest of a path that is not a
+// directory in the tracked tree: absent, a file or a link.  SHA-256 of the
+// single byte 11.
+func NotDirectoryListingDigest() [32]byte { return sha256.Sum256([]byte{listNotDirectory}) }
+
+// ListingDigest is SHA-256(u8(0x10) || list([str(name) || u8(kind)])) for a
+// tracked directory, meaning one with some tracked file under it, so it has at
+// least one child (an empty list is refused).  The names are
 // the directory's immediate children, not paths, so a name is non-empty, valid
 // UTF-8 and holds no '/'.  As everywhere in KILN02, the order is the caller's
 // duty and a violation is an error: strictly ascending by name bytes, so an
 // equal neighbour (a duplicate) is refused as well as a descending pair.
 func ListingDigest(es []ListingEntry) ([32]byte, error) {
-	b := putU64(nil, uint64(len(es)))
+	if len(es) == 0 {
+		return [32]byte{}, fmt.Errorf("listing: a tracked directory has at least one child")
+	}
+	b := putU64([]byte{listDirectory}, uint64(len(es)))
 	for i, e := range es {
 		if e.Name == "" || strings.ContainsRune(e.Name, '/') {
 			return [32]byte{}, fmt.Errorf("listing: %q is not a child name", e.Name)

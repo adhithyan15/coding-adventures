@@ -277,7 +277,8 @@ checked by the same verifier. A traced weak key and strong key are ordinary
   reads. `kind` is `state-absent`, `state-directory`, `state-file` (`exec`,
   `content_hex`, the SHA-256 of the content), `state-link` (`target`),
   `missing-package`, `listing` (`entries`: `{name, kind}`, kind 1 file, 2
-  link, 3 directory) or `traced-package` (`own_digest_hex`, `nested`).
+  link, 3 directory; tagged `10`), `listing-not-directory` (tagged `11`) or
+  `traced-package` (`own_digest_hex`, `nested`).
 - `strong_consumed`: `{name, description, weak_key_hex, entries, consumed}`,
   where `entries` are `{name, digest_hex}` and `consumed` is the section a
   strong key is built with.

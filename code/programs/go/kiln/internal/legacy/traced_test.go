@@ -20,6 +20,15 @@ const (
 )
 
 // tracedOpts is the fixture's options with a HOME and a TMPDIR added.
+// newTracedFixture is newFixture minus a BUILD file in a directory that the
+// base graph does not list (x/q): a traced key refuses a graph that disagrees
+// with the tree.
+func newTracedFixture(t *testing.T) *fixture {
+	f := newFixture(t)
+	f.remove("code/packages/x/q/BUILD")
+	return f
+}
+
 func (f *fixture) tracedOpts() Options {
 	o := f.opts("linux")
 	o.Environ = append(o.Environ, "HOME=/home/runner", "TMPDIR=/tmp/kiln", "PATH=/evil/bin", "UNLISTED=1")
@@ -62,7 +71,7 @@ func envOf(vars []key.EnvVar, name string) (string, bool) {
 }
 
 func TestWeakKeySections(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	w := mustWeak(t, f.traced(baseGraph()), pkgA)
 	a := w.Action
 	if a.SemanticsVersion != 2 {
@@ -106,7 +115,7 @@ func TestWeakKeySections(t *testing.T) {
 }
 
 func TestWeakKeyEnvironment(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	w := mustWeak(t, f.traced(baseGraph()), pkgA)
 	// The scrubbed environment: allowlisted, HOME, TMPDIR, constructed PATH,
 	// LANG and TZ.  OTHER, UNLISTED and the inherited PATH are gone.
@@ -239,14 +248,14 @@ func TestScrubbedEnvRefusals(t *testing.T) {
 }
 
 func TestWeakKeyDeterministic(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	a := mustWeak(t, f.traced(baseGraph()), pkgA)
 	b := mustWeak(t, f.traced(baseGraph()), pkgA)
 	if a.Key != b.Key {
 		t.Fatal("two runs differ")
 	}
 	tr := f.traced(baseGraph())
-	if mustWeak(t, tr, pkgA) != mustWeak(t, tr, pkgA) {
+	if mustWeak(t, tr, pkgA).Key != mustWeak(t, tr, pkgA).Key {
 		t.Error("WeakKey is not memoised")
 	}
 	if a.Key == mustWeak(t, f.traced(baseGraph()), "code/packages/x/z").Key {
@@ -282,7 +291,7 @@ func TestWeakKeyChanges(t *testing.T) {
 	for name, mutate := range cases {
 		// Each case gets its own checkout, and its baseline is taken in that
 		// checkout before the change, so kiln:root is the same on both sides.
-		f := newFixture(t)
+		f := newTracedFixture(t)
 		ref, err := NewTraced(baseGraph(), f.tracedOpts(), f.root(), flags())
 		if err != nil {
 			t.Fatal(err)
@@ -301,7 +310,7 @@ func TestWeakKeyChanges(t *testing.T) {
 }
 
 func TestWeakKeyIgnores(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	base := mustWeak(t, f.traced(baseGraph()), pkgA).Key
 	// An unlisted variable, another package's files, and toolchains.json for a
 	// language this package does not use all leave the weak key alone.
@@ -325,7 +334,7 @@ func TestWeakKeyIgnores(t *testing.T) {
 }
 
 func TestWeakKeyToolsFollowTheStaticClosure(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	g := baseGraph()
 	// x/z uses a second language; x/a's closure does not hold it.
 	for i := range g.Packages {
@@ -348,7 +357,7 @@ func TestWeakKeyToolsFollowTheStaticClosure(t *testing.T) {
 }
 
 func TestWeakKeyRefusals(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	refusal := func(tr *Traced, rel, want string) {
 		t.Helper()
 		_, err := tr.WeakKey(rel)
@@ -375,7 +384,7 @@ func TestWeakKeyRefusals(t *testing.T) {
 	refusal(f.traced(g), pkgA, "no-build-file:linux")
 	// A BUILD that is a symlink.
 	if runtime.GOOS != "windows" {
-		ln := newFixture(t)
+		ln := newTracedFixture(t)
 		if err := os.Remove(filepath.Join(ln.dir, pkgA, "BUILD")); err != nil {
 			t.Fatal(err)
 		}
@@ -388,10 +397,8 @@ func TestWeakKeyRefusals(t *testing.T) {
 	g = baseGraph()
 	nb := "BUILD_nope"
 	g.Packages[0].BuildFiles["linux"] = &nb
-	if _, err := f.traced(g).WeakKey(pkgA); err == nil {
+	if _, err := NewTraced(g, f.tracedOpts(), f.root(), nil); err == nil {
 		t.Error("a BUILD named by the graph but absent was accepted")
-	} else if _, ok := IsRefusal(err); ok {
-		t.Error("a missing file is reported as a refusal")
 	}
 	// A package that is not in the graph.
 	if _, err := f.traced(baseGraph()).WeakKey("code/packages/x/nowhere"); err == nil {
@@ -403,7 +410,7 @@ func TestWeakKeyRefusals(t *testing.T) {
 }
 
 func TestNewTracedRefusals(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	good := f.tracedOpts()
 	root := f.root()
 	for name, c := range map[string]struct {
@@ -474,7 +481,7 @@ func entryDigest(t *testing.T, tr *Traced, name string) [32]byte {
 }
 
 func TestPathDigests(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	f.write("code/scripts/run.sh", "echo hi\n")
 	tr := f.traced(baseGraph())
 	content := h32sum("echo hi\n")
@@ -515,7 +522,7 @@ func TestPathDigests(t *testing.T) {
 func h32sum(s string) [32]byte { return sha256Sum([]byte(s)) }
 
 func TestListDigests(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	tr := f.traced(baseGraph())
 	got := entryDigest(t, tr, "list:code/grammars/g")
 	want, _ := key.ListingDigest([]key.ListingEntry{{Name: "one.txt", Kind: key.ListFile}, {Name: "sub", Kind: key.ListDir}})
@@ -528,10 +535,13 @@ func TestListDigests(t *testing.T) {
 	if root != wantRoot {
 		t.Error("root listing is wrong")
 	}
-	empty, _ := key.ListingDigest(nil)
+	notDir := key.NotDirectoryListingDigest()
 	for _, n := range []string{"list:code/grammars/none", "list:README.md", "list:code/gram"} {
-		if entryDigest(t, tr, n) != empty {
-			t.Errorf("%s is not the empty listing", n)
+		if entryDigest(t, tr, n) != notDir {
+			t.Errorf("%s is not the not-a-directory listing", n)
+		}
+		if notDir == got {
+			t.Fatal("a directory listing equals the not-a-directory digest")
 		}
 	}
 	// A new child changes the listing; a change below a child does not; a new
@@ -565,7 +575,7 @@ func TestListDigests(t *testing.T) {
 }
 
 func TestPackageDigests(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	tr := f.traced(baseGraph())
 	// x/c has one nested package (x/c-n at c/ext/n); x/outer has x/b nested.
 	own, err := tr.ownDigest(tr.pl.byPath[pkgC])
@@ -593,32 +603,35 @@ func TestPackageDigests(t *testing.T) {
 }
 
 func TestNestedPackageChangesTq(t *testing.T) {
-	f := newFixture(t)
-	before := entryDigest(t, f.traced(baseGraph()), "pkg:"+pkgZ)
-	// A new package appears inside x/z, with no tracked file of its own, so
-	// D(x/z) is unchanged: only the nested list moves T.
+	f := newTracedFixture(t)
+	tr0 := f.traced(baseGraph())
+	before := entryDigest(t, tr0, "pkg:"+pkgZ)
+	oldOwn, _ := tr0.ownDigest(tr0.pl.byPath[pkgZ])
+	// A new package appears inside x/z.  Its only file is its BUILD, which D(x/z)
+	// never counted (it was not there), so D(x/z) is unchanged: only the nested
+	// list moves T.
+	f.write(pkgZ+"/sub/BUILD", "echo sub\n")
 	g := baseGraph()
-	sub := mkpkg("x/z-sub", pkgZ+"/sub", "x")
-	g.Packages = append(g.Packages, sub)
-	after := entryDigest(t, f.traced(g), "pkg:"+pkgZ)
-	if before == after {
-		t.Fatal("a new nested package did not change T(q)")
-	}
+	g.Packages = append(g.Packages, mkpkg("x/z-sub", pkgZ+"/sub", "x"))
 	tr := f.traced(g)
-	oldOwn, _ := f.traced(baseGraph()).ownDigest(f.traced(baseGraph()).pl.byPath[pkgZ])
 	newOwn, _ := tr.ownDigest(tr.pl.byPath[pkgZ])
 	if oldOwn != newOwn {
 		t.Fatal("test premise: D(q) should not move")
 	}
+	if entryDigest(t, tr, "pkg:"+pkgZ) == before {
+		t.Fatal("a new nested package did not change T(q)")
+	}
 	// A tracked file appearing where an action found nothing changes D(q), hence T(q).
-	f.write(pkgZ+"/new-file.txt", "x")
-	if entryDigest(t, f.traced(baseGraph()), "pkg:"+pkgZ) == before {
+	h := newTracedFixture(t)
+	hb := entryDigest(t, h.traced(baseGraph()), "pkg:"+pkgZ)
+	h.write(pkgZ+"/new-file.txt", "x")
+	if entryDigest(t, h.traced(baseGraph()), "pkg:"+pkgZ) == hb {
 		t.Error("a new tracked file in the package did not change T(q)")
 	}
 }
 
 func TestEntryDigestRefusesBadNames(t *testing.T) {
-	tr := newFixture(t).traced(baseGraph())
+	tr := newTracedFixture(t).traced(baseGraph())
 	for _, n := range []string{"weak:x", "tool:build-tool", "path:../x", "x", "list:", "pkg:/abs"} {
 		if _, err := tr.EntryDigest(n); err == nil {
 			t.Errorf("%q accepted", n)
@@ -631,7 +644,7 @@ func TestEntryDigestRefusesBadNames(t *testing.T) {
 
 func TestTrackedTreeOnly(t *testing.T) {
 	hasGit(t)
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	gitInit(t, f.dir)
 	src := source.NewGit(f.dir)
 	o := f.tracedOpts()
@@ -663,7 +676,7 @@ func TestTrackedTreeOnly(t *testing.T) {
 }
 
 func TestStrongKeyFlow(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	f.write("code/scripts/run.sh", "echo hi\n")
 	tr := f.traced(baseGraph())
 	w := mustWeak(t, tr, pkgA)
@@ -698,7 +711,7 @@ func TestStrongKeyFlow(t *testing.T) {
 	// Each case runs in its own checkout (kiln:root is part of the key) and is
 	// compared with that checkout's own baseline.
 	strongAfter := func(mutate func(g *fixture)) (before, after [32]byte) {
-		g := newFixture(t)
+		g := newTracedFixture(t)
 		g.write("code/scripts/run.sh", "echo hi\n")
 		run := func() [32]byte {
 			tr := g.traced(baseGraph())
@@ -717,7 +730,7 @@ func TestStrongKeyFlow(t *testing.T) {
 		t.Error("a change nothing in the manifest covers moved the strong key")
 	}
 	// A tracked file under a path that is not a package does not make it one.
-	if b, a := strongAfter(func(g *fixture) { g.write("code/packages/x/gone/BUILD", "echo\n") }); a != b {
+	if b, a := strongAfter(func(g *fixture) { g.write("code/packages/x/gone/src.txt", "echo\n") }); a != b {
 		t.Error("a missing package's digest moved although no package appeared")
 	}
 	// Each entry's digest moves it.
@@ -744,7 +757,7 @@ func TestStrongKeyFlow(t *testing.T) {
 }
 
 func TestMemoisedDigests(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	tr := f.traced(baseGraph())
 	a, err := tr.CurrentDigests([]string{"pkg:" + pkgC, "list:.", "path:README.md"})
 	if err != nil {
@@ -766,11 +779,92 @@ func sha256Sum(b []byte) [32]byte { return sha256.Sum256(b) }
 // A package that did not exist when its manifest was recorded may exist now:
 // the entry then digests to T(q), not the missing value, so lookup misses.
 func TestMissingPackageBecomesReal(t *testing.T) {
-	f := newFixture(t)
+	f := newTracedFixture(t)
 	missing := entryDigest(t, f.traced(baseGraph()), "pkg:code/packages/x/fresh")
+	f.write("code/packages/x/fresh/BUILD", "echo\n")
 	g := baseGraph()
 	g.Packages = append(g.Packages, mkpkg("x/fresh", "code/packages/x/fresh", "x"))
 	if entryDigest(t, f.traced(g), "pkg:code/packages/x/fresh") == missing {
 		t.Error("a package that now exists still digests as missing")
+	}
+}
+
+// The listing digest stands alone: a directory that becomes a file changes it,
+// with no paired path: entry to notice.
+func TestListingNeedsNoPathEntry(t *testing.T) {
+	f := newTracedFixture(t)
+	f.write("code/scripts/a/x.txt", "x")
+	asDir := entryDigest(t, f.traced(baseGraph()), "list:code/scripts/a")
+	if err := os.RemoveAll(filepath.Join(f.dir, "code/scripts/a")); err != nil {
+		t.Fatal(err)
+	}
+	f.write("code/scripts/a", "now a file")
+	asFile := entryDigest(t, f.traced(baseGraph()), "list:code/scripts/a")
+	if asDir == asFile {
+		t.Fatal("a directory that became a tracked file kept its list: digest")
+	}
+	if asFile != key.NotDirectoryListingDigest() {
+		t.Error("a file's listing is not the not-a-directory digest")
+	}
+}
+
+func TestGraphMustMatchSource(t *testing.T) {
+	f := newTracedFixture(t)
+	// A BUILD file in a directory the graph does not list.
+	f.write("code/packages/x/new/BUILD", "echo\n")
+	if _, err := NewTraced(baseGraph(), f.tracedOpts(), f.root(), nil); err == nil || !strings.Contains(err.Error(), "outside every graph package") {
+		t.Errorf("BUILD outside the graph: %v", err)
+	}
+	g := newTracedFixture(t)
+	g.write("code/packages/x/new/BUILD_mac", "echo\n")
+	if _, err := NewTraced(baseGraph(), g.tracedOpts(), g.root(), nil); err == nil {
+		t.Error("BUILD_* outside the graph accepted")
+	}
+	// A graph package whose BUILD is gone from the tree.
+	h := newTracedFixture(t)
+	h.remove("code/packages/x/z/BUILD")
+	if _, err := NewTraced(baseGraph(), h.tracedOpts(), h.root(), nil); err == nil || !strings.Contains(err.Error(), "not in the tree") {
+		t.Errorf("missing BUILD: %v", err)
+	}
+	// A nested package the graph has not heard of is exactly the stale case.
+	n := newTracedFixture(t)
+	n.write(pkgZ+"/sub/BUILD", "echo\n")
+	if _, err := NewTraced(baseGraph(), n.tracedOpts(), n.root(), nil); err == nil {
+		t.Error("a new nested package missing from the graph was accepted")
+	}
+}
+
+func TestWeakKeyIsACopy(t *testing.T) {
+	f := newTracedFixture(t)
+	tr := f.traced(baseGraph())
+	a := mustWeak(t, tr, pkgA)
+	want := a.Key
+	// Scribble over every part of the copy.
+	a.Action.Recipe[0] ^= 0xff
+	a.Action.Consumed[0].Key[0] ^= 0xff
+	a.Action.Tools[0].Identity[0] ^= 0xff
+	a.Action.Env[0].Value = "tampered"
+	*a.Action.HostImageID = "tampered"
+	a.Scrubbed[0].Value = "tampered"
+	a.Key = [32]byte{}
+	b := mustWeak(t, tr, pkgA)
+	if b.Key != want {
+		t.Fatal("caller mutation reached the memoised key")
+	}
+	k, err := key.Key(b.Action)
+	if err != nil || k != want {
+		t.Fatalf("memoised action corrupted: %v", err)
+	}
+	// Strong shares nothing with the weak key it came from.
+	s, err := b.Strong([]key.EntryDigest{{Name: "path:a", Digest: [32]byte{1}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	s.Action.Recipe[0] ^= 0xff
+	s.Action.Tools[0].Identity[0] ^= 0xff
+	s.Action.Env[0].Value = "tampered"
+	*s.Action.HostImageID = "tampered"
+	if k, _ := key.Key(b.Action); k != want {
+		t.Fatal("mutating a strong key changed its weak key")
 	}
 }

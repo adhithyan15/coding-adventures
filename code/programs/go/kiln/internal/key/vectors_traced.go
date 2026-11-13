@@ -25,6 +25,7 @@ const (
 	DigestLink       = "state-link"
 	DigestMissingPkg = "missing-package"
 	DigestListing    = "listing"
+	DigestNotDir     = "listing-not-directory"
 	DigestTracedPkg  = "traced-package"
 )
 
@@ -119,6 +120,8 @@ func (v DigestVector) Compute() ([32]byte, error) {
 		return LinkDigest(v.Target)
 	case DigestMissingPkg:
 		return MissingPackageDigest(), nil
+	case DigestNotDir:
+		return NotDirectoryListingDigest(), nil
 	case DigestListing:
 		es := make([]ListingEntry, len(v.Entries))
 		for i, e := range v.Entries {

@@ -106,7 +106,7 @@ func (w *WeakKey) Strong(entries []key.EntryDigest) (*StrongKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	a := w.Action
+	a := w.Action.Clone() // the strong key shares nothing with the weak one
 	a.Consumed = consumed
 	k, err := key.Key(a)
 	if err != nil {
@@ -183,6 +183,9 @@ func NewTraced(g *Graph, opt Options, root string, flags []string) (*Traced, err
 	if err != nil {
 		return nil, err
 	}
+	if err := pl.checkGraphMatchesSource(); err != nil {
+		return nil, err
+	}
 	names := make(map[string]bool, len(g.Packages))
 	for _, p := range g.Packages {
 		names[p.Name] = true
@@ -191,6 +194,31 @@ func NewTraced(g *Graph, opt Options, root string, flags []string) (*Traced, err
 		return nil, err
 	}
 	return &Traced{pl: pl, root: root, args: args}, nil
+}
+
+// checkGraphMatchesSource refuses a stale graph.  T(q) names the packages nested
+// in q, and those names come from the graph; if the graph lags the tree, a new
+// nested package would not change T(q) and a lookup could wrongly hit.  Two
+// symptoms are checked: a BUILD file the graph names that the tree lacks, and a
+// BUILD or BUILD_* file in a directory that is not a graph package.
+func (pl *planner) checkGraphMatchesSource() error {
+	for _, p := range pl.g.Packages {
+		for _, os := range OSes {
+			if bf := p.BuildFiles[os]; bf != nil && !pl.fileSet[p.RelPath+"/"+*bf] {
+				return fmt.Errorf("traced key: graph package %s names %s, which is not in the tree (stale graph?)", short(p.Name), short(*bf))
+			}
+		}
+	}
+	for _, f := range pl.files {
+		b := path.Base(f)
+		if b != "BUILD" && !strings.HasPrefix(b, "BUILD_") {
+			continue
+		}
+		if _, ok := pl.byPath[path.Dir(f)]; !ok {
+			return fmt.Errorf("traced key: %s is a BUILD file outside every graph package (stale graph?)", short(f))
+		}
+	}
+	return nil
 }
 
 // ScrubbedEnv is the environment of a traced run (KILN04 section 4.2), as the
@@ -275,7 +303,16 @@ func (t *Traced) WeakKey(rel string) (*WeakKey, error) {
 	if !ok {
 		return nil, fmt.Errorf("traced key: no package at %q", short(rel))
 	}
-	return t.weak.get(rel, func() (*WeakKey, error) { return t.weakKey(p) })
+	w, err := t.weak.get(rel, func() (*WeakKey, error) { return t.weakKey(p) })
+	if err != nil {
+		return nil, err
+	}
+	return w.clone(), nil // callers get their own copy, never the memoised one
+}
+
+// clone deep-copies a weak key.
+func (w *WeakKey) clone() *WeakKey {
+	return &WeakKey{Action: w.Action.Clone(), Key: w.Key, Scrubbed: append([]key.EnvVar(nil), w.Scrubbed...)}
 }
 
 func (t *Traced) weakKey(p int) (*WeakKey, error) {
@@ -471,9 +508,9 @@ func (t *Traced) contentDigest(rel string) ([32]byte, error) {
 
 // listDigest is the listing of directory rel ("." is the root): the immediate
 // children that hold or are tracked files, a child directory counting when
-// anything tracked lies beneath it.  The listing of a path that is not a
-// directory is empty, the same as a directory with nothing tracked in it:
-// `path:` entries are what tell those apart.
+// anything tracked lies beneath it.  A path that is not a tracked directory
+// (absent, a file or a link) gets the tagged not-a-directory digest, which no
+// directory listing can equal.
 func (t *Traced) listDigest(rel string) ([32]byte, error) {
 	pl := t.pl
 	var below []string
@@ -504,6 +541,11 @@ func (t *Traced) listDigest(rel string) ([32]byte, error) {
 		if info.Link {
 			kinds[child] = key.ListLink
 		}
+	}
+	if len(kinds) == 0 {
+		// Not a directory in the tracked tree (absent, a file or a link): a
+		// tagged digest of its own, so this entry needs no paired path: entry.
+		return key.NotDirectoryListingDigest(), nil
 	}
 	es := make([]key.ListingEntry, 0, len(kinds))
 	for n, k := range kinds {

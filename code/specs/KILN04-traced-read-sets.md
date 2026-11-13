@@ -902,9 +902,13 @@ trace.
   - `02 || u8(exec) || SHA-256(content)`: file;
   - `03 || bytes(target)`: link.
 - **The missing-package digest** is SHA-256 of `str("kiln-missing-package")`.
-- **A listing digest** is SHA-256 of `list([str(name) || u8(kind)])`,
-  sorted by name bytes, where kind `1` is a file, `2` a link and `3` a
-  directory.
+- **A listing digest** is tagged, like the state digests, so a `list:`
+  entry stands on its own without a paired `path:` entry:
+  - for a tracked directory (some tracked file lies under it):
+    SHA-256 of `u8(0x10) || list([str(name) || u8(kind)])`, sorted by name
+    bytes, where kind `1` is a file, `2` a link and `3` a directory;
+  - for a path that is not a directory in the tracked tree (absent, a file
+    or a link): SHA-256 of the single byte `11`.
 - **`T(q)`** is as defined in §5.2.
 
 Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
@@ -941,10 +945,13 @@ is what the code does.
    `Source`. A `path:` entry is a file or link if `Source` lists it, a
    directory if it lists anything beneath it, and absent otherwise. A `list:`
    entry holds the immediate children, a child directory counting when
-   anything tracked lies below it. The listing of a path that is a file, or
-   of one with nothing tracked beneath it, is the empty listing; the
-   `path:` state is what tells those cases apart. Untracked files never
-   appear. Each digest is computed once per `Traced`.
+   anything tracked lies below it. A `list:` digest is tagged (`10` for a
+   directory with its children, `11` for anything that is not a tracked
+   directory), so a directory that later becomes a tracked file, or vanishes,
+   changes its `list:` digest even when the manifest has no `path:` entry for
+   it. The directory encoding requires at least one child, and its first byte
+   `10` cannot be mistaken for the state tags `00` to `03`. Untracked files
+   never appear. Each digest is computed once per `Traced`.
 5. **"Directly nested" means the nearest enclosing package.** A package `j`
    is in `T(q)`'s list when `q` is the closest package above it. `D(q)`
    already omits everything inside any nested package.
@@ -981,6 +988,24 @@ is what the code does.
     state, missing, listing or `T(q)` digest, with its inputs),
     `strong_consumed` (a weak key and entries in, the sorted consumed section
     out) and `refused_entries`. `kiln verify-vectors` checks all of them.
+11. **The graph must match `Source`.** `NewTraced` refuses a stale graph: an
+    error if a graph package's BUILD file is missing from `Source`, or if
+    `Source` holds a `BUILD` or `BUILD_*` file in a directory that is not a
+    graph package. `T(q)` takes its nested-package names from the graph, so a
+    graph that lags the tree could let a new nested package leave `T(q)`
+    unchanged.
+12. **Returned keys are copies.** `WeakKey` returns a deep copy of the
+    memoised key, and `Strong` deep-copies the sections it reuses
+    (`key.Action.Clone`), so a caller cannot corrupt a cached key.
+13. **Pins, not probes.** The traced keys carry the tool pins, never probe
+    results. Whatever uses a key to skip a test (stage 5 lookup, M3) must
+    first apply `probe-mismatch`, the never list and the §6 preconditions;
+    none of them is in the key (also listed in the §13 M3 gate).
+14. **Windows.** On Windows `os/exec` adds `SYSTEMROOT` to a child's
+    environment. That is moot while tracing is Linux-only (§4.1), but it must
+    be keyed if Windows is ever traced.
+15. **`kiln:root` is not cleaned.** It is keyed as given, so two spellings of
+    one checkout path are two keys. That can only cause a miss, never a hit.
 
 ## 12. Tests that must exist
 
@@ -1109,7 +1134,10 @@ point, not a measurement.
    disagreements on traced predictions;
 2. the scrubbed-environment shadow shows no unexplained result changes;
 3. `probe-mismatch` is fatal (KILN03 §4);
-4. recording runs inside the §4.3 sandbox.
+4. recording runs inside the §4.3 sandbox;
+5. lookup applies `probe-mismatch`, the never list and the §6
+   preconditions before it can skip, because the traced keys carry pins
+   only and none of these (§11.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this
