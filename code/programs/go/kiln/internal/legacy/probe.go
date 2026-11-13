@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -59,6 +60,9 @@ type ProbeOptions struct {
 	Run  ProbeRunner // nil: execute for real
 	// Total bounds all probes together; 0 means ProbeTotalTimeout.
 	Total time.Duration
+	// now is the clock, for tests: Windows' coarse timer can report no time
+	// passing between two calls, which made a 1 ns deadline flaky there.
+	now func() time.Time
 }
 
 // ProbeResult is the outcome of one tool's probes (the worst of them, when a
@@ -201,6 +205,23 @@ func severity(s string) int {
 // tools, ConstructPATH), `LANG=C`, `TZ=UTC` and a private HOME and working
 // directory, a 10 s timeout and 64 KiB of output.  A binary whose real path
 // (after symlinks) lies inside opt.Root is never run.
+// homeInsideRoot reports whether a POSIX-form HOME (validHome's rules) lies
+// in or under the checkout root. It compares POSIX strings, not filepath.Rel:
+// on Windows the root carries a volume ("C:\\...") that a POSIX HOME never
+// has, so Rel would error and every HOME would be dropped, changing the PATH.
+// A root with a volume therefore cannot contain a POSIX HOME. Case-folded on
+// darwin and windows, whose default filesystems ignore case.
+func homeInsideRoot(home, root string) bool {
+	if filepath.VolumeName(root) != "" {
+		return false
+	}
+	h, r := path.Clean(home), path.Clean(filepath.ToSlash(root))
+	if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
+		h, r = strings.ToLower(h), strings.ToLower(r)
+	}
+	return h == r || r == "/" || strings.HasPrefix(h, r+"/")
+}
+
 func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res []ProbeResult, err error) {
 	run := opt.Run
 	if run == nil {
@@ -221,8 +242,15 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	}
 	used, _ := t.selected(names, osName)
 	tools, _ := t.ToolsFor(names, osName, "")
-	pathVar := t.ConstructPATH(tools, opt.Home) // drops a home that is not absolute and clean
-	dirs := filepath.SplitList(pathVar)
+	home := opt.Home
+	if home != "" && homeInsideRoot(home, root) {
+		home = "" // a HOME inside the checkout would put checkout directories on the PATH
+	}
+	pathVar := t.ConstructPATH(tools, home) // drops a home that is not absolute and clean
+	var dirs []string                       // ConstructPATH uses POSIX ':' on every host
+	if pathVar != "" {
+		dirs = strings.Split(pathVar, posixListSep)
+	}
 	dir, err := os.MkdirTemp("", "kiln-probe-")
 	if err != nil {
 		return nil, fmt.Errorf("probe: %w", err)
@@ -237,7 +265,11 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	if total <= 0 {
 		total = ProbeTotalTimeout
 	}
-	start := time.Now()
+	now := opt.now
+	if now == nil {
+		now = time.Now
+	}
+	start := now()
 
 	worst := map[string]string{}
 	detail := map[string]string{}
@@ -249,7 +281,7 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 	for _, e := range used {
 		for _, argv := range e.Probes {
 			tool := argv[0]
-			if time.Since(start) > total {
+			if now().Sub(start) > total {
 				note(tool, ProbeTimedOut)
 				continue
 			}
