@@ -101,19 +101,6 @@ func TestInventorySkipsDotGitFileOfALinkedWorktree(t *testing.T) {
 	}
 }
 
-func TestInventoryDoesNotEnterGitlinks(t *testing.T) {
-	dir := newRepo(t, baseFiles)
-	commit := runGit(t, dir, "rev-parse", "HEAD")
-	runGit(t, dir, "update-index", "--add", "--cacheinfo", "160000,"+commit+",vendor/sub")
-	runGit(t, dir, "commit", "-q", "-m", "gitlink")
-	writeFile(t, dir, "vendor/sub/inside.txt", "x")
-	writeFile(t, dir, "vendor/other.txt", "x")
-	want := []string{"vendor/other.txt"}
-	if got := inventoryOf(t, dir); !reflect.DeepEqual(got, want) {
-		t.Fatalf("got %v, want %v", got, want)
-	}
-}
-
 func TestInventoryNeverFollowsSymlinks(t *testing.T) {
 	dir := newRepo(t, baseFiles)
 	outside := t.TempDir()

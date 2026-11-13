@@ -16,7 +16,7 @@ func verifyWithin(t *testing.T, dir string) error {
 	t.Helper()
 	done := make(chan error, 1)
 	go func() {
-		_, err := VerifyTree(dir)
+		_, err := VerifyTree(dir, "")
 		done <- err
 	}()
 	select {

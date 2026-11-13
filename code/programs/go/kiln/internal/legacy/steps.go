@@ -26,17 +26,24 @@ package legacy
 //     error rather than a silent "last one wins",
 //   - a package path must be a valid Kiln path (the same rule as the graph),
 //   - a line may not contain NUL (a C string would end there, so two different
-//     lines could compare equal) and is size-capped.
+//     lines could compare equal), may not be empty, is size-capped, and the
+//     document must be valid UTF-8 with no U+FFFD: the JSON decoder turns an
+//     invalid byte into U+FFFD, so two different recipes could otherwise
+//     decode to the same line,
+//   - null is refused anywhere (a null element would read as an empty line).
 //
 // An empty "steps" list is legal: a package with no commands. Whether that is
 // acceptable for a particular package is the caller's decision.
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
 )
@@ -46,7 +53,8 @@ const StepsSchema = "kiln-legacy-steps/1"
 
 // Limits that keep a hostile or broken export from exhausting memory.
 const (
-	MaxStepsBytes   = 64 << 20 // 64 MiB of JSON
+	MaxStepsBytes   = 16 << 20 // 16 MiB of JSON (the real repository's export is under 2 MiB)
+	MaxStepsScalars = 1 << 20  // strings and numbers in the whole document
 	MaxStepsPerPkg  = 4096     // lines of one package
 	MaxStepLineSize = 1 << 20  // bytes of one line
 )
@@ -71,8 +79,16 @@ type Steps struct {
 
 // ReadStepsFile loads and validates the export at path. The file must be a
 // regular file no larger than MaxStepsBytes.
+//
+// The path is lstat-ed and opened with O_NOFOLLOW|O_NONBLOCK, so a symlink or
+// a FIFO planted at the path is refused instead of followed or waited on.
 func ReadStepsFile(path string) (*Steps, error) {
-	f, err := os.Open(path)
+	if fi, err := os.Lstat(path); err != nil {
+		return nil, err
+	} else if !fi.Mode().IsRegular() {
+		return nil, fmt.Errorf("steps %s: not a regular file", path)
+	}
+	f, err := openNoFollow(path)
 	if err != nil {
 		return nil, err
 	}
@@ -91,10 +107,46 @@ func ReadStepsFile(path string) (*Steps, error) {
 	return DecodeSteps(data)
 }
 
+// checkTokens walks the document's JSON tokens before the typed decode, so a
+// document of millions of tiny elements is refused before it is turned into
+// millions of strings, and refuses every null (a null element would decode to
+// an empty string and read as "an empty line").
+func checkTokens(data []byte) error {
+	dec := json.NewDecoder(bytes.NewReader(data))
+	scalars := 0
+	for {
+		tok, err := dec.Token()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if _, ok := tok.(json.Delim); ok {
+			continue
+		}
+		if tok == nil {
+			return fmt.Errorf("null is not allowed")
+		}
+		if scalars++; scalars > MaxStepsScalars {
+			return fmt.Errorf("more than %d values", MaxStepsScalars)
+		}
+	}
+}
+
 // DecodeSteps strictly decodes and validates an export.
 func DecodeSteps(data []byte) (*Steps, error) {
 	if len(data) > MaxStepsBytes {
 		return nil, fmt.Errorf("steps: exceeds the %d byte limit", MaxStepsBytes)
+	}
+	// The whole document must be valid UTF-8. The JSON decoder would turn an
+	// invalid byte (or a lone surrogate escape) into U+FFFD and two different
+	// lines could then decode to the same string.
+	if !utf8.Valid(data) {
+		return nil, fmt.Errorf("steps: not valid UTF-8")
+	}
+	if err := checkTokens(data); err != nil {
+		return nil, fmt.Errorf("steps: %w", err)
 	}
 	var s Steps
 	if err := policyDecode(data, &s); err != nil {
@@ -130,6 +182,14 @@ func DecodeSteps(data []byte) (*Steps, error) {
 			return nil, fmt.Errorf("steps: package %q: %d steps, limit %d", short(p.Package), len(p.Steps), MaxStepsPerPkg)
 		}
 		for j, l := range p.Steps {
+			if l == "" {
+				return nil, fmt.Errorf("steps: package %q: step %d is empty", short(p.Package), j)
+			}
+			if strings.ContainsRune(l, utf8.RuneError) {
+				// U+FFFD is what the decoder substitutes for a bad byte; the
+				// build tool never emits it.
+				return nil, fmt.Errorf("steps: package %q: step %d contains U+FFFD", short(p.Package), j)
+			}
 			if len(l) > MaxStepLineSize {
 				return nil, fmt.Errorf("steps: package %q: step %d is %d bytes, limit %d", short(p.Package), j, len(l), MaxStepLineSize)
 			}

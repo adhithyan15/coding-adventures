@@ -51,19 +51,36 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
 )
 
+// inventoryLimit is how many entries the walk collects before giving up. It is
+// the record format's own maximum; a variable so a test can lower it.
+var inventoryLimit = recfmt.MaxInventory
+
 // Inventory lists everything under root that the tracked tree does not hold.
 func Inventory(root string) (recfmt.Inventory, error) {
-	out, err := source.NewGit(root).Output("ls-files", "-z")
+	g := source.NewGit(root)
+	if err := requireTopLevel(g); err != nil {
+		return recfmt.Inventory{}, err
+	}
+	index, err := lsIndex(g)
 	if err != nil {
 		return recfmt.Inventory{}, err
 	}
 	tracked := map[string]bool{}
 	haveTracked := map[string]bool{} // directories that contain a tracked path
-	for _, p := range splitNUL(out) {
+	var gitlinks problems
+	for p, e := range index {
+		if e.mode == modeGitlink {
+			gitlinks.add(p, "a submodule (gitlink)")
+		}
 		tracked[p] = true
 		for d := path.Dir(p); d != "."; d = path.Dir(d) {
 			haveTracked[d] = true
 		}
+	}
+	// A submodule's directory is not part of what this repository tracks, and
+	// nothing inside it is verified: fail rather than list or skip it.
+	if err := gitlinks.err("submodule-unsupported"); err != nil {
+		return recfmt.Inventory{}, err
 	}
 
 	paths := []string{}
@@ -81,9 +98,14 @@ func Inventory(root string) (recfmt.Inventory, error) {
 			switch {
 			case rel == ".git":
 				continue
+			case tracked[rel] && e.IsDir():
+				// A tracked FILE has been replaced by a directory (a BUILD
+				// did it, or someone did). Skipping it would hide everything
+				// inside; listing it would call a tracked path "untracked".
+				// Fail closed: VerifyTree says the same thing from its side.
+				return fmt.Errorf("tracked path %q is a directory on disk", printable(rel))
 			case tracked[rel]:
-				// A tracked file, symlink or gitlink: not an inventory
-				// entry, and a gitlink's directory is not entered.
+				// A tracked file or symlink: not an inventory entry.
 				continue
 			case e.IsDir() && haveTracked[rel]:
 				if err := walk(rel); err != nil {
@@ -93,6 +115,11 @@ func Inventory(root string) (recfmt.Inventory, error) {
 				// An untracked file, symlink, FIFO..., or a directory with
 				// nothing tracked inside it (collapsed to one entry).
 				paths = append(paths, rel)
+				// Stop at the format's limit instead of collecting a
+				// million entries and only then being refused.
+				if len(paths) > inventoryLimit {
+					return fmt.Errorf("inventory has more than %d entries", inventoryLimit)
+				}
 			}
 		}
 		return nil

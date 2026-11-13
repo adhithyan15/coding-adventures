@@ -1179,6 +1179,12 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-steps is only valid together with -emit-kiln-graph (the two exports must come from one discovery pass).")
 			return 1
 		}
+		if samePath(*emitKilnGraph, *emitKilnSteps) {
+			// Both writers are atomic renames: with one path the second
+			// would silently replace the first.
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-steps and -emit-kiln-graph name the same file.")
+			return 1
+		}
 		if cerr := checkResultsPath(*emitKilnSteps); cerr != nil {
 			fmt.Fprintf(os.Stderr, "Error: -emit-kiln-steps: %v\n", cerr)
 			return 1
@@ -1650,7 +1656,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// These are early-exit modes that compute metadata but don't build.
 
 	if *emitKilnGraph != "" {
-		if code := emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph, true); code != 0 {
+		if code := emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph, requireKilnConsumers); code != 0 {
 			return code
 		}
 		if *emitKilnSteps != "" {

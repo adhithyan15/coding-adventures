@@ -31,7 +31,8 @@ package main
 //	{
 //	  "schema": "kiln-legacy-steps/1",
 //	  "os": "linux",                       the OS the lines are for (runtime.GOOS)
-//	  "packages": [                        sorted by package
+//	  "packages": [                        sorted by package; only packages
+//	                                       that have a BUILD file for that OS
 //	    {"package": "code/packages/go/x",  repo-relative, slash-separated
 //	     "steps": ["go build ./...", ...]} never null; [] when there are none
 //	  ]
@@ -47,10 +48,30 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/executor"
 )
+
+// requireKilnConsumers makes the graph export refuse a repository whose
+// selector relations name packages that were not discovered. It is true in
+// every real run; only tests set it false, so the whole CLI path of the two
+// exports can be exercised on a small fixture tree. It is a package variable,
+// not a flag: there is no way to turn it off from the command line.
+var requireKilnConsumers = true
+
+// samePath reports whether a and b name the same file once made absolute and
+// cleaned.
+func samePath(a, b string) bool {
+	aa, errA := filepath.Abs(a)
+	bb, errB := filepath.Abs(b)
+	if errA != nil || errB != nil {
+		return filepath.Clean(a) == filepath.Clean(b)
+	}
+	return aa == bb
+}
 
 // kilnStepsSchema is the schema tag stamped on every export.
 const kilnStepsSchema = "kiln-legacy-steps/1"
@@ -73,16 +94,34 @@ type kilnLegacyStepsEntry struct {
 func buildKilnLegacySteps(packages []discovery.Package, repoRoot, goos string) (*kilnLegacySteps, error) {
 	out := &kilnLegacySteps{Schema: kilnStepsSchema, OS: goos, Packages: make([]kilnLegacyStepsEntry, 0, len(packages))}
 	for _, pkg := range packages {
+		// A package that has no BUILD file for this OS runs nothing here:
+		// discovery across all platforms still lists it (its lines come
+		// from another OS's file), and exporting those lines as this OS's
+		// recipe would be wrong.
+		if discovery.GetBuildFileForPlatform(pkg.Path, goos) == "" {
+			continue
+		}
 		rel, err := filepath.Rel(repoRoot, pkg.Path)
 		if err != nil {
 			return nil, fmt.Errorf("package %s: path %s is not under %s: %w", pkg.Name, pkg.Path, repoRoot, err)
 		}
+		rel = filepath.ToSlash(rel)
+		if rel == ".." || strings.HasPrefix(rel, "../") {
+			return nil, fmt.Errorf("package %s: path %s is outside %s", pkg.Name, pkg.Path, repoRoot)
+		}
 		// EffectiveStepLines returns a non-nil slice (make), so the JSON
 		// is [] rather than null for a package with no commands.
-		out.Packages = append(out.Packages, kilnLegacyStepsEntry{
-			Package: filepath.ToSlash(rel),
-			Steps:   executor.EffectiveStepLines(pkg),
-		})
+		lines := executor.EffectiveStepLines(pkg)
+		for i, l := range lines {
+			// encoding/json turns an invalid byte into U+FFFD, so two
+			// different recipes would export identically; Kiln's decoder
+			// refuses both U+FFFD and empty lines, so refuse them here
+			// with a message that names the package.
+			if l == "" || !utf8.ValidString(l) || strings.ContainsRune(l, utf8.RuneError) {
+				return nil, fmt.Errorf("package %s: step %d is empty, not valid UTF-8, or contains U+FFFD and cannot be exported", pkg.Name, i)
+			}
+		}
+		out.Packages = append(out.Packages, kilnLegacyStepsEntry{Package: rel, Steps: lines})
 	}
 	sort.Slice(out.Packages, func(i, j int) bool { return out.Packages[i].Package < out.Packages[j].Package })
 	return out, nil

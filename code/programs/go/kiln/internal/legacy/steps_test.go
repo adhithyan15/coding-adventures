@@ -102,6 +102,47 @@ func TestDecodeStepsRejects(t *testing.T) {
 	}
 }
 
+// Two different recipes must never decode to the same lines: the JSON decoder
+// turns an invalid byte, or a lone surrogate escape, into U+FFFD.
+func TestPoCDecodeLossy(t *testing.T) {
+	head := `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[`
+	for name, doc := range map[string]string{
+		"raw invalid byte":     head + "{\"package\":\"a\",\"steps\":[\"x\xffy\"]}]}",
+		"lone surrogate":       head + `{"package":"a","steps":["x\ud800y"]}]}`,
+		"literal U+FFFD":       head + `{"package":"a","steps":["x` + "�" + `y"]}]}`,
+		"escaped U+FFFD":       head + `{"package":"a","steps":["x�y"]}]}`,
+		"empty line":           head + `{"package":"a","steps":[""]}]}`,
+		"null step":            head + `{"package":"a","steps":[null]}]}`,
+		"null package":         head + `null]}`,
+		"null steps":           head + `{"package":"a","steps":null}]}`,
+		"invalid byte in name": head + "{\"package\":\"a\xff\",\"steps\":[]}]}",
+	} {
+		if _, err := DecodeSteps([]byte(doc)); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
+	}
+	// A valid non-ASCII line is fine and round-trips exactly.
+	s, err := DecodeSteps([]byte(head + `{"package":"a","steps":["echo é ✓"]}]}`))
+	if err != nil || s.Packages[0].Steps[0] != "echo é ✓" {
+		t.Fatalf("%v %v", s, err)
+	}
+}
+
+func TestDecodeStepsScalarBudget(t *testing.T) {
+	var b strings.Builder
+	b.WriteString(`{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"a","steps":[`)
+	for i := 0; i <= MaxStepsScalars; i++ {
+		if i > 0 {
+			b.WriteByte(',')
+		}
+		b.WriteString(`"x"`)
+	}
+	b.WriteString(`]}]}`)
+	if _, err := DecodeSteps([]byte(b.String())); err == nil || !strings.Contains(err.Error(), "more than") {
+		t.Fatalf("got %v", err)
+	}
+}
+
 func TestDecodeStepsSizeLimits(t *testing.T) {
 	if _, err := DecodeSteps(make([]byte, MaxStepsBytes+1)); err == nil || !strings.Contains(err.Error(), "limit") {
 		t.Fatalf("over-size input: %v", err)

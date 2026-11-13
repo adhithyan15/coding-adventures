@@ -67,6 +67,9 @@ func (g *Git) Output(args ...string) ([]byte, error) { return g.run(args...) }
 // is first resolved to a hex object id, then `--` precedes pathspecs).
 func gitHardening() []string {
 	return []string{"--no-pager",
+		// `git replace` refs make an object id name different content. Every
+		// id Kiln reads from git must mean what its hash says.
+		"--no-replace-objects",
 		"-c", "core.fsmonitor=false",
 		"-c", "core.hooksPath=" + os.DevNull,
 		"-c", "protocol.file.allow=never"}
@@ -88,7 +91,11 @@ func gitEnv(environ []string) []string {
 		}
 		out = append(out, e)
 	}
-	return append(out, "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C")
+	// GIT_NO_REPLACE_OBJECTS is the environment spelling of --no-replace-objects
+	// (belt and braces); GIT_NO_LAZY_FETCH stops a partial clone from reaching
+	// the network to fill in a missing object.
+	return append(out, "GIT_CONFIG_NOSYSTEM=1", "GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C",
+		"GIT_NO_REPLACE_OBJECTS=1", "GIT_NO_LAZY_FETCH=1")
 }
 
 // splitNUL splits NUL-terminated output into its records.

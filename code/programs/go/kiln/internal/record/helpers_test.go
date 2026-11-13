@@ -36,12 +36,18 @@ func runGit(t *testing.T, dir string, args ...string) string {
 // runGitStdin is runGit with text on standard input.
 func runGitStdin(t *testing.T, dir, stdin string, args ...string) {
 	t.Helper()
+	if out, err := tryGitStdin(dir, stdin, args...); err != nil {
+		t.Fatalf("git %s: %v\n%s", strings.Join(args, " "), err, out)
+	}
+}
+
+// tryGitStdin returns git's trimmed output (the new object id for mktree).
+func tryGitStdin(dir, stdin string, args ...string) (string, error) {
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
 	cmd.Stdin = strings.NewReader(stdin)
-	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("git %s: %v\n%s", strings.Join(args, " "), err, out)
-	}
+	out, err := cmd.CombinedOutput()
+	return strings.TrimSpace(string(out)), err
 }
 
 func tryGit(dir string, args ...string) (string, error) {

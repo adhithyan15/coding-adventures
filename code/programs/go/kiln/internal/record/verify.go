@@ -10,8 +10,14 @@ package record
 // fooled by anything a repository can configure. So the check is done in three
 // layers, each closing a gap the one before leaves:
 //
-//	layer 1  the INDEX equals HEAD
-//	         `git ls-tree -r -z HEAD` reads the object store; `git ls-files
+//	layer 0  the COMMIT is pinned
+//	         HEAD^{commit} is resolved ONCE to a full id (replace refs are off),
+//	         everything below is checked against that id, and the id is
+//	         returned so a later call can demand the same one. The root must be
+//	         the top of its repository.
+//
+//	layer 1  the INDEX equals that commit
+//	         `git ls-tree -r -z <id>` reads the object store; `git ls-files
 //	         --stage -z` reads the index. They must list the same paths with the
 //	         same modes and the same object ids, all at stage 0. Without this a
 //	         staged edit (or an unresolved merge) would be "the tree" while HEAD
@@ -29,7 +35,7 @@ package record
 //	             120000  a symlink, whose target text hashes to the blob id
 //	             100644  a regular file, opened O_NOFOLLOW|O_NONBLOCK|O_NOCTTY,
 //	             100755  hashed as a Git blob; and the exec bit must agree
-//	             160000  a submodule: reported to the caller, not inspected
+//	             160000  a submodule: refused outright ("submodule-unsupported")
 //	             other   "non-regular": a FIFO, a socket, a device, a directory
 //	                     where a file belongs
 //	         Hashing as a Git blob (`"blob <size>\0" + bytes`) means a smudge
@@ -95,68 +101,174 @@ const (
 // entry is one tracked path: its mode and object id (hex, 40 or 64 digits).
 type entry struct{ mode, id string }
 
-// VerifyTree proves the checkout at root equals HEAD (see the file comment).
-// It returns the paths of the gitlinks (submodules) it found, sorted: the
-// caller must give the enclosing packages `precondition:submodule`, because
-// the contents of a submodule are not covered by this check.
+// Result is what a successful VerifyTree vouches for.
+type Result struct {
+	// Commit is the full id of the commit the tree was proven to equal
+	// (`HEAD^{commit}`, resolved once). The post-build check passes it back
+	// as expectedCommit, so a BUILD that ran `git commit -a` (moving HEAD to
+	// a commit that DOES match the edited disk) is caught.
+	Commit string
+}
+
+// VerifyTree proves the checkout at root equals one commit (see the file
+// comment) and returns that commit's id.
+//
+// expectedCommit pins the commit: when it is not empty the tree must equal
+// THAT commit and HEAD must still name it. The first call (before any BUILD)
+// passes "" and keeps the id it gets back; the backstop after the build and
+// the merge job pass it.
+//
+// root must be the top level of its repository. A subdirectory of a repository
+// (or a directory with no .git of its own inside a parent repository) is
+// refused: `ls-files` would then list only the subtree and everything else
+// would go unchecked.
+//
+// A submodule (mode 160000) is an error for now ("submodule-unsupported"):
+// nothing inside one is covered by this check, so a recording over a tree that
+// has one would key unverified bytes. The repository has none today.
 //
 // A nil error means every tracked path is on disk with exactly the committed
 // bytes and mode. Any other outcome is an error: a *TreeError for a tree that
 // differs, or a plain error when git itself could not be run.
-func VerifyTree(root string) ([]string, error) {
+func VerifyTree(root, expectedCommit string) (Result, error) {
 	g := source.NewGit(root)
-
-	headTree, err := lsTree(g)
+	if err := requireTopLevel(g); err != nil {
+		return Result{}, err
+	}
+	commit, err := resolveHead(g)
 	if err != nil {
-		return nil, err
+		return Result{}, err
+	}
+	if expectedCommit != "" && commit != expectedCommit {
+		return Result{}, fmt.Errorf("HEAD is %s but %s was expected: the commit moved", short(commit), short(expectedCommit))
+	}
+
+	headTree, err := lsTree(g, commit)
+	if err != nil {
+		return Result{}, err
 	}
 	index, err := lsIndex(g)
 	if err != nil {
-		return nil, err
+		return Result{}, err
 	}
 
 	var bad problems
 	compareTrees(headTree, index, &bad)
 	if err := checkHidden(g, len(index), &bad); err != nil {
-		return nil, err
+		return Result{}, err
 	}
 	// If the index and HEAD disagree there is no single "expected" content to
 	// hash against; report that and stop, rather than a second, noisier list.
 	if len(bad.list) > 0 {
-		return nil, bad.err("working tree is not HEAD")
+		return Result{}, bad.err("working tree is not HEAD")
 	}
 
-	gitlinks, err := checkDisk(root, headTree, &bad)
-	if err != nil {
-		return nil, err
+	if err := checkDisk(root, headTree, &bad); err != nil {
+		return Result{}, err
 	}
 	if e := bad.err("working tree is not HEAD"); e != nil {
-		return nil, e
+		return Result{}, e
 	}
-	return gitlinks, nil
+	return Result{Commit: commit}, nil
 }
 
-// lsTree reads HEAD's tree: path -> (mode, id). `-z` gives raw NUL-terminated
-// records (no quoting of odd file names); `-r` recurses into subtrees but not
-// into gitlinks, which appear as `160000 commit <id>`.
-func lsTree(g *source.Git) (map[string]entry, error) {
-	out, err := g.Output("ls-tree", "-r", "-z", "HEAD")
+// requireTopLevel refuses a root that is not the top of its work tree:
+// `git rev-parse --show-prefix` is empty exactly there.
+func requireTopLevel(g *source.Git) error {
+	out, err := g.Output("rev-parse", "--show-prefix")
+	if err != nil {
+		return err
+	}
+	if p := strings.TrimSpace(string(out)); p != "" {
+		return fmt.Errorf("the root is not the top level of its repository (it is %q inside it)", printable(p))
+	}
+	return nil
+}
+
+// resolveHead names HEAD's commit once, as a full hex id. Replace refs are off
+// (see source.gitHardening), so the id means what its hash says.
+func resolveHead(g *source.Git) (string, error) {
+	out, err := g.Output("rev-parse", "--verify", "--quiet", "HEAD^{commit}")
+	if err != nil {
+		return "", err
+	}
+	id := strings.TrimSpace(string(out))
+	if _, err := newHasher(id); err != nil || !isHex(id) {
+		return "", fmt.Errorf("git rev-parse HEAD: %q is not a full object id", printable(id))
+	}
+	return id, nil
+}
+
+func isHex(s string) bool {
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
+			return false
+		}
+	}
+	return true
+}
+
+// checkTreePath refuses a path a tree should never hold and that a walk or an
+// `open` could be steered by: an empty, "." or ".." component, a ".git"
+// component in any case (a checkout must never write into the repository's own
+// directory), a leading slash, a backslash (a separator on Windows) or a NUL.
+// Git itself refuses most of these when it writes a tree, but a tree object can
+// be forged with plumbing, and this is the last gate before `filepath.Join`.
+func checkTreePath(p string) string {
+	switch {
+	case p == "":
+		return "empty path"
+	case p[0] == '/':
+		return "absolute path"
+	case strings.ContainsAny(p, "\\\x00"):
+		return "backslash or NUL in the path"
+	}
+	for _, c := range strings.Split(p, "/") {
+		switch {
+		case c == "" || c == "." || c == "..":
+			return fmt.Sprintf("path has the component %q", c)
+		case strings.EqualFold(c, ".git"):
+			return "path has a .git component"
+		}
+	}
+	return ""
+}
+
+// lsTree reads the tree of commit: path -> (mode, id). `-z` gives raw
+// NUL-terminated records (no quoting of odd file names); `-r` recurses into
+// subtrees; `--full-tree` makes the paths relative to the repository root
+// whatever the working directory. A gitlink is an error.
+func lsTree(g *source.Git, commit string) (map[string]entry, error) {
+	out, err := g.Output("ls-tree", "-r", "-z", "--full-tree", commit)
 	if err != nil {
 		return nil, err
 	}
+	return parseTree(out)
+}
+
+// parseTree parses `ls-tree -r -z` output.
+func parseTree(out []byte) (map[string]entry, error) {
 	m := map[string]entry{}
+	var bad problems
 	for _, rec := range splitNUL(out) {
 		meta, path, ok := strings.Cut(rec, "\t")
 		f := strings.Fields(meta)
-		if !ok || len(f) != 3 || path == "" {
+		if !ok || len(f) != 3 {
 			return nil, fmt.Errorf("git ls-tree: unparsable record %q", printable(rec))
+		}
+		if why := checkTreePath(path); why != "" {
+			return nil, fmt.Errorf("git ls-tree: %q: %s", printable(path), why)
 		}
 		if _, dup := m[path]; dup {
 			return nil, fmt.Errorf("git ls-tree: %q listed twice", printable(path))
 		}
+		if f[0] == modeGitlink {
+			bad.add(path, "a submodule (gitlink)")
+		}
 		m[path] = entry{mode: f[0], id: f[2]}
 	}
-	return m, nil
+	return m, bad.err("submodule-unsupported")
 }
 
 // lsIndex reads the index: path -> (mode, id). Any entry whose stage is not 0
@@ -166,6 +278,11 @@ func lsIndex(g *source.Git) (map[string]entry, error) {
 	if err != nil {
 		return nil, err
 	}
+	return parseIndex(out)
+}
+
+// parseIndex parses `ls-files --stage -z` output.
+func parseIndex(out []byte) (map[string]entry, error) {
 	m := map[string]entry{}
 	for _, rec := range splitNUL(out) {
 		meta, path, ok := strings.Cut(rec, "\t")
@@ -226,6 +343,15 @@ func checkHidden(g *source.Git, entries int, bad *problems) error {
 	if err != nil {
 		return err
 	}
+	if err := parseHidden(out, entries, bad); err != nil {
+		return err
+	}
+	return checkSparseConfig(g, bad)
+}
+
+// parseHidden reads `ls-files -v -z` output and records every entry that is
+// not plain "H".
+func parseHidden(out []byte, entries int, bad *problems) error {
 	seen := 0
 	for _, rec := range splitNUL(out) {
 		// "<tag> <path>": one tag character, a space, the path.
@@ -246,7 +372,11 @@ func checkHidden(g *source.Git, entries int, bad *problems) error {
 	if seen != entries {
 		return fmt.Errorf("git ls-files -v listed %d paths, --stage listed %d", seen, entries)
 	}
+	return nil
+}
 
+// checkSparseConfig refuses `core.sparseCheckout`.
+func checkSparseConfig(g *source.Git, bad *problems) error {
 	// `--bool` turns yes/on/1/true into "true", so every spelling of "on" is
 	// caught. Exit status 1 means the key is unset, which is the good case.
 	cfg, err := g.Output("config", "--bool", "--get", "core.sparseCheckout")
@@ -264,8 +394,8 @@ func checkHidden(g *source.Git, entries int, bad *problems) error {
 }
 
 // checkDisk hashes every entry against the disk, 8 at a time, under the
-// time budget. It returns the gitlink paths, sorted.
-func checkDisk(root string, tree map[string]entry, bad *problems) ([]string, error) {
+// time budget.
+func checkDisk(root string, tree map[string]entry, bad *problems) error {
 	paths := make([]string, 0, len(tree))
 	for p := range tree {
 		paths = append(paths, p)
@@ -277,9 +407,8 @@ func checkDisk(root string, tree map[string]entry, bad *problems) ([]string, err
 
 	v := &verifier{root: root, ctx: ctx, dirs: map[string]error{}}
 	var (
-		mu       sync.Mutex
-		gitlinks []string
-		wg       sync.WaitGroup
+		mu sync.Mutex
+		wg sync.WaitGroup
 	)
 	jobs := make(chan string)
 	for w := 0; w < workers; w++ {
@@ -287,11 +416,8 @@ func checkDisk(root string, tree map[string]entry, bad *problems) ([]string, err
 		go func() {
 			defer wg.Done()
 			for p := range jobs {
-				why, isGitlink := v.check(p, tree[p])
+				why := v.check(p, tree[p])
 				mu.Lock()
-				if isGitlink {
-					gitlinks = append(gitlinks, p)
-				}
 				if why != "" {
 					bad.add(p, why)
 				}
@@ -310,10 +436,9 @@ feed:
 	close(jobs)
 	wg.Wait()
 	if ctx.Err() != nil {
-		return nil, fmt.Errorf("working tree check exceeded its %v budget", budget)
+		return fmt.Errorf("working tree check exceeded its %v budget", budget)
 	}
-	sort.Strings(gitlinks)
-	return gitlinks, nil
+	return nil
 }
 
 // verifier holds what the workers share: the root, the deadline, and a cache
@@ -325,34 +450,28 @@ type verifier struct {
 	dirs map[string]error // directory (slash path) -> nil if a real directory
 }
 
-// check returns why the path is wrong ("" when it is right) and whether it is
-// a gitlink.
-func (v *verifier) check(path string, want entry) (why string, gitlink bool) {
+// check returns why the path is wrong ("" when it is right). A gitlink never
+// reaches here (lsTree refuses the whole tree), so mode 160000 is just one
+// more unsupported mode.
+func (v *verifier) check(path string, want entry) string {
 	if err := v.ctx.Err(); err != nil {
-		return "", false // the caller reports the budget once
+		return "" // the caller reports the budget once
 	}
 	if why := v.ancestors(path); why != "" {
-		return why, want.mode == modeGitlink
+		return why
 	}
-	if want.mode == modeGitlink {
-		// A submodule's directory may be absent or empty (not initialised)
-		// or hold another repository: both are fine HERE. The caller marks
-		// the enclosing package, because nothing inside is verified.
-		return "", true
-	}
-
 	full := filepath.Join(v.root, filepath.FromSlash(path))
 	fi, err := os.Lstat(full)
 	if err != nil {
-		return "missing on disk", false
+		return "missing on disk"
 	}
 	switch want.mode {
 	case modeSymlink:
-		return v.checkSymlink(full, fi, want), false
+		return v.checkSymlink(full, fi, want)
 	case modeFile, modeExec:
-		return v.checkFile(full, fi, want), false
+		return v.checkFile(full, fi, want)
 	default:
-		return fmt.Sprintf("unsupported mode %s", want.mode), false
+		return fmt.Sprintf("unsupported mode %s", want.mode)
 	}
 }
 
