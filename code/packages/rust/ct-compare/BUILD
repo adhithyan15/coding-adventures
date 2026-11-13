@@ -1,5 +1,8 @@
 cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --check-module
 cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert effect_certificate.json
+# This line also runs tests/runtime_capability.rs (the VER08b jail).  The jail is Linux-only,
+# so on macOS it reports NOT-LIVE (RCG010) without failing; Linux uses BUILD_linux, which adds
+# a strict re-run (RCG_STRICT=1) so a NOT-LIVE gate is a failure there.
 cargo test -p coding_adventures_ct_compare -- --nocapture
 python3 ../../../scripts/ct_compare_tfv.py
 # VER04h: the evidence harness is generated from code/specs/ct-compare.warrant.

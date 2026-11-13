@@ -138,6 +138,16 @@ WIR-level trace proofs and the assurance report remain later VER26 steps.
 Proof labels are the bound actually discharged (`bounded(128)`; `proved` only for
 `ct_eq_u64`). Every certificate is a trivial miter-collapsed refutation.
 
+## Runtime capability conformance (VER08b)
+
+`cargo test -p coding_adventures_ct_compare --test runtime_capability` runs the
+whole public API (`ct_eq`, `ct_eq_fixed`, `ct_eq_u64`, `ct_select_bytes`, including
+its length-mismatch panic and a 1 MiB input) inside a seccomp/Landlock sandbox
+derived from `required_capabilities.json` (no capabilities) while an independent
+`strace` observer confirms nothing but the baseline syscalls happen. `BUILD_linux`
+re-runs it with `RCG_STRICT=1`, so an unavailable sandbox fails the Linux build
+instead of reporting NOT-LIVE; `BUILD` (macOS) is tolerant.
+
 ## Zero-allocation evidence (measured, LH-003a)
 
 `tests/microbenchmarks.rs` installs test-bootstrap's counting
