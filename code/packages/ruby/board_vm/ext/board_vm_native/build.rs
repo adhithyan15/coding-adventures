@@ -80,6 +80,9 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         ("rb_eStandardError", true),
         ("rb_eArgError", true),
         ("rb_eRuntimeError", true),
+        // Everything ruby-bridge (a dependency of this crate) declares, so the generated
+        // import library resolves every rb_* it references (rb_eval_string, rb_str_new, ...).
+        ("rb_eval_string", false),
     ];
 
     let def_path = PathBuf::from(out_dir).join(format!("{so_name}.def"));
