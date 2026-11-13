@@ -15,15 +15,28 @@
   - text over 256 KiB and executable non-text files give `unscanned:<file>`;
   - every symlink in a package's inputs and in every read is fully resolved
     (chains, directory links, 40 hops, loops refused) and must end inside the
-    package, its closure or its reads, else `escape:<link>`.
-  All are hard reasons (class `uncacheable`); keys are still computed. The scan
-  shares the single read that hashes each file.
+    package, its closure or its reads, else the hard reason `symlink:<link>`.
+  The text scans (`escape:`, `indirect:`, `unscanned:`) are advisory hints, not
+  reasons (see Changed); keys are always computed. The scan shares the single
+  read that hashes each file.
 
 ### Changed
 
-- `m1-incomplete:scans` is gone; `m1-incomplete:tools-env` remains, so still no
-  package is `cacheable`. The histogram groups `escape:`, `indirect:` and
-  `unscanned:` reasons by prefix.
+- Scans are advisory hints, not soundness (KILN03 sections 6, 11.2 and 12
+  items 13 to 21): `escape:`, `indirect:` and `unscanned:` findings no longer
+  contribute to `reasons` or change a class. They go to a new per-package
+  `hints` array in `kiln-legacy-plan/1` (sorted, de-duplicated, 16 per kind)
+  and to a separate `histogram.hints`; member and read findings still reach
+  dependents, as hints only. Soundness will come from traced read-sets under
+  `strace` (KILN04, forthcoming).
+- Symlink findings stay hard reasons but are now spelled `symlink:<link>`
+  (and `symlink:<build-file>` for a symlinked BUILD), so `escape:` means one
+  thing only: a hint.
+- `m1-incomplete:scans` is gone; `m1-incomplete:trace` (no traced read-set
+  manifest yet) is added beside `m1-incomplete:tools-env`, so no package is
+  `cacheable`. A test asserts it for every fixture plan.
+- `kiln explain` prints hints in their own `advisory_hints` section, labelled
+  advisory.
 
 ### Fixed
 

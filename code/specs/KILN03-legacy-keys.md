@@ -254,33 +254,48 @@ grown.
 ## 6. Escapes and indirection
 
 A legacy BUILD can reach outside its closure in ways a key cannot see. M1
-uses two cheap, conservative rules. Both are heuristics; §8 is the real check.
+runs cheap static scans over the files it hashes. **The scans are advisory
+hints for triage and debugging.** They make no soundness or security claim: a
+text scan cannot prove that a build reads nothing outside its key, and every
+review of one has found another way past it. A hint can neither make a
+package `cacheable` nor make it `uncacheable`; hints never appear among a
+package's `reasons` and never change its class (§7). Soundness for reuse
+comes from **traced read-sets**: the read-set of a real run, recorded under
+`strace` on trusted CI and checked against the key's inputs (KILN04,
+forthcoming). Until a traced read-set manifest exists for a package it carries
+`m1-incomplete:trace` and cannot be `cacheable`.
 
-1. **`../` resolution over every text file.** Every text file in P's own
-   inputs (up to 256 KiB each, not just the BUILD) is scanned for path tokens
-   containing `../`. Each is resolved against the file's directory. A result
-   inside P is fine (source-relative imports stay quiet); a result inside
-   another closure member or a read path is fine; anything else makes P
-   uncacheable with reason `escape:<path>`.
-2. **Indirection markers in every scanned file.** The selected BUILD *and*
-   every text file in P's own inputs are scanned for: `git rev-parse`,
-   `git ls-files`, `dirname`, `realpath`, `readlink`, `$(pwd)`, `$PWD`,
-   `$OLDPWD`, `$0`, `${BASH_SOURCE`, `$HOME`, `~/`, a bare `cd ..` (with or
-   without a trailing `/` or separator), or an absolute path outside a small
-   allowlist (`/dev/null`, `/usr/bin/env`, `/bin/sh`). Any hit makes P
-   uncacheable with reason `indirect:<file>`. In particular the ~301
-   packages whose BUILD is `sh tools/run.sh` stay uncacheable until the
-   audit proves them.
-3. **Unscanned means uncacheable.** A text file over the 256 KiB cap, or a
-   file with an executable bit that is not text, cannot be scanned, so it
-   makes P uncacheable with reason `unscanned:<file>`. Failing closed is the
-   point: these rules are heuristics, so their blind spots must cost hit rate,
-   not correctness.
+What the scans report, as entries of the plan's per-package `hints` array:
 
-The implementation widens the three rules beyond P's own files: they apply to
-every closure member's files and to every read file, and non-text files are
-`unscanned` unless a known inert format. §12 items 13 to 20 are normative for
-the exact definitions.
+1. **`../` resolution over every text file.** Every text file (up to 256 KiB
+   each, not just the BUILD) is scanned for path tokens containing `../`. Each
+   is resolved against the file's directory. A result inside the allowed
+   region (§12 item 17) is quiet; anything else is hint `escape:<path>`.
+2. **Indirection markers in every scanned file.** Location markers
+   (`dirname`, `realpath`, `readlink`, `$0`, `${BASH_SOURCE`, `$HOME`, `~/`,
+   `git rev-parse`, a bare `cd ..`, `__file__`, `CARGO_MANIFEST_DIR`, ...) and
+   absolute paths outside a small allowlist give hint `indirect:<file>`.
+   The ~301 packages whose BUILD is `sh tools/run.sh` are the typical hit.
+3. **Unscanned files.** A text file over the 256 KiB cap, or a file that is
+   not text and not a known inert format, cannot be scanned and gives hint
+   `unscanned:<file>`.
+
+Hints are only a map of where a human, or the tracer, should look first. They
+are sorted, de-duplicated and capped at 16 per kind per package, and the
+histogram counts them apart from reasons.
+
+**Symlink rules stay hard.** A symlink is the one case where the key itself
+is blind by construction (a link's digest covers only its target text), so
+these remain uncacheable reasons, `symlink:<link>`, independent of any trace:
+a link in a package's own files or reads that does not resolve, through any
+chain or directory link, inside the closure and reads; a link that leaves the
+repository or exhausts the 40-hop limit; and a symlinked selected BUILD file.
+Unknown toolchains and unknown repository inputs are hard reasons too.
+
+The implementation widens the scans beyond P's own files: they apply to every
+closure member's files and to every read file, and non-text files are
+`unscanned` unless a known inert format. §12 items 13 to 21 give the exact
+definitions; they define what a hint means, not a guarantee.
 
 ## 7. Cacheability classes
 
@@ -399,9 +414,13 @@ must match them.
    between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
    `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
    unpinned closure language gives `unpinned`; `cacheable` needs no reason at
-   all, so it is unreachable while any `m1-incomplete` reason remains. Hard reasons now
-   also include `escape:`, `indirect:` and `unscanned:`; a package carrying one
-   still gets its key.
+   all, so it is unreachable while any `m1-incomplete` reason remains. The text scans
+   of §6 (`escape:`, `indirect:`, `unscanned:`) are advisory `hints`, not
+   reasons, and play no part in the class. The hard symlink reasons
+   (`symlink:<link>`) do. `m1-incomplete:trace` (no traced read-set manifest,
+   KILN04) is a standing reason beside `m1-incomplete:tools-env`, so
+   `cacheable` stays unreachable. A package carrying a hard reason still gets
+   its key.
 3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
    an empty key and reason `no-build-file:<os>`, but remains a closure member
    for others.
@@ -442,9 +461,11 @@ must match them.
 13. **Scope and timing.** The files examined are every closure member's own
     files (§3.1; the package's own among them) and every read file (a read
     file, every file under a read directory, every glob match, ancestor
-    configuration). A dependency's indirection, unscanned file, dynamic `../`
-    token or escaping link therefore makes each dependent uncacheable, and the
-    reason names the member's file (`indirect:<member file>`). `../` targets
+    configuration). A dependency's indirection, unscanned file or dynamic `../`
+    token therefore gives each dependent a hint, naming the member's file
+    (`indirect:<member file>`); a dependency's escaping link gives each
+    dependent the hard reason `symlink:<link>`. Hints are advisory (section 6)
+    and never change a class. `../` targets
     and links from ALL examined files are re-judged against the dependent's own
     allowed region (item 17). Per-file facts are computed once, in the same pass
     that hashes the file, and summarised once per member and per read item. A
@@ -529,16 +550,21 @@ must match them.
 20. **Symlinks.** Resolved like a kernel (a stack of components; a link
     component is replaced by its target's components and costs one hop; `..`
     pops), over the listed tree: at most 40 hops, so a loop fails by running
-    out. Refused (reason `escape:<link>`): an empty, rooted, Windows-drive or
+    out. Refused (hard reason `symlink:<link>`): an empty, rooted, Windows-drive or
     backslash-containing target, climbing above the repository root, a regular
     file used as a directory, an exhausted hop budget; or a final path outside
     the allowed region (17). A dangling target inside the region is fine. The
     links checked are those in every examined file set of item 13. The target
     text comes from the same `Describe` that produced the link's digest.
-21. **Reasons.** `escape:<path>` (the cleaned `../` target, the dynamic token,
-    or the link), `indirect:<file>`, `unscanned:<file>`, with control
-    characters removed. At most 16 of each kind are recorded per package (the
-    first in sorted order); the cap bounds plan size and changes no class.
-    All are hard reasons (class `uncacheable`) and the key is still computed.
-    The histogram counts each of the three kinds once per package, under its
-    prefix.
+21. **Reasons and hints.** Symlink findings are reasons: `symlink:<link>`
+    (and `symlink:<build-file>` for a symlinked selected BUILD file). The text
+    scans are hints in the record's `hints` array: `escape:<path>` (the cleaned
+    `../` target or the dynamic token), `indirect:<file>`, `unscanned:<file>`.
+    Control characters are removed from both. At most 16 of each kind are
+    recorded per package (the first in sorted order); `hints` is sorted and
+    de-duplicated, and the cap bounds plan size and changes no class. Hints are
+    advisory: they make no soundness or security claim, never enter `reasons`,
+    and cannot make a package `cacheable` or `uncacheable`; the key is always
+    computed. The histogram has a `hints` map beside `reasons`, counting each
+    hint kind once per package under its prefix. `kiln explain` prints hints in
+    their own section, labelled advisory.
