@@ -38,6 +38,9 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
 | KILN00 | Kiln Build System | Language-agnostic build system: hashed keys, isolated work roots, CI pass ledger; supersedes B01–B04 |
+| KILN02 | Kiln Key Encoding | Byte-exact, length-framed key preimage with golden vectors |
+| KILN03 | Kiln Legacy Keys | Keys for today's shell BUILDs from the old tool's graph export |
+| KILN04 | Kiln Traced Read-Sets | Reuse legacy passes only when every traced read would see the same thing again |
 
 **Interactive hardware specs**:
 | # | Spec | Purpose |

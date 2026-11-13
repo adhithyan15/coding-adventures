@@ -7,6 +7,21 @@ KILN00 §15.1 on top of KILN02 key encoding, the `Source`/`Host` interfaces
 (KILN00 §13) and the pass ledger (§10). **Shadow mode only:** nothing in M1
 or M2 skips a build; keys are computed, recorded and compared.
 
+*Revision (2026-11-12): traced read-sets.* The static key defined here is
+now a **diagnostic upper bound**, not the basis for reuse. Reuse is decided
+by [KILN04](KILN04-traced-read-sets.md): a weak key over what a tracer
+cannot see (this spec's recipe, tools, environment and executor digest) and
+a strong key over what a trusted run was observed to read. The file scans
+of §6 are advisory hints; the symlink rule of §3.3 and the hard reasons of
+§7 remain preconditions for both keys. Three things differ between the two
+keys:
+- A traced `pkg:` entry carries `T(q)`, not this spec's `D(q)`.
+- The traced weak key also keys `PATH`, `HOME` and `TMPDIR`, which §5
+  leaves unkeyed.
+- `pinned.json` comes to mean "ecosystems whose fetchers and download
+  state are allowed" (KILN04 §5.3–§5.4), and `never.json` shrinks to
+  clock-dependent packages, since tracing reports network use.
+
 ## 1. The problem in one paragraph
 
 Kiln's real keys (KILN00 §8) need declared inputs and isolated work roots.
@@ -150,7 +165,7 @@ symlink in P's inputs, and in every read, is **fully** resolved — following
 chains and directory links, with a 40-hop limit and loops refused — and the
 final target is checked: inside P, a closure member or a read path is
 already covered; anything else, a loop, or an exhausted hop limit makes P
-uncacheable with reason `escape:<link>`.
+uncacheable with reason `symlink:<link>`.
 
 ### 3.4 Key fields
 
@@ -284,9 +299,9 @@ measurement. Each package gets one class:
 
 | Class | Meaning |
 |---|---|
-| `cacheable` | Every closure language is in `code/kiln/legacy/pinned.json`, no escape, no indirection, no unknown toolchain, not on the never list. |
+| `cacheable` | Every closure language is in `code/kiln/legacy/pinned.json`, no symlink leaves the closure, no unknown toolchain or repository input, not on the never list. Reuse additionally needs a KILN04 manifest whose strong key has a pass. |
 | `unpinned` | Only reason: some closure language is not yet pinned (its M0 PR has not landed). |
-| `uncacheable` | Any other reason (listed). |
+| `uncacheable` | Any other hard reason (listed). Advisory hints (§6) never affect the class. |
 
 `pinned.json` starts empty and gains a language when its pinning PR lands.
 `code/kiln/legacy/never.json` lists packages known to depend on the network
@@ -304,9 +319,12 @@ is the measured value of M0.
   full build is not the same experiment as a pass in a PR subset. This cannot
   be keyed. M2 records the run kind (`full` or `affected`) with each shadow
   record and reports disagreement split by run kind.
-- **The resolver is the trust root.** Every edge comes from the old tool,
-  which KILN00 §2 records has missed dependents before. The definitive check
-  is an M2 audit: on one Linux full-build shard set, run each BUILD under
+- **The resolver is the trust root — for the static key only.** Every edge
+  comes from the old tool, which KILN00 §2 records has missed dependents
+  before. *Revision (2026-11-12):* the audit below is no longer a one-off
+  sample. It became the mechanism: every recorded pass carries its own trace
+  (KILN04), and traced reads outside the static closure are reported as
+  old-graph bugs (KILN04 §9). The original audit design: on one Linux full-build shard set, run each BUILD under
   `strace -f -e trace=%file,%process,connect -e signal=none` — `%file`
   includes `stat`, `access`, `readlink` and directory listing, so existence
   checks and globs are seen, not only opens; `connect` finds network use.
@@ -319,9 +337,10 @@ is the measured value of M0.
   verbose `execve` lines print the whole environment. Its logs are treated
   as sensitive and never uploaded as artifacts; only the derived
   path-to-package diff is.
-- **Gate for M3.** Reuse is not enabled until the audit is clean (no
-  unexplained misses), the scrubbed-environment shadow run (§5) shows no
-  result changes, and `probe-mismatch` is fatal.
+- **Gate for M3.** Superseded by KILN04 §13: zero unexplained
+  disagreements on traced predictions, no unexplained result changes under
+  the scrubbed environment (now enforced on every traced run, not only
+  before M3), `probe-mismatch` fatal, and the recording run confined.
 - **Ignored and ignore-listed files.** Files Git ignores are invisible to
   `Source`, so they are outside every key; this is safe only on fresh
   runners, which is why reuse is CI-only. The ancestor-directory ignore list
@@ -361,10 +380,10 @@ kiln explain --plan <plan.json> <package>
   P's inputs (it always is, so this is asserted only for the recipe
   component).
 - Dependency and dev-dependency cycles terminate and are order-independent.
-- `../` escapes are detected in a non-BUILD text file; in-package and
-  in-closure `../` are allowed; each indirection marker, in the BUILD or in
-  any other text file, makes the package uncacheable; an over-cap text file
-  and an executable binary each make it `unscanned`.
+- `../` escapes, indirection markers and unscanned files each produce the
+  matching **hint** and leave the class unchanged; in-package and
+  in-closure `../` produce no hint. (Read-set soundness is tested in KILN04
+  §12, not here.)
 - A symlink whose target leaves the closure and read paths makes the
   package uncacheable; one pointing inside the closure does not.
 - An enclosing package's manifest change changes the nested package's key; a change in a package nested inside, or enclosing, a *dependency* of P changes P's key.
@@ -421,7 +440,7 @@ must match them.
    sorted by name, and `histogram` (named reasons grouped by prefix, except
    `unpinned:<language>`).
 10. **Symlinked BUILD.** A selected BUILD file that is a symlink makes that
-    package `uncacheable` with reason `escape:<build-file>` and no key; the
+    package `uncacheable` with reason `symlink:<build-file>` and no key; the
     rest of the plan is still produced.
 11. **Graph limits.** At most 100,000 packages and 5,000,000 edges (deps over
     all OSes plus dev_deps); `extra_toolchains` entries are non-empty UTF-8

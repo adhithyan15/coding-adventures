@@ -1,0 +1,777 @@
+# KILN04 — Traced Read-Sets for Legacy BUILDs
+
+## Status
+
+Accepted (2026-11-12), after an adversarial design review (7 blockers,
+13 should-fix items, all folded in). This spec replaces the static scans
+of [KILN03](KILN03-legacy-keys.md) §6 as the soundness mechanism for
+reusing a legacy BUILD's result. It builds on:
+
+- the [KILN02](KILN02-key-encoding.md) key encoding;
+- the ledger and trust rules of [KILN00](KILN00-kiln-build-system.md) §10;
+- the security boundary of KILN00 §9.6.
+
+It is **shadow only** until the M3 gate (§13): nothing is skipped because
+of this spec alone. Implementation is staged in five PRs (§16).
+
+## 1. Why tracing
+
+A legacy BUILD runs in place and can read anything. KILN03 first tried to
+bound what it reads by **reading the BUILD's files**, scanning for `../`,
+`dirname`, `$0`, `Path(__file__)`, `CARGO_MANIFEST_DIR` and so on. On the
+real graph (5,555 packages) those rules left 89% of packages uncacheable,
+and each security review still found idioms they missed. A static scan
+cannot win: what files a program touches cannot be decided from its text,
+and the list of idioms has no end.
+
+Tracing asks the question the other way round. Instead of predicting what
+a BUILD *might* read, it **watches what the BUILD did read** on a real run
+and records those reads with the pass. A later run may reuse the pass only
+if every one of those reads would see exactly the same thing again.
+
+```
+static scan:   text of the BUILD  ──guess──▶  what it might read   (unbounded)
+tracing:       one real run       ──watch──▶  what it did read     (exact, per run)
+```
+
+Every pass carries its own evidence. Static scans stay as **advisory
+hints** (KILN03 §6) for people and for the M4 translator. They make no
+soundness or security claim.
+
+## 2. The soundness argument
+
+Take a program that is deterministic given what it observes: the bytes it
+reads, the files it finds missing, the directory listings, the
+environment, the clock. Suppose two runs start from the same program, and
+**every observation the first run made returns the same answer in the
+second**. Then the second run takes the same path, step by step, and
+reaches the same result. It cannot read anything the first run did not,
+because its first divergent read would need a divergent earlier
+observation.
+
+So a recorded pass may be reused when both of these hold:
+
+1. everything the tracer **cannot** see is held fixed by the **weak key**
+   (§3): the BUILD text, the platform, the runner image, the toolchains,
+   the environment, the executor and the recorder;
+2. everything the tracer **can** see is listed in the **manifest** (§5),
+   and each listed entry has the same digest now as when it was recorded.
+
+The argument holds only if the premises below hold. Each one has a rule.
+Where a premise cannot be checked, §14 names it.
+
+| Premise | Rule |
+|---|---|
+| The trace is complete: every file access, probe, listing, exec and connection by every descendant process is seen. | §4.3, §4.4, §6 (`trace-incomplete`) |
+| Absences count: "not found" and directory listings are observations. | §5.2 |
+| Nothing unseen varies: the environment is scrubbed and keyed. Time and randomness are the flaky-test problem that KILN00 §10.5 already handles. | §4.2 |
+| No other action's leftovers were read. | §7 (`reads-product`) |
+| Reads outside the repository come only from what the weak key pins, unmodified since the image booted. | §5.3 (`host-read`) |
+| The network is not used, or is used only to fetch pinned dependencies. | §5.4 (`network`) |
+| The action cannot forge its own trace. | §4.3 |
+
+## 3. Two keys
+
+A traced legacy action has two keys. Both are ordinary KILN02 keys, schema
+1, with **semantics version 2**. Version 0 is the static legacy key of
+KILN03, and version 1 is reserved for KILN01.
+
+### 3.1 The weak key
+
+The weak key selects which manifests to try. It covers exactly what the
+tracer cannot see:
+
+| KILN02 section | Value |
+|---|---|
+| `platform` | OS, arch |
+| `host` | `Host.ImageID()`, always present. An image ID containing `unknown` (a self-hosted runner) means no recording and no lookup. |
+| `action` | target = P's `rel_path`; phase = `test` |
+| `recipe` | `LegacyRecipeFiles` of the single BUILD variant this OS runs (KILN03 §3.4) |
+| `inputs`, `reads` | empty |
+| `consumed` | `tool:build-tool` → the executor's source digest (KILN03 §3.4); `policy:env.json` and `policy:host-roots.json` → their content digests |
+| `tools` | the pins (KILN03 §4) of the languages in P's **static closure**, plus the always-included set (`sh`, `cc`, `ld`, `strace`) |
+| `env` | the whole environment of the traced run (§4.2); plus `kiln:root` → the absolute checkout path; `kiln:recorder` → the recorder version (an integer bumped by hand on any change to §4–§7); and `kiln:executor-args` → the executor's canonical flags |
+
+`toolchains.json` itself is deliberately not in the weak key, so bumping
+one language's pin does not invalidate every other language. A read under
+a `tool` root whose tool is not in `tools` gives
+`host-read:tool-not-keyed:<tool>`. Names containing `:` are reserved for
+Kiln, and `env.json` may not list one.
+
+### 3.2 The strong key
+
+The pass ledger stores strong keys. A strong key is the weak key with the
+manifest's entries added, each paired with its digest **as it is now**:
+
+| KILN02 section | Value |
+|---|---|
+| all sections except `consumed` | identical to the weak key |
+| `consumed` | `weak:` → the 32-byte weak key, plus one entry per manifest entry (§5.2) |
+
+Only strong keys contain a `weak:` entry, so a weak key can never equal a
+strong key. The `tool:` and `policy:` entries reach the strong key through
+the weak key, so they are not repeated.
+
+### 3.3 Lookup
+
+At plan time, for package P (§9):
+
+```
+W = weak_key(P)
+for M in manifests[W], newest first (at most K = 4 distinct ones):
+    S = strong_key(W, entries(M) with current digests)
+    if ledger has a pass for S:  predicted hit; stop
+otherwise: miss
+```
+
+Lookup runs no BUILD. It reads only the tree, the manifest store and the
+pass ledger. Trying several manifests matters because one BUILD can take
+different paths: a feature probe that flips, or a test filtered by a
+changed file. Each path that passed is recorded once.
+
+## 4. Recording
+
+### 4.1 Who records
+
+Only **trusted** runs (KILN00 §10.2) record, only on **Linux x64**, and
+only on a **forced full build**, where every package runs. A PR run never
+traces and never writes; it only looks up.
+
+In M2, recording runs as dedicated, non-gating jobs (`kiln-record` shards
+plus one `kiln-record-merge`, §7) on the scheduled full build. A BUILD
+that behaves differently under the tracer or the scrubbed environment
+therefore cannot break `main`.
+
+macOS and Windows record nothing in v1 (open question 1); their packages
+always run.
+
+### 4.2 The run is scrubbed
+
+The tracer cannot see `getenv`. So every traced step runs with its
+environment **replaced** by exactly:
+
+- the variables `env.json` allows (KILN03 §5), with their values;
+- `HOME`, and `TMPDIR` if set;
+- `PATH`, **constructed** from the pinned tool roots in a fixed order,
+  never inherited, so recording and PR jobs produce the same value;
+- `LANG=C.UTF-8` and `TZ=UTC`, which override `env.json`.
+
+That exact environment is the weak key's `env` section. Two more inputs
+are fixed: standard input is `/dev/null`, and the working directory is the
+package directory, as the executor sets it today.
+
+### 4.3 The tracer and the sandbox
+
+**Wiring.** The old build tool gains two flags:
+
+- `-exec-wrapper <argv>`: a prefix for each `sh -c <line>` it runs, with
+  `KILN_ACTION` and `KILN_STEP` set in the wrapper's environment (not the
+  action's);
+- `-emit-results <json>`: writes `kiln-legacy-results/1`, the status and
+  step count for each package.
+
+Recording runs the executor with `-prune-leaf-targets` and `-clippy` off;
+both are recorded in `kiln:executor-args`. Each step produces one trace,
+and each package produces one manifest. An action **passed** if and only
+if its status is `built` and every step has a complete trace whose
+top-level process exited with 0.
+
+**The command.** v1 uses **`strace`**, whose exact version comes from the
+runner image and is pinned and probed like any tool. It is a CI tool like
+`git`, not a Go dependency. The command for one step:
+
+```
+strace -f --quiet=attach -y -s 64 -e signal=none \
+       -e trace=%file,%process,%network,getdents,getdents64,fchdir,\
+io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount,\
+fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace,\
+process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark \
+       -o <trace-file> -- kiln sandbox-exec -- sh -c <line>
+```
+
+- `-f` follows every `fork`, `vfork`, `clone` and `clone3`.
+- `--quiet=attach` hides attach and detach chatter but keeps the
+  `+++ exited` / `+++ killed` lines and personality-change messages.
+  (`-qq` would remove the exit lines.)
+- `-y` annotates every file descriptor with the kernel's resolved path,
+  including the one an `open` returns.
+- Output goes to one file, not one per process, so events stay in the
+  order the tracer observed them. Every `<unfinished …>` line must have a
+  matching `<… resumed>` line.
+- **No `-v`.** Without it, `execve` prints `/* N vars */` instead of the
+  environment.
+- No `--seccomp-bpf` until it has been reviewed (open question 2).
+
+**The sandbox helper.** `kiln sandbox-exec` does four things, then
+`execve`s the step:
+
+1. enters new user, mount and PID namespaces;
+2. keeps the repository at **the same absolute path** inside them;
+3. over-mounts the trace directory, the ledger and Kiln's own state with
+   empty read-only `tmpfs`;
+4. closes every file descriptor ≥ 3.
+
+Two consequences:
+
+- **Trace boundary.** The parser discards everything the helper's PID does
+  before that first `execve`, after checking that its `/proc/<pid>/exe` is
+  the Kiln binary. So the namespace setup (`unshare`, `mount`,
+  `pivot_root`) never reaches the refusal list.
+- **Daemons.** The helper's child is PID 1 of the new PID namespace, so
+  when it exits the kernel kills every survivor. Any process whose exit
+  line is `killed by SIGKILL` after PID 1's exit line gives `daemon-left`.
+  No timer is needed.
+
+**Integrity.**
+- **The claim.** The tracer runs outside the namespaces, unprivileged: no
+  `sudo`, no `--privileged`, no added `SYS_PTRACE`.
+- **Why it holds.** Inside the namespaces the action sees neither the
+  trace file nor the tracer's process, so it can neither write to nor
+  forge its own trace.
+- **Its limit.** An unprivileged user namespace cannot provide a second
+  uid, so KILN00 §9.6's "dedicated user" is not met. Integrity rests on
+  the mount and PID namespaces alone.
+- **Runners.** Hosted Ubuntu runners restrict unprivileged user
+  namespaces through AppArmor. A setup step lifts this with `sudo sysctl -w
+  kernel.apparmor_restrict_unprivileged_userns=0` before any BUILD runs, as
+  `ci.yml` already does for the Forme sandbox.
+- **No namespaces, no recording.**
+
+**Hygiene.** Trace files hold command lines and paths. They are never
+uploaded as artifacts and are deleted after processing; only derived
+records leave the runner.
+
+### 4.4 The parser's closed table
+
+The `-e trace=` filter decides what strace prints. The parser then sorts
+every printed system call into exactly one of three classes. A name in
+none of them, or a line it cannot parse, makes the trace incomplete. The
+strace version is pinned exactly, so a call newly added to `%file` shows
+up as an unknown name rather than being silently skipped.
+
+**Handled** calls are observations or writes:
+
+| Kind | System calls | Meaning |
+|---|---|---|
+| Open | `open`, `openat`, `openat2`, `creat` | a read if the access mode includes reading; a write if it includes writing or `O_CREAT`/`O_TRUNC` |
+| Metadata | `stat`, `lstat`, `newfstatat`, `statx`, `access`, `faccessat`, `faccessat2`, `readlink`, `readlinkat`, `getxattr`, `lgetxattr`, `listxattr`, `llistxattr`, `statfs`, `inotify_add_watch`, `fanotify_mark` | an observation of the path |
+| Listing | `getdents`, `getdents64` | a listing of the directory the descriptor names |
+| Directory | `chdir`, `fchdir` | changes the process's working directory (§5.1) |
+| Write | `mkdir`, `mkdirat`, `rmdir`, `unlink`, `unlinkat`, `rename`, `renameat`, `renameat2`, `link`, `linkat`, `symlink`, `symlinkat`, `chmod`, `fchmodat`, `fchmodat2`, `chown`, `lchown`, `fchownat`, `truncate`, `utime`, `utimes`, `utimensat`, `futimesat`, `setxattr`, `lsetxattr`, `removexattr`, `lremovexattr`, `mknod`, `mknodat` | a write to the path. The **source** of `rename`, `link` and `linkat` is an observation as well as a write. |
+| Process | `execve`, `execveat`, `fork`, `vfork`, `clone`, `clone3`, exit lines | the process tree; an exec is a read of the program (§5.1) |
+| Network | `socket`, `connect`, `bind`, `listen`, `sendto`, `sendmsg`, `sendmmsg` | §5.4 |
+
+**Ignored** calls carry no path: `wait4`, `waitid`, `exit`, `exit_group`,
+`kill`, `tgkill`, `getsockname`, `getpeername`, `recvfrom`, `recvmsg`,
+`accept`, `accept4`, `shutdown`, `setsockopt`, `getsockopt`, `socketpair`,
+`getcwd`, `pipe`, `pipe2`, `close`, `dup*`, and the rest of `%process`
+and `%network`, enumerated in the implementation.
+
+**Refused** calls make the trace incomplete. They read files without a
+path the tracer sees, or change what paths mean: `io_uring_setup`,
+`open_by_handle_at`, `name_to_handle_at`, `mount`, `umount2`, `fsopen`,
+`fsmount`, `fsconfig`, `fspick`, `open_tree`, `move_mount`,
+`mount_setattr`, `pivot_root`, `chroot`, `unshare`, `setns`, `ptrace`,
+`process_vm_readv`, `pidfd_getfd`, `bpf`.
+
+**Failures.** A path call that fails is an observation of that path
+(`ENOENT`: absent; `EEXIST`: present), never a write. A personality-change
+line (a non-x86-64 system-call ABI) makes the trace incomplete.
+
+Calls on an already-open descriptor (`read`, `mmap`, `fstat`, `sendfile`,
+`copy_file_range`) need no tracing, because the `open` that produced the
+descriptor was already observed.
+
+## 5. From trace to manifest
+
+### 5.1 Resolving each observation
+
+The parser looks only at **path-typed arguments** and `-y` annotations.
+Other strings, which `-s 64` may truncate (a `readlink` result buffer,
+for example), are ignored. A non-UTF-8 path, a truncated path or a
+`(deleted)` annotation makes the trace incomplete.
+
+**Working directory.** The parser tracks it per process, starting from
+the known initial directory. `chdir` and `fchdir` change it, and `clone`
+copies it, or shares it under `CLONE_FS`. It never relies on an
+`AT_FDCWD` annotation.
+
+**Calls that return a descriptor.** The `-y` annotation on the return
+value is the kernel's own resolved path. An open of `/proc/self/fd/N` or
+`/dev/fd/N` is classified by that annotation.
+
+**Other calls** (metadata, probes, writes). The path is joined lexically to
+the working directory, or to the `-y` path of the `dirfd`, and then
+resolved by an `lstat` walk on the post-run tree. Every link traversed is
+itself an observation. If any traversed component was renamed, unlinked or
+re-linked by any action in the run, the result is
+`trace-incomplete:unstable-path`.
+
+**Exec.** `execve(path)` is a read of `path`. The kernel then loads,
+invisibly, the interpreter of a `#!` script and the `PT_INTERP` loader of
+an ELF file. The parser adds both as reads, following `#!` up to four
+levels deep as the kernel does.
+
+**`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) allows the
+ubiquitous entries: `/proc/self/{exe,maps,status,cgroup,mountinfo}`,
+`/proc/{meminfo,stat,cpuinfo}`, `/sys/devices/system/cpu/**`,
+`/sys/fs/cgroup/**` and `/dev/fd/N`. Every other `/proc` path makes the
+trace incomplete. That includes any numeric `/proc/<pid>/` path: the PIDs
+in the trace are the tracer's, not the action's. `/proc/self/root/…` and
+`/proc/<pid>/fd/…` could reach any file by another name.
+
+### 5.2 Mapping observations to entries
+
+Every resolved path inside the repository is classified. Package
+boundaries are the graph's (KILN03 §2).
+
+**Record-time digests come from the clean, pre-BUILD tree via `Source`**
+(KILN03 §9), never from the disk after the run. `path:` and `list:` states
+are always states of the tracked tree.
+
+| The path is… | Entry | Digest at lookup |
+|---|---|---|
+| inside package `q` (the deepest enclosing one), whether tracked or absent from the tracked tree | `pkg:<q.rel_path>` | `T(q)`, defined below; a package that no longer exists gets the fixed *missing* digest |
+| outside every package (e.g. `code/scripts/x.py`, a root config) | `path:<rel>`; an absent path is recorded as its **first absent component** | the digest of its tracked state: *absent*, *directory*, *file* (exec bit + content) or *link* (target) |
+| a directory that was **listed** | `list:<rel>` | the digest of the sorted names and kinds of its tracked children (a child directory counts if it contains any tracked file) |
+| `.git` itself, by `stat` or `access` | none | — |
+| anything beneath `.git/` | none: `vcs-read` (§6) | — |
+| untracked and present | §7 decides | — |
+
+`T(q)` is `D(q)` together with the names of the packages nested directly
+in `q`:
+
+```
+T(q) = SHA-256( str("kiln-traced-pkg") || bytes(D(q))
+              || list( str(rel_path) of each package directly nested in q, sorted ) )
+```
+
+`D(q)` (KILN03 §3.1) encodes every tracked name in `q` except those in
+nested packages. So if a tracked file later appears where an action found
+nothing, `D(q)` changes. If a new **package** appears there instead, the
+nested-package list changes. Either way, `T(q)` changes and lookup misses.
+
+Listings are always `list:` entries, never folded into `pkg:`, because a
+listing also sees the directory names of nested packages.
+
+**Written, then read.** A path the action itself created is its own
+output, not an input. The parser treats a path as created by the action
+only when the action's first touch of it provably started from empty:
+- `O_EXCL`, `O_TRUNC` or `creat`;
+- `mkdir` or `symlink`;
+- a `link` or `rename` onto it, whose **source** is still an observation;
+- an earlier probe by the same action that returned "not found".
+
+Any other first touch is an observation of whatever was there before.
+
+**Writes to tracked files.** An action that writes a tracked path gets
+`writes-tracked:<path>` and no record. An unlocked install that rewrites
+its lockfile is caught this way. After the job, the recorder re-hashes
+every tracked file. If any changed, every action that observed it gets
+`reads-product`.
+
+### 5.3 Reads outside the repository
+
+Manifests never store out-of-repository paths. Instead,
+`code/kiln/legacy/host-roots.json` declares what an action may read:
+
+```json
+{
+  "roots": [
+    {"path": "/usr",  "kind": "image"},
+    {"path": "/etc",  "kind": "image"},
+    {"path": "/opt/hostedtoolcache/go/1.23.4", "kind": "tool", "tool": "go"},
+    {"path": "$HOME/.cargo/registry", "kind": "state", "ecosystem": "rust",
+     "fetchers": ["/opt/hostedtoolcache/rust/1.99.1/bin/cargo"]}
+  ],
+  "ephemeral": ["/dev/null", "/dev/urandom", "/dev/fd/*", "/proc/self/status",
+                "/proc/cpuinfo", "/sys/devices/system/cpu/**"],
+  "absent-ok": ["$HOME/.config", "$HOME/.npmrc"]
+}
+```
+
+`/bin`, `/lib` and `/lib64` are symlinks into `/usr` on the runner image,
+so they resolve under it.
+
+| Kind | Covered by | Reads allowed when |
+|---|---|---|
+| `image` | `Host.ImageID()` in the weak key | the file's ctime is no later than the job-start stamp; a file a setup step changed gives `host-read:setup-modified:<path>` |
+| `tool` | the tool's pin and probe in the weak key | the tool is in the weak key's `tools`; the pinned version matches the path; the probe passed |
+| `state` | the ecosystem's lockfile, which the action read and which is therefore in the manifest | the ecosystem is in `pinned.json` and its fetchers are enabled (stage 5, §16) |
+| `ephemeral` | nothing, by design (randomness, CPU count, the process's own `/proc`) | always |
+
+Four more rules apply:
+
+- **State roots start empty.** Every `state` root must be empty or absent
+  before the first BUILD. Otherwise the job records nothing
+  (`unscrubbed:state-preloaded`), so `kiln-record` restores no caches.
+- **Only fetchers write state.** Only a fetcher process may write under a
+  `state` root; any other writer gives `state-write:<path>`. A tool's own
+  build cache (`GOCACHE`, `~/.cache/…`) declared as `state` is KILN00 §9.5
+  trust, and §14 names it.
+- **Absent probes.** An absent probe outside the repository is allowed only
+  under an `image`, `tool` or `state` root, or in `absent-ok`. `$HOME`
+  dotfiles need explicit entries.
+- **Temporary files.** A read of the action's own temporary files (paths
+  it created, §5.2) is allowed.
+
+Any other out-of-repository read or probe gives `host-read:<path>` and no
+record. `$HOME` and `TMPDIR` are expanded from the scrubbed environment.
+The file gates reuse, so on trusted runs it is read from the base revision
+via `Source`, never from the working tree (KILN03 D6).
+
+### 5.4 Network
+
+Network activity is classified **by address, never by return value**:
+curl, Node, Go and asyncio all get `EINPROGRESS` on a non-blocking
+`connect`.
+
+| Observation | Result |
+|---|---|
+| `connect`, `sendto`, `sendmsg` or `sendmmsg` naming a non-loopback address, or port 53 on any address, whatever it returned | network use: `network:<program>`. From stage 5, it is allowed when the process's program (the real path of its last `execve`, under a `tool` root) is a `fetchers` entry of a pinned ecosystem. For an interpreter-hosted fetcher such as npm, the entry names the interpreter and the script. |
+| a successful loopback or Unix `connect` to an address the action's own processes bound | allowed (a test server) |
+| a successful loopback or Unix `connect` to an address the action did not bind | `daemon:<address>` |
+| a loopback or Unix `connect` that fails with `ECONNREFUSED` or `ENOENT` | allowed: it observes host state the image fixes (§14) |
+
+`EINPROGRESS` and `EAGAIN` count as success. Every package that gets
+`network` is reported, which replaces the hand-curated network entries in
+`never.json`.
+
+## 6. When nothing is recorded
+
+A traced pass becomes a record only when every check passes. Otherwise
+the action gets one or more of these reasons and **no manifest and no
+pass**, and it runs again next time:
+
+| Reason | Cause |
+|---|---|
+| `trace-incomplete:<detail>` | an unknown system call or unparseable line, a refused call (§4.4), a personality change, a truncated or non-UTF-8 path, an unmatched `unfinished`/`resumed` pair, a process with no exit line, an unstable or unresolvable path (§5.1), a disallowed `/proc` path, a trace over its size cap |
+| `reads-product:<path>` | it read another action's or a setup step's leftovers (§7) |
+| `writes-tracked:<path>` | it changed a tracked file (§5.2) |
+| `host-read:<path>` | it read or probed outside the allowed host roots, or a file a setup step modified (§5.3) |
+| `state-write:<path>` | a non-fetcher wrote under a `state` root |
+| `network:<program>` | network use not allowed by §5.4 |
+| `daemon:<address>` / `daemon-left` | it talked to, or left behind, a long-lived process (§4.3, §5.4) |
+| `vcs-read` | it read beneath `.git/`; a commit-dependent answer is in no key |
+| `unscrubbed[:<detail>]` | the environment or the state roots were not as §4.2 and §5.3 require |
+| `manifest-too-large` | more than 8,192 entries |
+| `failed` | the BUILD did not pass |
+| `precondition:<reason>` | a KILN03 hard reason: the never list, no BUILD for this OS, an unknown toolchain, a symlinked BUILD or a symlink leaving the closure |
+
+At most 16 reasons per kind are listed for each action.
+
+## 7. Other actions' leftovers
+
+Legacy BUILDs share one tree. An earlier BUILD leaves `node_modules`,
+`.venv` and Rust `target/` directories behind, and a later one may read
+them. Such a read depends on **which actions ran before it**, and that is
+in no key. KILN03 §8 called this order dependence. v1 refuses to record
+it.
+
+Shards run on separate machines, so the check cannot run per shard:
+
+1. **Shards record raw.** Each `kiln-record` shard uploads **raw records**
+   for its actions: entries, write set (coarsened to *write roots*, see
+   below), observations of untracked paths, reasons and exit status. A
+   shard writes no manifest and no pass.
+2. **One job merges.** `kiln-record-merge` runs in the same workflow run,
+   under `ledger-merge`'s trust rules. It joins every shard's records and,
+   for each action A, applies:
+   - **Another action's write.** A observed a path that another action
+     wrote, in any shard, before or after A: `reads-product`. Another job
+     could run them in the other order.
+   - **A changed listing.** A listed a directory in which another action
+     created or removed an entry: `reads-product`.
+   - **Pre-existing leftovers.** A observed an untracked path that existed
+     before the first BUILD. Each shard inventories untracked and ignored
+     paths, at directory granularity, before its first BUILD:
+     `reads-product`.
+   - **Unexplained.** A observed an untracked path that A did not create
+     and nobody wrote. On a correct trace this cannot happen, so it is
+     `trace-incomplete`.
+3. **All or nothing.** Only after these checks does the merge job emit
+   manifests and passes. If any shard's records are missing, it emits
+   nothing.
+
+A **write root** is the highest ancestor directory of a written path that
+contains no tracked files: `code/packages/rust/target`, for example, or
+`code/packages/typescript/foo/node_modules`. A path written under another
+action's write root counts as written by that action.
+
+Rust packages share `code/packages/rust/target`, so under these rules
+they may record nothing in v1. A v2 could union the writer's manifest into
+the reader's (open question 3). The kill criterion (§13) decides whether
+that is worth doing or whether Rust goes straight to M4.
+
+## 8. The manifest store
+
+Manifests live beside the pass ledger (KILN00 §10), in a `manifests/`
+subdirectory of the ledger directory. They use their own strict,
+canonical JSON-lines segments: the same rules as pass segments except for
+the caps below. Only the trusted `kiln-record-merge` job writes them, and
+`ledger-merge` merges them. A manifest is a **store-only** record, not a
+ledger kind: it can never cause a hit by itself, so it is not restamped,
+and order is `(run, at)`.
+
+```json
+{"kind":"manifest","id":"9e0d…","weak":"3b1c…","target":"code/packages/go/parser",
+ "os":"linux","arch":"x64",
+ "entries":["list:code/packages/go","path:go.work","pkg:code/packages/go/lexer","pkg:code/packages/go/parser"],
+ "revision":"0bf84a8…","run":"43117337685","at":"2026-11-12T03:00:00Z"}
+```
+
+- **Entries are names only**, sorted and unique. Digests are never
+  stored: each is recomputed from the current tree at lookup, so a stale
+  or tampered entry can only cause a miss.
+- **`id`** is the SHA-256 of the canonical `entries` list. Retention keeps
+  the newest K = 4 **distinct ids** per weak key, so scheduled runs that
+  re-record the same paths do not crowd out the others. Records older than
+  30 days are dropped.
+- **Caps.** 8,192 entries per record (more gives `manifest-too-large` at
+  record time), 512 bytes per name, 1 MiB per line, 64 MiB per segment and
+  256 MiB per store. A reader that finds a malformed or over-cap store
+  treats the **whole store** as unusable for that run, so there are no
+  hits.
+- **Names.** Entry names are repository paths and package paths. KILN00
+  §10.1's "hashes only" becomes "hashes and repository path names": no
+  file content, no out-of-repository path and no environment value is
+  stored.
+- **Run report.** The reason histogram (§13) is a run report, not stored
+  records.
+
+**Poisoning.** A forged manifest alone cannot produce a hit. The strong
+key needs a pass record for exactly those entries' current digests, and
+only a trusted run writes passes. A trusted run whose BUILD is malicious
+is the KILN00 §9.6 threat, which tracing does not change. §4.3's
+namespaces are what keep an action from writing the store or its own
+trace.
+
+## 9. Planning
+
+`kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
+
+- the weak key, how many manifests it has, and the result: `hit`; `miss`,
+  with the first entry whose digest differs, for `kiln explain`; or
+  `no-manifest`;
+- the static class and reasons of KILN03, which are now a **diagnostic
+  upper bound**: the static closure is what the old graph claims P can
+  read;
+- the advisory static hints (KILN03 §6), labelled as such;
+- every traced `pkg:` entry that is **not** in P's static closure. Each
+  one is a dependency the old build tool does not know about, and so a bug
+  in the old graph (stage 5).
+
+## 10. What stays from KILN03
+
+- The graph export, `D(q)`, the pins, probes and env allowlist, the
+  clean-tree rule, the never list and the pinned allowlist.
+- The hard preconditions of §6 (`precondition:`).
+  `unknown-repo-inputs` is a static-key reason only, because tracing
+  observes the reads.
+- The static semantics-0 key, now diagnostic: M2 compares its predictions
+  with the traced ones.
+- The scans, as advisory hints only.
+
+## 11. Encoding details
+
+- **Entry names.** `pkg:` + the package's `rel_path`; `path:` + a
+  repository-relative path; `list:` + a repository-relative path, with `.`
+  for the root. Paths follow KILN02 §3.5. Only Kiln writes the prefixes
+  `weak:`, `tool:` and `policy:`; a manifest entry with one of them is
+  refused.
+- **`consumed` phase.** Every entry's phase is the nominal `build`, as
+  under semantics version 0.
+- **State digests for `path:`.** SHA-256 over a tag byte and a payload:
+  - `00`: absent;
+  - `01`: directory;
+  - `02 || u8(exec) || SHA-256(content)`: file;
+  - `03 || bytes(target)`: link.
+- **The missing-package digest** is SHA-256 of `str("kiln-missing-package")`.
+- **A listing digest** is SHA-256 of `list([str(name) || u8(kind)])`,
+  sorted by name bytes, where kind `1` is a file, `2` a link and `3` a
+  directory.
+- **`T(q)`** is as defined in §5.2.
+
+Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
+- a weak key;
+- a strong key;
+- each state digest;
+- a listing digest;
+- `T(q)` with and without nested packages.
+
+## 12. Tests that must exist
+
+- **Absence.** An action probes a missing file and is recorded. Adding
+  that file inside a package, outside every package, or as a **new nested
+  package** makes lookup miss.
+- **Listing.** Adding or removing a sibling in a listed directory makes
+  lookup miss. Changing a sibling's content does not, unless it was also
+  read.
+- **Written, then read.** An action that writes and then reads its own
+  file records nothing for it. An action that opens a pre-existing file
+  without `O_TRUNC` gets `reads-product`. Linking or renaming another
+  package's file into place and reading it adds that package.
+- **Products.** Action B writes `x` and action A reads `x`, in either
+  order and in **different shards**: A gets `reads-product`. A missing
+  shard emits nothing.
+- **Failing closed.** Each of these gives `trace-incomplete`:
+  - each refused call;
+  - an unknown system-call name;
+  - a personality change;
+  - a truncated path;
+  - an unmatched `resumed`;
+  - a missing exit line;
+  - a `/proc/self/root` path or a numeric `/proc/<pid>/` path;
+  - an unstable path.
+- **Host.**
+  - A read under an `image` root is allowed.
+  - A read of `$HOME/.config/x` gives `host-read`.
+  - An `image` file with a ctime after job start gives
+    `host-read:setup-modified`.
+  - A preloaded `state` root gives `unscrubbed:state-preloaded`.
+  - A read under the root of a tool not in the weak key's `tools` gives
+    `host-read:tool-not-keyed`.
+- **Network.**
+  - A non-blocking `connect` returning `EINPROGRESS` to a public address
+    gives `network`.
+  - A loopback server the action started is allowed.
+  - A connection to an existing Unix socket gives `daemon`.
+  - `ECONNREFUSED` on loopback is allowed.
+- **Sandbox.**
+  - Setup calls before the helper's `execve` are discarded.
+  - A survivor killed when PID 1 exits gives `daemon-left`.
+  - The action cannot open the trace file (end to end).
+- **Exec.** A `#!` interpreter inside another package adds that package.
+- **Keys.**
+  - Weak and strong keys never collide.
+  - The strong key changes when any entry's digest changes, and not
+    otherwise.
+  - Lookup tries up to K distinct manifests, newest first.
+- **Store.**
+  - Over-cap records and stores are refused.
+  - Retention keeps K distinct ids per weak key.
+  - Unknown fields, non-canonical lines and unsorted entries are refused.
+- **Determinism.** The same trace gives a byte-identical manifest.
+- **End to end** (CI, Linux). A fixture repository with a handful of shell
+  BUILDs is recorded under real `strace` through `sandbox-exec`, then
+  looked up after a mutation of each kind. Each strace behaviour this spec
+  relies on is pinned:
+  - exit lines under `--quiet=attach`;
+  - `-y` annotations on returned descriptors;
+  - `unfinished`/`resumed` pairing;
+  - same-path annotations inside the namespace.
+
+## 13. Rollout and gates
+
+**M2: traced shadow (backlog item 8).** The scheduled Linux full build
+also runs `kiln-record` and `kiln-record-merge` under the tracer, with the
+scrubbed environment. They write manifests and passes to a **shadow
+scope**. Until stage 5, all network use gives `network`. The run report
+gives:
+
+- overhead: wall time traced versus untraced;
+- trace and manifest sizes;
+- the reason histogram (`reads-product`, `host-read`, `network`,
+  `trace-incomplete`, …) and the recordable share per language;
+- the packages whose result changed under the scrubbed environment. Each
+  is a missing `env.json` entry or a real dependence to fix.
+
+**M2: comparison (backlog item 9).**
+
+- Before each forced full build, snapshot every predicted hit. Afterwards,
+  compare them with the actual results. A predicted hit that fails, and
+  fails again when re-run at the same commit, is a soundness bug.
+- Report traced entries outside the static closure (§9). These are bugs
+  in the old graph.
+- Mutation tests:
+  - touching a traced file must miss;
+  - touching an untraced file inside the static closure must still hit,
+    and the BUILD must still pass when re-run.
+
+**Kill criterion.** After the traced shadow, a language with under about
+30% of its packages recordable (mostly `reads-product`) does not get the
+bridge. It goes straight to M4 isolation. The 30% figure is a starting
+point, not a measurement.
+
+**M3 gate.** Reuse turns on per language only when all of these hold:
+
+1. N forced full builds (KILN00 §18 Q6) show zero unexplained
+   disagreements on traced predictions;
+2. the scrubbed-environment shadow shows no unexplained result changes;
+3. `probe-mismatch` is fatal (KILN03 §4);
+4. recording runs inside the §4.3 sandbox.
+
+**Skipped products.** A skipped action creates no products, so another
+action that relied on them might now fail. The M3 spec must settle this
+before any skipping. The likely rule: do not skip an action whose write
+roots a running action read in its latest trace.
+
+## 14. Residual risks
+
+These are known and named. They are measured rather than closed.
+
+- **Nondeterminism.** Time, randomness, thread scheduling, CPU count and
+  model, hostname, uid, and the mtimes and inode numbers that `stat`
+  reveals are not keyed. A flaky test can be recorded as a pass. KILN00
+  §10.5 is the answer, as for every Kiln key: a daily uncached run, and
+  tombstones.
+- **A new writer.** Path A probed absent may, in another job, be created
+  first by a changed BUILD that wrote there for the first time.
+  Full-build recording (§7) catches every writer that exists at recording
+  time; a writer's first-ever write to a new place is caught only by the
+  comparison runs. M4 isolation removes this class.
+- **Out-of-repository symlinks** are resolved after the run, not at the
+  moment of the call. A `-y` annotation can also race when threads reuse
+  the same descriptor number.
+- **Failed loopback or Unix connections** observe host state that the
+  image is assumed to fix.
+- **Tool build caches** declared as `state` are trusted the way KILN00
+  §9.5 trusts tool state.
+- **Linux only.** macOS and Windows get no hits from this bridge.
+
+## 15. Open questions
+
+1. **macOS and Windows tracing.** Each option needs special access:
+   `dtruss` needs SIP off, the Endpoint Security framework needs an
+   entitlement, and ETW needs administrator rights, which hosted Windows
+   runners have. Is any of them worth it before M4, given those hosts are
+   untrusted under KILN00 §9.6 anyway?
+2. **`strace` versus an own tracer.** Is `strace` enough, and is
+   `--seccomp-bpf` (much faster on stat-heavy Node and Python) safe when a
+   tracee installs its own seccomp filter?
+3. **Product provenance (v2).** Instead of refusing `reads-product`, union
+   the writer's manifest into the reader's. Rust needs this for any hits
+   under its shared `target/`.
+4. **Trace volume.** A full Rust or Node build may emit gigabytes of
+   trace. Measure it in M2 and set the per-step cap from the measurement.
+
+## 16. Implementation stages
+
+Each stage is one PR.
+
+1. **Trace parser and manifest builder.** Pure Go, tested on canned trace
+   fixtures:
+   - the three-class table;
+   - working-directory tracking;
+   - classification;
+   - `T(q)`, state and listing digests;
+   - weak and strong keys;
+   - golden vectors.
+2. **Manifest store.** Segments, strict decoding, caps, `id`
+   deduplication, retention and merge. Includes a test that the pass
+   ledger ignores the `manifests/` subdirectory.
+3. **Sandbox and wiring.**
+   - `kiln sandbox-exec`;
+   - build-tool `-exec-wrapper` and `-emit-results`;
+   - the real-`strace` end-to-end fixture, on Linux CI.
+4. **Recording jobs.** `kiln-record` and `kiln-record-merge`: a shadow
+   scope, cross-shard checks, and the reason and overhead report, with all
+   network refused.
+5. **Lookup and comparison.**
+   - lookup in `legacy-plan`;
+   - the comparison harness;
+   - fetcher and state allowances;
+   - the static-closure diff report.
+
+KILN03 item 7c-3 (pins, probes, the env allowlist, and the new
+`host-roots.json`) provides the weak key. It lands before stage 3.
