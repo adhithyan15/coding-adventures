@@ -163,8 +163,9 @@ func (c *classifier) inetPeer(t *trace.Trace, ev *trace.Event) {
 	if expectedFailure(ev.Result) || c.bound(ip, a.Port, c.sockType(ev)) {
 		return
 	}
+	// A loopback peer nobody here bound lives in the step's own network
+	// namespace (KILN04 4.7), so it cannot be a host daemon: only the reason.
 	c.reason("daemon:" + sanitize(addrText(ip, a.Port)))
-	c.incomplete = true // L2: an untraced peer may write the repository
 }
 
 func addrText(ip netip.Addr, port int) string {
@@ -225,14 +226,21 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		if expectedFailure(ev.Result) || c.unixBound("@"+a.Address, c.sockType(ev)) {
 			return
 		}
+		// The abstract namespace is per network namespace too: only the reason.
 		c.reason("daemon:" + sanitize("@"+a.Address))
-		c.incomplete = true // L2
 		return
 	}
 	if a.Address == "" {
 		return // an unnamed socket has no peer to be a daemon
 	}
-	tg, ok := c.resolve(join(ev.Cwd, "", a.Address), true)
+	// The peer's lookups are the write-set's business too (L5): "the action
+	// bound this address itself" is believed only while the bound name is
+	// stable, so an action that swaps the name for a link to a host daemon's
+	// socket between bind and connect (and back) is judged by the same
+	// stability rule as a write, and is incomplete.
+	var tg target
+	var ok bool
+	c.writing(func() { tg, ok = c.resolve(join(ev.Cwd, "", a.Address), true) })
 	if !ok {
 		return
 	}
@@ -246,7 +254,14 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		return
 	}
 	c.reason("daemon:" + c.redact(tg.abs))
-	c.incomplete = true // L2
+	// L2 (M4): a connect that SUCCEEDED to a pathname socket outside the
+	// repository and outside the fresh HOME and TMPDIR reached a host
+	// process, which may write the repository for the action.  Peers inside
+	// the repository or the scratch directories are another action's (the
+	// cross-action rule M13 handles those).
+	if _, in := c.rel(tg.abs); !in && ev.Result.OK && !c.underTmp(tg.abs) && !c.isTmpRoot(tg.abs) {
+		c.incomplete = true
+	}
 }
 
 // unixBound says the action bound this Unix address on a socket of this type.

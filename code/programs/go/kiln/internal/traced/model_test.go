@@ -89,6 +89,7 @@ type model struct {
 	dirs            []string // candidate directory descriptors
 	opStart         int      // index of the first touch of the current operation
 	core            bool     // a process dumped core (L1)
+	sigpipe         bool     // a child was killed by SIGPIPE (M5)
 }
 
 func (m *model) mkpath(abs string, n *mnode) {
@@ -1011,6 +1012,21 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		case 110:
 			// a child dumps core: the kernel writes ./core with no system call (L1)
 			o.run = func() []trace.Event { m.core = true; return nil }
+		case 112:
+			// an httptest-style server: bind port 0, connect to its port (M4)
+			port := 20000 + next()
+			o.run = func() []trace.Event {
+				b := base("bind", trace.KindNetwork, "")
+				b.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: 0}
+				b.SockPath = "socket:[1]"
+				c := base("connect", trace.KindNetwork, "")
+				c.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: port}
+				c.SockPath = "socket:[1]"
+				return []trace.Event{m.event(pid, b, ""), m.event(pid, c, "")}
+			}
+		case 113:
+			// a child killed by SIGPIPE (yes | head): hides no write (M5)
+			o.run = func() []trace.Event { m.sigpipe = true; return nil }
 		case 111:
 			f := []string{"O_WRONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_RDWR|O_APPEND"}[int(next())%3]
 			ret := []string{"pipe:[77]", "socket:[5]", "anon_inode:[eventfd]"}[int(next())%3]
@@ -1039,7 +1055,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % (30 + len(bursts))
+		kind := next() % (32 + len(bursts))
 		if kind >= 18+len(bursts) {
 			add(100+kind-18-len(bursts), m.path(data, i), "")
 			continue
@@ -1125,6 +1141,11 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		RootPid: 1,
 		Procs:   map[int]*trace.Process{1: {Pid: 1, Exit: &trace.Exit{Pid: 1}}, 2: {Pid: 2, Parent: 1, Exit: &trace.Exit{Pid: 2}}},
 		Exits:   []trace.Exit{{Pid: 2}, {Pid: 1}},
+	}
+	if m.sigpipe {
+		sp := trace.Exit{Pid: 2, Killed: true, Signal: "SIGPIPE"}
+		tr.Procs[2].Exit = &sp
+		tr.Exits = []trace.Exit{sp, {Pid: 1}}
 	}
 	if m.core {
 		cd := trace.Exit{Pid: 2, Killed: true, Signal: "SIGSEGV", CoreDumped: true}

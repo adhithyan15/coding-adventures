@@ -158,7 +158,7 @@ func TestPOCCoreDump(t *testing.T) {
 		return st
 	}
 	wantComplete(t, "core dumped", h.runSteps(mk(trace.Exit{Killed: true, Signal: "SIGSEGV", CoreDumped: true})), false)
-	wantComplete(t, "SIGPIPE child", h.runSteps(mk(trace.Exit{Killed: true, Signal: "SIGPIPE"})), false)
+	wantComplete(t, "SIGPIPE child (yes | head)", h.runSteps(mk(trace.Exit{Killed: true, Signal: "SIGPIPE"})), true) // M5: a killed process hides no write
 	wantComplete(t, "a child that exited", h.runSteps(mk(trace.Exit{Code: 3})), true)
 	// The exit line alone, without a process entry, is enough.
 	st := step(mkdir(abs("code/p/a/out")))
@@ -174,10 +174,10 @@ func TestPOCDaemon(t *testing.T) {
 	rec := h.wc(unix("connect", "/var/run/docker.sock"))
 	wantReason(t, rec, "daemon:/var/run/docker.sock")
 	wantComplete(t, "host unix daemon", rec, false)
-	wantComplete(t, "loopback daemon", h.wc(inet("connect", "127.0.0.1", 5432)), false)
+	wantComplete(t, "loopback daemon (own netns, M4)", h.wc(inet("connect", "127.0.0.1", 5432)), true)
 	ab := unix("connect", "dbus")
 	ab.Addr.Abstract = true
-	wantComplete(t, "abstract daemon", h.wc(ab), false)
+	wantComplete(t, "abstract daemon (own netns, M4)", h.wc(ab), true)
 	// A peer the action bound itself is traced.
 	wantComplete(t, "own server", h.runNet(unix("bind", "/tmp/kiln-1/s"), unix("connect", "/tmp/kiln-1/s")), true)
 	// An expected failure is host state the image fixes.
@@ -357,4 +357,46 @@ func hasSpan(m map[string]span, k string) bool { _, ok := m[k]; return ok }
 func hasGone(m map[string]goneLook, k string) bool {
 	_, ok := m[k]
 	return ok
+}
+
+// M4: a test server on an ephemeral port (Go httptest) is the action's own;
+// the loopback and abstract namespaces are the step's own, so only the plain
+// daemon reason remains.
+func TestR2EphemeralPort(t *testing.T) {
+	h := newHarness(t)
+	rec := h.wc(sockEv("socket:[1]", "SOCK_STREAM"), inet("bind", "127.0.0.1", 0), inet("connect", "127.0.0.1", 41234), mkdir(abs("code/p/a/out")))
+	wantReason(t, rec, "daemon:127.0.0.1:41234")
+	wantComplete(t, "bind :0, connect :41234", rec, true)
+	// A pathname peer inside the repository or the scratch directories is
+	// another action's, not a host daemon.
+	h.fs.file(abs("code/p/b/live.sock"))
+	wantComplete(t, "in-repo pathname peer", h.wc(unix("connect", abs("code/p/b/live.sock"))), true)
+	// A host pathname peer that answered is untraced code with write access.
+	h.fs.file("/var/run/docker.sock")
+	wantComplete(t, "host pathname peer", h.wc(unix("connect", "/var/run/docker.sock")), false)
+}
+
+// L5: "the action bound this socket itself" is believed only while the bound
+// name is stable: swapping it for a link to a host daemon's socket between
+// bind and connect, and back, must not pass.
+func TestR2DaemonSpoof(t *testing.T) {
+	for _, P := range []string{abs("code/p/a/s"), "/tmp/kiln-1/s"} {
+		h := newHarness(t)
+		h.noSettle = true
+		h.fs.file("/var/run/docker.sock")
+		h.fs.info[P] = FileInfo{Kind: KindOther, Ctime: oldCtime}
+		rec := h.wc(
+			sockEv("socket:[1]", "SOCK_STREAM"),
+			unix("bind", P),
+			write("unlink", P),
+			symlink("/var/run/docker.sock", P),
+			unix("connect", P), // the kernel follows the link: dockerd answers
+			write("unlink", P),
+			unix("bind", P),
+		)
+		wantComplete(t, "spoofed self-bound peer "+P, rec, false)
+	}
+	// The honest shape stays complete.
+	h := newHarness(t)
+	wantComplete(t, "honest own server", h.runNet(unix("bind", "/tmp/kiln-1/s"), unix("connect", "/tmp/kiln-1/s")), true)
 }

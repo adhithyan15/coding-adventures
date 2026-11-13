@@ -228,9 +228,18 @@ func CompleteOf(r RawRecord) *bool {
 // (r.Record.WritesComplete, available only in memory: it is not on the wire).
 // A writer that forgot the key, defaulted it, or set it from anything but the
 // classifier would hand the merge a claim nobody computed.
+//
+// A record that did not run to completion (status other than built: refused,
+// gated, failed) has no classified raw record, so the flag is an explicit
+// false and need not match one; the key stays required on the wire.  The
+// merge charges such a record as a truncated execution (M-1), not as an
+// unknown write set (KILN04 7.1).
 func CheckComplete(r ShardRecord) error {
 	if r.Complete == nil {
 		return fmt.Errorf("record %q: writes_complete is missing (derive it with CompleteOf)", short(r.Action))
+	}
+	if r.Status != StatusBuilt && !*r.Complete {
+		return nil
 	}
 	if *r.Complete != r.Record.WritesComplete {
 		return fmt.Errorf("record %q: writes_complete %v disagrees with the classifier's %v (derive it with CompleteOf)",

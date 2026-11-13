@@ -692,7 +692,14 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
 - A step whose trace does not parse is `unknown_writes` and never complete; the
   recorder must not substitute an empty record.
 - The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
-  raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does).
+  raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
+  stays required on the wire for every record. A record that did not run to
+  completion (`status` other than `built`: failed, refused, gated) was never
+  classified, so the writer sets an explicit `false` for it, which
+  `CheckComplete` accepts without a raw record; the merge charges such a record
+  as a truncated execution (M-1: strict void, relaxed charges the action), not
+  as an unknown write set. A built record with a `false` or missing key is
+  unknown (§7.1, G1).
 - Classify each action before a later action can change the tree: M8's
   cross-action `unstable-path` does not feed G1, so an action classified after
   another one rewrote links it traversed would see a different disk.
@@ -1226,22 +1233,30 @@ write could exist that the lists do not show.
   nothing vouches for the components it did not reach.
 - **W10. A whole-trace problem.** A step's trace has no exit line for the step
   process or the step was killed by a signal (a truncated or interrupted
-  trace), some traced process has no exit line, **any** traced process was
-  killed by a signal or dumped core (the kernel writes the core file with no
-  system call, and a process cut off by a signal may have left work unseen), a survivor outlived the
-  sandbox's init (`daemon-left`), or the traced steps do not match the weak
+  trace), some traced process has no exit line, **any** traced process
+  dumped core (the kernel writes the core file with no system call), a
+  survivor outlived the sandbox's init (`daemon-left`), or the traced steps do not match the weak
   key's recipe (`recipe-mismatch`). A nonzero exit status by itself is **not**
-  a trigger: the failed action wrote what it wrote, and the merge treats the
+  a trigger, and neither is a child killed by a signal other than the step
+  process (`yes | head` dies of SIGPIPE): every call up to its death is traced
+  and a call it never finished is refused (L1, M5): the failed action wrote what it wrote, and the merge treats the
   failure as a truncated execution (§7.1, M-1). A trace that did not parse, or
   a tracer that did not finish cleanly, never reaches `Classify`; the
   recorder reports those as `unknown_writes` and `clean: false`, which the
   merge already treats as unknown.
 
-**W11. An untraced peer.** A `daemon:<address>` reason, that is a connect to
-a loopback inet address, an abstract Unix address or a pathname Unix socket
-that the action did not bind itself and that did not fail with `ECONNREFUSED`
-or `ENOENT`: the peer is outside the trace and may write the repository on the
-action's behalf.
+**W11. An untraced host peer.** A `connect` or send that *succeeded* to a
+pathname `AF_UNIX` socket that resolves outside the repository and outside the
+fresh `HOME` and `TMPDIR`, and that the action did not bind itself: a host
+process, outside the trace, may write the repository on the action's behalf.
+Loopback inet peers and abstract Unix peers are in the step's own network
+namespace (§4.7) and so cannot be host daemons; pathname peers inside the
+repository or the scratch directories are another action's, which the
+cross-action rule (M13) handles. All of them keep the plain `daemon:<address>`
+reason. "The action bound it itself" is believed only while the bound name is
+stable: the peer's lookups are judged with the write set's (L5), so an action
+that swaps the bound name for a link to a host daemon's socket and back is
+incomplete.
 
 **M3. A reason always accompanies an unknown write set.** Whenever the write
 set is unknown and the record would otherwise carry no `trace-incomplete`
@@ -1253,7 +1268,8 @@ merge reading only the reasons relies on.
 
 Deliberately **not** triggers, because they cannot hide a write: any
 read-only reason (`host-read`, `exec-unreadable`, a failed lookup of a name the
-action only looked at), a nonzero exit, `network:<program>` reasons (the
+action only looked at), a nonzero exit, a child's death by a signal, a loopback
+or abstract `daemon:` peer, `network:<program>` reasons (the
 record is refused anyway and no peer is reached), and a write outside the
 repository (it is `state-write` or the action's own scratch space, and cannot
 name a repository path without going through a resolved, vouched component).
@@ -1427,8 +1443,12 @@ excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
 read-only `unstable-path`, and so on). **A recipe mismatch is never
 excused**: when the steps that ran are not the steps the weak key's recipe
 covers (B6, or the classifier's `trace-incomplete:recipe-mismatch`), the
-trace says nothing about what the recipe writes. A step whose tracer did
-not finish cleanly (`clean: false`) is likewise unknown, and a record must
+trace says nothing about what the recipe writes. `writes_complete` is
+required on the wire; a built record whose key is false or missing is unknown,
+while a record that did not run to completion (never classified) carries an
+explicit `false` and is a truncated execution (below), so the relaxed verdict
+charges only that action. A step whose tracer did not finish cleanly
+(`clean: false`) is likewise unknown, and a record must
 carry exactly one step summary per step that ran (`len(steps) ==
 steps_run`).
 

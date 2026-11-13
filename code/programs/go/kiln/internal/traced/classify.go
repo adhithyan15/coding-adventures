@@ -361,15 +361,17 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 		c.incomplete = true
 	}
 	for _, p := range t.Procs {
-		if p == nil || p.Exit == nil || p.Exit.Killed || p.Exit.CoreDumped {
+		if p == nil || p.Exit == nil || p.Exit.CoreDumped {
 			c.incomplete = true
 		}
 	}
-	// L1: a process killed by a signal, whichever process it was, may have been
-	// cut off with work unseen; and the kernel writes a core file for a
-	// process that dumps core with NO system call, so no trace shows it.
+	// L1: the kernel writes a core file for a process that dumps core with NO
+	// system call, so no trace shows it.  A process merely killed by a signal
+	// (SIGPIPE in `yes | head`) hides nothing: every call up to its death is
+	// traced, and a call it never finished is refused.  Only the STEP
+	// process's death counts (above).
 	for _, ex := range t.Exits {
-		if ex.Killed || ex.CoreDumped {
+		if ex.CoreDumped {
 			c.incomplete = true
 		}
 	}

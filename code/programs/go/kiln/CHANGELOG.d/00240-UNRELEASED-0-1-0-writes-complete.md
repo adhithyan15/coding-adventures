@@ -35,3 +35,23 @@
   `trace-incomplete:size` like the other lists (the lists were unbounded).
 - `HonourWritesComplete` stays off by default; the recorder (stage 4 PR 2b)
   turns it on.
+
+### Fixed (second review round)
+
+- **M4** Only a successful connect to a pathname Unix socket outside the
+  repository and outside the fresh HOME and TMPDIR makes the write set unknown
+  (W11); loopback, abstract and in-repository peers keep only the `daemon:`
+  reason (an httptest server on port 0 stays complete).
+- **M5** A child killed by a signal (SIGPIPE in `yes | head`) no longer makes
+  the write set unknown; a core dump in any process, and the step process's
+  own death, still do.
+- **L5** The peer of a connect is resolved as a write lookup, so the
+  "bound by the action itself" exception is believed only while the name is
+  stable (the bind, swap-to-docker.sock, connect, swap-back, bind spoof is
+  incomplete).
+- **L6** `writes_complete` stays required on the wire for every record;
+  `CheckComplete` accepts an explicit `false` for a non-built record without a
+  raw record, and the merge charges a non-built record as a truncated
+  execution (M-1), not as an unknown write set. A built record with a false or
+  missing key is still unknown. The contract is in KILN04 7.1 and 4.8.
+- The fuzz model gains port-0 bind plus connect and SIGPIPE child death.
