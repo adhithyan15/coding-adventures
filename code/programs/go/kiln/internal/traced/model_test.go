@@ -510,16 +510,19 @@ var contents = [][]byte{nil, nil, nil, []byte("garbage")}
 
 func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 	pr := m.procs[pid]
-	flags := []string{"O_RDONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_WRONLY|O_CREAT|O_EXCL", "O_WRONLY|O_CREAT", "O_WRONLY|O_TRUNC"}[mode]
-	create := mode == 1 || mode == 2 || mode == 3
-	writes := mode != 0
-	r := m.resolve(p, pr.cwdPath, mode != 2)
+	flags := []string{"O_RDONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_WRONLY|O_CREAT|O_EXCL", "O_WRONLY|O_CREAT", "O_WRONLY|O_TRUNC",
+		"O_RDONLY|O_CREAT|O_NOFOLLOW|O_PATH", "O_RDONLY|O_CREAT|O_NOFOLLOW"}[mode]
+	// Modes 5 and 6 do not follow a final link; O_PATH (5) ignores O_CREAT and
+	// opens a link itself.
+	create := mode == 1 || mode == 2 || mode == 3 || mode == 6
+	writes := mode != 0 && mode != 5
+	r := m.resolve(p, pr.cwdPath, mode != 2 && mode < 5)
 	m.look(r, create && r.stop == "", false, false)
 	errno := r.errno
 	final := r.final
 	made := false
 	switch {
-	case errno == "" && r.node != nil && r.node.kind == KindLink:
+	case errno == "" && r.node != nil && r.node.kind == KindLink && mode != 5:
 		errno = "ELOOP"
 	case errno == "" && r.node == nil:
 		errno = "EINVAL"
@@ -769,6 +772,9 @@ var bursts = [][]burstOp{
 	{{12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}, {8, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}},
 	{{12, "/code/p/a/left.txt", true}, {5, "/code/p/a/left.txt", true}, {10, "/code/p/a/left.txt", true}, {12, "/code/p/a/left.txt", true}},
 	{{0, "/o", false}, {1, "/o/l", false}, {8, "/o/l", false}, {12, "/o/l", false}},
+	{{100, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{100, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
+	{{101, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -777,7 +783,7 @@ var bursts = [][]burstOp{
 var perturbations = []struct {
 	kind int
 	swap bool
-}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}}
+}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}}
 
 func (m *model) burstBase(b byte) string {
 	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
@@ -835,6 +841,10 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 2, c) }
 		case 10:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 3, -1) }
+		case 100:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 5, -1) }
+		case 101:
+			o.run = func() []trace.Event { return m.doOpen(pid, p, 6, -1) }
 		case 11:
 			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
@@ -859,7 +869,11 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % (18 + len(bursts))
+		kind := next() % (20 + len(bursts))
+		if kind >= 18+len(bursts) {
+			add(100+kind-18-len(bursts), m.path(data, i), "")
+			continue
+		}
 		if kind < 18 {
 			add(kind, m.path(data, i), "")
 			continue

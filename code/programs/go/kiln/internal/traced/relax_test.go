@@ -342,3 +342,35 @@ func TestSuccessfulLookupOfARemovedLeftover(t *testing.T) {
 	h = quiet(t)
 	wantStable(t, "made, ENOENT, removed", h.run(created(l, "O_WRONLY|O_CREAT|O_EXCL"), unlinkOf(l), fail(stat(l), "ENOENT")))
 }
+
+// D12-1: O_PATH ignores O_CREAT, and with O_NOFOLLOW opens a final symlink
+// itself, so such an open proves nothing about the name.
+func TestOPathAndNofollowAreNotCreateEntries(t *testing.T) {
+	const l = "code/p/a/leftlnk"
+	for _, fl := range []string{
+		"O_RDONLY|O_CREAT|O_NOFOLLOW|O_PATH",
+		"O_RDONLY|O_CREAT|O_PATH",
+		"O_RDONLY|O_CREAT|O_NOFOLLOW",
+	} {
+		h := quiet(t)
+		rec := h.run(open(l, fl, abs(l)), stat(l), unlinkOf(l))
+		wantUnstable(t, fl, rec)
+	}
+	// An O_PATH open is a plain observation: no write, no creation.
+	h := quiet(t)
+	h.fs.file(abs("code/p/a/f"))
+	rec := h.run(open("code/p/a/f", "O_RDONLY|O_CREAT|O_PATH", abs("code/p/a/f")))
+	eq(t, "writes", rec.Writes)
+	eq(t, "untracked", rec.UntrackedObservations, "code/p/a/f")
+}
+
+// D12-2: the removed-name rule covers any component a walk stopped at.
+func TestRemovedNameRuleCoversStoppedComponents(t *testing.T) {
+	const l = "code/p/a/leftlnk"
+	h := quiet(t)
+	wantUnstable(t, "unlink", h.run(fail(stat(l+"/x"), "ENOENT"), unlinkOf(l)))
+	h = quiet(t)
+	wantUnstable(t, "rename", h.run(fail(stat(l+"/x"), "ENOENT"), rename(l, "code/p/a/m")))
+	h = quiet(t)
+	wantStable(t, "removed first", h.run(unlinkOf(l), fail(stat(l+"/x"), "ENOENT")))
+}

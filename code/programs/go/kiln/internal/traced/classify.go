@@ -52,6 +52,29 @@ type mod struct {
 	opened, unlinked bool
 }
 
+// firstMade is the completion of the first entry that proves the action made
+// the name itself: a clean creation or an O_CREAT open keyed by a kernel path.
+func (c *classifier) firstMade(ms []mod) pos {
+	first := posInf
+	for _, m := range ms {
+		if (m.clean || m.opened) && m.at.before(first) {
+			first = m.at
+		}
+	}
+	return first
+}
+
+// removedBeforeMade says some removal completed at or after from but before
+// the action made the name: the lookup may have gone through what was there.
+func removedBeforeMade(ms []mod, firstMade, from pos) bool {
+	for _, m := range ms {
+		if !m.made && m.at.before(firstMade) && !m.at.before(from) {
+			return true
+		}
+	}
+	return false
+}
+
 // goneLook describes lookups that followed a final name the post-run disk shows
 // absent.
 type goneLook struct {
@@ -664,7 +687,7 @@ func (c *classifier) checkStability() {
 			mi = newModIndex(ms)
 			idx[p] = mi
 		}
-		if mi.unsafe(ms, sp.s, sp.e) {
+		if mi.unsafe(ms, sp.s, sp.e) || removedBeforeMade(ms, c.firstMade(ms), sp.s) {
 			c.reason(rUnstable)
 		}
 	}
@@ -710,19 +733,12 @@ func (c *classifier) checkStability() {
 	// the lookup went through (a pre-existing object the disk no longer shows).
 	for p, g := range c.gone {
 		ms := c.mods[p]
-		firstMade := posInf
-		for _, m := range ms {
-			if m.made && m.at.before(firstMade) {
-				firstMade = m.at
-			}
-		}
+		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
 			c.reason(rUnstable)
 		}
-		for _, m := range ms {
-			if !m.made && m.at.before(firstMade) && !m.at.before(g.from) {
-				c.reason(rUnstable)
-			}
+		if removedBeforeMade(ms, firstMade, g.from) {
+			c.reason(rUnstable)
 		}
 	}
 	for p := range c.seenFile {

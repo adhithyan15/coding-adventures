@@ -22,7 +22,7 @@ func flagSet(text string) map[string]bool {
 
 // openFlags is the part of an open's flags that matters here.
 type openFlags struct {
-	wronly, rdwr, creat, excl, trunc, nofollow, tmpfile bool
+	wronly, rdwr, creat, excl, trunc, nofollow, tmpfile, path bool
 }
 
 // openat2Field returns the text of a field ("flags", "resolve") of the struct
@@ -47,10 +47,18 @@ func parseOpenFlags(text string) openFlags {
 		text = openat2Field(text, "flags")
 	}
 	s := flagSet(text)
-	return openFlags{
+	f := openFlags{
 		wronly: s["O_WRONLY"], rdwr: s["O_RDWR"], creat: s["O_CREAT"], excl: s["O_EXCL"],
-		trunc: s["O_TRUNC"], nofollow: s["O_NOFOLLOW"], tmpfile: s["O_TMPFILE"],
+		trunc: s["O_TRUNC"], nofollow: s["O_NOFOLLOW"], tmpfile: s["O_TMPFILE"], path: s["O_PATH"],
 	}
+	if f.path {
+		// The kernel ignores every flag but O_DIRECTORY, O_NOFOLLOW and
+		// O_CLOEXEC under O_PATH: nothing is created, truncated or written, and
+		// with O_NOFOLLOW a final symlink is opened itself.  It is a plain
+		// observation of the name.
+		f.wronly, f.rdwr, f.creat, f.excl, f.trunc, f.tmpfile = false, false, false, false, false, false
+	}
+	return f
 }
 
 // writes reports whether the open can change the file: a write access mode,
@@ -180,7 +188,7 @@ func (c *classifier) openResolved(abs string, f openFlags, creat, byRet bool) {
 	if f.creat || creat {
 		// An O_CREAT open may have made the name: a namespace change.  Only
 		// with O_EXCL does the result prove it did.
-		c.nsChange(abs, f.creat && f.excl, byRet && !f.tmpfile)
+		c.nsChange(abs, f.creat && f.excl, byRet && !f.tmpfile && !f.nofollow && !f.path)
 	}
 	if f.writes() || creat {
 		c.writePath(abs)
