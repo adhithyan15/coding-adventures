@@ -1056,6 +1056,9 @@ impl Evidence {
     /// each of exhaustive, property and fuzz, a passing `<op>/output-bound`
     /// entry; the operation must also declare a `heap` row; and every observed
     /// entry of the operation must have measured a peak within its bound.
+    /// Each such suite must also have run at least one case (`cases + iterations >= 1`)
+    /// and each `output-bound` entry must carry both `max_observed_heap` and
+    /// `bound_at_max`: a missing field is refused by name, never skipped.
     /// Anything less is listed in [`DecompressionBounds::unproven`], which keeps
     /// the weakness row open: an absent fact is never read as a pass.
     pub fn decompression_bounds(&self) -> DecompressionBounds {
@@ -1076,6 +1079,24 @@ impl Evidence {
                     [] => b.unproven.push(format!("{}: no {kind} suite for {claim}", op.name)),
                     entries => {
                         for t in entries {
+                            // A suite that ran nothing proves nothing (CWE-409 review
+                            // finding 2): `cases` counts exhaustive and property inputs,
+                            // `iterations` the fuzz executions, so one of them must be >= 1.
+                            if t.cases.saturating_add(t.iterations) == 0 {
+                                b.unproven.push(format!("{}: {} ran no cases (cases = 0, iterations = 0)", op.name, t.id));
+                            }
+                            // Every output-bound entry is *measured against* the heap row, so
+                            // it must carry both numbers.  The loop below skips an entry
+                            // that lacks either; for these entries that skip would turn "not
+                            // observed" into "not a failure", so refuse it by name instead.
+                            for (field, present) in [
+                                ("max_observed_heap", t.max_observed_heap.is_some()),
+                                ("bound_at_max", t.bound_at_max.is_some()),
+                            ] {
+                                if !present {
+                                    b.unproven.push(format!("{}: {} is missing `{field}`", op.name, t.id));
+                                }
+                            }
                             if t.verdict != "pass" {
                                 b.unproven.push(format!("{}: {} is {}", op.name, t.id, t.verdict));
                             } else {
