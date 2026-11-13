@@ -1,3 +1,6 @@
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
 cargo test -q -p gf256 --lib --test gf256_test -- --nocapture
 cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check gf256
 set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p gf256 --test warrant_evidence

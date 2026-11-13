@@ -1,4 +1,10 @@
 cargo test -q -p gf256 --lib --test gf256_test -- --nocapture
+# VER08b: the whole public API runs inside a seccomp/Landlock jail derived from
+# required_capabilities.json (no capabilities), watched by an independent strace.
+# The jail is Linux-only, so on macOS this plain run reports the gate NOT-LIVE (RCG010)
+# without failing; Linux uses BUILD_linux instead, which runs the same line with
+# RCG_STRICT=1 so a NOT-LIVE gate is a failure there.  (Windows uses BUILD_windows.)
+cargo test -q -p gf256 --test runtime_capability
 # VER04h: the evidence harness is generated from code/specs/gf256.warrant and
 # evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence
 # manifest from a real run, and prove each sabotage mode makes the model-pinned
