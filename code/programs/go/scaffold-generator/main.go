@@ -1615,10 +1615,28 @@ done_testing;
 	build.WriteString("cpanm --installdeps --quiet .\n")
 	build.WriteString("prove -l -v t/\n")
 
-	// BUILD_windows — Perl is not tested on Windows CI (setup step skips it).
-	// A no-op BUILD_windows prevents the build-tool from falling back to BUILD
-	// and failing with "Unknown option: --with-test" on Strawberry Perl.
-	buildWindows := "echo Perl testing is not supported on Windows - skipping\n"
+	// BUILD_windows — a real recipe, never an echo skip (BUILD-002 W2/W6). It runs
+	// the shared helper, which picks Strawberry Perl, installs Test2::V0 if
+	// needed, puts each sibling's lib\ on @INC with absolute -I paths and runs
+	// prove. The `REM prereqs:` line is load-bearing: the build-tool validator
+	// requires Perl BUILD files to name every transitive sibling, and `-Deps`
+	// alone does not look like a ../name reference. The set is the same
+	// orderedDeps the Unix BUILD walks above.
+	var buildWindows strings.Builder
+	if len(orderedDeps) == 0 {
+		buildWindows.WriteString("REM prereqs: (none)\n")
+	} else {
+		buildWindows.WriteString("REM prereqs:")
+		for _, dep := range orderedDeps {
+			fmt.Fprintf(&buildWindows, " ../%s", dep)
+		}
+		buildWindows.WriteString("\n")
+	}
+	buildWindows.WriteString("powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\..\\scripts\\run-perl-tests-windows.ps1")
+	if len(orderedDeps) > 0 {
+		buildWindows.WriteString(" -Deps " + strings.Join(orderedDeps, ","))
+	}
+	buildWindows.WriteString("\n")
 
 	// Create directories
 	libDir := filepath.Join(targetDir, "lib", "CodingAdventures")
@@ -1637,7 +1655,7 @@ done_testing;
 		filepath.Join("t", "00-load.t"):                       loadT,
 		filepath.Join("t", "01-basic.t"):                      basicT,
 		"BUILD":                                               build.String(),
-		"BUILD_windows":                                       buildWindows,
+		"BUILD_windows":                                       buildWindows.String(),
 	}
 	for path, content := range files {
 		if err := os.WriteFile(filepath.Join(targetDir, path), []byte(content), 0o644); err != nil {
@@ -2104,7 +2122,7 @@ spec =
 		"test/Spec.hs":                               specHs,
 		"test/" + moduleName + "Spec.hs":             packageSpecHs,
 		"BUILD":                                      haskellDarwinBuild("cabal test"),
-		"BUILD_windows":                              "echo \"haskell support not enabled in windows CI yet -- skipping\"\n",
+		"BUILD_windows":                              "cabal test all\n",
 		"required_capabilities.json":                 capabilityManifest,
 	}
 

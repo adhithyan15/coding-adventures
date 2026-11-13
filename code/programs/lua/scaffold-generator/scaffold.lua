@@ -785,7 +785,8 @@ local function scaffold_one(opts)
             generate_test_lua(pkg_name)
         )
         write_file(target_dir .. "/BUILD", generate_build(direct_deps, ordered_deps, pkg_name))
-        write_file(target_dir .. "/BUILD_windows", 'echo "Skipping Lua on Windows CI"\n')
+        -- A real recipe, never an echo skip (BUILD-002 W6): the same busted run as BUILD.
+        write_file(target_dir .. "/BUILD_windows", generate_build(direct_deps, ordered_deps, pkg_name))
     end
     write_file(target_dir .. "/README.md", generate_readme(pkg_name, description, layer, direct_deps))
     write_file(target_dir .. "/CHANGELOG.md", generate_changelog())
