@@ -198,8 +198,10 @@ type ShardRecord struct {
 	Unknown    string    `json:"unknown_writes"`
 	Record     RawRecord `json:"record"`
 	// Complete is the optional "writes_complete" switch of KILN04 section 7.1
-	// (G1).  It is absent until the classifier reports it (stage 4, PR 4); the
-	// merge models it now so that PR is a one-line flip.
+	// (G1).  The classifier computes it (traced.RawRecord.WritesComplete, a
+	// Go-only field); the recorder sets it from CompleteOf.  Absent means
+	// "unknown", and the merge honours the key only when
+	// Input.HonourWritesComplete is on.
 	Complete *bool `json:"writes_complete,omitempty"`
 }
 
@@ -207,6 +209,15 @@ type ShardRecord struct {
 // form is the classifier's own JSON, so the shard can marshal a
 // *traced.RawRecord directly.
 type RawRecord = traced.RawRecord
+
+// CompleteOf is the value of a shard record's "writes_complete" key for a
+// freshly classified raw record: the classifier's own answer, never a default.
+// (RawRecord.WritesComplete is not in the record's JSON, so the key travels
+// on the shard record, where the merge reads it.)
+func CompleteOf(r RawRecord) *bool {
+	v := r.WritesComplete
+	return &v
+}
 
 // Shard is one decoded shard artifact: its four files plus the artifact's own
 // index (taken from the artifact NAME by the caller, so a record file cannot

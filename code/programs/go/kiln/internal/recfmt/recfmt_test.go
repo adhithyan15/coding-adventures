@@ -545,3 +545,12 @@ func TestPartitionDigest(t *testing.T) {
 		t.Error("short")
 	}
 }
+
+func TestCompleteOfCopiesTheClassifiersAnswer(t *testing.T) {
+	if got := CompleteOf(RawRecord{WritesComplete: true}); got == nil || !*got {
+		t.Error("a complete record must give true")
+	}
+	if got := CompleteOf(RawRecord{}); got == nil || *got {
+		t.Error("the zero record fails closed: false, never absent")
+	}
+}
