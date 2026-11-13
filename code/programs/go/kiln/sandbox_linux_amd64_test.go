@@ -529,6 +529,12 @@ func TestSandboxStraceTraceSetNamesAreValid(t *testing.T) {
 	if len(names) < 20 {
 		t.Fatalf("the trace set has only %d names", len(names))
 	}
+	// The options the recorder relies on, too.
+	for _, opt := range []string{"--kill-on-exit", "--pidns-translation", "--quiet=attach"} {
+		if out, err := exec.Command(straceBin, "-o", os.DevNull, opt, "true").CombinedOutput(); err != nil {
+			t.Errorf("strace does not accept %s: %v: %s", opt, err, strings.TrimSpace(string(out)))
+		}
+	}
 	for _, name := range names {
 		out, err := exec.Command(straceBin, "-o", os.DevNull, "-e", "trace="+name, "true").CombinedOutput()
 		if err != nil {
@@ -561,7 +567,7 @@ func TestSandboxRealStrace(t *testing.T) {
 		t.Fatal(err)
 	}
 	trf := filepath.Join(f.base, "trace.txt")
-	args := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "-e", "signal=none",
+	args := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "--pidns-translation", "-e", "signal=none",
 		"-e", "trace=" + requiredTraceSet, "-o", trf, "--",
 		f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat " + data}
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)

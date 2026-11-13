@@ -322,7 +322,7 @@ func (m *model) buildSpawns(recs []record) *Error {
 		parent, line int
 		reason       string
 	}
-	var bad []badClone
+	var bad, untranslated []badClone
 	for i := range recs {
 		c := recs[i].call
 		if c == nil {
@@ -353,7 +353,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if !c.ret.hasVal || c.ret.value <= 0 || c.ret.value > 1<<30 {
 			return incomplete(recs[i].line, reasonResult)
 		}
-		child := int(c.ret.value)
+		child := c.ret.pid()
+		if m.opts.HelperRoot && !c.ret.hasHost {
+			// Judged below: inside the sandbox's PID namespace a returned pid is
+			// namespace-local, and without strace's translation it cannot be
+			// matched to the lines that follow.
+			untranslated = append(untranslated, badClone{recs[i].pid, recs[i].line, reasonPidnsUntranslated})
+		}
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
 		}
@@ -363,6 +369,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 	for _, b := range bad {
 		if !(m.opts.HelperRoot && m.inRootGroup(b.parent)) {
 			return incomplete(b.line, b.reason)
+		}
+	}
+	// Only the helper root, in strace's own PID namespace, may return a pid
+	// without the translation annotation.
+	for _, u := range untranslated {
+		if !m.inRootGroup(u.parent) {
+			return incomplete(u.line, u.reason)
 		}
 	}
 	if m.opts.HelperRoot {
@@ -631,7 +644,7 @@ func (m *model) apply(rec *record) *Error {
 					// A clone3 of the init's window is tolerated like clone
 					// (the Go runtime makes its threads with it), and tracked
 					// like clone: threads only, never a second process.
-					child := int(c.ret.value)
+					child := c.ret.pid()
 					if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
 						return incomplete(rec.line, reasonHelperSpawn)
 					}
@@ -654,7 +667,7 @@ func (m *model) apply(rec *record) *Error {
 		}
 		// Create the child NOW, copying (or sharing) the parent's cwd as it
 		// is at this moment.
-		if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+		if _, e := m.get(c.ret.pid(), rec.line-1); e != nil {
 			return e
 		}
 	}
@@ -713,7 +726,7 @@ func (m *model) applyHelperRoot(p *proc, rec *record) *Error {
 	}
 	switch {
 	case isSpawn(c.name) && c.ret.ok():
-		child := int(c.ret.value)
+		child := c.ret.pid()
 		if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
 			m.rootSpawn = true
 		}

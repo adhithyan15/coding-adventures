@@ -279,8 +279,8 @@ func TestHelperRootRules(t *testing.T) {
 	// A failed root exec does not count.
 	mustHelper(t, "10  execve(\"/bin/nope\", [\"x\"], 0x0) = -1 ENOENT (No such file or directory)\n"+helperRootSetup+helperInitSetup+helperExec+helperEnd)
 	// The init child spawns (non-thread) in its window.
-	wantReasonOpts(t, helperRootSetup+"11  fork() = 12\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, opts, reasonHelperSpawn)
-	wantReasonOpts(t, helperRootSetup+"11  clone(child_stack=NULL, flags=SIGCHLD) = 12\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, opts, reasonHelperSpawn)
+	wantReasonOpts(t, helperRootSetup+"11  fork() = 2 /* 12 in strace's PID NS */\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, opts, reasonHelperSpawn)
+	wantReasonOpts(t, helperRootSetup+"11  clone(child_stack=NULL, flags=SIGCHLD) = 2 /* 12 in strace's PID NS */\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, opts, reasonHelperSpawn)
 	// The child never execs the step (the re-exec alone is not enough), or its exec fails.
 	wantReasonOpts(t, helperRootSetup+helperInitSetup+helperReExec+"11  +++ exited with 1 +++\n10  +++ exited with 1 +++\n", opts, reasonHelperNoExec)
 	wantReasonOpts(t, helperRootSetup+"11  execve(\"/bin/sh\", [\"sh\"], 0x0) = -1 ENOENT (No such file or directory)\n11  +++ exited with 1 +++\n10  +++ exited with 1 +++\n", opts, reasonHelperNoExec)
@@ -290,7 +290,7 @@ func TestHelperRootRules(t *testing.T) {
 	// the step may spawn.
 	wantReasonOpts(t, ok+"11  mount(\"a\", \"b\", NULL, 0, NULL) = 0\n"+helperEnd, opts, "refused:mount")
 	wantReasonOpts(t, ok+"11  capset(0x1) = 0\n"+helperEnd, opts, "unknown-syscall:capset")
-	mustHelper(t, ok+"11  fork() = 12\n12  +++ exited with 0 +++\n"+helperEnd)
+	mustHelper(t, ok+"11  fork() = 2 /* 12 in strace's PID NS */\n12  +++ exited with 0 +++\n"+helperEnd)
 	// A split setup call (unknown name) is paired and discarded.
 	mustHelper(t, helperRootSetup+"11  mount(\"a\", \"b\", NULL, 0 <unfinished ...>\n11  <... mount resumed>, NULL) = 0\n"+helperExec+helperEnd)
 	// A setup call that parses but is odd does not leak into the events.
@@ -347,7 +347,7 @@ func TestHelperThreads(t *testing.T) {
 	// Init threads made during setup: part of the init group, discarded, and gone
 	// (or silent) by the step's exec.
 	initThread := helperRootSetup +
-		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[13], tls=0x1) = 13\n" +
+		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[3 /* 13 in strace's PID NS */], tls=0x1) = 3 /* 13 in strace's PID NS */\n" +
 		"13  stat(\"/z\", 0x1) = 0\n" +
 		"13  mount(\"a\", \"b\", NULL, 0, NULL) = 0\n" +
 		"13  +++ exited with 0 +++\n"
@@ -357,13 +357,13 @@ func TestHelperThreads(t *testing.T) {
 	}
 	// A window thread still making calls after the step's exec.
 	late := helperRootSetup +
-		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[13], tls=0x1) = 13\n" +
+		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[3 /* 13 in strace's PID NS */], tls=0x1) = 3 /* 13 in strace's PID NS */\n" +
 		helperExec +
 		"13  stat(\"/late\", 0x1) = 0\n13  +++ exited with 0 +++\n" + helperEnd
 	wantReasonOpts(t, late, helperOpts, reasonHelperActivity)
 	// A thread the STEP makes after its exec is part of the step.
 	step := helperRootSetup + helperExec +
-		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[13], tls=0x1) = 13\n" +
+		"11  clone(child_stack=0x7f0000001000, flags=" + threadFlags + ", parent_tid=[3 /* 13 in strace's PID NS */], tls=0x1) = 3 /* 13 in strace's PID NS */\n" +
 		"13  stat(\"/ok\", 0x1) = 0\n13  +++ exited with 0 +++\n" + helperEnd
 	tr = mustHelper(t, step)
 	if len(tr.Events) != 3 || tr.Events[2].Pid != 13 {
@@ -420,11 +420,11 @@ func TestRootGroupWalkIsLinear(t *testing.T) {
 	var b strings.Builder
 	b.WriteString("10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11\n")
 	for k := 11; k < 11+depth; k++ {
-		fmt.Fprintf(&b, "%d  clone(child_stack=0x1, flags=%s, parent_tid=[%d], tls=0x1) = %d\n", k, threadFlags, k+1, k+1)
+		fmt.Fprintf(&b, "%d  clone(child_stack=0x1, flags=%s, parent_tid=[%d], tls=0x1) = %d /* %d in strace's PID NS */\n", k, threadFlags, k+1, k+1, k+1)
 	}
 	deepest := 11 + depth
 	for i := 0; i < forks; i++ {
-		fmt.Fprintf(&b, "%d  fork() = %d\n", deepest, 100000+i)
+		fmt.Fprintf(&b, "%d  fork() = %d /* %d in strace's PID NS */\n", deepest, 100000+i, 100000+i)
 	}
 	lim := Limits{}.withDefaults()
 	recs, root, e := readRecords(strings.NewReader(b.String()), lim, true)
@@ -450,7 +450,7 @@ func TestRootGroupWalkIsLinear(t *testing.T) {
 
 func TestHelperUnshareFSMakesCwdPrivate(t *testing.T) {
 	// A threaded init: a thread shares the cwd, so a plain chdir is a race ...
-	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 12\n" +
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 2 /* 12 in strace's PID NS */\n" +
 		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
 	body := helperRootSetup + thread + "11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec +
 		"12  +++ exited with 0 +++\n" + helperEnd
@@ -464,5 +464,60 @@ func TestHelperUnshareFSMakesCwdPrivate(t *testing.T) {
 	// A failed unshare, or one without CLONE_FS, changes nothing.
 	for _, u := range []string{"11  unshare(CLONE_FS) = -1 EPERM (Operation not permitted)\n", "11  unshare(CLONE_NEWNS) = 0\n", "11  unshare(0x20000) = 0\n"} {
 		wantReasonOpts(t, helperRootSetup+thread+u+"11  chdir(\"/elsewhere\") = 0\n"+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
+	}
+}
+
+func TestPidnsTranslationOfSpawns(t *testing.T) {
+	// Inside the sandbox's PID namespace a returned pid is namespace-local
+	// ("= 2") and strace --pidns-translation says which host pid it is.  The
+	// spawn is recorded under the HOST pid, the one the line prefixes use.
+	note := " /* 12 in strace's PID NS */"
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + ", parent_tid=[2" + note + "], tls=0x1) = 2" + note + "\n" +
+		"12  stat(\"/z\", 0x1) = 0\n12  +++ exited with 0 +++\n"
+	tr := mustHelper(t, helperRootSetup+thread+helperExec+helperEnd)
+	if p := tr.Procs[12]; p == nil || p.Parent != 11 {
+		t.Fatalf("the translated thread: %+v", tr.Procs[12])
+	}
+	if tr.Procs[2] != nil {
+		t.Error("the namespace-local number became a process")
+	}
+	// Without the annotation the local number cannot be matched to anything: a
+	// spawn by the init or its descendants must carry it.
+	bare := "11  clone(child_stack=0x1, flags=" + threadFlags + ", tls=0x1) = 2\n"
+	wantReasonOpts(t, helperRootSetup+bare+helperExec+helperEnd, helperOpts, reasonPidnsUntranslated)
+	// ... and so must fork and vfork.
+	for _, call := range []string{"fork()", "vfork()", "clone(child_stack=NULL, flags=SIGCHLD)"} {
+		wantReasonOpts(t, helperRootSetup+"11  "+call+" = 2\n"+helperExec+helperEnd, helperOpts, reasonPidnsUntranslated)
+	}
+	// The helper root lives in strace's own namespace: no annotation, no fault.
+	mustHelper(t, helperRootExec+"10  clone(child_stack=0x1, flags="+threadFlags+", tls=0x1) = 20\n20  +++ exited with 0 +++\n"+helperRootSetup[len(helperRootExec):]+helperInitSetup+helperExec+helperEnd)
+}
+
+func TestPidnsNoteIsExact(t *testing.T) {
+	cases := map[string]bool{
+		" /* 5030 in strace's PID NS */":        true,
+		"/* 5030 in strace's PID NS */":         true,
+		" /* 0 in strace's PID NS */":           false,
+		" /* -3 in strace's PID NS */":          false,
+		" /* x in strace's PID NS */":           false,
+		" /* 5030 in strace's PID NS*/":         false,
+		" /* 5030 in another PID NS */":         false,
+		" /* 5030 */":                           false,
+		" // 5030 in strace's PID NS */":        false,
+		" /* 12345678901 in strace's PID NS */": false,
+		"":                                      false,
+	}
+	for in, want := range cases {
+		if _, _, ok := parsePidnsNote(in); ok != want {
+			t.Errorf("%q: %v, want %v", in, ok, want)
+		}
+	}
+	// A stray comment after a result is still refused.
+	if _, r := parseResult("= 5 /* surprise */"); r == "" {
+		t.Error("an unknown comment was accepted")
+	}
+	r, why := parseResult("= 2 /* 5030 in strace's PID NS */")
+	if why != "" || r.value != 2 || r.host != 5030 || r.pid() != 5030 {
+		t.Errorf("%+v %q", r, why)
 	}
 }

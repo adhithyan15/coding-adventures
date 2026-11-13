@@ -23,6 +23,19 @@ func clone3Split(pid, child int, flags string) string {
 		itoa(pid) + "  <... clone3 resumed> => {parent_tid=[" + itoa(child) + "]}, 88) = " + itoa(child) + "\n"
 }
 
+// The same inside the sandbox's PID namespace, as strace --pidns-translation
+// prints them: the returned tid is namespace-local (2) and the host pid follows.
+func ns(host int) string { return " /* " + itoa(host) + " in strace's PID NS */" }
+
+func clone3InlineNS(pid, host int, flags string) string {
+	return itoa(pid) + "  clone3({flags=" + flags + realClone3Tail + " => {parent_tid=[2" + ns(host) + "]}, 88) = 2" + ns(host) + "\n"
+}
+
+func clone3SplitNS(pid, host int, flags string) string {
+	return itoa(pid) + "  clone3({flags=" + flags + realClone3Tail + " <unfinished ...>\n" +
+		itoa(pid) + "  <... clone3 resumed> => {parent_tid=[2" + ns(host) + "]}, 88) = 2" + ns(host) + "\n"
+}
+
 func itoa(n int) string {
 	if n == 0 {
 		return "0"
@@ -73,23 +86,23 @@ func TestClone3ThreadsOfTheHelperRoot(t *testing.T) {
 func TestClone3InTheInitWindowIsTrackedLikeClone(t *testing.T) {
 	// A thread by clone3: tolerated, and a later chdir is then a cwd-race with
 	// it (it shares the cwd) until unshare(CLONE_FS).
-	thr := clone3Inline(11, 20, realThreadFlags) + "20  futex(0x1, FUTEX_WAIT, 0, NULL) = 0\n"
+	thr := clone3InlineNS(11, 20, realThreadFlags) + "20  futex(0x1, FUTEX_WAIT, 0, NULL) = 0\n"
 	exit := "20  +++ exited with 0 +++\n"
 	ok := helperRootSetup + thr + "11  unshare(CLONE_FS) = 0\n11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec + exit + helperEnd
 	mustHelper(t, ok)
 	racy := helperRootSetup + thr + "11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec + exit + helperEnd
 	wantReasonOpts(t, racy, helperOpts, reasonCwdRace)
 	// A split clone3 too.
-	mustHelper(t, helperRootSetup+clone3Split(11, 21, realThreadFlags)+"21  +++ exited with 0 +++\n"+helperExec+helperEnd)
+	mustHelper(t, helperRootSetup+clone3SplitNS(11, 21, realThreadFlags)+"21  +++ exited with 0 +++\n"+helperExec+helperEnd)
 	// Never a second process in the init's window: helper-spawn.
-	wantReasonOpts(t, helperRootSetup+clone3Inline(11, 22, "CLONE_VM|CLONE_VFORK")+helperExec+"22  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonHelperSpawn)
+	wantReasonOpts(t, helperRootSetup+clone3InlineNS(11, 22, "CLONE_VM|CLONE_VFORK")+helperExec+"22  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonHelperSpawn)
 }
 
 func TestClone3PolicyIsUnchangedOutsideTheSetupWindows(t *testing.T) {
 	// The step's own clone3 is refused (the sandbox filter answers ENOSYS, so
 	// a clone3 in a trace of the step means the filter failed).
 	step := helperRootSetup + helperInitSetup + helperReExec + helperExec
-	wantReasonOpts(t, step+clone3Inline(11, 30, realThreadFlags)+"30  +++ exited with 0 +++\n"+helperEnd, helperOpts, "refused:clone3")
+	wantReasonOpts(t, step+clone3InlineNS(11, 30, realThreadFlags)+"30  +++ exited with 0 +++\n"+helperEnd, helperOpts, "refused:clone3")
 	// And without the helper option, any clone3 is refused.
 	_, err := parseAt(t, "/r", "1  clone3({flags=CLONE_VM"+realClone3Tail+", 88) = -1 ENOSYS (Function not implemented)\n1  +++ exited with 0 +++\n", Options{})
 	if err == nil || err.Error() != "trace-incomplete:refused:clone3" {
@@ -123,4 +136,16 @@ func TestClone3StructsItCannotDecodeAreCloneFlags(t *testing.T) {
 	}
 	// A failed clone3 spawns nothing, so there is nothing to decode.
 	mustHelper(t, helperRootSetup+"11  clone3({flags=CLONE_VM, exit_signal=0}, 88) = -1 ENOSYS (Function not implemented)\n"+helperExec+helperEnd)
+}
+
+func TestClone3UntranslatedInsideTheNamespaceIsRefused(t *testing.T) {
+	// The real failure: the init's clone3 returned "2" and the thread's own
+	// lines are prefixed with its host pid.  Without the translation the spawn
+	// cannot be matched; the parser refuses rather than guess.
+	wantReasonOpts(t, helperRootSetup+clone3Inline(11, 2, realThreadFlags)+"12  stat(\"/z\", 0x1) = 0\n"+helperExec+helperEnd, helperOpts, reasonPidnsUntranslated)
+	// With it, the host pid is the child and the local tid is never a process.
+	tr := mustHelper(t, helperRootSetup+clone3InlineNS(11, 12, realThreadFlags)+"12  stat(\"/z\", 0x1) = 0\n12  +++ exited with 0 +++\n"+helperExec+helperEnd)
+	if tr.Procs[12] == nil || tr.Procs[2] != nil {
+		t.Fatalf("procs %v", tr.Order)
+	}
 }

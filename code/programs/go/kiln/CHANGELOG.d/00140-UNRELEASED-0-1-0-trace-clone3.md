@@ -14,3 +14,10 @@
   list and the closed table (glibc's is `utimensat(fd, NULL, ...)`, handled).
 - `TestSandboxRealStrace` now prints the lines around a refused trace line, so
   the next unknown shape needs no second CI run to find.
+- `internal/trace`: PID namespaces. Inside the sandbox a `clone`, `clone3`, `fork`
+  or `vfork` returns a namespace-local pid while strace prefixes lines with host
+  pids, so the first real trace was an `orphan-pid`. The recorder and the
+  real-strace test now run strace with `--pidns-translation`; the parser reads
+  `= 2 /* 5030 in strace's PID NS */` (exactly) and records the spawn under the
+  host pid. A spawn by the init, the step or any descendant without the note is
+  `pidns-untranslated`: fail closed, never trust a local number.

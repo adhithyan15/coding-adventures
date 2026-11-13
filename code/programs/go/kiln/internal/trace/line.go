@@ -87,6 +87,44 @@ type result struct {
 	ann     []byte // -y annotation on a returned descriptor
 	hasAnn  bool
 	unknown bool // "= ?"
+	// host is the pid in strace's own PID namespace, from the annotation
+	// `= 2 /* 5030 in strace's PID NS */` that --pidns-translation adds to a
+	// pid returned inside another PID namespace; hasHost says it was printed.
+	host    int64
+	hasHost bool
+}
+
+// pid is the pid a spawn returned, in the namespace the trace's line prefixes
+// use: the translated host pid when there is one, else the printed value.
+func (r result) pid() int {
+	if r.hasHost {
+		return int(r.host)
+	}
+	return int(r.value)
+}
+
+// parsePidnsNote reads ` /* N in strace's PID NS */` at the start of s (leading
+// spaces allowed) and returns N and the rest.  It is exact: any other comment
+// is not recognised, and then fails the result parse like any stray text.
+func parsePidnsNote(s string) (n int64, rest string, ok bool) {
+	t := strings.TrimLeft(s, " ")
+	const open, tail = "/* ", " in strace's PID NS */"
+	if !strings.HasPrefix(t, open) {
+		return 0, s, false
+	}
+	t = t[len(open):]
+	k := 0
+	for k < len(t) && t[k] >= '0' && t[k] <= '9' {
+		k++
+	}
+	if k == 0 || k > 10 || !strings.HasPrefix(t[k:], tail) {
+		return 0, s, false
+	}
+	v, err := strconv.ParseInt(t[:k], 10, 64)
+	if err != nil || v <= 0 {
+		return 0, s, false
+	}
+	return v, t[k+len(tail):], true
 }
 
 func (r result) ok() bool { return !r.unknown && r.errno == "" }
@@ -244,6 +282,10 @@ func parseResult(s string) (result, string) {
 		}
 		r.value, r.hasVal = v, true
 		s = s[k:]
+		if h, rest, ok := parsePidnsNote(s); ok && v > 0 {
+			r.host, r.hasHost = h, true
+			s = rest
+		}
 		if strings.HasPrefix(s, "<") {
 			if v < 0 {
 				return r, reasonResult

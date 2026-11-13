@@ -205,9 +205,17 @@ io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount,\
 fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace,\
 process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark,\
 fchmod,fchown,fsetxattr,fremovexattr \
-       --kill-on-exit -o <trace-file> -- kiln sandbox-exec -- sh -c <line>
+       --kill-on-exit --pidns-translation \
+       -o <trace-file> -- kiln sandbox-exec -- sh -c <line>
 ```
 
+- `--pidns-translation` (strace 5.9 or later) makes strace print the pid a
+  tracee gets back from `fork`, `vfork`, `clone` and `clone3` **inside the
+  sandbox's PID namespace** with its host pid:
+  `= 2 /* 5030 in strace's PID NS */`, and in `clone3`'s output struct
+  `parent_tid=[2 /* 5030 in strace's PID NS */]`. Every line is prefixed with
+  the host pid, so without the translation the local number cannot be matched
+  to the child's lines (§4.5).
 - `--kill-on-exit` makes strace kill its tracees if it dies. Without it a
   strace that is signalled detaches them and the step runs on untraced. The
   sandbox also puts the step in a session and process group of its own, so
@@ -516,6 +524,19 @@ first successful exec of a non-Kiln path is the step.**
     will need before it spawns the init child;
   - live at a `HelperExe` path **outside the repository tree**. The parser
     only compares paths; the caller verifies this.
+- **PID namespaces.** The init and everything under it run in a PID namespace
+  of their own, so a pid returned by their `fork`, `vfork`, `clone` or `clone3`
+  is namespace-local, while the trace's line prefixes, exit lines and the
+  root's own returns are host pids. With `--pidns-translation` (§4.3) the
+  returned pid is followed by `/* N in strace's PID NS */`, and the spawn is
+  recorded under that **host** pid `N`, never under the local number. The note
+  is parsed exactly; any other comment after a result is `result`. **A spawn
+  whose caller is not in the root group (the init, its threads, the step and
+  everything it spawns) must carry the note**, otherwise the trace is
+  `pidns-untranslated`: without it the spawn cannot be matched to its child's
+  lines, and trusting the local number could attribute them to the wrong
+  process. The root group lives in strace's own namespace and prints none.
+  Exit lines use host pids; `wait4`, `kill` and `tgkill` are ignored-class.
 - **Flags.** `AT_EMPTY_PATH` is read from a numeric or hex flags value too
   (bit `0x1000`); a flags field that cannot be decoded is `flags`.
 - **Exit status and daemons.** The step's status is the init child's
@@ -842,6 +863,9 @@ version of this section led to these. Each is a decision, not a sketch.
   blocking and exits 125 if it sees end of file: a root that died before the
   signal was set left nobody to signal the init. Teardown does not rest on the
   parent-death signal alone.
+- **`--pidns-translation` is required.** The recorder and the real-strace test
+  run strace with it, and the parser refuses an untranslated spawn inside the
+  namespace (§4.5), so a missing flag fails closed. `TestSandboxStraceTraceSetNamesAreValid` checks the runner's strace accepts it.
 - **`clone3` in the helper's groups.** The Go runtime makes its threads with
   `clone3`, which strace 6.8 prints as a struct with an output annotation:
   `clone3({flags=A|B, child_tid=0x.., ..., tls=0x..} => {parent_tid=[N]}, 88) = N`
