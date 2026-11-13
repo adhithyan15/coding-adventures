@@ -264,6 +264,7 @@ On Windows, use the compiled `.exe`:
 | `-shard-index` | -1 | With `-plan-file`, run only that shard |
 | `-prune-leaf-targets` | false | Delete a leaf package's own Cargo `target/` once it has built (CI disk budget) |
 | `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
+| `-emit-kiln-steps` | (none) | Only with `-emit-kiln-graph`: also write the `kiln-legacy-steps/1` export (per package, the lines `executor.EffectiveStepLines` returns for this OS) from the same discovery pass; KILN04 section 4.8 |
 | `-exec-wrapper` | (none) | JSON array of strings: a prefix for every BUILD step, run as `wrapper... sh -c <line>`. The wrapper (not the BUILD) gets `KILN_ACTION`, `KILN_STEP`, `KILN_STEP_COUNT`. Incompatible with `-clippy` and `-prune-leaf-targets` |
 | `-emit-results` | (none) | After the run, write the `kiln-legacy-results/1` record (status and step counts per package) to this path |
 

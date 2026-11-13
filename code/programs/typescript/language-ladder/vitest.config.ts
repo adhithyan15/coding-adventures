@@ -1,6 +1,7 @@
 import { defineConfig } from "vitest/config";
 import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
+import { watchCurriculumSourcesForVitest } from "./vitest-mode.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
 
 // The curriculum — both the script JSON and the ~7,500 lesson markdown files —
@@ -15,7 +16,14 @@ const curriculumRoot = path.join(repoRoot, "code", "learning", "human-languages"
 
 export default defineConfig({
   plugins: [
-    humanLanguageLedgerPlugin({ curriculumRoot }),
+    // A one-shot run validates the same canonical shards but never needs HMR.
+    // Registering tens of thousands of watch paths on Windows used most of
+    // the curriculum suite's 60-second hook budget before its assertions ran.
+    // Keep watches for interactive `vitest`/`vitest --watch` sessions.
+    humanLanguageLedgerPlugin({
+      curriculumRoot,
+      watchSources: watchCurriculumSourcesForVitest(process.argv),
+    }),
     scriptInventoryPlugin({ curriculumRoot }),
   ],
   server: {

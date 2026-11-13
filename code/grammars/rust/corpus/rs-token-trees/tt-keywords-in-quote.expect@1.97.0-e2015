@@ -1,0 +1,9 @@
+NAME quote
+BANG !
++LBRACE {
++KEYWORD abstract
++NAME try
++KEYWORD yield
++RAW_IDENT r#try
++NAME gen
++RBRACE }

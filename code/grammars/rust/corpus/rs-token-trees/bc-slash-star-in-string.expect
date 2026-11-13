@@ -1,0 +1,11 @@
+KEYWORD let
++NAME s
++EQ =
++STR_LIT "/*"
+SEMI ;
++KEYWORD let
++NAME t
++EQ =
++STR_LIT "*/"
+SEMI ;
++NAME x

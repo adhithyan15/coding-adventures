@@ -4,6 +4,46 @@
 
 ### Fixed
 
+- No weak randomness. `random_hex()` no longer falls back to a clock/address
+  mix when `getrandom` fails or reads short; it returns an error. The private
+  directory creation reports NOT-LIVE `RCG013` ("no OS randomness"), and a
+  nonce that cannot be drawn mid-run stops the gate with a panic rather than
+  proceeding with a predictable value.
+- Private working directories are now created exclusively and removed on every
+  exit path. (1) The `rcg-scratch` / `rcg-container` directory name is
+  `<name>-<pid>-<64 random bits>` (the same source as the run nonces) and is
+  made with a non-recursive `mkdir` at mode 0700, never `create_dir_all`: with
+  `evidence_dir == None` it sits under shared `/tmp`, where a pre-planted
+  symlink at the predictable `<name>-<pid>` was followed and strace output
+  could be redirected. An existing path of any kind (symlink, file,
+  directory) is now refused and the gate reports NOT-LIVE `RCG013`; it is
+  never reused. (2) An RAII `ScratchDir` guard deletes the directory on drop,
+  so the early `NOT-LIVE` returns (no strace, strace cannot trace, no
+  `current_exe`, child will not spawn), a panic and the container ring all
+  clean up; only SIGKILL can still leave one. No control, policy, `RCG009` or
+  `RCG013` behaviour changed. Tests: in-module unit tests in `harness.rs`
+  and two new cases in `tests/selftest_fail_closed.rs`.
+- Fail closed on a missing trace. An observed run whose strace trace was
+  absent, unreadable or empty used to be analysed as an empty string, i.e.
+  "observed nothing, saw no violations". The main run, every control run
+  (full and observe-only), the env-leak run and the known-gap run now add an
+  `RCG013` failure ("observer produced no trace (<which run>: <why>)"), in
+  strict and non-strict mode alike. Regression test
+  `tests/selftest_fail_closed.rs` (a `strace` shim that leaves no trace,
+  either always or only for controls). `RCG013` keeps its id; its meaning now
+  covers an unusable trace, documented in the README and VER08b.
+- Scratch (`rcg-scratch`) and container (`rcg-container`) working directories
+  are now private to each gate process (`<name>-<pid>`). They live under the
+  adopter's `evidence_dir`, which for Rust adopters is the workspace-wide
+  `CARGO_TARGET_TMPDIR`, and are removed with `remove_dir_all`. Two gates
+  running in parallel (the build tool does this, e.g. `ct-compare` beside
+  `gf256`) shared one directory: the first to finish deleted the directory the
+  second was writing `strace -o` traces into, so every later observed run had
+  no trace and `RCG009` reported the remaining controls (io-uring, bpf,
+  env-leak on CI) as "NOT detected" while enforce-only runs still passed.
+  Regression test: `tests/selftest_concurrent.rs` (two staggered gates, one
+  shared `evidence_dir`; failed 3/3 before the fix). The jail itself is
+  unchanged: no control, check or `RCG009` condition was touched.
 - Launcher now closes every inherited descriptor above stderr between `fork`
   and `exec` (`close_range`, with a `close` loop fallback). `Command` only
   closes `O_CLOEXEC` descriptors, and the GitHub Actions runner leaks plain

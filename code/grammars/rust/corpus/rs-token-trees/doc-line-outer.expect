@@ -1,0 +1,7 @@
+OUTER_DOC /// outer
++KEYWORD fn
++NAME f
+LPAREN (
+RPAREN )
++LBRACE {
+RBRACE }

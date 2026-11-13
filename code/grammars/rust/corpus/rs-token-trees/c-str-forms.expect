@@ -1,0 +1,3 @@
+C_STR_LIT c"a"
++RAW_C_STR_LIT cr"b"
++RAW_C_STR_LIT cr#"c"#

@@ -1,0 +1,6 @@
+KEYWORD let
++NAME s
++EQ =
++RAW_STR_LIT r#"/* not a comment"#
+SEMI ;
++NAME y

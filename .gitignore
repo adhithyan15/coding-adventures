@@ -52,7 +52,6 @@ yarn-error.log*
 
 # Rust
 target/
-Cargo.lock
 
 # Swift / Xcode
 .build/

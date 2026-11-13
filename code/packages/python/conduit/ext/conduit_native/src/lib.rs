@@ -115,7 +115,9 @@ extern "C" {
     );
 
     // Borrow the UTF-8 bytes from a Python str (no allocation; lifetime = object).
-    fn PyUnicode_AsUTF8(o: PyObjectPtr) -> *const c_char;
+    // PyUnicode_AsUTF8 is not in the stable ABI (python3.lib, which the
+    // Windows build links, does not export it); the AndSize form is.
+    fn PyUnicode_AsUTF8AndSize(o: PyObjectPtr, size: *mut isize) -> *const c_char;
 
     // str(obj) → Python str (new reference).
     fn PyObject_Str(obj: PyObjectPtr) -> PyObjectPtr;
@@ -799,7 +801,8 @@ unsafe fn extract_exception_message() -> String {
     let msg = if !pvalue.is_null() {
         let s = PyObject_Str(pvalue);
         let text = if !s.is_null() {
-            let ptr = PyUnicode_AsUTF8(s);
+            let mut size: isize = 0;
+            let ptr = PyUnicode_AsUTF8AndSize(s, &mut size);
             let r = if !ptr.is_null() {
                 CStr::from_ptr(ptr).to_string_lossy().into_owned()
             } else {

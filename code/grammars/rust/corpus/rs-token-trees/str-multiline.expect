@@ -1,0 +1,2 @@
+STR_LIT "a\nb"
++STR_LIT "c\\\n    d"

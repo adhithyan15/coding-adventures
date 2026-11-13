@@ -1,3 +1,4 @@
 # needs-toolchain: rust
 # Keep Cargo, staging and prove on the same native Windows Perl under Git Bash.
 powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\check-perl-extension-windows.ps1 -ExtensionName Conduit
+# t/05-xsub-errors.t drives every native die path; it only proves the Windows unwind here.

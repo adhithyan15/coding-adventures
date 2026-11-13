@@ -12,9 +12,9 @@
   XSUB registered with it must not reach `die` on Windows). Tests 1-42 of the smoke
   test, everything up to the first `die`, had already passed on the real Windows Perl.
   Linux and the Wine/GNU run are unaffected because there `longjmp` does not unwind.
-  **Known follow-up:** the XSUBs in `perl/conduit` call `perl_bridge::die` for
-  argument-count misuse from plain `extern "C"` functions and should move to
-  `extern "C-unwind"` + `newXS_unwind`; no test reaches those paths today.
+  **Resolved:** the `perl/conduit` XSUBs that raise argument-count and bind errors
+  now use `extern "C-unwind"` + `newXS_unwind`, and `perl/conduit/t/05-xsub-errors.t`
+  reaches every one of those paths.
 
 - `BUILD`/`BUILD_windows` build, lint and test instead of echoing. Both recipes were
   `echo "perl-bridge: compile-only crate (requires Perl shared library to link)"`, so
