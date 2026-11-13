@@ -15822,7 +15822,7 @@ dependencies = [
 
 [[package]]
 name = "x509-certificate-path-reviewed-anchor-binding"
-version = "0.2.0"
+version = "0.4.0"
 dependencies = [
  "der-asn1",
  "x509-certificate",

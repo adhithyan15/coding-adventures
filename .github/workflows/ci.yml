@@ -738,6 +738,8 @@ jobs:
       - name: Set up Rust for ADJ and capability-cage contracts
         if: needs.detect.outputs.run_contracts_adj_stdlib == 'true' || needs.detect.outputs.run_contracts_capability_cage == 'true'
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Install Python contract dependencies
         run: python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
@@ -754,7 +756,7 @@ jobs:
       - name: Set up Node for the document-shard registry
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       - name: Verify sharded documents rebuild
         run: |
@@ -809,6 +811,13 @@ jobs:
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_cargo_lockfiles.py'
+          # Every toolchain version is exact, and every workflow's version
+          # inputs agree with mise.toml (or a reasoned deviation in
+          # code/specs/data/toolchain-pins.json). A floating `stable` or
+          # `'3.13'` lets an upstream release change a result under an
+          # unchanged commit.
+          python3 code/scripts/toolchain_pins.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_toolchain_pins.py'
           # Every third-party Python package is pinned with hashes in two
           # generated constraints files. This fails when they are stale or when a
           # dependency has no pin (an unlisted name would float silently).
@@ -1048,7 +1057,7 @@ jobs:
       - name: Set up Python for language frontend oracle replay
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
 
       - name: Verify language frontend neutral fixtures
         run: |
@@ -1185,13 +1194,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "latest"
+          version: "0.13.7"
           cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
@@ -1203,13 +1212,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       - name: Use npm with the peer dependency resolver fix
         run: npm install --global npm@11.13.0
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1221,9 +1232,9 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Run every D18F manifest consumer and verify regeneration
@@ -1249,13 +1260,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "latest"
+          version: "0.13.7"
           cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
@@ -1267,13 +1278,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       - name: Use npm with the peer dependency resolver fix
         run: npm install --global npm@11.13.0
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1285,9 +1298,9 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Run every D18P manifest consumer and verify regeneration
@@ -1313,13 +1326,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "latest"
+          version: "0.13.7"
           cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
@@ -1331,13 +1344,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       - name: Use npm with the peer dependency resolver fix
         run: npm install --global npm@11.13.0
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1349,9 +1364,9 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Run every D18Q manifest consumer and verify regeneration
@@ -1384,13 +1399,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       - name: Install uv
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "latest"
+          version: "0.13.7"
           cache-dependency-glob: 'code/**/pyproject.toml'
 
       - name: Set up Go
@@ -1402,13 +1417,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       - name: Use npm with the peer dependency resolver fix
         run: npm install --global npm@11.13.0
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Set up Elixir
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -1420,9 +1437,9 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Run every D18T manifest consumer and verify regeneration
@@ -1457,9 +1474,9 @@ jobs:
           filter: blob:none
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Regenerate every Ruby _grammar.rb from current .tokens/.grammar source
@@ -1885,6 +1902,8 @@ jobs:
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       - name: Run the platform library's headless harness
         shell: bash
@@ -2382,13 +2401,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       # Every lane builds a Rust engine. cargo-ndk and the Android targets
       # are added by the Android steps themselves.
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          toolchain: "1.99.1"
 
       # cairo is a transitive native dependency of the Mosaic engines (see
       # "Install native Paint VM dependencies" in `build`).
@@ -3953,7 +3974,7 @@ jobs:
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
         uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.13.17'
           allow-prereleases: true
 
       - name: Test ADJ Windows Job containment
@@ -3969,7 +3990,7 @@ jobs:
         if: needs.detect.outputs.needs_python == 'true'
         uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          version: "latest"
+          version: "0.13.7"
           cache-dependency-glob: 'code/**/pyproject.toml'
 
       # ── Lua must be set up BEFORE Ruby on Windows ──────────────
@@ -4166,21 +4187,21 @@ jobs:
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
-        uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
-          ruby-version: '3.4'
+          ruby-version: '3.4.12'
           bundler-cache: false
 
       - name: Install bundler
         if: needs.detect.outputs.needs_ruby == 'true'
         shell: bash
-        run: gem install bundler
+        run: gem install bundler --version 4.0.24
 
       - name: Set up Node.js
         if: needs.detect.outputs.needs_typescript == 'true' || needs.detect.outputs.needs_venture_windows == 'true'
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.23.5'
 
       # npm 10.9.8 crashes in Arborist while resolving Vitest peer dependencies
       # ("Cannot read properties of null (reading 'edgesOut')").
@@ -4236,17 +4257,21 @@ jobs:
 
       - name: Set up Rust
         if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        # Uses the `stable` channel (matching the rest of this repo's Rust CI).
-        # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
-        # release, so a new Rust release can surface new lints on `main` — treat
-        # that as normal maintenance (run `cargo clippy --fix` + resolve). Pinning
-        # to a specific version was tried but broke BUILDs that invoke
-        # `rustup run stable` / `rustup target add` (wasm + embedded firmware),
-        # because a version-pinned default toolchain is not the `stable` alias
-        # those scripts expect. Reproduce CI's clippy locally with the *current*
-        # stable (`rustup update stable`), not a stale cached toolchain.
+        # Installs the exact Rust release named by `rust` in the root mise.toml
+        # (code/scripts/toolchain_pins.py fails CI if the two disagree). The
+        # floating `stable` channel let a Rust release change clippy's lints,
+        # and the compiler under every cached result, on a day nothing in the
+        # repo changed. Bumping Rust is now a PR: edit mise.toml and every
+        # `toolchain:` input together, then fix any new clippy lints there.
+        #
+        # An earlier attempt to pin broke BUILDs that ran `rustup run stable`,
+        # because a pinned default toolchain is not the `stable` alias. Those
+        # BUILDs now call `cargo` directly, and toolchain_pins.py rejects
+        # `rustup run stable` and `+stable` so the alias cannot creep back.
+        # `rustup target add` adds the target to the active (pinned) toolchain.
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
         with:
+          toolchain: "1.99.1"
           # dtolnay/rust-toolchain installs the minimal profile, which omits
           # clippy; the -clippy gate needs it, so request it explicitly.
           #
@@ -4657,8 +4682,8 @@ jobs:
         if: needs.detect.outputs.needs_haskell == 'true'
         uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
         with:
-          ghc-version: '9.4'
-          cabal-version: '3.10'
+          ghc-version: '9.4.8'
+          cabal-version: '3.10.3.0'
 
       # GHC links with `-fuse-ld=gold`. Ubuntu 22.04/24.04 ship ld.gold inside
       # `binutils`, but on 26.04 (what `ubuntu-latest` now resolves to) gold was

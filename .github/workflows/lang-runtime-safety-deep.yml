@@ -106,21 +106,21 @@ jobs:
 
       - name: Install Rust nightly with Miri
         run: |
-          rustup toolchain install nightly --component miri
-          rustup +nightly component add rust-src
-          cargo +nightly miri --version
+          rustup toolchain install nightly-2026-11-10 --component miri
+          rustup +nightly-2026-11-10 component add rust-src
+          cargo +nightly-2026-11-10 miri --version
 
       - name: Miri — twig-vm (full suite, may take 60-90 min)
         working-directory: code/packages/rust
-        run: cargo +nightly miri test -p twig-vm --no-fail-fast
+        run: cargo +nightly-2026-11-10 miri test -p twig-vm --no-fail-fast
 
       # Belt-and-braces: also re-run the blocking suite on main
       # nightly, so a regression introduced by a merge that
       # bypassed CI (force-push, admin merge) shows up here.
       - name: Miri — lang-runtime-core
         working-directory: code/packages/rust
-        run: cargo +nightly miri test -p lang-runtime-core --no-fail-fast
+        run: cargo +nightly-2026-11-10 miri test -p lang-runtime-core --no-fail-fast
 
       - name: Miri — dynval-runtime
         working-directory: code/packages/rust
-        run: cargo +nightly miri test -p dynval-runtime --no-fail-fast
+        run: cargo +nightly-2026-11-10 miri test -p dynval-runtime --no-fail-fast
