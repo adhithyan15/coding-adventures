@@ -1,0 +1,3 @@
+//// four slashes
+//
+fn f() {}

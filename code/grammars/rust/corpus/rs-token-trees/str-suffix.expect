@@ -1,0 +1,3 @@
+STR_LIT "a"suffix
++CHAR_LIT 'c'x
++INT_LIT 1u8

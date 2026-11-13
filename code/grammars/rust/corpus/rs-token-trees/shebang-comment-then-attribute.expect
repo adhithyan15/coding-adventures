@@ -1,0 +1,14 @@
+POUND #
+BANG !
++LBRACKET [
+NAME allow
+LPAREN (
+NAME dead_code
+RPAREN )
+RBRACKET ]
++KEYWORD fn
++NAME main
+LPAREN (
+RPAREN )
++LBRACE {
+RBRACE }

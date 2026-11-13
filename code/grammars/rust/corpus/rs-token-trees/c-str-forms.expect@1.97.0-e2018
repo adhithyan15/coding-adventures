@@ -1,0 +1,8 @@
+NAME c
+STR_LIT "a"
++NAME cr
+STR_LIT "b"
++NAME cr
+POUND #
+STR_LIT "c"
+POUND #

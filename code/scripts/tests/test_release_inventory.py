@@ -1211,7 +1211,15 @@ class RustInventoryTest(Fixture):
         self.assertFalse(any(r.startswith("release-") for r in rows))
 
     def check(self, lines: list[str]) -> list[str]:
-        return self.errors("rust", lines)
+        """Check `lines` as the rust inventory, next to the real pair files.
+
+        A row past stage `none` needs its pair files (slice A4 wrote the first
+        four), so the real ones are copied beside the temporary inventory.
+        """
+        path = self.write("rust", lines)
+        for pair in REPO.glob("code/grammars/rust/rust1.97.0-e*.*"):
+            (path.parent / pair.name).write_bytes(pair.read_bytes())
+        return release_inventory.check_inventory(path).errors
 
     def assert_rust_error(self, lines: list[str], fragment: str) -> None:
         errors = self.check(lines)
@@ -1291,7 +1299,7 @@ class RustInventoryTest(Fixture):
 
     def test_rust_rules_apply_only_to_the_rust_directory(self) -> None:
         lines = self.real_lines()
-        self.assertEqual(self.errors("rust", lines), [])
+        self.assertEqual(self.check(lines), [])
         # The generic edition rules still hold elsewhere, but ID rules do not.
         lang = edition_lines([erow("nightly-1", "2000-06-01", "a4", "2015;2018")])
         self.assertEqual(self.errors("lang", lang), [])
