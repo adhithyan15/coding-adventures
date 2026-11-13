@@ -8,5 +8,5 @@ npm --prefix ../chacha20-poly1305 install --silent
 npm --prefix ../md5 install --silent
 npm --prefix ../sha1 install --silent
 npm --prefix ../uuid install --silent
-npm install --silent
+npm ci --silent
 npx vitest run --coverage

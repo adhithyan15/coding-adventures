@@ -30,9 +30,13 @@
 # script is chatty on purpose and exits with prove's own exit code.
 #
 # Parameters
-#   -Deps   comma separated names of sibling packages under code\packages\perl
+#   -Deps   comma separated names of packages under code\packages\perl
 #           whose lib\ directory must be on @INC (the same set the Unix BUILD
-#           lists as ../<name>/lib).
+#           lists as ../<name>/lib, or ../../../packages/perl/<name>/lib from a
+#           program under code\programs\perl).  The names are always resolved
+#           against code\packages\perl, so packages and programs share this
+#           helper.  Omit it for a program whose scripts and tests put their own
+#           `use lib` lines in front of the monorepo libraries.
 
 param(
     [string]$Deps = ''
@@ -55,7 +59,10 @@ function Invoke-Native([scriptblock]$Command) {
 try {
     # The build tool runs every recipe line in the package directory.
     $packageDir = (Get-Location).ProviderPath
-    $perlRoot = Split-Path -Parent $packageDir
+    # Sibling libraries always live in code\packages\perl, wherever the caller
+    # is (code\packages\perl\<pkg> or code\programs\perl\<program>); this
+    # script sits in code\scripts, so find them relative to it.
+    $perlRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'packages\perl'
     Write-Host "==> package dir : $packageDir"
     if (-not (Test-Path -LiteralPath (Join-Path $packageDir 't'))) {
         throw "No t\ directory in $packageDir -- is the recipe running in the package directory?"

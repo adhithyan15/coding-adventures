@@ -172,10 +172,7 @@ func NewTraced(g *Graph, opt Options, root string, flags []string) (*Traced, err
 	if opt.Arch != "x64" && opt.Arch != "arm64" {
 		return nil, fmt.Errorf("traced key: unknown arch %q", short(opt.Arch))
 	}
-	if !filepath.IsAbs(root) || !utf8.ValidString(root) || strings.ContainsFunc(root, unicode.IsControl) {
-		return nil, fmt.Errorf("traced key: checkout root %q must be an absolute path", short(root))
-	}
-	args, err := CanonicalExecutorArgs(flags)
+	args, err := checkRootAndArgs(root, flags)
 	if err != nil {
 		return nil, err
 	}
@@ -194,6 +191,14 @@ func NewTraced(g *Graph, opt Options, root string, flags []string) (*Traced, err
 		return nil, err
 	}
 	return &Traced{pl: pl, root: root, args: args}, nil
+}
+
+// checkRootAndArgs validates `kiln:root` and canonicalises the executor flags.
+func checkRootAndArgs(root string, flags []string) (string, error) {
+	if !filepath.IsAbs(root) || !utf8.ValidString(root) || strings.ContainsFunc(root, unicode.IsControl) {
+		return "", fmt.Errorf("traced key: checkout root %q must be an absolute path", short(root))
+	}
+	return CanonicalExecutorArgs(flags)
 }
 
 // checkGraphMatchesSource is a PARTIAL guard against a stale graph: every BUILD

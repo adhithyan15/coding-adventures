@@ -1,0 +1,1301 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/logic_gates/example/not_0",
+        "warrant/logic_gates/example/not_1",
+        "warrant/logic_gates/example/not_gate_eight_rejected",
+        "warrant/logic_gates/example/not_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/not_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/not_truth_table",
+        "warrant/logic_gates/fuzz/not_rejects_non_bit",
+        "warrant/logic_gates/fuzz/not_truth_table",
+        "warrant/logic_gates/negctl/example/not_gate/missing-error",
+        "warrant/logic_gates/negctl/example/not_gate/shift-mask",
+        "warrant/logic_gates/negctl/exhaustive/not_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/not_gate/shift-mask",
+        "warrant/logic_gates/negctl/fuzz/not_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/not_gate/shift-mask",
+        "warrant/logic_gates/negctl/property/not_gate/missing-error",
+        "warrant/logic_gates/negctl/property/not_gate/shift-mask",
+        "warrant/logic_gates/property/not_rejects_non_bit",
+        "warrant/logic_gates/property/not_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 256,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "not_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "not_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/and_0_0",
+        "warrant/logic_gates/example/and_0_1",
+        "warrant/logic_gates/example/and_1_0",
+        "warrant/logic_gates/example/and_1_1",
+        "warrant/logic_gates/example/and_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/and_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/and_truth_table",
+        "warrant/logic_gates/fuzz/and_rejects_non_bit",
+        "warrant/logic_gates/fuzz/and_truth_table",
+        "warrant/logic_gates/negctl/example/and_gate/missing-error",
+        "warrant/logic_gates/negctl/example/and_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/and_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/and_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/and_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/and_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/and_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/and_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/and_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/and_gate/missing-error",
+        "warrant/logic_gates/negctl/property/and_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/and_gate/saturate-sub",
+        "warrant/logic_gates/property/and_rejects_non_bit",
+        "warrant/logic_gates/property/and_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "and_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "and_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/or_0_0",
+        "warrant/logic_gates/example/or_0_1",
+        "warrant/logic_gates/example/or_1_0",
+        "warrant/logic_gates/example/or_1_1",
+        "warrant/logic_gates/example/or_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/or_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/or_truth_table",
+        "warrant/logic_gates/fuzz/or_rejects_non_bit",
+        "warrant/logic_gates/fuzz/or_truth_table",
+        "warrant/logic_gates/negctl/example/or_gate/missing-error",
+        "warrant/logic_gates/negctl/example/or_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/or_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/or_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/or_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/or_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/or_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/or_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/or_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/or_gate/missing-error",
+        "warrant/logic_gates/negctl/property/or_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/or_gate/saturate-sub",
+        "warrant/logic_gates/property/or_rejects_non_bit",
+        "warrant/logic_gates/property/or_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "or_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "or_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/xor_0_0",
+        "warrant/logic_gates/example/xor_0_1",
+        "warrant/logic_gates/example/xor_1_0",
+        "warrant/logic_gates/example/xor_1_1",
+        "warrant/logic_gates/example/xor_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/xor_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/xor_truth_table",
+        "warrant/logic_gates/fuzz/xor_rejects_non_bit",
+        "warrant/logic_gates/fuzz/xor_truth_table",
+        "warrant/logic_gates/negctl/example/xor_gate/missing-error",
+        "warrant/logic_gates/negctl/example/xor_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/xor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/xor_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/xor_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/xor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/xor_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/xor_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/xor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/xor_gate/missing-error",
+        "warrant/logic_gates/negctl/property/xor_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/xor_gate/saturate-sub",
+        "warrant/logic_gates/property/xor_rejects_non_bit",
+        "warrant/logic_gates/property/xor_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "xor_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "xor_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nand_0_0",
+        "warrant/logic_gates/example/nand_0_1",
+        "warrant/logic_gates/example/nand_1_0",
+        "warrant/logic_gates/example/nand_1_1",
+        "warrant/logic_gates/example/nand_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/nand_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nand_truth_table",
+        "warrant/logic_gates/fuzz/nand_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nand_truth_table",
+        "warrant/logic_gates/negctl/example/nand_gate/missing-error",
+        "warrant/logic_gates/negctl/example/nand_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/nand_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/nand_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nand_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/nand_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/nand_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nand_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/nand_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/nand_gate/missing-error",
+        "warrant/logic_gates/negctl/property/nand_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/nand_gate/saturate-sub",
+        "warrant/logic_gates/property/nand_rejects_non_bit",
+        "warrant/logic_gates/property/nand_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "nand_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "nand_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nor_0_0",
+        "warrant/logic_gates/example/nor_0_1",
+        "warrant/logic_gates/example/nor_1_0",
+        "warrant/logic_gates/example/nor_1_1",
+        "warrant/logic_gates/example/nor_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/nor_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nor_truth_table",
+        "warrant/logic_gates/fuzz/nor_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nor_truth_table",
+        "warrant/logic_gates/negctl/example/nor_gate/missing-error",
+        "warrant/logic_gates/negctl/example/nor_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/nor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/nor_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nor_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/nor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/nor_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nor_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/nor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/nor_gate/missing-error",
+        "warrant/logic_gates/negctl/property/nor_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/nor_gate/saturate-sub",
+        "warrant/logic_gates/property/nor_rejects_non_bit",
+        "warrant/logic_gates/property/nor_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "nor_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "nor_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/xnor_0_0",
+        "warrant/logic_gates/example/xnor_0_1",
+        "warrant/logic_gates/example/xnor_1_0",
+        "warrant/logic_gates/example/xnor_1_1",
+        "warrant/logic_gates/example/xnor_gate_two_rejected",
+        "warrant/logic_gates/exhaustive/xnor_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/xnor_truth_table",
+        "warrant/logic_gates/fuzz/xnor_rejects_non_bit",
+        "warrant/logic_gates/fuzz/xnor_truth_table",
+        "warrant/logic_gates/negctl/example/xnor_gate/missing-error",
+        "warrant/logic_gates/negctl/example/xnor_gate/saturate-add",
+        "warrant/logic_gates/negctl/example/xnor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/xnor_gate/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/xnor_gate/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/xnor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/xnor_gate/missing-error",
+        "warrant/logic_gates/negctl/fuzz/xnor_gate/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/xnor_gate/saturate-sub",
+        "warrant/logic_gates/negctl/property/xnor_gate/missing-error",
+        "warrant/logic_gates/negctl/property/xnor_gate/saturate-add",
+        "warrant/logic_gates/negctl/property/xnor_gate/saturate-sub",
+        "warrant/logic_gates/property/xnor_rejects_non_bit",
+        "warrant/logic_gates/property/xnor_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65536,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 10000,
+        "status": "pass"
+      },
+      "id": "xnor_gate_soundness",
+      "proof": null,
+      "property": {
+        "cases": 8192,
+        "status": "pass"
+      },
+      "symbol": "xnor_gate"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nand_not_eight_rejected",
+        "warrant/logic_gates/example/nand_not_two_rejected",
+        "warrant/logic_gates/exhaustive/nand_not_equals_not",
+        "warrant/logic_gates/exhaustive/nand_not_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nand_not_truth_table",
+        "warrant/logic_gates/fuzz/nand_not_equals_not",
+        "warrant/logic_gates/fuzz/nand_not_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nand_not_truth_table",
+        "warrant/logic_gates/negctl/example/nand_not/missing-error",
+        "warrant/logic_gates/negctl/example/nand_not/shift-mask",
+        "warrant/logic_gates/negctl/exhaustive/nand_not/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nand_not/shift-mask",
+        "warrant/logic_gates/negctl/fuzz/nand_not/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nand_not/shift-mask",
+        "warrant/logic_gates/negctl/property/nand_not/missing-error",
+        "warrant/logic_gates/negctl/property/nand_not/shift-mask",
+        "warrant/logic_gates/property/nand_not_equals_not",
+        "warrant/logic_gates/property/nand_not_rejects_non_bit",
+        "warrant/logic_gates/property/nand_not_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 258,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "nand_not_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "nand_not"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nand_and_two_rejected",
+        "warrant/logic_gates/exhaustive/nand_and_equals_and",
+        "warrant/logic_gates/exhaustive/nand_and_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nand_and_truth_table",
+        "warrant/logic_gates/fuzz/nand_and_equals_and",
+        "warrant/logic_gates/fuzz/nand_and_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nand_and_truth_table",
+        "warrant/logic_gates/negctl/example/nand_and/missing-error",
+        "warrant/logic_gates/negctl/example/nand_and/saturate-add",
+        "warrant/logic_gates/negctl/example/nand_and/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/nand_and/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nand_and/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/nand_and/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/nand_and/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nand_and/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/nand_and/saturate-sub",
+        "warrant/logic_gates/negctl/property/nand_and/missing-error",
+        "warrant/logic_gates/negctl/property/nand_and/saturate-add",
+        "warrant/logic_gates/negctl/property/nand_and/saturate-sub",
+        "warrant/logic_gates/property/nand_and_equals_and",
+        "warrant/logic_gates/property/nand_and_rejects_non_bit",
+        "warrant/logic_gates/property/nand_and_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65540,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "nand_and_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "nand_and"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nand_or_two_rejected",
+        "warrant/logic_gates/exhaustive/nand_or_equals_or",
+        "warrant/logic_gates/exhaustive/nand_or_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nand_or_truth_table",
+        "warrant/logic_gates/fuzz/nand_or_equals_or",
+        "warrant/logic_gates/fuzz/nand_or_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nand_or_truth_table",
+        "warrant/logic_gates/negctl/example/nand_or/missing-error",
+        "warrant/logic_gates/negctl/example/nand_or/saturate-add",
+        "warrant/logic_gates/negctl/example/nand_or/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/nand_or/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nand_or/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/nand_or/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/nand_or/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nand_or/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/nand_or/saturate-sub",
+        "warrant/logic_gates/negctl/property/nand_or/missing-error",
+        "warrant/logic_gates/negctl/property/nand_or/saturate-add",
+        "warrant/logic_gates/negctl/property/nand_or/saturate-sub",
+        "warrant/logic_gates/property/nand_or_equals_or",
+        "warrant/logic_gates/property/nand_or_rejects_non_bit",
+        "warrant/logic_gates/property/nand_or_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65540,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "nand_or_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "nand_or"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/nand_xor_two_rejected",
+        "warrant/logic_gates/exhaustive/nand_xor_equals_xor",
+        "warrant/logic_gates/exhaustive/nand_xor_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/nand_xor_truth_table",
+        "warrant/logic_gates/fuzz/nand_xor_equals_xor",
+        "warrant/logic_gates/fuzz/nand_xor_rejects_non_bit",
+        "warrant/logic_gates/fuzz/nand_xor_truth_table",
+        "warrant/logic_gates/negctl/example/nand_xor/missing-error",
+        "warrant/logic_gates/negctl/example/nand_xor/saturate-add",
+        "warrant/logic_gates/negctl/example/nand_xor/saturate-sub",
+        "warrant/logic_gates/negctl/exhaustive/nand_xor/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/nand_xor/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/nand_xor/saturate-sub",
+        "warrant/logic_gates/negctl/fuzz/nand_xor/missing-error",
+        "warrant/logic_gates/negctl/fuzz/nand_xor/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/nand_xor/saturate-sub",
+        "warrant/logic_gates/negctl/property/nand_xor/missing-error",
+        "warrant/logic_gates/negctl/property/nand_xor/saturate-add",
+        "warrant/logic_gates/negctl/property/nand_xor/saturate-sub",
+        "warrant/logic_gates/property/nand_xor_equals_xor",
+        "warrant/logic_gates/property/nand_xor_rejects_non_bit",
+        "warrant/logic_gates/property/nand_xor_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65540,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "nand_xor_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "nand_xor"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/and_n_empty_rejected",
+        "warrant/logic_gates/example/and_n_four_ones",
+        "warrant/logic_gates/example/and_n_one_zero",
+        "warrant/logic_gates/example/and_n_single_rejected",
+        "warrant/logic_gates/exhaustive/and_n_of_two_equals_and_gate",
+        "warrant/logic_gates/exhaustive/and_n_rejects_a_short_input",
+        "warrant/logic_gates/exhaustive/and_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/exhaustive/and_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/exhaustive/and_n_truth_table_every_width",
+        "warrant/logic_gates/fuzz/and_n_of_two_equals_and_gate",
+        "warrant/logic_gates/fuzz/and_n_rejects_a_short_input",
+        "warrant/logic_gates/fuzz/and_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/fuzz/and_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/fuzz/and_n_truth_table_every_width",
+        "warrant/logic_gates/negctl/example/and_n/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/and_n/missing-error",
+        "warrant/logic_gates/negctl/fuzz/and_n/missing-error",
+        "warrant/logic_gates/negctl/property/and_n/missing-error",
+        "warrant/logic_gates/property/and_n_of_two_equals_and_gate",
+        "warrant/logic_gates/property/and_n_rejects_a_short_input",
+        "warrant/logic_gates/property/and_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/property/and_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/property/and_n_truth_table_every_width"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 66820,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "and_n_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "and_n"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/or_n_four_zeros",
+        "warrant/logic_gates/example/or_n_one_one",
+        "warrant/logic_gates/example/or_n_two_rejected",
+        "warrant/logic_gates/exhaustive/or_n_of_two_equals_or_gate",
+        "warrant/logic_gates/exhaustive/or_n_rejects_a_short_input",
+        "warrant/logic_gates/exhaustive/or_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/exhaustive/or_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/exhaustive/or_n_truth_table_every_width",
+        "warrant/logic_gates/fuzz/or_n_of_two_equals_or_gate",
+        "warrant/logic_gates/fuzz/or_n_rejects_a_short_input",
+        "warrant/logic_gates/fuzz/or_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/fuzz/or_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/fuzz/or_n_truth_table_every_width",
+        "warrant/logic_gates/negctl/example/or_n/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/or_n/missing-error",
+        "warrant/logic_gates/negctl/fuzz/or_n/missing-error",
+        "warrant/logic_gates/negctl/property/or_n/missing-error",
+        "warrant/logic_gates/property/or_n_of_two_equals_or_gate",
+        "warrant/logic_gates/property/or_n_rejects_a_short_input",
+        "warrant/logic_gates/property/or_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/property/or_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/property/or_n_truth_table_every_width"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 66820,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "or_n_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "or_n"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/xor_n_even_parity",
+        "warrant/logic_gates/example/xor_n_odd_parity",
+        "warrant/logic_gates/example/xor_n_two_rejected",
+        "warrant/logic_gates/exhaustive/xor_n_of_two_equals_xor_gate",
+        "warrant/logic_gates/exhaustive/xor_n_rejects_a_short_input",
+        "warrant/logic_gates/exhaustive/xor_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/exhaustive/xor_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/exhaustive/xor_n_truth_table_every_width",
+        "warrant/logic_gates/fuzz/xor_n_of_two_equals_xor_gate",
+        "warrant/logic_gates/fuzz/xor_n_rejects_a_short_input",
+        "warrant/logic_gates/fuzz/xor_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/fuzz/xor_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/fuzz/xor_n_truth_table_every_width",
+        "warrant/logic_gates/negctl/example/xor_n/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/xor_n/missing-error",
+        "warrant/logic_gates/negctl/fuzz/xor_n/missing-error",
+        "warrant/logic_gates/negctl/property/xor_n/missing-error",
+        "warrant/logic_gates/property/xor_n_of_two_equals_xor_gate",
+        "warrant/logic_gates/property/xor_n_rejects_a_short_input",
+        "warrant/logic_gates/property/xor_n_rejects_non_bit_at_either_end",
+        "warrant/logic_gates/property/xor_n_rejects_non_bit_in_the_middle",
+        "warrant/logic_gates/property/xor_n_truth_table_every_width"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 66820,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "xor_n_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "xor_n"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/mux2_both_data_one_sel_zero",
+        "warrant/logic_gates/example/mux2_selects_d0",
+        "warrant/logic_gates/example/mux2_selects_d1",
+        "warrant/logic_gates/example/mux2_two_rejected",
+        "warrant/logic_gates/exhaustive/mux2_rejects_non_bit_d0",
+        "warrant/logic_gates/exhaustive/mux2_rejects_non_bit_d1",
+        "warrant/logic_gates/exhaustive/mux2_rejects_non_bit_sel",
+        "warrant/logic_gates/exhaustive/mux2_truth_table",
+        "warrant/logic_gates/fuzz/mux2_rejects_non_bit_d0",
+        "warrant/logic_gates/fuzz/mux2_rejects_non_bit_d1",
+        "warrant/logic_gates/fuzz/mux2_rejects_non_bit_sel",
+        "warrant/logic_gates/fuzz/mux2_truth_table",
+        "warrant/logic_gates/negctl/example/mux2/missing-error",
+        "warrant/logic_gates/negctl/example/mux2/saturate-add",
+        "warrant/logic_gates/negctl/exhaustive/mux2/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/mux2/saturate-add",
+        "warrant/logic_gates/negctl/fuzz/mux2/missing-error",
+        "warrant/logic_gates/negctl/fuzz/mux2/saturate-add",
+        "warrant/logic_gates/negctl/property/mux2/missing-error",
+        "warrant/logic_gates/negctl/property/mux2/saturate-add",
+        "warrant/logic_gates/property/mux2_rejects_non_bit_d0",
+        "warrant/logic_gates/property/mux2_rejects_non_bit_d1",
+        "warrant/logic_gates/property/mux2_rejects_non_bit_sel",
+        "warrant/logic_gates/property/mux2_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 3080,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 20000,
+        "status": "pass"
+      },
+      "id": "mux2_soundness",
+      "proof": null,
+      "property": {
+        "cases": 16384,
+        "status": "pass"
+      },
+      "symbol": "mux2"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/mux4_one_select_bit_rejected",
+        "warrant/logic_gates/example/mux4_sel_01_selects_d2",
+        "warrant/logic_gates/example/mux4_sel_10_selects_d1",
+        "warrant/logic_gates/example/mux4_two_rejected",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_d0",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_d1",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_d2",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_d3",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_sel_0",
+        "warrant/logic_gates/exhaustive/mux4_rejects_non_bit_sel_1",
+        "warrant/logic_gates/exhaustive/mux4_rejects_wrong_select_width",
+        "warrant/logic_gates/exhaustive/mux4_truth_table",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_d0",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_d1",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_d2",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_d3",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_sel_0",
+        "warrant/logic_gates/fuzz/mux4_rejects_non_bit_sel_1",
+        "warrant/logic_gates/fuzz/mux4_rejects_wrong_select_width",
+        "warrant/logic_gates/fuzz/mux4_truth_table",
+        "warrant/logic_gates/negctl/example/mux4/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/mux4/missing-error",
+        "warrant/logic_gates/negctl/fuzz/mux4/missing-error",
+        "warrant/logic_gates/negctl/property/mux4/missing-error",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_d0",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_d1",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_d2",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_d3",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_sel_0",
+        "warrant/logic_gates/property/mux4_rejects_non_bit_sel_1",
+        "warrant/logic_gates/property/mux4_rejects_wrong_select_width",
+        "warrant/logic_gates/property/mux4_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 5515,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 40000,
+        "status": "pass"
+      },
+      "id": "mux4_soundness",
+      "proof": null,
+      "property": {
+        "cases": 32768,
+        "status": "pass"
+      },
+      "symbol": "mux4"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/mux_n_four_inputs_index_one",
+        "warrant/logic_gates/example/mux_n_sixteen_inputs_index_five",
+        "warrant/logic_gates/example/mux_n_three_inputs_rejected",
+        "warrant/logic_gates/exhaustive/mux_n_16_inputs_exhaustive",
+        "warrant/logic_gates/exhaustive/mux_n_2_inputs_exhaustive",
+        "warrant/logic_gates/exhaustive/mux_n_4_inputs_exhaustive",
+        "warrant/logic_gates/exhaustive/mux_n_8_inputs_exhaustive",
+        "warrant/logic_gates/exhaustive/mux_n_of_four_equals_mux4",
+        "warrant/logic_gates/exhaustive/mux_n_of_two_equals_mux2",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_a_bad_shape",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_input_0",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_input_1",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_input_2",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_input_3",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_sel_0",
+        "warrant/logic_gates/exhaustive/mux_n_rejects_non_bit_sel_1",
+        "warrant/logic_gates/fuzz/mux_n_16_inputs_exhaustive",
+        "warrant/logic_gates/fuzz/mux_n_2_inputs_exhaustive",
+        "warrant/logic_gates/fuzz/mux_n_4_inputs_exhaustive",
+        "warrant/logic_gates/fuzz/mux_n_8_inputs_exhaustive",
+        "warrant/logic_gates/fuzz/mux_n_of_four_equals_mux4",
+        "warrant/logic_gates/fuzz/mux_n_of_two_equals_mux2",
+        "warrant/logic_gates/fuzz/mux_n_rejects_a_bad_shape",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_input_0",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_input_1",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_input_2",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_input_3",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_sel_0",
+        "warrant/logic_gates/fuzz/mux_n_rejects_non_bit_sel_1",
+        "warrant/logic_gates/negctl/example/mux_n/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/mux_n/missing-error",
+        "warrant/logic_gates/negctl/fuzz/mux_n/missing-error",
+        "warrant/logic_gates/negctl/property/mux_n/missing-error",
+        "warrant/logic_gates/property/mux_n_16_inputs_exhaustive",
+        "warrant/logic_gates/property/mux_n_2_inputs_exhaustive",
+        "warrant/logic_gates/property/mux_n_4_inputs_exhaustive",
+        "warrant/logic_gates/property/mux_n_8_inputs_exhaustive",
+        "warrant/logic_gates/property/mux_n_of_four_equals_mux4",
+        "warrant/logic_gates/property/mux_n_of_two_equals_mux2",
+        "warrant/logic_gates/property/mux_n_rejects_a_bad_shape",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_input_0",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_input_1",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_input_2",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_input_3",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_sel_0",
+        "warrant/logic_gates/property/mux_n_rejects_non_bit_sel_1"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 2479105,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 65000,
+        "status": "pass"
+      },
+      "id": "mux_n_soundness",
+      "proof": null,
+      "property": {
+        "cases": 53248,
+        "status": "pass"
+      },
+      "symbol": "mux_n"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/demux_data_zero_routes_nothing",
+        "warrant/logic_gates/example/demux_routes_to_line_one",
+        "warrant/logic_gates/example/demux_seventeen_select_lines_rejected",
+        "warrant/logic_gates/example/demux_two_rejected",
+        "warrant/logic_gates/example/demux_wrong_select_width_rejected",
+        "warrant/logic_gates/exhaustive/demux_rejects_a_bad_shape",
+        "warrant/logic_gates/exhaustive/demux_rejects_non_bit_data",
+        "warrant/logic_gates/exhaustive/demux_rejects_non_bit_select",
+        "warrant/logic_gates/exhaustive/demux_routes_data",
+        "warrant/logic_gates/fuzz/demux_rejects_a_bad_shape",
+        "warrant/logic_gates/fuzz/demux_rejects_non_bit_data",
+        "warrant/logic_gates/fuzz/demux_rejects_non_bit_select",
+        "warrant/logic_gates/fuzz/demux_routes_data",
+        "warrant/logic_gates/negctl/example/demux/drop-last-result-byte",
+        "warrant/logic_gates/negctl/example/demux/flip-result-bit",
+        "warrant/logic_gates/negctl/example/demux/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/demux/drop-last-result-byte",
+        "warrant/logic_gates/negctl/exhaustive/demux/flip-result-bit",
+        "warrant/logic_gates/negctl/exhaustive/demux/missing-error",
+        "warrant/logic_gates/negctl/fuzz/demux/drop-last-result-byte",
+        "warrant/logic_gates/negctl/fuzz/demux/flip-result-bit",
+        "warrant/logic_gates/negctl/fuzz/demux/missing-error",
+        "warrant/logic_gates/negctl/property/demux/drop-last-result-byte",
+        "warrant/logic_gates/negctl/property/demux/flip-result-bit",
+        "warrant/logic_gates/negctl/property/demux/missing-error",
+        "warrant/logic_gates/property/demux_rejects_a_bad_shape",
+        "warrant/logic_gates/property/demux_rejects_non_bit_data",
+        "warrant/logic_gates/property/demux_rejects_non_bit_select",
+        "warrant/logic_gates/property/demux_routes_data"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 110986,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 20000,
+        "status": "pass"
+      },
+      "id": "demux_soundness",
+      "proof": null,
+      "property": {
+        "cases": 16384,
+        "status": "pass"
+      },
+      "symbol": "demux"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/decoder_at_the_cap_has_65536_lines",
+        "warrant/logic_gates/example/decoder_empty_rejected",
+        "warrant/logic_gates/example/decoder_seventeen_inputs_rejected",
+        "warrant/logic_gates/example/decoder_sixty_four_inputs_rejected",
+        "warrant/logic_gates/example/decoder_two_bits_index_one",
+        "warrant/logic_gates/example/decoder_two_rejected",
+        "warrant/logic_gates/exhaustive/decoder_one_hot_every_width",
+        "warrant/logic_gates/exhaustive/decoder_rejects_non_bit_alone",
+        "warrant/logic_gates/exhaustive/decoder_rejects_non_bit_first",
+        "warrant/logic_gates/exhaustive/decoder_rejects_non_bit_last",
+        "warrant/logic_gates/fuzz/decoder_one_hot_every_width",
+        "warrant/logic_gates/fuzz/decoder_rejects_non_bit_alone",
+        "warrant/logic_gates/fuzz/decoder_rejects_non_bit_first",
+        "warrant/logic_gates/fuzz/decoder_rejects_non_bit_last",
+        "warrant/logic_gates/negctl/example/decoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/example/decoder/flip-result-bit",
+        "warrant/logic_gates/negctl/example/decoder/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/decoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/exhaustive/decoder/flip-result-bit",
+        "warrant/logic_gates/negctl/exhaustive/decoder/missing-error",
+        "warrant/logic_gates/negctl/fuzz/decoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/fuzz/decoder/flip-result-bit",
+        "warrant/logic_gates/negctl/fuzz/decoder/missing-error",
+        "warrant/logic_gates/negctl/property/decoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/property/decoder/flip-result-bit",
+        "warrant/logic_gates/negctl/property/decoder/missing-error",
+        "warrant/logic_gates/property/decoder_one_hot_every_width",
+        "warrant/logic_gates/property/decoder_rejects_non_bit_alone",
+        "warrant/logic_gates/property/decoder_rejects_non_bit_first",
+        "warrant/logic_gates/property/decoder_rejects_non_bit_last"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 50176,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 20000,
+        "status": "pass"
+      },
+      "id": "decoder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 16384,
+        "status": "pass"
+      },
+      "symbol": "decoder"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/encoder_line_two",
+        "warrant/logic_gates/example/encoder_none_active_rejected",
+        "warrant/logic_gates/example/encoder_two_active_rejected",
+        "warrant/logic_gates/example/encoder_two_rejected",
+        "warrant/logic_gates/exhaustive/encoder_inverts_decoder",
+        "warrant/logic_gates/exhaustive/encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/exhaustive/encoder_rejects_no_active_input",
+        "warrant/logic_gates/exhaustive/encoder_rejects_non_bit",
+        "warrant/logic_gates/exhaustive/encoder_rejects_two_active_inputs",
+        "warrant/logic_gates/fuzz/encoder_inverts_decoder",
+        "warrant/logic_gates/fuzz/encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/fuzz/encoder_rejects_no_active_input",
+        "warrant/logic_gates/fuzz/encoder_rejects_non_bit",
+        "warrant/logic_gates/fuzz/encoder_rejects_two_active_inputs",
+        "warrant/logic_gates/negctl/example/encoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/example/encoder/flip-result-bit",
+        "warrant/logic_gates/negctl/example/encoder/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/encoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/exhaustive/encoder/flip-result-bit",
+        "warrant/logic_gates/negctl/exhaustive/encoder/missing-error",
+        "warrant/logic_gates/negctl/fuzz/encoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/fuzz/encoder/flip-result-bit",
+        "warrant/logic_gates/negctl/fuzz/encoder/missing-error",
+        "warrant/logic_gates/negctl/property/encoder/drop-last-result-byte",
+        "warrant/logic_gates/negctl/property/encoder/flip-result-bit",
+        "warrant/logic_gates/negctl/property/encoder/missing-error",
+        "warrant/logic_gates/property/encoder_inverts_decoder",
+        "warrant/logic_gates/property/encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/property/encoder_rejects_no_active_input",
+        "warrant/logic_gates/property/encoder_rejects_non_bit",
+        "warrant/logic_gates/property/encoder_rejects_two_active_inputs"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 50312,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "encoder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "encoder"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/priority_encoder_highest_wins",
+        "warrant/logic_gates/example/priority_encoder_none_active",
+        "warrant/logic_gates/example/priority_encoder_three_inputs_rejected",
+        "warrant/logic_gates/example/priority_encoder_two_rejected",
+        "warrant/logic_gates/exhaustive/priority_encoder_16_inputs_exhaustive",
+        "warrant/logic_gates/exhaustive/priority_encoder_every_word_2_4_8",
+        "warrant/logic_gates/exhaustive/priority_encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/exhaustive/priority_encoder_rejects_non_bit_first",
+        "warrant/logic_gates/exhaustive/priority_encoder_rejects_non_bit_last",
+        "warrant/logic_gates/exhaustive/priority_encoder_rejects_non_bit_middle",
+        "warrant/logic_gates/fuzz/priority_encoder_16_inputs_exhaustive",
+        "warrant/logic_gates/fuzz/priority_encoder_every_word_2_4_8",
+        "warrant/logic_gates/fuzz/priority_encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/fuzz/priority_encoder_rejects_non_bit_first",
+        "warrant/logic_gates/fuzz/priority_encoder_rejects_non_bit_last",
+        "warrant/logic_gates/fuzz/priority_encoder_rejects_non_bit_middle",
+        "warrant/logic_gates/negctl/example/priority_encoder/drop-consumed",
+        "warrant/logic_gates/negctl/example/priority_encoder/missing-error",
+        "warrant/logic_gates/negctl/example/priority_encoder/off-by-one-consumed",
+        "warrant/logic_gates/negctl/exhaustive/priority_encoder/drop-consumed",
+        "warrant/logic_gates/negctl/exhaustive/priority_encoder/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/priority_encoder/off-by-one-consumed",
+        "warrant/logic_gates/negctl/fuzz/priority_encoder/drop-consumed",
+        "warrant/logic_gates/negctl/fuzz/priority_encoder/missing-error",
+        "warrant/logic_gates/negctl/fuzz/priority_encoder/off-by-one-consumed",
+        "warrant/logic_gates/negctl/property/priority_encoder/drop-consumed",
+        "warrant/logic_gates/negctl/property/priority_encoder/missing-error",
+        "warrant/logic_gates/negctl/property/priority_encoder/off-by-one-consumed",
+        "warrant/logic_gates/property/priority_encoder_16_inputs_exhaustive",
+        "warrant/logic_gates/property/priority_encoder_every_word_2_4_8",
+        "warrant/logic_gates/property/priority_encoder_rejects_a_bad_shape",
+        "warrant/logic_gates/property/priority_encoder_rejects_non_bit_first",
+        "warrant/logic_gates/property/priority_encoder_rejects_non_bit_last",
+        "warrant/logic_gates/property/priority_encoder_rejects_non_bit_middle"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 279111,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 30000,
+        "status": "pass"
+      },
+      "id": "priority_encoder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 24576,
+        "status": "pass"
+      },
+      "symbol": "priority_encoder"
+    },
+    {
+      "evidence": [
+        "warrant/logic_gates/example/tri_state_disabled_floats",
+        "warrant/logic_gates/example/tri_state_enabled_passes_data",
+        "warrant/logic_gates/example/tri_state_two_while_disabled_rejected",
+        "warrant/logic_gates/example/tri_state_two_with_enable_rejected",
+        "warrant/logic_gates/exhaustive/tri_state_rejects_non_bit_data",
+        "warrant/logic_gates/exhaustive/tri_state_rejects_non_bit_enable",
+        "warrant/logic_gates/exhaustive/tri_state_truth_table",
+        "warrant/logic_gates/fuzz/tri_state_rejects_non_bit_data",
+        "warrant/logic_gates/fuzz/tri_state_rejects_non_bit_enable",
+        "warrant/logic_gates/fuzz/tri_state_truth_table",
+        "warrant/logic_gates/negctl/example/tri_state/missing-error",
+        "warrant/logic_gates/negctl/exhaustive/tri_state/missing-error",
+        "warrant/logic_gates/negctl/fuzz/tri_state/missing-error",
+        "warrant/logic_gates/negctl/property/tri_state/missing-error",
+        "warrant/logic_gates/property/tri_state_rejects_non_bit_data",
+        "warrant/logic_gates/property/tri_state_rejects_non_bit_enable",
+        "warrant/logic_gates/property/tri_state_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1028,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "tri_state_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "tri_state"
+    }
+  ],
+  "closure": [
+    "rust/logic-gates"
+  ],
+  "commit": "152d5666910",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
+      "kind": "no-live-proof",
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))"
+    },
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
+      "kind": "not-applicable",
+      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
+    }
+  ],
+  "package": "rust/logic-gates",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.1.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (src/gates.rs: lowering refused: Unsupported custom type in WIR lowering: str; parse refused at src/combinational.rs:54:5: Expected item, found Const (line: `pub const MAX_DECODER_WIDTH: usize = 16;`); per export, and_gate: alone: lowering refused (Variable 'None' not found in scope); and_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); decoder: alone: parse refused (Unexpected token in expression: Or); demux: alone: parse refused (Unexpected token in expression: Or); encoder: alone: parse refused (Unexpected token in expression: Or); mux2: alone: lowers (loop-free, table-free body); mux4: alone: lowers (loop-free, table-free body); mux_n: alone: lowering refused (Unsupported custom type in WIR lowering: f64); nand_and: alone: lowers (loop-free, table-free body); nand_gate: alone: lowering refused (Variable 'None' not found in scope); nand_not: alone: lowers (loop-free, table-free body); nand_or: alone: lowers (loop-free, table-free body); nand_xor: alone: lowers (loop-free, table-free body); nor_gate: alone: lowering refused (Variable 'None' not found in scope); not_gate: alone: lowering refused (Variable 'None' not found in scope); or_gate: alone: lowering refused (Variable 'None' not found in scope); or_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering); priority_encoder: alone: parse refused (Expected RParen, found Ident(\"Vec\")); tri_state: alone: parse refused (Expected LBrace, found Lt); xnor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_gate: alone: lowering refused (Variable 'None' not found in scope); xor_n: alone: lowering refused (Unsupported method call 'iter' in WIR lowering))",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 407,
+      "evidence": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
+      "status": "exemption"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}

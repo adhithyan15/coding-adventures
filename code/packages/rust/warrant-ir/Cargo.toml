@@ -39,3 +39,11 @@ harness = false
 name = "wasm_leb128_proofs"
 path = "tests/wasm_leb128_proofs.rs"
 harness = false
+
+# logic-gates: no secret labels, so only the steps/depth rows, attempted on the
+# real gates.rs and combinational.rs.  The front end refuses them, so this target
+# records the steps-bound obligations `not-live` with the precise blocker.
+[[test]]
+name = "logic_gates_proofs"
+path = "tests/logic_gates_proofs.rs"
+harness = false

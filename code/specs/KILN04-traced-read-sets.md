@@ -619,6 +619,8 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   Everything else gives `trace-incomplete:unstable-path`: an untracked
   leftover of an earlier action, a component created after the lookup began
   or twice, a renamed link. There is no "did not exist yet" exception.
+  Three narrow exceptions for the FINAL component of a successful open, stat
+  or exec, and for `$HOME` itself, are in §5.5 ("Relaxations").
 - A `..` after a component the walk could not enter (missing, or not a
   directory) cannot be placed. On a failed call, the call looked at that
   component, which is observed; on a successful call, the result is
@@ -627,6 +629,19 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   walk still runs to find the links on the way. If either path is in the
   repository and they disagree, the post-run disk no longer shows what the call
   saw: `unstable-path`.
+- **A followed call whose final name is absent on the post-run disk** was
+  removed afterwards, or was never there. If the call found something there (it
+  succeeded, or failed with an errno other than `ENOENT`/`ENOTDIR`), the action
+  must have made the name, the creation completing before the lookup started;
+  else `unstable-path`. And a removal of a name the action had not yet made
+  (an untracked leftover) that completed after the lookup started gives
+  `unstable-path` too: the lookup may have gone through a link there that the
+  disk no longer shows. The removal rule applies to **any** component at which
+  a walk stopped (a missing parent as in `stat("L/x")` followed by
+  `unlink(L)`), not only the final one. Only a clean creation (`mkdir`,
+  `symlink`, `O_CREAT|O_EXCL`) or an `O_CREAT` open keyed by a kernel path
+  counts as "the action made the name". A successful open whose `-y` path is the name is exempt
+  (§5.5(a)).
 - **A successful call whose walk stopped before its final component**, at a
   component the disk shows missing or not a directory, contradicts the disk:
   `unstable-path`. This holds with no change of the action's own.
@@ -895,8 +910,8 @@ tracked tree for a path the disk lost. The strict stability rule of §5.1
 replaces any use of "what the trace knew at the time": the disk must vouch for
 every traversed component. Simulating renames, hard links and concurrent
 lookups exactly is unbounded work and every gap is a false hit, so builds that
-churn temporary directories lose their records; the M2 reason histogram
-measures that cost. `/proc` and `/dev/fd` are never walked. `Config.Root` must
+churn temporary directories lose their records (the relaxations below recover
+the common cases); the M2 reason histogram measures what is left. `/proc` and `/dev/fd` are never walked. `Config.Root` must
 be a real path, and `prepare` checks that every prefix of it is a real
 directory on the disk. `openat2` with a non-zero `resolve=` is
 `trace-incomplete:resolve-flags`.
@@ -950,11 +965,48 @@ exit with 0 gives `failed`. After the init child's exit line, a process
 killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
-**Known cost.** The strict stability rule refuses common patterns: a
-compiler output that is created and then stat'ed, a temp file that is created,
-read and unlinked, and `stat($HOME)` when the checkout is under `$HOME`. Narrow
-relaxations ("opens settle the final name", "open-only change logs",
-"`$HOME` itself") are planned as a separate follow-up with their own review.
+**Relaxations.** The strict rule of §5.1 refuses several very common
+patterns: a compiler output that is created and then stat'ed, a temporary that
+is created, read and unlinked, and `stat($HOME)` when the checkout lies under
+`$HOME`. Three narrow relaxations admit them. Each applies only when its
+precondition provably holds; anything else stays on the strict rule.
+
+- **(a) Opens settle the final name.** For a **successful** open whose `-y`
+  path equals the walked path, the final component is neither noted as a
+  followed final nor as a missing stop. The kernel's own path proves that the
+  name was not a link at the moment of the open. Intermediate components, and
+  every link the walk crossed, keep the full rule. A `-y` path that differs
+  from the walked path, a failed open, and an open of `/proc/self/fd/N` settle
+  nothing.
+- **(b) Open-only change logs.** Take a followed final name of a **successful**
+  `stat` (or other metadata call that follows links) or `exec` whose post-run
+  disk state is a regular file. It is accepted when its **whole** change log
+  is `O_CREAT` opens keyed by their `-y` path (an `O_CREAT` open through a
+  link is logged at the link's target, so an entry at the name proves it was
+  no link; an `O_PATH` open is never an `O_CREAT` entry, since the kernel
+  ignores `O_CREAT` there, and an `O_NOFOLLOW` open does not prove the name was
+  not a link, so neither is one), optionally ended by exactly **one** `unlink`/`unlinkat` that
+  **started after the latest lookup of the name completed**; and
+  - the first open **completed before** the earliest such lookup **started**;
+  - the disk agrees with the log: the name is present if there was no unlink,
+    and absent if there was one (a name absent on the disk is then not a
+    "missing stop" of the lookup);
+  - the name was never a `link`/`linkat` source or destination.
+
+  Any other entry keeps the strict rule for that name: a `rename` (either end),
+  `RENAME_EXCHANGE`, `link`, `symlink`, `mkdir`, `mknod`, an `unlink` before
+  or overlapping a lookup, a second `unlink`, an `O_CREAT` open that is not
+  keyed by a kernel path, or a lookup that began before the first open
+  completed. The ancestors need no extra rule: every lookup went through them,
+  so each already had to be stable by §5.1 (a created directory needs exactly
+  one `mkdir` that completed before the first lookup). Other followed lookups
+  (`chmod`, a failed call, `chdir`) are not relaxed.
+- **(c) `$HOME` itself.** A stat or listing of the `Home` directory node is
+  allowed even when the checkout lies beneath it (hosted runners). It is the
+  sandbox's tmpfs mount point, the same node in every run. Listing it is
+  allowed too: it is the fresh tmpfs, whose contents are the same in every
+  run apart from the mounts the sandbox itself makes. Only the node: the
+  checkout's other ancestors and everything under `$HOME` stay `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
@@ -963,11 +1015,16 @@ of each call's interval; events are in completion order with `StartLine`),
 one or two steps, a randomised `Root` (also under `HOME`), `HOME` and `TMPDIR`,
 tracked files, pre-existing untracked leftovers (file, directory, link), host
 files, changing file contents, `RENAME_EXCHANGE`, `O_TRUNC` without `O_CREAT`,
-dirfd-relative lookups and listings. When the record has no reason, every path
+dirfd-relative lookups and listings. "Bursts" issue the patterns of the
+relaxations (a kept output, a temporary, an exclusive temporary, an exec of an
+output, a stat of `$HOME`) on one name, each operation with its own process and
+overlap, and may add a perturbation (rename onto the name, hard link, symlink,
+exchange, second unlink). When the record has no reason, every path
 the model really looked at must be the action's own or be covered by an entry,
 an untracked observation or a `list:` entry; every absence must be in
 `AbsentObservations`; and every write must lie under a write root. A mutation
-check (disabling the overlap logic) makes it fail.
+check makes it fail when the overlap logic is disabled, and likewise when any
+one precondition of a relaxation is dropped.
 
 ## 6. When nothing is recorded
 
@@ -1011,12 +1068,21 @@ Shards run on separate machines, so the check cannot run per shard:
    under `ledger-merge`'s trust rules.
 
    **Shard binding.** It recomputes the plan and the shard partition from
-   the base revision. It accepts exactly one raw record per planned
-   action, from the shard the partition assigns it, each record carrying
-   `{run, revision, plan digest, shard i/n}`. Any mismatch, duplicate,
-   missing record or extra record means nothing is emitted. The merge job
-   computes every digest and strong key itself, from `Source`, and never
-   trusts a digest from a shard.
+   the base revision. It accepts exactly one raw record per (shard,
+   package) for every package the shard runs (its assigned packages and
+   their prerequisites), each record carrying `{run, revision, plan
+   digest, shard i/n}`. Only the assigned shard's record of an action is
+   emitted; every copy is checked. Any mismatch, duplicate, missing record
+   or extra record means nothing is emitted. The merge job computes every
+   digest and strong key itself, from `Source`, and never trusts a digest
+   from a shard.
+
+   The merge job takes from each shard only what no other job can observe:
+   the image id, the checkout path and the scrubbed environment, all
+   written before the shard's first BUILD. It recomputes the weak key from
+   them and from `Source`, and refuses the shard if it differs. The scrubbed
+   environment's values travel in the shard's run artifact to the merge job;
+   they are never printed.
 
    It then joins every shard's records and, for each action A, applies:
    - **Another action's write.** A observed a path that another action
@@ -1039,16 +1105,27 @@ Shards run on separate machines, so the check cannot run per shard:
      against every other action's writes: a traversed component another action
      created, renamed, unlinked or re-linked is `unstable-path`, and an absent
      name another action wrote is `reads-product`.
-   - **Daemons.** An action with a `daemon:<addr>` reason voids every action
-     whose `Binds`, or whose bound Unix path under its write roots, matches
-     that address: the server side depends on the client's bytes.
+   - **Daemons.** An action with a `daemon` reason makes every other action
+     that wrote under a path it observed untracked, and every other action
+     that bound a port, `reads-product:daemon-peer`: the server side depends
+     on the client's bytes. The raw record's reasons are capped and
+     sanitised, so the daemon's address cannot be matched against `Binds`;
+     the rule is a conservative superset that needs only the reason's kind
+     (§7.1, G11).
    - **Shared ports.** Two actions that bind the same inet address and port
      (`RawRecord.Binds`) both get `reads-product`: one's server may have
      answered the other's client. The kernel can also hand out the same port to
      different actions at different times, which the trace cannot tell apart.
-   - **Unknown write sets.** An action with any `trace-incomplete` reason has
-     an unknown write set, so no other action's checks can be trusted: **its
-     whole shard emits nothing**.
+   - **Unknown write sets.** An action's write set is *unknown* when a
+     step's tracer did not finish cleanly (§4.3), a step's trace does not
+     parse, the traced step count differs from `kiln-legacy-results`, or its
+     raw record says `writes_complete: false`. Every cross-action rule above
+     quantifies over the writes of every action in every shard, so one
+     unknown write set means **the run emits nothing**. A record with
+     `trace-incomplete` reasons and `writes_complete: true` loses only its
+     own manifest. Until the classifier reports `writes_complete`, every
+     `trace-incomplete` reason counts as unknown. (The earlier wording voided
+     only the shard; that was unsound, see §7.1, G1.)
 3. **All or nothing.** Only after these checks does the merge job emit
    manifests and passes. If any shard's records are missing, it emits
    nothing.
@@ -1062,6 +1139,185 @@ Rust packages share `code/packages/rust/target`, so under these rules
 they may record nothing in v1. A v2 could union the writer's manifest into
 the reader's (open question 3). The kill criterion (§13) decides whether
 that is worth doing or whether Rust goes straight to M4.
+
+### 7.1 Merge decisions (stage 4a)
+
+Implemented by `internal/recfmt` (the record formats, strict decoding) and
+`internal/recmerge` (`Merge`, pure: no I/O, no clock). The recorder and the
+`kiln record-merge` command are later PRs. The design review found these
+gaps in the text above; each decision below replaces it.
+
+**G1. An unknown write set voids the run.** §7's rules are cross-shard
+("another action's write, in any shard"). If action X in shard 3 has an
+unknown write set and action A in shard 5 probed `p` absent, nothing shows
+X does not create `p`; in a later single-tree job X may run before A, and
+A's cached result would be a false hit. Shards are separate trees, so
+voiding X's shard does not protect A. The merge therefore has three levels
+of "no": *action* (a reason, no manifest), *shard-void* (nothing assigned
+to that shard) and *run-void* (nothing at all). An unknown write set is
+run-void (rule M1). `writes_complete` is modelled as an optional key of the
+shard record line and a switch of `Merge`
+(`Input.HonourWritesComplete`, off): with the switch off every
+`trace-incomplete` reason is unknown; with it on, a record that says
+`writes_complete: true` loses only its own manifest, while one that omits
+the field is still unknown. The classifier does not emit the field yet
+(stage 4, PR 4). The read-side reasons that `writes_complete: true` may
+excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
+read-only `unstable-path`, and so on). **A recipe mismatch is never
+excused**: when the steps that ran are not the steps the weak key's recipe
+covers (B6, or the classifier's `trace-incomplete:recipe-mismatch`), the
+trace says nothing about what the recipe writes. A step whose tracer did
+not finish cleanly (`clean: false`) is likewise unknown, and a record must
+carry exactly one step summary per step that ran (`len(steps) ==
+steps_run`).
+
+**Truncated executions (M-1).** A copy that did not run to completion has
+an unknown write set: `status` other than `built` (a failed action stopped
+part way even when every step ran, and the untraced build on `main`, which
+does not fail here, would have run further), `steps_run` below
+`steps_total`, or a `daemon-left` reason (a survivor may still write).
+This is run-void.
+
+**Unexplained tracked changes (M-2).** The shard's post-build backstop
+counts the tracked paths that changed and that no record's `tracked_writes`
+covers, as the header field `tracked_changed_unexplained` (a required key).
+A non-zero count is a write no trace saw: run-void, like
+`post_inventory_unexplained`. A `tracked-changed` void token whose changes
+are all explained is only the shard-level void (M4).
+
+**Second-order order dependence (M-3).** An action whose own record
+depended on another action's recorded writes (any `reads-product` or
+`unstable-path` reason derived by M5 to M14, or any reason in its own record
+whose kind is not on the allow-list below) would write something else if the order changed, so its recorded write set
+is one of several possible. Every cross-action rule quantifies over write
+sets, so one such action makes every other action's check unreliable. The
+strict verdict therefore treats it as an unknown write set: **run-void**.
+The allow-list of own-record reason kinds that describe only the action's own
+environment, and so do not mark it order-dependent: `failed` (its BUILD
+exited non-zero), `precondition` (a gate or refusal), `network`,
+`host-read`, `state-write`, `writes-tracked` (a taint source, not a
+reader), `vcs-read`, `trace-visible`, `unscrubbed`, `trace-incomplete` (M1
+decides the run), `daemon-left` (M-1 decides the run) and `manifest-*`.
+Every other kind, a `daemon:<addr>` on the client, any spelling of
+`reads-product` or `unstable-path`, and a kind the merge has never seen, is
+order dependence (fail closed). That closes the class for emission. It is expected to zero the yield of
+the first runs; any relaxation of it needs a lookup-time rule first (the M3
+spec: an action that would have been order-dependent in the lookup job must
+run), and that is the second-order item of §14.
+
+**The relaxed verdict (report only).** `Merge` also computes, for the M2
+report, what would be emitted if the M-1 and M-3 classes cost only their
+action instead of the run (`Outcome.RelaxedEmittable`,
+`Result.RelaxedRunVoid`). Every other cause stays run-void in it. It is
+**never** turned into a manifest, a pass or a ledger record; only the
+strict verdict feeds emission, and a test holds that line.
+
+**Resource bounds.** A record path is at most 4,096 bytes and 128 segments,
+holds no NUL and no U+FFFD (the same checks apply to the path part of every entry and to
+the action name), a field may not be `null`, and every line is valid UTF-8 with no padding
+(a BOM, CR or whitespace around the value is refused). The merge counts
+every node and comparison of all its overlap walks against one work budget
+(500 million units: ancestor probes weighted by prefix length, every visited
+node by its owner count, descendant nodes by the query length, every reason
+added by its length) and holds at
+most 4 GiB of path text; exceeding either is run-void `size`. A record that
+fails validation, or a shard whose index is outside the plan, voids the run
+and nothing further is analysed. Caps are enforced before allocation: a line
+is at most 64 MiB and a shard file 1 GiB, no list may exceed its cap and no
+string 64 KiB (a token pre-pass refuses them before any struct is built), the
+small files have byte caps, a record has at most 64 distinct reason kinds
+(the classifier emits about a dozen), no element of a string list may be
+`null` or empty, and the decoder stops once a shard holds more than its
+retained-text cap. The retained-text count includes the host facts. The merge
+keeps the exact number of distinct void causes but only the smallest 64 as
+text. Cause text
+is deterministic (validators report the first failure in a fixed order).
+
+**G3. Shards are prerequisite-closed.** A shard runs its assigned packages
+and their prerequisites (`ShardEntry.PackageNames`), so an action has a raw
+record in every shard that runs it. Records are keyed (shard, action);
+shard `s` must supply exactly one for every package in `PackageNames(s)`
+(B4). Every copy takes part in every rule, a reason found on any copy is
+the action's, and only the copy from the assigned shard becomes a manifest
+and a pass, from that shard's host facts.
+
+**G4. Weak keys are recomputed from machine facts.** `weakKey` hashes the
+image id, `kiln:root` and the scrubbed environment's values, which exist
+only on the shard. The shard writes `host-facts.json` before any BUILD; the
+merge recomputes each weak key from those facts and its own `Source` and
+requires the record's `weak` to match, or its `refusal` to be a refusal
+the merge reproduces (B5). A mismatch is run-void. No digest is taken from
+a shard. Image ids may differ between shards.
+
+**G11. The daemon rule uses the reason's kind only.** `RawRecord.Reasons`
+is capped (16 per kind) and sanitised, so a daemon's address cannot be
+matched against `Binds`. If any copy of action C has a reason of kind
+`daemon`, every other action with `overlap(u, w)` for `u` in the
+untracked observations of any copy of C and `w` in its own writes, and
+every other action with a non-empty `Binds`, gets
+`reads-product:daemon-peer`. The reason kinds are decided explicitly:
+`daemon` and `daemon-left` both count (`daemon-left` is also a truncated
+execution, M-1). This is a superset of the address match only for binds the
+record lists: `Binds` omits port 0 and abstract sockets. That gap is vacuous
+under §4.7, where every step has its own network namespace (G10), so no
+marker is added; only a pathname socket inside the checkout crosses
+actions, and the untracked-overlap half catches it.
+
+**The rules.** Notation: `anc(p, q)` is `p == q` or `p` is a *path*-prefix
+ancestor of `q` (so `a/b` is not an ancestor of `a/bc`); `overlap` is `anc`
+in either direction; `"."` (only in `list:.`) is an ancestor of everything.
+`W(b)` and `TW(b)` are the unions of `Writes` and `TrackedWrites` over all
+copies of `b`; `Tainted` is the union of `TW`; `Inv(s)` is shard `s`'s
+pre-BUILD inventory.
+
+| # | Level | Rule |
+|---|---|---|
+| B1 | run | The merge's own tree verifies and `HEAD` equals the workflow's sha (before `Merge`, which receives the regenerated digests). |
+| B2 | run | One shard per index `0..N-1`, the index from the artifact name and equal to the header's and the binding's; `shard_count == N ==` the regenerated plan's. |
+| B3 | run | `repository`, `run`, `revision`, `recorder` match; `attempt` is at most the merge's; `graph_sha256`, `steps_sha256` and `partition_sha256` equal the regenerated ones; `host_facts_sha256` and `inventory_sha256` are those of the files beside the binding. |
+| B4 | run | Every record line carries its shard's `binding_id` and is well-formed; the shard's actions are exactly `PackageNames(s)`, once each. |
+| B5 | run | Weak keys recompute (G4). |
+| B6 | run | A `built` record's `steps_sha256` equals the digest of the regenerated step lines, else `trace-incomplete:recipe-mismatch`, an unknown write set that `writes_complete` never excuses. |
+| M1 | run | Any unknown write set (G1), including truncated executions (M-1) and an unclean step. |
+| M2 | run | An untracked observation explained by neither `Inv(s)` nor another record's write **in the same shard**. |
+| M2b | run | `tracked_changed_unexplained > 0` (M-2). |
+| M3 | run | `post_inventory_unexplained > 0`, or a header `void` of `survivor`, `records-too-large` or an unknown token. |
+| M4 | shard | A header `void` of `tracked-changed` or `state-preloaded`. |
+| M5 | action | An untracked observation overlaps `W(b)`, `b != a`: `reads-product`. |
+| M6 | action | An absent observation overlaps `W(b)`: `reads-product`. |
+| M7 | action | `list:d` with `w` in `W(b)`, `overlap(d, w)`: `reads-product`. |
+| M8 | action | A traversed `t` with `w` in `W(b)` or `TW(b)`, `anc(w, t)`: `trace-incomplete:unstable-path`. |
+| M9 | action | An inventory path overlapping an untracked or absent observation: `reads-product`; one that is an ancestor of a traversed path: `unstable-path`. |
+| M10 | action | `overlap(w1, w2)` for `w1` in `W(a)`, `w2` in `W(b)`: `reads-product`. An action's own copies never collide. |
+| M11 | action | A tainted `t` overlapping a `pkg:`, `path:` or `list:` entry: `reads-product`. |
+| M12 | action | A tainted path overlapping the action's package, a `.gitignore`, the build tool or `code/kiln`: `reads-product`. |
+| M13 | action | Daemons (G11). |
+| M14 | action | Two actions with the same `Binds` string (type, address, port): `reads-product:shared-port`. |
+| M15 | action | The record's own reasons, a status other than `built`, a gate, a refusal. |
+| M-3 | run (strict) | Any action that received a reason from M5 to M14 (or carries `reads-product` or `unstable-path` itself). |
+
+M5 to M14 are the order-dependence reasons; M15's reasons describe the
+action's own environment and are not.
+
+An action is emitted only when the run is not void, its assigned shard is
+not void, no copy gave it a reason, and its assigned record's entries pass
+`key.CheckEntryName`, fit the manifest caps and include `pkg:<action>` (a
+manifest without it would still hit after the action's own sources
+changed).
+
+Rules are evaluated completely even after a void, so the report can name
+every problem. Rule M13 reads daemon reasons per action rather than per
+record: the copies of an action run the same BUILD, so a daemon seen in one
+is assumed in all.
+
+**Exec-then-rewrite by another action** needs no further data. An action
+that execs its own product which another action later rewrites: the write
+roots coincide or nest (M10). One that execs a tracked file another
+rewrote: the file is tainted and the entry covers it (M11). One that execs
+an untracked file it did not make: an untracked observation (M5, M9, M2).
+A writer with an unknown write set: M1. Writes outside the repository
+reach no other action (`$HOME`, `TMPDIR`, `/tmp` and `/run` are per-step
+tmpfs, the `ro_roots` are read-only).
 
 ## 8. The manifest store
 
@@ -1165,8 +1421,8 @@ left open above:
 `kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
 
 - the weak key, how many manifests it has, and the result: `hit`; `miss`,
-  with the first entry whose digest differs, for `kiln explain`; or
-  `no-manifest`;
+  with the manifests tried and each entry's state now, for `kiln explain`
+  (§9.1: the first differing entry is not computable); or `no-manifest`;
 - the static class and reasons of KILN03, which are now a **diagnostic
   upper bound**: the static closure is what the old graph claims P can
   read;
@@ -1174,6 +1430,91 @@ left open above:
 - every traced `pkg:` entry that is **not** in P's static closure. Each
   one is a dependency the old build tool does not know about, and so a bug
   in the old graph (stage 5).
+
+### 9.1 Lookup decisions (stage 5a)
+
+Stage 5a is `kiln legacy-plan --ledger <dir> --scope shared|local`. It is
+**report-only**: it skips nothing and changes no class. Without `--ledger`
+the plan is byte for byte what it was. The plan schema stays
+`kiln-legacy-plan/1`; everything below is an additive field, since nothing
+consumes the plan yet.
+
+- **Order.** For each package on a Linux plan (another OS gives
+  `untraced-os`): gate first, then the weak key, then the manifests, then
+  the strong keys, then one pass-ledger read for the whole plan.
+- **Gating comes before any key or ledger read** (§13 item 5, §11.1 item 13).
+  A package on the never list, with a KILN03 hard reason or precondition
+  (`symlink:`, `unknown-repo-inputs:`, `unknown-toolchain:`,
+  `no-build-file:`), or with a `probe-mismatch`, `probe-timeout` or
+  `probe-refused` result when `--probe` ran, gets `ineligible:<reason>` and
+  no lookup, even if a hit is waiting. If several apply the reported one is
+  fixed: the never list, then the other hard reasons, then probes, each sorted
+  bytewise. A refused weak key (`host-unknown`) is `ineligible:<refusal>`.
+  A probe refusal gates but is **not** added to the record's `reasons`, so a
+  plan made without `--ledger` does not change.
+- **Results.** `hit` (with the manifest id and the pass record), `miss`,
+  `no-manifest`, `untraced-os` and `ineligible:<reason>`. At most K = 4
+  manifests are tried, newest first, and the tried list stops at the hit.
+  The histogram counts each class; reasons that embed a name are grouped by
+  prefix (`ineligible:never`), as for KILN03.
+- **A miss cannot name the differing entry.** Manifests store names and the
+  pass ledger stores only strong keys (§8), so what an entry's digest was
+  when the pass was recorded is unknowable at plan time. A miss therefore
+  lists, for each manifest tried, the strong key that was looked up and the
+  entries in stored order, each with its **state in this tree** (`present`,
+  `absent`, `directory`, `no-package`, `not-directory`; `unknown` if it could
+  not be digested). That describes today's tree. It is not a comparison and
+  the plan says so. This replaces §9's "the first entry whose digest
+  differs".
+- **Outside the static closure.** Per package with manifests, the traced
+  `pkg:` entries (of any retained manifest, tried or not) that are not in its
+  static closure are listed as `outside_static_closure`, and the histogram
+  counts the packages that have any. A `pkg:` entry for a path that is no
+  package is listed too: the trace read something the graph does not know.
+- **Memory (D11).** The manifest reader takes the set of weak keys the plan
+  computed and ignores every other record as it parses it, so the heap is
+  bounded by the plan's packages, not the store (`ManifestReport.Ignored`
+  counts them). `nil` keeps everything, which is what merge uses. Structure
+  and caps are still judged for ignored records. The verified `id` is
+  computed once when a record is retained and kept with it, not recomputed
+  per comparison.
+- **Unusable stores.** A manifest-store error makes every package that got a
+  weak key `ineligible:manifest-store-unusable`; a pass-ledger error makes
+  those with manifests `ineligible:pass-ledger-unusable`. The plan says which
+  in `lookup.errors`. Nothing is a hit.
+- **The recorder's identity is in the key.** `kiln:root` is the absolute
+  `--root` and `kiln:executor-args` is the repeatable `--executor-arg`
+  flags. A lookup that differs from the recorder in either gets
+  `no-manifest`, never a hit.
+- **Plan size.** Each tried manifest lists at most 256 entries
+  (`entries`), with `entry_count` and `entries_truncated`; the strong key and
+  `outside_static_closure` always use the full list. `kiln explain` shows only
+  what the plan holds and says when it was truncated.
+- **Scope and probes.** The plan's `lookup.scope` comes from the stores
+  themselves (both must have the same scope; `NewLookupOptions` opens them
+  together). `lookup.probes_ran` says whether `--probe` ran.
+- **Junk manifests.** A flood of forged or junk manifests can only fill the
+  four slots of a weak key and force misses; it cannot produce a hit, because
+  a hit needs a pass for the strong key (§8, Poisoning).
+- **Before any skip mode exists (M3 requirements from the review).** Skipping
+  requires: (a) the policy files (`never.json`, `pinned.json`,
+  `toolchains.json`, `env.json`, `host-roots.json`) read from the base
+  revision, enforced in code, not by convention; (b) `probes_ran == true`,
+  since without probes a `probe-mismatch` gate cannot fire; (c) an explicit
+  decision on whether `unpinned:<lang>` gates lookup. **This is open**: 5a
+  does not gate on it, and the keys carry pins only.
+- **Trust boundary (§3.3).** Lookup reads the policy files (`env.json`,
+  `host-roots.json`, `never.json`, `pinned.json`, `toolchains.json`) through
+  the existing loaders, from whatever tree it is given. That is acceptable
+  only because 5a reports. **Skipping (M3) must run the Kiln binary and read
+  the policy built from the base revision**, as §3.3 says; 5a does not
+  establish that and must not be wired to a skip.
+- **The tree must be vouched for.** `--ledger` is refused (exit 2, nothing
+  written) with `--source folder`, and the library refuses any `Source` that
+  is not a `source.Cleaner`: a plain folder cannot list untracked files, so a
+  build product could enter a digest and the result would describe a tree
+  nobody committed. The plain plan only warns, because its keys are not a
+  claim about the ledger.
 
 ## 10. What stays from KILN03
 
@@ -1441,6 +1782,9 @@ point, not a measurement.
 5. lookup applies `probe-mismatch`, the never list and the §6
    preconditions before it can skip, because the traced keys carry pins
    only and none of these (§11.1).
+6. skipping reads policy from the base revision, enforced in code before any
+   skip mode exists; it requires `probes_ran == true`; and the open question
+   of whether `unpinned:<lang>` gates is decided (§9.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this
@@ -1484,6 +1828,22 @@ These are known and named. They are measured rather than closed.
   connect to a port the action bound and released is then allowed. A bind to
   port 0 matches nothing. The merge job's shared-port rule (§7) is the
   partial defence.
+- **Second-order order dependence.** An action that depended on another's
+  output has a recorded write set that is only one of several; the other
+  actions' checks quantify over write sets. The strict merge closes this for
+  emission by voiding the run (§7.1, M-3), which probably zeroes the yield of
+  the first runs. The relaxed verdict reports what is lost. The M3 spec must
+  add a lookup-time rule (an action that would be order-dependent in the
+  lookup job runs) before any relaxation.
+- **A compromised shard** can under-report its own copies' `Writes` and
+  choose its own host facts for its own actions. The merge cannot see either,
+  because it has only the shard's records and the facts the weak key needs.
+  This is inherent, and is mitigated by trusted runs only (the job `if:`,
+  `Trusted()` and the cache scope). `kiln_sha256`, `build_tool_sha256` and
+  `sandbox_config_sha256` in the binding are self-attested and
+  report-only: they are not compared across shards, because a compromised
+  shard would simply write the same value. The guards are
+  `recorder == RecorderVersion` and B5/B6.
 - **Tool build caches** declared as `state` are trusted the way KILN00
   §9.5 trusts tool state.
 - **Linux only.** macOS and Windows get no hits from this bridge.

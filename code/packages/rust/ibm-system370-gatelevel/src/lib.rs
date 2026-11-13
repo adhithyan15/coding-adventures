@@ -293,6 +293,12 @@ impl System370GateLevel {
                 return false;
             }
         }
+        // The oracle's memory is a Vec, so its length is not fixed by the type.
+        // The old index loop panicked on a short oracle; `take` alone would
+        // quietly compare fewer bytes and call the states equal. Fail closed.
+        if oracle.memory.len() < MEMORY_BYTES {
+            return false;
+        }
         let mut writes = settled.memory_writes.iter().peekable();
         for (address, &actual) in oracle.memory.iter().enumerate().take(MEMORY_BYTES) {
             let expected = if writes.peek().is_some_and(|(next, _)| *next == address) {
@@ -507,5 +513,44 @@ fn map_system360_error(error: ibm_system360_gatelevel::System360Error) -> System
         Source::AllocationFailed => System370Error::AllocationFailed,
         Source::Halted => System370Error::Halted,
         Source::MaxStepsExceeded { max_steps } => System370Error::MaxStepsExceeded { max_steps },
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A settled transition that changes nothing: same PC, no writes.
+    fn quiet_settled(pc: u32) -> engine::SettledExtension {
+        engine::SettledExtension {
+            raw: Vec::new(),
+            width: 0,
+            mnemonic: String::new(),
+            description: String::new(),
+            pc,
+            gpr_updates: [(0, 0); 4],
+            gpr_count: 0,
+            memory_writes: Vec::new(),
+            condition_code: None,
+        }
+    }
+
+    #[test]
+    fn truncated_oracle_memory_never_matches() {
+        let gate = System370GateLevel::new().expect("fresh gate-level machine");
+        let oracle = gate.get_state().expect("state snapshot");
+        let settled = quiet_settled(oracle.pc);
+
+        // Control: the complete oracle agrees with the unchanged machine.
+        assert_eq!(oracle.memory.len(), MEMORY_BYTES);
+        assert!(gate.settled_matches_oracle(&settled, &oracle));
+
+        // Only the oracle's length differs; every byte it does hold is equal.
+        // A bounded `take` loop would call this equal; it must fail closed.
+        let mut truncated = oracle.clone();
+        truncated.memory.truncate(MEMORY_BYTES - 1);
+        assert!(!gate.settled_matches_oracle(&settled, &truncated));
+        truncated.memory.clear();
+        assert!(!gate.settled_matches_oracle(&settled, &truncated));
     }
 }

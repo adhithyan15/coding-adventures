@@ -1,4 +1,4 @@
-cd ../gf256 && npm install --silent
-cd ../aes && npm install --silent
-npm install --silent
+cd ../gf256 && npm ci --silent
+cd ../aes && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

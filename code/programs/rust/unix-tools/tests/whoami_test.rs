@@ -4,6 +4,10 @@
 //! with CLI Builder, and that the business logic returns a valid
 //! username from the environment.
 
+// Unix-only tools: on Windows most of these tests (and the imports and helpers they use)
+// are compiled out, which would otherwise trip the CI `-D warnings` clippy gate.
+#![cfg_attr(not(unix), allow(unused_imports, dead_code))]
+
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
 use std::path::PathBuf;
 use unix_tools::whoami_tool::get_username;

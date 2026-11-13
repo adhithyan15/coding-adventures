@@ -1,4 +1,4 @@
-cd ../trig && npm install --silent
-cd ../point2d && npm install --silent
-npm install --silent
+cd ../trig && npm ci --silent
+cd ../point2d && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

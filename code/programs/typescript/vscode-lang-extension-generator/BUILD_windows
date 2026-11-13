@@ -1,5 +1,5 @@
-npm install --silent --prefix ..\..\..\packages\typescript\directed-graph
-npm install --silent --prefix ..\..\..\packages\typescript\state-machine
-npm install --silent --prefix ..\..\..\packages\typescript\cli-builder
-npm install --silent
+npm ci --silent --prefix ..\..\..\packages\typescript\directed-graph
+npm ci --silent --prefix ..\..\..\packages\typescript\state-machine
+npm ci --silent --prefix ..\..\..\packages\typescript\cli-builder
+npm ci --silent
 npx vitest run --coverage

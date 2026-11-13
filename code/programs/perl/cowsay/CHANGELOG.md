@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for the sibling libraries) instead of an `echo ... skipping` recipe. The helper resolves `-Deps` against `code\packages\perl`, so programs and packages share it.
+
 ## 0.1.0
 
 - add the Perl port of `cowsay`, parsing `code/specs/cowsay.json` via

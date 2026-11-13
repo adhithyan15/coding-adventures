@@ -6,4 +6,4 @@ cd ../state-machine && npm ci --quiet
 cd ../toml-lexer && npm ci --quiet
 cd ../parser && npm ci --quiet
 cd ../toml-parser && npm ci --quiet
-npm install --silent && npx vitest run --coverage
+npm ci --silent && npx vitest run --coverage

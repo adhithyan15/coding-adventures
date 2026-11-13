@@ -69,7 +69,7 @@ use warnings;
 
 use IO::Socket::INET;
 use IO::Select;
-use Socket qw(SHUT_WR);
+use Socket qw(SHUT_WR SO_ERROR);
 use Errno qw(ETIMEDOUT ECONNREFUSED ECONNRESET EPIPE);
 use Exporter 'import';
 
@@ -944,6 +944,41 @@ sub connect {
         CodingAdventures::TcpClient::TcpError->_throw(
             'io_error',
             "TcpClient: failed to connect to $host:$port: $err",
+        );
+    }
+
+    # -- Verify the connection really exists --
+    #
+    # With a Timeout, IO::Socket::INET connects non-blocking and then select()s
+    # for writability.  A REFUSED connect also makes the socket "writable", and
+    # on macOS the socket object comes back as a success while the error is
+    # still pending on it (the macOS CI leg saw connect() to a closed loopback
+    # port return a connection).  getpeername() fails with ENOTCONN on a socket
+    # that never connected, and SO_ERROR holds the real outcome, so ask both
+    # instead of trusting the constructor.
+    unless (defined $socket->peername) {
+        my $so_err = $socket->sockopt(SO_ERROR) || 0;
+        my $reason = do { local $! = $so_err || ECONNREFUSED; "$!" };
+        $socket->close;
+        if ($so_err == ETIMEDOUT) {
+            CodingAdventures::TcpClient::TcpError->_throw(
+                'timeout',
+                "TcpClient: connect to $host:$port timed out after " .
+                    $options->connect_timeout() . " seconds",
+                phase    => 'connect',
+                duration => $options->connect_timeout(),
+            );
+        }
+        if (!$so_err || $so_err == ECONNREFUSED) {
+            CodingAdventures::TcpClient::TcpError->_throw(
+                'connection_refused',
+                "TcpClient: connection refused by $host:$port",
+                addr => "$host:$port",
+            );
+        }
+        CodingAdventures::TcpClient::TcpError->_throw(
+            'io_error',
+            "TcpClient: failed to connect to $host:$port: $reason",
         );
     }
 

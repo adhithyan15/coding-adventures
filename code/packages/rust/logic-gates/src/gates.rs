@@ -41,12 +41,16 @@ use transistors::cmos_gates::{CMOSAnd, CMOSInverter, CMOSNand, CMOSNor, CMOSOr, 
 
 /// Panics if the value is not a valid binary bit (0 or 1).
 ///
-/// In Rust, we use `debug_assert!` so that validation runs in debug builds
-/// (during development and testing) but is compiled away in release builds
-/// for maximum performance. This is the Rust idiom for "trust but verify."
+/// A wire carries 0 or 1; a `u8` can hold 254 other values, and a gate has no
+/// meaningful output for any of them.  The check is a plain `assert!`, so it
+/// runs in EVERY build profile.  It used to be a `debug_assert!`, compiled away
+/// in release builds, and then "does a release build reject a 2?" depended on
+/// whichever transistor model happened to sit underneath (finding SEC-007; see
+/// LG01 "Bit representation").  One comparison per input is the price of a
+/// contract that does not change with the optimisation level.
 #[inline]
 fn validate_bit(value: u8, name: &str) {
-    debug_assert!(
+    assert!(
         value == 0 || value == 1,
         "{name} must be 0 or 1, got {value}"
     );
@@ -261,6 +265,8 @@ pub fn xor_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn nand_gate(a: u8, b: u8) -> u8 {
+    validate_bit(a, "a");
+    validate_bit(b, "b");
     // Delegate to the CMOS NAND gate (4 transistors — the natural CMOS primitive).
     CMOSNand::new(None, None, None)
         .evaluate_digital(a, b)
@@ -292,6 +298,8 @@ pub fn nand_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn nor_gate(a: u8, b: u8) -> u8 {
+    validate_bit(a, "a");
+    validate_bit(b, "b");
     // Delegate to the CMOS NOR gate (4 transistors — the other natural CMOS primitive).
     CMOSNor::new(None, None, None)
         .evaluate_digital(a, b)
@@ -324,6 +332,8 @@ pub fn nor_gate(a: u8, b: u8) -> u8 {
 /// ```
 #[inline]
 pub fn xnor_gate(a: u8, b: u8) -> u8 {
+    validate_bit(a, "a");
+    validate_bit(b, "b");
     // Delegate to the dedicated CMOSXnor gate (XOR + Inverter = 8 transistors).
     CMOSXnor::new(None).evaluate_digital(a, b).unwrap()
 }

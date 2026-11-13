@@ -72,3 +72,11 @@ mise exec -- cargo run
 mise exec -- cargo run -- -P
 mise exec -- cargo run -- --help
 ```
+
+## Windows
+
+`cargo test` runs on Windows too. Tests that need Unix-only APIs (permission
+bits, `chown`, symlinks, user and group lookup, `df`, `tty`, `uname`, ...) are
+behind `#[cfg(unix)]`, so a Windows run reports a smaller number of tests rather
+than failing. Tests that spawn a child process use the real `echo`/`false` on
+Unix and the test executable itself elsewhere.

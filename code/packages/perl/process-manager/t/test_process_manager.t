@@ -240,7 +240,7 @@ subtest 'Manager — exit_process sends SIGCHLD to parent' => sub {
     my $cpid = $m->fork($ppid);
     $m->exit_process($cpid, 0);
     my $parent = $m->get($ppid);
-    ok(grep { $_ == $PM->SIGCHLD } @{ $parent->{pending_signals} }, 'SIGCHLD queued');
+    ok(scalar(grep { $_ == $PM->SIGCHLD } @{ $parent->{pending_signals} }), 'SIGCHLD queued');
 };
 
 subtest 'Manager — wait_child reaps zombie' => sub {
@@ -299,7 +299,7 @@ subtest 'Manager — kill SIGTERM queues signal' => sub {
     my $m   = $Mgr->new();
     my $pid = $m->spawn('p');
     $m->kill($pid, $PM->SIGTERM);
-    ok(grep { $_ == $PM->SIGTERM } @{ $m->get($pid)->{pending_signals} }, 'SIGTERM queued');
+    ok(scalar(grep { $_ == $PM->SIGTERM } @{ $m->get($pid)->{pending_signals} }), 'SIGTERM queued');
 };
 
 subtest 'Manager — kill no-ops for missing process' => sub {

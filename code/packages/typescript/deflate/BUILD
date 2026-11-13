@@ -1,5 +1,5 @@
-cd ../heap && npm install --quiet
-cd ../huffman-tree && npm install --quiet
-cd ../lzss && npm install --quiet
-npm install --quiet
+cd ../heap && npm ci --quiet
+cd ../huffman-tree && npm ci --quiet
+cd ../lzss && npm ci --quiet
+npm ci --quiet
 npx vitest run --coverage
