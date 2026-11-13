@@ -4303,7 +4303,25 @@ jobs:
           # neither. Declared here rather than left to chance: a developer
           # machine usually has the component installed already, so omitting it
           # fails only on CI.
-          components: clippy,llvm-tools
+          #
+          # rustfmt likewise: many BUILD files run `cargo fmt -- --check`.
+          # Before the toolchain was pinned this step installed onto the
+          # runner image's preinstalled `stable`, which already carried
+          # rustfmt; a freshly installed exact release gets only the minimal
+          # profile plus what is listed here, so every fmt check failed with
+          # "'cargo-fmt' is not installed for the toolchain".
+          components: clippy,llvm-tools,rustfmt
+
+      # Ruby native extensions on Windows compile with
+      # `--target x86_64-pc-windows-gnu` to match RubyInstaller's MinGW Ruby
+      # (see each `ext/*/build_config.rb`). The pinned toolchain installed
+      # above carries only the host (msvc) standard library; the floating
+      # `stable` this replaced was the runner image's, which already had the
+      # GNU target. Without it cargo stops with "can't find crate for `core`".
+      - name: Add the Windows GNU Rust target for Ruby native extensions
+        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true') && runner.os == 'Windows'
+        shell: bash
+        run: rustup target add x86_64-pc-windows-gnu
 
       - name: Install native Paint VM dependencies
         # needs_mosaic_qt_runtime is its own condition, independent of
