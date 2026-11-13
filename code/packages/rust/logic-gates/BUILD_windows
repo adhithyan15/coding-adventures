@@ -1,1 +1,64 @@
-cargo test -p logic-gates -- --nocapture
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
+cargo test -q -p logic-gates --lib -- --nocapture
+cargo test -q -p logic-gates --doc
+cargo test -q -p logic-gates --test gates_test --test combinational_test --test sequential_test --test bit_domain --test decoder_width
+cargo test -q -p logic-gates --release --test bit_domain --test decoder_width
+cargo test -q -p logic-gates --release --test warrant_evidence
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check logic-gates
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p logic-gates --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xor_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nor_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xnor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_and_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_or_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_xor_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=shift-mask&& set WARRANT_EVIDENCE_FILTER=/exhaustive/not_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=shift-mask&& set WARRANT_EVIDENCE_FILTER=/exhaustive/nand_not_rejects_non_bit&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/and_n_rejects_a_short_input&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/or_n_rejects_a_short_input&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/xor_n_rejects_a_short_input&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_rejects_non_bit_d0&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=saturate-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/mux2_truth_table&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/mux4_rejects_non_bit_d0&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/mux_n_rejects_non_bit_input_0&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/demux_rejects_non_bit_data&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/demux_routes_data&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_rejects_non_bit_alone&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decoder_one_hot_every_width&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_rejects_no_active_input&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/encoder_inverts_decoder&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_rejects_non_bit_first&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/priority_encoder_every_word_2_4_8&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/tri_state_rejects_non_bit_data&& cargo test -q -p logic-gates --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test logic_gates_proofs
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

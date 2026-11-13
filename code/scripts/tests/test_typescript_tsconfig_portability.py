@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -299,7 +300,14 @@ console.log(__dirname, __filename, path, url, env);
             self.assertEqual(summary.node_lock_exemptions, 0)
 
     def test_accepts_the_reviewed_native_napi_lock_exception(self) -> None:
-        with tempfile.TemporaryDirectory() as temp_dir:
+        # The repository's exception list is empty since matrix-rust-napi
+        # started committing its lock, so the test supplies its own entry to
+        # keep the mechanism itself covered.
+        exceptions = {
+            Path("code/packages/typescript/matrix-rust-napi"): "test fixture",
+        }
+        with mock.patch.object(portability, "NODE_LOCK_EXCEPTIONS", exceptions), \
+                tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             self.make_shared_base(root, "${configDir}/src", "${configDir}/dist")
             project = self.make_project(
@@ -542,7 +550,8 @@ console.log(prose, nested);
         self.assertEqual(summary.node_provider_projects, 88)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
-        self.assertEqual(summary.node_lock_exemptions, 1)
+        # 0: matrix-rust-napi's lock exemption is retired; it commits a lock.
+        self.assertEqual(summary.node_lock_exemptions, 0)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
@@ -591,7 +600,10 @@ console.log(prose, nested);
         # +1: pbt locks its standalone compiler.
         # +1: fuzz locks its standalone compiler.
         # +1: test-matchers locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 498)
+        # +13: the dependency-pinning work committed locks for affine2d,
+        # arc2d, bezier2d, deflate, matrix-rust-napi, point2d, progress-bar,
+        # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
+        self.assertEqual(summary.locked_compilers, 511)
 
 
 if __name__ == "__main__":

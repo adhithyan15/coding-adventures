@@ -1,7 +1,7 @@
-npm install --prefix ../md5 --silent
-npm install --prefix ../sha1 --silent
-npm install --prefix ../sha256 --silent
-npm install --prefix ../sha512 --silent
-npm install --prefix ../hmac --silent
-npm install --silent
+npm ci --prefix ../md5 --silent
+npm ci --prefix ../sha1 --silent
+npm ci --prefix ../sha256 --silent
+npm ci --prefix ../sha512 --silent
+npm ci --prefix ../hmac --silent
+npm ci --silent
 npx vitest run

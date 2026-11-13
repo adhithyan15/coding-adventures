@@ -1,1 +1,1 @@
-cd ../../../packages/typescript/repl && npm install --quiet && cd ../../../programs/typescript/parrot && npm install --quiet && npx vitest run
+cd ../../../packages/typescript/repl && npm ci --quiet && cd ../../../programs/typescript/parrot && npm ci --quiet && npx vitest run

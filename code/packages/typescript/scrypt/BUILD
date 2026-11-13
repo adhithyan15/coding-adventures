@@ -1,8 +1,8 @@
-cd ../md5 && npm install --silent
-cd ../sha1 && npm install --silent
-cd ../sha256 && npm install --silent
-cd ../sha512 && npm install --silent
-cd ../hmac && npm install --silent
-cd ../pbkdf2 && npm install --silent
-npm install --silent
+cd ../md5 && npm ci --silent
+cd ../sha1 && npm ci --silent
+cd ../sha256 && npm ci --silent
+cd ../sha512 && npm ci --silent
+cd ../hmac && npm ci --silent
+cd ../pbkdf2 && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

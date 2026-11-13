@@ -1,13 +1,13 @@
-cd ../../../packages/typescript/directed-graph && npm install
-cd ../../../packages/typescript/cli-builder && npm install
-cd ../../../packages/typescript/grammar-tools && npm install
-cd ../../../packages/typescript/lexer && npm install
-cd ../../../packages/typescript/state-machine && npm install
-cd ../../../packages/typescript/parser && npm install
-cd ../../../packages/typescript/lattice-lexer && npm install
-cd ../../../packages/typescript/lattice-ast-to-css && npm install
-cd ../../../packages/typescript/lattice-parser && npm install
-cd ../../../packages/typescript/lattice-transpiler && npm install
-npm install
+cd ../../../packages/typescript/directed-graph && npm ci
+cd ../../../packages/typescript/cli-builder && npm ci
+cd ../../../packages/typescript/grammar-tools && npm ci
+cd ../../../packages/typescript/lexer && npm ci
+cd ../../../packages/typescript/state-machine && npm ci
+cd ../../../packages/typescript/parser && npm ci
+cd ../../../packages/typescript/lattice-lexer && npm ci
+cd ../../../packages/typescript/lattice-ast-to-css && npm ci
+cd ../../../packages/typescript/lattice-parser && npm ci
+cd ../../../packages/typescript/lattice-transpiler && npm ci
+npm ci
 npx vitest run
 npm run build

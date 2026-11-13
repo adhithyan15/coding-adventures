@@ -1,2 +1,2 @@
-cd ../forme-deploy-runner-core && npm install --silent
-npm install --silent && npm run build && npx vitest run --coverage
+cd ../forme-deploy-runner-core && npm ci --silent
+npm ci --silent && npm run build && npx vitest run --coverage

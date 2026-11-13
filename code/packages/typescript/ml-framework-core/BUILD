@@ -1,1 +1,1 @@
-npm install --silent && npm run build && npm test
+npm ci --silent && npm run build && npm test

@@ -1,3 +1,3 @@
-cd ../document-ast && npm install --silent
-cd ../forme-types && npm install --silent
-npm install --silent && npm run build && npx vitest run --coverage
+cd ../document-ast && npm ci --silent
+cd ../forme-types && npm ci --silent
+npm ci --silent && npm run build && npx vitest run --coverage
