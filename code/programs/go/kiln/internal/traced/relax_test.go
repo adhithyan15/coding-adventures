@@ -321,4 +321,19 @@ func TestSuccessfulLookupOfARemovedLeftover(t *testing.T) {
 	wantStable(t, "lstat", h.run(lstat(l), unlinkOf(l)))
 	h = quiet(t)
 	wantStable(t, "failed stat", h.run(fail(stat(l), "ENOENT")))
+	// A failure that says something was there (EISDIR: the link led to a
+	// directory) is as good as a success; found by the fuzzer.
+	h = quiet(t)
+	wantUnstable(t, "EISDIR then removed", h.run(
+		fail(open(l, "O_WRONLY|O_CREAT|O_TRUNC", ""), "EISDIR"), rename(l, "code/p/a/elsewhere")))
+	// An ENOENT before the removal of a name the action did not make may have
+	// been the missing target of a link that is gone now; after the removal it
+	// is just an absence.
+	h = quiet(t)
+	wantUnstable(t, "ENOENT before the removal", h.run(fail(stat(l), "ENOENT"), unlinkOf(l)))
+	h = quiet(t)
+	wantStable(t, "ENOENT after the removal", h.run(unlinkOf(l), fail(stat(l), "ENOENT")))
+	// A name made before the lookup is judged by its change log.
+	h = quiet(t)
+	wantStable(t, "made, ENOENT, removed", h.run(created(l, "O_WRONLY|O_CREAT|O_EXCL"), unlinkOf(l), fail(stat(l), "ENOENT")))
 }

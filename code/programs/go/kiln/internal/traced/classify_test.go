@@ -46,6 +46,7 @@ func TestAbsence(t *testing.T) {
 
 func TestFailedCallsAreObservationsNotWrites(t *testing.T) {
 	h := newHarness(t)
+	h.fs.file(abs("code/p/b/x")) // EACCES says it is there
 	rec := h.run(
 		fail(mkdir("code/p/a/out"), "EEXIST"),               // present, untracked
 		fail(write("unlink", "code/scripts/zzz"), "ENOENT"), // absent

@@ -52,6 +52,13 @@ type mod struct {
 	opened, unlinked bool
 }
 
+// goneLook describes lookups that followed a final name the post-run disk shows
+// absent.
+type goneLook struct {
+	from    pos
+	present bool
+}
+
 // span is the interval covered by a set of lookups: the earliest start and the
 // latest completion.  Treating all lookups of a name as one wide interval only
 // ever adds reasons.
@@ -112,11 +119,11 @@ type classifier struct {
 	// post-run disk shows as a file, relAbs those it shows absent.  The span is
 	// the earliest start and the latest completion of such lookups.
 	relFinal, relAbs map[string]span
-	// gone holds followed final names that a SUCCESSFUL call walked to and the
-	// post-run disk shows absent: something removed them afterwards, so the
-	// call may have gone through a link or file that is no longer there.  Only
-	// a name the action itself made can be vouched for (checkStability).
-	gone map[string]bool
+	// gone holds the followed final names the post-run disk shows absent, with
+	// the start of the earliest lookup and whether any call found something
+	// there (it succeeded, or failed with an errno that says so).  See
+	// checkStability.
+	gone map[string]goneLook
 	// relax is set while a successful stat or exec target is resolved.
 	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
@@ -127,6 +134,8 @@ type classifier struct {
 	cur    pos // completion of the current call
 	start  pos // start of the current call
 	callOK bool
+	// callPresent says the call found something at its path (presence).
+	callPresent bool
 	// openRet is the -y path of the descriptor while the path of a successful
 	// open is resolved: when the walk ends at exactly that path, the final name
 	// was not a link at the moment of the open ("opens settle the final name",
@@ -150,7 +159,7 @@ func newClassifier(p *prepared) *classifier {
 		created: map[string]pos{}, absent: map[string]pos{}, links: map[string]string{},
 		dirs: map[string]bool{}, cache: map[string]node{}, mods: map[string][]mod{},
 		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
-		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]bool{},
+		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
 	}
 }
@@ -173,6 +182,7 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 		c.start = c.cur
 	}
 	c.callOK = ev.Result.OK
+	c.callPresent = presence(ev.Result)
 	switch ev.Kind {
 	case trace.KindOpen:
 		c.open(ev)
@@ -692,13 +702,27 @@ func (c *classifier) checkStability() {
 			c.reason(rUnstable)
 		}
 	}
-	for p := range c.gone {
-		made := false
-		for _, m := range c.mods[p] {
-			made = made || m.made
+	// A followed final name that the post-run disk shows absent was removed, or
+	// never there.  A call that found something there needs the action to have
+	// made the name: the creation must have COMPLETED before the earliest
+	// lookup began.  And a removal of a name the action had NOT made yet, that
+	// completed after the earliest lookup began, may have taken a link or file
+	// the lookup went through (a pre-existing object the disk no longer shows).
+	for p, g := range c.gone {
+		ms := c.mods[p]
+		firstMade := posInf
+		for _, m := range ms {
+			if m.made && m.at.before(firstMade) {
+				firstMade = m.at
+			}
 		}
-		if !made {
+		if g.present && !firstMade.before(g.from) {
 			c.reason(rUnstable)
+		}
+		for _, m := range ms {
+			if !m.made && m.at.before(firstMade) && !m.at.before(g.from) {
+				c.reason(rUnstable)
+			}
 		}
 	}
 	for p := range c.seenFile {

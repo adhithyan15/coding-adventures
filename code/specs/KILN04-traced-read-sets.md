@@ -584,10 +584,15 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   walk still runs to find the links on the way. If either path is in the
   repository and they disagree, the post-run disk no longer shows what the call
   saw: `unstable-path`.
-- **A successful followed call whose final name is absent on the post-run
-  disk** was removed afterwards, perhaps after the call went through a link
-  there. Unless the action itself made the name (some creation in its change
-  log), the result is `unstable-path`.
+- **A followed call whose final name is absent on the post-run disk** was
+  removed afterwards, or was never there. If the call found something there (it
+  succeeded, or failed with an errno other than `ENOENT`/`ENOTDIR`), the action
+  must have made the name, the creation completing before the lookup started;
+  else `unstable-path`. And a removal of a name the action had not yet made
+  (an untracked leftover) that completed after the lookup started gives
+  `unstable-path` too: the lookup may have gone through a link there that the
+  disk no longer shows. A successful open whose `-y` path is the name is exempt
+  (§5.5(a)).
 - **A successful call whose walk stopped before its final component**, at a
   component the disk shows missing or not a directory, contradicts the disk:
   `unstable-path`. This holds with no change of the action's own.
