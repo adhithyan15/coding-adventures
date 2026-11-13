@@ -373,4 +373,9 @@ func TestRemovedNameRuleCoversStoppedComponents(t *testing.T) {
 	wantUnstable(t, "rename", h.run(fail(stat(l+"/x"), "ENOENT"), rename(l, "code/p/a/m")))
 	h = quiet(t)
 	wantStable(t, "removed first", h.run(unlinkOf(l), fail(stat(l+"/x"), "ENOENT")))
+	// A rename onto the name does not make it "the action's own": the stat saw
+	// the leftover that the rename replaced.
+	h = quiet(t)
+	wantUnstable(t, "renamed onto, then removed", h.run(
+		created("code/p/a/m", "O_WRONLY|O_CREAT|O_EXCL"), fail(stat(l), "ENOENT"), rename("code/p/a/m", l), unlinkOf(l)))
 }
