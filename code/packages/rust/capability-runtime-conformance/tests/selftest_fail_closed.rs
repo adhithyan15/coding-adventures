@@ -74,8 +74,14 @@ fn write_shim(dir: &std::path::Path, real: &std::path::Path, trace_main: bool) {
     );
     let path = dir.join("strace");
     std::fs::write(&path, script).unwrap();
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    // Only Linux reaches this function (`main` returns early elsewhere), but
+    // the test binary must still COMPILE on Windows, where `std::os::unix`
+    // does not exist: the Windows CI build compiles every test target.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    }
 }
 
 fn main() {
