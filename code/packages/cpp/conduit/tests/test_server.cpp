@@ -1,15 +1,12 @@
 // ============================================================================
 // End-to-end: build a real Conduit app, serve it on a background thread, and
-// drive it with a tiny blocking HTTP/1.0 client over a POSIX socket. A watchdog
+// drive it with a tiny blocking HTTP/1.0 client over a loopback TCP socket
+// (BSD sockets on Unix, Winsock on Windows — see net_compat.h). A watchdog
 // thread stops the server after a deadline so a wedged run fails fast; sockets
 // carry a receive timeout for the same reason.
 // ============================================================================
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
 #include <atomic>
+#include <cctype>
 #include <chrono>
 #include <stdexcept>
 #include <string>
@@ -17,6 +14,7 @@
 
 #include "conduit/conduit.hpp"
 #include "conduit_test.h"
+#include "net_compat.h"
 
 using namespace conduit;
 
@@ -38,19 +36,13 @@ struct HttpResult {
 bool httpRequest(uint16_t port, const std::string& method, const std::string& path,
                  const std::string& body, const std::string& contentType, HttpResult& out) {
     out = HttpResult{};  // reset — callers reuse the same out across requests
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0) return false;
+    netcompat::Socket fd = netcompat::open_tcp();
+    if (fd == netcompat::kInvalidSocket) return false;
 
-    timeval tv{5, 0};
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+    netcompat::set_recv_timeout_seconds(fd, 5);
 
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    if (connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
-        close(fd);
+    if (!netcompat::connect_loopback(fd, port)) {
+        netcompat::close_socket(fd);
         return false;
     }
 
@@ -61,19 +53,19 @@ bool httpRequest(uint16_t port, const std::string& method, const std::string& pa
     }
     req += "Connection: close\r\n\r\n" + body;
 
-    if (send(fd, req.data(), req.size(), 0) < 0) {
-        close(fd);
+    if (netcompat::send_bytes(fd, req.data(), req.size()) < 0) {
+        netcompat::close_socket(fd);
         return false;
     }
 
     std::string raw;
     char buf[4096];
     for (;;) {
-        ssize_t n = recv(fd, buf, sizeof(buf), 0);
+        long long n = netcompat::recv_bytes(fd, buf, sizeof(buf));
         if (n <= 0) break;
         raw.append(buf, static_cast<size_t>(n));
     }
-    close(fd);
+    netcompat::close_socket(fd);
 
     auto sep = raw.find("\r\n\r\n");
     if (sep == std::string::npos) return false;
@@ -95,7 +87,7 @@ bool httpRequest(uint16_t port, const std::string& method, const std::string& pa
         size_t colon = line.find(": ");
         if (colon != std::string::npos) {
             std::string k = line.substr(0, colon);
-            for (auto& c : k) c = static_cast<char>(::tolower(c));
+            for (auto& c : k) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
             out.headers.emplace_back(k, line.substr(colon + 2));
         }
         pos = eol + 2;
