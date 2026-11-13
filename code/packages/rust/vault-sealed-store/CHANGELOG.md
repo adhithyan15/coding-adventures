@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- `binds_vaults` no longer trips clippy 1.100's `needless_bool` in the test
+  build (an early `return false` followed by `true`): one expression per cfg arm,
+  same behaviour.
+
 ### Added
 
 - **Vault identity** (VLT01 F12, #13980 P1.20d).

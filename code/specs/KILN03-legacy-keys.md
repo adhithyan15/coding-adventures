@@ -7,6 +7,21 @@ KILN00 §15.1 on top of KILN02 key encoding, the `Source`/`Host` interfaces
 (KILN00 §13) and the pass ledger (§10). **Shadow mode only:** nothing in M1
 or M2 skips a build; keys are computed, recorded and compared.
 
+*Revision (2026-11-12): traced read-sets.* The static key defined here is
+now a **diagnostic upper bound**, not the basis for reuse. Reuse is decided
+by [KILN04](KILN04-traced-read-sets.md): a weak key over what a tracer
+cannot see (this spec's recipe, tools, environment and executor digest) and
+a strong key over what a trusted run was observed to read. The file scans
+of §6 are advisory hints; the symlink rule of §3.3 and the hard reasons of
+§7 remain preconditions for both keys. Three things differ between the two
+keys:
+- A traced `pkg:` entry carries `T(q)`, not this spec's `D(q)`.
+- The traced weak key also keys `PATH`, `HOME` and `TMPDIR`, which §5
+  leaves unkeyed.
+- `pinned.json` comes to mean "ecosystems whose fetchers and download
+  state are allowed" (KILN04 §5.3–§5.4), and `never.json` shrinks to
+  clock-dependent packages, since tracing reports network use.
+
 ## 1. The problem in one paragraph
 
 Kiln's real keys (KILN00 §8) need declared inputs and isolated work roots.
@@ -150,7 +165,7 @@ symlink in P's inputs, and in every read, is **fully** resolved — following
 chains and directory links, with a 40-hop limit and loops refused — and the
 final target is checked: inside P, a closure member or a read path is
 already covered; anything else, a loop, or an exhausted hop limit makes P
-uncacheable with reason `escape:<link>`.
+uncacheable with reason `symlink:<link>`.
 
 ### 3.4 Key fields
 
@@ -254,28 +269,48 @@ grown.
 ## 6. Escapes and indirection
 
 A legacy BUILD can reach outside its closure in ways a key cannot see. M1
-uses two cheap, conservative rules. Both are heuristics; §8 is the real check.
+runs cheap static scans over the files it hashes. **The scans are advisory
+hints for triage and debugging.** They make no soundness or security claim: a
+text scan cannot prove that a build reads nothing outside its key, and every
+review of one has found another way past it. A hint can neither make a
+package `cacheable` nor make it `uncacheable`; hints never appear among a
+package's `reasons` and never change its class (§7). Soundness for reuse
+comes from **traced read-sets**: the read-set of a real run, recorded under
+`strace` on trusted CI and checked against the key's inputs (KILN04,
+forthcoming). Until a traced read-set manifest exists for a package it carries
+`m1-incomplete:trace` and cannot be `cacheable`.
 
-1. **`../` resolution over every text file.** Every text file in P's own
-   inputs (up to 256 KiB each, not just the BUILD) is scanned for path tokens
-   containing `../`. Each is resolved against the file's directory. A result
-   inside P is fine (source-relative imports stay quiet); a result inside
-   another closure member or a read path is fine; anything else makes P
-   uncacheable with reason `escape:<path>`.
-2. **Indirection markers in every scanned file.** The selected BUILD *and*
-   every text file in P's own inputs are scanned for: `git rev-parse`,
-   `git ls-files`, `dirname`, `realpath`, `readlink`, `$(pwd)`, `$PWD`,
-   `$OLDPWD`, `$0`, `${BASH_SOURCE`, `$HOME`, `~/`, a bare `cd ..` (with or
-   without a trailing `/` or separator), or an absolute path outside a small
-   allowlist (`/dev/null`, `/usr/bin/env`, `/bin/sh`). Any hit makes P
-   uncacheable with reason `indirect:<file>`. In particular the ~301
-   packages whose BUILD is `sh tools/run.sh` stay uncacheable until the
-   audit proves them.
-3. **Unscanned means uncacheable.** A text file over the 256 KiB cap, or a
-   file with an executable bit that is not text, cannot be scanned, so it
-   makes P uncacheable with reason `unscanned:<file>`. Failing closed is the
-   point: these rules are heuristics, so their blind spots must cost hit rate,
-   not correctness.
+What the scans report, as entries of the plan's per-package `hints` array:
+
+1. **`../` resolution over every text file.** Every text file (up to 256 KiB
+   each, not just the BUILD) is scanned for path tokens containing `../`. Each
+   is resolved against the file's directory. A result inside the allowed
+   region (§12 item 17) is quiet; anything else is hint `escape:<path>`.
+2. **Indirection markers in every scanned file.** Location markers
+   (`dirname`, `realpath`, `readlink`, `$0`, `${BASH_SOURCE`, `$HOME`, `~/`,
+   `git rev-parse`, a bare `cd ..`, `__file__`, `CARGO_MANIFEST_DIR`, ...) and
+   absolute paths outside a small allowlist give hint `indirect:<file>`.
+   The ~301 packages whose BUILD is `sh tools/run.sh` are the typical hit.
+3. **Unscanned files.** A text file over the 256 KiB cap, or a file that is
+   not text and not a known inert format, cannot be scanned and gives hint
+   `unscanned:<file>`.
+
+Hints are only a map of where a human, or the tracer, should look first. They
+are sorted, de-duplicated and capped at 16 per kind per package, and the
+histogram counts them apart from reasons.
+
+**Symlink rules stay hard.** A symlink is the one case where the key itself
+is blind by construction (a link's digest covers only its target text), so
+these remain uncacheable reasons, `symlink:<link>`, independent of any trace:
+a link in a package's own files or reads that does not resolve, through any
+chain or directory link, inside the closure and reads; a link that leaves the
+repository or exhausts the 40-hop limit; and a symlinked selected BUILD file.
+Unknown toolchains and unknown repository inputs are hard reasons too.
+
+The implementation widens the scans beyond P's own files: they apply to every
+closure member's files and to every read file, and non-text files are
+`unscanned` unless a known inert format. §12 items 13 to 21 give the exact
+definitions; they define what a hint means, not a guarantee.
 
 ## 7. Cacheability classes
 
@@ -284,9 +319,9 @@ measurement. Each package gets one class:
 
 | Class | Meaning |
 |---|---|
-| `cacheable` | Every closure language is in `code/kiln/legacy/pinned.json`, no escape, no indirection, no unknown toolchain, not on the never list. |
+| `cacheable` | Every closure language is in `code/kiln/legacy/pinned.json`, no symlink leaves the closure, no unknown toolchain or repository input, not on the never list. Reuse additionally needs a KILN04 manifest whose strong key has a pass. |
 | `unpinned` | Only reason: some closure language is not yet pinned (its M0 PR has not landed). |
-| `uncacheable` | Any other reason (listed). |
+| `uncacheable` | Any other hard reason (listed). Advisory hints (§6) never affect the class. |
 
 `pinned.json` starts empty and gains a language when its pinning PR lands.
 `code/kiln/legacy/never.json` lists packages known to depend on the network
@@ -304,9 +339,12 @@ is the measured value of M0.
   full build is not the same experiment as a pass in a PR subset. This cannot
   be keyed. M2 records the run kind (`full` or `affected`) with each shadow
   record and reports disagreement split by run kind.
-- **The resolver is the trust root.** Every edge comes from the old tool,
-  which KILN00 §2 records has missed dependents before. The definitive check
-  is an M2 audit: on one Linux full-build shard set, run each BUILD under
+- **The resolver is the trust root — for the static key only.** Every edge
+  comes from the old tool, which KILN00 §2 records has missed dependents
+  before. *Revision (2026-11-12):* the audit below is no longer a one-off
+  sample. It became the mechanism: every recorded pass carries its own trace
+  (KILN04), and traced reads outside the static closure are reported as
+  old-graph bugs (KILN04 §9). The original audit design: on one Linux full-build shard set, run each BUILD under
   `strace -f -e trace=%file,%process,connect -e signal=none` — `%file`
   includes `stat`, `access`, `readlink` and directory listing, so existence
   checks and globs are seen, not only opens; `connect` finds network use.
@@ -319,9 +357,10 @@ is the measured value of M0.
   verbose `execve` lines print the whole environment. Its logs are treated
   as sensitive and never uploaded as artifacts; only the derived
   path-to-package diff is.
-- **Gate for M3.** Reuse is not enabled until the audit is clean (no
-  unexplained misses), the scrubbed-environment shadow run (§5) shows no
-  result changes, and `probe-mismatch` is fatal.
+- **Gate for M3.** Superseded by KILN04 §13: zero unexplained
+  disagreements on traced predictions, no unexplained result changes under
+  the scrubbed environment (now enforced on every traced run, not only
+  before M3), `probe-mismatch` fatal, and the recording run confined.
 - **Ignored and ignore-listed files.** Files Git ignores are invisible to
   `Source`, so they are outside every key; this is safe only on fresh
   runners, which is why reuse is CI-only. The ancestor-directory ignore list
@@ -331,7 +370,7 @@ is the measured value of M0.
 ## 9. Commands and output
 
 ```
-kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows]
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--probe]
 kiln explain --plan <plan.json> <package>
 ```
 
@@ -361,10 +400,10 @@ kiln explain --plan <plan.json> <package>
   P's inputs (it always is, so this is asserted only for the recipe
   component).
 - Dependency and dev-dependency cycles terminate and are order-independent.
-- `../` escapes are detected in a non-BUILD text file; in-package and
-  in-closure `../` are allowed; each indirection marker, in the BUILD or in
-  any other text file, makes the package uncacheable; an over-cap text file
-  and an executable binary each make it `unscanned`.
+- `../` escapes, indirection markers and unscanned files each produce the
+  matching **hint** and leave the class unchanged; in-package and
+  in-closure `../` produce no hint. (Read-set soundness is tested in KILN04
+  §12, not here.)
 - A symlink whose target leaves the closure and read paths makes the
   package uncacheable; one pointing inside the closure does not.
 - An enclosing package's manifest change changes the nested package's key; a change in a package nested inside, or enclosing, a *dependency* of P changes P's key.
@@ -388,12 +427,19 @@ must match them.
    digest is SHA-256 of the full KILN02 section encoding
    `str("inputs") || list(entries)`. The plan's component digests use the
    section encodings of `reads` and `consumed` from the key encoder.
-2. **Class precedence.** The temporary `m1-incomplete:*` reasons (present
-   until escape scans and tool/env identity land) do not count when choosing
+2. **Class precedence.** The temporary `m1-incomplete:*` reason (the escape
+   scans landed in 7c-2 and tool/env identity in 7c-3, so
+   `m1-incomplete:scans` and `m1-incomplete:tools-env` no longer exist; only
+   `m1-incomplete:trace` remains) does not count when choosing
    between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
-   `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
+   `never`, `unknown-toolchain:<name>`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
    unpinned closure language gives `unpinned`; `cacheable` needs no reason at
-   all, so it is unreachable while any `m1-incomplete` reason remains.
+   all, so it is unreachable while any `m1-incomplete` reason remains. The text scans
+   of §6 (`escape:`, `indirect:`, `unscanned:`) are advisory `hints`, not
+   reasons, and play no part in the class. The hard symlink reasons
+   (`symlink:<link>`) do. `m1-incomplete:trace` (no traced read-set manifest,
+   KILN04) is the standing reason, so `cacheable` stays unreachable. A package carrying a hard reason still gets
+   its key.
 3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
    an empty key and reason `no-build-file:<os>`, but remains a closure member
    for others.
@@ -421,10 +467,265 @@ must match them.
    sorted by name, and `histogram` (named reasons grouped by prefix, except
    `unpinned:<language>`).
 10. **Symlinked BUILD.** A selected BUILD file that is a symlink makes that
-    package `uncacheable` with reason `escape:<build-file>` and no key; the
+    package `uncacheable` with reason `symlink:<build-file>` and no key; the
     rest of the plan is still produced.
 11. **Graph limits.** At most 100,000 packages and 5,000,000 edges (deps over
     all OSes plus dev_deps); `extra_toolchains` entries are non-empty UTF-8
     without control characters.
 12. **Folder source.** The plain-folder `Source` cannot check for a clean tree;
     `legacy-plan` warns on stderr and continues.
+
+## 12. Implementation decisions (7c-2: escape and indirection scans)
+
+13. **Scope and timing.** The files examined are every closure member's own
+    files (§3.1; the package's own among them) and every read file (a read
+    file, every file under a read directory, every glob match, ancestor
+    configuration). A dependency's indirection, unscanned file or dynamic `../`
+    token therefore gives each dependent a hint, naming the member's file
+    (`indirect:<member file>`); a dependency's escaping link gives each
+    dependent the hard reason `symlink:<link>`. Hints are advisory (section 6)
+    and never change a class. `../` targets
+    and links from ALL examined files are re-judged against the dependent's own
+    allowed region (item 17). Per-file facts are computed once, in the same pass
+    that hashes the file, and summarised once per member and per read item. A
+    symlink is never opened, so its target's content is not scanned; the
+    link-target rule covers it.
+14. **Text.** The kind of a file comes from its first 8 KiB (all of it when
+    shorter), in this order: (1) a UTF-16 byte order mark (`FF FE` or `FE FF`):
+    the file is decoded to text and scanned; (2) the magic bytes of an inert
+    format (PNG, JPEG, GIF, WebP, ICO, PDF, TrueType, OpenType, WOFF, WOFF2):
+    hashed but not scanned, unless the file is executable, in which case it is
+    `unscanned`; (3) a NUL byte: binary, always `unscanned`; (4) otherwise text,
+    scanned as bytes whether or not it is valid UTF-8. Text up to 256 KiB
+    (262,144 bytes, inclusive) is scanned; larger text is `unscanned:<file>`.
+    Residual risk, accepted: a script that begins with an inert magic and is run
+    as `sh file.png` is not seen. Scanning works on bytes (or the decoded
+    UTF-16): every marker and delimiter is ASCII.
+15. **Tokens.** A token is a maximal run of bytes that are not whitespace,
+    `"`, `'`, `` ` ``, `=`, `(`, `)`, `,`, `;`, `:`, `<`, `>`, `|` or `&`.
+    Before tokenising, URLs (`scheme://` up to the next whitespace, quote,
+    bracket or operator) are removed, so `https://x/y` is ignored. Kept (so
+    scanned as ordinary text): `file:` URLs, which name a path, and any URL
+    containing `..`.
+16. **`../` tokens.** A token counts when, with `\` read as `/`, it contains
+    `../`, ends in `/..`, or is exactly `..`, `../` or `..\` (the parent of the
+    file's directory; Lua's spaced concatenation `a .. b` is an accepted false
+    positive). `wait..` and `a..b` do not count. A glued flag prefix without a
+    slash is dropped (`-I../inc` is `../inc`). The token is resolved against
+    the file's directory and cleaned; a result that climbs above the repository
+    root is an escape. A token containing any of `$ * ? [ ] { } ~ %` cannot be
+    resolved and is an escape as written. Absolute tokens are not resolved:
+    the absolute-path rule owns them. The reason names the cleaned target.
+    Before the region check every target is walked through any symlinks it
+    crosses (the walk of item 20); the walked path is what is checked.
+17. **Allowed region.** A target is inside when it equals or lies under the
+    package's `rel_path`, any closure member's `rel_path`, or a read path (file
+    or directory). A read glob admits a target only when the target is a listed
+    file the glob matches, or a directory with at least one file all of whose
+    files match. A directory that merely contains the package (`../` from its
+    root) is outside.
+18. **Markers.** Case-sensitive substrings, deliberately without word
+    boundaries (`__dirname`, `os.path.realpath`, `$0` inside `$01` all hit):
+    - shell: `dirname`, `realpath`, `readlink`, `$0`, `${0`, `$BASH_SOURCE`,
+      `${BASH_SOURCE`, `~/`, `pushd`, `Set-Location`, `Push-Location`, `chdir`,
+      `Chdir`;
+    - a file's own location: `__file__`, `__dir__`, `__FILE__`, `__filename`,
+      `import.meta`, `CARGO_MANIFEST_DIR`, `MyInvocation`, `PSCommandPath`,
+      `$PSScriptRoot`;
+    - the working directory: `getcwd`, `Getwd`, `cwd()`, `Dir.pwd`,
+      `current_dir`, `set_current_dir`, `filepath.Dir`, `filepath.Abs`,
+      `runtime.Caller`, `Get-Location`;
+    - CI checkouts: `GITHUB_WORKSPACE`, `RUNNER_`; Windows: `%~dp0`, `%CD%`.
+
+    Matched case-insensitively (PowerShell variables are case-insensitive):
+    `$(pwd`, `` `pwd` ``, `$pwd`, `${pwd`, `$oldpwd`, `${oldpwd`, `$home`,
+    `${home`, `$psscriptroot`, `%~dp0`, `%cd%`. Also `git`, whitespace,
+    `rev-parse` or `ls-files` (any whitespace run); and a bare `cd ..`: the
+    word `cd` or `sl` not glued to a longer word, optional whitespace (so
+    `cd..` counts), an optional quote, `..`, any number of `/`, an optional
+    quote, then whitespace, `;`, `&`, `|`, `)` or the end (`cd ../x` is not a
+    marker, it is a `../` token).
+19. **Absolute paths.** A token is examined after: reading `\` as `/`; dropping
+    a leading `#!`; dropping a leading run of `- + @ [ {` (so `${TMPDIR:-/tmp}`,
+    `@/etc/x` and `[/etc` are seen); for a token that began with `-`, dropping
+    the flag name up to the first `/` (`-isystem/usr/include`); and dropping
+    trailing `} ) ]`. It is an absolute path outside the allowlist
+    (`/dev/null`, `/usr/bin/env`, `/bin/sh`) when it starts with `~` and a
+    letter or `_` (`~user/x`), or starts with `/` and: it contains `..`; or it
+    starts with exactly one slash and its first segment (cut at the first
+    character other than a letter, digit, `_`, `.`, `-`) is a well-known
+    filesystem root (`etc usr opt home Users tmp var private Library System
+    Applications Volumes mnt media proc sys dev root nix bin sbin lib lib64 snap
+    srv run workspace github runner __w Windows`) or it has at least two
+    non-empty segments (`/a/b`); or it starts with exactly two slashes and has
+    at least two non-empty segments once they are removed (`//server/share`)
+    or its first segment is a filesystem root (`//tmp`); three or more leading
+    slashes (the tail of `file:///etc/x`) are judged as the one-slash case on
+    what follows. A token made only of slashes is never a path, and neither
+    are one-segment tokens with an unknown root: `</p>` (the token `/p`), `/W4`,
+    `/permissive-`, `/*`, `/^re/`. Separately, before tokenising, a Windows
+    drive prefix (a single letter not glued to a longer word, then `:` and `\`
+    or `/`) or a `\\host\` UNC path anywhere in the text is indirection.
+20. **Symlinks.** Resolved like a kernel (a stack of components; a link
+    component is replaced by its target's components and costs one hop; `..`
+    pops), over the listed tree: at most 40 hops, so a loop fails by running
+    out. Refused (hard reason `symlink:<link>`): an empty, rooted, Windows-drive or
+    backslash-containing target, climbing above the repository root, a regular
+    file used as a directory, an exhausted hop budget; or a final path outside
+    the allowed region (17). A dangling target inside the region is fine. The
+    links checked are those in every examined file set of item 13. The target
+    text comes from the same `Describe` that produced the link's digest.
+21. **Reasons and hints.** Symlink findings are reasons: `symlink:<link>`
+    (and `symlink:<build-file>` for a symlinked selected BUILD file). The text
+    scans are hints in the record's `hints` array: `escape:<path>` (the cleaned
+    `../` target or the dynamic token), `indirect:<file>`, `unscanned:<file>`.
+    Control characters are removed from both. At most 16 of each kind are
+    recorded per package (the first in sorted order); `hints` is sorted and
+    de-duplicated, and the cap bounds plan size and changes no class. Hints are
+    advisory: they make no soundness or security claim, never enter `reasons`,
+    and cannot make a package `cacheable` or `uncacheable`; the key is always
+    computed. The histogram has a `hints` map beside `reasons`, counting each
+    hint kind once per package under its prefix. `kiln explain` prints hints in
+    their own section, labelled advisory.
+
+## 13. Implementation decisions (7c-3: tools and environment)
+
+Items continue the numbering of §11 and §12. (The loop item asked for a
+"§12"; §12 was taken by 7c-2, so this is §13.)
+
+22. **`toolchains.json` shape.** A bare object from entry name to entry,
+    sorted by name, with no duplicate keys. An entry has `pins` (required, may
+    be empty; tool name to version, sorted), `probes` (argv lists), `roots`
+    (tool name to PATH directories, sorted; each tool must be pinned in the same
+    entry) and the optional `always` (bool) and `os` (a sorted subset of
+    `linux`, `darwin`, `windows`, in the graph's spelling). Unknown fields are
+    refused. Names (entries and tools) are 1 to 64 bytes of letters, digits and
+    `._+-`, not starting with punctuation: no `:` (reserved for Kiln) and no `/`.
+    A pin is `image` or an exact version (a digit first, then letters, digits and
+    `._+-`); `latest`, ranges and empty pins are refused. At most 256 entries, 8
+    probes of at most 8 arguments each (a probe's `argv[0]` must be a tool the
+    same entry pins; `image` counts. The arguments after it are a CLOSED
+    allowlist of whole tails, not a shape: at most one argument, one of `--version`,
+    `-version`, `-V`, `-v`, `-vV`, `--numeric-version`, or a per-tool query:
+    `go version`, `xcode-select -p`, and `pkgutil --pkg-info=<reverse-DNS id>`
+    (`^--pkg-info=[a-z0-9]+(\.[A-Za-z0-9_-]+)+$`). Everything else is refused at
+    load, so no probe can install, fetch, evaluate or run code (`cargo install`,
+    `python3 -m pip`, `node -p`, `uv tool run`, `go install`). `erl` has no safe
+    version flag, so it has no probe: its pin is identity only, unverified), 16 directories per tool. A tool pinned in
+    two entries must carry the same pin and the same roots, or the file is
+    refused. Every policy file (`toolchains.json`, `env.json`,
+    `host-roots.json`, `pinned.json`, `never.json`) is decoded case-exactly and
+    with duplicate keys refused (Go's decoder would match `"Pins"` and let the
+    last of two equal keys win), so what a reviewer reads is what is parsed.
+    Paths in policy files may not contain `:` or `;`, so one entry cannot smuggle
+    in a second PATH directory.
+23. **Entry namespace.** Closure languages and `extra_toolchains` share one
+    namespace of entry names (`rust` is both a language and an extra toolchain).
+    The always-included set of §4 is the entries with `always: true` (`sh`, `cc`,
+    `strace` on Linux, `xcode` on macOS); every package gets them whether or not
+    its closure names them. A name with no entry is the hard reason
+    `unknown-toolchain:<name>` for every package whose closure holds it. The
+    language `unknown` (the two `code/sites` packages, which the old tool could
+    not classify) deliberately has no entry, so it gives that reason.
+24. **The `tools` section.** One KILN02 kind-2 entry per distinct tool name
+    (the binary name), `version` = the pin string, `identity` = the pin string,
+    or for `image` the `Host.ImageID()` bytes; sorted by name. The set is the
+    union of the entries for the closure's languages and extra toolchains plus the
+    always-included ones that apply to the OS. `ToolsFor(names, os, imageID)` is the
+    one function; it returns the unknown names separately. The digest of
+    `toolchains.json` is the consumed entry `policy:toolchains.json` (SHA-256 of the
+    file's bytes) in the static key; KILN04's weak key leaves it out.
+25. **Pin sources.** An exact pin is the version committed in `mise.toml`
+    (`go`, `python`, `uv`, `node`, `ruby`, `rust`, `ghc`, `cabal`, `dart`,
+    `gradle`, `kotlin`, `lua`), in `code/specs/data/toolchain-pins.json`
+    (`dotnet`, `elixir`, `erlang`, `bundler`) or asserted in `ci.yml` shell steps
+    (`opam`, `ocamlc`). Everything else (the C toolchain, `java` whose workflow
+    input is only a major version, `swift`, `perl`, `npm`, `cpanm`) is `image`.
+    A repository test compares each exact pin with these files, so a toolchain
+    bump that forgets Kiln fails.
+26. **Probe semantics.** A probe checks the pin whose tool name equals its
+    `argv[0]`; a probe whose tool has no pin, or an `image` pin, is run but
+    compared with nothing (`ok`). The pin must be a whole token of the normalised
+    output: tokens split at white space and `,;()[]"'<>`, trailing `.` and `:`
+    are cut, and a letters-only prefix is cut (`v22.1.0`, `go1.26.1`), so
+    `1.2.3` does not match `1.2.30` or `1.2.3-rc1`. Normalisation removes
+    absolute paths (recognised at a token start) and timestamps first. Statuses:
+    `ok`, `absent` (not found on the fixed PATH, or a dangling link),
+    `refused` (the real path is inside the checkout, or cannot be related to it:
+    the check fails closed, compares case-folded on macOS and Windows, and `Probe`
+    refuses to run at all without a checkout root), `mismatch` (the output lacks
+    the pin, or the run failed to start, timed out or exited non-zero even if the
+    pin is in the output; a short normalised excerpt is kept as `detail`) and
+    `timeout` (the 120 s limit for all probes of a plan passed before this one
+    ran). `mismatch` and `timeout` are findings and give the soft reasons
+    `probe-mismatch:<tool>` and `probe-timeout:<tool>` to every package whose key
+    holds that tool. They, and `refused`, are soft only in M2: they become
+    fatal before M3 enables reuse. A tool's
+    reported status is the worst of its probes. The binary that is run is the
+    real path that was checked (so it cannot be swapped between check and run),
+    with `argv[0]` set to the name the PATH gave (rustup proxies and multi-call
+    binaries read it). On Unix each probe leads its own process group and a
+    timeout kills the group. A `HOME` that is not absolute and clean, or holds the
+    list separator, is treated as unset, so its roots are skipped. Failing to
+    remove the probe's private directory is an error. The overall 120 s deadline
+    is checked between probes, so one probe can overrun it by up to its own 10 s,
+    and a timed-out tool is reported `timeout` whatever its output would have
+    shown (a timeout can mask a mismatch). The error text of a failed run goes
+    through the same normalisation as the output before it is kept as `detail`. The run's environment is exactly `PATH`, `LANG=C`,
+    `LC_ALL=C`, `TZ=UTC` and a private `HOME`, in a private working directory.
+    Probes run once per plan over the entries any package uses, and only for the
+    platform the machine runs (`--probe` with another `--os` is a usage error).
+    A tool whose entry lists no `roots` cannot be found on the fixed PATH and
+    reads as `absent`; adding roots is how a tool becomes probe-able.
+27. **`env.json`.** `{"names": [...]}`, strictly sorted; a name is
+    letters, digits and `_` (not starting with a digit) with an optional trailing
+    `*`. A bare `*`, a name with `:`, and any name or prefix that is secret-like
+    are refused when the file loads. Secret-like is §5's list (`TOKEN`, `SECRET`,
+    `PASSWORD`, `PASSWD`, `CREDENTIAL`, `AUTH`, `PRIVATE` anywhere, `_KEY` and
+    `_PAT` at the end, case-insensitively; plus `PASSPHRASE`, `COOKIE`,
+    `SESSION`, `APIKEY`, `SIGNING` and `ACCESS_KEY`) joined with what `envscrub` removes
+    from child environments, so the two lists cannot disagree. After wildcard
+    expansion a matching set variable that is secret-like is an error naming the
+    variable (never its value). A keyed VALUE that looks like a credential is an
+    error naming the variable too: URL userinfo (`://user@`), the token shapes
+    `ghp_`, `gho_`, `github_pat_`, `AKIA`, `xoxb-` and `xoxp-`, and a
+    `-D...password=` flag. Names match case-sensitively, except on Windows where
+    they are case-insensitive; the LAST of two entries with one name wins (as in
+    `os/exec`); and a value must be valid UTF-8.
+    Origin is always 0 (`env`). `PATH`, `HOME` and `TMPDIR` are not listed: the
+    KILN04 weak key owns them.
+28. **`ConstructPATH(tools, home)`.** Directories come from the `roots` of
+    exactly the given tools, in tool-name order and each tool's file order,
+    non-system directories first, then system ones (`/usr`, `/bin`, `/sbin`,
+    `/opt/homebrew`), first occurrence wins, joined with the OS list separator.
+    A leading `$HOME` is replaced by `home`; with no home such roots are left
+    out. It is not wired into anything yet. In the seed file `go`, `node`,
+    `python3` and `ruby` use `/opt/hostedtoolcache/<name>/<version>/x64/bin`,
+    `rustc` and `cargo` use `$HOME/.cargo/bin`, `ghc` uses `$HOME/.ghcup/bin`,
+    `dotnet` uses `$HOME/.dotnet`, and the always-included tools `/bin` and
+    `/usr/bin`; every other tool has no roots yet.
+29. **`host-roots.json`.** `roots` (strictly sorted by path; `path`, `kind`
+    `image`, `tool`, `state` or `ephemeral`, and `tool`, `ecosystem`,
+    `fetchers` only where the kind uses them), `ephemeral` and `absent-ok`
+    (strictly sorted). An `ephemeral` glob needs at least two literal segments
+    before its first wildcard (`/dev/fd/*` is fine, `/proc/*` is not). Paths are absolute or begin with `$HOME` (or `$TMPDIR`),
+    are clean, and contain no `..`; `ephemeral` allows `*` and `**`; `/`, `$HOME`
+    and `$TMPDIR` alone are too broad to be roots. A `tool` root names a tool
+    that `toolchains.json` pins (the tool's binary name, not the entry name), and
+    every `/opt/hostedtoolcache` directory on a tool's PATH must lie under a
+    `tool` root of that tool, so the two files cannot drift. The loader is
+    required (a missing file is an error). Its digest (`policy:host-roots.json`)
+    is for the KILN04 weak key; the static key does not use it, so editing the
+    file changes no static key. The seed lists only `image` and `tool` roots: no
+    `state` root, because state roots need `pinned.json` ecosystems and the
+    fetchers of KILN04 stage 5, and the image roots are the Linux layout.
+30. **Plan and explain.** The plan gains `env` (the sorted names that entered
+    every key), `probes` (only when `--probe` ran), per-record `tools`
+    (`name@pin`), and the component digests `tools` and `env` (the KILN02 section
+    encodings of §3.8 and §3.9). Environment values never appear. `explain`
+    prints the same. Since the environment is one for the whole run, `env` sits at
+    the plan level; each record carries only the digest.
+31. **Where policy is read from.** On trusted runs the policy files are to be
+    read from the base revision through `Source`, never from the working tree
+    (KILN03 D6), so a PR cannot choose its own probes or allowlist. 7c-3 reads
+    them from the tree it is given; the base-revision read is a later item.

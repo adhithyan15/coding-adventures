@@ -465,3 +465,33 @@ func TestSectionDigests(t *testing.T) {
 		t.Fatal("bad phase accepted")
 	}
 }
+
+func TestToolsAndEnvDigests(t *testing.T) {
+	ts := []Tool{{Name: "a", Version: "1", Kind: ToolHost, Identity: []byte("1")}, {Name: "b", Version: "image", Kind: ToolHost, Identity: []byte("img")}}
+	td, err := ToolsDigest(ts)
+	if err != nil || td != sha256.Sum256(putTools(nil, ts)) {
+		t.Fatalf("ToolsDigest = %x, %v", td, err)
+	}
+	if _, err := ToolsDigest([]Tool{ts[1], ts[0]}); err == nil {
+		t.Fatal("unsorted tools accepted")
+	}
+	es := []EnvVar{{Name: "A", Value: "1"}, {Name: "B", Value: ""}}
+	ed, err := EnvDigest(es)
+	if err != nil || ed != sha256.Sum256(putEnv(nil, es)) {
+		t.Fatalf("EnvDigest = %x, %v", ed, err)
+	}
+	if ed == td {
+		t.Fatal("sections must not collide")
+	}
+	if _, err := EnvDigest([]EnvVar{es[1], es[0]}); err == nil {
+		t.Fatal("unsorted env accepted")
+	}
+	// The digests are the sections of the full preimage, byte for byte.
+	pre, err := Preimage(Action{OS: "linux", Arch: "x64", Target: "t", Phase: PhaseTest, Tools: ts, Env: es})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.HasSuffix(pre, append(putTools(nil, ts), putEnv(nil, es)...)) {
+		t.Fatal("tools and env are not the tail of the preimage")
+	}
+}

@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+# The single source of truth for every third-party gem the repository's Ruby
+# packages may resolve.  Gemfile.lock next to this file is committed (with
+# checksums) and CI serves exactly that set to every package's unchanged
+# `bundle install` through a local gem mirror (code/scripts/ruby_gem_mirror.py).
+#
+# Each gem lists the UNION of the requirement ranges used by the repo's
+# Gemfiles and gemspecs, so the locked version satisfies all of them.
+# code/scripts/ruby_pins_check.py fails CI when this file, the lock or the
+# manifests drift apart.  The names must match
+# code/specs/data/third-party-dependencies/ruby-allowlist.json.
+
+source "https://rubygems.org"
+
+gem "base64", ">= 0.2.0"
+gem "json", ">= 2.21.0"
+gem "minitest", "~> 5.0", "~> 5.27"
+gem "rake", "~> 13.0", "~> 13.4"
+gem "rspec", "~> 3.0"
+gem "simplecov", "~> 0.22", "~> 0.22.0"
+gem "standard", "~> 1.0", "~> 1.56.0"

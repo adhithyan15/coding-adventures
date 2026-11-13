@@ -213,9 +213,10 @@ Two things are deliberately **allowed**:
 - **`schema_version`** is `1` for this document. Any change to sections 2–4
   — a new section, a reordered field, a new tag — is a new schema version
   and a new spec revision.
-- **`semantics_version`** belongs to KILN01 (expansion). It changes when the
-  same BUILD and rule files would expand to different canonical recipes.
-  Until KILN01 is accepted it is `0`, which only legacy actions use.
+- **`semantics_version`** says what the recipe and `consumed` entries mean.
+  `0` is the static legacy key (KILN03), `1` is reserved for KILN01
+  (expansion; it changes when the same BUILD and rule files would expand to
+  different canonical recipes), and `2` is the traced legacy key (KILN04).
 - **Under semantics version 0** (legacy, KILN03 §3.5) a `consumed` entry's
   `key` is a 32-byte **content digest** — a package's own digest, a
   directory's tree digest, or a tool's source digest — not another action's
@@ -224,6 +225,18 @@ Two things are deliberately **allowed**:
   unchanged; only the meaning of the 32 bytes differs, and because the
   semantics version is in the preamble a legacy key can never equal a real
   one. A golden vector pins this case.
+- **Under semantics version 2** (traced legacy, KILN04 §3, §11) the
+  encoding is again unchanged.
+  - A **weak key** has empty `inputs` and `reads`; its `consumed` holds
+    `tool:` and `policy:` content digests.
+  - A **strong key** repeats the weak key's other sections; its `consumed`
+    holds `weak:` → the 32-byte weak key, plus one entry per manifest
+    entry: `pkg:` → `T(q)` (a package digest that also covers its nested
+    package names, KILN04 §5.2), `path:` → a state digest, or `list:` → a
+    listing digest.
+
+  Only strong keys contain a `weak:` entry, so a weak key never equals a
+  strong key. Golden vectors pin both.
 
 Bumping either version changes every key, which empties the ledger. That is
 deliberate: it is the only safe response to a change in meaning.
@@ -257,8 +270,26 @@ expected refusal. Byte strings in an action are hex (`recipe_hex`,
 invalid UTF-8, an action may give `target_hex` to override `target`. Unknown
 fields are rejected.
 
+Three further arrays pin the traced legacy key (§5, KILN04 §11), and are
+checked by the same verifier. A traced weak key and strong key are ordinary
+`valid` actions with `semantics_version` 2.
+- `digests`: `{name, description, kind, digest_hex}` plus the inputs `kind`
+  reads. `kind` is `state-absent`, `state-directory`, `state-file` (`exec`,
+  `content_hex`, the SHA-256 of the content), `state-link` (`target`),
+  `missing-package`, `listing` (`entries`: `{name, kind}`, kind 1 file, 2
+  link, 3 directory; tagged `10`), `listing-not-directory` (tagged `11`) or
+  `traced-package` (`own_digest_hex`, `nested`).
+- `strong_consumed`: `{name, description, weak_key_hex, entries, consumed}`,
+  where `entries` are `{name, digest_hex}` and `consumed` is the section a
+  strong key is built with.
+- `refused_entries`: `{name, description, weak_key_hex, entries, error}`, a
+  manifest entry list that must be refused with `error` in the message.
+
 The Go vectors were cross-checked against an independent encoder written
-from this spec alone; all 13 valid vectors matched byte for byte.
+from this spec alone; all 13 valid vectors matched byte for byte. The
+traced vectors added with KILN04 stage 1b-ii (2 valid, 11 `digests`, 2
+`strong_consumed`, 7 `refused_entries`) were cross-checked the same way,
+from §2, §3 and KILN04 §11 only.
 
 CI checks that the Go implementation reproduces the file (KILN00 §10.2:
 golden vectors are what stop a change to key computation from shipping

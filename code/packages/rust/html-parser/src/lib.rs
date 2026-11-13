@@ -27092,7 +27092,7 @@ fn browser_autofill_has_webauthn_token(tokens: &[String]) -> bool {
 
 fn browser_autofill_token_is_field(token: &str) -> bool {
     let lower = token.to_ascii_lowercase();
-    if lower.starts_with("section-")
+    !(lower.starts_with("section-")
         || matches!(
             lower.as_str(),
             "on" | "off"
@@ -27104,11 +27104,7 @@ fn browser_autofill_token_is_field(token: &str) -> bool {
                 | "fax"
                 | "pager"
                 | "webauthn"
-        )
-    {
-        return false;
-    }
-    true
+        ))
 }
 
 fn browser_form_autofill_element(control: &BrowserFormControl) -> String {

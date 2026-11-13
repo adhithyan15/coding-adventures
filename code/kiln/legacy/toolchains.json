@@ -1,0 +1,447 @@
+{
+  "c": {
+    "pins": {
+      "cc": "image",
+      "ld": "image"
+    }
+  },
+  "cc": {
+    "always": true,
+    "pins": {
+      "cc": "image",
+      "ld": "image"
+    },
+    "probes": [
+      [
+        "cc",
+        "--version"
+      ],
+      [
+        "ld",
+        "-v"
+      ]
+    ],
+    "roots": {
+      "cc": [
+        "/bin",
+        "/usr/bin"
+      ],
+      "ld": [
+        "/bin",
+        "/usr/bin"
+      ]
+    }
+  },
+  "cpp": {
+    "pins": {
+      "c++": "image",
+      "cc": "image",
+      "ld": "image"
+    },
+    "probes": [
+      [
+        "c++",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "c++": [
+        "/bin",
+        "/usr/bin"
+      ]
+    }
+  },
+  "csharp": {
+    "pins": {
+      "dotnet": "9.0.319"
+    },
+    "probes": [
+      [
+        "dotnet",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "dotnet": [
+        "$HOME/.dotnet"
+      ]
+    }
+  },
+  "dart": {
+    "pins": {
+      "dart": "3.12.2"
+    },
+    "probes": [
+      [
+        "dart",
+        "--version"
+      ]
+    ]
+  },
+  "dotnet": {
+    "pins": {
+      "dotnet": "9.0.319"
+    },
+    "probes": [
+      [
+        "dotnet",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "dotnet": [
+        "$HOME/.dotnet"
+      ]
+    }
+  },
+  "elixir": {
+    "pins": {
+      "elixir": "1.18.4",
+      "erl": "27.3.4.11"
+    },
+    "probes": [
+      [
+        "elixir",
+        "--version"
+      ]
+    ]
+  },
+  "fsharp": {
+    "pins": {
+      "dotnet": "9.0.319"
+    },
+    "probes": [
+      [
+        "dotnet",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "dotnet": [
+        "$HOME/.dotnet"
+      ]
+    }
+  },
+  "go": {
+    "pins": {
+      "go": "1.26.1"
+    },
+    "probes": [
+      [
+        "go",
+        "version"
+      ]
+    ],
+    "roots": {
+      "go": [
+        "/opt/hostedtoolcache/go/1.26.1/x64/bin"
+      ]
+    }
+  },
+  "haskell": {
+    "pins": {
+      "cabal": "3.10.3.0",
+      "ghc": "9.4.8"
+    },
+    "probes": [
+      [
+        "ghc",
+        "--version"
+      ],
+      [
+        "cabal",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "ghc": [
+        "$HOME/.ghcup/bin"
+      ]
+    }
+  },
+  "java": {
+    "pins": {
+      "gradle": "8.14",
+      "java": "image"
+    },
+    "probes": [
+      [
+        "gradle",
+        "--version"
+      ],
+      [
+        "java",
+        "-version"
+      ]
+    ]
+  },
+  "kotlin": {
+    "pins": {
+      "gradle": "8.14",
+      "java": "image",
+      "kotlinc": "2.1.20"
+    },
+    "probes": [
+      [
+        "gradle",
+        "--version"
+      ],
+      [
+        "kotlinc",
+        "-version"
+      ]
+    ]
+  },
+  "lua": {
+    "pins": {
+      "lua": "5.4.7"
+    },
+    "probes": [
+      [
+        "lua",
+        "-v"
+      ]
+    ]
+  },
+  "mosaic": {
+    "pins": {
+      "cargo": "1.99.1",
+      "rustc": "1.99.1"
+    },
+    "probes": [
+      [
+        "rustc",
+        "-V"
+      ],
+      [
+        "cargo",
+        "-V"
+      ]
+    ],
+    "roots": {
+      "cargo": [
+        "$HOME/.cargo/bin"
+      ],
+      "rustc": [
+        "$HOME/.cargo/bin"
+      ]
+    }
+  },
+  "ocaml": {
+    "pins": {
+      "ocamlc": "5.2.1",
+      "opam": "2.5.2"
+    },
+    "probes": [
+      [
+        "ocamlc",
+        "-version"
+      ],
+      [
+        "opam",
+        "--version"
+      ]
+    ]
+  },
+  "perl": {
+    "pins": {
+      "cpanm": "image",
+      "perl": "image",
+      "prove": "image"
+    }
+  },
+  "python": {
+    "pins": {
+      "python3": "3.13.17",
+      "uv": "0.13.7"
+    },
+    "probes": [
+      [
+        "python3",
+        "--version"
+      ],
+      [
+        "uv",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "python3": [
+        "/opt/hostedtoolcache/Python/3.13.17/x64/bin"
+      ]
+    }
+  },
+  "ruby": {
+    "pins": {
+      "bundle": "4.0.24",
+      "ruby": "3.4.12"
+    },
+    "probes": [
+      [
+        "ruby",
+        "--version"
+      ],
+      [
+        "bundle",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "ruby": [
+        "/opt/hostedtoolcache/Ruby/3.4.12/x64/bin"
+      ]
+    }
+  },
+  "rust": {
+    "pins": {
+      "cargo": "1.99.1",
+      "rustc": "1.99.1"
+    },
+    "probes": [
+      [
+        "rustc",
+        "-V"
+      ],
+      [
+        "cargo",
+        "-V"
+      ]
+    ],
+    "roots": {
+      "cargo": [
+        "$HOME/.cargo/bin"
+      ],
+      "rustc": [
+        "$HOME/.cargo/bin"
+      ]
+    }
+  },
+  "sh": {
+    "always": true,
+    "pins": {
+      "bash": "image",
+      "sh": "image"
+    },
+    "probes": [
+      [
+        "bash",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "bash": [
+        "/bin",
+        "/usr/bin"
+      ],
+      "sh": [
+        "/bin",
+        "/usr/bin"
+      ]
+    }
+  },
+  "starlark": {
+    "pins": {}
+  },
+  "strace": {
+    "always": true,
+    "os": [
+      "linux"
+    ],
+    "pins": {
+      "strace": "image"
+    },
+    "probes": [
+      [
+        "strace",
+        "-V"
+      ]
+    ],
+    "roots": {
+      "strace": [
+        "/bin",
+        "/usr/bin"
+      ]
+    }
+  },
+  "swift": {
+    "pins": {
+      "swift": "image"
+    },
+    "probes": [
+      [
+        "swift",
+        "--version"
+      ]
+    ]
+  },
+  "typescript": {
+    "pins": {
+      "node": "22.23.5",
+      "npm": "image"
+    },
+    "probes": [
+      [
+        "node",
+        "--version"
+      ]
+    ],
+    "roots": {
+      "node": [
+        "/opt/hostedtoolcache/node/22.23.5/x64/bin"
+      ]
+    }
+  },
+  "wasm": {
+    "pins": {
+      "cargo": "1.99.1",
+      "rustc": "1.99.1"
+    },
+    "probes": [
+      [
+        "rustc",
+        "-V"
+      ],
+      [
+        "cargo",
+        "-V"
+      ]
+    ],
+    "roots": {
+      "cargo": [
+        "$HOME/.cargo/bin"
+      ],
+      "rustc": [
+        "$HOME/.cargo/bin"
+      ]
+    }
+  },
+  "xcode": {
+    "always": true,
+    "os": [
+      "darwin"
+    ],
+    "pins": {
+      "pkgutil": "image",
+      "xcode-select": "image"
+    },
+    "probes": [
+      [
+        "xcode-select",
+        "-p"
+      ],
+      [
+        "pkgutil",
+        "--pkg-info=com.apple.pkg.CLTools_Executables"
+      ]
+    ],
+    "roots": {
+      "pkgutil": [
+        "/usr/sbin"
+      ],
+      "xcode-select": [
+        "/bin",
+        "/usr/bin"
+      ]
+    }
+  }
+}

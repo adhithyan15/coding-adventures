@@ -1,3 +1,3 @@
-rustup target add --toolchain stable wasm32-unknown-unknown
-rustup run stable cargo test -- --nocapture
-rustup run stable cargo build --target wasm32-unknown-unknown --release
+rustup target add wasm32-unknown-unknown
+cargo test -- --nocapture
+cargo build --target wasm32-unknown-unknown --release

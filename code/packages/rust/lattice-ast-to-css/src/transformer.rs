@@ -2370,10 +2370,7 @@ pub fn make_value_node(value: &str, _template: &GrammarASTNode) -> GrammarASTNod
 
 /// Check whether a node is an empty artifact from expansion.
 fn is_empty_artifact(node: &GrammarASTNode) -> bool {
-    if node.children.is_empty() && node.rule_name == "block_item" {
-        return true;
-    }
-    false
+    node.children.is_empty() && node.rule_name == "block_item"
 }
 
 /// Extract mixin/function parameters from a `mixin_params` node.
