@@ -37,6 +37,8 @@ REQUIRED = (
     "TestSandboxRORootsHaveNoSocketsOrFifos",
     "TestSandboxRealStrace",
     "TestSandboxStraceTraceSetNamesAreValid",
+    "TestSandboxROBeneathHome",
+    "TestSandboxOutputDescriptors",
 )
 
 FINAL = {"pass", "fail", "skip"}

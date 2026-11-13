@@ -1124,9 +1124,12 @@ version of this section led to these. Each is a decision, not a sketch.
   which turns every skip into a failure. A script then asserts from the
   `go test -json` stream that every named test passed and none skipped. One of
   them runs the real `strace -f --quiet=attach -y -s 4096 --kill-on-exit`
-  around `kiln sandbox-exec` and parses the trace in helper mode, which pins
-  the single-spawn root, the init's tolerated setup and strace's `-y`
-  escaping.
+  around `kiln sandbox-exec` (with the argv `sandbox.StraceArgs` returns) and
+  parses the trace in helper mode, which pins the single-spawn root, the init's
+  tolerated setup and strace's `-y` escaping. `TestSandboxROBeneathHome` (S1:
+  reads, no writes, no renames of a root or its anchor, a writable state root
+  beneath the anchor) and `TestSandboxOutputDescriptors` (S2: output in the two
+  pipes, the root's own streams empty, refusals exit 125) are in the same set.
 
 **Exit status.** The root exits with the init's status (128 plus the signal if
 it was killed). A failure before the step runs exits 125, and a failed exec 127.
