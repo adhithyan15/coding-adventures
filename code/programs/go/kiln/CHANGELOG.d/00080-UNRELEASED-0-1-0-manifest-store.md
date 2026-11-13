@@ -23,4 +23,12 @@
   byte-stable). `ManifestSet.Manifests(weak)` is the lookup for stage 5.
 - Tests prove the pass-ledger reader ignores `manifests/` and refuses a
   manifest segment placed among pass segments (and the reverse).
+- Security-review hardening: far-future manifests (after now plus
+  `MaxClockSkew`) are dropped and reported by the reader and fail a merge when
+  they are in the snapshot; retention is applied incrementally while parsing
+  (at most K records per weak key held); every pass and manifest store and
+  merge refuses a symlinked or non-directory ledger, `manifests/` or output
+  directory (`checkPlainDir`); the store budget check cannot overflow, the
+  segment buffer is sized from the stat, and negative years are refused in pass
+  and manifest records.
 - KILN04 section 8.1 records the implementation decisions.

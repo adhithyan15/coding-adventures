@@ -892,6 +892,20 @@ left open above:
   with the rank that decided the merge, and re-merging a snapshot with an
   empty delta reproduces it byte for byte. The merge reads its delta
   strictly: any structural error and any over-cap record reject it.
+- **Far-future records.** A record dated after now plus `MaxClockSkew`
+  would never expire and would outrank real ones, so a reader drops it and
+  reports it (`ManifestReport.Future`, also listed in `Dropped`), and a
+  `ledger-merge` snapshot containing one fails the merge, as in the pass
+  `Merge`. `run` is capped at 128 bytes, the same as pass records.
+- **Memory.** The reader applies expiry and the per-weak-key top-K
+  (distinct ids) while parsing, so the heap holds at most K records per
+  weak key plus the segment being parsed. The result is identical to
+  sorting everything first.
+- **Directories.** Every ledger read or write (pass and manifest stores,
+  both merges) first `Lstat`s the ledger directory, the `manifests/`
+  directory and a merge output directory, and refuses a symlink or
+  anything that is not a plain directory; a missing directory is an empty
+  store. Years below 0 are refused in pass and manifest records.
 - **Lookup.** `OpenManifests(ledgerDir, scope).Load(now)` returns a
   `ManifestSet` and a report; `ManifestSet.Manifests(weak)` is the stage 5
   call (newest first, at most K). A load error means no hits.

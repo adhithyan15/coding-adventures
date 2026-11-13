@@ -175,7 +175,7 @@ func (m Manifest) validateStructure() error {
 	if m.At.IsZero() || m.At.Location() != time.UTC || m.At.Nanosecond() != 0 {
 		return errors.New("at must be a non-zero UTC time in whole seconds")
 	}
-	if m.At.Year() > 9999 {
+	if y := m.At.Year(); y > 9999 || y < 0 {
 		return errors.New("at year out of range")
 	}
 	for i, e := range m.Entries {

@@ -30,6 +30,7 @@ type ManifestReport struct {
 	Read       int            // records accepted from segments (before retention)
 	Dropped    []ManifestDrop // over-cap records and segments
 	Expired    int            // accepted records older than ManifestMaxAge
+	Future     int            // accepted records dated after now plus MaxClockSkew (dropped; also listed in Dropped)
 	Superseded int            // accepted records beyond the newest K distinct ids, or repeating an id
 	Retained   int            // records kept
 }
@@ -85,10 +86,14 @@ func readManifestFile(path string, lim manifestLimits) (data []byte, size int64,
 	if size > lim.segment {
 		return nil, size, true, nil
 	}
-	data, err = io.ReadAll(io.LimitReader(f, lim.segment+1))
-	if err != nil {
+	// Size the buffer from the stat so the read does not regrow it; the
+	// LimitReader still bounds what a file that grows meanwhile can add.
+	var buf bytes.Buffer
+	buf.Grow(int(size) + 1)
+	if _, err = buf.ReadFrom(io.LimitReader(f, lim.segment+1)); err != nil {
 		return nil, 0, false, err
 	}
+	data = buf.Bytes()
 	if int64(len(data)) > lim.segment { // grew while we read it
 		return nil, int64(len(data)), true, nil
 	}
@@ -124,25 +129,100 @@ func parseManifestSegment(name string, seq uint64, data []byte, lim manifestLimi
 	return out, nil
 }
 
-// loadManifestDir reads every segment of dir under the reader policy above.
-func loadManifestDir(dir string, lim manifestLimits) ([]mEntry, ManifestReport, error) {
+// retainer applies retention INCREMENTALLY, so the heap holds at most
+// ManifestKeep records per weak key (plus the segment being parsed) instead of
+// every accepted record.  A record is discarded on arrival when it is older
+// than ManifestMaxAge before now, or dated after now plus MaxClockSkew (a
+// far-future record would never expire and would outrank real ones forever);
+// otherwise it competes for one of the weak key's K slots, which hold DISTINCT
+// ids, each with its newest instance.  A repeated id (a scheduled re-record)
+// therefore never uses a second slot.  The outcome equals sorting everything
+// and cutting afterwards: the order is total, and an id's newest instance is
+// the only one that can matter.
+type retainer struct {
+	now        time.Time
+	failFuture bool // a far-future record is an error (merge snapshots), not a drop
+	by         map[[32]byte][]mEntry
+	seen       int
+	expired    int
+	drops      []ManifestDrop // far-future records
+}
+
+func newRetainer(now time.Time, failFuture bool) *retainer {
+	return &retainer{now: now.UTC(), failFuture: failFuture, by: map[[32]byte][]mEntry{}}
+}
+
+func (r *retainer) add(e mEntry) error {
+	r.seen++
+	if e.m.At.After(r.now.Add(MaxClockSkew)) {
+		if r.failFuture {
+			return fmt.Errorf("ledger: manifest segment %s line %d is dated %s, after now",
+				e.name, e.line, e.m.At.Format(time.RFC3339))
+		}
+		r.drops = append(r.drops, ManifestDrop{e.name, e.line,
+			"dated " + e.m.At.Format(time.RFC3339) + ", after now plus the clock skew"})
+		return nil
+	}
+	if e.m.At.Before(r.now.Add(-ManifestMaxAge)) {
+		r.expired++
+		return nil
+	}
+	w, id := e.m.Weak, e.m.ID()
+	list := r.by[w]
+	for i := range list {
+		if list[i].m.ID() == id {
+			if e.newer(list[i]) {
+				list[i] = e
+				sortNewestFirst(list)
+			}
+			return nil
+		}
+	}
+	list = append(list, e)
+	sortNewestFirst(list)
+	if len(list) > ManifestKeep {
+		list = list[:ManifestKeep]
+	}
+	r.by[w] = list
+	return nil
+}
+
+func sortNewestFirst(l []mEntry) {
+	sort.Slice(l, func(i, j int) bool { return l[i].newer(l[j]) })
+}
+
+// finish fills the report's retention counters and returns the retained
+// records per weak key, newest first.
+func (r *retainer) finish(rep *ManifestReport) map[[32]byte][]mEntry {
+	retained := 0
+	for _, l := range r.by {
+		retained += len(l)
+	}
+	rep.Expired, rep.Future, rep.Retained = r.expired, len(r.drops), retained
+	rep.Superseded = r.seen - r.expired - len(r.drops) - retained
+	rep.Dropped = append(rep.Dropped, r.drops...)
+	return r.by
+}
+
+// loadManifestDir reads every segment of dir under the reader policy above and
+// feeds each accepted record to acc as it goes.
+func loadManifestDir(dir string, lim manifestLimits, acc *retainer) (ManifestReport, error) {
 	var rep ManifestReport
 	segs, err := listSegments(dir)
 	if err != nil {
-		return nil, rep, err
+		return rep, err
 	}
-	var all []mEntry
 	var total int64
 	for _, s := range segs {
 		rep.Segments++
 		data, size, tooBig, err := readManifestFile(filepath.Join(dir, s.name), lim)
 		if err != nil {
-			return nil, rep, err
+			return rep, err
+		}
+		if size > lim.store-total { // this form cannot overflow
+			return rep, fmt.Errorf("ledger: manifest store exceeds %d bytes", lim.store)
 		}
 		total += size
-		if total > lim.store {
-			return nil, rep, fmt.Errorf("ledger: manifest store exceeds %d bytes", lim.store)
-		}
 		if tooBig {
 			rep.Dropped = append(rep.Dropped, ManifestDrop{s.name, 0,
 				fmt.Sprintf("segment is %d bytes, limit %d", size, lim.segment)})
@@ -150,54 +230,16 @@ func loadManifestDir(dir string, lim manifestLimits) ([]mEntry, ManifestReport, 
 		}
 		es, err := parseManifestSegment(s.name, s.seq, data, lim, &rep)
 		if err != nil {
-			return nil, rep, err
+			return rep, err
 		}
 		rep.Read += len(es)
-		all = append(all, es...)
+		for _, e := range es {
+			if err := acc.add(e); err != nil {
+				return rep, err
+			}
+		}
 	}
-	return all, rep, nil
-}
-
-// retainManifests applies retention: records older than ManifestMaxAge before
-// now are dropped; per weak key the newest ManifestKeep DISTINCT ids survive,
-// newest first.  Two records with one id are the same read-set recorded twice
-// (a scheduled re-record): only the newer is kept, and the duplicate does not
-// use up one of the K slots.  The result is keyed by weak key.
-func retainManifests(all []mEntry, now time.Time, rep *ManifestReport) map[[32]byte][]mEntry {
-	cutoff := now.Add(-ManifestMaxAge)
-	live := make([]mEntry, 0, len(all))
-	for _, e := range all {
-		if e.m.At.Before(cutoff) {
-			rep.Expired++
-			continue
-		}
-		live = append(live, e)
-	}
-	// Newest first, grouped by weak key; the order is total, so the sort need
-	// not be stable and the result is independent of input order.
-	sort.Slice(live, func(i, j int) bool {
-		if c := bytes.Compare(live[i].m.Weak[:], live[j].m.Weak[:]); c != 0 {
-			return c < 0
-		}
-		return live[i].newer(live[j])
-	})
-	out := map[[32]byte][]mEntry{}
-	seen := map[[32]byte]map[[32]byte]bool{}
-	for _, e := range live {
-		w := e.m.Weak
-		id := e.m.ID()
-		if seen[w] == nil {
-			seen[w] = map[[32]byte]bool{}
-		}
-		if seen[w][id] || len(out[w]) >= ManifestKeep {
-			rep.Superseded++
-			continue
-		}
-		seen[w][id] = true
-		out[w] = append(out[w], e)
-		rep.Retained++
-	}
-	return out
+	return rep, nil
 }
 
 // ManifestSet is a loaded, retained manifest store.
@@ -223,6 +265,7 @@ func (s *ManifestSet) Manifests(weak [32]byte) []Manifest {
 
 // ManifestStore is the manifests/ directory of a ledger directory.
 type ManifestStore struct {
+	root  string // the ledger directory, checked to be a plain directory
 	dir   string
 	scope Scope
 	fs    fsOps
@@ -232,18 +275,22 @@ type ManifestStore struct {
 // that is, ledgerDir/manifests.  The directory need not exist.  The pass-ledger
 // reader ignores it: "manifests" does not match the segment-name pattern.
 func OpenManifests(ledgerDir string, scope Scope) *ManifestStore {
-	return &ManifestStore{dir: filepath.Join(ledgerDir, ManifestsDir), scope: scope, fs: realFS}
+	return &ManifestStore{root: ledgerDir, dir: filepath.Join(ledgerDir, ManifestsDir), scope: scope, fs: realFS}
 }
 
 // Load reads the store under the reader policy and applies retention relative
 // to now (a parameter, never the clock).  On an error (structural corruption,
 // an over-cap store) the set is nil and the caller must treat it as no hits.
 func (s *ManifestStore) Load(now time.Time) (*ManifestSet, ManifestReport, error) {
-	all, rep, err := loadManifestDir(s.dir, defaultManifestLimits)
+	if err := checkPlainDir(s.root); err != nil {
+		return nil, ManifestReport{}, err
+	}
+	acc := newRetainer(now, false)
+	rep, err := loadManifestDir(s.dir, defaultManifestLimits, acc)
 	if err != nil {
 		return nil, rep, err
 	}
-	return &ManifestSet{retainManifests(all, now.UTC(), &rep)}, rep, nil
+	return &ManifestSet{acc.finish(&rep)}, rep, nil
 }
 
 // packLines groups encoded lines into segments of at most maxBytes each.  A
@@ -301,6 +348,13 @@ func (s *ManifestStore) Record(ms []Manifest, auth Authority, now time.Time) err
 	}
 	if len(segs) != 1 {
 		return fmt.Errorf("ledger: %d manifests exceed the %d byte segment limit", len(ms), MaxManifestSegmentBytes)
+	}
+	// MkdirAll follows a symlinked directory silently, so check first.
+	if err := checkPlainDir(s.root); err != nil {
+		return err
+	}
+	if err := checkPlainDir(s.dir); err != nil {
+		return err
 	}
 	if err := os.MkdirAll(s.dir, 0o755); err != nil {
 		return err
@@ -371,7 +425,10 @@ func mergeManifests(o fsOps, lim manifestLimits, snapshotDir, deltaFile, outDir 
 	if err := checkOutDir(snapshotDir, outDir); err != nil {
 		return st, err
 	}
-	snap, snapRep, err := loadManifestDir(snapshotDir, lim)
+	// A far-future snapshot record is an error (as in the pass Merge), not a
+	// drop: it is forged or the clock is badly wrong.
+	acc := newRetainer(now, true)
+	snapRep, err := loadManifestDir(snapshotDir, lim, acc)
 	if err != nil {
 		return st, fmt.Errorf("snapshot: %w", err)
 	}
@@ -394,17 +451,18 @@ func mergeManifests(o fsOps, lim manifestLimits, snapshotDir, deltaFile, outDir 
 		return st, fmt.Errorf("delta: line %d: %s", d.Line, d.Reason)
 	}
 	st.Delta = len(delta)
-	all := slices.Clone(snap)
 	for _, e := range delta {
 		if e.m.At.After(now.Add(MaxClockSkew)) {
 			return st, fmt.Errorf("delta: line %d is dated %s, after now", e.line, e.m.At.Format(time.RFC3339))
 		}
 		e.name = "" // the delta outranks every snapshot segment on a positional tie
-		all = append(all, e)
+		if err := acc.add(e); err != nil {
+			return st, err
+		}
 	}
 
 	var rep ManifestReport
-	kept := retainManifests(all, now, &rep)
+	kept := acc.finish(&rep)
 	st.Expired, st.Superseded, st.Kept = rep.Expired, rep.Superseded, rep.Retained
 
 	weaks := make([][32]byte, 0, len(kept))

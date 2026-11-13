@@ -365,7 +365,7 @@ func TestReaderSegmentAndStoreCaps(t *testing.T) {
 
 	// A segment over the segment cap is dropped whole and reported.
 	lim := manifestLimits{line: MaxManifestLineBytes, segment: segSize, store: 1 << 30}
-	es, rep, err := loadManifestDir(dir, lim)
+	es, rep, err := loadFlat(dir, lim)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -377,21 +377,21 @@ func TestReaderSegmentAndStoreCaps(t *testing.T) {
 	}
 	// Exactly at the cap is accepted.
 	lim.segment = segSize * 2
-	if _, rep, err := loadManifestDir(dir, lim); err != nil || len(rep.Dropped) != 0 {
+	if _, rep, err := loadFlat(dir, lim); err != nil || len(rep.Dropped) != 0 {
 		t.Errorf("at cap: %v %+v", err, rep)
 	}
 	// A store over its cap is unusable, including bytes of dropped segments.
 	lim = manifestLimits{line: MaxManifestLineBytes, segment: segSize, store: segSize * 2}
-	if es, _, err := loadManifestDir(dir, lim); err == nil || es != nil {
+	if es, _, err := loadFlat(dir, lim); err == nil || es != nil {
 		t.Errorf("store over cap: %d %v", len(es), err)
 	}
 	lim.store = segSize * 4
-	if _, _, err := loadManifestDir(dir, lim); err != nil {
+	if _, _, err := loadFlat(dir, lim); err != nil {
 		t.Errorf("store under cap: %v", err)
 	}
 	// The line cap is injectable too.
 	lim = manifestLimits{line: 10, segment: 1 << 20, store: 1 << 30}
-	if _, rep, err := loadManifestDir(dir, lim); err != nil || len(rep.Dropped) != 3 {
+	if _, rep, err := loadFlat(dir, lim); err != nil || len(rep.Dropped) != 3 {
 		t.Errorf("line cap: %v %+v", err, rep)
 	}
 }
@@ -789,11 +789,10 @@ func TestMergeManifestsUnionRetentionAndDeterminism(t *testing.T) {
 	if st.Snapshot != 3 || st.Delta != 2 || st.Expired != 1 || st.Superseded != 1 || st.Kept != 3 {
 		t.Errorf("stats %+v", st)
 	}
-	es, _, err := loadManifestDir(out, defaultManifestLimits)
+	got, _, err := loadMap(out, defaultManifestLimits)
 	if err != nil {
 		t.Fatal(err)
 	}
-	got := retainManifests(es, nowT, &ManifestReport{})
 	w1 := got[key(1)]
 	if len(w1) != 2 || w1[0].m.Run != "12" || w1[1].m.Run != "11" {
 		t.Errorf("weak 1: %+v", w1)
@@ -862,10 +861,9 @@ func TestMergeKeepsTiesStableAcrossCompaction(t *testing.T) {
 	if _, err := MergeManifests(snap, deltaOf(t), out1, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
-	es1, _, _ := loadManifestDir(snap, defaultManifestLimits)
-	es2, _, _ := loadManifestDir(out1, defaultManifestLimits)
-	r1 := retainManifests(es1, nowT, &ManifestReport{})[key(1)]
-	r2 := retainManifests(es2, nowT, &ManifestReport{})[key(1)]
+	m1, _, _ := loadMap(snap, defaultManifestLimits)
+	m2, _, _ := loadMap(out1, defaultManifestLimits)
+	r1, r2 := m1[key(1)], m2[key(1)]
 	if len(r1) != 2 || len(r2) != 2 || r1[0].m.Entries[0] != r2[0].m.Entries[0] || r1[0].m.Entries[0] != "path:second" {
 		t.Errorf("tie order changed: %v vs %v", r1[0].m.Entries, r2[0].m.Entries)
 	}
@@ -1149,5 +1147,268 @@ func TestShort40TruncatesOnRuneBoundary(t *testing.T) {
 	err := mf(1, "1", t0, "env:"+strings.Repeat("é", 200)).Validate()
 	if err == nil || len(err.Error()) > 200 {
 		t.Errorf("error not bounded: %v", err)
+	}
+}
+
+// ---------- hardening after the security review ----------
+
+func loadMap(dir string, lim manifestLimits) (map[[32]byte][]mEntry, ManifestReport, error) {
+	acc := newRetainer(nowT, false)
+	rep, err := loadManifestDir(dir, lim, acc)
+	if err != nil {
+		return nil, rep, err
+	}
+	return acc.finish(&rep), rep, nil
+}
+
+func loadFlat(dir string, lim manifestLimits) ([]mEntry, ManifestReport, error) {
+	m, rep, err := loadMap(dir, lim)
+	if err != nil {
+		return nil, rep, err
+	}
+	var out []mEntry
+	for _, l := range m {
+		out = append(out, l...)
+	}
+	return out, rep, nil
+}
+
+func TestFarFutureManifestsAreDroppedAndReported(t *testing.T) {
+	dir := manifestDirOf(t)
+	edge := nowT.Add(MaxClockSkew)
+	writeManifestSeg(t, dir, 1,
+		mfLine(t, mf(1, "1", t0, "path:real")),
+		mfLine(t, mf(1, "99999", edge.Add(time.Second), "path:forged")), // would outrank everything forever
+		mfLine(t, mf(1, "2", edge, "path:edge")),                        // exactly at the skew: kept
+		mfLine(t, mf(2, "1", time.Date(9999, 1, 1, 0, 0, 0, 0, time.UTC), "path:far")),
+	)
+	set, rep, err := load(t, dir, nowT)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rep.Future != 2 || len(rep.Dropped) != 2 || rep.Dropped[0].Line != 2 || rep.Dropped[1].Line != 4 ||
+		!strings.Contains(rep.Dropped[0].Reason, "after now") {
+		t.Errorf("report %+v", rep)
+	}
+	g := set.Manifests(key(1))
+	if len(g) != 2 || g[0].Entries[0] != "path:edge" || g[1].Entries[0] != "path:real" {
+		t.Errorf("served %+v", g)
+	}
+	if set.Manifests(key(2)) != nil {
+		t.Error("far-future manifest served")
+	}
+	// The counters add up: every accepted record is retained or accounted for.
+	if rep.Read != rep.Retained+rep.Expired+rep.Future+rep.Superseded {
+		t.Errorf("counters %+v", rep)
+	}
+	// A far-future record in a merge SNAPSHOT fails the merge (as in the pass Merge).
+	_, err = MergeManifests(dir, deltaOf(t), filepath.Join(t.TempDir(), "o"), trusted, nowT)
+	if err == nil || !strings.Contains(err.Error(), "snapshot") || !strings.Contains(err.Error(), "after now") {
+		t.Errorf("merge with a far-future snapshot record: %v", err)
+	}
+}
+
+func TestRunLengthIsCappedLikePassRecords(t *testing.T) {
+	// Pass records allow 128 bytes for run (MaxFieldBytes); manifests match,
+	// so a crafted run cannot be long enough to matter for ordering or size.
+	long := mf(1, strings.Repeat("9", MaxFieldBytes+1), t0)
+	if err := long.Validate(); err == nil {
+		t.Error("manifest run over the cap accepted")
+	}
+	r := pass(1, t0)
+	r.Run = strings.Repeat("9", MaxFieldBytes+1)
+	if err := r.Validate(); err == nil {
+		t.Error("pass run over the cap accepted")
+	}
+	ok := mf(1, strings.Repeat("9", MaxFieldBytes), t0)
+	line := mfLine(t, ok)
+	if _, err := decodeManifestLine([]byte(line)); err != nil {
+		t.Errorf("run at the cap: %v", err)
+	}
+	// A hostile line carrying a longer run is structural corruption on read.
+	forged := strings.Replace(line, strings.Repeat("9", MaxFieldBytes), strings.Repeat("9", MaxFieldBytes+1), 1)
+	if _, err := decodeManifestLine([]byte(forged)); err == nil || errors.Is(err, errOverCap) {
+		t.Errorf("long run on read: %v", err)
+	}
+}
+
+func TestRetainerIsBoundedAndMatchesBatchRetention(t *testing.T) {
+	// Many records, several weak keys, repeated ids, in several arrival orders.
+	var all []mEntry
+	for i := 0; i < 400; i++ {
+		m := mf(byte(1+i%3), fmt.Sprint(1000+i%97), t0.Add(time.Duration(i%7)*time.Minute),
+			fmt.Sprintf("path:f%d", i%11))
+		all = append(all, mEntry{m, uint64(1 + i/50), fmt.Sprintf("n%d", i/50), 1 + i%50})
+	}
+	// Reference: sort everything, then take the first K distinct ids per weak key.
+	want := map[[32]byte][]mEntry{}
+	ref := append([]mEntry(nil), all...)
+	sortNewestFirst(ref)
+	seen := map[[64]byte]bool{}
+	for _, e := range ref {
+		var k [64]byte
+		id := e.m.ID()
+		copy(k[:32], e.m.Weak[:])
+		copy(k[32:], id[:])
+		if seen[k] || len(want[e.m.Weak]) >= ManifestKeep {
+			continue
+		}
+		seen[k] = true
+		want[e.m.Weak] = append(want[e.m.Weak], e)
+	}
+	for _, order := range []string{"forward", "reverse", "interleaved"} {
+		acc := newRetainer(nowT, false)
+		feed := func(e mEntry) {
+			if err := acc.add(e); err != nil {
+				t.Fatal(err)
+			}
+			for _, l := range acc.by { // the heap bound holds at every step
+				if len(l) > ManifestKeep {
+					t.Fatalf("%s: %d records held for one weak key", order, len(l))
+				}
+			}
+		}
+		switch order {
+		case "forward":
+			for _, e := range all {
+				feed(e)
+			}
+		case "reverse":
+			for i := len(all) - 1; i >= 0; i-- {
+				feed(all[i])
+			}
+		default:
+			for i := 0; i < len(all); i += 2 {
+				feed(all[i])
+			}
+			for i := 1; i < len(all); i += 2 {
+				feed(all[i])
+			}
+		}
+		var rep ManifestReport
+		got := acc.finish(&rep)
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("%s: incremental retention differs from batch retention", order)
+		}
+		if rep.Superseded != 400-rep.Retained {
+			t.Errorf("%s: report %+v", order, rep)
+		}
+	}
+}
+
+func TestSymlinkedLedgerDirectoriesAreRefused(t *testing.T) {
+	real := t.TempDir()
+	if err := Open(real, Shared).Record([]Record{pass(1, t0)}, trusted, nowT); err != nil {
+		t.Fatal(err)
+	}
+	if err := OpenManifests(real, Shared).Record([]Manifest{mf(1, "1", t0)}, trusted, nowT); err != nil {
+		t.Fatal(err)
+	}
+	base := t.TempDir()
+	link := filepath.Join(base, "ledger")
+	if err := os.Symlink(real, link); err != nil {
+		t.Skip("symlinks unavailable:", err)
+	}
+	// Pass store through a symlinked ledger directory: read and write refused,
+	// and nothing is written through the link.
+	before, _ := os.ReadDir(real)
+	if got, err := Open(link, Shared).Lookup([][32]byte{key(1)}); err == nil || got != nil {
+		t.Errorf("Lookup through a symlink: %v %v", got, err)
+	}
+	if err := Open(link, Shared).Record([]Record{pass(2, t0)}, trusted, nowT); err == nil {
+		t.Error("Record through a symlink")
+	}
+	if after, _ := os.ReadDir(real); len(after) != len(before) {
+		t.Error("a refused write went through the link")
+	}
+	// Pass merge: symlinked snapshot, symlinked output.
+	delta := writeFile(t, t.TempDir(), "d.jsonl", mustEncode(t, pass(2, t0)))
+	if _, err := Merge(link, delta, filepath.Join(t.TempDir(), "o"), trusted, nowT, nil); err == nil {
+		t.Error("Merge with a symlinked snapshot")
+	}
+	emptyTarget := t.TempDir()
+	outLink := filepath.Join(base, "outlink")
+	if err := os.Symlink(emptyTarget, outLink); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Merge(real, delta, outLink, trusted, nowT, nil); err == nil {
+		t.Error("Merge with a symlinked output directory")
+	}
+	if ents, _ := os.ReadDir(emptyTarget); len(ents) != 0 {
+		t.Error("merge wrote through the output link")
+	}
+	// Manifest store through a symlinked ledger directory.
+	ms := OpenManifests(link, Shared)
+	if set, _, err := ms.Load(nowT); err == nil || set != nil {
+		t.Errorf("manifest Load through a symlinked ledger dir: %v %v", set, err)
+	}
+	if err := ms.Record([]Manifest{mf(2, "1", t0)}, trusted, nowT); err == nil {
+		t.Error("manifest Record through a symlinked ledger dir")
+	}
+	// A symlinked manifests/ directory inside a real ledger directory.
+	ledger2 := t.TempDir()
+	elsewhere := t.TempDir()
+	if err := os.Symlink(elsewhere, filepath.Join(ledger2, ManifestsDir)); err != nil {
+		t.Fatal(err)
+	}
+	s2 := OpenManifests(ledger2, Shared)
+	if err := s2.Record([]Manifest{mf(1, "1", t0)}, trusted, nowT); err == nil {
+		t.Error("manifest Record through a symlinked manifests/")
+	}
+	if ents, _ := os.ReadDir(elsewhere); len(ents) != 0 {
+		t.Error("manifest write went through the link")
+	}
+	if _, _, err := s2.Load(nowT); err == nil {
+		t.Error("manifest Load through a symlinked manifests/")
+	}
+	snapLink := filepath.Join(base, "snaplink")
+	if err := os.Symlink(filepath.Join(real, ManifestsDir), snapLink); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := MergeManifests(snapLink, deltaOf(t), filepath.Join(t.TempDir(), "o"), trusted, nowT); err == nil {
+		t.Error("MergeManifests with a symlinked snapshot")
+	}
+	if _, err := MergeManifests(filepath.Join(real, ManifestsDir), deltaOf(t), outLink, trusted, nowT); err == nil {
+		t.Error("MergeManifests with a symlinked output")
+	}
+	// A regular file where a directory belongs.
+	file := writeFile(t, t.TempDir(), "f", []byte("x"))
+	if err := checkPlainDir(file); err == nil {
+		t.Error("a file is not a plain directory")
+	}
+	// A missing directory is an empty ledger; the real ones are fine.
+	for _, d := range []string{filepath.Join(t.TempDir(), "absent"), real} {
+		if err := checkPlainDir(d); err != nil {
+			t.Errorf("%s: %v", d, err)
+		}
+	}
+}
+
+func TestNegativeYearsAreRefused(t *testing.T) {
+	neg := time.Date(-1, 6, 1, 0, 0, 0, 0, time.UTC)
+	r := pass(1, t0)
+	r.At = neg
+	if err := r.Validate(); err == nil {
+		t.Error("pass record with a negative year")
+	}
+	if err := mf(1, "1", neg).Validate(); err == nil {
+		t.Error("manifest with a negative year")
+	}
+	// Year 0 formats and parses, so it is still allowed (and then expired).
+	if err := mf(1, "1", time.Date(0, 6, 1, 0, 0, 0, 0, time.UTC)).Validate(); err != nil {
+		t.Errorf("year 0: %v", err)
+	}
+}
+
+func TestManifestStoreBudgetIsOverflowSafe(t *testing.T) {
+	dir := manifestDirOf(t)
+	p := writeManifestSeg(t, dir, 1, mfLine(t, mf(1, "1", t0)))
+	st, _ := os.Stat(p)
+	// Exactly at the store cap is accepted; one byte under is refused.
+	if _, _, err := loadFlat(dir, manifestLimits{MaxManifestLineBytes, MaxManifestSegmentBytes, st.Size()}); err != nil {
+		t.Errorf("at the store cap: %v", err)
+	}
+	if _, _, err := loadFlat(dir, manifestLimits{MaxManifestLineBytes, MaxManifestSegmentBytes, st.Size() - 1}); err == nil {
+		t.Error("over the store cap")
 	}
 }
