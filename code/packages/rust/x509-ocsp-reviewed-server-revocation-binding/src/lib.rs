@@ -5663,6 +5663,128 @@ pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_respond
     })
 }
 
+/// Require RFC 6960 no-check policy for the strongest-path responder.
+///
+/// This consumes the complete strongest-path responder intermediate-DNS proof
+/// and derives the responder certificate only through that retained proof. A
+/// structurally unique `id-pkix-ocsp-nocheck` extension must be present with
+/// exact DER `NULL` contents. RFC 6960 recommends a non-critical extension but
+/// does not require it; a critical instance can reach this semantic gate only
+/// when the prerequisite certificate-wide role policy explicitly recognized
+/// its OID.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before responder or intermediate revocation policy, generalized path
+/// validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+) -> Result<
+    ValidatedX509OcspReviewedResponderNoCheckPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    X509OcspReviewedResponderNoCheckPolicyError,
+>{
+    let responder_certificate = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation()
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    evaluate_responder_no_check_policy(responder_certificate)?;
+
+    Ok(ValidatedX509OcspReviewedResponderNoCheckPolicy {
+        intermediate_dns_policy,
+    })
+}
+
 /// Apply the exact routed intermediate's supported critical DNS policy.
 ///
 /// This consumes the complete routed selected-anchor responder-policy proof.
