@@ -1118,6 +1118,63 @@ fn canonicalize_best_effort(path: &Path) -> PathBuf {
 // Tests
 // ---------------------------------------------------------------------------
 
+// ── Windows verbatim-path helper for integration tests ───────────────────────
+//
+// `Path::canonicalize` on Windows returns an *extended-length* (verbatim) path
+// such as `\\?\C:\repo\code\packages\twig\compiler`.  The tests embed that
+// directory in Twig source (`(self-compile-all "<dir>")`), and the Twig compiler
+// builds file names by appending `"/" + name`.  Win32 does not normalise `/` in a
+// verbatim path, so `\\?\C:\...\compiler/span.tw` is rejected with
+// ERROR_INVALID_NAME (os error 123) before any stack is exercised.  Stripping the
+// `\\?\` prefix gives the ordinary `C:\...` path, where `/` is accepted.  A no-op
+// on every other platform.
+
+#[cfg(test)]
+pub(crate) fn strip_verbatim_prefix(p: std::path::PathBuf) -> std::path::PathBuf {
+    let Some(text) = p.to_str() else { return p };
+    if let Some(rest) = text.strip_prefix(r"\\?\UNC\") {
+        return std::path::PathBuf::from(format!(r"\\{rest}"));
+    }
+    if let Some(rest) = text.strip_prefix(r"\\?\") {
+        // Only a drive-letter path (`C:\...`) has an ordinary equivalent.
+        let mut chars = rest.chars();
+        if let (Some(d), Some(':')) = (chars.next(), chars.next()) {
+            if d.is_ascii_alphabetic() {
+                return std::path::PathBuf::from(rest);
+            }
+        }
+    }
+    p
+}
+
+#[cfg(test)]
+mod verbatim_path_tests {
+    use super::strip_verbatim_prefix;
+    use std::path::PathBuf;
+
+    fn strip(s: &str) -> String {
+        strip_verbatim_prefix(PathBuf::from(s)).to_str().unwrap().to_string()
+    }
+
+    #[test]
+    fn strips_the_drive_letter_form() {
+        assert_eq!(strip(r"\\?\C:\a\b"), r"C:\a\b");
+    }
+
+    #[test]
+    fn rewrites_the_unc_form() {
+        assert_eq!(strip(r"\\?\UNC\server\share\x"), r"\\server\share\x");
+    }
+
+    #[test]
+    fn leaves_other_paths_alone() {
+        assert_eq!(strip("/home/user/x"), "/home/user/x");
+        assert_eq!(strip(r"C:\already\plain"), r"C:\already\plain");
+        // A verbatim path with no drive letter (a device path) has no plain form.
+        assert_eq!(strip(r"\\?\Volume{1234}\x"), r"\\?\Volume{1234}\x");
+    }
+}
+
 // ── Large-stack helper for integration tests ─────────────────────────────────
 //
 // The self-hosted Twig lex-loop recurses once per character and the call chain
@@ -2212,6 +2269,7 @@ mod tw05d_tests {
         Path::new(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -2417,6 +2475,7 @@ mod tw05e_tests {
         Path::new(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -2655,6 +2714,7 @@ mod tw05f_tests {
         PathBuf::from(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -2923,6 +2983,7 @@ mod tw05g_tests {
         PathBuf::from(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -3188,6 +3249,7 @@ mod tw05h_tests {
         PathBuf::from(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -3439,6 +3501,7 @@ mod tw05i_tests {
         PathBuf::from(manifest)
             .join("../../twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -3706,6 +3769,7 @@ mod tw05j_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -3948,6 +4012,7 @@ mod tw05k_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -4160,6 +4225,7 @@ mod tw05l_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -4375,6 +4441,7 @@ mod tw05m_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -4688,6 +4755,7 @@ mod tw05n_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 
@@ -5022,6 +5090,7 @@ mod tw05q_tests {
             .parent().unwrap()  // packages/
             .join("twig/compiler")
             .canonicalize()
+            .map(crate::strip_verbatim_prefix)
             .expect("code/packages/twig/compiler/ must exist")
     }
 

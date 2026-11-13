@@ -1150,6 +1150,34 @@ func TestClippyStepFor(t *testing.T) {
 			want:     clippy,
 			wantOK:   true,
 		},
+		{
+			// os-kernel: a no_std UEFI app that cannot be clippy-checked for the
+			// host, so its BUILD lints the targets it really builds for. The
+			// automatic host-target step must not be added on top of that.
+			name: "BUILD with its own cargo clippy owns its lint policy",
+			commands: []string{
+				"rustup target add x86_64-unknown-uefi",
+				"cargo test --lib",
+				"cargo build --release --target x86_64-unknown-uefi",
+				"cargo clippy --target x86_64-unknown-uefi --all-targets -- -D warnings",
+				"cargo clippy --lib --tests -- -D warnings",
+			},
+			want:   "",
+			wantOK: false,
+		},
+		{
+			// Mentioning clippy in quoted text is not running it.
+			name:     "quoted cargo clippy does not opt out",
+			commands: []string{`echo "run cargo clippy by hand"`, "cargo test -p widget"},
+			want:     clippy,
+			wantOK:   true,
+		},
+		{
+			name:     "cargo clippy behind an env prefix still counts",
+			commands: []string{"cargo test -p widget", `RUSTFLAGS="-D warnings" cargo clippy -p widget`},
+			want:     "",
+			wantOK:   false,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

@@ -11,6 +11,10 @@
 //! code 1. We test both this expected behavior and the formatting
 //! functions with synthetic data.
 
+// Unix-only tools: on Windows most of these tests (and the imports and helpers they use)
+// are compiled out, which would otherwise trip the CI `-D warnings` clippy gate.
+#![cfg_attr(not(unix), allow(unused_imports, dead_code))]
+
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
 use unix_tools::tty_tool::{check_tty, format_tty_output, TtyResult};
 use std::path::PathBuf;

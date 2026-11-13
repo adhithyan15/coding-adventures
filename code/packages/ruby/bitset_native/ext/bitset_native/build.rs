@@ -129,6 +129,16 @@ fn generate_msvc_lib(dll_name: &str, so_name: &str, out_dir: &str) -> bool {
         // Functions from our lib.rs:
         ("rb_num2long", false),
         ("rb_path2class", false),
+        // Everything ruby-bridge (a dependency of this crate) declares, so the generated
+        // import library resolves every rb_* it references (rb_eval_string, rb_str_new, ...).
+        ("rb_define_module_function", false),
+        ("rb_eval_string", false),
+        ("rb_float_new", false),
+        ("rb_hash_aset", false),
+        ("rb_hash_new", false),
+        ("rb_num2dbl", false),
+        ("rb_str_new", false),
+        ("rb_string_value_ptr", false),
     ];
 
     // Write the .def file

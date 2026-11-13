@@ -291,6 +291,26 @@ pub fn run_xargs(
 mod tests {
     use super::*;
 
+    /// A command that succeeds, for tests that really spawn a child process.
+    ///
+    /// On Unix that is the real `echo`/`false`.  Windows has neither as an
+    /// executable (`echo` is a cmd.exe builtin, `false` does not exist), so there
+    /// the test executable itself stands in: libtest's `--list` prints the test
+    /// names and exits 0, and an unknown flag makes it exit with 101.  Either way
+    /// the code under test still does a genuine spawn-and-wait.
+    #[cfg(unix)]
+    fn succeeding_command() -> Vec<String> {
+        vec!["echo".into()]
+    }
+
+    #[cfg(not(unix))]
+    fn succeeding_command() -> Vec<String> {
+        vec![
+            std::env::current_exe().unwrap().to_string_lossy().into_owned(),
+            "--list".into(),
+        ]
+    }
+
     // --- split_input tests ---
 
     #[test]
@@ -388,7 +408,8 @@ mod tests {
 
     #[test]
     fn execute_echo() {
-        let args = vec!["echo".into(), "test".into()];
+        let mut args = succeeding_command();
+        args.push("test".into());
         let result = execute_command(&args, false);
         assert_eq!(result.unwrap(), 0);
     }
@@ -412,7 +433,7 @@ mod tests {
     #[test]
     fn run_xargs_with_echo() {
         let input = "hello world";
-        let command = vec!["echo".into()];
+        let command = succeeding_command();
         let result = run_xargs(input, &command, &XargsOptions::default());
         assert_eq!(result.unwrap(), 0);
     }
