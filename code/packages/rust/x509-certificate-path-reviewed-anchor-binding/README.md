@@ -26,6 +26,16 @@ retains the complete Name-policy-backed construction, reviewed-root selection,
 and issuing-CA policy together. Generic reviewed-terminal evidence cannot
 produce this result.
 
+`initialize_name_policy_reviewed_constructed_x509_certificate_path_length`
+consumes that complete policy-backed role proof and derives the initial
+path-length capacity from its retained construction. Its non-copyable result
+keeps the exact Name policy, reviewed-root selection, certificate-wide anchor
+role policy, and derived state together. Generic reviewed-terminal evidence
+cannot produce this stronger initializer, and callers cannot detach the policy,
+inflate the capacity, or attach it to another construction. This remains only
+initialization; it does not authenticate a link, apply a transition, define
+complete Name equality, or validate a complete path.
+
 A stronger follow-up consumes that reviewed-terminal-bound path together with
 certificate-wide role-policy evidence for the exact terminal object. It
 rejects byte-equal re-decodes and requires the retained role to be issuing CA,

@@ -1,6 +1,6 @@
 [package]
 name = "x509-certificate-path-reviewed-anchor-binding"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "Exact reviewed-root terminal binding for constructed X.509 certificate paths"
 license = "MIT"
