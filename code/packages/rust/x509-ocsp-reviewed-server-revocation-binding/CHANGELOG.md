@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the exact target-nearest intermediate's supported critical permitted-
+  and-excluded DNS constraints to the exact delegated responder retained by
+  the strongest Name-policy path/fully routed OCSP bridge.
+- Derive both certificates only through the consumed non-copyable strong
+  anchor-policy proof, reuse the existing redacted evaluator, and stop before
+  no-check, revocation completion, TLS, HTTP, OAuth, or network readiness.
 - Apply the selected Mozilla-reviewed root's supported out-of-band permitted-
   DNS constraints to the exact delegated responder retained by the strongest
   Name-policy path/fully routed OCSP bridge.
