@@ -876,6 +876,11 @@ jobs:
           # `lang_matrix` row on the release or its IIR class representative.
           python3 code/scripts/release_inventory.py check --matrix
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
+          # RS01 pair evidence (`code/grammars/rust/pair-evidence.csv`): every
+          # copy is byte-identical to its source, every semantic-copy records
+          # all three conditions, and the rows cover exactly the pair files.
+          python3 code/scripts/rust_release_pairs.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_rust_release_pairs.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           # The native GFM reader trusts only the corpus accepted by this

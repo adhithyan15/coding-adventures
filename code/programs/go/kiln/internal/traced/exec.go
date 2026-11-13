@@ -29,7 +29,9 @@ const maxShebangDepth = 4
 // exec observes an execve/execveat and, when it succeeded, everything the
 // kernel loaded for it.
 func (c *classifier) exec(ev *trace.Event) {
+	c.relax = ev.Result.OK
 	tg, ok := c.targetOf(ev, true)
+	c.relax = false
 	if !ok {
 		return
 	}

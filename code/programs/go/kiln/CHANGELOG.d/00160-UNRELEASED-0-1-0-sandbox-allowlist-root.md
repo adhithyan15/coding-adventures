@@ -32,5 +32,5 @@ and 14):
 
 ### Changed
 
-- Supersedes the 00120 entries on masking `/run` and `/var/run` and on
+- Supersedes the 00150 entries on masking `/run` and `/var/run` and on
   `RLIMIT_CORE` 0.

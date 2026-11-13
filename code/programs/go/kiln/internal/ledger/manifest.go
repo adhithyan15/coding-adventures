@@ -354,6 +354,7 @@ func isDigits(s string) bool {
 // mEntry is a manifest with its position, which breaks ordering ties.
 type mEntry struct {
 	m    Manifest
+	id   [32]byte // m.ID(), computed once when the retainer accepts the record
 	seq  uint64
 	name string
 	line int
