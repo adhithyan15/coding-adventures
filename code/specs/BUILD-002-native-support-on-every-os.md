@@ -146,9 +146,45 @@ DLL that the Haskell recipe stages:
 - `tools\run-tests.ps1` in each package mirrors `tools/run-tests.sh`, and the
   recipe is `powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1`.
 
+### W3 progress: C++ (`cpp/conduit`, `cpp/conduit-hello`)
+
+Done. Both recipes were echo-skips ("uses POSIX sockets") and now build and run
+the same tests as their Unix `BUILD` on Windows. Unlike Go's cgo, `cl.exe` links
+the default MSVC Rust output, so no GNU target is involved:
+
+- `code/scripts/build-conduit-capi-windows-msvc.ps1` (shared by both recipes)
+  drops Git for Windows' `usr\bin` from `PATH` (a bare `link` would be GNU
+  coreutils', see `lessons.d/on-the-windows-runner-a-bare-link-is-git-s-gnu-coreutils.md`),
+  asserts `cl`/`link`/`cargo` and an `x86_64-pc-windows-msvc` rustc host, runs
+  `cargo rustc --release --crate-type staticlib -- --print native-static-libs`
+  (the staticlib alone, as on Unix) and returns `conduit_capi.lib`, its header
+  directory and the system libraries to link: `kernel32 advapi32 ntdll userenv
+  bcrypt ws2_32 synchronization`, merged with whatever rustc reports except the
+  cargo-private `windows.0.52.0.lib`. `synchronization.lib` holds
+  `WaitOnAddress`/`WakeByAddress*`; without it the link ends in LNK2019/LNK1120.
+- `tools\run-tests.ps1` (`cpp/conduit`) and `tools\run.ps1` (`cpp/conduit-hello`)
+  mirror the Unix scripts: `cl.exe /std:c++17 /EHsc /W4 /MD` (dynamic CRT, which
+  is what Rust's MSVC std uses), each suite run in turn and any failure turned
+  into a non-zero exit. The recipes are
+  `powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1` /
+  `...tools\run.ps1` and keep the Unix `# build-tool: deps=` directive.
+- The E2E clients (`tests/test_server.cpp`, `tests/smoke.cpp`) go through a small
+  `tests/net_compat.h` (BSD sockets on Unix, Winsock on Windows: `WSAStartup`
+  once, `SOCKET`/`closesocket`, int-sized `send`/`recv`, and `SO_RCVTIMEO` as a
+  DWORD of milliseconds instead of a `timeval`). Unix behaviour is unchanged.
+- `CMakeLists.txt` selects `conduit_capi.lib` + the system libraries under MSVC
+  and the `x86_64-pc-windows-gnu` archive under MinGW; the Unix result is the
+  same `libconduit_capi.a` as before.
+
+Proof so far: Unix scripts pass; the shimmed tests compile with
+`-Wall -Wextra -Wpedantic -Werror` under mingw-w64, link against the GNU-target
+staticlib and pass under Wine (loopback E2E included); the build tool's
+`-validate-build-files` accepts both `BUILD_windows` files. The MSVC/PowerShell
+path itself is first exercised by the Windows CI leg.
+
 Remaining in W3: node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF
-link, Ruby MinGW vs MSVC ABI, .NET P/Invoke, and the other Go cgo consumers
-(the C++ ones are separate).
+link, Ruby MinGW vs MSVC ABI, .NET P/Invoke, and the remaining Go cgo consumer
+`go/paint-codec-png-native`.
 
 ## Done
 

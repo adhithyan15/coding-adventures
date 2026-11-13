@@ -1,1 +1,7 @@
-echo C++ Conduit tests use POSIX sockets for the E2E — skipping on Windows
+# Windows: tools\run-tests.ps1 builds the Rust conduit-capi staticlib with the
+# default MSVC toolchain (conduit_capi.lib), compiles each tests\test_*.cpp with
+# cl.exe (/MD, linking the system libs a Rust staticlib needs) and runs the
+# suites, including the loopback end-to-end server test over Winsock (see
+# code\scripts\build-conduit-capi-windows-msvc.ps1 and tests\net_compat.h).
+# build-tool: deps=rust/conduit-capi
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1

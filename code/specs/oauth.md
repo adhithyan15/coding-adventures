@@ -1835,6 +1835,25 @@ certificate-data composition performs no parsing, new signature verification,
 credential access or editing, signing, storage, clock acquisition, provider
 action, audit event, trace emission, I/O, network access, or other external
 effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A stronger target-signature closure follow-up consumes only the Name-policy-
+backed arbitrary-depth accumulator together with the same already routed depth-
+zero signature proof and complete server-certificate policy. It applies the
+identical exact-construction, depth-zero, exact-target-child, target-nearest-
+issuer, and exact-server-policy checks as the generic closure. Success retains
+the exact Name-value policy, reviewed trust-root selection, certificate-wide
+anchor-role policy, construction-derived path-length state, complete ordered
+intermediate evidence, target signature, and complete target policy in one
+non-copyable result. A generic accumulator cannot produce this stronger
+closure, and a target proof or policy from another construction fails closed
+even when its certificate bytes compare equal. This preserves stronger policy
+provenance across target-signature closure only; it does not define complete
+RFC 5280 Name equality, apply all certificate or Name constraints, validate a
+complete path, check time, hostname, or revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
+certificate-data composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded reviewed-anchor DNS-policy follow-up now consumes that exact target-
 signature closure together with separate caller-owned limits for the reviewed
 constraint and target Subject Alternative Name decoders. It derives the exact
