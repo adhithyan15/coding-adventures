@@ -33,7 +33,7 @@ pub enum FailureId {
     Rcg011,
     /// Landlock is required for fs scoping but unavailable.
     Rcg012,
-    /// The observer is unavailable or its trace is unparsable.
+    /// The observer is unavailable, or its trace is absent, empty or unparsable.
     Rcg013,
     /// The container ring failed.
     Rcg014,
@@ -75,7 +75,7 @@ impl FailureId {
             Self::Rcg010 => "platform not live",
             Self::Rcg011 => "unexpected inherited file descriptor",
             Self::Rcg012 => "Landlock required for fs scoping but unavailable",
-            Self::Rcg013 => "observer unavailable or trace unparsable",
+            Self::Rcg013 => "observer unavailable, or trace absent/empty/unparsable",
             Self::Rcg014 => "container ring failed",
         }
     }

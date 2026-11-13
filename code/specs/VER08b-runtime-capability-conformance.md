@@ -237,7 +237,7 @@ A control that is **not** detected makes the gate itself fail with `RCG009` — 
 | `RCG010` | Platform not live (non-Linux) — reported, never silent |
 | `RCG011` | Unexpected inherited file descriptor |
 | `RCG012` | Landlock required for fs scoping but unavailable |
-| `RCG013` | Observer unavailable or trace unparsable |
+| `RCG013` | Observer unavailable, or an observed run left no usable trace (absent, unreadable, empty or unparsable) |
 | `RCG014` | Container ring failed |
 
 ## 11. Tests (implementation contract)
@@ -275,7 +275,7 @@ Each lane gets its own baseline *version string* and justification table; baseli
 | Linux (x86_64, aarch64) | **Live**: all three rings |
 | macOS | **not-live**: the gate prints `NOT-LIVE (RCG010)` and writes evidence with `live:false`. A future ring may use Seatbelt (`sandbox-exec`) + `dtruss`/`fs_usage`, which need elevated privileges. |
 | Windows | **not-live**: same reporting. Future: AppContainer + Job Object + ETW. |
-| Linux without `strace`/ptrace | **not-live (observer)** unless `RCG_STRICT=1`, in which case `RCG013` fails |
+| Linux without `strace`/ptrace | **not-live (observer)** unless `RCG_STRICT=1`, in which case `RCG013` fails. An observer that starts but leaves no trace for an observed run (main, any control, the env-leak run or the known-gap run) is a **failure** (`RCG013`) in both modes: the gate never reads "no trace" as "no violations". |
 
 GitHub-hosted `ubuntu-24.04` restricts *unprivileged user namespaces* via AppArmor; this gate does not need them (seccomp + `no_new_privs` + Landlock are unprivileged; Docker is available on those runners).
 
