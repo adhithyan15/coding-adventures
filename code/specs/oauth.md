@@ -2043,6 +2043,28 @@ signing, storage, clock acquisition, provider action, audit event, trace
 emission, I/O, network access, or other external effect. Concrete HTTPS and
 live-provider readiness remain unavailable.
 
+A bounded revocation-binding follow-up consumes that exact strongest supported
+Name-policy-backed path result together with one fully routed authenticated
+OCSP target-revocation proof. The target certificate is derived only from the
+retained complete server policy, and the target-nearest issuer is derived only
+from the retained depth-zero routed signature. Binding requires the OCSP proof
+to retain those same exact decoded certificate objects, then validates both
+path certificates at the OCSP proof's retained observation time. Failure order
+is stable: target identity, issuer identity, target validity, then issuer
+validity. Success retains both complete non-copyable inputs plus the two exact-
+time validity tokens; byte-equal independent decodes, detached issuers, and
+cross-time evidence cannot substitute.
+
+This is pure public-certificate and signed-response evidence composition. It
+performs no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not fetch revocation data, reify or authorize the
+delegated responder path, apply responder DNS or no-check policy, establish
+status for every non-root certificate, complete Name or path validation,
+validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
