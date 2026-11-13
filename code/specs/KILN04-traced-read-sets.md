@@ -1221,7 +1221,16 @@ every node and comparison of all its overlap walks against one work budget
 node by its owner count, descendant nodes by the query length, every reason
 added by its length) and holds at
 most 4 GiB of path text; exceeding either is run-void `size`. A record that
-fails validation voids the run and nothing further is analysed. Cause text
+fails validation, or a shard whose index is outside the plan, voids the run
+and nothing further is analysed. Caps are enforced before allocation: a line
+is at most 64 MiB and a shard file 1 GiB, no list may exceed its cap and no
+string 64 KiB (a token pre-pass refuses them before any struct is built), the
+small files have byte caps, a record has at most 64 distinct reason kinds
+(the classifier emits about a dozen), no element of a string list may be
+`null` or empty, and the decoder stops once a shard holds more than its
+retained-text cap. The retained-text count includes the host facts. The merge
+keeps the exact number of distinct void causes but only the smallest 64 as
+text. Cause text
 is deterministic (validators report the first failure in a fixed order).
 
 **G3. Shards are prerequisite-closed.** A shard runs its assigned packages

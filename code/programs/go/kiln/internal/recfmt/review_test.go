@@ -180,3 +180,165 @@ func TestR2EntriesAndActionGetPathChecks(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+// Security review MEDIUM-2: caps hold BEFORE the struct is built.
+func TestSRPrescanRefusesOversizeInput(t *testing.T) {
+	line := string(mustLine(t, goodRecord("a")))
+	items := make([]string, MaxList+1)
+	for i := range items {
+		items[i] = `"x"`
+	}
+	for name, in := range map[string]string{
+		"list over the cap": strings.Replace(line, `"binds":[]`, `"binds":[`+strings.Join(items, ",")+`]`, 1),
+		"string over 64KiB": strings.Replace(line, `"language":"go"`, `"language":"`+strings.Repeat("x", 1<<16+1)+`"`, 1),
+		"nesting over 8":    strings.Replace(line, `"language":"go"`, `"language":`+strings.Repeat("[", 9)+strings.Repeat("]", 9), 1),
+	} {
+		if err := prescan([]byte(in), MaxList); err == nil {
+			t.Errorf("%s: prescan accepted", name)
+		}
+		if _, err := DecodeRecord([]byte(in)); err == nil {
+			t.Errorf("%s: decode accepted", name)
+		}
+	}
+	// What prescan accepts, the strict decoder still judges.
+	if err := prescan([]byte(line), MaxList); err != nil {
+		t.Error(err)
+	}
+	// A truncated value is the strict decoder's to refuse; prescan only caps.
+	if _, err := DecodeRecord([]byte(`{`)); err == nil {
+		t.Error("a truncated value was accepted")
+	}
+	// The inventory may be larger than a record list.
+	inv := `{"schema":"kiln-record-inventory/1","paths":[` + strings.Repeat(`"a",`, MaxList+5) + `"b"]}`
+	if err := prescan([]byte(inv), MaxInventory); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestSRShardFileCapsAndRetained(t *testing.T) {
+	bind, _ := EncodeBinding(goodBinding())
+	facts, _ := EncodeHostFacts(goodFacts())
+	inv, _ := EncodeInventory(Inventory{Schema: SchemaInventory})
+	recs, _ := EncodeShardRecords(ShardHeader{Schema: SchemaShard, BindingID: d1, ShardCount: 1}, []ShardRecord{goodRecord("a"), goodRecord("b")})
+	if _, err := DecodeShard(0, ShardFiles{append(bind, make([]byte, MaxBindingBytes)...), facts, inv, bytes.NewReader(recs)}, DefaultLimits); err == nil {
+		t.Error("an oversize binding was read")
+	}
+	if _, err := DecodeShard(0, ShardFiles{bind, append(facts, make([]byte, MaxHostFactsBytes)...), inv, bytes.NewReader(recs)}, DefaultLimits); err == nil {
+		t.Error("oversize host facts were read")
+	}
+	// Retained-text accounting stops early.
+	lim := DefaultLimits
+	lim.MaxRetained = int64(len(inv)+len(facts)) + 100
+	if _, err := DecodeShard(0, ShardFiles{bind, facts, inv, bytes.NewReader(recs)}, lim); err == nil || !strings.Contains(err.Error(), "retained") {
+		t.Errorf("%v", err)
+	}
+	if DefaultLimits.MaxLine > 64<<20 || DefaultLimits.MaxFile > 1<<30 {
+		t.Error("the default caps grew")
+	}
+}
+
+// LOW-2: null inside a string list, and empty elements.
+func TestSRNullAndEmptyStringListElements(t *testing.T) {
+	line := string(mustLine(t, goodRecord("a")))
+	for name, in := range map[string]string{
+		"null bind":     strings.Replace(line, `"binds":[]`, `"binds":[null]`, 1),
+		"null reason":   strings.Replace(line, `"reasons":[]`, `"reasons":[null]`, 1),
+		"null write":    strings.Replace(line, `"writes":[]`, `"writes":[null]`, 1),
+		"empty bind":    strings.Replace(line, `"binds":[]`, `"binds":[""]`, 1),
+		"empty reason":  strings.Replace(line, `"reasons":[]`, `"reasons":[""]`, 1),
+		"FFFD language": strings.Replace(line, `"language":"go"`, `"language":"g\ud800"`, 1),
+	} {
+		if _, err := DecodeRecord([]byte(in)); err == nil {
+			t.Errorf("%s accepted", name)
+		}
+	}
+	h, _ := EncodeHeader(ShardHeader{Schema: SchemaShard, BindingID: d1, ShardCount: 1})
+	if _, err := DecodeHeader([]byte(strings.Replace(string(h), `"void":[]`, `"void":[null]`, 1))); err == nil {
+		t.Error("null void token accepted")
+	}
+	if _, err := DecodeHeader([]byte(strings.Replace(string(h), `"void":[]`, `"void":[""]`, 1))); err == nil {
+		t.Error("empty void token accepted")
+	}
+	f, _ := EncodeHostFacts(goodFacts())
+	for _, bad := range []string{`"executor_args":[null]`, `"executor_args":[""]`, `"env":[null]`, `"env":[""]`} {
+		key := bad[:strings.Index(bad, ":")]
+		i := strings.Index(string(f), key)
+		j := i + strings.Index(string(f)[i:], "]") + 1
+		if _, err := DecodeHostFacts([]byte(string(f)[:i] + bad + string(f)[j:])); err == nil {
+			t.Errorf("%s accepted", bad)
+		}
+	}
+}
+
+func TestSRReasonKindCap(t *testing.T) {
+	r := goodRecord("a")
+	for i := 0; i < MaxReasonKinds; i++ {
+		r.Record.Reasons = append(r.Record.Reasons, "k"+string(rune('a'+i/26))+string(rune('a'+i%26))+":x")
+	}
+	if err := r.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	r.Record.Reasons = sortedCopy(append(r.Record.Reasons, "zz-extra:x"))
+	if err := r.Validate(); err == nil || !strings.Contains(err.Error(), "distinct reason kinds") {
+		t.Errorf("%v", err)
+	}
+}
+
+func TestSRHostFactsHardening(t *testing.T) {
+	for name, mut := range map[string]func(f *HostFacts){
+		"NUL in env":       func(f *HostFacts) { f.Env = []string{"A=b\x00c"} },
+		"control in env":   func(f *HostFacts) { f.Env = []string{"A=b\nc"} },
+		"FFFD in env":      func(f *HostFacts) { f.Env = []string{"A=b\xef\xbf\xbd"} },
+		"NUL in root":      func(f *HostFacts) { f.Root = "/a\x00b" },
+		"dotdot in root":   func(f *HostFacts) { f.Root = "/a/../b" },
+		"dotdot in home":   func(f *HostFacts) { f.Home = "/.." },
+		"dotdot in tmpdir": func(f *HostFacts) { f.Tmpdir = "/x/../y" },
+		"NUL in arg":       func(f *HostFacts) { f.ExecutorArgs = []string{"-a\x00"} },
+		"empty arg":        func(f *HostFacts) { f.ExecutorArgs = []string{""} },
+	} {
+		f := goodFacts()
+		mut(&f)
+		if f.Validate() == nil {
+			t.Errorf("%s accepted", name)
+		}
+	}
+	f := goodFacts()
+	f.Root = "/a/..b/c" // a name that merely contains dots is fine
+	if err := f.Validate(); err != nil {
+		t.Error(err)
+	}
+}
+
+// A decode fuzz target: nothing panics, and whatever decodes re-encodes to a
+// line that decodes to the same record.  The seed corpus runs in go test.
+func FuzzDecodeRecord(f *testing.F) {
+	for _, r := range []ShardRecord{goodRecord("a"), goodRecord("code/packages/go/x")} {
+		l, _ := EncodeRecord(r)
+		f.Add(l)
+	}
+	f.Add([]byte(`{}`))
+	f.Add([]byte(`null`))
+	f.Add([]byte(`{"record":{"writes":["a\ud800"]}}`))
+	f.Add([]byte("\xef\xbb\xbf{}"))
+	f.Fuzz(func(t *testing.T, data []byte) {
+		r, err := DecodeRecord(data)
+		if err != nil {
+			return
+		}
+		if err := r.Validate(); err != nil {
+			t.Fatalf("decoded but invalid: %v", err)
+		}
+		l, err := EncodeRecord(r)
+		if err != nil {
+			t.Fatalf("decoded but not encodable: %v", err)
+		}
+		r2, err := DecodeRecord(l)
+		if err != nil {
+			t.Fatalf("re-decode: %v", err)
+		}
+		l2, _ := EncodeRecord(r2)
+		if !bytes.Equal(l, l2) {
+			t.Fatal("not a fixed point")
+		}
+	})
+}

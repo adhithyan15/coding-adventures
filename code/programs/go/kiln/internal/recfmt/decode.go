@@ -20,14 +20,28 @@ import (
 )
 
 // Limits are the size caps of records.jsonl (KILN04 section 7.1): a line over
-// MaxLine, or a file over MaxFile, is refused, never truncated.
+// MaxLine, or a file over MaxFile, is refused, never truncated.  MaxRetained
+// bounds the path and entry text a decoded shard holds (0 means the default).
 type Limits struct {
-	MaxLine int64
-	MaxFile int64
+	MaxLine     int64
+	MaxFile     int64
+	MaxRetained int64
 }
 
-// DefaultLimits are the caps the shard recorder also applies.
-var DefaultLimits = Limits{MaxLine: 256 << 20, MaxFile: 2 << 30}
+// DefaultLimits are the caps the shard recorder also applies.  A line is one
+// action.  A real record holds a few lists of tens to thousands of paths of
+// roughly 100 bytes, so well under a megabyte; the worst the list caps allow
+// of honest data (six lists of 65,536 paths) is about 40 MiB, so 64 MiB per
+// line leaves headroom and no more.  A shard (a few hundred actions) is far
+// below 1 GiB.  An over-cap shard is refused with a void token, not read.
+var DefaultLimits = Limits{MaxLine: 64 << 20, MaxFile: 1 << 30, MaxRetained: 1 << 30}
+
+// Byte caps of the three small files, checked before they are decoded.
+const (
+	MaxBindingBytes   = 1 << 20
+	MaxHostFactsBytes = 16 << 20
+	MaxInventoryBytes = 256 << 20
+)
 
 // ---------------------------------------------------------------------------
 // Strict decoding.
@@ -48,10 +62,78 @@ func decodeStrict(data []byte, v any) error {
 	if n := len(data); n > 0 && (data[0] <= ' ' || data[n-1] <= ' ') {
 		return fmt.Errorf("leading or trailing whitespace")
 	}
+	// A cheap token pass first: no list longer than its cap and no string
+	// longer than the longest legal one reaches the struct decoder.  It only
+	// ever REFUSES; what it lets through is parsed by the strict decoder below,
+	// so the two cannot disagree about a value.
+	elems := MaxList
+	if _, ok := v.(*Inventory); ok {
+		elems = MaxInventory
+	}
+	if err := prescan(data, elems); err != nil {
+		return err
+	}
+	// The input is then walked a bounded number of times: the pre-pass, the
+	// decode, the exact-key check (once per nesting level, at most 3 levels
+	// here) and the required-key check.  About six passes in all, each linear.
 	if err := legacy.PolicyDecode(data, v); err != nil {
 		return err
 	}
 	return requireKeys(data, reflect.TypeOf(v))
+}
+
+// prescan walks the tokens of one JSON value and refuses an array of more than
+// maxElems elements, a string over 64 KiB or nesting deeper than 8, before any
+// struct is built.
+func prescan(data []byte, maxElems int) error {
+	dec := json.NewDecoder(bytes.NewReader(data))
+	type frame struct {
+		arr bool
+		n   int
+	}
+	var st []frame
+	count := func() error {
+		if k := len(st); k > 0 && st[k-1].arr {
+			if st[k-1].n++; st[k-1].n > maxElems {
+				return fmt.Errorf("a list has more than %d elements", maxElems)
+			}
+		}
+		return nil
+	}
+	for {
+		tok, err := dec.Token()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		switch t := tok.(type) {
+		case json.Delim:
+			if t == ']' || t == '}' {
+				st = st[:len(st)-1]
+				continue
+			}
+			if err := count(); err != nil {
+				return err
+			}
+			if len(st) >= 8 {
+				return fmt.Errorf("nesting is deeper than 8")
+			}
+			st = append(st, frame{arr: t == '['})
+		case string:
+			if len(t) > 1<<16 {
+				return fmt.Errorf("a string is %d bytes, limit %d", len(t), 1<<16)
+			}
+			if err := count(); err != nil {
+				return err
+			}
+		default:
+			if err := count(); err != nil {
+				return err
+			}
+		}
+	}
 }
 
 func requireKeys(raw []byte, t reflect.Type) error {
@@ -94,6 +176,19 @@ func requireKeys(raw []byte, t reflect.Type) error {
 	case reflect.Slice:
 		if string(raw) == "null" {
 			return fmt.Errorf("a list may not be null")
+		}
+		if t.Elem().Kind() == reflect.String {
+			// A null element would decode as "": an empty path, reason or
+			// argument that nobody wrote.
+			var items []json.RawMessage
+			if err := json.Unmarshal(raw, &items); err != nil {
+				return err
+			}
+			for _, it := range items {
+				if string(bytes.TrimSpace(it)) == "null" {
+					return fmt.Errorf("a list holds null")
+				}
+			}
 		}
 		if t.Elem().Kind() == reflect.Struct {
 			var items []json.RawMessage
@@ -215,6 +310,13 @@ func sum(b []byte) string {
 // and inventory files are computed here, from the exact bytes, so the binding
 // check in recmerge compares against what was really uploaded.
 func DecodeShard(artifactIndex int, f ShardFiles, lim Limits) (*Shard, error) {
+	if len(f.Binding) > MaxBindingBytes || len(f.HostFacts) > MaxHostFactsBytes || len(f.Inventory) > MaxInventoryBytes {
+		return nil, fmt.Errorf("a shard file is over its size cap")
+	}
+	retained := lim.MaxRetained
+	if retained <= 0 {
+		retained = DefaultLimits.MaxRetained
+	}
 	s := &Shard{ArtifactIndex: artifactIndex}
 	var err error
 	if s.Binding, err = DecodeBinding(f.Binding); err != nil {
@@ -229,6 +331,7 @@ func DecodeShard(artifactIndex int, f ShardFiles, lim Limits) (*Shard, error) {
 		return nil, err
 	}
 	s.InventorySHA256 = sum(f.Inventory)
+	retained -= int64(len(f.Inventory)) + int64(len(f.HostFacts))
 	if f.Records == nil {
 		return nil, fmt.Errorf("records: no stream")
 	}
@@ -243,6 +346,10 @@ func DecodeShard(artifactIndex int, f ShardFiles, lim Limits) (*Shard, error) {
 		r, err := DecodeRecord(line)
 		if err != nil {
 			return err
+		}
+		// Stop early: the decoded record holds about as much text as its line.
+		if retained -= int64(len(line)); retained < 0 {
+			return fmt.Errorf("the shard holds more than the retained-text cap")
 		}
 		s.Records = append(s.Records, r)
 		return nil

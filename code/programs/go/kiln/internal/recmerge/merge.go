@@ -59,6 +59,7 @@ package recmerge
 import (
 	"encoding/hex"
 	"fmt"
+	mbits "math/bits"
 	"sort"
 	"strings"
 	"time"
@@ -142,6 +143,8 @@ const (
 
 // Outcome is the verdict on one action.
 type Outcome struct {
+	// Action is a package path taken from a shard's record: valid UTF-8 but
+	// otherwise raw.  Whatever prints it (the report, PR 3) must sanitise it.
 	Action string
 	// Assigned is the shard the partition assigns the action to, or -1.
 	Assigned int
@@ -217,6 +220,8 @@ type reasons struct {
 	m   map[string]bool
 	any bool
 	mt  *meter
+	// kept is the size after the last trim; trims counts them (tests).
+	kept, trims int
 	// order is set when a reason means the action's behaviour depended on
 	// another action's recorded writes (M-3).
 	order bool
@@ -263,12 +268,19 @@ func (r *reasons) add(s string) {
 		r.m = map[string]bool{}
 	}
 	r.m[s] = true
-	if len(r.m) > 512 {
+	// Trim only when the set has DOUBLED since the last trim (and passed 512):
+	// a set that stays large because it holds many kinds at 16 each would
+	// otherwise be re-sorted on every add.  A trim costs n log n, charged.
+	if len(r.m) > max(512, 2*r.kept) {
+		r.trims++
+		n := int64(len(r.m))
+		r.mt.spend(n * int64(mbits.Len64(uint64(n))))
 		kept := map[string]bool{}
 		for _, k := range traced.CapReasons(r.m) {
 			kept[k] = true
 		}
 		r.m = kept
+		r.kept = len(kept)
 	}
 }
 
@@ -293,10 +305,10 @@ type act struct {
 
 type merger struct {
 	in     Input
-	causes map[string]bool // strict verdict: every cause
+	causes *causeSet // strict verdict: every cause
 	// relaxed holds the causes that are NOT charged to an action in the
 	// relaxed (report-only) verdict.
-	relaxed   map[string]bool
+	relaxed   *causeSet
 	relaxLost map[string]string // action -> why (M-1 and M-3 classes)
 	mt        *meter
 	malformed bool
@@ -320,14 +332,14 @@ type merger struct {
 // void records a cause that voids the run in BOTH verdicts.
 func (m *merger) void(format string, args ...any) {
 	c := traced.Sanitize(fmt.Sprintf(format, args...))
-	m.causes[c] = true
-	m.relaxed[c] = true
+	m.causes.add(c)
+	m.relaxed.add(c)
 }
 
 // voidStrict records a cause of the M-1 / M-3 classes: it voids the run in the
 // strict verdict and only costs the action in the relaxed one.
 func (m *merger) voidStrict(action, class, format string, args ...any) {
-	m.causes[traced.Sanitize(fmt.Sprintf(format, args...))] = true
+	m.causes.add(traced.Sanitize(fmt.Sprintf(format, args...)))
 	if m.relaxLost[action] == "" {
 		m.relaxLost[action] = class
 	}
@@ -336,7 +348,7 @@ func (m *merger) voidStrict(action, class, format string, args ...any) {
 // Merge applies B1-B6 and M1-M15 to the shards and returns the verdict.
 func Merge(in Input) Result {
 	m := &merger{
-		in: in, causes: map[string]bool{}, relaxed: map[string]bool{}, relaxLost: map[string]string{}, byIndex: map[int]*recfmt.Shard{},
+		in: in, causes: newCauseSet(), relaxed: newCauseSet(), relaxLost: map[string]string{}, byIndex: map[int]*recfmt.Shard{},
 		assigned: map[string]int{}, shardVoid: map[int]map[string]bool{}, acts: map[string]*act{},
 		shardW: map[*recfmt.Shard]*pathIndex{}, shardInv: map[*recfmt.Shard]pathSet{},
 	}
@@ -467,6 +479,8 @@ func (m *merger) checkBindings() {
 		bad := func(what string) { m.void("binding shard %d: %s", i, what) }
 		if i < 0 || i >= m.n {
 			bad("the artifact index is outside the plan")
+			// Nothing of this shard has been validated: never analyse it.
+			m.malformed = true
 			continue
 		}
 		for _, err := range []error{b.Validate(), s.Header.Validate(), s.Facts.Validate(), s.Inventory.Validate()} {
@@ -1088,6 +1102,9 @@ func (m *merger) tooBig() bool {
 	}
 	for _, s := range m.shards {
 		add(s.Inventory.Paths)
+		add(s.Facts.Env)
+		add(s.Facts.ExecutorArgs)
+		n += int64(len(s.Facts.Image) + len(s.Facts.Root) + len(s.Facts.Home) + len(s.Facts.Tmpdir))
 		for k := range s.Records {
 			r := &s.Records[k]
 			n += int64(len(r.Action))
@@ -1109,18 +1126,12 @@ func (m *merger) tooBig() bool {
 
 func (m *merger) finish() Result {
 	res := Result{ShardVoid: map[int][]string{}}
-	res.RunVoidCount = len(m.causes)
-	res.RunVoid = keys(m.causes)
-	if len(res.RunVoid) > MaxCauses {
-		res.RunVoid = res.RunVoid[:MaxCauses]
-	}
-	res.RelaxedRunVoidCount = len(m.relaxed)
-	res.RelaxedRunVoid = keys(m.relaxed)
-	if len(res.RelaxedRunVoid) > MaxCauses {
-		res.RelaxedRunVoid = res.RelaxedRunVoid[:MaxCauses]
-	}
-	res.Emitted = len(m.causes) == 0
-	relaxedOK := len(m.relaxed) == 0
+	res.RunVoidCount = m.causes.count()
+	res.RunVoid = m.causes.list()
+	res.RelaxedRunVoidCount = m.relaxed.count()
+	res.RelaxedRunVoid = m.relaxed.list()
+	res.Emitted = res.RunVoidCount == 0
+	relaxedOK := res.RelaxedRunVoidCount == 0
 	for i, toks := range m.shardVoid {
 		res.ShardVoid[i] = keys(toks)
 	}

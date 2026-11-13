@@ -52,3 +52,22 @@ verdict, the only one that produces manifests and passes, is now stricter.
 - `null` is refused for every field of every record type, not only lists.
 - The path part of every entry and the action name get the same checks as other
   paths (length, depth, NUL, U+FFFD).
+
+### Security review (2 MEDIUM, 3 LOW, INFO)
+
+- The reason-set trim is amortised (only when the set has doubled; each trim is
+  charged `n log n`), and a record may carry at most 64 distinct reason kinds.
+- Size caps hold before allocation: `DefaultLimits` is 64 MiB per line and
+  1 GiB per file, a token pre-pass refuses over-long lists, strings and deep
+  nesting before any struct is built, the binding, host facts and inventory have
+  byte caps, `DecodeShard` stops at a retained-text cap, and `Merge` counts the
+  host facts in its own cap.
+- The void-cause sets are bounded: exact distinct count, smallest 64 as text.
+- `null` and empty elements in string lists are refused; a shard whose artifact
+  index is outside the plan stops the analysis, so its host facts never reach
+  `Keys.Weak`.
+- The meter saturates; host facts refuse NUL, control characters, U+FFFD,
+  `..` in the paths and empty executor args; U+FFFD is refused in all free text;
+  `Outcome.Action` documents that it must be sanitised before printing.
+- New `FuzzDecodeRecord` target (decoded records are valid and a fixed point of
+  encode and decode).

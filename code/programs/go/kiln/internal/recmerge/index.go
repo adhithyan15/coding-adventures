@@ -38,6 +38,7 @@ package recmerge
 // uses neither the index nor this file's helpers.
 
 import (
+	"math"
 	"sort"
 	"strings"
 )
@@ -62,7 +63,12 @@ func (m *meter) spend(n int64) bool {
 	if m == nil {
 		return true
 	}
-	m.spent += n
+	// Saturate: a wrapped counter would read as "almost nothing spent".
+	if n < 0 || m.spent > math.MaxInt64-n {
+		m.spent = math.MaxInt64
+	} else {
+		m.spent += n
+	}
 	return m.spent <= m.max
 }
 

@@ -500,3 +500,125 @@ func TestR2OwnReasonAllowList(t *testing.T) {
 		t.Error("manifest kind prefix")
 	}
 }
+
+// Security review MEDIUM-1: the reason-set trim is amortised.  Counted, not
+// timed: a set that holds 60 kinds at 16 reasons each (960 entries) used to be
+// re-sorted on every add once it passed 512.
+func TestSRReasonTrimIsAmortised(t *testing.T) {
+	mt := &meter{max: 1 << 60}
+	r := reasons{mt: mt}
+	const adds = 20000
+	for i := 0; i < adds; i++ {
+		r.add("k" + string(rune('A'+i%60)) + ":" + strings.Repeat("x", i%40) + string(rune('a'+i%26)) + itoa(i))
+	}
+	if r.trims > 40 {
+		t.Errorf("%d trims for %d adds: the trim is not amortised", r.trims, adds)
+	}
+	// Total spend stays near linear: well under the n log n of re-sorting 960
+	// entries on every add (about 20000 * 960 * 10).
+	if mt.spent > 20_000_000 {
+		t.Errorf("spent %d", mt.spent)
+	}
+	if !r.any || len(r.m) == 0 {
+		t.Error("lost the set")
+	}
+	// A trim is charged.
+	before := mt.spent
+	small := reasons{mt: mt}
+	for i := 0; i < 513; i++ {
+		small.add("a:" + itoa(i))
+	}
+	if small.trims != 1 || mt.spent-before < 513*9 {
+		t.Errorf("trims %d, charged %d", small.trims, mt.spent-before)
+	}
+}
+
+// LOW-1: the cause set keeps the true distinct count and the smallest
+// MaxCauses strings, whatever order the causes arrive in.
+func TestSRCauseSetIsBoundedAndOrderIndependent(t *testing.T) {
+	var all []string
+	for i := 0; i < 1000; i++ {
+		all = append(all, "cause "+itoa(i)+" "+strings.Repeat("z", i%7))
+	}
+	a, b := newCauseSet(), newCauseSet()
+	for i, c := range all {
+		a.add(c)
+		a.add(c) // a repeat is not a new cause
+		b.add(all[len(all)-1-i])
+	}
+	if a.count() != 1000 || b.count() != 1000 || len(a.top) != MaxCauses {
+		t.Fatalf("%d %d %d", a.count(), b.count(), len(a.top))
+	}
+	if strings.Join(a.list(), "|") != strings.Join(b.list(), "|") {
+		t.Error("the retained causes depend on arrival order")
+	}
+	for i := 1; i < len(a.top); i++ {
+		if a.top[i-1] >= a.top[i] {
+			t.Error("not sorted")
+		}
+	}
+	if len(newCauseSet().list()) != 0 {
+		t.Error("empty")
+	}
+}
+
+// INFO: the meter saturates instead of wrapping.
+func TestSRMeterSaturates(t *testing.T) {
+	m := &meter{max: 100}
+	m.spent = 1<<63 - 10
+	if m.spend(1 << 40) {
+		t.Error("overflow read as within budget")
+	}
+	if m.spent != 1<<63-1 || !m.over() {
+		t.Errorf("%d", m.spent)
+	}
+	if m.spend(-5) || m.spent != 1<<63-1 {
+		t.Error("a negative spend must saturate too")
+	}
+}
+
+type spyKeys struct {
+	fakeKeys
+	images []string
+}
+
+func (s *spyKeys) Weak(f recfmt.HostFacts, a string) ([32]byte, string, error) {
+	s.images = append(s.images, f.Image)
+	return s.fakeKeys.Weak(f, a)
+}
+
+// LOW-3: a shard whose artifact index is outside the plan is never analysed:
+// its (unvalidated) host facts never reach Keys.Weak.
+func TestSRUnvalidatedShardNeverReachesKeys(t *testing.T) {
+	w := std(t)
+	c := *w.shards[0]
+	c.ArtifactIndex = 9
+	c.Facts.Image = "HOSTILE-IMAGE"
+	c.Facts.Root = "" // invalid
+	w.shards = append(w.shards, &c)
+	in := w.input()
+	spy := &spyKeys{}
+	in.Keys = spy
+	wantVoid(t, "out of range", Merge(in), "outside the plan")
+	for _, img := range spy.images {
+		if img == "HOSTILE-IMAGE" {
+			t.Error("unvalidated facts reached Keys.Weak")
+		}
+	}
+	if len(spy.images) != 0 {
+		t.Errorf("Keys was consulted for a malformed run: %v", spy.images)
+	}
+}
+
+// MEDIUM-2: the retained-text cap counts the host facts too.
+func TestSRRetainedCapCountsHostFacts(t *testing.T) {
+	w := std(t)
+	var env []string
+	for i := 0; i < 100; i++ {
+		env = append(env, "V"+itoa(i)+"="+strings.Repeat("v", 1000))
+	}
+	w.shards[0].Facts.Env = env
+	in := w.input()
+	in.MaxRetainedBytes = 50_000
+	wantVoid(t, "env", Merge(in), "retained-text cap")
+}

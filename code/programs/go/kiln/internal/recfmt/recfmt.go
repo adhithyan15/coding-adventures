@@ -86,6 +86,12 @@ const (
 	MaxReasons = 1 << 12
 	// MaxReasonsPerKind is the classifier's per-kind cap (traced.CapReasons).
 	MaxReasonsPerKind = 16
+	// MaxReasonKinds bounds the DISTINCT reason kinds of one record.  The
+	// classifier emits about a dozen (trace-incomplete, host-read, network,
+	// daemon, daemon-left, failed, writes-tracked, state-write, trace-visible,
+	// vcs-read, ...); 64 leaves a wide margin and stops a record from
+	// carrying hundreds of kinds at 16 reasons each (a merge cost multiplier).
+	MaxReasonKinds = 64
 )
 
 // Binding is pre/binding.json: what one shard claims about itself before any
@@ -248,7 +254,9 @@ func printable(what, s string, max int) error {
 		return fmt.Errorf("%s is not valid UTF-8", what)
 	}
 	for _, r := range s {
-		if !unicode.IsPrint(r) {
+		// U+FFFD is what the decoder substitutes for a byte that was not text
+		// (a lone \ud800 escape, say), so it is never a faithful character.
+		if !unicode.IsPrint(r) || r == utf8.RuneError {
 			return fmt.Errorf("%s holds a non-printable character", what)
 		}
 	}
@@ -313,6 +321,9 @@ func textList(what string, l []string, max, maxLen int) error {
 		return fmt.Errorf("%s has %d entries, limit %d", what, len(l), max)
 	}
 	for _, s := range l {
+		if s == "" {
+			return fmt.Errorf("%s holds an empty element", what)
+		}
 		if err := printable(what, s, maxLen); err != nil {
 			return err
 		}
@@ -378,14 +389,17 @@ func (f *HostFacts) Validate() error {
 		if p.v == "" && p.name != "home" && p.name != "tmpdir" {
 			return fmt.Errorf("host facts: %s is empty", p.name)
 		}
-		if p.v != "" && (p.v[0] != '/' || printable(p.name, p.v, MaxText) != nil) {
-			return fmt.Errorf("host facts: %s %q is not an absolute path", p.name, short(p.v))
+		if p.v != "" && (p.v[0] != '/' || printable(p.name, p.v, MaxText) != nil || hasDotDot(p.v)) {
+			return fmt.Errorf("host facts: %s %q is not a clean absolute path", p.name, short(p.v))
 		}
 	}
 	if len(f.ExecutorArgs) > MaxEnv || len(f.Env) > MaxEnv {
 		return fmt.Errorf("host facts: too many executor args or environment entries")
 	}
 	for _, a := range f.ExecutorArgs {
+		if a == "" {
+			return fmt.Errorf("host facts: an executor arg is empty")
+		}
 		if err := printable("executor arg", a, MaxText); err != nil {
 			return fmt.Errorf("host facts: %v", err)
 		}
@@ -393,7 +407,7 @@ func (f *HostFacts) Validate() error {
 	seen := map[string]bool{}
 	for _, e := range f.Env {
 		name, _, ok := strings.Cut(e, "=")
-		if !ok || name == "" || !utf8.ValidString(e) || len(e) > 1<<16 {
+		if !ok || name == "" || printable("environment entry", e, 1<<16) != nil {
 			return fmt.Errorf("host facts: environment entry %q is not NAME=value", short(e))
 		}
 		if strings.EqualFold(name, "PATH") {
@@ -528,6 +542,9 @@ func (r *ShardRecord) Validate() error {
 	}
 	kinds := map[string]int{}
 	for _, reason := range rr.Reasons {
+		if len(kinds) >= MaxReasonKinds && kinds[kindOf(reason)] == 0 {
+			return fmt.Errorf("record %q: more than %d distinct reason kinds", short(r.Action), MaxReasonKinds)
+		}
 		if kinds[kindOf(reason)]++; kinds[kindOf(reason)] > MaxReasonsPerKind {
 			return fmt.Errorf("record %q: more than %d reasons of kind %q", short(r.Action), MaxReasonsPerKind, short(kindOf(reason)))
 		}
@@ -554,4 +571,15 @@ func statusOK(s string) bool {
 		}
 	}
 	return true
+}
+
+// hasDotDot reports a ".." segment (or a relative-looking "//" is left to
+// callers): a recorded root must be a clean absolute path.
+func hasDotDot(p string) bool {
+	for _, seg := range strings.Split(p, "/") {
+		if seg == ".." {
+			return true
+		}
+	}
+	return false
 }
