@@ -1,8 +1,8 @@
 Kannada, chapter 108: Below, Outside, In front, In the middle, Road.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 ಕೆಳಗೆ (keḷage) — below, underneath.
 
 Warm-up.
@@ -34,7 +34,7 @@ Wrap-up Recall.
 What does ಕೆಳಗೆ (keḷage) mean? ("Below, underneath".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 ಹೊರಗೆ (horage) — outside.
 
 Warm-up.
@@ -66,7 +66,7 @@ Wrap-up Recall.
 What does ಹೊರಗೆ (horage) mean? ("Outside".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 ಮುಂದೆ (munde) — in front.
 
 Warm-up.
@@ -98,7 +98,7 @@ Wrap-up Recall.
 What does ಮುಂದೆ (munde) mean? ("In front".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 ನಡುವೆ (naḍuve) — in the middle, between.
 
 Warm-up.
@@ -130,7 +130,7 @@ Wrap-up Recall.
 What does ನಡುವೆ (naḍuve) mean? ("In the middle, between".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 ರಸ್ತೆ (rastē) — a road.
 
 Warm-up.
@@ -162,3 +162,32 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does ರಸ್ತೆ (rastē) mean? ("A road".) Say it once more.
+
+
+Lesson 6 of 6.
+ಶಾಲೆಗೆ (śālege) — to school, not from school.
+
+Warm-up.
+[pause 2 seconds]
+Say the Kannada for “I”, “go”, “school”, “in front”, “in the middle” and “road”. Now say the answer you already know: “I have come from Bengaluru.” One direction is already yours.
+
+You'll want to know: a destination.
+Listen first, then say this one short sentence:
+ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ. nānu śālege hōguttēne. — “I go to school.”
+You know ಶಾಲೆ (śāle, school) and ಹೋಗು (hōgu, go). In this fixed sentence, ಶಾಲೆಗೆ (śālege) means “to school”: -ಗೆ points to the destination. Keep ಹೋಗುತ್ತೇನೆ as the whole “I go” form here. This is one place-and-verb frame, not a promise that you can attach -ಗೆ to every noun or conjugate every verb.
+
+Grammar lens: to and from.
+ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ. (nānu śālege hōguttēne) — I go to school. ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. — I have come from Bengaluru.
+The destination ends in -ಗೆ; the starting place ends in -ಇಂದ. You already learned the whole Bengaluru answer in chapter 103. Listen for the difference, then say each sentence once. Do not swap “to” and “from”.
+
+Guided practice.
+[pause 3 seconds]
+[your turn — say: “I go to school” in Kannada, without looking.]
+[pause 8 seconds for the answer]
+[your turn — say: “I have come from Bengaluru” in Kannada, without looking.]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ಶಾಲೆಗೆ from memory, then check the printed word.]
+
+Wrap-up recall.
+[pause 3 seconds]
+Which ending points towards a place? (-ಗೆ, as in ಶಾಲೆಗೆ.) Which marks the place one came from? (-ಇಂದ, as in ಬೆಂಗಳೂರಿನಿಂದ.)

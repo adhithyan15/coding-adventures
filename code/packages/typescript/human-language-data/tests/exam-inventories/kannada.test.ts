@@ -14,6 +14,7 @@ import {
   trackIntroducedAtoms,
 } from "../../src/exam-inventory.js";
 import { lessonsUpToLevel } from "../../src/levels.js";
+import { measureContinuity } from "../../src/continuity.js";
 
 describe("the committed Kannada A1 inventory", () => {
   const inventory = loadExamInventory("kannada", "A1");
@@ -183,6 +184,20 @@ describe("the committed Kannada A1 inventory", () => {
       ?.chapters.find((chapter) => chapter.chapter === 108);
     expect(chapter108?.payoff?.lesson).toBe("KA-C108-movement");
     expect(chapter108?.payoff?.assesses).toContain("KA-GRAMMAR-C108-DESTINATION-GE-06");
+
+    // Four later retrievals span the R1-R4 windows; a one-off probe should
+    // not turn a durable A1 ability into a coverage score.
+    for (const id of [
+      "KA-C109-setuve", "KA-C110-sante", "KA-C113-yajamana", "KA-C149-seru",
+    ]) {
+      const review = lessons.find((lesson) => lesson.realization.lessonId === id);
+      expect(review?.frontmatter["practises.knowledge"], id).toContain(
+        "KA-GRAMMAR-C108-DESTINATION-GE-06",
+      );
+    }
+    expect(measureContinuity(lessons).reinforcement.find(
+      (defect) => defect.atom === "KA-GRAMMAR-C108-DESTINATION-GE-06",
+    )).toBeUndefined();
   }, 60_000);
 
   it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
@@ -204,8 +219,8 @@ describe("the committed Kannada A1 inventory", () => {
     const origin = coverage.points.filter((point) => originIds.includes(point.id));
     expect(origin.map((point) => point.id)).toEqual(originIds);
     expect(origin.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(211);
-    expect(coverage.unmapped).toBe(47);
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(46);
   }, 60_000);
 
   it("teaches the five-part A1 third-person bridge before the A1 boundary", () => {
@@ -224,8 +239,8 @@ describe("the committed Kannada A1 inventory", () => {
     const bridge = coverage.points.filter((point) => bridgeIds.includes(point.id));
     expect(bridge.map((point) => point.id)).toEqual(bridgeIds);
     expect(bridge.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(211);
-    expect(coverage.unmapped).toBe(47);
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(46);
 
     // The plural examples must be words the learner actually owns. The first
     // reviewed draft used banna/bannagaḷu while citing the four colour-word
@@ -293,8 +308,8 @@ describe("the committed Kannada A1 inventory", () => {
     const objectBridge = coverage.points.filter((point) => objectIds.includes(point.id));
     expect(objectBridge.map((point) => point.id)).toEqual(objectIds);
     expect(objectBridge.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(211);
-    expect(coverage.unmapped).toBe(47);
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(46);
 
     const accusative = lessons.find(
       (lesson) => lesson.realization.lessonId === "KA-C104-accusative-annu",
@@ -375,8 +390,9 @@ describe("the committed Kannada A1 inventory", () => {
     // above: pronouns, human/non-human, present endings, possessives and -gaḷu.
     // 209 -> 211: chapter 104 closes the dependent accusative/object-pronoun
     // pair pinned above without claiming any other case or pronoun demand.
-    expect(coverage.covered).toBe(211);
-    expect(coverage.unmapped).toBe(47);
+    // 211 -> 212: chapter 108 closes movement to/from, not relative position.
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(46);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -432,7 +448,7 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 211/258 points covered (82%)",
+      "kannada A1 (partial inventory): 212/258 points covered (82%)",
     );
   }, 60_000);
 });

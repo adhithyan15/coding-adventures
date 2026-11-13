@@ -1475,7 +1475,10 @@
       "id": "KA-A1-POST-03",
       "category": "Anusarga (postpositions)",
       "label": "movement towards and away",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+        "KA-GRAMMAR-C108-DESTINATION-GE-06"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1485,7 +1488,7 @@
         "A1-NG3-04",
         "A1-NG3-05"
       ],
-      "note": "Untaught. hoogu and baa give the motion; the destination cannot be attached to them."
+      "note": "CLOSED by the chapter 108 movement bridge: chapter 103 already teaches a concrete place of origin with -inda and a come-from answer; chapter 108 adds the attested school destination -ge in a fixed I-go-to-school frame and retrieves both directions without claiming general case or verb mastery."
     },
     {
       "id": "KA-A1-POST-04",
