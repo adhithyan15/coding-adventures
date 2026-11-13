@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.22.0 - 2026-11-12
+
+### Added
+
+- Added reviewed-anchor DNS-policy evaluation that accepts only the Name-
+  policy-backed arbitrary-depth target-signature closure.
+- Added retained Name-policy, reviewed-root, anchor-role, intermediate,
+  target-signature, server-policy, and anchor-policy coverage over a checked-in
+  two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic results derive the exact target, validated SAN index,
+  and reviewed-anchor constraint bytes only from their consumed closure, then
+  use the same bounded repository-owned supported permitted-DNS evaluator.
+- The strong result retains the exact Name-value policy through reviewed-anchor
+  policy. It does not establish complete Name or path validity, apply excluded
+  or non-DNS anchor constraints or every intermediate constraint, check
+  revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+  authority.
+
 ## 0.21.0 - 2026-11-12
 
 ### Added
