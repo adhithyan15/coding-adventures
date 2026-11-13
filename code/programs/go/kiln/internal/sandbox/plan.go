@@ -51,6 +51,10 @@ const (
 	KindEnsureDir MountKind = "ensure-dir"
 	// KindBind binds a host path, writable, over a path of the new root.
 	KindBind MountKind = "bind"
+	// KindSealDir makes ONE mount (not the ones beneath it) read-only: the
+	// anchor tmpfs of read-only roots beneath home, once everything that has
+	// to be created inside it is in place (S1).
+	KindSealDir MountKind = "seal-dir"
 	// KindMask makes a path of the checkout absent: an empty read-only tmpfs
 	// over a directory, an empty file over anything else.
 	KindMask MountKind = "mask"
@@ -140,6 +144,8 @@ const maskData = "mode=0555,size=4k,nr_inodes=2"
 //  4. Bind each allowed read-only root into it (shallowest first), creating the
 //     missing parent directories on the root tmpfs.
 //  5. Fresh tmpfs for HOME, TMPDIR, /tmp, /var/tmp and /run, shallowest first.
+//     Then the read-only roots beneath HOME (S1, see homeRoRoots), which the
+//     HOME tmpfs would have hidden had they been bound in step 4.
 //  6. The minimal /dev.
 //  7. Bind the repository, writable, at its own path, and then each state root.
 //  8. Mask the checkout's own files (.git and the like), which are direct
@@ -165,6 +171,9 @@ func Plan(c *Config) ([]Mount, error) {
 		Mount{Kind: KindRootTmpfs, Target: stage, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData("0755")},
 	)
 	for _, r := range sortedByDepth(c.RoRoots) {
+		if _, beneath := HomeAnchor(c.Home, r); beneath {
+			continue // bound after HOME's tmpfs (homeRoRoots)
+		}
 		plan = append(plan, Mount{Kind: KindRORoot, Source: r, Target: r, Flags: MsBind})
 	}
 	// The scratch tmpfs, deduplicated (TMPDIR may be /tmp) and shallowest first
@@ -188,6 +197,7 @@ func Plan(c *Config) ([]Mount, error) {
 			Mount{Kind: KindTmpfs, Target: p, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData(mode[p])},
 		)
 	}
+	plan = append(plan, homeRoRoots(c)...)
 	plan = append(plan,
 		Mount{Kind: KindEnsureDir, Target: "/dev"},
 		Mount{Kind: KindDev, Target: "/dev", FSType: "tmpfs", Flags: MsNosuid | MsNoexec, Data: devData},
@@ -211,6 +221,73 @@ func Plan(c *Config) ([]Mount, error) {
 		Mount{Kind: KindVerifyAbsent},
 	)
 	return plan, nil
+}
+
+// homeRoRoots plans the read-only roots that lie strictly beneath HOME
+// (S1, KILN04 section 4.7).  It runs after every scratch tmpfs is mounted, so
+// HOME's fresh tmpfs is already there to receive them at their own paths.
+//
+// The hazard is the mount point's ANCESTORS.  A tool root such as
+// ~/.cargo/bin is a mount point, and the kernel refuses to rename, remove or
+// replace a mount point (EBUSY); but its parent ~/.cargo is an ordinary
+// directory of HOME's tmpfs, which the step owns, and the kernel happily
+// renames a directory that merely CONTAINS a mount.  A step could then move
+// ~/.cargo away and build its own ~/.cargo/bin, and the read of
+// ~/.cargo/bin/cargo would be attributed to the declared host root while
+// reading the step's file.  So:
+//
+//   - a root that is a direct child of HOME (~/.rustup) is bound as it is: it
+//     IS the mount point, and its parent is HOME itself;
+//   - a deeper root has an ANCHOR, the first directory below HOME on its path
+//     (~/.cargo).  The anchor becomes a tmpfs of its own; the missing parents
+//     and the roots are created and bound inside it; the mount points of any
+//     writable state root beneath it (~/.cargo/registry) are created inside it
+//     too, so the later bind of the state root lands on an existing directory;
+//     and then that one mount is made read-only (KindSealDir).  The anchor is
+//     a mount point (EBUSY), and nobody can create, rename or remove an entry
+//     inside a read-only tmpfs, so every ancestor of every mount point below
+//     it is fixed.  A state root inside it stays a writable mount.
+//
+// Validate guarantees the anchors hold neither the checkout nor TMPDIR and do
+// not nest, so an anchor never hides, or is hidden by, another mount.
+func homeRoRoots(c *Config) []Mount {
+	var direct []string
+	byAnchor := map[string][]string{}
+	for _, r := range c.RoRoots {
+		a, ok := HomeAnchor(c.Home, r)
+		switch {
+		case !ok:
+		case a == r:
+			direct = append(direct, r)
+		default:
+			byAnchor[a] = append(byAnchor[a], r)
+		}
+	}
+	var out []Mount
+	for _, r := range sortedByDepth(direct) {
+		out = append(out, Mount{Kind: KindRORoot, Source: r, Target: r, Flags: MsBind})
+	}
+	anchors := make([]string, 0, len(byAnchor))
+	for a := range byAnchor {
+		anchors = append(anchors, a)
+	}
+	sort.Strings(anchors)
+	for _, a := range anchors {
+		out = append(out,
+			Mount{Kind: KindEnsureDir, Target: a},
+			Mount{Kind: KindTmpfs, Target: a, FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: tmpfsData("0755")},
+		)
+		for _, r := range sortedByDepth(byAnchor[a]) {
+			out = append(out, Mount{Kind: KindRORoot, Source: r, Target: r, Flags: MsBind})
+		}
+		for _, s := range c.StateRoots {
+			if within(s, a) {
+				out = append(out, Mount{Kind: KindEnsureDir, Target: s})
+			}
+		}
+		out = append(out, Mount{Kind: KindSealDir, Target: a})
+	}
+	return out
 }
 
 // sortedByDepth returns a copy of paths ordered by depth, then name.

@@ -933,6 +933,10 @@ not stop a rename of an ancestor, so the plan removes the ability instead:
   entry lies beneath another entry of this kind, so no anchor is another
   entry's mount point.
 
+A root beneath `home` is exempt from the `/tmp` and `/var/tmp` rule above,
+because it is bound after every scratch tmpfs: `home` may itself live under
+`/tmp` (a test fixture's does) without anything being hidden.
+
 Only strictly-descending entries qualify; an entry equal to `home`, or one that
 contains it, is still refused, and so is one beneath `tmpdir`, the checkout or a
 state root. The kiln binary and the configuration file stay out of every

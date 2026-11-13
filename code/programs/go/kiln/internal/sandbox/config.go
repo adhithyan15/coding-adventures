@@ -221,6 +221,19 @@ func within(p, root string) bool {
 	return p == root || strings.HasPrefix(p, root+"/")
 }
 
+// HomeAnchor reports, for a read-only root strictly beneath home, its ANCHOR:
+// the first directory of the root below home (home + "/.cargo" for
+// home + "/.cargo/bin"; the root itself for a direct child of home).  ok is
+// false for a root that is not beneath home.  The plan uses the anchor to make
+// every ancestor of a mount point unrenamable (KILN04 section 4.7, S1).
+func HomeAnchor(home, r string) (anchor string, ok bool) {
+	if !strings.HasPrefix(r, home+"/") {
+		return "", false
+	}
+	first, _, _ := strings.Cut(r[len(home)+1:], "/")
+	return home + "/" + first, true
+}
+
 // Validate checks everything that needs no filesystem.
 func (c *Config) Validate() error {
 	for _, f := range []struct{ what, p string }{
@@ -306,12 +319,43 @@ func (c *Config) Validate() error {
 		seen[r] = true
 		// A read-only root that overlaps a writable or scratch place would
 		// either expose it read-only or be hidden by it: refuse both ways.
+		// The one exception (S1, KILN04 section 4.7) is a root STRICTLY
+		// beneath home: $HOME is a fresh tmpfs, and the plan binds such a
+		// root after it, at the same path.  A root that is home, or that
+		// contains home, is still refused.
 		for _, o := range append([]string{c.RepoRoot, c.Home, c.Tmpdir}, c.StateRoots...) {
+			if o == c.Home && r != o && within(r, o) {
+				continue
+			}
 			if within(r, o) || within(o, r) {
 				return fmt.Errorf("config: ro root %q overlaps %q", clip(r), clip(o))
 			}
 		}
+		anchor, beneathHome := HomeAnchor(c.Home, r)
+		if beneathHome {
+			// The anchor of a deeper root becomes a tmpfs of its own (see
+			// Plan): it would hide the checkout's or TMPDIR's mount if either
+			// lay beneath it.
+			for _, o := range []string{c.RepoRoot, c.Tmpdir} {
+				if within(o, anchor) {
+					return fmt.Errorf("config: ro root %q lies under %q, which also holds %q", clip(r), clip(anchor), clip(o))
+				}
+			}
+			// Roots beneath home may not nest: an anchor would be another
+			// root's mount point.
+			for _, o := range c.RoRoots {
+				if o != r && within(r, o) {
+					return fmt.Errorf("config: ro root %q lies inside ro root %q beneath home; list them side by side", clip(r), clip(o))
+				}
+			}
+		}
 		for _, o := range append(append([]string{}, replaced...), scratchRoots...) {
+			// A root beneath home is bound after every scratch tmpfs (Plan), so
+			// /tmp and /var/tmp cannot hide it even when home itself lives
+			// there (the test fixtures' home is under the test's /tmp).
+			if beneathHome && (o == "/tmp" || o == "/var/tmp") {
+				continue
+			}
 			if within(r, o) {
 				return fmt.Errorf("config: ro root %q lies inside %s, which the sandbox builds itself", clip(r), o)
 			}

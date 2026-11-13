@@ -340,6 +340,8 @@ func applyPlan(c *Config, plan []Mount) error {
 			err = os.MkdirAll(at(m.Target), 0o755)
 		case KindBind:
 			err = syscall.Mount(m.Source, at(m.Target), "", m.Flags, "")
+		case KindSealDir:
+			err = setReadOnly(at(m.Target))
 		case KindMask:
 			err = applyMask(at(m.Target), m)
 		case KindDev:
