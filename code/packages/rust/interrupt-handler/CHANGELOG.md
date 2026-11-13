@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/idt.rs`: `needless_range_loop`: `write_to_memory` and `load_from_memory` iterate the IDT entries directly; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added
