@@ -686,8 +686,6 @@ func TestM1UnknownWriteSetVoidsTheWholeRun(t *testing.T) {
 	for name, mut := range cases {
 		w := std(t)
 		mut2 := mut
-		w.rec(2, "pkg/d").StepsRun, w.rec(2, "pkg/d").Steps = 0, nil
-		w.rec(2, "pkg/d").StepsTotal = 0
 		mut2(w.rec(2, "pkg/d"))
 		r := w.merge()
 		if r.Emitted || !r.cause("M1") {

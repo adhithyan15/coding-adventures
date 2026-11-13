@@ -27,6 +27,7 @@ func TestRecordsThatRanNothingAreTruncationsNotUnknownWrites(t *testing.T) {
 			r.Status = kind
 			r.StepsRun, r.Steps = 0, []recfmt.Step{}
 			r.StepsSHA = ""
+			r.Record = recfmt.Normalize(recfmt.RawRecord{Package: r.Action}) // ran nothing: nothing classified
 			r.Gate = "precondition"
 			r.Complete = c.set
 			res := w.merge()

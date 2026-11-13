@@ -700,6 +700,13 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   execution (M-1: strict void, relaxed charges the action). Any record that ran
   a step, failed or built, was classified: its key must agree with the
   classifier, and a `false` or missing one is an unknown write set (§7.1, G1).
+- A recorder test pins that `StepNetNS` is true only when the step really ran
+  under `kiln sandbox-exec`, and false on every other path.
+- Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
+  checks) runs repository code outside a traced step: untraced repository code
+  can write the tree with no trace at all.
+- `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
+  record has any content: a record that ran nothing was never classified.
 - The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
   true only when the step ran under `kiln sandbox-exec` (which unshares `NET`);
   anywhere else it stays false, and an unbound loopback or abstract peer makes
@@ -1273,6 +1280,15 @@ a fresh tmpfs per step. "The action bound it itself" is believed only while the
 bound name is stable: the peer's lookups are judged with the write set's (L5),
 so an action that swaps the bound name for a link to a host daemon's socket and
 back is incomplete.
+
+*Known precision limits (fail-closed).* A Unix-socket server that binds `P`,
+connects to it, and then unlinks `P` is judged incomplete: the self-bound peer
+goes through the write set's stability judge (L5), and a name with a later
+removal is not stable. The planned fix is a trace-order check for the
+self-bound exception instead of the stability rule: the last completed change
+to `P` before the connect is the action's own bind, and no change to `P` or its
+ancestors overlaps the connect. That is new soundness-critical logic and needs
+its own review; until then the conservative answer costs only a cache entry.
 
 **M3. A reason always accompanies an unknown write set.** Whenever the write
 set is unknown and the record would otherwise carry no `trace-incomplete`

@@ -545,6 +545,15 @@ func (r *ShardRecord) Validate() error {
 		return fmt.Errorf("record %q: exactly one of weak and refusal must be set", short(r.Action))
 	}
 	rr := &r.Record
+	if r.StepsRun == 0 {
+		// A record that ran nothing was never classified: any content in its
+		// raw record is a recorder bug, and a classification nobody made must
+		// not reach the merge (fail closed).
+		if len(rr.Entries)+len(rr.Writes)+len(rr.TrackedWrites)+len(rr.AbsentObservations)+len(rr.Binds)+
+			len(rr.UntrackedObservations)+len(rr.Traversed)+len(rr.Reasons) != 0 {
+			return fmt.Errorf("record %q: ran no step but carries a classified raw record", short(r.Action))
+		}
+	}
 	for _, l := range []struct {
 		name string
 		v    []string

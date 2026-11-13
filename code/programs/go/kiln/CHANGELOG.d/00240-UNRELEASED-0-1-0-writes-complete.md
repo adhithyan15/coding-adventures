@@ -72,3 +72,14 @@
   key is `unkHard`.
 - Regression tests `TestR3` and `TestR3Parser`; a fuzz model op connects to an
   unbound loopback peer with `StepNetNS` false (must be incomplete).
+
+### Changed (final hardening)
+
+- `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
+  record has any entries, writes, tracked writes, observations, binds or
+  reasons: a record that ran nothing was never classified, so content is a
+  recorder bug.
+- KILN04: a "known precision limits" note (bind, connect, unlink of a Unix
+  socket is judged incomplete; the planned trace-order exception needs its own
+  review) and two more PR 2b items (the `StepNetNS` recorder test, and no gate
+  or probe running repository code outside a traced step).
