@@ -488,6 +488,29 @@ at construction time.
 This is simpler than LZ78, which needed a TrieCursor abstraction. LZW can use plain hash
 maps and arrays.
 
+**Both representations are quadratic on redundant input** (SEC-002, SEC-002a; see
+[LZ01](LZ01-lzw-contract.md)). Every entry is an earlier entry plus one byte, so along a
+chain of `k` entries the strings hold `k²/2` bytes: the string-keyed encoder hashes a prefix
+that grows by a byte per code, and the `Vec<Vec<u8>>` decoder holds as much dictionary as
+output. The **Rust implementation** therefore diverges from the representation above while
+producing the identical wire format:
+
+* **Encoder:** `HashMap<(prefix_code, byte), code>` for the multi-byte entries (the code of
+  the single-byte string `[b]` is `b`, so those need no storage); the current prefix `w` is
+  held as its code. One constant-size lookup per input byte.
+* **Decoder:** a `Vec` of `(prefix_code, first_byte, last_byte, length)` links, at most
+  65,536 eight-byte entries; a string is written once, into the output, by walking the
+  prefix chain from its end.
+* **Header:** `original_length` is written as a saturating `u32`, not a wrapping cast.
+* **Output cap:** the decoder returns an error rather than deliver more than
+  `MAX_OUTPUT_LEN` = 16 MiB (counting delivered bytes only; the declared length is an upper
+  bound and may stop the decoder earlier). The cap is Rust-only until the `max_output`
+  API change (backlog LP-003) is decided for every port.
+
+Other ports may keep the textbook representation until then; a port that holds one string
+per dictionary entry should know that it is a decompression bomb (CWE-409) for a stream of
+about 15 KB.
+
 ### Bit I/O
 
 Each language implementation must provide private `BitWriter` and `BitReader` helpers:

@@ -62,6 +62,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
 | [LG01](LG01-logic-gates-contract.md) | Stateless logic-gate and combinational-block contract (bit domain, shapes, decoder width cap, the claims a later layer links to) and its Warrant document [`logic-gates.warrant`](logic-gates.warrant); layer 1 of the Intel 4004 chain |
+| [LZ01](LZ01-lzw-contract.md) | LZW compress/decompress contract (the 16 MiB output cap against decompression bombs, linear dictionary and encoder, header as an upper bound, findings SEC-002/SEC-002a) and its Warrant document [`lzw.warrant`](lzw.warrant); the first decompressor and the first document with `output` bound rows |
 | [LEB01](LEB01-wasm-leb128.md) | LEB128 contract (canonical encoders, malformed-input rules, bytes-consumed bound) and its Warrant document [`wasm-leb128.warrant`](wasm-leb128.warrant) |
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |

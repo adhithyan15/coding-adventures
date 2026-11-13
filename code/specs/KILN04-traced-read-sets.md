@@ -565,6 +565,124 @@ left room; the code is authoritative.
   which is in the weak key.
 - **Output path.** A symlink or non-regular `-emit-results` path is refused
   before the build starts (and again by the atomic writer).
+- **The expected step lines (`-emit-kiln-steps`).** Kiln cannot derive the
+  lines a package runs: they depend on the OS, on the Swift and Windows
+  rewrites, and, for a Starlark BUILD, on evaluation. `-emit-kiln-steps
+  <path>` writes, per package `rel_path`, the lines
+  `executor.EffectiveStepLines` returns for this OS (schema
+  `kiln-legacy-steps/1`, see §4.8). It is valid only with `-emit-kiln-graph`,
+  is written in the same invocation from the same discovery pass, and so
+  exists before any BUILD runs.
+
+### 4.8 Recording decisions (stage 4a)
+
+Implemented by `internal/record` (`VerifyTree`, `Inventory`) and
+`internal/legacy` (the `kiln-legacy-steps/1` decoder, `RecordTmpdir`), plus
+the build tool's `-emit-kiln-steps`. The rest of the shard recorder (host
+scan, sandbox configuration, supervisor, `collect`, the `kiln record`
+commands) is a later PR, because it needs the sandbox. The design review
+found these gaps in the text above; each decision below replaces it. G7 to
+G9 (the tracer completeness rule, trace storage, the strace install) are
+pending that PR and are not decided here.
+
+**G5. The tree must equal `HEAD` before any digest is taken.** `Source` reads
+the working tree, and nothing proved the tree equals the commit; CI's default
+checkout is also sparse, which §5.2 forbids. `record.VerifyTree(root,
+expectedCommit)` runs in the shard before any BUILD, after the build (the §5.2
+backstop) and in the merge job before any digest. It returns the commit id it
+verified. The first call passes `""`; every later call in the same run passes
+that id, so a BUILD that ran `git commit -a` (a tree that equals its new HEAD)
+fails the backstop. It requires, in order:
+
+0. `root` is the top level of its repository (`git rev-parse --show-prefix`
+   is empty); `HEAD^{commit}` is resolved once to a full id, with replace refs
+   disabled (`--no-replace-objects`, `GIT_NO_REPLACE_OBJECTS=1`) and lazy fetch
+   disabled (`GIT_NO_LAZY_FETCH=1`) in every Git call Kiln makes; and when
+   `expectedCommit` is given, HEAD must still be it;
+1. `git ls-tree -r -z --full-tree <that id>` (object ids from the object
+   store, not the index) equals `git ls-files --stage -z` path for path, mode
+   for mode and id for id, with stage 0 only. A tree path with an empty, `.`
+   or `..` component, a `.git` component (any case), a leading `/`, a
+   backslash or a NUL is refused;
+2. `git ls-files -v` shows only the plain tag `H` (no skip-worktree, no
+   assume-unchanged, no unmerged entry) and `core.sparseCheckout` is not
+   `true`;
+3. every entry is `lstat`ed, every ancestor directory is a real directory (not
+   a symlink), and then: mode `120000` must be a symlink whose target hashes to
+   the blob id; `100644` and `100755` must be regular files, opened
+   `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY` (so a FIFO cannot hang the check), hashed
+   as a Git blob (`"blob <n>\0"` plus the bytes; SHA-1 or SHA-256 by the id's
+   length) with the executable bit equal to the mode; anything else is
+   `non-regular`. A gitlink (`160000`) is an error, `submodule-unsupported`,
+   until submodules are designed: nothing inside one is covered by this check
+   (the repository has none today);
+4. a file over 1 GiB, a check over 20 minutes, or a file whose size changed
+   while it was read is an error; 8 workers hash in parallel;
+5. an error lists at most 16 paths and says how many more there were.
+
+Smudge filters, `ident`, `autocrlf` and LFS pointers are caught by their
+effect on the bytes. On Windows there are no executable bits and no
+`O_NOFOLLOW`; the check compares bytes and symlinks only, and the recorder
+itself is Linux-only (stage 4 refuses other platforms).
+
+**Inventory.** `record.Inventory(root)` lists everything on the disk the
+tracked tree does not hold, as `kiln-record-inventory/1`: sorted, repo-relative
+and forward-slashed. A directory holding no tracked file, however deep, is one
+entry (the granularity of a write root), an empty one included. A symlink is an
+entry and is never followed. The root `.git` (a directory, or a linked
+worktree's `.git` file) is skipped. It uses its own `lstat` walk, not Git, so
+ignored files are listed too (Git supplies only the tracked paths). It fails,
+rather than skipping or listing, when: the root is not the repository's top
+level; the tree has a gitlink (`submodule-unsupported`); a tracked path is a
+directory on disk; a name the record formats refuse (not UTF-8, trailing
+slash, too long); or the list passes the format's maximum (the walk stops
+there instead of collecting everything first). Nothing is recorded from a tree
+whose inventory cannot be written.
+
+**G6. Kiln cannot compute the expected step lines.** See the
+`-emit-kiln-steps` bullet of §4.6. The file is
+`{"schema":"kiln-legacy-steps/1","os":"<goos>","packages":[{"package":
+"<rel_path>","steps":["<line>",...]}]}`, sorted by package, every list
+non-null, written atomically like the graph. Only packages that have a BUILD
+file for that OS are listed (a package whose only file is `BUILD_windows` has
+no recipe on Linux). The build tool refuses a line that is empty, not valid
+UTF-8 or contains U+FFFD (the JSON encoder would map different bad bytes to the
+same text), a package directory outside the root, a steps path equal to the
+graph path, and a symlink or non-regular output path. Kiln's decoder
+(`legacy.DecodeSteps`) refuses unknown, duplicate and case-variant keys,
+trailing data, null anywhere, invalid UTF-8, U+FFFD, empty lines, NUL, an `os`
+other than the three known ones, a repeated or unsorted package, a path
+`key.ValidatePath` refuses, and a document over 16 MiB or over 2^20 values;
+`ReadStepsFile` opens with `O_NOFOLLOW|O_NONBLOCK` and refuses a non-regular
+file. The shard uses the lines as `traced.Input.Recipe`; the merge regenerates
+them from its own checkout and compares `steps_sha256` (rule B6).
+
+**G13. `TMPDIR`.** The sandbox requires a `tmpdir` and hosted runners do not
+set `TMPDIR`. The recorder sets `TMPDIR=/tmp/kiln-tmp`
+(`legacy.RecordTmpdir`) in the environment it derives keys from. The value is
+keyed, so stage 5b lookups must set the same one.
+
+**Pending for PR 2b** (the review of 4a found these; they belong to the code
+that calls `VerifyTree` and `Inventory`, which does not exist yet):
+
+- `collect` treats any plain git error from `VerifyTree` (not only a
+  `*TreeError`) as a void of the shard, like `tracked-changed`, and passes the
+  commit id `prepare` recorded.
+- An `Inventory` error after the build voids the shard; it must not crash
+  `collect` before the records are written.
+- `prepare` fails if the pre-build inventory contains any path whose base name
+  starts with `BUILD`: an untracked BUILD variant would change the lines a
+  package runs.
+- Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
+  read by Kiln's Git calls, so the recorder's `HOME`, `XDG_CONFIG_HOME` and
+  `PATH` must not be writable from the sandbox.
+- The commit pin protects object ids, not the integrity of the object store. A
+  BUILD that could write `.git` could overwrite loose objects or
+  `.git/config`, so `.git` must be unwritable from the sandbox (the
+  `R/.git` mask is a requirement, not a convenience). Consider a post-build
+  `git fsck --connectivity-only` as a second line.
+- The caller keeps `Result.Commit` from the pre-build `VerifyTree` and passes
+  it as `expectedCommit` to the post-build call and to the merge job's call.
 
 ## 5. From trace to manifest
 

@@ -7,6 +7,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+- Add the mandatory strict runtime-capability jail check (VER08b, CAP-RT):
+  `tests/runtime_capability.rs` runs the whole public API (`add`, `subtract`,
+  `multiply`, `divide`, `power`, `inverse` and `Field` for 0x11D and 0x11B) inside the
+  Landlock + seccomp jail derived from `required_capabilities.json`, with an
+  independent `strace` observation ring and the 18 negative controls. The lazily built
+  `OnceLock` tables are first built inside the jail. New `BUILD_linux` runs it with
+  `RCG_STRICT=1`; `BUILD` (macOS) runs it non-strict; `BUILD_windows` documents the skip.
+  New dev-dependency `capability-runtime-conformance`. No change to the library, the
+  policy (still no capabilities) or the generated evidence. The unjailed baseline needed
+  no syscall beyond the existing allowances.
 - Add the sealed `src/capabilities.rs` generated from `required_capabilities.json`
   (`ca-capability-analyzer --generate-module`), required by the hardened analyzer
   before an effect certificate verifies; certificate, evidence manifests and

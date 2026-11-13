@@ -93,6 +93,11 @@ pub struct TestEntry {
     pub admitted: u64,
     pub equal_cases: u64,
     pub caught_by: String,
+    /// WX-H: the peak live heap the allocation observer measured over every
+    /// instance of this entry (absent when the entry was not observed).
+    pub max_observed_heap: Option<u64>,
+    /// WX-H: the `heap` bound evaluated at the instance that peaked.
+    pub bound_at_max: Option<u64>,
 }
 
 #[derive(Clone, Debug)]
@@ -169,6 +174,34 @@ impl ProofEntry {
     }
 }
 
+/// The CWE-409 (decompression bomb) facts of a package, derived from the Warrant
+/// document and the test manifest ([`Evidence::decompression_bounds`]).
+///
+/// A package that expands its input has an `output` bound row (WX-H) on the
+/// operation that does it.  That row is a *generated property*: for every
+/// admitted input, an `Ok` result is no larger than the bound, checked by an
+/// exhaustive, a property and a fuzz suite named `<op>/output-bound`, every
+/// instance of which also runs under the allocation observer against the op's
+/// `heap` row.  This is what lets the report say something true about CWE-409.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct DecompressionBounds {
+    /// Operations with an `output` bound row, in document order.
+    pub ops: Vec<String>,
+    /// Ids of the passing `output-bound` suites that support the row (three
+    /// per operation when complete).
+    pub ids: Vec<String>,
+    /// Why the evidence does not support a discharge; empty when it does.
+    /// Each entry names an operation and the missing or failing fact.
+    pub unproven: Vec<String>,
+    /// Cases, iterations and the observed peak, for the row's reason text.
+    pub cases: u64,
+    pub max_observed_heap: u64,
+    pub bound_at_max: u64,
+}
+
+/// The kinds of generated suite that carry an `output-bound` claim.
+pub const OUTPUT_BOUND_SUITE_KINDS: [&str; 3] = ["exhaustive", "property", "fuzz"];
+
 /// Facts read from the Warrant document that the manifests must cover.
 #[derive(Clone, Debug, Default)]
 pub struct SpecFacts {
@@ -186,6 +219,12 @@ pub struct OpFacts {
     pub name: String,
     pub has_secret: bool,
     pub has_steps_bound: bool,
+    /// The document declares an `output` bound row (WX-H) for this operation:
+    /// the size of what the operation returns is bounded.  Only a decompressor
+    /// (or another amplifier) has one.
+    pub has_output_bound: bool,
+    /// The document declares a `heap` bound row for this operation.
+    pub has_heap_bound: bool,
     /// Every parameter of the operation has a `labels` row naming it (or one
     /// of its projections), and no row of the operation is `secret`.  An
     /// unlabelled parameter is *unclassified*, not public, so it leaves this
@@ -307,6 +346,15 @@ fn num(v: &JsonValue, key: &str) -> Result<u64, EvidenceError> {
     }
 }
 
+/// [`num`] for a field that may be absent, where absent means `None` rather
+/// than 0 (an unobserved entry is not an entry that measured nothing).
+fn opt_num(v: &JsonValue, key: &str) -> Result<Option<u64>, EvidenceError> {
+    match v.get(key) {
+        None => Ok(None),
+        Some(_) => num(v, key).map(Some),
+    }
+}
+
 fn schema(v: &JsonValue, want: &str, path: &Path) -> Result<(), EvidenceError> {
     if text(v, "schema") == want {
         Ok(())
@@ -353,6 +401,12 @@ fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
                 let has_steps_bound = file.declarations.iter().any(|x| {
                     matches!(x, Declaration::Bound(b) if b.name == o.name && b.rows.iter().any(|r| r.name == "steps"))
                 });
+                let has_bound_row = |row: &str| {
+                    file.declarations.iter().any(|x| {
+                        matches!(x, Declaration::Bound(b) if b.name == o.name && b.rows.iter().any(|r| r.name == row))
+                    })
+                };
+                let (has_output_bound, has_heap_bound) = (has_bound_row("output"), has_bound_row("heap"));
                 let labelled = |param: &str| {
                     file.declarations.iter().any(|x| {
                         matches!(x, Declaration::Labels(l) if l.name == o.name
@@ -364,6 +418,8 @@ fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
                     name: o.name.to_string(),
                     has_secret,
                     has_steps_bound,
+                    has_output_bound,
+                    has_heap_bound,
                     labelled_public,
                 });
             }
@@ -757,6 +813,8 @@ impl Evidence {
                 admitted: num(t, "admitted")?,
                 equal_cases: num(t, "equal_cases")?,
                 caught_by: text(t, "caught_by"),
+                max_observed_heap: opt_num(t, "max_observed_heap")?,
+                bound_at_max: opt_num(t, "bound_at_max")?,
             });
         }
         let spec_rel = req_text(&tv, "spec", "test manifest")?;
@@ -991,6 +1049,88 @@ impl Evidence {
         !self.spec.ops.is_empty() && self.spec.ops.iter().all(|o| o.labelled_public)
     }
 
+    /// The CWE-409 facts: which operations are bounded by an `output` row and
+    /// whether the test manifest holds the passing evidence for each.
+    ///
+    /// For every operation with an `output` row the manifest must hold, for
+    /// each of exhaustive, property and fuzz, a passing `<op>/output-bound`
+    /// entry; the operation must also declare a `heap` row; and every observed
+    /// entry of the operation must have measured a peak within its bound.
+    /// Each such suite must also have run at least one case (`cases + iterations >= 1`)
+    /// and each `output-bound` entry must carry both `max_observed_heap` and
+    /// `bound_at_max`: a missing field is refused by name, never skipped.
+    /// Anything less is listed in [`DecompressionBounds::unproven`], which keeps
+    /// the weakness row open: an absent fact is never read as a pass.
+    pub fn decompression_bounds(&self) -> DecompressionBounds {
+        let mut b = DecompressionBounds::default();
+        for op in self.spec.ops.iter().filter(|o| o.has_output_bound) {
+            b.ops.push(op.name.clone());
+            if !op.has_heap_bound {
+                b.unproven.push(format!("{}: no `heap` bound row beside the `output` row", op.name));
+            }
+            let claim = format!("{}/output-bound", op.name);
+            for kind in OUTPUT_BOUND_SUITE_KINDS {
+                let found: Vec<&TestEntry> = self
+                    .tests
+                    .iter()
+                    .filter(|t| t.kind == kind && t.op == op.name && t.claim == claim)
+                    .collect();
+                match found.as_slice() {
+                    [] => b.unproven.push(format!("{}: no {kind} suite for {claim}", op.name)),
+                    entries => {
+                        for t in entries {
+                            // A suite that ran nothing proves nothing (CWE-409 review
+                            // finding 2): `cases` counts exhaustive and property inputs,
+                            // `iterations` the fuzz executions, so one of them must be >= 1.
+                            if t.cases.saturating_add(t.iterations) == 0 {
+                                b.unproven.push(format!("{}: {} ran no cases (cases = 0, iterations = 0)", op.name, t.id));
+                            }
+                            // Every output-bound entry is *measured against* the heap row, so
+                            // it must carry both numbers.  The loop below skips an entry
+                            // that lacks either; for these entries that skip would turn "not
+                            // observed" into "not a failure", so refuse it by name instead.
+                            for (field, present) in [
+                                ("max_observed_heap", t.max_observed_heap.is_some()),
+                                ("bound_at_max", t.bound_at_max.is_some()),
+                            ] {
+                                if !present {
+                                    b.unproven.push(format!("{}: {} is missing `{field}`", op.name, t.id));
+                                }
+                            }
+                            if t.verdict != "pass" {
+                                b.unproven.push(format!("{}: {} is {}", op.name, t.id, t.verdict));
+                            } else {
+                                b.ids.push(t.id.clone());
+                                b.cases = b.cases.saturating_add(t.cases).saturating_add(t.iterations);
+                            }
+                        }
+                    }
+                }
+            }
+            // Heap: every observed entry of this operation, not only the
+            // output-bound suites, stayed within its bound.
+            let mut observed = 0u64;
+            for t in self.tests.iter().filter(|t| t.op == op.name) {
+                let (Some(peak), Some(bound)) = (t.max_observed_heap, t.bound_at_max) else {
+                    continue;
+                };
+                observed += 1;
+                if peak > bound {
+                    b.unproven.push(format!("{}: {} peaked at {peak} bytes over its {bound}-byte bound", op.name, t.id));
+                }
+                if peak > b.max_observed_heap {
+                    b.max_observed_heap = peak;
+                    b.bound_at_max = bound;
+                }
+            }
+            if op.has_heap_bound && observed == 0 {
+                b.unproven.push(format!("{}: no entry was observed against the `heap` row", op.name));
+            }
+        }
+        b.ids.sort();
+        b
+    }
+
     fn entries<'a>(&'a self, kind: &'a str, op: &'a str) -> impl Iterator<Item = &'a TestEntry> {
         self.tests.iter().filter(move |t| t.kind == kind && t.op == op)
     }
@@ -1085,6 +1225,7 @@ impl Evidence {
                 Vec::new()
             },
             profile,
+            decompression: self.decompression_bounds(),
         };
         PackageAuditContext {
             package_id: package_id.to_string(),
@@ -1391,6 +1532,27 @@ pub const MEMORY_SAFETY_CWES: [u32; 6] = [416, 787, 125, 415, 476, 190];
 
 /// Evidence ids that are not machine-checked attestations (VER04h section 10).
 pub const UNVERIFIED_PREFIX: &str = "unverified::";
+
+/// Hold the report's recorded audit profile to the profile the caller expects.
+///
+/// `expected` is `Some` when the checker was told a profile (`--check ... --profile P`, which a
+/// package's BUILD line passes so that the build, not the report, decides what the package is)
+/// and `None` when it was not, in which case the recorded profile stands.  A mismatch is refused:
+/// otherwise a report generated under the wrong profile (for example a decompressor under the
+/// default `comparison`) would pass `--check` with true-looking, wrong sentences.
+pub fn verify_profile(
+    report: &AssuranceReport,
+    expected: Option<crate::matrix::AuditProfile>,
+) -> Result<(), EvidenceCheckError> {
+    match expected {
+        Some(want) if want != report.profile => Err(EvidenceCheckError::EvidenceMismatch(format!(
+            "report records profile `{}` but `{want}` was requested (--profile): regenerate the report \
+             with the profile the package's BUILD line checks against",
+            report.profile
+        ))),
+        _ => Ok(()),
+    }
+}
 
 /// Cross-check `report` against `ev`.  On success returns the ids that were
 /// accepted only as `unverified::` attestations, so callers can surface them.
@@ -1704,6 +1866,72 @@ pub fn verify_evidence(
                 if ev.spec_all_operands_public() { "does" } else { "does not" },
                 ct.len()
             )));
+        }
+    }
+    // 6c. CWE-409 (decompression bomb) is re-derived from the Warrant document
+    //     and the test manifest, in both directions, so a report can neither
+    //     exclude the class for a package whose document bounds an output
+    //     (a false exclusion, the old behaviour for every package) nor claim a
+    //     discharge the manifest does not support.
+    //
+    //       document has an `output` bound row, row is `excluded`  -> rejected
+    //       row is `discharged` and the derived facts are not clean -> rejected
+    //       row is `discharged` and cites other ids than the derived ones
+    //                                                              -> rejected
+    //       row is `discharged` and the document has no `output` row -> rejected
+    //       row is an exemption (nothing generates one)            -> rejected
+    //
+    //     (A package that decompresses but whose document has no `output` row
+    //     cannot reach a report at all: the generator's matrix is an open row.)
+    let facts = ev.decompression_bounds();
+    for w in report.weaknesses.iter().filter(|w| w.cwe == 409) {
+        match w.status {
+            WeaknessStatus::Excluded if !facts.ops.is_empty() => {
+                return Err(E::EvidenceMismatch(format!(
+                    "CWE-409 is excluded, but the Warrant document bounds the output of {} \
+                     (an `output` row): a package that expands its input is not excluded",
+                    facts.ops.join(", ")
+                )));
+            }
+            // The recorded profile is the report's own statement of what the package is.  A
+            // profile that decompresses applies CWE-409 whatever the Warrant document says
+            // (a decompressor whose document forgot its `output` row would otherwise be
+            // excluded), so an exclusion under it is a contradiction, not a finding.
+            WeaknessStatus::Excluded if report.profile.decompresses() => {
+                return Err(E::EvidenceMismatch(format!(
+                    "CWE-409 is excluded, but the report's recorded profile `{}` decompresses attacker-controlled \
+                     input: the class applies and must be discharged from `output`/`heap` bound rows",
+                    report.profile
+                )));
+            }
+            WeaknessStatus::Excluded => {}
+            WeaknessStatus::Discharged => {
+                if facts.ops.is_empty() {
+                    return Err(E::EvidenceMismatch(
+                        "CWE-409 is discharged on output/heap bounds, but the Warrant document declares no `output` row".into(),
+                    ));
+                }
+                if !facts.unproven.is_empty() {
+                    return Err(E::EvidenceMismatch(format!(
+                        "CWE-409 is discharged, but the bound evidence is incomplete: {}",
+                        facts.unproven.join("; ")
+                    )));
+                }
+                let mut cited = w.evidence.clone();
+                cited.sort();
+                if cited != facts.ids {
+                    return Err(E::EvidenceMismatch(format!(
+                        "CWE-409 cites {} evidence ids but the manifest's passing output-bound suites are {}",
+                        cited.len(),
+                        facts.ids.len()
+                    )));
+                }
+            }
+            WeaknessStatus::Exemption => {
+                return Err(E::EvidenceMismatch(
+                    "CWE-409 is recorded as an exemption, which no generator produces".into(),
+                ));
+            }
         }
     }
     let want_rungs = ev.rungs();
