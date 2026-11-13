@@ -1324,6 +1324,159 @@ impl fmt::Debug
     }
 }
 
+/// Second Name-policy-backed anchor-to-target path-length transition.
+///
+/// The previous stronger step proves the root-authenticated anchor-nearest
+/// intermediate while retaining the exact Name policy. The next routed proof
+/// must be the immediately target-nearer adjacency from that same construction,
+/// and its issuer must be the already processed intermediate. Complete policy
+/// for its exact candidate child supplies the second transition inputs. This
+/// proves exactly two ordered intermediate steps, not arbitrary traversal or
+/// complete path validity.
+pub struct AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    previous_step:
+        AdvancedInitializedNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    next_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded>,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the retained policy-backed first ordered transition.
+    #[must_use]
+    pub const fn previous_step(
+        &self,
+    ) -> &AdvancedInitializedNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.previous_step
+    }
+
+    /// Return authentication of the immediately target-nearer intermediate.
+    #[must_use]
+    pub const fn next_signature(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.next_signature
+    }
+
+    /// Return complete policy for the authenticated second candidate child.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded> {
+        &self.intermediate_policy
+    }
+
+    /// Return path-length state after the second ordered transition.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength")
+    }
+}
+
 /// First anchor-to-target path-length transition from reviewed construction.
 ///
 /// The terminal proof authenticates the anchor-nearest intermediate as the
@@ -2796,6 +2949,101 @@ fn advance_initialized_reviewed_intermediate_path_length_state<
     })
 }
 
+fn advance_next_reviewed_intermediate_path_length_state<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    reviewed_terminal: &BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    previous_intermediate_policy: &ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+    previous_path_length_state: &X509CertificatePathLengthState,
+    next_signature: &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy: &ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<X509CertificatePathLengthState, X509RsaConstructedPathNextIntermediatePathLengthError> {
+    let previous_terminal_link = reviewed_terminal
+        .verified_terminal_signature()
+        .adjacent_link();
+    let next_link = next_signature.adjacent_link();
+    if !same_exact_object(
+        previous_terminal_link.constructed_path(),
+        next_link.constructed_path(),
+    ) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let Some(expected_next_depth) = previous_terminal_link.issuer_depth().checked_sub(1) else {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    };
+    if next_link.issuer_depth() != expected_next_depth {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    }
+    if !same_exact_object(
+        next_link.issuer_certificate(),
+        previous_intermediate_policy.certificate(),
+    ) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let Some(next_intermediate) = next_link.child_candidate_certificate() else {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
+        ));
+    };
+    if !same_exact_object(next_intermediate, intermediate_policy.certificate()) {
+        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::IntermediatePolicyMismatch,
+        ));
+    }
+
+    X509CertificatePathLengthState::new(
+        previous_path_length_state.remaining_non_self_issued_intermediate_cas(),
+    )
+    .advance_validated_intermediate_ca(intermediate_policy)
+    .map_err(|error| {
+        X509RsaConstructedPathNextIntermediatePathLengthError::new(
+            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::PathLength(error.kind()),
+        )
+    })
+}
+
 /// Advance the policy-backed root-authenticated first intermediate.
 ///
 /// RFC 5280 path processing proceeds from the trust anchor toward the target.
@@ -2978,6 +3226,95 @@ pub fn advance_initialized_reviewed_x509_rsa_constructed_path_intermediate_path_
     )
 }
 
+/// Advance the policy-backed immediately target-nearer intermediate.
+///
+/// The previous stronger step and `next_signature` must retain the same exact
+/// construction. The routed proof's issuer depth must immediately precede the
+/// reviewed terminal depth, and its issuer must be the exact intermediate
+/// already processed by the previous step. Its child must be another selected
+/// candidate, and `intermediate_policy` must retain that exact child. Only then
+/// is the prior retained path-length state recreated privately and advanced.
+///
+/// Success retains the exact Name-policy-backed first step, the second routed
+/// proof, its child policy, and the twice-advanced state. It does not iterate
+/// over later depths or establish complete path, TLS, HTTP, OAuth, or network
+/// validity.
+pub fn advance_next_name_policy_reviewed_x509_rsa_constructed_path_intermediate_path_length<
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    previous_step:
+        AdvancedInitializedNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    next_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength<
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathNextIntermediatePathLengthError,
+> {
+    let path_length_state = advance_next_reviewed_intermediate_path_length_state(
+        previous_step.reviewed_terminal(),
+        previous_step.intermediate_policy(),
+        previous_step.path_length_state(),
+        &next_signature,
+        &intermediate_policy,
+    )?;
+
+    Ok(
+        AdvancedNextNamePolicyReviewedX509RsaConstructedPathIntermediatePathLength {
+            previous_step,
+            next_signature,
+            intermediate_policy,
+            path_length_state,
+        },
+    )
+}
+
 /// Advance the immediately target-nearer authenticated intermediate.
 ///
 /// The previous ordered step and `next_signature` must retain the same exact
@@ -3044,62 +3381,13 @@ pub fn advance_next_reviewed_x509_rsa_constructed_path_intermediate_path_length<
     >,
     X509RsaConstructedPathNextIntermediatePathLengthError,
 > {
-    let previous_terminal_link = previous_step
-        .reviewed_terminal()
-        .verified_terminal_signature()
-        .adjacent_link();
-    let next_link = next_signature.adjacent_link();
-    if !same_exact_object(
-        previous_terminal_link.constructed_path(),
-        next_link.constructed_path(),
-    ) {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
-        ));
-    }
-
-    let Some(expected_next_depth) = previous_terminal_link.issuer_depth().checked_sub(1) else {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
-        ));
-    };
-    if next_link.issuer_depth() != expected_next_depth {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
-        ));
-    }
-    if !same_exact_object(
-        next_link.issuer_certificate(),
-        previous_step.intermediate_policy().certificate(),
-    ) {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::EvidenceMismatch,
-        ));
-    }
-
-    let Some(next_intermediate) = next_link.child_candidate_certificate() else {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::InvalidPathShape,
-        ));
-    };
-    if !same_exact_object(next_intermediate, intermediate_policy.certificate()) {
-        return Err(X509RsaConstructedPathNextIntermediatePathLengthError::new(
-            X509RsaConstructedPathNextIntermediatePathLengthErrorKind::IntermediatePolicyMismatch,
-        ));
-    }
-
-    let path_length_state = X509CertificatePathLengthState::new(
-        previous_step
-            .path_length_state()
-            .remaining_non_self_issued_intermediate_cas(),
-    );
-    let path_length_state = path_length_state
-        .advance_validated_intermediate_ca(&intermediate_policy)
-        .map_err(|error| {
-            X509RsaConstructedPathNextIntermediatePathLengthError::new(
-                X509RsaConstructedPathNextIntermediatePathLengthErrorKind::PathLength(error.kind()),
-            )
-        })?;
+    let path_length_state = advance_next_reviewed_intermediate_path_length_state(
+        previous_step.reviewed_terminal(),
+        previous_step.intermediate_policy(),
+        previous_step.path_length_state(),
+        &next_signature,
+        &intermediate_policy,
+    )?;
 
     Ok(
         AdvancedNextReviewedX509RsaConstructedPathIntermediatePathLength {

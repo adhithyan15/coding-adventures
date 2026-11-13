@@ -287,14 +287,24 @@ This filter is the sandbox's own; it is independent of strace's
 
 Two consequences:
 
-- **Trace boundary.** The parser discards everything the helper's PID does
-  before that first `execve`, after checking that its `/proc/<pid>/exe` is
-  the Kiln binary. So the namespace setup (`unshare`, `mount`,
-  `pivot_root`) never reaches the refusal list.
-- **Daemons.** The helper's child is PID 1 of the new PID namespace, so
-  when it exits the kernel kills every survivor. Any process whose exit
-  line is `killed by SIGKILL` after PID 1's exit line gives `daemon-left`.
-  No timer is needed.
+- **Trace boundary.** The traced tree has a fixed shape. The Kiln helper
+  is the Go `kiln` binary, so it is multi-threaded. It (the root, with its
+  `CLONE_THREAD` threads) spawns **exactly one** non-thread child, the init
+  of the new PID namespace. That child does the setup, re-executes the same
+  binary (`/proc/self/exe sandbox-init ...`) as needed, and then `execve`s
+  `sh -c <line>`. **The first successful exec of a non-Kiln path is the
+  step.** The parser discards every event of the root group, and every
+  event of the init child before the step, except failed execs of other
+  paths (§4.5); the caller first checks that the root's `/proc/<pid>/exe`
+  is the Kiln binary. So the namespace setup (`unshare`, `mount`,
+  `pivot_root`, the seccomp installation) never reaches the refusal list.
+  The step's exit status is the init child's, and its working directory
+  must be the one the executor names (§4.5). The stage 3 recipe comparison
+  uses the step's exec event, not the first exec of the init child.
+- **Daemons.** The init child is PID 1 of the new PID namespace, so when
+  it exits the kernel kills every survivor. Any process whose exit line is
+  `killed by SIGKILL` after the **init child's** exit line gives
+  `daemon-left`. No timer is needed.
 
 **Integrity.**
 - **The claim.** The tracer runs outside the namespaces, unprivileged: no
@@ -375,6 +385,140 @@ line (a non-x86-64 system-call ABI) makes the trace incomplete.
 Calls on an already-open descriptor (`read`, `mmap`, `fstat`, `sendfile`,
 `copy_file_range`) need no tracing, because the `open` that produced the
 descriptor was already observed.
+
+### 4.5 Parser decisions (stage 1a)
+
+Stage 1a (`internal/trace`) is pure: it reads strace text and returns
+ordered events plus the process tree. It never resolves a path. These are
+the decisions it settled where §4.3 to §5.1 left room. The code is
+authoritative for details: `table.go` for the table, `errors.go` for the
+reason strings.
+
+**Reasons.** Every refusal is `trace-incomplete:<detail>`; a detail never
+contains path text.
+- A refused name is `refused:<name>`, an unknown one
+  `unknown-syscall:<name>`.
+- `clone` with `CLONE_UNTRACED`, any `CLONE_NEW*`, a missing `flags=` or
+  a flag token it cannot name is `clone-flags`. `clone3` is
+  `refused:clone3`.
+- A process-tree fault is `pid-reuse` (a pid returned twice, or by its
+  own process, or the root's pid), `orphan-pid` (a pid nobody spawned),
+  `process-cycle` (or a parent chain over 4096 deep), `missing-exit`,
+  `duplicate-exit` or `event-after-exit`.
+- Other reasons: `unresumed-call`, `unmatched-resume`, `interleaved-call`,
+  `personality`, `unparsable-line`, `ambiguous-path`, `truncated`,
+  `non-utf8-path`, `deleted-path`, `arity`, `sockaddr`, `result`, `size`.
+
+**The `-y` annotation.** The parser assumes strace 6.x escapes the
+annotation body like a string and also escapes `<` and `>` as `\<` and
+`\>`, so `3</a<b>` is printed `3</a\<b\>>` and round-trips. A raw `<`
+inside an annotation, or text left after its closing `>`, is
+`ambiguous-path`. The return-value annotation must end the line. The stage 3
+real-strace fixture must pin this assumption against the exact strace
+version; until then the canned fixtures are hand-written.
+
+**Order and split calls.** Events are ordered by when the call
+**completes**, so a split call sits at its `resumed` line. Its working
+directory is the one current at its `<unfinished ...>` line. An unfinished
+call may end at the process's exit line only if it carries no path
+(`wait4`, `exit_group`); an unfinished path call that never resumes is
+`unresumed-call`. A handled call whose result is `?` (including
+`ERESTARTSYS`) is `result`: restarted calls are not recognised in v1. A
+final line without its newline is `unparsable-line`, since strace may have
+been cut off mid-line.
+
+**Process model.**
+- A first pass collects every child pid a `fork`, `vfork` or `clone`
+  returned, because the child's lines may precede the parent's return line.
+- A child is created **when the parent's call succeeds**, which snapshots
+  the parent's working directory then, or shares it under `CLONE_FS`. A
+  later `chdir` by the parent never reaches the child. The only earlier
+  creation is a child whose lines were printed while its parent was still
+  blocked in the call.
+- The working directory is an **unresolved expression**: after
+  `chdir("../b")` from `/a` it is `/a/../b`. Only `fchdir` gives a resolved
+  path (its `-y` annotation). Stage 1b walks the cwd expression like any
+  other path.
+- A successful `chdir` or `fchdir` on a cwd shared by more than one live
+  process is `cwd-race`: relative paths of the sharer would change
+  unobserved.
+- Pids with leading zeros are not pids.
+
+**The helper.** With `Options.HelperRoot` and `Options.HelperExe` (the
+resolved path of the Kiln binary, required), the tree is: helper root and
+its threads, one init child and its threads, then the step (§4.3). **The
+first successful exec of a non-Kiln path is the step.**
+- **The root group.** None of its events reaches `Events`. If it execs
+  successfully, the first exec must be of `HelperExe` (`helper-exe`), and a
+  later one is `helper-activity`. Threads (`CLONE_THREAD`) of the root, or
+  of its threads, belong to the group. The group makes exactly one
+  non-thread spawn, the init child; a second is `helper-spawn`. Before it,
+  its calls are setup and are discarded, and it may clone into new
+  namespaces. After it, only ignored-class calls (`wait4`, `waitid`,
+  `kill`, `exit*`) are allowed; anything else is `helper-activity`. A root
+  that never spawns is `helper-no-init`.
+- **The init child's window.** It lasts until the init child's first
+  successful exec of a path other than `HelperExe`. Inside it, events are
+  discarded and calls the table would refuse or not know (`unshare`,
+  `mount`, `pivot_root`, `seccomp`, ...) are tolerated, because pass 1
+  cannot yet tell whose call it is and judges these names in pass 2.
+  Successful execs of `HelperExe` (the re-exec; `/proc/self/exe` counts as
+  the same binary) are allowed. `CLONE_THREAD` threads belong to the init
+  group; a non-thread spawn is `helper-spawn`. **Exception:** a failed
+  `execve` or `execveat` of any other path is kept as an observation, since
+  it is a real `ENOENT` probe. A thread made in the window that is still
+  calling after the step's exec is `helper-activity`; threads the step
+  itself makes later are part of the step. Without a step exec the trace is
+  `helper-no-exec`.
+- **Working directory.** At the step's exec the init child's tracked cwd
+  must equal the `initialCwd` given to `Parse`, for every path form,
+  absolute included; otherwise `helper-cwd`. A setup `chdir` is fine only
+  if it ends back there.
+- **Requirements on the stage 3 helper.** The parser models the shape
+  above and cannot enforce how the helper reaches it, so the helper must:
+  - exec the step from the init **thread-group leader** (the Go helper
+    locks the main goroutine's thread with `runtime.LockOSThread` before the
+    exec), because an exec by another thread changes the pid strace prints;
+  - do its setup `chdir`s before any thread starts, or after
+    `unshare(CLONE_FS)`, which the parser does not model, so avoid
+    `unshare(CLONE_FS)`: threads that share a cwd make a `chdir` a
+    `cwd-race`;
+  - make **no traced call in the root group after the spawn**. Go runtime
+    thread creation is a `clone`, so the helper starts all the threads it
+    will need before it spawns the init child;
+  - live at a `HelperExe` path **outside the repository tree**. The parser
+    only compares paths; the caller verifies this.
+- **Flags.** `AT_EMPTY_PATH` is read from a numeric or hex flags value too
+  (bit `0x1000`); a flags field that cannot be decoded is `flags`.
+- **Exit status and daemons.** The step's status is the init child's
+  (`Trace.StepExit`), and `Trace.InitPid` names it for the later
+  `daemon-left` rule, which the parser does not implement.
+
+**Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
+`bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
+`NULL` address. `sendmsg` and `sendmmsg` give one event per distinct
+`sockaddr` found outside string literals (none: one event with no address).
+A bare `...` element in their arrays is `sockaddr`, since it means a
+truncated list. A pathname `AF_UNIX` address is not copied into `Path`;
+§5.4 decides what it means. With `AT_EMPTY_PATH` and an empty path, `Path`
+is the descriptor's `-y` path.
+
+**The ignored list.** §4.4 defers the enumeration to the implementation,
+and `table.go` is authoritative: `wait4`, `waitid`, `waitpid`, `exit`,
+`exit_group`, `kill`, `tgkill`, `tkill`, `arch_prctl`, `prctl`,
+`pidfd_open`, `pidfd_send_signal`, `getsockname`, `getpeername`,
+`recvfrom`, `recvmsg`, `recvmmsg`, `accept`, `accept4`, `shutdown`,
+`setsockopt`, `getsockopt`, `socketpair`, `getcwd`, `pipe`, `pipe2`,
+`close`, `close_range`, `dup`, `dup2`, `dup3`. Anything else absent from the
+table is unknown.
+
+**Caps.** The parser's caps bound **resident memory**, not the recorder's
+2 GiB disk cap (§4.3): it keeps every non-ignored record until the second
+pass, and each record keeps its source line. The defaults are 1 MiB per
+line, 64 MiB in total and 1,000,000 records, and every record counts
+(calls, start markers and exit lines). Argument counts are bounded while
+scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
+is `size` or `arity`. A caller with a larger measured budget raises them.
 
 ## 5. From trace to manifest
 
@@ -717,6 +861,55 @@ is the KILN00 §9.6 threat, which tracing does not change. §4.3's
 namespaces are what keep an action from writing the store or its own
 trace.
 
+### 8.1 Implementation decisions (stage 2)
+
+Stage 2 lives in `internal/ledger` (`manifest.go`, `manifest_store.go`),
+not a new package, because it reuses the ledger's unexported segment,
+atomic-write, regular-file and `Authority` machinery. These points were
+left open above:
+
+- **`id` bytes.** The id is the SHA-256 of the compact JSON array of the
+  entries (no HTML escaping), exactly the bytes after `"entries":` in the
+  line. An empty list is `[]`, never `null`.
+- **Entry names.** `pkg:`, `path:` and `list:` paths follow KILN02 §3.5;
+  `list:.` is the only use of `.`. A name's 512-byte cap includes its
+  prefix.
+- **Error classes.** Structure is judged before caps. A line that is over a
+  cap and also not canonical is corruption (the store is unusable), never a
+  quiet drop. A line longer than 1 MiB is dropped without being parsed.
+  A segment over 64 MiB is dropped without being read, but its bytes still
+  count toward the 256 MiB store cap.
+- **Order.** `(run, at)` compares `run` as a number when both runs are
+  all digits (numeric runs sort before other runs, which compare as
+  bytes), then `at`, then the ledger's segment sequence, segment name and
+  line. A manifest is not restamped; the writer refuses `at` more than
+  `MaxRecordSkew` after now, and `ledger-merge` refuses a delta record more
+  than `MaxClockSkew` after now.
+- **Retention and merge.** Expiry is applied first (`at` before now minus
+  30 days), then the newest K = 4 distinct ids per weak key; a repeated id
+  keeps only its newest record and does not use a slot. Merge writes each
+  weak key **oldest first**, so file position (the last tie-break) agrees
+  with the rank that decided the merge, and re-merging a snapshot with an
+  empty delta reproduces it byte for byte. The merge reads its delta
+  strictly: any structural error and any over-cap record reject it.
+- **Far-future records.** A record dated after now plus `MaxClockSkew`
+  would never expire and would outrank real ones, so a reader drops it and
+  reports it (`ManifestReport.Future`, also listed in `Dropped`), and a
+  `ledger-merge` snapshot containing one fails the merge, as in the pass
+  `Merge`. `run` is capped at 128 bytes, the same as pass records.
+- **Memory.** The reader applies expiry and the per-weak-key top-K
+  (distinct ids) while parsing, so the heap holds at most K records per
+  weak key plus the segment being parsed. The result is identical to
+  sorting everything first.
+- **Directories.** Every ledger read or write (pass and manifest stores,
+  both merges) first `Lstat`s the ledger directory, the `manifests/`
+  directory and a merge output directory, and refuses a symlink or
+  anything that is not a plain directory; a missing directory is an empty
+  store. Years below 0 are refused in pass and manifest records.
+- **Lookup.** `OpenManifests(ledgerDir, scope).Load(now)` returns a
+  `ManifestSet` and a report; `ManifestSet.Manifests(weak)` is the stage 5
+  call (newest first, at most K). A load error means no hits.
+
 ## 9. Planning
 
 `kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
@@ -758,9 +951,13 @@ trace.
   - `02 || u8(exec) || SHA-256(content)`: file;
   - `03 || bytes(target)`: link.
 - **The missing-package digest** is SHA-256 of `str("kiln-missing-package")`.
-- **A listing digest** is SHA-256 of `list([str(name) || u8(kind)])`,
-  sorted by name bytes, where kind `1` is a file, `2` a link and `3` a
-  directory.
+- **A listing digest** is tagged, like the state digests, so a `list:`
+  entry stands on its own without a paired `path:` entry:
+  - for a tracked directory (some tracked file lies under it):
+    SHA-256 of `u8(0x10) || list([str(name) || u8(kind)])`, sorted by name
+    bytes, where kind `1` is a file, `2` a link and `3` a directory;
+  - for a path that is not a directory in the tracked tree (absent, a file
+    or a link): SHA-256 of the single byte `11`.
 - **`T(q)`** is as defined in §5.2.
 
 Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
@@ -769,6 +966,99 @@ Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
 - each state digest;
 - a listing digest;
 - `T(q)` with and without nested packages.
+
+### 11.1 Key decisions (stage 1b-ii)
+
+The encoders are in `internal/key` (`traced.go`) and the composition is in
+`internal/legacy` (`traced.go`). Where §3, §4.2 and §11 left a choice, this
+is what the code does.
+
+1. **Tag bytes are raw.** A state digest hashes its one tag byte, then the
+   payload, exactly as listed in §11. The tag is not framed with `str` or
+   `bytes`. `02` carries the SHA-256 of the content, not the content, so a
+   large file is hashed once and streamed. The `exec` bit is the one the
+   `Source` reports, never the disk's.
+2. **Encoders refuse, they do not repair.** `ListingDigest` and `T(q)` demand
+   strictly ascending input, as KILN02 §4 does for every list, so a duplicate
+   or an unsorted name is an error. A listing name is a child name: non-empty,
+   valid UTF-8, no `/`. A nested path in `T(q)` is a KILN02 path.
+3. **The manifest allowlist is `CheckEntryName`.** The prefix must be `pkg:`,
+   `path:` or `list:`; the rest is a KILN02 path, except that `list:.` is the
+   root. `path:.` is refused: the root is always a directory, and only a
+   `list:` entry can see into it. A `weak:` entry, a bare `weak:` and a
+   `tool:` or `policy:` entry are refused. `StrongConsumed` sorts the section
+   itself (a manifest keeps its own order), refuses a name given twice, and
+   puts `weak:` among the rest, so the sorted order is `list:`, `path:`,
+   `pkg:`, `weak:`.
+4. **Tracked tree only.** `Traced.CurrentDigests` reads the tree only through
+   `Source`. A `path:` entry is a file or link if `Source` lists it, a
+   directory if it lists anything beneath it, and absent otherwise. A `list:`
+   entry holds the immediate children, a child directory counting when
+   anything tracked lies below it. A `list:` digest is tagged (`10` for a
+   directory with its children, `11` for anything that is not a tracked
+   directory), so a directory that later becomes a tracked file, or vanishes,
+   changes its `list:` digest even when the manifest has no `path:` entry for
+   it. The directory encoding requires at least one child, and its first byte
+   `10` cannot be mistaken for the state tags `00` to `03`. Untracked files
+   never appear. Each digest is computed once per `Traced`.
+5. **"Directly nested" means the nearest enclosing package.** A package `j`
+   is in `T(q)`'s list when `q` is the closest package above it. `D(q)`
+   already omits everything inside any nested package.
+6. **A package with no traced key is a `Refusal`, not a failure.** The weak
+   key is refused with a reason: `host-unknown` (an image ID containing
+   `unknown`), `unknown-toolchain:<name>`, `no-build-file:<os>` or
+   `symlink:<file>`. A BUILD file named by the graph but missing from the
+   tree is an error. The never list and the §6 preconditions are the
+   planner's, not the key's, so the key does not look at them.
+7. **`policy:git` is an inputs-list digest.** It is `FilesDigest("inputs", ...)`
+   over every `.gitattributes` and `.gitmodules` in the tree, so a path, an
+   executable bit or a byte change moves it, and so does the first such file
+   appearing. `.git/info/attributes` is untracked and out of reach; the
+   recorder's clean-checkout checks (§5.2) are what cover it.
+8. **The scrubbed environment.** One function, `ScrubbedEnv`, builds it, and
+   the weak key's `env` section is that result plus the three `kiln:` names, so
+   what the recorder runs with is exactly what is keyed. Later steps replace
+   earlier ones of the same name: the allowlist, then `HOME` and `TMPDIR`, then
+   `PATH`, then `LANG=C.UTF-8` and `TZ=UTC`. So `env.json` listing `PATH` or
+   `LANG` changes nothing. `HOME` and `TMPDIR` are passed when set and left out
+   when not; an unset one is not invented. `PATH` is `ConstructPATH` over the
+   `tools` of the weak key and `HOME`. A variable whose name contains `:` is
+   refused. The `kiln:` entries are keyed but never exported to the process.
+   Every origin is `0`.
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `1`) in
+   `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
+   §7. **`kiln:executor-args`** is each flag as one `-name=value` token,
+   Go-quoted, sorted bytewise and joined by spaces, so the same flags in
+   another order key the same; a flag given twice is refused. **`kiln:root`**
+   must be an absolute path.
+10. **Vector kinds.** (Beyond §11's list, a `weak:` manifest entry and other
+    bad entries are pinned as refusals.) The weak key and the strong key are ordinary `valid`
+    vectors (semantics 2). Three new arrays pin the rest: `digests` (one per
+    state, missing, listing or `T(q)` digest, with its inputs),
+    `strong_consumed` (a weak key and entries in, the sorted consumed section
+    out) and `refused_entries`. `kiln verify-vectors` checks all of them.
+11. **The graph must come from the same tree as `Source`.** `T(q)` takes its
+    nested-package names from the graph, so a graph that lags the tree could
+    let a new nested package leave `T(q)` unchanged. Stages 4 and 5 will
+    enforce this by running the export in the same job and binding it to the
+    tree (a digest of the export plus the source revision); this is a tracked
+    follow-up. Until then `NewTraced`'s check, that every BUILD file the graph
+    names exists in `Source`, is a partial guard. A `BUILD` file elsewhere
+    (a test fixture, say) is not checked: the old tool does not treat it as a
+    package, so it is an ordinary file of its enclosing package, in `D(q)`
+    and not in the nested list.
+12. **Returned keys are copies.** `WeakKey` returns a deep copy of the
+    memoised key, and `Strong` deep-copies the sections it reuses
+    (`key.Action.Clone`), so a caller cannot corrupt a cached key.
+13. **Pins, not probes.** The traced keys carry the tool pins, never probe
+    results. Whatever uses a key to skip a test (stage 5 lookup, M3) must
+    first apply `probe-mismatch`, the never list and the §6 preconditions;
+    none of them is in the key (also listed in the §13 M3 gate).
+14. **Windows.** On Windows `os/exec` adds `SYSTEMROOT` to a child's
+    environment. That is moot while tracing is Linux-only (§4.1), but it must
+    be keyed if Windows is ever traced.
+15. **`kiln:root` is not cleaned.** It is keyed as given, so two spellings of
+    one checkout path are two keys. That can only cause a miss, never a hit.
 
 ## 12. Tests that must exist
 
@@ -897,7 +1187,10 @@ point, not a measurement.
    disagreements on traced predictions;
 2. the scrubbed-environment shadow shows no unexplained result changes;
 3. `probe-mismatch` is fatal (KILN03 §4);
-4. recording runs inside the §4.3 sandbox.
+4. recording runs inside the §4.3 sandbox;
+5. lookup applies `probe-mismatch`, the never list and the §6
+   preconditions before it can skip, because the traced keys carry pins
+   only and none of these (§11.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this

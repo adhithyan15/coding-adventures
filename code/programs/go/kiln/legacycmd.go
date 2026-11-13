@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/host"
@@ -17,6 +18,7 @@ import (
 //
 //	kiln legacy-plan --graph <graph.json> --out <plan.json>
 //	                 [--os linux|darwin|windows] [--root <dir>] [--source git|folder]
+//	                 [--probe]
 //
 // It computes the legacy key of every package in the graph (KILN03) and writes
 // the plan atomically.  Any problem is an error and a non-zero exit: a plan
@@ -30,11 +32,12 @@ func runLegacyPlan(args []string, stdout, stderr io.Writer) int {
 	osName := fs.String("os", runtime.GOOS, "platform to key for: linux, darwin or windows")
 	root := fs.String("root", ".", "repository root")
 	kind := fs.String("source", "git", "tree adapter: git or folder")
+	probe := fs.Bool("probe", false, "run the toolchain probes of KILN03 4 and report disagreements (soft reasons; off by default)")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	if *graphPath == "" || *outPath == "" || fs.NArg() != 0 {
-		fmt.Fprintln(stderr, "usage: kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder]")
+		fmt.Fprintln(stderr, "usage: kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--root <dir>] [--source git|folder] [--probe]")
 		return 2
 	}
 	var src legacy.Source
@@ -59,12 +62,28 @@ func runLegacyPlan(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "kiln: %v\n", err)
 		return 1
 	}
-	plan, err := legacy.BuildPlan(g, legacy.Options{
-		Source: src,
-		Host:   host.Detect(os.Getenv, os.Environ()),
-		OS:     *osName,
-		Arch:   arch,
-	})
+	opt := legacy.Options{
+		Source:  src,
+		Host:    host.Detect(os.Getenv, os.Environ()),
+		OS:      *osName,
+		Arch:    arch,
+		Environ: os.Environ(),
+	}
+	if *probe {
+		// A probe runs the tools of THIS machine, so it can only speak for the
+		// platform it runs on.
+		if *osName != runtime.GOOS {
+			fmt.Fprintf(stderr, "kiln: --probe needs --os %s (this machine); probes cannot speak for another platform\n", runtime.GOOS)
+			return 2
+		}
+		abs, err := filepath.Abs(*root)
+		if err != nil {
+			fmt.Fprintf(stderr, "kiln: %v\n", err)
+			return 1
+		}
+		opt.Probe = &legacy.ProbeOptions{Root: abs, Home: os.Getenv("HOME")}
+	}
+	plan, err := legacy.BuildPlan(g, opt)
 	if err != nil {
 		fmt.Fprintf(stderr, "kiln: %v\n", err)
 		return 1
@@ -116,6 +135,7 @@ func runExplain(args []string, stdout, stderr io.Writer) int {
 		Class       string            `json:"class"`
 		Reasons     []string          `json:"reasons"`
 		ClosureSize int               `json:"closure_size"`
+		Tools       []string          `json:"tools"`
 		Components  legacy.Components `json:"components"`
 	}
 	hints := rec.Hints
@@ -123,16 +143,26 @@ func runExplain(args []string, stdout, stderr io.Writer) int {
 		hints = []string{}
 	}
 	out := struct {
-		OS       string     `json:"os"`
-		Arch     string     `json:"arch"`
-		Host     string     `json:"host"`
-		Record   recordView `json:"record"`
+		OS     string     `json:"os"`
+		Arch   string     `json:"arch"`
+		Host   string     `json:"host"`
+		Record recordView `json:"record"`
+		// Env names the variables keyed in every package; the values are
+		// digested into record.components.env and never printed (KILN04 4.3).
+		Env      []string             `json:"env"`
+		Probes   []legacy.ProbeResult `json:"probes,omitempty"`
 		Advisory struct {
 			Note  string   `json:"note"`
 			Hints []string `json:"hints"`
 		} `json:"advisory_hints"`
-	}{OS: plan.OS, Arch: plan.Arch, Host: plan.Host,
-		Record: recordView{rec.Name, rec.Key, rec.Class, rec.Reasons, rec.ClosureSize, rec.Components}}
+	}{OS: plan.OS, Arch: plan.Arch, Host: plan.Host, Env: plan.Env, Probes: plan.Probes,
+		Record: recordView{rec.Name, rec.Key, rec.Class, rec.Reasons, rec.ClosureSize, rec.Tools, rec.Components}}
+	if out.Env == nil {
+		out.Env = []string{}
+	}
+	if rec.Tools == nil {
+		out.Record.Tools = []string{}
+	}
 	out.Advisory.Note = "advisory only: static scans for triage and debugging; they make no soundness or security claim and do not affect the class"
 	out.Advisory.Hints = hints
 	enc := json.NewEncoder(stdout)

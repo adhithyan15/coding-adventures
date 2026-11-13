@@ -41,6 +41,19 @@ incomplete for RFC 5280 Name equality, and no later transition, complete path
 validation, constraint, revocation, TLS, HTTP, OAuth, or network authority is
 added.
 
+A second stronger entry point consumes that policy-backed first-step result
+only with the immediately target-nearer routed adjacency from the same exact
+construction. Its issuer must be the already processed anchor-nearest
+intermediate, and complete policy must retain its exact candidate child before
+the prior path-length state advances. Success retains the exact Name-value
+policy, reviewed-root and anchor-role evidence, both routed signatures, both
+intermediate policies, and the twice-advanced state. Generic first-step
+evidence, detached constructions, skipped depths, disconnected issuers, target
+children, and cross-certificate policy fail closed. This proves exactly two
+ordered intermediate steps; it does not add arbitrary traversal, complete path
+or Name validation, constraints, revocation, TLS, HTTP, OAuth, or network
+authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

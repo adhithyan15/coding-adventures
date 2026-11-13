@@ -55,7 +55,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 			}
 			return 1
 		}
-		fmt.Fprintf(stdout, "ok: %d valid, %d invalid vectors\n", len(vf.Valid), len(vf.Invalid))
+		fmt.Fprintf(stdout, "ok: %d valid, %d invalid vectors; %d digests, %d strong-consumed, %d refused entries\n",
+			len(vf.Valid), len(vf.Invalid), len(vf.Digests), len(vf.StrongConsumed), len(vf.RefusedEntries))
 		return 0
 	case "legacy-plan":
 		return runLegacyPlan(args[1:], stdout, stderr)

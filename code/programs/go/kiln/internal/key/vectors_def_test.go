@@ -213,9 +213,31 @@ func buildVectorFile(t *testing.T) VectorFile {
 		k, _ := Key(a)
 		vf.Valid = append(vf.Valid, ValidVector{d.name, d.desc, d.action, hex.EncodeToString(pre), Hex(k)})
 	}
+	for _, d := range tracedValid(t) {
+		a, err := d.action.ToAction()
+		if err != nil {
+			t.Fatal(err)
+		}
+		pre, err := Preimage(a)
+		if err != nil {
+			t.Fatalf("%s: %v", d.name, err)
+		}
+		k, _ := Key(a)
+		vf.Valid = append(vf.Valid, ValidVector{d.name, d.desc, d.action, hex.EncodeToString(pre), Hex(k)})
+	}
 	for _, d := range invalidDefs() {
 		vf.Invalid = append(vf.Invalid, InvalidVector{d.name, d.desc, d.action, d.err})
 	}
+	for _, d := range tracedDigests() {
+		got, err := d.Compute()
+		if err != nil {
+			t.Fatalf("%s: %v", d.Name, err)
+		}
+		d.DigestHex = hex.EncodeToString(got[:])
+		vf.Digests = append(vf.Digests, d)
+	}
+	vf.StrongConsumed = tracedStrongConsumed(t)
+	vf.RefusedEntries = tracedRefused()
 	return vf
 }
 

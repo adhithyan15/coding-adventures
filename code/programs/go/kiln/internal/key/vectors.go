@@ -147,6 +147,10 @@ type VectorFile struct {
 	SchemaVersion uint64          `json:"schema_version"`
 	Valid         []ValidVector   `json:"valid"`
 	Invalid       []InvalidVector `json:"invalid"`
+	// The traced-key kinds (KILN04 section 11; see vectors_traced.go).
+	Digests        []DigestVector         `json:"digests"`
+	StrongConsumed []StrongConsumedVector `json:"strong_consumed"`
+	RefusedEntries []RefusedEntryVector   `json:"refused_entries"`
 }
 
 // ToAction converts the JSON form to an Action.  A bad hex string is an error.
@@ -282,5 +286,5 @@ func (vf VectorFile) Verify() []string {
 			fails = append(fails, fmt.Sprintf("invalid %s: error %q does not contain %q", v.Name, err, v.Error))
 		}
 	}
-	return fails
+	return append(fails, vf.verifyTraced()...)
 }

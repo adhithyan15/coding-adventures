@@ -270,8 +270,26 @@ expected refusal. Byte strings in an action are hex (`recipe_hex`,
 invalid UTF-8, an action may give `target_hex` to override `target`. Unknown
 fields are rejected.
 
+Three further arrays pin the traced legacy key (§5, KILN04 §11), and are
+checked by the same verifier. A traced weak key and strong key are ordinary
+`valid` actions with `semantics_version` 2.
+- `digests`: `{name, description, kind, digest_hex}` plus the inputs `kind`
+  reads. `kind` is `state-absent`, `state-directory`, `state-file` (`exec`,
+  `content_hex`, the SHA-256 of the content), `state-link` (`target`),
+  `missing-package`, `listing` (`entries`: `{name, kind}`, kind 1 file, 2
+  link, 3 directory; tagged `10`), `listing-not-directory` (tagged `11`) or
+  `traced-package` (`own_digest_hex`, `nested`).
+- `strong_consumed`: `{name, description, weak_key_hex, entries, consumed}`,
+  where `entries` are `{name, digest_hex}` and `consumed` is the section a
+  strong key is built with.
+- `refused_entries`: `{name, description, weak_key_hex, entries, error}`, a
+  manifest entry list that must be refused with `error` in the message.
+
 The Go vectors were cross-checked against an independent encoder written
-from this spec alone; all 13 valid vectors matched byte for byte.
+from this spec alone; all 13 valid vectors matched byte for byte. The
+traced vectors added with KILN04 stage 1b-ii (2 valid, 11 `digests`, 2
+`strong_consumed`, 7 `refused_entries`) were cross-checked the same way,
+from §2, §3 and KILN04 §11 only.
 
 CI checks that the Go implementation reproduces the file (KILN00 §10.2:
 golden vectors are what stop a change to key computation from shipping
