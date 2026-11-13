@@ -324,7 +324,10 @@ rec, err := traced.Classify(cfg, traced.Input{
 - **Resolution** walks each path through the post-run disk, expanding symlinks
   (40 hops) and applying `..` to the resolved directory. Every crossed link is
   an observation. A component that may have changed under the action is
-  `trace-incomplete:unstable-path`.
+  `trace-incomplete:unstable-path`, with three narrow exceptions (KILN04 5.5):
+  a successful open settles its own final name, a stat or exec of a name whose
+  whole change log is `O_CREAT` opens (and at most one later `unlink`) is
+  accepted, and `$HOME` itself may be stat'ed when the checkout is under it.
 - **Exec** reads the program, its `#!` chain and the ELF loader. `/proc` and
   `/dev/fd` follow the ephemeral list. Reads outside the repository follow
   `host-roots.json`. Network use is judged by address.

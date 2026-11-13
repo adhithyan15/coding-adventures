@@ -619,6 +619,8 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   Everything else gives `trace-incomplete:unstable-path`: an untracked
   leftover of an earlier action, a component created after the lookup began
   or twice, a renamed link. There is no "did not exist yet" exception.
+  Three narrow exceptions for the FINAL component of a successful open, stat
+  or exec, and for `$HOME` itself, are in §5.5 ("Relaxations").
 - A `..` after a component the walk could not enter (missing, or not a
   directory) cannot be placed. On a failed call, the call looked at that
   component, which is observed; on a successful call, the result is
@@ -627,6 +629,19 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   walk still runs to find the links on the way. If either path is in the
   repository and they disagree, the post-run disk no longer shows what the call
   saw: `unstable-path`.
+- **A followed call whose final name is absent on the post-run disk** was
+  removed afterwards, or was never there. If the call found something there (it
+  succeeded, or failed with an errno other than `ENOENT`/`ENOTDIR`), the action
+  must have made the name, the creation completing before the lookup started;
+  else `unstable-path`. And a removal of a name the action had not yet made
+  (an untracked leftover) that completed after the lookup started gives
+  `unstable-path` too: the lookup may have gone through a link there that the
+  disk no longer shows. The removal rule applies to **any** component at which
+  a walk stopped (a missing parent as in `stat("L/x")` followed by
+  `unlink(L)`), not only the final one. Only a clean creation (`mkdir`,
+  `symlink`, `O_CREAT|O_EXCL`) or an `O_CREAT` open keyed by a kernel path
+  counts as "the action made the name". A successful open whose `-y` path is the name is exempt
+  (§5.5(a)).
 - **A successful call whose walk stopped before its final component**, at a
   component the disk shows missing or not a directory, contradicts the disk:
   `unstable-path`. This holds with no change of the action's own.
@@ -895,8 +910,8 @@ tracked tree for a path the disk lost. The strict stability rule of §5.1
 replaces any use of "what the trace knew at the time": the disk must vouch for
 every traversed component. Simulating renames, hard links and concurrent
 lookups exactly is unbounded work and every gap is a false hit, so builds that
-churn temporary directories lose their records; the M2 reason histogram
-measures that cost. `/proc` and `/dev/fd` are never walked. `Config.Root` must
+churn temporary directories lose their records (the relaxations below recover
+the common cases); the M2 reason histogram measures what is left. `/proc` and `/dev/fd` are never walked. `Config.Root` must
 be a real path, and `prepare` checks that every prefix of it is a real
 directory on the disk. `openat2` with a non-zero `resolve=` is
 `trace-incomplete:resolve-flags`.
@@ -950,11 +965,48 @@ exit with 0 gives `failed`. After the init child's exit line, a process
 killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
-**Known cost.** The strict stability rule refuses common patterns: a
-compiler output that is created and then stat'ed, a temp file that is created,
-read and unlinked, and `stat($HOME)` when the checkout is under `$HOME`. Narrow
-relaxations ("opens settle the final name", "open-only change logs",
-"`$HOME` itself") are planned as a separate follow-up with their own review.
+**Relaxations.** The strict rule of §5.1 refuses several very common
+patterns: a compiler output that is created and then stat'ed, a temporary that
+is created, read and unlinked, and `stat($HOME)` when the checkout lies under
+`$HOME`. Three narrow relaxations admit them. Each applies only when its
+precondition provably holds; anything else stays on the strict rule.
+
+- **(a) Opens settle the final name.** For a **successful** open whose `-y`
+  path equals the walked path, the final component is neither noted as a
+  followed final nor as a missing stop. The kernel's own path proves that the
+  name was not a link at the moment of the open. Intermediate components, and
+  every link the walk crossed, keep the full rule. A `-y` path that differs
+  from the walked path, a failed open, and an open of `/proc/self/fd/N` settle
+  nothing.
+- **(b) Open-only change logs.** Take a followed final name of a **successful**
+  `stat` (or other metadata call that follows links) or `exec` whose post-run
+  disk state is a regular file. It is accepted when its **whole** change log
+  is `O_CREAT` opens keyed by their `-y` path (an `O_CREAT` open through a
+  link is logged at the link's target, so an entry at the name proves it was
+  no link; an `O_PATH` open is never an `O_CREAT` entry, since the kernel
+  ignores `O_CREAT` there, and an `O_NOFOLLOW` open does not prove the name was
+  not a link, so neither is one), optionally ended by exactly **one** `unlink`/`unlinkat` that
+  **started after the latest lookup of the name completed**; and
+  - the first open **completed before** the earliest such lookup **started**;
+  - the disk agrees with the log: the name is present if there was no unlink,
+    and absent if there was one (a name absent on the disk is then not a
+    "missing stop" of the lookup);
+  - the name was never a `link`/`linkat` source or destination.
+
+  Any other entry keeps the strict rule for that name: a `rename` (either end),
+  `RENAME_EXCHANGE`, `link`, `symlink`, `mkdir`, `mknod`, an `unlink` before
+  or overlapping a lookup, a second `unlink`, an `O_CREAT` open that is not
+  keyed by a kernel path, or a lookup that began before the first open
+  completed. The ancestors need no extra rule: every lookup went through them,
+  so each already had to be stable by §5.1 (a created directory needs exactly
+  one `mkdir` that completed before the first lookup). Other followed lookups
+  (`chmod`, a failed call, `chdir`) are not relaxed.
+- **(c) `$HOME` itself.** A stat or listing of the `Home` directory node is
+  allowed even when the checkout lies beneath it (hosted runners). It is the
+  sandbox's tmpfs mount point, the same node in every run. Listing it is
+  allowed too: it is the fresh tmpfs, whose contents are the same in every
+  run apart from the mounts the sandbox itself makes. Only the node: the
+  checkout's other ancestors and everything under `$HOME` stay `host-read`.
 
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
@@ -963,11 +1015,16 @@ of each call's interval; events are in completion order with `StartLine`),
 one or two steps, a randomised `Root` (also under `HOME`), `HOME` and `TMPDIR`,
 tracked files, pre-existing untracked leftovers (file, directory, link), host
 files, changing file contents, `RENAME_EXCHANGE`, `O_TRUNC` without `O_CREAT`,
-dirfd-relative lookups and listings. When the record has no reason, every path
+dirfd-relative lookups and listings. "Bursts" issue the patterns of the
+relaxations (a kept output, a temporary, an exclusive temporary, an exec of an
+output, a stat of `$HOME`) on one name, each operation with its own process and
+overlap, and may add a perturbation (rename onto the name, hard link, symlink,
+exchange, second unlink). When the record has no reason, every path
 the model really looked at must be the action's own or be covered by an entry,
 an untracked observation or a `list:` entry; every absence must be in
 `AbsentObservations`; and every write must lie under a write root. A mutation
-check (disabling the overlap logic) makes it fail.
+check makes it fail when the overlap logic is disabled, and likewise when any
+one precondition of a relaxation is dropped.
 
 ## 6. When nothing is recorded
 
