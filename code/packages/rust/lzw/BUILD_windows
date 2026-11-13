@@ -1,0 +1,33 @@
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
+cargo test -q -p lzw --lib -- --nocapture
+cargo test -q -p lzw --doc
+cargo test -q -p lzw --test hostile_headers --test decompression_cap --test decoder_memory --test encoder_cost --test decoder_equivalence
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check lzw
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p lzw --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/compress_one_byte_matches_the_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/compress_two_bytes_match_the_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/compress_is_at_least_seven_bytes&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_long_runs&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/round_trip_of_repeated_byte_pairs&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=flip-result-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/declared_length_cuts_the_output&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-last-result-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/a_huge_declared_length_is_harmless&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_empty_input_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_byte_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_header_only_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_one_payload_byte_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_byte_payload_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_missing_clear_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_invalid_first_code_every_value&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_two_bytes_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_three_bytes_rejected&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_zero_header_two_byte_payload_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test lzw_proofs
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

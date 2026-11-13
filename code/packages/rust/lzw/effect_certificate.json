@@ -1,0 +1,22 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/lzw",
+  "source_digest": "7927d71d087656710bbb9c82068851aa5a631f79a62d4f59a6d9cf9dab077f50",
+  "manifest_digest": "6ca7dd89a2a8bc6d00a7820f8a99fce34f5d6c1e7f78ddfa84001e13417241ef",
+  "declared_effects": [],
+  "entry_points": [
+    {
+      "name": "compress",
+      "signature": "pub fn compress(data: &[u8]) -> Vec<u8>",
+      "effects": []
+    },
+    {
+      "name": "decompress",
+      "signature": "pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String>",
+      "effects": []
+    }
+  ],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}

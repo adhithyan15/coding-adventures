@@ -1,0 +1,41 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/lzw.warrant.
+#
+# One line per Warrant operation: the public export that implements it, its
+# host signature where the Warrant type is not the default one, and the
+# deliberate faults the generated negative controls attack it with (VER04h
+# section 6, VER04j section 4.8).
+#
+# compress: `compress(&[u8]) -> Vec<u8>`; the Warrant type `Bytes -> Bytes` is the
+# default host signature, so no args=/ret=.
+#
+# decompress: `decompress(&[u8]) -> Result<Vec<u8>, String>`.  The Rust API has no
+# error type: the error is a `String` message.  errors= maps the whole `String`
+# (the path is `std::string`, the "variant" is the struct `String`, matched as
+# `std::string::String { .. }`, as for wasm-leb128's `Leb128Error` struct) to the
+# single Warrant case CORRUPT, so the claims separate "accepted with these bytes"
+# from "rejected" and cannot see the message.  That is a limitation of what the
+# public API makes observable, recorded in LZ01, not worked around.
+#
+# proofs_not_live=<reason> is the package's declaration that this operation's
+# steps-bound obligation cannot be run: the Rust-subset front end refuses
+# src/lib.rs (warrant-ir/tests/lzw_proofs.rs records its message).  Only an
+# operation listed here may have a `not-live` entry in evidence/proof-manifest.json;
+# `ca-assurance-report --check` rejects any other (VER04h section 9, check 18).
+#
+# exhaustive_budget is 2^24: decompress_three_bytes_rejected enumerates every
+# 3-byte input (a U16 times a U8).  Together with the empty, 1-byte and 2-byte
+# claims that is every input of length <= 3 (1 + 256 + 65,536 + 16,777,216 =
+# 16,843,009).  The measured wall-clock cost is recorded in LZ01.
+package lzw
+revision 0.1.0
+spec code/specs/lzw.warrant
+output code/packages/rust/lzw/tests/generated/warrant_evidence.rs
+seed 0x4c5a_5731_5f57_4152
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+op compress export=compress faults=flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op decompress export=decompress errors=std::string/String=CORRUPT faults=flip-result-bit,drop-last-result-byte,missing-error proofs_not_live=frontend-refuses-lib

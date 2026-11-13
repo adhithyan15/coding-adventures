@@ -1,0 +1,470 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/lzw/example/compress_ababab",
+        "warrant/lzw/example/compress_empty",
+        "warrant/lzw/example/compress_every_byte_value_twice",
+        "warrant/lzw/example/compress_one_byte",
+        "warrant/lzw/example/compress_seven_a",
+        "warrant/lzw/example/compress_tobeornot",
+        "warrant/lzw/example/compress_two_distinct_bytes",
+        "warrant/lzw/exhaustive/compress/output-bound",
+        "warrant/lzw/exhaustive/compress_is_at_least_seven_bytes",
+        "warrant/lzw/exhaustive/compress_one_byte_matches_the_model",
+        "warrant/lzw/exhaustive/compress_two_bytes_match_the_model",
+        "warrant/lzw/fuzz/compress/output-bound",
+        "warrant/lzw/fuzz/compress_is_at_least_seven_bytes",
+        "warrant/lzw/fuzz/compress_one_byte_matches_the_model",
+        "warrant/lzw/fuzz/compress_two_bytes_match_the_model",
+        "warrant/lzw/negctl/example/compress/drop-last-result-byte",
+        "warrant/lzw/negctl/example/compress/flip-result-bit",
+        "warrant/lzw/negctl/exhaustive/compress/drop-last-result-byte",
+        "warrant/lzw/negctl/exhaustive/compress/flip-result-bit",
+        "warrant/lzw/negctl/fuzz/compress/drop-last-result-byte",
+        "warrant/lzw/negctl/fuzz/compress/flip-result-bit",
+        "warrant/lzw/negctl/property/compress/drop-last-result-byte",
+        "warrant/lzw/negctl/property/compress/flip-result-bit",
+        "warrant/lzw/property/compress/output-bound",
+        "warrant/lzw/property/compress_is_at_least_seven_bytes",
+        "warrant/lzw/property/compress_one_byte_matches_the_model",
+        "warrant/lzw/property/compress_two_bytes_match_the_model"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 66486,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 20000,
+        "status": "pass"
+      },
+      "id": "compress_soundness",
+      "proof": null,
+      "property": {
+        "cases": 16384,
+        "status": "pass"
+      },
+      "symbol": "compress"
+    },
+    {
+      "evidence": [
+        "warrant/lzw/example/a_huge_declared_length_on_a_small_stream",
+        "warrant/lzw/example/a_short_declared_length_cuts_the_output",
+        "warrant/lzw/example/a_zero_declared_length_delivers_nothing",
+        "warrant/lzw/example/bomb_1024_units_declaring_1024_bytes_delivers_them",
+        "warrant/lzw/example/bomb_1024_units_declaring_exactly_the_cap_delivers_the_cap",
+        "warrant/lzw/example/bomb_1024_units_declaring_one_byte_over_the_cap_is_rejected",
+        "warrant/lzw/example/bomb_1024_units_declaring_one_gibibyte_is_rejected",
+        "warrant/lzw/example/bomb_1024_units_is_rejected",
+        "warrant/lzw/example/bomb_512_units_is_under_the_cap_and_decodes",
+        "warrant/lzw/example/decompress_ababab",
+        "warrant/lzw/example/decompress_empty_input",
+        "warrant/lzw/example/decompress_empty_stream",
+        "warrant/lzw/example/decompress_first_code_is_not_clear",
+        "warrant/lzw/example/decompress_header_only",
+        "warrant/lzw/example/decompress_invalid_code",
+        "warrant/lzw/example/decompress_mid_stream_clear",
+        "warrant/lzw/example/decompress_one_byte",
+        "warrant/lzw/example/decompress_seven_a_tricky_token",
+        "warrant/lzw/example/decompress_three_bytes_no_header",
+        "warrant/lzw/example/decompress_tobeornot",
+        "warrant/lzw/exhaustive/a_huge_declared_length_is_harmless",
+        "warrant/lzw/exhaustive/declared_length_cuts_the_output",
+        "warrant/lzw/exhaustive/decompress/output-bound",
+        "warrant/lzw/exhaustive/decompress_empty_input_rejected",
+        "warrant/lzw/exhaustive/decompress_header_only_rejected",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_every_value",
+        "warrant/lzw/exhaustive/decompress_invalid_first_code_rejected",
+        "warrant/lzw/exhaustive/decompress_missing_clear_rejected",
+        "warrant/lzw/exhaustive/decompress_one_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_one_payload_byte_rejected",
+        "warrant/lzw/exhaustive/decompress_three_bytes_rejected",
+        "warrant/lzw/exhaustive/decompress_two_byte_payload_model",
+        "warrant/lzw/exhaustive/decompress_two_bytes_rejected",
+        "warrant/lzw/exhaustive/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/exhaustive/round_trip",
+        "warrant/lzw/exhaustive/round_trip_after_a_prefix",
+        "warrant/lzw/exhaustive/round_trip_of_long_runs",
+        "warrant/lzw/exhaustive/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/exhaustive/round_trip_of_short_runs",
+        "warrant/lzw/fuzz/a_huge_declared_length_is_harmless",
+        "warrant/lzw/fuzz/declared_length_cuts_the_output",
+        "warrant/lzw/fuzz/decompress/output-bound",
+        "warrant/lzw/fuzz/decompress_empty_input_rejected",
+        "warrant/lzw/fuzz/decompress_header_only_rejected",
+        "warrant/lzw/fuzz/decompress_invalid_first_code_every_value",
+        "warrant/lzw/fuzz/decompress_invalid_first_code_rejected",
+        "warrant/lzw/fuzz/decompress_missing_clear_rejected",
+        "warrant/lzw/fuzz/decompress_one_byte_rejected",
+        "warrant/lzw/fuzz/decompress_one_payload_byte_rejected",
+        "warrant/lzw/fuzz/decompress_three_bytes_rejected",
+        "warrant/lzw/fuzz/decompress_two_byte_payload_model",
+        "warrant/lzw/fuzz/decompress_two_bytes_rejected",
+        "warrant/lzw/fuzz/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/fuzz/round_trip",
+        "warrant/lzw/fuzz/round_trip_after_a_prefix",
+        "warrant/lzw/fuzz/round_trip_of_long_runs",
+        "warrant/lzw/fuzz/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/fuzz/round_trip_of_short_runs",
+        "warrant/lzw/negctl/example/decompress/drop-last-result-byte",
+        "warrant/lzw/negctl/example/decompress/flip-result-bit",
+        "warrant/lzw/negctl/example/decompress/missing-error",
+        "warrant/lzw/negctl/exhaustive/decompress/drop-last-result-byte",
+        "warrant/lzw/negctl/exhaustive/decompress/flip-result-bit",
+        "warrant/lzw/negctl/exhaustive/decompress/missing-error",
+        "warrant/lzw/negctl/fuzz/decompress/drop-last-result-byte",
+        "warrant/lzw/negctl/fuzz/decompress/flip-result-bit",
+        "warrant/lzw/negctl/fuzz/decompress/missing-error",
+        "warrant/lzw/negctl/property/decompress/drop-last-result-byte",
+        "warrant/lzw/negctl/property/decompress/flip-result-bit",
+        "warrant/lzw/negctl/property/decompress/missing-error",
+        "warrant/lzw/property/a_huge_declared_length_is_harmless",
+        "warrant/lzw/property/declared_length_cuts_the_output",
+        "warrant/lzw/property/decompress/output-bound",
+        "warrant/lzw/property/decompress_empty_input_rejected",
+        "warrant/lzw/property/decompress_header_only_rejected",
+        "warrant/lzw/property/decompress_invalid_first_code_every_value",
+        "warrant/lzw/property/decompress_invalid_first_code_rejected",
+        "warrant/lzw/property/decompress_missing_clear_rejected",
+        "warrant/lzw/property/decompress_one_byte_rejected",
+        "warrant/lzw/property/decompress_one_payload_byte_rejected",
+        "warrant/lzw/property/decompress_three_bytes_rejected",
+        "warrant/lzw/property/decompress_two_byte_payload_model",
+        "warrant/lzw/property/decompress_two_bytes_rejected",
+        "warrant/lzw/property/decompress_zero_header_two_byte_payload_model",
+        "warrant/lzw/property/round_trip",
+        "warrant/lzw/property/round_trip_after_a_prefix",
+        "warrant/lzw/property/round_trip_of_long_runs",
+        "warrant/lzw/property/round_trip_of_repeated_byte_pairs",
+        "warrant/lzw/property/round_trip_of_short_runs"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 17498027,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 95000,
+        "status": "pass"
+      },
+      "id": "decompress_soundness",
+      "proof": null,
+      "property": {
+        "cases": 77824,
+        "status": "pass"
+      },
+      "symbol": "decompress"
+    }
+  ],
+  "closure": [
+    "rust/lzw"
+  ],
+  "commit": "c048d6fca9c",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
+      "kind": "no-live-proof",
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?'))"
+    },
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
+      "kind": "not-applicable",
+      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
+    }
+  ],
+  "package": "rust/lzw",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.1.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/lib.rs:166:18: Unexpected byte: ''' (line: `struct BitReader<'a> {`); per export, compress: alone: parse refused (Expected Semi, found Lt); decompress: alone: parse refused (Unexpected byte: '?'))",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "warrant/lzw/exhaustive/compress/output-bound",
+        "warrant/lzw/exhaustive/decompress/output-bound",
+        "warrant/lzw/fuzz/compress/output-bound",
+        "warrant/lzw/fuzz/decompress/output-bound",
+        "warrant/lzw/property/compress/output-bound",
+        "warrant/lzw/property/decompress/output-bound"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "discharged for bounded inputs: the Warrant document bounds the size of what compress, decompress returns (`output` row) and the live heap of the call (`heap` row); 18886 generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most 33554496 bytes (the bound at that instance: 70348824). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
+      "status": "discharged"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 407,
+      "evidence": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "bounded work per call: the encoder performs one dictionary lookup per input byte and the decoder writes each delivered byte once, through a dictionary of at most 65,536 fixed-size entries, delivering at most the documented output cap; no other input-dependent iteration [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
+      "status": "exemption"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "lossless compression: package implements LZW compression and decompression only, no cipher, hash or MAC [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "no keys: the package takes and generates no key material; operands are byte strings to compress and compressed streams, not key bytes of a fixed strength [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}
