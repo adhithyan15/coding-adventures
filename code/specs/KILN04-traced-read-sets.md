@@ -521,6 +521,167 @@ line, 64 MiB in total and 1,000,000 records, and every record counts
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
 is `size` or `arity`. A caller with a larger measured budget raises them.
 
+### 4.7 Sandbox decisions (stage 3b)
+
+Stage 3b is `kiln sandbox-exec` (`internal/sandbox`). The code is
+authoritative: `plan.go` for the mount order, `bpf.go` for the filter,
+`privs.go` for the privilege drop. These are the decisions that §4.3 and §4.5
+left open, and the places where Go's `os/exec` and the trace parser's helper
+model (§4.5) forced a different shape.
+
+**Interface.** `kiln sandbox-exec --config <abs path> -- <argv...>`. The build
+tool's `-exec-wrapper` is `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`
+and sets `KILN_ACTION` (the package `rel_path`), `KILN_STEP` and
+`KILN_STEP_COUNT`. The helper reads only `KILN_ACTION`; the other two are for
+the recorder. The step never sees any of the three: its environment is the
+list the configuration holds for `KILN_ACTION`, exactly, and an action the
+configuration does not name is an error.
+
+**The configuration** is strict JSON, written by the recorder: `repo_root`,
+`home`, `tmpdir`, `state_roots`, `masks`, `env_by_action` and `kiln_exe`. It
+is read with a size cap by both helper processes; the root passes its SHA-256
+to the init, which refuses a file that changed in between. Unknown keys,
+differently-cased keys, duplicate keys and trailing data are refused. Every
+path is absolute and clean, is not `/`, and holds no `:` (the list separator),
+`,` (the mount-option separator), control character or non-UTF-8 byte. Further
+rules:
+- `home` and `tmpdir` are not inside `repo_root`, and differ;
+- `repo_root` is not inside `tmpdir`, because `tmpdir` is where the new root
+  is assembled (below), so nothing bound from the host may live under it;
+- a state root overlaps neither the checkout nor `tmpdir` and does not cover
+  `home`;
+- no mask covers the checkout, `home`, `tmpdir` or a state root;
+- an `env_by_action` key is a clean relative path (`.` is the checkout), and
+  no entry names a `KILN_` variable;
+- `kiln_exe` equals `/proc/self/exe`, and neither it nor its resolved path is
+  inside `repo_root`.
+
+Against the real filesystem the helper additionally requires that `repo_root`,
+`home`, `tmpdir`, the working directory and every state root (or its nearest
+existing ancestor) are canonical directories (no symlink in any component),
+because the mounts are made at `<new root>/<path>` and an absolute symlink in a
+component would resolve against the host's root; that no mask target is a
+symlink; that a mask target inside the checkout exists (otherwise the step
+could create it); that the configuration file is not inside the checkout,
+`home`, `tmpdir` or a state root; and that the working directory is exactly
+`repo_root/<KILN_ACTION>`.
+
+**Processes.** The root (`sandbox-exec`) is the process strace traces. It
+starts its Go runtime threads first (a throwaway burst of goroutines blocked in
+a read), then spawns exactly one child with one `clone` carrying
+`CLONE_NEWUSER|CLONE_NEWNS|CLONE_NEWPID`, the init, a re-exec of
+`/proc/self/exe sandbox-init ...` with an **empty** environment, then waits.
+Three things differ from the sketch in §4.3:
+- **The init writes its own id maps.** Go's `SysProcAttr.UidMappings` writes
+  `/proc/<pid>/uid_map` from the parent after the clone, an `openat` in the root
+  after the spawn, which §4.5 forbids (`helper-activity`). A process may write
+  a single-id map for its creator's effective id without privilege over the
+  parent namespace, so the init does it: `setgroups` is set to `deny` first,
+  then `uid_map` and `gid_map` get `1000 <caller id> 1`. The caller maps to
+  uid and gid **1000** inside.
+- **The init sets its own parent-death signal.** `SysProcAttr.Pdeathsig` makes
+  Go's child compare `getppid()` with the parent's pid, which is 0 in a new PID
+  namespace, so the child would kill itself. The init calls
+  `prctl(PR_SET_PDEATHSIG, SIGKILL)`; the root's main goroutine is locked to
+  the first thread, which lives as long as the root.
+- **`AmbientCaps`.** The init is started with `CAP_SETPCAP` and `CAP_SYS_ADMIN`
+  ambient, because the capabilities of a new user namespace do not survive the
+  exec of a uid the namespace has not yet mapped.
+
+The init runs on the thread-group leader (`runtime.LockOSThread` in an `init`
+function, so `main` starts there). §4.5 asks for setup `chdir`s before any
+thread starts; a Go program cannot, so the init first calls
+**`unshare(CLONE_FS)`** on that thread, and the parser (`internal/trace`)
+models a successful `unshare` with `CLONE_FS` in the init's window as giving
+that process a private working directory. This supersedes §4.5's advice to
+avoid `unshare(CLONE_FS)`. Every other `chdir` is a setup `chdir` that ends
+back at the package directory.
+
+**Mount order** (`Plan`; each step needs the ones before it). Paths in steps 2
+and 3 are host paths; every later path is placed under the new root.
+1. `mount("", "/", MS_REC|MS_PRIVATE)`: nothing propagates to the host.
+2. Create each `state` root on the host (the filesystem is still writable).
+3. Mount the staging tmpfs on the host's `tmpdir`
+   (`MS_NOSUID|MS_NODEV`, `mode=0755,uid=1000,gid=1000`) and create
+   `tmpdir/.kiln-newroot` in it.
+4. `mount("/", tmpdir/.kiln-newroot, MS_BIND|MS_REC)`, then
+   `mount_setattr(.., MOUNT_ATTR_RDONLY, AT_RECURSIVE)`. This sets only the one
+   attribute on every mount of the copy; a plain remount would have to repeat
+   each inherited flag, which a user namespace locks.
+5. Fresh tmpfs on `home` (`0755`) and on `tmpdir` (`1777`), both
+   `MS_NOSUID|MS_NODEV` and owned by uid 1000, the shallower first, creating
+   the mount point where it does not exist.
+6. Bind `repo_root` writable at the same path.
+7. Bind each state root writable.
+8. Mask, shallowest first, in this order: each mask target is looked at then.
+   A directory gets an empty read-only tmpfs
+   (`MS_RDONLY|MS_NOSUID|MS_NODEV|MS_NOEXEC`, `size=4k,nr_inodes=2`); anything
+   else gets `/dev/null` bound over it (so `$GITHUB_ENV` can be read, empty,
+   and written, to nowhere). A symlink is refused. A target that does not
+   exist is skipped outside the checkout and refused inside it.
+9. Fresh `proc` on `/proc` (`MS_NOSUID|MS_NODEV|MS_NOEXEC`, `hidepid=2`).
+10. `chdir(new root)`, `pivot_root(".", ".")`, `umount2(".", MNT_DETACH)`,
+    `chdir("/")`.
+
+`home` and `tmpdir` precede the checkout and state roots because the checkout
+may live under `$HOME`, where the tmpfs would hide a bind made earlier. A
+checkout under `$HOME` therefore persists, and so do the ancestor directories
+the plan creates in the tmpfs.
+
+**Privilege drop** (`PrivSteps`, then checked by reading the state back):
+1. `prctl(PR_SET_NO_NEW_PRIVS, 1)`;
+2. `prctl(PR_CAPBSET_DROP, c)` for `c` from 0, until `EINVAL` (at most 64
+   capabilities); it needs `CAP_SETPCAP`, so it comes before step 4;
+3. `prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL)`;
+4. `capset` (version 3) with empty effective, permitted and inheritable sets.
+
+The init then verifies `no_new_privs`, an empty bounding set and empty `capget`
+sets, and refuses to continue otherwise.
+
+**Seccomp filter** (`BuildFilter`): a hand-built classic BPF program, installed
+with `prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER)` on the exec thread, so the
+exec carries it. Its layout:
+
+| # | Instruction | Verdict |
+|---|---|---|
+| 0 | `ld arch` | |
+| 1 | `jeq AUDIT_ARCH_X86_64` | else `RET KILL_PROCESS` |
+| 2 | `ld nr` | |
+| 3 | `jset __X32_SYSCALL_BIT` | then `RET KILL_PROCESS` |
+| 4.. | `jeq <nr>` for each refused call, in the order of `RefusedSyscalls` | then `RET ERRNO\|EPERM` |
+| | `jeq clone` (56) | then the clone check |
+| | `jeq clone3` (435) | then `RET ERRNO\|ENOSYS` |
+| | `RET ALLOW` | |
+| | clone check: `ld args[0]` (low 32 bits); `jset` any of `CLONE_UNTRACED`, `CLONE_NEWNS`, `CLONE_NEWCGROUP`, `CLONE_NEWUTS`, `CLONE_NEWIPC`, `CLONE_NEWUSER`, `CLONE_NEWPID`, `CLONE_NEWNET` | then `RET ERRNO\|EPERM`; else `RET ALLOW` |
+| | `RET ERRNO\|EPERM`, `RET ERRNO\|ENOSYS`, `RET KILL_PROCESS` | the targets above |
+
+The refused calls are the twenty §4.4 names: `io_uring_setup`,
+`open_by_handle_at`, `name_to_handle_at`, `mount`, `umount2`, `fsopen`,
+`fsmount`, `fsconfig`, `fspick`, `open_tree`, `move_mount`, `mount_setattr`,
+`pivot_root`, `chroot`, `unshare`, `setns`, `ptrace`, `process_vm_readv`,
+`pidfd_getfd`, `bpf`. On x86-64 `clone`'s flags are its **first** argument. The
+filter adds `CLONE_NEWUTS` to §4.3's list, matching §4.4's "any `CLONE_NEW*`".
+A change to the filter bumps `kiln:recorder`.
+
+**Descriptors, standard input, exec.** After the filter, the init opens
+`/dev/null` as descriptor 0 and marks every descriptor from 3 up
+close-on-exec (`close_range(3, ~0, CLOSE_RANGE_CLOEXEC)`, or `fcntl` one by one
+on a kernel without it). It does not close them outright: the Go runtime's
+own epoll descriptor may still be used by its monitor thread until the exec,
+and closing it is a fatal runtime error. The effect on the step is the same.
+It `chdir`s to the package directory and `execve`s the step from the leader.
+An `argv[0]` with no `/` is looked up in the **configured** `PATH` (absolute
+entries only), one real `execve` per candidate, so the failed probes appear in
+the trace as the parser expects (§4.5).
+
+**Exit status.** The root exits with the init's status (128 plus the signal if
+it was killed). A failure before the step runs exits 125, and a failed exec 127.
+Such a trace has no step exec, which the parser refuses.
+
+**Platforms.** linux/amd64 only (`sandbox_linux_amd64.go`). Every other
+platform gets a stub that prints why and exits 125. The integration tests need
+unprivileged user namespaces and skip where the kernel refuses them.
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation

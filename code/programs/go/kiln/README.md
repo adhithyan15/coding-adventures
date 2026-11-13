@@ -367,3 +367,42 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
   not `pkg:`, `path:` or `list:` is refused.
 - Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
   verify-vectors` checks them.
+
+## Sandbox (`kiln sandbox-exec`, `internal/sandbox`, KILN04 stage 3b)
+
+`kiln sandbox-exec --config <abs path> -- <argv...>` runs one traced BUILD step
+so that the trace is the whole story: the build tool's `-exec-wrapper` is
+`["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`, with
+`KILN_ACTION` (the package `rel_path`) in the wrapper's environment.
+
+```json
+{
+  "repo_root": "/home/runner/work/repo",
+  "home": "/home/runner",
+  "tmpdir": "/home/runner/_tmp",
+  "state_roots": ["/home/runner/.cargo/registry"],
+  "masks": ["/home/runner/work/repo/.git", "/home/runner/work/_temp"],
+  "env_by_action": {"code/packages/go/a": ["HOME=/home/runner", "PATH=/usr/bin:/bin"]},
+  "kiln_exe": "/opt/kiln/bin/kiln"
+}
+```
+
+The step sees a read-only copy of `/` with the checkout writable at its own
+absolute path, fresh empty tmpfs `$HOME` and `TMPDIR`, writable `state` roots,
+the masked paths empty, and its own `/proc` (`hidepid=2`). It runs as uid 1000
+in a new user namespace with no capabilities, `no_new_privs` and a seccomp
+filter (EPERM for the refused calls of KILN04 section 4.4, for `CLONE_UNTRACED`
+and for every `CLONE_NEW*`; ENOSYS for `clone3`; any non-x86-64 ABI is killed).
+Its environment is exactly the configured list, standard input is `/dev/null`,
+and when it exits (it is PID 1) the kernel kills everything left behind.
+
+- **linux/amd64 only.** Elsewhere the command prints why and exits 125.
+- **Needs unprivileged user namespaces.** On hosted Ubuntu runners:
+  `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0`.
+- The pure parts (configuration, mount plan, BPF program, privilege-drop
+  sequence) are tested on every OS. The end-to-end tests are Linux-only and
+  skip when namespaces are unavailable.
+- Exit status: the step's; 125 when the sandbox could not be built; 127 when the
+  step's command was not found.
+
+The design and every decision are in KILN04 section 4.7.

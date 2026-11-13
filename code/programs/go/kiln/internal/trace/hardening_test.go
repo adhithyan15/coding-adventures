@@ -447,3 +447,22 @@ func TestRootGroupWalkIsLinear(t *testing.T) {
 		t.Fatal("group membership")
 	}
 }
+
+func TestHelperUnshareFSMakesCwdPrivate(t *testing.T) {
+	// A threaded init: a thread shares the cwd, so a plain chdir is a race ...
+	thread := "11  clone(child_stack=0x1, flags=" + threadFlags + "|CLONE_FS|CLONE_FILES) = 12\n" +
+		"12  futex(0x1, FUTEX_WAIT_PRIVATE, 0, NULL) = 0\n"
+	body := helperRootSetup + thread + "11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec +
+		"12  +++ exited with 0 +++\n" + helperEnd
+	wantReasonOpts(t, body, helperOpts, reasonCwdRace)
+	// ... and unshare(CLONE_FS) first (by name, or as a number) makes it private.
+	for _, arg := range []string{"CLONE_FS", "CLONE_FS|CLONE_NEWNS", "0x200", "CLONE_NEWNS|0x200"} {
+		priv := helperRootSetup + thread + "11  unshare(" + arg + ") = 0\n11  chdir(\"/elsewhere\") = 0\n11  chdir(\"/start\") = 0\n" + helperExec +
+			"12  +++ exited with 0 +++\n" + helperEnd
+		mustHelper(t, priv)
+	}
+	// A failed unshare, or one without CLONE_FS, changes nothing.
+	for _, u := range []string{"11  unshare(CLONE_FS) = -1 EPERM (Operation not permitted)\n", "11  unshare(CLONE_NEWNS) = 0\n", "11  unshare(0x20000) = 0\n"} {
+		wantReasonOpts(t, helperRootSetup+thread+u+"11  chdir(\"/elsewhere\") = 0\n"+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, helperOpts, reasonCwdRace)
+	}
+}

@@ -564,6 +564,14 @@ func (m *model) apply(rec *record) *Error {
 	}
 	c := rec.call
 	if m.opts.HelperRoot {
+		// A successful unshare(CLONE_FS) in the init's window gives the calling
+		// thread a private working directory: stage 3b's helper does it so its
+		// setup chdirs are not a cwd-race with the Go runtime's threads.
+		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
+			p.cwd.refs--
+			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
+			return nil
+		}
 		// Classification was deferred in pass 1.
 		if e := classifyName(c.name, rec.line); e != nil {
 			if inWindow {
@@ -963,4 +971,20 @@ func hasEmptyPath(text string) (bool, string) {
 		}
 	}
 	return found, ""
+}
+
+// unshareHasFS reports whether an unshare flags argument includes CLONE_FS
+// (0x200), spelled by name or as a number.  Anything it cannot decode is not
+// CLONE_FS, so a later chdir stays a cwd-race: the safe direction.
+func unshareHasFS(text string) bool {
+	for _, tok := range strings.Split(text, "|") {
+		tok = strings.TrimSpace(tok)
+		if tok == "CLONE_FS" {
+			return true
+		}
+		if n, err := strconv.ParseUint(tok, 0, 64); err == nil && n&0x200 != 0 {
+			return true
+		}
+	}
+	return false
 }
