@@ -134,6 +134,20 @@ inventory point covered only after an assessed composition path genuinely
 supports the whole point; the wider near/far/on/under/inside and
 towards/away demands must remain explicit if a bounded tranche teaches less.
 
+The first bounded delivery within this issue will close **movement
+towards/away** (`KA-A1-POST-03`) only. After the existing chapter 108 road and
+location words, an A1 lesson can introduce the destination form **ಶಾಲೆಗೆ**
+(*śālege*, to school) in **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** (*nānu śālege
+hōguttēne*, I go to school), a deliberately shortened teaching frame from
+the NITI Aayog sentence above. A later retrieval can contrast that destination
+with chapter 103's already-taught **ಬೆಂಗಳೂರಿನಿಂದ** (*Beṅgaḷūrininda*, from
+Bengaluru) and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** (*nānu
+Beṅgaḷūrininda bandiddēne*, I am from Bengaluru). This makes the two
+directions visible without claiming that every use of the dative or ablative
+has been taught. The relative-position point (`KA-A1-POST-02`) stays uncovered
+until separate assessed noun-plus-relator compositions genuinely cover its
+range; a near-word drill alone cannot close it.
+
 ### B2 content-inventory source plan
 
 The B2 task shape fixes **how** performance is sampled; it does not define the
