@@ -536,7 +536,7 @@ Slice A4 ran the lexer against the real engine and found six more facts
 Every case below has a probe fixture in slice A4 (the `rs-token-trees` corpus,
 section 6.2) and a positive and negative corpus case in `rs-syntax`.
 Slice A4 also checked each pair against `rustc 1.97.0`, the release's own
-compiler, on about 2,700 random token soups and 56 hand-written cases per
+compiler, on about 3,400 random token soups and 56 hand-written cases per
 edition (section 4.3, "Differential").
 
 | # | Case | How it is expressed | Releases |
@@ -680,7 +680,7 @@ specified (`#! /** d */ [a]` is a shebang).
 is installed on the CI-class host, so it is the oracle for the token-tree
 level: a source `S` is wrapped as `macro_rules! m { ($($t:tt)*) => {} } m!{ S }`
 and compiled with `--crate-type lib --emit=metadata`; the pair accepts `S` iff
-the lexer, both hooks and the token-tree grammar accept it. Over 2,700 random
+the lexer, both hooks and the token-tree grammar accept it. Over 3,400 random
 strings built from 75 lexically interesting fragments (quotes, hashes, `r`,
 `b`, `c`, comment openers, digits, `e`, dots, underscores, non-ASCII), in all
 four editions, the only disagreements are the RD6 family (literal values) and
@@ -1655,7 +1655,7 @@ These are stated plainly so that no later slice treats them as facts.
   unterminated comment is a `Parse` refusal. Both need the small engine changes
   named there, or the stopgaps.
 - That the A4 pairs and the differential cover what matters beyond 1.97.0: only
-  that release's lexer was read and run. The random differential is 2,700
+  that release's lexer was read and run. The random differential is 3,400
   strings of at most seven fragments, not an exhaustive search, and compares
   acceptance at the token-tree level, not token boundaries (`1.` is `INT DOT`
   here and one float for `rustc`; `x.0.1` is three tokens here and `rustc`'s
