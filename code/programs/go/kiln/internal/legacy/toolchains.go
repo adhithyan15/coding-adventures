@@ -178,24 +178,47 @@ func checkPolicyPath(p string, allowTmp, glob bool) error {
 	return nil
 }
 
-var probeArgRe = regexp.MustCompile(`^(-{1,2}[A-Za-z][A-Za-z0-9._=-]*|[A-Za-z][A-Za-z0-9._-]*)$`)
+// probeTails is the closed set of argument tails a probe may carry: at most
+// one argument, and only a pure version query. Anything that could fetch,
+// install, evaluate or run code (`install`, `-m pip`, `-p`, `tool run`, `-c`)
+// is outside it. A tool's own extra query is listed in probeTailsFor.
+var probeTails = map[string]bool{
+	"": true, "--version": true, "-version": true, "-V": true, "-v": true, "-vV": true, "--numeric-version": true,
+}
 
-// evalFlags are interpreter flags that run supplied code; a probe may never
-// carry one, in either dash spelling and with or without `=value`.
-var evalFlags = map[string]bool{"c": true, "e": true, "E": true, "r": true, "eval": true, "exec": true, "command": true}
+// probeTailsFor adds the per-tool info queries, keyed by argv[0].
+var probeTailsFor = map[string][]string{
+	"go":           {"version"},
+	"xcode-select": {"-p"},
+}
 
-// checkProbeArg accepts a flag-shaped argument (`-v`, `--version`,
-// `--pkg-info=x`) or a bare word (`version`), never a path, a space or an
-// eval flag.
-func checkProbeArg(a string) error {
-	if len(a) > maxProbeArg || !probeArgRe.MatchString(a) {
-		return fmt.Errorf("argument %q is not a flag or a bare word", short(a))
+var pkgInfoRe = regexp.MustCompile(`^--pkg-info=[a-z0-9]+(\.[A-Za-z0-9_-]+)+$`)
+
+// checkProbeTail accepts a whole tail (the arguments after argv[0]) only if it
+// is in the closed allowlist. `erl` has no safe version flag, so it has no
+// probe at all: its pin is identity only.
+func checkProbeTail(tool string, tail []string) error {
+	if len(tail) > 1 {
+		return fmt.Errorf("more than one argument after %q", short(tool))
 	}
-	name, _, _ := strings.Cut(strings.TrimLeft(a, "-"), "=")
-	if strings.HasPrefix(a, "-") && evalFlags[name] {
-		return fmt.Errorf("argument %q evaluates code", short(a))
+	a := ""
+	if len(tail) == 1 {
+		if a = tail[0]; a == "" {
+			return fmt.Errorf("empty argument")
+		}
 	}
-	return nil
+	if probeTails[a] {
+		return nil
+	}
+	for _, extra := range probeTailsFor[tool] {
+		if a == extra {
+			return nil
+		}
+	}
+	if tool == "pkgutil" && pkgInfoRe.MatchString(a) {
+		return nil
+	}
+	return fmt.Errorf("argument %q is not an allowed version query", short(a))
 }
 
 // ParseToolchains reads toolchains.json strictly: unknown fields, duplicate
@@ -292,10 +315,8 @@ func parseToolchain(name string, raw json.RawMessage) (*Toolchain, error) {
 		if _, ok := e.Pins[argv[0]]; !ok {
 			return nil, fmt.Errorf("probe of %q: not one of this entry's pins", short(argv[0]))
 		}
-		for _, a := range argv[1:] {
-			if err := checkProbeArg(a); err != nil {
-				return nil, fmt.Errorf("probe of %q: %w", short(argv[0]), err)
-			}
+		if err := checkProbeTail(argv[0], argv[1:]); err != nil {
+			return nil, fmt.Errorf("probe of %q: %w", short(argv[0]), err)
 		}
 	}
 	rk, rv, err := objectMembers(j.Roots)

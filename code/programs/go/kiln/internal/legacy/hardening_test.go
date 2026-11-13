@@ -137,33 +137,64 @@ func TestProbeCleanupErrorIsReported(t *testing.T) {
 
 func TestProbeDefinitionsAreConstrained(t *testing.T) {
 	wrap := func(probe string) string {
-		return `{"a": {"pins": {"t": "1", "u": "image"}, "probes": [` + probe + `]}}`
+		return `{"a": {"pins": {"cargo": "1", "go": "1", "node": "1", "pkgutil": "image", "python3": "1", "t": "1", "uv": "1", "xcode-select": "image"}, "probes": [` + probe + `]}}`
 	}
 	bad := map[string]string{
-		"argv0 not pinned":  `["other", "--version"]`,
-		"path argument":     `["t", "/etc/passwd"]`,
-		"relative path arg": `["t", "./x"]`,
-		"space":             `["t", "--version x"]`,
-		"shell":             `["t", "a;b"]`,
-		"eval -c":           `["t", "-c"]`,
-		"eval -e":           `["t", "-e"]`,
-		"eval -E":           `["t", "-E"]`,
-		"eval -r":           `["t", "-r"]`,
-		"eval --eval":       `["t", "--eval"]`,
-		"eval -eval":        `["t", "-eval"]`,
-		"eval with value":   `["t", "--eval=x"]`,
-		"digit first":       `["t", "-1"]`,
-		"dash only":         `["t", "-"]`,
-		"triple dash":       `["t", "---v"]`,
+		"argv0 not pinned":     `["other", "--version"]`,
+		"cargo install":        `["cargo", "install", "x"]`,
+		"cargo install single": `["cargo", "install"]`,
+		"pip install":          `["python3", "-m", "pip", "install", "x"]`,
+		"python -m":            `["python3", "-m"]`,
+		"node -p":              `["node", "-p", "1"]`,
+		"node -p alone":        `["node", "-p"]`,
+		"uv tool run":          `["uv", "tool", "run", "x"]`,
+		"go install":           `["go", "install", "x"]`,
+		"go install alone":     `["go", "install"]`,
+		"go env":               `["go", "env"]`,
+		"version on non-go":    `["t", "version"]`,
+		"-p on non-xcode":      `["t", "-p"]`,
+		"pkg-info on non-pkg":  `["t", "--pkg-info=com.apple.x"]`,
+		"pkg-info bad id":      `["pkgutil", "--pkg-info=Com.apple"]`,
+		"pkg-info no dot":      `["pkgutil", "--pkg-info=comapple"]`,
+		"pkg-info extra":       `["pkgutil", "--pkg-info=com.apple.x", "y"]`,
+		"two args":             `["t", "--version", "--version"]`,
+		"path argument":        `["t", "/etc/passwd"]`,
+		"space":                `["t", "--version x"]`,
+		"eval -c":              `["t", "-c"]`,
+		"eval -e":              `["t", "-e"]`,
+		"eval --eval":          `["t", "--eval"]`,
+		"empty argument":       `["t", ""]`,
+		"long flag guess":      `["t", "--versions"]`,
 	}
 	for name, p := range bad {
 		if _, err := ParseToolchains([]byte(wrap(p))); err == nil {
 			t.Errorf("%s accepted", name)
 		}
 	}
-	for _, p := range []string{`["t", "--version"]`, `["t", "-V"]`, `["t", "version"]`, `["u", "--pkg-info=com.apple.pkg.CLTools_Executables"]`, `["t", "-version"]`, `["t"]`} {
+	for _, p := range []string{
+		`["t"]`, `["t", "--version"]`, `["t", "-version"]`, `["t", "-V"]`, `["t", "-v"]`, `["t", "-vV"]`,
+		`["t", "--numeric-version"]`, `["go", "version"]`, `["xcode-select", "-p"]`,
+		`["pkgutil", "--pkg-info=com.apple.pkg.CLTools_Executables"]`,
+	} {
 		if _, err := ParseToolchains([]byte(wrap(p))); err != nil {
 			t.Errorf("%s refused: %v", p, err)
+		}
+	}
+}
+
+func TestProbeDetailIsNormalised(t *testing.T) {
+	f := newProbeFixture(t)
+	f.exe("ltool")
+	rs, err := f.tc.Probe([]string{"lang"}, "linux", ProbeOptions{Root: f.checkout, Home: f.home,
+		Run: func(ProbeRun) ([]byte, error) {
+			return []byte("bad"), errors.New("fork/exec /Users/alice/bin/ltool: no such file")
+		}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, r := range rs {
+		if r.Tool == "ltool" && (strings.Contains(r.Detail, "alice") || strings.Contains(r.Detail, "/Users") || !strings.Contains(r.Detail, "bad")) {
+			t.Fatalf("detail %q", r.Detail)
 		}
 	}
 }

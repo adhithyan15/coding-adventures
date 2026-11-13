@@ -285,10 +285,13 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res
 			}
 			note(tool, ProbeMismatch)
 			if _, seen := detail[tool]; !seen {
-				d := strings.Join(strings.Fields(normalizeProbe(out)), " ")
+				// The run error can name the runner's paths or user; it goes
+				// through the same normalisation as the output.
+				d := string(out)
 				if runErr != nil {
-					d = "(" + short(runErr.Error()) + ") " + d
+					d = "(" + runErr.Error() + ") " + d
 				}
+				d = strings.Join(strings.Fields(normalizeProbe([]byte(d))), " ")
 				detail[tool] = short(d)
 			}
 		}

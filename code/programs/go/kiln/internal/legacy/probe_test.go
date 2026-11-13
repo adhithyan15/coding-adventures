@@ -102,7 +102,7 @@ func newProbeFixture(t *testing.T) *probeFixture {
 	f.tc = mustToolchains(t, `{
 	  "img":  {"always": true, "pins": {"imgtool": "image"}, "probes": [["imgtool", "--version"]], "roots": {"imgtool": ["$HOME/bin"]}},
 	  "lang": {"pins": {"gone": "1.0", "ltool": "2.0.1", "nopin": "image", "other": "7.7"},
-	           "probes": [["ltool", "--version"], ["ltool", "-V"], ["other", "-v"], ["gone", "-v"], ["nopin", "-x"]],
+	           "probes": [["ltool", "--version"], ["ltool", "-V"], ["other", "-v"], ["gone", "-v"], ["nopin", "-v"]],
 	           "roots": {"ltool": ["$HOME/bin"]}}
 	}`)
 	return f

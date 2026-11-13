@@ -604,10 +604,14 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     A pin is `image` or an exact version (a digit first, then letters, digits and
     `._+-`); `latest`, ranges and empty pins are refused. At most 256 entries, 8
     probes of at most 8 arguments each (a probe's `argv[0]` must be a tool the
-    same entry pins; `image` counts. Its arguments are a flag such as `-v`,
-    `--version` or `--pkg-info=x`, or a bare word such as `version`; no path, no
-    space, and never an interpreter eval flag: `-c`, `-e`, `-E`, `-r`, `-eval`,
-    `--eval`, `--exec`, `--command`, with or without `=value`), 16 directories per tool. A tool pinned in
+    same entry pins; `image` counts. The arguments after it are a CLOSED
+    allowlist of whole tails, not a shape: at most one argument, one of `--version`,
+    `-version`, `-V`, `-v`, `-vV`, `--numeric-version`, or a per-tool query:
+    `go version`, `xcode-select -p`, and `pkgutil --pkg-info=<reverse-DNS id>`
+    (`^--pkg-info=[a-z0-9]+(\.[A-Za-z0-9_-]+)+$`). Everything else is refused at
+    load, so no probe can install, fetch, evaluate or run code (`cargo install`,
+    `python3 -m pip`, `node -p`, `uv tool run`, `go install`). `erl` has no safe
+    version flag, so it has no probe: its pin is identity only, unverified), 16 directories per tool. A tool pinned in
     two entries must carry the same pin and the same roots, or the file is
     refused. Every policy file (`toolchains.json`, `env.json`,
     `host-roots.json`, `pinned.json`, `never.json`) is decoded case-exactly and
@@ -663,7 +667,11 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     binaries read it). On Unix each probe leads its own process group and a
     timeout kills the group. A `HOME` that is not absolute and clean, or holds the
     list separator, is treated as unset, so its roots are skipped. Failing to
-    remove the probe's private directory is an error. The run's environment is exactly `PATH`, `LANG=C`,
+    remove the probe's private directory is an error. The overall 120 s deadline
+    is checked between probes, so one probe can overrun it by up to its own 10 s,
+    and a timed-out tool is reported `timeout` whatever its output would have
+    shown (a timeout can mask a mismatch). The error text of a failed run goes
+    through the same normalisation as the output before it is kept as `detail`. The run's environment is exactly `PATH`, `LANG=C`,
     `LC_ALL=C`, `TZ=UTC` and a private `HOME`, in a private working directory.
     Probes run once per plan over the entries any package uses, and only for the
     platform the machine runs (`--probe` with another `--os` is a usage error).
