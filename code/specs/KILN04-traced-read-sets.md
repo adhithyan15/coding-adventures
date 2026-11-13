@@ -676,6 +676,13 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
 - Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
   read by Kiln's Git calls, so the recorder's `HOME`, `XDG_CONFIG_HOME` and
   `PATH` must not be writable from the sandbox.
+- The commit pin protects object ids, not the integrity of the object store. A
+  BUILD that could write `.git` could overwrite loose objects or
+  `.git/config`, so `.git` must be unwritable from the sandbox (the
+  `R/.git` mask is a requirement, not a convenience). Consider a post-build
+  `git fsck --connectivity-only` as a second line.
+- The caller keeps `Result.Commit` from the pre-build `VerifyTree` and passes
+  it as `expectedCommit` to the post-build call and to the merge job's call.
 
 ## 5. From trace to manifest
 

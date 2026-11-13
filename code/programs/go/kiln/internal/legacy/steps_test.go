@@ -128,6 +128,28 @@ func TestPoCDecodeLossy(t *testing.T) {
 	}
 }
 
+// Deep nesting is refused at the ninth level, so a megabyte of '[' costs a few
+// tokens, not a megabyte of decoder state. The check is on the count of tokens
+// consumed (bounded by the depth limit), not on a clock.
+func TestDecodeStepsDepthLimit(t *testing.T) {
+	deep := strings.Repeat("[", 1<<20)
+	if _, err := DecodeSteps([]byte(deep)); err == nil || !strings.Contains(err.Error(), "deeper than") {
+		t.Fatalf("got %v", err)
+	}
+	// Exactly the limit passes this pre-pass (the typed decode rejects the
+	// truncated document afterwards).
+	if err := checkTokens([]byte(strings.Repeat("[", MaxStepsDepth))); err != nil {
+		t.Fatalf("depth %d must pass the depth check: %v", MaxStepsDepth, err)
+	}
+	if err := checkTokens([]byte(strings.Repeat("{\"a\":", MaxStepsDepth+1))); err == nil || !strings.Contains(err.Error(), "deeper than") {
+		t.Fatalf("objects: %v", err)
+	}
+	// The real shape is four deep and passes.
+	if err := checkTokens([]byte(okSteps)); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestDecodeStepsScalarBudget(t *testing.T) {
 	var b strings.Builder
 	b.WriteString(`{"schema":"kiln-legacy-steps/1","os":"linux","packages":[{"package":"a","steps":[`)

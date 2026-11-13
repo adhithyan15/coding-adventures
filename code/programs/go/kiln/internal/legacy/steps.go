@@ -55,6 +55,7 @@ const StepsSchema = "kiln-legacy-steps/1"
 const (
 	MaxStepsBytes   = 16 << 20 // 16 MiB of JSON (the real repository's export is under 2 MiB)
 	MaxStepsScalars = 1 << 20  // strings and numbers in the whole document
+	MaxStepsDepth   = 8        // JSON nesting (a valid export is 4)
 	MaxStepsPerPkg  = 4096     // lines of one package
 	MaxStepLineSize = 1 << 20  // bytes of one line
 )
@@ -113,7 +114,7 @@ func ReadStepsFile(path string) (*Steps, error) {
 // an empty string and read as "an empty line").
 func checkTokens(data []byte) error {
 	dec := json.NewDecoder(bytes.NewReader(data))
-	scalars := 0
+	scalars, depth := 0, 0
 	for {
 		tok, err := dec.Token()
 		if err == io.EOF {
@@ -122,7 +123,18 @@ func checkTokens(data []byte) error {
 		if err != nil {
 			return err
 		}
-		if _, ok := tok.(json.Delim); ok {
+		if d, ok := tok.(json.Delim); ok {
+			// Token() has no depth limit of its own (a run of '[' costs memory
+			// per level), so count here and stop at once. A valid export is
+			// four deep: object, packages, package, steps.
+			switch d {
+			case '[', '{':
+				if depth++; depth > MaxStepsDepth {
+					return fmt.Errorf("nested deeper than %d levels", MaxStepsDepth)
+				}
+			default:
+				depth--
+			}
 			continue
 		}
 		if tok == nil {

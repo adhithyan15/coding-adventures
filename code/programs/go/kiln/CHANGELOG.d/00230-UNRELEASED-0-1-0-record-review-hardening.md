@@ -20,6 +20,9 @@
   anywhere, and a document with more than 2^20 values; `MaxStepsBytes` drops to
   16 MiB (the real export is 1.4 MiB). `ReadStepsFile` lstat-s and opens with
   `O_NOFOLLOW|O_NONBLOCK`, refusing a FIFO or a symlink.
+- `legacy.DecodeSteps` counts JSON nesting in its token pre-pass and refuses
+  anything deeper than `MaxStepsDepth` (8; a valid export is 4), so a run of
+  `[` no longer costs memory per level.
 - KILN04 section 4.8 updated, with a "Pending for PR 2b" list.
 
 ### Tests
