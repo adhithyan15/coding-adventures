@@ -394,21 +394,36 @@ subtest 'peer_addr and local_addr' => sub {
 # definitely not listening.
 
 subtest 'connection refused' => sub {
-    # Bind to get a port, then close immediately
-    my $tmp = IO::Socket::INET->new(
-        LocalAddr => '127.0.0.1',
-        LocalPort => 0,
-        Proto     => 'tcp',
-        Listen    => 1,
-    ) or die "Cannot create temp listener: $!";
-    my $port = $tmp->sockport();
-    $tmp->close();
+    # Bind to get a port, then close immediately.
+    #
+    # A connect to a port that was just freed can, rarely, be given that very
+    # port as its OWN ephemeral source port, so the socket connects to itself
+    # (TCP simultaneous open) and the connect "succeeds".  That is a property of
+    # the OS port allocator, not of the client, so when it happens we simply
+    # pick another port; only a connect that really reached a closed port can
+    # prove the refusal path.
+    my ($err, $port, $attempts);
+    for my $try (1 .. 5) {
+        $attempts = $try;
+        my $tmp = IO::Socket::INET->new(
+            LocalAddr => '127.0.0.1',
+            LocalPort => 0,
+            Proto     => 'tcp',
+            Listen    => 1,
+        ) or die "Cannot create temp listener: $!";
+        $port = $tmp->sockport();
+        $tmp->close();
 
-    eval { connect('127.0.0.1', $port) };
-    my $err = $@;
+        my $conn = eval { connect('127.0.0.1', $port) };
+        $err = $@;
+        last if $err;                       # refused: this is what we test
+        $conn->close() if $conn;            # self-connect: try another port
+    }
     ok(ref $err && $err->isa('CodingAdventures::TcpClient::TcpError'),
-       'connection refused throws TcpError');
-    like($err->type(), qr/^(connection_refused|io_error)$/,
+       'connection refused throws TcpError')
+        or diag("port $port after $attempts attempt(s): "
+            . (defined $err && length $err ? "got '$err'" : 'connect did not fail'));
+    like(ref $err ? $err->type() : '', qr/^(connection_refused|io_error)$/,
          'error type is connection_refused or io_error');
 };
 
