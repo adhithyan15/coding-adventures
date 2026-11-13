@@ -1,0 +1,71 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/logic-gates.warrant.
+#
+# One line per Warrant operation: the public export that implements it, its host
+# signature where the Warrant type is not the default one, and the deliberate
+# faults the generated negative controls attack it with (VER04h section 6,
+# VER04j section 4.8).  Every export is a crate-root re-export of a gates.rs or
+# combinational.rs function (src/lib.rs); sequential.rs is not bound (LG01 "Next
+# slice").
+#
+# error=INVALID_INPUT: the export does not return a Result.  It PANICS on a value
+# that is not a bit, on a slice of the wrong length, and (decoder, demux) on a
+# width over 16.  The generated adapter contains the panic and reads it as
+# Err(INVALID_INPUT), exactly as gf256 reads a division by zero (VER04h section
+# 6).  A rejection claim therefore passes only when the crate really panics, and a
+# spurious panic on a valid input fails the claim that expected Ok.  The single
+# case cannot tell the reasons apart; tests/bit_domain.rs and
+# tests/decoder_width.rs pin the panic itself, in debug and in release builds.
+#
+# Scalar bit operations take and return u8 (a wire is 0 or 1); slices of bits are
+# `bytes`; `demux`'s n_outputs is a usize; tri_state returns Option<u8> (None is a
+# floating, high-impedance output); priority_encoder returns (bytes, u8).
+#
+# The faults.  A two-argument gate is attacked with saturate-add / saturate-sub
+# (the call is replaced by `a.saturating_add(b)`, which is wrong on at least one
+# row of every gate's truth table); a one-argument gate with shift-mask (the
+# argument is reduced mod 8, so the non-bit 8 would pass for 0); everything with a
+# Result is also attacked with missing-error (a panic becomes Ok(0), so only a
+# claim that demands a rejection can catch it).  Operations that return bytes also
+# get flip-result-bit and drop-last-result-byte; priority_encoder's valid flag gets
+# drop-consumed and off-by-one-consumed.
+#
+# proofs_not_live=<reason>: the Rust-subset front end refuses the sources
+# (warrant-ir/tests/logic_gates_proofs.rs records its message), so every steps
+# obligation is recorded `not-live` (VER04h section 9, check 18).
+#
+# exhaustive_budget is 2^24: mux_n_16_inputs_exhaustive enumerates every U16 data
+# word and every 4-bit select (2^20 cases) and the n-input claims enumerate U8 x
+# Nat.  Measured wall-clock cost: LG01 "Verification status".
+package logic_gates
+revision 0.1.0
+spec code/specs/logic-gates.warrant
+output code/packages/rust/logic-gates/tests/generated/warrant_evidence.rs
+seed 0x4c47_3031_5f57_4152
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+op and_gate export=and_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op or_gate export=or_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op xor_gate export=xor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op nand_gate export=nand_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op nor_gate export=nor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op xnor_gate export=xnor_gate error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op nand_and export=nand_and error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op nand_or export=nand_or error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op nand_xor export=nand_xor error=INVALID_INPUT faults=missing-error,saturate-add,saturate-sub proofs_not_live=frontend-refuses-lib
+op not_gate export=not_gate error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib
+op nand_not export=nand_not error=INVALID_INPUT faults=missing-error,shift-mask proofs_not_live=frontend-refuses-lib
+op and_n export=and_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
+op or_n export=or_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
+op xor_n export=xor_n args=bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
+op mux2 export=mux2 error=INVALID_INPUT faults=missing-error,saturate-add proofs_not_live=frontend-refuses-lib
+op mux4 export=mux4 args=u8,u8,u8,u8,bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
+op mux_n export=mux_n args=bytes,bytes error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
+op demux export=demux args=u8,bytes,usize ret=bytes error=INVALID_INPUT faults=missing-error,flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op decoder export=decoder args=bytes ret=bytes error=INVALID_INPUT faults=missing-error,flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op encoder export=encoder args=bytes ret=bytes error=INVALID_INPUT faults=missing-error,flip-result-bit,drop-last-result-byte proofs_not_live=frontend-refuses-lib
+op priority_encoder export=priority_encoder args=bytes ret=(bytes,u8) error=INVALID_INPUT faults=missing-error,drop-consumed,off-by-one-consumed proofs_not_live=frontend-refuses-lib
+op tri_state export=tri_state args=u8,u8 ret=opt<u8> error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib
