@@ -1,0 +1,198 @@
+{
+  "schema": "kiln-legacy-graph/1",
+  "packages": [
+    {
+      "name": "rust/core",
+      "rel_path": "code/packages/rust/core",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/cyc-a",
+      "rel_path": "code/packages/rust/cyc-a",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [
+          "rust/cyc-b"
+        ],
+        "linux": [
+          "rust/cyc-b"
+        ],
+        "windows": [
+          "rust/cyc-b"
+        ]
+      },
+      "dev_deps": [],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/cyc-b",
+      "rel_path": "code/packages/rust/cyc-b",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [
+        "rust/cyc-a"
+      ],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/parser",
+      "rel_path": "code/packages/rust/parser",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [
+          "rust/core"
+        ],
+        "linux": [
+          "rust/core"
+        ],
+        "windows": [
+          "rust/core"
+        ]
+      },
+      "dev_deps": [
+        "rust/support"
+      ],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": [
+        "java"
+      ]
+    },
+    {
+      "name": "rust/programs/closurec",
+      "rel_path": "code/programs/rust/closurec",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [
+        "code/specs/CV02-checked-bounded-provenance-graphs.md"
+      ],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/rng",
+      "rel_path": "code/packages/rust/rng",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [
+        "code/specs/fixtures/rng-v1"
+      ],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/support",
+      "rel_path": "code/packages/rust/support",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD",
+        "linux": "BUILD",
+        "windows": "BUILD"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/unix-only",
+      "rel_path": "code/packages/rust/unix-only",
+      "language": "rust",
+      "build_files": {
+        "darwin": "BUILD_mac_and_linux",
+        "linux": "BUILD_mac_and_linux",
+        "windows": null
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    },
+    {
+      "name": "rust/win-only",
+      "rel_path": "code/packages/rust/win-only",
+      "language": "rust",
+      "build_files": {
+        "darwin": null,
+        "linux": null,
+        "windows": "BUILD_windows"
+      },
+      "deps": {
+        "darwin": [],
+        "linux": [],
+        "windows": []
+      },
+      "dev_deps": [],
+      "repo_inputs": [],
+      "repo_input_globs": [],
+      "extra_toolchains": []
+    }
+  ]
+}

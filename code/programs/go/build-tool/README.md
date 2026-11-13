@@ -263,6 +263,29 @@ On Windows, use the compiled `.exe`:
 | `-shard-weights` | (none) | Measured per-package seconds (`ci-package-durations-v1`); selects locality-aware sharding v2 (see below) |
 | `-shard-index` | -1 | With `-plan-file`, run only that shard |
 | `-prune-leaf-targets` | false | Delete a leaf package's own Cargo `target/` once it has built (CI disk budget) |
+| `-emit-kiln-graph` | (none) | Write the `kiln-legacy-graph/1` export (KILN03 section 2) to this path and exit: every package, all three OSes, implies `-force` and `-language all`. Go-only; the other ports do not implement it |
+
+### Kiln legacy graph export
+
+`-emit-kiln-graph out.json` hands the repository's language knowledge to Kiln
+as plain data, so Kiln's core never has to parse a manifest. For every
+package (including ones that only have a BUILD file for another OS) it lists
+the selected BUILD file per OS (or `null`), direct dependencies per OS,
+`dev_deps` (the Cargo test-trigger relation, inverted), `repo_inputs` (every
+external input the change selector uses: the repository-input consumer table,
+the native fixture readers, the external corpora and the CV02 spec; built in
+`external_inputs.go` from the selector's own tables so they cannot drift) and `extra_toolchains`.
+Lists are sorted and de-duplicated, so output is byte-identical for a tree.
+See `kiln_graph.go` for the field-by-field contract and
+`testdata/kiln-legacy-graph.golden.json` for the pinned format. `repo_input_globs`
+holds pattern-valued inputs (`**` any depth, `*` within a segment), e.g. the
+Mosaic guard's `code/**/?*.mll`; `repo_inputs_unknown` is set only for a
+consumer that declares neither (none today).
+
+The CLI fails closed: it exits non-zero if no packages are found, if a
+selector relation names a package discovery did not find, if a package path
+cannot be made repo-relative, or if the output path is a symlink. The file is
+written atomically (temp file, fsync, rename).
 
 ### Sharding v1 and v2
 

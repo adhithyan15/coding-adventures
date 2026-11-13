@@ -1,11 +1,29 @@
+# Exact toolchain versions for this repository.
+#
+# This file is the source of truth for every toolchain a developer installs
+# locally. CI installs the same versions: code/scripts/toolchain_pins.py fails
+# the "Repo-wide metadata contracts" job if any `.github/workflows/*.yml`
+# version input disagrees with a value here (or with the CI-only pins in
+# code/specs/data/toolchain-pins.json), or if anything here floats.
+#
+# Never write `latest`, `stable`, `lts` or a bare major/minor: a floating pin
+# lets an upstream release change the compiler, linter or resolver under a
+# commit that did not change, which is exactly what a cached CI result must
+# not allow. To upgrade a tool, change the version here and run
+#
+#     python3 code/scripts/toolchain_pins.py check
+#
+# which names every workflow input that must move with it.
 [tools]
-cabal = "3.16.1.0"
-dart = "latest"
-ghc = "9.14.1"
-go = "latest"
+cabal = "3.10.3.0"
+dart = "3.12.2"
+ghc = "9.4.8"
+go = "1.26.1"
 gradle = "8.14"
 kotlin = "2.1.20"
-lua = "5.4"
-python = "3.12"
-ruby = "3.4"
-rust = "stable"
+lua = "5.4.7"
+node = "22.23.5"
+python = "3.13.17"
+ruby = "3.4.12"
+rust = "1.100.0"
+uv = "0.13.7"

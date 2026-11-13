@@ -209,6 +209,36 @@ const planFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/plan-"
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
 
+// External corpora whose native readers live in a package that does not own
+// the file. The selector below seeds these consumers; the Kiln graph export
+// (external_inputs.go) publishes the same relation from the SAME constants and
+// variables, so the two cannot drift.
+const (
+	starlarkOpcodeProviderCorpusPath = "code/specs/fixtures/starlark-opcode-provider-v1/cases.json"
+	compilerIRCorpusPath             = "code/specs/fixtures/compiler-ir-v1/cases.json"
+	gfmFencedBlockCorpusPath         = "code/specs/gfm-fenced-block-v1/cases.json"
+	gfmExtensionCorpusPath           = "code/specs/fixtures/gfm-extension-v1/cases.json"
+	bezier2dFlatteningCorpusPath     = "code/specs/fixtures/bezier2d-flattening-v1/cases.json"
+)
+
+var starlarkOpcodeProviderConsumers = []struct{ name, language string }{
+	{"go/starlark-compiler", "go"},
+	{"haskell/starlark-compiler", "haskell"},
+}
+
+var compilerIRCorpusConsumers = []struct{ name, language string }{
+	{"go/compiler-ir", "go"},
+}
+
+var gfmCorpusConsumers = []struct{ name, language string }{
+	{"typescript/gfm-parser", "typescript"},
+}
+
+var bezier2dFlatteningConsumers = []struct{ name, language string }{
+	{name: "csharp/bezier2d", language: "csharp"},
+	{name: "fsharp/bezier2d", language: "fsharp"},
+}
+
 // These are the program fronts whose native tests read sharedDiscoveryFixturePath.
 // A new direct consumer must extend this list and its test in the same change.
 var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
@@ -657,14 +687,8 @@ func selectPackageRoots(
 	// The committed Go and Haskell native readers consume this exact external
 	// corpus. Seed before the ordinary fixture early return, including deleted
 	// old paths, while preserving an explicitly single-language invocation.
-	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") {
-		consumers := []struct {
-			name, language string
-		}{
-			{"go/starlark-compiler", "go"},
-			{"haskell/starlark-compiler", "haskell"},
-		}
-		for _, consumer := range consumers {
+	if containsPath(changedFiles, starlarkOpcodeProviderCorpusPath) {
+		for _, consumer := range starlarkOpcodeProviderConsumers {
 			if language != "all" && language != consumer.language {
 				continue
 			}
@@ -684,45 +708,42 @@ func selectPackageRoots(
 	// BF03's native Go reader lives outside the shared fixture directory. Seed
 	// its real package before external-fixture early return, including deletion
 	// and a rename's old path. All downstream consumers follow the normal graph.
-	if containsPath(changedFiles, "code/specs/fixtures/compiler-ir-v1/cases.json") && (language == "all" || language == "go") {
+	if containsPath(changedFiles, compilerIRCorpusPath) && (language == "all" || language == "go") {
 		found := false
 		for _, pkg := range packages {
-			if pkg.Name == "go/compiler-ir" && pkg.Language == "go" {
+			if pkg.Name == compilerIRCorpusConsumers[0].name && pkg.Language == compilerIRCorpusConsumers[0].language {
 				found = true
 				break
 			}
 		}
 		if !found {
-			return nil, nil, fmt.Errorf("BF03 fixture consumer %q is missing from discovered packages", "go/compiler-ir")
+			return nil, nil, fmt.Errorf("BF03 fixture consumer %q is missing from discovered packages", compilerIRCorpusConsumers[0].name)
 		}
-		changed["go/compiler-ir"] = true
+		changed[compilerIRCorpusConsumers[0].name] = true
 	}
 	// TE04's bounded corpora are outside the reader package. Seed the actual
 	// TypeScript reader without statting either fixture so deletion and
 	// rename-old paths still exercise native tests and ordinary consumers.
-	gfmCorpusChanged := containsPath(changedFiles, "code/specs/gfm-fenced-block-v1/cases.json") ||
-		containsPath(changedFiles, "code/specs/fixtures/gfm-extension-v1/cases.json")
+	gfmCorpusChanged := containsPath(changedFiles, gfmFencedBlockCorpusPath) ||
+		containsPath(changedFiles, gfmExtensionCorpusPath)
 	if gfmCorpusChanged && (language == "all" || language == "typescript") {
 		found := false
 		for _, pkg := range packages {
-			if pkg.Name == "typescript/gfm-parser" && pkg.Language == "typescript" {
+			if pkg.Name == gfmCorpusConsumers[0].name && pkg.Language == gfmCorpusConsumers[0].language {
 				found = true
 				break
 			}
 		}
 		if !found {
-			return nil, nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", "typescript/gfm-parser")
+			return nil, nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", gfmCorpusConsumers[0].name)
 		}
-		changed["typescript/gfm-parser"] = true
+		changed[gfmCorpusConsumers[0].name] = true
 	}
 	// G2D02's bounded flattening corpus is consumed directly by both .NET
 	// implementations. Seed the exact readers before the external-fixture early
 	// return; deletion and rename-old paths must still exercise their tests.
-	if containsPath(changedFiles, "code/specs/fixtures/bezier2d-flattening-v1/cases.json") {
-		for _, consumer := range []struct{ name, language string }{
-			{name: "csharp/bezier2d", language: "csharp"},
-			{name: "fsharp/bezier2d", language: "fsharp"},
-		} {
+	if containsPath(changedFiles, bezier2dFlatteningCorpusPath) {
+		for _, consumer := range bezier2dFlatteningConsumers {
 			if language != "all" && language != consumer.language {
 				continue
 			}
@@ -1102,9 +1123,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	ciGates := flag.String("ci-gates", cigates.DefaultRegistryPath, "CI gate registry (repo-relative) used to decide which Actions jobs this change needs; empty disables gating")
 	validateBuildFiles := flag.Bool("validate-build-files", true, "Validate BUILD files against inferred dependency metadata and fail on mismatches")
 	pruneLeafTargets := flag.Bool("prune-leaf-targets", false, "Delete a package's own Cargo target/ and npm node_modules/ once it has built, when no package depends on it (CI disk budget; X-7)")
+	emitKilnGraph := flag.String("emit-kiln-graph", "", "Write the kiln-legacy-graph/1 export (every package, all OSes; implies -force and -language all) to this path, then exit")
 	clippy := flag.Bool("clippy", false, "For Rust packages, run `cargo clippy --all-targets -- -D warnings` before the BUILD commands and fail the package on any clippy warning")
 
 	flag.Parse()
+
+	// -emit-kiln-graph describes the whole repository, not a diff or a
+	// language slice (see kiln_graph.go): it implies -force and -language all.
+	if *emitKilnGraph != "" {
+		if *planFile != "" {
+			fmt.Fprintln(os.Stderr, "Error: -emit-kiln-graph cannot be combined with -plan-file (it needs full discovery).")
+			return 1
+		}
+		*force = true
+		*language = "all"
+	}
 
 	// Step 1: Find the repo root.
 	repoRoot := *root
@@ -1314,7 +1347,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 
 	if !usedPlan {
 		// Step 2: Discover packages.
-		packages, err = discovery.DiscoverPackages(codeRoot)
+		if *emitKilnGraph != "" {
+			// The export covers every OS, including packages that only
+			// have a BUILD file for another one.
+			packages, err = discovery.DiscoverPackagesAllPlatforms(codeRoot)
+		} else {
+			packages, err = discovery.DiscoverPackages(codeRoot)
+		}
 		if err != nil {
 			message, exitCode := formatDiscoveryError(err)
 			fmt.Fprintln(os.Stderr, message)
@@ -1322,6 +1361,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		}
 		if len(packages) == 0 {
 			fmt.Fprintln(os.Stderr, "No packages found.")
+			if *emitKilnGraph != "" {
+				// An export of nothing must not look like success.
+				return 1
+			}
 			return 0
 		}
 
@@ -1542,6 +1585,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// ── Emit plan and/or detect languages ─────────────────────────
 	//
 	// These are early-exit modes that compute metadata but don't build.
+
+	if *emitKilnGraph != "" {
+		return emitKilnLegacyGraph(triggerKnown, repoRoot, *emitKilnGraph, true)
+	}
 
 	if *emitPlan != "" {
 		return emitBuildPlanAgainst(

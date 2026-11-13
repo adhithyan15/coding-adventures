@@ -21,6 +21,7 @@
 - Added bounded `run_loaded_with_limit` execution with an observable
   `ExecutionResult`, allowing compiler backends to distinguish a halted guest
   from one that exhausted its instruction budget.
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed x1..x31 with `iter_mut().enumerate().skip(1)`; behaviour unchanged.
 
 ## [0.1.0] - 2026-03-19
 

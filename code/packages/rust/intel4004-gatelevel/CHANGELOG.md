@@ -37,6 +37,10 @@ All notable changes to this project will be documented in this file.
   only calls carrying the expected value, so a later overwrite cannot hide
   behind a valid first clock.
 
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/cpu.rs and src/stack.rs`: `needless_range_loop`: RAM restore and the hardware-stack reset/read iterate their containers directly; behaviour unchanged.
+
 ## [0.1.0] - 2026-03-21
 
 ### Added

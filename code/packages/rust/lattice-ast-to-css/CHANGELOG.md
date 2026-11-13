@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/transformer.rs`: `needless_bool`: `is_empty_artifact` returns its condition directly; behaviour unchanged.
+
 ## [0.2.2] - 2026-03-25
 
 ### Fixed

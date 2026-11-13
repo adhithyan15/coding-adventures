@@ -171,8 +171,8 @@ impl FPRegisterFile {
     /// registers to reduce noise.
     pub fn dump(&self) -> HashMap<String, f64> {
         let mut result = HashMap::new();
-        for i in 0..self.num_registers {
-            let val = bits_to_float(&self.values[i]);
+        for (i, bits) in self.values.iter().enumerate().take(self.num_registers) {
+            let val = bits_to_float(bits);
             if val != 0.0 {
                 result.insert(format!("R{}", i), val);
             }
@@ -185,8 +185,8 @@ impl FPRegisterFile {
     /// Unlike [`dump()`](Self::dump), this includes zero-valued registers.
     pub fn dump_all(&self) -> HashMap<String, f64> {
         let mut result = HashMap::new();
-        for i in 0..self.num_registers {
-            result.insert(format!("R{}", i), bits_to_float(&self.values[i]));
+        for (i, bits) in self.values.iter().enumerate().take(self.num_registers) {
+            result.insert(format!("R{}", i), bits_to_float(bits));
         }
         result
     }

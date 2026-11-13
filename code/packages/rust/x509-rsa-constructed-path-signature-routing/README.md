@@ -28,6 +28,44 @@ policy, and advanced state together. That lower-level transition remains
 available for generalized traversal code, but it cannot directly create the
 fixed reviewed two-link result.
 
+A distinct ordered-transition entry point accepts only the stronger
+Name-policy-backed reviewed-construction initializer. It requires the same
+exact terminal routed proof and complete anchor-nearest intermediate policy as
+the generic entry point, advances through the same shared checks, and retains
+the initializer's exact validated Name-value policy, reviewed-root selection,
+certificate-wide anchor role policy, construction-derived capacity, terminal
+signature, child policy, and advanced state together. A generic initializer or
+proof from another construction cannot produce this result. This is only the
+first ordered public-certificate transition; the available Name rules remain
+incomplete for RFC 5280 Name equality, and no later transition, complete path
+validation, constraint, revocation, TLS, HTTP, OAuth, or network authority is
+added.
+
+A second stronger entry point consumes that policy-backed first-step result
+only with the immediately target-nearer routed adjacency from the same exact
+construction. Its issuer must be the already processed anchor-nearest
+intermediate, and complete policy must retain its exact candidate child before
+the prior path-length state advances. Success retains the exact Name-value
+policy, reviewed-root and anchor-role evidence, both routed signatures, both
+intermediate policies, and the twice-advanced state. Generic first-step
+evidence, detached constructions, skipped depths, disconnected issuers, target
+children, and cross-certificate policy fail closed. This proves exactly two
+ordered intermediate steps; it does not add arbitrary traversal, complete path
+or Name validation, constraints, revocation, TLS, HTTP, OAuth, or network
+authority.
+
+A stronger allocation-free accumulator now accepts only the Name-policy-backed
+reviewed initializer and the same bounded ordered evidence used by the generic
+accumulator. Both entry points share one private traversal implementation for
+construction-derived counts, the caller ceiling, exact construction identity,
+immediate depth order, issuer continuity, authenticated candidate children,
+complete intermediate policy, and path-length advancement. The stronger result
+retains the exact Name-value policy, reviewed-root selection, anchor-role
+policy, construction-derived initial capacity, both borrowed evidence slices,
+processed count, and final state. It stops before the target signature and does
+not add complete RFC 5280 Name or path validation, constraints, revocation,
+TLS, HTTP, OAuth, or network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

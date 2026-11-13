@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Build uses the pinned toolchain.** `BUILD` and `BUILD_windows` call
+  `cargo` directly instead of `rustup run stable cargo`. CI now installs the
+  exact Rust release named in the root `mise.toml` rather than the floating
+  `stable` channel, so naming `stable` here would have run a different
+  compiler (or none) from the rest of the build.
+
 - **Schematic import and export work natively.** They now use UI87's standard
   `files.open` / `files.save` kinds with `accept: ["application/json"]`. The
   retired singular `file.*` kinds were answered only by the browser executor,
