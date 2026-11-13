@@ -63,21 +63,6 @@
       "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Erlang/OTP link step (headers or import library) wired up per OS.",
       "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
     },
-    "packages/rust/font-parser-node": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Node.js link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
-    "packages/rust/font-parser-python": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Python link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
-    "packages/rust/font-parser-ruby": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Ruby link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
     "packages/rust/lua-bridge": {
       "category": "tracked-follow-up",
       "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Lua 5.4 link step (headers or import library) wired up per OS.",
@@ -88,20 +73,10 @@
       "reason": "Metal compute bindings; requires macOS/Apple frameworks.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
     },
-    "packages/rust/node-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Node.js link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
     "packages/rust/objc-bridge": {
       "category": "intrinsic-apple",
       "reason": "Objective-C runtime bridge; requires macOS/Apple frameworks.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
-    },
-    "packages/rust/os-kernel": {
-      "category": "tracked-follow-up",
-      "reason": "Targets x86_64-unknown-uefi (no_std); it cannot be built, tested or clippy-checked on a std host, so its recipe echoes on every OS. A UEFI-target CI lane is the planned fix.",
-      "evidence": "packages/rust/os-kernel/BUILD_windows; BUILD-002 W4 (remaining skips)"
     },
     "packages/rust/paint-metal": {
       "category": "intrinsic-apple",
@@ -118,25 +93,10 @@
       "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Perl link step (headers or import library) wired up per OS.",
       "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
     },
-    "packages/rust/python-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Python link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
-    "packages/rust/ruby-bridge": {
-      "category": "tracked-follow-up",
-      "reason": "Native-extension crate whose recipe only echoes 'compile-only' on every OS: it is not even compiled in CI. Needs the Ruby link step (headers or import library) wired up per OS.",
-      "evidence": "BUILD-002 W3 (native bridges: node import library, Lua lua54.lib, Elixir NIF link, Ruby MinGW vs MSVC ABI)"
-    },
     "packages/rust/tcp-reactor": {
       "category": "intrinsic-platform",
       "reason": "Readiness reactor built on Unix file descriptors (poll/kqueue/epoll); Windows has no equivalent of that API. rust/tcp-runtime is the cross-platform counterpart and runs its real tests on Windows. Policy decision pending on whether an IOCP path belongs in this crate.",
       "evidence": "BUILD-002 W4 (tcp-reactor, IOCP path); recipe directive build-tool: unsupported=RUST_TCP_REACTOR_REQUIRES_UNIX_FDS"
-    },
-    "packages/rust/twig-module-driver": {
-      "category": "tracked-follow-up",
-      "reason": "Self-compile tests reserve 768 MiB and 3 GiB thread stacks that fail to spawn on Windows hosts. The fix is to shrink the stacks or run the deep tests on a Windows-sized budget, not to skip the package.",
-      "evidence": "packages/rust/twig-module-driver/BUILD_windows; BUILD-002 principle 3 (make the work cheaper rather than skip it)"
     },
     "packages/starlark/builtins": {
       "category": "no-tests-by-design",
@@ -157,16 +117,6 @@
       "category": "intrinsic-apple",
       "reason": "Swift wrapper over the Metal C bridge; supported on macOS arm64 only.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
-    },
-    "programs/ruby/unix-tools": {
-      "category": "tracked-follow-up",
-      "reason": "Ruby unix-tools suite assumes Unix filesystem, user/group and tty semantics; the Windows leg is an echo skip. Needs the Unix-only tests gated individually so the rest run on Windows.",
-      "evidence": "BUILD-002 W4 (remaining skips: unix-tools)"
-    },
-    "programs/rust/unix-tools": {
-      "category": "tracked-follow-up",
-      "reason": "Rust unix-tools suite assumes Unix filesystem, user/group and tty semantics; the Windows leg is an echo skip. Needs the Unix-only tests gated individually so the rest run on Windows.",
-      "evidence": "BUILD-002 W4 (remaining skips: unix-tools)"
     },
     "programs/typescript/visicalc-deno": {
       "category": "no-tests-by-design",

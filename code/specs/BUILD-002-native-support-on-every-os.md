@@ -375,7 +375,7 @@ path to `{category, reason, evidence}`. Categories:
 | `intrinsic-apple` | Needs Apple frameworks (Metal, Objective-C); the audit checks the package itself names them | 11 |
 | `intrinsic-platform` | Bound to a platform API with no equivalent (`rust/tcp-reactor`; `rust/tcp-runtime` is its Windows counterpart) | 1 |
 | `no-tests-by-design` | Nothing to run: Starlark rule packages, the Python shell packages, `visicalc-deno`'s notes-only BUILD | 7 |
-| `tracked-follow-up` | A real gap with a plan: the native-extension crates of W3, `unix-tools`, `os-kernel`, `twig-module-driver`, `barcode-layout-1d` | 14 |
+| `tracked-follow-up` | A real gap with a plan: `perl/barcode-layout-1d` (own PR: dedicated registry owner item) and the three compile-only bridge crates that have no `BUILD_windows` and echo on every OS (`erl-nif-bridge`, `lua-bridge`, `perl-bridge`) | 4 |
 
 **Policy: the list only shrinks.**
 
@@ -391,11 +391,15 @@ path to `{category, reason, evidence}`. Categories:
    Everything else needs `intrinsic-platform` or `no-tests-by-design` with a
    stated reason, or it is a `tracked-follow-up` that is meant to disappear.
 
-Entries found while surveying that look like bugs rather than limits, now
-tracked as debt in the list: the nine `rust` native-extension crates
-(`font-parser-*`, `*-bridge`) echo "compile-only" on every OS, so they are not
-even compiled in CI; `twig-module-driver` skips Windows over thread-stack
-sizes; `os-kernel` needs a UEFI-target lane.
+Entries found while surveying that looked like bugs rather than limits were first
+tracked as debt in the list and then converted, which is the policy working: the
+Rust native-extension bridges (`font-parser-{node,python,ruby}`, `node-bridge`,
+`python-bridge`, `ruby-bridge`), `twig-module-driver` (its Windows failure was a
+verbatim `\\?\` path, not thread-stack size), `os-kernel` (a UEFI-target cross
+build is its real recipe) and both `unix-tools` packages all run real recipes on
+Windows, so ten entries were deleted and the `tracked-follow-up` cap went from
+14 to 4. What is left of the debt: `barcode-layout-1d`, and `erl-nif-bridge`,
+`lua-bridge` and `perl-bridge`, whose plain `BUILD` echoes on every OS.
 
 The scaffold generators no longer create the shapes the audit rejects: Haskell
 (Go and native generators), Perl (Go generator) and Lua now emit a real
