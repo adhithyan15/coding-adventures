@@ -138,7 +138,7 @@ func TestMemberResultsPropagate(t *testing.T) {
 	// A member's link that leaves the dependent's region.
 	f = newFixture(t)
 	f.symlink(pc+"/out", "../z/src.txt")
-	if got := scanReasonsOf(t, f, "x/a"); !contains(got, "escape:"+pc+"/out") {
+	if got := scanReasonsOf(t, f, "x/a"); !contains(got, "symlink:"+pc+"/out") {
 		t.Fatalf("%v", got)
 	}
 }
@@ -151,7 +151,7 @@ func TestDotDotTargetFollowsSymlinks(t *testing.T) {
 	// "hop/src.txt" has no ".." so it is not a ref; "../a/hop/src.txt" is, and
 	// it lands inside x/a textually but resolves through hop into x/z.
 	got := scanReasonsOf(t, f, "x/a")
-	if !contains(got, "escape:"+pa+"/hop") || !contains(got, "escape:"+pa+"/hop/src.txt") {
+	if !contains(got, "symlink:"+pa+"/hop") || !contains(got, "escape:"+pa+"/hop/src.txt") {
 		t.Fatalf("%v", got)
 	}
 	// Through a link that stays inside the closure it is fine.
@@ -274,7 +274,7 @@ func TestLinkTargetRules(t *testing.T) {
 	f.symlink(pa+"/back", `..\z\src.txt`)
 	f.symlink(pa+"/ok", "src.txt")
 	got := scanReasonsOf(t, f, "x/a")
-	wantReasons(t, got, "escape:"+pa+"/back")
+	wantReasons(t, got, "symlink:"+pa+"/back")
 
 	pl, err := f.planner()
 	if err != nil {

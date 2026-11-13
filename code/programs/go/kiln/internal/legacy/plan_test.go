@@ -388,7 +388,7 @@ func TestSymlinkedBuildFileIsPerPackageEscape(t *testing.T) {
 	}
 	p := f.plan(baseGraph()) // must not abort
 	r := p.rec(t, "x/z")
-	if r.Key != "" || r.Class != ClassUncacheable || !contains(r.Reasons, "escape:BUILD") || r.Components.Recipe != "" {
+	if r.Key != "" || r.Class != ClassUncacheable || !contains(r.Reasons, "symlink:BUILD") || r.Components.Recipe != "" {
 		t.Fatalf("%+v", r)
 	}
 	if p.rec(t, "x/a").Key == "" {

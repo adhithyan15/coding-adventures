@@ -23,9 +23,18 @@ func scanReasonsOf(t *testing.T, f *fixture, name string) []string {
 	r := f.plan(baseGraph()).rec(t, name)
 	var out []string
 	for _, why := range r.Reasons {
-		if hasPrefixReason([]string{why}, "escape:") || hasPrefixReason([]string{why}, "indirect:") || hasPrefixReason([]string{why}, "unscanned:") {
+		if hasPrefixReason([]string{why}, "symlink:") {
 			out = append(out, why)
 		}
+	}
+	// Hints are what the text scans produce; none of them may ever be a reason.
+	for _, h := range r.Hints {
+		for _, p := range []string{"escape:", "indirect:", "unscanned:"} {
+			if hasPrefixReason([]string{h}, p) && hasPrefixReason(r.Reasons, p) {
+				t.Fatalf("%s: hint %q leaked into reasons %v", name, h, r.Reasons)
+			}
+		}
+		out = append(out, h)
 	}
 	return out
 }
@@ -70,7 +79,7 @@ const (
 // plan-level behaviour
 // ---------------------------------------------------------------------------
 
-func TestScansReasonRetiredToolsEnvRemains(t *testing.T) {
+func TestTraceReasonReplacesScansAndNothingIsCacheable(t *testing.T) {
 	f := newFixture(t)
 	f.write("code/kiln/legacy/pinned.json", `{"languages": ["x"]}`)
 	p := f.plan(baseGraph())
@@ -78,8 +87,8 @@ func TestScansReasonRetiredToolsEnvRemains(t *testing.T) {
 		if contains(r.Reasons, "m1-incomplete:scans") {
 			t.Fatalf("%s still carries m1-incomplete:scans", r.Name)
 		}
-		if !contains(r.Reasons, ReasonToolsEnv) {
-			t.Fatalf("%s lost %s", r.Name, ReasonToolsEnv)
+		if !contains(r.Reasons, ReasonToolsEnv) || !contains(r.Reasons, "m1-incomplete:trace") {
+			t.Fatalf("%s lost a standing reason: %v", r.Name, r.Reasons)
 		}
 		if r.Class == ClassCacheable {
 			t.Fatalf("%s is cacheable while tools-env is outstanding", r.Name)
@@ -91,8 +100,8 @@ func TestEscapeInNonBuildTextFile(t *testing.T) {
 	f := newFixture(t)
 	f.write(pa+"/src.txt", "see ../z/src.txt for details\n")
 	r := f.plan(baseGraph()).rec(t, "x/a")
-	if r.Class != ClassUncacheable || !contains(r.Reasons, "escape:"+pz+"/src.txt") {
-		t.Fatalf("%+v", r)
+	if r.Class != ClassUnpinned || !contains(r.Hints, "escape:"+pz+"/src.txt") || hasPrefixReason(r.Reasons, "escape:") {
+		t.Fatalf("a hint must not change the class: %+v", r)
 	}
 	if r.Key == "" {
 		t.Fatal("an escaping package must still get a key (measurement continues)")
@@ -182,7 +191,7 @@ func TestIndirectionInBuildAndOtherFiles(t *testing.T) {
 			if !contains(got, "indirect:"+pz+"/"+file) {
 				t.Errorf("%q in %s: not flagged (%v)", c, file, got)
 			}
-			if r := f.plan(baseGraph()).rec(t, "x/z"); r.Class != ClassUncacheable || r.Key == "" {
+			if r := f.plan(baseGraph()).rec(t, "x/z"); r.Class != ClassUnpinned || r.Key == "" {
 				t.Errorf("%q: %+v", c, r)
 			}
 		}
@@ -306,11 +315,17 @@ func TestHistogramGroupsScanReasons(t *testing.T) {
 	f.write(pz+"/src.txt", "../a/x\n")
 	f.write(pz+"/big.txt", strings.Repeat("a\n", maxScanBytes))
 	p := f.plan(baseGraph())
-	h := p.Histogram.Reasons
+	h := p.Histogram.Hints
 	if h["indirect"] != 1 || h["escape"] != 1 || h["unscanned"] != 1 {
 		t.Fatalf("%v", h)
 	}
-	for k := range h {
+	// Hint counts are kept apart from reason counts.
+	for _, k := range []string{"indirect", "escape", "unscanned"} {
+		if n := p.Histogram.Reasons[k]; n != 0 {
+			t.Fatalf("hint kind %q counted as a reason: %d", k, n)
+		}
+	}
+	for k := range p.Histogram.Reasons {
 		if strings.Contains(k, ":") && !strings.HasPrefix(k, "unpinned:") && !strings.HasPrefix(k, "m1-incomplete:") {
 			t.Fatalf("ungrouped reason %q", k)
 		}
@@ -328,7 +343,7 @@ func TestOverCapTextIsUnscanned(t *testing.T) {
 	f.write(pz+"/big.txt", strings.Repeat("a", maxScanBytes+1))
 	wantReasons(t, scanReasonsOf(t, f, "x/z"), "unscanned:"+pz+"/big.txt")
 	r := f.plan(baseGraph()).rec(t, "x/z")
-	if r.Class != ClassUncacheable || r.Key == "" {
+	if r.Class != ClassUnpinned || r.Key == "" {
 		t.Fatalf("%+v", r)
 	}
 }
@@ -494,7 +509,7 @@ func TestSymlinkInsideClosureIsFine(t *testing.T) {
 func TestSymlinkLeavingClosure(t *testing.T) {
 	f := newFixture(t)
 	f.symlink(pa+"/out", "../z/src.txt")
-	wantReasons(t, scanReasonsOf(t, f, "x/a"), "escape:"+pa+"/out")
+	wantReasons(t, scanReasonsOf(t, f, "x/a"), "symlink:"+pa+"/out")
 	r := f.plan(baseGraph()).rec(t, "x/a")
 	if r.Class != ClassUncacheable || r.Key == "" {
 		t.Fatalf("%+v", r)
@@ -502,7 +517,7 @@ func TestSymlinkLeavingClosure(t *testing.T) {
 	// The same link is fine for a package that has z in its closure.
 	g := baseGraph()
 	g.Packages[0].Deps["linux"] = append(g.Packages[0].Deps["linux"], "x/z")
-	if got := f.plan(g).rec(t, "x/a"); hasPrefixReason(got.Reasons, "escape:") {
+	if got := f.plan(g).rec(t, "x/a"); hasPrefixReason(got.Reasons, "symlink:") {
 		t.Fatalf("%v", got.Reasons)
 	}
 }
@@ -511,7 +526,7 @@ func TestSymlinkChains(t *testing.T) {
 	f := newFixture(t)
 	f.symlink(pa+"/l1", "l2")
 	f.symlink(pa+"/l2", "../z/src.txt")
-	wantReasons(t, scanReasonsOf(t, f, "x/a"), "escape:"+pa+"/l1", "escape:"+pa+"/l2")
+	wantReasons(t, scanReasonsOf(t, f, "x/a"), "symlink:"+pa+"/l1", "symlink:"+pa+"/l2")
 }
 
 func TestSymlinkLoop(t *testing.T) {
@@ -519,7 +534,7 @@ func TestSymlinkLoop(t *testing.T) {
 	f.symlink(pa+"/l1", "l2")
 	f.symlink(pa+"/l2", "l1")
 	f.symlink(pa+"/self", "self")
-	wantReasons(t, scanReasonsOf(t, f, "x/a"), "escape:"+pa+"/l1", "escape:"+pa+"/l2", "escape:"+pa+"/self")
+	wantReasons(t, scanReasonsOf(t, f, "x/a"), "symlink:"+pa+"/l1", "symlink:"+pa+"/l2", "symlink:"+pa+"/self")
 }
 
 func TestSymlinkHopLimit(t *testing.T) {
@@ -538,10 +553,10 @@ func TestSymlinkHopLimit(t *testing.T) {
 		t.Fatalf("%d hops must be allowed: %v", maxLinkHops, got)
 	}
 	got := chain(maxLinkHops + 1)
-	if !contains(got, "escape:"+pa+"/h00") {
+	if !contains(got, "symlink:"+pa+"/h00") {
 		t.Fatalf("%d hops must be refused: %v", maxLinkHops+1, got)
 	}
-	if contains(got, "escape:"+pa+"/h01") {
+	if contains(got, "symlink:"+pa+"/h01") {
 		t.Fatalf("h01 needs only %d hops: %v", maxLinkHops, got)
 	}
 }
@@ -555,7 +570,7 @@ func TestSymlinkLeavingRepositoryOrAbsolute(t *testing.T) {
 	f.symlink(pa+"/file-as-dir", "src.txt/x")
 	got := scanReasonsOf(t, f, "x/a")
 	for _, l := range []string{"up", "abs", "drive", "dotdot-in-the-middle", "file-as-dir"} {
-		if !contains(got, "escape:"+pa+"/"+l) {
+		if !contains(got, "symlink:"+pa+"/"+l) {
 			t.Errorf("%s: %v", l, got)
 		}
 	}
@@ -569,7 +584,7 @@ func TestSymlinkDirectoryLinks(t *testing.T) {
 	f.symlink(pa+"/via-in", "dir-in/src.txt")
 	f.symlink(pa+"/dot-slash", "./dir-in/./src.txt")
 	got := scanReasonsOf(t, f, "x/a")
-	want := []string{"escape:" + pa + "/dir-out", "escape:" + pa + "/via-out"}
+	want := []string{"symlink:" + pa + "/dir-out", "symlink:" + pa + "/via-out"}
 	wantReasons(t, got, want...)
 }
 
@@ -580,7 +595,7 @@ func TestSymlinkInReadsNotJustInPackage(t *testing.T) {
 	f.symlink("code/grammars/g/outside", "../../lang/other") // outside everything
 	for _, name := range []string{"x/c", "x/a"} {
 		got := scanReasonsOf(t, f, name)
-		wantReasons(t, got, "escape:code/grammars/g/outside")
+		wantReasons(t, got, "symlink:code/grammars/g/outside")
 	}
 	// x/z does not read it.
 	wantReasons(t, scanReasonsOf(t, f, "x/z"))
@@ -589,13 +604,13 @@ func TestSymlinkInReadsNotJustInPackage(t *testing.T) {
 func TestSymlinkInGlobAndFileReads(t *testing.T) {
 	f := newFixture(t)
 	f.symlink("code/lang/l.mll", "../../README.md") // matched by x/b's glob; target is not a read
-	wantReasons(t, scanReasonsOf(t, f, "x/b"), "escape:code/lang/l.mll")
-	wantReasons(t, scanReasonsOf(t, f, "x/a"), "escape:code/lang/l.mll")
+	wantReasons(t, scanReasonsOf(t, f, "x/b"), "symlink:code/lang/l.mll")
+	wantReasons(t, scanReasonsOf(t, f, "x/a"), "symlink:code/lang/l.mll")
 	// A read FILE that is itself a link (ancestor configuration).
 	f2 := newFixture(t)
 	f2.remove("code/packages/x/.npmrc")
 	f2.symlink("code/packages/x/.npmrc", "../../../code/lang/other")
-	wantReasons(t, scanReasonsOf(t, f2, "x/z"), "escape:code/packages/x/.npmrc")
+	wantReasons(t, scanReasonsOf(t, f2, "x/z"), "symlink:code/packages/x/.npmrc")
 }
 
 func TestSymlinkedFileCannotHideAnEscape(t *testing.T) {
@@ -605,7 +620,7 @@ func TestSymlinkedFileCannotHideAnEscape(t *testing.T) {
 	f.write(pz+"/evil.sh", "cd .. && cat ../../../etc/passwd\n")
 	f.symlink(pa+"/evil", "../z/evil.sh")
 	got := scanReasonsOf(t, f, "x/a")
-	wantReasons(t, got, "escape:"+pa+"/evil")
+	wantReasons(t, got, "symlink:"+pa+"/evil")
 }
 
 func TestLinkHelpers(t *testing.T) {

@@ -642,28 +642,35 @@ func (pl *planner) summarize(files []string) (scanSummary, error) {
 	return s, nil
 }
 
-// scanReasons applies KILN03 6 to a package whose closure is members and whose
+// scanFindings applies KILN03 6 to a package whose closure is members and whose
 // reads are items.  The files examined are every member's own files and every
 // read file; `../` targets (and symlinks) from ALL of them are judged against
 // THIS package's region, so a dependency's escape or indirection reaches its
-// dependents.  It returns the reasons.
-func (pl *planner) scanReasons(members []int, items []readItem) ([]string, error) {
+// dependents.
+//
+// It returns two lists.  `reasons` are the symlink findings (`symlink:<link>`):
+// a link that does not resolve inside the closure and reads is a real
+// escape the digest cannot see, and stays a hard reason.  `hints` are the
+// advisory text findings (`escape:`, `indirect:`, `unscanned:`): triage aids
+// that make no soundness claim and never change a class.
+func (pl *planner) scanFindings(members []int, items []readItem) (reasons, hints []string, err error) {
 	var all scanSummary
 	for _, q := range members {
 		s, err := pl.memberSummary(q)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		all.add(s)
 	}
 	for _, it := range items {
 		s, err := pl.itemSummary(it)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		all.add(s)
 	}
 	esc := append([]string{}, all.dyn...)
+	var badLinks []string
 	var allow *allowSet
 	region := func() *allowSet {
 		if allow == nil {
@@ -673,31 +680,40 @@ func (pl *planner) scanReasons(members []int, items []readItem) ([]string, error
 	}
 	// Every ref target and every link is walked through any symlinks it
 	// crosses (resolveLink) before the region check.
-	for _, group := range [][]string{sortedKeys(toSet(all.refs)), sortedKeys(toSet(all.links))} {
+	for i, group := range [][]string{sortedKeys(toSet(all.refs)), sortedKeys(toSet(all.links))} {
 		for _, x := range group {
 			res, err := pl.resolveLink(x)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 			if !res.ok || !region().ok(res.final) {
-				esc = append(esc, x)
+				if i == 0 {
+					esc = append(esc, x)
+				} else {
+					badLinks = append(badLinks, x)
+				}
 			}
 		}
 	}
-	var out []string
+	emit := func(prefix string, list []string) []string {
+		list = sortedKeys(toSet(list))
+		if len(list) > maxScanReasons {
+			list = list[:maxScanReasons]
+		}
+		out := make([]string, 0, len(list))
+		for _, v := range list {
+			out = append(out, prefix+printable(v))
+		}
+		return out
+	}
+	reasons = emit("symlink:", badLinks)
 	for _, k := range []struct {
 		prefix string
 		list   []string
 	}{{"escape:", esc}, {"indirect:", all.ind}, {"unscanned:", all.uns}} {
-		list := sortedKeys(toSet(k.list))
-		if len(list) > maxScanReasons {
-			list = list[:maxScanReasons]
-		}
-		for _, v := range list {
-			out = append(out, k.prefix+printable(v))
-		}
+		hints = append(hints, emit(k.prefix, k.list)...)
 	}
-	return out, nil
+	return reasons, hints, nil
 }
 
 // memberSummary is the summary of package q's own files (memoised).

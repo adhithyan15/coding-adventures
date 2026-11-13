@@ -56,7 +56,7 @@ func TestUnpinnedClassKeepsKey(t *testing.T) {
 	// nothing is cacheable yet.
 	g.Packages[2].Language = "x"
 	r = f.plan(g).rec(t, "x/a")
-	if r.Class != ClassUncacheable || len(r.Reasons) != 1 {
+	if r.Class != ClassUncacheable || len(r.Reasons) != 2 {
 		t.Fatalf("%+v", r)
 	}
 }

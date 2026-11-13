@@ -31,11 +31,16 @@ const (
 	ClassUncacheable = "uncacheable"
 )
 
+// ReasonTrace marks work still undone (KILN04): no traced read-set manifest
+// exists yet, and soundness for reuse comes only from one.  Every package
+// carries it, so none is ever `cacheable`.  Like ReasonToolsEnv it is an
+// "incomplete" reason, not a hard one.
+const ReasonTrace = "m1-incomplete:trace"
+
 // ReasonToolsEnv marks work still undone (7c-3).  Until tool and environment
 // identity exist, no package may be called cacheable, so every package carries
 // it.  It is an "incomplete" reason, not a hard one: it stops a package being
-// cacheable but does not hide the more informative `unpinned` class.  (The
-// escape scans landed in 7c-2; their reasons are hard.)
+// cacheable but does not hide the more informative `unpinned` class.
 const ReasonToolsEnv = "m1-incomplete:tools-env"
 
 // Components are the digests a key is made of, so two plans can be compared
@@ -54,6 +59,7 @@ type Record struct {
 	Key         string     `json:"key"`
 	Class       string     `json:"class"`
 	Reasons     []string   `json:"reasons"`
+	Hints       []string   `json:"hints"`
 	ClosureSize int        `json:"closure_size"`
 	Components  Components `json:"components"`
 }
@@ -70,6 +76,7 @@ type Sizes struct {
 type Histogram struct {
 	Classes      map[string]int `json:"classes"`
 	Reasons      map[string]int `json:"reasons"`
+	Hints        map[string]int `json:"hints"`
 	ClosureSizes Sizes          `json:"closure_sizes"`
 }
 
@@ -194,15 +201,16 @@ func (pl *planner) record(p int) (Record, error) {
 			consumed = append(consumed, *r.consumed)
 		}
 	}
-	reasons := map[string]bool{ReasonToolsEnv: true}
+	reasons := map[string]bool{ReasonToolsEnv: true, ReasonTrace: true}
 	hard := false
-	// Escape, indirection and unscanned rules (KILN03 6).  Hard reasons, but
-	// the key is still computed below: measurement never stops.
-	scan, err := pl.scanReasons(members, items)
+	// Symlink rules are hard reasons (KILN03 6); the text scans are advisory
+	// hints only and never touch `reasons` or the class.  The key is computed
+	// below either way: measurement never stops.
+	symlinks, hints, err := pl.scanFindings(members, items)
 	if err != nil {
 		return Record{}, err
 	}
-	for _, r := range scan {
+	for _, r := range symlinks {
 		reasons[r] = true
 		hard = true
 	}
@@ -261,7 +269,7 @@ func (pl *planner) record(p int) (Record, error) {
 	} else if info.Link {
 		// A symlinked BUILD file could point anywhere.  Fail closed for THIS
 		// package (no key) and keep planning the others.
-		reasons["escape:"+*bf] = true
+		reasons["symlink:"+*bf] = true
 		hard = true
 	} else {
 		contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
@@ -292,6 +300,8 @@ func (pl *planner) record(p int) (Record, error) {
 		rec.Reasons = append(rec.Reasons, r)
 	}
 	sort.Strings(rec.Reasons)
+	rec.Hints = append([]string{}, hints...)
+	sort.Strings(rec.Hints)
 	rec.Class = classify(hard, unpinned)
 	return rec, nil
 }
@@ -313,7 +323,7 @@ func classify(hard, unpinned bool) string {
 // reasonGroup collapses a reason to the kind the histogram counts: reasons
 // that embed a package or file name are grouped by their prefix.
 func reasonGroup(r string) string {
-	for _, p := range []string{"unknown-repo-inputs:", "never:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:"} {
+	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:"} {
 		if strings.HasPrefix(r, p) {
 			return p[:len(p)-1]
 		}
@@ -322,7 +332,7 @@ func reasonGroup(r string) string {
 }
 
 func histogram(recs []Record) Histogram {
-	h := Histogram{Classes: map[string]int{}, Reasons: map[string]int{}}
+	h := Histogram{Classes: map[string]int{}, Reasons: map[string]int{}, Hints: map[string]int{}}
 	sizes := make([]int, 0, len(recs))
 	for _, r := range recs {
 		h.Classes[r.Class]++
@@ -332,6 +342,13 @@ func histogram(recs []Record) Histogram {
 		}
 		for g := range groups {
 			h.Reasons[g]++
+		}
+		hgroups := map[string]bool{}
+		for _, hint := range r.Hints {
+			hgroups[reasonGroup(hint)] = true
+		}
+		for g := range hgroups {
+			h.Hints[g]++
 		}
 		sizes = append(sizes, r.ClosureSize)
 	}
