@@ -370,7 +370,7 @@ is the measured value of M0.
 ## 9. Commands and output
 
 ```
-kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows]
+kiln legacy-plan --graph <graph.json> --out <plan.json> [--os linux|darwin|windows] [--probe]
 kiln explain --plan <plan.json> <package>
 ```
 
@@ -427,18 +427,18 @@ must match them.
    digest is SHA-256 of the full KILN02 section encoding
    `str("inputs") || list(entries)`. The plan's component digests use the
    section encodings of `reads` and `consumed` from the key encoder.
-2. **Class precedence.** The temporary `m1-incomplete:*` reason (present
-   until tool/env identity lands; the escape scans landed in 7c-2, so
-   `m1-incomplete:scans` no longer exists) does not count when choosing
+2. **Class precedence.** The temporary `m1-incomplete:*` reason (the escape
+   scans landed in 7c-2 and tool/env identity in 7c-3, so
+   `m1-incomplete:scans` and `m1-incomplete:tools-env` no longer exist; only
+   `m1-incomplete:trace` remains) does not count when choosing
    between `unpinned` and `uncacheable`. Hard reasons — `unknown-repo-inputs`,
-   `never`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
+   `never`, `unknown-toolchain:<name>`, `no-build-file:<os>` — always give `uncacheable`; otherwise an
    unpinned closure language gives `unpinned`; `cacheable` needs no reason at
    all, so it is unreachable while any `m1-incomplete` reason remains. The text scans
    of §6 (`escape:`, `indirect:`, `unscanned:`) are advisory `hints`, not
    reasons, and play no part in the class. The hard symlink reasons
    (`symlink:<link>`) do. `m1-incomplete:trace` (no traced read-set manifest,
-   KILN04) is a standing reason beside `m1-incomplete:tools-env`, so
-   `cacheable` stays unreachable. A package carrying a hard reason still gets
+   KILN04) is the standing reason, so `cacheable` stays unreachable. A package carrying a hard reason still gets
    its key.
 3. **No BUILD for this OS.** A package whose `build_files[OS]` is `null` gets
    an empty key and reason `no-build-file:<os>`, but remains a closure member
@@ -587,3 +587,108 @@ must match them.
     computed. The histogram has a `hints` map beside `reasons`, counting each
     hint kind once per package under its prefix. `kiln explain` prints hints in
     their own section, labelled advisory.
+
+## 13. Implementation decisions (7c-3: tools and environment)
+
+Items continue the numbering of §11 and §12. (The loop item asked for a
+"§12"; §12 was taken by 7c-2, so this is §13.)
+
+22. **`toolchains.json` shape.** A bare object from entry name to entry,
+    sorted by name, with no duplicate keys. An entry has `pins` (required, may
+    be empty; tool name to version, sorted), `probes` (argv lists), `roots`
+    (tool name to PATH directories, sorted; each tool must be pinned in the same
+    entry) and the optional `always` (bool) and `os` (a sorted subset of
+    `linux`, `darwin`, `windows`, in the graph's spelling). Unknown fields are
+    refused. Names (entries and tools) are 1 to 64 bytes of letters, digits and
+    `._+-`, not starting with punctuation: no `:` (reserved for Kiln) and no `/`.
+    A pin is `image` or an exact version (a digit first, then letters, digits and
+    `._+-`); `latest`, ranges and empty pins are refused. At most 256 entries, 8
+    probes of at most 8 arguments each, 16 directories per tool. A tool pinned in
+    two entries must carry the same pin and the same roots, or the file is
+    refused.
+23. **Entry namespace.** Closure languages and `extra_toolchains` share one
+    namespace of entry names (`rust` is both a language and an extra toolchain).
+    The always-included set of §4 is the entries with `always: true` (`sh`, `cc`,
+    `strace` on Linux, `xcode` on macOS); every package gets them whether or not
+    its closure names them. A name with no entry is the hard reason
+    `unknown-toolchain:<name>` for every package whose closure holds it. The
+    language `unknown` (the two `code/sites` packages, which the old tool could
+    not classify) deliberately has no entry, so it gives that reason.
+24. **The `tools` section.** One KILN02 kind-2 entry per distinct tool name
+    (the binary name), `version` = the pin string, `identity` = the pin string,
+    or for `image` the `Host.ImageID()` bytes; sorted by name. The set is the
+    union of the entries for the closure's languages and extra toolchains plus the
+    always-included ones that apply to the OS. `ToolsFor(names, os, imageID)` is the
+    one function; it returns the unknown names separately. The digest of
+    `toolchains.json` is the consumed entry `policy:toolchains.json` (SHA-256 of the
+    file's bytes) in the static key; KILN04's weak key leaves it out.
+25. **Pin sources.** An exact pin is the version committed in `mise.toml`
+    (`go`, `python`, `uv`, `node`, `ruby`, `rust`, `ghc`, `cabal`, `dart`,
+    `gradle`, `kotlin`, `lua`), in `code/specs/data/toolchain-pins.json`
+    (`dotnet`, `elixir`, `erlang`, `bundler`) or asserted in `ci.yml` shell steps
+    (`opam`, `ocamlc`). Everything else (the C toolchain, `java` whose workflow
+    input is only a major version, `swift`, `perl`, `npm`, `cpanm`) is `image`.
+    A repository test compares each exact pin with these files, so a toolchain
+    bump that forgets Kiln fails.
+26. **Probe semantics.** A probe checks the pin whose tool name equals its
+    `argv[0]`; a probe whose tool has no pin, or an `image` pin, is run but
+    compared with nothing (`ok`). The pin must be a whole token of the normalised
+    output: tokens split at white space and `,;()[]"'<>`, trailing `.` and `:`
+    are cut, and a letters-only prefix is cut (`v22.1.0`, `go1.26.1`), so
+    `1.2.3` does not match `1.2.30` or `1.2.3-rc1`. Normalisation removes
+    absolute paths (recognised at a token start) and timestamps first. Statuses:
+    `ok`, `absent` (not found on the fixed PATH, or a dangling link),
+    `refused` (the real path is inside the checkout) and `mismatch` (the output
+    lacks the pin, or the run failed to start or timed out); a non-zero exit keeps
+    its output. Only `mismatch` is a finding, and it gives the soft reason
+    `probe-mismatch:<tool>` to every package whose key holds that tool. A tool's
+    reported status is the worst of its probes. The binary is run under the name
+    the PATH gave (rustup proxies and multi-call binaries read `argv[0]`) but
+    judged by its real path. The run's environment is exactly `PATH`, `LANG=C`,
+    `LC_ALL=C`, `TZ=UTC` and a private `HOME`, in a private working directory.
+    Probes run once per plan over the entries any package uses, and only for the
+    platform the machine runs (`--probe` with another `--os` is a usage error).
+    A tool whose entry lists no `roots` cannot be found on the fixed PATH and
+    reads as `absent`; adding roots is how a tool becomes probe-able.
+27. **`env.json`.** `{"names": [...]}`, strictly sorted; a name is
+    letters, digits and `_` (not starting with a digit) with an optional trailing
+    `*`. A bare `*`, a name with `:`, and any name or prefix that is secret-like
+    are refused when the file loads. Secret-like is §5's list (`TOKEN`, `SECRET`,
+    `PASSWORD`, `PASSWD`, `CREDENTIAL`, `AUTH`, `PRIVATE` anywhere, `_KEY` and
+    `_PAT` at the end, case-insensitively) joined with what `envscrub` removes
+    from child environments, so the two lists cannot disagree. After wildcard
+    expansion a matching set variable that is secret-like is an error naming the
+    variable (never its value). Names match case-sensitively on every OS, the
+    first of two entries with one name wins, and a value must be valid UTF-8.
+    Origin is always 0 (`env`). `PATH`, `HOME` and `TMPDIR` are not listed: the
+    KILN04 weak key owns them.
+28. **`ConstructPATH(tools, home)`.** Directories come from the `roots` of
+    exactly the given tools, in tool-name order and each tool's file order,
+    non-system directories first, then system ones (`/usr`, `/bin`, `/sbin`,
+    `/opt/homebrew`), first occurrence wins, joined with the OS list separator.
+    A leading `$HOME` is replaced by `home`; with no home such roots are left
+    out. It is not wired into anything yet. In the seed file `go`, `node`,
+    `python3` and `ruby` use `/opt/hostedtoolcache/<name>/<version>/x64/bin`,
+    `rustc` and `cargo` use `$HOME/.cargo/bin`, `ghc` uses `$HOME/.ghcup/bin`,
+    `dotnet` uses `$HOME/.dotnet`, and the always-included tools `/bin` and
+    `/usr/bin`; every other tool has no roots yet.
+29. **`host-roots.json`.** `roots` (strictly sorted by path; `path`, `kind`
+    `image`, `tool`, `state` or `ephemeral`, and `tool`, `ecosystem`,
+    `fetchers` only where the kind uses them), `ephemeral` and `absent-ok`
+    (strictly sorted). Paths are absolute or begin with `$HOME` (or `$TMPDIR`),
+    are clean, and contain no `..`; `ephemeral` allows `*` and `**`; `/`, `$HOME`
+    and `$TMPDIR` alone are too broad to be roots. A `tool` root names a tool
+    that `toolchains.json` pins (the tool's binary name, not the entry name), and
+    every `/opt/hostedtoolcache` directory on a tool's PATH must lie under a
+    `tool` root of that tool, so the two files cannot drift. The loader is
+    required (a missing file is an error). Its digest (`policy:host-roots.json`)
+    is for the KILN04 weak key; the static key does not use it, so editing the
+    file changes no static key. The seed lists only `image` and `tool` roots: no
+    `state` root, because state roots need `pinned.json` ecosystems and the
+    fetchers of KILN04 stage 5, and the image roots are the Linux layout.
+30. **Plan and explain.** The plan gains `env` (the sorted names that entered
+    every key), `probes` (only when `--probe` ran), per-record `tools`
+    (`name@pin`), and the component digests `tools` and `env` (the KILN02 section
+    encodings of §3.8 and §3.9). Environment values never appear. `explain`
+    prints the same. Since the environment is one for the whole run, `env` sits at
+    the plan level; each record carries only the digest.

@@ -33,6 +33,12 @@ type Options struct {
 	OS      string // linux | darwin | windows (the graph's spelling)
 	Arch    string // x64 | arm64 (KILN02 spelling)
 	Workers int    // hashing parallelism; 0 means a default bounded by CPU count
+	// Environ is the process environment ("NAME=value"), from which env.json
+	// selects the key's env section (KILN03 5).  nil means an empty one.
+	Environ []string
+	// Probe, when set, runs the toolchain probes (KILN03 4, `--probe`); nil
+	// leaves the tools to their pins alone.
+	Probe *ProbeOptions
 }
 
 // keyOS maps the graph's OS name to KILN02's.
@@ -130,6 +136,13 @@ type planner struct {
 	toolOnce sync.Once
 	tool     [32]byte
 	toolErr  error
+
+	tools     memo[toolsResult] // per distinct set of closure language names
+	envVars   []key.EnvVar
+	envNames  []string
+	envDigest [32]byte
+	probes    []ProbeResult
+	mismatch  map[string]bool
 }
 
 // workers returns the pool size: at most the caller's choice, else the CPU

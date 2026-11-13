@@ -34,7 +34,7 @@ func TestUnpinnedClassKeepsKey(t *testing.T) {
 	if r.Class != ClassUnpinned || r.Key == "" {
 		t.Fatalf("%+v", r)
 	}
-	for _, want := range []string{"unpinned:x", ReasonToolsEnv} {
+	for _, want := range []string{"unpinned:x", ReasonTrace} {
 		if !contains(r.Reasons, want) {
 			t.Fatalf("missing reason %s in %v", want, r.Reasons)
 		}
@@ -56,7 +56,7 @@ func TestUnpinnedClassKeepsKey(t *testing.T) {
 	// nothing is cacheable yet.
 	g.Packages[2].Language = "x"
 	r = f.plan(g).rec(t, "x/a")
-	if r.Class != ClassUncacheable || len(r.Reasons) != 2 {
+	if r.Class != ClassUncacheable || len(r.Reasons) != 1 || r.Reasons[0] != ReasonTrace {
 		t.Fatalf("%+v", r)
 	}
 }
