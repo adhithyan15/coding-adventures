@@ -44,6 +44,8 @@ const TRACK_ID = /^[a-z][a-z0-9-]*$/;
 
 export interface HumanLanguageLedgerPluginOptions {
   readonly curriculumRoot: string;
+  /** Unit-test runs read immutable fixtures and do not need dev-server HMR watches. */
+  readonly watchSources?: boolean;
 }
 
 type WatchFile = (path: string) => void;
@@ -345,6 +347,7 @@ export function humanLanguageLedgerPlugin(
   return {
     name: "human-language-ledgers",
     configureServer(server) {
+      if (options.watchSources === false) return;
       // Individual files are registered by `load`, which covers edits. Watch
       // the external curriculum root as well so a newly added or deleted shard
       // invalidates the corresponding virtual module instead of requiring a
@@ -372,9 +375,9 @@ export function humanLanguageLedgerPlugin(
       return resolveHumanLanguageLedgerId(id);
     },
     load(id) {
-      return loadHumanLanguageLedgerModule(id, options.curriculumRoot, (path) =>
-        this.addWatchFile(path),
-      );
+      return loadHumanLanguageLedgerModule(id, options.curriculumRoot, (path) => {
+        if (options.watchSources !== false) this.addWatchFile(path);
+      });
     },
   };
 }
