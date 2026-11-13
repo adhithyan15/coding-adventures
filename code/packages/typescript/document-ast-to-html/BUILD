@@ -1,1 +1,1 @@
-cd ../document-ast && npm install --silent && cd ../document-ast-to-html && npm install --silent && npx vitest run --coverage
+cd ../document-ast && npm ci --silent && cd ../document-ast-to-html && npm ci --silent && npx vitest run --coverage

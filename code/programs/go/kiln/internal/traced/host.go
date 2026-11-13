@@ -105,8 +105,12 @@ func (c *classifier) observeHost(abs string, present bool) {
 	if c.ephemeralMatch(abs) {
 		return
 	}
-	if c.isTmpRoot(abs) {
-		return // the fresh $HOME and TMPDIR directories themselves
+	if c.isTmpRoot(abs) || (c.cfg.Home != "" && abs == c.cfg.Home) {
+		// The fresh $HOME and TMPDIR directories themselves.  $HOME is also
+		// allowed when the checkout lies beneath it (hosted runners): it is the
+		// sandbox's tmpfs mount point, so the directory node is the same in
+		// every run.  Only the node: nothing under it (section 5.5).
+		return
 	}
 	if r := c.rootOf(abs); r != nil {
 		c.observeRoot(r, abs, present)

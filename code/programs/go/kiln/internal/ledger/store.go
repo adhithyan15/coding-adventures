@@ -117,6 +117,20 @@ type Store struct {
 // directory is an empty ledger.
 func Open(dir string, scope Scope) *Store { return &Store{dir: dir, scope: scope, fs: realFS} }
 
+// Scope reports which kind of ledger this store is.
+func (s *Store) Scope() Scope { return s.scope }
+
+// String names a scope as the command line spells it.
+func (s Scope) String() string {
+	switch s {
+	case Shared:
+		return "shared"
+	case Local:
+		return "local"
+	}
+	return "invalid"
+}
+
 // segInfo names one valid segment file.
 type segInfo struct {
 	name string

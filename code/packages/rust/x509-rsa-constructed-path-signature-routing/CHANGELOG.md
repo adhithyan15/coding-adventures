@@ -1,5 +1,113 @@
 # Changelog
 
+## 0.25.0 - 2026-11-13
+
+### Added
+
+- Added reviewed-anchor subordinate DNS-policy evaluation that accepts only the
+  Name-policy-backed subordinate-intermediate result.
+- Added retained Name-policy, reviewed-root, anchor-role, ordered target and
+  subordinate constraint, and payload-free reviewed-anchor evaluation-count
+  coverage over a checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic entry points derive the reviewed-anchor constraint
+  bytes, intermediate certificates, anchor-to-target order, and self-issued
+  classifications only through their consumed evidence, then use the same
+  bounded repository-owned reviewed-anchor subordinate evaluator.
+- The strong result retains the exact Name-value policy through the supported
+  reviewed-anchor subordinate DNS subset. It does not constrain subject
+  distinguished names, support every GeneralName or anchor constraint,
+  establish complete Name or path validity, check revocation, perform TLS or
+  HTTP, authorize OAuth transport, or grant network authority.
+
+## 0.24.0 - 2026-11-13
+
+### Added
+
+- Added subordinate-intermediate NameConstraints evaluation that accepts only
+  the Name-policy-backed ordered target policy result.
+- Added retained Name-policy, reviewed-root, anchor-role, ordered target and
+  subordinate constraint, and payload-free evaluation-count coverage over a
+  checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic entry points derive the intermediate certificates,
+  anchor-to-target order, and self-issued classifications only through their
+  consumed evidence, then use the same bounded repository-owned subordinate
+  constraint evaluator.
+- The strong result retains the exact Name-value policy through supported
+  subordinate-CA SAN constraints. It does not apply reviewed-anchor constraints
+  to subordinate CAs, constrain subject distinguished names, establish complete
+  Name or path validity, check revocation, perform TLS or HTTP, authorize OAuth
+  transport, or grant network authority.
+
+## 0.23.0 - 2026-11-13
+
+### Added
+
+- Added ordered intermediate NameConstraints evaluation that accepts only the
+  Name-policy-backed reviewed-anchor policy result.
+- Added retained Name-policy, reviewed-root, anchor-role, ordered
+  intermediate, target-signature, server-policy, anchor-policy, and
+  payload-free intermediate-constraint coverage over a checked-in
+  two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic results derive the target, validated SAN index,
+  intermediate certificates, and anchor-to-target order only through their
+  consumed evidence, then use the same bounded repository-owned ordered
+  constraint evaluator.
+- The strong result retains the exact Name-value policy through supported
+  intermediate target constraints. It does not constrain subordinate CA
+  names, support every GeneralName, establish complete Name or path validity,
+  check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
+  network authority.
+
+## 0.22.0 - 2026-11-12
+
+### Added
+
+- Added reviewed-anchor DNS-policy evaluation that accepts only the Name-
+  policy-backed arbitrary-depth target-signature closure.
+- Added retained Name-policy, reviewed-root, anchor-role, intermediate,
+  target-signature, server-policy, and anchor-policy coverage over a checked-in
+  two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic results derive the exact target, validated SAN index,
+  and reviewed-anchor constraint bytes only from their consumed closure, then
+  use the same bounded repository-owned supported permitted-DNS evaluator.
+- The strong result retains the exact Name-value policy through reviewed-anchor
+  policy. It does not establish complete Name or path validity, apply excluded
+  or non-DNS anchor constraints or every intermediate constraint, check
+  revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+  authority.
+
+## 0.21.0 - 2026-11-12
+
+### Added
+
+- Added a target-signature closure that accepts only the Name-policy-backed
+  arbitrary-depth intermediate accumulator.
+- Added retained Name-policy, reviewed-root, anchor-role, intermediate,
+  depth-zero target-signature, and complete server-policy coverage over a
+  checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic target-signature closures share one private
+  implementation of the exact-construction, depth-zero, construction-target,
+  target-nearest issuer, and exact server-policy checks.
+- The strong result retains the exact Name-value policy and all reviewed path
+  evidence through target authentication. It does not establish complete Name
+  or path validity, apply every constraint or revocation policy, perform TLS
+  or HTTP, authorize OAuth transport, or grant network authority.
+
 ## 0.20.0 - 2026-11-12
 
 ### Added

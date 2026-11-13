@@ -1,3 +1,3 @@
-cd ../trig && npm install --silent
-npm install --silent
+cd ../trig && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

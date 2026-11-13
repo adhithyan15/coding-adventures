@@ -51,7 +51,7 @@ func writeManifestSeg(t *testing.T, dir string, seq uint64, lines ...string) str
 func load(t *testing.T, dir string, now time.Time) (*ManifestSet, ManifestReport, error) {
 	t.Helper()
 	// dir is the manifests directory itself; OpenManifests wants its parent.
-	return OpenManifests(filepath.Dir(dir), Shared).Load(now)
+	return OpenManifests(filepath.Dir(dir), Shared).Load(now, nil)
 }
 
 func TestManifestRoundTripAndGolden(t *testing.T) {
@@ -437,7 +437,7 @@ func TestReaderFilesystemRefusals(t *testing.T) {
 	}
 	// A dir that is a file: listSegments error.
 	f := writeFile(t, t.TempDir(), "afile", []byte("x"))
-	if _, _, err := OpenManifests(f, Shared).Load(nowT); err == nil {
+	if _, _, err := OpenManifests(f, Shared).Load(nowT, nil); err == nil {
 		t.Error("ledger dir that is a file")
 	}
 }
@@ -638,7 +638,7 @@ func TestRecordWritesImmutableSegmentsNotRestamped(t *testing.T) {
 	if err != nil || len(segs) != 2 || segs[0].seq != 1 || segs[1].seq != 2 {
 		t.Fatalf("segments %+v %v", segs, err)
 	}
-	set, _, err := s.Load(nowT)
+	set, _, err := s.Load(nowT, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1084,14 +1084,14 @@ func TestPassLedgerIgnoresManifestsSubdirectory(t *testing.T) {
 		t.Error("'manifests' parses as a segment name")
 	}
 	// And the manifest reader never looks at the pass segments beside it.
-	if _, _, err := OpenManifests(ledgerDir, Shared).Load(nowT); err == nil {
+	if _, _, err := OpenManifests(ledgerDir, Shared).Load(nowT, nil); err == nil {
 		t.Error("the garbage manifest segment should make the manifest store unusable")
 	}
 	clean := t.TempDir()
 	if err := Open(clean, Shared).Record([]Record{pass(1, t0)}, trusted, nowT); err != nil {
 		t.Fatal(err)
 	}
-	set, rep, err := OpenManifests(clean, Shared).Load(nowT)
+	set, rep, err := OpenManifests(clean, Shared).Load(nowT, nil)
 	if err != nil || rep.Segments != 0 || set.Manifests(key(1)) != nil {
 		t.Errorf("manifest reader saw pass segments: %v %+v", err, rep)
 	}
@@ -1153,7 +1153,7 @@ func TestShort40TruncatesOnRuneBoundary(t *testing.T) {
 // ---------- hardening after the security review ----------
 
 func loadMap(dir string, lim manifestLimits) (map[[32]byte][]mEntry, ManifestReport, error) {
-	acc := newRetainer(nowT, false)
+	acc := newRetainer(nowT, false, nil)
 	rep, err := loadManifestDir(dir, lim, acc)
 	if err != nil {
 		return nil, rep, err
@@ -1238,7 +1238,7 @@ func TestRetainerIsBoundedAndMatchesBatchRetention(t *testing.T) {
 	for i := 0; i < 400; i++ {
 		m := mf(byte(1+i%3), fmt.Sprint(1000+i%97), t0.Add(time.Duration(i%7)*time.Minute),
 			fmt.Sprintf("path:f%d", i%11))
-		all = append(all, mEntry{m, uint64(1 + i/50), fmt.Sprintf("n%d", i/50), 1 + i%50})
+		all = append(all, mEntry{m: m, seq: uint64(1 + i/50), name: fmt.Sprintf("n%d", i/50), line: 1 + i%50})
 	}
 	// Reference: sort everything, then take the first K distinct ids per weak key.
 	want := map[[32]byte][]mEntry{}
@@ -1254,10 +1254,11 @@ func TestRetainerIsBoundedAndMatchesBatchRetention(t *testing.T) {
 			continue
 		}
 		seen[k] = true
+		e.id = id // the retainer keeps each verified id
 		want[e.m.Weak] = append(want[e.m.Weak], e)
 	}
 	for _, order := range []string{"forward", "reverse", "interleaved"} {
-		acc := newRetainer(nowT, false)
+		acc := newRetainer(nowT, false, nil)
 		feed := func(e mEntry) {
 			if err := acc.add(e); err != nil {
 				t.Fatal(err)
@@ -1339,7 +1340,7 @@ func TestSymlinkedLedgerDirectoriesAreRefused(t *testing.T) {
 	}
 	// Manifest store through a symlinked ledger directory.
 	ms := OpenManifests(link, Shared)
-	if set, _, err := ms.Load(nowT); err == nil || set != nil {
+	if set, _, err := ms.Load(nowT, nil); err == nil || set != nil {
 		t.Errorf("manifest Load through a symlinked ledger dir: %v %v", set, err)
 	}
 	if err := ms.Record([]Manifest{mf(2, "1", t0)}, trusted, nowT); err == nil {
@@ -1358,7 +1359,7 @@ func TestSymlinkedLedgerDirectoriesAreRefused(t *testing.T) {
 	if ents, _ := os.ReadDir(elsewhere); len(ents) != 0 {
 		t.Error("manifest write went through the link")
 	}
-	if _, _, err := s2.Load(nowT); err == nil {
+	if _, _, err := s2.Load(nowT, nil); err == nil {
 		t.Error("manifest Load through a symlinked manifests/")
 	}
 	snapLink := filepath.Join(base, "snaplink")

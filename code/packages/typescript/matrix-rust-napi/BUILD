@@ -19,5 +19,5 @@ cargo build -p matrix-rust-napi --release --manifest-path ../../rust/Cargo.toml
 cp ../../rust/target/release/libmatrix_rust_napi.dylib matrix_rust_napi.node 2>/dev/null || cp ../../rust/target/release/libmatrix_rust_napi.so matrix_rust_napi.node 2>/dev/null || cp ../../rust/target/release/matrix_rust_napi.dll matrix_rust_napi.node 2>/dev/null || (echo "matrix-rust-napi: no built shared library found in ../../rust/target/release/" >&2 && exit 1)
 
 # Standard TypeScript package build + test.
-npm install --silent
+npm ci --silent
 npx vitest run --coverage

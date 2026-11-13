@@ -811,6 +811,11 @@ jobs:
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_cargo_lockfiles.py'
+          # Every BUILD must install with `npm ci`, and every lock it relies
+          # on must exist, match its package.json and name only registry
+          # URLs with integrity hashes.
+          python3 code/scripts/npm_lockfiles.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_npm_lockfiles.py'
           # The central Gemfile.lock must keep agreeing with every Gemfile and
           # gemspec's third-party gems (names, requirement ranges, checksums).
           python3 code/scripts/ruby_pins_check.py
@@ -893,6 +898,11 @@ jobs:
           # `lang_matrix` row on the release or its IIR class representative.
           python3 code/scripts/release_inventory.py check --matrix
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
+          # RS01 pair evidence (`code/grammars/rust/pair-evidence.csv`): every
+          # copy is byte-identical to its source, every semantic-copy records
+          # all three conditions, and the rows cover exactly the pair files.
+          python3 code/scripts/rust_release_pairs.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_rust_release_pairs.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           # The native GFM reader trusts only the corpus accepted by this
@@ -4858,7 +4868,7 @@ jobs:
             uv pip install --system pytest
           fi
           if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
-            npm install -g jest
+            npm install -g jest@29.7.0
           fi
 
       - name: Restore selected Ruby to Windows PATH

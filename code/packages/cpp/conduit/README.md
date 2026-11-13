@@ -31,6 +31,18 @@ sh tools/run-tests.sh        # builds conduit-capi, compiles + runs the tests
 `native-static-libs`, and compiles each `tests/test_*.cpp` against it. A
 `CMakeLists.txt` is provided as the documented end-user path.
 
+On Windows (MSVC, from a Developer prompt with Rust installed):
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
+```
+
+`tools\run-tests.ps1` does the same job with `cl.exe`: it builds the MSVC
+`conduit_capi.lib`, links it with the system libraries a Rust staticlib needs
+(`kernel32 advapi32 ntdll userenv bcrypt ws2_32 synchronization`) and the
+dynamic CRT (`/MD`), and runs all three suites, including the end-to-end server
+test. `tests/net_compat.h` maps that test's BSD-socket client onto Winsock.
+
 ## Quick start
 
 ```cpp
@@ -110,4 +122,6 @@ exceptions so none unwind across the C ABI.
 and CR/LF guard), the Application DSL / settings / bind, and a full end-to-end
 server run (routes, params, POST echo, query, before-halt 503, throwing-handler→
 onError 500, custom 404, redirect 302, after-hook header stamping) driven by a
-POSIX-socket HTTP/1.0 client with a watchdog thread.
+loopback-socket HTTP/1.0 client (BSD sockets on Unix, Winsock on Windows, via
+`tests/net_compat.h`) with a watchdog thread. `tools\run-tests.ps1` runs the
+same suites on Windows.

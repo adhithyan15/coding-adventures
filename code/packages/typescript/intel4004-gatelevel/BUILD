@@ -1,1 +1,1 @@
-cd ../transistors && npm install --silent && cd ../logic-gates && npm install --silent && cd ../arithmetic && npm install --silent && cd ../intel4004-gatelevel && npm install --silent && npx vitest run
+cd ../transistors && npm ci --silent && cd ../logic-gates && npm ci --silent && cd ../arithmetic && npm ci --silent && cd ../intel4004-gatelevel && npm ci --silent && npx vitest run

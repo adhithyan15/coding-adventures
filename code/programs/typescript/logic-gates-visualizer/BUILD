@@ -1,9 +1,9 @@
-cd ../../../packages/typescript/logic-gates && npm install
-cd ../../../packages/typescript/transistors && npm install
-cd ../../../packages/typescript/pixel-container && npm install --quiet
-cd ../../../packages/typescript/paint-instructions && npm install --quiet
-cd ../../../packages/typescript/paint-vm && npm install --quiet
-cd ../../../packages/typescript/paint-vm-canvas && npm install --quiet
-cd ../../../packages/typescript/ui-components && npm install
-npm install
+cd ../../../packages/typescript/logic-gates && npm ci
+cd ../../../packages/typescript/transistors && npm ci
+cd ../../../packages/typescript/pixel-container && npm ci --quiet
+cd ../../../packages/typescript/paint-instructions && npm ci --quiet
+cd ../../../packages/typescript/paint-vm && npm ci --quiet
+cd ../../../packages/typescript/paint-vm-canvas && npm ci --quiet
+cd ../../../packages/typescript/ui-components && npm ci
+npm ci
 npx vitest run

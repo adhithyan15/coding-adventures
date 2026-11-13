@@ -1,10 +1,6 @@
 // Smoke test: launch the real demo app on an OS-assigned port and hit a few
-// routes. POSIX-socket client + watchdog thread.
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
+// routes. Loopback-socket client (BSD sockets on Unix, Winsock on Windows — see
+// net_compat.h) + watchdog thread.
 #include <atomic>
 #include <chrono>
 #include <iostream>
@@ -12,6 +8,7 @@
 #include <thread>
 
 #include "app.hpp"
+#include "net_compat.h"
 
 namespace {
 
@@ -22,25 +19,24 @@ struct Result {
 
 bool get(uint16_t port, const std::string& path, Result& out) {
     out = Result{};
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0) return false;
-    timeval tv{5, 0};
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    if (connect(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
-        close(fd);
+    netcompat::Socket fd = netcompat::open_tcp();
+    if (fd == netcompat::kInvalidSocket) return false;
+    netcompat::set_recv_timeout_seconds(fd, 5);
+    if (!netcompat::connect_loopback(fd, port)) {
+        netcompat::close_socket(fd);
         return false;
     }
     std::string req = "GET " + path + " HTTP/1.0\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n";
-    send(fd, req.data(), req.size(), 0);
+    if (netcompat::send_bytes(fd, req.data(), req.size()) < 0) {
+        netcompat::close_socket(fd);
+        return false;
+    }
     std::string raw;
     char buf[4096];
-    ssize_t n;
-    while ((n = recv(fd, buf, sizeof(buf), 0)) > 0) raw.append(buf, static_cast<size_t>(n));
-    close(fd);
+    long long n;
+    while ((n = netcompat::recv_bytes(fd, buf, sizeof(buf))) > 0)
+        raw.append(buf, static_cast<size_t>(n));
+    netcompat::close_socket(fd);
     auto sep = raw.find("\r\n\r\n");
     if (sep == std::string::npos) return false;
     out.body = raw.substr(sep + 4);

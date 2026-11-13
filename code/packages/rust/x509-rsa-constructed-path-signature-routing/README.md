@@ -66,6 +66,76 @@ processed count, and final state. It stops before the target signature and does
 not add complete RFC 5280 Name or path validation, constraints, revocation,
 TLS, HTTP, OAuth, or network authority.
 
+A matching stronger target-signature closure accepts only that Name-policy-
+backed accumulator. It applies the same shared exact-construction, depth-zero,
+construction-target, target-nearest issuer, and exact server-policy checks as
+the generic closure, then retains the policy-backed accumulator, routed target
+signature, and complete server policy together. The generic accumulator cannot
+produce this result. Success preserves the exact Name-value policy,
+reviewed-root selection, certificate-wide anchor-role policy, complete ordered
+intermediate evidence, final path-length state, and target authentication in
+one value. This still does not define complete Name comparison, validate the
+whole path, apply every constraint or revocation policy, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority.
+
+A matching stronger reviewed-anchor DNS-policy result accepts only the Name-
+policy-backed target-signature closure. It derives the exact target, validated
+SAN index, reviewed anchor, and optional constraint bytes only through that
+closure, then invokes the same bounded supported permitted-DNS evaluator as the
+generic result. Success retains the exact Name-value policy, reviewed-root
+selection, certificate-wide anchor-role policy, complete ordered intermediate
+and target-signature evidence, complete server policy, and any payload-free
+constrained-name count together. A generic target closure cannot produce this
+result. This covers only the supported reviewed-anchor DNS subset; it does not
+define complete Name comparison, validate the whole path, apply excluded or
+non-DNS anchor constraints or every intermediate constraint, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or grant network authority.
+
+A matching stronger ordered-intermediate policy accepts only that Name-policy-
+backed reviewed-anchor result. It derives the exact target, validated SAN
+index, complete intermediate sequence, and anchor-to-target traversal order
+only through the retained strong evidence, then invokes the same bounded
+supported DNS/IP NameConstraints evaluator as the generic result. Success
+retains the exact Name-value policy, reviewed-root selection, certificate-wide
+anchor-role policy, complete ordered signature and intermediate evidence,
+target authentication, reviewed-anchor DNS policy, constrained-intermediate
+count, and payload-free target DNS/IP counts together. The generic ordered
+policy cannot produce this stronger result. This applies supported
+intermediate constraints only to exact target identities; it does not constrain
+subordinate CA names, support every GeneralName, establish complete Name or
+path validity, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority.
+
+A matching stronger subordinate-intermediate policy accepts only that strong
+ordered target policy. It derives every complete intermediate policy, exact
+certificate, anchor-to-target order, and self-issued classification only
+through the retained strong evidence, then invokes the same bounded private
+subordinate DNS/IP NameConstraints evaluator as the generic result. Success
+retains the exact Name-value policy, reviewed-root selection, certificate-wide
+anchor-role policy, complete ordered signature and intermediate evidence,
+target authentication, reviewed-anchor and target-intermediate policy, and
+only payload-free subordinate application and repeated-name counts together.
+The generic subordinate policy cannot produce this stronger result. This does
+not apply reviewed-anchor constraints to subordinate CAs, constrain subject
+distinguished names, support every GeneralName, establish complete Name or
+path validity, check revocation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority.
+
+A matching stronger reviewed-anchor subordinate policy accepts only that
+strong subordinate-intermediate result. It derives the reviewed anchor's
+optional constraint bytes, every complete intermediate certificate, traversal
+order, and self-issued classification only through the retained strong
+evidence, then invokes the same bounded private permitted-DNS evaluator as the
+generic result. Success retains the exact Name-value policy, reviewed-root
+selection, certificate-wide anchor-role policy, complete ordered signature and
+intermediate evidence, all prior supported target and subordinate constraint
+evaluations, and only payload-free reviewed-anchor application and repeated-DNS
+counts together. The generic reviewed-anchor subordinate result cannot produce
+this stronger result. This does not constrain subordinate subject distinguished
+names, support every GeneralName or reviewed-anchor constraint, establish
+complete Name or path validity, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or grant network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

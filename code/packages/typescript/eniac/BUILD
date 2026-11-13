@@ -1,3 +1,3 @@
-cd ../transistors && npm install
-cd ../eniac && npm install
+cd ../transistors && npm ci
+cd ../eniac && npm ci
 npx vitest run
