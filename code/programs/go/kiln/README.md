@@ -128,6 +128,31 @@ Hashes and provenance only; no build output.
 - Segment names are pattern-checked before any path is built; symlinks and
   non-regular files are refused (regular-file check on the open descriptor).
 
+## Manifest store (`internal/ledger`, KILN04 stage 2)
+
+Manifests are a store-only record kind in a `manifests/` subdirectory of the
+ledger directory: for one weak key, the sorted names (`pkg:`, `path:`,
+`list:`) a traced build read. They hold names only, never digests, and can
+never cause a hit by themselves (the strong key still needs a pass record).
+The pass-ledger reader never opens that subdirectory, and a manifest line
+dropped among pass segments is refused (and the reverse).
+
+- `OpenManifests(ledgerDir, scope).Record(manifests, auth, now)` writes one
+  immutable segment through the same `Authority` gate as passes. Manifests
+  are not restamped. A record over 8,192 entries, 512 bytes per name or 1 MiB
+  per line is refused with `ErrManifestTooLarge` (`manifest-too-large`).
+- `.Load(now)` returns a `ManifestSet`; `Manifests(weak)` gives at most 4
+  manifests, newest first by `(run, at)`, with distinct ids (the id is the
+  SHA-256 of the entries list, verified on read). Records older than 30 days
+  are dropped, and a re-recorded id does not crowd out other read-sets.
+- Reader policy: an over-cap record or segment is dropped and reported in the
+  `ManifestReport`; structural corruption (non-canonical line, unknown field,
+  id mismatch, bad entry, a store over 256 MiB) makes the whole store
+  unusable and `Load` returns an error, so there are no hits.
+- `MergeManifests(snapshotDir, deltaFile, outDir, auth, now)` is the manifest
+  half of `ledger-merge`: it needs `Trusted()`, reads the delta strictly,
+  applies retention, and writes a deterministic new snapshot.
+
 ## Legacy keys (`legacy-plan`)
 
 `internal/legacy` implements the core of [KILN03](../../../specs/KILN03-legacy-keys.md):
@@ -312,3 +337,33 @@ rec, err := traced.Classify(cfg, traced.Input{
 
 The decisions are in KILN04 section 5.5. `FuzzClassify` checks the classifier
 never panics and always returns sorted, unique, clean output.
+
+## Traced keys (`internal/key/traced.go`, `internal/legacy/traced.go`, KILN04 stage 1b-ii)
+
+A traced action has two KILN02 keys of semantics version 2. The **weak key**
+covers what a trace cannot see (platform, image, BUILD recipe, the
+`tool:build-tool` and `policy:` digests, the static closure's tool pins, and the
+scrubbed environment). The **strong key** is the weak key with `consumed`
+replaced by `weak:` -> W plus one entry per manifest entry, each paired with its
+digest as it is now.
+
+```go
+tr, err := legacy.NewTraced(graph, opts, "/abs/checkout", []string{"-exec-wrapper=/k"})
+w, err := tr.WeakKey("code/packages/go/example") // *legacy.Refusal if not traceable
+env := w.Environ()                               // exactly what the recorder runs with
+s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py", "list:code/shared"})
+```
+
+- **Digests** (`internal/key`): `path:` states `00` absent, `01` directory,
+  `02||exec||SHA-256(content)` file, `03||bytes(target)` link; the missing-package
+  digest; the sorted listing digest; and `T(q)`, which adds the names of directly
+  nested packages to `D(q)`.
+- **Digest provider** (`Traced.CurrentDigests`): memoised, reads only the tracked
+  tree through `Source`, never the disk.
+- **`ScrubbedEnv`**: allowlist, then `HOME`/`TMPDIR`, then a constructed `PATH`,
+  then `LANG=C.UTF-8` and `TZ=UTC`, later steps winning. One source of truth for
+  the key and the recorder.
+- Only strong keys hold `weak:`, so the two can never collide. An entry that is
+  not `pkg:`, `path:` or `list:` is refused.
+- Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
+  verify-vectors` checks them.

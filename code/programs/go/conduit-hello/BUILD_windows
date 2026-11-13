@@ -1,1 +1,4 @@
-echo conduit-hello uses CGO + the Rust static lib — skipping on Windows
+# Windows: same flow as go/conduit -- tools\run-tests.ps1 builds the GNU-ABI
+# conduit-capi staticlib, puts MinGW gcc on PATH and runs `go test ./... -v`.
+# build-tool: deps=rust/conduit-capi go/conduit
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1
