@@ -1,4 +1,10 @@
-# build-conduit-capi-windows-gnu.ps1 -- build conduit-capi for Go's cgo on Windows.
+# build-conduit-capi-windows-gnu.ps1 -- build a Rust C-ABI crate for Go's cgo on Windows.
+#
+# Despite the name this is the shared "Rust staticlib for Go cgo on Windows"
+# helper.  With no parameters it builds conduit-capi (go/conduit and
+# go/conduit-hello); -CrateDir / -ArchiveName select another crate in the Rust
+# workspace, e.g. go/paint-codec-png-native passes
+#     -CrateDir paint-codec-png-c -ArchiveName libpaint_codec_png_c.a
 #
 # Why this script exists
 # ----------------------
@@ -34,7 +40,10 @@
 
 param(
     # This file lives in <repo>\code\scripts, so the repo root is two levels up.
-    [string]$RepoRoot = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
+    [string]$RepoRoot = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)),
+    # Crate directory under code\packages\rust and the staticlib archive it produces.
+    [string]$CrateDir = 'conduit-capi',
+    [string]$ArchiveName = 'libconduit_capi.a'
 )
 
 Set-StrictMode -Version Latest
@@ -60,7 +69,7 @@ function Get-NativeOutput([scriptblock]$Command) {
 
 $RepoRoot = (Resolve-Path -LiteralPath $RepoRoot).Path
 $rustWorkspace = Join-Path $RepoRoot 'code\packages\rust'
-$capiDir = Join-Path $rustWorkspace 'conduit-capi'
+$capiDir = Join-Path $rustWorkspace $CrateDir
 if (-not (Test-Path -LiteralPath $capiDir)) { throw "Missing crate directory: $capiDir" }
 foreach ($tool in 'cargo', 'rustup', 'go') {
     if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) { throw "$tool was not found on PATH." }
@@ -81,13 +90,13 @@ if ($rc -ne 0) { throw "cargo rustc failed with exit code $rc" }
 # The Go package hard-codes <workspace>\target\<triple>\release; a CARGO_TARGET_DIR
 # override would put the archive somewhere else and the link would fail late and
 # confusingly, so check here.
-$archive = Join-Path $rustWorkspace "target\$target\release\libconduit_capi.a"
+$archive = Join-Path $rustWorkspace "target\$target\release\$ArchiveName"
 if (-not (Test-Path -LiteralPath $archive)) {
     $dir = Split-Path -Parent $archive
     Write-Host "Contents of ${dir}:"
     if (Test-Path -LiteralPath $dir) { Get-ChildItem -LiteralPath $dir | ForEach-Object { Write-Host "  $($_.Name)" } }
     else { Write-Host '  (directory does not exist)' }
-    throw "libconduit_capi.a not found at $archive (is CARGO_TARGET_DIR set?)"
+    throw "$ArchiveName not found at $archive (is CARGO_TARGET_DIR set?)"
 }
 Write-Host ('==> staticlib   : {0} ({1:N0} bytes)' -f $archive, (Get-Item -LiteralPath $archive).Length)
 
