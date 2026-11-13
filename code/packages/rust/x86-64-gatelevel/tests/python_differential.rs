@@ -2,8 +2,8 @@ use coding_adventures_x86_64_gatelevel::{X86GateSimulator, X86State};
 
 fn seeded_state(cpu: &X86GateSimulator, program: &[u8], seed: usize) -> X86State {
     let mut state = cpu.get_state();
-    for index in 0..16 {
-        state.gpr[index] = ((seed as u64 + 1).wrapping_mul(0x9e37_79b9_7f4a_7c15))
+    for (index, reg) in state.gpr.iter_mut().enumerate().take(16) {
+        *reg = ((seed as u64 + 1).wrapping_mul(0x9e37_79b9_7f4a_7c15))
             ^ (index as u64).wrapping_mul(0xd1b5_4a32_d192_ed03);
     }
     state.gpr[0] = [0, 1, 0x8000_0000_0000_0000, u64::MAX][seed];

@@ -1795,6 +1795,26 @@ or other external effect. It does not check target authentication, complete
 Name semantics, time, hostname, revocation, TLS, HTTP, OAuth transport, or
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger bounded arbitrary-depth entry point now accepts only the retained
+Name-policy-backed initializer together with the same reviewed terminal,
+ordered routed-signature slice, ordered complete-intermediate-policy slice,
+and nonzero caller ceiling. It applies the identical construction-derived
+count, ceiling, exact-object, immediate-depth, issuer-continuity,
+authenticated-child, complete-policy, and path-length checks as the generic
+accumulator. Success retains the exact Name-value policy, reviewed trust-root
+selection, certificate-wide anchor-role policy, construction-derived initial
+capacity, both complete borrowed evidence slices, processed count, and final
+path-length state in one non-copyable result. A generic initializer or evidence
+from another construction cannot produce that result. This preserves stronger
+policy provenance through arbitrary-depth intermediate traversal only; it does
+not close the target signature, define complete RFC 5280 Name equality, apply
+all certificate or Name constraints, validate a complete path, check time,
+hostname, or revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. The pure public-certificate-data composition performs
+no parsing, new signature verification, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. Concrete HTTPS and live-provider
+readiness remain unavailable.
 A bounded target-signature closure now consumes that arbitrary-depth
 intermediate accumulator together with one already routed depth-zero signature
 proof and complete server-certificate policy. It fails closed unless the
@@ -1811,6 +1831,25 @@ closure only: it does not validate the anchor self-signature, generalize all
 certificate or Name policy across an arbitrary path, apply every intermediate
 NameConstraints value, verify the requested hostname, check revocation, or
 compose TLS, HTTP, OAuth transport, or network authority. The pure public-
+certificate-data composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A stronger target-signature closure follow-up consumes only the Name-policy-
+backed arbitrary-depth accumulator together with the same already routed depth-
+zero signature proof and complete server-certificate policy. It applies the
+identical exact-construction, depth-zero, exact-target-child, target-nearest-
+issuer, and exact-server-policy checks as the generic closure. Success retains
+the exact Name-value policy, reviewed trust-root selection, certificate-wide
+anchor-role policy, construction-derived path-length state, complete ordered
+intermediate evidence, target signature, and complete target policy in one
+non-copyable result. A generic accumulator cannot produce this stronger
+closure, and a target proof or policy from another construction fails closed
+even when its certificate bytes compare equal. This preserves stronger policy
+provenance across target-signature closure only; it does not define complete
+RFC 5280 Name equality, apply all certificate or Name constraints, validate a
+complete path, check time, hostname, or revocation, perform TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
 certificate-data composition performs no parsing, new signature verification,
 credential access or editing, signing, storage, clock acquisition, provider
 action, audit event, trace emission, I/O, network access, or other external

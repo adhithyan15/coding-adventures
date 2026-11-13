@@ -898,9 +898,9 @@ mod tests {
     #[test]
     fn make_module_grid_all_light() {
         let g = make_module_grid(5, 5, ModuleShape::Square);
-        for row in 0..g.rows as usize {
-            for col in 0..g.cols as usize {
-                assert!(!g.modules[row][col]);
+        for row in g.modules.iter().take(g.rows as usize) {
+            for &module in row.iter().take(g.cols as usize) {
+                assert!(!module);
             }
         }
     }

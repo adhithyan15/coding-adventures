@@ -1237,8 +1237,8 @@ mod tests {
         }
 
         assert_eq!(adder.results.len(), 10);
-        for i in 0..10 {
-            let got = bits_to_float(&adder.results[i]);
+        for (i, result) in adder.results.iter().enumerate().take(10) {
+            let got = bits_to_float(result);
             let want = (i as f64) + 1.0;
             assert_eq!(got as f32, want as f32, "result[{i}] = {got}, want {want}");
         }

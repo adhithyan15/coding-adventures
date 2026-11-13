@@ -772,9 +772,9 @@ impl Tensor {
             for (d, base) in base_indices.iter_mut().enumerate() {
                 if d == actual_dim { continue; }
                 let mut stride_without_dim = 1;
-                for d2 in (d + 1)..a.shape.len() {
+                for (d2, &dim_size) in a.shape.iter().enumerate().skip(d + 1) {
                     if d2 != actual_dim {
-                        stride_without_dim *= a.shape[d2];
+                        stride_without_dim *= dim_size;
                     }
                 }
                 *base = remaining / stride_without_dim;
@@ -1192,8 +1192,8 @@ fn compute_backward(grad_fn: &GradFn, grad_output: &[f64]) -> Vec<Option<Vec<f64
                 for (d, base) in base_indices.iter_mut().enumerate() {
                     if d == actual_dim { continue; }
                     let mut stride_without_dim = 1;
-                    for d2 in (d + 1)..ab.shape.len() {
-                        if d2 != actual_dim { stride_without_dim *= ab.shape[d2]; }
+                    for (d2, &dim_size) in ab.shape.iter().enumerate().skip(d + 1) {
+                        if d2 != actual_dim { stride_without_dim *= dim_size; }
                     }
                     *base = remaining / stride_without_dim;
                     remaining %= stride_without_dim;

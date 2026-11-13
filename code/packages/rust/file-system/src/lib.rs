@@ -1327,8 +1327,8 @@ impl VFS {
     /// Reads all directory entries from a directory inode.
     fn read_directory_entries(&self, inode: &Inode) -> Vec<DirectoryEntry> {
         let mut data = Vec::new();
-        for i in 0..DIRECT_BLOCKS {
-            match inode.direct_blocks[i] {
+        for direct_block in inode.direct_blocks.iter().take(DIRECT_BLOCKS) {
+            match *direct_block {
                 Some(block_num) => {
                     data.extend_from_slice(&Self::read_block_static(&self.blocks, block_num));
                 }

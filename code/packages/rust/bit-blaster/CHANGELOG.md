@@ -1,5 +1,11 @@
 # Changelog — `bit-blaster`
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/bv.rs`: `needless_range_loop`: `mul` walks the multiplier bits with `iter().enumerate()`; behaviour unchanged.
+
 ## 0.2.0 — 2026-11-09
 
 Faithfulness audit (VER10 §9). No bug was found in the existing encoding:

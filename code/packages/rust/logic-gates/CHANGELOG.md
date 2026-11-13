@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/sequential.rs`: `needless_range_loop`: the counter increment iterates `state.value` directly; behaviour unchanged.
+
 ## [0.4.0] - 2026-04-12
 
 ### Added

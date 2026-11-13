@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.21.0 - 2026-11-12
+
+### Added
+
+- Added a target-signature closure that accepts only the Name-policy-backed
+  arbitrary-depth intermediate accumulator.
+- Added retained Name-policy, reviewed-root, anchor-role, intermediate,
+  depth-zero target-signature, and complete server-policy coverage over a
+  checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic target-signature closures share one private
+  implementation of the exact-construction, depth-zero, construction-target,
+  target-nearest issuer, and exact server-policy checks.
+- The strong result retains the exact Name-value policy and all reviewed path
+  evidence through target authentication. It does not establish complete Name
+  or path validity, apply every constraint or revocation policy, perform TLS
+  or HTTP, authorize OAuth transport, or grant network authority.
+
+## 0.20.0 - 2026-11-12
+
+### Added
+
+- Added a bounded arbitrary-depth intermediate path-length accumulator that
+  accepts only the Name-policy-backed reviewed-construction initializer.
+- Added retained-policy success and detached-construction rejection coverage
+  over a checked-in two-intermediate public-certificate chain.
+
+### Security
+
+- The strong and generic accumulators now share one private implementation of
+  the construction-derived count, caller ceiling, exact-construction,
+  immediate-depth, issuer-continuity, authenticated-child, complete-policy,
+  and path-length checks.
+- The strong result retains the exact Name-value policy, reviewed anchor,
+  anchor role policy, ordered signature and policy slices, and final state. It
+  does not close the target signature, define complete RFC 5280 Name equality,
+  validate the whole path, apply constraints or revocation, perform TLS or
+  HTTP, authorize OAuth transport, or grant network authority.
+
 ## 0.19.0 - 2026-11-12
 
 ### Added

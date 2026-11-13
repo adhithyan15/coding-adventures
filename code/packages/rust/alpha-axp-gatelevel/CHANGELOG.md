@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed registers with `iter_mut().enumerate().take(31)`; behaviour unchanged.
+
 ## 0.1.0
 
 - Added the exact 526,465-DFF Alpha AXP persistent topology.

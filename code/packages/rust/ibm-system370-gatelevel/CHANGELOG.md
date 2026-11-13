@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: `settled_matches_oracle` compares GPRs, FPRs and memory with `iter().enumerate()`; the parsed-token `LIB_LOCK` in `tests/gate_integrity.rs` is refreshed for the token-level change (same behaviour); behaviour unchanged.
+
 ## [0.1.0] - 2026-10-26
 
 ### Added
