@@ -162,7 +162,10 @@ extern "C" {
     pub fn rb_num2long(v: VALUE) -> c_long;
 
     // -- Numeric operations ------------------------------------------------
-    pub fn rb_int2inum(v: c_long) -> VALUE;
+    // rb_int2inum takes an `intptr_t`, NOT a `long`: on 64-bit Windows (LLP64) `long` is
+    // 32 bits but `intptr_t` is 64, so declaring it `c_long` left the upper half of the
+    // argument register undefined and `-494` came back as `4294966802`.
+    pub fn rb_int2inum(v: isize) -> VALUE;
     pub fn rb_float_new(v: f64) -> VALUE;
     pub fn rb_num2dbl(v: VALUE) -> f64;
 
@@ -470,7 +473,7 @@ pub fn true_value() -> VALUE {
 }
 
 pub fn usize_to_rb(n: usize) -> VALUE {
-    unsafe { rb_int2inum(n as c_long) }
+    unsafe { rb_int2inum(n as isize) }
 }
 
 pub fn f64_to_rb(n: f64) -> VALUE {

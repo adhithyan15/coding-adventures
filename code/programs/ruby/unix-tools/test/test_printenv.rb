@@ -182,8 +182,12 @@ class TestPrintenvAllVars < Minitest::Test
     old_argv = ARGV.dup
     ARGV.replace([])
     output = capture_io { printenv_main }[0]
-    lines = output.split("\n")
+    # Only look at lines that start a `NAME=value` entry: an environment value
+    # may itself contain newlines (CI runners export a few), and its
+    # continuation lines are not variable names.
+    lines = output.split("\n").grep(/\A[A-Za-z_][A-Za-z0-9_]*=/)
     keys = lines.map { |l| l.split("=", 2)[0] }
+    refute_empty keys
     assert_equal keys.sort, keys
   ensure
     ARGV.replace(old_argv)

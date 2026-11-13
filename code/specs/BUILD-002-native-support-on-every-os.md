@@ -53,7 +53,7 @@ macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
 | W1 | Haskell on Windows: real `BUILD_windows` for the 158 packages, proving a leaf, a mid-stack package and `conduit` (network/hsc2hs linking) first | W0 |
 | W2 | Perl on Windows: install Strawberry Perl and `Test2::V0` when Perl is needed, then real recipes for 100 pure-Perl packages; finish the native extensions (`perl-bridge` shim compile) | W0 |
 | W3 | Native bridges: one language at a time (node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF link, Go cgo, Ruby MinGW vs MSVC ABI, .NET P/Invoke) | W0 |
-| W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (IOCP path), `unix-tools`, prerequisite-chain skips; decide Metal | W1-W3 |
+| W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (IOCP path: needs a decision, see "the Rust remainder"), the 44 Ruby `unix-tools` test files held back on Windows, prerequisite-chain skips; decide Metal | W1-W3 |
 | W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
 | W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS. **Windows half done**, see "W6 progress" (macOS half open) | W1-W4 |
 
@@ -265,8 +265,77 @@ under Wine; `go/conduit` still cross-compiles; the build tool's
 `-validate-build-files` accepts both recipes. The PowerShell wrapper itself and
 macOS amd64 are first exercised by CI.
 
-Remaining in W3: node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF
-link, Ruby MinGW vs MSVC ABI and .NET P/Invoke.
+Remaining in W3: Lua `lua54.lib`, Dart FFI, Elixir NIF link and .NET P/Invoke.
+The node import library is done (raw-dylib, see `typescript/conduit`), and the
+Rust bridge crates are covered in the next section.
+
+### W3/W4 progress: the Rust remainder
+
+The echo-skips left in `code/packages/rust` and `code/programs/rust` were
+`node-bridge`, `font-parser-node`, `python-bridge`, `font-parser-python`,
+`ruby-bridge`, `font-parser-ruby`, `tcp-reactor`, `twig-module-driver`,
+`os-kernel`, `unix-tools` (Rust and Ruby) and the Metal packages. Status:
+
+- **Bridges (converted).** `font-parser-{node,python,ruby}` each build their
+  cdylib into the package's own `target/` (all three emit `font_parser_native`,
+  and the build tool runs independent packages in parallel), run
+  `cargo clippy -D warnings`, and run a smoke test that loads the library into a
+  real Node.js, CPython or Ruby and calls every export, error paths included
+  (`tests/smoke.test.js`, `tests/smoke_test.py`, `tests/smoke_test.rb`).
+  `node-bridge`, `python-bridge` and `ruby-bridge` have no tests of their own;
+  they build and run clippy on every OS and are exercised through the above.
+  `# build-tool: deps=` on the pure-language `font-parser` sibling makes CI set
+  up the matching toolchain. The skips were hiding real defects: `font-parser-node`
+  declared five `napi_*` imports without the `node.exe` raw-dylib marker (Windows
+  link failure, reproduced by a cross-link); `font-parser-python` had no
+  `build.rs` for `pythonXY.lib`; `font-parser-ruby` had never been loaded and
+  failed three ways (`rb_data_object_get` is `static inline`, receiver and
+  arguments swapped, `Qnil` hard-coded). On Windows its `build.rs` scans the
+  `rb_*` declarations of the crate and ruby-bridge into a `.def` file and has MSVC
+  `lib.exe` (PATH, else vswhere) build an import library for Ruby's DLL; the GNU
+  target links RubyInstaller's `.dll.a`. **Only Windows CI can prove:** that the
+  MSVC-linked cdylib loads into RubyInstaller's MinGW Ruby 3.4, that
+  `rb_raise`'s longjmp across the Rust frames is clean there, and that
+  `lib.exe` is found.
+- **`os-kernel` (converted).** The skip said it cannot be built on a std host;
+  the binary cannot, the package can. The recipe adds the
+  `x86_64-unknown-uefi` target, runs the `Kernel` unit tests on the host,
+  cross-builds `os-kernel.efi` and runs clippy for both targets, identically on
+  every OS. The QEMU boot test stays manual.
+- **`unix-tools`, Rust (converted).** The crate already compiled for Windows and
+  gated its Unix-only tests behind `#[cfg(unix)]`. The whole suite built for
+  `x86_64-pc-windows-gnu` and run under Wine found ten tests failing, all spawning
+  a real `echo` or `false`; they now fall back to the test executable itself, and
+  Wine reports 1278 passed, 0 failed.
+- **`unix-tools`, Ruby (partly converted).** The Rakefile runs every test file on
+  Unix and, on Windows, the twelve whose tools are pure stream transformers, and
+  prints which 44 it held back. The rest need a Windows run to classify.
+- **`tcp-reactor` (needs a decision, not converted).** It is a readiness
+  reactor: nonblocking sockets, `epoll`/`kqueue` readiness, read-until-`WouldBlock`.
+  Windows IOCP is completion-based, and `event-loop-native-backends.md`
+  ("Windows should not be forced into a fake readiness abstraction"; `WSAPoll`:
+  "avoid as primary design") and the `iocp` crate both say not to fake readiness
+  on Windows. An IOCP `tcp-reactor` is a redesign (`AcceptEx`/`WSARecv`/`WSASend`
+  with owned buffers, per-connection outstanding-operation counts, completion
+  based backpressure): that is what `transport-platform`'s Windows provider and
+  `tcp-runtime` already are, with real Windows tests. Nothing depends on
+  `tcp-reactor`. Options: list it on the W6 allowlist as intrinsic with
+  `tcp-runtime` named as the Windows equivalent, or retire it. Note also that its
+  only tests are `kqueue` ones, so `cargo test -p tcp-reactor` runs zero tests on
+  Linux.
+- **`twig-module-driver` (converted).** The recorded reason (768 MiB and 3 GiB
+  thread stacks fail to spawn on Windows) had no observation behind it and does
+  not hold: Windows reserves thread stacks as address space and commits on use,
+  and the suite peaks at about 1.3 GiB resident. Nothing was shrunk. Running the
+  suite for `x86_64-pc-windows-gnu` under Wine found the real Windows failure: the
+  tests canonicalised the Twig compiler directory, which on Windows is a verbatim
+  `\\?\C:\...` path, and the Twig compiler appends `"/" + name`, which Win32
+  rejects inside a verbatim path (`os error 123`). The test helpers now strip the
+  prefix. After that, 111 of 111 Windows-applicable tests pass under Wine,
+  including the 768 MiB and 3 GiB threads. **Only Windows CI can prove:** real
+  Windows commit behaviour with four parallel test threads (each up to about
+  1.75 GiB of stack in debug builds), and wall time (Wine took 25 minutes with two
+  threads; Linux 12.5 minutes single-threaded).
 
 ### W6 progress: the Windows echo-skip guardrail
 

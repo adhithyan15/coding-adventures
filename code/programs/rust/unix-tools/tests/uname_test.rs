@@ -4,6 +4,10 @@
 //! with CLI Builder, and that the business logic returns valid system
 //! information.
 
+// Unix-only tools: on Windows most of these tests (and the imports and helpers they use)
+// are compiled out, which would otherwise trip the CI `-D warnings` clippy gate.
+#![cfg_attr(not(unix), allow(unused_imports, dead_code))]
+
 use cli_builder::{load_spec_from_file, Parser, ParserOutput};
 use unix_tools::uname_tool::{format_uname, get_system_info};
 use std::path::PathBuf;

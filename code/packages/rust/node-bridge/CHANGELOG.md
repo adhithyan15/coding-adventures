@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — `BUILD`/`BUILD_windows` build and lint instead of echoing
+
+Both recipes were an `echo` ("compile-only crate"), although the raw-dylib change
+below means the crate links on Windows.  They now run `cargo build --release` and
+`cargo clippy --all-targets -D warnings` on every OS.  The crate has no tests of its
+own; its `napi_*` imports are exercised end to end by font-parser-node's smoke test,
+which loads a real cdylib into Node.js.
+
 ### Fixed — addons now link on Windows
 
 On `x86_64-pc-windows-msvc` every addon built on node-bridge failed to

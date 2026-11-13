@@ -1,5 +1,36 @@
 # Changelog — twig-module-driver
 
+## Unreleased — the suite runs on Windows
+
+### Changed
+
+- `BUILD_windows` was an `echo SKIP` claiming the 768 MiB / 3 GiB test thread
+  stacks "fail to spawn on Windows hosts".  No observation is recorded behind that
+  reason (the crate had never been run on Windows), and it does not hold.  A thread stack on
+  Windows is an address-space *reservation* (`STACK_SIZE_PARAM_IS_A_RESERVATION`),
+  committed only as it is touched, so 3 GiB of reservation is cheap on x64.  The
+  suite's real peak is about 1.3 GiB resident (measured on Linux over the whole
+  suite).  `BUILD_windows` now runs the same suite as `BUILD`, with
+  `set RUST_MIN_STACK=67108864&& cargo test ...`.  No stack size was reduced and no
+  test was weakened.
+
+### Fixed
+
+- **Every self-compile test that embeds a source directory in Twig failed on
+  Windows.**  The tests canonicalised `code/packages/twig/compiler`, which on
+  Windows yields an extended-length path (`\\?\C:\...`), and the Twig compiler
+  appends `"/" + name`.  Win32 does not normalise `/` inside a verbatim path, so
+  the read failed with `host/read_file: Invalid name. (os error 123)`.  The test
+  helpers now strip the verbatim prefix (`strip_verbatim_prefix`, with unit
+  tests for the drive-letter, UNC and device forms; a no-op elsewhere).
+
+### Tests
+
+Whole suite built for `x86_64-pc-windows-gnu` and run under Wine: 111 passed,
+0 failed (the 112th, `read_source_refuses_devices_and_fifos_without_blocking`, is
+`#[cfg(unix)]`).  On Linux the 109 existing tests pass in about 12.5 minutes single-threaded (peak
+RSS 1.3 GiB), and the 3 new `verbatim_path_tests` pass.
+
 ## Unreleased — #18474 re-review: imported name bytes; a BUILD at last
 
 - `BUILD` sets `RUST_MIN_STACK=64 MiB` for libtest's threads. The tests that interpret the Twig compiler without their own large-stack thread overflowed the default 2 MiB stack on macOS arm64 (`tw05h_tests::emit_program_two_fns`, SIGABRT), now that the crate's tests run in CI.

@@ -56,3 +56,11 @@ Layer 3: Directed Graph (drives CLI Builder's command routing)
 ```bash
 bundle exec rake test
 ```
+
+## Windows
+
+On Windows `rake test` runs only the test files whose tools are pure stream
+transformers (`echo expand false fold nl seq sleep tr true unexpand uniq yes`)
+and prints which files it held back; the remaining tools exercise POSIX
+filesystem, user/group, tty and path behaviour. See `WINDOWS_TEST_FILES` in the
+`Rakefile`.
