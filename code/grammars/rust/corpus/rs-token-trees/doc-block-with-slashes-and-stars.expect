@@ -1,0 +1,11 @@
+OUTER_BC_OPEN /** 
+BC_TEXT a 
+BC_TEXT *
++BC_TEXT b 
+BC_TEXT /
++BC_TEXT c 
+BC_TEXT /
+BC_TEXT /
++BC_TEXT d 
+BC_CLOSE */
++NAME x

@@ -339,6 +339,16 @@ rec, err := traced.Classify(cfg, traced.Input{
   separately and give `writes-tracked`. Untracked observations and traversed
   components are exposed for the merge job's cross-action checks (KILN04
   section 7). There are no digests in a raw record.
+- **`rec.WritesComplete`** (KILN04 5.5, W1 to W10) says `Writes` and
+  `TrackedWrites` list every in-repository path the action wrote. It fails
+  closed: false when a write could not be placed (including a `..` past a
+  missing component, a `/proc` name, `.git`, the root), when a write went
+  through a component the stability rule rejected, on a list or budget cap, and
+  on a truncated, killed or recipe-mismatched trace. A read-only reason does not
+  clear it. It is not in the record's JSON: the recorder copies it with
+  `recfmt.CompleteOf` to the shard record's `writes_complete`, which the merge
+  honours only when `HonourWritesComplete` is on (off by default).
+  `RecorderVersion` is 2 since this field exists.
 - `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
   `sh -c` lines.
 

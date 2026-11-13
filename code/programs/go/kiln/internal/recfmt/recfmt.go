@@ -198,15 +198,56 @@ type ShardRecord struct {
 	Unknown    string    `json:"unknown_writes"`
 	Record     RawRecord `json:"record"`
 	// Complete is the optional "writes_complete" switch of KILN04 section 7.1
-	// (G1).  It is absent until the classifier reports it (stage 4, PR 4); the
-	// merge models it now so that PR is a one-line flip.
-	Complete *bool `json:"writes_complete,omitempty"`
+	// (G1).  The classifier computes it (traced.RawRecord.WritesComplete, a
+	// Go-only field); the shard writer MUST derive it with CompleteOf, and
+	// EncodeRecord refuses a record where it is missing or disagrees
+	// (CheckComplete).  For recorder version 2 the key is REQUIRED on the
+	// wire (no omitempty): a record without it is not decoded, and one that
+	// reaches the merge in memory without it is an unknown write set whatever
+	// its reasons say.  The merge honours a true value only when
+	// Input.HonourWritesComplete is on.
+	Complete *bool `json:"writes_complete"`
 }
 
 // RawRecord is the classifier's output, unchanged (internal/traced).  The wire
 // form is the classifier's own JSON, so the shard can marshal a
 // *traced.RawRecord directly.
 type RawRecord = traced.RawRecord
+
+// CompleteOf is the value of a shard record's "writes_complete" key for a
+// freshly classified raw record: the classifier's own answer, never a default.
+// (RawRecord.WritesComplete is not in the record's JSON, so the key travels
+// on the shard record, where the merge reads it.)
+func CompleteOf(r RawRecord) *bool {
+	v := r.WritesComplete
+	return &v
+}
+
+// CheckComplete is the check the shard writer's record must pass: the
+// "writes_complete" key is present, and it says what the classifier said
+// (r.Record.WritesComplete, available only in memory: it is not on the wire).
+// A writer that forgot the key, defaulted it, or set it from anything but the
+// classifier would hand the merge a claim nobody computed.
+//
+// A record that ran NOTHING (steps_run 0 and not built: refused or gated) has
+// no classified raw record, so the flag is an explicit false and need not
+// match one; the key stays required on the wire.  The merge charges such a
+// record as a truncated execution (M-1), not as an unknown write set (KILN04
+// 7.1).  A record that ran any step, failed or not, was classified, and its
+// flag must agree with the classifier.
+func CheckComplete(r ShardRecord) error {
+	if r.Complete == nil {
+		return fmt.Errorf("record %q: writes_complete is missing (derive it with CompleteOf)", short(r.Action))
+	}
+	if r.StepsRun == 0 && r.Status != StatusBuilt && !*r.Complete {
+		return nil
+	}
+	if *r.Complete != r.Record.WritesComplete {
+		return fmt.Errorf("record %q: writes_complete %v disagrees with the classifier's %v (derive it with CompleteOf)",
+			short(r.Action), *r.Complete, r.Record.WritesComplete)
+	}
+	return nil
+}
 
 // Shard is one decoded shard artifact: its four files plus the artifact's own
 // index (taken from the artifact NAME by the caller, so a record file cannot
@@ -504,6 +545,15 @@ func (r *ShardRecord) Validate() error {
 		return fmt.Errorf("record %q: exactly one of weak and refusal must be set", short(r.Action))
 	}
 	rr := &r.Record
+	if r.StepsRun == 0 {
+		// A record that ran nothing was never classified: any content in its
+		// raw record is a recorder bug, and a classification nobody made must
+		// not reach the merge (fail closed).
+		if len(rr.Entries)+len(rr.Writes)+len(rr.TrackedWrites)+len(rr.AbsentObservations)+len(rr.Binds)+
+			len(rr.UntrackedObservations)+len(rr.Traversed)+len(rr.Reasons) != 0 {
+			return fmt.Errorf("record %q: ran no step but carries a classified raw record", short(r.Action))
+		}
+	}
 	for _, l := range []struct {
 		name string
 		v    []string

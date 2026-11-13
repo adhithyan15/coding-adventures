@@ -39,9 +39,15 @@ Vocabulary
 Which roots need a lock
 -----------------------
 
-A root needs a committed lock when any manifest in its *closure* (members plus
-everything reachable through ``path`` dependencies, following ``workspace =
-true`` inheritance) declares an external dependency.  A root whose closure is
+A root needs a committed lock when any manifest in its *closure* declares an
+external dependency.  The closure is the root, its workspace members, and
+everything reachable through ``path`` dependencies (following ``workspace =
+true`` inheritance and ``[patch]`` paths).  It follows Cargo's own rule for
+``[dev-dependencies]``: they are resolved only for the root package and the
+root workspace's members, never for a path dependency reached transitively.
+So a dev-dependency of such a crate (for example a ``libc`` pulled in only by
+its test helper) neither adds to the closure nor counts as external, while
+normal, build and ``target.*`` dependencies propagate transitively.  A root whose closure is
 path-only has nothing to pin, so it may omit the lock (``check`` does not
 demand one, ``generate`` does not create one).  If such a root nevertheless has
 a lock, ``check`` still verifies it is current.  The test is static (it parses
@@ -113,6 +119,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 DEP_TABLES = ("dependencies", "dev-dependencies", "build-dependencies")
+NON_DEV_TABLES = ("dependencies", "build-dependencies")
 
 # The command that proves a lock is current (see "How currency is checked").
 CHECK_CMD = ["cargo", "update", "--workspace", "--locked"]
@@ -249,12 +256,17 @@ class Index:
 
     # -- dependencies ----------------------------------------------------
 
-    def dep_specs(self, d: Path):
-        """Yield (name, spec, from_dir) for the deps a manifest declares."""
+    def dep_specs(self, d: Path, dev: bool = True):
+        """Yield (name, spec) for the deps a manifest declares.
+
+        ``dev`` says whether ``[dev-dependencies]`` (plain and ``target.*``)
+        are included; see "closure" in the module docstring.
+        """
         data = self.toml(d)
-        tables = [data.get(t, {}) for t in DEP_TABLES]
+        names = DEP_TABLES if dev else NON_DEV_TABLES
+        tables = [data.get(t, {}) for t in names]
         for tgt in data.get("target", {}).values():
-            tables.extend(tgt.get(t, {}) for t in DEP_TABLES)
+            tables.extend(tgt.get(t, {}) for t in names)
         for tbl in tables:
             for name, spec in tbl.items():
                 yield name, spec
@@ -277,11 +289,11 @@ class Index:
             return None, True
         return self._plain(ws, spec)
 
-    def deps_of(self, d: Path):
+    def deps_of(self, d: Path, dev: bool = True):
         """(path-dep dirs, has_external) for one package directory."""
         paths: set[Path] = set()
         external = False
-        for name, spec in self.dep_specs(d):
+        for name, spec in self.dep_specs(d, dev):
             if isinstance(spec, dict) and spec.get("workspace"):
                 p, ext = self.inherited_dep(d, name)
             else:
@@ -300,8 +312,15 @@ class Index:
 
     # -- closure ---------------------------------------------------------
 
-    def closure(self, start: set[Path]) -> tuple[set[Path], bool]:
-        """Package dirs reachable from `start` via path deps; any external?"""
+    def closure(self, start: set[Path], dev_ok=None) -> tuple[set[Path], bool]:
+        """Package dirs reachable from `start` via path deps; any external?
+
+        Cargo resolves ``[dev-dependencies]`` only for the root package and
+        workspace members, never for a path dependency reached transitively.
+        So dev-dependencies are followed only for packages in `start` and
+        those for which ``dev_ok(dir)`` is true (the root workspace's
+        members).  Normal, build and ``target.*`` dependencies always follow.
+        """
         seen: set[Path] = set()
         stack = list(start)
         external = False
@@ -313,7 +332,8 @@ class Index:
                 seen.add(d)
                 continue
             seen.add(d)
-            paths, ext = self.deps_of(d)
+            dev = d in start or (dev_ok is not None and dev_ok(d))
+            paths, ext = self.deps_of(d, dev)
             external = external or ext
             stack.extend(paths)
             ws = self.ancestor_workspace(d)
@@ -335,19 +355,26 @@ class Index:
     def find_roots(self) -> list[Root]:
         # 1. Fixed point: which non-workspace manifests are implicit members?
         members: set[Path] = set()
+        ws_members: dict[Path, set[Path]] = {}
         reach_from: dict[Path, set[Path]] = {}
         for ws in self.workspaces:
             start = self.explicit_members(ws) | ({ws} if "package" in self.toml(ws) else set())
             reach_from[ws] = start
         for ws, start in reach_from.items():
             excl = self.excluded(ws)
-            clo, _ = self.closure(start | {ws})
+            # Members found so far may add implicit members through their
+            # dev-dependencies too, so anything inside `ws` follows them.
+            clo, _ = self.closure(
+                start | {ws},
+                lambda p, ws=ws, excl=excl: ws in p.parents and p not in excl,
+            )
             inside = {
                 p for p in clo
                 if p != ws and ws in p.parents and p not in excl
                 and (p / "Cargo.toml").exists()
             }
-            members |= self.explicit_members(ws) | inside
+            ws_members[ws] = self.explicit_members(ws) | inside
+            members |= ws_members[ws]
         # Resolve nested workspaces: a [workspace] manifest is always a root.
         roots = []
         for d in self.dirs:
@@ -362,7 +389,7 @@ class Index:
             start = {d}
             if d in self._ws_set():
                 start |= self.explicit_members(d)
-            clo, ext = self.closure(start)
+            clo, ext = self.closure(start, lambda p, d=d: p in ws_members.get(d, ()))
             out.append(Root(d, clo, ext))
         return out
 

@@ -3062,8 +3062,10 @@ live-provider readiness remain unavailable.
 
 A third bounded routed-policy follow-up consumes that complete routed
 intermediate-DNS proof and derives the exact authenticated responder
-certificate exclusively through the retained fully routed proof. It requires
-the structurally unique `id-pkix-ocsp-nocheck` extension already admitted by
+certificate exclusively through the retained fully routed proof.
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy`
+accepts only that complete proof and requires the structurally unique
+`id-pkix-ocsp-nocheck` extension already admitted by
 certificate-wide role policy and validates that the extension value is exact
 DER `NULL`. RFC 6960 recommends, but does not require, non-critical marking; a
 critical instance can reach this semantic gate only when the prerequisite role

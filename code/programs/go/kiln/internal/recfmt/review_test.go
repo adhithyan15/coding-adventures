@@ -328,6 +328,9 @@ func FuzzDecodeRecord(f *testing.F) {
 		if err := r.Validate(); err != nil {
 			t.Fatalf("decoded but invalid: %v", err)
 		}
+		// The in-memory flag is not on the wire; a writer sets both from the
+		// classifier, so give the decoded record the flag it claims.
+		r.Record.WritesComplete = r.Complete != nil && *r.Complete
 		l, err := EncodeRecord(r)
 		if err != nil {
 			t.Fatalf("decoded but not encodable: %v", err)
@@ -336,6 +339,7 @@ func FuzzDecodeRecord(f *testing.F) {
 		if err != nil {
 			t.Fatalf("re-decode: %v", err)
 		}
+		r2.Record.WritesComplete = r2.Complete != nil && *r2.Complete
 		l2, _ := EncodeRecord(r2)
 		if !bytes.Equal(l, l2) {
 			t.Fatal("not a fixed point")

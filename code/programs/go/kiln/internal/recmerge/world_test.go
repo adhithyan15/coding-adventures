@@ -113,13 +113,18 @@ func newWorld(t *testing.T, specs ...shardSpec) *world {
 			sh.Records = append(sh.Records, recfmt.ShardRecord{
 				BindingID: sh.BindingID, Action: pkg, Language: "go", Status: recfmt.StatusBuilt,
 				StepsRun: 1, StepsTotal: 1, Steps: []recfmt.Step{{Clean: true}}, StepsSHA: w.steps[pkg],
-				Weak:   hex.EncodeToString(wk[:]),
-				Record: recfmt.Normalize(recfmt.RawRecord{Package: pkg, Entries: []string{"pkg:" + pkg}})})
+				Weak:     hex.EncodeToString(wk[:]),
+				Complete: complete(),
+				Record:   recfmt.Normalize(recfmt.RawRecord{Package: pkg, Entries: []string{"pkg:" + pkg}})})
 		}
 		w.shards = append(w.shards, sh)
 	}
 	return w
 }
+
+// complete is a classified record's writes_complete: true (the key is
+// required, and an ordinary action's write set is complete).
+func complete() *bool { v := true; return &v }
 
 func sha(b []byte) string { d := sha256.Sum256(b); return hex.EncodeToString(d[:]) }
 
@@ -140,7 +145,7 @@ func sl(v ...string) []string {
 func (w *world) input() Input {
 	return Input{Run: w.run, Expected: Expected{GraphSHA256: dGraph, StepsSHA256: dSteps, Plan: w.plan, Steps: w.steps},
 		Shards: w.shards, Keys: w.keys, Now: time.Date(2026, 11, 13, 1, 2, 3, 999, time.UTC),
-		Kiln: "kiln/0.1.0 traced/2 recorder/1", HonourWritesComplete: w.honour}
+		Kiln: "kiln/0.1.0 traced/2 recorder/2", HonourWritesComplete: w.honour}
 }
 
 func (w *world) merge() Result { return Merge(w.input()) }

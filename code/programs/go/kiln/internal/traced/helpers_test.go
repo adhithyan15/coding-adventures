@@ -170,6 +170,7 @@ func (f *memFS) ReadHead(p string, n int) ([]byte, error) {
 // harness bundles a tree, a disk and a config.
 type harness struct {
 	noSettle bool
+	netns    bool // Input.StepNetNS
 	t        *testing.T
 	tree     *memTree
 	fs       *memFS
@@ -348,7 +349,7 @@ func (h *harness) runSteps(steps ...*trace.Trace) *RawRecord {
 	for i := range recipe {
 		recipe[i] = "step"
 	}
-	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
+	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: h.netns})
 	if err != nil {
 		h.t.Fatalf("Classify: %v", err)
 	}

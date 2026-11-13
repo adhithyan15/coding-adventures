@@ -120,6 +120,19 @@ supplied independently. This policy performs no external effect and stops
 before no-check, responder or intermediate revocation, complete revocation or
 Name/path validation, TLS, HTTP, OAuth, network, or live-provider readiness.
 
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy`
+consumes that complete strong intermediate-DNS proof and derives the exact
+fully routed authenticated responder only through its retained non-copyable
+evidence. The responder must carry one structurally unique
+`id-pkix-ocsp-nocheck` extension whose value is exact DER `NULL`; the entry
+point reuses the existing private evaluator and stable payload-free errors. A
+critical instance can reach this gate only when certificate-wide role policy
+already recognized the OID. No responder, extension, path, algorithm, key,
+signature, status, or time can be supplied independently. This policy performs
+no external effect and stops before responder or intermediate revocation,
+complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

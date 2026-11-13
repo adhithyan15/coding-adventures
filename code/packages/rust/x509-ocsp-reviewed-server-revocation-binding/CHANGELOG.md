@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply exact RFC 6960 no-check policy to the delegated responder retained by
+  the strongest Name-policy path/fully routed OCSP bridge after both responder
+  DNS-policy gates.
+- Derive the responder only through the consumed non-copyable proof, reuse the
+  existing redacted exact-DER evaluator, and stop before further revocation,
+  complete path validation, TLS, HTTP, OAuth, or network readiness.
 - Apply the exact target-nearest intermediate's supported critical permitted-
   and-excluded DNS constraints to the exact delegated responder retained by
   the strongest Name-policy path/fully routed OCSP bridge.

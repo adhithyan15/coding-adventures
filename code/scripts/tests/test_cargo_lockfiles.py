@@ -87,6 +87,57 @@ class DiscoveryTests(Fixture):
         self.add("ws/a", package("a", "serde = { workspace = true }"))
         self.assertTrue(self.roots()["ws"].needs_lock)
 
+    # -- dev-dependencies follow Cargo's semantics -----------------------
+    #
+    # Cargo resolves [dev-dependencies] only for the root package and for
+    # workspace members, never for a path dependency reached transitively.
+
+    def test_transitive_path_dep_dev_dependency_is_ignored(self):
+        self.add("lib", package("lib") + '[dev-dependencies]\nlibc = "0.2"\n')
+        self.add("root", package("root", 'lib = { path = "../lib" }'))
+        roots = self.roots()
+        self.assertFalse(roots["root"].needs_lock)
+        # lib is itself a root and does resolve its own dev-dependency.
+        self.assertTrue(roots["lib"].needs_lock)
+
+    def test_transitive_target_dev_dependency_is_ignored(self):
+        self.add("lib", package("lib") + (
+            "[target.'cfg(target_os = \"linux\")'.dev-dependencies]\n"
+            'libc = "0.2"\n'))
+        self.add("root", package("root", 'lib = { path = "../lib" }'))
+        self.assertFalse(self.roots()["root"].needs_lock)
+
+    def test_transitive_build_and_target_dependencies_still_count(self):
+        self.add("b", package("b") + '[build-dependencies]\ncc = "1"\n')
+        self.add("t", package("t") + (
+            "[target.'cfg(unix)'.dependencies]\nlibc = \"0.2\"\n"))
+        self.add("rb", package("rb", 'b = { path = "../b" }'))
+        self.add("rt", package("rt", 't = { path = "../t" }'))
+        roots = self.roots()
+        self.assertTrue(roots["rb"].needs_lock)
+        self.assertTrue(roots["rt"].needs_lock)
+
+    def test_root_own_dev_dependency_counts(self):
+        self.add("root", package("root") + '[dev-dependencies]\nserde = "1"\n')
+        self.assertTrue(self.roots()["root"].needs_lock)
+
+    def test_workspace_member_dev_dependency_counts(self):
+        self.add("ws", '[workspace]\nmembers = ["a"]\n')
+        self.add("ws/a", package("a") + '[dev-dependencies]\nserde = "1"\n')
+        self.assertTrue(self.roots()["ws"].needs_lock)
+
+    def test_implicit_member_dev_dependency_counts(self):
+        self.add("ws", '[workspace]\nmembers = ["a"]\n')
+        self.add("ws/a", package("a", 'b = { path = "../b" }'))
+        self.add("ws/b", package("b") + '[dev-dependencies]\nserde = "1"\n')
+        self.assertTrue(self.roots()["ws"].needs_lock)
+
+    def test_non_member_path_dep_of_workspace_dev_dependency_ignored(self):
+        self.add("lib", package("lib") + '[dev-dependencies]\nlibc = "0.2"\n')
+        self.add("ws", '[workspace]\nmembers = ["a"]\n')
+        self.add("ws/a", package("a", 'lib = { path = "../../lib" }'))
+        self.assertFalse(self.roots()["ws"].needs_lock)
+
 
 class ChangedSinceTests(Fixture):
     def test_manifest_in_closure_marks_root_affected(self):

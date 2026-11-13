@@ -766,6 +766,40 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
     state root whenever any `ro_roots` entry lies beneath it, and a tool root
     beneath `home` must be a real directory or file (not a symlink).
 
+**Pending for PR 2b** (the review of `writes_complete`, stage 4 PR 4):
+
+- The pre-build inventory voids the shard if any in-repository regular file has
+  `nlink > 1`: a pre-run hard-link alias is the one write path no trace names
+  (§5.5, Aliases).
+- A step whose trace does not parse is `unknown_writes` and never complete; the
+  recorder must not substitute an empty record.
+- The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
+  raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
+  stays required on the wire for every record. A record that ran nothing
+  (`steps_run == 0` and not built: refused or gated) was never classified, so
+  the writer sets an explicit `false` for it, which `CheckComplete` accepts
+  without a raw record; the merge charges such a record as a truncated
+  execution (M-1: strict void, relaxed charges the action). Any record that ran
+  a step, failed or built, was classified: its key must agree with the
+  classifier, and a `false` or missing one is an unknown write set (§7.1, G1).
+- A recorder test pins that `StepNetNS` is true only when the step really ran
+  under `kiln sandbox-exec`, and false on every other path.
+- Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
+  checks) runs repository code outside a traced step: untraced repository code
+  can write the tree with no trace at all.
+- `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
+  record has any content: a record that ran nothing was never classified.
+- The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
+  true only when the step ran under `kiln sandbox-exec` (which unshares `NET`);
+  anywhere else it stays false, and an unbound loopback or abstract peer makes
+  the write set unknown (W11).
+- Classify each action before a later action can change the tree: M8's
+  cross-action `unstable-path` does not feed G1, so an action classified after
+  another one rewrote links it traversed would see a different disk.
+- The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
+  child's) needs a real-`strace` fixture on Linux CI; the canned traces only
+  assume it.
+
 ### 4.7 Sandbox decisions (stage 3b)
 
 Stage 3b is `kiln sandbox-exec` (`internal/sandbox`). The code is
@@ -1670,6 +1704,157 @@ an untracked observation or a `list:` entry; every absence must be in
 check makes it fail when the overlap logic is disabled, and likewise when any
 one precondition of a relaxation is dropped.
 
+**`writes_complete` (stage 4, PR 4).** The classifier reports whether it can
+vouch that `Writes` and `TrackedWrites` list *every* in-repository path the
+action wrote. It is `RawRecord.WritesComplete`, a Go-only field (`json:"-"`:
+the recorder copies it with `recfmt.CompleteOf` to the shard record's
+top-level `writes_complete`, §7.1, so the record's own JSON is unchanged; the
+key is **required** for recorder version 2, and `recfmt.EncodeRecord` refuses a
+record whose key is missing or disagrees with the classifier). It is **true by
+default and fails closed**: the zero value is `false`, and `Classify` leaves it `true` only for
+a record in which none of the following happened. Each trigger is a way a
+write could exist that the lists do not show.
+
+- **W1. An unresolved write.** A Write-kind call (§4.4's table, including the
+  descriptor writes) whose target cannot be placed: the walk refuses
+  (`symlink-loop`, `size`), a `..` follows a component the walk could not enter,
+  the path is empty or unresolvable. A no-follow call other than the
+  parent-based create and remove calls (`lchown`, `lsetxattr`, `lremovexattr`,
+  and `utimensat`, `fchownat`, `fchmodat2` with `AT_SYMLINK_NOFOLLOW`) keeps a
+  trailing slash: the kernel's lookup of a final name ending in `/` follows a
+  symlink and demands a directory, so the call changed the directory the link
+  points to, not the link. Only `mkdir`, `mknod`, `symlink`, `unlink`, `rmdir`
+  (and their `at` forms), which act on a name in its parent, drop the slash.
+  The trigger holds whatever the call's result:
+  a failed call that could not be placed is not proved to have changed
+  nothing.
+- **W2. An unresolved creating or writing open.** An `open`, `openat`,
+  `openat2` or `creat` that can write (`O_WRONLY`, `O_RDWR`, `O_CREAT`,
+  `O_TRUNC`, `creat`) and cannot be placed, or an `openat2` with a nonzero
+  `resolve` field. A read-only open that cannot be placed is only a read-side
+  reason.
+- **W3. An unresolved `rename` or `link` endpoint**, either name, whatever the
+  result.
+- **W4. An unresolved Unix `bind`.** An `AF_UNIX` pathname `bind` whose path
+  cannot be placed, or a `bind` the parser gave no socket address.
+- **W5. A virtual write.** A write whose path lies under `/proc` or
+  `/dev/fd`, other than the `/proc/self/fd/N` and `/dev/fd/N` opens that return
+  a `-y` path (those are classified by that path), and the re-opening of a
+  descriptor whose `-y` text is `pipe:[`, `socket:[` or `anon_inode:`
+  (`> /dev/stderr`): such an object has no place in any directory and cannot
+  name a repository file. Every other non-absolute annotation stays unknown.
+  Otherwise the name says nothing about the object written. This covers Write-kind calls, writing opens,
+  `rename`/`link` endpoints, a `bind` path and an `O_TMPFILE` file linked back
+  by `linkat`.
+- **W6. A path the record cannot hold.** `bad-path` (a path `key.ValidatePath`
+  refuses) or `vcs-write` (a write under `.git`).
+- **W7. A write to the repository root itself** (`chmod .`, `utimes .`). The
+  root has no write root to coarsen to; the fail-closed answer is "unknown"
+  rather than a special case.
+- **W8. An unstable component under a write.** The stability rule (§5.1) is
+  applied twice over the same change log: to every lookup (an unstable one is
+  the `unstable-path` reason) and to the lookups made by calls that can write,
+  on their own intervals (an unstable one means a write may have landed
+  somewhere else). A lookup only a read made costs a write nothing, and
+  probing a name before creating it (`stat out/x` ENOENT, `mkdir out`, create
+  `out/x`) is judged by the write's own, later lookup. The verdicts are
+  monotone in the interval (a shorter span or a later first lookup is only
+  safer), and what a write's placement depends on is exactly its own lookups,
+  so the narrower judgement is as sound. A post-run lookup that failed
+  (`unresolvable-path`) while a write was being placed, and every
+  `trace-incomplete` reason raised while a write call is processed, also
+  count.
+- **W9. A list or budget cap.** `Writes` or `TrackedWrites` would exceed the
+  65 536-entry cap (this adds the `size` reason, as the other lists do), or the
+  walk or stability budget ran out (`size`): the stability pass stops early, so
+  nothing vouches for the components it did not reach.
+- **W10. A whole-trace problem.** A step's trace has no exit line for the step
+  process or the step was killed by a signal (a truncated or interrupted
+  trace), some traced process has no exit line, **any** traced process
+  dumped core (the kernel writes the core file with no system call), a
+  survivor outlived the sandbox's init (`daemon-left`), or the traced steps do not match the weak
+  key's recipe (`recipe-mismatch`). A nonzero exit status by itself is **not**
+  a trigger, and neither is a child killed by a signal other than the step
+  process (`yes | head` dies of SIGPIPE): every call up to its death is traced
+  and a call it never finished is refused (L1, M5): the failed action wrote what it wrote, and the merge treats the
+  failure as a truncated execution (§7.1, M-1). A trace that did not parse, or
+  a tracer that did not finish cleanly, never reaches `Classify`; the
+  recorder reports those as `unknown_writes` and `clean: false`, which the
+  merge already treats as unknown.
+
+**W11. An untraced peer.** The write set is unknown after a connect or send
+that *succeeded* to a peer the action did not bind itself and that may be a
+host process, outside the trace, writing the repository on the action's
+behalf:
+
+- a pathname `AF_UNIX` socket outside the fresh `HOME` and `TMPDIR`, **inside
+  or outside the repository**: every earlier step's processes are dead and a
+  listener in the same step would have its bind in the trace, so an unbound
+  in-repository peer is no other action's but a host process or an alias of
+  one (L7);
+- a loopback inet or abstract Unix peer, **unless the step ran in a fresh
+  network namespace of its own** (`Input.StepNetNS`, below).
+
+`Input.StepNetNS` is a precondition the classifier cannot check, so it is an
+input that fails closed: the default `false` treats unbound inet and abstract
+peers as W11. Only the recorder sets it, and only when the step ran under the
+stage-3b sandbox (`kiln sandbox-exec`, which unshares `NET` and leaves only a
+loopback: §4.7). Under a fresh namespace a loopback or abstract peer
+nobody bound cannot be a host daemon and keeps just the plain
+`daemon:<address>` reason, which the cross-action rule M13 handles; TMPDIR is
+a fresh tmpfs per step. "The action bound it itself" is believed only while the
+bound name is stable: the peer's lookups are judged with the write set's (L5),
+so an action that swaps the bound name for a link to a host daemon's socket and
+back is incomplete.
+
+*Known precision limits (fail-closed).* A Unix-socket server that binds `P`,
+connects to it, and then unlinks `P` is judged incomplete: the self-bound peer
+goes through the write set's stability judge (L5), and a name with a later
+removal is not stable. The planned fix is a trace-order check for the
+self-bound exception instead of the stability rule: the last completed change
+to `P` before the connect is the action's own bind, and no change to `P` or its
+ancestors overlaps the connect. That is new soundness-critical logic and needs
+its own review; until then the conservative answer costs only a cache entry.
+
+**M3. A reason always accompanies an unknown write set.** Whenever the write
+set is unknown and the record would otherwise carry no `trace-incomplete`
+reason (a write to the root, a failed unplaceable call, a core dump, a daemon
+peer), the classifier adds `trace-incomplete:writes-unknown`. The per-kind cap
+keeps one reason of every kind, so it survives. This keeps the invariant "no
+`writes_complete`, or `false`, implies a `trace-incomplete` reason" that a
+merge reading only the reasons relies on.
+
+Deliberately **not** triggers, because they cannot hide a write: any
+read-only reason (`host-read`, `exec-unreadable`, a failed lookup of a name the
+action only looked at), a nonzero exit, a child's death by a signal, a loopback
+or abstract `daemon:` peer, `network:<program>` reasons (the
+record is refused anyway and no peer is reached), and a write outside the
+repository (it is `state-write` or the action's own scratch space, and cannot
+name a repository path without going through a resolved, vouched component).
+
+*Aliases.* A write through a hard link is covered case by case: an alias the
+action makes during the run is tracked (the `link` source and destination are
+both written, and `hard` makes neither a stable component; M10, M5, M11);
+`O_TMPFILE` is refused by the parser or is W5 when linked back; a pre-run
+untracked alias is excluded by the inventory (M9); tracked content changed
+through any alias is caught by the post-build backstop (M-2b). The residual
+risk is a metadata-only change (mode, owner, times, xattrs) through a pre-run
+alias of a file the trace never names, which changes no content digest.
+
+**The fuzzer invariant.** The differential fuzzer checks, for every record
+whose `WritesComplete` is true *even when it carries reasons*, that every
+in-repository path the model wrote lies under an entry of `Writes` or
+`TrackedWrites`, using the classifier's own coarsening (the highest ancestor
+holding no tracked file, or the tracked path itself). Perturbations aim at each
+trigger: writes through links retargeted mid-run, writes after a `..` past a
+missing component, writes through `/proc/self/cwd`, writes to the root, an
+exchange under a written name, a write to a name another process removes
+meanwhile, no-follow metadata writes with and without a trailing slash (the
+model follows the kernel's rule), descriptor metadata writes, Unix `bind`,
+writes under `.git` and to unrepresentable names, re-opens of pipes and sockets,
+and processes that dump core. A mutation check (dropping a trigger) makes the fuzzer fail.
+
+
 ## 6. When nothing is recorded
 
 A traced pass becomes a record only when every check passes. Otherwise
@@ -1767,7 +1952,8 @@ Shards run on separate machines, so the check cannot run per shard:
      quantifies over the writes of every action in every shard, so one
      unknown write set means **the run emits nothing**. A record with
      `trace-incomplete` reasons and `writes_complete: true` loses only its
-     own manifest. Until the classifier reports `writes_complete`, every
+     own manifest. The classifier reports `writes_complete` (§5.5); while the
+     recorder does not yet honour it (`HonourWritesComplete`, off), every
      `trace-incomplete` reason counts as unknown. (The earlier wording voided
      only the shard; that was unsound, see §7.1, G1.)
 3. **All or nothing.** Only after these checks does the merge job emit
@@ -1804,14 +1990,25 @@ shard record line and a switch of `Merge`
 (`Input.HonourWritesComplete`, off): with the switch off every
 `trace-incomplete` reason is unknown; with it on, a record that says
 `writes_complete: true` loses only its own manifest, while one that omits
-the field is still unknown. The classifier does not emit the field yet
-(stage 4, PR 4). The read-side reasons that `writes_complete: true` may
+the field is still unknown. The classifier now computes the field
+(`RawRecord.WritesComplete`, §5.5, which defines it and lists every trigger);
+the recorder copies it to the shard record's `writes_complete`. The switch
+stays off until the recorder (stage 4, PR 2b) turns it on, so PR 4 changes
+no merge outcome by itself. Because the record's semantics changed,
+`RecorderVersion` is now `2`: every weak key changes and manifests recorded by
+the version-1 recorder are never looked up. The read-side reasons that `writes_complete: true` may
 excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
 read-only `unstable-path`, and so on). **A recipe mismatch is never
 excused**: when the steps that ran are not the steps the weak key's recipe
 covers (B6, or the classifier's `trace-incomplete:recipe-mismatch`), the
-trace says nothing about what the recipe writes. A step whose tracer did
-not finish cleanly (`clean: false`) is likewise unknown, and a record must
+trace says nothing about what the recipe writes. `writes_complete` is
+required on the wire; a record that ran any step (`steps_run > 0`, built or
+failed: it was classified) whose key is false or missing is an unknown write
+set, so a hostile BUILD cannot choose a nonzero exit to downgrade it. Only a
+record that ran nothing (`steps_run == 0`, refused or gated: never classified)
+carries an explicit `false`, and that is a truncated execution (below), so the
+relaxed verdict charges only that action. A step whose tracer did not finish cleanly
+(`clean: false`) is likewise unknown, and a record must
 carry exactly one step summary per step that ran (`len(steps) ==
 steps_run`).
 
@@ -1903,8 +2100,9 @@ every other action with a non-empty `Binds`, gets
 `daemon` and `daemon-left` both count (`daemon-left` is also a truncated
 execution, M-1). This is a superset of the address match only for binds the
 record lists: `Binds` omits port 0 and abstract sockets. That gap is vacuous
-under §4.7, where every step has its own network namespace (G10), so no
-marker is added; only a pathname socket inside the checkout crosses
+only when the step ran in a fresh network namespace of its own (G10; the
+stage-3b sandbox, §4.7; the classifier's `StepNetNS`), so no
+marker is added in that case; only a pathname socket inside the checkout crosses
 actions, and the untracked-overlap half catches it.
 
 **The rules.** Notation: `anc(p, q)` is `p == q` or `p` is a *path*-prefix
@@ -2260,7 +2458,8 @@ is what the code does.
    `tools` of the weak key and `HOME`. A variable whose name contains `:` is
    refused. The `kiln:` entries are keyed but never exported to the process.
    Every origin is `0`.
-9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `1`) in
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `2`;
+   `1` was the recorder before `writes_complete`, stage 4 PR 4) in
    `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
    §7. **`kiln:executor-args`** is each flag as one `-name=value` token,
    Go-quoted, sorted bytewise and joined by spaces, so the same flags in

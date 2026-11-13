@@ -1,0 +1,6 @@
+LIFETIME 'r
+POUND #
+NAME a
++LIFETIME 'r
+POUND #
+KEYWORD static
