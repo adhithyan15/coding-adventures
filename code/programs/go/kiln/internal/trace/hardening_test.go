@@ -188,52 +188,109 @@ func TestPidLeadingZeros(t *testing.T) {
 	mustParse(t, "10  +++ exited with 0 +++\n")
 }
 
-const helperSetup = "10  unshare(CLONE_NEWUSER|CLONE_NEWNS|CLONE_NEWPID) = 0\n" +
-	"10  mount(\"none\", \"/\", NULL, MS_REC|MS_PRIVATE, NULL) = 0\n" +
-	"10  capset(0x1, 0x2) = 0\n" +
-	"10  pivot_root(\".\", \".\") = 0\n" +
-	"10  chdir(\"/repo\") = 0\n"
+// The sandbox helper's process tree: helper (10) spawns one init child (11),
+// which does the setup and then execs the step.
+const helperRootSetup = "10  unshare(CLONE_NEWUSER) = 0\n" +
+	"10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11\n"
 
-func TestHelperRoot(t *testing.T) {
+const helperInitSetup = "11  unshare(CLONE_NEWNS) = 0\n" +
+	"11  mount(\"none\", \"/\", NULL, MS_REC|MS_PRIVATE, NULL) = 0\n" +
+	"11  pivot_root(\".\", \".\") = 0\n" +
+	"11  chdir(\"/\") = 0\n" +
+	"11  prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) = 0\n" +
+	"11  seccomp(SECCOMP_SET_MODE_FILTER, 0, 0x1) = 0\n"
+
+const helperExec = "11  execve(\"/bin/sh\", [\"sh\", \"-c\", \"make\"], 0x0 /* 1 vars */) = 0\n"
+
+const helperEnd = "11  +++ exited with 5 +++\n10  wait4(11, [{WIFEXITED(s) && WEXITSTATUS(s) == 5}], 0, NULL) = 11\n10  +++ exited with 0 +++\n"
+
+func TestHelperRootHappyPath(t *testing.T) {
 	opts := Options{HelperRoot: true}
-	text := helperSetup +
-		"10  execve(\"/bin/sh\", [\"sh\"], 0x0 /* 1 vars */) = 0\n" +
-		"10  openat(AT_FDCWD, \"a\", O_RDONLY) = 3</repo/a>\n" +
-		"10  +++ exited with 0 +++\n"
+	text := helperRootSetup + helperInitSetup + helperExec +
+		"11  openat(AT_FDCWD, \"a\", O_RDONLY) = 3</start/a>\n" + helperEnd
 	tr, err := parseAt(t, "/start", text, opts)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(tr.Events) != 2 || tr.Events[0].Syscall != "execve" || tr.Events[1].Cwd != "/repo" {
+	// Setup (unshare, mount, pivot_root, chdir) and every root event are gone.
+	if len(tr.Events) != 2 || tr.Events[0].Syscall != "execve" || tr.Events[1].Syscall != "openat" {
 		t.Fatalf("%+v", tr.Events)
 	}
-	// Without the option the same trace is refused.
+	for _, e := range tr.Events {
+		if e.Pid != 11 || e.Cwd != "/start" {
+			t.Fatalf("event %+v: want pid 11 in the executor's cwd", e)
+		}
+	}
+	if tr.InitPid != 11 || tr.RootPid != 10 || tr.Procs[11].Parent != 10 {
+		t.Fatalf("%d %d", tr.InitPid, tr.RootPid)
+	}
+	if ex := tr.StepExit(); ex == nil || ex.Pid != 11 || ex.Code != 5 {
+		t.Fatalf("step exit %+v", ex)
+	}
+	if tr.Procs[10].Exit.Code != 0 {
+		t.Fatal("root exit")
+	}
+	// Without the option the same trace is refused, and StepExit is the root's.
 	_, err = parseAt(t, "/start", text, Options{})
 	if err == nil || err.Error() != "trace-incomplete:refused:unshare" {
 		t.Fatalf("%v", err)
 	}
-	// After the exec, refused calls are refused as usual.
-	_, err = parseAt(t, "/start", helperSetup+"10  execve(\"/bin/sh\", [\"sh\"], 0x0) = 0\n10  mount(\"a\", \"b\", NULL, 0, NULL) = 0\n10  +++ exited with 0 +++\n", opts)
-	if err == nil || err.Error() != "trace-incomplete:refused:mount" {
-		t.Fatalf("%v", err)
+	plain := mustParse(t, wrap(`stat("a", 0x1) = 0`))
+	if plain.InitPid != 0 || plain.StepExit().Pid != 1 {
+		t.Fatal("plain StepExit")
 	}
-	// Unknown names after the exec as well.
-	wantReasonOpts(t, helperSetup+"10  execve(\"/bin/sh\", [\"sh\"], 0x0) = 0\n10  capset(0x1) = 0\n10  +++ exited with 0 +++\n", opts, "unknown-syscall:capset")
-	// The exec must happen; a failed exec does not count.
-	wantReasonOpts(t, helperSetup+"10  +++ exited with 0 +++\n", opts, reasonHelperNoExec)
-	wantReasonOpts(t, helperSetup+"10  execve(\"/bin/sh\", [\"sh\"], 0x0) = -1 ENOENT (No such file or directory)\n10  +++ exited with 1 +++\n", opts, reasonHelperNoExec)
-	// The helper must not spawn before the exec.
-	wantReasonOpts(t, helperSetup+"10  fork() = 11\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n", opts, reasonHelperSpawn)
-	// A split setup call is paired and discarded too.
-	tr, err = parseAt(t, "/", "10  mount(\"a\", \"b\", NULL, 0 <unfinished ...>\n10  <... mount resumed>, NULL) = 0\n10  execve(\"/x\", [], 0x0) = 0\n10  +++ exited with 0 +++\n", opts)
-	if err != nil || len(tr.Events) != 1 {
-		t.Fatalf("%v %+v", err, tr)
+	if (&Trace{}).StepExit() != nil {
+		t.Fatal("empty StepExit")
 	}
-	// A child spawned AFTER the exec is normal.
-	_, err = parseAt(t, "/", helperSetup+"10  execve(\"/x\", [], 0x0) = 0\n10  fork() = 11\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n", opts)
+}
+
+func TestHelperRootRules(t *testing.T) {
+	opts := Options{HelperRoot: true}
+	ok := helperRootSetup + helperInitSetup + helperExec
+	// The root spawns twice.
+	wantReasonOpts(t, helperRootSetup+"10  fork() = 12\n"+helperInitSetup+helperExec+"12  +++ exited with 0 +++\n"+helperEnd, opts, reasonHelperSpawn)
+	// The root does a handled call after the spawn, or a refused or unknown one.
+	for _, call := range []string{"stat(\"a\", 0x1) = 0", "mount(\"a\", \"b\", NULL, 0, NULL) = 0", "capset(0x1) = 0"} {
+		wantReasonOpts(t, helperRootSetup+"10  "+call+"\n"+helperInitSetup+helperExec+helperEnd, opts, reasonHelperActivity)
+	}
+	// ... but ignored calls are fine, and handled calls BEFORE the spawn are setup.
+	mustHelper(t, "10  stat(\"a\", 0x1) = 0\n"+helperRootSetup+"10  close(3) = 0\n"+helperInitSetup+helperExec+helperEnd)
+	// The init child spawns before exec.
+	wantReasonOpts(t, helperRootSetup+"11  fork() = 12\n12  +++ exited with 0 +++\n"+helperExec+helperEnd, opts, reasonHelperSpawn)
+	// The child never execs, or its exec fails.
+	wantReasonOpts(t, helperRootSetup+helperInitSetup+"11  +++ exited with 1 +++\n10  +++ exited with 1 +++\n", opts, reasonHelperNoExec)
+	wantReasonOpts(t, helperRootSetup+"11  execve(\"/bin/sh\", [\"sh\"], 0x0) = -1 ENOENT (No such file or directory)\n11  +++ exited with 1 +++\n10  +++ exited with 1 +++\n", opts, reasonHelperNoExec)
+	// The root never spawns at all.
+	wantReasonOpts(t, "10  unshare(CLONE_NEWUSER) = 0\n10  +++ exited with 0 +++\n", opts, reasonHelperNoInit)
+	// After the exec, refused and unknown calls are refused as usual, and the
+	// step may spawn.
+	wantReasonOpts(t, ok+"11  mount(\"a\", \"b\", NULL, 0, NULL) = 0\n"+helperEnd, opts, "refused:mount")
+	wantReasonOpts(t, ok+"11  capset(0x1) = 0\n"+helperEnd, opts, "unknown-syscall:capset")
+	mustHelper(t, ok+"11  fork() = 12\n12  +++ exited with 0 +++\n"+helperEnd)
+	// A split setup call (unknown name) is paired and discarded.
+	mustHelper(t, helperRootSetup+"11  mount(\"a\", \"b\", NULL, 0 <unfinished ...>\n11  <... mount resumed>, NULL) = 0\n"+helperExec+helperEnd)
+	// A setup call that parses but is odd does not leak into the events.
+	tr := mustHelper(t, helperRootSetup+"11  openat(AT_FDCWD, \"/proc/self/uid_map\", O_WRONLY) = 3</proc/1/uid_map>\n"+helperExec+helperEnd)
+	if len(tr.Events) != 1 {
+		t.Fatalf("%+v", tr.Events)
+	}
+	// Setup chdirs are discarded: an absolute exec starts at the executor's cwd,
+	// a relative one after a chdir is refused.
+	tr = mustHelper(t, helperRootSetup+"11  chdir(\"/elsewhere\") = 0\n"+helperExec+helperEnd)
+	if tr.Events[0].Cwd != "/start" {
+		t.Fatalf("%+v", tr.Events[0])
+	}
+	wantReasonOpts(t, helperRootSetup+"11  chdir(\"/elsewhere\") = 0\n11  execve(\"sh\", [\"sh\"], 0x0) = 0\n"+helperEnd, opts, reasonHelperCwd)
+	mustHelper(t, helperRootSetup+"11  execve(\"sh\", [\"sh\"], 0x0) = 0\n"+helperEnd)
+}
+
+func mustHelper(t *testing.T, text string) *Trace {
+	t.Helper()
+	tr, err := parseAt(t, "/start", text, Options{HelperRoot: true})
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("%v\n%s", err, text)
 	}
+	return tr
 }
 
 func wantReasonOpts(t *testing.T, text string, opts Options, reason string) {

@@ -124,6 +124,21 @@ type Trace struct {
 	Procs   map[int]*Process
 	Order   []int  // pids in the order they first appeared
 	Exits   []Exit // exit lines in trace order
+	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
+	InitPid int
+}
+
+// StepExit is the exit status of the step: the init child's under HelperRoot,
+// otherwise the root's.
+func (t *Trace) StepExit() *Exit {
+	pid := t.RootPid
+	if t.InitPid != 0 {
+		pid = t.InitPid
+	}
+	if p := t.Procs[pid]; p != nil {
+		return p.Exit
+	}
+	return nil
 }
 
 // cwdCell is the filesystem context (the working directory) that processes
@@ -155,26 +170,36 @@ const maxProcessDepth = 4096
 type Options struct {
 	Limits Limits
 	// HelperRoot says the first (root) process is `kiln sandbox-exec`, the
-	// sandbox helper of KILN04 §4.3.  Everything the helper does before its first
-	// successful execve (unshare, mount, pivot_root, capability and seccomp
-	// setup) is setup, not the build step: those events are discarded and calls
-	// the table would refuse or not know are tolerated.  The parser then
-	// REQUIRES that the exec happens (helper-no-exec) and that the helper has not
-	// spawned a child before it (helper-spawn).  From the exec onward the root
-	// is an ordinary process and refused calls are refused as usual.
+	// sandbox helper of KILN04 section 4.3, and the trace has this shape:
+	//
+	//	helper (root) --spawns exactly one--> init child (PID 1 of the new PID
+	//	namespace) --setup, then execve--> the step (sh -c <line>)
+	//
+	// All of the root's events are discarded.  It may spawn once (a second
+	// spawn is helper-spawn); after that it may make only ignored-class calls
+	// such as wait4 (anything else is helper-activity).  The init child's events
+	// before its first SUCCESSFUL execve are setup and are discarded too, and
+	// there unknown or refused names (unshare, mount, pivot_root, seccomp) are
+	// tolerated; a spawn by it before that exec is helper-spawn.  The exec event
+	// is kept, the child's working directory becomes the initialCwd given to
+	// Parse (setup chdirs are discarded), and refusals apply normally from then
+	// on.  Without a successful exec the trace is helper-no-exec.  The step's
+	// exit status is the init child's (Trace.StepExit).
 	HelperRoot bool
 }
 
 type model struct {
-	lim        Limits
-	opts       Options
-	root       int
-	initCwd    string
-	trace      *Trace
-	procs      map[int]*proc
-	spawns     map[int]spawn
-	spawnList  []int
-	helperDone bool
+	lim       Limits
+	opts      Options
+	root      int
+	initCwd   string
+	trace     *Trace
+	procs     map[int]*proc
+	spawns    map[int]spawn
+	spawnList []int
+	initPid   int  // helper mode: the root's one child
+	initExec  bool // helper mode: the init child has exec'd the step
+	rootSpawn bool // helper mode: the root has spawned its child
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -199,10 +224,9 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	}
 	m := &model{
 		lim: lim, opts: opts, root: root, initCwd: initialCwd,
-		trace:      &Trace{RootPid: root, Procs: map[int]*Process{}},
-		procs:      map[int]*proc{},
-		spawns:     map[int]spawn{},
-		helperDone: !opts.HelperRoot,
+		trace:  &Trace{RootPid: root, Procs: map[int]*Process{}},
+		procs:  map[int]*proc{},
+		spawns: map[int]spawn{},
 	}
 	if e := m.buildSpawns(recs); e != nil {
 		return nil, e
@@ -215,6 +239,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 	if e := m.finish(); e != nil {
 		return nil, e
 	}
+	m.trace.InitPid = m.initPid
 	return m.trace, nil
 }
 
@@ -236,7 +261,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 			var r string
 			flags, share, r = analyzeClone(c.args)
 			if r != "" {
-				return incomplete(recs[i].line, r)
+				if m.opts.HelperRoot && recs[i].pid == m.root {
+					// The helper itself may clone into new namespaces; that is
+					// its job.  Its child is never treated as sharing anything.
+					flags, share = "", false
+				} else {
+					return incomplete(recs[i].line, r)
+				}
 			}
 		default:
 			continue
@@ -250,6 +281,12 @@ func (m *model) buildSpawns(recs []record) *Error {
 		child := int(c.ret.value)
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
+		}
+		if m.opts.HelperRoot && recs[i].pid == m.root {
+			if m.initPid != 0 {
+				return incomplete(recs[i].line, reasonHelperSpawn)
+			}
+			m.initPid = child
 		}
 		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags, line: recs[i].line}
 		m.spawnList = append(m.spawnList, child)
@@ -341,7 +378,13 @@ func (m *model) add(p *proc) {
 	m.trace.Order = append(m.trace.Order, p.Pid)
 }
 
-func (m *model) inHelper(pid int) bool { return !m.helperDone && pid == m.root }
+// setup reports whether pid is, right now, running sandbox setup rather than
+// the step: the helper root always, the init child until it has exec'd.
+func (m *model) setup(pid int) bool {
+	return m.opts.HelperRoot && (pid == m.root || (pid == m.initPid && !m.initExec))
+}
+
+func isSpawn(name string) bool { return name == "fork" || name == "vfork" || name == "clone" }
 
 func (m *model) apply(rec *record) *Error {
 	p, e := m.get(rec.pid, rec.line)
@@ -361,39 +404,76 @@ func (m *model) apply(rec *record) *Error {
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
 	}
+	if m.opts.HelperRoot && rec.pid == m.root {
+		return m.applyHelperRoot(rec)
+	}
 	if rec.start {
 		p.startCwd, p.hasStart = p.cwd.path, true
 		return nil
+	}
+	c := rec.call
+	setup := m.setup(rec.pid)
+	if m.opts.HelperRoot {
+		// Classification was deferred in pass 1.
+		if e := classifyName(c.name, rec.line); e != nil {
+			if setup {
+				return nil // sandbox setup: unknown or refused is tolerated
+			}
+			return e
+		}
 	}
 	evs, e := m.call(p, rec)
 	if e != nil {
 		return e
 	}
-	c := rec.call
-	switch c.name {
-	case "fork", "vfork", "clone":
-		if c.ret.ok() {
-			if m.inHelper(rec.pid) {
-				return incomplete(rec.line, reasonHelperSpawn)
-			}
-			// Create the child NOW, copying (or sharing) the parent's cwd as
-			// it is at this moment.
-			if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
-				return e
-			}
+	if isSpawn(c.name) && c.ret.ok() {
+		if setup {
+			return incomplete(rec.line, reasonHelperSpawn)
+		}
+		// Create the child NOW, copying (or sharing) the parent's cwd as it
+		// is at this moment.
+		if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+			return e
 		}
 	}
-	if m.inHelper(rec.pid) {
-		if isExecName(c.name) && c.ret.ok() {
-			m.helperDone = true // keep the exec event itself
+	if setup {
+		if !(isExecName(c.name) && c.ret.ok()) {
+			evs = nil // setup: not part of the step
 		} else {
-			evs = nil // helper setup: not part of the step
+			// The step starts where the executor says, whatever setup did.
+			ev := &evs[0]
+			if ev.Path != "" && !strings.HasPrefix(ev.Path, "/") && ev.DirfdPath == "" && ev.Cwd != m.initCwd {
+				return incomplete(rec.line, reasonHelperCwd)
+			}
+			m.initExec = true
+			p.cwd.path = m.initCwd
+			ev.Cwd = m.initCwd
 		}
 	}
 	if len(m.trace.Events)+len(evs) > m.lim.MaxEvents {
 		return incomplete(rec.line, reasonSize)
 	}
 	m.trace.Events = append(m.trace.Events, evs...)
+	return nil
+}
+
+// applyHelperRoot handles a record of the sandbox helper.  Nothing it does
+// becomes an event.  Its one spawn creates the init child; after that only
+// ignored-class calls (which pass 1 has already dropped) are allowed.
+func (m *model) applyHelperRoot(rec *record) *Error {
+	if rec.start {
+		return nil
+	}
+	c := rec.call
+	if m.rootSpawn {
+		return incomplete(rec.line, reasonHelperActivity)
+	}
+	if isSpawn(c.name) && c.ret.ok() {
+		m.rootSpawn = true
+		if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+			return e
+		}
+	}
 	return nil
 }
 
@@ -418,8 +498,13 @@ func (m *model) finish() *Error {
 			return incomplete(0, reasonMissingExit)
 		}
 	}
-	if !m.helperDone {
-		return incomplete(0, reasonHelperNoExec)
+	if m.opts.HelperRoot {
+		if m.initPid == 0 {
+			return incomplete(0, reasonHelperNoInit)
+		}
+		if !m.initExec {
+			return incomplete(0, reasonHelperNoExec)
+		}
 	}
 	return nil
 }

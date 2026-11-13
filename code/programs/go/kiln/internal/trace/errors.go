@@ -56,4 +56,7 @@ const (
 	reasonCwdRace        = "cwd-race"
 	reasonHelperSpawn    = "helper-spawn"
 	reasonHelperNoExec   = "helper-no-exec"
+	reasonHelperNoInit   = "helper-no-init"
+	reasonHelperActivity = "helper-activity"
+	reasonHelperCwd      = "helper-cwd"
 )

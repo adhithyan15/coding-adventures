@@ -220,9 +220,13 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
   on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
   last line lacks its newline is incomplete.
 - **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true})`
-  discards the helper's setup calls (`unshare`, `mount`, `pivot_root`, ...)
-  before its first successful `execve`, and requires that exec
-  (`helper-no-exec`, `helper-spawn`). See KILN04 section 4.5.
+  models the helper tree: the root spawns exactly one init child, which does
+  setup and then `execve`s the step. Every root event and the init child's
+  pre-exec setup are discarded; `unshare`, `mount`, `pivot_root` and the like
+  are tolerated there only. The step starts in `cwd`, and `Trace.StepExit` and
+  `Trace.InitPid` give the init child's status and pid. Violations are
+  `helper-spawn`, `helper-activity`, `helper-no-init`, `helper-no-exec` and
+  `helper-cwd` (KILN04 section 4.5).
 - **Boundary.** Paths are reported as printed, with the working directory or
   `dirfd` path they are relative to. Resolving them against a tree (symlinks,
   `..`, stability) is stage 1b.

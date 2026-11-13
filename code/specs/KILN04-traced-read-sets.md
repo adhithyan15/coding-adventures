@@ -287,14 +287,19 @@ This filter is the sandbox's own; it is independent of strace's
 
 Two consequences:
 
-- **Trace boundary.** The parser discards everything the helper's PID does
-  before that first `execve`, after checking that its `/proc/<pid>/exe` is
-  the Kiln binary. So the namespace setup (`unshare`, `mount`,
-  `pivot_root`) never reaches the refusal list.
-- **Daemons.** The helper's child is PID 1 of the new PID namespace, so
-  when it exits the kernel kills every survivor. Any process whose exit
-  line is `killed by SIGKILL` after PID 1's exit line gives `daemon-left`.
-  No timer is needed.
+- **Trace boundary.** The traced tree has a fixed shape: the Kiln helper
+  (the root) spawns **exactly one** child, the init of the new PID
+  namespace, and that child does the setup and then `execve`s
+  `sh -c <line>`. The parser discards every event of the root, and every
+  event of the init child before its first successful `execve`; the caller
+  first checks that the root's `/proc/<pid>/exe` is the Kiln binary. So the namespace setup (`unshare`, `mount`, `pivot_root`,
+  the seccomp installation) never reaches the refusal list. The step's
+  exit status is the init child's, and the step starts in the working
+  directory the executor names, whatever setup did (§4.5).
+- **Daemons.** The init child is PID 1 of the new PID namespace, so when
+  it exits the kernel kills every survivor. Any process whose exit line is
+  `killed by SIGKILL` after the **init child's** exit line gives
+  `daemon-left`. No timer is needed.
 
 **Integrity.**
 - **The claim.** The tracer runs outside the namespaces, unprivileged: no
@@ -435,12 +440,28 @@ been cut off mid-line.
 - Pids with leading zeros are not pids.
 
 **The helper.** With `Options.HelperRoot`, the root process is
-`kiln sandbox-exec`. Its events before its first **successful** `execve`
-are discarded, and calls the table would refuse or not know (`unshare`,
-`mount`, `pivot_root`, `capset`, ...) are tolerated there. The exec must
-happen (`helper-no-exec`), and a child spawned by the helper before it is
-`helper-spawn`. From the exec on, refused calls are refused as usual. The
-exec event itself is kept.
+`kiln sandbox-exec` and the tree is helper, then one init child, then the
+step (§4.3).
+- **The root.** None of its events ever reaches `Events`. It may spawn
+  exactly one child; a second spawn is `helper-spawn`. After that spawn it
+  may make only ignored-class calls (`wait4`, `waitid`, `kill`, `exit*`);
+  anything else, handled, refused or unknown, is `helper-activity`. It may
+  itself clone into new namespaces. A root that never spawns is
+  `helper-no-init`.
+- **The init child.** Its events before its first **successful** `execve`
+  are discarded, and calls the table would refuse or not know (`unshare`,
+  `mount`, `pivot_root`, `seccomp`, ...) are tolerated there. A spawn by
+  it before that exec is `helper-spawn`. The exec event itself is kept, and
+  refusals apply from then on. Without a successful exec the trace is
+  `helper-no-exec`. Because pass 1 cannot know yet whose call it is,
+  unknown and refused names are judged in pass 2 in this mode.
+- **Working directory.** The step's cwd is the `initialCwd` given to
+  `Parse`, set at the exec; every setup `chdir` is discarded. An exec by a
+  relative path after a setup `chdir` is `helper-cwd`, since that path
+  would resolve against a directory the step never had.
+- **Exit status and daemons.** The step's status is the init child's
+  (`Trace.StepExit`), and `Trace.InitPid` names it for the later
+  `daemon-left` rule, which the parser does not implement.
 
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a

@@ -110,9 +110,13 @@ type record struct {
 
 // lineState is what the line handler carries between lines.
 type lineState struct {
-	pend   map[int]*pending
-	root   int  // pid of the first line
-	helper bool // HelperRoot is set and the root has not yet exec'd
+	pend map[int]*pending
+	root int // pid of the first line
+	// helper is HelperRoot: name classification (unknown, refused) is DEFERRED
+	// to pass 2, because whether a name is refused depends on which process
+	// made the call and whether it has exec'd, and that is only known once the
+	// whole spawn structure has been read.
+	helper bool
 }
 
 type pending struct {
@@ -395,9 +399,6 @@ func readRecords(r io.Reader, lim Limits, helper bool) ([]record, int, *Error) {
 			if len(recs) > lim.MaxEvents {
 				return nil, 0, incomplete(lineNo, reasonSize)
 			}
-			if st.helper && rec.call != nil && rec.pid == st.root && isExecName(rec.call.name) && rec.call.ret.ok() {
-				st.helper = false
-			}
 		}
 	}
 	var first *pending
@@ -498,7 +499,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		return finishCall(pid, lineNo, call, true, st.helper && pid == st.root)
+		return finishCall(pid, lineNo, call, true, st.helper)
 	}
 	call, unfinished, prefix, r := parseCall(body)
 	if r != "" {
@@ -507,9 +508,8 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 	if pend[pid] != nil {
 		return nil, incomplete(lineNo, reasonInterleaved)
 	}
-	setup := st.helper && pid == st.root
 	if unfinished {
-		if !setup {
+		if !st.helper {
 			if e := classifyName(call.name, lineNo); e != nil {
 				return nil, e
 			}
@@ -522,21 +522,18 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		}
 		return nil, nil
 	}
-	return finishCall(pid, lineNo, call, false, setup)
+	return finishCall(pid, lineNo, call, false, st.helper)
 }
 
 // finishCall checks the closed table and keeps the call unless it is ignored.
 //
-// With HelperRoot, the helper's own setup calls (unshare, mount, pivot_root,
-// anything unknown) are discarded instead of refused until it has exec'd: that
-// is what `setup` means.
-func finishCall(pid, lineNo int, call rawCall, split, setup bool) (*record, *Error) {
-	if setup {
-		if c := lookup(call.name).class; c == classUnknown || c == classRefused {
-			return nil, nil
+// With HelperRoot, unknown and refused names are kept and judged in pass 2
+// (deferClass), where the sandbox helper's setup calls can be told apart.
+func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record, *Error) {
+	if !deferClass {
+		if e := classifyName(call.name, lineNo); e != nil {
+			return nil, e
 		}
-	} else if e := classifyName(call.name, lineNo); e != nil {
-		return nil, e
 	}
 	if lookup(call.name).class == classIgnored {
 		return nil, nil
