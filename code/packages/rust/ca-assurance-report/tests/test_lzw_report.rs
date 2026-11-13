@@ -219,4 +219,3 @@ fn check_rejects_an_exemption_for_cwe_409() {
     row.approved = Some(false);
     assert!(verify_evidence(&report, &ev).is_err());
 }
-

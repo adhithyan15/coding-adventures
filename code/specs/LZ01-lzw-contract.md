@@ -316,4 +316,3 @@ from the document and the manifest and refuses a report that excludes the class,
 different suite set, or discharges on evidence the manifest does not hold. The remaining
 rows are excluded as for the other adopters; eight rows rest on `unverified::` static
 attestations (nine for wasm-leb128: the CWE-409 one is gone).
-
