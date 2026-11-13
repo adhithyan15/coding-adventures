@@ -603,9 +603,18 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     `._+-`, not starting with punctuation: no `:` (reserved for Kiln) and no `/`.
     A pin is `image` or an exact version (a digit first, then letters, digits and
     `._+-`); `latest`, ranges and empty pins are refused. At most 256 entries, 8
-    probes of at most 8 arguments each, 16 directories per tool. A tool pinned in
+    probes of at most 8 arguments each (a probe's `argv[0]` must be a tool the
+    same entry pins; `image` counts. Its arguments are a flag such as `-v`,
+    `--version` or `--pkg-info=x`, or a bare word such as `version`; no path, no
+    space, and never an interpreter eval flag: `-c`, `-e`, `-E`, `-r`, `-eval`,
+    `--eval`, `--exec`, `--command`, with or without `=value`), 16 directories per tool. A tool pinned in
     two entries must carry the same pin and the same roots, or the file is
-    refused.
+    refused. Every policy file (`toolchains.json`, `env.json`,
+    `host-roots.json`, `pinned.json`, `never.json`) is decoded case-exactly and
+    with duplicate keys refused (Go's decoder would match `"Pins"` and let the
+    last of two equal keys win), so what a reviewer reads is what is parsed.
+    Paths in policy files may not contain `:` or `;`, so one entry cannot smuggle
+    in a second PATH directory.
 23. **Entry namespace.** Closure languages and `extra_toolchains` share one
     namespace of entry names (`rust` is both a language and an extra toolchain).
     The always-included set of §4 is the entries with `always: true` (`sh`, `cc`,
@@ -638,13 +647,23 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     `1.2.3` does not match `1.2.30` or `1.2.3-rc1`. Normalisation removes
     absolute paths (recognised at a token start) and timestamps first. Statuses:
     `ok`, `absent` (not found on the fixed PATH, or a dangling link),
-    `refused` (the real path is inside the checkout) and `mismatch` (the output
-    lacks the pin, or the run failed to start or timed out); a non-zero exit keeps
-    its output. Only `mismatch` is a finding, and it gives the soft reason
-    `probe-mismatch:<tool>` to every package whose key holds that tool. A tool's
-    reported status is the worst of its probes. The binary is run under the name
-    the PATH gave (rustup proxies and multi-call binaries read `argv[0]`) but
-    judged by its real path. The run's environment is exactly `PATH`, `LANG=C`,
+    `refused` (the real path is inside the checkout, or cannot be related to it:
+    the check fails closed, compares case-folded on macOS and Windows, and `Probe`
+    refuses to run at all without a checkout root), `mismatch` (the output lacks
+    the pin, or the run failed to start, timed out or exited non-zero even if the
+    pin is in the output; a short normalised excerpt is kept as `detail`) and
+    `timeout` (the 120 s limit for all probes of a plan passed before this one
+    ran). `mismatch` and `timeout` are findings and give the soft reasons
+    `probe-mismatch:<tool>` and `probe-timeout:<tool>` to every package whose key
+    holds that tool. They, and `refused`, are soft only in M2: they become
+    fatal before M3 enables reuse. A tool's
+    reported status is the worst of its probes. The binary that is run is the
+    real path that was checked (so it cannot be swapped between check and run),
+    with `argv[0]` set to the name the PATH gave (rustup proxies and multi-call
+    binaries read it). On Unix each probe leads its own process group and a
+    timeout kills the group. A `HOME` that is not absolute and clean, or holds the
+    list separator, is treated as unset, so its roots are skipped. Failing to
+    remove the probe's private directory is an error. The run's environment is exactly `PATH`, `LANG=C`,
     `LC_ALL=C`, `TZ=UTC` and a private `HOME`, in a private working directory.
     Probes run once per plan over the entries any package uses, and only for the
     platform the machine runs (`--probe` with another `--os` is a usage error).
@@ -655,11 +674,16 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     `*`. A bare `*`, a name with `:`, and any name or prefix that is secret-like
     are refused when the file loads. Secret-like is §5's list (`TOKEN`, `SECRET`,
     `PASSWORD`, `PASSWD`, `CREDENTIAL`, `AUTH`, `PRIVATE` anywhere, `_KEY` and
-    `_PAT` at the end, case-insensitively) joined with what `envscrub` removes
+    `_PAT` at the end, case-insensitively; plus `PASSPHRASE`, `COOKIE`,
+    `SESSION`, `APIKEY`, `SIGNING` and `ACCESS_KEY`) joined with what `envscrub` removes
     from child environments, so the two lists cannot disagree. After wildcard
     expansion a matching set variable that is secret-like is an error naming the
-    variable (never its value). Names match case-sensitively on every OS, the
-    first of two entries with one name wins, and a value must be valid UTF-8.
+    variable (never its value). A keyed VALUE that looks like a credential is an
+    error naming the variable too: URL userinfo (`://user@`), the token shapes
+    `ghp_`, `gho_`, `github_pat_`, `AKIA`, `xoxb-` and `xoxp-`, and a
+    `-D...password=` flag. Names match case-sensitively, except on Windows where
+    they are case-insensitive; the LAST of two entries with one name wins (as in
+    `os/exec`); and a value must be valid UTF-8.
     Origin is always 0 (`env`). `PATH`, `HOME` and `TMPDIR` are not listed: the
     KILN04 weak key owns them.
 28. **`ConstructPATH(tools, home)`.** Directories come from the `roots` of
@@ -675,7 +699,8 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
 29. **`host-roots.json`.** `roots` (strictly sorted by path; `path`, `kind`
     `image`, `tool`, `state` or `ephemeral`, and `tool`, `ecosystem`,
     `fetchers` only where the kind uses them), `ephemeral` and `absent-ok`
-    (strictly sorted). Paths are absolute or begin with `$HOME` (or `$TMPDIR`),
+    (strictly sorted). An `ephemeral` glob needs at least two literal segments
+    before its first wildcard (`/dev/fd/*` is fine, `/proc/*` is not). Paths are absolute or begin with `$HOME` (or `$TMPDIR`),
     are clean, and contain no `..`; `ephemeral` allows `*` and `**`; `/`, `$HOME`
     and `$TMPDIR` alone are too broad to be roots. A `tool` root names a tool
     that `toolchains.json` pins (the tool's binary name, not the entry name), and
@@ -692,3 +717,7 @@ Items continue the numbering of §11 and §12. (The loop item asked for a
     encodings of §3.8 and §3.9). Environment values never appear. `explain`
     prints the same. Since the environment is one for the whole run, `env` sits at
     the plan level; each record carries only the digest.
+31. **Where policy is read from.** On trusted runs the policy files are to be
+    read from the base revision through `Source`, never from the working tree
+    (KILN03 D6), so a PR cannot choose its own probes or allowlist. 7c-3 reads
+    them from the tree it is given; the base-revision read is a later item.

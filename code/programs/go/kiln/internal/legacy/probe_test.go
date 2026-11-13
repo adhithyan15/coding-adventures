@@ -101,7 +101,7 @@ func newProbeFixture(t *testing.T) *probeFixture {
 	}
 	f.tc = mustToolchains(t, `{
 	  "img":  {"always": true, "pins": {"imgtool": "image"}, "probes": [["imgtool", "--version"]], "roots": {"imgtool": ["$HOME/bin"]}},
-	  "lang": {"pins": {"gone": "1.0", "ltool": "2.0.1", "other": "7.7"},
+	  "lang": {"pins": {"gone": "1.0", "ltool": "2.0.1", "nopin": "image", "other": "7.7"},
 	           "probes": [["ltool", "--version"], ["ltool", "-V"], ["other", "-v"], ["gone", "-v"], ["nopin", "-x"]],
 	           "roots": {"ltool": ["$HOME/bin"]}}
 	}`)
@@ -257,7 +257,7 @@ func TestProbeRunErrorIsMismatchAndWorstWins(t *testing.T) {
 
 func TestProbeAbsentToolIsNotAnError(t *testing.T) {
 	f := newProbeFixture(t)
-	rs, err := f.tc.Probe([]string{"lang"}, "linux", ProbeOptions{Run: func(ProbeRun) ([]byte, error) {
+	rs, err := f.tc.Probe([]string{"lang"}, "linux", ProbeOptions{Root: f.checkout, Run: func(ProbeRun) ([]byte, error) {
 		t.Fatal("ran a tool that is not there")
 		return nil, nil
 	}})
@@ -271,7 +271,7 @@ func TestProbeAbsentToolIsNotAnError(t *testing.T) {
 	}
 	// With no home, $HOME roots are not on the PATH at all.
 	f.exe("ltool")
-	rs, _ = f.tc.Probe([]string{"lang"}, "linux", ProbeOptions{Run: func(ProbeRun) ([]byte, error) { t.Fatal("ran"); return nil, nil }})
+	rs, _ = f.tc.Probe([]string{"lang"}, "linux", ProbeOptions{Root: f.checkout, Run: func(ProbeRun) ([]byte, error) { t.Fatal("ran"); return nil, nil }})
 	if results(rs)["ltool"] != ProbeAbsent {
 		t.Fatalf("%v", rs)
 	}
@@ -293,8 +293,8 @@ func TestExecProbeReal(t *testing.T) {
 		t.Fatalf("%q %v", out, err)
 	}
 	run.Args = []string{"fail"}
-	if out, err := execProbe(run); err != nil || !strings.Contains(string(out), "2.0.1") {
-		t.Fatalf("non-zero exit must keep the output: %q %v", out, err)
+	if out, err := execProbe(run); err == nil || !strings.Contains(string(out), "2.0.1") {
+		t.Fatalf("non-zero exit must be an error and keep the output: %q %v", out, err)
 	}
 	run.Args = []string{"big"}
 	if out, _ := execProbe(run); len(out) != ProbeOutputLimit {

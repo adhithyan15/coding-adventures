@@ -143,6 +143,7 @@ type planner struct {
 	envDigest [32]byte
 	probes    []ProbeResult
 	mismatch  map[string]bool
+	timedOut  map[string]bool
 }
 
 // workers returns the pool size: at most the caller's choice, else the CPU

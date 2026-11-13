@@ -266,6 +266,9 @@ func (pl *planner) record(p int) (Record, error) {
 		if pl.mismatch[tl.Name] {
 			reasons["probe-mismatch:"+tl.Name] = true // soft: reported, never a class
 		}
+		if pl.timedOut[tl.Name] {
+			reasons["probe-timeout:"+tl.Name] = true // soft, like probe-mismatch
+		}
 	}
 
 	sort.Slice(reads, func(a, b int) bool { return reads[a].Path < reads[b].Path })
@@ -355,7 +358,7 @@ func classify(hard, unpinned bool) string {
 // reasonGroup collapses a reason to the kind the histogram counts: reasons
 // that embed a package or file name are grouped by their prefix.
 func reasonGroup(r string) string {
-	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:"} {
+	for _, p := range []string{"unknown-repo-inputs:", "never:", "symlink:", "escape:", "indirect:", "unscanned:", "unknown-toolchain:", "probe-mismatch:", "probe-timeout:"} {
 		if strings.HasPrefix(r, p) {
 			return p[:len(p)-1]
 		}

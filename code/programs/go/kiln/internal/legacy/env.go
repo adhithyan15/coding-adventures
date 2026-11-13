@@ -3,6 +3,8 @@ package legacy
 import (
 	"crypto/sha256"
 	"fmt"
+	"regexp"
+	"runtime"
 	"sort"
 	"strings"
 	"unicode/utf8"
@@ -30,7 +32,37 @@ type envFile struct {
 // blunt: it also catches GIT_AUTHOR_NAME, and over-matching only costs a
 // variable the key does not need, where a miss would put a brute-forceable
 // digest of a credential in a plan.
-var secretMarkers = []string{"TOKEN", "SECRET", "PASSWORD", "PASSWD", "CREDENTIAL", "AUTH", "PRIVATE"}
+var secretMarkers = []string{"TOKEN", "SECRET", "PASSWORD", "PASSWD", "PASSPHRASE", "CREDENTIAL", "AUTH", "PRIVATE",
+	"COOKIE", "SESSION", "APIKEY", "SIGNING", "ACCESS_KEY"}
+
+// secretValueRes recognise a credential by its VALUE, for the day a harmless
+// name carries one: URL userinfo, common token shapes, and a JVM `-D...password=`
+// flag.
+var secretValueRes = []*regexp.Regexp{
+	regexp.MustCompile(`://[^/\s@]+@`),
+	regexp.MustCompile(`ghp_|gho_|github_pat_|AKIA|xox[bp]-`),
+	regexp.MustCompile(`-D[^\s=]*[Pp]assword=`),
+}
+
+func secretValue(v string) bool {
+	for _, re := range secretValueRes {
+		if re.MatchString(v) {
+			return true
+		}
+	}
+	return false
+}
+
+// envCaseFold makes names compare case-insensitively: Windows environment names
+// do, so `Path` and `PATH` are one variable there.
+var envCaseFold = runtime.GOOS == "windows"
+
+func foldEnv(n string) string {
+	if envCaseFold {
+		return strings.ToUpper(n)
+	}
+	return n
+}
 
 // secretLike reports whether a variable name looks like it holds a secret:
 // KILN03 5's rule, plus everything the child-process scrubber already removes
@@ -66,7 +98,7 @@ func envNameOK(n string) bool {
 // trailing `*` makes a prefix; a bare `*` would allow everything and is refused.
 func ParseEnvPolicy(data []byte) (*EnvPolicy, error) {
 	var f envFile
-	if err := strictDecode(data, &f); err != nil {
+	if err := policyDecode(data, &f); err != nil {
 		return nil, fmt.Errorf("env: %w", err)
 	}
 	if err := checkSorted("env names", f.Names); err != nil {
@@ -85,9 +117,9 @@ func ParseEnvPolicy(data []byte) (*EnvPolicy, error) {
 			return nil, fmt.Errorf("env: %q is secret-like and may not be keyed", short(n))
 		}
 		if prefix {
-			p.prefixes = append(p.prefixes, stem)
+			p.prefixes = append(p.prefixes, foldEnv(stem))
 		} else {
-			p.exact[stem] = true
+			p.exact[foldEnv(stem)] = true
 		}
 	}
 	return p, nil
@@ -107,6 +139,7 @@ func (p *EnvPolicy) Names() []string {
 }
 
 func (p *EnvPolicy) allows(name string) bool {
+	name = foldEnv(name)
 	if p.exact[name] {
 		return true
 	}
@@ -123,23 +156,29 @@ func (p *EnvPolicy) allows(name string) bool {
 // unset variable is simply absent, an empty one stays an empty value, so
 // the two remain distinct.  A variable that matches only after wildcard
 // expansion and is secret-like is an ERROR, not a silent skip; an invalid
-// UTF-8 value is an error too (a key cannot hold it).  The first of two
-// entries with one name wins, as getenv would.  Names are compared exactly.
+// UTF-8 value is an error too (a key cannot hold it), and so is a value that
+// looks like a credential.  The LAST of two entries with one name wins, as in
+// os/exec's environment handling.  Names are compared exactly, except on Windows.
 func (p *EnvPolicy) EnvFor(environ []string) ([]key.EnvVar, error) {
-	seen := map[string]bool{}
-	var out []key.EnvVar
-	for _, e := range environ {
-		name := envscrub.EntryName(e)
-		if seen[name] || !p.allows(name) {
-			continue
+	last := map[string]int{} // folded name -> index of the LAST entry
+	for i, e := range environ {
+		if name := envscrub.EntryName(e); p.allows(name) {
+			last[foldEnv(name)] = i
 		}
-		seen[name] = true
+	}
+	out := make([]key.EnvVar, 0, len(last))
+	for _, i := range last {
+		e := environ[i]
+		name := envscrub.EntryName(e)
 		if secretLike(name) {
 			return nil, fmt.Errorf("env: variable %q is set, matches env.json and looks like a secret; unset it or narrow env.json", short(name))
 		}
 		value := strings.TrimPrefix(e[len(name):], "=")
 		if !utf8.ValidString(value) {
 			return nil, fmt.Errorf("env: variable %q holds a value that is not valid UTF-8", short(name))
+		}
+		if secretValue(value) {
+			return nil, fmt.Errorf("env: variable %q holds a value that looks like a credential; unset it or narrow env.json", short(name))
 		}
 		out = append(out, key.EnvVar{Name: name, Value: value, Origin: key.OriginEnv})
 	}

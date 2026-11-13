@@ -69,7 +69,7 @@ func loadPolicy(src Source, names map[string]bool) (*policy, error) {
 		return nil, err
 	}
 	var pf pinnedFile
-	if err := strictDecode(data, &pf); err != nil {
+	if err := policyDecode(data, &pf); err != nil {
 		return nil, fmt.Errorf("%s: %w", PinnedPath, err)
 	}
 	if err := checkSorted(PinnedPath+" languages", pf.Languages); err != nil {
@@ -83,7 +83,7 @@ func loadPolicy(src Source, names map[string]bool) (*policy, error) {
 		return nil, err
 	}
 	var nf neverFile
-	if err := strictDecode(data, &nf); err != nil {
+	if err := policyDecode(data, &nf); err != nil {
 		return nil, fmt.Errorf("%s: %w", NeverPath, err)
 	}
 	if err := checkNameList(NeverPath+" packages", nf.Packages, names); err != nil {

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"unicode"
@@ -146,6 +147,10 @@ func checkPolicyPath(p string, allowTmp, glob bool) error {
 	if p == "" || len(p) > 1024 || !utf8.ValidString(p) || strings.ContainsFunc(p, unicode.IsControl) || strings.Contains(p, "\\") {
 		return fmt.Errorf("invalid path %q", short(p))
 	}
+	// The list separators would let one entry smuggle a second PATH directory.
+	if strings.ContainsAny(p, ":;") {
+		return fmt.Errorf("path %q contains a path-list separator", short(p))
+	}
 	rest := p
 	switch {
 	case strings.HasPrefix(p, "/"):
@@ -169,6 +174,26 @@ func checkPolicyPath(p string, allowTmp, glob bool) error {
 		if seg == ".." || seg == "." {
 			return fmt.Errorf("path %q has a %q segment", short(p), seg)
 		}
+	}
+	return nil
+}
+
+var probeArgRe = regexp.MustCompile(`^(-{1,2}[A-Za-z][A-Za-z0-9._=-]*|[A-Za-z][A-Za-z0-9._-]*)$`)
+
+// evalFlags are interpreter flags that run supplied code; a probe may never
+// carry one, in either dash spelling and with or without `=value`.
+var evalFlags = map[string]bool{"c": true, "e": true, "E": true, "r": true, "eval": true, "exec": true, "command": true}
+
+// checkProbeArg accepts a flag-shaped argument (`-v`, `--version`,
+// `--pkg-info=x`) or a bare word (`version`), never a path, a space or an
+// eval flag.
+func checkProbeArg(a string) error {
+	if len(a) > maxProbeArg || !probeArgRe.MatchString(a) {
+		return fmt.Errorf("argument %q is not a flag or a bare word", short(a))
+	}
+	name, _, _ := strings.Cut(strings.TrimLeft(a, "-"), "=")
+	if strings.HasPrefix(a, "-") && evalFlags[name] {
+		return fmt.Errorf("argument %q evaluates code", short(a))
 	}
 	return nil
 }
@@ -222,7 +247,7 @@ func ParseToolchains(data []byte) (*Toolchains, error) {
 
 func parseToolchain(name string, raw json.RawMessage) (*Toolchain, error) {
 	var j toolchainJSON
-	if err := strictDecode(raw, &j); err != nil {
+	if err := policyDecode(raw, &j); err != nil {
 		return nil, err
 	}
 	e := &Toolchain{Name: name, Always: j.Always, OS: j.OS, Probes: j.Probes, Pins: map[string]string{}, Roots: map[string][]string{}}
@@ -261,9 +286,15 @@ func parseToolchain(name string, raw json.RawMessage) (*Toolchain, error) {
 		if len(argv) == 0 || len(argv) > maxProbeArgs || !validName(argv[0]) {
 			return nil, fmt.Errorf("probe %q must be a binary name plus at most %d arguments", short(strings.Join(argv, " ")), maxProbeArgs-1)
 		}
-		for _, a := range argv {
-			if a == "" || len(a) > maxProbeArg || !utf8.ValidString(a) || strings.ContainsFunc(a, unicode.IsControl) {
-				return nil, fmt.Errorf("probe %q has a bad argument", short(argv[0]))
+		// A probe runs a binary named by a PR-editable file, so it may only run
+		// a tool this entry pins, with arguments that cannot make it evaluate
+		// code.
+		if _, ok := e.Pins[argv[0]]; !ok {
+			return nil, fmt.Errorf("probe of %q: not one of this entry's pins", short(argv[0]))
+		}
+		for _, a := range argv[1:] {
+			if err := checkProbeArg(a); err != nil {
+				return nil, fmt.Errorf("probe of %q: %w", short(argv[0]), err)
 			}
 		}
 	}
@@ -392,6 +423,14 @@ func systemDir(d string) bool {
 	return false
 }
 
+// validHome says whether home may be spliced into a PATH: absolute, already
+// clean, and free of list separators. A relative or odd HOME would put a
+// relative directory on the PATH, which is the checkout when the probe runs.
+func validHome(home string) bool {
+	return home != "" && filepath.IsAbs(home) && filepath.Clean(home) == home &&
+		!strings.ContainsRune(home, filepath.ListSeparator)
+}
+
 // ConstructPATH builds a PATH from the roots of exactly the given tools
 // (KILN04 4.2), so recording and PR jobs get the same value and a pin bump for
 // an unrelated language changes nothing.  Order is fixed: the directories of
@@ -401,6 +440,9 @@ func systemDir(d string) bool {
 // home is left out.  Never `.`, never `node_modules/.bin`, never a shim: only
 // what toolchains.json names.
 func (t *Toolchains) ConstructPATH(tools []key.Tool, home string) string {
+	if !validHome(home) {
+		home = ""
+	}
 	names := make([]string, 0, len(tools))
 	for _, tl := range tools {
 		names = append(names, tl.Name)

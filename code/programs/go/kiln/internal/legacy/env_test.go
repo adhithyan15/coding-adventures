@@ -60,9 +60,15 @@ func TestEnvFor(t *testing.T) {
 			t.Fatalf("origin of %s = %d", v.Name, v.Origin)
 		}
 	}
-	want := "CARGO_HOME=/h CARGO_TARGET_DIR=/t=x CI=true TZ="
+	want := "CARGO_HOME=/h CARGO_TARGET_DIR=/t=x CI=ignored-second TZ="
 	if strings.Join(got, " ") != want {
 		t.Fatalf("got %q want %q", strings.Join(got, " "), want)
+	}
+	// Duplicate names: the LAST entry wins, as in os/exec.
+	for _, v := range vars {
+		if v.Name == "CI" && v.Value != "ignored-second" {
+			t.Fatalf("CI = %q, want the last value", v.Value)
+		}
 	}
 	// An empty value stays distinct from unset: LANG is not there at all.
 	for _, v := range vars {
@@ -109,5 +115,51 @@ func TestEnvNamesAndSecretLike(t *testing.T) {
 		if secretLike(n) != want {
 			t.Errorf("secretLike(%q) = %v", n, !want)
 		}
+	}
+}
+
+func TestEnvSecretMarkersAndValues(t *testing.T) {
+	for _, n := range []string{"GPG_PASSPHRASE", "MY_COOKIE", "SESSION_ID", "STRIPEAPIKEY", "CODE_SIGNING_X", "AWS_ACCESS_KEY_ID"} {
+		if !secretLike(n) {
+			t.Errorf("%s not secret-like", n)
+		}
+		if _, err := ParseEnvPolicy([]byte(`{"names": ["` + n + `"]}`)); err == nil {
+			t.Errorf("%s accepted in env.json", n)
+		}
+	}
+	p := mustEnv(t, `{"names": ["CI", "FLAGS"]}`)
+	for _, v := range []string{
+		"https://user:pw@example.com/x", "ghp_abcdef", "gho_abc", "github_pat_11AA", "AKIAIOSFODNN7EXAMPLE",
+		"xoxb-1-2", "xoxp-1", "-Ddb.password=hunter2 -Dx=1", "-Dpassword=x",
+	} {
+		_, err := p.EnvFor([]string{"FLAGS=" + v})
+		if err == nil || !strings.Contains(err.Error(), "FLAGS") || strings.Contains(err.Error(), v) {
+			t.Errorf("value %q: %v", v, err)
+		}
+	}
+	for _, v := range []string{"https://example.com/x", "a@b", "-Dfoo=bar", "xoxo", "true"} {
+		if _, err := p.EnvFor([]string{"FLAGS=" + v}); err != nil {
+			t.Errorf("harmless value %q refused: %v", v, err)
+		}
+	}
+}
+
+func TestEnvCaseFoldOnWindows(t *testing.T) {
+	old := envCaseFold
+	defer func() { envCaseFold = old }()
+	envCaseFold = true
+	p := mustEnv(t, `{"names": ["CARGO_*", "CI"]}`)
+	vars, err := p.EnvFor([]string{"Ci=1", "cargo_home=/h", "CI=2"})
+	if err != nil || len(vars) != 2 || vars[1].Name != "cargo_home" && vars[0].Name != "cargo_home" {
+		t.Fatalf("%v %v", vars, err)
+	}
+	for _, v := range vars {
+		if v.Name == "CI" && v.Value != "2" {
+			t.Fatalf("last-wins across case: %v", vars)
+		}
+	}
+	envCaseFold = false
+	if vars, _ := p.EnvFor([]string{"Ci=1"}); len(vars) != 0 {
+		t.Fatal("case-folded match off Windows")
 	}
 }

@@ -19,6 +19,9 @@ import (
 const (
 	ProbeTimeout     = 10 * time.Second
 	ProbeOutputLimit = 64 << 10
+	// ProbeTotalTimeout bounds ALL probes of one plan, so a PR that makes
+	// every probe slow cannot stall planning for 10 s times the probe count.
+	ProbeTotalTimeout = 120 * time.Second
 )
 
 // Probe statuses.  Only ProbeMismatch is a finding; the others say why a probe
@@ -28,13 +31,15 @@ const (
 	ProbeOK       = "ok"       // ran; the pin was found as a whole token, or there is nothing to compare
 	ProbeAbsent   = "absent"   // no binary on the fixed PATH
 	ProbeRefused  = "refused"  // the binary resolves inside the checkout, so the PR would choose what runs
-	ProbeMismatch = "mismatch" // ran (or failed to), and the output does not carry the pin
+	ProbeMismatch = "mismatch" // ran (or failed to or exited non-zero), and the output does not carry the pin
+	ProbeTimedOut = "timeout"  // the overall deadline passed before this probe ran
 )
 
 // ProbeRun is one probe execution: no shell, an explicit environment, a
 // private working directory, a timeout and an output cap.
 type ProbeRun struct {
-	Path    string
+	Path    string   // the real path, symlinks resolved
+	Argv0   string   // the name the PATH gave, which multi-call binaries read
 	Args    []string // without argv[0]
 	Env     []string
 	Dir     string
@@ -50,8 +55,10 @@ type ProbeRunner func(ProbeRun) ([]byte, error)
 // ProbeOptions turn probing on (`--probe`).
 type ProbeOptions struct {
 	Root string      // the checkout; a binary that resolves inside it is refused
-	Home string      // expands $HOME roots on the PATH; "" drops them
+	Home string      // expands $HOME roots on the PATH; "" or a non-absolute home drops them
 	Run  ProbeRunner // nil: execute for real
+	// Total bounds all probes together; 0 means ProbeTotalTimeout.
+	Total time.Duration
 }
 
 // ProbeResult is the outcome of one tool's probes (the worst of them, when a
@@ -59,6 +66,9 @@ type ProbeOptions struct {
 type ProbeResult struct {
 	Tool   string `json:"tool"`
 	Status string `json:"status"`
+	// Detail keeps a short normalised excerpt of the output of a mismatch,
+	// for the report.
+	Detail string `json:"detail,omitempty"`
 }
 
 // capWriter keeps at most limit bytes and silently discards the rest, so a
@@ -75,21 +85,25 @@ func (w *capWriter) Write(p []byte) (int, error) {
 	return len(p), nil
 }
 
-// execProbe is the real ProbeRunner.
+// execProbe is the real ProbeRunner.  On Unix the child leads its own process
+// group and a timeout kills the whole group, so a probe cannot leave
+// grandchildren running.  A non-zero exit is returned as an error beside the
+// output, which is kept for the report.
 func execProbe(r ProbeRun) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.Timeout)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, r.Path, r.Args...)
+	if r.Argv0 != "" {
+		cmd.Args[0] = r.Argv0
+	}
 	cmd.Env = r.Env
 	cmd.Dir = r.Dir
 	cmd.Stdin = nil
 	out := &capWriter{limit: r.Limit}
 	cmd.Stdout, cmd.Stderr = out, out
 	cmd.WaitDelay = time.Second
+	isolate(cmd)
 	err := cmd.Run()
-	if _, exit := err.(*exec.ExitError); exit && ctx.Err() == nil {
-		err = nil // a non-zero exit still printed its version, maybe
-	}
 	return out.buf.Bytes(), err
 }
 
@@ -109,10 +123,19 @@ func lookPath(name string, dirs []string) (string, bool) {
 	return "", false
 }
 
-// inside reports whether path lies under root (both symlink-resolved).
+// inside reports whether path lies under root.  It FAILS CLOSED: a path that
+// cannot be related to root (a relative one, say) counts as inside, so the
+// binary is refused rather than run.  On macOS and Windows, whose file systems
+// are case-insensitive by default, the comparison folds case.
 func inside(path, root string) bool {
+	if runtime.GOOS == "darwin" || runtime.GOOS == "windows" {
+		path, root = strings.ToLower(path), strings.ToLower(root)
+	}
 	rel, err := filepath.Rel(root, path)
-	return err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) && !filepath.IsAbs(rel)
+	if err != nil {
+		return true
+	}
+	return !(rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) || filepath.IsAbs(rel))
 }
 
 var (
@@ -160,6 +183,8 @@ func probeMatches(output, pin string) bool {
 // severity orders statuses so the worst of a tool's probes is reported.
 func severity(s string) int {
 	switch s {
+	case ProbeTimedOut:
+		return 4
 	case ProbeMismatch:
 		return 3
 	case ProbeRefused:
@@ -176,33 +201,46 @@ func severity(s string) int {
 // tools, ConstructPATH), `LANG=C`, `TZ=UTC` and a private HOME and working
 // directory, a 10 s timeout and 64 KiB of output.  A binary whose real path
 // (after symlinks) lies inside opt.Root is never run.
-func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) ([]ProbeResult, error) {
+func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) (res []ProbeResult, err error) {
 	run := opt.Run
 	if run == nil {
 		run = execProbe
 	}
-	root := opt.Root
-	if root != "" {
-		r, err := filepath.EvalSymlinks(root)
-		if err != nil {
-			return nil, fmt.Errorf("probe: %w", err)
-		}
-		if root, err = filepath.Abs(r); err != nil {
-			return nil, fmt.Errorf("probe: %w", err)
-		}
+	// Without a checkout root the "no binary from the PR" rule cannot be
+	// judged, so there is no way to proceed: fail rather than run unchecked.
+	if opt.Root == "" {
+		return nil, fmt.Errorf("probe: the checkout root is required")
+	}
+	r, err := filepath.EvalSymlinks(opt.Root)
+	if err != nil {
+		return nil, fmt.Errorf("probe: %w", err)
+	}
+	root, err := filepath.Abs(r)
+	if err != nil {
+		return nil, fmt.Errorf("probe: %w", err)
 	}
 	used, _ := t.selected(names, osName)
 	tools, _ := t.ToolsFor(names, osName, "")
-	pathVar := t.ConstructPATH(tools, opt.Home)
+	pathVar := t.ConstructPATH(tools, opt.Home) // drops a home that is not absolute and clean
 	dirs := filepath.SplitList(pathVar)
 	dir, err := os.MkdirTemp("", "kiln-probe-")
 	if err != nil {
 		return nil, fmt.Errorf("probe: %w", err)
 	}
-	defer os.RemoveAll(dir)
+	defer func() {
+		if rmErr := removeAll(dir); rmErr != nil && err == nil {
+			res, err = nil, fmt.Errorf("probe: removing its working directory: %w", rmErr)
+		}
+	}()
 	env := []string{"PATH=" + pathVar, "LANG=C", "LC_ALL=C", "TZ=UTC", "HOME=" + dir}
+	total := opt.Total
+	if total <= 0 {
+		total = ProbeTotalTimeout
+	}
+	start := time.Now()
 
 	worst := map[string]string{}
+	detail := map[string]string{}
 	note := func(tool, status string) {
 		if cur, ok := worst[tool]; !ok || severity(status) > severity(cur) {
 			worst[tool] = status
@@ -211,40 +249,61 @@ func (t *Toolchains) Probe(names []string, osName string, opt ProbeOptions) ([]P
 	for _, e := range used {
 		for _, argv := range e.Probes {
 			tool := argv[0]
+			if time.Since(start) > total {
+				note(tool, ProbeTimedOut)
+				continue
+			}
 			bin, ok := lookPath(tool, dirs)
 			if !ok {
 				note(tool, ProbeAbsent)
 				continue
 			}
-			// Judge where the binary really lives, but execute it under the name
-			// the PATH gave: multi-call binaries (rustup proxies, busybox) pick
-			// their behaviour from argv[0].
 			real, err := filepath.EvalSymlinks(bin)
+			if err == nil {
+				real, err = filepath.Abs(real)
+			}
 			if err != nil {
 				note(tool, ProbeAbsent) // a dangling link: nothing to run
 				continue
 			}
-			if root != "" && inside(real, root) {
+			if inside(real, root) {
 				note(tool, ProbeRefused)
 				continue
 			}
-			out, runErr := run(ProbeRun{Path: bin, Args: argv[1:], Env: env, Dir: dir, Timeout: ProbeTimeout, Limit: ProbeOutputLimit})
+			// Run the path that was checked, under the name the PATH gave:
+			// multi-call binaries (rustup proxies, busybox) read argv[0].
+			out, runErr := run(ProbeRun{Path: real, Argv0: filepath.Base(bin), Args: argv[1:], Env: env, Dir: dir, Timeout: ProbeTimeout, Limit: ProbeOutputLimit})
 			pin, versioned := e.Pins[tool]
 			if !versioned || pin == ImagePin {
 				note(tool, ProbeOK)
 				continue
 			}
+			// A failed run is a mismatch even when the output carries the pin.
 			if runErr == nil && probeMatches(string(out), pin) {
 				note(tool, ProbeOK)
-			} else {
-				note(tool, ProbeMismatch)
+				continue
+			}
+			note(tool, ProbeMismatch)
+			if _, seen := detail[tool]; !seen {
+				d := strings.Join(strings.Fields(normalizeProbe(out)), " ")
+				if runErr != nil {
+					d = "(" + short(runErr.Error()) + ") " + d
+				}
+				detail[tool] = short(d)
 			}
 		}
 	}
-	res := make([]ProbeResult, 0, len(worst))
+	res = make([]ProbeResult, 0, len(worst))
 	for tool, s := range worst {
-		res = append(res, ProbeResult{Tool: tool, Status: s})
+		r := ProbeResult{Tool: tool, Status: s}
+		if s == ProbeMismatch {
+			r.Detail = detail[tool]
+		}
+		res = append(res, r)
 	}
 	sort.Slice(res, func(a, b int) bool { return res[a].Tool < res[b].Tool })
 	return res, nil
 }
+
+// removeAll is os.RemoveAll; tests replace it to see the error path.
+var removeAll = os.RemoveAll

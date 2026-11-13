@@ -43,7 +43,7 @@ type HostRoots struct {
 // `tool` root of the same tool, so the two files cannot drift apart.
 func ParseHostRoots(data []byte, tc *Toolchains) (*HostRoots, error) {
 	var h HostRoots
-	if err := strictDecode(data, &h); err != nil {
+	if err := policyDecode(data, &h); err != nil {
 		return nil, fmt.Errorf("host-roots: %w", err)
 	}
 	h.Digest = sha256.Sum256(data)
@@ -100,12 +100,34 @@ func ParseHostRoots(data []byte, tc *Toolchains) (*HostRoots, error) {
 			if err := checkPolicyPath(p, true, l.glob); err != nil {
 				return nil, fmt.Errorf("host-roots: %s: %w", l.what, err)
 			}
+			if l.glob && literalSegments(p) < 2 {
+				return nil, fmt.Errorf("host-roots: ephemeral %q needs at least two literal segments before its first wildcard", short(p))
+			}
 		}
 	}
 	if err := h.coversToolRoots(tc); err != nil {
 		return nil, err
 	}
 	return &h, nil
+}
+
+// literalSegments counts the path segments before the first one holding a
+// wildcard; a leading $HOME or $TMPDIR is not a segment. `/dev/fd/*` has two,
+// `/*` and `/proc/*` fewer, so a glob can never allow a whole tree like /proc.
+func literalSegments(p string) int {
+	if i := strings.IndexByte(p, '/'); strings.HasPrefix(p, "$") && i >= 0 {
+		p = p[i:]
+	} else if strings.HasPrefix(p, "$") {
+		return 0
+	}
+	n := 0
+	for _, seg := range strings.Split(strings.TrimPrefix(p, "/"), "/") {
+		if strings.Contains(seg, "*") {
+			break
+		}
+		n++
+	}
+	return n
 }
 
 // coversToolRoots enforces the cross-file rule: a hostedtoolcache directory on

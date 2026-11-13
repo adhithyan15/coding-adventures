@@ -69,6 +69,7 @@ func (pl *planner) prepareToolsEnv() error {
 		return err
 	}
 	pl.mismatch = map[string]bool{}
+	pl.timedOut = map[string]bool{}
 	if pl.opt.Probe == nil {
 		return nil
 	}
@@ -90,6 +91,9 @@ func (pl *planner) prepareToolsEnv() error {
 	for _, r := range pl.probes {
 		if r.Status == ProbeMismatch {
 			pl.mismatch[r.Tool] = true
+		}
+		if r.Status == ProbeTimedOut {
+			pl.timedOut[r.Tool] = true
 		}
 	}
 	return nil
