@@ -18,3 +18,15 @@
   ambiguous, non-UTF-8 or deleted path, unmatched resume, missing exit line,
   line or total size cap). Tests use canned strace 6.x fixtures; `FuzzParse`
   asserts no panic and only `trace-incomplete` errors.
+- Security hardening: a child's cwd is snapshotted when the parent's
+  `fork`/`clone` succeeds; a split call's cwd is sampled at its start;
+  `chdir`/`fchdir` on a cwd shared by live `CLONE_FS` processes is
+  `cwd-race`; argument counts are bounded while scanning; every record counts
+  against `MaxEvents` and the default caps are a resident-memory bound (64 MiB,
+  1M records); a final line without a newline, pids with leading zeros, NULL
+  `connect`/`bind` addresses, non-symbolic socket domains and truncated
+  `sendmsg`/`sendmmsg` arrays are refused; the parent chain is walked
+  iteratively; `AT_EMPTY_PATH` uses the descriptor path; and
+  `ParseOptions` with `HelperRoot` discards sandbox-helper setup before its
+  first successful `execve`.
+- KILN04 section 4.5 records the parser decisions of stage 1a.

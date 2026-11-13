@@ -376,6 +376,98 @@ Calls on an already-open descriptor (`read`, `mmap`, `fstat`, `sendfile`,
 `copy_file_range`) need no tracing, because the `open` that produced the
 descriptor was already observed.
 
+### 4.5 Parser decisions (stage 1a)
+
+Stage 1a (`internal/trace`) is pure: it reads strace text and returns
+ordered events plus the process tree. It never resolves a path. These are
+the decisions it settled where §4.3 to §5.1 left room. The code is
+authoritative for details: `table.go` for the table, `errors.go` for the
+reason strings.
+
+**Reasons.** Every refusal is `trace-incomplete:<detail>`; a detail never
+contains path text.
+- A refused name is `refused:<name>`, an unknown one
+  `unknown-syscall:<name>`.
+- `clone` with `CLONE_UNTRACED`, any `CLONE_NEW*`, a missing `flags=` or
+  a flag token it cannot name is `clone-flags`. `clone3` is
+  `refused:clone3`.
+- A process-tree fault is `pid-reuse` (a pid returned twice, or by its
+  own process, or the root's pid), `orphan-pid` (a pid nobody spawned),
+  `process-cycle` (or a parent chain over 4096 deep), `missing-exit`,
+  `duplicate-exit` or `event-after-exit`.
+- Other reasons: `unresumed-call`, `unmatched-resume`, `interleaved-call`,
+  `personality`, `unparsable-line`, `ambiguous-path`, `truncated`,
+  `non-utf8-path`, `deleted-path`, `arity`, `sockaddr`, `result`, `size`.
+
+**The `-y` annotation.** The parser assumes strace 6.x escapes the
+annotation body like a string and also escapes `<` and `>` as `\<` and
+`\>`, so `3</a<b>` is printed `3</a\<b\>>` and round-trips. A raw `<`
+inside an annotation, or text left after its closing `>`, is
+`ambiguous-path`. The return-value annotation must end the line. The stage 3
+real-strace fixture must pin this assumption against the exact strace
+version; until then the canned fixtures are hand-written.
+
+**Order and split calls.** Events are ordered by when the call
+**completes**, so a split call sits at its `resumed` line. Its working
+directory is the one current at its `<unfinished ...>` line. An unfinished
+call may end at the process's exit line only if it carries no path
+(`wait4`, `exit_group`); an unfinished path call that never resumes is
+`unresumed-call`. A handled call whose result is `?` (including
+`ERESTARTSYS`) is `result`: restarted calls are not recognised in v1. A
+final line without its newline is `unparsable-line`, since strace may have
+been cut off mid-line.
+
+**Process model.**
+- A first pass collects every child pid a `fork`, `vfork` or `clone`
+  returned, because the child's lines may precede the parent's return line.
+- A child is created **when the parent's call succeeds**, which snapshots
+  the parent's working directory then, or shares it under `CLONE_FS`. A
+  later `chdir` by the parent never reaches the child. The only earlier
+  creation is a child whose lines were printed while its parent was still
+  blocked in the call.
+- The working directory is an **unresolved expression**: after
+  `chdir("../b")` from `/a` it is `/a/../b`. Only `fchdir` gives a resolved
+  path (its `-y` annotation). Stage 1b walks the cwd expression like any
+  other path.
+- A successful `chdir` or `fchdir` on a cwd shared by more than one live
+  process is `cwd-race`: relative paths of the sharer would change
+  unobserved.
+- Pids with leading zeros are not pids.
+
+**The helper.** With `Options.HelperRoot`, the root process is
+`kiln sandbox-exec`. Its events before its first **successful** `execve`
+are discarded, and calls the table would refuse or not know (`unshare`,
+`mount`, `pivot_root`, `capset`, ...) are tolerated there. The exec must
+happen (`helper-no-exec`), and a child spawned by the helper before it is
+`helper-spawn`. From the exec on, refused calls are refused as usual. The
+exec event itself is kept.
+
+**Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
+`bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
+`NULL` address. `sendmsg` and `sendmmsg` give one event per distinct
+`sockaddr` found outside string literals (none: one event with no address).
+A bare `...` element in their arrays is `sockaddr`, since it means a
+truncated list. A pathname `AF_UNIX` address is not copied into `Path`;
+§5.4 decides what it means. With `AT_EMPTY_PATH` and an empty path, `Path`
+is the descriptor's `-y` path.
+
+**The ignored list.** §4.4 defers the enumeration to the implementation,
+and `table.go` is authoritative: `wait4`, `waitid`, `waitpid`, `exit`,
+`exit_group`, `kill`, `tgkill`, `tkill`, `arch_prctl`, `prctl`,
+`pidfd_open`, `pidfd_send_signal`, `getsockname`, `getpeername`,
+`recvfrom`, `recvmsg`, `recvmmsg`, `accept`, `accept4`, `shutdown`,
+`setsockopt`, `getsockopt`, `socketpair`, `getcwd`, `pipe`, `pipe2`,
+`close`, `close_range`, `dup`, `dup2`, `dup3`. Anything else absent from the
+table is unknown.
+
+**Caps.** The parser's caps bound **resident memory**, not the recorder's
+2 GiB disk cap (§4.3): it keeps every non-ignored record until the second
+pass, and each record keeps its source line. The defaults are 1 MiB per
+line, 64 MiB in total and 1,000,000 records, and every record counts
+(calls, start markers and exit lines). Argument counts are bounded while
+scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
+is `size` or `arity`. A caller with a larger measured budget raises them.
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation

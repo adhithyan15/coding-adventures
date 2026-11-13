@@ -211,8 +211,18 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
   fork/clone, shared under `CLONE_FS`, changed by `chdir`/`fchdir`). Every pid
   must have an exit line and every split call must be resumed.
 - **Fail closed.** Every refusal is a `*trace.Error` whose message is
-  `trace-incomplete:<detail>`, with a stable detail and no path text. Line and
-  total-byte caps give `trace-incomplete:size`.
+  `trace-incomplete:<detail>`, with a stable detail and no path text. Line,
+  total-byte and record caps (defaults 1 MiB, 64 MiB, 1M records, a
+  resident-memory bound) give `trace-incomplete:size`; argument counts are
+  bounded while scanning (`arity`).
+- **Working directory.** A child's cwd is snapshotted when the parent's
+  `fork`/`clone` succeeds; a split call uses the cwd at its start; a `chdir`
+  on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
+  last line lacks its newline is incomplete.
+- **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true})`
+  discards the helper's setup calls (`unshare`, `mount`, `pivot_root`, ...)
+  before its first successful `execve`, and requires that exec
+  (`helper-no-exec`, `helper-spawn`). See KILN04 section 4.5.
 - **Boundary.** Paths are reported as printed, with the working directory or
   `dirfd` path they are relative to. Resolving them against a tree (symlinks,
   `..`, stability) is stage 1b.
