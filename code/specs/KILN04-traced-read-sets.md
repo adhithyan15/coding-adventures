@@ -521,6 +521,51 @@ line, 64 MiB in total and 1,000,000 records, and every record counts
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
 is `size` or `arity`. A caller with a larger measured budget raises them.
 
+### 4.6 Wiring decisions (stage 3a)
+
+Stage 3a added `-exec-wrapper` and `-emit-results` to the old Go build tool
+(`code/programs/go/build-tool/`). These are the choices it made where §4.3
+left room; the code is authoritative.
+
+- **Argument syntax.** `-exec-wrapper` takes a JSON array of non-empty
+  strings with no NUL. An empty, invalid or trailing-data value is a usage
+  error. The step runs as `wrapper... sh -c <line>` (`wrapper... cmd /C
+  <line>` on Windows, with Go's standard argument quoting).
+- **Environment.** The wrapper receives `KILN_ACTION` (the package's
+  repo-relative path, forward slashes), `KILN_STEP` (0-based) and
+  `KILN_STEP_COUNT`. §4.3 named only the first two; the count lets the
+  wrapper report a missing step. Caller values of these three names are
+  replaced. They are for the wrapper: `kiln sandbox-exec` scrubs them before
+  the step runs.
+- **Mutual exclusion.** `-exec-wrapper` with `-clippy` or
+  `-prune-leaf-targets` exits 1 before any work.
+- **Results.** `status` is the executor's own status, unchanged: `built`,
+  `failed`, `skipped`, `dep-skipped`, `unsupported`, `dep-unsupported`,
+  `would-build`. `steps_run` counts steps started, so a failing step counts
+  as run and `steps_run < steps_total` marks a mid-package failure; a package
+  that never ran has `steps_run` 0 and its BUILD's step count as
+  `steps_total`. Packages are keyed by repo-relative path and sorted. The file
+  is written after the run, even when a package failed.
+- **Freshness.** `-emit-results` removes any existing file at its path
+  before doing any work, so early exits (no packages, hash failure, usage
+  errors after the check) leave no file. Consumers must require exit 0 **and**
+  a file written by this run.
+- **The wrapper program.** `wrapper[0]` is resolved at startup: a relative
+  path containing a separator is rejected, a bare name goes through
+  `exec.LookPath` and must resolve to an absolute path, and the absolute path
+  is what runs. A BUILD can therefore never supply the wrapper through the
+  package working directory. A wrapper that cannot start reports `failed` with
+  `steps_run` equal to the step's index (it never started).
+- **The line the wrapper sees.** The executor rewrites some lines
+  deterministically before running them (the Swift native build-system pin;
+  on Windows the inline-env rewrite), so the wrapper's `sh -c` argument can
+  differ from the BUILD text. The stage 3b recipe check must compare with the
+  line after those rewrites; `executor.EffectiveStepLines(pkg)` returns exactly
+  those lines. The rewrites depend only on the line and the build-tool source,
+  which is in the weak key.
+- **Output path.** A symlink or non-regular `-emit-results` path is refused
+  before the build starts (and again by the atomic writer).
+
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation
