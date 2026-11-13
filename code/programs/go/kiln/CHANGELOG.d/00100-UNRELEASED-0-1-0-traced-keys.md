@@ -27,7 +27,7 @@
 
 - Review fixes: the listing digest is tagged (`10` directory, `11` not a
   tracked directory) so `list:` needs no paired `path:`; `NewTraced` refuses a
-  graph that disagrees with `Source` on BUILD files; `WeakKey` and `Strong`
+  graph naming a BUILD file that `Source` lacks; `WeakKey` and `Strong`
   return deep copies (`key.Action.Clone`).
 
 ### Changed

@@ -988,12 +988,16 @@ is what the code does.
     state, missing, listing or `T(q)` digest, with its inputs),
     `strong_consumed` (a weak key and entries in, the sorted consumed section
     out) and `refused_entries`. `kiln verify-vectors` checks all of them.
-11. **The graph must match `Source`.** `NewTraced` refuses a stale graph: an
-    error if a graph package's BUILD file is missing from `Source`, or if
-    `Source` holds a `BUILD` or `BUILD_*` file in a directory that is not a
-    graph package. `T(q)` takes its nested-package names from the graph, so a
-    graph that lags the tree could let a new nested package leave `T(q)`
-    unchanged.
+11. **The graph must come from the same tree as `Source`.** `T(q)` takes its
+    nested-package names from the graph, so a graph that lags the tree could
+    let a new nested package leave `T(q)` unchanged. Stages 4 and 5 will
+    enforce this by running the export in the same job and binding it to the
+    tree (a digest of the export plus the source revision); this is a tracked
+    follow-up. Until then `NewTraced`'s check, that every BUILD file the graph
+    names exists in `Source`, is a partial guard. A `BUILD` file elsewhere
+    (a test fixture, say) is not checked: the old tool does not treat it as a
+    package, so it is an ordinary file of its enclosing package, in `D(q)`
+    and not in the nested list.
 12. **Returned keys are copies.** `WeakKey` returns a deep copy of the
     memoised key, and `Strong` deep-copies the sections it reuses
     (`key.Action.Clone`), so a caller cannot corrupt a cached key.

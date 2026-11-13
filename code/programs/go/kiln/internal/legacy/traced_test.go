@@ -808,29 +808,44 @@ func TestListingNeedsNoPathEntry(t *testing.T) {
 	}
 }
 
-func TestGraphMustMatchSource(t *testing.T) {
-	f := newTracedFixture(t)
-	// A BUILD file in a directory the graph does not list.
-	f.write("code/packages/x/new/BUILD", "echo\n")
-	if _, err := NewTraced(baseGraph(), f.tracedOpts(), f.root(), nil); err == nil || !strings.Contains(err.Error(), "outside every graph package") {
-		t.Errorf("BUILD outside the graph: %v", err)
-	}
-	g := newTracedFixture(t)
-	g.write("code/packages/x/new/BUILD_mac", "echo\n")
-	if _, err := NewTraced(baseGraph(), g.tracedOpts(), g.root(), nil); err == nil {
-		t.Error("BUILD_* outside the graph accepted")
-	}
-	// A graph package whose BUILD is gone from the tree.
+func TestGraphBuildFilesMustExist(t *testing.T) {
 	h := newTracedFixture(t)
 	h.remove("code/packages/x/z/BUILD")
 	if _, err := NewTraced(baseGraph(), h.tracedOpts(), h.root(), nil); err == nil || !strings.Contains(err.Error(), "not in the tree") {
 		t.Errorf("missing BUILD: %v", err)
 	}
-	// A nested package the graph has not heard of is exactly the stale case.
-	n := newTracedFixture(t)
-	n.write(pkgZ+"/sub/BUILD", "echo\n")
-	if _, err := NewTraced(baseGraph(), n.tracedOpts(), n.root(), nil); err == nil {
-		t.Error("a new nested package missing from the graph was accepted")
+}
+
+// A BUILD file in a package's subdirectory that the graph does not list (a test
+// fixture, say) is an ordinary file of that package: it is in D(q) and the
+// package is not in the nested list.
+func TestStrayBuildIsAnOrdinaryFile(t *testing.T) {
+	f := newTracedFixture(t)
+	tr0 := f.traced(baseGraph())
+	before := entryDigest(t, tr0, "pkg:"+pkgZ)
+	oldOwn, _ := tr0.ownDigest(tr0.pl.byPath[pkgZ])
+	f.write(pkgZ+"/tests/fixtures/BUILD", "echo fixture\n")
+	f.write(pkgZ+"/tests/fixtures/BUILD_mac", "echo fixture\n")
+	tr, err := NewTraced(baseGraph(), f.tracedOpts(), f.root(), nil)
+	if err != nil {
+		t.Fatalf("a stray BUILD was refused: %v", err)
+	}
+	z := tr.pl.byPath[pkgZ]
+	newOwn, _ := tr.ownDigest(z)
+	if newOwn == oldOwn {
+		t.Error("a stray BUILD is not in D(q)")
+	}
+	own := tr.pl.own[z]
+	found := false
+	for _, p := range own {
+		found = found || p == pkgZ+"/tests/fixtures/BUILD"
+	}
+	if !found {
+		t.Error("a stray BUILD is not among the package's own files")
+	}
+	want, _ := key.TracedPackageDigest(newOwn, nil)
+	if got := entryDigest(t, tr, "pkg:"+pkgZ); got != want || got == before {
+		t.Error("T(q) should hold the new D(q) and an empty nested list")
 	}
 }
 

@@ -196,26 +196,20 @@ func NewTraced(g *Graph, opt Options, root string, flags []string) (*Traced, err
 	return &Traced{pl: pl, root: root, args: args}, nil
 }
 
-// checkGraphMatchesSource refuses a stale graph.  T(q) names the packages nested
-// in q, and those names come from the graph; if the graph lags the tree, a new
-// nested package would not change T(q) and a lookup could wrongly hit.  Two
-// symptoms are checked: a BUILD file the graph names that the tree lacks, and a
-// BUILD or BUILD_* file in a directory that is not a graph package.
+// checkGraphMatchesSource is a PARTIAL guard against a stale graph: every BUILD
+// file the graph names must exist in the tree.  T(q) takes its nested-package
+// names from the graph, so a graph exported from another tree could let a new
+// nested package leave T(q) unchanged.  A stray BUILD elsewhere is not checked:
+// the old tool deliberately does not treat those (test fixtures, say) as
+// packages, so they are ordinary files of their enclosing package.  The real
+// requirement, that the graph come from the same tree as Source, is KILN04
+// 11.1 item 11.
 func (pl *planner) checkGraphMatchesSource() error {
 	for _, p := range pl.g.Packages {
 		for _, os := range OSes {
 			if bf := p.BuildFiles[os]; bf != nil && !pl.fileSet[p.RelPath+"/"+*bf] {
 				return fmt.Errorf("traced key: graph package %s names %s, which is not in the tree (stale graph?)", short(p.Name), short(*bf))
 			}
-		}
-	}
-	for _, f := range pl.files {
-		b := path.Base(f)
-		if b != "BUILD" && !strings.HasPrefix(b, "BUILD_") {
-			continue
-		}
-		if _, ok := pl.byPath[path.Dir(f)]; !ok {
-			return fmt.Errorf("traced key: %s is a BUILD file outside every graph package (stale graph?)", short(f))
 		}
 	}
 	return nil
