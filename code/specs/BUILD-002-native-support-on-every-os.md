@@ -55,7 +55,7 @@ macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
 | W3 | Native bridges: one language at a time (node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF link, Go cgo, Ruby MinGW vs MSVC ABI, .NET P/Invoke) | W0 |
 | W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (IOCP path), `unix-tools`, prerequisite-chain skips; decide Metal | W1-W3 |
 | W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
-| W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS | W1-W4 |
+| W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS. **Windows half done**, see "W6 progress" (macOS half open) | W1-W4 |
 
 ### W2 recipe contract (pure-Perl packages)
 
@@ -268,8 +268,73 @@ macOS amd64 are first exercised by CI.
 Remaining in W3: node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF
 link, Ruby MinGW vs MSVC ABI and .NET P/Invoke.
 
+### W6 progress: the Windows echo-skip guardrail
+
+Done for Windows (macOS has no skips to guard yet). The guardrail landed
+before W1-W4 finished on purpose: the allowlist starts as the full current
+debt, so it can only shrink while those workstreams convert packages, and no new
+skip can slip in beside them.
+
+`code/scripts/audit_build_windows.py --check` (the `contracts` job in `ci.yml`,
+which already ran it) now has three more classes:
+
+- **F, windows-skip (blocking).** The recipe Windows runs does nothing: every
+  command is an `echo`, `exit`/`exit /b 0`, `cmd /c exit|echo`, `type nul`,
+  `ver >nul`, `call echo`, `goto :eof` or a PowerShell `Write-Host`, optionally
+  behind `if [not] exist|defined|errorlevel|a==b`; or the file holds only
+  comments and `REM`/`::` lines; or the package has no Windows build file at
+  all (only `BUILD_linux`/`BUILD_mac*`). The file checked is the one the build
+  tool picks on Windows, so an echo-only plain `BUILD` with no `BUILD_windows`
+  counts too. A line that also runs a real command is not a skip. Unlisted skips
+  block.
+- **G, skip-allowlist (blocking).** The allowlist is wrong: an entry whose
+  package now has a real Windows recipe (or no longer exists) is *stale* and
+  must be deleted, an entry is malformed, or a category holds more entries than
+  its cap.
+- **H, conditional-skip (advisory).** A real recipe that falls back to
+  `echo ... skipping` when the toolchain is missing (`where swift && swift test
+  || echo ... skipping`). It passes without testing when the tool is absent,
+  which is how the Haskell recipe passed in under a second. About 130 Swift,
+  Haskell and similar recipes are listed (`--verbose`); they stay advisory until
+  W1/W4 replace them.
+
+**The allowlist** is `code/specs/data/windows-skip-allowlist.json`: package
+path to `{category, reason, evidence}`. Categories:
+
+| Category | Meaning | Entries |
+|---|---|---|
+| `intrinsic-apple` | Needs Apple frameworks (Metal, Objective-C); the audit checks the package itself names them | 11 |
+| `intrinsic-platform` | Bound to a platform API with no equivalent (`rust/tcp-reactor`; `rust/tcp-runtime` is its Windows counterpart) | 1 |
+| `no-tests-by-design` | Nothing to run: Starlark rule packages, the Python shell packages, `visicalc-deno`'s notes-only BUILD | 7 |
+| `tracked-follow-up` | A real gap with a plan: the native-extension crates of W3, `unix-tools`, `os-kernel`, `twig-module-driver`, `barcode-layout-1d` | 14 |
+
+**Policy: the list only shrinks.**
+
+1. Never add an entry to make the audit pass. Give the package a real recipe.
+2. When a package is converted its entry becomes stale and the audit fails
+   until the entry is removed in the same PR. Lower that category's number in
+   `ALLOWLIST_CAPS` (same file as the audit) at the same time; the repository
+   test requires the caps to equal the real counts, so slack cannot build up.
+3. A new entry needs three things in one diff: the entry (category, reason,
+   evidence), a raised cap, and an owner decision recorded in this document.
+   `tracked-follow-up` may not grow at all; a new gap is fixed, not filed.
+4. `intrinsic-apple` is limited to what genuinely needs Apple frameworks.
+   Everything else needs `intrinsic-platform` or `no-tests-by-design` with a
+   stated reason, or it is a `tracked-follow-up` that is meant to disappear.
+
+Entries found while surveying that look like bugs rather than limits, now
+tracked as debt in the list: the nine `rust` native-extension crates
+(`font-parser-*`, `*-bridge`) echo "compile-only" on every OS, so they are not
+even compiled in CI; `twig-module-driver` skips Windows over thread-stack
+sizes; `os-kernel` needs a UEFI-target lane.
+
+The scaffold generators no longer create the shapes the audit rejects: Haskell
+(Go and native generators), Perl (Go generator) and Lua now emit a real
+`BUILD_windows`.
+
 ## Done
 
 Every package either passes its real build and tests on all three OSes, or is
 on the W6 allowlist with a named platform limit. The daily cross-OS full build
-is green, and the allowlist contains only intrinsic limits.
+is green, and the W6 allowlist contains only intrinsic limits and
+`no-tests-by-design` packages (no `tracked-follow-up` entries remain).
