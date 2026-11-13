@@ -127,6 +127,45 @@ type Action struct {
 	Env              []EnvVar
 }
 
+// Clone returns a deep copy of the action: no slice or pointer is shared with
+// the original, so changing one can never change the other.
+func (a Action) Clone() Action {
+	c := a
+	if a.HostImageID != nil {
+		h := *a.HostImageID
+		c.HostImageID = &h
+	}
+	c.Recipe = append([]byte(nil), a.Recipe...)
+	files := func(in []FileEntry) []FileEntry {
+		if in == nil {
+			return nil
+		}
+		out := make([]FileEntry, len(in))
+		for i, e := range in {
+			e.Digest = append([]byte(nil), e.Digest...)
+			out[i] = e
+		}
+		return out
+	}
+	c.Inputs, c.Reads = files(a.Inputs), files(a.Reads)
+	if a.Consumed != nil {
+		c.Consumed = make([]Consumed, len(a.Consumed))
+		for i, e := range a.Consumed {
+			e.Key = append([]byte(nil), e.Key...)
+			c.Consumed[i] = e
+		}
+	}
+	if a.Tools != nil {
+		c.Tools = make([]Tool, len(a.Tools))
+		for i, e := range a.Tools {
+			e.Identity = append([]byte(nil), e.Identity...)
+			c.Tools[i] = e
+		}
+	}
+	c.Env = append([]EnvVar(nil), a.Env...)
+	return c
+}
+
 // ---------------------------------------------------------------------------
 // Building blocks (KILN02 section 2).  Each appends to dst and returns it.
 // ---------------------------------------------------------------------------

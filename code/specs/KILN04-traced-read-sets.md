@@ -951,9 +951,13 @@ left open above:
   - `02 || u8(exec) || SHA-256(content)`: file;
   - `03 || bytes(target)`: link.
 - **The missing-package digest** is SHA-256 of `str("kiln-missing-package")`.
-- **A listing digest** is SHA-256 of `list([str(name) || u8(kind)])`,
-  sorted by name bytes, where kind `1` is a file, `2` a link and `3` a
-  directory.
+- **A listing digest** is tagged, like the state digests, so a `list:`
+  entry stands on its own without a paired `path:` entry:
+  - for a tracked directory (some tracked file lies under it):
+    SHA-256 of `u8(0x10) || list([str(name) || u8(kind)])`, sorted by name
+    bytes, where kind `1` is a file, `2` a link and `3` a directory;
+  - for a path that is not a directory in the tracked tree (absent, a file
+    or a link): SHA-256 of the single byte `11`.
 - **`T(q)`** is as defined in §5.2.
 
 Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
@@ -962,6 +966,99 @@ Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
 - each state digest;
 - a listing digest;
 - `T(q)` with and without nested packages.
+
+### 11.1 Key decisions (stage 1b-ii)
+
+The encoders are in `internal/key` (`traced.go`) and the composition is in
+`internal/legacy` (`traced.go`). Where §3, §4.2 and §11 left a choice, this
+is what the code does.
+
+1. **Tag bytes are raw.** A state digest hashes its one tag byte, then the
+   payload, exactly as listed in §11. The tag is not framed with `str` or
+   `bytes`. `02` carries the SHA-256 of the content, not the content, so a
+   large file is hashed once and streamed. The `exec` bit is the one the
+   `Source` reports, never the disk's.
+2. **Encoders refuse, they do not repair.** `ListingDigest` and `T(q)` demand
+   strictly ascending input, as KILN02 §4 does for every list, so a duplicate
+   or an unsorted name is an error. A listing name is a child name: non-empty,
+   valid UTF-8, no `/`. A nested path in `T(q)` is a KILN02 path.
+3. **The manifest allowlist is `CheckEntryName`.** The prefix must be `pkg:`,
+   `path:` or `list:`; the rest is a KILN02 path, except that `list:.` is the
+   root. `path:.` is refused: the root is always a directory, and only a
+   `list:` entry can see into it. A `weak:` entry, a bare `weak:` and a
+   `tool:` or `policy:` entry are refused. `StrongConsumed` sorts the section
+   itself (a manifest keeps its own order), refuses a name given twice, and
+   puts `weak:` among the rest, so the sorted order is `list:`, `path:`,
+   `pkg:`, `weak:`.
+4. **Tracked tree only.** `Traced.CurrentDigests` reads the tree only through
+   `Source`. A `path:` entry is a file or link if `Source` lists it, a
+   directory if it lists anything beneath it, and absent otherwise. A `list:`
+   entry holds the immediate children, a child directory counting when
+   anything tracked lies below it. A `list:` digest is tagged (`10` for a
+   directory with its children, `11` for anything that is not a tracked
+   directory), so a directory that later becomes a tracked file, or vanishes,
+   changes its `list:` digest even when the manifest has no `path:` entry for
+   it. The directory encoding requires at least one child, and its first byte
+   `10` cannot be mistaken for the state tags `00` to `03`. Untracked files
+   never appear. Each digest is computed once per `Traced`.
+5. **"Directly nested" means the nearest enclosing package.** A package `j`
+   is in `T(q)`'s list when `q` is the closest package above it. `D(q)`
+   already omits everything inside any nested package.
+6. **A package with no traced key is a `Refusal`, not a failure.** The weak
+   key is refused with a reason: `host-unknown` (an image ID containing
+   `unknown`), `unknown-toolchain:<name>`, `no-build-file:<os>` or
+   `symlink:<file>`. A BUILD file named by the graph but missing from the
+   tree is an error. The never list and the §6 preconditions are the
+   planner's, not the key's, so the key does not look at them.
+7. **`policy:git` is an inputs-list digest.** It is `FilesDigest("inputs", ...)`
+   over every `.gitattributes` and `.gitmodules` in the tree, so a path, an
+   executable bit or a byte change moves it, and so does the first such file
+   appearing. `.git/info/attributes` is untracked and out of reach; the
+   recorder's clean-checkout checks (§5.2) are what cover it.
+8. **The scrubbed environment.** One function, `ScrubbedEnv`, builds it, and
+   the weak key's `env` section is that result plus the three `kiln:` names, so
+   what the recorder runs with is exactly what is keyed. Later steps replace
+   earlier ones of the same name: the allowlist, then `HOME` and `TMPDIR`, then
+   `PATH`, then `LANG=C.UTF-8` and `TZ=UTC`. So `env.json` listing `PATH` or
+   `LANG` changes nothing. `HOME` and `TMPDIR` are passed when set and left out
+   when not; an unset one is not invented. `PATH` is `ConstructPATH` over the
+   `tools` of the weak key and `HOME`. A variable whose name contains `:` is
+   refused. The `kiln:` entries are keyed but never exported to the process.
+   Every origin is `0`.
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `1`) in
+   `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
+   §7. **`kiln:executor-args`** is each flag as one `-name=value` token,
+   Go-quoted, sorted bytewise and joined by spaces, so the same flags in
+   another order key the same; a flag given twice is refused. **`kiln:root`**
+   must be an absolute path.
+10. **Vector kinds.** (Beyond §11's list, a `weak:` manifest entry and other
+    bad entries are pinned as refusals.) The weak key and the strong key are ordinary `valid`
+    vectors (semantics 2). Three new arrays pin the rest: `digests` (one per
+    state, missing, listing or `T(q)` digest, with its inputs),
+    `strong_consumed` (a weak key and entries in, the sorted consumed section
+    out) and `refused_entries`. `kiln verify-vectors` checks all of them.
+11. **The graph must come from the same tree as `Source`.** `T(q)` takes its
+    nested-package names from the graph, so a graph that lags the tree could
+    let a new nested package leave `T(q)` unchanged. Stages 4 and 5 will
+    enforce this by running the export in the same job and binding it to the
+    tree (a digest of the export plus the source revision); this is a tracked
+    follow-up. Until then `NewTraced`'s check, that every BUILD file the graph
+    names exists in `Source`, is a partial guard. A `BUILD` file elsewhere
+    (a test fixture, say) is not checked: the old tool does not treat it as a
+    package, so it is an ordinary file of its enclosing package, in `D(q)`
+    and not in the nested list.
+12. **Returned keys are copies.** `WeakKey` returns a deep copy of the
+    memoised key, and `Strong` deep-copies the sections it reuses
+    (`key.Action.Clone`), so a caller cannot corrupt a cached key.
+13. **Pins, not probes.** The traced keys carry the tool pins, never probe
+    results. Whatever uses a key to skip a test (stage 5 lookup, M3) must
+    first apply `probe-mismatch`, the never list and the §6 preconditions;
+    none of them is in the key (also listed in the §13 M3 gate).
+14. **Windows.** On Windows `os/exec` adds `SYSTEMROOT` to a child's
+    environment. That is moot while tracing is Linux-only (§4.1), but it must
+    be keyed if Windows is ever traced.
+15. **`kiln:root` is not cleaned.** It is keyed as given, so two spellings of
+    one checkout path are two keys. That can only cause a miss, never a hit.
 
 ## 12. Tests that must exist
 
@@ -1090,7 +1187,10 @@ point, not a measurement.
    disagreements on traced predictions;
 2. the scrubbed-environment shadow shows no unexplained result changes;
 3. `probe-mismatch` is fatal (KILN03 §4);
-4. recording runs inside the §4.3 sandbox.
+4. recording runs inside the §4.3 sandbox;
+5. lookup applies `probe-mismatch`, the never list and the §6
+   preconditions before it can skip, because the traced keys carry pins
+   only and none of these (§11.1).
 
 **Skipped products.** A skipped action creates no products, so another
 action that relied on them might now fail. The M3 spec must settle this

@@ -295,25 +295,14 @@ func (pl *planner) record(p int) (Record, error) {
 	rec.Components.Env = hexOf(pl.envDigest[:])
 	rec.Tools = ts.labels
 
-	if bf := pkg.BuildFiles[pl.opt.OS]; bf == nil {
-		reasons["no-build-file:"+pl.opt.OS] = true
-		hard = true
-	} else if info, err := pl.opt.Source.Describe(pkg.RelPath + "/" + *bf); err != nil {
+	recipe, why, err := pl.buildRecipe(pkg)
+	if err != nil {
 		return Record{}, err
-	} else if info.Link {
-		// A symlinked BUILD file could point anywhere.  Fail closed for THIS
-		// package (no key) and keep planning the others.
-		reasons["symlink:"+*bf] = true
+	}
+	if why != "" {
+		reasons[why] = true
 		hard = true
 	} else {
-		contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
-		if err != nil {
-			return Record{}, err
-		}
-		recipe, err := key.LegacyRecipeFiles([]key.NamedFile{{Name: *bf, Contents: contents}})
-		if err != nil {
-			return Record{}, err
-		}
 		rs := sha256.Sum256(recipe)
 		rec.Components.Recipe = hexOf(rs[:])
 		image := pl.opt.Host.ImageID()
@@ -339,6 +328,32 @@ func (pl *planner) record(p int) (Record, error) {
 	sort.Strings(rec.Hints)
 	rec.Class = classify(hard, unpinned)
 	return rec, nil
+}
+
+// buildRecipe is the canonical legacy recipe of the BUILD variant this OS runs
+// (KILN03 3.4), shared by the static key and the KILN04 weak key.  A package
+// with no usable BUILD has no recipe: why then names the hard reason
+// (`no-build-file:<os>` or `symlink:<file>`) and the error is nil, so the caller
+// can fail closed for this package and carry on with the others.
+func (pl *planner) buildRecipe(pkg Package) (recipe []byte, why string, err error) {
+	bf := pkg.BuildFiles[pl.opt.OS]
+	if bf == nil {
+		return nil, "no-build-file:" + pl.opt.OS, nil
+	}
+	info, err := pl.opt.Source.Describe(pkg.RelPath + "/" + *bf)
+	if err != nil {
+		return nil, "", err
+	}
+	if info.Link {
+		// A symlinked BUILD file could point anywhere.
+		return nil, "symlink:" + *bf, nil
+	}
+	contents, err := readSmall(pl.opt.Source, pkg.RelPath+"/"+*bf, maxBuildBytes)
+	if err != nil {
+		return nil, "", err
+	}
+	recipe, err = key.LegacyRecipeFiles([]key.NamedFile{{Name: *bf, Contents: contents}})
+	return recipe, "", err
 }
 
 // classify implements KILN03 section 7 for 7c-1.  A hard reason makes a
