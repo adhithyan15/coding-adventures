@@ -1,0 +1,4 @@
+NAME k
+STR_LIT "x"
++NAME s
+CHAR_LIT 'c'

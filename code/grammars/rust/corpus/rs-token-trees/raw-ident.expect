@@ -1,0 +1,4 @@
+RAW_IDENT r#match
++RAW_IDENT r#fn
++RAW_IDENT r#foo_bar
++RAW_IDENT r#try

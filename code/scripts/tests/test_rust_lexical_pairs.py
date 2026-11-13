@@ -362,6 +362,7 @@ class Lexicon(unittest.TestCase):
                 "C_STR_LIT",
                 "RAW_C_STR_LIT",
                 "RAW_LIFETIME",
+                "RAW_LIFETIME_BAD",
                 "LIFETIME_PREFIX",
                 "RESERVED_PREFIX",
             },

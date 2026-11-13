@@ -608,6 +608,10 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
     ident, suffix = classes.ident, classes.suffix
     decimal = "[0-9][0-9_]*"
     exponent = "[eE][+-]?[0-9_]*[0-9][0-9_]*"
+    bad_exponent = f"{decimal}(?:\\.{decimal})?[eE]{EXPONENT_WITHOUT_DIGITS}"
+    bad_based = (
+        "0[bo][0-9_]*[eE]|0[box][0-9a-fA-F_]*\\.(?:\\z|[^.A-Za-z_\\x80-\\U0010FFFF])"
+    )
 
     # -- skipped input ------------------------------------------------------
     lex.skip = [
@@ -809,6 +813,14 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
     if ed.raw_lifetimes:
         d.append(
             Def(
+                "RAW_LIFETIME_BAD",
+                f"'r#{ident}'",
+                refusal=True,
+                notes=("`'r#a'` is an error: a raw lifetime followed by a quote.",),
+            )
+        )
+        d.append(
+            Def(
                 "RAW_LIFETIME",
                 f"'r#{ident}",
                 notes=(
@@ -894,7 +906,7 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
     d.append(
         Def(
             "BASED_FLOAT_BAD",
-            "0[bo][0-9_]*[eE]|0[box][0-9a-fA-F_]*\\.(?:\\z|[^.A-Za-z_\\x80-\\U0010FFFF])",
+            bad_based,
             refusal=True,
             notes=(
                 "NUMBERS. A binary, octal or hexadecimal literal followed by an",
@@ -906,7 +918,7 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
     d.append(
         Def(
             "FLOAT_BAD_EXP",
-            f"{decimal}(?:\\.{decimal})?[eE]{EXPONENT_WITHOUT_DIGITS}",
+            bad_exponent,
             refusal=True,
             notes=(
                 "`1e`, `1.5e+`, `1else`: an exponent with no digit is an error. It",
@@ -1009,18 +1021,24 @@ def build_lexicon(ed: Edition, classes: Classes) -> Lexicon:
         Group(
             "after_dot",
             [
+                Def("TUPLE_BAD_EXP", bad_exponent, alias="FLOAT_BAD_EXP", refusal=True),
+                Def(
+                    "TUPLE_BAD_BASED", bad_based, alias="BASED_FLOAT_BAD", refusal=True
+                ),
                 Def(
                     "TUPLE_INDEX",
-                    "[0-9]+",
+                    f"{decimal}{suffix}",
                     alias="INT_LIT",
-                    notes=(),
-                )
+                ),
             ],
             notes=(
-                "TUPLE INDEX. Right after a lone `.`, digits are an integer, so",
-                "`x.0.1` is INT 0, DOT, INT 1 (the view `rustc`'s parser reaches by",
-                "splitting the float `0.1`). A flat mode: it inherits every default",
-                "pattern, and its own pattern wins.",
+                "TUPLE INDEX. Right after a lone `.`, a digit run is an integer",
+                "that ends at the next `.`, so `x.0.1` is INT 0, DOT, INT 1 (the",
+                "view `rustc`'s parser reaches by splitting the float `0.1`). A flat",
+                "mode: it inherits every default pattern and its own come first.",
+                "The two refusals repeat the number rules that the integer would",
+                "otherwise hide, and the suffix is kept so `x.0u8` is one token as in",
+                "`rustc_lexer`.",
             ),
         ),
         Group(

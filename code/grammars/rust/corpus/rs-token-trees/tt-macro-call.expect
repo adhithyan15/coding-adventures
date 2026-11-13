@@ -1,0 +1,8 @@
+NAME println
+BANG !
+LPAREN (
+STR_LIT "{}"
+COMMA ,
++NAME x
+RPAREN )
+SEMI ;

@@ -1,0 +1,7 @@
+INNER_DOC //! inner
++KEYWORD fn
++NAME f
+LPAREN (
+RPAREN )
++LBRACE {
+RBRACE }
