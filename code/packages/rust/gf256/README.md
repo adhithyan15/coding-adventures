@@ -101,6 +101,17 @@ must fail. `evidence/test-manifest.json` is written by that run;
 are **not live**: the WIR front end cannot lower this source
 (`evidence/proof-manifest.json` records the blocker).
 
+## Runtime capability conformance
+
+The library is pure (`required_capabilities.json` declares no capabilities).
+`cargo test -p gf256 --test runtime_capability` proves it at run time on Linux:
+every public operation, including `Field` for both the Reed-Solomon (0x11D) and
+AES (0x11B) polynomials and the first construction of the lookup tables, runs
+inside a seccomp/Landlock sandbox derived from that manifest while an independent
+`strace` observer confirms nothing but the baseline syscalls happen (VER08b).
+`BUILD_linux` sets `RCG_STRICT=1` so an unavailable sandbox fails the build
+instead of reporting NOT-LIVE.
+
 ## Spec
 
 See `code/specs/MA01-gf256.md` in the coding-adventures monorepo, and
