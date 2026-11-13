@@ -34,3 +34,7 @@ harness = false
 [[test]]
 name = "selftest_controls"
 harness = false
+
+[[test]]
+name = "selftest_concurrent"
+harness = false

@@ -569,6 +569,26 @@ mod linux {
         }
     }
 
+    /// A working directory that belongs to THIS gate process alone.
+    ///
+    /// `evidence_dir` is shared: Cargo's `CARGO_TARGET_TMPDIR`, which every
+    /// Rust adopter passes, is one directory per workspace, and the build
+    /// tool runs independent packages in parallel. The scratch and container
+    /// directories are deleted with `remove_dir_all` (at the end of the run,
+    /// and at the start of the container ring), so with a fixed name the
+    /// first gate to finish deleted the directory a slower gate was still
+    /// writing `strace -o` traces into. Every later observed run then had no
+    /// trace and RCG009 reported its controls as "NOT detected" (PR #19314,
+    /// `rust/gf256`, CI only). The process id makes the name private to this
+    /// run; only `capability_runtime_evidence.json` stays at a fixed path.
+    fn private_dir(config: &GateConfig, leaf: &str) -> PathBuf {
+        config
+            .evidence_dir
+            .clone()
+            .unwrap_or_else(std::env::temp_dir)
+            .join(format!("{leaf}-{}", std::process::id()))
+    }
+
     fn random_nonce(tag: &str) -> String {
         let mut bytes = [0u8; 8];
         // SAFETY: getrandom into a live 8-byte buffer.
@@ -662,11 +682,7 @@ mod linux {
                 return 1;
             }
         };
-        let scratch = config
-            .evidence_dir
-            .clone()
-            .unwrap_or_else(std::env::temp_dir)
-            .join("rcg-scratch");
+        let scratch = private_dir(config, "rcg-scratch");
         let _ = std::fs::create_dir_all(&scratch);
         let exe = match std::env::current_exe() {
             Ok(exe) => exe,
@@ -1208,11 +1224,7 @@ mod linux {
             }
             Err(error) => return not_live(error),
         }
-        let work = config
-            .evidence_dir
-            .clone()
-            .unwrap_or_else(std::env::temp_dir)
-            .join("rcg-container");
+        let work = private_dir(config, "rcg-container");
         let _ = std::fs::remove_dir_all(&work);
         let rootfs = work.join("rootfs");
         if let Err(error) = std::fs::create_dir_all(rootfs.join("rcg")) {

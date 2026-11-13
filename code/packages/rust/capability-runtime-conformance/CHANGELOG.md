@@ -4,6 +4,18 @@
 
 ### Fixed
 
+- Scratch (`rcg-scratch`) and container (`rcg-container`) working directories
+  are now private to each gate process (`<name>-<pid>`). They live under the
+  adopter's `evidence_dir`, which for Rust adopters is the workspace-wide
+  `CARGO_TARGET_TMPDIR`, and are removed with `remove_dir_all`. Two gates
+  running in parallel (the build tool does this, e.g. `ct-compare` beside
+  `gf256`) shared one directory: the first to finish deleted the directory the
+  second was writing `strace -o` traces into, so every later observed run had
+  no trace and `RCG009` reported the remaining controls (io-uring, bpf,
+  env-leak on CI) as "NOT detected" while enforce-only runs still passed.
+  Regression test: `tests/selftest_concurrent.rs` (two staggered gates, one
+  shared `evidence_dir`; failed 3/3 before the fix). The jail itself is
+  unchanged: no control, check or `RCG009` condition was touched.
 - Launcher now closes every inherited descriptor above stderr between `fork`
   and `exec` (`close_range`, with a `close` loop fallback). `Command` only
   closes `O_CLOEXEC` descriptors, and the GitHub Actions runner leaks plain
