@@ -108,17 +108,65 @@ lane-evidence contract in `code/specs/fixtures/barcode-layout-1d-v1/targets.json
 change to it must re-run the lane's tests and update that evidence in the same
 PR. Its Windows run also showed a real portability bug (`File::Temp::tempfile()`
 dies with "Permission denied" in the runner's `%TEMP%`; `tempdir(CLEANUP => 1)`
-works), so it gets its own PR that fixes the test, converts the recipe and
-attests the evidence after the lane's tests pass.
+works). The Perl lane's tests can be run locally (`t/00-load.t`, `01-basic.t`,
+`02-conformance.t` pass), so the blocker is the registry, not the tests: the Perl
+entry shares its owner item (`barcode-layout-existing-lanes-v1-conformance`,
+merged as #16343) with the C#, F#, Go, Python, Rust and TypeScript entries, and
+`test_target_registry_lifecycle_and_repository_evidence` requires
+`entry.verified_revision == item.implementation_revision` and
+`entry.adoption_pr == item.pr_number`. Moving Perl's pin alone breaks that
+equality, and moving the shared item re-attests six lanes nobody re-ran, so it
+needs its own PR that registers a dedicated owner item (with the real PR number)
+for the Perl lane, fixes the test with `tempdir`, converts the recipe and pins the
+new tree. `barcode-1d` does not depend on that recipe (only on the sibling's
+`lib\`), so it is converted separately.
 
-Still hand-written or skipped (tracked in W2/W4): `tcp-client` and
-`process-manager` (sockets, fork and signals need a Windows design), `barcode-1d`
-(its Unix `BUILD` stages the macOS-only Metal and PNG native extensions),
+### W2 progress: the remaining Perl recipes
+
+- **Programs** (`programs/perl/cowsay`, `grammar-tools`, `parrot`) use the same
+  helper. `-Deps` is always resolved against `code\packages\perl` (the helper
+  finds it relative to its own location), so a program passes the package names
+  the Unix `BUILD` reaches as `../../../packages/perl/<name>/lib`, and its
+  `REM prereqs:` line uses those relative paths. `grammar-tools` and `parrot` put
+  their sibling library on `@INC` with `use lib` inside the script instead of
+  declaring it in `cpanfile`, so their `BUILD_windows` adds
+  `# build-tool: deps=perl/grammar-tools` / `perl/repl`; that comment is both the
+  validator's allow-list entry and a real graph edge for the Windows plan.
+- **`process-manager`** is an in-memory process-table simulation (no OS `fork`,
+  `kill` or signals), so it needed no porting. **`tcp-client`** talks to loopback
+  sockets and forks a server child. Loopback TCP and `IO::Select` work on
+  Strawberry Perl, and `fork()` is thread-emulated there, so the suite stays and
+  its tests were made portable instead of skipped: a server child now ends when
+  the client hangs up (no `sleep(10)` + `kill('TERM')`, which cannot interrupt a
+  pseudo-process in `accept`), pauses use `Time::HiRes::sleep` (a 4-argument
+  `select` with three `undef`s is not a Windows sleep), and the connect-timeout
+  test accepts `connection_refused` as well as `timeout` and `io_error`.
+- **`barcode-1d`**: Metal and the PNG codec stay native-extension work, but
+  `render_png` used to `require` the codec before checking for a backend, so a
+  host without the extension died in DynaLoader instead of reporting the
+  documented "no native Paint VM" error. It now renders first. On Windows the
+  recipe lists `paint_codec_png_native` and `paint_vm_metal_native` as
+  prerequisites and puts their `lib\` on `@INC`; the Metal one is still an
+  intentional macOS-only skip.
+- **Rust XS packages** (`gf256_native`, `polynomial_native`,
+  `paint_codec_png_native`) reuse the conduit design rather than inventing one:
+  `code/scripts/check-perl-extension-windows.ps1` (its `-ExtensionName` set now
+  names them) selects the native Strawberry Perl, builds the cdylib with the
+  default MSVC host target (`perl-bridge` compiles its C shim with that Perl's
+  compiler and links the CORE import library `libperl*.a`, which `rust-lld`
+  accepts), stages `<Name>.dll` as `lib\auto\CodingAdventures\<Name>\<Name>.xs.dll`
+  and runs `prove`. A GNU-target build (as `go/conduit` needs for cgo) is not
+  used here because nothing links through gcc: Perl loads the DLL itself and the
+  only C is the shim, built by Strawberry's gcc. `gf256_native` and
+  `polynomial_native` previously only loaded the module in their Unix `BUILD`;
+  they now have real `t/01-basic.t` suites that both recipes run. The three are
+  repository-input consumers of the helper and `perl-bridge` (and members of the
+  `build-windows-os-suites` gate), like `conduit` and `irc-server-native`.
+
+Still hand-written or skipped (tracked in W2/W4): `barcode-layout-1d` (above),
 `aes-modes` (`Makefile.PL`/`make test`), `der-asn1`, `der-tlv` and
-`x509-extension` (explicit-Strawberry compile checks that already pass), and the
-native extensions `conduit`, `irc-server-native`, `gf256_native`,
-`polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
-(Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
+`x509-extension` (explicit-Strawberry compile checks that already pass), and
+`paint_vm_metal_native` (Metal is macOS-only).
 
 ### W3 progress: Go cgo (`go/conduit`, `go/conduit-hello`)
 

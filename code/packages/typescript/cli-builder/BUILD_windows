@@ -1,4 +1,4 @@
-cd ../directed-graph && npm install --silent
-cd ../state-machine && npm install --silent
-npm install --silent
+cd ../directed-graph && npm ci --silent
+cd ../state-machine && npm ci --silent
+npm ci --silent
 npm test

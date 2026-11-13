@@ -1,1 +1,3 @@
-echo "perl/parrot: skipped on Windows CI"
+# build-tool: deps=perl/repl
+REM prereqs: ../../../packages/perl/repl
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps repl

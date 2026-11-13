@@ -1,6 +1,6 @@
 # The build tool runs each line as its own `cmd /C` from this package's
 # directory (PowerShell and batch-file syntax do not work here), so each
 # line is one command, and a step elsewhere is `cd <dir> && <command>`.
-npm install --silent
+npm ci --silent
 npx tsc -p .
 npm test

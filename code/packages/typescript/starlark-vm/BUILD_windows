@@ -1,3 +1,3 @@
-cd ../virtual-machine && npm install --silent
-npm install --silent
+cd ../virtual-machine && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

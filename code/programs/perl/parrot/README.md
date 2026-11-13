@@ -74,7 +74,7 @@ parrot/
   Makefile.PL         — build configuration
   cpanfile            — dependency declaration
   BUILD               — CI build command
-  BUILD_windows       — skip marker for Windows CI
+  BUILD_windows       — Windows CI build command (shared Strawberry Perl helper)
   README.md           — this file
   CHANGELOG.md        — version history
 ```

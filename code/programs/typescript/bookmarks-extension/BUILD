@@ -1,3 +1,3 @@
-cd ../../../packages/typescript/browser-extension-toolkit && npm install --silent
-npm install --silent
+cd ../../../packages/typescript/browser-extension-toolkit && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

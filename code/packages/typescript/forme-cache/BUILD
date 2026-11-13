@@ -1,5 +1,5 @@
-cd ../document-ast && npm install --silent
-cd ../forme-types && npm install --silent
-cd ../blake2b && npm install --silent
-cd ../forme-identity && npm install --silent
-npm install --silent && npx vitest run --coverage
+cd ../document-ast && npm ci --silent
+cd ../forme-types && npm ci --silent
+cd ../blake2b && npm ci --silent
+cd ../forme-identity && npm ci --silent
+npm ci --silent && npx vitest run --coverage

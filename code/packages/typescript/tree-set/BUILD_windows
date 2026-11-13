@@ -1,2 +1,2 @@
-npm install --silent --no-package-lock
+npm ci --silent
 npm test

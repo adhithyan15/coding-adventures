@@ -1,4 +1,3 @@
-# Windows: Perl native extensions still need the Perl DLL import library and
-# headers available locally. Windows CI runners here do not provide that full
-# Perl development toolchain yet, so we skip the package there.
-echo Skipping perl/polynomial_native on Windows — Perl import library not available
+# needs-toolchain: rust
+# Build, stage and test with one native Windows interpreter (not MSYS Perl).
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\check-perl-extension-windows.ps1 -ExtensionName PolynomialNative

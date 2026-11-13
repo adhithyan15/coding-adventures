@@ -24,7 +24,7 @@ use coding_adventures_test_bootstrap::run::{self, Suite};
 use coding_adventures_test_bootstrap::tfv::Value;
 use coding_adventures_test_bootstrap::Verdict;
 
-fn main() {
+pub(crate) fn main() {
     let mode = std::env::var("TFB_FIXTURE").unwrap_or_else(|_| "pass".into());
     let mut suite = Suite::new();
     match mode.as_str() {

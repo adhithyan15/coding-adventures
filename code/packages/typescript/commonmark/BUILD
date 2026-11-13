@@ -1,6 +1,6 @@
-cd ../directed-graph && npm install --silent
-cd ../document-ast && npm install --silent
-cd ../document-ast-to-html && npm install --silent
-cd ../state-machine && npm install --silent
-cd ../commonmark-parser && npm install --silent
-npm install --silent && npx vitest run --coverage
+cd ../directed-graph && npm ci --silent
+cd ../document-ast && npm ci --silent
+cd ../document-ast-to-html && npm ci --silent
+cd ../state-machine && npm ci --silent
+cd ../commonmark-parser && npm ci --silent
+npm ci --silent && npx vitest run --coverage

@@ -2933,6 +2933,135 @@ impl fmt::Debug
     }
 }
 
+/// Name-policy-backed closure after reviewed-anchor subordinate-CA DNS policy.
+///
+/// The reviewed anchor's supported permitted-DNS constraint has been applied
+/// to every retained non-self-issued intermediate certificate's optional
+/// Subject Alternative Name. The consumed strong policy already proves the
+/// anchor constraint against the final target and supported intermediate
+/// constraints across the path while retaining the exact Name-value policy.
+/// This does not constrain subordinate distinguished names, support every
+/// GeneralName, establish complete path validity, check revocation, or
+/// authorize transport.
+pub struct ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+> {
+    subordinate_policy:
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_application_count: usize,
+    dns_name_evaluation_count: usize,
+}
+
+impl<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+    ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >
+{
+    /// Return the consumed strong subordinate-intermediate constraints policy.
+    #[must_use]
+    pub const fn subordinate_policy(
+        &self,
+    ) -> &ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > {
+        &self.subordinate_policy
+    }
+
+    /// Return reviewed-anchor to subordinate-CA constraint applications.
+    #[must_use]
+    pub const fn constraint_application_count(&self) -> usize {
+        self.constraint_application_count
+    }
+
+    /// Return total reviewed-anchor subordinate dNSName evaluations.
+    #[must_use]
+    pub const fn dns_name_evaluation_count(&self) -> usize {
+        self.dns_name_evaluation_count
+    }
+}
+
+impl fmt::Debug
+    for ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy",
+        )
+    }
+}
+
 /// Arbitrary-depth closure after every retained intermediate name policy.
 ///
 /// Complete intermediate policies are visited only in the anchor-to-target
@@ -5080,6 +5209,93 @@ pub fn validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subor
             constraint_application_count,
             dns_name_evaluation_count,
             ip_address_evaluation_count,
+        },
+    )
+}
+
+/// Apply the reviewed anchor's DNS constraint to strong subordinate evidence.
+///
+/// Constraint bytes, certificates, anchor-to-target order, and self-issued
+/// classifications come only from the consumed Name-policy-backed proof. The
+/// exact private evaluator shared with the generic entry point supplies
+/// identical unconstrained, traversal, limit, failure, and redaction behavior.
+pub fn validate_accumulated_name_policy_reviewed_x509_rsa_constructed_path_subordinate_anchor_name_constraints_policy<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    subordinate_policy:
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateIntermediateNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+>{
+    let accumulated_intermediates = subordinate_policy
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .accumulated_intermediates();
+    let intermediate_policies = accumulated_intermediates.intermediate_policies();
+    let name_constraints = accumulated_intermediates
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let (constraint_application_count, dns_name_evaluation_count) =
+        evaluate_selected_anchor_subordinate_intermediate_dns_policy(
+            intermediate_policies.len(),
+            |index| intermediate_policies[index].certificate(),
+            |index| {
+                intermediate_policies[index]
+                    .self_issued_classification()
+                    .is_self_issued()
+            },
+            name_constraints,
+            constraint_limits,
+            subject_alt_name_limits,
+        )?;
+
+    Ok(
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy {
+            subordinate_policy,
+            constraint_application_count,
+            dns_name_evaluation_count,
         },
     )
 }

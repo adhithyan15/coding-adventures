@@ -20,3 +20,21 @@
 pub mod combinational;
 pub mod gates;
 pub mod sequential;
+
+// ---------------------------------------------------------------------------
+// The flat surface: every stateless operation, at the crate root
+// ---------------------------------------------------------------------------
+//
+// The gates and the combinational blocks are pure functions: the output is a
+// function of the inputs and nothing else.  They are re-exported here so that
+// the Warrant evidence harness (`code/specs/logic-gates.warrant`, bound by
+// `evidence.bindings`) can name each operation as `logic_gates::and_gate`,
+// `logic_gates::mux2`, ...  The harness resolves an `export=` by name at the
+// crate root; it has no notion of a module path.
+//
+// `sequential` is deliberately NOT re-exported: its operations carry state
+// across calls, which is a different kind of claim (LG01, "Next slice").
+// `logic_gates::gates::and_gate` and `logic_gates::and_gate` are the same
+// function, so existing callers are unaffected.
+pub use combinational::*;
+pub use gates::*;

@@ -48,10 +48,13 @@ NODE_BUILTINS = frozenset(
     worker_threads zlib
     """.split()
 )
-NODE_LOCK_EXCEPTIONS = {
-    Path("code/packages/typescript/matrix-rust-napi"):
-        "native N-API workspace regenerates its platform lock per build",
-}
+# Projects allowed to omit package-lock.json (and gitignore it instead).
+# Empty since the dependency-pinning work: matrix-rust-napi, the one entry,
+# was described as regenerating a platform lock per build, but its
+# package.json holds only ordinary devDependencies, and it now commits a
+# lock and installs with `npm ci` like every other package. Keep the
+# mechanism; an entry needs a reason that survives that same check.
+NODE_LOCK_EXCEPTIONS: dict[Path, str] = {}
 
 
 @dataclass(frozen=True)

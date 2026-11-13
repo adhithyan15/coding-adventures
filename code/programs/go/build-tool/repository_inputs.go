@@ -185,6 +185,24 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:   nativePerlBuildPaths,
 	},
 	{
+		name: "perl/gf256_native", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
+	},
+	{
+		name: "perl/polynomial_native", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
+	},
+	{
+		name: "perl/paint_codec_png_native", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+		paths:   nativePerlBuildPaths,
+	},
+	{
 		name:     "rust/ct-compare",
 		language: "rust",
 		inputs:   "the CT01 corpus, L0 transport and independent projection",

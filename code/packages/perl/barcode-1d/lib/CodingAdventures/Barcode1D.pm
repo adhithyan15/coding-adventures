@@ -76,8 +76,13 @@ sub render_pixels {
 
 sub render_png {
   my ($class, $data, $symbology, $layout_config) = @_;
-  require CodingAdventures::PaintCodecPngNative;
+  # Render first: on a host with no native Paint VM (Linux, Windows) this dies
+  # with the documented "no native Paint VM is available for this host" error.
+  # The PNG codec is loaded only afterwards, so a host that has no native
+  # extensions built at all still reports that clean error instead of a
+  # DynaLoader "Can't locate loadable object" failure from the codec.
   my $pixels = $class->render_pixels($data, $symbology, $layout_config);
+  require CodingAdventures::PaintCodecPngNative;
   return CodingAdventures::PaintCodecPngNative::encode_rgba8_native(
     $pixels->width,
     $pixels->height,

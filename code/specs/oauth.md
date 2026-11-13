@@ -2014,6 +2014,74 @@ effect. It does not validate the anchor self-signature, check revocation,
 compose TLS or HTTP, authorize OAuth transport, or grant network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
 
+A Name-policy-backed reviewed-anchor subordinate-name-policy follow-up consumes
+the exact strong subordinate-intermediate result and derives the reviewed
+anchor's optional constraint bytes, every complete intermediate certificate,
+anchor-to-target order, and self-issued classification only through that
+retained evidence. It applies the same supported permitted-DNS contents under
+the same independent caller-owned decoder limits as the generic reviewed-anchor
+follow-up. Success retains the complete strong subordinate-intermediate policy
+plus only payload-free counts of reviewed-anchor constraint applications and
+repeated DNS-name evaluations. The generic reviewed-anchor subordinate result
+cannot construct or substitute for this stronger result. The strong and generic
+entry points must share the exact private reviewed-anchor subordinate evaluator
+so unconstrained short-circuiting, traversal, the self-issued exception,
+decoder-limit propagation, stable failure kinds, and payload redaction cannot
+drift between them.
+
+This preserves the exact Name-value policy, reviewed trust-root selection,
+certificate-wide anchor-role policy, construction-derived path-length state,
+complete ordered intermediate and target-signature evidence, complete target
+policy, and all supported target and subordinate Name-constraint evaluations in
+one non-copyable result. It still does not constrain subordinate subject
+distinguished names, support every GeneralName form, add excluded or non-DNS
+reviewed-anchor constraints, establish complete Name or path validation,
+validate the anchor self-signature, check revocation, compose TLS or HTTP,
+authorize OAuth transport, or grant network authority. The pure public-
+certificate-data composition performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+A bounded revocation-binding follow-up consumes that exact strongest supported
+Name-policy-backed path result together with one fully routed authenticated
+OCSP target-revocation proof. The target certificate is derived only from the
+retained complete server policy, and the target-nearest issuer is derived only
+from the retained depth-zero routed signature. Binding requires the OCSP proof
+to retain those same exact decoded certificate objects, then validates both
+path certificates at the OCSP proof's retained observation time. Failure order
+is stable: target identity, issuer identity, target validity, then issuer
+validity. Success retains both complete non-copyable inputs plus the two exact-
+time validity tokens; byte-equal independent decodes, detached issuers, and
+cross-time evidence cannot substitute.
+
+This is pure public-certificate and signed-response evidence composition. It
+performs no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not fetch revocation data, reify or authorize the
+delegated responder path, apply responder DNS or no-check policy, establish
+status for every non-root certificate, complete Name or path validation,
+validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
+A bounded responder-path projection follow-up consumes only that exact strong
+Name-policy path/fully routed OCSP binding and nominally reifies the delegated
+responder's already-authenticated responder-to-issuer-to-reviewed-root suffix.
+It accepts no caller-supplied certificate, path, algorithm, key, signature,
+time, or policy input, performs no additional validation, and retains the
+complete non-copyable strong binding intact. The generic older routed-path
+binding cannot substitute for this stronger projection.
+
+This pure public-data composition performs no parsing, cryptography, credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It does
+not apply responder DNS or no-check policy, establish separately authenticated
+responder or intermediate status, complete revocation or Name/path validation,
+validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
