@@ -15,6 +15,7 @@ import {
 } from "../../src/exam-inventory.js";
 import { lessonsUpToLevel } from "../../src/levels.js";
 import { measureContinuity } from "../../src/continuity.js";
+import { buildModalityManifest } from "../../src/modality-manifest.js";
 
 describe("the committed Kannada A1 inventory", () => {
   const inventory = loadExamInventory("kannada", "A1");
@@ -164,6 +165,12 @@ describe("the committed Kannada A1 inventory", () => {
     expect(movement?.body).toContain("ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ");
     expect(movement?.body).toContain("ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ");
     expect(Number(movement?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+    const [modality] = buildModalityManifest([movement!]).lessons;
+    expect(modality?.modality).toBe("pen");
+    expect(modality?.drivable).toBe(false);
+    expect(modality?.coreModality).toBe("voice");
+    expect(modality?.coreDrivable).toBe(true);
+    expect(modality?.detachableSegments).toContain("Writing: ಶಾಲೆಗೆ");
 
     const point = inventory.points.find((entry) => entry.id === "KA-A1-POST-03");
     expect(point?.probe).toEqual([

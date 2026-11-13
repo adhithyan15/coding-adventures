@@ -72,6 +72,10 @@ difference, then say each sentence once. Do not swap “to” and “from”.
 [PAUSE 3s]
 - [YOU SAY: “I go to school” in Kannada, without looking.]
 - [YOU SAY: “I have come from Bengaluru” in Kannada, without looking.]
+
+## Writing: ಶಾಲೆಗೆ
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
 - [YOU WRITE: **ಶಾಲೆಗೆ** from memory, then check the printed word.]
 
 ## Wrap-up recall

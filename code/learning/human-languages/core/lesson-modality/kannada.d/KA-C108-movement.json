@@ -4,18 +4,21 @@
     "language": "kannada",
     "chapter": 108,
     "sequence": 4395,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e0760d797681b913"
+    "sourceHash": "fnv1a64:2cfebc40f94753b7",
+    "detachableSegments": [
+      "Writing: ಶಾಲೆಗೆ"
+    ]
   },
   "findings": []
 }

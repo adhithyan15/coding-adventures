@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 108,
-  "sourceHash": "fnv1a64:4769480e435202c0",
+  "sourceHash": "fnv1a64:f0d3f937351c6b8b",
   "lessonIds": [
     "KA-C108-kelage",
     "KA-C108-horage",
@@ -10,11 +10,11 @@
     "KA-C108-raste",
     "KA-C108-movement"
   ],
-  "voiceLessons": 6,
+  "voiceLessons": 5,
   "drivablePrefix": 6,
   "text": "kannada/narration/ch108.txt",
   "json": "kannada/narration/ch108.json",
-  "textHash": "fnv1a64:514aa0796d2f05cb",
-  "jsonHash": "fnv1a64:b557ce905fc6484b",
+  "textHash": "fnv1a64:4b81bd6d32f6ff69",
+  "jsonHash": "fnv1a64:2be7b3013c853f84",
   "findings": []
 }
