@@ -4285,7 +4285,14 @@ jobs:
           # neither. Declared here rather than left to chance: a developer
           # machine usually has the component installed already, so omitting it
           # fails only on CI.
-          components: clippy,llvm-tools
+          #
+          # rustfmt likewise: many BUILD files run `cargo fmt -- --check`.
+          # Before the toolchain was pinned this step installed onto the
+          # runner image's preinstalled `stable`, which already carried
+          # rustfmt; a freshly installed exact release gets only the minimal
+          # profile plus what is listed here, so every fmt check failed with
+          # "'cargo-fmt' is not installed for the toolchain".
+          components: clippy,llvm-tools,rustfmt
 
       - name: Install native Paint VM dependencies
         # needs_mosaic_qt_runtime is its own condition, independent of
