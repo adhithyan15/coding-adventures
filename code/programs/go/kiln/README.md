@@ -152,10 +152,28 @@ kiln explain --plan <plan.json> <package>
   targets, `go.work` and `vendor/`.
 - The key is a KILN02 key with **semantics version 0**. Tools and env are empty
   in this milestone, so every package carries `m1-incomplete:tools-env` and
-  `m1-incomplete:scans` and none is `cacheable` yet. Packages whose closure has
+  `m1-incomplete:trace` and none is `cacheable` yet. Packages whose closure has
   an unpinned language (`code/kiln/legacy/pinned.json`) are class `unpinned`;
   `unknown-repo-inputs:<name>`, `never.json` entries and a missing BUILD file
   for the OS are `uncacheable`.
+- **Advisory hints** (KILN03 section 6) come from static scans of each
+  package's own files, its closure members' files and its reads, in the same
+  pass that hashes them: a `../` path that leaves the package, closure and
+  reads is `escape:<path>`; indirection markers (`dirname`, `$PWD`,
+  `git rev-parse`, a bare `cd ..`, an absolute path, ...) are `indirect:<file>`;
+  text over 256 KiB or an executable that is not text is `unscanned:<file>`.
+  They land in each record's sorted, de-duplicated `hints` array (at most 16
+  per kind), are counted in `histogram.hints`, and make **no soundness or
+  security claim**: they are for triage and debugging, and can neither make a
+  package cacheable nor uncacheable. `kiln explain` prints them in a separate
+  section labelled advisory. Soundness for reuse will come from traced
+  read-sets recorded under `strace` on trusted CI (KILN04, forthcoming), so
+  every package also carries `m1-incomplete:trace` and none is `cacheable`.
+- **Symlink rules stay hard.** A symlink (in the package, a closure member or a
+  read) that does not resolve, through any chain or directory link, to the
+  package, closure or reads, that leaves the repository, or that exhausts the
+  40-hop limit, is the reason `symlink:<link>`; a symlinked BUILD file is
+  `symlink:<build-file>` and has no key. These make the package `uncacheable`.
 - The Git source refuses to plan when any untracked, non-ignored file exists
   (build products would enter the digests). `--source folder` has no such
   check: it prints a warning to stderr and keeps going (shadow mode), so run it

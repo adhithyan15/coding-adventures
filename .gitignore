@@ -35,6 +35,7 @@ coverage/
 .bundle/
 vendor/bundle
 Gemfile.lock
+!/code/specs/data/third-party-dependencies/ruby/Gemfile.lock
 *.bundle
 
 # TypeScript / Node

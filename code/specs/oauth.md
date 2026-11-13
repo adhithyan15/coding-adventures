@@ -1669,6 +1669,28 @@ adjacency, apply an intermediate transition, generalize full path validation,
 check revocation, perform TLS or HTTP, authorize OAuth transport, or grant
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A distinct policy-backed ordered-transition follow-up now borrows that stronger
+initializer and consumes one already routed terminal proof only when both
+retain the same exact constructed-path object. The terminal proof authenticates
+the anchor-nearest intermediate as the reviewed root's exact child, and
+complete intermediate policy must retain that same decoded child before a
+private working state is recreated from the construction-derived capacity and
+advanced. The non-copyable result retains the Name-policy-backed initializer,
+its exact validated `X509NameValuePolicy`, reviewed-root selection,
+certificate-wide anchor role policy, terminal repository-owned RSA signature
+evidence, complete intermediate policy, and advanced path-length state
+together. Generic initialization evidence cannot produce this stronger result;
+proofs from another construction and policy for another certificate fail
+closed. This pure public-certificate-data composition performs no new parsing
+or signature verification, credential access or editing, signing, storage,
+clock acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It proves only the first ordered
+anchor-to-target intermediate transition. The available Name-value rules still
+do not define complete RFC 5280 Name equality, and this boundary does not
+process remaining intermediates, validate the whole path, apply name
+constraints, check revocation, perform TLS or HTTP, authorize OAuth transport,
+or grant network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded role-policy follow-up now consumes that exact reviewed-terminal-bound
 path together with certificate-wide role-policy evidence. It fails closed
 unless the role evidence retains the identical decoded terminal certificate
