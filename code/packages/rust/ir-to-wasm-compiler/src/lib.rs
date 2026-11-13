@@ -970,8 +970,14 @@ impl<'a> FunctionLowerer<'a> {
         end: usize,
         label: &str,
     ) -> Result<usize, WasmLoweringError> {
-        for index in start..end {
-            let instruction = &self.function.instructions[index];
+        for (index, instruction) in self
+            .function
+            .instructions
+            .iter()
+            .enumerate()
+            .take(end)
+            .skip(start)
+        {
             if !matches!(instruction.opcode, IrOp::BranchZ | IrOp::BranchNz) {
                 continue;
             }

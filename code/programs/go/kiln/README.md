@@ -292,6 +292,52 @@ Fixtures in `internal/trace/testdata/` are hand-written in strace 6.x format;
 `FuzzParse` checks the parser never panics and only ever returns
 `trace-incomplete` errors.
 
+## Trace classification (`internal/traced`, KILN04 stage 1b-i)
+
+`internal/traced` turns the parsed traces of one action into a **raw record**:
+what the action observed, what it wrote, and every reason its trace cannot be
+trusted. It is pure; everything outside the traces is injected.
+
+```go
+cfg := traced.Config{
+    Root:      "/work/repo",                     // the real checkout path
+    Packages:  traced.NewPackageIndex(relPaths), // nested-aware
+    Tree:      tree,                             // tracked tree (SourceTree adapts a Source)
+    FS:        disk,                             // post-run Lstat, Readlink, ReadHead
+    HostRoots: hostRoots, Pinned: pinned, Tools: weakKeyTools,
+    Home: home, Tmpdir: tmp, JobStart: start,
+}
+rec, err := traced.Classify(cfg, traced.Input{
+    Package: "code/packages/go/parser",
+    Traces:  stepTraces,   // one per BUILD step, in order
+    Recipe:  recipeLines,  // required: the expected `sh -c` lines
+})
+// rec.Entries: ["list:code/packages/go", "path:go.work", "pkg:code/packages/go/lexer", ...]
+// rec.Reasons: ["host-read:$HOME/.cache/x", "network:/usr/bin/curl", ...]
+```
+
+- **Entries** are `pkg:<package>` for a path inside a package (tracked or not,
+  the deepest package wins), `path:<rel>` outside every package (an absent path
+  at its first absent component) and `list:<rel>` for a listed directory. A
+  path the action made itself, or that lies under a directory it made, is its
+  own output and records nothing.
+- **Resolution** walks each path through the post-run disk, expanding symlinks
+  (40 hops) and applying `..` to the resolved directory. Every crossed link is
+  an observation. A component that may have changed under the action is
+  `trace-incomplete:unstable-path`.
+- **Exec** reads the program, its `#!` chain and the ELF loader. `/proc` and
+  `/dev/fd` follow the ephemeral list. Reads outside the repository follow
+  `host-roots.json`. Network use is judged by address.
+- **Writes** are coarsened to write roots; tracked paths written are listed
+  separately and give `writes-tracked`. Untracked observations and traversed
+  components are exposed for the merge job's cross-action checks (KILN04
+  section 7). There are no digests in a raw record.
+- `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
+  `sh -c` lines.
+
+The decisions are in KILN04 section 5.5. `FuzzClassify` checks the classifier
+never panics and always returns sorted, unique, clean output.
+
 ## Traced keys (`internal/key/traced.go`, `internal/legacy/traced.go`, KILN04 stage 1b-ii)
 
 A traced action has two KILN02 keys of semantics version 2. The **weak key**

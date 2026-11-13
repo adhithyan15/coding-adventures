@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `src/lib.rs`: `needless_range_loop`: `find_first_branch_to_label` iterates the instruction slice with `enumerate().take().skip()`; behaviour unchanged.
+
 ## [0.3.2] — 2026-08-26 (W25 — memory64 proposal, first slice)
 
 ### Changed

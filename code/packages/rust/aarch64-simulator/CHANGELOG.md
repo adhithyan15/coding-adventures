@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Rust 1.100 clippy (`-D warnings`) drift in `tests/python_differential.rs`: `needless_range_loop`: seed the register file with `iter_mut().enumerate()`; behaviour unchanged.
+
 ## 0.1.0 (2026-09-07)
 
 - Added exact 64 KiB AArch64 architectural state with 32 64-bit GPR slots,

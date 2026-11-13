@@ -8,8 +8,8 @@ fn seed_register(seed: usize, index: usize) -> u64 {
 
 fn seeded_state(name: &str, raw: u32, seed: usize) -> Rv64IState {
     let mut state = Rv64ISimulator::new().get_state();
-    for index in 1..32 {
-        state.registers[index] = seed_register(seed, index);
+    for (index, reg) in state.registers.iter_mut().enumerate().skip(1).take(31) {
+        *reg = seed_register(seed, index);
     }
     state.registers[2] = 0x200;
     if (name.starts_with("beq") || name.starts_with("bne")) && seed == 0 {

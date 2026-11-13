@@ -54,6 +54,18 @@ ordered intermediate steps; it does not add arbitrary traversal, complete path
 or Name validation, constraints, revocation, TLS, HTTP, OAuth, or network
 authority.
 
+A stronger allocation-free accumulator now accepts only the Name-policy-backed
+reviewed initializer and the same bounded ordered evidence used by the generic
+accumulator. Both entry points share one private traversal implementation for
+construction-derived counts, the caller ceiling, exact construction identity,
+immediate depth order, issuer continuity, authenticated candidate children,
+complete intermediate policy, and path-length advancement. The stronger result
+retains the exact Name-value policy, reviewed-root selection, anchor-role
+policy, construction-derived initial capacity, both borrowed evidence slices,
+processed count, and final state. It stops before the target signature and does
+not add complete RFC 5280 Name or path validation, constraints, revocation,
+TLS, HTTP, OAuth, or network authority.
+
 An ordered-transition follow-up borrows the reviewed construction-derived
 initializer and consumes a terminal routed proof only when both retain the same
 exact constructed-path object. That terminal proof authenticates the

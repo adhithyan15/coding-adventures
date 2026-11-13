@@ -16322,7 +16322,7 @@ dependencies = [
 
 [[package]]
 name = "x509-rsa-constructed-path-signature-routing"
-version = "0.19.0"
+version = "0.20.0"
 dependencies = [
  "der-asn1",
  "rsa-public-operation",

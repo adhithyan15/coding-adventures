@@ -620,9 +620,9 @@ fn circular_stack_depths_wraps_and_return_variants_are_exact() {
             state = cpu.snapshot();
         }
         assert_eq!(state.stack_pointer, (depth & 7) as u8);
-        for slot in 0..8 {
+        for (slot, &stacked) in state.return_stack.iter().enumerate().take(8) {
             let last = (slot..depth).step_by(8).next_back();
-            assert_eq!(state.return_stack[slot], last.map_or(0, |i| i as u16 + 1));
+            assert_eq!(stacked, last.map_or(0, |i| i as u16 + 1));
         }
 
         for (raw, literal, gie) in [
