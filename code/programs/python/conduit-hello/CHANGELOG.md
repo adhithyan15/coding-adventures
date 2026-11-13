@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Windows: added a `BUILD_windows`. The POSIX `BUILD` ran `bash BUILD` in the
+  conduit package, which searched for `libconduit_native.*` (cargo names the
+  Windows cdylib `conduit_native.dll`) and used `.venv/bin/python`, so the build
+  failed with "no libconduit_native found" once the native crate was rebuilt.
+  The new script builds the extension, copies the `.dll` to the `.pyd` name and
+  runs the tests with `.venv\Scripts\python.exe`.
+
 ### Phase 1 — Full Flask-like demo (WEB03)
 
 - **8 routes** exercising every WEB03 DSL feature: `GET /`, `GET /hello/<name>`,

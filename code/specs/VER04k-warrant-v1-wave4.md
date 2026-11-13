@@ -1889,11 +1889,12 @@ edit.
 | E20 | The S1 security review: `dsize` priced a nullary constructor and `Err(E.CASE)` at 0, but constructor and error values own their names, so `replicate(<10,000-byte constructor>, 65536)` allocated about 660 MB (peaking at 1.3 GB) with 2 MiB charged; list literals and `concat` did the same, in v0 and v1. Identifiers had no length cap | `dsize` counts the bytes of the stored names: `len(T) + len(C)` for a constructor of type `T`, nullary ones included, and `len(E) + len(CASE)` for an error value, so the charge is never below what a copy allocates. Every implementation charges them, generated code included. In v1 documents the checker also caps every identifier at 128 bytes (`MAX_IDENTIFIER_BYTES`, the binding parser's path-segment cap), as W0602 with the message "an identifier of N bytes is longer than the 128 bytes a v1 document allows", in a pass before every other check, so an over-long reference is refused before resolution. The cap is defence in depth: the name charge is what bounds the copies. v0 is unchanged (no data counter, no cap) | coordinator-decided (S1 security review, override welcome) | Status, 1.2, 1.4, 2.7, 6.2 |
 | E21 | The S1 security review: the checker resolved a dotted name by its first segment alone (a binder, a built-in such as `Some`, `None` or `len`, a model or an operation) and typed it as that, while the ground evaluator turns any two-segment name it does not recognise into the error value `Err((seg0, seg1))` and ignores the arguments. So v1 `g.x(a)`, `g` a model, was typed `U8` and evaluated to `Err(("g", "x"))`; `Some.x(a)`, `None.x` and `len.x(a)` likewise; v0 `a.foo` was typed as the binder `a`. An example `select_bytes(..) == m.FORGED(..)` checked, and `compile_warrant_to_tfv` emitted the error id `FORGED`, which no declaration has. The evidence generator already refused such names, so the lanes disagreed | A reference of more than one segment is exactly one of two things: `E.CASE`, with `E` a declared error and `CASE` one of its cases (v0 and v1), or a v1 projection `x.f.g` from a binder `x` in scope. Anything else is W0202 `UnboundName` of the whole dotted name, in v0 and in v1, refused before any first-segment lookup. This is a **v0 deviation**: such v0 documents used to check, but evaluated to a forged error value, never to what their type said. No in-repository document uses one (`git ls-files '*.warrant'`: the only dotted references are `E.CASE` and the v1 projection `b.tag` in `wxa`; `labels` and `input` lines name operation parameters, not references), and every v0 output, the v0 compatibility pin and the regenerated harnesses are byte-identical | coordinator-decided (S1 security review, override welcome) | 9.1; VER04 §10 |
 
-**Note on E4: reads (an open hazard).** Reads charge no data, because a charge
-per read would make the meter depend on whether an implementation copies or
-shares, and on how often a body names a value. But the ground evaluator's reads
-clone `EvalValue` deeply, and those copies are not small. The S1 security review
-measured them:
+**Note on E4: reads (a bounded-copy guard, with a residual accounting gap).**
+The portable data meter does not charge reads, because a charge per read would
+make that meter depend on whether an implementation copies or shares, and on
+how often a body names a value. The Rust ground evaluator does deep-clone
+`EvalValue` on several read paths, however, and those copies are not small. The
+S1 security review measured them:
 
 * a list literal of 48 references to one binder whose value was charged about
   16 MB peaked at **2.4 GB** before the literal's own charge failed with W0703;
@@ -1905,19 +1906,62 @@ measured them:
 * the worst case, many references to a value near the 64 MiB budget, inside a
   bounded nesting of calls, is hundreds of GB.
 
-So the data counter's claim is narrower than the first draft of this note put
-it: **it caps the `dsize` of any one v1 value at 64 MiB, per value; it does not
-bound the total memory of an evaluation**, since uncharged read copies of an
-admitted value can be made many times over. The hazard is older than this wave
-(in v0 and wave-3 evaluation no counter bounds even one value: the element cap
-allows a list of 65,536 strings of 65,536 bytes, about 4 GiB, built by repeated
-`concat` within the work budget), and WX-D1 narrows it without closing it. It is
-**open**. The fix is one of: shared storage in `EvalValue` (`Rc`/`Arc` for
-sequences, composites and names, so a read is a reference-count increment and
-the meter's "charges as if it copied" rule becomes exact), or a host-side guard
-that bounds the memory of the reads themselves. Either is a change to the
-evaluator's representation, which this wave does not make (8.1). It is tracked
-as backlog **WX-RD1** (P1) and recorded for the owner, not settled here.
+The S1 measurements show that `dsize` does not bound the host copy work. The
+64 MiB v1 data meter still caps `dsize` for each produced value, not the
+aggregate memory of an evaluation. A separate read-copy guard is selected for
+the Rust ground evaluator while preserving the public `EvalValue`,
+`CodegenError`, `CodegenErrorKind` and `CodegenLimits` shapes:
+
+* `MAX_READ_COPY_CHARGE_BYTES` is 64 MiB per top-level evaluation. The counter
+  is cumulative across nested model calls and expression evaluation, and
+  `reset_work` resets it with the existing per-evaluation counters.
+* Before any evaluator-owned deep copy, compute its copy-footprint charge using
+  checked/saturating arithmetic and refuse before allocating any part of that
+  copy if the cumulative charge would exceed the limit. For a copied value
+  tree, charge 96 bytes per `EvalValue` node plus the exact payload length of
+  every `Bytes` vector and every owned constructor/error name string. A copied
+  list or tuple includes the charge for every child node; a copied constructor,
+  `Option`, or `Result` includes all nested nodes and names. Multi-input copies
+  such as list/byte `concat` reserve the combined charge before copying either
+  operand. The walk stops as soon as the charge is over budget and rejects
+  values deeper than `TFV_MAX_DEPTH` with W0703 `RecursionDepthExceeded` before
+  copying.
+* The 96-byte node charge is a fixed, conservative host-accounting assumption
+  for the current Rust `EvalValue` layout (96 bytes on the supported 64-bit
+  hosts), not the portable value charge. The implementation must fail to
+  compile if `size_of::<EvalValue>()` grows beyond 96 until this contract and
+  its tests are deliberately updated. The charge is an evaluator copy
+  footprint, not a measurement of allocator requests, process RSS, or total
+  memory. It excludes the input environment, parser/AST storage, allocator
+  metadata/capacity rounding and non-copying value construction.
+* The guard applies to v0 and v1 so the pre-WX-D memory hazard is bounded too.
+  In v0, a workload whose read-copy charge stays within the limit keeps its
+  existing output; an over-limit read returns W0703 with the existing
+  `CodegenErrorKind::EvaluationError("read-copy budget exceeded")` shape. This
+  does not change `data_used`, whose 32-byte portable `VALUE_OVERHEAD` remains
+  separate. The diagnostic mapping preserves the public error enum shape and
+  does not imply `work_used` or `data_used` reached its limit.
+
+The guard must cover binder/model argument reads, projection heads and fields,
+`at`, `fixed`, `concat`, both `unwrap_or` copy branches, `take`/`drop`/`slice`,
+`replicate`, and pattern bindings including copied error names. Match-arm
+evaluation must not deep-clone the whole environment; use a borrowed binding
+overlay or charge the complete environment copy before creating it. Every
+remaining evaluator-owned `Clone`, `to_vec` or equivalent deep-copy path must
+have one preflight before allocation. The independent allocator probe constructs
+its large binder before measurement and checks both the 48-reference list
+literal and 48-argument model-call shapes: with a 16 MiB `Bytes` value, three
+copies fit and copy four is refused because `4 * (16 MiB + 96) > 64 MiB`.
+Positive single-copy controls and the v0 corpus regeneration check remain
+required.
+
+This guard reduces the measured deep-copy amplification but is **not a total
+memory cap**. The portable data meter still charges 32 bytes per value slot
+while `EvalValue` is 96 bytes on supported 64-bit hosts, and this first slice
+does not account for allocator overhead or every non-copying allocation. The
+slot-cost undercharge and total-memory claim remain open under backlog
+**WX-RD1** (P1); do not close the row or claim bounded process RSS from this
+guard alone.
 
 **Slices.** The S0 review also split WX-D1 into the slices of 8.1. Each
 coordinator decision above is listed in the S0 pull request for owner override.
@@ -1937,11 +1981,18 @@ coordinator decision above is listed in the S0 pull request for owner override.
 
 - S1 security review (2026-11-12), recorded in 9.1 as E20: `dsize` counts the
   stored names of constructor and error values, and v1 identifiers are capped at
-  128 bytes (W0602); the note on E4 now records the measured cost of uncharged
-  read copies as an open hazard (backlog WX-RD1) and limits the data counter's
-  claim to a per-value bound. The S1 implementation also enforces the existing
-  §1.2 rule that a v1 parameter or quantifier binder may not spell a reserved
-  built-in (W0203); no text changed for that.
+  128 bytes (W0602); the note on E4 records the measured read-copy hazard and
+  selects a separate API-preserving host copy-footprint guard, while leaving
+  the portable slot-cost undercharge and total-memory claim open under WX-RD1.
+  The S1 implementation also enforces the existing §1.2 rule that a v1
+  parameter or quantifier binder may not spell a reserved built-in (W0203); no
+  text changed for that.
+
+- WX-RD1 first bounded repair (2026-11-12), recorded in 9.1: a separate
+  cumulative 64 MiB copy-footprint budget rejects deep copies before allocation
+  in v0 and v1, with W0703 and the existing `EvaluationError` shape. The guard
+  uses a fixed 96-byte host slot charge and payload lengths; it does not replace
+  the portable 32-byte `VALUE_OVERHEAD` or claim a total-memory/RSS bound.
 
 - Initial VER04k: normative WX-D (in three slices), WX-F and WX-G, replacing the
   non-normative sketches of VER04j §7. Departures from those sketches, each

@@ -63,6 +63,7 @@ The pilot is `code/packages/rust/ct-compare/tests/runtime_capability.rs`.
 | Linux x86_64 / aarch64 | live (needs `strace`; Docker ring needs a reachable daemon) |
 | macOS, Windows | **NOT-LIVE** (`RCG010`), reported in output and evidence, never a pass |
 | Linux without strace/ptrace | **NOT-LIVE** (`RCG013`) |
+| strace present but an observed run leaves no trace (absent, unreadable or empty) | **FAIL** (`RCG013`), strict or not: a broken observer is not a clean observation |
 
 Environment switches: `RCG_STRICT=1` turns any not-live into a failure;
 `RCG_REQUIRE_DOCKER=1` makes an unavailable Docker ring a failure.

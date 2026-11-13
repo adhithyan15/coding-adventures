@@ -402,6 +402,37 @@ if res.Emitted { /* res.Manifests and res.Passes go to the ledger */ }
 with an independent brute-force oracle; its seed corpus runs in a normal
 `go test`.
 
+## The shard recorder, first part (`internal/record`, KILN04 stage 4a)
+
+The checks the recorder runs on the checkout before any BUILD does (KILN04
+section 4.8). No sandbox and no CLI yet (`kiln record` is a later PR).
+
+- `record.VerifyTree(root, expectedCommit)` proves the working tree is
+  byte-for-byte one commit and returns its id (pass it back later to catch a
+  moved HEAD; the root must be the repository's top level; a submodule is an
+  error for now; replace refs are off): `git ls-tree -r -z --full-tree <id>`
+  equals `git ls-files --stage -z` (path, mode, id,
+  stage 0 only); no skip-worktree or assume-unchanged bit and no
+  `core.sparseCheckout`; then every entry is `lstat`ed and hashed as a Git blob
+  (SHA-1 or SHA-256 by id length) through an `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY`
+  open, symlink targets compared, exec bits compared, ancestor directories
+  checked for symlinks. Smudge filters, `eol=crlf`, LFS pointers and a FIFO in
+  place of a file are all caught. At most 16 paths are named in the error; limits are 1 GiB per file, 20 minutes,
+  8 workers.
+- `record.Inventory(root)` lists what the commit does not hold, as
+  `kiln-record-inventory/1`: a directory with no tracked file is one entry,
+  symlinks are never followed, the root `.git` is skipped, the order is byte
+  order.
+- `legacy.DecodeSteps` / `legacy.ReadStepsFile` strictly decode the build tool's
+  `-emit-kiln-steps` file (`kiln-legacy-steps/1`: the lines
+  `executor.EffectiveStepLines` returns per package), and `legacy.RecordTmpdir`
+  is the `TMPDIR` keys are derived under.
+
+```go
+res, err := record.VerifyTree(root, "") // nil error: the disk is the commit
+inv, err := record.Inventory(root)       // inv.Paths, ready for recfmt.EncodeInventory
+```
+
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 
 ```

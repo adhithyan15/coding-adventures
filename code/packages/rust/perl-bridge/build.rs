@@ -40,6 +40,18 @@ fn main() {
 
     println!("cargo:rustc-link-search=native={}", out_dir.display());
     println!("cargo:rustc-link-lib=static=perl_bridge_shim");
+
+    // The perl_bridge_smoke example is a cdylib. Apple ld rejects undefined
+    // symbols in a dylib by default, and the Perl API symbols come from the
+    // interpreter that loads the extension, so resolve them at load time (the same
+    // flag the XS consumers' build.rs files pass). `rustc-link-arg` rather than
+    // `rustc-cdylib-link-arg` so the unit-test binary links too, should it ever
+    // pull in a shim object that references Perl. Linux needs nothing: ELF shared
+    // objects may leave symbols undefined.
+    if env::var("CARGO_CFG_TARGET_OS").ok().as_deref() == Some("macos") {
+        println!("cargo:rustc-link-arg=-undefined");
+        println!("cargo:rustc-link-arg=dynamic_lookup");
+    }
 }
 
 // Strawberry's headers and import library describe the interpreter that loads

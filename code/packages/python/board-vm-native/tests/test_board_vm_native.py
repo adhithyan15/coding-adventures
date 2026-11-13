@@ -1060,7 +1060,7 @@ def test_python_esp_connect_flash_uses_rust_owned_upload_command():
                 "4194304",
                 "--no-verify",
             ],
-            "/repo/code/packages/rust",
+            str(pathlib.Path("/repo/code/packages/rust")),
         )
     ]
 
@@ -1097,7 +1097,7 @@ def test_python_pico_flash_rediscover_runtime_port():
                 "--mount",
                 "/Volumes/RPI-RP2",
             ],
-            "/repo/code/packages/rust",
+            str(pathlib.Path("/repo/code/packages/rust")),
         )
     ]
 

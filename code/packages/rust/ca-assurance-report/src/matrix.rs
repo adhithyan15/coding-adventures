@@ -7,6 +7,7 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
+use crate::evidence::DecompressionBounds;
 use crate::json::JsonValue;
 use crate::registry::{WeaknessClass, WeaknessRegistry};
 
@@ -166,6 +167,11 @@ pub struct AuditEvidence {
     /// What kind of package the three attestation rows (CWE-326/327/407)
     /// describe; see [`AuditProfile`].
     pub profile: AuditProfile,
+    /// The CWE-409 (decompression bomb) facts: the operations with an `output`
+    /// bound row and the generated evidence that supports or fails to support
+    /// them.  Empty -- the default -- means "the document bounds no output",
+    /// which excludes CWE-409 only for a profile that does not decompress.
+    pub decompression: DecompressionBounds,
 }
 
 /// What the package does, for the rows whose rationale is a static statement
@@ -185,6 +191,39 @@ pub enum AuditProfile {
     /// Pure Boolean logic (rust/logic-gates): logic gates and combinational
     /// blocks over single-bit values.  No bytes-as-keys, no cryptography.
     BooleanLogic,
+    /// A lossless compressor and decompressor (rust/lzw): bytes in, bytes out
+    /// and back, an output that can be far larger than the input, no key
+    /// material, no cryptography.  Unlike every other profile this one
+    /// *decompresses hostile input*, so CWE-409 is never excluded for it: the
+    /// row is evidenced by the document's `output`/`heap` bound rows or the
+    /// report cannot be generated (see [`DecompressionBounds`]).
+    LosslessCompression,
+}
+
+impl AuditProfile {
+    /// Does a package with this profile expand attacker-controlled input?
+    /// CWE-409 is then applicable by definition, whatever the document says.
+    pub fn decompresses(self) -> bool {
+        matches!(self, AuditProfile::LosslessCompression)
+    }
+
+    /// The name `--profile` accepts and a report records (`FromStr`'s inverse).
+    /// It is the on-disk spelling, so it must never change for an existing variant.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            AuditProfile::Comparison => "comparison",
+            AuditProfile::FieldArithmetic => "field-arithmetic",
+            AuditProfile::VarintCodec => "varint-codec",
+            AuditProfile::BooleanLogic => "boolean-logic",
+            AuditProfile::LosslessCompression => "lossless-compression",
+        }
+    }
+}
+
+impl std::fmt::Display for AuditProfile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.as_str())
+    }
 }
 
 impl std::str::FromStr for AuditProfile {
@@ -195,8 +234,9 @@ impl std::str::FromStr for AuditProfile {
             "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
             "varint-codec" => Ok(AuditProfile::VarintCodec),
             "boolean-logic" => Ok(AuditProfile::BooleanLogic),
+            "lossless-compression" => Ok(AuditProfile::LosslessCompression),
             other => Err(format!(
-                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic)"
+                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | lossless-compression)"
             )),
         }
     }
@@ -255,6 +295,66 @@ pub fn build_weakness_matrix(
     }
 
     Ok(rows)
+}
+
+/// CWE-409, decompression bomb: an attacker-chosen, well-formed compressed input
+/// that expands to a huge output.
+///
+/// The row is **never excluded for a package that decompresses**, and the
+/// matrix cannot be talked out of that: the exclusion needs *both* a profile
+/// that does not decompress *and* a Warrant document that declares no `output`
+/// bound row.  Either fact alone applies the class.
+///
+/// ```text
+///  profile does not decompress  AND  no `output` bound row   ->  excluded
+///  (anything else)  AND  every `output` op has a `heap` row, passing
+///                        exhaustive + property + fuzz `<op>/output-bound`
+///                        suites, and no observed peak over its bound   ->  discharged (bounded)
+///  (anything else)                                                      ->  open row
+/// ```
+///
+/// "Open row" is the generator's fail-closed outcome: no report is produced
+/// until the evidence exists.  A discharge is *bounded* (VER15: `bounded(k)`):
+/// the bound is checked on the enumerated and sampled inputs and on the
+/// declared bomb examples, not proved for every input, and the row says so.
+fn cwe_409(class: &WeaknessClass, ctx: &PackageAuditContext) -> Result<WeaknessRow, MatrixError> {
+    let d = &ctx.evidence.decompression;
+    let applies = ctx.evidence.profile.decompresses() || !d.ops.is_empty();
+    if !applies {
+        return Ok(WeaknessRow {
+            cwe: 409,
+            name: class.name.clone(),
+            status: WeaknessStatus::Excluded,
+            approved: None,
+            reason: "pure computation: package implements no decompression or archive decoding routines".into(),
+            evidence: vec!["unverified::ast-audit::no-compression-routines".into()],
+        });
+    }
+    if d.ops.is_empty() {
+        return Err(MatrixError::OpenRow(
+            "CWE-409 applies (the package decompresses) but its Warrant document declares no `output` bound row".into(),
+        ));
+    }
+    if !d.unproven.is_empty() {
+        return Err(MatrixError::OpenRow(format!(
+            "CWE-409 applies and its output/heap bound evidence is incomplete: {}",
+            d.unproven.join("; ")
+        )));
+    }
+    Ok(WeaknessRow {
+        cwe: 409,
+        name: class.name.clone(),
+        status: WeaknessStatus::Discharged,
+        approved: None,
+        reason: format!(
+            "discharged for bounded inputs: the Warrant document bounds the size of what {} returns (`output` row) and the live heap of the call (`heap` row); {} generated cases and iterations of the exhaustive, property and fuzz `output-bound` suites passed, and every observed instance ran under the allocation observer with a peak of at most {} bytes (the bound at that instance: {}). The bound is checked on the enumerated and sampled inputs and the document's bomb examples, not proved for every input",
+            d.ops.join(", "),
+            d.cases,
+            d.max_observed_heap,
+            d.bound_at_max
+        ),
+        evidence: d.ids.clone(),
+    })
 }
 
 fn evaluate_row(
@@ -436,16 +536,7 @@ fn evaluate_row(
                 Err(MatrixError::OpenRow("CWE-400 resource exhaustion evidence missing".into()))
             }
         }
-        409 => {
-            Ok(WeaknessRow {
-                cwe: 409,
-                name: class.name.clone(),
-                status: WeaknessStatus::Excluded,
-                approved: None,
-                reason: "pure computation: package implements no decompression or archive decoding routines".into(),
-                evidence: vec!["unverified::ast-audit::no-compression-routines".into()],
-            })
-        }
+        409 => cwe_409(class, ctx),
         674 => {
             Ok(WeaknessRow {
                 cwe: 674,
@@ -476,6 +567,7 @@ fn evaluate_row(
                     AuditProfile::Comparison => "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
                     AuditProfile::FieldArithmetic => "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration",
                     AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
+                    AuditProfile::LosslessCompression => "bounded work per call: the encoder performs one dictionary lookup per input byte and the decoder writes each delivered byte once, through a dictionary of at most 65,536 fixed-size entries, delivering at most the documented output cap; no other input-dependent iteration",
                     AuditProfile::BooleanLogic => "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration",
                 }
                 .into(),
@@ -571,6 +663,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
                     AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
                     AuditProfile::BooleanLogic => "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC",
+                    AuditProfile::LosslessCompression => "lossless compression: package implements LZW compression and decompression only, no cipher, hash or MAC",
                 }
                 .into(),
                 evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
@@ -587,6 +680,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
                     AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
                     AuditProfile::BooleanLogic => "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength",
+                    AuditProfile::LosslessCompression => "no keys: the package takes and generates no key material; operands are byte strings to compress and compressed streams, not key bytes of a fixed strength",
                 }
                 .into(),
                 evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],

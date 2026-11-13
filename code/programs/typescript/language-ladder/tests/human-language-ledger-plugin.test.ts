@@ -396,6 +396,21 @@ describe("the bounded human-language ledger virtual modules", () => {
     expect(sent).toHaveBeenCalledTimes(4);
   });
 
+  it("does not register dev-server watches in the one-shot test configuration", () => {
+    const add = vi.fn();
+    const on = vi.fn();
+    const configure = humanLanguageLedgerPlugin({
+      curriculumRoot: root,
+      watchSources: false,
+    }).configureServer;
+    expect(typeof configure).toBe("function");
+    (configure as (server: ViteDevServer) => void)({
+      watcher: { add, on },
+    } as unknown as ViteDevServer);
+    expect(add).not.toHaveBeenCalled();
+    expect(on).not.toHaveBeenCalled();
+  });
+
   it("keeps the eager index proportional to tracks, not authored shards", () => {
     const watched: string[] = [];
     const source = loadHumanLanguageLedgerModule(

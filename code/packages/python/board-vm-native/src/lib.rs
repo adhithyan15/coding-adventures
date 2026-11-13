@@ -39,6 +39,7 @@ use python_bridge::*;
 #[allow(non_snake_case)]
 extern "C" {
     fn PyLong_AsLong(obj: PyObjectPtr) -> c_long;
+    fn PyLong_AsLongLong(obj: PyObjectPtr) -> i64;
     fn PyErr_Occurred() -> PyObjectPtr;
     fn PyDict_GetItemString(p: PyObjectPtr, key: *const c_char) -> PyObjectPtr;
     fn PyObject_IsTrue(o: PyObjectPtr) -> c_int;
@@ -1676,7 +1677,10 @@ unsafe fn parse_arg_unsigned(args: PyObjectPtr, index: isize, name: &str, max: u
         return None;
     }
     PyErr_Clear();
-    let value = PyLong_AsLong(arg);
+    // C `long` is 32 bits on Windows, so PyLong_AsLong rejected any u32 above
+    // i32::MAX (e.g. a host nonce) with OverflowError. `long long` is 64-bit
+    // on every platform.
+    let value = PyLong_AsLongLong(arg);
     if value == -1 && !PyErr_Occurred().is_null() {
         PyErr_Clear();
         set_error(type_error_class(), &format!("{name} must be an integer"));

@@ -1393,6 +1393,10 @@ npm run build      # production build to dist/
 npm run preview    # serve the production build
 ```
 
+One-shot `vitest run` tests still parse and validate every canonical curriculum
+ledger, but skip dev-server file-watch registration. The development server and
+interactive Vitest watch mode keep those watches so corpus edits reload normally.
+
 ## Practice mode (recall drill)
 
 Toggle **Practice** to drill *recall*: the app shows a **sound** and you pick the

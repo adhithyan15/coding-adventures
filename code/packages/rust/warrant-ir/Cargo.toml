@@ -47,3 +47,12 @@ harness = false
 name = "logic_gates_proofs"
 path = "tests/logic_gates_proofs.rs"
 harness = false
+
+# lzw: no secret labels, so only the steps/heap/depth rows (and the WX-H output rows,
+# which the generated harness observes), attempted on the real lzw source.  The
+# front end refuses the file, so this target records the steps-bound obligations
+# `not-live` with the precise blocker.
+[[test]]
+name = "lzw_proofs"
+path = "tests/lzw_proofs.rs"
+harness = false

@@ -3,6 +3,17 @@
 All notable changes to this package will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- The conformance tests no longer fail to compile under the F# 9 compiler that
+  CI pins (FS0193, "byte array is not compatible with byte"). The two
+  `Assert.Equal<byte>(array, call-result)` assertions in
+  `PortableConformanceTests.fs` now bind the result first and compare with
+  `Assert.True(a = b, message)`, the form the rest of that file already uses.
+  No library code changed.
+
 ## [0.2.0] — 2026-08-20
 
 ### Added

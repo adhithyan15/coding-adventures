@@ -127,13 +127,15 @@ module PortableConformanceTests =
         let prefix = Array.init 32768 (fun index -> byte ((index * 73 + index / 251) &&& 0xff))
         let expected = Array.append prefix prefix
         let foreign = pythonCodec "compress" expected
-        Assert.Equal<byte>(expected, RawRfc1951.rawInflate foreign expected.Length)
+        let inflated = RawRfc1951.rawInflate foreign expected.Length
+        Assert.True((inflated = expected), "foreign full-window stream must inflate to the original bytes")
 
     [<Fact>]
     let ``ZIP reader enforces exact compressed and uncompressed sizes`` () =
         let compressed = fromHex "0dc28911c0200c03b0d8f97028ec3f6ed129cab7dd96a0c2445bdb93809663a5d303f6b265e20c2b79ea03379d227e"
         let plain = fromHex "0406030b000e070909010906010a04070007000000000501010908030108050302030401000401000207090009020a0a020605020d060c01020b020302090201"
-        Assert.Equal<byte>(plain, ZipReader(rawZip "dynamic.bin" compressed plain plain.Length 8us).Read("dynamic.bin"))
+        let readBack = ZipReader(rawZip "dynamic.bin" compressed plain plain.Length 8us).Read("dynamic.bin")
+        Assert.True((readBack = plain), "dynamic-Huffman entry must read back to the original bytes")
         let cavity = Array.concat [ compressed; [| 0xdeuy; 0xaduy |] ]
         let suffixError = Assert.Throws<InvalidDataException>(fun () -> ZipReader(rawZip "cavity.bin" cavity plain plain.Length 8us).Read("cavity.bin") |> ignore)
         Assert.Equal("zip: compressed payload contains trailing bytes", suffixError.Message)
