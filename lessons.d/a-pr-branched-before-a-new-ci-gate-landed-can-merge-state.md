@@ -25,3 +25,16 @@ merge main into it, or run the gate locally:
 `python3 code/scripts/cargo_lockfiles.py check --changed-since origin/main`.
 In a sparse checkout, a "Cargo.lock is missing" line for a root outside the
 sparse set is an artifact; read only the lines for the roots you changed.
+
+**A second trap behind the first.** Once the Rust lock was fresh, the same
+gate failed on the seven `gf256` wrapper roots (Elixir, Lua, Perl, Python,
+Ruby, TypeScript, WASM): "Cargo.lock is missing but the project resolves
+external crates". They resolve none. `cargo_lockfiles.py` followed
+`dev-dependencies` transitively, and #19314 had given `rust/gf256` a dev-only
+path dependency whose own dependencies include `libc`. Cargo resolves
+dev-dependencies only for the root package and workspace members, never for
+a path dependency reached transitively; `cargo generate-lockfile` in
+`code/packages/wasm/gf256` produced a lock with no registry entries at all.
+The script now follows dev-dependencies only where Cargo does. A gate that
+models a tool's semantics should be checked against the tool itself
+(`cargo generate-lockfile`) before trusting its verdict.
