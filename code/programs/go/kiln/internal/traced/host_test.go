@@ -8,6 +8,7 @@ import (
 
 func TestImageRoots(t *testing.T) {
 	h := newHarness(t)
+	h.noSettle = true
 	h.image("/usr/lib/libm.so", "/etc/passwd")
 	// An unmodified image file is allowed, and so is probing for a missing one.
 	rec := h.run(openAbs("/usr/lib/libm.so"), stat("/etc/passwd"), fail(stat("/usr/lib/absent"), "ENOENT"))
@@ -67,7 +68,7 @@ func TestEphemeralAndAbsentOK(t *testing.T) {
 	// absent-ok: a dotfile probe is fine, reading one is not.
 	wantNoReasons(t, h.run(fail(stat("/home/runner/.npmrc"), "ENOENT"), fail(stat("/home/runner/.config/pip/pip.conf"), "ENOENT")))
 	rec = h.run(openAbs("/home/runner/.config/x"))
-	eq(t, "reasons", rec.Reasons, "host-read:$HOME/.config/x")
+	wantReason(t, rec, "host-read:$HOME/.config/x") // (and the fresh HOME cannot hold it: unstable)
 	// Other absent probes are host-reads too.
 	wantReason(t, h.run(fail(stat("/home/runner/.gitconfig"), "ENOENT")), "host-read:$HOME/.gitconfig")
 	wantReason(t, h.run(fail(stat("/var/nothing"), "ENOENT")), "host-read:/var/nothing")

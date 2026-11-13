@@ -151,7 +151,7 @@ func TestNetworkUnixSockets(t *testing.T) {
 	wantNoReasons(t, h.runNet(b, e))
 	// An existing socket someone else made: a daemon.
 	eq(t, "reasons", h.runNet(unix("connect", "/var/run/docker.sock")).Reasons, "daemon:/var/run/docker.sock")
-	eq(t, "reasons", h.runNet(unix("sendto", "/home/runner/.s")).Reasons, "daemon:$HOME/.s")
+	wantReason(t, h.runNet(unix("sendto", "/home/runner/.s")), "daemon:$HOME/.s")
 	// Inside the repository the socket file is observed, and a daemon too.
 	rec = h.runNet(unix("connect", "code/p/b/live.sock"))
 	eq(t, "reasons", rec.Reasons, "daemon:/w/repo/code/p/b/live.sock")

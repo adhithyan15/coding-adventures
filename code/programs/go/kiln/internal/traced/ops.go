@@ -156,15 +156,22 @@ func (c *classifier) parentTrusted(abs string) bool {
 // openResolved applies the created-from-empty rule to a successfully opened
 // path and records the write, if any.
 func (c *classifier) openResolved(abs string, f openFlags, creat bool) {
-	wasAbsent := c.absent[abs] && c.parentTrusted(abs)
+	at, seenAbsent := c.absent[abs]
+	wasAbsent := seenAbsent && at.before(c.start) && c.parentTrusted(abs)
 	clean := !f.tmpfile && (creat || (f.creat && f.excl) || f.trunc || (f.creat && wasAbsent))
 	if !clean {
+		if f.creat {
+			c.creating(abs) // it may have made the name: the absence it saw counts
+		}
 		c.observe(abs, true, false)
 	} else {
 		if f.creat || creat {
 			c.creating(abs)
+		} else {
+			// O_TRUNC alone only works on something that was there.
+			c.observe(abs, true, false)
 		}
-		c.created[abs] = true
+		c.created[abs] = c.cur
 		delete(c.absent, abs)
 	}
 	if f.creat || creat {
@@ -261,7 +268,7 @@ func (c *classifier) write(ev *trace.Event) {
 		c.markCreated(tg.abs, true)
 		c.links[tg.abs] = ev.Target
 	case "unlink", "unlinkat", "rmdir":
-		c.observe(tg.abs, true, false)
+		c.observeSelf(tg.abs, true)
 		c.writePath(tg.abs)
 		c.markRemoved(tg.abs)
 	default:
@@ -306,16 +313,20 @@ func (c *classifier) rename(ev *trace.Event) {
 		c.observe(dst.abs, presence(ev.Result), false)
 		return
 	}
-	c.observe(src.abs, true, false)
+	c.observeSelf(src.abs, true)
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
 	if flagSet(ev.Flags)["RENAME_EXCHANGE"] {
 		// Both names existed before and still do: neither is created.
-		c.observe(dst.abs, true, false)
+		c.observeSelf(dst.abs, true)
 		dstLink, dstIsLink := c.links[dst.abs]
 		c.nsChange(src.abs, false)
 		c.nsChange(dst.abs, false)
+		// Everything under either name now lives under the other: nothing the
+		// action made there is provably its own any more.
+		c.forgetCreated(src.abs)
+		c.forgetCreated(dst.abs)
 		delete(c.links, src.abs)
 		delete(c.links, dst.abs)
 		if dstIsLink {
@@ -375,7 +386,7 @@ func (c *classifier) link(ev *trace.Event) {
 		return
 	}
 	c.hard[src.abs], c.hard[dst.abs] = true, true
-	c.observe(src.abs, true, false)
+	c.observeSelf(src.abs, true)
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
@@ -391,4 +402,13 @@ func stripSlashes(p string) string {
 		return q
 	}
 	return p
+}
+
+// forgetCreated drops abs and everything beneath it from the created set.
+func (c *classifier) forgetCreated(abs string) {
+	for p := range c.created {
+		if p == abs || strings.HasPrefix(p, abs+"/") {
+			delete(c.created, p)
+		}
+	}
 }

@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"io/fs"
+	"path"
 	"strings"
 	"testing"
 	"time"
@@ -88,6 +89,14 @@ type memFS struct {
 	data  map[string][]byte
 	errs  map[string]error // a path whose lstat fails with this error
 	tree  *memTree         // the post-run disk holds every tracked file too
+	root  string           // where the checkout lives (default testRoot)
+}
+
+func (f *memFS) checkout() string {
+	if f.root != "" {
+		return f.root
+	}
+	return testRoot
 }
 
 func newMemFS() *memFS {
@@ -126,10 +135,10 @@ func (f *memFS) Lstat(p string) (FileInfo, error) {
 	if i, ok := f.info[p]; ok {
 		return i, nil
 	}
-	if p == "/" || p == "/w" || p == testRoot {
+	if p == "/" || p == "/w" || p == f.checkout() {
 		return FileInfo{Kind: KindDir, Ctime: oldCtime}, nil
 	}
-	if rel, ok := strings.CutPrefix(p, testRoot+"/"); ok && f.tree != nil {
+	if rel, ok := strings.CutPrefix(p, f.checkout()+"/"); ok && f.tree != nil {
 		if n := f.tree.Stat(rel); n.Kind != KindAbsent {
 			return FileInfo{Kind: n.Kind, Ctime: oldCtime}, nil
 		}
@@ -141,7 +150,7 @@ func (f *memFS) Readlink(p string) (string, error) {
 	if t, ok := f.links[p]; ok {
 		return t, nil
 	}
-	if rel, ok := strings.CutPrefix(p, testRoot+"/"); ok && f.tree != nil && f.tree.Stat(rel).Kind == KindLink {
+	if rel, ok := strings.CutPrefix(p, f.checkout()+"/"); ok && f.tree != nil && f.tree.Stat(rel).Kind == KindLink {
 		return f.tree.Stat(rel).Target, nil
 	}
 	return "", errors.New("not a link")
@@ -160,10 +169,11 @@ func (f *memFS) ReadHead(p string, n int) ([]byte, error) {
 
 // harness bundles a tree, a disk and a config.
 type harness struct {
-	t    *testing.T
-	tree *memTree
-	fs   *memFS
-	cfg  Config
+	noSettle bool
+	t        *testing.T
+	tree     *memTree
+	fs       *memFS
+	cfg      Config
 }
 
 var jobStart = time.Date(2026, 6, 1, 0, 0, 0, 0, time.UTC)
@@ -183,7 +193,7 @@ func newHarness(t *testing.T) *harness {
 	h.fs.tree = tree
 	h.fs.bytes("/usr/bin/sh", buildELF(loader, elf.ELFCLASS64, binary.LittleEndian))
 	h.fs.file(loader)
-	for _, d := range []string{"/usr", "/usr/bin", "/usr/lib", "/etc", "/lib64", "/bin", "/tmp", "/home"} {
+	for _, d := range []string{"/usr", "/usr/bin", "/usr/lib", "/etc", "/lib64", "/bin", "/tmp", "/home", "/dev", "/var", "/var/run"} {
 		h.fs.dir(d)
 	}
 	h.cfg = Config{
@@ -251,8 +261,89 @@ func (h *harness) run(events ...trace.Event) *RawRecord {
 	return h.runSteps(step(events...))
 }
 
+// settle makes the fixture disk consistent with the run: a call that
+// SUCCEEDED on a path implies the path exists after the run, unless the action
+// itself changed that path (then the test says what the disk holds).
+func (h *harness) settle(steps []*trace.Trace) {
+	if h.noSettle {
+		return
+	}
+	mutated := map[string]bool{}
+	clean := func(cwd, p string) string {
+		if !strings.HasPrefix(p, "/") {
+			p = cwd + "/" + p
+		}
+		return pathClean(p)
+	}
+	for _, st := range steps {
+		for _, e := range st.Events {
+			switch {
+			case e.Kind == trace.KindWrite:
+				mutated[clean(e.Cwd, e.Path)] = true
+				if e.Path2 != "" {
+					mutated[clean(e.Cwd, e.Path2)] = true
+				}
+			case e.Kind == trace.KindOpen && strings.Contains(e.Flags, "O_CREAT"):
+				mutated[clean(e.Cwd, e.Path)] = true
+			case e.Kind == trace.KindNetwork && e.Addr != nil && e.Addr.Family == "AF_UNIX" && e.Syscall == "bind":
+				mutated[clean(e.Cwd, e.Addr.Address)] = true
+			}
+		}
+	}
+	under := func(p string) bool {
+		for m := range mutated {
+			if p == m || strings.HasPrefix(p, m+"/") {
+				return true
+			}
+		}
+		return false
+	}
+	for _, st := range steps {
+		for _, e := range st.Events {
+			if e.Kind == trace.KindNetwork && e.Addr != nil && e.Addr.Family == "AF_UNIX" && !e.Addr.Abstract && e.Addr.Address != "" && e.Result.OK && e.Syscall != "bind" {
+				e.Path = e.Addr.Address
+				e.Kind = trace.KindMetadata
+			}
+			if !e.Result.OK || e.Path == "" || (e.Kind != trace.KindOpen && e.Kind != trace.KindMetadata && e.Kind != trace.KindProcess && e.Kind != trace.KindDirectory) {
+				continue
+			}
+			p := clean(e.Cwd, e.Path)
+			if e.DirfdPath != "" && !strings.HasPrefix(e.Path, "/") {
+				p = pathClean(e.DirfdPath + "/" + e.Path)
+			}
+			if under(p) || isVirtual(p) || h.cfg.Home != "" && strings.HasPrefix(p, h.cfg.Home+"/") && h.cfg.Home != "" && false {
+				continue
+			}
+			if _, err := h.fs.Lstat(p); err == nil {
+				continue
+			}
+			if rel, ok := strings.CutPrefix(p, testRoot+"/"); ok && h.tree.Stat(rel).Kind != KindAbsent {
+				continue
+			}
+			ok := true
+			for q := parentOf(p); q != ""; q = parentOf(q) {
+				if i, err := h.fs.Lstat(q); err == nil && i.Kind != KindDir {
+					ok = false
+				}
+			}
+			if !ok {
+				continue
+			}
+			for q := parentOf(p); q != ""; q = parentOf(q) {
+				if _, err := h.fs.Lstat(q); err != nil {
+					h.fs.dir(q)
+				}
+			}
+			h.fs.file(p)
+		}
+	}
+}
+
+func pathClean(p string) string { return path.Clean(p) }
+
 func (h *harness) runSteps(steps ...*trace.Trace) *RawRecord {
 	h.t.Helper()
+	h.settle(steps)
 	recipe := make([]string, len(steps))
 	for i := range recipe {
 		recipe[i] = "step"

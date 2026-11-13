@@ -35,4 +35,15 @@
 - `internal/trace`: `Event.Argv` (the decoded argument vector of an exec) and
   `Trace.StepEvent()` (the step's first successful exec), which the recipe check
   needs.
+- Round-2 review fixes: change logs carry start and completion so overlapping
+  calls of different processes count as "during" a lookup (absent walks,
+  created-by-this-action, earlier ENOENT); a successful call through a missing
+  component is `unstable-path`; the fresh-tmpfs rule excludes the checkout
+  (which may lie under `$HOME`), its ancestors and every declared host root;
+  stability scans are logarithmic (1M events in seconds); exec rewrites are
+  measured from the first exec's start; `O_TRUNC` alone observes; `RENAME_EXCHANGE`
+  forgets created paths; `Binds` is exposed. The differential fuzzer now models
+  two overlapping processes, multi-step actions, random `Root`/`HOME`/`TMPDIR`,
+  untracked leftovers, changing contents and more operations, and checks
+  writes, absences and listings too.
 - KILN04 section 5.5 records the classification decisions.

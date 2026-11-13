@@ -116,7 +116,9 @@ func (c *classifier) readHead(abs string) ([]byte, bool) {
 				return b, true
 			}
 		}
-		c.execReads[abs] = c.cur
+		if _, seen := c.execReads[abs]; !seen {
+			c.execReads[abs] = c.start // the earliest exec decides
+		}
 	}
 	b, err := c.cfg.FS.ReadHead(abs, headLimit)
 	return b, err == nil

@@ -57,7 +57,7 @@ func TestTmpAndHomeAreNeverReadFromTheDisk(t *testing.T) {
 	eq(t, "entries", rec.Entries, "pkg:code/p/b")
 	// The stale link is not there (a read of it is a host-read); the directories
 	// themselves may be stat'ed and listed.
-	eq(t, "reasons", rec.Reasons, "host-read:$TMPDIR/ghost/b.txt")
+	wantReason(t, rec, "host-read:$TMPDIR/ghost/b.txt")
 	// An exec of a file in TMPDIR cannot be read after the run.
 	wantReason(t, h.run(open("/tmp/kiln-1/x", "O_WRONLY|O_CREAT|O_EXCL", "/tmp/kiln-1/x"), execve("/tmp/kiln-1/x", "x")),
 		"trace-incomplete:exec-unreadable")

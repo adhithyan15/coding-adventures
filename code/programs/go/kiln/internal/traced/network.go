@@ -178,6 +178,7 @@ func (c *classifier) bind(ev *trace.Event) {
 		}
 		if ip, err := netip.ParseAddr(a.Address); err == nil && a.Port != 0 {
 			c.boundInet = append(c.boundInet, boundAddr{ip, a.Port, c.sockType(ev)})
+			c.binds[c.sockType(ev)+"/"+addrText(ip, a.Port)] = true
 		}
 	case "AF_UNIX":
 		if a.Abstract {

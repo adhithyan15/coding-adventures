@@ -163,6 +163,11 @@ type RawRecord struct {
 	// create first.  The merge job checks them against other actions' writes
 	// and the pre-existing inventory.
 	AbsentObservations []string `json:"absent_observations"`
+	// Binds lists the inet addresses the action bound (port 0 excluded), as
+	// "<socket type>/<address>:<port>".  A bound port is never forgotten (the
+	// trace does not follow close), so the merge job flags two actions that bind
+	// the same one (section 7).
+	Binds []string `json:"binds"`
 	// UntrackedObservations are in-repository untracked paths the action
 	// observed and did not create.  The merge job decides what each means.
 	UntrackedObservations []string `json:"untracked_observations"`
@@ -250,6 +255,14 @@ func prepare(cfg Config) (*prepared, error) {
 		}
 		if info, err := cfg.FS.Lstat(p); err != nil || info.Kind != KindDir {
 			return nil, fmt.Errorf("traced: %q is not a real directory (Root must be a resolved path)", p)
+		}
+	}
+	// The scrubbed HOME and TMPDIR are fresh tmpfs; the checkout is neither
+	// inside nor equal to them as a whole.  (It may lie beneath HOME, as on
+	// hosted runners; the fresh-tmpfs rule then excludes it, see classifier.fresh.)
+	for _, d := range []string{cfg.Home, cfg.Tmpdir} {
+		if d != "" && (d == cfg.Root || strings.HasPrefix(d, cfg.Root+"/")) {
+			return nil, fmt.Errorf("traced: Home and Tmpdir must not be the checkout or inside it, got %q", d)
 		}
 	}
 	p := &prepared{Config: cfg}

@@ -162,6 +162,7 @@ func TestShebangDepth(t *testing.T) {
 
 func TestExecFailsClosed(t *testing.T) {
 	h := newHarness(t)
+	h.noSettle = true
 	// A file the classifier cannot read.
 	wantReason(t, h.run(execve("/usr/bin/ghost", "g")), "trace-incomplete:exec-unreadable")
 	// A format nobody here understands.

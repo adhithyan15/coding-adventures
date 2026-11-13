@@ -582,6 +582,21 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   walk still runs to find the links on the way. If either path is in the
   repository and they disagree, the post-run disk no longer shows what the call
   saw: `unstable-path`.
+- **A successful call whose walk stopped before its final component**, at a
+  component the disk shows missing or not a directory, contradicts the disk:
+  `unstable-path`. This holds with no change of the action's own.
+- **Overlap.** Calls of different processes overlap, and a change takes effect
+  somewhere in `[start, completion]`. So every comparison treats anything that
+  could have taken effect during the lookup's interval as "during". A path
+  counts as created by the action only for calls that START after the creation
+  COMPLETED, and an earlier "not found" counts only if it completed before the
+  creating call started. A walk that found a name absent on the post-run disk
+  is unstable if some creation of that name began before the lookup ended and
+  no removal that began after that creation completed also completed before
+  the lookup began.
+- **The working directory.** Its expression is walked like any other path on
+  every call, so a `chdir` target that later becomes unstable makes every later
+  relative call from that directory unstable too.
 - A component is stable only as far as the walk is bounded: the walk has a
   per-action step budget (50M) and a path-length cap; exceeding either is
   `trace-incomplete:size`.
@@ -595,8 +610,10 @@ the first blank or tab, with **no** trimming of `\r`: the kernel looks up
 that exact name. The head bytes come from the tracked tree for a tracked
 file, else from the post-run disk, never under `$HOME` or `TMPDIR`. An
 untracked file read from the disk must not be written, truncated, renamed,
-linked onto or unlinked after the exec, nor an ancestor changed, by any
-action; otherwise `trace-incomplete:exec-unreadable`.
+linked onto or unlinked, nor an ancestor changed, by any action, by a change
+that completed after the **first** exec of it STARTED (so an overlapping
+write-open counts, and so does a rewrite between two execs); otherwise
+`trace-incomplete:exec-unreadable`.
 
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
@@ -668,6 +685,9 @@ final component that the walk really looked up (not a missing parent, not a
 path ending in `/` or `/.`, not an exec, `rename` or `link` failure), and the
 parent is in the repository or is the action's own. A failed `rename` or `link`
 observes **both** names, by errno.
+
+`O_TRUNC` without `O_CREAT` only works on a file that was there, so on a path
+the action did not make it is an observation of that file.
 
 **Creation is an absence observation.** Before the action makes a path
 (`mkdir`, `symlink`, `mknod`, `bind`, an `O_CREAT` open, the destination of
@@ -753,7 +773,11 @@ Four more rules apply:
 - **Temporary files.** A read of the action's own temporary files (paths
   it created, §5.2) is allowed. `$HOME` and `TMPDIR` are **fresh tmpfs**, so
   a stat or listing of those two directories is allowed, and the post-run
-  disk is never consulted beneath them. `ReadHead` and any other file read
+  disk is never consulted beneath them, **except** for the checkout, its
+  ancestors, and every declared host root and its ancestors (a `state` root
+  such as `$HOME/.cargo/registry` persists, and hosted runners put the checkout
+  under `$HOME`). The checkout may not be `$HOME` or `TMPDIR`, and neither may
+  lie inside it. `ReadHead` and any other file read
   from the post-run disk open with `O_NOFOLLOW|O_NONBLOCK`.
 - **Image absence.** An absent probe under an `image` root is checked against
   the ctime of the deepest directory that exists: one after the job-start
@@ -881,11 +905,18 @@ exit with 0 gives `failed`. After the init child's exit line, a process
 killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
-**Tests.** A differential fuzzer runs an in-memory filesystem model (mkdir,
-symlink, rename, link, unlink, rmdir, open, stat, chdir, exec) with the true
-results and `-y` paths, gives the final state as the post-run disk, and
-requires that every path the model really looked at is the action's own,
-covered by the record, or that the record carries a reason.
+**Tests.** A differential fuzzer runs an in-memory filesystem model with the
+true results and `-y` paths and gives the final state as the post-run disk. It
+models two processes with overlapping calls (the effect lands at a random point
+of each call's interval; events are in completion order with `StartLine`),
+one or two steps, a randomised `Root` (also under `HOME`), `HOME` and `TMPDIR`,
+tracked files, pre-existing untracked leftovers (file, directory, link), host
+files, changing file contents, `RENAME_EXCHANGE`, `O_TRUNC` without `O_CREAT`,
+dirfd-relative lookups and listings. When the record has no reason, every path
+the model really looked at must be the action's own or be covered by an entry,
+an untracked observation or a `list:` entry; every absence must be in
+`AbsentObservations`; and every write must lie under a write root. A mutation
+check (disabling the overlap logic) makes it fail.
 
 ## 6. When nothing is recorded
 
@@ -957,6 +988,10 @@ Shards run on separate machines, so the check cannot run per shard:
      against every other action's writes: a traversed component another action
      created, renamed, unlinked or re-linked is `unstable-path`, and an absent
      name another action wrote is `reads-product`.
+   - **Shared ports.** Two actions that bind the same inet address and port
+     (`RawRecord.Binds`) both get `reads-product`: one's server may have
+     answered the other's client. The kernel can also hand out the same port to
+     different actions at different times, which the trace cannot tell apart.
    - **Unknown write sets.** An action with any `trace-incomplete` reason has
      an unknown write set, so no other action's checks can be trusted: **its
      whole shard emits nothing**.
@@ -1240,6 +1275,12 @@ These are known and named. They are measured rather than closed.
   action misses and its latest trace, or the write-root diff in
   `legacy-plan`, touches a path another package's manifest saw as absent,
   that package runs too.
+- **Bound ports are never forgotten.** The trace does not follow `close`, so a
+  loopback port the action bound counts as served for the rest of the action,
+  even after the server's socket is closed and a daemon owns the port. A
+  connect to a port the action bound and released is then allowed. A bind to
+  port 0 matches nothing. The merge job's shared-port rule (§7) is the
+  partial defence.
 - **Tool build caches** declared as `state` are trusted the way KILN00
   §9.5 trusts tool state.
 - **Linux only.** macOS and Windows get no hits from this bridge.

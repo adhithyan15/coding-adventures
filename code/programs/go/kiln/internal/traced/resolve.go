@@ -72,6 +72,8 @@ type walkResult struct {
 	// followed is the object itself: no link or directory behind it depends on
 	// what the disk says.
 	stopFinal bool
+	// stopMid says the walk stopped BEFORE the final component.
+	stopMid bool
 }
 
 func splitPath(p string) []string {
@@ -114,10 +116,26 @@ func (c *classifier) rel(abs string) (string, bool) {
 	return "", false
 }
 
-// underTmp says abs is strictly inside the scrubbed HOME or TMPDIR.
+// fresh says abs may lie in the fresh sandbox tmpfs.  The checkout is never
+// fresh (hosted runners put it under $HOME), nor is an ancestor of it, nor
+// anything under a declared host root (a `state` root such as
+// $HOME/.cargo/registry persists).
+func (c *classifier) fresh(abs string) bool {
+	if covers(c.cfg.Root, abs) || strings.HasPrefix(c.cfg.Root, abs+"/") {
+		return false
+	}
+	for i := range c.cfg.roots {
+		if p := c.cfg.roots[i].path; covers(p, abs) || strings.HasPrefix(p, abs+"/") {
+			return false
+		}
+	}
+	return true
+}
+
+// underTmp says abs is strictly inside the fresh scrubbed HOME or TMPDIR.
 func (c *classifier) underTmp(abs string) bool {
 	for _, d := range []string{c.cfg.Home, c.cfg.Tmpdir} {
-		if d != "" && strings.HasPrefix(abs, d+"/") {
+		if d != "" && strings.HasPrefix(abs, d+"/") && c.fresh(abs) {
 			return true
 		}
 	}
@@ -125,7 +143,7 @@ func (c *classifier) underTmp(abs string) bool {
 }
 
 func (c *classifier) isTmpRoot(abs string) bool {
-	return abs != "" && (abs == c.cfg.Home || abs == c.cfg.Tmpdir)
+	return abs != "" && (abs == c.cfg.Home || abs == c.cfg.Tmpdir) && c.fresh(abs)
 }
 
 // lookup says what abs is.  An unreadable path is a reason and reads as absent.
@@ -142,7 +160,7 @@ func (c *classifier) lookup(abs string) node {
 		if c.dirs[abs] {
 			return node{kind: KindDir}
 		}
-		if c.created[abs] {
+		if _, ok := c.created[abs]; ok {
 			return node{kind: KindFile}
 		}
 		return node{}
@@ -265,6 +283,7 @@ func (c *classifier) walk(full string, follow bool) (walkResult, string) {
 				// file in the middle of a path is a place the walk stopped.
 				res.stop, res.stopPresent = next, n.kind != KindAbsent
 				res.stopFinal = last && !follow
+				res.stopMid = !last
 			}
 		}
 	}
@@ -336,6 +355,12 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	}
 	if w.stop != "" && !w.stopFinal {
 		c.noteMissing(w.stop, w.stopPresent)
+	}
+	if w.stopMid && c.callOK {
+		// A successful call went THROUGH a component the post-run disk shows as
+		// missing (or not a directory): the disk contradicts the call, so
+		// something changed it, and nothing here can say what the call saw.
+		c.reason(rUnstable)
 	}
 	if w.dotdot {
 		if c.callOK {

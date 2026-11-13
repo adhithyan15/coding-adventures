@@ -1,6 +1,7 @@
 package traced
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
@@ -41,15 +42,16 @@ func (a pos) before(b pos) bool {
 // three creations whose result the trace fully determines: mkdir, symlink and
 // open with O_CREAT|O_EXCL.
 type mod struct {
-	at    pos
+	at    pos // completion
+	start pos // start of the call (the change took effect somewhere in [start, at])
 	clean bool
 	made  bool // the change may have created the name (any creation)
 }
 
-type absKey struct {
-	path string
-	k    int
-}
+// span is the interval covered by a set of lookups: the earliest start and the
+// latest completion.  Treating all lookups of a name as one wide interval only
+// ever adds reasons.
+type span struct{ s, e pos }
 
 // classifier is the state of one action across all of its steps.
 //
@@ -64,10 +66,10 @@ type classifier struct {
 	// created holds the absolute paths this action created from empty so far
 	// (section 5.2).  A path is the action's own if it, or any directory above
 	// it, is in the set.
-	created map[string]bool
+	created map[string]pos
 	// absent holds paths the action probed and found missing by an
 	// unambiguous ENOENT on the final component.
-	absent map[string]bool
+	absent map[string]pos
 	// links and dirs are the symlinks and directories this action made.  They
 	// answer lookups under $HOME and TMPDIR, where the post-run disk is never
 	// asked.
@@ -88,8 +90,16 @@ type classifier struct {
 	seen map[string]pos
 	// seenAbsent holds the places a walk stopped because the disk showed
 	// nothing (or a file) there; see noteMissing.
-	seenAbsent map[absKey]pos
-	seenFile   map[string]bool
+	seenAbsent map[string]span
+	// ownSeen holds the created paths a call treated as "the action's own"
+	// (and so did not observe), with the interval of the calls that did.  A
+	// change to such a path that overlaps one of those calls may have landed
+	// first, so the call may have seen something else (see checkStability).
+	ownSeen map[string]span
+	// binds are the loopback or wildcard inet addresses the action bound, as
+	// "<type>/<address>:<port>"; see RawRecord.Binds.
+	binds    map[string]bool
+	seenFile map[string]bool
 	// seenFinal holds followed final components, with the start of the earliest
 	// lookup that followed them.
 	seenFinal map[string]pos
@@ -104,7 +114,10 @@ type classifier struct {
 	// noFinals is set while resolving the path of a successful open: the
 	// descriptor's -y path already says what was opened, so the final
 	// component's link-ness is not in question.
-	noFinals  bool
+	noFinals bool
+	// noOwnSeen is set while a call observes the very name it is about to
+	// change: its own change is not an overlap with itself.
+	noOwnSeen bool
 	steps     int // walk steps spent
 	sockTypes map[string]string
 
@@ -117,9 +130,9 @@ func newClassifier(p *prepared) *classifier {
 		cfg:     p,
 		entries: map[string]bool{}, writes: map[string]bool{}, tracked: map[string]bool{},
 		untracked: map[string]bool{}, absentObs: map[string]bool{}, reasons: map[string]bool{},
-		created: map[string]bool{}, absent: map[string]bool{}, links: map[string]string{},
+		created: map[string]pos{}, absent: map[string]pos{}, links: map[string]string{},
 		dirs: map[string]bool{}, cache: map[string]node{}, mods: map[string][]mod{},
-		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[absKey]pos{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
+		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
 	}
 }
@@ -221,15 +234,32 @@ func presence(r trace.Result) bool {
 func (c *classifier) observeResult(tg target, r trace.Result) {
 	present := presence(r)
 	if !present && r.Errno == "ENOENT" && tg.reached {
-		c.absent[tg.abs] = true
+		c.absent[tg.abs] = c.cur
 	}
 	c.observe(tg.abs, present, false)
+}
+
+// observeSelf observes abs for a call that is itself about to change it.
+func (c *classifier) observeSelf(abs string, present bool) {
+	c.noOwnSeen = true
+	c.observe(abs, present, false)
+	c.noOwnSeen = false
 }
 
 // isCreated says whether the action made abs: it, or a directory above it.
 func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
-		if c.created[p] {
+		if at, ok := c.created[p]; ok && at.before(c.start) {
+			if !c.noOwnSeen {
+				sp, seen := c.ownSeen[p]
+				if !seen || c.start.before(sp.s) {
+					sp.s = c.start
+				}
+				if !seen || sp.e.before(c.cur) {
+					sp.e = c.cur
+				}
+				c.ownSeen[p] = sp
+			}
 			return true
 		}
 	}
@@ -397,7 +427,7 @@ func (c *classifier) creating(abs string) {
 
 // nsChange logs a namespace change to abs.
 func (c *classifier) nsChange(abs string, clean bool) {
-	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, clean: clean, made: true})
+	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start, clean: clean, made: true})
 }
 
 // noteFinal records a followed final component that the disk shows present.
@@ -419,16 +449,20 @@ func (c *classifier) noteMissing(abs string, isFile bool) {
 		c.seenFile[abs] = true
 		return
 	}
-	k := absKey{abs, len(c.mods[abs])}
-	if p, ok := c.seenAbsent[k]; !ok || c.start.before(p) {
-		c.seenAbsent[k] = c.start
+	sp, ok := c.seenAbsent[abs]
+	if !ok || c.start.before(sp.s) {
+		sp.s = c.start
 	}
+	if !ok || sp.e.before(c.cur) {
+		sp.e = c.cur
+	}
+	c.seenAbsent[abs] = sp
 }
 
 // markCreated records that the action made abs, from empty, now.
 func (c *classifier) markCreated(abs string, clean bool) {
 	c.creating(abs)
-	c.created[abs] = true
+	c.created[abs] = c.cur
 	delete(c.absent, abs)
 	delete(c.links, abs)
 	delete(c.dirs, abs)
@@ -440,8 +474,8 @@ func (c *classifier) markRemoved(abs string) {
 	delete(c.created, abs)
 	delete(c.links, abs)
 	delete(c.dirs, abs)
-	c.absent[abs] = true
-	c.mods[abs] = append(c.mods[abs], mod{at: c.cur})
+	c.absent[abs] = c.cur
+	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start})
 }
 
 // noteTraversal records that a path went through the component abs, at the
@@ -457,10 +491,20 @@ func (c *classifier) noteTraversal(abs string) {
 // that completed after `after` (the zero pos means "ever").
 func (c *classifier) touchedAfter(abs string, after pos, ever bool) bool {
 	for p := abs; p != ""; p = parentOf(p) {
-		for _, m := range c.mods[p] {
-			if ever || after.before(m.at) {
-				return true
-			}
+		// The log is in completion order, so the last entry decides.
+		if ms := c.mods[p]; len(ms) > 0 && (ever || after.before(ms[len(ms)-1].at)) {
+			return true
+		}
+	}
+	return false
+}
+
+// touchedFrom is touchedAfter for a change that completed at or after `from`:
+// one that may have taken effect while a call that began at `from` was running.
+func (c *classifier) touchedFrom(abs string, from pos) bool {
+	for p := abs; p != ""; p = parentOf(p) {
+		if ms := c.mods[p]; len(ms) > 0 && !ms[len(ms)-1].at.before(from) {
+			return true
 		}
 	}
 	return false
@@ -500,13 +544,13 @@ func (c *classifier) createdOnce(abs string, lookup pos) bool {
 	if len(m) != 1 || !m[0].clean || !m[0].at.before(lookup) || c.hard[abs] {
 		return false
 	}
-	return !c.touchedAfterParents(abs, m[0].at)
+	return !c.touchedAfterParents(abs, m[0].start)
 }
 
 // touchedAfterParents is touchedAfter for the proper ancestors of abs.
 func (c *classifier) touchedAfterParents(abs string, after pos) bool {
 	p := parentOf(abs)
-	return p != "" && c.touchedAfter(p, after, false)
+	return p != "" && c.touchedFrom(p, after)
 }
 
 // checkStability applies the rule to every component any path went through,
@@ -518,14 +562,23 @@ func (c *classifier) checkStability() {
 			c.reason(rUnstable)
 		}
 	}
-	for k, at := range c.seenAbsent {
-		var last *mod
-		for i := range c.mods[k.path] {
-			if m := &c.mods[k.path][i]; m.at.before(at) {
-				last = m
-			}
+	idx := map[string]*modIndex{}
+	for p, sp := range c.seenAbsent {
+		c.steps += 8
+		if c.steps > walkBudget {
+			c.reason(rSize)
+			break
 		}
-		if last != nil && last.made {
+		ms := c.mods[p]
+		if len(ms) == 0 {
+			continue
+		}
+		mi := idx[p]
+		if mi == nil {
+			mi = newModIndex(ms)
+			idx[p] = mi
+		}
+		if mi.unsafe(ms, sp.s, sp.e) {
 			c.reason(rUnstable)
 		}
 	}
@@ -542,15 +595,107 @@ func (c *classifier) checkStability() {
 			c.reason(rUnstable)
 		}
 	}
-	for p, at := range c.execReads {
-		bad := c.touchedAfter(p, at, false)
-		for _, w := range c.wlog[p] {
-			bad = bad || at.before(w)
+	for p, sp := range c.ownSeen {
+		// Anything that may have taken effect while such a call ran: a change
+		// to the path or an ancestor that completed after the call began and
+		// began before it ended.
+		for q := p; q != ""; q = parentOf(q) {
+			ms := c.mods[q]
+			if len(ms) == 0 {
+				continue
+			}
+			c.steps += 8
+			if c.steps > walkBudget {
+				c.reason(rSize)
+				break
+			}
+			mi := idx[q]
+			if mi == nil {
+				mi = newModIndex(ms)
+				idx[q] = mi
+			}
+			if mi.overlaps(ms, sp.s, sp.e) {
+				c.reason(rUnstable)
+				break
+			}
+		}
+	}
+	for p, from := range c.execReads {
+		// Measured from the FIRST exec's start: any change that completed after
+		// it began may have altered the bytes the kernel read.
+		bad := c.touchedFrom(p, from)
+		if w := c.wlog[p]; len(w) > 0 && !w[len(w)-1].before(from) {
+			bad = true
 		}
 		if bad {
 			c.reason(rExecUnreadable)
 		}
 	}
+}
+
+// modIndex answers, in O(log n), whether some change to a name may have been in
+// effect while a lookup of it ran, using prefix maxima over the (completion
+// ordered) change log.
+type modIndex struct {
+	madeAtMax   []pos // max completion of made changes among ms[:i]
+	remStartMax []pos // max start of removals among ms[:i]
+	madeStart   []pos // min start of made changes among ms[i:]
+	anyStart    []pos // min start of any change among ms[i:]
+}
+
+var (
+	posNone = pos{-1, -1}
+	posInf  = pos{1 << 30, 0}
+)
+
+func newModIndex(ms []mod) *modIndex {
+	n := len(ms)
+	mi := &modIndex{make([]pos, n+1), make([]pos, n+1), make([]pos, n+1), make([]pos, n+1)}
+	mi.madeAtMax[0], mi.remStartMax[0], mi.madeStart[n], mi.anyStart[n] = posNone, posNone, posInf, posInf
+	for i, m := range ms {
+		mi.madeAtMax[i+1], mi.remStartMax[i+1] = mi.madeAtMax[i], mi.remStartMax[i]
+		if m.made && mi.madeAtMax[i].before(m.at) {
+			mi.madeAtMax[i+1] = m.at
+		}
+		if !m.made && mi.remStartMax[i].before(m.start) {
+			mi.remStartMax[i+1] = m.start
+		}
+	}
+	for i := n - 1; i >= 0; i-- {
+		mi.madeStart[i] = mi.madeStart[i+1]
+		mi.anyStart[i] = mi.anyStart[i+1]
+		if ms[i].start.before(mi.anyStart[i]) {
+			mi.anyStart[i] = ms[i].start
+		}
+		if ms[i].made && ms[i].start.before(mi.madeStart[i]) {
+			mi.madeStart[i] = ms[i].start
+		}
+	}
+	return mi
+}
+
+// overlaps says some change completed at or after s and began before e.
+func (mi *modIndex) overlaps(ms []mod, s, e pos) bool {
+	j := sort.Search(len(ms), func(i int) bool { return !ms[i].at.before(s) })
+	return mi.anyStart[j].before(e)
+}
+
+// unsafe says a lookup that ran over [s, e] and found the name absent on the
+// post-run disk may have seen it present: some creation could have taken effect
+// before the lookup ended (it began before e), and no removal that began after
+// that creation completed also completed before the lookup began.
+func (mi *modIndex) unsafe(ms []mod, s, e pos) bool {
+	n := len(ms)
+	i1 := sort.Search(n, func(i int) bool { return !ms[i].at.before(e) })
+	if mi.madeStart[i1].before(e) {
+		return true // a creation overlapping or following the lookup's start
+	}
+	made := mi.madeAtMax[i1]
+	if made == posNone {
+		return false
+	}
+	j := sort.Search(n, func(i int) bool { return !ms[i].at.before(s) })
+	return !made.before(mi.remStartMax[j])
 }
 
 // record assembles the output.
@@ -571,6 +716,7 @@ func (c *classifier) record(pkg string) *RawRecord {
 		TrackedWrites:         sortedKeys(c.tracked),
 		UntrackedObservations: sortedKeys(c.untracked),
 		AbsentObservations:    sortedKeys(c.absentObs),
+		Binds:                 sortedKeys(c.binds),
 		Traversed:             sortedKeys(trav),
 		Reasons:               capReasons(c.reasons),
 	}
