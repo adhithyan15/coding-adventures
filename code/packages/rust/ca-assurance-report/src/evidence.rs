@@ -1533,6 +1533,27 @@ pub const MEMORY_SAFETY_CWES: [u32; 6] = [416, 787, 125, 415, 476, 190];
 /// Evidence ids that are not machine-checked attestations (VER04h section 10).
 pub const UNVERIFIED_PREFIX: &str = "unverified::";
 
+/// Hold the report's recorded audit profile to the profile the caller expects.
+///
+/// `expected` is `Some` when the checker was told a profile (`--check ... --profile P`, which a
+/// package's BUILD line passes so that the build, not the report, decides what the package is)
+/// and `None` when it was not, in which case the recorded profile stands.  A mismatch is refused:
+/// otherwise a report generated under the wrong profile (for example a decompressor under the
+/// default `comparison`) would pass `--check` with true-looking, wrong sentences.
+pub fn verify_profile(
+    report: &AssuranceReport,
+    expected: Option<crate::matrix::AuditProfile>,
+) -> Result<(), EvidenceCheckError> {
+    match expected {
+        Some(want) if want != report.profile => Err(EvidenceCheckError::EvidenceMismatch(format!(
+            "report records profile `{}` but `{want}` was requested (--profile): regenerate the report \
+             with the profile the package's BUILD line checks against",
+            report.profile
+        ))),
+        _ => Ok(()),
+    }
+}
+
 /// Cross-check `report` against `ev`.  On success returns the ids that were
 /// accepted only as `unverified::` attestations, so callers can surface them.
 pub fn verify_evidence(
@@ -1870,6 +1891,17 @@ pub fn verify_evidence(
                     "CWE-409 is excluded, but the Warrant document bounds the output of {} \
                      (an `output` row): a package that expands its input is not excluded",
                     facts.ops.join(", ")
+                )));
+            }
+            // The recorded profile is the report's own statement of what the package is.  A
+            // profile that decompresses applies CWE-409 whatever the Warrant document says
+            // (a decompressor whose document forgot its `output` row would otherwise be
+            // excluded), so an exclusion under it is a contradiction, not a finding.
+            WeaknessStatus::Excluded if report.profile.decompresses() => {
+                return Err(E::EvidenceMismatch(format!(
+                    "CWE-409 is excluded, but the report's recorded profile `{}` decompresses attacker-controlled \
+                     input: the class applies and must be discharged from `output`/`heap` bound rows",
+                    report.profile
                 )));
             }
             WeaknessStatus::Excluded => {}

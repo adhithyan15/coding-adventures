@@ -206,6 +206,24 @@ impl AuditProfile {
     pub fn decompresses(self) -> bool {
         matches!(self, AuditProfile::LosslessCompression)
     }
+
+    /// The name `--profile` accepts and a report records (`FromStr`'s inverse).
+    /// It is the on-disk spelling, so it must never change for an existing variant.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            AuditProfile::Comparison => "comparison",
+            AuditProfile::FieldArithmetic => "field-arithmetic",
+            AuditProfile::VarintCodec => "varint-codec",
+            AuditProfile::BooleanLogic => "boolean-logic",
+            AuditProfile::LosslessCompression => "lossless-compression",
+        }
+    }
+}
+
+impl std::fmt::Display for AuditProfile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(self.as_str())
+    }
 }
 
 impl std::str::FromStr for AuditProfile {

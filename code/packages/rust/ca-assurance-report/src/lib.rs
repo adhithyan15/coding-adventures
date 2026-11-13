@@ -23,7 +23,7 @@ pub use assumptions::{check_assumptions, AssumptionCheckError, AssumptionSummary
 pub use catalogue::{CatalogueError, CatalogueSet};
 pub use checker::{verify_assurance_report, CheckError, CheckVerdict};
 pub use evidence::{
-    derive_claims, verify_evidence, Evidence, EvidenceCheckError, EvidenceError,
+    derive_claims, verify_evidence, verify_profile, Evidence, EvidenceCheckError, EvidenceError,
 };
 pub use matrix::{
     build_weakness_matrix, AuditEvidence, AuditProfile, MatrixError, PackageAuditContext,
@@ -135,6 +135,7 @@ pub fn generate_package_report(
         package: package.into(),
         version: version.into(),
         commit: commit_sha.into(),
+        profile,
         catalogue: assumptions::catalogue_ref(set),
         assumptions: report_assumptions,
         closure: vec![package.into()],

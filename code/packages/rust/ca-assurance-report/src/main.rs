@@ -11,7 +11,7 @@ use std::path::PathBuf;
 use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
-    check_assumptions, generate_package_report, verify_assurance_report, verify_evidence,
+    check_assumptions, generate_package_report, verify_assurance_report, verify_evidence, verify_profile,
     AssuranceReport, AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
 };
 
@@ -100,6 +100,8 @@ fn main() {
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
     let mut profile = AuditProfile::Comparison;
+    // Set only by an explicit `--profile`: `--check` holds the report's recorded profile to it.
+    let mut profile_requested: Option<AuditProfile> = None;
 
     let mut i = 1;
     while i < args.len() {
@@ -142,6 +144,7 @@ fn main() {
                         exit(2);
                     }
                 };
+                profile_requested = Some(profile);
             }
             "--registry" => {
                 i += 1;
@@ -216,6 +219,10 @@ fn main() {
                 exit(1);
             }
         };
+        if let Err(e) = verify_profile(&report, profile_requested) {
+            eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+            exit(1);
+        }
         match verify_evidence(&report, &evidence) {
             Ok(unverified) => {
                 if !unverified.is_empty() {
