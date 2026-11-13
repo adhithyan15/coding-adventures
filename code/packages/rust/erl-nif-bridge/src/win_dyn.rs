@@ -779,4 +779,4 @@ mod imp {
 #[cfg(windows)]
 pub use imp::*;
 
-// Not wrapped on Windows: enif_make_list (variadic), enif_make_tuple (variadic), enif_make_pid.
+// Not wrapped on Windows: enif_make_list (variadic), enif_make_tuple (variadic).

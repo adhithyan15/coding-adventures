@@ -89,6 +89,22 @@ new validation or external effect and stops before responder DNS, no-check,
 responder or intermediate revocation, complete revocation or Name/path
 validation, TLS, HTTP, OAuth, network, or live-provider readiness.
 
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy`
+consumes that exact strong responder path and derives both policy inputs
+internally: the fully routed authenticated responder certificate and the
+selected Mozilla-reviewed root's exact optional out-of-band name-constraint
+bytes retained by the strongest Name-policy path. Entries without constraints
+succeed without reading the responder SAN. Constrained entries decode the
+supported permitted-DNS subset and exact responder Subject Alternative Name
+under separate caller-owned limits, require every responder `dNSName` to
+comply, and retain only count evidence. The entry point reuses the existing
+private evaluator and stable payload-free anchor-policy errors. No certificate,
+SAN, root, path, algorithm, key, signature, time, or policy can be supplied
+independently. This policy performs no external effect and stops before
+intermediate DNS, no-check, responder or intermediate revocation, complete
+revocation or Name/path validation, TLS, HTTP, OAuth, network, or live-provider
+readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

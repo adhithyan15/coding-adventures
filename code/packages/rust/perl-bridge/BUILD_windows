@@ -1,0 +1,7 @@
+# needs-toolchain: perl
+# One native Windows interpreter (not Git Bash's MSYS Perl) must compile the shim,
+# link the CORE import library and load the smoke extension, and Git Bash puts its
+# MSYS Perl first in the inherited PATH.  tests\run-windows.ps1 selects the native
+# Strawberry Perl once, then runs the same steps as the Unix BUILD (cargo test,
+# build, clippy -D warnings, the perl_bridge_smoke build and tests\smoke.pl).
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\run-windows.ps1

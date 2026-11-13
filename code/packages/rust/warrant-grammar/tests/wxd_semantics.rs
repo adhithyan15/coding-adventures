@@ -542,22 +542,45 @@ fn every_constructing_node_charges_its_dsize_in_v1_and_pass_through_nodes_charge
 }
 
 #[test]
-fn replicate_of_a_64_kib_binder_fits_1023_copies_and_refuses_1024() {
-    // VER04k section 2.7: 1,023 x 65,568 = 67,076,064 <= 2^26, and
-    // 1,024 x 65,568 = 67,141,632 > 2^26.
-    let src = doc_of(" v1", &["replicate(b, 1023)", "replicate(b, 1024)"]);
+fn replicate_keeps_near_boundary_success_and_refuses_over_budget_copies() {
+    // The binder read plus 1,021 replicated copies costs 1,022 x
+    // (65,536 + 96) = 67,075,904, just below 2^26. The portable meter
+    // separately admits 1,022 x 65,568 = 67,010,496 but refuses 1,024 x
+    // 65,568 = 67,141,632. The host copy guard therefore refuses the binder
+    // read plus 1,022 clones before allocation while 1,021 remains a near-limit
+    // positive control.
+    let src = doc_of(
+        " v1",
+        &[
+            "replicate(b, 1021)",
+            "replicate(b, 1022)",
+            "replicate(b, 1024)",
+        ],
+    );
     with_doc(&src, |file| {
         let e = bodies(file);
         let mut ev = Evaluator::new(file, CodegenLimits::default());
         let env: Env = HashMap::from([("b", EvalValue::Bytes(vec![0xa5; 65_536]))]);
         ev.reset_work();
-        let v = ev.eval(e[0], &env).expect("1,023 copies fit");
-        assert!(matches!(&v, EvalValue::List(xs) if xs.len() == 1023));
-        drop(v);
-        assert_eq!(ev.data_used(), 67_076_064);
-        assert_eq!(ev.work_used(), 3 + 1023);
+        let value = ev
+            .eval(e[0], &env)
+            .expect("1,021 copies plus binder read fit just below the host cap");
+        assert!(matches!(&value, EvalValue::List(xs) if xs.len() == 1021));
+        drop(value);
+        assert_eq!(ev.data_used(), 66_944_928);
+        assert_eq!(ev.work_used(), 3 + 1021);
+        ev.reset_work();
+        let err = ev
+            .eval(e[1], &env)
+            .expect_err("the host copy footprint exceeds 64 MiB");
         assert_eq!(
-            run(&mut ev, e[1], &env),
+            err.kind,
+            CodegenErrorKind::EvaluationError("read-copy budget exceeded".into())
+        );
+        assert_eq!(ev.data_used(), 67_010_496);
+        assert_eq!(ev.work_used(), 3 + 1022);
+        assert_eq!(
+            run(&mut ev, e[2], &env),
             Outcome::Exhausted(CodegenErrorKind::DataBudgetExceeded)
         );
     });

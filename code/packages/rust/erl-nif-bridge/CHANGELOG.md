@@ -2,7 +2,38 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `enif_make_pid` is a header macro (in the OTP 25 and 27 `erl_nif_api_funcs.h`), not an exported function,
+  but it was declared in the Unix `extern "C"` block, so a NIF that called it failed to
+  load with `undefined symbol: enif_make_pid` (confirmed against `nm -D beam.smp` and
+  by loading a NIF into OTP 25). It is now an inline function with the macro's
+  definition, matching what `win_dyn` already did on Windows. Nothing in the repository
+  called it, which is why nothing noticed: the recipe was an `echo`, so no NIF built on
+  this crate had to load it. `src/win_dyn.rs` was regenerated (only a trailing comment
+  changed).
+
 ### Added
+
+- `examples/nif_smoke.rs`, `tests/nif_smoke.erl` and `tests/smoke.escript`: a real NIF
+  library built on the crate and loaded into the real BEAM by `erlang:load_nif/2`. It
+  calls the integer (including values past 32 bits), float, atom, tuple, binary, list,
+  map (including the iterator), resource (with its destructor), pid, thread-to-process
+  `enif_send`, `enif_alloc` and error (`badarg`, `enif_raise_exception`) paths and checks
+  each result from Erlang. It passes on OTP 25 (Linux) and on the real Windows OTP
+  27.3.4.11 (ERTS 15.2.7.8) through `win_dyn`'s callback table.
+- `build.rs`: `-undefined dynamic_lookup` on macOS for the smoke library (the same flag
+  `elixir/gf256_native/native/gf256_native/build.rs` passes); nothing changes elsewhere.
+
+### Changed — `BUILD`/`BUILD_windows` build, lint and test instead of echoing
+
+Both recipes were `echo "erl-nif-bridge: compile-only crate (requires Erlang/OTP runtime
+to link)"`, so CI never compiled the crate. They now run `cargo test`, `cargo build
+--release`, `cargo clippy --all-targets -D warnings` and the smoke test on every OS,
+with `# needs-toolchain: elixir` so CI installs the pinned Erlang/OTP. The crate left
+the W6 Windows echo-skip allowlist (BUILD-002).
+
+### Added (earlier, same release)
 
 - Windows support. A Windows NIF DLL cannot leave `enif_*` imports undefined and
   `beam.smp.dll` exports no `enif_*` names, so OTP passes `nif_init` a table of

@@ -252,17 +252,131 @@ fn stored_names_are_charged_as_data_so_copies_cannot_outrun_the_meter() {
         "allocated {total} bytes (largest single request {largest}) before W0703"
     );
 
-    // The exact boundary.  Building the constructor charges its names
-    // (1 + 10,000 = 10,001 bytes); each copy is 32 + 10,001 = 10,033.
+    // The portable data-meter boundary. Building the constructor charges its
+    // names (1 + 10,000 = 10,001 bytes); each copy charges 32 + 10,001 =
+    // 10,033. The independent host-copy guard refuses the 6,687-copy case
+    // before it allocates the clones because its conservative node charge is
+    // 96 rather than the portable meter's 32.
     //   10,001 + 6,687 x 10,033 = 67,100,672 <= 2^26 = 67,108,864
     //   10,001 + 6,688 x 10,033 = 67,110,705 >  2^26
     const _: () = assert!(10_001 + 6_687 * 10_033 <= DATA_BUDGET_BYTES);
     const _: () = assert!(10_001 + 6_688 * 10_033 > DATA_BUDGET_BYTES);
     ev.reset_work();
-    let fits = ev.eval(bodies[6], &env).expect("6,687 copies fit");
+    let err = ev
+        .eval(bodies[6], &env)
+        .expect_err("read-copy guard refuses before the data-meter boundary");
+    assert_eq!(
+        (err.code, err.kind),
+        (
+            CgCode::W0703,
+            CodegenErrorKind::EvaluationError("read-copy budget exceeded".into())
+        )
+    );
     assert_eq!(ev.data_used(), 10_001 + 6_687 * 10_033);
-    drop(fits);
     ev.reset_work();
     let err = ev.eval(bodies[7], &env).expect_err("6,688 copies do not");
     assert_eq!(err.kind, CodegenErrorKind::DataBudgetExceeded);
+}
+
+// A Bytes value is charged by the size of the copy the evaluator is about to
+// make.  Keep the 16 MiB binder construction outside the allocator window so
+// these measurements cover only evaluation. Three copies (48 MiB) fit; the
+// fourth must be refused before its 16 MiB allocation would cross 64 MiB.
+#[test]
+fn cumulative_copy_budget_refuses_list_and_model_arguments_before_copy_four() {
+    const PAYLOAD: usize = 16 * 1024 * 1024;
+    const COPIES: usize = 48;
+    let repeated = std::iter::repeat_n("b", COPIES)
+        .collect::<Vec<_>>()
+        .join(", ");
+    let params = (0..COPIES)
+        .map(|i| format!("p{i}: Bytes"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let args = (0..COPIES).map(|_| "b").collect::<Vec<_>>().join(", ");
+    let src = format!(
+        "warrant probe v1\n  model m({params}) -> Bytes = p0\n  model leaf(x: Bytes) -> Bytes = x\n  model middle(x: Bytes) -> Bytes = leaf(x)\n  model outer(x: Bytes) -> Bytes = middle(x)\n  example e0:\n    [{repeated}]\n  example e1:\n    m({args})\n  example e2:\n    outer(b)\n  example e3:\n    concat(b, b)\n  example e4:\n    [b]\n  example e5:\n    replicate(b, 0)\n"
+    );
+    let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).expect("admit");
+    let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
+    let file = parse_document(&layout, &doc, ParserLimits::default()).expect("parse");
+    let bodies: Vec<&Expression> = file
+        .declarations
+        .iter()
+        .filter_map(|d| match d {
+            Declaration::Example(e) => Some(&e.body),
+            _ => None,
+        })
+        .collect();
+    // concat charges work proportional to output bytes; raise only that
+    // ceiling so this test reaches its read-copy preflight rather than the
+    // independent work limit first.
+    let limits = CodegenLimits {
+        max_work: 100_000_000,
+        max_value_bytes: 64 * 1024 * 1024,
+        ..CodegenLimits::default()
+    };
+    let mut ev = Evaluator::new(&file, limits);
+    let env = HashMap::from([("b", EvalValue::Bytes(vec![0x5a; PAYLOAD]))]);
+
+    for (i, body) in bodies.iter().enumerate().take(3) {
+        ev.reset_work();
+        let (res, total, largest) = measured(|| ev.eval(body, &env));
+        let err = res.expect_err("the cumulative copy budget must refuse");
+        assert_eq!(
+            (err.code, err.kind),
+            (
+                CgCode::W0703,
+                CodegenErrorKind::EvaluationError("read-copy budget exceeded".into())
+            ),
+            "example e{i}"
+        );
+        assert!(
+            total < 4 * PAYLOAD,
+            "example e{i} allocated {total} bytes before refusal (largest request {largest}); copy four must not be made"
+        );
+        assert!(
+            total >= 3 * PAYLOAD,
+            "example e{i} allocated only {total} bytes; expected three complete copies before refusal"
+        );
+        assert!(
+            largest <= PAYLOAD,
+            "unexpected allocation of {largest} bytes"
+        );
+    }
+
+    // Both input reads fit, but the combined concat output footprint is 288
+    // bytes over budget. It must preflight the complete output before cloning
+    // the first operand into the result.
+    ev.reset_work();
+    let (res, total, _) = measured(|| ev.eval(bodies[3], &env));
+    let err = res.expect_err("concat must preflight both operands atomically");
+    assert_eq!(
+        (err.code, err.kind),
+        (
+            CgCode::W0703,
+            CodegenErrorKind::EvaluationError("read-copy budget exceeded".into())
+        )
+    );
+    assert!((2 * PAYLOAD..3 * PAYLOAD).contains(&total));
+
+    // A single copy remains admitted, and resetting work gives it a fresh
+    // cumulative budget after the four refused evaluations.
+    ev.reset_work();
+    let (res, total, largest) = measured(|| ev.eval(bodies[4], &env));
+    let EvalValue::List(items) = res.expect("one payload copy fits") else {
+        panic!("not a list")
+    };
+    assert_eq!(items.len(), 1);
+    assert!(total >= PAYLOAD && largest >= PAYLOAD);
+
+    // The eager binder argument is copied once, but a zero-count replicate
+    // must not evaluate an extra `x.clone()` hidden in `vec![x; 0]`.
+    ev.reset_work();
+    let (res, total, _) = measured(|| ev.eval(bodies[5], &env));
+    assert!(matches!(res, Ok(EvalValue::List(ref xs)) if xs.is_empty()));
+    assert!(
+        total < 2 * PAYLOAD,
+        "zero-count replicate copied {total} bytes"
+    );
 }

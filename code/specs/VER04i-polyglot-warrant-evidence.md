@@ -2,7 +2,7 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a specifies a strict lane-manifest and consumer-registry contract with structural validation; parser code, lane runners, lane manifests, native suites, samples, and proofs are not delivered yet, and no non-Rust lane has Warrant-derived execution evidence today.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-004b report integration, lane runners and manifests, native suites, samples, and proofs are not delivered, and no non-Rust lane has Warrant-derived execution evidence today.
 
 **Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
 CI receipts, and subsequent discoveries are maintained in the

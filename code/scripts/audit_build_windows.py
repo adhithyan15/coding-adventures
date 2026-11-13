@@ -692,7 +692,7 @@ ALLOWLIST_CAPS = {
     "intrinsic-apple": 11,
     "intrinsic-platform": 1,
     "no-tests-by-design": 7,
-    "tracked-follow-up": 4,
+    "tracked-follow-up": 1,
 }
 
 # An `intrinsic-apple` entry must be backed by the package itself: its name, its
