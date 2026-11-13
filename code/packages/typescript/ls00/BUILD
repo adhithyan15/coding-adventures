@@ -1,1 +1,1 @@
-cd ../json-rpc && npm install --silent && cd ../ls00 && npm install --silent && npx vitest run
+cd ../json-rpc && npm ci --silent && cd ../ls00 && npm ci --silent && npx vitest run

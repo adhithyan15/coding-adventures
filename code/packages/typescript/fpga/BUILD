@@ -1,1 +1,1 @@
-cd ../transistors && npm install --silent && cd ../logic-gates && npm install --silent && cd ../block-ram && npm install --silent && cd ../fpga && npm install --silent && npx vitest run
+cd ../transistors && npm ci --silent && cd ../logic-gates && npm ci --silent && cd ../block-ram && npm ci --silent && cd ../fpga && npm ci --silent && npx vitest run

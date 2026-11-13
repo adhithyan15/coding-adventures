@@ -1,11 +1,11 @@
-cd ../directed-graph && npm install --silent
-cd ../cli-builder && npm install --silent
-cd ../grammar-tools && npm install --silent
-cd ../state-machine && npm install --silent
-cd ../lexer && npm install --silent
-cd ../lattice-lexer && npm install --silent
-cd ../parser && npm install --silent
-cd ../lattice-parser && npm install --silent
-cd ../lattice-ast-to-css && npm install --silent
-cd ../lattice-transpiler && npm install --silent
+cd ../directed-graph && npm ci --silent
+cd ../cli-builder && npm ci --silent
+cd ../grammar-tools && npm ci --silent
+cd ../state-machine && npm ci --silent
+cd ../lexer && npm ci --silent
+cd ../lattice-lexer && npm ci --silent
+cd ../parser && npm ci --silent
+cd ../lattice-parser && npm ci --silent
+cd ../lattice-ast-to-css && npm ci --silent
+cd ../lattice-transpiler && npm ci --silent
 npx vitest run --coverage

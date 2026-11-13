@@ -1,6 +1,6 @@
-cd ../trig && npm install --silent
-cd ../point2d && npm install --silent
-cd ../bezier2d && npm install --silent
-npm install --silent
+cd ../trig && npm ci --silent
+cd ../point2d && npm ci --silent
+cd ../bezier2d && npm ci --silent
+npm ci --silent
 npm run build
 npx vitest run --coverage

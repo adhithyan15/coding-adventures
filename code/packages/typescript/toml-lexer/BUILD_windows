@@ -1,7 +1,7 @@
-(cd ../directed-graph && npm install --silent)
-(cd ../cli-builder && npm install --silent)
-(cd ../grammar-tools && npm install --silent)
-(cd ../state-machine && npm install --silent)
-(cd ../lexer && npm install --silent)
-(cd ../toml-lexer && npm install --silent)
+(cd ../directed-graph && npm ci --silent)
+(cd ../cli-builder && npm ci --silent)
+(cd ../grammar-tools && npm ci --silent)
+(cd ../state-machine && npm ci --silent)
+(cd ../lexer && npm ci --silent)
+(cd ../toml-lexer && npm ci --silent)
 npx vitest run --coverage

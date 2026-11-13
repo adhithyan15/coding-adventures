@@ -1,24 +1,24 @@
 # build-tool: deps=typescript/forme-sandbox-core
-cd ../directed-graph && npm install --silent
-cd ../state-machine && npm install --silent
-cd ../cli-builder && npm install --silent
-cd ../grammar-tools && npm install --silent
-cd ../lexer && npm install --silent
-cd ../toml-lexer && npm install --silent
-cd ../parser && npm install --silent
-cd ../toml-parser && npm install --silent
-cd ../document-ast && npm install --silent
-cd ../blake2b && npm install --silent
-cd ../sha512 && npm install --silent
-cd ../ed25519 && npm install --silent
-cd ../forme-types && npm install --silent && npm run build
-cd ../forme-errors && npm install --silent && npm run build
-cd ../forme-capability && npm install --silent
-cd ../forme-manifest && npm install --silent
-cd ../forme-pipeline-config && npm install --silent
-cd ../forme-stage && npm install --silent && npm run build
-cd ../forme-plugin-runner-ts && npm install --silent && npm run build
-cd ../forme-plugin-host && npm install --silent && npm run build
-cd ../forme-sandbox-core && npm install --silent && npm run build
+cd ../directed-graph && npm ci --silent
+cd ../state-machine && npm ci --silent
+cd ../cli-builder && npm ci --silent
+cd ../grammar-tools && npm ci --silent
+cd ../lexer && npm ci --silent
+cd ../toml-lexer && npm ci --silent
+cd ../parser && npm ci --silent
+cd ../toml-parser && npm ci --silent
+cd ../document-ast && npm ci --silent
+cd ../blake2b && npm ci --silent
+cd ../sha512 && npm ci --silent
+cd ../ed25519 && npm ci --silent
+cd ../forme-types && npm ci --silent && npm run build
+cd ../forme-errors && npm ci --silent && npm run build
+cd ../forme-capability && npm ci --silent
+cd ../forme-manifest && npm ci --silent
+cd ../forme-pipeline-config && npm ci --silent
+cd ../forme-stage && npm ci --silent && npm run build
+cd ../forme-plugin-runner-ts && npm ci --silent && npm run build
+cd ../forme-plugin-host && npm ci --silent && npm run build
+cd ../forme-sandbox-core && npm ci --silent && npm run build
 cd ../forme-sandbox-macos
-npm install --silent && npm run build && npx vitest run --coverage
+npm ci --silent && npm run build && npx vitest run --coverage

@@ -1,1 +1,1 @@
-cd ../document-ast && npm install --silent && cd ../document-ast-to-html && npm install --silent && cd ../asciidoc-parser && npm install --silent && cd ../asciidoc && npm install && npx vitest run --coverage
+cd ../document-ast && npm ci --silent && cd ../document-ast-to-html && npm ci --silent && cd ../asciidoc-parser && npm ci --silent && cd ../asciidoc && npm ci && npx vitest run --coverage

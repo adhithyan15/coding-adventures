@@ -1,3 +1,3 @@
-cd ../irc-proto && npm install --silent
-npm install --silent
+cd ../irc-proto && npm ci --silent
+npm ci --silent
 npx vitest run --coverage

@@ -30,8 +30,8 @@ set -e
 (cd ../../../packages/typescript/paint-vm && npm ci --silent)
 (cd ../../../packages/typescript/paint-vm-svg && npm ci --silent)
 (cd ../../../packages/typescript/human-language-data && npm ci --silent)
-(cd ../../../packages/typescript/script-ductus && npm install --silent)
-npm install
+(cd ../../../packages/typescript/script-ductus && npm ci --silent)
+npm ci
 npm run typecheck
 npm run build
 npm run check:bundle
