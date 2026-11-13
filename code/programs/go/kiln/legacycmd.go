@@ -108,12 +108,33 @@ func runExplain(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "kiln: package %q is not in the plan\n", fs.Arg(0))
 		return 1
 	}
+	// Hints are advisory (KILN03 section 6): they get their own section, apart
+	// from the record's reasons, so no reader mistakes them for a verdict.
+	type recordView struct {
+		Name        string            `json:"name"`
+		Key         string            `json:"key"`
+		Class       string            `json:"class"`
+		Reasons     []string          `json:"reasons"`
+		ClosureSize int               `json:"closure_size"`
+		Components  legacy.Components `json:"components"`
+	}
+	hints := rec.Hints
+	if hints == nil {
+		hints = []string{}
+	}
 	out := struct {
-		OS     string        `json:"os"`
-		Arch   string        `json:"arch"`
-		Host   string        `json:"host"`
-		Record legacy.Record `json:"record"`
-	}{plan.OS, plan.Arch, plan.Host, rec}
+		OS       string     `json:"os"`
+		Arch     string     `json:"arch"`
+		Host     string     `json:"host"`
+		Record   recordView `json:"record"`
+		Advisory struct {
+			Note  string   `json:"note"`
+			Hints []string `json:"hints"`
+		} `json:"advisory_hints"`
+	}{OS: plan.OS, Arch: plan.Arch, Host: plan.Host,
+		Record: recordView{rec.Name, rec.Key, rec.Class, rec.Reasons, rec.ClosureSize, rec.Components}}
+	out.Advisory.Note = "advisory only: static scans for triage and debugging; they make no soundness or security claim and do not affect the class"
+	out.Advisory.Hints = hints
 	enc := json.NewEncoder(stdout)
 	enc.SetEscapeHTML(false)
 	enc.SetIndent("", "  ")
