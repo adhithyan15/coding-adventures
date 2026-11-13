@@ -223,6 +223,9 @@ func checkOutDir(snapshotDir, outDir string) error {
 	if a == b {
 		return errors.New("ledger: output directory must differ from the snapshot directory")
 	}
+	if err := checkPlainDir(outDir); err != nil { // ReadDir would follow a symlink
+		return err
+	}
 	entries, err := os.ReadDir(outDir)
 	switch {
 	case os.IsNotExist(err):
