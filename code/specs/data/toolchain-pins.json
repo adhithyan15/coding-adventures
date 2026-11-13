@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "_comment": "Pins for toolchains CI installs but mise.toml does not manage, plus reasoned exceptions to mise.toml. Checked by code/scripts/toolchain_pins.py; see its docstring.",
+  "ci_only": {
+    "dotnet": "9.0.319",
+    "elixir": "1.18.4",
+    "erlang": "27.3.4.11",
+    "flutter": "3.44.0"
+  },
+  "rust_nightly": "nightly-2026-11-10",
+  "bundler": "4.0.24",
+  "deviations": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "input": "python-version",
+      "value": "3.13.7",
+      "reason": "forme-release-platform pins its own reviewed release toolchain; it moves only with a Forme release review."
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "input": "node-version",
+      "value": "22.23.2",
+      "reason": "forme-release-platform pins its own reviewed release toolchain; it moves only with a Forme release review."
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "input": "toolchain",
+      "value": "1.95.0",
+      "reason": "forme-release-platform pins its own reviewed release toolchain; it moves only with a Forme release review."
+    },
+    {
+      "file": ".github/workflows/human-language-data-macos-full.yml",
+      "input": "node-version",
+      "value": "22.23.2",
+      "reason": "Pinned before this policy to match the Forme release toolchain; align it in a change that reruns the full macOS corpus."
+    },
+    {
+      "file": ".github/workflows/release-task-app.yml",
+      "input": "RUST_VERSION",
+      "value": "1.97.0",
+      "reason": "TaskApp releases build with the Rust they were qualified on; bump with a release."
+    },
+    {
+      "file": ".github/workflows/release-venture.yml",
+      "input": "toolchain",
+      "value": "1.98.1",
+      "reason": "Venture releases build with the Rust minor they were qualified on (previously the range 1.98); bump with a release."
+    },
+    {
+      "file": ".github/workflows/deploy-arithmetic.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-arm1-web.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-busicom.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-code39.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-commonmark.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-electronics-visualizers.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-eniac.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-lattice-docs.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-logic-gates.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-ml-learning.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-nib-web.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/deploy-transistors.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "Static-site deploy still on Node 20 (the major it used before pinning). Moving it to the repo's Node 22 is a behaviour change for its own PR."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-napi.yml",
+      "input": "node-version",
+      "value": "20.20.2",
+      "reason": "N-API smoke test deliberately exercises the oldest Node major it supports."
+    },
+    {
+      "file": ".github/workflows/deploy-ml-learning.yml",
+      "input": "go-version",
+      "value": "1.23.12",
+      "reason": "Site deploy pinned to the Go minor it used before pinning (previously the range 1.23)."
+    },
+    {
+      "file": ".github/workflows/deploy-mosaic-docs.yml",
+      "input": "go-version",
+      "value": "1.21.13",
+      "reason": "Site deploy pinned to the Go minor it used before pinning (previously the range 1.21)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.10.11",
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.11.9",
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.12.10",
+      "reason": "Python ABI matrix, macOS and Windows cells: each supported CPython minor at its last binary release, the newest patch actions/python-versions builds for those OSes."
+    },
+    {
+      "file": ".github/workflows/mycin-2026.yml",
+      "input": "python-version",
+      "value": "3.12.16",
+      "reason": "MYCIN 2026 runs on the CPython minor it was written against (previously the range 3.12); newest 3.12 patch built for Ubuntu 26.04."
+    },
+    {
+      "file": ".github/workflows/neural-framework.yml",
+      "input": "python-version",
+      "value": "3.12.16",
+      "reason": "Neural framework lanes run on the minors they were qualified on (previously 3.12 and Node 24)."
+    },
+    {
+      "file": ".github/workflows/neural-framework.yml",
+      "input": "node-version",
+      "value": "24.22.3",
+      "reason": "Neural framework lanes run on the minors they were qualified on (previously 3.12 and Node 24)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.10.22",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.11.18",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
+    },
+    {
+      "file": ".github/workflows/matrix-rust-python.yml",
+      "input": "python-version",
+      "value": "3.12.16",
+      "reason": "Python ABI matrix, ubuntu-latest cells: each supported CPython minor at the newest patch actions/python-versions builds for Ubuntu 26.04. Windows/macOS have no build of these security-only patches, so their cells use the last binary release (see the other entries)."
+    }
+  ]
+}

@@ -43,7 +43,7 @@ old pieces stuck together. Before this chapter ends you will **write it by hand*
 ## You'll want to know — The letters in this word
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-BI-KHAYR-01]; assesses=[] -->
 
-*(Skim if you read Arabic.)* **ب** (*bāʾ*), **خ** (*khāʾ*), **ي** (*yāʾ*), **ر**
+**ب** (*bāʾ*), **خ** (*khāʾ*), **ي** (*yāʾ*), **ر**
 (*rāʾ*) — every one of them a letter you have already written. The chapter's
 last writing lesson joins them into **خير** and then **بخير**, letter by letter.
 Right to left: **ب · خ · ي · ر**.
