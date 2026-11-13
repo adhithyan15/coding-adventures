@@ -248,7 +248,7 @@ generated test target; 116 entries, all `pass`), debug profile:
 
 * 27 examples;
 * 23 claims, each with an exhaustive, a property (4,096 cases) and a fuzz (5,000
-  iterations) suite: **17,564,513 exhaustive cases** in total, 0 unreachable by type;
+  iterations) suite: **17,106,176 exhaustive + 336,475 sampled + 121,862 bounded-set cases (17,564,513 total)**, 0 unreachable by type;
 * per operation (the report's `exhaustive.cases`): `compress` 66,486 exhaustive,
   16,384 property and 20,000 fuzz cases; `decompress` 17,498,027, 77,824 and 95,000;
 * 20 negative controls (2 operations x their faults x example/exhaustive/property/
