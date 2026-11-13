@@ -134,6 +134,24 @@ var (
 		"code/scripts/tfv.py",
 		"code/specs/VER04-warrant-language.md",
 		"code/specs/VER04a-warrant-source-admission.md",
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+	}
+	// warrantAssurancePaths are the shared Warrant lane artifacts the
+	// assurance report validates directly (see isWarrantAssuranceInput).
+	// The Kiln graph export reads them, so they must list every path the
+	// predicate accepts; TestRepositoryInputPredicatesAreCoveredByDeclaredInputs
+	// enforces that.
+	warrantAssurancePaths = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
+		"code/scripts/tfv.py",
 	}
 )
 
@@ -350,6 +368,7 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		language: "rust",
 		inputs:   "the Warrant lane spec, corpus, consumer registry, schema and TFV transport",
 		matches:  isWarrantAssuranceInput,
+		paths:    warrantAssurancePaths,
 	},
 }
 
