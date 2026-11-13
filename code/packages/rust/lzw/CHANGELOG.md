@@ -28,6 +28,12 @@ entry is unreleased and the version is bumped at release.)
   input byte (`HashMap<Vec<u8>, u16>`): 8 MiB of zeros took about 35 s in a debug build.
   The dictionary is keyed by `(prefix code, byte)` and each byte costs one lookup. Output
   unchanged (pinned against the old algorithm kept as a test reference).
+- **SEC-002a test, runner-speed independent.** `compress_of_redundant_input_is_linear_time`
+  asserted `< 10 s` for 8 MiB of zeros; the linear encoder took 12.3 s in a debug build on
+  the Windows CI runner. It now times 256 KiB and 4 MiB of zeros (best of 5 and 2) and
+  requires the ratio to stay under 32 (linear measures 16, the old prefix-hashing encoder
+  54 to 56), so runner speed cancels out. Verified to fail against the encoder from
+  `783810d4e89`. No library change; the wire format is unchanged.
 - **SEC-002a, wrapping header.** `compress` wrote `data.len() as u32`, so a 4 GiB + 10
   byte input got the header 10 and `decompress` returned ten bytes as a success. The
   header saturates at `u32::MAX`, which `decompress` rejects at the cap.

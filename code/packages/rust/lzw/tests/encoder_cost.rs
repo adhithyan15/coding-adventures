@@ -12,10 +12,16 @@
 //!
 //! Two things are tested here:
 //!
-//! 1. `compress` of a redundant 8 MiB input finishes quickly.  The old
-//!    encoder needed about half a minute in a debug build; the bound is
-//!    generous (10 s) so a slow CI machine does not flake, and the two
-//!    behaviours are four orders of magnitude apart.
+//! 1. `compress` scales linearly on redundant input.  A fixed wall-clock bound
+//!    cannot tell the two encoders apart on every runner (a debug build on a slow
+//!    Windows runner took 12 s for the *linear* encoder; the old one needed about
+//!    15 s for 4 MiB on a fast machine), so the test compares the encoder with
+//!    itself: it times 256 KiB and 4 MiB of zeros (16x the input) and bounds the
+//!    ratio.  Runner speed, debug or release, cancels out.  Linear cost gives a
+//!    ratio near 16 (measured 16.3); the old prefix hashing is about n^1.5, a
+//!    ratio near 64 (measured 54).  The bound is 32, twice the linear value and
+//!    well under the quadratic one.  Each size takes the minimum of several
+//!    runs, which discards scheduling stalls.
 //! 2. The output is byte for byte what the old algorithm produced.  The old
 //!    encoder is kept below as `reference_compress`, written from CMP03 and
 //!    deliberately simple, and compared on structured and seeded random inputs.
@@ -26,17 +32,33 @@ use lzw::{compress, decompress};
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
+/// Fastest of `runs` timed calls to `compress(data)`.
+fn best_of(runs: usize, data: &[u8]) -> (Duration, usize) {
+    let mut best = Duration::MAX;
+    let mut len = 0;
+    for _ in 0..runs {
+        let start = Instant::now();
+        let packed = compress(data);
+        best = best.min(start.elapsed());
+        len = packed.len();
+    }
+    (best, len)
+}
+
 #[test]
 fn compress_of_redundant_input_is_linear_time() {
-    let zeros = vec![0u8; 8 * 1024 * 1024];
-    let start = Instant::now();
-    let packed = compress(&zeros);
-    let elapsed = start.elapsed();
+    const SMALL: usize = 256 * 1024;
+    const LARGE: usize = 16 * SMALL; // 4 MiB
+    let (small, _) = best_of(5, &vec![0u8; SMALL]);
+    let (large, packed_len) = best_of(2, &vec![0u8; LARGE]);
+    assert!(packed_len < 16 * 1024, "zeros compress well: {packed_len} bytes");
+    // Clamp the divisor so a coarse clock cannot divide by zero.
+    let ratio = large.as_secs_f64() / small.as_secs_f64().max(1e-6);
     assert!(
-        elapsed < Duration::from_secs(10),
-        "compress of 8 MiB of zeros took {elapsed:?} (quadratic prefix hashing)"
+        ratio < 32.0,
+        "16x the input took {ratio:.1}x the time ({small:?} -> {large:?}); \
+         linear is about 16, quadratic prefix hashing about 64"
     );
-    assert!(packed.len() < 16 * 1024, "zeros compress well: {} bytes", packed.len());
 }
 
 /// CMP03 section "Encoding Algorithm", transcribed directly: a dictionary of
