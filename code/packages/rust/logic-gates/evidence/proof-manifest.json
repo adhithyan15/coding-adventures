@@ -533,7 +533,7 @@
   ],
   "schema": "warrant-proof-evidence-v1",
   "source": "code/packages/rust/logic-gates/src/gates.rs, combinational.rs",
-  "source_sha256": "32155cc451a49e2333a71462628e212ec23573fc679eb65c134e93fa63fe8e7a",
+  "source_sha256": "91ff0b285777118f18d2cfd173fbcbc5c2d86ac045bad6e308934b0cdcc49d5d",
   "spec": "code/specs/logic-gates.warrant",
   "spec_sha256": "40d92149d7ca1d079c2448fb35c9a92e0648a82ad7db3584a78df150c85775c2"
 }
