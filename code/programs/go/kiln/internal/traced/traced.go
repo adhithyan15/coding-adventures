@@ -284,6 +284,13 @@ func prepare(cfg Config) (*prepared, error) {
 	}
 	for _, r := range cfg.HostRoots.Roots {
 		if e, ok := expand(r.Path); ok {
+			// A root that is, or contains, the fresh HOME or TMPDIR would make
+			// the host's real files readable at sandbox tmpfs paths.
+			for _, d := range []string{cfg.Home, cfg.Tmpdir} {
+				if d != "" && (e == d || strings.HasPrefix(d, e+"/")) {
+					return nil, fmt.Errorf("traced: host root %q equals or contains Home/Tmpdir %q", e, d)
+				}
+			}
 			p.roots = append(p.roots, preparedRoot{path: e, kind: r.Kind, tool: r.Tool, ecosystem: r.Ecosystem})
 		}
 	}

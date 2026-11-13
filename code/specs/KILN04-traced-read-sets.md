@@ -905,6 +905,12 @@ exit with 0 gives `failed`. After the init child's exit line, a process
 killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
+**Known cost.** The strict stability rule refuses common patterns: a
+compiler output that is created and then stat'ed, a temp file that is created,
+read and unlinked, and `stat($HOME)` when the checkout is under `$HOME`. Narrow
+relaxations ("opens settle the final name", "open-only change logs",
+"`$HOME` itself") are planned as a separate follow-up with their own review.
+
 **Tests.** A differential fuzzer runs an in-memory filesystem model with the
 true results and `-y` paths and gives the final state as the post-run disk. It
 models two processes with overlapping calls (the effect lands at a random point
@@ -988,6 +994,9 @@ Shards run on separate machines, so the check cannot run per shard:
      against every other action's writes: a traversed component another action
      created, renamed, unlinked or re-linked is `unstable-path`, and an absent
      name another action wrote is `reads-product`.
+   - **Daemons.** An action with a `daemon:<addr>` reason voids every action
+     whose `Binds`, or whose bound Unix path under its write roots, matches
+     that address: the server side depends on the client's bytes.
    - **Shared ports.** Two actions that bind the same inet address and port
      (`RawRecord.Binds`) both get `reads-product`: one's server may have
      answered the other's client. The kernel can also hand out the same port to
