@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased] — Warrant-derived evidence (AR01, VER04h)
 
 Layer 2 of the Intel 4004 verification chain (VER27 section 4.15, backlog LV-006,
-LP-010), on top of `logic-gates` (layer 1). (Cargo.toml stays at 0.1.0: this whole
+LP-011), on top of `logic-gates` (layer 1). (Cargo.toml stays at 0.1.0: this whole
 entry is unreleased and the version is bumped at release.)
 
 ### Added
