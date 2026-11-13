@@ -375,6 +375,33 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
 - Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
   verify-vectors` checks them.
 
+## Record formats and the merge engine (`internal/recfmt`, `internal/recmerge`, KILN04 stage 4)
+
+Stage 4 records traced read-sets in shards and merges them in one job. These two
+packages are the pure half (no I/O, no clock, no CLI yet; the recorder and
+`kiln record-merge` come in later PRs):
+
+- `internal/recfmt`: the strict wire formats (shard binding, host facts,
+  pre-BUILD inventory, shard header, record line) with decoders and canonical
+  encoders, plus `StepsDigest` and `PartitionDigest`. Every decoder refuses what
+  a hostile shard could use to hide an observation: a missing key, a null list,
+  a duplicate or case-variant key, an unsorted list, a malformed path.
+- `internal/recmerge`: `Merge(Input) Result`. It checks the binding of every
+  shard (B1-B6), then applies the cross-action rules (M1-M15) to every record of
+  every shard and decides, per action, whether it may become a manifest and a
+  pass. An unknown write set anywhere voids the whole run; an action that runs in
+  several shards is checked in all of them and emitted from the assigned shard
+  only. The design is KILN04 section 7.1.
+
+```go
+res := recmerge.Merge(recmerge.Input{Run: run, Expected: expected, Shards: shards, Keys: keys, Now: now, Kiln: id})
+if res.Emitted { /* res.Manifests and res.Passes go to the ledger */ }
+```
+
+`FuzzMerge` (`go test -fuzz FuzzMerge ./internal/recmerge`) compares `Merge`
+with an independent brute-force oracle; its seed corpus runs in a normal
+`go test`.
+
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 
 ```
