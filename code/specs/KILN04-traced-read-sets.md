@@ -579,8 +579,11 @@ non-UTF-8 byte. Further rules:
   `home`;
 - `ro_roots` is not empty, has no duplicates, and no entry overlaps (equals,
   contains or lies inside) the checkout, `home`, `tmpdir` or a state root, or
-  lies inside `/dev`, `/run`, `/var/run`, `/proc`, `/tmp` or `/var/tmp`, which
-  the sandbox builds itself;
+  lies inside **or contains** `/dev`, `/run`, `/var/run`, `/proc`, `/tmp` or
+  `/var/tmp`, which the sandbox builds itself. So `/var` is refused (it holds a
+  real `/var/run` and `/var/tmp`), and so is `/var/lib` (service sockets): list
+  specific subdirectories instead. No per-step walk for sockets is done; it
+  would be too slow, and the CI test and the `kiln-record` probe cover it;
 - no configured path lies inside `/dev`, `/run`, `/var/run` or `/proc`;
 - **a mask is a direct child of `repo_root`**, and nothing else is a mask.
   A path outside the checkout is already absent unless it is under an allowed
@@ -594,8 +597,9 @@ non-UTF-8 byte. Further rules:
 Against the real filesystem the helper additionally requires that `repo_root`,
 `home`, `tmpdir`, the working directory and every state root (or its nearest
 existing ancestor) are canonical directories (no symlink in any component),
-and that every `ro_roots` entry exists and is either a symlink (the entry
-itself) or a canonical directory or file,
+and that every `ro_roots` entry exists and is either a symlink (whose
+**parent** must be canonical, since the link is recreated at
+`<new root>/<parent>`) or a canonical directory or file,
 because the mounts are made at `<new root>/<path>` and an absolute symlink in a
 component would resolve against the host's root; that no mask target is a
 symlink; that every mask target exists; that the configuration file is not inside the checkout,
@@ -1759,6 +1763,12 @@ These are known and named. They are measured rather than closed.
   with the same walk as `TestSandboxNoReachableSocketsOrFifos`), and a root such
   as `/var` that might bring back a host service path is caught only by the
   post-pivot check of §4.3.
+- **Shared inodes between sandboxes.** Concurrent sandboxes see the same inodes
+  under `ro_roots`, so advisory locks (`flock`, `fcntl`) and timing form a
+  low-bandwidth channel between cooperating actions that no trace records.
+- **Stage 4 runs from outside the checkout.** Parsing and merging must run from
+  binaries and scripts that live outside the checkout, never from the working
+  tree after BUILDs have run: a BUILD can rewrite anything in it.
 - **Linux only.** macOS and Windows get no hits from this bridge.
 
 ## 15. Open questions

@@ -167,7 +167,9 @@ func checkRoRoot(p string) error {
 		return fmt.Errorf("sandbox-exec: ro root %q: %v", clip(p), err)
 	}
 	if st.Mode()&os.ModeSymlink != 0 {
-		return nil
+		// The entry is recreated under <new root>/<parent>: the parent must not
+		// resolve through a host symlink into some other host directory.
+		return mustBeCanonical("ro root parent", filepath.Dir(p))
 	}
 	return mustBeCanonical("ro root", p)
 }

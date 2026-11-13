@@ -158,6 +158,9 @@ func TestValidateRefusals(t *testing.T) {
 		{"ro root in /run", func(c *Config) { c.RoRoots = []string{"/run/x"} }, "builds itself"},
 		{"ro root /dev", func(c *Config) { c.RoRoots = []string{"/dev"} }, "builds itself"},
 		{"ro root /proc", func(c *Config) { c.RoRoots = []string{"/proc"} }, "builds itself"},
+		{"ro root /var", func(c *Config) { c.RoRoots = []string{"/var"} }, "contains /var/run"},
+		{"ro root /var/lib", func(c *Config) { c.RoRoots = []string{"/var/lib"} }, "service sockets"},
+		{"ro root holds /tmp", func(c *Config) { c.RoRoots = []string{"/var/tmp/../.."} }, "not clean"},
 		{"ro root list separator", func(c *Config) { c.RoRoots = []string{"/opt/a:b"} }, "separator"},
 		{"too many ro roots", func(c *Config) {
 			c.RoRoots = nil

@@ -212,3 +212,19 @@ func TestCheckHostRoRootMayBeASymlinkOrAFile(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestCheckHostRoRootSymlinkParentMustBeCanonical(t *testing.T) {
+	f := newHostFixture(t)
+	os.MkdirAll(filepath.Join(f.base, "real"), 0o755)
+	os.Symlink(filepath.Join(f.base, "real"), filepath.Join(f.base, "alias"))
+	os.Symlink("/usr", filepath.Join(f.base, "real", "entry"))
+	// The entry itself is a symlink whose PARENT is reached through another.
+	f.cfg.RoRoots = []string{"/usr", filepath.Join(f.base, "alias", "entry")}
+	if err := f.cfg.CheckHost("pkg", f.facts()); err == nil || !strings.Contains(err.Error(), "ro root parent") {
+		t.Fatalf("%v", err)
+	}
+	f.cfg.RoRoots = []string{"/usr", filepath.Join(f.base, "real", "entry")}
+	if err := f.cfg.CheckHost("pkg", f.facts()); err != nil {
+		t.Fatal(err)
+	}
+}

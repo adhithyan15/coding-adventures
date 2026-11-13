@@ -315,6 +315,14 @@ func (c *Config) Validate() error {
 			if within(r, o) {
 				return fmt.Errorf("config: ro root %q lies inside %s, which the sandbox builds itself", clip(r), o)
 			}
+			// An ancestor would bring the real directory back (/var holds a
+			// real /var/run and /var/tmp, /var/lib holds service sockets).
+			if within(o, r) {
+				return fmt.Errorf("config: ro root %q contains %s, which the sandbox builds itself; list specific subdirectories instead", clip(r), o)
+			}
+		}
+		if r == "/var" || r == "/var/lib" {
+			return fmt.Errorf("config: ro root %q holds service sockets; list specific subdirectories instead", r)
 		}
 	}
 	seen = map[string]bool{}

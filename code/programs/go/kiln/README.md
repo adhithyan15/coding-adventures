@@ -395,7 +395,8 @@ absolute path, the writable `state` roots, fresh empty tmpfs for `$HOME`,
 `TMPDIR`, `/tmp`, `/var/tmp` and `/run`, a minimal `/dev`, and its own `/proc`
 (`hidepid=2`). Nothing else of the host is there, because a pathname Unix
 socket or FIFO is reachable through the filesystem whatever the mount flags.
-`masks` are the checkout's own direct children (`.git`) made empty; a path
+An entry may not be, or contain, a directory the sandbox builds itself, so
+`/var` and `/var/lib` are refused: list specific subdirectories. `masks` are the checkout's own direct children (`.git`) made empty; a path
 outside the checkout is simply absent unless it is under an allowed root, and
 the configuration refuses a mask there. The step runs as uid 1000 in a new user
 namespace with no capabilities, `no_new_privs` and a seccomp filter (EPERM for
