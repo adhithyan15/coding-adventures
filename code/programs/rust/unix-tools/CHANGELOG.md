@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The crate now passes `clippy -D warnings` on Windows (the CI gate runs it there): imports and helpers only used by Unix code or Unix-only tests are `#[cfg(unix)]`-gated in `chmod_tool`, `chown_tool` and the `id`/`logname`/`whoami` test modules, the integration tests that are mostly Unix-only carry a file-level `#![cfg_attr(not(unix), allow(unused_imports, dead_code))]`, and `ln_tool` returns a `String` instead of a no-argument `format!`.
+
 ### Changed — the suite now runs on Windows
 
 `BUILD_windows` was an `echo` ("Skipping ... targets Unix/POSIX behavior"); it is

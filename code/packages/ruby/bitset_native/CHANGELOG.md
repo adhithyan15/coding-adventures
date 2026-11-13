@@ -2,6 +2,12 @@
 
 All notable changes to the `coding_adventures_bitset_native` gem will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- `to_integer`'s `-1` sentinel goes through `ruby_bridge::rb_int2inum`, which now takes an `intptr_t`: on 64-bit Windows the old `c_long` declaration returned it as `4294967295` (this is the likely cause of the Windows-only failure recorded for this package).
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

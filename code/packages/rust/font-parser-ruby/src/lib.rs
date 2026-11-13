@@ -87,8 +87,10 @@ extern "C" {
     // rb_fix2int: convert a Fixnum VALUE to a C int.
     fn rb_fix2int(v: VALUE) -> c_int;
 
-    // rb_int2inum: convert a C long to a Ruby Integer VALUE.
-    fn rb_int2inum(v: c_long) -> VALUE;
+    // rb_int2inum: convert an `intptr_t` to a Ruby Integer VALUE.  It is NOT a C `long`:
+    // on 64-bit Windows `long` is 32 bits, so declaring it `c_long` made negative
+    // metrics (descender -494) arrive as 4294966802.
+    fn rb_int2inum(v: isize) -> VALUE;
 
     // rb_data_object_wrap: create a Ruby Data object wrapping a C pointer.
     // This is the ONLY supported way to associate a C pointer with a Ruby object.
@@ -134,7 +136,7 @@ unsafe fn metrics_to_hash(m: &fp::FontMetrics) -> VALUE {
 
     macro_rules! set_int {
         ($key:expr, $val:expr) => {
-            rb_hash_aset(h, sym($key), rb_int2inum($val as c_long));
+            rb_hash_aset(h, sym($key), rb_int2inum($val as isize));
         };
     }
     macro_rules! set_str {
@@ -145,7 +147,7 @@ unsafe fn metrics_to_hash(m: &fp::FontMetrics) -> VALUE {
     macro_rules! set_opt_int {
         ($key:expr, $val:expr) => {
             let v = match $val {
-                Some(n) => rb_int2inum(n as c_long),
+                Some(n) => rb_int2inum(n as isize),
                 None => nil_value(),
             };
             rb_hash_aset(h, sym($key), v);
@@ -171,8 +173,8 @@ unsafe fn metrics_to_hash(m: &fp::FontMetrics) -> VALUE {
 
 unsafe fn glyph_metrics_to_hash(gm: &fp::GlyphMetrics) -> VALUE {
     let h = rb_hash_new();
-    rb_hash_aset(h, sym("advance_width"),     rb_int2inum(gm.advance_width as c_long));
-    rb_hash_aset(h, sym("left_side_bearing"), rb_int2inum(gm.left_side_bearing as c_long));
+    rb_hash_aset(h, sym("advance_width"),     rb_int2inum(gm.advance_width as isize));
+    rb_hash_aset(h, sym("left_side_bearing"), rb_int2inum(gm.left_side_bearing as isize));
     h
 }
 
@@ -279,7 +281,7 @@ unsafe extern "C" fn rb_glyph_id(_self: VALUE, font_obj: VALUE, cp_val: VALUE) -
     }
 
     match fp::glyph_id(font, cp_raw as u32) {
-        Some(gid) => rb_int2inum(gid as c_long),
+        Some(gid) => rb_int2inum(gid as isize),
         None => nil_value(),
     }
 }
@@ -318,7 +320,7 @@ unsafe extern "C" fn rb_kerning(
         raise_arg_error("kerning: glyph IDs must be in range 0..65535");
     }
 
-    rb_int2inum(fp::kerning(font, left_raw as u16, right_raw as u16) as c_long)
+    rb_int2inum(fp::kerning(font, left_raw as u16, right_raw as u16) as isize)
 }
 
 /// Extract `&FontFile` from a Ruby Data object.

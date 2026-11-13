@@ -49,7 +49,7 @@ pub fn create_link(target: &str, link_name: &str, symbolic: bool, force: bool) -
         }
         #[cfg(not(unix))]
         {
-            Err(format!("ln: symbolic links not supported on this platform"))
+            Err("ln: symbolic links not supported on this platform".to_string())
         }
     } else {
         // Create a hard link. Both names point to the same inode.

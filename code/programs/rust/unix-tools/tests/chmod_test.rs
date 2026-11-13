@@ -3,6 +3,10 @@
 //! These tests verify permission parsing (octal and symbolic),
 //! permission application, and file permission changes.
 
+// Unix-only tools: on Windows most of these tests (and the imports and helpers they use)
+// are compiled out, which would otherwise trip the CI `-D warnings` clippy gate.
+#![cfg_attr(not(unix), allow(unused_imports, dead_code))]
+
 use unix_tools::chmod_tool::*;
 use std::fs;
 use std::path::Path;

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Its own `rb_int2inum` declaration takes an `isize` (`intptr_t`), not a `c_long`: on 64-bit Windows `long` is 32 bits, so `descender: -494` came back as `4294966802` and the smoke test's `font_metrics` check failed on the Windows runner (the first Windows run that loaded this extension into a real Ruby 3.4; the `lib.exe` import-library link itself worked).
+
 ### Fixed — the extension could not be loaded, and every call misread its arguments
 
 The crate had only ever been compiled, never `require`d.  Loading it into a real
