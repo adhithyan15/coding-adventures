@@ -45,7 +45,12 @@
 //! that names the delegated responder's already-proven exact path through the
 //! policy-validated intermediate to the reviewed root; subsequent policies
 //! derive the responder SAN plus reviewed-anchor and exact-intermediate
-//! constraints internally.
+//! constraints internally. The strongest Name-policy-backed path projection
+//! can now also apply its exact selected reviewed root's supported out-of-band
+//! permitted-DNS constraints to that retained responder without accepting
+//! detached evidence. It still stops before intermediate DNS, responder no-
+//! check or authenticated revocation, complete Name/path or revocation policy,
+//! TLS, HTTP, OAuth, or network readiness.
 
 #![deny(unsafe_code)]
 
@@ -5371,6 +5376,145 @@ pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy<
         .anchor_policy()
         .reviewed_server_path()
         .reviewed_path()
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_responder_anchor_dns_policy(
+        responder_certificate,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+        responder_path,
+        constrained_dns_names,
+    })
+}
+
+/// Apply the selected reviewed anchor's supported DNS policy to the responder
+/// retained by the strongest Name-policy path bridge.
+///
+/// The exact responder certificate is derived only through the consumed fully
+/// routed OCSP proof. The selected reviewed terminal and its optional out-of-
+/// band constraint bytes are derived only through the retained strongest Name-
+/// policy path. Separate caller-owned limits bound both ASN.1 parses. Entries
+/// without constraints succeed without reading the responder SAN or
+/// manufacturing DNS evidence.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before intermediate DNS, no-check, responder or intermediate revocation,
+/// complete Name/path or revocation validation, TLS, HTTP, OAuth readiness, or
+/// network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    responder_path: BoundX509OcspReviewedResponderPath<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    X509OcspReviewedResponderAnchorDnsPolicyError,
+>{
+    let strong_binding = responder_path.reviewed_server_revocation();
+    let responder_certificate = strong_binding
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let name_constraints = strong_binding
+        .strong_name_policy_path()
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .accumulated_intermediates()
         .reviewed_terminal()
         .reviewed_anchor()
         .name_constraints();
