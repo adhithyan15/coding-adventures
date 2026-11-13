@@ -119,7 +119,17 @@ var (
 		"code/scripts/tfv.py",
 	}
 	ctCompareCorpusPaths = []string{"code/specs/fixtures/ct-compare-v1/cases.json"}
-	testBootstrapPaths   = []string{
+	// kilnToolchainPinPaths are the pin sources Kiln's committed
+	// code/kiln/legacy/toolchains.json is checked against by its drift test
+	// (realpolicy_test.go). A toolchain bump that edits only these files must
+	// still re-run Kiln's tests, or the drift goes unnoticed until the next
+	// Kiln change (#19269 bumped Rust without touching toolchains.json).
+	kilnToolchainPinPaths = []string{
+		"mise.toml",
+		"code/specs/data/toolchain-pins.json",
+		".github/workflows/ci.yml",
+	}
+	testBootstrapPaths = []string{
 		"code/specs/fixtures/test-bootstrap-v1",
 		"code/scripts/tfv.py",
 		"code/scripts/bootstrap_harness_conformance.py",
@@ -350,6 +360,13 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		paths:    rngCorpusPaths,
 	},
 	{
+		name:     "go/programs/kiln",
+		language: "go",
+		inputs:   "the toolchain pin sources its toolchains.json drift test reads",
+		matches:  isKilnToolchainPinInput,
+		paths:    kilnToolchainPinPaths,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",
@@ -459,6 +476,16 @@ func isTestBootstrapInput(changed string) bool {
 		return true
 	}
 	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
+// isKilnToolchainPinInput reports whether a changed path is one of the pin
+// sources Kiln's toolchains.json must agree with.
+func isKilnToolchainPinInput(changed string) bool {
+	switch changed {
+	case "mise.toml", "code/specs/data/toolchain-pins.json", ".github/workflows/ci.yml":
+		return true
+	}
+	return false
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,
