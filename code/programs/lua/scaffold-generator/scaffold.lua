@@ -493,12 +493,36 @@ done_testing;
     build_lines[#build_lines + 1] = "prove -l -v t/"
     local build = table.concat(build_lines, "\n") .. "\n"
 
+    -- BUILD_windows: a real recipe, never an echo skip or a fall-through to the Unix
+    -- BUILD (BUILD-002 W2/W6; mirrors the Go scaffold generator).  It runs the shared
+    -- helper, which picks Strawberry Perl, installs Test2::V0 if needed, puts each
+    -- sibling's lib\ on @INC with absolute -I paths and runs prove.  The `REM prereqs:`
+    -- line is load-bearing: the build-tool validator requires Perl BUILD files to name
+    -- every transitive sibling, and `-Deps` alone does not look like a ../name reference.
+    local build_windows_lines = {}
+    if #ordered_deps == 0 then
+        build_windows_lines[#build_windows_lines + 1] = "REM prereqs: (none)"
+    else
+        local refs = {}
+        for _, dep in ipairs(ordered_deps) do
+            refs[#refs + 1] = "../" .. dep
+        end
+        build_windows_lines[#build_windows_lines + 1] = "REM prereqs: " .. table.concat(refs, " ")
+    end
+    local helper = "powershell -NoProfile -ExecutionPolicy Bypass -File ..\\..\\..\\scripts\\run-perl-tests-windows.ps1"
+    if #ordered_deps > 0 then
+        helper = helper .. " -Deps " .. table.concat(ordered_deps, ",")
+    end
+    build_windows_lines[#build_windows_lines + 1] = helper
+    local build_windows = table.concat(build_windows_lines, "\n") .. "\n"
+
     write_file(target_dir .. "/Makefile.PL", makefile_pl)
     write_file(target_dir .. "/cpanfile", cpanfile)
     write_file(target_dir .. "/lib/CodingAdventures/" .. camel .. ".pm", module_pm)
     write_file(target_dir .. "/t/00-load.t", load_t)
     write_file(target_dir .. "/t/01-basic.t", basic_t)
     write_file(target_dir .. "/BUILD", build)
+    write_file(target_dir .. "/BUILD_windows", build_windows)
 end
 
 --- Generate the rockspec file content.
@@ -785,7 +809,8 @@ local function scaffold_one(opts)
             generate_test_lua(pkg_name)
         )
         write_file(target_dir .. "/BUILD", generate_build(direct_deps, ordered_deps, pkg_name))
-        write_file(target_dir .. "/BUILD_windows", 'echo "Skipping Lua on Windows CI"\n')
+        -- A real recipe, never an echo skip (BUILD-002 W6): the same busted run as BUILD.
+        write_file(target_dir .. "/BUILD_windows", generate_build(direct_deps, ordered_deps, pkg_name))
     end
     write_file(target_dir .. "/README.md", generate_readme(pkg_name, description, layer, direct_deps))
     write_file(target_dir .. "/CHANGELOG.md", generate_changelog())
