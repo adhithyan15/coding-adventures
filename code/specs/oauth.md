@@ -2082,6 +2082,32 @@ validate the anchor self-signature, compose TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded strong-path responder anchor-DNS follow-up consumes only that exact
+responder-path projection plus separate caller-owned limits for the reviewed
+constraint and responder Subject Alternative Name decoders. It derives the
+fully routed authenticated responder certificate only through the retained
+OCSP proof and derives the exact selected Mozilla-reviewed root's optional
+out-of-band constraint bytes only through the retained strongest Name-policy
+path. An unconstrained snapshot entry succeeds without reading the responder
+SAN. A constrained entry must decode as the repository's supported permitted-
+DNS subset, and every exact responder `dNSName` must satisfy that subset before
+success retains the complete non-copyable responder path plus only payload-free
+count evidence. Callers cannot substitute another responder, root, SAN,
+constraint value, path, algorithm, key, signature, or observation time. The
+entry point shares the existing private responder-anchor evaluator and stable
+payload-free failure categories so decoding, limit propagation, evaluation,
+and redaction cannot drift from the older fixed-path and routed-path policies.
+
+This pure public-certificate-data policy performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It does not
+apply excluded or non-DNS reviewed-root constraints or the retained
+intermediate's constraints, establish no-check or separately authenticated
+responder revocation, authenticate intermediate status, complete revocation or
+Name/path validation, validate the anchor self-signature, compose TLS or HTTP,
+authorize OAuth transport, or grant network authority. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded constructed-target binding follow-up now consumes that constructed
 path together with complete validated server-certificate policy. It fails
 closed unless the server-policy evidence retains the same exact decoded target
