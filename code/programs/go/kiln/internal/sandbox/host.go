@@ -55,7 +55,7 @@ func (c *Config) CheckHost(action string, h HostFacts) error {
 		}
 	}
 	for _, m := range c.Masks {
-		if err := checkMaskTarget(m, within(m, c.RepoRoot)); err != nil {
+		if err := checkMaskTarget(m); err != nil {
 			return err
 		}
 	}
@@ -65,8 +65,21 @@ func (c *Config) CheckHost(action string, h HostFacts) error {
 	if err != nil {
 		return fmt.Errorf("sandbox-exec: cannot resolve the kiln binary: %v", err)
 	}
-	if within(real, c.RepoRoot) {
-		return errors.New("sandbox-exec: the kiln binary is inside repo_root")
+	for _, w := range append([]string{c.RepoRoot, c.Tmpdir}, c.StateRoots...) {
+		if within(real, w) {
+			return fmt.Errorf("sandbox-exec: the kiln binary is inside %q", clip(w))
+		}
+	}
+	if real != h.Exe {
+		return fmt.Errorf("sandbox-exec: the kiln binary path %q is not canonical (it resolves to %q)", clip(h.Exe), clip(real))
+	}
+	// The configuration file: canonical too, and not where a step writes.
+	realCfg, err := filepath.EvalSymlinks(h.ConfigPath)
+	if err != nil {
+		return fmt.Errorf("sandbox-exec: cannot resolve the configuration: %v", err)
+	}
+	if realCfg != h.ConfigPath {
+		return fmt.Errorf("sandbox-exec: the configuration path %q is not canonical (it resolves to %q)", clip(h.ConfigPath), clip(realCfg))
 	}
 	return nil
 }
@@ -124,20 +137,12 @@ func canonicalOrCreatable(what, p string) error {
 }
 
 // checkMaskTarget checks one mask.  A target that exists must not be a symlink
-// and must be reached through none.  One that does not exist is skipped, except
-// inside the checkout: there the step could create it, so a missing mask is a
-// refusal rather than a hole.
-func checkMaskTarget(m string, inRepo bool) error {
+// and must be reached through none.  One that does not exist is refused,
+// wherever it is: a mask the sandbox cannot place would silently be no mask.
+func checkMaskTarget(m string) error {
 	st, err := os.Lstat(m)
 	if errors.Is(err, os.ErrNotExist) {
-		if inRepo {
-			return fmt.Errorf("sandbox-exec: mask %q does not exist inside the checkout, so a step could create it", clip(m))
-		}
-		near, derr := deepestExisting(m)
-		if derr != nil {
-			return fmt.Errorf("sandbox-exec: mask %q: %v", clip(m), derr)
-		}
-		return mustBeCanonical("mask ancestor", near)
+		return fmt.Errorf("sandbox-exec: mask %q does not exist", clip(m))
 	}
 	if err != nil {
 		return fmt.Errorf("sandbox-exec: mask %q: %v", clip(m), err)

@@ -3,6 +3,7 @@
 package sandbox
 
 import (
+	"strings"
 	"syscall"
 	"testing"
 )
@@ -17,6 +18,15 @@ func TestRefusedNumbersMatchPackageSyscall(t *testing.T) {
 		"chroot":     syscall.SYS_CHROOT,
 		"ptrace":     syscall.SYS_PTRACE,
 		"unshare":    syscall.SYS_UNSHARE,
+		// Every other number package syscall names.  (It stopped adding
+		// names around Linux 3.x: setns, bpf, process_vm_*, the handle calls
+		// and io_uring_setup are checked against the literals in
+		// TestFilterKnownNumbers.)
+		"kexec_load":      syscall.SYS_KEXEC_LOAD,
+		"perf_event_open": syscall.SYS_PERF_EVENT_OPEN,
+		"add_key":         syscall.SYS_ADD_KEY,
+		"request_key":     syscall.SYS_REQUEST_KEY,
+		"keyctl":          syscall.SYS_KEYCTL,
 	}
 	checked := 0
 	for _, s := range RefusedSyscalls {
@@ -55,5 +65,25 @@ func TestMountFlagsMatchPackageSyscall(t *testing.T) {
 		if pair[0] != pair[1] {
 			t.Errorf("%s: %#x vs %#x", name, pair[0], pair[1])
 		}
+	}
+}
+
+// The liveness check: open while the writer holds its end, an error once it is
+// gone (the init then exits 125 instead of running an orphaned step).
+func TestCheckPipeAlive(t *testing.T) {
+	var p [2]int
+	if err := syscall.Pipe2(p[:], syscall.O_CLOEXEC); err != nil {
+		t.Fatal(err)
+	}
+	defer syscall.Close(p[0])
+	if err := checkPipeAlive(p[0]); err != nil {
+		t.Fatalf("writer alive: %v", err)
+	}
+	syscall.Close(p[1])
+	if err := checkPipeAlive(p[0]); err == nil || !strings.Contains(err.Error(), "gone") {
+		t.Fatalf("writer gone: %v", err)
+	}
+	if err := checkPipeAlive(1 << 20); err == nil {
+		t.Fatal("a bad descriptor passed the check")
 	}
 }

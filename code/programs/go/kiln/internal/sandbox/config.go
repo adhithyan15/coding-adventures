@@ -233,8 +233,26 @@ func (c *Config) Validate() error {
 			return err
 		}
 	}
-	if within(c.KilnExe, c.RepoRoot) {
-		return errors.New("config: kiln_exe lies inside repo_root: the build could rewrite the sandbox")
+	for _, w := range append([]string{c.RepoRoot, c.Tmpdir}, c.StateRoots...) {
+		if within(c.KilnExe, w) {
+			return fmt.Errorf("config: kiln_exe lies inside %q, where the build could rewrite the sandbox", clip(w))
+		}
+	}
+	// /dev, /run and /var/run are replaced by the sandbox, so nothing
+	// configured can live there.
+	for _, f := range []struct{ what, p string }{{"repo_root", c.RepoRoot}, {"home", c.Home}, {"tmpdir", c.Tmpdir}} {
+		for _, r := range reserved {
+			if within(f.p, r) {
+				return fmt.Errorf("config: %s %q lies inside %s, which the sandbox replaces", f.what, clip(f.p), r)
+			}
+		}
+	}
+	for _, s := range c.StateRoots {
+		for _, r := range reserved {
+			if within(s, r) {
+				return fmt.Errorf("config: state root %q lies inside %s, which the sandbox replaces", clip(s), r)
+			}
+		}
 	}
 	// The checkout may not be $HOME or TMPDIR, and neither may lie inside it.
 	if within(c.Home, c.RepoRoot) || within(c.Tmpdir, c.RepoRoot) {
@@ -268,6 +286,18 @@ func (c *Config) Validate() error {
 			return fmt.Errorf("config: duplicate mask %q", clip(m))
 		}
 		seen[m] = true
+		// An in-repo mask is a DIRECT child of the checkout: a step may rename
+		// an ancestor of a mount point around the mask, and may not rename a
+		// mount point itself.  No mask lies inside a state root, which is
+		// writable for the same reason.
+		if within(m, c.RepoRoot) && m != c.RepoRoot && path.Dir(m) != c.RepoRoot {
+			return fmt.Errorf("config: mask %q is inside the checkout but not a direct child of it", clip(m))
+		}
+		for _, s := range c.StateRoots {
+			if within(m, s) {
+				return fmt.Errorf("config: mask %q lies inside the state root %q", clip(m), clip(s))
+			}
+		}
 		// A mask hides what it covers; covering the checkout, the scratch
 		// directories or a state root would make the step unrunnable.
 		for _, keep := range append([]string{c.RepoRoot, c.Home, c.Tmpdir}, c.StateRoots...) {

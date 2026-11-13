@@ -599,6 +599,16 @@
         "code/specs/CV02-checked-bounded-provenance-graphs.md",
         "code/specs/FM02-forme-plugin-host.md"
       ]
+    },
+    "kiln-sandbox": {
+      "scope": "job",
+      "description": "Kiln sandbox-exec end to end on linux/amd64: user, mount, PID, network, IPC and UTS namespaces, seccomp, and the real-strace trace parse. Required, never skipped, because the sandbox tests skip silently where namespaces are unavailable.",
+      "packages": [
+        "go/programs/kiln"
+      ],
+      "paths": [
+        "code/programs/go/kiln/**"
+      ]
     }
   }
 }

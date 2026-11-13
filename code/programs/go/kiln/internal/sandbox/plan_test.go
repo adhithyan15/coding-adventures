@@ -31,6 +31,9 @@ func TestPlanOrder(t *testing.T) {
 		{Kind: KindStageDir, Target: stage},
 		{Kind: KindRootBind, Source: "/", Target: stage, Flags: MsBind | MsRec},
 		{Kind: KindReadOnly, Target: stage},
+		{Kind: KindDev, Target: "/dev", FSType: "tmpfs", Flags: MsNosuid | MsNoexec, Data: "mode=0755,size=64k,nr_inodes=64,uid=1000,gid=1000"},
+		{Kind: KindMask, Target: "/run", FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: "mode=0555,size=4k,nr_inodes=2", Optional: true},
+		{Kind: KindMask, Target: "/var/run", FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: "mode=0555,size=4k,nr_inodes=2", Optional: true},
 		// $HOME, then TMPDIR (it lies under HOME, so HOME is the parent).
 		{Kind: KindEnsureDir, Target: "/home/runner"},
 		{Kind: KindTmpfs, Target: "/home/runner", FSType: "tmpfs", Flags: MsNosuid | MsNodev, Data: "mode=0755,uid=1000,gid=1000"},
@@ -57,6 +60,7 @@ func TestPlanOrder(t *testing.T) {
 	want = append(want,
 		Mount{Kind: KindProc, Source: "proc", Target: "/proc", FSType: "proc", Flags: MsNosuid | MsNodev | MsNoexec, Data: "hidepid=2"},
 		Mount{Kind: KindPivot, Target: stage},
+		Mount{Kind: KindVerifyAbsent},
 	)
 	if !reflect.DeepEqual(plan, want) {
 		for i := 0; i < len(plan) || i < len(want); i++ {
@@ -100,11 +104,22 @@ func TestPlanDependencies(t *testing.T) {
 	before(KindRootBind, KindReadOnly)      // read-only is applied to the copy ...
 	before(KindReadOnly, KindTmpfs)         // ... and the writable parts come after it
 	before(KindTmpfs, KindBind)             // a checkout under $HOME survives the tmpfs
-	before(KindBind, KindMask)              // masks go over the binds
-	before(KindMask, KindProc)              // proc last of the mounts ...
-	before(KindProc, KindPivot)             // ... then the pivot
-	if first[KindPivot] != len(plan)-1 {
-		t.Error("the pivot is not last")
+	// Configured masks go over the binds (the /run masks are not configured).
+	firstMask := -1
+	for i, m := range plan {
+		if m.Kind == KindMask && !m.Optional {
+			firstMask = i
+			break
+		}
+	}
+	if firstMask < last[KindBind] {
+		t.Error("masks must all come after the binds")
+	}
+	before(KindReadOnly, KindDev) // /dev is replaced after the copy is read-only
+	before(KindMask, KindProc)    // proc last of the mounts ...
+	before(KindProc, KindPivot)   // ... then the pivot
+	if first[KindPivot] != len(plan)-2 || first[KindVerifyAbsent] != len(plan)-1 {
+		t.Error("the pivot, then the verification, are not last")
 	}
 }
 
@@ -156,7 +171,7 @@ func TestPlanMaskDepthOrder(t *testing.T) {
 	}
 	var got []string
 	for _, m := range plan {
-		if m.Kind == KindMask {
+		if m.Kind == KindMask && !m.Optional {
 			got = append(got, m.Target)
 		}
 	}
@@ -193,7 +208,7 @@ func TestPrivSteps(t *testing.T) {
 	if idx[PrivNoNewPrivs] != 0 {
 		t.Error("no_new_privs first")
 	}
-	if !reflect.DeepEqual(StartCaps(), []uintptr{8, 21}) {
+	if !reflect.DeepEqual(StartCaps(), []uintptr{8, 12, 21}) {
 		t.Errorf("start caps %v", StartCaps())
 	}
 }

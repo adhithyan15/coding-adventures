@@ -27,7 +27,7 @@ func newHostFixture(t *testing.T) *hostFixture {
 	}
 	f := &hostFixture{base: base}
 	repo := filepath.Join(base, "repo")
-	for _, d := range []string{"repo/pkg", "repo/.git", "home", "tmp", "bin", "state"} {
+	for _, d := range []string{"repo/pkg", "repo/.git", "home", "home/present-mask", "tmp", "bin", "state"} {
 		if err := os.MkdirAll(filepath.Join(base, d), 0o755); err != nil {
 			t.Fatal(err)
 		}
@@ -44,7 +44,7 @@ func newHostFixture(t *testing.T) *hostFixture {
 		Home:        filepath.Join(base, "home"),
 		Tmpdir:      filepath.Join(base, "tmp"),
 		StateRoots:  []string{filepath.Join(base, "state"), filepath.Join(base, "state2", "deeper")},
-		Masks:       []string{filepath.Join(repo, ".git"), filepath.Join(base, "absent-mask")},
+		Masks:       []string{filepath.Join(repo, ".git"), filepath.Join(base, "home", "present-mask")},
 		EnvByAction: map[string][]string{"pkg": {"A=b"}},
 		KilnExe:     f.exe,
 	}
@@ -88,7 +88,7 @@ func TestCheckHostRefusals(t *testing.T) {
 			os.WriteFile(f.cfg.RepoRoot, []byte("x"), 0o644)
 			h.Cwd = filepath.Join(f.cfg.RepoRoot, "pkg")
 		}, "not a real directory"},
-		{"home missing", func(f *hostFixture, h *HostFacts) { os.Remove(f.cfg.Home) }, "no such file"},
+		{"home missing", func(f *hostFixture, h *HostFacts) { os.RemoveAll(f.cfg.Home) }, "no such file"},
 		{"tmpdir is a symlink", func(f *hostFixture, h *HostFacts) {
 			os.Remove(f.cfg.Tmpdir)
 			os.Symlink(f.cfg.Home, f.cfg.Tmpdir)
@@ -124,17 +124,34 @@ func TestCheckHostRefusals(t *testing.T) {
 		}, "not canonical"},
 		{"mask missing inside the checkout", func(f *hostFixture, h *HostFacts) {
 			os.RemoveAll(filepath.Join(f.cfg.RepoRoot, ".git"))
-		}, "step could create it"},
-		{"mask under a symlinked missing ancestor", func(f *hostFixture, h *HostFacts) {
+		}, "does not exist"},
+		{"mask missing outside the checkout", func(f *hostFixture, h *HostFacts) {
+			f.cfg.Masks = []string{filepath.Join(f.base, "nope")}
+		}, "does not exist"},
+		{"mask under a symlinked ancestor", func(f *hostFixture, h *HostFacts) {
 			os.Symlink(f.base, filepath.Join(f.base, "evil"))
-			f.cfg.Masks = []string{filepath.Join(f.base, "evil", "nothing", "here")}
+			f.cfg.Masks = []string{filepath.Join(f.base, "evil", "home")}
 		}, "not canonical"},
+		{"kiln path is a symlink", func(f *hostFixture, h *HostFacts) {
+			link := filepath.Join(f.base, "kiln-link")
+			os.Symlink(f.exe, link)
+			f.cfg.KilnExe, h.Exe = link, link
+		}, "not canonical"},
+		{"config path is a symlink", func(f *hostFixture, h *HostFacts) {
+			link := filepath.Join(f.base, "cfg-link.json")
+			os.Symlink(f.conf, link)
+			h.ConfigPath = link
+		}, "not canonical"},
+		{"config missing", func(f *hostFixture, h *HostFacts) { os.Remove(f.conf) }, "cannot resolve the configuration"},
+		{"binary in a state root", func(f *hostFixture, h *HostFacts) {
+			f.cfg.StateRoots = []string{filepath.Join(f.base, "bin")}
+		}, "inside"},
 		{"binary inside the checkout via symlink", func(f *hostFixture, h *HostFacts) {
 			real := filepath.Join(f.cfg.RepoRoot, "kiln-real")
 			os.WriteFile(real, []byte("x"), 0o755)
 			os.Remove(f.exe)
 			os.Symlink(real, f.exe)
-		}, "inside repo_root"},
+		}, "the kiln binary is inside"},
 		{"binary missing", func(f *hostFixture, h *HostFacts) { os.Remove(f.exe) }, "cannot resolve"},
 	}
 	for _, tc := range cases {
@@ -150,13 +167,8 @@ func TestCheckHostRefusals(t *testing.T) {
 	}
 }
 
-func TestCheckHostMaskOutsideTheCheckoutMayBeAbsent(t *testing.T) {
+func TestCheckHostMaskMayBeAFile(t *testing.T) {
 	f := newHostFixture(t)
-	f.cfg.Masks = []string{filepath.Join(f.base, "nope", "a", "b"), filepath.Join(f.cfg.Home, "a")}
-	if err := f.cfg.CheckHost("pkg", f.facts()); err != nil {
-		t.Fatal(err)
-	}
-	// An existing mask file is fine too (it becomes an empty file).
 	file := filepath.Join(f.base, "github_env")
 	os.WriteFile(file, nil, 0o644)
 	f.cfg.Masks = []string{file}

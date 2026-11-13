@@ -12,17 +12,34 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
 	"syscall"
 	"testing"
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
+
+// requireEnv turns every skip in this file into a failure.  CI sets it, so a
+// runner that cannot give the sandbox its namespaces fails loudly instead of
+// reporting a green run in which nothing was tested.
+const requireEnv = "KILN_REQUIRE_SANDBOX"
+
+// skipOrFail skips the test, or fails it when the sandbox is required.
+func skipOrFail(t *testing.T, format string, args ...any) {
+	t.Helper()
+	if os.Getenv(requireEnv) == "1" {
+		t.Fatalf(requireEnv+"=1 forbids skipping: "+format, args...)
+	}
+	t.Skipf(format, args...)
+}
 
 const probeCommand = "sandbox-probe"
 
@@ -63,6 +80,34 @@ func probe(out *os.File) int {
 	go func() { close(done) }()
 	<-done
 	out.WriteString("threads=ok\n")
+	// The network namespace has a working loopback and nothing else.
+	if ln, err := net.Listen("tcp", "127.0.0.1:0"); err != nil {
+		out.WriteString("loopback=" + err.Error() + "\n")
+	} else {
+		go func() {
+			if c, err := ln.Accept(); err == nil {
+				c.Close()
+			}
+		}()
+		if c, err := net.DialTimeout("tcp", ln.Addr().String(), 5*time.Second); err != nil {
+			out.WriteString("loopback=" + err.Error() + "\n")
+		} else {
+			c.Close()
+			out.WriteString("loopback=ok\n")
+		}
+		ln.Close()
+	}
+	if c, err := net.DialTimeout("tcp", "192.0.2.1:80", 2*time.Second); err == nil {
+		c.Close()
+		out.WriteString("external=reachable\n")
+	} else {
+		out.WriteString("external=refused\n")
+	}
+	if _, err := net.DialTimeout("unix", "/run/docker.sock", time.Second); err == nil {
+		out.WriteString("docker=reachable\n")
+	} else {
+		out.WriteString("docker=refused\n")
+	}
 	return 0
 }
 
@@ -77,7 +122,6 @@ type sandboxFixture struct {
 // and skips if the kernel will not give us a user namespace.
 func newSandboxFixture(t *testing.T) *sandboxFixture {
 	t.Helper()
-	probeUserNS(t)
 	base, err := filepath.EvalSymlinks(t.TempDir())
 	if err != nil {
 		t.Fatal(err)
@@ -103,6 +147,7 @@ func newSandboxFixture(t *testing.T) *sandboxFixture {
 	f.env = []string{"HOME=" + f.home, "TMPDIR=" + f.tmp, "PATH=/usr/bin:/bin", "LANG=C.UTF-8", "TZ=UTC", "PROBE=" + f.exe}
 	f.cfg = filepath.Join(base, "cfg.json")
 	f.writeConfig(t, nil)
+	probeSandbox(t, f)
 	return f
 }
 
@@ -127,14 +172,31 @@ func (f *sandboxFixture) writeConfig(t *testing.T, edit func(*sandbox.Config)) {
 	}
 }
 
-// probeUserNS skips when unprivileged user namespaces are unavailable: the
-// documented condition of KILN04 section 4.3 ("No namespaces, no recording").
-func probeUserNS(t *testing.T) {
+var (
+	probeOnce sync.Once
+	probeErr  string
+)
+
+// probeSandbox skips (or, with KILN_REQUIRE_SANDBOX=1, fails) when the kernel
+// will not give the sandbox what it needs.  It probes the real thing, once: a
+// trivial step through `sandbox-exec` needs a user namespace, a write of the
+// id maps, mounts (tmpfs, bind, mount_setattr, proc, pivot_root), a network
+// namespace and its loopback, and seccomp.  A status of 125 means the sandbox
+// could not be built, and its stderr says why.
+func probeSandbox(t *testing.T, f *sandboxFixture) {
 	t.Helper()
-	cmd := exec.Command("/bin/true")
-	cmd.SysProcAttr = &syscall.SysProcAttr{Cloneflags: syscall.CLONE_NEWUSER}
-	if err := cmd.Run(); err != nil {
-		t.Skipf("unprivileged user namespaces are unavailable here (%v); on Ubuntu runners run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0", err)
+	probeOnce.Do(func() {
+		cmd := exec.Command(f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "true")
+		cmd.Dir = f.pkg
+		cmd.Env = []string{"KILN_ACTION=pkg", "PATH=/usr/bin:/bin"}
+		var eb bytes.Buffer
+		cmd.Stderr = &eb
+		if err := cmd.Run(); err != nil {
+			probeErr = err.Error() + ": " + strings.TrimSpace(eb.String())
+		}
+	})
+	if probeErr != "" {
+		skipOrFail(t, "the sandbox cannot be built here (%s); on Ubuntu runners run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0", probeErr)
 	}
 }
 
@@ -236,6 +298,7 @@ func TestSandboxSeccompRefusals(t *testing.T) {
 	for _, want := range []string{
 		"clone-untraced=operation not permitted", "clone-newuser=operation not permitted", "unshare=operation not permitted",
 		"mount=operation not permitted", "ptrace=operation not permitted", "clone3=function not implemented", "threads=ok",
+		"loopback=ok", "external=refused", "docker=refused",
 	} {
 		if !strings.Contains(r.stdout, want) {
 			t.Errorf("output lacks %q:\n%s", want, r.stdout)
@@ -365,5 +428,133 @@ func TestSandboxInitRefusesToRunOutsideANamespace(t *testing.T) {
 	err := cmd.Run()
 	if ee, ok := err.(*exec.ExitError); !ok || ee.ExitCode() != sandbox.ExitFailure || !strings.Contains(eb.String(), "PID 1") {
 		t.Errorf("%v %q", err, eb.String())
+	}
+}
+
+func TestSandboxStepCannotSignalOutside(t *testing.T) {
+	f := newSandboxFixture(t)
+	// The step is its own session and process group leader inside a PID
+	// namespace of its own: kill(0, sig) reaches only itself (ignored: it is
+	// PID 1).  Were it in strace's group, these would kill strace and the
+	// build tool, and this test process with them.
+	r := f.sandboxRun(t, "pkg", "sh", "-c", "kill -USR1 0; kill -KILL 0; echo alive; cut -d' ' -f5,6 /proc/self/stat")
+	if r.code != 0 || !strings.HasPrefix(r.stdout, "alive\n") {
+		t.Fatalf("exit %d, stdout %q, stderr %q", r.code, r.stdout, r.stderr)
+	}
+	// pgrp and session of a child of the step: both are the step's (pid 1).
+	if got := strings.TrimSpace(strings.TrimPrefix(r.stdout, "alive\n")); got != "1 1" {
+		t.Errorf("process group and session %q, want %q", got, "1 1")
+	}
+	// This process, and its process group, are alive: we are still running.
+	if err := syscall.Kill(0, 0); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestSandboxNoHostIPC(t *testing.T) {
+	f := newSandboxFixture(t)
+	script := strings.Join([]string{
+		`sed -n '3,$p' /proc/net/dev | cut -d: -f1 | tr -d ' '`,
+		`for p in /run/docker.sock /var/run/docker.sock /run/user /run/dbus /var/run/dbus; do test -e $p && echo "present:$p"; done`,
+		`echo "run:$(ls -A /run | wc -l)"`,
+		`echo "dev:$(ls -A /dev | tr '\n' ' ')"`,
+		`echo x > /dev/null && echo devnull-ok`,
+		`if echo x > /dev/leak 2>/dev/null; then echo dev-writable; else echo dev-readonly; fi`,
+		`if echo x > /run/leak 2>/dev/null; then echo run-writable; else echo run-readonly; fi`,
+		`echo "core:$(ulimit -c)"`,
+		`echo "ipc:$(cat /proc/sysvipc/shm | wc -l)"`,
+	}, "; ")
+	r := f.sandboxRun(t, "pkg", "sh", "-c", script)
+	if r.code != 0 {
+		t.Fatalf("exit %d: %s", r.code, r.stderr)
+	}
+	out := r.stdout
+	if !strings.HasPrefix(out, "lo\nrun:0\n") {
+		t.Errorf("network interfaces: %q (want lo only)", out)
+	}
+	if strings.Contains(out, "present:") {
+		t.Errorf("a host service path exists:\n%s", out)
+	}
+	for _, want := range []string{"run:0", "dev:fd full null random stderr stdin stdout tty urandom zero ", "devnull-ok", "dev-readonly", "run-readonly", "core:0", "ipc:1"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("output lacks %q:\n%s", want, out)
+		}
+	}
+}
+
+// requiredTraceSet is the -e trace= set of KILN04 section 4.3.
+const requiredTraceSet = "%file,%process,%network,getdents,getdents64,fchdir," +
+	"io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount," +
+	"fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace," +
+	"process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark," +
+	"fchmod,fchown,fsetxattr,fremovexattr,futimens"
+
+// TestSandboxRealStrace runs the sandbox under the real strace the way the
+// recorder will, and parses the trace with the stage 1a parser in helper mode.
+// It pins what the canned fixtures only assume: that the root makes exactly one
+// spawn and nothing after it (no pidfd-probe clone from os/exec, no mapping
+// writes), that the init's setup is tolerated, that --kill-on-exit is accepted,
+// and strace's escaping of the -y annotation.
+func TestSandboxRealStrace(t *testing.T) {
+	straceBin, err := exec.LookPath("strace")
+	if err != nil {
+		skipOrFail(t, "strace is not installed")
+	}
+	f := newSandboxFixture(t)
+	data := filepath.Join(f.pkg, "data.txt")
+	if err := os.WriteFile(data, []byte("hello\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	trf := filepath.Join(f.base, "trace.txt")
+	args := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "-e", "signal=none",
+		"-e", "trace=" + requiredTraceSet, "-o", trf, "--",
+		f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat " + data}
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, straceBin, args...)
+	cmd.Dir = f.pkg
+	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
+	var out, eb bytes.Buffer
+	cmd.Stdout, cmd.Stderr = &out, &eb
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("strace: %v\nstderr: %s", err, eb.String())
+	}
+	if eb.Len() != 0 {
+		t.Fatalf("strace wrote to standard error: %q", eb.String())
+	}
+	if out.String() != "hello\n" {
+		t.Fatalf("step output %q", out.String())
+	}
+	fh, err := os.Open(trf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer fh.Close()
+	tr, err := trace.ParseOptions(fh, f.pkg, trace.Options{HelperRoot: true, HelperExe: f.exe})
+	if err != nil {
+		raw, _ := os.ReadFile(trf)
+		if len(raw) > 6000 {
+			raw = raw[:6000]
+		}
+		t.Fatalf("the trace was refused: %v\n--- trace head ---\n%s", err, raw)
+	}
+	if ex := tr.StepExit(); ex == nil || ex.Killed || ex.Code != 0 {
+		t.Errorf("step exit %+v", ex)
+	}
+	step := tr.StepEvent()
+	if step == nil || !strings.HasSuffix(step.Path, "/sh") || len(step.Argv) != 3 || step.Argv[0] != "sh" || step.Argv[1] != "-c" {
+		t.Fatalf("step event %+v", step)
+	}
+	var sawCatExec, sawRead bool
+	for _, e := range tr.Events {
+		if e.Syscall == "execve" && e.Result.OK && strings.HasSuffix(e.Path, "/cat") {
+			sawCatExec = true
+		}
+		if (e.Syscall == "openat" || e.Syscall == "open") && e.Result.OK && e.Path == data {
+			sawRead = true
+		}
+	}
+	if !sawCatExec || !sawRead {
+		t.Errorf("exec of cat: %v, read of %s: %v", sawCatExec, data, sawRead)
 	}
 }

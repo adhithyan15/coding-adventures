@@ -51,10 +51,11 @@ func PrivSteps() []PrivStep {
 // They are gone after PrivSteps.
 const (
 	CapSetpcap  = 8  // PR_CAPBSET_DROP and changing inheritable sets
+	CapNetAdmin = 12 // bringing the loopback interface up in the new network namespace
 	CapSysAdmin = 21 // mount, pivot_root, unshare(CLONE_FS), writing id maps
 )
 
 // StartCaps is the ambient set the root asks the kernel to give the init, so
 // the capabilities of its new user namespace survive the exec of a non-root
 // uid.
-func StartCaps() []uintptr { return []uintptr{CapSetpcap, CapSysAdmin} }
+func StartCaps() []uintptr { return []uintptr{CapSetpcap, CapNetAdmin, CapSysAdmin} }

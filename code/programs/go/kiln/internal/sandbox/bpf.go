@@ -87,6 +87,20 @@ var RefusedSyscalls = []Syscall{
 	{"process_vm_readv", 310},
 	{"pidfd_getfd", 438},
 	{"bpf", 321},
+	// Added by the stage 3b review: more ways to reach the host or to read
+	// without a path.  io_uring_enter and _register are useless without a
+	// setup, but a descriptor could in principle be inherited, and a refused
+	// call costs nothing.
+	{"io_uring_enter", 426},
+	{"io_uring_register", 427},
+	{"process_vm_writev", 311},
+	{"userfaultfd", 323},
+	{"kexec_load", 246},
+	{"kexec_file_load", 320},
+	{"perf_event_open", 298},
+	{"add_key", 248},
+	{"request_key", 249},
+	{"keyctl", 250},
 }
 
 // Syscall numbers the filter treats specially.

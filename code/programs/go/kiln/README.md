@@ -396,12 +396,19 @@ and for every `CLONE_NEW*`; ENOSYS for `clone3`; any non-x86-64 ABI is killed).
 Its environment is exactly the configured list, standard input is `/dev/null`,
 and when it exits (it is PID 1) the kernel kills everything left behind.
 
+- **No network, no host IPC.** The step runs in empty network, IPC and UTS
+  namespaces (only `lo`, up), `/run` and `/var/run` are empty, `/dev` holds
+  only `null`, `zero`, `full`, `random`, `urandom` and `tty`, and it runs in a
+  session of its own, so it cannot signal strace. The recorder runs strace with
+  `--kill-on-exit` and must make the step's descriptors 1 and 2 pipes.
 - **linux/amd64 only.** Elsewhere the command prints why and exits 125.
 - **Needs unprivileged user namespaces.** On hosted Ubuntu runners:
   `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0`.
 - The pure parts (configuration, mount plan, BPF program, privilege-drop
   sequence) are tested on every OS. The end-to-end tests are Linux-only and
   skip when namespaces are unavailable.
+- CI: the required `kiln-sandbox` job runs `KILN_REQUIRE_SANDBOX=1 go test -run
+  Sandbox` (a skip is a failure) including a run under the real `strace`.
 - Exit status: the step's; 125 when the sandbox could not be built; 127 when the
   step's command was not found.
 

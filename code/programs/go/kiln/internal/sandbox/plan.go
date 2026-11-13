@@ -49,11 +49,39 @@ const (
 	// over a directory, an empty file over anything else.  Which one is
 	// decided when the target is looked at.
 	KindMask MountKind = "mask"
+	// KindDev replaces /dev with a minimal tmpfs: the DevNodes bound from the
+	// host's, the DevLinks, nothing else (no /dev/kvm, /dev/fuse, /dev/pts).
+	KindDev MountKind = "dev"
 	// KindProc mounts a fresh /proc for the new PID namespace.
 	KindProc MountKind = "proc"
 	// KindPivot makes the new root the root and detaches the old one.
 	KindPivot MountKind = "pivot"
+	// KindVerifyAbsent checks, after the pivot, that none of HostIPCPaths exists.
+	KindVerifyAbsent MountKind = "verify-absent"
 )
+
+// DevNodes are the only device nodes the step gets, bound from the host's /dev.
+var DevNodes = []string{"null", "zero", "full", "random", "urandom", "tty"}
+
+// DevLink is a symlink of the minimal /dev.
+type DevLink struct{ Name, Target string }
+
+// DevLinks are the minimal /dev's symlinks.
+var DevLinks = []DevLink{
+	{"fd", "/proc/self/fd"}, {"stdin", "/proc/self/fd/0"}, {"stdout", "/proc/self/fd/1"}, {"stderr", "/proc/self/fd/2"},
+}
+
+// RunDirs are masked, empty, in every sandbox: the host's service sockets live
+// there (/run/docker.sock is host root to anything that can connect to it).
+var RunDirs = []string{"/run", "/var/run"}
+
+// HostIPCPaths must not exist in the sandbox once it is built.  The helper
+// refuses to run the step (exit 125) if any does.
+var HostIPCPaths = []string{"/run/docker.sock", "/var/run/docker.sock", "/run/user", "/run/dbus", "/var/run/dbus"}
+
+// reserved are the places no configured path may lie in: the sandbox replaces
+// them.
+var reserved = []string{"/dev", "/run", "/var/run"}
 
 // Mount is one step of the plan.  Target is where it acts: for the "stage"
 // kinds and KindMakePrivate, KindHostMkdir and KindRootBind's source, a path
@@ -69,6 +97,10 @@ type Mount struct {
 	// InRepo marks a KindMask whose target lies inside the checkout, where a
 	// missing target is a refusal (the step could create it).
 	InRepo bool
+	// Optional marks a KindMask that is skipped when the target is absent or a
+	// symlink (/var/run is usually a symlink to /run).  Configured masks are
+	// never optional.
+	Optional bool
 }
 
 // StageDirName is the directory, under TMPDIR, the new root is built in.
@@ -86,6 +118,9 @@ func tmpfsData(mode string) string {
 
 // maskData bounds a mask's tmpfs to one page and one inode: it only has to be
 // empty.
+// devData bounds the minimal /dev and makes it the step's.
+var devData = fmt.Sprintf("mode=0755,size=64k,nr_inodes=64,uid=%d,gid=%d", InsideID, InsideID)
+
 const maskData = "mode=0555,size=4k,nr_inodes=2"
 
 // Plan returns the ordered mount steps for a configuration.  It is pure: the
@@ -96,13 +131,14 @@ const maskData = "mode=0555,size=4k,nr_inodes=2"
 //  2. Create the state roots on the host.
 //  3. Mount the staging tmpfs on TMPDIR and create the new root's directory.
 //  4. Recursively bind "/" onto it and make that whole tree read-only.
+//     4a. Replace /dev with a minimal tmpfs, and mask /run and /var/run.
 //  5. Mount fresh tmpfs over HOME and TMPDIR (the shallower first).
 //  6. Bind the repository, writable, at its own path.
 //  7. Bind each state root, writable.
 //  8. Mask: .git, the trace and ledger directories, and the rest, shallowest
 //     first.
 //  9. Mount a fresh /proc with hidepid=2.
-//  10. Pivot into the new root.
+//  10. Pivot into the new root, then verify no host IPC path exists.
 //
 // Home and TMPDIR come before the repository and the state roots because the
 // checkout may live under $HOME: the tmpfs would hide a bind made earlier.
@@ -121,6 +157,10 @@ func Plan(c *Config) ([]Mount, error) {
 		Mount{Kind: KindRootBind, Source: "/", Target: stage, Flags: MsBind | MsRec},
 		Mount{Kind: KindReadOnly, Target: stage},
 	)
+	plan = append(plan, Mount{Kind: KindDev, Target: "/dev", FSType: "tmpfs", Flags: MsNosuid | MsNoexec, Data: devData})
+	for _, d := range RunDirs {
+		plan = append(plan, Mount{Kind: KindMask, Target: d, FSType: "tmpfs", Flags: MsRdonly | MsNosuid | MsNodev | MsNoexec, Data: maskData, Optional: true})
+	}
 	scratch := []struct{ p, mode string }{{c.Home, "0755"}, {c.Tmpdir, "1777"}}
 	if within(c.Home, c.Tmpdir) {
 		scratch[0], scratch[1] = scratch[1], scratch[0] // mount the parent first
@@ -152,6 +192,7 @@ func Plan(c *Config) ([]Mount, error) {
 	plan = append(plan,
 		Mount{Kind: KindProc, Source: "proc", Target: "/proc", FSType: "proc", Flags: MsNosuid | MsNodev | MsNoexec, Data: "hidepid=2"},
 		Mount{Kind: KindPivot, Target: stage},
+		Mount{Kind: KindVerifyAbsent},
 	)
 	return plan, nil
 }

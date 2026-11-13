@@ -188,6 +188,9 @@ func buildTable() map[string]entry {
 		"fsopen", "fsmount", "fsconfig", "fspick", "open_tree", "move_mount", "mount_setattr",
 		"pivot_root", "chroot", "unshare", "setns", "ptrace", "process_vm_readv",
 		"pidfd_getfd", "bpf",
+		// The sandbox filter also refuses these (KILN04 section 4.7).
+		"io_uring_enter", "io_uring_register", "process_vm_writev", "userfaultfd",
+		"kexec_load", "kexec_file_load", "perf_event_open", "add_key", "request_key", "keyctl",
 		// clone3's flags are not visible to the seccomp filter, so any clone3
 		// that reaches a trace is refused (§4.4).
 		"clone3",

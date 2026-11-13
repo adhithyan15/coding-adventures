@@ -132,6 +132,14 @@ func TestValidateRefusals(t *testing.T) {
 		{"mask covers home", func(c *Config) { c.Masks = []string{"/home"} }, "covers"},
 		{"mask is tmpdir", func(c *Config) { c.Masks = []string{c.Tmpdir} }, "covers"},
 		{"mask covers state", func(c *Config) { c.Masks = []string{"/home/runner/.cargo"} }, "covers"},
+		{"mask deep in repo", func(c *Config) { c.Masks = []string{c.RepoRoot + "/a/.git"} }, "direct child"},
+		{"mask in state root", func(c *Config) { c.Masks = []string{c.StateRoots[0] + "/x"} }, "state root"},
+		{"kiln in state root", func(c *Config) { c.KilnExe = c.StateRoots[0] + "/kiln" }, "kiln_exe"},
+		{"kiln in tmpdir", func(c *Config) { c.KilnExe = c.Tmpdir + "/kiln" }, "kiln_exe"},
+		{"repo in /run", func(c *Config) { c.RepoRoot, c.Masks = "/run/work", nil }, "replaces"},
+		{"home in /dev", func(c *Config) { c.Home, c.Masks = "/dev/home", nil }, "replaces"},
+		{"tmpdir in /var/run", func(c *Config) { c.Tmpdir = "/var/run/t" }, "replaces"},
+		{"state in /run", func(c *Config) { c.StateRoots = []string{"/run/state"} }, "replaces"},
 		{"dup mask", func(c *Config) { c.Masks = []string{"/a", "/a"} }, "duplicate mask"},
 		{"too many masks", func(c *Config) {
 			c.Masks = nil

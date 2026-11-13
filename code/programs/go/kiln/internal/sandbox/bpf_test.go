@@ -100,8 +100,8 @@ func TestFilterX32IsKilled(t *testing.T) {
 
 func TestFilterRefusedCallsGetEPERM(t *testing.T) {
 	p := filter(t)
-	if len(RefusedSyscalls) != 20 {
-		t.Fatalf("the refused table has %d calls; KILN04 section 4.4 names 20", len(RefusedSyscalls))
+	if len(RefusedSyscalls) != 30 {
+		t.Fatalf("the refused table has %d calls; KILN04 section 4.4 names 30", len(RefusedSyscalls))
 	}
 	want := RetErrno | Eperm
 	seen := map[uint32]bool{}
@@ -190,8 +190,8 @@ func TestFilterAllowsEverythingElse(t *testing.T) {
 		refused[s.Nr] = true
 	}
 	// read, write, open, execve, exit_group, openat, getdents64, seccomp,
-	// prctl, futex, execveat, io_uring_enter (useless without a setup).
-	for _, nr := range []uint32{0, 1, 2, 59, 231, 257, 217, 317, 157, 202, 322, 426, 0x3ff} {
+	// prctl, futex, execveat.
+	for _, nr := range []uint32{0, 1, 2, 59, 231, 257, 217, 317, 157, 202, 322, 0x3ff} {
 		if refused[nr] {
 			t.Fatalf("test bug: %d is refused", nr)
 		}
@@ -257,6 +257,8 @@ func TestFilterKnownNumbers(t *testing.T) {
 		"unshare": 272, "setns": 308, "bpf": 321, "io_uring_setup": 425, "mount_setattr": 442,
 		"open_by_handle_at": 304, "name_to_handle_at": 303, "pidfd_getfd": 438, "process_vm_readv": 310,
 		"fsopen": 430, "fsconfig": 431, "fsmount": 432, "fspick": 433, "open_tree": 428, "move_mount": 429,
+		"io_uring_enter": 426, "io_uring_register": 427, "process_vm_writev": 311, "userfaultfd": 323,
+		"kexec_load": 246, "kexec_file_load": 320, "perf_event_open": 298, "add_key": 248, "request_key": 249, "keyctl": 250,
 	}
 	for _, s := range RefusedSyscalls {
 		if want[s.Name] != s.Nr {

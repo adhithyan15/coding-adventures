@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"runtime"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"syscall"
@@ -22,6 +23,7 @@ func Supported() bool { return true }
 const (
 	sysMountSetattr = 442
 	sysCloseRange   = 436
+	oPath           = 0x200000
 
 	atFdcwd         = -100
 	atRecursive     = 0x8000
@@ -39,7 +41,6 @@ const (
 	closeRangeCloexec = 4
 	cloneFS           = 0x200
 	linuxCapabilityV3 = 0x20080522
-	fallbackFdCeiling = 4096
 )
 
 // RunExec is `kiln sandbox-exec --config <path> -- <argv...>`: the ROOT of the
@@ -85,8 +86,16 @@ func RunExec(args []string, stderr io.Writer) int {
 	if _, err := Plan(cfg); err != nil {
 		return fail(err)
 	}
-	devnull, err := os.Open("/dev/null")
+	// No garbage-collector worker threads appear late in the root.
+	debug.SetGCPercent(-1)
+	devnull, err := syscall.Open("/dev/null", syscall.O_RDONLY|syscall.O_CLOEXEC, 0)
 	if err != nil {
+		return fail(err)
+	}
+	// The liveness pipe: the init holds the read end and refuses to run the
+	// step if the write end (held only by this process) is gone.
+	var alive [2]int
+	if err := syscall.Pipe2(alive[:], syscall.O_CLOEXEC); err != nil {
 		return fail(err)
 	}
 	warmThreads()
@@ -97,35 +106,55 @@ func RunExec(args []string, stderr io.Writer) int {
 		"--uid", strconv.Itoa(os.Getuid()), "--gid", strconv.Itoa(os.Getgid()),
 		"--",
 	}, ea.Argv...)
-	// Cloneflags creates the three namespaces in the one clone.  There are no
-	// UidMappings here on purpose: Go would write them from THIS process after
-	// the clone (an openat the parser's model of the root forbids), so the
-	// init maps its own ids, which the kernel allows for a single id.
-	// No Pdeathsig here either: Go's child checks getppid() against the
-	// parent's pid, which is 0 in a new PID namespace, and would kill itself.
-	// The init sets PR_SET_PDEATHSIG for itself.
-	// AmbientCaps lets the init keep its new user namespace's capabilities
-	// across the exec of a non-root uid.  The environment is EMPTY: the init
-	// gets everything it needs on its command line.
-	proc, err := os.StartProcess("/proc/self/exe", initArgv, &os.ProcAttr{
+	// One clone creates the five namespaces.  Network, IPC and UTS isolate the
+	// step from the host's services (docker.sock, D-Bus, abstract sockets,
+	// loopback listeners, SysV and POSIX IPC).  The decisions behind the rest:
+	//
+	//   - No UidMappings: Go would write them from THIS process after the
+	//     clone (an openat the parser's model of the root forbids), so the init
+	//     maps its own ids, which the kernel allows for a single id.
+	//   - No Pdeathsig: Go's child checks getppid() against the parent's pid,
+	//     which is 0 in a new PID namespace, and would kill itself.  The init
+	//     sets PR_SET_PDEATHSIG itself and checks the liveness pipe.
+	//   - Setsid: the step must not share the session or process group of
+	//     strace, this process and the build tool, or kill(0, sig) would reach
+	//     them (strace dying detaches its tracees).
+	//   - AmbientCaps: the init keeps its new user namespace's capabilities
+	//     across the exec of a not-yet-mapped uid.
+	//   - Env is EMPTY: the init gets everything on its command line.
+	//   - syscall.ForkExec, not os.StartProcess: os.StartProcess probes pidfd
+	//     support with a throwaway clone, a second spawn in the root.  Nothing
+	//     else before this point clones a process (the only other clones are
+	//     warmThreads' CLONE_THREAD threads).
+	pid, err := syscall.ForkExec("/proc/self/exe", initArgv, &syscall.ProcAttr{
 		Env:   []string{},
-		Files: []*os.File{devnull, os.Stdout, os.Stderr},
+		Files: []uintptr{uintptr(devnull), 1, 2, uintptr(alive[0])},
 		Sys: &syscall.SysProcAttr{
-			Cloneflags:  syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWPID,
+			Cloneflags: syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWPID |
+				syscall.CLONE_NEWIPC | syscall.CLONE_NEWUTS | syscall.CLONE_NEWNET,
+			Setsid:      true,
 			AmbientCaps: StartCaps(),
 		},
 	})
 	if err != nil {
 		return fail(fmt.Errorf("cannot start the sandbox (are unprivileged user namespaces enabled?): %v", err))
 	}
-	state, err := proc.Wait()
+	syscall.Close(devnull)
+	syscall.Close(alive[0])
+	var ws syscall.WaitStatus
+	for {
+		_, err = syscall.Wait4(pid, &ws, 0, nil)
+		if err != syscall.EINTR {
+			break
+		}
+	}
 	if err != nil {
 		return fail(err)
 	}
-	if ws, ok := state.Sys().(syscall.WaitStatus); ok && ws.Signaled() {
+	if ws.Signaled() {
 		return 128 + int(ws.Signal())
 	}
-	return state.ExitCode()
+	return ws.ExitStatus()
 }
 
 // warmThreads starts the Go runtime's worker threads BEFORE the child is
@@ -163,6 +192,7 @@ func RunInit(args []string, stderr io.Writer) int {
 	// Every setup step is made on this thread, the thread-group leader, before
 	// any other goroutine starts: the final exec must come from the leader.
 	runtime.LockOSThread()
+	debug.SetGCPercent(-1)
 	fail := func(err error) int {
 		fmt.Fprintf(stderr, "kiln sandbox-init: %v\n", err)
 		return ExitFailure
@@ -180,6 +210,15 @@ func RunInit(args []string, stderr io.Writer) int {
 	if err := prctl(prSetPdeathsig, uintptr(syscall.SIGKILL), 0, 0); err != nil {
 		return fail(fmt.Errorf("PR_SET_PDEATHSIG: %v", err))
 	}
+	// The signal is not enough: a root that died before the line above leaves
+	// no parent to signal this process.  The liveness pipe says so.
+	if err := checkRootAlive(); err != nil {
+		return fail(err)
+	}
+	// A crashing step must never invoke the host's core_pattern handler.
+	if err := syscall.Setrlimit(syscall.RLIMIT_CORE, &syscall.Rlimit{}); err != nil {
+		return fail(fmt.Errorf("RLIMIT_CORE: %v", err))
+	}
 	if err := mapIDs(ia.UID, ia.GID); err != nil {
 		return fail(err)
 	}
@@ -192,6 +231,9 @@ func RunInit(args []string, stderr io.Writer) int {
 	}
 	cfg, err := ParseConfig(data)
 	if err != nil {
+		return fail(err)
+	}
+	if err := loopbackUp(); err != nil {
 		return fail(err)
 	}
 	env, err := cfg.EnvFor(ia.Action)
@@ -296,6 +338,10 @@ func applyPlan(c *Config, plan []Mount) error {
 			err = syscall.Mount(m.Source, at(m.Target), "", m.Flags, "")
 		case KindMask:
 			err = applyMask(at(m.Target), m)
+		case KindDev:
+			err = applyDev(at(m.Target), m)
+		case KindVerifyAbsent:
+			err = verifyAbsent()
 		case KindProc:
 			err = syscall.Mount(m.Source, at(m.Target), m.FSType, m.Flags, m.Data)
 		case KindPivot:
@@ -329,24 +375,127 @@ func setReadOnlyRecursive(target string) error {
 }
 
 // applyMask hides target: an empty read-only tmpfs over a directory, the empty
-// /dev/null over anything else.  A target that is absent is skipped outside the
-// checkout and refused inside it.
+// /dev/null over anything else.  The target is opened ONCE, O_PATH|O_NOFOLLOW,
+// and everything after goes through that descriptor (/proc/self/fd/N), so what
+// was inspected is what is mounted over: there is no look-then-mount race.  A
+// symlink is refused (skipped when Optional); an absent target is refused
+// (skipped when Optional).
 func applyMask(target string, m Mount) error {
-	st, err := os.Lstat(target)
-	switch {
-	case errors.Is(err, os.ErrNotExist):
-		if m.InRepo {
-			return errors.New("absent inside the checkout")
+	fd, err := syscall.Open(target, oPath|syscall.O_NOFOLLOW|syscall.O_CLOEXEC, 0)
+	if err != nil {
+		if errors.Is(err, syscall.ENOENT) && m.Optional {
+			return nil
 		}
-		return nil
-	case err != nil:
 		return err
-	case st.Mode()&os.ModeSymlink != 0:
-		return errors.New("is a symlink")
-	case st.IsDir():
-		return syscall.Mount(m.FSType, target, m.FSType, m.Flags, m.Data)
 	}
-	return syscall.Mount("/dev/null", target, "", MsBind, "")
+	defer syscall.Close(fd)
+	var st syscall.Stat_t
+	if err := syscall.Fstat(fd, &st); err != nil {
+		return err
+	}
+	fdPath := "/proc/self/fd/" + strconv.Itoa(fd)
+	switch st.Mode & syscall.S_IFMT {
+	case syscall.S_IFLNK:
+		if m.Optional {
+			return nil
+		}
+		return errors.New("is a symlink")
+	case syscall.S_IFDIR:
+		return syscall.Mount(m.FSType, fdPath, m.FSType, m.Flags, m.Data)
+	}
+	return syscall.Mount("/dev/null", fdPath, "", MsBind, "")
+}
+
+// applyDev builds the minimal /dev: a fresh tmpfs with the DevNodes bound from
+// the host's /dev and the DevLinks, then read-only.  There is no /dev/pts, no
+// /dev/kvm, no /dev/fuse, no disks.
+func applyDev(dev string, m Mount) error {
+	if st, err := os.Lstat(dev); err != nil || !st.IsDir() {
+		return fmt.Errorf("%s is not a directory", dev)
+	}
+	if err := syscall.Mount(m.FSType, dev, m.FSType, m.Flags, m.Data); err != nil {
+		return err
+	}
+	for _, n := range DevNodes {
+		f, err := os.OpenFile(dev+"/"+n, os.O_CREATE|os.O_WRONLY|os.O_EXCL, 0o666)
+		if err != nil {
+			return err
+		}
+		f.Close()
+		if err := syscall.Mount("/dev/"+n, dev+"/"+n, "", MsBind, ""); err != nil {
+			return fmt.Errorf("bind /dev/%s: %v", n, err)
+		}
+	}
+	for _, l := range DevLinks {
+		if err := os.Symlink(l.Target, dev+"/"+l.Name); err != nil {
+			return err
+		}
+	}
+	return syscall.Mount("", dev, "", syscall.MS_REMOUNT|MsRdonly|m.Flags, "")
+}
+
+// verifyAbsent refuses to go on if a way to a host service survived: the
+// mounts of RunDirs should have hidden them.  It runs after the pivot, so it
+// looks at what the step will see.
+func verifyAbsent() error {
+	for _, p := range HostIPCPaths {
+		if _, err := os.Lstat(p); err == nil {
+			return fmt.Errorf("%s exists in the sandbox", p)
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("%s: %v", p, err)
+		}
+	}
+	return nil
+}
+
+// loopbackUp brings "lo" up in the new network namespace, which starts with
+// only a down loopback.  The step has no other network (KILN04 section 4.7);
+// tools that bind or connect on 127.0.0.1 within the step still work.
+func loopbackUp() error {
+	fd, err := syscall.Socket(syscall.AF_INET, syscall.SOCK_DGRAM|syscall.SOCK_CLOEXEC, 0)
+	if err != nil {
+		return fmt.Errorf("loopback socket: %v", err)
+	}
+	defer syscall.Close(fd)
+	var ifr struct {
+		name  [16]byte
+		flags uint16
+		_     [22]byte
+	}
+	copy(ifr.name[:], "lo")
+	const siocgifflags, siocsifflags, iffUp = 0x8913, 0x8914, 0x1
+	if _, _, e := syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), siocgifflags, uintptr(unsafe.Pointer(&ifr))); e != 0 {
+		return fmt.Errorf("SIOCGIFFLAGS lo: %v", e)
+	}
+	ifr.flags |= iffUp
+	if _, _, e := syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), siocsifflags, uintptr(unsafe.Pointer(&ifr))); e != 0 {
+		return fmt.Errorf("SIOCSIFFLAGS lo: %v", e)
+	}
+	return nil
+}
+
+// livenessFD is the descriptor the root's liveness pipe arrives on.
+const livenessFD = 3
+
+// checkRootAlive reads the liveness pipe without blocking: no data and "would
+// block" means the root still holds the write end; end of file means it is
+// gone.
+func checkRootAlive() error { return checkPipeAlive(livenessFD) }
+
+// checkPipeAlive is checkRootAlive for any descriptor.
+func checkPipeAlive(fd int) error {
+	if err := syscall.SetNonblock(fd, true); err != nil {
+		return fmt.Errorf("liveness pipe: %v", err)
+	}
+	var b [1]byte
+	n, err := syscall.Read(fd, b[:])
+	switch {
+	case err == syscall.EAGAIN:
+		return nil
+	case err == nil && n == 0:
+		return errors.New("the sandbox-exec root is gone")
+	}
+	return fmt.Errorf("liveness pipe: unexpected state (n=%d, err=%v)", n, err)
 }
 
 // pivot makes newRoot the root and detaches the old one.  pivot_root(".", ".")
@@ -482,9 +631,24 @@ func redirectStdinAndCloseFDs() error {
 		}
 	}
 	if _, _, e := syscall.RawSyscall(sysCloseRange, 3, 0xffffffff, closeRangeCloexec); e != 0 {
-		// No close_range (before Linux 5.11): mark them one by one.
-		for f := 3; f < fallbackFdCeiling; f++ {
-			syscall.RawSyscall(syscall.SYS_FCNTL, uintptr(f), syscall.F_SETFD, syscall.FD_CLOEXEC)
+		// Only a kernel without close_range (before 5.11) or without its
+		// CLOEXEC flag (before 5.11 too) gets the slow path; any other error
+		// is a failure, not a reason to guess.
+		if e != syscall.ENOSYS && e != syscall.EINVAL {
+			return fmt.Errorf("close_range: %v", e)
+		}
+		ents, err := os.ReadDir("/proc/self/fd")
+		if err != nil {
+			return fmt.Errorf("listing /proc/self/fd: %v", err)
+		}
+		for _, ent := range ents {
+			n, err := strconv.Atoi(ent.Name())
+			if err != nil || n < 3 {
+				continue
+			}
+			if _, _, e := syscall.RawSyscall(syscall.SYS_FCNTL, uintptr(n), syscall.F_SETFD, syscall.FD_CLOEXEC); e != 0 && e != syscall.EBADF {
+				return fmt.Errorf("fcntl %d: %v", n, e)
+			}
 		}
 	}
 	return nil
