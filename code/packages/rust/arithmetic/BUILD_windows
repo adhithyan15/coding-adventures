@@ -1,1 +1,26 @@
-cargo test -p arithmetic -- --nocapture
+# Windows: the VER08b runtime-capability gate (tests/runtime_capability.rs) is Linux-only
+# (seccomp/Landlock + strace) and is deliberately not run here.  Linux uses BUILD_linux
+# (strict gate), macOS uses BUILD (plain gate, NOT-LIVE without failing).
+cargo test -q -p arithmetic --lib -- --nocapture
+cargo test -q -p arithmetic --doc
+cargo test -q -p arithmetic --test adders_test --test alu_test --test bit_domain
+cargo test -q -p arithmetic --release --test bit_domain
+cargo test -q -p arithmetic --release --test warrant_evidence
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check arithmetic
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p arithmetic --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_rejects_non_bit&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=swap-components&& set WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_rejects_non_bit_a&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=drop-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=off-by-one-consumed&& set WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=swap-components&& set WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_rejects_an_empty_a&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_1_bit_exhaustive&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/alu_rejects_empty_a&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test arithmetic_proofs
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

@@ -118,7 +118,7 @@ fn prepare() -> Exercise {
         for a in 0..=1u8 {
             for b in 0..=1u8 {
                 let (s, c) = half_adder(a, b);
-                single_ok &= u8::from(s) + 2 * u8::from(c) == a + b;
+                single_ok &= s + 2 * c == a + b;
                 for cin in 0..=1u8 {
                     let (s, c) = full_adder(a, b, cin);
                     single_ok &= s + 2 * c == a + b + cin;

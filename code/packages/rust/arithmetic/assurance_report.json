@@ -1,0 +1,704 @@
+{
+  "assumptions": [
+    "att.analyzer.name-allowlist-regex-free",
+    "att.ast-audit.no-compression-routines",
+    "att.ast-audit.no-deserialization",
+    "att.ast-audit.no-legacy-ciphers",
+    "att.ast-audit.no-protocol-sinks",
+    "att.ast-call-graph.acyclic",
+    "att.language-type-system.no-prototype-pollution",
+    "att.type-signatures.unconstrained-slices",
+    "att.warrant-ir.cost-semantics-linear",
+    "gov.approval.blocked",
+    "gov.catalogue.integrity",
+    "wir.cost.step-model"
+  ],
+  "capabilities": {
+    "analyzer": "pass",
+    "certificate": "proved",
+    "declared": [],
+    "new_since_last_release": []
+  },
+  "catalogue": {
+    "evidence_kinds_sha256": "80ddc39cd9f4f3baaa245cb7fc6bfca998a5e526595eba95dae8930db9f2a391",
+    "non_claims_sha256": "22043eebae7626d36efe42f54e222e9486c61fb79c682b6a74140ad93c166f26",
+    "path": "code/assumptions/catalogue-v1.json",
+    "schema": "ver13-assumption-catalogue-v1",
+    "sha256": "8ad3cf2766136114b6f64a7c3830db6abd6fcdc614c2808a8de19091bde77a7a"
+  },
+  "claims": [
+    {
+      "evidence": [
+        "warrant/arithmetic/example/half_adder_0_0",
+        "warrant/arithmetic/example/half_adder_0_1",
+        "warrant/arithmetic/example/half_adder_1_0",
+        "warrant/arithmetic/example/half_adder_1_1",
+        "warrant/arithmetic/example/half_adder_second_input_rejected",
+        "warrant/arithmetic/example/half_adder_two_rejected",
+        "warrant/arithmetic/exhaustive/half_adder_counts_ones",
+        "warrant/arithmetic/exhaustive/half_adder_rejects_non_bit",
+        "warrant/arithmetic/exhaustive/half_adder_truth_table",
+        "warrant/arithmetic/fuzz/half_adder_counts_ones",
+        "warrant/arithmetic/fuzz/half_adder_rejects_non_bit",
+        "warrant/arithmetic/fuzz/half_adder_truth_table",
+        "warrant/arithmetic/negctl/example/half_adder/drop-consumed",
+        "warrant/arithmetic/negctl/example/half_adder/missing-error",
+        "warrant/arithmetic/negctl/example/half_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/example/half_adder/swap-components",
+        "warrant/arithmetic/negctl/exhaustive/half_adder/drop-consumed",
+        "warrant/arithmetic/negctl/exhaustive/half_adder/missing-error",
+        "warrant/arithmetic/negctl/exhaustive/half_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/exhaustive/half_adder/swap-components",
+        "warrant/arithmetic/negctl/fuzz/half_adder/drop-consumed",
+        "warrant/arithmetic/negctl/fuzz/half_adder/missing-error",
+        "warrant/arithmetic/negctl/fuzz/half_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/fuzz/half_adder/swap-components",
+        "warrant/arithmetic/negctl/property/half_adder/drop-consumed",
+        "warrant/arithmetic/negctl/property/half_adder/missing-error",
+        "warrant/arithmetic/negctl/property/half_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/property/half_adder/swap-components",
+        "warrant/arithmetic/property/half_adder_counts_ones",
+        "warrant/arithmetic/property/half_adder_rejects_non_bit",
+        "warrant/arithmetic/property/half_adder_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 65540,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 15000,
+        "status": "pass"
+      },
+      "id": "half_adder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 12288,
+        "status": "pass"
+      },
+      "symbol": "half_adder"
+    },
+    {
+      "evidence": [
+        "warrant/arithmetic/example/full_adder_0_0_0",
+        "warrant/arithmetic/example/full_adder_0_0_1",
+        "warrant/arithmetic/example/full_adder_0_1_0",
+        "warrant/arithmetic/example/full_adder_0_1_1",
+        "warrant/arithmetic/example/full_adder_1_0_0",
+        "warrant/arithmetic/example/full_adder_1_0_1",
+        "warrant/arithmetic/example/full_adder_1_1_0",
+        "warrant/arithmetic/example/full_adder_1_1_1",
+        "warrant/arithmetic/example/full_adder_carry_in_rejected",
+        "warrant/arithmetic/example/full_adder_first_input_rejected",
+        "warrant/arithmetic/exhaustive/full_adder_counts_ones",
+        "warrant/arithmetic/exhaustive/full_adder_rejects_non_bit_a",
+        "warrant/arithmetic/exhaustive/full_adder_rejects_non_bit_b",
+        "warrant/arithmetic/exhaustive/full_adder_rejects_non_bit_carry_in",
+        "warrant/arithmetic/exhaustive/full_adder_truth_table",
+        "warrant/arithmetic/fuzz/full_adder_counts_ones",
+        "warrant/arithmetic/fuzz/full_adder_rejects_non_bit_a",
+        "warrant/arithmetic/fuzz/full_adder_rejects_non_bit_b",
+        "warrant/arithmetic/fuzz/full_adder_rejects_non_bit_carry_in",
+        "warrant/arithmetic/fuzz/full_adder_truth_table",
+        "warrant/arithmetic/negctl/example/full_adder/drop-consumed",
+        "warrant/arithmetic/negctl/example/full_adder/missing-error",
+        "warrant/arithmetic/negctl/example/full_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/example/full_adder/swap-components",
+        "warrant/arithmetic/negctl/exhaustive/full_adder/drop-consumed",
+        "warrant/arithmetic/negctl/exhaustive/full_adder/missing-error",
+        "warrant/arithmetic/negctl/exhaustive/full_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/exhaustive/full_adder/swap-components",
+        "warrant/arithmetic/negctl/fuzz/full_adder/drop-consumed",
+        "warrant/arithmetic/negctl/fuzz/full_adder/missing-error",
+        "warrant/arithmetic/negctl/fuzz/full_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/fuzz/full_adder/swap-components",
+        "warrant/arithmetic/negctl/property/full_adder/drop-consumed",
+        "warrant/arithmetic/negctl/property/full_adder/missing-error",
+        "warrant/arithmetic/negctl/property/full_adder/off-by-one-consumed",
+        "warrant/arithmetic/negctl/property/full_adder/swap-components",
+        "warrant/arithmetic/property/full_adder_counts_ones",
+        "warrant/arithmetic/property/full_adder_rejects_non_bit_a",
+        "warrant/arithmetic/property/full_adder_rejects_non_bit_b",
+        "warrant/arithmetic/property/full_adder_rejects_non_bit_carry_in",
+        "warrant/arithmetic/property/full_adder_truth_table"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 3088,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 25000,
+        "status": "pass"
+      },
+      "id": "full_adder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 20480,
+        "status": "pass"
+      },
+      "symbol": "full_adder"
+    },
+    {
+      "evidence": [
+        "warrant/arithmetic/example/ripple_127_plus_1_overflows_in_8_bits",
+        "warrant/arithmetic/example/ripple_15_plus_1_carries_out_of_4_bits",
+        "warrant/arithmetic/example/ripple_255_plus_1_carries_out_of_8_bits",
+        "warrant/arithmetic/example/ripple_2_plus_3_is_5_in_4_bits",
+        "warrant/arithmetic/example/ripple_5_plus_3_overflows_in_4_bits",
+        "warrant/arithmetic/example/ripple_7_plus_1_overflows_in_4_bits",
+        "warrant/arithmetic/example/ripple_8_plus_8_carries_and_overflows_in_4_bits",
+        "warrant/arithmetic/example/ripple_empty_rejected",
+        "warrant/arithmetic/example/ripple_non_bit_rejected",
+        "warrant/arithmetic/example/ripple_one_bit_one_plus_one",
+        "warrant/arithmetic/example/ripple_unequal_lengths_rejected",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_1_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_2_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_3_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_equals_with_carry_zero",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_rejects_an_empty_a",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_rejects_non_bit_in_a",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_rejects_non_bit_in_b",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_16_bit_sampled",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_1_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_2_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_3_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_equals_with_carry_zero",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_rejects_an_empty_a",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_rejects_non_bit_in_a",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_rejects_non_bit_in_b",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_rejects_unequal_lengths",
+        "warrant/arithmetic/negctl/example/ripple_carry_adder/field-zero",
+        "warrant/arithmetic/negctl/example/ripple_carry_adder/missing-error",
+        "warrant/arithmetic/negctl/exhaustive/ripple_carry_adder/field-zero",
+        "warrant/arithmetic/negctl/exhaustive/ripple_carry_adder/missing-error",
+        "warrant/arithmetic/negctl/fuzz/ripple_carry_adder/field-zero",
+        "warrant/arithmetic/negctl/fuzz/ripple_carry_adder/missing-error",
+        "warrant/arithmetic/negctl/property/ripple_carry_adder/field-zero",
+        "warrant/arithmetic/negctl/property/ripple_carry_adder/missing-error",
+        "warrant/arithmetic/property/ripple_carry_adder_16_bit_sampled",
+        "warrant/arithmetic/property/ripple_carry_adder_1_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_2_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_3_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_4_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_8_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_equals_with_carry_zero",
+        "warrant/arithmetic/property/ripple_carry_adder_rejects_an_empty_a",
+        "warrant/arithmetic/property/ripple_carry_adder_rejects_non_bit_in_a",
+        "warrant/arithmetic/property/ripple_carry_adder_rejects_non_bit_in_b",
+        "warrant/arithmetic/property/ripple_carry_adder_rejects_unequal_lengths"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 357668,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 55000,
+        "status": "pass"
+      },
+      "id": "ripple_carry_adder_soundness",
+      "proof": null,
+      "property": {
+        "cases": 45056,
+        "status": "pass"
+      },
+      "symbol": "ripple_carry_adder"
+    },
+    {
+      "evidence": [
+        "warrant/arithmetic/example/ripple_with_carry_15_plus_0_plus_1_in_4_bits",
+        "warrant/arithmetic/example/ripple_with_carry_15_plus_15_plus_1_in_4_bits",
+        "warrant/arithmetic/example/ripple_with_carry_7_plus_0_plus_1_overflows",
+        "warrant/arithmetic/example/ripple_with_carry_carry_in_two_rejected",
+        "warrant/arithmetic/example/ripple_with_carry_empty_rejected",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_2_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_3_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_non_bit_in_a",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_non_bit_in_b",
+        "warrant/arithmetic/exhaustive/ripple_carry_adder_with_carry_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_16_bit_sampled",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_1_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_2_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_3_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_an_empty_a",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_non_bit_in_a",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_non_bit_in_b",
+        "warrant/arithmetic/fuzz/ripple_carry_adder_with_carry_rejects_unequal_lengths",
+        "warrant/arithmetic/negctl/example/ripple_carry_adder_with_carry/field-zero",
+        "warrant/arithmetic/negctl/example/ripple_carry_adder_with_carry/missing-error",
+        "warrant/arithmetic/negctl/exhaustive/ripple_carry_adder_with_carry/field-zero",
+        "warrant/arithmetic/negctl/exhaustive/ripple_carry_adder_with_carry/missing-error",
+        "warrant/arithmetic/negctl/fuzz/ripple_carry_adder_with_carry/field-zero",
+        "warrant/arithmetic/negctl/fuzz/ripple_carry_adder_with_carry/missing-error",
+        "warrant/arithmetic/negctl/property/ripple_carry_adder_with_carry/field-zero",
+        "warrant/arithmetic/negctl/property/ripple_carry_adder_with_carry/missing-error",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_16_bit_sampled",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_1_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_2_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_3_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_4_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_8_bit_exhaustive",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_an_empty_a",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_non_bit_carry_in",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_non_bit_in_a",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_non_bit_in_b",
+        "warrant/arithmetic/property/ripple_carry_adder_with_carry_rejects_unequal_lengths"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 649800,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 55000,
+        "status": "pass"
+      },
+      "id": "ripple_carry_adder_with_carry_soundness",
+      "proof": null,
+      "property": {
+        "cases": 45056,
+        "status": "pass"
+      },
+      "symbol": "ripple_carry_adder_with_carry"
+    },
+    {
+      "evidence": [
+        "warrant/arithmetic/example/alu_add_15_plus_1_carries_and_is_zero",
+        "warrant/arithmetic/example/alu_add_3_plus_5_in_4_bits",
+        "warrant/arithmetic/example/alu_add_7_plus_1_overflows_and_is_negative",
+        "warrant/arithmetic/example/alu_add_8_plus_8_carries_and_overflows",
+        "warrant/arithmetic/example/alu_add_zero_sets_the_zero_flag",
+        "warrant/arithmetic/example/alu_and_in_4_bits",
+        "warrant/arithmetic/example/alu_empty_not_rejected",
+        "warrant/arithmetic/example/alu_empty_rejected",
+        "warrant/arithmetic/example/alu_non_bit_in_a_rejected",
+        "warrant/arithmetic/example/alu_non_bit_in_a_rejected_by_not",
+        "warrant/arithmetic/example/alu_non_bit_in_b_rejected",
+        "warrant/arithmetic/example/alu_not_ignores_an_empty_b",
+        "warrant/arithmetic/example/alu_not_in_8_bits",
+        "warrant/arithmetic/example/alu_or_in_4_bits",
+        "warrant/arithmetic/example/alu_sub_3_minus_5_borrows",
+        "warrant/arithmetic/example/alu_sub_5_minus_3_in_4_bits",
+        "warrant/arithmetic/example/alu_sub_5_minus_5_is_zero_with_carry",
+        "warrant/arithmetic/example/alu_sub_7_minus_8_overflows",
+        "warrant/arithmetic/example/alu_sub_8_minus_1_overflows",
+        "warrant/arithmetic/example/alu_unequal_lengths_rejected",
+        "warrant/arithmetic/example/alu_xor_in_4_bits",
+        "warrant/arithmetic/exhaustive/alu_add_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_add_1_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_add_2_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_add_3_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_add_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_add_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_add_rejects_unequal_lengths",
+        "warrant/arithmetic/exhaustive/alu_and_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_and_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_and_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_and_rejects_unequal_lengths",
+        "warrant/arithmetic/exhaustive/alu_not_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_not_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_not_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_not_ignores_b",
+        "warrant/arithmetic/exhaustive/alu_or_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_or_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_or_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_or_rejects_unequal_lengths",
+        "warrant/arithmetic/exhaustive/alu_rejects_empty_a",
+        "warrant/arithmetic/exhaustive/alu_rejects_non_bit_in_a",
+        "warrant/arithmetic/exhaustive/alu_rejects_non_bit_in_b",
+        "warrant/arithmetic/exhaustive/alu_sub_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_sub_1_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_sub_2_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_sub_3_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_sub_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_sub_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_sub_rejects_unequal_lengths",
+        "warrant/arithmetic/exhaustive/alu_xor_16_bit_sampled",
+        "warrant/arithmetic/exhaustive/alu_xor_4_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_xor_8_bit_exhaustive",
+        "warrant/arithmetic/exhaustive/alu_xor_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/alu_add_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_add_1_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_add_2_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_add_3_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_add_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_add_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_add_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/alu_and_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_and_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_and_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_and_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/alu_not_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_not_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_not_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_not_ignores_b",
+        "warrant/arithmetic/fuzz/alu_or_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_or_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_or_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_or_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/alu_rejects_empty_a",
+        "warrant/arithmetic/fuzz/alu_rejects_non_bit_in_a",
+        "warrant/arithmetic/fuzz/alu_rejects_non_bit_in_b",
+        "warrant/arithmetic/fuzz/alu_sub_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_sub_1_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_sub_2_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_sub_3_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_sub_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_sub_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_sub_rejects_unequal_lengths",
+        "warrant/arithmetic/fuzz/alu_xor_16_bit_sampled",
+        "warrant/arithmetic/fuzz/alu_xor_4_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_xor_8_bit_exhaustive",
+        "warrant/arithmetic/fuzz/alu_xor_rejects_unequal_lengths",
+        "warrant/arithmetic/negctl/example/alu/missing-error",
+        "warrant/arithmetic/negctl/exhaustive/alu/missing-error",
+        "warrant/arithmetic/negctl/fuzz/alu/missing-error",
+        "warrant/arithmetic/negctl/property/alu/missing-error",
+        "warrant/arithmetic/property/alu_add_16_bit_sampled",
+        "warrant/arithmetic/property/alu_add_1_bit_exhaustive",
+        "warrant/arithmetic/property/alu_add_2_bit_exhaustive",
+        "warrant/arithmetic/property/alu_add_3_bit_exhaustive",
+        "warrant/arithmetic/property/alu_add_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_add_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_add_rejects_unequal_lengths",
+        "warrant/arithmetic/property/alu_and_16_bit_sampled",
+        "warrant/arithmetic/property/alu_and_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_and_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_and_rejects_unequal_lengths",
+        "warrant/arithmetic/property/alu_not_16_bit_sampled",
+        "warrant/arithmetic/property/alu_not_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_not_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_not_ignores_b",
+        "warrant/arithmetic/property/alu_or_16_bit_sampled",
+        "warrant/arithmetic/property/alu_or_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_or_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_or_rejects_unequal_lengths",
+        "warrant/arithmetic/property/alu_rejects_empty_a",
+        "warrant/arithmetic/property/alu_rejects_non_bit_in_a",
+        "warrant/arithmetic/property/alu_rejects_non_bit_in_b",
+        "warrant/arithmetic/property/alu_sub_16_bit_sampled",
+        "warrant/arithmetic/property/alu_sub_1_bit_exhaustive",
+        "warrant/arithmetic/property/alu_sub_2_bit_exhaustive",
+        "warrant/arithmetic/property/alu_sub_3_bit_exhaustive",
+        "warrant/arithmetic/property/alu_sub_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_sub_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_sub_rejects_unequal_lengths",
+        "warrant/arithmetic/property/alu_xor_16_bit_sampled",
+        "warrant/arithmetic/property/alu_xor_4_bit_exhaustive",
+        "warrant/arithmetic/property/alu_xor_8_bit_exhaustive",
+        "warrant/arithmetic/property/alu_xor_rejects_unequal_lengths"
+      ],
+      "example": "pass",
+      "exhaustive": {
+        "cases": 1579341,
+        "status": "pass"
+      },
+      "fuzz": {
+        "iterations": 165000,
+        "status": "pass"
+      },
+      "id": "alu_soundness",
+      "proof": null,
+      "property": {
+        "cases": 135168,
+        "status": "pass"
+      },
+      "symbol": "alu"
+    }
+  ],
+  "closure": [
+    "rust/arithmetic"
+  ],
+  "commit": "c048d6fca9c",
+  "exemptions": [
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 400,
+      "evidence": [],
+      "id": "EXEMPT-CWE-400-NO-STEP-PROOF",
+      "kind": "no-live-proof",
+      "rationale": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen))"
+    },
+    {
+      "approved": false,
+      "assumptions": [],
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "id": "EXEMPT-CWE-208-NO-SECRET-OPERANDS",
+      "kind": "not-applicable",
+      "rationale": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms"
+    }
+  ],
+  "package": "rust/arithmetic",
+  "public_symbols_without_claims": [],
+  "rungs": {
+    "E0": "pass",
+    "E1": "pass",
+    "E2": "not-live",
+    "E3": "pass",
+    "E4": "pass",
+    "E5": "not-live"
+  },
+  "verdict": "report-only",
+  "version": "0.1.0",
+  "weaknesses": [
+    {
+      "cwe": 416,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Use After Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 787,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Write",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 125,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Out-of-bounds Read",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 415,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Double Free",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 476,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "NULL Pointer Dereference",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 190,
+      "evidence": [
+        "analyzer::no-unsafe-or-ffi",
+        "effect-certificate::proved"
+      ],
+      "name": "Integer Overflow to Buffer Boundary",
+      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
+      "status": "excluded"
+    },
+    {
+      "cwe": 78,
+      "evidence": [
+        "capability-audit::proc-empty"
+      ],
+      "name": "OS Command Injection",
+      "reason": "pure computation: package declares no proc capability; analyzer verified zero process or shell execution",
+      "status": "excluded"
+    },
+    {
+      "cwe": 89,
+      "evidence": [
+        "capability-audit::no-database-sinks"
+      ],
+      "name": "SQL Injection",
+      "reason": "pure computation: package contains no database interaction or SQL query construction",
+      "status": "excluded"
+    },
+    {
+      "cwe": 22,
+      "evidence": [
+        "capability-audit::fs-empty"
+      ],
+      "name": "Path Traversal",
+      "reason": "pure computation: package declares no fs capability; analyzer verified zero filesystem operations",
+      "status": "excluded"
+    },
+    {
+      "cwe": 79,
+      "evidence": [
+        "capability-audit::ui-empty"
+      ],
+      "name": "Cross-Site Scripting (XSS)",
+      "reason": "pure computation: package declares no ui capability and renders no HTML or DOM structures",
+      "status": "excluded"
+    },
+    {
+      "cwe": 94,
+      "evidence": [
+        "capability-audit::banned-constructs-clean"
+      ],
+      "name": "Code Injection / Eval",
+      "reason": "compiled Rust: language has no dynamic code evaluation or runtime eval primitives; analyzer verified no dynamic loading",
+      "status": "excluded"
+    },
+    {
+      "cwe": 116,
+      "evidence": [
+        "unverified::ast-audit::no-protocol-sinks"
+      ],
+      "name": "Improper Output Encoding",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 117,
+      "evidence": [
+        "capability-audit::stdout-empty"
+      ],
+      "name": "Log Injection",
+      "reason": "pure computation: package declares no stdout or logging capabilities; analyzer verified zero log sinks",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "reason": "computed exemption (unapproved): no step-bound proof is live, so the Warrant steps bounds are declarations that no tool checks (parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen))",
+      "status": "exemption"
+    },
+    {
+      "cwe": 409,
+      "evidence": [
+        "unverified::ast-audit::no-compression-routines"
+      ],
+      "name": "Decompression Bomb",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 674,
+      "evidence": [
+        "unverified::ast-call-graph::acyclic"
+      ],
+      "name": "Uncontrolled Recursion",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1333,
+      "evidence": [
+        "unverified::analyzer::name-allowlist-regex-free"
+      ],
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 407,
+      "evidence": [
+        "unverified::warrant-ir::cost-semantics-linear"
+      ],
+      "name": "Inefficient Algorithmic Complexity",
+      "reason": "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "approved": false,
+      "cwe": 208,
+      "evidence": [
+        "warrant-spec::all-operands-public"
+      ],
+      "name": "Observable Timing Discrepancy",
+      "reason": "not applicable: no secret operands; the Warrant document labels every operand of every operation public, so it states no constant-time obligation and none was run. Recorded as an unapproved exemption rather than an exclusion because the registry defines no safe subset for CWE-208, and because the labels are the specification's own classification, which no analyzer here confirms",
+      "status": "exemption"
+    },
+    {
+      "cwe": 330,
+      "evidence": [
+        "capability-audit::rand-empty"
+      ],
+      "name": "Use of Insufficiently Random Values",
+      "reason": "pure computation: package performs purely deterministic computation and declares no rand capability",
+      "status": "excluded"
+    },
+    {
+      "cwe": 327,
+      "evidence": [
+        "unverified::ast-audit::no-legacy-ciphers"
+      ],
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "reason": "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 326,
+      "evidence": [
+        "unverified::type-signatures::unconstrained-slices"
+      ],
+      "name": "Inadequate Encryption Strength",
+      "reason": "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 362,
+      "evidence": [
+        "capability-audit::thread-empty"
+      ],
+      "name": "Concurrent Execution Race Condition",
+      "reason": "pure computation: package declares no thread capability and uses zero multithreading or shared mutable state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 367,
+      "evidence": [
+        "capability-audit::no-external-resources"
+      ],
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "reason": "pure computation: package interacts with no external filesystem or process state",
+      "status": "excluded"
+    },
+    {
+      "cwe": 502,
+      "evidence": [
+        "unverified::ast-audit::no-deserialization"
+      ],
+      "name": "Deserialization of Untrusted Data",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    },
+    {
+      "cwe": 1321,
+      "evidence": [
+        "unverified::language-type-system::no-prototype-pollution"
+      ],
+      "name": "Prototype Pollution",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
+      "status": "excluded"
+    }
+  ]
+}

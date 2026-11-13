@@ -1,9 +1,51 @@
-load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
-
-_targets = [
-    rust_library(
-        name = "arithmetic",
-        srcs = ["src/**/*.rs", "tests/**/*.rs"],
-        deps = [],
-    ),
-]
+cargo test -q -p arithmetic --lib -- --nocapture
+cargo test -q -p arithmetic --doc
+cargo test -q -p arithmetic --test adders_test --test alu_test --test bit_domain
+# The bit domain is also checked in the RELEASE profile: this crate's rejection of a non-bit is
+# inherited from the logic-gates guard (its SEC-007, once a debug-only `debug_assert!`), so a
+# regression there must fail THIS build, not only the gates'.  The same file passes in both
+# profiles or the build fails.
+cargo test -q -p arithmetic --release --test bit_domain
+# ... and the whole generated Warrant harness (every rejection row included) in release too.
+cargo test -q -p arithmetic --release --test warrant_evidence
+# The library is pure: no capability, test code included (the analyzer reads it).
+cargo run -q -p coding_adventures_ca_capability_analyzer -- --dir .
+# VER08b: every public operation (the adders and the ALU) runs inside a seccomp/Landlock
+# jail derived from required_capabilities.json (no capabilities), watched by an
+# independent strace.  The jail is Linux-only, so on macOS this plain run
+# reports the gate NOT-LIVE (RCG010) without failing; Linux uses BUILD_linux instead,
+# which runs the same line with RCG_STRICT=1 so a NOT-LIVE gate is a failure there.
+# (Windows uses BUILD_windows.)  Everything else in BUILD_linux is identical to this file.
+cargo test -q -p arithmetic --test runtime_capability
+# VER04h: the evidence harness is generated from code/specs/arithmetic.warrant and
+# evidence.bindings.  Fail if the checked-in file drifted, rewrite the evidence
+# manifest from a real run, and prove each sabotage mode makes a model-pinned
+# exhaustive suite of each operation report `not ok` (each filter names the cheap
+# claim that pins the faulted behaviour; a fault applies to every operation that
+# lists it, and the filter selects which operation's claim is attacked).  The ALU is
+# attacked by missing-error only: the generator's other faults need a numeric or bytes
+# result and the ALU's record has neither (AR01 "Verification status").
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check arithmetic
+WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p arithmetic --test warrant_evidence
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_rejects_non_bit cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/half_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_rejects_non_bit_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=drop-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=off-by-one-consumed WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=swap-components WARRANT_EVIDENCE_FILTER=/exhaustive/full_adder_truth_table cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_rejects_an_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_1_bit_exhaustive cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_rejects_an_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=field-zero WARRANT_EVIDENCE_FILTER=/exhaustive/ripple_carry_adder_with_carry_1_bit_exhaustive cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/alu_rejects_empty_a cargo test -q -p arithmetic --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+# No operand is secret, so there is no constant-time obligation; the steps rows are
+# attempted on the real source, the front end refuses it, and the proof manifest
+# records every steps-bound obligation `not-live` with the blocker.
+WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test arithmetic_proofs
+# VER04h: the report is derived from the manifests written above; --check
+# cross-checks it against them and fails closed on any disagreement.
+# --allow-unverified: the report still cites `unverified::` static attestations
+# (AST audits no tool re-runs, same rows as gf256, ct-compare, wasm-leb128 and logic-gates).
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

@@ -143,8 +143,9 @@ is what is under test.
 The domain checks of VER27 section 7.4 were made first (non-bit inputs at every
 position, unequal and empty operands, a hostile `b` for `Not`, width-driven
 allocation, release-profile behaviour; `tests/bit_domain.rs`, run in debug and
-release). **They found no defect in this crate**, so there is no SEC row, no
-failing-then-fixed test and no lesson for this layer: every non-bit is rejected
+release). **They found no defect in this crate**, so there is no SEC row and no
+failing-then-fixed test (the one lesson recorded is about the inherited
+rejection, below): every non-bit is rejected
 in both profiles because `logic-gates` already rejects it (its SEC-007), and
 no operation sizes anything from a caller's width. The exhaustive and sampled
 claims also found no disagreement between the crate and the integer
@@ -156,9 +157,13 @@ What was found are two properties worth stating:
 * **The rejection is inherited, not owned.** A change to a gate's guard
   changes this layer's behaviour without touching its source. Pinned in release
   (above); the contract assumed from `logic-gates` (below) names the guard.
-* **Proof-front-end refusals as design findings (VER27 section 7.4, P11).**
-  See "Verification status": the Rust-subset front end refuses `adders.rs` and
-  `alu.rs`, recorded in `evidence/proof-manifest.json`.
+* **Proof-front-end refusals as design findings (VER27 section 7.4, P11).** The
+  Rust-subset front end refuses both files (recorded in
+  `evidence/proof-manifest.json`): `adders.rs` at the `(u8, u8)` tuple return type
+  of `half_adder` and `full_adder`, and every export that destructures it
+  (`let (s, c) = full_adder(..)`) at the tuple pattern; `alu.rs` at the `enum AluOp`
+  item. None of these is a defect of the crate; a small `Sum { sum, carry }`
+  struct would shape the adders for the prover (backlog AR-001).
 
 ## Contracts this layer publishes (pending LV-005)
 
