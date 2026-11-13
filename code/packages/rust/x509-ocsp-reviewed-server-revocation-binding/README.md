@@ -133,6 +133,20 @@ no external effect and stops before responder or intermediate revocation,
 complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
 live-provider readiness.
 
+`bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation`
+is the separate authenticated-revocation alternative to that strongest-path
+no-check gate. It consumes the same complete intermediate-DNS proof plus one
+fully routed authenticated OCSP target-revocation proof, then derives the
+expected responder, target-nearest intermediate, and original server-status
+observation time exclusively through the retained evidence. Exact decoded-
+object identity and field-wise time equality are required in stable target,
+issuer, then time order. Success retains both complete non-copyable inputs;
+no raw certificate, status, freshness endpoint, path, key, signature, or time
+can be substituted. This composition performs no external effect and stops
+before policy for the added proof's responder or the retained intermediate,
+complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

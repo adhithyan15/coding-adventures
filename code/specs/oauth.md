@@ -3082,10 +3082,13 @@ authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
 An alternative bounded routed revocation follow-up consumes that same complete
 intermediate-DNS proof plus a separate fully authenticated, fully routed OCSP
-target-revocation proof. The second proof must name the exact routed responder
-certificate as its target, the exact retained intermediate as its issuer, and
-the original server-status OCSP observation time as its own explicit
-observation time. Every certificate comparison uses decoded-object identity,
+target-revocation proof.
+`bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation`
+accepts only those complete proofs. The second proof must name the exact routed
+responder certificate as its target, the exact retained intermediate as its
+issuer, and the original server-status OCSP observation time as its own
+explicit observation time. Every certificate comparison uses decoded-object
+identity,
 so byte-equal independent decodes fail closed, and stable target, issuer, and
 observation-time mismatch categories retain no certificate, response, key,
 signature, status, hostname, or time payload. Success retains both complete
