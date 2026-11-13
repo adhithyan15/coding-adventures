@@ -38,6 +38,7 @@ REQUIRED = (
     "TestSandboxRealStrace",
     "TestSandboxStraceTraceSetNamesAreValid",
     "TestSandboxROBeneathHome",
+    "TestSandboxROBeneathHomeRefusals",
     "TestSandboxOutputDescriptors",
 )
 

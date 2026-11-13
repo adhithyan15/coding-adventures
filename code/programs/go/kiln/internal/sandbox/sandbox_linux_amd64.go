@@ -379,7 +379,8 @@ func applyPlan(c *Config, plan []Mount) error {
 		case KindRootTmpfs:
 			err = syscall.Mount(m.FSType, m.Target, m.FSType, m.Flags, m.Data)
 		case KindRORoot:
-			err = applyRORoot(m.Source, at(m.Target))
+			_, beneathHome := HomeAnchor(c.Home, m.Target)
+			err = applyRORoot(m.Source, at(m.Target), beneathHome)
 		case KindTmpfs:
 			err = syscall.Mount(m.FSType, at(m.Target), m.FSType, m.Flags, m.Data)
 		case KindEnsureDir:
@@ -434,7 +435,11 @@ func setReadOnly(target string) error {
 // (a bind that would carry a mount beneath it along, which the kernel refuses
 // when that mount is locked, is a failure rather than a surprise), then made
 // read-only.  The missing parents are made on the root tmpfs.
-func applyRORoot(src, dst string) error {
+//
+// A symlink beneath home (noSymlink) is refused here as well as by CheckHost:
+// it would be an ordinary inode of home's writable tmpfs, which the step could
+// remove and replace, not a mount point.
+func applyRORoot(src, dst string, noSymlink bool) error {
 	st, err := os.Lstat(src)
 	if err != nil {
 		return err
@@ -443,6 +448,9 @@ func applyRORoot(src, dst string) error {
 		return err
 	}
 	if st.Mode()&os.ModeSymlink != 0 {
+		if noSymlink {
+			return errors.New("a symlink beneath home is not a mount point and could be replaced by the step")
+		}
 		target, err := os.Readlink(src)
 		if err != nil {
 			return err

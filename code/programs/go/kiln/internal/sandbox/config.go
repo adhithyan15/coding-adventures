@@ -333,6 +333,16 @@ func (c *Config) Validate() error {
 		}
 		anchor, beneathHome := HomeAnchor(c.Home, r)
 		if beneathHome {
+			// Home's own ancestors must sit on the sealed root tmpfs.  If home
+			// lay inside a scratch tmpfs, TMPDIR, the checkout or a state root,
+			// the step could rename an ancestor of home (mv /tmp/k /tmp/.gone)
+			// and rebuild $HOME/.cargo/bin itself: a mount point is EBUSY, but
+			// the directories above home are plain, step-writable ones.
+			for _, o := range append([]string{"/tmp", "/var/tmp", c.Tmpdir, c.RepoRoot}, c.StateRoots...) {
+				if c.Home != o && within(c.Home, o) {
+					return fmt.Errorf("config: ro root %q lies beneath home %q, which lies inside %q, a place the step can write: a step could rename home's ancestors; put home elsewhere", clip(r), clip(c.Home), clip(o))
+				}
+			}
 			// The anchor of a deeper root becomes a tmpfs of its own (see
 			// Plan): it would hide the checkout's or TMPDIR's mount if either
 			// lay beneath it.
@@ -350,12 +360,6 @@ func (c *Config) Validate() error {
 			}
 		}
 		for _, o := range append(append([]string{}, replaced...), scratchRoots...) {
-			// A root beneath home is bound after every scratch tmpfs (Plan), so
-			// /tmp and /var/tmp cannot hide it even when home itself lives
-			// there (the test fixtures' home is under the test's /tmp).
-			if beneathHome && (o == "/tmp" || o == "/var/tmp") {
-				continue
-			}
 			if within(r, o) {
 				return fmt.Errorf("config: ro root %q lies inside %s, which the sandbox builds itself", clip(r), o)
 			}

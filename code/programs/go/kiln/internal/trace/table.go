@@ -219,6 +219,18 @@ func SyscallClass(name string) string {
 	return ""
 }
 
+// HandledNames lists the handled class, sorted.
+func HandledNames() []string {
+	var out []string
+	for n, e := range table {
+		if e.class == classHandled {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
 // RefusedNames lists the refused class, sorted.
 func RefusedNames() []string {
 	var out []string

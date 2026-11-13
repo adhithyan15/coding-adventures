@@ -63,8 +63,8 @@ type ExecArgs struct {
 const maxOutputFD = 1 << 20
 
 // ParseExecArgs parses
-// `--config <abs path> [--stdout-fd N] [--stderr-fd N] -- <argv...>`.
-// The optional flags come in that order, each at most once; a flag is never
+// `--config <abs path> [--stdout-fd N --stderr-fd N] -- <argv...>`.
+// The two flags come together, in that order, each once; a flag is never
 // taken from the step's argv, which starts only after the `--`.
 func ParseExecArgs(args []string) (*ExecArgs, error) {
 	usage := errors.New("usage: kiln sandbox-exec --config <absolute path> [--stdout-fd N] [--stderr-fd N] -- <argv...>")
@@ -92,6 +92,12 @@ func ParseExecArgs(args []string) (*ExecArgs, error) {
 	}
 	if len(rest) < 2 || rest[0] != "--" {
 		return nil, usage
+	}
+	// Both or neither: a recorder that names only one has forgotten the
+	// other, and the step's remaining stream would be strace's own, which the
+	// recorder means to keep apart (L6).
+	if (ea.StdoutFD == NoFD) != (ea.StderrFD == NoFD) {
+		return nil, errors.New("sandbox-exec: --stdout-fd and --stderr-fd must be given together or not at all")
 	}
 	ea.Argv = rest[1:]
 	if err := checkArgv(ea.Argv); err != nil {
@@ -127,12 +133,13 @@ const (
 	sIFIFO  = 0o010000
 	oAccmod = 0x3
 	oWronly = 0x1
-	oRdwr   = 0x2
 )
 
 // CheckOutputFD decides whether a descriptor may become the step's standard
 // output or error, from its file-type bits (st_mode) and its open flags
-// (F_GETFL).  It must be a PIPE, open for writing (S2).
+// (F_GETFL).  It must be a PIPE, open WRITE-ONLY (S2, L4): a descriptor that
+// can also read would let the step read back what the recorder's other end
+// holds, or hold the read end of a pipe whose reader is the recorder.
 //
 // Pipes only, because D15 says the step's descriptors 1 and 2 are pipes, and
 // because of what the other kinds would give the step: a regular file lets it
@@ -140,7 +147,8 @@ const (
 // recorder then hashes); a terminal gives it a controlling terminal and its
 // ioctls; a socket, a character device (even /dev/null) or a directory is no
 // output a reader can attribute.  A pipe is append-only and bounded by its
-// reader.  A descriptor open only for reading would fail at the first write.
+// reader.  A read end would fail at the first write, and a read-write one
+// (a FIFO opened O_RDWR) is refused for the reason above.
 func CheckOutputFD(what string, mode uint32, flags int) error {
 	if mode&sIFMT != sIFIFO {
 		kind := map[uint32]string{
@@ -152,8 +160,8 @@ func CheckOutputFD(what string, mode uint32, flags int) error {
 		}
 		return fmt.Errorf("sandbox-exec: %s is %s; the step's output must be a pipe", what, kind)
 	}
-	if acc := flags & oAccmod; acc != oWronly && acc != oRdwr {
-		return fmt.Errorf("sandbox-exec: %s is not open for writing", what)
+	if flags&oAccmod != oWronly {
+		return fmt.Errorf("sandbox-exec: %s is not open write-only", what)
 	}
 	return nil
 }

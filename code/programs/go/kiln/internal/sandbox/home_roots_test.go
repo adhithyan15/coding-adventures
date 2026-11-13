@@ -56,14 +56,8 @@ func TestValidateRoRootsBeneathHome(t *testing.T) {
 			t.Errorf("%s: %v, want an error containing %q", tc.name, err, tc.want)
 		}
 	}
-	// Home may itself live under /tmp (the test fixtures' does): its roots are
-	// bound after every scratch tmpfs, so /tmp cannot hide them.
-	c0 := goodConfig()
-	c0.Home, c0.Tmpdir, c0.RepoRoot, c0.StateRoots, c0.Masks = "/tmp/h", "/var/tmp/t", "/work/repo", nil, []string{"/work/repo/.git"}
-	c0.RoRoots = []string{"/usr", "/tmp/h/.cargo/bin"}
-	if err := c0.Validate(); err != nil {
-		t.Errorf("home under /tmp: %v", err)
-	}
+	// Home under /tmp is refused when a root lies beneath it (M2): see
+	// TestValidateHomeAncestorsMustBeSealed.
 	// Nesting with no state root in the way.
 	c := goodConfig()
 	c.StateRoots = nil
@@ -218,5 +212,55 @@ func TestPlanWithoutHomeRootsHasNoSealDir(t *testing.T) {
 	}
 	if got := targets(plan, KindSealDir); len(got) != 0 {
 		t.Errorf("seal-dir steps: %v", got)
+	}
+}
+
+// TestValidateHomeAncestorsMustBeSealed is M2: a root beneath home is allowed
+// only if every ancestor of home sits on the sealed root tmpfs.  With home at
+// /tmp/k/home the step could `mv /tmp/k /tmp/.gone` (a plain directory of the
+// step-writable /tmp tmpfs) and rebuild $HOME/.cargo/bin itself.
+func TestValidateHomeAncestorsMustBeSealed(t *testing.T) {
+	mk := func(home, tmp, repo string, ro, state []string) *Config {
+		c := goodConfig()
+		c.Home, c.Tmpdir, c.RepoRoot, c.StateRoots = home, tmp, repo, state
+		c.Masks = []string{repo + "/.git"}
+		c.RoRoots = append([]string{"/usr"}, ro...)
+		return c
+	}
+	bad := map[string]*Config{
+		"home under /tmp":                     mk("/tmp/k/home", "/w/tmp", "/w/repo", []string{"/tmp/k/home/.rustup", "/tmp/k/home/.cargo/bin"}, nil),
+		"home under /var/tmp":                 mk("/var/tmp/h", "/w/tmp", "/w/repo", []string{"/var/tmp/h/.rustup"}, nil),
+		"home under tmpdir":                   mk("/w/tmp/home", "/w/tmp", "/w/repo", []string{"/w/tmp/home/.rustup"}, nil),
+		"home under the repo":                 mk("/w/repo/home", "/w/tmp", "/w/repo", []string{"/w/repo/home/.rustup"}, nil),
+		"home under state":                    mk("/s/home", "/w/tmp", "/w/repo", []string{"/s/home/.rustup"}, []string{"/s"}),
+		"home is /var, root in /var/tmp (L1)": mk("/var", "/w/tmp", "/w/repo", []string{"/var/tmp/x/bin"}, nil),
+	}
+	for name, c := range bad {
+		if err := c.Validate(); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
+	}
+	// The message for the layout of the review's PoC names the cause.
+	err := bad["home under /tmp"].Validate()
+	if err == nil || !strings.Contains(err.Error(), "rename home's ancestors") {
+		t.Errorf("home under /tmp: %v", err)
+	}
+	// Without a root beneath home the same layouts are fine: nothing is
+	// mounted at a path whose ancestors a step can move.
+	for name, c := range map[string]*Config{
+		"home under /tmp":     mk("/tmp/k/home", "/w/tmp", "/w/repo", nil, nil),
+		"home under /var/tmp": mk("/var/tmp/h", "/w/tmp", "/w/repo", nil, nil),
+	} {
+		if err := c.Validate(); err != nil {
+			t.Errorf("%s with no root beneath home: %v", name, err)
+		}
+	}
+	// Ancestors on the sealed root tmpfs are fine, however deep.
+	if err := mk("/home/runner/a/b/home", "/w/tmp", "/w/repo", []string{"/home/runner/a/b/home/.cargo/bin"}, nil).Validate(); err != nil {
+		t.Errorf("deep home on the root tmpfs: %v", err)
+	}
+	// A root directly in /var/tmp is still refused as a scratch place.
+	if err := mk("/var", "/w/tmp", "/w/repo", []string{"/var/tmp"}, nil).Validate(); err == nil {
+		t.Error("/var/tmp as a root accepted")
 	}
 }

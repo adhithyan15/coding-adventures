@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 
@@ -116,15 +117,6 @@ func TestSandboxOutputDescriptors(t *testing.T) {
 		t.Errorf("same pipe twice: %q", s)
 	}
 
-	// Only stderr named: the step's stdout stays the root's.
-	only, onlyW, _ := os.Pipe()
-	gotOnly := read(only)
-	out, errb, code = f.outFDRun(t, []string{"--stderr-fd", "3"}, []*os.File{onlyW}, "sh", "-c", "echo plain; echo err >&2")
-	onlyW.Close()
-	if code != 0 || out != "plain\n" || errb != "" || <-gotOnly != "err\n" {
-		t.Errorf("stderr only: exit %d, stdout %q, stderr %q", code, out, errb)
-	}
-
 	// Refusals: each exits 125 with a message on the root's stderr, and the
 	// step never runs (it would have created a file).
 	marker := filepath.Join(f.pkg, "ran")
@@ -147,6 +139,15 @@ func TestSandboxOutputDescriptors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer null.Close()
+	fifo := filepath.Join(f.base, "rw.fifo")
+	if err := syscall.Mkfifo(fifo, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	rwFifo, err := os.OpenFile(fifo, os.O_RDWR, 0) // does not block: it is both ends
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rwFifo.Close()
 	for _, tc := range []struct {
 		name  string
 		flags []string
@@ -156,10 +157,13 @@ func TestSandboxOutputDescriptors(t *testing.T) {
 		{"regular file", []string{"--stdout-fd", "3"}, []*os.File{reg}, "a regular file"},
 		{"directory", []string{"--stderr-fd", "3"}, []*os.File{dir}, "a directory"},
 		{"/dev/null", []string{"--stdout-fd", "3"}, []*os.File{null}, "character device"},
-		{"pipe read end", []string{"--stdout-fd", "3"}, []*os.File{pr}, "not open for writing"},
+		{"pipe read end", []string{"--stdout-fd", "3"}, []*os.File{pr}, "not open write-only"},
 		{"not open", []string{"--stdout-fd", "9"}, nil, "not an open descriptor"},
 		{"good then bad", []string{"--stdout-fd", "3", "--stderr-fd", "4"}, []*os.File{pw, reg}, "--stderr-fd 4"},
 		{"standard stream", []string{"--stdout-fd", "1"}, nil, "out of range"},
+		{"read-write FIFO (L4)", []string{"--stdout-fd", "3", "--stderr-fd", "3"}, []*os.File{rwFifo}, "not open write-only"},
+		{"stdout only (L6)", []string{"--stdout-fd", "3"}, []*os.File{pw}, "together or not at all"},
+		{"stderr only (L6)", []string{"--stderr-fd", "3"}, []*os.File{pw}, "together or not at all"},
 	} {
 		out, errb, code := f.outFDRun(t, tc.flags, tc.extra, notRun...)
 		if code != sandbox.ExitFailure || out != "" || !strings.Contains(errb, tc.want) {

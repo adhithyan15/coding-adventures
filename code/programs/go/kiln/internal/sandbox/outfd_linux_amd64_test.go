@@ -46,7 +46,7 @@ func TestInspectOutputFD(t *testing.T) {
 		fd   int
 		want string
 	}{
-		"read end":     {int(pr.Fd()), "not open for writing"},
+		"read end":     {int(pr.Fd()), "not open write-only"},
 		"regular file": {int(file.Fd()), "a regular file"},
 		"directory":    {int(dir.Fd()), "a directory"},
 		"/dev/null":    {int(null.Fd()), "character device"},
