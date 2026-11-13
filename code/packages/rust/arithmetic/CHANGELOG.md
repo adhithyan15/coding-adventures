@@ -24,7 +24,7 @@ entry is unreleased and the version is bumped at release.)
   `tests/warrant_evidence.rs`**: the generated harness (examples, exhaustive,
   property and fuzz suites, 52 negative controls), `evidence/test-manifest.json`
   and `evidence/proof-manifest.json` (the proof front end refuses `adders.rs` and
-  `alu.rs`, so every steps-bound obligation is `not-live`; backlog AR-001),
+  `alu.rs`, so every steps-bound obligation is `not-live`; backlog ARITH-001),
   `effect_certificate.json` and `assurance_report.json` (`--profile
   bit-arithmetic`, report-only).  The report records `"profile": "bit-arithmetic"`
   (required since the lzw merge) and BUILD, BUILD_linux and BUILD_windows pass

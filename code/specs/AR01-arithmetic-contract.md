@@ -163,7 +163,7 @@ What was found are two properties worth stating:
   of `half_adder` and `full_adder`, and every export that destructures it
   (`let (s, c) = full_adder(..)`) at the tuple pattern; `alu.rs` at the `enum AluOp`
   item. None of these is a defect of the crate; a small `Sum { sum, carry }`
-  struct would shape the adders for the prover (backlog AR-001).
+  struct would shape the adders for the prover (backlog ARITH-001).
 
 ## Contracts this layer publishes (pending LV-005)
 
