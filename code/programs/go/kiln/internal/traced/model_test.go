@@ -37,6 +37,15 @@ import (
 //     truncate+create, exclusive create, create, truncate only), stat, lstat,
 //     chdir, exec, directory listings and dirfd-relative lookups.
 //
+// The WRITES-COMPLETE oracle (KILN04 section 5.5, PR 4): whenever the record
+// says WritesComplete, EVERY in-repository path the model really wrote lies
+// under Writes or TrackedWrites, WITH OR WITHOUT reasons (a read-side reason
+// must not be able to hide a write).  Perturbations aim at each false-trigger:
+// writes through /proc/self/cwd (virtual), chmod of the root and of names
+// reached through links and "..", and, after the run, a truncated trace, a
+// killed step, a process with no exit line and a wrong recipe, each of which
+// must make WritesComplete false.
+//
 // The oracle (KILN04 sections 5.1, 5.2, 7): when the record carries NO reason,
 // every path the model really looked at must be the action's own or be covered
 // by an entry (pkg:, path: on a prefix, an untracked observation, list: for a
@@ -79,6 +88,9 @@ type model struct {
 	touches         []touch
 	dirs            []string // candidate directory descriptors
 	opStart         int      // index of the first touch of the current operation
+	core            bool     // a process dumped core (L1)
+	sigpipe         bool     // a child was killed by SIGPIPE (M5)
+	noNetNS         bool     // the run has no fresh network namespace (W11)
 }
 
 func (m *model) mkpath(abs string, n *mnode) {
@@ -571,6 +583,133 @@ func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 	return []trace.Event{m.event(pid, e, errno)}
 }
 
+// doChmod changes the mode of whatever p names (following links): a write to
+// the final object, which must exist.  Aimed at the root and at names reached
+// through links and "..".
+func (m *model) doChmod(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	m.look(r, false, false, false)
+	errno := r.errno
+	switch {
+	case errno == "" && (r.node == nil || r.node.kind == KindLink):
+		errno = "EINVAL"
+	case errno == "" && m.readOnlyHost(r.final):
+		errno = "EROFS"
+	}
+	if errno == "" {
+		m.add(touch{path: r.final, write: true, wonly: true})
+	}
+	return []trace.Event{m.event(pid, base("chmod", trace.KindWrite, p), errno)}
+}
+
+// noFollowSyscalls are the metadata writes that do not follow a final symlink,
+// and the flag (if any) that says so.  The kernel still FOLLOWS a final name
+// that ends in a slash, and demands a directory there (M1): resolve applies
+// that rule already.
+var noFollowSyscalls = []struct{ sys, flags string }{
+	{"lchown", ""}, {"lsetxattr", ""}, {"lremovexattr", ""},
+	{"utimensat", "AT_SYMLINK_NOFOLLOW"}, {"fchownat", "AT_SYMLINK_NOFOLLOW"}, {"fchmodat2", "AT_SYMLINK_NOFOLLOW"},
+}
+
+// doMetaNoFollow is a NOFOLLOW metadata write, half the time with a trailing
+// slash added: it changes the link itself, or, with the slash, the directory
+// the link points to.
+func (m *model) doMetaNoFollow(pid int, which int, p string, slash bool) []trace.Event {
+	pr := m.procs[pid]
+	if slash && !strings.HasSuffix(p, "/") {
+		p += "/"
+	}
+	r := m.resolve(p, pr.cwdPath, false)
+	m.look(r, false, false, false)
+	errno := r.errno
+	switch {
+	case errno == "" && r.node == nil:
+		errno = "EINVAL"
+	case errno == "" && m.readOnlyHost(r.final):
+		errno = "EROFS"
+	}
+	if errno == "" {
+		m.add(touch{path: r.final, write: true, wonly: true})
+	}
+	c := noFollowSyscalls[which%len(noFollowSyscalls)]
+	e := base(c.sys, trace.KindWrite, p)
+	e.Flags = c.flags
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+// doFdWrite is a descriptor metadata write (fchmod and friends): the trace
+// carries the descriptor's own -y path, which is already resolved.
+func (m *model) doFdWrite(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	if r.errno != "" || r.node == nil || r.node.kind == KindLink || m.readOnlyHost(r.final) {
+		return nil
+	}
+	m.look(r, false, false, false)
+	m.add(touch{path: r.final, write: true, wonly: true})
+	return []trace.Event{m.event(pid, base("fchmod", trace.KindWrite, r.final), "")}
+}
+
+// doBind binds a Unix socket at p: it creates the socket file (W4).
+func (m *model) doBind(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	p = stripSlashes(p)
+	r := m.resolve(p, pr.cwdPath, false)
+	create := r.errno == "ENOENT" && r.stop == "" && !r.isDot
+	m.look(r, create, false, false)
+	errno := r.errno
+	switch {
+	case errno == "" && r.node != nil:
+		errno = "EADDRINUSE"
+	case errno == "" && r.node == nil:
+		errno = "EINVAL"
+	case errno == "ENOENT" && create:
+		if m.readOnlyHost(r.final) {
+			errno = "EROFS"
+		} else {
+			errno = ""
+			r.parent.kids[r.name] = &mnode{kind: KindFile}
+			m.add(touch{path: r.final, write: true, wonly: true})
+			m.own[r.final] = true
+		}
+	}
+	e := base("bind", trace.KindNetwork, "")
+	e.Addr = &trace.Addr{Family: "AF_UNIX", Address: p, Port: -1}
+	e.SockPath = "socket:[1]"
+	return []trace.Event{m.event(pid, e, errno)}
+}
+
+// doReopen re-opens a descriptor that is a pipe or socket (`> /dev/stderr`):
+// no repository path, so no write.
+func (m *model) doReopen(pid int, flags, ret string) []trace.Event {
+	e := base("openat", trace.KindOpen, "/proc/self/fd/9")
+	e.Flags, e.ReturnFDPath = flags, ret
+	return []trace.Event{m.event(pid, e, "")}
+}
+
+// doVirtual runs f on the path p spelled through /proc/self/cwd: the kernel
+// really resolves to p, but the trace prints the virtual name, which the
+// classifier cannot place (W5).  A path that is not under the cwd is run as
+// it is.
+func (m *model) doVirtual(pid int, p string, f func(q string) []trace.Event) []trace.Event {
+	pr := m.procs[pid]
+	rel := p
+	if strings.HasPrefix(p, "/") {
+		var ok bool
+		if rel, ok = strings.CutPrefix(p, pr.cwdPath+"/"); !ok {
+			return f(p)
+		}
+	}
+	evs := f(p)
+	for i := range evs {
+		if evs[i].Path == p {
+			evs[i].Path = "/proc/self/cwd/" + rel
+		}
+	}
+	return evs
+}
+
 func (m *model) doList(pid int, p string) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, true)
@@ -783,7 +922,7 @@ var bursts = [][]burstOp{
 var perturbations = []struct {
 	kind int
 	swap bool
-}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}}
+}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}, {102, false}, {103, false}, {104, false}, {105, false}, {106, false}, {109, false}}
 
 func (m *model) burstBase(b byte) string {
 	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
@@ -845,6 +984,64 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 5, -1) }
 		case 101:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 6, -1) }
+		case 102:
+			c := next()
+			o.run = func() []trace.Event {
+				return m.doVirtual(pid, p, func(q string) []trace.Event { return m.doOpen(pid, q, 1, c) })
+			}
+		case 103:
+			o.run = func() []trace.Event {
+				return m.doVirtual(pid, p, func(q string) []trace.Event { return m.doMkdirLike(pid, "mkdir", q, "") })
+			}
+		case 104:
+			o.run = func() []trace.Event { return m.doChmod(pid, p) }
+		case 105:
+			w, slash := next(), next()%2 == 0
+			o.run = func() []trace.Event { return m.doMetaNoFollow(pid, int(w), p, slash) }
+		case 106:
+			o.run = func() []trace.Event { return m.doBind(pid, p) }
+		case 107:
+			// W6: a write under .git
+			g := m.root + "/.git/" + modelNames[int(next())%len(modelNames)]
+			o.run = func() []trace.Event { return m.doMkdirLike(pid, "mkdir", g, "") }
+		case 108:
+			// W6: a name no record can hold (invalid UTF-8)
+			g := m.root + "/code/p/a/bad\xff" + modelNames[int(next())%len(modelNames)]
+			o.run = func() []trace.Event { return m.doOpen(pid, g, 1, -1) }
+		case 109:
+			o.run = func() []trace.Event { return m.doFdWrite(pid, p) }
+		case 110:
+			// a child dumps core: the kernel writes ./core with no system call (L1)
+			o.run = func() []trace.Event { m.core = true; return nil }
+		case 112:
+			// an httptest-style server: bind port 0, connect to its port (M4)
+			port := 20000 + next()
+			o.run = func() []trace.Event {
+				b := base("bind", trace.KindNetwork, "")
+				b.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: 0}
+				b.SockPath = "socket:[1]"
+				c := base("connect", trace.KindNetwork, "")
+				c.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: port}
+				c.SockPath = "socket:[1]"
+				return []trace.Event{m.event(pid, b, ""), m.event(pid, c, "")}
+			}
+		case 114:
+			// a loopback peer nobody bound, with no network-namespace
+			// guarantee (StepNetNS false): a host daemon may answer (W11)
+			o.run = func() []trace.Event {
+				m.noNetNS = true
+				c := base("connect", trace.KindNetwork, "")
+				c.Addr = &trace.Addr{Family: "AF_INET", Address: "127.0.0.1", Port: 4226}
+				c.SockPath = "socket:[1]"
+				return []trace.Event{m.event(pid, c, "")}
+			}
+		case 113:
+			// a child killed by SIGPIPE (yes | head): hides no write (M5)
+			o.run = func() []trace.Event { m.sigpipe = true; return nil }
+		case 111:
+			f := []string{"O_WRONLY", "O_WRONLY|O_CREAT|O_TRUNC", "O_RDWR|O_APPEND"}[int(next())%3]
+			ret := []string{"pipe:[77]", "socket:[5]", "anon_inode:[eventfd]"}[int(next())%3]
+			o.run = func() []trace.Event { return m.doReopen(pid, f, ret) }
 		case 11:
 			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
@@ -869,7 +1066,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % (20 + len(bursts))
+		kind := next() % (33 + len(bursts))
 		if kind >= 18+len(bursts) {
 			add(100+kind-18-len(bursts), m.path(data, i), "")
 			continue
@@ -955,6 +1152,16 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		RootPid: 1,
 		Procs:   map[int]*trace.Process{1: {Pid: 1, Exit: &trace.Exit{Pid: 1}}, 2: {Pid: 2, Parent: 1, Exit: &trace.Exit{Pid: 2}}},
 		Exits:   []trace.Exit{{Pid: 2}, {Pid: 1}},
+	}
+	if m.sigpipe {
+		sp := trace.Exit{Pid: 2, Killed: true, Signal: "SIGPIPE"}
+		tr.Procs[2].Exit = &sp
+		tr.Exits = []trace.Exit{sp, {Pid: 1}}
+	}
+	if m.core {
+		cd := trace.Exit{Pid: 2, Killed: true, Signal: "SIGSEGV", CoreDumped: true}
+		tr.Procs[2].Exit = &cd
+		tr.Exits = []trace.Exit{cd, {Pid: 1}}
 	}
 	tr.Events = append(tr.Events, sh)
 	type placed struct {
@@ -1052,16 +1259,76 @@ func runDifferential(t *testing.T, data []byte) {
 		for i := range recipe {
 			recipe[i] = "step"
 		}
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
+		// The last byte picks a whole-trace perturbation (W10).  Each must make
+		// WritesComplete false; the writes-complete oracle is then moot.
+		cut := perturbTrace(data[len(data)-1], steps, recipe)
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe, StepNetNS: !m.noNetNS})
 		if err != nil {
 			// The action moved or removed the checkout's own directories: the
 			// post-run disk no longer shows a real Root, which is refused.
 			return
 		}
+		if cut != "" {
+			if rec.WritesComplete {
+				t.Fatalf("%s must make WritesComplete false", cut)
+			}
+			return
+		}
+		if m.noNetNS && rec.WritesComplete {
+			t.Fatal("an unbound loopback peer without a network namespace must make WritesComplete false")
+		}
+		if m.core && rec.WritesComplete {
+			t.Fatal("a process that dumped core must make WritesComplete false")
+		}
+		// The writes-complete oracle holds with or without reasons.
+		if rec.WritesComplete {
+			checkWrites(t, m, rec)
+		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
 		}
 		check(t, m, tree, rec)
+	}
+}
+
+// perturbTrace applies the whole-trace perturbation the byte b selects (most
+// bytes select none) and says which one it was.
+func perturbTrace(b byte, steps []*trace.Trace, recipe []string) string {
+	st := steps[int(b>>4)%len(steps)]
+	switch b % 24 {
+	case 0:
+		st.Procs[1].Exit = nil
+		return "a step with no exit line"
+	case 1:
+		st.Procs[1].Exit = &trace.Exit{Pid: 1, Killed: true, Signal: "SIGKILL"}
+		return "a killed step"
+	case 2:
+		st.Procs[2].Exit = nil
+		return "a process with no exit line"
+	case 3:
+		recipe[int(b>>4)%len(recipe)] = "another step"
+		return "a recipe mismatch"
+	}
+	return ""
+}
+
+// checkWrites is the writes-complete invariant: every in-repository path the
+// model really wrote is under a write root of Writes, or is a TrackedWrites
+// path itself (the classifier's own coarsening).
+func checkWrites(t *testing.T, m *model, rec *RawRecord) {
+	t.Helper()
+	for _, tc := range m.touches {
+		if !tc.write && !tc.wonly {
+			continue
+		}
+		rel, in := strings.CutPrefix(tc.path, m.root+"/")
+		if !in || m.readOnlyHost(tc.path) {
+			continue
+		}
+		if !underAny(rec.Writes, rel) && !underAny(rec.TrackedWrites, rel) {
+			t.Fatalf("WritesComplete, but %s was written and is in no write set\nroot %s home %s tmp %s\nwrites %q tracked %q reasons %q",
+				tc.path, m.root, m.home, m.tmp, rec.Writes, rec.TrackedWrites, rec.Reasons)
+		}
 	}
 }
 
@@ -1092,6 +1359,9 @@ func check(t *testing.T, m *model, tree *memTree, rec *RawRecord) {
 	for _, tc := range m.touches {
 		if tc.path == "" || tc.path == m.root {
 			continue
+		}
+		if tc.path == m.root+"/.git" && !tc.write && !tc.wonly {
+			continue // a stat of ".git" itself is nothing, by design (section 5.2)
 		}
 		rel, in := strings.CutPrefix(tc.path, m.root+"/")
 		if tc.wonly {

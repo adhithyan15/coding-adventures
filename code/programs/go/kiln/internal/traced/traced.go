@@ -142,6 +142,16 @@ type Input struct {
 	// from the BUILD variant Source holds.  It is required: without it nothing
 	// shows the traced steps are the ones the weak key's recipe covers.
 	Recipe []string
+	// StepNetNS says every step ran in a fresh network namespace of its own
+	// (the stage-3b sandbox, `kiln sandbox-exec`, which unshares NET).  It is
+	// a PRECONDITION the classifier cannot check, so it fails closed: the
+	// default false treats a loopback or abstract peer nobody in the trace
+	// bound as a host process that may write the repository (W11).  Only the
+	// recorder (stage 4 PR 2b) sets it, and only when the step really ran
+	// under the sandbox.  Under a fresh namespace such a peer cannot be a host
+	// daemon, and keeps just the plain daemon: reason (the cross-action rule
+	// M13 covers it).
+	StepNetNS bool
 }
 
 // RawRecord is the output (KILN04 section 7, item 1).  Every slice is sorted
@@ -177,6 +187,22 @@ type RawRecord struct {
 	Traversed []string `json:"traversed"`
 	// Reasons are the section 6 reason strings, at most 16 per kind.
 	Reasons []string `json:"reasons"`
+	// WritesComplete says Writes and TrackedWrites list EVERY in-repository
+	// path the action wrote (KILN04 section 5.5, "writes_complete").  It is
+	// the classifier's answer to "if I tell the merge job this action's write
+	// set, may it believe me?", and it is what lets a read-side reason (an
+	// unreadable exec, an unstable path nobody wrote through) cost only this
+	// action's manifest instead of voiding the whole run (section 7.1, G1).
+	//
+	// It FAILS CLOSED.  Its zero value is false; Classify leaves it true only
+	// when none of the triggers W1..W10 of section 5.5 fired: a write that
+	// could not be placed, a write through a component the stability rule
+	// rejected, a list cap, a truncated trace, a recipe mismatch, and so on.
+	//
+	// It is not part of the record's JSON (the tag is "-"): the recorder
+	// copies it to the shard record's top-level "writes_complete" key, which
+	// is where the merge job reads it.
+	WritesComplete bool `json:"-"`
 }
 
 // Limits on the sets a record carries.  Hitting one is a reason, not a crash.
@@ -206,11 +232,15 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 		}
 	}
 	c := newClassifier(p)
+	c.netns = in.StepNetNS
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}
 	for _, r := range CheckRecipe(in.Traces, in.Recipe) {
 		c.reason(r)
+		// W10: the steps that ran are not the steps the weak key's recipe
+		// covers, so the traces say nothing about what the recipe writes.
+		c.incomplete = true
 	}
 	c.checkStability()
 	return c.record(in.Package), nil

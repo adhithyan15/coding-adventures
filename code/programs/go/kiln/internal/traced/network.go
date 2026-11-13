@@ -68,6 +68,9 @@ func (c *classifier) noteSocket(ev *trace.Event) {
 func (c *classifier) network(t *trace.Trace, ev *trace.Event) {
 	a := ev.Addr
 	if a == nil {
+		if ev.Syscall == "bind" {
+			c.incomplete = true // W4: a bind with no address may have made a socket file
+		}
 		return // a connected socket sending, or listen: the connect was judged
 	}
 	switch ev.Syscall {
@@ -160,7 +163,13 @@ func (c *classifier) inetPeer(t *trace.Trace, ev *trace.Event) {
 	if expectedFailure(ev.Result) || c.bound(ip, a.Port, c.sockType(ev)) {
 		return
 	}
+	// A loopback peer nobody here bound is a host daemon unless the step ran
+	// in a fresh network namespace (Input.StepNetNS), where it cannot be: then
+	// only the reason (W11).
 	c.reason("daemon:" + sanitize(addrText(ip, a.Port)))
+	if !c.netns {
+		c.incomplete = true
+	}
 }
 
 func addrText(ip netip.Addr, port int) string {
@@ -190,18 +199,28 @@ func (c *classifier) bind(ev *trace.Event) {
 		if a.Address == "" {
 			return
 		}
-		tg, ok := c.resolve(join(ev.Cwd, "", a.Address), false)
-		if !ok {
-			return
-		}
-		if !ev.Result.OK {
-			c.observeResult(tg, ev.Result)
-			return
-		}
-		c.writePath(tg.abs)
-		c.markCreated(tg.abs, true) // bind never replaces a name: like O_EXCL
-		c.boundUnix[tg.abs] = c.sockType(ev)
+		c.writing(func() { c.bindPath(ev, a.Address) })
 	}
+}
+
+// bindPath places the socket file of an AF_UNIX pathname bind.
+func (c *classifier) bindPath(ev *trace.Event, addr string) {
+	tg, ok := c.resolve(join(ev.Cwd, "", addr), false)
+	if !ok {
+		c.incomplete = true // W4: a bind that could not be placed
+		return
+	}
+	if tg.virtual {
+		c.incomplete = true // W5
+		return
+	}
+	if !ev.Result.OK {
+		c.observeResult(tg, ev.Result)
+		return
+	}
+	c.writePath(tg.abs)
+	c.markCreated(tg.abs, true) // bind never replaces a name: like O_EXCL
+	c.boundUnix[tg.abs] = c.sockType(ev)
 }
 
 // unixPeer handles a connect or send to an AF_UNIX address.
@@ -211,13 +230,25 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		if expectedFailure(ev.Result) || c.unixBound("@"+a.Address, c.sockType(ev)) {
 			return
 		}
+		// The abstract namespace belongs to the network namespace: as for a
+		// loopback peer, only a fresh one makes this just a reason.
 		c.reason("daemon:" + sanitize("@"+a.Address))
+		if !c.netns {
+			c.incomplete = true
+		}
 		return
 	}
 	if a.Address == "" {
 		return // an unnamed socket has no peer to be a daemon
 	}
-	tg, ok := c.resolve(join(ev.Cwd, "", a.Address), true)
+	// The peer's lookups are the write-set's business too (L5): "the action
+	// bound this address itself" is believed only while the bound name is
+	// stable, so an action that swaps the name for a link to a host daemon's
+	// socket between bind and connect (and back) is judged by the same
+	// stability rule as a write, and is incomplete.
+	var tg target
+	var ok bool
+	c.writing(func() { tg, ok = c.resolve(join(ev.Cwd, "", a.Address), true) })
 	if !ok {
 		return
 	}
@@ -231,6 +262,16 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 		return
 	}
 	c.reason("daemon:" + c.redact(tg.abs))
+	// L2, L7: a connect that SUCCEEDED to a pathname socket nobody in the
+	// trace bound, outside the fresh HOME and TMPDIR, reached a host process
+	// (or an alias of one), which may write the repository for the action.
+	// Every earlier step's processes are dead and a listener in this step
+	// would have its bind in the trace, so an unbound peer inside the
+	// repository is no other action's: it is a host process too.  TMPDIR is a
+	// fresh tmpfs per step.
+	if ev.Result.OK && !c.underTmp(tg.abs) && !c.isTmpRoot(tg.abs) {
+		c.incomplete = true
+	}
 }
 
 // unixBound says the action bound this Unix address on a socket of this type.

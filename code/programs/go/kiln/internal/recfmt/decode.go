@@ -430,6 +430,9 @@ func EncodeRecord(r ShardRecord) ([]byte, error) {
 	if err := r.Validate(); err != nil {
 		return nil, err
 	}
+	if err := CheckComplete(r); err != nil {
+		return nil, err
+	}
 	return marshal(r)
 }
 
