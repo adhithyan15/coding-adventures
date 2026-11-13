@@ -6,5 +6,13 @@ name = "lua-bridge"
 version = "0.1.0"
 edition = "2021"
 description = "Thin safe Rust wrapper over Lua 5.4 C API — zero dependencies, no mlua/rlua, no macros"
+build = "build.rs"
 
 [dependencies]
+
+# The smoke module: a real Lua C module built on this crate and loaded into a real
+# Lua by tests/smoke.lua (see BUILD).  An example, so it is built only on request
+# and never ships with the library.
+[[example]]
+name = "lua_bridge_smoke"
+crate-type = ["cdylib"]

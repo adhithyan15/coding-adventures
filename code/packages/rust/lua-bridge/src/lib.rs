@@ -172,11 +172,10 @@ extern "C" {
     /// Push a copy of the value at `idx` onto the stack.
     pub fn lua_pushvalue(L: *mut lua_State, idx: c_int);
 
-    /// Remove the element at `idx`, shifting elements above it down.
-    pub fn lua_remove(L: *mut lua_State, idx: c_int);
-
-    /// Move the top element to position `idx`, shifting elements above up.
-    pub fn lua_insert(L: *mut lua_State, idx: c_int);
+    /// Rotate the stack elements between `idx` and the top by `n` positions in
+    /// the direction of the top (negative `n`: toward `idx`). This is the one
+    /// real function behind the `lua_insert` and `lua_remove` macros below.
+    pub fn lua_rotate(L: *mut lua_State, idx: c_int, n: c_int);
 
     // -- Push values -------------------------------------------------------
 
@@ -216,9 +215,6 @@ extern "C" {
 
     /// Return 1 if the value at `idx` is a string or a number (coercible).
     pub fn lua_isstring(L: *mut lua_State, idx: c_int) -> c_int;
-
-    /// Return 1 if the value at `idx` is a boolean.
-    pub fn lua_isboolean(L: *mut lua_State, idx: c_int) -> c_int;
 
     /// Return 1 if the value at `idx` is a userdata (full or light).
     pub fn lua_isuserdata(L: *mut lua_State, idx: c_int) -> c_int;
@@ -305,16 +301,16 @@ extern "C" {
 
     /// Create a new empty metatable named `tname` in the registry (returns 1
     /// if new, 0 if it already existed). Pushes the table.
-    pub fn lua_newmetatable(L: *mut lua_State, tname: *const c_char) -> c_int;
+    ///
+    /// The real function lives in the auxiliary library, hence the `luaL_`
+    /// prefix; there is no exported `lua_newmetatable` (see the alias below).
+    pub fn luaL_newmetatable(L: *mut lua_State, tname: *const c_char) -> c_int;
 
     /// Pop a table from the stack and set it as the metatable for the value at `idx`.
     pub fn lua_setmetatable(L: *mut lua_State, idx: c_int) -> c_int;
 
     /// Push the metatable of the value at `idx`. Returns 1 if it has one, 0 if not.
     pub fn lua_getmetatable(L: *mut lua_State, idx: c_int) -> c_int;
-
-    /// Push the metatable registered as `tname` from the registry.
-    pub fn luaL_getmetatable(L: *mut lua_State, tname: *const c_char) -> c_int;
 
     /// Check that the value at `ud` is a userdata of type `tname`. Raises a
     /// Lua error if not. Returns the raw userdata pointer.
@@ -348,8 +344,14 @@ extern "C" {
     /// Check that argument `narg` is a number; raise an error if not.
     pub fn luaL_checknumber(L: *mut lua_State, narg: c_int) -> lua_Number;
 
-    /// Check that argument `narg` is a string; raise an error if not.
-    pub fn luaL_checkstring(L: *mut lua_State, narg: c_int) -> *const c_char;
+    /// Check that argument `narg` is a string; raise an error if not. Returns
+    /// the string's bytes (NUL-terminated) and, when `len` is not null, its
+    /// length. `luaL_checkstring` below is the macro that passes a null `len`.
+    pub fn luaL_checklstring(
+        L: *mut lua_State,
+        narg: c_int,
+        len: *mut usize,
+    ) -> *const c_char;
 
     // -- Library registration ----------------------------------------------
 
@@ -371,6 +373,58 @@ extern "C" {
 #[inline]
 pub unsafe fn lua_pop(L: *mut lua_State, n: c_int) {
     lua_settop(L, -(n) - 1);
+}
+
+/// Move the top element to position `idx`, shifting the elements above it up.
+///
+/// C macro: `#define lua_insert(L,idx) lua_rotate(L, (idx), 1)`
+///
+/// In Lua 5.4 this is NOT an exported function (it was one in 5.1), so it must
+/// not be declared `extern`: a cdylib that referenced it failed to load with
+/// `undefined symbol: lua_insert`.
+#[inline]
+pub unsafe fn lua_insert(L: *mut lua_State, idx: c_int) {
+    lua_rotate(L, idx, 1);
+}
+
+/// Remove the element at `idx`, shifting the elements above it down.
+///
+/// C macro: `#define lua_remove(L,idx) (lua_rotate(L, (idx), -1), lua_pop(L, 1))`
+#[inline]
+pub unsafe fn lua_remove(L: *mut lua_State, idx: c_int) {
+    lua_rotate(L, idx, -1);
+    lua_pop(L, 1);
+}
+
+/// Return 1 if the value at `idx` is a boolean, else 0.
+///
+/// C macro: `#define lua_isboolean(L,n) (lua_type(L, (n)) == LUA_TBOOLEAN)`
+#[inline]
+pub unsafe fn lua_isboolean(L: *mut lua_State, idx: c_int) -> c_int {
+    (lua_type(L, idx) == LUA_TBOOLEAN) as c_int
+}
+
+/// Push the metatable registered as `tname` in the registry.
+///
+/// C macro: `#define luaL_getmetatable(L,n) (lua_getfield(L, LUA_REGISTRYINDEX, (n)))`
+#[inline]
+pub unsafe fn luaL_getmetatable(L: *mut lua_State, tname: *const c_char) -> c_int {
+    lua_getfield(L, LUA_REGISTRYINDEX, tname)
+}
+
+/// Check that argument `narg` is a string and return a pointer to it.
+///
+/// C macro: `#define luaL_checkstring(L,n) (luaL_checklstring(L, (n), NULL))`
+#[inline]
+pub unsafe fn luaL_checkstring(L: *mut lua_State, narg: c_int) -> *const c_char {
+    luaL_checklstring(L, narg, ptr::null_mut())
+}
+
+/// Compatibility alias for [`luaL_newmetatable`], the name this crate used to
+/// declare (and that no Lua library exports).
+#[inline]
+pub unsafe fn lua_newmetatable(L: *mut lua_State, tname: *const c_char) -> c_int {
+    luaL_newmetatable(L, tname)
 }
 
 /// Create a new empty table and push it.
@@ -552,4 +606,79 @@ macro_rules! lua_module {
             }
         });
     };
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+//
+// Everything here runs without a Lua library: it pins the constants and layouts
+// that come from Lua's headers rather than from a symbol, which a missing or
+// wrong value would corrupt silently.  The calls themselves (every `extern`
+// symbol, argument order, the macro replacements, `longjmp` through the Rust
+// frames) are checked against a real Lua by `tests/smoke.lua`, which loads the
+// `lua_bridge_smoke` example; see BUILD.
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::mem::{align_of, size_of};
+
+    /// `luaconf.h`: `LUAI_MAXSTACK` is 1_000_000 on 64-bit builds and
+    /// `lua.h` defines `LUA_REGISTRYINDEX` as `(-LUAI_MAXSTACK - 1000)`.  The
+    /// Lua 5.1 value (-10000) is a real stack index in 5.4 and crashes.
+    #[test]
+    fn registry_index_is_lua_5_4s() {
+        assert_eq!(LUA_REGISTRYINDEX, -1_000_000 - 1_000);
+    }
+
+    /// `lua.h` numbers the basic types from `LUA_TNONE` (-1) upward with no gaps.
+    #[test]
+    fn type_tags_follow_lua_h() {
+        let tags = [
+            LUA_TNONE,
+            LUA_TNIL,
+            LUA_TBOOLEAN,
+            LUA_TLIGHTUSERDATA,
+            LUA_TNUMBER,
+            LUA_TSTRING,
+            LUA_TTABLE,
+            LUA_TFUNCTION,
+            LUA_TUSERDATA,
+            LUA_TTHREAD,
+        ];
+        for (offset, tag) in tags.iter().enumerate() {
+            assert_eq!(*tag, offset as c_int - 1);
+        }
+        assert_eq!(LUA_MULTRET, -1);
+        assert_eq!(LUA_OK, 0);
+    }
+
+    /// `lua_Integer` is `long long` and `lua_Number` is `double` in a default
+    /// Lua 5.4 build.
+    #[test]
+    fn numeric_types_match_the_default_build() {
+        assert_eq!(size_of::<lua_Integer>(), 8);
+        assert_eq!(size_of::<lua_Number>(), 8);
+    }
+
+    /// `luaL_Reg` is `{ const char *name; lua_CFunction func; }`: two
+    /// pointer-sized fields, and `Option<fn>` has the null-pointer layout.
+    #[test]
+    fn lual_reg_is_two_pointers() {
+        assert_eq!(size_of::<luaL_Reg>(), 2 * size_of::<usize>());
+        assert_eq!(align_of::<luaL_Reg>(), align_of::<usize>());
+        assert_eq!(size_of::<lua_CFunction>(), size_of::<usize>());
+        let sentinel = luaL_Reg {
+            name: ptr::null(),
+            func: None,
+        };
+        assert!(sentinel.name.is_null() && sentinel.func.is_none());
+    }
+
+    /// `lua_State` is opaque: only ever used behind a pointer.
+    #[test]
+    fn lua_state_is_zero_sized_and_opaque() {
+        assert_eq!(size_of::<lua_State>(), 0);
+    }
 }

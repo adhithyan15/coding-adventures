@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **Fixed (Windows, found by the first real Windows run of the smoke test):** `die`
+  from Rust aborted the process with "panic in a function that cannot unwind". Perl's
+  `croak` ends in a `longjmp`, which on Windows is an SEH unwind, and it crossed the
+  XSUB's plain `extern "C"` frame; Rust aborts when an unwind reaches such a frame.
+  The shim's croak and warn declarations are now `extern "C-unwind"`, and there is a
+  new `newXS_unwind` that registers an `unsafe extern "C-unwind" fn(*mut CV)` XSUB
+  (the existing `newXS` is unchanged, so current extensions keep compiling, but an
+  XSUB registered with it must not reach `die` on Windows). Tests 1-42 of the smoke
+  test, everything up to the first `die`, had already passed on the real Windows Perl.
+  Linux and the Wine/GNU run are unaffected because there `longjmp` does not unwind.
+  **Known follow-up:** the XSUBs in `perl/conduit` call `perl_bridge::die` for
+  argument-count misuse from plain `extern "C"` functions and should move to
+  `extern "C-unwind"` + `newXS_unwind`; no test reaches those paths today.
+
+- `BUILD`/`BUILD_windows` build, lint and test instead of echoing. Both recipes were
+  `echo "perl-bridge: compile-only crate (requires Perl shared library to link)"`, so
+  CI never compiled the crate on its own. They now run `cargo test`, `cargo build
+  --release`, `cargo clippy --all-targets -D warnings` and a smoke test on every OS,
+  with `# needs-toolchain: perl`; `BUILD_windows` runs `tests/run-windows.ps1`, which
+  selects the native Strawberry Perl once (Git Bash's MSYS Perl is first on PATH) and
+  runs the same steps. The crate left the W6 Windows echo-skip allowlist (BUILD-002).
+- Added `examples/perl_bridge_smoke.rs`, `tests/lib/PerlBridgeSmoke.pm` and
+  `tests/smoke.pl`: a real XS extension built on the crate and loaded into the real
+  Perl through DynaLoader. It exercises the integer, unsigned, float and string
+  conversions (embedded NULs included), the `Sv*OK` / `SvTRUE` / `SvROK` predicates,
+  arrays, hashes, reference counts, `call_coderef`, `croak`/`warn`, the interpreter
+  context and the XS stack frame (50 checks). It passes on Linux Perl 5.38 and on
+  Strawberry Perl 5.42 for Windows.
+- Added unit tests for the flag constants and struct layouts that come from `sv.h` and
+  the shim rather than from a symbol.
+- `build.rs` passes `-undefined dynamic_lookup` for the cdylib on macOS (the flag the XS
+  consumers' build scripts already pass); nothing changes elsewhere.
 - Show the C compiler's own output when the Windows shim compile fails
   (`ExtUtils::CBuilder` `quiet=>0`). The first Windows full build failed
   `perl/conduit` and `perl/irc-server-native` here with only "error building

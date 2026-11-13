@@ -188,6 +188,21 @@ pub const SVs_TEMP: u32 = 0x00000800;
 // underlying function-equivalents here. Where Perl only provides a macro, we
 // implement it manually below.
 
+// croak and warn can unwind: `croak` ends in a `longjmp` back to the enclosing `eval`,
+// and a `$SIG{__WARN__}` handler may itself `die`.  On Windows `longjmp` is implemented
+// as an SEH unwind, so it walks through every Rust frame between Perl and the croak.
+// Rust aborts ("panic in a function that cannot unwind") when an unwind reaches a plain
+// `extern "C"` frame, so the declarations here are `"C-unwind"`, and an XSUB that can
+// reach them must be `unsafe extern "C-unwind" fn` registered with [`newXS_unwind`].
+// (On Unix the `longjmp` does not unwind, so both ABIs behave the same there.)
+#[allow(non_snake_case)]
+extern "C-unwind" {
+    #[link_name = "perl_bridge_croak_message"]
+    fn raw_croak_message(msg: *const c_char) -> !;
+    #[link_name = "perl_bridge_warn_message"]
+    fn raw_warn_message(msg: *const c_char);
+}
+
 #[allow(non_snake_case)]
 extern "C" {
     #[link_name = "perl_bridge_newSViv"]
@@ -234,10 +249,6 @@ extern "C" {
     fn raw_SvRV(sv: *mut SV) -> *mut SV;
     #[link_name = "perl_bridge_sv_rok"]
     fn raw_SvROK(sv: *mut SV) -> c_int;
-    #[link_name = "perl_bridge_croak_message"]
-    fn raw_croak_message(msg: *const c_char) -> !;
-    #[link_name = "perl_bridge_warn_message"]
-    fn raw_warn_message(msg: *const c_char);
     // -- Conduit (WEB11) additions ----------------------------------------
     #[link_name = "perl_bridge_call_coderef"]
     fn raw_call_coderef(
@@ -387,6 +398,28 @@ pub unsafe fn newXS(
     subaddr: unsafe extern "C" fn(*mut CV),
     filename: *const c_char,
 ) -> *mut CV {
+    raw_newXS(name, subaddr, filename)
+}
+
+/// Register an XSUB that may unwind (call [`die`], `croak`, or anything that does).
+///
+/// Same as [`newXS`], but the function is `extern "C-unwind"`.  An XSUB that can reach
+/// [`die`] must use this: on Windows the `longjmp` Perl's `croak` performs is an SEH
+/// unwind that crosses the XSUB's frame, and Rust aborts if that frame is plain
+/// `extern "C"`.  A `"C-unwind"` and a `"C"` function pointer have the same calling
+/// convention; only the unwind behaviour differs, which is the point.  Keep such XSUBs
+/// free of live locals that own resources across the call to `die` where you can:
+/// on Unix the `longjmp` skips destructors, on Windows the unwind runs them.
+pub unsafe fn newXS_unwind(
+    name: *const c_char,
+    subaddr: unsafe extern "C-unwind" fn(*mut CV),
+    filename: *const c_char,
+) -> *mut CV {
+    // SAFETY: identical ABI; the difference is only whether an unwind may pass through.
+    let subaddr = std::mem::transmute::<
+        unsafe extern "C-unwind" fn(*mut CV),
+        unsafe extern "C" fn(*mut CV),
+    >(subaddr);
     raw_newXS(name, subaddr, filename)
 }
 
@@ -656,4 +689,77 @@ macro_rules! xs_init {
             }
         });
     };
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+//
+// Everything here runs without calling into a Perl: it pins the constants and
+// layouts that must agree with `sv.h` and with the C shim. The calls themselves
+// (every shim function, the stack frame, the XS handshake, croak/warn through
+// `longjmp`, callbacks) are checked against a real Perl by `tests/smoke.pl`, which
+// loads the `perl_bridge_smoke` example; see BUILD.
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::mem::{align_of, size_of};
+
+    /// `sv.h`: the `SVf_*` public flags are single bits and distinct, and `SVs_TEMP`
+    /// is a different bit again.
+    #[test]
+    fn sv_flags_are_distinct_single_bits() {
+        let flags = [SVf_IOK, SVf_NOK, SVf_POK, SVs_TEMP];
+        for flag in flags {
+            assert_eq!(flag.count_ones(), 1, "{flag:#x} is not a single bit");
+        }
+        let all = flags.iter().fold(0u32, |acc, f| acc | f);
+        assert_eq!(all.count_ones(), 4, "flags overlap");
+        assert_eq!((SVf_IOK, SVf_NOK, SVf_POK), (0x100, 0x200, 0x400));
+    }
+
+    /// `sv.h`'s `svtype` numbering for the scalar kinds.
+    #[test]
+    fn sv_types_follow_sv_h() {
+        assert_eq!((SVt_IV, SVt_NV, SVt_PV), (1, 2, 4));
+    }
+
+    /// `perl_bridge_shim.c` declares `IV` as `intptr_t`-wide (`IVSIZE` equals the
+    /// pointer width on every supported target; `build.rs` asserts it on Windows)
+    /// and `NV` as `double`.
+    #[test]
+    fn perl_number_types_match_the_target() {
+        assert_eq!(size_of::<IV>(), size_of::<usize>());
+        assert_eq!(size_of::<UV>(), size_of::<usize>());
+        assert_eq!(size_of::<NV>(), 8);
+    }
+
+    /// `XsubFrame` is filled in by `perl_bridge_xsub_frame` as
+    /// `{ SV **base; I32 ax; I32 items; }`.
+    #[test]
+    fn xsub_frame_matches_the_c_struct() {
+        let pointer = size_of::<*mut *mut SV>();
+        // A pointer and two 32-bit integers, padded to the pointer's alignment.
+        assert_eq!(
+            size_of::<XsubFrame>(),
+            (pointer + 2 * size_of::<i32>()).next_multiple_of(pointer)
+        );
+        assert_eq!(align_of::<XsubFrame>(), align_of::<*mut *mut SV>());
+    }
+
+    /// The perl types are opaque: only ever used behind a pointer.
+    #[test]
+    fn opaque_types_are_zero_sized() {
+        assert_eq!(size_of::<SV>(), 0);
+        assert_eq!(size_of::<AV>(), 0);
+        assert_eq!(size_of::<HV>(), 0);
+        assert_eq!(size_of::<CV>(), 0);
+        assert_eq!(size_of::<PerlInterpreter>(), 0);
+    }
+
+    #[test]
+    fn boolean_constants() {
+        assert_eq!((TRUE, FALSE), (1, 0));
+    }
 }
