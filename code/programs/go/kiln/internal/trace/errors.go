@@ -59,4 +59,7 @@ const (
 	reasonHelperNoInit   = "helper-no-init"
 	reasonHelperActivity = "helper-activity"
 	reasonHelperCwd      = "helper-cwd"
+	reasonHelperExe      = "helper-exe"
+	reasonHelperConfig   = "helper-config"
+	reasonFlags          = "flags"
 )

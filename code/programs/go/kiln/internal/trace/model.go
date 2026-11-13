@@ -45,6 +45,7 @@ package trace
 import (
 	"io"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -154,7 +155,17 @@ type proc struct {
 	exited   bool
 	startCwd string // cwd sampled at the "<unfinished ...>" line of a split call
 	hasStart bool
+	grp      helperGroup
 }
+
+// helperGroup says which part of the sandbox helper a process belongs to.
+type helperGroup int
+
+const (
+	grpNone helperGroup = iota
+	grpRoot             // the helper root and its CLONE_THREAD threads
+	grpInit             // the init child and the threads it made during setup
+)
 
 type spawn struct {
 	parent  int
@@ -170,36 +181,52 @@ const maxProcessDepth = 4096
 type Options struct {
 	Limits Limits
 	// HelperRoot says the first (root) process is `kiln sandbox-exec`, the
-	// sandbox helper of KILN04 section 4.3, and the trace has this shape:
+	// sandbox helper of KILN04 section 4.3.  The helper is the Go Kiln binary
+	// (multi-threaded) and the tree has this shape:
 	//
-	//	helper (root) --spawns exactly one--> init child (PID 1 of the new PID
-	//	namespace) --setup, then execve--> the step (sh -c <line>)
+	//	helper (root, plus its CLONE_THREAD threads)
+	//	  --spawns exactly one non-thread child-->  init child (PID 1 of the new
+	//	  PID namespace, plus its threads)
+	//	    --setup, re-exec of HelperExe, then the first exec of any OTHER path-->
+	//	      the step (sh -c <line>)
 	//
-	// All of the root's events are discarded.  It may spawn once (a second
-	// spawn is helper-spawn); after that it may make only ignored-class calls
-	// such as wait4 (anything else is helper-activity).  The init child's events
-	// before its first SUCCESSFUL execve are setup and are discarded too, and
-	// there unknown or refused names (unshare, mount, pivot_root, seccomp) are
-	// tolerated; a spawn by it before that exec is helper-spawn.  The exec event
-	// is kept, the child's working directory becomes the initialCwd given to
-	// Parse (setup chdirs are discarded), and refusals apply normally from then
-	// on.  Without a successful exec the trace is helper-no-exec.  The step's
-	// exit status is the init child's (Trace.StepExit).
+	// Root group: no event of the root or its threads reaches Events.  If it
+	// execs successfully, the first exec must be of HelperExe (else
+	// helper-exe) and a later one is helper-activity.  It may make exactly one
+	// non-thread spawn (a second is helper-spawn); after that only ignored-class
+	// calls are allowed (else helper-activity).  Before the spawn its calls are
+	// setup and are discarded.
+	//
+	// Init group: the setup window lasts until the init child's first successful
+	// exec of a path other than HelperExe; THAT exec is the step.  Inside the
+	// window, events are discarded and unknown or refused names are tolerated;
+	// execs of HelperExe are allowed; CLONE_THREAD threads belong to the init
+	// group; a non-thread spawn is helper-spawn; but a FAILED exec of any other
+	// path is kept as an observation (an ENOENT probe).  At the step's exec the
+	// tracked cwd must equal the initCwd given to Parse, whatever the path form
+	// (else helper-cwd).  A window thread still making calls after the step's
+	// exec is helper-activity.  Without a step exec the trace is helper-no-exec.
+	// The step's exit status is the init child's (Trace.StepExit).
 	HelperRoot bool
+	// HelperExe is the resolved path of the Kiln binary; required with
+	// HelperRoot.  An exec of "/proc/self/exe" inside the init window is
+	// treated as the same binary.
+	HelperExe string
 }
 
 type model struct {
-	lim       Limits
-	opts      Options
-	root      int
-	initCwd   string
-	trace     *Trace
-	procs     map[int]*proc
-	spawns    map[int]spawn
-	spawnList []int
-	initPid   int  // helper mode: the root's one child
-	initExec  bool // helper mode: the init child has exec'd the step
-	rootSpawn bool // helper mode: the root has spawned its child
+	lim        Limits
+	opts       Options
+	root       int
+	initCwd    string
+	trace      *Trace
+	procs      map[int]*proc
+	spawns     map[int]spawn
+	spawnList  []int
+	initPid    int  // helper mode: the root's one non-thread child
+	stepExec   bool // helper mode: the init child has exec'd the step
+	rootSpawn  bool // helper mode: the root group has spawned the init child
+	rootExeced bool // helper mode: the root group has had its one exec
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -212,6 +239,9 @@ func Parse(r io.Reader, initialCwd string, limits Limits) (*Trace, error) {
 // ParseOptions is Parse with options.
 func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) {
 	lim := opts.Limits.withDefaults()
+	if opts.HelperRoot && (!strings.HasPrefix(opts.HelperExe, "/") || strings.IndexByte(opts.HelperExe, 0) >= 0) {
+		return nil, incomplete(0, reasonHelperConfig)
+	}
 	if !strings.HasPrefix(initialCwd, "/") || strings.IndexByte(initialCwd, 0) >= 0 || len(initialCwd) > 4096 {
 		return nil, incomplete(0, reasonInitialCwd)
 	}
@@ -248,6 +278,11 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 // line after the child may already have started running, so a child's first
 // lines can precede the line that says whose child it is.
 func (m *model) buildSpawns(recs []record) *Error {
+	type badClone struct {
+		parent, line int
+		reason       string
+	}
+	var bad []badClone
 	for i := range recs {
 		c := recs[i].call
 		if c == nil {
@@ -261,13 +296,9 @@ func (m *model) buildSpawns(recs []record) *Error {
 			var r string
 			flags, share, r = analyzeClone(c.args)
 			if r != "" {
-				if m.opts.HelperRoot && recs[i].pid == m.root {
-					// The helper itself may clone into new namespaces; that is
-					// its job.  Its child is never treated as sharing anything.
-					flags, share = "", false
-				} else {
-					return incomplete(recs[i].line, r)
-				}
+				// Judged below: the helper's own group may clone into new
+				// namespaces; nobody else may.
+				bad = append(bad, badClone{recs[i].pid, recs[i].line, r})
 			}
 		default:
 			continue
@@ -282,16 +313,44 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
 		}
-		if m.opts.HelperRoot && recs[i].pid == m.root {
-			if m.initPid != 0 {
-				return incomplete(recs[i].line, reasonHelperSpawn)
-			}
-			m.initPid = child
-		}
 		m.spawns[child] = spawn{parent: recs[i].pid, shareFS: share, flags: flags, line: recs[i].line}
 		m.spawnList = append(m.spawnList, child)
 	}
+	for _, b := range bad {
+		if !(m.opts.HelperRoot && m.inRootGroup(b.parent)) {
+			return incomplete(b.line, b.reason)
+		}
+	}
+	if m.opts.HelperRoot {
+		for _, child := range m.spawnList {
+			sp := m.spawns[child]
+			if hasFlag(sp.flags, "CLONE_THREAD") || !m.inRootGroup(sp.parent) {
+				continue
+			}
+			if m.initPid != 0 {
+				return incomplete(sp.line, reasonHelperSpawn)
+			}
+			m.initPid = child
+		}
+	}
 	return nil
+}
+
+// inRootGroup reports whether pid is the helper root or a CLONE_THREAD thread
+// (transitively) of it.  It uses only the spawn records, so it is valid before
+// pass 2.
+func (m *model) inRootGroup(pid int) bool {
+	for n := 0; n < maxProcessDepth; n++ {
+		if pid == m.root {
+			return true
+		}
+		sp, ok := m.spawns[pid]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") {
+			return false
+		}
+		pid = sp.parent
+	}
+	return false
 }
 
 // analyzeClone reads the flags= argument of a clone call.  A clone that could
@@ -308,15 +367,15 @@ func analyzeClone(args []string) (flags string, shareFS bool, reason string) {
 			tok = strings.TrimSpace(tok)
 			switch {
 			case tok == "CLONE_UNTRACED", strings.HasPrefix(tok, "CLONE_NEW"):
-				return "", false, reasonCloneFlags
+				reason = reasonCloneFlags
 			case tok == "CLONE_FS":
 				shareFS = true
 			}
 			if !(strings.HasPrefix(tok, "CLONE_") || strings.HasPrefix(tok, "SIG")) || !isErrnoName(tok) {
-				return "", false, reasonCloneFlags
+				reason = reasonCloneFlags
 			}
 		}
-		return v, shareFS, ""
+		return v, shareFS, reason
 	}
 	return "", false, reasonCloneFlags
 }
@@ -354,13 +413,18 @@ func (m *model) get(pid, line int) (*proc, *Error) {
 		cur = sp.parent
 	}
 	if m.procs[cur] == nil { // the root
-		m.add(&proc{Process: &Process{Pid: cur}, cwd: &cwdCell{path: m.initCwd, refs: 1}})
+		root := &proc{Process: &Process{Pid: cur}, cwd: &cwdCell{path: m.initCwd, refs: 1}}
+		if m.opts.HelperRoot {
+			root.grp = grpRoot
+		}
+		m.add(root)
 	}
 	for k := len(chain) - 1; k >= 0; k-- {
 		child := chain[k]
 		sp := m.spawns[child]
 		parent := m.procs[sp.parent]
 		p := &proc{Process: &Process{Pid: child, Parent: sp.parent, ShareFS: sp.shareFS, CloneFlags: sp.flags}}
+		p.grp = m.groupFor(child, sp, parent)
 		if sp.shareFS {
 			p.cwd = parent.cwd
 			p.cwd.refs++
@@ -372,19 +436,43 @@ func (m *model) get(pid, line int) (*proc, *Error) {
 	return m.procs[pid], nil
 }
 
+// groupFor says which part of the sandbox helper a new child belongs to.  A
+// CLONE_THREAD thread of a root-group process is a root-group thread.  The
+// root's one non-thread child is the init child.  A thread of an init-group
+// process belongs to the init group while setup lasts: a thread of the init
+// child created after the step's exec is part of the step itself.
+func (m *model) groupFor(child int, sp spawn, parent *proc) helperGroup {
+	if !m.opts.HelperRoot {
+		return grpNone
+	}
+	thread := hasFlag(sp.flags, "CLONE_THREAD")
+	switch parent.grp {
+	case grpRoot:
+		if thread {
+			return grpRoot
+		}
+		if child == m.initPid {
+			return grpInit
+		}
+	case grpInit:
+		if thread && (parent.Pid != m.initPid || !m.stepExec) {
+			return grpInit
+		}
+	}
+	return grpNone
+}
+
 func (m *model) add(p *proc) {
 	m.procs[p.Pid] = p
 	m.trace.Procs[p.Pid] = p.Process
 	m.trace.Order = append(m.trace.Order, p.Pid)
 }
 
-// setup reports whether pid is, right now, running sandbox setup rather than
-// the step: the helper root always, the init child until it has exec'd.
-func (m *model) setup(pid int) bool {
-	return m.opts.HelperRoot && (pid == m.root || (pid == m.initPid && !m.initExec))
-}
-
 func isSpawn(name string) bool { return name == "fork" || name == "vfork" || name == "clone" }
+
+func (m *model) isHelperExe(path string) bool {
+	return path == m.opts.HelperExe || path == "/proc/self/exe"
+}
 
 func (m *model) apply(rec *record) *Error {
 	p, e := m.get(rec.pid, rec.line)
@@ -404,19 +492,23 @@ func (m *model) apply(rec *record) *Error {
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
 	}
-	if m.opts.HelperRoot && rec.pid == m.root {
-		return m.applyHelperRoot(rec)
+	if p.grp == grpRoot {
+		return m.applyHelperRoot(p, rec)
+	}
+	inWindow := p.grp == grpInit && !m.stepExec
+	if p.grp == grpInit && m.stepExec && p.Pid != m.initPid {
+		// A thread made during setup still running after the step's exec.
+		return incomplete(rec.line, reasonHelperActivity)
 	}
 	if rec.start {
 		p.startCwd, p.hasStart = p.cwd.path, true
 		return nil
 	}
 	c := rec.call
-	setup := m.setup(rec.pid)
 	if m.opts.HelperRoot {
 		// Classification was deferred in pass 1.
 		if e := classifyName(c.name, rec.line); e != nil {
-			if setup {
+			if inWindow {
 				return nil // sandbox setup: unknown or refused is tolerated
 			}
 			return e
@@ -427,7 +519,7 @@ func (m *model) apply(rec *record) *Error {
 		return e
 	}
 	if isSpawn(c.name) && c.ret.ok() {
-		if setup {
+		if inWindow && !hasFlag(evs[0].Flags, "CLONE_THREAD") {
 			return incomplete(rec.line, reasonHelperSpawn)
 		}
 		// Create the child NOW, copying (or sharing) the parent's cwd as it
@@ -436,18 +528,9 @@ func (m *model) apply(rec *record) *Error {
 			return e
 		}
 	}
-	if setup {
-		if !(isExecName(c.name) && c.ret.ok()) {
-			evs = nil // setup: not part of the step
-		} else {
-			// The step starts where the executor says, whatever setup did.
-			ev := &evs[0]
-			if ev.Path != "" && !strings.HasPrefix(ev.Path, "/") && ev.DirfdPath == "" && ev.Cwd != m.initCwd {
-				return incomplete(rec.line, reasonHelperCwd)
-			}
-			m.initExec = true
-			p.cwd.path = m.initCwd
-			ev.Cwd = m.initCwd
+	if inWindow {
+		if evs, e = m.windowFilter(p, rec, evs); e != nil {
+			return e
 		}
 	}
 	if len(m.trace.Events)+len(evs) > m.lim.MaxEvents {
@@ -457,21 +540,67 @@ func (m *model) apply(rec *record) *Error {
 	return nil
 }
 
-// applyHelperRoot handles a record of the sandbox helper.  Nothing it does
-// becomes an event.  Its one spawn creates the init child; after that only
-// ignored-class calls (which pass 1 has already dropped) are allowed.
-func (m *model) applyHelperRoot(rec *record) *Error {
+// windowFilter decides what survives of a call the init group made during
+// setup.  Execs are the interesting ones: a re-exec of the Kiln binary is part
+// of setup; the first successful exec of anything else is the step; a failed
+// exec of anything else is a real observation (the step's shell probing PATH
+// looks exactly like that) and is kept.
+func (m *model) windowFilter(p *proc, rec *record, evs []Event) ([]Event, *Error) {
+	c := rec.call
+	if !isExecName(c.name) {
+		return nil, nil
+	}
+	ev := evs[0]
+	if m.isHelperExe(ev.Path) {
+		return nil, nil
+	}
+	if !c.ret.ok() {
+		return evs, nil
+	}
+	if p.Pid != m.initPid {
+		return nil, incomplete(rec.line, reasonHelperActivity)
+	}
+	// The step starts where the executor says.  Whatever setup did to the
+	// working directory, it must have left it there, for every path form.
+	if ev.Cwd != m.initCwd {
+		return nil, incomplete(rec.line, reasonHelperCwd)
+	}
+	m.stepExec = true
+	return evs, nil
+}
+
+// applyHelperRoot handles a record of the sandbox helper root or one of its
+// threads.  Nothing it does becomes an event.
+func (m *model) applyHelperRoot(p *proc, rec *record) *Error {
 	if rec.start {
 		return nil
 	}
 	c := rec.call
 	if m.rootSpawn {
+		// After the init child exists the root may only wait (ignored calls,
+		// which pass 1 has already dropped).
 		return incomplete(rec.line, reasonHelperActivity)
 	}
-	if isSpawn(c.name) && c.ret.ok() {
-		m.rootSpawn = true
-		if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+	switch {
+	case isSpawn(c.name) && c.ret.ok():
+		child := int(c.ret.value)
+		if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
+			m.rootSpawn = true
+		}
+		if _, e := m.get(child, rec.line-1); e != nil {
 			return e
+		}
+	case isExecName(c.name) && c.ret.ok():
+		evs, e := m.call(p, rec)
+		if e != nil {
+			return e
+		}
+		if m.rootExeced {
+			return incomplete(rec.line, reasonHelperActivity)
+		}
+		m.rootExeced = true
+		if evs[0].Path != m.opts.HelperExe {
+			return incomplete(rec.line, reasonHelperExe)
 		}
 	}
 	return nil
@@ -502,7 +631,7 @@ func (m *model) finish() *Error {
 		if m.initPid == 0 {
 			return incomplete(0, reasonHelperNoInit)
 		}
-		if !m.initExec {
+		if !m.stepExec {
 			return incomplete(0, reasonHelperNoExec)
 		}
 	}
@@ -691,10 +820,16 @@ rest:
 			return r
 		}
 	}
-	if ev.Path == "" && ev.DirfdPath != "" && ent.flags > 0 && hasFlag(args[ent.flags-1], "AT_EMPTY_PATH") {
-		// fexecve, fstat-by-statx and friends: the descriptor itself is the
-		// object, so its -y path is the path.
-		ev.Path, ev.DirfdPath = ev.DirfdPath, ""
+	if ev.Path == "" && ev.DirfdPath != "" && ent.flags > 0 {
+		empty, r := hasEmptyPath(args[ent.flags-1])
+		if r != "" {
+			return r
+		}
+		if empty {
+			// fexecve, fstat-by-statx and friends: the descriptor itself is the
+			// object, so its -y path is the path.
+			ev.Path, ev.DirfdPath = ev.DirfdPath, ""
+		}
 	}
 	if ent.pth2 > 0 {
 		if ev.Path2, r = pathArg(args[ent.pth2-1]); r != "" {
@@ -720,4 +855,35 @@ func hasFlag(text, flag string) bool {
 		}
 	}
 	return false
+}
+
+// hasEmptyPath decodes a flags argument for AT_EMPTY_PATH (0x1000).  strace
+// prints known bits by name, but a numeric or hex leftover can hide the bit,
+// so numbers are decoded; anything else is not understood and is an error.
+func hasEmptyPath(text string) (bool, string) {
+	found := false
+	for _, tok := range strings.Split(text, "|") {
+		tok = strings.TrimSpace(tok)
+		switch {
+		case tok == "AT_EMPTY_PATH":
+			found = true
+		case strings.HasPrefix(tok, "0x"):
+			v, err := strconv.ParseUint(tok[2:], 16, 64)
+			if err != nil {
+				return false, reasonFlags
+			}
+			found = found || v&0x1000 != 0
+		case tok != "" && tok[0] >= '0' && tok[0] <= '9':
+			v, err := strconv.ParseUint(tok, 10, 64)
+			if err != nil {
+				return false, reasonFlags
+			}
+			found = found || v&0x1000 != 0
+		case isErrnoName(tok):
+			// a symbolic flag: not AT_EMPTY_PATH
+		default:
+			return false, reasonFlags
+		}
+	}
+	return found, ""
 }

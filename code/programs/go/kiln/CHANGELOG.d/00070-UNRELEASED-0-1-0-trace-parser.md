@@ -27,9 +27,12 @@
   `connect`/`bind` addresses, non-symbolic socket domains and truncated
   `sendmsg`/`sendmmsg` arrays are refused; the parent chain is walked
   iteratively; `AT_EMPTY_PATH` uses the descriptor path; and
-  `ParseOptions` with `HelperRoot` models the sandbox helper tree (root, one
-  init child, the step): root events and the init child's pre-exec setup are
-  discarded, the step starts in the executor's cwd, `Trace.InitPid` and
-  `StepExit` expose the init child, and violations are `helper-spawn`,
-  `helper-activity`, `helper-no-init`, `helper-no-exec` and `helper-cwd`.
+  `ParseOptions` with `HelperRoot` and `HelperExe` models the multi-threaded
+  sandbox helper tree (root group, one init child, the step): root events and
+  the init child's setup are discarded, failed execs of other paths are kept,
+  the first successful exec of a non-Kiln path is the step and must start in
+  the executor's cwd, `Trace.InitPid` and `StepExit` expose the init child,
+  and violations are `helper-spawn`, `helper-activity`, `helper-exe`,
+  `helper-no-init`, `helper-no-exec`, `helper-cwd` and `helper-config`.
+  `AT_EMPTY_PATH` is decoded from numeric flags too (`flags` otherwise).
 - KILN04 section 4.5 records the parser decisions of stage 1a.

@@ -219,14 +219,16 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
   `fork`/`clone` succeeds; a split call uses the cwd at its start; a `chdir`
   on a cwd shared by live `CLONE_FS` processes is `cwd-race`. A trace whose
   last line lacks its newline is incomplete.
-- **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true})`
-  models the helper tree: the root spawns exactly one init child, which does
-  setup and then `execve`s the step. Every root event and the init child's
-  pre-exec setup are discarded; `unshare`, `mount`, `pivot_root` and the like
-  are tolerated there only. The step starts in `cwd`, and `Trace.StepExit` and
-  `Trace.InitPid` give the init child's status and pid. Violations are
-  `helper-spawn`, `helper-activity`, `helper-no-init`, `helper-no-exec` and
-  `helper-cwd` (KILN04 section 4.5).
+- **Sandbox helper.** `trace.ParseOptions(r, cwd, trace.Options{HelperRoot: true, HelperExe: kiln})`
+  models the helper tree: the root (and its threads) spawns exactly one init
+  child, which sets up, may re-exec `HelperExe`, and then execs the step; the
+  first successful exec of a non-Kiln path is the step. Root events and the
+  init child's setup are discarded (failed execs of other paths are kept);
+  `unshare`, `mount`, `pivot_root` and the like are tolerated there only. The
+  step's cwd must equal `cwd`. `Trace.StepExit` and `Trace.InitPid` give the
+  init child's status and pid. Violations are `helper-spawn`,
+  `helper-activity`, `helper-exe`, `helper-no-init`, `helper-no-exec`,
+  `helper-cwd` and `helper-config` (KILN04 section 4.5).
 - **Boundary.** Paths are reported as printed, with the working directory or
   `dirfd` path they are relative to. Resolving them against a tree (symlinks,
   `..`, stability) is stage 1b.

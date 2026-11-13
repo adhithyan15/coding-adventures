@@ -192,6 +192,7 @@ func FuzzParse(f *testing.F) {
 	f.Fuzz(func(t *testing.T, in string) {
 		tr, err := ParseOptions(strings.NewReader(in), "/w", Options{
 			HelperRoot: len(in)%2 == 0,
+			HelperExe:  "/usr/bin/kiln",
 			Limits:     Limits{MaxLineBytes: 1 << 16, MaxTotalBytes: 1 << 20, MaxEvents: 1 << 12},
 		})
 		if err != nil {

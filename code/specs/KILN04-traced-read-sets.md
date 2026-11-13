@@ -287,15 +287,20 @@ This filter is the sandbox's own; it is independent of strace's
 
 Two consequences:
 
-- **Trace boundary.** The traced tree has a fixed shape: the Kiln helper
-  (the root) spawns **exactly one** child, the init of the new PID
-  namespace, and that child does the setup and then `execve`s
-  `sh -c <line>`. The parser discards every event of the root, and every
-  event of the init child before its first successful `execve`; the caller
-  first checks that the root's `/proc/<pid>/exe` is the Kiln binary. So the namespace setup (`unshare`, `mount`, `pivot_root`,
-  the seccomp installation) never reaches the refusal list. The step's
-  exit status is the init child's, and the step starts in the working
-  directory the executor names, whatever setup did (§4.5).
+- **Trace boundary.** The traced tree has a fixed shape. The Kiln helper
+  is the Go `kiln` binary, so it is multi-threaded. It (the root, with its
+  `CLONE_THREAD` threads) spawns **exactly one** non-thread child, the init
+  of the new PID namespace. That child does the setup, re-executes the same
+  binary (`/proc/self/exe sandbox-init ...`) as needed, and then `execve`s
+  `sh -c <line>`. **The first successful exec of a non-Kiln path is the
+  step.** The parser discards every event of the root group, and every
+  event of the init child before the step, except failed execs of other
+  paths (§4.5); the caller first checks that the root's `/proc/<pid>/exe`
+  is the Kiln binary. So the namespace setup (`unshare`, `mount`,
+  `pivot_root`, the seccomp installation) never reaches the refusal list.
+  The step's exit status is the init child's, and its working directory
+  must be the one the executor names (§4.5). The stage 3 recipe comparison
+  uses the step's exec event, not the first exec of the init child.
 - **Daemons.** The init child is PID 1 of the new PID namespace, so when
   it exits the kernel kills every survivor. Any process whose exit line is
   `killed by SIGKILL` after the **init child's** exit line gives
@@ -439,26 +444,38 @@ been cut off mid-line.
   unobserved.
 - Pids with leading zeros are not pids.
 
-**The helper.** With `Options.HelperRoot`, the root process is
-`kiln sandbox-exec` and the tree is helper, then one init child, then the
-step (§4.3).
-- **The root.** None of its events ever reaches `Events`. It may spawn
-  exactly one child; a second spawn is `helper-spawn`. After that spawn it
-  may make only ignored-class calls (`wait4`, `waitid`, `kill`, `exit*`);
-  anything else, handled, refused or unknown, is `helper-activity`. It may
-  itself clone into new namespaces. A root that never spawns is
-  `helper-no-init`.
-- **The init child.** Its events before its first **successful** `execve`
-  are discarded, and calls the table would refuse or not know (`unshare`,
-  `mount`, `pivot_root`, `seccomp`, ...) are tolerated there. A spawn by
-  it before that exec is `helper-spawn`. The exec event itself is kept, and
-  refusals apply from then on. Without a successful exec the trace is
-  `helper-no-exec`. Because pass 1 cannot know yet whose call it is,
-  unknown and refused names are judged in pass 2 in this mode.
-- **Working directory.** The step's cwd is the `initialCwd` given to
-  `Parse`, set at the exec; every setup `chdir` is discarded. An exec by a
-  relative path after a setup `chdir` is `helper-cwd`, since that path
-  would resolve against a directory the step never had.
+**The helper.** With `Options.HelperRoot` and `Options.HelperExe` (the
+resolved path of the Kiln binary, required), the tree is: helper root and
+its threads, one init child and its threads, then the step (§4.3). **The
+first successful exec of a non-Kiln path is the step.**
+- **The root group.** None of its events reaches `Events`. If it execs
+  successfully, the first exec must be of `HelperExe` (`helper-exe`), and a
+  later one is `helper-activity`. Threads (`CLONE_THREAD`) of the root, or
+  of its threads, belong to the group. The group makes exactly one
+  non-thread spawn, the init child; a second is `helper-spawn`. Before it,
+  its calls are setup and are discarded, and it may clone into new
+  namespaces. After it, only ignored-class calls (`wait4`, `waitid`,
+  `kill`, `exit*`) are allowed; anything else is `helper-activity`. A root
+  that never spawns is `helper-no-init`.
+- **The init child's window.** It lasts until the init child's first
+  successful exec of a path other than `HelperExe`. Inside it, events are
+  discarded and calls the table would refuse or not know (`unshare`,
+  `mount`, `pivot_root`, `seccomp`, ...) are tolerated, because pass 1
+  cannot yet tell whose call it is and judges these names in pass 2.
+  Successful execs of `HelperExe` (the re-exec; `/proc/self/exe` counts as
+  the same binary) are allowed. `CLONE_THREAD` threads belong to the init
+  group; a non-thread spawn is `helper-spawn`. **Exception:** a failed
+  `execve` or `execveat` of any other path is kept as an observation, since
+  it is a real `ENOENT` probe. A thread made in the window that is still
+  calling after the step's exec is `helper-activity`; threads the step
+  itself makes later are part of the step. Without a step exec the trace is
+  `helper-no-exec`.
+- **Working directory.** At the step's exec the init child's tracked cwd
+  must equal the `initialCwd` given to `Parse`, for every path form,
+  absolute included; otherwise `helper-cwd`. A setup `chdir` is fine only
+  if it ends back there.
+- **Flags.** `AT_EMPTY_PATH` is read from a numeric or hex flags value too
+  (bit `0x1000`); a flags field that cannot be decoded is `flags`.
 - **Exit status and daemons.** The step's status is the init child's
   (`Trace.StepExit`), and `Trace.InitPid` names it for the later
   `daemon-left` rule, which the parser does not implement.
