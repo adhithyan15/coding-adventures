@@ -24,7 +24,8 @@ Read from ``code/programs/go/build-tool/internal/discovery/discovery.go``
 Two consequences drive the checks below:
 
 * ``BUILD_mac_and_linux`` is never used on Windows.  A package with only that
-  file has *no* Windows build (fine, deliberately skipped).
+  file has *no* Windows build, which is a skip like any other (class F below):
+  it needs a real ``BUILD_windows`` or an allowlist entry.
 * A package with a plain ``BUILD`` and no ``BUILD_windows`` runs that ``BUILD``
   on Windows, and the executor runs every line as ``cmd /C <line>``.  A
   ``BUILD`` written for ``sh`` therefore breaks (or worse, silently skips).
@@ -50,12 +51,59 @@ THE DRIFT CLASSES
                                   runners (e.g. node --test vs vitest).
     E   windows-posix-fallback    No BUILD_windows, and the BUILD that Windows
                                   falls back to uses POSIX-only shell syntax.
+    F   windows-skip              The recipe Windows runs does nothing: every
+                                  command is an ``echo``/``exit 0``/``if ...
+                                  echo`` no-op, it is empty, or the package has
+                                  no Windows build file at all.  Blocking unless
+                                  the package is on the W6 allowlist.
+    G   skip-allowlist            The W6 allowlist itself is wrong: an entry is
+                                  stale (the package is no longer a skip, or no
+                                  longer exists), malformed, or the list grew
+                                  past its cap.  Blocking.
+    H   conditional-skip          A real recipe that falls back to
+                                  ``echo ... skipping`` when the toolchain is
+                                  missing (``where swift && swift test || echo
+                                  ... skipping``).  Advisory: it still passes
+                                  without testing anything.
 
 Class D is about test *runners* only.  A ``BUILD_windows`` that is an
 intentional skip stub (it runs no runner at all) is not a mismatch, and a
 runner set that is merely a subset or superset of BUILD's (cargo skipped on
 Windows, say) is reported as *advisory*: it never fails ``--check``.  Only a
 swapped, disjoint runner set blocks.
+
+THE W6 GUARDRAIL (classes F and G)
+==================================
+
+BUILD-002 sets the goal that every package runs real tests on Linux, macOS and
+Windows.  An echo-only ``BUILD_windows`` is a gap, not a form of support, so the
+audit fails on one unless the package is listed, with a reason, in
+``code/specs/data/windows-skip-allowlist.json``.  The list can only shrink:
+
+* every entry carries a ``category`` (``intrinsic-apple``,
+  ``intrinsic-platform``, ``no-tests-by-design`` or ``tracked-follow-up``), a
+  ``reason`` and ``evidence`` (a spec section or file that backs it);
+* an entry whose package is no longer a skip is *stale* and fails the audit
+  (class G), so converting a package forces its line out of the list and the
+  list cannot rot;
+* ``ALLOWLIST_CAPS`` below fixes the number of entries per category.  A new
+  entry fails the audit until that cap is raised in the same diff, which makes
+  growth a visible, reviewed decision.  Caps are only ever lowered, to match a
+  shrinking list; raising one needs an owner decision recorded in BUILD-002.
+
+``intrinsic-apple`` is for what genuinely needs Apple frameworks (Metal,
+Objective-C); the audit checks that the package itself says so.  Everything
+else must be ``tracked-follow-up`` (a gap with a plan) or a reasoned
+``intrinsic-platform`` / ``no-tests-by-design`` case.
+
+What counts as a skip is decided by ``windows_skip_shape``: every effective
+line, split on ``&``/``&&``/``||``/``else``, must be a no-op (``echo``,
+``exit``/``exit /b 0``, ``cmd /c exit|echo``, ``type nul``, ``ver >nul``,
+``call echo``, ``goto :eof``, a PowerShell ``Write-Host``), optionally behind
+``if [not] exist|defined|errorlevel|a==b``.  A line that also runs any real
+command (``where swift && swift test || echo skipping``) is not a skip; that
+shape is the advisory class H.  Comments (``#``, ``REM``, ``::``) and blank
+lines do not count as commands.
 
 Class (d) from the original incident notes -- Ruby library code passing sizes
 to native methods that overflow a 32-bit C ``long`` on Windows -- needs a
@@ -67,6 +115,7 @@ USAGE
     python3 code/scripts/audit_build_windows.py            # print a report
     python3 code/scripts/audit_build_windows.py --check    # exit 1 on findings
     python3 code/scripts/audit_build_windows.py --root DIR # audit another tree
+    python3 code/scripts/audit_build_windows.py --verbose  # list every advisory line
 
 The script uses only the standard library.
 """
@@ -114,11 +163,15 @@ def find_packages(root: Path) -> list[Path]:
 
 def read_command_lines(path: Path) -> list[str]:
     """The lines the executor would run: no blanks, no ``#`` comments, no
-    ``rem`` lines."""
+    ``rem`` lines, no ``::`` label-comments."""
     lines: list[str] = []
     for raw in path.read_text(encoding="utf-8", errors="replace").splitlines():
         line = raw.strip().lstrip("﻿")
-        if not line or line.startswith("#") or re.match(r"(?i)^@?rem(\s|$)", line):
+        if (
+            not line
+            or line.startswith(("#", "::"))
+            or re.match(r"(?i)^@?rem(\s|$)", line)
+        ):
             continue
         lines.append(line)
     return lines
@@ -153,6 +206,9 @@ CLASS_TITLES = {
     "C": "ruby-standardrb-eol (standardrb without --except Layout/EndOfLine)",
     "D": "runner-mismatch (BUILD and BUILD_windows run different test runners)",
     "E": "windows-posix-fallback (no BUILD_windows; BUILD uses POSIX-only syntax)",
+    "F": "windows-skip (Windows recipe runs nothing and the package is not allowlisted)",
+    "G": "skip-allowlist (stale, malformed or over-cap W6 allowlist entry)",
+    "H": "conditional-skip (recipe falls back to `echo ... skipping` if the toolchain is missing)",
 }
 
 
@@ -438,6 +494,307 @@ def check_windows_posix_fallback(package: Path, rel: str) -> list[Finding]:
 
 
 # ---------------------------------------------------------------------------
+# Class F -- a Windows recipe that runs nothing (BUILD-002 W6)
+# ---------------------------------------------------------------------------
+
+# A line longer than this is never analysed as a no-op: every real recipe line
+# is far shorter, and the bound keeps the regular expressions below linear in
+# practice on a hostile file (CodeQL py/redos).
+MAX_SKIP_LINE = 2000
+
+# `if [/i] [not] <condition> ` -- the conditions cmd offers.  Quoted operands
+# are matched as `"[^"]*"`, bare ones as `\S+`; no group is nested inside a
+# quantifier, so there is nothing to backtrack exponentially.
+IF_PREFIX = re.compile(
+    r'(?i)^if\s+(?:/i\s+)?(?:not\s+)?'
+    r'(?:exist\s+(?:"[^"]*"|\S+)'
+    r"|defined\s+\S+"
+    r"|errorlevel\s+\d+"
+    r"|cmdextversion\s+\d+"
+    r'|(?:"[^"]*"|\S+)\s*==\s*(?:"[^"]*"|\S+)'
+    r'|(?:"[^"]*"|\S+)\s+(?:equ|neq|lss|leq|gtr|geq)\s+(?:"[^"]*"|\S+)'
+    r")\s*"
+)
+
+# Commands that do nothing useful for a build: they print, exit cleanly or are
+# a placeholder.  `exit 1` is deliberately absent -- that is a hard failure,
+# the opposite of a skip.  `echo` and `cmd /c echo` take any text; the rest must
+# match whole (optionally followed by a redirection such as `>nul 2>&1`).
+ECHO_COMMAND = re.compile(r"(?i)^(?:cmd(?:\.exe)?\s+/[ck]\s+|call\s+)?echo(?![A-Za-z0-9_-])")
+EXACT_NOOP = re.compile(
+    r"(?i)^(?:"
+    r"(?:cmd(?:\.exe)?\s+/[ck]\s+|call\s+)?exit(?:\s+/b)?(?:\s+0)?"
+    r"|type\s+nul"
+    r"|ver"
+    r"|goto\s+:?eof"
+    r")(?:\s*\d?>+\s*(?:nul|&\d)){0,2}\s*$"
+)
+POWERSHELL_PRINT = ("write-host", "write-output", "write-warning", "echo")
+
+ELSE_SPLIT = re.compile(r"\)\s*else\b\s*", re.IGNORECASE)
+
+
+def split_segments(line: str) -> list[str]:
+    """Split a cmd line into the commands it chains.
+
+    Separators are ``&&``, ``||``, ``&`` and ``) else``, and only outside
+    double quotes (cmd hands quoted text to the program untouched).  Parentheses
+    are not separators, because ``C:\\Program Files (x86)\\tool.exe`` is one
+    command; they are trimmed from each segment's ends instead.
+    """
+    pieces: list[str] = []
+    current: list[str] = []
+    in_quote = False
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        if ch == '"':
+            in_quote = not in_quote
+            current.append(ch)
+        elif not in_quote and ch in "&|":
+            # `&&`, `||` and a lone `&` all end a command; a lone `|` is a pipe
+            # whose right side is a real command, so keep it in the segment.
+            if line[i : i + 2] in ("&&", "||"):
+                pieces.append("".join(current))
+                current = []
+                i += 1
+            elif ch == "&":
+                pieces.append("".join(current))
+                current = []
+            else:
+                current.append(ch)
+        else:
+            current.append(ch)
+        i += 1
+    pieces.append("".join(current))
+    segments: list[str] = []
+    for piece in pieces:
+        segments.extend(ELSE_SPLIT.split(piece) if not _has_quote(piece) else [piece])
+    return [seg.strip() for seg in segments if seg.strip()]
+
+
+def _has_quote(text: str) -> bool:
+    return '"' in text
+
+
+def _is_powershell_print(segment: str) -> bool:
+    """``powershell -Command "Write-Host skipping"`` and nothing else."""
+    tokens = segment.split()
+    if not tokens or tokens[0].lower().removesuffix(".exe") not in ("powershell", "pwsh"):
+        return False
+    lowered = [t.lower() for t in tokens]
+    for flag in ("-command", "-c"):
+        if flag in lowered:
+            rest = " ".join(tokens[lowered.index(flag) + 1 :]).lstrip("\"'").lower()
+            return rest.startswith(POWERSHELL_PRINT) and ";" not in rest and "&" not in rest
+    return False
+
+
+def is_noop_segment(segment: str) -> bool:
+    """True when one chained command does nothing for the build."""
+    text = segment.strip().lstrip("@").strip()
+    for _ in range(4):  # `if a if b echo x` style nesting, bounded
+        text = text.strip().lstrip("(").rstrip(")").strip().lstrip("@").strip()
+        match = IF_PREFIX.match(text)
+        if not match:
+            break
+        text = text[match.end() :]
+    text = text.strip().lstrip("(").rstrip(")").strip().lstrip("@").strip()
+    if not text:
+        return True  # `if exist x ()` -- an empty branch
+    if ECHO_COMMAND.match(text):
+        # `echo y | cargo publish` feeds a real command; split_segments keeps a
+        # lone `|` inside its segment so it shows up here.
+        return "|" not in strip_double_quoted(text)
+    return bool(EXACT_NOOP.match(text)) or _is_powershell_print(text)
+
+
+def is_noop_line(line: str) -> bool:
+    if len(line) > MAX_SKIP_LINE:
+        return False
+    segments = split_segments(line)
+    return bool(segments) and all(is_noop_segment(seg) for seg in segments)
+
+
+def windows_skip_shape(package: Path) -> tuple[str, str] | None:
+    """If the recipe Windows runs for ``package`` does nothing, return
+    ``(file, shape)``; otherwise ``None``.
+
+    ``file`` is ``BUILD_windows`` or the ``BUILD`` Windows falls back to, or
+    ``(none)`` when no candidate exists.  Starlark BUILD files are evaluated
+    rather than run line by line, so they are never a skip.
+    """
+    effective = effective_build_file(package, WINDOWS_CANDIDATES)
+    if effective is None:
+        if any(package.glob("BUILD*")):
+            return ("(none)", "no Windows build file (only BUILD_linux/BUILD_mac*)")
+        return None
+    if is_starlark(effective):
+        return None
+    lines = read_command_lines(effective)
+    if not lines:
+        return (effective.name, "empty recipe (no commands)")
+    if not all(is_noop_line(line) for line in lines):
+        return None
+    if all(re.match(r"(?i)^@?echo(?![A-Za-z0-9_-])", line) for line in lines):
+        return (effective.name, f"echo-only: {lines[0]}")
+    return (effective.name, f"no-op only (echo/exit/if-echo): {lines[0]}")
+
+
+def check_conditional_skip(package: Path, rel: str) -> list[Finding]:
+    """Class H: a real command with an ``echo ... skipping`` fallback."""
+    effective = effective_build_file(package, WINDOWS_CANDIDATES)
+    if effective is None or effective.name != "BUILD_windows" or is_starlark(effective):
+        return []
+    if windows_skip_shape(package) is not None:
+        return []  # a plain skip is class F's business
+    findings = []
+    for line in read_command_lines(effective):
+        if len(line) > MAX_SKIP_LINE:
+            continue
+        segments = split_segments(line)
+        has_real = any(not is_noop_segment(seg) for seg in segments)
+        prints_skip = any(
+            re.match(r"(?i)^[(@\s]*(?:if\s.*?[(\s])?echo\b.*\bskipping\b", seg) for seg in segments
+        )
+        if has_real and prints_skip:
+            findings.append(
+                Finding(
+                    "H",
+                    rel,
+                    effective.name,
+                    f"passes without testing when the toolchain is missing: {line}",
+                    advisory=True,
+                )
+            )
+    return findings
+
+
+# ---------------------------------------------------------------------------
+# Class G -- the W6 allowlist (data file + caps)
+# ---------------------------------------------------------------------------
+
+ALLOWLIST_PATH = ("code", "specs", "data", "windows-skip-allowlist.json")
+
+CATEGORIES = (
+    "intrinsic-apple",  # needs Apple frameworks (Metal, Objective-C)
+    "intrinsic-platform",  # bound to a platform API with no equivalent here
+    "no-tests-by-design",  # nothing to run: rule definitions, shell packages
+    "tracked-follow-up",  # a real gap with a plan; must only shrink
+)
+
+# How many entries each category may hold.  This is the "can only shrink"
+# rule's teeth: adding an entry to the JSON without raising a cap here fails
+# the audit, so growth always shows up as a reviewed change to this table.
+# Lower a number when an entry is removed; raise one only with an owner decision
+# recorded in BUILD-002 (see the module docstring).
+ALLOWLIST_CAPS = {
+    "intrinsic-apple": 11,
+    "intrinsic-platform": 1,
+    "no-tests-by-design": 7,
+    "tracked-follow-up": 4,
+}
+
+# An `intrinsic-apple` entry must be backed by the package itself: its name, its
+# BUILD or its Windows recipe has to mention an Apple framework or platform.
+APPLE_EVIDENCE = re.compile(r"(?i)metal|objc|darwin|macos|apple")
+
+
+def load_allowlist(root: Path) -> tuple[dict[str, dict], list[str]]:
+    """Read the allowlist; return ``(entries, problems)``.  A missing file is an
+    empty list (a throwaway tree, or a repo that has none)."""
+    path = root.joinpath(*ALLOWLIST_PATH)
+    if not path.is_file():
+        return {}, []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        return {}, [f"{path.name} is not valid JSON: {error}"]
+    entries = data.get("entries") if isinstance(data, dict) else None
+    if not isinstance(entries, dict):
+        return {}, [f"{path.name} must be an object with an `entries` object"]
+    return entries, []
+
+
+def validate_entry(root: Path, rel: str, entry: object) -> list[str]:
+    """Everything wrong with one entry's shape, independent of the package."""
+    if not isinstance(entry, dict):
+        return ["entry must be an object"]
+    problems = []
+    category = entry.get("category")
+    if category not in CATEGORIES:
+        problems.append(f"category must be one of {', '.join(CATEGORIES)}")
+    for key in ("reason", "evidence"):
+        value = entry.get(key)
+        if not isinstance(value, str) or len(value.strip()) < 10:
+            problems.append(f"`{key}` must be a real sentence (at least 10 characters)")
+    if category == "intrinsic-apple":
+        package = root / "code" / rel
+        haystack = rel
+        for name in ("BUILD", "BUILD_windows"):
+            if (package / name).is_file():
+                haystack += (package / name).read_text(encoding="utf-8", errors="replace")
+        if not APPLE_EVIDENCE.search(haystack):
+            problems.append(
+                "intrinsic-apple, but nothing in the package names Metal/ObjC/Darwin/macOS"
+            )
+    return problems
+
+
+def check_skip_allowlist(root: Path, skips: dict[str, tuple[str, str]]) -> list[Finding]:
+    """Class F (an unlisted skip) and class G (a bad or stale entry)."""
+    entries, problems = load_allowlist(root)
+    findings = [Finding("G", "(allowlist)", ALLOWLIST_PATH[-1], p) for p in problems]
+    shown = "/".join(ALLOWLIST_PATH)
+
+    for rel, (file, shape) in sorted(skips.items()):
+        if rel not in entries:
+            findings.append(
+                Finding(
+                    "F",
+                    rel,
+                    file,
+                    f"{shape}.  Give it a real recipe; if it truly cannot run on "
+                    f"Windows, add a reasoned entry to {shown} (BUILD-002 W6)",
+                )
+            )
+
+    counts: dict[str, int] = {}
+    for rel, entry in sorted(entries.items()):
+        for problem in validate_entry(root, rel, entry):
+            findings.append(Finding("G", rel, ALLOWLIST_PATH[-1], problem))
+        category = entry.get("category") if isinstance(entry, dict) else None
+        if category in CATEGORIES:
+            counts[category] = counts.get(category, 0) + 1
+        if rel not in skips:
+            gone = not (root / "code" / rel).is_dir()
+            why = "the package no longer exists" if gone else "it now runs a real Windows recipe"
+            findings.append(
+                Finding(
+                    "G",
+                    rel,
+                    ALLOWLIST_PATH[-1],
+                    f"stale entry: {why}.  Delete it from the allowlist (and lower "
+                    "its category cap in ALLOWLIST_CAPS)",
+                )
+            )
+    for category, count in sorted(counts.items()):
+        cap = ALLOWLIST_CAPS.get(category, 0)
+        if count > cap:
+            findings.append(
+                Finding(
+                    "G",
+                    "(allowlist)",
+                    ALLOWLIST_PATH[-1],
+                    f"{count} `{category}` entries but the cap is {cap}.  The "
+                    "allowlist may only shrink; raising ALLOWLIST_CAPS needs an "
+                    "owner decision recorded in BUILD-002",
+                )
+            )
+    return findings
+
+
+# ---------------------------------------------------------------------------
 # Driver
 # ---------------------------------------------------------------------------
 
@@ -447,23 +804,39 @@ CHECKS = (
     check_ruby_standardrb,
     check_runner_mismatch,
     check_windows_posix_fallback,
+    check_conditional_skip,
 )
 
 
 def audit(root: Path) -> list[Finding]:
     findings: list[Finding] = []
+    skips: dict[str, tuple[str, str]] = {}
     for package in find_packages(root):
         rel = package.relative_to(root / "code").as_posix()
         for check in CHECKS:
             findings.extend(check(package, rel))
+        skip = windows_skip_shape(package)
+        if skip is not None:
+            skips[rel] = skip
+    findings.extend(check_skip_allowlist(root, skips))
     return sorted(findings, key=lambda f: (f.cls, f.package, f.file, f.detail))
 
 
-def render(findings: list[Finding]) -> str:
+def render(findings: list[Finding], verbose: bool = True) -> str:
     out: list[str] = []
     for cls, title in CLASS_TITLES.items():
         group = [f for f in findings if f.cls == cls]
         out.append(f"[{cls}] {title}: {len(group)}")
+        if cls == "H" and group and not verbose:
+            # Class H is an inventory of ~130 advisory lines; summarise it per
+            # language and leave the full list to --verbose.
+            by_language: dict[str, int] = {}
+            for f in group:
+                language = f.package.split("/")[1]
+                by_language[language] = by_language.get(language, 0) + 1
+            summary = ", ".join(f"{k}: {v}" for k, v in sorted(by_language.items()))
+            out.append(f"    by language: {summary}  (--verbose lists each)")
+            continue
         for f in group:
             tag = " (advisory)" if f.advisory else ""
             out.append(f"    {f.package}/{f.file}{tag}: {f.detail}")
@@ -483,10 +856,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--check", action="store_true", help="exit 1 if anything is found"
     )
+    parser.add_argument(
+        "--verbose", action="store_true", help="list every advisory class H line"
+    )
     args = parser.parse_args(argv)
 
     findings = audit(args.root)
-    print(render(findings))
+    print(render(findings, verbose=args.verbose))
     if args.check and any(not f.advisory for f in findings):
         print(
             "\nBuild-front drift found; see the module docstring for what each class means.",

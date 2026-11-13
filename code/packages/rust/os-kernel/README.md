@@ -28,6 +28,15 @@ cross-compilation targets**
 ~/.cargo/bin/cargo build -p os-kernel --target aarch64-unknown-uefi
 ```
 
+## Build and test in CI
+
+The `BUILD` recipe (the same on Linux, macOS and Windows) adds the
+`x86_64-unknown-uefi` target, runs the `Kernel` unit tests on the host
+(`cargo test --lib`), cross-builds the UEFI image
+(`cargo build --release --target x86_64-unknown-uefi`) and runs clippy with
+`-D warnings` for both the UEFI target and the host. The QEMU boot test below
+is not part of CI.
+
 ## Boot tests
 
 ```bash

@@ -1,3 +1,7 @@
-echo "font-parser-python: compile-only crate (requires Python dev headers to link)"
-echo "  To build: cargo build -p font-parser-python --release"
-echo "  To package for PyPI: maturin build --release"
+# build-tool: deps=python/font-parser
+# Own target dir: font-parser-node, font-parser-python and font-parser-ruby all
+# produce a cdylib called font_parser_native, so sharing the workspace target
+# directory would let parallel builds overwrite each other's library.
+cargo build --release -p font-parser-python --target-dir target
+cargo clippy -p font-parser-python --all-targets --target-dir target -- -D warnings
+python3 tests/smoke_test.py

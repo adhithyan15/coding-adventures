@@ -204,6 +204,26 @@ pub fn run_command(
 mod tests {
     use super::*;
 
+    /// A command that succeeds, for tests that really spawn a child process.
+    ///
+    /// On Unix that is the real `echo`/`false`.  Windows has neither as an
+    /// executable (`echo` is a cmd.exe builtin, `false` does not exist), so there
+    /// the test executable itself stands in: libtest's `--list` prints the test
+    /// names and exits 0, and an unknown flag makes it exit with 101.  Either way
+    /// the code under test still does a genuine spawn-and-wait.
+    #[cfg(unix)]
+    fn succeeding_command() -> Vec<String> {
+        vec!["echo".into()]
+    }
+
+    #[cfg(not(unix))]
+    fn succeeding_command() -> Vec<String> {
+        vec![
+            std::env::current_exe().unwrap().to_string_lossy().into_owned(),
+            "--list".into(),
+        ]
+    }
+
     // --- parse_assignment tests ---
 
     #[test]
@@ -313,7 +333,8 @@ mod tests {
     fn run_echo_command() {
         let mut env = BTreeMap::new();
         env.insert("PATH".into(), std::env::var("PATH").unwrap_or_default());
-        let cmd = vec!["echo".into(), "hello".into()];
+        let mut cmd = succeeding_command();
+        cmd.push("hello".into());
         let result = run_command(&cmd, &env, &None);
         assert_eq!(result.unwrap(), 0);
     }

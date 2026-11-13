@@ -291,6 +291,20 @@ func clippyGatedCommands(pkg discovery.Package, clippy bool) []string {
 func clippyStepFor(buildCommands []string) (string, bool) {
 	const clippy = "cargo clippy --all-targets -- -D warnings"
 
+	// A BUILD that runs its own `cargo clippy` owns its lint policy, so the
+	// automatic host-target step is not added. The case this exists for is a
+	// crate that cannot be compiled for the host at all (os-kernel is a no_std
+	// UEFI application: `cargo clippy --all-targets` on the host dies with
+	// "unwinding panics are not supported without std"), whose BUILD lints the
+	// target it really builds for and the host-buildable lib/tests explicitly,
+	// with the same `-D warnings`. The gate is not weakened: the package still
+	// has to pass its own clippy steps.
+	for _, raw := range buildCommands {
+		if runsCargoClippy(raw) {
+			return "", false
+		}
+	}
+
 	guarded := ""
 	for _, raw := range buildCommands {
 		command := strings.TrimSpace(raw)
@@ -322,6 +336,36 @@ func clippyStepFor(buildCommands []string) (string, bool) {
 
 	// No cargo anywhere (e.g. a bare `echo SKIP`): nothing to lint here.
 	return "", false
+}
+
+// runsCargoClippy reports whether a shell command invokes `cargo clippy`
+// (ignoring quoted text, like runsCargo): a `cargo` word immediately followed
+// by a `clippy` word.
+func runsCargoClippy(command string) bool {
+	var unquoted strings.Builder
+	quote := rune(0)
+	for _, r := range command {
+		switch {
+		case quote != 0:
+			if r == quote {
+				quote = 0
+			}
+		case r == '\'' || r == '"':
+			quote = r
+			unquoted.WriteByte(' ')
+		default:
+			unquoted.WriteRune(r)
+		}
+	}
+	fields := strings.FieldsFunc(unquoted.String(), func(r rune) bool {
+		return r == ' ' || r == '\t' || r == ';' || r == '&' || r == '|' || r == '(' || r == ')'
+	})
+	for i := 0; i+1 < len(fields); i++ {
+		if fields[i] == "cargo" && fields[i+1] == "clippy" {
+			return true
+		}
+	}
+	return false
 }
 
 // runsCargo reports whether a shell command actually *invokes* cargo, as
