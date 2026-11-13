@@ -303,3 +303,22 @@ func TestHomeItselfOnly(t *testing.T) {
 	h = mk()
 	wantNoReasons(t, h.run(stat(root+"/go.work")))
 }
+
+// A successful followed lookup of a name that the post-run disk shows absent
+// and the action never made: something removed it afterwards (here an untracked
+// leftover link, which the stat followed into code/p/b), so the call may have
+// gone somewhere the disk can no longer show.  Found by the differential
+// fuzzer's "leftover replaced" burst.
+func TestSuccessfulLookupOfARemovedLeftover(t *testing.T) {
+	const l = "code/p/a/leftlnk"
+	h := quiet(t)
+	wantUnstable(t, "stat then unlink", h.run(stat(l), unlinkOf(l)))
+	// A name the action made is judged by its change log instead.
+	h = quiet(t)
+	wantStable(t, "own", h.run(created(l, "O_WRONLY|O_CREAT|O_EXCL"), stat(l), unlinkOf(l)))
+	// Not followed, or failing: nothing to contradict.
+	h = quiet(t)
+	wantStable(t, "lstat", h.run(lstat(l), unlinkOf(l)))
+	h = quiet(t)
+	wantStable(t, "failed stat", h.run(fail(stat(l), "ENOENT")))
+}

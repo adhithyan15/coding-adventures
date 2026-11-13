@@ -112,6 +112,11 @@ type classifier struct {
 	// post-run disk shows as a file, relAbs those it shows absent.  The span is
 	// the earliest start and the latest completion of such lookups.
 	relFinal, relAbs map[string]span
+	// gone holds followed final names that a SUCCESSFUL call walked to and the
+	// post-run disk shows absent: something removed them afterwards, so the
+	// call may have gone through a link or file that is no longer there.  Only
+	// a name the action itself made can be vouched for (checkStability).
+	gone map[string]bool
 	// relax is set while a successful stat or exec target is resolved.
 	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
@@ -145,7 +150,7 @@ func newClassifier(p *prepared) *classifier {
 		created: map[string]pos{}, absent: map[string]pos{}, links: map[string]string{},
 		dirs: map[string]bool{}, cache: map[string]node{}, mods: map[string][]mod{},
 		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
-		relFinal: map[string]span{}, relAbs: map[string]span{},
+		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]bool{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
 	}
 }
@@ -684,6 +689,15 @@ func (c *classifier) checkStability() {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) {
+			c.reason(rUnstable)
+		}
+	}
+	for p := range c.gone {
+		made := false
+		for _, m := range c.mods[p] {
+			made = made || m.made
+		}
+		if !made {
 			c.reason(rUnstable)
 		}
 	}

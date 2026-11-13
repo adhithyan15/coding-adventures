@@ -363,7 +363,11 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 		}
 	}
 	if w.stop != "" && !w.stopFinal {
-		switch last := w.stop == w.final && !w.stopMid; {
+		last := w.stop == w.final && !w.stopMid
+		if last && !w.stopPresent && c.callOK && !settled {
+			c.gone[w.stop] = true
+		}
+		switch {
 		case last && settled:
 		case last && c.relax && !w.stopPresent:
 			c.noteRel(c.relAbs, w.stop)

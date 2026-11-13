@@ -737,6 +737,8 @@ type mop struct {
 type burstOp struct {
 	kind   int
 	suffix string
+	// inRoot says suffix is a path under the checkout, not under the base.
+	inRoot bool
 }
 
 // bursts are the build patterns that KILN04 section 5.5 relaxes.  A burst
@@ -751,14 +753,20 @@ type burstOp struct {
 //	4  create+truncate t.o with contents; exec it; unlink it
 //	5  create+truncate t.o; stat it twice
 //	6  stat of the base directory itself ($HOME, $TMPDIR, the checkout, ...)
+//	7  stat a leftover link; unlink it; create a file in its place; stat again
+//	8  the same for an untracked leftover file and a tracked link
+//	9  mkdir o; symlink o/l; create through the link; stat the link
 var bursts = [][]burstOp{
-	{{0, "/o"}, {8, "/o/x"}, {7, "/o/x"}, {12, "/o/x"}},
-	{{8, "/t.o"}, {7, "/t.o"}, {5, "/t.o"}},
-	{{9, "/t.o"}, {12, "/t.o"}, {5, "/t.o"}},
-	{{10, "/t.o"}, {12, "/t.o"}, {5, "/t.o"}},
-	{{8, "/t.o"}, {15, "/t.o"}, {5, "/t.o"}},
-	{{8, "/t.o"}, {12, "/t.o"}, {12, "/t.o"}},
-	{{12, ""}},
+	{{0, "/o", false}, {8, "/o/x", false}, {7, "/o/x", false}, {12, "/o/x", false}},
+	{{8, "/t.o", false}, {7, "/t.o", false}, {5, "/t.o", false}},
+	{{9, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{10, "/t.o", false}, {12, "/t.o", false}, {5, "/t.o", false}},
+	{{8, "/t.o", false}, {15, "/t.o", false}, {5, "/t.o", false}},
+	{{8, "/t.o", false}, {12, "/t.o", false}, {12, "/t.o", false}},
+	{{12, "", false}},
+	{{12, "/code/p/a/leftlnk", true}, {5, "/code/p/a/leftlnk", true}, {8, "/code/p/a/leftlnk", true}, {12, "/code/p/a/leftlnk", true}},
+	{{12, "/code/p/a/left.txt", true}, {5, "/code/p/a/left.txt", true}, {10, "/code/p/a/left.txt", true}, {12, "/code/p/a/left.txt", true}},
+	{{0, "/o", false}, {1, "/o/l", false}, {8, "/o/l", false}, {12, "/o/l", false}},
 }
 
 // perturbations are the operations a burst may be followed by, aimed at the
@@ -849,7 +857,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % 26
+		kind := next() % (18 + len(bursts))
 		if kind < 18 {
 			add(kind, m.path(data, i), "")
 			continue
@@ -857,13 +865,24 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		b := bursts[(kind-18)%len(bursts)]
 		base := m.burstBase(byte(next()))
 		alt := base + "/u.o"
+		full := func(op burstOp) string {
+			if op.inRoot {
+				return m.root + op.suffix
+			}
+			return base + op.suffix
+		}
 		for _, op := range b {
-			// Contents for the exec burst: a program; others read from the data.
-			add(op.kind, base+op.suffix, alt)
+			add(op.kind, full(op), alt)
 		}
 		if next()%3 == 0 {
 			pt := perturbations[next()%len(perturbations)]
-			name := base + b[len(b)-1].suffix
+			name := full(b[len(b)-1])
+			if next()%3 == 0 {
+				// Aim at a directory the name goes through instead.
+				if q := parentOf(name); q != "" {
+					name = q
+				}
+			}
 			if pt.swap {
 				add(pt.kind, alt, name)
 			} else {

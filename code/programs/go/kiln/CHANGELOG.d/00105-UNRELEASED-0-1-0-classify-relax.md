@@ -27,3 +27,11 @@
   the name, a hard link, a symlink, an exchange, a second unlink). A seeded
   deterministic run of the oracle (`TestDifferentialSeeded`) joins the normal
   test run.
+
+### Fixed
+
+- A successful followed call (stat, chdir, chmod, ...) on a name the post-run
+  disk shows absent, that the action never made, is now `unstable-path`. The
+  stability rule had a hole: stat through an untracked leftover link, then
+  unlink the link, left the link's target unobserved. Found by the new
+  "leftover replaced" burst of the differential fuzzer; the fix is fail-closed.
