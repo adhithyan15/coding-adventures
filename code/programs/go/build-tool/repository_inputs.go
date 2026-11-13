@@ -470,7 +470,14 @@ func isCtCompareCorpus(changed string) bool {
 //	code/specs/fixtures/test-bootstrap-v10/cases.json    → false
 //	code/specs/fixtures/ct-compare-v1/cases.json         → false
 //	code/scripts/tests/test_bootstrap_harness_conformance.py → false
-//
+func isTestBootstrapInput(changed string) bool {
+	switch changed {
+	case "code/scripts/tfv.py", "code/scripts/bootstrap_harness_conformance.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
+}
+
 // isKilnToolchainPinInput reports whether a changed path is one of the pin
 // sources Kiln's toolchains.json must agree with.
 func isKilnToolchainPinInput(changed string) bool {
@@ -479,14 +486,6 @@ func isKilnToolchainPinInput(changed string) bool {
 		return true
 	}
 	return false
-}
-
-func isTestBootstrapInput(changed string) bool {
-	switch changed {
-	case "code/scripts/tfv.py", "code/scripts/bootstrap_harness_conformance.py":
-		return true
-	}
-	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,
