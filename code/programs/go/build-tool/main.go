@@ -1145,6 +1145,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Fprintln(os.Stderr, "Error: -exec-wrapper cannot be combined with -clippy or -prune-leaf-targets (recording needs both off).")
 			return 1
 		}
+		if execWrapper, werr = resolveExecWrapper(execWrapper); werr != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", werr)
+			return 1
+		}
 	}
 	if flagGiven["emit-results"] {
 		if *emitResults == "" {
@@ -1153,6 +1157,12 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		}
 		if cerr := checkResultsPath(*emitResults); cerr != nil {
 			fmt.Fprintf(os.Stderr, "Error: -emit-results: %v\n", cerr)
+			return 1
+		}
+		// Remove any older file now: a missing file then means "this run
+		// did not complete", never a stale record from an earlier run.
+		if rerr := os.Remove(*emitResults); rerr != nil && !os.IsNotExist(rerr) {
+			fmt.Fprintf(os.Stderr, "Error: -emit-results: %v\n", rerr)
 			return 1
 		}
 	}

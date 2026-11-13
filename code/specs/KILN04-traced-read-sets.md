@@ -545,6 +545,23 @@ left room; the code is authoritative.
   that never ran has `steps_run` 0 and its BUILD's step count as
   `steps_total`. Packages are keyed by repo-relative path and sorted. The file
   is written after the run, even when a package failed.
+- **Freshness.** `-emit-results` removes any existing file at its path
+  before doing any work, so early exits (no packages, hash failure, usage
+  errors after the check) leave no file. Consumers must require exit 0 **and**
+  a file written by this run.
+- **The wrapper program.** `wrapper[0]` is resolved at startup: a relative
+  path containing a separator is rejected, a bare name goes through
+  `exec.LookPath` and must resolve to an absolute path, and the absolute path
+  is what runs. A BUILD can therefore never supply the wrapper through the
+  package working directory. A wrapper that cannot start reports `failed` with
+  `steps_run` equal to the step's index (it never started).
+- **The line the wrapper sees.** The executor rewrites some lines
+  deterministically before running them (the Swift native build-system pin;
+  on Windows the inline-env rewrite), so the wrapper's `sh -c` argument can
+  differ from the BUILD text. The stage 3b recipe check must compare with the
+  line after those rewrites; `executor.EffectiveStepLines(pkg)` returns exactly
+  those lines. The rewrites depend only on the line and the build-tool source,
+  which is in the weak key.
 - **Output path.** A symlink or non-regular `-emit-results` path is refused
   before the build starts (and again by the atomic writer).
 

@@ -31,6 +31,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -79,6 +80,25 @@ func parseExecWrapper(value string) ([]string, error) {
 	return argv, nil
 }
 
+// resolveExecWrapper makes wrapper[0] an absolute path, so a step's working
+// directory (the package, which a BUILD can write to) can never supply the
+// wrapper. A path with a separator must already be absolute; a bare name is
+// resolved with exec.LookPath, and the result must be absolute.
+func resolveExecWrapper(argv []string) ([]string, error) {
+	first := argv[0]
+	if strings.ContainsAny(first, `/\`) && !filepath.IsAbs(first) {
+		return nil, fmt.Errorf("-exec-wrapper program %q is a relative path; use an absolute path or a bare name found on PATH", first)
+	}
+	resolved, err := exec.LookPath(first)
+	if err != nil {
+		return nil, fmt.Errorf("-exec-wrapper program %q: %w", first, err)
+	}
+	if !filepath.IsAbs(resolved) {
+		return nil, fmt.Errorf("-exec-wrapper program %q resolved to a relative path %q", first, resolved)
+	}
+	return append([]string{resolved}, argv[1:]...), nil
+}
+
 // buildKilnResults assembles the export, sorted by rel_path. Only packages
 // present in results are listed.
 func buildKilnResults(packages []discovery.Package, repoRoot string, results map[string]executor.BuildResult) (*kilnLegacyResults, error) {
@@ -92,8 +112,11 @@ func buildKilnResults(packages []discovery.Package, repoRoot string, results map
 		if err != nil {
 			return nil, fmt.Errorf("package %s: path %s is not under %s: %w", pkg.Name, pkg.Path, repoRoot, err)
 		}
+		// A run that recorded a total reports it; every other outcome
+		// (skipped, unsupported, the cycle-detected failure, ...) reports the
+		// BUILD's own step count.
 		total := r.StepsTotal
-		if r.Status != "built" && r.Status != "failed" {
+		if total == 0 {
 			total = len(pkg.BuildCommands)
 		}
 		out.Packages = append(out.Packages, kilnResultPackage{

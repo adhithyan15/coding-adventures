@@ -63,3 +63,39 @@ func TestRunCommandsWithoutWrapperIsUnchanged(t *testing.T) {
 		t.Fatalf("failure result = %+v", res)
 	}
 }
+
+func TestWrapperThatCannotStartReportsStepNotRun(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX shell commands")
+	}
+	old := ExecWrapper
+	defer func() { ExecWrapper = old }()
+	ExecWrapper = []string{"/nonexistent/kiln-wrapper"}
+	pkg := discovery.Package{Name: "go/x", Path: t.TempDir()}
+	res := runCommands(pkg, []string{"echo a", "echo b"}, time.Now())
+	if res.Status != "failed" || res.StepsRun != 0 || res.StepsTotal != 2 {
+		t.Fatalf("result = %+v", res)
+	}
+	if !strings.Contains(res.Stderr, "failed to start step") {
+		t.Fatalf("stderr = %q", res.Stderr)
+	}
+}
+
+func TestEffectiveStepLinesApplyDeterministicRewrites(t *testing.T) {
+	pkg := discovery.Package{BuildCommands: []string{"swift build -c release", `FOO=bar echo hi`, "echo plain"}}
+
+	linux := effectiveStepLinesForOS(pkg, "linux")
+	if !strings.Contains(linux[0], "--build-system native") || linux[1] != "FOO=bar echo hi" || linux[2] != "echo plain" {
+		t.Fatalf("linux lines = %q", linux)
+	}
+	win := effectiveStepLinesForOS(pkg, "windows")
+	if strings.Contains(win[0], "--build-system") || win[1] != `set "FOO=bar"&& echo hi` {
+		t.Fatalf("windows lines = %q", win)
+	}
+	if pkg.BuildCommands[0] != "swift build -c release" {
+		t.Fatal("EffectiveStepLines mutated the package")
+	}
+	if got := EffectiveStepLines(pkg); len(got) != 3 {
+		t.Fatalf("got %q", got)
+	}
+}

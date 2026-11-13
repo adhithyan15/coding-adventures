@@ -404,8 +404,14 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		if err != nil {
 			elapsed := time.Since(start).Seconds()
 			exitCode := 1
+			stepsRun := i + 1
 			if exitErr, ok := err.(*exec.ExitError); ok {
 				exitCode = exitErr.ExitCode()
+			} else {
+				// The process never started (e.g. the wrapper cannot be
+				// executed): this step did not run.
+				stepsRun = i
+				allStderr = append(allStderr, "failed to start step: "+err.Error()+"\n")
 			}
 			return BuildResult{
 				PackageName: pkg.Name,
@@ -414,7 +420,7 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 				Stdout:      strings.Join(allStdout, ""),
 				Stderr:      strings.Join(allStderr, ""),
 				ReturnCode:  exitCode,
-				StepsRun:    i + 1,
+				StepsRun:    stepsRun,
 				StepsTotal:  len(commands),
 			}
 		}
@@ -431,6 +437,28 @@ func runCommands(pkg discovery.Package, commands []string, start time.Time) Buil
 		StepsRun:    len(commands),
 		StepsTotal:  len(commands),
 	}
+}
+
+// EffectiveStepLines returns exactly the lines the executor runs for pkg's
+// BUILD steps (with -clippy off, as when recording): the BUILD lines after
+// the executor's deterministic rewrites (the Swift native build-system pin,
+// and the Windows inline-env rewrite on Windows). A wrapper receives these,
+// not the raw BUILD lines, so a recipe comparison (KILN04 stage 3b) must use
+// them. The rewrites are a function of the line and the build-tool source.
+func EffectiveStepLines(pkg discovery.Package) []string {
+	return effectiveStepLinesForOS(pkg, runtime.GOOS)
+}
+
+func effectiveStepLinesForOS(pkg discovery.Package, goos string) []string {
+	lines := swiftNativeBuildSystemCommands(pkg.BuildCommands, goos)
+	out := make([]string, len(lines))
+	for i, l := range lines {
+		if goos == "windows" {
+			l = rewriteInlineEnvPrefixForWindows(l)
+		}
+		out[i] = l
+	}
+	return out
 }
 
 // wrapCommand rebuilds cmd so it runs behind the wrapper argv: the process

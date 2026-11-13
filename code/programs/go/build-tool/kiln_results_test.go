@@ -300,3 +300,52 @@ func TestBuildKilnResultsSortedAndUnsupportedTotals(t *testing.T) {
 		t.Fatalf("got %+v", doc.Packages)
 	}
 }
+
+func TestEmitResultsRemovesStaleFileBeforeEarlyExit(t *testing.T) {
+	// A root without code/ exits early (1) before any results are written.
+	root := t.TempDir()
+	results := filepath.Join(t.TempDir(), "results.json")
+	if err := os.WriteFile(results, []byte(`{"schema":"kiln-legacy-results/1","packages":[]}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	code, _ := runBuildTool(t, "-root", root, "-emit-results", results)
+	if code == 0 {
+		t.Fatal("expected the early exit to fail")
+	}
+	if _, err := os.Lstat(results); !os.IsNotExist(err) {
+		t.Fatalf("stale results file survived an early exit: %v", err)
+	}
+}
+
+func TestExecWrapperRelativeOrUnresolvableProgramIsRejected(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("POSIX shell script")
+	}
+	root := kilnFixture(t, map[string]string{"demo": "echo a\n"})
+	planted := filepath.Join(root, "code", "packages", "go", "demo", "kiln")
+	marker := filepath.Join(root, "ran")
+	if err := os.WriteFile(planted, []byte("#!/bin/sh\ntouch "+marker+"\n"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, w := range []string{`["./kiln"]`, `["kiln/x"]`, `["../kiln"]`, `["kiln"]`} {
+		code, stderr := runBuildTool(t, "-root", root, "-force", "-validate-build-files=false", "-exec-wrapper", w)
+		if code != 1 || !strings.Contains(stderr, "-exec-wrapper program") {
+			t.Fatalf("%s: exit %d, stderr %q", w, code, stderr)
+		}
+	}
+	if _, err := os.Stat(marker); err == nil {
+		t.Fatal("a wrapper planted in the package directory was run")
+	}
+}
+
+func TestBuildKilnResultsFailedWithoutRunUsesBuildStepCount(t *testing.T) {
+	root := t.TempDir()
+	pkgs := []discovery.Package{{Name: "a", Path: filepath.Join(root, "a"), BuildCommands: []string{"x", "y"}}}
+	doc, err := buildKilnResults(pkgs, root, map[string]executor.BuildResult{"a": {Status: "failed"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if doc.Packages[0].StepsTotal != 2 || doc.Packages[0].StepsRun != 0 {
+		t.Fatalf("got %+v", doc.Packages[0])
+	}
+}
