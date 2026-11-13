@@ -5,7 +5,7 @@
 //! code can stand for thousands of bytes: the code for "the previous string
 //! plus its own first byte" (the *tricky token*, see the decoder docs) makes
 //! the dictionary grow by one byte per code, so `k` codes of ~13 bits each
-//! expand to about `k * k / 2` bytes.  A 13 KB stream is 32 MiB; a 128 KB one
+//! expand to about `k * k / 2` bytes.  A 15 KB stream is 40 MB; a 128 KB one
 //! is two gigabytes.
 //!
 //! The header's `original_length` does not help: it is attacker-controlled, so
@@ -88,11 +88,11 @@ fn chain_bomb_expansion(codes: usize) -> usize {
 
 #[test]
 fn a_chain_bomb_over_the_cap_is_rejected() {
-    // 8000 codes: about 32 MiB of output from a 13 KB stream.
-    let codes = 8000;
+    // 9000 codes: about 40 MB of output from a 15 KB stream.
+    let codes = 9000;
     assert!(chain_bomb_expansion(codes) > 2 * CAP, "the fixture must exceed the cap");
     let stream = chain_bomb(codes, u32::MAX);
-    assert!(stream.len() < 16 * 1024, "the bomb is small: {} bytes", stream.len());
+    assert!(stream.len() < 20 * 1024, "the bomb is small: {} bytes", stream.len());
     assert!(decompress(&stream).is_err(), "a decompression bomb must be an Err");
 }
 
@@ -101,7 +101,7 @@ fn a_chain_bomb_is_rejected_whatever_length_it_declares() {
     // Declaring a length over the cap changes nothing; neither does declaring
     // exactly the cap plus one.  (A declared length at or under the cap stops
     // the decoder early instead; see the next test.)
-    let codes = 8000;
+    let codes = 9000;
     for declared in [u32::MAX, (CAP as u32) + 1, 1 << 30] {
         assert!(decompress(&chain_bomb(codes, declared)).is_err(), "declared {declared}");
     }
@@ -111,7 +111,7 @@ fn a_chain_bomb_is_rejected_whatever_length_it_declares() {
 fn a_declared_length_under_the_cap_stops_the_decoder_early() {
     // The same bomb, but the header asks for only 1000 bytes: the decoder
     // delivers exactly those and never reaches the cap.
-    let out = decompress(&chain_bomb(8000, 1000)).expect("the declared prefix is valid");
+    let out = decompress(&chain_bomb(9000, 1000)).expect("the declared prefix is valid");
     assert_eq!(out, vec![b'A'; 1000]);
 }
 
@@ -149,4 +149,9 @@ fn highly_redundant_real_data_under_the_cap_round_trips() {
     // ratio limit would have rejected it; the absolute cap does not).
     let zeros = vec![0u8; 1 << 18];
     assert_eq!(decompress(&compress(&zeros)).unwrap(), zeros);
+}
+
+#[test]
+fn the_public_cap_is_sixteen_mebibytes() {
+    assert_eq!(lzw::MAX_OUTPUT_LEN, CAP);
 }
