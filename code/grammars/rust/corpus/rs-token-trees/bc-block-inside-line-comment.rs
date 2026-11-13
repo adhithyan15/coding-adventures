@@ -1,0 +1,2 @@
+// /* never opens
+fn f() {}
