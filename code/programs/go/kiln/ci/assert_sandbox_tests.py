@@ -35,6 +35,7 @@ REQUIRED = (
     "TestSandboxNoHostIPC",
     "TestSandboxNoReachableSocketsOrFifos",
     "TestSandboxRealStrace",
+    "TestSandboxStraceTraceSetNamesAreValid",
 )
 
 FINAL = {"pass", "fail", "skip"}

@@ -226,7 +226,14 @@ type result struct {
 // working directory the package's.
 func (f *sandboxFixture) sandboxRun(t *testing.T, action string, argv ...string) result {
 	t.Helper()
-	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	return f.sandboxRunTimeout(t, 45*time.Second, action, argv...)
+}
+
+// sandboxRunTimeout is sandboxRun with its own bound.  On a timeout the test
+// fails with what the step had printed so far.
+func (f *sandboxFixture) sandboxRunTimeout(t *testing.T, limit time.Duration, action string, argv ...string) result {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(context.Background(), limit)
 	defer cancel()
 	args := append([]string{sandbox.ExecCommand, "--config", f.cfg, "--"}, argv...)
 	cmd := exec.CommandContext(ctx, f.exe, args...)
@@ -507,12 +514,33 @@ func TestSandboxNoHostIPC(t *testing.T) {
 	}
 }
 
+// TestSandboxStraceTraceSetNamesAreValid checks every name of the -e trace=
+// set against the strace this runner has, one at a time, so an invalid name
+// (futimens is not a system call on x86-64) fails loudly with its name instead
+// of as an opaque strace error in the real-strace test.
+func TestSandboxStraceTraceSetNamesAreValid(t *testing.T) {
+	straceBin, err := exec.LookPath("strace")
+	if err != nil {
+		skipOrFail(t, "strace is not installed")
+	}
+	names := strings.Split(requiredTraceSet, ",")
+	if len(names) < 20 {
+		t.Fatalf("the trace set has only %d names", len(names))
+	}
+	for _, name := range names {
+		out, err := exec.Command(straceBin, "-o", os.DevNull, "-e", "trace="+name, "true").CombinedOutput()
+		if err != nil {
+			t.Errorf("strace does not accept trace=%s: %v: %s", name, err, strings.TrimSpace(string(out)))
+		}
+	}
+}
+
 // requiredTraceSet is the -e trace= set of KILN04 section 4.3.
 const requiredTraceSet = "%file,%process,%network,getdents,getdents64,fchdir," +
 	"io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount," +
 	"fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace," +
 	"process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark," +
-	"fchmod,fchown,fsetxattr,fremovexattr,futimens"
+	"fchmod,fchown,fsetxattr,fremovexattr"
 
 // TestSandboxRealStrace runs the sandbox under the real strace the way the
 // recorder will, and parses the trace with the stage 1a parser in helper mode.
@@ -620,10 +648,14 @@ func TestSandboxNoReachableSocketsOrFifos(t *testing.T) {
 	}
 	script := strings.Join([]string{
 		`for p in ` + strings.Join(hostPaths, " ") + `; do if test -e "$p"; then echo "visible:$p"; fi; done`,
-		`n=0; for m in $(awk '{print $5}' /proc/self/mountinfo); do n=$((n+1)); find "$m" -xdev \( -type s -o -type p \) -print 2>/dev/null | sed 's/^/found:/'; done`,
+		// Every mount, in parallel (/usr on a runner image is huge), each with
+		// find, which only lstats: it never opens a FIFO, so it cannot block.
+		// -quit ends a mount's walk at its first hit.  Progress lines make a
+		// timeout diagnosable: a mount with "start:" and no "done:" is the slow one.
+		`n=0; for m in $(awk '{print $5}' /proc/self/mountinfo | sort -u); do n=$((n+1)); ( echo "start:$m"; find "$m" -xdev \( -type s -o -type p \) -print -quit 2>/dev/null | sed 's/^/found:/'; echo "done:$m" ) & done; wait`,
 		`echo "mounts:$n"`,
 	}, "; ")
-	r := f.sandboxRun(t, "pkg", "sh", "-c", script)
+	r := f.sandboxRunTimeout(t, 4*time.Minute, "pkg", "sh", "-c", script)
 	if r.code != 0 {
 		t.Fatalf("exit %d: %s", r.code, r.stderr)
 	}

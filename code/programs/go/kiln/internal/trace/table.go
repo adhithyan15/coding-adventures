@@ -150,7 +150,6 @@ func buildTable() map[string]entry {
 	h("fchown", entry{kind: KindWrite, role: roleFdPath, min: 3, max: 3})
 	h("fsetxattr", entry{kind: KindWrite, role: roleFdPath, min: 5, max: 5})
 	h("fremovexattr", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
-	h("futimens", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
 	h("mknod", entry{kind: KindWrite, min: 3, max: 3, pth: 1})
 	h("mknodat", entry{kind: KindWrite, min: 4, max: 4, dirfd: 1, pth: 2})
 
