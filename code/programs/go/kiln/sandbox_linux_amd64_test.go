@@ -35,6 +35,20 @@ import (
 // reporting a green run in which nothing was tested.
 const requireEnv = "KILN_REQUIRE_SANDBOX"
 
+// withCover adds GOCOVERDIR to the environment of a child that is this test
+// binary acting as kiln, when the binary is coverage-instrumented: otherwise
+// the Go runtime prints "warning: GOCOVERDIR not set" to standard error when
+// the child exits, which the tests (rightly) do not tolerate.  It is for the
+// ROOT's environment only; the sandbox hands the step exactly the configured
+// list, which TestSandboxEnvironmentIsExactlyTheConfiguredList checks.
+func withCover(t *testing.T, env []string) []string {
+	t.Helper()
+	if testing.CoverMode() == "" {
+		return env
+	}
+	return append(env, "GOCOVERDIR="+t.TempDir())
+}
+
 // skipOrFail skips the test, or fails it when the sandbox is required.
 func skipOrFail(t *testing.T, format string, args ...any) {
 	t.Helper()
@@ -205,7 +219,7 @@ func probeSandbox(t *testing.T, f *sandboxFixture) {
 	probeOnce.Do(func() {
 		cmd := exec.Command(f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "true")
 		cmd.Dir = f.pkg
-		cmd.Env = []string{"KILN_ACTION=pkg", "PATH=/usr/bin:/bin"}
+		cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "PATH=/usr/bin:/bin"})
 		var eb bytes.Buffer
 		cmd.Stderr = &eb
 		if err := cmd.Run(); err != nil {
@@ -240,7 +254,7 @@ func (f *sandboxFixture) sandboxRunTimeout(t *testing.T, limit time.Duration, ac
 	args := append([]string{sandbox.ExecCommand, "--config", f.cfg, "--"}, argv...)
 	cmd := exec.CommandContext(ctx, f.exe, args...)
 	cmd.Dir = f.pkg
-	cmd.Env = []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "SECRET_FROM_PARENT=leak", "PATH=/usr/bin:/bin"}
+	cmd.Env = withCover(t, []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "SECRET_FROM_PARENT=leak", "PATH=/usr/bin:/bin"})
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	start := time.Now()
@@ -366,7 +380,7 @@ func TestSandboxEnvironmentIsExactlyTheConfiguredList(t *testing.T) {
 		t.Errorf("environment:\n%s\nwant:\n%s", strings.Join(got, "\n"), strings.Join(f.env, "\n"))
 	}
 	for _, line := range got {
-		if strings.HasPrefix(line, "KILN_") || strings.HasPrefix(line, "SECRET_") {
+		if strings.HasPrefix(line, "KILN_") || strings.HasPrefix(line, "SECRET_") || strings.HasPrefix(line, "GOCOVERDIR") {
 			t.Errorf("%q reached the step", line)
 		}
 	}
@@ -382,7 +396,7 @@ func TestSandboxStdinAndDescriptors(t *testing.T) {
 	args := []string{sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat; echo eof; ls /proc/self/fd | sort -n | tail -1"}
 	cmd := exec.Command(f.exe, args...)
 	cmd.Dir = f.pkg
-	cmd.Env = []string{"KILN_ACTION=pkg", "PATH=/usr/bin:/bin"}
+	cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "PATH=/usr/bin:/bin"})
 	cmd.Stdin = pr
 	cmd.ExtraFiles = []*os.File{pr, pw} // descriptors 3 and 4 in the root
 	done := make(chan struct{})
@@ -422,7 +436,7 @@ func TestSandboxExitStatusAndErrors(t *testing.T) {
 	}
 	// No KILN_ACTION at all.
 	cmd := exec.Command(f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "true")
-	cmd.Dir, cmd.Env = f.pkg, []string{"PATH=/usr/bin"}
+	cmd.Dir, cmd.Env = f.pkg, withCover(t, []string{"PATH=/usr/bin"})
 	var eb bytes.Buffer
 	cmd.Stderr = &eb
 	if err := cmd.Run(); err == nil || !strings.Contains(eb.String(), "KILN_ACTION") {
@@ -430,7 +444,7 @@ func TestSandboxExitStatusAndErrors(t *testing.T) {
 	}
 	// The wrong working directory.
 	cmd = exec.Command(f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "true")
-	cmd.Dir, cmd.Env = f.repo, []string{"KILN_ACTION=pkg", "PATH=/usr/bin"}
+	cmd.Dir, cmd.Env = f.repo, withCover(t, []string{"KILN_ACTION=pkg", "PATH=/usr/bin"})
 	eb.Reset()
 	cmd.Stderr = &eb
 	if err := cmd.Run(); err == nil || !strings.Contains(eb.String(), "package directory") {
@@ -574,7 +588,7 @@ func TestSandboxRealStrace(t *testing.T) {
 	defer cancel()
 	cmd := exec.CommandContext(ctx, straceBin, args...)
 	cmd.Dir = f.pkg
-	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
+	cmd.Env = withCover(t, []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"})
 	var out, eb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &eb
 	if err := cmd.Run(); err != nil {
