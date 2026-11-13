@@ -737,6 +737,144 @@ Every package that gets
 `network` is reported, which replaces the hand-curated network entries in
 `never.json`.
 
+### 5.5 Classification decisions (stage 1b-i)
+
+Stage 1b-i (`internal/traced`) turns the parsed traces of one action into a
+**raw record**. It is pure: the traces, the package index, a tracked-tree view,
+a post-run disk view, `host-roots.json`, the pinned ecosystems, the weak key's
+tool set and the scrubbed `HOME` and `TMPDIR` all arrive as arguments. It
+computes no digest and applies no cross-action rule (stages 1b-ii and 4). These
+are the decisions it settled where §5.1 to §5.4 left room. The code is
+authoritative for details.
+
+**Stage 1a additions.** `trace.Event.Argv` holds the decoded argument vector of
+an exec call (nil unless decoded exactly), and `Trace.StepEvent()` returns the
+step's first successful exec. The recipe check of §4.3 needs both.
+
+**The record.** `Entries` (`pkg:`, `path:`, `list:`), `Writes`,
+`TrackedWrites`, `UntrackedObservations`, `Traversed` and `Reasons`, all sorted
+and unique. Two fields go beyond §7's list:
+- `TrackedWrites` holds the exact tracked paths written, the tainted-set
+  candidates. `Writes` holds write roots only.
+- `Traversed` holds every in-repository directory or link that a resolved path
+  went through. The merge job needs it for the cross-action half of the
+  stability rule: a traversed component that another action created, renamed,
+  unlinked or re-linked is `unstable-path`.
+
+The traces of one action are classified as one sequence. Created paths, absent
+probes and links carry from one step into the next.
+
+**Resolution.**
+- A successful open takes its final path from the `-y` return annotation. The
+  walk still runs, to find the symlinks on the way (each one is an observation).
+  If the walk and the kernel disagree and either path is in the repository, the
+  post-run disk no longer shows what the call saw: `unstable-path`. Outside the
+  repository the `-y` path simply wins.
+- A final symlink is not followed by `lstat`, `readlink`, `unlink*`, `rmdir`,
+  `mkdir*`, `symlink*`, `rename*`, `link`, `mknod*`, `l*xattr`, `lchown`, by
+  `O_NOFOLLOW` or `O_CREAT|O_EXCL`, or by an `AT_SYMLINK_NOFOLLOW` flag. A
+  trailing slash always follows.
+- A lookup asks, in order: the links, directories and removals this action made
+  (the trace knows the state at that moment), then the post-run disk, then the
+  tracked tree for a path the disk lost. A component none of them has ends the
+  walk: the rest is kept as written, as the kernel would have failed there.
+- `/proc` and `/dev/fd` are never walked: the disk's `/proc/self` is the
+  classifier's own. They are treated as lexical paths, and `..` out of them
+  resumes the walk.
+- **Stability.** A traversed component is stable if any of these holds:
+  - the trace itself knew it at that moment (a link or directory this action
+    made, or a path it removed);
+  - this action never changed it;
+  - its last change was a clean creation, and the traversal came after it;
+  - it did not exist yet when the call ran, and this action made it later.
+
+  Otherwise (for example, a tracked link this action replaced after reading
+  through it) it is `unstable-path`. A component that is **untracked, present
+  and never touched by this action** is not unstable here: it is a
+  pre-existing leftover, which §7's cross-action rules decide, from
+  `UntrackedObservations` and `Traversed`.
+
+**Mapping.**
+- A path is the action's own if it, or a directory above it, was created
+  earlier in the trace. This covers a `rename` or `link` destination.
+- An open that cannot prove emptiness (`O_WRONLY|O_CREAT` alone, `O_APPEND`) is
+  an observation. A read after an `ENOENT` probe is an observation too.
+- `rename` and `link` write their source and observe it. A failed one observes
+  both names by the errno (`ENOENT`: absent) and creates nothing.
+  `RENAME_EXCHANGE` creates nothing.
+- An observation of an untracked path that is present gives its entry **and**
+  an untracked observation. The merge job rejects the record if another action
+  wrote the path, if it pre-existed, or if nobody explains it.
+- A `list:` entry is added for a directory listing. The `open` of that
+  directory has already produced its `pkg:` or `path:` entry.
+- The repository root is recorded only as `list:.`; a stat of it records
+  nothing. `.git` itself records nothing; any path beneath a `.git` segment, at
+  any depth, or a listing of it, is `vcs-read`. A repository path that
+  KILN02 §3.5 rejects is `trace-incomplete:bad-path`.
+- A write root is the shortest prefix of the written path that is not tracked.
+  A tracked path is its own root. A write beneath `.git` is
+  `trace-incomplete:vcs-write`.
+
+**Exec.**
+- The head bytes come from the tracked tree for a tracked file, else from the
+  post-run disk. A `#!` line follows up to 4 hops; a fifth is `exec-depth`. An
+  ELF file's `PT_INTERP` is read from its program headers with the `debug/elf`
+  structures. `debug/elf.File` is not used, because it reads the section
+  headers at the end of the file.
+- A successful exec that cannot be read (a program the action made and removed,
+  `/proc/self/exe`), an unknown format or a malformed ELF is
+  `trace-incomplete:exec-unreadable`, `exec-format` or `exec-elf`. This also
+  costs a compiled-then-deleted `conftest` program its record: nothing can say
+  what loader it used.
+- A program the action made is not an entry, but its loading chain is still
+  observed.
+
+**`/proc`.** Only `/proc/self/status` and `/proc/self/stat` are
+`trace-visible`. The ephemeral list is applied next. Every other `/proc` path
+is `trace-incomplete:proc-path`, including `/proc/self/fd` itself and the bare
+`/dev/fd` directory. An open of `/proc/self/fd/N` or `/dev/fd/N` is classified
+by its `-y` path (a pipe or socket is nothing). A failed one is judged by the
+paths' own rules.
+
+**Out of the repository.** The order is: made by this action, ephemeral list,
+longest covering root, `absent-ok`, else `host-read`.
+- `X/**` in the ephemeral list also covers `X`.
+- `absent-ok` covers a path and everything under it, but only for absent probes.
+- An `image` read needs the file's ctime from the disk to be no later than the
+  job-start stamp. A zero ctime or a failed lstat gives `host-read:<path>`,
+  never a pass.
+- A `tool` root, present or absent, needs the tool in the weak key
+  (`tool-not-keyed:<tool>`).
+- A `state` root reads as `host-read` and an absent probe under it is allowed.
+  The fetcher check is stage 5; `fetchersEnabled` is the switch.
+- A write under a `state` root is `state-write` for now.
+- An absent probe under `$TMPDIR` that is not the action's own path is a
+  `host-read`, as §5.3 reads.
+
+Reasons carry `$HOME` and `TMPDIR` redacted, control characters replaced and
+200 bytes at most.
+
+**Network.**
+- The wildcard address (`0.0.0.0`, `::`) counts as local for a connect.
+- A bind counts only if it succeeded earlier in the trace. A bind to port 0
+  stands for every port of that address, since `getsockname` is not parsed.
+- A bind to a wildcard address matches a connect to loopback on the same port.
+- A pathname `AF_UNIX` bind also creates the path (a write, and the action's
+  own).
+- Inside the repository, a Unix connect is also a path observation; outside it,
+  only the §5.4 table applies.
+- Any failure other than `ECONNREFUSED` or `ENOENT` is judged like a success.
+- An unnamed Unix address and a call without an address (a connected send,
+  `listen`) are ignored.
+- The program in `network:<program>` is the process's last exec path, made
+  absolute against the call's working directory, with the same redaction.
+
+**Reasons from the step itself.** A step whose init child (or root) did not
+exit with 0 gives `failed`. After the init child's exit line, a process killed
+by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of exactly
+`[<shell>, "-c", <line>]`; `argv[0]` is not compared. `Classify` runs it when
+the input carries the expected lines.
+
 ## 6. When nothing is recorded
 
 A traced pass becomes a record only when every check passes. Otherwise

@@ -95,6 +95,11 @@ type Event struct {
 	Flags string
 	// Addr is the destination of a network call; nil when there is none.
 	Addr *Addr
+	// Argv is the argument vector of an execve/execveat call, decoded exactly.
+	// It is nil when it could not be decoded exactly (a truncated string, a
+	// trailing "..." that means strace printed only the first elements, a
+	// pointer): the recipe comparison (stage 1b) then fails closed.
+	Argv []string
 }
 
 // Exit is a process's exit line.
@@ -138,6 +143,25 @@ func (t *Trace) StepExit() *Exit {
 	}
 	if p := t.Procs[pid]; p != nil {
 		return p.Exit
+	}
+	return nil
+}
+
+// StepEvent returns the exec event that started the step: the first
+// SUCCESSFUL execve/execveat of the process whose exit status is the step's
+// (the init child under HelperRoot, else the root).  Failed execs before it are
+// ENOENT probes of the shell's PATH search and are not the step.  It returns
+// nil when there is none.
+func (t *Trace) StepEvent() *Event {
+	pid := t.RootPid
+	if t.InitPid != 0 {
+		pid = t.InitPid
+	}
+	for i := range t.Events {
+		e := &t.Events[i]
+		if e.Pid == pid && e.Kind == KindProcess && isExecName(e.Syscall) && e.Result.OK {
+			return e
+		}
 	}
 	return nil
 }
@@ -795,6 +819,13 @@ func (m *model) call(p *proc, rec *record) ([]Event, *Error) {
 				return fail(reasonCwdTooLong)
 			}
 			p.cwd.path = n
+		}
+		if ent.role == roleExec {
+			ai := 2
+			if c.name == "execveat" {
+				ai = 3
+			}
+			ev.Argv = parseArgv(c.args[ai-1])
 		}
 		if ent.role == roleExec && c.ret.ok() {
 			p.LastExec = ev.Path
