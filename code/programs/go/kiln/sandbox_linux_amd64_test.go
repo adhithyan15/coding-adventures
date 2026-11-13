@@ -709,14 +709,16 @@ func TestSandboxNoReachableSocketsOrFifos(t *testing.T) {
 	}
 	script := strings.Join([]string{
 		`for p in ` + strings.Join(hostPaths, " ") + `; do if test -e "$p"; then echo "visible:$p"; fi; done`,
-		// Every mount, in parallel (/usr on a runner image is huge), each with
-		// find, which only lstats: it never opens a FIFO, so it cannot block.
-		// -quit ends a mount's walk at its first hit.  Progress lines make a
-		// timeout diagnosable: a mount with "start:" and no "done:" is the slow one.
-		`n=0; for m in $(awk '{print $5}' /proc/self/mountinfo | sort -u); do n=$((n+1)); ( echo "start:$m"; find "$m" -xdev \( -type s -o -type p \) -print -quit 2>/dev/null | sed 's/^/found:/'; echo "done:$m" ) & done; wait`,
+		// Every mount of the sandbox EXCEPT the read-only roots, in parallel,
+		// each with find, which only lstats: it never opens a FIFO, so it cannot
+		// block.  The read-only roots (/usr on a runner image has millions of
+		// files) are scanned on the host by TestSandboxRORootsHaveNoSocketsOrFifos;
+		// this test checks the sandbox's own structure.  -quit ends a mount's walk
+		// at its first hit.  Progress lines make a timeout diagnosable.
+		`ro=" ` + strings.Join(imageRoots(), " ") + ` "; n=0; for m in $(awk '{print $5}' /proc/self/mountinfo | sort -u); do n=$((n+1)); case "$ro" in *" $m "*) echo "skip:$m"; continue;; esac; ( echo "start:$m"; find "$m" -xdev \( -type s -o -type p \) -print -quit 2>/dev/null | sed 's/^/found:/'; echo "done:$m" ) & done; wait`,
 		`echo "mounts:$n"`,
 	}, "; ")
-	r := f.sandboxRunTimeout(t, 4*time.Minute, "pkg", "sh", "-c", script)
+	r := f.sandboxRunTimeout(t, 2*time.Minute, "pkg", "sh", "-c", script)
 	if r.code != 0 {
 		t.Fatalf("exit %d: %s", r.code, r.stderr)
 	}
@@ -729,5 +731,66 @@ func TestSandboxNoReachableSocketsOrFifos(t *testing.T) {
 	}
 	if n, _ := strconv.Atoi(m[1]); n < 8 {
 		t.Errorf("only %d mounts walked; the walk did not cover the sandbox", n)
+	}
+}
+
+// TestSandboxRORootsHaveNoSocketsOrFifos scans the read-only roots the sandbox
+// is given (the same list the other sandbox tests configure) ON THE HOST, with
+// no sandbox: a socket or FIFO inside one is reachable from the step whatever
+// the mount flags, and the roots (/usr on a runner image) are too big to walk
+// inside every sandbox test.  The kiln-record probe must run the same scan on
+// the real configuration's ro_roots before it records (KILN04 section 13).
+// find only lstats, so a FIFO cannot block it; each root is walked in parallel
+// and reports progress, so a timeout names the slow one.
+func TestSandboxRORootsHaveNoSocketsOrFifos(t *testing.T) {
+	var roots []string
+	for _, r := range imageRoots() {
+		// A symlink root (/bin, /lib) is recreated, not walked: its target is
+		// under another root.
+		if st, err := os.Lstat(r); err == nil && st.Mode()&os.ModeSymlink == 0 {
+			roots = append(roots, r)
+		}
+	}
+	if len(roots) == 0 {
+		t.Fatal("no read-only root to scan")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+	type result struct {
+		root string
+		hits []string
+		err  error
+		took time.Duration
+	}
+	results := make(chan result, len(roots))
+	for _, r := range roots {
+		go func(root string) {
+			start := time.Now()
+			t.Logf("start: %s", root)
+			out, err := exec.CommandContext(ctx, "find", root, "-xdev", "(", "-type", "s", "-o", "-type", "p", ")", "-print", "-quit").Output()
+			var hits []string
+			for _, l := range strings.Split(strings.TrimSpace(string(out)), "\n") {
+				if l != "" {
+					hits = append(hits, l)
+				}
+			}
+			results <- result{root, hits, err, time.Since(start)}
+		}(r)
+	}
+	for range roots {
+		select {
+		case res := <-results:
+			t.Logf("done: %s in %v", res.root, res.took.Round(time.Second))
+			if len(res.hits) > 0 {
+				t.Errorf("%s holds a socket or FIFO reachable from the sandbox: %v", res.root, res.hits)
+			}
+			// find exits 1 for unreadable directories; a hit or a clean walk
+			// is what matters, but a killed walk is a failure.
+			if res.err != nil && ctx.Err() != nil {
+				t.Errorf("%s: %v", res.root, res.err)
+			}
+		case <-ctx.Done():
+			t.Fatalf("the host scan of %v did not finish in 10 minutes", roots)
+		}
 	}
 }

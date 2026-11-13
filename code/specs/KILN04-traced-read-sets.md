@@ -834,8 +834,13 @@ version of this section led to these. Each is a decision, not a sketch.
   tmpfs holding only the `ro_roots`, the checkout, the state roots and fresh
   scratch tmpfs (steps 3 to 7 above), and masks apply only inside the checkout.
   Test `TestSandboxNoReachableSocketsOrFifos` walks every mount of a running
-  sandbox, finds no socket or FIFO, and checks that ones the test makes in the
-  host's `/tmp` and `/var/tmp` are not visible.
+  sandbox **except the `ro_roots`**, finds no socket or FIFO, and checks that
+  ones the test makes in the host's `/tmp` and `/var/tmp` are not visible: it
+  checks the sandbox's own structure and is fast. **The read-only roots are
+  scanned on the host** (`/usr` on a runner image has millions of files, too
+  slow to walk inside every sandbox) by `TestSandboxRORootsHaveNoSocketsOrFifos`,
+  with `find <root> -xdev ( -type s -o -type p ) -print -quit`, one walk per root
+  in parallel.
 - **One spawn in the root.** `os.StartProcess` probes pidfd support with a
   throwaway `clone` (`os/pidfd_linux.go`), a second non-thread spawn in the
   root, which §4.5 refuses (`helper-spawn`). The root uses `syscall.ForkExec`
@@ -1932,7 +1937,9 @@ action that relied on them might now fail. The M3 spec must settle this
 before any skipping. The likely rule: do not skip an action whose write
 roots a running action read in its latest trace.
 
-**Before recording.** The sandbox tests skip where the kernel refuses
+**Before recording.** The `kiln-record` probe (D15) must also run that host
+scan for sockets and FIFOs over the real configuration's `ro_roots`, because the
+in-sandbox walk does not look inside them. The sandbox tests skip where the kernel refuses
 unprivileged namespaces, and a runner image, kernel or `strace` can change
 under a green CI. The `kiln-record` job (stage 4) must therefore run the same
 probe before it records anything: a trivial step through `kiln sandbox-exec`

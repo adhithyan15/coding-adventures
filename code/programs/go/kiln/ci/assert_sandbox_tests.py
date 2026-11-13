@@ -34,6 +34,7 @@ REQUIRED = (
     "TestSandboxStepCannotSignalOutside",
     "TestSandboxNoHostIPC",
     "TestSandboxNoReachableSocketsOrFifos",
+    "TestSandboxRORootsHaveNoSocketsOrFifos",
     "TestSandboxRealStrace",
     "TestSandboxStraceTraceSetNamesAreValid",
 )
