@@ -26,7 +26,9 @@ entry is unreleased and the version is bumped at release.)
   and `evidence/proof-manifest.json` (the proof front end refuses `adders.rs` and
   `alu.rs`, so every steps-bound obligation is `not-live`; backlog AR-001),
   `effect_certificate.json` and `assurance_report.json` (`--profile
-  bit-arithmetic`, report-only).
+  bit-arithmetic`, report-only).  The report records `"profile": "bit-arithmetic"`
+  (required since the lzw merge) and BUILD, BUILD_linux and BUILD_windows pass
+  `--profile bit-arithmetic` to `--check`.
 - **`tests/bit_domain.rs`**: every operation rejects a non-bit at every position of
   every operand and in the carry-in, unequal lengths and an empty operand, in the
   debug and the release profile (BUILD runs it in both): the rejection is inherited
