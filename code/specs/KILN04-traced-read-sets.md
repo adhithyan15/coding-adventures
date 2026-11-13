@@ -1144,6 +1144,87 @@ an untracked observation or a `list:` entry; every absence must be in
 check makes it fail when the overlap logic is disabled, and likewise when any
 one precondition of a relaxation is dropped.
 
+**`writes_complete` (stage 4, PR 4).** The classifier reports whether it can
+vouch that `Writes` and `TrackedWrites` list *every* in-repository path the
+action wrote. It is `RawRecord.WritesComplete`, a Go-only field (`json:"-"`:
+the recorder copies it to the shard record's top-level `writes_complete`, §7.1,
+so the record's own JSON is unchanged). It is **true by default and fails
+closed**: the zero value is `false`, and `Classify` leaves it `true` only for
+a record in which none of the following happened. Each trigger is a way a
+write could exist that the lists do not show.
+
+- **W1. An unresolved write.** A Write-kind call (§4.4's table, including the
+  descriptor writes) whose target cannot be placed: the walk refuses
+  (`symlink-loop`, `size`), a `..` follows a component the walk could not enter,
+  the path is empty or unresolvable. This holds whatever the call's result:
+  a failed call that could not be placed is not proved to have changed
+  nothing.
+- **W2. An unresolved creating or writing open.** An `open`, `openat`,
+  `openat2` or `creat` that can write (`O_WRONLY`, `O_RDWR`, `O_CREAT`,
+  `O_TRUNC`, `creat`) and cannot be placed, or an `openat2` with a nonzero
+  `resolve` field. A read-only open that cannot be placed is only a read-side
+  reason.
+- **W3. An unresolved `rename` or `link` endpoint**, either name, whatever the
+  result.
+- **W4. An unresolved Unix `bind`.** An `AF_UNIX` pathname `bind` whose path
+  cannot be placed, or a `bind` the parser gave no socket address.
+- **W5. A virtual write.** A write whose path lies under `/proc` or
+  `/dev/fd`, other than the `/proc/self/fd/N` and `/dev/fd/N` opens that return
+  a `-y` path (those are classified by that path): the name says nothing about
+  the object written. This covers Write-kind calls, writing opens,
+  `rename`/`link` endpoints, a `bind` path and an `O_TMPFILE` file linked back
+  by `linkat`.
+- **W6. A path the record cannot hold.** `bad-path` (a path `key.ValidatePath`
+  refuses) or `vcs-write` (a write under `.git`).
+- **W7. A write to the repository root itself** (`chmod .`, `utimes .`). The
+  root has no write root to coarsen to; the fail-closed answer is "unknown"
+  rather than a special case.
+- **W8. An unstable component under a write.** The stability rule (§5.1) judged
+  unstable a component (a traversed link or directory, a followed final name,
+  a place the walk stopped, an own-path lookup) that some write call's
+  resolution went through, or a post-run lookup failed (`unresolvable-path`)
+  while a write was being placed. Every `trace-incomplete` reason raised
+  *while a write call is processed* counts, so a read-only `unstable-path`
+  elsewhere in the trace does **not**: it costs the action its manifest and
+  nothing else.
+- **W9. A list or budget cap.** `Writes` or `TrackedWrites` would exceed the
+  65 536-entry cap (this adds the `size` reason, as the other lists do), or the
+  walk or stability budget ran out (`size`): the stability pass stops early, so
+  nothing vouches for the components it did not reach.
+- **W10. A whole-trace problem.** A step's trace has no exit line for the step
+  process or the step was killed by a signal (a truncated or interrupted
+  trace), some traced process has no exit line, a survivor outlived the
+  sandbox's init (`daemon-left`), or the traced steps do not match the weak
+  key's recipe (`recipe-mismatch`). A nonzero exit status by itself is **not**
+  a trigger: the failed action wrote what it wrote, and the merge treats the
+  failure as a truncated execution (§7.1, M-1). A trace that did not parse, or
+  a tracer that did not finish cleanly, never reaches `Classify`; the
+  recorder reports those as `unknown_writes` and `clean: false`, which the
+  merge already treats as unknown.
+
+Deliberately **not** triggers, because they cannot hide a write: any
+read-only reason (`host-read`, `exec-unreadable`, a failed lookup of a name the
+action only looked at), a nonzero exit, `network` and `daemon:<address>`
+reasons, and a write outside the repository (it is `state-write` or the
+action's own scratch space, and cannot name a repository path without going
+through a resolved, vouched component).
+
+*Known gap (residual risk).* A write through a pre-existing hard link whose
+other name is outside the trace (an untracked alias made before the run) is
+visible to no trace. The sandbox's fresh checkout has no such aliases;
+`link()` calls the action makes are tracked.
+
+**The fuzzer invariant.** The differential fuzzer checks, for every record
+whose `WritesComplete` is true *even when it carries reasons*, that every
+in-repository path the model wrote lies under an entry of `Writes` or
+`TrackedWrites`, using the classifier's own coarsening (the highest ancestor
+holding no tracked file, or the tracked path itself). Perturbations aim at each
+trigger: writes through links retargeted mid-run, writes after a `..` past a
+missing component, writes through `/proc/self/cwd`, writes to the root, an
+exchange under a written name, and a write to a name another process removes
+meanwhile. A mutation check (dropping a trigger) makes the fuzzer fail.
+
+
 ## 6. When nothing is recorded
 
 A traced pass becomes a record only when every check passes. Otherwise
@@ -1241,7 +1322,8 @@ Shards run on separate machines, so the check cannot run per shard:
      quantifies over the writes of every action in every shard, so one
      unknown write set means **the run emits nothing**. A record with
      `trace-incomplete` reasons and `writes_complete: true` loses only its
-     own manifest. Until the classifier reports `writes_complete`, every
+     own manifest. The classifier reports `writes_complete` (§5.5); while the
+     recorder does not yet honour it (`HonourWritesComplete`, off), every
      `trace-incomplete` reason counts as unknown. (The earlier wording voided
      only the shard; that was unsound, see §7.1, G1.)
 3. **All or nothing.** Only after these checks does the merge job emit
@@ -1278,8 +1360,13 @@ shard record line and a switch of `Merge`
 (`Input.HonourWritesComplete`, off): with the switch off every
 `trace-incomplete` reason is unknown; with it on, a record that says
 `writes_complete: true` loses only its own manifest, while one that omits
-the field is still unknown. The classifier does not emit the field yet
-(stage 4, PR 4). The read-side reasons that `writes_complete: true` may
+the field is still unknown. The classifier now computes the field
+(`RawRecord.WritesComplete`, §5.5, which defines it and lists every trigger);
+the recorder copies it to the shard record's `writes_complete`. The switch
+stays off until the recorder (stage 4, PR 2b) turns it on, so PR 4 changes
+no merge outcome by itself. Because the record's semantics changed,
+`RecorderVersion` is now `2`: every weak key changes and manifests recorded by
+the version-1 recorder are never looked up. The read-side reasons that `writes_complete: true` may
 excuse are the other `trace-incomplete` reasons (`exec-unreadable`, a
 read-only `unstable-path`, and so on). **A recipe mismatch is never
 excused**: when the steps that ran are not the steps the weak key's recipe
@@ -1734,7 +1821,8 @@ is what the code does.
    `tools` of the weak key and `HOME`. A variable whose name contains `:` is
    refused. The `kiln:` entries are keyed but never exported to the process.
    Every origin is `0`.
-9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `1`) in
+9. **`kiln:recorder`** is the integer constant `RecorderVersion` (now `2`;
+   `1` was the recorder before `writes_complete`, stage 4 PR 4) in
    `internal/legacy/traced.go`, to be bumped by hand with any change to §4 to
    §7. **`kiln:executor-args`** is each flag as one `-name=value` token,
    Go-quoted, sorted bytewise and joined by spaces, so the same flags in
