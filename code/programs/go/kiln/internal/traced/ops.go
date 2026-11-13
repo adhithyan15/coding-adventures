@@ -25,18 +25,26 @@ type openFlags struct {
 	wronly, rdwr, creat, excl, trunc, nofollow, tmpfile bool
 }
 
+// openat2Field returns the text of a field ("flags", "resolve") of the struct
+// openat2 takes, "" when absent.
+func openat2Field(text, name string) string {
+	i := strings.Index(text, name+"=")
+	if !strings.HasPrefix(text, "{") || i < 0 {
+		return ""
+	}
+	v := text[i+len(name)+1:]
+	if j := strings.IndexAny(v, ",}"); j >= 0 {
+		v = v[:j]
+	}
+	return strings.TrimSpace(v)
+}
+
 // parseOpenFlags reads open/openat/creat flags, and the "flags=" field of the
 // struct openat2 takes.  Numeric leftovers are ignored: strace names every bit
 // it knows, and an unknown one cannot be a creation or a write we recognise.
 func parseOpenFlags(text string) openFlags {
 	if strings.HasPrefix(text, "{") {
-		text = strings.TrimPrefix(text, "{")
-		if i := strings.Index(text, "flags="); i >= 0 {
-			text = text[i+len("flags="):]
-		}
-		if i := strings.IndexAny(text, ",}"); i >= 0 {
-			text = text[:i]
-		}
+		text = openat2Field(text, "flags")
 	}
 	s := flagSet(text)
 	return openFlags{
@@ -92,12 +100,21 @@ func writeFollow(ev *trace.Event) bool {
 // O_WRONLY|O_CREAT, which cannot tell a new file from an old one.
 func (c *classifier) open(ev *trace.Event) {
 	f := parseOpenFlags(ev.Flags)
+	if ev.Syscall == "openat2" {
+		// RESOLVE_NO_SYMLINKS, RESOLVE_BENEATH, RESOLVE_IN_ROOT, ... change
+		// what a path means in ways the walk does not model.
+		if v := openat2Field(ev.Flags, "resolve"); v != "" && v != "0" {
+			c.reason(rResolveFlags)
+		}
+	}
+	c.noFinals = ev.Result.OK && strings.HasPrefix(ev.ReturnFDPath, "/")
 	tg, ok := c.targetOf(ev, !f.nofollow && !(f.creat && f.excl))
+	c.noFinals = false
 	if !ok {
 		return
 	}
 	if !ev.Result.OK {
-		c.observeResult(tg.abs, ev.Result)
+		c.observeResult(tg, ev.Result)
 		return
 	}
 	if tg.virtual {
@@ -124,20 +141,36 @@ func (c *classifier) open(ev *trace.Event) {
 	c.openResolved(abs, f, ev.Syscall == "creat")
 }
 
+// parentTrusted says an ENOENT on a child of abs's parent can be believed: the
+// parent is in the repository (the tracked tree and the stability rule vouch
+// for it) or is the action's own.  Elsewhere a missing name may be a missing
+// parent.
+func (c *classifier) parentTrusted(abs string) bool {
+	p := parentOf(abs)
+	if _, ok := c.rel(p); ok {
+		return true
+	}
+	return c.isCreated(p)
+}
+
 // openResolved applies the created-from-empty rule to a successfully opened
 // path and records the write, if any.
 func (c *classifier) openResolved(abs string, f openFlags, creat bool) {
-	wasAbsent := c.absent[abs]
+	wasAbsent := c.absent[abs] && c.parentTrusted(abs)
 	clean := !f.tmpfile && (creat || (f.creat && f.excl) || f.trunc || (f.creat && wasAbsent))
 	if !clean {
 		c.observe(abs, true, false)
-	}
-	if clean {
+	} else {
+		if f.creat || creat {
+			c.creating(abs)
+		}
 		c.created[abs] = true
 		delete(c.absent, abs)
-		if creat || (f.creat && (f.excl || wasAbsent)) {
-			c.mods[abs] = append(c.mods[abs], true)
-		}
+	}
+	if f.creat || creat {
+		// An O_CREAT open may have made the name: a namespace change.  Only
+		// with O_EXCL does the result prove it did.
+		c.nsChange(abs, f.creat && f.excl)
 	}
 	if f.writes() || creat {
 		c.writePath(abs)
@@ -175,6 +208,11 @@ func isFDLink(abs string) bool {
 }
 
 // write handles the Write kind.
+//
+// A successful change to a path the action did not make also OBSERVES it: the
+// call only worked because something was there, and what that was is an input
+// (section 4.4).  A call whose path lies in /proc or /dev/fd is refused: the
+// path says nothing about the object.
 func (c *classifier) write(ev *trace.Event) {
 	switch ev.Syscall {
 	case "rename", "renameat", "renameat2":
@@ -189,34 +227,47 @@ func (c *classifier) write(ev *trace.Event) {
 	case "mkdir", "mkdirat", "mknod", "mknodat", "symlink", "symlinkat", "unlink", "unlinkat", "rmdir":
 		follow = false
 	}
+	if !follow && ev.Result.OK {
+		// A call that succeeded on a name it does not follow treated a trailing
+		// slash as "this must be a directory", not as "follow the link".
+		e2 := *ev
+		e2.Path = stripSlashes(ev.Path)
+		ev = &e2
+	}
 	tg, ok := c.targetOf(ev, follow)
 	if !ok {
+		return
+	}
+	if tg.virtual {
+		c.reason(rProc)
 		return
 	}
 	if !ev.Result.OK {
 		// A failed write is an observation of the path, never a write:
 		// EEXIST says it was there, ENOENT that it was not.
-		c.observeResult(tg.abs, ev.Result)
+		c.observeResult(tg, ev.Result)
 		return
 	}
 	switch ev.Syscall {
 	case "mkdir", "mkdirat":
 		c.writePath(tg.abs)
-		c.markCreated(tg.abs)
+		c.markCreated(tg.abs, true)
 		c.dirs[tg.abs] = true
 	case "mknod", "mknodat":
 		c.writePath(tg.abs)
-		c.markCreated(tg.abs)
+		c.markCreated(tg.abs, false)
 	case "symlink", "symlinkat":
 		c.writePath(tg.abs)
-		c.markCreated(tg.abs)
+		c.markCreated(tg.abs, true)
 		c.links[tg.abs] = ev.Target
 	case "unlink", "unlinkat", "rmdir":
+		c.observe(tg.abs, true, false)
 		c.writePath(tg.abs)
 		c.markRemoved(tg.abs)
 	default:
-		// chmod, chown, truncate, utimes, setxattr, ...: the object is
-		// changed in place; its first-touch state is not ours.
+		// chmod, chown, truncate, utimes, setxattr, fchmod, ...: the object is
+		// changed in place, so it existed and its first-touch state is not ours.
+		c.observe(tg.abs, true, false)
 		c.writePath(tg.abs)
 	}
 }
@@ -225,12 +276,32 @@ func (c *classifier) write(ev *trace.Event) {
 // content is now where the destination is) and written (it is gone); the
 // destination is written, and is the action's own from now on.
 func (c *classifier) rename(ev *trace.Event) {
-	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, ev.Path), false)
-	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, ev.Path2), false)
+	srcPath, dstPath := ev.Path, ev.Path2
+	if ev.Result.OK {
+		srcPath, dstPath = stripSlashes(srcPath), stripSlashes(dstPath)
+	}
+	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), false)
+	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		// One name could not be placed (see resolve); a failed call still
+		// looked at the other.
+		if !ev.Result.OK {
+			if ok1 {
+				c.observe(src.abs, presence(ev.Result), false)
+			}
+			if ok2 {
+				c.observe(dst.abs, presence(ev.Result), false)
+			}
+		}
+		return
+	}
+	if src.virtual || dst.virtual {
+		c.reason(rProc)
 		return
 	}
 	if !ev.Result.OK {
+		// An ENOENT could be either name or either parent: observe both, as
+		// ambiguous, and remember nothing as absent.
 		c.observe(src.abs, presence(ev.Result), false)
 		c.observe(dst.abs, presence(ev.Result), false)
 		return
@@ -243,8 +314,8 @@ func (c *classifier) rename(ev *trace.Event) {
 		// Both names existed before and still do: neither is created.
 		c.observe(dst.abs, true, false)
 		dstLink, dstIsLink := c.links[dst.abs]
-		c.mods[src.abs] = append(c.mods[src.abs], false)
-		c.mods[dst.abs] = append(c.mods[dst.abs], false)
+		c.nsChange(src.abs, false)
+		c.nsChange(dst.abs, false)
 		delete(c.links, src.abs)
 		delete(c.links, dst.abs)
 		if dstIsLink {
@@ -257,7 +328,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	}
 	srcDir := c.dirs[src.abs]
 	c.markRemoved(src.abs)
-	c.markCreated(dst.abs)
+	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
 	}
@@ -267,11 +338,35 @@ func (c *classifier) rename(ev *trace.Event) {
 }
 
 // link handles link and linkat.  Like rename, the source is both an
-// observation and a write (section 4.4); the destination is created.
+// observation and a write (section 4.4); the destination is created.  Both
+// names become aliases of one file, which the trace cannot follow, so neither
+// may later be relied on as a stable component.
 func (c *classifier) link(ev *trace.Event) {
-	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, ev.Path), flagSet(ev.Flags)["AT_SYMLINK_FOLLOW"])
-	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, ev.Path2), false)
+	followSrc := flagSet(ev.Flags)["AT_SYMLINK_FOLLOW"]
+	srcPath, dstPath := ev.Path, ev.Path2
+	if ev.Result.OK {
+		dstPath = stripSlashes(dstPath)
+		if !followSrc {
+			srcPath = stripSlashes(srcPath)
+		}
+	}
+	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), followSrc)
+	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		// One name could not be placed (see resolve); a failed call still
+		// looked at the other.
+		if !ev.Result.OK {
+			if ok1 {
+				c.observe(src.abs, presence(ev.Result), false)
+			}
+			if ok2 {
+				c.observe(dst.abs, presence(ev.Result), false)
+			}
+		}
+		return
+	}
+	if src.virtual || dst.virtual {
+		c.reason(rProc)
 		return
 	}
 	if !ev.Result.OK {
@@ -279,12 +374,21 @@ func (c *classifier) link(ev *trace.Event) {
 		c.observe(dst.abs, presence(ev.Result), false)
 		return
 	}
+	c.hard[src.abs], c.hard[dst.abs] = true, true
 	c.observe(src.abs, true, false)
 	c.writePath(src.abs)
 	c.writePath(dst.abs)
 	srcLink, srcIsLink := c.links[src.abs]
-	c.markCreated(dst.abs)
+	c.markCreated(dst.abs, false)
 	if srcIsLink {
 		c.links[dst.abs] = srcLink
 	}
+}
+
+// stripSlashes drops trailing slashes (keeping a lone "/").
+func stripSlashes(p string) string {
+	if q := strings.TrimRight(p, "/"); q != "" {
+		return q
+	}
+	return p
 }

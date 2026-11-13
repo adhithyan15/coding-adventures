@@ -72,7 +72,7 @@ func FuzzClassify(f *testing.F) {
 		if len(evs) == 0 {
 			return
 		}
-		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: []*trace.Trace{step(evs...)}})
+		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: []*trace.Trace{step(evs...)}, Recipe: []string{"step"}})
 		if err != nil {
 			t.Fatal(err)
 		}

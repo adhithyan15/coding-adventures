@@ -45,6 +45,7 @@ type role int
 const (
 	rolePath     role = iota // generic: dirfd/path/path2 positions below
 	roleCreat                // creat(path, mode): flags are implied
+	roleFdPath               // fchmod(fd, ...): the object is the descriptor's -y path
 	roleListing              // getdents(fd, ...): path is the fd annotation
 	roleFchdir               // fchdir(fd): cwd becomes the fd annotation
 	roleChdir                // chdir(path)
@@ -144,6 +145,12 @@ func buildTable() map[string]entry {
 	h("lsetxattr", entry{kind: KindWrite, min: 5, max: 5, pth: 1})
 	h("removexattr", entry{kind: KindWrite, min: 2, max: 2, pth: 1})
 	h("lremovexattr", entry{kind: KindWrite, min: 2, max: 2, pth: 1})
+	// Metadata writes through a descriptor: the object is the -y path.
+	h("fchmod", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
+	h("fchown", entry{kind: KindWrite, role: roleFdPath, min: 3, max: 3})
+	h("fsetxattr", entry{kind: KindWrite, role: roleFdPath, min: 5, max: 5})
+	h("fremovexattr", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
+	h("futimens", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
 	h("mknod", entry{kind: KindWrite, min: 3, max: 3, pth: 1})
 	h("mknodat", entry{kind: KindWrite, min: 4, max: 4, dirfd: 1, pth: 2})
 

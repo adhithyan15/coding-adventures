@@ -14,6 +14,7 @@
     return path for successful opens and flags a disagreement, and applies the
     stability rule using what the trace itself knows (links, directories and
     removals the action made) before the post-run disk.
+  - Stability is strict (KILN04 5.1): a traversed component is stable only if it is tracked and untouched, or this action created it once before the lookup began and nothing touched it or an ancestor since; outside the repository only untouched components are stable; HOME and TMPDIR are never read from the disk. Creation is an absence observation; the record also lists `AbsentObservations`. `Recipe` is required. A differential fuzzer (an in-memory filesystem model as oracle) checks every path the model really resolved is covered, own, or explained by a reason.
   - Exec is a read of the program plus its `#!` chain (4 hops) and the ELF
     `PT_INTERP`, read from the tracked tree or the post-run disk.
   - `/proc` follows the ephemeral list (`trace-visible` for

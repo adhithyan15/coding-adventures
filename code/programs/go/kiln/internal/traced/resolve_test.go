@@ -37,16 +37,27 @@ func TestLinkIntoAnotherPackageAddsThatPackage(t *testing.T) {
 
 func TestSymlinkCreatedByTheActionIntoAnotherPackage(t *testing.T) {
 	h := newHarness(t)
-	// The link exists only for this action (and was removed afterwards: the
-	// post-run disk does not have it), so its target must come from the trace.
+	// The post-run disk shows the link, so it is a component the disk can vouch
+	// for: created once, before the read, untouched since.
+	h.fs.link(abs("code/p/a/mylink"), "../b/b.txt")
 	rec := h.run(
+		symlink("../b/b.txt", "code/p/a/mylink"),
+		open("code/p/a/mylink", "O_RDONLY", abs("code/p/b/b.txt")),
+	)
+	// The link is the action's own (its creation is an absence observation);
+	// what it pointed at is not.
+	eq(t, "entries", rec.Entries, "pkg:code/p/a", "pkg:code/p/b")
+	wantNoReasons(t, rec)
+
+	// Removed afterwards, the post-run disk no longer shows what the read
+	// crossed: unstable, however well the trace knows it.
+	h = newHarness(t)
+	rec = h.run(
 		symlink("../b/b.txt", "code/p/a/mylink"),
 		open("code/p/a/mylink", "O_RDONLY", abs("code/p/b/b.txt")),
 		write("unlink", "code/p/a/mylink"),
 	)
-	// The link is the action's own; what it pointed at is not.
-	eq(t, "entries", rec.Entries, "pkg:code/p/b")
-	wantNoReasons(t, rec)
+	wantReason(t, rec, "trace-incomplete:unstable-path")
 }
 
 func TestDotDotAppliesToTheResolvedDirectory(t *testing.T) {
@@ -151,43 +162,60 @@ func TestUnstableLinks(t *testing.T) {
 
 	// A link the action made and never touched again is stable.
 	h = newHarness(t)
+	h.fs.link(abs("code/p/a/M"), "../b")
 	rec = h.run(symlink("../b", "code/p/a/M"), stat("code/p/a/M/b.txt"))
-	if hasReason(rec, "trace-incomplete:unstable-path") {
-		t.Fatalf("%q", rec.Reasons)
-	}
-	// A link the action made and then replaced after reading through it is
-	// still stable: the trace knew what the link was at the moment of the read,
-	// so nothing depends on what the post-run disk shows.
+	wantNoReasons(t, rec)
+	// Replaced after the read: unstable (a second change).
+	h = newHarness(t)
+	h.fs.link(abs("code/p/a/M"), "../a")
 	rec = h.run(symlink("../b", "code/p/a/M"), stat("code/p/a/M/b.txt"),
 		write("unlink", "code/p/a/M"), symlink("../a", "code/p/a/M"))
-	if hasReason(rec, "trace-incomplete:unstable-path") {
-		t.Fatalf("%q", rec.Reasons)
-	}
-	eq(t, "entries", rec.Entries, "pkg:code/p/b")
-	// Re-created BEFORE the read is fine: the last change is a creation and
-	// it precedes the traversal.
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// Re-created BEFORE the read is not "created exactly once": unstable too.
 	rec = h.run(symlink("../b", "code/p/a/M"), write("unlink", "code/p/a/M"),
 		symlink("../a", "code/p/a/M"), stat("code/p/a/M/README"))
-	wantNoReasons(t, rec)
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// An untracked leftover of an earlier action is no stable component either.
+	h = newHarness(t)
+	h.fs.dir(abs("code/p/a/node_modules"))
+	rec = h.run(stat("code/p/a/node_modules/x/index.js"))
+	wantReason(t, rec, "trace-incomplete:unstable-path")
 }
 
-func TestComponentCreatedAfterTheCallIsNotUnstable(t *testing.T) {
+func TestComponentCreatedAfterTheCallIsUnstable(t *testing.T) {
 	h := newHarness(t)
 	// The probe ran when out/ did not exist; the action made it afterwards.
-	// The post-run disk has out/, but the call never reached it.
+	// The post-run disk has out/, but the call never reached it, and a
+	// creation that completes after the lookup started does not vouch for it.
 	h.fs.dir(abs("code/p/a/out"))
 	rec := h.run(
 		fail(stat("code/p/a/out/f"), "ENOENT"),
 		mkdir("code/p/a/out"),
 	)
-	if hasReason(rec, "trace-incomplete:unstable-path") {
-		t.Fatalf("%q", rec.Reasons)
-	}
-	// But a TRACKED directory the action removed and re-made after reading
-	// through it is unstable.
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// Completion against start: a lookup that STARTED before the creation
+	// completed (a split call) is unstable even though its own line is later.
+	h = newHarness(t)
+	h.fs.dir(abs("code/p/a/out"))
+	tr := step(fail(stat("code/p/a/out/f"), "ENOENT"), mkdir("code/p/a/out"))
+	tr.Events[1].StartLine, tr.Events[1].Line = 2, 5 // the stat began early, completed late
+	tr.Events[2].StartLine, tr.Events[2].Line = 3, 3
+	rec = h.runSteps(tr)
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// A creation that completed before the lookup started is stable.
+	h = newHarness(t)
+	h.fs.dir(abs("code/p/a/out"))
+	rec = h.run(mkdir("code/p/a/out"), fail(stat("code/p/a/out/f"), "ENOENT"))
+	wantNoReasons(t, rec)
+	// A tracked directory the action removed and re-made after reading through
+	// it is unstable.
 	h = newHarness(t)
 	h.fs.dir(abs("code/p/b"))
 	rec = h.run(stat("code/p/b/b.txt"), write("rmdir", "code/p/b"), mkdir("code/p/b"))
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// Any ancestor's change counts: renaming a tracked directory away.
+	h = newHarness(t)
+	rec = h.run(stat("code/p/b/b.txt"), rename("code/p/b", "code/p/c"))
 	wantReason(t, rec, "trace-incomplete:unstable-path")
 }
 

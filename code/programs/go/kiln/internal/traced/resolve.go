@@ -27,35 +27,51 @@ import (
 // exactly as the kernel reads it.  Every link crossed is itself an
 // observation: if it were retargeted, the same text would lead elsewhere.
 //
-// Lookups use, in this order:
+// The walk reads the POST-RUN disk, which is only the truth about the call if
+// nothing the walk went through changed in between.  Whether that holds is the
+// stability rule (classify.go); the walk just reports what it crossed.
 //
-//  1. the symlinks THIS action created, as the trace has them at this moment
-//     (the post-run disk may have forgotten a link the action removed);
-//  2. the post-run disk (Lstat, Readlink);
-//  3. the tracked tree, for a path the disk no longer has.
-//
-// A component the disk does not have simply ends the walk: the kernel would
-// have stopped there too (ENOENT), so the rest is kept as written.
+// Under $HOME and TMPDIR the disk is never asked: they are fresh sandbox
+// tmpfs, gone after the run.  Only what the trace itself created is there.
 
 // maxHops is the kernel's limit on symlinks followed in one lookup.
 const maxHops = 40
+
+// maxResolvedLen bounds a path while it is being resolved.
+const maxResolvedLen = 4096
+
+// walkBudget is the most component steps one action may spend walking paths
+// (a variable so a test can lower it).  A hostile symlink farm can make each
+// lookup cost 40 hops, so the total is bounded, not just each walk.
+var walkBudget = 50_000_000
 
 type node struct {
 	kind   NodeKind
 	target string
 }
 
-// comp is a component a walk went through.
-type comp struct {
-	path  string
-	exact bool // the action's own trace said what it was, at that moment
-}
-
 type walkResult struct {
-	final   string // the resolved absolute path
-	links   []comp // every symlink crossed, in order
-	dirs    []comp // every directory crossed
-	virtual bool   // the path lies in /proc or /dev/fd: not walked
+	final string   // the resolved absolute path
+	links []string // every symlink crossed, in order
+	dirs  []string // every directory crossed
+	// finals is the final component when it was FOLLOWED (a stat or open, not
+	// an lstat or unlink) and exists: if it was a link at call time and is not
+	// one now, the disk misleads, so the action must not have touched it.
+	finals  []string
+	virtual bool // the path lies in /proc or /dev/fd: not walked
+	// reached says the final component was found by a lookup: the walk did not
+	// go plain before it, and the path does not end in "/" or "/.".  Only then
+	// does an ENOENT mean "this name is absent".
+	reached bool
+	// dotdot says a ".." came after the walk went plain (a missing component
+	// or a file): where it leads cannot be known.  stop is that component.
+	dotdot      bool
+	stop        string
+	stopPresent bool
+	// stopFinal says the stop was the final name, and a name that is not
+	// followed is the object itself: no link or directory behind it depends on
+	// what the disk says.
+	stopFinal bool
 }
 
 func splitPath(p string) []string {
@@ -98,26 +114,45 @@ func (c *classifier) rel(abs string) (string, bool) {
 	return "", false
 }
 
-// lookup says what abs is.  exact reports that the answer comes from the
-// action's own trace, which knows the state AT THIS MOMENT, rather than from
-// the post-run disk, which knows the state at the end.  An unreadable path is a
-// reason and reads as absent.
-func (c *classifier) lookup(abs string) (n node, exact bool) {
-	if t, ok := c.links[abs]; ok {
-		return node{kind: KindLink, target: t}, true
+// underTmp says abs is strictly inside the scrubbed HOME or TMPDIR.
+func (c *classifier) underTmp(abs string) bool {
+	for _, d := range []string{c.cfg.Home, c.cfg.Tmpdir} {
+		if d != "" && strings.HasPrefix(abs, d+"/") {
+			return true
+		}
 	}
-	if c.dirs[abs] {
-		return node{kind: KindDir}, true
+	return false
+}
+
+func (c *classifier) isTmpRoot(abs string) bool {
+	return abs != "" && (abs == c.cfg.Home || abs == c.cfg.Tmpdir)
+}
+
+// lookup says what abs is.  An unreadable path is a reason and reads as absent.
+func (c *classifier) lookup(abs string) node {
+	if c.isTmpRoot(abs) {
+		return node{kind: KindDir}
 	}
-	if c.gone[abs] {
-		return node{}, true
+	if c.underTmp(abs) {
+		// Fresh tmpfs: either the action made it (the trace knows) or it is
+		// absent.  The post-run disk is never asked.
+		if t, ok := c.links[abs]; ok {
+			return node{kind: KindLink, target: t}
+		}
+		if c.dirs[abs] {
+			return node{kind: KindDir}
+		}
+		if c.created[abs] {
+			return node{kind: KindFile}
+		}
+		return node{}
 	}
 	if n, ok := c.cache[abs]; ok {
-		return n, false
+		return n
 	}
-	n = c.lookupFS(abs)
+	n := c.lookupFS(abs)
 	c.cache[abs] = n
-	return n, false
+	return n
 }
 
 func (c *classifier) lookupFS(abs string) node {
@@ -158,13 +193,22 @@ func (c *classifier) walk(full string, follow bool) (walkResult, string) {
 	hops := 0
 	plain := false // the rest is text: past a missing component, a file or /proc
 	virtBase := ""
+	slashTarget := false
 	for len(queue) > 0 {
+		c.steps++
+		if c.steps > walkBudget || len(queue) > maxResolvedLen || len(cur) > maxResolvedLen {
+			return res, rSize
+		}
 		name := queue[len(queue)-1]
 		queue = queue[:len(queue)-1]
 		switch name {
 		case ".":
 			continue
 		case "..":
+			if plain && !res.virtual {
+				res.dotdot = true
+				return res, ""
+			}
 			cur = parentOf(cur)
 			if res.virtual && !strings.HasPrefix(cur+"/", virtBase+"/") {
 				res.virtual, plain = false, false
@@ -181,35 +225,62 @@ func (c *classifier) walk(full string, follow bool) (walkResult, string) {
 			continue
 		}
 		last := len(queue) == 0
-		n, exact := c.lookup(next)
+		n := c.lookup(next)
 		switch n.kind {
 		case KindLink:
 			if last && !follow {
 				cur = next
+				res.reached = true
 				continue
 			}
 			hops++
 			if hops > maxHops {
 				return res, rLoop
 			}
-			res.links = append(res.links, comp{next, exact})
+			res.links = append(res.links, next)
+			slashTarget = slashTarget || slashy(n.target)
 			if strings.HasPrefix(n.target, "/") {
 				cur = ""
 			}
 			queue = append(queue, reverse(splitPath(n.target))...)
 		case KindDir:
-			res.dirs = append(res.dirs, comp{next, exact})
+			if last && follow {
+				res.finals = append(res.finals, next)
+			}
+			if !last {
+				// Only a directory the path goes THROUGH is a traversed
+				// component; a final directory is the object, observed as such.
+				res.dirs = append(res.dirs, next)
+			}
 			cur = next
+			res.reached = last
 		default: // a file, a device, or nothing: the walk ends here
+			if last && follow && n.kind != KindAbsent {
+				res.finals = append(res.finals, next)
+			}
 			cur, plain = next, true
+			res.reached = last
+			if !last || n.kind == KindAbsent {
+				// A final FILE is the object itself; only a missing name or a
+				// file in the middle of a path is a place the walk stopped.
+				res.stop, res.stopPresent = next, n.kind != KindAbsent
+				res.stopFinal = last && !follow
+			}
 		}
 	}
 	res.final = cur
 	if res.final == "" {
 		res.final = "/"
 	}
+	// "x/" and "x/." name the directory x but ask the kernel more than a
+	// lookup of the name, so the answer does not say the NAME is absent.
+	if slashy(full) || slashTarget {
+		res.reached = false
+	}
 	return res, ""
 }
+
+func slashy(p string) bool { return strings.HasSuffix(p, "/") || strings.HasSuffix(p, "/.") }
 
 func reverse(s []string) []string {
 	out := make([]string, len(s))
@@ -223,6 +294,7 @@ func reverse(s []string) []string {
 type target struct {
 	abs     string
 	virtual bool
+	reached bool
 }
 
 // join makes the absolute path expression of a path argument: absolute as
@@ -241,7 +313,9 @@ func join(cwd, dirfd, p string) string {
 
 // resolve walks full, records every link crossed as an observation and every
 // link and directory crossed for the stability check, and returns the final
-// path.
+// path.  A ".." after a component the walk could not enter cannot be placed:
+// on a failed call the component where the walk stopped is what the call
+// looked at; on a successful one the call went somewhere unknown.
 func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	w, bad := c.walk(full, follow)
 	if bad != "" {
@@ -249,11 +323,27 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 		return target{}, false
 	}
 	for _, l := range w.links {
-		c.noteTraversal(l.path, l.exact)
-		c.observe(l.path, true, false)
+		c.noteTraversal(l)
+		c.observe(l, true, false)
 	}
 	for _, d := range w.dirs {
-		c.noteTraversal(d.path, d.exact)
+		c.noteTraversal(d)
 	}
-	return target{abs: w.final, virtual: w.virtual}, true
+	if !c.noFinals {
+		for _, f := range w.finals {
+			c.noteFinal(f)
+		}
+	}
+	if w.stop != "" && !w.stopFinal {
+		c.noteMissing(w.stop, w.stopPresent)
+	}
+	if w.dotdot {
+		if c.callOK {
+			c.reason(rUnstable)
+		} else {
+			c.observe(w.stop, w.stopPresent, false)
+		}
+		return target{}, false
+	}
+	return target{abs: w.final, virtual: w.virtual, reached: w.reached}, true
 }

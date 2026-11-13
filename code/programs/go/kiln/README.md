@@ -285,7 +285,7 @@ cfg := traced.Config{
 rec, err := traced.Classify(cfg, traced.Input{
     Package: "code/packages/go/parser",
     Traces:  stepTraces,   // one per BUILD step, in order
-    Recipe:  recipeLines,  // optional: the expected `sh -c` lines
+    Recipe:  recipeLines,  // required: the expected `sh -c` lines
 })
 // rec.Entries: ["list:code/packages/go", "path:go.work", "pkg:code/packages/go/lexer", ...]
 // rec.Reasons: ["host-read:$HOME/.cache/x", "network:/usr/bin/curl", ...]

@@ -203,7 +203,8 @@ strace -f --quiet=attach -y -s 4096 -e signal=none \
        -e trace=%file,%process,%network,getdents,getdents64,fchdir,\
 io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount,\
 fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace,\
-process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark \
+process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark,\
+fchmod,fchown,fsetxattr,fremovexattr,futimens \
        -o <trace-file> -- kiln sandbox-exec -- sh -c <line>
 ```
 
@@ -358,7 +359,7 @@ up as an unknown name rather than being silently skipped.
 | Metadata | `stat`, `lstat`, `newfstatat`, `statx`, `access`, `faccessat`, `faccessat2`, `readlink`, `readlinkat`, `getxattr`, `lgetxattr`, `listxattr`, `llistxattr`, `statfs`, `inotify_add_watch`, `fanotify_mark` | an observation of the path |
 | Listing | `getdents`, `getdents64` | a listing of the directory the descriptor names |
 | Directory | `chdir`, `fchdir` | changes the process's working directory (§5.1) |
-| Write | `mkdir`, `mkdirat`, `rmdir`, `unlink`, `unlinkat`, `rename`, `renameat`, `renameat2`, `link`, `linkat`, `symlink`, `symlinkat`, `chmod`, `fchmodat`, `fchmodat2`, `chown`, `lchown`, `fchownat`, `truncate`, `utime`, `utimes`, `utimensat`, `futimesat`, `setxattr`, `lsetxattr`, `removexattr`, `lremovexattr`, `mknod`, `mknodat` | a write to the path. The **source** of `rename`, `link` and `linkat` is an observation as well as a write. |
+| Write | `mkdir`, `mkdirat`, `rmdir`, `unlink`, `unlinkat`, `rename`, `renameat`, `renameat2`, `link`, `linkat`, `symlink`, `symlinkat`, `chmod`, `fchmodat`, `fchmodat2`, `chown`, `lchown`, `fchownat`, `truncate`, `utime`, `utimes`, `utimensat`, `futimesat`, `setxattr`, `lsetxattr`, `removexattr`, `lremovexattr`, `mknod`, `mknodat`, and through a descriptor `fchmod`, `fchown`, `fsetxattr`, `fremovexattr`, `futimens` (the object is the `-y` path) | a write to the path. The **source** of `rename`, `link` and `linkat` is an observation as well as a write. A **successful** call on a path the action did not create is an observation as well: it only worked because something was there. |
 | Process | `execve`, `execveat`, `fork`, `vfork`, `clone`, `clone3`, exit lines | the process tree; an exec is a read of the program (§5.1) |
 | Network | `socket`, `connect`, `bind`, `listen`, `sendto`, `sendmsg`, `sendmmsg` | §5.4 |
 
@@ -552,21 +553,50 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   matches the kernel. `L/../x`, where `L` is a link, means `x` beside L's
   target.
 - Every link traversed is itself an observation.
-- A traversed component is **stable** only in two cases:
-  - this same action created it **before** the call, in that action's own
-    trace order, and no other action in the run, in any shard, created,
-    renamed, unlinked or re-linked it;
-  - it is tracked, and no action touched it.
+- A traversed component `c` is **stable** only in these cases:
+  - **(a)** `c` is tracked, and no action in the run made a namespace change
+    to `c` **or to any ancestor of `c`**. A namespace change is a `rename`
+    source or destination (including `RENAME_EXCHANGE`), `unlink`, `rmdir`,
+    the destination of `link`/`linkat`, `symlink`, `mkdir`, `mknod`, or an
+    `O_CREAT` open.
+  - **(b)** this action created `c` exactly once (`mkdir`, `symlink` or
+    `O_CREAT|O_EXCL`), the creation's **completion line** precedes the lookup's
+    **start line** (`Event.StartLine`: for a split call the `<unfinished>`
+    line), no namespace change by anyone touched `c` or an ancestor
+    afterwards, and `c` was never a `link`/`linkat` source or destination
+    (hard links make aliases the trace cannot follow).
+  - **Outside the repository**, `c` resolves on the post-run disk and is
+    stable only if no traced namespace change touched it or an ancestor.
+    `$HOME` and `TMPDIR` are fresh sandbox tmpfs, so the disk is **never**
+    consulted under them: a path there was created by the action (rule b) or
+    is absent.
 
-  Every other component is unstable, whatever the ordering. That covers a
-  component any *other* action touched, and a component that existed
-  before the first BUILD and that any action touched. An unstable
-  component gives `trace-incomplete:unstable-path`.
+  Everything else gives `trace-incomplete:unstable-path`: an untracked
+  leftover of an earlier action, a component created after the lookup began
+  or twice, a renamed link. There is no "did not exist yet" exception.
+- A `..` after a component the walk could not enter (missing, or not a
+  directory) cannot be placed. On a failed call, the call looked at that
+  component, which is observed; on a successful call, the result is
+  `unstable-path`.
+- A successful open takes its final path from the `-y` annotation, and the
+  walk still runs to find the links on the way. If either path is in the
+  repository and they disagree, the post-run disk no longer shows what the call
+  saw: `unstable-path`.
+- A component is stable only as far as the walk is bounded: the walk has a
+  per-action step budget (50M) and a path-length cap; exceeding either is
+  `trace-incomplete:size`.
 
 **Exec.** `execve(path)` is a read of `path`. The kernel then loads,
 invisibly, the interpreter of a `#!` script and the `PT_INTERP` loader of
 an ELF file. The parser adds both as reads, following `#!` up to four
-levels deep as the kernel does.
+levels deep. (The kernel follows up to five; four is stricter, and a fifth
+hop is `exec-depth`, so it fails closed.) The interpreter is the text up to
+the first blank or tab, with **no** trimming of `\r`: the kernel looks up
+that exact name. The head bytes come from the tracked tree for a tracked
+file, else from the post-run disk, never under `$HOME` or `TMPDIR`. An
+untracked file read from the disk must not be written, truncated, renamed,
+linked onto or unlinked after the exec, nor an ancestor changed, by any
+action; otherwise `trace-incomplete:exec-unreadable`.
 
 **`/proc`.** The `ephemeral` list of `host-roots.json` (§5.3) is the one
 authoritative list. Its seed allows the ubiquitous entries: `/proc/self/{exe,maps,cgroup,mountinfo}`,
@@ -632,6 +662,21 @@ only when the action's first touch of it provably started from empty:
 - an earlier probe by the same action that returned "not found".
 
 Any other first touch is an observation of whatever was there before.
+
+An earlier "not found" counts only if it is unambiguous: an `ENOENT` on the
+final component that the walk really looked up (not a missing parent, not a
+path ending in `/` or `/.`, not an exec, `rename` or `link` failure), and the
+parent is in the repository or is the action's own. A failed `rename` or `link`
+observes **both** names, by errno.
+
+**Creation is an absence observation.** Before the action makes a path
+(`mkdir`, `symlink`, `mknod`, `bind`, an `O_CREAT` open, the destination of
+`rename` or `link`), nothing of that name was there from the action's point of
+view, and another action could have created it first. So a creation with no
+own ancestor is recorded like an `ENOENT` probe: `pkg:q`, or
+`path:<first absent>`. The raw record also lists these as **absent
+observations** (in-repository paths whose first absent component is
+untracked) for the merge job.
 
 **Writes to tracked files.** An action that writes a tracked path gets
 `writes-tracked:<path>` and no record. An unlocked install that rewrites
@@ -706,7 +751,13 @@ Four more rules apply:
   under an `image`, `tool` or `state` root, or in `absent-ok`. `$HOME`
   dotfiles need explicit entries.
 - **Temporary files.** A read of the action's own temporary files (paths
-  it created, §5.2) is allowed.
+  it created, §5.2) is allowed. `$HOME` and `TMPDIR` are **fresh tmpfs**, so
+  a stat or listing of those two directories is allowed, and the post-run
+  disk is never consulted beneath them. `ReadHead` and any other file read
+  from the post-run disk open with `O_NOFOLLOW|O_NONBLOCK`.
+- **Image absence.** An absent probe under an `image` root is checked against
+  the ctime of the deepest directory that exists: one after the job-start
+  stamp is `host-read:setup-modified`.
 
 Any other out-of-repository read or probe gives `host-read:<path>` and no
 record. `$HOME` and `TMPDIR` are expanded from the scrubbed environment.
@@ -733,6 +784,15 @@ families are pathname `AF_UNIX`, and `AF_INET`/`AF_INET6` under the rows
 above. Examples outside them: `AF_NETLINK`, which reads routes and
 interfaces that no key covers, and `AF_PACKET` and `AF_VSOCK`. An
 abstract-namespace Unix socket the action did not bind gives `daemon:`.
+
+"Bound" has three further limits. A bind to **port 0** matches nothing: the
+kernel chose the port and the `bind` line does not say which, so a client of
+such a server reads as a daemon (learning the port from `getsockname` is
+future work). A wildcard bind is **family-scoped**: `0.0.0.0` serves IPv4
+only, `::` serves both families. The **socket type** must match, read from the
+`socket()` call through the socket's `-y` name (`socket:[inode]`); an unknown
+or ambiguous type matches nothing.
+
 Every package that gets
 `network` is reported, which replaces the hand-curated network entries in
 `never.json`.
@@ -740,140 +800,92 @@ Every package that gets
 ### 5.5 Classification decisions (stage 1b-i)
 
 Stage 1b-i (`internal/traced`) turns the parsed traces of one action into a
-**raw record**. It is pure: the traces, the package index, a tracked-tree view,
-a post-run disk view, `host-roots.json`, the pinned ecosystems, the weak key's
-tool set and the scrubbed `HOME` and `TMPDIR` all arrive as arguments. It
-computes no digest and applies no cross-action rule (stages 1b-ii and 4). These
-are the decisions it settled where §5.1 to §5.4 left room. The code is
-authoritative for details.
+**raw record**. It is pure: the traces, the expected recipe lines, the package
+index, a tracked-tree view, a post-run disk view, `host-roots.json`, the
+pinned ecosystems, the weak key's tool set and the scrubbed `HOME` and
+`TMPDIR` all arrive as arguments. It computes no digest and applies no
+cross-action rule (stages 1b-ii and 4). The rules themselves are in §4.4, §5.1
+to §5.4 and §7; this subsection lists what the implementation settled where
+they left room. The code is authoritative for details.
 
-**Stage 1a additions.** `trace.Event.Argv` holds the decoded argument vector of
-an exec call (nil unless decoded exactly), and `Trace.StepEvent()` returns the
-step's first successful exec. The recipe check of §4.3 needs both.
+**Stage 1a additions.** `Event.Argv` (an exec's decoded argument vector),
+`Event.StartLine`, `Event.SockPath`, `Trace.StepEvent()`, and the descriptor
+metadata writes in the table.
 
-**The record.** `Entries` (`pkg:`, `path:`, `list:`), `Writes`,
-`TrackedWrites`, `UntrackedObservations`, `Traversed` and `Reasons`, all sorted
-and unique. Two fields go beyond §7's list:
-- `TrackedWrites` holds the exact tracked paths written, the tainted-set
-  candidates. `Writes` holds write roots only.
-- `Traversed` holds every in-repository directory or link that a resolved path
-  went through. The merge job needs it for the cross-action half of the
-  stability rule: a traversed component that another action created, renamed,
-  unlinked or re-linked is `unstable-path`.
+**The record.** `Entries`, `Writes`, `TrackedWrites`, `UntrackedObservations`,
+`AbsentObservations`, `Traversed` and `Reasons`, sorted and unique. Beyond §7's
+list: `TrackedWrites` holds the exact tracked paths written (the tainted-set
+candidates; `Writes` holds write roots only); `AbsentObservations` and
+`Traversed` exist for the merge job's cross-action checks. The traces of one
+action are classified as one sequence. `Recipe` is a required input: without
+it nothing shows the steps are the ones the weak key covers.
 
-The traces of one action are classified as one sequence. Created paths, absent
-probes and links carry from one step into the next.
-
-**Resolution.**
-- A successful open takes its final path from the `-y` return annotation. The
-  walk still runs, to find the symlinks on the way (each one is an observation).
-  If the walk and the kernel disagree and either path is in the repository, the
-  post-run disk no longer shows what the call saw: `unstable-path`. Outside the
-  repository the `-y` path simply wins.
-- A final symlink is not followed by `lstat`, `readlink`, `unlink*`, `rmdir`,
-  `mkdir*`, `symlink*`, `rename*`, `link`, `mknod*`, `l*xattr`, `lchown`, by
-  `O_NOFOLLOW` or `O_CREAT|O_EXCL`, or by an `AT_SYMLINK_NOFOLLOW` flag. A
-  trailing slash always follows.
-- A lookup asks, in order: the links, directories and removals this action made
-  (the trace knows the state at that moment), then the post-run disk, then the
-  tracked tree for a path the disk lost. A component none of them has ends the
-  walk: the rest is kept as written, as the kernel would have failed there.
-- `/proc` and `/dev/fd` are never walked: the disk's `/proc/self` is the
-  classifier's own. They are treated as lexical paths, and `..` out of them
-  resumes the walk.
-- **Stability.** A traversed component is stable if any of these holds:
-  - the trace itself knew it at that moment (a link or directory this action
-    made, or a path it removed);
-  - this action never changed it;
-  - its last change was a clean creation, and the traversal came after it;
-  - it did not exist yet when the call ran, and this action made it later.
-
-  Otherwise (for example, a tracked link this action replaced after reading
-  through it) it is `unstable-path`. A component that is **untracked, present
-  and never touched by this action** is not unstable here: it is a
-  pre-existing leftover, which §7's cross-action rules decide, from
-  `UntrackedObservations` and `Traversed`.
+**Resolution.** The walk consults, in order, the trace's own links and
+directories (only under `$HOME` and `TMPDIR`), the post-run disk, and the
+tracked tree for a path the disk lost. The strict stability rule of §5.1
+replaces any use of "what the trace knew at the time": the disk must vouch for
+every traversed component. Simulating renames, hard links and concurrent
+lookups exactly is unbounded work and every gap is a false hit, so builds that
+churn temporary directories lose their records; the M2 reason histogram
+measures that cost. `/proc` and `/dev/fd` are never walked. `Config.Root` must
+be a real path, and `prepare` checks that every prefix of it is a real
+directory on the disk. `openat2` with a non-zero `resolve=` is
+`trace-incomplete:resolve-flags`.
 
 **Mapping.**
 - A path is the action's own if it, or a directory above it, was created
-  earlier in the trace. This covers a `rename` or `link` destination.
-- An open that cannot prove emptiness (`O_WRONLY|O_CREAT` alone, `O_APPEND`) is
-  an observation. A read after an `ENOENT` probe is an observation too.
-- `rename` and `link` write their source and observe it. A failed one observes
-  both names by the errno (`ENOENT`: absent) and creates nothing.
-  `RENAME_EXCHANGE` creates nothing.
-- An observation of an untracked path that is present gives its entry **and**
-  an untracked observation. The merge job rejects the record if another action
-  wrote the path, if it pre-existed, or if nobody explains it.
-- A `list:` entry is added for a directory listing. The `open` of that
-  directory has already produced its `pkg:` or `path:` entry.
-- The repository root is recorded only as `list:.`; a stat of it records
-  nothing. `.git` itself records nothing; any path beneath a `.git` segment, at
-  any depth, or a listing of it, is `vcs-read`. A repository path that
-  KILN02 §3.5 rejects is `trace-incomplete:bad-path`.
+  earlier in the trace. An open that cannot prove emptiness (`O_WRONLY|O_CREAT`
+  alone, `O_APPEND`) is an observation.
+- `rename` and `link` write and observe their source; `RENAME_EXCHANGE`
+  creates nothing; a descriptor-based or `/dev/fd` path in a Write-kind call
+  is `trace-incomplete:proc-path`.
+- An observation of an untracked present path gives its entry **and** an
+  untracked observation. The repository root records only `list:.`; `.git`
+  itself records nothing; any path beneath a `.git` segment is `vcs-read`; a
+  repository path KILN02 §3.5 rejects is `trace-incomplete:bad-path`; a write
+  beneath `.git` is `trace-incomplete:vcs-write`.
 - A write root is the shortest prefix of the written path that is not tracked.
-  A tracked path is its own root. A write beneath `.git` is
-  `trace-incomplete:vcs-write`.
 
-**Exec.**
-- The head bytes come from the tracked tree for a tracked file, else from the
-  post-run disk. A `#!` line follows up to 4 hops; a fifth is `exec-depth`. An
-  ELF file's `PT_INTERP` is read from its program headers with the `debug/elf`
-  structures. `debug/elf.File` is not used, because it reads the section
-  headers at the end of the file.
-- A successful exec that cannot be read (a program the action made and removed,
-  `/proc/self/exe`), an unknown format or a malformed ELF is
-  `trace-incomplete:exec-unreadable`, `exec-format` or `exec-elf`. This also
-  costs a compiled-then-deleted `conftest` program its record: nothing can say
-  what loader it used.
-- A program the action made is not an entry, but its loading chain is still
-  observed.
+**Exec.** An ELF's `PT_INTERP` is read from its program headers with the
+`debug/elf` structures (not `elf.File`, which reads the section headers at
+the end of the file). A program that cannot be read, an unknown format or a
+malformed ELF is `exec-unreadable`, `exec-format` or `exec-elf`. A compiled
+then deleted program (autoconf's `conftest`) therefore loses its record.
 
 **`/proc`.** Only `/proc/self/status` and `/proc/self/stat` are
-`trace-visible`. The ephemeral list is applied next. Every other `/proc` path
-is `trace-incomplete:proc-path`, including `/proc/self/fd` itself and the bare
-`/dev/fd` directory. An open of `/proc/self/fd/N` or `/dev/fd/N` is classified
-by its `-y` path (a pipe or socket is nothing). A failed one is judged by the
-paths' own rules.
+`trace-visible`; the ephemeral list comes next; every other `/proc` path,
+including `/proc/self/fd` itself and the bare `/dev/fd`, is
+`trace-incomplete:proc-path`. An open of `/proc/self/fd/N` or `/dev/fd/N` is
+classified by its `-y` path.
 
 **Out of the repository.** The order is: made by this action, ephemeral list,
-longest covering root, `absent-ok`, else `host-read`.
-- `X/**` in the ephemeral list also covers `X`.
-- `absent-ok` covers a path and everything under it, but only for absent probes.
-- An `image` read needs the file's ctime from the disk to be no later than the
-  job-start stamp. A zero ctime or a failed lstat gives `host-read:<path>`,
-  never a pass.
-- A `tool` root, present or absent, needs the tool in the weak key
-  (`tool-not-keyed:<tool>`).
-- A `state` root reads as `host-read` and an absent probe under it is allowed.
-  The fetcher check is stage 5; `fetchersEnabled` is the switch.
-- A write under a `state` root is `state-write` for now.
-- An absent probe under `$TMPDIR` that is not the action's own path is a
-  `host-read`, as §5.3 reads.
+`$HOME` or `TMPDIR` themselves, longest covering root, `absent-ok`, else
+`host-read`. `X/**` in the ephemeral list also covers `X`; `absent-ok` covers
+a path and what is under it, for absent probes only. An `image` file with a
+zero ctime or a failed lstat is `host-read`. A `state` root reads as
+`host-read` and an absent probe under it is allowed (the fetcher check is
+stage 5; `fetchersEnabled` is the switch); a write under it is `state-write`.
+An absent probe under `$TMPDIR` that is not the action's own is a
+`host-read`. Reasons redact `$HOME` and `TMPDIR`, replace every non-printable
+rune and are capped at 200 bytes (checked before each rune is appended).
 
-Reasons carry `$HOME` and `TMPDIR` redacted, control characters replaced and
-200 bytes at most.
-
-**Network.**
-- The wildcard address (`0.0.0.0`, `::`) counts as local for a connect.
-- A bind counts only if it succeeded earlier in the trace. A bind to port 0
-  stands for every port of that address, since `getsockname` is not parsed.
-- A bind to a wildcard address matches a connect to loopback on the same port.
-- A pathname `AF_UNIX` bind also creates the path (a write, and the action's
-  own).
-- Inside the repository, a Unix connect is also a path observation; outside it,
-  only the §5.4 table applies.
-- Any failure other than `ECONNREFUSED` or `ENOENT` is judged like a success.
-- An unnamed Unix address and a call without an address (a connected send,
-  `listen`) are ignored.
-- The program in `network:<program>` is the process's last exec path, made
-  absolute against the call's working directory, with the same redaction.
+**Network.** The wildcard address counts as local for a connect. A bind
+counts only if it succeeded earlier in the trace; port 0, family scoping and
+the socket type are in §5.4. A pathname `AF_UNIX` bind also creates the path.
+Inside the repository a Unix connect is also a path observation. Any failure
+other than `ECONNREFUSED` or `ENOENT` is judged like a success. The program in
+`network:<program>` is the process's last exec path, absolute and redacted.
 
 **Reasons from the step itself.** A step whose init child (or root) did not
-exit with 0 gives `failed`. After the init child's exit line, a process killed
-by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of exactly
-`[<shell>, "-c", <line>]`; `argv[0]` is not compared. `Classify` runs it when
-the input carries the expected lines.
+exit with 0 gives `failed`. After the init child's exit line, a process
+killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
+exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
+
+**Tests.** A differential fuzzer runs an in-memory filesystem model (mkdir,
+symlink, rename, link, unlink, rmdir, open, stat, chdir, exec) with the true
+results and `-y` paths, gives the final state as the post-run disk, and
+requires that every path the model really looked at is the action's own,
+covered by the record, or that the record carries a reason.
 
 ## 6. When nothing is recorded
 
@@ -937,6 +949,17 @@ Shards run on separate machines, so the check cannot run per shard:
    - **Unexplained.** A observed an untracked path that A did not create
      and nobody wrote. On a correct trace this cannot happen, so it is
      `trace-incomplete`.
+   - **Overlapping write roots.** Two actions whose write roots overlap
+     (one is a prefix of the other, or they are equal) both get
+     `reads-product`: neither can say which one's output a later reader saw.
+   - **Stability across actions.** The record's `Traversed` components and
+     `AbsentObservations` are checked against the pre-existing inventory and
+     against every other action's writes: a traversed component another action
+     created, renamed, unlinked or re-linked is `unstable-path`, and an absent
+     name another action wrote is `reads-product`.
+   - **Unknown write sets.** An action with any `trace-incomplete` reason has
+     an unknown write set, so no other action's checks can be trusted: **its
+     whole shard emits nothing**.
 3. **All or nothing.** Only after these checks does the merge job emit
    manifests and passes. If any shard's records are missing, it emits
    nothing.

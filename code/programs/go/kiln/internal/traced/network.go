@@ -24,12 +24,44 @@ import (
 //	abstract Unix socket the action did not bind       -> daemon:<address>
 //
 // "Bound" means a successful bind() earlier in the trace, in any step of the
-// action.  A bind to port 0 asked the kernel for any free port, and strace's
-// bind line does not say which, so it stands for every port of that address.
+// action, on a socket of the SAME TYPE (a stream server does not answer a
+// datagram, and the socket()'s type is read from its -y name).  A bind to port
+// 0 asked the kernel for any free port, and strace's bind line does not say
+// which: it matches nothing (learning the port from getsockname is future
+// work), so such a server's clients read as daemons and the record is refused.
+// A wildcard bind is family-scoped: 0.0.0.0 serves IPv4 only, :: serves both.
 
 type boundAddr struct {
 	ip   netip.Addr
 	port int
+	typ  string
+}
+
+// sockType returns the socket type (SOCK_STREAM, ...) of the socket the event
+// used, or "" when it is not known.
+func (c *classifier) sockType(ev *trace.Event) string {
+	t := c.sockTypes[ev.SockPath]
+	if t == "?" {
+		return ""
+	}
+	return t
+}
+
+// noteSocket reads the type from a socket() call: "AF_INET, SOCK_STREAM|SOCK_CLOEXEC, 0".
+// Two sockets that share a -y name with different types make it unknown.
+func (c *classifier) noteSocket(ev *trace.Event) {
+	if ev.SockPath == "" || !ev.Result.OK {
+		return
+	}
+	parts := strings.Split(ev.Flags, ", ")
+	if len(parts) < 2 {
+		return
+	}
+	typ, _, _ := strings.Cut(parts[1], "|")
+	if old, ok := c.sockTypes[ev.SockPath]; ok && old != typ {
+		typ = "?"
+	}
+	c.sockTypes[ev.SockPath] = typ
 }
 
 // network handles one network event.
@@ -40,6 +72,7 @@ func (c *classifier) network(t *trace.Trace, ev *trace.Event) {
 	}
 	switch ev.Syscall {
 	case "socket":
+		c.noteSocket(ev)
 		if !allowedFamily(a.Family) {
 			c.networkUse(t, ev)
 		}
@@ -81,16 +114,34 @@ func (c *classifier) networkUse(t *trace.Trace, ev *trace.Event) {
 // "this machine".
 func localAddr(ip netip.Addr) bool { return ip.IsLoopback() || ip.IsUnspecified() }
 
-func (c *classifier) bound(ip netip.Addr, port int) bool {
+func (c *classifier) bound(ip netip.Addr, port int, typ string) bool {
+	if typ == "" {
+		return false
+	}
 	for _, b := range c.boundInet {
-		if b.port != port && b.port != 0 {
-			continue
-		}
-		if b.ip.Unmap() == ip.Unmap() || b.ip.IsUnspecified() || ip.IsUnspecified() {
+		if b.port == port && b.typ == typ && addrServes(b.ip, ip) {
 			return true
 		}
 	}
 	return false
+}
+
+// addrServes says whether a socket bound to b answers a connect to ip.
+//
+//	bound ::         serves every address of both families (dual stack)
+//	bound 0.0.0.0    serves IPv4 addresses only
+//	connect to ::    means this machine over IPv6: a bound loopback or wildcard IPv6 socket
+//	connect to 0.0.0.0   the same over IPv4
+//	otherwise        the same address (a v4-mapped v6 address is its v4 address)
+func addrServes(b, ip netip.Addr) bool {
+	b, ip = b.Unmap(), ip.Unmap()
+	if b.IsUnspecified() {
+		return b.Is6() || ip.Is4()
+	}
+	if ip.IsUnspecified() {
+		return b.Is4() == ip.Is4() && b.IsLoopback()
+	}
+	return b == ip
 }
 
 // expectedFailure is the failure of a connect or send to a local peer that
@@ -106,7 +157,7 @@ func (c *classifier) inetPeer(t *trace.Trace, ev *trace.Event) {
 		c.networkUse(t, ev)
 		return
 	}
-	if expectedFailure(ev.Result) || c.bound(ip, a.Port) {
+	if expectedFailure(ev.Result) || c.bound(ip, a.Port, c.sockType(ev)) {
 		return
 	}
 	c.reason("daemon:" + sanitize(addrText(ip, a.Port)))
@@ -125,13 +176,13 @@ func (c *classifier) bind(ev *trace.Event) {
 		if !ev.Result.OK {
 			return
 		}
-		if ip, err := netip.ParseAddr(a.Address); err == nil {
-			c.boundInet = append(c.boundInet, boundAddr{ip, a.Port})
+		if ip, err := netip.ParseAddr(a.Address); err == nil && a.Port != 0 {
+			c.boundInet = append(c.boundInet, boundAddr{ip, a.Port, c.sockType(ev)})
 		}
 	case "AF_UNIX":
 		if a.Abstract {
 			if ev.Result.OK {
-				c.boundUnix["@"+a.Address] = true
+				c.boundUnix["@"+a.Address] = c.sockType(ev)
 			}
 			return
 		}
@@ -143,12 +194,12 @@ func (c *classifier) bind(ev *trace.Event) {
 			return
 		}
 		if !ev.Result.OK {
-			c.observeResult(tg.abs, ev.Result)
+			c.observeResult(tg, ev.Result)
 			return
 		}
 		c.writePath(tg.abs)
-		c.markCreated(tg.abs)
-		c.boundUnix[tg.abs] = true
+		c.markCreated(tg.abs, true) // bind never replaces a name: like O_EXCL
+		c.boundUnix[tg.abs] = c.sockType(ev)
 	}
 }
 
@@ -156,7 +207,7 @@ func (c *classifier) bind(ev *trace.Event) {
 func (c *classifier) unixPeer(ev *trace.Event) {
 	a := ev.Addr
 	if a.Abstract {
-		if expectedFailure(ev.Result) || c.boundUnix["@"+a.Address] {
+		if expectedFailure(ev.Result) || c.unixBound("@"+a.Address, c.sockType(ev)) {
 			return
 		}
 		c.reason("daemon:" + sanitize("@"+a.Address))
@@ -173,10 +224,16 @@ func (c *classifier) unixPeer(ev *trace.Event) {
 	// absence or presence is an observation.  Outside it, a failed connect
 	// observes only host state the image fixes, and is allowed as it is.
 	if _, in := c.rel(tg.abs); in {
-		c.observeResult(tg.abs, ev.Result)
+		c.observeResult(tg, ev.Result)
 	}
-	if expectedFailure(ev.Result) || c.boundUnix[tg.abs] {
+	if expectedFailure(ev.Result) || c.unixBound(tg.abs, c.sockType(ev)) {
 		return
 	}
 	c.reason("daemon:" + c.redact(tg.abs))
+}
+
+// unixBound says the action bound this Unix address on a socket of this type.
+func (c *classifier) unixBound(addr, typ string) bool {
+	t, ok := c.boundUnix[addr]
+	return ok && typ != "" && t == typ
 }

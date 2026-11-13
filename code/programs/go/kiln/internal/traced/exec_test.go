@@ -119,7 +119,7 @@ func TestShebangShapes(t *testing.T) {
 		"#!/bin/sh\necho":           "/bin/sh",
 		"#!  /bin/sh -e\n":          "/bin/sh",
 		"#!\t/usr/bin/env python\n": "/usr/bin/env",
-		"#!/bin/sh\r\n":             "/bin/sh",
+		"#!/bin/sh\r\n":             "/bin/sh\r", // no trimming: the kernel does not
 		"#!./rel/interp":            "./rel/interp",
 	} {
 		got, ok := shebangInterpreter([]byte(in))
@@ -192,7 +192,14 @@ func TestExecOfFileTheActionMade(t *testing.T) {
 		open("code/p/a/conftest", "O_WRONLY|O_CREAT|O_TRUNC", abs("code/p/a/conftest")),
 		execve("code/p/a/conftest", "conftest"),
 	)
-	eq(t, "entries", rec.Entries)
+	eq(t, "entries", rec.Entries, "pkg:code/p/a")
+	// Created by O_TRUNC (not O_EXCL) and then followed by the exec: the disk
+	// cannot vouch that it was no link at that moment.
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	rec = h.run(
+		open("code/p/a/conftest", "O_WRONLY|O_CREAT|O_EXCL", abs("code/p/a/conftest")),
+		execve("code/p/a/conftest", "conftest"),
+	)
 	wantNoReasons(t, rec)
 	// If it is gone afterwards and was never tracked, nothing can say what its
 	// loader was.

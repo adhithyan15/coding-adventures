@@ -50,6 +50,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
@@ -136,8 +138,9 @@ type Input struct {
 	// Traces holds one parsed trace per BUILD step, in step order.  Created
 	// paths and absent probes carry over from one step to the next.
 	Traces []*trace.Trace
-	// Recipe is the expected `sh -c` line of each step (KILN04 section 4.3).
-	// When non-nil, CheckRecipe runs and its reason joins the record's.
+	// Recipe is the expected `sh -c` line of each step (KILN04 section 4.3),
+	// from the BUILD variant Source holds.  It is required: without it nothing
+	// shows the traced steps are the ones the weak key's recipe covers.
 	Recipe []string
 }
 
@@ -155,6 +158,11 @@ type RawRecord struct {
 	// TrackedWrites are the TRACKED paths the action wrote: the candidates for
 	// the run-wide tainted set.
 	TrackedWrites []string `json:"tracked_writes"`
+	// AbsentObservations are in-repository paths the action found absent whose
+	// first absent component is untracked: the names another action might
+	// create first.  The merge job checks them against other actions' writes
+	// and the pre-existing inventory.
+	AbsentObservations []string `json:"absent_observations"`
 	// UntrackedObservations are in-repository untracked paths the action
 	// observed and did not create.  The merge job decides what each means.
 	UntrackedObservations []string `json:"untracked_observations"`
@@ -184,6 +192,9 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 	if in.Package == "" || len(in.Traces) == 0 {
 		return nil, fmt.Errorf("traced: an action needs a package and at least one trace")
 	}
+	if in.Recipe == nil {
+		return nil, fmt.Errorf("traced: the expected recipe lines are required")
+	}
 	for _, t := range in.Traces {
 		if t == nil {
 			return nil, fmt.Errorf("traced: nil trace")
@@ -193,10 +204,8 @@ func Classify(cfg Config, in Input) (*RawRecord, error) {
 	for _, t := range in.Traces {
 		c.runTrace(t)
 	}
-	if in.Recipe != nil {
-		for _, r := range CheckRecipe(in.Traces, in.Recipe) {
-			c.reason(r)
-		}
+	for _, r := range CheckRecipe(in.Traces, in.Recipe) {
+		c.reason(r)
 	}
 	c.checkStability()
 	return c.record(in.Package), nil
@@ -227,6 +236,20 @@ func prepare(cfg Config) (*prepared, error) {
 	for _, d := range []string{cfg.Home, cfg.Tmpdir} {
 		if d != "" && (!strings.HasPrefix(d, "/") || path.Clean(d) != d) {
 			return nil, fmt.Errorf("traced: Home and Tmpdir must be empty or absolute and clean, got %q", d)
+		}
+	}
+	// Every prefix of the checkout path must be a real directory on the disk:
+	// a symlink in it would make the walk resolve the root away from itself.
+	for i := 0; i <= len(cfg.Root); i++ {
+		if i < len(cfg.Root) && cfg.Root[i] != '/' {
+			continue
+		}
+		p := cfg.Root[:i]
+		if p == "" {
+			p = "/"
+		}
+		if info, err := cfg.FS.Lstat(p); err != nil || info.Kind != KindDir {
+			return nil, fmt.Errorf("traced: %q is not a real directory (Root must be a resolved path)", p)
 		}
 	}
 	p := &prepared{Config: cfg}
@@ -294,15 +317,16 @@ func capReasons(m map[string]bool) []string {
 	return out
 }
 
-// sanitize makes text from the traced action safe to print in a reason: no
-// control characters (a filename can hold a newline) and a bounded length.
+// sanitize makes text from the traced action safe to print in a reason: only
+// printable characters (a filename can hold a newline, a bidi override or an
+// escape), and a bounded length that is checked BEFORE each rune is appended.
 func sanitize(s string) string {
 	var b strings.Builder
 	for _, r := range s {
-		if r < 0x20 || r == 0x7f {
+		if !unicode.IsPrint(r) {
 			r = '?'
 		}
-		if b.Len() >= maxReasonText {
+		if b.Len()+utf8.RuneLen(r) > maxReasonText {
 			b.WriteString("...")
 			break
 		}

@@ -33,7 +33,9 @@ func (c *classifier) exec(ev *trace.Event) {
 	if !ok {
 		return
 	}
-	c.observeResult(tg.abs, ev.Result)
+	// An exec failure says nothing about WHICH name was missing (a PATH search
+	// probes every directory), so it is observed but never remembered as absent.
+	c.observe(tg.abs, presence(ev.Result), false)
 	if !ev.Result.OK {
 		return
 	}
@@ -100,14 +102,21 @@ func (c *classifier) loadChain(abs, cwd string) {
 
 // readHead returns the first bytes of the file at abs: from the tracked tree
 // when it is a tracked file (those bytes are what the key digests), else from
-// the post-run disk.
+// the post-run disk.  The disk is never asked under $HOME or TMPDIR (fresh
+// tmpfs, gone after the run).  A file read from the disk is remembered: if the
+// action changes it after the exec, the bytes are not the ones the kernel read
+// (checkStability).
 func (c *classifier) readHead(abs string) ([]byte, bool) {
+	if c.underTmp(abs) {
+		return nil, false
+	}
 	if rel, ok := c.rel(abs); ok {
 		if c.cfg.Tree.Stat(rel).Kind == KindFile {
 			if b, err := c.cfg.Tree.Head(rel, headLimit); err == nil {
 				return b, true
 			}
 		}
+		c.execReads[abs] = c.cur
 	}
 	b, err := c.cfg.FS.ReadHead(abs, headLimit)
 	return b, err == nil
@@ -129,7 +138,6 @@ func shebangInterpreter(head []byte) (string, bool) {
 	if i := strings.IndexAny(s, " \t"); i >= 0 {
 		s = s[:i]
 	}
-	s = strings.TrimRight(s, "\r")
 	if s == "" || strings.IndexByte(s, 0) >= 0 {
 		return "", false
 	}

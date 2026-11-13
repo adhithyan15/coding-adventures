@@ -15,7 +15,7 @@ import (
 )
 
 func shStep(line string) *trace.Trace {
-	return step(execve("/usr/bin/sh", "sh", "-c", line))
+	return rawStep(execve("/usr/bin/sh", "sh", "-c", line))
 }
 
 func TestCheckRecipe(t *testing.T) {
@@ -33,10 +33,10 @@ func TestCheckRecipe(t *testing.T) {
 		"other line":    {[]*trace.Trace{a, b}, []string{"make", "make check"}},
 		"byte for byte": {[]*trace.Trace{a}, []string{"make "}},
 		"nil trace":     {[]*trace.Trace{nil}, []string{"make"}},
-		"no step exec":  {[]*trace.Trace{step(stat("go.work"))}, []string{"make"}},
-		"not sh -c":     {[]*trace.Trace{step(execve("/usr/bin/sh", "sh", "-e", "make"))}, []string{"make"}},
-		"extra args":    {[]*trace.Trace{step(execve("/usr/bin/sh", "sh", "-c", "make", "x"))}, []string{"make"}},
-		"undecoded":     {[]*trace.Trace{step(execve("/usr/bin/sh"))}, []string{"make"}},
+		"no step exec":  {[]*trace.Trace{rawStep(stat("go.work"))}, []string{"make"}},
+		"not sh -c":     {[]*trace.Trace{rawStep(execve("/usr/bin/sh", "sh", "-e", "make"))}, []string{"make"}},
+		"extra args":    {[]*trace.Trace{rawStep(execve("/usr/bin/sh", "sh", "-c", "make", "x"))}, []string{"make"}},
+		"undecoded":     {[]*trace.Trace{rawStep(execve("/usr/bin/sh"))}, []string{"make"}},
 	} {
 		got := CheckRecipe(c.steps, c.lines)
 		if len(got) != 1 || got[0] != bad[0] {
@@ -44,7 +44,7 @@ func TestCheckRecipe(t *testing.T) {
 		}
 	}
 	// A shell started by an absolute name is still the step.
-	if got := CheckRecipe([]*trace.Trace{step(execve("/bin/sh", "/bin/sh", "-c", "x"))}, []string{"x"}); got != nil {
+	if got := CheckRecipe([]*trace.Trace{rawStep(execve("/bin/sh", "/bin/sh", "-c", "x"))}, []string{"x"}); got != nil {
 		t.Fatal(got)
 	}
 	// Classify runs the check when given a recipe.

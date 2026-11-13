@@ -105,6 +105,9 @@ func (c *classifier) observeHost(abs string, present bool) {
 	if c.ephemeralMatch(abs) {
 		return
 	}
+	if c.isTmpRoot(abs) {
+		return // the fresh $HOME and TMPDIR directories themselves
+	}
 	if r := c.rootOf(abs); r != nil {
 		c.observeRoot(r, abs, present)
 		return
@@ -119,17 +122,25 @@ func (c *classifier) observeRoot(r *preparedRoot, abs string, present bool) {
 	switch r.kind {
 	case legacy.RootEphemeral:
 	case legacy.RootImage:
-		if !present {
-			return // an absent probe under an image root: the image fixes it
+		// An absent probe is covered by the image too, but a setup step may
+		// have ADDED the name's neighbours: the ctime of the deepest directory
+		// that exists is what says so.
+		for p := abs; covers(r.path, p); p = parentOf(p) {
+			info, err := c.cfg.FS.Lstat(p)
+			switch {
+			case err == nil && (info.Ctime.IsZero()):
+				// Cannot show it is as old as the image.
+				c.reason("host-read:" + c.redact(abs))
+			case err == nil && info.Ctime.After(c.cfg.JobStart):
+				c.reason("host-read:setup-modified:" + c.redact(abs))
+			case err != nil && isNotExist(err) && !present && p != r.path:
+				continue
+			case err != nil:
+				c.reason("host-read:" + c.redact(abs))
+			}
+			return
 		}
-		info, err := c.cfg.FS.Lstat(abs)
-		switch {
-		case err != nil || info.Ctime.IsZero():
-			// Cannot show the file is as old as the image.
-			c.reason("host-read:" + c.redact(abs))
-		case info.Ctime.After(c.cfg.JobStart):
-			c.reason("host-read:setup-modified:" + c.redact(abs))
-		}
+		c.reason("host-read:" + c.redact(abs))
 	case legacy.RootTool:
 		if !c.cfg.Tools[r.tool] {
 			c.reason("host-read:tool-not-keyed:" + sanitize(r.tool))

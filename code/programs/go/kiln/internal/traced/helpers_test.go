@@ -126,7 +126,7 @@ func (f *memFS) Lstat(p string) (FileInfo, error) {
 	if i, ok := f.info[p]; ok {
 		return i, nil
 	}
-	if p == "/w" || p == testRoot {
+	if p == "/" || p == "/w" || p == testRoot {
 		return FileInfo{Kind: KindDir, Ctime: oldCtime}, nil
 	}
 	if rel, ok := strings.CutPrefix(p, testRoot+"/"); ok && f.tree != nil {
@@ -181,6 +181,11 @@ func newHarness(t *testing.T) *harness {
 		file("go.work", "go 1.26\n")
 	h := &harness{t: t, tree: tree, fs: newMemFS()}
 	h.fs.tree = tree
+	h.fs.bytes("/usr/bin/sh", buildELF(loader, elf.ELFCLASS64, binary.LittleEndian))
+	h.fs.file(loader)
+	for _, d := range []string{"/usr", "/usr/bin", "/usr/lib", "/etc", "/lib64", "/bin", "/tmp", "/home"} {
+		h.fs.dir(d)
+	}
 	h.cfg = Config{
 		Root:     testRoot,
 		Packages: NewPackageIndex([]string{"code/p/a", "code/p/a/nested", "code/p/b"}),
@@ -216,13 +221,20 @@ func (h *harness) image(paths ...string) {
 	}
 }
 
-// step builds a one-process trace around events.
+// step builds a one-process trace around events, led by the exec of the shell
+// that runs the step line "step" (every action's trace starts that way).
 func step(events ...trace.Event) *trace.Trace {
+	return rawStep(append([]trace.Event{execve("/usr/bin/sh", "sh", "-c", "step")}, events...)...)
+}
+
+// rawStep builds a one-process trace around exactly these events.
+func rawStep(events ...trace.Event) *trace.Trace {
 	for i := range events {
 		if events[i].Pid == 0 {
 			events[i].Pid = 1
 		}
 		events[i].Line = i + 1
+		events[i].StartLine = i + 1
 	}
 	return &trace.Trace{
 		RootPid: 1,
@@ -241,7 +253,11 @@ func (h *harness) run(events ...trace.Event) *RawRecord {
 
 func (h *harness) runSteps(steps ...*trace.Trace) *RawRecord {
 	h.t.Helper()
-	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps})
+	recipe := make([]string, len(steps))
+	for i := range recipe {
+		recipe[i] = "step"
+	}
+	rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
 	if err != nil {
 		h.t.Fatalf("Classify: %v", err)
 	}
@@ -307,12 +323,14 @@ func execve(path string, argv ...string) trace.Event {
 func inet(sys, addr string, port int) trace.Event {
 	e := base(sys, trace.KindNetwork, "")
 	e.Addr = &trace.Addr{Family: "AF_INET", Address: addr, Port: port}
+	e.SockPath = "socket:[1]"
 	return e
 }
 
 func unix(sys, path string) trace.Event {
 	e := base(sys, trace.KindNetwork, "")
 	e.Addr = &trace.Addr{Family: "AF_UNIX", Address: path, Port: -1}
+	e.SockPath = "socket:[1]"
 	return e
 }
 

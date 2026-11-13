@@ -72,8 +72,9 @@ func TestListing(t *testing.T) {
 	wantNoReasons(t, rec)
 
 	// A directory the action made itself is not an input, listed or not.
+	// (Its creation is an absence observation: before the mkdir, nothing was there.)
 	rec = h.run(mkdir("code/p/a/out"), getdents(abs("code/p/a/out")))
-	eq(t, "entries", rec.Entries)
+	eq(t, "entries", rec.Entries, "pkg:code/p/a")
 }
 
 func TestGitIsNothingOrVCSRead(t *testing.T) {
@@ -116,12 +117,11 @@ func TestWrittenThenRead(t *testing.T) {
 			evs = append(evs, open("code/p/a/out.txt/inner", "O_RDONLY", abs("code/p/a/out.txt/inner")))
 			rec := h.run(evs...)
 			if strings.HasPrefix(name, "link") || strings.HasPrefix(name, "rename") {
-				// The source stays an observation.
-				eq(t, "entries", rec.Entries, "pkg:code/p/b")
-			} else if name == "probe then create" {
-				eq(t, "entries", rec.Entries, "pkg:code/p/a") // the probe itself was an observation
+				// The source stays an observation, and so does the absence the
+				// creation proves; the later reads of the new name record nothing.
+				eq(t, "entries", rec.Entries, "pkg:code/p/a", "pkg:code/p/b")
 			} else {
-				eq(t, "entries", rec.Entries)
+				eq(t, "entries", rec.Entries, "pkg:code/p/a")
 			}
 			eq(t, "untracked", rec.UntrackedObservations)
 		})
@@ -131,6 +131,7 @@ func TestWrittenThenRead(t *testing.T) {
 func TestSymlinkCreatedIsTheActionsOwn(t *testing.T) {
 	h := newHarness(t)
 	// The link itself is the action's; what it points at is not.
+	h.fs.link(abs("code/p/a/mine"), "README")
 	rec := h.run(symlink("README", "code/p/a/mine"), lstat("code/p/a/mine"),
 		open("code/p/a/mine", "O_RDONLY", abs("code/p/a/README")))
 	eq(t, "entries", rec.Entries, "pkg:code/p/a")
@@ -161,7 +162,7 @@ func TestRenameAndLinkSourceIsAnObservation(t *testing.T) {
 		link("code/p/b/b.txt", "code/p/a/copy.txt"),
 		open("code/p/a/copy.txt", "O_RDONLY", abs("code/p/a/copy.txt")),
 	)
-	eq(t, "entries", rec.Entries, "pkg:code/p/b")
+	eq(t, "entries", rec.Entries, "pkg:code/p/a", "pkg:code/p/b")
 	// And, being a write to a tracked path, it is refused.
 	wantReason(t, rec, "writes-tracked:code/p/b/b.txt")
 	eq(t, "tracked", rec.TrackedWrites, "code/p/b/b.txt")
@@ -205,7 +206,7 @@ func TestUnlinkRmdirAndChangesInPlace(t *testing.T) {
 		write("mknod", "code/p/a/fifo"),
 	)
 	eq(t, "writes", rec.Writes, "code/p/a/fifo", "code/p/a/old.o", "code/p/a/olddir", "code/p/a/t", "code/p/a/u", "code/p/a/x")
-	eq(t, "entries", rec.Entries)
+	eq(t, "entries", rec.Entries, "pkg:code/p/a") // each success observes (or, for mknod, proves absence)
 	wantNoReasons(t, rec)
 	// A recreated path is the action's own again.
 	rec = h.run(mkdir("code/p/a/d"), write("rmdir", "code/p/a/d"), stat("code/p/a/d"), mkdir("code/p/a/d"), stat("code/p/a/d"))
@@ -240,8 +241,9 @@ func TestMultipleStepsShareCreatedPaths(t *testing.T) {
 	h := newHarness(t)
 	s1 := step(mkdir("code/p/a/out"), open("code/p/a/out/f", "O_WRONLY|O_CREAT|O_EXCL", abs("code/p/a/out/f")))
 	s2 := step(open("code/p/a/out/f", "O_RDONLY", abs("code/p/a/out/f")))
+	h.fs.dir(abs("code/p/a/out")).file(abs("code/p/a/out/f"))
 	rec := h.runSteps(s1, s2)
-	eq(t, "entries", rec.Entries)
+	eq(t, "entries", rec.Entries, "pkg:code/p/a")
 	wantNoReasons(t, rec)
 }
 
@@ -331,13 +333,14 @@ func TestBadAndSensitivePaths(t *testing.T) {
 
 func TestClassifyRejectsBadInput(t *testing.T) {
 	h := newHarness(t)
-	good := Input{Package: "code/p/a", Traces: []*trace.Trace{step(stat("go.work"))}}
+	good := Input{Package: "code/p/a", Traces: []*trace.Trace{step(stat("go.work"))}, Recipe: []string{"step"}}
 	if _, err := Classify(h.cfg, good); err != nil {
 		t.Fatal(err)
 	}
 	for name, in := range map[string]Input{
 		"no package": {Traces: good.Traces},
-		"no traces":  {Package: "code/p/a"},
+		"no traces":  {Package: "code/p/a", Recipe: []string{}},
+		"no recipe":  {Package: "code/p/a", Traces: good.Traces},
 		"nil trace":  {Package: "code/p/a", Traces: []*trace.Trace{nil}},
 	} {
 		if _, err := Classify(h.cfg, in); err == nil {
@@ -350,9 +353,12 @@ func TestClassifyRejectsBadInput(t *testing.T) {
 		"unclean root":  func(c *Config) { c.Root = "/w/repo/" },
 		"no packages":   func(c *Config) { c.Packages = nil },
 		"no tree":       func(c *Config) { c.Tree = nil },
-		"no fs":         func(c *Config) { c.FS = nil },
-		"bad home":      func(c *Config) { c.Home = "home" },
-		"bad tmpdir":    func(c *Config) { c.Tmpdir = "/tmp/" },
+		"root through a link": func(c *Config) {
+			c.FS = &linkedRoot{c.FS}
+		},
+		"no fs":      func(c *Config) { c.FS = nil },
+		"bad home":   func(c *Config) { c.Home = "home" },
+		"bad tmpdir": func(c *Config) { c.Tmpdir = "/tmp/" },
 	} {
 		cfg := h.cfg
 		mutate(&cfg)
@@ -362,11 +368,22 @@ func TestClassifyRejectsBadInput(t *testing.T) {
 	}
 }
 
+// linkedRoot is a disk where the checkout's parent is a symlink.
+type linkedRoot struct{ FS }
+
+func (l *linkedRoot) Lstat(p string) (FileInfo, error) {
+	if p == "/w" {
+		return FileInfo{Kind: KindLink}, nil
+	}
+	return l.FS.Lstat(p)
+}
+
 func TestNoHostRootsMeansEverythingIsAHostRead(t *testing.T) {
 	h := newHarness(t)
 	h.cfg.HostRoots = nil
 	rec := h.run(openAbs("/usr/lib/x"))
 	wantReason(t, rec, "host-read:/usr/lib/x")
+	wantReason(t, rec, "host-read:/usr/bin/sh") // even the shell
 	// With $HOME unset, a root that needs it can never match.
 	h = newHarness(t)
 	h.cfg.Home = ""

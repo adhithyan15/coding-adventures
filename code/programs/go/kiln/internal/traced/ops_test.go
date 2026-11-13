@@ -56,49 +56,54 @@ func TestLinkAndRenameFailures(t *testing.T) {
 	eq(t, "untracked", rec.UntrackedObservations, "code/p/a/z")
 }
 
-func TestLinksAndDirectoriesMoveWithRename(t *testing.T) {
+func TestRenamedLinksAndHardLinksAreNeverStable(t *testing.T) {
+	// A renamed link is not "created once": the rename is a change the trace
+	// cannot vouch for, so reading through the new name is unstable.
 	h := newHarness(t)
+	h.fs.link(abs("code/p/a/final-link"), "../b")
 	rec := h.run(
 		symlink("../b", "code/p/a/tmp-link"),
 		rename("code/p/a/tmp-link", "code/p/a/final-link"),
 		stat("code/p/a/final-link/b.txt"),
-		stat("code/p/a/tmp-link"), // the old name is gone
 	)
-	// The moved link still points at b; the old name is now a probe.
-	eq(t, "entries", rec.Entries, "pkg:code/p/a", "pkg:code/p/b")
+	wantReason(t, rec, "trace-incomplete:unstable-path")
 
+	// A directory renamed into place and then only named, not traversed.
 	h = newHarness(t)
-	rec = h.run(
-		mkdir("code/p/a/d1"),
-		symlink("../b", "code/p/a/d1/l"),
-		rename("code/p/a/d1", "code/p/a/d2"),
-		stat("code/p/a/d2"),
-	)
-	eq(t, "entries", rec.Entries)
+	h.fs.dir(abs("code/p/a/d2"))
+	rec = h.run(mkdir("code/p/a/d1"), rename("code/p/a/d1", "code/p/a/d2"), lstat("code/p/a/d2"))
+	eq(t, "entries", rec.Entries, "pkg:code/p/a")
 	wantNoReasons(t, rec)
+	// A followed stat of the renamed name cannot be vouched for.
+	rec = h.run(mkdir("code/p/a/d1"), rename("code/p/a/d1", "code/p/a/d2"), stat("code/p/a/d2"))
+	wantReason(t, rec, "trace-incomplete:unstable-path")
 
-	// Hard-linking a symlink keeps it a symlink.
+	// Hard-linking a symlink: both names are aliases the trace cannot follow.
 	h = newHarness(t)
+	h.fs.link(abs("code/p/a/s1"), "../b")
+	h.fs.link(abs("code/p/a/s2"), "../b")
 	rec = h.run(
 		symlink("../b", "code/p/a/s1"),
 		link("code/p/a/s1", "code/p/a/s2"),
-		stat("code/p/a/s2/b.txt"),
+		stat("code/p/a/s1/b.txt"),
 	)
-	eq(t, "entries", rec.Entries, "pkg:code/p/b")
+	wantReason(t, rec, "trace-incomplete:unstable-path")
+	h.fs.link(abs("code/p/a/s3"), "../b")
+	rec = h.run(symlink("../b", "code/p/a/s3"), link("code/p/b/b.txt", "code/p/a/s3x"), stat("code/p/a/s3/b.txt"))
+	if hasReason(rec, "trace-incomplete:unstable-path") {
+		t.Fatalf("an unrelated link() poisoned s3: %q", rec.Reasons)
+	}
 
 	// RENAME_EXCHANGE swaps what the names are.
 	h = newHarness(t)
+	h.fs.link(abs("code/p/a/s1"), "../a")
+	h.fs.link(abs("code/p/a/s2"), "../b")
 	ex := rename("code/p/a/s1", "code/p/a/s2")
 	ex.Syscall, ex.Flags = "renameat2", "RENAME_EXCHANGE"
-	rec = h.run(
-		symlink("../b", "code/p/a/s1"),
-		symlink("../a", "code/p/a/s2"),
-		ex,
-		stat("code/p/a/s1/README"),
-		stat("code/p/a/s2/b.txt"),
-	)
-	eq(t, "entries", rec.Entries, "pkg:code/p/a", "pkg:code/p/b")
+	rec = h.run(symlink("../b", "code/p/a/s1"), symlink("../a", "code/p/a/s2"), ex, stat("code/p/a/s1/README"))
+	wantReason(t, rec, "trace-incomplete:unstable-path")
 	h = newHarness(t)
+	h.fs.link(abs("code/p/a/s1"), "../b").dir(abs("code/p/a/s2"))
 	ex2 := rename("code/p/a/s1", "code/p/a/s2")
 	ex2.Syscall, ex2.Flags = "renameat2", "RENAME_EXCHANGE"
 	wantNoReasons(t, h.run(symlink("../b", "code/p/a/s1"), mkdir("code/p/a/s2"), ex2))
