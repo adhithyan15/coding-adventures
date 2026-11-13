@@ -2,7 +2,16 @@
 
 package record
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
+
+// linkTargetText turns the native separators Windows' readlink returns back
+// into the slashes Git stores. It stays fail-closed: a committed target that
+// holds a literal backslash can never equal the result (which has none), so it
+// reports a difference rather than passing a different target.
+func linkTargetText(target string) string { return filepath.ToSlash(target) }
 
 // openNoFollow is a plain open where O_NOFOLLOW, O_NONBLOCK and O_NOCTTY do
 // not exist. VerifyTree has already `lstat`ed the path and refuses anything

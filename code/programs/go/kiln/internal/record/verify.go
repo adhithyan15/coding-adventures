@@ -511,6 +511,7 @@ func (v *verifier) checkSymlink(full string, fi os.FileInfo, want entry) string 
 		return fmt.Sprintf("tracked as a symlink but is %s", kind(fi))
 	}
 	target, err := os.Readlink(full)
+	target = linkTargetText(target)
 	if err != nil {
 		return "cannot read the symlink"
 	}
