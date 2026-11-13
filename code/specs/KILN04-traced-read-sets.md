@@ -408,11 +408,16 @@ the `dirfd`, using an `lstat` walk on the post-run tree.
   matches the kernel. `L/../x`, where `L` is a link, means `x` beside L's
   target.
 - Every link traversed is itself an observation.
-- A traversed component is **unstable** when, after its creation as the
-  trace orders events, any action renamed, unlinked or re-linked it, so
-  it could have differed at the moment of the call. A component that this
-  action itself created, and that nobody re-linked afterwards, is stable.
-  An unstable component gives `trace-incomplete:unstable-path`.
+- A traversed component is **stable** only in two cases:
+  - this same action created it **before** the call, in that action's own
+    trace order, and no other action in the run, in any shard, created,
+    renamed, unlinked or re-linked it;
+  - it is tracked, and no action touched it.
+
+  Every other component is unstable, whatever the ordering. That covers a
+  component any *other* action touched, and a component that existed
+  before the first BUILD and that any action touched. An unstable
+  component gives `trace-incomplete:unstable-path`.
 
 **Exec.** `execve(path)` is a read of `path`. The kernel then loads,
 invisibly, the interpreter of a `#!` script and the `PT_INTERP` loader of
@@ -790,6 +795,8 @@ Golden vectors are added to `key-vectors-v1.json` (KILN02 §6) for:
   recorded, through either the recipe mismatch or the tainted set.
 - **ABI.** Any 32-bit or x32 syscall, including a 32-bit
   `clone(CLONE_UNTRACED)`, kills the process.
+- **Unstable links.** A resolves through a link `L` that B, in any shard,
+  replaces by unlinking and re-creating it: `unstable-path`.
 - **Hostile tree.** A tracked path replaced by a FIFO, a device node or a
   symlink loop gives `non-regular` or `unstable-path`, never a hang.
 - **Working tree.** A `.gitattributes` change that alters checked-out
