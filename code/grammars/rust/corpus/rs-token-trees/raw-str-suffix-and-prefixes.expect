@@ -1,0 +1,7 @@
+RAW_STR_LIT r"a"s
++RAW_BYTE_STR_LIT br"b"
++RAW_BYTE_STR_LIT br#"b"#
++BYTE_STR_LIT b"c"
++BYTE_LIT b'd'
++BYTE_LIT b'\\n'
++BYTE_LIT b'\\''

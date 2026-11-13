@@ -1,0 +1,5 @@
+STR_LIT "a"
++STR_LIT "b\\"c"
++STR_LIT "\\\\"
++STR_LIT "\\n"
++STR_LIT "\\u{1F600}"

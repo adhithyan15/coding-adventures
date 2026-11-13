@@ -1,0 +1,1 @@
+1 1_000 0x1F 0o7 0b1 1u8 0x1F_u8 1_i64 0xdead_beef
