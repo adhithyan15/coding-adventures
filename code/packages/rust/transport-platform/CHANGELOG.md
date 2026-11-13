@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- The Windows provider no longer sets `SO_REUSEADDR` on listeners. On Windows
+  that option lets a second socket bind a port a live listener already holds
+  (the newer socket steals traffic), so `ListenerOptions::default()` made an
+  in-use bind succeed. Found by `go/conduit`'s
+  `TestApplicationIsUnusableAfterBind` on the first real Windows run. Windows
+  already rebinds over TIME_WAIT without the option. New Windows test
+  `binding_a_port_that_is_already_listening_fails`.
 - Windows `close_stream` now shuts the socket down for sending before
   dropping it. Winsock turns `closesocket()` into an RST while an overlapped
   `WSARecv` is pending (this provider nearly always has one), and the peer
