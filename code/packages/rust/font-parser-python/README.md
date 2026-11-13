@@ -49,6 +49,21 @@ maturin build --release
 cargo build --workspace
 ```
 
+## Testing
+
+There are no Rust unit tests: the shim is only meaningful inside CPython, so the
+test imports the built library into a real interpreter and calls it.
+
+```bash
+cargo build --release -p font-parser-python --target-dir target
+python3 tests/smoke_test.py      # `python` on Windows
+```
+
+Each crate builds into its own `target/` (`--target-dir target`) because font-parser-node,
+font-parser-python and font-parser-ruby all emit a cdylib named `font_parser_native`.
+`build.rs` links `pythonXY.lib` on Windows (located by asking the interpreter for
+`sys.base_prefix`; set `PYO3_PYTHON` to pick a specific one).
+
 ## License
 
 MIT

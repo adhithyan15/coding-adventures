@@ -318,6 +318,52 @@ fn a_package_with_secrets_cannot_use_the_not_applicable_exemption() {
 }
 
 #[test]
+fn the_boolean_logic_profile_parses_and_unknown_profiles_list_it() {
+    assert_eq!("boolean-logic".parse::<AuditProfile>(), Ok(AuditProfile::BooleanLogic));
+    let err = "lzw".parse::<AuditProfile>().unwrap_err();
+    assert!(err.contains("boolean-logic"), "{err}");
+}
+
+#[test]
+fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manifests() {
+    let ev = Evidence::load(&pkg_dir("logic-gates")).unwrap();
+    let report = generate_package_report(
+        "rust/logic-gates",
+        "0.1.0",
+        "c0ffee",
+        &WeaknessRegistry::embedded(),
+        &ev,
+        AuditProfile::BooleanLogic,
+    )
+    .expect("report derives from the logic-gates manifests");
+    for cwe in [326, 327, 407] {
+        let row = report.weaknesses.iter().find(|w| w.cwe == cwe).unwrap();
+        // None of the other profiles' subjects may leak into a gate library's report.
+        for foreign in ["LEB128", "GF(2^8)", "comparison", "integer encoding"] {
+            assert!(!row.reason.contains(foreign), "CWE-{cwe} names {foreign}: {}", row.reason);
+        }
+    }
+    let row = report.weaknesses.iter().find(|w| w.cwe == 407).unwrap();
+    assert!(row.reason.contains("at most 16 inputs"), "{}", row.reason);
+    // The CWE-208 row is the not-applicable exemption: every operand is public.
+    assert!(report.exemptions.iter().any(|x| x.id == NA_ID));
+    // And the checked-in report is exactly what the manifests derive.
+    let text = fs::read_to_string(pkg_dir("logic-gates").join("assurance_report.json")).unwrap();
+    let on_disk = AssuranceReport::from_json_str(&text).unwrap();
+    verify_evidence(&on_disk, &ev).expect("assurance_report.json must agree with the manifests");
+    let fresh = generate_package_report(
+        "rust/logic-gates",
+        "0.1.0",
+        &on_disk.commit,
+        &WeaknessRegistry::embedded(),
+        &ev,
+        AuditProfile::BooleanLogic,
+    )
+    .unwrap();
+    assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
+}
+
+#[test]
 fn the_varint_profile_parses_and_unknown_profiles_list_it() {
     assert_eq!("varint-codec".parse::<AuditProfile>(), Ok(AuditProfile::VarintCodec));
     let err = "lzw".parse::<AuditProfile>().unwrap_err();

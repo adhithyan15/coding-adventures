@@ -1,4 +1,4 @@
-use std::ffi::{c_char, c_int, c_long, c_void};
+use std::ffi::{c_char, c_int, c_void};
 use std::ptr;
 use std::slice;
 
@@ -1774,7 +1774,7 @@ fn rb_usize(value: impl TryInto<usize>) -> VALUE {
 }
 
 fn rb_i64(value: i64) -> VALUE {
-    unsafe { ruby_bridge::rb_int2inum(value as c_long) }
+    unsafe { ruby_bridge::rb_int2inum(value as isize) }
 }
 
 fn build_blink_module_value(

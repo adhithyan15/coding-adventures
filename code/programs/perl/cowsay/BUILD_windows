@@ -1,1 +1,2 @@
-echo Perl testing is not supported on Windows - skipping
+REM prereqs: ../../../packages/perl/cli-builder ../../../packages/perl/paint-instructions ../../../packages/perl/paint-vm-ascii
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\run-perl-tests-windows.ps1 -Deps cli-builder,paint-instructions,paint-vm-ascii

@@ -210,11 +210,17 @@ func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
 		{Name: "perl/conduit", Language: "perl"},
 		{Name: "perl/irc-server-native", Language: "perl"},
 		{Name: "perl/programs/conduit-hello", Language: "perl"},
+		{Name: "perl/gf256_native", Language: "perl"},
+		{Name: "perl/polynomial_native", Language: "perl"},
+		{Name: "perl/paint_codec_png_native", Language: "perl"},
 	}
 	want := map[string]bool{
 		"perl/conduit":                true,
 		"perl/irc-server-native":      true,
 		"perl/programs/conduit-hello": true,
+		"perl/gf256_native":           true,
+		"perl/polynomial_native":      true,
+		"perl/paint_codec_png_native": true,
 	}
 	for _, input := range []string{
 		"code/scripts/check-perl-extension-windows.ps1",
@@ -250,8 +256,14 @@ func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
 
 func TestNativePerlRecipesRequestRustForHelperOnlyChanges(t *testing.T) {
 	root := findRepoRoot("")
-	names := []string{"perl/conduit", "perl/irc-server-native", "perl/programs/conduit-hello"}
-	paths := []string{"code/packages/perl/conduit", "code/packages/perl/irc-server-native", "code/programs/perl/conduit-hello"}
+	names := []string{
+		"perl/conduit", "perl/irc-server-native", "perl/programs/conduit-hello",
+		"perl/gf256_native", "perl/polynomial_native", "perl/paint_codec_png_native",
+	}
+	paths := []string{
+		"code/packages/perl/conduit", "code/packages/perl/irc-server-native", "code/programs/perl/conduit-hello",
+		"code/packages/perl/gf256_native", "code/packages/perl/polynomial_native", "code/packages/perl/paint_codec_png_native",
+	}
 	for _, platform := range []string{"linux", "darwin", "windows"} {
 		var packages []discovery.Package
 		for i, path := range paths {

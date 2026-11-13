@@ -235,6 +235,8 @@ unsafe fn gid_to_name(gid: u32) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
+    // Every test in here is `#[cfg(unix)]`, so on Windows nothing uses the glob.
+    #[cfg(unix)]
     use super::*;
 
     #[cfg(unix)]

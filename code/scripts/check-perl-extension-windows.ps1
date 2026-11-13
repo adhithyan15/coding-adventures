@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('Conduit', 'IrcServerNative')]
+    [ValidateSet('Conduit', 'IrcServerNative', 'GF256Native', 'PolynomialNative', 'PaintCodecPngNative')]
     [string]$ExtensionName,
     [string]$ExtensionDir = '.',
     [string]$Program = ''

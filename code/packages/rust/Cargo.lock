@@ -9010,6 +9010,9 @@ dependencies = [
 name = "logic-gates"
 version = "0.1.0"
 dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
  "transistors",
 ]
 
@@ -16159,7 +16162,7 @@ dependencies = [
 
 [[package]]
 name = "x509-ocsp-reviewed-server-revocation-binding"
-version = "0.1.0"
+version = "0.3.0"
 dependencies = [
  "coding_adventures_sha1",
  "coding_adventures_sha256",
@@ -16169,9 +16172,11 @@ dependencies = [
  "x509-certificate",
  "x509-certificate-path-construction",
  "x509-certificate-path-length-policy",
+ "x509-certificate-path-reviewed-anchor-binding",
  "x509-certificate-policy",
  "x509-intermediate-certificate-policy",
  "x509-name-constraints",
+ "x509-name-value-policy",
  "x509-ocsp-authenticated-responder",
  "x509-ocsp-authenticated-target-revocation",
  "x509-ocsp-basic-response",

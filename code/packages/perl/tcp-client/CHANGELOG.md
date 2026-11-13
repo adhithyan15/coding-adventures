@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for the sibling libraries) instead of an `echo ... skipping` recipe. The suite uses loopback sockets and `fork()` (emulated with threads on Windows), so the tests now stay inside the subset both platforms support.
+
+### Fixed
+
+- `t/01-basic.t`: the read-timeout server child now blocks until the client hangs up instead of `sleep(10)` followed by `kill('TERM')` (a pseudo-process cannot be interrupted out of `accept`/`sleep` on Windows); the short pause uses `Time::HiRes::sleep` instead of a three-`undef` 4-argument `select`; the connect-timeout test also accepts `connection_refused`, which is what an egress proxy or sandbox firewall answers for a non-routable address.
+- `t/01-basic.t` `connection refused`: retries on another port if the connect unexpectedly succeeds (a connect to a just-freed ephemeral port can be given that same port as its own source port and connect to itself) and prints what happened if it still fails; the macOS leg of the Windows-recipe PR failed this subtest with no library change in the diff.
+- `connect` verifies the connection really exists: with a `Timeout`, `IO::Socket::INET` connects non-blocking and select()s for writability, a refused connect is also "writable", and on macOS the constructor handed back a socket with the error still pending (the macOS CI leg saw `connect` to a closed loopback port return a connection on all five retries). It now checks `getpeername` and `SO_ERROR` and throws `connection_refused` / `timeout` / `io_error`. New test `unconnected socket from the constructor is rejected` simulates this on every OS.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added

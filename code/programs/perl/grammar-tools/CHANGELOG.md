@@ -1,5 +1,11 @@
 # Changelog — grammar-tools (Perl program)
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for the sibling libraries) instead of an `echo ... skipping` recipe. The helper resolves `-Deps` against `code\packages\perl`, so programs and packages share it. The recipe declares its `use lib` dependency on `perl/grammar-tools` with `# build-tool: deps=`.
+
 ## [1.0.0] - 2026-08-17
 
 ### Added
