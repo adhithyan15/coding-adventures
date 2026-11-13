@@ -194,9 +194,9 @@ func TestExecOfFileTheActionMade(t *testing.T) {
 		execve("code/p/a/conftest", "conftest"),
 	)
 	eq(t, "entries", rec.Entries, "pkg:code/p/a")
-	// Created by O_TRUNC (not O_EXCL) and then followed by the exec: the disk
-	// cannot vouch that it was no link at that moment.
-	wantReason(t, rec, "trace-incomplete:unstable-path")
+	// Created by O_TRUNC (not O_EXCL) and then followed by the exec: the open's
+	// -y path and the open-only rule of section 5.5 vouch for the name.
+	wantNoReasons(t, rec)
 	rec = h.run(
 		open("code/p/a/conftest", "O_WRONLY|O_CREAT|O_EXCL", abs("code/p/a/conftest")),
 		execve("code/p/a/conftest", "conftest"),

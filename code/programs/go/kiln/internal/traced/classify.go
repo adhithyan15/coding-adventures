@@ -46,6 +46,10 @@ type mod struct {
 	start pos // start of the call (the change took effect somewhere in [start, at])
 	clean bool
 	made  bool // the change may have created the name (any creation)
+	// opened marks an O_CREAT open keyed by the descriptor's -y path, and
+	// unlinked an unlink/unlinkat of a name.  Together they are the only
+	// entries the open-only rule of section 5.5 accepts in a change log.
+	opened, unlinked bool
 }
 
 // span is the interval covered by a set of lookups: the earliest start and the
@@ -103,6 +107,13 @@ type classifier struct {
 	// seenFinal holds followed final components, with the start of the earliest
 	// lookup that followed them.
 	seenFinal map[string]pos
+	// relFinal and relAbs hold the followed final names of a successful stat or
+	// exec that the open-only rule (section 5.5) may accept: relFinal those the
+	// post-run disk shows as a file, relAbs those it shows absent.  The span is
+	// the earliest start and the latest completion of such lookups.
+	relFinal, relAbs map[string]span
+	// relax is set while a successful stat or exec target is resolved.
+	relax bool
 	// execReads maps an untracked file whose head was read from the post-run
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
 	execReads map[string]pos
@@ -111,10 +122,11 @@ type classifier struct {
 	cur    pos // completion of the current call
 	start  pos // start of the current call
 	callOK bool
-	// noFinals is set while resolving the path of a successful open: the
-	// descriptor's -y path already says what was opened, so the final
-	// component's link-ness is not in question.
-	noFinals bool
+	// openRet is the -y path of the descriptor while the path of a successful
+	// open is resolved: when the walk ends at exactly that path, the final name
+	// was not a link at the moment of the open ("opens settle the final name",
+	// section 5.5).
+	openRet string
 	// noOwnSeen is set while a call observes the very name it is about to
 	// change: its own change is not an overlap with itself.
 	noOwnSeen bool
@@ -133,6 +145,7 @@ func newClassifier(p *prepared) *classifier {
 		created: map[string]pos{}, absent: map[string]pos{}, links: map[string]string{},
 		dirs: map[string]bool{}, cache: map[string]node{}, mods: map[string][]mod{},
 		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
+		relFinal: map[string]span{}, relAbs: map[string]span{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
 	}
 }
@@ -159,7 +172,11 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 	case trace.KindOpen:
 		c.open(ev)
 	case trace.KindMetadata:
-		if tg, ok := c.targetOf(ev, metaFollow(ev)); ok {
+		follow := metaFollow(ev)
+		c.relax = follow && ev.Result.OK
+		tg, ok := c.targetOf(ev, follow)
+		c.relax = false
+		if ok {
 			c.observeResult(tg, ev.Result)
 		}
 	case trace.KindListing:
@@ -426,8 +443,61 @@ func (c *classifier) creating(abs string) {
 }
 
 // nsChange logs a namespace change to abs.
-func (c *classifier) nsChange(abs string, clean bool) {
-	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start, clean: clean, made: true})
+func (c *classifier) nsChange(abs string, clean, opened bool) {
+	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start, clean: clean, made: true, opened: opened})
+}
+
+// noteRel records a followed final name of a successful stat or exec for the
+// open-only rule.
+func (c *classifier) noteRel(m map[string]span, abs string) {
+	sp, ok := m[abs]
+	if !ok || c.start.before(sp.s) {
+		sp.s = c.start
+	}
+	if !ok || sp.e.before(c.cur) {
+		sp.e = c.cur
+	}
+	m[abs] = sp
+}
+
+// openOnly is the open-only change-log rule of section 5.5.  A final name p
+// that a successful stat or exec followed was a regular file throughout, and
+// the post-run disk may stand in for the lookup, when ALL of these hold:
+//
+//   - every entry of p's change log is an O_CREAT open keyed by its -y path
+//     (an O_CREAT open through a link is logged at the link's target, so an
+//     open logged at p proves p was not a link when it ran; it never replaces
+//     or moves a name), except that the log may end with ONE unlink;
+//   - the first open COMPLETED before the earliest such lookup STARTED;
+//   - the unlink, when there is one, STARTED after the latest lookup
+//     COMPLETED (so no lookup overlaps it), and the disk agrees with it: p is
+//     absent after an unlink and present without one (absent says which);
+//   - p was never a link()/linkat() source or destination.
+//
+// The ancestors of p need no check here: every lookup went through them, so
+// the ordinary rule of stable already judged each one.
+func (c *classifier) openOnly(p string, sp span, absent bool) bool {
+	ms := c.mods[p]
+	n := len(ms)
+	if n == 0 || c.hard[p] {
+		return false
+	}
+	k := n
+	if ms[n-1].unlinked {
+		k = n - 1
+		if !sp.e.before(ms[n-1].start) {
+			return false
+		}
+	}
+	if absent != (k < n) || k == 0 {
+		return false
+	}
+	for _, m := range ms[:k] {
+		if !m.opened {
+			return false
+		}
+	}
+	return ms[0].at.before(sp.s)
 }
 
 // noteFinal records a followed final component that the disk shows present.
@@ -466,16 +536,17 @@ func (c *classifier) markCreated(abs string, clean bool) {
 	delete(c.absent, abs)
 	delete(c.links, abs)
 	delete(c.dirs, abs)
-	c.nsChange(abs, clean)
+	c.nsChange(abs, clean, false)
 }
 
-// markRemoved records that the action removed (or moved away) abs.
-func (c *classifier) markRemoved(abs string) {
+// markRemoved records that the action removed (or moved away) abs.  unlink
+// says the call was unlink or unlinkat without AT_REMOVEDIR.
+func (c *classifier) markRemoved(abs string, unlink bool) {
 	delete(c.created, abs)
 	delete(c.links, abs)
 	delete(c.dirs, abs)
 	c.absent[abs] = c.cur
-	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start})
+	c.mods[abs] = append(c.mods[abs], mod{at: c.cur, start: c.start, unlinked: unlink})
 }
 
 // noteTraversal records that a path went through the component abs, at the
@@ -587,6 +658,32 @@ func (c *classifier) checkStability() {
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
 		if len(c.mods[p]) > 0 && !c.createdOnce(p, at) {
+			c.reason(rUnstable)
+		}
+	}
+	// The followed finals of a successful stat or exec: the open-only rule,
+	// else the strict rules they would have met as ordinary lookups.
+	for p, sp := range c.relFinal {
+		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
+			c.reason(rUnstable)
+		}
+	}
+	for p, sp := range c.relAbs {
+		ms := c.mods[p]
+		if len(ms) == 0 || c.openOnly(p, sp, true) {
+			continue
+		}
+		c.steps += 8
+		if c.steps > walkBudget {
+			c.reason(rSize)
+			break
+		}
+		mi := idx[p]
+		if mi == nil {
+			mi = newModIndex(ms)
+			idx[p] = mi
+		}
+		if mi.unsafe(ms, sp.s, sp.e) {
 			c.reason(rUnstable)
 		}
 	}

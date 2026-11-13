@@ -4,6 +4,7 @@ import (
 	"debug/elf"
 	"encoding/binary"
 	"io/fs"
+	"math/rand"
 	"sort"
 	"strings"
 	"testing"
@@ -731,34 +732,82 @@ type mop struct {
 	events             []trace.Event
 }
 
+// burstOp is one operation of a burst: an operation kind of runStep's switch
+// and the name it acts on, relative to the burst's base directory.
+type burstOp struct {
+	kind   int
+	suffix string
+}
+
+// bursts are the build patterns that KILN04 section 5.5 relaxes.  A burst
+// issues the operations of a pattern on ONE name, each with its own random
+// process, duration, start offset and effect point, so the fuzzer sees the
+// pattern in order, interleaved and overlapped.
+//
+//	0  mkdir out; create+truncate out/x; read it; stat it     (a kept output)
+//	1  create+truncate t.o; read it; unlink it                (a temporary)
+//	2  create exclusively t.o; stat it; unlink it
+//	3  plain O_CREAT t.o; stat it; unlink it
+//	4  create+truncate t.o with contents; exec it; unlink it
+//	5  create+truncate t.o; stat it twice
+//	6  stat of the base directory itself ($HOME, $TMPDIR, the checkout, ...)
+var bursts = [][]burstOp{
+	{{0, "/o"}, {8, "/o/x"}, {7, "/o/x"}, {12, "/o/x"}},
+	{{8, "/t.o"}, {7, "/t.o"}, {5, "/t.o"}},
+	{{9, "/t.o"}, {12, "/t.o"}, {5, "/t.o"}},
+	{{10, "/t.o"}, {12, "/t.o"}, {5, "/t.o"}},
+	{{8, "/t.o"}, {15, "/t.o"}, {5, "/t.o"}},
+	{{8, "/t.o"}, {12, "/t.o"}, {12, "/t.o"}},
+	{{12, ""}},
+}
+
+// perturbations are the operations a burst may be followed by, aimed at the
+// burst's name (a bare kind, or a rename INTO the name when swap is set): the
+// negative cases of the relaxations.  q is the burst's second name.
+var perturbations = []struct {
+	kind int
+	swap bool
+}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}}
+
+func (m *model) burstBase(b byte) string {
+	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
+		m.home + "/d1", "/usr/lib", parentOf(m.root), m.root + "/code/p/b"}[int(b)%10]
+}
+
 // runStep schedules, executes and serialises one BUILD step's operations.
 func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 	var ops []*mop
 	free := map[int]int{}
-	for k := 0; k < count && *i < len(data); k++ {
-		kind := int(data[*i%len(data)]) % 18
+	next := func() int {
+		b := int(data[*i%len(data)])
 		*i++
-		pid := 1 + int(data[*i%len(data)])%2
-		*i++
-		dur := int(data[*i%len(data)]) % 5
-		*i++
-		off := int(data[*i%len(data)]) % 3
-		*i++
-		eff := int(data[*i%len(data)]) % (dur + 1)
-		*i++
-		p := m.path(data, i)
+		return b
+	}
+	// add schedules one operation of the given kind on p (and q, for the calls
+	// that take a second name; "" reads one from the data).
+	add := func(kind int, p, q string) {
+		pid := 1 + next()%2
+		dur := next() % 5
+		off := next() % 3
+		eff := next() % (dur + 1)
 		start := free[pid] + off
 		end := start + dur
 		free[pid] = end + 1
 		o := &mop{pid: pid, start: start, effect: start + eff, end: end}
+		second := func() string {
+			if q != "" {
+				return q
+			}
+			return m.path(data, i)
+		}
 		switch kind {
 		case 0:
 			o.run = func() []trace.Event { return m.doMkdirLike(pid, "mkdir", p, "") }
 		case 1:
-			t := m.path(data, i)
+			t := second()
 			o.run = func() []trace.Event { return m.doMkdirLike(pid, "symlink", p, t) }
 		case 2, 3, 4:
-			q := m.path(data, i)
+			q := second()
 			o.run = func() []trace.Event {
 				return m.doRenameLink(pid, map[int]string{2: "rename", 3: "rename", 4: "link"}[kind], p, q, kind == 3)
 			}
@@ -769,18 +818,15 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		case 7:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 0, -1) }
 		case 8:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 1, c) }
 		case 9:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 2, c) }
 		case 10:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 3, -1) }
 		case 11:
-			c := int(data[*i%len(data)])
-			*i++
+			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
 		case 12:
 			o.run = func() []trace.Event { return m.doStat(pid, p, true) }
@@ -793,8 +839,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		case 16:
 			o.run = func() []trace.Event { return m.doList(pid, p) }
 		default:
-			d := m.dirs[int(data[*i%len(data)])%len(m.dirs)]
-			*i++
+			d := m.dirs[next()%len(m.dirs)]
 			rel := m.path(data, i)
 			if strings.HasPrefix(rel, "/") {
 				rel = strings.TrimLeft(rel, "/")
@@ -802,6 +847,29 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 			o.run = func() []trace.Event { return m.doDirStat(pid, d, rel) }
 		}
 		ops = append(ops, o)
+	}
+	for k := 0; k < count && *i < len(data); k++ {
+		kind := next() % 26
+		if kind < 18 {
+			add(kind, m.path(data, i), "")
+			continue
+		}
+		b := bursts[(kind-18)%len(bursts)]
+		base := m.burstBase(byte(next()))
+		alt := base + "/u.o"
+		for _, op := range b {
+			// Contents for the exec burst: a program; others read from the data.
+			add(op.kind, base+op.suffix, alt)
+		}
+		if next()%3 == 0 {
+			pt := perturbations[next()%len(perturbations)]
+			name := base + b[len(b)-1].suffix
+			if pt.swap {
+				add(pt.kind, alt, name)
+			} else {
+				add(pt.kind, name, alt)
+			}
+		}
 	}
 	// Effects land in effect-time order.
 	order := make([]int, len(ops))
@@ -902,7 +970,37 @@ func FuzzDifferential(f *testing.F) {
 	f.Add([]byte{1, 0, 2, 3, 4, 0, 5, 7, 0, 1, 2, 3})
 	f.Add([]byte{3, 5, 5, 5, 9, 2, 2, 2, 7, 6, 6, 6, 2, 1, 1, 1})
 	f.Add([]byte("mkdir symlink rename link unlink open stat chdir exec"))
-	f.Fuzz(func(t *testing.T, data []byte) {
+	f.Fuzz(runDifferential)
+}
+
+// TestDifferentialSeeded runs the differential oracle over pseudo-random
+// inputs, so the ordinary test run (and a mutation check of the classifier)
+// exercises it without the fuzzing engine.  The seeds are fixed: a failure
+// reproduces.
+func TestDifferentialSeeded(t *testing.T) {
+	n := 4000
+	if testing.Short() {
+		n = 400
+	}
+	for seed := 0; seed < n; seed++ {
+		r := rand.New(rand.NewSource(int64(seed)))
+		data := make([]byte, 40+r.Intn(260))
+		for i := range data {
+			data[i] = byte(r.Intn(256))
+		}
+		t.Run("", func(t *testing.T) {
+			defer func() {
+				if t.Failed() {
+					t.Logf("seed %d", seed)
+				}
+			}()
+			runDifferential(t, data)
+		})
+	}
+}
+
+func runDifferential(t *testing.T, data []byte) {
+	{
 		if len(data) < 4 {
 			return
 		}
@@ -926,7 +1024,7 @@ func FuzzDifferential(f *testing.F) {
 			return // a record with a reason is never trusted: always safe
 		}
 		check(t, m, tree, rec)
-	})
+	}
 }
 
 func inSet(set []string, v string) bool {

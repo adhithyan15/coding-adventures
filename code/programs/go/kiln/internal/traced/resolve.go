@@ -348,13 +348,28 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	for _, d := range w.dirs {
 		c.noteTraversal(d)
 	}
-	if !c.noFinals {
-		for _, f := range w.finals {
+	// A successful open settles its final name: the descriptor's -y path is
+	// the kernel's own, so when the walk ends at exactly that path the name was
+	// not a link at the moment of the open.  Only the FINAL component: every
+	// link and directory crossed was noted above and keeps the strict rule.
+	settled := c.openRet != "" && w.final == c.openRet
+	for _, f := range w.finals {
+		switch {
+		case settled:
+		case c.relax && c.lookup(f).kind == KindFile:
+			c.noteRel(c.relFinal, f)
+		default:
 			c.noteFinal(f)
 		}
 	}
 	if w.stop != "" && !w.stopFinal {
-		c.noteMissing(w.stop, w.stopPresent)
+		switch last := w.stop == w.final && !w.stopMid; {
+		case last && settled:
+		case last && c.relax && !w.stopPresent:
+			c.noteRel(c.relAbs, w.stop)
+		default:
+			c.noteMissing(w.stop, w.stopPresent)
+		}
 	}
 	if w.stopMid && c.callOK {
 		// A successful call went THROUGH a component the post-run disk shows as
