@@ -1,0 +1,86 @@
+{
+  "roots": [
+    {
+      "path": "$HOME/.cargo/bin",
+      "kind": "tool",
+      "tool": "cargo"
+    },
+    {
+      "path": "$HOME/.dotnet",
+      "kind": "tool",
+      "tool": "dotnet"
+    },
+    {
+      "path": "$HOME/.ghcup",
+      "kind": "tool",
+      "tool": "ghc"
+    },
+    {
+      "path": "$HOME/.rustup",
+      "kind": "tool",
+      "tool": "rustc"
+    },
+    {
+      "path": "/bin",
+      "kind": "image"
+    },
+    {
+      "path": "/etc",
+      "kind": "image"
+    },
+    {
+      "path": "/lib",
+      "kind": "image"
+    },
+    {
+      "path": "/lib64",
+      "kind": "image"
+    },
+    {
+      "path": "/opt/hostedtoolcache/Python/3.13.17",
+      "kind": "tool",
+      "tool": "python3"
+    },
+    {
+      "path": "/opt/hostedtoolcache/Ruby/3.4.12",
+      "kind": "tool",
+      "tool": "ruby"
+    },
+    {
+      "path": "/opt/hostedtoolcache/go/1.26.1",
+      "kind": "tool",
+      "tool": "go"
+    },
+    {
+      "path": "/opt/hostedtoolcache/node/22.23.5",
+      "kind": "tool",
+      "tool": "node"
+    },
+    {
+      "path": "/sbin",
+      "kind": "image"
+    },
+    {
+      "path": "/usr",
+      "kind": "image"
+    }
+  ],
+  "ephemeral": [
+    "/dev/fd/*",
+    "/dev/null",
+    "/dev/urandom",
+    "/proc/cpuinfo",
+    "/proc/meminfo",
+    "/proc/self/cgroup",
+    "/proc/self/exe",
+    "/proc/self/maps",
+    "/proc/self/mountinfo",
+    "/proc/stat",
+    "/sys/devices/system/cpu/**",
+    "/sys/fs/cgroup/**"
+  ],
+  "absent-ok": [
+    "$HOME/.config",
+    "$HOME/.npmrc"
+  ]
+}
