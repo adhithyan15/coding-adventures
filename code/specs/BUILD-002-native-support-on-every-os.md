@@ -120,6 +120,36 @@ native extensions `conduit`, `irc-server-native`, `gf256_native`,
 `polynomial_native`, `paint_codec_png_native` and `paint_vm_metal_native`
 (Perl import library, MSVC/MinGW ABI choice, Metal is macOS-only).
 
+### W3 progress: Go cgo (`go/conduit`, `go/conduit-hello`)
+
+Done. Both recipes were echo-skips and now run `go test` for real on Windows.
+Go's cgo drives MinGW-w64 gcc (never `cl.exe`), and a gcc/ld link needs a
+GNU-ABI library, so the recipe does not use the MSVC `conduit_capi.lib` or the
+DLL that the Haskell recipe stages:
+
+- `code/scripts/build-conduit-capi-windows-gnu.ps1` (shared by both recipes)
+  runs `rustup target add x86_64-pc-windows-gnu`, then
+  `cargo rustc --release --target x86_64-pc-windows-gnu --lib --crate-type staticlib`.
+  Asking for the staticlib alone avoids linking the crate's `cdylib`, which
+  would need a MinGW linker for rustc; the result is
+  `target\x86_64-pc-windows-gnu\release\libconduit_capi.a`.
+- The same helper then picks a MinGW-w64 gcc (`C:\mingw64\bin` first, other
+  known MinGW locations next, then any `gcc` on PATH; Ruby's UCRT gcc is not a
+  candidate because Rust's GNU std links the msvcrt runtime), prepends it to
+  PATH only after cargo has run, sets `CC=gcc`, and asserts gcc is an x86_64
+  MinGW and Go is `windows/amd64`.
+- `conduit.go` gains `#cgo windows LDFLAGS:` naming that archive by full path
+  plus `-lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32
+  -lgcc_eh -static` (the libraries `rustc --print native-static-libs` reports
+  for the GNU target, plus `libgcc_eh` for the `_Unwind_*` symbols; `-static`
+  keeps `libwinpthread` from becoming a runtime DLL dependency).
+- `tools\run-tests.ps1` in each package mirrors `tools/run-tests.sh`, and the
+  recipe is `powershell -NoProfile -ExecutionPolicy Bypass -File tools\run-tests.ps1`.
+
+Remaining in W3: node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF
+link, Ruby MinGW vs MSVC ABI, .NET P/Invoke, and the other Go cgo consumers
+(the C++ ones are separate).
+
 ## Done
 
 Every package either passes its real build and tests on all three OSes, or is

@@ -128,6 +128,31 @@ Hashes and provenance only; no build output.
 - Segment names are pattern-checked before any path is built; symlinks and
   non-regular files are refused (regular-file check on the open descriptor).
 
+## Manifest store (`internal/ledger`, KILN04 stage 2)
+
+Manifests are a store-only record kind in a `manifests/` subdirectory of the
+ledger directory: for one weak key, the sorted names (`pkg:`, `path:`,
+`list:`) a traced build read. They hold names only, never digests, and can
+never cause a hit by themselves (the strong key still needs a pass record).
+The pass-ledger reader never opens that subdirectory, and a manifest line
+dropped among pass segments is refused (and the reverse).
+
+- `OpenManifests(ledgerDir, scope).Record(manifests, auth, now)` writes one
+  immutable segment through the same `Authority` gate as passes. Manifests
+  are not restamped. A record over 8,192 entries, 512 bytes per name or 1 MiB
+  per line is refused with `ErrManifestTooLarge` (`manifest-too-large`).
+- `.Load(now)` returns a `ManifestSet`; `Manifests(weak)` gives at most 4
+  manifests, newest first by `(run, at)`, with distinct ids (the id is the
+  SHA-256 of the entries list, verified on read). Records older than 30 days
+  are dropped, and a re-recorded id does not crowd out other read-sets.
+- Reader policy: an over-cap record or segment is dropped and reported in the
+  `ManifestReport`; structural corruption (non-canonical line, unknown field,
+  id mismatch, bad entry, a store over 256 MiB) makes the whole store
+  unusable and `Load` returns an error, so there are no hits.
+- `MergeManifests(snapshotDir, deltaFile, outDir, auth, now)` is the manifest
+  half of `ledger-merge`: it needs `Trusted()`, reads the delta strictly,
+  applies retention, and writes a deterministic new snapshot.
+
 ## Legacy keys (`legacy-plan`)
 
 `internal/legacy` implements the core of [KILN03](../../../specs/KILN03-legacy-keys.md):

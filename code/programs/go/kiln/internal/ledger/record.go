@@ -117,7 +117,7 @@ func (r Record) Validate() error {
 	if r.At.IsZero() || r.At.Location() != time.UTC || r.At.Nanosecond() != 0 {
 		return errors.New("at must be a non-zero UTC time in whole seconds")
 	}
-	if y := r.At.Year(); y > 9999 {
+	if y := r.At.Year(); y > 9999 || y < 0 {
 		return errors.New("at year out of range")
 	}
 	return nil
