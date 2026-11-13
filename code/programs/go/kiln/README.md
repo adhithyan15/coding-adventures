@@ -266,3 +266,33 @@ tr, err := trace.Parse(file, "/work/repo", trace.Limits{})
 Fixtures in `internal/trace/testdata/` are hand-written in strace 6.x format;
 `FuzzParse` checks the parser never panics and only ever returns
 `trace-incomplete` errors.
+
+## Traced keys (`internal/key/traced.go`, `internal/legacy/traced.go`, KILN04 stage 1b-ii)
+
+A traced action has two KILN02 keys of semantics version 2. The **weak key**
+covers what a trace cannot see (platform, image, BUILD recipe, the
+`tool:build-tool` and `policy:` digests, the static closure's tool pins, and the
+scrubbed environment). The **strong key** is the weak key with `consumed`
+replaced by `weak:` -> W plus one entry per manifest entry, each paired with its
+digest as it is now.
+
+```go
+tr, err := legacy.NewTraced(graph, opts, "/abs/checkout", []string{"-exec-wrapper=/k"})
+w, err := tr.WeakKey("code/packages/go/example") // *legacy.Refusal if not traceable
+env := w.Environ()                               // exactly what the recorder runs with
+s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py", "list:code/shared"})
+```
+
+- **Digests** (`internal/key`): `path:` states `00` absent, `01` directory,
+  `02||exec||SHA-256(content)` file, `03||bytes(target)` link; the missing-package
+  digest; the sorted listing digest; and `T(q)`, which adds the names of directly
+  nested packages to `D(q)`.
+- **Digest provider** (`Traced.CurrentDigests`): memoised, reads only the tracked
+  tree through `Source`, never the disk.
+- **`ScrubbedEnv`**: allowlist, then `HOME`/`TMPDIR`, then a constructed `PATH`,
+  then `LANG=C.UTF-8` and `TZ=UTC`, later steps winning. One source of truth for
+  the key and the recorder.
+- Only strong keys hold `weak:`, so the two can never collide. An entry that is
+  not `pkg:`, `path:` or `list:` is refused.
+- Golden vectors for all of this are in `key-vectors-v1.json`; `kiln
+  verify-vectors` checks them.
