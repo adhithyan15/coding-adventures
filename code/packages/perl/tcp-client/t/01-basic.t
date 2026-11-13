@@ -31,7 +31,16 @@
 #
 # On Windows, fork() is emulated by Perl using threads (pseudo-fork).
 # It works for our purposes but may behave slightly differently than
-# real Unix fork().
+# real Unix fork(), so the tests below deliberately stay inside the common
+# subset (this suite runs for real on Linux, macOS and Windows):
+#
+#   * every server child ends when the client closes its connection, so no
+#     test needs kill() or a long sleep() to stop a child (kill() on a
+#     pseudo-process cannot interrupt a thread blocked in accept()/sleep());
+#   * short pauses use Time::HiRes::sleep(), never the 4-argument select()
+#     with three undef sets, which is not a portable sleep on Windows;
+#   * the only failure classes asserted for unreachable hosts are ones
+#     every platform can produce (see the 'connect timeout' test).
 #
 # ============================================================================
 
@@ -40,6 +49,7 @@ use warnings;
 use Test::More;
 use IO::Socket::INET;
 use IO::Select;
+use Time::HiRes ();
 
 # Load our library
 use lib 'lib';
@@ -436,10 +446,15 @@ subtest 'read timeout' => sub {
     if ($pid == 0) {
         my $client = $listener->accept();
         $listener->close();
-        # Just sit here and never send anything.
-        # Sleep long enough for the test to complete.
-        sleep(10);
-        $client->close() if $client;
+        # Accept but never send anything. Block reading until the client
+        # hangs up (sysread returns 0 at EOF), then exit. This replaces a
+        # fixed sleep(10) + kill('TERM'): the child ends exactly when the
+        # test closes its connection, on Unix fork() and on Windows
+        # pseudo-fork alike.
+        if ($client) {
+            1 while sysread($client, my $buf, 4096);
+            $client->close();
+        }
         exit(0);
     }
 
@@ -456,10 +471,8 @@ subtest 'read timeout' => sub {
     is($err->type(), 'timeout', 'error type is timeout');
     like($err->message(), qr/timed out/, 'message mentions timeout');
 
+    # Closing our end gives the child EOF, which is its cue to exit.
     $conn->close();
-
-    # Clean up child
-    kill('TERM', $pid);
     waitpid($pid, 0);
 };
 
@@ -467,10 +480,18 @@ subtest 'read timeout' => sub {
 # Test 16: Connect timeout (non-routable address)
 # ============================================================================
 #
-# 10.255.255.1 is a non-routable address that silently drops packets.
+# 10.255.255.1 is a non-routable address that normally silently drops packets.
 # Connecting to it with a short timeout should produce a timeout error.
 #
 # This test uses a 2-second timeout to keep it fast.
+#
+# What the OS does with such a SYN is environmental, not something this library
+# controls: a bare network drops it (timeout), a host with no route answers
+# immediately with "network is unreachable" (io_error), and a sandbox or
+# egress proxy that terminates every outbound connection answers "connection
+# refused". All three prove the same thing -- the failure is reported as a
+# TcpError of a sensible class instead of hanging for the 30-second default --
+# so all three are accepted.
 
 subtest 'connect timeout' => sub {
     my $opts = CodingAdventures::TcpClient::ConnectOptions->new(
@@ -481,8 +502,8 @@ subtest 'connect timeout' => sub {
     my $err = $@;
     ok(ref $err && $err->isa('CodingAdventures::TcpClient::TcpError'),
        'connect timeout throws TcpError');
-    like($err->type(), qr/^(timeout|io_error)$/,
-         'error type is timeout or io_error');
+    like($err->type(), qr/^(timeout|io_error|connection_refused)$/,
+         'error type is timeout, io_error or connection_refused');
 };
 
 # ============================================================================
@@ -553,8 +574,8 @@ subtest 'unexpected EOF on read_exact' => sub {
     my $conn = connect('127.0.0.1', $port);
     $listener->close();
 
-    # Give server time to send and close
-    select(undef, undef, undef, 0.1);
+    # Give server time to send and close.
+    Time::HiRes::sleep(0.1);
 
     eval { $conn->read_exact(10) };
     my $err = $@;

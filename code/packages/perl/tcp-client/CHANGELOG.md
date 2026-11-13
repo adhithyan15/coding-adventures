@@ -2,6 +2,16 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `BUILD_windows` now runs the real test suite on Windows through the shared `code/scripts/run-perl-tests-windows.ps1` helper (native Strawberry Perl, absolute `-I` paths for the sibling libraries) instead of an `echo ... skipping` recipe. The suite uses loopback sockets and `fork()` (emulated with threads on Windows), so the tests now stay inside the subset both platforms support.
+
+### Fixed
+
+- `t/01-basic.t`: the read-timeout server child now blocks until the client hangs up instead of `sleep(10)` followed by `kill('TERM')` (a pseudo-process cannot be interrupted out of `accept`/`sleep` on Windows); the short pause uses `Time::HiRes::sleep` instead of a three-`undef` 4-argument `select`; the connect-timeout test also accepts `connection_refused`, which is what an egress proxy or sandbox firewall answers for a non-routable address.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added
