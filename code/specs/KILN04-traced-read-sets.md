@@ -861,6 +861,41 @@ is the KILN00 §9.6 threat, which tracing does not change. §4.3's
 namespaces are what keep an action from writing the store or its own
 trace.
 
+### 8.1 Implementation decisions (stage 2)
+
+Stage 2 lives in `internal/ledger` (`manifest.go`, `manifest_store.go`),
+not a new package, because it reuses the ledger's unexported segment,
+atomic-write, regular-file and `Authority` machinery. These points were
+left open above:
+
+- **`id` bytes.** The id is the SHA-256 of the compact JSON array of the
+  entries (no HTML escaping), exactly the bytes after `"entries":` in the
+  line. An empty list is `[]`, never `null`.
+- **Entry names.** `pkg:`, `path:` and `list:` paths follow KILN02 §3.5;
+  `list:.` is the only use of `.`. A name's 512-byte cap includes its
+  prefix.
+- **Error classes.** Structure is judged before caps. A line that is over a
+  cap and also not canonical is corruption (the store is unusable), never a
+  quiet drop. A line longer than 1 MiB is dropped without being parsed.
+  A segment over 64 MiB is dropped without being read, but its bytes still
+  count toward the 256 MiB store cap.
+- **Order.** `(run, at)` compares `run` as a number when both runs are
+  all digits (numeric runs sort before other runs, which compare as
+  bytes), then `at`, then the ledger's segment sequence, segment name and
+  line. A manifest is not restamped; the writer refuses `at` more than
+  `MaxRecordSkew` after now, and `ledger-merge` refuses a delta record more
+  than `MaxClockSkew` after now.
+- **Retention and merge.** Expiry is applied first (`at` before now minus
+  30 days), then the newest K = 4 distinct ids per weak key; a repeated id
+  keeps only its newest record and does not use a slot. Merge writes each
+  weak key **oldest first**, so file position (the last tie-break) agrees
+  with the rank that decided the merge, and re-merging a snapshot with an
+  empty delta reproduces it byte for byte. The merge reads its delta
+  strictly: any structural error and any over-cap record reject it.
+- **Lookup.** `OpenManifests(ledgerDir, scope).Load(now)` returns a
+  `ManifestSet` and a report; `ManifestSet.Manifests(weak)` is the stage 5
+  call (newest first, at most K). A load error means no hits.
+
 ## 9. Planning
 
 `kiln legacy-plan` gains a lookup mode. For each Linux package it reports:
