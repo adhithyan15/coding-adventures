@@ -140,6 +140,67 @@ fn an_output_row_with_no_heap_row_stops_the_report() {
     assert!(err.contains("no `heap` bound row"), "{err}");
 }
 
+// ---- a suite that ran nothing, or that omits the bound it was measured against ----
+//
+// CWE-409 review finding 2: `decompression_bounds` read manifest fields only, so a suite with
+// `cases = 0`, or an `output-bound` entry with no `max_observed_heap` / `bound_at_max`
+// (silently skipped), still counted as passing evidence.  Each of these must stop the report.
+
+#[test]
+fn an_output_bound_suite_that_ran_zero_cases_stops_the_report() {
+    for kind in ["exhaustive", "property"] {
+        let mut ev = Evidence::load(&pkg_dir("lzw")).unwrap();
+        let t = ev
+            .tests
+            .iter_mut()
+            .find(|t| t.kind == kind && t.claim == "decompress/output-bound")
+            .unwrap();
+        t.cases = 0;
+        let err = lzw_report(&ev).expect_err("a suite that ran nothing is not evidence");
+        assert!(err.contains("CWE-409") && err.contains("ran no cases"), "{kind}: {err}");
+    }
+    // A fuzz suite counts its `iterations`, not `cases`.
+    let mut ev = Evidence::load(&pkg_dir("lzw")).unwrap();
+    let t = ev.tests.iter_mut().find(|t| t.kind == "fuzz" && t.claim == "compress/output-bound").unwrap();
+    t.iterations = 0;
+    t.cases = 0;
+    let err = lzw_report(&ev).expect_err("a fuzz suite with zero iterations is not evidence");
+    assert!(err.contains("CWE-409") && err.contains("ran no cases"), "{err}");
+}
+
+#[test]
+fn an_output_bound_entry_missing_its_observed_peak_stops_the_report() {
+    let mut ev = Evidence::load(&pkg_dir("lzw")).unwrap();
+    let t = ev.tests.iter_mut().find(|t| t.kind == "property" && t.claim == "decompress/output-bound").unwrap();
+    t.max_observed_heap = None;
+    let err = lzw_report(&ev).expect_err("an unobserved output-bound entry is not evidence");
+    assert!(err.contains("CWE-409") && err.contains("max_observed_heap"), "{err}");
+}
+
+#[test]
+fn an_output_bound_entry_missing_its_bound_stops_the_report() {
+    let mut ev = Evidence::load(&pkg_dir("lzw")).unwrap();
+    let t = ev.tests.iter_mut().find(|t| t.kind == "fuzz" && t.claim == "compress/output-bound").unwrap();
+    t.bound_at_max = None;
+    let err = lzw_report(&ev).expect_err("a peak with no bound to compare to is not evidence");
+    assert!(err.contains("CWE-409") && err.contains("bound_at_max"), "{err}");
+}
+
+#[test]
+fn the_facts_that_step_6c_re_derives_flag_both_holes() {
+    // `verify_evidence` step 6c reads these same facts, so a discharge is refused whenever they
+    // are unproven.  (An earlier rung/claim comparison also notices a changed case count, so the
+    // facts are asserted directly rather than through the first error `verify_evidence` hits.)
+    let (_, mut ev) = good();
+    ev.tests.iter_mut().find(|t| t.kind == "exhaustive" && t.claim == "compress/output-bound").unwrap().cases = 0;
+    let facts = ev.decompression_bounds();
+    assert!(facts.unproven.iter().any(|u| u.contains("ran no cases")), "{:?}", facts.unproven);
+    let (_, mut ev) = good();
+    ev.tests.iter_mut().find(|t| t.kind == "fuzz" && t.claim == "decompress/output-bound").unwrap().bound_at_max = None;
+    let facts = ev.decompression_bounds();
+    assert!(facts.unproven.iter().any(|u| u.contains("bound_at_max")), "{:?}", facts.unproven);
+}
+
 // ---- --check refuses a report that disagrees with the manifests -------------
 
 fn good() -> (AssuranceReport, Evidence) {
