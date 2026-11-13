@@ -48,6 +48,11 @@ var walkBudget = 50_000_000
 type node struct {
 	kind   NodeKind
 	target string
+	// bad says the lookup FAILED (unreadable, an unreadable link): the node
+	// reads as absent, and the reason was raised once, when it was first
+	// looked up.  The flag survives the cache so a later WRITE that walks
+	// through the same place still learns it could not be placed (W8).
+	bad bool
 }
 
 type walkResult struct {
@@ -165,11 +170,14 @@ func (c *classifier) lookup(abs string) node {
 		}
 		return node{}
 	}
-	if n, ok := c.cache[abs]; ok {
-		return n
+	n, ok := c.cache[abs]
+	if !ok {
+		n = c.lookupFS(abs)
+		c.cache[abs] = n
 	}
-	n := c.lookupFS(abs)
-	c.cache[abs] = n
+	if n.bad && c.inWrite {
+		c.incomplete = true
+	}
 	return n
 }
 
@@ -181,7 +189,7 @@ func (c *classifier) lookupFS(abs string) node {
 			t, err := c.cfg.FS.Readlink(abs)
 			if err != nil || t == "" {
 				c.reason(rUnresolvable)
-				return node{}
+				return node{bad: true}
 			}
 			return node{kind: KindLink, target: t}
 		}
@@ -189,7 +197,7 @@ func (c *classifier) lookupFS(abs string) node {
 	case isNotExist(err):
 	default:
 		c.reason(rUnresolvable)
-		return node{}
+		return node{bad: true}
 	}
 	if rel, ok := c.rel(abs); ok {
 		t := c.cfg.Tree.Stat(rel)
@@ -365,6 +373,7 @@ func (c *classifier) resolve(full string, follow bool) (target, bool) {
 	if w.stop != "" && !w.stopFinal {
 		last := w.stop == w.final && !w.stopMid
 		if last && !w.stopPresent && !settled {
+			c.touchW(w.stop)
 			g, ok := c.gone[w.stop]
 			if !ok || c.start.before(g.from) {
 				g.from = c.start

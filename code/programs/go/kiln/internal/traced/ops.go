@@ -108,6 +108,17 @@ func writeFollow(ev *trace.Event) bool {
 // O_WRONLY|O_CREAT, which cannot tell a new file from an old one.
 func (c *classifier) open(ev *trace.Event) {
 	f := parseOpenFlags(ev.Flags)
+	if f.writes() || ev.Syscall == "creat" {
+		// The open can write: everything that goes wrong placing it is a
+		// reason the write set may be incomplete (W2, W8).
+		c.writing(func() { c.openCall(ev, f) })
+		return
+	}
+	c.openCall(ev, f)
+}
+
+// openCall is open, after inWrite is settled.
+func (c *classifier) openCall(ev *trace.Event, f openFlags) {
 	if ev.Syscall == "openat2" {
 		// RESOLVE_NO_SYMLINKS, RESOLVE_BENEATH, RESOLVE_IN_ROOT, ... change
 		// what a path means in ways the walk does not model.
@@ -121,6 +132,9 @@ func (c *classifier) open(ev *trace.Event) {
 	tg, ok := c.targetOf(ev, !f.nofollow && !(f.creat && f.excl))
 	c.openRet = ""
 	if !ok {
+		if c.inWrite {
+			c.incomplete = true // W2: a writing open that could not be placed
+		}
 		return
 	}
 	if !ev.Result.OK {
@@ -128,6 +142,12 @@ func (c *classifier) open(ev *trace.Event) {
 		return
 	}
 	if tg.virtual {
+		// W5: only an open of /proc/self/fd/N (or /dev/fd/N) that returned a
+		// real -y path is classified by that path (openVirtual); any other
+		// virtual name that can write says nothing about the object.
+		if c.inWrite && !(isFDLink(tg.abs) && strings.HasPrefix(ev.ReturnFDPath, "/")) {
+			c.incomplete = true
+		}
 		c.openVirtual(ev, tg, f)
 		return
 	}
@@ -254,10 +274,12 @@ func (c *classifier) write(ev *trace.Event) {
 	}
 	tg, ok := c.targetOf(ev, follow)
 	if !ok {
+		c.incomplete = true // W1: a write call that could not be placed
 		return
 	}
 	if tg.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {
@@ -301,6 +323,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), false)
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		c.incomplete = true // W3: an endpoint that could not be placed
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -315,6 +338,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	}
 	if src.virtual || dst.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {
@@ -375,6 +399,7 @@ func (c *classifier) link(ev *trace.Event) {
 	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), followSrc)
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		c.incomplete = true // W3: an endpoint that could not be placed
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -389,6 +414,7 @@ func (c *classifier) link(ev *trace.Event) {
 	}
 	if src.virtual || dst.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {

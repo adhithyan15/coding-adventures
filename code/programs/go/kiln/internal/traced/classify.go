@@ -153,6 +153,21 @@ type classifier struct {
 	// disk (for a "#!" line or an ELF header) to the exec that read it.
 	execReads map[string]pos
 
+	// incomplete is the negation of RawRecord.WritesComplete: set the moment
+	// something happens that could hide a write from Writes/TrackedWrites.
+	// Every setter says which trigger of KILN04 section 5.5 it is.
+	incomplete bool
+	// inWrite is set while a call that can write is being processed.  Any
+	// trace-incomplete reason raised then (a loop, a budget, an unresolvable
+	// lookup, an unstable direct check) is a reason the WRITE could not be
+	// placed, so it sets incomplete too (W8).
+	inWrite bool
+	// wtouch holds the paths a write call's resolution touched, in any of the
+	// maps checkStability later judges (seen, seenFinal, seenAbsent, ...).
+	// checkStability turns an unstable verdict on one of them into incomplete
+	// (W8); an unstable path only reads went through costs nothing here.
+	wtouch map[string]bool
+
 	step   int
 	cur    pos // completion of the current call
 	start  pos // start of the current call
@@ -184,10 +199,52 @@ func newClassifier(p *prepared) *classifier {
 		hard: map[string]bool{}, wlog: map[string][]pos{}, seen: map[string]pos{}, seenAbsent: map[string]span{}, ownSeen: map[string]span{}, binds: map[string]bool{}, seenFile: map[string]bool{}, seenFinal: map[string]pos{},
 		relFinal: map[string]span{}, relAbs: map[string]span{}, gone: map[string]goneLook{},
 		execReads: map[string]pos{}, sockTypes: map[string]string{}, boundUnix: map[string]string{},
+		wtouch: map[string]bool{},
 	}
 }
 
-func (c *classifier) reason(r string) { c.reasons[r] = true }
+func (c *classifier) reason(r string) {
+	c.reasons[r] = true
+	// W8: a read-side problem is only a reason, but the same problem while a
+	// write is being placed means the write may be somewhere else.
+	if c.inWrite && strings.HasPrefix(r, "trace-incomplete:") {
+		c.incomplete = true
+	}
+}
+
+// writing runs f with inWrite set (restoring it after), for a call that can
+// write.
+func (c *classifier) writing(f func()) {
+	old := c.inWrite
+	c.inWrite = true
+	defer func() { c.inWrite = old }()
+	f()
+}
+
+// touchW remembers that the write call being processed touched abs.
+func (c *classifier) touchW(abs string) {
+	if c.inWrite {
+		c.wtouch[abs] = true
+	}
+}
+
+// unstable raises the unstable-path reason for p, the key of the lookup the
+// stability rule rejected.  If a write call's resolution touched p, the write
+// may have landed elsewhere: the write set is unknown (W8).
+func (c *classifier) unstable(p string) {
+	c.reason(rUnstable)
+	if c.wtouch[p] {
+		c.incomplete = true
+	}
+}
+
+// budgetOut raises the size reason when the stability pass runs out of
+// budget.  The pass stops early, so nothing vouches for the components it did
+// not reach: any of them may have been under a write (W9).
+func (c *classifier) budgetOut() {
+	c.reason(rSize)
+	c.incomplete = true
+}
 
 // runTrace classifies one step's trace.
 func (c *classifier) runTrace(t *trace.Trace) {
@@ -229,7 +286,7 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 		}
 		// fchdir needs nothing: the open that made the descriptor was observed.
 	case trace.KindWrite:
-		c.write(ev)
+		c.writing(func() { c.write(ev) })
 	case trace.KindProcess:
 		if ev.Syscall == "execve" || ev.Syscall == "execveat" {
 			c.exec(ev)
@@ -241,8 +298,22 @@ func (c *classifier) event(t *trace.Trace, ev *trace.Event) {
 
 // stepStatus adds the reasons that come from how the step ended.
 func (c *classifier) stepStatus(t *trace.Trace) {
-	if ex := t.StepExit(); ex == nil || ex.Killed || ex.Code != 0 {
+	ex := t.StepExit()
+	if ex == nil || ex.Killed || ex.Code != 0 {
 		c.reason(rFailed)
+	}
+	// W10: no exit line for the step, or death by a signal, is a truncated or
+	// interrupted trace.  A plain nonzero exit is not: the failed action
+	// wrote what it wrote, and the merge handles the failure (section 7.1,
+	// M-1).  A traced process with no exit line was still running when the
+	// trace ended, or its line was lost: its later writes are unseen.
+	if ex == nil || ex.Killed {
+		c.incomplete = true
+	}
+	for _, p := range t.Procs {
+		if p == nil || p.Exit == nil {
+			c.incomplete = true
+		}
 	}
 	// Daemons (section 4.3): the init child is PID 1 of the sandbox's PID
 	// namespace, so when it exits the kernel kills every survivor.  A process
@@ -255,6 +326,7 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 	for _, ex := range t.Exits {
 		if seenInit && ex.Killed && ex.Signal == "SIGKILL" {
 			c.reason(rDaemonLeft)
+			c.incomplete = true // W10: a survivor may have written before it was killed
 		}
 		if ex.Pid == t.InitPid {
 			seenInit = true
@@ -306,6 +378,7 @@ func (c *classifier) isCreated(abs string) bool {
 	for p := abs; p != ""; p = parentOf(p) {
 		if at, ok := c.created[p]; ok && at.before(c.start) {
 			if !c.noOwnSeen {
+				c.touchW(p)
 				sp, seen := c.ownSeen[p]
 				if !seen || c.start.before(sp.s) {
 					sp.s = c.start
@@ -439,6 +512,7 @@ func (c *classifier) coarsen(rel string) string {
 // writePath records a write to abs.
 func (c *classifier) writePath(abs string) {
 	if isVirtual(abs) {
+		c.incomplete = true // W5: the name says nothing about the object written
 		return
 	}
 	c.wlog[abs] = append(c.wlog[abs], c.cur)
@@ -448,15 +522,18 @@ func (c *classifier) writePath(abs string) {
 		return
 	}
 	if rel == "" {
+		c.incomplete = true // W7: the root has no write root to be listed under
 		return
 	}
 	if err := key.ValidatePath(rel); err != nil {
 		c.reason(rBadPath)
+		c.incomplete = true // W6: a path the record cannot hold
 		return
 	}
 	for _, s := range strings.Split(rel, "/") {
 		if s == ".git" {
 			c.reason(rVCSWrite)
+			c.incomplete = true // W6
 			return
 		}
 	}
@@ -488,6 +565,7 @@ func (c *classifier) nsChange(abs string, clean, opened bool) {
 // noteRel records a followed final name of a successful stat or exec for the
 // open-only rule.
 func (c *classifier) noteRel(m map[string]span, abs string) {
+	c.touchW(abs)
 	sp, ok := m[abs]
 	if !ok || c.start.before(sp.s) {
 		sp.s = c.start
@@ -540,6 +618,7 @@ func (c *classifier) openOnly(p string, sp span, absent bool) bool {
 
 // noteFinal records a followed final component that the disk shows present.
 func (c *classifier) noteFinal(abs string) {
+	c.touchW(abs)
 	if p, ok := c.seenFinal[abs]; !ok || c.start.before(p) {
 		c.seenFinal[abs] = c.start
 	}
@@ -553,6 +632,7 @@ func (c *classifier) noteFinal(abs string) {
 // unstable when the last change to it before the lookup was a creation; a file
 // there is unstable if the action touched it at all.
 func (c *classifier) noteMissing(abs string, isFile bool) {
+	c.touchW(abs)
 	if isFile {
 		c.seenFile[abs] = true
 		return
@@ -591,6 +671,7 @@ func (c *classifier) markRemoved(abs string, unlink bool) {
 // start of the current call.  Only the earliest lookup matters: if the rule
 // holds for it, it holds for every later one.
 func (c *classifier) noteTraversal(abs string) {
+	c.touchW(abs)
 	if p, ok := c.seen[abs]; !ok || c.start.before(p) {
 		c.seen[abs] = c.start
 	}
@@ -668,14 +749,14 @@ func (c *classifier) touchedAfterParents(abs string, after pos) bool {
 func (c *classifier) checkStability() {
 	for p, at := range c.seen {
 		if !c.stable(p, at) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	idx := map[string]*modIndex{}
 	for p, sp := range c.seenAbsent {
 		c.steps += 8
 		if c.steps > walkBudget {
-			c.reason(rSize)
+			c.budgetOut()
 			break
 		}
 		ms := c.mods[p]
@@ -688,7 +769,7 @@ func (c *classifier) checkStability() {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) || removedBeforeMade(ms, c.firstMade(ms), sp.s) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	for p, at := range c.seenFinal {
@@ -696,14 +777,14 @@ func (c *classifier) checkStability() {
 		// leftover is then an untracked observation, for the merge job); one it
 		// changed must satisfy the creation rule.
 		if len(c.mods[p]) > 0 && !c.createdOnce(p, at) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	// The followed finals of a successful stat or exec: the open-only rule,
 	// else the strict rules they would have met as ordinary lookups.
 	for p, sp := range c.relFinal {
 		if len(c.mods[p]) > 0 && !c.openOnly(p, sp, false) && !c.createdOnce(p, sp.s) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	for p, sp := range c.relAbs {
@@ -713,7 +794,7 @@ func (c *classifier) checkStability() {
 		}
 		c.steps += 8
 		if c.steps > walkBudget {
-			c.reason(rSize)
+			c.budgetOut()
 			break
 		}
 		mi := idx[p]
@@ -722,7 +803,7 @@ func (c *classifier) checkStability() {
 			idx[p] = mi
 		}
 		if mi.unsafe(ms, sp.s, sp.e) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	// A followed final name that the post-run disk shows absent was removed, or
@@ -735,15 +816,15 @@ func (c *classifier) checkStability() {
 		ms := c.mods[p]
 		firstMade := c.firstMade(ms)
 		if g.present && !firstMade.before(g.from) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 		if removedBeforeMade(ms, firstMade, g.from) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	for p := range c.seenFile {
 		if c.touchedAfter(p, pos{}, true) {
-			c.reason(rUnstable)
+			c.unstable(p)
 		}
 	}
 	for p, sp := range c.ownSeen {
@@ -757,7 +838,7 @@ func (c *classifier) checkStability() {
 			}
 			c.steps += 8
 			if c.steps > walkBudget {
-				c.reason(rSize)
+				c.budgetOut()
 				break
 			}
 			mi := idx[q]
@@ -766,7 +847,7 @@ func (c *classifier) checkStability() {
 				idx[q] = mi
 			}
 			if mi.overlaps(ms, sp.s, sp.e) {
-				c.reason(rUnstable)
+				c.unstable(p)
 				break
 			}
 		}
@@ -860,6 +941,13 @@ func (c *classifier) record(pkg string) *RawRecord {
 	if len(trav) > maxListed {
 		c.reason(rSize)
 	}
+	// W9: the write lists are never truncated, but a record this large is
+	// refused like the other lists (the size reason), and says its write set
+	// is not to be trusted.
+	if len(c.writes) > maxListed || len(c.tracked) > maxListed {
+		c.reason(rSize)
+		c.incomplete = true
+	}
 	return &RawRecord{
 		Package:               pkg,
 		Entries:               sortedKeys(c.entries),
@@ -870,5 +958,6 @@ func (c *classifier) record(pkg string) *RawRecord {
 		Binds:                 sortedKeys(c.binds),
 		Traversed:             sortedKeys(trav),
 		Reasons:               capReasons(c.reasons),
+		WritesComplete:        !c.incomplete,
 	}
 }

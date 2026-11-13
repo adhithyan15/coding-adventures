@@ -68,6 +68,9 @@ func (c *classifier) noteSocket(ev *trace.Event) {
 func (c *classifier) network(t *trace.Trace, ev *trace.Event) {
 	a := ev.Addr
 	if a == nil {
+		if ev.Syscall == "bind" {
+			c.incomplete = true // W4: a bind with no address may have made a socket file
+		}
 		return // a connected socket sending, or listen: the connect was judged
 	}
 	switch ev.Syscall {
@@ -190,18 +193,28 @@ func (c *classifier) bind(ev *trace.Event) {
 		if a.Address == "" {
 			return
 		}
-		tg, ok := c.resolve(join(ev.Cwd, "", a.Address), false)
-		if !ok {
-			return
-		}
-		if !ev.Result.OK {
-			c.observeResult(tg, ev.Result)
-			return
-		}
-		c.writePath(tg.abs)
-		c.markCreated(tg.abs, true) // bind never replaces a name: like O_EXCL
-		c.boundUnix[tg.abs] = c.sockType(ev)
+		c.writing(func() { c.bindPath(ev, a.Address) })
 	}
+}
+
+// bindPath places the socket file of an AF_UNIX pathname bind.
+func (c *classifier) bindPath(ev *trace.Event, addr string) {
+	tg, ok := c.resolve(join(ev.Cwd, "", addr), false)
+	if !ok {
+		c.incomplete = true // W4: a bind that could not be placed
+		return
+	}
+	if tg.virtual {
+		c.incomplete = true // W5
+		return
+	}
+	if !ev.Result.OK {
+		c.observeResult(tg, ev.Result)
+		return
+	}
+	c.writePath(tg.abs)
+	c.markCreated(tg.abs, true) // bind never replaces a name: like O_EXCL
+	c.boundUnix[tg.abs] = c.sockType(ev)
 }
 
 // unixPeer handles a connect or send to an AF_UNIX address.

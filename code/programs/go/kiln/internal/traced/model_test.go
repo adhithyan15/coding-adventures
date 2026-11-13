@@ -37,6 +37,15 @@ import (
 //     truncate+create, exclusive create, create, truncate only), stat, lstat,
 //     chdir, exec, directory listings and dirfd-relative lookups.
 //
+// The WRITES-COMPLETE oracle (KILN04 section 5.5, PR 4): whenever the record
+// says WritesComplete, EVERY in-repository path the model really wrote lies
+// under Writes or TrackedWrites, WITH OR WITHOUT reasons (a read-side reason
+// must not be able to hide a write).  Perturbations aim at each false-trigger:
+// writes through /proc/self/cwd (virtual), chmod of the root and of names
+// reached through links and "..", and, after the run, a truncated trace, a
+// killed step, a process with no exit line and a wrong recipe, each of which
+// must make WritesComplete false.
+//
 // The oracle (KILN04 sections 5.1, 5.2, 7): when the record carries NO reason,
 // every path the model really looked at must be the action's own or be covered
 // by an entry (pkg:, path: on a prefix, an untracked observation, list: for a
@@ -571,6 +580,48 @@ func (m *model) doOpen(pid int, p string, mode int, content int) []trace.Event {
 	return []trace.Event{m.event(pid, e, errno)}
 }
 
+// doChmod changes the mode of whatever p names (following links): a write to
+// the final object, which must exist.  Aimed at the root and at names reached
+// through links and "..".
+func (m *model) doChmod(pid int, p string) []trace.Event {
+	pr := m.procs[pid]
+	r := m.resolve(p, pr.cwdPath, true)
+	m.look(r, false, false, false)
+	errno := r.errno
+	switch {
+	case errno == "" && (r.node == nil || r.node.kind == KindLink):
+		errno = "EINVAL"
+	case errno == "" && m.readOnlyHost(r.final):
+		errno = "EROFS"
+	}
+	if errno == "" {
+		m.add(touch{path: r.final, write: true, wonly: true})
+	}
+	return []trace.Event{m.event(pid, base("chmod", trace.KindWrite, p), errno)}
+}
+
+// doVirtual runs f on the path p spelled through /proc/self/cwd: the kernel
+// really resolves to p, but the trace prints the virtual name, which the
+// classifier cannot place (W5).  A path that is not under the cwd is run as
+// it is.
+func (m *model) doVirtual(pid int, p string, f func(q string) []trace.Event) []trace.Event {
+	pr := m.procs[pid]
+	rel := p
+	if strings.HasPrefix(p, "/") {
+		var ok bool
+		if rel, ok = strings.CutPrefix(p, pr.cwdPath+"/"); !ok {
+			return f(p)
+		}
+	}
+	evs := f(p)
+	for i := range evs {
+		if evs[i].Path == p {
+			evs[i].Path = "/proc/self/cwd/" + rel
+		}
+	}
+	return evs
+}
+
 func (m *model) doList(pid int, p string) []trace.Event {
 	pr := m.procs[pid]
 	r := m.resolve(p, pr.cwdPath, true)
@@ -783,7 +834,7 @@ var bursts = [][]burstOp{
 var perturbations = []struct {
 	kind int
 	swap bool
-}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}}
+}{{2, false}, {2, true}, {3, false}, {4, false}, {4, true}, {1, false}, {0, false}, {5, false}, {9, false}, {10, false}, {14, false}, {100, false}, {101, false}, {102, false}, {103, false}, {104, false}}
 
 func (m *model) burstBase(b byte) string {
 	return []string{m.root + "/code/p/a", m.root + "/code/p/a/d1", m.root, m.tmp, m.home, m.tmp + "/d1",
@@ -845,6 +896,17 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 5, -1) }
 		case 101:
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 6, -1) }
+		case 102:
+			c := next()
+			o.run = func() []trace.Event {
+				return m.doVirtual(pid, p, func(q string) []trace.Event { return m.doOpen(pid, q, 1, c) })
+			}
+		case 103:
+			o.run = func() []trace.Event {
+				return m.doVirtual(pid, p, func(q string) []trace.Event { return m.doMkdirLike(pid, "mkdir", q, "") })
+			}
+		case 104:
+			o.run = func() []trace.Event { return m.doChmod(pid, p) }
 		case 11:
 			c := next()
 			o.run = func() []trace.Event { return m.doOpen(pid, p, 4, c) }
@@ -869,7 +931,7 @@ func (m *model) runStep(data []byte, i *int, count int) *trace.Trace {
 		ops = append(ops, o)
 	}
 	for k := 0; k < count && *i < len(data); k++ {
-		kind := next() % (20 + len(bursts))
+		kind := next() % (23 + len(bursts))
 		if kind >= 18+len(bursts) {
 			add(100+kind-18-len(bursts), m.path(data, i), "")
 			continue
@@ -1052,16 +1114,70 @@ func runDifferential(t *testing.T, data []byte) {
 		for i := range recipe {
 			recipe[i] = "step"
 		}
+		// The last byte picks a whole-trace perturbation (W10).  Each must make
+		// WritesComplete false; the writes-complete oracle is then moot.
+		cut := perturbTrace(data[len(data)-1], steps, recipe)
 		rec, err := Classify(h.cfg, Input{Package: "code/p/a", Traces: steps, Recipe: recipe})
 		if err != nil {
 			// The action moved or removed the checkout's own directories: the
 			// post-run disk no longer shows a real Root, which is refused.
 			return
 		}
+		if cut != "" {
+			if rec.WritesComplete {
+				t.Fatalf("%s must make WritesComplete false", cut)
+			}
+			return
+		}
+		// The writes-complete oracle holds with or without reasons.
+		if rec.WritesComplete {
+			checkWrites(t, m, rec)
+		}
 		if len(rec.Reasons) > 0 {
 			return // a record with a reason is never trusted: always safe
 		}
 		check(t, m, tree, rec)
+	}
+}
+
+// perturbTrace applies the whole-trace perturbation the byte b selects (most
+// bytes select none) and says which one it was.
+func perturbTrace(b byte, steps []*trace.Trace, recipe []string) string {
+	st := steps[int(b>>4)%len(steps)]
+	switch b % 24 {
+	case 0:
+		st.Procs[1].Exit = nil
+		return "a step with no exit line"
+	case 1:
+		st.Procs[1].Exit = &trace.Exit{Pid: 1, Killed: true, Signal: "SIGKILL"}
+		return "a killed step"
+	case 2:
+		st.Procs[2].Exit = nil
+		return "a process with no exit line"
+	case 3:
+		recipe[int(b>>4)%len(recipe)] = "another step"
+		return "a recipe mismatch"
+	}
+	return ""
+}
+
+// checkWrites is the writes-complete invariant: every in-repository path the
+// model really wrote is under a write root of Writes, or is a TrackedWrites
+// path itself (the classifier's own coarsening).
+func checkWrites(t *testing.T, m *model, rec *RawRecord) {
+	t.Helper()
+	for _, tc := range m.touches {
+		if !tc.write && !tc.wonly {
+			continue
+		}
+		rel, in := strings.CutPrefix(tc.path, m.root+"/")
+		if !in || m.readOnlyHost(tc.path) {
+			continue
+		}
+		if !underAny(rec.Writes, rel) && !underAny(rec.TrackedWrites, rel) {
+			t.Fatalf("WritesComplete, but %s was written and is in no write set\nroot %s home %s tmp %s\nwrites %q tracked %q reasons %q",
+				tc.path, m.root, m.home, m.tmp, rec.Writes, rec.TrackedWrites, rec.Reasons)
+		}
 	}
 }
 
