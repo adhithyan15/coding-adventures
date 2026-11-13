@@ -842,6 +842,21 @@ version of this section led to these. Each is a decision, not a sketch.
   blocking and exits 125 if it sees end of file: a root that died before the
   signal was set left nobody to signal the init. Teardown does not rest on the
   parent-death signal alone.
+- **`clone3` in the helper's groups.** The Go runtime makes its threads with
+  `clone3`, which strace 6.8 prints as a struct with an output annotation:
+  `clone3({flags=A|B, child_tid=0x.., ..., tls=0x..} => {parent_tid=[N]}, 88) = N`
+  (inline, or split into `<unfinished ...>` and `<... clone3 resumed> => {...},
+  88) = N`). The parser decodes the struct's leading `flags=` field and records
+  the returned pid as a spawn exactly as for `clone`, so a thread of the root
+  group is a root-group thread and a thread of the init window shares its cwd.
+  A struct it cannot decode exactly (not a struct, no leading `flags=`, a
+  truncated one with `...`, numeric flags, a missing size argument, trailing
+  text) is `clone-flags`. The policy is unchanged: in the root group and the
+  init window a `clone3` is tolerated (threads only; a second process in the
+  init window is `helper-spawn`, and `CLONE_NEW*` or `CLONE_UNTRACED` is
+  `clone-flags`); anywhere else, the step's own included, it is
+  `refused:clone3`, because the sandbox filter answers `ENOSYS` and a `clone3`
+  in a trace of the step means the filter failed.
 - **No late runtime threads.** Both helpers call `debug.SetGCPercent(-1)`, so
   no garbage-collector worker thread starts after the spawn.
 - **CI.** `ci.yml` has a required `kiln-sandbox` job (linux/amd64,

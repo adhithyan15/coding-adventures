@@ -12,6 +12,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net"
 	"os"
 	"os/exec"
@@ -585,11 +587,31 @@ func TestSandboxRealStrace(t *testing.T) {
 	defer fh.Close()
 	tr, err := trace.ParseOptions(fh, f.pkg, trace.Options{HelperRoot: true, HelperExe: f.exe})
 	if err != nil {
+		// Show the lines around the refused one (its number is in the error),
+		// each cut short, so the next fix needs no second CI run to find them.
 		raw, _ := os.ReadFile(trf)
-		if len(raw) > 6000 {
-			raw = raw[:6000]
+		lines := strings.Split(string(raw), "\n")
+		at := 0
+		var te *trace.Error
+		if errors.As(err, &te) {
+			at = te.Line
 		}
-		t.Fatalf("the trace was refused: %v\n--- trace head ---\n%s", err, raw)
+		lo, hi := at-15, at+5
+		if lo < 0 {
+			lo = 0
+		}
+		if hi > len(lines) {
+			hi = len(lines)
+		}
+		var win strings.Builder
+		for i := lo; i < hi; i++ {
+			l := lines[i]
+			if len(l) > 400 {
+				l = l[:400] + "..."
+			}
+			fmt.Fprintf(&win, "%5d  %s\n", i+1, l)
+		}
+		t.Fatalf("the trace was refused: %v (line %d of %d)\n--- around the refused line ---\n%s", err, at, len(lines), win.String())
 	}
 	if ex := tr.StepExit(); ex == nil || ex.Killed || ex.Code != 0 {
 		t.Errorf("step exit %+v", ex)

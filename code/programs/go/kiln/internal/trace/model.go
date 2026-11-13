@@ -332,9 +332,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 		var flags string
 		switch c.name {
 		case "fork", "vfork":
-		case "clone":
+		case "clone", "clone3":
 			var r string
-			flags, share, r = analyzeClone(c.args)
+			if c.name == "clone3" {
+				flags, share, r = analyzeClone3(c.args)
+			} else {
+				flags, share, r = analyzeClone(c.args)
+			}
 			if r != "" {
 				// Judged below: the helper's own group may clone into new
 				// namespaces; nobody else may.
@@ -409,6 +413,52 @@ func (m *model) inRootGroup(pid int) bool {
 		m.rootMemo[p] = res
 	}
 	return res
+}
+
+// analyzeClone3 reads clone3's struct argument, which strace 6.x prints as
+//
+//	clone3({flags=A|B, child_tid=0x.., ..., tls=0x..} => {parent_tid=[N]}, 88) = N
+//
+// (the "=> {...}" part is the output annotation, absent when the call failed).
+// It returns the flags the way analyzeClone does.  Anything it cannot decode
+// exactly (not a struct, no leading flags=, a truncated struct, a second
+// argument other than the size, trailing text that is not the annotation) is
+// clone-flags: a clone3 whose flags are unknown might be anything.
+func analyzeClone3(args []string) (flags string, shareFS bool, reason string) {
+	if len(args) != 2 || !strings.HasPrefix(args[0], "{") {
+		return "", false, reasonCloneFlags
+	}
+	st := args[0]
+	depth, end := 0, -1
+	for i := 0; i < len(st) && end < 0; i++ {
+		switch st[i] {
+		case '{', '[', '(':
+			depth++
+		case '}', ']', ')':
+			depth--
+			if depth == 0 {
+				end = i
+			}
+		}
+	}
+	if end < 0 {
+		return "", false, reasonCloneFlags
+	}
+	if tail := strings.TrimSpace(st[end+1:]); tail != "" && !strings.HasPrefix(tail, "=>") {
+		return "", false, reasonCloneFlags
+	}
+	body := st[1:end]
+	if strings.Contains(body, "...") || !strings.HasPrefix(body, "flags=") {
+		return "", false, reasonCloneFlags
+	}
+	text := body[len("flags="):]
+	if k := strings.IndexByte(text, ','); k >= 0 {
+		text = text[:k]
+	}
+	if text == "" || strings.ContainsAny(text, " {}[]()") {
+		return "", false, reasonCloneFlags
+	}
+	return analyzeClone([]string{"flags=" + text})
 }
 
 // analyzeClone reads the flags= argument of a clone call.  A clone that could
@@ -526,7 +576,9 @@ func (m *model) add(p *proc) {
 	m.trace.Order = append(m.trace.Order, p.Pid)
 }
 
-func isSpawn(name string) bool { return name == "fork" || name == "vfork" || name == "clone" }
+func isSpawn(name string) bool {
+	return name == "fork" || name == "vfork" || name == "clone" || name == "clone3"
+}
 
 func (m *model) isHelperExe(path string) bool {
 	return path == m.opts.HelperExe || path == "/proc/self/exe"
@@ -575,6 +627,18 @@ func (m *model) apply(rec *record) *Error {
 		// Classification was deferred in pass 1.
 		if e := classifyName(c.name, rec.line); e != nil {
 			if inWindow {
+				if c.name == "clone3" && c.ret.ok() {
+					// A clone3 of the init's window is tolerated like clone
+					// (the Go runtime makes its threads with it), and tracked
+					// like clone: threads only, never a second process.
+					child := int(c.ret.value)
+					if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
+						return incomplete(rec.line, reasonHelperSpawn)
+					}
+					if _, e := m.get(child, rec.line-1); e != nil {
+						return e
+					}
+				}
 				return nil // sandbox setup: unknown or refused is tolerated
 			}
 			return e
