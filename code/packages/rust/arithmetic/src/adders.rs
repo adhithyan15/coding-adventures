@@ -53,6 +53,13 @@ use logic_gates::gates::{and_gate, or_gate, xor_gate};
 /// 1  1  |  0     1     (1 + 1 = 10 in binary)
 /// ```
 ///
+/// # Panics
+///
+/// Panics, in EVERY build profile, if an input is not 0 or 1.  The check is the
+/// gates' (`logic_gates::gates` rejects a non-bit with `assert!`, finding SEC-007
+/// of that crate), so the rule is inherited rather than repeated here; it is
+/// pinned by `tests/bit_domain.rs` in the debug and the release profile.
+///
 /// # Example
 ///
 /// ```
@@ -88,6 +95,13 @@ pub fn half_adder(a: u8, b: u8) -> (u8, u8) {
 ///                         |                   |
 ///                     carry_out                |
 /// ```
+///
+/// # Panics
+///
+/// Panics, in EVERY build profile, if an input is not 0 or 1.  The check is the
+/// gates' (`logic_gates::gates` rejects a non-bit with `assert!`, finding SEC-007
+/// of that crate), so the rule is inherited rather than repeated here; it is
+/// pinned by `tests/bit_domain.rs` in the debug and the release profile.
 ///
 /// # Example
 ///
@@ -128,6 +142,14 @@ pub struct RippleCarryResult {
 /// - `b` — second number as bits, LSB first
 ///
 /// Both slices must have the same length and be non-empty.
+///
+/// # Panics
+///
+/// Panics, in EVERY build profile, if `a` and `b` differ in length, if they are
+/// empty, or if any element is not 0 or 1 (the gates reject it; see
+/// [`full_adder`]).  Nothing is masked or passed through.  There is no
+/// width-driven allocation: the sum is exactly as long as the operands, so a
+/// caller's length is not an amplification factor.
 ///
 /// # Carry-in
 ///
@@ -185,6 +207,13 @@ pub fn ripple_carry_adder(a: &[u8], b: &[u8]) -> RippleCarryResult {
 
 /// Ripple-carry adder with explicit carry-in, used internally by the ALU
 /// for subtraction (where carry_in = 1).
+///
+/// Computes `(a + b + carry_in) mod 2^n` with the carry out of bit `n - 1`, and
+/// the signed-overflow flag of the same sum.
+///
+/// # Panics
+///
+/// As [`ripple_carry_adder`], and also if `carry_in` is not 0 or 1.
 pub fn ripple_carry_adder_with_carry(a: &[u8], b: &[u8], carry_in: u8) -> RippleCarryResult {
     assert_eq!(
         a.len(),

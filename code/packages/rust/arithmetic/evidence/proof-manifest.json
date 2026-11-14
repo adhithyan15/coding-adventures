@@ -1,0 +1,131 @@
+{
+  "max_len": 0,
+  "module": "arithmetic",
+  "proofs": [
+    {
+      "certificates": [],
+      "function": "alu",
+      "id": "warrant/arithmetic/proof/alu/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "alu",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "alu",
+      "id": "warrant/arithmetic/proof/alu/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen)",
+      "op": "alu",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "full_adder",
+      "id": "warrant/arithmetic/proof/full_adder/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "full_adder",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "full_adder",
+      "id": "warrant/arithmetic/proof/full_adder/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen)",
+      "op": "full_adder",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "half_adder",
+      "id": "warrant/arithmetic/proof/half_adder/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "half_adder",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "half_adder",
+      "id": "warrant/arithmetic/proof/half_adder/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen)",
+      "op": "half_adder",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "ripple_carry_adder",
+      "id": "warrant/arithmetic/proof/ripple_carry_adder/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "ripple_carry_adder",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "ripple_carry_adder",
+      "id": "warrant/arithmetic/proof/ripple_carry_adder/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen)",
+      "op": "ripple_carry_adder",
+      "runs": 0,
+      "verdict": "not-live"
+    },
+    {
+      "certificates": [],
+      "function": "ripple_carry_adder_with_carry",
+      "id": "warrant/arithmetic/proof/ripple_carry_adder_with_carry/depth-bound",
+      "kind": "depth-bound",
+      "label": "unchecked",
+      "max_len": 0,
+      "note": "the pilot prover does not track this resource",
+      "op": "ripple_carry_adder_with_carry",
+      "runs": 0,
+      "verdict": "unchecked"
+    },
+    {
+      "certificates": [],
+      "function": "ripple_carry_adder_with_carry",
+      "id": "warrant/arithmetic/proof/ripple_carry_adder_with_carry/steps-bound",
+      "kind": "steps-bound",
+      "label": "not-live",
+      "max_len": 0,
+      "note": "parse refused at src/adders.rs:71:37: Expected RParen, found Ident(\"u8\") (line: `pub fn half_adder(a: u8, b: u8) -> (u8, u8) {`); parse refused at src/alu.rs:35:5: Expected item, found Ident(\"enum\") (line: `pub enum AluOp {`); per export, alu: alone: parse refused (Expected variable name, found LParen); full_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); half_adder: alone: parse refused (Expected RParen, found Ident(\"u8\")); ripple_carry_adder: alone: parse refused (Expected variable name, found LParen); ripple_carry_adder_with_carry: alone: parse refused (Expected variable name, found LParen)",
+      "op": "ripple_carry_adder_with_carry",
+      "runs": 0,
+      "verdict": "not-live"
+    }
+  ],
+  "schema": "warrant-proof-evidence-v1",
+  "source": "code/packages/rust/arithmetic/src/adders.rs, alu.rs",
+  "source_sha256": "431eca1d75b0ce425e5f64d235dfac93bd4aa87a72ba7e995b52cc2b2edf1457",
+  "spec": "code/specs/arithmetic.warrant",
+  "spec_sha256": "f47e5b1da0b0da91678f06ffd3ba007c30a3b3fe0d2d643d40736ca3ff2df963"
+}

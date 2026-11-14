@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Stronger exact-object composition between the complete HTTPS destination
+  proof and the complete reviewed server-path plus repository-owned anchor
+  self-signature evidence.
+
 ## [0.1.0] - 2026-11-13
 
 ### Added

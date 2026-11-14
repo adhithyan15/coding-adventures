@@ -1,0 +1,59 @@
+# Warrant binding manifest (VER04 section 6, VER04j section 4.6) for
+# code/specs/arithmetic.warrant.
+#
+# One line per Warrant operation: the public export that implements it, its host
+# signature where the Warrant type is not the default one, and the deliberate
+# faults the generated negative controls attack it with (VER04h section 6,
+# VER04j section 4.8).  Every export is a crate-root re-export of an adders.rs or
+# alu.rs item (src/lib.rs), the same function as `adders::half_adder` and so on.
+#
+# error=INVALID_INPUT: the export does not return a Result.  It PANICS on a value
+# that is not a bit (the gates underneath reject it, logic-gates SEC-007), on
+# operands of unequal length and on an empty operand.  The generated adapter
+# contains the panic and reads it as Err(INVALID_INPUT), exactly as gf256 reads a
+# division by zero (VER04h section 6).  A rejection claim therefore passes only
+# when the crate really panics, and a spurious panic on a valid input fails the
+# claim that expected Ok.  The single case cannot tell the reasons apart;
+# tests/bit_domain.rs pins the panic itself, in debug and in release builds.
+#
+# Host types.  A wire is a u8 (0 or 1) and a bit vector is `bytes` (&[u8]).  The
+# three result types are bound field by field: RippleCarryResult and AluResult
+# are structs with public fields, AluOp is a unit-variant enum that the claims
+# also pass IN.  half_adder and full_adder return a (u8, u8) pair (sum, carry).
+#
+# The faults.  The generator's faults rewrite a result, and a fault needs a result
+# shape it can attack: the (sum, carry) pairs take drop-consumed (the carry becomes
+# a constant), off-by-one-consumed (the carry is off by one) and swap-components
+# (sum and carry exchanged); RippleCarryResult takes field-zero, which zeroes the
+# first numeric field, carry_out; every operation takes missing-error (a panic
+# becomes Ok).  AluResult has no numeric field and its bytes field is inside a
+# record, so the ALU is attacked by missing-error only: no negative control zeroes
+# a flag or flips a result bit of the ALU.  That is a stated limit of the
+# generator (AR01 "Verification status"), not a claim of sensitivity.
+#
+# proofs_not_live=<reason>: the Rust-subset front end refuses the sources
+# (warrant-ir/tests/arithmetic_proofs.rs records its message), so every steps
+# obligation is recorded `not-live` (VER04h section 9, check 18).
+#
+# exhaustive_budget is 2^24: the 8-bit adder with a carry-in enumerates a U8 pair
+# and a Bool (131,072 cases) and the ALU rejection and 16-bit claims stay below
+# 290,000; nothing here approaches the budget, which is kept equal to logic-gates'.
+package arithmetic
+revision 0.1.0
+spec code/specs/arithmetic.warrant
+output code/packages/rust/arithmetic/tests/generated/warrant_evidence.rs
+seed 0x4152_3031_5f57_4152
+property_cases 4096
+fuzz_iterations 5000
+negctl_fuzz_iterations 1000
+exhaustive_budget 16777216
+
+struct RippleCarryResult path=arithmetic::RippleCarryResult fields=sum:bytes,carry_out:u8,overflow:bool
+struct AluResult path=arithmetic::AluResult fields=result:bytes,zero:bool,carry:bool,negative:bool,overflow:bool
+enum AluOp path=arithmetic::AluOp ctors=Add,Sub,And,Or,Xor,Not
+
+op half_adder export=half_adder ret=(u8,u8) error=INVALID_INPUT faults=missing-error,drop-consumed,off-by-one-consumed,swap-components proofs_not_live=frontend-refuses-lib
+op full_adder export=full_adder ret=(u8,u8) error=INVALID_INPUT faults=missing-error,drop-consumed,off-by-one-consumed,swap-components proofs_not_live=frontend-refuses-lib
+op ripple_carry_adder export=ripple_carry_adder args=bytes,bytes ret=RippleCarryResult error=INVALID_INPUT faults=missing-error,field-zero proofs_not_live=frontend-refuses-lib
+op ripple_carry_adder_with_carry export=ripple_carry_adder_with_carry args=bytes,bytes,u8 ret=RippleCarryResult error=INVALID_INPUT faults=missing-error,field-zero proofs_not_live=frontend-refuses-lib
+op alu export=alu args=bytes,bytes,AluOp ret=AluResult error=INVALID_INPUT faults=missing-error proofs_not_live=frontend-refuses-lib

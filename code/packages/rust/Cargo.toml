@@ -1467,4 +1467,6 @@ members = [
   "tls13-finished",
   "tls13-key-schedule",
   "https-reviewed-server-path-binding",
+  "x509-rsa-reviewed-anchor-self-signature-binding",
+  "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
 ]

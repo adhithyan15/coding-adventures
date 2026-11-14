@@ -4951,6 +4951,77 @@ HTTPS, OAuth, network, or live-provider readiness. Complete path/Name policy,
 revocation, repository-owned TLS/HTTP composition, and audited transport remain
 separate blockers. Concrete HTTPS remains unavailable.
 
+A bounded `x509-rsa-reviewed-anchor-self-signature-binding` prerequisite now
+joins the existing data-driven repository-owned RSA signature router to the
+reviewed Mozilla root snapshot without adding another algorithm switch. It
+consumes one routed RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 policy proof
+and one reviewed-root selection. The routed proof's child certificate, its
+issuer RSA algorithm-and-key policy certificate, and the selected reviewed
+root must all be the same exact decoded object. Byte-equal independently
+decoded certificates fail closed. Success returns non-copyable evidence that
+retains the selected fixed verifier, complete certificate algorithm policy,
+complete RSA algorithm-and-key policy, exact repository-owned signature proof,
+and exact reviewed-snapshot membership. Stable failures and Debug output
+retain no certificate, key, signature, algorithm, route, or root payloads.
+
+This is a public-data evidence boundary only. It does not select certificate
+algorithm profiles or signature routes, parse certificates or keys, decide
+trust-anchor semantics, establish CA role, validate time or constraints,
+construct or validate a certification path, bind the proof into the current
+reviewed server-path result, check revocation, build or run TLS or HTTP, access
+credentials, emit provider or trace audit events, perform I/O, authorize an
+external effect, or grant HTTPS, OAuth, network, or live-provider readiness.
+Complete path/Name policy, composition of this self-signature evidence into
+the reviewed server path, revocation, repository-owned TLS/HTTP composition,
+and audited transport remain separate blockers. Concrete HTTPS remains
+unavailable.
+
+A bounded `x509-rsa-reviewed-server-path-anchor-self-signature-binding`
+prerequisite now consumes the strongest accumulated Name-policy-backed
+reviewed RSA server-path result together with complete reviewed-anchor RSA
+self-signature evidence. It derives the path terminal only through the
+retained constructed-path evidence and requires the terminal's reviewed-root
+selection and the self-signature proof's reviewed-root selection to retain the
+same exact decoded certificate object. A byte-equal independent decode fails
+closed. Success returns one non-copyable result retaining the complete ordered
+path-signature, role, path-length, target and subordinate NameConstraints
+policy together with the data-driven SHA-256, SHA-384, or SHA-512
+repository-owned anchor self-signature proof. Stable failures and Debug output
+retain no certificate, path, key, signature, algorithm, constraint, or root
+payloads.
+
+This is an evidence-integrity composition only. It performs no parsing,
+signature verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It does not add trust-anchor semantics, complete RFC
+5280 Name or path validation, revocation, TLS, HTTP, OAuth transport, or
+network authority. Composition with the HTTPS destination proof, complete
+revocation policy, repository-owned TLS/HTTP, and audited transport remain
+separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The existing bounded `https-reviewed-server-path-binding` prerequisite now
+also joins the complete HTTPS destination-name proof directly to that complete
+reviewed server-path-and-anchor-self-signature evidence. It derives the path
+target only through the retained accumulated path, requires the destination
+certificate and path target to be the same exact decoded certificate object,
+and retains both complete non-copyable inputs after success. A byte-equal
+independently decoded leaf fails closed. The original path-only binder remains
+available as the deliberately weaker evidence boundary; this stronger entry
+point cannot be constructed from a detached leaf, path, anchor selection, or
+self-signature claim. Stable failures and Debug output retain no certificate,
+hostname, authority, path, key, signature, algorithm, constraint, or root
+payloads.
+
+This stronger composition performs no parsing, signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not add trust-anchor semantics, complete RFC 5280 Name or path
+validation, revocation, TLS, HTTP, OAuth transport, or network authority.
+Complete revocation policy, repository-owned TLS/HTTP, and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact

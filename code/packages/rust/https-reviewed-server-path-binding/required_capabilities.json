@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/https-reviewed-server-path-binding",
   "capabilities": [],
-  "justification": "Pure exact-object comparison over caller-owned non-copyable certificate, destination-name, and reviewed server-path evidence. It performs no filesystem, network, process, environment, clock, FFI, credential access, signing, provider action, audit, trace, or external effect."
+  "justification": "Pure exact-object comparison over caller-owned non-copyable certificate, destination-name, reviewed server-path, reviewed-root, and repository-owned public anchor self-signature evidence. It performs no filesystem, network, process, environment, clock, FFI, credential access, secret-key use, signing, provider action, audit, trace, I/O, or external effect."
 }

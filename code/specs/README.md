@@ -62,12 +62,15 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
 | [LG01](LG01-logic-gates-contract.md) | Stateless logic-gate and combinational-block contract (bit domain, shapes, decoder width cap, the claims a later layer links to) and its Warrant document [`logic-gates.warrant`](logic-gates.warrant); layer 1 of the Intel 4004 chain |
+| [AR01](AR01-arithmetic-contract.md) | Adder and ALU contract (bit domain and shapes inherited from the gates and pinned in release, the claims a later layer links to, the contracts it would assume from logic-gates) and its Warrant document [`arithmetic.warrant`](arithmetic.warrant); layer 2 of the Intel 4004 chain |
 | [LZ01](LZ01-lzw-contract.md) | LZW compress/decompress contract (the 16 MiB output cap against decompression bombs, linear dictionary and encoder, header as an upper bound, findings SEC-002/SEC-002a) and its Warrant document [`lzw.warrant`](lzw.warrant); the first decompressor and the first document with `output` bound rows |
 | [LEB01](LEB01-wasm-leb128.md) | LEB128 contract (canonical encoders, malformed-input rules, bytes-consumed bound) and its Warrant document [`wasm-leb128.warrant`](wasm-leb128.warrant) |
 | [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
+| [VER04l](VER04l-warrant-text.md) | Warrant text (WX-T) and alphabet domains (WX-AD): `Text`/`Char` as scalar sequences, `within`, the `v2` header, lane hazard table, corpus encoding, slice T1 and pilots |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
 | [VER27](VER27-layered-validation-roadmap.md) | Layered validation roadmap: vision, layer ladder, per-language assumption tiers, thread order |
 | [VER29](VER29-layer-contract-linking.md) | Layer contract linking (LV-005): `contract.<lane>.<package>.<claim>` ids, the generated `contract` family, fail-closed discharge, strength propagation, coverage and reach-around rules, CI re-selection, implementation slices; amendments to VER04 and VER13 as text |
+| [VER30](VER30-warrant-expansion-roadmap.md) | Warrant expansion roadmap: where the six adopters stand, repository-wide demand by tier, tracks A-E (scale enablers, adoption waves, features, polyglot, layer chains), capacity constraints, metrics, owner decisions of 2026-11-14; data in [`data/warrant-inventory/`](data/warrant-inventory/) |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 
 ## Spec Template

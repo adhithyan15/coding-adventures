@@ -406,6 +406,9 @@ dependencies = [
 name = "arithmetic"
 version = "0.1.0"
 dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
  "logic-gates",
 ]
 
@@ -7393,6 +7396,8 @@ dependencies = [
  "x509-rsa-algorithm-policy",
  "x509-rsa-constructed-path-signature-routing",
  "x509-rsa-public-key",
+ "x509-rsa-reviewed-anchor-self-signature-binding",
+ "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
  "x509-rsa-signature-routing",
  "x509-server-certificate-policy",
  "x509-time",
@@ -16435,6 +16440,43 @@ version = "0.1.0"
 dependencies = [
  "der-asn1",
  "x509-subject-public-key-info",
+]
+
+[[package]]
+name = "x509-rsa-reviewed-anchor-self-signature-binding"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-public-operation",
+ "x509-certificate",
+ "x509-certificate-policy",
+ "x509-rsa-algorithm-policy",
+ "x509-rsa-public-key",
+ "x509-rsa-signature-routing",
+ "x509-webpki-root-anchor-selection",
+]
+
+[[package]]
+name = "x509-rsa-reviewed-server-path-anchor-self-signature-binding"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "rsa-public-operation",
+ "tls-server-identity",
+ "x509-certificate",
+ "x509-certificate-path-construction",
+ "x509-certificate-path-reviewed-anchor-binding",
+ "x509-certificate-policy",
+ "x509-intermediate-certificate-policy",
+ "x509-name-value-policy",
+ "x509-rsa-algorithm-policy",
+ "x509-rsa-constructed-path-signature-routing",
+ "x509-rsa-public-key",
+ "x509-rsa-reviewed-anchor-self-signature-binding",
+ "x509-rsa-signature-routing",
+ "x509-server-certificate-policy",
+ "x509-time",
+ "x509-webpki-root-anchor-selection",
 ]
 
 [[package]]
