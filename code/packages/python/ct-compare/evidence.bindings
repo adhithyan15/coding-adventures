@@ -8,9 +8,13 @@
 # `width=implicit`: `ct_eq_fixed` infers the width N from its buffers; the
 # runner asserts every Bytes<N> argument really has length N and does not pass N.
 #
-# The `errors=` row maps by exception CLASS, not message: any other
-# ValueError raised by ct_select_bytes would also be read as the length-mismatch
-# error.  That is a limit of the binding (VER04i section 11, item 3).
+# The `errors=` row maps by EXACT exception class, not message: a subclass of
+# ValueError is not the declared error.  But `ct_select_bytes` raises a plain
+# ValueError for the length mismatch and `_as_bytes` raises plain ValueError for
+# bad elements, so any other plain ValueError would still read as the
+# length-mismatch error.  The corpus only passes `bytes`, so that cannot happen
+# today; a dedicated exception type would close it (backlog, portable Warrant
+# queue).  That remaining limit is VER04i section 11, item 3.
 lane python
 package python/ct-compare
 module ct_compare

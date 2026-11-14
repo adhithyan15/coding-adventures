@@ -53,6 +53,17 @@ implementation.
 - **Binding fidelity.** The `errors=` row maps by exception class, so any `ValueError` from `ct_select_bytes` reads as
   `CT_SELECT_LENGTH_MISMATCH`; the corpus cannot distinguish them.
 
+## Follow-ups from the WD-101 security review
+
+- **Dedicated exception types per port (proposed).** The Python `ct-compare` raises a plain `ValueError` for the
+  length mismatch and also for unrelated input errors, so the exact-class binding still cannot tell them apart.
+  Each port should raise a dedicated exception type per declared error (for example `SelectLengthMismatch`),
+  mapped in `evidence.bindings`. Changing ct-compare's public exceptions is a library change, not part of WD-101.
+- **LP-012.** The per-suite `full`/`bounded-set`/`sample` split now exists for the Python lane as the sidecar
+  `evidence/domain-labels.json`; the Rust manifests and `ca-assurance-report` still sum them as "exhaustive".
+- **Sidecar in WD-004b1.** The lane evidence row schema is closed, so labels are a sidecar; a loader should read it
+  and the report should quote `cases_by_label`.
+
 ## Runtime jail (CAP-RT-1xx) for Python: deliberately not in WD-101
 
 VER04i section 12 expects each lane's corpus run to repeat under a VER08b sandbox derived from

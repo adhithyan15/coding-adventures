@@ -32,6 +32,8 @@ python tests/warrant_evidence.py sabotage                                # prove
 `Bytes[347] x Bytes[347]`, `Bytes<0|1|2|4|16>`, `U64[377] x U64[377]`, each
 checked against SHA-256 digests computed by the Rust compiler); and 8 negative
 controls that break one operation at a time and must be caught. "Exhaustive"
-means exhaustive over those domains only. The constant-time property itself is
+means exhaustive over those domains only: `evidence/domain-labels.json` splits the total into 65,537
+`full` cases (`Bytes<0>`, `Bytes<1>`) and 506,572 `bounded-set` cases, and until backlog **LP-012**
+lands the suite-level "exhaustive" total conflates the two. The constant-time property itself is
 **not** established by this lane (VER04i section 11): it is a statement about
 CPython's execution, which the corpus does not measure.

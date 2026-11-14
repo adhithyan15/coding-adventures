@@ -610,13 +610,14 @@ op eq_u64 export=ct_eq_u64
 | `values` | Lane type of each Warrant scalar. Python accepts only `Bool=bool`, `Bytes=bytes`, `U64=int`, `Nat=int` (rule 3); anything else is `BindingInvalid` |
 | `op` | `export=<name>` (required); `width=implicit` when the export infers a `Bytes<N>` width from its buffers (the runner still asserts the corpus width equals every buffer length and does not pass it); `width=runtime` when it takes the width as a trailing argument; `errors=<VARIANT>:<ExceptionName>[,...]` maps a raised built-in exception class to a declared `Err` variant |
 
-Error normalisation is **closed** (rule 2): a mapped exception class becomes
-`Err(variant)`; any other exception from any op is failure id
-`unexpected-error`. Exception names resolve only among the interpreter's
-built-in exception classes, never `BaseException`/`Exception` themselves, so a
-binding cannot swallow arbitrary failures. The mapping is by class, not by
-message: a library that raised the mapped class for a *different* reason would
-be accepted, which is a limit of the binding (§11 item 3), not of the runner.
+Error normalisation is **closed** (rule 2): an exception whose type is *exactly* a mapped class
+(`type(e) is cls`, so a subclass does not count) becomes `Err(variant)`; any other exception from any
+op is failure id `unexpected-error`. Exception names resolve only among the interpreter's built-in
+exception classes, never `BaseException`/`Exception` themselves, so a binding cannot swallow
+arbitrary failures. The mapping is by class, not by message: a library that raised exactly the mapped
+class for a *different* reason would still be accepted, which is a limit of the binding (§11 item 3).
+Each port should therefore raise a dedicated exception type for each declared error (backlog note in
+the portable Warrant queue).
 
 Python results are checked with `type(x) is T`, not `==`: `True == 1` and a
 `bytearray` compare equal to `bytes` in Python, so a library returning `1`
@@ -692,6 +693,15 @@ the model's), `type-mismatch` (right value, wrong Python type), `missing-error`
 (an exception no binding row maps) and `uncaught-fault` (a negative control no
 claim failed). A failing line is `not ok <suite id>@<case index> <failure id>`
 followed by `not ok <suite id> <failure id>`; no input bytes are printed.
+
+Bounded work (security review of WD-101): before any case runs, the product of a suite's binder
+domains must equal its declared `cases + discarded`, a suite must admit at least one case, one suite's
+product is capped (`MAX_SUITE_PRODUCT`, 1,000,000), and the total work (every suite once plus every
+control's re-runs) is capped (`MAX_TOTAL_WORK`, 8,000,000); the real `ct-compare` corpus needs about
+2.1 million. Model IR has a static cost bound per expression (`MAX_IR_COST`, 2,000 node evaluations
+counting each model call at its body's full cost), so a chain of models that each call the next twice
+is refused at compile time. Arithmetic operands are range-checked before the operation. A fixed-width
+op must state its width in the IR, and any width a signature states (`Bytes<4>`) is asserted per call.
 
 The runner treats the corpus as untrusted: size-capped, duplicate-key-rejecting
 JSON; closed key sets; every IR node compiled before the first case runs (an
@@ -832,6 +842,18 @@ test values exercise successful joins, but no checked-in manifest or report
 claims a real Python run. This parser does not verify source/build/toolchain
 freshness, execute a binding, produce an assurance report, or change the
 Rust-only legacy evidence loader; those remain later WD-004b/WD-1xx work.
+
+**Coverage labels sidecar (WD-101 review).** The manifest keeps the corpus's `kind: "exhaustive"`,
+which cannot be split without breaking WD-004a's closed row schema. The honest word lives in
+`evidence/domain-labels.json` (`schema: "warrant-lane-domain-labels-v1"`), written beside the manifest
+by `run --out`, compared by `check` and `validate-manifest`, and bound to the manifest by a digest
+that ignores `toolchain.version`. Each suite is labelled from its domain descriptors: `full` (every
+binder enumerates its whole type: `bool`, `u8_all`, `Bytes<0>`, `Bytes<1>`), `bounded-set` (a fixed
+strict subset: `u64_edge`, `bytes_d1`, `bytes_n(N>=2)`, `nat_0_64`) or `sample` (reserved for
+unstructured draws; no portable descriptor yields one yet); a suite is as weak as its weakest binder.
+`cases_by_label` is the headline, not the manifest's exhaustive total: suite-level "exhaustive" totals
+conflate the kinds until backlog LP-012 lands. For `ct-compare`: 65,537 `full` cases and 506,572
+`bounded-set` cases (2 and 7 suites).
 
 Two field definitions the first lane fixed (WD-101): `runner.src_sha256` is
 the same `warrant-src-v1` framing (§8.1) over the runner package's own
@@ -1174,7 +1196,8 @@ dependency graph.
   conflations (§5.1). (4) The runner package is `warrant-corpus`, import
   `coding_adventures_warrant_corpus`; the CLI is §6.2, including the portable
   `sabotage` command and the `check` drift mode that ignores `toolchain.version`.
-  (5) The closed failure-id set of §6.2 extends §6.1. (6) `runner.src_sha256` and
+  (5) The closed failure-id set of §6.2 extends §6.1; mapped exceptions match by exact class; work
+  caps and the IR cost bound are defined in §6.2; the coverage-label sidecar is defined in §8. (6) `runner.src_sha256` and
   `evidence_seed` are defined in §8. (7) Not done and still open: the
   `warrant-corpus-conformance-v1` fixture of §9/§13 does not exist yet, so the
   Python package's tests (falsification cases built from the real corpus) are the

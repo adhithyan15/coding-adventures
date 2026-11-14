@@ -1,0 +1,185 @@
+{
+  "cases_by_label": {
+    "bounded-set": 506572,
+    "full": 65537
+  },
+  "manifest_sha256": "4b2079b665d87436ca7db7b346de214e4c2bce128f56a05d322e84465bda5a32",
+  "module": "ct_compare",
+  "note": "Suite-level 'exhaustive' counts conflate full, bounded-set and sample domains until backlog LP-012 lands; use cases_by_label, not the manifest's exhaustive total, as the headline.",
+  "package": "python/ct-compare",
+  "schema": "warrant-lane-domain-labels-v1",
+  "suites": [
+    {
+      "binders": [
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "b"
+        }
+      ],
+      "cases": 120409,
+      "domain": "Bytes[347] x Bytes[347]",
+      "id": "warrant/ct_compare/exhaustive/eq_agrees",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_n(0)",
+          "label": "full",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_n(0)",
+          "label": "full",
+          "name": "b"
+        }
+      ],
+      "cases": 1,
+      "domain": "Bytes<0>[1] x Bytes<0>[1]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+      "label": "full"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_n(1)",
+          "label": "full",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_n(1)",
+          "label": "full",
+          "name": "b"
+        }
+      ],
+      "cases": 65536,
+      "domain": "Bytes<1>[256] x Bytes<1>[256]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+      "label": "full"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_n(16)",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_n(16)",
+          "label": "bounded-set",
+          "name": "b"
+        }
+      ],
+      "cases": 2704,
+      "domain": "Bytes<16>[52] x Bytes<16>[52]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_n(2)",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_n(2)",
+          "label": "bounded-set",
+          "name": "b"
+        }
+      ],
+      "cases": 256,
+      "domain": "Bytes<2>[16] x Bytes<2>[16]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_n(4)",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_n(4)",
+          "label": "bounded-set",
+          "name": "b"
+        }
+      ],
+      "cases": 256,
+      "domain": "Bytes<4>[16] x Bytes<4>[16]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "u64_edge",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "u64_edge",
+          "label": "bounded-set",
+          "name": "b"
+        }
+      ],
+      "cases": 142129,
+      "domain": "U64[377] x U64[377]",
+      "id": "warrant/ct_compare/exhaustive/eq_u64_agrees",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "b"
+        },
+        {
+          "domain": "bool",
+          "label": "full",
+          "name": "choice"
+        }
+      ],
+      "cases": 139818,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "id": "warrant/ct_compare/exhaustive/select_picks",
+      "label": "bounded-set"
+    },
+    {
+      "binders": [
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "a"
+        },
+        {
+          "domain": "bytes_d1",
+          "label": "bounded-set",
+          "name": "b"
+        },
+        {
+          "domain": "bool",
+          "label": "full",
+          "name": "choice"
+        }
+      ],
+      "cases": 101000,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "id": "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+      "label": "bounded-set"
+    }
+  ]
+}
