@@ -10424,6 +10424,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "oauth-client-secret-reviewed-server-binding"
+version = "0.1.0"
+dependencies = [
+ "https-reviewed-server-path-binding",
+ "oauth-client-secret-http1-release",
+]
+
+[[package]]
 name = "objc"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
