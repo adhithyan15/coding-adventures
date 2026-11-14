@@ -6,12 +6,15 @@
 //! different certificate, SNI, or Host authority. It can then bind that
 //! complete destination to one strict canonical HTTP/1 Host field without
 //! accepting a detached authority value, and bind that proof to an exact
-//! bounded additional-field slice that contains no second Host field.
+//! bounded additional-field slice that contains no second Host field. The
+//! complete field-set proof can then be joined to one exact fixed request body
+//! and its canonical Content-Length field while rejecting framing ambiguity.
 
 #![forbid(unsafe_code)]
 
 use core::fmt;
 use der_asn1::Asn1Limits;
+use http1_fixed_request_body::Http1FixedRequestContentLengthField;
 use http1_request_header_field::Http1RequestHeaderField;
 use http1_request_host_authority::Http1RequestHostAuthority;
 use tls13_server_name::TlsServerName;
@@ -131,6 +134,34 @@ impl fmt::Display for HttpsRequestHeaderFieldsBindingError {
 
 impl std::error::Error for HttpsRequestHeaderFieldsBindingError {}
 
+/// Stable fixed request-body binding failures that retain no request input.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsFixedRequestBodyBindingError {
+    /// Host, Content-Length, and additional fields exceed the retained limit.
+    TooManyFields,
+    /// The additional slice contains another Content-Length field.
+    AdditionalContentLengthField,
+    /// The additional slice contains a forbidden Transfer-Encoding field.
+    TransferEncodingField,
+}
+
+impl fmt::Display for HttpsFixedRequestBodyBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::TooManyFields => "HTTPS fixed request field set exceeds its retained limit",
+            Self::AdditionalContentLengthField => {
+                "additional HTTP Content-Length field is forbidden for a fixed request body"
+            }
+            Self::TransferEncodingField => {
+                "transfer coding is forbidden for an HTTPS fixed request body"
+            }
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for HttpsFixedRequestBodyBindingError {}
+
 /// Non-copyable proof that one exact certificate, SNI, and Host share a DNS name.
 ///
 /// This value proves only destination-name consistency and complete-certificate
@@ -175,6 +206,100 @@ pub struct BoundHttpsRequestHeaderFields<
         BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'host_field>,
     additional_fields: &'fields [Http1RequestHeaderField<'additional_field>],
     limits: HttpsRequestHeaderFieldsLimits,
+}
+
+/// One exact HTTPS field-set proof bound to one exact fixed request body.
+///
+/// This non-copyable proof defines the logical field order as the retained Host
+/// field, the retained canonical Content-Length field, and then the retained
+/// additional fields in caller order. It proves no field authorization,
+/// request-line binding, encoding, TLS, HTTP, OAuth, I/O, credential, audit,
+/// trace, or external-effect authority.
+pub struct BoundHttpsFixedRequestBody<
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+    'body,
+    'content_length_field,
+> {
+    header_fields: BoundHttpsRequestHeaderFields<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+    >,
+    fixed_body: Http1FixedRequestContentLengthField<'body, 'content_length_field>,
+}
+
+impl<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >
+    BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >
+{
+    /// Return the exact retained Host-plus-additional field-set proof.
+    #[must_use]
+    pub const fn header_fields(
+        &self,
+    ) -> &BoundHttpsRequestHeaderFields<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+    > {
+        &self.header_fields
+    }
+
+    /// Return the exact retained body and canonical Content-Length proof.
+    #[must_use]
+    pub const fn fixed_body(
+        &self,
+    ) -> &Http1FixedRequestContentLengthField<'body, 'content_length_field> {
+        &self.fixed_body
+    }
+
+    /// Return Host plus Content-Length plus every retained additional field.
+    #[must_use]
+    pub const fn total_field_count(&self) -> usize {
+        self.header_fields.additional_fields.len() + 2
+    }
+}
+
+impl fmt::Debug for BoundHttpsFixedRequestBody<'_, '_, '_, '_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundHttpsFixedRequestBody")
+            .field("header_fields", &"[REDACTED]")
+            .field("fixed_body", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
 }
 
 impl<'certificate, 'encoded, 'server_name, 'host, 'host_field, 'fields, 'additional_field>
@@ -404,6 +529,76 @@ pub fn bind_https_request_header_fields<
         host_binding,
         additional_fields,
         limits,
+    })
+}
+
+/// Bind one exact HTTPS field set to one exact fixed request body.
+///
+/// The canonical Content-Length field carried by `fixed_body` counts inside
+/// the existing total-field ceiling. Every additional field is checked under
+/// HTTP ASCII case-insensitive field-name semantics. A second Content-Length
+/// field or any Transfer-Encoding field fails closed.
+pub fn bind_https_fixed_request_body<
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+    'body,
+    'content_length_field,
+>(
+    header_fields: BoundHttpsRequestHeaderFields<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+    >,
+    fixed_body: Http1FixedRequestContentLengthField<'body, 'content_length_field>,
+) -> Result<
+    BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >,
+    HttpsFixedRequestBodyBindingError,
+> {
+    let total_fields = header_fields
+        .additional_fields()
+        .len()
+        .checked_add(2)
+        .ok_or(HttpsFixedRequestBodyBindingError::TooManyFields)?;
+    if total_fields > header_fields.limits().maximum_fields() {
+        return Err(HttpsFixedRequestBodyBindingError::TooManyFields);
+    }
+    if header_fields
+        .additional_fields()
+        .iter()
+        .any(|field| field.name().eq_ignore_ascii_case(b"Content-Length"))
+    {
+        return Err(HttpsFixedRequestBodyBindingError::AdditionalContentLengthField);
+    }
+    if header_fields
+        .additional_fields()
+        .iter()
+        .any(|field| field.name().eq_ignore_ascii_case(b"Transfer-Encoding"))
+    {
+        return Err(HttpsFixedRequestBodyBindingError::TransferEncodingField);
+    }
+
+    Ok(BoundHttpsFixedRequestBody {
+        header_fields,
+        fixed_body,
     })
 }
 

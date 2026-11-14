@@ -4952,14 +4952,24 @@ non-copyable result. Stable failures and Debug output retain no field name,
 field value, hostname, certificate, observed count, or limit violation
 payloads.
 
-This composition does not authorize any additional field, reject duplicates
-other than Host, reconcile Content-Length, prohibit Transfer-Encoding, bind a
-request line or body, encode a complete request head, perform credential
-access or release, emit provider or trace audit events, perform TLS or HTTP
-I/O, open a socket, or grant network, OAuth, or live-provider authority. A
-later strict request-head composition must consume this exact proof and
-preserve the same destination through audited transport. Concrete HTTPS
-remains unavailable.
+The same boundary can now consume that exact request-field-set proof together
+with one exact fixed-body proof already bound to its canonical Content-Length
+field. The resulting non-copyable proof defines logical field order as Host,
+Content-Length, then the retained additional fields in caller order. The
+length field counts inside the same retained total-field ceiling, hard-capped
+at 64. Every additional name is checked under HTTP's ASCII case-insensitive
+semantics, so any second Content-Length or any Transfer-Encoding field fails
+closed. Success retains both complete input proofs; stable failures and Debug
+output retain no field, body, hostname, certificate, observed count, or limit
+violation payloads.
+
+This stricter composition does not authorize any additional field, reject
+duplicates other than Host and Content-Length, bind a request line, encode a
+complete request head, write the body, perform credential access or release,
+emit provider or trace audit events, perform TLS or HTTP I/O, open a socket, or
+grant network, OAuth, or live-provider authority. A later strict request-head
+composition must consume this exact proof and preserve the same destination
+through audited transport. Concrete HTTPS remains unavailable.
 
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
@@ -5353,14 +5363,15 @@ bytes without normalization or substitution. Non-`Content-Length` names and
 noncanonical or mismatched values fail with stable payload-free errors; Debug
 redacts both retained body and field bytes.
 
-This boundary does not create a `Content-Length` field line, authorize the
-surrounding field set, reject an additional `Content-Length` or
-`Transfer-Encoding` field, encode form data, interpret or release credentials,
+This package boundary does not create a `Content-Length` field line, authorize
+the surrounding field set, encode form data, interpret or release credentials,
 authorize a method or destination, compose a request, perform TLS or I/O, emit
 provider or trace audit events, or grant HTTP, OAuth, or live-provider
-transport. A later reviewed composition must prove exactly one length field and
-no transfer coding across the complete field set, audit any credential release
-and external effect, and write exactly the retained body.
+transport. The reviewed `https-destination-name-binding` composition now
+consumes this exact proof to establish one length field and no transfer coding
+across its exact retained field set. That composition still does not authorize
+or encode the fields, audit credential release or external effects, or write
+the retained body.
 
 An allocation-free `http1-request-line` prerequisite now validates and encodes
 one deliberately narrow HTTP/1.0 or HTTP/1.1 request line into caller-owned
