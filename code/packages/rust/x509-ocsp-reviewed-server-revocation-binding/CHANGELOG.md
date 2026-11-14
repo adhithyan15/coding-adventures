@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Carry the sealed exact server-target projection through the recursive
+  responder no-check complete fixed-path revocation proof.
+- Preserve exact decoded-object identity without detached inputs and stop
+  before its HTTPS destination binding, TLS, HTTP, OAuth, or network readiness.
 - Carry the sealed exact server-target projection through the alternative
   intermediate-status-responder revocation no-check complete fixed-path proof.
 - Accept no detached target input and stop before its HTTPS destination
