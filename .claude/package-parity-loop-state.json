@@ -10100,11 +10100,11 @@
     {
       "id": "canonical-cbor-lua-lane-parity",
       "title": "Port canonical CBOR to Lua",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/canonical-cbor-lua-lane-parity",
       "pr_number": null,
       "notes": "Implement the closed canonical-CBOR contract in Lua and consume every language-neutral case."
     },
@@ -10143,12 +10143,14 @@
     {
       "id": "canonical-cbor-ruby-lane-parity",
       "title": "Port canonical CBOR to Ruby",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-ruby-lane-parity",
       "pr_number": 19402,
+      "merged_at": "2026-11-14T21:29:41Z",
+      "merge_commit": "cabd9888168",
       "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
     },
     {
@@ -27581,6 +27583,40 @@
       ],
       "discovered_revision": "d90925ebcbcb94f1488f523630e601bb8815e5d1",
       "notes": "Classify the boundary of pure HTTP/1 request/response framing for OAuth client-secret authentication against portable custody prerequisites; keep raw socket I/O, TLS, and network authority out of the pure binding layer."
+    },
+    {
+      "id": "oauth-client-secret-http1-release-boundary-classification",
+      "title": "Classify bounded OAuth client secret HTTP/1 release protocol boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-http1-binding-boundary-classification"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-http1-release"
+      ],
+      "discovered_revision": "cabd9888168adba577b962d53609318ede7f6f8d",
+      "notes": "Classify bounded OAuth client secret HTTP/1 release protocol boundaries against custody and transport framing invariants."
+    },
+    {
+      "id": "oauth-client-secret-reviewed-server-binding-boundary-classification",
+      "title": "Classify reviewed OAuth client secret server binding boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-http1-release-boundary-classification"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-reviewed-server-binding"
+      ],
+      "discovered_revision": "cabd9888168adba577b962d53609318ede7f6f8d",
+      "notes": "Classify reviewed server binding boundaries for OAuth client secret validation; maintain boundary separation from socket I/O and process execution."
     }
   ],
   "postmerge_refresh": {
