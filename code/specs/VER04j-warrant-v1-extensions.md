@@ -1163,6 +1163,9 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   survey and the `gf256` conversion's forced workarounds. No v0 text is changed;
   section 1.4 records the one evaluator conformance fix against existing v0 text
   (non-wrapping `U8` in the generated evaluator).
+- WX-N (fixed-length byte arrays across the host boundary) implemented
+  (`rust/warrant-grammar` 0.6.0): see section 14.4.  No language, checker or
+  corpus-encoding text changed; the gap was in the binding and generator.
 - WX-H and WX-E implemented (`rust/warrant-grammar` 0.4.0): see sections 14.2 and
   14.3 for the deviations and clarifications this forced; sections 5 and 6 are
   unchanged except where 14.2/14.3 say a sentence has no antecedent in the checker
@@ -1175,7 +1178,7 @@ VER13 has no reference to VER04i or VER04j, so it needed no edit here.
   corrected in place: the `U16 x U16` demotion example, the list of values the edge
   domains guarantee, and the operator-qualified fault names.
 
-## 14. Implementation status and deviations (WX-B, WX-C, WX-A, WX-H, WX-E)
+## 14. Implementation status and deviations (WX-B, WX-C, WX-A, WX-H, WX-E, WX-N)
 
 Where the code departs from, or must decide something the text leaves open:
 
@@ -1601,3 +1604,84 @@ The numbering continues from 14.1.
     write a table copy or harness through a symlink at any level; the capability
     manifest narrows `fs:read` to `code/specs/fixtures/**` and
     `code/packages/rust/*/tests/generated/**`.
+
+### 14.4 WX-N (fixed-length byte arrays across the host boundary)
+
+**What was missing, exactly.**  The *language* already has a length-indexed bytes
+type: `Bytes<N>` with a literal `N` is parsed, checked (`Bytes<N> <: Bytes`,
+`concat` adds widths, a literal has its static width) and enumerated (the binder
+domain of 4.7: 1, 256, `4^N` for `N <= 3`, `3N + 4` above) and the VER04i corpus
+encoding (`X<hex>`, "length must be `N`") already carries it.  Nothing in the
+language, the checker, the corpus encoding or the digests changes.  The gap was
+the *binding and generator*, in three places:
+
+1. **No host type for an array.**  The bindings' host types (4.6) knew `bytes`
+   (`Vec<u8>` / `&[u8]`) but not `[u8; N]`, so an export such as
+   `fn x25519(&[u8; 32], &[u8; 32]) -> Result<[u8; 32], &str>` could not be bound.
+2. **Parameters refused.**  The composite adapter answered W0701 "fixed-width Bytes
+   parameters are not supported here" for any `Bytes<N>` parameter.
+3. **No length check.**  A `Bytes<N>` *result* was converted exactly like `Bytes`,
+   so an export that returned the wrong number of bytes produced a model value of
+   the wrong length instead of a finding.
+
+A fourth, smaller gap was found by the pilot: a host `Result<T, E>` whose `E` is
+opaque (`&'static str`, the shape of most of the crypto crates) could not be bound,
+because `errors=` needs an enum whose variants are named.
+
+**What changes (v1 documents only; v0 text and every v0 harness are untouched).**
+
+* **Host type `bytes<N>`** (`N` a decimal literal, 0 to 4096, the `MAX_FIXED_WIDTH`
+  of the generator): the host `[u8; N]`.  As a *top-level parameter* it is passed
+  by reference, as `bytes` is (`&[u8; N]`); anywhere else (a tuple component, a
+  field, a result) it is the array by value.  `bytes<N>` is accepted only where the
+  Warrant type is `Bytes<N>` with the *same literal* `N`; a different width, a
+  plain `Bytes`, or a named width (`Bytes<M>`) is W0701 at generation.
+* **Length check, fail closed.**  Converting the model value into `[u8; N]` is
+  `<[u8; N]>::try_from(slice)`, and a length other than `N` raises the harness's
+  `Unreachable` (the same signal as a scalar the host integer cannot hold: the
+  case is *unreachable by type*, never truncated or padded).  Converting a host
+  value into a `Bytes<N>` result checks `len == N` and panics with a message that
+  names the operation otherwise, outside the panic containment, so the claim fails
+  rather than comparing a wrong-length value.  This check applies to every
+  `Bytes<N>` result of a v1 composite adapter, whatever the host type (`bytes` or
+  `bytes<N>`).
+* **Domains, labelled honestly (LP-012's intent).**  A `Bytes<N>` binder keeps the
+  domain of 4.7; only its *label* changes.  `Bytes<0>` and `Bytes<1>` are `full`
+  (all `256^N` values).  From `N = 2` the enumerated set is a small *sample* of
+  `256^N` (a four-letter alphabet at each position for `N <= 3`; constants and
+  one-position changes above), and the manifest `domain` text now says
+  `sample(SIZE)` instead of `set(SIZE)`.  `set` stays for the other fixed finite
+  sets (`Bool`, `Nat`, dynamic `Bytes`).  No other count, order or digest changes;
+  the per-kind counts of LP-012 are still not implemented, so a consumer must read
+  the word, as it already must for `edge`.
+* **Host `Result` with an opaque error: `err_any=CASE`.**  An op option, exclusive
+  with `error=` and `errors=`: the export returns `Result<T, E>` for any `E`, and
+  `Err(_)` is the Warrant error case `CASE` (which must be one of the operation's
+  cases).  `Ok(r)` converts as the payload.  `missing-error` applies as for
+  `errors=`.
+* **Fixed arrays of fixed-width integers (`[u32; 8]`, `[[u8; 4]; 4]`) are not
+  added.**  `Bytes<N>` is the whole of this slice: there is no array type in the
+  language, the host mapping for `List<U32>` is a `Vec`, and a sound length-refined
+  `List` needs a checker type, a domain, a corpus encoding and a harness value, i.e.
+  a language change rather than a binding change.  Backlog row WD-014 records it.
+
+**Compatibility.**  The change is additive.  The only text that can differ in an
+existing generated harness is (a) the `domain` label of a v1 `Bytes<N>` binder or
+table column with `N >= 2`, and (b) the length check on a `Bytes<N>` result of a
+composite adapter.  No checked-in package adopter has either (`gen_evidence --check`
+of ct-compare, gf256, wasm-leb128, logic-gates, lzw and arithmetic reports no
+drift); the v0 harnesses, which have their own `describe`, are byte-identical.  The
+one checked-in file that did change is the *test fixture* harness
+`tests/generated/wxv_evidence.rs` (its `digest` returns `Bytes<32>`): it gains the
+`sample`/`full` label arms and the length check, and was regenerated.
+
+**WD-013 (U8 arithmetic).**  Re-checked on this slice.  For a v1 document it is
+closed as WX-B says: `U8`/`U64` are `V::Fixed` and wrap, and this slice adds a
+test that pins it through the generated harness of a `Bytes<N>` operation.  The
+generated v0 harness still evaluates `U8` as `V::Nat`; see the backlog row for why
+that stays frozen.
+
+**Pilot.**  `x25519` (RFC 7748 section 5.2 known answers, the scalar clamp as a
+`Bytes<32> -> Bytes<32>` claim, and `Err` for a low-order point), bound with
+`args=bytes<32>,bytes<32> ret=bytes<32> err_any=LOW_ORDER`.  It exercises the
+generator path only: it is not an adoption of the crate (no report, no profile).
