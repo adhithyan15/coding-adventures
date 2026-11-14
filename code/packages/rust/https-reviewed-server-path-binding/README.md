@@ -30,6 +30,15 @@ certificate, callback-shaped target claim, path, status result, or trust
 assertion. Other complete fixed-path revocation branches remain separate
 composition slices.
 
+The parallel nested-revocation entry point consumes the exact nested no-check
+complete fixed-path revocation policy. It derives the server leaf only through
+that completion's deeper sealed repository-owned target projection, rejects a
+byte-equal independent decode, and retains both complete inputs. It accepts no
+detached certificate, callback-shaped target claim, path, status result, or
+trust assertion, and it neither requires nor implies the separate anchor-self-
+signature composition. Other complete fixed-path revocation branches remain
+separate composition slices.
+
 The non-copyable result retains both complete inputs. Stable errors and Debug
 output expose no certificate, hostname, authority, path, key, signature,
 algorithm, constraint, or root payloads.

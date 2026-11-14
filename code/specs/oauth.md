@@ -5098,6 +5098,29 @@ Those other branches, repository-owned TLS/HTTP composition, and audited
 transport remain separate blockers. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The same `https-reviewed-server-path-binding` boundary now also joins the
+complete HTTPS destination proof to the exact nested no-check complete fixed-
+path revocation proof. It derives the server leaf only through that
+completion's deeper sealed repository-owned target projection, requires both
+non-copyable inputs to retain the same exact decoded certificate object, and
+moves both complete inputs into the result. A byte-equal independent decode
+fails closed, and callers cannot supply a detached certificate, callback-
+shaped target claim, path, status result, or trust assertion. Stable failures
+and Debug output retain no certificate, hostname, authority, path, key,
+signature, algorithm, status, constraint, or root payloads. The nested branch
+does not require, retain, or imply the separate anchor-self-signature
+composition.
+
+This nested-branch composition performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It does not generalize revocation or path
+construction, cover the remaining complete fixed-path revocation branches,
+build or run TLS or HTTP, authorize OAuth transport, or grant network
+authority. Those remaining branches, repository-owned TLS/HTTP composition,
+and audited transport remain separate blockers. Concrete HTTPS and live-
+provider readiness remain unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
