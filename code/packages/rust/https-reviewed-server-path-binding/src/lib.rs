@@ -3,11 +3,12 @@
 //! An HTTPS client must not validate a certificate path for one decoded leaf
 //! and then send TLS and HTTP protocol identities proven against another leaf.
 //! This crate closes that one composition gap: it consumes the complete DNS
-//! destination proof and one of three retained server proofs: the strongest
+//! destination proof and one of four retained server proofs: the strongest
 //! accumulated reviewed RSA path policy, that path already bound to its
 //! reviewed anchor's repository-owned self-signature, or the orthogonal exact
-//! direct no-check complete fixed-path revocation policy. Every entry point
-//! requires its complete inputs to retain the same exact decoded target object.
+//! direct or nested no-check complete fixed-path revocation policy. Every
+//! entry point requires its complete inputs to retain the same exact decoded
+//! target object.
 //!
 //! ```text
 //! HTTPS destination ── certificate ──┐
@@ -16,9 +17,9 @@
 //! ```
 //!
 //! The composed results retain their respective complete
-//! path-to-anchor-self-signature or direct no-check complete-revocation proof
+//! path-to-anchor-self-signature or no-check complete-revocation proof
 //! after this target check; they do not replace the path-only boundary. The
-//! direct-revocation branch does not require or imply anchor-self-signature
+//! revocation branches do not require or imply anchor-self-signature
 //! evidence.
 //!
 //! This is an evidence-integrity boundary, not certificate validation. It
@@ -32,6 +33,7 @@ use core::fmt;
 use https_destination_name_binding::BoundHttpsDnsDestination;
 use x509_ocsp_reviewed_server_revocation_binding::{
     ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy,
+    ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy,
     X509OcspReviewedServerRevocationTargetEvidence,
 };
 use x509_rsa_constructed_path_signature_routing::ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy;
@@ -710,6 +712,142 @@ where
 
     Ok(
         BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation {
+            destination,
+            complete_revocation,
+        },
+    )
+}
+
+/// Non-copyable HTTPS destination and complete nested revocation evidence.
+///
+/// The retained completion already covers the exact nested no-check fixed
+/// path selected by repository-owned revocation policy. Construction derives
+/// its server leaf only through sealed target evidence, checks exact decoded
+/// object identity against the destination certificate, and then moves both
+/// complete inputs into this result.
+pub struct BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    ResponderRevocation,
+    IntermediateRevocation,
+> {
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation: ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >,
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+    BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+{
+    /// Return the complete certificate, SNI, Host, and SAN destination proof.
+    #[must_use]
+    pub const fn destination(
+        &self,
+    ) -> &BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host> {
+        &self.destination
+    }
+
+    /// Return the exact nested no-check complete fixed-path revocation proof.
+    #[must_use]
+    pub const fn complete_revocation(
+        &self,
+    ) -> &ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    > {
+        &self.complete_revocation
+    }
+}
+
+impl<Proof, ResponderRevocation, IntermediateRevocation> fmt::Debug
+    for BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+        '_,
+        '_,
+        '_,
+        '_,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct(
+                "BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation",
+            )
+            .field("destination", &"[REDACTED]")
+            .field("complete_revocation", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind an HTTPS destination to exact nested no-check complete revocation.
+///
+/// The server target is derived only through the completion's sealed
+/// repository-owned evidence. A byte-equal certificate from an independent
+/// decode therefore fails closed. Success retains the complete destination
+/// and complete fixed-path revocation proof, without parsing, cryptography,
+/// credential access, audit, trace, I/O, TLS, HTTP, or any external effect.
+pub fn bind_https_dns_destination_to_reviewed_nested_no_check_complete_fixed_path_revocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    ResponderRevocation,
+    IntermediateRevocation,
+>(
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation: ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >,
+) -> Result<
+    BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >,
+    HttpsReviewedServerPathBindingError,
+>
+where
+    Proof: X509OcspReviewedServerRevocationTargetEvidence,
+{
+    require_same_object(
+        destination.certificate(),
+        complete_revocation.server_target_certificate(),
+    )?;
+
+    Ok(
+        BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation {
             destination,
             complete_revocation,
         },
