@@ -306,8 +306,12 @@ func TestStepStatus(t *testing.T) {
 				&trace.Process{Pid: 9, Parent: 7, CloneFlags: "CLONE_THREAD"}), true},
 		{"a pid in the root group is not the step's",
 			build(10, []trace.Exit{sigkill(5), {Pid: 1}}, []int{11, 12}, &trace.Process{Pid: 5, Parent: 0}), false},
-		{"a pid that is unknown is not a descendant",
-			build(10, []trace.Exit{sigkill(42), {Pid: 1}}, []int{11, 12}), false},
+		// Undecidable ancestry fails closed (security review): only a proof of
+		// "outside init" excludes an exit.
+		{"a pid with no process entry is counted",
+			build(10, []trace.Exit{sigkill(42), {Pid: 1}}, []int{11, 12}), true},
+		{"a missing parent entry is counted",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12}, &trace.Process{Pid: 7, Parent: 99}), true},
 		{"ExitLines that do not line up fail closed",
 			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3}, child), true},
 	}
@@ -327,11 +331,81 @@ func TestStepStatus(t *testing.T) {
 	if DaemonLeft(&trace.Trace{Exits: []trace.Exit{sigkill(7)}}) || DaemonLeft(nil) {
 		t.Error("DaemonLeft without an init child")
 	}
-	// A parent cycle cannot hang the walk.
+	// A parent cycle cannot hang the walk, and is not proof of anything: counted.
 	cyc := build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12},
 		&trace.Process{Pid: 7, Parent: 8}, &trace.Process{Pid: 8, Parent: 7})
-	if DaemonLeft(cyc) {
-		t.Error("a cycle was followed to the init child")
+	if !DaemonLeft(cyc) {
+		t.Error("a parent cycle excluded a SIGKILL death")
+	}
+	// A CLONE_THREAD cycle is not proof of init-group membership either.
+	tcyc := build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12},
+		&trace.Process{Pid: 7, Parent: 8, CloneFlags: "CLONE_THREAD"},
+		&trace.Process{Pid: 8, Parent: 7, CloneFlags: "CLONE_THREAD"})
+	if !DaemonLeft(tcyc) {
+		t.Error("a thread cycle excluded a SIGKILL death")
+	}
+}
+
+// Memoised walks: several exits sharing ancestors give the same answers as
+// walking each alone, and the init child's own SIGKILL is not a survivor.
+func TestDaemonLeftSharedAncestry(t *testing.T) {
+	sk := func(pid int) trace.Exit { return trace.Exit{Pid: pid, Killed: true, Signal: "SIGKILL"} }
+	d := step(stat("go.work"))
+	d.InitPid = 1
+	// 5 is parentless (outside init); 6 and 7 hang under it; 8 is an init
+	// thread, 9 and 10 are threads of that thread.
+	for _, p := range []*trace.Process{
+		{Pid: 5}, {Pid: 6, Parent: 5}, {Pid: 7, Parent: 6},
+		{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"},
+		{Pid: 9, Parent: 8, CloneFlags: "CLONE_THREAD"},
+		{Pid: 10, Parent: 9, CloneFlags: "CLONE_THREAD"},
+	} {
+		d.Procs[p.Pid] = p
+	}
+	d.Exits = []trace.Exit{sk(7), sk(6), sk(10), sk(9), sk(1)}
+	d.ExitLines, d.InitExitLine = []int{30, 31, 32, 33, 34}, 20
+	if DaemonLeft(d) {
+		t.Error("an exit proven outside init, or an init thread, or init itself was counted")
+	}
+	// One real survivor after them still counts.
+	d.Procs[11] = &trace.Process{Pid: 11, Parent: 1}
+	d.Exits, d.ExitLines = append(d.Exits, sk(11)), append(d.ExitLines, 35)
+	if !DaemonLeft(d) {
+		t.Error("a survivor among shared-ancestry exits was missed")
+	}
+}
+
+// A step forks a chain deeper than any walk bound, one child at a time, and
+// leaves a daemon at the bottom: still a survivor.  (The walk used to give up at
+// 4096 steps and call the exit "outside init".)  A same-depth chain that
+// provably ends at the root is still excluded, and the walk is linear.
+func TestDaemonLeftDeepChain(t *testing.T) {
+	const depth = 20000
+	mk := func(top int) *trace.Trace {
+		d := step(stat("go.work"))
+		d.InitPid = 1
+		for i := 0; i < depth; i++ {
+			pid := 100 + i
+			parent := top
+			if i > 0 {
+				parent = pid - 1
+			}
+			d.Procs[pid] = &trace.Process{Pid: pid, Parent: parent}
+		}
+		leaf := 100 + depth - 1
+		d.Exits = []trace.Exit{{Pid: leaf, Killed: true, Signal: "SIGKILL"}, {Pid: 1}}
+		d.ExitLines, d.InitExitLine = []int{30, 31}, 20
+		return d
+	}
+	if !DaemonLeft(mk(1)) {
+		t.Error("a daemon under a chain deeper than 4096 was not counted")
+	}
+	// The same chain hanging from a parentless process (outside init) is
+	// proven outside, however deep.
+	out := mk(500)
+	out.Procs[500] = &trace.Process{Pid: 500}
+	if DaemonLeft(out) {
+		t.Error("a chain proven to end at a parentless process was counted")
 	}
 }
 

@@ -384,10 +384,6 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 	}
 }
 
-// maxDescent bounds the parent walks of DaemonLeft: a process table deeper than
-// this is not one the parser produces, and a walk that long is not followed.
-const maxDescent = 4096
-
 // DaemonLeft reports whether the step left a process running when it ended.
 //
 // The init child is PID 1 of the sandbox's PID namespace, so when its thread
@@ -397,8 +393,8 @@ const maxDescent = 4096
 // it comes BEFORE the init's exit_group.  So a survivor is an exit that
 //
 //   - is killed by SIGKILL,
-//   - belongs to a process that descends from the init child (a process outside
-//     that tree is not the step's to leave behind),
+//   - belongs to a process NOT PROVEN to be outside the init child's tree (see
+//     below),
 //   - is NOT in the init's own thread group (its sibling threads are killed by
 //     the init's exit_group, and are not daemons), and
 //   - comes after the init's exit_group call (Trace.InitExitLine).
@@ -413,16 +409,27 @@ const maxDescent = 4096
 // So does an ExitLines slice that does not line up with Exits.  A child
 // SIGKILLed and not waited for just before the step exits may also be flagged;
 // that race is accepted.
+//
+// The two ancestry questions are answered with the polarity that fails closed.
+// An exit is EXCLUDED only on a definite proof: its parent chain reaches a
+// process with no parent (the root, or the helper-root group) without passing
+// the init child, or it is a thread whose CLONE_THREAD chain reaches the init
+// child.  A missing process entry, a cycle, or anything else undecidable leaves
+// the exit counted.  (An earlier version bounded the walk at 4096 steps and
+// treated "not reached" as "outside": a step could fork a chain deeper than
+// that, one child at a time, and hide a daemon at the bottom.)  Each pid is
+// walked once, whatever the depth: answers are memoised along the chain.
 func DaemonLeft(t *trace.Trace) bool {
 	if t == nil || t.InitPid == 0 {
 		return false
 	}
 	aligned := len(t.ExitLines) == len(t.Exits)
+	w := &ancestry{t: t, under: map[int]bool{}, group: map[int]bool{}}
 	for i, ex := range t.Exits {
 		if !ex.Killed || ex.Signal != "SIGKILL" {
 			continue
 		}
-		if !descendsFromInit(t, ex.Pid) || inInitGroup(t, ex.Pid) {
+		if !w.underInit(ex.Pid) || w.inInitGroup(ex.Pid) {
 			continue
 		}
 		if !aligned || t.InitExitLine == 0 || t.ExitLines[i] > t.InitExitLine {
@@ -432,37 +439,86 @@ func DaemonLeft(t *trace.Trace) bool {
 	return false
 }
 
-// descendsFromInit walks the parent links from pid; a missing process, a cycle
-// or an over-long chain is "no".
-func descendsFromInit(t *trace.Trace, pid int) bool {
-	for n := 0; n < maxDescent; n++ {
-		p := t.Procs[pid]
-		if p == nil || p.Parent == 0 {
-			return false
-		}
-		if p.Parent == t.InitPid {
-			return true
-		}
-		pid = p.Parent
-	}
-	return false
+// ancestry answers DaemonLeft's two questions with memoised iterative walks.
+type ancestry struct {
+	t     *trace.Trace
+	under map[int]bool // pid -> not proven outside the init child's tree
+	group map[int]bool // pid -> proven a thread of the init child's group
 }
 
-// inInitGroup reports whether pid is the init child or a CLONE_THREAD thread
-// (transitively) of it.  An unknown process or an over-long chain is "no": that
-// counts the exit as a survivor, which fails closed.
-func inInitGroup(t *trace.Trace, pid int) bool {
-	for n := 0; n < maxDescent; n++ {
-		if pid == t.InitPid {
-			return true
-		}
-		p := t.Procs[pid]
-		if p == nil || !hasCloneThread(p.CloneFlags) {
-			return false
-		}
-		pid = p.Parent
+// underInit is false ONLY when pid's parent chain provably ends at a process
+// with no parent without passing the init child (or pid is the init child
+// itself).  A missing entry or a cycle is true: fail closed.
+func (w *ancestry) underInit(pid int) bool {
+	if pid == w.t.InitPid {
+		return false
 	}
-	return false
+	var path []int
+	seen := map[int]bool{}
+	res := true
+	for cur := pid; ; {
+		if v, ok := w.under[cur]; ok {
+			res = v
+			break
+		}
+		if seen[cur] {
+			res = true // a cycle
+			break
+		}
+		seen[cur] = true
+		path = append(path, cur)
+		p := w.t.Procs[cur]
+		if p == nil {
+			res = true
+			break
+		}
+		if p.Parent == w.t.InitPid {
+			res = true
+			break
+		}
+		if p.Parent == 0 {
+			res = false
+			break
+		}
+		cur = p.Parent
+	}
+	for _, q := range path {
+		w.under[q] = res
+	}
+	return res
+}
+
+// inInitGroup is true ONLY when pid is the init child or its CLONE_THREAD chain
+// provably reaches the init child.  Anything undecidable (a missing entry, a
+// cycle) is false, so the exit is counted as a survivor.
+func (w *ancestry) inInitGroup(pid int) bool {
+	var path []int
+	seen := map[int]bool{}
+	res := false
+	for cur := pid; ; {
+		if cur == w.t.InitPid {
+			res = true
+			break
+		}
+		if v, ok := w.group[cur]; ok {
+			res = v
+			break
+		}
+		if seen[cur] {
+			break
+		}
+		seen[cur] = true
+		path = append(path, cur)
+		p := w.t.Procs[cur]
+		if p == nil || !hasCloneThread(p.CloneFlags) {
+			break
+		}
+		cur = p.Parent
+	}
+	for _, q := range path {
+		w.group[q] = res
+	}
+	return res
 }
 
 func hasCloneThread(flags string) bool {

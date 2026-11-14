@@ -367,8 +367,10 @@ Two consequences:
   uses the step's exec event, not the first exec of the init child.
 - **Daemons.** The init child is PID 1 of the new PID namespace, so when
   its thread group exits the kernel kills every survivor. A process that
-  descends from the init child, is not in the init child's thread group,
-  and has an exit line `killed by SIGKILL` **after the init child's
+  is not proven to be outside the init child's tree (an exit is excluded only
+  when its parent chain provably ends at a parentless process without passing
+  the init child; a missing entry, a cycle or any depth is undecidable and
+  counts), is not provably in the init child's thread group, and has an exit line `killed by SIGKILL` **after the init child's
   `exit_group` call line** gives `daemon-left` (D19). The boundary is the
   call line, not the init child's `+++ exited +++` line: strace prints
   `exit_group` when the group starts to die, and whether a survivor's line
