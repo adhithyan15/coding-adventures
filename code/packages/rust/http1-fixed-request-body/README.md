@@ -9,11 +9,18 @@ into caller-owned storage without allocation. Empty bodies encode as `0`; an
 undersized output remains unchanged. Stable errors retain no body, length,
 limit, or output bytes, and Debug redacts the body.
 
-This package does not create a header field, reconcile duplicate or conflicting
-lengths, admit transfer coding, encode forms, interpret or release credentials,
-authorize methods or destinations, compose a request, perform TLS or HTTP I/O,
-emit provider/trace audit events, or make OAuth, HTTPS, or live-provider use
-ready.
+The crate can also consume that body evidence together with one exact validated
+request-header field. The resulting non-copyable evidence proves that the
+field name is `Content-Length` under HTTP ASCII case-insensitive comparison and
+that its value is the canonical shortest-decimal encoding of the retained
+body's exact byte length. It retains both original evidence objects without
+normalizing or replacing their borrowed bytes.
+
+This package does not create a header field, authorize a surrounding field set,
+reject an additional `Content-Length` or `Transfer-Encoding` field, encode
+forms, interpret or release credentials, authorize methods or destinations,
+compose a request, perform TLS or HTTP I/O, emit provider/trace audit events, or
+make OAuth, HTTPS, or live-provider use ready.
 
 ## Validation
 

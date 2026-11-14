@@ -5344,13 +5344,23 @@ different body from being substituted without revalidation, and a small output
 remains unchanged. Stable failures retain no body, length, limit, or output
 bytes, and Debug redacts the body.
 
-This boundary does not create a `Content-Length` field line, authorize multiple
-or conflicting length fields, admit `Transfer-Encoding`, encode form data,
-interpret or release credentials, authorize a method or destination, compose a
-request, perform TLS or I/O, emit provider or trace audit events, or grant HTTP,
-OAuth, or live-provider transport. A later reviewed composition must emit
-exactly one field from this evidence, prohibit transfer coding, audit any
-credential release and external effect, and write exactly the retained body.
+The package can additionally consume that exact body evidence with one exact
+validated request-header field. The resulting non-copyable evidence proves the
+field name is `Content-Length` under HTTP ASCII case-insensitive comparison and
+its value is the canonical shortest-decimal form of the retained body's exact
+byte length. Success retains both original evidence objects and their borrowed
+bytes without normalization or substitution. Non-`Content-Length` names and
+noncanonical or mismatched values fail with stable payload-free errors; Debug
+redacts both retained body and field bytes.
+
+This boundary does not create a `Content-Length` field line, authorize the
+surrounding field set, reject an additional `Content-Length` or
+`Transfer-Encoding` field, encode form data, interpret or release credentials,
+authorize a method or destination, compose a request, perform TLS or I/O, emit
+provider or trace audit events, or grant HTTP, OAuth, or live-provider
+transport. A later reviewed composition must prove exactly one length field and
+no transfer coding across the complete field set, audit any credential release
+and external effect, and write exactly the retained body.
 
 An allocation-free `http1-request-line` prerequisite now validates and encodes
 one deliberately narrow HTTP/1.0 or HTTP/1.1 request line into caller-owned
