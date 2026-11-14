@@ -6,6 +6,7 @@ import copy
 import hashlib
 import json
 import os
+import sys
 
 import pytest
 from helpers import CORPUS_DIR, REGISTRY_PATH, REPO_ROOT
@@ -42,10 +43,10 @@ def test_framing_cannot_confuse_a_path_with_content() -> None:
 
 def test_source_digest_selects_python_sources_only(tmp_path) -> None:
     (tmp_path / "pkg").mkdir()
-    (tmp_path / "pkg" / "__init__.py").write_text("x = 1\n")
-    (tmp_path / "pkg" / "mod.pyi").write_text("x: int\n")
-    (tmp_path / "py.typed").write_text("")
-    (tmp_path / "notes.txt").write_text("ignored")
+    (tmp_path / "pkg" / "__init__.py").write_bytes(b"x = 1\n")
+    (tmp_path / "pkg" / "mod.pyi").write_bytes(b"x: int\n")
+    (tmp_path / "py.typed").write_bytes(b"")
+    (tmp_path / "notes.txt").write_bytes(b"ignored")
     (tmp_path / "__pycache__").mkdir()
     (tmp_path / "__pycache__" / "mod.cpython-313.pyc").write_bytes(b"\x00")
     names = [name for name, _data in read_source_tree(tmp_path)]
@@ -54,14 +55,14 @@ def test_source_digest_selects_python_sources_only(tmp_path) -> None:
     assert (
         digest == hashlib.sha256(frame_sources(read_source_tree(tmp_path))).hexdigest()
     )
-    (tmp_path / "pkg" / "__init__.py").write_text("x = 2\n")
+    (tmp_path / "pkg" / "__init__.py").write_bytes(b"x = 2\n")
     assert source_digest(tmp_path) != digest  # editing production code changes it
-    (tmp_path / "notes.txt").write_text("changed")
+    (tmp_path / "notes.txt").write_bytes(b"changed")
     assert source_digest(tmp_path) == source_digest(tmp_path)
 
 
 def test_source_tree_refuses_what_it_cannot_account_for(tmp_path, monkeypatch) -> None:
-    (tmp_path / "a.py").write_text("")
+    (tmp_path / "a.py").write_bytes(b"")
     os.symlink(tmp_path / "a.py", tmp_path / "link.py")
     with pytest.raises(CorpusError, match="symlink"):
         read_source_tree(tmp_path)
@@ -70,7 +71,7 @@ def test_source_tree_refuses_what_it_cannot_account_for(tmp_path, monkeypatch) -
 
     big = tmp_path / "big"
     big.mkdir()
-    (big / "huge.py").write_text("x" * 20)
+    (big / "huge.py").write_bytes(("x" * 20).encode())
     monkeypatch.setattr(
         "coding_adventures_warrant_corpus.manifest.MAX_SOURCE_FILE_BYTES", 10
     )
@@ -88,6 +89,10 @@ def test_source_tree_refuses_what_it_cannot_account_for(tmp_path, monkeypatch) -
         read_source_tree(deep)
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="NTFS stores names as UTF-16, so a non-UTF-8 file name cannot exist there",
+)
 def test_a_non_utf8_file_name_is_refused(tmp_path) -> None:
     try:
         with open(os.fsencode(tmp_path) + b"/\xff.py", "wb"):
@@ -99,6 +104,8 @@ def test_a_non_utf8_file_name_is_refused(tmp_path) -> None:
 
 
 def test_unreadable_directories_are_errors(tmp_path) -> None:
+    if sys.platform == "win32" or not hasattr(os, "geteuid"):
+        pytest.skip("chmod(0) cannot make a directory unreadable on Windows")
     if os.geteuid() == 0:
         pytest.skip("root can read everything")
     locked = tmp_path / "locked"

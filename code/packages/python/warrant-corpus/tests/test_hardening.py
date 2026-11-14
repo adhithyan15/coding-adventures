@@ -33,7 +33,7 @@ def loads_mini(tmp_path, change):
     root, corpus_dir = mini_corpus(tmp_path)
     document = json.loads((corpus_dir / "corpus.json").read_text())
     change(document)
-    (corpus_dir / "corpus.json").write_text(json.dumps(document))
+    (corpus_dir / "corpus.json").write_bytes((json.dumps(document)).encode())
     return root, corpus_dir
 
 
@@ -317,7 +317,9 @@ def test_run_writes_the_label_sidecar_and_check_guards_it(
     document["suites"][0]["label"] = (
         "full" if document["suites"][0]["label"] != "full" else "sample"
     )
-    sidecar.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
+    sidecar.write_bytes(
+        (json.dumps(document, indent=2, sort_keys=True) + "\n").encode()
+    )
     assert main(["check", *common, str(out)]) == 1
     assert main(["validate-manifest", *common, str(out)]) == 2
     sidecar.unlink()
@@ -341,3 +343,24 @@ def test_the_sabotage_child_always_finds_the_runner() -> None:
     assert _child_env({}, "a:b")["PYTHONPATH"] == str(
         Path(pkg.__file__).resolve().parent.parent
     )
+
+
+def test_fixture_helpers_preserve_bytes_exactly(tmp_path) -> None:
+    """Text-mode copies translate LF to CRLF on Windows and break the TFV header."""
+    from helpers import CORPUS_DIR
+
+    _root, corpus_dir = copy_corpus(tmp_path)
+    assert (corpus_dir / "cases.tfv").read_bytes() == (
+        CORPUS_DIR / "cases.tfv"
+    ).read_bytes()
+    assert b"\r" not in (corpus_dir / "corpus.json").read_bytes()
+    _root, mini = mini_corpus(tmp_path)
+    assert b"\r" not in (mini / "cases.tfv").read_bytes()
+
+
+def test_a_crlf_tfv_is_refused_not_tolerated(tmp_path) -> None:
+    root, corpus_dir = copy_corpus(tmp_path)
+    tfv = corpus_dir / "cases.tfv"
+    tfv.write_bytes(tfv.read_bytes().replace(b"\n", b"\r\n"))
+    with pytest.raises(CorpusError):
+        load_corpus(root, corpus_dir)

@@ -55,7 +55,7 @@ def test_list_faults(capsys) -> None:
 
 
 def test_source_digest_command(tmp_path, capsys) -> None:
-    (tmp_path / "a.py").write_text("x = 1\n")
+    (tmp_path / "a.py").write_bytes(b"x = 1\n")
     assert main(["source-digest", str(tmp_path)]) == 0
     assert len(capsys.readouterr().out.strip()) == 64
     assert main(["source-digest", str(tmp_path / "missing")]) == 2
@@ -67,7 +67,7 @@ def test_run_writes_a_manifest_and_check_accepts_it(
     common, _pkg, _b = library(tmp_path, monkeypatch)
     out = tmp_path / "evidence" / "test-manifest.json"
     assert main(["run", *common, "--out", str(out)]) == 0
-    text = out.read_text()
+    text = out.read_bytes().decode()
     assert text.endswith("}\n") and json.loads(text)["faulted"] is False
     assert "# wrote" in capsys.readouterr().out
 
@@ -78,7 +78,7 @@ def test_run_writes_a_manifest_and_check_accepts_it(
     # ... and a different interpreter version is not drift.
     document = json.loads(text)
     document["toolchain"]["version"] = "0.0.1"
-    out.write_text(render_json(document))
+    out.write_bytes((render_json(document)).encode())
     assert main(["check", *common, str(out)]) == 0
 
     # The same manifest, validated structurally, with the planned registry row.
@@ -109,18 +109,18 @@ def test_check_reports_drift(tmp_path, capsys) -> None:
     }
     manifest = tmp_path / "m.json"
 
-    manifest.write_text(render_json({**fresh, "tests": [1]}))
+    manifest.write_bytes((render_json({**fresh, "tests": [1]})).encode())
     assert _compare(manifest, fresh) == 1
     assert "drifted (tests)" in capsys.readouterr().out
 
-    manifest.write_text(json.dumps(fresh))  # same data, different bytes
+    manifest.write_bytes((json.dumps(fresh)).encode())  # same data, different bytes
     assert _compare(manifest, fresh) == 1
     assert "formatting" in capsys.readouterr().out
 
     assert _compare(tmp_path / "absent.json", fresh) == 1
-    manifest.write_text("[]")
+    manifest.write_bytes(b"[]")
     assert _compare(manifest, fresh) == 1
-    manifest.write_text("not json")
+    manifest.write_bytes(b"not json")
     assert _compare(manifest, fresh) == 1
     manifest.write_bytes(b"\xff")
     assert _compare(manifest, fresh) == 1
@@ -235,7 +235,7 @@ def test_sabotage_fails_when_a_fault_goes_unnoticed(
 def test_validate_manifest_refuses_a_bad_manifest(tmp_path, monkeypatch) -> None:
     common, _p, _b = library(tmp_path, monkeypatch)
     bad = tmp_path / "bad.json"
-    bad.write_text("{}")
+    bad.write_bytes(b"{}")
     assert main(["validate-manifest", *common, str(bad)]) == 2
 
 

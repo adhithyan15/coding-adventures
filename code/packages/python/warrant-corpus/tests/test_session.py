@@ -153,7 +153,9 @@ def test_environment_reads_the_three_variables(monkeypatch) -> None:
 
 def edited_binding(tmp_path, monkeypatch, old: str, new: str):
     _name, package_dir, binding_path = new_library(tmp_path, monkeypatch)
-    binding_path.write_text(binding_path.read_text().replace(old, new))
+    binding_path.write_bytes(
+        binding_path.read_bytes().replace(old.encode(), new.encode())
+    )
     return package_dir, binding_path
 
 
@@ -193,7 +195,7 @@ def test_a_tampered_digest_is_reported_as_a_suite_level_failure(
     root, corpus_dir = mini_corpus(tmp_path)
     document = json.loads((corpus_dir / "corpus.json").read_text())
     document["suites"][0]["inputs_sha256"] = "0" * 64
-    (corpus_dir / "corpus.json").write_text(json.dumps(document))
+    (corpus_dir / "corpus.json").write_bytes((json.dumps(document)).encode())
     _name, package_dir, binding_path = new_library(tmp_path, monkeypatch)
     lines: list[str] = []
     outcome = execute(

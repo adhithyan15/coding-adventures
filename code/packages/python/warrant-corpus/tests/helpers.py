@@ -59,9 +59,9 @@ def new_library(
     functions = {**CORRECT, **(overrides or {})}
     source_dir = tmp_path / "src" / name
     source_dir.mkdir(parents=True)
-    (source_dir / "__init__.py").write_text("\n".join(functions.values()))
+    (source_dir / "__init__.py").write_bytes(("\n".join(functions.values())).encode())
     binding = tmp_path / "evidence.bindings"
-    binding.write_text(BINDING_TEXT.format(name=name))
+    binding.write_bytes((BINDING_TEXT.format(name=name)).encode())
     monkeypatch.syspath_prepend(str(tmp_path / "src"))
     return name, tmp_path, binding
 
@@ -80,9 +80,9 @@ def copy_corpus(
     document = json.loads((CORPUS_DIR / "corpus.json").read_text())
     if corpus:
         corpus(document)
-    (corpus_dir / "corpus.json").write_text(json.dumps(document, indent=1))
-    text = (CORPUS_DIR / "cases.tfv").read_text()
-    (corpus_dir / "cases.tfv").write_text(tfv(text) if tfv else text)
+    (corpus_dir / "corpus.json").write_bytes((json.dumps(document, indent=1)).encode())
+    text = (CORPUS_DIR / "cases.tfv").read_bytes().decode()
+    (corpus_dir / "cases.tfv").write_bytes((tfv(text) if tfv else text).encode())
     spec_bytes = SPEC_PATH.read_bytes()
     (root / "code" / "specs" / "ct-compare.warrant").write_bytes(
         spec(spec_bytes) if spec else spec_bytes

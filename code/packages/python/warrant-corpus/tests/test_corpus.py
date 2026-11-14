@@ -31,10 +31,10 @@ def test_list_control_rows() -> None:
 
 
 def test_list_control_rows_needs_controls(tmp_path) -> None:
-    (tmp_path / "corpus.json").write_text('{"controls": 3}')
+    (tmp_path / "corpus.json").write_bytes(b'{"controls": 3}')
     with pytest.raises(CorpusError):
         list_control_rows(tmp_path)
-    (tmp_path / "corpus.json").write_text('{"controls": [3]}')
+    (tmp_path / "corpus.json").write_bytes(b'{"controls": [3]}')
     with pytest.raises(CorpusError):
         list_control_rows(tmp_path)
 
