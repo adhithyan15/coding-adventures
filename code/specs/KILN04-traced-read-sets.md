@@ -488,9 +488,25 @@ version; until then the canned fixtures are hand-written.
 directory is the one current at its `<unfinished ...>` line. An unfinished
 call may end at the process's exit line only if it carries no path
 (`wait4`, `exit_group`); an unfinished path call that never resumes is
-`unresumed-call`. A handled call whose result is `?` (including
-`ERESTARTSYS`) is `result`: restarted calls are not recognised in v1. A
-final line without its newline is `unparsable-line`, since strace may have
+`unresumed-call`. One more shape is accepted: a thread killed at syscall
+entry. When a fatal signal is already pending (a sibling's `exit_group`, a
+SIGKILL, an exec by another thread), strace cannot name the call and prints
+`???`, in exactly one of three spellings, each followed by that thread's exit
+line: `P  ???( <unfinished ...>` (S1); the same followed by
+`P  <... ??? resumed>) = ?` (S2); or the single line `P  ???()` padded to
+`= ?` (S3). The kernel's `ptrace_report_syscall` returns
+`fatal_signal_pending`, so `syscall_trace_enter` returns before seccomp and
+dispatch: the call never ran and the thread makes no further syscall, so the
+line is a death marker, not an observation, and produces no record. The
+spelling depends on a stale per-thread "filtered" flag from the previous
+syscall, which is why all three occur. Every other `???` shape stays
+`unparsable-line` (a result other than `= ?`, arguments, near-miss spellings),
+a call, second `???(` or signal line from the same pid before its exit is
+`interleaved-call`, a resume of another name or a second `??? resumed` is
+`unmatched-resume`, and one never followed by the exit is `unresumed-call`.
+This covers the superseded-leader exec case too, which is still refused. A
+handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
+restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **Process model.**
