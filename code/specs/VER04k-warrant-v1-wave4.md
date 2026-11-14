@@ -1734,11 +1734,19 @@ vacuous or ambiguous, the note says which reading is implemented.
     cannot fail for any subject, yet it would count as `postcondition_rows`. The checker
     refuses it with W0601 ("vacuous contract", as for a `vectors` table that calls no
     operation). The rule is syntactic: a row such as `result == result` still passes it.
-12. **A host return is never discarded.** Where a slot has no host-returned component (S1,
+12. **A host return is never discarded.
+- Second review fix (2026-11-14), section 4.13 item 13: host-returned tuples of two or more
+  components are destructured with an exact pattern, so a wider tuple is rejected.** Where a slot has no host-returned component (S1,
     S2, and S3/S4 with `h = 0`) the adapter binds the host's return to `()`: `let () = call`
     for a plain slot, `Ok(())` / `Some(())` for a `Result` slot, so a host that returns a
     value (a count) or whose `Ok` carries data fails to compile instead of being ignored. A
     host `Result` that returns `Err` is mapped to its Warrant case, never read as success.
+13. **Host returns are destructured exactly.** Item 12 extends to every host-returned
+    component: with `h >= 2` the adapter binds the host return with an exact pattern (`let
+    (r0, r1) = call;`, `Ok((r0, r1)) =>`, `Some((r0, r1)) =>`), never by field access
+    (`r.0`), so a host returning a wider tuple, or one of another arity, is a type error
+    (E0308) in the generated harness instead of having its extra components dropped. A host
+    that returns a wrong *type* in a component fails the same way, in the conversion.
 
 ## 5. Cross-cutting evidence and portability rules
 
