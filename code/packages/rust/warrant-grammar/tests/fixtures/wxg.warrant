@@ -1,0 +1,118 @@
+-- VER04k WX-G test fixture: `inout` parameters and `ensures` postconditions, one
+-- operation for every host form the first slice implements (slice, array, int,
+-- bool, struct, vec) and for each post-state slot rule (S1 to S4).  It is NOT a
+-- package specification; it exists so the generator is tested by compiling and
+-- running what it emits against in-test subjects (tests/wxg_evidence.rs,
+-- tests/wxg_broken.rs).
+--
+-- Every expected value is written from the definition of the operation, never
+-- read back from a subject.
+warrant wxg v1
+  error WxgError = TOO_SHORT
+
+  record Cell(a: U8, on: Bool)
+
+  -- S1, host form `slice` (`&mut [u8]`): every byte becomes zero.
+  op wipe(buf: inout Bytes) -> Bytes
+  -- S1, host form `array` (`&mut [u8; 4]`).
+  op wipe4(buf: inout Bytes<4>) -> Bytes<4>
+  -- S1, host form `int:u8` (`&mut u8`): add one, wrapping.
+  op bump(x: inout U8) -> U8
+  -- S1, host form `bool` (`&mut bool`).
+  op toggle(flag: inout Bool) -> Bool
+  -- S1, host form `struct:Cell` (`&mut Cell`): switch the cell on.
+  op set_on(c: inout Cell) -> Cell
+  -- S3, host form `vec` (`&mut Vec<u8>`): append one byte, return the count appended.
+  op push_byte(v: U8, out: inout Bytes) -> (Nat, Bytes)
+  -- S2, host form `slice`: wipe a non-empty buffer; an empty one is TOO_SHORT.
+  op clear_nonempty(buf: inout Bytes) -> Result<Bytes, WxgError>
+  -- S4, host form `slice`: write `v` and its complement into the first two bytes
+  -- of the buffer and return 2; a buffer of fewer than two bytes is TOO_SHORT.
+  op encode(v: U8, out: inout Bytes) -> Result<(Nat, Bytes), WxgError>
+
+  labels wipe:
+    buf public
+  labels wipe4:
+    buf public
+  labels bump:
+    x public
+  labels toggle:
+    flag public
+  labels set_on:
+    c public
+  labels push_byte:
+    v public
+    out public
+  labels clear_nonempty:
+    buf public
+  labels encode:
+    v public
+    out public
+
+  -- The all-zero byte string of length n, for n <= 8 (the longest `Bytes` binder
+  -- of the generator is 8 bytes).  Written as a ladder because the generator
+  -- does not emit the WX-D1 `replicate` yet (VER04k section 4.13 item 9).
+  model zeros(n: Nat) -> Bytes = if n == 0 then b"" else if n == 1 then b"00" else if n == 2 then b"0000" else if n == 3 then b"000000" else if n == 4 then b"00000000" else if n == 5 then b"0000000000" else if n == 6 then b"000000000000" else if n == 7 then b"00000000000000" else b"0000000000000000"
+
+  ensures wipe:
+    len(result) == len(buf)
+    result == zeros(len(buf))
+  ensures wipe4:
+    len(result) == 4
+  ensures bump:
+    result != x
+  ensures toggle:
+    result != flag
+  ensures set_on:
+    result.on
+  ensures push_byte:
+    result.0 == 1
+    len(result.1) == len(out) + 1
+  ensures clear_nonempty:
+    match result with Ok(r) -> len(r) == len(buf) and len(buf) > 0 | Err(e) -> len(buf) == 0
+  ensures encode:
+    match result with Ok(r) -> r.0 == 2 and len(r.1) == len(out) | Err(e) -> len(out) < 2
+
+  example wipe_three_bytes:
+    wipe(b"010203") == b"000000"
+  example wipe_empty:
+    wipe(b"") == b""
+  example wipe4_ones:
+    wipe4(b"ffffffff") == b"00000000"
+  example bump_wraps:
+    bump(255u8) == 0u8
+  example toggle_true:
+    toggle(true) == false
+  example set_on_a_cell:
+    set_on(Cell(7u8, false)) == Cell(7u8, true)
+  example push_byte_appends:
+    push_byte(255u8, b"0102") == (1, b"0102ff")
+  example clear_empty_is_too_short:
+    clear_nonempty(b"") == Err(WxgError.TOO_SHORT)
+  example clear_one_byte:
+    clear_nonempty(b"ab") == Ok(b"00")
+  example encode_writes_two_bytes:
+    encode(1u8, b"aabbcc") == Ok((2, b"01feaa"))
+  example encode_one_byte_is_too_short:
+    encode(1u8, b"aa") == Err(WxgError.TOO_SHORT)
+
+  claim wipe_zeroes:
+    forall buf: Bytes. wipe(buf) == zeros(len(buf))
+  claim wipe_is_idempotent:
+    forall buf: Bytes. wipe(wipe(buf)) == wipe(buf)
+  claim wipe4_zeroes:
+    forall buf: Bytes<4>. wipe4(buf) == b"00000000"
+  claim bump_adds_one:
+    forall x: U8. bump(x) == if x == 255u8 then 0u8 else x + 1u8
+  claim toggle_negates:
+    forall flag: Bool. toggle(flag) == not flag
+  claim set_on_keeps_the_byte:
+    forall c: Cell. set_on(c) == Cell(c.a, true)
+  claim push_byte_appends_the_byte:
+    forall v: U8, out: Bytes. push_byte(v, out) == (1, concat(out, be_bytes(v)))
+  claim clear_nonempty_wipes_or_refuses:
+    forall buf: Bytes. clear_nonempty(buf) == if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf)))
+  claim encode_short_buffers_are_refused:
+    forall v: U8, out: Bytes<1>. encode(v, out) == Err(WxgError.TOO_SHORT)
+  claim encode_writes_the_complement:
+    forall v: U8, out: Bytes<2>. encode(v, out) == Ok((2, concat(be_bytes(v), be_bytes(bit_not(v)))))
