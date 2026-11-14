@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-LEX-NI, ZH-LEX-HAO, ZH-SCRIPT-NI, ZH-SCRIPT-HAO]
 introduces:
   knowledge: [ZH-LEX-NIHAO, ZH-GRAMMAR-COMPOUND-WORD]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NI, ZH-LEX-HAO, ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-LEX-NIHAO, ZH-GRAMMAR-COMPOUND-WORD]
 skills: [listening, speaking, reading]

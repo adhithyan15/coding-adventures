@@ -175,9 +175,7 @@ yī flat, èr falling, sān flat.
 Say the run. It goes level, down, level, and that shape is the first thing a listener recognises — before any of the individual words.
 
 Why it's said this way — the pattern stops here.
-Three characters in, one stroke per unit, a system so regular it barely needs teaching. It stops here, and you should know why before it happens.
-Every counting system humans have built hits the same wall in the same place. Roman numerals go I, II, III and then break to IV, because stacked marks stop being readable at about three. This one breaks for exactly the same reason.
-You are being told now so that the next character feels like a solved problem rather than a broken promise.
+In the three number characters you have met, the stroke count matches the number: 一 (yī), 二 (èr), 三 (sān). That local pattern stops here. The next character uses a different shape, so do not try to guess it by stacking another bar. You will learn its shape directly in the next lesson.
 
 The word, taken apart.
 三 sān is inherited from Middle Chinese sam, "three" (Guangyun, in Baxter's transcription). The final m has since become n.
@@ -188,10 +186,10 @@ Guided Practice.
 [once you have stopped driving — read: 一 (yī) 二 (èr) 三 (sān) — say each as you point at it]
 
 Wrap-up Recall.
-Three characters, three stroke counts, nothing memorised. That ends now.
+Three characters, three matching stroke counts. The next shape must be learned.
 Source: Unicode CJK Unified Ideographs chart.
 [question — say your answer, then pause 12 seconds]
-Do you expect the character for four to have four strokes? Why or why not?
+Can you infer the character for four by adding one more bar to 三 (sān)?
 
 
 Lesson 7 of 11.
@@ -247,7 +245,7 @@ Why it's said this way — the pun in the lift.
 A reason to get that tone right, and it is a real one:
 sì (falling) — four sǐ (dipping) — die.
 Separated by pitch alone — the third time this chapter has shown you that tone is part of a Mandarin word's identity, not an accent on it.
-Not a curiosity, either: it is why many buildings in China number floors 1, 2, 3, 5, skipping four the way some Western buildings skip thirteen.
+Not just a sound exercise: some buildings omit the floor label 4. One photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a documented example, not a rule for every building. The near-match between sì and sǐ helps explain why the number may be avoided.
 
 The word, taken apart.
 四 sì is inherited from Middle Chinese sijH, "four" (Guangyun, in Baxter's transcription). The sound-borrowing above is the history of the character: the word came first, and a shape was borrowed to write it.
@@ -259,9 +257,9 @@ Guided Practice.
 
 Wrap-up Recall.
 Four is the first number here you could not work out. What replaced the trick? (A shape borrowed for its sound, built to a rule.)
-Source: Unicode CJK Unified Ideographs chart.
+Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Aaron Tan's photographed Shanghai lift panel, fig. 5.
 [question — say your answer, then pause 15 seconds]
-Why do some buildings in China have no fourth floor?
+What sound link helps explain why a documented Shanghai lift panel omits floor label 4?
 
 
 Lesson 9 of 11.
@@ -347,22 +345,20 @@ Count to five aloud, in order, without looking. Then do it again with your eyes 
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Script — the same five, shuffled.
-Counting in order is slightly dishonest: the sequence carries you, and you can recite yī èr sān without reading anything.
-So here they are shuffled. Name each before moving on, without letting your eye run back to the row above:
+The sequence can carry you. Now read them out of order without looking back:
 四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) 三 (sān) 五 (wǔ) 一 (yī) 四 (sì) 二 (èr).
 If one of them made you pause, it will be 四 (sì) or 五 (wǔ) — the two you could not derive. That is expected, and it tells you exactly which two to drill.
 
 Why it's said this way — where you will actually meet these.
 Not a party trick. A lift panel, a floor directory, a bus number, a market price — all use these characters on their own, with no sentence around them. That is why five are already useful; you are not waiting on grammar:
 You see: 三 You say: sān — third floor.
-And when the panel reads.
+And if a panel reads.
 一 (yī) 二 (èr) 三 (sān) 五 (wǔ).
-with no 四 (sì) between three and five, you know why, and you are not confused by it.
+with no 四 (sì) between three and five, the sound link from the previous lesson is one documented reason a building might label it that way.
 
 The exchange.
 Two voices, using only what this book has given you:
 A: 你好 — ní hǎo (the sandhi tone, as always) B: 你好 — ní hǎo A: [pointing at a panel] 五 — wǔ B: 五 — wǔ.
-Small, and entirely real: repeating a floor number back is what people do in a lift, in any language.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
@@ -379,7 +375,7 @@ Five characters, and three different ways a character can come to you:
 That spread is not an accident of this chapter. It is the whole writing system in small: a little of it can be reasoned out, more of it is borrowed sound, and the rest is simply known. You have now met all three, on characters short enough that none of them hurt.
 
 Wrap-up Recall.
-You can read the five characters cold, in any order, with no sentence around them. A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ) — which number is missing, and why? (四, because sì sits one tone from sǐ.)
-Source: Unicode CJK Unified Ideographs chart.
+A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which label is missing? (四 (sì).) The sound link can help explain an omission; not every building skips it.
+Sources: Unicode CJK Unified Ideographs chart and Aaron Tan's photographed Shanghai lift panel, fig. 5.
 [question — say your answer, then pause 15 seconds]
-A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor number is missing, and why?
+A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor label is missing?

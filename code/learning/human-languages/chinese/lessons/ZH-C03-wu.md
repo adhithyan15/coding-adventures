@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-SCRIPT-NUM-WU, ZH-LEX-NUM-SI, ZH-METHOD-STROKE-COUNT]
 introduces:
   knowledge: [ZH-LEX-NUM-WU]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NUM-WU, ZH-SCRIPT-NUM-WU, ZH-LEX-NUM-YI, ZH-LEX-NUM-ER, ZH-LEX-NUM-SAN, ZH-LEX-NUM-SI, ZH-METHOD-STROKE-COUNT, ZH-TONE-LEXICAL]
 skills: [listening, speaking, reading]
