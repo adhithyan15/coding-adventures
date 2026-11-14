@@ -307,33 +307,38 @@ type sidecarOK struct {
 // and never stops at the first, so the report says everything.
 func checkSidecars(c *collector, name string, planned Action, s dirScan, bad *[]string) sidecarOK {
 	out := sidecarOK{allZero: true, allDecoded: true}
-	k := len(s.sidecars)
-	// The sidecars are exactly steps 0..k-1, and every one has its trace and the
+	// n is how many steps the directory shows: one past the highest number that
+	// has a sidecar or a trace. Indices are walked in order (never by ranging over
+	// the maps) so the reasons, and the text built from them, are the same on
+	// every run: the merge's output is compared byte for byte.
+	n := 0
+	for j := range s.sidecars {
+		n = max(n, j+1)
+	}
+	for j := range s.traces {
+		n = max(n, j+1)
+	}
+	// The sidecars are exactly steps 0..n-1, and every one has its trace and the
 	// reverse: a step that took a number and was killed has a trace and no
 	// sidecar; a deleted trace leaves a sidecar alone.
-	for j := 0; j < k; j++ {
-		if !s.sidecars[j] {
+	for j := 0; j < n; j++ {
+		switch {
+		case s.sidecars[j] && !s.traces[j]:
+			*bad = append(*bad, fmt.Sprintf("step %d has a sidecar and no trace", j))
+		case !s.sidecars[j] && s.traces[j]:
+			*bad = append(*bad, fmt.Sprintf("step %d has a trace and no sidecar (it started and was not accounted for)", j))
+			out.allDecoded = false
+		case !s.sidecars[j]:
 			*bad = append(*bad, fmt.Sprintf("step %d has no sidecar but a later one does", j))
 			out.allDecoded = false
 		}
 	}
-	for j := range s.sidecars {
-		if !s.traces[j] {
-			*bad = append(*bad, fmt.Sprintf("step %d has a sidecar and no trace", j))
-		}
-	}
-	for j := range s.traces {
-		if !s.sidecars[j] {
-			*bad = append(*bad, fmt.Sprintf("step %d has a trace and no sidecar (it started and was not accounted for)", j))
-			out.allDecoded = false
-		}
-	}
-	if k > len(planned.Steps) {
-		*bad = append(*bad, fmt.Sprintf("%d steps ran, the plan has %d", k, len(planned.Steps)))
+	if n > len(planned.Steps) {
+		*bad = append(*bad, fmt.Sprintf("%d steps ran, the plan has %d", n, len(planned.Steps)))
 		out.allDecoded = false
 		return out
 	}
-	for j := 0; j < k; j++ {
+	for j := 0; j < n; j++ {
 		if !s.sidecars[j] {
 			continue
 		}
