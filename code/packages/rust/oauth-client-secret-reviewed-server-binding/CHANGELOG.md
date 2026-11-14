@@ -22,3 +22,14 @@
   signature proof shape.
 - Kept the direct revocation proof additive to the signed path instead of
   admitting it as a substitute for signed reviewed-server evidence.
+- Added a distinct sealed composition for the destination-bound nested
+  no-check complete fixed-path revocation branch.
+- Restricted that nested marker to the exact retained signed reviewed path-
+  and-anchor-self-signature proof shape beneath its responder-revocation and
+  responder-no-check layers.
+- Repeated the exact leaf, issuer, anchor, SNI, Host, port, and one-intermediate
+  checks because the additional responder layers do not extend the nested
+  branch's target-plus-intermediate server-chain coverage.
+- Left double-nested, recursive, and alternative revocation branches outside
+  this boundary and made no TLS, HTTP, network, or live-provider readiness
+  claim.

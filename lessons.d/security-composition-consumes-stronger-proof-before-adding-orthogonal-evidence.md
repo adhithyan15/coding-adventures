@@ -14,3 +14,10 @@ Consume the already-constructed signed-path composition first, then add the
 revocation proof under its own sealed exact-type marker. The resulting type
 retains both complete inputs, and callers cannot substitute orthogonal
 revocation evidence for the stronger path proof.
+
+Do not infer covered path depth from a generic wrapper named “complete.” A
+nominal direct or nested revocation branch can retain an accumulated server
+path of arbitrary depth even when its revocation checks cover only the target
+and one intermediate. Project the processed-intermediate count from the exact
+retained signed path and require it to match the concrete branch's coverage
+before composing the proofs.
