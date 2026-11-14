@@ -874,9 +874,16 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 		w.Close()
 	}
 	sink.kill = func() { cmd.Process.Kill() }
-	var timedOut atomic.Bool
+	// A deadline marks the run timed out only when it really killed strace: not
+	// when strace had already been reaped (Kill then fails), and the final check
+	// is that strace died of SIGKILL.
+	var timedOut, waited atomic.Bool
 	if o.Deadline > 0 {
-		t := time.AfterFunc(o.Deadline, func() { timedOut.Store(true); cmd.Process.Kill() })
+		t := time.AfterFunc(o.Deadline, func() {
+			if !waited.Load() && cmd.Process.Kill() == nil {
+				timedOut.Store(true)
+			}
+		})
 		defer t.Stop()
 	}
 
@@ -901,6 +908,7 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 	go relay(run.stderr, rs[4], own)
 
 	cmd.Wait()
+	waited.Store(true)
 	// Everything the step and strace wrote: wait for it to drain, but only so
 	// long. A pipe that is still open after strace is gone is held by something
 	// that outlived it, which is not a clean run whatever the exit status.
@@ -937,7 +945,6 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 	for _, r := range rs {
 		r.Close()
 	}
-	run.timedOut = timedOut.Load()
 	if ps := cmd.ProcessState; ps != nil {
 		if wst, ok := ps.Sys().(syscall.WaitStatus); ok && wst.Signaled() {
 			run.signal = int(wst.Signal())
@@ -945,6 +952,7 @@ func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *t
 			run.code = ps.ExitCode()
 		}
 	}
+	run.timedOut = timedOut.Load() && run.signal == int(syscall.SIGKILL)
 	return run
 }
 

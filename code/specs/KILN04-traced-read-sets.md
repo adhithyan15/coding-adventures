@@ -1675,11 +1675,17 @@ under the real `strace`, started exactly as `kiln record step` starts a step
 | `pipes` | `readlink /proc/self/fd/1 /proc/self/fd/2` | exactly two lines, each `pipe:[N]` |
 | `walk` | `find / ( -path /proc -o -path <each ro_root> -o -path <repo_root> ) -prune -o ( -type s -o -type p ) -print` | no output (glob characters of a root are escaped) |
 | `shadow` | `find <mounts...> -xdev ( -type s -o -type p ) -print` | no output; run only when `ShadowedMounts` is not empty |
-| `signals` | `sh -c 'sleep 300 & echo started'` | stdout `started\n`; `traced.DaemonLeft` true; finished in under 30 s |
+| `signals` | `sh -c 'sleep 300 & sleep 1; echo started'` | stdout `started\n`; `traced.DaemonLeft` true; finished in under 30 s |
 
 `ShadowedMounts(cfg)` is the host's mount points (mountinfo) strictly inside a
-non-symlink `ro_roots` entry, `repo_root` or a state root, sorted; an unreadable
-mountinfo, or more than 256 entries, is an error. The `signals` run is a
+non-symlink `ro_roots` entry, `repo_root` or a state root, sorted, keeping only
+the outermost of nested ones (beneath a shadowed directory the inner mount point
+may not exist in the sandbox, and the outer walk covers it; the report check
+refuses a nested pair); an unreadable mountinfo, or more than 256 entries, is an
+error. The `signals` run waits one
+second after starting its sleeper, so the namespace's SIGKILL does not land while
+the sleeper is still in `execve` or the loader (that leaves an unresumed call in
+the trace and fails the probe at random). It is a
 self-check of the tracer: a strace that cannot print "killed by" lines (it needs
 `-e signal=all`, D19) cannot show a daemon, and `daemon-left` would never fire.
 
@@ -1706,7 +1712,10 @@ strictly (the bytes must equal what `EncodeProbes` writes for what they say):
 `toolchains` is reserved for the toolchain probes (PR 3) and is empty. `VerifyPre`
 decodes it and requires it to be exactly what the probe list for the sealed
 configuration is (names, order, argv, exit 0, a trace size and digest), so a
-dropped probe is refused by every later command. `<dir>/probe/<name>.trace`
+dropped `pipes`, `walk` or `signals` probe is refused by every later command.
+`shadowed` itself is the probe's claim (sealed, but `VerifyPre` cannot recompute
+the host's mount points), so the `shadow` run is the one that can be absent
+unnoticed. `<dir>/probe/<name>.trace`
 (created `O_EXCL`, directory `0700`) holds the traces for whoever debugs a failed
 run; the sealed digest says which file is meant. A shard with no action runs no
 probe and seals the report with an empty `action` and no runs. The binding is

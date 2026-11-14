@@ -18,6 +18,22 @@
 - `ci/assert_sandbox_tests.py` prints the `F2:` and `PROBE:` lines of PASSING
   tests (at most 20, 300 characters each), so facts a test logs reach the CI log.
 
+### Review fixes
+
+- The `signals` probe is `sleep 300 & sleep 1; echo started`: the sandbox's
+  SIGKILL no longer lands while the sleeper is still in exec.
+- Every probe failure message quotes the first 400 bytes of the step's stdout
+  and stderr (printable).
+- `ShadowedMounts` keeps only the outermost of nested mount points, and
+  `CheckProbeReport` refuses a nested pair.
+- A deadline marks a run timed out only when it killed strace (SIGKILL).
+- `assert_sandbox_tests.py` prints every output line with a two-space prefix, so
+  test output can never start a `::` workflow command.
+- E2e: the strace wrapper inserts `-e signal=none` before the first `--`; new
+  cases for the `walk` probe (exported runner, hand-built config) and the
+  `shadow` probe (a tmpfs mounted with `sudo -n` over a directory holding a FIFO).
+- The doc comment of `CheckProbeReport` says the `shadow` run is self-attested.
+
 ### Changed
 
 - `runStrace` takes the working directory and an optional deadline;

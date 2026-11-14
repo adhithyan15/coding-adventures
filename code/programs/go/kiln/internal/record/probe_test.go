@@ -165,6 +165,26 @@ func TestCheckProbeRunRefuses(t *testing.T) {
 	}
 }
 
+func TestProbeFailuresQuoteTheStepsOutput(t *testing.T) {
+	sp := specNamed(t, ProbeSpecs(probeCfg(), nil), ProbeWalk)
+	o := goodObs(ProbeWalk)
+	o.StepStderr = 40
+	o.StepStderrHead = []byte("find: '/x': Permission denied\n\x1b[31m" + strings.Repeat("e", 1000))
+	err := CheckProbeRun(sp, o, goodTrace(sp.Argv, false))
+	if err == nil || !strings.Contains(err.Error(), "Permission denied") || strings.Contains(err.Error(), "\x1b") || len(err.Error()) > 1000 {
+		t.Fatalf("%v", err)
+	}
+}
+
+func TestSignalsProbeGivesTheSleeperTimeToStart(t *testing.T) {
+	// The sandbox's SIGKILL must not land while the sleeper is still in exec:
+	// that leaves an unresumed call in the trace.
+	argv := specNamed(t, ProbeSpecs(probeCfg(), nil), ProbeSignals).Argv
+	if argv[2] != "sleep 300 & sleep 1; echo started" {
+		t.Fatalf("%q", argv)
+	}
+}
+
 func goodReport(cfg *sandbox.Config, shadowed []string) ProbeReport {
 	rep := ProbeReport{Schema: ProbesSchema, Action: "p", Shadowed: shadowed}
 	for _, sp := range ProbeSpecs(cfg, shadowed) {
@@ -227,6 +247,7 @@ func TestCheckProbeReportRefuses(t *testing.T) {
 		"shadow relative":   func(r *ProbeReport) { r.Shadowed = []string{"usr/a"} },
 		"shadow dash":       func(r *ProbeReport) { r.Shadowed = []string{"-x"} },
 		"shadow root":       func(r *ProbeReport) { r.Shadowed = []string{"/"} },
+		"shadow nested":     func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/a/b"} },
 		"shadow vs runs":    func(r *ProbeReport) { r.Shadowed = []string{"/usr/a", "/usr/b"} },
 		"too many": func(r *ProbeReport) {
 			r.Shadowed = nil
@@ -284,6 +305,18 @@ func TestShadowedMounts(t *testing.T) {
 	}
 	if want := []string{repo + "/m", ro + "/a", ro + "/b", state + "/s"}; strings.Join(got, "|") != strings.Join(want, "|") {
 		t.Fatalf("got %v, want %v", got, want)
+	}
+
+	// Nested mount points: only the outermost is visible in the sandbox.
+	mountPoints = func() map[string]bool {
+		return map[string]bool{ro + "/a": true, ro + "/a/b": true, ro + "/a/b/c": true, ro + "/ab": true, ro + "/z": true}
+	}
+	got, err = ShadowedMounts(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := []string{ro + "/a", ro + "/ab", ro + "/z"}; strings.Join(got, "|") != strings.Join(want, "|") {
+		t.Fatalf("nested: got %v, want %v", got, want)
 	}
 
 	mountPoints = func() map[string]bool { return nil }

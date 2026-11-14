@@ -204,7 +204,7 @@ func hazard(m os.FileMode) bool { return m&(os.ModeSocket|os.ModeNamedPipe) != 0
 // UNDER the mount, which the host scan (it does not cross mount points) never
 // looked at. The in-sandbox probe `shadow` (probe.go) does, once for all of them.
 //
-// The result is sorted and has no duplicate. A mountinfo that cannot be read is
+// The result is sorted, has no duplicate, and holds no entry inside another. A mountinfo that cannot be read is
 // an error (the answer would be "none", which a failed read must never give), and
 // so is a list longer than MaxShadowed.
 func ShadowedMounts(cfg *sandbox.Config) ([]string, error) {
@@ -239,6 +239,17 @@ func ShadowedMounts(cfg *sandbox.Config) ([]string, error) {
 		}
 	}
 	sort.Strings(out)
+	// Only the outermost mount point is visible in the sandbox: beneath a
+	// shadowed directory the nested mount point may not exist at all (find would
+	// fail on it), and everything under it is covered by walking the outer one.
+	kept := out[:0]
+	for _, m := range out {
+		if n := len(kept); n > 0 && strings.HasPrefix(m, kept[n-1]+"/") {
+			continue
+		}
+		kept = append(kept, m)
+	}
+	out = kept
 	if len(out) > MaxShadowed {
 		return nil, fmt.Errorf("%d host mount points lie inside the read-only roots, the checkout or the state roots (at most %d are probed)", len(out), MaxShadowed)
 	}

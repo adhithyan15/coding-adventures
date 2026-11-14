@@ -12,8 +12,14 @@ package main
 //	success     every probe passes on a plain runner; pre/probes.json is sealed,
 //	            names the runs, and carries the digest of each trace in
 //	            <dir>/probe/; the signals self-check really sees the survivor
-//	FIFO        a FIFO in a state root fails prepare (the host checks and the
-//	            probe each refuse it; the message says which)
+//	state root  a FIFO in a state root fails prepare, by the config's own
+//	            state-preloaded check (it comes before any probe)
+//	walk        the walk probe itself finds a FIFO in a state root: the
+//	            exported runner is given a hand-built configuration whose state
+//	            root holds one (sandbox-exec does not require empty state roots)
+//	shadow      a FIFO hidden beneath a tmpfs mounted over a directory of a
+//	            read-only root: the host scan skips what a mount hides, the
+//	            shadow probe finds it (needs `sudo -n mount`, as the CI job has)
 //	signals     a strace wrapper that adds `-e signal=none` makes prepare fail ON
 //	            THE signals PROBE: a tracer that cannot show a signal death is
 //	            not one the daemon-left rule can rest on
@@ -52,6 +58,27 @@ import (
 type probeWorld struct {
 	base, repo, recDir, bin, home, kiln, strace, git, sha, event string
 	state                                                        string // a state root's path, or ""
+	shadowRoot                                                   string // an image root with a mount over its m/, or ""
+}
+
+// probeOpts shapes a world.
+type probeOpts struct {
+	state  bool // declare a state root (an empty directory)
+	shadow bool // an image root whose m/ is a tmpfs mount hiding m/evil.fifo
+}
+
+// sudoMount mounts a tmpfs over dir and unmounts it in cleanup. Without a
+// usable `sudo -n` it skips (or, with KILN_REQUIRE_SANDBOX=1, fails).
+func sudoMount(t *testing.T, dir string) {
+	t.Helper()
+	if out, err := exec.Command("sudo", "-n", "mount", "-t", "tmpfs", "none", dir).CombinedOutput(); err != nil {
+		skipOrFail(t, "cannot mount a tmpfs with sudo (%v): %s", err, strings.TrimSpace(string(out)))
+	}
+	t.Cleanup(func() {
+		if out, err := exec.Command("sudo", "-n", "umount", dir).CombinedOutput(); err != nil {
+			t.Errorf("umount %s: %v: %s", dir, err, out)
+		}
+	})
 }
 
 // newProbeKiln builds the uninstrumented kiln once per test.
@@ -68,9 +95,9 @@ func newProbeKiln(t *testing.T, dir string) string {
 	return kiln
 }
 
-// newProbeWorld makes a world. withState declares a state root (an empty
+// newProbeWorld makes a world. opts.state declares a state root (an empty
 // directory) in host-roots.json; its path is world.state.
-func newProbeWorld(t *testing.T, kiln string, withState bool) *probeWorld {
+func newProbeWorld(t *testing.T, kiln string, opts probeOpts) *probeWorld {
 	t.Helper()
 	w := &probeWorld{kiln: kiln}
 	var err error
@@ -120,11 +147,27 @@ func newProbeWorld(t *testing.T, kiln string, withState bool) *probeWorld {
 	// The policy files: the fixture's only toolchain key is "sh", so the package's
 	// language is "sh" (the policy decoders refuse a language they do not know).
 	files := recStepPolicyFiles(imageRoots())
-	if withState {
+	var extra []string
+	if opts.state {
 		w.state = filepath.Join(w.base, "state")
 		if err := os.Mkdir(w.state, 0o755); err != nil {
 			t.Fatal(err)
 		}
+		extra = append(extra, fmt.Sprintf(`{"path": %q, "kind": "state", "ecosystem": "fixture"}`, w.state))
+	}
+	if opts.shadow {
+		w.shadowRoot = filepath.Join(w.base, "shadowroot")
+		m := filepath.Join(w.shadowRoot, "m")
+		if err := os.MkdirAll(m, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := syscall.Mkfifo(filepath.Join(m, "evil.fifo"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		sudoMount(t, m) // the FIFO is now hidden on the host, and visible to the sandbox
+		extra = append(extra, fmt.Sprintf(`{"path": %q, "kind": "image"}`, w.shadowRoot))
+	}
+	if len(extra) > 0 {
 		hr := files["code/kiln/legacy/host-roots.json"]
 		// Roots must be strictly sorted by path: put the state root where it sorts.
 		var tc struct {
@@ -137,7 +180,7 @@ func newProbeWorld(t *testing.T, kiln string, withState bool) *probeWorld {
 		for _, r := range tc.Roots {
 			raw = append(raw, string(r))
 		}
-		raw = append(raw, fmt.Sprintf(`{"path": %q, "kind": "state", "ecosystem": "fixture"}`, w.state))
+		raw = append(raw, extra...)
 		sortByPath(t, raw)
 		files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(raw, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`
 	}
@@ -269,7 +312,7 @@ func TestSandboxRecordProbe(t *testing.T) {
 	kiln := newProbeKiln(t, t.TempDir())
 
 	t.Run("success", func(t *testing.T) {
-		w := newProbeWorld(t, kiln, false)
+		w := newProbeWorld(t, kiln, probeOpts{})
 		stderr, code := w.prepare(t, w.strace)
 		if code != 0 {
 			t.Fatalf("record prepare: exit %d\nstderr: %s\nprobe traces:\n%s", code, stderr, w.probeTails(25))
@@ -306,7 +349,7 @@ func TestSandboxRecordProbe(t *testing.T) {
 	})
 
 	t.Run("fifo in a state root", func(t *testing.T) {
-		w := newProbeWorld(t, kiln, true)
+		w := newProbeWorld(t, kiln, probeOpts{state: true})
 		if err := syscall.Mkfifo(filepath.Join(w.state, "evil.fifo"), 0o600); err != nil {
 			t.Fatal(err)
 		}
@@ -326,16 +369,83 @@ func TestSandboxRecordProbe(t *testing.T) {
 		}
 	})
 
+	t.Run("walk finds a FIFO in a state root", func(t *testing.T) {
+		w := newProbeWorld(t, kiln, probeOpts{})
+		if stderr, code := w.prepare(t, w.strace); code != 0 {
+			t.Fatalf("record prepare: exit %d\nstderr: %s", code, stderr)
+		}
+		pre, err := record.VerifyPre(w.recDir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		// A configuration like the sealed one, but with a state root that holds a
+		// FIFO: prepare's own checks would refuse it, the exported runner does not.
+		state := filepath.Join(w.base, "walk-state")
+		if err := os.Mkdir(state, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := syscall.Mkfifo(filepath.Join(state, "evil.fifo"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		cfg := *pre.Config
+		cfg.StateRoots = []string{state}
+		data, err := record.MarshalConfig(&cfg)
+		if err != nil {
+			t.Fatal(err)
+		}
+		cfgDir, runDir := filepath.Join(w.base, "walk-cfg"), filepath.Join(w.base, "walk-run")
+		for _, d := range []string{cfgDir, runDir} {
+			if err := os.Mkdir(d, 0o700); err != nil {
+				t.Fatal(err)
+			}
+		}
+		cfgPath := filepath.Join(cfgDir, "sandbox.json")
+		if err := os.WriteFile(cfgPath, data, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		sum := sha256.Sum256(data)
+		action := pre.Probes.Action
+		_, err = record.RunStructureProbes(record.ProbeInput{
+			Dir: runDir, Cfg: &cfg, ConfigPath: cfgPath, ConfigSHA256: hex.EncodeToString(sum[:]), Action: action,
+			KilnExe: w.kiln, Strace: w.strace,
+			Env: []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=" + pre.Tools.Path},
+		})
+		if err == nil || !strings.Contains(err.Error(), "probe walk") || !strings.Contains(err.Error(), "reachable") {
+			t.Fatalf("the walk probe did not find the FIFO: %v", err)
+		}
+		t.Logf("PROBE: walk found a FIFO in a state root: %s", firstLineOf(err.Error()))
+		if entries, _ := os.ReadDir(legacy.RecordTmpdir); len(entries) != 0 {
+			t.Errorf("tmpdir after the probes: %v", entries)
+		}
+	})
+
+	t.Run("shadow finds a FIFO a mount hides", func(t *testing.T) {
+		w := newProbeWorld(t, kiln, probeOpts{shadow: true})
+		stderr, code := w.prepare(t, w.strace)
+		if code == 0 {
+			t.Fatalf("record prepare accepted a FIFO hidden beneath a mount point\nprobe traces:\n%s", w.probeTails(25))
+		}
+		t.Logf("PROBE: shadow: exit %d: %s", code, firstLineOf(stderr))
+		if !strings.Contains(stderr, "probe shadow") || !strings.Contains(stderr, "reachable") {
+			t.Fatalf("it did not fail on the shadow probe\nstderr: %s\nprobe traces:\n%s", stderr, w.probeTails(25))
+		}
+		if _, err := os.Lstat(filepath.Join(w.recDir, "pre", "SEALED")); err == nil {
+			t.Fatal("a failed prepare left a SEALED record")
+		}
+	})
+
 	t.Run("a strace that hides signals", func(t *testing.T) {
-		w := newProbeWorld(t, kiln, false)
-		// The wrapper inserts `-e signal=none` right before the traced command
-		// (kiln), i.e. AFTER the recorder's own `-e signal=all`, where it wins.
+		w := newProbeWorld(t, kiln, probeOpts{})
+		// The wrapper inserts `-e signal=none` right before the first `--` (the
+		// end of strace's own options: StraceArgs ends with `-o <file> --`), i.e.
+		// AFTER the recorder's own `-e signal=all`, where it should win. If strace
+		// keeps the first, the test says so: the prepare then succeeds.
 		wrapper := filepath.Join(w.bin, "strace-nosignals")
 		recStepWrite(t, wrapper, `#!/bin/sh
 n=$#; i=0; inserted=""
 while [ $i -lt $n ]; do
   a="$1"; shift
-  if [ -z "$inserted" ] && [ "$a" = '`+w.kiln+`' ]; then
+  if [ -z "$inserted" ] && [ "$a" = "--" ]; then
     set -- "$@" -e signal=none "$a"; inserted=1
   else
     set -- "$@" "$a"
@@ -346,7 +456,7 @@ exec '`+w.strace+`' "$@"
 `, 0o755)
 		stderr, code := w.prepare(t, wrapper)
 		if code == 0 {
-			t.Fatalf("record prepare accepted a strace that hides signals\nprobe traces:\n%s", w.probeTails(25))
+			t.Fatalf("record prepare accepted a strace run with -e signal=none appended: either strace keeps the FIRST -e signal= (then the wrapper proves nothing) or the signals probe is blind\nprobe traces:\n%s", w.probeTails(25))
 		}
 		t.Logf("PROBE: strace -e signal=none: exit %d: %s", code, firstLineOf(stderr))
 		if !strings.Contains(stderr, "probe signals") {

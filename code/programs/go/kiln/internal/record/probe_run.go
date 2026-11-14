@@ -117,7 +117,7 @@ func runProbe(in ProbeInput, probeDir string, spec ProbeSpec, deadline time.Dura
 		Started: run.started, TimedOut: run.timedOut, Truncated: sink.reason != "", PipesHeld: run.pipesHeld,
 		StraceExit: run.code, StraceSignal: run.signal,
 		StraceStdout: run.stdout.n, StraceStderr: run.stderr.n, StepStderr: stderr.n,
-		StepStdout: stdout.b, StepStdoutBytes: stdout.n, Elapsed: elapsed,
+		StepStdout: stdout.b, StepStdoutBytes: stdout.n, StepStderrHead: stderr.b, Elapsed: elapsed,
 	}
 	// What strace itself said, for whoever has to find out why a CI run failed.
 	diag := func(err error) error {

@@ -165,7 +165,7 @@ func ProbeSpecs(cfg *sandbox.Config, shadowed []string) []ProbeSpec {
 		argv = append(argv, "-xdev", "(", "-type", "s", "-o", "-type", "p", ")", "-print")
 		specs = append(specs, ProbeSpec{ProbeShadow, argv})
 	}
-	return append(specs, ProbeSpec{ProbeSignals, []string{"sh", "-c", "sleep 300 & echo started"}})
+	return append(specs, ProbeSpec{ProbeSignals, []string{"sh", "-c", "sleep 300 & sleep 1; echo started"}})
 }
 
 // findEscape escapes the characters find's -path pattern treats as special.
@@ -192,7 +192,11 @@ type ProbeObservation struct {
 	// StepStdoutBytes how many bytes it was in all.
 	StepStdout      []byte
 	StepStdoutBytes int64
-	Elapsed         time.Duration
+	// StepStderrHead is the first bytes the step wrote to its standard error
+	// (kept for the message of a failure: the most useful fact about a `find`
+	// that failed is what it said).
+	StepStderrHead []byte
+	Elapsed        time.Duration
 }
 
 var pipeLine = regexp.MustCompile(`^pipe:\[[0-9]+\]$`)
@@ -202,7 +206,8 @@ var pipeLine = regexp.MustCompile(`^pipe:\[[0-9]+\]$`)
 // the caller, with the parser's reason, before this is called).
 func CheckProbeRun(spec ProbeSpec, obs ProbeObservation, tr *trace.Trace) error {
 	fail := func(format string, a ...any) error {
-		return fmt.Errorf("probe %s: %s", spec.Name, fmt.Sprintf(format, a...))
+		return fmt.Errorf("probe %s: %s [step stdout %q, step stderr %q]", spec.Name, fmt.Sprintf(format, a...),
+			printable(clipBytes(obs.StepStdout)), printable(clipBytes(obs.StepStderrHead)))
 	}
 	switch {
 	case !obs.Started:
@@ -276,6 +281,17 @@ func checkProbeOutput(name string, obs ProbeObservation, tr *trace.Trace, fail f
 	return nil
 }
 
+// clipBytes is the first probeDiagBytes bytes, for a failure message.
+func clipBytes(b []byte) string {
+	if len(b) > probeDiagBytes {
+		return string(b[:probeDiagBytes]) + "..."
+	}
+	return string(b)
+}
+
+// probeDiagBytes bounds what a failure message quotes of a step's output.
+const probeDiagBytes = 400
+
 func firstLine(b []byte) string {
 	if i := bytes.IndexByte(b, '\n'); i >= 0 {
 		b = b[:i]
@@ -302,7 +318,11 @@ func sameStrings(a, b []string) bool {
 // have run for cfg: the action, the list of runs in order, each argv, an exit of
 // 0, and a trace of a plausible size with a SHA-256. The sealed file is checked
 // with it by `prepare` (what the hook returned) and by VerifyPre (what was
-// read back), so a hand-edited probes.json that dropped a probe is refused.
+// read back), so a hand-edited probes.json that dropped the `pipes`, `walk` or
+// `signals` probe is refused. The `shadow` probe is the exception: whether it is
+// due depends on the host's mount points, which VerifyPre cannot recompute, so
+// `Shadowed` (and with it the presence of the `shadow` run) is the probe's own
+// claim, sealed but not independently checkable.
 func CheckProbeReport(cfg *sandbox.Config, rep ProbeReport, actions []string) error {
 	if rep.Schema != ProbesSchema {
 		return fmt.Errorf("probes: schema %q", printable(rep.Schema))
@@ -316,6 +336,13 @@ func CheckProbeReport(cfg *sandbox.Config, rep ProbeReport, actions []string) er
 	for i, m := range rep.Shadowed {
 		if !path.IsAbs(m) || path.Clean(m) != m || m == "/" || strings.HasPrefix(m, "-") || printable(m) != m || (i > 0 && m <= rep.Shadowed[i-1]) {
 			return fmt.Errorf("probes: shadowed mount point %q is not an absolute, clean path in strict order", printable(m))
+		}
+	}
+	for i, m := range rep.Shadowed {
+		for _, o := range rep.Shadowed[:i] {
+			if strings.HasPrefix(m, o+"/") {
+				return fmt.Errorf("probes: shadowed mount point %q lies inside another, %q: only the outermost is visible in the sandbox", printable(m), printable(o))
+			}
 		}
 	}
 	if rep.Action == "" {

@@ -53,6 +53,14 @@ FINAL = {"pass", "fail", "skip"}
 FACT_MARKERS = ("F2:", "PROBE:")
 MAX_FACT_LINES = 20
 MAX_FACT_CHARS = 300
+# Every printed line of test output starts with this, so no line of a test's
+# output can begin with "::" and be taken for a GitHub workflow command.
+LOG_PREFIX = "  "
+
+
+def log_lines(text: str) -> list[str]:
+    """The lines of a piece of test output, each safe to print."""
+    return [LOG_PREFIX + line for line in text.splitlines() or [""]]
 
 
 def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
@@ -69,7 +77,7 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
         if not test:
             continue
         if event.get("Action") == "output":
-            out.setdefault(test, []).append(event.get("Output", "").rstrip("\n"))
+            out.setdefault(test, []).extend(log_lines(event.get("Output", "")))
         elif event.get("Action") in FINAL:
             final[test] = event["Action"]
     return {t: o[-limit:] for t, o in out.items() if final.get(t) == "fail"}
@@ -89,9 +97,9 @@ def passing_facts(lines: list[str]) -> dict[str, list[str]]:
         if not test:
             continue
         if event.get("Action") == "output":
-            text = event.get("Output", "").strip()
-            if any(m in text for m in FACT_MARKERS):
-                found.setdefault(test, []).append(text[:MAX_FACT_CHARS])
+            for text in event.get("Output", "").splitlines():
+                if any(m in text for m in FACT_MARKERS):
+                    found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
         elif event.get("Action") in FINAL:
             final[test] = event["Action"]
     out: dict[str, list[str]] = {}
