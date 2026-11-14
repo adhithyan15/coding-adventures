@@ -16,6 +16,48 @@ use crate::parser::{
 
 const EXHAUSTIVE_BUDGET: usize = 400_000;
 
+/// What a lane adapter needs to know about an operation with `inout` parameters
+/// (VER04k section 4.9): which parameters carry a post-state, and where in the
+/// result the adapter puts the buffer it reads back.  The corpus needs no new
+/// value encoding for WX-G (a result is encoded as its declared type); these two
+/// fields are what `corpus.json.ops.<op>` gains.
+///
+/// The corpus compiler below is still the v0 `ct_compare` profile and refuses
+/// every v1-only form, so nothing emits this yet; the v1 profile will, and this
+/// function is the one definition of the fields.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InoutDescriptor {
+    /// The `inout` parameter names, in parameter order.
+    pub inout: Vec<String>,
+    /// `"S1"`, `"S2"`, `"S3"` or `"S4"`.
+    pub post_slot: &'static str,
+}
+
+/// The descriptor of `op`, or `None` when it has no `inout` parameter.
+pub fn inout_descriptor(
+    file: &WarrantFile<'_>,
+    checked: &crate::checker::CheckedWarrantModule,
+    op: &str,
+) -> Option<InoutDescriptor> {
+    let decl = file.declarations.iter().find_map(|d| match d {
+        Declaration::Op(o) if o.name == op => Some(o),
+        _ => None,
+    })?;
+    let ck = checked.operations.get(op)?;
+    let posts: Vec<crate::checker::Type> = decl
+        .params
+        .iter()
+        .zip(&ck.params)
+        .filter(|(p, _)| p.inout)
+        .map(|(_, (_, t))| t.clone())
+        .collect();
+    let slot = crate::checker::resolve_post_slot(&posts, &crate::checker::slot_shape(&ck.return_type))?;
+    Some(InoutDescriptor {
+        inout: decl.params.iter().filter(|p| p.inout).map(|p| p.name.to_string()).collect(),
+        post_slot: slot.name(),
+    })
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CorpusError(pub String);
 

@@ -93,7 +93,7 @@ fn carrier_of(
         (InoutForm::Slice, Ty::Bytes | Ty::BytesN(_)) => HostTy::Bytes,
         (InoutForm::Vec, Ty::Bytes) => HostTy::Bytes,
         (InoutForm::Vec, Ty::List(c)) => {
-            HostTy::List(Box::new(default_host(c).map_err(|e| no(e))?))
+            HostTy::List(Box::new(default_host(c).map_err(&no)?))
         }
         (InoutForm::Array, Ty::BytesN(n)) => HostTy::BytesN(*n),
         (InoutForm::Int(ht), Ty::Fx(f)) if f.suffix() == ht => HostTy::Int(ht.clone()),

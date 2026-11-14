@@ -141,3 +141,22 @@ fn debug_output_of_a_parameter_without_inout_is_the_pre_wx_g_text() {
         assert!(format!("{:?}", op.params[0]).contains("inout: true"));
     });
 }
+
+#[test]
+fn the_corpus_descriptor_names_the_inout_parameters_and_the_slot() {
+    use coding_adventures_warrant_grammar::checker::check_warrant;
+    use coding_adventures_warrant_grammar::corpus::inout_descriptor;
+    let src = "warrant t v1\n  error E = X\n  op a(buf: inout Bytes) -> Bytes\n  op b(v: Nat, out: inout Bytes) -> (Nat, Bytes)\n  op c(p: Nat, q: inout Bytes, r: inout Nat) -> Result<(Bytes, Nat), E>\n  op d(x: U8) -> U8\n  labels a:\n    buf public\n  labels b:\n    v public\n    out public\n  labels c:\n    p public\n    q public\n    r public\n  labels d:\n    x public\n";
+    parse(src, |file| {
+        let checked = check_warrant(file).expect("checks");
+        let d = |op: &str| inout_descriptor(file, &checked, op);
+        let a = d("a").unwrap();
+        assert_eq!((a.inout, a.post_slot), (vec!["buf".to_string()], "S1"));
+        let b = d("b").unwrap();
+        assert_eq!((b.inout, b.post_slot), (vec!["out".to_string()], "S3"));
+        let c = d("c").unwrap();
+        assert_eq!((c.inout, c.post_slot), (vec!["q".to_string(), "r".to_string()], "S4"));
+        assert_eq!(d("d"), None, "no inout parameter, no descriptor");
+        assert_eq!(d("nope"), None);
+    });
+}
