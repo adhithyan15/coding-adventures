@@ -67,8 +67,27 @@ func newStepFix(t *testing.T) *stepFix { return newStepFixEnv(t) }
 // derives the build tool's environment from.
 func newStepFixEnv(t *testing.T, extraEnv ...string) *stepFix {
 	t.Helper()
+	return newStepFixCustom(t, planSteps, nil, false, extraEnv...)
+}
+
+// newStepFixCustom is newStepFixEnv with its own steps export, extra tracked
+// files, and a fake tracer that writes no "fake trace" line of its own when
+// playback is set (the step's line then writes the whole trace, so a test can
+// give the supervisor a canned one the classifier can parse).
+func newStepFixCustom(t *testing.T, plan string, files map[string]string, playback bool, extraEnv ...string) *stepFix {
+	t.Helper()
+	return newStepFixLinks(t, plan, files, nil, playback, extraEnv...)
+}
+
+// newStepFixLinks is newStepFixCustom with tracked symlinks (path -> text).
+func newStepFixLinks(t *testing.T, plan string, files, links map[string]string, playback bool, extraEnv ...string) *stepFix {
+	t.Helper()
 	p := newPrep(t)
+	p.links = links
 	p.env = append(p.env, extraEnv...)
+	for k, v := range files {
+		p.files[k] = v
+	}
 	f := &stepFix{t: t, p: p, aux: filepath.Join(p.base, "aux")}
 	if err := os.MkdirAll(f.aux, 0o755); err != nil {
 		t.Fatal(err)
@@ -86,16 +105,24 @@ while [ $# -gt 0 ]; do
   case "$1" in -o) tf="$2"; shift 2;; --) shift; break;; *) shift;; esac
 done
 n="${tf##*/}"
+aux='` + f.aux + `'
+root='ROOTDIR'
 echo run >> '` + f.count + `'
 printf '%s\n' "$@" > '` + f.args + `'
 env | sort > '` + f.envf + `'
-echo "fake trace" >&$n
+FAKELINE
 for last; do :; done
 eval "$last"
 `
-	writeBytes(t, p.strace, []byte(script), 0o755)
-	p.steps = planSteps
+	fake := `echo "fake trace" >&$n`
+	if playback {
+		fake = ":"
+	}
+	script = strings.Replace(script, "FAKELINE", fake, 1)
+	p.steps = plan
 	p.commit()
+	script = strings.Replace(script, "ROOTDIR", p.root, 1) // the checkout exists only now
+	writeBytes(t, p.strace, []byte(script), 0o755)
 	p.mustPrepare()
 	pre, err := VerifyPre(p.dir)
 	if err != nil {
@@ -118,6 +145,8 @@ func (f *stepFix) opts(action string, step, count int, line string) StepOptions 
 		Dir: f.p.dir, Argv: []string{"sh", "-c", line}, Environ: f.env(action, step, count),
 		Cwd: f.pre.Config.PackageDir(action), KilnExe: f.p.kiln,
 		Stdout: &f.stdout, Stderr: &f.stderr, Drain: 2 * time.Second,
+		// The classification child is this test binary (classify_child_unix_test.go).
+		ChildCmd: testChildCmd(""),
 	}
 }
 
@@ -305,8 +334,15 @@ func TestStepMirrorsTheRootsStatus(t *testing.T) {
 	if res.ExitCode != 3 || sc.StraceExit != 3 || sc.RootStatus != 3 || sc.Exit125 || !sc.Clean || !sc.StepNetNS {
 		t.Fatalf("%d %+v", res.ExitCode, sc)
 	}
-	// Step 1 of the same action runs next, and sees step 0's sidecar.
-	if res := f.must(actB, 1, 2, "exit 0"); res.ExitCode != 0 {
+	// A failing step ended the action (it is classified), so step 1 of the same
+	// action is refused (decision P13). An action whose first step passed has its
+	// second run next and sees the first's sidecar:
+	f.refused(f.opts(actB, 1, 2, "exit 0"), "already been classified")
+	g := newStepFix(t)
+	if res := g.must(actB, 0, 2, "exit 0"); res.ExitCode != 0 {
+		t.Fatalf("%d", res.ExitCode)
+	}
+	if res := g.must(actB, 1, 2, "exit 3"); res.ExitCode != 3 {
 		t.Fatalf("%d", res.ExitCode)
 	}
 }
@@ -791,7 +827,7 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 		if err := os.Mkdir(other, 0o700); err != nil {
 			t.Fatal(err)
 		}
-		os.Remove(filepath.Join(f.p.dir, "traces"))
+		os.RemoveAll(filepath.Join(f.p.dir, "traces"))
 		if err := os.Symlink(other, filepath.Join(f.p.dir, "traces")); err != nil {
 			t.Skip(err)
 		}
@@ -799,9 +835,9 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 	})
 	t.Run("a file", func(t *testing.T) {
 		f := newStepFix(t)
-		os.Remove(filepath.Join(f.p.dir, "traces"))
+		os.RemoveAll(filepath.Join(f.p.dir, "traces"))
 		writeBytes(t, filepath.Join(f.p.dir, "traces"), nil, 0o600)
-		f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces of")
+		f.refused(f.opts(actZ, 0, 1, "exit 0"), "not a real directory")
 	})
 	t.Run("open to others", func(t *testing.T) {
 		f := newStepFix(t)
