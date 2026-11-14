@@ -41,6 +41,7 @@ REQUIRED = (
     "TestSandboxROBeneathHomeRefusals",
     "TestSandboxOutputDescriptors",
     "TestSandboxRecordStep",
+    "TestSandboxRecordCollect",
 )
 
 FINAL = {"pass", "fail", "skip"}

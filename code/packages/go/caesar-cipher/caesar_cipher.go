@@ -165,6 +165,17 @@ var EnglishFrequencies = map[rune]float64{
 //	 'H' |  7  |   3   |      10        |  'K'
 //	 'K' | 10  |  -3   |       7        |  'H'   ← decryption
 
+// normalizeShift reduces any int shift to its residue in 0..25.
+//
+// SEC-010: Go's int wraps silently on overflow, so any arithmetic on a raw,
+// caller-supplied shift is suspect: `pos + shift` overflows near math.MaxInt,
+// and `-shift` overflows at math.MinInt (-math.MinInt == math.MinInt). The
+// remainder `shift % 26` cannot overflow, and the reduced value is tiny, so we
+// reduce FIRST and only then add or negate.
+func normalizeShift(shift int) int {
+	return ((shift % 26) + 26) % 26
+}
+
 // shiftRune shifts a single rune by the given amount. Non-letter runes are
 // returned unchanged. Case is preserved.
 func shiftRune(r rune, shift int) rune {
@@ -196,7 +207,7 @@ func shiftRune(r rune, shift int) rune {
 	//   normalized = (shifted % 26 + 26) % 26  → always 0..25
 	//
 	pos := int(r - base)
-	shifted := ((pos+shift)%26 + 26) % 26
+	shifted := (pos + normalizeShift(shift)) % 26
 
 	return base + rune(shifted)
 }
@@ -256,7 +267,7 @@ func Decrypt(text string, shift int) string {
 	result, _ := StartNew[string]("caesar-cipher.Decrypt", "",
 		func(op *Operation[string], rf *ResultFactory[string]) *OperationResult[string] {
 			op.AddProperty("shift", shift)
-			return rf.Generate(true, false, Encrypt(text, -shift))
+			return rf.Generate(true, false, Encrypt(text, -normalizeShift(shift)))
 		}).GetResult()
 	return result
 }

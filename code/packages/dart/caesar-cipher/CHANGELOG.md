@@ -1,5 +1,11 @@
 # Changelog — coding_adventures_caesar_cipher
 
+## [Unreleased]
+
+### Fixed
+
+- SEC-010: `decrypt` negated the raw shift (Dart VM 64-bit `int`). `decrypt` now reduces the shift to 0..25 before negating it. `-minInt64` wraps back to `minInt64`, so the undo shifted the wrong way and returned wrong plaintext. Tests: `decrypt` at the minimum shift against a by-hand value, plus `decrypt(encrypt(t, s), s) == t` for s in {min, min+1, -1, 0, 25, 26, max}. `encrypt` was already safe (`((shift % 26) + 26) % 26`; Dart `%` is Euclidean). Native-VM semantics only; JS-compiled Dart is not what the package tests.
+
 ## 0.1.0 — 2026-07-10
 
 ### Added

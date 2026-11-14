@@ -1,0 +1,17 @@
+# Warrant binding manifest (VER04 section 6, VER04j sections 4.6 and 14.4) for
+# code/specs/x25519.warrant.  A PILOT of fixed-length byte arrays: `bytes<32>` is
+# the Rust `[u8; 32]` (a top-level parameter is `&[u8; 32]`), and `err_any=` maps
+# the opaque `&'static str` error of `x25519` to the one Warrant case.
+package coding_adventures_x25519
+revision 0.2.0
+spec code/specs/x25519.warrant
+output code/packages/rust/x25519/tests/generated/warrant_evidence.rs
+seed 0x5832_3535_3139_5057
+property_cases 2048
+fuzz_iterations 1200
+negctl_fuzz_iterations 600
+exhaustive_budget 400000
+
+op clamp_scalar export=clamp_scalar args=bytes<32> ret=bytes<32> faults=flip-result-bit,drop-last-result-byte
+op x25519 export=x25519 args=bytes<32>,bytes<32> ret=bytes<32> err_any=LOW_ORDER faults=flip-result-bit,missing-error
+op x25519_base export=x25519_base args=bytes<32> ret=bytes<32> err_any=LOW_ORDER faults=flip-result-bit

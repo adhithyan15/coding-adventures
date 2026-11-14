@@ -223,4 +223,28 @@ class CaesarCipherTest {
             }
         }
     }
+
+    // SEC-010: decrypt used to be encrypt(text, -shift). In Java, -Integer.MIN_VALUE
+    // silently wraps back to Integer.MIN_VALUE (two's complement has one more
+    // negative value than positive), and encrypt then reduces that to
+    // (-2^31 mod 26) = 2: a forward shift of 2 where a backward shift of 2 was
+    // needed. Wrong plaintext, no exception.
+    //
+    // By hand: 2^31 mod 26 = 24, so MIN_VALUE is congruent to +2; undoing it
+    // shifts by -2, and "ABC" becomes "YZA".
+    @Test
+    void decryptIntMinValueIsCorrect() {
+        assertEquals("YZA", CaesarCipher.decrypt("ABC", Integer.MIN_VALUE));
+        assertEquals("yza", CaesarCipher.decrypt("abc", Integer.MIN_VALUE));
+    }
+
+    @Test
+    void decryptInvertsEncryptAtIntExtremes() {
+        String text = "Hello, World! xyz XYZ";
+        int[] shifts = {Integer.MIN_VALUE, Integer.MIN_VALUE + 1, -1, 0, 25, 26, Integer.MAX_VALUE};
+        for (int shift : shifts) {
+            assertEquals(text, CaesarCipher.decrypt(CaesarCipher.encrypt(text, shift), shift),
+                "round trip failed for shift " + shift);
+        }
+    }
 }

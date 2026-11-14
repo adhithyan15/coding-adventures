@@ -1,0 +1,29 @@
+# Warrant binding table (VER04i section 5.1) for code/specs/ct-compare.warrant.
+#
+# One line per Warrant operation: which public export implements it and how a
+# raised exception becomes a declared `Err` variant.  This file is data, not
+# code -- it cannot compute an answer, retry or fall back; the runner
+# (`coding_adventures_warrant_corpus`) reads nothing else about this package.
+#
+# `width=implicit`: `ct_eq_fixed` infers the width N from its buffers; the
+# runner asserts every Bytes<N> argument really has length N and does not pass N.
+#
+# The `errors=` row maps by EXACT exception class, not message: a subclass of
+# ValueError is not the declared error.  But `ct_select_bytes` raises a plain
+# ValueError for the length mismatch and `_as_bytes` raises plain ValueError for
+# bad elements, so any other plain ValueError would still read as the
+# length-mismatch error.  The corpus only passes `bytes`, so that cannot happen
+# today; a dedicated exception type would close it (backlog, portable Warrant
+# queue).  That remaining limit is VER04i section 11, item 3.
+lane python
+package python/ct-compare
+module ct_compare
+import coding_adventures_ct_compare
+source src/coding_adventures_ct_compare
+seed 0x5741_5252_414e_5421
+values Bool=bool Bytes=bytes Nat=int U64=int
+
+op eq export=ct_eq
+op eq_fixed export=ct_eq_fixed width=implicit
+op select_bytes export=ct_select_bytes errors=CT_SELECT_LENGTH_MISMATCH:ValueError
+op eq_u64 export=ct_eq_u64

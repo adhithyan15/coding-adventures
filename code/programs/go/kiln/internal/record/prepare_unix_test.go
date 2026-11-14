@@ -53,6 +53,7 @@ type prep struct {
 	toolEnvs  [][]string
 	files     map[string]string
 	links     map[string]string // tracked symlinks to add: path -> link text
+	repoDest  string            // when set, the repository is made there, not in a t.TempDir()
 }
 
 const fixtureToolchains = `{
@@ -91,9 +92,14 @@ func realGit(t *testing.T) (string, string) {
 	return b.Path, b.SHA256
 }
 
-func newPrep(t *testing.T) *prep {
+func newPrep(t *testing.T) *prep { return newPrepAt(t, canonTemp(t)) }
+
+// newPrepAt is newPrep with the base directory chosen by the caller (it must be
+// canonical and empty). The collect tests keep a prepared world alive across
+// tests, so its base is not a t.TempDir().
+func newPrepAt(t *testing.T, base string) *prep {
 	t.Helper()
-	p := &prep{t: t, base: canonTemp(t), toolErr: map[string]error{}}
+	p := &prep{t: t, base: base, toolErr: map[string]error{}}
 	p.home = filepath.Join(p.base, "home")
 	p.tmpdir = filepath.Join(p.base, "kiln-tmp")
 	p.dir = filepath.Join(p.base, "record")
@@ -130,7 +136,12 @@ func (p *prep) commit() {
 	roots := append([]string{`{"path": "/bin", "kind": "image"}`, `{"path": "/sbin", "kind": "image"}`}, p.roots...)
 	sort.Slice(roots, func(a, b int) bool { return rootPath(roots[a]) < rootPath(roots[b]) })
 	p.files["code/kiln/legacy/host-roots.json"] = `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`
-	repo := newRepo(p.t, p.files)
+	var repo string
+	if p.repoDest != "" {
+		repo = newRepoAt(p.t, p.repoDest, p.files)
+	} else {
+		repo = newRepo(p.t, p.files)
+	}
 	root, err := filepath.EvalSymlinks(repo)
 	if err != nil {
 		p.t.Fatal(err)

@@ -381,3 +381,35 @@ describe("Caesar Cipher", function()
         end)
     end)
 end)
+
+-- ============================================================================
+-- SEC-010: integer extremes
+-- ============================================================================
+--
+-- decrypt used to be encrypt(text, -shift). Lua 5.3+ integers are 64-bit
+-- two's complement and WRAP on overflow, so -math.mininteger == math.mininteger
+-- and the "undo" shifted the wrong way: wrong plaintext, no error. (encrypt was
+-- already safe: it reduces `shift % 26` first, and Lua's % is a floored modulo
+-- that always lands in 0..25 for a positive modulus.)
+--
+-- By hand: 2^63 mod 26 = 8, so mininteger is congruent to -8, i.e. +18. Undoing
+-- it shifts by -18 = +8, so "ABC" must decrypt to "IJK".
+describe("Caesar Cipher integer extremes (SEC-010)", function()
+    it("decrypts with math.mininteger correctly", function()
+        assert.are.equal("IJK", caesar.decrypt("ABC", math.mininteger))
+        assert.are.equal("ijk", caesar.decrypt("abc", math.mininteger))
+    end)
+
+    it("encrypts with math.maxinteger correctly (2^63-1 = 7 mod 26)", function()
+        assert.are.equal("HIJ", caesar.encrypt("ABC", math.maxinteger))
+    end)
+
+    it("decrypt inverts encrypt at integer extremes", function()
+        local text = "Hello, World! xyz XYZ"
+        local shifts = { math.mininteger, math.mininteger + 1, -1, 0, 25, 26, math.maxinteger }
+        for _, shift in ipairs(shifts) do
+            assert.are.equal(text, caesar.decrypt(caesar.encrypt(text, shift), shift),
+                "round trip failed for shift " .. tostring(shift))
+        end
+    end)
+end)

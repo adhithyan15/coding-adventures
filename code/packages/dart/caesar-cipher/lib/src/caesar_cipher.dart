@@ -92,7 +92,12 @@ String encrypt(String text, int shift) {
 /// ```
 /// decrypt("KHOOR", 3) → "HELLO"
 /// ```
-String decrypt(String text, int shift) => encrypt(text, -shift);
+///
+/// SEC-010: the shift is reduced to 0..25 *before* it is negated. Dart VM ints
+/// are 64-bit and wrap, so `-shift` for the minimum int is the minimum int
+/// again, and the "undo" would shift the wrong way. The residue is small, so
+/// negating it is always safe.
+String decrypt(String text, int shift) => encrypt(text, -(((shift % 26) + 26) % 26));
 
 /// Apply ROT13 — a special Caesar cipher with shift 13.
 ///
