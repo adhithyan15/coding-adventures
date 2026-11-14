@@ -106,42 +106,55 @@ func safeList(name, value string, regions []Region) (SafePathResult, error) {
 // 40 too).
 const maxLinkHops = 40
 
-// resolveDeepest resolves the symlinks of p. A path that does not exist yet is
-// resolved through its deepest EXISTING ancestor and the missing remainder is
-// appended: `/opt/x/bin` with `/opt/x` a symlink into the checkout and no `bin`
-// yet is, for a step that can create it, the checkout's `bin`. A component that
-// is itself a symlink with no target yet (a DANGLING link) is followed by hand:
-// a step can create its target, so it is read and resolved again, up to
-// maxLinkHops times. More hops, or a loop, is an error: the entry is refused.
-func resolveDeepest(p string) (string, error) { return resolveHops(p, 0) }
-
-func resolveHops(p string, hops int) (string, error) {
-	if hops > maxLinkHops {
-		return "", fmt.Errorf("more than %d symbolic links in %q (a loop?)", maxLinkHops, printable(p))
+// resolveDeepest resolves the symlinks of the absolute path p the way the kernel
+// would if every missing name were created later as a plain directory:
+//
+//   - a path that does not exist yet is resolved through its deepest EXISTING
+//     ancestor, the missing remainder kept (`/opt/x/bin` with `/opt/x` a link
+//     into the checkout is the checkout's `bin`);
+//   - a link whose target does not exist (a DANGLING link) is followed too: a
+//     step can create the target;
+//   - `..` is applied to the RESOLVED path so far, never lexically across a
+//     component that is a link: with `a/b -> <checkout>/d` and
+//     `<checkout>/d/l -> ../x/bin`, the entry `a/b/l` is `<checkout>/x/bin`, not
+//     `a/x/bin`.
+//
+// It walks the path one component at a time, replacing a link by its target at
+// the front of the work list, at most maxLinkHops times; more hops, or a loop,
+// is an error and the entry is refused.
+func resolveDeepest(p string) (string, error) {
+	work := strings.Split(p, "/")
+	cur := "/"
+	hops := 0
+	for len(work) > 0 {
+		c := work[0]
+		work = work[1:]
+		switch c {
+		case "", ".":
+			continue
+		case "..":
+			cur = filepath.Dir(cur) // cur is physical: this is the kernel's ".."
+			continue
+		}
+		next := filepath.Join(cur, c)
+		st, err := os.Lstat(next)
+		if err != nil || st.Mode()&os.ModeSymlink == 0 {
+			cur = next // a plain name, or one that is not there (yet)
+			continue
+		}
+		if hops++; hops > maxLinkHops {
+			return "", fmt.Errorf("more than %d symbolic links in %q (a loop?)", maxLinkHops, printable(p))
+		}
+		t, err := os.Readlink(next)
+		if err != nil {
+			return "", err
+		}
+		if filepath.IsAbs(t) {
+			cur = "/"
+		}
+		work = append(strings.Split(t, "/"), work...)
 	}
-	rest := ""
-	for cur := p; ; {
-		if r, err := filepath.EvalSymlinks(cur); err == nil {
-			return filepath.Join(r, rest), nil
-		}
-		if st, err := os.Lstat(cur); err == nil && st.Mode()&os.ModeSymlink != 0 {
-			t, err := os.Readlink(cur)
-			if err != nil {
-				return "", err
-			}
-			if !filepath.IsAbs(t) {
-				t = filepath.Join(filepath.Dir(cur), t)
-			}
-			return resolveHops(filepath.Join(filepath.Clean(t), rest), hops+1)
-		}
-		// A plain missing name (or one we cannot look at): go up.
-		parent := filepath.Dir(cur)
-		if parent == cur {
-			return p, nil
-		}
-		rest = filepath.Join(filepath.Base(cur), rest)
-		cur = parent
-	}
+	return cur, nil
 }
 
 // LoaderEnv validates the variables that steer the dynamic loader of every
@@ -202,7 +215,8 @@ func pathOf(environ []string) string {
 //
 //	HOME                    git and the Go runtime look for a home directory
 //	PATH                    the validated PATH: the build tool runs git, sh and
-//	                        toolchain probes through it
+//	                        other helpers through it (the exports start no
+//	                        toolchain probe)
 //	LD_LIBRARY_PATH         only if the recorder's own was validated and kept
 //	source.PinnedEnv()      git's configuration pinned to nothing (system and
 //	                        global are the null device), no optional locks or

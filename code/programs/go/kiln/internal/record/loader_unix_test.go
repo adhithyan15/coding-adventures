@@ -299,3 +299,31 @@ func TestSafePathFollowsDanglingLinks(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 }
+
+// L1: ".." is applied to the physically resolved path, never lexically across a
+// link: a/b -> <checkout>/d and <checkout>/d/l -> ../x/bin (dangling) make the
+// entry a/b/l the checkout's x/bin, not a/x/bin.
+func TestSafePathAppliesDotDotAfterResolvingLinks(t *testing.T) {
+	d := canonTemp(t)
+	checkout := filepath.Join(d, "checkout")
+	os.MkdirAll(filepath.Join(checkout, "d"), 0o755)
+	os.MkdirAll(filepath.Join(d, "a"), 0o755)
+	os.Symlink(filepath.Join(checkout, "d"), filepath.Join(d, "a", "b"))
+	os.Symlink("../x/bin", filepath.Join(checkout, "d", "l"))
+	entry := filepath.Join(d, "a", "b", "l")
+	if _, err := SafePath(entry, []Region{{"the checkout", checkout}}); err == nil {
+		t.Fatal("an entry that is physically <checkout>/x/bin was accepted")
+	}
+	if got, err := resolveDeepest(entry); err != nil || got != filepath.Join(checkout, "x", "bin") {
+		t.Fatalf("%q %v", got, err)
+	}
+	// ".." in the middle of an absolute link target, through a link.
+	os.Symlink(filepath.Join(d, "a", "b")+"/../y", filepath.Join(d, "abs")) // not cleaned
+	if got, err := resolveDeepest(filepath.Join(d, "abs")); err != nil || got != filepath.Join(checkout, "y") {
+		t.Fatalf("%q %v", got, err)
+	}
+	// An ordinary ".." still works.
+	if got, err := resolveDeepest(filepath.Join(d, "a", "..", "a", "z")); err != nil || got != filepath.Join(d, "a", "z") {
+		t.Fatalf("%q %v", got, err)
+	}
+}

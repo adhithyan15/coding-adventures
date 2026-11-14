@@ -1105,7 +1105,9 @@ would be run by `prepare` itself. So:
   to the wrapper plus `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`, so
   `record step` refuses to run unless its inherited environment, apart from those
   three, equals `build_tool_env` exactly (in particular every `GIT_*`, `LD_*` and
-  `PATH` entry).
+  `PATH` entry). The comparison is of multisets of `NAME=value` entries after
+  removing `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`, and a repeated name
+  (in either) is a refusal.
 - **2b-2.** `step` and `collect` re-verify `pre/` against `SEALED` and the binding
   id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
   comes only from the files being unreachable from the sandbox.

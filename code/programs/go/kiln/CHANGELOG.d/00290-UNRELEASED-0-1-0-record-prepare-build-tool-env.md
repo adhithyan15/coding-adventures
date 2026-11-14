@@ -19,6 +19,13 @@
   refuse `prepare`.
 - `SafePath` follows a dangling symlink by hand (relative or absolute, with a
   remainder beneath it), at most 40 hops; a loop or too many hops refuses the entry.
+- L1: `resolveDeepest` walks the path one component at a time and applies `..` to
+  the physically resolved path, never lexically across a link (`a/b ->
+  <checkout>/d` with `<checkout>/d/l -> ../x/bin` dangling: the entry `a/b/l` is
+  `<checkout>/x/bin` and is refused). The `buildToolEnv` comment no longer claims
+  the exports run toolchain probes. P11's 2b-2 item says `record step` compares
+  the inherited environment as a multiset of `NAME=value` entries without the
+  three `KILN_*` variables and refuses duplicate names.
 - `source.PinnedEnv` and `source.ConfigEnv` are exported so both paths use one
   definition.
 
