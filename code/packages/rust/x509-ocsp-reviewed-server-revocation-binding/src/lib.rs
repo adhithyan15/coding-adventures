@@ -23,6 +23,9 @@
 //! fixed-path wrapper carries the projection through its retained proof so a
 //! later HTTPS composition can derive the exact leaf without accepting a
 //! detached certificate, callback, or substitute evidence implementation.
+//! The nested and double-nested complete fixed-path wrappers carry the same
+//! projection through their deeper retained proof graphs without widening the
+//! caller-controlled input surface.
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
@@ -3684,6 +3687,34 @@ impl<Proof, OriginalResponderRevocation, IntermediateRevocation, AddedResponderR
         >,
     > {
         &self.responder_no_check_policy
+    }
+
+    /// Return the exact server leaf retained by the double-nested proof.
+    ///
+    /// The target is derived only through sealed repository-owned evidence.
+    /// No detached certificate, callback, path, or trust assertion is accepted.
+    #[must_use]
+    pub fn server_target_certificate(&self) -> &x509_certificate::X509Certificate<'_>
+    where
+        Proof: X509OcspReviewedServerRevocationTargetEvidence,
+    {
+        self.responder_no_check_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation_responder_no_check_intermediate_revocation()
+            .responder_no_check_policy()
+            .intermediate_dns_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .target_certificate()
     }
 }
 
@@ -9566,10 +9597,15 @@ mod tests {
 
     #[test]
     fn double_nested_no_check_completes_exact_alternative_fixed_path() {
+        let leaf_encoded = fixture(LEAF_HEX);
+        let detached_leaf_encoded = leaf_encoded.clone();
         let intermediate_encoded = certificate(&[]);
         let root_encoded = certificate(&[]);
         let added_responder_encoded = certificate(&[]);
         let final_responder_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let detached_leaf =
+            decode_x509_certificate(&detached_leaf_encoded, Asn1Limits::default()).unwrap();
         let intermediate =
             decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
         let root = decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap();
@@ -9580,10 +9616,12 @@ mod tests {
         let observation_time = time(b"\x17\x0d261025120000Z");
 
         let original_responder_no_check =
-            responder_revocation_responder_no_check_intermediate_binding_evidence(
+            responder_revocation_responder_no_check_intermediate_binding_evidence_with_target_and_constraints(
+                &leaf,
                 &intermediate,
                 &root,
                 observation_time,
+                None,
             );
         let intermediate_status = TestIntermediateStatusResponderRevocationEvidence {
             original_responder: &intermediate,
@@ -9670,6 +9708,11 @@ mod tests {
             format!("{complete:?}"),
             "ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy"
         );
+        assert!(core::ptr::eq(complete.server_target_certificate(), &leaf));
+        assert!(!core::ptr::eq(
+            complete.server_target_certificate(),
+            &detached_leaf,
+        ));
     }
 
     #[test]

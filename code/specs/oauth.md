@@ -5121,6 +5121,25 @@ authority. Those remaining branches, repository-owned TLS/HTTP composition,
 and audited transport remain separate blockers. Concrete HTTPS and live-
 provider readiness remain unavailable.
 
+The existing `x509-ocsp-reviewed-server-revocation-binding` prerequisite now
+also carries its sealed exact-server-target projection through the complete
+double-nested no-check fixed-path revocation proof. The projection traverses
+only the completion's retained repository-owned evidence graph back to the
+original reviewed-server proof and returns that proof's exact decoded target
+certificate object. A byte-equal independent decode remains a different
+object, and callers cannot supply a detached certificate, callback-shaped
+claim, path, status result, or trust assertion.
+
+This double-nested projection performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It does not bind an HTTPS destination,
+generalize revocation or path construction, build or run TLS or HTTP,
+authorize OAuth transport, or grant network authority. The double-nested
+HTTPS binding, the other remaining complete fixed-path revocation branches,
+repository-owned TLS/HTTP composition, and audited transport remain separate
+blockers. Concrete HTTPS and live-provider readiness remain unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact

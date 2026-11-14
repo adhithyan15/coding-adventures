@@ -99,8 +99,17 @@ sealed projection through its deeper retained proof graph. It exposes only the
 exact server target retained by the original reviewed-server proof, and a
 byte-equal independently decoded certificate remains a different object. This
 projection accepts no detached certificate, callback-shaped claim, path,
-status result, or trust assertion. Binding an HTTPS destination to the nested
-completion remains separate work.
+status result, or trust assertion. The separate
+`https-reviewed-server-path-binding` package now binds this nested completion
+to its exact HTTPS destination without widening that input surface.
+
+The double-nested responder-no-check complete fixed-path wrapper carries the
+same sealed projection through both retained responder-revocation layers. It
+likewise exposes only the original reviewed-server proof's exact target and
+a byte-equal independently decoded certificate remains a different object.
+The projection accepts no detached certificate, callback-shaped claim, path,
+status result, or trust assertion. Binding an HTTPS destination to this
+double-nested completion remains separate work.
 
 This ordered signed-path bridge performs no new parsing or signature
 verification and no credential access or editing, signing, storage, clock
@@ -115,7 +124,7 @@ The sealed target projections likewise perform no parsing, validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit or trace emission, I/O, network access, or
 other external effect. The remaining complete fixed-path revocation branches
-and the final HTTPS composition remain separate work.
+and the double-nested HTTPS composition remain separate work.
 
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
