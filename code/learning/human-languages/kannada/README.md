@@ -185,7 +185,7 @@ Spanish-proxy demands. The measured C2 planner remains **9,542 projectable /
 tranches. These are repository measurements, not claims of certification,
 standard setting, human validation, learner readiness or learner attainment.
 
-## Kannada A1 movement bridge status
+## Kannada A1 place-bridge status
 
 The four-minute [`KA-C108-movement`](./lessons/KA-C108-movement.md) lesson
 contrasts the fixed **ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** (“go to school”) destination with the
@@ -193,11 +193,18 @@ already-taught **ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇ�
 origin. Chapters 109, 110, 113, and 149 retrieve that distinction across the
 R1–R4 windows. It does not claim general dative or verb-conjugation mastery.
 
-Strict Kannada A1 inventory coverage is now **212/258**, with 46 points still
-unmapped. In particular, the separate noun-plus-spatial-relator demand remains
-open: earlier “near,” “on,” and “under” words do not demonstrate that
-composition. Coverage is an internal measure, not an external CEFR judgment or
-learner-readiness claim.
+The two four-minute chapter-110 lessons
+[`KA-C110-tree-on-under`](./lessons/KA-C110-tree-on-under.md) and
+[`KA-C110-house-near-far-inside`](./lessons/KA-C110-house-near-far-inside.md)
+add fixed, named-reference frames for **on, under, near, far from,** and
+**inside**. The far-from frame reuses the chapter-103 source marker; it is
+not presented as another genitive postposition. Reading and handwriting are
+included, while the voice core remains usable without the writing section.
+
+Strict Kannada A1 inventory coverage is now **213/258**, with 45 points still
+unmapped. These two internally assessed place tasks do not demonstrate
+productive spatial grammar for arbitrary nouns. Coverage is an internal
+measure, not an external CEFR judgment or learner-readiness claim.
 
 ## Kannada B2 content inventory status
 

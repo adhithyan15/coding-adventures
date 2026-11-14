@@ -50,6 +50,14 @@ func TestRealBuildToolExportsAreWhatPrepareReads(t *testing.T) {
 	if testing.Short() {
 		t.Skip("-short: runs the real build tool over the whole repository")
 	}
+	if runtime.GOOS == "windows" {
+		// `kiln record prepare` runs only on linux/amd64, and this test replays the
+		// MINIMAL Unix environment it gives the build tool: a ':'-separated PATH of
+		// /usr/bin and /bin. That environment does not exist on Windows (the real
+		// failure there was "git: executable file not found in %PATH%", because ':'
+		// is not the PATH separator), so there is nothing to verify.
+		t.Skip("record prepare is linux/amd64-only; its minimal build-tool environment is Unix-specific")
+	}
 	root := repoRoot()
 	if root == "" {
 		t.Skip("the repository root was not found")

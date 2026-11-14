@@ -39,7 +39,26 @@ func githubHost(t *testing.T, env map[string]string) host.Host {
 	return host.NewGitHub(func(k string) string { return all[k] }, &bytes.Buffer{})
 }
 
-var goodArgs = []string{"prepare", "--root", "/r", "--dir", "/d", "--build-tool", "/b", "--shard-index", "3", "--shard-count", "12", "--job-start", "1794000000"}
+// absPath returns p as an absolute path on every OS. `kiln record prepare` checks its
+// paths with filepath.IsAbs, which rejects "/r" on Windows (no drive), so the tests
+// spell their paths through this instead of hard-coding Unix ones.
+func absPath(p string) string {
+	if runtime.GOOS == "windows" {
+		return `C:` + filepath.FromSlash(p)
+	}
+	return p
+}
+
+// goodArgs is a valid `record prepare` command line. On Windows the --strace and --git
+// defaults are Linux paths (`record prepare` runs only on linux/amd64) that IsAbs
+// rejects before the platform check is reached, so they are given explicitly there.
+var goodArgs = func() []string {
+	args := []string{"prepare", "--root", absPath("/r"), "--dir", absPath("/d"), "--build-tool", absPath("/b"), "--shard-index", "3", "--shard-count", "12", "--job-start", "1794000000"}
+	if runtime.GOOS == "windows" {
+		args = append(args, "--strace", absPath("/usr/bin/strace"), "--git", absPath("/usr/bin/git"))
+	}
+	return args
+}()
 
 func runRec(args ...string) (int, string, string) {
 	var out, errb bytes.Buffer
@@ -64,15 +83,6 @@ func TestRecordUsage(t *testing.T) {
 	}
 }
 
-// The post-build pass is a stub until stage 4 PR 2b-2b. It must refuse, so a
-// workflow wired to it fails instead of recording nothing.
-func TestRecordCollectIsAStub(t *testing.T) {
-	code, out, e := runRec("collect", "--root", "/r", "--dir", "/d", "--results", "/x", "--out", "/o")
-	if code != 1 || out != "" || !strings.Contains(e, "2b-2b") || !strings.Contains(e, "collect") {
-		t.Errorf("%d %q %q", code, out, e)
-	}
-}
-
 // recordStepHooks also restores the step hook.
 func recordStepHooks(t *testing.T) {
 	t.Helper()
@@ -93,8 +103,8 @@ func TestRecordStepUsageAndPlatform(t *testing.T) {
 		"nothing":         {"step"},
 		"no dir":          {"step", "--", "sh", "-c", "true"},
 		"a relative dir":  {"step", "--dir", "rec", "--", "sh", "-c", "true"},
-		"no command":      {"step", "--dir", "/d"},
-		"an unknown flag": {"step", "--nope", "--dir", "/d", "--", "sh", "-c", "true"},
+		"no command":      {"step", "--dir", absPath("/d")},
+		"an unknown flag": {"step", "--nope", "--dir", absPath("/d"), "--", "sh", "-c", "true"},
 	} {
 		if code, out, e := runRec(args...); code != 2 || out != "" || e == "" {
 			t.Errorf("%s: %d %q %q", name, code, out, e)
@@ -102,7 +112,7 @@ func TestRecordStepUsageAndPlatform(t *testing.T) {
 	}
 	// Off linux/amd64 the step is refused with 3, before anything is looked at.
 	recordPlatformOK = func() bool { return false }
-	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true")
+	code, out, e := runRec("step", "--dir", absPath("/d"), "--", "sh", "-c", "true")
 	if code != 3 || out != "" || !strings.Contains(e, "linux/amd64") || !strings.Contains(e, "not run") {
 		t.Fatalf("%d %q %q", code, out, e)
 	}
@@ -121,11 +131,11 @@ func TestRecordStepPassesWhatItWasGivenAndMirrorsTheStatus(t *testing.T) {
 		}
 		return &record.StepResult{ExitCode: 7}, nil
 	}
-	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "make -j4")
+	code, out, e := runRec("step", "--dir", absPath("/d"), "--", "sh", "-c", "make -j4")
 	if code != 7 || out != "relayed\n" || e != "" {
 		t.Fatalf("%d %q %q", code, out, e)
 	}
-	if got.Dir != "/d" || got.KilnExe != "/canonical/kiln" || got.Cwd != wd || strings.Join(got.Argv, "|") != "sh|-c|make -j4" || len(got.Environ) == 0 {
+	if got.Dir != absPath("/d") || got.KilnExe != "/canonical/kiln" || got.Cwd != wd || strings.Join(got.Argv, "|") != "sh|-c|make -j4" || len(got.Environ) == 0 {
 		t.Fatalf("%+v", got)
 	}
 }
@@ -137,12 +147,12 @@ func TestRecordStepRefusalsExit125WithoutEchoingTheEnvironment(t *testing.T) {
 	recordStep = func(record.StepOptions) (*record.StepResult, error) {
 		return nil, errors.New("the environment is wrong")
 	}
-	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true")
+	code, out, e := runRec("step", "--dir", absPath("/d"), "--", "sh", "-c", "true")
 	if code != record.ExitRefused || out != "" || !strings.Contains(e, "the environment is wrong") {
 		t.Fatalf("%d %q %q", code, out, e)
 	}
 	recordSelf = func() (string, error) { return "", errors.New("no exe") }
-	if code, _, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "no exe") {
+	if code, _, e := runRec("step", "--dir", absPath("/d"), "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "no exe") {
 		t.Fatalf("%d %q", code, e)
 	}
 }
@@ -173,9 +183,9 @@ func TestRecordPrepareUsageErrors(t *testing.T) {
 		"no job start":       without("--job-start"),
 		"a stray argument":   append(append([]string{}, goodArgs...), "extra"),
 		"an unknown flag":    append(append([]string{}, goodArgs...), "--nope"),
-		"a relative root":    replace(goodArgs, "/r", "repo"),
-		"a relative dir":     replace(goodArgs, "/d", "rec"),
-		"a relative tool":    replace(goodArgs, "/b", "bt"),
+		"a relative root":    replace(goodArgs, absPath("/r"), "repo"),
+		"a relative dir":     replace(goodArgs, absPath("/d"), "rec"),
+		"a relative tool":    replace(goodArgs, absPath("/b"), "bt"),
 		"a relative strace":  append(append([]string{}, goodArgs...), "--strace", "strace"),
 		"a relative git":     append(append([]string{}, goodArgs...), "--git", "git"),
 		"a negative index":   replace(goodArgs, "3", "-3"),
@@ -250,27 +260,27 @@ func TestRecordPrepareRunsPrepareOnATrustedRun(t *testing.T) {
 			PreDir: "/d/pre", Actions: 40, Refused: 2,
 		}, nil
 	}
-	code, out, e := runRec(append(append([]string{}, goodArgs...), "--strace", "/opt/strace")...)
+	code, out, e := runRec(append(append([]string{}, goodArgs...), "--strace", absPath("/opt/strace"))...)
 	if code != 0 || e != "" {
 		t.Fatalf("%d %s", code, e)
 	}
-	if got.Root != "/r" || got.Dir != "/d" || got.BuildTool != "/b" || got.KilnExe != "/opt/kiln" || got.Strace != "/opt/strace" ||
+	if got.Root != absPath("/r") || got.Dir != absPath("/d") || got.BuildTool != absPath("/b") || got.KilnExe != "/opt/kiln" || got.Strace != absPath("/opt/strace") ||
 		got.ShardIndex != 3 || got.ShardCount != 12 || got.JobStart != 1794000000 ||
 		got.Image != "github/"+got.Image[len("github/"):] || !strings.Contains(got.Image, "ubuntu24") || got.Getenv == nil || got.Environ == nil {
 		t.Fatalf("%+v", got)
 	}
-	for _, want := range []string{"ok: shard 3 of 12 prepared", strings.Repeat("ab", 32), "40 actions (2 without a weak key)", "/d/pre/exec-wrapper.json"} {
+	for _, want := range []string{"ok: shard 3 of 12 prepared", strings.Repeat("ab", 32), "40 actions (2 without a weak key)", filepath.Join("/d/pre", "exec-wrapper.json")} {
 		if !strings.Contains(out, want) {
 			t.Errorf("%q missing from %q", want, out)
 		}
 	}
 	// The default strace.
 	runRec(goodArgs...)
-	if got.Strace != "/usr/bin/strace" || got.Git != "/usr/bin/git" {
+	if got.Strace != absPath("/usr/bin/strace") || got.Git != absPath("/usr/bin/git") {
 		t.Fatalf("%q %q", got.Strace, got.Git)
 	}
-	runRec(append(append([]string{}, goodArgs...), "--git", "/opt/git")...)
-	if got.Git != "/opt/git" {
+	runRec(append(append([]string{}, goodArgs...), "--git", absPath("/opt/git"))...)
+	if got.Git != absPath("/opt/git") {
 		t.Fatalf("%q", got.Git)
 	}
 }
@@ -322,7 +332,7 @@ func TestRecordStepRefusesWhenItCannotArmParentDeath(t *testing.T) {
 		t.Fatal("RunStep was reached")
 		return nil, nil
 	}
-	if code, _, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "build tool exited") {
+	if code, _, e := runRec("step", "--dir", absPath("/d"), "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "build tool exited") {
 		t.Fatalf("%d %q", code, e)
 	}
 }

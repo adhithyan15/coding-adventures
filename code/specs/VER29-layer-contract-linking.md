@@ -6,6 +6,19 @@ row LV-005 call for before any code. It does not edit VER04 or VER13: the
 exact text of both edits is in section 16 and lands with the implementation
 slices of section 13.
 
+**Amendment (2026-11-14), owner decision, with [VER04m](VER04m-warrant-stateful-objects.md):**
+review item H3 is reworded from "stateless and deterministic binding (`state none`)" to
+**"pure in its explicit state"**. What changed: section 6.1 row 4, section 6.2 (the H3
+paragraph and its closing remark), section 14 conditions 5 and 8 and the verdict paragraph,
+decision D26 and the H3 label control of section 13.1. Why: with the old rule a flip-flop or a
+register could never be `exhaustive`, so condition 1 of section 14 failed for the whole 4004 chain
+by construction. `exhaustive` is now allowed only for a step claim over explicit state whose state
+set is complete and whose binding passes the hidden-state obligations; an operation executed by a
+driver, and any claim over a bounded set of call sequences, is never `exhaustive` (it is
+`bounded-set`, at most `exhaustive-sampled`, with the depth and call alphabet printed). No contract
+id, no rung of the label set and no other rule changes. The mechanism (the `state=explicit` key,
+reach classes, obligations, labels) is VER04m.
+
 **Parent:** [VER27](VER27-layered-validation-roadmap.md) (P9; sections 4.13,
 4.14 and 4.15; conflict C14; question Q8), [VER00](VER00-verified-shipping-program.md)
 (section 7.5, assume-guarantee; section 7.5.6, owned layers).
@@ -595,7 +608,7 @@ weakest:
 | Rank | Label | Meaning | Source in the manifests |
 |---|---|---|---|
 | 5 | `proved` | A certificate-checked proof (`proved` in VER13 section 5.4). | proof manifest entry with label `proved` |
-| 4 | `exhaustive` | Every value of the claim's whole input domain was enumerated and the claim held, by a stateless, deterministic binding (section 6.2). | `exhaustive` suite whose every binder is a complete finite type, on a stateless binding |
+| 4 | `exhaustive` | Every value of the claim's whole input domain was enumerated and the claim held, by a binding that is pure in its explicit state (section 6.2). | `exhaustive` suite whose every binder is a complete finite type, on a binding that is pure in its explicit state |
 | 3 | `bounded-proof(k=K)` | A proof up to a stated bound `K` (`bounded(K)`). `K` is **always printed** (`bounded-proof(k=128)`): a proof up to length 128 says nothing about length 129, which an enumeration of a complete domain does not leave out. | proof manifest entry with label `bounded(K)` |
 | 2 | `exhaustive-sampled` | Enumerated over a stated finite domain that is not the whole input domain (a representative set, edge values, widths up to a bound). | any other `exhaustive` suite |
 | 1 | `randomized` | Property or fuzz evidence only. | `property` or `fuzz` suites |
@@ -629,23 +642,35 @@ who takes the minimum errs towards the weaker label.
 
 An `exhaustive` suite supports the label `exhaustive` only if **both** parts hold.
 
-**Stateless and deterministic binding (review item H3).** Enumerating inputs from
-one initial state of a stateful operation (a flip-flop's `clock` method called from
-a freshly built object for each case) proves the transition from that state only; it
-says nothing about the next state, the history, or other initial states. The
-evidence is `exhaustive` only if the operation is a pure function of its arguments:
-the package's `evidence.bindings` declares `state none` (a package-level line or a
-per-operation `state=none` key, validated like the other binding keys), and the
+**Pure in its explicit state (review item H3, reworded 2026-11-14).** Enumerating inputs from
+one initial state of a stateful operation (a flip-flop's `clock` method called from a freshly built
+object for each case) proves the transition from that state only; it says nothing about the next
+state, the history, or other initial states. The evidence is `exhaustive` only if every operation
+the claim calls is a pure function of its **explicit arguments**: its binding declares `state=none`
+(a package-level line or a per-operation key, validated like the other binding keys), **or** declares
+`state=explicit` and, for that operation, (a) the claim's state set is complete (a claim over the whole
+state type, or over the set of states satisfying a declared invariant, as VER04m E6 defines) and (b) the
+state-completeness obligations of VER04m E15 (`codec-roundtrip`, `rebuild-equivalence`, `deterministic`,
+`order-independence`) passed, each with its negative control, in the same manifest. In both cases the
 package's effect certificate and capability audit show no clock or random source
-(`effect-certificate::proved`, `capability-audit::rand-empty`; the runtime gate of
-VER08b observes the rest). An operation without that declaration, or any operation
-that wraps a stateful object, is classified at most `exhaustive-sampled`, whatever
-its binders. This matters for the `sequential` layer of the 4004 chain
-(registers, flip-flops): their claims will not be `exhaustive` until a sequence
-driver (VER04j section 7.1, not implemented) makes the history part of the
-quantifier. The `state none` key is a small producer change in the bindings reader;
-absent the key the classifier is conservative, so `logic-gates` stays
-`exhaustive-sampled` until its bindings say `state none`.
+(`effect-certificate::proved`, `capability-audit::rand-empty`; the runtime gate of VER08b observes the
+rest). An operation without either declaration is classified at most `exhaustive-sampled`, whatever its
+binders.
+
+An operation **executed by a driver** (a WX-F driver or a protocol dispatch driver, VER04m section 6) is
+never `exhaustive`, and neither is any claim that quantifies over a bounded set of call sequences: such a
+claim is `bounded-set` (backlog LP-012) and is at most `exhaustive-sampled`, printed with the depth and the
+call alphabet (`traces(calls=8, depth<=5) = 37,449`). A fixed composition of explicit-state steps from
+every state of a complete set (a two-step "low then high captures the data" claim) is not such a quantifier
+and may be `exhaustive`; the report prints its step count. "All traces agree with the model, by induction"
+is an inference over step claims and a closure argument, not a suite; it is not a rung and is not printed by
+this specification (VER04m section 7.2).
+
+This matters for the `sequential` layer of the 4004 chain (registers, flip-flops): their step claims are
+`exhaustive` through explicit state (VER04m section 5.1) once their bindings declare `state=explicit` and
+the obligations pass. The `state none` key is a small producer change in the bindings reader; absent a
+declaration the classifier is conservative, so `logic-gates` stays `exhaustive-sampled` until its bindings say
+`state none`, and its sequential layer until they say `state=explicit` with the obligations evidenced.
 
 **Complete domain.** The suite is complete when every binder of the claim is of a type
 whose whole value set the generator enumerates: `Bool`, `U8`, `U16`, `I8`,
@@ -1318,8 +1343,10 @@ gate, as in VER04h section 6.
 * **Lower-report controls (H1):** a lower report with `unverified::` ids yields a
   `conditional_on` entry for each; a report that drops one fails the check.
 * **Label controls (H2, H3):** `bounded-proof(k=128)` ranks below `exhaustive` and
-  always prints `k`; an operation without `state none`, and one that wraps a
-  stateful object, is at most `exhaustive-sampled`.
+  always prints `k`; an operation with neither `state none` nor `state=explicit`
+  (with the claim's state set complete and the VER04m E15 obligations passed), an
+  operation executed by a driver, and a claim over a bounded set of call sequences,
+  are at most `exhaustive-sampled`.
 * **Downgrade control (H4):** regenerating after a strength decrease, a
   discharged-to-open change or a `claim_sha256` change fails the gate without the
   trailer and passes with it.
@@ -1405,6 +1432,13 @@ argument sound.
 5. **Stateful layers have trace contracts.** Flip-flops and registers need a
    step-relation contract and a statement of the clocking abstraction
    (`gate.sequential.ideal-dff`). A truth table covers combinational blocks only.
+   (Amended 2026-11-14.) The condition is met by a **step claim over explicit state**
+   whose state set is complete (VER04m reach class R1 or R2) **plus a closure row**
+   (every post-state of the step lies in the invariant), both evidenced and printed;
+   with the hidden-state obligations of VER04m E15 passed, the step claims and the
+   closure imply by induction that every finite trace agrees with the model, an
+   inference the report does not print before VER04m section 7.2 is enabled. A bounded
+   set of traces never meets it.
 6. **Every caller satisfies each contract's refinement and domain** (review item
    C1). A contract proved over nibbles says nothing about a 12-bit use, and `covered`
    does not check it (section 7.2.2). A composition proof needs, for each use, a
@@ -1415,9 +1449,12 @@ argument sound.
    level that differ between the lower evidence build and the artefact the
    composition is about make the contract a statement about a different program
    (section 5.1.1 pins the manifest-level part; the binary-level part is not pinned).
-8. **The code is pure and deterministic.** No clock, random source, global state or
-   history: a contract over a stateful operation proved from one initial state
-   (section 6.2) does not compose.
+8. **The code is pure in its explicit state, and deterministic.** No clock, random
+   source, global state or hidden history: a contract over a stateful operation proved
+   from one initial state (section 6.2) does not compose. (Amended 2026-11-14.) An
+   operation whose whole state is a value the harness builds and reads (`state=explicit`)
+   is pure in that sense **when state completeness is evidenced** (VER04m E15, with
+   controls); an operation executed by a driver is not.
 9. **Panics and rejections are part of the contract actually used.** The gate
    contract says a non-bit panics, normalised by the binding to `INVALID_INPUT`; an
    upper layer that relies on a result must also account for the rejection path of
@@ -1444,7 +1481,8 @@ contracts are `exhaustive` or `proved`, whose composition is proved with abstrac
 lower operations, and whose reach-around check, caller domains, build
 configuration, purity, rejection paths and trace/timing coverage are clean
 (conditions 1 to 10). The 4004 chain meets condition 1 for its lowest layers
-at most (and only once their bindings declare `state none`), and none of 2 to 10. Recommendation, not a decision (open question VQ4, for
+at most (and only once their bindings declare `state none`, or `state=explicit` with
+the VER04m obligations evidenced for the sequential layer), and none of 2 to 10. Recommendation, not a decision (open question VQ4, for
 the owner): when the chain has a composition proof for one small layer (the 4-bit
 adder over the gates), **compute the miter for the same layer and compare the two
 verdicts**. That calibrates Q8 on a stack where both are cheap, which is what
@@ -1636,7 +1674,7 @@ Section 8 (relationships): add a row for VER29.
 | D23 | Per-claim strength lives in `published`; an operation row shows the minimum (C3). | Report rows are per operation, not per claim. |
 | D24 | Condition (a) binds to the in-tree path package; `Cargo.toml` and `build.rs` are pinned; differing features give `build-config-unpinned` (C4). | A name is not an identity. |
 | D25 | The lower report is checked with its own BUILD's flags and its `unverified::` ids are carried into `conditional_on` (H1). | Works today; never inherits silently. |
-| D26 | `exhaustive` requires a stateless, deterministic binding (`state none`) (H3). | One initial state proves one transition. |
+| D26 | `exhaustive` requires a binding that is pure in its explicit state (H3, reworded 2026-11-14 from "stateless, deterministic, `state none`"): `state none`, or `state=explicit` with a complete state set and the VER04m E15 obligations passed; a driven operation, or a bounded set of call sequences, is never `exhaustive`. | One initial state proves one transition; a complete set of explicit states with hidden-state checks proves the transition relation, and a bounded set of sequences proves only itself. |
 | D27 | Regeneration cannot accept a downgrade silently: CI gate against the diff base, accepted by a `Contract-Change-Accepted` commit trailer (H4). | A regenerated pin would otherwise hide a weakened claim. |
 | D28 | Reach resolution is by defining path through `pub use`; `call-level-partial` unless unresolved and opaque uses are 0; pins gain `unverified_deps` and toolchain; generator and tooling changes select all link checks (review medium items). | Last-segment matching and a `call-level` that ignores unresolved uses were unsound. |
 

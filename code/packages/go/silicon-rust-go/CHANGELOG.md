@@ -1,5 +1,19 @@
 # Changelog — silicon-rust-go
 
+## [Unreleased]
+
+### Fixed
+
+- **Windows: link the Rust crate statically.** The Windows `#cgo` line linked the cdylib's
+  import library, so the test binary exited `0xc0000135` (STATUS_DLL_NOT_FOUND) because
+  `silicon_rust_cgo.dll` was not on PATH. It now links the GNU-ABI staticlib
+  (`x86_64-pc-windows-gnu`, `libsilicon_rust_cgo.a`) the way `go/conduit` does, built by
+  `tools/run-tests.ps1` through the shared `build-conduit-capi-windows-gnu.ps1` helper
+  (`-CrateDir silicon-rust-cgo -ArchiveName libsilicon_rust_cgo.a`). Linux and macOS are unchanged.
+  Validated by building the archive, cross-compiling the cgo test with MinGW and running it
+  under Wine (the whole suite passes).
+- `BUILD_windows` runs `tools/run-tests.ps1` instead of the Unix command.
+
 ## [0.1.0] — 2026-06-13
 
 ### Added

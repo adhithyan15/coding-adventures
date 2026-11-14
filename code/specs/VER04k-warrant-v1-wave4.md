@@ -12,6 +12,17 @@ wave-3 tool (section 1); the two wave-3 v1 refusals this wave adds (list
 literals above 4,096 elements, S0 E8, and identifiers longer than 128 bytes,
 E20) are recorded in 1.2.
 
+**Amendment (2026-11-14), with [VER04m](VER04m-warrant-stateful-objects.md):** three small
+changes travel with the first slice of stateful objects (WX-S1). Section 4.3 now says
+explicitly that `inout List<T>` admits `T` an admissible **record** (the `register` of the
+4004 sequential layer is `&mut [FlipFlopState]`); section 4.6 gains the host forms
+`slice-of:struct:<Name>`, `vec-of:struct:<Name>` and `codec:<Record>`, and says that with
+`error=<CASE>` an S2 or S4 slot may be served by a host that returns the remaining components
+directly (a panic is `Err` with no post-state), which is the shape of `d_flip_flop`; section 4.12's
+last bullet now points to VER04m. Why: without them the sequential layer, `pixel-container` and
+the CPU step cannot be bound. No existing rule is weakened and no v0 or wave-3 meaning changes;
+a tuple is still not an admissible `inout` or record-field type.
+
 **Parent:** [VER04 §2–§8](VER04-warrant-language.md),
 [VER04d](VER04d-warrant-type-system.md), [VER04e](VER04e-warrant-codegen.md),
 [VER04h](VER04h-warrant-derived-evidence.md),
@@ -1438,8 +1449,10 @@ warrant inout_excerpt v1
 
 * `inout` types are admissible when they can be passed and read back by a host
   mutable reference: `Bool`, the fixed-width integers, `Nat`, `Bytes`, `Bytes<N>`
-  with a literal `N`, `List<T>` with `T` one of those, and records whose fields
-  are all admissible. Anything else is W0713 (an `Option` cannot be "written into";
+  with a literal `N`, `List<T>` with `T` one of those **or an admissible record**
+  (amended 2026-11-14: a list of records, for `&mut [FlipFlopState]`), and records
+  whose fields are all admissible. A tuple, as an `inout` type or as a record
+  field, remains inadmissible. Anything else is W0713 (an `Option` cannot be "written into";
   a variant would need a constructor-changing write).
 * At most 4 `inout` parameters per operation (W0713). An `inout` parameter is a
   runtime parameter (never static). A refinement on it constrains the
@@ -1495,6 +1508,9 @@ Each `inout` parameter declares its host form:
 | `bool` | `&mut bool` | `Bool` | the Bool |
 | `struct:<Name>` | `&mut Name` for a declared WX-A `struct` line | records | field-wise observation |
 | `returned` | none: the host returns the post-state as its result (functional lanes, 4.9) | any admissible | the host result |
+| `slice-of:struct:<Name>` | `&mut [Name]` for a declared `struct` line (VER04m E4) | `List<R>`, `R` a record | each element field-wise; the length cannot change and the adapter checks it equals the pre-state length |
+| `vec-of:struct:<Name>` | `&mut Vec<Name>` | `List<R>`, `R` a record | each element field-wise, any length |
+| `codec:<Record>` | a host object built and observed through a `codec` line (VER04m E11) | the record | the observation, from the same object that was called |
 
 Line form: `op zeroize export=zeroize_bytes inout=buf:slice faults=stale-post,skip-last-write`.
 JSON form: `"inout": { "buf": "slice" }`. For an operation with an `inout`
@@ -1503,7 +1519,12 @@ crate root (`varint::write`, `Zeroize::zeroize`), called in fully qualified
 form (`coding_adventures_zeroize::Zeroize::zeroize(&mut host)`), which reaches
 inherent and trait methods without imports; the arguments are passed in the
 operation's parameter order. The `ret=` and `errors=` options describe the
-*host* return of the slot table (4.2), never the post-states. A missing host form,
+*host* return of the slot table (4.2), never the post-states. (Amended 2026-11-14.) With
+`error=<CASE>`, an S2 or S4 slot may be served by a host export that does **not** return a
+`Result` but the remaining components directly: a panic is normalised to `Err(E.CASE)` and carries no
+post-state, and an ordinary return is `Ok` of the components with the read-back post-state
+(`d_flip_flop(data, clock, &mut state) -> (u8, u8)` against the result type
+`Result<((U8, U8), FlipFlopState), GateError>`). A missing host form,
 or one that cannot carry the parameter's type, is W0704; a malformed option is
 W0501.
 
@@ -1634,7 +1655,10 @@ type, and `result` is bound only inside `ensures` rows.
   Warrant value contains spare capacity, so that part is unobservable here.
 * **Not stateful objects.** `&mut self` receivers whose state is not a Warrant
   value (bitset, heap) need a state codec (open question 11); WX-F drives
-  objects but does not expose their state.
+  objects but does not expose their state. (Amended 2026-11-14: the `codec` line,
+  the explicit-state classification and the dispatch driver for protocols are
+  specified in [VER04m](VER04m-warrant-stateful-objects.md); heaps and hash maps
+  without a canonical observer stay protocols there.)
 
 ## 5. Cross-cutting evidence and portability rules
 
@@ -1978,6 +2002,13 @@ coordinator decision above is listed in the S0 pull request for owner override.
 | a `v2` header | open question 3 |
 
 ## 11. Specification change record
+
+- Amendment with VER04m (2026-11-14): section 4.3 admits `inout List<R>` for an admissible
+  record `R` (tuples stay inadmissible); section 4.6 adds the host forms `slice-of:struct:`,
+  `vec-of:struct:` and `codec:`, and lets `error=<CASE>` serve an S2 or S4 slot from a host that
+  returns the remaining components directly; section 4.12 points to VER04m. Reason: the 4004
+  sequential layer (`register`, `shift_register`), `pixel-container` and the CPU `step` cannot
+  be bound without them. No new diagnostic, no other rule changes.
 
 - S1 security review (2026-11-12), recorded in 9.1 as E20: `dsize` counts the
   stored names of constructor and error values, and v1 identifiers are capped at

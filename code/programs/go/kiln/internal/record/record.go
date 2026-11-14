@@ -62,10 +62,14 @@ func (p *problems) err(what string) error {
 	})
 	e := &TreeError{What: what, Total: len(p.list)}
 	for i, pr := range p.list {
-		if i == MaxReported {
-			break
+		if i < MaxReported {
+			e.Problems = append(e.Problems, fmt.Sprintf("%s: %s", printable(pr.path), pr.why))
 		}
-		e.Problems = append(e.Problems, fmt.Sprintf("%s: %s", printable(pr.path), pr.why))
+		// The FULL list, as the raw paths and never printed: the list is sorted
+		// by path, so a path with two problems is adjacent to itself.
+		if n := len(e.Paths); n == 0 || e.Paths[n-1] != pr.path {
+			e.Paths = append(e.Paths, pr.path)
+		}
 	}
 	return e
 }
@@ -75,6 +79,19 @@ type TreeError struct {
 	What     string
 	Problems []string // at most MaxReported, sorted by path
 	Total    int      // how many there were
+	// Paths is EVERY path that has a problem, raw (not made printable),
+	// sorted bytewise and without repeats; unlike Problems it is not cut at
+	// MaxReported. `collect` needs the whole set to decide which changed
+	// tracked paths some record's tracked_writes explains and which nobody's
+	// does (KILN04 7.1, M-2); it is for comparison, never for printing. A
+	// path "." means the problem is not a path (a sparse checkout).
+	Paths []string
+	// Partial says the check stopped before it compared the DISK: the commit's
+	// tree and the index disagreed (or the index had an unresolved merge, or a
+	// gitlink), so Paths are paths of that disagreement, not files whose bytes
+	// changed. Nothing is known about the disk, and a caller that counts changes
+	// must not take the list as the whole story.
+	Partial bool
 }
 
 func (e *TreeError) Error() string {

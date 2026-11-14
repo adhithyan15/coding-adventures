@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Ability, Skill, Right, Chance, Tool",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:56d842a7f19cf88a",
+  "sourceHash": "fnv1a64:07caf55bdd854834",
   "lessons": [
     {
       "id": "KA-C112-samarthya",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a5de6a2f0a1ed17",
+      "sourceHash": "fnv1a64:b82d41299526c9b2",
       "notice": null,
       "blocks": [
         {
@@ -403,6 +403,23 @@
             {
               "kind": "speech",
               "text": "What does ಹಕ್ಕು (hakku) mean? (\"A right\".) Say it once more."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall: place R2",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bird is under the tree and then inside the house. Say both Kannada place phrases. Now say “the school is near the house” and change only its meaning to “far from the house.” Keep the different house forms: ಮರದ ಕೆಳಗೆ, ಮನೆಯೊಳಗೆ, ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ."
             }
           ]
         }

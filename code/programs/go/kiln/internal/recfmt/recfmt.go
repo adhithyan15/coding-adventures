@@ -237,6 +237,12 @@ func CompleteOf(r RawRecord) *bool {
 // record as a truncated execution (M-1), not as an unknown write set (KILN04
 // 7.1).  A record that ran any step, failed or not, was classified, and its
 // flag must agree with the classifier.
+//
+// One more record has no classifier answer to agree with: a BUILT action whose
+// recipe is EMPTY (steps_run 0 of 0, a comment-only BUILD).  Nothing ran and
+// nothing could have been written, so its empty write set is vacuously
+// complete: the writer sets the key true, and Record.WritesComplete is true to
+// match (the check below is the same equality as for any classified record).
 func CheckComplete(r ShardRecord) error {
 	if r.Complete == nil {
 		return fmt.Errorf("record %q: writes_complete is missing (derive it with CompleteOf)", short(r.Action))

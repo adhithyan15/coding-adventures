@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind fully routed authenticated server status to the complete accumulated
+  Name-policy reviewed path-plus-anchor-self-signature proof in stable target,
+  issuer, and exact-observation validity order.
+- Retain both complete non-copyable inputs in the existing generic result,
+  leave the earlier path-only API unchanged, and stop before responder and
+  intermediate revocation completion, TLS, HTTP, OAuth, or network readiness.
 - Complete revocation policy for the direct responder-no-check branch after
   exact intermediate status and added-responder no-check policy.
 - Retain the strongest Name-policy-backed proof through a distinct fixed-path

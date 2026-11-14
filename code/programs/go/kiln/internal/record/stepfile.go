@@ -13,30 +13,34 @@ package record
 //	traces/<sha256(action)>/0.trace   strace's output for step 0
 //	traces/<sha256(action)>/0.json    this file
 //	traces/<sha256(action)>/0.rerun   (only if the step was run twice)
+//	traces/<sha256(action)>/0.overlap (only if the serial lock was held, P13)
+//	traces/<sha256(action)>/record.json   the classified record, written at the
+//	                                  end of the action (P13); or record.failed
 //
 // The action's name never becomes a path component (decision P4); its SHA-256
 // does, exactly as in `pre/actions/`.
 //
-// The supervisor does NOT classify. It never parses the trace, never decides
-// whether a write set is complete, and does not read the root's exit line.
-// `strace_exit` is strace's own exit code; strace exits with the traced root's
-// status, so it doubles as `root_status`, and `collect` compares it with the
-// root's exit line in the trace (the other half of G7).
+// The sidecar itself holds only what the TRACER did. Since decision P13 the
+// supervisor also classifies, but into a file of its own (`record.json`, see
+// classify_step.go), at the end of the action: the sidecar is written first and
+// does not depend on it. `strace_exit` is strace's own exit code; strace exits
+// with the traced root's status, so it doubles as `root_status`, and the
+// epilogue compares it with the root's exit line in the trace (the parse half
+// of G7).
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"io"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
 // StepSchema is the schema of a step sidecar.
-const StepSchema = "kiln-record-step/1"
+const StepSchema = "kiln-record-step/2"
 
 // Why a trace was cut short (StepSidecar.TruncatedReason).
 const (
@@ -61,6 +65,12 @@ type StepSidecar struct {
 	Action    string `json:"action"`
 	Step      int    `json:"step"`
 	StepCount int    `json:"step_count"`
+	// Seq is the step's place in the shard's serial order (decision P13): the
+	// supervisor numbers every step it runs, from `traces/.seq`, under the
+	// exclusive `traces/.serial` lock, starting at 0. `collect` requires one
+	// action's values to be contiguous, so a step of another action in the
+	// middle of it (the lock failed to serialise) is seen.
+	Seq int `json:"seq"`
 	// BindingID is the SHA-256 of pre/binding.json this step was run under.
 	BindingID string `json:"binding_id"`
 	// LineSHA256 is the SHA-256 of the `sh -c` line that ran; LineInPlan says
@@ -131,6 +141,9 @@ func (s *StepSidecar) Validate() error {
 	if s.Step < 0 || s.StepCount < 1 || s.Step >= s.StepCount {
 		return fmt.Errorf("step sidecar: step %d of %d", s.Step, s.StepCount)
 	}
+	if s.Seq < 0 {
+		return fmt.Errorf("step sidecar: seq %d", s.Seq)
+	}
 	for _, d := range []struct{ what, v string }{{"binding_id", s.BindingID}, {"line_sha256", s.LineSHA256}, {"trace_sha256", s.TraceSHA256}} {
 		if !hexDigest(d.v) {
 			return fmt.Errorf("step sidecar: %s is not a SHA-256 in lowercase hex", d.what)
@@ -186,14 +199,10 @@ func EncodeStepSidecar(s StepSidecar) ([]byte, error) {
 // DecodeStepSidecar reads a sidecar strictly: no unknown key, no trailing
 // data, and the same validation as the encoder.
 func DecodeStepSidecar(data []byte) (StepSidecar, error) {
+	// legacy.PolicyDecode: see DecodeClassified (duplicate and case-variant keys).
 	var s StepSidecar
-	dec := json.NewDecoder(bytes.NewReader(data))
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&s); err != nil {
+	if err := legacy.PolicyDecode(data, &s); err != nil {
 		return StepSidecar{}, fmt.Errorf("step sidecar: %w", err)
-	}
-	if _, err := dec.Token(); err != io.EOF {
-		return StepSidecar{}, fmt.Errorf("step sidecar: unexpected data after the JSON value")
 	}
 	return s, s.Validate()
 }

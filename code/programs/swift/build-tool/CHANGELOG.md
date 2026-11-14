@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - source-input boundary sync (rust/arithmetic)
+
+- `code/packages/rust/arithmetic` is no longer a consumer of `starlark-rust-library-rule-consumers`: #19311 (Warrant adoption) rewrote its BUILD from a Starlark `rust_library` target into plain shell commands, so nothing loads `rust_library.star` there any more. The checked repository source-input boundary dropped that root, the projection was regenerated with the repository's generator, and the pinned boundary digest moved from `4569b531...` to `f338935e...`. The boundary has 491 scopes and 505 authorizations (were 492 and 506). No behaviour change in the tool.
+
 ## Unreleased - BUILD-001 registry update
 
 - Source-input registry and repository boundary updated for BUILD-001 (generated wasm artifacts are built, not committed): `code/packages/rust/engram-wasm/pkg/engram_engine.wasm` is no longer an exact package input of `rust-engram-wasm-build-inputs`, and `visicalc-html/vendor/spreadsheet-engine-wasm.js` is no longer a cross-package input of the Deno VisiCalc boundary. Registry digest is now `8f3d9ee3...`, boundary digest `ec516870... (combined with the #19050 TypeScript boundary sync)`.
