@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Fixed
+
+- `unregister_clears_formatter` registered a formatter for the head `Foo` in the
+  process-global registry while `mathematica_user_function_camel` formats `Foo`;
+  when the two ran concurrently the second saw `CUSTOM` instead of `Foo[x]`
+  (about 3% of runs, 13 of 400 locally, and one red shard in the scheduled full
+  build). The probe test now uses a head name no other test formats (0 of 800
+  after). Test-only change.
+
 ### Added
 
 - `pretty_2d(node, dialect) -> String` with a Rust port of the Python 2D box
