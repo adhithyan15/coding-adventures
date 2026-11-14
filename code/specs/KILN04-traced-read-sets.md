@@ -1430,7 +1430,12 @@ refuses (125, nothing run, no sequence number, no marker) once it exists: a step
 that took the shared lock a moment after `collect` released the exclusive one
 cannot add to a directory that has been read. A directory is collected once; the
 refusals about the arguments all come BEFORE the tombstone, so one does not use
-up the collection. Every git call `collect` makes has a 10 minute deadline and
+up the collection. A failure AFTER the tombstone (a shard that cannot be encoded, a
+transient `--out` write error such as ENOSPC, which also takes the half-made file
+back) burns the record directory: the next `collect` is refused. That fails closed,
+because a missing shard is a run-void in the merge (B2), never a believed one.
+`--results` needs a canonical parent, as `--out` does, and `step` refuses when it
+cannot tell whether the tombstone exists (only "not there" lets it go on). Every git call `collect` makes has a 10 minute deadline and
 keeps at most 1 GiB of stdout (more is an error, never a truncation) and 1 MiB of
 stderr. `record.json` and the sidecars are decoded with `legacy.PolicyDecode`
 (no duplicate and no case-variant key); the temporary file of the atomic writers

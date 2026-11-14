@@ -131,6 +131,24 @@ type dirScan struct {
 	reruns, overlaps     int
 	hasRecord, hasFailed bool
 	bad                  []string
+	// more counts the reasons dropped after maxScanBad.
+	more int
+}
+
+// maxScanBad bounds the reasons one directory scan keeps: a directory a million
+// strange names long must not make a million strings (only the first 190 bytes of
+// the joined text reach the record in any case).
+const maxScanBad = 64
+
+// flag records one reason, up to maxScanBad; the rest are counted, and the last
+// kept entry says how many there were.
+func (s *dirScan) flag(why string) {
+	if len(s.bad) < maxScanBad {
+		s.bad = append(s.bad, why)
+		return
+	}
+	s.more++
+	s.bad[maxScanBad-1] = fmt.Sprintf("... and %d more entries are not as the supervisor leaves them", s.more+1)
 }
 
 // scanAction lists the action's directory and files every entry under what the
@@ -143,17 +161,17 @@ func scanAction(dir string) dirScan {
 		return s
 	case err != nil:
 		s.exists = true
-		s.bad = append(s.bad, "the action's trace directory: "+err.Error())
+		s.flag("the action's trace directory: " + err.Error())
 		return s
 	case st.Mode()&os.ModeSymlink != 0 || !st.IsDir():
 		s.exists = true
-		s.bad = append(s.bad, "the action's trace directory is not a real directory")
+		s.flag("the action's trace directory is not a real directory")
 		return s
 	}
 	s.exists = true
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		s.bad = append(s.bad, "the action's trace directory cannot be listed: "+err.Error())
+		s.flag("the action's trace directory cannot be listed: " + err.Error())
 		return s
 	}
 	for _, e := range entries {
@@ -168,13 +186,13 @@ func scanAction(dir string) dirScan {
 		case strings.HasPrefix(name, "record.json.tmp-") || strings.HasPrefix(name, "record.failed.tmp-"):
 			// A kill between the write and the link(2): a record that may have been
 			// half made. It is never "no record".
-			s.bad = append(s.bad, "a stray "+reasonText(name))
+			s.flag("a stray " + reasonText(name))
 			continue
 		}
 		n, ext, ok := strings.Cut(name, ".")
 		j, err := canonicalInt("", n)
 		if !ok || err != nil {
-			s.bad = append(s.bad, "an unexpected entry "+reasonText(name))
+			s.flag("an unexpected entry " + reasonText(name))
 			continue
 		}
 		// Whatever a step's file is, it must be a regular file: the supervisor
@@ -193,11 +211,11 @@ func scanAction(dir string) dirScan {
 			// Opaque, never read (see the file comment).
 			continue
 		default:
-			s.bad = append(s.bad, "an unexpected entry "+reasonText(name))
+			s.flag("an unexpected entry " + reasonText(name))
 			continue
 		}
 		if !regular {
-			s.bad = append(s.bad, reasonText(name)+" is not a regular file")
+			s.flag(reasonText(name) + " is not a regular file")
 		}
 	}
 	return s

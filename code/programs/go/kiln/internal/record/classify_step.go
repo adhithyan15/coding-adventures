@@ -228,10 +228,20 @@ func writeAtomic(final string, data []byte) error {
 	}
 	os.Remove(tmp)
 	if err == nil {
-		err = syncDir(filepath.Dir(final))
+		if serr := syncDirFn(filepath.Dir(final)); serr != nil {
+			// The name is linked but not known to be durable. A caller that is
+			// told "failed" must be able to rely on "nothing written" (a refused
+			// --out leaves no file; a record.json that failed leaves none, so the
+			// epilogue leaves record.failed instead), so the link is taken back.
+			os.Remove(final)
+			err = serr
+		}
 	}
 	return err
 }
+
+// syncDirFn is syncDir; a variable so a test can make the sync fail.
+var syncDirFn = syncDir
 
 // syncDir fsyncs a directory so a link made in it is durable. A platform that
 // cannot open a directory for this (Windows) reports nothing wrong: the

@@ -158,7 +158,49 @@ func borrow(t *testing.T, key string, build func(*testing.T, string) *cfix) *cfi
 		t.Fatal(err)
 	}
 	f.pre, f.results = pre, nil
+	f.checkReset()
 	return f
+}
+
+// checkReset proves reset really did put the world back, and fails the test
+// loudly if not: a borrowed world that is not what prepare left would make the
+// next test pass or fail for the wrong reason, and say nothing about why.
+//
+//	the checkout is the commit (VerifyTree, pinned to the commit prepare saw)
+//	nothing untracked is on the disk but what the sealed pre-build inventory lists
+//	the record directory holds exactly pre/ and traces/
+func (f *cfix) checkReset() {
+	t := f.t
+	t.Helper()
+	if _, err := VerifyTree(f.p.root, f.p.sha); err != nil {
+		t.Fatalf("the borrowed world's checkout is not the commit after reset: %v", err)
+	}
+	data, err := f.pre.ReadSealed("inventory.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want, err := recfmt.DecodeInventory(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := Inventory(f.p.root)
+	if err != nil {
+		t.Fatalf("inventory after reset: %v", err)
+	}
+	if strings.Join(got.Paths, "\n") != strings.Join(want.Paths, "\n") {
+		t.Fatalf("the borrowed world holds untracked paths the sealed inventory does not list after reset:\n got %q\nwant %q", got.Paths, want.Paths)
+	}
+	ents, err := os.ReadDir(f.p.dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var names []string
+	for _, e := range ents {
+		names = append(names, e.Name())
+	}
+	if strings.Join(names, ",") != "pre,traces" {
+		t.Fatalf("the record directory holds %v after reset, want exactly [pre traces]", names)
+	}
 }
 
 // reset puts a borrowed world back as prepare left it: the checkout is the

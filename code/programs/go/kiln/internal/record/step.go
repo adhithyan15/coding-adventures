@@ -285,8 +285,17 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// tombstone before it reads anything, after the exclusive lock this step's
 	// shared one excludes; a step that got the shared lock a moment after
 	// `collect` let go of the exclusive one lands here.
-	if _, err := os.Lstat(filepath.Join(o.Dir, "traces", CollectedMarker)); err == nil {
+	//
+	// Only "it is not there" lets the step go on. Any other answer (an unreadable
+	// traces/, an I/O error) is a refusal: a check that cannot be made is not a
+	// check that passed.
+	switch _, err := os.Lstat(filepath.Join(o.Dir, "traces", CollectedMarker)); {
+	case err == nil:
 		return nil, fmt.Errorf("the record directory was collected (traces/%s): no step may run in it", CollectedMarker)
+	case !errors.Is(err, os.ErrNotExist) && !errors.Is(err, syscall.ENOTDIR):
+		// (ENOTDIR, traces/ is not a directory at all, is left to the serial lock
+		// below, whose refusal names exactly that; the step still does not run.)
+		return nil, fmt.Errorf("whether the record directory was collected cannot be checked: %v", err)
 	}
 	// 1b. The serial lock (P13), second in the lock order. A step that cannot
 	// take it runs nothing, and says so in a marker `collect` reads.

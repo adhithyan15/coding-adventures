@@ -291,6 +291,12 @@ func checkOutPlacement(o CollectOptions) error {
 	if within(o.Results, o.Root) {
 		return fmt.Errorf("--results %q is inside the checkout, where a BUILD can write it", printable(o.Results))
 	}
+	// And its parent must be a canonical directory (no symlink anywhere in it), or
+	// a link a BUILD planted could make a path that looks outside the checkout
+	// lead into it: the spelling above is only as good as what it resolves to.
+	if _, err := Canonical("the parent of --results", filepath.Dir(o.Results)); err != nil {
+		return err
+	}
 	if _, err := Canonical("the parent of --out", filepath.Dir(o.Out)); err != nil {
 		return err
 	}
