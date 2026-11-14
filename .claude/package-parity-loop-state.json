@@ -10100,22 +10100,24 @@
     {
       "id": "canonical-cbor-lua-lane-parity",
       "title": "Port canonical CBOR to Lua",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-lua-lane-parity",
       "pr_number": 19404,
+      "merged_at": "2026-11-14T22:33:53Z",
+      "merge_commit": "4f0aa930974",
       "notes": "Implement the closed canonical-CBOR contract in Lua and consume every language-neutral case."
     },
     {
       "id": "canonical-cbor-perl-lane-parity",
       "title": "Port canonical CBOR to Perl",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/canonical-cbor-perl-lane-parity",
       "pr_number": null,
       "notes": "Implement the closed canonical-CBOR contract in Perl and consume every language-neutral case."
     },
