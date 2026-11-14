@@ -494,7 +494,12 @@ fn cswap(swap: u64, a: &mut Fe, b: &mut Fe) {
 // Scalar Clamping
 // ============================================================================
 
-fn clamp_scalar(k: &[u8; 32]) -> [u8; 32] {
+/// Clamp a 32-byte X25519 scalar (RFC 7748 section 5, `decodeScalar25519`).
+///
+/// Public since 0.2.0 so the Warrant evidence for the clamp (a `Bytes<32> ->
+/// Bytes<32>` claim) can bind to it.  `x25519` clamps its scalar itself, so a
+/// caller never has to call this first.
+pub fn clamp_scalar(k: &[u8; 32]) -> [u8; 32] {
     let mut clamped = *k;
 
     // Clear the three lowest bits — make k a multiple of 8 (cofactor clearing).

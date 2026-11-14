@@ -1,7 +1,19 @@
 [package]
 name = "coding_adventures_x25519"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "X25519 elliptic curve Diffie-Hellman (RFC 7748) implemented from scratch"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+# The generated evidence harness hashes the spec and the source tree.
+coding_adventures_sha256 = { path = "../sha256" }
+
+# Generated from code/specs/x25519.warrant (VER04h, VER04j section 14.4): a pilot
+# of fixed-length byte arrays across the host boundary.
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false
