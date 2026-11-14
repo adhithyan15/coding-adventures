@@ -16,10 +16,8 @@
       "external-approval"
     ]
   },
-  "active_pr": 19107,
-  "active_prs": [
-    19107
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
     "observed_at": "2026-11-10T15:05:40Z",
     "pr_number": 19107,
@@ -3049,7 +3047,7 @@
     {
       "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
       "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
       ],
@@ -3069,7 +3067,9 @@
       "reconciled_main_revision": "b9528b15054c4686a73e15880a1c3548f1b00524",
       "publication_notes": "Draft PR #19107 was opened from the independently reviewed exact head after a normal first push. GitHub reports it mergeable against the exact reviewed base. The draft exists to obtain its durable PR identity; this lifecycle-only receipt requires independent delta review before readiness, and guarded auto-merge remains disabled until every exact-head hosted check is terminal acceptable and GitHub still reports the PR mergeable.",
       "validation_notes": "The authority-free Rust resolver accepts only caller-supplied immutable package, crate, redirect, and exact exemption snapshots. It performs byte-exact lexical reduction, deepest segment-trie ownership, nested and exempt-orphan traversal, transitive normal/build closure, stable cycle and 16-level depth refusal, compact package-ID bitset memoization, deterministic validation, and sorted unique self-free relations. Inclusive ceilings cover 4,096 packages, 16,384 crates and references, 4,096 exemptions, and 16,384 output relations; the 16,385th unique relation fails before string materialization. Full cargo test (271 tests), cargo check, clippy with warnings denied, rustfmt check, strict state parsing, and diff hygiene pass again after normally merging exact current main b9528b15054c4686a73e15880a1c3548f1b00524. The repo-wide assumption-catalogue validation, generator check, and 71-test suite also pass locally. Independent correctness, security, and adversarial reviews issued SHIP for the implementation and prior reconciled heads after relation, memory, owner-lookup, validation-order, and reduced drive-prefix findings were closed; fresh review of the current reconciled head remains required. The worktree remains clean and authority-empty.",
-      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner.",
+      "merged_at": "2026-11-10T20:18:59Z",
+      "merge_commit": "34369b699c6aa1567de71b347dd2383fa03c28f5"
     },
     {
       "id": "build-tool-rust-cargo-trigger-native-input-adapter",
@@ -8690,19 +8690,21 @@
     {
       "id": "dart-current-14-of-15-binary-search-tree",
       "title": "Port the DT07 binary search tree package to Dart",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "dart-scaffold-capability-schema",
         "binary-tree-dart-swift-lane-parity"
       ],
       "branch": null,
-      "pr_number": null,
+      "pr_number": 19347,
       "notes": "Materialized from the remaining Dart-only 14-of-15 frontier after PR #9477. Reconcile the cross-lane empty min/max, invalid-rank, comparator, and conceptual tree/binary-tree prerequisite differences before implementation.",
       "validation_plan": "dart-bst-prerequisite-validation-preparation.md: merged scaffold is available, existing pending two-lane DT03 parent still blocks BST; do not add scaffold approval as an implementation prerequisite or fabricate DT02/DT03 runtime imports from conceptual spec relations. No committed DT03/DT07 behavior corpus found; scaffold capability goldens prove only authority metadata. Existing owner covers specs-first comparator/duplicate/empty-error/persistence/even-array lower-vs-upper midpoint reconciliation, two reference lanes Python/Rust, independent sorted-set/version/structural oracle and meaningful literal Dart RED. Future actual Dart format/analyze/test/BUILD and measured library coverage required, no native execution here. DT03 optional per-lane partitions collision-clean but scope already owned, not registered; parent remains unfinished until both lanes delivered.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/dart-current-14-of-15-binary-search-tree"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "merged_at": "2026-11-14T13:31:41Z",
+      "merge_commit": "d589d2874f56307b485f4ffe2425b3be5fac5523"
     },
     {
       "id": "fenwick-tree-language-neutral-fixtures-and-index-contract",
