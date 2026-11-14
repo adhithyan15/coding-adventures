@@ -3,10 +3,12 @@
 //! An HTTPS client must not validate a certificate path for one decoded leaf
 //! and then send TLS and HTTP protocol identities proven against another leaf.
 //! This crate closes that one composition gap: it consumes the complete DNS
-//! destination proof and either the strongest accumulated reviewed RSA
-//! server-path policy or that path already bound to its reviewed anchor's
-//! repository-owned self-signature proof. Both entry points require their
-//! complete inputs to retain the same exact decoded target object.
+//! destination proof and one of three progressively stronger retained server
+//! proofs: the strongest accumulated reviewed RSA path policy, that path
+//! already bound to its reviewed anchor's repository-owned self-signature, or
+//! the exact direct no-check complete fixed-path revocation policy. Every entry
+//! point requires its complete inputs to retain the same exact decoded target
+//! object.
 //!
 //! ```text
 //! HTTPS destination ── certificate ──┐
@@ -14,8 +16,9 @@
 //! reviewed server path ── target ────┘
 //! ```
 //!
-//! The stronger result retains the complete path-to-anchor-self-signature
-//! proof after this target check; it does not replace the path-only boundary.
+//! The stronger results retain the complete path-to-anchor-self-signature or
+//! direct no-check complete-revocation proof after this target check; they do
+//! not replace the path-only boundary.
 //!
 //! This is an evidence-integrity boundary, not certificate validation. It
 //! performs no new parsing, signature verification, path or Name validation,
@@ -26,6 +29,10 @@
 
 use core::fmt;
 use https_destination_name_binding::BoundHttpsDnsDestination;
+use x509_ocsp_reviewed_server_revocation_binding::{
+    ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy,
+    X509OcspReviewedServerRevocationTargetEvidence,
+};
 use x509_rsa_constructed_path_signature_routing::ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy;
 use x509_rsa_reviewed_server_path_anchor_self_signature_binding::BoundX509RsaReviewedServerPathAnchorSelfSignature;
 
@@ -322,9 +329,7 @@ pub fn bind_https_dns_destination_to_reviewed_server_path<
         .server_policy()
         .certificate();
 
-    if !same_object(destination.certificate(), path_certificate) {
-        return Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch);
-    }
+    require_same_object(destination.certificate(), path_certificate)?;
 
     Ok(BoundHttpsDnsDestinationToReviewedServerPath {
         destination,
@@ -580,9 +585,7 @@ pub fn bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature<
         .server_policy()
         .certificate();
 
-    if !same_object(destination.certificate(), path_certificate) {
-        return Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch);
-    }
+    require_same_object(destination.certificate(), path_certificate)?;
 
     Ok(
         BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature {
@@ -592,13 +595,144 @@ pub fn bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature<
     )
 }
 
+/// Non-copyable HTTPS destination and complete direct revocation evidence.
+///
+/// The retained completion already covers the exact direct no-check fixed
+/// path selected by repository-owned revocation policy. Construction derives
+/// its server leaf only through sealed target evidence, checks exact decoded
+/// object identity against the destination certificate, and then moves both
+/// complete inputs into this result.
+pub struct BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    IntermediateRevocation,
+> {
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation: ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+    >,
+}
+
+impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
+    BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+    >
+{
+    /// Return the complete certificate, SNI, Host, and SAN destination proof.
+    #[must_use]
+    pub const fn destination(
+        &self,
+    ) -> &BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host> {
+        &self.destination
+    }
+
+    /// Return the exact direct no-check complete fixed-path revocation proof.
+    #[must_use]
+    pub const fn complete_revocation(
+        &self,
+    ) -> &ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+    > {
+        &self.complete_revocation
+    }
+}
+
+impl<Proof, IntermediateRevocation> fmt::Debug
+    for BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
+        '_,
+        '_,
+        '_,
+        '_,
+        Proof,
+        IntermediateRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct(
+                "BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation",
+            )
+            .field("destination", &"[REDACTED]")
+            .field("complete_revocation", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind an HTTPS destination to exact direct no-check complete revocation.
+///
+/// The server target is derived only through the completion's sealed
+/// repository-owned evidence. A byte-equal certificate from an independent
+/// decode therefore fails closed. Success retains the complete destination
+/// and complete fixed-path revocation proof, without parsing, cryptography,
+/// credential access, audit, trace, I/O, TLS, HTTP, or any external effect.
+pub fn bind_https_dns_destination_to_reviewed_direct_no_check_complete_fixed_path_revocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    IntermediateRevocation,
+>(
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation: ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+    >,
+) -> Result<
+    BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+    >,
+    HttpsReviewedServerPathBindingError,
+>
+where
+    Proof: X509OcspReviewedServerRevocationTargetEvidence,
+{
+    require_same_object(
+        destination.certificate(),
+        complete_revocation.server_target_certificate(),
+    )?;
+
+    Ok(
+        BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation {
+            destination,
+            complete_revocation,
+        },
+    )
+}
+
+fn require_same_object<T: ?Sized>(
+    left: &T,
+    right: &T,
+) -> Result<(), HttpsReviewedServerPathBindingError> {
+    if same_object(left, right) {
+        Ok(())
+    } else {
+        Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch)
+    }
+}
+
 fn same_object<T: ?Sized>(left: &T, right: &T) -> bool {
     core::ptr::eq(left, right)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{same_object, HttpsReviewedServerPathBindingError};
+    use super::{require_same_object, same_object, HttpsReviewedServerPathBindingError};
 
     #[test]
     fn exact_object_check_accepts_only_the_same_allocation() {
@@ -607,6 +741,11 @@ mod tests {
 
         assert!(same_object(&retained, &retained));
         assert!(!same_object(&retained, &byte_equal_independent));
+        assert_eq!(require_same_object(&retained, &retained), Ok(()));
+        assert_eq!(
+            require_same_object(&retained, &byte_equal_independent),
+            Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch)
+        );
     }
 
     #[test]
