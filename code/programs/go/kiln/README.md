@@ -710,7 +710,12 @@ a void of the whole run. After the build it runs `VerifyTree` with the commit
 `prepare` recorded, `git fsck --connectivity-only` and `Inventory`, and fills the
 header's `tracked_changed_unexplained` and `post_inventory_unexplained`; a failure
 of any of the three is a void and a non-zero count, never a crash. The shard is
-decoded with `recfmt` before it is written, atomically, to `--out`. Exit 1 and
+decoded with `recfmt` before it is written, atomically, to `--out`. Before it reads
+anything of `traces/`, `collect` creates `traces/.collected`; `kiln record step`
+refuses once that exists, so a directory is collected once and cannot grow after.
+A package whose recipe is empty (a comment-only BUILD, built 0 of 0) is vacuously
+complete, not unknown. Why a post-build check failed is printed as
+`post-build problem:` lines (never written to the shard). Exit 1 and
 nothing written when `collect` cannot say what the build did (the directory is locked,
 `pre/` changed, the results are unreadable); a void shard is still written and the
 exit is 0.

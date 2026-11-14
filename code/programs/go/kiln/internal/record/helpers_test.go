@@ -115,22 +115,30 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
+// ensureRootLocked makes the shared root (canonical: a prepared world must live
+// at a path with no symlink in it, which /var on macOS is) when templatesMu is held.
+func ensureRootLocked(t *testing.T) {
+	t.Helper()
+	if templatesRoot != "" {
+		return
+	}
+	root, err := os.MkdirTemp("", "kiln-record-templates-")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if root, err = filepath.EvalSymlinks(root); err != nil {
+		t.Fatal(err)
+	}
+	templatesRoot = root
+}
+
 // sharedRoot is the directory the template repositories and the prepared worlds
 // of the collect tests live in: outside every t.TempDir(), removed by TestMain.
 func sharedRoot(t *testing.T) string {
 	t.Helper()
 	templatesMu.Lock()
 	defer templatesMu.Unlock()
-	if templatesRoot == "" {
-		root, err := os.MkdirTemp("", "kiln-record-templates-")
-		if err != nil {
-			t.Fatal(err)
-		}
-		if root, err = filepath.EvalSymlinks(root); err != nil {
-			t.Fatal(err)
-		}
-		templatesRoot = root
-	}
+	ensureRootLocked(t)
 	return templatesRoot
 }
 
@@ -153,13 +161,7 @@ func templateRepo(t *testing.T, files map[string]string, initArgs []string) stri
 	if d, ok := templates[key]; ok {
 		return d
 	}
-	if templatesRoot == "" {
-		root, err := os.MkdirTemp("", "kiln-record-templates-")
-		if err != nil {
-			t.Fatal(err)
-		}
-		templatesRoot = root
-	}
+	ensureRootLocked(t)
 	dir := filepath.Join(templatesRoot, fmt.Sprint(len(templates)))
 	if err := os.Mkdir(dir, 0o755); err != nil {
 		t.Fatal(err)
