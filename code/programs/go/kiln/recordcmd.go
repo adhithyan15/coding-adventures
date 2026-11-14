@@ -6,22 +6,27 @@ package main
 //	kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
 //	                    --shard-index I --shard-count N --job-start <unix>
 //	                    [--strace <abs>]
-//	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2)
+//	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2a)
 //	kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
-//	                                                                 (PR 2b-2)
+//	                                                                 (PR 2b-2b)
 //
 // `prepare` is the part of a recording shard that runs before any BUILD (see
-// internal/record/prepare.go). `step` is the build tool's -exec-wrapper and
-// `collect` is the post-build pass; both belong to the next PR and exist here
-// only as stubs that refuse, so the command surface a workflow is written
-// against is fixed now, and a workflow that wires the build to a recorder that
-// does not trace yet fails loudly instead of recording nothing.
+// internal/record/prepare.go). `step` is the build tool's -exec-wrapper: it
+// supervises one BUILD line under strace (internal/record/step.go). `collect`
+// is the post-build pass; it belongs to the next PR and exists here only as a
+// stub that refuses, so the command surface a workflow is written against is
+// fixed now, and a workflow that wires the build to a recorder that does not
+// collect yet fails loudly instead of recording nothing.
 //
 // Refusals come before any work and write nothing:
 //
 //	exit 2   a usage error (a missing flag, a relative path)
 //	exit 3   not a trusted GitHub run, or not linux/amd64
 //	exit 1   anything `prepare` found wrong, or a stub
+//
+// `step` is different, because its exit status is the step's: it exits with the
+// traced root's status, or 125 (record.ExitRefused) when it refused to run the
+// step or could not account for it, 2 for a usage error and 3 off linux/amd64.
 //
 // Platform and trust are hooks (package variables) so the tests can exercise the
 // whole command on a developer's machine without being a GitHub runner.
@@ -61,7 +66,11 @@ var recordSelf = func() (string, error) {
 // can prove Prepare was never reached.
 var recordPrepare = record.Prepare
 
-const notYet = "not implemented (KILN04 stage 4 PR 2b-2)"
+// recordStep is record.RunStep; a hook so a test of the command can prove a
+// refusal never reached it.
+var recordStep = record.RunStep
+
+const notYet = "not implemented (KILN04 stage 4 PR 2b-2b)"
 
 // runRecord dispatches `kiln record <subcommand>`.
 func runRecord(args []string, stdout, stderr io.Writer) int {
@@ -72,8 +81,10 @@ func runRecord(args []string, stdout, stderr io.Writer) int {
 	switch args[0] {
 	case "prepare":
 		return runRecordPrepare(args[1:], stdout, stderr)
-	case "step", "collect":
-		// The stubs refuse everything, flags included: there is nothing to run.
+	case "step":
+		return runRecordStep(args[1:], stdout, stderr)
+	case "collect":
+		// The stub refuses everything, flags included: there is nothing to run.
 		fmt.Fprintf(stderr, "kiln: record %s: %s\n", args[0], notYet)
 		return 1
 	}
@@ -140,4 +151,45 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 		res.Binding.ShardIndex, res.Binding.ShardCount, res.BindingID, res.Actions, res.Refused,
 		filepath.Join(res.PreDir, "exec-wrapper.json"))
 	return 0
+}
+
+// runRecordStep is `kiln record step --dir <abs> -- sh -c <line>`.
+//
+// The step's output goes to stdout and stderr, which in the real process are its
+// own (so the build log shows it); the tests hand in buffers.
+func runRecordStep(args []string, stdout, stderr io.Writer) int {
+	fs := flag.NewFlagSet("record step", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	dir := fs.String("dir", "", "the record directory (absolute)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if *dir == "" || !filepath.IsAbs(*dir) || fs.NArg() == 0 {
+		fmt.Fprintln(stderr, "usage: kiln record step --dir <abs> -- sh -c <line>")
+		return 2
+	}
+	if !recordPlatformOK() {
+		fmt.Fprintf(stderr, "kiln: record step runs only on linux/amd64 (this is %s/%s); the step was not run\n", runtime.GOOS, runtime.GOARCH)
+		return 3
+	}
+	self, err := recordSelf()
+	if err != nil {
+		fmt.Fprintf(stderr, "kiln: record step: cannot locate this binary: %v\n", err)
+		return record.ExitRefused
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
+		return record.ExitRefused
+	}
+	res, err := recordStep(record.StepOptions{
+		Dir: *dir, Argv: fs.Args(), Environ: os.Environ(), Cwd: cwd, KilnExe: self,
+		Stdout: stdout, Stderr: stderr,
+	})
+	if err != nil {
+		// Nothing printed here is a value from the environment.
+		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
+		return record.ExitRefused
+	}
+	return res.ExitCode
 }
