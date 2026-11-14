@@ -244,10 +244,13 @@ func ShadowedMounts(cfg *sandbox.Config) ([]string, error) {
 	// fail on it), and everything under it is covered by walking the outer one.
 	kept := out[:0]
 	for _, m := range out {
-		if n := len(kept); n > 0 && strings.HasPrefix(m, kept[n-1]+"/") {
-			continue
+		inside := false
+		for _, k := range kept { // every kept entry: "/a", "/a-b", "/a/b" sorts in that order
+			inside = inside || strings.HasPrefix(m, k+"/")
 		}
-		kept = append(kept, m)
+		if !inside {
+			kept = append(kept, m)
+		}
 	}
 	out = kept
 	if len(out) > MaxShadowed {

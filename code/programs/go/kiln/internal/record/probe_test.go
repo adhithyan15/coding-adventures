@@ -311,6 +311,17 @@ func TestShadowedMounts(t *testing.T) {
 	mountPoints = func() map[string]bool {
 		return map[string]bool{ro + "/a": true, ro + "/a/b": true, ro + "/a/b/c": true, ro + "/ab": true, ro + "/z": true}
 	}
+	// "/a", "/a-b", "/a/b" sort in that order: /a/b is inside /a, not inside /a-b.
+	mountPoints = func() map[string]bool {
+		return map[string]bool{ro + "/a": true, ro + "/a-b": true, ro + "/a/b": true}
+	}
+	got, err = ShadowedMounts(cfg)
+	if err != nil || strings.Join(got, "|") != ro+"/a|"+ro+"/a-b" {
+		t.Fatalf("interleaved: %v %v", got, err)
+	}
+	mountPoints = func() map[string]bool {
+		return map[string]bool{ro + "/a": true, ro + "/a/b": true, ro + "/a/b/c": true, ro + "/ab": true, ro + "/z": true}
+	}
 	got, err = ShadowedMounts(cfg)
 	if err != nil {
 		t.Fatal(err)

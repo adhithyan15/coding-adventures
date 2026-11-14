@@ -18,8 +18,10 @@ package main
 //	            exported runner is given a hand-built configuration whose state
 //	            root holds one (sandbox-exec does not require empty state roots)
 //	shadow      a FIFO hidden beneath a tmpfs mounted over a directory of a
-//	            read-only root: the host scan skips what a mount hides, the
-//	            shadow probe finds it (needs `sudo -n mount`, as the CI job has)
+//	            read-only root: the host scan skips what a mount hides, and
+//	            either the shadow probe finds it or the kernel refuses to bind
+//	            the root at all (locked child mounts); both fail closed, and the
+//	            log says which (needs `sudo -n mount`, as the CI job has)
 //	signals     a strace wrapper that adds `-e signal=none` makes prepare fail ON
 //	            THE signals PROBE: a tracer that cannot show a signal death is
 //	            not one the daemon-left rule can rest on
@@ -156,7 +158,18 @@ func newProbeWorld(t *testing.T, kiln string, opts probeOpts) *probeWorld {
 		extra = append(extra, fmt.Sprintf(`{"path": %q, "kind": "state", "ecosystem": "fixture"}`, w.state))
 	}
 	if opts.shadow {
-		w.shadowRoot = filepath.Join(w.base, "shadowroot")
+		// The root is a sibling of the step's $HOME under the runner's real home:
+		// Config.Validate refuses a read-only root inside /tmp or /var/tmp (and
+		// w.base is a t.TempDir()). Its cleanup is registered BEFORE the mount's,
+		// so the unmount runs first.
+		var err error
+		if w.shadowRoot, err = os.MkdirTemp(realHome, ".kiln-probe-shadow-"); err != nil {
+			skipOrFail(t, "cannot make a directory under the home directory: %v", err)
+		}
+		t.Cleanup(func() { os.RemoveAll(w.shadowRoot) })
+		if w.shadowRoot, err = filepath.EvalSymlinks(w.shadowRoot); err != nil {
+			t.Fatal(err)
+		}
 		m := filepath.Join(w.shadowRoot, "m")
 		if err := os.MkdirAll(m, 0o755); err != nil {
 			t.Fatal(err)
@@ -407,7 +420,7 @@ func TestSandboxRecordProbe(t *testing.T) {
 		action := pre.Probes.Action
 		_, err = record.RunStructureProbes(record.ProbeInput{
 			Dir: runDir, Cfg: &cfg, ConfigPath: cfgPath, ConfigSHA256: hex.EncodeToString(sum[:]), Action: action,
-			KilnExe: w.kiln, Strace: w.strace,
+			KilnExe: pre.Config.KilnExe, Strace: w.strace,
 			Env: []string{"KILN_ACTION=" + action, "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=" + pre.Tools.Path},
 		})
 		if err == nil || !strings.Contains(err.Error(), "probe walk") || !strings.Contains(err.Error(), "reachable") {
@@ -426,8 +439,28 @@ func TestSandboxRecordProbe(t *testing.T) {
 			t.Fatalf("record prepare accepted a FIFO hidden beneath a mount point\nprobe traces:\n%s", w.probeTails(25))
 		}
 		t.Logf("PROBE: shadow: exit %d: %s", code, firstLineOf(stderr))
-		if !strings.Contains(stderr, "probe shadow") || !strings.Contains(stderr, "reachable") {
-			t.Fatalf("it did not fail on the shadow probe\nstderr: %s\nprobe traces:\n%s", stderr, w.probeTails(25))
+		// Two outcomes are correct, and both fail closed:
+		//
+		//  (i)  the sandbox starts, and the shadow probe finds the FIFO the host
+		//       scan could not see beneath the mount: "probe shadow ... reachable".
+		//  (ii) the kernel refuses to start the sandbox at all. In a new user and
+		//       mount namespace the inherited mounts are LOCKED, and a
+		//       non-recursive bind (MsBind) of a directory that has a locked
+		//       child mount fails (EINVAL, has_locked_children in fs/namespace.c).
+		//       The helper then exits 125 and prepare fails on the FIRST probe,
+		//       with the helper's own message in the quoted step output. In that
+		//       case the kernel closes the shadow risk outright, and the probe is
+		//       defence in depth.
+		//
+		// The match for (ii) is specific: the first probe, strace's exit 125, and
+		// the sandbox helper's own error prefix. Anything else is a failure.
+		switch {
+		case strings.Contains(stderr, "probe shadow") && strings.Contains(stderr, "reachable"):
+			t.Logf("PROBE: shadow-outcome=probe-found-the-fifo")
+		case strings.Contains(stderr, "probe pipes") && strings.Contains(stderr, "strace exited 125") && strings.Contains(stderr, "kiln sandbox-"):
+			t.Logf("PROBE: shadow-outcome=kernel-refused-the-bind (locked child mount)")
+		default:
+			t.Fatalf("it failed, but neither on the shadow probe nor on the sandbox refusing to bind the root\nstderr: %s\nprobe traces:\n%s", stderr, w.probeTails(25))
 		}
 		if _, err := os.Lstat(filepath.Join(w.recDir, "pre", "SEALED")); err == nil {
 			t.Fatal("a failed prepare left a SEALED record")

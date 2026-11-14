@@ -1721,6 +1721,17 @@ run; the sealed digest says which file is meant. A shard with no action runs no
 probe and seals the report with an empty `action` and no runs. The binding is
 unchanged (D4): `SEALED` covers `probes.json`.
 
+*The kernel may close this risk outright.* In a new user and mount namespace the
+inherited mounts are locked, and a non-recursive bind (`MsBind`, which is how the
+sandbox binds every root) of a directory that has a locked child mount fails
+(`has_locked_children` in `fs/namespace.c`). So a host mount point inside an
+`ro_roots` entry, the checkout or a state root is expected to make the sandbox
+refuse to start, and `prepare` to fail on the first probe (strace exit 125, the
+helper's message in the quoted step output): fail-closed, with no probe needed.
+The `shadow` probe is then defence in depth. `TestSandboxRecordProbe` accepts
+exactly either outcome for a FIFO hidden beneath a tmpfs and logs
+`PROBE: shadow-outcome=...`; the first CI run says which applies.
+
 *Residue.* The probe is a sample of the host's state at `prepare`, not a lock:
 a socket created later, by something outside the sandbox, in a place the sandbox
 binds, is the host scan's and the runner's business (§14).
@@ -3603,7 +3614,9 @@ These are known and named. They are measured rather than closed.
   an `ro_roots` entry non-recursively, so what the mount hides on the host is
   what the step sees. That is not scanned on the host; the `shadow` run of the
   in-sandbox structure probe (decision P14, stage 4 PR 2b-2c-2: a `find -xdev`
-  under every such mount point, in the sandbox's own view) covers it.
+  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule is also expected to make such a mount
+  fail every step (the sandbox cannot bind the root: P14), which is fail-closed;
+  the probe is defence in depth, and the CI outcome confirms which applies.
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above
