@@ -49,10 +49,12 @@ warrant wxg v1
     v public
     out public
 
-  -- The all-zero byte string of length n, for n <= 8 (the longest `Bytes` binder
-  -- of the generator is 8 bytes).  Written as a ladder because the generator
-  -- does not emit the WX-D1 `replicate` yet (VER04k section 4.13 item 9).
-  model zeros(n: Nat) -> Bytes = if n == 0 then b"" else if n == 1 then b"00" else if n == 2 then b"0000" else if n == 3 then b"000000" else if n == 4 then b"00000000" else if n == 5 then b"0000000000" else if n == 6 then b"000000000000" else if n == 7 then b"00000000000000" else b"0000000000000000"
+  -- The all-zero byte string of length n, for n < 256: one block of 2^i zero bytes
+  -- for each set bit i of n.  (The generator draws `Bytes` of at most 64 bytes, so
+  -- every length it can produce is covered; it does not emit the WX-D1
+  -- `replicate` yet, VER04k section 4.13 item 9.)
+  model chunk(n: Nat, i: Nat, z: Bytes) -> Bytes = if bit(wrap<U8>(n), i) then z else b""
+  model zeros(n: Nat) -> Bytes = concat(concat(concat(concat(concat(concat(concat(chunk(n, 0, b"00"), chunk(n, 1, b"0000")), chunk(n, 2, b"00000000")), chunk(n, 3, b"0000000000000000")), chunk(n, 4, b"00000000000000000000000000000000")), chunk(n, 5, b"0000000000000000000000000000000000000000000000000000000000000000")), chunk(n, 6, b"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")), chunk(n, 7, b"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"))
 
   -- A byte string typed `Bytes` rather than `Bytes<N>` (a tuple's components are
   -- compared at their exact types, so a literal needs widening to meet a result).

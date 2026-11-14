@@ -507,6 +507,45 @@ impl V {
 }
 
 //@endif
+//@if post
+/// The panic payload of a postcondition monitor (VER04k section 4.7): an `ensures`
+/// row of the operation just called was false for its arguments and result
+/// (`postcondition-violated: <op> row <i>`) or could not be evaluated
+/// (`postcondition-unevaluable: <op> row <i>`, a defect of the document that
+/// never counts as satisfied).
+#[derive(Debug)]
+pub struct PostViolation(pub String);
+
+thread_local! {
+    static POST_CALLS: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
+    static POST_NOTE: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// One monitored call is about to have its rows evaluated.
+fn post_count(_op: &str) {
+    POST_CALLS.with(|c| c.set(c.get() + 1));
+}
+
+fn take_post_calls() -> u64 {
+    POST_CALLS.with(|c| c.replace(0))
+}
+
+/// A claim or example wrapper caught a [`PostViolation`]: remember the note (the
+/// counterexample message carries it) and report the instance as failed.
+fn post_failed(payload: Box<dyn std::any::Any + Send>) -> bool {
+    match payload.downcast::<PostViolation>() {
+        Ok(v) => POST_NOTE.with(|n| *n.borrow_mut() = Some(v.0)),
+        Err(other) => std::panic::resume_unwind(other),
+    }
+    false
+}
+
+/// The number of `ensures` rows of `op`, from the generated table.
+fn post_rows(op: &str) -> u64 {
+    POST_ROWS.iter().find(|(o, _)| *o == op).map_or(0, |(_, n)| *n)
+}
+
+//@endif
 //@if comp
 /// The panic payload an adapter raises for a value its host integer type cannot
 /// hold: the case is *unreachable by type*, skipped (never narrowed) and counted
@@ -1841,9 +1880,22 @@ pub struct Stats {
     /// Cases skipped because a host integer cannot hold a generated value.
     pub unreachable: u64,
 //@endif
+//@if post
+    /// Calls of a monitored operation whose `ensures` rows were evaluated
+    /// (VER04k section 4.7, `monitored_calls`).
+    pub monitored: u64,
+//@endif
 }
 
 fn counterexample_message(what: &str, env: &[V]) -> String {
+//@if post
+    // A postcondition the monitor reported at this instance names itself.
+    let what = match POST_NOTE.with(|n| n.take()) {
+        Some(note) => format!("{what} ({note})"),
+        None => what.to_string(),
+    };
+    let what = what.as_str();
+//@endif
     let repr = format!("{env:?}");
     if std::env::var("CI").is_ok() {
         format!("{what}; repro-fnv: {:016x}", fnv1a64(repr.as_bytes()))
@@ -2624,6 +2676,10 @@ fn write_manifest(outcomes: &[Outcome]) {
             .map(|o| if o.passed() { "pass" } else { "fail" })
             .unwrap_or("not-run");
         let (s, note) = stats.get(&m.id).cloned().unwrap_or_default();
+//@if post
+        let is_post = m.claim.ends_with("/post");
+        let post_n = post_rows(&m.op);
+//@endif
 //@if obs
         let obs_entry = obs_stats.get(&m.id).cloned();
 //@endif
@@ -2647,6 +2703,12 @@ fn write_manifest(outcomes: &[Outcome]) {
 //@if comp
                 e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
 //@endif
+//@if post
+                if is_post {
+                    e.insert("monitored_calls".into(), Json::Num(s.monitored));
+                    e.insert("postcondition_rows".into(), Json::Num(post_n));
+                }
+//@endif
 //@if v1
                 e.insert(
                     "demoted".into(),
@@ -2661,6 +2723,12 @@ fn write_manifest(outcomes: &[Outcome]) {
 //@if comp
                 e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
 //@endif
+//@if post
+                if is_post {
+                    e.insert("monitored_calls".into(), Json::Num(s.monitored));
+                    e.insert("postcondition_rows".into(), Json::Num(post_n));
+                }
+//@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
             "fuzz" => {
@@ -2668,6 +2736,12 @@ fn write_manifest(outcomes: &[Outcome]) {
                 e.insert("admitted".into(), Json::Num(s.admitted));
 //@if comp
                 e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
+//@endif
+//@if post
+                if is_post {
+                    e.insert("monitored_calls".into(), Json::Num(s.monitored));
+                    e.insert("postcondition_rows".into(), Json::Num(post_n));
+                }
 //@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
