@@ -55,4 +55,11 @@ harness = false
 [[test]]
 name = "lzw_proofs"
 path = "tests/lzw_proofs.rs"
+
+# arithmetic: no secret labels, so only the steps/depth rows, attempted on the real
+# adders.rs and alu.rs.  The front end refuses them (if it does), so this target
+# records the steps-bound obligations `not-live` with the precise blocker.
+[[test]]
+name = "arithmetic_proofs"
+path = "tests/arithmetic_proofs.rs"
 harness = false

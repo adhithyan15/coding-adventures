@@ -191,6 +191,12 @@ pub enum AuditProfile {
     /// Pure Boolean logic (rust/logic-gates): logic gates and combinational
     /// blocks over single-bit values.  No bytes-as-keys, no cryptography.
     BooleanLogic,
+    /// Adders and an arithmetic logic unit over bit vectors (rust/arithmetic):
+    /// a bit vector of the caller's width in, a bit vector of the same width out.
+    /// No bytes-as-keys, no cryptography.  Distinct from `BooleanLogic`, whose
+    /// sentences say "single-bit values only" and name a 2^n decoder bound, both
+    /// false for an adder over a 16-bit operand.
+    BitArithmetic,
     /// A lossless compressor and decompressor (rust/lzw): bytes in, bytes out
     /// and back, an output that can be far larger than the input, no key
     /// material, no cryptography.  Unlike every other profile this one
@@ -215,6 +221,7 @@ impl AuditProfile {
             AuditProfile::FieldArithmetic => "field-arithmetic",
             AuditProfile::VarintCodec => "varint-codec",
             AuditProfile::BooleanLogic => "boolean-logic",
+            AuditProfile::BitArithmetic => "bit-arithmetic",
             AuditProfile::LosslessCompression => "lossless-compression",
         }
     }
@@ -234,9 +241,10 @@ impl std::str::FromStr for AuditProfile {
             "field-arithmetic" => Ok(AuditProfile::FieldArithmetic),
             "varint-codec" => Ok(AuditProfile::VarintCodec),
             "boolean-logic" => Ok(AuditProfile::BooleanLogic),
+            "bit-arithmetic" => Ok(AuditProfile::BitArithmetic),
             "lossless-compression" => Ok(AuditProfile::LosslessCompression),
             other => Err(format!(
-                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | lossless-compression)"
+                "unknown profile `{other}` (comparison | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic | lossless-compression)"
             )),
         }
     }
@@ -569,6 +577,7 @@ fn evaluate_row(
                     AuditProfile::VarintCodec => "bounded work per call: a LEB128 encoder emits at most ceil(64/7) = 10 bytes and a decoder reads at most ceil(max_bits/7) bytes from its offset (10 for the documented widths, max_bits <= 64), one constant-time step per byte; no other input-dependent iteration",
                     AuditProfile::LosslessCompression => "bounded work per call: the encoder performs one dictionary lookup per input byte and the decoder writes each delivered byte once, through a dictionary of at most 65,536 fixed-size entries, delivering at most the documented output cap; no other input-dependent iteration",
                     AuditProfile::BooleanLogic => "bounded work per call: a gate is a fixed number of CMOS evaluations, an n-input gate or multiplexer is linear in its inputs, and a decoder or demultiplexer produces 2^n lines for at most 16 inputs (a width cap enforced by a panic); no other input-dependent iteration",
+                    AuditProfile::BitArithmetic => "bounded work per call: a half or full adder is a fixed number of gate evaluations, a ripple-carry adder and every ALU operation make a constant number of passes over their operands, linear in the operand length, and the result is exactly as long as the operands (no width-driven allocation); no other input-dependent iteration",
                 }
                 .into(),
                 evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
@@ -663,6 +672,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC",
                     AuditProfile::VarintCodec => "integer encoding: package implements LEB128 variable-length integer encoding only, no cipher, hash or MAC",
                     AuditProfile::BooleanLogic => "boolean logic: package implements logic gates and combinational blocks over single-bit values only, no cipher, hash or MAC",
+                    AuditProfile::BitArithmetic => "bit arithmetic: package implements adders and an arithmetic logic unit over bit vectors only, no cipher, hash or MAC",
                     AuditProfile::LosslessCompression => "lossless compression: package implements LZW compression and decompression only, no cipher, hash or MAC",
                 }
                 .into(),
@@ -680,6 +690,7 @@ fn evaluate_row(
                     AuditProfile::FieldArithmetic => "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength",
                     AuditProfile::VarintCodec => "no keys: the package takes and generates no key material; operands are integers and LEB128 byte strings, not key bytes of a fixed strength",
                     AuditProfile::BooleanLogic => "no keys: the package takes and generates no key material; operands are single bits and short bit vectors, not key bytes of a fixed strength",
+                    AuditProfile::BitArithmetic => "no keys: the package takes and generates no key material; operands are bits and bit vectors of the caller's width, not key bytes of a fixed strength",
                     AuditProfile::LosslessCompression => "no keys: the package takes and generates no key material; operands are byte strings to compress and compressed streams, not key bytes of a fixed strength",
                 }
                 .into(),

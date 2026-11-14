@@ -72,7 +72,10 @@ pub struct AluResult {
     pub result: Vec<u8>,
     /// True if all result bits are 0.
     pub zero: bool,
-    /// True if addition produced an unsigned overflow (carry out of MSB).
+    /// For `Add`: the carry out of the most significant bit (the sum does not fit
+    /// in N bits as an unsigned number).  For `Sub`: set when NO borrow is needed,
+    /// that is `a >= b` unsigned (the carry of `A + NOT(B) + 1`).  Always false
+    /// for the logical operations.
     pub carry: bool,
     /// True if the MSB of the result is 1 (negative in two's complement).
     pub negative: bool,
@@ -87,8 +90,12 @@ pub struct AluResult {
 ///
 /// # Panics
 ///
-/// Panics if `a` and `b` have different lengths (except for `Not`),
-/// or if either is empty.
+/// Panics, in EVERY build profile, if `a` is empty, if `a` and `b` have
+/// different lengths (except for `Not`, which never reads `b`: any content and
+/// any length, even empty, is accepted and ignored), or if any bit that is read
+/// is not 0 or 1 (the gates reject it with `assert!`, finding SEC-007 of
+/// `logic-gates`; pinned by `tests/bit_domain.rs`).  There is no width-driven
+/// allocation: the result is exactly as long as `a`.
 ///
 /// # Example
 ///

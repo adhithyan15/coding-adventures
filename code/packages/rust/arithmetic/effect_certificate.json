@@ -1,0 +1,11 @@
+{
+  "schema_version": "ver24-effect-cert-v1",
+  "package": "rust/arithmetic",
+  "source_digest": "e48b3a1fb6b291b8f1f524888273a948e5eecfec4316e3ce272eb81df0d0f3d2",
+  "manifest_digest": "c7734763d921fb7dd6acd190260ad0718ee31f01cd9551f3fbfb966419425f03",
+  "declared_effects": [],
+  "entry_points": [],
+  "unconditional_roots": [],
+  "banned_construct_exceptions": [],
+  "label": "proved"
+}
