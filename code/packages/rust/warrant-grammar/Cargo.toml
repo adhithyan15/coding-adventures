@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_warrant_grammar"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 description = "Warrant v0/v1 grammar artifacts, bounded source admission, layout, parser, type checker, evaluator, evidence generator, pinned vector tables and bindings"
 license = "MIT"

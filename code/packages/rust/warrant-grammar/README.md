@@ -187,6 +187,23 @@ op classify export=classify ret=Shape faults=wrong-ctor
   `tests/wxa_evidence.rs` also runs the ground evaluator against the generated
   model code on every composite domain within budget.
 
+## Warrant v1: fixed-length byte arrays (VER04j WX-N)
+
+`Bytes<N>` was always in the language; the binding now maps it to the Rust array
+`[u8; N]` with the host type `bytes<N>` (a top-level parameter is `&[u8; N]`),
+and `err_any=CASE` binds a host `Result<T, E>` whose error type is opaque:
+
+```text
+op x25519 export=x25519 args=bytes<32>,bytes<32> ret=bytes<32> err_any=LOW_ORDER faults=flip-result-bit,missing-error
+```
+
+A model value of the wrong length is unreachable by type (never padded or
+truncated); an export that returns the wrong length fails the harness. A
+`Bytes<N>` binder with N >= 2 enumerates a *sample* of the `256^N` values and the
+manifest says `sample(SIZE)`; only N <= 1 is `full`. Fixed arrays of integers
+(`[u32; 8]`) are not supported (backlog WD-015). The pilot is
+`code/specs/x25519.warrant`; the compiled fixture is `tests/fixtures/wxn.warrant`.
+
 ## Warrant v1: output bounds (VER04j WX-H)
 
 A v1 `bound` block gains a fourth metric, `output`, that bounds the *size of the
