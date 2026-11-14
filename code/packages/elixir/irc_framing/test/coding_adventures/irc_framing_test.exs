@@ -212,4 +212,78 @@ defmodule CodingAdventures.IrcFramingTest do
       assert Enum.at(msgs, 1).params == ["alice", "0", "*", "Alice Smith"]
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # SEC-011: a peer that never sends LF must not grow the buffer.
+  #
+  # The cap on an unterminated line is 511 bytes: 510 content bytes plus a CR
+  # whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512 bytes
+  # including CRLF).  These tests mirror the Rust crate's SEC-011 tests.
+  # ---------------------------------------------------------------------------
+
+  describe "pending-line bound (SEC-011)" do
+    @sixteen_mib 16 * 1024 * 1024
+
+    test "no LF in chunks is bounded" do
+      chunk = String.duplicate("A", 4096)
+
+      {framer, worst} =
+        Enum.reduce(1..div(@sixteen_mib, 4096), {Framer.new(), 0}, fn _, {f, worst} ->
+          f = Framer.feed(f, chunk)
+          {f, max(worst, Framer.buffer_size(f))}
+        end)
+
+      assert worst <= 512, "buffer grew to #{worst} bytes with no LF"
+      assert {_, []} = Framer.frames(framer)
+    end
+
+    test "no LF in one feed is bounded" do
+      framer = Framer.feed(Framer.new(), :binary.copy("A", @sixteen_mib))
+      assert Framer.buffer_size(framer) <= 512
+      assert {_, []} = Framer.frames(framer)
+    end
+
+    test "framer recovers after a flood" do
+      framer =
+        Framer.new()
+        |> Framer.feed(String.duplicate("A", 4096))
+        |> Framer.feed(String.duplicate("B", 4096))
+        |> Framer.feed("tail\r\nNICK alice\r\n")
+
+      {framer, lines} = Framer.frames(framer)
+      assert lines == ["NICK alice"]
+      assert Framer.buffer_size(framer) == 0
+    end
+
+    test "a pending line of 510 bytes plus CR is kept" do
+      framer = Framer.feed(Framer.new(), String.duplicate("A", 510) <> "\r")
+      assert Framer.buffer_size(framer) == 511
+      framer = Framer.feed(framer, "\n")
+      {_, lines} = Framer.frames(framer)
+      assert lines == [String.duplicate("A", 510)]
+    end
+
+    test "a pending line of 512 bytes is dropped and skipped to its LF" do
+      framer = Framer.feed(Framer.new(), String.duplicate("A", 512))
+      assert Framer.buffer_size(framer) == 0
+      framer = Framer.feed(framer, "\r\nPING x\r\n")
+      {_, lines} = Framer.frames(framer)
+      assert lines == ["PING x"]
+    end
+
+    test "complete lines before the flood survive" do
+      framer = Framer.feed(Framer.new(), "NICK a\r\n" <> String.duplicate("A", 2000))
+      {framer, lines} = Framer.frames(framer)
+      assert lines == ["NICK a"]
+      assert Framer.buffer_size(framer) == 0
+    end
+
+    test "reset clears the discard state" do
+      framer = Framer.feed(Framer.new(), String.duplicate("A", 600))
+      framer = Framer.reset(framer)
+      framer = Framer.feed(framer, "NICK a\r\n")
+      {_, lines} = Framer.frames(framer)
+      assert lines == ["NICK a"]
+    end
+  end
 end
