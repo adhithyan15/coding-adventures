@@ -147,6 +147,18 @@ before policy for the added proof's responder or the retained intermediate,
 complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
 live-provider readiness.
 
+That strongest-path result is admitted directly to the existing generic
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
+projection and
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_anchor_dns_policy`
+gate. The private evidence adapter derives the selected reviewed root's exact
+optional constraint bytes only through the retained arbitrary-depth Name-policy
+proof; it accepts no detached certificate, root, constraint, path, signature,
+status, or time. This closes only the selected-root DNS composition boundary
+for the added responder and stops before intermediate DNS, no-check, further
+revocation, complete Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the

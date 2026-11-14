@@ -3143,6 +3143,16 @@ implement complete revocation policy, generalize path construction or
 validation, or provide TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
 
+The same generic projection and selected-root DNS-policy boundary admit the
+strongest Name-policy-backed arbitrary-depth original proof above. A private
+evidence adapter derives the selected reviewed root's exact optional
+constraint bytes exclusively through that retained proof, without a second
+public entry point or any detached certificate, root, constraint, path,
+signature, status, or time input. This composition stops at selected-root DNS
+policy for the added responder; intermediate DNS, no-check, further revocation,
+complete Name/path validation, TLS, HTTP, OAuth transport, and network
+authority remain unavailable.
+
 A further bounded policy follow-up consumes that complete reviewed-root DNS
 proof and applies the separately authenticated proof's exact retained
 intermediate NameConstraints to its exact responder certificate. Both

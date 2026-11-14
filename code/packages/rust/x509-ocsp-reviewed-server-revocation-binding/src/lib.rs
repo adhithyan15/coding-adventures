@@ -4518,6 +4518,74 @@ impl<
         'target_encoded,
         'issuer,
         'issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > ReviewedIntermediateStatusOriginalProofEvidence
+    for BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+        >,
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    >
+{
+    fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]> {
+        self.strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .name_constraints()
+    }
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
     > IntermediateStatusResponderEvidence
     for AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
         'binding,
@@ -6942,6 +7010,44 @@ mod tests {
     const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
     const OCSP_NO_CHECK_OID_DER: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x05];
     const NULL_DER: &[u8] = &[0x05, 0x00];
+
+    #[test]
+    fn strongest_name_policy_proof_is_admitted_to_added_responder_anchor_evidence() {
+        fn assert_original_proof_evidence<T: ReviewedIntermediateStatusOriginalProofEvidence>() {}
+
+        type StrongestOriginalProof =
+            BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+                AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                >,
+                ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                >,
+            >;
+
+        assert_original_proof_evidence::<StrongestOriginalProof>();
+    }
 
     fn fixture(hexadecimal: &str) -> Vec<u8> {
         let digits = hexadecimal

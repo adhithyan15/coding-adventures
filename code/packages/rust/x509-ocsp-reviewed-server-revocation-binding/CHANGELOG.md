@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Admit the strongest Name-policy-backed arbitrary-depth server proof to the
+  existing added-responder projection and selected-root DNS-policy boundary.
+- Derive the exact reviewed root constraints only through that retained strong
+  proof, without adding detached inputs or widening the public API, and stop
+  before intermediate DNS, no-check, further revocation, TLS, HTTP, or OAuth.
 - Bind a separate fully routed authenticated OCSP proof to the exact delegated
   responder, target-nearest intermediate, and original observation time
   retained by the strongest Name-policy path bridge.
