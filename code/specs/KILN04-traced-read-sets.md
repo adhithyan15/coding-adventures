@@ -504,9 +504,9 @@ syscall, which is why all three occur. Every other `???` shape stays
 a call, second `???(` or signal line from the same pid before its exit is
 `interleaved-call`, a resume of another name or a second `??? resumed` is
 `unmatched-resume`, and one never followed by the exit is `unresumed-call`.
-This covers the superseded-leader exec case too, which is still refused. A handled call whose result is `?` (including
-`ERESTARTSYS`) is `result`: restarted calls are not recognised in v1. A
-final line without its newline is `unparsable-line`, since strace may have
+This covers the superseded-leader exec case too, which is still refused. A
+handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
+restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **Process model.**

@@ -127,7 +127,12 @@ func TestKilledAtEntryRefused(t *testing.T) {
 		{"unfinished with arguments", thr("2  ???(0x1 <unfinished ...>\n" + exit), reasonUnparsable},
 		{"resume of another name", thr(open + "2  <... execve resumed>) = 0\n" + exit), reasonUnmatched},
 		{"resume of openat", thr(open + "2  <... openat resumed>) = 0\n" + exit), reasonUnmatched},
-		{"superseded leader", thr("2  ???( <unfinished ...>\n3  +++ superseded by execve in pid 2 +++\n2  <... execve resumed>) = 0\n" + exit), reasonUnparsable},
+		// The leader L is at an entry stop when thread T execs.  strace prints
+		// "L  +++ superseded by execve in pid T +++" (leader's pid as the
+		// prefix), which is unparsable.  Without that line, "2 ???(" followed by
+		// "2 <... execve resumed>) = 0" is the "resume of another name" case
+		// above: unmatched-resume.
+		{"superseded leader", thr("2  ???( <unfinished ...>\n2  +++ superseded by execve in pid 3 +++\n2  <... execve resumed>) = 0\n" + exit), reasonUnparsable},
 		{"two entries", thr(open + open + exit), reasonInterleaved},
 		{"two resumes", thr(open + "2  <... ??? resumed>) = ?\n2  <... ??? resumed>) = ?\n" + exit), reasonUnmatched},
 		{"resume with nothing pending", thr("2  <... ??? resumed>) = ?\n" + exit), reasonUnmatched},
@@ -147,6 +152,18 @@ func TestKilledAtEntryRefused(t *testing.T) {
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) { wantReason(t, c.text, c.reason) })
+	}
+}
+
+func TestKilledAtEntryRefusedInHelperMode(t *testing.T) {
+	open := "12  ???( <unfinished ...>\n"
+	cases := []struct{ name, text, reason string }{
+		{"call after entry", helperThreadTrace(open + "12  close(3) = 0\n"), reasonInterleaved},
+		{"no exit line", strings.Replace(helperThreadTrace(open), "12  +++ exited with 0 +++\n", "", 1), reasonUnresumed},
+		{"resume = 0", helperThreadTrace(open + "12  <... ??? resumed>) = 0\n"), reasonUnparsable},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) { wantReasonOpts(t, c.text, helperOpts, c.reason) })
 	}
 }
 
