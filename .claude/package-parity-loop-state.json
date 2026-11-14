@@ -10027,13 +10027,15 @@
     {
       "id": "canonical-cbor-dart-lane-parity",
       "title": "Port canonical CBOR to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-dart-lane-parity",
       "pr_number": 19396,
-      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case."
+      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case.",
+      "merged_at": "2026-11-14T20:42:59Z",
+      "merge_commit": "d90925ebcbc"
     },
     {
       "id": "canonical-cbor-elixir-lane-parity",
@@ -10141,12 +10143,12 @@
     {
       "id": "canonical-cbor-ruby-lane-parity",
       "title": "Port canonical CBOR to Ruby",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "feat/canonical-cbor-ruby-lane-parity",
+      "pr_number": 19402,
       "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
     },
     {
@@ -27562,6 +27564,23 @@
       "merged_at": "2026-10-26T04:30:17Z",
       "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
       "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry discovered during independent review of the Haskell/Swift Bezier tranche."
+    },
+    {
+      "id": "oauth-client-secret-http1-binding-boundary-classification",
+      "title": "Classify bounded OAuth client secret HTTP/1 binding and transport framing boundaries",
+      "status": "pending",
+      "depends_on": [
+        "oauth-client-secret-custody-portable-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": true,
+      "package_paths": [
+        "code/packages/rust/oauth-client-secret-http1-binding"
+      ],
+      "discovered_revision": "d90925ebcbcb94f1488f523630e601bb8815e5d1",
+      "notes": "Classify the boundary of pure HTTP/1 request/response framing for OAuth client-secret authentication against portable custody prerequisites; keep raw socket I/O, TLS, and network authority out of the pure binding layer."
     }
   ],
   "postmerge_refresh": {
