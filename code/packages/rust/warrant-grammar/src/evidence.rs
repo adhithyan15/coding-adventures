@@ -2323,6 +2323,23 @@ fn composite_adapter<'a>(
         if !cases.contains(&case.to_string()) && !env_cases_of(&op.return_type, env).contains(&case.to_string()) {
             return Err(bad(format!("err_any= names `{case}`, which is not an error case")));
         }
+        // Soundness: `Err(_)` carries no information about WHICH error the
+        // export returned, so it can only stand for a type with one case.
+        // With two or more, an export that returns the wrong error would still
+        // map to `CASE` and a claim `f(..) == Err(CASE)` would pass vacuously.
+        let declared = env_cases_of(&op.return_type, env);
+        let n_cases = if declared.is_empty() { cases.len() } else { declared.len() };
+        if n_cases != 1 {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::MissingBinding(format!(
+                    "err_any= is incompatible with `{n}`: its error type has {n_cases} cases, \
+                     and err_any= needs exactly one (an opaque Err(_) cannot say which case; \
+                     use errors= to map each host error variant)"
+                )),
+                span: op.span,
+            });
+        }
         let ok = from_host(&payload, &hret, "r", &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let v: V = match {call} {{");
         let _ = writeln!(s, "        Ok(r) => V::Ok(Box::new({ok})),");

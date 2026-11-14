@@ -148,14 +148,32 @@ fn a_named_width_is_still_refused_on_a_composite_operation() {
 // err_any=
 // ---------------------------------------------------------------------------
 
+fn two_case_doc() -> String {
+    result_doc().replace("error E = LOW", "error E = LOW | HIGH")
+}
+
 fn result_doc() -> String {
-    "warrant t v1\n  error E = LOW | HIGH\n  op f(a: Bytes<2>) -> Result<Bytes<2>, E>\n  labels f:\n    a public\n  claim c:\n    forall a: Bytes<2>. f(a) == f(a)\n".to_string()
+    "warrant t v1\n  error E = LOW\n  op f(a: Bytes<2>) -> Result<Bytes<2>, E>\n  labels f:\n    a public\n  claim c:\n    forall a: Bytes<2>. f(a) == f(a)\n".to_string()
 }
 
 #[test]
 fn err_any_maps_every_host_error_to_one_case() {
     let text = generate(&result_doc(), &["op f export=f args=bytes<2> ret=bytes<2> err_any=LOW faults=missing-error"]).unwrap();
     assert!(text.contains("Err(_) => V::Err(\"LOW\".into())"), "{text}");
+}
+
+/// err_any= is sound only for a single-case error type: with two cases an
+/// export returning the *wrong* error would still map to the named case, and a
+/// claim `f(..) == Err(CASE)` would pass vacuously.  Refused as an incompatible
+/// host binding (W0704).
+#[test]
+fn err_any_is_refused_for_an_error_type_with_several_cases() {
+    for case in ["LOW", "HIGH"] {
+        let line = format!("op f export=f args=bytes<2> ret=bytes<2> err_any={case} faults=missing-error");
+        let (code, msg) = generate(&two_case_doc(), &[&line]).expect_err("two cases");
+        assert_eq!(code, Some(DiagnosticCode::W0704), "{msg}");
+        assert!(msg.contains("exactly one") && msg.contains("err_any"), "{msg}");
+    }
 }
 
 #[test]
