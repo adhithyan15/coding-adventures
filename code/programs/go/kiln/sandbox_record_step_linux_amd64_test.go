@@ -176,23 +176,17 @@ func TestSandboxRecordStep(t *testing.T) {
 
 	// The repository: the files `prepare` reads (the same set the unit tests
 	// of prepare use) and one package.
-	var roots []string
-	for _, p := range imageRoots() {
-		roots = append(roots, fmt.Sprintf(`{"path": %q, "kind": "image"}`, p))
-	}
-	files := map[string]string{
-		"code/kiln/legacy/pinned.json": `{"languages": []}`,
-		"code/kiln/legacy/never.json":  `{"packages": []}`,
-		"code/kiln/legacy/toolchains.json": `{
-  "sh": {"always": true, "pins": {"sh": "image"}, "roots": {"sh": ["/usr/bin", "/bin"]}}
-}
-`,
-		"code/kiln/legacy/env.json":           `{"names": ["FIXTURE_*", "LANG"]}`,
-		"code/kiln/legacy/host-roots.json":    `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`,
+	// The policy files come from recStepPolicyFiles (sorted and de-duplicated as
+	// the strict decoder requires; record_step_policy_test.go decodes them on
+	// every OS).
+	files := recStepPolicyFiles(imageRoots())
+	for p, c := range map[string]string{
 		"code/programs/go/build-tool/go.mod":  "module example.com/bt\n\ngo 1.26\n",
 		"code/programs/go/build-tool/main.go": "package main\n",
 		recStepAction + "/BUILD":              lines[0] + "\n",
 		recStepAction + "/data.txt":           "somefile content\n",
+	} {
+		files[p] = c
 	}
 	for p, c := range files {
 		recStepWrite(t, filepath.Join(repo, filepath.FromSlash(p)), c, 0o644)
