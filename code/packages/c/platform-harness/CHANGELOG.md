@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- The MSVC-family flags now include `/D_CRT_SECURE_NO_WARNINGS=` (defined empty, as
+  `iso-harness` does). Under `/W4 /WX` the C4996 "unsafe function" deprecation of
+  `getenv` failed `c/os-platform` on Windows (`getenv("ComSpec")` in its process
+  test; the first scheduled cross-OS build, on both `cl` and `clang-cl`). The macro
+  silences only that one warning; every other warning stays fatal. No package that
+  uses this harness defines the macro itself, so the empty value cannot collide.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

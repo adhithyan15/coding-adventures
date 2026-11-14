@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Two test assignments of an int literal to a narrower `std::optional`
+  (`f.fcs = 0xbeef;`, `f.sequence_number = 0x2a;`) raised MSVC C4244 inside
+  `<optional>`, fatal under `/W4 /WX`, so the Windows build failed. Both now cast
+  explicitly, like the neighbouring lines. Test-only.
+
 ## [0.1.0] - 2026-07-13
 
 ### Added

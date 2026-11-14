@@ -48,7 +48,14 @@ function Platform-Cxxstd { if ($env:PLATFORM_CXXSTD) { return $env:PLATFORM_CXXS
 # /permissive- (this is OS-dependent, deliberately non-strict-ISO code).
 function Platform-StrictFlags {
     param([Parameter(Mandatory)][ValidateSet('c','cpp')][string]$Lang)
-    $flags = @('/nologo', '/W4', '/WX')
+    # _CRT_SECURE_NO_WARNINGS silences only C4996, MSVC's "this ISO function is
+    # unsafe, use the _s version" (getenv, strncpy, fopen), which steers code to
+    # non-ISO Microsoft extensions and, under /WX, failed c/os-platform on its
+    # getenv("ComSpec"). /W4 /WX still make every other warning fatal. It is
+    # defined EMPTY, exactly as iso-harness does: a source file that writes
+    # `#define _CRT_SECURE_NO_WARNINGS` then redefines it identically, whereas a
+    # bare /D defines it as 1 and the redefinition is C4005, fatal under /WX.
+    $flags = @('/nologo', '/W4', '/WX', '/D_CRT_SECURE_NO_WARNINGS=')
     if ($Lang -eq 'cpp') {
         $flags += @("/std:$(Platform-Cxxstd)", '/EHsc')
     } else {
