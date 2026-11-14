@@ -938,8 +938,9 @@ directory is refused). `pre/` is then made read-only (files `0444`, directories
 `0555`); if that pass fails, `SEALED` is removed again. The modes are cosmetic:
 integrity comes only from the files being unreachable from the sandbox, and from
 `step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b-ii, list below).
-`traces/` is created by `prepare` (0700, outside the sealed `pre/`), its
-per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2c.
+`traces/` is created by `prepare` (0700, outside the sealed `pre/`, holding
+`traces/.seq` = `0\n`; `prepare` also refuses a tree file over the 128 MiB a
+sealed file is read back at), its per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2c.
 
 **P5. Refusals that void the shard before it starts.** After `VerifyTree`
 (which supplies the commit) and before any export:
@@ -1240,7 +1241,9 @@ step's descriptors 1 and 2 are therefore pipes by construction, and nothing
 strace or the root prints can be mistaken for step output. `Pdeathsig` is
 `SIGKILL` on a locked OS thread: a supervisor that is killed takes strace with
 it, and `--kill-on-exit` takes the tracees. Exit
-status 125 is recorded (`exit_125`) and never retried (§4.7). strace's own
+status 125 is recorded (`exit_125`) and never retried (§4.7). strace's `-s 4096`
+cuts any string longer than that, so a BUILD line over 4096 bytes has an `execve`
+argv that cannot be decoded exactly and can never be recorded (P13). strace's own
 standard error, when not empty, is also saved (first 4 KiB) as
 `<step>.strace-stderr` (`O_EXCL`) for whoever has to find out why a run failed.
 It is untrusted diagnostic text (a step can make strace print what it likes):
@@ -1299,6 +1302,17 @@ step's own `execve` is in the trace (a refused sandbox has none).
 - **2b-2b-ii.** `collect` treats any `.rerun` marker, any sidecar without a trace
   (or the reverse), any `trace-write-failed` and any `strace-pipes-held-open`
   as an unknown write set.
+- **2b-2b-ii** (from the review of P13). `collect` requires the `seq` values of
+  the whole shard to be globally distinct, each below the final value of
+  `traces/.seq`, and consecutive in step order within each action; any `.overlap`
+  marker voids the shard. It requires `steps_run` of a `record.json` to equal the
+  number of started sidecars of the action, treats `record.failed` as overriding
+  `record.json` (both present is a failure), requires the record's `binding_id`
+  and `sealed_sha256` to equal the sealed directory's, and treats a `record.json`
+  that does not decode (or a stray `record.json.tmp-*`) as an unknown write set,
+  never as "no record". It must not read `sandbox-refused` in `parse_reasons` as
+  "the step wrote nothing": a refused step ran nothing, but the sandbox may have
+  failed after it had changed the disk, so the action's write set is unknown.
 
 **P13. Records are classified at action end, and recording is serial
 (2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
@@ -1310,10 +1324,15 @@ host state roots. So:
 1. *Serial.* The traced build runs with `-jobs 1`. `step` holds an exclusive,
    non-blocking `flock` on `traces/.serial` from before its checks until it
    exits; a step that cannot take it leaves `<step>.overlap`, runs nothing and
-   exits 125. Under that lock it assigns the sidecar a `seq` from
-   `traces/.seq`. `collect` requires each action's `seq` values to be
-   contiguous; any `.overlap` or gap makes every record of the shard
-   `unknown_writes` (`serial-violated`, M1).
+   exits 125 (the marker only for a lock that is HELD, `EWOULDBLOCK`; any other
+   failure to take it is a refusal with no claim of overlap). Under that lock it
+   assigns the sidecar a `seq` from `traces/.seq`, which `prepare` creates as
+   `0\n`; the update is one `pwrite` at offset 0 and a sync (the number never
+   gets shorter, so there is no truncate for a kill to land after), and an empty,
+   missing or malformed counter is refused, never reset. A refused step takes no
+   number. `collect` requires each action's `seq` values to be contiguous; any
+   `.overlap` or gap makes every record of the shard `unknown_writes`
+   (`serial-violated`, M1).
 2. *Sealed inputs.* `prepare` also writes `pre/tree` (`kiln-record-tree/1`:
    every tracked path of the verified commit with mode, blob id and link text),
    `pre/classify.json` (the host roots and pinned ecosystems) and each action's
@@ -1326,9 +1345,31 @@ host state roots. So:
    follows no symlink (`lstat`, `readlink`; a head is read only from a regular
    file opened `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY` whose `/proc/self/fd` path
    equals the path asked). `Tree.Head` returns disk bytes only when they hash
-   to the sealed blob id. The result is `traces/<sha256(action)>/record.json`
-   (`O_EXCL`). A panic, a classification over 10 minutes, or traces over 2 GiB
-   leaves `record.failed` instead. The step's exit status is never changed.
+   to the sealed blob id. The result is `traces/<sha256(action)>/record.json`,
+   written atomically (to a temporary name, then `link(2)`, never replacing). The
+   work runs in a **child process**, `kiln record classify-action --dir D
+   --action A --step N --data-limit B`, so that running out of memory or any
+   other fatal runtime error is a process that did not exit 0 and not the end of
+   the supervisor: the child is given only those paths and numbers, re-verifies
+   `pre/` and the sidecar itself, and writes `record.json` itself, and the parent
+   decodes the file again (action, binding and `sealed_sha256` must match). Its
+   memory is bounded by `GOMEMLIMIT` (soft, 5 GiB) and `RLIMIT_DATA` (hard, 8 GiB,
+   set by the child on itself); `RLIMIT_AS` is not used because the Go runtime
+   reserves address space it never touches. The parser's limits are 1 GiB and 8
+   million events per step (the supervisor's own trace cap, so a trace the
+   supervisor accepted is one the classifier reads; the parser's defaults of 64
+   MiB and 1 million records are not used), and all the action's traces together
+   may not exceed 2 GiB. A panic, a crash, the child killed, a memory overrun, a
+   classification over 10 minutes (the parent kills the child), traces over the
+   cap, or a child that exits 0 without a valid record leaves `record.failed`
+   (atomically, the reason as text) instead; the epilogue can therefore add up to
+   10 minutes to the last step. The step's exit status is never changed. A step
+   asked to run after its action's `record.json` or `record.failed` exists is
+   refused (125, nothing run). Every unclean sidecar is a parse reason
+   (`step N: unclean:<reason>`), so an action with an unclean tracer has no raw
+   record. A BUILD line over 4096 bytes can never be recorded: strace runs with
+   `-s 4096`, the step's `execve` argv is cut, and the recipe and digest checks
+   fail.
    The parse half of G7 is: every trace parses (with the sandbox helper as
    root); the root's exit line equals the sidecar's `root_status`; the traced
    `execve` of the init's `--sha256` and the root's `--config-sha256` equal
@@ -1355,12 +1396,14 @@ step, by `VerifyPre`) and strictly decoded in about 0.2 s (once per action, by
 The sidecar is `kiln-record-step/2` (adds `seq`, from 0). `record.json` is
 `kiln-record-classified/1`: the raw record, `writes_complete` (the classifier's
 own answer, which is not part of the raw record's JSON), `steps_run`,
-`step_netns`, and `parse_ok` with `parse_reasons`, so that `collect` can build a
+`step_netns`, `sealed_sha256` (the digest of `pre/SEALED`), and `parse_ok` with
+`parse_reasons`, so that `collect` can build a
 `recfmt.ShardRecord` without parsing a trace. When any trace fails the parse half
 of G7 the record carries the reasons and **no** raw record (`record: null`,
 `parse_ok: false`, `writes_complete: false`); it is never an empty record.
 `record.failed` holds the reason as text (`panic:`, `timeout:`, `traces-too-large:`,
-`classified-twice:`, or the classifier's own error). A sandbox refusal is a status
+`classified-twice:`, `the classifier failed: <exit status or signal>`, or the
+classifier's own error). A sandbox refusal is a status
 of 125 with no step `execve` in the trace, which the parser reports as
 `helper-no-init` (the root died before it made the init) or `helper-no-exec` (the
 init died before the step); the epilogue names both `sandbox-refused`. An
@@ -1368,13 +1411,18 @@ init died before the step); the epilogue names both `sandbox-refused`. An
 step refused the lock can be run once the lock is free (the marker stays and
 `collect` voids the shard).
 
-*Why a motivating test needs a link the action did not create.* A link an action
-creates itself is resolved from the trace, which carries its text (rule b of
-section 5.1), so the disk never decides where its writes go. The disk decides for
-a tracked or earlier-made link the action only traverses, and that is what a later
-action can retarget: classified at the action's end the walk agrees with strace's
-`-y` path and the path is stable; classified after the later action it disagrees
-and the action gets `unstable-path` and an unknown write set.
+*Why the silent case is the strong case for P13.* A link an action creates
+itself is resolved from the DISK, not from the link text in the trace: that text
+is used only under the fresh `$HOME` and `TMPDIR`. Only an `open` is checked
+against the kernel's `-y` path. So `mkdir`, `rename`, `unlink`, `symlink` and
+`chmod` through a link are placed wherever the link points when the classifier
+looks, and nothing says it moved: an action that makes `L -> d1` and runs `mkdir
+L/sub` is classified at its end as writing `d1/sub`, but after a later action
+retargeted `L -> d2` as writing `d2/sub`, with `writes_complete` still true (a
+test pins both). For a link that was already there (tracked, or left by an
+earlier action) an `open` is caught late as `unstable-path` and an unknown write
+set; the other calls are not. Classifying at the action's end closes both, and
+host state roots as well.
 
 ### 4.7 Sandbox decisions (stage 3b)
 
