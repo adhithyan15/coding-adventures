@@ -562,11 +562,18 @@ fn register_custom_head_formatter() {
 #[test]
 fn unregister_clears_formatter() {
     // After unregistering, the head falls back to function-call form.
-    register_head_formatter("Foo", |_node, _dialect, _fmt| "CUSTOM".to_string());
-    unregister_head_formatter("Foo");
+    //
+    // The formatter registry is process-global and Rust runs tests on parallel
+    // threads, so this test must use a head name that no other test formats.
+    // It used "Foo", which `mathematica_user_function_camel` also formats: when
+    // that test ran between the register and unregister calls it saw "CUSTOM"
+    // instead of "Foo[x]" (about 3% of runs).
+    const PROBE: &str = "UnregisterProbeHead";
+    register_head_formatter(PROBE, |_node, _dialect, _fmt| "CUSTOM".to_string());
+    unregister_head_formatter(PROBE);
 
-    let expr = apply(sym("Foo"), vec![int(1)]);
-    assert_eq!(macsyma(&expr), "Foo(1)");
+    let expr = apply(sym(PROBE), vec![int(1)]);
+    assert_eq!(macsyma(&expr), "UnregisterProbeHead(1)");
 }
 
 #[test]
