@@ -5048,6 +5048,39 @@ repository-owned TLS/HTTP composition, response policy, and every actual
 external effect remain separate blockers. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded `oauth-client-secret-http1-release` prerequisite composes that
+custody-bound material with one exact validated HTTP/1 request line and one
+existing `https-destination-name-binding` certificate/SNI/Host proof. Its
+data-driven policy retains the expected provider, method, exact form media
+type, and complete-request byte ceiling. The request endpoint must equal the
+exact lowercase `https://` origin retained by the canonical Host field plus
+the exact origin-form request target; detached endpoint, destination, method,
+provider, trace, media-type, Content-Length, body, and Authorization claims
+are unavailable. The only admitted wire order is request line, Host,
+Content-Length, Content-Type, optional Authorization for Basic authentication,
+the terminating empty line, and the exact custody-built form body. Post
+authentication therefore has no Authorization field, while Basic
+authentication has exactly the one field already retained by the binding.
+
+Each release publishes a privacy-safe attempted event for the request's own
+provider and trace before inspecting credential-bearing body or Authorization
+bytes. Policy, endpoint, framing, field-placement, length, allocation, and
+encoding rejection publishes a closed failed outcome. The complete request is
+prepared in repository-owned wipe-on-drop storage before a terminal succeeded
+event; after that event the implementation only moves the already prepared
+storage into a non-copyable returned proof, so it performs no later credential
+read or copy. Audit failure returns no request and wipe-on-drop storage covers
+every prepared failure path. Debug and errors reveal no provider, trace,
+endpoint, request, header, body, or credential bytes.
+
+This release is still pure in-memory evidence. The retained certificate proof
+does not add certificate role, purpose, algorithm, validity, signature, path,
+constraint, trust-root, or revocation validation. The package performs no DNS,
+socket, TLS, HTTP I/O, response handling, credential access or edit, signing,
+or external transport effect and grants no HTTPS, OAuth, or live-provider
+readiness. Repository-owned TLS/HTTP composition, audited network effects, and
+response policy remain separate blockers.
+
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
 reviewed RSA server-path policy. It derives the path target only through the
