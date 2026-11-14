@@ -59,16 +59,39 @@ type cfix struct {
 	out     string // where records.jsonl goes
 }
 
-// newCfix prepares a shard of the three fixture packages. Prepare is given the
-// one-shard plan, so the shard is shard 0 of 1.
-func newCfix(t *testing.T) *cfix { return newCfixWith(t, nil, nil) }
+// newCfix gives a prepared shard of the three fixture packages. Prepare is given
+// the one-shard plan, so the shard is shard 0 of 1.
+//
+// Preparing costs about 0.4 s (git, hashing, sealing) and the collect tests make
+// well over a hundred of them from the same inputs, so the prepared world is
+// built once per test binary and BORROWED: each test gets it back reset to the
+// moment after prepare (borrow, reset). A test that must change the sealed
+// directory or damage the repository for good (tamper with pre/, remove an
+// object) asks for a fresh one with newCfixWith.
+func newCfix(t *testing.T) *cfix {
+	t.Helper()
+	return borrow(t, "plain", func(t *testing.T, base string) *cfix { return buildCfix(t, base, nil, nil) })
+}
 
-// newCfixWith adds tracked files, and runs before(root) after the commit and
-// before prepare (to leave something untracked on the disk, as a previous job
-// would have).
+// newCfixWith is a FRESH shard, never shared: it adds tracked files, and runs
+// before(root) after the commit and before prepare (to leave something untracked
+// on the disk, as a previous job would have).
 func newCfixWith(t *testing.T, files map[string]string, before func(root string)) *cfix {
 	t.Helper()
-	p := newPrep(t)
+	return buildCfix(t, "", files, before)
+}
+
+// buildCfix prepares the shard. base is the directory it lives in ("" for a
+// t.TempDir(), cleaned up with the test; otherwise the caller owns it).
+func buildCfix(t *testing.T, base string, files map[string]string, before func(root string)) *cfix {
+	t.Helper()
+	var p *prep
+	if base == "" {
+		p = newPrep(t)
+	} else {
+		p = newPrepAt(t, base)
+		p.repoDest = filepath.Join(base, "repo")
+	}
 	p.steps = `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[` +
 		`{"package":"code/packages/x/a","steps":["echo a"]},` +
 		`{"package":"code/packages/x/b","steps":["echo b1","echo b2"]},` +
@@ -80,13 +103,22 @@ func newCfixWith(t *testing.T, files map[string]string, before func(root string)
 	if before != nil {
 		before(p.root)
 	}
+	return finishCfix(t, p, base, singlePlan)
+}
+
+// finishCfix runs Prepare for a one-shard plan and wraps the result.
+func finishCfix(t *testing.T, p *prep, base, onePlan string) *cfix {
+	t.Helper()
 	old := plan
-	plan = singlePlan
-	t.Cleanup(func() { plan = old })
+	plan = onePlan
 	o := p.options()
 	o.ShardCount = 1
-	t.Cleanup(p.writable)
-	if _, err := Prepare(o); err != nil {
+	if base == "" {
+		t.Cleanup(p.writable)
+	}
+	_, err := Prepare(o)
+	plan = old
+	if err != nil {
 		t.Fatalf("Prepare: %v", err)
 	}
 	pre, err := VerifyPre(p.dir)
@@ -98,6 +130,76 @@ func newCfixWith(t *testing.T, files map[string]string, before func(root string)
 		t.Fatal(err)
 	}
 	return &cfix{t: t, p: p, pre: pre, rpath: filepath.Join(p.base, "results.json"), out: filepath.Join(outDir, "records.jsonl")}
+}
+
+// The prepared worlds, by name. Tests run one at a time, so a world is lent to
+// one test and handed to the next only after reset.
+var worlds = map[string]*cfix{}
+
+// borrow lends the named world, building it with build on first use, and
+// returns it reset to the state right after prepare, bound to t.
+func borrow(t *testing.T, key string, build func(*testing.T, string) *cfix) *cfix {
+	t.Helper()
+	requireGit(t)
+	f := worlds[key]
+	if f == nil {
+		base := filepath.Join(sharedRoot(t), "world-"+key)
+		if err := os.Mkdir(base, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		f = build(t, base)
+		worlds[key] = f
+		return f
+	}
+	f.t, f.p.t = t, t
+	f.reset()
+	pre, err := VerifyPre(f.p.dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	f.pre, f.results = pre, nil
+	return f
+}
+
+// reset puts a borrowed world back as prepare left it: the checkout is the
+// commit (nothing untracked, nothing staged), traces/ is empty with its counter
+// at 0, and nothing is left in the base directory but what prepare made. The
+// sealed pre/ is NOT touched, so a test that changes it must not borrow.
+func (f *cfix) reset() {
+	t := f.t
+	t.Helper()
+	runGit(t, f.p.root, "clean", "-fdxq")
+	runGit(t, f.p.root, "reset", "-q", "--hard", f.p.sha)
+	traces := filepath.Join(f.p.dir, "traces")
+	ents, err := os.ReadDir(traces)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range ents {
+		if err := os.RemoveAll(filepath.Join(traces, e.Name())); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(traces, ".seq"), []byte("0\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	keep := map[string]bool{"home": true, "kiln-tmp": true, "record": true, "bin": true, "repo": true}
+	base, _ := os.ReadDir(f.p.base)
+	for _, e := range base {
+		if !keep[e.Name()] {
+			os.RemoveAll(filepath.Join(f.p.base, e.Name()))
+		}
+	}
+	binKeep := map[string]bool{"kiln": true, "build-tool": true, "strace": true}
+	bins, _ := os.ReadDir(filepath.Join(f.p.base, "bin"))
+	for _, e := range bins {
+		if !binKeep[e.Name()] {
+			os.RemoveAll(filepath.Join(f.p.base, "bin", e.Name()))
+		}
+	}
+	if err := os.MkdirAll(filepath.Dir(f.out), 0o755); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func (f *cfix) opts() CollectOptions {
@@ -112,6 +214,14 @@ func (f *cfix) collect() (*CollectResult, *recfmt.Shard) {
 		f.t.Fatalf("Collect: %v", err)
 	}
 	return res, f.decode()
+}
+
+// again readies the fixture for a second Collect: a directory is collected once
+// (the tombstone), so a test that collects twice removes it and the output.
+func (f *cfix) again() {
+	f.t.Helper()
+	os.Remove(filepath.Join(f.p.dir, "traces", CollectedMarker))
+	os.Remove(f.out)
 }
 
 // refuse runs Collect and requires a refusal naming want, with nothing written.
