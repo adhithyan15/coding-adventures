@@ -1459,7 +1459,11 @@
       "id": "KA-A1-POST-02",
       "category": "Anusarga (postpositions)",
       "label": "relative position: near, far, on, under, inside",
-      "probe": null,
+      "probe": [
+        "KA-GRAMMAR-C110-TREE-ON-UNDER-06",
+        "KA-LEX-C110-INSIDE-08",
+        "KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -1469,7 +1473,7 @@
         "A1-NG3-02",
         "A1-NG3-03"
       ],
-      "note": "Uncovered as a relational composition, not absent as vocabulary. The A1 edition already teaches isolated hattira (near), mele (above/on top) and kelage (below): chapter 100 is pre-A1 by its spine node, and chapters 107-108 are A1 under SPINE-ASK-LOCATION. Their word drills do not yet assess a named object located relative to a named reference place. The wider near/far/on/under/inside set remains incomplete, so probe stays null."
+      "note": "Two short chapter-110 composition lessons teach and assess fixed named-reference frames: marada mele/kelage hakki ide (bird on/under tree), shaale maneya hattira ide (school near house), shaale maneyinda doora ide (school far from house), and hakki maneyolage ide (bird inside house). Source-plus-distance is distinguished from the genitive spatial forms. The three-atom probe requires both lessons and the newly taught inside term. This is project-internal A1 task coverage, not proof of productive spatial grammar across nouns, external exam validation, or learner attainment."
     },
     {
       "id": "KA-A1-POST-03",

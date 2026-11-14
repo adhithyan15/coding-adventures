@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-C110-house-near-far-inside",
+    "language": "kannada",
+    "chapter": 110,
+    "sequence": 4494,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82888986576573e6",
+    "detachableSegments": [
+      "Writing: three house phrases"
+    ]
+  },
+  "findings": []
+}

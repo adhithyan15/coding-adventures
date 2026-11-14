@@ -119,7 +119,7 @@ describe("the committed Kannada A1 inventory", () => {
     }
   });
 
-  it("distinguishes mapped A1 spatial words from the untaught relational frame", () => {
+  it("keeps isolated A1 spatial words distinct from the later composed frame", () => {
     // Issue #19319 audits the actual spine-derived book level. The extension
     // stage is pre-A1 for all three words, but the spine places two at A1.
     // A chapter number or isolated word is not an assessed composition.
@@ -142,10 +142,9 @@ describe("the committed Kannada A1 inventory", () => {
       expect(throughA1.has(id), `${id} is missing from A1`).toBe(true);
     }
     const spatial = inventory.points.find((point) => point.id === "KA-A1-POST-02");
-    expect(spatial?.probe).toBeNull();
-    expect(spatial?.note).toMatch(/hattira/);
-    expect(spatial?.note).toMatch(/isolated|word/);
-    expect(spatial?.note).not.toMatch(/Not one spatial relator/);
+    expect(spatial?.probe).not.toBeNull();
+    expect(spatial?.note).toMatch(/fixed named-reference frames/);
+    expect(spatial?.note).toMatch(/not proof of productive spatial grammar/);
   });
 
   it("teaches the A1 to/from movement contrast after the place vocabulary", () => {
@@ -179,8 +178,8 @@ describe("the committed Kannada A1 inventory", () => {
     ]);
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.points.find((entry) => entry.id === point?.id)?.covered).toBe(true);
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(46);
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(45);
 
     const curriculum = loadTrackLanguageCurriculum("kannada");
     expect(curriculum).toBeDefined();
@@ -207,6 +206,63 @@ describe("the committed Kannada A1 inventory", () => {
     )).toBeUndefined();
   }, 60_000);
 
+  it("requires composed A1 relative positions, not five isolated direction words", () => {
+    // #19321: two short, source-bounded steps. The first composes a known
+    // tree and bird with on/under; the second adds near/far/inside relative
+    // to a known house. Far-from uses the taught source marker, not the
+    // genitive postposition frame. Only the combined assessed path scores.
+    const lessons = loadTrackLessons("kannada");
+    const byId = (id: string) => lessons.find((lesson) => lesson.realization.lessonId === id);
+    const vertical = byId("KA-C110-tree-on-under");
+    const house = byId("KA-C110-house-near-far-inside");
+    expect(vertical).toBeDefined();
+    expect(house).toBeDefined();
+    expect(vertical?.body).toContain("ಮರದ ಮೇಲೆ");
+    expect(vertical?.body).toContain("ಮರದ ಕೆಳಗೆ");
+    expect(house?.body).toContain("ಮನೆಯ ಹತ್ತಿರ");
+    expect(house?.body).toContain("ಮನೆಯಿಂದ ದೂರ");
+    expect(house?.body).toContain("ಮನೆಯೊಳಗೆ");
+    for (const lesson of [vertical, house]) {
+      expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+      expect(lesson?.frontmatter.skills).toEqual(["listening", "speaking", "reading", "writing"]);
+      const [modality] = buildModalityManifest([lesson!]).lessons;
+      expect(modality?.coreDrivable).toBe(true);
+      expect(modality?.detachableSegments.some((name) => name.startsWith("Writing"))).toBe(true);
+    }
+    const point = inventory.points.find((entry) => entry.id === "KA-A1-POST-02");
+    expect(point?.probe).toEqual([
+      "KA-GRAMMAR-C110-TREE-ON-UNDER-06",
+      "KA-LEX-C110-INSIDE-08",
+      "KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07",
+    ]);
+    expect(measureExamCoverage(inventory, lessons).points.find((entry) => entry.id === point?.id)?.covered)
+      .toBe(true);
+
+    const chapter110 = loadTrackChapters()
+      .find((track) => track.language === "kannada")
+      ?.chapters.find((chapter) => chapter.chapter === 110);
+    expect(chapter110?.payoff?.lesson).toBe("KA-C110-house-near-far-inside");
+    for (const atom of point?.probe ?? []) {
+      expect(chapter110?.payoff?.assesses).toContain(atom);
+    }
+    // The next chapter, a short second review, a later third review and a
+    // distant fourth review keep the *composed* frames retrievable.
+    for (const id of ["KA-C111-hotel", "KA-C112-hakku", "KA-C115-karana", "KA-C149-seru"]) {
+      const review = byId(id);
+      expect(Number(review?.frontmatter["duration.max_seconds"]), id).toBeLessThanOrEqual(300);
+      for (const atom of point?.probe ?? []) {
+        expect(review?.frontmatter["practises.knowledge"], `${id}: ${atom}`).toContain(atom);
+      }
+      expect(review?.body, id).toContain("ಮನೆಯಿಂದ ದೂರ");
+      expect(review?.body, id).toContain("ಮನೆಯೊಳಗೆ");
+    }
+    const continuity = measureContinuity(lessons);
+    for (const atom of point?.probe ?? []) {
+      expect(continuity.reinforcement.find((defect) => defect.atom === atom))
+        .toBeUndefined();
+    }
+  }, 60_000);
+
   it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
     // The 2026-11-04 source audit found that the old inventory notes were stale:
     // uuru, nagara, deesha and raajya already have direct owners. The missing
@@ -226,8 +282,8 @@ describe("the committed Kannada A1 inventory", () => {
     const origin = coverage.points.filter((point) => originIds.includes(point.id));
     expect(origin.map((point) => point.id)).toEqual(originIds);
     expect(origin.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(46);
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(45);
   }, 60_000);
 
   it("teaches the five-part A1 third-person bridge before the A1 boundary", () => {
@@ -246,8 +302,8 @@ describe("the committed Kannada A1 inventory", () => {
     const bridge = coverage.points.filter((point) => bridgeIds.includes(point.id));
     expect(bridge.map((point) => point.id)).toEqual(bridgeIds);
     expect(bridge.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(46);
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(45);
 
     // The plural examples must be words the learner actually owns. The first
     // reviewed draft used banna/bannagaḷu while citing the four colour-word
@@ -315,8 +371,8 @@ describe("the committed Kannada A1 inventory", () => {
     const objectBridge = coverage.points.filter((point) => objectIds.includes(point.id));
     expect(objectBridge.map((point) => point.id)).toEqual(objectIds);
     expect(objectBridge.every((point) => point.covered)).toBe(true);
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(46);
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(45);
 
     const accusative = lessons.find(
       (lesson) => lesson.realization.lessonId === "KA-C104-accusative-annu",
@@ -397,9 +453,10 @@ describe("the committed Kannada A1 inventory", () => {
     // above: pronouns, human/non-human, present endings, possessives and -gaḷu.
     // 209 -> 211: chapter 104 closes the dependent accusative/object-pronoun
     // pair pinned above without claiming any other case or pronoun demand.
-    // 211 -> 212: chapter 108 closes movement to/from, not relative position.
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(46);
+    // 211 -> 212: chapter 108 closes movement to/from; 212 -> 213:
+    // chapter 110 closes the bounded five-relation composition point.
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(45);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -455,7 +512,7 @@ describe("the committed Kannada A1 inventory", () => {
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 212/258 points covered (82%)",
+      "kannada A1 (partial inventory): 213/258 points covered (83%)",
     );
   }, 60_000);
 });
