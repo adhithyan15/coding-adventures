@@ -1,0 +1,576 @@
+-- AR01 -- rust/arithmetic: the adders and the ALU, built from logic gates.
+--
+-- Warrant document for rust/arithmetic (VER04h; the third Warrant v1 adopter after wasm-leb128
+-- and logic-gates, and LAYER 2 of the Intel 4004 verification chain, VER27 section 4.15 and
+-- backlog LV-006: "4-bit result and carry = (a+b+c) mod 16, 512 cases, exhaustive").  Every
+-- example and claim below is compiled into tests/generated/warrant_evidence.rs and executed
+-- against the real public exports of the `arithmetic` crate.  The prose contract, the claims a
+-- later layer may link to, the contracts this layer would assume from logic-gates, the trust
+-- boundary and the reasons behind every limitation stated here are in
+-- AR01-arithmetic-contract.md.
+--
+-- What is covered: the half adder, the full adder, the ripple-carry adder (with and without an
+-- explicit carry-in) and the ALU with its six operations (Add, Sub, And, Or, Xor, Not) and its
+-- four flags (zero, carry, negative, overflow).
+--
+-- "Exhaustive" means what it says and no more.  A bit is a u8 that is 0 or 1.  Every adder up to
+-- 4 bits and every 8-bit adder and ALU operation is ENUMERATED over its whole input space (the 4-bit
+-- adder with a carry-in is the 512 cases of VER27 section 4.15; an 8-bit adder with a carry-in is
+-- 131,072).  A 16-bit operation is SAMPLED: the operands are the low 16 bits of the 377-value
+-- boundary domain of a U64 binder (every value below 256, every single bit, all ones and all ones
+-- with one bit cleared), squared, plus the whole 64-bit range in the random suites.  A claim's name
+-- says which it is (`_exhaustive` or `_sampled`), and the manifest's `domain` text states it claim
+-- by claim.  Nothing here is stated about widths above 16.  Exhaustive is proof by enumeration of
+-- the Rust function as compiled by the host toolchain; it is not a proof about silicon, about the
+-- `logic-gates` and `transistors` crates underneath (they are part of the code under test, not
+-- oracles), or about the Rust compiler, which are assumed (AR01 "Trust boundary").
+--
+-- The oracles.  Every expected value is computed from Warrant's own integers (Nat, Int: exact,
+-- no overflow) and its Bool and bit operators: the sum a + b + c as a mathematical integer, the
+-- result as that integer modulo 2^n, the carry as "the integer is at least 2^n", signed overflow as
+-- "the two's-complement sum does not fit in n bits", the subtraction as a - b with carry meaning
+-- "no borrow" (a >= b).  Never from the crate and never by calling it.  In particular the oracle
+-- does NOT compute a + NOT(b) + 1, which is how the crate builds a subtraction: the claims state
+-- what a subtraction IS, so that the crate's construction is the thing under test.
+--
+-- Bit representation and the error model.  A bit vector is a slice of u8, least significant bit
+-- first (element 0 is bit 0).  The adders and the ALU do not validate bits themselves: every bit
+-- passes through a logic-gates gate, which rejects a value other than 0 or 1 by panicking in every
+-- build profile (logic-gates finding SEC-007).  This crate adds its own shape rules, as `assert!`:
+-- the two operands have the same length and the length is at least 1.  A panic is not a Warrant
+-- error case, so the binding normalises it (evidence.bindings `error=INVALID_INPUT`, the mechanism
+-- gf256 and logic-gates use): the harness contains the panic and reads it as `Err(INVALID_INPUT)`.
+-- The single case means "this call panicked"; it cannot tell a non-bit from a bad length, and a
+-- rejection claim passes only when the crate really panics.  tests/bit_domain.rs pins the panic
+-- itself in debug AND release builds.  Width is not an amplification factor: the output is as long
+-- as the input and nothing is sized from a width the caller states.
+--
+-- `AluOp.Not` is unary: its `b` is never read, whatever it holds (any length, any content, even
+-- empty).  That is the documented behaviour, stated by `alu_not_ignores_b` and by the exemption in
+-- `input alu.b`; it is a decision recorded in AR01, not a finding.
+--
+-- Honest limits, recorded rather than worked around (all in AR01):
+--   * a Bytes value cannot be indexed in an evidence body, so every vector is BUILT from integers
+--     (bit i of a U8 or U16) and "every vector of length n" is "every integer below 2^n";
+--   * a refinement on a binder starves the random suites (they retry a filter 100 times), so a
+--     claim is TOTAL wherever it can be: a non-bit comes from `junk`, a position from `k mod 8`,
+--     an operation from `anyop`/`binop`.  The only filtered claims are the unequal-length ones,
+--     where a random pair of byte strings differs in length almost always;
+--   * the content of a hostile byte string cannot be a `rejects` predicate (no indexing), so the
+--     rows below state only the shape rules; the content rule is carried by the
+--     `*_rejects_non_bit_*` claims, which sweep the eight positions of an 8-bit operand;
+--   * the generator's faults attack a result, and the only numeric field of the two result records
+--     is `RippleCarryResult.carry_out`, so the sabotage controls of the ALU are `missing-error`
+--     only and those of the ripple-carry adders add `field-zero` (BUILD_linux); a sabotage of the
+--     ALU's flags is therefore NOT among the negative controls, and the claims' sensitivity to it
+--     rests on the exhaustive enumeration, not on a control;
+--   * heap is not bounded here, and the steps rows are declarations: no prover backs them.
+warrant arithmetic v1
+  error ArithError = INVALID_INPUT
+
+  -- The three result types of the crate, as Warrant records and a variant.  The binding
+  -- (evidence.bindings) maps each onto the real struct or enum field by field.
+  record RippleCarryResult(sum: Bytes, carry_out: U8, overflow: Bool)
+  record AluResult(result: Bytes, zero: Bool, carry: Bool, negative: Bool, overflow: Bool)
+  variant AluOp = Add | Sub | And | Or | Xor | Not
+
+  -- ---- helpers ------------------------------------------------------------------------
+  -- A Bool as the wire value 0 / 1.
+  model b2u(x: Bool) -> U8 = if x then 1u8 else 0u8
+  -- Every value that is NOT a bit, as x runs over all of U8: 2 + (x mod 254) covers 2..=255.
+  model junk(x: U8) -> U8 = 2u8 + unwrap_or(rem(x, 254u8), 0u8)
+  -- A Bytes literal has a static width; a record field and a tuple component must be a plain Bytes.
+  model fwd(x: Bytes) -> Bytes = x
+  model is_not(o: AluOp) -> Bool = match o with Not -> true | _ -> false
+
+  -- ---- integers, widths 1..=8 ---------------------------------------------------------
+  -- The all-ones mask of the low n bits, 1 <= n <= 8; the sign bit of an n-bit number; 2^n.
+  model maskn(n: Nat) -> U8 = if n == 1 then 1u8 else (if n == 2 then 3u8 else (if n == 3 then 7u8 else (if n == 4 then 15u8 else (if n == 5 then 31u8 else (if n == 6 then 63u8 else (if n == 7 then 127u8 else 255u8))))))
+  model hibit(n: Nat) -> U8 = if n == 1 then 1u8 else (if n == 2 then 2u8 else (if n == 3 then 4u8 else (if n == 4 then 8u8 else (if n == 5 then 16u8 else (if n == 6 then 32u8 else (if n == 7 then 64u8 else 128u8))))))
+  model p2(n: Nat) -> Nat = to_nat(shl(1u16, n))
+  -- The unsigned value of the low n bits of w, and the two's-complement value of the same bits.
+  model vn(w: U8, n: Nat) -> Nat = to_nat(bit_and(w, maskn(n)))
+  model msb(w: U8, n: Nat) -> Bool = bit_and(w, hibit(n)) != 0u8
+  model sgn(w: U8, n: Nat) -> Int = vn(w, n) - (if msb(w, n) then p2(n) else 0)
+  -- Is the (mathematical) integer s representable as a signed n-bit number?
+  model fits(s: Int, n: Nat) -> Bool = s >= 0 - to_nat(hibit(n)) and s < to_nat(hibit(n))
+
+  -- ---- bit vectors built from an integer -----------------------------------------------
+  -- Element i of the vector is bit i of w (least significant first): the convention of
+  -- every operation in the crate (`ripple_carry_adder(&[1, 0, 1, 0], ...)` is the number 5).
+  model bitb8(w: U8, i: Nat) -> Bytes = be_bytes(bit_and(shr(w, i), 1u8))
+  model bv1(w: U8) -> Bytes = bitb8(w, 0)
+  model bv2(w: U8) -> Bytes = concat(bv1(w), bitb8(w, 1))
+  model bv3(w: U8) -> Bytes = concat(bv2(w), bitb8(w, 2))
+  model bv4(w: U8) -> Bytes = concat(bv3(w), bitb8(w, 3))
+  model bv5(w: U8) -> Bytes = concat(bv4(w), bitb8(w, 4))
+  model bv6(w: U8) -> Bytes = concat(bv5(w), bitb8(w, 5))
+  model bv7(w: U8) -> Bytes = concat(bv6(w), bitb8(w, 6))
+  model bv8(w: U8) -> Bytes = concat(bv7(w), bitb8(w, 7))
+  model bitb16(w: U16, i: Nat) -> Bytes = be_bytes(wrap<U8>(bit_and(shr(w, i), 1u16)))
+  model wv1(w: U16) -> Bytes = bitb16(w, 0)
+  model wv2(w: U16) -> Bytes = concat(wv1(w), bitb16(w, 1))
+  model wv3(w: U16) -> Bytes = concat(wv2(w), bitb16(w, 2))
+  model wv4(w: U16) -> Bytes = concat(wv3(w), bitb16(w, 3))
+  model wv5(w: U16) -> Bytes = concat(wv4(w), bitb16(w, 4))
+  model wv6(w: U16) -> Bytes = concat(wv5(w), bitb16(w, 5))
+  model wv7(w: U16) -> Bytes = concat(wv6(w), bitb16(w, 6))
+  model wv8(w: U16) -> Bytes = concat(wv7(w), bitb16(w, 7))
+  model wv9(w: U16) -> Bytes = concat(wv8(w), bitb16(w, 8))
+  model wv10(w: U16) -> Bytes = concat(wv9(w), bitb16(w, 9))
+  model wv11(w: U16) -> Bytes = concat(wv10(w), bitb16(w, 10))
+  model wv12(w: U16) -> Bytes = concat(wv11(w), bitb16(w, 11))
+  model wv13(w: U16) -> Bytes = concat(wv12(w), bitb16(w, 12))
+  model wv14(w: U16) -> Bytes = concat(wv13(w), bitb16(w, 13))
+  model wv15(w: U16) -> Bytes = concat(wv14(w), bitb16(w, 14))
+  model wv16(w: U16) -> Bytes = concat(wv15(w), bitb16(w, 15))
+  -- (Bit-vector helper for a width n in 1..=8, used by the position-sweeping claims.)
+  model bvn(w: U8, n: Nat) -> Bytes = if n == 1 then bv1(w) else (if n == 2 then bv2(w) else (if n == 3 then bv3(w) else (if n == 4 then bv4(w) else (if n == 5 then bv5(w) else (if n == 6 then bv6(w) else (if n == 7 then bv7(w) else bv8(w)))))))
+  -- A bit vector of exactly p zero bits (p = 0 is the empty vector).
+  model padn(p: Nat) -> Bytes = if p == 0 then b"" else bvn(0u8, p)
+  -- Eight bits, all zero but the byte `junk(j)` at position k mod 8: the hostile operand of the
+  -- position sweeps.  k runs over a Nat, so no claim needs a filter.
+  model at8(k: Nat) -> U8 = bit_and(wrap<U8>(k), 7u8)
+  model junkvec(j: U8, k: Nat) -> Bytes = concat(concat(padn(to_nat(at8(k))), be_bytes(junk(j))), padn(to_nat(7u8 - at8(k))))
+  -- The Boolean packed from Bool binders: pkW(x0, .., xW-1) is the W-bit number whose bit i is xi,
+  -- so a claim over W Bool binders enumerates every W-bit operand.
+  model pk1(x0: Bool) -> U8 = b2u(x0)
+  model pk2(x0: Bool, x1: Bool) -> U8 = b2u(x0) + 2u8 * b2u(x1)
+  model pk3(x0: Bool, x1: Bool, x2: Bool) -> U8 = b2u(x0) + 2u8 * b2u(x1) + 4u8 * b2u(x2)
+  model pk4(x0: Bool, x1: Bool, x2: Bool, x3: Bool) -> U8 = b2u(x0) + 2u8 * b2u(x1) + 4u8 * b2u(x2) + 8u8 * b2u(x3)
+
+  -- ---- 16 bits (the sampled width) -----------------------------------------------------
+  model v16(w: U16) -> Nat = to_nat(w)
+  model sg16(w: U16) -> Int = to_nat(w) - (if bit(w, 15) then 65536 else 0)
+  model fits16(s: Int) -> Bool = s >= 0 - 32768 and s < 32768
+  -- The low 16 bits of a U64 binder: the U64 domain is the boundary-rich set 0..=255, every single
+  -- bit, MAX and every MAX-with-one-bit-cleared (377 values); its low 16 bits keep every carry
+  -- boundary of a 16-bit adder, and the random suites draw the whole 64-bit range.
+  model lo16(x: U64) -> U16 = wrap<U16>(x)
+
+  -- ---- the oracles: Warrant integers, never the crate -----------------------------------
+  -- The sum a + b + c of two n-bit unsigned numbers and a carry-in, as a mathematical integer.
+  model tot(a: U8, b: U8, c: U8, n: Nat) -> Int = vn(a, n) + vn(b, n) + to_nat(c)
+  -- The ripple-carry adder: the low n bits of the sum, the carry out (sum >= 2^n), and signed
+  -- overflow (the signed sum a + b + c does not fit in n bits).
+  model rc_model(a: U8, b: U8, c: U8, n: Nat) -> RippleCarryResult = RippleCarryResult(bvn(wrap<U8>(tot(a, b, c, n)), n), if tot(a, b, c, n) >= p2(n) then 1u8 else 0u8, not fits(sgn(a, n) + sgn(b, n) + to_nat(c), n))
+  model tot16(a: U16, b: U16, c: U8) -> Int = v16(a) + v16(b) + to_nat(c)
+  model rc16_model(a: U16, b: U16, c: U8) -> RippleCarryResult = RippleCarryResult(wv16(wrap<U16>(tot16(a, b, c))), if tot16(a, b, c) >= 65536 then 1u8 else 0u8, not fits16(sg16(a) + sg16(b) + to_nat(c)))
+  -- The ALU: result bits, then the four flags.  zero: every result bit is 0; negative: the top
+  -- bit; carry: the carry out of an addition, and for a subtraction 1 when NO borrow is needed
+  -- (a >= b), the convention of A + NOT(B) + 1; overflow: the signed result does not fit.  The
+  -- logical operations have carry = overflow = false.
+  model al_make(r: U8, n: Nat, carry: Bool, ovf: Bool) -> AluResult = AluResult(bvn(r, n), bit_and(r, maskn(n)) == 0u8, carry, msb(r, n), ovf)
+  model al_add(a: U8, b: U8, n: Nat) -> AluResult = al_make(wrap<U8>(vn(a, n) + vn(b, n)), n, vn(a, n) + vn(b, n) >= p2(n), not fits(sgn(a, n) + sgn(b, n), n))
+  model al_sub(a: U8, b: U8, n: Nat) -> AluResult = al_make(wrap<U8>(vn(a, n) - vn(b, n)), n, vn(a, n) >= vn(b, n), not fits(sgn(a, n) - sgn(b, n), n))
+  model al_and(a: U8, b: U8, n: Nat) -> AluResult = al_make(bit_and(a, b), n, false, false)
+  model al_or(a: U8, b: U8, n: Nat) -> AluResult = al_make(bit_or(a, b), n, false, false)
+  model al_xor(a: U8, b: U8, n: Nat) -> AluResult = al_make(bit_xor(a, b), n, false, false)
+  model al_not(a: U8, n: Nat) -> AluResult = al_make(bit_not(a), n, false, false)
+  model al16(r: U16, carry: Bool, ovf: Bool) -> AluResult = AluResult(wv16(r), r == 0u16, carry, bit(r, 15), ovf)
+  model al16_add(a: U16, b: U16) -> AluResult = al16(wrap<U16>(v16(a) + v16(b)), v16(a) + v16(b) >= 65536, not fits16(sg16(a) + sg16(b)))
+  model al16_sub(a: U16, b: U16) -> AluResult = al16(wrap<U16>(v16(a) - v16(b)), v16(a) >= v16(b), not fits16(sg16(a) - sg16(b)))
+  model al16_and(a: U16, b: U16) -> AluResult = al16(bit_and(a, b), false, false)
+  model al16_or(a: U16, b: U16) -> AluResult = al16(bit_or(a, b), false, false)
+  model al16_xor(a: U16, b: U16) -> AluResult = al16(bit_xor(a, b), false, false)
+  model al16_not(a: U16) -> AluResult = al16(bit_not(a), false, false)
+  -- An ALU operation chosen by a Nat, total: every residue is some operation.  anyop covers all
+  -- six, binop the five that read b.
+  model anyop(n: Nat) -> AluOp = if unwrap_or(rem(n, 6), 0) == 0 then Add else (if unwrap_or(rem(n, 6), 0) == 1 then Sub else (if unwrap_or(rem(n, 6), 0) == 2 then And else (if unwrap_or(rem(n, 6), 0) == 3 then Or else (if unwrap_or(rem(n, 6), 0) == 4 then Xor else Not))))
+  model binop(n: Nat) -> AluOp = if unwrap_or(rem(n, 5), 0) == 0 then Add else (if unwrap_or(rem(n, 5), 0) == 1 then Sub else (if unwrap_or(rem(n, 5), 0) == 2 then And else (if unwrap_or(rem(n, 5), 0) == 3 then Or else Xor)))
+
+  -- ---- the operations ------------------------------------------------------------------
+  op half_adder(a: U8, b: U8) -> Result<(U8, U8), ArithError>
+  op full_adder(a: U8, b: U8, carry_in: U8) -> Result<(U8, U8), ArithError>
+  op ripple_carry_adder(a: Bytes, b: Bytes) -> Result<RippleCarryResult, ArithError>
+  op ripple_carry_adder_with_carry(a: Bytes, b: Bytes, carry_in: U8) -> Result<RippleCarryResult, ArithError>
+  op alu(a: Bytes, b: Bytes, op: AluOp) -> Result<AluResult, ArithError>
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- ---- layering (VER27 sections 4.13 and 4.14; VER29 not implemented) ----------------------
+  -- This layer takes the logic-gates contract as an assumption and proves how the adders and the
+  -- ALU compose it.  It does NOT re-prove a gate.  The mechanism that lets a Warrant file name
+  -- another package's claim (VER29: contract ids, `assume platform:` resolving to them, discharge
+  -- only on proof at a pinned revision) is specified but not implemented, so `assume platform:`
+  -- above stays `none` and NOTHING here claims a discharged assumption.
+  --
+  -- TODO(LV-005): when VER29's id parsing lands, replace `none` above by the contracts this layer
+  -- would assume from logic-gates, by id (the claim names are in logic-gates.warrant and listed in
+  -- LG01):
+  --     contract.logic-gates.xor_truth_table      (sum bit of every adder)
+  --     contract.logic-gates.and_truth_table      (carry bit of the half adder)
+  --     contract.logic-gates.or_truth_table       (carry-out of the full adder)
+  --     contract.logic-gates.not_truth_table      (operand inversion in a subtraction, Not)
+  --     contract.logic-gates.xor_rejects_non_bit  (the source of this layer's non-bit rejection)
+  --     contract.logic-gates.and_rejects_non_bit, or_rejects_non_bit, not_rejects_non_bit
+  -- and publish this layer's own claims as `contract.arithmetic.<claim name>`.
+  --
+  -- VER29 H3 (an `exhaustive` label needs a stateless, deterministic binding, `state none`): every
+  -- operation here is a pure function of its arguments, so the label applies as is.  The current
+  -- evidence.bindings format has no `state` declaration (a binding is stateless by construction:
+  -- it calls an export and compares the value), so nothing is declared; when VER29 adds the
+  -- `state none` line, it goes on every `op` row of evidence.bindings.
+
+  labels half_adder:
+    a public
+    b public
+  labels full_adder:
+    a public
+    b public
+    carry_in public
+  labels ripple_carry_adder:
+    a public
+    b public
+  labels ripple_carry_adder_with_carry:
+    a public
+    b public
+    carry_in public
+  labels alu:
+    a public
+    b public
+    op public
+
+  -- Input contracts.  Every parameter is hostile.  A bit parameter is rejected above 1.  A bit
+  -- vector is rejected for its SHAPE here (unequal lengths, empty); its content (each byte 0 or 1)
+  -- cannot be written as a predicate without indexing and is pinned by the *_rejects_non_bit_*
+  -- claims.  `alu`'s `b` is exempt for `Not`, which never reads it (AR01, "The ALU").
+  input half_adder.a:
+    hostile
+    rejects a > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input half_adder.b:
+    hostile
+    rejects b > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input full_adder.a:
+    hostile
+    rejects a > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input full_adder.b:
+    hostile
+    rejects b > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input full_adder.carry_in:
+    hostile
+    rejects carry_in > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input ripple_carry_adder.a:
+    hostile
+    rejects len(a) == 0 with ArithError.INVALID_INPUT
+    rejects len(a) != len(b) with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input ripple_carry_adder.b:
+    hostile
+    rejects len(b) != len(a) with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input ripple_carry_adder_with_carry.a:
+    hostile
+    rejects len(a) == 0 with ArithError.INVALID_INPUT
+    rejects len(a) != len(b) with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input ripple_carry_adder_with_carry.b:
+    hostile
+    rejects len(b) != len(a) with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input ripple_carry_adder_with_carry.carry_in:
+    hostile
+    rejects carry_in > 1u8 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input alu.a:
+    hostile
+    rejects len(a) == 0 with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+  input alu.b:
+    hostile
+    rejects len(b) != len(a) and not is_not(op) with ArithError.INVALID_INPUT
+    ensures no_panic, terminates
+
+  -- Declared bounds.  A ripple-carry stage is five gate evaluations, each a handful of CMOS
+  -- evaluations; the ALU adds one more pass over the operand.  These are DECLARATIONS: no
+  -- step-bound prover run backs them (the proof manifest records nothing, see AR01), and heap
+  -- is not bounded here.
+  bound half_adder:
+    steps <= 1024
+    depth <= 64
+  bound full_adder:
+    steps <= 4096
+    depth <= 64
+  bound ripple_carry_adder:
+    steps <= 4096 * len(a) + 4096
+    depth <= 64
+  bound ripple_carry_adder_with_carry:
+    steps <= 4096 * len(a) + 4096
+    depth <= 64
+  bound alu:
+    steps <= 4096 * len(a) + 4096
+    depth <= 64
+
+  -- ---- examples: worked rows as a datasheet prints them --------------------------------
+  -- Hand-written, independent of the claims below, which enumerate them again by model.
+  example half_adder_0_0:
+    half_adder(0u8, 0u8) == Ok((0u8, 0u8))
+  example half_adder_0_1:
+    half_adder(0u8, 1u8) == Ok((1u8, 0u8))
+  example half_adder_1_0:
+    half_adder(1u8, 0u8) == Ok((1u8, 0u8))
+  example half_adder_1_1:
+    half_adder(1u8, 1u8) == Ok((0u8, 1u8))
+  example full_adder_0_0_0:
+    full_adder(0u8, 0u8, 0u8) == Ok((0u8, 0u8))
+  example full_adder_0_0_1:
+    full_adder(0u8, 0u8, 1u8) == Ok((1u8, 0u8))
+  example full_adder_0_1_0:
+    full_adder(0u8, 1u8, 0u8) == Ok((1u8, 0u8))
+  example full_adder_0_1_1:
+    full_adder(0u8, 1u8, 1u8) == Ok((0u8, 1u8))
+  example full_adder_1_0_0:
+    full_adder(1u8, 0u8, 0u8) == Ok((1u8, 0u8))
+  example full_adder_1_0_1:
+    full_adder(1u8, 0u8, 1u8) == Ok((0u8, 1u8))
+  example full_adder_1_1_0:
+    full_adder(1u8, 1u8, 0u8) == Ok((0u8, 1u8))
+  example full_adder_1_1_1:
+    full_adder(1u8, 1u8, 1u8) == Ok((1u8, 1u8))
+  example half_adder_two_rejected:
+    half_adder(2u8, 0u8) == Err(ArithError.INVALID_INPUT)
+  example half_adder_second_input_rejected:
+    half_adder(0u8, 255u8) == Err(ArithError.INVALID_INPUT)
+  example full_adder_carry_in_rejected:
+    full_adder(0u8, 0u8, 2u8) == Err(ArithError.INVALID_INPUT)
+  example full_adder_first_input_rejected:
+    full_adder(3u8, 1u8, 1u8) == Err(ArithError.INVALID_INPUT)
+  example ripple_5_plus_3_overflows_in_4_bits:
+    ripple_carry_adder(b"01000100", b"01010000") == Ok(RippleCarryResult(fwd(b"00000001"), 0u8, true))
+  example ripple_7_plus_1_overflows_in_4_bits:
+    ripple_carry_adder(b"01010100", b"01000000") == Ok(RippleCarryResult(fwd(b"00000001"), 0u8, true))
+  example ripple_15_plus_1_carries_out_of_4_bits:
+    ripple_carry_adder(b"01010101", b"01000000") == Ok(RippleCarryResult(fwd(b"00000000"), 1u8, false))
+  example ripple_8_plus_8_carries_and_overflows_in_4_bits:
+    ripple_carry_adder(b"00000001", b"00000001") == Ok(RippleCarryResult(fwd(b"00000000"), 1u8, true))
+  example ripple_2_plus_3_is_5_in_4_bits:
+    ripple_carry_adder(b"00010000", b"01010000") == Ok(RippleCarryResult(fwd(b"01000100"), 0u8, false))
+  example ripple_255_plus_1_carries_out_of_8_bits:
+    ripple_carry_adder(b"0101010101010101", b"0100000000000000") == Ok(RippleCarryResult(fwd(b"0000000000000000"), 1u8, false))
+  example ripple_127_plus_1_overflows_in_8_bits:
+    ripple_carry_adder(b"0101010101010100", b"0100000000000000") == Ok(RippleCarryResult(fwd(b"0000000000000001"), 0u8, true))
+  example ripple_one_bit_one_plus_one:
+    ripple_carry_adder(b"01", b"01") == Ok(RippleCarryResult(fwd(b"00"), 1u8, true))
+  example ripple_with_carry_15_plus_0_plus_1_in_4_bits:
+    ripple_carry_adder_with_carry(b"01010101", b"00000000", 1u8) == Ok(RippleCarryResult(fwd(b"00000000"), 1u8, false))
+  example ripple_with_carry_7_plus_0_plus_1_overflows:
+    ripple_carry_adder_with_carry(b"01010100", b"00000000", 1u8) == Ok(RippleCarryResult(fwd(b"00000001"), 0u8, true))
+  example ripple_with_carry_15_plus_15_plus_1_in_4_bits:
+    ripple_carry_adder_with_carry(b"01010101", b"01010101", 1u8) == Ok(RippleCarryResult(fwd(b"01010101"), 1u8, false))
+  example ripple_unequal_lengths_rejected:
+    ripple_carry_adder(b"0100", b"01") == Err(ArithError.INVALID_INPUT)
+  example ripple_empty_rejected:
+    ripple_carry_adder(b"", b"") == Err(ArithError.INVALID_INPUT)
+  example ripple_non_bit_rejected:
+    ripple_carry_adder(b"0102", b"0000") == Err(ArithError.INVALID_INPUT)
+  example ripple_with_carry_empty_rejected:
+    ripple_carry_adder_with_carry(b"", b"", 0u8) == Err(ArithError.INVALID_INPUT)
+  example ripple_with_carry_carry_in_two_rejected:
+    ripple_carry_adder_with_carry(b"0100", b"0000", 2u8) == Err(ArithError.INVALID_INPUT)
+  example alu_add_3_plus_5_in_4_bits:
+    alu(b"01010000", b"01000100", Add) == Ok(AluResult(fwd(b"00000001"), false, false, true, true))
+  example alu_add_zero_sets_the_zero_flag:
+    alu(b"00000000", b"00000000", Add) == Ok(AluResult(fwd(b"00000000"), true, false, false, false))
+  example alu_add_15_plus_1_carries_and_is_zero:
+    alu(b"01010101", b"01000000", Add) == Ok(AluResult(fwd(b"00000000"), true, true, false, false))
+  example alu_add_7_plus_1_overflows_and_is_negative:
+    alu(b"01010100", b"01000000", Add) == Ok(AluResult(fwd(b"00000001"), false, false, true, true))
+  example alu_add_8_plus_8_carries_and_overflows:
+    alu(b"00000001", b"00000001", Add) == Ok(AluResult(fwd(b"00000000"), true, true, false, true))
+  example alu_sub_5_minus_3_in_4_bits:
+    alu(b"01000100", b"01010000", Sub) == Ok(AluResult(fwd(b"00010000"), false, true, false, false))
+  example alu_sub_5_minus_5_is_zero_with_carry:
+    alu(b"01000100", b"01000100", Sub) == Ok(AluResult(fwd(b"00000000"), true, true, false, false))
+  example alu_sub_3_minus_5_borrows:
+    alu(b"01010000", b"01000100", Sub) == Ok(AluResult(fwd(b"00010101"), false, false, true, false))
+  example alu_sub_8_minus_1_overflows:
+    alu(b"00000001", b"01000000", Sub) == Ok(AluResult(fwd(b"01010100"), false, true, false, true))
+  example alu_sub_7_minus_8_overflows:
+    alu(b"01010100", b"00000001", Sub) == Ok(AluResult(fwd(b"01010101"), false, false, true, true))
+  example alu_and_in_4_bits:
+    alu(b"00000101", b"00010001", And) == Ok(AluResult(fwd(b"00000001"), false, false, true, false))
+  example alu_or_in_4_bits:
+    alu(b"00000101", b"00010001", Or) == Ok(AluResult(fwd(b"00010101"), false, false, true, false))
+  example alu_xor_in_4_bits:
+    alu(b"00000101", b"00010001", Xor) == Ok(AluResult(fwd(b"00010100"), false, false, false, false))
+  example alu_not_in_8_bits:
+    alu(b"0101010100000000", b"0000000000000000", Not) == Ok(AluResult(fwd(b"0000000001010101"), false, false, true, false))
+  example alu_not_ignores_an_empty_b:
+    alu(b"01000100", b"", Not) == Ok(AluResult(fwd(b"00010001"), false, false, true, false))
+  example alu_unequal_lengths_rejected:
+    alu(b"010000", b"0100", Add) == Err(ArithError.INVALID_INPUT)
+  example alu_empty_rejected:
+    alu(b"", b"", Add) == Err(ArithError.INVALID_INPUT)
+  example alu_empty_not_rejected:
+    alu(b"", b"", Not) == Err(ArithError.INVALID_INPUT)
+  example alu_non_bit_in_a_rejected:
+    alu(b"0200", b"0000", And) == Err(ArithError.INVALID_INPUT)
+  example alu_non_bit_in_b_rejected:
+    alu(b"0000", b"0003", Or) == Err(ArithError.INVALID_INPUT)
+  example alu_non_bit_in_a_rejected_by_not:
+    alu(b"0201", b"", Not) == Err(ArithError.INVALID_INPUT)
+
+  -- ---- claims -------------------------------------------------------------------------
+  -- Order inside each group is deliberate: a negative control stops at the first claim that
+  -- catches its fault, so cheap claims come first and large enumerations last.
+  -- Claim names are STABLE: AR01 lists them as "contracts this layer publishes" for the
+  -- layer-contract linking of LV-005 (VER27 section 4.14).  Rename one and a later layer's
+  -- assumption stops resolving.
+
+  -- Half adder: the Boolean definition (sum = XOR, carry = AND), then the arithmetic one
+  -- (sum + 2 carry = a + b), then rejection over ALL of U8 x U8.
+  claim half_adder_truth_table:
+    forall a: Bool, b: Bool. half_adder(b2u(a), b2u(b)) == Ok((b2u(a != b), b2u(a and b)))
+  claim half_adder_counts_ones:
+    forall a: Bool, b: Bool. half_adder(b2u(a), b2u(b)) == Ok((bit_and(b2u(a) + b2u(b), 1u8), shr(b2u(a) + b2u(b), 1)))
+  claim half_adder_rejects_non_bit:
+    forall a: U8, b: U8 | a > 1u8 or b > 1u8. half_adder(a, b) == Err(ArithError.INVALID_INPUT)
+
+  -- Full adder: sum = a XOR b XOR cin, carry = majority(a, b, cin); and as arithmetic.  A non-bit
+  -- is rejected in each of the three positions (junk(j) runs over all 254 non-bits).
+  claim full_adder_truth_table:
+    forall a: Bool, b: Bool, c: Bool. full_adder(b2u(a), b2u(b), b2u(c)) == Ok((b2u((a != b) != c), b2u((a and b) or (c and (a != b)))))
+  claim full_adder_counts_ones:
+    forall a: Bool, b: Bool, c: Bool. full_adder(b2u(a), b2u(b), b2u(c)) == Ok((bit_and(b2u(a) + b2u(b) + b2u(c), 1u8), shr(b2u(a) + b2u(b) + b2u(c), 1)))
+  claim full_adder_rejects_non_bit_a:
+    forall j: U8, x: Bool, y: Bool. full_adder(junk(j), b2u(x), b2u(y)) == Err(ArithError.INVALID_INPUT)
+  claim full_adder_rejects_non_bit_b:
+    forall j: U8, x: Bool, y: Bool. full_adder(b2u(x), junk(j), b2u(y)) == Err(ArithError.INVALID_INPUT)
+  claim full_adder_rejects_non_bit_carry_in:
+    forall j: U8, x: Bool, y: Bool. full_adder(b2u(x), b2u(y), junk(j)) == Err(ArithError.INVALID_INPUT)
+
+  -- Ripple-carry adder.  Widths 1..=4 are enumerated from Bool binders, so the 4-bit claim with a
+  -- carry-in is exactly the 512 cases of VER27 section 4.15 ((a + b + cin) mod 16 and the carry out,
+  -- plus the signed-overflow flag); 8 bits are enumerated over U8 x U8 (x Bool); 16 bits are SAMPLED
+  -- (U64 binders, low 16 bits: the 377-value boundary domain squared) and say so in their name.
+  claim ripple_carry_adder_1_bit_exhaustive:
+    forall a0: Bool, b0: Bool. ripple_carry_adder(bv1(pk1(a0)), bv1(pk1(b0))) == Ok(rc_model(pk1(a0), pk1(b0), 0u8, 1))
+  claim ripple_carry_adder_with_carry_1_bit_exhaustive:
+    forall a0: Bool, b0: Bool, c: Bool. ripple_carry_adder_with_carry(bv1(pk1(a0)), bv1(pk1(b0)), b2u(c)) == Ok(rc_model(pk1(a0), pk1(b0), b2u(c), 1))
+  claim ripple_carry_adder_2_bit_exhaustive:
+    forall a0: Bool, a1: Bool, b0: Bool, b1: Bool. ripple_carry_adder(bv2(pk2(a0, a1)), bv2(pk2(b0, b1))) == Ok(rc_model(pk2(a0, a1), pk2(b0, b1), 0u8, 2))
+  claim ripple_carry_adder_with_carry_2_bit_exhaustive:
+    forall a0: Bool, a1: Bool, b0: Bool, b1: Bool, c: Bool. ripple_carry_adder_with_carry(bv2(pk2(a0, a1)), bv2(pk2(b0, b1)), b2u(c)) == Ok(rc_model(pk2(a0, a1), pk2(b0, b1), b2u(c), 2))
+  claim ripple_carry_adder_3_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, b0: Bool, b1: Bool, b2: Bool. ripple_carry_adder(bv3(pk3(a0, a1, a2)), bv3(pk3(b0, b1, b2))) == Ok(rc_model(pk3(a0, a1, a2), pk3(b0, b1, b2), 0u8, 3))
+  claim ripple_carry_adder_with_carry_3_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, b0: Bool, b1: Bool, b2: Bool, c: Bool. ripple_carry_adder_with_carry(bv3(pk3(a0, a1, a2)), bv3(pk3(b0, b1, b2)), b2u(c)) == Ok(rc_model(pk3(a0, a1, a2), pk3(b0, b1, b2), b2u(c), 3))
+  claim ripple_carry_adder_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. ripple_carry_adder(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3))) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 0u8, 4))
+  claim ripple_carry_adder_with_carry_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool, c: Bool. ripple_carry_adder_with_carry(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), b2u(c)) == Ok(rc_model(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), b2u(c), 4))
+  claim ripple_carry_adder_8_bit_exhaustive:
+    forall a: U8, b: U8. ripple_carry_adder(bv8(a), bv8(b)) == Ok(rc_model(a, b, 0u8, 8))
+  claim ripple_carry_adder_with_carry_8_bit_exhaustive:
+    forall a: U8, b: U8, c: Bool. ripple_carry_adder_with_carry(bv8(a), bv8(b), b2u(c)) == Ok(rc_model(a, b, b2u(c), 8))
+  claim ripple_carry_adder_equals_with_carry_zero:
+    forall a: U8, b: U8. ripple_carry_adder(bv8(a), bv8(b)) == ripple_carry_adder_with_carry(bv8(a), bv8(b), 0u8)
+  claim ripple_carry_adder_16_bit_sampled:
+    forall a: U64, b: U64. ripple_carry_adder(wv16(lo16(a)), wv16(lo16(b))) == Ok(rc16_model(lo16(a), lo16(b), 0u8))
+  claim ripple_carry_adder_with_carry_16_bit_sampled:
+    forall a: U64, b: U64, c: Bool. ripple_carry_adder_with_carry(wv16(lo16(a)), wv16(lo16(b)), b2u(c)) == Ok(rc16_model(lo16(a), lo16(b), b2u(c)))
+
+  -- Ripple-carry rejections.  Shape: operands of unequal length, and empty operands.  Content: a
+  -- non-bit at each of the eight positions of an 8-bit operand (k mod 8 selects the position, so
+  -- the first, a middle and the last are all covered), in a, in b and in the carry-in.
+  claim ripple_carry_adder_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). ripple_carry_adder(a, b) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_rejects_an_empty_a:
+    forall b: Bytes. ripple_carry_adder(b"", b) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_rejects_non_bit_in_a:
+    forall j: U8, k: Nat. ripple_carry_adder(junkvec(j, k), bv8(0u8)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_rejects_non_bit_in_b:
+    forall j: U8, k: Nat. ripple_carry_adder(bv8(0u8), junkvec(j, k)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_with_carry_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes, c: Bool | len(a) != len(b). ripple_carry_adder_with_carry(a, b, b2u(c)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_with_carry_rejects_an_empty_a:
+    forall b: Bytes, c: Bool. ripple_carry_adder_with_carry(b"", b, b2u(c)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_with_carry_rejects_non_bit_in_a:
+    forall j: U8, k: Nat, c: Bool. ripple_carry_adder_with_carry(junkvec(j, k), bv8(0u8), b2u(c)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_with_carry_rejects_non_bit_in_b:
+    forall j: U8, k: Nat, c: Bool. ripple_carry_adder_with_carry(bv8(0u8), junkvec(j, k), b2u(c)) == Err(ArithError.INVALID_INPUT)
+  claim ripple_carry_adder_with_carry_rejects_non_bit_carry_in:
+    forall j: U8, a: U8. ripple_carry_adder_with_carry(bv4(a), bv4(bit_not(a)), junk(j)) == Err(ArithError.INVALID_INPUT)
+
+  -- ALU.  Each operation against its arithmetic or bitwise definition, with all four flags in the
+  -- one equality (result bits, zero, carry, negative, overflow).  Widths: Add and Sub at 1..=4 and 8,
+  -- the logical operations at 4 and 8 (a bitwise operation has no carry chain, so its width does not
+  -- change what a bit does), all six sampled at 16.  `Not` has no b: b is arbitrary bytes there.
+  claim alu_add_1_bit_exhaustive:
+    forall a0: Bool, b0: Bool. alu(bv1(pk1(a0)), bv1(pk1(b0)), Add) == Ok(al_add(pk1(a0), pk1(b0), 1))
+  claim alu_add_2_bit_exhaustive:
+    forall a0: Bool, a1: Bool, b0: Bool, b1: Bool. alu(bv2(pk2(a0, a1)), bv2(pk2(b0, b1)), Add) == Ok(al_add(pk2(a0, a1), pk2(b0, b1), 2))
+  claim alu_add_3_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, b0: Bool, b1: Bool, b2: Bool. alu(bv3(pk3(a0, a1, a2)), bv3(pk3(b0, b1, b2)), Add) == Ok(al_add(pk3(a0, a1, a2), pk3(b0, b1, b2), 3))
+  claim alu_add_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), Add) == Ok(al_add(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 4))
+  claim alu_add_8_bit_exhaustive:
+    forall a: U8, b: U8. alu(bv8(a), bv8(b), Add) == Ok(al_add(a, b, 8))
+  claim alu_sub_1_bit_exhaustive:
+    forall a0: Bool, b0: Bool. alu(bv1(pk1(a0)), bv1(pk1(b0)), Sub) == Ok(al_sub(pk1(a0), pk1(b0), 1))
+  claim alu_sub_2_bit_exhaustive:
+    forall a0: Bool, a1: Bool, b0: Bool, b1: Bool. alu(bv2(pk2(a0, a1)), bv2(pk2(b0, b1)), Sub) == Ok(al_sub(pk2(a0, a1), pk2(b0, b1), 2))
+  claim alu_sub_3_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, b0: Bool, b1: Bool, b2: Bool. alu(bv3(pk3(a0, a1, a2)), bv3(pk3(b0, b1, b2)), Sub) == Ok(al_sub(pk3(a0, a1, a2), pk3(b0, b1, b2), 3))
+  claim alu_sub_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), Sub) == Ok(al_sub(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 4))
+  claim alu_sub_8_bit_exhaustive:
+    forall a: U8, b: U8. alu(bv8(a), bv8(b), Sub) == Ok(al_sub(a, b, 8))
+  claim alu_and_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), And) == Ok(al_and(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 4))
+  claim alu_and_8_bit_exhaustive:
+    forall a: U8, b: U8. alu(bv8(a), bv8(b), And) == Ok(al_and(a, b, 8))
+  claim alu_or_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), Or) == Ok(al_or(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 4))
+  claim alu_or_8_bit_exhaustive:
+    forall a: U8, b: U8. alu(bv8(a), bv8(b), Or) == Ok(al_or(a, b, 8))
+  claim alu_xor_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool, b0: Bool, b1: Bool, b2: Bool, b3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(pk4(b0, b1, b2, b3)), Xor) == Ok(al_xor(pk4(a0, a1, a2, a3), pk4(b0, b1, b2, b3), 4))
+  claim alu_xor_8_bit_exhaustive:
+    forall a: U8, b: U8. alu(bv8(a), bv8(b), Xor) == Ok(al_xor(a, b, 8))
+  claim alu_not_4_bit_exhaustive:
+    forall a0: Bool, a1: Bool, a2: Bool, a3: Bool. alu(bv4(pk4(a0, a1, a2, a3)), bv4(0u8), Not) == Ok(al_not(pk4(a0, a1, a2, a3), 4))
+  claim alu_not_8_bit_exhaustive:
+    forall a: U8. alu(bv8(a), bv8(0u8), Not) == Ok(al_not(a, 8))
+  claim alu_not_ignores_b:
+    forall a: U8, b: Bytes. alu(bv8(a), b, Not) == Ok(al_not(a, 8))
+  claim alu_add_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), Add) == Ok(al16_add(lo16(a), lo16(b)))
+  claim alu_sub_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), Sub) == Ok(al16_sub(lo16(a), lo16(b)))
+  claim alu_and_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), And) == Ok(al16_and(lo16(a), lo16(b)))
+  claim alu_or_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), Or) == Ok(al16_or(lo16(a), lo16(b)))
+  claim alu_xor_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), Xor) == Ok(al16_xor(lo16(a), lo16(b)))
+  claim alu_not_16_bit_sampled:
+    forall a: U64, b: U64. alu(wv16(lo16(a)), wv16(lo16(b)), Not) == Ok(al16_not(lo16(a)))
+
+  -- ALU rejections.  Shape: an empty a for every operation; unequal lengths for each of the five
+  -- operations that read b.  Content: a non-bit at each position of a (all six operations; k mod 8
+  -- is the position, k / 8 the operation) and of b (the five binary operations).
+  claim alu_rejects_empty_a:
+    forall b: Bytes, i: Nat. alu(b"", b, anyop(i)) == Err(ArithError.INVALID_INPUT)
+  claim alu_add_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). alu(a, b, Add) == Err(ArithError.INVALID_INPUT)
+  claim alu_sub_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). alu(a, b, Sub) == Err(ArithError.INVALID_INPUT)
+  claim alu_and_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). alu(a, b, And) == Err(ArithError.INVALID_INPUT)
+  claim alu_or_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). alu(a, b, Or) == Err(ArithError.INVALID_INPUT)
+  claim alu_xor_rejects_unequal_lengths:
+    forall a: Bytes, b: Bytes | len(a) != len(b). alu(a, b, Xor) == Err(ArithError.INVALID_INPUT)
+  claim alu_rejects_non_bit_in_a:
+    forall j: U8, k: Nat. alu(junkvec(j, k), bv8(0u8), anyop(to_nat(shr(wrap<U8>(k), 3)))) == Err(ArithError.INVALID_INPUT)
+  claim alu_rejects_non_bit_in_b:
+    forall j: U8, k: Nat. alu(bv8(0u8), junkvec(j, k), binop(to_nat(shr(wrap<U8>(k), 3)))) == Err(ArithError.INVALID_INPUT)
