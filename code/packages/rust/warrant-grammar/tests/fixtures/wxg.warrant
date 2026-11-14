@@ -34,6 +34,11 @@ warrant wxg v1
   -- the same contract as clear_nonempty, through the other error binding.
   op clr(buf: inout Bytes) -> Result<Bytes, WxgError>
 
+  -- S3 with TWO host-returned components: the host returns (u8, u8), destructured exactly.
+  op pair(buf: inout Bytes) -> (U8, U8, Bytes)
+
+  labels pair:
+    buf public
   labels clr:
     buf public
   labels wipe:
@@ -105,6 +110,8 @@ warrant wxg v1
     clear_nonempty(b"") == Err(WxgError.TOO_SHORT)
   example clear_one_byte:
     clear_nonempty(b"ab") == Ok(b"00")
+  example pair_wipes:
+    pair(b"0102") == (1u8, 2u8, wide(b"0000"))
   example clr_empty_is_too_short:
     clr(b"") == Err(WxgError.TOO_SHORT)
   example clr_wipes:
@@ -130,6 +137,8 @@ warrant wxg v1
     forall v: U8, out: Bytes. push_byte(v, out) == (1, concat(out, be_bytes(v)))
   claim clear_nonempty_wipes_or_refuses:
     forall buf: Bytes. clear_nonempty(buf) == (if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf))))
+  claim pair_returns_one_two_and_wipes:
+    forall buf: Bytes. pair(buf) == (1u8, 2u8, zeros(len(buf)))
   claim clr_wipes_or_refuses:
     forall buf: Bytes. clr(buf) == (if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf))))
   claim encode_short_buffers_are_refused:

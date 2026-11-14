@@ -71,3 +71,9 @@ pub fn encode(v: u8, out: &mut [u8]) -> Result<usize, ()> {
     out[0] = v;
     Ok(2)
 }
+
+/// Returns the right pair but leaves the buffer alone.
+pub fn pair(buf: &mut [u8]) -> (u8, u8) {
+    std::hint::black_box(buf);
+    (1, 2)
+}

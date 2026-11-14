@@ -68,3 +68,9 @@ pub fn clr(buf: &mut [u8]) -> Result<(), ()> {
     wipe(buf);
     Ok(())
 }
+
+/// S3 with two host-returned components.
+pub fn pair(buf: &mut [u8]) -> (u8, u8) {
+    wipe(buf);
+    (1, 2)
+}

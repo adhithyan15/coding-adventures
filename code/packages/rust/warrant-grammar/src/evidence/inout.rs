@@ -341,15 +341,14 @@ pub(super) fn inout_adapter<'a>(
 
     // The value built from the host's return `r` and the post-states.
     let mut parts: Vec<String> = Vec::new();
-    let r_src = match rem.len() {
-        0 => None,
+    match rem.len() {
+        0 => {}
         1 => {
             let h = match host.ret.clone() {
                 Some(h) => h,
                 None => default_host(&rem[0]).map_err(&bad)?,
             };
             parts.push(from_host(&rem[0], &h, "r", &mut hc).map_err(&bad)?);
-            Some(())
         }
         k => {
             let hs = match host.ret.clone() {
@@ -362,10 +361,17 @@ pub(super) fn inout_adapter<'a>(
                     .map_err(&bad)?,
             };
             for (j, (t, h)) in rem.iter().zip(&hs).enumerate() {
-                parts.push(from_host(t, h, &format!("r.{j}"), &mut hc).map_err(&bad)?);
+                parts.push(from_host(t, h, &format!("r{j}"), &mut hc).map_err(&bad)?);
             }
-            Some(())
         }
+    }
+    // The exact pattern the host's return is bound with (VER04k 4.13 items 12, 13):
+    // `()` for no component, `r` for one, `(r0, r1, ..)` for several, so a host that
+    // returns more, fewer or other components is a type error, not a silent drop.
+    let r_pat = match rem.len() {
+        0 => "()".to_string(),
+        1 => "r".to_string(),
+        k => format!("({})", (0..k).map(|j| format!("r{j}")).collect::<Vec<_>>().join(", ")),
     };
     parts.extend(post_srcs.iter().cloned());
     let built = match slot {
@@ -381,18 +387,14 @@ pub(super) fn inout_adapter<'a>(
     let want_missing = faults.iter().any(|f| f == "missing-error");
 
     if !is_result {
-        if r_src.is_some() {
-            let _ = writeln!(s, "    let r = {call};");
-        } else {
-            // The host returns nothing: a `let ()` makes a host that does return
-            // something fail to compile instead of being silently ignored.
-            let _ = writeln!(s, "    let () = {call};");
-        }
+        // `let ()` for a host that returns nothing makes one that does return
+        // something fail to compile instead of being silently ignored.
+        let _ = writeln!(s, "    let {r_pat} = {call};");
         let _ = writeln!(s, "    let v: V = {ok_value};");
     } else {
         // No returned component: the host's `Ok` must be exactly `()`, so a host
         // that returns data (a count) fails to compile instead of being dropped.
-        let ok_pat = if r_src.is_some() { "Ok(r)" } else { "Ok(())" };
+        let ok_pat = format!("Ok({r_pat})");
         if let Some(case) = host.err_any.as_deref() {
             // WX-N `err_any=CASE`: every `Err(_)` is the one Warrant case.
             let declared = env_cases_of(&op.return_type, env);
@@ -449,7 +451,7 @@ pub(super) fn inout_adapter<'a>(
             let case = err_case.ok_or_else(|| {
                 w0704(n, op.span, "binding has neither error normalization nor errors= nor err_any=")
             })?;
-            let some_pat = if r_src.is_some() { "Some(r)" } else { "Some(())" };
+            let some_pat = format!("Some({r_pat})");
             let _ = writeln!(s, "    let v: V = match contained(|| {call}) {{");
             let _ = writeln!(s, "        {some_pat} => {ok_value},");
             if want_missing {

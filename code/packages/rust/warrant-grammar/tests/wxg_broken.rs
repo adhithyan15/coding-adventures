@@ -97,3 +97,8 @@ fn the_examples_fail_too() {
         assert!(!failures(ex).is_empty(), "{ex} passed against a broken subject");
     }
 }
+
+#[test]
+fn a_two_component_host_return_is_read_and_the_unwritten_buffer_is_caught() {
+    assert_eq!(failed("warrant/wxg/exhaustive/pair_returns_one_two_and_wipes").len(), 1);
+}
