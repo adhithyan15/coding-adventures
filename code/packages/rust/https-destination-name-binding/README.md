@@ -19,12 +19,24 @@ The certificate reference parser creates at most one temporary normalized DNS
 name bounded by the 253-byte SNI profile. Stable errors and Debug output retain
 no hostname or certificate bytes.
 
+`bind_https_host_header_field` then consumes that complete destination proof
+together with one `http1-request-header-field` value. It accepts the field name
+`Host` under HTTP's case-insensitive name semantics and requires the value to
+be the retained authority's canonical encoding: lowercase DNS bytes plus an
+optional colon and shortest-decimal port. The non-copyable result retains both
+inputs, so a caller cannot replace the Host field with one for another
+destination after binding.
+
+This proves only one retained Host field. A later request-head composition must
+still reject additional Host fields, bind the request line and body framing,
+and preserve this destination through the audited transport boundary.
+
 This package does not parse URLs, bind request targets or provider
 configuration, choose ports, validate critical extensions, certificate role,
 purpose, algorithms, validity, signatures, paths, roots, constraints, or
-revocation, build a TLS or HTTP message, perform I/O, access credentials, emit
-audits or traces, authorize effects, or grant HTTPS, OAuth, or live-provider
-readiness.
+revocation, compose a complete HTTP request, perform TLS or I/O, access or
+release credentials, emit audits or traces, authorize effects, or grant HTTPS,
+OAuth, or live-provider readiness.
 
 ## Validation
 

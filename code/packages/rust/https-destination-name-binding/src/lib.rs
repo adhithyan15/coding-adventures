@@ -3,12 +3,15 @@
 //! Each input reaches this crate only after its owning package has validated its
 //! syntax. This crate adds the missing semantic equality and retains the exact
 //! inputs in one non-copyable value so later composition cannot substitute a
-//! different certificate, SNI, or Host authority.
+//! different certificate, SNI, or Host authority. It can then bind that
+//! complete destination to one strict canonical HTTP/1 Host field without
+//! accepting a detached authority value.
 
 #![forbid(unsafe_code)]
 
 use core::fmt;
 use der_asn1::Asn1Limits;
+use http1_request_header_field::Http1RequestHeaderField;
 use http1_request_host_authority::Http1RequestHostAuthority;
 use tls13_server_name::TlsServerName;
 use tls_server_identity::ReferenceIdentity;
@@ -54,6 +57,28 @@ impl std::error::Error for HttpsDestinationNameBindingError {
     }
 }
 
+/// Stable Host-field binding failures that retain no header or authority input.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsHostHeaderBindingError {
+    /// The validated field name is not the HTTP Host field name.
+    NotHostField,
+    /// The field value is not the destination's exact canonical Host authority.
+    HostAuthorityMismatch,
+}
+
+impl fmt::Display for HttpsHostHeaderBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::NotHostField => formatter.write_str("HTTP request field is not Host"),
+            Self::HostAuthorityMismatch => {
+                formatter.write_str("HTTP Host field does not match the HTTPS destination")
+            }
+        }
+    }
+}
+
+impl std::error::Error for HttpsHostHeaderBindingError {}
+
 /// Non-copyable proof that one exact certificate, SNI, and Host share a DNS name.
 ///
 /// This value proves only destination-name consistency and complete-certificate
@@ -65,6 +90,45 @@ pub struct BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host>
     server_name: TlsServerName<'server_name>,
     host_authority: Http1RequestHostAuthority<'host>,
     certificate_identity: ValidatedCertificateServerIdentity,
+}
+
+/// One exact HTTPS DNS destination bound to one canonical HTTP/1 Host field.
+///
+/// This non-copyable value retains one field only. It does not prove that a
+/// later request head contains no additional Host field and grants no request,
+/// TLS, HTTP, OAuth, I/O, credential, audit, trace, or external-effect
+/// authority.
+pub struct BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'field> {
+    destination: BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host>,
+    host_field: Http1RequestHeaderField<'field>,
+}
+
+impl<'certificate, 'encoded, 'server_name, 'host, 'field>
+    BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'field>
+{
+    /// Return the complete destination retained by this Host-field proof.
+    #[must_use]
+    pub const fn destination(
+        &self,
+    ) -> &BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host> {
+        &self.destination
+    }
+
+    /// Return the exact validated Host field retained by this proof.
+    #[must_use]
+    pub const fn host_field(&self) -> &Http1RequestHeaderField<'field> {
+        &self.host_field
+    }
+}
+
+impl fmt::Debug for BoundHttpsHostHeaderField<'_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundHttpsHostHeaderField")
+            .field("destination", &"[REDACTED]")
+            .field("host_field", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
 }
 
 impl<'certificate, 'encoded, 'server_name, 'host>
@@ -142,4 +206,82 @@ pub fn bind_https_dns_destination<'certificate, 'encoded, 'server_name, 'host>(
         host_authority,
         certificate_identity,
     })
+}
+
+/// Bind one complete HTTPS destination to one canonical HTTP/1 Host field.
+///
+/// Field-name comparison follows HTTP's ASCII case-insensitive semantics. The
+/// value must equal the exact encoding owned by the retained Host authority:
+/// lowercase DNS bytes followed, when present, by a colon and the port's
+/// shortest decimal representation. The function accepts no detached hostname
+/// or port claim.
+pub fn bind_https_host_header_field<'certificate, 'encoded, 'server_name, 'host, 'field>(
+    destination: BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host>,
+    host_field: Http1RequestHeaderField<'field>,
+) -> Result<
+    BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'field>,
+    HttpsHostHeaderBindingError,
+> {
+    if !host_field.name().eq_ignore_ascii_case(b"Host") {
+        return Err(HttpsHostHeaderBindingError::NotHostField);
+    }
+    if !matches_canonical_host_authority(destination.host_authority(), host_field.value()) {
+        return Err(HttpsHostHeaderBindingError::HostAuthorityMismatch);
+    }
+
+    Ok(BoundHttpsHostHeaderField {
+        destination,
+        host_field,
+    })
+}
+
+fn matches_canonical_host_authority(
+    authority: &Http1RequestHostAuthority<'_>,
+    value: &[u8],
+) -> bool {
+    if value.len() != authority.encoded_length() || value.len() < authority.host().len() {
+        return false;
+    }
+
+    let (encoded_host, encoded_port) = value.split_at(authority.host().len());
+    if !encoded_host
+        .iter()
+        .copied()
+        .zip(authority.host().iter().copied())
+        .all(|(encoded, source)| encoded == source.to_ascii_lowercase())
+    {
+        return false;
+    }
+
+    match authority.port() {
+        None => encoded_port.is_empty(),
+        Some(port) => matches_canonical_port(encoded_port, port),
+    }
+}
+
+fn matches_canonical_port(encoded: &[u8], port: u16) -> bool {
+    let Some(digits) = encoded.strip_prefix(b":") else {
+        return false;
+    };
+    if digits.len() != decimal_length(port) {
+        return false;
+    }
+
+    let mut remaining = port;
+    for digit in digits.iter().rev().copied() {
+        if digit != b'0' + (remaining % 10) as u8 {
+            return false;
+        }
+        remaining /= 10;
+    }
+    remaining == 0
+}
+
+fn decimal_length(mut value: u16) -> usize {
+    let mut length = 1usize;
+    while value >= 10 {
+        value /= 10;
+        length += 1;
+    }
+    length
 }

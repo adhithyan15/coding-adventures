@@ -4930,6 +4930,26 @@ DNS or network I/O, authorize an external effect, or grant HTTPS, OAuth, or
 live-provider readiness. Those policy, protocol, transport, and effect
 compositions remain separate. Concrete HTTPS remains unavailable.
 
+The same `https-destination-name-binding` boundary now also consumes one
+strictly validated HTTP/1 request-header field together with that complete
+destination proof. It accepts only the `Host` field name under HTTP's
+case-insensitive field-name semantics and requires the field value to equal
+the retained Host authority's canonical encoding: the DNS name is lowercase,
+and any explicit port uses shortest decimal form. Success moves both
+non-copyable inputs into one result, so a field for another destination cannot
+be substituted after binding. Stable failures and Debug output retain no
+certificate, hostname, authority, field-name, field-value, port, or observed
+length payloads.
+
+This composition retains one exact Host field but does not compose a complete
+request head or prove that no additional Host field appears elsewhere. It does
+not bind a request line or body, authorize other fields, perform credential
+access or release, emit provider or trace audit events, perform TLS or HTTP
+I/O, open a socket, or grant network, OAuth, or live-provider authority. A
+later strict request-head composition must consume this proof, reject any
+additional Host field, and preserve the same destination through audited
+transport. Concrete HTTPS remains unavailable.
+
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
 reviewed RSA server-path policy. It derives the path target only through the

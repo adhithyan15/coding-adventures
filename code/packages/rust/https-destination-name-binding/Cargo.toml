@@ -6,6 +6,7 @@ description = "Exact DNS identity binding across X.509 SAN, TLS SNI, and HTTP Ho
 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
+http1-request-header-field = { path = "../http1-request-header-field" }
 http1-request-host-authority = { path = "../http1-request-host-authority" }
 tls-server-identity = { path = "../tls-server-identity" }
 tls13-server-name = { path = "../tls13-server-name" }
