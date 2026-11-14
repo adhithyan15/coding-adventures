@@ -183,4 +183,24 @@ class CaesarCipherTest {
                 "E should be most frequent; index $i had higher freq")
         }
     }
+
+    // SEC-010: decrypt used to be encrypt(text, -shift). In Kotlin, -Int.MIN_VALUE
+    // silently wraps back to Int.MIN_VALUE, and encrypt then reduces that to
+    // (-2^31 mod 26) = 2: a forward shift of 2 where a backward shift of 2 was
+    // needed. Wrong plaintext, no exception.
+    //
+    // By hand: 2^31 mod 26 = 24, so MIN_VALUE is congruent to +2; undoing it
+    // shifts by -2, and "ABC" becomes "YZA".
+    @Test fun decryptIntMinValueIsCorrect() {
+        assertEquals("YZA", CaesarCipher.decrypt("ABC", Int.MIN_VALUE))
+        assertEquals("yza", CaesarCipher.decrypt("abc", Int.MIN_VALUE))
+    }
+
+    @Test fun decryptInvertsEncryptAtIntExtremes() {
+        val text = "Hello, World! xyz XYZ"
+        for (shift in listOf(Int.MIN_VALUE, Int.MIN_VALUE + 1, -1, 0, 25, 26, Int.MAX_VALUE)) {
+            assertEquals(text, CaesarCipher.decrypt(CaesarCipher.encrypt(text, shift), shift),
+                "round trip failed for shift $shift")
+        }
+    }
 }
