@@ -264,20 +264,74 @@ func TestStepStatus(t *testing.T) {
 	none.Procs[1].Exit = nil
 	wantReason(t, h.runSteps(none), "failed")
 
-	// A survivor killed after the init child exited is a daemon.
-	d := step(stat("go.work"))
-	d.InitPid = 1
-	d.Procs[7] = &trace.Process{Pid: 7, Exit: &trace.Exit{Pid: 7, Killed: true, Signal: "SIGKILL"}}
-	d.Exits = []trace.Exit{{Pid: 1}, {Pid: 7, Killed: true, Signal: "SIGKILL"}}
-	wantReason(t, h.runSteps(d), "daemon-left")
-	// Killed BEFORE the init child's exit is an ordinary kill.
-	d.Exits = []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGKILL"}, {Pid: 1}}
-	if hasReason(h.runSteps(d), "daemon-left") {
-		t.Fatal("killed before init exited")
+	// Daemons (D19): a SIGKILL death of a descendant of the init child, outside
+	// its thread group, after the init's exit_group call.  Every case builds
+	// the Trace by hand: ExitLines is parallel to Exits, InitExitLine is the
+	// line of init's exit_group.
+	sigkill := func(pid int) trace.Exit { return trace.Exit{Pid: pid, Killed: true, Signal: "SIGKILL"} }
+	build := func(initExitLine int, exits []trace.Exit, lines []int, procs ...*trace.Process) *trace.Trace {
+		d := step(stat("go.work"))
+		d.InitPid = 1
+		for _, p := range procs {
+			d.Procs[p.Pid] = p
+		}
+		d.Exits, d.ExitLines, d.InitExitLine = exits, lines, initExitLine
+		return d
 	}
-	d.Exits = []trace.Exit{{Pid: 1}, {Pid: 7, Killed: true, Signal: "SIGTERM"}}
-	if hasReason(h.runSteps(d), "daemon-left") {
-		t.Fatal("SIGTERM is not a survivor")
+	child := &trace.Process{Pid: 7, Parent: 1}
+	cases := []struct {
+		name string
+		tr   *trace.Trace
+		want bool
+	}{
+		{"survivor line between the exit_group and init's exit line",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12}, child), true},
+		{"survivor line after init's exit line",
+			build(10, []trace.Exit{{Pid: 1}, sigkill(7)}, []int{12, 13}, child), true},
+		{"killed before init's exit_group (reaped by the step)",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{9, 12}, child), false},
+		{"SIGTERM is not a survivor",
+			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), false},
+		{"marker 0 (init killed from outside): fail closed",
+			build(0, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3, 12}, child), true},
+		{"a SIGKILLed thread of the init group is not a daemon",
+			build(10, []trace.Exit{sigkill(8), {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_VM|CLONE_THREAD"}), false},
+		{"nor a thread of a thread",
+			build(10, []trace.Exit{sigkill(9), {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"},
+				&trace.Process{Pid: 9, Parent: 8, CloneFlags: "CLONE_THREAD"}), false},
+		{"a thread of a daemon is one",
+			build(10, []trace.Exit{sigkill(9), {Pid: 1}}, []int{11, 12}, child,
+				&trace.Process{Pid: 9, Parent: 7, CloneFlags: "CLONE_THREAD"}), true},
+		{"a pid in the root group is not the step's",
+			build(10, []trace.Exit{sigkill(5), {Pid: 1}}, []int{11, 12}, &trace.Process{Pid: 5, Parent: 0}), false},
+		{"a pid that is unknown is not a descendant",
+			build(10, []trace.Exit{sigkill(42), {Pid: 1}}, []int{11, 12}), false},
+		{"ExitLines that do not line up fail closed",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3}, child), true},
+	}
+	for _, c := range cases {
+		rec := h.runSteps(c.tr)
+		if got := hasReason(rec, "daemon-left"); got != c.want {
+			t.Errorf("%s: daemon-left = %v, want %v", c.name, got, c.want)
+		}
+		if DaemonLeft(c.tr) != c.want {
+			t.Errorf("%s: DaemonLeft = %v, want %v", c.name, !c.want, c.want)
+		}
+		if c.want && rec.WritesComplete {
+			t.Errorf("%s: a daemon left WritesComplete true", c.name)
+		}
+	}
+	// No init pid: no rule.
+	if DaemonLeft(&trace.Trace{Exits: []trace.Exit{sigkill(7)}}) || DaemonLeft(nil) {
+		t.Error("DaemonLeft without an init child")
+	}
+	// A parent cycle cannot hang the walk.
+	cyc := build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12},
+		&trace.Process{Pid: 7, Parent: 8}, &trace.Process{Pid: 8, Parent: 7})
+	if DaemonLeft(cyc) {
+		t.Error("a cycle was followed to the init child")
 	}
 }
 

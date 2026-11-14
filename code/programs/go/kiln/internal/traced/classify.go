@@ -377,23 +377,101 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 			c.incomplete = true
 		}
 	}
-	// Daemons (section 4.3): the init child is PID 1 of the sandbox's PID
-	// namespace, so when it exits the kernel kills every survivor.  A process
-	// whose exit line says SIGKILL and comes AFTER the init child's was such a
-	// survivor.
-	if t.InitPid == 0 {
-		return
+	// Daemons (section 4.3, D19): see DaemonLeft.
+	if DaemonLeft(t) {
+		c.reason(rDaemonLeft)
+		c.incomplete = true // W10: a survivor may have written before it was killed
 	}
-	seenInit := false
-	for _, ex := range t.Exits {
-		if seenInit && ex.Killed && ex.Signal == "SIGKILL" {
-			c.reason(rDaemonLeft)
-			c.incomplete = true // W10: a survivor may have written before it was killed
+}
+
+// maxDescent bounds the parent walks of DaemonLeft: a process table deeper than
+// this is not one the parser produces, and a walk that long is not followed.
+const maxDescent = 4096
+
+// DaemonLeft reports whether the step left a process running when it ended.
+//
+// The init child is PID 1 of the sandbox's PID namespace, so when its thread
+// group exits the kernel SIGKILLs every other process in the namespace.  Such
+// a survivor's exit line says "+++ killed by SIGKILL +++".  A process the step
+// itself killed and reaped ("kill -KILL $p; wait $p") has the same line, but
+// it comes BEFORE the init's exit_group.  So a survivor is an exit that
+//
+//   - is killed by SIGKILL,
+//   - belongs to a process that descends from the init child (a process outside
+//     that tree is not the step's to leave behind),
+//   - is NOT in the init's own thread group (its sibling threads are killed by
+//     the init's exit_group, and are not daemons), and
+//   - comes after the init's exit_group call (Trace.InitExitLine).
+//
+// The boundary is the exit_group CALL line, not the init's "+++ exited +++"
+// line: the kernel kills the namespace while the init is still exiting, and
+// whether a survivor's line precedes or follows the init's exit line is not
+// something the design relies on (KILN04 D19, open question F2).
+//
+// FAIL CLOSED: InitExitLine == 0 (the init was killed from outside, or the
+// last thread called exit(2)) makes every SIGKILL death of a descendant count.
+// So does an ExitLines slice that does not line up with Exits.  A child
+// SIGKILLed and not waited for just before the step exits may also be flagged;
+// that race is accepted.
+func DaemonLeft(t *trace.Trace) bool {
+	if t == nil || t.InitPid == 0 {
+		return false
+	}
+	aligned := len(t.ExitLines) == len(t.Exits)
+	for i, ex := range t.Exits {
+		if !ex.Killed || ex.Signal != "SIGKILL" {
+			continue
 		}
-		if ex.Pid == t.InitPid {
-			seenInit = true
+		if !descendsFromInit(t, ex.Pid) || inInitGroup(t, ex.Pid) {
+			continue
+		}
+		if !aligned || t.InitExitLine == 0 || t.ExitLines[i] > t.InitExitLine {
+			return true
 		}
 	}
+	return false
+}
+
+// descendsFromInit walks the parent links from pid; a missing process, a cycle
+// or an over-long chain is "no".
+func descendsFromInit(t *trace.Trace, pid int) bool {
+	for n := 0; n < maxDescent; n++ {
+		p := t.Procs[pid]
+		if p == nil || p.Parent == 0 {
+			return false
+		}
+		if p.Parent == t.InitPid {
+			return true
+		}
+		pid = p.Parent
+	}
+	return false
+}
+
+// inInitGroup reports whether pid is the init child or a CLONE_THREAD thread
+// (transitively) of it.  An unknown process or an over-long chain is "no": that
+// counts the exit as a survivor, which fails closed.
+func inInitGroup(t *trace.Trace, pid int) bool {
+	for n := 0; n < maxDescent; n++ {
+		if pid == t.InitPid {
+			return true
+		}
+		p := t.Procs[pid]
+		if p == nil || !hasCloneThread(p.CloneFlags) {
+			return false
+		}
+		pid = p.Parent
+	}
+	return false
+}
+
+func hasCloneThread(flags string) bool {
+	for _, f := range strings.Split(flags, "|") {
+		if strings.TrimSpace(f) == "CLONE_THREAD" {
+			return true
+		}
+	}
+	return false
 }
 
 // targetOf resolves an event's primary path.

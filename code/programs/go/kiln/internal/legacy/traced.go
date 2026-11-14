@@ -56,7 +56,11 @@ const TracedSemantics uint64 = 2
 // manifests recorded by the old recorder are never looked up by the new one.
 // It is a constant in code, not a file, so a change to it is reviewed together
 // with the recorder change it accompanies.
-const RecorderVersion = 2
+//
+// Version 3: strace now prints every signal (-e signal=all, D19), so a process
+// killed by a signal has an exit line, and the daemon-left rule keys on the
+// init's exit_group call line.  Both change what a trace means.
+const RecorderVersion = 3
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real
