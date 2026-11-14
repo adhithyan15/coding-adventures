@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Admit the strongest Name-policy-backed responder-revocation proof to the
+  existing exact retained-intermediate revocation binding boundary.
+- Derive the intermediate, reviewed root, and original observation time only
+  through the retained strong proof, without widening the public API, and stop
+  before policy for either added responder, complete revocation, TLS, HTTP, or
+  OAuth readiness.
 - Admit the strongest Name-policy-backed arbitrary-depth server proof to the
   existing added-responder projection and selected-root DNS-policy boundary.
 - Derive the exact reviewed root constraints only through that retained strong
