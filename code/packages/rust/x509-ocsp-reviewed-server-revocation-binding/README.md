@@ -411,6 +411,20 @@ responder; separately authenticated responder revocation, complete revocation,
 generalized path validation, TLS, HTTP, OAuth, and network readiness remain
 unresolved.
 
+`complete_x509_ocsp_routed_issuer_reviewed_direct_no_check_fixed_path_revocation_policy`
+then nominally completes revocation policy for the exact direct branch. Its
+input type proves that authenticated good-and-fresh OCSP status covers the
+server target and retained intermediate, while exact RFC 6960 no-check policy
+covers the original responder and added intermediate-status responder. This
+also admits the strongest Name-policy-backed original proof through the same
+retained generic type path. The selected Mozilla-reviewed root remains the
+trust anchor. The infallible non-copyable wrapper retains the complete proof
+and accepts no substitute evidence. It performs no parsing, cryptography,
+clock acquisition, credential or provider operation, audit or trace emission,
+I/O, or network effect. It does not generalize revocation or path construction
+and validation, acquire or refresh revocation data, or provide TLS, HTTP,
+OAuth, network, or live-provider readiness.
+
 `bind_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation`
 is the alternative for an added responder that does not use no-check. It
 consumes the same complete reviewed-root DNS proof plus a separate fully
