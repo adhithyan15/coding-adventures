@@ -108,8 +108,18 @@ same sealed projection through both retained responder-revocation layers. It
 likewise exposes only the original reviewed-server proof's exact target and
 a byte-equal independently decoded certificate remains a different object.
 The projection accepts no detached certificate, callback-shaped claim, path,
-status result, or trust assertion. Binding an HTTPS destination to this
-double-nested completion remains separate work.
+status result, or trust assertion. The separate
+`https-reviewed-server-path-binding` package now binds this double-nested
+completion to its exact HTTPS destination without widening that input surface.
+
+The alternative intermediate-status-responder revocation no-check complete
+fixed-path wrapper now carries the same sealed projection through its retained
+default-source proof graph. It returns only the exact server target retained
+by the original reviewed-server proof, while a byte-equal independently
+decoded certificate remains a different object. No detached certificate,
+callback-shaped claim, path, status result, or trust assertion is accepted.
+Binding an HTTPS destination to this alternative completion remains separate
+work.
 
 This ordered signed-path bridge performs no new parsing or signature
 verification and no credential access or editing, signing, storage, clock
@@ -123,8 +133,8 @@ and live-provider readiness remain unavailable.
 The sealed target projections likewise perform no parsing, validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit or trace emission, I/O, network access, or
-other external effect. The remaining complete fixed-path revocation branches
-and the double-nested HTTPS composition remain separate work.
+other external effect. The recursive complete fixed-path revocation branch
+and the alternative HTTPS composition remain separate work.
 
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
