@@ -301,7 +301,7 @@ func parseIndex(out []byte) (map[string]entry, error) {
 			return nil, fmt.Errorf("git ls-files --stage: unparsable record %q", printable(rec))
 		}
 		if f[2] != "0" {
-			return nil, &TreeError{What: "working tree is not HEAD", Total: 1,
+			return nil, &TreeError{What: "working tree is not HEAD", Total: 1, Paths: []string{path},
 				Problems: []string{fmt.Sprintf("%s: index entry at stage %s (unresolved merge)", printable(path), f[2])}}
 		}
 		if _, dup := m[path]; dup {
