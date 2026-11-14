@@ -26,7 +26,7 @@ func TestLoaderEnv(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Join(entries, ",") != "LD_LIBRARY_PATH=/usr/lib:/opt/lib,GCONV_PATH=/usr/lib/gconv" || len(dirs) == 0 {
+	if strings.Join(entries, ",") != "LD_LIBRARY_PATH=/usr/lib:/opt/lib" || len(dirs) == 0 {
 		t.Fatalf("%v %v", entries, dirs)
 	}
 	if e, _, err := LoaderEnv([]string{"PATH=/usr/bin", "LD_LIBRARY_PATH="}, regions); err != nil || len(e) != 0 {
@@ -49,10 +49,13 @@ func TestLoaderEnv(t *testing.T) {
 			t.Errorf("%s: accepted", name)
 		}
 	}
-	// GCONV_PATH and LOCPATH are dropped, not refused, when unsafe.
-	e, _, err := LoaderEnv([]string{"GCONV_PATH=" + checkout + "/g", "LOCPATH=" + filepath.Join(d, "innocent")}, regions)
-	if err != nil || len(e) != 0 {
-		t.Fatalf("%v %v", e, err)
+	// GCONV_PATH and LOCPATH are colon LISTS; they are never passed on at all
+	// (and never judged), whatever they hold.
+	for _, v := range []string{"/usr/lib/gconv:" + checkout + "/g", "/usr/lib/gconv:", checkout + "/g", filepath.Join(d, "innocent")} {
+		e, dirs, err := LoaderEnv([]string{"GCONV_PATH=" + v, "LOCPATH=" + v}, regions)
+		if err != nil || len(e) != 0 || len(dirs) != 0 {
+			t.Fatalf("%q: %v %v %v", v, e, dirs, err)
+		}
 	}
 }
 
@@ -70,11 +73,11 @@ func TestSafePathResolvesAMissingEntryThroughItsAncestor(t *testing.T) {
 	if _, err := SafePath(filepath.Join(d, "x", "a", "b", "c"), regions); err == nil {
 		t.Fatal("a deeper missing entry was accepted")
 	}
-	if got := resolveDeepest(filepath.Join(d, "x", "bin")); got != filepath.Join(checkout, "bin") {
-		t.Fatal(got)
+	if got, err := resolveDeepest(filepath.Join(d, "x", "bin")); err != nil || got != filepath.Join(checkout, "bin") {
+		t.Fatal(got, err)
 	}
-	if got := resolveDeepest("/no/such/dir/at/all"); got != "/no/such/dir/at/all" {
-		t.Fatal(got)
+	if got, err := resolveDeepest("/no/such/dir/at/all"); err != nil || got != "/no/such/dir/at/all" {
+		t.Fatal(got, err)
 	}
 	if _, err := SafePath(filepath.Join(d, "elsewhere", "bin"), regions); err != nil {
 		t.Fatal(err)
@@ -105,26 +108,56 @@ func TestPrepareRefusesLoaderVariables(t *testing.T) {
 	}
 }
 
-func TestPrepareValidatesLoaderVariablesAndRecordsThem(t *testing.T) {
+// M4: the build tool's environment is an allowlist. With every dangerous
+// variable set in the process, the build tool sees exactly these and nothing
+// else.
+func TestBuildToolGetsExactlyTheAllowlist(t *testing.T) {
 	p := newPrep(t)
 	p.commit()
-	p.env = append(p.env, "LD_LIBRARY_PATH=/usr/lib", "LD_BIND_NOW=1", "GCONV_PATH=gconv", "LOCPATH=/usr/lib/locale")
+	for k, v := range map[string]string{
+		"GIT_EXEC_PATH": p.root + "/x", "GIT_CONFIG_GLOBAL": p.root + "/c", "GIT_CONFIG_COUNT": "9", "GIT_DIR": p.root + "/.git",
+		"GIT_CONFIG_KEY_0": "core.fsmonitor", "GIT_CONFIG_VALUE_0": p.root + "/evil", "GIT_SSH_COMMAND": "evil",
+		"GLIBC_TUNABLES": "glibc.malloc.check=3", "GCONV_PATH": "/usr/lib/gconv:" + p.root + "/g", "LOCPATH": p.root + "/l",
+		"LD_BIND_NOW": "1", "TZDIR": p.root + "/tz", "GITHUB_OUTPUT": p.root + "/out", "GITHUB_TOKEN": "t", "SECRET_THING": "s", "TMPDIR": p.root + "/t",
+	} {
+		p.env = append(p.env, k+"="+v)
+	}
+	p.env = append(p.env, "LD_LIBRARY_PATH=/usr/lib")
 	res := p.mustPrepare()
+	want := []string{
+		"HOME=" + p.home, "PATH=/usr/bin:/bin", "LD_LIBRARY_PATH=/usr/lib",
+		"GIT_CONFIG_NOSYSTEM=1", "GIT_CONFIG_SYSTEM=" + os.DevNull, "GIT_CONFIG_GLOBAL=" + os.DevNull, "GIT_OPTIONAL_LOCKS=0",
+		"GIT_TERMINAL_PROMPT=0", "LC_ALL=C", "GIT_NO_REPLACE_OBJECTS=1", "GIT_NO_LAZY_FETCH=1",
+		"GIT_CONFIG_COUNT=3", "GIT_CONFIG_KEY_0=core.fsmonitor", "GIT_CONFIG_VALUE_0=false",
+		"GIT_CONFIG_KEY_1=core.hooksPath", "GIT_CONFIG_VALUE_1=" + os.DevNull,
+		"GIT_CONFIG_KEY_2=protocol.file.allow", "GIT_CONFIG_VALUE_2=never",
+	}
+	if len(p.toolEnvs) != 2 {
+		t.Fatal(p.toolEnvs)
+	}
+	for _, env := range p.toolEnvs {
+		if strings.Join(env, "\n") != strings.Join(want, "\n") {
+			t.Fatalf("the build tool's environment is not exactly the allowlist:\n got %q\nwant %q", env, want)
+		}
+	}
+	// pre/tools.json records exactly that environment for `record step`.
 	var tools ToolsFile
 	if err := json.Unmarshal(readPre(t, res, "tools.json"), &tools); err != nil {
 		t.Fatal(err)
 	}
-	if strings.Join(tools.LoaderEnv, ",") != "LD_LIBRARY_PATH=/usr/lib,LOCPATH=/usr/lib/locale" {
-		t.Fatalf("%v", tools.LoaderEnv)
+	if strings.Join(tools.BuildToolEnv, "\n") != strings.Join(want, "\n") {
+		t.Fatalf("%q", tools.BuildToolEnv)
 	}
-	for _, env := range p.toolEnvs {
-		got := map[string]string{}
-		for _, e := range env {
-			k, v, _ := strings.Cut(e, "=")
-			got[k] = v
-		}
-		if got["LD_LIBRARY_PATH"] != "/usr/lib" || got["LOCPATH"] != "/usr/lib/locale" || got["LD_BIND_NOW"] != "" || got["GCONV_PATH"] != "" {
-			t.Fatalf("the build tool's loader environment: %v", env)
+}
+
+func TestBuildToolEnvWithoutLoaderVariables(t *testing.T) {
+	got := buildToolEnv("/h", "/usr/bin", nil)
+	if got[0] != "HOME=/h" || got[1] != "PATH=/usr/bin" || len(got) != 2+8+7 {
+		t.Fatalf("%q", got)
+	}
+	for _, e := range got {
+		if strings.HasPrefix(e, "LD_") || strings.HasPrefix(e, "GCONV") || strings.HasPrefix(e, "LOCPATH") {
+			t.Fatalf("%s", e)
 		}
 	}
 }
@@ -230,5 +263,39 @@ func TestSealFailureReportsAndRestores(t *testing.T) {
 	st, err := os.Stat(filepath.Join(d, "actions"))
 	if err != nil || st.Mode().Perm() != 0o700 {
 		t.Fatalf("%v %v", st, err)
+	}
+}
+
+// A DANGLING link is followed by hand: a step can create its target.
+func TestSafePathFollowsDanglingLinks(t *testing.T) {
+	d := canonTemp(t)
+	checkout := filepath.Join(d, "repo")
+	os.MkdirAll(checkout, 0o755)
+	regions := []Region{{"the checkout", checkout}}
+	// <d>/dangling -> <checkout>/x/bin, and <checkout>/x does not exist.
+	os.Symlink(filepath.Join(checkout, "x", "bin"), filepath.Join(d, "dangling"))
+	if _, err := SafePath(filepath.Join(d, "dangling")+":/usr/bin", regions); err == nil {
+		t.Fatal("a dangling link to <checkout>/x/bin was accepted")
+	}
+	// A relative dangling link, with a remainder beneath it.
+	os.Symlink("repo/new", filepath.Join(d, "rel"))
+	if _, err := SafePath(filepath.Join(d, "rel", "deeper", "bin"), regions); err == nil {
+		t.Fatal("a relative dangling link into the checkout was accepted")
+	}
+	// A chain of dangling links.
+	os.Symlink(filepath.Join(d, "dangling"), filepath.Join(d, "chain"))
+	if _, err := SafePath(filepath.Join(d, "chain"), regions); err == nil {
+		t.Fatal("a chain of dangling links was accepted")
+	}
+	// A dangling link that points somewhere harmless is fine.
+	os.Symlink(filepath.Join(d, "elsewhere", "bin"), filepath.Join(d, "harmless"))
+	if _, err := SafePath(filepath.Join(d, "harmless"), regions); err != nil {
+		t.Fatal(err)
+	}
+	// A loop is refused, not followed forever.
+	os.Symlink(filepath.Join(d, "b"), filepath.Join(d, "a"))
+	os.Symlink(filepath.Join(d, "a"), filepath.Join(d, "b"))
+	if _, err := SafePath(filepath.Join(d, "a"), regions); err == nil || !strings.Contains(err.Error(), "symbolic links") {
+		t.Fatalf("%v", err)
 	}
 }

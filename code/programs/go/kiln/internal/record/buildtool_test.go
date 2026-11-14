@@ -9,7 +9,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
@@ -70,7 +69,17 @@ func TestRealBuildToolExportsAreWhatPrepareReads(t *testing.T) {
 		t.Skipf("cannot build the build tool here: %v\n%s", err, msg)
 	}
 
-	env := envscrub.Scrub(os.Environ())
+	// The MINIMAL environment `prepare` gives the build tool (buildToolEnv): the
+	// exports must not need anything else of the job's environment.
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Skip("no home directory")
+	}
+	gitPath, err := exec.LookPath("git")
+	if err != nil {
+		t.Skip("the version-control tool is not on PATH")
+	}
+	env := buildToolEnv(home, filepath.Dir(gitPath)+":/usr/bin:/bin", nil)
 	graphPath, stepsPath, planPath := filepath.Join(out, "graph.json"), filepath.Join(out, "steps.json"), filepath.Join(out, "plan.json")
 	err = execTool(ToolRun{Path: exe, Args: GraphArgs(root, graphPath, stepsPath), Dir: out, Env: env, Timeout: 10 * time.Minute})
 	if err != nil && strings.Contains(err.Error(), "were not discovered") {

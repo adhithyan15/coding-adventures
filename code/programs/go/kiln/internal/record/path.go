@@ -31,8 +31,11 @@ package record
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
 )
 
 // SafePathResult is a validated PATH.
@@ -81,7 +84,10 @@ func safeList(name, value string, regions []Region) (SafePathResult, error) {
 			return SafePathResult{}, fmt.Errorf("the recorder's %s entry %q is relative", name, printable(e))
 		}
 		clean := filepath.Clean(e)
-		resolved := resolveDeepest(clean)
+		resolved, err := resolveDeepest(clean)
+		if err != nil {
+			return SafePathResult{}, fmt.Errorf("the recorder's %s entry %q: %v", name, printable(e), err)
+		}
 		for _, p := range []string{clean, resolved} {
 			for _, rg := range regions {
 				if rg.Path != "" && overlap(p, rg.Path) {
@@ -96,50 +102,70 @@ func safeList(name, value string, regions []Region) (SafePathResult, error) {
 	return res, nil
 }
 
+// maxLinkHops bounds the symlink hops of resolveDeepest (the kernel's limit is
+// 40 too).
+const maxLinkHops = 40
+
 // resolveDeepest resolves the symlinks of p. A path that does not exist yet is
 // resolved through its deepest EXISTING ancestor and the missing remainder is
 // appended: `/opt/x/bin` with `/opt/x` a symlink into the checkout and no `bin`
-// yet is, for a step that can create it, the checkout's `bin`. If nothing can be
-// resolved the path is returned as written.
-func resolveDeepest(p string) string {
+// yet is, for a step that can create it, the checkout's `bin`. A component that
+// is itself a symlink with no target yet (a DANGLING link) is followed by hand:
+// a step can create its target, so it is read and resolved again, up to
+// maxLinkHops times. More hops, or a loop, is an error: the entry is refused.
+func resolveDeepest(p string) (string, error) { return resolveHops(p, 0) }
+
+func resolveHops(p string, hops int) (string, error) {
+	if hops > maxLinkHops {
+		return "", fmt.Errorf("more than %d symbolic links in %q (a loop?)", maxLinkHops, printable(p))
+	}
 	rest := ""
 	for cur := p; ; {
 		if r, err := filepath.EvalSymlinks(cur); err == nil {
-			return filepath.Join(r, rest)
+			return filepath.Join(r, rest), nil
 		}
+		if st, err := os.Lstat(cur); err == nil && st.Mode()&os.ModeSymlink != 0 {
+			t, err := os.Readlink(cur)
+			if err != nil {
+				return "", err
+			}
+			if !filepath.IsAbs(t) {
+				t = filepath.Join(filepath.Dir(cur), t)
+			}
+			return resolveHops(filepath.Join(filepath.Clean(t), rest), hops+1)
+		}
+		// A plain missing name (or one we cannot look at): go up.
 		parent := filepath.Dir(cur)
 		if parent == cur {
-			return p
+			return p, nil
 		}
 		rest = filepath.Join(filepath.Base(cur), rest)
 		cur = parent
 	}
 }
 
-// LoaderEnv validates the variables that steer the dynamic loader and the C
-// library of every program the recorder starts (KILN04 4.8, P11, M3), and
-// returns the "NAME=value" entries that may be passed on, plus the directories
-// they name (as regions a state root must stay out of).
+// LoaderEnv validates the variables that steer the dynamic loader of every
+// program the recorder starts (KILN04 4.8, P11, M3), and returns the
+// "NAME=value" entries that may be passed on, plus the directories they name (as
+// regions a state root must stay out of).
 //
 //	LD_PRELOAD, LD_AUDIT   a library loaded into the process: refused when set
 //	                       and non-empty (nothing legitimate sets them for a
 //	                       build)
 //	LD_LIBRARY_PATH        a library search path: validated like PATH (an empty
 //	                       entry means the working directory)
-//	GCONV_PATH, LOCPATH    a directory of converters or locales loaded as code
-//	                       or data: kept only if absolute and clear of every
-//	                       region, otherwise dropped
-//	any other LD_*         dropped
 //
-// An empty variable is the same as an unset one and is dropped.
+// Everything else of the loader and C library family (any other LD_*,
+// GLIBC_TUNABLES, GCONV_PATH, LOCPATH, TZDIR, ...) is simply never passed on: the
+// child environments are allowlists (buildToolEnv, source.NewGitAt). GCONV_PATH
+// and LOCPATH are colon lists, which a single-path check would have mishandled;
+// dropping them closes that. An empty variable is the same as an unset one.
 func LoaderEnv(environ []string, regions []Region) (entries []string, dirs []Region, err error) {
 	last := map[string]string{}
 	for _, e := range environ {
-		name, value, ok := strings.Cut(e, "=")
-		if !ok || (!strings.HasPrefix(name, "LD_") && name != "GCONV_PATH" && name != "LOCPATH") {
-			continue
+		if name, value, ok := strings.Cut(e, "="); ok && strings.HasPrefix(name, "LD_") {
+			last[name] = value
 		}
-		last[name] = value
 	}
 	for _, name := range []string{"LD_AUDIT", "LD_PRELOAD"} {
 		if last[name] != "" {
@@ -153,25 +179,6 @@ func LoaderEnv(environ []string, regions []Region) (entries []string, dirs []Reg
 		}
 		entries = append(entries, "LD_LIBRARY_PATH="+r.String())
 		dirs = append(dirs, r.Regions()...)
-	}
-	for _, name := range []string{"GCONV_PATH", "LOCPATH"} {
-		v := last[name]
-		if v == "" || !filepath.IsAbs(v) {
-			continue
-		}
-		clean := filepath.Clean(v)
-		resolved := resolveDeepest(clean)
-		bad := false
-		for _, p := range []string{clean, resolved} {
-			for _, rg := range regions {
-				bad = bad || rg.Path != "" && overlap(p, rg.Path)
-			}
-		}
-		if bad {
-			continue
-		}
-		entries = append(entries, name+"="+clean)
-		dirs = append(dirs, Region{"the directory of " + name, clean}, Region{"the directory of " + name, resolved})
 	}
 	return entries, dirs, nil
 }
@@ -187,18 +194,32 @@ func pathOf(environ []string) string {
 	return v
 }
 
-// childEnv builds the build tool's environment: the scrubbed process
-// environment without PATH and without any loader variable, then the validated
-// PATH and the validated loader entries.
-func childEnv(environ []string, pathValue string, loader []string) []string {
-	out := make([]string, 0, len(environ)+1+len(loader))
-	for _, e := range environ {
-		name, _, _ := strings.Cut(e, "=")
-		if name == "PATH" || strings.HasPrefix(name, "LD_") || name == "GCONV_PATH" || name == "LOCPATH" {
-			continue
-		}
-		out = append(out, e)
-	}
-	out = append(out, "PATH="+pathValue)
-	return append(out, loader...)
+// buildToolEnv is the build tool's ENTIRE environment, an allowlist (KILN04 4.8,
+// P11, M4). The build tool starts `git` without setting an environment, so
+// anything it inherits reaches git (a GIT_CONFIG_GLOBAL file in the checkout with
+// core.fsmonitor naming a program, GIT_EXEC_PATH, GIT_DIR...) and the dynamic
+// loader. What it gets, and why:
+//
+//	HOME                    git and the Go runtime look for a home directory
+//	PATH                    the validated PATH: the build tool runs git, sh and
+//	                        toolchain probes through it
+//	LD_LIBRARY_PATH         only if the recorder's own was validated and kept
+//	source.PinnedEnv()      git's configuration pinned to nothing (system and
+//	                        global are the null device), no optional locks or
+//	                        prompts, no replace refs, no lazy fetch, LC_ALL=C
+//	source.ConfigEnv()      core.fsmonitor=false, core.hooksPath=null device and
+//	                        protocol.file.allow=never, as Kiln's own git passes
+//
+// The build tool reads no other variable for -emit-kiln-graph, -emit-kiln-steps
+// and -emit-plan: its only os.Getenv calls are GITHUB_OUTPUT (the detect and
+// plan-printing paths, which these flags do not take), and its executor's
+// os.Environ is used only when it RUNS a BUILD, which `prepare` never does. So no
+// GITHUB_* value is passed, and none needs validating. TMPDIR is not passed: the
+// exports are written next to their destination, and a TMPDIR in the checkout
+// would only be a place to plant files.
+func buildToolEnv(home, pathValue string, loader []string) []string {
+	out := []string{"HOME=" + home, "PATH=" + pathValue}
+	out = append(out, loader...)
+	out = append(out, source.PinnedEnv()...)
+	return append(out, source.ConfigEnv()...)
 }

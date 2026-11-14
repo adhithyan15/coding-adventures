@@ -61,7 +61,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
@@ -86,9 +85,11 @@ type ToolsFile struct {
 	Git    string `json:"git"`
 	Strace string `json:"strace"`
 	Path   string `json:"path"`
-	// LoaderEnv are the validated dynamic-loader entries ("NAME=value") the
-	// build tool was started with; usually empty.
-	LoaderEnv []string `json:"loader_env"`
+	// BuildToolEnv is the build tool's ENTIRE environment ("NAME=value"), an
+	// allowlist (buildToolEnv). `record step` requires its inherited
+	// environment, apart from the KILN_* variables the build tool adds, to equal
+	// it exactly.
+	BuildToolEnv []string `json:"build_tool_env"`
 }
 
 // ToolRun is one start of the build tool.
@@ -272,7 +273,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	w := &sealWriter{pre: pre, sums: map[string]string{}}
 
 	// 5. Graph, steps and plan, by the out-of-tree build tool.
-	toolEnv := childEnv(envscrub.Scrub(o.Environ), safe.String(), loader)
+	toolEnv := buildToolEnv(home, safe.String(), loader)
 	graphPath, stepsPath, planPath := filepath.Join(pre, "graph.json"), filepath.Join(pre, "steps.json"), filepath.Join(pre, "build-plan.json")
 	if err := o.RunTool(ToolRun{Path: bt.Path, Dir: o.Dir, Env: toolEnv, Timeout: ToolTimeout, Args: GraphArgs(o.Root, graphPath, stepsPath)}); err != nil {
 		return nil, fmt.Errorf("build tool (graph and steps export): %w", err)
@@ -434,7 +435,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	// The programs the recorder runs, by absolute path, and the PATH it passes:
 	// `kiln record step` and `collect` use exactly these and never look
 	// anything up (decision P11).
-	toolsBytes, err := marshalJSON(ToolsFile{Schema: ToolsSchema, Git: git.Path, Strace: strace.Path, Path: safe.String(), LoaderEnv: nonNil(loader)})
+	toolsBytes, err := marshalJSON(ToolsFile{Schema: ToolsSchema, Git: git.Path, Strace: strace.Path, Path: safe.String(), BuildToolEnv: toolEnv})
 	if err != nil {
 		return nil, err
 	}

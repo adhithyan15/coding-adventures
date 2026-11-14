@@ -1058,36 +1058,54 @@ would be run by `prepare` itself. So:
   `tmpdir` or the record directory; it also stays out of the state roots (P9).
   The build tool is started with a scrubbed environment whose `PATH` is exactly
   that validated value. The build tool's own code is not changed.
-- **The dynamic loader (M3).** The process environment can steer the loader into
-  a library planted in the checkout (`LD_PRELOAD`, `LD_AUDIT`, an `LD_LIBRARY_PATH`
-  with an empty entry, which means the working directory, `GCONV_PATH`,
-  `LOCPATH`, `TZDIR`...). So: the pinned git gets an **allowlist** environment
-  and nothing else of the process's (`HOME`, the validated `PATH`, the validated
-  `XDG_CONFIG_HOME`, and fixed `GIT_CONFIG_NOSYSTEM`, `GIT_CONFIG_SYSTEM` and
-  `GIT_CONFIG_GLOBAL` all `/dev/null`, `GIT_OPTIONAL_LOCKS`,
-  `GIT_TERMINAL_PROMPT`, `GIT_NO_REPLACE_OBJECTS`, `GIT_NO_LAZY_FETCH`,
-  `LC_ALL=C`); no global configuration is read because nothing Kiln asks git needs
-  one, and a git too old for `GIT_CONFIG_GLOBAL` still reads files the recorder
-  keeps unwritable (P9). The build tool's environment is the scrubbed process
-  environment without `PATH`, without every `LD_*`, `GCONV_PATH` and `LOCPATH`,
-  then the validated `PATH` and the validated loader entries: `LD_PRELOAD` and
-  `LD_AUDIT` set and non-empty refuse `prepare`; `LD_LIBRARY_PATH` is validated
-  like `PATH` (no empty or relative entry, none overlapping the checkout, `tmpdir`
-  or record directory, symlinks resolved through the deepest existing ancestor);
-  `GCONV_PATH` and `LOCPATH` are kept only if absolute and clear of those places,
-  else dropped; any other `LD_*` is dropped. The kept entries are also kept out of
-  the state roots. Every host-side subprocess starts in a directory a step cannot
-  write (the build tool in the record directory, `git` and `strace` in `/`), with
-  absolute paths throughout; the build tool takes `-root` and does not depend on
-  its working directory.
+- **The environment is an allowlist (M3, M4).** The process environment can steer
+  the dynamic loader into a library planted in the checkout (`LD_PRELOAD`,
+  `LD_AUDIT`, an `LD_LIBRARY_PATH` with an empty entry, which means the working
+  directory, `GCONV_PATH`, `LOCPATH`, `GLIBC_TUNABLES`, `TZDIR`...), and the build
+  tool starts `git` with whatever it inherited, so a `GIT_CONFIG_GLOBAL` file in
+  the checkout naming a program as `core.fsmonitor` would run it unsandboxed.
+  Naming the dangerous variables one at a time keeps leaving gaps, so both
+  children get an allowlist and nothing else of the process environment:
+  - the pinned `git`: `HOME`, the validated `PATH`, the validated
+    `XDG_CONFIG_HOME`, and `source.PinnedEnv()`: `GIT_CONFIG_NOSYSTEM=1`,
+    `GIT_CONFIG_SYSTEM` and `GIT_CONFIG_GLOBAL` both the null device (no global
+    configuration is read because nothing Kiln asks git needs one, and a git too
+    old for the variable still reads files the recorder keeps unwritable, P9),
+    `GIT_OPTIONAL_LOCKS=0`, `GIT_TERMINAL_PROMPT=0`, `GIT_NO_REPLACE_OBJECTS=1`,
+    `GIT_NO_LAZY_FETCH=1`, `LC_ALL=C`; it starts in `/`;
+  - the build tool: `HOME` (git and the Go runtime want a home), the validated
+    `PATH` (it runs `git`, `sh` and toolchain probes through it), the validated
+    `LD_LIBRARY_PATH` when one was set, `source.PinnedEnv()`, and
+    `source.ConfigEnv()`: `GIT_CONFIG_COUNT=3` with `core.fsmonitor=false`,
+    `core.hooksPath=` the null device and `protocol.file.allow=never`, the same
+    values Kiln's own git passes as `-c` (git 2.31 and later; an older git
+    ignores them). The build tool reads no other variable for
+    `-emit-kiln-graph`, `-emit-kiln-steps` and `-emit-plan`: its only
+    `os.Getenv` is `GITHUB_OUTPUT` (paths these flags do not take) and its
+    executor's `os.Environ` is used only when it RUNS a BUILD, which `prepare`
+    never does. So no `GITHUB_*` value, no `TMPDIR` and no `GOFLAGS`-style variable
+    is passed, and none needs validating. It starts in the record directory.
+  - `LD_PRELOAD` or `LD_AUDIT` set and non-empty refuses `prepare`;
+    `LD_LIBRARY_PATH` is validated like `PATH` (no empty or relative entry, none
+    overlapping the checkout, `tmpdir` or record directory, symlinks resolved
+    through the deepest existing ancestor and dangling links followed by hand, at
+    most 40 hops, a loop refused); every other `LD_*` and `GCONV_PATH`, `LOCPATH`
+    (colon lists) are not passed on. The kept entries are also kept out of the
+    state roots.
+  - Every host-side subprocess starts in a directory a step cannot write (the
+    build tool in the record directory, `git` and `strace` in `/`), with absolute
+    paths throughout; the build tool takes `-root` and does not depend on its
+    working directory.
 - `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`,
-  the `PATH` string and the validated loader entries (`loader_env`).
+  the `PATH` string and the build tool's exact environment (`build_tool_env`).
 - **2b-2.** `kiln record step` and `collect` use only the recorded git path and
   the recorded `PATH`, and never look a program up on `PATH`.
-- **2b-2.** `record step` refuses to run unless its inherited `PATH` and loader
-  variables equal `pre/tools.json`'s (`path`, `loader_env`; the build tool's
-  wrapper is started by the build tool, which got exactly those). The workflow
-  does not launch the build tool through anything that changes them.
+- **2b-2.** The workflow launches the build tool with **exactly** the recorded
+  `build_tool_env` (nothing inherited). The build tool hands its own environment
+  to the wrapper plus `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`, so
+  `record step` refuses to run unless its inherited environment, apart from those
+  three, equals `build_tool_env` exactly (in particular every `GIT_*`, `LD_*` and
+  `PATH` entry).
 - **2b-2.** `step` and `collect` re-verify `pre/` against `SEALED` and the binding
   id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
   comes only from the files being unreachable from the sandbox.
