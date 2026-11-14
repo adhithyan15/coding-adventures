@@ -226,6 +226,37 @@ human validation. It remains blocked on an absent task-shape inventory and
 unprojectable across tracks without a complete assessment contract. The
 historical note above describes the original tranche, not the present queue.
 
+**Update, 2026-11-14 — book-taught mock prerequisites:** A task shape is not
+the only prerequisite for writing a fair paper. Each full-mock declaration may
+name stable, form-specific book-teaching requirements. The status reader must
+keep an incomplete mock in the projection but put it in `blocked` with those
+requirement IDs until independently measured lesson evidence satisfies them.
+An issue link, a manifest's assertion that something was taught, or the mere
+presence of an assessment artifact is not teaching evidence.
+
+Two evidence kinds are needed. A functional-frame requirement resolves only
+when the named knowledge is introduced in a schema-v2 lesson at or before the
+mock's level, appears in an actual teaching block, and is used in a productive
+practice or recall task. A surface-form-closure requirement resolves only by
+comparing exact target-script tokens in the form's learner and examiner
+stimuli with the earlier taught lesson corpus; substring matches, related
+lemmas, and an unpublished or absent stimulus do not resolve it. The planner
+must bind those stimulus paths to that form's declared learner paper and its
+matching examiner-script file. When a legacy form has no paper declaration,
+its stable level/mock ID determines the conventional paper path; arbitrary
+readable Markdown cannot substitute.
+Hidden HTML comments are not visible teaching or tested tokens. The planner
+may report aggregate missing counts but must not publish a confidential mock
+body or its remaining candidate-token list. Neither evidence kind establishes
+native-speaker review, learner attainment, or external exam equivalence.
+
+This contract must be per form, not a language-wide switch: Marwadi A1's
+functional frames and Punjabi A2's exact Gurmukhi closure block their known
+missing mocks, while an independent mock with satisfied prerequisites remains
+actionable. Missing task-shape, artifact, taught-token, and human-validation
+gates retain their existing force. A malformed prerequisite declaration fails
+closed rather than silently ranking the mock as ready.
+
 Carried forward from HL-C182 and HL-C184 Phase 3, unchanged:
 
 - **retention over time** — nothing here re-tests a reader a month later;
