@@ -42,25 +42,28 @@ another `Content-Length` or any `Transfer-Encoding` fails closed. The result
 defines logical field order as Host, Content-Length, then the retained
 additional fields in caller order, and retains both complete input proofs.
 
-`bind_https_fixed_request_head` finally consumes that complete proof together
-with one exact validated `http1-request-line`. It preflights the exact complete
-head length under a caller-selected ceiling hard-capped by the package maximum.
-The allocation-free encoder writes the request line, Host, Content-Length,
-additional fields in caller order, and the terminating CRLF into caller-owned
-storage. Too-small output fails before mutation. The exact body remains
-retained but is not written.
+`bind_https_public_request_line` first requires data-driven provider policy to
+classify one exact validated `http1-request-line` method and query-free target
+as public request metadata. The resulting non-copyable proof is then consumed
+by `bind_https_fixed_request_head` with the complete fixed-body destination
+proof. Additional fields fail closed because their potentially credential-
+bearing bytes require a later provider/trace-audited release composition. The
+allocation-free encoder delegates each segment to the repository-owned request-
+line and field encoders, writing only the public request line, Host, Content-
+Length, and terminating CRLF into caller-owned storage after a complete
+capacity preflight. The exact body remains retained but is not written.
 
-This does not authorize a method, target, or additional field, reject duplicate
-names other than Host and Content-Length, write the body, or preserve the
-destination through audited transport. Those later policies and effects must
-consume this exact proof.
+This does not authorize transport, release an additional field, write the body,
+or preserve the destination through audited transport. Secret-bearing targets
+and fields require separate provider/trace-audited proofs. Those later policies
+and effects must consume this exact proof.
 
-This package does not parse URLs, bind request targets or provider
-configuration, choose ports, validate critical extensions, certificate role,
-purpose, algorithms, validity, signatures, paths, roots, constraints, or
-revocation, compose a complete HTTP request including its body, perform TLS or
-I/O, access or release credentials, emit audits or traces, authorize effects,
-or grant HTTPS, OAuth, or live-provider readiness.
+This package does not parse URLs or provider documents, choose ports, validate
+critical extensions, certificate role, purpose, algorithms, validity,
+signatures, paths, roots, constraints, or revocation, compose a complete HTTP
+request including its body, perform TLS or I/O, access or release credentials,
+emit audits or traces, authorize effects, or grant HTTPS, OAuth, or live-
+provider readiness.
 
 ## Validation
 

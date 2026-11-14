@@ -4963,24 +4963,28 @@ closed. Success retains both complete input proofs; stable failures and Debug
 output retain no field, body, hostname, certificate, observed count, or limit
 violation payloads.
 
-The strict request-head boundary then consumes this exact fixed-body proof
-together with one exact validated request line. A caller-selected complete-head
-byte ceiling is bounded by the fixed package maximum before any output is
-written. Success retains both complete inputs and their exact encoded head
-length. Its allocation-free encoder writes, in order, the request line, the
-canonical Host field, the canonical Content-Length field, every retained
-additional field in caller order, and the terminating empty line. Insufficient
-output fails before mutation. The body remains retained but is not written.
-Stable failures and Debug output retain no method, target, field, body,
-hostname, certificate, observed length, limit, or output payloads.
+The strict request-head boundary first requires data-driven provider policy to
+classify one exact validated request-line method and query-free origin-form
+target as public request metadata. This produces a non-copyable proof rather
+than accepting an unclassified target. The complete head composition consumes
+that proof with the exact fixed-body destination proof and rejects every
+additional field; potentially credential-bearing targets and fields instead
+require a later provider/trace-audited release proof. A caller-selected
+complete-head byte ceiling is bounded by the fixed package maximum before any
+output is written. Success retains both complete inputs and their exact encoded
+head length. Its allocation-free encoder delegates to the repository-owned
+request-line and field encoders and writes, in order, the public request line,
+canonical Host field, canonical Content-Length field, and terminating empty
+line. Insufficient output fails before mutation. The body remains retained but
+is not written. Stable failures and Debug output retain no method, target,
+field, body, hostname, certificate, observed length, limit, or output payloads.
 
-This stricter composition does not authorize a method, target, or additional
-field; reject duplicates other than Host and Content-Length; write the body;
-perform credential access or release; emit provider or trace audit events;
-perform TLS or HTTP I/O; open a socket; or grant network, OAuth, or
-live-provider authority. A later audited transport must consume this exact
-proof without substituting any retained request or destination input. Concrete
-HTTPS remains unavailable.
+This stricter composition does not authorize transport, release an additional
+field, write the body, perform credential access or release, emit provider or
+trace audit events, perform TLS or HTTP I/O, open a socket, or grant network,
+OAuth, or live-provider authority. A later audited transport must consume this
+exact proof without substituting any retained request or destination input.
+Concrete HTTPS remains unavailable.
 
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
@@ -5400,10 +5404,13 @@ percent-encoding semantics, encode headers or a body, select body framing,
 interpret or release a credential, perform TLS, read or write a socket, emit
 provider or trace audit events, or authorize HTTP or OAuth transport. The
 reviewed `https-destination-name-binding` request-head composition now consumes
-this exact proof together with its exact fixed-body destination proof and
-encodes the complete head into caller-owned storage, but still supplies none of
-those policies or external-effect authority. Concrete HTTPS remains
-unavailable.
+this exact syntax proof only after data-driven provider policy has classified
+its exact method and query-free target as public. It combines that proof with
+the exact fixed-body destination proof and encodes only the request line, Host,
+Content-Length, and terminating empty line into caller-owned storage.
+Potentially credential-bearing targets and additional fields remain behind a
+later provider/trace-audited release boundary. The composition still supplies
+no transport or external-effect authority. Concrete HTTPS remains unavailable.
 
 An allocation-free `http1-response-head` prerequisite now decodes one strict
 HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
