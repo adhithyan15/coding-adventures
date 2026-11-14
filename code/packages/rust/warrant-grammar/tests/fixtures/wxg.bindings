@@ -18,4 +18,5 @@ op toggle export=toggle inout=flag:bool faults=stale-post
 op set_on export=set_on inout=c:struct:Cell faults=stale-post
 op push_byte export=push_byte ret=usize inout=out:vec faults=stale-post,drop-last-push,clobber-prefix
 op clear_nonempty export=clear_nonempty error=TOO_SHORT inout=buf:slice faults=stale-post,missing-error
+op clr export=clr err_any=TOO_SHORT inout=buf:slice faults=stale-post,missing-error
 op encode export=encode ret=usize err_any=TOO_SHORT inout=out:slice faults=stale-post,missing-error

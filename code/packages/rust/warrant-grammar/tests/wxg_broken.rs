@@ -40,7 +40,7 @@ fn failures(part: &str) -> Vec<String> {
 }
 
 /// Every operation with the written claim that states it.
-const OPS: [(&str, &str); 8] = [
+const OPS: [(&str, &str); 9] = [
     ("wipe", "wipe_zeroes"),
     ("wipe4", "wipe4_zeroes"),
     ("bump", "bump_adds_one"),
@@ -48,6 +48,7 @@ const OPS: [(&str, &str); 8] = [
     ("set_on", "set_on_keeps_the_byte"),
     ("push_byte", "push_byte_appends_the_byte"),
     ("clear_nonempty", "clear_nonempty_wipes_or_refuses"),
+    ("clr", "clr_wipes_or_refuses"),
     ("encode", "encode_writes_the_complement"),
 ];
 
@@ -75,8 +76,10 @@ fn a_failing_post_suite_names_the_violated_row() {
     assert!(failures("exhaustive/toggle/post")[0].contains("postcondition-violated: toggle row 1"));
     // `set_on` only for a non-zero byte: the cell with a == 0 violates row 1.
     assert!(failures("exhaustive/set_on/post")[0].contains("postcondition-violated: set_on row 1"));
-    // `clear_nonempty` does not refuse an empty buffer.
+    // `clear_nonempty` always crashes (Err): row 1 says a non-empty buffer is not an Err.
     assert!(failures("exhaustive/clear_nonempty/post")[0].contains("postcondition-violated: clear_nonempty row 1"));
+    // `clr` wipes and then ALWAYS returns Err(()): the Err arm is mapped, not ignored.
+    assert!(failures("exhaustive/clr/post")[0].contains("postcondition-violated: clr row 1"));
 }
 
 #[test]

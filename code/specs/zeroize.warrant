@@ -86,7 +86,8 @@ warrant zeroize v1
     forall buf: Bytes<1>. zeroize_bytes(buf) == b"00"
   claim zeroizes_a_sample_of_two_byte_buffers:
     forall buf: Bytes<2>. zeroize_bytes(buf) == b"0000"
-  claim zeroizes_every_byte_of_every_buffer:
+  -- A bounded SET of 347 buffers (0 to 8 bytes), not every buffer: see the domain table.
+  claim zeroizes_every_byte_of_the_347_buffer_set:
     forall buf: Bytes. zeroize_bytes(buf) == zeros(len(buf))
   claim keeps_the_length:
     forall buf: Bytes. len(zeroize_bytes(buf)) == len(buf)

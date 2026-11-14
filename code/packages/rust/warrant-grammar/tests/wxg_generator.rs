@@ -57,7 +57,7 @@ fn refused(spec: &str, bindings: &str, code: &str, needle: &str) {
 #[test]
 fn the_fixture_generates_a_harness_with_one_adapter_per_operation() {
     let text = generated();
-    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "encode"] {
+    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "clr", "encode"] {
         assert!(text.contains(&format!("fn op_{op}(")), "no adapter for {op}");
     }
 }
@@ -102,7 +102,7 @@ fn every_fault_of_the_bindings_is_in_the_generated_fault_enum() {
 #[test]
 fn ensures_blocks_add_a_post_suite_per_operation_and_monitor_every_call() {
     let text = generated();
-    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "encode"] {
+    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "clr", "encode"] {
         for kind in ["exhaustive", "property", "fuzz"] {
             assert!(
                 text.contains(&format!("warrant/wxg/{kind}/{op}/post")),
@@ -244,13 +244,21 @@ fn a_result_slot_without_a_returned_component_types_the_host_return_as_unit() {
             text.contains("Ok(()) =>") || text.contains("Some(()) =>"),
             "{opts}: the host return is not typed as ()"
         );
-        assert!(!text.contains("Ok(_) =>") && !text.contains("Some(_) =>"), "{opts}: a host value is discarded");
+        assert!(!discards(&text), "{opts}: a host value is discarded");
     }
 }
 
 #[test]
 fn the_fixture_discards_no_host_value_anywhere() {
     let text = generated();
-    assert!(!text.contains("Ok(_) =>"), "Ok(_) discards the host's payload");
-    assert!(!text.contains("Some(_) =>"), "Some(_) discards the host's payload");
+    assert!(!discards(&text), "an arm `Ok(_)` / `Some(_)` discards the host's payload");
+}
+
+/// Does any generated match arm START with `Ok(_) =>` or `Some(_) =>` (the host's
+/// own `Result`/`Option`; a model value `V::Ok(_)` in the prelude is not one)?
+fn discards(text: &str) -> bool {
+    text.lines().any(|l| {
+        let t = l.trim_start();
+        t.starts_with("Ok(_) =>") || t.starts_with("Some(_) =>")
+    })
 }

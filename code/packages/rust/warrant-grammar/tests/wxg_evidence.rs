@@ -26,6 +26,7 @@ mod harness {
             "set_on" => op_set_on(&[], args, fault),
             "push_byte" => op_push_byte(&[], args, fault),
             "clear_nonempty" => op_clear_nonempty(&[], args, fault),
+            "clr" => op_clr(&[], args, fault),
             "encode" => op_encode(&[], args, fault),
             other => panic!("no operation {other}"),
         }
@@ -42,6 +43,7 @@ mod harness {
             "set_on" => op_set_on_core(&[], args, fault),
             "push_byte" => op_push_byte_core(&[], args, fault),
             "clear_nonempty" => op_clear_nonempty_core(&[], args, fault),
+            "clr" => op_clr_core(&[], args, fault),
             "encode" => op_encode_core(&[], args, fault),
             other => panic!("no operation {other}"),
         }
@@ -103,7 +105,7 @@ fn every_negative_control_catches_its_fault() {
 #[test]
 fn each_operation_has_exhaustive_property_and_fuzz_post_suites() {
     let run = run_once();
-    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "encode"] {
+    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "clr", "encode"] {
         for kind in ["exhaustive", "property", "fuzz"] {
             let id = format!("warrant/wxg/{kind}/{op}/post");
             let o = run.outcomes.iter().find(|o| o.id == id).unwrap_or_else(|| panic!("no {id}"));

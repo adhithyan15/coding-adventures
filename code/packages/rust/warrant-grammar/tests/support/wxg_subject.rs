@@ -59,3 +59,12 @@ pub fn encode(v: u8, out: &mut [u8]) -> Result<usize, ()> {
     out[1] = !v;
     Ok(2)
 }
+
+/// S2 served by `Result<(), ()>`: an empty buffer is the one error.
+pub fn clr(buf: &mut [u8]) -> Result<(), ()> {
+    if buf.is_empty() {
+        return Err(());
+    }
+    wipe(buf);
+    Ok(())
+}

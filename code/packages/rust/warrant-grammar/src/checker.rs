@@ -1537,6 +1537,23 @@ impl<'a> Checker<'a> {
                     });
                 }
             }
+            // VER04k 4.13 item 11: the post-state is reachable only through `result`,
+            // so a block with no row over it is a function of the pre-state alone.
+            let names: HashSet<&str> = ["result"].into_iter().collect();
+            let mut seen = BTreeSet::new();
+            for row in &en.rows {
+                row.mentioned_names(&names, &mut seen);
+            }
+            if seen.is_empty() {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0601,
+                    kind: CheckerErrorKind::Postcondition(format!(
+                        "no ensures row of `{}` mentions `result`, so the block cannot fail for any subject",
+                        en.op
+                    )),
+                    span: en.span,
+                });
+            }
         }
         Ok(())
     }

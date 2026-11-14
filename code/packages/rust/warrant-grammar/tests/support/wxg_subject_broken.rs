@@ -49,11 +49,18 @@ pub fn push_byte(v: u8, out: &mut Vec<u8>) -> usize {
     1
 }
 
-/// Does not refuse an empty buffer.
+/// A crashing subject: under `error=` every call is a panic, hence `Err`.
 pub fn clear_nonempty(buf: &mut [u8]) {
+    let _ = buf;
+    panic!("always crashes");
+}
+
+/// The review's repro: it wipes the buffer and then ALWAYS returns `Err(())`.
+pub fn clr(buf: &mut [u8]) -> Result<(), ()> {
     for b in buf.iter_mut() {
         *b = 0;
     }
+    Err(())
 }
 
 /// Writes only the first byte but reports two.

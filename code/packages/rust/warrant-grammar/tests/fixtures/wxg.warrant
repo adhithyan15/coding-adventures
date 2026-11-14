@@ -30,6 +30,12 @@ warrant wxg v1
   -- of the buffer and return 2; a buffer of fewer than two bytes is TOO_SHORT.
   op encode(v: U8, out: inout Bytes) -> Result<(Nat, Bytes), WxgError>
 
+  -- S2, host form `slice`, served by a host that returns `Result<(), ()>` (err_any):
+  -- the same contract as clear_nonempty, through the other error binding.
+  op clr(buf: inout Bytes) -> Result<Bytes, WxgError>
+
+  labels clr:
+    buf public
   labels wipe:
     buf public
   labels wipe4:
@@ -76,6 +82,8 @@ warrant wxg v1
     len(result.1) == len(out) + 1
   ensures clear_nonempty:
     match result with Ok(r) -> len(r) == len(buf) and len(buf) > 0 | Err(e) -> len(buf) == 0
+  ensures clr:
+    match result with Ok(r) -> len(r) == len(buf) and len(buf) > 0 | Err(e) -> len(buf) == 0
   ensures encode:
     match result with Ok(r) -> r.0 == 2 and len(r.1) == len(out) | Err(e) -> len(out) < 2
 
@@ -97,6 +105,10 @@ warrant wxg v1
     clear_nonempty(b"") == Err(WxgError.TOO_SHORT)
   example clear_one_byte:
     clear_nonempty(b"ab") == Ok(b"00")
+  example clr_empty_is_too_short:
+    clr(b"") == Err(WxgError.TOO_SHORT)
+  example clr_wipes:
+    clr(b"abcd") == Ok(b"0000")
   example encode_writes_two_bytes:
     encode(1u8, b"aabbcc") == Ok((2, wide(b"01fecc")))
   example encode_one_byte_is_too_short:
@@ -118,6 +130,8 @@ warrant wxg v1
     forall v: U8, out: Bytes. push_byte(v, out) == (1, concat(out, be_bytes(v)))
   claim clear_nonempty_wipes_or_refuses:
     forall buf: Bytes. clear_nonempty(buf) == (if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf))))
+  claim clr_wipes_or_refuses:
+    forall buf: Bytes. clr(buf) == (if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf))))
   claim encode_short_buffers_are_refused:
     forall v: U8, out: Bytes<1>. encode(v, out) == Err(WxgError.TOO_SHORT)
   claim encode_writes_the_complement:

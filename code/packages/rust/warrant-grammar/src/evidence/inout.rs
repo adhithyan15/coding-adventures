@@ -390,7 +390,9 @@ pub(super) fn inout_adapter<'a>(
         }
         let _ = writeln!(s, "    let v: V = {ok_value};");
     } else {
-        let ok_pat = if r_src.is_some() { "Ok(r)" } else { "Ok(_)" };
+        // No returned component: the host's `Ok` must be exactly `()`, so a host
+        // that returns data (a count) fails to compile instead of being dropped.
+        let ok_pat = if r_src.is_some() { "Ok(r)" } else { "Ok(())" };
         if let Some(case) = host.err_any.as_deref() {
             // WX-N `err_any=CASE`: every `Err(_)` is the one Warrant case.
             let declared = env_cases_of(&op.return_type, env);
@@ -447,7 +449,7 @@ pub(super) fn inout_adapter<'a>(
             let case = err_case.ok_or_else(|| {
                 w0704(n, op.span, "binding has neither error normalization nor errors= nor err_any=")
             })?;
-            let some_pat = if r_src.is_some() { "Some(r)" } else { "Some(_)" };
+            let some_pat = if r_src.is_some() { "Some(r)" } else { "Some(())" };
             let _ = writeln!(s, "    let v: V = match contained(|| {call}) {{");
             let _ = writeln!(s, "        {some_pat} => {ok_value},");
             if want_missing {
