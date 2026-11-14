@@ -1,3 +1,4 @@
+# Windows runs the same tests; recordcmd_test.go builds its paths with absPath so they are absolute here too.
 go build -o kiln.exe .
 go vet ./...
 go test ./... -cover
