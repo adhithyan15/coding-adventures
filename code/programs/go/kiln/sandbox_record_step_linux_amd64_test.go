@@ -315,17 +315,56 @@ exit 0
 	if ex := tr.StepExit(); ex == nil || ex.Killed || ex.Code != 0 {
 		t.Errorf("step exit %+v", ex)
 	}
-	var sawCat, sawRead bool
+	// What `cat data.txt` leaves in the trace: an execve of cat by some process,
+	// then an openat by THAT process of "data.txt". Event.Path is "as printed
+	// (unresolved)", so the open is relative to the process's working directory
+	// (Event.Cwd, or the directory descriptor's -y path when there is one); the
+	// assertion resolves it and requires the package's data.txt, opened for
+	// reading successfully, by the process that exec'd cat.
+	dataTxt := filepath.Join(pkgDir, "data.txt")
+	resolve := func(e trace.Event) string {
+		if filepath.IsAbs(e.Path) {
+			return filepath.Clean(e.Path)
+		}
+		base := e.Cwd
+		if e.DirfdPath != "" {
+			base = e.DirfdPath
+		}
+		return filepath.Join(base, e.Path)
+	}
+	catPid := -1
 	for _, e := range tr.Events {
 		if e.Syscall == "execve" && e.Result.OK && strings.HasSuffix(e.Path, "/cat") {
-			sawCat = true
+			catPid = e.Pid
 		}
-		if (e.Syscall == "openat" || e.Syscall == "open") && e.Result.OK && e.Path == filepath.Join(pkgDir, "data.txt") {
+	}
+	sawRead := false
+	for _, e := range tr.Events {
+		if e.Pid == catPid && (e.Syscall == "openat" || e.Syscall == "open") && e.Result.OK && resolve(e) == dataTxt {
 			sawRead = true
 		}
 	}
-	if !sawCat || !sawRead {
-		t.Errorf("exec of cat: %v, read of data.txt: %v", sawCat, sawRead)
+	if catPid < 0 || !sawRead {
+		// Show what the trace holds, so a failure in CI can be diagnosed from
+		// the log: the events of every process that exec'd cat, and the raw lines
+		// that mention data.txt.
+		var ev strings.Builder
+		for _, e := range tr.Events {
+			if e.Pid == catPid || strings.Contains(e.Path, "data.txt") {
+				fmt.Fprintf(&ev, "  line %d pid %d %s kind %v ok %v path %q cwd %q dirfd %q\n", e.Line, e.Pid, e.Syscall, e.Kind, e.Result.OK, e.Path, e.Cwd, e.DirfdPath)
+			}
+		}
+		raw, _ := os.ReadFile(tracePath)
+		var lines []string
+		for _, l := range strings.Split(string(raw), "\n") {
+			if strings.Contains(l, "data.txt") || strings.Contains(l, "/cat") {
+				if len(l) > 300 {
+					l = l[:300] + "..."
+				}
+				lines = append(lines, l)
+			}
+		}
+		t.Errorf("cat pid %d, read of %s by it: %v\nparsed events:\n%sraw lines:\n%s", catPid, dataTxt, sawRead, ev.String(), strings.Join(lines, "\n"))
 	}
 	if sc0.TraceBytes == 0 {
 		t.Error("an empty trace")
