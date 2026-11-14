@@ -43,6 +43,12 @@ mod harness {
         pub fn bump1(a: &[u8; 1], k: u8) -> [u8; 1] {
             [a[0].wrapping_add(k)]
         }
+        pub fn scale1(a: &[u8; 1], k: u8) -> [u8; 1] {
+            [a[0].wrapping_mul(k)]
+        }
+        pub fn shl1(a: &[u8; 1], n: u32) -> [u8; 1] {
+            [if n >= 8 { 0 } else { a[0] << n }]
+        }
     }
     include!("generated/wxn_evidence.rs");
 
@@ -52,6 +58,8 @@ mod harness {
             "head2" => op_head2(&[], args, Fault::None),
             "pair" => op_pair(&[], args, Fault::None),
             "bump1" => op_bump1(&[], args, Fault::None),
+            "scale1" => op_scale1(&[], args, Fault::None),
+            "shl1" => op_shl1(&[], args, Fault::None),
             _ => panic!("no such op"),
         }
     }
@@ -59,6 +67,8 @@ mod harness {
     pub fn model(name: &str, args: &[V]) -> V {
         match name {
             "bump1_model" => model_bump1_model(args[0].clone(), args[1].clone()),
+            "scale1_model" => model_scale1_model(args[0].clone(), args[1].clone()),
+            "shl1_model" => model_shl1_model(args[0].clone(), args[1].clone()),
             _ => panic!("no such model"),
         }
     }
@@ -171,4 +181,21 @@ fn u8_arithmetic_wraps_in_the_generated_model_code() {
     assert_eq!(harness::model("bump1_model", &[bytes(&[255]), u8v(1)]), bytes(&[0]));
     // The subject wraps the same way, so every one of the 65,536 cases agrees.
     assert_eq!(harness::call("bump1", &[bytes(&[200]), u8v(100)]), bytes(&[44]));
+}
+
+/// VER04 section 3: `U8` multiplication wraps and `shl` drops the high bits
+/// (`n >= 8` gives 0), in the generated model code and in the subject.
+#[test]
+fn u8_multiplication_and_shifts_wrap_in_the_generated_model_code() {
+    use harness::F;
+    let u8v = |n: i128| V::Fixed(F::U8, n);
+    // 200 * 3 = 600 = 88 (mod 256); a non-wrapping evaluator says 600.
+    assert_eq!(harness::model("scale1_model", &[bytes(&[200]), u8v(3)]), bytes(&[88]));
+    assert_eq!(harness::model("scale1_model", &[bytes(&[16]), u8v(16)]), bytes(&[0]));
+    assert_eq!(harness::call("scale1", &[bytes(&[200]), u8v(3)]), bytes(&[88]));
+    // shl(0x81, 1) = 0x02 (the top bit is dropped), shl(1, 7) = 128, shl(1, 8) = 0.
+    assert_eq!(harness::model("shl1_model", &[bytes(&[0x81]), V::Int(1)]), bytes(&[0x02]));
+    assert_eq!(harness::model("shl1_model", &[bytes(&[1]), V::Int(7)]), bytes(&[128]));
+    assert_eq!(harness::model("shl1_model", &[bytes(&[1]), V::Int(8)]), bytes(&[0]));
+    assert_eq!(harness::call("shl1", &[bytes(&[0x81]), V::Int(1)]), bytes(&[0x02]));
 }

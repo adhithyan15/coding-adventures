@@ -16,6 +16,9 @@ warrant wxn v1
   op pair(a: Bytes<2>, b: Bytes<2>) -> Result<Bytes<4>, NErr>
   -- add a U8 to a one-byte value; U8 arithmetic wraps (VER04 section 3, WD-013)
   op bump1(a: Bytes<1>, k: U8) -> Bytes<1>
+  -- multiply by a U8 and shift left by a count: both wrap / drop high bits
+  op scale1(a: Bytes<1>, k: U8) -> Bytes<1>
+  op shl1(a: Bytes<1>, n: Nat) -> Bytes<1>
 
   labels flip4:
     a public
@@ -27,8 +30,17 @@ warrant wxn v1
   labels bump1:
     a public
     k public
+  labels scale1:
+    a public
+    k public
+  labels shl1:
+    a public
+    n public
 
   model bump1_model(a: Bytes<1>, k: U8) -> Bytes<1> = be_bytes(from_be<U8>(a) + k)
+
+  model scale1_model(a: Bytes<1>, k: U8) -> Bytes<1> = be_bytes(from_be<U8>(a) * k)
+  model shl1_model(a: Bytes<1>, n: Nat) -> Bytes<1> = be_bytes(shl(from_be<U8>(a), n))
 
   example flip4_reverses:
     flip4(b"01020304") == b"04030201"
@@ -54,3 +66,7 @@ warrant wxn v1
     forall a: Bytes<2>, b: Bytes<2>. pair(a, b) == (if a == b then Err(NErr.LOW) else Ok(concat(a, b)))
   claim bump1_matches_the_wrapping_model:
     forall a: Bytes<1>, k: U8. bump1(a, k) == bump1_model(a, k)
+  claim scale1_matches_the_wrapping_model:
+    forall a: Bytes<1>, k: U8. scale1(a, k) == scale1_model(a, k)
+  claim shl1_matches_the_model:
+    forall a: Bytes<1>, n: Nat. shl1(a, n) == shl1_model(a, n)

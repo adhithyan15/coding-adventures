@@ -13,3 +13,5 @@ op flip4 export=flip4 args=bytes<4> ret=bytes<4> faults=flip-result-bit,drop-las
 op head2 export=head2 args=bytes<4> faults=flip-result-bit
 op pair export=pair args=bytes<2>,bytes<2> ret=bytes<4> err_any=LOW faults=missing-error,flip-result-bit
 op bump1 export=bump1 args=bytes<1>,u8 ret=bytes<1> faults=flip-result-bit
+op scale1 export=scale1 args=bytes<1>,u8 ret=bytes<1> faults=flip-result-bit
+op shl1 export=shl1 args=bytes<1>,u32 ret=bytes<1> faults=flip-result-bit
