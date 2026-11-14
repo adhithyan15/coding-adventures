@@ -5,7 +5,8 @@
 //! inputs in one non-copyable value so later composition cannot substitute a
 //! different certificate, SNI, or Host authority. It can then bind that
 //! complete destination to one strict canonical HTTP/1 Host field without
-//! accepting a detached authority value.
+//! accepting a detached authority value, and bind that proof to an exact
+//! bounded additional-field slice that contains no second Host field.
 
 #![forbid(unsafe_code)]
 
@@ -79,6 +80,57 @@ impl fmt::Display for HttpsHostHeaderBindingError {
 
 impl std::error::Error for HttpsHostHeaderBindingError {}
 
+/// Fixed maximum number of fields in one bound HTTPS request field set.
+pub const MAX_HTTPS_REQUEST_HEADER_FIELDS: usize = 64;
+
+/// Caller-owned total-field ceiling for one HTTPS request field set.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct HttpsRequestHeaderFieldsLimits {
+    maximum_fields: u8,
+}
+
+impl HttpsRequestHeaderFieldsLimits {
+    /// Validate the total-field ceiling, including the one retained Host field.
+    pub fn new(maximum_fields: usize) -> Result<Self, HttpsRequestHeaderFieldsBindingError> {
+        if maximum_fields == 0 || maximum_fields > MAX_HTTPS_REQUEST_HEADER_FIELDS {
+            return Err(HttpsRequestHeaderFieldsBindingError::InvalidLimits);
+        }
+        Ok(Self {
+            maximum_fields: maximum_fields as u8,
+        })
+    }
+
+    /// Return the total-field ceiling, including the retained Host field.
+    #[must_use]
+    pub const fn maximum_fields(self) -> usize {
+        self.maximum_fields as usize
+    }
+}
+
+/// Stable request-field-set failures that retain no field input or observed count.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsRequestHeaderFieldsBindingError {
+    /// The total-field ceiling is zero or exceeds the fixed package maximum.
+    InvalidLimits,
+    /// The supplied field set exceeds the caller's total-field ceiling.
+    TooManyFields,
+    /// A field other than the retained canonical field is also named Host.
+    AdditionalHostField,
+}
+
+impl fmt::Display for HttpsRequestHeaderFieldsBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::InvalidLimits => "invalid HTTPS request-header field-set limits",
+            Self::TooManyFields => "HTTPS request-header field set exceeds its limit",
+            Self::AdditionalHostField => "additional HTTP Host field is forbidden",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for HttpsRequestHeaderFieldsBindingError {}
+
 /// Non-copyable proof that one exact certificate, SNI, and Host share a DNS name.
 ///
 /// This value proves only destination-name consistency and complete-certificate
@@ -101,6 +153,71 @@ pub struct BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host>
 pub struct BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'field> {
     destination: BoundHttpsDnsDestination<'certificate, 'encoded, 'server_name, 'host>,
     host_field: Http1RequestHeaderField<'field>,
+}
+
+/// One HTTPS destination bound to the complete retained request field set.
+///
+/// The field set contains exactly one Host field: the canonical field inside
+/// `host_binding`. The exact additional validated-field slice and the caller's
+/// field-count policy are retained without authorizing any additional field or
+/// granting request, TLS, HTTP, OAuth, I/O, credential, audit, trace, or
+/// external-effect authority.
+pub struct BoundHttpsRequestHeaderFields<
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+> {
+    host_binding:
+        BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'host_field>,
+    additional_fields: &'fields [Http1RequestHeaderField<'additional_field>],
+    limits: HttpsRequestHeaderFieldsLimits,
+}
+
+impl<'certificate, 'encoded, 'server_name, 'host, 'host_field, 'fields, 'additional_field>
+    BoundHttpsRequestHeaderFields<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+    >
+{
+    /// Return the complete destination and canonical Host-field binding.
+    #[must_use]
+    pub const fn host_binding(
+        &self,
+    ) -> &BoundHttpsHostHeaderField<'certificate, 'encoded, 'server_name, 'host, 'host_field> {
+        &self.host_binding
+    }
+
+    /// Return the exact additional validated fields in caller order.
+    #[must_use]
+    pub const fn additional_fields(&self) -> &'fields [Http1RequestHeaderField<'additional_field>] {
+        self.additional_fields
+    }
+
+    /// Return the exact caller field-count policy retained by this proof.
+    #[must_use]
+    pub const fn limits(&self) -> HttpsRequestHeaderFieldsLimits {
+        self.limits
+    }
+}
+
+impl fmt::Debug for BoundHttpsRequestHeaderFields<'_, '_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundHttpsRequestHeaderFields")
+            .field("host_binding", &"[REDACTED]")
+            .field("additional_fields", &"[REDACTED]")
+            .field("limits", &self.limits)
+            .finish_non_exhaustive()
+    }
 }
 
 impl<'certificate, 'encoded, 'server_name, 'host, 'field>
@@ -232,6 +349,61 @@ pub fn bind_https_host_header_field<'certificate, 'encoded, 'server_name, 'host,
     Ok(BoundHttpsHostHeaderField {
         destination,
         host_field,
+    })
+}
+
+/// Bind one canonical HTTPS Host field to the complete additional field slice.
+///
+/// The caller's total-field ceiling includes the canonical Host field. Every
+/// additional field name is compared using HTTP's ASCII case-insensitive
+/// semantics, and any second Host field fails closed. Other duplicate names,
+/// field authorization, request-line and body-framing policy, encoding, and
+/// transport remain outside this boundary.
+pub fn bind_https_request_header_fields<
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+>(
+    host_binding: BoundHttpsHostHeaderField<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+    >,
+    additional_fields: &'fields [Http1RequestHeaderField<'additional_field>],
+    limits: HttpsRequestHeaderFieldsLimits,
+) -> Result<
+    BoundHttpsRequestHeaderFields<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+    >,
+    HttpsRequestHeaderFieldsBindingError,
+> {
+    let maximum_additional_fields = limits.maximum_fields() - 1;
+    if additional_fields.len() > maximum_additional_fields {
+        return Err(HttpsRequestHeaderFieldsBindingError::TooManyFields);
+    }
+    if additional_fields
+        .iter()
+        .any(|field| field.name().eq_ignore_ascii_case(b"Host"))
+    {
+        return Err(HttpsRequestHeaderFieldsBindingError::AdditionalHostField);
+    }
+
+    Ok(BoundHttpsRequestHeaderFields {
+        host_binding,
+        additional_fields,
+        limits,
     })
 }
 

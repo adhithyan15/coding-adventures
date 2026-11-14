@@ -4941,14 +4941,25 @@ be substituted after binding. Stable failures and Debug output retain no
 certificate, hostname, authority, field-name, field-value, port, or observed
 length payloads.
 
-This composition retains one exact Host field but does not compose a complete
-request head or prove that no additional Host field appears elsewhere. It does
-not bind a request line or body, authorize other fields, perform credential
+The same boundary can now move that canonical Host proof into one bounded
+request-field-set proof together with the exact caller-borrowed slice of
+additional validated fields. An explicit caller-selected total-field ceiling,
+including Host, is hard-capped at 64 before the slice is scanned. Every
+additional field name is compared under HTTP's ASCII case-insensitive
+semantics, so any second Host spelling fails closed. Success retains the exact
+Host proof, additional-field slice, caller order, and count policy in one
+non-copyable result. Stable failures and Debug output retain no field name,
+field value, hostname, certificate, observed count, or limit violation
+payloads.
+
+This composition does not authorize any additional field, reject duplicates
+other than Host, reconcile Content-Length, prohibit Transfer-Encoding, bind a
+request line or body, encode a complete request head, perform credential
 access or release, emit provider or trace audit events, perform TLS or HTTP
 I/O, open a socket, or grant network, OAuth, or live-provider authority. A
-later strict request-head composition must consume this proof, reject any
-additional Host field, and preserve the same destination through audited
-transport. Concrete HTTPS remains unavailable.
+later strict request-head composition must consume this exact proof and
+preserve the same destination through audited transport. Concrete HTTPS
+remains unavailable.
 
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated

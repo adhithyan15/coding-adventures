@@ -6,8 +6,9 @@ use http1_request_host_authority::{
     validate_http1_request_host_authority, Http1RequestHostAuthorityLimits,
 };
 use https_destination_name_binding::{
-    bind_https_dns_destination, bind_https_host_header_field, HttpsDestinationNameBindingError,
-    HttpsHostHeaderBindingError,
+    bind_https_dns_destination, bind_https_host_header_field, bind_https_request_header_fields,
+    HttpsDestinationNameBindingError, HttpsHostHeaderBindingError,
+    HttpsRequestHeaderFieldsBindingError, HttpsRequestHeaderFieldsLimits,
 };
 use tls13_server_name::TlsServerName;
 use tls_server_identity::MatchKind;
@@ -89,6 +90,10 @@ fn host_limits() -> Http1RequestHostAuthorityLimits {
 
 fn header_limits() -> Http1RequestHeaderFieldLimits {
     Http1RequestHeaderFieldLimits::new(64, 259, 327).unwrap()
+}
+
+fn request_fields_limits() -> HttpsRequestHeaderFieldsLimits {
+    HttpsRequestHeaderFieldsLimits::new(16).unwrap()
 }
 
 #[test]
@@ -306,4 +311,171 @@ fn bound_host_field_debug_output_redacts_destination_and_field() {
     assert!(!debug.contains("issuer.example"));
     assert!(!debug.contains(":443"));
     assert!(debug.matches("[REDACTED]").count() >= 2);
+}
+
+#[test]
+fn binds_the_exact_additional_request_field_slice() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [
+        validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+            .unwrap(),
+        validate_http1_request_header_field(b"X-Trace", b"opaque", header_limits()).unwrap(),
+        validate_http1_request_header_field(b"Hosting", b"allowed", header_limits()).unwrap(),
+    ];
+
+    let bound =
+        bind_https_request_header_fields(host_binding, &additional_fields, request_fields_limits())
+            .unwrap();
+
+    assert!(core::ptr::eq(
+        bound.host_binding().destination().certificate(),
+        &certificate
+    ));
+    assert_eq!(bound.host_binding().host_field().name(), b"Host");
+    assert!(core::ptr::eq(
+        bound.additional_fields(),
+        additional_fields.as_slice()
+    ));
+}
+
+#[test]
+fn accepts_an_empty_additional_request_field_slice() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [];
+
+    let bound =
+        bind_https_request_header_fields(host_binding, &additional_fields, request_fields_limits())
+            .unwrap();
+
+    assert!(bound.additional_fields().is_empty());
+}
+
+#[test]
+fn rejects_every_additional_host_field_case_insensitively() {
+    for name in [b"Host".as_slice(), b"HOST".as_slice(), b"hOsT".as_slice()] {
+        let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let server_name = TlsServerName::new("api.example.test").unwrap();
+        let host = validate_http1_request_host_authority(b"api.example.test", None, host_limits())
+            .unwrap();
+        let destination =
+            bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default())
+                .unwrap();
+        let host_field =
+            validate_http1_request_header_field(b"Host", b"api.example.test", header_limits())
+                .unwrap();
+        let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+        let additional_fields = [
+            validate_http1_request_header_field(b"Accept", b"text/plain", header_limits()).unwrap(),
+            validate_http1_request_header_field(name, b"secret.example.test", header_limits())
+                .unwrap(),
+        ];
+
+        let error = bind_https_request_header_fields(
+            host_binding,
+            &additional_fields,
+            request_fields_limits(),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error,
+            HttpsRequestHeaderFieldsBindingError::AdditionalHostField
+        );
+        assert!(!error.to_string().contains("secret.example.test"));
+        assert!(!format!("{error:?}").contains("secret.example.test"));
+    }
+}
+
+#[test]
+fn bound_request_fields_debug_output_redacts_all_fields() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields =
+        [
+            validate_http1_request_header_field(
+                b"Authorization",
+                b"Bearer secret",
+                header_limits(),
+            )
+            .unwrap(),
+        ];
+
+    let bound =
+        bind_https_request_header_fields(host_binding, &additional_fields, request_fields_limits())
+            .unwrap();
+    let debug = format!("{bound:?}");
+
+    assert!(!debug.contains("api.example.test"));
+    assert!(!debug.contains("Authorization"));
+    assert!(!debug.contains("Bearer secret"));
+    assert!(debug.matches("[REDACTED]").count() >= 2);
+}
+
+#[test]
+fn rejects_invalid_or_exceeded_request_field_limits_without_observed_counts() {
+    assert_eq!(
+        HttpsRequestHeaderFieldsLimits::new(64)
+            .unwrap()
+            .maximum_fields(),
+        64
+    );
+    assert_eq!(
+        HttpsRequestHeaderFieldsLimits::new(0),
+        Err(HttpsRequestHeaderFieldsBindingError::InvalidLimits)
+    );
+    assert_eq!(
+        HttpsRequestHeaderFieldsLimits::new(65),
+        Err(HttpsRequestHeaderFieldsBindingError::InvalidLimits)
+    );
+
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields =
+        [validate_http1_request_header_field(b"Accept", b"text/plain", header_limits()).unwrap()];
+
+    let error = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(1).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(error, HttpsRequestHeaderFieldsBindingError::TooManyFields);
+    assert!(!error.to_string().contains('2'));
+    assert!(!format!("{error:?}").contains('2'));
 }

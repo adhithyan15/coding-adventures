@@ -13,3 +13,9 @@
 - Retain both non-copyable inputs with payload-free failures and redacted Debug
   output without claiming complete request-head uniqueness or transport
   authority.
+- Bind that canonical Host proof to an exact caller-borrowed slice of
+  additional validated fields under a caller-selected total-field ceiling
+  hard-capped at 64.
+- Reject every additional case-insensitive Host spelling while retaining the
+  complete field slice, caller order, and limit policy with payload-free
+  failures and redacted Debug output.
