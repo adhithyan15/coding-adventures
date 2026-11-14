@@ -11,6 +11,9 @@ use https_reviewed_server_path_binding::{
     BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature,
 };
 use oauth_client_secret_http1_release::ReleasedClientSecretHttp1Request;
+use x509_ocsp_authenticated_target_revocation::AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation;
+use x509_ocsp_reviewed_server_revocation_binding::BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation;
+use x509_rsa_reviewed_server_path_anchor_self_signature_binding::BoundX509RsaReviewedServerPathAnchorSelfSignature;
 
 mod sealed {
     pub struct DestinationIdentity<'a> {
@@ -20,16 +23,27 @@ mod sealed {
         pub port: Option<u16>,
     }
 
+    pub struct ReviewedPathIdentity<'a> {
+        pub destination: DestinationIdentity<'a>,
+        pub target_nearest_issuer: *const (),
+        pub reviewed_anchor: *const (),
+    }
+
     pub trait RequestEvidence {
         fn destination_identity(&self) -> DestinationIdentity<'_>;
     }
 
     pub trait ReviewedServerEvidence {
-        fn destination_identity(&self) -> DestinationIdentity<'_>;
+        fn path_identity(&self) -> ReviewedPathIdentity<'_>;
     }
 
     pub trait DirectRevocationEvidence {
-        fn destination_identity(&self) -> DestinationIdentity<'_>;
+        fn path_identity(&self) -> ReviewedPathIdentity<'_>;
+    }
+
+    pub trait SignedReviewedServerRevocationEvidence {
+        fn target_nearest_issuer(&self) -> *const ();
+        fn reviewed_anchor(&self) -> *const ();
     }
 }
 
@@ -50,8 +64,10 @@ impl<T: sealed::ReviewedServerEvidence> SignedReviewedHttpsServerEvidence for T 
 
 /// Sealed direct no-check complete fixed-path revocation evidence.
 ///
-/// Only the repository-owned destination-bound direct completion implements
-/// this trait. It remains distinct from signed reviewed server-path evidence.
+/// Only the repository-owned destination-bound direct completion whose
+/// retained server-status proof includes the exact signed reviewed path and
+/// anchor-self-signature shape implements this trait. It remains distinct from
+/// signed reviewed server-path evidence.
 pub trait DirectNoCheckCompleteFixedPathRevocationEvidence:
     sealed::DirectRevocationEvidence
 {
@@ -97,6 +113,110 @@ impl<
     }
 }
 
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'revocation_target,
+        'revocation_target_encoded,
+        'revocation_issuer,
+        'revocation_issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    > sealed::SignedReviewedServerRevocationEvidence
+    for BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'revocation_target,
+            'revocation_target_encoded,
+            'revocation_issuer,
+            'revocation_issuer_encoded,
+        >,
+        BoundX509RsaReviewedServerPathAnchorSelfSignature<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+            'signature_certificate,
+            'signature_encoded,
+            'signature_issuer_certificate,
+            'signature_issuer_encoded,
+            'signature_anchor_certificate,
+            'signature_anchor_encoded,
+        >,
+    >
+{
+    fn target_nearest_issuer(&self) -> *const () {
+        let target_closure = self
+            .strong_name_policy_path()
+            .reviewed_server_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure();
+        core::ptr::from_ref(
+            target_closure
+                .target_signature()
+                .signature()
+                .issuer_rsa_algorithm_policy()
+                .certificate(),
+        )
+        .cast()
+    }
+
+    fn reviewed_anchor(&self) -> *const () {
+        let target_closure = self
+            .strong_name_policy_path()
+            .reviewed_server_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure();
+        core::ptr::from_ref(
+            target_closure
+                .accumulated_intermediates()
+                .reviewed_terminal()
+                .reviewed_anchor()
+                .candidate_certificate(),
+        )
+        .cast()
+    }
+}
+
 impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
     sealed::DirectRevocationEvidence
     for BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
@@ -107,14 +227,31 @@ impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocatio
         Proof,
         IntermediateRevocation,
     >
+where
+    Proof: sealed::SignedReviewedServerRevocationEvidence,
 {
-    fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
+    fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
         let destination = self.destination();
-        sealed::DestinationIdentity {
-            certificate: core::ptr::from_ref(destination.certificate()).cast(),
-            server_name: destination.server_name().as_str().as_bytes(),
-            host: destination.host_authority().host(),
-            port: destination.host_authority().port(),
+        let reviewed_server_revocation = self
+            .complete_revocation()
+            .intermediate_status_responder_no_check_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .no_check_intermediate_revocation()
+            .responder_no_check_policy()
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation();
+        sealed::ReviewedPathIdentity {
+            destination: sealed::DestinationIdentity {
+                certificate: core::ptr::from_ref(destination.certificate()).cast(),
+                server_name: destination.server_name().as_str().as_bytes(),
+                host: destination.host_authority().host(),
+                port: destination.host_authority().port(),
+            },
+            target_nearest_issuer: reviewed_server_revocation.target_nearest_issuer(),
+            reviewed_anchor: reviewed_server_revocation.reviewed_anchor(),
         }
     }
 }
@@ -164,13 +301,38 @@ impl<
         'signature_anchor_encoded,
     >
 {
-    fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
+    fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
         let destination = self.destination();
-        sealed::DestinationIdentity {
-            certificate: core::ptr::from_ref(destination.certificate()).cast(),
-            server_name: destination.server_name().as_str().as_bytes(),
-            host: destination.host_authority().host(),
-            port: destination.host_authority().port(),
+        let target_closure = self
+            .reviewed_server_path_anchor_self_signature()
+            .reviewed_server_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure();
+        sealed::ReviewedPathIdentity {
+            destination: sealed::DestinationIdentity {
+                certificate: core::ptr::from_ref(destination.certificate()).cast(),
+                server_name: destination.server_name().as_str().as_bytes(),
+                host: destination.host_authority().host(),
+                port: destination.host_authority().port(),
+            },
+            target_nearest_issuer: core::ptr::from_ref(
+                target_closure
+                    .target_signature()
+                    .signature()
+                    .issuer_rsa_algorithm_policy()
+                    .certificate(),
+            )
+            .cast(),
+            reviewed_anchor: core::ptr::from_ref(
+                target_closure
+                    .accumulated_intermediates()
+                    .reviewed_terminal()
+                    .reviewed_anchor()
+                    .candidate_certificate(),
+            )
+            .cast(),
         }
     }
 }
@@ -180,11 +342,19 @@ impl<
 pub enum ClientSecretReviewedServerBindingError {
     /// The retained certificate, SNI, or Host identity differs.
     DestinationMismatch,
+    /// The retained target-nearest issuer or reviewed anchor differs.
+    PathMismatch,
 }
 
 impl fmt::Display for ClientSecretReviewedServerBindingError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.write_str("OAuth client-secret request and reviewed server destination mismatch")
+        match self {
+            Self::DestinationMismatch => formatter
+                .write_str("OAuth client-secret request and reviewed server destination mismatch"),
+            Self::PathMismatch => formatter.write_str(
+                "OAuth signed reviewed server and direct revocation path identity mismatch",
+            ),
+        }
     }
 }
 
@@ -245,9 +415,9 @@ where
     ReviewedServer: SignedReviewedHttpsServerEvidence,
 {
     let request_identity = sealed::RequestEvidence::destination_identity(&request);
-    let server_identity = sealed::ReviewedServerEvidence::destination_identity(&reviewed_server);
+    let server_identity = sealed::ReviewedServerEvidence::path_identity(&reviewed_server);
 
-    if !same_destination(request_identity, server_identity) {
+    if !same_destination(request_identity, server_identity.destination) {
         return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
     }
 
@@ -324,9 +494,10 @@ impl<Request, ReviewedServer, DirectRevocation> fmt::Debug
 /// Bind the audited request/signed-server proof to complete direct revocation.
 ///
 /// Both complete inputs are moved into the result only when their exact
-/// decoded certificate object, SNI DNS name, Host DNS name, and optional Host
-/// port agree. DNS comparisons are ASCII case-insensitive. This function never
-/// accesses credential-bearing request bytes and emits no audit event.
+/// decoded leaf, target-nearest issuer, and reviewed-anchor objects, SNI DNS
+/// name, Host DNS name, and optional Host port agree. DNS comparisons are
+/// ASCII case-insensitive. This function never accesses credential-bearing
+/// request bytes and emits no audit event.
 pub fn bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation<
     Request,
     ReviewedServer,
@@ -349,14 +520,22 @@ where
     ReviewedServer: SignedReviewedHttpsServerEvidence,
     DirectRevocation: DirectNoCheckCompleteFixedPathRevocationEvidence,
 {
-    let server_identity = sealed::ReviewedServerEvidence::destination_identity(
+    let server_identity = sealed::ReviewedServerEvidence::path_identity(
         request_and_reviewed_server.reviewed_server(),
     );
-    let revocation_identity =
-        sealed::DirectRevocationEvidence::destination_identity(&direct_revocation);
+    let revocation_identity = sealed::DirectRevocationEvidence::path_identity(&direct_revocation);
 
-    if !same_destination(server_identity, revocation_identity) {
+    if !same_destination(server_identity.destination, revocation_identity.destination) {
         return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
+    }
+    if !core::ptr::eq(
+        server_identity.target_nearest_issuer,
+        revocation_identity.target_nearest_issuer,
+    ) || !core::ptr::eq(
+        server_identity.reviewed_anchor,
+        revocation_identity.reviewed_anchor,
+    ) {
+        return Err(ClientSecretReviewedServerBindingError::PathMismatch);
     }
 
     Ok(
@@ -372,7 +551,11 @@ mod tests {
     use super::*;
 
     static CERTIFICATE_A: u8 = 1;
-    static CERTIFICATE_B: u8 = 1;
+    static CERTIFICATE_B: u8 = 2;
+    static ISSUER_A: u8 = 3;
+    static ISSUER_B: u8 = 4;
+    static ANCHOR_A: u8 = 5;
+    static ANCHOR_B: u8 = 6;
 
     struct RequestEvidence {
         identity: TestIdentity,
@@ -395,6 +578,8 @@ mod tests {
         server_name: &'static [u8],
         host: &'static [u8],
         port: Option<u16>,
+        target_nearest_issuer: &'static u8,
+        reviewed_anchor: &'static u8,
     }
 
     impl sealed::RequestEvidence for RequestEvidence {
@@ -404,14 +589,14 @@ mod tests {
     }
 
     impl sealed::ReviewedServerEvidence for ReviewedServerEvidence {
-        fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
-            identity(self.identity)
+        fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
+            path_identity(self.identity)
         }
     }
 
     impl sealed::DirectRevocationEvidence for DirectRevocationEvidence {
-        fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
-            identity(self.identity)
+        fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
+            path_identity(self.identity)
         }
     }
 
@@ -421,6 +606,14 @@ mod tests {
             server_name: identity.server_name,
             host: identity.host,
             port: identity.port,
+        }
+    }
+
+    fn path_identity(value: TestIdentity) -> sealed::ReviewedPathIdentity<'static> {
+        sealed::ReviewedPathIdentity {
+            destination: identity(value),
+            target_nearest_issuer: core::ptr::from_ref(value.target_nearest_issuer).cast(),
+            reviewed_anchor: core::ptr::from_ref(value.reviewed_anchor).cast(),
         }
     }
 
@@ -461,6 +654,8 @@ mod tests {
             server_name: b"Token.Example",
             host: b"TOKEN.EXAMPLE",
             port: Some(443),
+            target_nearest_issuer: &ISSUER_A,
+            reviewed_anchor: &ANCHOR_A,
         }
     }
 
@@ -580,6 +775,33 @@ mod tests {
             );
             assert_eq!(format!("{error:?}"), "DestinationMismatch");
             for payload in ["token.example", "other.example", "443"] {
+                assert!(!error.to_string().contains(payload));
+            }
+        }
+    }
+
+    #[test]
+    fn alternate_direct_revocation_path_substitution_fails_closed() {
+        let mismatches = [
+            TestIdentity {
+                target_nearest_issuer: &ISSUER_B,
+                ..matching_identity()
+            },
+            TestIdentity {
+                reviewed_anchor: &ANCHOR_B,
+                ..matching_identity()
+            },
+        ];
+
+        for mismatch in mismatches {
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                direct_revocation(mismatch),
+            )
+            .unwrap_err();
+            assert_eq!(error, ClientSecretReviewedServerBindingError::PathMismatch);
+            assert_eq!(format!("{error:?}"), "PathMismatch");
+            for payload in ["token.example", "issuer", "anchor"] {
                 assert!(!error.to_string().contains(payload));
             }
         }

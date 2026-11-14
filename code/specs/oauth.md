@@ -5208,15 +5208,18 @@ remain unavailable.
 
 The same bounded OAuth boundary now also consumes that complete audited
 request-to-signed-reviewed-server binding together with the exact HTTPS
-destination-bound direct no-check complete fixed-path revocation proof. It
-derives both destinations only through the retained repository-owned evidence,
-requires the same exact decoded certificate object, ASCII-case-insensitively
-equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
-same optional port, and moves both complete non-copyable inputs into one
-result. Requiring the already-composed request/signed-server proof preserves
+destination-bound direct no-check complete fixed-path revocation proof. The
+admitted direct completion must itself retain the exact signed reviewed-server
+path-and-anchor-self-signature proof shape. The composition derives both paths
+only through retained repository-owned evidence and requires the same exact
+decoded leaf, target-nearest issuer, and reviewed-anchor objects, ASCII-case-
+insensitively equal SNI DNS names, and ASCII-case-insensitively equal Host DNS
+names with the same optional port. It then moves both complete non-copyable
+inputs into one result. Requiring the already-composed request/signed-server proof preserves
 the stronger path-and-anchor-self-signature boundary instead of admitting a
 revocation proof as a substitute for it. A byte-equal independent certificate
-decode, different admitted SAN name, or different explicit port fails closed.
+decode, alternate intermediate or reviewed-root path, different admitted SAN
+name, or different explicit port fails closed.
 Stable failures and Debug output retain no provider, trace, request,
 credential, certificate, hostname, authority, path, key, signature, algorithm,
 constraint, revocation, status, or trust-root payloads.
