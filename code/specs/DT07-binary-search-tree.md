@@ -655,10 +655,10 @@ class BST:
         """Return True if value is in the BST."""
 
     def min_value(self) -> Any:
-        """Return the smallest value. Raises EmptyTreeError if empty."""
+        """Return the smallest value, or None if empty."""
 
     def max_value(self) -> Any:
-        """Return the largest value. Raises EmptyTreeError if empty."""
+        """Return the largest value, or None if empty."""
 
     def predecessor(self, value: Any) -> Optional[Any]:
         """Return the largest value strictly less than `value`."""
@@ -667,7 +667,7 @@ class BST:
         """Return the smallest value strictly greater than `value`."""
 
     def kth_smallest(self, k: int) -> Any:
-        """Return the k-th smallest value (1-indexed)."""
+        """Return the 1-indexed k-th value, or None if k is out of range."""
 
     def rank(self, value: Any) -> int:
         """Return count of values strictly less than `value`."""
@@ -708,14 +708,24 @@ BST inherits traversal methods (`inorder`, `preorder`, `postorder`, `height`,
 AVLTree (DT08) extends BST and overrides `insert` and `delete` to include
 rebalancing. It also adds `balance_factor`, `rotate_left`, `rotate_right`.
 
+This diagram describes conceptual reuse, not a required runtime dependency in
+every language. Rust owns a standalone `BST<T>` with private cached-size nodes
+and returns `Option` for empty extrema and invalid selection. Dart follows that
+standalone model rather than adding an unused dependency on DT03's generic
+`binary-tree` package. Dart accepts an optional comparator; comparator result
+zero defines key equality. Its sorted-array constructor checks that values are
+strictly increasing under that comparator. Rust uses the type's `Ord` relation
+and trusts the caller's sorted-input precondition.
+
 ### Composition languages (Rust, Go, Elixir, Lua, Perl, Swift)
 
 These languages use composition or protocols instead of inheritance:
 
 **Rust**: `BSTNode<T: Ord>` is a struct. Functions like `bst_insert`,
 `bst_delete`, `bst_search` take `Option<Box<BSTNode<T>>>` and return the
-same type. The BST "interface" is a trait `SearchTree<T>` that AVL and
-Red-Black also implement.
+same type. The `BST<T: Ord + Clone>` wrapper provides persistent convenience
+methods over that node representation. Empty extrema and out-of-range
+selection return `Option::None`.
 
 **Go**: `BSTNode[T constraints.Ordered]` struct with `Insert`, `Delete`,
 `Search` functions. An interface `SearchTree[T]` with those methods. AVL
@@ -726,6 +736,24 @@ Pattern matching makes the three deletion cases elegant.
 
 **Swift**: `BSTNode<T: Comparable>` class with mutating methods, or a
 functional variant using value types and returning new trees.
+
+**Dart**: `BST<T>` owns an immutable root and a `Comparator<T>`. The comparator
+defaults to `Comparable.compareTo`; comparator result zero means key equality.
+`fromSortedArray` accepts a strictly increasing list and constructs a balanced
+tree. Insert and delete return new trees and preserve prior versions. Dart's
+key type is non-null (`T extends Object`), so nullable extrema and selection
+unambiguously indicate empty or invalid results.
+
+### Shared result semantics
+
+In the Dart, Rust, and TypeScript implementations, empty minimum and maximum
+queries return the language's no-value result (`null` or `Option::None`).
+One-based `kth_smallest(k)` likewise returns no value when `k < 1` or
+`k > size`. `rank(value)` counts keys strictly less than the query whether or
+not it exists, and `predecessor` and `successor` return strict neighbors,
+including for absent keys. The Python-style pseudocode uses its documented
+exception mapping: empty extrema raise `EmptyTreeError`, and an invalid
+`kth_smallest` rank raises `IndexError`.
 
 ---
 
