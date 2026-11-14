@@ -90,8 +90,12 @@ fn run_on_java(source: &str, tag: &str) -> Option<String> {
     let tmp = std::env::temp_dir().join(format!("mccarthy_w5a_{tag}"));
     std::fs::create_dir_all(&tmp).expect("temp dir");
     std::fs::write(tmp.join("Main.class"), &bytes).expect("write Main.class");
+    // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+    // running in parallel a recycled PID's file can still be locked, and the JVM
+    // then prints a unified-logging warning to STDOUT, which this test compares
+    // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
     let out = std::process::Command::new("java")
-        .arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
+        .arg("-XX:-UsePerfData").arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
         .output().expect("run java");
     Some(String::from_utf8_lossy(&out.stdout).trim().to_string())
 }
