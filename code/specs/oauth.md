@@ -5076,9 +5076,11 @@ the result. A byte-equal independent decode fails closed, and callers cannot
 supply a detached certificate, callback-shaped target claim, path, status
 result, or trust assertion. Stable failures and Debug output retain no
 certificate, hostname, authority, path, key, signature, algorithm, status,
-constraint, or root payloads.
+constraint, or root payloads. This direct-revocation branch is orthogonal to
+the separate path-to-anchor-self-signature composition: it does not require,
+retain, or imply that signed-anchor evidence.
 
-This final direct-branch composition performs no parsing, new validation,
+This orthogonal direct-branch composition performs no parsing, new validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network access,
 or other external effect. It does not generalize revocation or path

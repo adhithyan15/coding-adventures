@@ -3,12 +3,11 @@
 //! An HTTPS client must not validate a certificate path for one decoded leaf
 //! and then send TLS and HTTP protocol identities proven against another leaf.
 //! This crate closes that one composition gap: it consumes the complete DNS
-//! destination proof and one of three progressively stronger retained server
-//! proofs: the strongest accumulated reviewed RSA path policy, that path
-//! already bound to its reviewed anchor's repository-owned self-signature, or
-//! the exact direct no-check complete fixed-path revocation policy. Every entry
-//! point requires its complete inputs to retain the same exact decoded target
-//! object.
+//! destination proof and one of three retained server proofs: the strongest
+//! accumulated reviewed RSA path policy, that path already bound to its
+//! reviewed anchor's repository-owned self-signature, or the orthogonal exact
+//! direct no-check complete fixed-path revocation policy. Every entry point
+//! requires its complete inputs to retain the same exact decoded target object.
 //!
 //! ```text
 //! HTTPS destination ── certificate ──┐
@@ -16,9 +15,11 @@
 //! reviewed server path ── target ────┘
 //! ```
 //!
-//! The stronger results retain the complete path-to-anchor-self-signature or
-//! direct no-check complete-revocation proof after this target check; they do
-//! not replace the path-only boundary.
+//! The composed results retain their respective complete
+//! path-to-anchor-self-signature or direct no-check complete-revocation proof
+//! after this target check; they do not replace the path-only boundary. The
+//! direct-revocation branch does not require or imply anchor-self-signature
+//! evidence.
 //!
 //! This is an evidence-integrity boundary, not certificate validation. It
 //! performs no new parsing, signature verification, path or Name validation,
