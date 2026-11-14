@@ -140,5 +140,89 @@ int main() {
         ISO_CHECK(eq(f2[1], "JOIN #three"));
     }
 
+    // ════════════════════════════════════════════════════════════════════
+    // SEC-011: a peer that never sends LF must not grow the buffer.
+    //
+    // The cap on an unterminated line is 511 bytes: 510 content bytes plus a
+    // CR whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512
+    // bytes including CRLF).  These tests mirror the Rust crate's.
+    // ════════════════════════════════════════════════════════════════════
+
+    // ── 16 MiB in 4 KiB chunks, no LF: the buffer never exceeds 512 ──────
+    {
+        Framer f;
+        const std::string chunk(4096, 'A');
+        std::size_t worst = 0;
+        for (std::size_t i = 0; i < (16u * 1024u * 1024u) / chunk.size(); i++) {
+            f.feed(chunk);
+            if (f.buffer_size() > worst) worst = f.buffer_size();
+        }
+        ISO_CHECK(worst <= 512u);
+        ISO_CHECK_EQ_UINT(f.frames().size(), 0u);
+    }
+
+    // ── 16 MiB in ONE feed, no LF: bounded ───────────────────────────────
+    {
+        Framer f;
+        f.feed(std::string(16u * 1024u * 1024u, 'A'));
+        ISO_CHECK(f.buffer_size() <= 512u);
+        ISO_CHECK_EQ_UINT(f.frames().size(), 0u);
+    }
+
+    // ── recovery: the flooded line is dropped whole, the next frames ─────
+    {
+        Framer f;
+        f.feed(std::string(4096, 'A'));
+        f.feed(std::string(4096, 'B'));
+        f.feed(std::string("tail\r\nNICK alice\r\n"));
+        auto fr = f.frames();
+        ISO_CHECK_EQ_UINT(fr.size(), 1u);
+        if (fr.size() == 1) ISO_CHECK(eq(fr[0], "NICK alice"));
+        ISO_CHECK_EQ_UINT(f.buffer_size(), 0u);
+    }
+
+    // ── 510 content bytes + CR is a legal pending line: kept ─────────────
+    {
+        Framer f;
+        f.feed(std::string(510, 'A') + "\r");
+        ISO_CHECK_EQ_UINT(f.buffer_size(), 511u);
+        f.feed(std::string("\n"));
+        auto fr = f.frames();
+        ISO_CHECK_EQ_UINT(fr.size(), 1u);
+        if (fr.size() == 1) ISO_CHECK_EQ_UINT(fr[0].size(), 510u);
+    }
+
+    // ── 512 bytes with no LF: dropped, then skip to the LF ───────────────
+    {
+        Framer f;
+        f.feed(std::string(512, 'A'));
+        ISO_CHECK_EQ_UINT(f.buffer_size(), 0u);
+        f.feed(std::string("\r\nPING x\r\n"));
+        auto fr = f.frames();
+        ISO_CHECK_EQ_UINT(fr.size(), 1u);
+        if (fr.size() == 1) ISO_CHECK(eq(fr[0], "PING x"));
+    }
+
+    // ── complete lines that arrived before the flood survive ─────────────
+    {
+        Framer f;
+        f.feed(std::string("NICK a\r\n") + std::string(2000, 'A'));
+        auto fr = f.frames();
+        ISO_CHECK_EQ_UINT(fr.size(), 1u);
+        if (fr.size() == 1) ISO_CHECK(eq(fr[0], "NICK a"));
+        ISO_CHECK_EQ_UINT(f.buffer_size(), 0u);
+    }
+
+    // ── reset() ends the skip-to-LF state ────────────────────────────────
+    {
+        Framer f;
+        f.feed(std::string(600, 'A'));
+        f.reset();
+        f.feed(std::string("NICK a\r\n"));
+        auto fr = f.frames();
+        ISO_CHECK_EQ_UINT(fr.size(), 1u);
+        if (fr.size() == 1) ISO_CHECK(eq(fr[0], "NICK a"));
+    }
+
     return ISO_TEST_RESULT();
 }

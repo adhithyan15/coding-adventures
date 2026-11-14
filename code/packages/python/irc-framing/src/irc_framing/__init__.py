@@ -32,8 +32,14 @@ RFC 1459 maximum line length
 
 RFC 1459 §2.3 states that a single IRC message MUST NOT exceed 512 bytes
 **including** the trailing ``\\r\\n``.  That leaves at most 510 bytes of
-content.  Lines that exceed this limit are silently discarded to prevent
-memory exhaustion from malformed or malicious clients.
+content.  RFC 2812 §2.3 keeps the same 512-byte limit.  Lines that exceed this
+limit are silently discarded to prevent memory exhaustion from malformed or
+malicious clients.
+
+That limit alone is not enough: it is only applied to lines that already ended
+in LF.  A peer that never sends LF would grow the buffer without bound
+(SEC-011, CWE-400/770).  So a line still lacking its LF after 511 bytes
+(510 plus a CR) is dropped early and the framer skips input up to the next LF.
 
 Usage example::
 
@@ -57,6 +63,13 @@ __version__ = "0.1.0"
 # RFC 1459 §2.3: maximum line length is 512 bytes including CRLF.
 # Content beyond 510 bytes must be discarded.
 _MAX_CONTENT_BYTES: int = 510
+
+# The most bytes we will hold for one line that has not yet seen its LF.
+#
+# A legal line can be 510 content bytes plus a CR whose LF has not arrived
+# yet, i.e. 511 bytes.  One more byte with no LF and the line can no longer be
+# legal (SEC-011), so we stop remembering it.
+_MAX_PENDING_BYTES: int = _MAX_CONTENT_BYTES + 1
 
 
 class Framer:
@@ -85,6 +98,12 @@ class Framer:
         # bytes (which is immutable) so we can append to it cheaply and slice
         # out frames in-place without creating intermediate copies each time.
         self._buf: bytearray = bytearray()
+        # Length of the unterminated tail of _buf (bytes after the last LF).
+        # Invariant: _tail_len <= _MAX_PENDING_BYTES after every feed().
+        self._tail_len: int = 0
+        # True while we are skipping the rest of an overlong line: everything
+        # up to and including the next LF is thrown away, unread.
+        self._discarding: bool = False
 
     # ------------------------------------------------------------------
     # Public API
@@ -98,11 +117,44 @@ class Framer:
 
         :param data: Raw bytes received from the network.  May be any length,
             including zero.
+
+        Memory bound (SEC-011)
+        ----------------------
+        The unterminated tail (bytes after the last LF) never exceeds 511
+        bytes.  When it would, the partial line is dropped and the framer
+        *discards input up to the next LF* -- fail closed, the same silent
+        discard that already applies to a complete overlong line, so the API
+        is unchanged.  Complete lines already buffered are kept; the caller
+        bounds those by calling :meth:`frames` after each read::
+
+            data = [ ...complete lines... LF ][ unterminated tail ]
+                                              ^ only this part can be flooded
         """
-        # extend() on a bytearray is O(1) amortised — analogous to
-        # list.extend().  No CRLF scanning happens here; that is deferred
-        # to frames() so the caller decides when to drain.
-        self._buf.extend(data)
+        # Step 1: while discarding an overlong line, skip to just past its LF.
+        if self._discarding:
+            pos = data.find(b"\n")
+            if pos == -1:
+                return  # still inside the overlong line
+            self._discarding = False
+            data = data[pos + 1 :]
+
+        # Step 2: split data at its last LF.  The head (through that LF)
+        # completes lines and is stored; only the tail can be flooded.
+        pos = data.rfind(b"\n")
+        head, tail = data[: pos + 1], data[pos + 1 :]
+        if head:
+            self._buf.extend(head)
+            self._tail_len = 0
+
+        # Step 3: store the tail only if the pending line still fits.  We
+        # check *before* extending so a huge single feed is never copied.
+        if self._tail_len + len(tail) > _MAX_PENDING_BYTES:
+            del self._buf[len(self._buf) - self._tail_len :]  # drop partial line
+            self._tail_len = 0
+            self._discarding = True
+        else:
+            self._buf.extend(tail)
+            self._tail_len += len(tail)
 
     def frames(self) -> Iterator[bytes]:
         """Yield complete lines from the buffer, with ``\\r\\n`` stripped.
@@ -171,6 +223,9 @@ class Framer:
 
             yield line
 
+        # Only the unterminated tail remains in the buffer.
+        self._tail_len = len(self._buf)
+
     def reset(self) -> None:
         """Discard all buffered data.
 
@@ -183,6 +238,8 @@ class Framer:
         # makes the intent explicit and allows the old allocation to be
         # garbage-collected.
         self._buf = bytearray()
+        self._tail_len = 0
+        self._discarding = False
 
     @property
     def buffer_size(self) -> int:

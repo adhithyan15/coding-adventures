@@ -185,3 +185,81 @@ describe("Framer", () => {
     assert.equal(frames[0].toString("utf-8"), "PRIVMSG #chan :hello world");
   });
 });
+
+// ---------------------------------------------------------------------------
+// SEC-011: a peer that never sends LF must not grow the buffer.
+//
+// The cap on an unterminated line is 511 bytes: 510 content bytes plus a CR
+// whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512 bytes
+// including CRLF).  These tests mirror the Rust crate's SEC-011 tests.
+// ---------------------------------------------------------------------------
+describe("Framer pending-line bound (SEC-011)", () => {
+  const SIXTEEN_MIB = 16 * 1024 * 1024;
+  let framer: Framer;
+
+  beforeEach(() => {
+    framer = new Framer();
+  });
+
+  it("stays bounded when fed 16 MiB without LF in chunks", () => {
+    const chunk = Buffer.alloc(4096, 0x41);
+    let worst = 0;
+    for (let i = 0; i < SIXTEEN_MIB / chunk.length; i++) {
+      framer.feed(chunk);
+      worst = Math.max(worst, framer.bufferSize);
+    }
+    assert.ok(worst <= 512, `buffer grew to ${worst} bytes with no LF`);
+    assert.deepEqual(framer.frames(), []);
+  });
+
+  it("stays bounded when fed 16 MiB without LF in one call", () => {
+    framer.feed(Buffer.alloc(SIXTEEN_MIB, 0x41));
+    assert.ok(framer.bufferSize <= 512, `buffer grew to ${framer.bufferSize}`);
+    assert.deepEqual(framer.frames(), []);
+  });
+
+  it("recovers after a flood: the next valid line frames intact", () => {
+    framer.feed(Buffer.alloc(4096, 0x41));
+    framer.feed(Buffer.alloc(4096, 0x42));
+    framer.feed(Buffer.from("tail\r\nNICK alice\r\n"));
+    const frames = framer.frames();
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString(), "NICK alice");
+    assert.equal(framer.bufferSize, 0);
+  });
+
+  it("keeps a pending line of 510 bytes plus CR", () => {
+    framer.feed(Buffer.concat([Buffer.alloc(510, 0x41), Buffer.from("\r")]));
+    assert.equal(framer.bufferSize, 511);
+    framer.feed(Buffer.from("\n"));
+    const frames = framer.frames();
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].length, 510);
+  });
+
+  it("drops a pending line of 512 bytes and skips to its LF", () => {
+    framer.feed(Buffer.alloc(512, 0x41));
+    assert.equal(framer.bufferSize, 0);
+    framer.feed(Buffer.from("\r\nPING x\r\n"));
+    const frames = framer.frames();
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString(), "PING x");
+  });
+
+  it("keeps complete lines that arrived before the flood", () => {
+    framer.feed(Buffer.concat([Buffer.from("NICK a\r\n"), Buffer.alloc(2000, 0x41)]));
+    const frames = framer.frames();
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString(), "NICK a");
+    assert.equal(framer.bufferSize, 0);
+  });
+
+  it("reset() clears the discard state", () => {
+    framer.feed(Buffer.alloc(600, 0x41));
+    framer.reset();
+    framer.feed(Buffer.from("NICK a\r\n"));
+    const frames = framer.frames();
+    assert.equal(frames.length, 1);
+    assert.equal(frames[0].toString(), "NICK a");
+  });
+});

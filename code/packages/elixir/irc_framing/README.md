@@ -47,6 +47,12 @@ framer = IrcFraming.feed(framer, "PING :server\r\n")
 
 - Lines may end with `\r\n` (CRLF) or bare `\n` (LF). Both are accepted.
 - Lines longer than 510 bytes (RFC 1459 limit) are silently discarded.
+- The pending (not yet LF-terminated) line is capped at 511 bytes: 510 content
+  bytes plus a CR (RFC 1459 and RFC 2812 section 2.3). The 510-byte rule alone
+  does not bound memory, because it only applies once a line ends in LF; past
+  the 511-byte cap the partial line is dropped and input is skipped up to the
+  next LF, so a peer that never sends LF cannot exhaust memory (SEC-011). No API
+  change; the struct gains `:tail_len` and `:discarding` fields.
 - The framer struct is immutable and purely functional — no processes,
   no I/O, no side effects.
 - `feed/2` returns a new framer with the buffered bytes appended.

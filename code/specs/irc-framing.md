@@ -67,6 +67,17 @@ beyond 512 bytes without encountering a `\r\n`, the accumulated bytes are discar
 framer resets its internal state for that line. This prevents memory exhaustion from malformed
 or malicious clients.
 
+**Precise rule (SEC-011).** The cap on an unterminated line is **511 bytes**: 510 content bytes
+plus a CR whose LF has not arrived yet (RFC 1459 and RFC 2812 section 2.3 both give 512 bytes
+including CRLF). One more byte with no LF and the line cannot be legal. The framer then drops
+the partial line and enters a *discard* state that skips input up to and including the next LF,
+keeping no data, so memory stays constant however much a peer sends. The discard state ends at
+that LF and in `reset()`. Without the skip, the remainder of the flooded line would be re-framed
+as a bogus short line. Complete lines already buffered are kept, and there is no API change:
+this is the same silent discard that applies to a complete overlong line. An implementation
+that only checked length once a line ended in LF (the original ports) let a peer that never
+sends LF grow the buffer without limit (CWE-400/770).
+
 ### Buffer Strategy
 
 The framer maintains a `bytearray` as its internal accumulation buffer. Appending bytes to a

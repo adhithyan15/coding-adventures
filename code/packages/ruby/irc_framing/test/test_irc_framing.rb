@@ -116,4 +116,69 @@ class TestFramer < Minitest::Test
     @framer.feed("\r\n")
     assert_equal ["NICK alice"], @framer.frames
   end
+
+  # -------------------------------------------------------------------------
+  # SEC-011: a peer that never sends LF must not grow the buffer.
+  #
+  # The cap on an unterminated line is 511 bytes: 510 content bytes plus a CR
+  # whose LF has not arrived yet (RFC 1459 / RFC 2812 section 2.3: 512 bytes
+  # including CRLF).  These tests mirror the Rust crate's SEC-011 tests.
+  # -------------------------------------------------------------------------
+
+  SIXTEEN_MIB = 16 * 1024 * 1024
+
+  def test_no_lf_in_chunks_is_bounded
+    chunk = "A" * 4096
+    worst = 0
+    (SIXTEEN_MIB / chunk.bytesize).times do
+      @framer.feed(chunk)
+      worst = [worst, @framer.buffer_size].max
+    end
+    assert worst <= 512, "buffer grew to #{worst} bytes with no LF"
+    assert_equal [], @framer.frames
+  end
+
+  def test_no_lf_in_one_feed_is_bounded
+    @framer.feed("A" * SIXTEEN_MIB)
+    assert @framer.buffer_size <= 512, "buffer grew to #{@framer.buffer_size}"
+    assert_equal [], @framer.frames
+  end
+
+  def test_framer_recovers_after_flood
+    # The flooded line is dropped whole, up to its LF; the next line frames.
+    @framer.feed("A" * 4096)
+    @framer.feed("B" * 4096)
+    @framer.feed("tail\r\nNICK alice\r\n")
+    assert_equal ["NICK alice"], @framer.frames
+    assert_equal 0, @framer.buffer_size
+  end
+
+  def test_pending_line_at_limit_is_kept
+    # 510 content bytes plus a CR is a legal line still waiting for its LF.
+    @framer.feed(("A" * 510) + "\r")
+    assert_equal 511, @framer.buffer_size
+    @framer.feed("\n")
+    assert_equal ["A" * 510], @framer.frames
+  end
+
+  def test_pending_line_over_limit_is_dropped
+    @framer.feed("A" * 512)
+    assert_equal 0, @framer.buffer_size
+    @framer.feed("\r\nPING x\r\n")
+    assert_equal ["PING x"], @framer.frames
+  end
+
+  def test_complete_lines_before_flood_survive
+    @framer.feed("NICK a\r\n" + ("A" * 2000))
+    assert_equal ["NICK a"], @framer.frames
+    assert_equal 0, @framer.buffer_size
+  end
+
+  def test_reset_clears_discard_state
+    # Reset must end the skip-to-LF state, or the next line is swallowed.
+    @framer.feed("A" * 600)
+    @framer.reset
+    @framer.feed("NICK a\r\n")
+    assert_equal ["NICK a"], @framer.frames
+  end
 end
