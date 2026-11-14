@@ -25,6 +25,12 @@ struct IrcFramer {
     unsigned char *buf;
     size_t len;
     size_t cap;
+    /* Length of the unterminated tail of `buf` (the bytes after the last LF).
+     * Invariant: tail_len <= IRC_MAX_PENDING_BYTES after every feed. */
+    size_t tail_len;
+    /* Non-zero while we are skipping the rest of an overlong line: everything
+     * up to and including the next LF is thrown away, unread. */
+    int discarding;
 };
 
 /* Ensure room for `extra` more bytes, guarding the doubling against overflow.
@@ -69,6 +75,8 @@ IrcFramer *irc_framer_new(void) {
     f->buf = NULL;
     f->len = 0;
     f->cap = 0;
+    f->tail_len = 0;
+    f->discarding = 0;
     return f;
 }
 
@@ -78,11 +86,62 @@ void irc_framer_free(IrcFramer *f) {
     free(f);
 }
 
+/* Number of bytes of data[0..len) up to and including its last LF (0 if none). */
+static size_t last_lf_end(const unsigned char *data, size_t len) {
+    while (len > 0) {
+        if (data[len - 1] == '\n') return len;
+        len--;
+    }
+    return 0;
+}
+
+/* Memory bound (SEC-011). The unterminated tail never exceeds
+ * IRC_MAX_PENDING_BYTES; past that the partial line is dropped and input is
+ * skipped up to the next LF.
+ *
+ *     data = [ ...complete lines... LF ][ unterminated tail ]
+ *                                       ^ only this part can be flooded
+ *
+ * Everything that can fail (the reserve) happens before any state changes, so
+ * an allocation failure leaves the framer exactly as it was. */
 int irc_framer_feed(IrcFramer *f, const unsigned char *data, size_t len) {
     if (len == 0) return 0; /* empty feed is a safe no-op */
-    if (!buf_reserve(f, len)) return -1;
-    memcpy(f->buf + f->len, data, len);
-    f->len += len;
+
+    /* Step 1: while discarding an overlong line, skip to just past its LF. */
+    if (f->discarding) {
+        const unsigned char *nl = memchr(data, '\n', len);
+        if (!nl) return 0; /* still inside the overlong line: keep nothing */
+        len -= (size_t)(nl - data) + 1;
+        data = nl + 1;
+    }
+
+    /* Step 2: split data at its last LF. The head (through that LF) completes
+     * lines and is stored; only the tail can be flooded. */
+    size_t head = last_lf_end(data, len);
+    size_t tail = len - head;
+    size_t pending = head ? 0 : f->tail_len;
+
+    /* Step 3: store the tail only if the pending line still fits. We decide
+     * *before* copying so a huge single feed is never copied. */
+    int overflow = tail > (size_t)IRC_MAX_PENDING_BYTES - pending;
+    if (!buf_reserve(f, head + (overflow ? 0 : tail))) return -1;
+
+    /* Commit. */
+    f->discarding = 0;
+    if (head) {
+        memcpy(f->buf + f->len, data, head);
+        f->len += head;
+        f->tail_len = 0;
+    }
+    if (overflow) {
+        f->len -= f->tail_len; /* drop the partial line */
+        f->tail_len = 0;
+        f->discarding = 1;
+    } else if (tail) {
+        memcpy(f->buf + f->len, data + head, tail);
+        f->len += tail;
+        f->tail_len += tail;
+    }
     return 0;
 }
 
@@ -91,6 +150,8 @@ void irc_framer_reset(IrcFramer *f) {
     f->buf = NULL;
     f->len = 0;
     f->cap = 0;
+    f->tail_len = 0;
+    f->discarding = 0;
 }
 
 size_t irc_framer_buffer_size(const IrcFramer *f) { return f->len; }
@@ -154,6 +215,7 @@ int irc_framer_frames(IrcFramer *f, IrcFrames *out) {
 
     /* Success: drain the whole consumed prefix in one move. */
     buf_drain_front(f, cursor);
+    f->tail_len = f->len; /* only the unterminated tail remains */
     out->frames = arr;
     out->count = n;
     return 0;
