@@ -15,7 +15,7 @@ remain historical and must not be read as the current queue.
 | WX-RD1 | Bound the ground evaluator's deep read-copy amplification while preserving public `EvalValue` and error shapes | Existing P1 under WX-001, selected as the next bounded item after PR #19236. Spec-first guard contract; the 32-byte portable slot-charge under-accounting and total-memory/RSS claims remain open after the first guard slice. |
 | WD-004b1 | Add the safe lane artifact loader, registry join, raw digest checks, and static readiness checks | After WD-004a; preserve the legacy Rust loader and make no source/build/toolchain authenticity claim beyond the named checks. |
 | WD-004b2 | Integrate lane-aware package reports, CLI/check behavior, and honest absent rungs | After WD-004b1; keep Rust-only proof/effect attestations isolated from non-Rust lanes. |
-| Python L0 runner | Execute portable corpus cases against the Python binding, with sabotage, manifest, and report | After WD-004b1/WD-004b2; then continue the per-lane WD-1xx sequence. |
+| WD-101 (Python L0 runner) | First non-Rust lane: `python/warrant-corpus` runner, `python/ct-compare` binding and committed lane manifest, BUILD drift/sabotage/validate lines, repository-input registration | Delivered on branch `claude/warrant-python-lane` (not yet merged). 12 examples; 9 exhaustive suites, 572,109 cases enumerated in Python over finite domains (`Bytes[347]` x `Bytes[347]`, `Bytes<0/1/2/4/16>`, `U64[377]` x `U64[377]`), every `inputs_sha256`/`expected_sha256`/call count equal to the Rust-emitted corpus; 8 negative controls, each caught by a required claim; each `sabotage` child exits 1 with `not ok`. The consumer row stays `planned`: `ca-assurance-report`'s own test pins the checked-in registry to `planned`, and flipping it belongs with WD-004b1. Not delivered: report integration, sandbox arming (CAP-RT-1xx Python), native (layer B) suites, the shared `warrant-corpus-conformance-v1` fixture of VER04i section 9. |
 
 WX implementation continues under the existing WX-001 owner and IDs; this
 shard does not create a duplicate feature owner. WX-H/E prerequisites merged
@@ -33,6 +33,34 @@ from extending WD-003's portable corpus profile. PR #19227 merged as
 `173110a5254d53761ee4ba82656bb4ae7f7c6c30`; it is a wasm-leb128 adopter that
 changes legacy Rust assurance behavior, not a WD-004a consumer-registry
 implementation.
+
+## Gaps handed to WD-004b1 by WD-101
+
+- **Lane artifact loader contract.** The checked-in manifest is `code/packages/python/ct-compare/evidence/test-manifest.json`
+  (`schema: warrant-lane-evidence-v1`, 29 rows, sorted by id). It was checked with a scratch build of WD-004a's own
+  `validate_lane_evidence` against a registry copy flipped to `active`: accepted, and a one-field edit rejected. That
+  validator is a library function with no CLI, so the BUILD instead runs the runner's Python port of the same rules
+  (`validate-manifest`); a loader should make the Rust check callable and replace the port as the gate.
+- **`planned` to `active`.** Flip the `python/ct-compare` row in `consumers.json` (and `active_consumer_count`) when the
+  loader lands, and update `test_lane_evidence.rs`, which asserts the checked-in row is `planned`.
+- **`toolchain.version` is excluded from the drift check** (`check` compares everything else, byte formatting included).
+  A report-side freshness check must not treat it as evidence, and `source_sha256`/`runner.src_sha256` are the
+  `warrant-src-v1` framing over `src/coding_adventures_ct_compare/` and the runner package respectively.
+- **`corpus` is the directory** (`code/specs/fixtures/ct-compare-warrant-v1`), `spec` the repo-relative spec path; both are
+  re-derived by the runner, not trusted.
+- **Honest labels.** The lane proves behaviour over the enumerated domains through the binding only. Proof label is
+  `unchecked`, property/fuzz `not-run`, and constant-time is "required by spec; not established in this lane".
+- **Binding fidelity.** The `errors=` row maps by exception class, so any `ValueError` from `ct_select_bytes` reads as
+  `CT_SELECT_LENGTH_MISMATCH`; the corpus cannot distinguish them.
+
+## Runtime jail (CAP-RT-1xx) for Python: deliberately not in WD-101
+
+VER04i section 12 expects each lane's corpus run to repeat under a VER08b sandbox derived from
+`required_capabilities.json` and to record a `sandbox` field. WD-101 neither arms a Python filter nor writes that field,
+so the lane cannot be `release-ready` (VER04i 12). The `python/warrant-corpus` runner declares the capabilities it needs
+(fs read/write, env read of `WARRANT_EVIDENCE_*`, one child process for `sabotage`); a Python jail has to allow exactly
+those for the runner and none for the library, arm after interpreter start-up, and re-run the same corpus with the same
+binding. Tracked under CAP-RT-1xx (Python); not started.
 
 ## Receipts and status
 

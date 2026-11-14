@@ -434,7 +434,7 @@ swift, dart, ocaml (need a CT01 ct-compare port first).
 | done / WD-003 | Rust Warrant compiler emits the language-neutral corpus for ct-compare Warrant v0; independent stdlib-only Python semantic/digest validator; byte-stable regeneration and falsification checks | PR #19177 merged as `d746f3b16bbbc78781ade0987abd88bc5a953e37`; explicitly unsharded ct_compare-v0 with no Python lane execution. [Current queue, receipts, and discoveries](VER-BACKLOG.d/portable-warrant.md) |
 | done / WD-908 | Route Linux Lua prerequisites through bounded apt install retries after repeated CI DNS failures | PR #19177 merged; retry wrapper preserves both package lists and step timeouts, and hosted validation passed. See [portable Warrant receipts](VER-BACKLOG.d/portable-warrant.md) |
 | P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | WD-004a merged in PR #19236; next WD-004b1 lane artifact loader, then WD-004b2 report/CLI integration, then Python L0. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
-| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | after WD-004b1/WD-004b2; Python runner follows the real lane manifest/report contract. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
+| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | Python runner and manifest delivered as WD-101 on branch `claude/warrant-python-lane` (report integration, sandbox and layer B still open); other lanes after WD-004b1/WD-004b2. See [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md) |
 | P3 / WD-2xx | Native Warrant backends emitting L2 PBT/fuzz suites per lane (TypeScript first: engines exist) | waiting WD-1xx per lane |
 | P3 / WD-3xx | CT01 ct-compare ports for lua, perl, haskell, swift, dart, ocaml, then their WD-1xx lanes | independent |
 | P4 / WD-4xx | Proof lanes via WIR front ends (VER14), C first | waiting VER14 spec |
@@ -606,7 +606,7 @@ when the fix is merged and verified on fetched main.
 | P0 / CAP-RT-001 | Spec VER08b + new crate capability-runtime-conformance; ct-compare pilot | local, branch worktree-agent-a9f1811c0377a9acf (6 commits); READY-WITH-CAVEATS: 6-syscall armed baseline, 18/18 negative controls caught by both rings, Docker ring live; coverage 72.7% (sandboxed child cannot flush profiles); vDSO time reads invisible; CI runner strace/Docker unverified |
 | P1 / CAP-RT-002 | Feed runtime evidence into the evidence-derived assurance report (new rung; `--check` requires it on Linux) | after WD-001 + CAP-RT-001 (mandatory: owner 2026-11-12, VER27 §6.1) |
 | P1 / CAP-RT-003 | Make CAP-RT a required step of every leaf-library conversion (LP-0xx) | after CAP-RT-001 (mandatory: owner 2026-11-12, VER27 §6.1) |
-| P2 / CAP-RT-1xx | Per-language lanes: arm the filter after interpreter/VM startup (Python, TypeScript/Node, Go, JVM, .NET, ...) | after CAP-RT-001 |
+| P2 / CAP-RT-1xx | Per-language lanes: arm the filter after interpreter/VM startup (Python, TypeScript/Node, Go, JVM, .NET, ...) | after CAP-RT-001. Python: not started; the WD-101 Python Warrant lane runs unsandboxed, so it records no `sandbox` field and cannot be `release-ready` (see [portable Warrant queue](VER-BACKLOG.d/portable-warrant.md)) |
 
 ### Follow-ups logged 2026-11-09 from agent reports
 
