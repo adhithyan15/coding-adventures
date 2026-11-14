@@ -5242,6 +5242,41 @@ repository-owned TLS/HTTP composition, audited network effects, and response
 policy remain separate blockers. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+The bounded OAuth boundary now also admits the exact HTTPS destination-bound
+nested no-check complete fixed-path revocation proof as a separate nominal
+branch. The nested completion must retain the same exact signed reviewed-
+server path-and-anchor-self-signature proof shape used by the already-bound
+request/server evidence. The composition derives both path identities only
+through retained repository-owned evidence and requires the same exact decoded
+leaf, target-nearest issuer, and reviewed-anchor objects, ASCII-case-
+insensitively equal SNI DNS names, and ASCII-case-insensitively equal Host DNS
+names with the same optional port. Both accumulated server paths must contain
+exactly one processed intermediate. The nested completion adds its retained
+responder-revocation and responder no-check policy layers, but its server-chain
+coverage is still the target plus that one intermediate; zero- or multi-
+intermediate server paths therefore fail closed. Success moves the complete
+request/signed-server binding and complete nested-revocation proof into one
+non-copyable result. A byte-equal independent certificate decode, alternate
+intermediate or reviewed-root path, different admitted SAN name, or different
+explicit port also fails closed. Stable failures and Debug output retain no
+provider, trace, request, credential, certificate, hostname, authority, path,
+key, signature, algorithm, constraint, revocation, status, or trust-root
+payloads.
+
+This nested-branch composition does not borrow or copy released request bytes,
+so it introduces no credential access and emits no provider or trace audit
+event. The release's existing audit gate remains mandatory for every later
+request-byte borrow. It performs no parsing, new validation, cryptography,
+credential editing, signing, storage, clock acquisition, status acquisition or
+refresh, I/O, network access, or other external effect. It does not generalize
+revocation or path construction, cover the double-nested, recursive, or
+alternative intermediate-status-responder complete branches, add trust-anchor
+semantics, complete RFC 5280 Name or path validation, build or run TLS or HTTP,
+authorize OAuth transport, or grant network authority. Those remaining
+revocation branches, repository-owned TLS/HTTP composition, audited network
+effects, and response policy remain separate blockers. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
 prerequisite now also provides an ordered entry point that consumes fully
 routed authenticated OCSP target status together with the complete reviewed
