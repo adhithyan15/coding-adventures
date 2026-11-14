@@ -12,19 +12,22 @@ package main
 // stops an action at its first failing step, and writes the `-emit-results`
 // file the build tool would. Everything else is the product.
 //
-// Five actions, one shard of one, each chosen for the verdict it must get:
+// Six actions, one shard of one, each chosen for the verdict it must get:
 //
 //	A  x/a  a clean hit        reads its own data.txt, writes nothing
 //	B  x/b  a failed step      `exit 3`; the action's status is failed
-//	C  x/c  a write the trace  `touch <the checkout>`: a write to the repository
-//	        cannot place       root itself has no write root to coarsen to, so the
-//	                           classifier says writes_complete false (W7, section
-//	                           5.5): an unknown write set, run-void (G1)
+//	C  x/c  a write the trace  `chmod u+w <the checkout>`: a metadata write to the
+//	        cannot place       repository root itself has no write root to coarsen
+//	                           to, so the classifier says writes_complete false (W7,
+//	                           section 5.5): an unknown write set, run-void (G1).
+//	                           The step fails if chmod cannot run (no `|| true`)
 //	D  x/d  a step run twice   the supervisor refuses the second run (125) and
 //	                           leaves a .rerun marker: unknown_writes
 //	E  x/e  a tracked file     clean itself, but its data.txt is rewritten after
 //	        changed after      the build, by something no trace saw: the post-build
 //	        the build          VerifyTree counts one unexplained tracked change
+//	F  x/f  an empty recipe    a comment-only BUILD: no step, results built 0 of 0;
+//	                           vacuously complete, known, and not emitted
 //
 // What is asserted, exactly:
 //
@@ -136,6 +139,7 @@ func TestSandboxRecordCollect(t *testing.T) {
 		actC = "code/packages/x/c"
 		actD = "code/packages/x/d"
 		actE = "code/packages/x/e"
+		actF = "code/packages/x/f"
 	)
 	type action struct {
 		rel   string
@@ -145,16 +149,24 @@ func TestSandboxRecordCollect(t *testing.T) {
 	actions := []action{
 		{actA, "x/a", []string{"echo hi; cat data.txt"}},
 		{actB, "x/b", []string{"exit 3"}},
-		{actC, "x/c", []string{"touch " + repo + " || true"}},
+		// A metadata write to the repository root (W7). Quoted, absolute, and with
+		// no `|| true`: if chmod cannot run the step fails and so does this test,
+		// loudly, instead of the trigger silently going away.
+		{actC, "x/c", []string{`chmod u+w "` + repo + `"`}},
 		{actD, "x/d", []string{"echo d"}},
 		{actE, "x/e", []string{"cat data.txt"}},
+		{actF, "x/f", []string{}},
 	}
 
 	files := recStepPolicyFiles(imageRoots())
 	files["code/programs/go/build-tool/go.mod"] = "module example.com/bt\n\ngo 1.26\n"
 	files["code/programs/go/build-tool/main.go"] = "package main\n"
 	for _, a := range actions {
-		files[a.rel+"/BUILD"] = a.steps[0] + "\n"
+		if len(a.steps) == 0 {
+			files[a.rel+"/BUILD"] = "# nothing to run\n"
+		} else {
+			files[a.rel+"/BUILD"] = a.steps[0] + "\n"
+		}
 		files[a.rel+"/data.txt"] = "content of " + a.rel + "\n"
 	}
 	for p, c := range files {
@@ -299,6 +311,14 @@ exit 0
 	if code != 0 {
 		t.Fatalf("record collect: exit %d\nstdout: %s\nstderr: %s", code, stdout, stderr)
 	}
+	// The first CI run of this test must be diagnosable: whatever fails below,
+	// show what collect itself said (its report names each failed post-build check
+	// and the paths it could not explain).
+	t.Cleanup(func() {
+		if t.Failed() {
+			t.Logf("collect's report:\n%s\nstderr: %s", stdout, stderr)
+		}
+	})
 	for _, want := range []string{"tracked_changed_unexplained 1", "post_inventory_unexplained 0", "unknown write set: " + actD, "unknown write set: " + actC + ": writes_complete is false"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("collect's report lacks %q:\n%s", want, stdout)
@@ -329,7 +349,7 @@ exit 0
 	if len(h.Void) != 1 || h.Void[0] != "tracked-changed" || h.TrackedChangedUnexplained != 1 || h.PostInventoryUnexplained != 0 {
 		t.Fatalf("header %+v", h)
 	}
-	if len(sh.Records) != 5 {
+	if len(sh.Records) != 6 {
 		t.Fatalf("%d records", len(sh.Records))
 	}
 	rec := func(a string) recfmt.ShardRecord {
@@ -375,6 +395,12 @@ exit 0
 		t.Errorf("E: %+v", re)
 	}
 
+	// F: an empty recipe is vacuously complete: known, built, nothing run.
+	rf2 := rec(actF)
+	if rf2.Unknown != "" || rf2.Status != "built" || rf2.StepsRun != 0 || rf2.StepsTotal != 0 || !complete(rf2) {
+		t.Errorf("F: %+v", rf2)
+	}
+
 	// The merge reads it: strict, the run is void, for the causes the verdicts
 	// above say, and each action gets the verdict it should.
 	steps := map[string]string{}
@@ -394,6 +420,9 @@ exit 0
 		t.Fatalf("a run with an unknown write set and an unexplained tracked change was emitted: %+v", m)
 	}
 	causes := strings.Join(m.RunVoid, "\n")
+	if strings.Contains(causes, ": "+actF) {
+		t.Errorf("the empty recipe was charged: %s", causes)
+	}
 	for _, want := range []string{
 		"writes_complete is false: " + actC, // C
 		"unknown_writes",                    // D
@@ -417,6 +446,11 @@ exit 0
 		case actE:
 			if !o.ShardVoid || o.Emitted {
 				t.Errorf("E: the shard is void, %+v", o)
+			}
+		case actF:
+			// Not unknown (no M1 cause names it) and not emitted.
+			if o.Emitted {
+				t.Errorf("F: an empty recipe was emitted: %+v", o)
 			}
 		}
 	}

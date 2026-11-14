@@ -143,6 +143,11 @@ func runRecordCollect(args []string, stdout, stderr io.Writer) int {
 	for _, u := range res.Unknown {
 		fmt.Fprintf(stdout, "unknown write set: %s\n", u)
 	}
+	// Why a post-build check failed (printable and bounded by Collect): the shard
+	// cannot carry it, and a void shard has to say why in the log.
+	for _, p := range res.PostProblems {
+		fmt.Fprintf(stdout, "post-build problem: %s\n", p)
+	}
 	return 0
 }
 

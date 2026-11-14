@@ -438,7 +438,7 @@ func TestCollectRanNothingIsExplicitFalse(t *testing.T) {
 	f.setResults(
 		ResultsPackage{Package: ca, Status: "built", StepsRun: 1, StepsTotal: 1},
 		ResultsPackage{Package: cb, Status: "built", StepsRun: 2, StepsTotal: 2})
-	os.Remove(f.out)
+	f.again()
 	_, sh = f.collect()
 	if z := requireKnown(t, sh, cz); z.Status != "not-run" {
 		t.Fatalf("%+v", z)
@@ -448,7 +448,7 @@ func TestCollectRanNothingIsExplicitFalse(t *testing.T) {
 		ResultsPackage{Package: ca, Status: "built", StepsRun: 1, StepsTotal: 1},
 		ResultsPackage{Package: cb, Status: "built", StepsRun: 2, StepsTotal: 2},
 		ResultsPackage{Package: cz, Status: "built", StepsRun: 0, StepsTotal: 1})
-	os.Remove(f.out)
+	f.again()
 	_, sh = f.collect()
 	requireUnknown(t, sh, cz, "built without a traced step")
 }

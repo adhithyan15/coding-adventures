@@ -279,6 +279,15 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		return nil, err
 	}
 	defer unlock()
+	// 1a. A directory that `collect` has read takes no more steps: nothing is run,
+	// no sequence number is taken, no marker is written (a marker would be a
+	// write into a directory somebody has already read). `collect` leaves the
+	// tombstone before it reads anything, after the exclusive lock this step's
+	// shared one excludes; a step that got the shared lock a moment after
+	// `collect` let go of the exclusive one lands here.
+	if _, err := os.Lstat(filepath.Join(o.Dir, "traces", CollectedMarker)); err == nil {
+		return nil, fmt.Errorf("the record directory was collected (traces/%s): no step may run in it", CollectedMarker)
+	}
 	// 1b. The serial lock (P13), second in the lock order. A step that cannot
 	// take it runs nothing, and says so in a marker `collect` reads.
 	serial, err := LockSerial(o.Dir)
@@ -588,7 +597,7 @@ func markRerun(dir, action string, step int) error {
 // entry of the action's directory is looked at, and step numbers are compared
 // as numbers ("10.json" sorts before "2.json"), so no early return can skip the
 // marker: a step that is run a second time, or out of order, leaves a `.rerun`
-// marker for `collect` to void the shard on. Two supervisors of the same step
+// marker for `collect` to make the action an unknown write set on (P12). Two supervisors of the same step
 // that race are sorted out by the O_EXCL of the trace file (createTrace), which
 // leaves the marker too.
 func checkOrder(dir, action string, step int) error {

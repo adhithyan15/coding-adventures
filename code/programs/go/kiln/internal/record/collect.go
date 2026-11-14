@@ -59,6 +59,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 
@@ -91,7 +92,16 @@ type CollectResult struct {
 	// Unknown lists "<action>: <reason>" for every action whose write set is
 	// unknown (the merge voids the run for each), sorted.
 	Unknown []string
+	// PostProblems says why each post-build check that failed did (the error, the
+	// first paths it named, the unexplained ones), printable and bounded. It is
+	// for the operator: the shard cannot carry it, and a CI run that voids a shard
+	// must say why.
+	PostProblems []string
 }
+
+// CollectedMarker is the file `collect` creates in traces/ before it reads
+// anything there (O_EXCL). `step` refuses to run once it exists.
+const CollectedMarker = ".collected"
 
 func (o *CollectOptions) defaults() {
 	if o.Lock == nil {
@@ -175,9 +185,14 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 	if !ok {
 		return nil, fmt.Errorf("tools.json: build_tool_env has no HOME")
 	}
-	// Exactly the environment prepare gave its own Git calls: HOME and the
-	// recorded PATH, and the fixed hardening source.NewGitAt adds. Nothing of this
-	// process's environment reaches git, and git is run by path.
+	// The environment prepare gave its own Git calls, less one variable: HOME and
+	// the recorded PATH, and the fixed hardening source.NewGitAt adds. prepare also
+	// passed XDG_CONFIG_HOME when the workflow set it; that is not recorded in
+	// tools.json, so collect does not pass it (the pinned GIT_CONFIG_GLOBAL, the
+	// null device, replaces the user-level configuration it would have named on any
+	// git that knows the variable, and a git too old for it reads files the
+	// recorder keeps unwritable, P9). Nothing of this process's environment reaches
+	// git, and git is run by path.
 	g := source.NewGitAt(o.Root, git.Path, []string{home, "PATH=" + pre.Tools.Path})
 	if err := checkOutPlacement(o); err != nil {
 		return nil, err
@@ -193,6 +208,15 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 		if _, ok := pre.Action(p.Package); !ok {
 			return nil, fmt.Errorf("--results lists %q, which is not an action of this shard's plan", printable(p.Package))
 		}
+	}
+	// Every refusal that is about the ARGUMENTS is behind us. From here `collect`
+	// reads the directory, so nothing may write into it afterwards: the tombstone
+	// makes `step` refuse (125, no sequence number) from now on, which closes the
+	// window in which a late supervisor, one that took the shared lock after this
+	// process released the exclusive one, could add a step after the verdict.
+	// O_EXCL: a directory is collected once.
+	if err := writeExcl(filepath.Join(o.Dir, "traces", CollectedMarker), []byte{}); err != nil {
+		return nil, fmt.Errorf("traces/%s: %w (a record directory is collected once)", CollectedMarker, err)
 	}
 	var (
 		outs    []actionOut
@@ -234,7 +258,7 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 	if err := writeAtomic(o.Out, data); err != nil {
 		return nil, fmt.Errorf("--out: %w", err)
 	}
-	r := &CollectResult{Out: o.Out, Header: header, Records: len(recs)}
+	r := &CollectResult{Out: o.Out, Header: header, Records: len(recs), PostProblems: post.problems}
 	for _, rec := range recs {
 		switch {
 		case rec.Unknown != "":
@@ -262,8 +286,18 @@ func checkOutPlacement(o CollectOptions) error {
 	if within(o.Out, o.Root) {
 		return fmt.Errorf("--out %q is inside the checkout", printable(o.Out))
 	}
+	// The results are the build tool's output, read as a fact about the build. A
+	// file inside the checkout is a file a BUILD can write.
+	if within(o.Results, o.Root) {
+		return fmt.Errorf("--results %q is inside the checkout, where a BUILD can write it", printable(o.Results))
+	}
 	if _, err := Canonical("the parent of --out", filepath.Dir(o.Out)); err != nil {
 		return err
+	}
+	// Never replaced: refused HERE, before the tombstone, so a name in the way
+	// does not use up the directory's one collection.
+	if _, err := os.Lstat(o.Out); err == nil {
+		return fmt.Errorf("--out %q exists; it is never replaced", printable(o.Out))
 	}
 	return nil
 }
@@ -310,7 +344,7 @@ func (c *collector) globalSeqCheck(outs []actionOut, overlap bool) string {
 		return fmt.Sprintf("serial-violated: the counter reached %d and %d sidecars hold a number", final, total)
 	}
 	// Only what the supervisors and `prepare` make is in traces/.
-	known := map[string]bool{".seq": true, ".serial": true}
+	known := map[string]bool{".seq": true, ".serial": true, CollectedMarker: true}
 	for _, ao := range outs {
 		known[filepath.Base(StepDir(c.dir, ao.name))] = true
 	}

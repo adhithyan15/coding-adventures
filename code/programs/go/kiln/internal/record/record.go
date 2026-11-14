@@ -86,6 +86,12 @@ type TreeError struct {
 	// does (KILN04 7.1, M-2); it is for comparison, never for printing. A
 	// path "." means the problem is not a path (a sparse checkout).
 	Paths []string
+	// Partial says the check stopped before it compared the DISK: the commit's
+	// tree and the index disagreed (or the index had an unresolved merge, or a
+	// gitlink), so Paths are paths of that disagreement, not files whose bytes
+	// changed. Nothing is known about the disk, and a caller that counts changes
+	// must not take the list as the whole story.
+	Partial bool
 }
 
 func (e *TreeError) Error() string {

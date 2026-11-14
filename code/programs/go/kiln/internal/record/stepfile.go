@@ -29,15 +29,14 @@ package record
 // of G7).
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
-	"io"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 )
 
 // StepSchema is the schema of a step sidecar.
@@ -200,14 +199,10 @@ func EncodeStepSidecar(s StepSidecar) ([]byte, error) {
 // DecodeStepSidecar reads a sidecar strictly: no unknown key, no trailing
 // data, and the same validation as the encoder.
 func DecodeStepSidecar(data []byte) (StepSidecar, error) {
+	// legacy.PolicyDecode: see DecodeClassified (duplicate and case-variant keys).
 	var s StepSidecar
-	dec := json.NewDecoder(bytes.NewReader(data))
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&s); err != nil {
+	if err := legacy.PolicyDecode(data, &s); err != nil {
 		return StepSidecar{}, fmt.Errorf("step sidecar: %w", err)
-	}
-	if _, err := dec.Token(); err != io.EOF {
-		return StepSidecar{}, fmt.Errorf("step sidecar: unexpected data after the JSON value")
 	}
 	return s, s.Validate()
 }

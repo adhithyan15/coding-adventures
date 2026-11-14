@@ -45,8 +45,12 @@ package record
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"sort"
+	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/source"
@@ -57,6 +61,43 @@ type postResult struct {
 	void                 []string
 	trackedUnexplained   int
 	inventoryUnexplained int
+	// problems is what an operator needs to find out WHY a check failed: the
+	// errors the checks returned (which the shard cannot carry), made printable and
+	// bounded. It is reported on the command line and never written to the shard.
+	problems []string
+}
+
+// The bounds of postResult.problems.
+const (
+	maxPostProblems    = 32  // entries
+	maxPostProblemText = 512 // bytes of one entry
+	maxPostPaths       = 16  // unexplained paths named in one entry
+)
+
+// printableText makes text that came from the checkout (a path, a git error that
+// quotes one) safe to print: only printable runes (a file name can hold a
+// newline, a bidi override or an escape, and a CI log reads `::` lines as
+// workflow commands) and at most max bytes, cut on a rune boundary.
+func printableText(s string, max int) string {
+	var b strings.Builder
+	for _, r := range s {
+		if !unicode.IsPrint(r) {
+			r = '?'
+		}
+		if b.Len()+utf8.RuneLen(r) > max {
+			break
+		}
+		b.WriteRune(r)
+	}
+	return b.String()
+}
+
+// note adds one diagnostic, sanitised and bounded; the list is bounded too.
+func (r *postResult) note(format string, args ...any) {
+	if len(r.problems) >= maxPostProblems {
+		return
+	}
+	r.problems = append(r.problems, printableText(fmt.Sprintf(format, args...), maxPostProblemText))
 }
 
 // voidTrackedChanged is the one header token for "the checkout is not the
@@ -79,15 +120,28 @@ func (c *collector) postBuild(o CollectOptions, g *source.Git, recs []recfmt.Sha
 		if vt.Commit != c.pre.Binding.Revision {
 			r.void = append(r.void, voidTrackedChanged)
 			r.trackedUnexplained++
+			r.note("verify-tree: vouched for %s, not the pinned commit", short(vt.Commit))
 		}
 	case errors.As(err, &te):
 		r.void = append(r.void, voidTrackedChanged)
-		r.trackedUnexplained += unexplainedPaths(te, tw)
+		n, unexplained := unexplainedPaths(te, tw)
+		r.trackedUnexplained += n
+		// A partial error (the index or the commit's tree disagreed, so the disk was
+		// never compared) says nothing about the files themselves: the paths it
+		// names are not the paths that changed on disk, so one more change is
+		// counted that no record can explain.
+		if te.Partial {
+			r.trackedUnexplained++
+		}
+		// The count and the paths first: an entry is cut at maxPostProblemText, and
+		// what an operator needs most is which files, not git's wording.
+		r.note("verify-tree: %d unexplained: %s; %s", n, strings.Join(firstN(unexplained, maxPostPaths), ", "), strings.ReplaceAll(te.Error(), "\n\t", " | "))
 	default:
 		// Git itself failed (not a tree that differs): the paths that changed
 		// cannot be listed, so none can be shown explained.
 		r.void = append(r.void, voidTrackedChanged)
 		r.trackedUnexplained++
+		r.note("verify-tree: %v", err)
 	}
 
 	// 2. The object store is connected, with the pinned git and its allowlist
@@ -95,6 +149,7 @@ func (c *collector) postBuild(o CollectOptions, g *source.Git, recs []recfmt.Sha
 	if err := o.Fsck(g); err != nil {
 		r.void = append(r.void, voidTrackedChanged)
 		r.trackedUnexplained++
+		r.note("fsck: %v", err)
 	}
 
 	// 3. Anything new on the disk.
@@ -104,14 +159,27 @@ func (c *collector) postBuild(o CollectOptions, g *source.Git, recs []recfmt.Sha
 		// `collect` before the records are written.
 		r.void = append(r.void, voidTrackedChanged)
 		r.inventoryUnexplained++
-	} else if n, err := c.newUnexplained(post, recs); err != nil {
+		r.note("inventory: %v", err)
+	} else if unexplained, err := c.newUnexplained(post, recs); err != nil {
 		r.void = append(r.void, voidTrackedChanged)
 		r.inventoryUnexplained++
+		r.note("inventory: comparing with the sealed one: %v", err)
 	} else {
-		r.inventoryUnexplained += n
+		r.inventoryUnexplained += len(unexplained)
+		if len(unexplained) > 0 {
+			r.note("inventory: %d new paths no record's writes cover: %s", len(unexplained), strings.Join(firstN(unexplained, maxPostPaths), ", "))
+		}
 	}
 	r.void = uniqSorted(r.void)
 	return r
+}
+
+// firstN returns at most n of the strings.
+func firstN(l []string, n int) []string {
+	if len(l) > n {
+		return l[:n]
+	}
+	return l
 }
 
 // trackedWriteSet is the union of every record's tracked_writes.
@@ -125,23 +193,24 @@ func trackedWriteSet(recs []recfmt.ShardRecord) map[string]bool {
 	return m
 }
 
-// unexplainedPaths counts the changed paths of a TreeError that no tracked write
-// covers. A TreeError without a path list (one built by hand, or a problem that
-// is not a path) counts as its Total, never as zero.
-func unexplainedPaths(te *TreeError, tw map[string]bool) int {
+// unexplainedPaths returns how many changed paths of a TreeError no tracked
+// write covers, and the paths themselves (for the report). A TreeError without a
+// path list (one built by hand, or a problem that is not a path) counts as its
+// Total, never as zero, and names nothing.
+func unexplainedPaths(te *TreeError, tw map[string]bool) (int, []string) {
 	if len(te.Paths) == 0 {
 		if te.Total > 0 {
-			return te.Total
+			return te.Total, nil
 		}
-		return 1
+		return 1, nil
 	}
-	n := 0
+	var out []string
 	for _, p := range te.Paths {
 		if !coveredByAncestor(p, tw) {
-			n++
+			out = append(out, p)
 		}
 	}
-	return n
+	return len(out), out
 }
 
 // coveredByAncestor reports whether p, or any ancestor directory of p, is in
@@ -161,45 +230,41 @@ func coveredByAncestor(p string, set map[string]bool) bool {
 	return false
 }
 
-// newUnexplained counts the paths the post-build inventory lists that the
-// pre-build one did not and that no record's writes cover.
-func (c *collector) newUnexplained(post recfmt.Inventory, recs []recfmt.ShardRecord) (int, error) {
+// newUnexplained lists the paths the post-build inventory has that the
+// pre-build one did not and that no record's writes cover. A path is covered
+// when a write is that very path or one of its ancestors (the write roots and
+// the inventory share one granularity: the highest ancestor that holds no
+// tracked file). The converse is NOT an excuse: a new directory `a` with a
+// traced write at `a/b/c` is unexplained, because the trace named something
+// beneath it and not the directory itself, and whatever else is in `a` is
+// nobody's.
+func (c *collector) newUnexplained(post recfmt.Inventory, recs []recfmt.ShardRecord) ([]string, error) {
 	data, err := c.pre.ReadSealed("inventory.json")
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	pre, err := recfmt.DecodeInventory(data)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	was := make(map[string]bool, len(pre.Paths))
 	for _, p := range pre.Paths {
 		was[p] = true
 	}
-	// writes holds every written root; prefixes every ancestor of one, so "p is
-	// an ancestor of a write" is a lookup too.
-	writes, prefixes := map[string]bool{}, map[string]bool{}
+	writes := map[string]bool{}
 	for _, rec := range recs {
 		for _, w := range rec.Record.Writes {
 			writes[w] = true
-			for i := 0; i < len(w); i++ {
-				if w[i] == '/' {
-					prefixes[w[:i]] = true
-				}
-			}
 		}
 	}
-	n := 0
+	var out []string
 	for _, p := range post.Paths {
-		if was[p] {
+		if was[p] || coveredByAncestor(p, writes) {
 			continue
 		}
-		if coveredByAncestor(p, writes) || prefixes[p] {
-			continue
-		}
-		n++
+		out = append(out, p)
 	}
-	return n, nil
+	return out, nil
 }
 
 // readDirNames lists a directory's entry names, sorted.

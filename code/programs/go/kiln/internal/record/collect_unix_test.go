@@ -186,7 +186,7 @@ func TestCollectRefusesATamperedPre(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			f := newCfix(t)
+			f := newCfixWith(t, nil, nil)
 			f.good()
 			tamper(f)
 			f.refuse("pre/")
@@ -241,7 +241,7 @@ func TestCollectRefusesAnotherRootOrBinary(t *testing.T) {
 func TestCollectUsesOnlyThePinnedGit(t *testing.T) {
 	f := newCfix(t)
 	f.good()
-	f2 := newCfix(t) // built before PATH changes: the fixture itself runs git
+	f2 := newCfixWith(t, nil, nil) // built before PATH changes: the fixture itself runs git
 	f2.good()
 	planted := t.TempDir()
 	marker := filepath.Join(planted, "ran")
@@ -267,7 +267,7 @@ func TestCollectUsesOnlyThePinnedGit(t *testing.T) {
 }
 
 func TestCollectRefusesAToolsFileWithoutHome(t *testing.T) {
-	f := newCfix(t)
+	f := newCfixWith(t, nil, nil)
 	f.good()
 	tools := f.pre.Tools
 	var env []string

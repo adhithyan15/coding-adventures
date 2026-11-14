@@ -1187,7 +1187,8 @@ diagnostic on standard error, and exits 125):
    examined and step numbers compare as numbers, so a step that is run twice
    or out of order always leaves `<step>.rerun` (also when two supervisors of
    one step race: the loser of the trace file's `O_EXCL` leaves it) and exits
-   125 without running; `collect` voids the shard on any `.rerun`.
+   125 without running; `collect` makes the action's write set unknown on any `.rerun`
+   (the merge then voids the run, G1).
 4. argv after `--` is exactly `sh`, `-c`, `<line>`, and the working
    directory is `<root>/<action>`. The line is compared with the action's
    planned step and the result is recorded (`line_in_plan`); a mismatch does
@@ -1363,16 +1364,29 @@ action, binding or sealed directory, counts other started steps than the
 sidecars, or has `parse_ok: false` (every parse reason, `sandbox-refused`
 included, is an unknown write set); the build tool's step count or total not
 equal to the traced and planned ones; `built` with a non-zero step or with no
-traced step; or the action is in the results with steps but a step directory
-is not. An action that ran nothing (no steps in the results, no directory) is
-not unknown: it carries an explicit `writes_complete: false` and the merge
-charges it as a truncated execution.
+traced step (except an empty recipe, below); or the action is in the results
+with steps but a step directory is not. An action that ran nothing (no steps in
+the results, no directory) is not unknown: it carries an explicit
+`writes_complete: false` and the merge charges it as a truncated execution.
+
+*An empty recipe is vacuously complete.* A package whose BUILD runs nothing (a
+comment-only file: the build tool drops comments, blank lines and the `set -e`
+preamble, so the plan has no step and the results say `built`, 0 of 0) has no
+trace and no write set to be unknown about. When the plan has no step, the
+results list it as `built` with `steps_run` and `steps_total` both 0, and the
+supervisor left no directory for it, the record is the empty raw record with
+`writes_complete: true` (derived with `recfmt.CompleteOf`), `steps_run` 0. Any
+other fact (a directory, a started step, a different total) leaves it unknown.
+Without this rule one such package, and the repository has them
+(`code/programs/typescript/visicalc-deno/BUILD`), would void every run. The merge
+accepts the record and does not emit the action (a manifest needs its own `pkg:`
+entry). The shard-wide serial rules below still override it.
 
 *Across the shard.* Every record becomes unknown (`serial-violated`) when any
 `.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
 `seq` is not below it or is used twice, when the number of sidecars is not the
-counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial` or
-an action's directory. A shard that does not decode under the format's caps is
+counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
+`.collected` or an action's directory. A shard that does not decode under the format's caps is
 replaced by the same shard with every record unknown and the header void
 `records-too-large`.
 
@@ -1383,8 +1397,28 @@ is not what the commit says"). `tracked_changed_unexplained` counts the paths of
 `TreeError.Paths` (the whole list, not the 16 named) that no record's
 `tracked_writes` contains or has as an ancestor directory (compared by path
 component); `post_inventory_unexplained` counts the paths of the post-build
-inventory that are not in the pre-build one and that no record's `writes`
-overlap (equal, ancestor or descendant, by component).
+inventory that are not in the pre-build one and that no record's `writes` equal
+or have as an ancestor (by component). A write BENEATH a new path is not an
+excuse for it: the trace named something under the directory, not the directory,
+and whatever else is in it is nobody's (the write roots and the inventory share
+one granularity, so an honest write never lies beneath a new inventory path).
+Why a check failed is returned to the command (`CollectResult.PostProblems`,
+printed as `post-build problem:` lines: the check, its error text, the first 16
+unexplained paths; sanitised, at most 32 entries of 512 bytes), never written to
+the shard.
+
+*The arguments and the directory.* `--results` may not be inside the checkout
+(a BUILD could write it), like `--out`; `--out` must not exist. Before `collect`
+reads anything of `traces/` it creates `traces/.collected` (`O_EXCL`), and `step`
+refuses (125, nothing run, no sequence number, no marker) once it exists: a step
+that took the shared lock a moment after `collect` released the exclusive one
+cannot add to a directory that has been read. A directory is collected once; the
+refusals about the arguments all come BEFORE the tombstone, so one does not use
+up the collection. Every git call `collect` makes has a 10 minute deadline and
+keeps at most 1 GiB of stdout (more is an error, never a truncation) and 1 MiB of
+stderr. `record.json` and the sidecars are decoded with `legacy.PolicyDecode`
+(no duplicate and no case-variant key); the temporary file of the atomic writers
+has a random suffix and the parent directory is synced after the link.
 
 *Divergences from the text above, each deliberate (all stricter).*
 
@@ -1408,6 +1442,18 @@ overlap (equal, ancestor or descendant, by component).
 4. A `.rerun` marker makes THAT action's write set unknown (the text says "voids
    the shard"); the merge turns any one unknown write set into a run-void (G1),
    so the effect is the same, and the report names the action.
+5. A `TreeError` raised before the disk was compared (the index and the commit's
+   tree disagreed: `TreeError.Partial`) counts one more, because the paths it
+   names are not the files that changed on disk.
+
+*A limitation, and a follow-up.* A failed action that stops mid-recipe has fewer
+traces than recipe lines, so the classifier's `CheckRecipe` says
+`trace-incomplete:recipe-mismatch` (W10) and its write set is unknown: the merge
+treats it as run-void in the relaxed report too, not as a truncated execution.
+The merge's `steps-missing` branch is reachable only for a failure on the last
+step. Fixing it is a classifier change (compare the traced prefix of the recipe
+when the build tool says the action failed), logged as a follow-up; `collect`
+reports what the classifier says.
 
 **P13. Records are classified at action end, and recording is serial
 (2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
@@ -1516,7 +1562,7 @@ of 125 with no step `execve` in the trace, which the parser reports as
 init died before the step); the epilogue names both `sandbox-refused`. An
 `.overlap` marker is not evidence that a step ran: `checkOrder` skips it, so a
 step refused the lock can be run once the lock is free (the marker stays and
-`collect` voids the shard).
+`collect` makes every record unknown).
 
 *Why the silent case is the strong case for P13.* A link an action creates
 itself is resolved from the DISK, not from the link text in the trace: that text

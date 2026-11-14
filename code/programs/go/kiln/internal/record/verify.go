@@ -155,22 +155,23 @@ func VerifyTreeWith(g *source.Git, root, expectedCommit string) (Result, error) 
 
 	headTree, err := lsTree(g, commit)
 	if err != nil {
-		return Result{}, err
+		return Result{}, markPartial(err)
 	}
 	index, err := lsIndex(g)
 	if err != nil {
-		return Result{}, err
+		return Result{}, markPartial(err)
 	}
 
 	var bad problems
 	compareTrees(headTree, index, &bad)
 	if err := checkHidden(g, len(index), &bad); err != nil {
-		return Result{}, err
+		return Result{}, markPartial(err)
 	}
 	// If the index and HEAD disagree there is no single "expected" content to
 	// hash against; report that and stop, rather than a second, noisier list.
+	// The error says it is PARTIAL: the disk was not compared.
 	if len(bad.list) > 0 {
-		return Result{}, bad.err("working tree is not HEAD")
+		return Result{}, markPartial(bad.err("working tree is not HEAD"))
 	}
 
 	if err := checkDisk(root, headTree, &bad); err != nil {
@@ -180,6 +181,16 @@ func VerifyTreeWith(g *source.Git, root, expectedCommit string) (Result, error) 
 		return Result{}, e
 	}
 	return Result{Commit: commit, entries: headTree}, nil
+}
+
+// markPartial flags a *TreeError as one raised before the disk was compared
+// (TreeError.Partial) and returns err unchanged otherwise.
+func markPartial(err error) error {
+	var te *TreeError
+	if errors.As(err, &te) {
+		te.Partial = true
+	}
+	return err
 }
 
 // requireTopLevel refuses a root that is not the top of its work tree:

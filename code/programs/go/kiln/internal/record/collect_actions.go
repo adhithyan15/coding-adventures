@@ -321,7 +321,9 @@ func checkSidecars(c *collector, name string, planned Action, s dirScan, bad *[]
 	// The sidecars are exactly steps 0..n-1, and every one has its trace and the
 	// reverse: a step that took a number and was killed has a trace and no
 	// sidecar; a deleted trace leaves a sidecar alone.
-	for j := 0; j < n; j++ {
+	// (At most len(plan)+1 indices are examined: n comes from file names, up to six
+	// digits, and a directory of a million orphans must not make a million reasons.)
+	for j := 0; j < min(n, len(planned.Steps)+1); j++ {
 		switch {
 		case s.sidecars[j] && !s.traces[j]:
 			*bad = append(*bad, fmt.Sprintf("step %d has a sidecar and no trace", j))
@@ -503,8 +505,18 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 	case !inResults && len(s.sidecars)+len(s.traces) > 0:
 		bad = append(bad, "steps ran for an action the build tool's results do not list")
 	}
+	// A package whose recipe is EMPTY (a comment-only BUILD: the build tool drops
+	// comments, blank lines and the `set -e` preamble, so it runs nothing and
+	// reports built, 0 of 0) is legitimate and common. It has no trace because it
+	// ran no step, and no write set to be unknown about: the empty recipe is
+	// vacuously complete. The shape is accepted ONLY when every fact agrees: the
+	// plan has no step, the results say built with 0 run of 0, and the supervisor
+	// left nothing at all (no directory). Anything else with no traced step is
+	// "nothing was classified", as before.
+	vacuous := status == recfmt.StatusBuilt && len(planned.Steps) == 0 && !s.exists &&
+		inResults && res.StepsRun == 0 && res.StepsTotal == 0
 	if status == recfmt.StatusBuilt {
-		if len(planned.Steps) == 0 || len(s.sidecars) == 0 {
+		if !vacuous && (len(planned.Steps) == 0 || len(s.sidecars) == 0) {
 			bad = append(bad, "built without a traced step: nothing was classified")
 		}
 		if !sc.allZero {
@@ -525,6 +537,16 @@ func (c *collector) assembleAction(name string, planned Action) actionOut {
 		if rec.Steps == nil {
 			rec.Steps = []recfmt.Step{}
 		}
+	}
+	if vacuous && len(bad) == 0 {
+		// The classifier never ran (nothing to classify), so the raw record is the
+		// empty one and its answer is the vacuous true, derived through CompleteOf
+		// like every record. The shard-wide serial pass can still override it
+		// (markUnknown), because that pass is about the order of the whole run.
+		rec.Record = recfmt.Normalize(traced.RawRecord{Package: name, WritesComplete: true})
+		rec.Complete = recfmt.CompleteOf(rec.Record)
+		out.rec = rec
+		return out
 	}
 	if len(bad) > 0 || v.rec == nil {
 		if v.rec == nil && len(bad) == 0 && len(s.sidecars) == 0 {

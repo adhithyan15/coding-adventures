@@ -195,7 +195,7 @@ func TestCollectPostBuildSeams(t *testing.T) {
 }
 
 func TestCollectFsckFailure(t *testing.T) {
-	f := newCfix(t)
+	f := newCfixWith(t, nil, nil)
 	f.good()
 	// Remove a blob the tree names. VerifyTree compares the disk with the ids and
 	// does not need it; only a connectivity check notices.
@@ -256,7 +256,7 @@ func TestCollectHeaderCounts(t *testing.T) {
 		{"an untracked file nobody wrote", func(f *cfix) { f.edit("code/packages/x/a/new.txt", "x") }, nil, 1},
 		{"the same but written", func(f *cfix) { f.edit("code/packages/x/a/new.txt", "x") }, []string{"code/packages/x/a/new.txt"}, 0},
 		{"a collapsed directory that is the write root", func(f *cfix) { f.edit("code/packages/x/a/newdir/f", "x") }, []string{"code/packages/x/a/newdir"}, 0},
-		{"a directory above a deeper write", func(f *cfix) { f.edit("code/packages/x/a/nd/deep/f", "x") }, []string{"code/packages/x/a/nd/deep"}, 0},
+		{"a new directory is not explained by a write beneath it", func(f *cfix) { f.edit("code/packages/x/a/nd/deep/f", "x") }, []string{"code/packages/x/a/nd/deep"}, 1},
 		{"a name that merely starts the same", func(f *cfix) { f.edit("code/packages/x/a/new.txt", "x") }, []string{"code/packages/x/a/ne"}, 1},
 		{"two new paths and one written", func(f *cfix) {
 			f.edit("code/packages/x/a/one.txt", "x")
@@ -285,7 +285,7 @@ func TestCollectHeaderCounts(t *testing.T) {
 // A tracked file replaced by a directory breaks both checks, and neither may
 // stop the other, or the records.
 func TestCollectATrackedFileReplacedByADirectory(t *testing.T) {
-	f := newCfix(t)
+	f := newCfixWith(t, nil, nil)
 	f.good()
 	p := filepath.Join(f.p.root, "code/packages/x/a/src.txt")
 	os.Remove(p)
@@ -321,7 +321,7 @@ func TestUnexplainedPathsAndCoverage(t *testing.T) {
 			t.Errorf("%q: %v", c.p, got)
 		}
 	}
-	if n := unexplainedPaths(&TreeError{Total: 2, Paths: []string{"a/b/c", "z"}}, tw); n != 1 {
+	if n, l := unexplainedPaths(&TreeError{Total: 2, Paths: []string{"a/b/c", "z"}}, tw); n != 1 || len(l) != 1 || l[0] != "z" {
 		t.Errorf("%d", n)
 	}
 }
