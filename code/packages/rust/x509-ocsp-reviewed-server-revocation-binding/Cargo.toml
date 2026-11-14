@@ -11,6 +11,7 @@ x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-name-constraints = { path = "../x509-name-constraints" }
 x509-ocsp-authenticated-target-revocation = { path = "../x509-ocsp-authenticated-target-revocation" }
 x509-rsa-constructed-path-signature-routing = { path = "../x509-rsa-constructed-path-signature-routing" }
+x509-rsa-reviewed-server-path-anchor-self-signature-binding = { path = "../x509-rsa-reviewed-server-path-anchor-self-signature-binding" }
 x509-rsa-sha256-reviewed-server-link = { path = "../x509-rsa-sha256-reviewed-server-link" }
 x509-subject-alt-name = { path = "../x509-subject-alt-name" }
 x509-time = { path = "../x509-time" }
@@ -38,6 +39,7 @@ x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
 x509-ocsp-rsa-signature-routing = { path = "../x509-ocsp-rsa-signature-routing" }
 x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+x509-rsa-reviewed-anchor-self-signature-binding = { path = "../x509-rsa-reviewed-anchor-self-signature-binding" }
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
 x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }
 x509-rsa-signature-routing = { path = "../x509-rsa-signature-routing" }

@@ -16240,6 +16240,8 @@ dependencies = [
  "x509-rsa-algorithm-policy",
  "x509-rsa-constructed-path-signature-routing",
  "x509-rsa-public-key",
+ "x509-rsa-reviewed-anchor-self-signature-binding",
+ "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
  "x509-rsa-sha256-issuer-link",
  "x509-rsa-sha256-reviewed-anchor-link",
  "x509-rsa-sha256-reviewed-server-link",
