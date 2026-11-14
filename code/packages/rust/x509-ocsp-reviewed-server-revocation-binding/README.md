@@ -112,6 +112,14 @@ status result, or trust assertion. The separate
 `https-reviewed-server-path-binding` package now binds this double-nested
 completion to its exact HTTPS destination without widening that input surface.
 
+The recursive responder-no-check complete fixed-path wrapper now carries the
+same sealed projection through its retained recursive responder-revocation
+layer. It returns only the original reviewed-server proof's exact target, and
+a byte-equal independently decoded certificate remains a different object.
+The projection accepts no detached certificate, callback-shaped claim, path,
+status result, or trust assertion. Binding this recursive completion to its
+exact HTTPS destination remains a separate composition slice.
+
 The alternative intermediate-status-responder revocation no-check complete
 fixed-path wrapper now carries the same sealed projection through its retained
 default-source proof graph. It returns only the exact server target retained
@@ -135,7 +143,7 @@ The sealed target projections likewise perform no parsing, validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit or trace emission, I/O, network access, or
 other external effect. The recursive complete fixed-path revocation branch
-remains separate work.
+still requires its separate HTTPS destination binding.
 
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
@@ -604,6 +612,10 @@ substitute evidence. It performs no parsing, cryptography, clock acquisition,
 credential or provider operation, audit or trace emission, I/O, or network
 effect. It does not generalize path construction or validation, acquire or
 refresh revocation data, or provide TLS, HTTP, OAuth, or network readiness.
+The completion exposes the retained server leaf only through its sealed
+repository-owned evidence graph. That projection preserves exact decoded-
+object identity, accepts no detached target input, and remains separate from
+the later HTTPS destination binding.
 
 `complete_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_revocation_responder_no_check_fixed_path_revocation_policy`
 then nominally completes revocation policy for this exact default-source
