@@ -1780,6 +1780,9 @@ fn describe(tys: &[Ty], names: &[&str]) -> String {
                 Ty::Fx(f) | Ty::FxEdge(f) => (format!("{f:?}"), "edge"),
                 Ty::NatCount => ("Nat".to_string(), "count"),
                 Ty::Nat => ("Nat".to_string(), "set"),
+//@if bytesn
+                Ty::BytesN(n) => (format!("{t:?}"), if *n <= 1 { "full" } else { "sample" }),
+//@endif
                 other => (format!("{other:?}"), "set"),
             };
             format!("{n}: {ty} {kind}({size})")
@@ -1800,6 +1803,9 @@ fn describe_ty(ty: Ty) -> String {
         Ty::Fx(f) | Ty::FxEdge(f) => leaf(format!("{f:?}"), "edge"),
         Ty::NatCount => leaf("Nat".to_string(), "count"),
         Ty::Nat => leaf("Nat".to_string(), "set"),
+//@if bytesn
+        Ty::BytesN(n) => leaf(format!("{ty:?}"), if n <= 1 { "full" } else { "sample" }),
+//@endif
         Ty::Tuple(cs) => {
             let parts: Vec<String> = cs.iter().map(|c| describe_ty(*c)).collect();
             format!("tuple({}) size({size})", parts.join(", "))

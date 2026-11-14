@@ -70,7 +70,12 @@ func TraceNames() []string { return append([]string{}, straceNames...) }
 //     run on untraced;
 //   - --pidns-translation prints a spawn's pid inside the sandbox's PID
 //     namespace next to its host pid, which the parser requires;
-//   - -e signal=none leaves signal delivery lines out of the trace;
+//   - -e signal=all prints every signal line.  This is NOT cosmetic (KILN04
+//     D19): strace prints "+++ killed by SIG +++" only for signals in the -e
+//     signal set (print_signalled), so with signal=none ANY process killed by
+//     a signal (SIGPIPE in `yes | head`, a harness killing its child) has no
+//     exit line and the run is voided as missing-exit.  The "--- SIG ---"
+//     delivery lines this adds are ignored by the parser;
 //   - -o writes ONE file for every process, so events stay in the order the
 //     kernel produced them.
 //
@@ -83,7 +88,7 @@ func StraceArgs(traceFile string) ([]string, error) {
 	}
 	return []string{
 		"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "--pidns-translation",
-		"-e", "signal=none",
+		"-e", "signal=all",
 		"-e", "trace=" + TraceSet(),
 		"-o", traceFile,
 		"--",

@@ -1,0 +1,86 @@
+-- X25519 (RFC 7748), a PILOT of the Warrant generator's fixed-length byte
+-- arrays (VER04j section 14.4, WX-N): every operand and result is a `Bytes<32>`
+-- (the Rust `&[u8; 32]` / `[u8; 32]`).  It proves the generator path end to end
+-- (host type `bytes<32>`, the length checks, an opaque host error); it is NOT an
+-- adoption of the crate: no secret labels, no constant-time claim, no report.
+--
+-- Every expected value below is from RFC 7748 (section 5.2 and section 6.1) or
+-- is a property written from the definition of the operation, never read back
+-- from the implementation.  The RFC vectors were also recomputed with an
+-- independent implementation (Python `cryptography`) when this file was written.
+--
+-- The domain of a `Bytes<32>` binder is a SAMPLE (100 of 2^256 values: constant
+-- strings and one-position changes), not the whole space; the manifest labels it
+-- `sample`.  The two-binder claims are therefore 10,000 cases of a sample, and
+-- the RFC vectors are what pin real inputs.
+warrant x25519 v1
+  error X25519Error = LOW_ORDER
+
+  -- RFC 7748 section 5: the scalar clamp (decodeScalar25519 before the ladder).
+  op clamp_scalar(k: Bytes<32>) -> Bytes<32>
+  -- RFC 7748 section 5: X25519(k, u); an all-zero result is refused.
+  op x25519(k: Bytes<32>, u: Bytes<32>) -> Result<Bytes<32>, X25519Error>
+  -- X25519 at the base point u = 9 (section 6.1: the public key of a private key).
+  op x25519_base(k: Bytes<32>) -> Result<Bytes<32>, X25519Error>
+
+  labels clamp_scalar:
+    k public
+  labels x25519:
+    k public
+    u public
+  labels x25519_base:
+    k public
+
+  -- The clamp of a key whose first byte is `a`, middle bytes `m` and last byte
+  -- `z`, written bit by bit from RFC 7748 section 5: clear the low three bits of
+  -- the first byte, clear the top bit of the last byte and set the next one.
+  model clamped(a: Bytes<1>, m: Bytes<30>, z: Bytes<1>) -> Bytes<32> = concat(concat(be_bytes(bit_and(from_be<U8>(a), 248u8)), m), be_bytes(bit_or(bit_and(from_be<U8>(z), 127u8), 64u8)))
+  model unclamped(a: Bytes<1>, m: Bytes<30>, z: Bytes<1>) -> Bytes<32> = concat(concat(a, m), z)
+
+  -- RFC 7748 section 5.2, the two single-call vectors.
+  example rfc7748_5_2_vector_1:
+    x25519(b"a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4", b"e6db6867583030db3594c1a424b15f7c726624ec26b3353b10a903a6d0ab1c4c") == Ok(b"c3da55379de9c6908e94ea4df28d084f32eccf03491c71f754b4075577a28552")
+  example rfc7748_5_2_vector_2:
+    x25519(b"4b66e9d4d1b4673c5ad22691957d6af5c11b6421e0ea01d42ca4169e7918ba0d", b"e5210f12786811d3f4b7959d0538ae2c31dbe7106fc03c3efc4cd549c715a493") == Ok(b"95cbde9476e8907d7aade45cb4b873f88b595a68799fa152e6f8f7647aac7957")
+  -- RFC 7748 section 5.2, the first iteration of the iterated test (k = u = 9).
+  example rfc7748_5_2_one_iteration:
+    x25519(b"0900000000000000000000000000000000000000000000000000000000000000", b"0900000000000000000000000000000000000000000000000000000000000000") == Ok(b"422c8e7a6227d7bca1350b3e2bb7279f7897b87bb6854b783c60e80311ae3079")
+  -- RFC 7748 section 6.1: Alice's and Bob's public keys, and the shared secret both derive.
+  example rfc7748_6_1_alice_public:
+    x25519_base(b"77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a") == Ok(b"8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a")
+  example rfc7748_6_1_bob_public:
+    x25519_base(b"5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb") == Ok(b"de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f")
+  example rfc7748_6_1_shared_secret_alice:
+    x25519(b"77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a", b"de9edb7d7b7dc1b4d35b61c2ece435373f8343c85b78674dadfc7e146f882b4f") == Ok(b"4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742")
+  example rfc7748_6_1_shared_secret_bob:
+    x25519(b"5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb", b"8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a") == Ok(b"4a5d9d5ba4ce2de1728e3bf480350f25e07e21c947d19e3376f09b3c1e161742")
+  -- The clamp of the first RFC scalar: a5 -> a0 (low three bits), c4 -> 44 (bit 255 off, bit 254 on).
+  example clamp_of_rfc_scalar_1:
+    clamp_scalar(b"a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4") == b"a046e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449a44"
+  -- The point u = 0 is of low order: the result is all zeros and is refused.
+  example zero_point_is_refused:
+    x25519(b"a546e36bf0527c9d3b16154b82465edd62144c0ac1fc5a18506a2244ba449ac4", b"0000000000000000000000000000000000000000000000000000000000000000") == Err(X25519Error.LOW_ORDER)
+
+  -- The clamp, for every first byte and every last byte (256 x 256 cases, a
+  -- fixed middle), and for every sampled middle (a fixed first and last byte).
+  claim clamp_edges_match_the_definition:
+    forall a: Bytes<1>, z: Bytes<1>. clamp_scalar(unclamped(a, b"000000000000000000000000000000000000000000000000000000000000", z)) == clamped(a, b"000000000000000000000000000000000000000000000000000000000000", z)
+  claim clamp_leaves_the_middle_alone:
+    forall m: Bytes<30>. clamp_scalar(unclamped(b"ff", m, b"ff")) == clamped(b"ff", m, b"ff")
+  claim clamp_is_idempotent:
+    forall k: Bytes<32>. clamp_scalar(clamp_scalar(k)) == clamp_scalar(k)
+  claim clamp_keeps_thirty_two_bytes:
+    forall k: Bytes<32>. len(clamp_scalar(k)) == 32
+  -- RFC 7748 section 5: the ladder clamps its scalar itself, so clamping first changes nothing.
+  claim x25519_clamps_its_scalar:
+    forall k: Bytes<32>, u: Bytes<32>. x25519(k, u) == x25519(clamp_scalar(k), u)
+  claim x25519_at_zero_is_low_order:
+    forall k: Bytes<32>. x25519(k, b"0000000000000000000000000000000000000000000000000000000000000000") == Err(X25519Error.LOW_ORDER)
+  -- Both orders, because a negative control attacks one operation at a time and
+  -- is answered by the claims that *start* with it: each side must be pinned
+  -- against the other, honest one.  `x25519_base` has no reachable error (the
+  -- base point never has low order), so it carries no `missing-error` fault.
+  claim x25519_at_nine_is_base:
+    forall k: Bytes<32>. x25519(k, b"0900000000000000000000000000000000000000000000000000000000000000") == x25519_base(k)
+  claim x25519_base_is_x25519_at_nine:
+    forall k: Bytes<32>. x25519_base(k) == x25519(k, b"0900000000000000000000000000000000000000000000000000000000000000")

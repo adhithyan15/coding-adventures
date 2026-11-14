@@ -201,13 +201,21 @@ fn m3_findings_carry_the_line_of_the_offending_key() {
 // M4: denial-of-service inputs
 // ---------------------------------------------------------------------------
 
-/// Run `f`, assert it finishes within 2 s, and return its result and duration.
+/// Wall-clock budget for one denial-of-service input. These inputs are built so that a
+/// quadratic or exponential implementation would take minutes or exhaust memory (e.g. 49M
+/// expansions, 2.3 GB), while the capped implementation takes well under half a second on
+/// an idle machine. The budget only has to separate those two worlds, so it is generous:
+/// the original 2 s failed `m4_glob_count_is_capped` on a macOS runner that was saturated
+/// by the full build (2.04 s, against 0.35-0.4 s locally), a flake and not a regression.
+const M4_BUDGET: Duration = Duration::from_secs(10);
+
+/// Run `f`, assert it finishes within `M4_BUDGET`, and return its result and duration.
 fn timed<T>(label: &str, f: impl FnOnce() -> T) -> (T, Duration) {
     let t = Instant::now();
     let out = f();
     let d = t.elapsed();
     eprintln!("[M4 timing] {label}: {d:?}");
-    assert!(d < Duration::from_secs(2), "{label} took {d:?}");
+    assert!(d < M4_BUDGET, "{label} took {d:?} (budget {M4_BUDGET:?})");
     (out, d)
 }
 

@@ -8,21 +8,22 @@ package main
 //	                    [--strace <abs>]
 //	kiln record step    --dir <abs> -- sh -c <line>                  (PR 2b-2a)
 //	kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
-//	                                                                 (PR 2b-2b)
+//	                                                                 (PR 2b-2b-ii)
 //
 // `prepare` is the part of a recording shard that runs before any BUILD (see
 // internal/record/prepare.go). `step` is the build tool's -exec-wrapper: it
 // supervises one BUILD line under strace (internal/record/step.go). `collect`
-// is the post-build pass; it belongs to the next PR and exists here only as a
-// stub that refuses, so the command surface a workflow is written against is
-// fixed now, and a workflow that wires the build to a recorder that does not
-// collect yet fails loudly instead of recording nothing.
+// is the post-build pass (internal/record/collect.go): it assembles the shard's
+// `records.jsonl` from the sealed `pre/`, the traces and the build tool's results.
 //
 // Refusals come before any work and write nothing:
 //
 //	exit 2   a usage error (a missing flag, a relative path)
 //	exit 3   not a trusted GitHub run, or not linux/amd64
-//	exit 1   anything `prepare` found wrong, or a stub
+//	exit 1   anything `prepare` or `collect` found wrong (`collect` refuses, and
+//	         writes nothing, when it cannot say what the build did; a shard that
+//	         is VOID, whose records the merge will discard, is still written and
+//	         `collect` exits 0: the verdict is the merge's, and the report names it)
 //
 // `step` is different, because its exit status is the step's: it exits with the
 // traced root's status, or 125 (record.ExitRefused) when it refused to run the
@@ -73,7 +74,9 @@ var recordStep = record.RunStep
 // recordArmParentDeath makes the supervisor die with the build tool (Linux).
 var recordArmParentDeath = armParentDeath
 
-const notYet = "not implemented (KILN04 stage 4 PR 2b-2b-ii)"
+// recordCollect is record.Collect; a hook so a test of the command can prove a
+// refusal never reached it.
+var recordCollect = record.Collect
 
 // runRecord dispatches `kiln record <subcommand>`.
 func runRecord(args []string, stdout, stderr io.Writer) int {
@@ -89,12 +92,63 @@ func runRecord(args []string, stdout, stderr io.Writer) int {
 	case record.ChildCommand:
 		return runRecordClassifyAction(args[1:], stderr)
 	case "collect":
-		// The stub refuses everything, flags included: there is nothing to run.
-		fmt.Fprintf(stderr, "kiln: record %s: %s\n", args[0], notYet)
-		return 1
+		return runRecordCollect(args[1:], stdout, stderr)
 	}
 	fmt.Fprintf(stderr, "kiln: unknown record subcommand %q\n", args[0])
 	return 2
+}
+
+// runRecordCollect is `kiln record collect --root <abs> --dir <abs> --results
+// <abs> --out <abs>`.
+func runRecordCollect(args []string, stdout, stderr io.Writer) int {
+	fs := flag.NewFlagSet("record collect", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	root := fs.String("root", "", "the checkout (absolute)")
+	dir := fs.String("dir", "", "the record directory prepare sealed (absolute)")
+	results := fs.String("results", "", "the build tool's -emit-results file (absolute)")
+	out := fs.String("out", "", "where records.jsonl is written; it must not exist (absolute)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	usage := "usage: kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>"
+	if fs.NArg() != 0 || *root == "" || *dir == "" || *results == "" || *out == "" {
+		fmt.Fprintln(stderr, usage)
+		return 2
+	}
+	for _, p := range []struct{ name, v string }{{"--root", *root}, {"--dir", *dir}, {"--results", *results}, {"--out", *out}} {
+		if !filepath.IsAbs(p.v) {
+			fmt.Fprintf(stderr, "kiln: %s %q is not an absolute path\n", p.name, p.v)
+			return 2
+		}
+	}
+	if !recordPlatformOK() {
+		fmt.Fprintf(stderr, "kiln: record collect runs only on linux/amd64 (this is %s/%s); nothing was written\n", runtime.GOOS, runtime.GOARCH)
+		return 3
+	}
+	self, err := recordSelf()
+	if err != nil {
+		fmt.Fprintf(stderr, "kiln: cannot locate this binary: %v\n", err)
+		return 1
+	}
+	res, err := recordCollect(record.CollectOptions{Root: *root, Dir: *dir, Results: *results, Out: *out, KilnExe: self})
+	if err != nil {
+		fmt.Fprintf(stderr, "kiln: record collect: %v\n", err)
+		return 1
+	}
+	// Nothing printed here is a value from the environment, and every action name
+	// and reason has been made printable already (they came from a trace).
+	h := res.Header
+	fmt.Fprintf(stdout, "ok: shard %d of %d collected: %d records in %s; void %v; tracked_changed_unexplained %d; post_inventory_unexplained %d\n",
+		h.ShardIndex, h.ShardCount, res.Records, res.Out, h.Void, h.TrackedChangedUnexplained, h.PostInventoryUnexplained)
+	for _, u := range res.Unknown {
+		fmt.Fprintf(stdout, "unknown write set: %s\n", u)
+	}
+	// Why a post-build check failed (printable and bounded by Collect): the shard
+	// cannot carry it, and a void shard has to say why in the log.
+	for _, p := range res.PostProblems {
+		fmt.Fprintf(stdout, "post-build problem: %s\n", p)
+	}
+	return 0
 }
 
 func runRecordPrepare(args []string, stdout, stderr io.Writer) int {

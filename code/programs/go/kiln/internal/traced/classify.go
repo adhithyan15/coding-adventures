@@ -377,23 +377,164 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 			c.incomplete = true
 		}
 	}
-	// Daemons (section 4.3): the init child is PID 1 of the sandbox's PID
-	// namespace, so when it exits the kernel kills every survivor.  A process
-	// whose exit line says SIGKILL and comes AFTER the init child's was such a
-	// survivor.
-	if t.InitPid == 0 {
-		return
+	// Daemons (section 4.3, D19): see DaemonLeft.
+	if DaemonLeft(t) {
+		c.reason(rDaemonLeft)
+		c.incomplete = true // W10: a survivor may have written before it was killed
 	}
-	seenInit := false
-	for _, ex := range t.Exits {
-		if seenInit && ex.Killed && ex.Signal == "SIGKILL" {
-			c.reason(rDaemonLeft)
-			c.incomplete = true // W10: a survivor may have written before it was killed
+}
+
+// DaemonLeft reports whether the step left a process running when it ended.
+//
+// The init child is PID 1 of the sandbox's PID namespace, so when its thread
+// group exits the kernel SIGKILLs every other process in the namespace.  Such
+// a survivor's exit line says "+++ killed by SIGKILL +++" (or, if it saw EOF
+// on a descriptor init's death closed and quit first, "+++ exited with 0 +++":
+// any exit counts).  A process the step itself killed and reaped ("kill -KILL
+// $p; wait $p") has the same line, but strace prints a reaped child's exit line
+// when it reaps it, before the parent's wait4 returns, so it comes BEFORE the
+// init's exit_group.  So a survivor is an exit that
+//
+//   - when the marker is known: is ANY exit (killed by any signal, or exited);
+//     when it is not (InitExitLine == 0): is killed by SIGKILL,
+//   - belongs to a process NOT PROVEN to be outside the init child's tree (see
+//     below),
+//   - is NOT in the init's own thread group (its sibling threads are killed by
+//     the init's exit_group, and are not daemons), and
+//   - comes after the init's exit_group call (Trace.InitExitLine).
+//
+// The boundary is the exit_group CALL line, not the init's "+++ exited +++"
+// line: the kernel kills the namespace while the init is still exiting, and
+// whether a survivor's line precedes or follows the init's exit line is not
+// something the design relies on (KILN04 D19, open question F2).
+//
+// FAIL CLOSED: InitExitLine == 0 (the init group made no exit call at all: it
+// was killed by a signal, so the step is already failed and incomplete) makes
+// every SIGKILL death of a descendant count (other exits cannot be placed
+// relative to a marker that is not there).
+// So does an ExitLines slice that does not line up with Exits.  A child
+// SIGKILLed and not waited for just before the step exits may also be flagged;
+// that race is accepted.
+//
+// The two ancestry questions are answered with the polarity that fails closed.
+// An exit is EXCLUDED only on a definite proof: its parent chain reaches a
+// process with no parent (the root, or the helper-root group) without passing
+// the init child, or it is a thread whose CLONE_THREAD chain reaches the init
+// child.  A missing process entry, a cycle, or anything else undecidable leaves
+// the exit counted.  (An earlier version bounded the walk at 4096 steps and
+// treated "not reached" as "outside": a step could fork a chain deeper than
+// that, one child at a time, and hide a daemon at the bottom.)  Each pid is
+// walked once, whatever the depth: answers are memoised along the chain.
+func DaemonLeft(t *trace.Trace) bool {
+	if t == nil || t.InitPid == 0 {
+		return false
+	}
+	aligned := len(t.ExitLines) == len(t.Exits)
+	w := &ancestry{t: t, under: map[int]bool{}, group: map[int]bool{}}
+	for i, ex := range t.Exits {
+		known := aligned && t.InitExitLine > 0
+		if !known && !(ex.Killed && ex.Signal == "SIGKILL") {
+			continue
 		}
-		if ex.Pid == t.InitPid {
-			seenInit = true
+		if !w.underInit(ex.Pid) || w.inInitGroup(ex.Pid) {
+			continue
+		}
+		if !known || t.ExitLines[i] > t.InitExitLine {
+			return true
 		}
 	}
+	return false
+}
+
+// ancestry answers DaemonLeft's two questions with memoised iterative walks.
+type ancestry struct {
+	t     *trace.Trace
+	under map[int]bool // pid -> not proven outside the init child's tree
+	group map[int]bool // pid -> proven a thread of the init child's group
+}
+
+// underInit is false ONLY when pid's parent chain provably ends at a process
+// with no parent without passing the init child (or pid is the init child
+// itself).  A missing entry or a cycle is true: fail closed.
+func (w *ancestry) underInit(pid int) bool {
+	if pid == w.t.InitPid {
+		return false
+	}
+	var path []int
+	seen := map[int]bool{}
+	res := true
+	for cur := pid; ; {
+		if v, ok := w.under[cur]; ok {
+			res = v
+			break
+		}
+		if seen[cur] {
+			res = true // a cycle
+			break
+		}
+		seen[cur] = true
+		path = append(path, cur)
+		p := w.t.Procs[cur]
+		if p == nil {
+			res = true
+			break
+		}
+		if p.Parent == w.t.InitPid {
+			res = true
+			break
+		}
+		if p.Parent == 0 {
+			res = false
+			break
+		}
+		cur = p.Parent
+	}
+	for _, q := range path {
+		w.under[q] = res
+	}
+	return res
+}
+
+// inInitGroup is true ONLY when pid is the init child or its CLONE_THREAD chain
+// provably reaches the init child.  Anything undecidable (a missing entry, a
+// cycle) is false, so the exit is counted as a survivor.
+func (w *ancestry) inInitGroup(pid int) bool {
+	var path []int
+	seen := map[int]bool{}
+	res := false
+	for cur := pid; ; {
+		if cur == w.t.InitPid {
+			res = true
+			break
+		}
+		if v, ok := w.group[cur]; ok {
+			res = v
+			break
+		}
+		if seen[cur] {
+			break
+		}
+		seen[cur] = true
+		path = append(path, cur)
+		p := w.t.Procs[cur]
+		if p == nil || !hasCloneThread(p.CloneFlags) {
+			break
+		}
+		cur = p.Parent
+	}
+	for _, q := range path {
+		w.group[q] = res
+	}
+	return res
+}
+
+func hasCloneThread(flags string) bool {
+	for _, f := range strings.Split(flags, "|") {
+		if strings.TrimSpace(f) == "CLONE_THREAD" {
+			return true
+		}
+	}
+	return false
 }
 
 // targetOf resolves an event's primary path.

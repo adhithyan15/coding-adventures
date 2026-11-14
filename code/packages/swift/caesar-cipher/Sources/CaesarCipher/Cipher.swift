@@ -153,7 +153,13 @@ internal func shiftCharacter(_ char: Character, by shift: Int) -> Character {
     //   -3 + 26 = 23
     //   23 % 26 = 23 → 'X'  ✓
     let offset = Int(value - base)
-    let shifted = ((offset + shift) % 26 + 26) % 26
+    //
+    // SEC-010: reduce the shift to 0..25 BEFORE adding the offset. In Swift,
+    // integer overflow traps, so `offset + shift` with shift near Int.max would
+    // crash the process. `shift % 26` cannot overflow (the divisor is not -1),
+    // and the reduced value is tiny, so the sum below is always safe.
+    let reducedShift = ((shift % 26) + 26) % 26
+    let shifted = (offset + reducedShift) % 26
 
     // ── Step 5: Convert back to a character ─────────────────────────────
     let newScalar = UnicodeScalar(base + UInt32(shifted))!
@@ -229,8 +235,14 @@ public func encrypt(_ text: String, shift: Int) -> String {
 public func decrypt(_ text: String, shift: Int) -> String {
     // Decryption is encryption with the negated shift. This follows directly
     // from the math: if we encrypted by adding `s`, we decrypt by subtracting
-    // `s`. Rather than duplicating logic, we reuse `encrypt` with `-shift`.
-    return encrypt(text, shift: -shift)
+    // `s`. Rather than duplicating logic, we reuse `encrypt` with the negated
+    // shift.
+    //
+    // SEC-010: we negate the shift *reduced to 0..25*, never the raw shift.
+    // `-Int.min` is an arithmetic overflow, which traps in Swift. The residue
+    // is small, so negating it is always safe.
+    let reducedShift = ((shift % 26) + 26) % 26
+    return encrypt(text, shift: -reducedShift)
 }
 
 

@@ -66,7 +66,11 @@ public static class CaesarCipher
     public static string Decrypt(string text, int shift)
     {
         ArgumentNullException.ThrowIfNull(text);
-        return Encrypt(text, -shift);
+        // SEC-010: never negate the raw shift. -int.MinValue overflows and, in
+        // the default unchecked context, wraps back to int.MinValue, so the
+        // "undo" would shift the wrong way. Reduce to 0..25 first; the residue
+        // is small, so negating it cannot overflow.
+        return Encrypt(text, -NormalizeShift(shift));
     }
 
     /// <summary>

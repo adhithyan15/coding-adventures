@@ -2,6 +2,7 @@ package source
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -9,6 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
 )
@@ -31,7 +33,9 @@ type Git struct {
 	// and GIT_*.
 	bin string
 	env []string
-	tm  treeModes // lazily loaded index modes, see Describe
+	// timeout is the deadline of one call (zero: DefaultGitTimeout).
+	timeout time.Duration
+	tm      treeModes // lazily loaded index modes, see Describe
 }
 
 // NewGit returns a Source for the work tree at dir.
@@ -80,14 +84,74 @@ func (g *Git) run(args ...string) ([]byte, error) {
 		env = append(append([]string(nil), g.env...), PinnedEnv()...)
 		dir = string(os.PathSeparator) // never the checkout: see NewGitAt
 	}
-	cmd := exec.Command(prog, full...)
+	// A deadline and a cap on what git may say. The recorder runs git over a
+	// checkout a BUILD has just had its way with (a huge index, a repository whose
+	// `fsck` takes forever): a git that never returns must not hold `collect`
+	// (and the exclusive lock it holds) for ever, and one that prints without end
+	// must not take the machine's memory. Exceeding the output cap is an ERROR,
+	// never a truncation: half a listing is a different listing.
+	timeout := g.timeout
+	if timeout <= 0 {
+		timeout = DefaultGitTimeout
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, prog, full...)
 	cmd.Env, cmd.Dir = env, dir
-	var out, errb bytes.Buffer
-	cmd.Stdout, cmd.Stderr = &out, &errb
+	// A grandchild that kept a pipe open must not outlive the deadline either.
+	cmd.WaitDelay = 5 * time.Second
+	out := &limitedBuffer{max: MaxGitStdout, strict: true}
+	errb := &limitedBuffer{max: MaxGitStderr}
+	cmd.Stdout, cmd.Stderr = out, errb
 	if err := cmd.Run(); err != nil {
+		if ctx.Err() != nil {
+			err = fmt.Errorf("timed out after %v: %w", timeout, err)
+		}
 		return nil, fmt.Errorf("git %s: %w: %s", args[0], err, strings.TrimSpace(errb.String()))
 	}
-	return out.Bytes(), nil
+	return out.b.Bytes(), nil
+}
+
+// DefaultGitTimeout bounds one git call (`fsck` of a large repository is the
+// longest the recorder makes). MaxGitStdout and MaxGitStderr bound what is kept
+// of its output.
+const (
+	DefaultGitTimeout       = 10 * time.Minute
+	MaxGitStdout      int64 = 1 << 30
+	MaxGitStderr      int64 = 1 << 20
+)
+
+// SetTimeout changes the deadline of every later call (zero: the default).
+func (g *Git) SetTimeout(d time.Duration) { g.timeout = d }
+
+// limitedBuffer keeps at most max bytes. When strict, one byte more is an error
+// (which stops the copy, so git gets EPIPE and ends); otherwise the rest is
+// dropped and a marker says so.
+type limitedBuffer struct {
+	b      bytes.Buffer
+	max    int64
+	strict bool
+	cut    bool
+}
+
+func (l *limitedBuffer) Write(p []byte) (int, error) {
+	room := l.max - int64(l.b.Len())
+	if int64(len(p)) <= room {
+		return l.b.Write(p)
+	}
+	if l.strict {
+		return 0, fmt.Errorf("git printed more than %d bytes", l.max)
+	}
+	l.b.Write(p[:room])
+	l.cut = true
+	return len(p), nil // swallowed: the process must not block
+}
+
+func (l *limitedBuffer) String() string {
+	if l.cut {
+		return l.b.String() + " [output truncated]"
+	}
+	return l.b.String()
 }
 
 // Output runs one git subcommand in the work tree, with the same hardening

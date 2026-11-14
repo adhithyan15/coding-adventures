@@ -264,20 +264,198 @@ func TestStepStatus(t *testing.T) {
 	none.Procs[1].Exit = nil
 	wantReason(t, h.runSteps(none), "failed")
 
-	// A survivor killed after the init child exited is a daemon.
+	// Daemons (D19): a SIGKILL death of a descendant of the init child, outside
+	// its thread group, after the init's exit_group call.  Every case builds
+	// the Trace by hand: ExitLines is parallel to Exits, InitExitLine is the
+	// line of init's exit_group.
+	sigkill := func(pid int) trace.Exit { return trace.Exit{Pid: pid, Killed: true, Signal: "SIGKILL"} }
+	build := func(initExitLine int, exits []trace.Exit, lines []int, procs ...*trace.Process) *trace.Trace {
+		d := step(stat("go.work"))
+		d.InitPid = 1
+		for _, p := range procs {
+			d.Procs[p.Pid] = p
+		}
+		d.Exits, d.ExitLines, d.InitExitLine = exits, lines, initExitLine
+		return d
+	}
+	child := &trace.Process{Pid: 7, Parent: 1}
+	cases := []struct {
+		name string
+		tr   *trace.Trace
+		want bool
+	}{
+		{"survivor line between the exit_group and init's exit line",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12}, child), true},
+		{"survivor line after init's exit line",
+			build(10, []trace.Exit{{Pid: 1}, sigkill(7)}, []int{12, 13}, child), true},
+		{"killed before init's exit_group (reaped by the step)",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{9, 12}, child), false},
+		// With the marker known ANY exit after it is a survivor's (a daemon
+		// may quit on EOF, or on a signal, before the namespace SIGKILL
+		// arrives); a waited child's line is printed at the reap, before
+		// the marker.
+		{"a SIGTERM survivor after the marker",
+			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), true},
+		{"an exited-with-0 survivor after the marker",
+			build(10, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{11, 12}, child), true},
+		{"a waited child that exited with 0 (line before the marker)",
+			build(10, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{9, 12}, child), false},
+		{"a waited SIGTERM child (line before the marker)",
+			build(10, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{9, 12}, child), false},
+		{"marker 0: only SIGKILL deaths count (a SIGTERM exit is not placed)",
+			build(0, []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGTERM"}, {Pid: 1}}, []int{11, 12}, child), false},
+		{"marker 0: an ordinary exit is not placed either",
+			build(0, []trace.Exit{{Pid: 7}, {Pid: 1}}, []int{11, 12}, child), false},
+		{"an init-group thread's ordinary exit after the marker is not a daemon",
+			build(10, []trace.Exit{{Pid: 8}, {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"}), false},
+		{"marker 0 (init killed from outside): fail closed",
+			build(0, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3, 12}, child), true},
+		{"a SIGKILLed thread of the init group is not a daemon",
+			build(10, []trace.Exit{sigkill(8), {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_VM|CLONE_THREAD"}), false},
+		{"nor a thread of a thread",
+			build(10, []trace.Exit{sigkill(9), {Pid: 1}}, []int{11, 12},
+				&trace.Process{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"},
+				&trace.Process{Pid: 9, Parent: 8, CloneFlags: "CLONE_THREAD"}), false},
+		{"a thread of a daemon is one",
+			build(10, []trace.Exit{sigkill(9), {Pid: 1}}, []int{11, 12}, child,
+				&trace.Process{Pid: 9, Parent: 7, CloneFlags: "CLONE_THREAD"}), true},
+		{"a pid in the root group is not the step's",
+			build(10, []trace.Exit{sigkill(5), {Pid: 1}}, []int{11, 12}, &trace.Process{Pid: 5, Parent: 0}), false},
+		// Undecidable ancestry fails closed (security review): only a proof of
+		// "outside init" excludes an exit.
+		{"a pid with no process entry is counted",
+			build(10, []trace.Exit{sigkill(42), {Pid: 1}}, []int{11, 12}), true},
+		{"a missing parent entry is counted",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12}, &trace.Process{Pid: 7, Parent: 99}), true},
+		{"ExitLines that do not line up fail closed",
+			build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{3}, child), true},
+	}
+	for _, c := range cases {
+		rec := h.runSteps(c.tr)
+		if got := hasReason(rec, "daemon-left"); got != c.want {
+			t.Errorf("%s: daemon-left = %v, want %v", c.name, got, c.want)
+		}
+		if DaemonLeft(c.tr) != c.want {
+			t.Errorf("%s: DaemonLeft = %v, want %v", c.name, !c.want, c.want)
+		}
+		if c.want && rec.WritesComplete {
+			t.Errorf("%s: a daemon left WritesComplete true", c.name)
+		}
+	}
+	// No init pid: no rule.
+	if DaemonLeft(&trace.Trace{Exits: []trace.Exit{sigkill(7)}}) || DaemonLeft(nil) {
+		t.Error("DaemonLeft without an init child")
+	}
+	// A parent cycle cannot hang the walk, and is not proof of anything: counted.
+	cyc := build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12},
+		&trace.Process{Pid: 7, Parent: 8}, &trace.Process{Pid: 8, Parent: 7})
+	if !DaemonLeft(cyc) {
+		t.Error("a parent cycle excluded a SIGKILL death")
+	}
+	// A CLONE_THREAD cycle is not proof of init-group membership either.
+	tcyc := build(10, []trace.Exit{sigkill(7), {Pid: 1}}, []int{11, 12},
+		&trace.Process{Pid: 7, Parent: 8, CloneFlags: "CLONE_THREAD"},
+		&trace.Process{Pid: 8, Parent: 7, CloneFlags: "CLONE_THREAD"})
+	if !DaemonLeft(tcyc) {
+		t.Error("a thread cycle excluded a SIGKILL death")
+	}
+}
+
+// Memoised walks: several exits sharing ancestors give the same answers as
+// walking each alone, and the init child's own SIGKILL is not a survivor.
+func TestDaemonLeftSharedAncestry(t *testing.T) {
+	sk := func(pid int) trace.Exit { return trace.Exit{Pid: pid, Killed: true, Signal: "SIGKILL"} }
 	d := step(stat("go.work"))
 	d.InitPid = 1
-	d.Procs[7] = &trace.Process{Pid: 7, Exit: &trace.Exit{Pid: 7, Killed: true, Signal: "SIGKILL"}}
-	d.Exits = []trace.Exit{{Pid: 1}, {Pid: 7, Killed: true, Signal: "SIGKILL"}}
-	wantReason(t, h.runSteps(d), "daemon-left")
-	// Killed BEFORE the init child's exit is an ordinary kill.
-	d.Exits = []trace.Exit{{Pid: 7, Killed: true, Signal: "SIGKILL"}, {Pid: 1}}
-	if hasReason(h.runSteps(d), "daemon-left") {
-		t.Fatal("killed before init exited")
+	// 5 is parentless (outside init); 6 and 7 hang under it; 8 is an init
+	// thread, 9 and 10 are threads of that thread.
+	for _, p := range []*trace.Process{
+		{Pid: 5}, {Pid: 6, Parent: 5}, {Pid: 7, Parent: 6},
+		{Pid: 8, Parent: 1, CloneFlags: "CLONE_THREAD"},
+		{Pid: 9, Parent: 8, CloneFlags: "CLONE_THREAD"},
+		{Pid: 10, Parent: 9, CloneFlags: "CLONE_THREAD"},
+	} {
+		d.Procs[p.Pid] = p
 	}
-	d.Exits = []trace.Exit{{Pid: 1}, {Pid: 7, Killed: true, Signal: "SIGTERM"}}
-	if hasReason(h.runSteps(d), "daemon-left") {
-		t.Fatal("SIGTERM is not a survivor")
+	d.Exits = []trace.Exit{sk(7), sk(6), sk(10), sk(9), sk(1)}
+	d.ExitLines, d.InitExitLine = []int{30, 31, 32, 33, 34}, 20
+	if DaemonLeft(d) {
+		t.Error("an exit proven outside init, or an init thread, or init itself was counted")
+	}
+	// One real survivor after them still counts.
+	d.Procs[11] = &trace.Process{Pid: 11, Parent: 1}
+	d.Exits, d.ExitLines = append(d.Exits, sk(11)), append(d.ExitLines, 35)
+	if !DaemonLeft(d) {
+		t.Error("a survivor among shared-ancestry exits was missed")
+	}
+}
+
+// Parser and rule together: a single-threaded init ending with a raw exit(2)
+// (no exit_group) still gets a marker, so a daemon that exits 0 on EOF after
+// it is flagged, while a child exited and reaped before it is not.
+func TestDaemonLeftAfterARawExitInit(t *testing.T) {
+	const head = `10  execve("/usr/bin/kiln", ["kiln", "sandbox-exec"], 0x0 /* 1 vars */) = 0
+10  unshare(CLONE_NEWUSER) = 0
+10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11
+11  unshare(CLONE_NEWNS) = 0
+11  chdir("/start") = 0
+11  execve("/usr/bin/kiln", ["kiln", "sandbox-init"], 0x0 /* 1 vars */) = 0
+11  execve("/bin/sh", ["sh", "-c", "make"], 0x0 /* 1 vars */) = 0
+11  clone(child_stack=NULL, flags=SIGCHLD) = 2 /* 12 in strace's PID NS */
+`
+	parse := func(body string) *trace.Trace {
+		tr, err := trace.ParseOptions(strings.NewReader(head+body), "/start",
+			trace.Options{HelperRoot: true, HelperExe: "/usr/bin/kiln"})
+		if err != nil {
+			t.Fatalf("%v\n%s", err, head+body)
+		}
+		return tr
+	}
+	// The child exits by itself after init's raw exit: a survivor.
+	tr := parse("11  exit(0) = ?\n12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n")
+	if tr.InitExitLine == 0 || !DaemonLeft(tr) {
+		t.Errorf("marker %d, DaemonLeft %v: a survivor after a raw exit was missed", tr.InitExitLine, DaemonLeft(tr))
+	}
+	// The child was reaped first: not a survivor.
+	tr = parse("12  +++ exited with 0 +++\n11  exit(0) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n")
+	if DaemonLeft(tr) {
+		t.Error("a child reaped before init's raw exit was flagged")
+	}
+}
+
+// A step forks a chain deeper than any walk bound, one child at a time, and
+// leaves a daemon at the bottom: still a survivor.  (The walk used to give up at
+// 4096 steps and call the exit "outside init".)  A same-depth chain that
+// provably ends at the root is still excluded, and the walk is linear.
+func TestDaemonLeftDeepChain(t *testing.T) {
+	const depth = 20000
+	mk := func(top int) *trace.Trace {
+		d := step(stat("go.work"))
+		d.InitPid = 1
+		for i := 0; i < depth; i++ {
+			pid := 100 + i
+			parent := top
+			if i > 0 {
+				parent = pid - 1
+			}
+			d.Procs[pid] = &trace.Process{Pid: pid, Parent: parent}
+		}
+		leaf := 100 + depth - 1
+		d.Exits = []trace.Exit{{Pid: leaf, Killed: true, Signal: "SIGKILL"}, {Pid: 1}}
+		d.ExitLines, d.InitExitLine = []int{30, 31}, 20
+		return d
+	}
+	if !DaemonLeft(mk(1)) {
+		t.Error("a daemon under a chain deeper than 4096 was not counted")
+	}
+	// The same chain hanging from a parentless process (outside init) is
+	// proven outside, however deep.
+	out := mk(500)
+	out.Procs[500] = &trace.Process{Pid: 500}
+	if DaemonLeft(out) {
+		t.Error("a chain proven to end at a parentless process was counted")
 	}
 }
 

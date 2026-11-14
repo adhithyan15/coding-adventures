@@ -28,7 +28,20 @@ foreach ($candidate in $candidates) {
 }
 if (-not $nativePerl) { throw 'Native Strawberry Perl is required on PATH (or in PERL_BIN)' }
 $env:PERL_BIN = $nativePerl
-$env:PATH = "$(Split-Path -Parent $nativePerl);$env:PATH"
+# Strawberry Perl ships its own MinGW gcc in <root>\c\bin, and ExtUtils::CBuilder (used by
+# build.rs) runs whatever "gcc" is first on PATH. In the full build, setup-ruby's MSYS2 and
+# ghcup's MinGW put other gcc builds ahead of it, and a mismatched gcc fails with no
+# diagnostic ("error building xs.dll file from 'src/perl_bridge_shim.c'"), which is how this
+# recipe failed in the scheduled full build while passing on pull requests (no Ruby there).
+# Put Strawberry's own toolchain first, next to its perl, exactly as
+# code\scripts\check-perl-extension-windows.ps1 does for the Perl extensions.
+$perlBin = Split-Path -Parent $nativePerl
+$strawberryRoot = Split-Path -Parent (Split-Path -Parent $perlBin)
+$toolDirs = @($perlBin, (Join-Path $strawberryRoot 'c\bin')) | Where-Object { Test-Path -LiteralPath $_ }
+$env:PATH = "$($toolDirs -join ';');$env:PATH"
+# Log which compiler the shim build will use, so a failure is diagnosable.
+$gcc = Get-Command gcc.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($gcc) { Write-Host "gcc: $($gcc.Source)"; & $gcc.Source --version | Select-Object -First 1 } else { Write-Host 'gcc: not found on PATH' }
 
 # The package root, wherever this was started from.
 Push-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)

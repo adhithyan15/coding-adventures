@@ -87,6 +87,19 @@ func checkExactKeys(raw []byte, t reflect.Type) error {
 		if raw[0] != '[' {
 			return nil // json.RawMessage and friends are checked by their owners
 		}
+		// A list of strings, numbers or booleans has no key to check in any
+		// element. Copying every element into a RawMessage only to find that out
+		// doubles the memory of a record with tens of thousands of path strings
+		// (a classified record is up to 256 MiB), so such a list is skipped.
+		et := t.Elem()
+		for et.Kind() == reflect.Pointer {
+			et = et.Elem()
+		}
+		switch et.Kind() {
+		case reflect.Struct, reflect.Map, reflect.Slice, reflect.Interface:
+		default:
+			return nil
+		}
 		var items []json.RawMessage
 		if err := json.Unmarshal(raw, &items); err != nil {
 			return err

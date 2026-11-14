@@ -12,8 +12,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net"
 	"os"
 	"os/exec"
@@ -27,7 +25,6 @@ import (
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/trace"
 )
 
 // requireEnv turns every skip in this file into a failure.  CI sets it, so a
@@ -574,90 +571,14 @@ func TestSandboxStraceTraceSetNamesAreValid(t *testing.T) {
 // writes), that the init's setup is tolerated, that --kill-on-exit is accepted,
 // and strace's escaping of the -y annotation.
 func TestSandboxRealStrace(t *testing.T) {
-	straceBin, err := exec.LookPath("strace")
-	if err != nil {
-		skipOrFail(t, "strace is not installed")
+	// The harness (build an uninstrumented kiln, write the config, run strace
+	// with the exported argv, parse in helper mode, show the lines around a
+	// refusal) is shared with TestSandboxStraceSignals: runStraced.
+	r := runStraced(t, "cat {data}")
+	if r.stdout != "hello\n" {
+		t.Fatalf("step output %q", r.stdout)
 	}
-	f := newSandboxFixture(t)
-	// Trace an UNINSTRUMENTED kiln.  Under -cover the test binary writes its
-	// coverage files when the root exits, which are traced calls by the root
-	// after the spawn: helper-activity, rightly.  So build the real binary
-	// (outside the checkout, the state root and tmpdir: its own temp directory)
-	// and make it both the strace target and the configured kiln_exe.
-	goBin, err := exec.LookPath("go")
-	if err != nil {
-		skipOrFail(t, "the go tool is not available to build an uninstrumented kiln")
-	}
-	kiln := filepath.Join(t.TempDir(), "kiln")
-	build := exec.Command(goBin, "build", "-o", kiln, ".")
-	if out, err := build.CombinedOutput(); err != nil {
-		t.Fatalf("go build: %v\n%s", err, out)
-	}
-	if kiln, err = filepath.EvalSymlinks(kiln); err != nil {
-		t.Fatal(err)
-	}
-	f.exe = kiln
-	f.writeConfig(t, nil)
-	data := filepath.Join(f.pkg, "data.txt")
-	if err := os.WriteFile(data, []byte("hello\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	trf := filepath.Join(f.base, "trace.txt")
-	// The exported argv, exactly what the recorder runs (KILN04 section 4.3).
-	args, err := sandbox.StraceArgs(trf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	args = append(args, f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", "cat "+data)
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, straceBin, args...)
-	cmd.Dir = f.pkg
-	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
-	var out, eb bytes.Buffer
-	cmd.Stdout, cmd.Stderr = &out, &eb
-	if err := cmd.Run(); err != nil {
-		t.Fatalf("strace: %v\nstderr: %s", err, eb.String())
-	}
-	if eb.Len() != 0 {
-		t.Fatalf("strace wrote to standard error: %q", eb.String())
-	}
-	if out.String() != "hello\n" {
-		t.Fatalf("step output %q", out.String())
-	}
-	fh, err := os.Open(trf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer fh.Close()
-	tr, err := trace.ParseOptions(fh, f.pkg, trace.Options{HelperRoot: true, HelperExe: f.exe})
-	if err != nil {
-		// Show the lines around the refused one (its number is in the error),
-		// each cut short, so the next fix needs no second CI run to find them.
-		raw, _ := os.ReadFile(trf)
-		lines := strings.Split(string(raw), "\n")
-		at := 0
-		var te *trace.Error
-		if errors.As(err, &te) {
-			at = te.Line
-		}
-		lo, hi := at-15, at+5
-		if lo < 0 {
-			lo = 0
-		}
-		if hi > len(lines) {
-			hi = len(lines)
-		}
-		var win strings.Builder
-		for i := lo; i < hi; i++ {
-			l := lines[i]
-			if len(l) > 400 {
-				l = l[:400] + "..."
-			}
-			fmt.Fprintf(&win, "%5d  %s\n", i+1, l)
-		}
-		t.Fatalf("the trace was refused: %v (line %d of %d)\n--- around the refused line ---\n%s", err, at, len(lines), win.String())
-	}
+	tr, data := r.tr, r.data
 	if ex := tr.StepExit(); ex == nil || ex.Killed || ex.Code != 0 {
 		t.Errorf("step exit %+v", ex)
 	}

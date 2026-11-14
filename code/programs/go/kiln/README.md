@@ -428,6 +428,9 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   only `null`, `zero`, `full`, `random`, `urandom` and `tty`, and it runs in a
   session of its own, so it cannot signal strace. The recorder runs strace with
   `--kill-on-exit` and must make the step's descriptors 1 and 2 pipes.
+  It also runs it with `-e signal=all`: strace prints `+++ killed by SIG +++`
+  only for signals in that set, so any narrower set would leave a process killed
+  by SIGPIPE (or anything else) with no exit line and void the run (KILN04 D19).
 - **Tool roots under `$HOME`.** An `ro_roots` entry may lie strictly beneath
   `home` (`~/.cargo/bin`, `~/.rustup`): it is bound after `home`'s tmpfs, at
   the same path. A deeper entry sits in a tmpfs anchor (`~/.cargo`) that is
@@ -558,9 +561,9 @@ lines, 48 MB, written in a third of a second and hashed in 20 ms) and
 ecosystems). `VerifyPre` hashes the tree on every step but decodes it only when a
 step classifies (`Pre.Tree`).
 
-`kiln record step` is the next section; `kiln record collect` exists as a stub that
-refuses (PR 2b-2b-ii). Not done by `prepare`, by design: gates and toolchain
-probes, the in-sandbox socket probe, and `collect`.
+`kiln record step` and `kiln record collect` are the next sections. Not done by
+`prepare`, by design: gates and toolchain probes and the in-sandbox socket probe
+(2b-2c).
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;
@@ -620,7 +623,8 @@ the times, whether the line matches the plan, `step_netns` (true only when strac
 was started with the sandbox command) and `clean`, the supervisor's half of the
 tracer-completeness rule (G7), and `seq`, the step's number in the serial order.
 It does not classify while an action is still running (see "Serial recording and
-classification" below): `kiln record collect`, the next PR, reads these files.
+classification" below): `kiln record collect` (see "`kiln record collect`" below)
+reads these files.
 
 How the trace is written (review of P12). strace does not write the file: it writes
 a pipe (`-o /proc/self/fd/5`) and the supervisor reads it, writes
@@ -630,7 +634,7 @@ polls; only "free space at least 4 GiB" is checked, before a step starts (a fiel
 of the options). `prepare` creates `traces/`, and `step` is safe against
 supervisors that start together. A rerun or out-of-order step always leaves
 `<step>.rerun`. `step` holds a shared `flock` on the record directory for its whole
-run (`record.LockDir`; `collect` will take it exclusively), asks the kernel to kill
+run (`record.LockDir`; `collect` takes it exclusively), asks the kernel to kill
 it when the build tool dies, passes the validated `LD_LIBRARY_PATH` to strace,
 saves strace's own stderr as `<step>.strace-stderr`, notices a survivor holding any
 of the five pipes whatever strace's exit status was, and passes
@@ -685,6 +689,46 @@ traces through the fake tracer and the real parser and classifier on a temporary
 checkout, including the motivating case (a tracked link that a later action
 retargets: classified at the action's end the path is stable, classified after the
 later action it is `unstable-path` and the write set unknown).
+
+### `kiln record collect` (KILN04 stage 4 PR 2b-2b-ii)
+
+```
+kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs>
+```
+
+Runs once, after the traced build. It writes `--out`, the shard's `records.jsonl`
+(a header, then one record per action of the plan); the binding, host facts and
+pre-build inventory of the shard artifact are the sealed files of `pre/`.
+`collect` classifies nothing and parses no trace; it refuses to believe. It takes the
+exclusive lock on the record directory, re-verifies `pre/`, the running Kiln and
+the pinned git, and then, per action, proves that what the supervisor left is whole:
+every trace re-hashes to its sidecar and ends in a newline, the sidecars are a
+contiguous run of steps of the planned lines, `seq` is consecutive, no marker
+(`.rerun`, `.overlap`) exists, `record.failed` overrides `record.json`, and the
+record is of this action under this sealed directory and counts the steps that
+started, which the build tool's `--results` (`kiln-legacy-results/1`) also says.
+Whatever cannot be proved is an UNKNOWN WRITE SET: an empty raw record,
+`writes_complete: false` and an `unknown_writes` reason, which the merge turns into
+a void of the whole run. After the build it runs `VerifyTree` with the commit
+`prepare` recorded, `git fsck --connectivity-only` and `Inventory`, and fills the
+header's `tracked_changed_unexplained` and `post_inventory_unexplained`; a failure
+of any of the three is a void and a non-zero count, never a crash. The shard is
+decoded with `recfmt` before it is written, atomically, to `--out`. Before it reads
+anything of `traces/`, `collect` creates `traces/.collected`; `kiln record step`
+refuses once that exists, so a directory is collected once and cannot grow after.
+A package whose recipe is empty (a comment-only BUILD, built 0 of 0) is vacuously
+complete, not unknown. Why a post-build check failed is printed as
+`post-build problem:` lines (never written to the shard). Exit 1 and
+nothing written when `collect` cannot say what the build did (the directory is locked,
+`pre/` changed, the results are unreadable); a void shard is still written and the
+exit is 0.
+
+Tests: `collect_*_unix_test.go` prepare a real shard on a committed repository and
+write what a supervisor would have, then break one thing at a time (every refusal
+and void path; the shard is also fed to the merge); `TestSandboxRecordCollect`
+(the required `kiln-sandbox` job) runs `prepare`, every step, `collect` and the merge
+over five real actions (a clean hit, a failed step, a write the classifier cannot
+place, a step run twice, a tracked file changed after the build).
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

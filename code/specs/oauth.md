@@ -5045,6 +5045,27 @@ intermediate revocation policy, repository-owned TLS/HTTP, and audited
 transport remain separate blockers. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The same repository-owned revocation boundary now exposes a sealed target-
+evidence projection for the fully routed reviewed-server proof and carries it
+through the exact direct no-check fixed-path revocation completion. The
+projection derives the leaf only from the retained authenticated target-status
+proof whose safe constructor already required exact identity with the retained
+reviewed path. External callers cannot implement substitute target evidence.
+The direct completion returns that same exact decoded certificate object
+through its complete retained proof, without accepting a detached certificate,
+callback, path, status result, or trust assertion. This prepares a later HTTPS
+destination-to-complete-revocation binding without moving or duplicating the
+signed path proof.
+
+This projection performs no parsing, new validation, cryptography, credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It does
+not bind an HTTPS destination, generalize revocation or path construction,
+build or run TLS or HTTP, authorize OAuth transport, or grant network
+authority. Other complete fixed-path revocation branches and the final HTTPS
+composition remain separate slices. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
