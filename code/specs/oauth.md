@@ -5135,10 +5135,32 @@ cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
-authorize OAuth transport, or grant network authority. The double-nested
-HTTPS binding, the other remaining complete fixed-path revocation branches,
-repository-owned TLS/HTTP composition, and audited transport remain separate
-blockers. Concrete HTTPS and live-provider readiness remain unavailable.
+authorize OAuth transport, or grant network authority. The composition below,
+the other remaining complete fixed-path revocation branches, repository-owned
+TLS/HTTP composition, and audited transport remain separate from this
+projection. Concrete HTTPS and live-provider readiness remain unavailable.
+
+The `https-reviewed-server-path-binding` boundary now also joins the complete
+HTTPS destination proof to that exact double-nested no-check complete fixed-
+path revocation proof. The binder derives the server leaf only through the
+completion's sealed target projection, requires both non-copyable inputs to
+retain the same exact decoded certificate object, and moves both complete
+inputs into the result. A byte-equal independent decode fails closed, and the
+surface accepts no detached certificate, callback-shaped target claim, path,
+status result, or trust assertion. Stable failures and Debug output retain no
+certificate, hostname, authority, path, key, signature, algorithm, status,
+constraint, or root payloads. This branch neither requires nor implies the
+separate anchor-self-signature composition.
+
+This double-nested composition performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It does not generalize revocation or path
+construction, cover the other remaining complete fixed-path revocation
+branches, build or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. Those remaining branches, repository-owned TLS/HTTP
+composition, and audited transport remain separate blockers. Concrete HTTPS
+and live-provider readiness remain unavailable.
 
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,

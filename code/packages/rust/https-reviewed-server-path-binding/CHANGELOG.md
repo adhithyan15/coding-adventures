@@ -7,6 +7,9 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Exact-object composition between the complete HTTPS destination proof and
+  the exact double-nested no-check complete fixed-path revocation policy,
+  deriving the leaf only through sealed repository-owned target evidence.
+- Exact-object composition between the complete HTTPS destination proof and
   the exact nested no-check complete fixed-path revocation policy, deriving
   the leaf only through sealed repository-owned target evidence.
 - Exact-object composition between the complete HTTPS destination proof and
