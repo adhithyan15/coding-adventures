@@ -15,6 +15,14 @@ import (
 // which also stops the log's directory from being deleted. The service is therefore put
 // in a Job Object with JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE, and the whole job is
 // terminated. If the job cannot be set up the tree falls back to killing the process.
+//
+// Known limits, accepted: the job is assigned just after cmd.Start, so a grandchild created
+// in that first instant is not in it (cmd.exe takes far longer than that to start
+// `go run`); a command that breaks away from the job escapes cleanup; and the structure
+// layouts below are the 64-bit ones (a 32-bit build would make SetInformationJobObject fail
+// with ERROR_BAD_LENGTH and silently fall back to killing only the process). Closing the
+// job handle, which also happens when this tool exits, kills the job, so an interrupted
+// run does not leak the service the way it can on Unix.
 type processTree struct {
 	cmd *exec.Cmd
 	job syscall.Handle

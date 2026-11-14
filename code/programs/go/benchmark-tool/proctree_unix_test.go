@@ -53,3 +53,26 @@ func assertTreeKilled(t *testing.T, dir, _ string) {
 	}
 	t.Fatalf("grandchild %d is still running after Stop", pid)
 }
+
+// An interrupted tool must not leave its services running: the signal handler kills every
+// live tree. This drives the same function the handler calls (the signal wiring itself
+// is a few lines of os/signal).
+func TestKillLiveTreesStopsAServiceThatWasNeverStopped(t *testing.T) {
+	dir := t.TempDir()
+	cmd := shellCommand(treeCommand(dir))
+	cmd.Dir = dir
+	configureProcessTree(cmd)
+	if err := cmd.Start(); err != nil {
+		t.Fatal(err)
+	}
+	tree := attachProcessTree(cmd)
+	defer tree.Close()
+	done := make(chan error, 1)
+	go func() { done <- cmd.Wait() }()
+
+	pid := readChildPID(t, dir)
+	killLiveTrees()
+	<-done
+	assertTreeKilled(t, dir, "")
+	_ = pid
+}
