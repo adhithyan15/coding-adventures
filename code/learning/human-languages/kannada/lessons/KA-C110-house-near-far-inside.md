@@ -46,7 +46,7 @@ far). We will keep one house as the reference and change its relation.
 ## You'll want to know: near the house
 <!-- hl-knowledge: introduces=[KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]; assesses=[KA-LEX-C103-HOME-01, KA-LEX-C100-FIND-05, KA-LEX-C92-WORK-01] -->
 
-Listen, then read:
+Listen, then say the line after the pause:
 
 > **ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ.**
 >
@@ -75,8 +75,8 @@ one means “far from the house”.
 > *hakki maneyoḷage ide.* — The bird is inside the house.
 
 Here **ಒಳಗೆ** (*oḷage*) means “inside”. In this fixed place phrase it
-joins **ಮನೆಯ** as **ಮನೆಯೊಳಗೆ**. Listen and point: is the bird on the
-tree, under the tree, or inside the house?
+joins **ಮನೆಯ** as **ಮನೆಯೊಳಗೆ**. Answer aloud: is the bird on the tree,
+under the tree, or inside the house?
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-INSIDE-08] -->

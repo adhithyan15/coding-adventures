@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Market, Beach, Garden, Corner, Turn",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9e8cef31b6f8ade2",
+  "sourceHash": "fnv1a64:e4b415100fbf3621",
   "lessons": [
     {
       "id": "KA-C110-sante",
@@ -698,15 +698,14 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c2a3325aec47fdc7",
+      "sourceHash": "fnv1a64:52b3b651ed0a5907",
       "notice": {
         "modality": "pen",
         "needs": [],
         "waitUntilStopped": [
-          "Guided Practice: on or under",
           "Writing: the place phrases"
         ],
-        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice: on or under and Writing: the place phrases."
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: the place phrases."
       },
       "blocks": [
         {
@@ -722,7 +721,7 @@
             },
             {
               "kind": "speech",
-              "text": "Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Point up for ಮೇಲೆ (mēle, on top), then down for ಕೆಳಗೆ (keḷage, under). You know all four words already."
+              "text": "Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Say ಮೇಲೆ (mēle, on top), then ಕೆಳಗೆ (keḷage, under). You know all four words already."
             }
           ]
         },
@@ -733,7 +732,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen once. Follow the printed line with your finger:"
+              "text": "Listen once, then say the line after the pause:"
             },
             {
               "kind": "speech",
@@ -756,7 +755,7 @@
             },
             {
               "kind": "speech",
-              "text": "The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Read both lines aloud, slowly. Listen for the word that tells you where."
+              "text": "The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Say both lines aloud, slowly. Listen for the word that tells you where."
             }
           ]
         },
@@ -791,12 +790,12 @@
             },
             {
               "kind": "prompt",
-              "action": "POINT",
-              "instruction": "which printed line puts the bird below?",
-              "spoken": false,
+              "action": "ANSWER",
+              "instruction": "which word puts the bird below? Say it aloud.",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: which printed line puts the bird below?]"
+              "source": "[YOU ANSWER: which word puts the bird below? Say it aloud.]"
             }
           ]
         },
@@ -848,7 +847,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:82888986576573e6",
+      "sourceHash": "fnv1a64:13b6e9b43bfb9734",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -882,7 +881,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen, then read:"
+              "text": "Listen, then say the line after the pause:"
             },
             {
               "kind": "speech",
@@ -920,7 +919,7 @@
             },
             {
               "kind": "speech",
-              "text": "Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Listen and point: is the bird on the tree, under the tree, or inside the house?"
+              "text": "Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Answer aloud: is the bird on the tree, under the tree, or inside the house?"
             }
           ]
         },

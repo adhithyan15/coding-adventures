@@ -228,6 +228,12 @@ describe("the committed Kannada A1 inventory", () => {
       const [modality] = buildModalityManifest([lesson!]).lessons;
       expect(modality?.coreDrivable).toBe(true);
       expect(modality?.detachableSegments.some((name) => name.startsWith("Writing"))).toBe(true);
+      const spokenCore = lesson!.blocks
+        .filter((block) => !block.title.startsWith("Writing"))
+        .map((block) => block.markdown)
+        .join("\n");
+      expect(spokenCore, `${lesson?.realization.lessonId}: audio-only core`)
+        .not.toMatch(/\b(?:point|finger|printed line|listen, then read|read both lines)\b/i);
     }
     const point = inventory.points.find((entry) => entry.id === "KA-A1-POST-02");
     expect(point?.probe).toEqual([

@@ -37,13 +37,13 @@ reviews_of: [KA-C54-tree, KA-C60-bird, KA-C107-mele, KA-C108-kelage]
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01] -->
 
 [PAUSE 2s] Recall **ಮರ** (*mara*, tree) and **ಹಕ್ಕಿ** (*hakki*, bird).
-Point up for **ಮೇಲೆ** (*mēle*, on top), then down for **ಕೆಳಗೆ**
-(*keḷage*, under). You know all four words already.
+Say **ಮೇಲೆ** (*mēle*, on top), then **ಕೆಳಗೆ** (*keḷage*, under).
+You know all four words already.
 
 ## You'll want to know: on the tree
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C110-TREE-ON-UNDER-06]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05] -->
 
-Listen once. Follow the printed line with your finger:
+Listen once, then say the line after the pause:
 
 > **ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ.**
 >
@@ -62,7 +62,7 @@ noun ending.
 > *marada keḷage hakki ide.* — The bird is under the tree.
 
 The tree and bird stay the same. Only **ಮೇಲೆ** changes to **ಕೆಳಗೆ**.
-Read both lines aloud, slowly. Listen for the word that tells you where.
+Say both lines aloud, slowly. Listen for the word that tells you where.
 
 ## Guided Practice: on or under
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06] -->
@@ -70,7 +70,7 @@ Read both lines aloud, slowly. Listen for the word that tells you where.
 [PAUSE 3s]
 - [YOU SAY: The bird is **on** the tree.]
 - [YOU SAY: The bird is **under** the tree.]
-- [YOU POINT: which printed line puts the bird below?]
+- [YOU ANSWER: which word puts the bird below? Say it aloud.]
 
 ## Writing: the place phrases
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06] -->

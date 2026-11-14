@@ -167,29 +167,29 @@ What does ತಿರುವು (tiruvu) mean? ("A turn, a bend".) Say it once more
 Lesson 6 of 7.
 ಮರದ ಮೇಲೆ / ಮರದ ಕೆಳಗೆ — on or under the tree.
 
-Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice: on or under and Writing: the place phrases.
+Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Writing: the place phrases.
 
 Warm-up.
 [pause 2 seconds]
-Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Point up for ಮೇಲೆ (mēle, on top), then down for ಕೆಳಗೆ (keḷage, under). You know all four words already.
+Recall ಮರ (mara, tree) and ಹಕ್ಕಿ (hakki, bird). Say ಮೇಲೆ (mēle, on top), then ಕೆಳಗೆ (keḷage, under). You know all four words already.
 
 You'll want to know: on the tree.
-Listen once. Follow the printed line with your finger:
+Listen once, then say the line after the pause:
 ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ. marada mēle hakki ide. — The bird is on the tree.
 ಮರದ (marada) means “of the tree” here. It names what ಮೇಲೆ is relative to. Keep ಮರದ ಮೇಲೆ together as “on the tree”; ಹಕ್ಕಿ ಇದೆ says that the bird is there. This one frame does not teach every Kannada noun ending.
 
 Grammar lens: under the tree.
 ಮರದ ಕೆಳಗೆ ಹಕ್ಕಿ ಇದೆ. marada keḷage hakki ide. — The bird is under the tree.
-The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Read both lines aloud, slowly. Listen for the word that tells you where.
+The tree and bird stay the same. Only ಮೇಲೆ changes to ಕೆಳಗೆ. Say both lines aloud, slowly. Listen for the word that tells you where.
 
-[once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice: on or under.
 [pause 3 seconds]
 [your turn — say: The bird is on the tree.]
 [pause 8 seconds for the answer]
 [your turn — say: The bird is under the tree.]
 [pause 8 seconds for the answer]
-[once you have stopped driving — point: which printed line puts the bird below?]
+[your turn — answer: which word puts the bird below? Say it aloud.]
+[pause 8 seconds for the answer]
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Writing: the place phrases.
@@ -210,7 +210,7 @@ Warm-up.
 Recall the chapter's five place words: market, beach, garden, corner, turn. Say them before checking: ಸಂತೆ (sante), ಕಡಲತೀರ (kaḍalatīra), ತೋಟ (tōṭa), ಮೂಲೆ (mūle), ತಿರುವು (tiruvu). Now say “on the tree” and “under the tree”. Recall ಮನೆ (mane, house), ಹತ್ತಿರ (hattira, near), and ದೂರ (dūra, far). We will keep one house as the reference and change its relation.
 
 You'll want to know: near the house.
-Listen, then read:
+Listen, then say the line after the pause:
 ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ. śāle maneya hattira ide. — The school is near the house.
 You know ಶಾಲೆ (śāle, school). ಮನೆಯ (maneya) links the house to ಹತ್ತಿರ. Say ಮನೆಯ ಹತ್ತಿರ as one place phrase.
 
@@ -220,7 +220,7 @@ Grammar lens: far from the house.
 
 You'll want to know: inside the house.
 ಹಕ್ಕಿ ಮನೆಯೊಳಗೆ ಇದೆ. hakki maneyoḷage ide. — The bird is inside the house.
-Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Listen and point: is the bird on the tree, under the tree, or inside the house?
+Here ಒಳಗೆ (oḷage) means “inside”. In this fixed place phrase it joins ಮನೆಯ as ಮನೆಯೊಳಗೆ. Answer aloud: is the bird on the tree, under the tree, or inside the house?
 
 The word, taken apart.
 You heard ಒಳಗೆ earlier in ಒಳಗೆ ಬನ್ನಿ (“please come in”). It is native Dravidian for “inside”; DEDR 698 also lists Tamil uḷ.
