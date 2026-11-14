@@ -10148,7 +10148,7 @@
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-ruby-lane-parity",
-      "pr_number": null,
+      "pr_number": 19402,
       "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
     },
     {
