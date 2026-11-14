@@ -5055,7 +5055,7 @@ The direct completion returns that same exact decoded certificate object
 through its complete retained proof, without accepting a detached certificate,
 callback, path, status result, or trust assertion. This prepares a later HTTPS
 destination-to-complete-revocation binding without moving or duplicating the
-signed path proof.
+retained direct-revocation proof.
 
 This projection performs no parsing, new validation, cryptography, credential
 access or editing, signing, storage, clock acquisition, provider action, audit
