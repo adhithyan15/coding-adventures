@@ -212,16 +212,7 @@ func (pl *planner) record(p int) (Record, error) {
 	members := pl.closure(p)
 
 	// Reads: the union over every member, de-duplicated.
-	seen := map[readItem]bool{}
-	var items []readItem
-	for _, q := range members {
-		for _, it := range pl.items[q] {
-			if !seen[it] {
-				seen[it] = true
-				items = append(items, it)
-			}
-		}
-	}
+	items := pl.unionItems(members)
 	var reads []key.FileEntry
 	var consumed []key.Consumed
 	for _, it := range items {
@@ -235,20 +226,20 @@ func (pl *planner) record(p int) (Record, error) {
 			consumed = append(consumed, *r.consumed)
 		}
 	}
-	reasons := map[string]bool{ReasonTrace: true}
-	hard := false
-	gate := gates{}
-	// Symlink rules are hard reasons (KILN03 6); the text scans are advisory
-	// hints only and never touch `reasons` or the class.  The key is computed
-	// below either way: measurement never stops.
-	symlinks, hints, err := pl.scanFindings(members, items)
+	// Every reason that can stop lookup comes from gateFacts, the one place the
+	// gate is computed (Traced.Gate calls it too), so the plan and the recorder
+	// can never disagree about what gates a package.  The key is computed below
+	// either way: measurement never stops.
+	f, err := pl.gateFacts(p, members, items)
 	if err != nil {
 		return Record{}, err
 	}
-	for _, r := range symlinks {
+	reasons := map[string]bool{ReasonTrace: true}
+	for _, r := range f.symlinks {
 		reasons[r] = true
-		hard = true
-		gate.add(gateHard, r)
+	}
+	for _, n := range f.unknownInputs {
+		reasons["unknown-repo-inputs:"+n] = true
 	}
 	unpinned := false
 	for _, q := range members {
@@ -257,20 +248,13 @@ func (pl *planner) record(p int) (Record, error) {
 			d := pl.ownDigest[q]
 			consumed = append(consumed, key.Consumed{Target: "pkg:" + m.Name, Phase: key.PhaseBuild, Key: d[:]})
 		}
-		if m.RepoInputsUnknown {
-			reasons["unknown-repo-inputs:"+m.Name] = true
-			hard = true
-			gate.add(gateHard, "unknown-repo-inputs:"+m.Name)
-		}
 		if !pl.pol.pinned[m.Language] {
 			reasons["unpinned:"+m.Language] = true
 			unpinned = true
 		}
 	}
-	if pl.pol.never[pkg.Name] {
+	if f.never {
 		reasons["never:"+pkg.Name] = true
-		hard = true
-		gate.add(gateNever, "never:"+pkg.Name)
 	}
 	td, err := pl.buildToolDigest()
 	if err != nil {
@@ -280,31 +264,15 @@ func (pl *planner) record(p int) (Record, error) {
 		key.Consumed{Target: "tool:build-tool", Phase: key.PhaseBuild, Key: td[:]},
 		key.Consumed{Target: "policy:toolchains.json", Phase: key.PhaseBuild, Key: pl.pol.tc.Digest[:]},
 		key.Consumed{Target: "policy:env.json", Phase: key.PhaseBuild, Key: pl.pol.env.Digest[:]})
-	// Tools: the pins of every closure language and extra toolchain, plus the
-	// always-included set (KILN03 4).  An entry that does not exist is a hard
-	// reason, never "no tools".
-	ts, err := pl.toolsOf(pl.closureNames(members))
-	if err != nil {
-		return Record{}, err
-	}
+	ts := f.ts
 	for _, n := range ts.unknown {
 		reasons["unknown-toolchain:"+n] = true
-		hard = true
-		gate.add(gateHard, "unknown-toolchain:"+n)
 	}
-	for _, tl := range ts.tools {
-		if pl.mismatch[tl.Name] {
-			reasons["probe-mismatch:"+tl.Name] = true // soft: reported, never a class
-			gate.add(gateProbe, "probe-mismatch:"+tl.Name)
-		}
-		if pl.timedOut[tl.Name] {
-			reasons["probe-timeout:"+tl.Name] = true // soft, like probe-mismatch
-			gate.add(gateProbe, "probe-timeout:"+tl.Name)
-		}
-		if pl.refused[tl.Name] {
-			// Reported by the probe list, not as a reason (the plan's reasons
-			// are unchanged without --ledger), but lookup must not skip on it.
-			gate.add(gateProbe, "probe-refused:"+tl.Name)
+	for _, g := range f.probe {
+		// A refused probe is reported by the probe list, not as a reason (the
+		// plan's reasons are unchanged without --ledger), but it still gates.
+		if !strings.HasPrefix(g, "probe-refused:") {
+			reasons[g] = true // soft: reported, never a class
 		}
 	}
 
@@ -332,14 +300,9 @@ func (pl *planner) record(p int) (Record, error) {
 	rec.Components.Env = hexOf(pl.envDigest[:])
 	rec.Tools = ts.labels
 
-	recipe, why, err := pl.buildRecipe(pkg)
-	if err != nil {
-		return Record{}, err
-	}
+	recipe, why := f.recipe, f.recipeWhy
 	if why != "" {
 		reasons[why] = true
-		hard = true
-		gate.add(gateHard, why)
 	} else {
 		rs := sha256.Sum256(recipe)
 		rec.Components.Recipe = hexOf(rs[:])
@@ -362,11 +325,126 @@ func (pl *planner) record(p int) (Record, error) {
 		rec.Reasons = append(rec.Reasons, r)
 	}
 	sort.Strings(rec.Reasons)
-	rec.Hints = append([]string{}, hints...)
+	rec.Hints = append([]string{}, f.hints...)
 	sort.Strings(rec.Hints)
-	rec.Class = classify(hard, unpinned)
-	rec.gate = gate.first()
+	rec.Class = classify(f.hard(), unpinned)
+	rec.gate = pl.gateFrom(pkg.Name, f)
 	return rec, nil
+}
+
+// unionItems is what every member of a closure reads, de-duplicated, in the
+// order the members list them.
+func (pl *planner) unionItems(members []int) []readItem {
+	seen := map[readItem]bool{}
+	var items []readItem
+	for _, q := range members {
+		for _, it := range pl.items[q] {
+			if !seen[it] {
+				seen[it] = true
+				items = append(items, it)
+			}
+		}
+	}
+	return items
+}
+
+// gateFacts are the facts a package's gate is decided from (KILN04 13 item 5),
+// plus the by-products of looking at them that record() also needs, so nothing
+// is computed twice:
+//
+//	symlinks       KILN03 6 `symlink:` reasons (hard)
+//	unknownInputs  members whose repo inputs are unknown (hard)
+//	unknownTools   closure languages and toolchains with no entry (hard)
+//	never          the package is on the never list
+//	recipeWhy      why the package has no recipe (`no-build-file:<os>`,
+//	               `symlink:<file>`); empty when it has one (hard)
+//	probe          `probe-mismatch:`, `probe-timeout:` and `probe-refused:`
+//	               gates of the closure's tools (soft)
+//
+// and hints (the advisory scans), ts (the tools section, whose tools are the
+// design's `tools`) and recipe.
+type gateFacts struct {
+	symlinks, unknownInputs, unknownTools []string
+	never                                 bool
+	recipeWhy                             string
+	probe                                 []string
+
+	hints  []string
+	ts     toolsResult
+	recipe []byte
+}
+
+// hard says a KILN03 hard reason holds, which makes a package uncacheable.
+func (f gateFacts) hard() bool {
+	return len(f.symlinks) > 0 || len(f.unknownInputs) > 0 || f.never || len(f.unknownTools) > 0 || f.recipeWhy != ""
+}
+
+// gateFacts collects the facts for package p, whose closure is members and
+// whose reads are items.
+func (pl *planner) gateFacts(p int, members []int, items []readItem) (gateFacts, error) {
+	pkg := pl.g.Packages[p]
+	var f gateFacts
+	var err error
+	// Symlink rules are hard reasons (KILN03 6); the text scans are advisory
+	// hints only and never touch the class.
+	if f.symlinks, f.hints, err = pl.scanFindings(members, items); err != nil {
+		return gateFacts{}, err
+	}
+	for _, q := range members {
+		if m := pl.g.Packages[q]; m.RepoInputsUnknown {
+			f.unknownInputs = append(f.unknownInputs, m.Name)
+		}
+	}
+	f.never = pl.pol.never[pkg.Name]
+	// Tools: the pins of every closure language and extra toolchain, plus the
+	// always-included set (KILN03 4).  An entry that does not exist is a hard
+	// reason, never "no tools".
+	if f.ts, err = pl.toolsOf(pl.closureNames(members)); err != nil {
+		return gateFacts{}, err
+	}
+	f.unknownTools = f.ts.unknown
+	for _, tl := range f.ts.tools {
+		if pl.mismatch[tl.Name] {
+			f.probe = append(f.probe, "probe-mismatch:"+tl.Name)
+		}
+		if pl.timedOut[tl.Name] {
+			f.probe = append(f.probe, "probe-timeout:"+tl.Name)
+		}
+		if pl.refused[tl.Name] {
+			f.probe = append(f.probe, "probe-refused:"+tl.Name)
+		}
+	}
+	if f.recipe, f.recipeWhy, err = pl.buildRecipe(pkg); err != nil {
+		return gateFacts{}, err
+	}
+	return f, nil
+}
+
+// gateFrom is the reason lookup (and the recorder) must not treat package name
+// as measurable, or "" when nothing gates it.  Priority: never, then the other
+// hard reasons, then probes; within one priority the smallest string wins, so
+// the answer never depends on map or scheduling order.
+func (pl *planner) gateFrom(name string, f gateFacts) string {
+	var g gates
+	for _, r := range f.symlinks {
+		g.add(gateHard, r)
+	}
+	for _, n := range f.unknownInputs {
+		g.add(gateHard, "unknown-repo-inputs:"+n)
+	}
+	if f.never {
+		g.add(gateNever, "never:"+name)
+	}
+	for _, n := range f.unknownTools {
+		g.add(gateHard, "unknown-toolchain:"+n)
+	}
+	if f.recipeWhy != "" {
+		g.add(gateHard, f.recipeWhy)
+	}
+	for _, r := range f.probe {
+		g.add(gateProbe, r)
+	}
+	return g.first()
 }
 
 // buildRecipe is the canonical legacy recipe of the BUILD variant this OS runs
