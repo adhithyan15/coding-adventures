@@ -180,6 +180,9 @@ func FuzzParse(f *testing.F) {
 	for _, s := range killedEntrySeeds {
 		f.Add(s)
 	}
+	for _, s := range signalSeeds {
+		f.Add(s)
+	}
 	for _, s := range []string{
 		"1  stat(\"a\\\"b\", 0x1) = 0\n1  +++ exited with 0 +++\n",
 		"1  openat(AT_FDCWD, \"/x\", O_RDONLY) = 3</x\\<\\>>\n",

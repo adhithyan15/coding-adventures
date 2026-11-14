@@ -312,8 +312,9 @@ func TestWritesCompleteW10WholeTrace(t *testing.T) {
 	// A daemon: a survivor killed after the init child exited.
 	d := step(evs...)
 	d.InitPid = 1
-	d.Procs[7] = &trace.Process{Pid: 7, Exit: &trace.Exit{Pid: 7, Killed: true, Signal: "SIGKILL"}}
+	d.Procs[7] = &trace.Process{Pid: 7, Parent: 1, Exit: &trace.Exit{Pid: 7, Killed: true, Signal: "SIGKILL"}}
 	d.Exits = []trace.Exit{{Pid: 1}, {Pid: 7, Killed: true, Signal: "SIGKILL"}}
+	d.ExitLines, d.InitExitLine = []int{20, 21}, 19 // init's exit_group at 19, the survivor after it
 	rec := h.runSteps(d)
 	wantReason(t, rec, rDaemonLeft)
 	wantComplete(t, "daemon-left", rec, false)
