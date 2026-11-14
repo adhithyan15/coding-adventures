@@ -653,7 +653,9 @@ action the moment it ends:
   `traces/.seq` (0, 1, 2, ...; a refused step takes none), so `collect` can see a
   gap or an overlap and void the shard.
 - **At the end of the action** (its last step, or a step that did not start or
-  exited non-zero), still under the lock, `step` parses the action's traces in the
+  exited non-zero), still under the lock, `step` starts a child process
+  (`kiln record classify-action`, memory bounded by `GOMEMLIMIT` 5 GiB and
+  `RLIMIT_DATA` 8 GiB, killed at 10 minutes) which parses the action's traces in the
   sandbox-helper mode, applies the parse half of G7 (the root's exit line equals
   `root_status`; the root's `--config-sha256` and the init's `--sha256`, read from
   the traced `execve` of Kiln, equal the sealed configuration's digest; a status of
@@ -667,8 +669,10 @@ action the moment it ends:
 - The result is `traces/<sha256(action)>/record.json` (`kiln-record-classified/1`:
   the raw record, `writes_complete`, `steps_run`, `step_netns`, and `parse_ok` with
   its reasons; no raw record when a trace did not parse, never an empty one), or
-  `record.failed` (a panic, a classification over 10 minutes, traces over 2 GiB, a
-  second classification of one action). **The step's exit status is never
+  `record.failed` (a panic, a crash, the child killed or out of memory, a
+  classification over 10 minutes, traces over 2 GiB; the parser's limits are 1 GiB
+  and 8 million events per step), both written atomically. A step asked to run
+  after its action was classified is refused. **The step's exit status is never
   changed.** `collect` classifies nothing: a missing or failed `record.json` is
   `unknown_writes`.
 

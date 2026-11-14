@@ -54,16 +54,12 @@ func TestParallelFirstStepsDoNotRaceOnTheTracesDirectory(t *testing.T) {
 	}
 }
 
-// The same through RunStep, with traces/ absent (as an older prepare left it)
-// and three actions started together. Since decision P13 recording is serial: of
+// The same through RunStep, with three actions started together. Since decision P13 recording is serial: of
 // supervisors that start together, whichever holds traces/.serial runs, and the
 // others are refused, run nothing and leave `<step>.overlap`. None may fail any
 // other way (in particular none may race on creating traces/).
 func TestParallelRunStepsOfDifferentActionsAreSerial(t *testing.T) {
 	f := newStepFix(t)
-	if err := os.Remove(filepath.Join(f.p.dir, "traces")); err != nil {
-		t.Fatal(err)
-	}
 	var wg sync.WaitGroup
 	errs := make([]error, 3)
 	acts := []string{actA, actB, actZ}

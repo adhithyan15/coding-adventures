@@ -134,7 +134,6 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
 // The default limits (design review G8).
@@ -192,14 +191,17 @@ type StepOptions struct {
 	// not exceed 2 GiB; both are fields so a test can make them small.
 	ClassifyTimeout time.Duration
 	MaxTraceTotal   int64
+	// ChildSoftMemory and ChildDataLimit bound the classification child
+	// (GOMEMLIMIT and RLIMIT_DATA; classify_child.go); zero means the default.
+	ChildSoftMemory, ChildDataLimit int64
+	// ChildCmd builds the child's command from its arguments and environment;
+	// the default runs this very binary (`kiln record classify-action`). A test
+	// replaces it to run its own test binary as the child.
+	ChildCmd func(args, env []string) *exec.Cmd
 
 	// Seams, for tests. Each defaults to the real thing.
 	FreeBytes func(dir string) (uint64, error)
-	// Classify is traced.Classify and DiskFS the live no-follow disk view
-	// (LiveFS); a test replaces Classify to make it panic or hang.
-	Classify func(traced.Config, traced.Input) (*traced.RawRecord, error)
-	DiskFS   traced.FS
-	Now      func() time.Time
+	Now       func() time.Time
 	// WrapTrace wraps the writer the trace is written through (the file), so a
 	// test can make a write fail the way a full disk does.
 	WrapTrace func(io.Writer) io.Writer
@@ -234,11 +236,11 @@ func (o *StepOptions) applyDefaults() {
 	if o.MaxTraceTotal == 0 {
 		o.MaxTraceTotal = DefaultMaxTraceTotal
 	}
-	if o.Classify == nil {
-		o.Classify = traced.Classify
+	if o.ChildSoftMemory == 0 {
+		o.ChildSoftMemory = DefaultChildSoftMemory
 	}
-	if o.DiskFS == nil {
-		o.DiskFS = LiveFS{}
+	if o.ChildDataLimit == 0 {
+		o.ChildDataLimit = DefaultChildDataLimit
 	}
 	if o.FreeBytes == nil {
 		o.FreeBytes = freeBytes
@@ -275,7 +277,13 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// take it runs nothing, and says so in a marker `collect` reads.
 	serial, err := LockSerial(o.Dir)
 	if err != nil {
-		markOverlap(o.Dir, o.Environ)
+		// Only a lock that is HELD says another step overlaps this one; any other
+		// failure (a bad traces directory, a file that cannot be opened) is a
+		// refusal with no claim about overlap.
+		var busy *SerialBusyError
+		if errors.As(err, &busy) {
+			markOverlap(o.Dir, o.Environ)
+		}
 		return nil, err
 	}
 	defer serial.Close()
@@ -441,7 +449,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// failing step). It runs under the serial lock, which is released only when
 	// RunStep returns, and never changes the status.
 	if step == count-1 || code != 0 || !run.started {
-		res.Record, res.RecordWhy = classifyEpilogue(o, pre, action, step, sc)
+		res.Record, res.RecordWhy = classifyEpilogue(o, pre, kiln.Path, action, step)
 	}
 	return res, nil
 }
@@ -626,6 +634,13 @@ func checkOrder(dir, action string, step int) error {
 			return fmt.Errorf("step %d of %q is out of order, and its marker could not be written: %v", step, printable(action), err)
 		}
 		return fmt.Errorf("step %d of %q was asked to run after a later step had started", step, printable(action))
+	}
+	// An action that has been classified has ended: a step that runs now would
+	// leave a record that is for fewer steps than ran. Nothing is run.
+	for _, f := range []string{RecordFile(dir, action), RecordFailedFile(dir, action)} {
+		if _, err := os.Lstat(f); err == nil {
+			return fmt.Errorf("%q has already been classified: a step cannot run after its action ended", printable(action))
+		}
 	}
 	return nil
 }

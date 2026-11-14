@@ -26,6 +26,35 @@
   - `legacy.Traced.Pinned`; `trace.Trace.RootExecArgv` and `InitExecArgv` (the
     argument vectors of the two execs of Kiln that the helper-mode parser drops).
 
+### Fixed (review of P13)
+
+- The epilogue's parse limits are explicit and deliberate (1 GiB and 8 million
+  events per step, the supervisor's own trace cap), not the parser's defaults (64
+  MiB, 1 million records), which made a heavy-but-accepted trace
+  `unknown_writes`. The 2 GiB per-action check is now reachable.
+- Classification runs in a child process (`kiln record classify-action`), with
+  `GOMEMLIMIT` and `RLIMIT_DATA`, killed at the deadline: out of memory and fatal
+  runtime errors are `record.failed` and leave the step's exit status unchanged.
+- `record.json` and `record.failed` are written atomically (temporary name and
+  `link(2)`); `record.json` carries `sealed_sha256`.
+- `traces/.seq` is created by `prepare` as `0\n` and updated with one `pwrite`; an
+  empty or missing counter is refused instead of restarting at 0.
+- A step is refused once its action has a `record.json` or `record.failed`.
+- Every unclean sidecar is a parse reason, so an unclean tracer never sits beside
+  `writes_complete: true`.
+- The `.overlap` marker is written only when the serial lock is actually held
+  (`SerialBusyError`).
+- `prepare` refuses a tree file larger than a sealed file can be read back at;
+  `readSidecar` checks the sidecar's action and step against its name.
+
+### Corrected
+
+- A link the action creates itself is resolved from the DISK, so a `mkdir` through
+  it is silently misplaced if a later action retargets the link
+  (`traced.TestOwnLinkIsResolvedFromTheDiskNotTheTrace`,
+  `TestEpilogueSilentMisplacementOfAWriteThroughALinkTheActionMade`). That is the
+  stronger case for classifying at the action's end.
+
 ### Changed
 
 - `kiln record step`: the action and sidecar schemas are `/2`; an `.overlap`
@@ -42,9 +71,8 @@
 
 ### Deviations from the P13 text
 
-- A link an action creates itself is resolved from the trace (which carries the
-  link text), not the disk; the disk matters for links that were there before. The
-  motivating test therefore uses a tracked link that a later action retargets.
+- (Withdrawn, see "Corrected" below: the claim that a link an action creates
+  itself is resolved from the trace and not the disk.)
 - The tree is decoded only when an action is classified, not by `VerifyPre` on
   every step (the digest is checked every time).
 - `traces/.serial` is opened (and `traces/` made when absent) before `VerifyPre`;

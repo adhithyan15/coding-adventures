@@ -15,15 +15,17 @@ package record
 // needs: the disk at the end of an action is what the classifier must see.
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
+	"syscall"
 	"testing"
-	"time"
-
-	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
 // --- canned traces ----------------------------------------------------------
@@ -168,9 +170,7 @@ func (f *stepFix) readRecord(action string) ClassifiedRecord {
 // classifyNow classifies action again, against the disk as it is now.
 func (f *stepFix) classifyNow(action string, step int) ClassifiedRecord {
 	f.t.Helper()
-	o := f.opts(action, step, step+1, "x")
-	o.applyDefaults()
-	rec, err := classifyAction(o, f.pre, action, step, f.sidecar(action, step))
+	rec, err := classifyAction(ClassifyDeps{}, f.pre, action, step, f.sidecar(action, step))
 	if err != nil {
 		f.t.Fatal(err)
 	}
@@ -186,10 +186,11 @@ func (f *stepFix) classifyNow(action string, step int) ClassifiedRecord {
 // disagrees with strace's -y path, and A gets an unstable-path reason and an
 // unknown write set: the action is charged for what B did.
 //
-// (A link that an action creates ITSELF is resolved from the trace, which
-// carries the link text, and never consults the disk; the disk matters for a
-// link that was already there, which is exactly what an earlier action leaves or
-// a later one changes.)
+// (This is the case where the disk CAN be checked: an `open` is compared with
+// the kernel's -y path, so the move is caught late as unstable-path. A link the
+// action creates itself is resolved from the disk as well, and there only an
+// `open` has that cross-check: see the silent-misplacement test below, which is
+// the stronger case for P13.)
 func TestEpilogueClassifiesAtActionEndNotAfterALaterActionChangedTheDisk(t *testing.T) {
 	lineA := playLine(`cd "$root/$KILN_ACTION" && echo hi > L/x`, "a", 0)
 	lineB := playLine(`cd "$root/`+actA+`" && rm L && ln -s d2 L`, "b", 0)
@@ -275,16 +276,15 @@ func TestEpilogueRunsExactlyAtActionEnd(t *testing.T) {
 		if rec.ParseOK || rec.Record != nil || rec.StepsRun != 1 || len(rec.ParseReasons) == 0 || rec.WritesComplete {
 			t.Fatalf("%+v", rec)
 		}
-		// A step that runs anyway (a build tool that went on) is a second
-		// classification of one action: record.failed, never an overwrite.
+		// A step that is asked to run after its action ended (a build tool that
+		// went on) is refused and runs nothing: its record would be for fewer
+		// steps than ran. The record is untouched.
 		before, _ := os.ReadFile(RecordFile(f.p.dir, actB))
-		res = f.must(actB, 1, 2, "exit 0")
-		if res.Record != RecordFailed || !strings.Contains(res.RecordWhy, "classified-twice") || res.ExitCode != 0 {
-			t.Fatalf("%d %q %q", res.ExitCode, res.Record, res.RecordWhy)
-		}
+		runs := f.runs()
+		f.refused(f.opts(actB, 1, 2, "exit 0"), "has already been classified")
 		after, _ := os.ReadFile(RecordFile(f.p.dir, actB))
-		if string(before) != string(after) || !exists(RecordFailedFile(f.p.dir, actB)) {
-			t.Fatal("record.json was overwritten, or no record.failed was left")
+		if string(before) != string(after) || exists(RecordFailedFile(f.p.dir, actB)) || f.runs() != runs {
+			t.Fatal("record.json was overwritten, or a record.failed was left")
 		}
 	})
 	t.Run("after a step that did not start", func(t *testing.T) {
@@ -425,41 +425,13 @@ func TestEpilogueLeavesRecordFailedAndNeverChangesTheStatus(t *testing.T) {
 			t.Fatalf("%+v", sc)
 		}
 	}
-	t.Run("a panic", func(t *testing.T) {
-		f := setup(t)
-		o := f.opts(actZ, 0, 1, line)
-		o.Classify = func(traced.Config, traced.Input) (*traced.RawRecord, error) { panic("boom") }
-		check(t, f, o, "panic: boom")
-	})
-	t.Run("an error from the classifier", func(t *testing.T) {
-		f := setup(t)
-		o := f.opts(actZ, 0, 1, line)
-		o.Classify = func(traced.Config, traced.Input) (*traced.RawRecord, error) { return nil, fmt.Errorf("bad config") }
-		check(t, f, o, "bad config")
-	})
-	t.Run("over the time budget", func(t *testing.T) {
-		f := setup(t)
-		release := make(chan struct{})
-		t.Cleanup(func() { close(release) })
-		o := f.opts(actZ, 0, 1, line)
-		o.ClassifyTimeout = 100 * time.Millisecond
-		o.Classify = func(traced.Config, traced.Input) (*traced.RawRecord, error) {
-			<-release
-			return nil, fmt.Errorf("too late")
-		}
-		start := time.Now()
-		check(t, f, o, "timeout")
-		if time.Since(start) > 30*time.Second {
-			t.Fatal("the epilogue waited for the classifier")
-		}
-	})
 	t.Run("traces over the cap", func(t *testing.T) {
 		f := setup(t)
 		o := f.opts(actZ, 0, 1, line)
 		o.MaxTraceTotal = 50
-		o.Classify = func(traced.Config, traced.Input) (*traced.RawRecord, error) {
-			t.Error("classified an oversize action")
-			return nil, nil
+		o.ChildCmd = func(args, env []string) *exec.Cmd {
+			t.Error("started the classifier for an oversize action")
+			return exec.Command("/usr/bin/true")
 		}
 		check(t, f, o, "traces-too-large")
 	})
@@ -585,13 +557,66 @@ func TestSeqCounterFileIsNeverSilentlyReset(t *testing.T) {
 			}
 		})
 	}
-	t.Run("an empty file is zero", func(t *testing.T) {
-		f := newStepFix(t)
-		writeBytes(t, filepath.Join(f.p.dir, "traces", ".seq"), nil, 0o600)
-		if seq := f.must(actZ, 0, 1, "exit 0").Sidecar.Seq; seq != 0 {
-			t.Fatalf("%d", seq)
+	// An EMPTY file is what a kill between a truncate and a write used to leave,
+	// and used to read as 0 (a counter that restarts). It is refused, like a
+	// missing one: `prepare` makes the file as "0\n".
+	for name, mk := range map[string]func(p string){
+		"an empty file":  func(p string) { writeBytes(t, p, nil, 0o600) },
+		"a missing file": func(p string) { os.Remove(p) },
+	} {
+		t.Run(name, func(t *testing.T) {
+			f := newStepFix(t)
+			mk(filepath.Join(f.p.dir, "traces", ".seq"))
+			f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces/.seq")
+			if exists(StepFile(f.p.dir, actZ, 0, "json")) {
+				t.Fatal("ran")
+			}
+		})
+	}
+}
+
+// prepare creates the counter as "0\n", private.
+func TestPrepareCreatesTheSeqCounter(t *testing.T) {
+	f := newStepFix(t)
+	p := filepath.Join(f.p.dir, "traces", ".seq")
+	if data, err := os.ReadFile(p); err != nil || string(data) != "0\n" {
+		t.Fatalf("%q %v", data, err)
+	}
+	if st, _ := os.Stat(p); st.Mode().Perm() != 0o600 {
+		t.Fatalf("%v", st.Mode())
+	}
+}
+
+// The update is one write at offset 0, so every state the file can be in between
+// two system calls is a whole number: counting up through the digit boundary
+// never shortens it.
+func TestSeqUpdateIsASingleOverwriteThatNeverShortens(t *testing.T) {
+	d := canonTemp(t)
+	os.Mkdir(filepath.Join(d, "traces"), 0o700)
+	writeBytes(t, filepath.Join(d, "traces", ".seq"), []byte("8\n"), 0o600)
+	l, err := LockSerial(d)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer l.Close()
+	if err := l.OpenSeq(d); err != nil {
+		t.Fatal(err)
+	}
+	var got []int
+	for i := 0; i < 5; i++ {
+		n, err := l.NextSeq()
+		if err != nil {
+			t.Fatal(err)
 		}
-	})
+		got = append(got, n)
+		data, _ := os.ReadFile(filepath.Join(d, "traces", ".seq"))
+		if want := fmt.Sprintf("%d\n", n+1); string(data) != want {
+			t.Fatalf("after %d the file holds %q, want %q", n, data, want)
+		}
+	}
+	if !reflect.DeepEqual(got, []int{8, 9, 10, 11, 12}) {
+		t.Fatalf("%v", got)
+	}
 }
 
 func TestSerialFilesMustBePrivateRegularFiles(t *testing.T) {
@@ -725,5 +750,142 @@ func TestEpilogueSealedInputsThatDoNotParse(t *testing.T) {
 				t.Fatalf("%d %q %q", res.ExitCode, res.Record, res.RecordWhy)
 			}
 		})
+	}
+}
+
+// The SILENT case (review L-1). A link an action creates itself is resolved from
+// the DISK too (only under the fresh $HOME and TMPDIR is the trace's link text
+// used), and only an `open` is checked against the kernel's -y path. So an
+// action that creates L -> d1 and then runs `mkdir L/sub` has its write placed
+// by whatever L points at when the classifier looks. Classified at the action's
+// end that is d1/sub. Classified after a later action retargeted L it is
+// d2/sub, with the write set still declared complete: nothing says it moved.
+// This is the stronger case for P13, and the test records it.
+func TestEpilogueSilentMisplacementOfAWriteThroughALinkTheActionMade(t *testing.T) {
+	lineA := playLine(`cd "$root/$KILN_ACTION" && ln -s d1 L && mkdir L/sub`, "a", 0)
+	lineB := playLine(`cd "$root/`+actA+`" && rm L && ln -s d2 L`, "b", 0)
+	f := newStepFixCustom(t, planOf([]string{lineA}, []string{lineB}, nil), map[string]string{
+		actA + "/d1/keep": "1\n", actA + "/d2/keep": "2\n",
+	}, true)
+	f.give("a", actA, lineA, 0, cannedOpts{},
+		`symlink("d1", "L") = 0`,
+		`mkdir("L/sub", 0777) = 0`)
+	f.give("b", actB, lineB, 0, cannedOpts{})
+
+	if res := f.must(actA, 0, 1, lineA); res.ExitCode != 0 || res.Record != RecordWritten {
+		t.Fatalf("%d %q %q", res.ExitCode, res.Record, res.RecordWhy)
+	}
+	atEnd := f.readRecord(actA)
+	rel := actA + "/"
+	if !atEnd.ParseOK || !containsStr(atEnd.Record.Writes, rel+"d1/sub") || containsStr(atEnd.Record.Writes, rel+"d2/sub") {
+		t.Fatalf("at A's end the mkdir through L is at d1/sub: %v %v", atEnd.Record.Writes, atEnd.Record.Reasons)
+	}
+	if res := f.must(actB, 0, 1, lineB); res.ExitCode != 0 {
+		t.Fatalf("%d", res.ExitCode)
+	}
+	late := f.classifyNow(actA, 0)
+	if !late.ParseOK || !containsStr(late.Record.Writes, rel+"d2/sub") || containsStr(late.Record.Writes, rel+"d1/sub") {
+		t.Fatalf("classified late the write moved to d2/sub: %v %v", late.Record.Writes, late.Record.Reasons)
+	}
+	// ... and nothing in the late record says so: no unstable-path, and the
+	// classifier still claims the write set complete when it did at the end.
+	if unstable(late.Record.Reasons) || late.WritesComplete != atEnd.WritesComplete {
+		t.Fatalf("the late record was expected to be silently wrong: complete %v (end: %v), %v", late.WritesComplete, atEnd.WritesComplete, late.Record.Reasons)
+	}
+}
+
+// An unclean tracer is never classified into a record that claims a write set:
+// every unclean reason becomes a parse reason (review L-4).
+func TestEpilogueAnUncleanStepMakesTheWriteSetUnknown(t *testing.T) {
+	line := playLine(`echo noise >&2`, "z", 0) // the fake tracer's own stderr: not the step's
+	f := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+	f.give("z", actZ, line, 0, cannedOpts{})
+	res := f.must(actZ, 0, 1, line)
+	if res.Sidecar.Clean || res.Record != RecordWritten {
+		t.Fatalf("%+v %q", res.Sidecar, res.Record)
+	}
+	rec := f.readRecord(actZ)
+	if rec.ParseOK || rec.Record != nil || rec.WritesComplete || !strings.Contains(strings.Join(rec.ParseReasons, "|"), "step 0: unclean:"+UncleanStderr) {
+		t.Fatalf("%+v", rec)
+	}
+}
+
+// markOverlap only for a lock that is held (security review): a lock that cannot
+// be taken for any other reason leaves no marker.
+func TestOverlapMarkerOnlyWhenTheLockIsHeld(t *testing.T) {
+	f := newStepFix(t)
+	// traces/.serial is a directory: LockSerial fails, but not because it is held.
+	os.Remove(filepath.Join(f.p.dir, "traces", ".serial"))
+	if err := os.Mkdir(filepath.Join(f.p.dir, "traces", ".serial"), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	var busy *SerialBusyError
+	_, err := LockSerial(f.p.dir)
+	if err == nil || errors.As(err, &busy) {
+		t.Fatalf("%v", err)
+	}
+	f.refused(f.opts(actB, 0, 2, "exit 0"), "traces")
+	if exists(StepFile(f.p.dir, actB, 0, "overlap")) {
+		t.Fatal("an overlap marker for a lock that was not held")
+	}
+	// A held lock is the typed error, and does earn the marker.
+	os.Remove(filepath.Join(f.p.dir, "traces", ".serial"))
+	held, err := LockSerial(f.p.dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer held.Close()
+	_, err = LockSerial(f.p.dir)
+	if !errors.As(err, &busy) || !errors.Is(err, syscall.EWOULDBLOCK) {
+		t.Fatalf("%v", err)
+	}
+	f.refused(f.opts(actB, 0, 2, "exit 0"), "traces/.serial")
+	if !exists(StepFile(f.p.dir, actB, 0, "overlap")) {
+		t.Fatal("no marker for a held lock")
+	}
+}
+
+// A sidecar must be the sidecar of the step and action it is found as.
+func TestReadSidecarChecksItsOwnNames(t *testing.T) {
+	f := newStepFix(t)
+	f.must(actB, 0, 2, "exit 0")
+	sc, err := readSidecar(f.p.dir, actB, 0)
+	if err != nil || sc.Action != actB || sc.Step != 0 {
+		t.Fatalf("%v", err)
+	}
+	// B's step 0 sidecar copied to the name of B's step 1, and of Z's step 0.
+	data, _ := os.ReadFile(StepFile(f.p.dir, actB, 0, "json"))
+	writeBytes(t, StepFile(f.p.dir, actB, 1, "json"), data, 0o600)
+	if _, err := readSidecar(f.p.dir, actB, 1); err == nil || !strings.Contains(err.Error(), "is of step 0") {
+		t.Fatalf("%v", err)
+	}
+	os.MkdirAll(StepDir(f.p.dir, actZ), 0o700)
+	writeBytes(t, StepFile(f.p.dir, actZ, 0, "json"), data, 0o600)
+	if _, err := readSidecar(f.p.dir, actZ, 0); err == nil || !strings.Contains(err.Error(), "is of step 0") {
+		t.Fatalf("%v", err)
+	}
+	if _, err := readSidecar(f.p.dir, actZ, 5); err == nil {
+		t.Fatal("a missing sidecar was read")
+	}
+}
+
+// record.json carries the digest of the sealed directory it was made under.
+func TestRecordCarriesTheSealedDigest(t *testing.T) {
+	f := newStepFix(t)
+	f.must(actZ, 0, 1, "exit 0")
+	rec := f.readRecord(actZ)
+	sealed, _ := os.ReadFile(filepath.Join(f.p.dir, "pre", "SEALED"))
+	sum := sha256.Sum256(sealed)
+	if rec.SealedSHA256 != hex.EncodeToString(sum[:]) || rec.SealedSHA256 != f.pre.SealedSHA256 {
+		t.Fatalf("%s vs %x", rec.SealedSHA256, sum)
+	}
+}
+
+func TestCheckTreeSize(t *testing.T) {
+	if err := checkTreeSize(maxKeptFile); err != nil {
+		t.Fatal(err)
+	}
+	if err := checkTreeSize(maxKeptFile + 1); err == nil || !strings.Contains(err.Error(), "tracked tree file") {
+		t.Fatalf("%v", err)
 	}
 }

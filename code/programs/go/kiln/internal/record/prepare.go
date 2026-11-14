@@ -278,6 +278,12 @@ func Prepare(o Options) (*PrepareResult, error) {
 			return nil, fmt.Errorf("create %s: %w", d, err)
 		}
 	}
+	// The serial order's counter (decision P13): the next step number, 0. It is
+	// made here, once, so that an EMPTY or missing file later is a corruption the
+	// step refuses, never a counter that silently restarts.
+	if err := writeExcl(filepath.Join(o.Dir, "traces", ".seq"), []byte("0\n")); err != nil {
+		return nil, fmt.Errorf("create traces/.seq: %w", err)
+	}
 	w := &sealWriter{pre: pre, sums: map[string]string{}}
 
 	// 5. Graph, steps and plan, by the out-of-tree build tool.
@@ -361,6 +367,9 @@ func Prepare(o Options) (*PrepareResult, error) {
 		return os.Readlink(filepath.Join(o.Root, filepath.FromSlash(p)))
 	})
 	if err != nil {
+		return nil, err
+	}
+	if err := checkTreeSize(len(treeBytes)); err != nil {
 		return nil, err
 	}
 	if _, err := DecodeTree(treeBytes); err != nil { // what step will read must decode
@@ -523,6 +532,16 @@ func Prepare(o Options) (*PrepareResult, error) {
 	sum := sha256.Sum256(bindBytes)
 	return &PrepareResult{Binding: binding, BindingID: hex.EncodeToString(sum[:]), PreDir: pre, ExecWrapper: wrapper,
 		Actions: len(actions), Refused: refused}, nil
+}
+
+// checkTreeSize refuses a tree file that Pre.ReadSealed (which keeps at most
+// maxKeptFile bytes) could never read back: better a clear failure of `prepare`
+// than every step failing to classify.
+func checkTreeSize(n int) error {
+	if n > maxKeptFile {
+		return fmt.Errorf("the tracked tree file is %d bytes, over the %d a sealed file may be read back at: raise maxKeptFile or shrink the repository", n, maxKeptFile)
+	}
+	return nil
 }
 
 // toolNames is the sorted, de-duplicated set of names of a weak key's tools.

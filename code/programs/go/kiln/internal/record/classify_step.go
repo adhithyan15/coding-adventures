@@ -26,7 +26,9 @@ package record
 //
 // What it does, in order (all under one time budget):
 //
-//	1  oversize?   traces of the action together over 2 GiB: record.failed
+//	1  oversize?   the action's traces together over 2 GiB: record.failed (each
+//	               trace is also bounded by the parser's limits, see
+//	               ClassifyLimits: 1 GiB and 8 million events a step)
 //	2  parse       each step's trace, in the sandbox-helper mode, plus the
 //	               parse half of the completeness rule (G7):
 //	                 - the trace parses;
@@ -43,13 +45,18 @@ package record
 //	               an empty record: `collect` turns it into unknown_writes.
 //	3  classify    traced.Classify with the sealed tree, the live no-follow disk
 //	               view, and the sealed policy (see classifyInputs)
-//	4  write       traces/<sha256(action)>/record.json, O_EXCL
+//	4  write       traces/<sha256(action)>/record.json, atomically (written to a
+//	               temporary name and link(2)ed into place, so it is whole or
+//	               absent)
 //
-// If the work panics, or exceeds 10 minutes, or fails for any other reason than
-// a trace that does not parse, `record.failed` is written instead (O_EXCL, with
-// the reason as text). Nothing here changes the step's exit status: the build
-// must see the BUILD line's own result, and `collect` reads the verdict from the
-// files.
+// Steps 2 to 4 run in a CHILD process (`kiln record classify-action`, see
+// classify_child.go) with a memory bound and a 10 minute deadline the parent
+// enforces. If the child panics, runs out of memory, is killed, exceeds the
+// deadline, or fails for any other reason than a trace that does not parse,
+// `record.failed` is written instead (atomically, with the reason as text). The
+// epilogue can therefore add up to 10 minutes to the last step of an action.
+// Nothing here changes the step's exit status: the build must see the BUILD
+// line's own result, and `collect` reads the verdict from the files.
 //
 // Why it cannot trust the files it reads. Everything it reads from `pre/` is
 // re-hashed against SEALED as it is read (Pre.ReadSealed); the traces are
@@ -73,6 +80,11 @@ import (
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/traced"
 )
 
+// A BUILD line over 4096 bytes can never be recorded: strace runs with `-s 4096`,
+// so the step's `execve` argv is cut ("...") and cannot be decoded exactly. The
+// recipe check and the digest check of the parse half of G7 then fail, and the
+// action's write set is unknown.
+
 // ClassifiedSchema is the schema of record.json.
 const ClassifiedSchema = "kiln-record-classified/1"
 
@@ -89,6 +101,9 @@ type ClassifiedRecord struct {
 	Schema    string `json:"schema"`
 	Action    string `json:"action"`
 	BindingID string `json:"binding_id"`
+	// SealedSHA256 is the digest of pre/SEALED the record was made under (Pre.
+	// SealedSHA256): `collect` requires it to equal the sealed directory's own.
+	SealedSHA256 string `json:"sealed_sha256"`
 	// StepsRun is how many steps of the action started (had a traced run).
 	StepsRun int `json:"steps_run"`
 	// StepNetNS is traced.Input.StepNetNS: every step ran under the sandbox
@@ -113,8 +128,8 @@ func (c *ClassifiedRecord) Validate() error {
 	if err := recfmt.CheckPath(c.Action); err != nil {
 		return fmt.Errorf("classified record: action: %v", err)
 	}
-	if !hexDigest(c.BindingID) {
-		return fmt.Errorf("classified record: binding_id is not a SHA-256 in lowercase hex")
+	if !hexDigest(c.BindingID) || !hexDigest(c.SealedSHA256) {
+		return fmt.Errorf("classified record: binding_id and sealed_sha256 must be SHA-256 digests in lowercase hex")
 	}
 	if c.StepsRun < 0 {
 		return fmt.Errorf("classified record: steps_run %d", c.StepsRun)
@@ -179,19 +194,55 @@ const (
 	RecordFailed  = "record.failed"
 )
 
+// writeAtomic puts data at final so that final either does not exist or holds
+// ALL of data: it is written to a temporary name (O_EXCL, fsynced) and then
+// link(2)ed into place, which fails with EEXIST rather than replace anything.
+// A kill in the middle leaves at most a stray `<final>.tmp-<pid>` file, never a
+// half-written record.json for `collect` to read.
+func writeAtomic(final string, data []byte) error {
+	tmp := fmt.Sprintf("%s.tmp-%d", final, os.Getpid())
+	f, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
+	if err != nil {
+		return err
+	}
+	_, err = f.Write(data)
+	if err == nil {
+		err = f.Sync()
+	}
+	if cerr := f.Close(); err == nil {
+		err = cerr
+	}
+	if err == nil {
+		err = os.Link(tmp, final)
+	}
+	os.Remove(tmp)
+	return err
+}
+
 // classifyEpilogue runs the epilogue for the action whose step `step` has just
-// ended (sidecar last). It returns the outcome and, for RecordFailed, the
-// reason. It never returns an error: whatever goes wrong is a record.failed,
-// and the step's exit status is the caller's business.
-func classifyEpilogue(o StepOptions, pre *Pre, action string, step int, last StepSidecar) (outcome, why string) {
+// ended. It returns the outcome and, for RecordFailed, the reason. It never
+// returns an error: whatever goes wrong is a record.failed, and the step's exit
+// status is the caller's business.
+//
+// The work is done by a CHILD process (`kiln record classify-action`, see
+// classify_child.go), not by a goroutine of the supervisor. A goroutine can
+// recover from a panic but not from running out of memory (the runtime aborts
+// the whole process) or from any other fatal runtime error, and the supervisor
+// must outlive all of that with the step's exit status intact. The child is a
+// separate process with its own bounded memory and a deadline the parent
+// enforces by killing it; any way it can end other than "exit 0 and a valid
+// record.json" is a record.failed.
+func classifyEpilogue(o StepOptions, pre *Pre, kilnPath, action string, step int) (outcome, why string) {
 	fail := func(reason string) (string, string) {
 		reason = traced.Sanitize(reason)
-		if err := writeExcl(RecordFailedFile(pre.Dir, action), []byte(reason)); err != nil && !errors.Is(err, os.ErrExist) {
-			return RecordFailed, reason + " (and the marker could not be written: " + err.Error() + ")"
+		if err := writeAtomic(RecordFailedFile(pre.Dir, action), []byte(reason)); err != nil && !errors.Is(err, os.ErrExist) {
+			return RecordFailed, reason + " (and record.failed could not be written: " + err.Error() + ")"
 		}
 		return RecordFailed, reason
 	}
-	// 1. Oversize. The sizes are of the files, not the sidecars' claims.
+	// 1. Oversize: all the action's traces together. (Each one is also bounded
+	// by the parser's own limit, ClassifyMaxStepBytes.) The sizes are of the
+	// files, not the sidecars' claims.
 	var total int64
 	for j := 0; j <= step; j++ {
 		if st, err := os.Lstat(StepFile(pre.Dir, action, j, "trace")); err == nil {
@@ -201,54 +252,90 @@ func classifyEpilogue(o StepOptions, pre *Pre, action string, step int, last Ste
 	if total > o.MaxTraceTotal {
 		return fail(fmt.Sprintf("traces-too-large: %d bytes over %d", total, o.MaxTraceTotal))
 	}
-	// 2 and 3, under the time budget, with a panic caught.
-	type result struct {
-		rec ClassifiedRecord
-		err error
+	// 2. The child does the rest.
+	if reason := runClassifyChild(o, pre, kilnPath, action, step); reason != "" {
+		return fail(reason)
 	}
-	done := make(chan result, 1)
-	go func() {
-		defer func() {
-			if r := recover(); r != nil {
-				done <- result{err: fmt.Errorf("panic: %v", r)}
-			}
-		}()
-		rec, err := classifyAction(o, pre, action, step, last)
-		done <- result{rec: rec, err: err}
-	}()
-	timer := time.NewTimer(o.ClassifyTimeout)
-	defer timer.Stop()
-	var res result
-	select {
-	case res = <-done:
-	case <-timer.C:
-		// The work goroutine is abandoned; the process exits right after, which
-		// ends it. It writes nothing.
-		return fail(fmt.Sprintf("timeout: classification took longer than %s", o.ClassifyTimeout))
-	}
-	if res.err != nil {
-		return fail(res.err.Error())
-	}
-	data, err := EncodeClassified(res.rec)
+	// 3. The child exited cleanly: its record must be there and be a record of
+	// THIS action under THIS sealed directory. The parent trusts the file no
+	// more than `collect` will.
+	data, err := os.ReadFile(RecordFile(pre.Dir, action))
 	if err != nil {
-		return fail("encode: " + err.Error())
+		return fail("the classifier exited cleanly but left no record.json: " + err.Error())
 	}
-	if err := writeExcl(RecordFile(pre.Dir, action), data); err != nil {
-		if errors.Is(err, os.ErrExist) {
-			// A second classification of one action means a step ran after the
-			// action's end: what is on disk is for fewer steps than ran.
-			return fail("classified-twice: record.json already exists")
-		}
-		return fail("record.json: " + err.Error())
+	rec, err := DecodeClassified(data)
+	switch {
+	case err != nil:
+		return fail("the classifier's record.json does not decode: " + err.Error())
+	case rec.Action != action || rec.BindingID != pre.BindingID || rec.SealedSHA256 != pre.SealedSHA256:
+		return fail("the classifier's record.json is of another action or another sealed directory")
 	}
 	return RecordWritten, ""
 }
 
-// classifyAction is steps 2 and 3: parse every step's trace with the parse half
-// of G7, then classify. It reads the disk as it is NOW and writes nothing.
-func classifyAction(o StepOptions, pre *Pre, action string, step int, last StepSidecar) (ClassifiedRecord, error) {
+// ClassifyDeps are the classifier's seams, for the child's tests; the zero value
+// is the real thing.
+type ClassifyDeps struct {
+	Classify func(traced.Config, traced.Input) (*traced.RawRecord, error)
+	DiskFS   traced.FS
+	// Limits are the parser's caps; zero fields take ClassifyLimits.
+	Limits trace.Limits
+}
+
+func (d ClassifyDeps) withDefaults() ClassifyDeps {
+	if d.Classify == nil {
+		d.Classify = traced.Classify
+	}
+	if d.DiskFS == nil {
+		d.DiskFS = LiveFS{}
+	}
+	def := ClassifyLimits()
+	if d.Limits.MaxLineBytes <= 0 {
+		d.Limits.MaxLineBytes = def.MaxLineBytes
+	}
+	if d.Limits.MaxTotalBytes <= 0 {
+		d.Limits.MaxTotalBytes = def.MaxTotalBytes
+	}
+	if d.Limits.MaxEvents <= 0 {
+		d.Limits.MaxEvents = def.MaxEvents
+	}
+	return d
+}
+
+// ClassifyLimits are the parser's caps for one step's trace in the epilogue.
+//
+//	MaxTotalBytes  1 GiB, the supervisor's own cap on a trace (DefaultTraceCap):
+//	               a trace the supervisor was willing to write is one the
+//	               classifier is willing to read. A cap below that would turn a
+//	               build the recorder accepted into an unknown write set (the
+//	               parser's own default, 64 MiB, did exactly that).
+//	MaxEvents      8 million. A kept record costs its source line plus about
+//	               200 bytes of event, so at the 1 GiB cap and around 100 bytes
+//	               a line a step can hold about 10 million records; 8 million
+//	               events leave room for the calls the parser ignores. The
+//	               memory this can take (about 1 GiB of lines and 1.6 GiB of
+//	               events for one step, more for several) is what the child's
+//	               memory bound (DefaultChildSoftMemory, DefaultChildDataLimit)
+//	               is for: over it the child dies and the record is
+//	               record.failed, never a false answer.
+//	MaxLineBytes   1 MiB, the parser's default (a line is one system call).
+func ClassifyLimits() trace.Limits {
+	return trace.Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: ClassifyMaxStepBytes, MaxEvents: ClassifyMaxEvents}
+}
+
+// The epilogue's limits.
+const (
+	ClassifyMaxStepBytes int64 = DefaultTraceCap
+	ClassifyMaxEvents          = 8_000_000
+)
+
+// classifyAction is the parse and classify steps: parse every step's trace with
+// the parse half of G7, then classify. It reads the disk as it is NOW and writes
+// nothing.
+func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last StepSidecar) (ClassifiedRecord, error) {
+	d = d.withDefaults()
 	planned, _ := pre.Action(action)
-	rec := ClassifiedRecord{Schema: ClassifiedSchema, Action: action, BindingID: pre.BindingID, ParseReasons: []string{}}
+	rec := ClassifiedRecord{Schema: ClassifiedSchema, Action: action, BindingID: pre.BindingID, SealedSHA256: pre.SealedSHA256, ParseReasons: []string{}}
 	pkgDir := pre.Config.PackageDir(action)
 	reasons := map[string]bool{}
 	var traces []*trace.Trace
@@ -266,11 +353,17 @@ func classifyAction(o StepOptions, pre *Pre, action string, step int, last StepS
 		if sc.BindingID != pre.BindingID {
 			reasons[fmt.Sprintf("step %d: run under another binding", j)] = true
 		}
+		// A tracer that was not clean (strace killed, cut short, noisy, pipes
+		// held open, ...) has a trace nobody should believe, whatever it parses
+		// to: the action's write set is unknown.
+		for _, u := range sc.Unclean {
+			reasons[fmt.Sprintf("step %d: unclean:%s", j, u)] = true
+		}
 		if sc.Started {
 			rec.StepsRun++
 		}
 		netns = netns && sc.StepNetNS
-		tr, why := parseStep(pre, action, j, sc, pkgDir)
+		tr, why := parseStep(pre, action, j, sc, pkgDir, d.Limits)
 		if why != "" {
 			reasons[fmt.Sprintf("step %d: %s", j, why)] = true
 			continue
@@ -285,11 +378,11 @@ func classifyAction(o StepOptions, pre *Pre, action string, step int, last StepS
 		sort.Strings(rec.ParseReasons)
 		return rec, nil
 	}
-	cfg, err := classifyInputs(o, pre, planned)
+	cfg, err := classifyInputs(d, pre, planned)
 	if err != nil {
 		return ClassifiedRecord{}, err
 	}
-	raw, err := o.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns})
+	raw, err := d.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns})
 	if err != nil {
 		return ClassifiedRecord{}, fmt.Errorf("classify: %w", err)
 	}
@@ -299,18 +392,27 @@ func classifyAction(o StepOptions, pre *Pre, action string, step int, last StepS
 	return rec, nil
 }
 
-// readSidecar reads and strictly decodes an earlier step's sidecar.
+// readSidecar reads and strictly decodes a step's sidecar, and requires it to be
+// the sidecar of that step of that action: its own fields must agree with the
+// name it was found under.
 func readSidecar(dir, action string, step int) (StepSidecar, error) {
 	data, err := os.ReadFile(StepFile(dir, action, step, "json"))
 	if err != nil {
 		return StepSidecar{}, err
 	}
-	return DecodeStepSidecar(data)
+	sc, err := DecodeStepSidecar(data)
+	if err != nil {
+		return StepSidecar{}, err
+	}
+	if sc.Action != action || sc.Step != step {
+		return StepSidecar{}, fmt.Errorf("the sidecar found as step %d of %q is of step %d of %q", step, printable(action), sc.Step, printable(sc.Action))
+	}
+	return sc, nil
 }
 
 // parseStep parses one step's trace and applies the parse half of G7. It
 // returns the trace, or a reason (never both).
-func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string) (*trace.Trace, string) {
+func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string, limits trace.Limits) (*trace.Trace, string) {
 	if !sc.Started {
 		return nil, "the step did not start"
 	}
@@ -322,7 +424,7 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string)
 	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
 		return nil, "the trace is not a regular file"
 	}
-	tr, err := trace.ParseOptions(f, pkgDir, trace.Options{HelperRoot: true, HelperExe: pre.Config.KilnExe})
+	tr, err := trace.ParseOptions(f, pkgDir, trace.Options{Limits: limits, HelperRoot: true, HelperExe: pre.Config.KilnExe})
 	if err != nil {
 		var te *trace.Error
 		// Exit status 125 with no step exec in the trace is the sandbox refusing
@@ -380,7 +482,7 @@ func flagValue(argv []string, name string) (string, bool) {
 // classifyInputs builds the traced.Config from the sealed files and the live
 // disk: nothing here asks Git, and nothing is built from the repository's own
 // policy files (they were read by `prepare`, which sealed what they said).
-func classifyInputs(o StepOptions, pre *Pre, planned Action) (traced.Config, error) {
+func classifyInputs(d ClassifyDeps, pre *Pre, planned Action) (traced.Config, error) {
 	tree, err := pre.Tree()
 	if err != nil {
 		return traced.Config{}, err
@@ -416,7 +518,7 @@ func classifyInputs(o StepOptions, pre *Pre, planned Action) (traced.Config, err
 	}
 	return traced.Config{
 		Root: facts.Root, Packages: traced.NewPackageIndex(rels),
-		Tree: NewDiskTree(tree, facts.Root), FS: o.DiskFS,
+		Tree: NewDiskTree(tree, facts.Root), FS: d.DiskFS,
 		HostRoots: &roots, Pinned: pinned, Tools: tools,
 		Home: facts.Home, Tmpdir: facts.Tmpdir, JobStart: time.Unix(pre.Binding.JobStart, 0).UTC(),
 	}, nil

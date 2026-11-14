@@ -96,8 +96,12 @@ type Pre struct {
 	ConfigPath string
 	// Sums is the digest of every file of `pre/` (relative path, slash
 	// separated), exactly as SEALED lists it.
-	Sums    map[string]string
-	actions map[string]Action
+	Sums map[string]string
+	// SealedSHA256 is the digest of the SEALED file itself: it names the exact
+	// set of files (and so the exact bytes) every later reader trusted, and a
+	// record that carries it says which sealed directory it was made from.
+	SealedSHA256 string
+	actions      map[string]Action
 }
 
 // Action returns the planned action of that name.
@@ -127,7 +131,7 @@ func VerifyPre(dir string) (*Pre, error) {
 	} else if st.Mode()&os.ModeSymlink != 0 || !st.IsDir() {
 		return nil, fmt.Errorf("pre/ is not a real directory")
 	}
-	sums, err := readSealed(pre)
+	sums, sealedSum, err := readSealed(pre)
 	if err != nil {
 		return nil, err
 	}
@@ -149,7 +153,7 @@ func VerifyPre(dir string) (*Pre, error) {
 			kept[rel] = data
 		}
 	}
-	p := &Pre{Dir: dir, PreDir: pre, Sums: sums, ConfigPath: filepath.Join(pre, "sandbox.json"), BindingID: sums["binding.json"], actions: map[string]Action{}}
+	p := &Pre{Dir: dir, PreDir: pre, Sums: sums, SealedSHA256: sealedSum, ConfigPath: filepath.Join(pre, "sandbox.json"), BindingID: sums["binding.json"], actions: map[string]Action{}}
 	if p.Binding, err = recfmt.DecodeBinding(kept["binding.json"]); err != nil {
 		return nil, err
 	}
@@ -233,54 +237,55 @@ func (p *Pre) Tree() (*TreeFile, error) {
 
 // readSealed reads and parses SEALED: "<64 hex>  <path>\n" per line, strictly
 // ascending by path (which also means no path twice).
-func readSealed(pre string) (map[string]string, error) {
+func readSealed(pre string) (map[string]string, string, error) {
 	f, err := openNoFollow(filepath.Join(pre, "SEALED"))
 	if err != nil {
-		return nil, fmt.Errorf("pre/SEALED: %v (a record directory that was not sealed is never used)", err)
+		return nil, "", fmt.Errorf("pre/SEALED: %v (a record directory that was not sealed is never used)", err)
 	}
 	defer f.Close()
 	st, err := f.Stat()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if !st.Mode().IsRegular() {
-		return nil, fmt.Errorf("pre/SEALED is not a regular file")
+		return nil, "", fmt.Errorf("pre/SEALED is not a regular file")
 	}
 	data, err := io.ReadAll(io.LimitReader(f, maxSealedBytes+1))
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if len(data) > maxSealedBytes {
-		return nil, fmt.Errorf("pre/SEALED exceeds %d bytes", maxSealedBytes)
+		return nil, "", fmt.Errorf("pre/SEALED exceeds %d bytes", maxSealedBytes)
 	}
 	if len(data) == 0 || data[len(data)-1] != '\n' {
-		return nil, fmt.Errorf("pre/SEALED does not end in a newline")
+		return nil, "", fmt.Errorf("pre/SEALED does not end in a newline")
 	}
+	digest := sha256.Sum256(data)
 	sums := map[string]string{}
 	prev := ""
 	for i, line := range strings.Split(strings.TrimSuffix(string(data), "\n"), "\n") {
 		if i >= maxPreEntries {
-			return nil, fmt.Errorf("pre/SEALED has more than %d entries", maxPreEntries)
+			return nil, "", fmt.Errorf("pre/SEALED has more than %d entries", maxPreEntries)
 		}
 		if len(line) < sealedLineDigits+3 || line[sealedLineDigits:sealedLineDigits+2] != "  " || !hexDigest(line[:sealedLineDigits]) {
-			return nil, fmt.Errorf("pre/SEALED line %d is not \"<sha256>  <path>\"", i+1)
+			return nil, "", fmt.Errorf("pre/SEALED line %d is not \"<sha256>  <path>\"", i+1)
 		}
 		digest, rel := line[:sealedLineDigits], line[sealedLineDigits+2:]
 		if err := checkSealedPath(rel); err != nil {
-			return nil, fmt.Errorf("pre/SEALED line %d: %v", i+1, err)
+			return nil, "", fmt.Errorf("pre/SEALED line %d: %v", i+1, err)
 		}
 		if i > 0 && rel <= prev {
-			return nil, fmt.Errorf("pre/SEALED line %d: %q is not after %q (the list is sorted, each path once)", i+1, printable(rel), printable(prev))
+			return nil, "", fmt.Errorf("pre/SEALED line %d: %q is not after %q (the list is sorted, each path once)", i+1, printable(rel), printable(prev))
 		}
 		prev = rel
 		sums[rel] = digest
 	}
 	for _, rel := range requiredPre {
 		if _, ok := sums[rel]; !ok {
-			return nil, fmt.Errorf("pre/SEALED does not list %s", rel)
+			return nil, "", fmt.Errorf("pre/SEALED does not list %s", rel)
 		}
 	}
-	return sums, nil
+	return sums, hex.EncodeToString(digest[:]), nil
 }
 
 // checkSealedPath requires a path SEALED may list: relative, clean, slash

@@ -71,7 +71,7 @@ func TestClassifyFileRoundTripsAndIsStrict(t *testing.T) {
 
 func goodClassified() ClassifiedRecord {
 	return ClassifiedRecord{
-		Schema: ClassifiedSchema, Action: "code/packages/x/a", BindingID: strings.Repeat("a", 64), StepsRun: 1, StepNetNS: true,
+		Schema: ClassifiedSchema, Action: "code/packages/x/a", BindingID: strings.Repeat("a", 64), SealedSHA256: strings.Repeat("b", 64), StepsRun: 1, StepNetNS: true,
 		ParseOK: true, ParseReasons: []string{}, WritesComplete: true,
 		Record: &traced.RawRecord{Package: "code/packages/x/a", Entries: []string{"pkg:code/packages/x/a"}, Writes: []string{}, TrackedWrites: []string{},
 			AbsentObservations: []string{}, Binds: []string{}, UntrackedObservations: []string{}, Traversed: []string{}, Reasons: []string{}},
@@ -92,7 +92,7 @@ func TestClassifiedRecordRoundTripsAndIsStrict(t *testing.T) {
 		t.Fatalf("%+v %v", back, err)
 	}
 	// A parse failure carries its reasons and no raw record.
-	bad := ClassifiedRecord{Schema: ClassifiedSchema, Action: good.Action, BindingID: good.BindingID, ParseReasons: []string{"step 0: x"}}
+	bad := ClassifiedRecord{Schema: ClassifiedSchema, Action: good.Action, BindingID: good.BindingID, SealedSHA256: good.SealedSHA256, ParseReasons: []string{"step 0: x"}}
 	data, err = EncodeClassified(bad)
 	if err != nil || !strings.Contains(string(data), `"record":null`) {
 		t.Fatalf("%s %v", data, err)
@@ -111,6 +111,7 @@ func TestClassifiedRecordRoundTripsAndIsStrict(t *testing.T) {
 		"schema":                  mut(func(c *ClassifiedRecord) { c.Schema = "x" }),
 		"bad action":              mut(func(c *ClassifiedRecord) { c.Action = "../x" }),
 		"short binding":           mut(func(c *ClassifiedRecord) { c.BindingID = "abc" }),
+		"short sealed digest":     mut(func(c *ClassifiedRecord) { c.SealedSHA256 = "abc" }),
 		"negative steps":          mut(func(c *ClassifiedRecord) { c.StepsRun = -1 }),
 		"ok with reasons":         mut(func(c *ClassifiedRecord) { c.ParseReasons = []string{"x"} }),
 		"not ok without reasons":  mut(func(c *ClassifiedRecord) { c.ParseOK = false }),

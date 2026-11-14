@@ -264,7 +264,11 @@ func (p *prep) options() Options {
 func (p *prep) writable() {
 	filepath.Walk(p.dir, func(path string, info os.FileInfo, err error) error {
 		if err == nil {
-			os.Chmod(path, 0o755)
+			mode := os.FileMode(0o755)
+			if b := filepath.Base(path); b == ".seq" || b == ".serial" { // private files stay private
+				mode = 0o600
+			}
+			os.Chmod(path, mode)
 		}
 		return nil
 	})

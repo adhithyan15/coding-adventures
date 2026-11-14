@@ -3,6 +3,7 @@
 package record
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -49,11 +50,15 @@ type SerialLock struct {
 }
 
 // serialFile opens one of the lock directory's two small files, creating it
-// 0600 when absent. It never follows a link, and requires a regular file this
-// user owns that group and others cannot touch.
-func serialFile(dir, name string) (*os.File, error) {
+// 0600 when create is set. It never follows a link, and requires a regular file
+// this user owns that group and others cannot touch.
+func serialFile(dir, name string, create bool) (*os.File, error) {
 	p := filepath.Join(dir, "traces", name)
-	f, err := os.OpenFile(p, os.O_RDWR|os.O_CREATE|syscall.O_NOFOLLOW|syscall.O_NONBLOCK|syscall.O_NOCTTY, 0o600)
+	flags := os.O_RDWR | syscall.O_NOFOLLOW | syscall.O_NONBLOCK | syscall.O_NOCTTY
+	if create {
+		flags |= os.O_CREATE
+	}
+	f, err := os.OpenFile(p, flags, 0o600)
 	if err != nil {
 		return nil, fmt.Errorf("traces/%s: %v", name, err)
 	}
@@ -83,22 +88,29 @@ func LockSerial(dir string) (*SerialLock, error) {
 	if st, err := os.Lstat(traces); err != nil || st.Mode()&os.ModeSymlink != 0 || !st.IsDir() {
 		return nil, fmt.Errorf("traces: %q is not a real directory", printable(traces))
 	}
-	lock, err := serialFile(dir, ".serial")
+	lock, err := serialFile(dir, ".serial", true)
 	if err != nil {
 		return nil, err
 	}
 	if err := syscall.Flock(int(lock.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
 		lock.Close()
-		return nil, fmt.Errorf("traces/.serial is held by another step (recording is serial: run the build with -jobs 1): %v", err)
+		if errors.Is(err, syscall.EWOULDBLOCK) {
+			return nil, &SerialBusyError{Err: err}
+		}
+		return nil, fmt.Errorf("traces/.serial cannot be locked: %v", err)
 	}
 	return &SerialLock{lock: lock}, nil
 }
 
 // NextSeq returns the next sequence number and advances the counter: an atomic
 // read, increment and write, safe because the exclusive lock is held. The file
-// holds the NEXT number, as decimal digits and a newline (empty means 0).
-// Anything else in it is an error, never silently reset: a counter that went
-// back would let two steps share a number.
+// holds the NEXT number, as decimal digits and a newline, and `prepare` creates
+// it as "0\n". Anything else in it, an EMPTY file included, is an error, never
+// silently reset: a counter that went back would let two steps share a number.
+// The update is ONE pwrite at offset 0 and a sync, with no truncate before it:
+// the number only ever gets longer or stays as long, so the new text overwrites
+// the old completely, and a kill between two system calls cannot leave an empty
+// file that reads as 0.
 func (l *SerialLock) NextSeq() (int, error) {
 	if l.seq == nil {
 		return 0, fmt.Errorf("traces/.seq: the lock was not taken for this directory")
@@ -111,17 +123,12 @@ func (l *SerialLock) NextSeq() (int, error) {
 		return 0, fmt.Errorf("traces/.seq: %v", err)
 	}
 	n := 0
-	if len(data) > 0 {
-		s := string(data)
-		if len(s) < 2 || s[len(s)-1] != '\n' {
-			return 0, fmt.Errorf("traces/.seq is not a counter")
-		}
-		if n, err = canonicalInt("traces/.seq", s[:len(s)-1]); err != nil {
-			return 0, err
-		}
+	s := string(data)
+	if len(s) < 2 || s[len(s)-1] != '\n' {
+		return 0, fmt.Errorf("traces/.seq is not a counter (it must hold a number and a newline)")
 	}
-	if err := l.seq.Truncate(0); err != nil {
-		return 0, fmt.Errorf("traces/.seq: %v", err)
+	if n, err = canonicalInt("traces/.seq", s[:len(s)-1]); err != nil {
+		return 0, err
 	}
 	if _, err := l.seq.WriteAt([]byte(strconv.Itoa(n+1)+"\n"), 0); err != nil {
 		return 0, fmt.Errorf("traces/.seq: %v", err)
@@ -134,7 +141,7 @@ func (l *SerialLock) NextSeq() (int, error) {
 
 // OpenSeq opens the counter file; called once the lock is held, by RunStep.
 func (l *SerialLock) OpenSeq(dir string) error {
-	f, err := serialFile(dir, ".seq")
+	f, err := serialFile(dir, ".seq", false)
 	if err != nil {
 		return err
 	}
