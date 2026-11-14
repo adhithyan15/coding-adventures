@@ -2570,6 +2570,55 @@ impl<Proof, Revocation, Source> fmt::Debug
     }
 }
 
+/// Non-copyable complete revocation policy for one exact direct no-check path.
+///
+/// The retained proof covers the server target and intermediate with
+/// authenticated good-and-fresh OCSP status, and covers both the original
+/// responder and the intermediate-status proof's responder with exact RFC
+/// 6960 no-check policy. The selected Mozilla-reviewed root remains the trust
+/// anchor, not a revocation target. This nominal completion evidence does not
+/// generalize path construction or validation, acquire or refresh revocation
+/// data, read a clock, or provide TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+> {
+    intermediate_status_responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+        >,
+}
+
+impl<Proof, IntermediateRevocation>
+    ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+    >
+{
+    /// Return the consumed complete direct no-check proof intact.
+    pub const fn intermediate_status_responder_no_check_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<
+        Proof,
+        IntermediateRevocation,
+    > {
+        &self.intermediate_status_responder_no_check_policy
+    }
+}
+
+impl<Proof, IntermediateRevocation> fmt::Debug
+    for ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy")
+    }
+}
+
 /// Non-copyable complete revocation policy for one exact nested fixed path.
 ///
 /// The retained proof covers every non-root certificate in this one fixed
@@ -5198,6 +5247,39 @@ where
     Ok(ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy { anchor_dns_policy })
 }
 
+/// Complete revocation policy for the exact direct no-check fixed path.
+///
+/// The input type can be constructed only after authenticated good-and-fresh
+/// OCSP status covers the server target and retained intermediate, while exact
+/// RFC 6960 no-check policy covers both the original responder and the
+/// intermediate-status proof's responder. This infallible nominal composition
+/// accepts no substitute certificate, path, root, algorithm, key, signature,
+/// status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It does not generalize path construction or
+/// validation, fetch, cache, acquire, or refresh revocation data, or provide
+/// TLS, HTTP, OAuth readiness, or network authority.
+pub const fn complete_x509_ocsp_routed_issuer_reviewed_direct_no_check_fixed_path_revocation_policy<
+    Proof,
+    IntermediateRevocation,
+>(
+    intermediate_status_responder_no_check_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<
+            Proof,
+            IntermediateRevocation,
+        >,
+) -> ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<
+    Proof,
+    IntermediateRevocation,
+> {
+    ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy {
+        intermediate_status_responder_no_check_policy,
+    }
+}
+
 /// Complete revocation policy for the exact nested no-check fixed path.
 ///
 /// The input type can be constructed only after the retained server target,
@@ -7175,6 +7257,15 @@ mod tests {
             T: ReviewedResponderRevocationIntermediateBindingEvidence,
         >() {
         }
+        fn assert_direct_no_check_completion_accepts<T>() {
+            let _: fn(
+                ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<T, u8>,
+            ) -> ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy<T, u8> =
+                complete_x509_ocsp_routed_issuer_reviewed_direct_no_check_fixed_path_revocation_policy::<
+                    T,
+                    u8,
+                >;
+        }
 
         type StrongestOriginalProof =
             BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
@@ -7209,6 +7300,7 @@ mod tests {
 
         assert_original_proof_evidence::<StrongestOriginalProof>();
         assert_no_check_intermediate_binding_evidence::<StrongestOriginalProof>();
+        assert_direct_no_check_completion_accepts::<StrongestOriginalProof>();
         assert_intermediate_binding_evidence::<
             BoundX509OcspReviewedResponderRevocation<StrongestOriginalProof, u8>,
         >();
@@ -10620,6 +10712,68 @@ mod tests {
         assert_eq!(
             format!("{no_check_policy:?}"),
             "ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy"
+        );
+    }
+
+    #[test]
+    fn direct_no_check_complete_fixed_path_revocation_policy_retains_complete_composition() {
+        let responder_no_check_policy = ValidatedX509OcspReviewedResponderNoCheckPolicy {
+            intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+                anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                    responder_path: BoundX509OcspReviewedResponderPath {
+                        reviewed_server_revocation: (),
+                    },
+                    constrained_dns_names: None,
+                },
+                constrained_dns_names: None,
+            },
+        };
+        let no_check_intermediate_revocation = BoundX509OcspReviewedNoCheckIntermediateRevocation {
+            responder_no_check_policy,
+            intermediate_revocation: 7_u8,
+        };
+        let responder_path =
+            reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path(
+                no_check_intermediate_revocation,
+            );
+        let anchor_dns_policy =
+            ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy {
+                responder_path,
+                constrained_dns_names: None,
+            };
+        let no_check_policy =
+            ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy { anchor_dns_policy };
+
+        let complete =
+            complete_x509_ocsp_routed_issuer_reviewed_direct_no_check_fixed_path_revocation_policy(
+                no_check_policy,
+            );
+
+        assert_eq!(
+            *complete
+                .intermediate_status_responder_no_check_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .no_check_intermediate_revocation()
+                .intermediate_revocation(),
+            7
+        );
+        assert_eq!(
+            complete
+                .intermediate_status_responder_no_check_policy()
+                .anchor_dns_policy()
+                .responder_path()
+                .no_check_intermediate_revocation()
+                .responder_no_check_policy()
+                .intermediate_dns_policy()
+                .anchor_policy()
+                .responder_path()
+                .reviewed_server_revocation(),
+            &()
+        );
+        assert_eq!(
+            format!("{complete:?}"),
+            "ValidatedX509OcspReviewedDirectNoCheckCompleteFixedPathRevocationPolicy"
         );
     }
 }

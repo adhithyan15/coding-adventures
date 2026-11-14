@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Complete revocation policy for the direct responder-no-check branch after
+  exact intermediate status and added-responder no-check policy.
+- Retain the strongest Name-policy-backed proof through a distinct fixed-path
+  completion type while stopping before generalized revocation, path
+  validation, TLS, HTTP, OAuth, or network readiness.
 - Admit the strongest Name-policy-backed responder no-check proof to the
   existing exact retained-intermediate revocation binding entry point.
 - Generalize that entry point behind private repository-owned evidence while
