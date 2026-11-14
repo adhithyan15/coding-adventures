@@ -4,7 +4,9 @@ use http1_request_host_authority::{
 };
 use https_destination_name_binding::bind_https_dns_destination;
 use https_reviewed_server_path_binding::{
-    bind_https_dns_destination_to_reviewed_server_path, HttpsReviewedServerPathBindingError,
+    bind_https_dns_destination_to_reviewed_server_path,
+    bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature,
+    HttpsReviewedServerPathBindingError,
 };
 use rsa_public_operation::RsaPublicOperationLimits;
 use tls13_server_name::TlsServerName;
@@ -42,7 +44,11 @@ use x509_rsa_constructed_path_signature_routing::{
     verify_x509_rsa_constructed_path_policy_signature,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
-use x509_rsa_signature_routing::{X509RsaSignatureRoute, X509RsaSignatureVerifier};
+use x509_rsa_reviewed_anchor_self_signature_binding::bind_x509_rsa_reviewed_anchor_self_signature;
+use x509_rsa_reviewed_server_path_anchor_self_signature_binding::bind_x509_rsa_reviewed_server_path_anchor_self_signature;
+use x509_rsa_signature_routing::{
+    verify_x509_rsa_policy_signature, X509RsaSignatureRoute, X509RsaSignatureVerifier,
+};
 use x509_server_certificate_policy::{
     validate_x509_server_certificate_policy, ValidatedX509ServerCertificatePolicy,
 };
@@ -220,7 +226,13 @@ fn server_policy_for<'certificate, 'encoded>(
     .unwrap()
 }
 
-fn exercise_binding(detached_destination: bool) {
+#[derive(Clone, Copy)]
+enum EvidenceProfile {
+    PathOnly,
+    PathAndAnchorSelfSignature,
+}
+
+fn exercise_binding(detached_destination: bool, evidence_profile: EvidenceProfile) {
     let target_encoded = fixture(TARGET_HEX);
     let detached_target_encoded = target_encoded.clone();
     let intermediate_encoded = fixture(TARGET_NEAREST_INTERMEDIATE_HEX);
@@ -387,6 +399,87 @@ fn exercise_binding(detached_destination: bool) {
     )
     .unwrap();
 
+    if matches!(
+        evidence_profile,
+        EvidenceProfile::PathAndAnchorSelfSignature
+    ) {
+        let verified_self_signature = verify_x509_rsa_policy_signature(
+            algorithm_policy(&candidates[2], &profiles),
+            rsa_policy(&candidates[2], &profiles),
+            &routes,
+            limits(),
+        )
+        .unwrap();
+        let anchor_self_signature = bind_x509_rsa_reviewed_anchor_self_signature(
+            verified_self_signature,
+            select_reviewed_webpki_root_anchor(&candidates[2]).unwrap(),
+        )
+        .unwrap();
+        let reviewed_server_path_anchor_self_signature =
+            bind_x509_rsa_reviewed_server_path_anchor_self_signature(
+                reviewed_server_path,
+                anchor_self_signature,
+            )
+            .unwrap();
+
+        if detached_destination {
+            let error =
+                match bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature(
+                    destination,
+                    reviewed_server_path_anchor_self_signature,
+                ) {
+                    Ok(_) => panic!("detached destination leaf must fail closed"),
+                    Err(error) => error,
+                };
+            assert_eq!(
+                error,
+                HttpsReviewedServerPathBindingError::TargetCertificateMismatch
+            );
+            assert_eq!(format!("{error:?}"), "TargetCertificateMismatch");
+            for payload in ["sectigo.com", "SECTIGO.COM", "USERTrust"] {
+                assert!(!error.to_string().contains(payload));
+            }
+            return;
+        }
+
+        let bound = bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature(
+            destination,
+            reviewed_server_path_anchor_self_signature,
+        )
+        .unwrap();
+        assert!(core::ptr::eq(bound.destination().certificate(), &target));
+        assert!(core::ptr::eq(
+            bound
+                .reviewed_server_path_anchor_self_signature()
+                .reviewed_server_path()
+                .subordinate_policy()
+                .target_policy()
+                .anchor_policy()
+                .target_signature_closure()
+                .server_policy()
+                .certificate(),
+            &target,
+        ));
+        assert_eq!(
+            bound
+                .reviewed_server_path_anchor_self_signature()
+                .anchor_self_signature()
+                .verified_self_signature()
+                .verifier(),
+            X509RsaSignatureVerifier::RsaPkcs1V15Sha384,
+        );
+        assert_eq!(bound.destination().server_name().as_str(), "sectigo.com");
+        assert_eq!(bound.destination().host_authority().host(), b"SECTIGO.COM");
+        assert_eq!(bound.destination().host_authority().port(), Some(443));
+
+        let debug = format!("{bound:?}");
+        assert_eq!(debug.matches("[REDACTED]").count(), 2);
+        for payload in ["sectigo.com", "SECTIGO.COM", "USERTrust"] {
+            assert!(!debug.contains(payload));
+        }
+        return;
+    }
+
     if detached_destination {
         let error =
             bind_https_dns_destination_to_reviewed_server_path(destination, reviewed_server_path)
@@ -427,10 +520,20 @@ fn exercise_binding(detached_destination: bool) {
 
 #[test]
 fn binds_the_complete_destination_to_the_same_reviewed_path_leaf() {
-    exercise_binding(false);
+    exercise_binding(false, EvidenceProfile::PathOnly);
 }
 
 #[test]
 fn rejects_a_byte_equal_independently_decoded_destination_leaf() {
-    exercise_binding(true);
+    exercise_binding(true, EvidenceProfile::PathOnly);
+}
+
+#[test]
+fn binds_the_complete_destination_to_the_signed_reviewed_path_leaf() {
+    exercise_binding(false, EvidenceProfile::PathAndAnchorSelfSignature);
+}
+
+#[test]
+fn signed_reviewed_path_rejects_a_byte_equal_independent_destination_leaf() {
+    exercise_binding(true, EvidenceProfile::PathAndAnchorSelfSignature);
 }
