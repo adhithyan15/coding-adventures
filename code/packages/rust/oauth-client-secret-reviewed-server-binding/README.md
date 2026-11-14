@@ -14,14 +14,23 @@ name from the same certificate. A byte-equal independent certificate decode
 also fails closed. Success moves both complete non-copyable inputs into one
 redacted result.
 
+The crate also consumes that complete request/signed-server binding together
+with the exact destination-bound direct no-check complete fixed-path revocation
+proof. The signed server and revocation destinations must satisfy the same
+certificate, SNI, Host, and port checks. Success retains both inputs, so the
+direct revocation proof augments rather than substitutes for the signed path
+and reviewed-anchor self-signature evidence.
+
 The composition never asks the request for its credential-bearing wire bytes,
 so it introduces no credential access or audit event. Every later byte borrow
 still passes through the request release's provider-and-trace audit gate.
 
 This is not a TLS or HTTP client. It performs no certificate parsing, new
-validation, cryptography, revocation check, credential edit, signing, I/O, or
-external effect. It does not complete RFC 5280 Name or path validation and
-does not grant HTTPS, OAuth, network, or live-provider readiness.
+validation, cryptography, revocation check or acquisition, credential edit,
+signing, I/O, or external effect. It covers only the direct no-check complete
+fixed-path revocation branch, does not complete RFC 5280 Name or path
+validation, and does not grant HTTPS, OAuth, network, or live-provider
+readiness.
 
 ## Validation
 

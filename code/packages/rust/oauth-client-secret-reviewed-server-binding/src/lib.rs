@@ -6,7 +6,10 @@
 
 use core::fmt;
 
-use https_reviewed_server_path_binding::BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature;
+use https_reviewed_server_path_binding::{
+    BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature,
+};
 use oauth_client_secret_http1_release::ReleasedClientSecretHttp1Request;
 
 mod sealed {
@@ -22,6 +25,10 @@ mod sealed {
     }
 
     pub trait ReviewedServerEvidence {
+        fn destination_identity(&self) -> DestinationIdentity<'_>;
+    }
+
+    pub trait DirectRevocationEvidence {
         fn destination_identity(&self) -> DestinationIdentity<'_>;
     }
 }
@@ -40,6 +47,17 @@ impl<T: sealed::RequestEvidence> CompleteClientSecretHttp1RequestEvidence for T 
 pub trait SignedReviewedHttpsServerEvidence: sealed::ReviewedServerEvidence {}
 
 impl<T: sealed::ReviewedServerEvidence> SignedReviewedHttpsServerEvidence for T {}
+
+/// Sealed direct no-check complete fixed-path revocation evidence.
+///
+/// Only the repository-owned destination-bound direct completion implements
+/// this trait. It remains distinct from signed reviewed server-path evidence.
+pub trait DirectNoCheckCompleteFixedPathRevocationEvidence:
+    sealed::DirectRevocationEvidence
+{
+}
+
+impl<T: sealed::DirectRevocationEvidence> DirectNoCheckCompleteFixedPathRevocationEvidence for T {}
 
 impl<
         'policy,
@@ -70,6 +88,28 @@ impl<
 {
     fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
         let destination = self.destination().destination();
+        sealed::DestinationIdentity {
+            certificate: core::ptr::from_ref(destination.certificate()).cast(),
+            server_name: destination.server_name().as_str().as_bytes(),
+            host: destination.host_authority().host(),
+            port: destination.host_authority().port(),
+        }
+    }
+}
+
+impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
+    sealed::DirectRevocationEvidence
+    for BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+    >
+{
+    fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
+        let destination = self.destination();
         sealed::DestinationIdentity {
             certificate: core::ptr::from_ref(destination.certificate()).cast(),
             server_name: destination.server_name().as_str().as_bytes(),
@@ -207,15 +247,7 @@ where
     let request_identity = sealed::RequestEvidence::destination_identity(&request);
     let server_identity = sealed::ReviewedServerEvidence::destination_identity(&reviewed_server);
 
-    if !core::ptr::eq(request_identity.certificate, server_identity.certificate)
-        || !request_identity
-            .server_name
-            .eq_ignore_ascii_case(server_identity.server_name)
-        || !request_identity
-            .host
-            .eq_ignore_ascii_case(server_identity.host)
-        || request_identity.port != server_identity.port
-    {
+    if !same_destination(request_identity, server_identity) {
         return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
     }
 
@@ -223,6 +255,116 @@ where
         request,
         reviewed_server,
     })
+}
+
+fn same_destination(
+    left: sealed::DestinationIdentity<'_>,
+    right: sealed::DestinationIdentity<'_>,
+) -> bool {
+    core::ptr::eq(left.certificate, right.certificate)
+        && left.server_name.eq_ignore_ascii_case(right.server_name)
+        && left.host.eq_ignore_ascii_case(right.host)
+        && left.port == right.port
+}
+
+/// Audited request and signed server evidence bound to direct revocation.
+///
+/// This non-copyable value retains the existing complete request/server
+/// binding and the exact destination-bound direct no-check complete fixed-path
+/// revocation proof. It grants no request-byte, TLS, HTTP, I/O, or
+/// external-effect authority.
+pub struct BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation<
+    Request,
+    ReviewedServer,
+    DirectRevocation,
+> {
+    request_and_reviewed_server:
+        BoundClientSecretRequestToSignedReviewedHttpsServer<Request, ReviewedServer>,
+    direct_revocation: DirectRevocation,
+}
+
+impl<Request, ReviewedServer, DirectRevocation>
+    BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation<
+        Request,
+        ReviewedServer,
+        DirectRevocation,
+    >
+{
+    /// Return the retained complete request/signed-server binding.
+    #[must_use]
+    pub const fn request_and_reviewed_server(
+        &self,
+    ) -> &BoundClientSecretRequestToSignedReviewedHttpsServer<Request, ReviewedServer> {
+        &self.request_and_reviewed_server
+    }
+
+    /// Return the exact retained direct complete-revocation proof.
+    #[must_use]
+    pub const fn direct_revocation(&self) -> &DirectRevocation {
+        &self.direct_revocation
+    }
+}
+
+impl<Request, ReviewedServer, DirectRevocation> fmt::Debug
+    for BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation<
+        Request,
+        ReviewedServer,
+        DirectRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation")
+            .field("request_and_reviewed_server", &"[REDACTED]")
+            .field("direct_revocation", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
+}
+
+/// Bind the audited request/signed-server proof to complete direct revocation.
+///
+/// Both complete inputs are moved into the result only when their exact
+/// decoded certificate object, SNI DNS name, Host DNS name, and optional Host
+/// port agree. DNS comparisons are ASCII case-insensitive. This function never
+/// accesses credential-bearing request bytes and emits no audit event.
+pub fn bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation<
+    Request,
+    ReviewedServer,
+    DirectRevocation,
+>(
+    request_and_reviewed_server: BoundClientSecretRequestToSignedReviewedHttpsServer<
+        Request,
+        ReviewedServer,
+    >,
+    direct_revocation: DirectRevocation,
+) -> Result<
+    BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation<
+        Request,
+        ReviewedServer,
+        DirectRevocation,
+    >,
+    ClientSecretReviewedServerBindingError,
+>
+where
+    ReviewedServer: SignedReviewedHttpsServerEvidence,
+    DirectRevocation: DirectNoCheckCompleteFixedPathRevocationEvidence,
+{
+    let server_identity = sealed::ReviewedServerEvidence::destination_identity(
+        request_and_reviewed_server.reviewed_server(),
+    );
+    let revocation_identity =
+        sealed::DirectRevocationEvidence::destination_identity(&direct_revocation);
+
+    if !same_destination(server_identity, revocation_identity) {
+        return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
+    }
+
+    Ok(
+        BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation {
+            request_and_reviewed_server,
+            direct_revocation,
+        },
+    )
 }
 
 #[cfg(test)]
@@ -242,6 +384,11 @@ mod tests {
         retained: u8,
     }
 
+    struct DirectRevocationEvidence {
+        identity: TestIdentity,
+        retained: u8,
+    }
+
     #[derive(Clone, Copy)]
     struct TestIdentity {
         certificate: &'static u8,
@@ -257,6 +404,12 @@ mod tests {
     }
 
     impl sealed::ReviewedServerEvidence for ReviewedServerEvidence {
+        fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
+            identity(self.identity)
+        }
+    }
+
+    impl sealed::DirectRevocationEvidence for DirectRevocationEvidence {
         fn destination_identity(&self) -> sealed::DestinationIdentity<'_> {
             identity(self.identity)
         }
@@ -283,6 +436,23 @@ mod tests {
             identity,
             retained: 9,
         }
+    }
+
+    fn direct_revocation(identity: TestIdentity) -> DirectRevocationEvidence {
+        DirectRevocationEvidence {
+            identity,
+            retained: 11,
+        }
+    }
+
+    fn bound_request_and_server(
+    ) -> BoundClientSecretRequestToSignedReviewedHttpsServer<RequestEvidence, ReviewedServerEvidence>
+    {
+        bind_client_secret_request_to_signed_reviewed_https_server(
+            request(matching_identity()),
+            reviewed_server(matching_identity()),
+        )
+        .unwrap()
     }
 
     fn matching_identity() -> TestIdentity {
@@ -338,6 +508,70 @@ mod tests {
             let error = bind_client_secret_request_to_signed_reviewed_https_server(
                 request(matching_identity()),
                 reviewed_server(mismatch),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::DestinationMismatch
+            );
+            assert_eq!(format!("{error:?}"), "DestinationMismatch");
+            for payload in ["token.example", "other.example", "443"] {
+                assert!(!error.to_string().contains(payload));
+            }
+        }
+    }
+
+    #[test]
+    fn matching_direct_revocation_retains_every_complete_input() {
+        let mut revocation_identity = matching_identity();
+        revocation_identity.server_name = b"token.example";
+        revocation_identity.host = b"token.example";
+        let bound = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
+            bound_request_and_server(),
+            direct_revocation(revocation_identity),
+        )
+        .unwrap();
+
+        assert_eq!(bound.request_and_reviewed_server().request().retained, 7);
+        assert_eq!(
+            bound
+                .request_and_reviewed_server()
+                .reviewed_server()
+                .retained,
+            9
+        );
+        assert_eq!(bound.direct_revocation().retained, 11);
+        let debug = format!("{bound:?}");
+        for payload in ["token.example", "7", "9", "11"] {
+            assert!(!debug.contains(payload));
+        }
+    }
+
+    #[test]
+    fn every_direct_revocation_destination_substitution_fails_closed() {
+        let mismatches = [
+            TestIdentity {
+                certificate: &CERTIFICATE_B,
+                ..matching_identity()
+            },
+            TestIdentity {
+                server_name: b"other.example",
+                ..matching_identity()
+            },
+            TestIdentity {
+                host: b"other.example",
+                ..matching_identity()
+            },
+            TestIdentity {
+                port: None,
+                ..matching_identity()
+            },
+        ];
+
+        for mismatch in mismatches {
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                direct_revocation(mismatch),
             )
             .unwrap_err();
             assert_eq!(
