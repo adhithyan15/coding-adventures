@@ -3039,10 +3039,12 @@ check responder or intermediate revocation, generalize path construction or
 validation, implement TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
-A second bounded routed-policy follow-up consumes that complete selected-anchor
-responder-policy proof and applies the exact retained intermediate's supported
-critical DNS constraints to the exact authenticated responder certificate. Both
-certificates are derived exclusively through the consumed fully routed proof;
+A second bounded routed-policy follow-up,
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy`,
+consumes that complete selected-anchor responder-policy proof and applies the
+exact retained intermediate's supported critical DNS constraints to the exact
+authenticated responder certificate. Both certificates are derived exclusively
+through the consumed fully routed strongest-Name-policy proof;
 callers cannot substitute a responder, SAN collection, intermediate, path,
 algorithm, key, signature, or time. An absent intermediate NameConstraints
 extension succeeds without reading Subject Alternative Name. A present
@@ -3060,8 +3062,10 @@ live-provider readiness remain unavailable.
 
 A third bounded routed-policy follow-up consumes that complete routed
 intermediate-DNS proof and derives the exact authenticated responder
-certificate exclusively through the retained fully routed proof. It requires
-the structurally unique `id-pkix-ocsp-nocheck` extension already admitted by
+certificate exclusively through the retained fully routed proof.
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy`
+accepts only that complete proof and requires the structurally unique
+`id-pkix-ocsp-nocheck` extension already admitted by
 certificate-wide role policy and validates that the extension value is exact
 DER `NULL`. RFC 6960 recommends, but does not require, non-critical marking; a
 critical instance can reach this semantic gate only when the prerequisite role
@@ -3078,10 +3082,13 @@ authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
 An alternative bounded routed revocation follow-up consumes that same complete
 intermediate-DNS proof plus a separate fully authenticated, fully routed OCSP
-target-revocation proof. The second proof must name the exact routed responder
-certificate as its target, the exact retained intermediate as its issuer, and
-the original server-status OCSP observation time as its own explicit
-observation time. Every certificate comparison uses decoded-object identity,
+target-revocation proof.
+`bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation`
+accepts only those complete proofs. The second proof must name the exact routed
+responder certificate as its target, the exact retained intermediate as its
+issuer, and the original server-status OCSP observation time as its own
+explicit observation time. Every certificate comparison uses decoded-object
+identity,
 so byte-equal independent decodes fail closed, and stable target, issuer, and
 observation-time mismatch categories retain no certificate, response, key,
 signature, status, hostname, or time payload. Success retains both complete
@@ -3096,6 +3103,19 @@ proof's own responder and for the retained intermediate, generalized path
 construction or validation, TLS, HTTP, OAuth transport, and network authority
 remain unavailable. Concrete HTTPS and live-provider readiness remain
 unavailable.
+
+The strongest Name-policy-backed responder-revocation result is now also
+admitted directly to the existing generic retained-intermediate revocation
+binding boundary. A private repository-owned evidence adapter derives the
+target-nearest intermediate, selected Mozilla-reviewed root, and original
+server-status observation time only through the retained strong proof;
+callers cannot substitute a certificate, root, status proof, or time. The
+existing stable target-issuer-time validator can therefore bind separately
+authenticated status for that exact intermediate without a second public
+entry point or an external effect. This closes only the strongest proof's
+retained-intermediate binding edge. Policy for either added OCSP proof's own
+responder, complete revocation or Name/path validation, TLS, HTTP, OAuth
+transport, network authority, and live-provider readiness remain unavailable.
 
 A bounded follow-up projection consumes that complete separately authenticated
 original-responder branch and reifies the added revocation proof's own exact
@@ -3135,6 +3155,16 @@ or separately authenticated revocation policy for the added responder,
 implement complete revocation policy, generalize path construction or
 validation, or provide TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
+
+The same generic projection and selected-root DNS-policy boundary admit the
+strongest Name-policy-backed arbitrary-depth original proof above. A private
+evidence adapter derives the selected reviewed root's exact optional
+constraint bytes exclusively through that retained proof, without a second
+public entry point or any detached certificate, root, constraint, path,
+signature, status, or time input. This composition stops at selected-root DNS
+policy for the added responder; intermediate DNS, no-check, further revocation,
+complete Name/path validation, TLS, HTTP, OAuth transport, and network
+authority remain unavailable.
 
 A further bounded policy follow-up consumes that complete reviewed-root DNS
 proof and applies the separately authenticated proof's exact retained
@@ -3259,17 +3289,20 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
-A bounded no-check composition follow-up consumes the complete fully routed
+A bounded no-check composition follow-up consumes an admitted fully routed
 responder no-check proof plus a separate fully authenticated, fully routed
-OCSP target-revocation proof for the retained intermediate. It derives the
-exact retained intermediate, selected Mozilla-reviewed root, and original
-server-status OCSP observation time exclusively through the consumed no-check
-proof, then requires the second proof to name those exact certificate objects
-and time. Stable target, issuer, and observation-time mismatch categories
-retain no certificate, response, key, signature, status, hostname, root, or
-time payload. Success retains the complete non-copyable no-check proof and
-intermediate-status proof under a distinct type; callers cannot substitute raw
-status, certificates, paths, roots, algorithms, keys, signatures, or time.
+OCSP target-revocation proof for the retained intermediate. Private
+repository-owned evidence now admits both the fixed-depth and strongest Name-
+policy-backed server proofs while preventing external substitute
+implementations. It derives the exact retained intermediate, selected
+Mozilla-reviewed root, and original server-status OCSP observation time
+exclusively through the consumed no-check proof, then requires the second proof
+to name those exact certificate objects and time. Stable target, issuer, and
+observation-time mismatch categories retain no certificate, response, key,
+signature, status, hostname, root, or time payload. Success retains the
+complete non-copyable no-check proof and intermediate-status proof under a
+distinct type; callers cannot substitute raw status, certificates, paths,
+roots, algorithms, keys, signatures, or time.
 This pure public-certificate-data composition performs no credential access or
 editing, signing, storage, clock acquisition, provider action, audit event,
 trace emission, I/O, network access, or other external effect. It resolves the

@@ -4347,6 +4347,12 @@ trait ReviewedResponderRevocationIntermediateBindingEvidence {
     fn server_status_observation_time(&self) -> x509_time::X509Time;
 }
 
+trait ReviewedServerIntermediateBindingEvidence {
+    fn retained_intermediate_certificate(&self) -> &x509_certificate::X509Certificate<'_>;
+    fn selected_reviewed_root_certificate(&self) -> &x509_certificate::X509Certificate<'_>;
+    fn server_status_observation_time(&self) -> x509_time::X509Time;
+}
+
 trait ReviewedIntermediateStatusOriginalProofEvidence {
     fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]>;
 }
@@ -4500,6 +4506,222 @@ impl<
             .anchor_policy()
             .reviewed_server_path()
             .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .name_constraints()
+    }
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > ReviewedServerIntermediateBindingEvidence
+    for BoundX509OcspRoutedIssuerReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    fn retained_intermediate_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.routed_reviewed_server_path()
+            .anchor_policy()
+            .reviewed_server_path()
+            .reviewed_path()
+            .authenticated_intermediate()
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate()
+    }
+
+    fn selected_reviewed_root_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.routed_reviewed_server_path()
+            .anchor_policy()
+            .reviewed_server_path()
+            .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate()
+    }
+
+    fn server_status_observation_time(&self) -> x509_time::X509Time {
+        self.authenticated_revocation()
+            .revocation()
+            .observation_time()
+    }
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > ReviewedServerIntermediateBindingEvidence
+    for BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+        >,
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    >
+{
+    fn retained_intermediate_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.authenticated_revocation()
+            .target_issuer_signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate()
+    }
+
+    fn selected_reviewed_root_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate()
+    }
+
+    fn server_status_observation_time(&self) -> x509_time::X509Time {
+        self.authenticated_revocation()
+            .revocation()
+            .observation_time()
+    }
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+    > ReviewedIntermediateStatusOriginalProofEvidence
+    for BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+        >,
+        ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+        >,
+    >
+{
+    fn selected_reviewed_root_name_constraints(&self) -> Option<&'static [u8]> {
+        self.strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
             .reviewed_terminal()
             .reviewed_anchor()
             .name_constraints()
@@ -4684,6 +4906,103 @@ impl<
             .anchor_policy()
             .reviewed_server_path()
             .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate()
+    }
+
+    fn server_status_observation_time(&self) -> x509_time::X509Time {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .revocation()
+            .observation_time()
+    }
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        ResponderRevocation,
+    > ReviewedResponderRevocationIntermediateBindingEvidence
+    for BoundX509OcspReviewedResponderRevocation<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'target,
+                'target_encoded,
+                'issuer,
+                'issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+        ResponderRevocation,
+    >
+{
+    fn retained_intermediate_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .target_issuer_signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate()
+    }
+
+    fn selected_reviewed_root_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
             .reviewed_terminal()
             .reviewed_anchor()
             .candidate_certificate()
@@ -5531,6 +5850,432 @@ pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_respond
     })
 }
 
+/// Apply the exact retained intermediate's supported critical DNS policy to
+/// the responder retained by the strongest Name-policy path bridge.
+///
+/// This consumes the complete strong selected-anchor responder-policy proof.
+/// The fully routed authenticated responder and target-nearest intermediate
+/// are derived only through that retained non-copyable proof. An absent
+/// intermediate NameConstraints extension succeeds without reading responder
+/// SAN. A present extension must be critical and decode as the supported
+/// permitted-and-excluded-DNS subset under separate caller-owned limits.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before no-check, responder or intermediate revocation, complete Name/path
+/// or revocation validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    X509OcspReviewedResponderIntermediateDnsPolicyError,
+>{
+    let strong_binding = anchor_policy.responder_path().reviewed_server_revocation();
+    let authenticated_revocation = strong_binding.authenticated_revocation();
+    let responder_certificate = authenticated_revocation
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let intermediate_certificate = authenticated_revocation
+        .target_issuer_signature()
+        .issuer_rsa_algorithm_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_responder_intermediate_dns_policy(
+        responder_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+        anchor_policy,
+        constrained_dns_names,
+    })
+}
+
+/// Require RFC 6960 no-check policy for the strongest-path responder.
+///
+/// This consumes the complete strongest-path responder intermediate-DNS proof
+/// and derives the responder certificate only through that retained proof. A
+/// structurally unique `id-pkix-ocsp-nocheck` extension must be present with
+/// exact DER `NULL` contents. RFC 6960 recommends a non-critical extension but
+/// does not require it; a critical instance can reach this semantic gate only
+/// when the prerequisite certificate-wide role policy explicitly recognized
+/// its OID.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before responder or intermediate revocation policy, generalized path
+/// validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+) -> Result<
+    ValidatedX509OcspReviewedResponderNoCheckPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    X509OcspReviewedResponderNoCheckPolicyError,
+>{
+    let responder_certificate = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation()
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    evaluate_responder_no_check_policy(responder_certificate)?;
+
+    Ok(ValidatedX509OcspReviewedResponderNoCheckPolicy {
+        intermediate_dns_policy,
+    })
+}
+
+/// Bind authenticated revocation to the strongest-path responder.
+///
+/// This alternative to the no-check branch consumes the complete strongest-
+/// path responder intermediate-DNS proof and a separate fully routed
+/// authenticated OCSP target-revocation proof. The second proof must target
+/// the same decoded responder object, name the same decoded target-nearest
+/// intermediate issuer, and use the original server-status OCSP observation
+/// time. Failure order is stable: target identity, issuer identity, then
+/// observation time.
+///
+/// This pure public-certificate-data composition performs no credential access
+/// or editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before revocation policy for the second proof's own responder or the
+/// retained intermediate, generalized path validation, TLS, HTTP, OAuth
+/// readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'responder_revocation_binding,
+    'responder_revocation_basic_response,
+    'responder_revocation_basic_encoded,
+    'responder_revocation_single_response,
+    'responder_revocation_single_encoded,
+    'responder_revocation_responder,
+    'responder_revocation_responder_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+    >,
+    responder_revocation: AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+        'responder_revocation_binding,
+        'responder_revocation_basic_response,
+        'responder_revocation_basic_encoded,
+        'responder_revocation_single_response,
+        'responder_revocation_single_encoded,
+        'responder_revocation_responder,
+        'responder_revocation_responder_encoded,
+        'responder,
+        'responder_encoded,
+        'revocation_issuer,
+        'revocation_issuer_encoded,
+    >,
+) -> Result<
+    BoundX509OcspReviewedResponderRevocation<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'revocation_target,
+                'revocation_target_encoded,
+                'revocation_issuer,
+                'revocation_issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'responder_revocation_binding,
+            'responder_revocation_basic_response,
+            'responder_revocation_basic_encoded,
+            'responder_revocation_single_response,
+            'responder_revocation_single_encoded,
+            'responder_revocation_responder,
+            'responder_revocation_responder_encoded,
+            'responder,
+            'responder_encoded,
+            'revocation_issuer,
+            'revocation_issuer_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderRevocationBindingError,
+>{
+    let strong_binding = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation();
+    let authenticated_revocation = strong_binding.authenticated_revocation();
+    let expected_responder = authenticated_revocation
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let expected_issuer = authenticated_revocation
+        .target_issuer_signature()
+        .issuer_rsa_algorithm_policy()
+        .certificate();
+    let expected_observation_time = authenticated_revocation.revocation().observation_time();
+    let revocation_binding = responder_revocation.revocation().cert_id_binding();
+
+    validate_responder_revocation_binding_inputs(
+        expected_responder,
+        expected_issuer,
+        expected_observation_time,
+        revocation_binding.target(),
+        revocation_binding.issuer(),
+        responder_revocation.revocation().observation_time(),
+    )?;
+
+    Ok(BoundX509OcspReviewedResponderRevocation {
+        intermediate_dns_policy,
+        responder_revocation,
+    })
+}
+
 /// Apply the exact routed intermediate's supported critical DNS policy.
 ///
 /// This consumes the complete routed selected-anchor responder-policy proof.
@@ -6150,142 +6895,44 @@ pub fn bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation<
 /// that exact time. Failure order is stable: target identity, issuer identity,
 /// then observation time.
 ///
+/// Private repository-owned evidence interfaces admit both the fixed-depth
+/// and strongest Name-policy-backed proof types while preventing external
+/// substitute implementations.
+///
 /// This pure public-certificate-data composition performs no credential access
 /// or editing, signing, storage, clock acquisition, provider action, audit or
 /// trace emission, I/O, network access, or other external effect. It stops
 /// before revocation policy for the added proof's own responder, complete
 /// revocation policy, generalized path validation, TLS, HTTP, OAuth readiness,
 /// or network authority.
-#[allow(clippy::type_complexity)]
+#[allow(private_bounds)]
 pub fn bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation<
-    'binding,
-    'basic_response,
-    'basic_encoded,
-    'single_response,
-    'single_encoded,
-    'responder,
-    'responder_encoded,
-    'target,
-    'target_encoded,
-    'issuer,
-    'issuer_encoded,
-    'path,
-    'server_certificate,
-    'path_target,
-    'path_target_encoded,
-    'candidates,
-    'candidate_encoded,
-    'intermediate_revocation_binding,
-    'intermediate_revocation_basic_response,
-    'intermediate_revocation_basic_encoded,
-    'intermediate_revocation_single_response,
-    'intermediate_revocation_single_encoded,
-    'intermediate_revocation_responder,
-    'intermediate_revocation_responder_encoded,
+    Proof,
+    IntermediateRevocation,
 >(
-    responder_no_check_policy: ValidatedX509OcspReviewedResponderNoCheckPolicy<
-        BoundX509OcspRoutedIssuerReviewedServerRevocation<
-            'binding,
-            'basic_response,
-            'basic_encoded,
-            'single_response,
-            'single_encoded,
-            'responder,
-            'responder_encoded,
-            'target,
-            'target_encoded,
-            'issuer,
-            'issuer_encoded,
-            'path,
-            'server_certificate,
-            'path_target,
-            'path_target_encoded,
-            'candidates,
-            'candidate_encoded,
-        >,
-    >,
-    intermediate_revocation: AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
-        'intermediate_revocation_binding,
-        'intermediate_revocation_basic_response,
-        'intermediate_revocation_basic_encoded,
-        'intermediate_revocation_single_response,
-        'intermediate_revocation_single_encoded,
-        'intermediate_revocation_responder,
-        'intermediate_revocation_responder_encoded,
-        'candidates,
-        'candidate_encoded,
-        'candidates,
-        'candidate_encoded,
-    >,
+    responder_no_check_policy: ValidatedX509OcspReviewedResponderNoCheckPolicy<Proof>,
+    intermediate_revocation: IntermediateRevocation,
 ) -> Result<
-    BoundX509OcspReviewedNoCheckIntermediateRevocation<
-        BoundX509OcspRoutedIssuerReviewedServerRevocation<
-            'binding,
-            'basic_response,
-            'basic_encoded,
-            'single_response,
-            'single_encoded,
-            'responder,
-            'responder_encoded,
-            'target,
-            'target_encoded,
-            'issuer,
-            'issuer_encoded,
-            'path,
-            'server_certificate,
-            'path_target,
-            'path_target_encoded,
-            'candidates,
-            'candidate_encoded,
-        >,
-        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
-            'intermediate_revocation_binding,
-            'intermediate_revocation_basic_response,
-            'intermediate_revocation_basic_encoded,
-            'intermediate_revocation_single_response,
-            'intermediate_revocation_single_encoded,
-            'intermediate_revocation_responder,
-            'intermediate_revocation_responder_encoded,
-            'candidates,
-            'candidate_encoded,
-            'candidates,
-            'candidate_encoded,
-        >,
-    >,
+    BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, IntermediateRevocation>,
     X509OcspReviewedIntermediateRevocationBindingError,
-> {
+>
+where
+    Proof: ReviewedServerIntermediateBindingEvidence,
+    IntermediateRevocation: RoutedTargetRevocationBindingEvidence,
+{
     let reviewed_server_revocation = responder_no_check_policy
         .intermediate_dns_policy()
         .anchor_policy()
         .responder_path()
         .reviewed_server_revocation();
-    let routed_path = reviewed_server_revocation.routed_reviewed_server_path();
-    let reviewed_path = routed_path
-        .anchor_policy()
-        .reviewed_server_path()
-        .reviewed_path();
-    let expected_intermediate = reviewed_path
-        .authenticated_intermediate()
-        .authenticated_intermediate()
-        .intermediate_policy()
-        .certificate();
-    let expected_root = reviewed_path
-        .reviewed_terminal()
-        .reviewed_anchor()
-        .candidate_certificate();
-    let expected_observation_time = reviewed_server_revocation
-        .authenticated_revocation()
-        .revocation()
-        .observation_time();
-    let revocation_binding = intermediate_revocation.revocation().cert_id_binding();
 
     validate_intermediate_revocation_binding_inputs(
-        expected_intermediate,
-        expected_root,
-        expected_observation_time,
-        revocation_binding.target(),
-        revocation_binding.issuer(),
-        intermediate_revocation.revocation().observation_time(),
+        reviewed_server_revocation.retained_intermediate_certificate(),
+        reviewed_server_revocation.selected_reviewed_root_certificate(),
+        reviewed_server_revocation.server_status_observation_time(),
+        intermediate_revocation.revocation_target_certificate(),
+        intermediate_revocation.revocation_issuer_certificate(),
+        intermediate_revocation.revocation_observation_time(),
     )?;
 
     Ok(BoundX509OcspReviewedNoCheckIntermediateRevocation {
@@ -6516,6 +7163,56 @@ mod tests {
     const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
     const OCSP_NO_CHECK_OID_DER: &[u8] = &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x05];
     const NULL_DER: &[u8] = &[0x05, 0x00];
+
+    #[test]
+    fn strongest_name_policy_proof_is_admitted_to_generic_private_evidence() {
+        fn assert_original_proof_evidence<T: ReviewedIntermediateStatusOriginalProofEvidence>() {}
+        fn assert_no_check_intermediate_binding_evidence<
+            T: ReviewedServerIntermediateBindingEvidence,
+        >() {
+        }
+        fn assert_intermediate_binding_evidence<
+            T: ReviewedResponderRevocationIntermediateBindingEvidence,
+        >() {
+        }
+
+        type StrongestOriginalProof =
+            BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+                AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                >,
+                ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                    'static,
+                >,
+            >;
+
+        assert_original_proof_evidence::<StrongestOriginalProof>();
+        assert_no_check_intermediate_binding_evidence::<StrongestOriginalProof>();
+        assert_intermediate_binding_evidence::<
+            BoundX509OcspReviewedResponderRevocation<StrongestOriginalProof, u8>,
+        >();
+    }
 
     fn fixture(hexadecimal: &str) -> Vec<u8> {
         let digits = hexadecimal

@@ -6896,6 +6896,7 @@ dependencies = [
 name = "gf256"
 version = "0.2.1"
 dependencies = [
+ "capability-runtime-conformance",
  "coding_adventures_sha256",
  "coding_adventures_test_bootstrap",
 ]
@@ -9056,6 +9057,11 @@ version = "0.1.0"
 [[package]]
 name = "lzw"
 version = "0.1.0"
+dependencies = [
+ "capability-runtime-conformance",
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "m68k-backend"
@@ -16162,7 +16168,7 @@ dependencies = [
 
 [[package]]
 name = "x509-ocsp-reviewed-server-revocation-binding"
-version = "0.3.0"
+version = "0.7.0"
 dependencies = [
  "coding_adventures_sha1",
  "coding_adventures_sha256",

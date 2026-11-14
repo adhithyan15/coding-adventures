@@ -1,0 +1,9 @@
+CHAR_LIT 'a'
++LIFETIME 'a
++CHAR_LIT '\\''
++CHAR_LIT '\\n'
++CHAR_LIT '\\u{1F600}'
++LIFETIME '_
++LIFETIME 'static
++CHAR_LIT '1'
++CHAR_LIT '"'

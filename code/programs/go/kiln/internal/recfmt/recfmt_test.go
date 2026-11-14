@@ -36,9 +36,12 @@ func goodRecord(action string) ShardRecord {
 	return ShardRecord{
 		BindingID: d1, Action: action, Language: "go", Status: StatusBuilt, StepsRun: 1, StepsTotal: 1,
 		Steps: []Step{{WallMS: 5, TraceBytes: 100, Clean: true}}, StepsSHA: d2, Weak: d2,
-		Record: RawRecord{Package: action, Entries: []string{"pkg:" + action}, Writes: []string{}},
+		Record:   RawRecord{Package: action, Entries: []string{"pkg:" + action}, Writes: []string{}, WritesComplete: true},
+		Complete: &complete,
 	}
 }
+
+var complete = true
 
 func mustJSON(t *testing.T, v any) []byte {
 	t.Helper()
@@ -214,20 +217,43 @@ func TestStrictDecoding(t *testing.T) {
 			t.Errorf("%s accepted", name)
 		}
 	}
-	// writes_complete is the one optional key.
-	tr := true
-	r := goodRecord("a")
-	r.Complete = &tr
-	l, err := EncodeRecord(r)
-	if err != nil {
-		t.Fatal(err)
-	}
+	// writes_complete is REQUIRED (recorder version 2, KILN04 7.1 M3): a record
+	// without it does not decode, and the writer cannot encode one.
+	l := mustLine(t, goodRecord("a"))
 	got, err := DecodeRecord(l)
 	if err != nil || got.Complete == nil || !*got.Complete {
 		t.Fatalf("writes_complete: %v %+v", err, got)
 	}
-	if got, err := DecodeRecord(mustLine(t, goodRecord("a"))); err != nil || got.Complete != nil {
-		t.Fatalf("absent writes_complete must stay absent: %v", err)
+	noKey := bytes.Replace(l, []byte(`,"writes_complete":true}`), []byte("}"), 1)
+	if bytes.Equal(noKey, l) {
+		t.Fatalf("setup: %s", l)
+	}
+	if _, err := DecodeRecord(noKey); err == nil {
+		t.Error("a record without writes_complete decoded")
+	}
+	// The writer's check: present, and equal to the classifier's own answer.
+	r := goodRecord("a")
+	r.Complete = nil
+	if _, err := EncodeRecord(r); err == nil {
+		t.Error("EncodeRecord took a missing writes_complete")
+	}
+	if err := CheckComplete(r); err == nil {
+		t.Error("CheckComplete took a missing writes_complete")
+	}
+	r = goodRecord("a")
+	f := false
+	r.Complete = &f // the classifier said true
+	if _, err := EncodeRecord(r); err == nil {
+		t.Error("EncodeRecord took a writes_complete the classifier did not say")
+	}
+	r = goodRecord("a")
+	r.Record.WritesComplete = false // the classifier said false
+	if err := CheckComplete(r); err == nil {
+		t.Error("CheckComplete took a true the classifier did not say")
+	}
+	r.Complete = CompleteOf(r.Record)
+	if err := CheckComplete(r); err != nil {
+		t.Error(err)
 	}
 }
 
@@ -543,5 +569,14 @@ func TestPartitionDigest(t *testing.T) {
 	}
 	if short(strings.Repeat("é", 100)) == "" || short("a\nb") != "a?b" {
 		t.Error("short")
+	}
+}
+
+func TestCompleteOfCopiesTheClassifiersAnswer(t *testing.T) {
+	if got := CompleteOf(RawRecord{WritesComplete: true}); got == nil || !*got {
+		t.Error("a complete record must give true")
+	}
+	if got := CompleteOf(RawRecord{}); got == nil || *got {
+		t.Error("the zero record fails closed: false, never absent")
 	}
 }

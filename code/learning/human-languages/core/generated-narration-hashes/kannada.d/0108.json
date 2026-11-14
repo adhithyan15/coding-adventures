@@ -1,19 +1,20 @@
 {
   "language": "kannada",
   "chapter": 108,
-  "sourceHash": "fnv1a64:cd91d3c7e704ca8a",
+  "sourceHash": "fnv1a64:f0d3f937351c6b8b",
   "lessonIds": [
     "KA-C108-kelage",
     "KA-C108-horage",
     "KA-C108-munde",
     "KA-C108-naduve",
-    "KA-C108-raste"
+    "KA-C108-raste",
+    "KA-C108-movement"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 6,
   "text": "kannada/narration/ch108.txt",
   "json": "kannada/narration/ch108.json",
-  "textHash": "fnv1a64:3722a2b83e473276",
-  "jsonHash": "fnv1a64:bedc420b204b0e0e",
+  "textHash": "fnv1a64:4b81bd6d32f6ff69",
+  "jsonHash": "fnv1a64:2be7b3013c853f84",
   "findings": []
 }

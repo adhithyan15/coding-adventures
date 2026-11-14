@@ -105,6 +105,71 @@ intermediate DNS, no-check, responder or intermediate revocation, complete
 revocation or Name/path validation, TLS, HTTP, OAuth, network, or live-provider
 readiness.
 
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy`
+consumes that complete strong anchor-policy proof and derives both the exact
+fully routed authenticated responder and the exact target-nearest intermediate
+through the retained non-copyable evidence. An absent intermediate
+NameConstraints extension succeeds without reading responder Subject
+Alternative Name. A present extension must be critical and decode as the
+supported permitted-and-excluded-DNS subset under separate caller-owned
+limits; every responder `dNSName` must comply. The entry point reuses the
+existing private evaluator and stable payload-free intermediate-policy errors,
+and retains only count evidence with the complete prior proof. No responder,
+SAN, intermediate, path, algorithm, key, signature, status, or time can be
+supplied independently. This policy performs no external effect and stops
+before no-check, responder or intermediate revocation, complete revocation or
+Name/path validation, TLS, HTTP, OAuth, network, or live-provider readiness.
+
+`validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy`
+consumes that complete strong intermediate-DNS proof and derives the exact
+fully routed authenticated responder only through its retained non-copyable
+evidence. The responder must carry one structurally unique
+`id-pkix-ocsp-nocheck` extension whose value is exact DER `NULL`; the entry
+point reuses the existing private evaluator and stable payload-free errors. A
+critical instance can reach this gate only when certificate-wide role policy
+already recognized the OID. No responder, extension, path, algorithm, key,
+signature, status, or time can be supplied independently. This policy performs
+no external effect and stops before responder or intermediate revocation,
+complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
+`bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation`
+is the separate authenticated-revocation alternative to that strongest-path
+no-check gate. It consumes the same complete intermediate-DNS proof plus one
+fully routed authenticated OCSP target-revocation proof, then derives the
+expected responder, target-nearest intermediate, and original server-status
+observation time exclusively through the retained evidence. Exact decoded-
+object identity and field-wise time equality are required in stable target,
+issuer, then time order. Success retains both complete non-copyable inputs;
+no raw certificate, status, freshness endpoint, path, key, signature, or time
+can be substituted. This composition performs no external effect and stops
+before policy for the added proof's responder or the retained intermediate,
+complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
+That strongest responder-revocation result is now also admitted directly to
+the existing generic retained-intermediate revocation binding boundary. A
+private repository-owned evidence adapter derives the target-nearest
+intermediate, selected reviewed root, and original server-status observation
+time only through the retained strong proof; callers cannot substitute a
+certificate, root, status proof, or time. This enables the existing stable
+target-issuer-time binding for separately authenticated intermediate status
+without adding a public API or external effect. Policy for either added OCSP
+proof's own responder, complete revocation or Name/path validation, TLS, HTTP,
+OAuth, network, and live-provider readiness remain unavailable.
+
+That strongest-path result is admitted directly to the existing generic
+`reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
+projection and
+`validate_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_anchor_dns_policy`
+gate. The private evidence adapter derives the selected reviewed root's exact
+optional constraint bytes only through the retained arbitrary-depth Name-policy
+proof; it accepts no detached certificate, root, constraint, path, signature,
+status, or time. This closes only the selected-root DNS composition boundary
+for the added responder and stops before intermediate DNS, no-check, further
+revocation, complete Name/path validation, TLS, HTTP, OAuth, network, or
+live-provider readiness.
+
 The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
 projection consumes that fully routed bound result and nominally reifies its
 already-proven exact delegated responder-to-reviewed-root path. It retains the
@@ -264,15 +329,18 @@ the responder no-check or authenticated responder-revocation branch and does
 not establish revocation policy for the second proof's own responder.
 
 `bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation`
-composes the routed no-check branch with exact intermediate status without
-duplicating the server proof. It consumes the complete routed responder
-no-check proof plus a separate fully routed, authenticated OCSP proof, derives
-the retained intermediate, selected reviewed root, and original observation
-time internally, and applies the same stable target, issuer, then time checks.
-Success retains both complete non-copyable inputs. It resolves the original
-routed responder through RFC 6960 no-check policy, but does not establish
-revocation policy for the added proof's own responder or complete revocation
-policy.
+composes either admitted routed no-check branch with exact intermediate status
+without duplicating the server proof. Private repository-owned evidence admits
+both the fixed-depth and strongest Name-policy-backed server proofs while
+preventing external substitute implementations. The entry point consumes the
+complete responder no-check proof plus a separate fully routed, authenticated
+OCSP proof, derives the retained intermediate, selected reviewed root, and
+original observation time internally, and applies the same stable target,
+issuer, then time checks. Success retains both complete non-copyable inputs.
+It resolves the original routed responder through RFC 6960 no-check policy,
+but does not establish revocation policy for the added proof's own responder
+or complete revocation policy, TLS, HTTP, OAuth, network, or live-provider
+readiness.
 
 `bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_revocation`
 provides the corresponding composition for an original responder that uses

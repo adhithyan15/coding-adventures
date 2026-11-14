@@ -1,6 +1,6 @@
 [package]
 name = "x509-ocsp-reviewed-server-revocation-binding"
-version = "0.4.0"
+version = "0.7.0"
 edition = "2021"
 description = "Exact OCSP revocation binding for fixed and routed constructed reviewed server paths"
 

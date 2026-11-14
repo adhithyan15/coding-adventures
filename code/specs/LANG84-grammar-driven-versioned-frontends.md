@@ -3112,6 +3112,12 @@ Neither recognizes the language's general token set (C3 criterion 3): the
 first deletes token types the lexer already classified, and the second
 stops at the first character that is neither whitespace nor a comment. Both
 enforce a block-comment depth budget of 256 and carry hostile probes.
+*(RS01 slice A4 verified the design on the real engine. The engine's F10
+`push` has no depth limit, so the first hook enforces the budget itself by
+leaving an over-deep run undeleted, which the grammar then refuses, until a
+`MAX_GROUP_DEPTH` check lands in the lexer. A post-tokenize hook cannot raise
+an error, so an unterminated comment is a `Parse` refusal, not a `Lex` one.
+RS01 section 4.3, "Verified by slice A4", has the evidence.)*
 
 ### R3. The preprocessor-dialect exception, token-tree form
 

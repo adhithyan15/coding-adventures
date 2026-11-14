@@ -322,7 +322,7 @@ func (m *model) buildSpawns(recs []record) *Error {
 		parent, line int
 		reason       string
 	}
-	var bad []badClone
+	var bad, untranslated []badClone
 	for i := range recs {
 		c := recs[i].call
 		if c == nil {
@@ -332,9 +332,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 		var flags string
 		switch c.name {
 		case "fork", "vfork":
-		case "clone":
+		case "clone", "clone3":
 			var r string
-			flags, share, r = analyzeClone(c.args)
+			if c.name == "clone3" {
+				flags, share, r = analyzeClone3(c.args)
+			} else {
+				flags, share, r = analyzeClone(c.args)
+			}
 			if r != "" {
 				// Judged below: the helper's own group may clone into new
 				// namespaces; nobody else may.
@@ -349,7 +353,16 @@ func (m *model) buildSpawns(recs []record) *Error {
 		if !c.ret.hasVal || c.ret.value <= 0 || c.ret.value > 1<<30 {
 			return incomplete(recs[i].line, reasonResult)
 		}
-		child := int(c.ret.value)
+		if c.ret.hasHost && (c.ret.host <= 0 || c.ret.host > 1<<30) {
+			return incomplete(recs[i].line, reasonResult)
+		}
+		child := c.ret.pid()
+		if m.opts.HelperRoot && !c.ret.hasHost {
+			// Judged below: inside the sandbox's PID namespace a returned pid is
+			// namespace-local, and without strace's translation it cannot be
+			// matched to the lines that follow.
+			untranslated = append(untranslated, badClone{recs[i].pid, recs[i].line, reasonPidnsUntranslated})
+		}
 		if _, dup := m.spawns[child]; dup || child == m.root || child == recs[i].pid {
 			return incomplete(recs[i].line, reasonPidReuse)
 		}
@@ -359,6 +372,13 @@ func (m *model) buildSpawns(recs []record) *Error {
 	for _, b := range bad {
 		if !(m.opts.HelperRoot && m.inRootGroup(b.parent)) {
 			return incomplete(b.line, b.reason)
+		}
+	}
+	// Only the helper root, in strace's own PID namespace, may return a pid
+	// without the translation annotation.
+	for _, u := range untranslated {
+		if !m.inRootGroup(u.parent) {
+			return incomplete(u.line, u.reason)
 		}
 	}
 	if m.opts.HelperRoot {
@@ -409,6 +429,52 @@ func (m *model) inRootGroup(pid int) bool {
 		m.rootMemo[p] = res
 	}
 	return res
+}
+
+// analyzeClone3 reads clone3's struct argument, which strace 6.x prints as
+//
+//	clone3({flags=A|B, child_tid=0x.., ..., tls=0x..} => {parent_tid=[N]}, 88) = N
+//
+// (the "=> {...}" part is the output annotation, absent when the call failed).
+// It returns the flags the way analyzeClone does.  Anything it cannot decode
+// exactly (not a struct, no leading flags=, a truncated struct, a second
+// argument other than the size, trailing text that is not the annotation) is
+// clone-flags: a clone3 whose flags are unknown might be anything.
+func analyzeClone3(args []string) (flags string, shareFS bool, reason string) {
+	if len(args) != 2 || !strings.HasPrefix(args[0], "{") {
+		return "", false, reasonCloneFlags
+	}
+	st := args[0]
+	depth, end := 0, -1
+	for i := 0; i < len(st) && end < 0; i++ {
+		switch st[i] {
+		case '{', '[', '(':
+			depth++
+		case '}', ']', ')':
+			depth--
+			if depth == 0 {
+				end = i
+			}
+		}
+	}
+	if end < 0 {
+		return "", false, reasonCloneFlags
+	}
+	if tail := strings.TrimSpace(st[end+1:]); tail != "" && !strings.HasPrefix(tail, "=>") {
+		return "", false, reasonCloneFlags
+	}
+	body := st[1:end]
+	if strings.Contains(body, "...") || !strings.HasPrefix(body, "flags=") {
+		return "", false, reasonCloneFlags
+	}
+	text := body[len("flags="):]
+	if k := strings.IndexByte(text, ','); k >= 0 {
+		text = text[:k]
+	}
+	if text == "" || strings.ContainsAny(text, " {}[]()") {
+		return "", false, reasonCloneFlags
+	}
+	return analyzeClone([]string{"flags=" + text})
 }
 
 // analyzeClone reads the flags= argument of a clone call.  A clone that could
@@ -526,7 +592,9 @@ func (m *model) add(p *proc) {
 	m.trace.Order = append(m.trace.Order, p.Pid)
 }
 
-func isSpawn(name string) bool { return name == "fork" || name == "vfork" || name == "clone" }
+func isSpawn(name string) bool {
+	return name == "fork" || name == "vfork" || name == "clone" || name == "clone3"
+}
 
 func (m *model) isHelperExe(path string) bool {
 	return path == m.opts.HelperExe || path == "/proc/self/exe"
@@ -564,9 +632,29 @@ func (m *model) apply(rec *record) *Error {
 	}
 	c := rec.call
 	if m.opts.HelperRoot {
+		// A successful unshare(CLONE_FS) in the init's window gives the calling
+		// thread a private working directory: stage 3b's helper does it so its
+		// setup chdirs are not a cwd-race with the Go runtime's threads.
+		if inWindow && c.name == "unshare" && c.ret.ok() && len(c.args) > 0 && unshareHasFS(c.args[0]) {
+			p.cwd.refs--
+			p.cwd = &cwdCell{path: p.cwd.path, refs: 1}
+			return nil
+		}
 		// Classification was deferred in pass 1.
 		if e := classifyName(c.name, rec.line); e != nil {
 			if inWindow {
+				if c.name == "clone3" && c.ret.ok() {
+					// A clone3 of the init's window is tolerated like clone
+					// (the Go runtime makes its threads with it), and tracked
+					// like clone: threads only, never a second process.
+					child := c.ret.pid()
+					if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
+						return incomplete(rec.line, reasonHelperSpawn)
+					}
+					if _, e := m.get(child, rec.line-1); e != nil {
+						return e
+					}
+				}
 				return nil // sandbox setup: unknown or refused is tolerated
 			}
 			return e
@@ -582,7 +670,7 @@ func (m *model) apply(rec *record) *Error {
 		}
 		// Create the child NOW, copying (or sharing) the parent's cwd as it
 		// is at this moment.
-		if _, e := m.get(int(c.ret.value), rec.line-1); e != nil {
+		if _, e := m.get(c.ret.pid(), rec.line-1); e != nil {
 			return e
 		}
 	}
@@ -641,7 +729,7 @@ func (m *model) applyHelperRoot(p *proc, rec *record) *Error {
 	}
 	switch {
 	case isSpawn(c.name) && c.ret.ok():
-		child := int(c.ret.value)
+		child := c.ret.pid()
 		if !hasFlag(m.spawns[child].flags, "CLONE_THREAD") {
 			m.rootSpawn = true
 		}
@@ -963,4 +1051,20 @@ func hasEmptyPath(text string) (bool, string) {
 		}
 	}
 	return found, ""
+}
+
+// unshareHasFS reports whether an unshare flags argument includes CLONE_FS
+// (0x200), spelled by name or as a number.  Anything it cannot decode is not
+// CLONE_FS, so a later chdir stays a cwd-race: the safe direction.
+func unshareHasFS(text string) bool {
+	for _, tok := range strings.Split(text, "|") {
+		tok = strings.TrimSpace(tok)
+		if tok == "CLONE_FS" {
+			return true
+		}
+		if n, err := strconv.ParseUint(tok, 0, 64); err == nil && n&0x200 != 0 {
+			return true
+		}
+	}
+	return false
 }

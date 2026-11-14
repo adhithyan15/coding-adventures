@@ -1,5 +1,7 @@
 package trace
 
+import "sort"
+
 // The closed table of KILN04 §4.4.
 //
 // strace's `-e trace=` filter decides what is printed; this table decides what
@@ -150,7 +152,6 @@ func buildTable() map[string]entry {
 	h("fchown", entry{kind: KindWrite, role: roleFdPath, min: 3, max: 3})
 	h("fsetxattr", entry{kind: KindWrite, role: roleFdPath, min: 5, max: 5})
 	h("fremovexattr", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
-	h("futimens", entry{kind: KindWrite, role: roleFdPath, min: 2, max: 2})
 	h("mknod", entry{kind: KindWrite, min: 3, max: 3, pth: 1})
 	h("mknodat", entry{kind: KindWrite, min: 4, max: 4, dirfd: 1, pth: 2})
 
@@ -188,6 +189,9 @@ func buildTable() map[string]entry {
 		"fsopen", "fsmount", "fsconfig", "fspick", "open_tree", "move_mount", "mount_setattr",
 		"pivot_root", "chroot", "unshare", "setns", "ptrace", "process_vm_readv",
 		"pidfd_getfd", "bpf",
+		// The sandbox filter also refuses these (KILN04 section 4.7).
+		"io_uring_enter", "io_uring_register", "process_vm_writev", "userfaultfd",
+		"kexec_load", "kexec_file_load", "perf_event_open", "add_key", "request_key", "keyctl",
 		// clone3's flags are not visible to the seccomp filter, so any clone3
 		// that reaches a trace is refused (§4.4).
 		"clone3",
@@ -198,6 +202,46 @@ func buildTable() map[string]entry {
 }
 
 func lookup(name string) entry { return table[name] }
+
+// SyscallClass names the class of a system call in the closed table: "handled",
+// "ignored" or "refused", or "" for a name the parser does not know (it would
+// report such a name as "unknown-syscall").  It lets the recorder's strace
+// argument list (package sandbox) be checked against this table.
+func SyscallClass(name string) string {
+	switch table[name].class {
+	case classHandled:
+		return "handled"
+	case classIgnored:
+		return "ignored"
+	case classRefused:
+		return "refused"
+	}
+	return ""
+}
+
+// HandledNames lists the handled class, sorted.
+func HandledNames() []string {
+	var out []string
+	for n, e := range table {
+		if e.class == classHandled {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
+// RefusedNames lists the refused class, sorted.
+func RefusedNames() []string {
+	var out []string
+	for n, e := range table {
+		if e.class == classRefused {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
 
 // classifyName returns the error for an unknown or refused name.
 func classifyName(name string, line int) *Error {

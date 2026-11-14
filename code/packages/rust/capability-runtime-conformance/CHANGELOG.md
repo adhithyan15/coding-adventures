@@ -4,6 +4,25 @@
 
 ### Fixed
 
+- No weak randomness. `random_hex()` no longer falls back to a clock/address
+  mix when `getrandom` fails or reads short; it returns an error. The private
+  directory creation reports NOT-LIVE `RCG013` ("no OS randomness"), and a
+  nonce that cannot be drawn mid-run stops the gate with a panic rather than
+  proceeding with a predictable value.
+- Private working directories are now created exclusively and removed on every
+  exit path. (1) The `rcg-scratch` / `rcg-container` directory name is
+  `<name>-<pid>-<64 random bits>` (the same source as the run nonces) and is
+  made with a non-recursive `mkdir` at mode 0700, never `create_dir_all`: with
+  `evidence_dir == None` it sits under shared `/tmp`, where a pre-planted
+  symlink at the predictable `<name>-<pid>` was followed and strace output
+  could be redirected. An existing path of any kind (symlink, file,
+  directory) is now refused and the gate reports NOT-LIVE `RCG013`; it is
+  never reused. (2) An RAII `ScratchDir` guard deletes the directory on drop,
+  so the early `NOT-LIVE` returns (no strace, strace cannot trace, no
+  `current_exe`, child will not spawn), a panic and the container ring all
+  clean up; only SIGKILL can still leave one. No control, policy, `RCG009` or
+  `RCG013` behaviour changed. Tests: in-module unit tests in `harness.rs`
+  and two new cases in `tests/selftest_fail_closed.rs`.
 - Fail closed on a missing trace. An observed run whose strace trace was
   absent, unreadable or empty used to be analysed as an empty string, i.e.
   "observed nothing, saw no violations". The main run, every control run

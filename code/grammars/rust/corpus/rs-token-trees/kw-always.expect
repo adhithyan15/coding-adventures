@@ -1,0 +1,15 @@
+KEYWORD fn
++KEYWORD let
++KEYWORD match
++KEYWORD struct
++KEYWORD abstract
++KEYWORD yield
++KEYWORD macro
++KEYWORD unsized
++NAME union
++NAME macro_rules
++NAME raw
++NAME safe
++NAME auto
++NAME default
++KEYWORD Self

@@ -1,0 +1,6 @@
+oracle: rustc 1.97.0 (2d8144b78 2026-07-07), the release's own compiler, run on the host (slice C2 pins and records toolchains).
+command: rustc --edition <E> --crate-type lib --emit=metadata FILE   # FILE is the case wrapped as: macro_rules! m { ($($t:tt)*) => {} } m!{ <case> }
+rustc: accepts 2015 2018 2021 2024; rejects none
+pair: accepts 2015 2018 2021 2024; refuses none
+RS01 4.2 case: 10
+note: A literal suffix is part of the token.

@@ -352,7 +352,7 @@ func TestNetworkStreamServerIsNotADatagramPeer(t *testing.T) {
 	c := unix("connect", "/tmp/kiln-1/s")
 	c.SockPath = "socket:[9]"
 	rec := h.run(sockEv("socket:[1]", "SOCK_STREAM"), sockEv("socket:[9]", "SOCK_DGRAM"), b, c)
-	eq(t, "reasons", rec.Reasons, "daemon:$TMPDIR/s")
+	eq(t, "reasons", noUnknown(rec.Reasons), "daemon:$TMPDIR/s")
 }
 
 // buildELFStatic is an ELF head with no PT_INTERP.

@@ -1,0 +1,6 @@
+oracle: rustc 1.97.0 (2d8144b78 2026-07-07), the release's own compiler, run on the host (slice C2 pins and records toolchains).
+command: rustc --edition <E> --crate-type lib --emit=metadata FILE   # FILE is the case wrapped as: macro_rules! m { ($($t:tt)*) => {} } m!{ <case> }
+rustc: accepts 2015 2018 2021; rejects 2024 (error: invalid string literal)
+pair: accepts 2015 2018 2021; refuses 2024 (LEX)
+RS01 4.2 case: 12
+note: Guarded strings `#"..."#` are reserved in edition 2024; earlier they are `#`, a string, `#`.

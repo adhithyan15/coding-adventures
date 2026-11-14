@@ -48,7 +48,7 @@ func weakAction() ActionJSON {
 			{"PATH", "/opt/hostedtoolcache/go/1.26.2/x64/bin:/usr/bin", 0},
 			{"TZ", "UTC", 0},
 			{"kiln:executor-args", `"-emit-results=/r.json" "-exec-wrapper=/k"`, 0},
-			{"kiln:recorder", "1", 0},
+			{"kiln:recorder", "2", 0},
 			{"kiln:root", "/home/runner/work/repo/repo", 0},
 		},
 	}

@@ -1,0 +1,6 @@
++KEYWORD fn
++NAME f
+LPAREN (
+RPAREN )
++LBRACE {
+RBRACE }
