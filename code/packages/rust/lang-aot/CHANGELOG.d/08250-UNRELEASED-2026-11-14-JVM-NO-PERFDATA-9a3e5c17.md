@@ -1,5 +1,3 @@
-# Changelog — `lang-aot`
-
 ## Unreleased - 2026-11-14 - JVM tests disable hsperfdata
 
 ### Fixed
