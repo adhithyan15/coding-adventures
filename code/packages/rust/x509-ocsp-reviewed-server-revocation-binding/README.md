@@ -71,6 +71,28 @@ then applies the same stable target-identity, issuer-identity, target-validity,
 and issuer-validity checks at the OCSP observation time. Success retains both
 complete non-copyable inputs and the two exact-time validity tokens.
 
+The additive
+`bind_x509_ocsp_routed_issuer_to_signed_accumulated_name_policy_reviewed_server_path`
+boundary consumes that same fully routed authenticated OCSP proof together
+with the complete
+`BoundX509RsaReviewedServerPathAnchorSelfSignature`. It derives the target and
+target-nearest issuer only through the signed wrapper's retained strongest
+Name-policy path, applies the same stable exact-object and observation-time
+validity checks, and retains the complete path plus reviewed-anchor
+self-signature evidence intact in the existing generic non-copyable result.
+The earlier path-only entry point remains available and unchanged. Tests use
+the public Apple/DigiCert fixture to prove success and reject byte-equal
+independently decoded target and issuer objects.
+
+This ordered signed-path bridge performs no new parsing or signature
+verification and no credential access or editing, signing, storage, clock
+acquisition, provider action, audit or trace emission, I/O, network access, or
+other external effect. It does not fetch status, add trust-anchor semantics,
+authorize the delegated responder path, establish status for every non-root
+certificate, complete Name, path, or revocation validation, provide TLS or
+HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
+
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
 network access, or other external effect. It does not fetch status, authorize
