@@ -8,6 +8,7 @@ use core::fmt;
 
 use https_reviewed_server_path_binding::{
     BoundHttpsDnsDestinationToReviewedDirectNoCheckCompleteFixedPathRevocation,
+    BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation,
     BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature,
 };
 use oauth_client_secret_http1_release::ReleasedClientSecretHttp1Request;
@@ -39,6 +40,10 @@ mod sealed {
     }
 
     pub trait DirectRevocationEvidence {
+        fn path_identity(&self) -> ReviewedPathIdentity<'_>;
+    }
+
+    pub trait NestedRevocationEvidence {
         fn path_identity(&self) -> ReviewedPathIdentity<'_>;
     }
 
@@ -76,6 +81,19 @@ pub trait DirectNoCheckCompleteFixedPathRevocationEvidence:
 }
 
 impl<T: sealed::DirectRevocationEvidence> DirectNoCheckCompleteFixedPathRevocationEvidence for T {}
+
+/// Sealed nested no-check complete fixed-path revocation evidence.
+///
+/// Only the repository-owned destination-bound nested completion whose
+/// retained server-status proof includes the exact signed reviewed path and
+/// anchor-self-signature shape implements this trait. It remains distinct
+/// from both signed reviewed server-path and direct-revocation evidence.
+pub trait NestedNoCheckCompleteFixedPathRevocationEvidence:
+    sealed::NestedRevocationEvidence
+{
+}
+
+impl<T: sealed::NestedRevocationEvidence> NestedNoCheckCompleteFixedPathRevocationEvidence for T {}
 
 impl<
         'policy,
@@ -273,6 +291,58 @@ where
 impl<
         'server_name,
         'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    > sealed::NestedRevocationEvidence
+    for BoundHttpsDnsDestinationToReviewedNestedNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        ResponderRevocation,
+        IntermediateRevocation,
+    >
+where
+    Proof: sealed::SignedReviewedServerRevocationEvidence,
+{
+    fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
+        let destination = self.destination();
+        let reviewed_server_revocation = self
+            .complete_revocation()
+            .intermediate_status_responder_no_check_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation_responder_no_check_intermediate_revocation()
+            .responder_no_check_policy()
+            .intermediate_dns_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation();
+        sealed::ReviewedPathIdentity {
+            destination: sealed::DestinationIdentity {
+                certificate: core::ptr::from_ref(destination.certificate()).cast(),
+                server_name: destination.server_name().as_str().as_bytes(),
+                host: destination.host_authority().host(),
+                port: destination.host_authority().port(),
+            },
+            target_nearest_issuer: reviewed_server_revocation.target_nearest_issuer(),
+            reviewed_anchor: reviewed_server_revocation.reviewed_anchor(),
+            processed_intermediate_count: reviewed_server_revocation.processed_intermediate_count(),
+        }
+    }
+}
+
+impl<
+        'server_name,
+        'host,
         'evidence,
         'initialized,
         'path,
@@ -371,10 +441,11 @@ impl fmt::Display for ClientSecretReviewedServerBindingError {
             Self::DestinationMismatch => formatter
                 .write_str("OAuth client-secret request and reviewed server destination mismatch"),
             Self::PathMismatch => formatter.write_str(
-                "OAuth signed reviewed server and direct revocation path identity mismatch",
+                "OAuth signed reviewed server and complete revocation path identity mismatch",
             ),
-            Self::UnsupportedPathShape => formatter
-                .write_str("OAuth direct revocation composition requires exactly one intermediate"),
+            Self::UnsupportedPathShape => formatter.write_str(
+                "OAuth complete revocation composition requires exactly one intermediate",
+            ),
         }
     }
 }
@@ -456,6 +527,31 @@ fn same_destination(
         && left.server_name.eq_ignore_ascii_case(right.server_name)
         && left.host.eq_ignore_ascii_case(right.host)
         && left.port == right.port
+}
+
+fn require_same_single_intermediate_path(
+    server_identity: sealed::ReviewedPathIdentity<'_>,
+    revocation_identity: sealed::ReviewedPathIdentity<'_>,
+) -> Result<(), ClientSecretReviewedServerBindingError> {
+    if !same_destination(server_identity.destination, revocation_identity.destination) {
+        return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
+    }
+    if server_identity.processed_intermediate_count != 1
+        || revocation_identity.processed_intermediate_count != 1
+    {
+        return Err(ClientSecretReviewedServerBindingError::UnsupportedPathShape);
+    }
+    if !core::ptr::eq(
+        server_identity.target_nearest_issuer,
+        revocation_identity.target_nearest_issuer,
+    ) || !core::ptr::eq(
+        server_identity.reviewed_anchor,
+        revocation_identity.reviewed_anchor,
+    ) {
+        return Err(ClientSecretReviewedServerBindingError::PathMismatch);
+    }
+
+    Ok(())
 }
 
 /// Audited request and signed server evidence bound to direct revocation.
@@ -548,28 +644,112 @@ where
     );
     let revocation_identity = sealed::DirectRevocationEvidence::path_identity(&direct_revocation);
 
-    if !same_destination(server_identity.destination, revocation_identity.destination) {
-        return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
-    }
-    if server_identity.processed_intermediate_count != 1
-        || revocation_identity.processed_intermediate_count != 1
-    {
-        return Err(ClientSecretReviewedServerBindingError::UnsupportedPathShape);
-    }
-    if !core::ptr::eq(
-        server_identity.target_nearest_issuer,
-        revocation_identity.target_nearest_issuer,
-    ) || !core::ptr::eq(
-        server_identity.reviewed_anchor,
-        revocation_identity.reviewed_anchor,
-    ) {
-        return Err(ClientSecretReviewedServerBindingError::PathMismatch);
-    }
+    require_same_single_intermediate_path(server_identity, revocation_identity)?;
 
     Ok(
         BoundClientSecretRequestToSignedReviewedHttpsServerAndDirectRevocation {
             request_and_reviewed_server,
             direct_revocation,
+        },
+    )
+}
+
+/// Audited request and signed server evidence bound to nested revocation.
+///
+/// This non-copyable value retains the existing complete request/server
+/// binding and the exact destination-bound nested no-check complete fixed-path
+/// revocation proof. It grants no request-byte, TLS, HTTP, I/O, or
+/// external-effect authority.
+pub struct BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation<
+    Request,
+    ReviewedServer,
+    NestedRevocation,
+> {
+    request_and_reviewed_server:
+        BoundClientSecretRequestToSignedReviewedHttpsServer<Request, ReviewedServer>,
+    nested_revocation: NestedRevocation,
+}
+
+impl<Request, ReviewedServer, NestedRevocation>
+    BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation<
+        Request,
+        ReviewedServer,
+        NestedRevocation,
+    >
+{
+    /// Return the retained complete request/signed-server binding.
+    #[must_use]
+    pub const fn request_and_reviewed_server(
+        &self,
+    ) -> &BoundClientSecretRequestToSignedReviewedHttpsServer<Request, ReviewedServer> {
+        &self.request_and_reviewed_server
+    }
+
+    /// Return the exact retained nested complete-revocation proof.
+    #[must_use]
+    pub const fn nested_revocation(&self) -> &NestedRevocation {
+        &self.nested_revocation
+    }
+}
+
+impl<Request, ReviewedServer, NestedRevocation> fmt::Debug
+    for BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation<
+        Request,
+        ReviewedServer,
+        NestedRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation")
+            .field("request_and_reviewed_server", &"[REDACTED]")
+            .field("nested_revocation", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
+}
+
+/// Bind the audited request/signed-server proof to complete nested revocation.
+///
+/// Both complete inputs are moved into the result only when their exact
+/// decoded leaf, target-nearest issuer, and reviewed-anchor objects, SNI DNS
+/// name, Host DNS name, and optional Host port agree. DNS comparisons are
+/// ASCII case-insensitive. Each retained server path must contain exactly one
+/// processed intermediate, matching the target-plus-intermediate server-chain
+/// coverage of this nested completion. This function never accesses
+/// credential-bearing request bytes and emits no audit event.
+pub fn bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation<
+    Request,
+    ReviewedServer,
+    NestedRevocation,
+>(
+    request_and_reviewed_server: BoundClientSecretRequestToSignedReviewedHttpsServer<
+        Request,
+        ReviewedServer,
+    >,
+    nested_revocation: NestedRevocation,
+) -> Result<
+    BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation<
+        Request,
+        ReviewedServer,
+        NestedRevocation,
+    >,
+    ClientSecretReviewedServerBindingError,
+>
+where
+    ReviewedServer: SignedReviewedHttpsServerEvidence,
+    NestedRevocation: NestedNoCheckCompleteFixedPathRevocationEvidence,
+{
+    let server_identity = sealed::ReviewedServerEvidence::path_identity(
+        request_and_reviewed_server.reviewed_server(),
+    );
+    let revocation_identity = sealed::NestedRevocationEvidence::path_identity(&nested_revocation);
+
+    require_same_single_intermediate_path(server_identity, revocation_identity)?;
+
+    Ok(
+        BoundClientSecretRequestToSignedReviewedHttpsServerAndNestedRevocation {
+            request_and_reviewed_server,
+            nested_revocation,
         },
     )
 }
@@ -600,6 +780,11 @@ mod tests {
         retained: u8,
     }
 
+    struct NestedRevocationEvidence {
+        identity: TestIdentity,
+        retained: u8,
+    }
+
     #[derive(Clone, Copy)]
     struct TestIdentity {
         certificate: &'static u8,
@@ -624,6 +809,12 @@ mod tests {
     }
 
     impl sealed::DirectRevocationEvidence for DirectRevocationEvidence {
+        fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
+            path_identity(self.identity)
+        }
+    }
+
+    impl sealed::NestedRevocationEvidence for NestedRevocationEvidence {
         fn path_identity(&self) -> sealed::ReviewedPathIdentity<'_> {
             path_identity(self.identity)
         }
@@ -665,6 +856,13 @@ mod tests {
         DirectRevocationEvidence {
             identity,
             retained: 11,
+        }
+    }
+
+    fn nested_revocation(identity: TestIdentity) -> NestedRevocationEvidence {
+        NestedRevocationEvidence {
+            identity,
+            retained: 13,
         }
     }
 
@@ -866,6 +1064,138 @@ mod tests {
             let error = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
                 bound_request_and_server(),
                 direct_revocation(revocation_identity),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::UnsupportedPathShape
+            );
+            assert_eq!(format!("{error:?}"), "UnsupportedPathShape");
+            assert!(!error
+                .to_string()
+                .contains(&processed_intermediate_count.to_string()));
+        }
+    }
+
+    #[test]
+    fn matching_nested_revocation_retains_every_complete_input() {
+        let mut revocation_identity = matching_identity();
+        revocation_identity.server_name = b"token.example";
+        revocation_identity.host = b"token.example";
+        let bound = bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation(
+            bound_request_and_server(),
+            nested_revocation(revocation_identity),
+        )
+        .unwrap();
+
+        assert_eq!(bound.request_and_reviewed_server().request().retained, 7);
+        assert_eq!(
+            bound
+                .request_and_reviewed_server()
+                .reviewed_server()
+                .retained,
+            9
+        );
+        assert_eq!(bound.nested_revocation().retained, 13);
+        let debug = format!("{bound:?}");
+        for payload in ["token.example", "7", "9", "13"] {
+            assert!(!debug.contains(payload));
+        }
+    }
+
+    #[test]
+    fn every_nested_revocation_destination_substitution_fails_closed() {
+        let mismatches = [
+            TestIdentity {
+                certificate: &CERTIFICATE_B,
+                ..matching_identity()
+            },
+            TestIdentity {
+                server_name: b"other.example",
+                ..matching_identity()
+            },
+            TestIdentity {
+                host: b"other.example",
+                ..matching_identity()
+            },
+            TestIdentity {
+                port: None,
+                ..matching_identity()
+            },
+        ];
+
+        for mismatch in mismatches {
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                nested_revocation(mismatch),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::DestinationMismatch
+            );
+            assert_eq!(format!("{error:?}"), "DestinationMismatch");
+            for payload in ["token.example", "other.example", "443"] {
+                assert!(!error.to_string().contains(payload));
+            }
+        }
+    }
+
+    #[test]
+    fn alternate_nested_revocation_path_substitution_fails_closed() {
+        let mismatches = [
+            TestIdentity {
+                target_nearest_issuer: &ISSUER_B,
+                ..matching_identity()
+            },
+            TestIdentity {
+                reviewed_anchor: &ANCHOR_B,
+                ..matching_identity()
+            },
+        ];
+
+        for mismatch in mismatches {
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                nested_revocation(mismatch),
+            )
+            .unwrap_err();
+            assert_eq!(error, ClientSecretReviewedServerBindingError::PathMismatch);
+            assert_eq!(format!("{error:?}"), "PathMismatch");
+            for payload in ["token.example", "issuer", "anchor"] {
+                assert!(!error.to_string().contains(payload));
+            }
+        }
+    }
+
+    #[test]
+    fn unsupported_nested_revocation_path_depth_fails_closed() {
+        for processed_intermediate_count in [0, 2] {
+            let mut server_identity = matching_identity();
+            server_identity.processed_intermediate_count = processed_intermediate_count;
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation(
+                bind_client_secret_request_to_signed_reviewed_https_server(
+                    request(matching_identity()),
+                    reviewed_server(server_identity),
+                )
+                .unwrap(),
+                nested_revocation(matching_identity()),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::UnsupportedPathShape
+            );
+            assert_eq!(format!("{error:?}"), "UnsupportedPathShape");
+            assert!(!error
+                .to_string()
+                .contains(&processed_intermediate_count.to_string()));
+
+            let mut revocation_identity = matching_identity();
+            revocation_identity.processed_intermediate_count = processed_intermediate_count;
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_nested_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                nested_revocation(revocation_identity),
             )
             .unwrap_err();
             assert_eq!(
