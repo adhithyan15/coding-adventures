@@ -1,5 +1,16 @@
 # Changelog — perl-bridge
 
+## Unreleased - Windows recipe puts Strawberry's gcc first
+
+- `tests/run-windows.ps1` now puts Strawberry Perl's own MinGW toolchain (`<root>\c\bin`) first on
+  PATH, next to its perl, the way `code\scripts\check-perl-extension-windows.ps1` already does.
+  ExtUtils::CBuilder runs whatever `gcc` is first on PATH, and in the scheduled full build
+  (which also installs Ruby and Haskell) setup-ruby's MSYS2 and ghcup's MinGW come first; a
+  mismatched gcc fails with no diagnostic, `error building xs.dll file from
+  'src/perl_bridge_shim.c'`, so this recipe failed there while passing on pull requests (no Ruby).
+  The recipe also logs which gcc it will use. Validated for syntax only; the next daily
+  full build is the real check.
+
 ## Unreleased
 
 - **Fixed (Windows, found by the first real Windows run of the smoke test):** `die`
