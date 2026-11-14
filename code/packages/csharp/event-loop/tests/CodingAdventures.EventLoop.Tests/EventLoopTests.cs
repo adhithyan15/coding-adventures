@@ -138,6 +138,8 @@ public sealed class EventLoopTests
     public async Task StopWhileIdleTerminatesLoop()
     {
         var loop = new EventLoop<int>();
+        using var running = new ManualResetEventSlim(false);
+        loop.AddSource(new RunningSignalSource(running));
         var called = false;
         loop.OnEvent(_ =>
         {
@@ -147,7 +149,7 @@ public sealed class EventLoopTests
 
         var stopTask = Task.Run(() =>
         {
-            Thread.Sleep(10);
+            Assert.True(running.Wait(30_000), "the loop never started");
             loop.Stop();
         });
 
@@ -161,10 +163,12 @@ public sealed class EventLoopTests
     public async Task StopHandleTerminatesIdleLoop()
     {
         var loop = new EventLoop<int>();
+        using var running = new ManualResetEventSlim(false);
+        loop.AddSource(new RunningSignalSource(running));
         var handle = loop.GetStopHandle();
         var stopTask = Task.Run(() =>
         {
-            Thread.Sleep(10);
+            Assert.True(running.Wait(30_000), "the loop never started");
             handle.Stop();
         });
 
@@ -191,7 +195,9 @@ public sealed class EventLoopTests
     public async Task NoEventsMeansHandlersAreNotCalled()
     {
         var loop = new EventLoop<int>();
+        using var running = new ManualResetEventSlim(false);
         loop.AddSource(new FixedSource<int>());
+        loop.AddSource(new RunningSignalSource(running));
         var count = 0;
         loop.OnEvent(_ =>
         {
@@ -201,7 +207,7 @@ public sealed class EventLoopTests
 
         var stopTask = Task.Run(() =>
         {
-            Thread.Sleep(10);
+            Assert.True(running.Wait(30_000), "the loop never started");
             loop.Stop();
         });
 
@@ -246,6 +252,20 @@ public sealed class EventLoopTests
             }
 
             return batches[_index++];
+        }
+    }
+
+    // Signals that Run() has started polling. Run() clears any earlier stop request
+    // when it begins, so a thread that wants to stop the loop must wait for this
+    // first. Stopping after a fixed sleep instead races the loop thread on a busy
+    // machine: a stop that arrives before Run() starts is erased and the loop spins
+    // forever (the F# port of this test hung a CI shard for 150 minutes).
+    private sealed class RunningSignalSource(ManualResetEventSlim running) : IEventSource<int>
+    {
+        public IReadOnlyList<int> Poll()
+        {
+            running.Set();
+            return [];
         }
     }
 

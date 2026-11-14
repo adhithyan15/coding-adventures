@@ -4930,6 +4930,27 @@ DNS or network I/O, authorize an external effect, or grant HTTPS, OAuth, or
 live-provider readiness. Those policy, protocol, transport, and effect
 compositions remain separate. Concrete HTTPS remains unavailable.
 
+A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
+complete HTTPS destination-name proof together with the strongest accumulated
+reviewed RSA server-path policy. It derives the path target only through the
+retained complete server policy and requires both inputs to retain the same
+exact decoded certificate object. A byte-equal independently decoded
+certificate therefore fails closed. Success returns one non-copyable boundary
+that retains the destination's certificate, TLS SNI, HTTP Host authority and
+SAN evidence alongside the reviewed root selection, data-driven RSA signature
+routing, certificate-wide target and issuer policy, path-length state, and the
+currently supported target and subordinate DNS/IP NameConstraints evidence.
+Stable failures and Debug output retain no certificate, hostname, authority,
+path, key, signature, algorithm, constraint, or trust-root payloads.
+
+This composition performs no certificate parsing or new validation, does not
+complete RFC 5280 Name or path validation, validate an anchor self-signature,
+check revocation, build or run TLS or HTTP, access credentials, emit provider
+or trace audit events, perform I/O, authorize an external effect, or grant
+HTTPS, OAuth, network, or live-provider readiness. Complete path/Name policy,
+revocation, repository-owned TLS/HTTP composition, and audited transport remain
+separate blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
