@@ -75,7 +75,7 @@ const (
 // requiredPre are the files every sealed `pre/` holds, besides the actions.
 var requiredPre = []string{
 	"binding.json", "build-plan.json", "exec-wrapper.json", "graph.json", "host-facts.json",
-	"inventory.json", "sandbox.json", "steps.json", "tools.json", "classify.json", "tree",
+	"inventory.json", "sandbox.json", "steps.json", "tools.json", "classify.json", "tree", "probes.json",
 }
 
 // Pre is a verified `pre/` directory.
@@ -91,7 +91,10 @@ type Pre struct {
 	Tools ToolsFile
 	// Classify is classify.json: the host roots and pinned ecosystems the
 	// classifier is given (decision P13).
-	Classify   ClassifyFile
+	Classify ClassifyFile
+	// Probes is probes.json: what the in-sandbox structure probes showed
+	// (probe.go), checked against the sandbox configuration.
+	Probes     ProbeReport
 	Config     *sandbox.Config
 	ConfigPath string
 	// Sums is the digest of every file of `pre/` (relative path, slash
@@ -141,7 +144,7 @@ func VerifyPre(dir string) (*Pre, error) {
 	// Hash every file once, keeping the bytes of the ones that are parsed.
 	kept := map[string][]byte{}
 	for _, rel := range sortedKeys(sums) {
-		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || rel == "steps.json" || rel == "classify.json" || strings.HasPrefix(rel, "actions/")
+		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || rel == "steps.json" || rel == "classify.json" || rel == "probes.json" || strings.HasPrefix(rel, "actions/")
 		data, sum, err := hashPreFile(filepath.Join(pre, filepath.FromSlash(rel)), keep)
 		if err != nil {
 			return nil, fmt.Errorf("pre/%s: %w", rel, err)
@@ -178,6 +181,9 @@ func VerifyPre(dir string) (*Pre, error) {
 	if err != nil {
 		return nil, fmt.Errorf("pre/steps.json: %w", err)
 	}
+	if p.Probes, err = DecodeProbes(kept["probes.json"]); err != nil {
+		return nil, fmt.Errorf("pre/probes.json: %w", err)
+	}
 	for rel, data := range kept {
 		if !strings.HasPrefix(rel, "actions/") {
 			continue
@@ -199,6 +205,9 @@ func VerifyPre(dir string) (*Pre, error) {
 			return nil, fmt.Errorf("pre/%s: %w", rel, err)
 		}
 		p.actions[a.Action] = a
+	}
+	if err := CheckProbeReport(p.Config, p.Probes, p.Actions()); err != nil {
+		return nil, fmt.Errorf("pre/probes.json: %w", err)
 	}
 	return p, nil
 }

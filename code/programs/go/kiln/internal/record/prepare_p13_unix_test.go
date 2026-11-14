@@ -175,7 +175,7 @@ func TestAnActionWithARefusalAndNoToolsEncodes(t *testing.T) {
 // --- VerifyPre holds the new files to the same standard ---------------------
 
 func TestVerifyPreCatchesTamperingWithTheNewFiles(t *testing.T) {
-	for _, rel := range []string{"tree", "classify.json"} {
+	for _, rel := range []string{"tree", "classify.json", "probes.json"} {
 		t.Run(rel+" modified", func(t *testing.T) {
 			f := newStepFix(t)
 			f.p.writable()

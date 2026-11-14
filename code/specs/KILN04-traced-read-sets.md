@@ -743,7 +743,8 @@ end of each action. **2b-2b-ii** is `kiln record collect`: assembly, the
 post-build `VerifyTree`, `git fsck` and `Inventory`, the header counts, the
 `seq` contiguity check, the re-hash and final-newline checks, the shard writer
 and the full end-to-end test. **2b-2c** is the gates and toolchain probes, the
-in-sandbox socket probe and the `daemon-left` fixture. Each item of the two
+in-sandbox structure probe (decision P14, done in 2b-2c-2) and the `daemon-left`
+fixture. Each item of the two
 "Pending for PR 2b" lists below is marked **2b-1** (decided and implemented by
 `prepare`), **2b-2a** (decided and implemented by `step`), **2b-2b-i**
 (decided by P13, implemented by `step` and `prepare`), **2b-2b-ii** (decided
@@ -902,10 +903,13 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   pinned `strace`, which starts the pinned Kiln; gates and probes are
   **2b-2c**, where this is to be confirmed again). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
   checks) runs repository code outside a traced step: untraced repository code
-  can write the tree with no trace at all. `prepare` runs no probe and no gate
-  (gates are **2b-2c**, decision P7); the only programs it starts are Git, the
-  build tool and `strace --version`, all resolved outside the checkout
-  (decision P3).
+  can write the tree with no trace at all. `prepare` runs no gate
+  (gates are **2b-2c**, decision P7) and no toolchain probe. Since **2b-2c-2** it
+  does run the in-sandbox structure probe (decision P14), but only as
+  `strace ... kiln sandbox-exec -- <fixed argv>`, every program of it inside the
+  sandbox and traced; the checkout's code is never run. The programs it starts
+  are Git, the build tool, `strace --version` and those four probe runs, all
+  resolved outside the checkout (decision P3).
 - **Done** (#19324). `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
   record has any content: a record that ran nothing was never classified.
 - **2b-2a** (the sidecar's `step_netns`) and **2b-2b-i** (`step`'s epilogue copies it into
@@ -1007,6 +1011,7 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
 pre/tools.json  pre/classify.json  pre/tree                        (the last two: P13)
+pre/probes.json                                                     (P14)
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
@@ -1022,7 +1027,7 @@ integrity comes only from the files being unreachable from the sandbox, and from
 `step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b-ii, both done, list below).
 `traces/` is created by `prepare` (0700, outside the sealed `pre/`, holding
 `traces/.seq` = `0\n`; `prepare` also refuses a tree file over the 128 MiB a
-sealed file is read back at), its per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2c.
+sealed file is read back at), its per-action directories by `step` (2b-2a, decision P12), and `probe/` (0700, the traces of the structure probe, decision P14) by `prepare`. `probe/` is never sealed, never read by `collect` and never uploaded.
 
 **P5. Refusals that void the shard before it starts.** After `VerifyTree`
 (which supplies the commit) and before any export:
@@ -1090,9 +1095,9 @@ on it, judged by the effective uid, gid and supplementary groups against the
 mode bits and confirmed by `access(2)`, unknown meaning searchable (a step is the
 same user and cannot reach anything in it); a directory with
 `--x` and no `r` hides its names but not a socket at a known name, so it fails the
-scan, as does any other error. The scan of the sandbox's own view (the in-sandbox
-probe, design step 8) needs the supervisor and `strace`, so it is **2b-2c**; it is
-also what covers content a host mount point shadows beneath an `ro_roots` entry
+scan, as does any other error. The scan of the sandbox's own view is the in-sandbox
+structure probe (decision P14, **2b-2c-2**); it is also what covers content a host
+mount point shadows beneath an `ro_roots` entry, the checkout or a state root
 (§14).
 
 **P9. The sandbox configuration.** `pre/sandbox.json` is generated from
@@ -1656,6 +1661,80 @@ test pins both). For a link that was already there (tracked, or left by an
 earlier action) an `open` is caught late as `unstable-path` and an unknown write
 set; the other calls are not. Classifying at the action's end closes both, and
 host state roots as well.
+
+**P14. The in-sandbox structure probe (stage 4 PR 2b-2c-2, design step 8).**
+After `sandbox.json` is written and `Config.CheckHost` has passed, and before
+any action file is written, `prepare` runs four probes in the REAL sandbox
+under the real `strace`, started exactly as `kiln record step` starts a step
+(`StraceArgs("/proc/self/fd/5")`, `--config-sha256`, `--stdout-fd 3 --stderr-fd
+4`, the working directory `cfg.PackageDir(first action)`, the environment of
+`stepProcessEnv`), but with a fixed argv and no shell:
+
+| Name | argv | Must show |
+|---|---|---|
+| `pipes` | `readlink /proc/self/fd/1 /proc/self/fd/2` | exactly two lines, each `pipe:[N]` |
+| `walk` | `find / ( -path /proc -o -path <each ro_root> -o -path <repo_root> ) -prune -o ( -type s -o -type p ) -print` | no output (glob characters of a root are escaped) |
+| `shadow` | `find <mounts...> -xdev ( -type s -o -type p ) -print` | no output; run only when `ShadowedMounts` is not empty |
+| `signals` | `sh -c 'sleep 300 & sleep 1; echo started'` | stdout `started\n`; `traced.DaemonLeft` true; finished in under 30 s |
+
+`ShadowedMounts(cfg)` is the host's mount points (mountinfo) strictly inside a
+non-symlink `ro_roots` entry, `repo_root` or a state root, sorted, keeping only
+the outermost of nested ones (beneath a shadowed directory the inner mount point
+may not exist in the sandbox, and the outer walk covers it; the report check
+refuses a nested pair); an unreadable mountinfo, or more than 256 entries, is an
+error. The `signals` run waits one
+second after starting its sleeper, so the namespace's SIGKILL does not land while
+the sleeper is still in `execve` or the loader (that leaves an unresumed call in
+the trace and fails the probe at random). It is a
+self-check of the tracer: a strace that cannot print "killed by" lines (it needs
+`-e signal=all`, D19) cannot show a daemon, and `daemon-left` would never fire.
+
+Every run is checked strictly, and any failure fails `prepare` with nothing
+sealed: strace started, was not signalled, exited 0 and wrote nothing to its
+stdout or stderr; the trace was not truncated (cap 64 MiB), no pipe was held
+open by a survivor, and the step wrote nothing to its stderr; the trace parses in
+helper mode and passes the parse half of G7 (`parseHelperTrace`, shared with
+`step`: both digests are the sealed configuration's); the step's own `execve`
+has exactly the probe's argv and the step exited 0; **no event of kind `write`**;
+and `InitExitLine > 0`. Each probe has 60 s and all of them 10 minutes (a
+deadline kills strace, and `--kill-on-exit` every tracee). After the last run,
+tmpdir must be empty and every state root absent or an empty directory, or the
+shard is `unscrubbed:state-preloaded`.
+
+`pre/probes.json` is sealed, compact, with no trailing newline, and decoded
+strictly (the bytes must equal what `EncodeProbes` writes for what they say):
+
+```json
+{"schema":"kiln-record-probes/1","action":"<first>","shadowed":[...],
+ "runs":[{"name","argv","exit","trace_bytes","trace_sha256"}],"toolchains":[]}
+```
+
+`toolchains` is reserved for the toolchain probes (PR 3) and is empty. `VerifyPre`
+decodes it and requires it to be exactly what the probe list for the sealed
+configuration is (names, order, argv, exit 0, a trace size and digest), so a
+dropped `pipes`, `walk` or `signals` probe is refused by every later command.
+`shadowed` itself is the probe's claim (sealed, but `VerifyPre` cannot recompute
+the host's mount points), so the `shadow` run is the one that can be absent
+unnoticed. `<dir>/probe/<name>.trace`
+(created `O_EXCL`, directory `0700`) holds the traces for whoever debugs a failed
+run; the sealed digest says which file is meant. A shard with no action runs no
+probe and seals the report with an empty `action` and no runs. The binding is
+unchanged (D4): `SEALED` covers `probes.json`.
+
+*The kernel may close this risk outright.* In a new user and mount namespace the
+inherited mounts are locked, and a non-recursive bind (`MsBind`, which is how the
+sandbox binds every root) of a directory that has a locked child mount fails
+(`has_locked_children` in `fs/namespace.c`). So a host mount point inside an
+`ro_roots` entry, the checkout or a state root is expected to make the sandbox
+refuse to start, and `prepare` to fail on the first probe (strace exit 125, the
+helper's message in the quoted step output): fail-closed, with no probe needed.
+The `shadow` probe is then defence in depth. `TestSandboxRecordProbe` accepts
+exactly either outcome for a FIFO hidden beneath a tmpfs and logs
+`PROBE: shadow-outcome=...`; the first CI run says which applies.
+
+*Residue.* The probe is a sample of the host's state at `prepare`, not a lock:
+a socket created later, by something outside the sandbox, in a place the sandbox
+binds, is the host scan's and the runner's business (§14).
 
 ### 4.7 Sandbox decisions (stage 3b)
 
@@ -3511,7 +3590,9 @@ roots a running action read in its latest trace.
 
 **Before recording.** The `kiln-record` probe (D15) must also run that host
 scan for sockets and FIFOs over the real configuration's `ro_roots`, because the
-in-sandbox walk does not look inside them. The sandbox tests skip where the kernel refuses
+in-sandbox walk does not look inside them. (Done by `prepare`: the host scan, P8,
+and the in-sandbox structure probe, P14, which is the trivial step through
+`kiln sandbox-exec` the next sentences ask for, and more.) The sandbox tests skip where the kernel refuses
 unprivileged namespaces, and a runner image, kernel or `strace` can change
 under a green CI. The `kiln-record` job (stage 4) must therefore run the same
 probe before it records anything: a trivial step through `kiln sandbox-exec`
@@ -3531,8 +3612,11 @@ These are known and named. They are measured rather than closed.
 - **Content shadowed beneath a host mount point.** The host scan skips a
   directory only when mountinfo lists it as a mount point, and the sandbox binds
   an `ro_roots` entry non-recursively, so what the mount hides on the host is
-  what the step sees. That is not scanned on the host; the in-sandbox probe of
-  stage 4 PR 2b-2c (a walk of the sandbox's own view) covers it.
+  what the step sees. That is not scanned on the host; the `shadow` run of the
+  in-sandbox structure probe (decision P14, stage 4 PR 2b-2c-2: a `find -xdev`
+  under every such mount point, in the sandbox's own view) covers it. The kernel's locked-mount rule is also expected to make such a mount
+  fail every step (the sandbox cannot bind the root: P14), which is fail-closed;
+  the probe is defence in depth, and the CI outcome confirms which applies.
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above

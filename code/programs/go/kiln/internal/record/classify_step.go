@@ -500,7 +500,32 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string,
 	if !sc.Started {
 		return nil, "the step did not start"
 	}
-	f, err := openNoFollow(StepFile(pre.Dir, action, step, "trace"))
+	tr, why := parseHelperTrace(StepFile(pre.Dir, action, step, "trace"), pre.Config.KilnExe, pkgDir,
+		pre.Binding.SandboxConfigSHA256, sc.RootStatus, sc.Exit125, limits)
+	if why != "" {
+		return nil, why
+	}
+	return tr, ""
+}
+
+// parseHelperTrace is the parse half of G7 for ONE helper trace file: it opens
+// the trace without following a symlink, parses it in helper mode, and checks
+// the facts the sandbox's own setup leaves in it. A reason is returned instead
+// of an error, for the sidecar's `parse_reasons`.
+//
+//	path        the trace file
+//	kilnExe     the sandbox helper binary the trace must show (kiln_exe)
+//	cwd         the directory strace was started in
+//	wantSHA     the sealed sandbox configuration's digest: the root's
+//	            --config-sha256 and the init's --sha256 must both be it
+//	rootStatus  the traced root's exit status (the strace exit code)
+//	exit125     the root exited 125: a missing step exec then means "the sandbox
+//	            refused", not "the trace is damaged"
+//
+// `step` calls it per step; the structure probes (probe_run.go) call it per
+// probe run, so both are held to exactly the same rules.
+func parseHelperTrace(path, kilnExe, cwd, wantSHA string, rootStatus int, exit125 bool, limits trace.Limits) (*trace.Trace, string) {
+	f, err := openNoFollow(path)
 	if err != nil {
 		return nil, "the trace cannot be opened"
 	}
@@ -508,36 +533,35 @@ func parseStep(pre *Pre, action string, step int, sc StepSidecar, pkgDir string,
 	if st, err := f.Stat(); err != nil || !st.Mode().IsRegular() {
 		return nil, "the trace is not a regular file"
 	}
-	tr, err := trace.ParseOptions(f, pkgDir, trace.Options{Limits: limits, HelperRoot: true, HelperExe: pre.Config.KilnExe})
+	tr, err := trace.ParseOptions(f, cwd, trace.Options{Limits: limits, HelperRoot: true, HelperExe: kilnExe})
 	if err != nil {
 		var te *trace.Error
 		// Exit status 125 with no step exec in the trace is the sandbox refusing
 		// to start the step: the parser says "helper-no-init" when the root died
 		// before it made the init child and "helper-no-exec" when the init died
 		// before the step.
-		if sc.Exit125 && errors.As(err, &te) && (te.Reason == "helper-no-exec" || te.Reason == "helper-no-init") {
+		if exit125 && errors.As(err, &te) && (te.Reason == "helper-no-exec" || te.Reason == "helper-no-init") {
 			return nil, "sandbox-refused"
 		}
 		return nil, traced.Sanitize(err.Error())
 	}
 	if tr.StepEvent() == nil {
-		if sc.Exit125 {
+		if exit125 {
 			return nil, "sandbox-refused"
 		}
 		return nil, "the step's own execve is not in the trace"
 	}
-	if root := tr.Procs[tr.RootPid]; root == nil || root.Exit == nil || root.Exit.Killed || root.Exit.Code != sc.RootStatus {
+	if root := tr.Procs[tr.RootPid]; root == nil || root.Exit == nil || root.Exit.Killed || root.Exit.Code != rootStatus {
 		return nil, "the root's exit line is not the sidecar's root_status"
 	}
-	want := pre.Binding.SandboxConfigSHA256
 	if got, ok := flagValue(tr.RootExecArgv, "--config-sha256"); !ok {
 		return nil, "the root's --config-sha256 cannot be read from the trace"
-	} else if got != want {
+	} else if got != wantSHA {
 		return nil, "the root ran with another --config-sha256 than the sealed configuration's"
 	}
 	if got, ok := flagValue(tr.InitExecArgv, "--sha256"); !ok {
 		return nil, "the init's --sha256 cannot be read from the trace"
-	} else if got != want {
+	} else if got != wantSHA {
 		return nil, "the init read another configuration than the sealed one"
 	}
 	return tr, ""

@@ -43,9 +43,24 @@ REQUIRED = (
     "TestSandboxRecordStep",
     "TestSandboxRecordCollect",
     "TestSandboxStraceSignals",
+    "TestSandboxRecordProbe",
 )
 
 FINAL = {"pass", "fail", "skip"}
+
+# Facts a PASSING test wants in the CI log (a t.Log line that holds one of these
+# markers).  Only these are printed, bounded, so the log stays readable.
+FACT_MARKERS = ("F2:", "PROBE:")
+MAX_FACT_LINES = 20
+MAX_FACT_CHARS = 300
+# Every printed line of test output starts with this, so no line of a test's
+# output can begin with "::" and be taken for a GitHub workflow command.
+LOG_PREFIX = "  "
+
+
+def log_lines(text: str) -> list[str]:
+    """The lines of a piece of test output, each safe to print."""
+    return [LOG_PREFIX + line for line in text.splitlines() or [""]]
 
 
 def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
@@ -62,10 +77,39 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
         if not test:
             continue
         if event.get("Action") == "output":
-            out.setdefault(test, []).append(event.get("Output", "").rstrip("\n"))
+            out.setdefault(test, []).extend(log_lines(event.get("Output", "")))
         elif event.get("Action") in FINAL:
             final[test] = event["Action"]
     return {t: o[-limit:] for t, o in out.items() if final.get(t) == "fail"}
+
+
+def passing_facts(lines: list[str]) -> dict[str, list[str]]:
+    """The marked output lines of every test that passed: at most MAX_FACT_LINES
+    in all, each cut to MAX_FACT_CHARS."""
+    final: dict[str, str] = {}
+    found: dict[str, list[str]] = {}
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        test = event.get("Test")
+        if not test:
+            continue
+        if event.get("Action") == "output":
+            for text in event.get("Output", "").splitlines():
+                if any(m in text for m in FACT_MARKERS):
+                    found.setdefault(test, []).append(LOG_PREFIX + text.strip()[:MAX_FACT_CHARS])
+        elif event.get("Action") in FINAL:
+            final[test] = event["Action"]
+    out: dict[str, list[str]] = {}
+    budget = MAX_FACT_LINES
+    for test in sorted(found):
+        if final.get(test) != "pass" or budget <= 0:
+            continue
+        out[test] = found[test][:budget]
+        budget -= len(out[test])
+    return out
 
 
 def check(lines: list[str]) -> list[str]:
@@ -115,6 +159,10 @@ def main(argv: list[str]) -> int:
     for test, output in sorted(failing_output(lines).items()):
         print(f"::group::output of failing test {test}")
         print("\n".join(output))
+        print("::endgroup::")
+    for test, facts in passing_facts(lines).items():
+        print(f"::group::facts logged by passing test {test}")
+        print("\n".join(facts))
         print("::endgroup::")
     for problem in problems:
         print(f"::error::{problem}")

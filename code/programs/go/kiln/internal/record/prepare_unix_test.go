@@ -54,6 +54,10 @@ type prep struct {
 	files     map[string]string
 	links     map[string]string // tracked symlinks to add: path -> link text
 	repoDest  string            // when set, the repository is made there, not in a t.TempDir()
+	// The structure probe is a fake (Options.Structure): unit tests of prepare,
+	// step and collect never start a sandbox, a strace or a sleeper.
+	probeIn []ProbeInput                          // what it was given, one per call
+	probeFn func(ProbeInput) (ProbeReport, error) // replaces the default report
 }
 
 const fixtureToolchains = `{
@@ -266,8 +270,32 @@ func (p *prep) options() Options {
 			}
 			return "strace -- version 6.8", nil
 		},
-		Kernel: func() (string, error) { return "6.8.0-test", nil },
+		Kernel:    func() (string, error) { return "6.8.0-test", nil },
+		Structure: p.structure,
 	}
+}
+
+// structure is the fake Options.Structure: it records its input and reports
+// exactly the runs ProbeSpecs says a real probe would make, each "passing", so
+// the checks prepare applies to the report are the real ones.
+func (p *prep) structure(in ProbeInput) (ProbeReport, error) {
+	p.probeIn = append(p.probeIn, in)
+	if p.probeFn != nil {
+		return p.probeFn(in)
+	}
+	return fakeProbeReport(in), nil
+}
+
+// fakeProbeReport is a valid report for the input, with no shadowed mount.
+func fakeProbeReport(in ProbeInput) ProbeReport {
+	rep := ProbeReport{Schema: ProbesSchema, Action: in.Action, Shadowed: []string{}, Runs: []ProbeRunRecord{}}
+	if in.Action == "" {
+		return rep
+	}
+	for _, sp := range ProbeSpecs(in.Cfg, nil) {
+		rep.Runs = append(rep.Runs, ProbeRunRecord{Name: sp.Name, Argv: sp.Argv, Exit: 0, TraceBytes: 100, TraceSHA256: strings.Repeat("a", 64)})
+	}
+	return rep
 }
 
 // writable makes a sealed record directory removable again, so the temp

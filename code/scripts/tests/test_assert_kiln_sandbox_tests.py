@@ -129,7 +129,32 @@ class CiWiring(unittest.TestCase):
             json.dumps({"Action": "output", "Test": "TestSandboxFilesystem", "Output": "fine\n"}),
             json.dumps({"Action": "pass", "Test": "TestSandboxFilesystem"}),
         ]
-        self.assertEqual(mod.failing_output(lines), {"TestSandboxNoHostIPC": ["boom: exit 125"]})
+        self.assertEqual(mod.failing_output(lines), {"TestSandboxNoHostIPC": ["  boom: exit 125"]})
+
+    def test_passing_facts_are_surfaced_and_bounded(self) -> None:
+        def out(test: str, text: str) -> str:
+            return json.dumps({"Action": "output", "Test": test, "Output": text + "\n"})
+
+        lines = [out("TestA/sub", "    x_test.go:1: F2: init order " + "y" * 400), out("TestA/sub", "plain line")]
+        lines += [out("TestA/sub", f"PROBE: fact {i}") for i in range(30)]
+        lines += [json.dumps({"Action": "pass", "Test": "TestA/sub"})]
+        lines += [out("TestB", "F2: from a failing test"), json.dumps({"Action": "fail", "Test": "TestB"})]
+        facts = mod.passing_facts(lines)
+        self.assertEqual(list(facts), ["TestA/sub"])
+        self.assertEqual(len(facts["TestA/sub"]), 20)
+        self.assertTrue(all(len(f) <= 302 and ("F2:" in f or "PROBE:" in f) for f in facts["TestA/sub"]))
+
+    def test_output_cannot_inject_workflow_commands(self) -> None:
+        def out(test: str, text: str) -> str:
+            return json.dumps({"Action": "output", "Test": test, "Output": text})
+
+        lines = [out("TestA", "F2: x\n::error::boom\n"), json.dumps({"Action": "pass", "Test": "TestA"})]
+        lines += [out("TestB", "::error::from a failure\nplain\n"), json.dumps({"Action": "fail", "Test": "TestB"})]
+        printed = [line for facts in mod.passing_facts(lines).values() for line in facts]
+        printed += [line for text in mod.failing_output(lines).values() for line in text]
+        self.assertTrue(printed)
+        self.assertFalse([line for line in printed if line.startswith("::")], printed)
+        self.assertEqual(mod.passing_facts(lines), {"TestA": ["  F2: x"]})
 
     def test_ci_gate_waits_for_the_job_and_rejects_nonsuccess(self) -> None:
         gate = CI.split("\n  ci-gate:\n", 1)[1]
