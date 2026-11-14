@@ -5057,13 +5057,21 @@ callback, path, status result, or trust assertion. This prepares a later HTTPS
 destination-to-complete-revocation binding without moving or duplicating the
 retained direct-revocation proof.
 
+The nested no-check fixed-path completion carries the same sealed target-
+evidence projection through its deeper retained proof graph. It derives the
+server leaf only from the original reviewed-server proof inside the complete
+nested composition and returns that same exact decoded certificate object.
+No detached certificate, callback-shaped claim, path, status result, or trust
+assertion can be substituted. This is target projection only; binding an HTTPS
+destination to this nested completion remains a separate slice.
+
 This projection performs no parsing, new validation, cryptography, credential
 access or editing, signing, storage, clock acquisition, provider action, audit
 event, trace emission, I/O, network access, or other external effect. It does
 not bind an HTTPS destination, generalize revocation or path construction,
 build or run TLS or HTTP, authorize OAuth transport, or grant network
-authority. Other complete fixed-path revocation branches and the final HTTPS
-composition remain separate slices. Concrete HTTPS and live-provider
+authority. The remaining complete fixed-path revocation branches and the final
+HTTPS composition remain separate slices. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
 The existing bounded `https-reviewed-server-path-binding` prerequisite now
