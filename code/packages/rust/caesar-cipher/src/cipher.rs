@@ -137,7 +137,7 @@ pub fn decrypt(text: &str, shift: i32) -> String {
     //   -25..=0 and can never overflow.  Shifts are only meaningful modulo 26
     //   anyway, so nothing is lost.
     //
-    //   shift = i32::MIN  =>  rem_euclid(26) = 16  =>  encrypt(text, -16)
+    //   shift = i32::MIN  =>  rem_euclid(26) = 2   =>  encrypt(text, -2)
     encrypt(text, -shift.rem_euclid(26))
 }
 
