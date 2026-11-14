@@ -38,6 +38,7 @@ pub struct BindingManifest {
 /// ```text
 /// u8 u16 u32 u64 i8 i16 i32 i64 usize     HostTy::Int
 /// bool  bytes                              HostTy::Bool, HostTy::Bytes
+/// bytes<32>                                HostTy::BytesN (the array `[u8; 32]`)
 /// (u64,usize)                              HostTy::Tuple   (a Rust tuple)
 /// opt<u8>  list<u32>                       Option<u8>, Vec<u32>
 /// Tlv                                      HostTy::Named   (a declared struct/enum)
@@ -47,6 +48,9 @@ pub enum HostTy {
     Int(String),
     Bool,
     Bytes,
+    /// `bytes<N>`: the fixed-length array `[u8; N]` (VER04j section 14.4).  It
+    /// fits only a Warrant `Bytes<N>` with the same literal `N`.
+    BytesN(u64),
     Tuple(Vec<HostTy>),
     Opt(Box<HostTy>),
     List(Box<HostTy>),
@@ -95,6 +99,9 @@ pub struct OpHost {
     pub args: Option<Vec<HostTy>>,
     pub ret: Option<HostTy>,
     pub errors: Option<HostErrors>,
+    /// `err_any=CASE` (VER04j section 14.4): the export returns `Result<T, E>`
+    /// for an opaque `E`, and every `Err(_)` is the Warrant error case `CASE`.
+    pub err_any: Option<String>,
 }
 
 /// Everything the bindings file says about host composites (VER04j section 4.6).
@@ -132,7 +139,7 @@ pub fn split_top(text: &str) -> Vec<&str> {
 /// Parse one host type expression.
 ///
 /// ```text
-/// ht = "u8" | ... | "usize" | "bool" | "bytes"
+/// ht = "u8" | ... | "usize" | "bool" | "bytes" | "bytes<" N ">"
 ///    | "(" ht { "," ht } ")"  |  "opt<" ht ">"  |  "list<" ht ">"  |  NAME
 /// ```
 pub fn parse_host_ty(text: &str) -> Result<HostTy, String> {
@@ -150,6 +157,22 @@ fn parse_host_ty_at(t: &str, depth: usize) -> Result<HostTy, String> {
         "bool" => return Ok(HostTy::Bool),
         "bytes" => return Ok(HostTy::Bytes),
         _ => {}
+    }
+    if let Some(inner) = t.strip_prefix("bytes<").and_then(|r| r.strip_suffix('>')) {
+        // A plain decimal literal: no sign, no leading zero, no space, and at
+        // most the generator's fixed-width cap (the width becomes a Rust array
+        // type in generated source, so nothing else may reach it).
+        let plain = !inner.is_empty()
+            && inner.bytes().all(|b| b.is_ascii_digit())
+            && (inner == "0" || !inner.starts_with('0'));
+        let n = plain.then(|| inner.parse::<u64>().ok()).flatten();
+        return match n {
+            Some(n) if n <= crate::evidence::MAX_FIXED_WIDTH => Ok(HostTy::BytesN(n)),
+            _ => Err(format!(
+                "`{t}`: the width of bytes<N> is a decimal literal from 0 to {}",
+                crate::evidence::MAX_FIXED_WIDTH
+            )),
+        };
     }
     if let Some(inner) = t.strip_prefix("opt<").and_then(|r| r.strip_suffix('>')) {
         return Ok(HostTy::Opt(Box::new(parse_host_ty_at(inner.trim(), depth + 1)?)));
@@ -480,6 +503,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 let mut not_live = None;
                 let mut ret = None;
                 let mut host_errors = None;
+                let mut err_any = None;
                 for w in words {
                     let (k, v) = w.split_once('=').unwrap_or((w, ""));
                     let list = || -> Vec<String> {
@@ -499,6 +523,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                         "errors" if !v.is_empty() => {
                             host_errors = Some(parse_host_errors(v).map_err(at)?)
                         }
+                        "err_any" if is_rust_identifier(v) => err_any = Some(v.to_string()),
                         "faults" if !v.is_empty() => faults = list(),
                         "proofs_not_live" if !v.is_empty() => not_live = Some(v.to_string()),
                         _ => return Err(at(format!("op `{name}`: unknown or malformed option `{w}`"))),
@@ -522,13 +547,19 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
                 if let Some(a) = args {
                     arg_types.insert(name.to_string(), a);
                 }
-                if host_args.is_some() || ret.is_some() || host_errors.is_some() {
+                if err_any.is_some() && (error.is_some() || host_errors.is_some()) {
+                    return Err(at(format!(
+                        "op `{name}`: err_any= excludes error= and errors="
+                    )));
+                }
+                if host_args.is_some() || ret.is_some() || host_errors.is_some() || err_any.is_some() {
                     hosts.ops.insert(
                         name.to_string(),
                         OpHost {
                             args: host_args,
                             ret,
                             errors: host_errors,
+                            err_any,
                         },
                     );
                 }

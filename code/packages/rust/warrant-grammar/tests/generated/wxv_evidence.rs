@@ -1254,6 +1254,7 @@ fn describe(tys: &[Ty], names: &[&str]) -> String {
                 Ty::Fx(f) | Ty::FxEdge(f) => (format!("{f:?}"), "edge"),
                 Ty::NatCount => ("Nat".to_string(), "count"),
                 Ty::Nat => ("Nat".to_string(), "set"),
+                Ty::BytesN(n) => (format!("{t:?}"), if *n <= 1 { "full" } else { "sample" }),
                 other => (format!("{other:?}"), "set"),
             };
             format!("{n}: {ty} {kind}({size})")
@@ -1272,6 +1273,7 @@ fn describe_ty(ty: Ty) -> String {
         Ty::Fx(f) | Ty::FxEdge(f) => leaf(format!("{f:?}"), "edge"),
         Ty::NatCount => leaf("Nat".to_string(), "count"),
         Ty::Nat => leaf("Nat".to_string(), "set"),
+        Ty::BytesN(n) => leaf(format!("{ty:?}"), if n <= 1 { "full" } else { "sample" }),
         Ty::Tuple(cs) => {
             let parts: Vec<String> = cs.iter().map(|c| describe_ty(*c)).collect();
             format!("tuple({}) size({size})", parts.join(", "))
@@ -2263,7 +2265,7 @@ fn field_pos(ty: &str, f: &str) -> usize {
 fn op_digest(_w: &[u64], args: &[V], fault: Fault) -> V {
     let fault = fault_for("digest", fault);
     let p0 = args[0].bytes();
-    let v: V = V::Bytes((digest(p0)).to_vec());
+    let v: V = { let b1: Vec<u8> = (digest(p0)).to_vec(); if b1.len() != 32 { panic!("operation `digest`: the export returned {} bytes for a Bytes<32> result, which is not 32 bytes", b1.len()); } V::Bytes(b1) };
     match fault {
         Fault::FlipResultBit => fault_flip_result_bit(v),
         Fault::DropLastResultByte => fault_drop_last_result_byte(v),
