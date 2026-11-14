@@ -23,6 +23,13 @@ last bullet now points to VER04m. Why: without them the sequential layer, `pixel
 the CPU step cannot be bound. No existing rule is weakened and no v0 or wave-3 meaning changes;
 a tuple is still not an admissible `inout` or record-field type.
 
+**Amendment (2026-11-14), WX-G implementation (`claude/warrant-wx-g`):** section 4.13 (new) records
+what the first WX-G implementation pins down that sections 4.2 to 4.9 left open: the exact
+`inout=` binding syntax and the host forms implemented in this slice, where monitoring sits, the
+note texts, the fault applicability checks, the scope of the corpus requirement (4.9), and one
+rule-order sentence of 4.2 that is vacuous. No rule of 4.2 to 4.9 is weakened and no diagnostic is
+added.
+
 **Parent:** [VER04 §2–§8](VER04-warrant-language.md),
 [VER04d](VER04d-warrant-type-system.md), [VER04e](VER04e-warrant-codegen.md),
 [VER04h](VER04h-warrant-derived-evidence.md),
@@ -1660,6 +1667,68 @@ type, and `result` is bound only inside `ensures` rows.
   specified in [VER04m](VER04m-warrant-stateful-objects.md); heaps and hash maps
   without a canonical observer stay protocols there.)
 
+### 4.13 Implementation notes (WX-G slice, 2026-11-14)
+
+These notes fix what the first implementation does where 4.2 to 4.9 are silent or
+imprecise. They add no rule that contradicts those sections; where a sentence there is
+vacuous or ambiguous, the note says which reading is implemented.
+
+1. **Rule order of 4.2 is defensive.** The sentence "a single `inout` parameter whose own
+   type is a tuple equal to `R` is the whole result" cannot arise: 4.3 makes a tuple
+   inadmissible as an `inout` type, and S1 needs `R = P1`, so S1 and S3 never both match.
+   The resolver still tries S1 first, so the order stays correct if tuples are ever admitted.
+   The slot of an operation is therefore unique by construction, and it is computed by one
+   function over a type-agnostic shape (`resolve_post_slot`), used by the checker and by the
+   generator, and differential-tested against a brute-force enumerator.
+2. **The `inout=` binding option.** `inout=<param>:<form>[,<param>:<form>...]`, one entry per
+   `inout` parameter, in any order. `<form>` is one of the forms of 4.6 and is taken after the
+   *first* colon, so `inout=x:int:u64` names the parameter `x` and the form `int:u64`. A
+   missing entry, an entry for a parameter that is not `inout`, a duplicate, or an unknown form
+   is W0501; a form that cannot carry the parameter's type is W0704.
+3. **Forms implemented in this slice:** `slice`, `vec` (for `Bytes` and for `List<T>` of
+   scalars), `array`, `int:<ht>`, `bool` and `struct:<Name>`. The forms `returned`,
+   `slice-of:struct:`, `vec-of:struct:` and `codec:` are bound-level syntax that this slice
+   refuses with W0704 and the message "host form `<form>` is not yet implemented"; they belong
+   to the stateful-objects slice of VER04m (S1) and to the lane work of 4.9.
+4. **`export=` paths.** A Rust path of at most 8 identifier segments is accepted for an
+   operation that has `inout=`, and for no other operation (an identifier stays the rule
+   everywhere else, so every existing bindings file means what it did). The call is the fully
+   qualified `krate::path(args)`. A `slice` host passes `&mut host[..]` (the slice, not the
+   `Vec` that holds the copy), so a trait method resolves to the slice implementation; the
+   other forms pass `&mut host`.
+5. **Monitoring is in the adapter.** The generated `op_<name>` is a wrapper around the
+   operation's adapter: it evaluates the `ensures` rows on the call's arguments and result
+   and, on a violation, raises a `PostViolation` that the enclosing claim, example or table row
+   reports as a failed instance with the note `postcondition-violated: <op> row <i>` (rows are
+   numbered from 1), and `postcondition-unevaluable: <op> row <i>` when a row cannot be
+   evaluated. Because every call goes through the wrapper, every test that calls the
+   operation is monitored, including the negative controls (a faulted post-state is a
+   violation the monitor sees). The rows run only when the arguments satisfy the parameters'
+   refinements. A document that has an `ensures` block uses the composite machinery of the
+   prelude (`comp`), which is where the panic containment for the violation lives; a document
+   with no `ensures` block and no `inout` generates exactly what it did.
+6. **The `<op>/post` suites.** Their claim id is `<op>/post`; their binders are the
+   operation's parameters with their refinements; their body calls the operation once, so the
+   monitor is the whole property. They are listed after the written claims, so a negative
+   control stops at a written claim that already catches the fault when there is one.
+7. **Example self-consistency (W0601)** is evaluated by the ground evaluator, with the
+   parameters bound to the example's ground arguments and `result` to its ground expected
+   value, before any subject runs.
+8. **Fault applicability is checked at generation (W0701).** A fault bound to an operation to
+   which 4.8's "Applies when" column does not apply (`drop-last-push` on a `slice` host,
+   `cursor-off-by-one` on a `Bytes` parameter, ...) is refused, never silently inert. With
+   several `inout` parameters a fault rewrites every post-state it applies to.
+9. **WX-D1 generation.** At the time of this slice the evidence generator does not emit
+   `take`, `drop`, `slice`, `replicate` or `to_bytes` (WX-D1 slice S2a is not merged), so a
+   row that uses them type-checks and is refused with W0701 at generation. The zeroize pilot
+   states the same properties with a model built from `if` and `concat`.
+10. **Corpus (4.9).** The corpus compiler of VER04i (`warrant-corpus-v1`, WD-003) is the v0
+    `ct_compare` profile and refuses every v1-only form, so there is no v1 corpus to extend.
+    This slice provides the descriptor 4.9 requires as a function (`inout_descriptor`: the
+    `inout` parameter names and the `post_slot`), tested here, for the v1 corpus profile to
+    emit under `ops.<op>`. VER04i is not edited: no value encoding changes, because a result
+    is encoded as its declared type.
+
 ## 5. Cross-cutting evidence and portability rules
 
 1. **One semantics, three evaluators.** The ground evaluator, the generated model
@@ -2002,6 +2071,14 @@ coordinator decision above is listed in the S0 pull request for owner override.
 | a `v2` header | open question 3 |
 
 ## 11. Specification change record
+
+- WX-G implementation notes (2026-11-14), section 4.13: the `inout=` option syntax and the
+  host forms implemented first; `export=` paths for `inout` operations only; monitoring in the
+  adapter wrapper with the note texts; the `<op>/post` suite order; W0601 by the ground
+  evaluator; fault applicability as W0701; the pilot's use of an `if`/`concat` model because the
+  generator does not yet emit WX-D1 forms; the corpus requirement of 4.9 provided as a
+  descriptor function because the corpus compiler has no v1 profile; the rule-order sentence of
+  4.2 recorded as vacuous. No rule of 4.2 to 4.9 changes.
 
 - Amendment with VER04m (2026-11-14): section 4.3 admits `inout List<R>` for an admissible
   record `R` (tuples stay inadmissible); section 4.6 adds the host forms `slice-of:struct:`,
