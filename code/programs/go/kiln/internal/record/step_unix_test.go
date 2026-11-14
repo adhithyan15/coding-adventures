@@ -67,8 +67,27 @@ func newStepFix(t *testing.T) *stepFix { return newStepFixEnv(t) }
 // derives the build tool's environment from.
 func newStepFixEnv(t *testing.T, extraEnv ...string) *stepFix {
 	t.Helper()
+	return newStepFixCustom(t, planSteps, nil, false, extraEnv...)
+}
+
+// newStepFixCustom is newStepFixEnv with its own steps export, extra tracked
+// files, and a fake tracer that writes no "fake trace" line of its own when
+// playback is set (the step's line then writes the whole trace, so a test can
+// give the supervisor a canned one the classifier can parse).
+func newStepFixCustom(t *testing.T, plan string, files map[string]string, playback bool, extraEnv ...string) *stepFix {
+	t.Helper()
+	return newStepFixLinks(t, plan, files, nil, playback, extraEnv...)
+}
+
+// newStepFixLinks is newStepFixCustom with tracked symlinks (path -> text).
+func newStepFixLinks(t *testing.T, plan string, files, links map[string]string, playback bool, extraEnv ...string) *stepFix {
+	t.Helper()
 	p := newPrep(t)
+	p.links = links
 	p.env = append(p.env, extraEnv...)
+	for k, v := range files {
+		p.files[k] = v
+	}
 	f := &stepFix{t: t, p: p, aux: filepath.Join(p.base, "aux")}
 	if err := os.MkdirAll(f.aux, 0o755); err != nil {
 		t.Fatal(err)
@@ -86,16 +105,24 @@ while [ $# -gt 0 ]; do
   case "$1" in -o) tf="$2"; shift 2;; --) shift; break;; *) shift;; esac
 done
 n="${tf##*/}"
+aux='` + f.aux + `'
+root='ROOTDIR'
 echo run >> '` + f.count + `'
 printf '%s\n' "$@" > '` + f.args + `'
 env | sort > '` + f.envf + `'
-echo "fake trace" >&$n
+FAKELINE
 for last; do :; done
 eval "$last"
 `
-	writeBytes(t, p.strace, []byte(script), 0o755)
-	p.steps = planSteps
+	fake := `echo "fake trace" >&$n`
+	if playback {
+		fake = ":"
+	}
+	script = strings.Replace(script, "FAKELINE", fake, 1)
+	p.steps = plan
 	p.commit()
+	script = strings.Replace(script, "ROOTDIR", p.root, 1) // the checkout exists only now
+	writeBytes(t, p.strace, []byte(script), 0o755)
 	p.mustPrepare()
 	pre, err := VerifyPre(p.dir)
 	if err != nil {
@@ -801,7 +828,7 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 		f := newStepFix(t)
 		os.Remove(filepath.Join(f.p.dir, "traces"))
 		writeBytes(t, filepath.Join(f.p.dir, "traces"), nil, 0o600)
-		f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces of")
+		f.refused(f.opts(actZ, 0, 1, "exit 0"), "not a real directory")
 	})
 	t.Run("open to others", func(t *testing.T) {
 		f := newStepFix(t)
@@ -835,7 +862,7 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 		if os.Geteuid() == 0 {
 			t.Skip("root reads anything")
 		}
-		f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces of")
+		f.refused(f.opts(actZ, 0, 1, "exit 0"), "not a real directory")
 	})
 }
 

@@ -403,8 +403,12 @@ exit 0
 			t.Fatalf("the step holds descriptor %s: %q", fd, out3)
 		}
 	}
+	// Nothing is classified before the action's last step ends it (P13).
+	if _, err := os.Stat(record.RecordFile(recDir, recStepAction)); err == nil {
+		t.Fatal("record.json exists before the last step ran")
+	}
 	// Step 4: it cannot write to the trace pipe, and what it tried to write is
-	// not in any trace.
+	// not in any trace. It is the last step, so it also classifies the action.
 	out4, err4, code4, sc4 := step(4)
 	mustClean(4, sc4, code4, err4)
 	if strings.TrimSpace(out4) != "refused" {
@@ -418,6 +422,45 @@ exit 0
 		if bytes.Contains(raw, []byte("forged")) {
 			t.Fatalf("the trace of step %d holds what the step wrote to descriptor 5", n)
 		}
+	}
+
+	// The serial order: every step has the next number, from 0.
+	for n, sc := range []record.StepSidecar{sc0, sc1, sc2, sc3, sc4} {
+		if sc.Seq != n {
+			t.Errorf("step %d has seq %d", n, sc.Seq)
+		}
+	}
+	// The last step classified the action at its end, with the real classifier
+	// over the real traces (P13): record.json exists and is a record, not a
+	// failure marker, and the parse half of G7 held for all five traces (the
+	// root's exit lines, and the sealed configuration's digest in the root's and
+	// the init's traced execve).
+	if _, err := os.Stat(record.RecordFailedFile(recDir, recStepAction)); err == nil {
+		why, _ := os.ReadFile(record.RecordFailedFile(recDir, recStepAction))
+		t.Fatalf("record.failed: %s", why)
+	}
+	rawRec, err := os.ReadFile(record.RecordFile(recDir, recStepAction))
+	if err != nil {
+		t.Fatal(err)
+	}
+	cr, err := record.DecodeClassified(rawRec)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !cr.ParseOK || cr.Record == nil {
+		t.Fatalf("the epilogue's parse half of G7 failed on real traces: %q", cr.ParseReasons)
+	}
+	if cr.StepsRun != len(lines) || !cr.StepNetNS || cr.BindingID != pre.BindingID {
+		t.Errorf("steps_run %d, step_netns %v, binding %s", cr.StepsRun, cr.StepNetNS, cr.BindingID)
+	}
+	// The read of data.txt (a file of the action's own package) is the package
+	// entry of the manifest.
+	hasPkg := false
+	for _, e := range cr.Record.Entries {
+		hasPkg = hasPkg || e == "pkg:"+recStepAction
+	}
+	if !hasPkg {
+		t.Errorf("the read of data.txt is not in the record's entries %q (reasons %q)", cr.Record.Entries, cr.Record.Reasons)
 	}
 
 	// A step is run once.

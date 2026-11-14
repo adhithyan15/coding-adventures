@@ -73,7 +73,7 @@ var recordStep = record.RunStep
 // recordArmParentDeath makes the supervisor die with the build tool (Linux).
 var recordArmParentDeath = armParentDeath
 
-const notYet = "not implemented (KILN04 stage 4 PR 2b-2b)"
+const notYet = "not implemented (KILN04 stage 4 PR 2b-2b-ii)"
 
 // runRecord dispatches `kiln record <subcommand>`.
 func runRecord(args []string, stdout, stderr io.Writer) int {
@@ -202,6 +202,12 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 		// Nothing printed here is a value from the environment.
 		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
 		return record.ExitRefused
+	}
+	// The epilogue's verdict never changes the status, but a failed
+	// classification is worth one line in the build log (the reason is the
+	// recorder's own text, printable).
+	if res.Record == record.RecordFailed {
+		fmt.Fprintf(stderr, "kiln: record step: no record.json for the action: %s\n", res.RecordWhy)
 	}
 	return res.ExitCode
 }

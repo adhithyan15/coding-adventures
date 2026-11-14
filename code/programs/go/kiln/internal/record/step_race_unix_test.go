@@ -55,15 +55,20 @@ func TestParallelFirstStepsDoNotRaceOnTheTracesDirectory(t *testing.T) {
 }
 
 // The same through RunStep, with traces/ absent (as an older prepare left it)
-// and three actions started together.
-func TestParallelRunStepsOfDifferentActions(t *testing.T) {
+// and three actions started together. Since decision P13 recording is serial: of
+// supervisors that start together, whichever holds traces/.serial runs, and the
+// others are refused, run nothing and leave `<step>.overlap`. None may fail any
+// other way (in particular none may race on creating traces/).
+func TestParallelRunStepsOfDifferentActionsAreSerial(t *testing.T) {
 	f := newStepFix(t)
 	if err := os.Remove(filepath.Join(f.p.dir, "traces")); err != nil {
 		t.Fatal(err)
 	}
 	var wg sync.WaitGroup
 	errs := make([]error, 3)
-	for i, a := range []string{actA, actB, actZ} {
+	acts := []string{actA, actB, actZ}
+	start := make(chan struct{})
+	for i, a := range acts {
 		wg.Add(1)
 		count := 1
 		if a == actB {
@@ -73,14 +78,28 @@ func TestParallelRunStepsOfDifferentActions(t *testing.T) {
 			defer wg.Done()
 			o := f.opts(a, 0, count, "exit 0")
 			o.Stdout, o.Stderr = nil, nil
+			<-start
 			_, errs[i] = RunStep(o)
 		}(i, a, count)
 	}
+	close(start)
 	wg.Wait()
+	ok := 0
 	for i, e := range errs {
-		if e != nil {
-			t.Errorf("action %d: %v", i, e)
+		overlap := exists(StepFile(f.p.dir, acts[i], 0, "overlap"))
+		switch {
+		case e == nil && !overlap:
+			ok++
+		case e != nil && strings.Contains(e.Error(), "traces/.serial") && overlap:
+		default:
+			t.Errorf("action %d: err %v, overlap marker %v", i, e, overlap)
 		}
+	}
+	if ok == 0 {
+		t.Error("no step won the serial lock")
+	}
+	if f.runs() != ok {
+		t.Errorf("%d tracers started for %d steps that ran", f.runs(), ok)
 	}
 }
 
