@@ -40,6 +40,7 @@ from .session import (
     ENV_OUT,
     RunConfig,
     check_filter_rules,
+    corpus_relative,
     environment,
     execute,
     parse_fault_spec,
@@ -243,7 +244,7 @@ def _common_flags(args: argparse.Namespace) -> list[str]:
 
 def _validate(args: argparse.Namespace) -> int:
     corpus = load_corpus(args.repo_root, args.corpus)
-    relative = args.corpus.resolve().relative_to(args.repo_root.resolve()).as_posix()
+    relative = corpus_relative(args.repo_root, args.corpus)
     registry = read_bytes(args.registry, MAX_TEXT_BYTES) if args.registry else None
     validate_manifest(
         read_bytes(args.manifest, MAX_TEXT_BYTES),

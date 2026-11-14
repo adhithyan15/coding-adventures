@@ -17,7 +17,8 @@
  * operation or an error path.
  */
 
-import { join, relative, resolve, sep } from "node:path";
+import { join, resolve, sep } from "node:path";
+import { relativeInside } from "./containment.ts";
 import { parseBinding, resolveExports, Subject, type Binding, type Exports } from "./binding.ts";
 import { loadCorpus, type Corpus } from "./corpus.ts";
 import { BindingError, UsageError } from "./errors.ts";
@@ -131,8 +132,8 @@ export async function prepare(config: RunConfig): Promise<Prepared> {
     }
   }
   const exports = await resolveExports(binding, config.packageDir);
-  const path = relative(resolve(config.repoRoot), resolve(config.corpusDir));
-  if (path === "" || path.startsWith("..")) {
+  const path = relativeInside(config.repoRoot, config.corpusDir);
+  if (path === null || path === "") {
     throw new BindingError("corpus-path", "the corpus must lie inside the repository root");
   }
   return { config, corpus, binding, exports, corpusRelative: path.split(sep).join("/") };

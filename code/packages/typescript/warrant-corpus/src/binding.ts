@@ -45,7 +45,8 @@
  */
 
 import { realpathSync } from "node:fs";
-import { isAbsolute, join, relative } from "node:path";
+import { join } from "node:path";
+import { relativeInside } from "./containment.ts";
 import { pathToFileURL } from "node:url";
 import { BindingError, CorpusError, UNEXPECTED_ERROR, TYPE_MISMATCH } from "./errors.ts";
 import type { Fault } from "./faults.ts";
@@ -235,8 +236,7 @@ export type Exports = ReadonlyMap<string, (...args: unknown[]) => unknown>;
 
 /** Is `child` the same path as `root` or beneath it? */
 function isUnder(root: string, child: string): boolean {
-  const path = relative(root, child);
-  return path === "" || (!path.startsWith("..") && !isAbsolute(path));
+  return relativeInside(root, child) !== null;
 }
 
 /** Import the library and resolve every export, or refuse to start. */

@@ -23,9 +23,10 @@
 
 import { spawnSync } from "node:child_process";
 import { mkdirSync, existsSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { dirname, join, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { listControlRows, loadCorpus, type Corpus } from "./corpus.ts";
+import { relativeInside } from "./containment.ts";
 import { LaneError, UsageError } from "./errors.ts";
 import { isObject, MAX_TEXT_BYTES, parseJson, readBytes, renderJson, sha256Hex, decodeUtf8 } from "./jsonio.ts";
 import { deriveLabels } from "./labels.ts";
@@ -255,7 +256,8 @@ function validate(args: Args, io: Io): number {
   const repoRoot = args.flags.get("--repo-root") as string;
   const corpusDir = args.flags.get("--corpus") as string;
   const corpus = loadCorpus(repoRoot, corpusDir);
-  const path = relative(resolve(repoRoot), resolve(corpusDir));
+  const path = relativeInside(repoRoot, corpusDir);
+  if (path === null) throw new UsageError("corpus-path", "the corpus must lie inside the repository root");
   const relativeCorpus = path.split(sep).join("/");
   const registryPath = args.flags.get("--registry");
   const registry = registryPath === undefined ? null : readBytes(registryPath, MAX_TEXT_BYTES);
