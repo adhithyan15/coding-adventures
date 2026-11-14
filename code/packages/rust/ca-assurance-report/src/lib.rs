@@ -16,6 +16,7 @@ pub mod evidence;
 pub mod json;
 pub mod lane_evidence;
 pub mod matrix;
+pub mod profile;
 pub mod registry;
 pub mod report;
 
@@ -26,9 +27,9 @@ pub use evidence::{
     derive_claims, verify_evidence, verify_profile, Evidence, EvidenceCheckError, EvidenceError,
 };
 pub use matrix::{
-    build_weakness_matrix, AuditEvidence, AuditProfile, MatrixError, PackageAuditContext,
-    WeaknessRow, WeaknessStatus,
+    build_weakness_matrix, AuditEvidence, MatrixError, PackageAuditContext, WeaknessRow, WeaknessStatus,
 };
+pub use profile::{AuditProfile, ProfileError, ProfileKind, PROFILE_FILE};
 pub use registry::{RegistryError, WeaknessClass, WeaknessRegistry};
 pub use report::{
     AssuranceReport, CapabilitiesSummary, CatalogueRef, ClaimEvidence, ComputedExemption,
@@ -50,7 +51,6 @@ pub fn generate_ct_compare_report(
         commit_sha,
         registry,
         evidence,
-        AuditProfile::Comparison,
     )
 }
 
@@ -72,7 +72,6 @@ pub fn generate_package_report(
     commit_sha: &str,
     registry: &WeaknessRegistry,
     evidence: &Evidence,
-    profile: AuditProfile,
 ) -> Result<AssuranceReport, MatrixError> {
     if package != evidence.package_id {
         return Err(MatrixError::MissingEvidence(format!(
@@ -80,7 +79,7 @@ pub fn generate_package_report(
             evidence.package_id
         )));
     }
-    let ctx = evidence.audit_context_with_profile(package, profile);
+    let ctx = evidence.audit_context(package);
     let weaknesses = build_weakness_matrix(registry, &ctx)?;
     let claims = derive_claims(evidence).map_err(|e| MatrixError::MissingEvidence(e.0))?;
     let rungs = evidence.rungs();
@@ -135,7 +134,8 @@ pub fn generate_package_report(
         package: package.into(),
         version: version.into(),
         commit: commit_sha.into(),
-        profile,
+        profile: evidence.profile.name.clone(),
+        profile_sha256: evidence.profile.sha256.clone(),
         catalogue: assumptions::catalogue_ref(set),
         assumptions: report_assumptions,
         closure: vec![package.into()],
@@ -152,4 +152,66 @@ pub fn generate_package_report(
         exemptions,
         verdict: "report-only".into(),
     })
+}
+
+/// Re-derive the weakness matrix from the evidence and the bound audit profile
+/// and hold `report` to it (backlog AR-001).
+///
+/// [`verify_evidence`] checks structured facts (statuses, evidence ids, digests)
+/// and deliberately never the prose.  This closes the remaining gap: the report
+/// is rebuilt the way the generator built it, and every weakness row (`cwe`,
+/// `name`, `status`, `approved`, `reason`, `evidence`) and every exemption's
+/// rationale must be identical.  So edited reason text, a report generated under
+/// another profile, and a profile that declares more than the evidence allows
+/// (the rebuild itself is then refused by the matrix) are all rejected.
+///
+/// Call it after [`verify_evidence`]: that one pins the profile file by digest, so
+/// the profile used here is the one the report names.
+pub fn verify_rederivation(
+    report: &AssuranceReport,
+    evidence: &Evidence,
+    registry: &WeaknessRegistry,
+) -> Result<(), EvidenceCheckError> {
+    use EvidenceCheckError as E;
+    let ctx = evidence.audit_context(&report.package);
+    let rows = build_weakness_matrix(registry, &ctx)
+        .map_err(|e| E::EvidenceMismatch(format!("the weakness matrix cannot be re-derived from the evidence and the bound profile: {e}")))?;
+    if rows.len() != report.weaknesses.len() {
+        return Err(E::EvidenceMismatch(format!(
+            "the report has {} weakness rows but {} re-derive from the evidence",
+            report.weaknesses.len(),
+            rows.len()
+        )));
+    }
+    for (want, got) in rows.iter().zip(&report.weaknesses) {
+        if want != got {
+            let what = if want.cwe != got.cwe {
+                "row order or class"
+            } else if want.reason != got.reason {
+                "reason text"
+            } else if want.status != got.status || want.approved != got.approved {
+                "status"
+            } else if want.evidence != got.evidence {
+                "evidence ids"
+            } else {
+                "name"
+            };
+            return Err(E::EvidenceMismatch(format!(
+                "CWE-{} {what} differs from the re-derivation from the evidence and profile `{}`: \
+                 regenerate the report instead of editing it",
+                got.cwe, evidence.profile.name
+            )));
+        }
+    }
+    for x in &report.exemptions {
+        if let Some(row) = rows.iter().find(|r| r.cwe == x.cwe) {
+            if x.rationale != row.reason {
+                return Err(E::EvidenceMismatch(format!(
+                    "exemption {} rationale differs from the re-derived CWE-{} reason",
+                    x.id, x.cwe
+                )));
+            }
+        }
+    }
+    Ok(())
 }

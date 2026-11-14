@@ -12,7 +12,7 @@ use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
     check_assumptions, generate_package_report, verify_assurance_report, verify_evidence, verify_profile,
-    AssuranceReport, AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
+    verify_rederivation, AssuranceReport, CheckVerdict, Evidence, WeaknessRegistry,
 };
 
 /// `rust/<directory name>` and the `version = "..."` of the package's
@@ -43,8 +43,9 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
-    eprintln!("  --profile <P>          comparison (default) | field-arithmetic | varint-codec | boolean-logic | bit-arithmetic | lossless-compression: which true sentence the");
-    eprintln!("                         static attestation rows (CWE-326/327/407) carry");
+    eprintln!("  --profile <NAME>       Optional pin: the `name` the package's assurance-profile.json must declare.");
+    eprintln!("                         The profile itself is data: <package-dir>/assurance-profile.json (VER04h section 9");
+    eprintln!("                         item 22), hash-bound into the report as profile_sha256; there is no built-in profile");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
     eprintln!("                         without it --check fails on any such id");
@@ -99,9 +100,8 @@ fn main() {
     let mut strict = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
-    let mut profile = AuditProfile::Comparison;
-    // Set only by an explicit `--profile`: `--check` holds the report's recorded profile to it.
-    let mut profile_requested: Option<AuditProfile> = None;
+    // Set only by an explicit `--profile`: the profile file's name must equal it.
+    let mut profile_requested: Option<String> = None;
 
     let mut i = 1;
     while i < args.len() {
@@ -137,14 +137,7 @@ fn main() {
                     eprintln!("Error: --profile requires an argument");
                     exit(2);
                 }
-                profile = match args[i].parse() {
-                    Ok(p) => p,
-                    Err(e) => {
-                        eprintln!("Error: {e}");
-                        exit(2);
-                    }
-                };
-                profile_requested = Some(profile);
+                profile_requested = Some(args[i].clone());
             }
             "--registry" => {
                 i += 1;
@@ -219,9 +212,20 @@ fn main() {
                 exit(1);
             }
         };
-        if let Err(e) = verify_profile(&report, profile_requested) {
+        if let Err(e) = verify_profile(&report, profile_requested.as_deref()) {
             eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
             exit(1);
+        }
+        // The pin is also held to the file itself: BUILD may only assert which profile it means.
+        if let Some(want) = profile_requested.as_deref() {
+            if want != evidence.profile.name {
+                eprintln!(
+                    "ASSURANCE VERIFICATION FAILED: --profile `{want}` but {} is named `{}`",
+                    coding_adventures_ca_assurance_report::PROFILE_FILE,
+                    evidence.profile.name
+                );
+                exit(1);
+            }
         }
         match verify_evidence(&report, &evidence) {
             Ok(unverified) => {
@@ -259,6 +263,13 @@ fn main() {
         // uses are flagged for removal (VER00 section 7.5.2): a warning by
         // default, an error under --strict.  (verify_evidence already ran
         // every other assumption rule.)
+        // AR-001: the matrix (and so every reason sentence, including the ones the profile
+        // supplies) is re-derived from the evidence and the bound profile.
+        if let Err(e) = verify_rederivation(&report, &evidence, &registry) {
+            eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+            exit(1);
+        }
+
         match check_assumptions(&report, &evidence, strict) {
             Ok(summary) => {
                 for id in &summary.unused {
@@ -303,6 +314,16 @@ fn main() {
                 exit(1);
             }
         };
+        if let Some(want) = profile_requested.as_deref() {
+            if want != evidence.profile.name {
+                eprintln!(
+                    "Error: --profile `{want}` but {} is named `{}`",
+                    coding_adventures_ca_assurance_report::PROFILE_FILE,
+                    evidence.profile.name
+                );
+                exit(2);
+            }
+        }
         let (package_id, version) = match package_identity(&package_dir) {
             Ok(v) => v,
             Err(e) => {
@@ -316,7 +337,6 @@ fn main() {
             &commit_sha,
             &registry,
             &evidence,
-            profile,
         ) {
             Ok(r) => r,
             Err(e) => {
@@ -332,6 +352,10 @@ fn main() {
         }
         if let Err(e) = verify_evidence(&report, &evidence) {
             eprintln!("Generated report failed evidence verification: {e}");
+            exit(1);
+        }
+        if let Err(e) = verify_rederivation(&report, &evidence, &registry) {
+            eprintln!("Generated report failed re-derivation: {e}");
             exit(1);
         }
 

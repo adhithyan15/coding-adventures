@@ -1,0 +1,19 @@
+{
+  "schema": "warrant-assurance-profile-v1",
+  "name": "field-arithmetic",
+  "kind": "transform",
+  "rows": {
+    "326": {
+      "applicability": "excluded",
+      "reason": "no keys: the package takes and generates no key material; operands are field elements, not key bytes of a fixed strength"
+    },
+    "327": {
+      "applicability": "excluded",
+      "reason": "field arithmetic: package implements GF(2^8) arithmetic only, no cipher, hash or MAC"
+    },
+    "407": {
+      "applicability": "excluded",
+      "reason": "constant work per call: every operation is a bounded number of table lookups and arithmetic steps after a one-time 255-iteration table build; no input-dependent iteration"
+    }
+  }
+}

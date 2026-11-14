@@ -34,7 +34,6 @@ fn lzw_report(ev: &Evidence) -> Result<AssuranceReport, String> {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::LosslessCompression,
     )
     .map_err(|e| e.to_string())
 }
@@ -68,7 +67,6 @@ fn the_lzw_report_discharges_cwe_409_from_its_own_bound_rows_and_matches_the_fil
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::LosslessCompression,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
@@ -296,61 +294,75 @@ fn lzw_without_output_rows() -> Evidence {
     ev
 }
 
+/// Generate under another adopter's profile file: the profile is evidence data, so swapping it is
+/// swapping `ev.profile` (what loading a different `assurance-profile.json` would do).
 fn generate_with(ev: &Evidence, profile: AuditProfile) -> AssuranceReport {
-    generate_package_report("rust/lzw", "0.1.0", "c0ffee", &WeaknessRegistry::embedded(), ev, profile)
+    let mut ev = ev.clone();
+    ev.profile = profile;
+    generate_package_report("rust/lzw", "0.1.0", "c0ffee", &WeaknessRegistry::embedded(), &ev)
         .expect("report generates")
 }
 
+fn profile_of(name: &str) -> AuditProfile {
+    AuditProfile::load(&pkg_dir(name)).expect("the adopter's profile loads")
+}
+
 #[test]
-fn the_report_records_its_profile_and_the_json_round_trips_it() {
-    let (report, _) = good();
-    assert_eq!(report.profile, AuditProfile::LosslessCompression);
+fn the_report_records_its_profile_and_digest_and_the_json_round_trips_them() {
+    let (report, ev) = good();
+    assert_eq!(report.profile, "lossless-compression");
+    assert_eq!(report.profile_sha256, ev.profile.sha256);
     let json = report.to_json_string();
     assert!(json.contains("\"profile\": \"lossless-compression\""), "{json}");
+    assert!(json.contains(&format!("\"profile_sha256\": \"{}\"", ev.profile.sha256)), "{json}");
     let back = AssuranceReport::from_json_str(&json).unwrap();
-    assert_eq!(back.profile, AuditProfile::LosslessCompression);
+    assert_eq!(back.profile, "lossless-compression");
     assert_eq!(back.to_json_string(), json, "byte-stable");
 }
 
 #[test]
-fn a_report_with_no_or_an_unknown_profile_is_refused() {
+fn a_report_with_no_profile_or_no_digest_is_refused() {
     let (report, _) = good();
     let json = report.to_json_string();
     let missing = json.replace("  \"profile\": \"lossless-compression\",\n", "");
     assert_ne!(missing, json, "the fixture must remove the line");
     assert!(AssuranceReport::from_json_str(&missing).is_err(), "a pre-profile report cannot be checked");
-    let unknown = json.replace("lossless-compression\",", "lossless-compressionx\",");
-    assert!(AssuranceReport::from_json_str(&unknown).is_err());
+    let lines: Vec<&str> = json.lines().filter(|l| !l.contains("\"profile_sha256\"")).collect();
+    assert!(AssuranceReport::from_json_str(&lines.join("\n")).is_err(), "no digest, no binding");
 }
 
 #[test]
-fn check_rejects_an_excluded_cwe_409_row_under_the_lossless_compression_profile() {
-    // Control: the honest comparison-profile report of the output-row-less document is excluded and
+fn check_rejects_an_excluded_cwe_409_row_under_a_decompressor_profile() {
+    // Control: the honest transform-profile report of the output-row-less document is excluded and
     // verifies (that is the old hole: nothing says the package decompresses)...
     let ev = lzw_without_output_rows();
-    let mut report = generate_with(&ev, AuditProfile::Comparison);
+    let report = generate_with(&ev, profile_of("ct-compare"));
     let row = report.weaknesses.iter().find(|w| w.cwe == 409).unwrap();
     assert_eq!(row.status, WeaknessStatus::Excluded);
-    verify_evidence(&report, &ev).expect("a comparison-profile exclusion is internally consistent");
-    // ...but the same row in a report recorded as lossless-compression is refused.
-    report.profile = AuditProfile::LosslessCompression;
+    let mut transform_ev = ev.clone();
+    transform_ev.profile = profile_of("ct-compare");
+    verify_evidence(&report, &transform_ev).expect("a transform-profile exclusion is internally consistent");
+    // ...but the same row checked against the decompressor profile file is refused (the bound
+    // file, not the report, says what the package is).  The digest check fires first, and with the
+    // digest forged the CWE-409 rule still refuses.
+    let mut forged = report.clone();
+    forged.profile = "lossless-compression".into();
+    forged.profile_sha256 = ev.profile.sha256.clone();
+    let err = verify_evidence(&forged, &ev);
     assert!(
-        matches!(verify_evidence(&report, &ev), Err(E::EvidenceMismatch(m)) if m.contains("CWE-409") && m.contains("lossless-compression")),
-        "{:?}",
-        verify_evidence(&report, &ev)
+        matches!(&err, Err(E::EvidenceMismatch(m)) if m.contains("CWE-409") && m.contains("lossless-compression")),
+        "{err:?}"
     );
 }
 
 #[test]
 fn check_rejects_a_recorded_profile_that_differs_from_the_requested_one() {
-    // The generator under the default profile records `comparison`; BUILD checks with
-    // `--profile lossless-compression`, so this is the mismatch it must catch.
     let ev = lzw_without_output_rows();
-    let report = generate_with(&ev, AuditProfile::Comparison);
+    let report = generate_with(&ev, profile_of("ct-compare"));
     assert!(matches!(
-        verify_profile(&report, Some(AuditProfile::LosslessCompression)),
+        verify_profile(&report, Some("lossless-compression")),
         Err(E::EvidenceMismatch(m)) if m.contains("comparison") && m.contains("lossless-compression")
     ));
-    assert!(verify_profile(&report, Some(AuditProfile::Comparison)).is_ok());
+    assert!(verify_profile(&report, Some("comparison")).is_ok());
     assert!(verify_profile(&report, None).is_ok(), "no profile requested: the recorded one stands");
 }

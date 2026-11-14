@@ -53,7 +53,6 @@ fn leb_report(ev: &Evidence) -> AssuranceReport {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::VarintCodec,
     )
     .expect("report derives from the wasm-leb128 manifests")
 }
@@ -65,7 +64,6 @@ fn gf_report(ev: &Evidence) -> AssuranceReport {
         "c0ffee",
         &WeaknessRegistry::embedded(),
         ev,
-        AuditProfile::FieldArithmetic,
     )
     .expect("report derives from the gf256 manifests")
 }
@@ -83,6 +81,8 @@ fn ctx(evidence: AuditEvidence) -> PackageAuditContext {
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
         evidence: AuditEvidence {
+            profile: AuditProfile::load(&pkg_dir("wasm-leb128")).expect("an adopter's profile loads"),
+            all_ops_step_bounded: true,
             step_not_live: vec!["warrant/m/proof/op/steps-bound".into()],
             step_unproven: vec!["warrant/m/proof/op/steps-bound".into()],
             not_live_note: "front end refused".into(),
@@ -185,7 +185,7 @@ impl Copy {
                 fs::copy(entry.path(), pkg.join("src").join(entry.file_name())).unwrap();
             }
         }
-        for f in ["effect_certificate.json", "evidence.bindings", "Cargo.toml"] {
+        for f in ["effect_certificate.json", "evidence.bindings", "Cargo.toml", "assurance-profile.json"] {
             fs::copy(real.join(f), pkg.join(f)).unwrap();
         }
         fs::create_dir_all(root.join("code/specs")).unwrap();
@@ -273,7 +273,6 @@ fn wasm_leb128_report_derives_verifies_and_matches_the_checked_in_file() {
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::VarintCodec,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
@@ -318,10 +317,14 @@ fn a_package_with_secrets_cannot_use_the_not_applicable_exemption() {
 }
 
 #[test]
-fn the_boolean_logic_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("boolean-logic".parse::<AuditProfile>(), Ok(AuditProfile::BooleanLogic));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("boolean-logic"), "{err}");
+fn the_boolean_logic_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("logic-gates")).unwrap();
+    assert_eq!(p.name, "boolean-logic");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 #[test]
@@ -333,7 +336,6 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
         "c0ffee",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BooleanLogic,
     )
     .expect("report derives from the logic-gates manifests");
     for cwe in [326, 327, 407] {
@@ -357,17 +359,20 @@ fn the_logic_gates_report_uses_the_boolean_logic_sentences_and_matches_its_manif
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BooleanLogic,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
 }
 
 #[test]
-fn the_bit_arithmetic_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("bit-arithmetic".parse::<AuditProfile>(), Ok(AuditProfile::BitArithmetic));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("bit-arithmetic"), "{err}");
+fn the_bit_arithmetic_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("arithmetic")).unwrap();
+    assert_eq!(p.name, "bit-arithmetic");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 #[test]
@@ -379,7 +384,6 @@ fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manif
         "c0ffee",
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BitArithmetic,
     )
     .expect("report derives from the arithmetic manifests");
     for cwe in [326, 327, 407] {
@@ -413,17 +417,20 @@ fn the_arithmetic_report_uses_the_bit_arithmetic_sentences_and_matches_its_manif
         &on_disk.commit,
         &WeaknessRegistry::embedded(),
         &ev,
-        AuditProfile::BitArithmetic,
     )
     .unwrap();
     assert_eq!(fresh.to_json_string(), on_disk.to_json_string(), "regenerate assurance_report.json");
 }
 
 #[test]
-fn the_varint_profile_parses_and_unknown_profiles_list_it() {
-    assert_eq!("varint-codec".parse::<AuditProfile>(), Ok(AuditProfile::VarintCodec));
-    let err = "lzw".parse::<AuditProfile>().unwrap_err();
-    assert!(err.contains("varint-codec"), "{err}");
+fn the_varint_codec_profile_is_a_data_file_that_names_itself() {
+    // The profile is `assurance-profile.json` beside the package, not an enum variant.
+    let p = AuditProfile::load(&pkg_dir("wasm-leb128")).unwrap();
+    assert_eq!(p.name, "varint-codec");
+    assert!(!p.decompresses());
+    for cwe in [326, 327, 407] {
+        assert!(p.row_reason(cwe).is_some(), "CWE-{cwe}");
+    }
 }
 
 /// wasm-leb128's genuine report with the CWE-208 exemption relabelled to the

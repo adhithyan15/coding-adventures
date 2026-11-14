@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **Audit profiles are data, not code** (VER04h section 9 item 22; closes backlog AR-001,
+  narrows LP-010b).  The `AuditProfile` enum, its `FromStr` and the per-variant wording
+  `match` arms are gone; `AuditProfile` is now a struct loaded by the new `profile` module
+  from `<package>/assurance-profile.json` (`warrant-assurance-profile-v1`: `name`, `kind`
+  `transform|decompressor`, `rows` 326/327/407 and optionally 409 for a transform; exact
+  keys, unknown keys refused, `excluded` the only applicability).  `Evidence::load` reads it
+  (no file, no report; there is no default profile) and `generate_package_report` lost its
+  `profile` argument.  `AssuranceReport.profile` is the name and the new
+  `profile_sha256` binds the file's exact bytes: `verify_evidence` refuses an edited profile
+  (`StaleEvidence`) and a name mismatch.  The security semantics stay in code: CWE-326/327
+  exclusions are refused beside a `rand:` capability, CWE-407 beside an operation with no
+  `steps` bound, CWE-409 for a `decompressor` (rejected at load) or beside an `output` row.
+  New `verify_rederivation` (run by `--check`, closes AR-001) rebuilds the matrix from the
+  evidence and the profile and compares every row and exemption rationale.  `verify_profile`
+  now takes `Option<&str>`; `--profile NAME` is an optional pin.  The six adopters'
+  `assurance-profile.json` carry the previous wording verbatim and their
+  `assurance_report.json` files differ by one added `profile_sha256` line.  Tests:
+  `tests/test_assurance_profile.rs`.  Effect certificate re-emitted.
 - **The audit profile is recorded in the report and checked** (CWE-409 security review,
   finding 1, low).  `AssuranceReport` gains `profile` (`AuditProfile::as_str` / `Display`,
   emitted as one `"profile"` string, so the JSON stays deterministic and byte-stable;

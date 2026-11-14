@@ -55,7 +55,8 @@ use crate::assumptions::{
 };
 use crate::catalogue::CatalogueSet;
 use crate::json::JsonValue;
-use crate::matrix::{AuditEvidence, AuditProfile, PackageAuditContext, WeaknessStatus};
+use crate::matrix::{AuditEvidence, PackageAuditContext, WeaknessStatus};
+use crate::profile::AuditProfile;
 use crate::report::{
     AssuranceReport, ClaimEvidence, ExhaustiveEvidence, FuzzEvidence, ProofEvidence,
     PropertyEvidence, RungsSummary,
@@ -257,6 +258,10 @@ pub struct Evidence {
     pub spec: SpecFacts,
     pub cert: CertFacts,
     pub source_sha256: String,
+    /// The package's audit profile, read from `assurance-profile.json` with
+    /// the digest of its exact bytes (`profile.sha256`), which a report binds
+    /// as `profile_sha256`.  There is no default profile.
+    pub profile: AuditProfile,
     pub proofs_dir: PathBuf,
     /// `rust/<package directory name>`: the package the evidence is about.
     pub package_id: String,
@@ -941,6 +946,11 @@ impl Evidence {
                 .ok_or_else(|| EvidenceError("package directory has no usable name".into()))?
         );
 
+        // The audit profile is the package's own file; a missing or malformed
+        // one fails the load, so no report is ever produced under a guessed
+        // profile.
+        let profile = AuditProfile::load(package_dir).map_err(|e| EvidenceError(e.to_string()))?;
+
         Ok(Evidence {
             tests,
             test_spec_sha256: text(&tv, "spec_sha256"),
@@ -963,6 +973,7 @@ impl Evidence {
             spec,
             cert,
             source_sha256: sha256_hex(&source_framed),
+            profile,
             proofs_dir: dir.join("proofs"),
             package_id,
             catalogue,
@@ -1148,16 +1159,6 @@ impl Evidence {
 
     /// Package facts for the weakness matrix, every one read from a manifest.
     pub fn audit_context(&self, package_id: &str) -> PackageAuditContext {
-        self.audit_context_with_profile(package_id, AuditProfile::Comparison)
-    }
-
-    /// [`Evidence::audit_context`] for a package whose attestation rows are
-    /// not about comparison primitives.
-    pub fn audit_context_with_profile(
-        &self,
-        package_id: &str,
-        profile: AuditProfile,
-    ) -> PackageAuditContext {
         // Every constant-time and steps-bound obligation is considered, live or
         // not (as on main before the generalisation): a `not-live` or
         // `unchecked` entry is an operation with no proof, and it must block a
@@ -1224,7 +1225,8 @@ impl Evidence {
             } else {
                 Vec::new()
             },
-            profile,
+            profile: self.profile.clone(),
+            all_ops_step_bounded: !self.spec.ops.is_empty() && self.spec.ops.iter().all(|o| o.has_steps_bound),
             decompression: self.decompression_bounds(),
         };
         PackageAuditContext {
@@ -1533,16 +1535,16 @@ pub const MEMORY_SAFETY_CWES: [u32; 6] = [416, 787, 125, 415, 476, 190];
 /// Evidence ids that are not machine-checked attestations (VER04h section 10).
 pub const UNVERIFIED_PREFIX: &str = "unverified::";
 
-/// Hold the report's recorded audit profile to the profile the caller expects.
+/// Hold the report's recorded audit profile name to the one the caller expects.
 ///
 /// `expected` is `Some` when the checker was told a profile (`--check ... --profile P`, which a
-/// package's BUILD line passes so that the build, not the report, decides what the package is)
-/// and `None` when it was not, in which case the recorded profile stands.  A mismatch is refused:
-/// otherwise a report generated under the wrong profile (for example a decompressor under the
-/// default `comparison`) would pass `--check` with true-looking, wrong sentences.
+/// package's BUILD line may pass so that the build, not the report, pins what the package is)
+/// and `None` when it was not, in which case the recorded profile stands.  A mismatch is refused.
+/// The name is only a label: the profile's *content* is bound by `profile_sha256` and checked
+/// in [`verify_evidence`], so a BUILD line cannot choose wording, only assert which file it means.
 pub fn verify_profile(
     report: &AssuranceReport,
-    expected: Option<crate::matrix::AuditProfile>,
+    expected: Option<&str>,
 ) -> Result<(), EvidenceCheckError> {
     match expected {
         Some(want) if want != report.profile => Err(EvidenceCheckError::EvidenceMismatch(format!(
@@ -1567,6 +1569,28 @@ pub fn verify_evidence(
         return Err(E::EvidenceMismatch(format!(
             "report is for {} but the evidence is for {}",
             report.package, ev.package_id
+        )));
+    }
+
+    // 0b. The audit profile the report was generated under is the file on disk.
+    //     `profile_sha256` binds the exact bytes (like `spec_sha256` binds the
+    //     spec), so editing `assurance-profile.json` after the report was
+    //     generated is `StaleEvidence`, and a report cannot name another profile
+    //     than the file's own `name`.
+    if report.profile_sha256 != ev.profile.sha256 {
+        return Err(E::StaleEvidence(format!(
+            "report was generated from {} with digest {} but the file on disk is {}",
+            crate::profile::PROFILE_FILE,
+            report.profile_sha256,
+            ev.profile.sha256
+        )));
+    }
+    if report.profile != ev.profile.name {
+        return Err(E::EvidenceMismatch(format!(
+            "report records profile `{}` but {} is named `{}`",
+            report.profile,
+            crate::profile::PROFILE_FILE,
+            ev.profile.name
         )));
     }
 
@@ -1897,11 +1921,11 @@ pub fn verify_evidence(
             // profile that decompresses applies CWE-409 whatever the Warrant document says
             // (a decompressor whose document forgot its `output` row would otherwise be
             // excluded), so an exclusion under it is a contradiction, not a finding.
-            WeaknessStatus::Excluded if report.profile.decompresses() => {
+            WeaknessStatus::Excluded if ev.profile.decompresses() => {
                 return Err(E::EvidenceMismatch(format!(
-                    "CWE-409 is excluded, but the report's recorded profile `{}` decompresses attacker-controlled \
-                     input: the class applies and must be discharged from `output`/`heap` bound rows",
-                    report.profile
+                    "CWE-409 is excluded, but the bound profile `{}` is a decompressor (attacker-controlled \
+                     input is expanded): the class applies and must be discharged from `output`/`heap` bound rows",
+                    ev.profile.name
                 )));
             }
             WeaknessStatus::Excluded => {}

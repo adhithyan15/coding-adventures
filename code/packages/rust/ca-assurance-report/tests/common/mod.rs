@@ -41,6 +41,8 @@ impl Sandbox {
         // `--generate` names the report after the package directory and reads
         // its version from Cargo.toml.
         fs::copy(real.join("Cargo.toml"), pkg.join("Cargo.toml")).unwrap();
+        // The audit profile is the package's own data file (VER04h section 9 item 22).
+        fs::copy(real.join("assurance-profile.json"), pkg.join("assurance-profile.json")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
             manifest.join("../../../specs/ct-compare.warrant"),

@@ -7,7 +7,7 @@ mod common;
 use coding_adventures_ca_assurance_report::checker::{
     verify_assurance_report, CheckError, CheckVerdict,
 };
-use coding_adventures_ca_assurance_report::generate_ct_compare_report;
+use coding_adventures_ca_assurance_report::{generate_ct_compare_report, AuditProfile};
 use coding_adventures_ca_assurance_report::json::JsonValue;
 use coding_adventures_ca_assurance_report::matrix::{
     build_weakness_matrix, AuditEvidence, PackageAuditContext, WeaknessStatus,
@@ -47,6 +47,10 @@ fn evid() -> AuditEvidence {
         hw_counters: "not-live".into(),
         oob_ids: vec!["warrant/m/proof/op/constant-time".into()],
         oob_label: "bounded(8)".into(),
+        // Profiles are data: the ct-compare adopter's own file supplies the static sentences.
+        profile: AuditProfile::load(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../ct-compare"))
+            .expect("ct-compare profile loads"),
+        all_ops_step_bounded: true,
         ..AuditEvidence::default()
     }
 }
