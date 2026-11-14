@@ -22,7 +22,7 @@ proven before the next relies on it.
 | haskell | 158 | "haskell support not enabled in windows CI yet". The toolchain is already installed on Windows by `ci.yml`. |
 | perl | 114 | 100 "Perl testing is not supported on Windows" (no Windows Perl toolchain in `ci.yml`); the rest are native extensions |
 | native bridges (lua, dart, elixir, go, ruby, typescript, python, csharp, fsharp, cpp, rust) | about 40 | import library or loader not configured for CI; `ELIXIR_WINDOWS_NIF_*`; P/Invoke needs cross-compile |
-| rust | 14 | `tcp-reactor` needs Unix fds; `unix-tools`; Metal |
+| rust | 14 | `tcp-reactor` needed Unix fds (now converted, native IOCP engine); `unix-tools`; Metal |
 | swift, starlark, other | 8 | "swift support not enabled in windows CI yet"; prerequisite chains |
 
 macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
@@ -53,7 +53,7 @@ macOS has one `BUILD_mac*` file. Its gaps are failures, not skips: shards
 | W1 | Haskell on Windows: real `BUILD_windows` for the 158 packages, proving a leaf, a mid-stack package and `conduit` (network/hsc2hs linking) first | W0 |
 | W2 | Perl on Windows: install Strawberry Perl and `Test2::V0` when Perl is needed, then real recipes for 100 pure-Perl packages; finish the native extensions (`perl-bridge` shim compile) | W0 |
 | W3 | Native bridges: one language at a time (node import library, Lua `lua54.lib`, Dart FFI, Elixir NIF link, Go cgo, Ruby MinGW vs MSVC ABI, .NET P/Invoke) | W0 |
-| W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (IOCP path: needs a decision, see "the Rust remainder"), the 44 Ruby `unix-tools` test files held back on Windows, prerequisite-chain skips; decide Metal | W1-W3 |
+| W4 | Remaining skips: Swift, Starlark, `tcp-reactor` (native IOCP engine: converted, see "the Rust remainder"), the 44 Ruby `unix-tools` test files held back on Windows, prerequisite-chain skips; decide Metal | W1-W3 |
 | W5 | Fix what is currently red from the first full build (c/cpp runtime, Ruby natives, OCaml `ppxlib`, macOS shards 4/9/12/14) | W0 |
 | W6 | Guardrail: an echo-only recipe must appear in an allowlist with a reason and an owner, and the allowlist may only shrink; same for macOS. **Windows half done**, see "W6 progress" (macOS half open) | W1-W4 |
 
@@ -338,19 +338,26 @@ The echo-skips left in `code/packages/rust` and `code/programs/rust` were
 - **`unix-tools`, Ruby (partly converted).** The Rakefile runs every test file on
   Unix and, on Windows, the twelve whose tools are pure stream transformers, and
   prints which 44 it held back. The rest need a Windows run to classify.
-- **`tcp-reactor` (needs a decision, not converted).** It is a readiness
-  reactor: nonblocking sockets, `epoll`/`kqueue` readiness, read-until-`WouldBlock`.
-  Windows IOCP is completion-based, and `event-loop-native-backends.md`
-  ("Windows should not be forced into a fake readiness abstraction"; `WSAPoll`:
-  "avoid as primary design") and the `iocp` crate both say not to fake readiness
-  on Windows. An IOCP `tcp-reactor` is a redesign (`AcceptEx`/`WSARecv`/`WSASend`
-  with owned buffers, per-connection outstanding-operation counts, completion
-  based backpressure): that is what `transport-platform`'s Windows provider and
-  `tcp-runtime` already are, with real Windows tests. Nothing depends on
-  `tcp-reactor`. Options: list it on the W6 allowlist as intrinsic with
-  `tcp-runtime` named as the Windows equivalent, or retire it. Note also that its
-  only tests are `kqueue` ones, so `cargo test -p tcp-reactor` runs zero tests on
-  Linux.
+- **`tcp-reactor` (converted: a native Windows engine).** The crate was a readiness
+  reactor (nonblocking sockets, `epoll`/`kqueue` readiness, read-until-`WouldBlock`)
+  gated off Windows with `compile_error!`, and the first plan was to list it as an
+  intrinsic-platform exception. The owner decided it must talk to the native
+  Windows networking stack instead, so it now has a second engine. Windows IOCP is
+  completion-based, and `event-loop-native-backends.md` ("Windows should not be
+  forced into a fake readiness abstraction") and the `iocp` crate both say not to
+  fake readiness on Windows, so the engine is not an `EventBackend`: it posts
+  `AcceptEx`/`WSARecv`/`WSASend` on a completion port, with per-connection
+  operation records whose buffers outlive any in-flight operation, completion-based
+  backpressure and the same cap, write-budget, half-close and stop behaviour as the
+  Unix engine. `tcp-reactor`'s old tests were `kqueue`-only (zero tests ran on
+  Linux), so the behaviour tests were rewritten against the public API and now run on
+  Linux, macOS and Windows alike. Validated locally by cross-compiling for
+  `x86_64-pc-windows-gnu` and running under Wine 9 (8 behaviour tests and 4 engine
+  tests, 25 repeated runs without a failure; three deliberate mutations, no cap, no
+  write budget, ignoring partial sends, showed the first two are caught and that the
+  partial-send branch is defensive and cannot be provoked: an overlapped stream send
+  completes whole), then on the real Windows runner by CI. The allowlist entry is
+  gone and the `intrinsic-platform` cap is 0.
 - **`twig-module-driver` (converted).** The recorded reason (768 MiB and 3 GiB
   thread stacks fail to spawn on Windows) had no observation behind it and does
   not hold: Windows reserves thread stacks as address space and commits on use,
@@ -401,7 +408,7 @@ path to `{category, reason, evidence}`. Categories:
 | Category | Meaning | Entries |
 |---|---|---|
 | `intrinsic-apple` | Needs Apple frameworks (Metal, Objective-C); the audit checks the package itself names them | 11 |
-| `intrinsic-platform` | Bound to a platform API with no equivalent (`rust/tcp-reactor`; `rust/tcp-runtime` is its Windows counterpart) | 1 |
+| `intrinsic-platform` | Bound to a platform API with no equivalent. Currently empty: `rust/tcp-reactor` was the only entry and got a native Windows engine instead | 0 |
 | `no-tests-by-design` | Nothing to run: Starlark rule packages, the Python shell packages, `visicalc-deno`'s notes-only BUILD | 7 |
 | `tracked-follow-up` | A real gap with a plan: `perl/barcode-layout-1d` (own PR: dedicated registry owner item) | 1 |
 

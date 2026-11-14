@@ -78,11 +78,6 @@
       "reason": "C ABI over the Metal Paint VM; builds only on macOS arm64.",
       "evidence": "BUILD-002 principle 5 (Metal is an intrinsic limit); the package BUILD is gated on Darwin"
     },
-    "packages/rust/tcp-reactor": {
-      "category": "intrinsic-platform",
-      "reason": "Readiness reactor built on Unix file descriptors (poll/kqueue/epoll); Windows has no equivalent of that API. rust/tcp-runtime is the cross-platform counterpart and runs its real tests on Windows. Policy decision pending on whether an IOCP path belongs in this crate.",
-      "evidence": "BUILD-002 W4 (tcp-reactor, IOCP path); recipe directive build-tool: unsupported=RUST_TCP_REACTOR_REQUIRES_UNIX_FDS"
-    },
     "packages/starlark/builtins": {
       "category": "no-tests-by-design",
       "reason": "Holds only .star rule definitions that the build tool loads and validates itself; there is no code to test.",

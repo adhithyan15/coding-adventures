@@ -635,9 +635,10 @@ class RepositoryAllowlistTest(unittest.TestCase):
     def test_allowlist_matches_the_caps_exactly(self) -> None:
         # Equality, not <=: a stale cap is slack that would let an entry in
         # unreviewed, so lowering the list means lowering the cap with it.
-        counts: dict[str, int] = {}
+        # Every category is listed, so one that has been emptied compares as 0.
+        counts: dict[str, int] = {category: 0 for category in audit.CATEGORIES}
         for entry_ in self.entries.values():
-            counts[entry_["category"]] = counts.get(entry_["category"], 0) + 1
+            counts[entry_["category"]] += 1
         self.assertEqual(counts, audit.ALLOWLIST_CAPS)
 
     def test_every_metal_package_is_apple_intrinsic(self) -> None:
