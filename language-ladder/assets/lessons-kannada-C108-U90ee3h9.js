@@ -1,0 +1,1326 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-horage
+spine_node: SPINE-ASK-LOCATION
+sequence: 4360
+chapter: 108
+type: word
+headword: "ಹೊರಗೆ"
+gloss: "outside"
+romanization: "horage"
+concept_tag: KA-LOC108-HORAGE
+prerequisites: [KA-C107-mele, KA-C108-kelage]
+sounds: []
+roots: [dravidian-pura-outside]
+etymology_hook: "horage: native Dravidian, one word with Tamil puṟam (DEDR 4333)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01]
+introduces:
+  knowledge: [KA-LEX-C108-LOC108-02]
+practises:
+  knowledge: [KA-LEX-C108-LOC108-02, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-kelage]
+---
+
+# ಹೊರಗೆ (horage) — outside
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for above, then the Kannada for below.
+
+## You'll want to know: ಹೊರಗೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-02]; assesses=[] -->
+
+**ಹೊರಗೆ** — *horage* — "outside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಹೊರಗೆ** (*horage*) is native Dravidian, one word with Tamil *puṟam* (DEDR 4333). DEDR lists *poṟage*, "the outside", the older form: the *p-* has become *h-*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-02, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *horage*]
+- [YOU SAY: *horage*, once more]
+- [YOU SAY: say *horage*]
+- [YOU RECALL: say the Kannada for above, then the Kannada for below, then say *horage* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-02, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01] -->
+
+[PAUSE 3s] What does ಹೊರಗೆ mean? ("Outside".) Say it once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-kelage
+spine_node: SPINE-ASK-LOCATION
+sequence: 4350
+chapter: 108
+type: word
+headword: "ಕೆಳಗೆ"
+gloss: "below, underneath"
+romanization: "keḷage"
+concept_tag: KA-LOC108-KELAGE
+prerequisites: [KA-C107-dura, KA-C107-mele]
+sounds: []
+roots: [dravidian-kiizh-below]
+etymology_hook: "keḷage: native Dravidian, one word with Tamil kīḻ (DEDR 1619)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C107-LOC107-04, KA-LEX-C107-LOC107-05]
+introduces:
+  knowledge: [KA-LEX-C108-LOC108-01]
+practises:
+  knowledge: [KA-LEX-C108-LOC108-01, KA-LEX-C107-LOC107-04, KA-LEX-C107-LOC107-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C107-mele]
+---
+
+# ಕೆಳಗೆ (keḷage) — below, underneath
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C107-LOC107-04, KA-LEX-C107-LOC107-05] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for far; distance, then the Kannada for above.
+
+## You'll want to know: ಕೆಳಗೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-01]; assesses=[] -->
+
+**ಕೆಳಗೆ** — *keḷage* — "below, underneath".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕೆಳಗೆ** (*keḷage*) is native Dravidian, one word with Tamil *kīḻ* (DEDR 1619). DEDR gives the older Kannada *kīḻ*, *kiḻ*, "below, under".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-01, KA-LEX-C107-LOC107-04, KA-LEX-C107-LOC107-05] -->
+
+[PAUSE 1s]
+- [YOU SAY: *keḷage*]
+- [YOU SAY: *keḷage*, once more]
+- [YOU SAY: say *keḷage*]
+- [YOU RECALL: say the Kannada for far; distance, then the Kannada for above, then say *keḷage* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-01, KA-LEX-C107-LOC107-04, KA-LEX-C107-LOC107-05] -->
+
+[PAUSE 3s] What does ಕೆಳಗೆ mean? ("Below, underneath".) Say it once more.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-movement
+spine_node: SPINE-ASK-LOCATION
+sequence: 4395
+chapter: 108
+type: dialogue
+headword: "ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ."
+gloss: "I go to school — towards, not from"
+romanization: "nānu śālege hōguttēne"
+concept_tag: KA-LOC108-DESTINATION
+prerequisites: [KA-C108-raste, KA-C92-school, KA-C103-origin-answer, KA-C04-hoogu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C03-NAANU-01, KA-LEX-C04-HOOGU-01, KA-LEX-C92-WORK-01, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-SAY-ORIGIN-10]
+introduces:
+  knowledge: [KA-GRAMMAR-C108-DESTINATION-GE-06]
+practises:
+  knowledge: [KA-LEX-C03-NAANU-01, KA-LEX-C04-HOOGU-01, KA-LEX-C92-WORK-01, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-SAY-ORIGIN-10, KA-GRAMMAR-C108-DESTINATION-GE-06]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-raste, KA-C103-origin-answer]
+---
+
+# ಶಾಲೆಗೆ (śālege) — to school, not from school
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C03-NAANU-01, KA-LEX-C04-HOOGU-01, KA-LEX-C92-WORK-01, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
+
+[PAUSE 2s] Say the Kannada for “I”, “go”, “school”, “in front”, “in the
+middle” and “road”. Now say the answer you already know: “I have come from
+Bengaluru.” One direction is already yours.
+
+## You'll want to know: a destination
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C108-DESTINATION-GE-06]; assesses=[KA-LEX-C03-NAANU-01, KA-LEX-C04-HOOGU-01, KA-LEX-C92-WORK-01] -->
+
+Listen first, then say this one short sentence:
+
+> **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ.**
+>
+> *nānu śālege hōguttēne.* — “I go to school.”
+
+You know **ಶಾಲೆ** (*śāle*, school) and **ಹೋಗು** (*hōgu*, go). In this fixed
+sentence, **ಶಾಲೆಗೆ** (*śālege*) means “to school”: **-ಗೆ** points to the
+destination. Keep **ಹೋಗುತ್ತೇನೆ** as the whole “I go” form here. This is one
+place-and-verb frame, not a promise that you can attach **-ಗೆ** to every noun
+or conjugate every verb.
+
+## Grammar lens: to and from
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
+
+> **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ.** — I go **to** school.
+>
+> **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.** — I have come **from** Bengaluru.
+
+The destination ends in **-ಗೆ**; the starting place ends in **-ಇಂದ**. You
+already learned the whole Bengaluru answer. Listen for the
+difference, then say each sentence once. Do not swap “to” and “from”.
+
+## Guided practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-SAY-ORIGIN-10, KA-LEX-C92-WORK-01] -->
+
+[PAUSE 3s]
+- [YOU SAY: “I go to school” in Kannada, without looking.]
+- [YOU SAY: “I have come from Bengaluru” in Kannada, without looking.]
+
+## Writing: ಶಾಲೆಗೆ
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
+- [YOU WRITE: **ಶಾಲೆಗೆ** from memory, then check the printed word.]
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C103-ABLATIVE-INDA-08] -->
+
+[PAUSE 3s] Which ending points **towards** a place? (**-ಗೆ**, as in
+**ಶಾಲೆಗೆ**.) Which marks the place one came **from**? (**-ಇಂದ**, as in
+**ಬೆಂಗಳೂರಿನಿಂದ**.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-munde
+spine_node: SPINE-ASK-LOCATION
+sequence: 4370
+chapter: 108
+type: word
+headword: "ಮುಂದೆ"
+gloss: "in front"
+romanization: "munde"
+concept_tag: KA-LOC108-MUNDE
+prerequisites: [KA-C108-kelage, KA-C108-horage]
+sounds: []
+roots: [dravidian-mun-front]
+etymology_hook: "munde: native Dravidian, one word with Tamil muṉ (DEDR 5020)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C108-LOC108-01, KA-LEX-C108-LOC108-02]
+introduces:
+  knowledge: [KA-LEX-C108-LOC108-03]
+practises:
+  knowledge: [KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-01, KA-LEX-C108-LOC108-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-horage]
+---
+
+# ಮುಂದೆ (munde) — in front
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-01, KA-LEX-C108-LOC108-02] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for below, then the Kannada for outside.
+
+## You'll want to know: ಮುಂದೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-03]; assesses=[] -->
+
+**ಮುಂದೆ** — *munde* — "in front".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮುಂದೆ** (*munde*) is native Dravidian, one word with Tamil *muṉ* (DEDR 5020). DEDR lists *munda*, *mundu*, "the front", under *mun*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-01, KA-LEX-C108-LOC108-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *munde*]
+- [YOU SAY: *munde*, once more]
+- [YOU SAY: say *munde*]
+- [YOU RECALL: say the Kannada for below, then the Kannada for outside, then say *munde* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-01, KA-LEX-C108-LOC108-02] -->
+
+[PAUSE 3s] What does ಮುಂದೆ mean? ("In front".) Say it once more.
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-naduve
+spine_node: SPINE-ASK-LOCATION
+sequence: 4380
+chapter: 108
+type: word
+headword: "ನಡುವೆ"
+gloss: "in the middle, between"
+romanization: "naḍuve"
+concept_tag: KA-LOC108-NADUVE
+prerequisites: [KA-C108-horage, KA-C108-munde]
+sounds: []
+roots: [dravidian-nadu-middle]
+etymology_hook: "naḍuve: native Dravidian, one word with Tamil naṭu (DEDR 3584)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C108-LOC108-02, KA-LEX-C108-LOC108-03]
+introduces:
+  knowledge: [KA-LEX-C108-LOC108-04]
+practises:
+  knowledge: [KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-02, KA-LEX-C108-LOC108-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-munde]
+---
+
+# ನಡುವೆ (naḍuve) — in the middle, between
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-02, KA-LEX-C108-LOC108-03] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for outside, then the Kannada for in front.
+
+## You'll want to know: ನಡುವೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-04]; assesses=[] -->
+
+**ನಡುವೆ** — *naḍuve* — "in the middle, between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ನಡುವೆ** (*naḍuve*) is native Dravidian, one word with Tamil *naṭu* (DEDR 3584). DEDR lists *naḍuve* itself, "the very middle".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-02, KA-LEX-C108-LOC108-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *naḍuve*]
+- [YOU SAY: *naḍuve*, once more]
+- [YOU SAY: say *naḍuve*]
+- [YOU RECALL: say the Kannada for outside, then the Kannada for in front, then say *naḍuve* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-02, KA-LEX-C108-LOC108-03] -->
+
+[PAUSE 3s] What does ನಡುವೆ mean? ("In the middle, between".) Say it once more.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C108-raste
+spine_node: SPINE-ASK-LOCATION
+sequence: 4390
+chapter: 108
+type: word
+headword: "ರಸ್ತೆ"
+gloss: "a road"
+romanization: "rastē"
+concept_tag: KA-LOC108-RASTE
+prerequisites: [KA-C108-munde, KA-C108-naduve]
+sounds: []
+roots: [persian-rasta]
+etymology_hook: "rastē ← Persian rāsta 'road', through Hindustani"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04]
+introduces:
+  knowledge: [KA-LEX-C108-LOC108-05]
+practises:
+  knowledge: [KA-LEX-C108-LOC108-05, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-naduve]
+---
+
+# ರಸ್ತೆ (rastē) — a road
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
+
+[PAUSE 2s] Say the Kannada for in front and in the middle. Then ask where somebody
+is from, answer “from Bengaluru”, and recognise the Karnataka relation question.
+
+## You'll want to know: ರಸ್ತೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C108-LOC108-05]; assesses=[] -->
+
+**ರಸ್ತೆ** — *rastē* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ರಸ್ತೆ** (*rastē*) is a loan from Persian *rāsta*, "road, way", which came through Hindustani.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-05, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
+
+[PAUSE 1s]
+- [YOU SAY: *rastē*]
+- [YOU SAY: *rastē*, once more]
+- [YOU SAY: say *rastē*]
+- [YOU RECALL: **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?** and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.**]
+- [YOU RECALL: say the Kannada for in front, then the Kannada for in the middle, then say *rastē* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-05, KA-LEX-C108-LOC108-03, KA-LEX-C108-LOC108-04] -->
+
+[PAUSE 3s] What does ರಸ್ತೆ mean? ("A road".) Say it once more.
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C109-byanku
+spine_node: SPINE-ASK-LOCATION
+sequence: 4440
+chapter: 109
+type: word
+headword: "ಬ್ಯಾಂಕು"
+gloss: "a bank"
+romanization: "byāṅku"
+concept_tag: KA-LOC109-BYANKU
+prerequisites: [KA-C109-devasthana, KA-C109-granthalaya, KA-C75-on-a-sign, KA-C75-ninth, KA-C75-tenth, KA-C75-eleventh, KA-C75-eleventh, KA-C75-short-form]
+sounds: []
+roots: [english-bank]
+etymology_hook: "byāṅku ← English bank"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
+introduces:
+  knowledge: [KA-LEX-C109-LOC109-05]
+practises:
+  knowledge: [KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C109-granthalaya, KA-C104-accusative-annu, KA-C104-object-pronouns]
+---
+
+# ಬ್ಯಾಂಕು (byāṅku) — a bank
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07, KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-04, KA-LEX-C75-ORDINAL-05, KA-LEX-C75-ORDINAL-06, KA-GRAMMAR-C75-ORDINAL-07, KA-LEX-C75-ORDINAL-08] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a temple, then the Kannada for a library.
+
+[PAUSE 2s] Say the ordinals past eight: **ಒಂಬತ್ತನೆಯ**, **ಹತ್ತನೆಯ**,
+**ಹನ್ನೊಂದನೆಯ**. Then the spoken **ಮೊದಲನೇ**. [YOU READ: the sign form **೧ನೇ**]
+
+[PAUSE 2s] From the earlier object lesson, say **-ಅನ್ನು**, then “him”, “her” and
+“them” as objects.
+
+## You'll want to know: ಬ್ಯಾಂಕು
+<!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-05]; assesses=[] -->
+
+**ಬ್ಯಾಂಕು** — *byāṅku* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಬ್ಯಾಂಕು** (*byāṅku*) is a loan from English *bank*. Kannada adds *-u* after the final consonant.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07] -->
+
+[PAUSE 1s]
+- [YOU SAY: *byāṅku*]
+- [YOU SAY: *byāṅku*, once more]
+- [YOU SAY: say *byāṅku*]
+- [YOU RECALL: **-ಅನ್ನು; ಅವನನ್ನು; ಅವಳನ್ನು; ಅವರನ್ನು**]
+- [YOU RECALL: say the Kannada for a temple, then the Kannada for a library, then say *byāṅku* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-04, KA-GRAMMAR-C104-ACCUSATIVE-ANNU-06, KA-GRAMMAR-C104-OBJECT-PRONOUNS-07] -->
+
+[PAUSE 3s] What does ಬ್ಯಾಂಕು mean? ("A bank".) Say it once more. Then say “it”
+and “them” as objects. (**ಅದನ್ನು; ಅವರನ್ನು**.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C109-devasthana
+spine_node: SPINE-ASK-LOCATION
+sequence: 4420
+chapter: 109
+type: word
+headword: "ದೇವಸ್ಥಾನ"
+gloss: "a temple"
+romanization: "dēvasthāna"
+concept_tag: KA-LOC109-DEVASTHANA
+prerequisites: [KA-C109-setuve, KA-C109-udyana]
+sounds: []
+roots: [sanskrit-deva, sanskrit-sthana]
+etymology_hook: "dēvasthāna ← Sanskrit deva 'god' (CDIAL 6523) + sthāna 'place' (CDIAL 13753)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C109-LOC109-01, KA-LEX-C109-LOC109-02]
+introduces:
+  knowledge: [KA-LEX-C109-LOC109-03]
+practises:
+  knowledge: [KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-01, KA-LEX-C109-LOC109-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C109-udyana]
+---
+
+# ದೇವಸ್ಥಾನ (dēvasthāna) — a temple
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-01, KA-LEX-C109-LOC109-02] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a bridge, then the Kannada for a park.
+
+## You'll want to know: ದೇವಸ್ಥಾನ
+<!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-03]; assesses=[] -->
+
+**ದೇವಸ್ಥಾನ** — *dēvasthāna* — "a temple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ದೇವಸ್ಥಾನ** (*dēvasthāna*) is Sanskrit *deva*, "god" (CDIAL 6523), and *sthāna*, "place" (CDIAL 13753): "the god's place".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-01, KA-LEX-C109-LOC109-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *dēvasthāna*]
+- [YOU SAY: *dēvasthāna*, once more]
+- [YOU SAY: say *dēvasthāna*]
+- [YOU RECALL: say the Kannada for a bridge, then the Kannada for a park, then say *dēvasthāna* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-03, KA-LEX-C109-LOC109-01, KA-LEX-C109-LOC109-02] -->
+
+[PAUSE 3s] What does ದೇವಸ್ಥಾನ mean? ("A temple".) Say it once more.
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C109-granthalaya
+spine_node: SPINE-ASK-LOCATION
+sequence: 4430
+chapter: 109
+type: word
+headword: "ಗ್ರಂಥಾಲಯ"
+gloss: "a library"
+romanization: "granthālaya"
+concept_tag: KA-LOC109-GRANTHALAYA
+prerequisites: [KA-C109-udyana, KA-C109-devasthana]
+sounds: []
+roots: [sanskrit-grantha, sanskrit-alaya]
+etymology_hook: "granthālaya ← Sanskrit grantha 'book' (CDIAL 4350) + ālaya 'house' (CDIAL 1366)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C109-LOC109-02, KA-LEX-C109-LOC109-03]
+introduces:
+  knowledge: [KA-LEX-C109-LOC109-04]
+practises:
+  knowledge: [KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-02, KA-LEX-C109-LOC109-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C109-devasthana]
+---
+
+# ಗ್ರಂಥಾಲಯ (granthālaya) — a library
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-02, KA-LEX-C109-LOC109-03] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a park, then the Kannada for a temple.
+
+## You'll want to know: ಗ್ರಂಥಾಲಯ
+<!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-04]; assesses=[] -->
+
+**ಗ್ರಂಥಾಲಯ** — *granthālaya* — "a library".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಗ್ರಂಥಾಲಯ** (*granthālaya*) is Sanskrit *grantha*, "knot; book" (CDIAL 4350), and *ālaya*, "house, receptacle" (CDIAL 1366): "a house of books".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-02, KA-LEX-C109-LOC109-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *granthālaya*]
+- [YOU SAY: *granthālaya*, once more]
+- [YOU SAY: say *granthālaya*]
+- [YOU RECALL: say the Kannada for a park, then the Kannada for a temple, then say *granthālaya* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-02, KA-LEX-C109-LOC109-03] -->
+
+[PAUSE 3s] What does ಗ್ರಂಥಾಲಯ mean? ("A library".) Say it once more.
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C109-setuve
+spine_node: SPINE-ASK-LOCATION
+sequence: 4400
+chapter: 109
+type: word
+headword: "ಸೇತುವೆ"
+gloss: "a bridge"
+romanization: "sētuve"
+concept_tag: KA-LOC109-SETUVE
+prerequisites: [KA-C108-naduve, KA-C108-raste, KA-C108-movement]
+sounds: []
+roots: [sanskrit-setu]
+etymology_hook: "sētuve ← Sanskrit setu 'dam, bridge', reshaped as a tadbhava (CDIAL 13585)"
+duration:
+  max_seconds: 220
+requires:
+  knowledge: [KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
+introduces:
+  knowledge: [KA-LEX-C109-LOC109-01]
+practises:
+  knowledge: [KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C108-raste, KA-C108-movement]
+---
+
+# ಸೇತುವೆ (sētuve) — a bridge
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for in the middle, then the Kannada for a road. Now say “I go to school” with **ಶಾಲೆಗೆ**.
+
+## You'll want to know: ಸೇತುವೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-01]; assesses=[] -->
+
+**ಸೇತುವೆ** — *sētuve* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಸೇತುವೆ** (*sētuve*) comes from Sanskrit *setu*, "dam, bridge", reshaped to Kannada sounds: a tadbhava (CDIAL 13585). Kannada added *-ve* to the end.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sētuve*]
+- [YOU SAY: *sētuve*, once more]
+- [YOU SAY: say *sētuve*]
+- [YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]
+- [YOU RECALL: say the Kannada for in the middle, then the Kannada for a road, then say *sētuve* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05] -->
+
+[PAUSE 3s] What does ಸೇತುವೆ mean? ("A bridge".) Say it once more.
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C109-udyana
+spine_node: SPINE-ASK-LOCATION
+sequence: 4410
+chapter: 109
+type: word
+headword: "ಉದ್ಯಾನ"
+gloss: "a park"
+romanization: "udyāna"
+concept_tag: KA-LOC109-UDYANA
+prerequisites: [KA-C108-raste, KA-C109-setuve]
+sounds: []
+roots: [sanskrit-udyana]
+etymology_hook: "udyāna ← Sanskrit udyāna 'going out; park, garden', a tatsama (CDIAL 2052)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C108-LOC108-05, KA-LEX-C109-LOC109-01]
+introduces:
+  knowledge: [KA-LEX-C109-LOC109-02]
+practises:
+  knowledge: [KA-LEX-C109-LOC109-02, KA-LEX-C108-LOC108-05, KA-LEX-C109-LOC109-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C109-setuve]
+---
+
+# ಉದ್ಯಾನ (udyāna) — a park
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-05, KA-LEX-C109-LOC109-01] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a road, then the Kannada for a bridge.
+
+## You'll want to know: ಉದ್ಯಾನ
+<!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-02]; assesses=[] -->
+
+**ಉದ್ಯಾನ** — *udyāna* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಉದ್ಯಾನ** (*udyāna*) is Sanskrit *udyāna*, "going out; park, garden", taken over whole as a learned loan, a tatsama (CDIAL 2052).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-02, KA-LEX-C108-LOC108-05, KA-LEX-C109-LOC109-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *udyāna*]
+- [YOU SAY: *udyāna*, once more]
+- [YOU SAY: say *udyāna*]
+- [YOU RECALL: say the Kannada for a road, then the Kannada for a bridge, then say *udyāna* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-02, KA-LEX-C108-LOC108-05, KA-LEX-C109-LOC109-01] -->
+
+[PAUSE 3s] What does ಉದ್ಯಾನ mean? ("A park".) Say it once more.
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-house-near-far-inside
+spine_node: SPINE-ASK-LOCATION
+sequence: 4494
+chapter: 110
+type: dialogue
+headword: "ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ."
+gloss: "The school is near the house — compare near, far and inside"
+romanization: "śāle maneya hattira ide"
+concept_tag: KA-SPATIAL110-HOUSE-NEAR-FAR-INSIDE
+prerequisites: [KA-C110-tree-on-under, KA-C103-house, KA-C100-near, KA-C107-dura, KA-C103-origin-answer, KA-C92-school]
+sounds: []
+roots: [dravidian-ul-inside]
+etymology_hook: "oḷage: native Dravidian 'inside' (DEDR 698), also heard in oḷage banni"
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C103-HOME-01, KA-LEX-C100-FIND-05, KA-LEX-C107-LOC107-04, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-LEX-C92-WORK-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-05]
+introduces:
+  knowledge: [KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
+practises:
+  knowledge: [KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C103-HOME-01, KA-LEX-C100-FIND-05, KA-LEX-C107-LOC107-04, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-LEX-C92-WORK-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-05, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C110-tree-on-under, KA-C103-house, KA-C100-near, KA-C107-dura]
+---
+
+# ಮನೆಯ ಹತ್ತಿರ / ಮನೆಯಿಂದ ದೂರ / ಮನೆಯೊಳಗೆ
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C103-HOME-01, KA-LEX-C100-FIND-05, KA-LEX-C107-LOC107-04, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-05] -->
+
+[PAUSE 2s] Recall the chapter's five place words: market, beach, garden,
+corner, turn. Say them before checking: **ಸಂತೆ**, **ಕಡಲತೀರ**, **ತೋಟ**,
+**ಮೂಲೆ**, **ತಿರುವು**. Now say “on the tree” and “under the tree”. Recall
+**ಮನೆ** (*mane*, house), **ಹತ್ತಿರ** (*hattira*, near), and **ದೂರ** (*dūra*,
+far). We will keep one house as the reference and change its relation.
+
+## You'll want to know: near the house
+<!-- hl-knowledge: introduces=[KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]; assesses=[KA-LEX-C103-HOME-01, KA-LEX-C100-FIND-05, KA-LEX-C92-WORK-01] -->
+
+Listen, then say the line after the pause:
+
+> **ಶಾಲೆ ಮನೆಯ ಹತ್ತಿರ ಇದೆ.**
+>
+> *śāle maneya hattira ide.* — The school is near the house.
+
+You know **ಶಾಲೆ** (*śāle*, school). **ಮನೆಯ** (*maneya*) links the house to
+**ಹತ್ತಿರ**. Say **ಮನೆಯ ಹತ್ತಿರ** as one place phrase.
+
+## Grammar lens: far from the house
+<!-- hl-knowledge: introduces=[]; assesses=[KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-LEX-C107-LOC107-04] -->
+
+> **ಶಾಲೆ ಮನೆಯಿಂದ ದೂರ ಇದೆ.**
+>
+> *śāle maneyinda dūra ide.* — The school is far from the house.
+
+**ಮನೆಯಿಂದ** (*maneyinda*) means “from the house”; its **-ಇಂದ** is the
+same source marker you met in **ಬೆಂಗಳೂರಿನಿಂದ**. Do not put **ಮನೆಯ** in
+this far-from line. Listen to near and far once more; answer aloud which
+one means “far from the house”.
+
+## You'll want to know: inside the house
+<!-- hl-knowledge: introduces=[KA-LEX-C110-INSIDE-08]; assesses=[KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07, KA-LEX-C60-ANIMAL-05] -->
+
+> **ಹಕ್ಕಿ ಮನೆಯೊಳಗೆ ಇದೆ.**
+>
+> *hakki maneyoḷage ide.* — The bird is inside the house.
+
+Here **ಒಳಗೆ** (*oḷage*) means “inside”. In this fixed place phrase it
+joins **ಮನೆಯ** as **ಮನೆಯೊಳಗೆ**. Answer aloud: is the bird on the tree,
+under the tree, or inside the house?
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-INSIDE-08] -->
+
+You heard **ಒಳಗೆ** earlier in **ಒಳಗೆ ಬನ್ನಿ** (“please come in”). It is
+native Dravidian for “inside”; DEDR 698 also lists Tamil *uḷ*.
+
+## Guided Practice: three house relations
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[PAUSE 3s]
+- [YOU SAY: The school is near the house; now far from the house.]
+- [YOU SAY: The bird is inside the house.]
+- [YOU RECALL: say the line that puts the bird **under** the tree.]
+
+## Writing: three house phrases
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[YOU WRITE: **ಮನೆಯ ಹತ್ತಿರ**, **ಮನೆಯಿಂದ ದೂರ**, and **ಮನೆಯೊಳಗೆ** from
+memory; check each against the printed examples.]
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[PAUSE 3s] Name the five places: near, far, on, under, inside.
+For each, say the **complete phrase** with its tree or house reference.
+That is what you will retrieve later; isolated words are not enough.
+`,T=e({default:()=>E}),E=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-kadalatira
+spine_node: SPINE-ASK-LOCATION
+sequence: 4460
+chapter: 110
+type: word
+headword: "ಕಡಲತೀರ"
+gloss: "a beach"
+romanization: "kaḍalatīra"
+concept_tag: KA-LOC110-KADALATIRA
+prerequisites: [KA-C109-byanku, KA-C110-sante]
+sounds: []
+roots: [dravidian-katal-sea, sanskrit-tira]
+etymology_hook: "kaḍalatīra: native kaḍal 'sea' (DEDR 1118) + tīra 'shore' ← Sanskrit (CDIAL 5842)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C109-LOC109-05, KA-LEX-C110-LOC110-01]
+introduces:
+  knowledge: [KA-LEX-C110-LOC110-02]
+practises:
+  knowledge: [KA-LEX-C110-LOC110-02, KA-LEX-C109-LOC109-05, KA-LEX-C110-LOC110-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C110-sante]
+---
+
+# ಕಡಲತೀರ (kaḍalatīra) — a beach
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-05, KA-LEX-C110-LOC110-01] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a bank, then the Kannada for a market.
+
+## You'll want to know: ಕಡಲತೀರ
+<!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-02]; assesses=[] -->
+
+**ಕಡಲತೀರ** — *kaḍalatīra* — "a beach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಕಡಲತೀರ** (*kaḍalatīra*) is *kaḍal*, "sea", native Dravidian (DEDR 1118, with Tamil *kaṭal*), and *tīra*, "shore", from Sanskrit *tīra* (CDIAL 5842).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-02, KA-LEX-C109-LOC109-05, KA-LEX-C110-LOC110-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kaḍalatīra*]
+- [YOU SAY: *kaḍalatīra*, once more]
+- [YOU SAY: say *kaḍalatīra*]
+- [YOU RECALL: say the Kannada for a bank, then the Kannada for a market, then say *kaḍalatīra* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-02, KA-LEX-C109-LOC109-05, KA-LEX-C110-LOC110-01] -->
+
+[PAUSE 3s] What does ಕಡಲತೀರ mean? ("A beach".) Say it once more.
+`,D=e({default:()=>O}),O=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-mule
+spine_node: SPINE-ASK-LOCATION
+sequence: 4480
+chapter: 110
+type: word
+headword: "ಮೂಲೆ"
+gloss: "a corner"
+romanization: "mūle"
+concept_tag: KA-LOC110-MULE
+prerequisites: [KA-C110-kadalatira, KA-C110-tota]
+sounds: []
+roots: [dravidian-muulai-corner]
+etymology_hook: "mūle: native Dravidian, one word with Tamil mūlai and Telugu mūla (DEDR 5044)"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03]
+introduces:
+  knowledge: [KA-LEX-C110-LOC110-04]
+practises:
+  knowledge: [KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C110-tota]
+---
+
+# ಮೂಲೆ (mūle) — a corner
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a beach, then the Kannada for a garden.
+
+## You'll want to know: ಮೂಲೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-04]; assesses=[] -->
+
+**ಮೂಲೆ** — *mūle* — "a corner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ಮೂಲೆ** (*mūle*) is native Dravidian, one word with Tamil *mūlai* and Telugu *mūla* (DEDR 5044).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *mūle*]
+- [YOU SAY: *mūle*, once more]
+- [YOU SAY: say *mūle*]
+- [YOU RECALL: say the Kannada for a beach, then the Kannada for a garden, then say *mūle* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-04, KA-LEX-C110-LOC110-02, KA-LEX-C110-LOC110-03] -->
+
+[PAUSE 3s] What does ಮೂಲೆ mean? ("A corner".) Say it once more.
+`,k=e({default:()=>A}),A=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-sante
+spine_node: SPINE-ASK-LOCATION
+sequence: 4450
+chapter: 110
+type: word
+headword: "ಸಂತೆ"
+gloss: "a market"
+romanization: "sante"
+concept_tag: KA-LOC110-SANTE
+prerequisites: [KA-C109-granthalaya, KA-C109-byanku, KA-C108-movement]
+sounds: []
+roots: [kannada-sante-market]
+etymology_hook: "sante: origin uncertain; not recorded in DEDR or CDIAL"
+duration:
+  max_seconds: 220
+requires:
+  knowledge: [KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
+introduces:
+  knowledge: [KA-LEX-C110-LOC110-01]
+practises:
+  knowledge: [KA-LEX-C110-LOC110-01, KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C109-byanku, KA-C108-movement]
+---
+
+# ಸಂತೆ (sante) — a market
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a library, then a bank. Recall “I go to school” with **ಶಾಲೆಗೆ**.
+
+## You'll want to know: ಸಂತೆ
+<!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-01]; assesses=[] -->
+
+**ಸಂತೆ** — *sante* — "a market".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **ಸಂತೆ** (*sante*) is uncertain. Neither DEDR nor CDIAL records it, and no source for it is settled.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-01, KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sante*]
+- [YOU SAY: *sante*, once more]
+- [YOU SAY: say *sante*]
+- [YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]
+- [YOU RECALL: say the Kannada for a library, then the Kannada for a bank, then say *sante* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-01, KA-LEX-C109-LOC109-04, KA-LEX-C109-LOC109-05] -->
+
+[PAUSE 3s] What does ಸಂತೆ mean? ("A market".) Say it once more.
+`,j=e({default:()=>M}),M=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-tiruvu
+spine_node: SPINE-ASK-LOCATION
+sequence: 4490
+chapter: 110
+type: word
+headword: "ತಿರುವು"
+gloss: "a turn, a bend"
+romanization: "tiruvu"
+concept_tag: KA-LOC110-TIRUVU
+prerequisites: [KA-C110-tota, KA-C110-mule]
+sounds: []
+roots: [dravidian-tiri-turn]
+etymology_hook: "tiruvu: native Dravidian, from tiri 'to turn' (DEDR 3246); Tamil tiri"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04]
+introduces:
+  knowledge: [KA-LEX-C110-LOC110-05]
+practises:
+  knowledge: [KA-LEX-C110-LOC110-05, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C110-mule]
+---
+
+# ತಿರುವು (tiruvu) — a turn, a bend
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a garden, then the Kannada for a corner.
+
+## You'll want to know: ತಿರುವು
+<!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-05]; assesses=[] -->
+
+**ತಿರುವು** — *tiruvu* — "a turn, a bend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತಿರುವು** (*tiruvu*) is native Dravidian, from *tiri*, "to turn round", which DEDR 3246 lists with "a turn" among its senses; the entry also has Tamil *tiri*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-05, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tiruvu*]
+- [YOU SAY: *tiruvu*, once more]
+- [YOU SAY: say *tiruvu*]
+- [YOU RECALL: say the Kannada for a garden, then the Kannada for a corner, then say *tiruvu* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-05, KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-04] -->
+
+[PAUSE 3s] What does ತಿರುವು mean? ("A turn, a bend".) Say it once more.
+`,N=e({default:()=>P}),P=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-tota
+spine_node: SPINE-ASK-LOCATION
+sequence: 4470
+chapter: 110
+type: word
+headword: "ತೋಟ"
+gloss: "a garden"
+romanization: "tōṭa"
+concept_tag: KA-LOC110-TOTA
+prerequisites: [KA-C110-sante, KA-C110-kadalatira]
+sounds: []
+roots: [dravidian-tottam-garden]
+etymology_hook: "tōṭa: native Dravidian; DEDR 3549 lists tōṭa 'garden' under tōḍu 'to dig'; Malayalam tōṭṭam"
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02]
+introduces:
+  knowledge: [KA-LEX-C110-LOC110-03]
+practises:
+  knowledge: [KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C110-kadalatira]
+---
+
+# ತೋಟ (tōṭa) — a garden
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02] -->
+
+[PAUSE 2s] Before the new one: say the Kannada for a market, then the Kannada for a beach.
+
+## You'll want to know: ತೋಟ
+<!-- hl-knowledge: introduces=[KA-LEX-C110-LOC110-03]; assesses=[] -->
+
+**ತೋಟ** — *tōṭa* — "a garden".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ತೋಟ** (*tōṭa*) is native Dravidian, listed in DEDR 3549 as *tōṭa*, "garden", under *tōḍu*, "to dig"; the entry also has Malayalam *tōṭṭam*.
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tōṭa*]
+- [YOU SAY: *tōṭa*, once more]
+- [YOU SAY: say *tōṭa*]
+- [YOU RECALL: say the Kannada for a market, then the Kannada for a beach, then say *tōṭa* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C110-LOC110-03, KA-LEX-C110-LOC110-01, KA-LEX-C110-LOC110-02] -->
+
+[PAUSE 3s] What does ತೋಟ mean? ("A garden".) Say it once more.
+`,F=e({default:()=>I}),I=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: KA-C110-tree-on-under
+spine_node: SPINE-ASK-LOCATION
+sequence: 4492
+chapter: 110
+type: dialogue
+headword: "ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ."
+gloss: "The bird is on the tree — a named reference place"
+romanization: "marada mēle hakki ide"
+concept_tag: KA-SPATIAL110-TREE-ON-UNDER
+prerequisites: [KA-C110-tiruvu, KA-C54-tree, KA-C60-bird, KA-C107-mele, KA-C108-kelage]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01]
+introduces:
+  knowledge: [KA-GRAMMAR-C110-TREE-ON-UNDER-06]
+practises:
+  knowledge: [KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01, KA-GRAMMAR-C110-TREE-ON-UNDER-06]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [KA-C54-tree, KA-C60-bird, KA-C107-mele, KA-C108-kelage]
+---
+
+# ಮರದ ಮೇಲೆ / ಮರದ ಕೆಳಗೆ — on or under the tree
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05, KA-LEX-C107-LOC107-05, KA-LEX-C108-LOC108-01] -->
+
+[PAUSE 2s] Recall **ಮರ** (*mara*, tree) and **ಹಕ್ಕಿ** (*hakki*, bird).
+Say **ಮೇಲೆ** (*mēle*, on top), then **ಕೆಳಗೆ** (*keḷage*, under).
+You know all four words already.
+
+## You'll want to know: on the tree
+<!-- hl-knowledge: introduces=[KA-GRAMMAR-C110-TREE-ON-UNDER-06]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C60-ANIMAL-05] -->
+
+Listen once, then say the line after the pause:
+
+> **ಮರದ ಮೇಲೆ ಹಕ್ಕಿ ಇದೆ.**
+>
+> *marada mēle hakki ide.* — The bird is on the tree.
+
+**ಮರದ** (*marada*) means “of the tree” here. It names what **ಮೇಲೆ** is
+relative to. Keep **ಮರದ ಮೇಲೆ** together as “on the tree”; **ಹಕ್ಕಿ ಇದೆ**
+says that the bird is there. This one frame does not teach every Kannada
+noun ending.
+
+## Grammar lens: under the tree
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C108-LOC108-01] -->
+
+> **ಮರದ ಕೆಳಗೆ ಹಕ್ಕಿ ಇದೆ.**
+>
+> *marada keḷage hakki ide.* — The bird is under the tree.
+
+The tree and bird stay the same. Only **ಮೇಲೆ** changes to **ಕೆಳಗೆ**.
+Say both lines aloud, slowly. Listen for the word that tells you where.
+
+## Guided Practice: on or under
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06] -->
+
+[PAUSE 3s]
+- [YOU SAY: The bird is **on** the tree.]
+- [YOU SAY: The bird is **under** the tree.]
+- [YOU ANSWER: which word puts the bird below? Say it aloud.]
+
+## Writing: the place phrases
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06] -->
+
+[YOU WRITE: **ಮರದ ಮೇಲೆ** and **ಮರದ ಕೆಳಗೆ** from memory. Check the
+two final words against the lines above.]
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06] -->
+
+[PAUSE 3s] Say “on the tree” and “under the tree” once more. You have
+located one named thing relative to another. Direction words alone do not
+give that reference.
+`;export{r as _,D as a,x as c,h as d,p as f,a as g,s as h,k as i,y as l,l as m,N as n,T as o,d as p,j as r,C as s,F as t,_ as u,t as v};
