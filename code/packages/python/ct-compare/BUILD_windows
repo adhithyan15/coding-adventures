@@ -1,3 +1,6 @@
 uv venv .venv --quiet --no-project --clear
-uv pip install --python .venv -e .[dev] --quiet
+uv pip install --python .venv -e ../warrant-corpus -e .[dev] --quiet
 .venv\Scripts\python -m pytest tests/ -v --tb=short
+.venv\Scripts\python tests\warrant_evidence.py check evidence/test-manifest.json
+.venv\Scripts\python tests\warrant_evidence.py sabotage
+.venv\Scripts\python -m coding_adventures_warrant_corpus validate-manifest evidence/test-manifest.json --repo-root ../../../.. --corpus ../../../specs/fixtures/ct-compare-warrant-v1 --registry ../../../specs/fixtures/ct-compare-warrant-v1/consumers.json
