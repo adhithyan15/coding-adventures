@@ -14,7 +14,7 @@ func TestStraceArgsShape(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	wantHead := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "--pidns-translation", "-e", "signal=none", "-e"}
+	wantHead := []string{"-f", "--quiet=attach", "-y", "-s", "4096", "--kill-on-exit", "--pidns-translation", "-e", "signal=all", "-e"}
 	if !reflect.DeepEqual(args[:len(wantHead)], wantHead) {
 		t.Errorf("head %v", args[:len(wantHead)])
 	}
@@ -27,6 +27,29 @@ func TestStraceArgsShape(t *testing.T) {
 	// element must be the separator.
 	if args[len(args)-1] != "--" {
 		t.Error("the argv does not end with --")
+	}
+}
+
+// D19: strace prints "+++ killed by SIG +++" only for signals in the -e signal
+// set, so the argv must say signal=all, and must never carry signal=none (or
+// any other -e signal=): with a narrower set a process killed by a signal has
+// no exit line and the run is voided.
+func TestStraceArgsPrintsEverySignal(t *testing.T) {
+	args, err := StraceArgs("/tmp/k/trace.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	all := 0
+	for i, a := range args {
+		if strings.HasPrefix(a, "signal=") {
+			if a != "signal=all" || i == 0 || args[i-1] != "-e" {
+				t.Errorf("unexpected signal option %q", a)
+			}
+			all++
+		}
+	}
+	if all != 1 {
+		t.Errorf("%d signal options in %v", all, args)
 	}
 }
 

@@ -1,6 +1,6 @@
 // Package trace parses the output of
 //
-//	strace -f --quiet=attach -y -s 4096 -e signal=none -e trace=... -o <file>
+//	strace -f --quiet=attach -y -s 4096 -e signal=all -e trace=... -o <file>
 //
 // into an ordered list of path events plus the process tree, exactly as
 // code/specs/KILN04-traced-read-sets.md §4.3-§5.1 describes (stage 1a).
@@ -138,6 +138,24 @@ type Trace struct {
 	Procs   map[int]*Process
 	Order   []int  // pids in the order they first appeared
 	Exits   []Exit // exit lines in trace order
+	// ExitLines is parallel to Exits: ExitLines[i] is the 1-based trace line of
+	// Exits[i].  (It is a separate slice, not a field of Exit, because many
+	// callers compare Exit values.)
+	ExitLines []int
+	// InitExitLine is, under Options.HelperRoot, the 1-based line where the
+	// FIRST exit_group call began that was made after the step's exec by the
+	// init process or by a CLONE_THREAD thread of it; 0 when there is none.
+	//
+	// strace prints exit_group at PTRACE_EVENT_EXIT, i.e. when the step's
+	// thread group starts to die.  The kernel then kills every other process
+	// of the PID namespace; those deaths are the "daemon left behind" and their
+	// "+++ killed by SIGKILL +++" lines may come before OR after the init's own
+	// "+++ exited +++" line, but (by design) after this call line.  So this
+	// line, not init's exit line, is the boundary that tells a daemon from a
+	// child the step reaped itself.  A thread group killed by a signal, or a
+	// raw exit(2) of the last thread, has no exit_group: 0 (fail closed, see
+	// traced.DaemonLeft).
+	InitExitLine int
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
 	// RootExecArgv and InitExecArgv are, under Options.HelperRoot, the argument
@@ -272,6 +290,7 @@ type model struct {
 	rootExeced bool         // helper mode: the root group has had its one exec
 	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
+	initMemo   map[int]bool // inInitThreads answers
 	walkSteps  int          // thread-chain steps taken (a test watches this stays linear)
 }
 
@@ -321,6 +340,7 @@ func newModel(lim Limits, opts Options, root int, initialCwd string) *model {
 		procs:    map[int]*proc{},
 		spawns:   map[int]spawn{},
 		rootMemo: map[int]bool{},
+		initMemo: map[int]bool{},
 	}
 }
 
@@ -438,6 +458,40 @@ func (m *model) inRootGroup(pid int) bool {
 	}
 	for _, p := range path {
 		m.rootMemo[p] = res
+	}
+	return res
+}
+
+// inInitThreads reports whether pid is the init child or a CLONE_THREAD thread
+// (transitively) of it: the init's thread group, whose exit_group ends the
+// step.  Like inRootGroup it uses only the spawn records, memoises every pid
+// on the walked chain (so the walk is linear in total) and treats a chain
+// deeper than maxProcessDepth as "no", which fails closed.
+func (m *model) inInitThreads(pid int) bool {
+	if m.initPid == 0 {
+		return false
+	}
+	var path []int
+	res := false
+	for cur, n := pid, 0; ; n++ {
+		if v, ok := m.initMemo[cur]; ok {
+			res = v
+			break
+		}
+		m.walkSteps++
+		path = append(path, cur)
+		if cur == m.initPid {
+			res = true
+			break
+		}
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") || n >= maxProcessDepth {
+			break
+		}
+		cur = sp.parent
+	}
+	for _, p := range path {
+		m.initMemo[p] = res
 	}
 	return res
 }
@@ -623,11 +677,18 @@ func (m *model) apply(rec *record) *Error {
 		p.exited = true
 		p.cwd.refs--
 		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
 		p.Exit = rec.exit // its own allocation: never aliases the slice above
 		return nil
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
+	}
+	if rec.groupExit {
+		if m.stepExec && m.inInitThreads(p.Pid) && m.trace.InitExitLine == 0 {
+			m.trace.InitExitLine = rec.line
+		}
+		return nil
 	}
 	if p.grp == grpRoot {
 		return m.applyHelperRoot(p, rec)

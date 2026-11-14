@@ -175,6 +175,12 @@ type record struct {
 	exit  *Exit
 	start bool // a handled call began (its "<unfinished ...>" line); call is nil
 	split bool // this completed call was split: its cwd was sampled at the start record
+	// groupExit marks the START of an exit_group call (call is nil).  The call
+	// is otherwise ignored; the model needs only WHEN it began, because strace
+	// prints it at the thread group's exit, before the "+++ exited +++" line
+	// (see Trace.InitExitLine).  Only the start line is emitted: a resumed
+	// half emits nothing.
+	groupExit bool
 }
 
 // lineState is what the line handler carries between lines.
@@ -634,6 +640,9 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			}
 		}
 		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
+		if call.name == "exit_group" {
+			return &record{line: lineNo, pid: pid, groupExit: true}, nil
+		}
 		if lookup(call.name).class == classHandled {
 			// The working directory a split call runs in is the one at its
 			// START; pass 2 samples it when it meets this marker.
@@ -661,6 +670,10 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 		}
 	}
 	if lookup(call.name).class == classIgnored {
+		if call.name == "exit_group" && !split {
+			// A whole-line exit_group: its one line is its start line.
+			return &record{line: lineNo, pid: pid, groupExit: true}, nil
+		}
 		return nil, nil
 	}
 	return &record{line: lineNo, pid: pid, call: &call, split: split}, nil
