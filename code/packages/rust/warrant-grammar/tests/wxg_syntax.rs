@@ -99,6 +99,6 @@ fn malformed_ensures_blocks_are_syntax_errors() {
 fn the_input_block_ensures_row_keeps_its_meaning() {
     // `ensures` as the last row of an `input` block is unchanged (VER04 section 2).
     accepts(
-        "warrant t\n  op f(x: Bytes) -> Bool\n  input f:\n    hostile\n    ensures no_panic\n",
+        "warrant t\n  op f(x: Bytes) -> Bool\n  input f.x:\n    hostile\n    ensures no_panic\n",
     );
 }

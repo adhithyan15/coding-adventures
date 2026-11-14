@@ -17,7 +17,7 @@ use std::fmt;
 
 use crate::fixed::FixedTy;
 use crate::parser::{
-    AssumptionsDecl, BinaryOp, BoundDecl, Declaration, Expression, FieldDecl, InputDecl,
+    AssumptionsDecl, BinaryOp, BoundDecl, Declaration, EnsuresDecl, Expression, FieldDecl, InputDecl,
     LabelsDecl, Literal, MatchArm, ModelDecl, OpDecl, Pattern, ProjKey, QualifiedName, TypeExpr,
     UnaryOp, VectorsDecl, Version, WarrantFile, Width, MAX_PATTERN_DEPTH,
 };
@@ -35,6 +35,12 @@ pub const MAX_TABLE_ROWS: u64 = 100_000;
 
 /// Most rows all the tables of one document may declare together.
 pub const MAX_DOCUMENT_ROWS: u64 = 250_000;
+
+/// Most `inout` parameters one operation may have (VER04k section 4.3, W0713).
+pub const MAX_INOUT_PARAMS: usize = 4;
+
+/// Most rows one `ensures` block may have (VER04k section 4.2, W0602).
+pub const MAX_ENSURES_ROWS: usize = 32;
 
 /// Names reserved in every document (VER04 section 2).
 const V0_BUILTINS: [&str; 18] = [
@@ -188,6 +194,11 @@ pub enum DiagnosticCode {
     /// W0710: Column/type mismatch of a `vectors` table: an unused column or a
     /// column type with no TFV decoding (VER04j section 5.4).
     W0710,
+    /// W0713: A WX-G rule (VER04k section 1.4): an `inout` parameter whose
+    /// post-state has no slot in the result type, an inadmissible `inout` type,
+    /// more than four of them, `inout` on a `fresh` operation, or an `ensures`
+    /// row that calls an operation or quantifies.
+    W0713,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -204,6 +215,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0601 => write!(f, "W0601"),
             Self::W0602 => write!(f, "W0602"),
             Self::W0710 => write!(f, "W0710"),
+            Self::W0713 => write!(f, "W0713"),
         }
     }
 }
@@ -279,6 +291,10 @@ pub enum CheckerErrorKind {
         len: usize,
         limit: usize,
     },
+    /// WX-G: a rule of VER04k section 4.2 or 4.3 (W0713); the text says which.
+    Postcondition(String),
+    /// WX-G: an `ensures` block with more than [`MAX_ENSURES_ROWS`] rows.
+    TooManyEnsuresRows { len: usize, limit: usize },
 }
 
 /// Semantic checking error with source span.
@@ -541,6 +557,11 @@ pub struct Checker<'a> {
     labels: BTreeMap<String, &'a LabelsDecl<'a>>,
     bounds: BTreeMap<String, &'a BoundDecl<'a>>,
     inputs: BTreeMap<String, &'a InputDecl<'a>>,
+
+    // WX-G: the `ensures` blocks by operation name, in declaration order of
+    // first appearance.  Private to the checker: no field is added to
+    // `CheckedWarrantModule` (VER04k section 1.3, item 3).
+    ensures: BTreeMap<String, &'a EnsuresDecl<'a>>,
 }
 
 impl<'a> Checker<'a> {
@@ -564,6 +585,7 @@ impl<'a> Checker<'a> {
             labels: BTreeMap::new(),
             bounds: BTreeMap::new(),
             inputs: BTreeMap::new(),
+            ensures: BTreeMap::new(),
         }
     }
 
@@ -623,6 +645,9 @@ impl<'a> Checker<'a> {
 
         // Pass 6: Type-check examples and claims
         self.typecheck_examples_and_claims()?;
+
+        // Pass 6b (WX-G): the `ensures` blocks.
+        self.typecheck_ensures(&checked_ops)?;
 
         // Pass 7: Check contracts (labels, bounds, inputs, assumptions)
         self.check_contracts()?;
@@ -803,6 +828,20 @@ impl<'a> Checker<'a> {
                         });
                     }
                     self.vectors.push(v);
+                }
+                // WX-G: one `ensures` block per operation (W0201); that the
+                // operation exists is checked once every operation is known.
+                Declaration::Ensures(en) => {
+                    if self.ensures.insert(en.op.to_string(), en).is_some() {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateContract(format!(
+                                "ensures {}",
+                                en.op
+                            )),
+                            span: en.span,
+                        });
+                    }
                 }
                 Declaration::Labels(lbl) => {
                     if self.labels.insert(lbl.name.to_string(), lbl).is_some() {
@@ -1323,6 +1362,7 @@ impl<'a> Checker<'a> {
                 }
             }
             let return_type = self.resolve_type(&op.return_type, &static_params)?;
+            self.check_inout(&op, &params, &return_type)?;
             checked_ops.insert(
                 op.name.to_string(),
                 CheckedOp {
@@ -1336,6 +1376,169 @@ impl<'a> Checker<'a> {
             );
         }
         Ok(checked_ops)
+    }
+
+    // ── WX-G: `inout` parameters and `ensures` blocks (VER04k section 4) ───
+
+    /// Is `ty` one a host mutable reference can pass and read back (VER04k
+    /// section 4.3)?  `Bool`, the fixed-width integers, `Nat`, `Bytes`,
+    /// `Bytes<N>` with a literal `N`, `List<T>` of one of those or of an
+    /// admissible record, and records whose fields are all admissible.  A tuple
+    /// (as the type or as a record field), an `Option`, a `Result`, a variant,
+    /// an `Int` and a symbolic width are not.
+    fn inout_admissible(&self, ty: &Type, in_list: bool, depth: usize) -> bool {
+        if depth > 8 {
+            return false;
+        }
+        match ty {
+            Type::Bool | Type::Nat | Type::Bytes | Type::FixedBytes(_) => true,
+            t if t.fixed().is_some() => true,
+            Type::List(inner) => !in_list && self.inout_admissible(inner, true, depth + 1),
+            Type::Adt(name) => self.adts.get(name).is_some_and(|a| {
+                a.is_record
+                    && a.ctors.iter().all(|c| {
+                        c.fields
+                            .iter()
+                            .all(|(_, f)| self.inout_admissible(f, false, depth + 1))
+                    })
+            }),
+            _ => false,
+        }
+    }
+
+    /// The `inout` rules of one operation: at most four, runtime parameters of an
+    /// admissible type, not on a `fresh` operation, and a post-state slot in the
+    /// result type (S1 to S4).  Every refusal is W0713.
+    fn check_inout(
+        &self,
+        op: &OpDecl<'a>,
+        params: &[(String, Type)],
+        return_type: &Type,
+    ) -> Result<(), CheckerError> {
+        let inout: Vec<(&crate::parser::Parameter<'a>, &Type)> = op
+            .params
+            .iter()
+            .zip(params.iter().map(|(_, t)| t))
+            .filter(|(p, _)| p.inout)
+            .collect();
+        if inout.is_empty() {
+            return Ok(());
+        }
+        let refuse = |span: (usize, usize), msg: String| CheckerError {
+            code: DiagnosticCode::W0713,
+            kind: CheckerErrorKind::Postcondition(msg),
+            span,
+        };
+        if inout.len() > MAX_INOUT_PARAMS {
+            return Err(refuse(
+                op.span,
+                format!(
+                    "operation `{}` has {} inout parameters; at most {MAX_INOUT_PARAMS} are allowed",
+                    op.name,
+                    inout.len()
+                ),
+            ));
+        }
+        if op.is_fresh {
+            return Err(refuse(
+                op.span,
+                format!(
+                    "operation `{}` is `fresh` and has an inout parameter: a post-state is the caller's own buffer",
+                    op.name
+                ),
+            ));
+        }
+        for (p, ty) in &inout {
+            if !self.inout_admissible(ty, false, 0) {
+                return Err(refuse(
+                    p.span,
+                    format!(
+                        "inout parameter `{}` has type {}, which a host mutable reference cannot carry",
+                        p.name,
+                        ty.display_name()
+                    ),
+                ));
+            }
+        }
+        let posts: Vec<Type> = inout.iter().map(|(_, t)| (*t).clone()).collect();
+        if resolve_post_slot(&posts, &slot_shape(return_type)).is_none() {
+            return Err(refuse(
+                op.span,
+                format!(
+                    "the result type {} of `{}` has no post-state slot for its inout parameters (S1 to S4)",
+                    return_type.display_name(),
+                    op.name
+                ),
+            ));
+        }
+        Ok(())
+    }
+
+    /// The `ensures` blocks: each names a declared operation (W0401), has 1 to 32
+    /// rows (W0602), the operation has no parameter called `result` (W0203), no
+    /// row calls an operation or quantifies (W0713), and each row is a `Bool`
+    /// over the parameters (the pre-state) and `result` (W0301).
+    fn typecheck_ensures(
+        &mut self,
+        ops: &BTreeMap<String, CheckedOp>,
+    ) -> Result<(), CheckerError> {
+        let blocks: Vec<&'a EnsuresDecl<'a>> = self.ensures.values().copied().collect();
+        for en in blocks {
+            self.charge_work(en.span)?;
+            let Some(op) = ops.get(en.op) else {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0401,
+                    kind: CheckerErrorKind::UnknownBoundOperation(format!(
+                        "ensures names `{}`, which is not a declared operation",
+                        en.op
+                    )),
+                    span: en.span,
+                });
+            };
+            if en.rows.len() > MAX_ENSURES_ROWS {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0602,
+                    kind: CheckerErrorKind::TooManyEnsuresRows {
+                        len: en.rows.len(),
+                        limit: MAX_ENSURES_ROWS,
+                    },
+                    span: en.span,
+                });
+            }
+            if op.params.iter().any(|(n, _)| n == "result") {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0203,
+                    kind: CheckerErrorKind::ShadowedBinding("result".to_string()),
+                    span: en.span,
+                });
+            }
+            let mut env: HashMap<String, Type> = op.params.iter().cloned().collect();
+            env.insert("result".to_string(), op.return_type.clone());
+            let op_names: HashSet<&str> = ops.keys().map(String::as_str).collect();
+            for row in &en.rows {
+                if let Some(what) = ensures_row_violation(row, &op_names) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0713,
+                        kind: CheckerErrorKind::Postcondition(format!(
+                            "an ensures row may not {what}"
+                        )),
+                        span: body_span(row),
+                    });
+                }
+                let ty = self.typecheck_expression(row, &env, Some(&Type::Bool), false)?;
+                if ty != Type::Bool {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bool".to_string(),
+                            actual: ty.display_name(),
+                        },
+                        span: body_span(row),
+                    });
+                }
+            }
+        }
+        Ok(())
     }
 
     // ── Pass 5: Type-Check Models ──────────────────────────────────────────
@@ -3808,6 +4011,116 @@ impl<'a> Checker<'a> {
     }
 }
 
+/// The structural shape of an operation's declared result, as far as the
+/// post-state slot rules of VER04k section 4.2 look at it.  It is generic in the
+/// component type so that the checker (over [`Type`]) and the evidence generator
+/// (over its own binder type) resolve a slot with the one function below.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SlotShape<T> {
+    /// Any type that is not a tuple and not a `Result`.
+    Plain(T),
+    /// A tuple `(C1, ..., Cn)`.
+    Tuple(Vec<T>),
+    /// `Result<T, E>` for a `T` that is not a tuple.
+    ResultPlain(T),
+    /// `Result<(C1, ..., Cn), E>`.
+    ResultTuple(Vec<T>),
+}
+
+/// Where the post-states of an operation's `inout` parameters are in its result
+/// (VER04k section 4.2).  `h` is the number of components the host returns.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PostSlot {
+    /// `k = 1` and `R = P1`: the whole result; the host returns `()`.
+    S1,
+    /// `k = 1` and `R = Result<P1, E>`: the `Ok` payload; the host returns `Result<(), E>`.
+    S2,
+    /// A tuple whose last `k` components are the post-states.
+    S3 { h: usize },
+    /// `Result` of such a tuple.
+    S4 { h: usize },
+}
+
+impl PostSlot {
+    /// The name the corpus descriptor uses (VER04k section 4.9).
+    pub fn name(self) -> &'static str {
+        match self {
+            PostSlot::S1 => "S1",
+            PostSlot::S2 => "S2",
+            PostSlot::S3 { .. } => "S3",
+            PostSlot::S4 { .. } => "S4",
+        }
+    }
+}
+
+/// The first of the rules S1 to S4 that matches, by exact equality of component
+/// types, or `None`.  The rules are tried in the order of the specification
+/// (S1 first); a post-state is only ever reached by projection, never through
+/// an `Option`, a `List` or a user variant, because those shapes have no case.
+pub fn resolve_post_slot<T: PartialEq>(posts: &[T], ret: &SlotShape<T>) -> Option<PostSlot> {
+    let k = posts.len();
+    if k == 0 {
+        return None;
+    }
+    let tail = |cs: &[T]| -> Option<usize> {
+        let n = cs.len();
+        (n >= 2 && n >= k && cs[n - k..] == *posts).then(|| n - k)
+    };
+    match ret {
+        SlotShape::Plain(t) if k == 1 && *t == posts[0] => Some(PostSlot::S1),
+        SlotShape::ResultPlain(t) if k == 1 && *t == posts[0] => Some(PostSlot::S2),
+        SlotShape::Tuple(cs) => tail(cs).map(|h| PostSlot::S3 { h }),
+        SlotShape::ResultTuple(cs) => tail(cs).map(|h| PostSlot::S4 { h }),
+        _ => None,
+    }
+}
+
+/// The [`SlotShape`] of a checked result type.
+pub fn slot_shape(ret: &Type) -> SlotShape<Type> {
+    match ret {
+        Type::Tuple(cs) => SlotShape::Tuple(cs.clone()),
+        Type::Result(ok, _) => match &**ok {
+            Type::Tuple(cs) => SlotShape::ResultTuple(cs.clone()),
+            other => SlotShape::ResultPlain(other.clone()),
+        },
+        other => SlotShape::Plain(other.clone()),
+    }
+}
+
+/// Why an `ensures` row is not allowed (VER04k section 4.2, W0713): it calls an
+/// operation or contains a quantifier.  `None` when it is fine.
+fn ensures_row_violation(row: &Expression<'_>, ops: &HashSet<&str>) -> Option<&'static str> {
+    match row {
+        Expression::Quantified { .. } => Some("contain a quantifier"),
+        Expression::Reference { name, args, .. } => {
+            if args.is_some() && name.segments.len() == 1 && ops.contains(name.segments[0]) {
+                return Some("call an operation");
+            }
+            args.iter().flatten().find_map(|a| ensures_row_violation(a, ops))
+        }
+        Expression::Binary { left, right, .. } => {
+            ensures_row_violation(left, ops).or_else(|| ensures_row_violation(right, ops))
+        }
+        Expression::Unary { operand, .. } => ensures_row_violation(operand, ops),
+        Expression::Grouped { inner, .. } => ensures_row_violation(inner, ops),
+        Expression::Project { base, .. } => ensures_row_violation(base, ops),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => ensures_row_violation(condition, ops)
+            .or_else(|| ensures_row_violation(then_branch, ops))
+            .or_else(|| ensures_row_violation(else_branch, ops)),
+        Expression::Match { target, arms, .. } => ensures_row_violation(target, ops)
+            .or_else(|| arms.iter().find_map(|a| ensures_row_violation(&a.body, ops))),
+        Expression::List { elements, .. } | Expression::Tuple { elements, .. } => {
+            elements.iter().find_map(|e| ensures_row_violation(e, ops))
+        }
+        Expression::Literal { .. } => None,
+    }
+}
+
 fn body_span(expr: &Expression<'_>) -> (usize, usize) {
     match expr {
         Expression::Quantified { span, .. }
@@ -4070,6 +4383,10 @@ fn check_identifier_lengths(file: &WarrantFile<'_>) -> Result<(), CheckerError> 
                     ident_type(&c.ty)
                 })?;
                 ident_expr(&v.holds)?;
+            }
+            Declaration::Ensures(e) => {
+                ident_ok(e.op, e.span)?;
+                e.rows.iter().try_for_each(ident_expr)?;
             }
         }
     }

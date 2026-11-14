@@ -54,6 +54,10 @@ warrant wxg v1
   -- does not emit the WX-D1 `replicate` yet (VER04k section 4.13 item 9).
   model zeros(n: Nat) -> Bytes = if n == 0 then b"" else if n == 1 then b"00" else if n == 2 then b"0000" else if n == 3 then b"000000" else if n == 4 then b"00000000" else if n == 5 then b"0000000000" else if n == 6 then b"000000000000" else if n == 7 then b"00000000000000" else b"0000000000000000"
 
+  -- A byte string typed `Bytes` rather than `Bytes<N>` (a tuple's components are
+  -- compared at their exact types, so a literal needs widening to meet a result).
+  model wide(b: Bytes) -> Bytes = b
+
   ensures wipe:
     len(result) == len(buf)
     result == zeros(len(buf))
@@ -86,13 +90,13 @@ warrant wxg v1
   example set_on_a_cell:
     set_on(Cell(7u8, false)) == Cell(7u8, true)
   example push_byte_appends:
-    push_byte(255u8, b"0102") == (1, b"0102ff")
+    push_byte(255u8, b"0102") == (1, wide(b"0102ff"))
   example clear_empty_is_too_short:
     clear_nonempty(b"") == Err(WxgError.TOO_SHORT)
   example clear_one_byte:
     clear_nonempty(b"ab") == Ok(b"00")
   example encode_writes_two_bytes:
-    encode(1u8, b"aabbcc") == Ok((2, b"01feaa"))
+    encode(1u8, b"aabbcc") == Ok((2, wide(b"01fecc")))
   example encode_one_byte_is_too_short:
     encode(1u8, b"aa") == Err(WxgError.TOO_SHORT)
 
@@ -103,7 +107,7 @@ warrant wxg v1
   claim wipe4_zeroes:
     forall buf: Bytes<4>. wipe4(buf) == b"00000000"
   claim bump_adds_one:
-    forall x: U8. bump(x) == if x == 255u8 then 0u8 else x + 1u8
+    forall x: U8. bump(x) == (if x == 255u8 then 0u8 else x + 1u8)
   claim toggle_negates:
     forall flag: Bool. toggle(flag) == not flag
   claim set_on_keeps_the_byte:
@@ -111,8 +115,8 @@ warrant wxg v1
   claim push_byte_appends_the_byte:
     forall v: U8, out: Bytes. push_byte(v, out) == (1, concat(out, be_bytes(v)))
   claim clear_nonempty_wipes_or_refuses:
-    forall buf: Bytes. clear_nonempty(buf) == if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf)))
+    forall buf: Bytes. clear_nonempty(buf) == (if len(buf) == 0 then Err(WxgError.TOO_SHORT) else Ok(zeros(len(buf))))
   claim encode_short_buffers_are_refused:
     forall v: U8, out: Bytes<1>. encode(v, out) == Err(WxgError.TOO_SHORT)
   claim encode_writes_the_complement:
-    forall v: U8, out: Bytes<2>. encode(v, out) == Ok((2, concat(be_bytes(v), be_bytes(bit_not(v)))))
+    forall v: U8, out: Bytes<2>. encode(v, out) == Ok((2, wide(concat(be_bytes(v), be_bytes(bit_not(v))))))
