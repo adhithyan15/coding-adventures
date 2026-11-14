@@ -32,8 +32,15 @@ package record
 //	   "check" and "use" has no window to exist in
 //	4  binding.json decodes strictly, and its digests of the graph, steps, host
 //	   facts, inventory and sandbox configuration equal the sealed files'
-//	5  tools.json, sandbox.json and every action file decode strictly, and every
-//	   action is one the sandbox configuration has an environment for
+//	5  tools.json, sandbox.json, classify.json and every action file decode
+//	   strictly, and every action is one the sandbox configuration has an
+//	   environment for
+//
+// `tree` (the tracked tree, tree.go) is hashed here like every other file, but
+// decoded only when the classifier needs it (Pre.Tree): `step` verifies pre/ on
+// every step, and decoding 394 thousand lines each time would cost more than it
+// protects, while a file whose digest is right and which `prepare` decoded
+// itself before sealing cannot have a malformed body.
 //
 // Nothing here consults PATH or the process environment.
 
@@ -68,7 +75,7 @@ const (
 // requiredPre are the files every sealed `pre/` holds, besides the actions.
 var requiredPre = []string{
 	"binding.json", "build-plan.json", "exec-wrapper.json", "graph.json", "host-facts.json",
-	"inventory.json", "sandbox.json", "steps.json", "tools.json",
+	"inventory.json", "sandbox.json", "steps.json", "tools.json", "classify.json", "tree",
 }
 
 // Pre is a verified `pre/` directory.
@@ -81,7 +88,10 @@ type Pre struct {
 	BindingID string
 	// Tools is tools.json and Config the parsed sandbox configuration;
 	// ConfigPath is the file the sandbox is started with.
-	Tools      ToolsFile
+	Tools ToolsFile
+	// Classify is classify.json: the host roots and pinned ecosystems the
+	// classifier is given (decision P13).
+	Classify   ClassifyFile
 	Config     *sandbox.Config
 	ConfigPath string
 	// Sums is the digest of every file of `pre/` (relative path, slash
@@ -127,7 +137,7 @@ func VerifyPre(dir string) (*Pre, error) {
 	// Hash every file once, keeping the bytes of the ones that are parsed.
 	kept := map[string][]byte{}
 	for _, rel := range sortedKeys(sums) {
-		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || rel == "steps.json" || strings.HasPrefix(rel, "actions/")
+		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || rel == "steps.json" || rel == "classify.json" || strings.HasPrefix(rel, "actions/")
 		data, sum, err := hashPreFile(filepath.Join(pre, filepath.FromSlash(rel)), keep)
 		if err != nil {
 			return nil, fmt.Errorf("pre/%s: %w", rel, err)
@@ -153,6 +163,9 @@ func VerifyPre(dir string) (*Pre, error) {
 	}
 	if p.Tools, err = decodeTools(kept["tools.json"]); err != nil {
 		return nil, err
+	}
+	if p.Classify, err = DecodeClassify(kept["classify.json"]); err != nil {
+		return nil, fmt.Errorf("pre/classify.json: %w", err)
 	}
 	if p.Config, err = sandbox.ParseConfig(kept["sandbox.json"]); err != nil {
 		return nil, fmt.Errorf("pre/sandbox.json: %w", err)
@@ -184,6 +197,38 @@ func VerifyPre(dir string) (*Pre, error) {
 		p.actions[a.Action] = a
 	}
 	return p, nil
+}
+
+// ReadSealed reads one sealed file again, hashing the very bytes it returns and
+// requiring the digest SEALED lists, so a file swapped after VerifyPre is
+// refused. The classifier uses it for the files VerifyPre only hashed (the
+// graph, the host facts, the tree).
+func (p *Pre) ReadSealed(rel string) ([]byte, error) {
+	want, ok := p.Sums[rel]
+	if !ok {
+		return nil, fmt.Errorf("pre/%s is not a sealed file", printable(rel))
+	}
+	data, sum, err := hashPreFile(filepath.Join(p.PreDir, filepath.FromSlash(rel)), true)
+	if err != nil {
+		return nil, fmt.Errorf("pre/%s: %w", rel, err)
+	}
+	if sum != want {
+		return nil, fmt.Errorf("pre/%s was modified: its digest is %s, SEALED says %s", rel, sum[:12], want[:12])
+	}
+	return data, nil
+}
+
+// Tree reads and strictly decodes the sealed tracked tree (pre/tree).
+func (p *Pre) Tree() (*TreeFile, error) {
+	data, err := p.ReadSealed("tree")
+	if err != nil {
+		return nil, err
+	}
+	t, err := DecodeTree(data)
+	if err != nil {
+		return nil, fmt.Errorf("pre/tree: %w", err)
+	}
+	return t, nil
 }
 
 // readSealed reads and parses SEALED: "<64 hex>  <path>\n" per line, strictly

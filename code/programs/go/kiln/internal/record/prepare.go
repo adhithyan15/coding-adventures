@@ -26,7 +26,10 @@ package record
 //	 5  create the record directory
 //	 6  graph, steps and plan           by the out-of-tree build tool, from the
 //	                                    tree just verified (D10, P6)
-//	 7  host facts, weak keys, actions  key every package the shard runs (P7)
+//	 7  host facts, weak keys, actions  key every package the shard runs (P7);
+//	                                    the tracked tree, the host roots and the
+//	                                    tools each action pins are sealed too,
+//	                                    so `step` can classify with no Git (P13)
 //	 8  sandbox configuration           generate, validate, scan the roots for
 //	                                    sockets and FIFOs, CheckHost (P8, P9)
 //	 9  binding, SEALED, read-only      written last, exactly as recfmt encodes
@@ -61,6 +64,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/key"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
@@ -350,6 +354,22 @@ func Prepare(o Options) (*PrepareResult, error) {
 	for _, p := range graph.Packages {
 		langOf[p.RelPath] = p.Language
 	}
+	// The tracked tree, written down once from the listing VerifyTree proved
+	// equal to the disk (P13). Symlink texts are read from the disk, which that
+	// same proof showed hashes to each link's blob id; EncodeTree checks it again.
+	treeBytes, err := EncodeTree(vt.entries, func(p string) (string, error) {
+		return os.Readlink(filepath.Join(o.Root, filepath.FromSlash(p)))
+	})
+	if err != nil {
+		return nil, err
+	}
+	if _, err := DecodeTree(treeBytes); err != nil { // what step will read must decode
+		return nil, fmt.Errorf("the tree file does not decode: %w", err)
+	}
+	classifyBytes, err := EncodeClassify(traced.HostRoots(), traced.Pinned())
+	if err != nil {
+		return nil, err
+	}
 	envByAction := make(map[string][]string, len(runs))
 	actions := make([]Action, 0, len(runs))
 	refused := 0
@@ -364,16 +384,18 @@ func Prepare(o Options) (*PrepareResult, error) {
 		if ref, isRef := legacy.IsRefusal(err); isRef {
 			a.Refusal = ref.Reason
 			refused++
-			env, _, err := traced.RecordEnv(rel)
+			env, tools, err := traced.RecordEnv(rel)
 			if err != nil {
 				return nil, fmt.Errorf("environment of %q: %w", printable(rel), err)
 			}
 			envByAction[rel] = legacy.EnvironOf(env)
+			a.Tools = toolNames(tools)
 		} else if err != nil {
 			return nil, fmt.Errorf("weak key of %q: %w", printable(rel), err)
 		} else {
 			a.Weak = hex.EncodeToString(wk.Key[:])
 			envByAction[rel] = wk.Environ()
+			a.Tools = toolNames(wk.Action.Tools)
 		}
 		actions = append(actions, a)
 	}
@@ -454,7 +476,7 @@ func Prepare(o Options) (*PrepareResult, error) {
 	for _, f := range []struct {
 		rel  string
 		data []byte
-	}{{"host-facts.json", factsBytes}, {"inventory.json", invBytes}, {"sandbox.json", cfgBytes}, {"exec-wrapper.json", wrapperBytes}, {"tools.json", toolsBytes}} {
+	}{{"host-facts.json", factsBytes}, {"classify.json", classifyBytes}, {"tree", treeBytes}, {"inventory.json", invBytes}, {"sandbox.json", cfgBytes}, {"exec-wrapper.json", wrapperBytes}, {"tools.json", toolsBytes}} {
 		if err := w.write(f.rel, f.data); err != nil {
 			return nil, err
 		}
@@ -501,6 +523,20 @@ func Prepare(o Options) (*PrepareResult, error) {
 	sum := sha256.Sum256(bindBytes)
 	return &PrepareResult{Binding: binding, BindingID: hex.EncodeToString(sum[:]), PreDir: pre, ExecWrapper: wrapper,
 		Actions: len(actions), Refused: refused}, nil
+}
+
+// toolNames is the sorted, de-duplicated set of names of a weak key's tools.
+func toolNames(tools []key.Tool) []string {
+	seen := map[string]bool{}
+	out := []string{}
+	for _, t := range tools {
+		if !seen[t.Name] {
+			seen[t.Name] = true
+			out = append(out, t.Name)
+		}
+	}
+	sort.Strings(out)
+	return out
 }
 
 // normalize fills defaults and checks the options that need no file system.

@@ -52,6 +52,7 @@ type prep struct {
 	toolCalls [][]string
 	toolEnvs  [][]string
 	files     map[string]string
+	links     map[string]string // tracked symlinks to add: path -> link text
 }
 
 const fixtureToolchains = `{
@@ -133,6 +134,13 @@ func (p *prep) commit() {
 	root, err := filepath.EvalSymlinks(repo)
 	if err != nil {
 		p.t.Fatal(err)
+	}
+	if len(p.links) > 0 { // tracked symlinks, committed on top (path -> link text)
+		for l, target := range p.links {
+			symlink(p.t, repo, l, target)
+		}
+		runGit(p.t, repo, "add", "-A")
+		runGit(p.t, repo, "commit", "-q", "-m", "links")
 	}
 	p.root = root
 	p.sha = runGit(p.t, root, "rev-parse", "HEAD")

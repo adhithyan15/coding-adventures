@@ -10,14 +10,20 @@ package record
 // file name:
 //
 //	pre/actions/9f2c...e1.json
-//	  {"schema":"kiln-record-action/1","action":"code/packages/go/parser",
+//	  {"schema":"kiln-record-action/2","action":"code/packages/go/parser",
 //	   "language":"go","weak":"3b1c...","refusal":"",
-//	   "steps":["go build ./...","go test ./... -cover"]}
+//	   "steps":["go build ./...","go test ./... -cover"],"tools":["go","git"]}
 //
 // `kiln record step` (stage 4 PR 2b-2) loads it to know the step it is about to
 // supervise; `kiln record collect` loads it for the recipe check. Both read it
 // from the sealed `pre/` directory, so a BUILD cannot change what its own steps
 // were supposed to be.
+//
+// `tools` (schema /2, KILN04 decision P13) is the sorted set of tool names the
+// action's weak key pins (WeakKey.Tools; for an action whose key was refused,
+// the tools Traced.RecordEnv knows). `kiln record step` hands it to the
+// classifier as `traced.Config.Tools`, because a step that classifies cannot
+// build the `legacy.Traced` that would otherwise supply it.
 //
 // Exactly one of `weak` and `refusal` is set, as in a shard record line: a
 // package either has a key or says why it does not.
@@ -29,12 +35,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 )
 
 // ActionSchema is the schema of an action file.
-const ActionSchema = "kiln-record-action/1"
+const ActionSchema = "kiln-record-action/2"
 
 // Action is one package the shard runs.
 type Action struct {
@@ -44,6 +51,7 @@ type Action struct {
 	Weak     string   `json:"weak"`
 	Refusal  string   `json:"refusal"`
 	Steps    []string `json:"steps"`
+	Tools    []string `json:"tools"`
 }
 
 // ActionFile is the file name, relative to `pre/`, of the action's file.
@@ -68,6 +76,17 @@ func (a *Action) validate() error {
 	if a.Steps == nil {
 		return fmt.Errorf("action %q: steps is null", printable(a.Action))
 	}
+	if a.Tools == nil {
+		return fmt.Errorf("action %q: tools is null", printable(a.Action))
+	}
+	for i, t := range a.Tools {
+		if t == "" || len(t) > 128 || strings.ContainsFunc(t, func(r rune) bool { return r < 0x20 || r == 0x7f }) {
+			return fmt.Errorf("action %q: tool %q is not a plain name", printable(a.Action), printable(t))
+		}
+		if i > 0 && a.Tools[i-1] >= t {
+			return fmt.Errorf("action %q: tools are not strictly sorted at %q", printable(a.Action), printable(t))
+		}
+	}
 	return nil
 }
 
@@ -84,10 +103,13 @@ func hexDigest(s string) bool {
 }
 
 // EncodeAction validates and renders an action file (no trailing newline, no
-// HTML escaping, nil steps as an empty list).
+// HTML escaping, nil steps and tools as empty lists).
 func EncodeAction(a Action) ([]byte, error) {
 	if a.Steps == nil {
 		a.Steps = []string{}
+	}
+	if a.Tools == nil {
+		a.Tools = []string{}
 	}
 	if err := a.validate(); err != nil {
 		return nil, err
