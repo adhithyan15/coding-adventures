@@ -662,3 +662,68 @@ func TestStepTakesTheDirectoryLockBeforeTheSerialLock(t *testing.T) {
 		t.Fatal("the serial lock was taken before the directory lock")
 	}
 }
+
+// An earlier step's sidecar that no longer decodes is a parse failure of the
+// action, never a silent skip of that step.
+func TestEpilogueAnUnreadableEarlierSidecarIsAParseFailure(t *testing.T) {
+	l0 := playLine("", "b0", 0)
+	l1 := playLine("", "b1", 0)
+	f := newStepFixCustom(t, planOf(nil, []string{l0, l1}, nil), nil, true)
+	f.give("b0", actB, l0, 0, cannedOpts{})
+	f.give("b1", actB, l1, 0, cannedOpts{})
+	f.must(actB, 0, 2, l0)
+	if err := os.WriteFile(StepFile(f.p.dir, actB, 0, "json"), []byte("{"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	res := f.must(actB, 1, 2, l1)
+	if res.Record != RecordWritten {
+		t.Fatalf("%q %q", res.Record, res.RecordWhy)
+	}
+	rec := f.readRecord(actB)
+	if rec.ParseOK || rec.Record != nil || !strings.Contains(strings.Join(rec.ParseReasons, "|"), "step 0: its sidecar is unreadable") || rec.StepNetNS {
+		t.Fatalf("%+v", rec)
+	}
+}
+
+// Two steps that ran, each under its own canned trace, are classified together.
+func TestEpilogueClassifiesAllStepsOfAnActionTogether(t *testing.T) {
+	l0 := playLine("", "b0", 0)
+	l1 := playLine("", "b1", 0)
+	f := newStepFixCustom(t, planOf(nil, []string{l0, l1}, nil), nil, true)
+	pkg := f.pre.Config.PackageDir(actB)
+	f.give("b0", actB, l0, 0, cannedOpts{}, `openat(AT_FDCWD, "one.txt", O_WRONLY|O_CREAT, 0666) = 3<`+pkg+`/one.txt>`)
+	f.give("b1", actB, l1, 0, cannedOpts{}, `openat(AT_FDCWD, "two.txt", O_WRONLY|O_CREAT, 0666) = 3<`+pkg+`/two.txt>`)
+	if res := f.must(actB, 0, 2, l0); res.Record != "" {
+		t.Fatalf("%q", res.Record)
+	}
+	if res := f.must(actB, 1, 2, l1); res.Record != RecordWritten {
+		t.Fatalf("%q %q", res.Record, res.RecordWhy)
+	}
+	rec := f.readRecord(actB)
+	if !rec.ParseOK || rec.StepsRun != 2 || !containsStr(rec.Record.Writes, actB+"/one.txt") || !containsStr(rec.Record.Writes, actB+"/two.txt") {
+		t.Fatalf("%+v %+v", rec, rec.Record)
+	}
+	if reasons := strings.Join(rec.Record.Reasons, "|"); strings.Contains(reasons, "recipe-mismatch") {
+		t.Fatalf("both steps ran, the recipe matches: %s", reasons)
+	}
+}
+
+// A sealed policy file that no longer parses is a record.failed, found when the
+// classifier reads it, not a crash and not an empty record.
+func TestEpilogueSealedInputsThatDoNotParse(t *testing.T) {
+	for name, rel := range map[string]string{"the graph": "graph.json", "the host facts": "host-facts.json"} {
+		t.Run(name, func(t *testing.T) {
+			line := playLine("", "z", 0)
+			f := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+			f.give("z", actZ, line, 0, cannedOpts{})
+			f.reseal(map[string][]byte{rel: []byte("{")}, true)
+			res, err := RunStep(f.opts(actZ, 0, 1, line))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if res.ExitCode != 0 || res.Record != RecordFailed || !strings.Contains(res.RecordWhy, rel) {
+				t.Fatalf("%d %q %q", res.ExitCode, res.Record, res.RecordWhy)
+			}
+		})
+	}
+}
