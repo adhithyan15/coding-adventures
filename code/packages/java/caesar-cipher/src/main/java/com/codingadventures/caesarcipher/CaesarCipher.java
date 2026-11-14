@@ -144,14 +144,20 @@ public final class CaesarCipher {
     /**
      * Decrypt a string by shifting every letter backward by {@code shift} positions.
      *
-     * <p>Equivalent to {@code encrypt(text, -shift)}.
+     * <p>Equivalent to {@code encrypt(text, -shift)} mathematically, but the shift
+     * is reduced mod 26 before negation so Integer.MIN_VALUE cannot overflow.
      *
      * @param text  the ciphertext
      * @param shift the shift used during encryption
      * @return the original plaintext
      */
     public static String decrypt(String text, int shift) {
-        return encrypt(text, -shift);
+        // SEC-010: never negate the raw shift. -Integer.MIN_VALUE overflows and
+        // wraps back to Integer.MIN_VALUE, so the "undo" would shift the wrong
+        // way. Reduce to 0..25 first; the residue is small, so negating it is
+        // always safe.
+        int normalized = ((shift % 26) + 26) % 26;
+        return encrypt(text, -normalized);
     }
 
     /**

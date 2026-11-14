@@ -1,5 +1,6 @@
 namespace CodingAdventures.CaesarCipher.Tests
 
+open System
 open Xunit
 open CodingAdventures.CaesarCipher
 
@@ -105,3 +106,27 @@ type CaesarCipherTests() =
             Assert.True(CaesarCipher.englishFrequencies[i] > 0.0)
             if i <> 4 then
                 Assert.True(eFrequency > CaesarCipher.englishFrequencies[i])
+
+    // SEC-010: decrypt used to be `encrypt text (-shift)`. `-Int32.MinValue`
+    // wraps back to Int32.MinValue (F# arithmetic is unchecked by default), and
+    // encrypt then reduces that to (-2^31 mod 26) = 2: a forward shift of 2
+    // where a backward shift of 2 was needed. Silently wrong plaintext.
+    //
+    // By hand: 2^31 mod 26 = 24, so Int32.MinValue is congruent to +2, and
+    // undoing it shifts by -2: "ABC" -> "YZA".
+    [<Fact>]
+    member _.``Decrypt of Int32 MinValue is correct``() =
+        Assert.Equal("YZA", CaesarCipher.decrypt "ABC" Int32.MinValue)
+        Assert.Equal("yza", CaesarCipher.decrypt "abc" Int32.MinValue)
+
+    [<Theory>]
+    [<InlineData(Int32.MinValue)>]
+    [<InlineData(-2147483647)>]
+    [<InlineData(-1)>]
+    [<InlineData(0)>]
+    [<InlineData(25)>]
+    [<InlineData(26)>]
+    [<InlineData(Int32.MaxValue)>]
+    member _.``Decrypt inverts encrypt at int extremes``(shift: int) =
+        let text = "Hello, World! xyz XYZ"
+        Assert.Equal(text, CaesarCipher.decrypt (CaesarCipher.encrypt text shift) shift)

@@ -117,13 +117,21 @@ object CaesarCipher {
     /**
      * Decrypt a string by shifting every letter backward by [shift] positions.
      *
-     * Equivalent to `encrypt(text, -shift)`.
+     * Equivalent to `encrypt(text, -shift)` mathematically, but the shift is
+     * reduced mod 26 before negation so Int.MIN_VALUE cannot overflow.
      *
      * @param text  the ciphertext
      * @param shift the shift used during encryption
      * @return the original plaintext
      */
-    fun decrypt(text: String, shift: Int): String = encrypt(text, -shift)
+    fun decrypt(text: String, shift: Int): String {
+        // SEC-010: never negate the raw shift. -Int.MIN_VALUE overflows and
+        // wraps back to Int.MIN_VALUE, so the "undo" would shift the wrong
+        // way. Reduce to 0..25 first; the residue is small, so negating it is
+        // always safe.
+        val normalized = ((shift % 26) + 26) % 26
+        return encrypt(text, -normalized)
+    }
 
     /**
      * ROT13 — Caesar cipher with shift = 13.

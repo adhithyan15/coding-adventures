@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- SEC-010: `Decrypt` negated the raw shift, and `-math.MinInt` wraps back to `math.MinInt`, so the undo shifted the wrong way and returned wrong plaintext. `Encrypt` was NOT safe either: `shiftRune` computed `pos+shift` before reducing mod 26, which overflows for shifts near `math.MaxInt`. Both now reduce the shift to 0..25 first (`normalizeShift`). Tests: `TestDecryptMinIntIsCorrect`, `TestEncryptMaxIntIsCorrect`, `TestDecryptInvertsEncryptAtIntExtremes`.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed

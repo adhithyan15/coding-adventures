@@ -1,6 +1,8 @@
 package caesarcipher
 
 import (
+	"math"
+	"strconv"
 	"strings"
 	"testing"
 )
@@ -576,5 +578,67 @@ func BenchmarkFrequencyAnalysis(b *testing.B) {
 	)
 	for i := 0; i < b.N; i++ {
 		FrequencyAnalysis(ciphertext)
+	}
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SEC-010: INTEGER EXTREMES
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// Decrypt used to be Encrypt(text, -shift). In Go, -math.MinInt wraps back to
+// math.MinInt (two's complement has one more negative value than positive), so
+// the "undo" shifted the wrong way and returned wrong plaintext with no error.
+//
+// Encrypt had a sibling flaw: shiftRune computed (pos+shift) before reducing
+// mod 26, and pos+math.MaxInt overflows for any pos >= 1.
+//
+// The expected values below are computed with Go's untyped constant
+// arithmetic, which is arbitrary precision and therefore cannot overflow:
+//
+//	shift ≡ s (mod 26), where s = ((shift % 26) + 26) % 26
+//
+// Decrypting by `shift` means encrypting by -s, which is the same as
+// encrypting by (26 - s) % 26.
+
+// reduce returns the shift's residue in 0..25 without negating or adding to
+// the full-width shift value.
+func reduce(shift int) int {
+	return ((shift % 26) + 26) % 26
+}
+
+func TestDecryptMinIntIsCorrect(t *testing.T) {
+	const text = "ABC xyz"
+	want := Encrypt(text, (26-reduce(math.MinInt))%26)
+	if got := Decrypt(text, math.MinInt); got != want {
+		t.Errorf("Decrypt(%q, MinInt) = %q, want %q", text, got, want)
+	}
+}
+
+func TestEncryptMaxIntIsCorrect(t *testing.T) {
+	const text = "ABC xyz"
+	// Build the expectation from the small residue, which cannot overflow.
+	want := Encrypt(text, reduce(math.MaxInt))
+	if got := Encrypt(text, math.MaxInt); got != want {
+		t.Errorf("Encrypt(%q, MaxInt) = %q, want %q", text, got, want)
+	}
+	// And pin one absolute value so the test is not circular: on 64-bit,
+	// 2^63-1 ≡ 7 (mod 26), and A+7 = H.
+	if strconv.IntSize == 64 {
+		if got := Encrypt("ABC", math.MaxInt); got != "HIJ" {
+			t.Errorf("Encrypt(ABC, MaxInt) = %q, want HIJ", got)
+		}
+		if got := Decrypt("ABC", math.MinInt); got != "IJK" {
+			t.Errorf("Decrypt(ABC, MinInt) = %q, want IJK", got)
+		}
+	}
+}
+
+func TestDecryptInvertsEncryptAtIntExtremes(t *testing.T) {
+	const text = "Hello, World! xyz XYZ"
+	shifts := []int{math.MinInt, math.MinInt + 1, -1, 0, 25, 26, math.MaxInt}
+	for _, shift := range shifts {
+		if got := Decrypt(Encrypt(text, shift), shift); got != text {
+			t.Errorf("round trip failed for shift %d: got %q", shift, got)
+		}
 	}
 }
