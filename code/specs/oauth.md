@@ -5073,6 +5073,12 @@ read or copy. Audit failure returns no request and wipe-on-drop storage covers
 every prepared failure path. Debug and errors reveal no provider, trace,
 endpoint, request, header, body, or credential bytes.
 
+The returned proof exposes complete wire bytes only through a further
+provider/trace audit-gated borrow. Audit failure withholds the slice, so every
+credential-byte access introduced by this package remains attributable even
+though the owner still retains independent access to the earlier custody-built
+request.
+
 This release is still pure in-memory evidence. The retained certificate proof
 does not add certificate role, purpose, algorithm, validity, signature, path,
 constraint, trust-root, or revocation validation. The package performs no DNS,
