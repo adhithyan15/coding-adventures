@@ -4986,6 +4986,31 @@ OAuth, or live-provider authority. A later audited transport must consume this
 exact proof without substituting any retained request or destination input.
 Concrete HTTPS remains unavailable.
 
+An additive audited request-head release now admits a non-empty ordered slice
+of additional fields only through exact data-driven provider policy. The
+policy retains one validated provider, public method and query-free path,
+validated DNS Host authority, and an ordered duplicate-free allowlist of
+additional HTTP field names; Host, Content-Length, and Transfer-Encoding remain
+reserved to the fixed-body composition. The release consumes the exact public
+request-line and fixed-body destination proofs, requires the retained method,
+path, Host authority, additional-field count, order, and case-insensitive HTTP
+field names to match that provider policy, and preflights the complete bounded
+head and caller-owned output before any effect or mutation. A privacy-safe
+event containing only provider, trace, stable action, and closed outcome must
+be durably published before the repository-owned request-line and field
+encoders copy any bytes. Audit failure leaves output unchanged and releases no
+proof; successful encoding returns a non-copyable redacted wrapper around the
+exact emitted head. Each wrapper requires one fresh audited encoding call, so
+one event cannot authorize another output release.
+
+This audited release does not interpret a field value or request body, access
+or edit credentials, write the retained body, wipe caller-owned storage,
+authorize transport, perform TLS or HTTP I/O, open a socket, or grant network,
+OAuth, or live-provider authority. A later body and transport composition must
+retain this exact provider, trace, request, destination, and release binding
+without substituting any input, and must apply its own audit gates before every
+credential access and external effect. Concrete HTTPS remains unavailable.
+
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
 reviewed RSA server-path policy. It derives the path target only through the
