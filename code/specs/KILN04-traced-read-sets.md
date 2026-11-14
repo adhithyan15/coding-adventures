@@ -924,7 +924,7 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 ```
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
-pre/tools.json
+pre/tools.json  pre/classify.json  pre/tree                        (the last two: P13)
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
@@ -986,10 +986,11 @@ tool's file, not a Kiln format.
 selected by `env.json` (`legacy.RecordEnviron`) plus `HOME` and
 `TMPDIR=<tmpdir>`, never `PATH`. Then the weak key of every package the shard
 runs (`PackageNames(I)`) is computed from `Traced` over the verified tree and
-those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/1`)
+those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/2`)
 holds, per action: `action`, `language`, `weak` (hex) or `refusal` (the
-`Refusal` reason), and `steps`, the lines `kiln-legacy-steps/1` gives for it
-(`[]` when it has no BUILD for Linux). A package whose key is refused still
+`Refusal` reason), `steps`, the lines `kiln-legacy-steps/1` gives for it
+(`[]` when it has no BUILD for Linux), and `tools`, the sorted names of the tools
+the key pins (P13). A package whose key is refused still
 gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
 (`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2c**: they
 need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
@@ -1261,9 +1262,9 @@ job's output), or must wrap the build in `::stop-commands::<random token>`.
 
 *After the step.* The supervisor exits with the traced root's status, which
 strace mirrors: strace's own exit code, or 128 plus the signal that killed
-it. The sidecar `traces/<sha256(action)>/<step>.json` (`kiln-record-step/1`,
+it. The sidecar `traces/<sha256(action)>/<step>.json` (`kiln-record-step/2`,
 compact, no trailing newline, `O_EXCL`) holds: `action`, `step`,
-`step_count`, `binding_id`, `line_sha256`, `line_in_plan`, `started`,
+`step_count`, `seq` (P13), `binding_id`, `line_sha256`, `line_in_plan`, `started`,
 `started_at` and `ended_at` (RFC 3339, UTC, nanoseconds), `strace_exit` (-1
 if it was signalled), `strace_signal` (0 if not), `strace_stdout_empty`,
 `strace_stderr_empty`, `root_status` (strace's exit code: strace exits with
@@ -1337,15 +1338,43 @@ host state roots. So:
    action that ran a step is `unknown_writes`. "Post-run disk" in §5.1 now reads
    "the disk at the end of the action".
 
-*As implemented.* `pre/tree` is line-oriented, sorted by path:
-`kiln-record-tree/1\n` then `<mode> <blob id> <path>\n`, with `<mode> <blob id>
-<path> <link text>` for mode `120000`; paths and link text are percent-escaped
-only for bytes the format must (`%`, space, control, non-ASCII is left raw).
-The sidecar is `kiln-record-step/2` (adds `seq`). `record.json` is
-`kiln-record-classified/1`: the raw record, `writes_complete`, the sidecar-derived
-`steps_run` and `step_netns`, and the G7 parse verdict (`parse_ok`,
-`parse_reasons`), so that `collect` can build a `recfmt.ShardRecord` without
-reparsing.
+*As implemented.* `pre/tree` is line-oriented, sorted bytewise by path:
+`kiln-record-tree/1\n`, then `<mode> <blob id> <path>\n`, and
+`<mode> <blob id> <path> <link text>\n` for mode `120000`. A path or link text
+is written with every byte that is not visible ASCII, and `%`, as `%XX` in
+upper-case hex, so a line splits on single spaces and each byte string has
+exactly one spelling; the decoder refuses anything else (an unsorted or repeated
+path, a path that is both a file and a directory, a needless or lower-case
+escape, a link text on a file, mixed object-id lengths). A link text is checked
+against its blob id before it is written. On this repository the file has
+394 222 lines and 48 MB: written in about 0.3 s, hashed in about 20 ms (once per
+step, by `VerifyPre`) and strictly decoded in about 0.2 s (once per action, by
+`Pre.Tree`, only when a step classifies). `VerifyPre` hashes it and decodes
+`classify.json` and the action files; the tree is decoded lazily.
+
+The sidecar is `kiln-record-step/2` (adds `seq`, from 0). `record.json` is
+`kiln-record-classified/1`: the raw record, `writes_complete` (the classifier's
+own answer, which is not part of the raw record's JSON), `steps_run`,
+`step_netns`, and `parse_ok` with `parse_reasons`, so that `collect` can build a
+`recfmt.ShardRecord` without parsing a trace. When any trace fails the parse half
+of G7 the record carries the reasons and **no** raw record (`record: null`,
+`parse_ok: false`, `writes_complete: false`); it is never an empty record.
+`record.failed` holds the reason as text (`panic:`, `timeout:`, `traces-too-large:`,
+`classified-twice:`, or the classifier's own error). A sandbox refusal is a status
+of 125 with no step `execve` in the trace, which the parser reports as
+`helper-no-init` (the root died before it made the init) or `helper-no-exec` (the
+init died before the step); the epilogue names both `sandbox-refused`. An
+`.overlap` marker is not evidence that a step ran: `checkOrder` skips it, so a
+step refused the lock can be run once the lock is free (the marker stays and
+`collect` voids the shard).
+
+*Why a motivating test needs a link the action did not create.* A link an action
+creates itself is resolved from the trace, which carries its text (rule b of
+section 5.1), so the disk never decides where its writes go. The disk decides for
+a tracked or earlier-made link the action only traverses, and that is what a later
+action can retarget: classified at the action's end the walk agrees with strace's
+`-y` path and the path is stable; classified after the later action it disagrees
+and the action gets `unstable-path` and an unknown write set.
 
 ### 4.7 Sandbox decisions (stage 3b)
 

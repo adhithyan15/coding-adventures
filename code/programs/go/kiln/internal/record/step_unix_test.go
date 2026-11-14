@@ -862,7 +862,7 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 		if os.Geteuid() == 0 {
 			t.Skip("root reads anything")
 		}
-		f.refused(f.opts(actZ, 0, 1, "exit 0"), "not a real directory")
+		f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces of")
 	})
 }
 
