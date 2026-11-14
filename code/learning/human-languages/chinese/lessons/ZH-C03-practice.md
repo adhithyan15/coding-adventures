@@ -114,4 +114,4 @@ A panel reads 一 二 三 五. Which label is missing? (**四**.) The sound link
 help explain an omission; not every building skips it.
 
 Sources: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)
-and [Aaron Tan's photographed Shanghai lift panel, fig. 5](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).
+and [Shanghai lift panel, fig. 5 in the AKDN volume](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).

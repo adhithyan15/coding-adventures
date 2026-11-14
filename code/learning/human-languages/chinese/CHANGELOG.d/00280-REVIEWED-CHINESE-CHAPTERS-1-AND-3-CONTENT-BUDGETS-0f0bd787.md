@@ -9,6 +9,10 @@
   added Ministry of Education pronunciation and architectural field sources
   (#19374). Removed an unsupported universal numeral-history analogy while
   retaining the gentle one-to-five progression (#19375).
+- Removed an unsupported blanket `你好` greeting-pragmatics claim and cited an
+  official beginner greeting example instead (#19378). Identified the Shanghai
+  lift image by its AKDN figure rather than attributing the photograph to the
+  chapter author.
 - All 13 lesson durations remain at or below 300 seconds. The Chinese-owned
   test pins the direct culture-claim identity, annotation floor, and zero
   over-budget lessons without pretending the full track has been audited.

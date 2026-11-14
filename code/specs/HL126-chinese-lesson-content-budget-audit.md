@@ -32,10 +32,12 @@ settled cultural facts.
 For Chapter 1 specifically, `好` *hǎo* (`good/well`) and *hào* (`be fond of`)
 are explicitly taught as different tone-distinguished words, not a new sense
 of one word. The woman-and-child gloss is identified as a disputed character
-etymology, not a claim about a people. The `你好` usage note describes greeting
-pragmatics, not a generalization about a culture. These are reviewed zeroes
-for the three declaration families; their lexical, etymology, and pragmatics
-teaching remains represented by the existing knowledge atoms.
+etymology, not a claim about a people. An unsupported generalization about
+when Mandarin speakers use `你好` was removed (#19378); the lesson now teaches
+the greeting itself, with an official YCT beginner example, rather than a
+cultural usage rule. These are reviewed zeroes for the three declaration
+families; the lexical and etymology teaching remains represented by existing
+knowledge atoms.
 
 Chapter 3 teaches the floor-number omission example first in `ZH-C03-si`;
 `ZH-C03-practice` revisits it without introducing a second claim. This is

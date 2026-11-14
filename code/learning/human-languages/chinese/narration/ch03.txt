@@ -257,7 +257,7 @@ Guided Practice.
 
 Wrap-up Recall.
 Four is the first number here you could not work out. What replaced the trick? (A shape borrowed for its sound, built to a rule.)
-Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Aaron Tan's photographed Shanghai lift panel, fig. 5.
+Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Shanghai lift panel, fig. 5 in the AKDN volume.
 [question — say your answer, then pause 15 seconds]
 What sound link helps explain why a documented Shanghai lift panel omits floor label 4?
 
@@ -376,6 +376,6 @@ That spread is not an accident of this chapter. It is the whole writing system i
 
 Wrap-up Recall.
 A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which label is missing? (四 (sì).) The sound link can help explain an omission; not every building skips it.
-Sources: Unicode CJK Unified Ideographs chart and Aaron Tan's photographed Shanghai lift panel, fig. 5.
+Sources: Unicode CJK Unified Ideographs chart and Shanghai lift panel, fig. 5 in the AKDN volume.
 [question — say your answer, then pause 15 seconds]
 A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor label is missing?

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5e4e4e61ab832d65",
+  "sourceHash": "fnv1a64:eca847ce3b81dcf6",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -1053,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:760591099054d0c5",
+      "sourceHash": "fnv1a64:c5a5763b89a23cc1",
       "notice": null,
       "blocks": [
         {
@@ -1176,7 +1176,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Aaron Tan's photographed Shanghai lift panel, fig. 5."
+              "text": "Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Shanghai lift panel, fig. 5 in the AKDN volume."
             },
             {
               "kind": "activity",
@@ -1541,7 +1541,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7c468db4e021fdb5",
+      "sourceHash": "fnv1a64:b3972b7186bd99db",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1708,7 +1708,7 @@
             },
             {
               "kind": "speech",
-              "text": "Sources: Unicode CJK Unified Ideographs chart and Aaron Tan's photographed Shanghai lift panel, fig. 5."
+              "text": "Sources: Unicode CJK Unified Ideographs chart and Shanghai lift panel, fig. 5 in the AKDN volume."
             },
             {
               "kind": "activity",

@@ -78,11 +78,9 @@ makes the word easy to remember; the whole is what it means.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAO, ZH-GRAMMAR-COMPOUND-WORD] -->
 
-**你好** is safe, neutral, and understood everywhere — which is exactly why a
-course teaches it first. But it is worth knowing that it is used less freely
-than English "hello". Between people who already know each other, a Mandarin
-speaker is more likely to open with a small situational remark than with
-**你好** at all. Reserve it for meeting someone, and you will sound right.
+**你好** is a greeting you can use in a first exchange. Say it, then hear the
+other person answer with the same word. This lesson gives you one greeting;
+later lessons add other ways to open a conversation.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -105,4 +103,5 @@ second-person word *nyeX* (Guangyun, in Baxter's transcription).
 Which character comes first, and what does it mean on its own? (**你**, "you".)
 Is **你好** one word or two? (One.)
 
-Source: [Unicode Han database, characters 你 and 好](https://www.unicode.org/charts/PDF/U4E00.pdf)
+Sources: [Unicode Han database, characters 你 and 好](https://www.unicode.org/charts/PDF/U4E00.pdf)
+and [YCT Level 1 language functions: greetings](https://www.chinesetest.cn/userfiles/file/dagang/YCT1.pdf).

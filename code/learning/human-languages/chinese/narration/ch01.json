@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5307683c21b26990",
+  "sourceHash": "fnv1a64:20749e42a7dce8bb",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -525,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b0bd5492058ed79",
+      "sourceHash": "fnv1a64:9fe22bf42388e89d",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English \"hello\". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right."
+              "text": "你好 (nǐ hǎo) is a greeting you can use in a first exchange. Say it, then hear the other person answer with the same word. This lesson gives you one greeting; later lessons add other ways to open a conversation."
             }
           ]
         },
@@ -662,7 +662,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hào)."
+              "text": "Sources: Unicode Han database, characters 你 (nǐ) and 好 (hào) and YCT Level 1 language functions: greetings."
             },
             {
               "kind": "activity",

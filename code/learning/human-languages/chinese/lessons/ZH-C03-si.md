@@ -94,4 +94,4 @@ Four is the first number here you could not work out. What replaced the trick?
 
 Sources: [Ministry of Education on 四 *sì*](https://dict.revised.moe.edu.tw/dictView.jsp?ID=9978&la=0&powerMode=0),
 [Ministry of Education on *sǐ* ('to die')](https://dict.revised.moe.edu.tw/dictView.jsp?ID=9974&la=0&powerMode=0),
-and [Aaron Tan's photographed Shanghai lift panel, fig. 5](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).
+and [Shanghai lift panel, fig. 5 in the AKDN volume](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).
