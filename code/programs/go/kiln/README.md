@@ -339,6 +339,16 @@ rec, err := traced.Classify(cfg, traced.Input{
   separately and give `writes-tracked`. Untracked observations and traversed
   components are exposed for the merge job's cross-action checks (KILN04
   section 7). There are no digests in a raw record.
+- **`rec.WritesComplete`** (KILN04 5.5, W1 to W10) says `Writes` and
+  `TrackedWrites` list every in-repository path the action wrote. It fails
+  closed: false when a write could not be placed (including a `..` past a
+  missing component, a `/proc` name, `.git`, the root), when a write went
+  through a component the stability rule rejected, on a list or budget cap, and
+  on a truncated, killed or recipe-mismatched trace. A read-only reason does not
+  clear it. It is not in the record's JSON: the recorder copies it with
+  `recfmt.CompleteOf` to the shard record's `writes_complete`, which the merge
+  honours only when `HonourWritesComplete` is on (off by default).
+  `RecorderVersion` is 2 since this field exists.
 - `CheckRecipe(steps, lines)` compares each step's exec argv with the expected
   `sh -c` lines.
 
@@ -377,7 +387,8 @@ s, err := tr.StrongKey(w, []string{"pkg:code/packages/go/dep", "path:code/x.py",
 
 ## Sandbox (`kiln sandbox-exec`, `internal/sandbox`, KILN04 stage 3b)
 
-`kiln sandbox-exec --config <abs path> -- <argv...>` runs one traced BUILD step
+`kiln sandbox-exec --config <abs path> [--stdout-fd N] [--stderr-fd N] -- <argv...>`
+runs one traced BUILD step
 so that the trace is the whole story: the build tool's `-exec-wrapper` is
 `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`, with
 `KILN_ACTION` (the package `rel_path`) in the wrapper's environment.
@@ -417,6 +428,22 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   only `null`, `zero`, `full`, `random`, `urandom` and `tty`, and it runs in a
   session of its own, so it cannot signal strace. The recorder runs strace with
   `--kill-on-exit` and must make the step's descriptors 1 and 2 pipes.
+- **Tool roots under `$HOME`.** An `ro_roots` entry may lie strictly beneath
+  `home` (`~/.cargo/bin`, `~/.rustup`): it is bound after `home`'s tmpfs, at
+  the same path. A deeper entry sits in a tmpfs anchor (`~/.cargo`) that is
+  sealed read-only once filled, because the kernel refuses to rename a mount
+  point but not a directory that merely contains one; a writable state root
+  beneath the same anchor (`~/.cargo/registry`) keeps working. An entry that is
+  `home` or contains it is still refused.
+- **The step's output.** `--stdout-fd N` and `--stderr-fd N` make the root's
+  descriptors N (3 or more) the step's 1 and 2, so a recorder keeps strace's
+  own standard error apart from the step's output. Each must be open, writable
+  and a **pipe**: a file, terminal, socket, device (`/dev/null` too) or
+  directory is refused with status 125 before anything runs.
+- **The strace argv.** `sandbox.StraceArgs(traceFile)` returns the exact
+  arguments of the strace that wraps `sandbox-exec` (up to `-o <file> --`), with
+  a `-e trace=` set that names every call the filter refuses; a test keeps it in
+  step with the parser's table (`trace.SyscallClass`, `trace.RefusedNames`).
 - **linux/amd64 only.** Elsewhere the command prints why and exits 125.
 - **Needs unprivileged user namespaces.** On hosted Ubuntu runners:
   `sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0`.

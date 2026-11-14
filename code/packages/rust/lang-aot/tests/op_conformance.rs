@@ -2624,8 +2624,12 @@ fn run_jvm(module: IIRModule, case: &Case) -> Option<RunResult> {
     std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&class))
         .expect("jvm: write Main.class");
     let classpath = std::env::join_paths([dir.path(), env_dir]).expect("jvm: classpath");
+    // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+    // running in parallel a recycled PID's file can still be locked, and the JVM
+    // then prints a unified-logging warning to STDOUT, which this test compares
+    // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
     let mut cmd = Command::new("java");
-    cmd.arg("-cp").arg(classpath).arg("Main");
+    cmd.arg("-XX:-UsePerfData").arg("-cp").arg(classpath).arg("Main");
     let result = run_process(cmd);
     if let RunResult::Trapped { kind: None, .. } = &result {
         panic!("Jvm: case `{}` failed without a LANG83 trap kind: {result:?}", case.name);

@@ -47,6 +47,12 @@ func evalBPF(t *testing.T, prog []Instruction, d seccompData) uint32 {
 			} else {
 				pc += int(in.Jf)
 			}
+		case 0x25: // jgt k (unsigned)
+			if a > in.K {
+				pc += int(in.Jt)
+			} else {
+				pc += int(in.Jf)
+			}
 		case 0x45: // jset k
 			if a&in.K != 0 {
 				pc += int(in.Jt)
@@ -191,7 +197,7 @@ func TestFilterAllowsEverythingElse(t *testing.T) {
 	}
 	// read, write, open, execve, exit_group, openat, getdents64, seccomp,
 	// prctl, futex, execveat.
-	for _, nr := range []uint32{0, 1, 2, 59, 231, 257, 217, 317, 157, 202, 322, 0x3ff} {
+	for _, nr := range []uint32{0, 1, 2, 59, 231, 257, 217, 317, 157, 202, 322, 452, MaxKnownSyscall} {
 		if refused[nr] {
 			t.Fatalf("test bug: %d is refused", nr)
 		}
@@ -207,7 +213,7 @@ func TestFilterAllowsEverythingElse(t *testing.T) {
 			if got != RetErrno|Eperm {
 				t.Errorf("nr %d: %#x", nr, got)
 			}
-		case nr == 435:
+		case nr == 435 || nr > MaxKnownSyscall:
 			if got != RetErrno|Enosys {
 				t.Errorf("nr %d: %#x", nr, got)
 			}
@@ -216,6 +222,39 @@ func TestFilterAllowsEverythingElse(t *testing.T) {
 				t.Errorf("nr %d: %#x, want ALLOW", nr, got)
 			}
 		}
+	}
+}
+
+// TestFilterNewerSyscallsGetENOSYS is L7: a call newer than the pinned strace
+// cannot be traced or parsed, so the filter answers ENOSYS for it.
+func TestFilterNewerSyscallsGetENOSYS(t *testing.T) {
+	p := filter(t)
+	for name, nr := range map[string]uint32{
+		"setxattrat": 463, "getxattrat": 464, "listxattrat": 465, "removexattrat": 466,
+		"open_tree_attr": 467, "file_getattr": 468, "file_setattr": 469,
+		"mseal": 462, "far above": 100000, "max uint": 0x3fffffff,
+	} {
+		if nr <= MaxKnownSyscall {
+			t.Fatalf("test bug: %s (%d) is not above the threshold", name, nr)
+		}
+		if got := evalBPF(t, p, native(nr)); got != RetErrno|Enosys {
+			t.Errorf("%s (%d): %#x, want ENOSYS", name, nr, got)
+		}
+	}
+	// The threshold itself is allowed, the next number is not, and a refused
+	// call at or below it still gets EPERM (mount_setattr is 442).
+	if got := evalBPF(t, p, native(MaxKnownSyscall)); got != RetAllow {
+		t.Errorf("the threshold: %#x", got)
+	}
+	if got := evalBPF(t, p, native(MaxKnownSyscall+1)); got != RetErrno|Enosys {
+		t.Errorf("above the threshold: %#x", got)
+	}
+	if got := evalBPF(t, p, native(442)); got != RetErrno|Eperm {
+		t.Errorf("mount_setattr: %#x", got)
+	}
+	// The ABI checks still come first: an x32 number above the threshold is KILLed.
+	if got := evalBPF(t, p, seccompData{nr: X32SyscallBit | 464, arch: AuditArchX86_64}); got != RetKillProcess {
+		t.Errorf("x32: %#x", got)
 	}
 }
 

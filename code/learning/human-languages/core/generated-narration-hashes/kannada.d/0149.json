@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 149,
-  "sourceHash": "fnv1a64:1c3c9d8e36c06d2d",
+  "sourceHash": "fnv1a64:8350142a948ea682",
   "lessonIds": [
     "KA-C149-ili2",
     "KA-C149-seru",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch149.txt",
   "json": "kannada/narration/ch149.json",
-  "textHash": "fnv1a64:0d786d0eb7e7ad04",
-  "jsonHash": "fnv1a64:31d5287229bab7c3",
+  "textHash": "fnv1a64:c2b716a0ee168b03",
+  "jsonHash": "fnv1a64:7772d20d1cdde152",
   "findings": []
 }

@@ -101,6 +101,53 @@ Sources checked 2026-11-04:
 - [Council of Europe CEFR Companion Volume and language
   versions](https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions)
 
+### A1 location-and-movement bridge source plan (#19319)
+
+The A1 inventory still marks `KA-A1-POST-02` and `KA-A1-POST-03` uncovered,
+but its claim that no spatial relator occurs in the corpus is stale. The
+curriculum extension files declare **pre-A1** for chapter 100's **ಹತ್ತಿರ**
+(*hattira*, near), chapter 107's **ಮೇಲೆ** (*mēle*, above/on top), and chapter
+108's **ಕೆಳಗೆ** (*keḷage*, below). That declaration is not the book filter:
+`lessonsUpToLevel` derives the effective level from the owning spine node.
+Chapter 100 is pre-A1 by that measure, while chapters 107 and 108 belong to
+the A1 `SPINE-ASK-LOCATION` node. Their current word lessons introduce and
+retrieve the isolated expressions, not a scored frame locating
+one named thing relative to another. Chapter 103's A1 origin bridge already
+teaches **-ಇಂದ** (*-inda*, from); do not duplicate it. The first step is to
+reconcile the stale inventory note against these exact owners, not to award
+coverage for vocabulary alone.
+
+The [National Institution for Transforming India's bilingual Kannada phrase
+book](https://www.niti.gov.in/sites/default/files/2020-03/EkBharatShreshthaBharat.pdf)
+prints **ನಾನು ಸ್ನಾನ ಮಾಡಿಕೊಂಡು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** as a movement-to-school
+sentence and **ಈ ರಸ್ತೆ ಎಲ್ಲಿಗೆ ಹೋಗುತ್ತದೆ?** as a direction question. The
+[Unique Identification Authority of India's Kannada operator question
+bank](https://uidai.gov.in/images/training-2019/QuestionBank-Operator-510/Kannada_510QB_24012019.pdf)
+prints **ನಿವಾಸದ ಮನೆಯ ಹತ್ತಿರ ಹೋಗಿ** inside a longer instruction, showing a
+named reference place with **ಹತ್ತಿರ**. These primary institutional examples
+bound the form check; they do not set a CEFR level or validate this project.
+The A1 demand is editorial, from the CEFR simple-place-exchange descriptor
+and the Spanish A1 inventory as a *level proxy only*. Select a small set of
+natural Kannada frames that reuse taught words, test the complete
+prerequisite chain, and keep each new lesson under five minutes. Mark an
+inventory point covered only after an assessed composition path genuinely
+supports the whole point; the wider near/far/on/under/inside and
+towards/away demands must remain explicit if a bounded tranche teaches less.
+
+The first bounded delivery within this issue will close **movement
+towards/away** (`KA-A1-POST-03`) only. After the existing chapter 108 road and
+location words, an A1 lesson can introduce the destination form **ಶಾಲೆಗೆ**
+(*śālege*, to school) in **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** (*nānu śālege
+hōguttēne*, I go to school), a deliberately shortened teaching frame from
+the NITI Aayog sentence above. A later retrieval can contrast that destination
+with chapter 103's already-taught **ಬೆಂಗಳೂರಿನಿಂದ** (*Beṅgaḷūrininda*, from
+Bengaluru) and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** (*nānu
+Beṅgaḷūrininda bandiddēne*, I am from Bengaluru). This makes the two
+directions visible without claiming that every use of the dative or ablative
+has been taught. The relative-position point (`KA-A1-POST-02`) stays uncovered
+until separate assessed noun-plus-relator compositions genuinely cover its
+range; a near-word drill alone cannot close it.
+
 ### B2 content-inventory source plan
 
 The B2 task shape fixes **how** performance is sampled; it does not define the

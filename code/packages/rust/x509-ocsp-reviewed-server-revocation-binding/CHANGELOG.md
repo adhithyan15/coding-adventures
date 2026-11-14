@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+- Complete revocation policy for the direct responder-no-check branch after
+  exact intermediate status and added-responder no-check policy.
+- Retain the strongest Name-policy-backed proof through a distinct fixed-path
+  completion type while stopping before generalized revocation, path
+  validation, TLS, HTTP, OAuth, or network readiness.
+- Admit the strongest Name-policy-backed responder no-check proof to the
+  existing exact retained-intermediate revocation binding entry point.
+- Generalize that entry point behind private repository-owned evidence while
+  retaining stable target-issuer-time validation and stopping before policy
+  for the added proof's responder, complete revocation, TLS, HTTP, or OAuth.
+- Admit the strongest Name-policy-backed responder-revocation proof to the
+  existing exact retained-intermediate revocation binding boundary.
+- Derive the intermediate, reviewed root, and original observation time only
+  through the retained strong proof, without widening the public API, and stop
+  before policy for either added responder, complete revocation, TLS, HTTP, or
+  OAuth readiness.
+- Admit the strongest Name-policy-backed arbitrary-depth server proof to the
+  existing added-responder projection and selected-root DNS-policy boundary.
+- Derive the exact reviewed root constraints only through that retained strong
+  proof, without adding detached inputs or widening the public API, and stop
+  before intermediate DNS, no-check, further revocation, TLS, HTTP, or OAuth.
+- Bind a separate fully routed authenticated OCSP proof to the exact delegated
+  responder, target-nearest intermediate, and original observation time
+  retained by the strongest Name-policy path bridge.
+- Reuse the existing stable target-issuer-time validator, retain both complete
+  non-copyable proofs, and stop before further revocation, complete path
+  validation, TLS, HTTP, OAuth, or network readiness.
+- Apply exact RFC 6960 no-check policy to the delegated responder retained by
+  the strongest Name-policy path/fully routed OCSP bridge after both responder
+  DNS-policy gates.
+- Derive the responder only through the consumed non-copyable proof, reuse the
+  existing redacted exact-DER evaluator, and stop before further revocation,
+  complete path validation, TLS, HTTP, OAuth, or network readiness.
 - Apply the exact target-nearest intermediate's supported critical permitted-
   and-excluded DNS constraints to the exact delegated responder retained by
   the strongest Name-policy path/fully routed OCSP bridge.

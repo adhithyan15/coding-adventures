@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "To get down, To join, To wear, To call, To count",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1c3c9d8e36c06d2d",
+  "sourceHash": "fnv1a64:8350142a948ea682",
   "lessons": [
     {
       "id": "KA-C149-ili2",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a39df96ce3605227",
+      "sourceHash": "fnv1a64:a622a2b0bf8405ef",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for to jump, then the Kannada for to get down."
+              "text": "Before the new one: say the Kannada for to jump and to get down. Recall the destination in ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ — “I go to school.”"
             }
           ]
         },
@@ -243,6 +243,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *sēru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ಶಾಲೆಗೆ is “to school”; say ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ಶಾಲೆಗೆ** is “to school”; say **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ**.]"
             },
             {
               "kind": "prompt",

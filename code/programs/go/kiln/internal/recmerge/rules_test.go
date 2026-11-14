@@ -24,7 +24,7 @@ func TestCleanWorldEmitsEveryAction(t *testing.T) {
 	for i, m := range r.Manifests {
 		p := r.Passes[i]
 		if m.Target != p.Target || m.OS != "linux" || m.Arch != "x64" || m.Revision != rev || m.Run != "42" ||
-			p.Kind != "pass" || p.Kiln != "kiln/0.1.0 traced/2 recorder/1" || m.At.Nanosecond() != 0 ||
+			p.Kind != "pass" || p.Kiln != "kiln/0.1.0 traced/2 recorder/2" || m.At.Nanosecond() != 0 ||
 			!m.At.Equal(p.At) || m.At.Location().String() != "UTC" {
 			t.Errorf("manifest %+v pass %+v", m, p)
 		}
@@ -686,8 +686,6 @@ func TestM1UnknownWriteSetVoidsTheWholeRun(t *testing.T) {
 	for name, mut := range cases {
 		w := std(t)
 		mut2 := mut
-		w.rec(2, "pkg/d").StepsRun, w.rec(2, "pkg/d").Steps = 0, nil
-		w.rec(2, "pkg/d").StepsTotal = 0
 		mut2(w.rec(2, "pkg/d"))
 		r := w.merge()
 		if r.Emitted || !r.cause("M1") {
@@ -921,5 +919,48 @@ func TestOutOfRepositoryPathsAreNotRecordPaths(t *testing.T) {
 		if sr.Validate() == nil {
 			t.Errorf("%s accepted", p)
 		}
+	}
+}
+
+// The classifier's own field, carried by recfmt.CompleteOf, is what the merge
+// reads when the switch is on (KILN04 7.1, G1; stage 4 PR 4).
+func TestClassifierWritesCompleteDrivesTheMerge(t *testing.T) {
+	complete := recfmt.CompleteOf(traced.RawRecord{WritesComplete: true})
+	unknown := recfmt.CompleteOf(traced.RawRecord{}) // the zero value fails closed
+	if !*complete || *unknown {
+		t.Fatal("CompleteOf must copy the classifier's field")
+	}
+	mk := func(honour bool, c *bool, reason string) Result {
+		w := std(t)
+		w.honour = honour
+		w.rec(2, "pkg/d").Record.Reasons = sl(reason)
+		w.rec(2, "pkg/d").Complete = c
+		return w.merge()
+	}
+	// A read-side trace-incomplete with writes_complete and the switch on
+	// costs only that action's manifest.
+	for _, reason := range []string{"trace-incomplete:exec-unreadable", "trace-incomplete:unstable-path"} {
+		r := mk(true, complete, reason)
+		if !r.relaxedOK() {
+			t.Fatalf("%s: %v", reason, r.RunVoid)
+		}
+		wantRelaxed(t, r, "pkg/a", "pkg/b", "pkg/c")
+		if !r.out(t, "pkg/d").hasKind("trace-incomplete") {
+			t.Errorf("%s: the action keeps its reason", reason)
+		}
+		// The classifier says its writes are unknown: the run is void.
+		if r := mk(true, unknown, reason); r.Emitted {
+			t.Errorf("%s: writes_complete=false must void the run", reason)
+		}
+		// The switch is off by default: every trace-incomplete is unknown.
+		if r := mk(false, complete, reason); r.Emitted {
+			t.Errorf("%s: with the switch off the run must be void", reason)
+		}
+	}
+	// A recipe mismatch is never excused, whatever the classifier says.
+	r := mk(true, complete, "trace-incomplete:recipe-mismatch")
+	wantVoid(t, "recipe mismatch with writes_complete", r, "recipe-mismatch")
+	if r.relaxedOK() {
+		t.Error("a recipe mismatch must void the run in the relaxed verdict too")
 	}
 }

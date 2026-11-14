@@ -276,7 +276,7 @@ the refinement admits).
 | `priority_encoder_rejects_a_bad_shape` | `priority_encoder` | 327 | a: Bytes set(347) |
 | `priority_encoder_16_inputs_exhaustive` | `priority_encoder` | 65,536 | x: U16 full(65536) |
 
-Total: **3,770,123 exhaustive cases over 88 claims**, 83 examples, 204 negative controls.
+Total: **3,225,774 exhaustive + 544,349 bounded-set (3,770,123 total) cases over 88 claims**, 83 examples, 204 negative controls. A bounded-set case is one whose domain is a fixed set rather than every value: a Bytes `set(347)`, or a `Nat set(65)` width or position.
 
 A claim's formula is in the Warrant file under the same name; the text of an
 upper layer's assumption must be that formula, not a paraphrase (VER27 rule (c)).
@@ -339,7 +339,7 @@ this contract.
    tables, written out as a datasheet prints them, plus rejection and
    boundary examples) and 88 claims, each with an exhaustive, a property and a
    fuzz suite.
-2. **Exhaustive means exhaustive.** 3,770,123 cases in the
+2. **Exhaustive means exhaustive.** 3,225,774 exhaustive + 544,349 bounded-set (3,770,123 total) cases in the
    debug profile, 0 unreachable by type. The largest are `mux_n_16_inputs_exhaustive`
    (1,048,576: every 16-bit data word and every 4-bit select) and the rejection
    claims of the 2-input gates (65,532 each: every pair of `u8` with a non-bit).

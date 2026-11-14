@@ -56,7 +56,7 @@ v1 document, with the prose contract in
 is *generated* from it and `evidence.bindings` (never edit it; `BUILD` fails if
 it drifts) and runs against the real exports:
 
-- **exhaustive suites, 3,770,123 cases in 88 claims:** every truth table of the
+- **exhaustive suites, 3,225,774 exhaustive + 544,349 bounded-set (3,770,123 total) cases in 88 claims:** every truth table of the
   seven primitive and four NAND-built gates against an oracle made of Warrant's
   own Boolean operators; every vector of width 2..=8 for the n-input gates;
   every input of `mux2`, `mux4` and `mux_n` (2, 4, 8 and 16 inputs, every data

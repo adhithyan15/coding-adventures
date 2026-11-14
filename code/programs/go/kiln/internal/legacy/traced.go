@@ -56,7 +56,7 @@ const TracedSemantics uint64 = 2
 // manifests recorded by the old recorder are never looked up by the new one.
 // It is a constant in code, not a file, so a change to it is reviewed together
 // with the recorder change it accompanies.
-const RecorderVersion = 1
+const RecorderVersion = 2
 
 // Names of the weak key's Kiln-owned env entries.  A ':' makes a name reserved
 // for Kiln (env.json may not list one), so none can collide with a real

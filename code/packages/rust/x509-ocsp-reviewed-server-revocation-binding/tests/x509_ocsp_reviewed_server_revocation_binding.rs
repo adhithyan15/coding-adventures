@@ -48,6 +48,7 @@ use x509_ocsp_response::{
 use x509_ocsp_reviewed_server_revocation_binding::{
     bind_x509_ocsp_revocation_to_reviewed_server_path,
     bind_x509_ocsp_revocation_to_routed_reviewed_server_path,
+    bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_responder_revocation,
@@ -62,6 +63,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     validate_x509_ocsp_reviewed_responder_no_check_policy,
     validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy,
+    validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy,
@@ -1681,7 +1683,105 @@ fn binds_routed_issuer_revocation_to_the_same_exact_strong_name_policy_path_inne
             .certificate(),
         &candidates[0]
     ));
+    let no_check_policy =
+        validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_no_check_policy(
+            intermediate_policy,
+        )
+        .unwrap();
+    assert_eq!(
+        format!("{no_check_policy:?}"),
+        "ValidatedX509OcspReviewedResponderNoCheckPolicy"
+    );
+    assert!(std::ptr::eq(
+        no_check_policy
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .issuer_bound_responder()
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate(),
+        response.get(0).unwrap()
+    ));
     let _ = binding;
+}
+
+#[test]
+fn strongest_path_responder_revocation_binding_rejects_another_exact_target() {
+    run_fixture_proof_test(
+        strongest_path_responder_revocation_binding_rejects_another_exact_target_inner,
+    );
+}
+
+#[allow(clippy::err_expect)] // The non-copyable success proof deliberately has no Debug.
+fn strongest_path_responder_revocation_binding_rejects_another_exact_target_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_issuer_revocation!(
+        server_binding,
+        server_revocation,
+        &response,
+        &leaf,
+        &candidates[0]
+    );
+    authenticate_routed_issuer_revocation!(
+        detached_binding,
+        detached_revocation,
+        &response,
+        &leaf,
+        &candidates[0]
+    );
+    accumulated_name_policy_reviewed_server_path!(strong_path, &leaf, &candidates);
+
+    let bound = bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_path(
+        server_revocation,
+        strong_path,
+    )
+    .unwrap();
+    let responder_path =
+        reify_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_path(bound);
+    let anchor_policy =
+        validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+    let intermediate_dns_policy =
+        validate_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_intermediate_dns_policy(
+            anchor_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    let error = bind_x509_ocsp_routed_issuer_accumulated_name_policy_reviewed_responder_revocation(
+        intermediate_dns_policy,
+        detached_revocation,
+    )
+    .err()
+    .expect("the leaf revocation proof must not bind to the strongest-path responder");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedResponderRevocationBindingErrorKind::TargetMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP reviewed-responder revocation binding error TargetMismatch"
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
+    let _ = server_binding;
+    let _ = detached_binding;
 }
 
 #[test]

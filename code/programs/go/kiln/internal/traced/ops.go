@@ -108,6 +108,17 @@ func writeFollow(ev *trace.Event) bool {
 // O_WRONLY|O_CREAT, which cannot tell a new file from an old one.
 func (c *classifier) open(ev *trace.Event) {
 	f := parseOpenFlags(ev.Flags)
+	if f.writes() || ev.Syscall == "creat" {
+		// The open can write: everything that goes wrong placing it is a
+		// reason the write set may be incomplete (W2, W8).
+		c.writing(func() { c.openCall(ev, f) })
+		return
+	}
+	c.openCall(ev, f)
+}
+
+// openCall is open, after inWrite is settled.
+func (c *classifier) openCall(ev *trace.Event, f openFlags) {
 	if ev.Syscall == "openat2" {
 		// RESOLVE_NO_SYMLINKS, RESOLVE_BENEATH, RESOLVE_IN_ROOT, ... change
 		// what a path means in ways the walk does not model.
@@ -121,6 +132,9 @@ func (c *classifier) open(ev *trace.Event) {
 	tg, ok := c.targetOf(ev, !f.nofollow && !(f.creat && f.excl))
 	c.openRet = ""
 	if !ok {
+		if c.inWrite {
+			c.incomplete = true // W2: a writing open that could not be placed
+		}
 		return
 	}
 	if !ev.Result.OK {
@@ -128,6 +142,17 @@ func (c *classifier) open(ev *trace.Event) {
 		return
 	}
 	if tg.virtual {
+		// W5: only an open of /proc/self/fd/N (or /dev/fd/N) that returned a
+		// real -y path is classified by that path (openVirtual); any other
+		// virtual name that can write says nothing about the object.
+		//
+		// The exception (M2): re-opening a descriptor that is a pipe, a socket
+		// or an anonymous inode (`> /dev/stderr`, `> /dev/stdout`) cannot name a
+		// repository file, so it hides no write.  Any other annotation that is
+		// not an absolute path stays unknown.
+		if c.inWrite && !(isFDLink(tg.abs) && (strings.HasPrefix(ev.ReturnFDPath, "/") || anonymousFD(ev.ReturnFDPath))) {
+			c.incomplete = true
+		}
 		c.openVirtual(ev, tg, f)
 		return
 	}
@@ -208,6 +233,17 @@ func (c *classifier) openVirtual(ev *trace.Event, tg target, f openFlags) {
 	c.observe(tg.abs, true, false)
 }
 
+// anonymousFD says a descriptor's -y text names a pipe, socket or anonymous
+// inode: an object with no place in any directory.
+func anonymousFD(ret string) bool {
+	for _, p := range []string{"pipe:[", "socket:[", "anon_inode:"} {
+		if strings.HasPrefix(ret, p) {
+			return true
+		}
+	}
+	return false
+}
+
 // isFDLink matches /proc/self/fd/N and /dev/fd/N.
 func isFDLink(abs string) bool {
 	rest, ok := strings.CutPrefix(abs, "/proc/self/fd/")
@@ -241,23 +277,32 @@ func (c *classifier) write(ev *trace.Event) {
 		return
 	}
 	follow := writeFollow(ev)
+	parentBased := false
 	switch ev.Syscall {
 	case "mkdir", "mkdirat", "mknod", "mknodat", "symlink", "symlinkat", "unlink", "unlinkat", "rmdir":
-		follow = false
+		follow, parentBased = false, true
 	}
-	if !follow && ev.Result.OK {
-		// A call that succeeded on a name it does not follow treated a trailing
-		// slash as "this must be a directory", not as "follow the link".
+	if parentBased && ev.Result.OK {
+		// A create or remove call works on a NAME in its parent: a trailing
+		// slash only means "this must be a directory", never "follow the
+		// link".  Every OTHER no-follow call (lchown, lsetxattr, lremovexattr,
+		// and utimensat/fchownat/fchmodat2 with AT_SYMLINK_NOFOLLOW) looks the
+		// path up like a stat does, and the kernel's lookup of a final name
+		// that ends in a slash always follows a symlink there (and demands a
+		// directory), so the slash stays and walk's "a trailing slash always
+		// follows" rule gives the directory the call really changed (M1).
 		e2 := *ev
 		e2.Path = stripSlashes(ev.Path)
 		ev = &e2
 	}
 	tg, ok := c.targetOf(ev, follow)
 	if !ok {
+		c.incomplete = true // W1: a write call that could not be placed
 		return
 	}
 	if tg.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {
@@ -301,6 +346,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), false)
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		c.incomplete = true // W3: an endpoint that could not be placed
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -315,6 +361,7 @@ func (c *classifier) rename(ev *trace.Event) {
 	}
 	if src.virtual || dst.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {
@@ -375,6 +422,7 @@ func (c *classifier) link(ev *trace.Event) {
 	src, ok1 := c.resolve(join(ev.Cwd, ev.DirfdPath, srcPath), followSrc)
 	dst, ok2 := c.resolve(join(ev.Cwd, ev.Dirfd2Path, dstPath), false)
 	if !ok1 || !ok2 {
+		c.incomplete = true // W3: an endpoint that could not be placed
 		// One name could not be placed (see resolve); a failed call still
 		// looked at the other.
 		if !ev.Result.OK {
@@ -389,6 +437,7 @@ func (c *classifier) link(ev *trace.Event) {
 	}
 	if src.virtual || dst.virtual {
 		c.reason(rProc)
+		c.incomplete = true // W5
 		return
 	}
 	if !ev.Result.OK {

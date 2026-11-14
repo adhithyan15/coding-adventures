@@ -43,6 +43,7 @@ const (
 const (
 	bpfLdWAbs uint16 = 0x20 // BPF_LD  | BPF_W   | BPF_ABS
 	bpfJeqK   uint16 = 0x15 // BPF_JMP | BPF_JEQ | BPF_K
+	bpfJgtK   uint16 = 0x25 // BPF_JMP | BPF_JGT | BPF_K (unsigned)
 	bpfJsetK  uint16 = 0x45 // BPF_JMP | BPF_JSET| BPF_K
 	bpfRetK   uint16 = 0x06 // BPF_RET | BPF_K
 )
@@ -103,6 +104,21 @@ var RefusedSyscalls = []Syscall{
 	{"keyctl", 250},
 }
 
+// MaxKnownSyscall is the highest x86-64 system call number the pinned strace
+// (6.8, Linux 6.8's table) and the parser's table know: lsm_list_modules, 461.
+// Every number ABOVE it gets ENOSYS (KILN04 section 4.7, L7).  A call newer than
+// the pinned strace is neither printed (the trace set cannot name it) nor
+// refused by the parser, so a step could use a path-taking one (getxattrat,
+// listxattrat, setxattrat, removexattrat 463-466, open_tree_attr 467,
+// file_getattr and file_setattr 468 and 469) without a line in the trace.
+// Failing closed with ENOSYS also makes a libc that probes for them fall back
+// to the older call.  Nothing the Go runtime, sh, coreutils or the toolchains
+// use today is above 461 (glibc 2.39 stops at fchmodat2 452 and clone3 435; the
+// kernel's 462 is mseal, which none of them call).  WHEN THE PINNED STRACE IS
+// BUMPED, RAISE THIS to the highest number its table knows, and add the new
+// path-taking calls to the parser's table first (KILN04 section 14).
+const MaxKnownSyscall uint32 = 461
+
 // Syscall numbers the filter treats specially.
 const (
 	sysClone  uint32 = 56
@@ -138,6 +154,7 @@ type step struct {
 //	jeq AUDIT_ARCH_X86_64  else -> KILL
 //	ld  nr
 //	jset __X32_SYSCALL_BIT then -> KILL
+//	jgt MaxKnownSyscall    then -> ENOSYS
 //	jeq <each refused nr>  then -> EPERM
 //	jeq clone              then -> CLONE
 //	jeq clone3             then -> ENOSYS
@@ -160,6 +177,7 @@ func BuildFilter() ([]Instruction, error) {
 		{code: bpfJeqK, k: AuditArchX86_64, jf: "kill"},
 		{code: bpfLdWAbs, k: offNr},
 		{code: bpfJsetK, k: X32SyscallBit, jt: "kill"},
+		{code: bpfJgtK, k: MaxKnownSyscall, jt: "enosys"},
 	}
 	for _, s := range RefusedSyscalls {
 		steps = append(steps, step{code: bpfJeqK, k: s.Nr, jt: "eperm"})
