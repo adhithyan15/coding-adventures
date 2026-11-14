@@ -7,3 +7,9 @@
 - Retain the exact certificate, SNI, Host authority, and certificate-identity
   evidence without granting TLS, HTTP, OAuth, I/O, or external-effect authority.
 - Keep stable failures and Debug output free of hostnames and certificate bytes.
+- Bind the complete destination proof to one strict HTTP/1 Host field only when
+  its value is the retained authority's canonical lowercase-host and
+  shortest-decimal-port encoding.
+- Retain both non-copyable inputs with payload-free failures and redacted Debug
+  output without claiming complete request-head uniqueness or transport
+  authority.

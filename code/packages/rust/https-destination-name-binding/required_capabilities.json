@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/https-destination-name-binding",
   "capabilities": [],
-  "justification": "Pure bounded comparison and certificate identity policy over caller-owned decoded certificate data and already validated caller-borrowed TLS SNI and HTTP Host values. It performs no filesystem, network, process, environment, clock, FFI, credential release, audit, trace, or external effect."
+  "justification": "Pure bounded comparison and certificate identity policy over caller-owned decoded certificate data and already validated caller-borrowed TLS SNI, HTTP Host authority, and strict Host field values. It performs no filesystem, network, process, environment, clock, FFI, credential release, audit, trace, or external effect."
 }
