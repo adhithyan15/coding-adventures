@@ -170,3 +170,40 @@ fn rot13_is_encrypt_13() {
     let text = "Equivalent to encrypt(text, 13)";
     assert_eq!(cipher::rot13(text), cipher::encrypt(text, 13));
 }
+
+// ===================================================================
+// SEC-010: the extreme shift i32::MIN
+// ===================================================================
+//
+// `decrypt` used to compute `encrypt(text, -shift)`.  `-i32::MIN` does not
+// fit in an i32, so that panicked in a debug build and wrapped in a release
+// build.  The correct answer is the shift reduced modulo 26; the reference
+// below computes that in i64 so the test does not rely on the code under test.
+
+fn reference_shift(shift: i32) -> i32 {
+    (shift as i64).rem_euclid(26) as i32
+}
+
+#[test]
+fn decrypt_i32_min_does_not_panic_and_is_correct() {
+    let text = "Hello, World! xyz XYZ";
+    let expected = cipher::encrypt(text, -reference_shift(i32::MIN));
+    assert_eq!(cipher::decrypt(text, i32::MIN), expected);
+}
+
+#[test]
+fn decrypt_inverts_encrypt_at_extreme_shifts() {
+    let text = "Attack at dawn, Zebra!";
+    for shift in [i32::MIN, i32::MIN + 1, -1, 0, 1, i32::MAX - 1, i32::MAX] {
+        assert_eq!(cipher::decrypt(&cipher::encrypt(text, shift), shift), text);
+    }
+}
+
+#[test]
+fn encrypt_extreme_shifts_match_reference() {
+    // 'A' is position 0, so the output letter is the reduced shift itself.
+    for shift in [i32::MIN, i32::MIN + 1, i32::MAX] {
+        let want = (b'A' + reference_shift(shift) as u8) as char;
+        assert_eq!(cipher::encrypt("A", shift), want.to_string());
+    }
+}
