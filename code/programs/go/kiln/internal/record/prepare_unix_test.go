@@ -58,6 +58,10 @@ type prep struct {
 	// step and collect never start a sandbox, a strace or a sleeper.
 	probeIn []ProbeInput                          // what it was given, one per call
 	probeFn func(ProbeInput) (ProbeReport, error) // replaces the default report
+	// The toolchain probes are a fake too (Options.ProbeRun): nothing here
+	// starts a sandbox. The default says every tool prints its pin.
+	probeRuns  []legacy.ProbeRun                     // what it was asked, one per call
+	probeRunFn func(legacy.ProbeRun) ([]byte, error) // replaces the default answer
 }
 
 const fixtureToolchains = `{
@@ -119,10 +123,12 @@ func newPrepAt(t *testing.T, base string) *prep {
 	writeBytes(t, p.strace, []byte("strace"), 0o755)
 	p.gitBin, p.gitSum = realGit(t)
 	p.files = map[string]string{
-		"code/kiln/legacy/pinned.json":        `{"languages": []}`,
-		"code/kiln/legacy/never.json":         `{"packages": []}`,
-		"code/kiln/legacy/toolchains.json":    fixtureToolchains,
-		"code/kiln/legacy/env.json":           `{"names": ["FIXTURE_*", "LANG"]}`,
+		"code/kiln/legacy/pinned.json":     `{"languages": []}`,
+		"code/kiln/legacy/never.json":      `{"packages": []}`,
+		"code/kiln/legacy/toolchains.json": fixtureToolchains,
+		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
+		// The gate (Traced.Gate) reads the boundary file, as the plan does.
+		legacy.BoundaryPath:                   `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
 		"code/programs/go/build-tool/go.mod":  "module example.com/bt\n\ngo 1.26\n",
 		"code/programs/go/build-tool/main.go": "package main\n",
 		"code/packages/x/a/BUILD":             "echo a\n",
@@ -272,7 +278,28 @@ func (p *prep) options() Options {
 		},
 		Kernel:    func() (string, error) { return "6.8.0-test", nil },
 		Structure: p.structure,
+		ProbeRun:  p.probeRun,
 	}
+}
+
+// probeRun is the fake Options.ProbeRun.
+func (p *prep) probeRun(r legacy.ProbeRun) ([]byte, error) {
+	p.probeRuns = append(p.probeRuns, r)
+	if p.probeRunFn != nil {
+		return p.probeRunFn(r)
+	}
+	return []byte(r.Argv0 + " version 1.2.3\n"), nil
+}
+
+// withProbeBin puts an executable called name in a directory outside the
+// checkout and makes the fixture's language x look for xtool there, so a probe
+// resolves and the fake runner is asked. It must run before commit.
+func (p *prep) withProbeBin(name string) string {
+	p.t.Helper()
+	bin := filepath.Join(p.base, "probebin")
+	writeBytes(p.t, filepath.Join(bin, name), []byte("#!/bin/sh\n"), 0o755)
+	p.files["code/kiln/legacy/toolchains.json"] = strings.Replace(fixtureToolchains, "/opt/x/bin", bin, 1)
+	return bin
 }
 
 // structure is the fake Options.Structure: it records its input and reports

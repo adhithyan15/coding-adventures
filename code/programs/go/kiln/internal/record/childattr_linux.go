@@ -4,6 +4,7 @@ package record
 
 import (
 	"os"
+	"os/exec"
 	"syscall"
 )
 
@@ -21,4 +22,17 @@ func setDataLimit(n uint64) error {
 // every thread (see the note on Pdeathsig in step.go).
 func childAttr() *syscall.SysProcAttr {
 	return &syscall.SysProcAttr{Pdeathsig: syscall.SIGKILL}
+}
+
+// isolateProbe makes a probe's sandbox root lead its own process group, die
+// with the thread that started it, and take its whole group down when the
+// deadline kills it.
+func isolateProbe(cmd *exec.Cmd) {
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Pdeathsig: syscall.SIGKILL}
+	cmd.Cancel = func() error {
+		if cmd.Process == nil {
+			return nil
+		}
+		return syscall.Kill(-cmd.Process.Pid, syscall.SIGKILL)
+	}
 }

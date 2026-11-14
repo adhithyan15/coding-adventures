@@ -157,6 +157,11 @@ type Options struct {
 	// the real strace. The report it returns is checked (CheckProbeReport)
 	// before it is sealed, whoever produced it.
 	Structure func(ProbeInput) (ProbeReport, error)
+	// ProbeRun replaces the runner of the toolchain probes (probe_toolchain.go),
+	// which by default starts each one in a plain sandbox. It exists so unit
+	// tests never start a sandbox. Unset does NOT mean legacy's host runner: an
+	// unset ProbeRun selects the sandboxed one.
+	ProbeRun legacy.ProbeRunner
 }
 
 // PrepareResult is what a successful Prepare reports.
@@ -355,8 +360,18 @@ func Prepare(o Options) (*PrepareResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	// The toolchain probes run in a sandbox (probe_toolchain.go). The runner is
+	// ALWAYS set: legacy's probe with a nil runner executes on this host, which
+	// would give a PR's tool roots the runner. The prober exists now but is not
+	// armed until the sandbox configuration is, and until then it refuses.
+	prober := newToolchainProber(o.Dir, kiln.Path, safe.String())
+	runProbe := o.ProbeRun
+	if runProbe == nil {
+		runProbe = prober.Run
+	}
 	traced, err := legacy.NewTraced(graph, legacy.Options{
 		Source: src, Host: facts, OS: "linux", Arch: arch, Environ: facts.Environ(),
+		Probe: &legacy.ProbeOptions{Root: o.Root, Home: home, Run: runProbe, Timeout: ProbeTimeout, Total: ProbeTotalTimeout},
 	}, o.Root, legacy.RecordExecutorArgs)
 	if err != nil {
 		return nil, err
@@ -531,6 +546,42 @@ func Prepare(o Options) (*PrepareResult, error) {
 	}
 	if probes.Action != probeIn.Action {
 		return nil, fmt.Errorf("structure probe: it ran for %q, not for the first action %q", printable(probes.Action), printable(probeIn.Action))
+	}
+	// The gates and the toolchain probes (P7). The probes run on the FIRST call
+	// of Gate, in a sandbox on the probes' own configuration (armed here, after
+	// the sandbox configuration and the structure probes), so no probe has run
+	// before this point. A probe that disagrees gates its packages; a probe the
+	// recorder could not run at all fails `prepare` (prober.Err).
+	if len(actions) > 0 {
+		if o.ProbeRun == nil {
+			if err := prober.Arm(cfg); err != nil {
+				return nil, err
+			}
+		}
+		for i := range actions {
+			g, err := traced.Gate(actions[i].Action)
+			if err != nil {
+				return nil, fmt.Errorf("gate of %q: %w", printable(actions[i].Action), err)
+			}
+			if err := prober.Err(); err != nil {
+				return nil, err
+			}
+			actions[i].Gate = reasonText(g)
+		}
+		results, err := traced.Probes()
+		if err != nil {
+			return nil, fmt.Errorf("toolchain probes: %w", err)
+		}
+		if err := prober.Err(); err != nil {
+			return nil, err
+		}
+		probes.Toolchains = make([]ToolchainProbe, 0, len(results))
+		for _, r := range results {
+			probes.Toolchains = append(probes.Toolchains, ToolchainProbe{Tool: r.Tool, Status: r.Status, Detail: reasonText(r.Detail)})
+		}
+		if err := checkToolchains(probes.Toolchains); err != nil {
+			return nil, err
+		}
 	}
 	probesBytes, err := EncodeProbes(probes)
 	if err != nil {
