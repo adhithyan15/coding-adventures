@@ -10429,6 +10429,9 @@ version = "0.1.0"
 dependencies = [
  "https-reviewed-server-path-binding",
  "oauth-client-secret-http1-release",
+ "x509-ocsp-authenticated-target-revocation",
+ "x509-ocsp-reviewed-server-revocation-binding",
+ "x509-rsa-reviewed-server-path-anchor-self-signature-binding",
 ]
 
 [[package]]

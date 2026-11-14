@@ -2,8 +2,11 @@
 name = "oauth-client-secret-reviewed-server-binding"
 version = "0.1.0"
 edition = "2021"
-description = "Bind an audited OAuth client-secret request to one signed reviewed HTTPS server path"
+description = "Bind an audited OAuth client-secret request to signed reviewed server and direct revocation evidence"
 
 [dependencies]
 https-reviewed-server-path-binding = { path = "../https-reviewed-server-path-binding" }
 oauth-client-secret-http1-release = { path = "../oauth-client-secret-http1-release" }
+x509-ocsp-authenticated-target-revocation = { path = "../x509-ocsp-authenticated-target-revocation" }
+x509-ocsp-reviewed-server-revocation-binding = { path = "../x509-ocsp-reviewed-server-revocation-binding" }
+x509-rsa-reviewed-server-path-anchor-self-signature-binding = { path = "../x509-rsa-reviewed-server-path-anchor-self-signature-binding" }
