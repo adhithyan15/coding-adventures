@@ -128,6 +128,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -185,6 +186,11 @@ type StepOptions struct {
 	DiskFloor uint64
 	// Drain bounds the wait for the step's output once strace has exited.
 	Drain time.Duration
+	// Deadline, when positive, kills strace (and with --kill-on-exit every
+	// tracee) after that long; the run then reports timedOut. The supervisor of a
+	// real step sets none (a BUILD may run for hours); the structure probes
+	// (probe_run.go) set one.
+	Deadline time.Duration
 
 	// The epilogue's limits (decision P13); zero means the default. The
 	// classification budget is 10 minutes and the action's traces together may
@@ -383,18 +389,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	argv := append(sargs, kiln.Path, sandbox.ExecCommand, "--config", pre.ConfigPath,
 		"--config-sha256", pre.Binding.SandboxConfigSHA256,
 		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", line)
-	env := []string{
-		EnvAction + "=" + action, EnvStep + "=" + strconv.Itoa(step), EnvStepCount + "=" + strconv.Itoa(count),
-		"PATH=" + pre.Tools.Path,
-	}
-	// A pinned strace that needs the validated LD_LIBRARY_PATH (the one
-	// prepare checked and gave the build tool) must find it again, or every
-	// step would fail to start. Nothing else of build_tool_env is passed on.
-	if names, err := envNames(pre.Tools.BuildToolEnv); err == nil {
-		if e, ok := names["LD_LIBRARY_PATH"]; ok {
-			env = append(env, e)
-		}
-	}
+	env := stepProcessEnv(action, step, count, pre.Tools.Path, pre.Tools.BuildToolEnv)
 
 	// 5. Run it.
 	lineSum := sha256.Sum256([]byte(line))
@@ -409,7 +404,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		tw = o.WrapTrace(tw)
 	}
 	sink := &traceSink{w: tw, h: sha256.New(), limit: o.TraceCap}
-	run := runStrace(o, strace.Path, argv, env, sink)
+	run := runStrace(o, "", strace.Path, argv, env, sink)
 	sc.EndedAt = o.Now().UTC().Format(time.RFC3339Nano)
 	// A write that failed only now (the file's close or flush) is a failed
 	// write too.
@@ -476,6 +471,25 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		res.Record, res.RecordWhy = classifyEpilogue(o, pre, kiln.Path, action, step)
 	}
 	return res, nil
+}
+
+// stepProcessEnv is the environment strace is started with: the three KILN
+// variables, the recorded PATH, and the validated LD_LIBRARY_PATH when the
+// build tool has one. A pinned strace that needs it (the one prepare checked and
+// gave the build tool) must find it again, or every step would fail to start.
+// Nothing else of build_tool_env is passed on. The structure probes use the
+// same function, so they start strace exactly as a step does.
+func stepProcessEnv(action string, step, count int, path string, buildToolEnv []string) []string {
+	env := []string{
+		EnvAction + "=" + action, EnvStep + "=" + strconv.Itoa(step), EnvStepCount + "=" + strconv.Itoa(count),
+		"PATH=" + path,
+	}
+	if names, err := envNames(buildToolEnv); err == nil {
+		if e, ok := names["LD_LIBRARY_PATH"]; ok {
+			env = append(env, e)
+		}
+	}
+	return env
 }
 
 // markOverlap leaves `<step>.overlap` for a step the serial lock refused, when
@@ -808,11 +822,14 @@ type straceRun struct {
 	code, signal   int // code is -1 when signalled or never started
 	stdout, stderr *capture
 	pipesHeld      bool
+	timedOut       bool // StepOptions.Deadline passed and strace was killed
 }
 
 // runStrace starts strace with the step's two output pipes and the trace pipe
-// as descriptors 3, 4 and 5, relays and records them, and waits.
-func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceSink) straceRun {
+// as descriptors 3, 4 and 5, relays and records them, and waits. cwd is strace's
+// working directory ("" keeps the caller's, which is what `step` wants: the
+// build tool started it in the package directory).
+func runStrace(o StepOptions, cwd, straceBin string, argv, env []string, sink *traceSink) straceRun {
 	// The child's fork must come from a thread that lives as long as this
 	// process, because Pdeathsig is tied to the forking thread.
 	runtime.LockOSThread()
@@ -842,6 +859,7 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceS
 	}
 	cmd := exec.Command(straceBin, argv...)
 	cmd.Env = env
+	cmd.Dir = cwd
 	cmd.Stdin = nil // /dev/null
 	cmd.Stdout, cmd.Stderr = ws[3], ws[4]
 	cmd.ExtraFiles = []*os.File{ws[0], ws[1], ws[2]} // descriptors 3, 4 and 5 of strace
@@ -856,6 +874,11 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceS
 		w.Close()
 	}
 	sink.kill = func() { cmd.Process.Kill() }
+	var timedOut atomic.Bool
+	if o.Deadline > 0 {
+		t := time.AfterFunc(o.Deadline, func() { timedOut.Store(true); cmd.Process.Kill() })
+		defer t.Stop()
+	}
 
 	relay := func(dst io.Writer, src *os.File, done chan<- struct{}) {
 		if _, err := io.Copy(dst, src); err != nil {
@@ -914,6 +937,7 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceS
 	for _, r := range rs {
 		r.Close()
 	}
+	run.timedOut = timedOut.Load()
 	if ps := cmd.ProcessState; ps != nil {
 		if wst, ok := ps.Sys().(syscall.WaitStatus); ok && wst.Signaled() {
 			run.signal = int(wst.Signal())
