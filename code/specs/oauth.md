@@ -5206,6 +5206,35 @@ repository-owned TLS/HTTP composition, audited network effects, and response
 policy remain separate blockers. Concrete HTTPS and live-provider readiness
 remain unavailable.
 
+The same bounded OAuth boundary now also consumes that complete audited
+request-to-signed-reviewed-server binding together with the exact HTTPS
+destination-bound direct no-check complete fixed-path revocation proof. It
+derives both destinations only through the retained repository-owned evidence,
+requires the same exact decoded certificate object, ASCII-case-insensitively
+equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
+same optional port, and moves both complete non-copyable inputs into one
+result. Requiring the already-composed request/signed-server proof preserves
+the stronger path-and-anchor-self-signature boundary instead of admitting a
+revocation proof as a substitute for it. A byte-equal independent certificate
+decode, different admitted SAN name, or different explicit port fails closed.
+Stable failures and Debug output retain no provider, trace, request,
+credential, certificate, hostname, authority, path, key, signature, algorithm,
+constraint, revocation, status, or trust-root payloads.
+
+This direct-branch composition does not borrow or copy the released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. It performs no parsing, new validation,
+cryptography, credential editing, signing, storage, clock acquisition, status
+acquisition or refresh, I/O, network access, or other external effect. It does
+not generalize revocation or path construction, cover the other complete
+fixed-path revocation branches, add trust-anchor semantics, complete RFC 5280
+Name or path validation, build or run TLS or HTTP, authorize OAuth transport,
+or grant network authority. The other complete revocation branches,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
 prerequisite now also provides an ordered entry point that consumes fully
 routed authenticated OCSP target status together with the complete reviewed
