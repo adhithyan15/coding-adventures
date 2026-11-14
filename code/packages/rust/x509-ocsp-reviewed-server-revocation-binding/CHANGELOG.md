@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Expose a sealed repository-owned projection of the exact authenticated
+  server target retained by the fully routed strong reviewed-server proof.
+- Carry that projection through the direct no-check complete fixed-path result
+  without detached inputs, while stopping before HTTPS destination binding or
+  any TLS, HTTP, OAuth, network, or live-provider readiness.
 - Bind fully routed authenticated server status to the complete accumulated
   Name-policy reviewed path-plus-anchor-self-signature proof in stable target,
   issuer, and exact-observation validity order.
