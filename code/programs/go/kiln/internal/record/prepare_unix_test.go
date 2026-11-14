@@ -712,6 +712,14 @@ func TestPrepareRefusals(t *testing.T) {
 			}
 			p.t.Cleanup(func() { os.Chmod(d, 0o755) })
 		}, want: "permission denied"},
+		"the record directory inside a state root (which then is not empty)": {setup: func(p *prep) {
+			p.roots = []string{`{"path": "$HOME/.state", "kind": "state", "ecosystem": "x"}`}
+		}, before: func(p *prep) {
+			if err := os.Mkdir(filepath.Join(p.home, ".state"), 0o755); err != nil {
+				p.t.Fatal(err)
+			}
+			p.dir = filepath.Join(p.home, ".state", "rec")
+		}, want: "state-preloaded"},
 		"a preloaded state root": {setup: func(p *prep) {
 			p.roots = []string{`{"path": "$HOME/.state", "kind": "state", "ecosystem": "x"}`}
 		}, before: func(p *prep) {
