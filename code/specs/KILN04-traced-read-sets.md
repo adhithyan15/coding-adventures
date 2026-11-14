@@ -651,6 +651,13 @@ found these gaps in the text above; each decision below replaces it. G7 to
 G9 (the tracer completeness rule, trace storage, the strace install) are
 pending that PR and are not decided here.
 
+Stage 4 PR 2b is split in two. **2b-1** is `kiln record prepare`, everything
+that runs before any BUILD (the section "Stage 4b-1" at the end of this
+section). **2b-2** is the supervisor (`kiln record step`), `kiln record
+collect` and the real-`strace` end-to-end test. Each item of the two
+"Pending for PR 2b" lists below is marked **2b-1** (decided and implemented by
+`prepare`) or **2b-2** (still pending, owned by the supervisor or `collect`).
+
 **G5. The tree must equal `HEAD` before any digest is taken.** `Source` reads
 the working tree, and nothing proved the tree equals the commit; CI's default
 checkout is also sparse, which §5.2 forbids. `record.VerifyTree(root,
@@ -731,49 +738,54 @@ keyed, so stage 5b lookups must set the same one.
 **Pending for PR 2b** (the review of 4a found these; they belong to the code
 that calls `VerifyTree` and `Inventory`, which does not exist yet):
 
-- `collect` treats any plain git error from `VerifyTree` (not only a
+- **2b-2.** `collect` treats any plain git error from `VerifyTree` (not only a
   `*TreeError`) as a void of the shard, like `tracked-changed`, and passes the
   commit id `prepare` recorded.
-- An `Inventory` error after the build voids the shard; it must not crash
+- **2b-2.** An `Inventory` error after the build voids the shard; it must not crash
   `collect` before the records are written.
-- `prepare` fails if the pre-build inventory contains any path whose base name
-  starts with `BUILD`: an untracked BUILD variant would change the lines a
-  package runs.
-- Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
+- **2b-1.** `prepare` fails if the pre-build inventory contains any path whose
+  base name starts with `BUILD`: an untracked BUILD variant would change the
+  lines a package runs. `prepare` also walks the whole disk for a `BUILD*`
+  file the tree does not track, because the inventory collapses an untracked
+  directory to one entry and a new package's BUILD hides inside it
+  (decision P5).
+- **2b-1.** Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
   read by Kiln's Git calls, so the recorder's `HOME`, `XDG_CONFIG_HOME` and
   `PATH` must not be writable from the sandbox.
-- The commit pin protects object ids, not the integrity of the object store. A
+- **2b-1** (the mask; the `git fsck` is **2b-2**). The commit pin protects object ids, not the integrity of the object store. A
   BUILD that could write `.git` could overwrite loose objects or
   `.git/config`, so `.git` must be unwritable from the sandbox (the
   `R/.git` mask is a requirement, not a convenience). Consider a post-build
   `git fsck --connectivity-only` as a second line.
-- The caller keeps `Result.Commit` from the pre-build `VerifyTree` and passes
-  it as `expectedCommit` to the post-build call and to the merge job's call.
+- **2b-1** (kept) and **2b-2** (used). The caller keeps `Result.Commit` from the
+  pre-build `VerifyTree` and passes it as `expectedCommit` to the post-build
+  call and to the merge job's call. `prepare` writes it as the binding's
+  `revision` (decision P10).
 - **Sandbox follow-ups (S1 to S3) the recorder must honour** (§4.7):
-  - the recorder passes `--stdout-fd` and `--stderr-fd` **together**, both
-    pipes it reads, and checks that strace's own standard error is empty;
-  - exit status 125 is a failure of the action and is **never retried
-    unsandboxed**; the recorder tells "the sandbox refused" from "the step
-    exited 125" by whether the step's `execve` is in the trace;
-  - the anchor of a tool root beneath `home` is sealed read-only as a whole, so
-    PR 2b's configuration generation must declare as `state_roots` everything
+  - **2b-2.** the recorder passes `--stdout-fd` and `--stderr-fd` **together**,
+    both pipes it reads, and checks that strace's own standard error is empty;
+  - **2b-2.** exit status 125 is a failure of the action and is **never
+    retried unsandboxed**; the recorder tells "the sandbox refused" from "the
+    step exited 125" by whether the step's `execve` is in the trace;
+  - **2b-1.** the anchor of a tool root beneath `home` is sealed read-only as a
+    whole, so PR 2b's configuration generation must declare as `state_roots` everything
     the toolchain writes beneath the same first directory: `~/.cargo/registry`,
     `~/.cargo/git` and whatever else cargo needs (`config.toml`, `env` and
     `.package-cache` are otherwise absent or read-only), and it must not anchor
     something broad such as `~/.local` (a tool root `~/.local/bin` would seal
     all of `~/.local`);
-  - `home` must be outside `/tmp`, `/var/tmp`, `tmpdir`, the checkout and every
-    state root whenever any `ro_roots` entry lies beneath it, and a tool root
-    beneath `home` must be a real directory or file (not a symlink).
+  - **2b-1.** `home` must be outside `/tmp`, `/var/tmp`, `tmpdir`, the checkout
+    and every state root whenever any `ro_roots` entry lies beneath it, and a
+    tool root beneath `home` must be a real directory or file (not a symlink).
 
 **Pending for PR 2b** (the review of `writes_complete`, stage 4 PR 4):
 
-- The pre-build inventory voids the shard if any in-repository regular file has
+- **2b-1.** The pre-build inventory voids the shard if any in-repository regular file has
   `nlink > 1`: a pre-run hard-link alias is the one write path no trace names
   (§5.5, Aliases).
-- A step whose trace does not parse is `unknown_writes` and never complete; the
+- **2b-2.** A step whose trace does not parse is `unknown_writes` and never complete; the
   recorder must not substitute an empty record.
-- The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
+- **2b-2.** The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
   raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
   stays required on the wire for every record. A record that ran nothing
   (`steps_run == 0` and not built: refused or gated) was never classified, so
@@ -782,23 +794,205 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   execution (M-1: strict void, relaxed charges the action). Any record that ran
   a step, failed or built, was classified: its key must agree with the
   classifier, and a `false` or missing one is an unknown write set (§7.1, G1).
-- A recorder test pins that `StepNetNS` is true only when the step really ran
+- **2b-2.** A recorder test pins that `StepNetNS` is true only when the step really ran
   under `kiln sandbox-exec`, and false on every other path.
-- Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
+- **2b-1** (confirmed for `prepare`; re-confirm in 2b-2). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
   checks) runs repository code outside a traced step: untraced repository code
-  can write the tree with no trace at all.
-- `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
+  can write the tree with no trace at all. `prepare` runs no probe and no gate
+  (gates are **2b-2**, decision P7); the only programs it starts are Git, the
+  build tool and `strace --version`, all resolved outside the checkout
+  (decision P3).
+- **Done** (#19324). `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
   record has any content: a record that ran nothing was never classified.
-- The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
+- **2b-2.** The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
   true only when the step ran under `kiln sandbox-exec` (which unshares `NET`);
   anywhere else it stays false, and an unbound loopback or abstract peer makes
   the write set unknown (W11).
-- Classify each action before a later action can change the tree: M8's
+- **2b-2.** Classify each action before a later action can change the tree: M8's
   cross-action `unstable-path` does not feed G1, so an action classified after
   another one rewrote links it traversed would see a different disk.
-- The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
+- **2b-2.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
   child's) needs a real-`strace` fixture on Linux CI; the canned traces only
   assume it.
+
+**Stage 4b-1: `kiln record prepare`.** Implemented by `internal/record`
+(`Prepare` and the files `place.go`, `scan.go`, `hostscan.go`, `sandboxcfg.go`,
+`plan.go`, `prepare.go`) and `recordcmd.go`. It runs once per shard, before any
+BUILD; any failure fails the job and records nothing. The decisions:
+
+**P1. The command surface, and the argv contract of the wrapper.** One
+command group, `kiln record`, three subcommands:
+
+```
+kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
+                    --shard-index I --shard-count N --job-start <unix seconds>
+                    [--strace <abs>]
+kiln record step    --dir <abs> -- sh -c <line>                          (2b-2)
+kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs> (2b-2)
+```
+
+Every path is absolute. `step` and `collect` exist in 2b-1 only as stubs that
+print "not implemented (KILN04 stage 4 PR 2b-2)" and exit 1, so the CLI
+surface is fixed and a workflow written against it fails loudly, never
+silently skips tracing. `prepare` writes the build tool's `-exec-wrapper`
+value to `pre/exec-wrapper.json`: the JSON array
+`["<kiln>","record","step","--dir","<dir>","--"]`, `<kiln>` being the
+canonical path of the running binary. The build tool appends `sh -c <line>` and
+sets `KILN_ACTION` (the package `rel_path`), `KILN_STEP` and
+`KILN_STEP_COUNT` in the wrapper's environment (§4.6); `step` requires argv
+after `--` to be exactly `sh -c <line>` and the working directory to be
+`<root>/<action>` (2b-2). The traced build is
+
+```
+build-tool -root <root> -plan-file <dir>/pre/build-plan.json -shard-index I \
+  -force -language all -exec-wrapper "$(cat <dir>/pre/exec-wrapper.json)" \
+  -emit-results <dir>/results.json
+```
+
+Exit codes: 0 ok; 1 failure; 2 usage; 3 untrusted run or unsupported
+platform (nothing is written).
+
+**P2. Trust and platform come before anything else.** `prepare` refuses, with
+exit 3 and nothing written, unless the process is `linux/amd64`, `host.Detect`
+returns a `*host.GitHub` whose `Trusted()` is true, and the image id does not
+contain `unknown`. Every path must be absolute. `GITHUB_SHA` must equal the
+commit `VerifyTree` vouches for. `GITHUB_REPOSITORY`, `GITHUB_RUN_ID` and
+`GITHUB_RUN_ATTEMPT` must be present and well formed (they become the
+binding). The package builds, vets and tests on every platform; only the CLI
+entry checks the platform, so the logic is unit-tested on developers' machines.
+
+**P3. Binary placement (D15).** The Kiln binary (the running executable,
+resolved through symlinks) and the build-tool binary must be regular files
+whose path equals its own resolved path, and must lie outside every place a
+BUILD can write or read: the checkout, `tmpdir`, every state root and every
+`ro_roots` entry. They are SHA-256 hashed into the binding. `--build-tool` is
+never looked up on `PATH`. `strace` defaults to `/usr/bin/strace`, is resolved
+the same way, and is run once, as `strace --version`, to put its first line in
+the binding. `--dir` obeys the same rule against the checkout, `tmpdir`, the
+state roots and the `ro_roots`. In addition `prepare` refuses an `ro_roots`
+entry that overlaps the record directory, `RUNNER_TEMP`, either binary, or the
+directory of `GITHUB_ENV`, `GITHUB_PATH` or `GITHUB_OUTPUT`.
+
+**P4. The record directory.** `--dir` must not be a symlink and must be
+canonical (`EvalSymlinks(dir) == dir`), so no component can be redirected. It
+must be absent or an empty directory; it is created `0700`, and every file
+under it is created `O_EXCL`. Layout of the part `prepare` writes:
+
+```
+pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
+pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
+pre/actions/<sha256(action)>.json
+pre/SEALED        (sha256 and path of every other pre/ file, written last)
+```
+
+Action names never become path components; their SHA-256 does. `pre/` is then
+made read-only (files `0444`, directories `0555`). `traces/` and `probe/` are
+created by 2b-2.
+
+**P5. Refusals that void the shard before it starts.** After `VerifyTree`
+(which supplies the commit) and before any export:
+
+- any path in the pre-build inventory whose base name starts with `BUILD`;
+- any file anywhere on disk, below the root `.git`, whose base name starts
+  with `BUILD` and that the tree does not track. `Inventory` collapses an
+  untracked directory to one entry, so a new package's `BUILD` inside it is not
+  an inventory entry of its own; the walk is `lstat`-only and follows no
+  symlink;
+- any regular file below the root, tracked or not, with `st_nlink > 1`: a
+  pre-run hard-link alias is the one write path no trace names (§5.5,
+  Aliases). Directories and symlinks are not counted. The root `.git` is not
+  walked.
+
+At most `MaxReported` paths are named. On a platform without `st_nlink` the
+check is an error, not a pass.
+
+**P6. Graph, steps and plan are exported by the out-of-tree build tool, from
+the verified tree.** In this order, with a scrubbed environment (Kiln's own
+`envscrub`, so no secret-like variable reaches it):
+`build-tool -root R -emit-kiln-graph pre/graph.json -emit-kiln-steps
+pre/steps.json`, then `build-tool -root R -force -language all -shard-count N
+-shard-weights code/specs/data/ci-package-durations.json -emit-plan
+pre/build-plan.json`. Each runs under a 15-minute timeout; a non-zero exit or
+a missing output fails. `graph_sha256` and `steps_sha256` of the binding are
+the SHA-256 of the **file bytes** (both exports are byte-stable, §4.6); the
+merge compares them with the same digest of its own regeneration (B3). The
+plan must hold exactly `N` shards with indices `0..N-1`, and every package
+name a shard lists must be a package of the plan; `partition_sha256` is
+`recfmt.PartitionDigest` over `rel_path` projections. The plan is decoded
+loosely (only `packages[].name,rel_path` and
+`shards[].index,assigned_packages,package_names`), because it is the build
+tool's file, not a Kiln format.
+
+**P7. Host facts and the weak keys.** `pre/host-facts.json` is written, with
+`recfmt.EncodeHostFacts`, before any BUILD: `image_id`; `root`; `home`
+(`$HOME`, which must be set and absolute); `tmpdir`, `legacy.RecordTmpdir`;
+`executor_args`, `legacy.RecordExecutorArgs`
+(`-clippy=false`, `-prune-leaf-targets=false`); `env`, the process environment
+selected by `env.json` (`legacy.RecordEnviron`) plus `HOME` and
+`TMPDIR=<tmpdir>`, never `PATH`. Then the weak key of every package the shard
+runs (`PackageNames(I)`) is computed from `Traced` over the verified tree and
+those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/1`)
+holds, per action: `action`, `language`, `weak` (hex) or `refusal` (the
+`Refusal` reason), and `steps`, the lines `kiln-legacy-steps/1` gives for it
+(`[]` when it has no BUILD for Linux). A package whose key is refused still
+gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
+(`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2**: they
+need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
+
+**P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one
+goroutine per root, with `lstat` only: it follows no symlink and never crosses
+a device boundary (`st_dev` differs from the root's). A socket or a FIFO is an
+error naming at most `MaxReported` paths. A root that is itself a symlink
+(`/bin`) is not entered. The scan of the sandbox's own view (the in-sandbox
+probe, design step 8) needs the supervisor and `strace`, so it is **2b-2**.
+
+**P9. The sandbox configuration.** `pre/sandbox.json` is generated from
+`code/kiln/legacy/host-roots.json` as the tracked tree has it, and must pass
+`sandbox.ParseConfig` (so `Validate`) and, on the host, `Config.CheckHost`.
+
+- `repo_root` is the checkout; `home` is `$HOME`; `tmpdir` is
+  `legacy.RecordTmpdir`, created `0700` if absent and required to be an empty
+  real directory (a symlink or a populated one is refused, so the step's
+  `TMPDIR` is fresh); `kiln_exe` is the canonical Kiln path.
+- `ro_roots` are the `image` and `tool` roots after `$HOME` expansion, those
+  that do not exist dropped, sorted. A root beneath `home` must be a real
+  directory or file: a symlink is refused. When any root lies beneath `home`,
+  `home` must not lie inside `/tmp`, `/var/tmp`, `tmpdir`, the checkout or a
+  state root (§4.7, M2): a step could rename an ancestor of `home`.
+- **State roots (S1).** The anchor of a tool root deeper than a direct child of
+  `home` is sealed read-only as a whole (§4.7), so everything the toolchain
+  writes beneath it must be a declared state root. The recorder carries a
+  closed table of anchors: `~/.cargo` with the state roots `~/.cargo/registry`
+  and `~/.cargo/git`. A tool root whose anchor is not in the table (a root
+  `~/.local/bin` would seal all of `~/.local`) is refused, never anchored. Roots
+  that are direct children of `home` (`~/.rustup`, `~/.dotnet`, `~/.ghcup`)
+  have no anchor and need no state root: they are bound read-only as they
+  are. A `state` root declared in `host-roots.json` is added to the list. Every
+  state root must be absent or an empty directory (`unscrubbed:state-preloaded`
+  fails `prepare`), so no cache is restored into a recording.
+- `masks` is `["<root>/.git"]`: the sandbox does not have a `.git` at all, so a
+  BUILD can neither write the object store, `.git/config` nor a hook (§4.8 list
+  above). No state root overlaps `$HOME/.gitconfig`, `$XDG_CONFIG_HOME` (or
+  `$HOME/.config/git`), or a directory of the `PATH` the keys were derived
+  with: Kiln's own Git calls read those, and a writable one would let a BUILD
+  steer them.
+- `env_by_action` maps every package the shard runs to its scrubbed
+  environment (`WeakKey.Environ()`, or `Traced.RecordEnv` for a refused one).
+- An `ro_roots` entry that overlaps the record directory, `RUNNER_TEMP`, either
+  binary, or the directories of `GITHUB_ENV`, `GITHUB_PATH` and
+  `GITHUB_OUTPUT` is refused.
+
+**P10. The binding.** `pre/binding.json` is `recfmt.EncodeBinding` of
+`kiln-record-binding/1`: `repository`, `run`, `attempt` and `revision` (the
+commit `VerifyTree` returned, which `GITHUB_SHA` equalled), `shard_index`,
+`shard_count`, the digests of the graph, steps, partition, host facts,
+inventory and sandbox configuration, `kiln_sha256`, `build_tool_sha256`,
+`recorder` (`legacy.RecorderVersion`), `strace_version`, `kernel`
+(`/proc/sys/kernel/osrelease`), `job_start` and `prepared_at`. Every
+`pre/` file is written exactly as the `recfmt` encoder produced it, with no
+trailing newline, so `binding_id` is the SHA-256 of the file and the merge's
+strict decoder reads it back byte for byte. Given the same inputs and the same
+clock, `prepare` writes the same bytes.
 
 ### 4.7 Sandbox decisions (stage 3b)
 
