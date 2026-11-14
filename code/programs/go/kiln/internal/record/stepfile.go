@@ -40,8 +40,9 @@ const StepSchema = "kiln-record-step/1"
 
 // Why a trace was cut short (StepSidecar.TruncatedReason).
 const (
-	TruncTooLarge  = "trace-too-large"
-	TruncDiskFloor = "disk-floor"
+	TruncTooLarge    = "trace-too-large"
+	TruncWriteFailed = "trace-write-failed" // the file could not be written (a full disk, an I/O error)
+	TruncDiskFloor   = "disk-floor"         // no longer produced (the floor is checked before a step starts); still accepted
 )
 
 // Why a tracer is not clean (entries of StepSidecar.Unclean).
@@ -87,11 +88,14 @@ type StepSidecar struct {
 	// exited 125. The supervisor never retries it; `collect` tells the two
 	// apart by whether the step's execve is in the trace.
 	Exit125 bool `json:"exit_125"`
-	// Truncated says the supervisor killed strace because the trace grew past
-	// its cap or the disk ran low; the trace then ends at an arbitrary place.
+	// Truncated says the trace is incomplete because the supervisor killed
+	// strace at the cap, or could not write the file (TruncatedReason says
+	// which); the trace then ends at an arbitrary place.
 	Truncated       bool   `json:"truncated"`
 	TruncatedReason string `json:"truncated_reason"`
-	// TraceBytes and TraceSHA256 describe the trace file once strace was gone.
+	// TraceBytes and TraceSHA256 describe the bytes the supervisor wrote to the
+	// trace file, hashed as they were written; `collect` re-hashes the file and
+	// requires it to end in a newline.
 	TraceBytes  int64  `json:"trace_bytes"`
 	TraceSHA256 string `json:"trace_sha256"`
 	// StepNetNS is true only when the step really ran under `kiln
@@ -149,7 +153,7 @@ func (s *StepSidecar) Validate() error {
 	if s.TraceBytes < 0 {
 		return fmt.Errorf("step sidecar: trace_bytes %d", s.TraceBytes)
 	}
-	if s.Truncated != (s.TruncatedReason != "") || (s.Truncated && s.TruncatedReason != TruncTooLarge && s.TruncatedReason != TruncDiskFloor) {
+	if s.Truncated != (s.TruncatedReason != "") || (s.Truncated && s.TruncatedReason != TruncTooLarge && s.TruncatedReason != TruncDiskFloor && s.TruncatedReason != TruncWriteFailed) {
 		return fmt.Errorf("step sidecar: truncated %v with reason %q", s.Truncated, printable(s.TruncatedReason))
 	}
 	if s.StepNetNS != s.Started {

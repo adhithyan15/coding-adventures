@@ -50,6 +50,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
@@ -126,7 +127,7 @@ func VerifyPre(dir string) (*Pre, error) {
 	// Hash every file once, keeping the bytes of the ones that are parsed.
 	kept := map[string][]byte{}
 	for _, rel := range sortedKeys(sums) {
-		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || strings.HasPrefix(rel, "actions/")
+		keep := rel == "binding.json" || rel == "tools.json" || rel == "sandbox.json" || rel == "steps.json" || strings.HasPrefix(rel, "actions/")
 		data, sum, err := hashPreFile(filepath.Join(pre, filepath.FromSlash(rel)), keep)
 		if err != nil {
 			return nil, fmt.Errorf("pre/%s: %w", rel, err)
@@ -156,6 +157,10 @@ func VerifyPre(dir string) (*Pre, error) {
 	if p.Config, err = sandbox.ParseConfig(kept["sandbox.json"]); err != nil {
 		return nil, fmt.Errorf("pre/sandbox.json: %w", err)
 	}
+	steps, err := legacy.DecodeSteps(kept["steps.json"])
+	if err != nil {
+		return nil, fmt.Errorf("pre/steps.json: %w", err)
+	}
 	for rel, data := range kept {
 		if !strings.HasPrefix(rel, "actions/") {
 			continue
@@ -169,6 +174,12 @@ func VerifyPre(dir string) (*Pre, error) {
 		}
 		if _, err := p.Config.EnvFor(a.Action); err != nil {
 			return nil, fmt.Errorf("pre/%s: the sandbox configuration has no environment for %q", rel, printable(a.Action))
+		}
+		// The plan an action file holds is the sealed steps export's, line for
+		// line: the two were written together, and a mismatch means one of them
+		// was replaced.
+		if err := stepsMatch(a, steps); err != nil {
+			return nil, fmt.Errorf("pre/%s: %w", rel, err)
 		}
 		p.actions[a.Action] = a
 	}

@@ -23,11 +23,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
-	"sync/atomic"
+	"syscall"
 	"testing"
 	"time"
 
@@ -60,25 +61,35 @@ type stepFix struct {
 	stderr     bytes.Buffer
 }
 
-func newStepFix(t *testing.T) *stepFix {
+func newStepFix(t *testing.T) *stepFix { return newStepFixEnv(t) }
+
+// newStepFixEnv is newStepFix with more variables in the environment prepare
+// derives the build tool's environment from.
+func newStepFixEnv(t *testing.T, extraEnv ...string) *stepFix {
 	t.Helper()
 	p := newPrep(t)
+	p.env = append(p.env, extraEnv...)
 	f := &stepFix{t: t, p: p, aux: filepath.Join(p.base, "aux")}
 	if err := os.MkdirAll(f.aux, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	f.args, f.envf, f.count = filepath.Join(f.aux, "args"), filepath.Join(f.aux, "env"), filepath.Join(f.aux, "count")
-	// The fake strace: find the trace file, keep the arguments and the
-	// environment where the test can read them, count the runs, then run the
-	// step's line as shell code.
+	// The fake strace: find the trace "file" after -o (the supervisor gives it
+	// /proc/self/fd/5, a pipe; the script takes the descriptor number, which
+	// works wherever /proc does not exist), keep the arguments and the
+	// environment where the test can read them, count the runs, write a line of
+	// "trace" and then run the step's line as shell code. A line writes more
+	// trace with >&$n.
 	script := `#!/bin/sh
 tf=""
 while [ $# -gt 0 ]; do
   case "$1" in -o) tf="$2"; shift 2;; --) shift; break;; *) shift;; esac
 done
+n="${tf##*/}"
 echo run >> '` + f.count + `'
 printf '%s\n' "$@" > '` + f.args + `'
 env | sort > '` + f.envf + `'
+echo "fake trace" >&$n
 for last; do :; done
 eval "$last"
 `
@@ -106,7 +117,7 @@ func (f *stepFix) opts(action string, step, count int, line string) StepOptions 
 	return StepOptions{
 		Dir: f.p.dir, Argv: []string{"sh", "-c", line}, Environ: f.env(action, step, count),
 		Cwd: f.pre.Config.PackageDir(action), KilnExe: f.p.kiln,
-		Stdout: &f.stdout, Stderr: &f.stderr, Poll: 5 * time.Millisecond, Drain: 2 * time.Second,
+		Stdout: &f.stdout, Stderr: &f.stderr, Drain: 2 * time.Second,
 	}
 }
 
@@ -231,7 +242,7 @@ func TestStepStartsStraceWithTheExactArgumentsAndEnvironment(t *testing.T) {
 	}
 	got := strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
 	want := []string{f.p.kiln, "sandbox-exec", "--config", filepath.Join(f.p.dir, "pre", "sandbox.json"),
-		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", "exit 0"}
+		"--config-sha256", f.pre.Binding.SandboxConfigSHA256, "--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", "exit 0"}
 	// The fake strace shifted off everything up to and including "--".
 	if strings.Join(got, "\x00") != strings.Join(want, "\x00") {
 		t.Fatalf("argv after strace's options:\n%q\nwant\n%q", got, want)
@@ -271,9 +282,9 @@ func TestStepStrace_ArgvIsStraceArgs(t *testing.T) {
 	f.must(actZ, 0, 1, "exit 0")
 	data, _ := os.ReadFile(f.args)
 	lines := strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
-	trace := StepFile(f.p.dir, actZ, 0, "trace")
 	i := indexOf(lines, "-o")
-	if lines[0] != "-f" || i < 0 || lines[i+1] != trace || lines[i+2] != "--" || lines[i+3] != f.p.kiln {
+	// strace writes to its own descriptor 5, a pipe the supervisor reads.
+	if lines[0] != "-f" || i < 0 || lines[i+1] != "/proc/self/fd/5" || lines[i+2] != "--" || lines[i+3] != f.p.kiln {
 		t.Fatalf("%q", lines)
 	}
 }
@@ -370,7 +381,7 @@ func TestStepASignalledStraceIsUncleanAndExits128PlusTheSignal(t *testing.T) {
 
 func TestStepKillsStraceWhenTheTraceIsTooLarge(t *testing.T) {
 	f := newStepFix(t)
-	o := f.opts(actZ, 0, 1, `head -c 20000 /dev/zero >> "$tf"; exec sleep 30`)
+	o := f.opts(actZ, 0, 1, `head -c 20000 /dev/zero >&$n; exec sleep 30`)
 	o.TraceCap = 1000
 	start := time.Now()
 	res, err := RunStep(o)
@@ -382,7 +393,7 @@ func TestStepKillsStraceWhenTheTraceIsTooLarge(t *testing.T) {
 	}
 	sc := res.Sidecar
 	if !sc.Truncated || sc.TruncatedReason != TruncTooLarge || sc.Clean || !containsStr(sc.Unclean, UncleanTruncated+":"+TruncTooLarge) ||
-		sc.StraceSignal != 9 || res.ExitCode != 137 || sc.TraceBytes < 20000 {
+		sc.StraceSignal != 9 || res.ExitCode != 137 || sc.TraceBytes != 1000 {
 		t.Fatalf("%d %+v", res.ExitCode, sc)
 	}
 	// The recorded digest is of the file as it ended.
@@ -409,41 +420,70 @@ func TestStepDiskFloor(t *testing.T) {
 		o.FreeBytes = func(string) (uint64, error) { return 0, errors.New("statfs: boom") }
 		f.refused(o, "statfs: boom")
 	})
-	t.Run("while it runs", func(t *testing.T) {
-		f := newStepFix(t)
-		o := f.opts(actZ, 0, 1, "exec sleep 30")
-		var calls atomic.Int32
-		o.DiskFloor = 1000
-		o.FreeBytes = func(string) (uint64, error) {
-			if calls.Add(1) == 1 {
-				return 1 << 40, nil
-			}
-			return 10, nil
-		}
-		res, err := RunStep(o)
-		if err != nil {
-			t.Fatal(err)
-		}
-		sc := res.Sidecar
-		if !sc.Truncated || sc.TruncatedReason != TruncDiskFloor || sc.Clean || res.ExitCode != 137 {
-			t.Fatalf("%d %+v", res.ExitCode, sc)
-		}
-	})
-	t.Run("a measurement that fails while it runs", func(t *testing.T) {
-		f := newStepFix(t)
-		o := f.opts(actZ, 0, 1, "exec sleep 30")
-		var calls atomic.Int32
-		o.FreeBytes = func(string) (uint64, error) {
-			if calls.Add(1) == 1 {
-				return 1 << 40, nil
-			}
-			return 0, errors.New("gone")
-		}
-		res, err := RunStep(o)
-		if err != nil || res.Sidecar.TruncatedReason != TruncDiskFloor {
-			t.Fatalf("%v %+v", err, res)
-		}
-	})
+}
+
+// A write that fails the way a full disk does (ENOSPC) marks the step
+// unclean, kills strace and keeps draining: nothing blocks, and the digest is
+// of what was written.
+func TestStepAFailedTraceWriteIsRecordedAndKillsStrace(t *testing.T) {
+	f := newStepFix(t)
+	o := f.opts(actZ, 0, 1, `head -c 200000 /dev/zero >&$n; exec sleep 30`)
+	var fw *failingWriter
+	o.WrapTrace = func(w io.Writer) io.Writer {
+		fw = &failingWriter{w: w, room: 100}
+		return fw
+	}
+	start := time.Now()
+	res, err := RunStep(o)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if time.Since(start) > 20*time.Second {
+		t.Fatal("the supervisor waited for the step")
+	}
+	sc := res.Sidecar
+	if !sc.Truncated || sc.TruncatedReason != TruncWriteFailed || sc.Clean || !containsStr(sc.Unclean, UncleanTruncated+":"+TruncWriteFailed) ||
+		sc.StraceSignal != 9 || res.ExitCode != 137 || sc.TraceBytes != 100 {
+		t.Fatalf("%d %+v", res.ExitCode, sc)
+	}
+	trace, _ := os.ReadFile(StepFile(f.p.dir, actZ, 0, "trace"))
+	if sum := sha256.Sum256(trace); len(trace) != 100 || sc.TraceSHA256 != hex.EncodeToString(sum[:]) {
+		t.Fatalf("%d bytes on disk; %+v", len(trace), sc)
+	}
+}
+
+// failingWriter accepts room bytes and then fails like a full disk.
+type failingWriter struct {
+	w    io.Writer
+	room int
+}
+
+func (f *failingWriter) Write(p []byte) (int, error) {
+	if len(p) > f.room {
+		n, _ := f.w.Write(p[:f.room])
+		f.room = 0
+		return n, syscall.ENOSPC
+	}
+	f.room -= len(p)
+	return f.w.Write(p)
+}
+
+// A trace that is exactly the cap is complete; one byte more is not.
+func TestStepTheCapIsExact(t *testing.T) {
+	f := newStepFix(t)
+	o := f.opts(actZ, 0, 1, `head -c 89 /dev/zero >&$n`) // "fake trace\n" is 11 bytes: 100 in all
+	o.TraceCap = 100
+	res, err := RunStep(o)
+	if err != nil || res.Sidecar.Truncated || res.Sidecar.TraceBytes != 100 || !res.Sidecar.Clean {
+		t.Fatalf("%v %+v", err, res)
+	}
+	f2 := newStepFix(t)
+	o = f2.opts(actZ, 0, 1, `head -c 90 /dev/zero >&$n; exec sleep 30`)
+	o.TraceCap = 100
+	res, err = RunStep(o)
+	if err != nil || !res.Sidecar.Truncated || res.Sidecar.TruncatedReason != TruncTooLarge || res.Sidecar.TraceBytes != 100 {
+		t.Fatalf("%v %+v", err, res)
+	}
 }
 
 // A step may be run once. The second attempt runs nothing and leaves a marker
@@ -489,7 +529,7 @@ func TestStepOnlyRunsStepsInOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 	writeBytes(t, StepFile(f2.p.dir, actB, 1, "trace"), nil, 0o600)
-	f2.refused(f2.opts(actB, 0, 2, "exit 0"), "after step 1 had started")
+	f2.refused(f2.opts(actB, 0, 2, "exit 0"), "later step had started")
 	// Files that are not a step's (no number, no extension) are ignored.
 	f3 := newStepFix(t)
 	if err := os.MkdirAll(StepDir(f3.p.dir, actZ), 0o700); err != nil {
@@ -735,23 +775,9 @@ func TestStepASurvivorHoldingThePipesIsRecordedNotWaitedFor(t *testing.T) {
 }
 
 func TestStepFailsWhenTheTraceOrSidecarCannotBeAccountedFor(t *testing.T) {
-	t.Run("the trace vanished", func(t *testing.T) {
-		f := newStepFix(t)
-		_, err := f.run(actZ, 0, 1, `rm "$tf"`)
-		if err == nil || !strings.Contains(err.Error(), "the trace") {
-			t.Fatalf("%v", err)
-		}
-	})
-	t.Run("the trace is not a regular file", func(t *testing.T) {
-		f := newStepFix(t)
-		_, err := f.run(actZ, 0, 1, `rm "$tf"; mkfifo "$tf"`)
-		if err == nil || !strings.Contains(err.Error(), "the trace") {
-			t.Fatalf("%v", err)
-		}
-	})
 	t.Run("the sidecar exists already", func(t *testing.T) {
 		f := newStepFix(t)
-		_, err := f.run(actZ, 0, 1, `touch "${tf%.trace}.json"`)
+		_, err := f.run(actZ, 0, 1, "touch '"+StepFile(f.p.dir, actZ, 0, "json")+"'")
 		if err == nil || !strings.Contains(err.Error(), "sidecar") {
 			t.Fatalf("%v", err)
 		}
@@ -765,6 +791,7 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 		if err := os.Mkdir(other, 0o700); err != nil {
 			t.Fatal(err)
 		}
+		os.Remove(filepath.Join(f.p.dir, "traces"))
 		if err := os.Symlink(other, filepath.Join(f.p.dir, "traces")); err != nil {
 			t.Skip(err)
 		}
@@ -772,14 +799,12 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 	})
 	t.Run("a file", func(t *testing.T) {
 		f := newStepFix(t)
+		os.Remove(filepath.Join(f.p.dir, "traces"))
 		writeBytes(t, filepath.Join(f.p.dir, "traces"), nil, 0o600)
 		f.refused(f.opts(actZ, 0, 1, "exit 0"), "traces of")
 	})
 	t.Run("open to others", func(t *testing.T) {
 		f := newStepFix(t)
-		if err := os.Mkdir(filepath.Join(f.p.dir, "traces"), 0o755); err != nil {
-			t.Fatal(err)
-		}
 		if err := os.Chmod(filepath.Join(f.p.dir, "traces"), 0o755); err != nil {
 			t.Fatal(err)
 		}
@@ -787,11 +812,17 @@ func TestStepRefusesAnUnusableTracesDirectory(t *testing.T) {
 	})
 	t.Run("the trace file exists", func(t *testing.T) {
 		d := canonTemp(t)
-		if _, err := createTrace(d, actZ, 0); err != nil {
+		tf, err := createTrace(d, actZ, 0)
+		if err != nil {
 			t.Fatal(err)
 		}
+		tf.Close()
 		if _, err := createTrace(d, actZ, 0); err == nil || !errors.Is(err, os.ErrExist) {
 			t.Fatalf("O_EXCL: %v", err)
+		}
+		// The refusal leaves the marker for collect.
+		if !exists(StepFile(d, actZ, 0, "rerun")) {
+			t.Fatal("no rerun marker after the trace file's O_EXCL failed")
 		}
 	})
 	t.Run("the trace directory is unreadable", func(t *testing.T) {
@@ -827,8 +858,8 @@ func TestStepStdoutAndStderrAreOptional(t *testing.T) {
 }
 
 func TestStepDefaultsAreTheDesignReviewsFigures(t *testing.T) {
-	if DefaultTraceCap != 1<<30 || DefaultDiskFloor != 4<<30 || DefaultPoll != 250*time.Millisecond || DefaultDrain != 10*time.Second {
-		t.Fatal("G8 says: 1 GiB cap, 4 GiB floor, 250 ms poll")
+	if DefaultTraceCap != 1<<30 || DefaultDiskFloor != 4<<30 || DefaultDrain != 10*time.Second {
+		t.Fatal("G8 says: 1 GiB cap, 4 GiB floor")
 	}
 	// A real run with the defaults (the fixture's temp disk is not under 4 GiB
 	// on a developer's machine or a runner; skip when it is).
@@ -837,7 +868,7 @@ func TestStepDefaultsAreTheDesignReviewsFigures(t *testing.T) {
 		t.Skipf("not enough free disk for the default floor: %d %v", free, err)
 	}
 	o := f.opts(actZ, 0, 1, "exit 0")
-	o.Poll, o.Drain = 0, 0
+	o.Drain = 0
 	if res, err := RunStep(o); err != nil || res.ExitCode != 0 {
 		t.Fatalf("%v %+v", err, res)
 	}
@@ -871,6 +902,8 @@ func TestCaptureKeepsTheFirstBytesAndCountsAll(t *testing.T) {
 func (f *stepFix) reseal(extra map[string][]byte, fixBinding bool) {
 	f.t.Helper()
 	f.p.writable()
+	// writable opens every mode up; the traces directory must stay private.
+	os.Chmod(filepath.Join(f.p.dir, "traces"), 0o700)
 	pre := filepath.Join(f.p.dir, "pre")
 	for rel, data := range extra {
 		if err := os.WriteFile(filepath.Join(pre, filepath.FromSlash(rel)), data, 0o644); err != nil {

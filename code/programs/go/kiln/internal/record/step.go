@@ -13,12 +13,16 @@ package record
 //	build tool                      the wrapper never trusts what it is given
 //	   |
 //	   v
-//	kiln record step                outside the sandbox, not traced itself
+//	kiln record step                outside the sandbox, not traced itself;
+//	   |                            holds a SHARED flock on the record directory
 //	   |  verifies pre/, the environment, the step's place in the plan
 //	   |  creates traces/<sha>/<n>.trace   (O_EXCL: a step runs once)
 //	   v
-//	strace -f ... -o <n>.trace -- kiln sandbox-exec --config pre/sandbox.json
-//	   |                              --stdout-fd 3 --stderr-fd 4 -- sh -c <line>
+//	strace -f ... -o /proc/self/fd/5 -- kiln sandbox-exec --config pre/sandbox.json
+//	   |        |                           --config-sha256 H
+//	   |        |                           --stdout-fd 3 --stderr-fd 4 -- sh -c <line>
+//	   |        +-- fd 5: a pipe; the supervisor reads it and writes <n>.trace,
+//	   |            hashing and counting every byte (an exact cap, no polling)
 //	   |   fd 3, fd 4: fresh pipes; the supervisor copies them to its own
 //	   |   stdout and stderr, so the build log still shows the step's output
 //	   |   strace's own stdout and stderr: two more pipes, kept apart
@@ -41,33 +45,64 @@ package record
 //	  canonical integers, the count is not the plan's, or the step is not the next
 //	the argv is not exactly  sh -c <line>
 //	the working directory is not <root>/<action>
-//	the disk is short
+//	the disk is short, or `collect` holds the record directory
 //
 // Nothing is looked up on PATH: strace is the path in tools.json, the sandbox
 // helper is this very binary, and the child's PATH is the recorded one.
 //
-// What it does NOT do: classify. It never opens its own trace. The facts it
+// What it does NOT do: classify. It never parses its own trace. The facts it
 // records are the ones the trace cannot hold (how strace itself fared, and how
 // big the trace was allowed to grow); `collect`, in the next PR, parses the
 // trace and applies the classifier.
 //
-// Trace size (G8). A trace of a real step is large (the compiler's every
-// `openat`), and an rlimit on strace would be inherited by the step, which would
-// then die of SIGXFSZ when a BUILD writes a big file. So the trace goes to
-// ordinary disk and a goroutine polls it: above the cap, or with the disk under
-// its floor, strace is killed with SIGKILL (`--kill-on-exit` makes the kernel
-// kill every tracee with it) and the sidecar says `truncated`.
+// Trace size and the disk (G8)
+// ----------------------------
+// A trace of a real step is large (the compiler's every `openat`), and an
+// rlimit on strace would be inherited by the step, which would then die of
+// SIGXFSZ when a BUILD writes a big file. So the trace goes to ordinary disk.
+// strace does not write the file itself: it writes to a PIPE (`-o
+// /proc/self/fd/5`, strace's own descriptor 5, which `strace -o` opens by path
+// like any file; opening a pipe through /proc gives the write end, and
+// O_TRUNC means nothing to a pipe), and the supervisor reads the pipe and
+// writes the file. That gives three things a polled file size could not:
 //
-// If the supervisor itself is killed, strace must not outlive it: the child is
-// started with Pdeathsig = SIGKILL, from a goroutine pinned to its OS thread
-// (Pdeathsig fires when the THREAD that forked the child exits, and an unpinned
-// goroutine's thread may be retired by the Go runtime at any moment).
+//	an exact cap          the supervisor counts the bytes; at the cap it keeps the
+//	                      bytes up to it, marks the step `trace-too-large`, kills
+//	                      strace (`--kill-on-exit` makes the kernel kill every
+//	                      tracee with it) and keeps draining so nothing blocks
+//	a failed write        ENOSPC or EIO from the file marks `trace-write-failed`,
+//	                      kills strace and keeps draining; a poll of free space
+//	                      could miss a fast fallocate-and-unlink, a write error
+//	                      cannot be missed
+//	the digest            the SHA-256 is of exactly the bytes written, as they
+//	                      were written, with no second pass over a gigabyte
+//
+// Only the check BEFORE the step starts (free space at least the floor) stays a
+// measurement.
+//
+// Descriptors. Of strace's descriptors 3, 4 and 5 (ExtraFiles), the root (`kiln
+// sandbox-exec`, a trusted program) inherits all and the init closes every
+// descriptor from 3 up before it starts the step, so the step holds none of
+// them. strace's own standard output and error are pipes too, drained by the
+// same logic, so a survivor that holds ANY of the five pipes open is noticed
+// (`pipesHeld`) whatever strace's exit status was.
+//
+// Death of the supervisor. If the supervisor is killed, strace must not outlive
+// it: the child is started with Pdeathsig = SIGKILL, from a goroutine pinned to
+// its OS thread (Pdeathsig fires when the THREAD that forked the child exits,
+// and an unpinned goroutine's thread may be retired by the Go runtime at any
+// moment). And an orphaned supervisor (its build tool killed) must not go on
+// writing into the record directory while `collect` reads it: `step` holds a
+// shared flock on the directory for its whole run, `collect` takes it
+// exclusively (and refuses if it cannot), and the command asks the kernel to
+// kill the supervisor when the build tool dies (recordcmd.go).
 
 import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"hash"
 	"io"
 	"os"
 	"os/exec"
@@ -76,18 +111,17 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"sync"
 	"syscall"
 	"time"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
 
 // The default limits (design review G8).
 const (
 	DefaultTraceCap  int64  = 1 << 30 // a trace above 1 GiB is cut
-	DefaultDiskFloor uint64 = 4 << 30 // free space under 4 GiB stops a step
-	DefaultPoll             = 250 * time.Millisecond
+	DefaultDiskFloor uint64 = 4 << 30 // free space under 4 GiB stops a step from starting
 )
 
 // The three variables the build tool adds to its own environment.
@@ -103,10 +137,14 @@ const (
 // failure and which is never retried.
 const ExitRefused = 125
 
-// DefaultDrain bounds how long the supervisor waits for the step's output to drain
-// once strace is gone. A survivor that holds a pipe open must not hold the
-// supervisor, and with it the build, forever.
+// DefaultDrain bounds how long the supervisor waits for the step's output and
+// the trace to drain once strace is gone. A survivor that holds a pipe open must
+// not hold the supervisor, and with it the build, forever.
 const DefaultDrain = 10 * time.Second
+
+// traceFD is the descriptor number strace sees the trace pipe as (ExtraFiles
+// index 2: after the step's stdout and stderr pipes, descriptors 3 and 4).
+const traceFD = 5
 
 // StepOptions are the inputs of RunStep.
 type StepOptions struct {
@@ -122,16 +160,20 @@ type StepOptions struct {
 	// Stdout and Stderr receive the step's output.
 	Stdout, Stderr io.Writer
 
-	// Limits; zero means the default.
+	// Limits; zero means the default. DiskFloor is a field because a heavy
+	// build may need a smaller floor and a separate cap; the default is
+	// unchanged (4 GiB), and the floor only decides whether a step may START.
 	TraceCap  int64
 	DiskFloor uint64
-	Poll      time.Duration
 	// Drain bounds the wait for the step's output once strace has exited.
 	Drain time.Duration
 
 	// Seams, for tests. Each defaults to the real thing.
 	FreeBytes func(dir string) (uint64, error)
 	Now       func() time.Time
+	// WrapTrace wraps the writer the trace is written through (the file), so a
+	// test can make a write fail the way a full disk does.
+	WrapTrace func(io.Writer) io.Writer
 }
 
 // StepResult is what RunStep reports when the step was supervised.
@@ -149,9 +191,6 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	}
 	if o.DiskFloor == 0 {
 		o.DiskFloor = DefaultDiskFloor
-	}
-	if o.Poll == 0 {
-		o.Poll = DefaultPoll
 	}
 	if o.Drain == 0 {
 		o.Drain = DefaultDrain
@@ -174,6 +213,14 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	// The shared lock is held for the whole run: `collect` takes the same lock
+	// exclusively, so it cannot start while a step (or an orphaned supervisor)
+	// is still writing.
+	unlock, err := LockDir(o.Dir, false)
+	if err != nil {
+		return nil, err
+	}
+	defer unlock()
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)
 	if err != nil {
 		return nil, err
@@ -222,12 +269,27 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	sargs, err := sandbox.StraceArgs(traceFile)
+	defer traceFile.Close()
+	// strace's -o names its OWN descriptor, a pipe (see the header).
+	sargs, err := sandbox.StraceArgs("/proc/self/fd/" + strconv.Itoa(traceFD))
 	if err != nil {
 		return nil, err
 	}
 	argv := append(sargs, kiln.Path, sandbox.ExecCommand, "--config", pre.ConfigPath,
+		"--config-sha256", pre.Binding.SandboxConfigSHA256,
 		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", line)
+	env := []string{
+		EnvAction + "=" + action, EnvStep + "=" + strconv.Itoa(step), EnvStepCount + "=" + strconv.Itoa(count),
+		"PATH=" + pre.Tools.Path,
+	}
+	// A pinned strace that needs the validated LD_LIBRARY_PATH (the one
+	// prepare checked and gave the build tool) must find it again, or every
+	// step would fail to start. Nothing else of build_tool_env is passed on.
+	if names, err := envNames(pre.Tools.BuildToolEnv); err == nil {
+		if e, ok := names["LD_LIBRARY_PATH"]; ok {
+			env = append(env, e)
+		}
+	}
 
 	// 5. Run it.
 	lineSum := sha256.Sum256([]byte(line))
@@ -237,11 +299,21 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		Unclean: []string{},
 	}
 	sc.StartedAt = o.Now().UTC().Format(time.RFC3339Nano)
-	run := runStrace(o, strace.Path, argv, []string{
-		EnvAction + "=" + action, EnvStep + "=" + strconv.Itoa(step), EnvStepCount + "=" + strconv.Itoa(count),
-		"PATH=" + pre.Tools.Path,
-	}, traceFile)
+	var tw io.Writer = traceFile
+	if o.WrapTrace != nil {
+		tw = o.WrapTrace(tw)
+	}
+	sink := &traceSink{w: tw, h: sha256.New(), limit: o.TraceCap}
+	run := runStrace(o, strace.Path, argv, env, sink)
 	sc.EndedAt = o.Now().UTC().Format(time.RFC3339Nano)
+	// A write that failed only now (the file's close or flush) is a failed
+	// write too.
+	if err := traceFile.Sync(); err != nil && sink.reason == "" {
+		sink.reason = TruncWriteFailed
+	}
+	if err := traceFile.Close(); err != nil && sink.reason == "" {
+		sink.reason = TruncWriteFailed
+	}
 
 	// 6. Account for it.
 	sc.Started = run.started
@@ -250,7 +322,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	sc.RootStatus = run.code
 	sc.Exit125 = run.code == ExitRefused
 	sc.StraceStdoutEmpty, sc.StraceStderrEmpty = run.stdout.n == 0, run.stderr.n == 0
-	sc.Truncated, sc.TruncatedReason = run.truncated != "", run.truncated
+	sc.Truncated, sc.TruncatedReason = sink.reason != "", sink.reason
 	switch {
 	case !run.started:
 		sc.Unclean = append(sc.Unclean, UncleanNotStarted)
@@ -258,7 +330,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		sc.Unclean = append(sc.Unclean, UncleanSignalled)
 	}
 	if sc.Truncated {
-		sc.Unclean = append(sc.Unclean, UncleanTruncated+":"+run.truncated)
+		sc.Unclean = append(sc.Unclean, UncleanTruncated+":"+sink.reason)
 	}
 	if run.started && !sc.StraceStdoutEmpty {
 		sc.Unclean = append(sc.Unclean, UncleanStdout)
@@ -270,8 +342,11 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		sc.Unclean = append(sc.Unclean, UncleanPipesHeld)
 	}
 	sc.Clean = len(sc.Unclean) == 0
-	if sc.TraceBytes, sc.TraceSHA256, err = hashTrace(traceFile); err != nil {
-		return nil, fmt.Errorf("the trace: %w", err)
+	sc.TraceBytes, sc.TraceSHA256 = sink.n, hex.EncodeToString(sink.h.Sum(nil))
+	// What strace said about itself, for whoever has to find out why a CI run
+	// failed. A diagnostic only: failing to save it changes nothing.
+	if run.stderr.n > 0 {
+		writeExcl(StepFile(o.Dir, action, step, "strace-stderr"), run.stderr.b)
 	}
 	data, err := EncodeStepSidecar(sc)
 	if err != nil {
@@ -377,11 +452,23 @@ func checkStepPlace(pre *Pre, vars map[string]string) (action string, step, coun
 	return action, step, count, nil
 }
 
+// markRerun leaves the `<step>.rerun` marker `collect` reads. It may exist
+// already, which changes nothing; any other failure is reported.
+func markRerun(dir, action string, step int) error {
+	if err := writeExcl(StepFile(dir, action, step, "rerun"), []byte{}); err != nil && !errors.Is(err, os.ErrExist) {
+		return err
+	}
+	return nil
+}
+
 // checkOrder requires the steps before this one to have finished (their
-// sidecars exist) and none of this step or a later one to have started. A step
-// that is run a second time leaves a `.rerun` marker, which `collect` treats as
-// a reason to void the shard: two runs of one step could not be told apart in a
-// single trace.
+// sidecars exist) and none of this step or a later one to have started. EVERY
+// entry of the action's directory is looked at, and step numbers are compared
+// as numbers ("10.json" sorts before "2.json"), so no early return can skip the
+// marker: a step that is run a second time, or out of order, leaves a `.rerun`
+// marker for `collect` to void the shard on. Two supervisors of the same step
+// that race are sorted out by the O_EXCL of the trace file (createTrace), which
+// leaves the marker too.
 func checkOrder(dir, action string, step int) error {
 	for j := 0; j < step; j++ {
 		st, err := os.Lstat(StepFile(dir, action, j, "json"))
@@ -396,47 +483,68 @@ func checkOrder(dir, action string, step int) error {
 	if err != nil {
 		return fmt.Errorf("the traces of %q: %v", printable(action), err)
 	}
+	var own, ownOther, later int // entries of this step, those that are not a marker, later steps' entries
 	for _, e := range entries {
 		n, ext, ok := strings.Cut(e.Name(), ".")
 		if !ok {
 			continue
 		}
 		j, err := canonicalInt("", n)
-		if err != nil || j < step {
-			continue
+		switch {
+		case err != nil || j < step:
+		case j > step:
+			later++
+		default:
+			own++
+			if ext != "rerun" {
+				ownOther++
+			}
 		}
-		if j > step {
-			return fmt.Errorf("step %d of %q was asked to run after step %d had started", step, printable(action), j)
-		}
-		if ext == "rerun" {
-			// An earlier attempt to run it again was refused. The step itself
-			// stays refused: the shard is void already.
-			return fmt.Errorf("step %d of %q was already run twice", step, printable(action))
-		}
-		// This step has run (or started) already. Say so where `collect` will
-		// see it; the marker may exist already, which changes nothing.
-		if err := writeExcl(StepFile(dir, action, step, "rerun"), []byte{}); err != nil && !errors.Is(err, os.ErrExist) {
+	}
+	switch {
+	case own > 0:
+		if err := markRerun(dir, action, step); err != nil {
 			return fmt.Errorf("step %d of %q has already run, and its marker could not be written: %v", step, printable(action), err)
 		}
+		if ownOther == 0 {
+			// Only a marker: an earlier attempt to run it again was refused.
+			return fmt.Errorf("step %d of %q was already run twice", step, printable(action))
+		}
 		return fmt.Errorf("step %d of %q has already run: a step runs once", step, printable(action))
+	case later > 0:
+		if err := markRerun(dir, action, step); err != nil {
+			return fmt.Errorf("step %d of %q is out of order, and its marker could not be written: %v", step, printable(action), err)
+		}
+		return fmt.Errorf("step %d of %q was asked to run after a later step had started", step, printable(action))
 	}
 	return nil
 }
 
-// ensureDir makes a directory the supervisor owns: absent (then created 0700)
-// or a real directory that group and others can not touch. A symlink is
-// refused, so no component can be redirected.
+// ensureDir makes a directory the supervisor owns: created 0700, or already a
+// real directory, owned by this user, that group and others can not touch. It
+// is safe against another supervisor making the same directory at the same
+// moment (the build tool runs independent packages in parallel): it tries to
+// create first and, when someone else got there, falls through to the checks
+// instead of failing. A symlink is refused, so no component can be redirected.
 func ensureDir(p string) error {
+	err := os.Mkdir(p, 0o700)
+	if err == nil {
+		return nil
+	}
+	if !errors.Is(err, os.ErrExist) {
+		return err
+	}
 	st, err := os.Lstat(p)
 	switch {
-	case errors.Is(err, os.ErrNotExist):
-		return os.Mkdir(p, 0o700)
 	case err != nil:
 		return err
 	case st.Mode()&os.ModeSymlink != 0 || !st.IsDir():
 		return fmt.Errorf("%q is not a real directory", printable(p))
 	case st.Mode().Perm()&0o077 != 0:
 		return fmt.Errorf("%q is accessible to group or others (mode %o)", printable(p), st.Mode().Perm())
+	}
+	if uid, ok := ownerOf(st); ok && uid != uint32(os.Geteuid()) {
+		return fmt.Errorf("%q is owned by user %d, not by this user", printable(p), uid)
 	}
 	return nil
 }
@@ -455,42 +563,27 @@ func writeExcl(p string, data []byte) error {
 	return f.Close()
 }
 
-// createTrace makes traces/<sha>/ and creates the step's trace file empty,
-// O_EXCL. strace then opens it by name.
-func createTrace(dir, action string, step int) (string, error) {
+// createTrace makes traces/<sha>/ (if `prepare` did not already make traces/)
+// and creates the step's trace file empty, O_EXCL, returning it open for
+// writing. A trace that exists means the step ran, or is running: leave the
+// marker and refuse.
+func createTrace(dir, action string, step int) (*os.File, error) {
 	for _, d := range []string{filepath.Join(dir, "traces"), StepDir(dir, action)} {
 		if err := ensureDir(d); err != nil {
-			return "", fmt.Errorf("traces: %w", err)
+			return nil, fmt.Errorf("traces: %w", err)
 		}
 	}
-	p := StepFile(dir, action, step, "trace")
-	if err := writeExcl(p, nil); err != nil {
-		return "", fmt.Errorf("the trace file: %w", err)
+	f, err := os.OpenFile(StepFile(dir, action, step, "trace"), os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
+	if errors.Is(err, os.ErrExist) {
+		if merr := markRerun(dir, action, step); merr != nil {
+			return nil, fmt.Errorf("step %d of %q has already started, and its marker could not be written: %v", step, printable(action), merr)
+		}
+		return nil, fmt.Errorf("the trace file: step %d of %q has already started: a step runs once: %w", step, printable(action), err)
 	}
-	return p, nil
-}
-
-// hashTrace measures the finished trace: its size and SHA-256, read through a
-// non-following handle.
-func hashTrace(p string) (int64, string, error) {
-	f, err := openNoFollow(p)
 	if err != nil {
-		return 0, "", err
+		return nil, fmt.Errorf("the trace file: %w", err)
 	}
-	defer f.Close()
-	st, err := f.Stat()
-	if err != nil {
-		return 0, "", err
-	}
-	if !st.Mode().IsRegular() {
-		return 0, "", fmt.Errorf("not a regular file")
-	}
-	h := sha256.New()
-	n, err := io.Copy(h, f)
-	if err != nil {
-		return 0, "", err
-	}
-	return n, hex.EncodeToString(h.Sum(nil)), nil
+	return f, nil
 }
 
 // capture keeps the first 4 KiB written to it and counts every byte.
@@ -507,53 +600,113 @@ func (c *capture) Write(p []byte) (int, error) {
 	return len(p), nil
 }
 
+// traceSink receives the trace from strace's pipe and writes the file.
+type traceSink struct {
+	w     io.Writer
+	h     hash.Hash
+	limit int64
+	n     int64 // bytes written, all hashed
+	// reason is "" or a Trunc* reason; kill stops strace. Both are set by the
+	// goroutine that copies, and read after it has finished.
+	reason string
+	kill   func()
+	dead   bool // the cap was reached or a write failed: drain and discard
+}
+
+// copy reads r to the end. At the cap it keeps the bytes up to it and stops
+// writing; on a write error it stops writing; either way it kills strace once
+// and keeps reading, so the pipe never fills and strace never blocks.
+func (s *traceSink) copy(r io.Reader) {
+	buf := make([]byte, 64<<10)
+	for {
+		n, err := r.Read(buf)
+		if n > 0 && !s.dead {
+			chunk := buf[:n]
+			if room := s.limit - s.n; int64(len(chunk)) > room {
+				chunk = chunk[:room]
+				s.stop(TruncTooLarge)
+			}
+			if len(chunk) > 0 {
+				wn, werr := s.w.Write(chunk)
+				if wn > 0 {
+					s.h.Write(chunk[:wn])
+					s.n += int64(wn)
+				}
+				if werr != nil || wn < len(chunk) {
+					s.stop(TruncWriteFailed)
+				}
+			}
+		}
+		if err != nil {
+			return
+		}
+	}
+}
+
+func (s *traceSink) stop(reason string) {
+	if s.dead {
+		return
+	}
+	s.dead, s.reason = true, reason
+	if s.kill != nil {
+		s.kill()
+	}
+}
+
 // straceRun is what happened to the child.
 type straceRun struct {
 	started        bool
 	code, signal   int // code is -1 when signalled or never started
 	stdout, stderr *capture
-	truncated      string // "" or a Trunc* reason
 	pipesHeld      bool
 }
 
-// runStrace starts strace with the step's two output pipes as descriptors 3
-// and 4, relays them, polls the trace, and waits.
-func runStrace(o StepOptions, straceBin string, argv, env []string, traceFile string) straceRun {
+// runStrace starts strace with the step's two output pipes and the trace pipe
+// as descriptors 3, 4 and 5, relays and records them, and waits.
+func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceSink) straceRun {
 	// The child's fork must come from a thread that lives as long as this
 	// process, because Pdeathsig is tied to the forking thread.
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 
 	run := straceRun{code: -1, stdout: &capture{}, stderr: &capture{}}
-	outR, outW, err := os.Pipe()
-	if err != nil {
-		return run
+	// Five pipes: the step's stdout and stderr, the trace, and strace's own
+	// stdout and stderr. rs are our read ends, ws the child's write ends.
+	var rs, ws [5]*os.File
+	closeAll := func() {
+		for i := range rs {
+			if rs[i] != nil {
+				rs[i].Close()
+			}
+			if ws[i] != nil {
+				ws[i].Close()
+			}
+		}
 	}
-	errR, errW, err := os.Pipe()
-	if err != nil {
-		outR.Close()
-		outW.Close()
-		return run
+	for i := range rs {
+		r, w, err := os.Pipe()
+		if err != nil {
+			closeAll()
+			return run
+		}
+		rs[i], ws[i] = r, w
 	}
 	cmd := exec.Command(straceBin, argv...)
 	cmd.Env = env
 	cmd.Stdin = nil // /dev/null
-	cmd.Stdout, cmd.Stderr = run.stdout, run.stderr
-	cmd.ExtraFiles = []*os.File{outW, errW} // descriptors 3 and 4 of strace
+	cmd.Stdout, cmd.Stderr = ws[3], ws[4]
+	cmd.ExtraFiles = []*os.File{ws[0], ws[1], ws[2]} // descriptors 3, 4 and 5 of strace
 	cmd.SysProcAttr = childAttr()
-	// A survivor that keeps strace's own pipes open must not hold us.
-	cmd.WaitDelay = o.Drain
 	if err := cmd.Start(); err != nil {
-		outR.Close()
-		outW.Close()
-		errR.Close()
-		errW.Close()
+		closeAll()
 		return run
 	}
 	run.started = true
 	// Our copies of the write ends must go, or the readers never see EOF.
-	outW.Close()
-	errW.Close()
+	for _, w := range ws {
+		w.Close()
+	}
+	sink.kill = func() { cmd.Process.Kill() }
 
 	relay := func(dst io.Writer, src *os.File, done chan<- struct{}) {
 		if _, err := io.Copy(dst, src); err != nil {
@@ -561,64 +714,56 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, traceFile st
 		}
 		done <- struct{}{}
 	}
-	done := make(chan struct{}, 2)
-	go relay(o.Stdout, outR, done)
-	go relay(o.Stderr, errR, done)
+	done := make(chan struct{}, 5)
+	go relay(o.Stdout, rs[0], done)
+	go relay(o.Stderr, rs[1], done)
+	go func() { sink.copy(rs[2]); done <- struct{}{} }()
+	go relay(run.stdout, rs[3], done)
+	go relay(run.stderr, rs[4], done)
 
-	var mu sync.Mutex
-	stop := make(chan struct{})
-	var watcher sync.WaitGroup
-	watcher.Add(1)
-	go func() {
-		defer watcher.Done()
-		tick := time.NewTicker(o.Poll)
-		defer tick.Stop()
-		for {
-			select {
-			case <-stop:
-				return
-			case <-tick.C:
-			}
-			reason := ""
-			if st, err := os.Stat(traceFile); err == nil && st.Size() > o.TraceCap {
-				reason = TruncTooLarge
-			} else if free, err := o.FreeBytes(o.Dir); err != nil || free < o.DiskFloor {
-				reason = TruncDiskFloor // an unmeasurable disk is a full disk
-			}
-			if reason != "" {
-				mu.Lock()
-				run.truncated = reason
-				mu.Unlock()
-				cmd.Process.Kill()
-				return
-			}
-		}
-	}()
-	waitErr := cmd.Wait()
-	close(stop)
-	watcher.Wait()
-	if errors.Is(waitErr, exec.ErrWaitDelay) {
-		run.pipesHeld = true
-	}
-	// The step's own output: wait for it to drain, but only so long.
+	cmd.Wait()
+	// Everything the step and strace wrote: wait for it to drain, but only so
+	// long. A pipe that is still open after strace is gone is held by something
+	// that outlived it, which is not a clean run whatever the exit status.
 	timeout := time.NewTimer(o.Drain)
 	defer timeout.Stop()
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 5; i++ {
 		select {
 		case <-done:
 		case <-timeout.C:
 			run.pipesHeld = true
-			i = 2
+			for _, r := range rs {
+				r.Close() // the copiers end with a read error
+			}
+			for j := i; j < 5; j++ {
+				<-done
+			}
+			i = 5
 		}
 	}
-	outR.Close()
-	errR.Close()
+	for _, r := range rs {
+		r.Close()
+	}
 	if ps := cmd.ProcessState; ps != nil {
-		if ws, ok := ps.Sys().(syscall.WaitStatus); ok && ws.Signaled() {
-			run.signal = int(ws.Signal())
+		if wst, ok := ps.Sys().(syscall.WaitStatus); ok && wst.Signaled() {
+			run.signal = int(wst.Signal())
 		} else {
 			run.code = ps.ExitCode()
 		}
 	}
 	return run
+}
+
+// stepsMatch compares an action's planned lines with the steps export's.
+func stepsMatch(a Action, st *legacy.Steps) error {
+	lines, _ := st.Lines(a.Action)
+	if len(lines) != len(a.Steps) {
+		return fmt.Errorf("action %q plans %d steps, the sealed steps export has %d", printable(a.Action), len(a.Steps), len(lines))
+	}
+	for i := range lines {
+		if lines[i] != a.Steps[i] {
+			return fmt.Errorf("action %q step %d is not the line of the sealed steps export", printable(a.Action), i)
+		}
+	}
+	return nil
 }

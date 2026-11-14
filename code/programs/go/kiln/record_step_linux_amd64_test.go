@@ -33,6 +33,8 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -325,6 +327,15 @@ exit 0
 	}
 	if sc0.TraceBytes == 0 {
 		t.Error("an empty trace")
+	}
+	// The sidecar's digest is of the bytes the supervisor wrote from strace's
+	// pipe (-o /proc/self/fd/5), and the trace ends in a newline.
+	raw0, err := os.ReadFile(tracePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sum := sha256.Sum256(raw0); sc0.TraceSHA256 != hex.EncodeToString(sum[:]) || sc0.TraceBytes != int64(len(raw0)) || raw0[len(raw0)-1] != '\n' {
+		t.Errorf("trace digest or size mismatch, or no final newline: %+v (%d bytes)", sc0, len(raw0))
 	}
 
 	// Step 1: the step's descriptors 1 and 2 are pipes.

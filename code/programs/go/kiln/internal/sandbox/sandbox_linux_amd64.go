@@ -66,6 +66,9 @@ func RunExec(args []string, stderr io.Writer) int {
 	if err != nil {
 		return fail(err)
 	}
+	if ea.ConfigSHA256 != "" && ea.ConfigSHA256 != sum {
+		return fail(errors.New("the configuration's content is not the one the caller verified (--config-sha256)"))
+	}
 	cfg, err := ParseConfig(data)
 	if err != nil {
 		return fail(err)

@@ -612,6 +612,23 @@ was started with the sandbox command) and `clean`, the supervisor's half of the
 tracer-completeness rule (G7). It classifies nothing: `kiln record collect`, the
 next PR, parses the trace and reads these files.
 
+How the trace is written (review of P12). strace does not write the file: it writes
+a pipe (`-o /proc/self/fd/5`) and the supervisor reads it, writes
+`<step>.trace` and hashes the bytes as it writes them, so the 1 GiB cap is exact,
+a write error (`ENOSPC`) kills strace at once (`trace-write-failed`), and nothing
+polls; only "free space at least 4 GiB" is checked, before a step starts (a field
+of the options). `prepare` creates `traces/`, and `step` is safe against
+supervisors that start together. A rerun or out-of-order step always leaves
+`<step>.rerun`. `step` holds a shared `flock` on the record directory for its whole
+run (`record.LockDir`; `collect` will take it exclusively), asks the kernel to kill
+it when the build tool dies, passes the validated `LD_LIBRARY_PATH` to strace,
+saves strace's own stderr as `<step>.strace-stderr`, notices a survivor holding any
+of the five pipes whatever strace's exit status was, and passes
+`--config-sha256` to `kiln sandbox-exec`, which refuses a configuration of other
+content. `VerifyPre` also checks every action file against the sealed `steps.json`.
+The workflow must start the build tool under `env -i` with exactly
+`build_tool_env`, and not consume step output (or wrap it in `::stop-commands::`).
+
 Tests: a fake `strace` script behind `tools.json` covers every refusal and
 outcome on any Unix (`step_unix_test.go`); `TestStepKillingTheSupervisorKillsStrace`
 covers `Pdeathsig` on Linux; `TestSandboxRecordStep` (the required `kiln-sandbox`

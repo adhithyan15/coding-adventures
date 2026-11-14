@@ -77,8 +77,9 @@ func TestRecordCollectIsAStub(t *testing.T) {
 func recordStepHooks(t *testing.T) {
 	t.Helper()
 	recordHooks(t)
-	st := recordStep
-	t.Cleanup(func() { recordStep = st })
+	st, ar := recordStep, recordArmParentDeath
+	recordArmParentDeath = func() error { return nil }
+	t.Cleanup(func() { recordStep, recordArmParentDeath = st, ar })
 }
 
 func TestRecordStepUsageAndPlatform(t *testing.T) {
@@ -312,3 +313,16 @@ func TestRecordDefaultHooks(t *testing.T) {
 }
 
 func osAndArch() string { return runtime.GOOS + "/" + runtime.GOARCH }
+
+func TestRecordStepRefusesWhenItCannotArmParentDeath(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordArmParentDeath = func() error { return errors.New("the build tool exited") }
+	recordStep = func(record.StepOptions) (*record.StepResult, error) {
+		t.Fatal("RunStep was reached")
+		return nil, nil
+	}
+	if code, _, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "build tool exited") {
+		t.Fatalf("%d %q", code, e)
+	}
+}

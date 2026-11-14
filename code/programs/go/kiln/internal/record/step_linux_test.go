@@ -32,7 +32,7 @@ const helperEnv = "KILN_STEP_HELPER_PAYLOAD"
 type helperPayload struct {
 	Dir, Cwd, KilnExe string
 	Argv, Environ     []string
-	Poll, Drain       time.Duration
+	Drain             time.Duration
 }
 
 // TestStepHelperProcess is the child. It does nothing unless the test below
@@ -50,7 +50,7 @@ func TestStepHelperProcess(t *testing.T) {
 	if err := json.Unmarshal(data, &hp); err != nil {
 		os.Exit(91)
 	}
-	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Poll: hp.Poll, Drain: hp.Drain})
+	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Drain: hp.Drain})
 
 	if err != nil {
 		os.Stderr.WriteString(err.Error() + "\n")
@@ -88,7 +88,7 @@ func TestStepKillingTheSupervisorKillsStrace(t *testing.T) {
 	line := `echo $$ > '` + pidFile + `.tmp'; mv '` + pidFile + `.tmp' '` + pidFile + `'; exec sleep 60`
 	o := f.opts(actZ, 0, 1, line)
 	payload := filepath.Join(f.aux, "payload.json")
-	data, err := json.Marshal(helperPayload{Dir: o.Dir, Cwd: o.Cwd, KilnExe: o.KilnExe, Argv: o.Argv, Environ: o.Environ, Poll: o.Poll, Drain: o.Drain})
+	data, err := json.Marshal(helperPayload{Dir: o.Dir, Cwd: o.Cwd, KilnExe: o.KilnExe, Argv: o.Argv, Environ: o.Environ, Drain: o.Drain})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -130,6 +130,45 @@ func TestStepKillingTheSupervisorKillsStrace(t *testing.T) {
 	for deadline := time.Now().Add(15 * time.Second); !processGone(pid); time.Sleep(20 * time.Millisecond) {
 		if time.Now().After(deadline) {
 			t.Fatalf("strace (pid %d) outlived its supervisor", pid)
+		}
+	}
+}
+
+// Supervisors of different actions started together, as separate PROCESSES
+// (the build tool's -jobs), with traces/ absent: none may be refused.
+func TestStepParallelProcessesDoNotRaceOnTheTracesDirectory(t *testing.T) {
+	f := newStepFix(t)
+	if err := os.Remove(filepath.Join(f.p.dir, "traces")); err != nil {
+		t.Fatal(err)
+	}
+	type job struct {
+		action string
+		count  int
+	}
+	jobs := []job{{actA, 1}, {actB, 2}, {actZ, 1}}
+	var cmds []*exec.Cmd
+	for i, j := range jobs {
+		o := f.opts(j.action, 0, j.count, "exit 0")
+		payload := filepath.Join(f.aux, "payload"+strconv.Itoa(i)+".json")
+		data, err := json.Marshal(helperPayload{Dir: o.Dir, Cwd: o.Cwd, KilnExe: o.KilnExe, Argv: o.Argv, Environ: o.Environ, Drain: o.Drain})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(payload, data, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		c := exec.Command(os.Args[0], "-test.run=^TestStepHelperProcess$")
+		c.Env = []string{helperEnv + "=" + payload, "PATH=/usr/bin:/bin"}
+		cmds = append(cmds, c)
+	}
+	for _, c := range cmds {
+		if err := c.Start(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for i, c := range cmds {
+		if err := c.Wait(); err != nil {
+			t.Errorf("supervisor %d: %v", i, err)
 		}
 	}
 }

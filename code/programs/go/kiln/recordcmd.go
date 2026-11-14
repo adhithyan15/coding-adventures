@@ -70,6 +70,9 @@ var recordPrepare = record.Prepare
 // refusal never reached it.
 var recordStep = record.RunStep
 
+// recordArmParentDeath makes the supervisor die with the build tool (Linux).
+var recordArmParentDeath = armParentDeath
+
 const notYet = "not implemented (KILN04 stage 4 PR 2b-2b)"
 
 // runRecord dispatches `kiln record <subcommand>`.
@@ -171,6 +174,10 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 	if !recordPlatformOK() {
 		fmt.Fprintf(stderr, "kiln: record step runs only on linux/amd64 (this is %s/%s); the step was not run\n", runtime.GOOS, runtime.GOARCH)
 		return 3
+	}
+	if err := recordArmParentDeath(); err != nil {
+		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
+		return record.ExitRefused
 	}
 	self, err := recordSelf()
 	if err != nil {

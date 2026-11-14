@@ -51,6 +51,11 @@ const NoFD = -1
 // ExecArgs are the parsed arguments of `sandbox-exec`.
 type ExecArgs struct {
 	Config string
+	// ConfigSHA256 is the hex SHA-256 the configuration's bytes must have (the
+	// optional --config-sha256), or "": the root then refuses a file whose
+	// content is not what the caller verified, closing the gap between a
+	// recorder that hashed the file and a helper that opens it by path.
+	ConfigSHA256 string
 	// StdoutFD and StderrFD are the root's descriptors that become the step's
 	// 1 and 2 (S2, KILN04 section 4.7), or NoFD.
 	StdoutFD int
@@ -63,9 +68,10 @@ type ExecArgs struct {
 const maxOutputFD = 1 << 20
 
 // ParseExecArgs parses
-// `--config <abs path> [--stdout-fd N --stderr-fd N] -- <argv...>`.
-// The two flags come together, in that order, each once; a flag is never
-// taken from the step's argv, which starts only after the `--`.
+// `--config <abs path> [--config-sha256 <hex>] [--stdout-fd N --stderr-fd N]
+// -- <argv...>`.
+// The two output flags come together, in that order, each once; a flag is
+// never taken from the step's argv, which starts only after the `--`.
 func ParseExecArgs(args []string) (*ExecArgs, error) {
 	usage := errors.New("usage: kiln sandbox-exec --config <absolute path> [--stdout-fd N] [--stderr-fd N] -- <argv...>")
 	if len(args) < 4 || args[0] != "--config" {
@@ -76,6 +82,12 @@ func ParseExecArgs(args []string) (*ExecArgs, error) {
 	}
 	ea := &ExecArgs{Config: args[1], StdoutFD: NoFD, StderrFD: NoFD}
 	rest := args[2:]
+	if len(rest) >= 2 && rest[0] == "--config-sha256" {
+		if len(rest[1]) != 64 || !isLowerHex(rest[1]) {
+			return nil, fmt.Errorf("sandbox-exec: --config-sha256 needs 64 lowercase hex digits, got %q", clip(rest[1]))
+		}
+		ea.ConfigSHA256, rest = rest[1], rest[2:]
+	}
 	if len(rest) >= 2 && rest[0] == "--stdout-fd" {
 		n, err := parseOutputFD("--stdout-fd", rest[1])
 		if err != nil {
@@ -104,6 +116,15 @@ func ParseExecArgs(args []string) (*ExecArgs, error) {
 		return nil, err
 	}
 	return ea, nil
+}
+
+func isLowerHex(s string) bool {
+	for i := 0; i < len(s); i++ {
+		if c := s[i]; !(c >= '0' && c <= '9' || c >= 'a' && c <= 'f') {
+			return false
+		}
+	}
+	return true
 }
 
 // parseOutputFD reads a descriptor number: decimal digits only (no sign, no
