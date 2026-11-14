@@ -65,7 +65,8 @@ the native networking stack directly:
 - **Write.** Each connection has at most one `WSASend` in flight. Handler output
   is appended to a pending buffer; when no send is in flight the pending bytes
   move to the in-flight buffer and are sent. A partial completion resends the
-  remainder.
+  remainder; this is defensive, since an overlapped stream send normally completes
+  whole, so no test can provoke it.
 - **Backpressure and budget** match the Unix engine: the queued bytes (in flight
   plus pending) are capped per connection; a handler response that would exceed
   the cap closes the connection; while the queue is at or over the cap no new

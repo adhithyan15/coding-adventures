@@ -1,9 +1,10 @@
 [package]
 name = "tcp-reactor"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Small nonblocking TCP reactor built on top of native-event-core"
+description = "Small nonblocking TCP reactor: epoll/kqueue readiness engine and a native Windows IOCP completion engine"
 license = "MIT"
 
 [dependencies]
 native-event-core = { path = "../native-event-core" }
+iocp = { path = "../iocp" }

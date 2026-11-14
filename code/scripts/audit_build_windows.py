@@ -686,7 +686,7 @@ CATEGORIES = (
 # recorded in BUILD-002 (see the module docstring).
 ALLOWLIST_CAPS = {
     "intrinsic-apple": 11,
-    "intrinsic-platform": 1,
+    "intrinsic-platform": 0,
     "no-tests-by-design": 7,
     "tracked-follow-up": 1,
 }
