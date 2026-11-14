@@ -868,10 +868,21 @@ BUILD can write or read: the checkout, `tmpdir`, every state root and every
 `ro_roots` entry. They are SHA-256 hashed into the binding. `--build-tool` is
 never looked up on `PATH`. `strace` defaults to `/usr/bin/strace`, is resolved
 the same way, and is run once, as `strace --version`, to put its first line in
-the binding. `--dir` obeys the same rule against the checkout, `tmpdir`, the
-state roots and the `ro_roots`. In addition `prepare` refuses an `ro_roots`
+the binding. `--dir` obeys the same rule against the checkout and `tmpdir`;
+inside a state root it is refused too, because creating it makes the root
+non-empty (`state-preloaded`). In addition `prepare` refuses an `ro_roots`
 entry that overlaps the record directory, `RUNNER_TEMP`, either binary, or the
 directory of `GITHUB_ENV`, `GITHUB_PATH` or `GITHUB_OUTPUT`.
+
+**Open (found by implementing P9).** `Config.CheckHost` (§4.7, "the
+configuration file is not inside the checkout, `home`, `tmpdir` or a state
+root") refuses a configuration inside `home`, and `prepare` runs it. On a
+hosted runner `RUNNER_TEMP` is `/home/runner/work/_temp`, beneath `home`
+(`/home/runner`), so the design's `--dir $RUNNER_TEMP/kiln-record` is refused
+there. §4.7 itself says `home` is a fresh tmpfs the host's copy never appears in
+(that is why `kiln_exe` is not checked against it), so dropping `home` from the
+configuration-path rule is sound; until that is decided and reviewed, `--dir`
+must lie outside `home`.
 
 **P4. The record directory.** `--dir` must not be a symlink and must be
 canonical (`EvalSymlinks(dir) == dir`), so no component can be redirected. It
