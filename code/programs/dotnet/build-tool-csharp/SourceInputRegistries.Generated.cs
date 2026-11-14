@@ -1371,7 +1371,6 @@ internal static class SourceInputRegistryProjection
           "code/packages/rust/adjudication-polarity-modality",
           "code/packages/rust/adjudication-round-trip",
           "code/packages/rust/adjudication-tsa-demo",
-          "code/packages/rust/arithmetic",
           "code/packages/rust/board-vm-esp-rom",
           "code/packages/rust/cas-algebraic",
           "code/packages/rust/cas-complex",
