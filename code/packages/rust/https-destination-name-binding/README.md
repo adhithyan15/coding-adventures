@@ -27,9 +27,18 @@ optional colon and shortest-decimal port. The non-copyable result retains both
 inputs, so a caller cannot replace the Host field with one for another
 destination after binding.
 
-This proves only one retained Host field. A later request-head composition must
-still reject additional Host fields, bind the request line and body framing,
-and preserve this destination through the audited transport boundary.
+`bind_https_request_header_fields` moves that proof together with the exact
+caller-borrowed slice of additional validated fields into a second
+non-copyable result. A caller-selected total-field ceiling includes Host and is
+hard-capped at 64. Every additional field name is checked case-insensitively,
+and any second Host field fails closed. The result retains the exact field
+slice, caller order, and limit policy for a later encoder.
+
+This does not authorize additional fields, reject duplicate names other than
+Host, reconcile `Content-Length`, prohibit `Transfer-Encoding`, or compose a
+request head. A later composition must consume this exact proof, bind the
+request line and body framing, and preserve the destination through audited
+transport.
 
 This package does not parse URLs, bind request targets or provider
 configuration, choose ports, validate critical extensions, certificate role,
