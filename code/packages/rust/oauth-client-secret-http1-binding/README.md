@@ -5,15 +5,19 @@ client-secret request and the strict repository-owned HTTP/1 evidence that a
 later HTTPS composition must consume.
 
 `bind_client_secret_http1_request_material` publishes an attempted event before
-inspecting credential-bearing material. Inside that audited boundary it
-constructs the fixed-body proof over the request's original form-body
+this binder inspects credential-bearing material. Inside that audited boundary
+it constructs the fixed-body proof over the request's original form-body
 allocation, writes and binds canonical Content-Length in a bounded caller
 buffer, and, for Basic authentication, constructs an `Authorization` field
 over the request's original Authorization allocation. Body authentication
 constructs no Authorization field. Callers cannot supply alternate credential
-bytes or prebuild these proofs. A rejected or successful outcome must be
-durable before the call returns an error or releases the non-copyable proof;
-validation or audit failure restores the caller buffer.
+bytes or prebuilt evidence as inputs. The already custody-released request
+remains independently accessible to its owner, so this proof attests only to
+the reads and construction performed by this call. A rejected or successful
+outcome must be durable before the call returns an error or releases the
+non-copyable proof. Validation or audit failure leaves the caller buffer
+unchanged, and deterministic output binding after success does not reread
+credential-bearing input.
 
 The proof retains the exact request reference, fixed body and canonical
 Content-Length binding, optional Authorization field, provider, and trace.

@@ -12,7 +12,7 @@ use coding_adventures_oauth_client_secret_custody::ClientSecretAuthenticatedRequ
 use core::fmt;
 use http1_fixed_request_body::{
     bind_http1_fixed_request_content_length_field, encode_http1_fixed_request_content_length,
-    validate_http1_fixed_request_body, Http1FixedRequestBodyLimits,
+    validate_http1_fixed_request_body, Http1FixedRequestBody, Http1FixedRequestBodyLimits,
     Http1FixedRequestContentLengthField, MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES,
 };
 use http1_request_header_field::{
@@ -31,7 +31,7 @@ pub enum ClientSecretHttp1AuditAction {
 pub enum ClientSecretHttp1AuditOutcome {
     /// The construction is about to inspect credential-bearing material.
     Attempted,
-    /// Every strict construction succeeded and a proof may be released.
+    /// Credential-dependent validation succeeded and deterministic release is authorized.
     Succeeded,
     /// A bounded body, field, or Content-Length check rejected the request.
     Rejected,
@@ -145,8 +145,8 @@ impl fmt::Debug for BoundClientSecretHttp1RequestMaterial<'_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("BoundClientSecretHttp1RequestMaterial")
-            .field("provider", self.request.provider())
-            .field("trace", &self.request.trace())
+            .field("provider", &"[REDACTED]")
+            .field("trace", &"[REDACTED]")
             .field("request", &"[REDACTED]")
             .field("body", &"[REDACTED]")
             .field("has_authorization", &self.authorization.is_some())
@@ -157,8 +157,9 @@ impl fmt::Debug for BoundClientSecretHttp1RequestMaterial<'_, '_> {
 /// Audit and construct strict HTTP/1 evidence from one custody-built request.
 ///
 /// The attempted event is durable before credential-bearing bytes are
-/// inspected. The seven-byte caller buffer is restored on every rejection or
-/// audit failure. A succeeded event is durable before the proof is released.
+/// inspected. Validation and audit failures leave the seven-byte caller buffer
+/// unchanged. A succeeded event is durable before deterministic output binding
+/// releases the proof, and no credential-bearing input is read after it.
 pub fn bind_client_secret_http1_request_material<
     'request,
     'length,
@@ -172,54 +173,43 @@ pub fn bind_client_secret_http1_request_material<
 ) -> Result<BoundClientSecretHttp1RequestMaterial<'request, 'length>, ClientSecretHttp1BindingError>
 {
     publish(audit, request, ClientSecretHttp1AuditOutcome::Attempted)?;
-    let original_output = *content_length_output;
+    let prepared = match prepare_request_material(request, body_limits, field_limits) {
+        Ok(prepared) => prepared,
+        Err(error) => {
+            publish(audit, request, ClientSecretHttp1AuditOutcome::Rejected)?;
+            return Err(error);
+        }
+    };
 
-    if let Err(error) =
-        prepare_request_material(request, body_limits, field_limits, content_length_output)
-    {
-        *content_length_output = original_output;
-        publish(audit, request, ClientSecretHttp1AuditOutcome::Rejected)?;
-        return Err(error);
-    }
+    publish(audit, request, ClientSecretHttp1AuditOutcome::Succeeded)?;
 
-    if publish(audit, request, ClientSecretHttp1AuditOutcome::Succeeded).is_err() {
-        *content_length_output = original_output;
-        return Err(ClientSecretHttp1BindingError::Audit);
-    }
-
-    construct_request_material(request, body_limits, field_limits, content_length_output)
+    Ok(release_request_material(prepared, content_length_output))
 }
 
-fn prepare_request_material(
-    request: &ClientSecretAuthenticatedRequest,
-    body_limits: Http1FixedRequestBodyLimits,
+struct PreparedClientSecretHttp1RequestMaterial<'request> {
+    request: &'request ClientSecretAuthenticatedRequest,
+    body: Http1FixedRequestBody<'request>,
+    authorization: Option<Http1RequestHeaderField<'request>>,
+    content_length_value: [u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES],
+    content_length_value_length: u8,
     field_limits: Http1RequestHeaderFieldLimits,
-    content_length_output: &mut [u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES],
-) -> Result<(), ClientSecretHttp1BindingError> {
-    let _prepared =
-        construct_request_material(request, body_limits, field_limits, content_length_output)?;
-    Ok(())
 }
 
-fn construct_request_material<'request, 'length>(
+fn prepare_request_material<'request>(
     request: &'request ClientSecretAuthenticatedRequest,
     body_limits: Http1FixedRequestBodyLimits,
     field_limits: Http1RequestHeaderFieldLimits,
-    content_length_output: &'length mut [u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES],
-) -> Result<BoundClientSecretHttp1RequestMaterial<'request, 'length>, ClientSecretHttp1BindingError>
-{
+) -> Result<PreparedClientSecretHttp1RequestMaterial<'request>, ClientSecretHttp1BindingError> {
     let body = validate_http1_fixed_request_body(request.form_body().as_bytes(), body_limits)
         .map_err(|_| ClientSecretHttp1BindingError::BodyRejected)?;
     let encoded_length = body.content_length_value_length();
+    let mut content_length_value = [0u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES];
     let length_value = encode_http1_fixed_request_content_length(
         &body,
-        &mut content_length_output[..encoded_length],
+        &mut content_length_value[..encoded_length],
     )
     .map_err(|_| ClientSecretHttp1BindingError::ContentLengthRejected)?;
-    let content_length =
-        validate_http1_request_header_field(b"Content-Length", length_value, field_limits)
-            .map_err(|_| ClientSecretHttp1BindingError::ContentLengthRejected)?;
-    let body = bind_http1_fixed_request_content_length_field(body, content_length)
+    validate_http1_request_header_field(b"Content-Length", length_value, field_limits)
         .map_err(|_| ClientSecretHttp1BindingError::ContentLengthRejected)?;
 
     let authorization = request
@@ -230,11 +220,37 @@ fn construct_request_material<'request, 'length>(
         })
         .transpose()?;
 
-    Ok(BoundClientSecretHttp1RequestMaterial {
+    Ok(PreparedClientSecretHttp1RequestMaterial {
         request,
         body,
         authorization,
+        content_length_value,
+        content_length_value_length: encoded_length as u8,
+        field_limits,
     })
+}
+
+fn release_request_material<'request, 'length>(
+    prepared: PreparedClientSecretHttp1RequestMaterial<'request>,
+    content_length_output: &'length mut [u8; MAX_HTTP1_FIXED_REQUEST_CONTENT_LENGTH_BYTES],
+) -> BoundClientSecretHttp1RequestMaterial<'request, 'length> {
+    let encoded_length = prepared.content_length_value_length as usize;
+    content_length_output[..encoded_length]
+        .copy_from_slice(&prepared.content_length_value[..encoded_length]);
+    let content_length = validate_http1_request_header_field(
+        b"Content-Length",
+        &content_length_output[..encoded_length],
+        prepared.field_limits,
+    )
+    .expect("prepared Content-Length field remains valid in exact caller storage");
+    let body = bind_http1_fixed_request_content_length_field(prepared.body, content_length)
+        .expect("prepared canonical Content-Length remains bound to the exact body");
+
+    BoundClientSecretHttp1RequestMaterial {
+        request: prepared.request,
+        body,
+        authorization: prepared.authorization,
+    }
 }
 
 fn publish<A: ClientSecretHttp1AuditSink>(

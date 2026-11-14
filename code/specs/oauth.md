@@ -5016,7 +5016,7 @@ retain this exact provider, trace, request, destination, and release binding
 without substituting any input, and must apply its own audit gates before every
 credential access and external effect. Concrete HTTPS remains unavailable.
 
-An allocation-free `oauth-client-secret-http1-binding` prerequisite now binds
+A bounded `oauth-client-secret-http1-binding` prerequisite now binds
 one custody-built `ClientSecretAuthenticatedRequest` to strict HTTP/1 evidence
 constructed only inside the audited boundary. Before inspecting either
 credential-bearing body or Authorization bytes, the binder durably publishes
@@ -5026,14 +5026,17 @@ and field primitives to retain the request's original form-body allocation,
 encode and bind its canonical Content-Length in bounded caller storage, and,
 when custody produced Basic authentication, validate an `Authorization` field
 that retains the original Authorization allocation. Body authentication
-produces no Authorization field. Callers cannot supply alternate credential
-bytes or prebuild evidence by reading them before this audit. A closed rejected
-or succeeded event must be durable before the call returns an error or releases
-the non-copyable proof. Validation or audit failure restores the bounded caller
-storage and releases no proof. Success retains the exact request reference,
-fixed-body/Content-Length proof, Authorization-field presence, provider, and
-trace so a later composition cannot substitute credential material or relabel
-the release.
+produces no Authorization field. The binder accepts no caller-supplied
+credential bytes or prebuilt evidence, but it does not revoke the owner's
+independent access to the already custody-released request; its proof attests
+only to reads and construction performed by this call. A closed rejected or
+succeeded event must be durable before the call returns an error or releases
+the non-copyable proof. Validation or audit failure leaves bounded caller
+storage unchanged and releases no proof. After terminal success, deterministic
+output binding rereads no credential-bearing input. Success retains the exact
+request reference, fixed-body/Content-Length proof, Authorization-field
+presence, provider, and trace so a later composition cannot substitute
+credential material or relabel the release.
 
 Stable failures and Debug output retain no endpoint, body, Authorization,
 field-name, field-value, credential, observed-length, or identity payloads.

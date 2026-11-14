@@ -378,6 +378,8 @@ fn debug_and_errors_do_not_retain_sensitive_payloads() {
     assert!(!debug.contains("secret+value"));
     assert!(!debug.contains("Basic "));
     assert!(!debug.contains("token.example"));
+    assert!(!debug.contains("provider-a"));
+    assert!(!debug.contains(&"42".repeat(16)));
     assert!(debug.contains("[REDACTED]"));
     for error in [
         ClientSecretHttp1BindingError::BodyRejected,
