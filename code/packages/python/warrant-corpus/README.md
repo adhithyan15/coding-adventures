@@ -88,7 +88,7 @@ op eq_u64 export=ct_eq_u64
 At start-up the runner checks the table is *total* (every corpus op has a row;
 every declared error variant has a mapping and vice versa), that every export
 exists, and that the imported module lives under `source` -- so the manifest's
-`source_sha256` describes the code that actually ran. An exception that matches
+`source_sha256` describes the code that actually ran. An exception that is not *exactly* a mapped class (a subclass does not count) and so matches
 no `errors=` row is the verdict `unexpected-error`. Results are checked by exact
 type (`type(x) is bool`), because `True == 1` and `bytearray(b"a") == b"a"`.
 
@@ -100,6 +100,20 @@ Each wraps the *callable the runner holds* (never the library) and perturbs
 exactly one op. The corpus lists which `(op, fault)` controls it requires, and
 which claims must catch each; a control passes only if a required claim fails
 *and* the call reached the real export.
+
+## Honest labels (LP-012)
+
+The corpus calls every enumerated suite `exhaustive`, but exhaustive over `Bytes[347]` means 347 chosen
+byte strings. `run --out` therefore also writes `domain-labels.json` beside the manifest, labelling each
+suite from its domain descriptors: `full` (the descriptor enumerates the whole type), `bounded-set` (a
+fixed strict subset) or `sample` (reserved). Use its `cases_by_label`, not a summed "exhaustive" total:
+suite-level totals conflate the kinds until backlog **LP-012** lands.
+
+## Bounded work
+
+Before any case runs, a suite's domain product must equal its declared `cases + discarded` and stay
+under `MAX_SUITE_PRODUCT`; total work (suites plus control re-runs) is capped by `MAX_TOTAL_WORK`; model
+IR has a static cost cap (`MAX_IR_COST`). A corpus that breaks any of these is refused (exit 2).
 
 ## Honest limits
 

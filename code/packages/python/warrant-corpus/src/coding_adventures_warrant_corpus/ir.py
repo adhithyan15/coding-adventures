@@ -37,6 +37,12 @@ SubjectCall = Callable[[str, list[object], int | None], object]
 
 MAX_DEPTH = 64
 
+# Static upper bound on the node evaluations one expression may cost per case,
+# counting every model call at the full cost of its body.  A chain of models
+# that each call the next one twice costs 2**n; it is refused at compile time,
+# before any case runs, instead of burning CPU for hours.
+MAX_IR_COST = 2_000
+
 _BINARY = {
     "eq": lambda a, b: a == b,
     "ne": lambda a, b: a != b,
@@ -53,6 +59,18 @@ _ARITHMETIC = {
     "sub": lambda a, b: a - b,
     "mul": lambda a, b: a * b,
 }
+
+
+def _operand(value: object) -> int:
+    """An arithmetic operand must be a real int in ``0 .. 2**64-1``.
+
+    Checked *before* the operation, so ``mul`` can never build a huge
+    intermediate (a 10**6-bit operand squared) just to be rejected afterwards,
+    and ``True`` is not silently the number 1.
+    """
+    if type(value) is not int or not 0 <= value <= U64_MAX:
+        raise CorpusError("ir-overflow", "arithmetic operand is outside U64")
+    return value
 
 
 def _checked(result: int) -> int:
@@ -75,6 +93,7 @@ class Compiler:
         self._ops = ops
         self._compiled_models: dict[str, tuple[list[str], Compiled]] = {}
         self._in_progress: set[str] = set()
+        self._model_costs: dict[str, int] = {}
 
     # -- models ---------------------------------------------------------
     def _model(self, name: str) -> tuple[list[str], Compiled]:
@@ -100,6 +119,7 @@ class Compiler:
         body = Compiler(self._models, None, self._ops)
         body._compiled_models = self._compiled_models
         body._in_progress = self._in_progress
+        body._model_costs = self._model_costs
         compiled = body.compile(model["body"], set(params), 0)
         self._in_progress.discard(name)
         self._compiled_models[name] = (list(params), compiled)
@@ -107,7 +127,48 @@ class Compiler:
 
     # -- expressions ----------------------------------------------------
     def compile(self, node: object, scope: set[str], depth: int = 0) -> Compiled:
-        """Compile ``node``; ``scope`` is the set of variable names in scope."""
+        """Compile ``node``; ``scope`` is the set of variable names in scope.
+
+        A top-level call (``depth == 0``) also enforces :data:`MAX_IR_COST`
+        and turns a Python ``RecursionError`` (an absurdly long model chain)
+        into a corpus error.
+        """
+        if depth != 0:
+            return self._compile(node, scope, depth)
+        try:
+            compiled = self._compile(node, scope, 0)
+            self._cost(node)
+        except RecursionError as error:
+            raise CorpusError("ir-limit", "model IR nests too deeply") from error
+        return compiled
+
+    def _cost(self, node: list[object]) -> int:
+        """Static upper bound on node evaluations (see :data:`MAX_IR_COST`)."""
+        tag = node[0]
+        if tag in ("len", "ok", "not"):
+            children = [node[1]]
+        elif tag == "if":
+            children = node[1:4]
+        elif tag in _BINARY or tag in _ARITHMETIC:
+            children = node[1:3]
+        elif tag in ("model_call", "subject_op"):
+            children = node[2]  # type: ignore[assignment]
+        else:
+            children = []
+        total = 1 + sum(self._cost(child) for child in children)  # type: ignore[arg-type]
+        if tag == "model_call":
+            total += self._model_cost(str(node[1]))
+        if total > MAX_IR_COST:
+            raise CorpusError("ir-limit", "model IR cost exceeds the work limit")
+        return total
+
+    def _model_cost(self, name: str) -> int:
+        if name not in self._model_costs:
+            body = self._models[name]["body"]  # type: ignore[index]
+            self._model_costs[name] = self._cost(body)  # type: ignore[arg-type]
+        return self._model_costs[name]
+
+    def _compile(self, node: object, scope: set[str], depth: int) -> Compiled:
         need(depth <= MAX_DEPTH, "ir-limit", "model IR nests too deeply")
         need(
             type(node) is list and bool(node) and type(node[0]) is str,
@@ -116,7 +177,7 @@ class Compiler:
         )
         assert isinstance(node, list)
         tag = node[0]
-        sub = lambda child: self.compile(child, scope, depth + 1)  # noqa: E731
+        sub = lambda child: self._compile(child, scope, depth + 1)  # noqa: E731
 
         if tag == "lit":
             need(len(node) == 2, "unsupported-ir", "malformed literal")
@@ -161,7 +222,9 @@ class Compiler:
         if tag in _ARITHMETIC:
             need(len(node) == 3, "unsupported-ir", "malformed arithmetic node")
             left, right, function = sub(node[1]), sub(node[2]), _ARITHMETIC[tag]
-            return lambda env: _checked(function(left(env), right(env)))  # type: ignore[arg-type]
+            return lambda env: _checked(
+                function(_operand(left(env)), _operand(right(env)))
+            )
         if tag == "model_call":
             return self._model_call(node, sub)
         if tag == "subject_op":
@@ -217,6 +280,13 @@ class Compiler:
                 "malformed static width",
             )
             width = int(widths[0])  # type: ignore[index]
+        signature = self._ops[name]
+        needs_width = bool(getattr(signature, "width_params", ()))
+        need(
+            needs_width == (width is not None),
+            "unsupported-ir",
+            "a fixed-width op needs its width, and any other op must not state one",
+        )
         args = [sub(argument) for argument in node[2]]  # type: ignore[union-attr]
         call = self._subject
         assert call is not None

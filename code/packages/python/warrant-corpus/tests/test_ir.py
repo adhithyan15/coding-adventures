@@ -6,6 +6,7 @@ import pytest
 
 from coding_adventures_warrant_corpus.errors import CorpusError
 from coding_adventures_warrant_corpus.ir import Compiler
+from coding_adventures_warrant_corpus.values import OpSig, parse_type
 
 MODELS = {
     "same": {"params": ["a", "b"], "body": ["eq", ["var", "a"], ["var", "b"]]},
@@ -14,7 +15,10 @@ MODELS = {
         "body": ["model_call", "same", [["var", "a"], ["var", "a"]]],
     },
 }
-OPS = {"eq": object()}
+OPS = {
+    "eq": OpSig("eq", (), parse_type("Bool")),
+    "fixed": OpSig("fixed", (), parse_type("Bool"), ("N",)),
+}
 
 
 def evaluate(node: object, env: dict[str, object] | None = None, subject=None):
@@ -73,10 +77,10 @@ def test_subject_calls_dispatch_through_the_hook_with_width() -> None:
         seen.append((name, args, width))
         return "result"
 
-    node = ["subject_op", "eq", [["var", "a"]], [4]]
+    node = ["subject_op", "fixed", [["var", "a"]], [4]]
     assert evaluate(node, {"a": b"zz"}, hook) == "result"
     assert evaluate(["subject_op", "eq", [["lit", 1]]], {}, hook) == "result"
-    assert seen == [("eq", [b"zz"], 4), ("eq", [1], None)]
+    assert seen == [("fixed", [b"zz"], 4), ("eq", [1], None)]
 
 
 @pytest.mark.parametrize(
@@ -115,9 +119,9 @@ def test_malformed_or_forbidden_nodes_fail_at_compile_time(node: object) -> None
         ["subject_op"],
         ["subject_op", "missing_op", []],
         ["subject_op", "eq", "x"],
-        ["subject_op", "eq", [], [1, 2]],
-        ["subject_op", "eq", [], [-1]],
-        ["subject_op", "eq", [], "w"],
+        ["subject_op", "fixed", [], [1, 2]],
+        ["subject_op", "fixed", [], [-1]],
+        ["subject_op", "fixed", [], "w"],
     ],
 )
 def test_malformed_subject_calls(node: object) -> None:

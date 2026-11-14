@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import runpy
 import sys
 
@@ -205,7 +206,10 @@ def test_sabotage_proves_every_control_makes_the_runner_fail(
 ) -> None:
     common, _p, _b = library(tmp_path, monkeypatch)
     # The child processes import the reference library from the temp directory.
-    monkeypatch.setenv("PYTHONPATH", str(tmp_path / "src"))
+    monkeypatch.setenv(
+        "PYTHONPATH",
+        os.pathsep.join([str(tmp_path / "src"), os.environ.get("PYTHONPATH", "")]),
+    )
     assert main(["sabotage", *common]) == 0
     lines = capsys.readouterr().out.splitlines()
     assert len(lines) == 2 and all(line.startswith("ok sabotage ") for line in lines)
@@ -216,7 +220,10 @@ def test_sabotage_fails_when_a_fault_goes_unnoticed(
     tmp_path, monkeypatch, capsys
 ) -> None:
     common, _p, _b = library(tmp_path, monkeypatch)
-    monkeypatch.setenv("PYTHONPATH", str(tmp_path / "src"))
+    monkeypatch.setenv(
+        "PYTHONPATH",
+        os.pathsep.join([str(tmp_path / "src"), os.environ.get("PYTHONPATH", "")]),
+    )
     # Poison the child so it never fails: a corpus-less binding makes it exit 2,
     # which `sabotage` must report as "not caught" (it requires exit 1 + not ok).
     broken = list(common)

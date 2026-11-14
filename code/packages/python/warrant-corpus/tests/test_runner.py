@@ -177,9 +177,11 @@ def test_tampered_digests_and_counts_fail_closed(tmp_path, monkeypatch, corpus) 
 
     assert tamper("inputs_sha256", "0" * 64).suite_failures == ["stream-mismatch"]
     assert tamper("expected_sha256", "f" * 64).suite_failures == ["stream-mismatch"]
-    assert tamper("cases", 257).suite_failures == ["count-mismatch"]
-    assert tamper("discarded", 1).suite_failures == ["count-mismatch"]
     assert tamper("expected_calls", 255).suite_failures == ["call-count-mismatch"]
+    # Declared counts that disagree with the domains are refused before any
+    # case runs (test_hardening): the count-mismatch verdict is a backstop.
+    with pytest.raises(CorpusError):
+        tamper("cases", 257)
 
 
 def test_ir_problems_are_refused_before_any_case_runs(tmp_path, monkeypatch) -> None:

@@ -26,13 +26,23 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .domains import binder_domain
-from .errors import need
+from .errors import CorpusError, need
 from .faults import FAULTS
 from .jsonio import MAX_CORPUS_BYTES, MAX_TEXT_BYTES, parse_json, read_bytes, sha256_hex
 from .tfv import parse_tfv
 from .values import OpSig, Type, decode_json, decode_tfv, parse_type
 
 PROFILE = "warrant-corpus-v1"
+
+# Work limits (VER04i section 3; the security review of WD-101).  The corpus is
+# untrusted, so the Cartesian product of a suite's binder domains must equal
+# the cases it declares (admitted + discarded) and stay under a cap *before*
+# any case runs.  The real ct-compare corpus needs 240,818 at most per suite
+# and 812,927 for one clean pass; with every negative control re-running its
+# target suites the total is about 2.1 million.
+MAX_SUITE_PRODUCT = 1_000_000  # tuples enumerated by one suite
+MAX_TOTAL_WORK = 8_000_000  # all suites once, plus every control's re-runs
+MAX_BINDERS = 8
 _HEX64 = re.compile(r"[0-9a-f]{64}")
 _IDENT = re.compile(r"[a-z][a-z0-9_]*")
 _TOP_KEYS = {
@@ -176,6 +186,7 @@ def _signatures(raw_ops: object) -> dict[str, OpSig]:
             "schema",
             "malformed op signature",
         )
+        need(type(row["params"]) is list, "schema", "op params must be a list")
         params = []
         for pair in row["params"]:
             need(
@@ -264,25 +275,42 @@ def _decode_suite(row: object, ops: dict[str, OpSig], module: str) -> Suite:
     need(
         type(suite_ops) is list
         and bool(suite_ops)
-        and all(o in ops for o in suite_ops),
+        and all(type(o) is str and o in ops for o in suite_ops),
         "schema",
         "suite names an unknown op",
     )
     binders = row["binders"]
-    need(type(binders) is list and bool(binders), "schema", "suite has no binders")
+    need(
+        type(binders) is list and 0 < len(binders) <= MAX_BINDERS,
+        "schema",
+        "suite needs between 1 and MAX_BINDERS binders",
+    )
     names, descriptors, types = [], [], []
+    product = 1
     for pair in binders:
         need(
             type(pair) is list and len(pair) == 2 and type(pair[0]) is str,
             "schema",
             "bad binder",
         )
-        _values, produced = binder_domain(pair[1])
+        values, produced = binder_domain(pair[1])
+        product *= len(values)
         need(pair[0] not in names, "schema", "duplicate binder name")
         names.append(pair[0])
         descriptors.append(pair[1]["domain"])
         types.append(produced)
     parse_type(_text(row["result_type"], "suite result type"))
+    cases = _count(row["cases"], "cases")
+    discarded = _count(row["discarded"], "discarded")
+    need(
+        cases > 0, "schema", "a suite must admit at least one case (no vacuous suites)"
+    )
+    need(
+        product == cases + discarded,
+        "work",
+        "declared cases + discarded differ from the binder domains' product",
+    )
+    need(product <= MAX_SUITE_PRODUCT, "work", "suite exceeds the per-suite work cap")
     return Suite(
         id=suite_id,
         claim=claim,
@@ -293,8 +321,8 @@ def _decode_suite(row: object, ops: dict[str, OpSig], module: str) -> Suite:
         lhs=row["lhs"],
         rhs=row["rhs"],
         result_type=row["result_type"],
-        cases=_count(row["cases"], "cases"),
-        discarded=_count(row["discarded"], "discarded"),
+        cases=cases,
+        discarded=discarded,
         expected_calls=_count(row["expected_calls"], "expected_calls"),
         domain_text=_text(row["domain_text"], "domain_text"),
         inputs_sha256=_digest(row["inputs_sha256"], "inputs_sha256"),
@@ -388,7 +416,21 @@ def _check_tfv(
 
 
 def load_corpus(repo_root: Path, corpus_dir: Path) -> Corpus:
-    """Read, validate and decode the corpus in ``corpus_dir``."""
+    """Read, validate and decode the corpus in ``corpus_dir``.
+
+    Every malformation is a :class:`CorpusError` (exit status 2).  The explicit
+    checks cover the shapes we thought of; the guard below turns any shape we
+    did not (a list where an object belongs, a number where a string belongs)
+    into the same refusal instead of a ``TypeError`` that would exit like a
+    verdict failure.
+    """
+    try:
+        return _load_corpus(repo_root, corpus_dir)
+    except (TypeError, KeyError, AttributeError, IndexError, ValueError) as error:
+        raise CorpusError("schema", "corpus has a malformed field type") from error
+
+
+def _load_corpus(repo_root: Path, corpus_dir: Path) -> Corpus:
     corpus_bytes = read_bytes(corpus_dir / "corpus.json", MAX_CORPUS_BYTES)
     cases_bytes = read_bytes(corpus_dir / "cases.tfv", MAX_TEXT_BYTES)
     root = _exact(parse_json(corpus_bytes), _TOP_KEYS, "corpus")
@@ -445,6 +487,14 @@ def load_corpus(repo_root: Path, corpus_dir: Path) -> Corpus:
     raw_controls = root["controls"]
     need(type(raw_controls) is list, "schema", "controls must be a list")
     assert isinstance(raw_controls, list)
+    for row in raw_controls:
+        need(
+            type(row) is dict
+            and type(row.get("required_claims")) is list
+            and all(type(claim) is str for claim in row["required_claims"]),
+            "schema",
+            "control required_claims must be a list of strings",
+        )
     actual = [
         Control(
             c["id"], c["fault"], c["op"], c["target_kind"], tuple(c["required_claims"])
@@ -462,6 +512,15 @@ def load_corpus(repo_root: Path, corpus_dir: Path) -> Corpus:
         "controls differ from those derived from the faults",
     )
 
+    by_id = {s.id: s.cases + s.discarded for s in suites}
+    total = sum(by_id.values()) + sum(
+        by_id[claim] for control in controls for claim in control.required_claims
+    )
+    need(
+        total <= MAX_TOTAL_WORK,
+        "work",
+        "total work (suites plus control re-runs) exceeds the work cap",
+    )
     _check_tfv(cases_bytes.decode("utf-8", errors="strict"), examples, ops, errors)
     return Corpus(
         module=module,

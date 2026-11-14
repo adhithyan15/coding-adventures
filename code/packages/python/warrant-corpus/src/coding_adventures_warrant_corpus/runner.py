@@ -31,11 +31,12 @@ from __future__ import annotations
 
 import hashlib
 import itertools
+import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from .binding import Binding, Subject, SubjectFailure
-from .corpus import Corpus, Suite
+from .corpus import MAX_SUITE_PRODUCT, Corpus, Suite
 from .domains import binder_domain
 from .errors import (
     CALL_COUNT_MISMATCH,
@@ -103,6 +104,14 @@ def run_suite(
     domains = [
         binder_domain({"domain": descriptor})[0] for _n, descriptor in suite.binders
     ]
+    # Refuse before running anything: the work this suite will do must be the
+    # work it declared (the corpus is untrusted; see corpus.MAX_SUITE_PRODUCT).
+    product = math.prod(len(domain) for domain in domains)
+    need(
+        product == suite.cases + suite.discarded and product <= MAX_SUITE_PRODUCT,
+        "work",
+        "declared cases + discarded differ from the binder domains' product",
+    )
     binder_types = [parse_type(text) for text in suite.binder_types]
     result_type = parse_type(suite.result_type)
 

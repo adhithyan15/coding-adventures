@@ -269,6 +269,16 @@ class Subject:
                     raise CorpusError(
                         "width", "a Bytes<N> argument does not have length N"
                     )
+        # Wherever the signature itself states a length (`Bytes<4>`), assert it.
+        for value, (_name, ty) in zip(args, signature.params, strict=False):
+            if (
+                ty.kind == "Bytes"
+                and isinstance(ty.width, int)
+                and (type(value) is not bytes or len(value) != ty.width)
+            ):
+                raise CorpusError(
+                    "width", "an argument does not have its declared length"
+                )
         fault = self._faulted(op)
         passed = fault.on_input(list(args), signature) if fault else args
         if binding.width == "runtime":
@@ -284,7 +294,9 @@ class Subject:
             )
         except Exception as error:  # noqa: BLE001 - classified just below
             for variant, exception_class in binding.errors:
-                if isinstance(error, exception_class):
+                # Exactly the mapped class: a subclass (an unrelated, more
+                # specific ValueError) must not satisfy a rejection claim.
+                if type(error) is exception_class:
                     outcome = ("err", variant)
                     break
             else:

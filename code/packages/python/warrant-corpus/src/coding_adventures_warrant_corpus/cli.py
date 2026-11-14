@@ -31,7 +31,8 @@ from pathlib import Path
 
 from .corpus import list_control_rows, load_corpus
 from .errors import LaneError, UsageError
-from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json
+from .jsonio import MAX_TEXT_BYTES, read_bytes, render_json, sha256_hex
+from .labels import derive_labels
 from .manifest import source_digest, validate_manifest
 from .session import (
     ENV_FAULT,
@@ -93,18 +94,46 @@ def _run(args: argparse.Namespace) -> int:
     if not outcome.passed:
         return 1
     if args.command == "check":
-        return _compare(args.manifest, outcome.manifest)
+        return _compare(args.manifest, outcome.manifest, prepared.corpus)
     out = getattr(args, "out", None) or (Path(env_out) if env_out else None)
     if outcome.manifest is None:
         print("# faulted or filtered run: no manifest written")
     elif out is not None:
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(render_json(outcome.manifest), encoding="utf-8", newline="\n")
+        text = render_json(outcome.manifest)
+        out.write_text(text, encoding="utf-8", newline="\n")
         print(f"# wrote {out}")
+        labels = _labels_for(prepared.corpus, outcome.manifest)
+        sidecar = out.parent / LABELS_FILE
+        sidecar.write_text(render_json(labels), encoding="utf-8", newline="\n")
+        print(f"# wrote {sidecar}")
     return 0
 
 
-def _compare(committed: Path, fresh: dict[str, object] | None) -> int:
+LABELS_FILE = "domain-labels.json"
+
+
+def _labels_for(corpus, manifest: dict[str, object]) -> dict:  # noqa: ANN001
+    """The coverage-label sidecar, bound to the manifest by digest.
+
+    The digest ignores ``toolchain.version`` (diagnostic, VER04i 8), exactly as
+    ``check`` does, so a different CPython patch release is not label drift.
+    """
+    stable = dict(manifest)
+    stable["toolchain"] = {"name": "python", "version": ""}
+    return derive_labels(
+        corpus,
+        str(manifest["package"]),
+        str(manifest["module"]),
+        sha256_hex(render_json(stable).encode("utf-8")),
+    )
+
+
+def _compare(
+    committed: Path,
+    fresh: dict[str, object] | None,
+    corpus=None,  # noqa: ANN001
+) -> int:
     """``check``: the regenerated manifest must equal the committed one.
 
     ``toolchain.version`` is diagnostic (VER04i 8), so a different CPython patch
@@ -140,6 +169,18 @@ def _compare(committed: Path, fresh: dict[str, object] | None) -> int:
         print(f"not ok manifest: the committed manifest drifted ({what})")
         return 1
     print(f"ok manifest {committed.name} matches the regenerated manifest")
+    if corpus is None:
+        return 0
+    expected = render_json(_labels_for(corpus, new))
+    try:
+        actual = read_bytes(committed.parent / LABELS_FILE, MAX_TEXT_BYTES).decode()
+    except (LaneError, UnicodeDecodeError):
+        print(f"not ok {LABELS_FILE}: missing or unreadable next to the manifest")
+        return 1
+    if actual != expected:
+        print(f"not ok {LABELS_FILE}: differs from the labels derived from the corpus")
+        return 1
+    print(f"ok {LABELS_FILE} matches the labels derived from the corpus")
     return 0
 
 
@@ -148,10 +189,7 @@ def _sabotage(args: argparse.Namespace) -> int:
     rows = list_control_rows(args.corpus)
     failures = 0
     for row in rows:
-        env = dict(os.environ)
-        env[ENV_FAULT] = row
-        env[ENV_FILTER] = "/exhaustive/"
-        env.pop(ENV_OUT, None)
+        env = _child_env(dict(os.environ), row)
         command = [sys.executable, *_module_args(), "run", *_common_flags(args)]
         done = subprocess.run(  # noqa: S603 - fixed argv, same interpreter
             command, env=env, capture_output=True, text=True, check=False
@@ -162,6 +200,28 @@ def _sabotage(args: argparse.Namespace) -> int:
         print(f"{'ok' if caught else 'not ok'} sabotage {row} (exit {done.returncode})")
         failures += 0 if caught else 1
     return 1 if failures else 0
+
+
+def _child_env(base: dict[str, str], fault: str) -> dict[str, str]:
+    """The environment of one sabotage child.
+
+    The child runs ``python -m coding_adventures_warrant_corpus``, so it must be
+    able to import this very package.  Relying on whatever ``PYTHONPATH`` the
+    parent happened to have (or on an editable install) made the command
+    environment-dependent: a caller that *replaced* ``PYTHONPATH`` to expose
+    the library under test hid the runner.  So the runner's own directory is
+    always first, and the caller's entries follow.
+    """
+    own = str(Path(__file__).resolve().parent.parent)
+    existing = [
+        entry for entry in base.get("PYTHONPATH", "").split(os.pathsep) if entry
+    ]
+    env = dict(base)
+    env["PYTHONPATH"] = os.pathsep.join([own, *existing])
+    env[ENV_FAULT] = fault
+    env[ENV_FILTER] = "/exhaustive/"
+    env.pop(ENV_OUT, None)
+    return env
 
 
 def _module_args() -> list[str]:
@@ -188,6 +248,22 @@ def _validate(args: argparse.Namespace) -> int:
         registry,
         require_active=args.require_active,
     )
+    sidecar = args.manifest.parent / LABELS_FILE
+    if sidecar.exists():
+        manifest_bytes = read_bytes(args.manifest, MAX_TEXT_BYTES)
+        document = validate_manifest(
+            manifest_bytes,
+            corpus,
+            relative,
+            registry,
+            require_active=args.require_active,
+        )
+        expected = render_json(_labels_for(corpus, document))
+        if read_bytes(sidecar, MAX_TEXT_BYTES).decode("utf-8", "replace") != expected:
+            raise UsageError(
+                "labels",
+                f"{LABELS_FILE} differs from the labels derived from the corpus",
+            )
     print(f"ok {args.manifest.name} is a structurally valid lane manifest")
     return 0
 
