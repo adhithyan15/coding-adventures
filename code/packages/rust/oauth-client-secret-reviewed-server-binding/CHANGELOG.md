@@ -14,6 +14,9 @@
 - Required the signed-server and revocation proofs to retain the same exact
   leaf, target-nearest issuer, reviewed anchor, SNI, Host, and optional port
   before retaining both complete inputs.
+- Required exactly one processed intermediate on both retained paths so the
+  direct branch cannot overstate its target-plus-intermediate revocation
+  coverage for a longer path.
 - Restricted the direct-revocation marker to completions whose retained server
   status proof includes the exact signed reviewed path-and-anchor-self-
   signature proof shape.

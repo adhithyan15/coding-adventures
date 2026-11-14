@@ -27,6 +27,7 @@ mod sealed {
         pub destination: DestinationIdentity<'a>,
         pub target_nearest_issuer: *const (),
         pub reviewed_anchor: *const (),
+        pub processed_intermediate_count: usize,
     }
 
     pub trait RequestEvidence {
@@ -44,6 +45,7 @@ mod sealed {
     pub trait SignedReviewedServerRevocationEvidence {
         fn target_nearest_issuer(&self) -> *const ();
         fn reviewed_anchor(&self) -> *const ();
+        fn processed_intermediate_count(&self) -> usize;
     }
 }
 
@@ -215,6 +217,17 @@ impl<
         )
         .cast()
     }
+
+    fn processed_intermediate_count(&self) -> usize {
+        self.strong_name_policy_path()
+            .reviewed_server_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .processed_intermediate_count()
+    }
 }
 
 impl<'server_name, 'host, 'target, 'target_encoded, Proof, IntermediateRevocation>
@@ -252,6 +265,7 @@ where
             },
             target_nearest_issuer: reviewed_server_revocation.target_nearest_issuer(),
             reviewed_anchor: reviewed_server_revocation.reviewed_anchor(),
+            processed_intermediate_count: reviewed_server_revocation.processed_intermediate_count(),
         }
     }
 }
@@ -333,6 +347,9 @@ impl<
                     .candidate_certificate(),
             )
             .cast(),
+            processed_intermediate_count: target_closure
+                .accumulated_intermediates()
+                .processed_intermediate_count(),
         }
     }
 }
@@ -344,6 +361,8 @@ pub enum ClientSecretReviewedServerBindingError {
     DestinationMismatch,
     /// The retained target-nearest issuer or reviewed anchor differs.
     PathMismatch,
+    /// Either retained path does not contain exactly one intermediate.
+    UnsupportedPathShape,
 }
 
 impl fmt::Display for ClientSecretReviewedServerBindingError {
@@ -354,6 +373,8 @@ impl fmt::Display for ClientSecretReviewedServerBindingError {
             Self::PathMismatch => formatter.write_str(
                 "OAuth signed reviewed server and direct revocation path identity mismatch",
             ),
+            Self::UnsupportedPathShape => formatter
+                .write_str("OAuth direct revocation composition requires exactly one intermediate"),
         }
     }
 }
@@ -496,7 +517,9 @@ impl<Request, ReviewedServer, DirectRevocation> fmt::Debug
 /// Both complete inputs are moved into the result only when their exact
 /// decoded leaf, target-nearest issuer, and reviewed-anchor objects, SNI DNS
 /// name, Host DNS name, and optional Host port agree. DNS comparisons are
-/// ASCII case-insensitive. This function never accesses credential-bearing
+/// ASCII case-insensitive. Each retained path must contain exactly one
+/// processed intermediate, matching the target-plus-intermediate coverage of
+/// this direct completion. This function never accesses credential-bearing
 /// request bytes and emits no audit event.
 pub fn bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation<
     Request,
@@ -527,6 +550,11 @@ where
 
     if !same_destination(server_identity.destination, revocation_identity.destination) {
         return Err(ClientSecretReviewedServerBindingError::DestinationMismatch);
+    }
+    if server_identity.processed_intermediate_count != 1
+        || revocation_identity.processed_intermediate_count != 1
+    {
+        return Err(ClientSecretReviewedServerBindingError::UnsupportedPathShape);
     }
     if !core::ptr::eq(
         server_identity.target_nearest_issuer,
@@ -580,6 +608,7 @@ mod tests {
         port: Option<u16>,
         target_nearest_issuer: &'static u8,
         reviewed_anchor: &'static u8,
+        processed_intermediate_count: usize,
     }
 
     impl sealed::RequestEvidence for RequestEvidence {
@@ -614,6 +643,7 @@ mod tests {
             destination: identity(value),
             target_nearest_issuer: core::ptr::from_ref(value.target_nearest_issuer).cast(),
             reviewed_anchor: core::ptr::from_ref(value.reviewed_anchor).cast(),
+            processed_intermediate_count: value.processed_intermediate_count,
         }
     }
 
@@ -656,6 +686,7 @@ mod tests {
             port: Some(443),
             target_nearest_issuer: &ISSUER_A,
             reviewed_anchor: &ANCHOR_A,
+            processed_intermediate_count: 1,
         }
     }
 
@@ -804,6 +835,47 @@ mod tests {
             for payload in ["token.example", "issuer", "anchor"] {
                 assert!(!error.to_string().contains(payload));
             }
+        }
+    }
+
+    #[test]
+    fn unsupported_direct_revocation_path_depth_fails_closed() {
+        for processed_intermediate_count in [0, 2] {
+            let mut server_identity = matching_identity();
+            server_identity.processed_intermediate_count = processed_intermediate_count;
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
+                bind_client_secret_request_to_signed_reviewed_https_server(
+                    request(matching_identity()),
+                    reviewed_server(server_identity),
+                )
+                .unwrap(),
+                direct_revocation(matching_identity()),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::UnsupportedPathShape
+            );
+            assert_eq!(format!("{error:?}"), "UnsupportedPathShape");
+            assert!(!error
+                .to_string()
+                .contains(&processed_intermediate_count.to_string()));
+
+            let mut revocation_identity = matching_identity();
+            revocation_identity.processed_intermediate_count = processed_intermediate_count;
+            let error = bind_client_secret_request_to_signed_reviewed_https_server_and_direct_no_check_complete_fixed_path_revocation(
+                bound_request_and_server(),
+                direct_revocation(revocation_identity),
+            )
+            .unwrap_err();
+            assert_eq!(
+                error,
+                ClientSecretReviewedServerBindingError::UnsupportedPathShape
+            );
+            assert_eq!(format!("{error:?}"), "UnsupportedPathShape");
+            assert!(!error
+                .to_string()
+                .contains(&processed_intermediate_count.to_string()));
         }
     }
 }

@@ -18,11 +18,13 @@ The crate also consumes that complete request/signed-server binding together
 with the exact destination-bound direct no-check complete fixed-path revocation
 proof. The signed server and revocation destinations must satisfy the same
 leaf certificate, target-nearest issuer, reviewed anchor, SNI, Host, and port
-checks. The admitted direct completion must itself retain the exact signed
-reviewed path-and-anchor-self-signature proof shape, so an alternate
-intermediate or reviewed-root path fails closed. Success retains both inputs,
-and the direct revocation proof augments rather than substitutes for the
-signed path evidence.
+checks. Both accumulated paths must contain exactly one processed intermediate
+because this direct completion covers the target and that one intermediate;
+zero- and multi-intermediate paths fail closed. The admitted direct completion
+must itself retain the exact signed reviewed path-and-anchor-self-signature
+proof shape, so an alternate intermediate or reviewed-root path fails closed.
+Success retains both inputs, and the direct revocation proof augments rather
+than substitutes for the signed path evidence.
 
 The composition never asks the request for its credential-bearing wire bytes,
 so it introduces no credential access or audit event. Every later byte borrow
