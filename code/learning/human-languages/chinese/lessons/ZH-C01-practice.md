@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-LEX-NI, ZH-LEX-HAO, ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-LEX-NIHAO, ZH-TONE-SANDHI-THIRD, ZH-TONE-LEXICAL, ZH-METHOD-COMPONENT-HOOK, ZH-GRAMMAR-COMPOUND-WORD]
 introduces:
   knowledge: [ZH-DIALOGUE-GREET]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NI, ZH-LEX-HAO, ZH-SCRIPT-NI, ZH-SCRIPT-HAO, ZH-LEX-NIHAO, ZH-TONE-SANDHI-THIRD, ZH-TONE-LEXICAL, ZH-METHOD-COMPONENT-HOOK, ZH-GRAMMAR-COMPOUND-WORD, ZH-DIALOGUE-GREET]
 skills: [listening, speaking, reading]

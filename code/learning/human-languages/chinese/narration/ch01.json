@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Nǐ Hǎo — Hello, Character by Character",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:046f1168d06e0971",
+  "sourceHash": "fnv1a64:20749e42a7dce8bb",
   "lessons": [
     {
       "id": "ZH-C01-tones",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:dab90814614ce676",
+      "sourceHash": "fnv1a64:cfe9d99b68aaea09",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3370e1e0b2f7e43c",
+      "sourceHash": "fnv1a64:bcc491e97ee3df79",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -350,7 +350,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc5b6a9ca7ff4c97",
+      "sourceHash": "fnv1a64:a168aef53de55bdc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -525,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43ab5a9c265173d4",
+      "sourceHash": "fnv1a64:9fe22bf42388e89d",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "你好 (nǐ hǎo) is safe, neutral, and understood everywhere — which is exactly why a course teaches it first. But it is worth knowing that it is used less freely than English \"hello\". Between people who already know each other, a Mandarin speaker is more likely to open with a small situational remark than with 你好 (nǐ hǎo) at all. Reserve it for meeting someone, and you will sound right."
+              "text": "你好 (nǐ hǎo) is a greeting you can use in a first exchange. Say it, then hear the other person answer with the same word. This lesson gives you one greeting; later lessons add other ways to open a conversation."
             }
           ]
         },
@@ -662,7 +662,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode Han database, characters 你 (nǐ) and 好 (hào)."
+              "text": "Sources: Unicode Han database, characters 你 (nǐ) and 好 (hào) and YCT Level 1 language functions: greetings."
             },
             {
               "kind": "activity",
@@ -703,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d10870ca2c51f78",
+      "sourceHash": "fnv1a64:e6895e769ead595d",
       "notice": null,
       "blocks": [
         {
@@ -840,7 +840,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b43971ce77740eeb",
+      "sourceHash": "fnv1a64:b01949102acf1fa8",
       "notice": null,
       "blocks": [
         {
@@ -985,7 +985,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67458a1bee4a9054",
+      "sourceHash": "fnv1a64:7b5ad87de928458b",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:08a22bf95e268f33",
+  "sourceHash": "fnv1a64:b3256505119992df",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93c5c55521ab777f",
+      "sourceHash": "fnv1a64:a5a62b67b863cf34",
       "notice": null,
       "blocks": [
         {
@@ -433,7 +433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da701058e44d6888",
+      "sourceHash": "fnv1a64:f8102d286d74fda7",
       "notice": null,
       "blocks": [
         {
@@ -743,7 +743,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d267a71c8ba6befd",
+      "sourceHash": "fnv1a64:8f363bfcba810630",
       "notice": null,
       "blocks": [
         {
@@ -807,15 +807,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three characters in, one stroke per unit, a system so regular it barely needs teaching. It stops here, and you should know why before it happens."
-            },
-            {
-              "kind": "speech",
-              "text": "Every counting system humans have built hits the same wall in the same place. Roman numerals go I, II, III and then break to IV, because stacked marks stop being readable at about three. This one breaks for exactly the same reason."
-            },
-            {
-              "kind": "speech",
-              "text": "You are being told now so that the next character feels like a solved problem rather than a broken promise."
+              "text": "In the three number characters you have met, the stroke count matches the number: 一 (yī), 二 (èr), 三 (sān). That local pattern stops here. The next character uses a different shape, so do not try to guess it by stacking another bar. You will learn its shape directly in the next lesson."
             }
           ]
         },
@@ -862,7 +854,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three characters, three stroke counts, nothing memorised. That ends now."
+              "text": "Three characters, three matching stroke counts. The next shape must be learned."
             },
             {
               "kind": "speech",
@@ -873,20 +865,20 @@
               "scored": true,
               "spoken": true,
               "id": "ZH-C03-san-next",
-              "prompt": "Do you expect the character for four to have four strokes? Why or why not?",
+              "prompt": "Can you infer the character for four by adding one more bar to 三 (sān)?",
               "assesses": [
                 "ZH-METHOD-STROKE-COUNT"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
                 "no",
-                "four bars would be unreadable",
-                "you would have to count it",
-                "stacked bars stop being readable"
+                "no, it uses a different shape",
+                "four has a different shape",
+                "not by stacking bars"
               ],
               "feedback": {
-                "correct": "No — four stacked bars would have to be counted rather than read.",
-                "incorrect": "No. Stacked marks stop being readable at about three."
+                "correct": "Right. The first three match their stroke counts; four uses a different shape.",
+                "incorrect": "No. Learn the next character as its own shape, not as another stacked bar."
               }
             }
           ]
@@ -1061,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99f50a0bd97398b9",
+      "sourceHash": "fnv1a64:b592f56d771c7f87",
       "notice": null,
       "blocks": [
         {
@@ -1133,7 +1125,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not a curiosity, either: it is why many buildings in China number floors 1, 2, 3, 5, skipping four the way some Western buildings skip thirteen."
+              "text": "This is more than a sound exercise: some buildings omit the floor label 4. One photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a documented example, not a rule for every building. The near-match between sì and sǐ helps explain why the number may be avoided."
             }
           ]
         },
@@ -1184,14 +1176,14 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode CJK Unified Ideographs chart."
+              "text": "Sources: Ministry of Education on 四 sì, Ministry of Education on sǐ ('to die'), and Shanghai lift panel, fig. 5 in the AKDN volume."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": true,
               "id": "ZH-C03-si-tone",
-              "prompt": "Why do some buildings in China have no fourth floor?",
+              "prompt": "What sound link helps explain why a documented Shanghai lift panel omits floor label 4?",
               "assesses": [
                 "ZH-LEX-NUM-SI"
               ],
@@ -1204,8 +1196,8 @@
                 "it sounds like the word for death"
               ],
               "feedback": {
-                "correct": "Because sì sits one tone away from sǐ, 'die'.",
-                "incorrect": "Because sì is one tone away from sǐ, 'die'."
+                "correct": "Yes. Mandarin sì 'four' is one tone away from sǐ 'die'; this is one documented panel, not every building.",
+                "incorrect": "Mandarin sì 'four' is one tone away from sǐ 'die'. The panel is one documented example."
               }
             }
           ]
@@ -1376,7 +1368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:351befee27f1a29a",
+      "sourceHash": "fnv1a64:fac0187d4b1a7957",
       "notice": null,
       "blocks": [
         {
@@ -1549,7 +1541,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:973fe4e67ad6c50e",
+      "sourceHash": "fnv1a64:b3972b7186bd99db",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1590,11 +1582,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Counting in order is slightly dishonest: the sequence carries you, and you can recite yī èr sān without reading anything."
-            },
-            {
-              "kind": "speech",
-              "text": "So here they are shuffled. Name each before moving on, without letting your eye run back to the row above:"
+              "text": "The sequence can carry you. Now read them out of order without looking back:"
             },
             {
               "kind": "speech",
@@ -1621,7 +1609,7 @@
             },
             {
               "kind": "speech",
-              "text": "And when the panel reads."
+              "text": "And if a panel reads."
             },
             {
               "kind": "speech",
@@ -1629,7 +1617,7 @@
             },
             {
               "kind": "speech",
-              "text": "with no 四 (sì) between three and five, you know why, and you are not confused by it."
+              "text": "with no 四 (sì) between three and five, the sound link from the previous lesson is one documented reason a building might label it that way."
             }
           ]
         },
@@ -1645,10 +1633,6 @@
             {
               "kind": "speech",
               "text": "A: 你好 — ní hǎo (the sandhi tone, as always) B: 你好 — ní hǎo A: [pointing at a panel] 五 — wǔ B: 五 — wǔ."
-            },
-            {
-              "kind": "speech",
-              "text": "Small, and entirely real: repeating a floor number back is what people do in a lift, in any language."
             }
           ]
         },
@@ -1720,18 +1704,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You can read the five characters cold, in any order, with no sentence around them. A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ) — which number is missing, and why? (四, because sì sits one tone from sǐ.)"
+              "text": "A panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which label is missing? (四 (sì).) The sound link can help explain an omission; not every building skips it."
             },
             {
               "kind": "speech",
-              "text": "Source: Unicode CJK Unified Ideographs chart."
+              "text": "Sources: Unicode CJK Unified Ideographs chart and Shanghai lift panel, fig. 5 in the AKDN volume."
             },
             {
               "kind": "activity",
               "scored": true,
               "spoken": true,
               "id": "ZH-C03-practice-lift",
-              "prompt": "A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor number is missing, and why?",
+              "prompt": "A lift panel reads 一 (yī) 二 (èr) 三 (sān) 五 (wǔ). Which floor label is missing?",
               "assesses": [
                 "ZH-DIALOGUE-COUNT"
               ],
@@ -1745,8 +1729,8 @@
                 "4 - unlucky"
               ],
               "feedback": {
-                "correct": "Four. sì sits one tone away from sǐ 'die', so some buildings skip it.",
-                "incorrect": "Four is missing — sì is a tone away from sǐ 'die', so some buildings leave it out."
+                "correct": "Four. Some panels omit it; Mandarin sì 'four' is one tone away from sǐ 'die'.",
+                "incorrect": "The missing label is four, 四. A sound link can help explain an omission, but not every building skips it."
               }
             }
           ]

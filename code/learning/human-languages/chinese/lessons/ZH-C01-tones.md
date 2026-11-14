@@ -19,6 +19,9 @@ requires:
   knowledge: []
 introduces:
   knowledge: [ZH-TONE-LEXICAL]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-TONE-LEXICAL]
 skills: [listening, speaking, writing]

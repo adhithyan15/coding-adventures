@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-SCRIPT-NUM-SI, ZH-TONE-LEXICAL, ZH-METHOD-STROKE-COUNT]
 introduces:
   knowledge: [ZH-LEX-NUM-SI]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: [ZH-CULTURE-SI-FLOOR-NUMBER-01]
 practises:
   knowledge: [ZH-LEX-NUM-SI, ZH-SCRIPT-NUM-SI, ZH-TONE-LEXICAL, ZH-METHOD-STROKE-COUNT]
 skills: [listening, speaking, reading]
@@ -64,8 +67,10 @@ A reason to get that tone right, and it is a real one:
 Separated **by pitch alone** — the third time this chapter has shown you that
 tone is part of a Mandarin word's identity, not an accent on it.
 
-Not a curiosity, either: it is why many buildings in China number floors 1, 2,
-3, 5, skipping four the way some Western buildings skip thirteen.
+This is more than a sound exercise: some buildings omit the floor label **4**. One
+photographed Shanghai apartment lift panel shows 1, 2, 3, then 5. That is a
+documented example, not a rule for every building. The near-match between
+*sì* and *sǐ* helps explain why the number may be avoided.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -82,9 +87,11 @@ character: the word came first, and a shape was borrowed to write it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-SI, ZH-TONE-LEXICAL] -->
-<!-- hl-activity: {"id":"ZH-C03-si-tone","kind":"text","assesses":["ZH-LEX-NUM-SI"],"prompt":"Why do some buildings in China have no fourth floor?","answer":"si sounds like the word for die","accepted":["because si sounds like die","four sounds like death","si and si differ only by tone","it sounds like the word for death"],"feedback":{"correct":"Because sì sits one tone away from sǐ, 'die'.","incorrect":"Because sì is one tone away from sǐ, 'die'."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"ZH-C03-si-tone","kind":"text","assesses":["ZH-LEX-NUM-SI"],"prompt":"What sound link helps explain why a documented Shanghai lift panel omits floor label 4?","answer":"si sounds like the word for die","accepted":["because si sounds like die","four sounds like death","si and si differ only by tone","it sounds like the word for death"],"feedback":{"correct":"Yes. Mandarin sì 'four' is one tone away from sǐ 'die'; this is one documented panel, not every building.","incorrect":"Mandarin sì 'four' is one tone away from sǐ 'die'. The panel is one documented example."},"response_seconds":15} -->
 
 Four is the first number here you could not work out. What replaced the trick?
 (**A shape borrowed for its sound**, built to a rule.)
 
-Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)
+Sources: [Ministry of Education on 四 *sì*](https://dict.revised.moe.edu.tw/dictView.jsp?ID=9978&la=0&powerMode=0),
+[Ministry of Education on *sǐ* ('to die')](https://dict.revised.moe.edu.tw/dictView.jsp?ID=9974&la=0&powerMode=0),
+and [Shanghai lift panel, fig. 5 in the AKDN volume](https://static.the.akdn/53832/1650573508-2016_akaa_shaping_cities.pdf).

@@ -19,6 +19,9 @@ requires:
   knowledge: [ZH-SCRIPT-NUM-ER, ZH-SCRIPT-ER-01, ZH-TONE-LEXICAL, ZH-METHOD-STROKE-COUNT]
 introduces:
   knowledge: [ZH-LEX-NUM-ER]
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
 practises:
   knowledge: [ZH-LEX-NUM-ER, ZH-SCRIPT-NUM-ER, ZH-TONE-LEXICAL, ZH-METHOD-STROKE-COUNT]
 skills: [listening, speaking, reading]
