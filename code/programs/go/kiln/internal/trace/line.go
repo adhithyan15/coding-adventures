@@ -178,9 +178,15 @@ type record struct {
 	// groupExit marks the START of an exit_group call (call is nil).  The call
 	// is otherwise ignored; the model needs only WHEN it began, because strace
 	// prints it at the thread group's exit, before the "+++ exited +++" line
-	// (see Trace.InitExitLine).  Only the start line is emitted: a resumed
-	// half emits nothing.
+	// (see Trace.InitExitLine).  Only the start line is emitted, and only for
+	// a call that did NOT return: "= ?", or the unfinished form (whose
+	// resumed half may still show a real result, see retract).
 	groupExit bool
+	// retract, with groupExit, says the resumed half of an exit_group that
+	// began at line `line` returned a real result (it FAILED, e.g. EPERM from
+	// a seccomp filter the step installed): the thread group is not dying, so
+	// the marker taken at the start line is withdrawn.
+	retract bool
 }
 
 // lineState is what the line handler carries between lines.
@@ -615,6 +621,11 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
+		if call.name == "exit_group" && !call.ret.unknown {
+			// The call began (the marker was taken at its start line) but
+			// returned: it failed, and the group is not dying.
+			return &record{line: p.line, pid: pid, groupExit: true, retract: true}, nil
+		}
 		return finishCall(pid, lineNo, call, true, st.helper)
 	}
 	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {
@@ -670,8 +681,10 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 		}
 	}
 	if lookup(call.name).class == classIgnored {
-		if call.name == "exit_group" && !split {
-			// A whole-line exit_group: its one line is its start line.
+		if call.name == "exit_group" && !split && call.ret.unknown {
+			// A whole-line exit_group that did not return (the group is
+			// dying): its one line is its start line.  One that returned
+			// (a failure) is nothing.
 			return &record{line: lineNo, pid: pid, groupExit: true}, nil
 		}
 		return nil, nil

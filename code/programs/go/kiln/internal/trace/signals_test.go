@@ -112,8 +112,58 @@ func TestExitLinesAlignWithExits(t *testing.T) {
 	}
 }
 
+// A failed exit_group (EPERM from a seccomp filter the step installed) does not
+// mean the group is dying, so it must not set the marker; in the split form the
+// marker taken at the start line is withdrawn when the resumed half shows a
+// real result.  A later exit_group that does not return takes it.
+func TestInitExitLineNeedsACallThatDidNotReturn(t *testing.T) {
+	end := "11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n"
+	const eperm = "-1 EPERM (Operation not permitted)"
+	cases := []struct {
+		name string
+		body string
+		want int
+	}{
+		{"one-line failure", "11  exit_group(0) = " + eperm + "\n", 0},
+		{"unfinished, resumed with a failure", "11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = " + eperm + "\n", 0},
+		{"unfinished, resumed unknown", "11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = ?\n", stepPrefixLines + 1},
+		{"a failure, then the real one", "11  exit_group(0) = " + eperm + "\n11  exit_group(0) = ?\n", stepPrefixLines + 2},
+		{"a split failure, then the real one",
+			"11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = " + eperm + "\n11  exit_group(0) = ?\n", stepPrefixLines + 3},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			tr, err := parseAt(t, "/start", stepPrefix+c.body+end, helperOpts)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if tr.InitExitLine != c.want {
+				t.Errorf("InitExitLine = %d, want %d", tr.InitExitLine, c.want)
+			}
+		})
+	}
+}
+
+// D18 interaction, pinned: a signal-delivery line ("--- SIG ---", which
+// -e signal=all now prints) on a thread with a "???(" entry pending is
+// "interleaved".  SIGKILL has no delivery stop, so a real trace should never
+// show it; if one does, the parser refuses it.  A future relaxation must be
+// deliberate, and must change this test.
+func TestSignalLineOnAPendingDeadEntryIsInterleaved(t *testing.T) {
+	for _, sig := range []string{
+		"2  --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=3, si_uid=1000, si_status=SIGKILL, si_utime=0, si_stime=0} ---\n",
+		"2  --- SIGKILL {si_signo=SIGKILL, si_code=SI_USER, si_pid=3, si_uid=1000} ---\n",
+		"2  --- stopped by SIGSTOP ---\n",
+	} {
+		text := thr("2  ???( <unfinished ...>\n" + sig + "2  <... ??? resumed>) = ?\n")
+		wantReason(t, text, reasonInterleaved)
+	}
+}
+
 // signalSeeds feed FuzzParse.
 var signalSeeds = []string{
+	stepPrefix + "11  exit_group(0) = -1 EPERM (Operation not permitted)\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
+	stepPrefix + "11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = -1 EPERM (Operation not permitted)\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + "11  exit_group(0) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + "11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + spawnThread(11, 12) + "12  exit_group(0) = ?\n12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",

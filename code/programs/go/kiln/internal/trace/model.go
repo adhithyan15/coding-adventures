@@ -684,6 +684,14 @@ func (m *model) apply(rec *record) *Error {
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
 	}
+	if rec.groupExit && rec.retract {
+		// A failed exit_group whose start line took the marker: withdraw it
+		// (only if it is still that call's).  The next one may take it again.
+		if m.trace.InitExitLine == rec.line {
+			m.trace.InitExitLine = 0
+		}
+		return nil
+	}
 	if rec.groupExit {
 		if m.stepExec && m.inInitThreads(p.Pid) && m.trace.InitExitLine == 0 {
 			m.trace.InitExitLine = rec.line
