@@ -151,4 +151,34 @@ void main() {
       expect(englishFrequencies[25], equals(minFreq)); // Z
     });
   });
+
+  // ==========================================================================
+  // SEC-010: integer extremes
+  // ==========================================================================
+  //
+  // decrypt used to be encrypt(text, -shift). On the Dart VM (the platform this
+  // package tests on) an int is a signed 64-bit value, so -minInt64 wraps back
+  // to minInt64 and the "undo" shifted the wrong way: wrong plaintext, no error.
+  // (Compiled to JavaScript, ints are doubles and behave differently; this
+  // package targets the VM.)
+  //
+  // By hand: 2^63 mod 26 = 8, so minInt64 is congruent to -8 = +18 (mod 26).
+  // Undoing it shifts by -18 = +8, so "ABC" must decrypt to "IJK".
+  group('integer extremes (SEC-010)', () {
+    const int64Min = -9223372036854775808;
+    const int64Max = 9223372036854775807;
+
+    test('decrypt with the minimum 64-bit shift is correct', () {
+      expect(decrypt('ABC', int64Min), equals('IJK'));
+      expect(decrypt('abc', int64Min), equals('ijk'));
+    });
+
+    test('decrypt inverts encrypt at integer extremes', () {
+      const text = 'Hello, World! xyz XYZ';
+      for (final shift in [int64Min, int64Min + 1, -1, 0, 25, 26, int64Max]) {
+        expect(decrypt(encrypt(text, shift), shift), equals(text),
+            reason: 'round trip failed for shift $shift');
+      }
+    });
+  });
 }

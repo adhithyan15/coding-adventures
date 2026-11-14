@@ -120,4 +120,33 @@ public sealed class CaesarCipherTests
             }
         }
     }
+
+    // SEC-010: Decrypt used to be Encrypt(text, -shift). -int.MinValue does not
+    // fit in an int; in the default unchecked context it wraps back to
+    // int.MinValue, and Encrypt then reduces that to (-2^31 mod 26) = 2, which
+    // shifts FORWARD by 2 instead of back by 2. The answer was silently wrong.
+    //
+    // Expected value, worked by hand: 2^31 mod 26 = 24, so int.MinValue is
+    // congruent to -24, i.e. to +2. Undoing a +2 shift means shifting by -2, so
+    // "ABC" must decrypt to "YZA".
+    [Fact]
+    public void DecryptIntMinValueIsCorrect()
+    {
+        Assert.Equal("YZA", CaesarCipher.Decrypt("ABC", int.MinValue));
+        Assert.Equal("yza", CaesarCipher.Decrypt("abc", int.MinValue));
+    }
+
+    [Theory]
+    [InlineData(int.MinValue)]
+    [InlineData(int.MinValue + 1)]
+    [InlineData(-1)]
+    [InlineData(0)]
+    [InlineData(25)]
+    [InlineData(26)]
+    [InlineData(int.MaxValue)]
+    public void DecryptInvertsEncryptAtIntExtremes(int shift)
+    {
+        const string text = "Hello, World! xyz XYZ";
+        Assert.Equal(text, CaesarCipher.Decrypt(CaesarCipher.Encrypt(text, shift), shift));
+    }
 }

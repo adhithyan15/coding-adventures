@@ -59,7 +59,7 @@ This guarantees a result in the range [0, 25] regardless of whether the shift is
 Decryption is simply encryption with the negated shift:
 
 ```go
-Decrypt(text, shift) = Encrypt(text, -shift)
+Decrypt(text, shift) = Encrypt(text, -(shift mod 26))   (shift reduced to 0..25 first, so math.MinInt cannot overflow)
 ```
 
 This works because shifting forward by `n` and then backward by `n` returns you to the starting position: `(x + n - n) mod 26 = x`.
@@ -119,7 +119,7 @@ caesarcipher.Encrypt("ABC 123", 1)        // → "BCD 123"
 
 #### `Decrypt(text string, shift int) string`
 
-Decrypts ciphertext by reversing the Caesar shift. Equivalent to `Encrypt(text, -shift)`.
+Decrypts ciphertext by reversing the Caesar shift. Equivalent to `Encrypt(text, -shift)`, except the shift is reduced to 0..25 before negation so `math.MinInt` cannot overflow.
 
 ```go
 caesarcipher.Decrypt("Khoor, Zruog!", 3)  // → "Hello, World!"

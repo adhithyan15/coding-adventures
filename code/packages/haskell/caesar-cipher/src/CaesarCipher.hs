@@ -21,7 +21,10 @@ encrypt text shift = map (shiftChar normalizedShift) text
 
 -- | Reverse an encryption performed with the given shift.
 decrypt :: String -> Int -> String
-decrypt text shift = encrypt text (-shift)
+decrypt text shift = encrypt text (negate (shift `mod` 26))
+-- SEC-010: reduce to 0..25 *before* negating. GHC's Int is fixed-width, so
+-- @negate minBound == minBound@ and a raw @negate shift@ would shift the wrong
+-- way for the most negative Int. The residue is small, so negating it is safe.
 
 -- | Apply the self-inverse Caesar shift of 13.
 rot13 :: String -> String

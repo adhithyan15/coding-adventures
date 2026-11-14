@@ -428,4 +428,31 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertEqual(a, b)
         XCTAssertNotEqual(a, c)
     }
+
+    // MARK: - SEC-010: integer extremes
+
+    // decrypt used to be `encrypt(text, shift: -shift)`. In Swift, `-Int.min`
+    // is an arithmetic overflow, which TRAPS (a crash, not a wrong answer).
+    // encrypt had a sibling flaw: `offset + shift` overflows for shift near
+    // Int.max. Both are reachable from any caller-supplied shift.
+    //
+    // By hand (64-bit Int): 2^63 mod 26 = 8, so Int.min is congruent to
+    // -8 = +18 (mod 26). Undoing it shifts by -18 = +8: "ABC" -> "IJK".
+    func testDecryptIntMinIsCorrect() {
+        XCTAssertEqual(decrypt("ABC", shift: Int.min), "IJK")
+        XCTAssertEqual(decrypt("abc", shift: Int.min), "ijk")
+    }
+
+    func testEncryptIntMaxIsCorrect() {
+        // 2^63 - 1 is congruent to 7 (mod 26), and A + 7 = H.
+        XCTAssertEqual(encrypt("ABC", shift: Int.max), "HIJ")
+    }
+
+    func testDecryptInvertsEncryptAtIntExtremes() {
+        let text = "Hello, World! xyz XYZ"
+        for shift in [Int.min, Int.min + 1, -1, 0, 25, 26, Int.max] {
+            XCTAssertEqual(decrypt(encrypt(text, shift: shift), shift: shift), text,
+                           "round trip failed for shift \(shift)")
+        }
+    }
 }
