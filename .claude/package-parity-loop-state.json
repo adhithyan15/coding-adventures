@@ -10027,11 +10027,11 @@
     {
       "id": "canonical-cbor-dart-lane-parity",
       "title": "Port canonical CBOR to Dart",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
-      "branch": null,
+      "branch": "feat/canonical-cbor-dart-lane-parity",
       "pr_number": null,
       "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case."
     },
@@ -10049,13 +10049,15 @@
     {
       "id": "canonical-cbor-go-lane-parity",
       "title": "Port canonical CBOR to Go",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "canonical-cbor-language-neutral-conformance"
       ],
       "branch": "feat/canonical-cbor-go-lane-parity",
       "pr_number": 19394,
-      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case."
+      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case.",
+      "merged_at": "2026-11-14T20:07:44Z",
+      "merge_commit": "b3fd9422fa8"
     },
     {
       "id": "canonical-cbor-haskell-lane-parity",
