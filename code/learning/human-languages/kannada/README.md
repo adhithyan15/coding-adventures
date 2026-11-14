@@ -185,6 +185,20 @@ Spanish-proxy demands. The measured C2 planner remains **9,542 projectable /
 tranches. These are repository measurements, not claims of certification,
 standard setting, human validation, learner readiness or learner attainment.
 
+## Kannada A1 movement bridge status
+
+The four-minute [`KA-C108-movement`](./lessons/KA-C108-movement.md) lesson
+contrasts the fixed **ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** (“go to school”) destination with the
+already-taught **ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** (“have come from Bengaluru”)
+origin. Chapters 109, 110, 113, and 149 retrieve that distinction across the
+R1–R4 windows. It does not claim general dative or verb-conjugation mastery.
+
+Strict Kannada A1 inventory coverage is now **212/258**, with 46 points still
+unmapped. In particular, the separate noun-plus-spatial-relator demand remains
+open: earlier “near,” “on,” and “under” words do not demonstrate that
+composition. Coverage is an internal measure, not an external CEFR judgment or
+learner-readiness claim.
+
 ## Kannada B2 content inventory status
 
 [`core/exam-inventory-kannada-b2.json`](../core/exam-inventory-kannada-b2.json)

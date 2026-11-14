@@ -3104,6 +3104,19 @@ construction or validation, TLS, HTTP, OAuth transport, and network authority
 remain unavailable. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The strongest Name-policy-backed responder-revocation result is now also
+admitted directly to the existing generic retained-intermediate revocation
+binding boundary. A private repository-owned evidence adapter derives the
+target-nearest intermediate, selected Mozilla-reviewed root, and original
+server-status observation time only through the retained strong proof;
+callers cannot substitute a certificate, root, status proof, or time. The
+existing stable target-issuer-time validator can therefore bind separately
+authenticated status for that exact intermediate without a second public
+entry point or an external effect. This closes only the strongest proof's
+retained-intermediate binding edge. Policy for either added OCSP proof's own
+responder, complete revocation or Name/path validation, TLS, HTTP, OAuth
+transport, network authority, and live-provider readiness remain unavailable.
+
 A bounded follow-up projection consumes that complete separately authenticated
 original-responder branch and reifies the added revocation proof's own exact
 delegated responder-to-intermediate-to-reviewed-root path under a distinct
@@ -3276,17 +3289,20 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
-A bounded no-check composition follow-up consumes the complete fully routed
+A bounded no-check composition follow-up consumes an admitted fully routed
 responder no-check proof plus a separate fully authenticated, fully routed
-OCSP target-revocation proof for the retained intermediate. It derives the
-exact retained intermediate, selected Mozilla-reviewed root, and original
-server-status OCSP observation time exclusively through the consumed no-check
-proof, then requires the second proof to name those exact certificate objects
-and time. Stable target, issuer, and observation-time mismatch categories
-retain no certificate, response, key, signature, status, hostname, root, or
-time payload. Success retains the complete non-copyable no-check proof and
-intermediate-status proof under a distinct type; callers cannot substitute raw
-status, certificates, paths, roots, algorithms, keys, signatures, or time.
+OCSP target-revocation proof for the retained intermediate. Private
+repository-owned evidence now admits both the fixed-depth and strongest Name-
+policy-backed server proofs while preventing external substitute
+implementations. It derives the exact retained intermediate, selected
+Mozilla-reviewed root, and original server-status OCSP observation time
+exclusively through the consumed no-check proof, then requires the second proof
+to name those exact certificate objects and time. Stable target, issuer, and
+observation-time mismatch categories retain no certificate, response, key,
+signature, status, hostname, root, or time payload. Success retains the
+complete non-copyable no-check proof and intermediate-status proof under a
+distinct type; callers cannot substitute raw status, certificates, paths,
+roots, algorithms, keys, signatures, or time.
 This pure public-certificate-data composition performs no credential access or
 editing, signing, storage, clock acquisition, provider action, audit event,
 trace emission, I/O, network access, or other external effect. It resolves the
@@ -3383,6 +3399,24 @@ revocation for responders without the extension, complete revocation policy,
 generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
+
+The direct branch can then nominally complete revocation policy for its one
+exact retained fixed path. The consumed type proves that authenticated good-
+and-fresh OCSP status covers the server target and retained intermediate,
+while exact RFC 6960 no-check policy covers the original responder and added
+intermediate-status responder. The same generic path admits the strongest
+Name-policy-backed original proof without a duplicate detached-input API. The
+selected Mozilla-reviewed root remains the trust anchor rather than a
+revocation target. The infallible non-copyable result retains all prerequisite
+evidence and accepts no substitute certificate, path, root, algorithm, key,
+signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It proves complete revocation policy
+only for this one direct retained fixed path; it does not generalize revocation
+or path construction and validation, fetch, cache, acquire, or refresh
+revocation data, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
 
 A branch-specific bounded completion slice then consumes that exact nested
 no-check composition after the server target, original responder, responder-

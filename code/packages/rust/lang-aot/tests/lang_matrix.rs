@@ -13555,8 +13555,12 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     }
     // A Brainfuck `,` reads `env.BFRuntime.getchar()` → `System.in`, so pipe the
     // program's stdin to the `java` process; empty for every other program.
+    // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+    // running in parallel a recycled PID's file can still be locked, and the JVM
+    // then prints a unified-logging warning to STDOUT, which this test compares
+    // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
     let mut java = Command::new("java");
-    java.arg("-cp").arg(dir.path()).arg("Main");
+    java.arg("-XX:-UsePerfData").arg("-cp").arg(dir.path()).arg("Main");
     let Some(out) = output_with_stdin(java, program_stdin(p)) else {
         cell_failed("Jvm", p, "running `java`", "could not spawn/collect");
     };
@@ -29395,8 +29399,12 @@ public class Peek {
         .expect("spawn javac for JVM peek");
     assert!(built.status.success(), "javac: {}", String::from_utf8_lossy(&built.stderr));
     for mode in [None, Some("peek"), Some("read")] {
+        // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+        // running in parallel a recycled PID's file can still be locked, and the JVM
+        // then prints a unified-logging warning to STDOUT, which this test compares
+        // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
         let mut cmd = Command::new("java");
-        cmd.arg("-cp").arg(dir.path()).arg("Peek");
+        cmd.arg("-XX:-UsePerfData").arg("-cp").arg(dir.path()).arg("Peek");
         if let Some(mode) = mode { cmd.arg(mode); }
         let out = output_with_stdin(cmd, b"5\nhello\n\nbad\n-3")
             .expect("run JVM peek");

@@ -32,7 +32,7 @@ this whole entry is unreleased and the version is bumped at release.)
   (`logic_gates::and_gate`), so the Warrant binding can name them. `sequential`
   is not re-exported. No existing path changes.
 - `code/specs/LG01-logic-gates-contract.md` and `code/specs/logic-gates.warrant`:
-  22 operations, 88 claims, 3,770,123 exhaustive cases, 83 examples; the claim
+  22 operations, 88 claims, 3,225,774 exhaustive + 544,349 bounded-set (3,770,123 total) cases, 83 examples; the claim
   names are published as stable identifiers for layer-contract linking (LV-005).
 - `evidence.bindings`, `tests/warrant_evidence.rs` (shim) and the generated
   `tests/generated/warrant_evidence.rs`: 88 claims each with an exhaustive, a
