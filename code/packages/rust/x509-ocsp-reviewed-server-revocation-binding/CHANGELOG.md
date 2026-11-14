@@ -2,10 +2,15 @@
 
 ## Unreleased
 
+- Carry the sealed exact server-target projection through the alternative
+  intermediate-status-responder revocation no-check complete fixed-path proof.
+- Accept no detached target input and stop before its HTTPS destination
+  binding, TLS, HTTP, OAuth, network, or live-provider readiness.
 - Carry the sealed exact server-target projection through the double-nested
   no-check complete fixed-path revocation proof without detached inputs.
-- Preserve exact decoded-object identity and stop before double-nested HTTPS
-  destination binding, TLS, HTTP, OAuth, network, or live-provider readiness.
+- Preserve exact decoded-object identity; the separate HTTPS binding package
+  now consumes that proof, while TLS, HTTP, OAuth, network, and live-provider
+  readiness remain unavailable.
 - Carry the sealed exact server-target projection through the nested no-check
   complete fixed-path revocation proof without detached inputs.
 - Preserve exact decoded-object identity and stop before HTTPS destination
