@@ -5179,6 +5179,33 @@ Complete revocation policy, repository-owned TLS/HTTP, and audited transport
 remain separate blockers. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+A bounded `oauth-client-secret-reviewed-server-binding` prerequisite now joins
+one complete audited client-secret HTTP/1 release to that stronger signed
+reviewed HTTPS server-path boundary. It derives the request destination only
+through the retained canonical Host binding and the reviewed destination only
+through the retained path-and-anchor-self-signature proof. The two destinations
+must retain the same exact decoded certificate object, ASCII-case-insensitively
+equal SNI DNS names, and ASCII-case-insensitively equal Host DNS names with the
+same optional port. This closes independent destination substitution even when
+one certificate admits more than one SAN name. A byte-equal independently
+decoded certificate, different admitted SAN name, or different explicit port
+fails closed. Success moves both complete non-copyable inputs into one result;
+stable failures and Debug output retain no provider, trace, request, credential,
+certificate, hostname, authority, path, key, signature, algorithm, constraint,
+or trust-root payloads.
+
+This identity-only composition does not borrow or copy the released request
+bytes, so it introduces no credential access and emits no provider or trace
+audit event. The release's existing audit gate remains mandatory for every
+later request-byte borrow. The composition performs no parsing, new
+validation, cryptography, credential editing, signing, storage, clock
+acquisition, I/O, network access, or other external effect. It does not add
+trust-anchor semantics, complete RFC 5280 Name or path validation, revocation,
+TLS, HTTP, OAuth transport, or network authority. Complete revocation policy,
+repository-owned TLS/HTTP composition, audited network effects, and response
+policy remain separate blockers. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
 prerequisite now also provides an ordered entry point that consumes fully
 routed authenticated OCSP target status together with the complete reviewed
