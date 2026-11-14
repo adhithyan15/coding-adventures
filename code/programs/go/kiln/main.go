@@ -8,6 +8,7 @@
 //	kiln legacy-plan ...           compute legacy keys for every package (KILN03)
 //	kiln explain ...               print one package's record from a plan
 //	kiln sandbox-exec ...          run one traced BUILD step in the sandbox (KILN04 section 4.7)
+//	kiln record prepare ...        the recorder's pre-BUILD phase (KILN04 section 4.8)
 package main
 
 import (
@@ -29,7 +30,7 @@ func main() {
 // run executes the CLI and returns the process exit code.
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: kiln <version|verify-vectors <path>|legacy-plan|explain|sandbox-exec>")
+		fmt.Fprintln(stderr, "usage: kiln <version|verify-vectors <path>|legacy-plan|explain|record|sandbox-exec>")
 		return 2
 	}
 	switch args[0] {
@@ -64,6 +65,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runLegacyPlan(args[1:], stdout, stderr)
 	case "explain":
 		return runExplain(args[1:], stdout, stderr)
+	case "record":
+		return runRecord(args[1:], stdout, stderr)
 	case sandbox.ExecCommand:
 		return sandbox.RunExec(args[1:], stderr)
 	case sandbox.InitCommand:

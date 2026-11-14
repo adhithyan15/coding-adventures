@@ -321,3 +321,19 @@ func TestMarshalConfigNeverWritesNull(t *testing.T) {
 		}
 	}
 }
+
+func TestExpandRoot(t *testing.T) {
+	for in, want := range map[string]string{
+		"$HOME": "/home/r", "$HOME/.cargo/bin": "/home/r/.cargo/bin", "/usr": "/usr", "/opt/x/y": "/opt/x/y",
+	} {
+		got, err := expandRoot(in, "/home/r")
+		if err != nil || got != want {
+			t.Errorf("expandRoot(%q) = %q, %v; want %q", in, got, err, want)
+		}
+	}
+	for _, in := range []string{"$TMPDIR", "$TMPDIR/x"} {
+		if _, err := expandRoot(in, "/home/r"); err == nil {
+			t.Errorf("expandRoot(%q) accepted", in)
+		}
+	}
+}
