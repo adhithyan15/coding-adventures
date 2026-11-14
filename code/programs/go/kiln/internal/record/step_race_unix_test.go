@@ -344,3 +344,37 @@ func TestVerifyPreChecksActionsAgainstTheStepsExport(t *testing.T) {
 	})
 	_ = fmt.Sprint
 }
+
+// A relay stuck writing to the caller (a pipe nobody reads) must not hold the
+// supervisor: after the drain timeout and a short grace it is abandoned, and
+// the sidecar says a pipe was held.
+func TestStepAnUnreadableCallerDoesNotHoldTheSupervisor(t *testing.T) {
+	f := newStepFix(t)
+	o := f.opts(actZ, 0, 1, "echo hello >&3")
+	block := make(chan struct{})
+	defer close(block)
+	o.Stdout = blockingWriter{block}
+	o.Drain = 300 * time.Millisecond
+	start := time.Now()
+	res, err := RunStep(o)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if time.Since(start) > 10*time.Second {
+		t.Fatalf("waited %s", time.Since(start))
+	}
+	if res.ExitCode != 0 || res.Sidecar.Clean || !containsStr(res.Sidecar.Unclean, UncleanPipesHeld) {
+		t.Fatalf("%d %+v", res.ExitCode, res.Sidecar)
+	}
+	// The trace was complete: the sink was waited for.
+	if res.Sidecar.TraceBytes != int64(len("fake trace\n")) {
+		t.Fatalf("%+v", res.Sidecar)
+	}
+}
+
+type blockingWriter struct{ release chan struct{} }
+
+func (b blockingWriter) Write([]byte) (int, error) {
+	<-b.release
+	return 0, errors.New("released")
+}

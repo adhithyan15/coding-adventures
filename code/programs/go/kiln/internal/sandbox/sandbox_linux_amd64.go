@@ -118,6 +118,16 @@ func RunExec(args []string, stderr io.Writer) int {
 		return fail(err)
 	}
 	warmThreads()
+	// Defence in depth (KILN04 4.7): every descriptor of 3 and up is marked
+	// close-on-exec BEFORE the spawn, so the init never holds one the caller
+	// left open (a recorder's trace pipe, say), whatever the init's own
+	// close_range does. The descriptors the child needs are put where they go by
+	// the spawn's explicit mapping (a dup, which clears the flag on the copy),
+	// not by inheriting these. Fail closed: if the kernel cannot do this, the
+	// step does not run.
+	if _, _, e := syscall.RawSyscall(sysCloseRange, 3, 0xffffffff, closeRangeCloexec); e != 0 {
+		return fail(fmt.Errorf("cannot mark the root's descriptors close-on-exec: %v", e))
+	}
 
 	initArgv := append([]string{
 		"kiln", InitCommand,

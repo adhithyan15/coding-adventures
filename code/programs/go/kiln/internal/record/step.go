@@ -89,9 +89,9 @@ package record
 //
 // Death of the supervisor. If the supervisor is killed, strace must not outlive
 // it: the child is started with Pdeathsig = SIGKILL, from a goroutine pinned to
-// its OS thread (Pdeathsig fires when the THREAD that forked the child exits,
-// and an unpinned goroutine's thread may be retired by the Go runtime at any
-// moment). And an orphaned supervisor (its build tool killed) must not go on
+// its OS thread (Pdeathsig fires when the THREAD that forked the child exits;
+// the Go runtime does not normally retire threads, but pinning makes the
+// thread's lifetime one we know, not one we hope for). And an orphaned supervisor (its build tool killed) must not go on
 // writing into the record directory while `collect` reads it: `step` holds a
 // shared flock on the directory for its whole run, `collect` takes it
 // exclusively (and refuses if it cannot), and the command asks the kernel to
@@ -208,19 +208,23 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		o.Stderr = io.Discard
 	}
 
-	// 1. pre/ is what prepare sealed, and the programs are the pinned ones.
-	pre, err := VerifyPre(o.Dir)
-	if err != nil {
+	// 1. The shared lock first, before anything of the record directory is
+	// read: `collect` takes the same lock exclusively, so it cannot start (or
+	// have started and be reading) while a step, an orphaned supervisor
+	// included, is working in the directory. The lock is held for the whole run.
+	if _, err := Canonical("the record directory", o.Dir); err != nil {
 		return nil, err
 	}
-	// The shared lock is held for the whole run: `collect` takes the same lock
-	// exclusively, so it cannot start while a step (or an orphaned supervisor)
-	// is still writing.
 	unlock, err := LockDir(o.Dir, false)
 	if err != nil {
 		return nil, err
 	}
 	defer unlock()
+	// pre/ is what prepare sealed, and the programs are the pinned ones.
+	pre, err := VerifyPre(o.Dir)
+	if err != nil {
+		return nil, err
+	}
 	kiln, err := ResolveBinary("the kiln binary", o.KilnExe)
 	if err != nil {
 		return nil, err
@@ -714,12 +718,19 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceS
 		}
 		done <- struct{}{}
 	}
-	done := make(chan struct{}, 5)
-	go relay(o.Stdout, rs[0], done)
-	go relay(o.Stderr, rs[1], done)
-	go func() { sink.copy(rs[2]); done <- struct{}{} }()
-	go relay(run.stdout, rs[3], done)
-	go relay(run.stderr, rs[4], done)
+	// Two kinds of reader. The ones that only fill our own memory or file (the
+	// trace sink and strace's own two streams) can not block once their pipe is
+	// closed, and what they gathered goes into the sidecar, so they are always
+	// waited for. The two that write to the caller's stdout and stderr CAN block
+	// (a full pipe nobody reads) and tell us nothing the sidecar needs, so after
+	// the drain timeout they get a short grace and are then abandoned.
+	own := make(chan struct{}, 3)
+	relays := make(chan struct{}, 2)
+	go relay(o.Stdout, rs[0], relays)
+	go relay(o.Stderr, rs[1], relays)
+	go func() { sink.copy(rs[2]); own <- struct{}{} }()
+	go relay(run.stdout, rs[3], own)
+	go relay(run.stderr, rs[4], own)
 
 	cmd.Wait()
 	// Everything the step and strace wrote: wait for it to drain, but only so
@@ -727,18 +738,32 @@ func runStrace(o StepOptions, straceBin string, argv, env []string, sink *traceS
 	// that outlived it, which is not a clean run whatever the exit status.
 	timeout := time.NewTimer(o.Drain)
 	defer timeout.Stop()
-	for i := 0; i < 5; i++ {
+	nOwn, nRelay := 3, 2
+	for nOwn > 0 || nRelay > 0 {
 		select {
-		case <-done:
+		case <-own:
+			nOwn--
+		case <-relays:
+			nRelay--
 		case <-timeout.C:
 			run.pipesHeld = true
 			for _, r := range rs {
-				r.Close() // the copiers end with a read error
+				r.Close() // the readers end with a read error
 			}
-			for j := i; j < 5; j++ {
-				<-done
+			for nOwn > 0 {
+				<-own // the sidecar's fields are read only after the sink has finished
+				nOwn--
 			}
-			i = 5
+			grace := time.NewTimer(time.Second)
+			for nRelay > 0 {
+				select {
+				case <-relays:
+					nRelay--
+				case <-grace.C:
+					nRelay = 0 // abandoned: a relay stuck writing to the caller
+				}
+			}
+			grace.Stop()
 		}
 	}
 	for _, r := range rs {

@@ -175,6 +175,11 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "kiln: record step runs only on linux/amd64 (this is %s/%s); the step was not run\n", runtime.GOOS, runtime.GOARCH)
 		return 3
 	}
+	// The parent-death signal belongs to the thread that asks for it, and fires
+	// when the build tool's forking thread dies: keep this goroutine on one OS
+	// thread for the life of the process, so the request is made from, and
+	// stays with, a thread that lives as long as the process does.
+	runtime.LockOSThread()
 	if err := recordArmParentDeath(); err != nil {
 		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
 		return record.ExitRefused

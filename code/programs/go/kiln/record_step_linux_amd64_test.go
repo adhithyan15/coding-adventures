@@ -164,6 +164,14 @@ func TestSandboxRecordStep(t *testing.T) {
 		"readlink /proc/self/fd/1; readlink /proc/self/fd/2",
 		fmt.Sprintf(`for p in %s %s %s; do if test -e "$p"; then echo "visible:$p"; fi; done; cat %s 2>/dev/null; exit 0`,
 			recDir, filepath.Join(recDir, "pre", "binding.json"), trace2, trace2),
+		// The step holds no descriptor but its own: 0, 1, 2 and the one ls opens
+		// to read the directory. Fd 5 is strace's trace pipe in the supervisor's
+		// world and must not exist here.
+		"ls /proc/self/fd",
+		// And it cannot write to that pipe: the redirection fails. The payload
+		// is spelled with an empty string in the middle so the line itself, which
+		// strace records, does not contain it.
+		`if (echo for""ged >&5) 2>/dev/null; then echo wrote; else echo refused; fi`,
 	}
 
 	// The repository: the files `prepare` reads (the same set the unit tests
@@ -354,10 +362,35 @@ exit 0
 		t.Fatalf("the step could see what it must not:\n%s", out2)
 	}
 
+	// Step 3: only descriptors 0 to 2 (plus ls's own, 3) exist in the step.
+	out3, err3, code3, sc3 := step(3)
+	mustClean(3, sc3, code3, err3)
+	for _, fd := range strings.Fields(out3) {
+		if fd != "0" && fd != "1" && fd != "2" && fd != "3" {
+			t.Fatalf("the step holds descriptor %s: %q", fd, out3)
+		}
+	}
+	// Step 4: it cannot write to the trace pipe, and what it tried to write is
+	// not in any trace.
+	out4, err4, code4, sc4 := step(4)
+	mustClean(4, sc4, code4, err4)
+	if strings.TrimSpace(out4) != "refused" {
+		t.Fatalf("the step's write to descriptor 5: %q", out4)
+	}
+	for n := 0; n < len(lines); n++ {
+		raw, err := os.ReadFile(record.StepFile(recDir, recStepAction, n, "trace"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if bytes.Contains(raw, []byte("forged")) {
+			t.Fatalf("the trace of step %d holds what the step wrote to descriptor 5", n)
+		}
+	}
+
 	// A step is run once.
 	cmd := exec.Command(kiln, "record", "step", "--dir", recDir, "--", "sh", "-c", lines[0])
 	cmd.Dir = pkgDir
-	cmd.Env = append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+recStepAction, "KILN_STEP=0", "KILN_STEP_COUNT=3")
+	cmd.Env = append(append([]string{}, pre.Tools.BuildToolEnv...), "KILN_ACTION="+recStepAction, "KILN_STEP=0", fmt.Sprintf("KILN_STEP_COUNT=%d", len(lines)))
 	if _, eb, code := recStepRun(t, cmd); code != record.ExitRefused || !strings.Contains(eb, "already run") {
 		t.Fatalf("a second run of step 0: exit %d, %s", code, eb)
 	}

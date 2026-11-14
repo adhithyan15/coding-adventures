@@ -1152,8 +1152,9 @@ diagnostic on standard error, and exits 125):
    are each a canonical regular file whose SHA-256 equals the binding's
    `kiln_sha256` and `strace_sha256`, and the Kiln path equals the sandbox
    configuration's `kiln_exe`. Every action file's steps equal, line for line,
-   the sealed `steps.json`'s. Nothing is looked up on `PATH`. The shared
-   `flock` on the record directory is taken here (below).
+   the sealed `steps.json`'s. Nothing is looked up on `PATH`. the shared
+   `flock` on the record directory is taken FIRST, before anything of the
+   directory is read (below).
 2. The inherited environment equals `build_tool_env` of `tools.json` as a
    multiset of `NAME=value` entries, after removing `KILN_ACTION`,
    `KILN_STEP` and `KILN_STEP_COUNT`. An entry without `=`, and a repeated
@@ -1182,7 +1183,12 @@ close-on-exec, so strace and the step never hold it, and it dies with the
 supervisor, so an orphan that outlives its build tool keeps `collect` out
 until it is gone. The command also sets `PR_SET_PDEATHSIG` (`SIGKILL`) on
 itself (Linux) so an orphaned supervisor does not outlive the build tool; if
-the build tool is already gone when it is set, the step is refused.
+the build tool is already gone when it is set, the step is refused. The
+command pins itself to one OS thread (`runtime.LockOSThread`) for the life of
+the process before asking. The arming depends on the build tool's forking
+thread staying alive (the signal fires when that thread exits); a misfire
+fails closed (the step dies, no sidecar, `collect` voids the shard), and the
+`flock` protects `collect` on its own whether or not the arming works.
 
 *Running the step.* `prepare` creates `traces/` (`0700`, outside the sealed
 `pre/`); `step` creates `traces/<sha256(action)>/` and, should `traces/` be
@@ -1226,6 +1232,15 @@ it, and `--kill-on-exit` takes the tracees. Exit
 status 125 is recorded (`exit_125`) and never retried (§4.7). strace's own
 standard error, when not empty, is also saved (first 4 KiB) as
 `<step>.strace-stderr` (`O_EXCL`) for whoever has to find out why a run failed.
+It is untrusted diagnostic text (a step can make strace print what it likes):
+`collect` treats it as opaque, never interprets it, and does not upload it in
+the shard.
+
+The drain after strace exits waits for the readers that cannot block (the
+trace sink and strace's own two streams) without limit, and for the two that
+write to the caller's stdout and stderr only for a short grace after the
+timeout, then abandons them, so a caller that stops reading cannot hold the
+supervisor.
 
 *The workflow.* The recording workflow launches the build tool under
 `env -i` with exactly `build_tool_env`: a shell adds `PWD`, `SHLVL` and `_`,
@@ -1295,6 +1310,12 @@ and sets `KILN_ACTION` (the package `rel_path`), `KILN_STEP` and
 the recorder. The step never sees any of the three: its environment is the
 list the configuration holds for `KILN_ACTION`, exactly, and an action the
 configuration does not name is an error.
+
+**Descriptors the caller leaves open.** Before the spawn the root marks every
+descriptor from 3 up close-on-exec (`close_range`, fail closed), so the init
+never holds one the caller left open (a recorder's trace pipe, say), whatever
+the init's own `close_range` does; the descriptors the child needs are placed
+by the spawn's explicit mapping, which clears the flag on the copy.
 
 **The configuration** is strict JSON, written by the recorder: `repo_root`,
 `home`, `tmpdir`, `ro_roots`, `state_roots`, `masks`, `env_by_action` and
