@@ -3,14 +3,19 @@
 //! An HTTPS client must not validate a certificate path for one decoded leaf
 //! and then send TLS and HTTP protocol identities proven against another leaf.
 //! This crate closes that one composition gap: it consumes the complete DNS
-//! destination proof and the strongest accumulated reviewed RSA server-path
-//! policy, then requires both to retain the same exact decoded target object.
+//! destination proof and either the strongest accumulated reviewed RSA
+//! server-path policy or that path already bound to its reviewed anchor's
+//! repository-owned self-signature proof. Both entry points require their
+//! complete inputs to retain the same exact decoded target object.
 //!
 //! ```text
 //! HTTPS destination ── certificate ──┐
 //!                                    ├── exact decoded object
 //! reviewed server path ── target ────┘
 //! ```
+//!
+//! The stronger result retains the complete path-to-anchor-self-signature
+//! proof after this target check; it does not replace the path-only boundary.
 //!
 //! This is an evidence-integrity boundary, not certificate validation. It
 //! performs no new parsing, signature verification, path or Name validation,
@@ -22,6 +27,7 @@
 use core::fmt;
 use https_destination_name_binding::BoundHttpsDnsDestination;
 use x509_rsa_constructed_path_signature_routing::ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy;
+use x509_rsa_reviewed_server_path_anchor_self_signature_binding::BoundX509RsaReviewedServerPathAnchorSelfSignature;
 
 /// The strongest accumulated reviewed RSA server-path policy currently
 /// available to this composition boundary.
@@ -57,6 +63,53 @@ pub type ReviewedHttpsServerPath<
     'anchor_encoded,
     'role_certificate,
     'role_encoded,
+>;
+
+/// Complete reviewed server-path evidence with its exact anchor signature.
+///
+/// This alias deliberately preserves the concrete non-copyable proof rather
+/// than accepting a detached root or callback-shaped assertion. The retained
+/// path includes the strongest accumulated Name-policy evidence, while the
+/// retained anchor proof includes data-driven repository-owned RSA signature
+/// verification and reviewed-snapshot selection.
+pub type ReviewedHttpsServerPathAnchorSelfSignature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+> = BoundX509RsaReviewedServerPathAnchorSelfSignature<
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
 >;
 
 /// Stable, payload-free binding failure categories.
@@ -277,6 +330,266 @@ pub fn bind_https_dns_destination_to_reviewed_server_path<
         destination,
         reviewed_server_path,
     })
+}
+
+/// Non-copyable HTTPS destination, reviewed path, and anchor-signature proof.
+///
+/// The complete path and anchor self-signature have already been bound to one
+/// exact reviewed root. Construction adds the final exact-object check between
+/// the destination certificate and the path target, then moves both complete
+/// inputs into this result so no detached evidence can be substituted later.
+pub struct BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+> {
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    reviewed_server_path_anchor_self_signature: ReviewedHttpsServerPathAnchorSelfSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >,
+}
+
+impl<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >
+    BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >
+{
+    /// Return the complete certificate, SNI, Host, and SAN destination proof.
+    #[must_use]
+    pub const fn destination(
+        &self,
+    ) -> &BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host> {
+        &self.destination
+    }
+
+    /// Return the complete reviewed path and anchor self-signature evidence.
+    #[must_use]
+    pub const fn reviewed_server_path_anchor_self_signature(
+        &self,
+    ) -> &ReviewedHttpsServerPathAnchorSelfSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    > {
+        &self.reviewed_server_path_anchor_self_signature
+    }
+}
+
+impl fmt::Debug
+    for BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature")
+            .field("destination", &"[REDACTED]")
+            .field("reviewed_server_path_anchor_self_signature", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind an HTTPS destination to a reviewed path with anchor self-signature.
+///
+/// The target certificate is derived only through the complete retained path;
+/// the caller cannot supply a detached leaf. Byte-equal independent decodes
+/// therefore fail closed, and success retains the destination, accumulated
+/// path, reviewed root selection, and repository-owned anchor signature proof.
+pub fn bind_https_dns_destination_to_reviewed_server_path_anchor_self_signature<
+    'server_name,
+    'host,
+    'evidence,
+    'initialized,
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+>(
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    reviewed_server_path_anchor_self_signature: ReviewedHttpsServerPathAnchorSelfSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >,
+) -> Result<
+    BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature<
+        'server_name,
+        'host,
+        'evidence,
+        'initialized,
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >,
+    HttpsReviewedServerPathBindingError,
+> {
+    let path_certificate = reviewed_server_path_anchor_self_signature
+        .reviewed_server_path()
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure()
+        .server_policy()
+        .certificate();
+
+    if !same_object(destination.certificate(), path_certificate) {
+        return Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch);
+    }
+
+    Ok(
+        BoundHttpsDnsDestinationToReviewedServerPathAnchorSelfSignature {
+            destination,
+            reviewed_server_path_anchor_self_signature,
+        },
+    )
 }
 
 fn same_object<T: ?Sized>(left: &T, right: &T) -> bool {

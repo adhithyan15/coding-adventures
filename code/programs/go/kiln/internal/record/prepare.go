@@ -265,7 +265,11 @@ func Prepare(o Options) (*PrepareResult, error) {
 			return nil, fmt.Errorf("create --dir: %w", err)
 		}
 	}
-	for _, d := range []string{pre, filepath.Join(pre, "actions")} {
+	// traces/ is created here, once, 0700, so that the supervisors of steps
+	// that start together (the build tool runs independent packages in
+	// parallel) never race to make it. It is outside pre/, so SEALED does not
+	// list it.
+	for _, d := range []string{pre, filepath.Join(pre, "actions"), filepath.Join(o.Dir, "traces")} {
 		if err := os.Mkdir(d, 0o700); err != nil {
 			return nil, fmt.Errorf("create %s: %w", d, err)
 		}
