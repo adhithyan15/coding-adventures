@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "To get down, To join, To wear, To call, To count",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8350142a948ea682",
+  "sourceHash": "fnv1a64:e21fa49595ea3458",
   "lessons": [
     {
       "id": "KA-C149-ili2",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a622a2b0bf8405ef",
+      "sourceHash": "fnv1a64:16f9dd9116fe7f6c",
       "notice": null,
       "blocks": [
         {
@@ -278,6 +278,23 @@
             {
               "kind": "speech",
               "text": "What does ಸೇರು (sēru) mean? (\"To join, to reach\".) Say it once more."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall: place R4",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One last place check: say the bird on and under the tree; the school near and far from the house; the bird inside the house. Keep each reference in the answer: ಮರದ ಮೇಲೆ, ಮರದ ಕೆಳಗೆ, ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ, ಮನೆಯೊಳಗೆ."
             }
           ]
         }

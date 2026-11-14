@@ -12,24 +12,24 @@ headword: "ಕಾರಣ"
 gloss: "a reason"
 romanization: "kāraṇa"
 concept_tag: KA-WHY115-KARANA
-prerequisites: [KA-C114-nirdhara, KA-C114-bayasu]
+prerequisites: [KA-C114-nirdhara, KA-C114-bayasu, KA-C110-house-near-far-inside]
 sounds: []
 roots: [sanskrit-karana]
 etymology_hook: "kāraṇa ← Sanskrit kāraṇa 'cause', a tatsama (CDIAL 3057)"
 duration:
-  max_seconds: 200
+  max_seconds: 240
 requires:
-  knowledge: [KA-LEX-C114-WANT114-04, KA-LEX-C114-WANT114-05]
+  knowledge: [KA-LEX-C114-WANT114-04, KA-LEX-C114-WANT114-05, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 introduces:
   knowledge: [KA-LEX-C115-WHY115-01]
 practises:
-  knowledge: [KA-LEX-C115-WHY115-01, KA-LEX-C114-WANT114-04, KA-LEX-C114-WANT114-05]
+  knowledge: [KA-LEX-C115-WHY115-01, KA-LEX-C114-WANT114-04, KA-LEX-C114-WANT114-05, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C114-bayasu]
+reviews_of: [KA-C114-bayasu, KA-C110-tree-on-under, KA-C110-house-near-far-inside]
 ---
 
 # ಕಾರಣ (kāraṇa) — a reason
@@ -67,3 +67,11 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C115-WHY115-01, KA-LEX-C114-WANT114-04, KA-LEX-C114-WANT114-05] -->
 
 [PAUSE 3s] What does ಕಾರಣ mean? ("A reason".) Say it once more.
+
+## Wrap-up Recall: place R3
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[PAUSE 3s] Recall the complete phrases for **on** and **under the tree**,
+then **inside**, **near**, and **far from the house**. The house changes
+form for “far from”: **ಮರದ ಮೇಲೆ**, **ಮರದ ಕೆಳಗೆ**, **ಮನೆಯೊಳಗೆ**,
+**ಮನೆಯ ಹತ್ತಿರ**, **ಮನೆಯಿಂದ ದೂರ**.

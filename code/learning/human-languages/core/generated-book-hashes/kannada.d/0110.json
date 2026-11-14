@@ -1,13 +1,15 @@
 {
   "language": "kannada",
   "chapter": 110,
-  "sourceHash": "fnv1a64:a0a3b8535ec3e012",
+  "sourceHash": "fnv1a64:34adb3546c6a9f18",
   "lessonIds": [
     "KA-C110-sante",
     "KA-C110-kadalatira",
     "KA-C110-tota",
     "KA-C110-mule",
-    "KA-C110-tiruvu"
+    "KA-C110-tiruvu",
+    "KA-C110-tree-on-under",
+    "KA-C110-house-near-far-inside"
   ],
   "tex": "kannada/book/chapters/ch110-market-beach-garden-corner-turn.tex"
 }
