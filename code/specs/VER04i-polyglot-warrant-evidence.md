@@ -2,7 +2,7 @@
 
 **Parent:** [VER00 §7–§9](VER00-verified-shipping-program.md), [VER01](VER01-assurance-report.md), [VER04 §5–§8](VER04-warrant-language.md), [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md), [VER04g](VER04g-typescript-warrant-compiler.md), [VER04h](VER04h-warrant-derived-evidence.md), [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), [TF01a](TF01a-typescript-test-bootstrap.md), [VER26](VER26-ct-compare-pilot.md). Runtime capability conformance: VER08b (in flight on branch `worktree-agent-a9f1811c0377a9acf`; referenced by name, not yet on `main`).
 
-**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-004b report integration, lane runners and manifests, native suites, samples, and proofs are not delivered, and no non-Rust lane has Warrant-derived execution evidence today.
+**Status:** WD-003 is merged: it implements Rust corpus generation and the independent Python validator for the ct-compare Warrant v0 profile. WD-004a is merged as PR #19236: it delivers the strict lane-manifest parser, planned consumer registry, and corpus structural validator. WD-101 delivers the first non-Rust lane runner and manifest (Python, `ct-compare`: §5.1, §6.2, §15); the consumer row stays `planned` until WD-004b1 can load a lane artifact, so no report consumes it yet. WD-004b report integration, other lanes, native suites, samples, and proofs are not delivered.
 
 **Implementation queue and receipts:** the current WD-003/WD-004/WX queue,
 CI receipts, and subsequent discoveries are maintained in the
@@ -577,6 +577,53 @@ the binding loader, and the manifest writer. It has *no dependency on any leaf
 library*. It is the only new per-lane code; the TFV parser and harness exist
 already in TF01/TF01a for several lanes.
 
+### 5.1 The Python binding file (`evidence.bindings`) -- WD-101 amendment
+
+The merged WD-004a consumer registry already reserves the path
+`<package_root>/evidence.bindings` for `python/ct-compare`, and the Rust lane
+already uses a line-oriented `evidence.bindings` (VER04 §6). The registry is
+the authority on paths, so the Python binding is **`evidence.bindings`, not
+`warrant.binding.json`**; the JSON example in §5 stays the illustration of the
+*content* every lane's binding carries. Like the JSON form it is data only: no
+expression, no code, one directive per line, `#` comments, blank lines ignored.
+
+```text
+lane python
+package python/ct-compare
+module ct_compare
+import coding_adventures_ct_compare
+source src/coding_adventures_ct_compare
+seed 0x5741_5252_414e_5421
+values Bool=bool Bytes=bytes Nat=int U64=int
+op eq export=ct_eq
+op eq_fixed export=ct_eq_fixed width=implicit
+op select_bytes export=ct_select_bytes errors=CT_SELECT_LENGTH_MISMATCH:ValueError
+op eq_u64 export=ct_eq_u64
+```
+
+| Directive | Meaning |
+|---|---|
+| `lane`, `package`, `module` | Lane id, `<lane>/<name>`, and the Warrant module; the runner refuses a binding whose module differs from the corpus's |
+| `import` | Dotted module that holds every export. Resolved when the runner starts; every `export` must exist and be callable |
+| `source` | Source root, relative to the package directory, whose `warrant-src-v1` digest is `source_sha256` (§8.1). The imported module's file **must** live under it (`source-mismatch` otherwise), so the digest describes the code that actually ran |
+| `seed` | The `evidence_seed`: a `u64` (decimal or `0x` hex, `_` allowed) that orders suites for a run; case order stays canonical |
+| `values` | Lane type of each Warrant scalar. Python accepts only `Bool=bool`, `Bytes=bytes`, `U64=int`, `Nat=int` (rule 3); anything else is `BindingInvalid` |
+| `op` | `export=<name>` (required); `width=implicit` when the export infers a `Bytes<N>` width from its buffers (the runner still asserts the corpus width equals every buffer length and does not pass it); `width=runtime` when it takes the width as a trailing argument; `errors=<VARIANT>:<ExceptionName>[,...]` maps a raised built-in exception class to a declared `Err` variant |
+
+Error normalisation is **closed** (rule 2): a mapped exception class becomes
+`Err(variant)`; any other exception from any op is failure id
+`unexpected-error`. Exception names resolve only among the interpreter's
+built-in exception classes, never `BaseException`/`Exception` themselves, so a
+binding cannot swallow arbitrary failures. The mapping is by class, not by
+message: a library that raised the mapped class for a *different* reason would
+be accepted, which is a limit of the binding (§11 item 3), not of the runner.
+
+Python results are checked with `type(x) is T`, not `==`: `True == 1` and a
+`bytearray` compare equal to `bytes` in Python, so a library returning `1`
+for `true` or a mutable buffer for `Bytes` fails with `type-mismatch`. This
+also discharges rule 4 (fresh outputs) by construction: a result that must be
+exactly `bytes` is immutable, so there is no buffer to alias or mutate.
+
 ## 6. The L0 runner protocol (identical in every lane)
 
 ```text
@@ -612,6 +659,45 @@ order is canonical). The runner:
   fail with the case index and *no input bytes printed* (VER00 §7.3: no
   reproducing material in public output; the index plus the corpus
   reproduces it).
+
+### 6.2 Runner command line as delivered for Python -- WD-101 amendment
+
+The Python runner is the package `warrant-corpus`
+(`code/packages/python/warrant-corpus`, import `coding_adventures_warrant_corpus`,
+run as `python -m coding_adventures_warrant_corpus`; the repository's Python
+naming replaces the illustrative `warrant_corpus` of §4.3). Every command takes
+`--repo-root`, `--corpus <dir>`, `--binding <file>` and `--package-dir <dir>`.
+A package keeps a thin entry (`tests/warrant_evidence.py`, the registry's
+`runner_entry`) that fixes those four and forwards the command.
+
+| Command | Behaviour |
+|---|---|
+| `run [--out F]` | Full clean run: examples, exhaustive suites, then negative controls. Writes the manifest to `--out` (or `WARRANT_EVIDENCE_OUT`) only for an unfaulted, unfiltered, fully passing run |
+| `check F` | Same run, but compares the regenerated manifest with the committed `F` and exits `1` on any difference. `toolchain.version` is excluded from the comparison (it is diagnostic, §8) so a different CPython patch release is not drift; everything else, including byte formatting, is |
+| `sabotage` | For every corpus control, re-executes `run` in a child process with `WARRANT_EVIDENCE_FAULT=<fault>:<op>` and `WARRANT_EVIDENCE_FILTER=/exhaustive/`, and requires a `not ok ` line, exit code `1` and no manifest. This is §4.3's shell loop made portable, because the lane BUILD runs under both `sh` and `cmd` |
+| `list-faults` | Prints `<fault>:<op>` for each corpus control |
+| `source-digest --root D` | Prints the `warrant-src-v1` digest of a source tree (§8.1) |
+| `validate-manifest M [--registry R] [--require-active]` | Structural validation of a lane manifest against the corpus with the closed `ct-compare-v0` rules of §8 (a Python port of WD-004a's checks); `--require-active` additionally demands an `active` registry row |
+
+`WARRANT_EVIDENCE_FAULT` is `<fault>` (every applicable op) or `<fault>:<op>`.
+`WARRANT_EVIDENCE_FILTER` is a substring of suite ids. As in §4.3: a filter
+without a fault, `FAULT=none` with a filter, an unknown fault, and a filter
+matching no suite are usage errors (exit `2`). A faulted or filtered run stops
+each suite at its first failing case and never writes a manifest.
+
+Failure ids are a closed set: `count-mismatch`, `stream-mismatch`,
+`call-count-mismatch` (§6.1), `result-mismatch` (the export's value differs from
+the model's), `type-mismatch` (right value, wrong Python type), `missing-error`
+(the model expects `Err`, the export returned a value), `unexpected-error`
+(an exception no binding row maps) and `uncaught-fault` (a negative control no
+claim failed). A failing line is `not ok <suite id>@<case index> <failure id>`
+followed by `not ok <suite id> <failure id>`; no input bytes are printed.
+
+The runner treats the corpus as untrusted: size-capped, duplicate-key-rejecting
+JSON; closed key sets; every IR node compiled before the first case runs (an
+unknown tag is an error, never a skip); `spec_sha256` re-derived from the spec
+bytes on disk; each control re-derived from the fault registry, the op
+signatures and the suites that mention the op.
 
 ## 7. Layer B: native suites (per lane, gated)
 
@@ -746,6 +832,12 @@ test values exercise successful joins, but no checked-in manifest or report
 claims a real Python run. This parser does not verify source/build/toolchain
 freshness, execute a binding, produce an assurance report, or change the
 Rust-only legacy evidence loader; those remain later WD-004b/WD-1xx work.
+
+Two field definitions the first lane fixed (WD-101): `runner.src_sha256` is
+the same `warrant-src-v1` framing (§8.1) over the runner package's own
+production source (`coding_adventures_warrant_corpus/**/*.py`), and
+`evidence_seed` is the binding's `seed` (§5.1). `toolchain` is diagnostic and
+`check` mode ignores `toolchain.version` (§6.2).
 
 ### 8.1 `source_sha256` and the per-language source tree
 
@@ -1074,3 +1166,19 @@ dependency graph.
   every lane's evaluator, which is the cost of the in-lane design and is
   guarded by the shared conformance fixture
   `code/specs/fixtures/warrant-corpus-conformance-v1/`.
+* **WD-101 (Python lane) amendments.** (1) The Python binding is the line
+  file `evidence.bindings` named by the merged registry, not
+  `warrant.binding.json` (§5.1). (2) New `width=implicit` binding value for
+  exports that infer `Bytes<N>` from their buffers (§5.1). (3) Result typing is
+  by exact Python type, closing the `True == 1` and `bytearray == bytes`
+  conflations (§5.1). (4) The runner package is `warrant-corpus`, import
+  `coding_adventures_warrant_corpus`; the CLI is §6.2, including the portable
+  `sabotage` command and the `check` drift mode that ignores `toolchain.version`.
+  (5) The closed failure-id set of §6.2 extends §6.1. (6) `runner.src_sha256` and
+  `evidence_seed` are defined in §8. (7) Not done and still open: the
+  `warrant-corpus-conformance-v1` fixture of §9/§13 does not exist yet, so the
+  Python package's tests (falsification cases built from the real corpus) are the
+  template other lanes should port; the consumer row stays `planned` because
+  `ca-assurance-report`'s own tests pin the checked-in row to `planned`, and
+  flipping it belongs with WD-004b1's loader; the VER08b sandbox run (§12) is
+  not armed for Python (backlog CAP-RT-1xx).
