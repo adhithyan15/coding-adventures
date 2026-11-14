@@ -80,7 +80,12 @@ class AssertScript(unittest.TestCase):
             self.assertEqual(mod.main(["x"]), 2)
 
     def test_every_required_name_exists_in_the_go_tests(self) -> None:
-        source = (REPO / "code" / "programs" / "go" / "kiln" / "sandbox_linux_amd64_test.go").read_text(encoding="utf-8")
+        # The sandbox tests are spread over sandbox*_linux_amd64_test.go in the
+        # kiln package directory (the CI job runs them all with -run Sandbox).
+        kiln = REPO / "code" / "programs" / "go" / "kiln"
+        files = sorted(kiln.glob("sandbox*_linux_amd64_test.go"))
+        self.assertTrue(files)
+        source = "\n".join(f.read_text(encoding="utf-8") for f in files)
         declared = set(re.findall(r"^func (TestSandbox\w+)\(", source, re.M))
         self.assertEqual(declared, set(mod.REQUIRED))
 

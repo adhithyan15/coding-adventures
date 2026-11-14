@@ -1,5 +1,7 @@
 package trace
 
+import "sort"
+
 // The closed table of KILN04 §4.4.
 //
 // strace's `-e trace=` filter decides what is printed; this table decides what
@@ -200,6 +202,46 @@ func buildTable() map[string]entry {
 }
 
 func lookup(name string) entry { return table[name] }
+
+// SyscallClass names the class of a system call in the closed table: "handled",
+// "ignored" or "refused", or "" for a name the parser does not know (it would
+// report such a name as "unknown-syscall").  It lets the recorder's strace
+// argument list (package sandbox) be checked against this table.
+func SyscallClass(name string) string {
+	switch table[name].class {
+	case classHandled:
+		return "handled"
+	case classIgnored:
+		return "ignored"
+	case classRefused:
+		return "refused"
+	}
+	return ""
+}
+
+// HandledNames lists the handled class, sorted.
+func HandledNames() []string {
+	var out []string
+	for n, e := range table {
+		if e.class == classHandled {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
+// RefusedNames lists the refused class, sorted.
+func RefusedNames() []string {
+	var out []string
+	for n, e := range table {
+		if e.class == classRefused {
+			out = append(out, n)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
 
 // classifyName returns the error for an unknown or refused name.
 func classifyName(name string, line int) *Error {

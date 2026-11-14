@@ -73,6 +73,21 @@ func RunExec(args []string, stderr io.Writer) int {
 	if _, err := cfg.EnvFor(action); err != nil {
 		return fail(err)
 	}
+	// The step's output descriptors (S2), checked before anything is spawned.
+	// fstat and fcntl are descriptor calls, which the trace set does not print.
+	outFDs := [2]int{1, 2}
+	for i, o := range []struct {
+		flag string
+		fd   int
+	}{{"--stdout-fd", ea.StdoutFD}, {"--stderr-fd", ea.StderrFD}} {
+		if o.fd == NoFD {
+			continue
+		}
+		if err := inspectOutputFD(o.flag, o.fd); err != nil {
+			return fail(err)
+		}
+		outFDs[i] = o.fd
+	}
 	exe, err := os.Readlink("/proc/self/exe")
 	if err != nil {
 		return fail(err)
@@ -128,8 +143,12 @@ func RunExec(args []string, stderr io.Writer) int {
 	//     else before this point clones a process (the only other clones are
 	//     warmThreads' CLONE_THREAD threads).
 	pid, err := syscall.ForkExec("/proc/self/exe", initArgv, &syscall.ProcAttr{
-		Env:   []string{},
-		Files: []uintptr{uintptr(devnull), 1, 2, uintptr(alive[0])},
+		Env: []string{},
+		// The step's 1 and 2 are the root's own, or the descriptors named by
+		// --stdout-fd and --stderr-fd: the clone puts them where the init's
+		// (and then the step's) descriptors 1 and 2 are, so the init needs no
+		// dup2 and the root makes no extra traced call.
+		Files: []uintptr{uintptr(devnull), uintptr(outFDs[0]), uintptr(outFDs[1]), uintptr(alive[0])},
 		Sys: &syscall.SysProcAttr{
 			Cloneflags: syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWPID |
 				syscall.CLONE_NEWIPC | syscall.CLONE_NEWUTS | syscall.CLONE_NEWNET,
@@ -142,6 +161,14 @@ func RunExec(args []string, stderr io.Writer) int {
 	}
 	syscall.Close(devnull)
 	syscall.Close(alive[0])
+	// The root has no more use for the output descriptors; closing them here
+	// (once, if both name the same one) lets the reader see end of file when
+	// the step is done, not only when the root exits.
+	for i, fd := range outFDs {
+		if fd > 2 && (i == 0 || fd != outFDs[0]) {
+			syscall.Close(fd)
+		}
+	}
 	var ws syscall.WaitStatus
 	for {
 		_, err = syscall.Wait4(pid, &ws, 0, nil)
@@ -156,6 +183,25 @@ func RunExec(args []string, stderr io.Writer) int {
 		return 128 + int(ws.Signal())
 	}
 	return ws.ExitStatus()
+}
+
+// inspectOutputFD fstat()s and F_GETFL()s a descriptor the caller named for
+// the step's output and applies CheckOutputFD.  A descriptor that is not open
+// is its own error.
+func inspectOutputFD(flag string, fd int) error {
+	what := fmt.Sprintf("%s %d", flag, fd)
+	var st syscall.Stat_t
+	if err := syscall.Fstat(fd, &st); err != nil {
+		if err == syscall.EBADF {
+			return fmt.Errorf("sandbox-exec: %s is not an open descriptor", what)
+		}
+		return fmt.Errorf("sandbox-exec: %s: %v", what, err)
+	}
+	flags, _, e := syscall.RawSyscall(syscall.SYS_FCNTL, uintptr(fd), syscall.F_GETFL, 0)
+	if e != 0 {
+		return fmt.Errorf("sandbox-exec: %s: F_GETFL: %v", what, e)
+	}
+	return CheckOutputFD(what, st.Mode, int(flags))
 }
 
 // warmThreads starts the Go runtime's worker threads BEFORE the child is
@@ -333,13 +379,16 @@ func applyPlan(c *Config, plan []Mount) error {
 		case KindRootTmpfs:
 			err = syscall.Mount(m.FSType, m.Target, m.FSType, m.Flags, m.Data)
 		case KindRORoot:
-			err = applyRORoot(m.Source, at(m.Target))
+			_, beneathHome := HomeAnchor(c.Home, m.Target)
+			err = applyRORoot(m.Source, at(m.Target), beneathHome)
 		case KindTmpfs:
 			err = syscall.Mount(m.FSType, at(m.Target), m.FSType, m.Flags, m.Data)
 		case KindEnsureDir:
 			err = os.MkdirAll(at(m.Target), 0o755)
 		case KindBind:
 			err = syscall.Mount(m.Source, at(m.Target), "", m.Flags, "")
+		case KindSealDir:
+			err = setReadOnly(at(m.Target))
 		case KindMask:
 			err = applyMask(at(m.Target), m)
 		case KindDev:
@@ -386,7 +435,11 @@ func setReadOnly(target string) error {
 // (a bind that would carry a mount beneath it along, which the kernel refuses
 // when that mount is locked, is a failure rather than a surprise), then made
 // read-only.  The missing parents are made on the root tmpfs.
-func applyRORoot(src, dst string) error {
+//
+// A symlink beneath home (noSymlink) is refused here as well as by CheckHost:
+// it would be an ordinary inode of home's writable tmpfs, which the step could
+// remove and replace, not a mount point.
+func applyRORoot(src, dst string, noSymlink bool) error {
 	st, err := os.Lstat(src)
 	if err != nil {
 		return err
@@ -395,6 +448,9 @@ func applyRORoot(src, dst string) error {
 		return err
 	}
 	if st.Mode()&os.ModeSymlink != 0 {
+		if noSymlink {
+			return errors.New("a symlink beneath home is not a mount point and could be replaced by the step")
+		}
 		target, err := os.Readlink(src)
 		if err != nil {
 			return err

@@ -199,15 +199,28 @@ runner image and is pinned and probed like any tool. It is a CI tool like
 `git`, not a Go dependency. The command for one step:
 
 ```
-strace -f --quiet=attach -y -s 4096 -e signal=none \
+strace -f --quiet=attach -y -s 4096 --kill-on-exit --pidns-translation \
+       -e signal=none \
        -e trace=%file,%process,%network,getdents,getdents64,fchdir,\
 io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount,\
 fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace,\
 process_vm_readv,pidfd_getfd,inotify_add_watch,fanotify_mark,\
-fchmod,fchown,fsetxattr,fremovexattr \
-       --kill-on-exit --pidns-translation \
-       -o <trace-file> -- kiln sandbox-exec -- sh -c <line>
+fchmod,fchown,fsetxattr,fremovexattr,\
+name_to_handle_at,mount,umount2,pivot_root,chroot,clone3,\
+io_uring_enter,io_uring_register,process_vm_writev,userfaultfd,\
+kexec_load,kexec_file_load,perf_event_open,add_key,request_key,keyctl \
+       -o <trace-file> -- kiln sandbox-exec --config <cfg> \
+       --stdout-fd <N> --stderr-fd <N> -- sh -c <line>
 ```
+
+The authority for this argv is `sandbox.StraceArgs(traceFile)` (§4.7, "The
+strace argv"); the block above is its output with the file name left open. The
+last ten names of the `trace=` set are the calls the sandbox filter refuses
+beyond the first twenty of §4.4 (§4.7): they are named explicitly so that a
+step's attempt to make one shows up in the trace (and is refused by the
+parser) instead of depending on which class strace puts it in. The six before
+them are in the classes already; they are listed too so that the set names
+**every** refused call, which a test checks.
 
 - `--pidns-translation` (strace 5.9 or later) makes strace print the pid a
   tracee gets back from `fork`, `vfork`, `clone` and `clone3` **inside the
@@ -303,7 +316,9 @@ steps, then `execve`s the step:
      `CLONE_NEWIPC`;
 
    and `ENOSYS` for `clone3`, whose flags a filter cannot inspect, so
-   libc falls back to `clone`.
+   libc falls back to `clone`, and for every system call number above the
+   highest one the pinned strace knows (§4.7, "Calls newer than the pinned
+   strace").
 
    The filter's first instructions check two things: that
    `seccomp_data.arch` is `AUDIT_ARCH_X86_64`, and that the syscall number
@@ -314,7 +329,10 @@ steps, then `execve`s the step:
    `kiln:recorder`. Enforcement must not rest on refusing a
    trace after the fact: a `CLONE_UNTRACED` child is never attached by
    `strace -f`, so it would leave no lines at all.
-6. **No inherited descriptors.** It closes every file descriptor ≥ 3.
+6. **No inherited descriptors.** It closes every file descriptor ≥ 3. The
+   step's standard output and error are the two descriptors the recorder names
+   with `--stdout-fd` and `--stderr-fd` (§4.7), which arrive as descriptors 1
+   and 2 and are the only ones that cross.
 
 This filter is the sandbox's own; it is independent of strace's
 `--seccomp-bpf` option.
@@ -731,6 +749,22 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   `git fsck --connectivity-only` as a second line.
 - The caller keeps `Result.Commit` from the pre-build `VerifyTree` and passes
   it as `expectedCommit` to the post-build call and to the merge job's call.
+- **Sandbox follow-ups (S1 to S3) the recorder must honour** (§4.7):
+  - the recorder passes `--stdout-fd` and `--stderr-fd` **together**, both
+    pipes it reads, and checks that strace's own standard error is empty;
+  - exit status 125 is a failure of the action and is **never retried
+    unsandboxed**; the recorder tells "the sandbox refused" from "the step
+    exited 125" by whether the step's `execve` is in the trace;
+  - the anchor of a tool root beneath `home` is sealed read-only as a whole, so
+    PR 2b's configuration generation must declare as `state_roots` everything
+    the toolchain writes beneath the same first directory: `~/.cargo/registry`,
+    `~/.cargo/git` and whatever else cargo needs (`config.toml`, `env` and
+    `.package-cache` are otherwise absent or read-only), and it must not anchor
+    something broad such as `~/.local` (a tool root `~/.local/bin` would seal
+    all of `~/.local`);
+  - `home` must be outside `/tmp`, `/var/tmp`, `tmpdir`, the checkout and every
+    state root whenever any `ro_roots` entry lies beneath it, and a tool root
+    beneath `home` must be a real directory or file (not a symlink).
 
 **Pending for PR 2b** (the review of `writes_complete`, stage 4 PR 4):
 
@@ -774,7 +808,9 @@ authoritative: `plan.go` for the mount order, `bpf.go` for the filter,
 left open, and the places where Go's `os/exec` and the trace parser's helper
 model (§4.5) forced a different shape.
 
-**Interface.** `kiln sandbox-exec --config <abs path> -- <argv...>`. The build
+**Interface.** `kiln sandbox-exec --config <abs path> [--stdout-fd N]
+[--stderr-fd N] -- <argv...>` (the two optional flags are described under
+"Descriptors" below). The build
 tool's `-exec-wrapper` is `["/abs/kiln","sandbox-exec","--config","/abs/cfg.json","--"]`
 and sets `KILN_ACTION` (the package `rel_path`), `KILN_STEP` and
 `KILN_STEP_COUNT`. The helper reads only `KILN_ACTION`; the other two are for
@@ -796,12 +832,21 @@ non-UTF-8 byte. Further rules:
 - a state root overlaps neither the checkout nor `tmpdir` and does not cover
   `home`;
 - `ro_roots` is not empty, has no duplicates, and no entry overlaps (equals,
-  contains or lies inside) the checkout, `home`, `tmpdir` or a state root, or
-  lies inside **or contains** `/dev`, `/run`, `/var/run`, `/proc`, `/tmp` or
+  contains or lies inside) the checkout, `tmpdir` or a state root. An entry
+  may lie **strictly beneath `home`** (S1, below); none equals or contains
+  `home`. And no entry lies inside **or contains** `/dev`, `/run`, `/var/run`, `/proc`, `/tmp` or
   `/var/tmp`, which the sandbox builds itself. So `/var` is refused (it holds a
   real `/var/run` and `/var/tmp`), and so is `/var/lib` (service sockets): list
   specific subdirectories instead. No per-step walk for sockets is done; it
   would be too slow, and the CI test and the `kiln-record` probe cover it;
+- an entry beneath `home` is allowed only if `home` does not lie strictly inside
+  `/tmp`, `/var/tmp`, `tmpdir`, the checkout or a state root (its ancestors would
+  be renamable, see "The ancestors of `home`" below), and it must be a real
+  directory or file on the host, not a symlink;
+- for an entry beneath `home`, the **anchor** (the first directory of the entry
+  below `home`, which is the entry itself when it is a direct child) holds
+  neither the checkout nor `tmpdir`, and no other entry lies beneath an entry
+  of this kind (S1, below);
 - no configured path lies inside `/dev`, `/run`, `/var/run` or `/proc`;
 - **a mask is a direct child of `repo_root`**, and nothing else is a mask.
   A path outside the checkout is already absent unless it is under an allowed
@@ -872,10 +917,15 @@ under the new root.
    locked one is a failure), then `mount_setattr(.., MOUNT_ATTR_RDONLY)` on
    that one mount (a plain remount would have to repeat each inherited flag,
    which a user namespace locks).
+   An entry beneath `home` is **not** bound here: `home`'s tmpfs would hide it
+   (step 5b).
 5. Fresh tmpfs, each preceded by creating the mount point (and parents), the
    shallower first and no path twice: `home` (`0755`), `tmpdir` (`1777`),
    `/tmp` (`1777`), `/var/tmp` (`1777`) and `/run` (`0755`); all
    `MS_NOSUID|MS_NODEV`, owned by uid 1000.
+5b. Each `ro_roots` entry beneath `home` (S1, below): a direct child of `home`
+   is bound exactly as in step 4; a deeper one is bound inside a read-only
+   tmpfs **anchor** that is mounted first and sealed last.
 6. The minimal `/dev` (`MS_NOSUID|MS_NOEXEC`, `size=64k,nr_inodes=64`), with
    the six device nodes bound from the host's and the links, then remounted
    read-only.
@@ -896,6 +946,117 @@ live under `$HOME` (or `/tmp`), where a tmpfs would hide a bind made earlier;
 the checkout's missing parents are created in the tmpfs. A checkout under
 `$HOME` therefore persists, and so do the ancestor directories the plan
 creates.
+
+**S1: tool roots beneath `home`** (`Plan`, `Config.Validate`).
+`host-roots.json` declares tool roots under `$HOME` (`.cargo/bin`, `.rustup`,
+`.dotnet`, `.ghcup`), and the recorder's `home` is the runner's real `$HOME`;
+the sandbox mounts a fresh tmpfs over `home`, which hides anything bound there
+earlier. An `ro_roots` entry strictly beneath `home` is therefore bound **after**
+the scratch tmpfs (step 5b), at the same absolute path, non-recursively and
+read-only exactly like any other entry (`applyRORoot`: parents created, bind,
+`mount_setattr` read-only). `home` stays a writable tmpfs for the step. An
+entry beneath `home` must be a **real directory or file**: a symlink is refused
+(by `CheckHost` before anything is mounted, and again by `applyRORoot`),
+because a recreated symlink is an ordinary inode of `home`'s tmpfs, not a mount
+point, and the step could `rm` it and build a directory of its own there
+(an entry outside `home`, such as `/bin`, sits on the sealed root tmpfs and may
+still be a recreated symlink). The sockets-and-FIFOs rule is unchanged: the CI walk and
+the `kiln-record` probe cover every `ro_roots` entry, wherever it is mounted.
+
+*The mount point must not be swappable.* The parents of an entry under `home`
+are created in `home`'s tmpfs, which the step owns, and the Linux rule that
+protects a mount point is narrow: `rename`, `rmdir` and `unlink` of a directory
+that **is** a mount point fail with `EBUSY`, but a directory that merely
+**contains** a mount may be renamed. So for `~/.cargo/bin` the entry itself is
+safe (it is a mount point), while a step could `mv ~/.cargo ~/.old` and then
+build its own `~/.cargo/bin`, or move a prepared tree to `~/.cargo`, and a read
+of `~/.cargo/bin/cargo` would be attributed to the declared host root while
+reading the step's own file. Nothing can be mounted over or unmounted by the
+step (the seccomp filter and the dropped capabilities refuse it), but that does
+not stop a rename of an ancestor, so the plan removes the ability instead:
+
+- a **direct child** of `home` (`~/.rustup`) is itself the mount point, and its
+  parent is `home`, which the step may rewrite but whose entry for the mount
+  cannot be renamed, replaced or removed (`EBUSY`);
+- a **deeper** entry (`~/.cargo/bin`) has an **anchor**: the first directory
+  below `home` on its path (`~/.cargo`). The plan mounts a fresh tmpfs on the
+  anchor, creates the remaining parents and binds the entries inside it,
+  creates inside it the mount points of any state root that lies beneath the
+  anchor (`~/.cargo/registry` is bound writable later, in step 7, onto a
+  directory that already exists), and then makes **that one mount** read-only
+  with `mount_setattr` (a `KindSealDir` step). The anchor is now a mount point
+  (it cannot be renamed or removed) holding only directories nobody can create,
+  rename or remove an entry in, so every ancestor of every entry is fixed. A
+  writable state root beneath it is itself a mount point and keeps its mount
+  point;
+- the checkout and `tmpdir` may not lie beneath an anchor (the anchor tmpfs
+  would hide their mounts, which come earlier or later in the order), and no
+  entry lies beneath another entry of this kind, so no anchor is another
+  entry's mount point.
+
+*The ancestors of `home` must be unmovable too.* Everything above is about
+what lies below `home`; the directories above `home` matter as much. They are
+created (`MkdirAll`) on the new root's tmpfs, which is sealed read-only before
+the pivot, so a step cannot rename them, **unless** `home` lies inside a place
+the step can write: a scratch tmpfs (`/tmp`, `/var/tmp`), `tmpdir`, the checkout
+or a state root. With `home` at `/tmp/k/home` a step could `mv /tmp/k /tmp/.gone`
+and rebuild `$HOME/.cargo/bin` itself. `Validate` therefore refuses a root
+beneath `home` whenever `home` lies strictly inside any of those (and a root
+inside `/tmp` or `/var/tmp` stays refused as a scratch place; there is no
+exemption for roots beneath `home`). A configuration with no root beneath
+`home` may keep `home` anywhere the other rules allow. The integration fixture
+for S1 therefore builds its `home` under the runner's real home directory
+(`/home/runner/.kiln-s1-*`), whose ancestors are on the root tmpfs, and asserts
+that `mv "$(dirname "$HOME")"` fails.
+
+Only strictly-descending entries qualify; an entry equal to `home`, or one that
+contains it, is still refused, and so is one beneath `tmpdir`, the checkout or a
+state root. The kiln binary and the configuration file stay out of every
+writable root as before (`home` is not one of the roots `kiln_exe` is checked
+against, because it is a fresh tmpfs the host's copy never appears in).
+
+**Descriptors for the step's output (S2).** By default the step's descriptors 1
+and 2 are the root's own, inherited as they are. `--stdout-fd N` and
+`--stderr-fd M` make descriptors N and M of the root the step's 1 and 2 (the
+two flags are given **together or not at all**, stdout first: a recorder that
+names one has forgotten the other, and the remaining stream would be strace's
+own; anything else is exit 125): the
+root passes them to the init as its descriptors 1 and 2 (the one `clone` of the
+spawn maps them; there is no `dup2` in the init, and no traced call is added to
+the root), and the init's `close_range` of every descriptor from 3 up is
+unchanged, so exactly 0, 1 and 2 reach the step. The recorder uses this to keep
+strace's own standard error apart from the step's output, so that "strace wrote
+nothing" can be checked. Each given descriptor must be 3 or more (0 to 2 are
+the root's own streams, the default), open, **write-only, and a pipe**
+(`O_WRONLY`; a read-write descriptor, such as a FIFO opened `O_RDWR`, could read
+back what the recorder's other end holds and is refused). A terminal, a
+directory, a socket, a character device, a regular file, a read end and a
+read-write descriptor are refused with exit status 125 before anything is
+spawned. The pipe-only rule follows D15 (the step's 1 and 2 are pipes): a
+regular file would let a step seek and rewrite what it already wrote (and, in
+the checkout, would be a file the recorder then hashes), and a tty would give it
+a controlling terminal; a pipe is append-only and bounded by the reader. The
+same descriptor may be given for both. A diagnostic of the **init** (exit 125
+after the root started it) is written to the init's standard error, which is
+then the step's stderr pipe; the root's own diagnostics keep going to the root's
+standard error.
+
+**Exit 125 is a failure, never a retry.** `125` means the sandbox could not be
+built or refused its configuration or arguments; the recorder treats it as a
+failure of the action and **never** re-runs the step unsandboxed or with a
+weaker configuration. A step may also exit 125 by itself; the recorder tells
+the two apart by whether the step's own `execve` appears in the trace (a
+sandbox that refused has no step exec, which the parser refuses, §4.5), not by
+the status.
+
+**The strace argv (S3).** `sandbox.StraceArgs(traceFile)` returns the argv of
+§4.3 up to and including `-o <traceFile> --`, so a caller appends the command to
+run. `traceFile` must be an absolute, clean path (it is the only variable part).
+The trace set is the three classes plus an explicit list that names every call
+the filter refuses, the thirty of §4.4 and `clone3`; unit tests check that the
+explicit names are exactly the parser's table's refused class and the filter's
+refused list, and that every name the set spells out is known to the parser's
+table. `TestSandboxRealStrace` runs the real strace with this argv.
 
 **Privilege drop** (`PrivSteps`, then checked by reading the state back):
 1. `prctl(PR_SET_NO_NEW_PRIVS, 1)`;
@@ -920,12 +1081,32 @@ exec carries it. Its layout:
 | 1 | `jeq AUDIT_ARCH_X86_64` | else `RET KILL_PROCESS` |
 | 2 | `ld nr` | |
 | 3 | `jset __X32_SYSCALL_BIT` | then `RET KILL_PROCESS` |
-| 4.. | `jeq <nr>` for each refused call, in the order of `RefusedSyscalls` | then `RET ERRNO\|EPERM` |
+| 4 | `jgt MaxKnownSyscall` (461, unsigned) | then `RET ERRNO\|ENOSYS` |
+| 5.. | `jeq <nr>` for each refused call, in the order of `RefusedSyscalls` | then `RET ERRNO\|EPERM` |
 | | `jeq clone` (56) | then the clone check |
 | | `jeq clone3` (435) | then `RET ERRNO\|ENOSYS` |
 | | `RET ALLOW` | |
 | | clone check: `ld args[0]` (low 32 bits); `jset` any of `CLONE_UNTRACED`, `CLONE_NEWNS`, `CLONE_NEWCGROUP`, `CLONE_NEWUTS`, `CLONE_NEWIPC`, `CLONE_NEWUSER`, `CLONE_NEWPID`, `CLONE_NEWNET` | then `RET ERRNO\|EPERM`; else `RET ALLOW` |
 | | `RET ERRNO\|EPERM`, `RET ERRNO\|ENOSYS`, `RET KILL_PROCESS` | the targets above |
+
+**Calls newer than the pinned strace (L7).** A system call the pinned strace
+does not know can be neither printed by `-e trace=` nor refused by the parser,
+so a path-taking one would leave no line in the trace: `getxattrat`,
+`listxattrat`, `setxattrat`, `removexattrat` (Linux 6.13, numbers 463 to 466),
+`open_tree_attr` (6.15, 467), `file_getattr` and `file_setattr` (6.17, 468 and
+469). The filter therefore answers **`ENOSYS` for every number above
+`MaxKnownSyscall` = 461** (`lsm_list_modules`, the highest of Linux 6.8's x86-64
+table, which strace 6.8 on the Ubuntu 24.04 runner image knows), placed right
+after the x32 check so the ABI tests still come first. The threshold is 461
+because nothing the Go runtime, `sh`, coreutils or the toolchains use today is
+above it: glibc 2.39's newest calls are `fchmodat2` (452) and `clone3` (435, which
+the filter already answers with `ENOSYS`), and the next number, 462, is `mseal`,
+which none of them call. `ENOSYS` rather than `EPERM` also lets a libc that
+probes for a new call fall back to the older one. The seven names above are all
+beyond the threshold, so none needs an explicit rule (a unit test runs the
+program over each number). When the pinned strace is bumped, **raise the
+threshold** to the highest number its table knows, after adding the calls it
+newly knows to the parser's table (§14).
 
 The refused calls are the thirty §4.4 names, the first twenty being: `io_uring_setup`,
 `open_by_handle_at`, `name_to_handle_at`, `mount`, `umount2`, `fsopen`,
@@ -1048,9 +1229,12 @@ version of this section led to these. Each is a decision, not a sketch.
   which turns every skip into a failure. A script then asserts from the
   `go test -json` stream that every named test passed and none skipped. One of
   them runs the real `strace -f --quiet=attach -y -s 4096 --kill-on-exit`
-  around `kiln sandbox-exec` and parses the trace in helper mode, which pins
-  the single-spawn root, the init's tolerated setup and strace's `-y`
-  escaping.
+  around `kiln sandbox-exec` (with the argv `sandbox.StraceArgs` returns) and
+  parses the trace in helper mode, which pins the single-spawn root, the init's
+  tolerated setup and strace's `-y` escaping. `TestSandboxROBeneathHome` (S1:
+  reads, no writes, no renames of a root or its anchor, a writable state root
+  beneath the anchor) and `TestSandboxOutputDescriptors` (S2: output in the two
+  pipes, the root's own streams empty, refusals exit 125) are in the same set.
 
 **Exit status.** The root exits with the init's status (128 plus the signal if
 it was killed). A failure before the step runs exits 125, and a failed exec 127.
@@ -2463,6 +2647,14 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **The strace pin and the seccomp threshold move together.** The sandbox
+  filter answers `ENOSYS` for every system call number above
+  `MaxKnownSyscall` (§4.7), the highest the pinned strace's table knows, because
+  a call newer than the pin can be neither traced nor refused. Bumping the pinned
+  strace therefore means **raising `MaxKnownSyscall`** (after adding the calls
+  the new strace knows to the parser's table, §4.4) and bumping `kiln:recorder`.
+  Forgetting leaves the newer calls blocked, which fails closed, not open.
 
 - **Nondeterminism.** Time, randomness, thread scheduling, CPU count and
   model, hostname, uid, and the mtimes and inode numbers that `stat`

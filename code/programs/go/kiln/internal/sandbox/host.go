@@ -53,6 +53,11 @@ func (c *Config) CheckHost(action string, h HostFacts) error {
 		if err := checkRoRoot(r); err != nil {
 			return err
 		}
+		if _, beneath := HomeAnchor(c.Home, r); beneath {
+			if err := checkRoRootBeneathHome(r); err != nil {
+				return err
+			}
+		}
 	}
 	for _, s := range c.StateRoots {
 		if err := canonicalOrCreatable("state root", s); err != nil {
@@ -172,4 +177,21 @@ func checkRoRoot(p string) error {
 		return mustBeCanonical("ro root parent", filepath.Dir(p))
 	}
 	return mustBeCanonical("ro root", p)
+}
+
+// checkRoRootBeneathHome refuses a symlink root beneath home.  A recreated
+// symlink is an ordinary inode in home's step-writable tmpfs, not a mount
+// point, so the kernel would let the step `rm` it and build a directory of its
+// own at the same path (S1, KILN04 section 4.7); a bind of a real directory or
+// file is a mount point and cannot be removed or renamed (EBUSY).  Roots beneath
+// home must be real directories or files.
+func checkRoRootBeneathHome(p string) error {
+	st, err := os.Lstat(p)
+	if err != nil {
+		return fmt.Errorf("sandbox-exec: ro root %q: %v", clip(p), err)
+	}
+	if st.Mode()&os.ModeSymlink != 0 {
+		return fmt.Errorf("sandbox-exec: ro root %q beneath home is a symlink; a recreated symlink is not a mount point and the step could replace it (list its target directory instead)", clip(p))
+	}
+	return nil
 }

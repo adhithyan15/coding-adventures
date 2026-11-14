@@ -44,25 +44,126 @@ func init() {
 	}
 }
 
+// NoFD is the value of ExecArgs.StdoutFD / StderrFD when the flag is absent:
+// the step then inherits the root's own descriptor 1 or 2 as it is.
+const NoFD = -1
+
 // ExecArgs are the parsed arguments of `sandbox-exec`.
 type ExecArgs struct {
 	Config string
-	Argv   []string
+	// StdoutFD and StderrFD are the root's descriptors that become the step's
+	// 1 and 2 (S2, KILN04 section 4.7), or NoFD.
+	StdoutFD int
+	StderrFD int
+	Argv     []string
 }
 
-// ParseExecArgs parses `--config <abs path> -- <argv...>`.
+// maxOutputFD bounds a descriptor number: a plausible one, and small enough
+// that the parse cannot overflow.
+const maxOutputFD = 1 << 20
+
+// ParseExecArgs parses
+// `--config <abs path> [--stdout-fd N --stderr-fd N] -- <argv...>`.
+// The two flags come together, in that order, each once; a flag is never
+// taken from the step's argv, which starts only after the `--`.
 func ParseExecArgs(args []string) (*ExecArgs, error) {
-	if len(args) < 4 || args[0] != "--config" || args[2] != "--" {
-		return nil, errors.New("usage: kiln sandbox-exec --config <absolute path> -- <argv...>")
+	usage := errors.New("usage: kiln sandbox-exec --config <absolute path> [--stdout-fd N] [--stderr-fd N] -- <argv...>")
+	if len(args) < 4 || args[0] != "--config" {
+		return nil, usage
 	}
 	if err := checkPath("config path", args[1]); err != nil {
 		return nil, err
 	}
-	argv := args[3:]
-	if err := checkArgv(argv); err != nil {
+	ea := &ExecArgs{Config: args[1], StdoutFD: NoFD, StderrFD: NoFD}
+	rest := args[2:]
+	if len(rest) >= 2 && rest[0] == "--stdout-fd" {
+		n, err := parseOutputFD("--stdout-fd", rest[1])
+		if err != nil {
+			return nil, err
+		}
+		ea.StdoutFD, rest = n, rest[2:]
+	}
+	if len(rest) >= 2 && rest[0] == "--stderr-fd" {
+		n, err := parseOutputFD("--stderr-fd", rest[1])
+		if err != nil {
+			return nil, err
+		}
+		ea.StderrFD, rest = n, rest[2:]
+	}
+	if len(rest) < 2 || rest[0] != "--" {
+		return nil, usage
+	}
+	// Both or neither: a recorder that names only one has forgotten the
+	// other, and the step's remaining stream would be strace's own, which the
+	// recorder means to keep apart (L6).
+	if (ea.StdoutFD == NoFD) != (ea.StderrFD == NoFD) {
+		return nil, errors.New("sandbox-exec: --stdout-fd and --stderr-fd must be given together or not at all")
+	}
+	ea.Argv = rest[1:]
+	if err := checkArgv(ea.Argv); err != nil {
 		return nil, err
 	}
-	return &ExecArgs{Config: args[1], Argv: argv}, nil
+	return ea, nil
+}
+
+// parseOutputFD reads a descriptor number: decimal digits only (no sign, no
+// space, no "0x"), 3 or more.  0 to 2 are the root's own standard streams, which
+// are what the step gets by default, so naming one is a mistake, not a choice.
+func parseOutputFD(flag, s string) (int, error) {
+	if s == "" || len(s) > 7 {
+		return 0, fmt.Errorf("sandbox-exec: %s needs a descriptor number, got %q", flag, clip(s))
+	}
+	n := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '9' {
+			return 0, fmt.Errorf("sandbox-exec: %s needs a descriptor number, got %q", flag, clip(s))
+		}
+		n = n*10 + int(s[i]-'0')
+	}
+	if n < 3 || n > maxOutputFD {
+		return 0, fmt.Errorf("sandbox-exec: %s %d is out of range (3 to %d; 0, 1 and 2 are the root's own streams)", flag, n, maxOutputFD)
+	}
+	return n, nil
+}
+
+// File-type and access-mode bits of a descriptor, spelled out so the check is
+// pure and runs on every OS.  The values are Linux's.
+const (
+	sIFMT   = 0o170000
+	sIFIFO  = 0o010000
+	oAccmod = 0x3
+	oWronly = 0x1
+)
+
+// CheckOutputFD decides whether a descriptor may become the step's standard
+// output or error, from its file-type bits (st_mode) and its open flags
+// (F_GETFL).  It must be a PIPE, open WRITE-ONLY (S2, L4): a descriptor that
+// can also read would let the step read back what the recorder's other end
+// holds, or hold the read end of a pipe whose reader is the recorder.
+//
+// Pipes only, because D15 says the step's descriptors 1 and 2 are pipes, and
+// because of what the other kinds would give the step: a regular file lets it
+// seek back and rewrite what it wrote (and a file in the checkout is one the
+// recorder then hashes); a terminal gives it a controlling terminal and its
+// ioctls; a socket, a character device (even /dev/null) or a directory is no
+// output a reader can attribute.  A pipe is append-only and bounded by its
+// reader.  A read end would fail at the first write, and a read-write one
+// (a FIFO opened O_RDWR) is refused for the reason above.
+func CheckOutputFD(what string, mode uint32, flags int) error {
+	if mode&sIFMT != sIFIFO {
+		kind := map[uint32]string{
+			0o140000: "a socket", 0o120000: "a symbolic link", 0o100000: "a regular file",
+			0o060000: "a block device", 0o040000: "a directory", 0o020000: "a character device (a terminal, say)",
+		}[mode&sIFMT]
+		if kind == "" {
+			kind = "not a pipe"
+		}
+		return fmt.Errorf("sandbox-exec: %s is %s; the step's output must be a pipe", what, kind)
+	}
+	if flags&oAccmod != oWronly {
+		return fmt.Errorf("sandbox-exec: %s is not open write-only", what)
+	}
+	return nil
 }
 
 // InitArgs are the parsed arguments of `sandbox-init`.
