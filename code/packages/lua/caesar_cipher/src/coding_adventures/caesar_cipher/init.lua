@@ -205,8 +205,15 @@ end
 -- by 3 to encrypt, we shift left by 3 (i.e., right by 23) to decrypt.
 -- The encrypt function already handles negative shifts via modulo.
 
+--
+-- SEC-010: we must NOT negate the raw shift. Lua 5.3+ integers are 64-bit
+-- two's complement and wrap, so -math.mininteger == math.mininteger and the
+-- "undo" would shift the wrong way. Reduce to 0..25 first (Lua's % is a floored
+-- modulo, so the result is always non-negative); the residue is small, so
+-- negating it is always safe.
+
 function M.decrypt(text, shift)
-    return M.encrypt(text, -shift)
+    return M.encrypt(text, -(shift % 26))
 end
 
 -- ============================================================================

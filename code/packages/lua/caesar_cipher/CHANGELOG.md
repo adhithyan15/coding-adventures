@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- SEC-010: `decrypt` negated the raw shift. Lua 5.3+ integers wrap, so `-math.mininteger == math.mininteger` and the undo shifted the wrong way, returning wrong plaintext. `decrypt` now reduces `shift % 26` before negating. `encrypt` was already safe (it reduces first; Lua `%` is floored).
+
 ## [0.1.0] - 2026-03-29
 
 ### Added

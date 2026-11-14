@@ -200,7 +200,7 @@ runner image and is pinned and probed like any tool. It is a CI tool like
 
 ```
 strace -f --quiet=attach -y -s 4096 --kill-on-exit --pidns-translation \
-       -e signal=none \
+       -e signal=all \
        -e trace=%file,%process,%network,getdents,getdents64,fchdir,\
 io_uring_setup,open_by_handle_at,bpf,setns,unshare,fsopen,fsmount,\
 fsconfig,fspick,open_tree,move_mount,mount_setattr,ptrace,\
@@ -366,9 +366,29 @@ Two consequences:
   must be the one the executor names (§4.5). The stage 3 recipe comparison
   uses the step's exec event, not the first exec of the init child.
 - **Daemons.** The init child is PID 1 of the new PID namespace, so when
-  it exits the kernel kills every survivor. Any process whose exit line is
-  `killed by SIGKILL` after the **init child's** exit line gives
-  `daemon-left`. No timer is needed.
+  its thread group exits the kernel kills every survivor. A process that
+  is not proven to be outside the init child's tree (an exit is excluded only
+  when its parent chain provably ends at a parentless process without passing
+  the init child; a missing entry, a cycle or any depth is undecidable and
+  counts), is not provably in the init child's thread group, and has ANY
+  exit line (killed by any signal, or exited: a daemon may quit on EOF
+  before the namespace's SIGKILL arrives) **after the init child's
+  `exit_group` call line** gives `daemon-left` (D19). A child the step
+  waited for has its exit line printed when strace reaps it, before the
+  parent's `wait4` returns, so it precedes the marker. The boundary is the
+  call line, not the init child's `+++ exited +++` line: strace prints
+  `exit_group` when the group starts to die, and whether a survivor's line
+  falls before or after the init child's own exit line is **left open**
+  until a real-strace run settles it (the `daemon-left` subtest of
+  `TestSandboxStraceSignals` logs it). With no `exit_group` seen
+  (`InitExitLine == 0`: the init group made no exit call at all and died by a
+  signal, so the step is already `failed` and incomplete) every such
+  `SIGKILL` death counts, which fails closed (other exits cannot be placed
+  relative to a marker that is not there). A failed `exit_group` (a result
+  other than `?`, for instance EPERM from a seccomp filter the step installed)
+  does not set the marker. A child the step SIGKILLed and
+  did not wait for just before exiting may be flagged too; that race is
+  accepted. No timer is needed.
 
 **Integrity.**
 - **The claim.** The tracer runs outside the namespaces, unprivileged: no
@@ -586,8 +606,24 @@ first successful exec of a non-Kiln path is the step.**
 - **Flags.** `AT_EMPTY_PATH` is read from a numeric or hex flags value too
   (bit `0x1000`); a flags field that cannot be decoded is `flags`.
 - **Exit status and daemons.** The step's status is the init child's
-  (`Trace.StepExit`), and `Trace.InitPid` names it for the later
-  `daemon-left` rule, which the parser does not implement.
+  (`Trace.StepExit`), and `Trace.InitPid` names it for the `daemon-left`
+  rule. The parser also records `Trace.ExitLines` (the line of each exit,
+  parallel to `Trace.Exits`) and `Trace.InitExitLine` (the marker, after the
+  step's exec, over the init child and its `CLONE_THREAD` threads: the
+  earliest `exit_group` that did not return, one candidate per thread, a
+  failed call and a split call whose resumed half shows a result being
+  withdrawn; else the start line of the LAST `exit` that did not return
+  (a single-threaded init may end with a raw `exit`, and every pthread ends
+  with one, so only the last counts); else 0); `traced.DaemonLeft` applies the
+  rule (D19). `--- SIG ---` signal lines are skipped; `+++ killed by SIG
+  +++` is an exit. A `--- SIG ---` line on a thread with a `???(` entry
+  pending is still `interleaved` (a SIGKILL has no delivery stop, so a real
+  trace should not show one); a test pins it so a relaxation is deliberate.
+  **Known precision limit.** A harness that SIGKILLs a busy child (a test
+  timeout, say) can leave a handled call unresumed, which is an unknown write
+  set and a void run (`unresumed`). It cannot be relaxed safely: a call killed
+  at entry and a call killed while blocked print identically. It is strictly
+  better than before D19, when every kill was `missing-exit`.
 
 **Addresses.** `socket` needs a symbolic `AF_*` domain, and `connect` and
 `bind` need a `sockaddr`; otherwise `sockaddr`. Only `sendto` may have a
@@ -614,6 +650,25 @@ line, 64 MiB in total and 1,000,000 records, and every record counts
 (calls, start markers and exit lines). Argument counts are bounded while
 scanning: a handled call's arity, or 16 for any other name. Exceeding a cap
 is `size` or `arity`. A caller with a larger measured budget raises them.
+
+**D19: signals in the trace.** `print_signalled` in strace 6.8
+(`strace.c`) prints `+++ killed by %s %s+++` only when
+`is_number_in_set(WTERMSIG(status), signal_set)`. With `-e signal=none`, a
+process killed by ANY signal (SIGPIPE in `yes | head`, a test harness killing
+its child, Go's `CommandContext`) therefore has no exit line, the parser
+reports `missing-exit`, and the run is voided. So the recorder runs
+`-e signal=all`; the `--- SIG ---` delivery lines it adds are skipped by the
+parser, and `RecorderVersion` is 3. A missing exit line is still
+`missing-exit`, and `(core dumped)` is still incomplete.
+
+**Yield note (D19).** Two accepted patterns can be flagged `daemon-left`
+nondeterministically, depending on the order in which the kernel and strace
+report exits near the init child's own: an init that exits without waiting for
+a child that is exiting at the same moment (read the child's output to EOF,
+then exit without `wait`), and a helper that exits on its parent's EOF (Python
+multiprocessing's resource tracker). Since `daemon-left` is run-void under M-1,
+the first recording runs must COUNT it per action before anyone relies on the
+rule.
 
 ### 4.6 Wiring decisions (stage 3a)
 
@@ -864,7 +919,11 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   different disk.
 - **2b-2c.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
   child's) needs a real-`strace` fixture on Linux CI; the canned traces only
-  assume it.
+  assumed it. **Done for the rule and the argv (PR 1, D19):** the rule keys on
+  the init child's `exit_group` line, and `TestSandboxStraceSignals` runs the
+  signal shapes against real strace. Whether the survivor's exit line precedes
+  or follows the init child's own exit line is still to be read off the first
+  CI run's log.
 
 **Stage 4b-1: `kiln record prepare`.** Implemented by `internal/record`
 (`Prepare` and the files `place.go`, `scan.go`, `hostscan.go`, `sandboxcfg.go`,
@@ -2454,8 +2513,9 @@ other than `ECONNREFUSED` or `ENOENT` is judged like a success. The program in
 `network:<program>` is the process's last exec path, absolute and redacted.
 
 **Reasons from the step itself.** A step whose init child (or root) did not
-exit with 0 gives `failed`. After the init child's exit line, a process
-killed by `SIGKILL` gives `daemon-left`. `CheckRecipe` accepts an argv of
+exit with 0 gives `failed`. A descendant outside the init child's thread
+group with an exit line after the init child's `exit_group` line gives
+`daemon-left` (§4.3, D19). `CheckRecipe` accepts an argv of
 exactly `[<shell>, "-c", <line>]`; `argv[0]` is not compared.
 
 **Relaxations.** The strict rule of §5.1 refuses several very common

@@ -77,6 +77,20 @@ spec = do
                 `shouldBe` (4, englishFrequencies !! 4)
             minimumBy (comparing snd) (zip [0 :: Int ..] englishFrequencies)
                 `shouldBe` (25, englishFrequencies !! 25)
+    -- SEC-010: decrypt used to be `encrypt text (negate shift)`. GHC's Int is
+    -- fixed-width two's complement (64-bit on the platforms we test), so
+    -- `negate minBound == minBound`: the "undo" silently shifted the wrong way
+    -- and returned the wrong plaintext, with no error.
+    --
+    -- By hand: 2^63 mod 26 = 8, so minBound is congruent to -8, i.e. +18.
+    -- Undoing it shifts by -18 = +8, so "ABC" must decrypt to "IJK".
+    describe "integer extremes (SEC-010)" $ do
+        it "decrypts with minBound :: Int correctly" $ do
+            decrypt "ABC" (minBound :: Int) `shouldBe` "IJK"
+            decrypt "abc" (minBound :: Int) `shouldBe` "ijk"
+        it "round-trips at the extremes of Int" $
+            mapM_ (checkRoundTrip "Hello, World! xyz XYZ")
+                [minBound, minBound + 1, -1, 0, 25, 26, maxBound :: Int]
   where
     checkRoundTrip original shift =
         decrypt (encrypt original shift) shift `shouldBe` original

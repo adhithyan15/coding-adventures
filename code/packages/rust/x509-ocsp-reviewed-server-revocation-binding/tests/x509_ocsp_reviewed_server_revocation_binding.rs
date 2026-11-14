@@ -71,6 +71,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     X509OcspReviewedIntermediateRevocationBindingErrorKind,
     X509OcspReviewedResponderRevocationBindingErrorKind,
     X509OcspReviewedServerRevocationBindingErrorKind,
+    X509OcspReviewedServerRevocationTargetEvidence,
 };
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
 use x509_ocsp_rsa_algorithm_policy::{
@@ -1790,6 +1791,7 @@ fn binds_routed_issuer_revocation_to_the_complete_signed_strong_path_inner() {
         format!("{bound:?}"),
         "BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation"
     );
+    assert!(std::ptr::eq(bound.target_certificate(), &leaf));
     let _ = bound.authenticated_revocation();
     let _ = bound.target_validity_at_observation();
     let _ = bound.issuer_validity_at_observation();

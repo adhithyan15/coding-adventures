@@ -84,6 +84,16 @@ The earlier path-only entry point remains available and unchanged. Tests use
 the public Apple/DigiCert fixture to prove success and reject byte-equal
 independently decoded target and issuer objects.
 
+The fully routed strong binding also implements the sealed
+`X509OcspReviewedServerRevocationTargetEvidence` projection. Only the
+repository-owned binding can implement that interface, and it returns the
+exact decoded target already retained by the authenticated OCSP proof. The
+direct responder-no-check complete fixed-path wrapper carries that projection
+through its complete retained proof and exposes the same exact object without
+accepting a detached certificate, callback, path, status result, or trust
+assertion. This prepares a later destination-to-complete-revocation binding;
+it does not itself bind an HTTPS destination.
+
 This ordered signed-path bridge performs no new parsing or signature
 verification and no credential access or editing, signing, storage, clock
 acquisition, provider action, audit or trace emission, I/O, network access, or
@@ -92,6 +102,12 @@ authorize the delegated responder path, establish status for every non-root
 certificate, complete Name, path, or revocation validation, provide TLS or
 HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
 and live-provider readiness remain unavailable.
+
+The sealed target projection likewise performs no parsing, validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit or trace emission, I/O, network access, or
+other external effect. Other complete fixed-path revocation branches and the
+final HTTPS composition remain separate work.
 
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
@@ -646,11 +662,16 @@ reify the added proof's exact delegated responder-to-reviewed-root path;
 subsequent policies apply supported reviewed-root DNS constraints and either
 the no-check or separately authenticated revocation branch to that exact added
 responder.
+The direct no-check complete fixed-path result can project the exact server
+target only through its retained sealed repository-owned proof. It accepts no
+independent certificate, callback, path, status result, or trust assertion and
+does not bind an HTTPS destination.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
 intermediate constraints to the responder certificate, implement complete
-revocation policy, validate either additional revocation proof's own responder,
+revocation policy outside the explicitly completed fixed branches, validate
+either additional revocation proof's own responder,
 interpret unsupported OCSP extensions,
 acquire or cache OCSP data, read a clock, implement TLS or HTTP, authorize
 OAuth transport, open a network connection, or access a credential. The

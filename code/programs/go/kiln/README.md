@@ -428,6 +428,9 @@ when it exits (it is PID 1) the kernel kills everything left behind.
   only `null`, `zero`, `full`, `random`, `urandom` and `tty`, and it runs in a
   session of its own, so it cannot signal strace. The recorder runs strace with
   `--kill-on-exit` and must make the step's descriptors 1 and 2 pipes.
+  It also runs it with `-e signal=all`: strace prints `+++ killed by SIG +++`
+  only for signals in that set, so any narrower set would leave a process killed
+  by SIGPIPE (or anything else) with no exit line and void the run (KILN04 D19).
 - **Tool roots under `$HOME`.** An `ro_roots` entry may lie strictly beneath
   `home` (`~/.cargo/bin`, `~/.rustup`): it is bound after `home`'s tmpfs, at
   the same path. A deeper entry sits in a tmpfs anchor (`~/.cargo`) that is

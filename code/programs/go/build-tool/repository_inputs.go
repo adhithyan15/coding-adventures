@@ -150,6 +150,23 @@ var (
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
 		"code/specs/fixtures/ct-compare-warrant-v1/consumers.schema.json",
 	}
+	// warrantPythonLaneInputs are the files the Python Warrant lane reads
+	// from outside its own package: the spec the corpus was compiled from,
+	// the corpus itself and its consumer registry. The ct-compare package's
+	// BUILD re-runs the corpus and fails when its committed manifest drifted,
+	// and the runner package's own tests run the real corpus once.
+	warrantPythonLaneInputs = []string{
+		"code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json",
+	}
+	// warrantPythonRunnerPackage is the shared runner. ct-compare installs it
+	// editable from a sibling directory (a dev dependency, not a graph edge),
+	// so an edit to the runner must select the pilot lane explicitly.
+	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
+	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
+	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -405,6 +422,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantAssuranceInput,
 		paths:    warrantAssurancePaths,
 	},
+	{
+		name:     "python/warrant-corpus",
+		language: "python",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantPythonLaneCorpusInput,
+		paths:    warrantPythonLaneCorpusPaths,
+	},
+	{
+		name:     "python/ct-compare",
+		language: "python",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared Python runner",
+		matches:  isWarrantPythonLanePilotInput,
+		paths:    warrantPythonLanePilotPaths,
+	},
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -419,6 +450,28 @@ func isWarrantAssuranceInput(changed string) bool {
 		return true
 	}
 	return false
+}
+
+// isWarrantPythonLaneCorpusInput selects the Python runner package when the
+// spec, corpus or registry its tests run changes. Exact paths only: a lookalike
+// version of the fixture directory must not select it.
+func isWarrantPythonLaneCorpusInput(changed string) bool {
+	switch changed {
+	case "code/specs/ct-compare.warrant",
+		"code/specs/fixtures/ct-compare-warrant-v1/cases.tfv",
+		"code/specs/fixtures/ct-compare-warrant-v1/corpus.json",
+		"code/specs/fixtures/ct-compare-warrant-v1/consumers.json":
+		return true
+	}
+	return false
+}
+
+// isWarrantPythonLanePilotInput selects python/ct-compare for the same files
+// plus anything beneath the shared runner package, which the pilot installs
+// as a sibling editable dev dependency.
+func isWarrantPythonLanePilotInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/python/warrant-corpus/")
 }
 
 // Canonical inputs live outside the Rust artifact package. Exact file paths
