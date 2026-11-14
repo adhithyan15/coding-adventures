@@ -1,3 +1,4 @@
+use coding_adventures_oauth::{OAuthTraceId, ProviderId};
 use der_asn1::Asn1Limits;
 use http1_fixed_request_body::{
     bind_http1_fixed_request_content_length_field, validate_http1_fixed_request_body,
@@ -15,15 +16,19 @@ use http1_request_line::{
 use https_destination_name_binding::{
     bind_https_dns_destination, bind_https_fixed_request_body, bind_https_fixed_request_head,
     bind_https_host_header_field, bind_https_public_request_line, bind_https_request_header_fields,
-    encode_https_fixed_request_head, BoundHttpsPublicRequestLine, HttpsDestinationNameBindingError,
-    HttpsFixedRequestBodyBindingError, HttpsFixedRequestHeadError, HttpsFixedRequestHeadLimits,
-    HttpsHostHeaderBindingError, HttpsPublicRequestLineBindingError, HttpsPublicRequestLinePolicy,
-    HttpsRequestHeaderFieldsBindingError, HttpsRequestHeaderFieldsLimits,
-    MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES,
+    encode_https_audited_fixed_request_head, encode_https_fixed_request_head,
+    BoundHttpsFixedRequestBody, BoundHttpsPublicRequestLine, HttpsAuditedRequestHeadError,
+    HttpsAuditedRequestHeadPolicy, HttpsAuditedRequestHeadPolicyError,
+    HttpsDestinationNameBindingError, HttpsFixedRequestBodyBindingError,
+    HttpsFixedRequestHeadError, HttpsFixedRequestHeadLimits, HttpsHostHeaderBindingError,
+    HttpsPublicRequestLineBindingError, HttpsPublicRequestLinePolicy, HttpsRequestHeadAuditAction,
+    HttpsRequestHeadAuditError, HttpsRequestHeadAuditEvent, HttpsRequestHeadAuditFailure,
+    HttpsRequestHeadAuditOutcome, HttpsRequestHeadAuditSink, HttpsRequestHeaderFieldsBindingError,
+    HttpsRequestHeaderFieldsLimits, MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES,
 };
 use tls13_server_name::TlsServerName;
 use tls_server_identity::MatchKind;
-use x509_certificate::decode_x509_certificate;
+use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::X509CertificateServerIdentityErrorKind;
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
@@ -124,6 +129,137 @@ fn public_request_line<'input>(
         validate_http1_request_line(method, target, version, request_line_limits()).unwrap();
     let policy = HttpsPublicRequestLinePolicy::new(method, target).unwrap();
     bind_https_public_request_line(request_line, policy).unwrap()
+}
+
+fn fixed_request_body_with_fields<'certificate, 'encoded, 'fields, 'field, 'body>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    additional_fields: &'fields [http1_request_header_field::Http1RequestHeaderField<'field>],
+    body: &'body [u8],
+    content_length: &'static [u8],
+) -> BoundHttpsFixedRequestBody<
+    'certificate,
+    'encoded,
+    'static,
+    'static,
+    'static,
+    'fields,
+    'field,
+    'body,
+    'static,
+> {
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(additional_fields.len() + 2).unwrap(),
+    )
+    .unwrap();
+    let body_evidence = validate_http1_fixed_request_body(body, body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", content_length, header_limits())
+            .unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+    bind_https_fixed_request_body(header_fields, fixed_body).unwrap()
+}
+
+#[derive(Debug, Eq, PartialEq)]
+struct RecordedAudit {
+    provider: String,
+    trace: OAuthTraceId,
+    action: HttpsRequestHeadAuditAction,
+    outcome: HttpsRequestHeadAuditOutcome,
+}
+
+#[derive(Default)]
+struct AuditSink {
+    fail: bool,
+    events: Vec<RecordedAudit>,
+}
+
+impl HttpsRequestHeadAuditSink for AuditSink {
+    fn publish(
+        &mut self,
+        event: &HttpsRequestHeadAuditEvent<'_>,
+    ) -> Result<(), HttpsRequestHeadAuditError> {
+        if self.fail {
+            return Err(HttpsRequestHeadAuditError);
+        }
+        self.events.push(RecordedAudit {
+            provider: event.provider().as_str().to_owned(),
+            trace: event.trace(),
+            action: event.action(),
+            outcome: event.outcome(),
+        });
+        Ok(())
+    }
+}
+
+fn assert_audited_binding_failure(
+    policy_method: &'static [u8],
+    policy_target: &'static [u8],
+    policy_host: &'static [u8],
+    expected: HttpsAuditedRequestHeadError,
+) {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let additional_fields = [validate_http1_request_header_field(
+        b"Content-Type",
+        b"application/x-www-form-urlencoded",
+        header_limits(),
+    )
+    .unwrap()];
+    let fixed_request_body =
+        fixed_request_body_with_fields(&certificate, &additional_fields, b"secret", b"6");
+    let request_line = public_request_line(b"POST", b"/oauth/token", Http1RequestVersion::Http11);
+    let provider = ProviderId::new("provider-a").unwrap();
+    let policy_destination =
+        validate_http1_request_host_authority(policy_host, None, host_limits()).unwrap();
+    let policy = HttpsAuditedRequestHeadPolicy::new(
+        &provider,
+        policy_method,
+        policy_target,
+        policy_destination,
+        &additional_fields,
+    )
+    .unwrap();
+    let trace = OAuthTraceId::new([0x33; 16]);
+    let mut output = [0xa5; 256];
+    let before = output;
+    let mut audit = AuditSink::default();
+
+    let error = encode_https_audited_fixed_request_head(
+        policy,
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(256).unwrap(),
+        trace,
+        &mut audit,
+        &mut output,
+    )
+    .unwrap_err();
+
+    assert_eq!(error, expected);
+    assert_eq!(output, before);
+    assert_eq!(
+        audit.events,
+        [RecordedAudit {
+            provider: "provider-a".to_owned(),
+            trace,
+            action: HttpsRequestHeadAuditAction::AdditionalFieldsRelease,
+            outcome: HttpsRequestHeadAuditOutcome::Failed(
+                HttpsRequestHeadAuditFailure::PolicyMismatch
+            ),
+        }]
+    );
+    assert!(!error.to_string().contains("secret-token"));
 }
 
 #[test]
@@ -971,4 +1107,366 @@ fn public_request_line_policy_is_query_free_exact_and_redacted() {
     assert!(!debug.contains("POST"));
     assert!(!debug.contains("oauth"));
     assert_eq!(debug.matches("[REDACTED]").count(), 2);
+}
+
+#[test]
+fn audited_policy_rejects_empty_credential_custom_duplicate_or_excess_fields() {
+    let provider = ProviderId::new("provider-a").unwrap();
+    let destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    assert_eq!(
+        HttpsAuditedRequestHeadPolicy::new(&provider, b"POST", b"/oauth/token", destination, &[],)
+            .unwrap_err(),
+        HttpsAuditedRequestHeadPolicyError::NoAdditionalFields
+    );
+
+    for unsupported in [
+        b"host".as_slice(),
+        b"CONTENT-LENGTH".as_slice(),
+        b"Transfer-Encoding".as_slice(),
+        b"Authorization".as_slice(),
+        b"Proxy-Authorization".as_slice(),
+        b"Cookie".as_slice(),
+        b"X-Api-Key".as_slice(),
+    ] {
+        let field =
+            [
+                validate_http1_request_header_field(unsupported, b"not-released", header_limits())
+                    .unwrap(),
+            ];
+        let destination =
+            validate_http1_request_host_authority(b"api.example.test", None, host_limits())
+                .unwrap();
+        assert_eq!(
+            HttpsAuditedRequestHeadPolicy::new(
+                &provider,
+                b"POST",
+                b"/oauth/token",
+                destination,
+                &field,
+            )
+            .unwrap_err(),
+            HttpsAuditedRequestHeadPolicyError::UnsupportedPublicField
+        );
+    }
+
+    let duplicate_fields = [
+        validate_http1_request_header_field(b"Content-Type", b"text/plain", header_limits())
+            .unwrap(),
+        validate_http1_request_header_field(b"content-type", b"text/html", header_limits())
+            .unwrap(),
+    ];
+    let destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    assert_eq!(
+        HttpsAuditedRequestHeadPolicy::new(
+            &provider,
+            b"POST",
+            b"/oauth/token",
+            destination,
+            &duplicate_fields,
+        )
+        .unwrap_err(),
+        HttpsAuditedRequestHeadPolicyError::DuplicateFieldName
+    );
+    let public_field = [validate_http1_request_header_field(
+        b"Content-Type",
+        b"application/x-www-form-urlencoded",
+        header_limits(),
+    )
+    .unwrap()];
+    let destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    assert_eq!(
+        HttpsAuditedRequestHeadPolicy::new(
+            &provider,
+            b"POST",
+            b"/oauth/token?secret=value",
+            destination,
+            &public_field,
+        )
+        .unwrap_err(),
+        HttpsAuditedRequestHeadPolicyError::InvalidRequestLine
+    );
+    let too_many: Vec<_> = (0..63)
+        .map(|_| {
+            validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+                .unwrap()
+        })
+        .collect();
+    let destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    assert_eq!(
+        HttpsAuditedRequestHeadPolicy::new(
+            &provider,
+            b"POST",
+            b"/oauth/token",
+            destination,
+            &too_many,
+        )
+        .unwrap_err(),
+        HttpsAuditedRequestHeadPolicyError::TooManyFields
+    );
+}
+
+#[test]
+fn audits_then_encodes_exact_additional_fields_without_writing_the_body() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let additional_fields = [
+        validate_http1_request_header_field(
+            b"Content-Type",
+            b"application/x-www-form-urlencoded",
+            header_limits(),
+        )
+        .unwrap(),
+        validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+            .unwrap(),
+    ];
+    let fixed_request_body = fixed_request_body_with_fields(
+        &certificate,
+        &additional_fields,
+        b"refresh_token=secret",
+        b"20",
+    );
+    let request_line = public_request_line(b"POST", b"/oauth/token", Http1RequestVersion::Http11);
+    let provider = ProviderId::new("provider-a").unwrap();
+    let policy_destination =
+        validate_http1_request_host_authority(b"API.EXAMPLE.TEST", None, host_limits()).unwrap();
+    let policy_fields = [
+        validate_http1_request_header_field(
+            b"content-type",
+            b"application/x-www-form-urlencoded",
+            header_limits(),
+        )
+        .unwrap(),
+        validate_http1_request_header_field(b"ACCEPT", b"application/json", header_limits())
+            .unwrap(),
+    ];
+    let policy = HttpsAuditedRequestHeadPolicy::new(
+        &provider,
+        b"POST",
+        b"/oauth/token",
+        policy_destination,
+        &policy_fields,
+    )
+    .unwrap();
+    let trace = OAuthTraceId::new([0x42; 16]);
+    let expected = b"POST /oauth/token HTTP/1.1\r\nHost: api.example.test\r\nContent-Length: 20\r\nContent-Type: application/x-www-form-urlencoded\r\nAccept: application/json\r\n\r\n";
+    let mut output = vec![0xa5; expected.len() + 24];
+    let mut audit = AuditSink::default();
+
+    let debug = {
+        let released = encode_https_audited_fixed_request_head(
+            policy,
+            request_line,
+            fixed_request_body,
+            HttpsFixedRequestHeadLimits::new(expected.len()).unwrap(),
+            trace,
+            &mut audit,
+            &mut output,
+        )
+        .unwrap();
+        assert_eq!(released.provider().as_str(), "provider-a");
+        assert_eq!(released.trace(), trace);
+        assert_eq!(released.as_bytes(), expected);
+        format!("{released:?}")
+    };
+    assert!(!debug.contains("Content-Type"));
+    assert!(!debug.contains("application/json"));
+    assert!(debug.contains("[REDACTED]"));
+    assert_eq!(&output[expected.len()..], &[0xa5; 24]);
+    assert_eq!(
+        audit.events,
+        [RecordedAudit {
+            provider: "provider-a".to_owned(),
+            trace,
+            action: HttpsRequestHeadAuditAction::AdditionalFieldsRelease,
+            outcome: HttpsRequestHeadAuditOutcome::Succeeded,
+        }]
+    );
+    assert!(!expected
+        .windows(b"refresh_token=secret".len())
+        .any(|window| window == b"refresh_token=secret"));
+}
+
+#[test]
+fn audit_failure_prevents_every_output_byte_release() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let additional_fields = [validate_http1_request_header_field(
+        b"Content-Type",
+        b"application/x-www-form-urlencoded",
+        header_limits(),
+    )
+    .unwrap()];
+    let fixed_request_body =
+        fixed_request_body_with_fields(&certificate, &additional_fields, b"secret", b"6");
+    let request_line = public_request_line(b"POST", b"/oauth/token", Http1RequestVersion::Http11);
+    let provider = ProviderId::new("provider-a").unwrap();
+    let policy_destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let policy = HttpsAuditedRequestHeadPolicy::new(
+        &provider,
+        b"POST",
+        b"/oauth/token",
+        policy_destination,
+        &additional_fields,
+    )
+    .unwrap();
+    let mut output = [0xa5; 256];
+    let before = output;
+    let mut audit = AuditSink {
+        fail: true,
+        events: Vec::new(),
+    };
+
+    let error = encode_https_audited_fixed_request_head(
+        policy,
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(256).unwrap(),
+        OAuthTraceId::new([7; 16]),
+        &mut audit,
+        &mut output,
+    )
+    .unwrap_err();
+
+    assert_eq!(error, HttpsAuditedRequestHeadError::Audit);
+    assert_eq!(output, before);
+    assert!(audit.events.is_empty());
+    assert!(!error
+        .to_string()
+        .contains("application/x-www-form-urlencoded"));
+}
+
+#[test]
+fn policy_mismatch_is_audited_and_fails_before_output_mutation() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let additional_fields = [
+        validate_http1_request_header_field(b"Content-Type", b"application/json", header_limits())
+            .unwrap(),
+        validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+            .unwrap(),
+    ];
+    let fixed_request_body =
+        fixed_request_body_with_fields(&certificate, &additional_fields, b"secret", b"6");
+    let request_line = public_request_line(b"POST", b"/oauth/token", Http1RequestVersion::Http11);
+    let provider = ProviderId::new("provider-a").unwrap();
+    let policy_destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let policy_fields = [
+        validate_http1_request_header_field(b"Content-Type", b"text/plain", header_limits())
+            .unwrap(),
+        validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+            .unwrap(),
+    ];
+    let policy = HttpsAuditedRequestHeadPolicy::new(
+        &provider,
+        b"POST",
+        b"/oauth/token",
+        policy_destination,
+        &policy_fields,
+    )
+    .unwrap();
+    let trace = OAuthTraceId::new([9; 16]);
+    let mut output = [0xa5; 256];
+    let before = output;
+    let mut audit = AuditSink::default();
+
+    let error = encode_https_audited_fixed_request_head(
+        policy,
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(256).unwrap(),
+        trace,
+        &mut audit,
+        &mut output,
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error,
+        HttpsAuditedRequestHeadError::AdditionalFieldsPolicyMismatch
+    );
+    assert_eq!(output, before);
+    assert_eq!(
+        audit.events,
+        [RecordedAudit {
+            provider: "provider-a".to_owned(),
+            trace,
+            action: HttpsRequestHeadAuditAction::AdditionalFieldsRelease,
+            outcome: HttpsRequestHeadAuditOutcome::Failed(
+                HttpsRequestHeadAuditFailure::PolicyMismatch
+            ),
+        }]
+    );
+    assert!(!error.to_string().contains("application/json"));
+    assert!(!format!("{error:?}").contains("text/plain"));
+}
+
+#[test]
+fn request_line_and_destination_mismatches_are_separately_audited() {
+    assert_audited_binding_failure(
+        b"GET",
+        b"/oauth/token",
+        b"api.example.test",
+        HttpsAuditedRequestHeadError::RequestLinePolicyMismatch,
+    );
+    assert_audited_binding_failure(
+        b"POST",
+        b"/oauth/token",
+        b"other.example.test",
+        HttpsAuditedRequestHeadError::DestinationPolicyMismatch,
+    );
+}
+
+#[test]
+fn capacity_failure_is_audited_and_atomic() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let additional_fields = [validate_http1_request_header_field(
+        b"Content-Type",
+        b"application/x-www-form-urlencoded",
+        header_limits(),
+    )
+    .unwrap()];
+    let fixed_request_body =
+        fixed_request_body_with_fields(&certificate, &additional_fields, b"secret", b"6");
+    let request_line = public_request_line(b"POST", b"/oauth/token", Http1RequestVersion::Http11);
+    let provider = ProviderId::new("provider-a").unwrap();
+    let policy_destination =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let policy = HttpsAuditedRequestHeadPolicy::new(
+        &provider,
+        b"POST",
+        b"/oauth/token",
+        policy_destination,
+        &additional_fields,
+    )
+    .unwrap();
+    let trace = OAuthTraceId::new([0x11; 16]);
+    let mut output = [0xa5; 8];
+    let before = output;
+    let mut audit = AuditSink::default();
+
+    let error = encode_https_audited_fixed_request_head(
+        policy,
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(256).unwrap(),
+        trace,
+        &mut audit,
+        &mut output,
+    )
+    .unwrap_err();
+
+    assert_eq!(error, HttpsAuditedRequestHeadError::OutputTooSmall);
+    assert_eq!(output, before);
+    assert_eq!(
+        audit.events[0].outcome,
+        HttpsRequestHeadAuditOutcome::Failed(HttpsRequestHeadAuditFailure::ResourceLimit)
+    );
+    assert!(!format!("{:?}", audit.events).contains("application/x-www-form-urlencoded"));
 }

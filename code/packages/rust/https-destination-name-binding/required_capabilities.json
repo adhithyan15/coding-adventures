@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/https-destination-name-binding",
   "capabilities": [],
-  "justification": "Pure bounded comparison, certificate identity policy, public provider request-line policy, and allocation-free caller-owned request-head encoding over caller-owned decoded certificate data and already validated caller-borrowed TLS SNI, HTTP Host authority, query-free request line, strict Host and Content-Length fields, an exact fixed request body, and an empty additional request-field slice under hard-capped caller limits. Potentially credential-bearing targets and additional fields are rejected. It performs no filesystem, network, process, environment, clock, FFI, credential access or release, audit, trace, or external effect."
+  "justification": "Pure bounded comparison, certificate identity policy, data-driven provider request policy, and allocation-free caller-owned request-head encoding over already validated caller-borrowed inputs. The additional-field path invokes only a caller-injected provider/trace audit sink before copying exact provider-policy-bound public Accept or Content-Type metadata; credential-bearing and custom fields fail closed. It directly performs no filesystem, network, process, environment, clock, FFI, credential access or edit, signing, TLS, HTTP I/O, or transport effect."
 }

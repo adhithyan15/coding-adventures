@@ -53,17 +53,37 @@ line and field encoders, writing only the public request line, Host, Content-
 Length, and terminating CRLF into caller-owned storage after a complete
 capacity preflight. The exact body remains retained but is not written.
 
-This does not authorize transport, release an additional field, write the body,
-or preserve the destination through audited transport. Secret-bearing targets
-and fields require separate provider/trace-audited proofs. Those later policies
-and effects must consume this exact proof.
+`encode_https_audited_fixed_request_head` is the additive release boundary for
+a non-empty ordered public additional-field slice. Its data-driven policy
+retains the validated OAuth provider, exact public method and query-free path,
+validated DNS Host authority, and duplicate-free ordered exact field names and
+values. Only the closed non-credential metadata names `Accept` and `Content-
+Type` are admitted. Credential-bearing, custom, Host, Content-Length, and
+Transfer-Encoding fields remain unavailable. The exact retained request,
+destination, field count, order, case-insensitive names, and values must match
+before the complete head and output capacity are preflighted. A privacy-safe
+provider/trace event then publishes durably before the repository-owned
+encoders copy any bytes. Audit or policy failure leaves caller output unchanged.
+Success returns one non-copyable wrapper retaining the exact audited provider,
+trace, and emitted head; Debug redacts the bytes. Each new output release
+requires a fresh audited call and cannot be relabelled under another provider
+or trace.
+
+This copies only exact public metadata classified by provider policy. It does
+not admit or access credential-bearing fields, obtain credentials from storage,
+edit credentials, sign, write or wipe the body, authorize transport, or
+preserve the destination through later TLS/HTTP I/O. Credential-field and body
+release and every further external effect require a custody-bound provider/
+trace-audited composition consuming the same exact request and destination
+evidence.
 
 This package does not parse URLs or provider documents, choose ports, validate
 critical extensions, certificate role, purpose, algorithms, validity,
 signatures, paths, roots, constraints, or revocation, compose a complete HTTP
-request including its body, perform TLS or I/O, access or release credentials,
-emit audits or traces, authorize effects, or grant HTTPS, OAuth, or live-
-provider readiness.
+request including its body, perform TLS or I/O, obtain credentials from storage,
+edit credentials, sign, authorize transport effects, or grant HTTPS, OAuth, or
+live-provider readiness. Its only effect boundary is the injected durable
+provider/trace audit required before exact public additional-field output.
 
 ## Validation
 

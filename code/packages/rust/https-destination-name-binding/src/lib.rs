@@ -11,10 +11,13 @@
 //! and its canonical Content-Length field while rejecting framing ambiguity.
 //! Finally, one exact validated request line classified as public by data-
 //! driven provider policy can be retained with that complete proof and encoded
-//! as one bounded request head in caller-owned storage.
+//! as one bounded request head in caller-owned storage. An additive audited
+//! path admits exact provider-policy-bound additional fields only after a
+//! provider/trace event publishes durably and before any output mutation.
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_oauth::{OAuthTraceId, ProviderId};
 use core::fmt;
 use der_asn1::Asn1Limits;
 use http1_fixed_request_body::Http1FixedRequestContentLengthField;
@@ -172,10 +175,11 @@ impl std::error::Error for HttpsFixedRequestBodyBindingError {}
 
 /// Largest complete request head admitted by this deliberately narrow boundary.
 ///
-/// The ceiling accounts for one maximum request line, the exact Host and
-/// Content-Length field lines, and the final CRLF that terminates the section.
-pub const MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES: usize =
-    MAX_HTTP1_REQUEST_LINE_BYTES + (2 * MAX_HTTP1_REQUEST_HEADER_LINE_BYTES) + 2;
+/// The ceiling accounts for one maximum request line, the maximum complete
+/// field set, and the final CRLF that terminates the section.
+pub const MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES: usize = MAX_HTTP1_REQUEST_LINE_BYTES
+    + (MAX_HTTPS_REQUEST_HEADER_FIELDS * MAX_HTTP1_REQUEST_HEADER_LINE_BYTES)
+    + 2;
 
 /// Data-driven provider policy for one public, query-free request line.
 ///
@@ -283,6 +287,297 @@ impl fmt::Display for HttpsFixedRequestHeadError {
 }
 
 impl std::error::Error for HttpsFixedRequestHeadError {}
+
+/// Exact provider policy for releasing one request head with public fields.
+///
+/// The provider, request line, destination, and ordered exact field allowlist
+/// are configuration data. Only closed, non-credential HTTP metadata names are
+/// admitted. Credential-bearing fields require a higher-level custody-bound
+/// provider/trace proof and cannot pass through this low-level release.
+pub struct HttpsAuditedRequestHeadPolicy<'policy> {
+    provider: &'policy ProviderId,
+    request_line: HttpsPublicRequestLinePolicy<'policy>,
+    destination: Http1RequestHostAuthority<'policy>,
+    additional_fields: &'policy [Http1RequestHeaderField<'policy>],
+}
+
+impl<'policy> HttpsAuditedRequestHeadPolicy<'policy> {
+    /// Validate one exact provider request-head release policy.
+    ///
+    /// At least one additional field is required because the unaudited public
+    /// request-head boundary already covers the empty-field case. Every exact
+    /// field name and value is retained as public provider policy. Only `Accept`
+    /// and `Content-Type` are admitted; credential-bearing and custom fields
+    /// require a separate provenance-bound composition.
+    pub fn new(
+        provider: &'policy ProviderId,
+        method: &'policy [u8],
+        target: &'policy [u8],
+        destination: Http1RequestHostAuthority<'policy>,
+        additional_fields: &'policy [Http1RequestHeaderField<'policy>],
+    ) -> Result<Self, HttpsAuditedRequestHeadPolicyError> {
+        let request_line = HttpsPublicRequestLinePolicy::new(method, target)
+            .map_err(|_| HttpsAuditedRequestHeadPolicyError::InvalidRequestLine)?;
+        if additional_fields.is_empty() {
+            return Err(HttpsAuditedRequestHeadPolicyError::NoAdditionalFields);
+        }
+        if additional_fields.len() > MAX_HTTPS_REQUEST_HEADER_FIELDS - 2 {
+            return Err(HttpsAuditedRequestHeadPolicyError::TooManyFields);
+        }
+
+        for (index, field) in additional_fields.iter().enumerate() {
+            if !is_public_additional_field_name(field.name()) {
+                return Err(HttpsAuditedRequestHeadPolicyError::UnsupportedPublicField);
+            }
+            if additional_fields[..index]
+                .iter()
+                .any(|previous| previous.name().eq_ignore_ascii_case(field.name()))
+            {
+                return Err(HttpsAuditedRequestHeadPolicyError::DuplicateFieldName);
+            }
+        }
+
+        Ok(Self {
+            provider,
+            request_line,
+            destination,
+            additional_fields,
+        })
+    }
+
+    /// Return the exact validated provider represented by this policy.
+    #[must_use]
+    pub const fn provider(&self) -> &ProviderId {
+        self.provider
+    }
+}
+
+impl fmt::Debug for HttpsAuditedRequestHeadPolicy<'_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("HttpsAuditedRequestHeadPolicy")
+            .field("provider", self.provider)
+            .field("request_line", &"[REDACTED]")
+            .field("destination", &"[REDACTED]")
+            .field("additional_fields", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
+}
+
+/// Stable provider-policy failures without request, destination, or field data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsAuditedRequestHeadPolicyError {
+    /// Method or target is not valid public query-free provider policy.
+    InvalidRequestLine,
+    /// The audited path would be redundant with the empty-field public path.
+    NoAdditionalFields,
+    /// Host and Content-Length leave no room for the configured field count.
+    TooManyFields,
+    /// A field is not closed public request metadata admitted by this boundary.
+    UnsupportedPublicField,
+    /// Two configured names are equal under HTTP field-name semantics.
+    DuplicateFieldName,
+}
+
+impl fmt::Display for HttpsAuditedRequestHeadPolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::InvalidRequestLine => "invalid audited HTTPS request-line policy",
+            Self::NoAdditionalFields => {
+                "audited HTTPS request-head policy has no additional fields"
+            }
+            Self::TooManyFields => "audited HTTPS request-head policy has too many fields",
+            Self::UnsupportedPublicField => {
+                "audited HTTPS request-head policy contains a non-public field"
+            }
+            Self::DuplicateFieldName => "audited HTTPS request-head policy has a duplicate field",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for HttpsAuditedRequestHeadPolicyError {}
+
+/// Stable privacy-safe action written before one request-head byte release.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsRequestHeadAuditAction {
+    /// Release one provider-policy-bound fixed request head with extra fields.
+    AdditionalFieldsRelease,
+}
+
+/// Closed failure class retained by a privacy-safe request-head audit event.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsRequestHeadAuditFailure {
+    /// Request, destination, or field names did not match provider policy.
+    PolicyMismatch,
+    /// A caller-owned length or output limit rejected the request.
+    ResourceLimit,
+}
+
+/// Privacy-safe outcome written before any request-head output is mutated.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsRequestHeadAuditOutcome {
+    /// Exact policy binding and every complete-output preflight succeeded.
+    Succeeded,
+    /// The release failed closed before any output mutation.
+    Failed(HttpsRequestHeadAuditFailure),
+}
+
+/// Provider- and trace-bound event containing no request or credential bytes.
+pub struct HttpsRequestHeadAuditEvent<'provider> {
+    provider: &'provider ProviderId,
+    trace: OAuthTraceId,
+    action: HttpsRequestHeadAuditAction,
+    outcome: HttpsRequestHeadAuditOutcome,
+}
+
+impl HttpsRequestHeadAuditEvent<'_> {
+    /// Return the exact provider policy whose request release was attempted.
+    #[must_use]
+    pub const fn provider(&self) -> &ProviderId {
+        self.provider
+    }
+
+    /// Return the caller-owned trace correlating this exact release attempt.
+    #[must_use]
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Return the stable request-head release action.
+    #[must_use]
+    pub const fn action(&self) -> HttpsRequestHeadAuditAction {
+        self.action
+    }
+
+    /// Return the closed outcome without request, field, or credential data.
+    #[must_use]
+    pub const fn outcome(&self) -> HttpsRequestHeadAuditOutcome {
+        self.outcome
+    }
+}
+
+impl fmt::Debug for HttpsRequestHeadAuditEvent<'_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("HttpsRequestHeadAuditEvent")
+            .field("provider", self.provider)
+            .field("trace", &self.trace)
+            .field("action", &self.action)
+            .field("outcome", &self.outcome)
+            .finish()
+    }
+}
+
+/// Durable publication required before one additional-field head is released.
+pub trait HttpsRequestHeadAuditSink {
+    /// Persist the complete privacy-safe event durably or fail closed.
+    fn publish(
+        &mut self,
+        event: &HttpsRequestHeadAuditEvent<'_>,
+    ) -> Result<(), HttpsRequestHeadAuditError>;
+}
+
+/// Closed audit-publication failure without sink diagnostics or request data.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct HttpsRequestHeadAuditError;
+
+/// Stable audited request-head failures without request or credential payloads.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsAuditedRequestHeadError {
+    /// The retained request line differs from exact provider policy.
+    RequestLinePolicyMismatch,
+    /// The retained Host authority differs from exact provider policy.
+    DestinationPolicyMismatch,
+    /// Additional field count, order, or names differ from provider policy.
+    AdditionalFieldsPolicyMismatch,
+    /// The exact encoded head exceeds the retained complete-head ceiling.
+    HeadTooLong,
+    /// Caller-owned output cannot hold the complete exact request head.
+    OutputTooSmall,
+    /// Durable provider/trace audit publication failed before output mutation.
+    Audit,
+}
+
+impl HttpsAuditedRequestHeadError {
+    const fn failure_class(self) -> Option<HttpsRequestHeadAuditFailure> {
+        match self {
+            Self::RequestLinePolicyMismatch
+            | Self::DestinationPolicyMismatch
+            | Self::AdditionalFieldsPolicyMismatch => {
+                Some(HttpsRequestHeadAuditFailure::PolicyMismatch)
+            }
+            Self::HeadTooLong | Self::OutputTooSmall => {
+                Some(HttpsRequestHeadAuditFailure::ResourceLimit)
+            }
+            Self::Audit => None,
+        }
+    }
+}
+
+impl fmt::Display for HttpsAuditedRequestHeadError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::RequestLinePolicyMismatch => {
+                "HTTPS request line differs from audited provider policy"
+            }
+            Self::DestinationPolicyMismatch => {
+                "HTTPS destination differs from audited provider policy"
+            }
+            Self::AdditionalFieldsPolicyMismatch => {
+                "HTTPS additional fields differ from audited provider policy"
+            }
+            Self::HeadTooLong => "audited HTTPS request head exceeds its byte limit",
+            Self::OutputTooSmall => "audited HTTPS request-head output is too small",
+            Self::Audit => "audited HTTPS request-head publication failed",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for HttpsAuditedRequestHeadError {}
+
+/// One exactly emitted request head released only after durable provider audit.
+///
+/// This wrapper is non-copyable and redacts its complete emitted bytes. This
+/// low-level path excludes credential-bearing fields and grants no body-write,
+/// TLS, HTTP I/O, or transport authority.
+pub struct EncodedHttpsAuditedRequestHead<'output, 'provider> {
+    provider: &'provider ProviderId,
+    trace: OAuthTraceId,
+    encoded: &'output mut [u8],
+}
+
+impl EncodedHttpsAuditedRequestHead<'_, '_> {
+    /// Return the exact provider bound to the successful release audit.
+    #[must_use]
+    pub const fn provider(&self) -> &ProviderId {
+        self.provider
+    }
+
+    /// Return the exact trace bound to the successful release audit.
+    #[must_use]
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Borrow the exact complete emitted request-head bytes after audit.
+    #[must_use]
+    pub fn as_bytes(&self) -> &[u8] {
+        self.encoded
+    }
+}
+
+impl fmt::Debug for EncodedHttpsAuditedRequestHead<'_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("EncodedHttpsAuditedRequestHead")
+            .field("provider", self.provider)
+            .field("trace", &self.trace)
+            .field("encoded", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
+}
 
 /// Non-copyable proof that one exact certificate, SNI, and Host share a DNS name.
 ///
@@ -972,6 +1267,186 @@ pub fn encode_https_fixed_request_head<'output>(
     offset += 2;
     debug_assert_eq!(offset, encoded_head_length);
     Ok(output)
+}
+
+/// Audit and encode one exact provider-policy-bound request head.
+///
+/// The method, query-free target, canonical Host authority, and complete
+/// additional-field sequence must match the consumed provider policy by exact
+/// public name, value, and order.
+/// Complete length and output-capacity checks happen before the audit effect.
+/// The privacy-safe provider/trace event must then publish durably before any
+/// provider-approved public field bytes are copied to caller storage.
+/// Every call consumes its inputs and performs its own audit, preventing one
+/// successful publication from authorizing another output release.
+#[allow(clippy::too_many_arguments)]
+pub fn encode_https_audited_fixed_request_head<
+    'output,
+    'policy,
+    'request_line,
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+    'body,
+    'content_length_field,
+    A: HttpsRequestHeadAuditSink,
+>(
+    policy: HttpsAuditedRequestHeadPolicy<'policy>,
+    request_line: BoundHttpsPublicRequestLine<'request_line>,
+    fixed_request_body: BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >,
+    limits: HttpsFixedRequestHeadLimits,
+    trace: OAuthTraceId,
+    audit: &mut A,
+    output: &'output mut [u8],
+) -> Result<EncodedHttpsAuditedRequestHead<'output, 'policy>, HttpsAuditedRequestHeadError> {
+    let prepared = prepare_audited_request_head(
+        &policy,
+        &request_line,
+        &fixed_request_body,
+        limits,
+        output.len(),
+    );
+    let outcome = match prepared {
+        Ok(_) => HttpsRequestHeadAuditOutcome::Succeeded,
+        Err(error) => match error.failure_class() {
+            Some(failure) => HttpsRequestHeadAuditOutcome::Failed(failure),
+            None => return Err(error),
+        },
+    };
+    audit
+        .publish(&HttpsRequestHeadAuditEvent {
+            provider: policy.provider,
+            trace,
+            action: HttpsRequestHeadAuditAction::AdditionalFieldsRelease,
+            outcome,
+        })
+        .map_err(|_| HttpsAuditedRequestHeadError::Audit)?;
+    let encoded_head_length = prepared?;
+
+    let output = &mut output[..encoded_head_length];
+    let mut offset = 0usize;
+    offset += encode_preflighted_request_line(request_line.request_line(), &mut output[offset..]);
+
+    let header_fields = fixed_request_body.header_fields();
+    offset += encode_preflighted_header_field(
+        header_fields.host_binding().host_field(),
+        &mut output[offset..],
+    );
+    offset += encode_preflighted_header_field(
+        fixed_request_body.fixed_body().field(),
+        &mut output[offset..],
+    );
+    for field in header_fields.additional_fields() {
+        offset += encode_preflighted_header_field(field, &mut output[offset..]);
+    }
+    output[offset..offset + 2].copy_from_slice(b"\r\n");
+    offset += 2;
+    debug_assert_eq!(offset, encoded_head_length);
+
+    Ok(EncodedHttpsAuditedRequestHead {
+        provider: policy.provider,
+        trace,
+        encoded: output,
+    })
+}
+
+fn prepare_audited_request_head(
+    policy: &HttpsAuditedRequestHeadPolicy<'_>,
+    request_line: &BoundHttpsPublicRequestLine<'_>,
+    fixed_request_body: &BoundHttpsFixedRequestBody<'_, '_, '_, '_, '_, '_, '_, '_, '_>,
+    limits: HttpsFixedRequestHeadLimits,
+    output_length: usize,
+) -> Result<usize, HttpsAuditedRequestHeadError> {
+    let retained_request_line = request_line.request_line();
+    if retained_request_line.method() != policy.request_line.method
+        || retained_request_line.target() != policy.request_line.target
+    {
+        return Err(HttpsAuditedRequestHeadError::RequestLinePolicyMismatch);
+    }
+
+    let header_fields = fixed_request_body.header_fields();
+    let retained_destination = header_fields.host_binding().destination().host_authority();
+    if !retained_destination
+        .host()
+        .eq_ignore_ascii_case(policy.destination.host())
+        || retained_destination.port() != policy.destination.port()
+    {
+        return Err(HttpsAuditedRequestHeadError::DestinationPolicyMismatch);
+    }
+
+    let additional_fields = header_fields.additional_fields();
+    if additional_fields.len() != policy.additional_fields.len()
+        || additional_fields
+            .iter()
+            .zip(policy.additional_fields.iter())
+            .any(|(field, expected)| {
+                !field.name().eq_ignore_ascii_case(expected.name())
+                    || field.value() != expected.value()
+            })
+    {
+        return Err(HttpsAuditedRequestHeadError::AdditionalFieldsPolicyMismatch);
+    }
+
+    let mut encoded_head_length = retained_request_line
+        .encoded_length()
+        .checked_add(header_fields.host_binding().host_field().encoded_length())
+        .and_then(|length| {
+            length.checked_add(fixed_request_body.fixed_body().field().encoded_length())
+        })
+        .ok_or(HttpsAuditedRequestHeadError::HeadTooLong)?;
+    for field in additional_fields {
+        encoded_head_length = encoded_head_length
+            .checked_add(field.encoded_length())
+            .ok_or(HttpsAuditedRequestHeadError::HeadTooLong)?;
+    }
+    encoded_head_length = encoded_head_length
+        .checked_add(2)
+        .ok_or(HttpsAuditedRequestHeadError::HeadTooLong)?;
+    if encoded_head_length > limits.maximum_head_bytes() {
+        return Err(HttpsAuditedRequestHeadError::HeadTooLong);
+    }
+    if output_length < encoded_head_length {
+        return Err(HttpsAuditedRequestHeadError::OutputTooSmall);
+    }
+    Ok(encoded_head_length)
+}
+
+fn encode_preflighted_request_line(
+    request_line: &Http1RequestLine<'_>,
+    output: &mut [u8],
+) -> usize {
+    let encoded_length = request_line.encoded_length();
+    let result = encode_http1_request_line(request_line, &mut output[..encoded_length]);
+    debug_assert!(result.is_ok());
+    encoded_length
+}
+
+fn encode_preflighted_header_field(
+    field: &Http1RequestHeaderField<'_>,
+    output: &mut [u8],
+) -> usize {
+    let encoded_length = field.encoded_length();
+    let result = encode_http1_request_header_field(field, &mut output[..encoded_length]);
+    debug_assert!(result.is_ok());
+    encoded_length
+}
+
+fn is_public_additional_field_name(name: &[u8]) -> bool {
+    name.eq_ignore_ascii_case(b"Accept") || name.eq_ignore_ascii_case(b"Content-Type")
 }
 
 fn matches_canonical_host_authority(

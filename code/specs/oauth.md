@@ -4987,26 +4987,31 @@ exact proof without substituting any retained request or destination input.
 Concrete HTTPS remains unavailable.
 
 An additive audited request-head release now admits a non-empty ordered slice
-of additional fields only through exact data-driven provider policy. The
-policy retains one validated provider, public method and query-free path,
-validated DNS Host authority, and an ordered duplicate-free allowlist of
-additional HTTP field names; Host, Content-Length, and Transfer-Encoding remain
-reserved to the fixed-body composition. The release consumes the exact public
-request-line and fixed-body destination proofs, requires the retained method,
-path, Host authority, additional-field count, order, and case-insensitive HTTP
-field names to match that provider policy, and preflights the complete bounded
-head and caller-owned output before any effect or mutation. A privacy-safe
+of public additional fields only through exact data-driven provider policy.
+The policy retains one validated provider, public method and query-free path,
+validated DNS Host authority, and an ordered duplicate-free allowlist of exact
+public HTTP field names and values. This low-level boundary admits only the
+closed non-credential metadata names `Accept` and `Content-Type`;
+credential-bearing, custom, Host, Content-Length, and Transfer-Encoding fields
+remain unavailable. The release consumes the exact public request-line and
+fixed-body destination proofs, requires the retained method, path, Host
+authority, additional-field count, order, case-insensitive names, and exact
+values to match that provider policy, and preflights the complete bounded head
+and caller-owned output before any effect or mutation. A privacy-safe
 event containing only provider, trace, stable action, and closed outcome must
 be durably published before the repository-owned request-line and field
 encoders copy any bytes. Audit failure leaves output unchanged and releases no
-proof; successful encoding returns a non-copyable redacted wrapper around the
-exact emitted head. Each wrapper requires one fresh audited encoding call, so
-one event cannot authorize another output release.
+proof; successful encoding returns a non-copyable redacted wrapper retaining
+the exact audited provider, trace, and emitted head. Each wrapper requires one
+fresh audited encoding call, so one event cannot authorize another output
+release or be relabelled under another provider or trace.
 
-This audited release does not interpret a field value or request body, access
-or edit credentials, write the retained body, wipe caller-owned storage,
-authorize transport, perform TLS or HTTP I/O, open a socket, or grant network,
-OAuth, or live-provider authority. A later body and transport composition must
+This audited release copies only exact public metadata classified by provider
+policy. It does not admit or access credential-bearing fields, obtain
+credentials from storage, interpret or edit a request body, sign, write the
+retained body, wipe caller-owned storage, authorize transport, perform TLS or
+HTTP I/O, open a socket, or grant network, OAuth, or live-provider authority.
+A later custody-bound credential-field, body, and transport composition must
 retain this exact provider, trace, request, destination, and release binding
 without substituting any input, and must apply its own audit gates before every
 credential access and external effect. Concrete HTTPS remains unavailable.
