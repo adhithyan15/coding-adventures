@@ -10395,6 +10395,17 @@ name = "nut-protocol"
 version = "0.1.0"
 
 [[package]]
+name = "oauth-client-secret-http1-binding"
+version = "0.1.0"
+dependencies = [
+ "coding_adventures_oauth",
+ "coding_adventures_oauth_client_secret_custody",
+ "coding_adventures_zeroize",
+ "http1-fixed-request-body",
+ "http1-request-header-field",
+]
+
+[[package]]
 name = "objc"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"

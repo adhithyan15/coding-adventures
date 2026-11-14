@@ -1,0 +1,14 @@
+[package]
+name = "oauth-client-secret-http1-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Audited identity binding for custody-built OAuth client-secret HTTP/1 material"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_oauth_client_secret_custody = { path = "../oauth-client-secret-custody" }
+http1-fixed-request-body = { path = "../http1-fixed-request-body" }
+http1-request-header-field = { path = "../http1-request-header-field" }
+
+[dev-dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }

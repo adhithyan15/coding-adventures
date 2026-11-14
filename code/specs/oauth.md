@@ -5016,6 +5016,38 @@ retain this exact provider, trace, request, destination, and release binding
 without substituting any input, and must apply its own audit gates before every
 credential access and external effect. Concrete HTTPS remains unavailable.
 
+A bounded `oauth-client-secret-http1-binding` prerequisite now binds
+one custody-built `ClientSecretAuthenticatedRequest` to strict HTTP/1 evidence
+constructed only inside the audited boundary. Before inspecting either
+credential-bearing body or Authorization bytes, the binder durably publishes
+an attempted event containing only the request's validated provider, trace,
+stable action, and closed outcome. It then uses the repository-owned fixed-body
+and field primitives to retain the request's original form-body allocation,
+encode and bind its canonical Content-Length in bounded caller storage, and,
+when custody produced Basic authentication, validate an `Authorization` field
+that retains the original Authorization allocation. Body authentication
+produces no Authorization field. The binder accepts no caller-supplied
+credential bytes or prebuilt evidence, but it does not revoke the owner's
+independent access to the already custody-released request; its proof attests
+only to reads and construction performed by this call. A closed rejected or
+succeeded event must be durable before the call returns an error or releases
+the non-copyable proof. Validation or audit failure leaves bounded caller
+storage unchanged and releases no proof. After terminal success, deterministic
+output binding rereads no credential-bearing input. Success retains the exact
+request reference, fixed-body/Content-Length proof, Authorization-field
+presence, provider, and trace so a later composition cannot substitute
+credential material or relabel the release.
+
+Stable failures and Debug output retain no endpoint, body, Authorization,
+field-name, field-value, credential, observed-length, or identity payloads.
+This identity boundary does not obtain credentials from storage, edit or sign
+them, encode or copy a head or body, authorize a method or endpoint, bind an
+HTTPS destination, perform TLS or HTTP I/O, open a socket, or authorize a
+transport effect. The audited complete-request release, destination binding,
+repository-owned TLS/HTTP composition, response policy, and every actual
+external effect remain separate blockers. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
 reviewed RSA server-path policy. It derives the path target only through the

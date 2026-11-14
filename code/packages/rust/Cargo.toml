@@ -1336,6 +1336,7 @@ members = [
   "oauth-account-identity",
   "oauth-broker",
   "oauth-client-secret-custody",
+  "oauth-client-secret-http1-binding",
   "oauth-credential-custody",
   "oauth-credential-sealed-store",
   "oauth-installed-app-host",
