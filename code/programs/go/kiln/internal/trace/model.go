@@ -1,6 +1,6 @@
 // Package trace parses the output of
 //
-//	strace -f --quiet=attach -y -s 4096 -e signal=none -e trace=... -o <file>
+//	strace -f --quiet=attach -y -s 4096 -e signal=all -e trace=... -o <file>
 //
 // into an ordered list of path events plus the process tree, exactly as
 // code/specs/KILN04-traced-read-sets.md §4.3-§5.1 describes (stage 1a).
@@ -138,6 +138,35 @@ type Trace struct {
 	Procs   map[int]*Process
 	Order   []int  // pids in the order they first appeared
 	Exits   []Exit // exit lines in trace order
+	// ExitLines is parallel to Exits: ExitLines[i] is the 1-based trace line of
+	// Exits[i].  (It is a separate slice, not a field of Exit, because many
+	// callers compare Exit values.)
+	ExitLines []int
+	// InitExitLine is, under Options.HelperRoot, the 1-based start line of the
+	// call that ended the step's thread group, made after the step's exec by
+	// the init process or a CLONE_THREAD thread of it:
+	//
+	//   - the earliest exit_group that did not return (one per thread; a
+	//     failed call, EPERM from a seccomp filter the step installed, is no
+	//     candidate, and a split call's candidacy is withdrawn when its
+	//     resumed half shows a result), else
+	//   - the start line of the LAST exit (one thread's exit, syscall 60) that
+	//     did not return: a single-threaded init may end with a raw exit, and
+	//     every pthread ends with one, so only the last counts, else
+	//   - 0.
+	//
+	// 0 therefore means the init group made no exit call at all and died by a
+	// signal (or its exit was never printed): the step is already failed and
+	// incomplete.  traced.DaemonLeft then counts SIGKILL deaths only.
+	//
+	// strace prints exit_group at PTRACE_EVENT_EXIT, i.e. when the step's
+	// thread group starts to die.  The kernel then kills every other process
+	// of the PID namespace; those deaths are the "daemon left behind" and their
+	// "+++ killed by SIGKILL +++" lines may come before OR after the init's own
+	// "+++ exited +++" line, but (by design) after this call line.  So this
+	// line, not init's exit line, is the boundary that tells a daemon from a
+	// child the step reaped itself.
+	InitExitLine int
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
 	// RootExecArgv and InitExecArgv are, under Options.HelperRoot, the argument
@@ -272,7 +301,14 @@ type model struct {
 	rootExeced bool         // helper mode: the root group has had its one exec
 	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
-	walkSteps  int          // thread-chain steps taken (a test watches this stays linear)
+	initMemo   map[int]bool // inInitThreads answers
+	// exitCand: pid -> start line of its exit_group that has not returned, for
+	// init-group threads after the step's exec.  rawExits: start lines of
+	// exit calls (one thread) that have not returned, same threads.  See
+	// Trace.InitExitLine.
+	exitCand  map[int]int
+	rawExits  map[int]bool
+	walkSteps int // thread-chain steps taken (a test watches this stays linear)
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -311,6 +347,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 		return nil, e
 	}
 	m.trace.InitPid = m.initPid
+	m.trace.InitExitLine = m.exitMarker()
 	return m.trace, nil
 }
 
@@ -321,6 +358,9 @@ func newModel(lim Limits, opts Options, root int, initialCwd string) *model {
 		procs:    map[int]*proc{},
 		spawns:   map[int]spawn{},
 		rootMemo: map[int]bool{},
+		initMemo: map[int]bool{},
+		exitCand: map[int]int{},
+		rawExits: map[int]bool{},
 	}
 }
 
@@ -438,6 +478,60 @@ func (m *model) inRootGroup(pid int) bool {
 	}
 	for _, p := range path {
 		m.rootMemo[p] = res
+	}
+	return res
+}
+
+// exitMarker settles Trace.InitExitLine: the earliest surviving exit_group
+// candidate, else the last surviving raw exit, else 0.
+func (m *model) exitMarker() int {
+	best := 0
+	for _, line := range m.exitCand {
+		if best == 0 || line < best {
+			best = line
+		}
+	}
+	if best != 0 {
+		return best
+	}
+	for line := range m.rawExits {
+		if line > best {
+			best = line
+		}
+	}
+	return best
+}
+
+// inInitThreads reports whether pid is the init child or a CLONE_THREAD thread
+// (transitively) of it: the init's thread group, whose exit_group ends the
+// step.  Like inRootGroup it uses only the spawn records, memoises every pid
+// on the walked chain (so the walk is linear in total) and treats a chain
+// deeper than maxProcessDepth as "no", which fails closed.
+func (m *model) inInitThreads(pid int) bool {
+	if m.initPid == 0 {
+		return false
+	}
+	var path []int
+	res := false
+	for cur, n := pid, 0; ; n++ {
+		if v, ok := m.initMemo[cur]; ok {
+			res = v
+			break
+		}
+		m.walkSteps++
+		path = append(path, cur)
+		if cur == m.initPid {
+			res = true
+			break
+		}
+		sp, ok := m.spawns[cur]
+		if !ok || !hasFlag(sp.flags, "CLONE_THREAD") || n >= maxProcessDepth {
+			break
+		}
+		cur = sp.parent
+	}
+	for _, p := range path {
+		m.initMemo[p] = res
 	}
 	return res
 }
@@ -623,11 +717,32 @@ func (m *model) apply(rec *record) *Error {
 		p.exited = true
 		p.cwd.refs--
 		m.trace.Exits = append(m.trace.Exits, *rec.exit)
+		m.trace.ExitLines = append(m.trace.ExitLines, rec.line)
 		p.Exit = rec.exit // its own allocation: never aliases the slice above
 		return nil
 	}
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
+	}
+	if rec.exitCall && rec.retract {
+		// A failed exit_group or exit whose start line was a candidate:
+		// withdraw exactly that candidate.
+		if rec.rawExit {
+			delete(m.rawExits, rec.line)
+		} else if m.exitCand[p.Pid] == rec.line {
+			delete(m.exitCand, p.Pid)
+		}
+		return nil
+	}
+	if rec.exitCall {
+		if m.stepExec && m.inInitThreads(p.Pid) {
+			if rec.rawExit {
+				m.rawExits[rec.line] = true
+			} else if _, ok := m.exitCand[p.Pid]; !ok {
+				m.exitCand[p.Pid] = rec.line
+			}
+		}
+		return nil
 	}
 	if p.grp == grpRoot {
 		return m.applyHelperRoot(p, rec)
