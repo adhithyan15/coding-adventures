@@ -14,6 +14,10 @@
 //! reviewed-anchor Name-constraint processing. That bridge retains both
 //! complete inputs plus exact-observation target and target-nearest issuer
 //! validity without authorizing the responder path or completing revocation.
+//! An ordered additive entry point accepts that same authenticated OCSP proof
+//! together with the complete reviewed path-plus-anchor-self-signature wrapper,
+//! derives target and issuer only through the retained path, and preserves the
+//! self-signature evidence intact in the existing generic result.
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
@@ -72,6 +76,7 @@ use x509_rsa_constructed_path_signature_routing::{
     ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy,
     ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy,
 };
+use x509_rsa_reviewed_server_path_anchor_self_signature_binding::BoundX509RsaReviewedServerPathAnchorSelfSignature;
 use x509_rsa_sha256_reviewed_server_link::ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy;
 use x509_subject_alt_name::{
     decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
@@ -1490,6 +1495,166 @@ pub fn bind_x509_ocsp_routed_issuer_to_accumulated_name_policy_reviewed_server_p
         BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation {
             authenticated_revocation,
             strong_name_policy_path,
+            target_validity_at_observation,
+            issuer_validity_at_observation,
+        },
+    )
+}
+
+/// Bind fully routed OCSP status to the complete signed reviewed-server path.
+///
+/// This ordered composition consumes the strongest reviewed path only through
+/// its retained anchor-self-signature wrapper. Failure order remains stable:
+/// target identity, issuer identity, target validity, then issuer validity.
+/// Success retains the complete authenticated revocation proof and the
+/// complete non-copyable path-plus-anchor-self-signature proof together with
+/// exact-observation validity evidence.
+///
+/// This does not fetch status, add trust-anchor semantics, authorize or reify
+/// responder-path policy, establish status for every non-root certificate,
+/// complete Name, path, or revocation validation, perform TLS or HTTP,
+/// authorize OAuth transport, or grant network authority.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_routed_issuer_to_signed_accumulated_name_policy_reviewed_server_path<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'revocation_target,
+    'revocation_target_encoded,
+    'revocation_issuer,
+    'revocation_issuer_encoded,
+    'evidence,
+    'initialized,
+    'path,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'policy,
+    'anchor_certificate,
+    'anchor_encoded,
+    'role_certificate,
+    'role_encoded,
+    'signature_certificate,
+    'signature_encoded,
+    'signature_issuer_certificate,
+    'signature_issuer_encoded,
+    'signature_anchor_certificate,
+    'signature_anchor_encoded,
+>(
+    authenticated_revocation: AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'revocation_target,
+        'revocation_target_encoded,
+        'revocation_issuer,
+        'revocation_issuer_encoded,
+    >,
+    signed_strong_name_policy_path: BoundX509RsaReviewedServerPathAnchorSelfSignature<
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        'signature_certificate,
+        'signature_encoded,
+        'signature_issuer_certificate,
+        'signature_issuer_encoded,
+        'signature_anchor_certificate,
+        'signature_anchor_encoded,
+    >,
+) -> Result<
+    BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'revocation_target,
+            'revocation_target_encoded,
+            'revocation_issuer,
+            'revocation_issuer_encoded,
+        >,
+        BoundX509RsaReviewedServerPathAnchorSelfSignature<
+            'evidence,
+            'initialized,
+            'path,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+            'policy,
+            'anchor_certificate,
+            'anchor_encoded,
+            'role_certificate,
+            'role_encoded,
+            'signature_certificate,
+            'signature_encoded,
+            'signature_issuer_certificate,
+            'signature_issuer_encoded,
+            'signature_anchor_certificate,
+            'signature_anchor_encoded,
+        >,
+    >,
+    X509OcspReviewedServerRevocationBindingError,
+> {
+    let target_signature = authenticated_revocation.target_issuer_signature();
+    let revocation_target = target_signature.child_algorithm_policy().certificate();
+    let target_closure = signed_strong_name_policy_path
+        .reviewed_server_path()
+        .subordinate_policy()
+        .target_policy()
+        .anchor_policy()
+        .target_signature_closure();
+    let path_target = target_closure.server_policy().certificate();
+    if !std::ptr::eq(revocation_target, path_target) {
+        return Err(X509OcspReviewedServerRevocationBindingError::target_mismatch());
+    }
+
+    let revocation_issuer = target_signature.issuer_rsa_algorithm_policy().certificate();
+    let path_issuer = target_closure
+        .target_signature()
+        .signature()
+        .issuer_rsa_algorithm_policy()
+        .certificate();
+    if !std::ptr::eq(revocation_issuer, path_issuer) {
+        return Err(X509OcspReviewedServerRevocationBindingError::issuer_mismatch());
+    }
+
+    let observation_time = authenticated_revocation.revocation().observation_time();
+    let (target_validity_at_observation, issuer_validity_at_observation) =
+        retain_path_validity_at_observation(
+            validate_certificate_validity_at(path_target, &observation_time)
+                .map_err(|error| error.kind()),
+            || {
+                validate_certificate_validity_at(path_issuer, &observation_time)
+                    .map_err(|error| error.kind())
+            },
+        )?;
+
+    Ok(
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation {
+            authenticated_revocation,
+            strong_name_policy_path: signed_strong_name_policy_path,
             target_validity_at_observation,
             issuer_validity_at_observation,
         },
