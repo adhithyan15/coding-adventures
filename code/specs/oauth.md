@@ -5082,7 +5082,7 @@ request.
 This release is still pure in-memory evidence. The retained certificate proof
 does not add certificate role, purpose, algorithm, validity, signature, path,
 constraint, trust-root, or revocation validation. The package performs no DNS,
-socket, TLS, HTTP I/O, response handling, credential access or edit, signing,
+socket, TLS, HTTP I/O, response handling, credential acquisition or edit, signing,
 or external transport effect and grants no HTTPS, OAuth, or live-provider
 readiness. Repository-owned TLS/HTTP composition, audited network effects, and
 response policy remain separate blockers.
