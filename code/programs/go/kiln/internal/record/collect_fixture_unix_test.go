@@ -61,14 +61,25 @@ type cfix struct {
 
 // newCfix prepares a shard of the three fixture packages. Prepare is given the
 // one-shard plan, so the shard is shard 0 of 1.
-func newCfix(t *testing.T) *cfix {
+func newCfix(t *testing.T) *cfix { return newCfixWith(t, nil, nil) }
+
+// newCfixWith adds tracked files, and runs before(root) after the commit and
+// before prepare (to leave something untracked on the disk, as a previous job
+// would have).
+func newCfixWith(t *testing.T, files map[string]string, before func(root string)) *cfix {
 	t.Helper()
 	p := newPrep(t)
 	p.steps = `{"schema":"kiln-legacy-steps/1","os":"linux","packages":[` +
 		`{"package":"code/packages/x/a","steps":["echo a"]},` +
 		`{"package":"code/packages/x/b","steps":["echo b1","echo b2"]},` +
 		`{"package":"code/packages/x/z","steps":["echo z"]}]}`
+	for k, v := range files {
+		p.files[k] = v
+	}
 	p.commit()
+	if before != nil {
+		before(p.root)
+	}
 	old := plan
 	plan = singlePlan
 	t.Cleanup(func() { plan = old })
