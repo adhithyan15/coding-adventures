@@ -4963,13 +4963,24 @@ closed. Success retains both complete input proofs; stable failures and Debug
 output retain no field, body, hostname, certificate, observed count, or limit
 violation payloads.
 
-This stricter composition does not authorize any additional field, reject
-duplicates other than Host and Content-Length, bind a request line, encode a
-complete request head, write the body, perform credential access or release,
-emit provider or trace audit events, perform TLS or HTTP I/O, open a socket, or
-grant network, OAuth, or live-provider authority. A later strict request-head
-composition must consume this exact proof and preserve the same destination
-through audited transport. Concrete HTTPS remains unavailable.
+The strict request-head boundary then consumes this exact fixed-body proof
+together with one exact validated request line. A caller-selected complete-head
+byte ceiling is bounded by the fixed package maximum before any output is
+written. Success retains both complete inputs and their exact encoded head
+length. Its allocation-free encoder writes, in order, the request line, the
+canonical Host field, the canonical Content-Length field, every retained
+additional field in caller order, and the terminating empty line. Insufficient
+output fails before mutation. The body remains retained but is not written.
+Stable failures and Debug output retain no method, target, field, body,
+hostname, certificate, observed length, limit, or output payloads.
+
+This stricter composition does not authorize a method, target, or additional
+field; reject duplicates other than Host and Content-Length; write the body;
+perform credential access or release; emit provider or trace audit events;
+perform TLS or HTTP I/O; open a socket; or grant network, OAuth, or
+live-provider authority. A later audited transport must consume this exact
+proof without substituting any retained request or destination input. Concrete
+HTTPS remains unavailable.
 
 A bounded `https-reviewed-server-path-binding` prerequisite now consumes that
 complete HTTPS destination-name proof together with the strongest accumulated
@@ -5387,9 +5398,12 @@ length, or output bytes, and Debug redacts both borrowed inputs.
 This syntax boundary does not authorize a method or target, validate URI or
 percent-encoding semantics, encode headers or a body, select body framing,
 interpret or release a credential, perform TLS, read or write a socket, emit
-provider or trace audit events, or authorize HTTP or OAuth transport. A later
-reviewed composition must supply those policies and external-effect authority.
-Concrete HTTPS remains unavailable.
+provider or trace audit events, or authorize HTTP or OAuth transport. The
+reviewed `https-destination-name-binding` request-head composition now consumes
+this exact proof together with its exact fixed-body destination proof and
+encodes the complete head into caller-owned storage, but still supplies none of
+those policies or external-effect authority. Concrete HTTPS remains
+unavailable.
 
 An allocation-free `http1-response-head` prerequisite now decodes one strict
 HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
