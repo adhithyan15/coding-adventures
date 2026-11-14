@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 111,
-  "sourceHash": "fnv1a64:6ed020f14ed66968",
+  "sourceHash": "fnv1a64:747191ac23d80a6c",
   "lessonIds": [
     "KA-C111-hotel",
     "KA-C111-railu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch111.txt",
   "json": "kannada/narration/ch111.json",
-  "textHash": "fnv1a64:90235af583b5c10a",
-  "jsonHash": "fnv1a64:804ffc8509fe061e",
+  "textHash": "fnv1a64:a9537fdce415e6dc",
+  "jsonHash": "fnv1a64:18b7ee125a6b1578",
   "findings": []
 }

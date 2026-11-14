@@ -2,18 +2,23 @@
   "chapter": 110,
   "title": "Market, Beach, Garden, Corner, Turn",
   "label": "ch:ka-market-beach-garden-corner-turn",
-  "canDo": "I can say a market, a beach, a garden, a corner and a turn.",
+  "canDo": "I can say a market, a beach, a garden, a corner and a turn, then locate a bird or school relative to a named tree or house.",
   "spineNodes": [
     "SPINE-ASK-LOCATION"
   ],
   "payoff": {
-    "lesson": "KA-C110-tiruvu",
+    "lesson": "KA-C110-house-near-far-inside",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 110: I can say a market, a beach, a garden, a corner and a turn.",
+    "summary": "Complete the last lesson of chapter 110: I can use short, fixed on/under/near/far/inside place frames with a named reference.",
     "assesses": [
+      "KA-LEX-C110-LOC110-01",
+      "KA-LEX-C110-LOC110-02",
       "KA-LEX-C110-LOC110-03",
       "KA-LEX-C110-LOC110-04",
-      "KA-LEX-C110-LOC110-05"
+      "KA-LEX-C110-LOC110-05",
+      "KA-GRAMMAR-C110-TREE-ON-UNDER-06",
+      "KA-LEX-C110-INSIDE-08",
+      "KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07"
     ]
   }
 }

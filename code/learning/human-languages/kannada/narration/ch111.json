@@ -4,7 +4,7 @@
   "chapter": 111,
   "title": "Hotel, Train, Aeroplane, Car, Bicycle",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ed020f14ed66968",
+  "sourceHash": "fnv1a64:747191ac23d80a6c",
   "lessons": [
     {
       "id": "KA-C111-hotel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a42bbf8c37631859",
+      "sourceHash": "fnv1a64:850ae5b73f79399a",
       "notice": null,
       "blocks": [
         {
@@ -135,6 +135,23 @@
             {
               "kind": "speech",
               "text": "What does ಹೋಟೆಲ್ (hōṭel) mean? (\"A hotel\".) Say it once more."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall: place R1",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking, say “on the tree,” “under the tree,” “near the house,” “far from the house,” and “inside the house.” Check the complete phrases: ಮರದ ಮೇಲೆ, ಮರದ ಕೆಳಗೆ, ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ, ಮನೆಯೊಳಗೆ."
             }
           ]
         }

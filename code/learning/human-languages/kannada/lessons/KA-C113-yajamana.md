@@ -12,24 +12,24 @@ headword: "ಯಜಮಾನ"
 gloss: "an owner, the master"
 romanization: "yajamāna"
 concept_tag: KA-CAN113-YAJAMANA
-prerequisites: [KA-C112-sadhana, KA-C113-asti, KA-C108-movement]
+prerequisites: [KA-C112-sadhana, KA-C113-asti, KA-C108-movement, KA-C110-house-near-far-inside]
 sounds: []
 roots: [sanskrit-yajamana]
 etymology_hook: "yajamāna ← Sanskrit yajamāna 'the patron of a sacrifice', a tatsama"
 duration:
-  max_seconds: 220
+  max_seconds: 260
 requires:
-  knowledge: [KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
+  knowledge: [KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 introduces:
   knowledge: [KA-LEX-C113-CAN113-02]
 practises:
-  knowledge: [KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
+  knowledge: [KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C113-asti, KA-C108-movement]
+reviews_of: [KA-C113-asti, KA-C108-movement, KA-C110-tree-on-under, KA-C110-house-near-far-inside]
 ---
 
 # ಯಜಮಾನ (yajamāna) — an owner, the master
@@ -68,3 +68,12 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01] -->
 
 [PAUSE 3s] What does ಯಜಮಾನ mean? ("An owner, the master".) Say it once more.
+
+## Wrap-up Recall: place R2 extension
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[PAUSE 3s] Give a complete place phrase for the bird **on the tree**,
+then **under the tree**, then **inside the house**. Next contrast the
+school **near the house** with the school **far from the house**.
+Answers: **ಮರದ ಮೇಲೆ**, **ಮರದ ಕೆಳಗೆ**, **ಮನೆಯೊಳಗೆ**, **ಮನೆಯ ಹತ್ತಿರ**,
+**ಮನೆಯಿಂದ ದೂರ**.

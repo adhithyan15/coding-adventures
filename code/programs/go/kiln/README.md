@@ -540,7 +540,8 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
    records their digests and the partition digest;
 4. writes `host-facts.json` and computes the weak key of every package the
    shard runs from them (the merge recomputes the same keys), one
-   `kiln-record-action/1` file per package;
+   `kiln-record-action/2` file per package (it also lists the tool names the
+   key pins, `tools`);
 5. generates `sandbox.json` (state roots for `~/.cargo`, a closed anchor table,
    `.git` masked, no root overlapping the record directory or `RUNNER_TEMP`),
    scans every `ro_roots` entry for sockets and FIFOs, and runs the sandbox's
@@ -549,9 +550,17 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
    makes `pre/` read-only. `pre/exec-wrapper.json` is the build tool's
    `-exec-wrapper`.
 
+Since decision P13 (stage 4 PR 2b-2b-i) `prepare` also seals what a step needs to
+classify with no Git: `pre/tree` (`kiln-record-tree/1`, every tracked path of the
+verified commit with mode, blob id and, for a link, its text; about 394 thousand
+lines, 48 MB, written in a third of a second and hashed in 20 ms) and
+`pre/classify.json` (`kiln-record-classify/1`, the host roots and the pinned
+ecosystems). `VerifyPre` hashes the tree on every step but decodes it only when a
+step classifies (`Pre.Tree`).
+
 `kiln record step` is the next section; `kiln record collect` exists as a stub that
-refuses (PR 2b-2b). Not done by `prepare`, by design: gates and toolchain probes,
-the in-sandbox socket probe, and `collect`.
+refuses (PR 2b-2b-ii). Not done by `prepare`, by design: gates and toolchain
+probes, the in-sandbox socket probe, and `collect`.
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;
@@ -604,13 +613,14 @@ its own stdout and stderr, and strace's own two streams kept apart and counted.
 250 ms and kills strace above 1 GiB or with the disk under 4 GiB, marking the step
 `truncated`. It never retries status 125.
 
-Afterwards `traces/<sha256(action)>/<step>.json` (`kiln-record-step/1`, `O_EXCL`)
+Afterwards `traces/<sha256(action)>/<step>.json` (`kiln-record-step/2`, `O_EXCL`)
 holds what only the supervisor can know: strace's exit code and signal, whether its
 streams were empty, the root's status, truncation, the trace's size and SHA-256,
 the times, whether the line matches the plan, `step_netns` (true only when strace
 was started with the sandbox command) and `clean`, the supervisor's half of the
-tracer-completeness rule (G7). It classifies nothing: `kiln record collect`, the
-next PR, parses the trace and reads these files.
+tracer-completeness rule (G7), and `seq`, the step's number in the serial order.
+It does not classify while an action is still running (see "Serial recording and
+classification" below): `kiln record collect`, the next PR, reads these files.
 
 How the trace is written (review of P12). strace does not write the file: it writes
 a pipe (`-o /proc/self/fd/5`) and the supervisor reads it, writes
@@ -629,10 +639,52 @@ content. `VerifyPre` also checks every action file against the sealed `steps.jso
 The workflow must start the build tool under `env -i` with exactly
 `build_tool_env`, and not consume step output (or wrap it in `::stop-commands::`).
 
+### Serial recording and classification (stage 4 PR 2b-2b-i, P13)
+
+`traced.Classify` resolves paths against the disk, so a record classified after a
+LATER action changed a link, directory or file it resolved through would place its
+writes wrongly. So the traced build runs with `-jobs 1` and `step` classifies each
+action the moment it ends:
+
+- **Serial.** `step` holds an exclusive, non-blocking `flock` on `traces/.serial`
+  from before its checks (after the shared lock on the record directory, always in
+  that order) until it exits. A step that cannot take it leaves `<step>.overlap`,
+  runs nothing and exits 125. Under the lock the sidecar gets `seq` from
+  `traces/.seq` (0, 1, 2, ...; a refused step takes none), so `collect` can see a
+  gap or an overlap and void the shard.
+- **At the end of the action** (its last step, or a step that did not start or
+  exited non-zero), still under the lock, `step` starts a child process
+  (`kiln record classify-action`, memory bounded by `GOMEMLIMIT` 5 GiB and
+  `RLIMIT_DATA` 8 GiB, killed at 10 minutes) which parses the action's traces in the
+  sandbox-helper mode, applies the parse half of G7 (the root's exit line equals
+  `root_status`; the root's `--config-sha256` and the init's `--sha256`, read from
+  the traced `execve` of Kiln, equal the sealed configuration's digest; a status of
+  125 is a sandbox refusal exactly when the step's own `execve` is absent) and runs
+  `traced.Classify` with the sealed tree, the policy of `pre/classify.json` and a
+  **live no-follow disk view** (`LiveFS`: `lstat`, `readlink`, and a read only of a
+  regular file opened `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY` whose `/proc/self/fd` name is
+  the path asked, at most 64 KiB; no link anywhere in the path is followed and a
+  FIFO is never opened). `Tree.Head` returns disk bytes only when they hash to the
+  sealed blob id.
+- The result is `traces/<sha256(action)>/record.json` (`kiln-record-classified/1`:
+  the raw record, `writes_complete`, `steps_run`, `step_netns`, and `parse_ok` with
+  its reasons; no raw record when a trace did not parse, never an empty one), or
+  `record.failed` (a panic, a crash, the child killed or out of memory, a
+  classification over 10 minutes, traces over 2 GiB; the parser's limits are 1 GiB
+  and 8 million events per step), both written atomically. A step asked to run
+  after its action was classified is refused. **The step's exit status is never
+  changed.** `collect` classifies nothing: a missing or failed `record.json` is
+  `unknown_writes`.
+
 Tests: a fake `strace` script behind `tools.json` covers every refusal and
 outcome on any Unix (`step_unix_test.go`); `TestStepKillingTheSupervisorKillsStrace`
 covers `Pdeathsig` on Linux; `TestSandboxRecordStep` (the required `kiln-sandbox`
-job) runs `prepare` and `step` for real with the real strace and sandbox.
+job) runs `prepare` and `step` for real with the real strace and sandbox, and checks
+the last step's `record.json`. `classify_step_unix_test.go` plays canned helper-shaped
+traces through the fake tracer and the real parser and classifier on a temporary
+checkout, including the motivating case (a tracked link that a later action
+retargets: classified at the action's end the path is stable, classified after the
+later action it is `unstable-path` and the write set unknown).
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

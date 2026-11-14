@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- SEC-010: `cipher::decrypt` negated the raw shift, so `decrypt(text, i32::MIN)` panicked on overflow in a debug build and wrapped in a release build. It now reduces with `rem_euclid(26)` before negating. Tests: `decrypt_i32_min_does_not_panic_and_is_correct`, `decrypt_inverts_encrypt_at_extreme_shifts`, `encrypt_extreme_shifts_match_reference`.
 - `required_capabilities.json` rewritten to the canonical schema-v1 shape (version, package, capabilities objects, justification) so the hardened capability analyzer accepts it.
 
 All notable changes to this package will be documented in this file.

@@ -488,9 +488,25 @@ version; until then the canned fixtures are hand-written.
 directory is the one current at its `<unfinished ...>` line. An unfinished
 call may end at the process's exit line only if it carries no path
 (`wait4`, `exit_group`); an unfinished path call that never resumes is
-`unresumed-call`. A handled call whose result is `?` (including
-`ERESTARTSYS`) is `result`: restarted calls are not recognised in v1. A
-final line without its newline is `unparsable-line`, since strace may have
+`unresumed-call`. One more shape is accepted: a thread killed at syscall
+entry. When a fatal signal is already pending (a sibling's `exit_group`, a
+SIGKILL, an exec by another thread), strace cannot name the call and prints
+`???`, in exactly one of three spellings, each followed by that thread's exit
+line: `P  ???( <unfinished ...>` (S1); the same followed by
+`P  <... ??? resumed>) = ?` (S2); or the single line `P  ???()` padded to
+`= ?` (S3). The kernel's `ptrace_report_syscall` returns
+`fatal_signal_pending`, so `syscall_trace_enter` returns before seccomp and
+dispatch: the call never ran and the thread makes no further syscall, so the
+line is a death marker, not an observation, and produces no record. The
+spelling depends on a stale per-thread "filtered" flag from the previous
+syscall, which is why all three occur. Every other `???` shape stays
+`unparsable-line` (a result other than `= ?`, arguments, near-miss spellings),
+a call, second `???(` or signal line from the same pid before its exit is
+`interleaved-call`, a resume of another name or a second `??? resumed` is
+`unmatched-resume`, and one never followed by the exit is `unresumed-call`.
+This covers the superseded-leader exec case too, which is still refused. A
+handled call whose result is `?` (including `ERESTARTSYS`) is `result`:
+restarted calls are not recognised in v1. A final line without its newline is `unparsable-line`, since strace may have
 been cut off mid-line.
 
 **Process model.**
@@ -663,14 +679,21 @@ found these gaps in the text above; each decision below replaces it. G7 to
 G9 (the tracer completeness rule, trace storage, the strace install) are
 pending that PR and are not decided here.
 
-Stage 4 PR 2b is split in three. **2b-1** is `kiln record prepare`, everything
+Stage 4 PR 2b is split in five. **2b-1** is `kiln record prepare`, everything
 that runs before any BUILD (the section "Stage 4b-1" at the end of this
 section). **2b-2a** is the supervisor, `kiln record step` (decision P12).
-**2b-2b** is `kiln record collect`, the gates and toolchain probes, the
-in-sandbox probe and the real-`strace` end-to-end test. Each item of the two
+**2b-2b-i** makes `step` classify (decision P13): the sealed classifier
+inputs in `pre/`, the serial lock and `seq`, and `record.json` written at the
+end of each action. **2b-2b-ii** is `kiln record collect`: assembly, the
+post-build `VerifyTree`, `git fsck` and `Inventory`, the header counts, the
+`seq` contiguity check, the re-hash and final-newline checks, the shard writer
+and the full end-to-end test. **2b-2c** is the gates and toolchain probes, the
+in-sandbox socket probe and the `daemon-left` fixture. Each item of the two
 "Pending for PR 2b" lists below is marked **2b-1** (decided and implemented by
-`prepare`), **2b-2a** (decided and implemented by `step`) or **2b-2b** (still
-pending, owned by `collect` or the probes).
+`prepare`), **2b-2a** (decided and implemented by `step`), **2b-2b-i**
+(decided by P13, implemented by `step` and `prepare`), **2b-2b-ii** (still
+pending, owned by `collect`) or **2b-2c** (still pending, owned by the gates
+and probes). A bare **2b-2b** in older text means 2b-2b-i and 2b-2b-ii.
 
 **G5. The tree must equal `HEAD` before any digest is taken.** `Source` reads
 the working tree, and nothing proved the tree equals the commit; CI's default
@@ -752,10 +775,10 @@ keyed, so stage 5b lookups must set the same one.
 **Pending for PR 2b** (the review of 4a found these; they belong to the code
 that calls `VerifyTree` and `Inventory`, which does not exist yet):
 
-- **2b-2b.** `collect` treats any plain git error from `VerifyTree` (not only a
+- **2b-2b-ii.** `collect` treats any plain git error from `VerifyTree` (not only a
   `*TreeError`) as a void of the shard, like `tracked-changed`, and passes the
   commit id `prepare` recorded.
-- **2b-2b.** An `Inventory` error after the build voids the shard; it must not crash
+- **2b-2b-ii.** An `Inventory` error after the build voids the shard; it must not crash
   `collect` before the records are written.
 - **2b-1.** `prepare` fails if the pre-build inventory contains any path whose
   base name starts with `BUILD`: an untracked BUILD variant would change the
@@ -766,22 +789,23 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
 - **2b-1.** Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
   read by Kiln's Git calls, so the recorder's `HOME`, `XDG_CONFIG_HOME` and
   `PATH` must not be writable from the sandbox.
-- **2b-1** (the mask; the `git fsck` is **2b-2b**). The commit pin protects object ids, not the integrity of the object store. A
+- **2b-1** (the mask; the `git fsck` is **2b-2b-ii**). The commit pin protects object ids, not the integrity of the object store. A
   BUILD that could write `.git` could overwrite loose objects or
   `.git/config`, so `.git` must be unwritable from the sandbox (the
   `R/.git` mask is a requirement, not a convenience). Consider a post-build
   `git fsck --connectivity-only` as a second line.
-- **2b-1** (kept) and **2b-2b** (used by `collect`). The caller keeps `Result.Commit` from the
+- **2b-1** (kept) and **2b-2b-ii** (used by `collect`). The caller keeps `Result.Commit` from the
   pre-build `VerifyTree` and passes it as `expectedCommit` to the post-build
   call and to the merge job's call. `prepare` writes it as the binding's
   `revision` (decision P10).
 - **Sandbox follow-ups (S1 to S3) the recorder must honour** (§4.7):
   - **2b-2a.** the recorder passes `--stdout-fd` and `--stderr-fd` **together**,
     both pipes it reads, and checks that strace's own standard error is empty
-    (the sidecar records it; `collect` applies G7);
-  - **2b-2a** (never retried) and **2b-2b** (told apart). exit status 125 is a
+    (the sidecar records it; `step` applies the parse half of G7 at the action's
+    end, P13, and `collect` the rest);
+  - **2b-2a** (never retried) and **2b-2b-i** (told apart, by `step`). exit status 125 is a
     failure of the action and is **never retried unsandboxed**: `step` records
-    it (`exit_125`) and mirrors it. `collect` tells "the sandbox refused" from
+    it (`exit_125`) and mirrors it. `step`'s epilogue tells "the sandbox refused" from
     "the step exited 125" by whether the step's `execve` is in the trace;
   - **2b-1.** the anchor of a tool root beneath `home` is sealed read-only as a
     whole, so PR 2b's configuration generation must declare as `state_roots` everything
@@ -799,9 +823,11 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
 - **2b-1.** The pre-build inventory voids the shard if any in-repository regular file has
   `nlink > 1`: a pre-run hard-link alias is the one write path no trace names
   (§5.5, Aliases).
-- **2b-2b.** A step whose trace does not parse is `unknown_writes` and never complete; the
-  recorder must not substitute an empty record.
-- **2b-2b.** The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
+- **2b-2b-i.** A step whose trace does not parse is `unknown_writes` and never complete; the
+  recorder must not substitute an empty record. (`step`'s epilogue leaves
+  `record.failed`, or a record with the trace's reason, never an empty record;
+  `collect` turns a missing or failed `record.json` into `unknown_writes`.)
+- **2b-2b-ii.** The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
   raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
   stays required on the wire for every record. A record that ran nothing
   (`steps_run == 0` and not built: refused or gated) was never classified, so
@@ -814,23 +840,24 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   under `kiln sandbox-exec`, and false on every other path.
 - **2b-1** (confirmed for `prepare`) and **2b-2a** (confirmed for `step`: it starts only the
   pinned `strace`, which starts the pinned Kiln; gates and probes are
-  **2b-2b**, where this is to be confirmed again). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
+  **2b-2c**, where this is to be confirmed again). Confirm that no gate or probe (preconditions, toolchain probes, `kiln`'s own
   checks) runs repository code outside a traced step: untraced repository code
   can write the tree with no trace at all. `prepare` runs no probe and no gate
-  (gates are **2b-2b**, decision P7); the only programs it starts are Git, the
+  (gates are **2b-2c**, decision P7); the only programs it starts are Git, the
   build tool and `strace --version`, all resolved outside the checkout
   (decision P3).
 - **Done** (#19324). `recfmt.ShardRecord.Validate` refuses a record with `steps_run == 0` whose raw
   record has any content: a record that ran nothing was never classified.
-- **2b-2a** (the sidecar's `step_netns`) and **2b-2b** (`collect` copies it into
+- **2b-2a** (the sidecar's `step_netns`) and **2b-2b-i** (`step`'s epilogue copies it into
   `traced.Input.StepNetNS`). The recorder is the only setter of `traced.Input.StepNetNS`, and sets it to
   true only when the step ran under `kiln sandbox-exec` (which unshares `NET`);
   anywhere else it stays false, and an unbound loopback or abstract peer makes
   the write set unknown (W11).
-- **2b-2b.** Classify each action before a later action can change the tree: M8's
-  cross-action `unstable-path` does not feed G1, so an action classified after
-  another one rewrote links it traversed would see a different disk.
-- **2b-2b.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
+- **Decided: P13** (**2b-2b-i**). Classify each action before a later action can
+  change the tree: M8's cross-action `unstable-path` does not feed G1, so an
+  action classified after another one rewrote links it traversed would see a
+  different disk.
+- **2b-2c.** The `daemon-left` ordering (a survivor's SIGKILL exit line after the init
   child's) needs a real-`strace` fixture on Linux CI; the canned traces only
   assume it.
 
@@ -847,12 +874,12 @@ kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
                     --shard-index I --shard-count N --job-start <unix seconds>
                     [--strace <abs>] [--git <abs>]
 kiln record step    --dir <abs> -- sh -c <line>                          (2b-2a)
-kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs> (2b-2b)
+kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs> (2b-2b-ii)
 ```
 
 Every path is absolute. `step` is implemented in 2b-2a. `collect` exists
-until 2b-2b only as a stub that prints "not implemented (KILN04 stage 4 PR
-2b-2b)" and exits 1, so the CLI surface is fixed and a workflow written
+until 2b-2b-ii only as a stub that prints "not implemented (KILN04 stage 4 PR
+2b-2b-ii)" and exits 1, so the CLI surface is fixed and a workflow written
 against it fails loudly, never silently skips tracing. `prepare` writes the build tool's `-exec-wrapper`
 value to `pre/exec-wrapper.json`: the JSON array
 `["<kiln>","record","step","--dir","<dir>","--"]`, `<kiln>` being the
@@ -864,7 +891,7 @@ after `--` to be exactly `sh -c <line>` and the working directory to be
 
 ```
 build-tool -root <root> -plan-file <dir>/pre/build-plan.json -shard-index I \
-  -force -language all -exec-wrapper "$(cat <dir>/pre/exec-wrapper.json)" \
+  -jobs 1 -force -language all -exec-wrapper "$(cat <dir>/pre/exec-wrapper.json)" \
   -emit-results <dir>/results.json
 ```
 
@@ -913,7 +940,7 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 ```
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
-pre/tools.json
+pre/tools.json  pre/classify.json  pre/tree                        (the last two: P13)
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
@@ -926,9 +953,10 @@ to `0700`. Action names never become path components; their SHA-256 does. Before
 directory is refused). `pre/` is then made read-only (files `0444`, directories
 `0555`); if that pass fails, `SEALED` is removed again. The modes are cosmetic:
 integrity comes only from the files being unreachable from the sandbox, and from
-`step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b, list below).
-`traces/` is created by `prepare` (0700, outside the sealed `pre/`), its
-per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2b.
+`step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b-ii, list below).
+`traces/` is created by `prepare` (0700, outside the sealed `pre/`, holding
+`traces/.seq` = `0\n`; `prepare` also refuses a tree file over the 128 MiB a
+sealed file is read back at), its per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2c.
 
 **P5. Refusals that void the shard before it starts.** After `VerifyTree`
 (which supplies the commit) and before any export:
@@ -975,12 +1003,13 @@ tool's file, not a Kiln format.
 selected by `env.json` (`legacy.RecordEnviron`) plus `HOME` and
 `TMPDIR=<tmpdir>`, never `PATH`. Then the weak key of every package the shard
 runs (`PackageNames(I)`) is computed from `Traced` over the verified tree and
-those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/1`)
+those facts. `pre/actions/<sha256(action)>.json` (`kiln-record-action/2`)
 holds, per action: `action`, `language`, `weak` (hex) or `refusal` (the
-`Refusal` reason), and `steps`, the lines `kiln-legacy-steps/1` gives for it
-(`[]` when it has no BUILD for Linux). A package whose key is refused still
+`Refusal` reason), `steps`, the lines `kiln-legacy-steps/1` gives for it
+(`[]` when it has no BUILD for Linux), and `tools`, the sorted names of the tools
+the key pins (P13). A package whose key is refused still
 gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
-(`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2b**: they
+(`gate`, `precondition:<gate>`) and the toolchain probes are **2b-2c**: they
 need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
 
 **P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one
@@ -996,7 +1025,7 @@ mode bits and confirmed by `access(2)`, unknown meaning searchable (a step is th
 same user and cannot reach anything in it); a directory with
 `--x` and no `r` hides its names but not a socket at a known name, so it fails the
 scan, as does any other error. The scan of the sandbox's own view (the in-sandbox
-probe, design step 8) needs the supervisor and `strace`, so it is **2b-2b**; it is
+probe, design step 8) needs the supervisor and `strace`, so it is **2b-2c**; it is
 also what covers content a host mount point shadows beneath an `ro_roots` entry
 (§14).
 
@@ -1118,7 +1147,7 @@ would be run by `prepare` itself. So:
     working directory.
 - `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`,
   the `PATH` string and the build tool's exact environment (`build_tool_env`).
-- **2b-2a** (`step`) and **2b-2b** (`collect`). `kiln record step` and `collect` use only the recorded git path and
+- **2b-2a** (`step`) and **2b-2b-ii** (`collect`). `kiln record step` and `collect` use only the recorded git path and
   the recorded `PATH`, and never look a program up on `PATH`.
 - **2b-2a.** The workflow launches the build tool with **exactly** the recorded
   `build_tool_env` (nothing inherited). The build tool hands its own environment
@@ -1128,15 +1157,14 @@ would be run by `prepare` itself. So:
   `PATH` entry). The comparison is of multisets of `NAME=value` entries after
   removing `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`, and a repeated name
   (in either) is a refusal.
-- **2b-2a** (`step`) and **2b-2b** (`collect`). `step` and `collect` re-verify `pre/` against `SEALED` and the binding
+- **2b-2a** (`step`) and **2b-2b-ii** (`collect`). `step` and `collect` re-verify `pre/` against `SEALED` and the binding
   id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
   comes only from the files being unreachable from the sandbox.
 
 **P12. The step supervisor `kiln record step` (stage 4 PR 2b-2a).** The build
 tool runs it once per BUILD step through `-exec-wrapper` (P1). It runs
 outside the sandbox and is not traced itself; it traces the step and keeps
-the facts about the tracer that the trace cannot contain. It classifies
-nothing: classification is `collect` (2b-2b).
+the facts about the tracer that the trace cannot contain. It classifies the action after its final executed step (P13).
 
 *Before the step* (any failure here runs nothing, writes nothing but a
 diagnostic on standard error, and exits 125):
@@ -1229,7 +1257,9 @@ step's descriptors 1 and 2 are therefore pipes by construction, and nothing
 strace or the root prints can be mistaken for step output. `Pdeathsig` is
 `SIGKILL` on a locked OS thread: a supervisor that is killed takes strace with
 it, and `--kill-on-exit` takes the tracees. Exit
-status 125 is recorded (`exit_125`) and never retried (§4.7). strace's own
+status 125 is recorded (`exit_125`) and never retried (§4.7). strace's `-s 4096`
+cuts any string longer than that, so a BUILD line over 4096 bytes has an `execve`
+argv that cannot be decoded exactly and can never be recorded (P13). strace's own
 standard error, when not empty, is also saved (first 4 KiB) as
 `<step>.strace-stderr` (`O_EXCL`) for whoever has to find out why a run failed.
 It is untrusted diagnostic text (a step can make strace print what it likes):
@@ -1251,9 +1281,9 @@ job's output), or must wrap the build in `::stop-commands::<random token>`.
 
 *After the step.* The supervisor exits with the traced root's status, which
 strace mirrors: strace's own exit code, or 128 plus the signal that killed
-it. The sidecar `traces/<sha256(action)>/<step>.json` (`kiln-record-step/1`,
+it. The sidecar `traces/<sha256(action)>/<step>.json` (`kiln-record-step/2`,
 compact, no trailing newline, `O_EXCL`) holds: `action`, `step`,
-`step_count`, `binding_id`, `line_sha256`, `line_in_plan`, `started`,
+`step_count`, `seq` (P13), `binding_id`, `line_sha256`, `line_in_plan`, `started`,
 `started_at` and `ended_at` (RFC 3339, UTC, nanoseconds), `strace_exit` (-1
 if it was signalled), `strace_signal` (0 if not), `strace_stdout_empty`,
 `strace_stderr_empty`, `root_status` (strace's exit code: strace exits with
@@ -1272,22 +1302,155 @@ helper unshares the network namespace; it is false when the process could not
 be started. `collect` copies it into `traced.Input.StepNetNS` only when the
 step's own `execve` is in the trace (a refused sandbox has none).
 
-*Obligations of `collect` (all **2b-2b**), from the review of P12.*
+*Obligations of `collect` (**2b-2b-ii**, except the parse half of the third, which `step` applies, P13), from the review of P12.*
 
-- **2b-2b.** `collect` takes an **exclusive**, non-blocking `flock` on the
+- **2b-2b-ii.** `collect` takes an **exclusive**, non-blocking `flock` on the
   record directory (`record.LockDir(dir, true)`) and refuses if it cannot: a
   step, or an orphaned supervisor, is still running.
-- **2b-2b.** `collect` requires every trace to end in a newline, re-hashes it
+- **2b-2b-ii.** `collect` requires every trace to end in a newline, re-hashes it
   and requires the digest and size to equal the sidecar's `trace_sha256` and
   `trace_bytes`; a trace that does not is `unknown_writes`.
-- **2b-2b.** `collect` compares the `--sha256` argument of the init's traced
+- **2b-2b-ii.** `collect` compares the `--sha256` argument of the init's traced
   `execve` (the digest the root read the configuration with) and the
   `--config-sha256` of the root's with the binding's `sandbox_config_sha256`,
   so the configuration a step ran under is the sealed one even where the
   recorder verified the file by content but the helper opened it by path.
-- **2b-2b.** `collect` treats any `.rerun` marker, any sidecar without a trace
+- **2b-2b-ii.** `collect` treats any `.rerun` marker, any sidecar without a trace
   (or the reverse), any `trace-write-failed` and any `strace-pipes-held-open`
   as an unknown write set.
+- **2b-2b-ii** (from the review of P13). `collect` requires the `seq` values of
+  the whole shard to be globally distinct, each below the final value of
+  `traces/.seq`, and consecutive in step order within each action; any `.overlap`
+  marker voids the shard. It requires `steps_run` of a `record.json` to equal the
+  number of started sidecars of the action, treats `record.failed` as overriding
+  `record.json` (both present is a failure), requires the record's `binding_id`
+  and `sealed_sha256` to equal the sealed directory's, and treats a `record.json`
+  that does not decode (or a stray `record.json.tmp-*`) as an unknown write set,
+  never as "no record". It must not read `sandbox-refused` in `parse_reasons` as
+  "the step wrote nothing": a refused step ran nothing, but the sandbox may have
+  failed after it had changed the disk, so the action's write set is unknown.
+
+**P13. Records are classified at action end, and recording is serial
+(2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
+classified after a later action changed a link, directory or file it resolved
+through places its writes and observations wrongly. M8 and M10 catch this in
+the strict verdict only through M-3, not at all in the relaxed one, and not for
+host state roots. So:
+
+1. *Serial.* The traced build runs with `-jobs 1`. `step` holds an exclusive,
+   non-blocking `flock` on `traces/.serial` from before its checks until it
+   exits; a step that cannot take it leaves `<step>.overlap`, runs nothing and
+   exits 125 (the marker only for a lock that is HELD, `EWOULDBLOCK`; any other
+   failure to take it is a refusal with no claim of overlap). Under that lock it
+   assigns the sidecar a `seq` from `traces/.seq`, which `prepare` creates as
+   `0\n`; the update is one `pwrite` at offset 0 and a sync (the number never
+   gets shorter, so there is no truncate for a kill to land after), and an empty,
+   missing or malformed counter is refused, never reset. A refused step takes no
+   number. `collect` requires each action's `seq` values to be contiguous; any
+   `.overlap` or gap makes every record of the shard `unknown_writes`
+   (`serial-violated`, M1).
+2. *Sealed inputs.* `prepare` also writes `pre/tree` (`kiln-record-tree/1`:
+   every tracked path of the verified commit with mode, blob id and link text),
+   `pre/classify.json` (the host roots and pinned ecosystems) and each action's
+   `tools` (action files become `kiln-record-action/2`). Neither `step` nor
+   `collect` builds a `legacy.Traced` or runs Git to classify.
+3. *Classification.* After the sidecar of the action's last step, or of a step
+   that did not start or exited non-zero, and before releasing the lock, `step`
+   parses the action's traces, applies the parse half of G7, and runs
+   `traced.Classify` with `Tree` from `pre/tree` and `FS` a live reader that
+   follows no symlink (`lstat`, `readlink`; a head is read only from a regular
+   file opened `O_NOFOLLOW|O_NONBLOCK|O_NOCTTY` whose `/proc/self/fd` path
+   equals the path asked). `Tree.Head` returns disk bytes only when they hash
+   to the sealed blob id. The result is `traces/<sha256(action)>/record.json`,
+   written atomically (to a temporary name, then `link(2)`, never replacing). The
+   work runs in a **child process**, `kiln record classify-action --dir D
+   --action A --step N --data-limit B`, so that running out of memory or any
+   other fatal runtime error is a process that did not exit 0 and not the end of
+   the supervisor: the child is given only those paths and numbers, re-verifies
+   `pre/` and the sidecar itself, and writes `record.json` itself, and the parent
+   decodes the file again (action, binding and `sealed_sha256` must match). Its
+   memory is bounded by `GOMEMLIMIT` (soft, 5 GiB) and `RLIMIT_DATA` (hard, 8 GiB,
+   set by the child on itself); `RLIMIT_AS` is not used because the Go runtime
+   reserves address space it never touches. The parser's limits are 1 GiB and 8
+   million events per step (the supervisor's own trace cap, so a trace the
+   supervisor accepted is one the classifier reads; the parser's defaults of 64
+   MiB and 1 million records are not used), and all the action's traces together
+   may not exceed 2 GiB. A panic, a crash, the child killed, a memory overrun, a
+   classification over 10 minutes (the parent kills the child), traces over the
+   cap, or a child that exits 0 without a valid record leaves `record.failed`
+   (atomically, the reason as text) instead; the epilogue can therefore add up to
+   10 minutes to the last step. The step's exit status is never changed. A step
+   asked to run after its action's `record.json` or `record.failed` exists is
+   refused (125, nothing run). Every unclean sidecar is a parse reason
+   (`step N: unclean:<reason>`), so an action with an unclean tracer has no raw
+   record. A BUILD line over 4096 bytes can never be recorded: strace runs with
+   `-s 4096`, the step's `execve` argv is cut, and the recipe and digest checks
+   fail. Likewise any `execve` whose printed argv exceeds the parser's 1 MiB line
+   cap (a huge glob expansion, an `xargs` batch) fails closed: the trace is not
+   parseable, and the run is voided. The supervisor reads the child's
+   `record.json` through a non-following handle and refuses a file over 256 MiB
+   (`record-too-large`); the child drops a raw record whose lists reached the
+   classifier's own cap (`writes-too-many`), which is incomplete anyway. A failure
+   removes any `record.json` before linking `record.failed`, so one verdict
+   remains (and where it cannot be removed `record.failed` overrides). The child
+   is `/proc/self/exe` (the image the supervisor verified), sets
+   `oom_score_adj` 1000 and `RLIMIT_DATA` to the smaller of 8 GiB and half of
+   `MemTotal` (soft limit scaled 5:8), and refuses unless the step ends its action
+   (the last step, or one that did not start or exited non-zero) and no verdict
+   exists yet.
+   The parse half of G7 is: every trace parses (with the sandbox helper as
+   root); the root's exit line equals the sidecar's `root_status`; the traced
+   `execve` of the init's `--sha256` and the root's `--config-sha256` equal
+   `binding.sandbox_config_sha256`; and a status of 125 is a sandbox refusal
+   exactly when the step's own `execve` is absent from the trace.
+4. *`collect`* classifies nothing. A missing or failed `record.json` for an
+   action that ran a step is `unknown_writes`. "Post-run disk" in §5.1 now reads
+   "the disk at the end of the action".
+
+*As implemented.* `pre/tree` is line-oriented, sorted bytewise by path:
+`kiln-record-tree/1\n`, then `<mode> <blob id> <path>\n`, and
+`<mode> <blob id> <path> <link text>\n` for mode `120000`. A path or link text
+is written with every byte that is not visible ASCII, and `%`, as `%XX` in
+upper-case hex, so a line splits on single spaces and each byte string has
+exactly one spelling; the decoder refuses anything else (an unsorted or repeated
+path, a path that is both a file and a directory, a needless or lower-case
+escape, a link text on a file, mixed object-id lengths). A link text is checked
+against its blob id before it is written. On this repository the file has
+394 222 lines and 48 MB: written in about 0.3 s, hashed in about 20 ms (once per
+step, by `VerifyPre`) and strictly decoded in about 0.2 s (once per action, by
+`Pre.Tree`, only when a step classifies). `VerifyPre` hashes it and decodes
+`classify.json` and the action files; the tree is decoded lazily.
+
+The sidecar is `kiln-record-step/2` (adds `seq`, from 0). `record.json` is
+`kiln-record-classified/1`: the raw record, `writes_complete` (the classifier's
+own answer, which is not part of the raw record's JSON), `steps_run`,
+`step_netns`, `sealed_sha256` (the digest of `pre/SEALED`), and `parse_ok` with
+`parse_reasons`, so that `collect` can build a
+`recfmt.ShardRecord` without parsing a trace. When any trace fails the parse half
+of G7 the record carries the reasons and **no** raw record (`record: null`,
+`parse_ok: false`, `writes_complete: false`); it is never an empty record.
+`record.failed` holds the reason as text (`panic:`, `timeout:`, `traces-too-large:`,
+`classified-twice:`, `the classifier failed: <exit status or signal>`, or the
+classifier's own error). A sandbox refusal is a status
+of 125 with no step `execve` in the trace, which the parser reports as
+`helper-no-init` (the root died before it made the init) or `helper-no-exec` (the
+init died before the step); the epilogue names both `sandbox-refused`. An
+`.overlap` marker is not evidence that a step ran: `checkOrder` skips it, so a
+step refused the lock can be run once the lock is free (the marker stays and
+`collect` voids the shard).
+
+*Why the silent case is the strong case for P13.* A link an action creates
+itself is resolved from the DISK, not from the link text in the trace: that text
+is used only under the fresh `$HOME` and `TMPDIR`. Only an `open` is checked
+against the kernel's `-y` path. So `mkdir`, `rename`, `unlink`, `symlink` and
+`chmod` through a link are placed wherever the link points when the classifier
+looks, and nothing says it moved: an action that makes `L -> d1` and runs `mkdir
+L/sub` is classified at its end as writing `d1/sub`, but after a later action
+retargeted `L -> d2` as writing `d2/sub`, with `writes_complete` still true (a
+test pins both). For a link that was already there (tracked, or left by an
+earlier action) an `open` is caught late as `unstable-path` and an unknown write
+set; the other calls are not. Classifying at the action's end closes both, and
+host state roots as well.
 
 ### 4.7 Sandbox decisions (stage 3b)
 
@@ -1751,6 +1914,8 @@ unprivileged user namespaces and skip where the kernel refuses them.
 ## 5. From trace to manifest
 
 ### 5.1 Resolving each observation
+
+*(Amended by decision P13, §4.8: wherever this section says "the post-run disk" it means the disk at the end of the action, because the recorder classifies each action when its last step ends, with recording serial.)*
 
 The parser tokenises strace output with a **real state machine**, not
 regular expressions, and unescapes strings exactly. A filename containing
@@ -3161,7 +3326,7 @@ These are known and named. They are measured rather than closed.
   directory only when mountinfo lists it as a mount point, and the sandbox binds
   an `ro_roots` entry non-recursively, so what the mount hides on the host is
   what the step sees. That is not scanned on the host; the in-sandbox probe of
-  stage 4 PR 2b-2b (a walk of the sandbox's own view) covers it.
+  stage 4 PR 2b-2c (a walk of the sandbox's own view) covers it.
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above
@@ -3170,6 +3335,12 @@ These are known and named. They are measured rather than closed.
   strace therefore means **raising `MaxKnownSyscall`** (after adding the calls
   the new strace knows to the parser's table, §4.4) and bumping `kiln:recorder`.
   Forgetting leaves the newer calls blocked, which fails closed, not open.
+
+- **Serial recording is slower.** P13 runs the traced build with `-jobs 1`, so a
+  shard's wall time is the sum of its packages', not the longest chain's. The
+  mitigation is a higher shard count (the plan already partitions by measured
+  duration); measure the slowest shard before raising it. Strace itself slows
+  each step, so the effect compounds.
 
 - **Nondeterminism.** Time, randomness, thread scheduling, CPU count and
   model, hostname, uid, and the mtimes and inode numbers that `stat`
