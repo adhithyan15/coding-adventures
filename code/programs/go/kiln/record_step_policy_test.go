@@ -39,6 +39,7 @@ func recStepPolicyFiles(imagePaths []string) map[string]string {
 }
 `,
 		"code/kiln/legacy/env.json":        `{"names": ["FIXTURE_*", "LANG"]}`,
+		legacy.BoundaryPath:                `{"schema_version": 1, "language_source_input_registry_sha256": "00", "boundaries": []}`,
 		"code/kiln/legacy/host-roots.json": `{"roots": [` + strings.Join(roots, ",") + `], "ephemeral": ["/dev/null"], "absent-ok": []}`,
 	}
 }
