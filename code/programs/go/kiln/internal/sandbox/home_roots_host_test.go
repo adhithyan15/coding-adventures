@@ -21,9 +21,9 @@ func TestCheckHostRoRootBeneathHomeRefusesSymlink(t *testing.T) {
 	os.Symlink(real, filepath.Join(f.cfg.Home, ".sub", "bin"))
 	for _, link := range []string{filepath.Join(f.cfg.Home, ".dotnet"), filepath.Join(f.cfg.Home, ".sub", "bin")} {
 		f.cfg.RoRoots = []string{"/usr", link}
-		if err := f.cfg.Validate(); err != nil {
-			t.Fatal(err)
-		}
+		// No Validate here: CheckHost is the layer under test, and on Linux
+		// t.TempDir() lies under /tmp, where Validate's M2 rule (home's
+		// ancestors must be unmovable) rightly refuses any root beneath home.
 		if err := f.cfg.CheckHost("pkg", f.facts()); err == nil || !strings.Contains(err.Error(), "symlink") {
 			t.Errorf("%s: %v", link, err)
 		}
