@@ -66,6 +66,24 @@ func TestCheckHostAccepts(t *testing.T) {
 	}
 }
 
+// Home is a fresh tmpfs in the sandbox, so a configuration beneath it that no
+// bind exposes is safe (KILN04 4.7): this is where RUNNER_TEMP lives on a
+// hosted runner.
+func TestCheckHostAcceptsAConfigurationBeneathHome(t *testing.T) {
+	f := newHostFixture(t)
+	h := f.facts()
+	h.ConfigPath = filepath.Join(f.cfg.Home, "work", "_temp", "kiln-record", "pre", "sandbox.json")
+	if err := os.MkdirAll(filepath.Dir(h.ConfigPath), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(h.ConfigPath, []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := f.cfg.CheckHost("pkg", h); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestCheckHostRefusals(t *testing.T) {
 	cases := []struct {
 		name string
@@ -78,7 +96,13 @@ func TestCheckHostRefusals(t *testing.T) {
 		{"cwd elsewhere", func(f *hostFixture, h *HostFacts) { h.Cwd = f.base }, "package directory"},
 		{"relative config path", func(f *hostFixture, h *HostFacts) { h.ConfigPath = "cfg.json" }, "not absolute"},
 		{"config in repo", func(f *hostFixture, h *HostFacts) { h.ConfigPath = filepath.Join(f.cfg.RepoRoot, "cfg.json") }, "rewrite"},
-		{"config in home", func(f *hostFixture, h *HostFacts) { h.ConfigPath = filepath.Join(f.cfg.Home, "cfg.json") }, "rewrite"},
+		{"config in an ro root", func(f *hostFixture, h *HostFacts) { h.ConfigPath = "/usr/share/cfg.json" }, "rewrite"},
+		{"config in an ro root beneath home", func(f *hostFixture, h *HostFacts) {
+			root := filepath.Join(f.cfg.Home, "present-mask")
+			f.cfg.RoRoots = append(f.cfg.RoRoots, root)
+			h.ConfigPath = filepath.Join(root, "cfg.json")
+		}, "rewrite"},
+		{"config over a state root", func(f *hostFixture, h *HostFacts) { h.ConfigPath = filepath.Join(f.base, "state") }, "rewrite"},
 		{"config in tmpdir", func(f *hostFixture, h *HostFacts) { h.ConfigPath = filepath.Join(f.cfg.Tmpdir, "cfg.json") }, "rewrite"},
 		{"config in state", func(f *hostFixture, h *HostFacts) { h.ConfigPath = filepath.Join(f.base, "state", "cfg.json") }, "rewrite"},
 		{"repo missing", func(f *hostFixture, h *HostFacts) {

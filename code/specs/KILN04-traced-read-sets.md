@@ -826,7 +826,7 @@ command group, `kiln record`, three subcommands:
 ```
 kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
                     --shard-index I --shard-count N --job-start <unix seconds>
-                    [--strace <abs>]
+                    [--strace <abs>] [--git <abs>]
 kiln record step    --dir <abs> -- sh -c <line>                          (2b-2)
 kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs> (2b-2)
 ```
@@ -874,15 +874,17 @@ non-empty (`state-preloaded`). In addition `prepare` refuses an `ro_roots`
 entry that overlaps the record directory, `RUNNER_TEMP`, either binary, or the
 directory of `GITHUB_ENV`, `GITHUB_PATH` or `GITHUB_OUTPUT`.
 
-**Open (found by implementing P9).** `Config.CheckHost` (§4.7, "the
-configuration file is not inside the checkout, `home`, `tmpdir` or a state
-root") refuses a configuration inside `home`, and `prepare` runs it. On a
-hosted runner `RUNNER_TEMP` is `/home/runner/work/_temp`, beneath `home`
-(`/home/runner`), so the design's `--dir $RUNNER_TEMP/kiln-record` is refused
-there. §4.7 itself says `home` is a fresh tmpfs the host's copy never appears in
-(that is why `kiln_exe` is not checked against it), so dropping `home` from the
-configuration-path rule is sound; until that is decided and reviewed, `--dir`
-must lie outside `home`.
+**Decided (found by implementing P9, review of 4b-1).** `Config.CheckHost`
+used to refuse a configuration file inside `home`. On a hosted runner
+`RUNNER_TEMP` is `/home/runner/work/_temp`, beneath `home` (`/home/runner`), so
+the design's `--dir $RUNNER_TEMP/kiln-record` was refused. The rule is now the
+precise one (§4.7): the configuration, which is read host-side before the pivot,
+may not overlap `repo_root`, `tmpdir`, a state root or an `ro_roots` entry, in
+either direction, because after the pivot a host path is visible only inside
+one of those (every bind is non-recursive, and `Validate` refuses an `ro_roots`
+entry that is or contains `home`). `home` itself is a fresh tmpfs the host's
+copy never appears in, so it protects nothing in this rule. `--dir
+$RUNNER_TEMP/kiln-record` works.
 
 **P4. The record directory.** `--dir` must not be a symlink and must be
 canonical (`EvalSymlinks(dir) == dir`), so no component can be redirected. It
@@ -892,12 +894,20 @@ under it is created `O_EXCL`. Layout of the part `prepare` writes:
 ```
 pre/binding.json  pre/host-facts.json  pre/inventory.json  pre/graph.json
 pre/steps.json    pre/build-plan.json  pre/sandbox.json     pre/exec-wrapper.json
+pre/tools.json
 pre/actions/<sha256(action)>.json
 pre/SEALED        (sha256 and path of every other pre/ file, written last)
 ```
 
-Action names never become path components; their SHA-256 does. `pre/` is then
-made read-only (files `0444`, directories `0555`). `traces/` and `probe/` are
+An existing empty `--dir`, and an existing `tmpdir`, must be owned by the
+running user and not writable by group or others, and their mode is then forced
+to `0700`. Action names never become path components; their SHA-256 does. Before
+`SEALED` is written, `pre/` is walked: every entry must be the directory itself,
+`actions/`, or a regular file `prepare` wrote (a stray file, a symlink or another
+directory is refused). `pre/` is then made read-only (files `0444`, directories
+`0555`); if that pass fails, `SEALED` is removed again. The modes are cosmetic:
+integrity comes only from the files being unreachable from the sandbox, and from
+`step` and `collect` re-verifying `pre/` (2b-2 list below). `traces/` and `probe/` are
 created by 2b-2.
 
 **P5. Refusals that void the shard before it starts.** After `VerifyTree`
@@ -909,6 +919,8 @@ created by 2b-2.
   untracked directory to one entry, so a new package's `BUILD` inside it is not
   an inventory entry of its own; the walk is `lstat`-only and follows no
   symlink;
+- any socket or FIFO below the root: the checkout is bound writable into every
+  step, so one would reach a process outside the sandbox;
 - any regular file below the root, tracked or not, with `st_nlink > 1`: a
   pre-run hard-link alias is the one write path no trace names (§5.5,
   Aliases). Directories and symlinks are not counted. The root `.git` is not
@@ -924,8 +936,9 @@ the verified tree.** In this order, with a scrubbed environment (Kiln's own
 pre/steps.json`, then `build-tool -root R -force -language all -shard-count N
 -shard-weights code/specs/data/ci-package-durations.json -emit-plan
 pre/build-plan.json`. Each runs under a 15-minute timeout; a non-zero exit or
-a missing output fails. `graph_sha256` and `steps_sha256` of the binding are
-the SHA-256 of the **file bytes** (both exports are byte-stable, §4.6); the
+a missing output fails. Each export is read once, from a non-following handle,
+and the digest is taken over the very bytes that are then parsed. `graph_sha256`
+and `steps_sha256` of the binding are the SHA-256 of the **file bytes** (both exports are byte-stable, §4.6); the
 merge compares them with the same digest of its own regeneration (B3). The
 plan must hold exactly `N` shards with indices `0..N-1`, and every package
 name a shard lists must be a package of the plan; `partition_sha256` is
@@ -951,11 +964,19 @@ gets an environment (`Traced.RecordEnv`), because it still runs. **Gates**
 need `legacy.Gate` extracted from the planner, and `prepare` runs no probe.
 
 **P8. The host scan (D15).** Every `ro_roots` entry is walked on the host, one
-goroutine per root, with `lstat` only: it follows no symlink and never crosses
-a device boundary (`st_dev` differs from the root's). A socket or a FIFO is an
-error naming at most `MaxReported` paths. A root that is itself a symlink
-(`/bin`) is not entered. The scan of the sandbox's own view (the in-sandbox
-probe, design step 8) needs the supervisor and `strace`, so it is **2b-2**.
+goroutine per root, with `lstat` only: it follows no symlink. A socket or a FIFO
+is an error naming at most `MaxReported` paths, and a root's walk stops at that
+many. A root that is itself a symlink (`/bin`) is not entered. A directory with a
+different `st_dev` is skipped only when `/proc/self/mountinfo` lists it as a
+mount point (the bind is non-recursive); if mountinfo cannot be read, or does not
+list it, it is scanned like any other, so the scan fails closed. A directory the
+scan cannot list is skipped only when this process also lacks search permission
+on it (a step is the same user and cannot reach anything in it); a directory with
+`--x` and no `r` hides its names but not a socket at a known name, so it fails the
+scan, as does any other error. The scan of the sandbox's own view (the in-sandbox
+probe, design step 8) needs the supervisor and `strace`, so it is **2b-2**; it is
+also what covers content a host mount point shadows beneath an `ro_roots` entry
+(§14).
 
 **P9. The sandbox configuration.** `pre/sandbox.json` is generated from
 `code/kiln/legacy/host-roots.json` as the tracked tree has it, and must pass
@@ -989,21 +1010,59 @@ probe, design step 8) needs the supervisor and `strace`, so it is **2b-2**.
   steer them.
 - `env_by_action` maps every package the shard runs to its scrubbed
   environment (`WeakKey.Environ()`, or `Traced.RecordEnv` for a refused one).
-- An `ro_roots` entry that overlaps the record directory, `RUNNER_TEMP`, either
-  binary, or the directories of `GITHUB_ENV`, `GITHUB_PATH` and
-  `GITHUB_OUTPUT` is refused.
+- An `ro_roots` entry **or a state root** that overlaps, in either direction, the
+  record directory, `RUNNER_TEMP`, the Kiln or build-tool binary, or the
+  directory of `GITHUB_ENV`, `GITHUB_PATH`, `GITHUB_OUTPUT`,
+  `GITHUB_STEP_SUMMARY` or `GITHUB_EVENT_PATH` is refused. A **state root** also
+  may not overlap the `strace` or `git` binary or any directory of the recorder's
+  `PATH` (a read-only root may: the image's `strace` and `git` live under `/usr`),
+  because it is writable from the sandbox.
+- `XDG_CONFIG_HOME`, when set, must be absolute.
+- An empty shard is not recorded: a shard that runs no package has an empty
+  `env_by_action`, which `Validate` refuses, so `prepare` fails. This is the
+  decision, not an accident: a recording that ran nothing is a void shard.
 
 **P10. The binding.** `pre/binding.json` is `recfmt.EncodeBinding` of
 `kiln-record-binding/1`: `repository`, `run`, `attempt` and `revision` (the
 commit `VerifyTree` returned, which `GITHUB_SHA` equalled), `shard_index`,
 `shard_count`, the digests of the graph, steps, partition, host facts,
 inventory and sandbox configuration, `kiln_sha256`, `build_tool_sha256`,
+`strace_sha256`, `git_sha256`,
 `recorder` (`legacy.RecorderVersion`), `strace_version`, `kernel`
 (`/proc/sys/kernel/osrelease`), `job_start` and `prepared_at`. Every
 `pre/` file is written exactly as the `recfmt` encoder produced it, with no
 trailing newline, so `binding_id` is the SHA-256 of the file and the merge's
 strict decoder reads it back byte for byte. Given the same inputs and the same
 clock, `prepare` writes the same bytes.
+
+**P11. The recorder's PATH and its git (review of 4b-1, H1).** Kiln, the build
+tool and the programs they start look programs up on the PATH they were started
+with, and `ci.yml` puts `$GITHUB_WORKSPACE/.lua/bin` first. The checkout is
+writable from every step, so a BUILD could plant `<checkout>/.lua/bin/git`, and
+the next host-side `git` call would run it unsandboxed; a tracked file there
+would be run by `prepare` itself. So:
+
+- `git` is resolved **once**, from `--git` (default `/usr/bin/git`), with the same
+  rules as the other binaries (absolute, canonical, a regular file, hashed into
+  the binding as `git_sha256`), and `strace` likewise (`strace_sha256`). Both
+  must lie outside the checkout, `tmpdir`, the record directory and every state
+  root; being under a read-only root (`/usr`) is fine, because a step cannot
+  write it.
+- Every Git call Kiln makes in `prepare` goes through `source.NewGitAt(dir, git,
+  path)`, which runs that file by path with an explicit PATH; the default
+  `source.NewGit` is not used by the recorder.
+- The process `PATH` must be non-empty, with no empty and no relative entry, and
+  no entry (spelled out or after `EvalSymlinks`) may overlap the checkout,
+  `tmpdir` or the record directory; it also stays out of the state roots (P9).
+  The build tool is started with a scrubbed environment whose `PATH` is exactly
+  that validated value. The build tool's own code is not changed.
+- `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`
+  and the `PATH` string.
+- **2b-2.** `kiln record step` and `collect` use only the recorded git path and
+  the recorded `PATH`, and never look a program up on `PATH`.
+- **2b-2.** `step` and `collect` re-verify `pre/` against `SEALED` and the binding
+  id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
+  comes only from the files being unreachable from the sandbox.
 
 ### 4.7 Sandbox decisions (stage 3b)
 
@@ -1070,8 +1129,13 @@ and that every `ro_roots` entry exists and is either a symlink (whose
 `<new root>/<parent>`) or a canonical directory or file,
 because the mounts are made at `<new root>/<path>` and an absolute symlink in a
 component would resolve against the host's root; that no mask target is a
-symlink; that every mask target exists; that the configuration file is not inside the checkout,
-`home`, `tmpdir` or a state root; and that the working directory is exactly
+symlink; that every mask target exists; that the configuration file does not overlap
+the checkout, `tmpdir`, a state root or an `ro_roots` entry, in either direction
+(not `home`: it is a fresh tmpfs the host's copy never appears in, so a
+configuration beneath it that no bind exposes, such as `$RUNNER_TEMP`'s, is safe;
+after the pivot a host path is visible only inside one of those, because every
+bind is non-recursive and an `ro_roots` entry never is or contains `home`); and
+that the working directory is exactly
 `repo_root/<KILN_ACTION>`.
 
 **Processes.** The root (`sandbox-exec`) is the process strace traces. It
@@ -2321,7 +2385,7 @@ pre-BUILD inventory.
 |---|---|---|
 | B1 | run | The merge's own tree verifies and `HEAD` equals the workflow's sha (before `Merge`, which receives the regenerated digests). |
 | B2 | run | One shard per index `0..N-1`, the index from the artifact name and equal to the header's and the binding's; `shard_count == N ==` the regenerated plan's. |
-| B3 | run | `repository`, `run`, `revision`, `recorder` match; `attempt` is at most the merge's; `graph_sha256`, `steps_sha256` and `partition_sha256` equal the regenerated ones; `host_facts_sha256` and `inventory_sha256` are those of the files beside the binding. |
+| B3 | run | `repository`, `run`, `revision`, `recorder` match; `attempt` is at most the merge's; `graph_sha256`, `steps_sha256` and `partition_sha256` equal the regenerated ones; `host_facts_sha256` and `inventory_sha256` are those of the files beside the binding. `kiln_sha256`, `build_tool_sha256`, `strace_sha256`, `git_sha256` and `sandbox_config_sha256` are **audit-only today**: the merge validates their form and compares none of them (there is no trusted value to compare with yet). |
 | B4 | run | Every record line carries its shard's `binding_id` and is well-formed; the shard's actions are exactly `PackageNames(s)`, once each. |
 | B5 | run | Weak keys recompute (G4). |
 | B6 | run | A `built` record's `steps_sha256` equals the digest of the regenerated step lines, else `trace-incomplete:recipe-mismatch`, an unknown write set that `writes_complete` never excuses. |
@@ -2852,6 +2916,17 @@ scheduled and dispatched full build.
 ## 14. Residual risks
 
 These are known and named. They are measured rather than closed.
+
+- **Recorded binary digests are audit-only.** The binding carries the SHA-256 of
+  the Kiln, build-tool, `strace` and `git` binaries and of the sandbox
+  configuration, but `recmerge` compares none of them (B3). Backlog: pin the
+  expected digests (built in the merge job from the same commit) and compare.
+
+- **Content shadowed beneath a host mount point.** The host scan skips a
+  directory only when mountinfo lists it as a mount point, and the sandbox binds
+  an `ro_roots` entry non-recursively, so what the mount hides on the host is
+  what the step sees. That is not scanned on the host; the in-sandbox probe of
+  stage 4 PR 2b-2 (a walk of the sandbox's own view) covers it.
 
 - **The strace pin and the seccomp threshold move together.** The sandbox
   filter answers `ENOSYS` for every system call number above

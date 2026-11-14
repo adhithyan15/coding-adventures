@@ -35,11 +35,17 @@ func (c *Config) CheckHost(action string, h HostFacts) error {
 	if err := checkPath("config path", h.ConfigPath); err != nil {
 		return err
 	}
-	// The configuration is read, then trusted: it must not be somewhere a step
-	// can write.
-	for _, w := range append([]string{c.RepoRoot, c.Home, c.Tmpdir}, c.StateRoots...) {
-		if within(h.ConfigPath, w) {
-			return fmt.Errorf("sandbox-exec: the configuration lies inside %q, where a step could rewrite it", clip(w))
+	// The configuration is read host-side, before the pivot, and then trusted:
+	// it must not be somewhere a step can reach. After the pivot a host path is
+	// visible only if it lies inside repo_root, a state root or an ro root
+	// (every bind is non-recursive, and Validate refuses an ro root that is or
+	// contains home), and tmpdir is the staging area. $HOME itself is a fresh
+	// tmpfs the host's copy never appears in, so a configuration under home that
+	// none of those exposes is safe. The exposure set is checked in both
+	// directions.
+	for _, w := range append(append([]string{c.RepoRoot, c.Tmpdir}, c.StateRoots...), c.RoRoots...) {
+		if within(h.ConfigPath, w) || within(w, h.ConfigPath) {
+			return fmt.Errorf("sandbox-exec: the configuration lies inside or over %q, where a step could reach or rewrite it", clip(w))
 		}
 	}
 	for _, d := range []struct{ what, p string }{
