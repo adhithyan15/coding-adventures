@@ -4768,6 +4768,103 @@ impl<
     }
 }
 
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'evidence,
+        'initialized,
+        'path,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'policy,
+        'anchor_certificate,
+        'anchor_encoded,
+        'role_certificate,
+        'role_encoded,
+        ResponderRevocation,
+    > ReviewedResponderRevocationIntermediateBindingEvidence
+    for BoundX509OcspReviewedResponderRevocation<
+        BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
+            AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+                'binding,
+                'basic_response,
+                'basic_encoded,
+                'single_response,
+                'single_encoded,
+                'responder,
+                'responder_encoded,
+                'target,
+                'target_encoded,
+                'issuer,
+                'issuer_encoded,
+            >,
+            ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy<
+                'evidence,
+                'initialized,
+                'path,
+                'path_target,
+                'path_target_encoded,
+                'candidates,
+                'candidate_encoded,
+                'policy,
+                'anchor_certificate,
+                'anchor_encoded,
+                'role_certificate,
+                'role_encoded,
+            >,
+        >,
+        ResponderRevocation,
+    >
+{
+    fn retained_intermediate_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .target_issuer_signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate()
+    }
+
+    fn selected_reviewed_root_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .strong_name_policy_path()
+            .subordinate_policy()
+            .target_policy()
+            .anchor_policy()
+            .target_signature_closure()
+            .accumulated_intermediates()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate()
+    }
+
+    fn server_status_observation_time(&self) -> x509_time::X509Time {
+        self.intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .revocation()
+            .observation_time()
+    }
+}
+
 /// Apply reviewed-root DNS policy to an authenticated-branch status responder.
 ///
 /// This is the authenticated-original-responder counterpart to
@@ -7012,8 +7109,12 @@ mod tests {
     const NULL_DER: &[u8] = &[0x05, 0x00];
 
     #[test]
-    fn strongest_name_policy_proof_is_admitted_to_added_responder_anchor_evidence() {
+    fn strongest_name_policy_proof_is_admitted_to_generic_private_evidence() {
         fn assert_original_proof_evidence<T: ReviewedIntermediateStatusOriginalProofEvidence>() {}
+        fn assert_intermediate_binding_evidence<
+            T: ReviewedResponderRevocationIntermediateBindingEvidence,
+        >() {
+        }
 
         type StrongestOriginalProof =
             BoundX509OcspRoutedIssuerAccumulatedNamePolicyReviewedServerRevocation<
@@ -7047,6 +7148,9 @@ mod tests {
             >;
 
         assert_original_proof_evidence::<StrongestOriginalProof>();
+        assert_intermediate_binding_evidence::<
+            BoundX509OcspReviewedResponderRevocation<StrongestOriginalProof, u8>,
+        >();
     }
 
     fn fixture(hexadecimal: &str) -> Vec<u8> {

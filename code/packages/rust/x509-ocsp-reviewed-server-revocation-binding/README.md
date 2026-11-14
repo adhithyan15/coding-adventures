@@ -147,6 +147,17 @@ before policy for the added proof's responder or the retained intermediate,
 complete revocation or Name/path validation, TLS, HTTP, OAuth, network, or
 live-provider readiness.
 
+That strongest responder-revocation result is now also admitted directly to
+the existing generic retained-intermediate revocation binding boundary. A
+private repository-owned evidence adapter derives the target-nearest
+intermediate, selected reviewed root, and original server-status observation
+time only through the retained strong proof; callers cannot substitute a
+certificate, root, status proof, or time. This enables the existing stable
+target-issuer-time binding for separately authenticated intermediate status
+without adding a public API or external effect. Policy for either added OCSP
+proof's own responder, complete revocation or Name/path validation, TLS, HTTP,
+OAuth, network, and live-provider readiness remain unavailable.
+
 That strongest-path result is admitted directly to the existing generic
 `reify_x509_ocsp_routed_issuer_reviewed_responder_revocation_responder_path`
 projection and

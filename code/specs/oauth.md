@@ -3104,6 +3104,19 @@ construction or validation, TLS, HTTP, OAuth transport, and network authority
 remain unavailable. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The strongest Name-policy-backed responder-revocation result is now also
+admitted directly to the existing generic retained-intermediate revocation
+binding boundary. A private repository-owned evidence adapter derives the
+target-nearest intermediate, selected Mozilla-reviewed root, and original
+server-status observation time only through the retained strong proof;
+callers cannot substitute a certificate, root, status proof, or time. The
+existing stable target-issuer-time validator can therefore bind separately
+authenticated status for that exact intermediate without a second public
+entry point or an external effect. This closes only the strongest proof's
+retained-intermediate binding edge. Policy for either added OCSP proof's own
+responder, complete revocation or Name/path validation, TLS, HTTP, OAuth
+transport, network authority, and live-provider readiness remain unavailable.
+
 A bounded follow-up projection consumes that complete separately authenticated
 original-responder branch and reifies the added revocation proof's own exact
 delegated responder-to-intermediate-to-reviewed-root path under a distinct
