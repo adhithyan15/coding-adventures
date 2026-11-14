@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/envscrub"
@@ -24,18 +25,63 @@ import (
 // contents, never from Revision, so this only affects explanations.
 type Git struct {
 	dir string
+	// bin and env pin the program and its WHOLE environment (before the fixed
+	// hardening entries). Empty bin means the default: look "git" up on the
+	// process PATH and run it with the process environment, minus credentials
+	// and GIT_*.
+	bin string
+	env []string
 	tm  treeModes // lazily loaded index modes, see Describe
 }
 
 // NewGit returns a Source for the work tree at dir.
 func NewGit(dir string) *Git { return &Git{dir: dir} }
 
+// NewGitAt is NewGit with the git program fixed to bin (an absolute path) and
+// its environment fixed to exactly env plus the entries of PinnedEnv. The
+// recorder uses it (KILN04 4.8, H1 and M3): a lookup on the process PATH can find
+// a `git` a BUILD planted in a directory the checkout is bound into, and the
+// process environment can steer the dynamic loader (LD_PRELOAD, LD_LIBRARY_PATH
+// with an empty entry, GCONV_PATH, LOCPATH...) into a library planted there; git
+// would then run it, unsandboxed, with the recorder's privileges. An ALLOWLIST
+// closes every such variable at once, including ones nobody has thought of. The
+// child also starts in "/", not in the checkout (dir is passed with -C).
+func NewGitAt(dir, bin string, env []string) *Git {
+	return &Git{dir: dir, bin: bin, env: append([]string(nil), env...)}
+}
+
+// PinnedEnv are the fixed entries every pinned git gets, after the caller's. The
+// recorder gives the same entries (plus ConfigEnv) to the build tool, which
+// starts `git` itself with whatever environment it was given, so both paths use
+// this one definition.
+//
+//   - GIT_CONFIG_NOSYSTEM and GIT_CONFIG_SYSTEM: no system configuration (two
+//     spellings, for old and new git);
+//   - GIT_CONFIG_GLOBAL=/dev/null: no global configuration either. Nothing Kiln
+//     asks git needs one, and a user-level file is exactly the kind of input that
+//     can change what a command means; a git too old to know the variable still
+//     reads $HOME and $XDG_CONFIG_HOME, which the recorder keeps unwritable from
+//     the sandbox (sandboxcfg.go, checkGitConfigUnwritable);
+//   - the rest are the fixed hardening of gitEnv.
+func PinnedEnv() []string {
+	return []string{"GIT_CONFIG_NOSYSTEM=1", "GIT_CONFIG_SYSTEM=" + os.DevNull, "GIT_CONFIG_GLOBAL=" + os.DevNull,
+		"GIT_OPTIONAL_LOCKS=0", "GIT_TERMINAL_PROMPT=0", "LC_ALL=C", "GIT_NO_REPLACE_OBJECTS=1", "GIT_NO_LAZY_FETCH=1"}
+}
+
 // run executes git in the work tree and returns stdout.
 func (g *Git) run(args ...string) ([]byte, error) {
 	full := append(gitHardening(), "-C", g.dir)
 	full = append(full, args...)
-	cmd := exec.Command("git", full...)
-	cmd.Env = gitEnv(os.Environ())
+	prog := "git"
+	env := gitEnv(os.Environ())
+	dir := ""
+	if g.bin != "" {
+		prog = g.bin
+		env = append(append([]string(nil), g.env...), PinnedEnv()...)
+		dir = string(os.PathSeparator) // never the checkout: see NewGitAt
+	}
+	cmd := exec.Command(prog, full...)
+	cmd.Env, cmd.Dir = env, dir
 	var out, errb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &errb
 	if err := cmd.Run(); err != nil {
@@ -66,13 +112,36 @@ func (g *Git) Output(args ...string) ([]byte, error) { return g.run(args...) }
 // text reaches git are already safe (a leading "-" is rejected, and the text
 // is first resolved to a hex object id, then `--` precedes pathspecs).
 func gitHardening() []string {
-	return []string{"--no-pager",
+	args := []string{"--no-pager",
 		// `git replace` refs make an object id name different content. Every
 		// id Kiln reads from git must mean what its hash says.
-		"--no-replace-objects",
-		"-c", "core.fsmonitor=false",
-		"-c", "core.hooksPath=" + os.DevNull,
-		"-c", "protocol.file.allow=never"}
+		"--no-replace-objects"}
+	for _, kv := range hardeningConfig {
+		args = append(args, "-c", kv[0]+"="+kv[1])
+	}
+	return args
+}
+
+// hardeningConfig are the configuration values Kiln's own git calls pass as
+// `-c`, and ConfigEnv passes to a git it does not start itself.
+var hardeningConfig = [][2]string{
+	{"core.fsmonitor", "false"},
+	{"core.hooksPath", os.DevNull},
+	{"protocol.file.allow", "never"},
+}
+
+// ConfigEnv is hardeningConfig as GIT_CONFIG_COUNT / GIT_CONFIG_KEY_n /
+// GIT_CONFIG_VALUE_n entries (git 2.31 and later), for programs that run `git`
+// with the environment they are given and cannot be handed `-c` flags: the
+// build tool. An older git ignores them; the rest of the recorder's defences
+// (the null global and system configuration, no hooks path in the checkout's own
+// config that a BUILD could write: `.git` is masked in the sandbox) still hold.
+func ConfigEnv() []string {
+	out := []string{"GIT_CONFIG_COUNT=" + strconv.Itoa(len(hardeningConfig))}
+	for i, kv := range hardeningConfig {
+		out = append(out, "GIT_CONFIG_KEY_"+strconv.Itoa(i)+"="+kv[0], "GIT_CONFIG_VALUE_"+strconv.Itoa(i)+"="+kv[1])
+	}
+	return out
 }
 
 // gitEnv builds git's environment: the caller's, minus credentials

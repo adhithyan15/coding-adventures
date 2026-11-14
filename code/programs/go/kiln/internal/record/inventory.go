@@ -57,7 +57,12 @@ var inventoryLimit = recfmt.MaxInventory
 
 // Inventory lists everything under root that the tracked tree does not hold.
 func Inventory(root string) (recfmt.Inventory, error) {
-	g := source.NewGit(root)
+	return InventoryWith(source.NewGit(root), root)
+}
+
+// InventoryWith is Inventory with the Git runner chosen by the caller (see
+// VerifyTreeWith).
+func InventoryWith(g *source.Git, root string) (recfmt.Inventory, error) {
 	if err := requireTopLevel(g); err != nil {
 		return recfmt.Inventory{}, err
 	}
