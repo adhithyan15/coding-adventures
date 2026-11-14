@@ -600,10 +600,14 @@ console.log(prose, nested);
         # +1: pbt locks its standalone compiler.
         # +1: fuzz locks its standalone compiler.
         # +1: test-matchers locks its standalone compiler.
+        # +1: warrant-corpus (WD-102) locks its standalone compiler and test
+        # toolchain. It has no `build` script (it is TypeScript run by Node's
+        # type stripping and checked with `tsc --noEmit`), so it is not one of
+        # the compiled projects counted above, but its lock is.
         # +13: the dependency-pinning work committed locks for affine2d,
         # arc2d, bezier2d, deflate, matrix-rust-napi, point2d, progress-bar,
         # rpc, starlark-vm, tree-set, twig-vscode, hash-breaker and parrot.
-        self.assertEqual(summary.locked_compilers, 511)
+        self.assertEqual(summary.locked_compilers, 512)
 
 
 if __name__ == "__main__":
