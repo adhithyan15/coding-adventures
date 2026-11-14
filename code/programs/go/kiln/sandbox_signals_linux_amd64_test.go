@@ -16,6 +16,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -32,7 +33,8 @@ import (
 type stracedRun struct {
 	f       *sandboxFixture
 	tr      *trace.Trace
-	stdout  string
+	stdout  string        // what the step wrote to its descriptor 1 (logged, never an error)
+	stderr  string        // and to its descriptor 2
 	data    string        // the data file the script may read
 	trf     string        // the raw trace file
 	elapsed time.Duration // wall time of the whole strace run
@@ -100,20 +102,56 @@ func runStraced(t *testing.T, script string) *stracedRun {
 		t.Fatal(err)
 	}
 	script = strings.ReplaceAll(script, "{data}", data)
-	args = append(args, f.exe, sandbox.ExecCommand, "--config", f.cfg, "--", "sh", "-c", script)
+	// The step's descriptors 1 and 2 are pipes the harness owns (fds 3 and 4 of
+	// strace, as the `record step` supervisor does), so what the step prints
+	// (a shell's "Killed" / "Terminated" job notice, "yes: Broken pipe") is
+	// kept apart from strace's OWN standard error, which must stay empty.
+	args = append(args, f.exe, sandbox.ExecCommand, "--config", f.cfg,
+		"--stdout-fd", "3", "--stderr-fd", "4", "--", "sh", "-c", script)
+	outR, outW, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	errR, errW, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, straceBin, args...)
 	cmd.Dir = f.pkg
 	cmd.Env = []string{"KILN_ACTION=pkg", "KILN_STEP=0", "KILN_STEP_COUNT=1", "PATH=/usr/bin:/bin"}
+	cmd.ExtraFiles = []*os.File{outW, errW}
 	var out, eb bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &eb
+	read := func(f *os.File, into *string) <-chan struct{} {
+		done := make(chan struct{})
+		go func() {
+			b, _ := io.ReadAll(f)
+			*into = string(b)
+			close(done)
+		}()
+		return done
+	}
+	var stepOut, stepErr string
 	start := time.Now()
-	runErr := cmd.Run()
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("starting strace: %v", err)
+	}
+	// Our copies of the write ends must go, or the readers never see EOF.
+	outW.Close()
+	errW.Close()
+	doneOut, doneErr := read(outR, &stepOut), read(errR, &stepErr)
+	runErr := cmd.Wait()
+	<-doneOut
+	<-doneErr
+	outR.Close()
+	errR.Close()
 	r.elapsed = time.Since(start)
-	r.stdout = out.String()
+	r.stdout, r.stderr = stepOut, stepErr
+	t.Logf("step stdout: %q\nstep stderr: %q", stepOut, stepErr)
 	if runErr != nil {
-		t.Fatalf("strace: %v\nstderr: %s\n--- trace tail ---\n%s", runErr, eb.String(), r.tail(25))
+		t.Fatalf("strace: %v\nstrace stderr: %s\n--- trace tail ---\n%s", runErr, eb.String(), r.tail(25))
 	}
 	if eb.Len() != 0 {
 		t.Fatalf("strace wrote to standard error: %q\n--- trace tail ---\n%s", eb.String(), r.tail(25))
@@ -172,14 +210,30 @@ func TestSandboxStraceSignals(t *testing.T) {
 		check        func(t *testing.T, r *stracedRun)
 	}{
 		{"sigpipe", "yes | head -n 1 >/dev/null", func(t *testing.T, r *stracedRun) {
+			// `yes` is killed by SIGPIPE once `head` has quit.  Unless SIGPIPE
+			// reached the sandbox IGNORED: an ignored signal stays ignored
+			// across exec, and no shell can reset it (POSIX: a signal ignored
+			// on entry to a non-interactive shell cannot be trapped or reset,
+			// so `trap - PIPE` would not help).  Then `yes` gets EPIPE and
+			// exits non-zero instead.  Both are accepted; either way the
+			// trace must have parsed, and the death or failure is logged.
 			if _, i := exitWithSignal(r.tr, "SIGPIPE"); i < 0 {
-				t.Errorf("no exit killed by SIGPIPE: %+v", r.tr.Exits)
+				failed := false
+				for _, ex := range r.tr.Exits {
+					if ex.Pid != r.tr.InitPid && !ex.Killed && ex.Code != 0 {
+						failed = true
+					}
+				}
+				if !failed {
+					t.Errorf("no exit killed by SIGPIPE, and none failed: %+v", r.tr.Exits)
+				}
+				t.Logf("SIGPIPE was apparently ignored: yes exited non-zero instead (exits %+v)", r.tr.Exits)
 			}
 			if traced.DaemonLeft(r.tr) {
 				t.Error("DaemonLeft is true for a SIGPIPE death")
 			}
 		}},
-		{"term-waited", "sleep 30 & p=$!; kill -TERM $p; wait $p; cat {data}", func(t *testing.T, r *stracedRun) {
+		{"term-waited", "sleep 30 & p=$!; sleep 1; kill -TERM $p; wait $p; cat {data}", func(t *testing.T, r *stracedRun) {
 			if _, i := exitWithSignal(r.tr, "SIGTERM"); i < 0 {
 				t.Errorf("no exit killed by SIGTERM: %+v", r.tr.Exits)
 			}
@@ -187,7 +241,7 @@ func TestSandboxStraceSignals(t *testing.T) {
 				t.Error("DaemonLeft is true for a reaped SIGTERM death")
 			}
 		}},
-		{"kill9-waited", "sleep 30 & p=$!; kill -KILL $p; wait $p; cat {data}", func(t *testing.T, r *stracedRun) {
+		{"kill9-waited", "sleep 30 & p=$!; sleep 1; kill -KILL $p; wait $p; cat {data}", func(t *testing.T, r *stracedRun) {
 			_, i := exitWithSignal(r.tr, "SIGKILL")
 			if i < 0 {
 				t.Fatalf("no exit killed by SIGKILL: %+v", r.tr.Exits)
@@ -199,7 +253,10 @@ func TestSandboxStraceSignals(t *testing.T) {
 				t.Errorf("the reaped child's exit is at line %d, not before init's exit_group at %d", r.tr.ExitLines[i], r.tr.InitExitLine)
 			}
 		}},
-		{"daemon-left", "sleep 300 & echo started", func(t *testing.T, r *stracedRun) {
+		{"daemon-left", "sleep 300 & sleep 1; echo started", func(t *testing.T, r *stracedRun) {
+			if !strings.Contains(r.stdout, "started") {
+				t.Errorf("the step's stdout (fd 3) lacks %q: %q", "started", r.stdout)
+			}
 			if r.tr.InitExitLine == 0 {
 				t.Error("InitExitLine is 0: the init's exit_group was not seen")
 			}
@@ -228,7 +285,7 @@ func TestSandboxStraceSignals(t *testing.T) {
 				t.Errorf("the step took %v: the sleeper outlived the sandbox", r.elapsed)
 			}
 		}},
-		{"setsid", "setsid sleep 300 >/dev/null 2>&1 & true", func(t *testing.T, r *stracedRun) {
+		{"setsid", "setsid sleep 300 >/dev/null 2>&1 & sleep 1; true", func(t *testing.T, r *stracedRun) {
 			if !traced.DaemonLeft(r.tr) {
 				t.Error("DaemonLeft is false for a setsid survivor")
 			}
