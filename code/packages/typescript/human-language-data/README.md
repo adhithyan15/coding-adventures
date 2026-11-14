@@ -35,6 +35,12 @@ visible per-part spans in the learner paper, rubric, and answer key. The plan's
 `mock-assessment/<language>/<level>` family counts mocks still missing a
 distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
 remain visible debt rather than becoming a parse error.
+Individual mocks can also declare `bookPrerequisites`: knowledge atoms that
+must be introduced and practised in an eligible lesson, or exact Gurmukhi
+surface tokens that must appear in the level's taught book before the learner
+and examiner stimuli count as fair. A declaration is an obligation, not proof;
+missing source drafts and untaught material keep the mock blocked in the plan.
+The planner reports stable blocker IDs without exposing unpublished mock text.
 For present full-mock evidence, the validator uses the repository's Python 3
 handle-relative reader so a concurrent symlink or Windows junction swap cannot
 redirect the manifest, paper, rubric, or key outside the audited track. Python 3

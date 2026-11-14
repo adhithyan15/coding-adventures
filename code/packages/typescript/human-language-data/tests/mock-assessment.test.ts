@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { defaultCurriculumRoot, loadTaskShapeInventory } from "../src/loader.js";
 import { listMockAssessmentStatuses } from "../src/mock-assessment.js";
+import { gurmukhiTokens } from "../src/mock-book-prerequisites.js";
 import * as mockEvidenceReader from "../src/mock-evidence-read.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
 import type { TaskShapeInventory } from "../src/task-shapes.js";
@@ -62,6 +63,11 @@ beforeEach(() => {
 afterEach(() => rmSync(root, { recursive: true, force: true }));
 
 describe("full-mock coverage measurement", () => {
+  it("compares exact Gurmukhi tokens, not fragments or related words", () => {
+    const tested = gurmukhiTokens("ਪੰਜਾਬੀ ਪੰਜਾਬ");
+    expect([...tested]).toEqual(["ਪੰਜਾਬੀ", "ਪੰਜਾਬ"]);
+    expect(gurmukhiTokens("ਪੰਜਾਬੀ").has("ਪੰਜਾਬ")).toBe(false);
+  });
   it("blocks known book-taught gaps without hiding an independent ready mock", () => {
     const statuses = listMockAssessmentStatuses(source);
     expect(statuses.find((status) => status.language === "marwadi" && status.level === "A1"))

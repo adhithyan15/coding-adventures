@@ -82,7 +82,7 @@ describe("track assessment contracts", () => {
 
     a1.fullMocks[0].bookPrerequisites.push({
       id: "functional-frames", kind: "exact-script-token-closure", script: "gurmukhi",
-      sources: ["mocks/a1/mock-1.md"],
+      sources: ["mocks/a1/mock-1.md", "mocks/a1/mock-1-examiner-script.md"],
     });
     expect(() => parseAssessmentContract(raw, "marwadi", policy)).toThrow(/duplicate.*prerequisite/i);
   });
@@ -92,7 +92,7 @@ describe("track assessment contracts", () => {
     const a2 = raw.levels.find((entry: { level: string }) => entry.level === "A2");
     a2.fullMocks[0].bookPrerequisites = [{
       id: "surface-closure", kind: "exact-script-token-closure", script: "gurmukhi",
-      sources: ["../private/mock-1.md"],
+      sources: ["../private/mock-1.md", "mocks/a2/mock-1-examiner-script.md"],
     }];
     expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/unsafe|relative|path/i);
     a2.fullMocks[0].bookPrerequisites[0].sources = [];
