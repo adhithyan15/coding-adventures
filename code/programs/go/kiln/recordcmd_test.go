@@ -64,16 +64,86 @@ func TestRecordUsage(t *testing.T) {
 	}
 }
 
-// The wrapper and the post-build pass are stubs until stage 4 PR 2b-2. They
-// must refuse, so a workflow wired to them fails instead of recording nothing.
-func TestRecordStepAndCollectAreStubs(t *testing.T) {
-	for _, args := range [][]string{
-		{"step", "--dir", "/d", "--", "sh", "-c", "true"}, {"step"}, {"collect", "--root", "/r", "--dir", "/d", "--results", "/x", "--out", "/o"},
+// The post-build pass is a stub until stage 4 PR 2b-2b. It must refuse, so a
+// workflow wired to it fails instead of recording nothing.
+func TestRecordCollectIsAStub(t *testing.T) {
+	code, out, e := runRec("collect", "--root", "/r", "--dir", "/d", "--results", "/x", "--out", "/o")
+	if code != 1 || out != "" || !strings.Contains(e, "2b-2b") || !strings.Contains(e, "collect") {
+		t.Errorf("%d %q %q", code, out, e)
+	}
+}
+
+// recordStepHooks also restores the step hook.
+func recordStepHooks(t *testing.T) {
+	t.Helper()
+	recordHooks(t)
+	st, ar := recordStep, recordArmParentDeath
+	recordArmParentDeath = func() error { return nil }
+	t.Cleanup(func() { recordStep, recordArmParentDeath = st, ar })
+}
+
+func TestRecordStepUsageAndPlatform(t *testing.T) {
+	recordStepHooks(t)
+	recordStep = func(record.StepOptions) (*record.StepResult, error) {
+		t.Fatal("RunStep was reached on a refusal")
+		return nil, nil
+	}
+	recordPlatformOK = func() bool { return true }
+	for name, args := range map[string][]string{
+		"nothing":         {"step"},
+		"no dir":          {"step", "--", "sh", "-c", "true"},
+		"a relative dir":  {"step", "--dir", "rec", "--", "sh", "-c", "true"},
+		"no command":      {"step", "--dir", "/d"},
+		"an unknown flag": {"step", "--nope", "--dir", "/d", "--", "sh", "-c", "true"},
 	} {
-		code, out, e := runRec(args...)
-		if code != 1 || out != "" || !strings.Contains(e, "2b-2") || !strings.Contains(e, args[0]) {
-			t.Errorf("%v: %d %q %q", args, code, out, e)
+		if code, out, e := runRec(args...); code != 2 || out != "" || e == "" {
+			t.Errorf("%s: %d %q %q", name, code, out, e)
 		}
+	}
+	// Off linux/amd64 the step is refused with 3, before anything is looked at.
+	recordPlatformOK = func() bool { return false }
+	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true")
+	if code != 3 || out != "" || !strings.Contains(e, "linux/amd64") || !strings.Contains(e, "not run") {
+		t.Fatalf("%d %q %q", code, out, e)
+	}
+}
+
+func TestRecordStepPassesWhatItWasGivenAndMirrorsTheStatus(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordSelf = func() (string, error) { return "/canonical/kiln", nil }
+	wd, _ := os.Getwd()
+	var got record.StepOptions
+	recordStep = func(o record.StepOptions) (*record.StepResult, error) {
+		got = o
+		if o.Stdout != nil {
+			o.Stdout.Write([]byte("relayed\n"))
+		}
+		return &record.StepResult{ExitCode: 7}, nil
+	}
+	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "make -j4")
+	if code != 7 || out != "relayed\n" || e != "" {
+		t.Fatalf("%d %q %q", code, out, e)
+	}
+	if got.Dir != "/d" || got.KilnExe != "/canonical/kiln" || got.Cwd != wd || strings.Join(got.Argv, "|") != "sh|-c|make -j4" || len(got.Environ) == 0 {
+		t.Fatalf("%+v", got)
+	}
+}
+
+func TestRecordStepRefusalsExit125WithoutEchoingTheEnvironment(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordSelf = func() (string, error) { return "/canonical/kiln", nil }
+	recordStep = func(record.StepOptions) (*record.StepResult, error) {
+		return nil, errors.New("the environment is wrong")
+	}
+	code, out, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true")
+	if code != record.ExitRefused || out != "" || !strings.Contains(e, "the environment is wrong") {
+		t.Fatalf("%d %q %q", code, out, e)
+	}
+	recordSelf = func() (string, error) { return "", errors.New("no exe") }
+	if code, _, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "no exe") {
+		t.Fatalf("%d %q", code, e)
 	}
 }
 
@@ -243,3 +313,16 @@ func TestRecordDefaultHooks(t *testing.T) {
 }
 
 func osAndArch() string { return runtime.GOOS + "/" + runtime.GOARCH }
+
+func TestRecordStepRefusesWhenItCannotArmParentDeath(t *testing.T) {
+	recordStepHooks(t)
+	recordPlatformOK = func() bool { return true }
+	recordArmParentDeath = func() error { return errors.New("the build tool exited") }
+	recordStep = func(record.StepOptions) (*record.StepResult, error) {
+		t.Fatal("RunStep was reached")
+		return nil, nil
+	}
+	if code, _, e := runRec("step", "--dir", "/d", "--", "sh", "-c", "true"); code != record.ExitRefused || !strings.Contains(e, "build tool exited") {
+		t.Fatalf("%d %q", code, e)
+	}
+}
