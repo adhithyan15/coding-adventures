@@ -62,7 +62,7 @@ func TestDecodeResults(t *testing.T) {
 }
 
 func TestReadResults(t *testing.T) {
-	d := canonTemp(t)
+	d := t.TempDir()
 	good := filepath.Join(d, "results.json")
 	if err := os.WriteFile(good, []byte(`{"schema":"kiln-legacy-results/1","packages":[]}`), 0o600); err != nil {
 		t.Fatal(err)
