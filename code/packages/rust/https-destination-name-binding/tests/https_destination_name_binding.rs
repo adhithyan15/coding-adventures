@@ -1,4 +1,8 @@
 use der_asn1::Asn1Limits;
+use http1_fixed_request_body::{
+    bind_http1_fixed_request_content_length_field, validate_http1_fixed_request_body,
+    Http1FixedRequestBodyLimits,
+};
 use http1_request_header_field::{
     validate_http1_request_header_field, Http1RequestHeaderFieldLimits,
 };
@@ -6,8 +10,9 @@ use http1_request_host_authority::{
     validate_http1_request_host_authority, Http1RequestHostAuthorityLimits,
 };
 use https_destination_name_binding::{
-    bind_https_dns_destination, bind_https_host_header_field, bind_https_request_header_fields,
-    HttpsDestinationNameBindingError, HttpsHostHeaderBindingError,
+    bind_https_dns_destination, bind_https_fixed_request_body, bind_https_host_header_field,
+    bind_https_request_header_fields, HttpsDestinationNameBindingError,
+    HttpsFixedRequestBodyBindingError, HttpsHostHeaderBindingError,
     HttpsRequestHeaderFieldsBindingError, HttpsRequestHeaderFieldsLimits,
 };
 use tls13_server_name::TlsServerName;
@@ -94,6 +99,10 @@ fn header_limits() -> Http1RequestHeaderFieldLimits {
 
 fn request_fields_limits() -> HttpsRequestHeaderFieldsLimits {
     HttpsRequestHeaderFieldsLimits::new(16).unwrap()
+}
+
+fn body_limits() -> Http1FixedRequestBodyLimits {
+    Http1FixedRequestBodyLimits::new(4096).unwrap()
 }
 
 #[test]
@@ -478,4 +487,213 @@ fn rejects_invalid_or_exceeded_request_field_limits_without_observed_counts() {
     assert_eq!(error, HttpsRequestHeaderFieldsBindingError::TooManyFields);
     assert!(!error.to_string().contains('2'));
     assert!(!format!("{error:?}").contains('2'));
+}
+
+#[test]
+fn binds_exact_header_set_and_fixed_body_with_one_content_length() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields =
+        [
+            validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+                .unwrap(),
+        ];
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(3).unwrap(),
+    )
+    .unwrap();
+    let body = b"secret";
+    let body_evidence = validate_http1_fixed_request_body(body, body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"6", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+
+    let bound = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+
+    assert!(core::ptr::eq(
+        bound
+            .header_fields()
+            .host_binding()
+            .destination()
+            .certificate(),
+        &certificate
+    ));
+    assert!(core::ptr::eq(
+        bound.header_fields().additional_fields(),
+        additional_fields.as_slice()
+    ));
+    assert_eq!(bound.fixed_body().body().body(), body);
+    assert_eq!(bound.fixed_body().field().name(), b"Content-Length");
+    assert_eq!(bound.fixed_body().field().value(), b"6");
+    assert_eq!(bound.total_field_count(), 3);
+}
+
+#[test]
+fn rejects_every_additional_content_length_case_insensitively() {
+    for name in [
+        b"Content-Length".as_slice(),
+        b"CONTENT-LENGTH".as_slice(),
+        b"cOnTeNt-LeNgTh".as_slice(),
+    ] {
+        let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let server_name = TlsServerName::new("api.example.test").unwrap();
+        let host = validate_http1_request_host_authority(b"api.example.test", None, host_limits())
+            .unwrap();
+        let destination =
+            bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default())
+                .unwrap();
+        let host_field =
+            validate_http1_request_header_field(b"Host", b"api.example.test", header_limits())
+                .unwrap();
+        let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+        let additional_fields =
+            [validate_http1_request_header_field(name, b"6", header_limits()).unwrap()];
+        let header_fields = bind_https_request_header_fields(
+            host_binding,
+            &additional_fields,
+            request_fields_limits(),
+        )
+        .unwrap();
+        let body_evidence = validate_http1_fixed_request_body(b"secret", body_limits()).unwrap();
+        let content_length =
+            validate_http1_request_header_field(b"Content-Length", b"6", header_limits()).unwrap();
+        let fixed_body =
+            bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+
+        let error = bind_https_fixed_request_body(header_fields, fixed_body).unwrap_err();
+
+        assert_eq!(
+            error,
+            HttpsFixedRequestBodyBindingError::AdditionalContentLengthField
+        );
+        assert!(!error.to_string().contains("api.example.test"));
+        assert!(!format!("{error:?}").contains("api.example.test"));
+    }
+}
+
+#[test]
+fn rejects_every_transfer_encoding_field_case_insensitively() {
+    for name in [
+        b"Transfer-Encoding".as_slice(),
+        b"TRANSFER-ENCODING".as_slice(),
+        b"tRaNsFeR-EnCoDiNg".as_slice(),
+    ] {
+        let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+        let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+        let server_name = TlsServerName::new("api.example.test").unwrap();
+        let host = validate_http1_request_host_authority(b"api.example.test", None, host_limits())
+            .unwrap();
+        let destination =
+            bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default())
+                .unwrap();
+        let host_field =
+            validate_http1_request_header_field(b"Host", b"api.example.test", header_limits())
+                .unwrap();
+        let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+        let additional_fields =
+            [validate_http1_request_header_field(name, b"chunked", header_limits()).unwrap()];
+        let header_fields = bind_https_request_header_fields(
+            host_binding,
+            &additional_fields,
+            request_fields_limits(),
+        )
+        .unwrap();
+        let body_evidence = validate_http1_fixed_request_body(b"secret", body_limits()).unwrap();
+        let content_length =
+            validate_http1_request_header_field(b"Content-Length", b"6", header_limits()).unwrap();
+        let fixed_body =
+            bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+
+        let error = bind_https_fixed_request_body(header_fields, fixed_body).unwrap_err();
+
+        assert_eq!(
+            error,
+            HttpsFixedRequestBodyBindingError::TransferEncodingField
+        );
+        assert!(!error.to_string().contains("chunked"));
+        assert!(!format!("{error:?}").contains("api.example.test"));
+    }
+}
+
+#[test]
+fn counts_content_length_inside_the_existing_total_field_limit() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [];
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(1).unwrap(),
+    )
+    .unwrap();
+    let body_evidence = validate_http1_fixed_request_body(b"", body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"0", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+
+    let error = bind_https_fixed_request_body(header_fields, fixed_body).unwrap_err();
+
+    assert_eq!(error, HttpsFixedRequestBodyBindingError::TooManyFields);
+    assert!(!error.to_string().contains('2'));
+    assert!(!format!("{error:?}").contains('2'));
+}
+
+#[test]
+fn fixed_body_binding_debug_redacts_all_retained_inputs() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [validate_http1_request_header_field(
+        b"Authorization",
+        b"Bearer other-secret",
+        header_limits(),
+    )
+    .unwrap()];
+    let header_fields =
+        bind_https_request_header_fields(host_binding, &additional_fields, request_fields_limits())
+            .unwrap();
+    let body_evidence =
+        validate_http1_fixed_request_body(b"refresh_token=secret", body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"20", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+
+    let bound = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+    let debug = format!("{bound:?}");
+
+    assert!(!debug.contains("api.example.test"));
+    assert!(!debug.contains("Authorization"));
+    assert!(!debug.contains("other-secret"));
+    assert!(!debug.contains("refresh_token"));
+    assert!(!debug.contains("Content-Length"));
+    assert!(debug.matches("[REDACTED]").count() >= 2);
 }

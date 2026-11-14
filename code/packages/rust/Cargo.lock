@@ -7377,6 +7377,7 @@ name = "https-destination-name-binding"
 version = "0.1.0"
 dependencies = [
  "der-asn1",
+ "http1-fixed-request-body",
  "http1-request-header-field",
  "http1-request-host-authority",
  "tls-server-identity",

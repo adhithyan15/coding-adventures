@@ -34,11 +34,18 @@ hard-capped at 64. Every additional field name is checked case-insensitively,
 and any second Host field fails closed. The result retains the exact field
 slice, caller order, and limit policy for a later encoder.
 
+`bind_https_fixed_request_body` then consumes that exact field-set proof and
+one exact `http1-fixed-request-body` proof that already binds a body to its
+canonical `Content-Length` field. The length field counts inside the retained
+total-field ceiling. Every additional field name is checked case-insensitively;
+another `Content-Length` or any `Transfer-Encoding` fails closed. The result
+defines logical field order as Host, Content-Length, then the retained
+additional fields in caller order, and retains both complete input proofs.
+
 This does not authorize additional fields, reject duplicate names other than
-Host, reconcile `Content-Length`, prohibit `Transfer-Encoding`, or compose a
-request head. A later composition must consume this exact proof, bind the
-request line and body framing, and preserve the destination through audited
-transport.
+Host and Content-Length, bind a request line, encode a request head, write the
+body, or preserve the destination through audited transport. Those later
+compositions must consume this exact proof.
 
 This package does not parse URLs, bind request targets or provider
 configuration, choose ports, validate critical extensions, certificate role,
