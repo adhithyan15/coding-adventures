@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+- **Fix: stopping a TCP service subject now stops everything it started.** A service
+  command runs through a shell (`sh -c "go run server.go ..."`, `cmd /C ...`), and `Stop`
+  killed only the shell, leaving the real server running as an orphan. On Windows the
+  orphan kept `service.log` open, so the results directory could not be deleted
+  (`TestRunManifestStartsTCPServiceSubject` failed its TempDir cleanup in the first
+  scheduled cross-OS build). On Unix the service now starts in its own process group and
+  the whole group is killed; on Windows it is put in a Job Object with
+  `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE` and the job is terminated. If the job cannot be
+  created, `Stop` falls back to killing the process, as before. On Unix a service in its own
+  group no longer receives the terminal's Ctrl-C, so the first service started installs a
+  SIGINT/SIGTERM/SIGHUP handler that kills the live services and re-raises the signal (a
+  Windows job dies with the tool, so it needs none). Found by the security review of this change.
+  Known limits: a command that deliberately leaves the group or job escapes cleanup, and the
+  Windows job is assigned just after the shell starts.
+- Add `TestStopKillsTheWholeProcessTree` (Unix: the grandchild must be dead; Windows: the log
+  must be deletable) and a layout check for the Windows job structure. Both were exercised
+  under Wine, and the Unix test fails when the fix is removed.
+- Add `BUILD_windows` (`go build -o benchmark-tool.exe .`, `go test ./... -v -cover`).
+
 ## 0.5.0 - 2026-04-20
 
 - Add `tcp-resp` `hold` mode for C10K-style capacity benchmarks.

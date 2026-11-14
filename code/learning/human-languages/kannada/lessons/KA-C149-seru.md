@@ -12,24 +12,24 @@ headword: "ಸೇರು"
 gloss: "to join, to reach"
 romanization: "sēru"
 concept_tag: KA-VERB-SERU
-prerequisites: [KA-C148-jigi, KA-C149-ili2, KA-C108-movement]
+prerequisites: [KA-C148-jigi, KA-C149-ili2, KA-C108-movement, KA-C110-house-near-far-inside]
 sounds: []
 roots: [dravidian-ceer-join]
 etymology_hook: "sēru: native Dravidian, one word with Tamil cēr and Telugu cēru (DEDR 2814)"
 duration:
-  max_seconds: 220
+  max_seconds: 260
 requires:
-  knowledge: [KA-LEX-C148-ACT148-05, KA-LEX-C149-ACT149-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
+  knowledge: [KA-LEX-C148-ACT148-05, KA-LEX-C149-ACT149-01, KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 introduces:
   knowledge: [KA-LEX-C149-ACT149-02]
 practises:
-  knowledge: [KA-LEX-C149-ACT149-02, KA-LEX-C148-ACT148-05, KA-LEX-C149-ACT149-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
+  knowledge: [KA-LEX-C149-ACT149-02, KA-LEX-C148-ACT148-05, KA-LEX-C149-ACT149-01, KA-GRAMMAR-C108-DESTINATION-GE-06, KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C149-ili2, KA-C108-movement]
+reviews_of: [KA-C149-ili2, KA-C108-movement, KA-C110-tree-on-under, KA-C110-house-near-far-inside]
 ---
 
 # ಸೇರು (sēru) — to join, to reach
@@ -68,3 +68,11 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C149-ACT149-02, KA-LEX-C148-ACT148-05, KA-LEX-C149-ACT149-01] -->
 
 [PAUSE 3s] What does ಸೇರು mean? ("To join, to reach".) Say it once more.
+
+## Wrap-up Recall: place R4
+<!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C110-TREE-ON-UNDER-06, KA-LEX-C110-INSIDE-08, KA-FUNCTION-C110-HOUSE-NEAR-FAR-INSIDE-07] -->
+
+[PAUSE 3s] One last place check: say the bird **on** and **under** the tree;
+the school **near** and **far from** the house; the bird **inside** the
+house. Keep each reference in the answer: **ಮರದ ಮೇಲೆ**, **ಮರದ ಕೆಳಗೆ**,
+**ಮನೆಯ ಹತ್ತಿರ**, **ಮನೆಯಿಂದ ದೂರ**, **ಮನೆಯೊಳಗೆ**.

@@ -101,6 +101,18 @@ func TestTracedRecordEnvAndHostRoots(t *testing.T) {
 	}
 }
 
+// Pinned is the sorted set pinned.json names, empty (not nil) when it names none.
+func TestTracedPinned(t *testing.T) {
+	f := newTracedFixture(t)
+	if got := f.traced(baseGraph()).Pinned(); got == nil || len(got) != 0 {
+		t.Fatalf("%#v", got)
+	}
+	f.write("code/kiln/legacy/pinned.json", `{"languages": ["go", "rust"]}`)
+	if got := f.traced(baseGraph()).Pinned(); !reflect.DeepEqual(got, []string{"go", "rust"}) {
+		t.Fatalf("%#v", got)
+	}
+}
+
 // A package whose key is refused (here: its closure names an unknown
 // toolchain) still runs, so it still gets an environment.
 func TestRecordEnvForARefusedPackage(t *testing.T) {

@@ -140,6 +140,16 @@ type Trace struct {
 	Exits   []Exit // exit lines in trace order
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
+	// RootExecArgv and InitExecArgv are, under Options.HelperRoot, the argument
+	// vectors of the two execs of the Kiln binary that setup makes and the
+	// parser otherwise discards: the root's one exec (strace starting `kiln
+	// sandbox-exec ... --config-sha256 H`) and the init child's first exec of
+	// the binary (`kiln sandbox-init ... --sha256 H`).  The recorder compares
+	// the digests in them with the sealed sandbox configuration's (KILN04 4.8,
+	// G7).  Each is nil when that exec is absent or its argv could not be
+	// decoded exactly (Event.Argv).
+	RootExecArgv []string
+	InitExecArgv []string
 }
 
 // StepExit is the exit status of the step: the init child's under HelperRoot,
@@ -260,6 +270,7 @@ type model struct {
 	stepExec   bool         // helper mode: the init child has exec'd the step
 	rootSpawn  bool         // helper mode: the root group has spawned the init child
 	rootExeced bool         // helper mode: the root group has had its one exec
+	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
 	walkSteps  int          // thread-chain steps taken (a test watches this stays linear)
 }
@@ -698,6 +709,13 @@ func (m *model) windowFilter(p *proc, rec *record, evs []Event) ([]Event, *Error
 	}
 	ev := evs[0]
 	if m.isHelperExe(ev.Path) {
+		// The init child's own re-exec of the binary carries the digest of the
+		// configuration it will read; keep its argv (the event itself is setup,
+		// and is still dropped).
+		if c.ret.ok() && p.Pid == m.initPid && !m.initExeced {
+			m.initExeced = true
+			m.trace.InitExecArgv = ev.Argv
+		}
 		return nil, nil
 	}
 	if !c.ret.ok() {
@@ -748,6 +766,7 @@ func (m *model) applyHelperRoot(p *proc, rec *record) *Error {
 		if evs[0].Path != m.opts.HelperExe {
 			return incomplete(rec.line, reasonHelperExe)
 		}
+		m.trace.RootExecArgv = evs[0].Argv
 	}
 	return nil
 }

@@ -5022,6 +5022,29 @@ Complete revocation policy, repository-owned TLS/HTTP, and audited transport
 remain separate blockers. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+The existing bounded `x509-ocsp-reviewed-server-revocation-binding`
+prerequisite now also provides an ordered entry point that consumes fully
+routed authenticated OCSP target status together with the complete reviewed
+server-path-and-anchor-self-signature proof. It derives the target and
+target-nearest issuer only through the signed wrapper's retained accumulated
+Name-policy path, requires the OCSP and path proofs to retain the same exact
+decoded target and issuer objects, validates both path certificates at the
+OCSP proof's retained observation time, and retains both complete non-copyable
+inputs with the resulting exact-time validity evidence. Byte-equal
+independently decoded target or issuer objects fail closed. The earlier
+path-only entry point remains available and unchanged.
+
+This ordered composition performs no parsing, new signature verification,
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It does not fetch or refresh status, add trust-anchor semantics,
+authorize the delegated responder path, establish status for every non-root
+certificate, complete Name, path, or revocation validation, build or run TLS
+or HTTP, authorize OAuth transport, or grant network authority. Responder and
+intermediate revocation policy, repository-owned TLS/HTTP, and audited
+transport remain separate blockers. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact

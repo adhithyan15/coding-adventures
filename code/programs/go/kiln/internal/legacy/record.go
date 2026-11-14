@@ -85,6 +85,22 @@ func RecordEnviron(src Source, environ []string, tmpdir string) ([]string, error
 // HostRoots is the parsed host-roots.json of the tree this Traced was built on.
 func (t *Traced) HostRoots() *HostRoots { return t.pl.pol.roots }
 
+// Pinned lists, sorted, the ecosystems pinned.json names (the languages whose
+// toolchain pinning has landed): the `traced.Config.Pinned` set the classifier
+// is given.  It is inert today (the fetchers are switched off) but the recorder
+// seals it anyway (KILN04 4.8, P13), so a later switch cannot change what an
+// already-prepared shard classifies with.
+func (t *Traced) Pinned() []string {
+	out := make([]string, 0, len(t.pl.pol.pinned))
+	for k, v := range t.pl.pol.pinned {
+		if v {
+			out = append(out, k)
+		}
+	}
+	sort.Strings(out)
+	return out
+}
+
 // RecordEnv is the scrubbed environment and the tools of the package at rel,
 // whether or not its weak key exists. A package whose key was refused
 // (`unknown-toolchain:<x>`, `no-build-file:linux`, ...) still runs under the

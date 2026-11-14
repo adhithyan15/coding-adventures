@@ -59,6 +59,8 @@ This converts any integer shift into the range 0..25.  For example:
 - shift = -27 becomes 25 (same as -1)
 - shift = 29 becomes 3
 
+The reduction uses `rem_euclid`, so even `i32::MIN` is safe: `decrypt` reduces the shift modulo 26 *before* negating it, because negating `i32::MIN` itself would overflow.
+
 ### What about non-letters?
 
 Digits, spaces, punctuation, and any other non-alphabetic characters pass through the cipher unchanged.  Only ASCII letters A-Z and a-z are transformed.  The case of each letter is preserved: an uppercase input produces an uppercase output.

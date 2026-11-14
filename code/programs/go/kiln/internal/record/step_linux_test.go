@@ -15,6 +15,7 @@ package record
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -50,7 +51,11 @@ func TestStepHelperProcess(t *testing.T) {
 	if err := json.Unmarshal(data, &hp); err != nil {
 		os.Exit(91)
 	}
-	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Drain: hp.Drain})
+	res, err := RunStep(StepOptions{Dir: hp.Dir, Argv: hp.Argv, Environ: hp.Environ, Cwd: hp.Cwd, KilnExe: hp.KilnExe, Drain: hp.Drain,
+		// The classification child must not be this test binary re-run (the default
+		// is /proc/self/exe): a harmless program stands in; the record it leaves
+		// missing is a record.failed, which these tests do not look at.
+		ChildCmd: func(args, env []string) *exec.Cmd { return exec.Command("/bin/true") }})
 
 	if err != nil {
 		os.Stderr.WriteString(err.Error() + "\n")
@@ -134,19 +139,22 @@ func TestStepKillingTheSupervisorKillsStrace(t *testing.T) {
 	}
 }
 
-// Supervisors of different actions started together, as separate PROCESSES
-// (the build tool's -jobs), with traces/ absent: none may be refused.
-func TestStepParallelProcessesDoNotRaceOnTheTracesDirectory(t *testing.T) {
+// Supervisors of different actions started together, as separate PROCESSES (what
+// the build tool's -jobs would do), against the traces/ directory and traces/.seq
+// that `prepare` made (decision P13). Recording is serial: whichever takes the
+// exclusive traces/.serial lock runs, the others are refused (exit 125), run
+// nothing and leave `<step>.overlap`. Whatever the interleaving, the counter is
+// never corrupted: the steps that ran have the distinct numbers 0..n-1 and the
+// file says n.
+func TestStepParallelProcessesAreSerialAndNeverCorruptTheCounter(t *testing.T) {
 	f := newStepFix(t)
-	if err := os.Remove(filepath.Join(f.p.dir, "traces")); err != nil {
-		t.Fatal(err)
-	}
 	type job struct {
 		action string
 		count  int
 	}
 	jobs := []job{{actA, 1}, {actB, 2}, {actZ, 1}}
 	var cmds []*exec.Cmd
+	var errs []*strings.Builder
 	for i, j := range jobs {
 		o := f.opts(j.action, 0, j.count, "exit 0")
 		payload := filepath.Join(f.aux, "payload"+strconv.Itoa(i)+".json")
@@ -159,16 +167,49 @@ func TestStepParallelProcessesDoNotRaceOnTheTracesDirectory(t *testing.T) {
 		}
 		c := exec.Command(os.Args[0], "-test.run=^TestStepHelperProcess$")
 		c.Env = []string{helperEnv + "=" + payload, "PATH=/usr/bin:/bin"}
+		var eb strings.Builder
+		c.Stderr = &eb
 		cmds = append(cmds, c)
+		errs = append(errs, &eb)
 	}
 	for _, c := range cmds {
 		if err := c.Start(); err != nil {
 			t.Fatal(err)
 		}
 	}
+	ran := 0
 	for i, c := range cmds {
-		if err := c.Wait(); err != nil {
-			t.Errorf("supervisor %d: %v", i, err)
+		err := c.Wait()
+		overlap := exists(StepFile(f.p.dir, jobs[i].action, 0, "overlap"))
+		var ee *exec.ExitError
+		switch {
+		case err == nil && !overlap:
+			ran++
+		case errors.As(err, &ee) && ee.ExitCode() == ExitRefused && overlap && strings.Contains(errs[i].String(), "traces/.serial"):
+		default:
+			t.Errorf("supervisor %d: %v (overlap marker %v): %s", i, err, overlap, errs[i].String())
 		}
+	}
+	if ran == 0 {
+		t.Fatal("no step won the serial lock")
+	}
+	if f.runs() != ran {
+		t.Errorf("%d tracers started for %d steps that ran", f.runs(), ran)
+	}
+	seen := map[int]bool{}
+	for i, j := range jobs {
+		if exists(StepFile(f.p.dir, j.action, 0, "json")) {
+			seen[f.sidecar(j.action, 0).Seq] = true
+		} else if !exists(StepFile(f.p.dir, j.action, 0, "overlap")) {
+			t.Errorf("job %d left neither a sidecar nor a marker", i)
+		}
+	}
+	for n := 0; n < ran; n++ {
+		if !seen[n] {
+			t.Errorf("seq %d was not handed out: %v", n, seen)
+		}
+	}
+	if data, _ := os.ReadFile(filepath.Join(f.p.dir, "traces", ".seq")); string(data) != strconv.Itoa(ran)+"\n" {
+		t.Errorf("the counter holds %q after %d steps", data, ran)
 	}
 }

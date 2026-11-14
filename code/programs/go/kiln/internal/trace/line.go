@@ -42,6 +42,35 @@ import (
 // so it is an error.  Signal lines ("--- ... ---") carry no path and are
 // skipped.
 //
+// # A thread killed at syscall entry: "???("
+//
+// One more shape is accepted, and only these three spellings of it.  When a
+// thread reaches a syscall-ENTRY stop with a fatal signal already pending (a
+// sibling's exit_group, a SIGKILL, or an exec by another thread), strace cannot
+// read the syscall number, decodes the call as the stub name "???" and prints
+//
+//	3486  ???( <unfinished ...>                       (S1, S2)
+//	3486  <... ??? resumed>)          = ?            (S2 only)
+//	3486  ???()                       = ?            (S3, in one line)
+//	3486  +++ exited with 0 +++
+//
+// Which of the three appears depends on a stale per-thread "filtered" flag
+// (TCB_FILTERED) left by the thread's PREVIOUS syscall, so all three are
+// legitimate output of the same event: S1 when the previous syscall was
+// untraced, S2 when it was traced (or this is the thread's first), S3 as S2
+// when nothing was printed in between.  The call is not an observation of
+// anything, because the kernel never ran it: ptrace_report_syscall() returns
+// fatal_signal_pending(), and syscall_trace_enter() then returns -1 BEFORE
+// seccomp and before dispatch.  There is no later stop for that task; it goes
+// straight to do_group_exit.  So the line is a "this thread died" marker,
+// carries no path, and is dropped; the exit line that follows is what the model
+// sees.  A "???" call can stand for ANY syscall (it is printed before -e
+// trace= filtering), which is exactly why it is dropped rather than
+// classified.  Anything that is not one of the three exact spellings, or that
+// is followed by anything but the thread's exit, stays refused: the one way the
+// pid lives on (a non-leader exec while the leader sits at the stop) is refused
+// by its "superseded by execve" line and the mismatched resume.
+//
 // Events are recorded in the order calls COMPLETE (when the return value is
 // known), which for a split call is the position of its "resumed" line.
 
@@ -163,6 +192,24 @@ type pending struct {
 	name   string
 	prefix string
 	line   int
+	// dead marks a "???(" entry: the thread was killed at syscall entry and
+	// the call never ran.  Only its own "<... ??? resumed>) = ?" (resumed) and
+	// its exit line are acceptable next; the pending ends at the exit line.
+	dead    bool
+	resumed bool
+}
+
+const (
+	deadOpen    = "???( <unfinished ...>"
+	deadResumed = "<... ??? resumed>)"
+	deadWhole   = "???()"
+)
+
+// isUnknownResult reports whether s is spaces then exactly "= ?" (strace pads
+// the '=' to a column), with at least one space.
+func isUnknownResult(s string) bool {
+	t := strings.TrimLeft(s, " ")
+	return len(t) < len(s) && t == "= ?"
 }
 
 // maxUnknownItems caps the arguments of a name outside the handled table.
@@ -516,7 +563,7 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			// A process killed or exiting inside a call that has no effect on
 			// paths is normal (wait4 interrupted by SIGKILL).  A path call that
 			// never returned is not: its result is unknown.
-			if c := lookup(p.name); c.class != classIgnored {
+			if c := lookup(p.name); c.class != classIgnored && !p.dead {
 				return nil, incomplete(p.line, reasonUnresumed)
 			}
 			delete(pend, pid)
@@ -525,6 +572,9 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 	case strings.HasPrefix(body, "--- "):
 		if !strings.HasSuffix(body, " ---") || len(body) < 8 {
 			return nil, incomplete(lineNo, reasonUnparsable)
+		}
+		if p := pend[pid]; p != nil && p.dead {
+			return nil, incomplete(lineNo, reasonInterleaved)
 		}
 		return nil, nil
 	case strings.HasPrefix(body, "<... "):
@@ -538,6 +588,19 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if p == nil || p.name != name {
 			return nil, incomplete(lineNo, reasonUnmatched)
 		}
+		if p.dead {
+			// The only thing a killed-at-entry call may resume to is "= ?",
+			// once.  "= 0", an errno, "<unavailable>" or arguments would mean
+			// the call actually ran.
+			if p.resumed {
+				return nil, incomplete(lineNo, reasonUnmatched)
+			}
+			if !strings.HasPrefix(body, deadResumed) || !isUnknownResult(body[len(deadResumed):]) {
+				return nil, incomplete(lineNo, reasonUnparsable)
+			}
+			p.resumed = true
+			return nil, nil
+		}
 		delete(pend, pid)
 		call, unfinished, _, r := parseCall(p.prefix + rest[k+len(" resumed>"):])
 		if r != "" {
@@ -547,6 +610,15 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
 		return finishCall(pid, lineNo, call, true, st.helper)
+	}
+	if body == deadOpen || (strings.HasPrefix(body, deadWhole) && isUnknownResult(body[len(deadWhole):])) {
+		// See "A thread killed at syscall entry" in the file head.  Something
+		// already pending for the pid is the usual interleaving error.
+		if pend[pid] != nil {
+			return nil, incomplete(lineNo, reasonInterleaved)
+		}
+		pend[pid] = &pending{name: "???", line: lineNo, dead: true, resumed: body != deadOpen}
+		return nil, nil
 	}
 	call, unfinished, prefix, r := parseCall(body)
 	if r != "" {

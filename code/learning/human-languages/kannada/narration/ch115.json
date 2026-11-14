@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Reason, Therefore, That is why, Because, Bed",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b0d1237664f94c53",
+  "sourceHash": "fnv1a64:6671fd08c4adda80",
   "lessons": [
     {
       "id": "KA-C115-karana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38027dc961a92be2",
+      "sourceHash": "fnv1a64:937178703d5ce209",
       "notice": null,
       "blocks": [
         {
@@ -135,6 +135,23 @@
             {
               "kind": "speech",
               "text": "What does ಕಾರಣ (kāraṇa) mean? (\"A reason\".) Say it once more."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall: place R3",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the complete phrases for on and under the tree, then inside, near, and far from the house. The house changes form for “far from”: ಮರದ ಮೇಲೆ, ಮರದ ಕೆಳಗೆ, ಮನೆಯೊಳಗೆ, ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ."
             }
           ]
         }

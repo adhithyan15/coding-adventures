@@ -57,11 +57,19 @@ package silicon_rust_go
 // Platform-specific LDFLAGS add the runtime library search path so the OS
 // dynamic linker can find libsilicon_rust_cgo.so at test execution time
 // (Linux rpath / macOS @rpath).
+//
+// Windows links the Rust crate STATICALLY. cgo on Windows means MinGW-w64 gcc, so the
+// archive is the GNU-ABI staticlib (target x86_64-pc-windows-gnu) that
+// tools\run-tests.ps1 builds through code\scripts\build-conduit-capi-windows-gnu.ps1.
+// Linking the cdylib's import library instead produced a test binary that exited with
+// 0xc0000135 (STATUS_DLL_NOT_FOUND) because silicon_rust_cgo.dll was not on PATH. The
+// import libraries listed are the ones Rust's std needs; keep them in sync with
+// go/conduit's cgo line.
 
 // #cgo CFLAGS: -I${SRCDIR}/../../rust/silicon-rust-cgo/include
 // #cgo linux   LDFLAGS: -L${SRCDIR}/../../rust/target/release -lsilicon_rust_cgo -Wl,-rpath,${SRCDIR}/../../rust/target/release
 // #cgo darwin  LDFLAGS: -L${SRCDIR}/../../rust/target/release -lsilicon_rust_cgo -Wl,-rpath,${SRCDIR}/../../rust/target/release
-// #cgo windows LDFLAGS: -L${SRCDIR}/../../rust/target/release -lsilicon_rust_cgo
+// #cgo windows LDFLAGS: ${SRCDIR}/../../rust/target/x86_64-pc-windows-gnu/release/libsilicon_rust_cgo.a -lws2_32 -luserenv -lbcrypt -lntdll -ladvapi32 -ldbghelp -lkernel32 -lsynchronization -lgcc_eh -static
 // #include "silicon_cgo.h"
 // #include <stdlib.h>
 import "C"

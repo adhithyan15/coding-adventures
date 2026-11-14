@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Property, Owner, Strength, Wish, Dream",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2ac124c926901b45",
+  "sourceHash": "fnv1a64:e19e67b4979b7639",
   "lessons": [
     {
       "id": "KA-C113-asti",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b99dc24bbd965d1",
+      "sourceHash": "fnv1a64:63e0051057818878",
       "notice": null,
       "blocks": [
         {
@@ -278,6 +278,23 @@
             {
               "kind": "speech",
               "text": "What does ಯಜಮಾನ (yajamāna) mean? (\"An owner, the master\".) Say it once more."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall: place R2 extension",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give a complete place phrase for the bird on the tree, then under the tree, then inside the house. Next contrast the school near the house with the school far from the house. Answers: ಮರದ ಮೇಲೆ, ಮರದ ಕೆಳಗೆ, ಮನೆಯೊಳಗೆ, ಮನೆಯ ಹತ್ತಿರ, ಮನೆಯಿಂದ ದೂರ."
             }
           ]
         }
