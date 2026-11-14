@@ -4976,6 +4976,30 @@ the reviewed server path, revocation, repository-owned TLS/HTTP composition,
 and audited transport remain separate blockers. Concrete HTTPS remains
 unavailable.
 
+A bounded `x509-rsa-reviewed-server-path-anchor-self-signature-binding`
+prerequisite now consumes the strongest accumulated Name-policy-backed
+reviewed RSA server-path result together with complete reviewed-anchor RSA
+self-signature evidence. It derives the path terminal only through the
+retained constructed-path evidence and requires the terminal's reviewed-root
+selection and the self-signature proof's reviewed-root selection to retain the
+same exact decoded certificate object. A byte-equal independent decode fails
+closed. Success returns one non-copyable result retaining the complete ordered
+path-signature, role, path-length, target and subordinate NameConstraints
+policy together with the data-driven SHA-256, SHA-384, or SHA-512
+repository-owned anchor self-signature proof. Stable failures and Debug output
+retain no certificate, path, key, signature, algorithm, constraint, or root
+payloads.
+
+This is an evidence-integrity composition only. It performs no parsing,
+signature verification, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It does not add trust-anchor semantics, complete RFC
+5280 Name or path validation, revocation, TLS, HTTP, OAuth transport, or
+network authority. Composition with the HTTPS destination proof, complete
+revocation policy, repository-owned TLS/HTTP, and audited transport remain
+separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
