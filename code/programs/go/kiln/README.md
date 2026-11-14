@@ -549,9 +549,9 @@ GitHub run with an image id; every other failure is exit 1. In order, it:
    makes `pre/` read-only. `pre/exec-wrapper.json` is the build tool's
    `-exec-wrapper`.
 
-`kiln record step` and `kiln record collect` exist as stubs that refuse (PR
-2b-2). Not done here, by design: gates and toolchain probes, the in-sandbox
-socket probe, the supervisor, and `collect`.
+`kiln record step` is the next section; `kiln record collect` exists as a stub that
+refuses (PR 2b-2b). Not done by `prepare`, by design: gates and toolchain probes,
+the in-sandbox socket probe, and `collect`.
 
 **The recorder's PATH and its git.** `git` is resolved once from `--git` (default
 `/usr/bin/git`) and every host-side Git call runs that file by absolute path;
@@ -564,6 +564,58 @@ reach it.
 One test (`TestRealBuildToolExportsAreWhatPrepareReads`, about a minute) builds
 the real build tool and runs it over this repository with the arguments
 `prepare` uses; it is skipped with `-short` and in a sparse checkout.
+
+## `kiln record step` (stage 4 PR 2b-2a, KILN04 section 4.8, P12)
+
+The per-step supervisor, in `internal/record` (`RunStep`, `VerifyPre`,
+`StepSidecar`) behind `kiln record step`. The build tool runs it once per BUILD
+line through its `-exec-wrapper` (the file `prepare` wrote), which appends
+`sh -c <line>` and adds `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`:
+
+```
+kiln record step --dir <abs> -- sh -c <line>
+```
+
+It exits with the traced step's status, so the build sees a pass as a pass and a
+failure as a failure; 125 when it refused to run the step or could not account
+for it; 2 for usage; 3 off linux/amd64. Before running anything it:
+
+1. re-verifies `pre/` against `SEALED` and the binding (every file listed and
+   hashed, nothing extra, no symlink, the binding's digests equal the sealed
+   files', every action has a sandbox environment), and requires the running
+   Kiln and the `strace` of `tools.json` to be the binaries the binding hashed;
+2. requires its environment to equal `build_tool_env` plus the three `KILN_*`
+   variables (a missing, extra, changed or repeated variable is a refusal; the
+   message names variables, never values);
+3. requires `KILN_ACTION` to be a planned action, `KILN_STEP` and
+   `KILN_STEP_COUNT` to be canonical integers with the count the plan's, and
+   the step to be the next one (a step runs once; a second attempt leaves a
+   `<step>.rerun` marker and runs nothing);
+4. requires argv to be exactly `sh -c <line>`, the working directory to be
+   `<root>/<action>`, and free disk above 4 GiB.
+
+Then it runs `strace <sandbox.StraceArgs> kiln sandbox-exec --config
+pre/sandbox.json --stdout-fd 3 --stderr-fd 4 -- sh -c <line>` with an environment of
+exactly the three variables and the recorded `PATH`, the trace in
+`traces/<sha256(action)>/<step>.trace` (created `O_EXCL`, so an action's name is
+never a path component), fresh pipes for the step's descriptors 1 and 2 relayed to
+its own stdout and stderr, and strace's own two streams kept apart and counted.
+`Pdeathsig` makes a killed supervisor take strace with it. It polls the trace every
+250 ms and kills strace above 1 GiB or with the disk under 4 GiB, marking the step
+`truncated`. It never retries status 125.
+
+Afterwards `traces/<sha256(action)>/<step>.json` (`kiln-record-step/1`, `O_EXCL`)
+holds what only the supervisor can know: strace's exit code and signal, whether its
+streams were empty, the root's status, truncation, the trace's size and SHA-256,
+the times, whether the line matches the plan, `step_netns` (true only when strace
+was started with the sandbox command) and `clean`, the supervisor's half of the
+tracer-completeness rule (G7). It classifies nothing: `kiln record collect`, the
+next PR, parses the trace and reads these files.
+
+Tests: a fake `strace` script behind `tools.json` covers every refusal and
+outcome on any Unix (`step_unix_test.go`); `TestStepKillingTheSupervisorKillsStrace`
+covers `Pdeathsig` on Linux; `TestSandboxRecordStep` (the required `kiln-sandbox`
+job) runs `prepare` and `step` for real with the real strace and sandbox.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 
