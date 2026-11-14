@@ -5055,7 +5055,7 @@ The direct completion returns that same exact decoded certificate object
 through its complete retained proof, without accepting a detached certificate,
 callback, path, status result, or trust assertion. This prepares a later HTTPS
 destination-to-complete-revocation binding without moving or duplicating the
-signed path proof.
+retained direct-revocation proof.
 
 This projection performs no parsing, new validation, cryptography, credential
 access or editing, signing, storage, clock acquisition, provider action, audit
@@ -5064,6 +5064,30 @@ not bind an HTTPS destination, generalize revocation or path construction,
 build or run TLS or HTTP, authorize OAuth transport, or grant network
 authority. Other complete fixed-path revocation branches and the final HTTPS
 composition remain separate slices. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
+The existing bounded `https-reviewed-server-path-binding` prerequisite now
+also joins the complete HTTPS destination proof directly to the exact direct
+no-check complete fixed-path revocation proof. It derives the server leaf only
+through that completion's sealed repository-owned target projection, requires
+the destination and completed revocation policy to retain the same exact
+decoded certificate object, and moves both complete non-copyable inputs into
+the result. A byte-equal independent decode fails closed, and callers cannot
+supply a detached certificate, callback-shaped target claim, path, status
+result, or trust assertion. Stable failures and Debug output retain no
+certificate, hostname, authority, path, key, signature, algorithm, status,
+constraint, or root payloads. This direct-revocation branch is orthogonal to
+the separate path-to-anchor-self-signature composition: it does not require,
+retain, or imply that signed-anchor evidence.
+
+This orthogonal direct-branch composition performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It does not generalize revocation or path
+construction, cover the other complete fixed-path revocation branches, build
+or run TLS or HTTP, authorize OAuth transport, or grant network authority.
+Those other branches, repository-owned TLS/HTTP composition, and audited
+transport remain separate blockers. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
