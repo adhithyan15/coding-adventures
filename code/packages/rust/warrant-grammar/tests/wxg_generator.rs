@@ -262,3 +262,26 @@ fn discards(text: &str) -> bool {
         t.starts_with("Ok(_) =>") || t.starts_with("Some(_) =>")
     })
 }
+
+/// S3 and S4 operations whose host returns TWO components (h = 2).
+fn two_spec() -> String {
+    "warrant t v1\n  error Bad = BAD\n  op two(buf: inout Bytes) -> (U8, U8, Bytes)\n  op rtwo(buf: inout Bytes) -> Result<(U8, U8, Bytes), Bad>\n  op otwo(buf: inout Bytes) -> Result<(U8, U8, Bytes), Bad>\n  labels two:\n    buf public\n  labels rtwo:\n    buf public\n  labels otwo:\n    buf public\n  example e:\n    two(b\"01\") == (1u8, 2u8, wide(b\"00\"))\n  model wide(b: Bytes) -> Bytes = b\n  claim k:\n    forall buf: Bytes. two(buf) == two(buf)\n".to_string()
+}
+
+fn two_bindings(rtwo: &str) -> String {
+    format!("package wxg_subject\nrevision 0\nspec s.warrant\noutput code/packages/rust/c/tests/generated/e.rs\nseed 1\nproperty_cases 10\nfuzz_iterations 10\nnegctl_fuzz_iterations 10\nop two export=two ret=(u8,u8) inout=buf:slice faults=stale-post\nop rtwo export=rtwo ret=(u8,u8) errors=wxg_subject::HE/B=BAD inout=buf:slice faults=stale-post\nop otwo export=otwo ret=(u8,u8) {rtwo} inout=buf:slice faults=stale-post\n")
+}
+
+#[test]
+fn host_returned_tuples_are_destructured_with_an_exact_pattern() {
+    // `two` (plain), `rtwo` (errors=), `otwo` (error=) and an err_any variant.
+    for variant in ["error=BAD", "err_any=BAD"] {
+        let text = generate_from(&two_spec(), &two_bindings(variant)).unwrap_or_else(|e| panic!("{variant}: {e}"));
+        assert!(text.contains("let (r0, r1) = wxg_subject::two("), "{variant}: plain slot");
+        assert!(text.contains("Ok((r0, r1)) =>"), "{variant}: errors=/err_any= slot");
+        let want = if variant == "error=BAD" { "Some((r0, r1)) =>" } else { "Ok((r0, r1)) =>" };
+        assert!(text.contains(want), "{variant}: {want}");
+        // Field access (`r.0`) would accept a wider tuple.
+        assert!(!text.contains("r.0") && !text.contains("r.1"), "{variant}: field access on the host return");
+    }
+}
