@@ -392,6 +392,39 @@ func TestDaemonLeftSharedAncestry(t *testing.T) {
 	}
 }
 
+// Parser and rule together: a single-threaded init ending with a raw exit(2)
+// (no exit_group) still gets a marker, so a daemon that exits 0 on EOF after
+// it is flagged, while a child exited and reaped before it is not.
+func TestDaemonLeftAfterARawExitInit(t *testing.T) {
+	const head = `10  execve("/usr/bin/kiln", ["kiln", "sandbox-exec"], 0x0 /* 1 vars */) = 0
+10  unshare(CLONE_NEWUSER) = 0
+10  clone(child_stack=NULL, flags=CLONE_NEWPID|SIGCHLD) = 11
+11  unshare(CLONE_NEWNS) = 0
+11  chdir("/start") = 0
+11  execve("/usr/bin/kiln", ["kiln", "sandbox-init"], 0x0 /* 1 vars */) = 0
+11  execve("/bin/sh", ["sh", "-c", "make"], 0x0 /* 1 vars */) = 0
+11  clone(child_stack=NULL, flags=SIGCHLD) = 2 /* 12 in strace's PID NS */
+`
+	parse := func(body string) *trace.Trace {
+		tr, err := trace.ParseOptions(strings.NewReader(head+body), "/start",
+			trace.Options{HelperRoot: true, HelperExe: "/usr/bin/kiln"})
+		if err != nil {
+			t.Fatalf("%v\n%s", err, head+body)
+		}
+		return tr
+	}
+	// The child exits by itself after init's raw exit: a survivor.
+	tr := parse("11  exit(0) = ?\n12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n")
+	if tr.InitExitLine == 0 || !DaemonLeft(tr) {
+		t.Errorf("marker %d, DaemonLeft %v: a survivor after a raw exit was missed", tr.InitExitLine, DaemonLeft(tr))
+	}
+	// The child was reaped first: not a survivor.
+	tr = parse("12  +++ exited with 0 +++\n11  exit(0) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n")
+	if DaemonLeft(tr) {
+		t.Error("a child reaped before init's raw exit was flagged")
+	}
+}
+
 // A step forks a chain deeper than any walk bound, one child at a time, and
 // leaves a daemon at the bottom: still a survivor.  (The walk used to give up at
 // 4096 steps and call the exit "outside init".)  A same-depth chain that

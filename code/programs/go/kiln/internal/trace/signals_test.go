@@ -144,6 +144,57 @@ func TestInitExitLineNeedsACallThatDidNotReturn(t *testing.T) {
 	}
 }
 
+// The marker is built from PER-THREAD exit_group candidates and the LAST raw
+// exit (review round 2): a failing exit_group held open by one thread must not
+// hide another thread's real one; a single-threaded init may end with a raw
+// exit; workers' early exits are not the end; a failed exit is nothing.
+func TestInitExitMarkerFromCandidatesAndTheLastRawExit(t *testing.T) {
+	end := "12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n"
+	one := "11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n"
+	const eperm = "-1 EPERM (Operation not permitted)"
+	sp := spawnThread(11, 12) // line stepPrefixLines+1
+	cases := []struct {
+		name string
+		text string
+		want int
+	}{
+		{"T1 holds a failing exit_group open while T2's real one runs", stepPrefix + sp +
+			"12  exit_group(1 <unfinished ...>\n" +
+			"11  exit_group(0) = ?\n" +
+			"12  <... exit_group resumed>) = " + eperm + "\n" + end, stepPrefixLines + 3},
+		{"the same, T1's failure first and printed whole", stepPrefix + sp +
+			"12  exit_group(1) = " + eperm + "\n11  exit_group(0) = ?\n" + end, stepPrefixLines + 3},
+		{"a raw exit ends a single-threaded init", stepPrefix + "11  exit(0) = ?\n" + one, stepPrefixLines + 1},
+		{"workers exit early, the main thread exit_groups", stepPrefix + sp +
+			"12  exit(0) = ?\n11  exit_group(0) = ?\n" + end, stepPrefixLines + 3},
+		{"only raw exits: the LAST one", stepPrefix + sp +
+			"12  exit(0) = ?\n11  exit(0) = ?\n" + end, stepPrefixLines + 3},
+		{"an exit_group beats a LATER raw exit", stepPrefix + sp +
+			"11  exit_group(0) = ?\n12  exit(0) = ?\n" + end, stepPrefixLines + 2},
+		{"a raw exit that failed is nothing", stepPrefix + "11  exit(0) = " + eperm + "\n" + one, 0},
+		{"a split raw exit that failed is withdrawn", stepPrefix +
+			"11  exit(0 <unfinished ...>\n11  <... exit resumed>) = " + eperm + "\n" + one, 0},
+		{"a split raw exit that did not return stands", stepPrefix +
+			"11  exit(0 <unfinished ...>\n11  <... exit resumed>) = ?\n" + one, stepPrefixLines + 1},
+		{"a withdrawn raw exit leaves the earlier one", stepPrefix + sp +
+			"12  exit(0) = ?\n11  exit(0 <unfinished ...>\n11  <... exit resumed>) = " + eperm + "\n" + end, stepPrefixLines + 2},
+		{"a raw exit of a child is not init's", stepPrefix +
+			"11  clone(child_stack=NULL, flags=SIGCHLD) = 2" + ns(12) + "\n12  exit(0) = ?\n" + end, 0},
+		{"no exit call at all (killed by a signal)", stepPrefix + "11  +++ killed by SIGKILL +++\n10  +++ exited with 0 +++\n", 0},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			tr, err := parseAt(t, "/start", c.text, helperOpts)
+			if err != nil {
+				t.Fatalf("%v\n%s", err, c.text)
+			}
+			if tr.InitExitLine != c.want {
+				t.Errorf("InitExitLine = %d, want %d\n%s", tr.InitExitLine, c.want, c.text)
+			}
+		})
+	}
+}
+
 // D18 interaction, pinned: a signal-delivery line ("--- SIG ---", which
 // -e signal=all now prints) on a thread with a "???(" entry pending is
 // "interleaved".  SIGKILL has no delivery stop, so a real trace should never
@@ -162,6 +213,11 @@ func TestSignalLineOnAPendingDeadEntryIsInterleaved(t *testing.T) {
 
 // signalSeeds feed FuzzParse.
 var signalSeeds = []string{
+	stepPrefix + "11  exit(0) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
+	stepPrefix + "11  exit(0 <unfinished ...>\n11  <... exit resumed>) = -1 EPERM (Operation not permitted)\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
+	stepPrefix + "11  exit(0 <unfinished ...>\n11  <... exit resumed>) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
+	stepPrefix + spawnThread(11, 12) + "12  exit_group(1 <unfinished ...>\n11  exit_group(0) = ?\n12  <... exit_group resumed>) = -1 EPERM (Operation not permitted)\n12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
+	stepPrefix + spawnThread(11, 12) + "12  exit(0) = ?\n11  exit_group(0) = ?\n12  +++ exited with 0 +++\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + "11  exit_group(0) = -1 EPERM (Operation not permitted)\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + "11  exit_group(0 <unfinished ...>\n11  <... exit_group resumed>) = -1 EPERM (Operation not permitted)\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",
 	stepPrefix + "11  exit_group(0) = ?\n11  +++ exited with 0 +++\n10  +++ exited with 0 +++\n",

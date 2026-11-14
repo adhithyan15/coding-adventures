@@ -408,9 +408,10 @@ func (c *classifier) stepStatus(t *trace.Trace) {
 // whether a survivor's line precedes or follows the init's exit line is not
 // something the design relies on (KILN04 D19, open question F2).
 //
-// FAIL CLOSED: InitExitLine == 0 (the init was killed from outside, or the
-// last thread called exit(2)) makes every SIGKILL death of a descendant count
-// (other exits cannot be placed relative to a marker that is not there).
+// FAIL CLOSED: InitExitLine == 0 (the init group made no exit call at all: it
+// was killed by a signal, so the step is already failed and incomplete) makes
+// every SIGKILL death of a descendant count (other exits cannot be placed
+// relative to a marker that is not there).
 // So does an ExitLines slice that does not line up with Exits.  A child
 // SIGKILLed and not waited for just before the step exits may also be flagged;
 // that race is accepted.

@@ -175,19 +175,25 @@ type record struct {
 	exit  *Exit
 	start bool // a handled call began (its "<unfinished ...>" line); call is nil
 	split bool // this completed call was split: its cwd was sampled at the start record
-	// groupExit marks the START of an exit_group call (call is nil).  The call
+	// exitCall marks the START of an exit_group or exit call (call is nil;
+	// rawExit says which).  The call
 	// is otherwise ignored; the model needs only WHEN it began, because strace
 	// prints it at the thread group's exit, before the "+++ exited +++" line
 	// (see Trace.InitExitLine).  Only the start line is emitted, and only for
 	// a call that did NOT return: "= ?", or the unfinished form (whose
 	// resumed half may still show a real result, see retract).
-	groupExit bool
-	// retract, with groupExit, says the resumed half of an exit_group that
+	exitCall bool
+	rawExit  bool // the call is exit (one thread), not exit_group
+	// retract, with exitCall, says the resumed half of an exit_group or exit that
 	// began at line `line` returned a real result (it FAILED, e.g. EPERM from
 	// a seccomp filter the step installed): the thread group is not dying, so
 	// the marker taken at the start line is withdrawn.
 	retract bool
 }
+
+// isExitName: the two calls that end a thread (exit) or a thread group
+// (exit_group), whose START lines the model keeps (Trace.InitExitLine).
+func isExitName(n string) bool { return n == "exit_group" || n == "exit" }
 
 // lineState is what the line handler carries between lines.
 type lineState struct {
@@ -621,10 +627,10 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 		if unfinished {
 			return nil, incomplete(lineNo, reasonUnparsable)
 		}
-		if call.name == "exit_group" && !call.ret.unknown {
+		if isExitName(call.name) && !call.ret.unknown {
 			// The call began (the marker was taken at its start line) but
 			// returned: it failed, and the group is not dying.
-			return &record{line: p.line, pid: pid, groupExit: true, retract: true}, nil
+			return &record{line: p.line, pid: pid, exitCall: true, rawExit: call.name == "exit", retract: true}, nil
 		}
 		return finishCall(pid, lineNo, call, true, st.helper)
 	}
@@ -651,8 +657,8 @@ func handleLine(text string, lineNo int, st *lineState) (*record, *Error) {
 			}
 		}
 		pend[pid] = &pending{name: call.name, prefix: prefix, line: lineNo}
-		if call.name == "exit_group" {
-			return &record{line: lineNo, pid: pid, groupExit: true}, nil
+		if isExitName(call.name) {
+			return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 		}
 		if lookup(call.name).class == classHandled {
 			// The working directory a split call runs in is the one at its
@@ -681,11 +687,11 @@ func finishCall(pid, lineNo int, call rawCall, split, deferClass bool) (*record,
 		}
 	}
 	if lookup(call.name).class == classIgnored {
-		if call.name == "exit_group" && !split && call.ret.unknown {
+		if isExitName(call.name) && !split && call.ret.unknown {
 			// A whole-line exit_group that did not return (the group is
 			// dying): its one line is its start line.  One that returned
 			// (a failure) is nothing.
-			return &record{line: lineNo, pid: pid, groupExit: true}, nil
+			return &record{line: lineNo, pid: pid, exitCall: true, rawExit: call.name == "exit"}, nil
 		}
 		return nil, nil
 	}

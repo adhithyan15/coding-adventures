@@ -381,7 +381,8 @@ Two consequences:
   falls before or after the init child's own exit line is **left open**
   until a real-strace run settles it (the `daemon-left` subtest of
   `TestSandboxStraceSignals` logs it). With no `exit_group` seen
-  (`InitExitLine == 0`: the init child was killed from outside) every such
+  (`InitExitLine == 0`: the init group made no exit call at all and died by a
+  signal, so the step is already `failed` and incomplete) every such
   `SIGKILL` death counts, which fails closed (other exits cannot be placed
   relative to a marker that is not there). A failed `exit_group` (a result
   other than `?`, for instance EPERM from a seccomp filter the step installed)
@@ -607,9 +608,13 @@ first successful exec of a non-Kiln path is the step.**
 - **Exit status and daemons.** The step's status is the init child's
   (`Trace.StepExit`), and `Trace.InitPid` names it for the `daemon-left`
   rule. The parser also records `Trace.ExitLines` (the line of each exit,
-  parallel to `Trace.Exits`) and `Trace.InitExitLine` (the start line of the
-  first `exit_group` made after the step's exec by the init child or one of
-  its `CLONE_THREAD` threads, 0 if none); `traced.DaemonLeft` applies the
+  parallel to `Trace.Exits`) and `Trace.InitExitLine` (the marker, after the
+  step's exec, over the init child and its `CLONE_THREAD` threads: the
+  earliest `exit_group` that did not return, one candidate per thread, a
+  failed call and a split call whose resumed half shows a result being
+  withdrawn; else the start line of the LAST `exit` that did not return
+  (a single-threaded init may end with a raw `exit`, and every pthread ends
+  with one, so only the last counts); else 0); `traced.DaemonLeft` applies the
   rule (D19). `--- SIG ---` signal lines are skipped; `+++ killed by SIG
   +++` is an exit. A `--- SIG ---` line on a thread with a `???(` entry
   pending is still `interleaved` (a SIGKILL has no delivery stop, so a real
@@ -655,6 +660,15 @@ reports `missing-exit`, and the run is voided. So the recorder runs
 `-e signal=all`; the `--- SIG ---` delivery lines it adds are skipped by the
 parser, and `RecorderVersion` is 3. A missing exit line is still
 `missing-exit`, and `(core dumped)` is still incomplete.
+
+**Yield note (D19).** Two accepted patterns can be flagged `daemon-left`
+nondeterministically, depending on the order in which the kernel and strace
+report exits near the init child's own: an init that exits without waiting for
+a child that is exiting at the same moment (read the child's output to EOF,
+then exit without `wait`), and a helper that exits on its parent's EOF (Python
+multiprocessing's resource tracker). Since `daemon-left` is run-void under M-1,
+the first recording runs must COUNT it per action before anyone relies on the
+rule.
 
 ### 4.6 Wiring decisions (stage 3a)
 

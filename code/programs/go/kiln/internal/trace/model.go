@@ -142,9 +142,22 @@ type Trace struct {
 	// Exits[i].  (It is a separate slice, not a field of Exit, because many
 	// callers compare Exit values.)
 	ExitLines []int
-	// InitExitLine is, under Options.HelperRoot, the 1-based line where the
-	// FIRST exit_group call began that was made after the step's exec by the
-	// init process or by a CLONE_THREAD thread of it; 0 when there is none.
+	// InitExitLine is, under Options.HelperRoot, the 1-based start line of the
+	// call that ended the step's thread group, made after the step's exec by
+	// the init process or a CLONE_THREAD thread of it:
+	//
+	//   - the earliest exit_group that did not return (one per thread; a
+	//     failed call, EPERM from a seccomp filter the step installed, is no
+	//     candidate, and a split call's candidacy is withdrawn when its
+	//     resumed half shows a result), else
+	//   - the start line of the LAST exit (one thread's exit, syscall 60) that
+	//     did not return: a single-threaded init may end with a raw exit, and
+	//     every pthread ends with one, so only the last counts, else
+	//   - 0.
+	//
+	// 0 therefore means the init group made no exit call at all and died by a
+	// signal (or its exit was never printed): the step is already failed and
+	// incomplete.  traced.DaemonLeft then counts SIGKILL deaths only.
 	//
 	// strace prints exit_group at PTRACE_EVENT_EXIT, i.e. when the step's
 	// thread group starts to die.  The kernel then kills every other process
@@ -152,9 +165,7 @@ type Trace struct {
 	// "+++ killed by SIGKILL +++" lines may come before OR after the init's own
 	// "+++ exited +++" line, but (by design) after this call line.  So this
 	// line, not init's exit line, is the boundary that tells a daemon from a
-	// child the step reaped itself.  A thread group killed by a signal, or a
-	// raw exit(2) of the last thread, has no exit_group: 0 (fail closed, see
-	// traced.DaemonLeft).
+	// child the step reaped itself.
 	InitExitLine int
 	// InitPid is the sandbox's PID-1 child under Options.HelperRoot, else 0.
 	InitPid int
@@ -291,7 +302,13 @@ type model struct {
 	initExeced bool         // helper mode: the init child's first successful exec of the helper binary was kept
 	rootMemo   map[int]bool // inRootGroup answers, so each pid is walked once
 	initMemo   map[int]bool // inInitThreads answers
-	walkSteps  int          // thread-chain steps taken (a test watches this stays linear)
+	// exitCand: pid -> start line of its exit_group that has not returned, for
+	// init-group threads after the step's exec.  rawExits: start lines of
+	// exit calls (one thread) that have not returned, same threads.  See
+	// Trace.InitExitLine.
+	exitCand  map[int]int
+	rawExits  map[int]bool
+	walkSteps int // thread-chain steps taken (a test watches this stays linear)
 }
 
 // Parse reads a strace trace from r.  initialCwd is the working directory of
@@ -330,6 +347,7 @@ func ParseOptions(r io.Reader, initialCwd string, opts Options) (*Trace, error) 
 		return nil, e
 	}
 	m.trace.InitPid = m.initPid
+	m.trace.InitExitLine = m.exitMarker()
 	return m.trace, nil
 }
 
@@ -341,6 +359,8 @@ func newModel(lim Limits, opts Options, root int, initialCwd string) *model {
 		spawns:   map[int]spawn{},
 		rootMemo: map[int]bool{},
 		initMemo: map[int]bool{},
+		exitCand: map[int]int{},
+		rawExits: map[int]bool{},
 	}
 }
 
@@ -460,6 +480,26 @@ func (m *model) inRootGroup(pid int) bool {
 		m.rootMemo[p] = res
 	}
 	return res
+}
+
+// exitMarker settles Trace.InitExitLine: the earliest surviving exit_group
+// candidate, else the last surviving raw exit, else 0.
+func (m *model) exitMarker() int {
+	best := 0
+	for _, line := range m.exitCand {
+		if best == 0 || line < best {
+			best = line
+		}
+	}
+	if best != 0 {
+		return best
+	}
+	for line := range m.rawExits {
+		if line > best {
+			best = line
+		}
+	}
+	return best
 }
 
 // inInitThreads reports whether pid is the init child or a CLONE_THREAD thread
@@ -684,17 +724,23 @@ func (m *model) apply(rec *record) *Error {
 	if p.exited {
 		return incomplete(rec.line, reasonEventAfterExit)
 	}
-	if rec.groupExit && rec.retract {
-		// A failed exit_group whose start line took the marker: withdraw it
-		// (only if it is still that call's).  The next one may take it again.
-		if m.trace.InitExitLine == rec.line {
-			m.trace.InitExitLine = 0
+	if rec.exitCall && rec.retract {
+		// A failed exit_group or exit whose start line was a candidate:
+		// withdraw exactly that candidate.
+		if rec.rawExit {
+			delete(m.rawExits, rec.line)
+		} else if m.exitCand[p.Pid] == rec.line {
+			delete(m.exitCand, p.Pid)
 		}
 		return nil
 	}
-	if rec.groupExit {
-		if m.stepExec && m.inInitThreads(p.Pid) && m.trace.InitExitLine == 0 {
-			m.trace.InitExitLine = rec.line
+	if rec.exitCall {
+		if m.stepExec && m.inInitThreads(p.Pid) {
+			if rec.rawExit {
+				m.rawExits[rec.line] = true
+			} else if _, ok := m.exitCand[p.Pid]; !ok {
+				m.exitCand[p.Pid] = rec.line
+			}
 		}
 		return nil
 	}

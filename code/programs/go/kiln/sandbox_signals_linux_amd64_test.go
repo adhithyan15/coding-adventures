@@ -136,6 +136,10 @@ func runStraced(t *testing.T, script string) *stracedRun {
 	var stepOut, stepErr string
 	start := time.Now()
 	if err := cmd.Start(); err != nil {
+		outR.Close()
+		outW.Close()
+		errR.Close()
+		errW.Close()
 		t.Fatalf("starting strace: %v", err)
 	}
 	// Our copies of the write ends must go, or the readers never see EOF.
