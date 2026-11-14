@@ -127,9 +127,18 @@ pub fn encrypt(text: &str, shift: i32) -> String {
 /// ```
 pub fn decrypt(text: &str, shift: i32) -> String {
     // Decryption with shift `s` is encryption with shift `-s`.
-    // Our `encrypt` function already handles negative shifts via
-    // normalisation, so this one-liner is both correct and clear.
-    encrypt(text, -shift)
+    //
+    // We must NOT write `-shift` on the raw input: `i32::MIN` has no positive
+    // counterpart (|-2147483648| = 2147483648 > i32::MAX), so the negation
+    // overflows -- a panic in a debug build, a silent wrap in a release build
+    // (SEC-010).  Instead reduce first, then negate:
+    //
+    //   shift.rem_euclid(26) is always in 0..=25, so its negation is in
+    //   -25..=0 and can never overflow.  Shifts are only meaningful modulo 26
+    //   anyway, so nothing is lost.
+    //
+    //   shift = i32::MIN  =>  rem_euclid(26) = 16  =>  encrypt(text, -16)
+    encrypt(text, -shift.rem_euclid(26))
 }
 
 /// Apply ROT13 -- a special Caesar cipher with shift 13.

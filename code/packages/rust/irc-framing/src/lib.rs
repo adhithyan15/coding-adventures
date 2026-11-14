@@ -23,6 +23,9 @@
 //!
 //! RFC 1459 §2.3: maximum 512 bytes per message including `\r\n`, leaving at
 //! most 510 bytes of content.  Lines exceeding 510 bytes are silently discarded.
+//! RFC 2812 §2.3 keeps the same 512-byte limit.  A line still lacking its LF
+//! after 511 bytes (510 plus a CR) is dropped early and the framer skips to the
+//! next LF, so a peer that never sends LF cannot make the buffer grow (SEC-011).
 //!
 //! ## Usage
 //!
@@ -39,8 +42,16 @@
 //! assert_eq!(frames[1], b"USER alice 0 * :Alice Smith");
 //! ```
 
-/// RFC 1459 §2.3: maximum line content is 510 bytes (512 - CRLF).
+/// RFC 1459 §2.3 / RFC 2812 §2.3: a message is at most 512 bytes *including*
+/// the trailing CRLF, so the content is at most 510 bytes (512 - CRLF).
 const MAX_CONTENT_BYTES: usize = 510;
+
+/// The most bytes we will hold for one line that has not yet seen its LF.
+///
+/// A legal line can be 510 content bytes plus a CR whose LF has not arrived
+/// yet, i.e. 511 bytes.  One more byte with no LF and the line can no longer
+/// be legal (SEC-011), so we stop remembering it.
+const MAX_PENDING_BYTES: usize = MAX_CONTENT_BYTES + 1;
 
 /// Stateful byte-stream-to-line-frame converter.
 ///
@@ -51,19 +62,77 @@ const MAX_CONTENT_BYTES: usize = 510;
 /// `Framer` instance.
 pub struct Framer {
     buf: Vec<u8>,
+    /// Length of the unterminated tail of `buf` (bytes after the last LF).
+    /// Invariant: `tail_len <= MAX_PENDING_BYTES` after every `feed`.
+    tail_len: usize,
+    /// True while we are skipping the rest of an overlong line: everything up
+    /// to and including the next LF is thrown away, unread.
+    discarding: bool,
 }
 
 impl Framer {
     /// Create a new `Framer` with an empty internal buffer.
     pub fn new() -> Self {
-        Framer { buf: Vec::new() }
+        Framer {
+            buf: Vec::new(),
+            tail_len: 0,
+            discarding: false,
+        }
     }
 
     /// Append `data` to the internal buffer.
     ///
     /// Passing an empty slice is a safe no-op.
-    pub fn feed(&mut self, data: &[u8]) {
-        self.buf.extend_from_slice(data);
+    ///
+    /// ## Memory bound (SEC-011)
+    ///
+    /// The unterminated tail (bytes after the last LF) never exceeds
+    /// [`MAX_PENDING_BYTES`] = 511.  A peer that sends bytes forever without an
+    /// LF would otherwise grow the buffer without limit (CWE-400/770).  When
+    /// the tail passes the cap, the partial line is dropped and the framer
+    /// *discards input up to the next LF* -- fail closed, the same silent
+    /// discard that already applies to a complete overlong line, so the API is
+    /// unchanged.  Complete lines already buffered are kept; the caller bounds
+    /// those by calling [`frames`](Framer::frames) after each read.
+    ///
+    /// ```text
+    /// data = [ ...complete lines... LF ][ unterminated tail ]
+    ///                                   ^ only this part can be flooded
+    /// ```
+    pub fn feed(&mut self, mut data: &[u8]) {
+        // Step 1: while discarding an overlong line, skip to just past its LF.
+        if self.discarding {
+            match data.iter().position(|&b| b == b'\n') {
+                None => return, // still inside the overlong line
+                Some(pos) => {
+                    self.discarding = false;
+                    data = &data[pos + 1..];
+                }
+            }
+        }
+
+        // Step 2: split `data` at its last LF.  The head (through that LF)
+        // completes lines and is stored; only the tail can be flooded.
+        let (head, tail) = match data.iter().rposition(|&b| b == b'\n') {
+            Some(pos) => data.split_at(pos + 1),
+            None => (&data[..0], data),
+        };
+        if !head.is_empty() {
+            self.buf.extend_from_slice(head);
+            self.tail_len = 0;
+        }
+
+        // Step 3: store the tail only if the pending line still fits.  We
+        // check *before* extending so a huge single feed is never copied.
+        if self.tail_len + tail.len() > MAX_PENDING_BYTES {
+            let keep = self.buf.len() - self.tail_len;
+            self.buf.truncate(keep); // drop the partial line
+            self.tail_len = 0;
+            self.discarding = true;
+        } else {
+            self.buf.extend_from_slice(tail);
+            self.tail_len += tail.len();
+        }
     }
 
     /// Drain all complete frames from the buffer, with CRLF stripped.
@@ -100,12 +169,16 @@ impl Framer {
             result.push(line);
         }
 
+        // Only the unterminated tail remains in the buffer.
+        self.tail_len = self.buf.len();
         result
     }
 
     /// Discard all buffered data.
     pub fn reset(&mut self) {
         self.buf = Vec::new();
+        self.tail_len = 0;
+        self.discarding = false;
     }
 
     /// Number of bytes currently held in the internal buffer.
