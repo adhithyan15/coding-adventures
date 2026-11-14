@@ -108,6 +108,10 @@ type Result struct {
 	// as expectedCommit, so a BUILD that ran `git commit -a` (moving HEAD to
 	// a commit that DOES match the edited disk) is caught.
 	Commit string
+	// entries is the commit's tracked tree (path -> mode and object id), the
+	// very listing the disk was just proven equal to. `prepare` seals it as
+	// `pre/tree` (tree.go) so that nothing after it needs Git to know it.
+	entries map[string]entry
 }
 
 // VerifyTree proves the checkout at root equals one commit (see the file
@@ -175,7 +179,7 @@ func VerifyTreeWith(g *source.Git, root, expectedCommit string) (Result, error) 
 	if e := bad.err("working tree is not HEAD"); e != nil {
 		return Result{}, e
 	}
-	return Result{Commit: commit}, nil
+	return Result{Commit: commit, entries: headTree}, nil
 }
 
 // requireTopLevel refuses a root that is not the top of its work tree:

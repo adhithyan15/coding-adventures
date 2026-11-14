@@ -50,10 +50,27 @@ package record
 // Nothing is looked up on PATH: strace is the path in tools.json, the sandbox
 // helper is this very binary, and the child's PATH is the recorded one.
 //
-// What it does NOT do: classify. It never parses its own trace. The facts it
-// records are the ones the trace cannot hold (how strace itself fared, and how
-// big the trace was allowed to grow); `collect`, in the next PR, parses the
-// trace and applies the classifier.
+// Serial recording and classification (decision P13)
+// --------------------------------------------------
+// The supervisor's sidecar holds the facts the trace cannot (how strace itself
+// fared, how big the trace was allowed to grow). Since P13 it ALSO classifies,
+// because `traced.Classify` resolves paths against the disk and a later action
+// can change what an earlier one resolved through (classify_step.go has the
+// picture). Two rules make that sound:
+//
+//	serial     the build runs with -jobs 1, and `step` holds an EXCLUSIVE,
+//	           non-blocking flock on traces/.serial from before its checks until
+//	           it exits. A step that cannot take it leaves <step>.overlap, runs
+//	           nothing and exits 125. Under the lock each step is numbered from
+//	           traces/.seq (the sidecar's `seq`), so `collect` can see a gap.
+//	at the end the step that ends an action (its last step, or one that did not
+//	           start or exited non-zero) classifies the action BEFORE the lock is
+//	           released, and writes traces/<sha>/record.json (or record.failed).
+//	           The step's exit status is never changed by it.
+//
+// Lock order, always: the shared lock on the record directory, then the serial
+// lock; released in the opposite order. Both are taken without waiting, so a
+// cycle cannot become a deadlock (and `collect` takes only the directory lock).
 //
 // Trace size and the disk (G8)
 // ----------------------------
@@ -115,6 +132,7 @@ import (
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/recfmt"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/sandbox"
 )
 
@@ -168,6 +186,22 @@ type StepOptions struct {
 	// Drain bounds the wait for the step's output once strace has exited.
 	Drain time.Duration
 
+	// The epilogue's limits (decision P13); zero means the default. The
+	// classification budget is 10 minutes and the action's traces together may
+	// not exceed 2 GiB; both are fields so a test can make them small.
+	ClassifyTimeout time.Duration
+	MaxTraceTotal   int64
+	// ChildSoftMemory and ChildDataLimit bound the classification child
+	// (GOMEMLIMIT and RLIMIT_DATA; classify_child.go); zero means the default.
+	ChildSoftMemory, ChildDataLimit int64
+	// MaxRecordBytes bounds the record.json the supervisor reads back (zero:
+	// DefaultMaxRecordBytes).
+	MaxRecordBytes int64
+	// ChildCmd builds the child's command from its arguments and environment;
+	// the default runs this very binary (`kiln record classify-action`). A test
+	// replaces it to run its own test binary as the child.
+	ChildCmd func(args, env []string) *exec.Cmd
+
 	// Seams, for tests. Each defaults to the real thing.
 	FreeBytes func(dir string) (uint64, error)
 	Now       func() time.Time
@@ -181,11 +215,15 @@ type StepResult struct {
 	// ExitCode is what the supervisor exits with: the traced root's status.
 	ExitCode int
 	Sidecar  StepSidecar
+	// Record is what the classification epilogue left (P13): RecordWritten,
+	// RecordFailed (then RecordWhy says why), or "" when the step did not end
+	// its action. It never changes ExitCode.
+	Record    string
+	RecordWhy string
 }
 
-// RunStep supervises one step. An error means nothing ran (or the sidecar could
-// not be written); the caller exits ExitRefused.
-func RunStep(o StepOptions) (*StepResult, error) {
+// applyDefaults fills every zero limit and seam with its default.
+func (o *StepOptions) applyDefaults() {
 	if o.TraceCap == 0 {
 		o.TraceCap = DefaultTraceCap
 	}
@@ -194,6 +232,21 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	}
 	if o.Drain == 0 {
 		o.Drain = DefaultDrain
+	}
+	if o.ClassifyTimeout == 0 {
+		o.ClassifyTimeout = DefaultClassifyTimeout
+	}
+	if o.MaxTraceTotal == 0 {
+		o.MaxTraceTotal = DefaultMaxTraceTotal
+	}
+	if o.MaxRecordBytes == 0 {
+		o.MaxRecordBytes = DefaultMaxRecordBytes
+	}
+	if o.ChildSoftMemory == 0 {
+		o.ChildSoftMemory = DefaultChildSoftMemory
+	}
+	if o.ChildDataLimit == 0 {
+		o.ChildDataLimit = DefaultChildDataLimit
 	}
 	if o.FreeBytes == nil {
 		o.FreeBytes = freeBytes
@@ -207,6 +260,12 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if o.Stderr == nil {
 		o.Stderr = io.Discard
 	}
+}
+
+// RunStep supervises one step. An error means nothing ran (or the sidecar could
+// not be written); the caller exits ExitRefused.
+func RunStep(o StepOptions) (*StepResult, error) {
+	o.applyDefaults()
 
 	// 1. The shared lock first, before anything of the record directory is
 	// read: `collect` takes the same lock exclusively, so it cannot start (or
@@ -220,6 +279,20 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		return nil, err
 	}
 	defer unlock()
+	// 1b. The serial lock (P13), second in the lock order. A step that cannot
+	// take it runs nothing, and says so in a marker `collect` reads.
+	serial, err := LockSerial(o.Dir)
+	if err != nil {
+		// Only a lock that is HELD says another step overlaps this one; any other
+		// failure (a bad traces directory, a file that cannot be opened) is a
+		// refusal with no claim about overlap.
+		var busy *SerialBusyError
+		if errors.As(err, &busy) {
+			markOverlap(o.Dir, o.Environ)
+		}
+		return nil, err
+	}
+	defer serial.Close()
 	// pre/ is what prepare sealed, and the programs are the pinned ones.
 	pre, err := VerifyPre(o.Dir)
 	if err != nil {
@@ -274,6 +347,16 @@ func RunStep(o StepOptions) (*StepResult, error) {
 		return nil, err
 	}
 	defer traceFile.Close()
+	// The step's number in the serial order, taken only now that nothing can
+	// refuse it any more: every step that RUNS has one, and a refused step takes
+	// none, so a gap means two steps shared the lock's protection wrongly.
+	if err := serial.OpenSeq(o.Dir); err != nil {
+		return nil, err
+	}
+	seq, err := serial.NextSeq()
+	if err != nil {
+		return nil, err
+	}
 	// strace's -o names its OWN descriptor, a pipe (see the header).
 	sargs, err := sandbox.StraceArgs("/proc/self/fd/" + strconv.Itoa(traceFD))
 	if err != nil {
@@ -298,7 +381,7 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	// 5. Run it.
 	lineSum := sha256.Sum256([]byte(line))
 	sc := StepSidecar{
-		Schema: StepSchema, Action: action, Step: step, StepCount: count, BindingID: pre.BindingID,
+		Schema: StepSchema, Action: action, Step: step, StepCount: count, Seq: seq, BindingID: pre.BindingID,
 		LineSHA256: hex.EncodeToString(lineSum[:]), LineInPlan: planned.Steps[step] == line,
 		Unclean: []string{},
 	}
@@ -359,14 +442,49 @@ func RunStep(o StepOptions) (*StepResult, error) {
 	if err := writeExcl(StepFile(o.Dir, action, step, "json"), data); err != nil {
 		return nil, fmt.Errorf("the step's sidecar: %w", err)
 	}
-	if !run.started {
-		return &StepResult{ExitCode: ExitRefused, Sidecar: sc}, nil
+	code := ExitRefused
+	if run.started {
+		code = run.code
+		if run.signal != 0 {
+			code = 128 + run.signal
+		}
 	}
-	code := run.code
-	if run.signal != 0 {
-		code = 128 + run.signal
+	res := &StepResult{ExitCode: code, Sidecar: sc}
+	// 7. The epilogue (P13): this step ends its action when it is the last, or
+	// did not start, or failed (the build tool stops an action at its first
+	// failing step). It runs under the serial lock, which is released only when
+	// RunStep returns, and never changes the status.
+	if step == count-1 || code != 0 || !run.started {
+		res.Record, res.RecordWhy = classifyEpilogue(o, pre, kiln.Path, action, step)
 	}
-	return &StepResult{ExitCode: code, Sidecar: sc}, nil
+	return res, nil
+}
+
+// markOverlap leaves `<step>.overlap` for a step the serial lock refused, when
+// the step can be named from its environment (an action that is a plain path
+// and a canonical step number). Best effort: the step is refused either way,
+// and the action then lacks the step, which `collect` sees too.
+func markOverlap(dir string, environ []string) {
+	names, err := envNames(environ)
+	if err != nil {
+		return
+	}
+	action, ok1 := names[EnvAction]
+	stepS, ok2 := names[EnvStep]
+	if !ok1 || !ok2 {
+		return
+	}
+	action, stepS = action[len(EnvAction)+1:], stepS[len(EnvStep)+1:]
+	step, err := canonicalInt(EnvStep, stepS)
+	if err != nil || recfmt.CheckPath(action) != nil {
+		return
+	}
+	for _, d := range []string{filepath.Join(dir, "traces"), StepDir(dir, action)} {
+		if ensureDir(d) != nil {
+			return
+		}
+	}
+	writeExcl(StepFile(dir, action, step, "overlap"), []byte{})
 }
 
 // checkStepEnv requires env to be build_tool_env plus the three KILN variables,
@@ -490,7 +608,9 @@ func checkOrder(dir, action string, step int) error {
 	var own, ownOther, later int // entries of this step, those that are not a marker, later steps' entries
 	for _, e := range entries {
 		n, ext, ok := strings.Cut(e.Name(), ".")
-		if !ok {
+		if !ok || ext == "overlap" {
+			// An overlap marker says a step was REFUSED the serial lock and ran
+			// nothing: it is not evidence that the step (or a later one) ran.
 			continue
 		}
 		j, err := canonicalInt("", n)
@@ -520,6 +640,13 @@ func checkOrder(dir, action string, step int) error {
 			return fmt.Errorf("step %d of %q is out of order, and its marker could not be written: %v", step, printable(action), err)
 		}
 		return fmt.Errorf("step %d of %q was asked to run after a later step had started", step, printable(action))
+	}
+	// An action that has been classified has ended: a step that runs now would
+	// leave a record that is for fewer steps than ran. Nothing is run.
+	for _, f := range []string{RecordFile(dir, action), RecordFailedFile(dir, action)} {
+		if _, err := os.Lstat(f); err == nil {
+			return fmt.Errorf("%q has already been classified: a step cannot run after its action ended", printable(action))
+		}
 	}
 	return nil
 }

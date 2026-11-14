@@ -73,7 +73,7 @@ var recordStep = record.RunStep
 // recordArmParentDeath makes the supervisor die with the build tool (Linux).
 var recordArmParentDeath = armParentDeath
 
-const notYet = "not implemented (KILN04 stage 4 PR 2b-2b)"
+const notYet = "not implemented (KILN04 stage 4 PR 2b-2b-ii)"
 
 // runRecord dispatches `kiln record <subcommand>`.
 func runRecord(args []string, stdout, stderr io.Writer) int {
@@ -86,6 +86,8 @@ func runRecord(args []string, stdout, stderr io.Writer) int {
 		return runRecordPrepare(args[1:], stdout, stderr)
 	case "step":
 		return runRecordStep(args[1:], stdout, stderr)
+	case record.ChildCommand:
+		return runRecordClassifyAction(args[1:], stderr)
 	case "collect":
 		// The stub refuses everything, flags included: there is nothing to run.
 		fmt.Fprintf(stderr, "kiln: record %s: %s\n", args[0], notYet)
@@ -156,6 +158,36 @@ func runRecordPrepare(args []string, stdout, stderr io.Writer) int {
 	return 0
 }
 
+// runRecordClassifyAction is `kiln record classify-action --dir <abs> --action
+// <name> --step N --data-limit B`: the classification child the step supervisor
+// starts at the end of an action (internal/record/classify_child.go). It only
+// writes `record.json` into the record directory, atomically and never over an
+// existing one.
+func runRecordClassifyAction(args []string, stderr io.Writer) int {
+	fs := flag.NewFlagSet("record classify-action", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	dir := fs.String("dir", "", "the record directory (absolute)")
+	action := fs.String("action", "", "the action")
+	step := fs.Int("step", -1, "the step that ended the action")
+	limit := fs.Int64("data-limit", 0, "RLIMIT_DATA in bytes (0: none)")
+	if err := fs.Parse(args); err != nil {
+		return 2
+	}
+	if *dir == "" || !filepath.IsAbs(*dir) || *action == "" || *step < 0 || *limit < 0 || fs.NArg() != 0 {
+		fmt.Fprintln(stderr, "usage: kiln record classify-action --dir <abs> --action <name> --step N [--data-limit B] (internal to `kiln record step`)")
+		return 2
+	}
+	if !recordPlatformOK() {
+		fmt.Fprintf(stderr, "kiln: record classify-action runs only on linux/amd64 (this is %s/%s)\n", runtime.GOOS, runtime.GOARCH)
+		return 3
+	}
+	if err := record.ClassifyChild(*dir, *action, *step, *limit, record.ChildHooks{}); err != nil {
+		fmt.Fprintf(stderr, "kiln: record classify-action: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
 // runRecordStep is `kiln record step --dir <abs> -- sh -c <line>`.
 //
 // The step's output goes to stdout and stderr, which in the real process are its
@@ -202,6 +234,12 @@ func runRecordStep(args []string, stdout, stderr io.Writer) int {
 		// Nothing printed here is a value from the environment.
 		fmt.Fprintf(stderr, "kiln: record step: %v\n", err)
 		return record.ExitRefused
+	}
+	// The epilogue's verdict never changes the status, but a failed
+	// classification is worth one line in the build log (the reason is the
+	// recorder's own text, printable).
+	if res.Record == record.RecordFailed {
+		fmt.Fprintf(stderr, "kiln: record step: no record.json for the action: %s\n", res.RecordWhy)
 	}
 	return res.ExitCode
 }
