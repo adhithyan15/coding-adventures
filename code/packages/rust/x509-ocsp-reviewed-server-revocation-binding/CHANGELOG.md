@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Admit the strongest Name-policy-backed responder no-check proof to the
+  existing exact retained-intermediate revocation binding entry point.
+- Generalize that entry point behind private repository-owned evidence while
+  retaining stable target-issuer-time validation and stopping before policy
+  for the added proof's responder, complete revocation, TLS, HTTP, or OAuth.
 - Admit the strongest Name-policy-backed responder-revocation proof to the
   existing exact retained-intermediate revocation binding boundary.
 - Derive the intermediate, reviewed root, and original observation time only

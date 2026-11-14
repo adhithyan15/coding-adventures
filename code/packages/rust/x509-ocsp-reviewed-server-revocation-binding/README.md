@@ -329,15 +329,18 @@ the responder no-check or authenticated responder-revocation branch and does
 not establish revocation policy for the second proof's own responder.
 
 `bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation`
-composes the routed no-check branch with exact intermediate status without
-duplicating the server proof. It consumes the complete routed responder
-no-check proof plus a separate fully routed, authenticated OCSP proof, derives
-the retained intermediate, selected reviewed root, and original observation
-time internally, and applies the same stable target, issuer, then time checks.
-Success retains both complete non-copyable inputs. It resolves the original
-routed responder through RFC 6960 no-check policy, but does not establish
-revocation policy for the added proof's own responder or complete revocation
-policy.
+composes either admitted routed no-check branch with exact intermediate status
+without duplicating the server proof. Private repository-owned evidence admits
+both the fixed-depth and strongest Name-policy-backed server proofs while
+preventing external substitute implementations. The entry point consumes the
+complete responder no-check proof plus a separate fully routed, authenticated
+OCSP proof, derives the retained intermediate, selected reviewed root, and
+original observation time internally, and applies the same stable target,
+issuer, then time checks. Success retains both complete non-copyable inputs.
+It resolves the original routed responder through RFC 6960 no-check policy,
+but does not establish revocation policy for the added proof's own responder
+or complete revocation policy, TLS, HTTP, OAuth, network, or live-provider
+readiness.
 
 `bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_revocation`
 provides the corresponding composition for an original responder that uses
