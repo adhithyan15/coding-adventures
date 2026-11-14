@@ -68,8 +68,9 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   // possessives and the bounded non-human -gaḷu plural.
   // 209 -> 211: chapter 104 closes exactly the dependent
   // accusative/object-pronoun pair.
-  expect(coverage.covered).toBe(211);
-  expect(coverage.unmapped).toBe(47);
+  // 211 -> 212: chapter 108 closes the to/from movement contrast only.
+  expect(coverage.covered).toBe(212);
+  expect(coverage.unmapped).toBe(46);
   expect(coverage.partial).toBe(0);
   // KA-A1-NUM-07 was one of the thirteen ordinal points HL-C354 left open, and
   // the one it priced cheapest: Kannada's -aneya has no exceptions, so ten
@@ -81,7 +82,7 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "kannada A1 (partial inventory): 211/258 points covered (82%)",
+    "kannada A1 (partial inventory): 212/258 points covered (82%)",
   );
 
   const chapter103 = loadTrackChapters()

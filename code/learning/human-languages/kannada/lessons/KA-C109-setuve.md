@@ -12,32 +12,32 @@ headword: "ಸೇತುವೆ"
 gloss: "a bridge"
 romanization: "sētuve"
 concept_tag: KA-LOC109-SETUVE
-prerequisites: [KA-C108-naduve, KA-C108-raste]
+prerequisites: [KA-C108-naduve, KA-C108-raste, KA-C108-movement]
 sounds: []
 roots: [sanskrit-setu]
 etymology_hook: "sētuve ← Sanskrit setu 'dam, bridge', reshaped as a tadbhava (CDIAL 13585)"
 duration:
-  max_seconds: 200
+  max_seconds: 220
 requires:
-  knowledge: [KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05]
+  knowledge: [KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
 introduces:
   knowledge: [KA-LEX-C109-LOC109-01]
 practises:
-  knowledge: [KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05]
+  knowledge: [KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C108-raste]
+reviews_of: [KA-C108-raste, KA-C108-movement]
 ---
 
 # ಸೇತುವೆ (sētuve) — a bridge
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
 
-[PAUSE 2s] Before the new one: say the Kannada for in the middle, then the Kannada for a road.
+[PAUSE 2s] Before the new one: say the Kannada for in the middle, then the Kannada for a road. Now say “I go to school” with **ಶಾಲೆಗೆ**.
 
 ## You'll want to know: ಸೇತುವೆ
 <!-- hl-knowledge: introduces=[KA-LEX-C109-LOC109-01]; assesses=[] -->
@@ -55,12 +55,13 @@ reviews_of: [KA-C108-raste]
 One more word for this chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C109-LOC109-01, KA-LEX-C108-LOC108-04, KA-LEX-C108-LOC108-05, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sētuve*]
 - [YOU SAY: *sētuve*, once more]
 - [YOU SAY: say *sētuve*]
+- [YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]
 - [YOU RECALL: say the Kannada for in the middle, then the Kannada for a road, then say *sētuve* again]
 
 ## Wrap-up Recall

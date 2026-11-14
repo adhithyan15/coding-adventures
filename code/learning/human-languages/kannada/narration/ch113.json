@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Property, Owner, Strength, Wish, Dream",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2117b53ae6104ad2",
+  "sourceHash": "fnv1a64:2ac124c926901b45",
   "lessons": [
     {
       "id": "KA-C113-asti",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:902322b6cb3061fb",
+      "sourceHash": "fnv1a64:2b99dc24bbd965d1",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for a tool, then the Kannada for property."
+              "text": "Before the new one: say the Kannada for a tool, then property. Recall the school-destination sentence: say “I go to school” with ಶಾಲೆಗೆ."
             }
           ]
         },
@@ -243,6 +243,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *yajamāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ — “I go to school.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]"
             },
             {
               "kind": "prompt",

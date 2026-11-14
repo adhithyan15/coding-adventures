@@ -2,18 +2,20 @@
   "chapter": 108,
   "title": "Below, Outside, In front, In the middle, Road",
   "label": "ch:ka-below-outside-in-front-in-the-middle-road",
-  "canDo": "I can say below, outside, in front, in the middle and a road.",
+  "canDo": "I can say below, outside, in front, in the middle and a road, then contrast going to a place with coming from one.",
   "spineNodes": [
     "SPINE-ASK-LOCATION"
   ],
   "payoff": {
-    "lesson": "KA-C108-raste",
+    "lesson": "KA-C108-movement",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 108: I can say below, outside, in front, in the middle and a road.",
+    "summary": "Complete the last lesson of chapter 108: I can retrieve the location words and say both a destination and an origin.",
     "assesses": [
       "KA-LEX-C108-LOC108-03",
       "KA-LEX-C108-LOC108-04",
-      "KA-LEX-C108-LOC108-05"
+      "KA-LEX-C108-LOC108-05",
+      "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+      "KA-GRAMMAR-C108-DESTINATION-GE-06"
     ]
   }
 }

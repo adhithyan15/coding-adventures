@@ -12,32 +12,32 @@ headword: "ಯಜಮಾನ"
 gloss: "an owner, the master"
 romanization: "yajamāna"
 concept_tag: KA-CAN113-YAJAMANA
-prerequisites: [KA-C112-sadhana, KA-C113-asti]
+prerequisites: [KA-C112-sadhana, KA-C113-asti, KA-C108-movement]
 sounds: []
 roots: [sanskrit-yajamana]
 etymology_hook: "yajamāna ← Sanskrit yajamāna 'the patron of a sacrifice', a tatsama"
 duration:
-  max_seconds: 200
+  max_seconds: 220
 requires:
-  knowledge: [KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01]
+  knowledge: [KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
 introduces:
   knowledge: [KA-LEX-C113-CAN113-02]
 practises:
-  knowledge: [KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01]
+  knowledge: [KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C113-asti]
+reviews_of: [KA-C113-asti, KA-C108-movement]
 ---
 
 # ಯಜಮಾನ (yajamāna) — an owner, the master
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
 
-[PAUSE 2s] Before the new one: say the Kannada for a tool, then the Kannada for property.
+[PAUSE 2s] Before the new one: say the Kannada for a tool, then property. Recall the school-destination sentence: say “I go to school” with **ಶಾಲೆಗೆ**.
 
 ## You'll want to know: ಯಜಮಾನ
 <!-- hl-knowledge: introduces=[KA-LEX-C113-CAN113-02]; assesses=[] -->
@@ -55,12 +55,13 @@ reviews_of: [KA-C113-asti]
 One more word for this chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C113-CAN113-02, KA-LEX-C112-CAN112-05, KA-LEX-C113-CAN113-01, KA-GRAMMAR-C108-DESTINATION-GE-06] -->
 
 [PAUSE 1s]
 - [YOU SAY: *yajamāna*]
 - [YOU SAY: *yajamāna*, once more]
 - [YOU SAY: say *yajamāna*]
+- [YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]
 - [YOU RECALL: say the Kannada for a tool, then the Kannada for property, then say *yajamāna* again]
 
 ## Wrap-up Recall

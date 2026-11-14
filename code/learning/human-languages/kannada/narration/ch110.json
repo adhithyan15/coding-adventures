@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Market, Beach, Garden, Corner, Turn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e0793e1d8e4e4ecc",
+  "sourceHash": "fnv1a64:a6acd8aee4210ce5",
   "lessons": [
     {
       "id": "KA-C110-sante",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:162663db82e3bef6",
+      "sourceHash": "fnv1a64:09d7283c6e9f3102",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for a library, then the Kannada for a bank."
+              "text": "Before the new one: say the Kannada for a library, then a bank. Recall “I go to school” with ಶಾಲೆಗೆ."
             }
           ]
         },
@@ -109,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *sante*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ — “I go to school.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]"
             },
             {
               "kind": "prompt",

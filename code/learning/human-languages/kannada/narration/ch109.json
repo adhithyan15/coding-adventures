@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Bridge, Park, Temple, Library, Bank",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b83c99466043fcf9",
+  "sourceHash": "fnv1a64:f5b28b39659a1f0e",
   "lessons": [
     {
       "id": "KA-C109-setuve",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56f27b9825f60649",
+      "sourceHash": "fnv1a64:ee2c92cc56b00cc9",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for in the middle, then the Kannada for a road."
+              "text": "Before the new one: say the Kannada for in the middle, then the Kannada for a road. Now say “I go to school” with ಶಾಲೆಗೆ."
             }
           ]
         },
@@ -109,6 +109,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *sētuve*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ — “I go to school.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ನಾನು ಶಾಲೆಗೆ ಹೋಗುತ್ತೇನೆ** — “I go to school.”]"
             },
             {
               "kind": "prompt",
