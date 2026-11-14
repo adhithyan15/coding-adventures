@@ -1,0 +1,22 @@
+[package]
+name = "oauth-client-secret-http1-release"
+version = "0.1.0"
+edition = "2021"
+description = "Audited complete HTTP/1 release for custody-built OAuth client-secret requests"
+
+[dependencies]
+coding_adventures_oauth = { path = "../oauth" }
+coding_adventures_zeroize = { path = "../zeroize" }
+http1-fixed-request-body = { path = "../http1-fixed-request-body" }
+http1-request-header-field = { path = "../http1-request-header-field" }
+http1-request-line = { path = "../http1-request-line" }
+https-destination-name-binding = { path = "../https-destination-name-binding" }
+oauth-client-secret-http1-binding = { path = "../oauth-client-secret-http1-binding" }
+
+[dev-dependencies]
+coding_adventures_oauth_client_secret_custody = { path = "../oauth-client-secret-custody" }
+der-asn1 = { path = "../der-asn1" }
+http1-fixed-request-body = { path = "../http1-fixed-request-body" }
+http1-request-host-authority = { path = "../http1-request-host-authority" }
+tls13-server-name = { path = "../tls13-server-name" }
+x509-certificate = { path = "../x509-certificate" }
