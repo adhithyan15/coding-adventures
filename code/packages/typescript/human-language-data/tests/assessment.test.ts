@@ -97,6 +97,10 @@ describe("track assessment contracts", () => {
     expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/unsafe|relative|path/i);
     a2.fullMocks[0].bookPrerequisites[0].sources = [];
     expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/sources/i);
+    a2.fullMocks[0].bookPrerequisites[0].sources = [
+      "mocks/a2/decoy.md", "mocks/a2/decoy-examiner-script.md",
+    ];
+    expect(() => parseAssessmentContract(raw, "punjabi", policy)).toThrow(/this mock's paper and examiner script/);
   });
 
   it("loads Hindi's seven-rung independent four-skill destination without claiming readiness", () => {

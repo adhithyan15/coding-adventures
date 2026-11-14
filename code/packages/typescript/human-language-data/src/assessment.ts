@@ -342,6 +342,7 @@ export function parseAssessmentContract(
     }
     const fullMocks = item.fullMocks.map((mock, mockIndex) => {
       const mockRaw = object(mock, `${expectedLanguage}.${current}.fullMocks[${mockIndex}]`);
+      const mockId = nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`);
       if (mockRaw.timed !== true) throw new Error(`assessment: ${expectedLanguage}.${current} mock must be timed`);
       const paper = mockRaw.paper === undefined
         ? undefined
@@ -365,12 +366,27 @@ export function parseAssessmentContract(
             mockRaw.bookPrerequisites,
             `${expectedLanguage}.${current}.fullMocks[${mockIndex}].bookPrerequisites`,
           );
+      for (const prerequisite of bookPrerequisites ?? []) {
+        if (prerequisite.kind !== "exact-script-token-closure") continue;
+        const levelSlug = current.toLowerCase();
+        const formName = mockId.startsWith(`${levelSlug}-`)
+          ? mockId.slice(levelSlug.length + 1) : "";
+        const conventionalPaper = /^mock-[1-9][0-9]*$/.test(formName)
+          ? `mocks/${levelSlug}/${formName}.md` : undefined;
+        const boundPaper = paper ?? conventionalPaper;
+        const examiner = boundPaper?.replace(/\.md$/, "-examiner-script.md");
+        if (boundPaper === undefined || !boundPaper.endsWith(".md")
+          || prerequisite.sources.length !== 2
+          || prerequisite.sources[0] !== boundPaper || prerequisite.sources[1] !== examiner) {
+          throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].bookPrerequisites '${prerequisite.id}' must name this mock's paper and examiner script`);
+        }
+      }
       if (paper !== undefined && [rubric, answerKey].some((reference) =>
         reference.split("#", 1)[0] === paper.split("#", 1)[0])) {
         throw new Error(`assessment: ${expectedLanguage}.${current}.fullMocks[${mockIndex}].paper must be distinct from rubric and answerKey`);
       }
       return {
-        id: nonEmpty(mockRaw.id, `${expectedLanguage}.${current}.mock.id`),
+        id: mockId,
         timed: true,
         ...(paper === undefined ? {} : { paper }),
         ...(manifest === undefined ? {} : { manifest }),

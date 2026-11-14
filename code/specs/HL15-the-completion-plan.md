@@ -241,6 +241,11 @@ practice or recall task. A surface-form-closure requirement resolves only by
 comparing exact target-script tokens in the form's learner and examiner
 stimuli with the earlier taught lesson corpus; substring matches, related
 lemmas, and an unpublished or absent stimulus do not resolve it. The planner
+must bind those stimulus paths to that form's declared learner paper and its
+matching examiner-script file. When a legacy form has no paper declaration,
+its stable level/mock ID determines the conventional paper path; arbitrary
+readable Markdown cannot substitute.
+Hidden HTML comments are not visible teaching or tested tokens. The planner
 may report aggregate missing counts but must not publish a confidential mock
 body or its remaining candidate-token list. Neither evidence kind establishes
 native-speaker review, learner attainment, or external exam equivalence.

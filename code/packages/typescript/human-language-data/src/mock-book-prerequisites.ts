@@ -9,6 +9,7 @@ import { join } from "node:path";
 
 import type { AssessmentMockBookPrerequisite } from "./assessment.js";
 import { lessonsUpToLevel, type CefrLevel } from "./levels.js";
+import { stripHtmlComments } from "./literal-markup.js";
 import { loadCurriculumSpine, loadTrackLanguageCurriculum, loadTrackLessons } from "./loader.js";
 import { readMockEvidence } from "./mock-evidence-read.js";
 import type { ParsedLesson } from "./parse.js";
@@ -17,19 +18,21 @@ const GURMUKHI_TOKEN = /[\u0A00-\u0A7F]+/gu;
 
 /** Only exact script tokens count: a related lemma or substring is not taught. */
 export function gurmukhiTokens(text: string): Set<string> {
-  return new Set(text.match(GURMUKHI_TOKEN) ?? []);
+  return new Set(stripHtmlComments(text, "remove").match(GURMUKHI_TOKEN) ?? []);
 }
 
-function introducedAndPractised(lessons: readonly ParsedLesson[], atom: string): boolean {
+export function introducedAndPractised(lessons: readonly ParsedLesson[], atom: string): boolean {
   return lessons.some((lesson) => {
     const introduced = lesson.frontmatter["introduces.knowledge"];
     if (!Array.isArray(introduced) || !introduced.includes(atom)) return false;
     const teachingBlock = lesson.blocks.some((block) =>
-      block.knowledge?.introduces.includes(atom) && block.markdown.trim().length > 0);
+      block.knowledge?.introduces.includes(atom)
+      && stripHtmlComments(block.markdown, "remove").trim().length > 0);
     const productiveTask = lesson.blocks.some((block) =>
       block.activities?.some((activity) =>
-        activity.assesses.includes(atom) && activity.prompt.trim().length > 0
-        && activity.answer.trim().length > 0));
+        activity.assesses.includes(atom)
+        && stripHtmlComments(activity.prompt, "remove").trim().length > 0
+        && stripHtmlComments(activity.answer, "remove").trim().length > 0));
     return teachingBlock && productiveTask;
   });
 }

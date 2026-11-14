@@ -5,7 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { defaultCurriculumRoot, loadTaskShapeInventory } from "../src/loader.js";
 import { listMockAssessmentStatuses } from "../src/mock-assessment.js";
-import { gurmukhiTokens } from "../src/mock-book-prerequisites.js";
+import { gurmukhiTokens, introducedAndPractised } from "../src/mock-book-prerequisites.js";
+import type { ParsedLesson } from "../src/parse.js";
 import * as mockEvidenceReader from "../src/mock-evidence-read.js";
 import { runAssessmentArtifactCli } from "../src/assessment-artifact-cli.js";
 import type { TaskShapeInventory } from "../src/task-shapes.js";
@@ -67,6 +68,20 @@ describe("full-mock coverage measurement", () => {
     const tested = gurmukhiTokens("ਪੰਜਾਬੀ ਪੰਜਾਬ");
     expect([...tested]).toEqual(["ਪੰਜਾਬੀ", "ਪੰਜਾਬ"]);
     expect(gurmukhiTokens("ਪੰਜਾਬੀ").has("ਪੰਜਾਬ")).toBe(false);
+    expect(gurmukhiTokens("<!-- ਪੰਜਾਬ --> ਪੰਜਾਬੀ")).toEqual(new Set(["ਪੰਜਾਬੀ"]));
+  });
+  it("does not mistake comment-only lesson prose or practice for book teaching", () => {
+    const atom = "MW-FUNCTION-A1-PREFERENCE";
+    const lesson = (teaching: string, prompt: string): ParsedLesson => ({
+      frontmatter: { "introduces.knowledge": [atom] },
+      blocks: [{
+        knowledge: { introduces: [atom] }, markdown: teaching,
+        activities: [{ assesses: [atom], prompt, answer: "I prefer this." }],
+      }],
+    }) as unknown as ParsedLesson;
+    expect(introducedAndPractised([lesson("<!-- hidden explanation -->", "Say your preference")], atom)).toBe(false);
+    expect(introducedAndPractised([lesson("I prefer this.", "<!-- hidden prompt -->")], atom)).toBe(false);
+    expect(introducedAndPractised([lesson("I prefer this.", "Say your preference")], atom)).toBe(true);
   });
   it("blocks known book-taught gaps without hiding an independent ready mock", () => {
     const statuses = listMockAssessmentStatuses(source);
