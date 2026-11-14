@@ -100,7 +100,7 @@ int main() {
         f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_short(0x9abc);
         f.payload = {0xaa, 0xbb, 0xcc};
-        f.fcs = 0xbeef;
+        f.fcs = static_cast<std::uint16_t>(0xbeef);
         auto s = f.summary();
         ISO_CHECK(s.frame_type == ie::FrameType::Data);
         ISO_CHECK(s.frame_version == ie::FrameVersion::Ieee2006);
@@ -244,7 +244,7 @@ int main() {
         f.frame_control.frame_version = ie::FrameVersion::Ieee2006;
         f.frame_control.destination_address_mode = ie::AddressMode::None;
         f.frame_control.source_address_mode = ie::AddressMode::Extended;
-        f.sequence_number = 0x2a;
+        f.sequence_number = static_cast<std::uint8_t>(0x2a);
         f.source_pan_id = static_cast<std::uint16_t>(0x1234);
         f.source = ie::Address::make_extended(0x8877665544332211ull);
         f.payload = {0xff, 0xdf, 0x00, 0x00};
