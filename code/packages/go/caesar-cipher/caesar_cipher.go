@@ -165,8 +165,6 @@ var EnglishFrequencies = map[rune]float64{
 //	 'H' |  7  |   3   |      10        |  'K'
 //	 'K' | 10  |  -3   |       7        |  'H'   ← decryption
 
-// shiftRune shifts a single rune by the given amount. Non-letter runes are
-// returned unchanged. Case is preserved.
 // normalizeShift reduces any int shift to its residue in 0..25.
 //
 // SEC-010: Go's int wraps silently on overflow, so any arithmetic on a raw,
@@ -178,6 +176,8 @@ func normalizeShift(shift int) int {
 	return ((shift % 26) + 26) % 26
 }
 
+// shiftRune shifts a single rune by the given amount. Non-letter runes are
+// returned unchanged. Case is preserved.
 func shiftRune(r rune, shift int) rune {
 	// Non-letter characters pass through untouched. This includes digits,
 	// spaces, punctuation, emoji, and any other Unicode character.
