@@ -42,17 +42,25 @@ another `Content-Length` or any `Transfer-Encoding` fails closed. The result
 defines logical field order as Host, Content-Length, then the retained
 additional fields in caller order, and retains both complete input proofs.
 
-This does not authorize additional fields, reject duplicate names other than
-Host and Content-Length, bind a request line, encode a request head, write the
-body, or preserve the destination through audited transport. Those later
-compositions must consume this exact proof.
+`bind_https_fixed_request_head` finally consumes that complete proof together
+with one exact validated `http1-request-line`. It preflights the exact complete
+head length under a caller-selected ceiling hard-capped by the package maximum.
+The allocation-free encoder writes the request line, Host, Content-Length,
+additional fields in caller order, and the terminating CRLF into caller-owned
+storage. Too-small output fails before mutation. The exact body remains
+retained but is not written.
+
+This does not authorize a method, target, or additional field, reject duplicate
+names other than Host and Content-Length, write the body, or preserve the
+destination through audited transport. Those later policies and effects must
+consume this exact proof.
 
 This package does not parse URLs, bind request targets or provider
 configuration, choose ports, validate critical extensions, certificate role,
 purpose, algorithms, validity, signatures, paths, roots, constraints, or
-revocation, compose a complete HTTP request, perform TLS or I/O, access or
-release credentials, emit audits or traces, authorize effects, or grant HTTPS,
-OAuth, or live-provider readiness.
+revocation, compose a complete HTTP request including its body, perform TLS or
+I/O, access or release credentials, emit audits or traces, authorize effects,
+or grant HTTPS, OAuth, or live-provider readiness.
 
 ## Validation
 

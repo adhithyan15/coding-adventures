@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/https-destination-name-binding",
   "capabilities": [],
-  "justification": "Pure bounded comparison and certificate identity policy over caller-owned decoded certificate data and already validated caller-borrowed TLS SNI, HTTP Host authority, strict Host and Content-Length fields, an exact fixed request body, and an exact additional request-field slice under a hard-capped caller limit. It performs no filesystem, network, process, environment, clock, FFI, credential release, audit, trace, or external effect."
+  "justification": "Pure bounded comparison, certificate identity policy, and allocation-free caller-owned request-head encoding over caller-owned decoded certificate data and already validated caller-borrowed TLS SNI, HTTP Host authority, request line, strict Host and Content-Length fields, an exact fixed request body, and an exact additional request-field slice under hard-capped caller limits. It performs no filesystem, network, process, environment, clock, FFI, credential release, audit, trace, or external effect."
 }

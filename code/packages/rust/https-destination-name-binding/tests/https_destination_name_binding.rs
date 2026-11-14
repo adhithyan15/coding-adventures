@@ -9,11 +9,16 @@ use http1_request_header_field::{
 use http1_request_host_authority::{
     validate_http1_request_host_authority, Http1RequestHostAuthorityLimits,
 };
+use http1_request_line::{
+    validate_http1_request_line, Http1RequestLineLimits, Http1RequestVersion,
+};
 use https_destination_name_binding::{
-    bind_https_dns_destination, bind_https_fixed_request_body, bind_https_host_header_field,
-    bind_https_request_header_fields, HttpsDestinationNameBindingError,
-    HttpsFixedRequestBodyBindingError, HttpsHostHeaderBindingError,
-    HttpsRequestHeaderFieldsBindingError, HttpsRequestHeaderFieldsLimits,
+    bind_https_dns_destination, bind_https_fixed_request_body, bind_https_fixed_request_head,
+    bind_https_host_header_field, bind_https_request_header_fields,
+    encode_https_fixed_request_head, HttpsDestinationNameBindingError,
+    HttpsFixedRequestBodyBindingError, HttpsFixedRequestHeadError, HttpsFixedRequestHeadLimits,
+    HttpsHostHeaderBindingError, HttpsRequestHeaderFieldsBindingError,
+    HttpsRequestHeaderFieldsLimits, MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES,
 };
 use tls13_server_name::TlsServerName;
 use tls_server_identity::MatchKind;
@@ -103,6 +108,10 @@ fn request_fields_limits() -> HttpsRequestHeaderFieldsLimits {
 
 fn body_limits() -> Http1FixedRequestBodyLimits {
     Http1FixedRequestBodyLimits::new(4096).unwrap()
+}
+
+fn request_line_limits() -> Http1RequestLineLimits {
+    Http1RequestLineLimits::new(16, 4096, 4096).unwrap()
 }
 
 #[test]
@@ -696,4 +705,220 @@ fn fixed_body_binding_debug_redacts_all_retained_inputs() {
     assert!(!debug.contains("refresh_token"));
     assert!(!debug.contains("Content-Length"));
     assert!(debug.matches("[REDACTED]").count() >= 2);
+}
+
+#[test]
+fn binds_and_encodes_one_exact_fixed_request_head_in_wire_order() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [
+        validate_http1_request_header_field(b"Authorization", b"Bearer secret", header_limits())
+            .unwrap(),
+        validate_http1_request_header_field(b"Accept", b"application/json", header_limits())
+            .unwrap(),
+    ];
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(4).unwrap(),
+    )
+    .unwrap();
+    let body = b"refresh_token=secret";
+    let body_evidence = validate_http1_fixed_request_body(body, body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"20", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+    let fixed_request_body = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+    let request_line = validate_http1_request_line(
+        b"POST",
+        b"/oauth/token?grant_type=refresh_token",
+        Http1RequestVersion::Http11,
+        request_line_limits(),
+    )
+    .unwrap();
+    let expected = b"POST /oauth/token?grant_type=refresh_token HTTP/1.1\r\nHost: api.example.test\r\nContent-Length: 20\r\nAuthorization: Bearer secret\r\nAccept: application/json\r\n\r\n";
+    let limits = HttpsFixedRequestHeadLimits::new(expected.len()).unwrap();
+
+    let bound = bind_https_fixed_request_head(request_line, fixed_request_body, limits).unwrap();
+
+    assert_eq!(bound.encoded_head_length(), expected.len());
+    assert_eq!(bound.request_line().method(), b"POST");
+    assert_eq!(
+        bound.request_line().target(),
+        b"/oauth/token?grant_type=refresh_token"
+    );
+    assert_eq!(bound.fixed_request_body().fixed_body().body().body(), body);
+    let mut output = vec![0xa5; expected.len() + 4];
+    let written = encode_https_fixed_request_head(&bound, &mut output).unwrap();
+    assert_eq!(written, expected);
+    assert_eq!(&output[expected.len()..], &[0xa5; 4]);
+}
+
+#[test]
+fn fixed_request_head_output_failure_is_atomic_and_payload_free() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [];
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(2).unwrap(),
+    )
+    .unwrap();
+    let body_evidence = validate_http1_fixed_request_body(b"", body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"0", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+    let fixed_request_body = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+    let request_line = validate_http1_request_line(
+        b"POST",
+        b"/oauth/token",
+        Http1RequestVersion::Http11,
+        request_line_limits(),
+    )
+    .unwrap();
+    let bound = bind_https_fixed_request_head(
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(4096).unwrap(),
+    )
+    .unwrap();
+    let mut output = [0xa5; 8];
+    let before = output;
+
+    let error = encode_https_fixed_request_head(&bound, &mut output).unwrap_err();
+
+    assert_eq!(error, HttpsFixedRequestHeadError::OutputTooSmall);
+    assert_eq!(output, before);
+    assert!(!error.to_string().contains("api.example.test"));
+    assert!(!error.to_string().contains("oauth"));
+    assert!(!format!("{error:?}").contains('8'));
+}
+
+#[test]
+fn fixed_request_head_limits_fail_closed_without_observed_lengths() {
+    assert!(HttpsFixedRequestHeadLimits::new(MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES).is_ok());
+    assert_eq!(
+        HttpsFixedRequestHeadLimits::new(0).unwrap_err(),
+        HttpsFixedRequestHeadError::InvalidLimits
+    );
+    assert_eq!(
+        HttpsFixedRequestHeadLimits::new(MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES + 1).unwrap_err(),
+        HttpsFixedRequestHeadError::InvalidLimits
+    );
+
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [];
+    let header_fields = bind_https_request_header_fields(
+        host_binding,
+        &additional_fields,
+        HttpsRequestHeaderFieldsLimits::new(2).unwrap(),
+    )
+    .unwrap();
+    let body_evidence = validate_http1_fixed_request_body(b"", body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"0", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+    let fixed_request_body = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+    let request_line = validate_http1_request_line(
+        b"POST",
+        b"/oauth/token",
+        Http1RequestVersion::Http11,
+        request_line_limits(),
+    )
+    .unwrap();
+
+    let error = bind_https_fixed_request_head(
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(1).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(error, HttpsFixedRequestHeadError::HeadTooLong);
+    assert!(!error.to_string().contains("api.example.test"));
+    assert!(!error.to_string().contains("oauth"));
+    assert!(!format!("{error:?}").contains('1'));
+}
+
+#[test]
+fn fixed_request_head_debug_redacts_every_retained_input() {
+    let encoded = certificate(&[subject_alt_name(&["api.example.test"])]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let server_name = TlsServerName::new("api.example.test").unwrap();
+    let host =
+        validate_http1_request_host_authority(b"api.example.test", None, host_limits()).unwrap();
+    let destination =
+        bind_https_dns_destination(&certificate, server_name, host, Asn1Limits::default()).unwrap();
+    let host_field =
+        validate_http1_request_header_field(b"Host", b"api.example.test", header_limits()).unwrap();
+    let host_binding = bind_https_host_header_field(destination, host_field).unwrap();
+    let additional_fields = [validate_http1_request_header_field(
+        b"Authorization",
+        b"Bearer other-secret",
+        header_limits(),
+    )
+    .unwrap()];
+    let header_fields =
+        bind_https_request_header_fields(host_binding, &additional_fields, request_fields_limits())
+            .unwrap();
+    let body_evidence =
+        validate_http1_fixed_request_body(b"refresh_token=secret", body_limits()).unwrap();
+    let content_length =
+        validate_http1_request_header_field(b"Content-Length", b"20", header_limits()).unwrap();
+    let fixed_body =
+        bind_http1_fixed_request_content_length_field(body_evidence, content_length).unwrap();
+    let fixed_request_body = bind_https_fixed_request_body(header_fields, fixed_body).unwrap();
+    let request_line = validate_http1_request_line(
+        b"POST",
+        b"/oauth/token",
+        Http1RequestVersion::Http11,
+        request_line_limits(),
+    )
+    .unwrap();
+    let bound = bind_https_fixed_request_head(
+        request_line,
+        fixed_request_body,
+        HttpsFixedRequestHeadLimits::new(4096).unwrap(),
+    )
+    .unwrap();
+
+    let debug = format!("{bound:?}");
+
+    assert!(!debug.contains("POST"));
+    assert!(!debug.contains("oauth"));
+    assert!(!debug.contains("api.example.test"));
+    assert!(!debug.contains("Authorization"));
+    assert!(!debug.contains("other-secret"));
+    assert!(!debug.contains("refresh_token"));
+    assert!(!debug.contains("Content-Length"));
+    assert!(debug.matches("[REDACTED]").count() >= 3);
 }

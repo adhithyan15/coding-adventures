@@ -9,14 +9,17 @@
 //! bounded additional-field slice that contains no second Host field. The
 //! complete field-set proof can then be joined to one exact fixed request body
 //! and its canonical Content-Length field while rejecting framing ambiguity.
+//! Finally, one exact validated request line can be retained with that complete
+//! proof and encoded as one bounded request head in caller-owned storage.
 
 #![forbid(unsafe_code)]
 
 use core::fmt;
 use der_asn1::Asn1Limits;
 use http1_fixed_request_body::Http1FixedRequestContentLengthField;
-use http1_request_header_field::Http1RequestHeaderField;
+use http1_request_header_field::{Http1RequestHeaderField, MAX_HTTP1_REQUEST_HEADER_LINE_BYTES};
 use http1_request_host_authority::Http1RequestHostAuthority;
+use http1_request_line::{Http1RequestLine, Http1RequestVersion, MAX_HTTP1_REQUEST_LINE_BYTES};
 use tls13_server_name::TlsServerName;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::X509Certificate;
@@ -162,6 +165,62 @@ impl fmt::Display for HttpsFixedRequestBodyBindingError {
 
 impl std::error::Error for HttpsFixedRequestBodyBindingError {}
 
+/// Largest complete request head admitted by this deliberately narrow boundary.
+///
+/// The ceiling accounts for one maximum request line, all 64 maximum field
+/// lines, and the final CRLF that terminates the field section.
+pub const MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES: usize = MAX_HTTP1_REQUEST_LINE_BYTES
+    + (MAX_HTTPS_REQUEST_HEADER_FIELDS * MAX_HTTP1_REQUEST_HEADER_LINE_BYTES)
+    + 2;
+
+/// Caller-owned complete-head byte ceiling for one fixed HTTPS request.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct HttpsFixedRequestHeadLimits {
+    maximum_head_bytes: u32,
+}
+
+impl HttpsFixedRequestHeadLimits {
+    /// Validate the complete request-head ceiling.
+    pub fn new(maximum_head_bytes: usize) -> Result<Self, HttpsFixedRequestHeadError> {
+        if maximum_head_bytes == 0 || maximum_head_bytes > MAX_HTTPS_FIXED_REQUEST_HEAD_BYTES {
+            return Err(HttpsFixedRequestHeadError::InvalidLimits);
+        }
+        Ok(Self {
+            maximum_head_bytes: maximum_head_bytes as u32,
+        })
+    }
+
+    /// Return the complete request-head byte ceiling.
+    #[must_use]
+    pub const fn maximum_head_bytes(self) -> usize {
+        self.maximum_head_bytes as usize
+    }
+}
+
+/// Stable request-head failures that retain no request input or observed size.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HttpsFixedRequestHeadError {
+    /// The caller's complete-head ceiling is zero or exceeds the fixed maximum.
+    InvalidLimits,
+    /// The exact request head exceeds the caller's retained ceiling.
+    HeadTooLong,
+    /// The caller-owned output cannot hold the complete exact request head.
+    OutputTooSmall,
+}
+
+impl fmt::Display for HttpsFixedRequestHeadError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let message = match self {
+            Self::InvalidLimits => "invalid HTTPS fixed request-head limits",
+            Self::HeadTooLong => "HTTPS fixed request head exceeds its byte limit",
+            Self::OutputTooSmall => "HTTPS fixed request-head output is too small",
+        };
+        formatter.write_str(message)
+    }
+}
+
+impl std::error::Error for HttpsFixedRequestHeadError {}
+
 /// Non-copyable proof that one exact certificate, SNI, and Host share a DNS name.
 ///
 /// This value proves only destination-name consistency and complete-certificate
@@ -236,6 +295,106 @@ pub struct BoundHttpsFixedRequestBody<
         'additional_field,
     >,
     fixed_body: Http1FixedRequestContentLengthField<'body, 'content_length_field>,
+}
+
+/// One exact validated request line bound to one exact fixed HTTPS request.
+///
+/// This non-copyable proof retains the complete request line, destination,
+/// Host field, canonical Content-Length field, additional field slice, body,
+/// and exact encoded head length. It grants no method, target, field, TLS,
+/// HTTP, OAuth, I/O, credential, audit, trace, or external-effect authority.
+pub struct BoundHttpsFixedRequestHead<
+    'request_line,
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+    'body,
+    'content_length_field,
+> {
+    request_line: Http1RequestLine<'request_line>,
+    fixed_request_body: BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >,
+    encoded_head_length: u32,
+}
+
+impl<
+        'request_line,
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >
+    BoundHttpsFixedRequestHead<
+        'request_line,
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >
+{
+    /// Return the exact retained validated request line.
+    #[must_use]
+    pub const fn request_line(&self) -> &Http1RequestLine<'request_line> {
+        &self.request_line
+    }
+
+    /// Return the exact retained fixed-body destination proof.
+    #[must_use]
+    pub const fn fixed_request_body(
+        &self,
+    ) -> &BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    > {
+        &self.fixed_request_body
+    }
+
+    /// Return the exact complete-head byte length, including its final CRLF.
+    #[must_use]
+    pub const fn encoded_head_length(&self) -> usize {
+        self.encoded_head_length as usize
+    }
+}
+
+impl fmt::Debug for BoundHttpsFixedRequestHead<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("BoundHttpsFixedRequestHead")
+            .field("request_line", &"[REDACTED]")
+            .field("fixed_request_body", &"[REDACTED]")
+            .field("encoded_head_length", &"[REDACTED]")
+            .finish_non_exhaustive()
+    }
 }
 
 impl<
@@ -602,6 +761,140 @@ pub fn bind_https_fixed_request_body<
     })
 }
 
+/// Bind one exact validated request line to one exact fixed HTTPS request.
+///
+/// The complete encoded head is preflighted under the caller's bounded byte
+/// ceiling. Its exact wire order is request line, Host, Content-Length,
+/// additional fields in retained caller order, and one final CRLF. The body is
+/// retained by the result but remains outside the encoded head.
+pub fn bind_https_fixed_request_head<
+    'request_line,
+    'certificate,
+    'encoded,
+    'server_name,
+    'host,
+    'host_field,
+    'fields,
+    'additional_field,
+    'body,
+    'content_length_field,
+>(
+    request_line: Http1RequestLine<'request_line>,
+    fixed_request_body: BoundHttpsFixedRequestBody<
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >,
+    limits: HttpsFixedRequestHeadLimits,
+) -> Result<
+    BoundHttpsFixedRequestHead<
+        'request_line,
+        'certificate,
+        'encoded,
+        'server_name,
+        'host,
+        'host_field,
+        'fields,
+        'additional_field,
+        'body,
+        'content_length_field,
+    >,
+    HttpsFixedRequestHeadError,
+> {
+    let header_fields = fixed_request_body.header_fields();
+    let encoded_head_length = request_line
+        .encoded_length()
+        .checked_add(header_fields.host_binding().host_field().encoded_length())
+        .and_then(|length| {
+            length.checked_add(fixed_request_body.fixed_body().field().encoded_length())
+        })
+        .and_then(|mut length| {
+            for field in header_fields.additional_fields() {
+                length = length.checked_add(field.encoded_length())?;
+            }
+            length.checked_add(2)
+        })
+        .ok_or(HttpsFixedRequestHeadError::HeadTooLong)?;
+    if encoded_head_length > limits.maximum_head_bytes() {
+        return Err(HttpsFixedRequestHeadError::HeadTooLong);
+    }
+
+    Ok(BoundHttpsFixedRequestHead {
+        request_line,
+        fixed_request_body,
+        encoded_head_length: encoded_head_length as u32,
+    })
+}
+
+/// Encode one exact bound fixed HTTPS request head into caller-owned storage.
+///
+/// The output remains unchanged when its capacity is insufficient. On success,
+/// the returned slice covers only the complete head; the retained body is not
+/// written or otherwise exposed.
+pub fn encode_https_fixed_request_head<'output>(
+    request: &BoundHttpsFixedRequestHead<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_>,
+    output: &'output mut [u8],
+) -> Result<&'output mut [u8], HttpsFixedRequestHeadError> {
+    let encoded_head_length = request.encoded_head_length();
+    if output.len() < encoded_head_length {
+        return Err(HttpsFixedRequestHeadError::OutputTooSmall);
+    }
+
+    let output = &mut output[..encoded_head_length];
+    let mut offset = 0usize;
+    encode_request_line(request.request_line(), output, &mut offset);
+    let fixed_request_body = request.fixed_request_body();
+    let header_fields = fixed_request_body.header_fields();
+    encode_request_field(
+        header_fields.host_binding().host_field(),
+        output,
+        &mut offset,
+    );
+    encode_request_field(fixed_request_body.fixed_body().field(), output, &mut offset);
+    for field in header_fields.additional_fields() {
+        encode_request_field(field, output, &mut offset);
+    }
+    write(output, &mut offset, b"\r\n");
+    debug_assert_eq!(offset, encoded_head_length);
+    Ok(output)
+}
+
+fn encode_request_line(request_line: &Http1RequestLine<'_>, output: &mut [u8], offset: &mut usize) {
+    write(output, offset, request_line.method());
+    write(output, offset, b" ");
+    write(output, offset, request_line.target());
+    write(output, offset, b" ");
+    let version = match request_line.version() {
+        Http1RequestVersion::Http10 => b"HTTP/1.0",
+        Http1RequestVersion::Http11 => b"HTTP/1.1",
+    };
+    write(output, offset, version);
+    write(output, offset, b"\r\n");
+}
+
+fn encode_request_field(
+    field: &Http1RequestHeaderField<'_>,
+    output: &mut [u8],
+    offset: &mut usize,
+) {
+    write(output, offset, field.name());
+    write(output, offset, b": ");
+    write(output, offset, field.value());
+    write(output, offset, b"\r\n");
+}
+
+fn write(output: &mut [u8], offset: &mut usize, bytes: &[u8]) {
+    let end = *offset + bytes.len();
+    output[*offset..end].copy_from_slice(bytes);
+    *offset = end;
+}
+
 fn matches_canonical_host_authority(
     authority: &Http1RequestHostAuthority<'_>,
     value: &[u8],
@@ -651,4 +944,30 @@ fn decimal_length(mut value: u16) -> usize {
         length += 1;
     }
     length
+}
+
+#[cfg(test)]
+mod tests {
+    use super::encode_request_line;
+    use http1_request_line::{
+        validate_http1_request_line, Http1RequestLineLimits, Http1RequestVersion,
+    };
+
+    #[test]
+    fn request_head_encoding_preserves_http_1_0_exactly() {
+        let request_line = validate_http1_request_line(
+            b"GET",
+            b"/health",
+            Http1RequestVersion::Http10,
+            Http1RequestLineLimits::new(8, 64, 128).unwrap(),
+        )
+        .unwrap();
+        let mut output = [0xa5; 64];
+        let mut offset = 0usize;
+
+        encode_request_line(&request_line, &mut output, &mut offset);
+
+        assert_eq!(&output[..offset], b"GET /health HTTP/1.0\r\n");
+        assert_eq!(output[offset], 0xa5);
+    }
 }

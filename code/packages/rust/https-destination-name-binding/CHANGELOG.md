@@ -24,3 +24,8 @@
 - Reject every additional case-insensitive Content-Length spelling and every
   Transfer-Encoding field while retaining both complete proofs with
   payload-free failures and redacted Debug output.
+- Bind one exact validated request line to the complete fixed-body destination
+  proof under a hard-capped caller-selected complete-head byte ceiling.
+- Encode the exact request line, Host, Content-Length, additional fields, and
+  terminating CRLF into caller-owned storage without allocation or partial
+  output on capacity failure; retain but do not write the body.
