@@ -122,6 +122,39 @@ describe("proseReadsThePage: the objects that put a reading step on the page wit
   });
 });
 
+describe("page-following and paired reading need eyes or hands", () => {
+  it.each([
+    "Follow the printed line with your finger.",
+    "Read both lines.",
+    "Listen, then read.",
+    "Listen, then read. Say which is nearer.",
+    "Listen, then read and answer.",
+    "Listen, then read, and say which is nearer.",
+  ])("finds the spoken prose step %j", (span) => {
+    expect(proseAsksToReadOrHandleCards(span)).toBe(true);
+    expect(eyesOrHandsSteps(span)).toEqual([span]);
+  });
+
+  it.each([
+    "[YOU RECALL: follow the printed line with your finger]",
+    "[YOU RECALL: read both lines, then say which is nearer]",
+    "[YOU RECALL: listen, then read]",
+  ])("finds the unhedged spoken cue %j", (cue) => {
+    expect(readingSpokenCues(cue)).toEqual([cue]);
+    expect(eyesOrHandsSteps(cue)).toEqual([cue]);
+  });
+
+  it.each([
+    "Follow the sound of the line with your ear.",
+    "Read the whole line as one thought.",
+    "Listen, then read it as a sum.",
+    '"Listen, then read" names a task for after the drive.',
+    "[YOU READ: both lines]",
+  ])("does not turn %j into an unguarded page step", (span) => {
+    expect(eyesOrHandsSteps(span)).toEqual([]);
+  });
+});
+
 describe("proseAsksToPointOrGesture", () => {
   it.each([
     "Point to **ش · ک · ر** and say *sh · k · r*.",
@@ -213,7 +246,7 @@ describe("the vocabulary screen is a superset of every check", () => {
   // to the classifier while every other test stayed green.
   it.each([
     "Write it", "rewrite it", "draw it", "copy it", "circle it", "underline it", "sketch it",
-    "jot it", "Read it", "the cards", "cover it", "Uncover it", "hide it", "point to it",
+    "jot it", "Read it", "follow the printed line", "the cards", "cover it", "Uncover it", "hide it", "point to it",
     "clapping", "tap twice", "touch it", "raise a finger", "hold up", "show 3", "gesturing",
     "wave goodbye", "nod", "shake your head", "a small bow", "palms together", "a hand",
     "x; YOU SHOW: 5",
@@ -364,6 +397,25 @@ describe("the classifier reads the core for steps", () => {
 // ---------------------------------------------------------------------------
 
 const { lessons } = loadEverything();
+
+it("a planted sight or hand imperative revokes Kannada's committed A1 voice core", () => {
+  const lesson = lessons.find((row) => row.realization.lessonId === "KA-C110-tree-on-under");
+  expect(lesson).toBeDefined();
+  if (lesson === undefined) return;
+  expect(deriveLessonModality(lesson).coreModality).toBe("voice");
+
+  for (const phrase of [
+    "Follow the printed line with your finger.",
+    "Read both lines.",
+    "Listen, then read.",
+  ]) {
+    const planted = { ...lesson, preamble: `${lesson.preamble}\n\n${phrase}` };
+    const entry = deriveLessonModality(planted);
+    expect(entry.coreModality).toBe("sight");
+    expect(entry.coreEyesOrHandsSteps).toContain(phrase);
+    expect(narrateLesson(planted).notice?.text).not.toContain("you can do this one in the car");
+  }
+});
 
 it("guards Punjabi Chapter 172's printed-form warm-up before asking for a point", () => {
   const lesson = lessons.find((row) => row.realization.lessonId === "PA-R172-form-order-again");
