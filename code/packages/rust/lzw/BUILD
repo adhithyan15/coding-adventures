@@ -54,4 +54,4 @@ WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --
 # no tool re-runs, same rows as the other adopters).  --profile pins the audit profile: the
 # report records the one it was generated under and --check refuses a different one, so a
 # decompressor cannot be re-labelled (and its CWE-409 row excluded) by regenerating it.
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile lossless-compression
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile lossless-compression --profile-kind decompressor

@@ -9,7 +9,7 @@
 mod common;
 
 use coding_adventures_ca_assurance_report::{
-    generate_package_report, verify_evidence, verify_rederivation, AssuranceReport, AuditProfile,
+    generate_package_report, verify_evidence, verify_rederivation, AssuranceReport, AuditProfile, ProfileKind,
     Evidence, EvidenceCheckError as E, WeaknessRegistry,
 };
 use common::Sandbox;
@@ -164,4 +164,70 @@ fn the_reason_text_is_the_profiles_and_still_carries_the_unverified_marker() {
     let row = r.weaknesses.iter().find(|w| w.cwe == 326).unwrap();
     assert!(row.reason.starts_with("bespoke wording"), "{}", row.reason);
     assert!(row.reason.ends_with("[attestation not machine-checked by any tool]"), "{}", row.reason);
+}
+
+// ---- the BUILD pin binds the kind as well as the name -----------------------
+//
+// `--profile NAME` alone pins only a label; `name` and `kind` are both author data, so an author
+// could keep `name: lossless-compression`, flip `kind` to `transform`, regenerate, and pass.
+// `--profile-kind` binds the kind that matters to the security rule.
+
+fn run(sb: &Sandbox, args: &[&str]) -> (bool, String) {
+    let out = std::process::Command::new(env!("CARGO_BIN_EXE_ca-assurance-report-rs"))
+        .current_dir(&sb.pkg)
+        .args(args)
+        .output()
+        .unwrap();
+    (out.status.success(), String::from_utf8_lossy(&out.stderr).into_owned() + &String::from_utf8_lossy(&out.stdout))
+}
+
+const PINS: [&str; 4] = ["--profile", "lossless-compression", "--profile-kind", "decompressor"];
+
+fn with(base: &[&str], extra: &[&str]) -> Vec<String> {
+    base.iter().chain(extra).map(|s| s.to_string()).collect()
+}
+
+fn run_s(sb: &Sandbox, args: Vec<String>) -> (bool, String) {
+    let a: Vec<&str> = args.iter().map(String::as_str).collect();
+    run(sb, &a)
+}
+
+#[test]
+fn verify_pin_holds_name_and_kind_to_the_file() {
+    let p = AuditProfile::load(&Sandbox::for_package("pin-lib", "lzw").pkg).unwrap();
+    assert!(p.verify_pin(None, None).is_ok());
+    assert!(p.verify_pin(Some("lossless-compression"), Some(ProfileKind::Decompressor)).is_ok());
+    assert!(p.verify_pin(Some("other"), None).is_err());
+    let e = p.verify_pin(None, Some(ProfileKind::Transform)).unwrap_err();
+    assert!(e.0.contains("kind") && e.0.contains("decompressor"), "{}", e.0);
+}
+
+#[test]
+fn lzw_profile_edited_to_transform_with_the_name_kept_fails_check_under_the_build_pin() {
+    let sb = Sandbox::for_package("pin-cli", "lzw");
+    let honest = with(&["--generate", "--package-dir", ".", "--commit", "c0ffee"], &PINS);
+    assert!(run_s(&sb, honest).0, "honest generation under the pins");
+    let check = with(&["--check", "assurance_report.json", "--allow-unverified"], &PINS);
+    let (ok, out) = run_s(&sb, check.clone());
+    assert!(ok, "honest check under the pins: {out}");
+
+    // The author flips the kind, keeps the name, and regenerates with only the old name pin.
+    sb.edit(PROFILE, "\"kind\": \"decompressor\"", "\"kind\": \"transform\"");
+    let regen = ["--generate", "--package-dir", ".", "--commit", "c0ffee", "--profile", "lossless-compression"];
+    assert!(run(&sb, &regen).0, "the old name-only pin is satisfied: that was the hole");
+    let (ok, out) = run_s(&sb, check);
+    assert!(!ok && out.contains("kind"), "the BUILD pin must refuse it: {out}");
+    // Generation under the kind pin refuses too.
+    let (ok, out) = run_s(&sb, with(&["--generate", "--package-dir", ".", "--commit", "c0ffee"], &PINS));
+    assert!(!ok && out.contains("kind"), "{out}");
+}
+
+#[test]
+fn a_kind_mismatch_fails_check_in_either_direction() {
+    let sb = Sandbox::for_package("pin-kind", "lzw");
+    assert!(run_s(&sb, with(&["--generate", "--package-dir", ".", "--commit", "c0ffee"], &PINS)).0);
+    let (ok, out) = run(&sb, &["--check", "assurance_report.json", "--allow-unverified", "--profile-kind", "transform"]);
+    assert!(!ok && out.contains("kind"), "{out}");
+    let (ok, out) = run(&sb, &["--check", "assurance_report.json", "--allow-unverified", "--profile-kind", "bogus"]);
+    assert!(!ok, "an unknown kind is a usage error: {out}");
 }

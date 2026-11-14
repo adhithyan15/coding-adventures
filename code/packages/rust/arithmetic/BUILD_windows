@@ -24,4 +24,4 @@ set WARRANT_EVIDENCE_FAULT=field-zero&& set WARRANT_EVIDENCE_FILTER=/exhaustive/
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/alu_rejects_empty_a&& cargo test -q -p arithmetic --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test arithmetic_proofs
 # --profile pins the audit profile the report records (see BUILD).
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile bit-arithmetic
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile bit-arithmetic --profile-kind transform

@@ -538,6 +538,21 @@ Further checks added by the security review (each has a falsification test in
     `kind: "decompressor"`: that kind applies the class and is an open row without
     `output`/`heap` evidence.
 
+    *The BUILD pin binds the kind, not only the name.*  `name` and `kind` are both
+    author data, so `--profile NAME` alone would let an author keep
+    `name: lossless-compression`, flip `kind` to `transform`, regenerate the report
+    and still pass.  `--check` and `--generate` therefore also accept
+    `--profile-kind transform|decompressor`, and refuse a profile file whose `kind`
+    differs.  A package's BUILD line pins both (`rust/lzw`: `--profile
+    lossless-compression --profile-kind decompressor`; `rust/arithmetic`: `--profile
+    bit-arithmetic --profile-kind transform`), so changing the kind is a visible
+    BUILD change as well as a data change.  This keeps for a package with a pinned
+    BUILD line what the old enum-keyed `--profile` pin gave.
+
+    *Symlinks.*  `assurance-profile.json` is read like the other manifests, through
+    symlinks.  That is acceptable because `profile_sha256` binds the content that was
+    read, so a redirected link changes the digest and is refused.
+
     *Binding.*  The report records `profile_sha256`, the SHA-256 of the file's exact
     bytes, beside `profile` (the name).  `Evidence::load` reads and hashes the file;
     a missing or malformed file is a load error, so there is no default profile.

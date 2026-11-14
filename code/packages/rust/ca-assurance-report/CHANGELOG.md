@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **`--profile-kind` pins the profile kind** (security review finding).  `--check` and `--generate` accept
+  `--profile-kind transform|decompressor` and refuse a profile file with another kind
+  (`AuditProfile::verify_pin`); lzw's BUILD lines pin `decompressor`, arithmetic's `transform`.
+  Spec notes that profile files are read through symlinks, bound by `profile_sha256`.
 - **Audit profiles are data, not code** (VER04h section 9 item 22; closes backlog AR-001,
   narrows LP-010b).  The `AuditProfile` enum, its `FromStr` and the per-variant wording
   `match` arms are gone; `AuditProfile` is now a struct loaded by the new `profile` module

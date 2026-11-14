@@ -89,6 +89,17 @@ pub enum ProfileKind {
     Decompressor,
 }
 
+impl std::str::FromStr for ProfileKind {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, String> {
+        match s {
+            "transform" => Ok(ProfileKind::Transform),
+            "decompressor" => Ok(ProfileKind::Decompressor),
+            other => Err(format!("unknown kind `{other}` (transform | decompressor)")),
+        }
+    }
+}
+
 impl ProfileKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -122,6 +133,29 @@ impl AuditProfile {
         self.rows.get(&cwe).map(String::as_str)
     }
 
+    /// Hold the profile to the pin a package's BUILD line passes (`--profile NAME`
+    /// and `--profile-kind KIND`).  `name` and `kind` are both author data, so the
+    /// name alone pins only a label; the kind is what the security rule keys on
+    /// (a decompressor's CWE-409 is never excluded), so the BUILD line pins it too
+    /// and an author cannot flip it in the file and regenerate.
+    pub fn verify_pin(&self, name: Option<&str>, kind: Option<ProfileKind>) -> Result<(), ProfileError> {
+        if let Some(want) = name {
+            if want != self.name {
+                return bad(format!("--profile `{want}` but {PROFILE_FILE} is named `{}`", self.name));
+            }
+        }
+        if let Some(want) = kind {
+            if want != self.kind {
+                return bad(format!(
+                    "--profile-kind `{}` but {PROFILE_FILE} declares kind `{}`",
+                    want.as_str(),
+                    self.kind.as_str()
+                ));
+            }
+        }
+        Ok(())
+    }
+
     /// Read `<package_dir>/assurance-profile.json`.  A missing file is an
     /// error: there is no default profile to fall back on.
     pub fn load(package_dir: &Path) -> Result<AuditProfile, ProfileError> {
@@ -149,11 +183,7 @@ impl AuditProfile {
         if name.is_empty() || name.len() > 64 || !name.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-') {
             return bad(format!("`name` {name:?} must match [a-z0-9-]{{1,64}}"));
         }
-        let kind = match string_field(obj, "kind")?.as_str() {
-            "transform" => ProfileKind::Transform,
-            "decompressor" => ProfileKind::Decompressor,
-            other => return bad(format!("unknown kind `{other}` (transform | decompressor)")),
-        };
+        let kind: ProfileKind = string_field(obj, "kind")?.parse().map_err(ProfileError)?;
 
         let rows_obj = obj
             .get("rows")

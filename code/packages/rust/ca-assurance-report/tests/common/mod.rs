@@ -27,11 +27,16 @@ fn copy_dir(from: &Path, to: &Path) {
 
 impl Sandbox {
     pub fn new(tag: &str) -> Sandbox {
+        Sandbox::for_package(tag, "ct-compare")
+    }
+
+    /// The same throw-away layout for any adopter (`lzw`, `arithmetic`, ...).
+    pub fn for_package(tag: &str, name: &str) -> Sandbox {
         let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
-        let real = manifest.join("../ct-compare");
+        let real = manifest.join("..").join(name);
         let root = std::env::temp_dir().join(format!("ver04h-{tag}-{}", std::process::id()));
         let _ = fs::remove_dir_all(&root);
-        let pkg = root.join("code/packages/rust/ct-compare");
+        let pkg = root.join("code/packages/rust").join(name);
         copy_dir(&real.join("evidence"), &pkg.join("evidence"));
         copy_dir(&real.join("src"), &pkg.join("src"));
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
@@ -45,8 +50,8 @@ impl Sandbox {
         fs::copy(real.join("assurance-profile.json"), pkg.join("assurance-profile.json")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
-            manifest.join("../../../specs/ct-compare.warrant"),
-            root.join("code/specs/ct-compare.warrant"),
+            manifest.join("../../../specs").join(format!("{name}.warrant")),
+            root.join("code/specs").join(format!("{name}.warrant")),
         )
         .unwrap();
         // The VER13 catalogue is found above the package, like the spec.

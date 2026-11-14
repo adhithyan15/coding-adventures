@@ -31,4 +31,4 @@ set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhausti
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/decompress_zero_header_two_byte_payload_model&& cargo test -q -p lzw --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test lzw_proofs
 # --profile pins the audit profile the report records (see BUILD).
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile lossless-compression
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified --profile lossless-compression --profile-kind decompressor

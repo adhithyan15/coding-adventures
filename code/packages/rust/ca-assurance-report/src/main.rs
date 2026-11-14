@@ -12,7 +12,7 @@ use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
     check_assumptions, generate_package_report, verify_assurance_report, verify_evidence, verify_profile,
-    verify_rederivation, AssuranceReport, CheckVerdict, Evidence, WeaknessRegistry,
+    verify_rederivation, AssuranceReport, CheckVerdict, ProfileKind, Evidence, WeaknessRegistry,
 };
 
 /// `rust/<directory name>` and the `version = "..."` of the package's
@@ -44,6 +44,8 @@ fn print_usage() {
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
     eprintln!("  --profile <NAME>       Optional pin: the `name` the package's assurance-profile.json must declare.");
+    eprintln!("  --profile-kind <K>     Optional pin: the `kind` (transform | decompressor) the profile file must declare;");
+    eprintln!("                         a BUILD line pins it so the file's author cannot flip it and regenerate");
     eprintln!("                         The profile itself is data: <package-dir>/assurance-profile.json (VER04h section 9");
     eprintln!("                         item 22), hash-bound into the report as profile_sha256; there is no built-in profile");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
@@ -102,6 +104,7 @@ fn main() {
     let mut commit_sha = "HEAD".to_string();
     // Set only by an explicit `--profile`: the profile file's name must equal it.
     let mut profile_requested: Option<String> = None;
+    let mut profile_kind_requested: Option<ProfileKind> = None;
 
     let mut i = 1;
     while i < args.len() {
@@ -138,6 +141,20 @@ fn main() {
                     exit(2);
                 }
                 profile_requested = Some(args[i].clone());
+            }
+            "--profile-kind" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --profile-kind requires an argument");
+                    exit(2);
+                }
+                profile_kind_requested = match args[i].parse() {
+                    Ok(k) => Some(k),
+                    Err(e) => {
+                        eprintln!("Error: {e}");
+                        exit(2);
+                    }
+                };
             }
             "--registry" => {
                 i += 1;
@@ -216,16 +233,11 @@ fn main() {
             eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
             exit(1);
         }
-        // The pin is also held to the file itself: BUILD may only assert which profile it means.
-        if let Some(want) = profile_requested.as_deref() {
-            if want != evidence.profile.name {
-                eprintln!(
-                    "ASSURANCE VERIFICATION FAILED: --profile `{want}` but {} is named `{}`",
-                    coding_adventures_ca_assurance_report::PROFILE_FILE,
-                    evidence.profile.name
-                );
-                exit(1);
-            }
+        // The pin is also held to the file itself (name and kind): BUILD may only assert which
+        // profile it means, and what kind of package it is.
+        if let Err(e) = evidence.profile.verify_pin(profile_requested.as_deref(), profile_kind_requested) {
+            eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+            exit(1);
         }
         match verify_evidence(&report, &evidence) {
             Ok(unverified) => {
@@ -314,15 +326,9 @@ fn main() {
                 exit(1);
             }
         };
-        if let Some(want) = profile_requested.as_deref() {
-            if want != evidence.profile.name {
-                eprintln!(
-                    "Error: --profile `{want}` but {} is named `{}`",
-                    coding_adventures_ca_assurance_report::PROFILE_FILE,
-                    evidence.profile.name
-                );
-                exit(2);
-            }
+        if let Err(e) = evidence.profile.verify_pin(profile_requested.as_deref(), profile_kind_requested) {
+            eprintln!("Error: {e}");
+            exit(2);
         }
         let (package_id, version) = match package_identity(&package_dir) {
             Ok(v) => v,
