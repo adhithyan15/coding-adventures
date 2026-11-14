@@ -7378,8 +7378,25 @@ dependencies = [
 name = "https-reviewed-server-path-binding"
 version = "0.1.0"
 dependencies = [
+ "der-asn1",
+ "http1-request-host-authority",
  "https-destination-name-binding",
+ "rsa-public-operation",
+ "tls-server-identity",
+ "tls13-server-name",
+ "x509-certificate",
+ "x509-certificate-path-construction",
+ "x509-certificate-path-reviewed-anchor-binding",
+ "x509-certificate-policy",
+ "x509-intermediate-certificate-policy",
+ "x509-name-value-policy",
+ "x509-rsa-algorithm-policy",
  "x509-rsa-constructed-path-signature-routing",
+ "x509-rsa-public-key",
+ "x509-rsa-signature-routing",
+ "x509-server-certificate-policy",
+ "x509-time",
+ "x509-webpki-root-anchor-selection",
 ]
 
 [[package]]

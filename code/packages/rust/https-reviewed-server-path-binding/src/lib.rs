@@ -17,6 +17,8 @@
 //! revocation, TLS, HTTP, credential access, audit, trace, I/O, or external
 //! effect. Concrete HTTPS and live-provider readiness remain unavailable.
 
+#![forbid(unsafe_code)]
+
 use core::fmt;
 use https_destination_name_binding::BoundHttpsDnsDestination;
 use x509_rsa_constructed_path_signature_routing::ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy;
