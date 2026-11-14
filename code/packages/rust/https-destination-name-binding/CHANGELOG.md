@@ -19,3 +19,8 @@
 - Reject every additional case-insensitive Host spelling while retaining the
   complete field slice, caller order, and limit policy with payload-free
   failures and redacted Debug output.
+- Bind the exact HTTPS field-set proof to one exact fixed-body and canonical
+  Content-Length proof, counting that field inside the retained total limit.
+- Reject every additional case-insensitive Content-Length spelling and every
+  Transfer-Encoding field while retaining both complete proofs with
+  payload-free failures and redacted Debug output.
