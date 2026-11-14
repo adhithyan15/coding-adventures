@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Carry the sealed exact server-target projection through the nested no-check
+  complete fixed-path revocation proof without detached inputs.
+- Preserve exact decoded-object identity and stop before HTTPS destination
+  binding, TLS, HTTP, OAuth, network, or live-provider readiness.
 - Expose a sealed repository-owned projection of the exact authenticated
   server target retained by the fully routed strong reviewed-server proof.
 - Carry that projection through the direct no-check complete fixed-path result

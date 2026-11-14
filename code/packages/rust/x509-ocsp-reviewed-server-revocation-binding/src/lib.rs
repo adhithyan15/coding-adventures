@@ -2944,6 +2944,31 @@ impl<Proof, ResponderRevocation, IntermediateRevocation>
     > {
         &self.intermediate_status_responder_no_check_policy
     }
+
+    /// Return the exact server leaf retained by the complete nested proof.
+    ///
+    /// The target is derived only through sealed repository-owned evidence.
+    /// No detached certificate, callback, path, or trust assertion is accepted.
+    #[must_use]
+    pub fn server_target_certificate(&self) -> &x509_certificate::X509Certificate<'_>
+    where
+        Proof: X509OcspReviewedServerRevocationTargetEvidence,
+    {
+        self.intermediate_status_responder_no_check_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation_responder_no_check_intermediate_revocation()
+            .responder_no_check_policy()
+            .intermediate_dns_policy()
+            .anchor_dns_policy()
+            .responder_path()
+            .responder_revocation()
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .target_certificate()
+    }
 }
 
 impl<Proof, ResponderRevocation, IntermediateRevocation> fmt::Debug
@@ -7938,10 +7963,24 @@ mod tests {
     }
 
     struct TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded> {
+        target: &'certificate x509_certificate::X509Certificate<'encoded>,
         intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
         root: &'certificate x509_certificate::X509Certificate<'encoded>,
         observation_time: x509_time::X509Time,
         name_constraints: Option<&'static [u8]>,
+    }
+
+    impl target_evidence_sealed::Sealed
+        for TestReviewedResponderRevocationIntermediateEvidence<'_, '_>
+    {
+    }
+
+    impl X509OcspReviewedServerRevocationTargetEvidence
+        for TestReviewedResponderRevocationIntermediateEvidence<'_, '_>
+    {
+        fn target_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+            self.target
+        }
     }
 
     struct TestResponderRevocationResponderAnchorOriginalEvidence {
@@ -8065,12 +8104,36 @@ mod tests {
         TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
         u8,
     > {
-        let responder_revocation = responder_revocation_intermediate_evidence_with_constraints(
+        responder_revocation_responder_no_check_intermediate_binding_evidence_with_target_and_constraints(
+            intermediate,
             intermediate,
             root,
             observation_time,
             name_constraints,
-        );
+        )
+    }
+
+    fn responder_revocation_responder_no_check_intermediate_binding_evidence_with_target_and_constraints<
+        'certificate,
+        'encoded,
+    >(
+        target: &'certificate x509_certificate::X509Certificate<'encoded>,
+        intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
+        root: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
+    ) -> ValidatedX509OcspReviewedResponderRevocationResponderNoCheckPolicy<
+        TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
+        u8,
+    > {
+        let responder_revocation =
+            responder_revocation_intermediate_evidence_with_target_and_constraints(
+                target,
+                intermediate,
+                root,
+                observation_time,
+                name_constraints,
+            );
 
         ValidatedX509OcspReviewedResponderRevocationResponderNoCheckPolicy {
             intermediate_dns_policy:
@@ -8151,12 +8214,35 @@ mod tests {
         TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
         u8,
     > {
+        responder_revocation_intermediate_evidence_with_target_and_constraints(
+            intermediate,
+            intermediate,
+            root,
+            observation_time,
+            name_constraints,
+        )
+    }
+
+    fn responder_revocation_intermediate_evidence_with_target_and_constraints<
+        'certificate,
+        'encoded,
+    >(
+        target: &'certificate x509_certificate::X509Certificate<'encoded>,
+        intermediate: &'certificate x509_certificate::X509Certificate<'encoded>,
+        root: &'certificate x509_certificate::X509Certificate<'encoded>,
+        observation_time: x509_time::X509Time,
+        name_constraints: Option<&'static [u8]>,
+    ) -> BoundX509OcspReviewedResponderRevocation<
+        TestReviewedResponderRevocationIntermediateEvidence<'certificate, 'encoded>,
+        u8,
+    > {
         BoundX509OcspReviewedResponderRevocation {
             intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
                 anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
                     responder_path: BoundX509OcspReviewedResponderPath {
                         reviewed_server_revocation:
                             TestReviewedResponderRevocationIntermediateEvidence {
+                                target,
                                 intermediate,
                                 root,
                                 observation_time,
@@ -10495,6 +10581,8 @@ mod tests {
 
     #[test]
     fn nested_no_check_complete_fixed_path_revocation_policy_retains_complete_composition() {
+        let leaf_encoded = fixture(LEAF_HEX);
+        let detached_leaf_encoded = leaf_encoded.clone();
         let intermediate_encoded = certificate(&[]);
         let root_encoded = certificate(&[]);
         let added_responder_encoded = certificate(&[
@@ -10504,6 +10592,9 @@ mod tests {
             ]),
             extension(OCSP_NO_CHECK_OID_DER, NULL_DER),
         ]);
+        let leaf = decode_x509_certificate(&leaf_encoded, Asn1Limits::default()).unwrap();
+        let detached_leaf =
+            decode_x509_certificate(&detached_leaf_encoded, Asn1Limits::default()).unwrap();
         let intermediate =
             decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
         let root = decode_x509_certificate(&root_encoded, Asn1Limits::default()).unwrap();
@@ -10512,8 +10603,8 @@ mod tests {
         let observation_time = time(b"\x17\x0d261025120000Z");
         let name_constraints: &'static [u8] =
             Box::leak(permitted_dns_subtrees(&[b".example.test"]).into_boxed_slice());
-        let responder_no_check_policy =
-            responder_revocation_responder_no_check_intermediate_binding_evidence_with_constraints(
+        let responder_no_check_policy = responder_revocation_responder_no_check_intermediate_binding_evidence_with_target_and_constraints(
+                &leaf,
                 &intermediate,
                 &root,
                 observation_time,
@@ -10583,6 +10674,11 @@ mod tests {
             format!("{complete:?}"),
             "ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy"
         );
+        assert!(core::ptr::eq(complete.server_target_certificate(), &leaf));
+        assert!(!core::ptr::eq(
+            complete.server_target_certificate(),
+            &detached_leaf,
+        ));
     }
 
     #[test]
