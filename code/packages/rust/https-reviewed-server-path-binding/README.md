@@ -27,8 +27,9 @@ byte-equal independent decode, and retains both the complete destination proof
 and the complete revocation proof. It does not require, retain, or imply the
 separate anchor-self-signature composition. The surface accepts no detached
 certificate, callback-shaped target claim, path, status result, or trust
-assertion. Other complete fixed-path revocation branches remain separate
-composition slices.
+assertion. Other complete fixed-path revocation branches retain their own
+concrete proof types and are composed only through their own entry points
+below.
 
 The parallel nested-revocation entry point consumes the exact nested no-check
 complete fixed-path revocation policy. It derives the server leaf only through
@@ -36,8 +37,8 @@ that completion's deeper sealed repository-owned target projection, rejects a
 byte-equal independent decode, and retains both complete inputs. It accepts no
 detached certificate, callback-shaped target claim, path, status result, or
 trust assertion, and it neither requires nor implies the separate anchor-self-
-signature composition. Other complete fixed-path revocation branches remain
-separate composition slices.
+signature composition. The additional branch-specific entry points below
+likewise retain their exact concrete proof types.
 
 The double-nested-revocation entry point consumes the exact double-nested no-
 check complete fixed-path revocation policy. It reaches the original server
@@ -45,8 +46,19 @@ leaf only through that completion's sealed projection across both retained
 responder-revocation layers, rejects a byte-equal independent decode, and
 retains both complete inputs. It accepts no detached certificate, callback-
 shaped target claim, path, status result, or trust assertion, and it neither
-requires nor implies the separate anchor-self-signature composition. Other
-complete fixed-path revocation branches remain separate composition slices.
+requires nor implies the separate anchor-self-signature composition. The
+recursive complete fixed-path revocation branch remains a separate composition
+slice.
+
+The alternative intermediate-status-responder-revocation entry point consumes
+that branch's exact responder-no-check complete fixed-path revocation policy.
+It reaches the original server leaf only through the completion's sealed
+projection across its retained default-source proof graph, rejects a byte-
+equal independent decode, and retains both complete inputs. It accepts no
+detached certificate, callback-shaped target claim, path, status result, or
+trust assertion, and it neither requires nor implies the separate anchor-self-
+signature composition. The recursive complete fixed-path revocation branch
+remains a separate composition slice.
 
 The non-copyable result retains both complete inputs. Stable errors and Debug
 output expose no certificate, hostname, authority, path, key, signature,

@@ -118,8 +118,9 @@ default-source proof graph. It returns only the exact server target retained
 by the original reviewed-server proof, while a byte-equal independently
 decoded certificate remains a different object. No detached certificate,
 callback-shaped claim, path, status result, or trust assertion is accepted.
-Binding an HTTPS destination to this alternative completion remains separate
-work.
+The separate `https-reviewed-server-path-binding` package now binds this
+alternative completion to its exact HTTPS destination without widening that
+input surface.
 
 This ordered signed-path bridge performs no new parsing or signature
 verification and no credential access or editing, signing, storage, clock
@@ -134,7 +135,7 @@ The sealed target projections likewise perform no parsing, validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit or trace emission, I/O, network access, or
 other external effect. The recursive complete fixed-path revocation branch
-and the alternative HTTPS composition remain separate work.
+remains separate work.
 
 This stronger bridge performs no credential access or editing, signing,
 storage, clock acquisition, provider action, audit or trace emission, I/O,
