@@ -674,7 +674,7 @@ for SHA-256.
 
 JSON is read by the runner's own strict parser, not `JSON.parse`, which keeps
 the *last* of two equal keys and silently rounds a large integer. The parser
-rejects duplicate keys, `NaN`, trailing data and nesting deeper than 256 levels, builds
+rejects duplicate keys, `NaN`, trailing data, unpaired surrogate escapes (corpus text is well-formed Unicode) and nesting deeper than 256 levels, builds
 objects with no prototype (a `__proto__` key is data), and refuses any number
 that is not a safe integer. Every count and counter in the corpus is far below
 2^53; a larger one is a corpus error, never a rounded value. `U64` values

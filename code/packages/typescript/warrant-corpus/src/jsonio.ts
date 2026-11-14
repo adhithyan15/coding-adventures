@@ -12,6 +12,8 @@
  *   into `9007199254740992` without a word; here that is an error, so no count
  *   or counter in the corpus can be a rounded lie. (`U64` *values* never travel
  *   as JSON numbers: they are tagged decimal text parsed with `BigInt`.)
+ * - strings must be well-formed Unicode: an unpaired surrogate (`"\\ud800"`) is an
+ *   error, as invalid UTF-8 already is;
  * - objects are built with **no prototype**, so a `"__proto__"` key is just
  *   data and cannot reach `Object.prototype`;
  * - output is canonical: sorted keys, two-space indent, LF, ASCII-only (the
@@ -86,6 +88,8 @@ export function decodeUtf8(data: Uint8Array, code = "malformed-json"): string {
 }
 
 const NUMBER = /-?(?:0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/y;
+/** A high surrogate not followed by a low one, or a low one not preceded by a high one. */
+const UNPAIRED_SURROGATE = /[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/;
 const ESCAPES: Record<string, string> = {
   '"': '"',
   "\\": "\\",
@@ -177,7 +181,10 @@ class Reader {
       need(this.at < this.text.length, "malformed-json", "unterminated string");
       const char = this.text.charAt(this.at);
       this.at += 1;
-      if (char === '"') return out;
+      if (char === '"') {
+        need(!UNPAIRED_SURROGATE.test(out), "malformed-json", "string has an unpaired surrogate");
+        return out;
+      }
       need(char >= " ", "malformed-json", "control character in string");
       if (char !== "\\") {
         out += char;
@@ -250,7 +257,8 @@ export function parseJson(data: Uint8Array): Json {
 function sortKeys(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sortKeys);
   if (isObject(value)) {
-    const sorted: Record<string, unknown> = {};
+    // No prototype: on `{}` a `__proto__` key would set the prototype and vanish.
+    const sorted: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
     for (const key of Object.keys(value).sort()) {
       sorted[key] = sortKeys(value[key]);
     }

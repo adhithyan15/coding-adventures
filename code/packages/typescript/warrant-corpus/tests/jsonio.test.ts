@@ -90,7 +90,27 @@ describe("parseJson", () => {
   });
 });
 
+describe("well-formed Unicode", () => {
+  it("rejects a lone high or low surrogate escape, in values and keys", () => {
+    refuses('"\\ud800"');
+    refuses('"\\udc00"');
+    refuses('"a\\ud800b"');
+    refuses('"\\udc00\\ud800"');
+    refuses('{"\\ud800": 1}');
+  });
+
+  it("still accepts a valid surrogate pair", () => {
+    expect(parse('"\\ud83d\\ude00"')).toBe("\u{1f600}");
+  });
+});
+
 describe("renderJson", () => {
+  it("round-trips __proto__ and constructor keys", () => {
+    const parsed = parse('{"__proto__":1,"constructor":2}');
+    expect(renderJson(parsed)).toBe('{\n  "__proto__": 1,\n  "constructor": 2\n}\n');
+    expect(Object.keys(parse(renderJson(parsed)) as object).sort()).toEqual(["__proto__", "constructor"]);
+  });
+
   it("sorts keys, indents by two, ends with one LF and escapes non-ASCII", () => {
     const text = renderJson({ b: [1, { z: 1, a: "é\u{1f600}" }], a: null, c: [], d: {} });
     expect(text).toBe(

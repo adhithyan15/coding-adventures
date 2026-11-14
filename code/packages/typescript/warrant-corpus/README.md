@@ -110,7 +110,9 @@ What differs from Python, and why:
   writes to its input cannot corrupt the enumerated domain, and a `fresh` result
   may not share an `ArrayBuffer` with an argument (rule 4).
 - **JSON is read by the runner's own parser**, because `JSON.parse` keeps the last
-  of two equal keys and rounds integers above 2^53 silently.
+  of two equal keys and rounds integers above 2^53 silently. Corpus text must be
+  well-formed Unicode: invalid UTF-8 and unpaired surrogate escapes are refused
+  (the Python lane still accepts a lone-surrogate escape).
 
 ## The model IR runs without `eval`
 
