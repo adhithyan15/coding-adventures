@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.6.0 — WX-N fixed-length byte arrays across the host boundary (VER04j 14.4)
+
+- The language already had `Bytes<N>`; the gap was the binding and generator.
+  New host type `bytes<N>` (the Rust `[u8; N]`, `&[u8; N]` as a top-level
+  parameter), accepted only against a Warrant `Bytes<N>` of the same literal
+  width (W0701 otherwise), width 0 to 4096.
+- The composite adapter accepts `Bytes<N>` parameters (it refused them) and
+  narrows with `try_from`; a wrong length is the harness's `Unreachable` signal,
+  never a truncation.  A `Bytes<N>` result is length-checked whatever the host
+  type, outside the panic containment, so a wrong-length export fails the harness.
+- New op option `err_any=CASE` for a host `Result<T, E>` with an opaque `E`
+  (`&'static str`): every `Err(_)` is the one Warrant case.  Sound only for an
+  error type with exactly one case, so it is refused (W0704) otherwise: with
+  two or more cases a wrong error would still map to `CASE` and `f(..) ==
+  Err(CASE)` would pass vacuously.  Use `errors=` for a multi-case type.
+- Known gap (LP-012): suite-level "exhaustive" totals include sampled
+  `Bytes<N>` cases; the per-claim `domain` field is the authoritative label.
+- Honest domain labels: a v1 `Bytes<N>` binder is `full` for N <= 1 and `sample`
+  from N = 2 (it was `set`), through a `bytesn` prelude region that is emitted
+  only for a document with a `Bytes<N>` binder, so no existing harness changes
+  by a byte (`gen_evidence --check` on all adopters is the proof).
+- WD-013 re-checked: closed for v1, pinned by a new test; the v0 evaluator is
+  left frozen (backlog row).  Fixed arrays of integers are backlog row WD-015.
+- Tests: U8 multiply and `shl` wrapping pinned alongside addition.  `wxn_generator` (host type, refusals, emitted conversions),
+  `wxn_evidence` + `wxn_regen` (a compiled, running fixture: suite and negative
+  controls, `sample`/`full` labels, both length checks, wrapping `U8`).
+
 ## Unreleased — VER04i WD-003 portable corpus
 
 - Add a closed ct-compare Warrant v0 corpus profile generated from the checked

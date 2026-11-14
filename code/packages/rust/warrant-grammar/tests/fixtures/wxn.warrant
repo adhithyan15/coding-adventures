@@ -1,0 +1,72 @@
+-- VER04j section 14.4 (WX-N) test fixture: a v1 document whose operations take
+-- and return fixed-length byte arrays (`Bytes<N>`, the Rust `[u8; N]`).  It is
+-- NOT a package specification; it exists so the generator is tested by
+-- compiling and running what it emits against a tiny in-test subject (see
+-- tests/wxn_evidence.rs).  Every claim's oracle is written from the definition
+-- of the operation, never from the subject.
+warrant wxn v1
+  error NErr = LOW
+
+  -- reverse the four bytes
+  op flip4(a: Bytes<4>) -> Bytes<4>
+  -- the first two bytes (the host returns a `Vec<u8>`, so the length is checked)
+  op head2(a: Bytes<4>) -> Bytes<2>
+  -- the two halves joined, except that equal halves are refused (an opaque host
+  -- error, bound with err_any=)
+  op pair(a: Bytes<2>, b: Bytes<2>) -> Result<Bytes<4>, NErr>
+  -- add a U8 to a one-byte value; U8 arithmetic wraps (VER04 section 3, WD-013)
+  op bump1(a: Bytes<1>, k: U8) -> Bytes<1>
+  -- multiply by a U8 and shift left by a count: both wrap / drop high bits
+  op scale1(a: Bytes<1>, k: U8) -> Bytes<1>
+  op shl1(a: Bytes<1>, n: Nat) -> Bytes<1>
+
+  labels flip4:
+    a public
+  labels head2:
+    a public
+  labels pair:
+    a public
+    b public
+  labels bump1:
+    a public
+    k public
+  labels scale1:
+    a public
+    k public
+  labels shl1:
+    a public
+    n public
+
+  model bump1_model(a: Bytes<1>, k: U8) -> Bytes<1> = be_bytes(from_be<U8>(a) + k)
+
+  model scale1_model(a: Bytes<1>, k: U8) -> Bytes<1> = be_bytes(from_be<U8>(a) * k)
+  model shl1_model(a: Bytes<1>, n: Nat) -> Bytes<1> = be_bytes(shl(from_be<U8>(a), n))
+
+  example flip4_reverses:
+    flip4(b"01020304") == b"04030201"
+  example head2_takes_two:
+    head2(b"01020304") == b"0102"
+  example pair_joins:
+    pair(b"0102", b"0304") == Ok(b"01020304")
+  example pair_refuses_equal_halves:
+    pair(b"0102", b"0102") == Err(NErr.LOW)
+  -- 200 + 100 = 300 = 44 (mod 256): the wrap is what the oracle says.
+  example bump1_wraps:
+    bump1(b"c8", 100u8) == b"2c"
+
+  claim flip4_is_an_involution:
+    forall a: Bytes<4>. flip4(flip4(a)) == a
+  claim flip4_has_length_four:
+    forall a: Bytes<4>. len(flip4(a)) == 4
+  claim head2_ignores_the_tail:
+    forall a: Bytes<4>. head2(concat(head2(a), b"ffff")) == head2(a)
+  claim head2_has_length_two:
+    forall a: Bytes<4>. len(head2(a)) == 2
+  claim pair_joins_unless_equal:
+    forall a: Bytes<2>, b: Bytes<2>. pair(a, b) == (if a == b then Err(NErr.LOW) else Ok(concat(a, b)))
+  claim bump1_matches_the_wrapping_model:
+    forall a: Bytes<1>, k: U8. bump1(a, k) == bump1_model(a, k)
+  claim scale1_matches_the_wrapping_model:
+    forall a: Bytes<1>, k: U8. scale1(a, k) == scale1_model(a, k)
+  claim shl1_matches_the_model:
+    forall a: Bytes<1>, n: Nat. shl1(a, n) == shl1_model(a, n)

@@ -1911,6 +1911,8 @@ fn default_host(t: &Ty) -> Result<HostTy, String> {
 /// State of one conversion-code generation: the declared host types and a
 /// counter that makes every generated variable name unique.
 struct HostCx<'h> {
+    /// The operation being adapted (named in a length-check message).
+    op: String,
     spec: &'h HostSpec,
     /// Warrant record name -> field names, to bind host struct fields by name.
     fields: &'h BTreeMap<String, Vec<String>>,
@@ -1974,6 +1976,16 @@ fn to_host(
         } else {
             format!("{place}.bytes().to_vec()")
         }),
+        // WX-N: the model value narrows to `[u8; N]` by `try_from`; a value of any
+        // other length is unreachable by type (the harness's own signal), never
+        // truncated or padded.  A top-level parameter is passed by reference, as
+        // `bytes` is.
+        (Ty::BytesN(n), HostTy::BytesN(m)) if n == m => {
+            let arr = format!(
+                "<[u8; {n}]>::try_from({place}.bytes()).unwrap_or_else(|_| std::panic::panic_any(Unreachable))"
+            );
+            Ok(if top { format!("&{arr}") } else { arr })
+        }
         (Ty::Tuple(cs), HostTy::Tuple(hs)) if cs.len() == hs.len() => {
             let mut parts = Vec::new();
             for (i, (c, h)) in cs.iter().zip(hs).enumerate() {
@@ -2055,7 +2067,20 @@ fn from_host(t: &Ty, h: &HostTy, expr: &str, hc: &mut HostCx<'_>) -> Result<Stri
             Ok(format!("V::Int(({expr}) as i128)"))
         }
         (Ty::Bool, HostTy::Bool) => Ok(format!("V::Bool({expr})")),
-        (Ty::Bytes | Ty::BytesN(_), HostTy::Bytes) => Ok(format!("V::Bytes(({expr}).to_vec())")),
+        // WX-N: a `Bytes<N>` result must be exactly `N` bytes.  The check sits
+        // outside the panic containment, so a wrong-length export fails the
+        // harness instead of being compared as a (different) model value.
+        (Ty::BytesN(n), HostTy::Bytes | HostTy::BytesN(_)) => {
+            if matches!(h, HostTy::BytesN(m) if m != n) {
+                return Err(format!("host type {h:?} does not fit the Warrant type {t:?}"));
+            }
+            let op = hc.op.clone();
+            let v = hc.fresh("b");
+            Ok(format!(
+                "{{ let {v}: Vec<u8> = ({expr}).to_vec(); if {v}.len() != {n} {{ panic!(\"operation `{op}`: the export returned {{}} bytes for a Bytes<{n}> result, which is not {n} bytes\", {v}.len()); }} V::Bytes({v}) }}"
+            ))
+        }
+        (Ty::Bytes, HostTy::Bytes) => Ok(format!("V::Bytes(({expr}).to_vec())")),
         (Ty::Tuple(cs), HostTy::Tuple(hs)) if cs.len() == hs.len() => {
             let v = hc.fresh("t");
             let mut parts = Vec::new();
@@ -2184,9 +2209,6 @@ fn composite_adapter<'a>(
         .iter()
         .map(|p| ty_of_op_param(p, true, env))
         .collect::<Result<_, _>>()?;
-    if ptys.iter().any(|t| matches!(t, Ty::BytesN(_))) {
-        return Err(bad("fixed-width Bytes parameters are not supported here".into()));
-    }
     let hargs: Vec<HostTy> = match host.and_then(|h| h.args.clone()) {
         Some(a) if a.len() == ptys.len() => a,
         Some(a) => {
@@ -2255,6 +2277,7 @@ fn composite_adapter<'a>(
         }
     }
     let mut hc = HostCx {
+        op: n.to_string(),
         spec: &options.hosts,
         fields: &env.fields,
         ctr: 0,
@@ -2294,6 +2317,39 @@ fn composite_adapter<'a>(
     if !is_result {
         let v = from_host(&payload, &hret, &call, &mut hc).map_err(bad)?;
         let _ = writeln!(s, "    let v: V = {v};");
+    } else if let Some(case) = host.and_then(|h| h.err_any.as_deref()) {
+        // WX-N `err_any=CASE`: the export returns `Result<T, E>` for an opaque
+        // `E` (`&'static str`, `()`); every `Err(_)` is one Warrant case.
+        if !cases.contains(&case.to_string()) && !env_cases_of(&op.return_type, env).contains(&case.to_string()) {
+            return Err(bad(format!("err_any= names `{case}`, which is not an error case")));
+        }
+        // Soundness: `Err(_)` carries no information about WHICH error the
+        // export returned, so it can only stand for a type with one case.
+        // With two or more, an export that returns the wrong error would still
+        // map to `CASE` and a claim `f(..) == Err(CASE)` would pass vacuously.
+        let declared = env_cases_of(&op.return_type, env);
+        let n_cases = if declared.is_empty() { cases.len() } else { declared.len() };
+        if n_cases != 1 {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::MissingBinding(format!(
+                    "err_any= is incompatible with `{n}`: its error type has {n_cases} cases, \
+                     and err_any= needs exactly one (an opaque Err(_) cannot say which case; \
+                     use errors= to map each host error variant)"
+                )),
+                span: op.span,
+            });
+        }
+        let ok = from_host(&payload, &hret, "r", &mut hc).map_err(bad)?;
+        let _ = writeln!(s, "    let v: V = match {call} {{");
+        let _ = writeln!(s, "        Ok(r) => V::Ok(Box::new({ok})),");
+        if faults.iter().any(|f| f == "missing-error") {
+            let _ = writeln!(
+                s,
+                "        Err(_) if fault == Fault::MissingError => V::Ok(Box::new({minimal})),"
+            );
+        }
+        let _ = writeln!(s, "        Err(_) => V::Err(\"{case}\".into()),\n    }};");
     } else if let Some(he) = host.and_then(|h| h.errors.as_ref()) {
         let decl_cases = env_cases_of(&op.return_type, env);
         for (_, case) in &he.map {
@@ -3577,6 +3633,12 @@ pub fn generate_evidence_harness_with_tables(
     }
     if WXE_FAULTS.iter().any(|(n, _)| used_faults.contains(*n)) {
         features.insert("bytefaults");
+    }
+    // WX-N: a v1 document with a fixed-width `Bytes<N>` anywhere labels that
+    // domain `full` or `sample` instead of `set`.  Gated like the helpers above,
+    // so no other harness changes by a byte (VER04j section 14.4).
+    if v1 && body.contains("Ty::BytesN(") {
+        features.insert("bytesn");
     }
 
     // Assemble.

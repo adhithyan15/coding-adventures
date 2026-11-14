@@ -300,9 +300,14 @@ fn the_translator_refuses_what_the_checker_would_have_refused() {
 
 #[test]
 fn composite_adapter_refusals() {
-    // A fixed-width Bytes parameter has no composite adapter.
+    // A fixed-width Bytes parameter used to have no composite adapter; since
+    // WX-N (VER04j section 14.4) it converts like `Bytes` (a `&[u8]`, the
+    // default host type), and `bytes<2>` asks for `&[u8; 2]` (tests/wxn_*).
     let src = "warrant t v1\n  op g(a: Bytes<2>) -> (U8, U8)\n  claim c:\n    forall a: Bytes<2>. g(a) == g(a)\n";
-    let e = generate(src, &["op g export=g faults=swap-components"]).unwrap_err();
+    let text = generate(src, &["op g export=g faults=swap-components"]).unwrap();
+    assert!(text.contains("args[0].bytes()"), "{text}");
+    // A host array of the wrong width is still refused.
+    let e = generate(src, &["op g export=g args=bytes<3> faults=swap-components"]).unwrap_err();
     assert!(e.contains("W0701"), "{e}");
     // A non-host `args=` entry on a composite operation.
     let src = "warrant t v1\n  op g(a: U8) -> (U8, U8)\n  claim c:\n    forall a: U8. g(a) == g(a)\n";

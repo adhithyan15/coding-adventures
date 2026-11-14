@@ -5302,7 +5302,7 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_warrant_grammar"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "coding_adventures_ct_compare",
  "coding_adventures_sha256",
@@ -5327,7 +5327,11 @@ dependencies = [
 
 [[package]]
 name = "coding_adventures_x25519"
-version = "0.1.0"
+version = "0.2.0"
+dependencies = [
+ "coding_adventures_sha256",
+ "coding_adventures_test_bootstrap",
+]
 
 [[package]]
 name = "coding_adventures_x3dh"
