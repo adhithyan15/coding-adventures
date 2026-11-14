@@ -47,6 +47,12 @@ REQUIRED = (
 
 FINAL = {"pass", "fail", "skip"}
 
+# Facts a PASSING test wants in the CI log (a t.Log line that holds one of these
+# markers).  Only these are printed, bounded, so the log stays readable.
+FACT_MARKERS = ("F2:", "PROBE:")
+MAX_FACT_LINES = 20
+MAX_FACT_CHARS = 300
+
 
 def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
     """The output of every test that failed, for the log: the JSON stream is the
@@ -66,6 +72,35 @@ def failing_output(lines: list[str], limit: int = 60) -> dict[str, list[str]]:
         elif event.get("Action") in FINAL:
             final[test] = event["Action"]
     return {t: o[-limit:] for t, o in out.items() if final.get(t) == "fail"}
+
+
+def passing_facts(lines: list[str]) -> dict[str, list[str]]:
+    """The marked output lines of every test that passed: at most MAX_FACT_LINES
+    in all, each cut to MAX_FACT_CHARS."""
+    final: dict[str, str] = {}
+    found: dict[str, list[str]] = {}
+    for line in lines:
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        test = event.get("Test")
+        if not test:
+            continue
+        if event.get("Action") == "output":
+            text = event.get("Output", "").strip()
+            if any(m in text for m in FACT_MARKERS):
+                found.setdefault(test, []).append(text[:MAX_FACT_CHARS])
+        elif event.get("Action") in FINAL:
+            final[test] = event["Action"]
+    out: dict[str, list[str]] = {}
+    budget = MAX_FACT_LINES
+    for test in sorted(found):
+        if final.get(test) != "pass" or budget <= 0:
+            continue
+        out[test] = found[test][:budget]
+        budget -= len(out[test])
+    return out
 
 
 def check(lines: list[str]) -> list[str]:
@@ -115,6 +150,10 @@ def main(argv: list[str]) -> int:
     for test, output in sorted(failing_output(lines).items()):
         print(f"::group::output of failing test {test}")
         print("\n".join(output))
+        print("::endgroup::")
+    for test, facts in passing_facts(lines).items():
+        print(f"::group::facts logged by passing test {test}")
+        print("\n".join(facts))
         print("::endgroup::")
     for problem in problems:
         print(f"::error::{problem}")
