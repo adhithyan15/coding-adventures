@@ -691,9 +691,10 @@ and the full end-to-end test. **2b-2c** is the gates and toolchain probes, the
 in-sandbox socket probe and the `daemon-left` fixture. Each item of the two
 "Pending for PR 2b" lists below is marked **2b-1** (decided and implemented by
 `prepare`), **2b-2a** (decided and implemented by `step`), **2b-2b-i**
-(decided by P13, implemented by `step` and `prepare`), **2b-2b-ii** (still
-pending, owned by `collect`) or **2b-2c** (still pending, owned by the gates
-and probes). A bare **2b-2b** in older text means 2b-2b-i and 2b-2b-ii.
+(decided by P13, implemented by `step` and `prepare`), **2b-2b-ii** (decided
+and implemented by `collect`; all done, see "As implemented by `collect`"
+after the obligations list of P12) or **2b-2c** (still pending, owned by the
+gates and probes). A bare **2b-2b** in older text means 2b-2b-i and 2b-2b-ii.
 
 **G5. The tree must equal `HEAD` before any digest is taken.** `Source` reads
 the working tree, and nothing proved the tree equals the commit; CI's default
@@ -775,11 +776,13 @@ keyed, so stage 5b lookups must set the same one.
 **Pending for PR 2b** (the review of 4a found these; they belong to the code
 that calls `VerifyTree` and `Inventory`, which does not exist yet):
 
-- **2b-2b-ii.** `collect` treats any plain git error from `VerifyTree` (not only a
+- **2b-2b-ii. Done.** `collect` treats any plain git error from `VerifyTree` (not only a
   `*TreeError`) as a void of the shard, like `tracked-changed`, and passes the
-  commit id `prepare` recorded.
-- **2b-2b-ii.** An `Inventory` error after the build voids the shard; it must not crash
-  `collect` before the records are written.
+  commit id `prepare` recorded (`collect_post.go`, `postBuild`; it also counts the
+  error as one unexplained tracked change, see "As implemented by `collect`").
+- **2b-2b-ii. Done.** An `Inventory` error after the build voids the shard; it must not crash
+  `collect` before the records are written (likewise, and it counts as one
+  unexplained path).
 - **2b-1.** `prepare` fails if the pre-build inventory contains any path whose
   base name starts with `BUILD`: an untracked BUILD variant would change the
   lines a package runs. `prepare` also walks the whole disk for a `BUILD*`
@@ -789,12 +792,14 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
 - **2b-1.** Global Git configuration (`$HOME/.gitconfig`, `$XDG_CONFIG_HOME`) is still
   read by Kiln's Git calls, so the recorder's `HOME`, `XDG_CONFIG_HOME` and
   `PATH` must not be writable from the sandbox.
-- **2b-1** (the mask; the `git fsck` is **2b-2b-ii**). The commit pin protects object ids, not the integrity of the object store. A
+- **2b-1** (the mask; the `git fsck` is **2b-2b-ii, done**: `record.Fsck`, `git fsck
+  --connectivity-only --no-dangling --no-progress`). The commit pin protects object ids, not the integrity of the object store. A
   BUILD that could write `.git` could overwrite loose objects or
   `.git/config`, so `.git` must be unwritable from the sandbox (the
   `R/.git` mask is a requirement, not a convenience). Consider a post-build
   `git fsck --connectivity-only` as a second line.
-- **2b-1** (kept) and **2b-2b-ii** (used by `collect`). The caller keeps `Result.Commit` from the
+- **2b-1** (kept) and **2b-2b-ii** (used by `collect`, done: `collect` passes
+  `binding.revision` and requires the commit `VerifyTree` returns to equal it). The caller keeps `Result.Commit` from the
   pre-build `VerifyTree` and passes it as `expectedCommit` to the post-build
   call and to the merge job's call. `prepare` writes it as the binding's
   `revision` (decision P10).
@@ -827,7 +832,7 @@ that calls `VerifyTree` and `Inventory`, which does not exist yet):
   recorder must not substitute an empty record. (`step`'s epilogue leaves
   `record.failed`, or a record with the trace's reason, never an empty record;
   `collect` turns a missing or failed `record.json` into `unknown_writes`.)
-- **2b-2b-ii.** The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
+- **2b-2b-ii. Done** (`collect.go` `encodeShard`, `collect_actions.go` `assembleAction`). The shard writer derives `writes_complete` with `recfmt.CompleteOf` from the
   raw record, and calls `recfmt.CheckComplete` (`EncodeRecord` does). The key
   stays required on the wire for every record. A record that ran nothing
   (`steps_run == 0` and not built: refused or gated) was never classified, so
@@ -878,9 +883,11 @@ kiln record collect --root <abs> --dir <abs> --results <abs> --out <abs> (2b-2b-
 ```
 
 Every path is absolute. `step` is implemented in 2b-2a. `collect` exists
-until 2b-2b-ii only as a stub that prints "not implemented (KILN04 stage 4 PR
-2b-2b-ii)" and exits 1, so the CLI surface is fixed and a workflow written
-against it fails loudly, never silently skips tracing. `prepare` writes the build tool's `-exec-wrapper`
+until 2b-2b-ii only as a stub that printed "not implemented (KILN04 stage 4 PR
+2b-2b-ii)" and exited 1, so the CLI surface was fixed and a workflow written
+against it failed loudly, never silently skipped tracing. It is implemented
+now (`internal/record/collect.go`); `--out` is the path of `records.jsonl` (the
+other three files of a shard artifact are already in `pre/`). `prepare` writes the build tool's `-exec-wrapper`
 value to `pre/exec-wrapper.json`: the JSON array
 `["<kiln>","record","step","--dir","<dir>","--"]`, `<kiln>` being the
 canonical path of the running binary. The build tool appends `sh -c <line>` and
@@ -953,7 +960,7 @@ to `0700`. Action names never become path components; their SHA-256 does. Before
 directory is refused). `pre/` is then made read-only (files `0444`, directories
 `0555`); if that pass fails, `SEALED` is removed again. The modes are cosmetic:
 integrity comes only from the files being unreachable from the sandbox, and from
-`step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b-ii, list below).
+`step` and `collect` re-verifying `pre/` (2b-2a and 2b-2b-ii, both done, list below).
 `traces/` is created by `prepare` (0700, outside the sealed `pre/`, holding
 `traces/.seq` = `0\n`; `prepare` also refuses a tree file over the 128 MiB a
 sealed file is read back at), its per-action directories by `step` (2b-2a, decision P12), and `probe/` by 2b-2c.
@@ -1147,7 +1154,7 @@ would be run by `prepare` itself. So:
     working directory.
 - `pre/tools.json` (`kiln-record-tools/1`) records the absolute `git`, `strace`,
   the `PATH` string and the build tool's exact environment (`build_tool_env`).
-- **2b-2a** (`step`) and **2b-2b-ii** (`collect`). `kiln record step` and `collect` use only the recorded git path and
+- **2b-2a** (`step`) and **2b-2b-ii** (`collect`, done). `kiln record step` and `collect` use only the recorded git path and
   the recorded `PATH`, and never look a program up on `PATH`.
 - **2b-2a.** The workflow launches the build tool with **exactly** the recorded
   `build_tool_env` (nothing inherited). The build tool hands its own environment
@@ -1157,7 +1164,7 @@ would be run by `prepare` itself. So:
   `PATH` entry). The comparison is of multisets of `NAME=value` entries after
   removing `KILN_ACTION`, `KILN_STEP` and `KILN_STEP_COUNT`, and a repeated name
   (in either) is a refusal.
-- **2b-2a** (`step`) and **2b-2b-ii** (`collect`). `step` and `collect` re-verify `pre/` against `SEALED` and the binding
+- **2b-2a** (`step`) and **2b-2b-ii** (`collect`, done). `step` and `collect` re-verify `pre/` against `SEALED` and the binding
   id before using any file in it. The `0444`/`0555` modes are cosmetic; integrity
   comes only from the files being unreachable from the sandbox.
 
@@ -1196,7 +1203,8 @@ diagnostic on standard error, and exits 125):
    examined and step numbers compare as numbers, so a step that is run twice
    or out of order always leaves `<step>.rerun` (also when two supervisors of
    one step race: the loser of the trace file's `O_EXCL` leaves it) and exits
-   125 without running; `collect` voids the shard on any `.rerun`.
+   125 without running; `collect` makes the action's write set unknown on any `.rerun`
+   (the merge then voids the run, G1).
 4. argv after `--` is exactly `sh`, `-c`, `<line>`, and the working
    directory is `<root>/<action>`. The line is compared with the action's
    planned step and the result is recorded (`line_in_plan`); a mismatch does
@@ -1304,21 +1312,21 @@ step's own `execve` is in the trace (a refused sandbox has none).
 
 *Obligations of `collect` (**2b-2b-ii**, except the parse half of the third, which `step` applies, P13), from the review of P12.*
 
-- **2b-2b-ii.** `collect` takes an **exclusive**, non-blocking `flock` on the
+- **2b-2b-ii. Done.** `collect` takes an **exclusive**, non-blocking `flock` on the
   record directory (`record.LockDir(dir, true)`) and refuses if it cannot: a
   step, or an orphaned supervisor, is still running.
-- **2b-2b-ii.** `collect` requires every trace to end in a newline, re-hashes it
+- **2b-2b-ii. Done.** `collect` requires every trace to end in a newline, re-hashes it
   and requires the digest and size to equal the sidecar's `trace_sha256` and
   `trace_bytes`; a trace that does not is `unknown_writes`.
-- **2b-2b-ii.** `collect` compares the `--sha256` argument of the init's traced
+- **2b-2b-ii. Done.** `collect` compares the `--sha256` argument of the init's traced
   `execve` (the digest the root read the configuration with) and the
   `--config-sha256` of the root's with the binding's `sandbox_config_sha256`,
   so the configuration a step ran under is the sealed one even where the
   recorder verified the file by content but the helper opened it by path.
-- **2b-2b-ii.** `collect` treats any `.rerun` marker, any sidecar without a trace
+- **2b-2b-ii. Done.** `collect` treats any `.rerun` marker, any sidecar without a trace
   (or the reverse), any `trace-write-failed` and any `strace-pipes-held-open`
   as an unknown write set.
-- **2b-2b-ii** (from the review of P13). `collect` requires the `seq` values of
+- **2b-2b-ii. Done** (from the review of P13). `collect` requires the `seq` values of
   the whole shard to be globally distinct, each below the final value of
   `traces/.seq`, and consecutive in step order within each action; any `.overlap`
   marker voids the shard. It requires `steps_run` of a `record.json` to equal the
@@ -1329,6 +1337,144 @@ step's own `execve` is in the trace (a refused sandbox has none).
   never as "no record". It must not read `sandbox-refused` in `parse_reasons` as
   "the step wrote nothing": a refused step ran nothing, but the sandbox may have
   failed after it had changed the disk, so the action's write set is unknown.
+
+*As implemented by `collect` (2b-2b-ii).* The code is authoritative:
+`collect.go` (the command), `collect_actions.go` (one action), `collect_post.go`
+(the checkout after the build) and `results.go`. `--out` is `records.jsonl`: the
+header line, then one record per action of the sealed plan, sorted by action.
+The binding, the host facts and the pre-build inventory of the shard artifact
+are the sealed files of `pre/`, byte for byte; `collect` decodes its own output
+together with them (`recfmt.DecodeShard`, default limits) before it writes it,
+atomically (`link(2)`, never replacing a file), mode `0600`. `--out` may not be
+inside `pre/`, `traces/` or the checkout, its parent must be canonical, and it
+must not exist. Two outcomes:
+
+- *Refusal* (exit 1, nothing written): the directory is locked (a step or an
+  orphaned supervisor holds it), `pre/` or the running Kiln or the pinned git is
+  not what the binding says, `--root` is not the sealed checkout, `--results` is
+  unreadable or lists a package that is not an action of the plan, or the shard
+  cannot be made to decode even with every record unknown.
+- *Void* (exit 0, the shard is written and the merge discards it): everything else
+  that is wrong. `collect` prints the header's counts and every unknown write set.
+
+*Per action.* The record's `status` is the build tool's (`not-run` when the
+results omit the action), `steps_total` the plan's, `steps_sha256` the digest of
+the sealed lines, `weak`/`refusal` those of the action file, `gate` empty (gates
+are 2b-2c). `steps_run` and the per-step summaries come from the started
+sidecars. The raw record is `record.json`'s, with `writes_complete` from the
+classifier's own answer through `recfmt.CompleteOf`. The write set is UNKNOWN
+(`unknown_writes`, an empty raw record, an explicit `writes_complete: false`;
+the merge voids the run) when: the directory holds an entry the supervisor does
+not make, a stray `record.json.tmp-*` or a non-regular file; a `.rerun` or
+`.overlap` marker; a sidecar without a trace or the reverse, or steps missing
+before a later one; more steps than the plan; a sidecar that does not decode or
+is of another action, step, count or binding; a step line that is not the
+planned one (the digest is recomputed from the sealed plan, the sidecar's
+`line_in_plan` is not trusted alone); `trace-write-failed` or
+`strace-pipes-held-open`; a trace that is not a regular file of exactly
+`trace_bytes`, does not hash to `trace_sha256` or does not end in a newline;
+`seq` values that are not consecutive within the action; `record.failed` (which
+overrides `record.json`, both present is a failure); no verdict for an action
+that ran; `record.json` that is over 256 MiB, does not decode, is of another
+action, binding or sealed directory, counts other started steps than the
+sidecars, or has `parse_ok: false` (every parse reason, `sandbox-refused`
+included, is an unknown write set); the build tool's step count or total not
+equal to the traced and planned ones; `built` with a non-zero step or with no
+traced step (except an empty recipe, below); or the action is in the results
+with steps but a step directory is not. An action that ran nothing (no steps in
+the results, no directory) is not unknown: it carries an explicit
+`writes_complete: false` and the merge charges it as a truncated execution.
+
+*An empty recipe is vacuously complete.* A package whose BUILD runs nothing (a
+comment-only file: the build tool drops comments, blank lines and the `set -e`
+preamble, so the plan has no step and the results say `built`, 0 of 0) has no
+trace and no write set to be unknown about. When the plan has no step, the
+results list it as `built` with `steps_run` and `steps_total` both 0, and the
+supervisor left no directory for it, the record is the empty raw record with
+`writes_complete: true` (derived with `recfmt.CompleteOf`), `steps_run` 0. Any
+other fact (a directory, a started step, a different total) leaves it unknown.
+Without this rule one such package, and the repository has them
+(`code/programs/typescript/visicalc-deno/BUILD`), would void every run. The merge
+accepts the record and does not emit the action (a manifest needs its own `pkg:`
+entry). The shard-wide serial rules below still override it.
+
+*Across the shard.* Every record becomes unknown (`serial-violated`) when any
+`.overlap` marker exists, when `traces/.seq` is missing or not a counter, when a
+`seq` is not below it or is used twice, when the number of sidecars is not the
+counter's value, or when `traces/` holds an entry that is not `.seq`, `.serial`,
+`.collected` or an action's directory. A shard that does not decode under the format's caps is
+replaced by the same shard with every record unknown and the header void
+`records-too-large`.
+
+*After the build.* `VerifyTree(root, binding.revision)` with the pinned git;
+`record.Fsck`; `Inventory`. Any error of the three adds the header void
+`tracked-changed` (the format's closed vocabulary has no other for "the checkout
+is not what the commit says"). `tracked_changed_unexplained` counts the paths of
+`TreeError.Paths` (the whole list, not the 16 named) that no record's
+`tracked_writes` contains or has as an ancestor directory (compared by path
+component); `post_inventory_unexplained` counts the paths of the post-build
+inventory that are not in the pre-build one and that no record's `writes` equal
+or have as an ancestor (by component). A write BENEATH a new path is not an
+excuse for it: the trace named something under the directory, not the directory,
+and whatever else is in it is nobody's (the write roots and the inventory share
+one granularity, so an honest write never lies beneath a new inventory path).
+Why a check failed is returned to the command (`CollectResult.PostProblems`,
+printed as `post-build problem:` lines: the check, its error text, the first 16
+unexplained paths; sanitised, at most 32 entries of 512 bytes), never written to
+the shard.
+
+*The arguments and the directory.* `--results` may not be inside the checkout
+(a BUILD could write it), like `--out`; `--out` must not exist. Before `collect`
+reads anything of `traces/` it creates `traces/.collected` (`O_EXCL`), and `step`
+refuses (125, nothing run, no sequence number, no marker) once it exists: a step
+that took the shared lock a moment after `collect` released the exclusive one
+cannot add to a directory that has been read. A directory is collected once; the
+refusals about the arguments all come BEFORE the tombstone, so one does not use
+up the collection. A failure AFTER the tombstone (a shard that cannot be encoded, a
+transient `--out` write error such as ENOSPC, which also takes the half-made file
+back) burns the record directory: the next `collect` is refused. That fails closed,
+because a missing shard is a run-void in the merge (B2), never a believed one.
+`--results` needs a canonical parent, as `--out` does, and `step` refuses when it
+cannot tell whether the tombstone exists (only "not there" lets it go on). Every git call `collect` makes has a 10 minute deadline and
+keeps at most 1 GiB of stdout (more is an error, never a truncation) and 1 MiB of
+stderr. `record.json` and the sidecars are decoded with `legacy.PolicyDecode`
+(no duplicate and no case-variant key); the temporary file of the atomic writers
+has a random suffix and the parent directory is synced after the link.
+
+*Divergences from the text above, each deliberate (all stricter).*
+
+1. A plain Git error from `VerifyTree`, a failing `fsck` and a `TreeError` with
+   no path list each ALSO add one to `tracked_changed_unexplained`, and an
+   `Inventory` error adds one to `post_inventory_unexplained`. The text asks for
+   a shard-level void "like `tracked-changed`" (M4), which drops only this
+   shard's own actions. But what a failed check means is that the paths that
+   changed cannot be listed, so none can be shown explained; the counts mean "at
+   least this many", and the merge turns them into a run-void (M2b, M3), which is
+   what an untraced write needs (G1). Reverting is dropping the increments.
+2. The init's traced `--sha256` and the root's `--config-sha256` (the third
+   obligation) are compared by `step` only, as the parse half of G7 (P13): a
+   mismatch is `parse_ok: false` in `record.json`, which `collect` turns into an
+   unknown write set. `collect` parses no trace (it "classifies nothing"), so it
+   does not compare them a second time. If a second line is wanted, `collect`
+   would have to decode every trace, which costs what P13 moved out of it.
+3. The count of sidecars must equal the final value of `traces/.seq` (stricter
+   than "each below the final value"): a step that took a number and left no
+   sidecar is otherwise visible only through its orphan trace.
+4. A `.rerun` marker makes THAT action's write set unknown (the text says "voids
+   the shard"); the merge turns any one unknown write set into a run-void (G1),
+   so the effect is the same, and the report names the action.
+5. A `TreeError` raised before the disk was compared (the index and the commit's
+   tree disagreed: `TreeError.Partial`) counts one more, because the paths it
+   names are not the files that changed on disk.
+
+*A limitation, and a follow-up.* A failed action that stops mid-recipe has fewer
+traces than recipe lines, so the classifier's `CheckRecipe` says
+`trace-incomplete:recipe-mismatch` (W10) and its write set is unknown: the merge
+treats it as run-void in the relaxed report too, not as a truncated execution.
+The merge's `steps-missing` branch is reachable only for a failure on the last
+step. Fixing it is a classifier change (compare the traced prefix of the recipe
+when the build tool says the action failed), logged as a follow-up; `collect`
+reports what the classifier says.
 
 **P13. Records are classified at action end, and recording is serial
 (2b-2b-i).** `traced.Classify` resolves paths against the disk, so a record
@@ -1437,7 +1583,7 @@ of 125 with no step `execve` in the trace, which the parser reports as
 init died before the step); the epilogue names both `sandbox-refused`. An
 `.overlap` marker is not evidence that a step ran: `checkOrder` skips it, so a
 step refused the lock can be run once the lock is free (the marker stays and
-`collect` voids the shard).
+`collect` makes every record unknown).
 
 *Why the silent case is the strong case for P13.* A link an action creates
 itself is resolved from the DISK, not from the link text in the trace: that text

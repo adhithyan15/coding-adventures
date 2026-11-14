@@ -65,13 +65,15 @@ package record
 // files.
 
 import (
-	"bytes"
-	"encoding/json"
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
+	"syscall"
 	"time"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/kiln/internal/legacy"
@@ -171,14 +173,13 @@ func EncodeClassified(c ClassifiedRecord) ([]byte, error) {
 
 // DecodeClassified reads record.json strictly.
 func DecodeClassified(data []byte) (ClassifiedRecord, error) {
+	// legacy.PolicyDecode: no unknown key, no trailing data, and ALSO no duplicate
+	// key and no key spelled in another case. Go's decoder lets the last duplicate
+	// win and matches names case-insensitively, so without this the bytes a
+	// reviewer reads are not the bytes that are believed.
 	var c ClassifiedRecord
-	dec := json.NewDecoder(bytes.NewReader(data))
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&c); err != nil {
+	if err := legacy.PolicyDecode(data, &c); err != nil {
 		return ClassifiedRecord{}, fmt.Errorf("classified record: %w", err)
-	}
-	if _, err := dec.Token(); err != io.EOF {
-		return ClassifiedRecord{}, fmt.Errorf("classified record: unexpected data after the JSON value")
 	}
 	return c, c.Validate()
 }
@@ -197,10 +198,20 @@ const (
 // writeAtomic puts data at final so that final either does not exist or holds
 // ALL of data: it is written to a temporary name (O_EXCL, fsynced) and then
 // link(2)ed into place, which fails with EEXIST rather than replace anything.
-// A kill in the middle leaves at most a stray `<final>.tmp-<pid>` file, never a
-// half-written record.json for `collect` to read.
+// A kill in the middle leaves at most a stray `<final>.tmp-<random>` file, never
+// a half-written record.json for `collect` to read.
+//
+// The temporary name is random, not the process id: a pid is reused, and a stray
+// file of a killed process with the same pid would make O_EXCL fail for the
+// next one. The temporary file is removed on every path once it exists, and the
+// parent directory is fsynced after the link, so a crash cannot leave the name
+// unrecorded after the call reported success.
 func writeAtomic(final string, data []byte) error {
-	tmp := fmt.Sprintf("%s.tmp-%d", final, os.Getpid())
+	var rnd [8]byte
+	if _, err := rand.Read(rnd[:]); err != nil {
+		return err
+	}
+	tmp := final + ".tmp-" + hex.EncodeToString(rnd[:])
 	f, err := os.OpenFile(tmp, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
 	if err != nil {
 		return err
@@ -216,7 +227,35 @@ func writeAtomic(final string, data []byte) error {
 		err = os.Link(tmp, final)
 	}
 	os.Remove(tmp)
+	if err == nil {
+		if serr := syncDirFn(filepath.Dir(final)); serr != nil {
+			// The name is linked but not known to be durable. A caller that is
+			// told "failed" must be able to rely on "nothing written" (a refused
+			// --out leaves no file; a record.json that failed leaves none, so the
+			// epilogue leaves record.failed instead), so the link is taken back.
+			os.Remove(final)
+			err = serr
+		}
+	}
 	return err
+}
+
+// syncDirFn is syncDir; a variable so a test can make the sync fail.
+var syncDirFn = syncDir
+
+// syncDir fsyncs a directory so a link made in it is durable. A platform that
+// cannot open a directory for this (Windows) reports nothing wrong: the
+// recorder itself runs only on Linux.
+func syncDir(dir string) error {
+	d, err := os.Open(dir)
+	if err != nil {
+		return nil
+	}
+	defer d.Close()
+	if err := d.Sync(); err != nil && !errors.Is(err, syscall.EINVAL) && !errors.Is(err, syscall.ENOTSUP) {
+		return err
+	}
+	return nil
 }
 
 // classifyEpilogue runs the epilogue for the action whose step `step` has just

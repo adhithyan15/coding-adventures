@@ -83,15 +83,6 @@ func TestRecordUsage(t *testing.T) {
 	}
 }
 
-// The post-build pass is a stub until stage 4 PR 2b-2b. It must refuse, so a
-// workflow wired to it fails instead of recording nothing.
-func TestRecordCollectIsAStub(t *testing.T) {
-	code, out, e := runRec("collect", "--root", "/r", "--dir", absPath("/d"), "--results", "/x", "--out", "/o")
-	if code != 1 || out != "" || !strings.Contains(e, "2b-2b") || !strings.Contains(e, "collect") {
-		t.Errorf("%d %q %q", code, out, e)
-	}
-}
-
 // recordStepHooks also restores the step hook.
 func recordStepHooks(t *testing.T) {
 	t.Helper()
