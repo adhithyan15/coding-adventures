@@ -62,6 +62,17 @@ beforeEach(() => {
 afterEach(() => rmSync(root, { recursive: true, force: true }));
 
 describe("full-mock coverage measurement", () => {
+  it("blocks known book-taught gaps without hiding an independent ready mock", () => {
+    const statuses = listMockAssessmentStatuses(source);
+    expect(statuses.find((status) => status.language === "marwadi" && status.level === "A1"))
+      .toMatchObject({ missingMocks: ["a1-mock-1", "a1-mock-2"],
+        blockedBy: ["book-teaching/marwadi/A1/a1-mock-1/functional-frames"] });
+    expect(statuses.find((status) => status.language === "punjabi" && status.level === "A2"))
+      .toMatchObject({ missingMocks: ["a2-mock-1", "a2-mock-2"],
+        blockedBy: ["book-teaching/punjabi/A2/a2-mock-1/surface-closure"] });
+    expect(statuses.find((status) => status.language === "russian" && status.level === "pre-A1"))
+      .toMatchObject({ blockedBy: [] });
+  });
   it("counts only the mock with a present paper, distinct key and rubric, and valid manifest", () => {
     const statuses = listMockAssessmentStatuses(root);
     expect(statuses.find((status) => status.level === "A1")).toMatchObject({
