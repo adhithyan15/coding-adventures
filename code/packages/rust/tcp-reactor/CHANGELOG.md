@@ -24,6 +24,20 @@ All notable changes to this package will be documented in this file.
   cover the completion engine's bookkeeping.
 - Real `BUILD_windows`; the crate is no longer `BUILD_TOOL_UNSUPPORTED` there.
 
+### Hardened (security review of the Windows engine)
+
+- Dropping a reactor cancels its pending `AcceptEx` operations with `CancelIoEx` on
+  the listener instead of relying on closing the accept sockets.
+- A failed or aborted accept re-post no longer ends `serve`: the slot is left
+  disarmed and re-armed on the next loop turn (which is also the retry back-off).
+- A single `WSASend` is capped at 1 GiB so the `u32` length is exact, and a send
+  that completes with zero bytes while data remains closes the connection instead
+  of being re-posted forever.
+- If a handler panics, its connection is closed before the panic propagates out of
+  `serve`, so no half-alive connection is left in the table.
+- `iocp::CompletionPort::get` no longer mistakes an operation that failed with Win32
+  error 258 for a wait timeout (see the `iocp` changelog).
+
 ### Changed
 
 - The readiness engine moved, unchanged, into `src/readiness.rs`; `lib.rs` holds the

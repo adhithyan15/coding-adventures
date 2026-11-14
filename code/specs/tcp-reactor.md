@@ -83,6 +83,20 @@ the native networking stack directly:
   the kernel.
 - Operation completion errors (reset, aborted, anything else) close only the
   affected connection; they never abort `serve`.
+- Accept slots are re-armed best-effort: a failed or aborted re-post leaves the slot
+  disarmed and `serve` retries it on its next loop turn (which doubles as the
+  back-off), so exhausting sockets or buffers never ends the server. Aborts are not
+  treated as "the listener is closing" because Windows also aborts operations whose
+  issuing thread exited.
+- One `WSASend` carries at most 1 GiB (`WSABUF.len` is a `u32`), and a send that
+  completes with zero bytes while data remains closes the connection rather than
+  being re-posted forever.
+- If the handler panics, the connection is closed before the panic propagates out of
+  `serve` (the same propagation as the readiness engine).
+- Dropping the reactor cancels the pending `AcceptEx` operations with `CancelIoEx` on
+  the listener and drains their completions.
+- `serve` should stay on one thread for the life of the posted operations: Windows
+  cancels overlapped operations when the thread that issued them exits.
 - `serve` polls the port with the same 10 ms timeout as the Unix engine so the
   stop flag is observed promptly. Stopping closes every connection and drains
   their completions; the listener's `AcceptEx` operations stay posted so

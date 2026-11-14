@@ -121,6 +121,13 @@ mod sys {
         pub fn WSAGetLastError() -> i32;
     }
 
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        /// Cancel every pending operation on `handle` (all of them when
+        /// `overlapped` is null), from any thread.
+        pub fn CancelIoEx(handle: *mut c_void, overlapped: *mut Overlapped) -> i32;
+    }
+
     #[link(name = "mswsock")]
     unsafe extern "system" {
         pub fn AcceptEx(
@@ -146,6 +153,9 @@ const ACCEPT_DEPTH: usize = 8;
 /// Room `AcceptEx` needs for one address: the largest `sockaddr` (IPv6, 28
 /// bytes) plus the 16 bytes the API requires on top.
 const ACCEPT_ADDRESS_LENGTH: usize = 64;
+/// The most bytes one `WSASend` is asked to carry. `WSABUF.len` is a `u32`; a
+/// bound well under 4 GiB keeps the cast exact and the length non-zero.
+const MAX_SEND_CHUNK: usize = 1 << 30;
 /// How long a stopping reactor waits for cancelled operations to complete
 /// before it gives up and leaks whatever is still outstanding.
 const DRAIN_DEADLINE: Duration = Duration::from_secs(5);
@@ -352,6 +362,11 @@ impl TcpReactor {
         self.arm_accepts()?;
         while !self.stop_flag.load(Ordering::SeqCst) {
             self.step(Duration::from_millis(POLL_INTERVAL_MS), false)?;
+            // A failed re-post (out of sockets or buffers, an accept aborted for
+            // any reason) must not end the server: leave that slot disarmed and
+            // try again on the next turn. When idle the turn is at most
+            // POLL_INTERVAL_MS, which is the retry back-off.
+            self.rearm_accepts_best_effort();
         }
         self.shutdown_all()
     }
@@ -401,6 +416,16 @@ impl TcpReactor {
             }
         }
         Ok(())
+    }
+
+    /// Re-post accept operations that are not in flight, ignoring failures.
+    fn rearm_accepts_best_effort(&mut self) {
+        let accepts = self.accepts.clone();
+        for op in accepts {
+            if unsafe { !(*op).in_flight } {
+                let _ = self.post_accept(op);
+            }
+        }
     }
 
     fn post_accept(&mut self, op: *mut Op) -> io::Result<()> {
@@ -464,9 +489,10 @@ impl TcpReactor {
                 if accept_socket != INVALID_SOCKET {
                     unsafe { sys::closesocket(accept_socket) };
                 }
-                // An aborted accept means the listener is going away, so no
-                // replacement is posted. Any other failure belongs to that one
-                // attempt: fall through and post another.
+                // An aborted accept is not re-posted here: it is aborted when the
+                // listener is closing, but also when the thread that posted it
+                // exited. `serve` re-arms every slot that is not in flight on its
+                // next turn, which covers both.
                 if error == Some(sys::ERROR_OPERATION_ABORTED) {
                     return Ok(());
                 }
@@ -477,7 +503,9 @@ impl TcpReactor {
             // `serve` re-arms any accept that is not in flight when it starts.
             return Ok(());
         }
-        self.post_accept(op)
+        // Best effort: a failure leaves the slot disarmed for the next turn.
+        let _ = self.post_accept(op);
+        Ok(())
     }
 
     /// Turn a completed accept socket into a connection (or close it).
@@ -554,7 +582,20 @@ impl TcpReactor {
             // buffer, and `bytes <= buf.len()` because it was the posted length.
             let receive_op = unsafe { &*conn.recv };
             let data = &receive_op.buf[..bytes];
-            let response = (self.handler)(conn.info, data);
+            // If the handler panics the panic still propagates out of `serve`
+            // (as in the readiness engine), but this connection is closed first so
+            // it cannot be left half-alive in the table.
+            let info = conn.info;
+            let handler = &self.handler;
+            let response = match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                handler(info, data)
+            })) {
+                Ok(response) => response,
+                Err(panic) => {
+                    let _ = self.close_connection(id);
+                    std::panic::resume_unwind(panic);
+                }
+            };
             if !response.is_empty() {
                 if conn.queued().saturating_add(response.len()) > self.max_pending_write_bytes {
                     return self.close_connection(id);
@@ -573,6 +614,11 @@ impl TcpReactor {
             return self.reap(id);
         }
         if error.is_some() {
+            return self.close_connection(id);
+        }
+        // SAFETY: the send completed, so the kernel is no longer reading `buf`.
+        if bytes == 0 && conn.send_offset < unsafe { (*conn.send).buf.len() } {
+            // A send that moves nothing would be re-posted forever.
             return self.close_connection(id);
         }
         conn.send_offset += bytes;
@@ -672,8 +718,9 @@ impl TcpReactor {
             let op = &mut *conn.send;
             op.overlapped = blank_overlapped();
             let remaining = &mut op.buf[conn.send_offset..];
+            let chunk = remaining.len().min(MAX_SEND_CHUNK);
             let mut buffer = sys::WsaBuf {
-                len: remaining.len() as u32,
+                len: chunk as u32,
                 buf: remaining.as_mut_ptr(),
             };
             let mut sent = 0u32;
@@ -756,6 +803,12 @@ impl Drop for TcpReactor {
         let ids: Vec<u64> = self.connections.keys().copied().collect();
         for id in ids {
             let _ = self.close_connection(id);
+        }
+        // CancelIoEx on the listener cancels every pending AcceptEx; each still
+        // completes (aborted) and is drained below. This is the documented way to
+        // cancel them; closing the accept sockets alone is not relied on.
+        unsafe {
+            sys::CancelIoEx(self.listener_socket as *mut c_void, ptr::null_mut());
         }
         for &op in &self.accepts {
             unsafe {
@@ -843,6 +896,51 @@ mod tests {
         let mut byte = [0u8; 1];
         let closed = matches!(client.read(&mut byte), Ok(0) | Err(_));
         assert!(closed, "the client should see the connection closed");
+    }
+
+    #[test]
+    fn a_panicking_handler_closes_its_connection_before_the_panic_escapes() {
+        let mut reactor = TcpReactor::bind_iocp(("127.0.0.1", 0), |_, _| panic!("handler failure"))
+            .expect("bind");
+        reactor.arm_accepts().expect("arm");
+        let mut client = TcpStream::connect(reactor.local_addr()).expect("connect");
+        client.write_all(b"boom").expect("write");
+
+        // Drive the engine by hand; the handler's panic must come out of `step`.
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            for _ in 0..500 {
+                reactor
+                    .step(Duration::from_millis(20), false)
+                    .expect("step");
+            }
+        }));
+        assert!(outcome.is_err(), "the handler's panic should propagate");
+        assert_eq!(
+            reactor.live_connections, 0,
+            "the connection must be marked closed, not left half-alive"
+        );
+        run_until(&mut reactor, "panicked connection reaped", |r| {
+            r.connections.is_empty()
+        });
+        let mut byte = [0u8; 1];
+        assert!(matches!(client.read(&mut byte), Ok(0) | Err(_)));
+    }
+
+    #[test]
+    fn dropping_a_reactor_with_pending_accepts_is_prompt() {
+        // All ACCEPT_DEPTH AcceptEx operations are pending; dropping must cancel
+        // them (CancelIoEx on the listener) rather than wait out the drain deadline.
+        let mut reactor =
+            TcpReactor::bind_iocp(("127.0.0.1", 0), |_, bytes| bytes.to_vec()).expect("bind");
+        reactor.arm_accepts().expect("arm");
+        assert!(reactor.accepts.iter().all(|&op| unsafe { (*op).in_flight }));
+        let started = Instant::now();
+        drop(reactor);
+        assert!(
+            started.elapsed() < Duration::from_millis(1500),
+            "drop took {:?}; the pending accepts were not cancelled",
+            started.elapsed()
+        );
     }
 
     #[test]

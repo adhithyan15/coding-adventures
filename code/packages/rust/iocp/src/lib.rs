@@ -141,18 +141,21 @@ mod imp {
             };
             if ok == 0 {
                 let error = io::Error::last_os_error();
-                if error.raw_os_error() == Some(WAIT_TIMEOUT) {
-                    Err(io::Error::new(
-                        io::ErrorKind::TimedOut,
-                        "IOCP wait timed out",
-                    ))
-                } else if !overlapped.is_null() {
+                if !overlapped.is_null() {
+                    // A dequeued packet for a failed operation. Check this first:
+                    // such an operation may itself fail with error 258, which must
+                    // not be mistaken for the wait timing out (and the packet lost).
                     Ok(CompletionPacket {
                         bytes_transferred: bytes,
                         completion_key: key,
                         overlapped,
                         error: error.raw_os_error(),
                     })
+                } else if error.raw_os_error() == Some(WAIT_TIMEOUT) {
+                    Err(io::Error::new(
+                        io::ErrorKind::TimedOut,
+                        "IOCP wait timed out",
+                    ))
                 } else {
                     Err(error)
                 }
