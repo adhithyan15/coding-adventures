@@ -253,7 +253,7 @@ the discovery mechanism; it has no hand-maintained index, manifest, or aggregate
 | `validate.ts` | the round-trip validator (errors fail CI; warnings tolerated) | ✅ |
 | `queries.ts` | `allConcepts` / `conceptsByLanguage` / `languagesForConcept` / `coverageByLanguage` | ✅ |
 | `modality.ts` | per-lesson channel (voice/sight/pen) and per-chapter drivable prefix | ✅ |
-| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`) | ✅ |
+| `drivable-instructions.ts` | the steps a narrator would say plainly that need eyes or hands (`eyes-or-hands-step`), including page-following and paired reading | ✅ |
 | `narration-cues.ts` | what one cue sounds like (spoken or deferred) and where a paragraph's cues are | ✅ |
 | `for-the-ear.ts` | a typed activity prompt and a heading, reworded for a listener ("Type …" → "Say …"; a label without its asking) | ✅ |
 | `speech.ts` | Markdown → speakable words; Markdown tables → spoken utterances or a reasoned refusal | ✅ |

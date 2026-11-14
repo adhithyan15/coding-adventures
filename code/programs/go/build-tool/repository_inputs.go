@@ -167,6 +167,19 @@ var (
 	warrantPythonRunnerPackage   = "code/packages/python/warrant-corpus"
 	warrantPythonLaneCorpusPaths = warrantPythonLaneInputs
 	warrantPythonLanePilotPaths  = append(append([]string{}, warrantPythonLaneInputs...), warrantPythonRunnerPackage)
+	// The TypeScript Warrant lane (WD-102) reads the same spec, corpus and
+	// registry. Its ct-compare BUILD re-runs the corpus, fails when the
+	// committed manifest drifted and validates it; the runner package's own
+	// tests run the real corpus once.
+	warrantTypeScriptLaneInputs = warrantPythonLaneInputs
+	// warrantTypeScriptRunnerPackage is the shared runner. ct-compare names it
+	// as a file: devDependency, which is a graph edge, but the committed
+	// manifest embeds the runner's source digest, so the pilot is selected by
+	// an explicit prefix too: the selection must not depend on the dependency
+	// resolver noticing a dev-only edge.
+	warrantTypeScriptRunnerPackage   = "code/packages/typescript/warrant-corpus"
+	warrantTypeScriptLaneCorpusPaths = warrantTypeScriptLaneInputs
+	warrantTypeScriptLanePilotPaths  = append(append([]string{}, warrantTypeScriptLaneInputs...), warrantTypeScriptRunnerPackage)
 	// warrantAssurancePaths are the shared Warrant lane artifacts the
 	// assurance report validates directly (see isWarrantAssuranceInput).
 	// The Kiln graph export reads them, so they must list every path the
@@ -436,6 +449,20 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isWarrantPythonLanePilotInput,
 		paths:    warrantPythonLanePilotPaths,
 	},
+	{
+		name:     "typescript/warrant-corpus",
+		language: "typescript",
+		inputs:   "the Warrant spec, corpus and consumer registry its tests run",
+		matches:  isWarrantTypeScriptLaneCorpusInput,
+		paths:    warrantTypeScriptLaneCorpusPaths,
+	},
+	{
+		name:     "typescript/ct-compare",
+		language: "typescript",
+		inputs:   "the Warrant spec, corpus, consumer registry and the shared TypeScript runner",
+		matches:  isWarrantTypeScriptLanePilotInput,
+		paths:    warrantTypeScriptLanePilotPaths,
+	},
 }
 
 // The assurance report validates the shared Warrant lane artifacts directly.
@@ -472,6 +499,20 @@ func isWarrantPythonLaneCorpusInput(changed string) bool {
 func isWarrantPythonLanePilotInput(changed string) bool {
 	return isWarrantPythonLaneCorpusInput(changed) ||
 		strings.HasPrefix(changed, "code/packages/python/warrant-corpus/")
+}
+
+// isWarrantTypeScriptLaneCorpusInput selects the TypeScript runner package
+// when the spec, corpus or registry its tests run changes. Exact paths only: a
+// lookalike version of the fixture directory must not select it.
+func isWarrantTypeScriptLaneCorpusInput(changed string) bool {
+	return isWarrantPythonLaneCorpusInput(changed)
+}
+
+// isWarrantTypeScriptLanePilotInput selects typescript/ct-compare for the same
+// files plus anything beneath the shared runner package.
+func isWarrantTypeScriptLanePilotInput(changed string) bool {
+	return isWarrantTypeScriptLaneCorpusInput(changed) ||
+		strings.HasPrefix(changed, "code/packages/typescript/warrant-corpus/")
 }
 
 // Canonical inputs live outside the Rust artifact package. Exact file paths

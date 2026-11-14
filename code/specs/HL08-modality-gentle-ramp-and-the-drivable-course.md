@@ -147,6 +147,14 @@ Hand-annotating 1,096 lessons invites drift, so modality is computed:
 > signs a lesson that teaches the hand, and a stray "Write it once" does not make a
 > handwriting lesson; it does make one you cannot do while driving.
 
+> **Amended — page-following and bare paired reading.** The same rule also catches
+> spoken-core imperatives to follow a *printed* line with a finger, read both
+> lines, or listen and then read. These need a page or a hand even when the verb
+> "read" has no explicit script object. A bounded, step-anchored match must not
+> turn quoted examples, vocabulary explanations, or an audio-only recall into
+> manual work. A kept section with one of these steps is `sight` at the core;
+> a detachable Writing section or deferred manual cue remains guarded instead.
+
 > **Amended — spoken questions and headings (driver safety, follow-up).** Two things
 > the narration speaks were outside every check above. A scored activity's prompt
 > lives in an `<!-- hl-activity: … -->` comment, which the body walk drops, yet the

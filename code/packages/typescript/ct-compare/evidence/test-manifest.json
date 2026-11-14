@@ -1,0 +1,351 @@
+{
+  "binding_sha256": "5cf25fb23f9c8029ea735a8a5ba9e30b196bb452bc0926a1f5ba49c2438fd7c9",
+  "cases_sha256": "2fa03f325b20e0a19513a5bf0ce918f836daf28b34d2a3185d71fb827b26b5ac",
+  "corpus": "code/specs/fixtures/ct-compare-warrant-v1",
+  "corpus_sha256": "ec3da15957092a2146a6f66e81c5405a9a3233df6887fae0bacfa936a73abc95",
+  "evidence_seed": "6287397068022371361",
+  "faulted": false,
+  "lane": "typescript",
+  "module": "ct_compare",
+  "package": "typescript/ct-compare",
+  "runner": {
+    "lane": "typescript",
+    "name": "warrant-corpus",
+    "src_sha256": "82978a6cfa22ad1794d7055ce342a45bca5cd5138a0b5734b575088a0657832b"
+  },
+  "schema": "warrant-lane-evidence-v1",
+  "source_sha256": "3366a948fb47271dde07507851c625fc33fc083279ec60e869de6b35121c4831",
+  "spec": "code/specs/ct-compare.warrant",
+  "spec_sha256": "45eaa88e9d65524c62f9262883278202a3cc33792d73e58d1884dba31d2013c0",
+  "tests": [
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/eq_diff_len",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/eq_empty",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/eq_one_diff",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/eq_one_equal",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/fixed_16_diff",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/fixed_16_equal",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/fixed_zero",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/select_left_fresh",
+      "kind": "example",
+      "layer": "portable",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/select_length_mismatch",
+      "kind": "example",
+      "layer": "portable",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/select_right_fresh",
+      "kind": "example",
+      "layer": "portable",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/u64_diff",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "id": "warrant/ct_compare/example/u64_equal",
+      "kind": "example",
+      "layer": "portable",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "calls": 120409,
+      "cases": 120409,
+      "claim": "eq_agrees",
+      "discarded": 0,
+      "domain": "Bytes[347] x Bytes[347]",
+      "expected_sha256": "a243a089a7ad008af8f29fca5504a92c042db32cca3e70953d91e749baf9d856",
+      "id": "warrant/ct_compare/exhaustive/eq_agrees",
+      "inputs_sha256": "73b983e125ba39dc8c311f407423a8f40cfcf2738e65151cdf177e36c384bc5b",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "calls": 1,
+      "cases": 1,
+      "claim": "eq_fixed_agrees_w0",
+      "discarded": 0,
+      "domain": "Bytes<0>[1] x Bytes<0>[1]",
+      "expected_sha256": "df473b27b8177a3a6fd686387c8bf2df8a4b38a73cec144545d797b154b6a86b",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+      "inputs_sha256": "a7fcfe4d1e50746bac8d869473984a2d9a8e225cae85d3d7ef6444cb106353e7",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "calls": 65536,
+      "cases": 65536,
+      "claim": "eq_fixed_agrees_w1",
+      "discarded": 0,
+      "domain": "Bytes<1>[256] x Bytes<1>[256]",
+      "expected_sha256": "cea8d7a523ba9d4aca3db279c043b91c80bb63a9b8d27d5dc5c6c1fecc2c3e7c",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+      "inputs_sha256": "84321254b2aa5362fb62c7706be1a3226ea2320c87cdb39d9b09731d89da22fc",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "calls": 2704,
+      "cases": 2704,
+      "claim": "eq_fixed_agrees_w16",
+      "discarded": 0,
+      "domain": "Bytes<16>[52] x Bytes<16>[52]",
+      "expected_sha256": "0d491f50b120ef82d24b640151ede4dc7c7815e2803cc3a76ffcbde2abe548e9",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+      "inputs_sha256": "ca7fa7a0045143bb88e88dc7b55748497a8562256d82733a1b2100cd3f21d3da",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "calls": 256,
+      "cases": 256,
+      "claim": "eq_fixed_agrees_w2",
+      "discarded": 0,
+      "domain": "Bytes<2>[16] x Bytes<2>[16]",
+      "expected_sha256": "df90a479a9ccf237e6f63e442563504b1cbbf81188bf6817832be5cbbf1dfb9f",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+      "inputs_sha256": "ac971579e63dfed711937587c204454a2a67155ecd299c77144881d9c54e2ffc",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "calls": 256,
+      "cases": 256,
+      "claim": "eq_fixed_agrees_w4",
+      "discarded": 0,
+      "domain": "Bytes<4>[16] x Bytes<4>[16]",
+      "expected_sha256": "19322d780e674a3d7d93170f7392631fd71d101bcd9be9084eb0c518a0643c6a",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+      "inputs_sha256": "32ae5516698a95773ef0a77c580421c75f843b37f0588ad0b4a2e69fbbce955d",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "calls": 142129,
+      "cases": 142129,
+      "claim": "eq_u64_agrees",
+      "discarded": 0,
+      "domain": "U64[377] x U64[377]",
+      "expected_sha256": "f209973592654c02a8cafae36388ac7a03d34dce9d9c644b045e9ea248399f56",
+      "id": "warrant/ct_compare/exhaustive/eq_u64_agrees",
+      "inputs_sha256": "4570ec1645c72514cb7af9123dc709f0beba9bd35e70108207eb72bd042f7aab",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "calls": 139818,
+      "cases": 139818,
+      "claim": "select_picks",
+      "discarded": 101000,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "expected_sha256": "5ad94e796d12126f89ec944f80b39969eb0f647c554a5d054fb26c03de4663c5",
+      "id": "warrant/ct_compare/exhaustive/select_picks",
+      "inputs_sha256": "34cd91027287399c80d4f32829e4db758e32fb6d1136b8e4e4a0ff91e6ec37f5",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "calls": 101000,
+      "cases": 101000,
+      "claim": "select_rejects_mismatch",
+      "discarded": 139818,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "expected_sha256": "1944a5875c5c2f61768abb0a60e7320d91e100145ff845c12be1c6d1683c46c6",
+      "id": "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+      "inputs_sha256": "556b55cc8ee97ecbead08e69a1cfd1e447e81f60fc46985f777bd41bff838bff",
+      "kind": "exhaustive",
+      "layer": "portable",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_agrees"
+      ],
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq/ignore-last-byte",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_agrees"
+      ],
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq/invert",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16"
+      ],
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_fixed/ignore-last-byte",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16"
+      ],
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_fixed/invert",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq_fixed",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_u64_agrees"
+      ],
+      "fault": "ignore-high-bit",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_u64/ignore-high-bit",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/eq_u64_agrees"
+      ],
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_u64/invert",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "eq_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/select_rejects_mismatch"
+      ],
+      "fault": "missing-error",
+      "id": "warrant/ct_compare/negctl/exhaustive/select_bytes/missing-error",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "select_bytes",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": [
+        "warrant/ct_compare/exhaustive/select_picks"
+      ],
+      "fault": "swap-choice",
+      "id": "warrant/ct_compare/negctl/exhaustive/select_bytes/swap-choice",
+      "kind": "negctl",
+      "layer": "portable",
+      "op": "select_bytes",
+      "target": "exhaustive",
+      "verdict": "pass"
+    }
+  ],
+  "toolchain": {
+    "name": "node",
+    "version": "22.23.4"
+  }
+}
