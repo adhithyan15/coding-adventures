@@ -381,6 +381,12 @@ fn debug_and_errors_do_not_retain_sensitive_payloads() {
     assert!(!debug.contains("provider-a"));
     assert!(!debug.contains(&"42".repeat(16)));
     assert!(debug.contains("[REDACTED]"));
+    for event in &audit.events {
+        let event_debug = format!("{event:?}");
+        assert!(!event_debug.contains("provider-a"));
+        assert!(!event_debug.contains(&"42".repeat(16)));
+        assert!(event_debug.contains("[REDACTED]"));
+    }
     for error in [
         ClientSecretHttp1BindingError::BodyRejected,
         ClientSecretHttp1BindingError::ContentLengthRejected,

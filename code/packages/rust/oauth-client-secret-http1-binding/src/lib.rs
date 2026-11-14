@@ -38,12 +38,24 @@ pub enum ClientSecretHttp1AuditOutcome {
 }
 
 /// Privacy-safe audit event for one request-material construction.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct ClientSecretHttp1AuditEvent {
     provider: ProviderId,
     trace: OAuthTraceId,
     action: ClientSecretHttp1AuditAction,
     outcome: ClientSecretHttp1AuditOutcome,
+}
+
+impl fmt::Debug for ClientSecretHttp1AuditEvent {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ClientSecretHttp1AuditEvent")
+            .field("provider", &"[REDACTED]")
+            .field("trace", &"[REDACTED]")
+            .field("action", &self.action)
+            .field("outcome", &self.outcome)
+            .finish()
+    }
 }
 
 impl ClientSecretHttp1AuditEvent {
