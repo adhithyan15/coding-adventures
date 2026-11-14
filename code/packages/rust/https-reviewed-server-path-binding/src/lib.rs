@@ -3,12 +3,13 @@
 //! An HTTPS client must not validate a certificate path for one decoded leaf
 //! and then send TLS and HTTP protocol identities proven against another leaf.
 //! This crate closes that one composition gap: it consumes the complete DNS
-//! destination proof and one of six retained server proofs: the strongest
+//! destination proof and one of seven retained server proofs: the strongest
 //! accumulated reviewed RSA path policy, that path already bound to its
 //! reviewed anchor's repository-owned self-signature, or the orthogonal exact
-//! direct, nested, double-nested, or alternative intermediate-status-responder
-//! revocation no-check complete fixed-path policy. Every entry point requires
-//! its complete inputs to retain the same exact decoded target object.
+//! direct, nested, double-nested, recursive, or alternative intermediate-
+//! status-responder revocation no-check complete fixed-path policy. Every
+//! entry point requires its complete inputs to retain the same exact decoded
+//! target object.
 //!
 //! ```text
 //! HTTPS destination ── certificate ──┐
@@ -36,6 +37,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     ValidatedX509OcspReviewedDoubleNestedNoCheckCompleteFixedPathRevocationPolicy,
     ValidatedX509OcspReviewedIntermediateStatusResponderRevocationResponderNoCheckCompleteFixedPathRevocationPolicy,
     ValidatedX509OcspReviewedNestedNoCheckCompleteFixedPathRevocationPolicy,
+    ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy,
     X509OcspReviewedServerRevocationTargetEvidence,
 };
 use x509_rsa_constructed_path_signature_routing::ValidatedAccumulatedNamePolicyReviewedX509RsaConstructedPathSubordinateAnchorNameConstraintsPolicy;
@@ -1004,6 +1006,153 @@ where
     )
 }
 
+/// Non-copyable HTTPS destination and complete recursive revocation evidence.
+///
+/// The retained completion already covers the exact recursive responder no-
+/// check fixed path selected by repository-owned revocation policy.
+/// Construction derives its server leaf only through sealed target evidence,
+/// checks exact decoded object identity against the destination certificate,
+/// and then moves both complete inputs into this result.
+pub struct BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+> {
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation:
+        ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+        >,
+}
+
+impl<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+    BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+{
+    /// Return the complete certificate, SNI, Host, and SAN destination proof.
+    #[must_use]
+    pub const fn destination(
+        &self,
+    ) -> &BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host> {
+        &self.destination
+    }
+
+    /// Return the exact recursive complete fixed-path revocation proof.
+    #[must_use]
+    pub const fn complete_revocation(
+        &self,
+    ) -> &ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    > {
+        &self.complete_revocation
+    }
+}
+
+impl<Proof, IntermediateRevocation, ResponderRevocation, RecursiveResponderRevocation> fmt::Debug
+    for BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+        '_,
+        '_,
+        '_,
+        '_,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct(
+                "BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation",
+            )
+            .field("destination", &"[REDACTED]")
+            .field("complete_revocation", &"[REDACTED]")
+            .finish()
+    }
+}
+
+/// Bind an HTTPS destination to exact recursive complete revocation.
+///
+/// The server target is derived only through the completion's sealed
+/// repository-owned evidence. A byte-equal certificate from an independent
+/// decode therefore fails closed. Success retains the complete destination
+/// and complete fixed-path revocation proof, without parsing, cryptography,
+/// credential access, audit, trace, I/O, TLS, HTTP, or any external effect.
+pub fn bind_https_dns_destination_to_reviewed_recursive_responder_no_check_complete_fixed_path_revocation<
+    'server_name,
+    'host,
+    'target,
+    'target_encoded,
+    Proof,
+    IntermediateRevocation,
+    ResponderRevocation,
+    RecursiveResponderRevocation,
+>(
+    destination: BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+    complete_revocation:
+        ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+        >,
+) -> Result<
+    BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >,
+    HttpsReviewedServerPathBindingError,
+>
+where
+    Proof: X509OcspReviewedServerRevocationTargetEvidence,
+{
+    require_same_object(
+        destination.certificate(),
+        complete_revocation.server_target_certificate(),
+    )?;
+
+    Ok(
+        BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation {
+            destination,
+            complete_revocation,
+        },
+    )
+}
+
 /// Non-copyable HTTPS destination and complete alternative revocation evidence.
 ///
 /// The retained completion already covers the exact intermediate-status-
@@ -1160,7 +1309,68 @@ fn same_object<T: ?Sized>(left: &T, right: &T) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{require_same_object, same_object, HttpsReviewedServerPathBindingError};
+    use super::{
+        bind_https_dns_destination_to_reviewed_recursive_responder_no_check_complete_fixed_path_revocation,
+        require_same_object, same_object,
+        BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation,
+        HttpsReviewedServerPathBindingError,
+    };
+
+    #[allow(dead_code)]
+    fn recursive_binding_surface_typechecks<
+        'server_name,
+        'host,
+        'target,
+        'target_encoded,
+        Proof,
+        IntermediateRevocation,
+        ResponderRevocation,
+        RecursiveResponderRevocation,
+    >(
+        destination: super::BoundHttpsDnsDestination<'target, 'target_encoded, 'server_name, 'host>,
+        complete_revocation: super::ValidatedX509OcspReviewedRecursiveResponderNoCheckCompleteFixedPathRevocationPolicy<
+            Proof,
+            IntermediateRevocation,
+            ResponderRevocation,
+            RecursiveResponderRevocation,
+        >,
+    ) where
+        Proof: super::X509OcspReviewedServerRevocationTargetEvidence,
+    {
+        if let Ok(bound) = bind_https_dns_destination_to_reviewed_recursive_responder_no_check_complete_fixed_path_revocation(
+            destination,
+            complete_revocation,
+        ) {
+            let _ = bound.destination();
+            let _ = bound.complete_revocation();
+            let _ = format!("{bound:?}");
+        }
+    }
+
+    #[test]
+    fn recursive_binding_surface_is_nominal_and_shares_exact_identity_failure() {
+        type RecursiveBinding =
+            BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation<
+                'static,
+                'static,
+                'static,
+                'static,
+                u8,
+                u16,
+                u32,
+                u64,
+            >;
+        let retained = vec![0xde, 0xad, 0xbe, 0xef];
+        let byte_equal_independent = retained.clone();
+
+        assert!(core::any::type_name::<RecursiveBinding>().contains(
+            "BoundHttpsDnsDestinationToReviewedRecursiveResponderNoCheckCompleteFixedPathRevocation"
+        ));
+        assert_eq!(
+            require_same_object(&retained, &byte_equal_independent),
+            Err(HttpsReviewedServerPathBindingError::TargetCertificateMismatch)
+        );
+    }
 
     #[test]
     fn exact_object_check_accepts_only_the_same_allocation() {

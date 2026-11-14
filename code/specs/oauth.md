@@ -5136,9 +5136,9 @@ acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
 authorize OAuth transport, or grant network authority. The composition below,
-the other remaining complete fixed-path revocation branches, repository-owned
-TLS/HTTP composition, and audited transport remain separate from this
-projection. Concrete HTTPS and live-provider readiness remain unavailable.
+the branch-specific compositions below, repository-owned TLS/HTTP composition,
+and audited transport remain separate from this projection. Concrete HTTPS and
+live-provider readiness remain unavailable.
 
 The `https-reviewed-server-path-binding` boundary now also joins the complete
 HTTPS destination proof to that exact double-nested no-check complete fixed-
@@ -5156,11 +5156,11 @@ This double-nested composition performs no parsing, new validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not generalize revocation or path
-construction, cover the other remaining complete fixed-path revocation
-branches, build or run TLS or HTTP, authorize OAuth transport, or grant
-network authority. Those remaining branches, repository-owned TLS/HTTP
-composition, and audited transport remain separate blockers. Concrete HTTPS
-and live-provider readiness remain unavailable.
+construction, cover the other complete fixed-path revocation branches, build
+or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. The branch-specific compositions below, repository-owned
+TLS/HTTP composition, and audited transport remain separate boundaries.
+Concrete HTTPS and live-provider readiness remain unavailable.
 
 The existing `x509-ocsp-reviewed-server-revocation-binding` prerequisite now
 also carries its sealed exact-server-target projection through the complete
@@ -5177,10 +5177,31 @@ cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
-authorize OAuth transport, or grant network authority. Its HTTPS destination
-binding, repository-owned TLS/HTTP composition, and audited transport remain
-separate from this projection. Concrete HTTPS and live-provider readiness
-remain unavailable.
+authorize OAuth transport, or grant network authority. The composition below,
+repository-owned TLS/HTTP composition, and audited transport remain separate
+from this projection. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
+The `https-reviewed-server-path-binding` boundary now also joins the complete
+HTTPS destination proof to that exact recursive responder no-check complete
+fixed-path revocation proof. The binder derives the server leaf only through
+the completion's sealed target projection, requires both non-copyable inputs
+to retain the same exact decoded certificate object, and moves both complete
+inputs into the result. A byte-equal independent decode fails closed, and the
+surface accepts no detached certificate, callback-shaped target claim, path,
+status result, or trust assertion. Stable failures and Debug output retain no
+certificate, hostname, authority, path, key, signature, algorithm, status,
+constraint, or root payloads. This branch neither requires nor implies the
+separate anchor-self-signature composition.
+
+This recursive-branch composition performs no parsing, new validation,
+cryptography, credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network
+access, or other external effect. It does not generalize revocation or path
+construction, build or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. Repository-owned TLS/HTTP composition and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
 The existing `x509-ocsp-reviewed-server-revocation-binding` prerequisite now
 also carries its sealed exact-server-target projection through the complete
@@ -5197,10 +5218,9 @@ acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not bind an HTTPS destination,
 generalize revocation or path construction, build or run TLS or HTTP,
 authorize OAuth transport, or grant network authority. Its HTTPS destination
-composition below, the recursive branch's separate HTTPS destination binding,
-repository-owned TLS/HTTP composition, and audited transport remain separate
-from this projection. Concrete HTTPS and live-provider readiness remain
-unavailable.
+composition below, repository-owned TLS/HTTP composition, and audited
+transport remain separate from this projection. Concrete HTTPS and live-
+provider readiness remain unavailable.
 
 The `https-reviewed-server-path-binding` boundary now also joins the complete
 HTTPS destination proof to that exact alternative intermediate-status-
@@ -5219,11 +5239,10 @@ This alternative-branch composition performs no parsing, new validation,
 cryptography, credential access or editing, signing, storage, clock
 acquisition, provider action, audit event, trace emission, I/O, network
 access, or other external effect. It does not generalize revocation or path
-construction, bind the recursive complete fixed-path revocation branch to its
-HTTPS destination, build or run TLS or HTTP, authorize OAuth transport, or
-grant network authority. That remaining binding, repository-owned TLS/HTTP
-composition, and audited transport remain separate blockers. Concrete HTTPS
-and live-provider readiness remain unavailable.
+construction, build or run TLS or HTTP, authorize OAuth transport, or grant
+network authority. Repository-owned TLS/HTTP composition and audited transport
+remain separate blockers. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
