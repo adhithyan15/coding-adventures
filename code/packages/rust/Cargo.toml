@@ -909,6 +909,7 @@ members = [
     "ieee802154-security",
     "http1",
     "http1-request-host-authority",
+    "https-destination-name-binding",
     "http1-request-header-field",
     "http1-fixed-request-body",
     "http1-request-line",

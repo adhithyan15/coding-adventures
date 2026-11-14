@@ -3400,6 +3400,24 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+The direct branch can then nominally complete revocation policy for its one
+exact retained fixed path. The consumed type proves that authenticated good-
+and-fresh OCSP status covers the server target and retained intermediate,
+while exact RFC 6960 no-check policy covers the original responder and added
+intermediate-status responder. The same generic path admits the strongest
+Name-policy-backed original proof without a duplicate detached-input API. The
+selected Mozilla-reviewed root remains the trust anchor rather than a
+revocation target. The infallible non-copyable result retains all prerequisite
+evidence and accepts no substitute certificate, path, root, algorithm, key,
+signature, status, or time. This pure public-certificate-data composition
+performs no parsing, cryptography, credential access or editing, signing,
+storage, clock acquisition, provider action, audit event, trace emission, I/O,
+network access, or other external effect. It proves complete revocation policy
+only for this one direct retained fixed path; it does not generalize revocation
+or path construction and validation, fetch, cache, acquire, or refresh
+revocation data, or provide TLS, HTTP, OAuth transport, or network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
+
 A branch-specific bounded completion slice then consumes that exact nested
 no-check composition after the server target, original responder, responder-
 status proof's own responder, intermediate, and intermediate-status proof's
@@ -4889,6 +4907,28 @@ configuration, authorize a destination, perform DNS or I/O, release a
 credential, emit provider or trace audit events, or provide HTTP, OAuth, or
 live-provider transport. Those semantic bindings and external effects remain
 separate. Concrete HTTPS remains unavailable.
+
+A bounded `https-destination-name-binding` prerequisite now joins the three
+repository-owned DNS identity boundaries that a future HTTPS client must keep
+consistent. It consumes one exact decoded certificate, one already validated
+TLS `server_name`, and one already validated HTTP/1 `Host` authority. It first
+requires the SNI and Host DNS names to be equal under ASCII case-insensitive
+comparison, then derives the certificate reference from that same SNI value
+and reruns complete-certificate Subject Alternative Name matching. On success,
+one non-copyable result retains the exact certificate object, SNI value, Host
+authority including any explicit port, and certificate-identity evidence. The
+port is deliberately retained as transport metadata but is not part of DNS
+identity comparison. Stable failures retain no hostname, certificate bytes,
+port, or observed input length, and Debug output redacts all three identities.
+
+This proof does not parse a URL, bind a request target or provider
+configuration, decide scheme-default ports, validate critical extensions,
+certificate role, purpose, algorithm, validity, signatures, paths, trust
+anchors, constraints, or revocation, construct a ClientHello or HTTP request,
+perform TLS or HTTP, access a credential, emit an audit event or trace, perform
+DNS or network I/O, authorize an external effect, or grant HTTPS, OAuth, or
+live-provider readiness. Those policy, protocol, transport, and effect
+compositions remain separate. Concrete HTTPS remains unavailable.
 
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,

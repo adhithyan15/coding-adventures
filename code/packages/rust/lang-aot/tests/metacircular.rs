@@ -273,8 +273,12 @@ fn run_jvm(src: &str) -> Option<i64> {
     let bytes = serialize_jvm_class_file(&class);
     let dir = tmp_dir("jvm");
     std::fs::write(dir.join("Main.class"), &bytes).ok()?;
+    // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+    // running in parallel a recycled PID's file can still be locked, and the JVM
+    // then prints a unified-logging warning to STDOUT, which this test compares
+    // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
     let out = std::process::Command::new("java")
-        .arg("-Xverify:none").arg("-cp").arg(&dir).arg("Main")
+        .arg("-XX:-UsePerfData").arg("-Xverify:none").arg("-cp").arg(&dir).arg("Main")
         .output()
         .ok()?;
     String::from_utf8_lossy(&out.stdout).trim().parse::<i64>().ok()

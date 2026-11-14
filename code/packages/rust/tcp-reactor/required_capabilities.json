@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tcp-reactor",
   "capabilities": [],
-  "justification": "TCP reactor crate built above native-event-core. It manages sockets and readiness, but leaves application protocols to higher layers."
+  "justification": "TCP reactor crate. On Unix it sits above native-event-core (epoll/kqueue); on Windows it drives an I/O completion port and Winsock overlapped I/O directly. It manages sockets and queued bytes, but leaves application protocols to higher layers."
 }

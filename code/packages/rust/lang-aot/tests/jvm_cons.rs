@@ -107,8 +107,12 @@ fn compile_and_run_on_java(source: &str, dir_tag: &str) -> Option<String> {
 
     // `-Xverify:none`: the backend does not emit StackMapTables (Java 21 demands
     // them unless verification is off) — same flag the LANG36 round-trip uses.
+    // HotSpot keeps perf counters in /tmp/hsperfdata_<user>/<pid>. With many JVMs
+    // running in parallel a recycled PID's file can still be locked, and the JVM
+    // then prints a unified-logging warning to STDOUT, which this test compares
+    // byte-for-byte. `-XX:-UsePerfData` removes the file, hence the warning.
     let out = std::process::Command::new("java")
-        .arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
+        .arg("-XX:-UsePerfData").arg("-Xverify:none").arg("-cp").arg(&tmp).arg("Main")
         .output().expect("run java");
     Some(format!(
         "{}|stderr:{}",

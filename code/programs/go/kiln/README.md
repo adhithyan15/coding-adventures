@@ -487,7 +487,7 @@ with an independent brute-force oracle; its seed corpus runs in a normal
 ## The shard recorder, first part (`internal/record`, KILN04 stage 4a)
 
 The checks the recorder runs on the checkout before any BUILD does (KILN04
-section 4.8). No sandbox and no CLI yet (`kiln record` is a later PR).
+section 4.8). The rest of the pre-BUILD phase is `kiln record prepare`, below.
 
 - `record.VerifyTree(root, expectedCommit)` proves the working tree is
   byte-for-byte one commit and returns its id (pass it back later to catch a
@@ -514,6 +514,56 @@ section 4.8). No sandbox and no CLI yet (`kiln record` is a later PR).
 res, err := record.VerifyTree(root, "") // nil error: the disk is the commit
 inv, err := record.Inventory(root)       // inv.Paths, ready for recfmt.EncodeInventory
 ```
+
+## `kiln record prepare` (stage 4 PR 2b-1, KILN04 section 4.8, P1 to P10)
+
+Everything a recording shard does before any BUILD, in `internal/record`
+(`Prepare`) behind `kiln record prepare`:
+
+```
+kiln record prepare --root <abs> --dir <abs> --build-tool <abs>
+                    --shard-index I --shard-count N --job-start <unix seconds>
+                    [--strace <abs>] [--git <abs>]
+```
+
+It refuses (exit 3, nothing written) unless this is linux/amd64 and a trusted
+GitHub run with an image id; every other failure is exit 1. In order, it:
+
+1. checks the paths (canonical, no symlink), hashes the Kiln and build-tool
+   binaries and requires them outside the checkout, `tmpdir`, the state roots
+   and the `ro_roots`;
+2. runs `VerifyTree` (the commit must be `GITHUB_SHA`; it becomes the binding's
+   `revision`), then refuses any untracked `BUILD*` path (a disk walk, so a new
+   package's BUILD inside an untracked directory is found) and any regular file
+   with `nlink > 1`;
+3. runs the out-of-tree build tool for the graph, steps and sharded plan, and
+   records their digests and the partition digest;
+4. writes `host-facts.json` and computes the weak key of every package the
+   shard runs from them (the merge recomputes the same keys), one
+   `kiln-record-action/1` file per package;
+5. generates `sandbox.json` (state roots for `~/.cargo`, a closed anchor table,
+   `.git` masked, no root overlapping the record directory or `RUNNER_TEMP`),
+   scans every `ro_roots` entry for sockets and FIFOs, and runs the sandbox's
+   own `CheckHost`;
+6. writes `binding.json` and `SEALED` last, exactly as `recfmt` encodes them, and
+   makes `pre/` read-only. `pre/exec-wrapper.json` is the build tool's
+   `-exec-wrapper`.
+
+`kiln record step` and `kiln record collect` exist as stubs that refuse (PR
+2b-2). Not done here, by design: gates and toolchain probes, the in-sandbox
+socket probe, the supervisor, and `collect`.
+
+**The recorder's PATH and its git.** `git` is resolved once from `--git` (default
+`/usr/bin/git`) and every host-side Git call runs that file by absolute path;
+the process `PATH` must hold no empty, relative or checkout/tmpdir/record-dir
+entry, and is what the build tool gets. `pre/tools.json` records the paths for
+`step` and `collect`. The record directory may be `$RUNNER_TEMP/kiln-record`
+(beneath `home`): `CheckHost` now refuses a configuration only where a step could
+reach it.
+
+One test (`TestRealBuildToolExportsAreWhatPrepareReads`, about a minute) builds
+the real build tool and runs it over this repository with the arguments
+`prepare` uses; it is skipped with `-short` and in a sparse checkout.
 
 ## Lookup in the plan (`kiln legacy-plan --ledger`, KILN04 stage 5a)
 

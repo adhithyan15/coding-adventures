@@ -20,7 +20,7 @@ func goodBinding() Binding {
 		Schema: SchemaBinding, Repository: "owner/repo", Run: "43117337685", Attempt: 1,
 		Revision: strings.Repeat("a", 40), ShardIndex: 3, ShardCount: 12,
 		GraphSHA256: d1, StepsSHA256: d1, PartitionSHA256: d1, HostFactsSHA256: d1, InventorySHA256: d1,
-		SandboxConfigSHA256: d1, KilnSHA256: d1, BuildToolSHA256: d1, Recorder: 1,
+		SandboxConfigSHA256: d1, KilnSHA256: d1, BuildToolSHA256: d1, StraceSHA256: d1, GitSHA256: d1, Recorder: 1,
 		StraceVersion: "strace -- version 6.8", Kernel: "6.8.0-1", JobStart: 1794000000,
 		PreparedAt: "2026-11-13T02:03:04Z",
 	}

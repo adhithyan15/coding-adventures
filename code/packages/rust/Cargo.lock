@@ -7363,6 +7363,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
+name = "https-destination-name-binding"
+version = "0.1.0"
+dependencies = [
+ "der-asn1",
+ "http1-request-host-authority",
+ "tls-server-identity",
+ "tls13-server-name",
+ "x509-certificate",
+ "x509-certificate-policy",
+]
+
+[[package]]
 name = "hue-client"
 version = "0.1.0"
 dependencies = [
@@ -13803,8 +13815,9 @@ version = "0.1.0"
 
 [[package]]
 name = "tcp-reactor"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
+ "iocp",
  "native-event-core",
 ]
 
