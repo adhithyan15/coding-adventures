@@ -1653,17 +1653,26 @@ because `errors=` needs an enum whose variants are named.
   `sample(SIZE)` instead of `set(SIZE)`.  `set` stays for the other fixed finite
   sets (`Bool`, `Nat`, dynamic `Bytes`).  No other count, order or digest changes;
   the per-kind counts of LP-012 are still not implemented, so a consumer must read
-  the word, as it already must for `edge`.
+  the word, as it already must for `edge`.  **Until LP-012 lands, a sampled
+  `Bytes<N>` (N >= 2) claim still runs under the suite and the negative-control
+  kind `exhaustive`, so suite-level "exhaustive" totals include those sampled
+  cases.  The per-claim `domain` field of the manifest is the authoritative
+  label; do not read the suite-level kind as proof of full enumeration.**
 * **Host `Result` with an opaque error: `err_any=CASE`.**  An op option, exclusive
   with `error=` and `errors=`: the export returns `Result<T, E>` for any `E`, and
-  `Err(_)` is the Warrant error case `CASE` (which must be one of the operation's
-  cases).  `Ok(r)` converts as the payload.  `missing-error` applies as for
-  `errors=`.
+  `Err(_)` is the Warrant error case `CASE`.  `Ok(r)` converts as the payload.
+  `missing-error` applies as for `errors=`.  **Single-case rule:** the operation's
+  Warrant error type must have *exactly one* case; otherwise generation is
+  refused with W0704 (incompatible host binding).  Why: `Err(_)` does not say
+  which error the export returned, so with two or more cases an export that
+  returns the wrong error would still map to `CASE` and a claim
+  `f(..) == Err(CASE)` would pass vacuously.  A multi-case error type needs
+  `errors=` (one mapping per host error variant).
 * **Fixed arrays of fixed-width integers (`[u32; 8]`, `[[u8; 4]; 4]`) are not
   added.**  `Bytes<N>` is the whole of this slice: there is no array type in the
   language, the host mapping for `List<U32>` is a `Vec`, and a sound length-refined
   `List` needs a checker type, a domain, a corpus encoding and a harness value, i.e.
-  a language change rather than a binding change.  Backlog row WD-014 records it.
+  a language change rather than a binding change.  Backlog row WD-015 records it.
 
 **Compatibility.**  The change is additive.  The only text that can differ in an
 existing generated harness is (a) the `domain` label of a v1 `Bytes<N>` binder or

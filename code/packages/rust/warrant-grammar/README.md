@@ -197,10 +197,16 @@ and `err_any=CASE` binds a host `Result<T, E>` whose error type is opaque:
 op x25519 export=x25519 args=bytes<32>,bytes<32> ret=bytes<32> err_any=LOW_ORDER faults=flip-result-bit,missing-error
 ```
 
+`err_any=` requires the operation's error type to have exactly one case (W0704
+otherwise): `Err(_)` cannot say which case occurred, so with several a wrong
+error would still satisfy `f(..) == Err(CASE)`; use `errors=` for those.
+
 A model value of the wrong length is unreachable by type (never padded or
 truncated); an export that returns the wrong length fails the harness. A
 `Bytes<N>` binder with N >= 2 enumerates a *sample* of the `256^N` values and the
-manifest says `sample(SIZE)`; only N <= 1 is `full`. Fixed arrays of integers
+manifest says `sample(SIZE)`; only N <= 1 is `full`. Until backlog LP-012 lands,
+suite-level "exhaustive" totals include these sampled cases; the per-claim
+`domain` field is the authoritative label. Fixed arrays of integers
 (`[u32; 8]`) are not supported (backlog WD-015). The pilot is
 `code/specs/x25519.warrant`; the compiled fixture is `tests/fixtures/wxn.warrant`.
 
