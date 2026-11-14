@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"reflect"
 	"strconv"
 	"strings"
 	"syscall"
@@ -376,4 +377,133 @@ type spyFS struct {
 func (s spyFS) Lstat(p string) (traced.FileInfo, error) {
 	*s.asked = true
 	return s.LiveFS.Lstat(p)
+}
+
+// --- round 2 of the review ---------------------------------------------------
+
+func TestSupervisorBoundsWhatItReadsBackFromTheChild(t *testing.T) {
+	line := playLine("", "z", 0)
+	f := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+	f.give("z", actZ, line, 0, cannedOpts{})
+	o := f.opts(actZ, 0, 1, line)
+	o.MaxRecordBytes = 10
+	res, err := RunStep(o)
+	if err != nil || res.Record != RecordFailed || !strings.Contains(res.RecordWhy, "record-too-large") {
+		t.Fatalf("%v %q %q", err, res.Record, res.RecordWhy)
+	}
+	// A single verdict: the oversize record.json was removed.
+	if exists(RecordFile(f.p.dir, actZ)) || !exists(RecordFailedFile(f.p.dir, actZ)) {
+		t.Fatal("record.json stands beside record.failed")
+	}
+	// A record.json that is not a regular file (a link to somewhere) is refused.
+	g := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+	g.give("z", actZ, line, 0, cannedOpts{})
+	o = g.opts(actZ, 0, 1, line)
+	o.ChildCmd = func(args, env []string) *exec.Cmd {
+		return exec.Command("/bin/sh", "-c", `ln -s /etc/hostname "$1"`, "sh", RecordFile(g.p.dir, actZ))
+	}
+	if res, err = RunStep(o); err != nil || res.Record != RecordFailed || !strings.Contains(res.RecordWhy, "left no record.json") {
+		t.Fatalf("%v %q %q", err, res.Record, res.RecordWhy)
+	}
+	if exists(RecordFile(g.p.dir, actZ)) {
+		t.Fatal("the link was left")
+	}
+}
+
+// A child that links a valid record and is then killed leaves one verdict.
+func TestKilledChildAfterLinkingARecordLeavesOnlyRecordFailed(t *testing.T) {
+	line := playLine("", "z", 4)
+	f := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+	f.give("z", actZ, line, 4, cannedOpts{})
+	o := f.opts(actZ, 0, 1, line)
+	o.ChildCmd = func(args, env []string) *exec.Cmd {
+		inner := testChildCmd("")(args, env)
+		cmd := exec.Command("/bin/sh", append([]string{"-c", `"$@"; kill -9 $$`, "sh"}, inner.Args...)...)
+		cmd.Env = inner.Env
+		return cmd
+	}
+	res, err := RunStep(o)
+	if err != nil || res.ExitCode != 4 || res.Record != RecordFailed {
+		t.Fatalf("%v %d %q %q", err, res.ExitCode, res.Record, res.RecordWhy)
+	}
+	if exists(RecordFile(f.p.dir, actZ)) || !exists(RecordFailedFile(f.p.dir, actZ)) {
+		t.Fatal("not a single verdict")
+	}
+}
+
+// A raw record whose lists reached the classifier's cap is dropped by the child.
+func TestChildDropsARecordWhoseListsHitTheCap(t *testing.T) {
+	line := playLine("", "z", 0)
+	f := newStepFixCustom(t, planOf(nil, nil, []string{line}), nil, true)
+	f.give("z", actZ, line, 0, cannedOpts{})
+	f.must(actZ, 0, 1, line)
+	os.Remove(RecordFile(f.p.dir, actZ))
+	h := ChildHooks{Classify: func(cfg traced.Config, in traced.Input) (*traced.RawRecord, error) {
+		return &traced.RawRecord{Package: actZ, Writes: make([]string, ClassifyMaxListed+1)}, nil
+	}}
+	if err := ClassifyChild(f.p.dir, actZ, 0, 0, h); err != nil {
+		t.Fatal(err)
+	}
+	rec := f.readRecord(actZ)
+	if rec.ParseOK || rec.Record != nil || rec.WritesComplete || !reflect.DeepEqual(rec.ParseReasons, []string{"writes-too-many"}) {
+		t.Fatalf("%+v", rec)
+	}
+}
+
+func TestChildMemoryPlanAndImage(t *testing.T) {
+	const gib = int64(1) << 30
+	if d, s := scaleLimits(8*gib, 0); d != 8*gib || s != 0 {
+		t.Fatalf("%d %d", d, s)
+	}
+	if d, s := scaleLimits(8*gib, 64*gib); d != 8*gib || s != 5*gib {
+		t.Fatalf("%d %d", d, s)
+	}
+	if d, s := scaleLimits(8*gib, 4*gib); d != 2*gib || s != 2*gib/8*5 {
+		t.Fatalf("%d %d", d, s)
+	}
+	if got := parseMemTotal("MemFree: 1 kB\nMemTotal:       16384 kB\n"); got != 16384<<10 {
+		t.Fatalf("%d", got)
+	}
+	for _, bad := range []string{"", "MemTotal: x kB", "MemTotal:", "MemTotal: 0 kB", "MemTotal: -5 kB"} {
+		if parseMemTotal(bad) != 0 {
+			t.Errorf("%q", bad)
+		}
+	}
+	if childExe("/opt/kiln", "linux") != "/proc/self/exe" || childExe("/opt/kiln", "darwin") != "/opt/kiln" {
+		t.Fatal("the child image")
+	}
+}
+
+// The child refuses an action that has not ended and one that has a verdict.
+func TestClassifyChildGuards(t *testing.T) {
+	l0, l1 := playLine("", "b0", 0), playLine("", "b1", 0)
+	f := newStepFixCustom(t, planOf(nil, []string{l0, l1}, nil), nil, true)
+	f.give("b0", actB, l0, 0, cannedOpts{})
+	f.must(actB, 0, 2, l0)
+	if err := ClassifyChild(f.p.dir, actB, 0, 0, ChildHooks{}); err == nil || !strings.Contains(err.Error(), "not the end of the action") {
+		t.Fatalf("a mid-action step was classified: %v", err)
+	}
+	// A failing step ends the action.
+	bad := playLine("", "z", 3)
+	g := newStepFixCustom(t, planOf(nil, []string{bad, l1}, nil), nil, true)
+	g.give("z", actB, bad, 3, cannedOpts{})
+	g.must(actB, 0, 2, bad)
+	os.Remove(RecordFile(g.p.dir, actB))
+	if err := ClassifyChild(g.p.dir, actB, 0, 0, ChildHooks{}); err != nil {
+		t.Fatalf("a failing step was refused: %v", err)
+	}
+	// A verdict already there, record.failed included.
+	os.Remove(RecordFile(g.p.dir, actB))
+	writeBytes(t, RecordFailedFile(g.p.dir, actB), []byte("x"), 0o600)
+	if err := ClassifyChild(g.p.dir, actB, 0, 0, ChildHooks{}); err == nil || !strings.Contains(err.Error(), "classified-twice") {
+		t.Fatalf("%v", err)
+	}
+	// A step that did not start ends the action too.
+	h := newStepFixCustom(t, planOf(nil, []string{l0, l1}, nil), nil, true)
+	os.Chmod(h.p.strace, 0o644)
+	h.must(actB, 0, 2, l0)
+	os.Remove(RecordFile(h.p.dir, actB))
+	if err := ClassifyChild(h.p.dir, actB, 0, 0, ChildHooks{}); err != nil {
+		t.Fatalf("a step that did not start was refused: %v", err)
+	}
 }

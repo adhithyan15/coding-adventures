@@ -194,6 +194,9 @@ type StepOptions struct {
 	// ChildSoftMemory and ChildDataLimit bound the classification child
 	// (GOMEMLIMIT and RLIMIT_DATA; classify_child.go); zero means the default.
 	ChildSoftMemory, ChildDataLimit int64
+	// MaxRecordBytes bounds the record.json the supervisor reads back (zero:
+	// DefaultMaxRecordBytes).
+	MaxRecordBytes int64
 	// ChildCmd builds the child's command from its arguments and environment;
 	// the default runs this very binary (`kiln record classify-action`). A test
 	// replaces it to run its own test binary as the child.
@@ -235,6 +238,9 @@ func (o *StepOptions) applyDefaults() {
 	}
 	if o.MaxTraceTotal == 0 {
 		o.MaxTraceTotal = DefaultMaxTraceTotal
+	}
+	if o.MaxRecordBytes == 0 {
+		o.MaxRecordBytes = DefaultMaxRecordBytes
 	}
 	if o.ChildSoftMemory == 0 {
 		o.ChildSoftMemory = DefaultChildSoftMemory

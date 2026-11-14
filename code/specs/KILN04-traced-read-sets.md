@@ -1369,7 +1369,19 @@ host state roots. So:
    (`step N: unclean:<reason>`), so an action with an unclean tracer has no raw
    record. A BUILD line over 4096 bytes can never be recorded: strace runs with
    `-s 4096`, the step's `execve` argv is cut, and the recipe and digest checks
-   fail.
+   fail. Likewise any `execve` whose printed argv exceeds the parser's 1 MiB line
+   cap (a huge glob expansion, an `xargs` batch) fails closed: the trace is not
+   parseable, and the run is voided. The supervisor reads the child's
+   `record.json` through a non-following handle and refuses a file over 256 MiB
+   (`record-too-large`); the child drops a raw record whose lists reached the
+   classifier's own cap (`writes-too-many`), which is incomplete anyway. A failure
+   removes any `record.json` before linking `record.failed`, so one verdict
+   remains (and where it cannot be removed `record.failed` overrides). The child
+   is `/proc/self/exe` (the image the supervisor verified), sets
+   `oom_score_adj` 1000 and `RLIMIT_DATA` to the smaller of 8 GiB and half of
+   `MemTotal` (soft limit scaled 5:8), and refuses unless the step ends its action
+   (the last step, or one that did not start or exited non-zero) and no verdict
+   exists yet.
    The parse half of G7 is: every trace parses (with the sandbox helper as
    root); the root's exit line equals the sidecar's `root_status`; the traced
    `execve` of the init's `--sha256` and the root's `--config-sha256` equal

@@ -47,6 +47,19 @@
 - `prepare` refuses a tree file larger than a sealed file can be read back at;
   `readSidecar` checks the sidecar's action and step against its name.
 
+### Fixed (round 2 of the review)
+
+- The supervisor reads the child's `record.json` through a non-following handle,
+  requires a regular file and refuses one over 256 MiB (`MaxRecordBytes`,
+  `record-too-large`); the child drops a raw record whose lists hit the cap
+  (`writes-too-many`).
+- A failure removes any `record.json` before linking `record.failed`: one verdict.
+- The child sets `oom_score_adj` 1000 and `RLIMIT_DATA` to the smaller of 8 GiB and
+  half of `MemTotal` (soft limit scaled 5:8); the default child image is
+  `/proc/self/exe` on Linux.
+- `classify-action` refuses unless the step ends its action and no verdict exists.
+- Spec: an `execve` argv over the parser's 1 MiB line cap fails closed.
+
 ### Corrected
 
 - A link the action creates itself is resolved from the DISK, so a `mkdir` through

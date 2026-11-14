@@ -31,7 +31,9 @@ package record
 //	                heap nears it (DefaultChildSoftMemory, 5 GiB)
 //	RLIMIT_DATA     hard, set by the child on itself (Linux): the kernel refuses
 //	                private writable memory past it (DefaultChildDataLimit, 8
-//	                GiB), and the runtime then aborts with "out of memory", which
+//	                GiB, or half of MemTotal if that is less, with the soft limit
+//	                scaled to match; the child also sets oom_score_adj 1000 so the
+//	                kernel's own OOM killer takes it first), and the runtime then aborts with "out of memory", which
 //	                the parent reports. RLIMIT_AS is NOT used: the Go runtime
 //	                reserves large ranges of ADDRESS SPACE it never touches (heap
 //	                arenas, per-thread stacks), so an address-space limit fails a
@@ -58,7 +60,9 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"runtime/debug"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -85,7 +89,7 @@ func runClassifyChild(o StepOptions, pre *Pre, kilnPath, action string, step int
 	if o.ChildCmd != nil {
 		cmd = o.ChildCmd(args, env)
 	} else {
-		cmd = exec.Command(kilnPath, args...)
+		cmd = exec.Command(childExe(kilnPath, runtime.GOOS), args...)
 		cmd.Env = env
 		cmd.Dir = string(os.PathSeparator) // never the checkout
 	}
@@ -120,6 +124,48 @@ func runClassifyChild(o StepOptions, pre *Pre, kilnPath, action string, step int
 	return ""
 }
 
+// childExe is the program the child runs. On Linux that is /proc/self/exe, the
+// very image the supervisor is running (which VerifyPre has already shown to be
+// the sealed Kiln), so a file swapped at the Kiln path after that check cannot be
+// what runs; elsewhere, the path.
+func childExe(kilnPath, goos string) string {
+	if goos == "linux" {
+		return "/proc/self/exe"
+	}
+	return kilnPath
+}
+
+// scaleLimits fits the memory bound to the machine: the hard data limit is the
+// smaller of the configured one and half of MemTotal, the soft limit the same
+// 5:8 share of it as the defaults. With MemTotal unknown (0) the configured
+// limit stands and the soft limit is left to GOMEMLIMIT.
+func scaleLimits(dataLimit, memTotal int64) (data, soft int64) {
+	if memTotal <= 0 {
+		return dataLimit, 0
+	}
+	data = dataLimit
+	if half := memTotal / 2; half < data {
+		data = half
+	}
+	return data, data / 8 * 5
+}
+
+// parseMemTotal reads MemTotal (in bytes) from the text of /proc/meminfo; 0 if
+// it is not there.
+func parseMemTotal(meminfo string) int64 {
+	for _, line := range strings.Split(meminfo, "\n") {
+		if rest, ok := strings.CutPrefix(line, "MemTotal:"); ok {
+			f := strings.Fields(rest)
+			if len(f) >= 1 {
+				if kb, err := strconv.ParseInt(f[0], 10, 64); err == nil && kb > 0 {
+					return kb << 10
+				}
+			}
+		}
+	}
+	return 0
+}
+
 // ChildHooks are the child's seams, for tests; the zero value is the real thing.
 type ChildHooks = ClassifyDeps
 
@@ -134,7 +180,18 @@ func ClassifyChild(dir, action string, step int, dataLimit int64, h ChildHooks) 
 		}
 	}()
 	if dataLimit > 0 {
-		if err := setDataLimit(uint64(dataLimit)); err != nil {
+		// Be the OOM killer's first choice (so a runaway classification dies
+		// before the runner's other work does), and fit the bound to the machine.
+		adjustOOM()
+		var total int64
+		if data, err := os.ReadFile("/proc/meminfo"); err == nil {
+			total = parseMemTotal(string(data))
+		}
+		data, soft := scaleLimits(dataLimit, total)
+		if soft > 0 {
+			debug.SetMemoryLimit(soft)
+		}
+		if err := setDataLimit(uint64(data)); err != nil {
 			return fmt.Errorf("memory limit: %w", err)
 		}
 	}
@@ -152,6 +209,15 @@ func ClassifyChild(dir, action string, step int, dataLimit int64, h ChildHooks) 
 	last, err := readSidecar(dir, action, step)
 	if err != nil {
 		return fmt.Errorf("the step's sidecar: %w", err)
+	}
+	// Guards of its own: it classifies only an action that has ended, once.
+	if step != len(planned.Steps)-1 && last.Started && last.RootStatus == 0 {
+		return fmt.Errorf("step %d is not the end of the action (it is not the last step, started, and exited 0)", step)
+	}
+	for _, f := range []string{RecordFile(dir, action), RecordFailedFile(dir, action)} {
+		if _, err := os.Lstat(f); err == nil {
+			return fmt.Errorf("classified-twice: %q already has a verdict", printable(action))
+		}
 	}
 	rec, err := classifyAction(h, pre, action, step, last)
 	if err != nil {

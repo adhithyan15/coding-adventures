@@ -235,6 +235,10 @@ func writeAtomic(final string, data []byte) error {
 func classifyEpilogue(o StepOptions, pre *Pre, kilnPath, action string, step int) (outcome, why string) {
 	fail := func(reason string) (string, string) {
 		reason = traced.Sanitize(reason)
+		// One verdict: a rejected or killed child may already have linked a
+		// record.json, which must not stand beside the failure. (Best effort; if
+		// it cannot be removed `collect` still treats record.failed as overriding.)
+		os.Remove(RecordFile(pre.Dir, action))
 		if err := writeAtomic(RecordFailedFile(pre.Dir, action), []byte(reason)); err != nil && !errors.Is(err, os.ErrExist) {
 			return RecordFailed, reason + " (and record.failed could not be written: " + err.Error() + ")"
 		}
@@ -259,9 +263,9 @@ func classifyEpilogue(o StepOptions, pre *Pre, kilnPath, action string, step int
 	// 3. The child exited cleanly: its record must be there and be a record of
 	// THIS action under THIS sealed directory. The parent trusts the file no
 	// more than `collect` will.
-	data, err := os.ReadFile(RecordFile(pre.Dir, action))
+	data, err := readRecordBounded(RecordFile(pre.Dir, action), o.MaxRecordBytes)
 	if err != nil {
-		return fail("the classifier exited cleanly but left no record.json: " + err.Error())
+		return fail(err.Error())
 	}
 	rec, err := DecodeClassified(data)
 	switch {
@@ -271,6 +275,36 @@ func classifyEpilogue(o StepOptions, pre *Pre, kilnPath, action string, step int
 		return fail("the classifier's record.json is of another action or another sealed directory")
 	}
 	return RecordWritten, ""
+}
+
+// DefaultMaxRecordBytes bounds the record.json the supervisor reads back.
+const DefaultMaxRecordBytes int64 = 256 << 20
+
+// readRecordBounded reads the child's record through a non-following handle,
+// requires a regular file and refuses one over max bytes (record-too-large)
+// BEFORE reading it: the child is a separate process, and what it leaves is not
+// trusted to be small.
+func readRecordBounded(path string, max int64) ([]byte, error) {
+	f, err := openNoFollow(path)
+	if err != nil {
+		return nil, fmt.Errorf("the classifier exited cleanly but left no record.json: %v", err)
+	}
+	defer f.Close()
+	st, err := f.Stat()
+	if err != nil || !st.Mode().IsRegular() {
+		return nil, fmt.Errorf("the classifier's record.json is not a regular file")
+	}
+	if st.Size() > max {
+		return nil, fmt.Errorf("record-too-large: record.json is %d bytes, over %d", st.Size(), max)
+	}
+	data, err := io.ReadAll(io.LimitReader(f, max+1))
+	if err != nil {
+		return nil, fmt.Errorf("record.json: %v", err)
+	}
+	if int64(len(data)) > max {
+		return nil, fmt.Errorf("record-too-large: record.json grew past %d bytes", max)
+	}
+	return data, nil
 }
 
 // ClassifyDeps are the classifier's seams, for the child's tests; the zero value
@@ -323,8 +357,10 @@ func ClassifyLimits() trace.Limits {
 	return trace.Limits{MaxLineBytes: 1 << 20, MaxTotalBytes: ClassifyMaxStepBytes, MaxEvents: ClassifyMaxEvents}
 }
 
-// The epilogue's limits.
+// The epilogue's limits. ClassifyMaxListed is the classifier's own list cap
+// (traced's maxListed).
 const (
+	ClassifyMaxListed          = 1 << 16
 	ClassifyMaxStepBytes int64 = DefaultTraceCap
 	ClassifyMaxEvents          = 8_000_000
 )
@@ -385,6 +421,15 @@ func classifyAction(d ClassifyDeps, pre *Pre, action string, step int, last Step
 	raw, err := d.Classify(cfg, traced.Input{Package: action, Traces: traces, Recipe: planned.Steps, StepNetNS: netns})
 	if err != nil {
 		return ClassifiedRecord{}, fmt.Errorf("classify: %w", err)
+	}
+	// A record whose lists reached the classifier's own cap is already incomplete;
+	// carrying them (up to 65536 names each, six lists) would only make the
+	// record big. It is dropped, with the reason, like a trace that did not parse.
+	for _, n := range []int{len(raw.Entries), len(raw.Writes), len(raw.TrackedWrites), len(raw.AbsentObservations), len(raw.UntrackedObservations), len(raw.Traversed)} {
+		if n > ClassifyMaxListed {
+			rec.ParseReasons = []string{"writes-too-many"}
+			return rec, nil
+		}
 	}
 	rec.ParseOK = true
 	rec.Record = raw
