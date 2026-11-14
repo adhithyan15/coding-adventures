@@ -189,13 +189,13 @@ func TestSandboxRecordCollect(t *testing.T) {
 	var planPkgs, names []string
 	for _, a := range actions {
 		pkgs = append(pkgs, legacy.Package{
-			Name: a.name, RelPath: a.rel, Language: "x",
+			Name: a.name, RelPath: a.rel, Language: "sh",
 			BuildFiles: map[string]*string{"linux": &b, "darwin": &b, "windows": &b},
 			Deps:       map[string][]string{"linux": {}, "darwin": {}, "windows": {}},
 			DevDeps:    []string{}, RepoInputs: []string{}, RepoInputGlobs: []string{}, ExtraToolchains: []string{},
 		})
 		stepRows = append(stepRows, map[string]any{"package": a.rel, "steps": a.steps})
-		planPkgs = append(planPkgs, fmt.Sprintf(`{"name": %q, "rel_path": %q, "language": "x"}`, a.name, a.rel))
+		planPkgs = append(planPkgs, fmt.Sprintf(`{"name": %q, "rel_path": %q, "language": "sh"}`, a.name, a.rel))
 		names = append(names, fmt.Sprintf("%q", a.name))
 	}
 	graph, err := json.Marshal(legacy.Graph{Schema: legacy.GraphSchema, Packages: pkgs})
