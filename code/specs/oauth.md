@@ -4951,6 +4951,31 @@ HTTPS, OAuth, network, or live-provider readiness. Complete path/Name policy,
 revocation, repository-owned TLS/HTTP composition, and audited transport remain
 separate blockers. Concrete HTTPS remains unavailable.
 
+A bounded `x509-rsa-reviewed-anchor-self-signature-binding` prerequisite now
+joins the existing data-driven repository-owned RSA signature router to the
+reviewed Mozilla root snapshot without adding another algorithm switch. It
+consumes one routed RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 policy proof
+and one reviewed-root selection. The routed proof's child certificate, its
+issuer RSA algorithm-and-key policy certificate, and the selected reviewed
+root must all be the same exact decoded object. Byte-equal independently
+decoded certificates fail closed. Success returns non-copyable evidence that
+retains the selected fixed verifier, complete certificate algorithm policy,
+complete RSA algorithm-and-key policy, exact repository-owned signature proof,
+and exact reviewed-snapshot membership. Stable failures and Debug output
+retain no certificate, key, signature, algorithm, route, or root payloads.
+
+This is a public-data evidence boundary only. It does not select certificate
+algorithm profiles or signature routes, parse certificates or keys, decide
+trust-anchor semantics, establish CA role, validate time or constraints,
+construct or validate a certification path, bind the proof into the current
+reviewed server-path result, check revocation, build or run TLS or HTTP, access
+credentials, emit provider or trace audit events, perform I/O, authorize an
+external effect, or grant HTTPS, OAuth, network, or live-provider readiness.
+Complete path/Name policy, composition of this self-signature evidence into
+the reviewed server path, revocation, repository-owned TLS/HTTP composition,
+and audited transport remain separate blockers. Concrete HTTPS remains
+unavailable.
+
 An allocation-free `form-urlencoded` prerequisite now validates an ordered,
 caller-borrowed sequence of UTF-8 name/value pairs under explicit field,
 component, and encoded-output ceilings. It serializes the exact
