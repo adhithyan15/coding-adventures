@@ -1,0 +1,4 @@
+{
+  "capabilities": [],
+  "justification": "Pure exact-object comparison over caller-owned public certificate evidence; no I/O, clock, credential, provider, trace, signing, storage, network, or external effect."
+}
