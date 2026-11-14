@@ -148,26 +148,46 @@ func TestSandboxOutputDescriptors(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer rwFifo.Close()
-	for _, tc := range []struct {
-		name  string
-		flags []string
-		extra []*os.File
-		want  string
-	}{
-		{"regular file", []string{"--stdout-fd", "3"}, []*os.File{reg}, "a regular file"},
-		{"directory", []string{"--stderr-fd", "3"}, []*os.File{dir}, "a directory"},
-		{"/dev/null", []string{"--stdout-fd", "3"}, []*os.File{null}, "character device"},
-		{"pipe read end", []string{"--stdout-fd", "3"}, []*os.File{pr}, "not open write-only"},
-		{"not open", []string{"--stdout-fd", "9"}, nil, "not an open descriptor"},
-		{"good then bad", []string{"--stdout-fd", "3", "--stderr-fd", "4"}, []*os.File{pw, reg}, "--stderr-fd 4"},
-		{"standard stream", []string{"--stdout-fd", "1"}, nil, "out of range"},
-		{"read-write FIFO (L4)", []string{"--stdout-fd", "3", "--stderr-fd", "3"}, []*os.File{rwFifo}, "not open write-only"},
-		{"stdout only (L6)", []string{"--stdout-fd", "3"}, []*os.File{pw}, "together or not at all"},
-		{"stderr only (L6)", []string{"--stderr-fd", "3"}, []*os.File{pw}, "together or not at all"},
+	// Both flags are always given (a lone one is refused first, L6), the bad
+	// descriptor to one and a valid write-only pipe to the other, in both
+	// positions, so each flag's own check is reached.
+	type refusal struct {
+		name string
+		bad  *os.File // descriptor 3, or nil
+		badN string   // the number given when bad is nil
+		want string
+	}
+	for _, r := range []refusal{
+		{"regular file", reg, "", "a regular file"},
+		{"directory", dir, "", "a directory"},
+		{"/dev/null", null, "", "character device"},
+		{"pipe read end", pr, "", "not open write-only"},
+		{"read-write FIFO (L4)", rwFifo, "", "not open write-only"},
+		{"not open", nil, "9", "not an open descriptor"},
+		{"standard stream", nil, "1", "out of range"},
 	} {
-		out, errb, code := f.outFDRun(t, tc.flags, tc.extra, notRun...)
-		if code != sandbox.ExitFailure || out != "" || !strings.Contains(errb, tc.want) {
-			t.Errorf("%s: exit %d, stdout %q, stderr %q; want 125 and %q", tc.name, code, out, errb, tc.want)
+		for _, stdoutBad := range []bool{true, false} {
+			bad, good := "3", "4"
+			extra := []*os.File{r.bad, pw}
+			if r.bad == nil {
+				bad, extra = r.badN, []*os.File{pw}
+				good = "3"
+			}
+			flag, args := "--stderr-fd", []string{"--stdout-fd", good, "--stderr-fd", bad}
+			if stdoutBad {
+				flag, args = "--stdout-fd", []string{"--stdout-fd", bad, "--stderr-fd", good}
+			}
+			out, errb, code := f.outFDRun(t, args, extra, notRun...)
+			if code != sandbox.ExitFailure || out != "" || !strings.Contains(errb, r.want) || !strings.Contains(errb, flag) {
+				t.Errorf("%s (bad %s): exit %d, stdout %q, stderr %q; want 125, %q and %q", r.name, flag, code, out, errb, r.want, flag)
+			}
+		}
+	}
+	// A lone flag is refused before any descriptor is looked at (L6).
+	for _, args := range [][]string{{"--stdout-fd", "3"}, {"--stderr-fd", "3"}} {
+		out, errb, code := f.outFDRun(t, args, []*os.File{pw}, notRun...)
+		if code != sandbox.ExitFailure || out != "" || !strings.Contains(errb, "together or not at all") {
+			t.Errorf("%v: exit %d, stdout %q, stderr %q", args, code, out, errb)
 		}
 	}
 	if _, err := os.Stat(marker); err == nil {
