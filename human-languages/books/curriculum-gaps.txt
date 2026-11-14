@@ -155,10 +155,10 @@ root ledger: 37534 roots, 34529 spent fewer than 3 times (92%), 26320 never spen
 info dump (report-only): 120 of 63268 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), PT-C16-ser-roots (6-row table with 5 person rows), ES-C07-repaso-presente-completo (7-row table with 6 person rows)
 
-lesson content budgets (report-only): 57502 of 63268 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
-  annotation coverage: idioms 57502, senses 57503, culture claims 57502
+lesson content budgets (report-only): 57515 of 63268 lessons measured -- 101 idioms, 103 senses, 209 culture claims; 0 lessons over budget
+  annotation coverage: idioms 57515, senses 57516, culture claims 57515
 
-metalanguage: 54 of 54 grammar terms appear in 62208 lessons; 120482 uses come before introduction, of which 21414 are technical terms across 16588 lessons
+metalanguage: 54 of 54 grammar terms appear in 62208 lessons; 120480 uses come before introduction, of which 21413 are technical terms across 16587 lessons
   most-used-before-introduction: verb (7199 lessons), noun (6499 lessons), participle (1238 lessons), adjective (1125 lessons), case (596 lessons), declension (464 lessons)
 literal markup: none in 63268 lessons or any generated book
 glyph coverage: every character renders -- 164 main-font and 1156 script characters across 12427 generated files

@@ -932612,22 +932612,22 @@
   },
   "lessonBudgets": {
     "lessons": 63268,
-    "measuredLessons": 57502,
-    "idiomMeasuredLessons": 57502,
-    "senseMeasuredLessons": 57503,
-    "cultureClaimMeasuredLessons": 57502,
+    "measuredLessons": 57515,
+    "idiomMeasuredLessons": 57515,
+    "senseMeasuredLessons": 57516,
+    "cultureClaimMeasuredLessons": 57515,
     "idioms": 101,
     "senses": 103,
-    "cultureClaims": 208,
+    "cultureClaims": 209,
     "overBudgetLessons": 0
   },
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 62208,
-    "usesBeforeIntroduction": 120482,
-    "technicalUsesBeforeIntroduction": 21414,
-    "technicalLessons": 16588,
+    "usesBeforeIntroduction": 120480,
+    "technicalUsesBeforeIntroduction": 21413,
+    "technicalLessons": 16587,
     "worstTerms": [
       {
         "term": "verb",
