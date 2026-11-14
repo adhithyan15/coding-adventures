@@ -145,7 +145,7 @@ func TestSandboxRecordCollect(t *testing.T) {
 	actions := []action{
 		{actA, "x/a", []string{"echo hi; cat data.txt"}},
 		{actB, "x/b", []string{"exit 3"}},
-		{actC, "x/c", []string{"touch " + repo}},
+		{actC, "x/c", []string{"touch " + repo + " || true"}},
 		{actD, "x/d", []string{"echo d"}},
 		{actE, "x/e", []string{"cat data.txt"}},
 	}
@@ -299,7 +299,7 @@ exit 0
 	if code != 0 {
 		t.Fatalf("record collect: exit %d\nstdout: %s\nstderr: %s", code, stdout, stderr)
 	}
-	for _, want := range []string{"tracked_changed_unexplained 1", "post_inventory_unexplained 0", "unknown write set: " + actD} {
+	for _, want := range []string{"tracked_changed_unexplained 1", "post_inventory_unexplained 0", "unknown write set: " + actD, "unknown write set: " + actC + ": writes_complete is false"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("collect's report lacks %q:\n%s", want, stdout)
 		}

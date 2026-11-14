@@ -460,13 +460,16 @@ func TestCollectWritesCompleteIsTheClassifiers(t *testing.T) {
 		f.good()
 		os.Remove(RecordFile(f.p.dir, ca))
 		f.verdict(ca, 1, func(c *ClassifiedRecord) { c.WritesComplete = want })
-		_, sh := f.collect()
+		res, sh := f.collect()
 		r := requireKnown(t, sh, ca)
 		if r.Complete == nil || *r.Complete != want {
 			t.Fatalf("classifier said %v, shard says %v", want, r.Complete)
 		}
 		// A classifier that says false is an unknown write set to the merge,
 		// whatever else the record says.
+		if reported := strings.Contains(strings.Join(res.Unknown, "\n"), ca+": writes_complete is false"); reported == want {
+			t.Fatalf("the report says %v for a classifier that said %v: %v", reported, want, res.Unknown)
+		}
 		if !want {
 			if m := mergeOf(f, sh); m.Emitted {
 				t.Fatal("writes_complete false must void the run")

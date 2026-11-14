@@ -236,8 +236,14 @@ func Collect(o CollectOptions) (*CollectResult, error) {
 	}
 	r := &CollectResult{Out: o.Out, Header: header, Records: len(recs)}
 	for _, rec := range recs {
-		if rec.Unknown != "" {
+		switch {
+		case rec.Unknown != "":
 			r.Unknown = append(r.Unknown, printable(rec.Action)+": "+rec.Unknown)
+		case rec.StepsRun > 0 && rec.Complete != nil && !*rec.Complete:
+			// Believed record, but the classifier could not vouch for its write
+			// set: the merge reads it as an unknown write set all the same, so the
+			// operator is told here too.
+			r.Unknown = append(r.Unknown, printable(rec.Action)+": writes_complete is false (the classifier could not vouch for the write set)")
 		}
 	}
 	sort.Strings(r.Unknown)
