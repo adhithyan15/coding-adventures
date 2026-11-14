@@ -14,6 +14,21 @@ mod harness {
 
 include!("support/wxg_runner.rs");
 
+/// The failed, non-negative-control outcomes whose id is exactly `id`.
+fn failed(id: &str) -> Vec<String> {
+    run_once()
+        .outcomes
+        .iter()
+        .filter(|o| !o.passed() && o.id == id)
+        .map(|o| format!("{}: {}", o.id, message(o)))
+        .collect()
+}
+
+/// Whether a suite with exactly this id was registered at all.
+fn exists(id: &str) -> bool {
+    run_once().outcomes.iter().any(|o| o.id == id)
+}
+
 /// The failed outcomes whose id contains `part`, with their messages.
 fn failures(part: &str) -> Vec<String> {
     run_once()
@@ -24,14 +39,28 @@ fn failures(part: &str) -> Vec<String> {
         .collect()
 }
 
+/// Every operation with the written claim that states it.
+const OPS: [(&str, &str); 8] = [
+    ("wipe", "wipe_zeroes"),
+    ("wipe4", "wipe4_zeroes"),
+    ("bump", "bump_adds_one"),
+    ("toggle", "toggle_negates"),
+    ("set_on", "set_on_keeps_the_byte"),
+    ("push_byte", "push_byte_appends_the_byte"),
+    ("clear_nonempty", "clear_nonempty_wipes_or_refuses"),
+    ("encode", "encode_writes_the_complement"),
+];
+
 #[test]
-fn every_operation_of_the_broken_subject_fails_some_suite() {
+fn every_operation_of_the_broken_subject_fails_its_own_claim() {
     assert!(run_once().failed > 0);
-    for op in ["wipe", "wipe4", "bump", "toggle", "set_on", "push_byte", "clear_nonempty", "encode"] {
-        let f = failures(&format!("/{op}"));
-        let by_example_or_claim = run_once().outcomes.iter().any(|o| !o.passed() && o.id.contains(op));
-        assert!(by_example_or_claim, "nothing failed for {op}");
-        assert!(!f.is_empty() || by_example_or_claim, "{op}");
+    for (op, claim) in OPS {
+        // Exact ids: `wipe` is not satisfied by `wipe4`, and a negative control
+        // (which passes when it catches) never counts.
+        let id = format!("warrant/wxg/exhaustive/{claim}");
+        assert!(exists(&id), "no suite {id}");
+        assert_eq!(failed(&id).len(), 1, "{op}: {id} passed against a broken subject");
+        assert!(exists(&format!("warrant/wxg/exhaustive/{op}/post")), "{op} has no post suite");
     }
 }
 

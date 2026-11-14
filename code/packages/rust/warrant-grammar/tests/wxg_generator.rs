@@ -223,3 +223,34 @@ fn an_export_path_is_accepted_only_for_an_inout_operation() {
     let long = with_binding("op wipe export=wipe inout=", "op wipe export=a::b::c::d::e::f::g::h::i inout=");
     assert!(parse_evidence_bindings(&long).is_err());
 }
+
+/// A one-operation document whose host returns a `Result<(), ()>` or a count, to see
+/// what the adapter does with the host's return value (VER04k 4.13 item 12).
+fn clr_spec() -> String {
+    "warrant c v1\n  error Bad = BAD\n  op clr(buf: inout Bytes) -> Result<Bytes, Bad>\n  labels clr:\n    buf public\n  example e:\n    clr(b\"01\") == Ok(b\"00\")\n  claim k:\n    forall buf: Bytes. clr(buf) == clr(buf)\n".to_string()
+}
+
+fn clr_bindings(opts: &str) -> String {
+    format!("package wxg_subject\nrevision 0\nspec s.warrant\noutput code/packages/rust/c/tests/generated/e.rs\nseed 1\nproperty_cases 10\nfuzz_iterations 10\nnegctl_fuzz_iterations 10\nop clr export=clr {opts} inout=buf:slice faults=stale-post\n")
+}
+
+#[test]
+fn a_result_slot_without_a_returned_component_types_the_host_return_as_unit() {
+    // Ok(()) / Some(()), never Ok(_) / Some(_): a host that returns data, or an
+    // Ok that carries a count, must fail to compile instead of being dropped.
+    for opts in ["err_any=BAD", "error=BAD", "errors=wxg_subject::E/B=BAD"] {
+        let text = generate_from(&clr_spec(), &clr_bindings(opts)).unwrap_or_else(|e| panic!("{opts}: {e}"));
+        assert!(
+            text.contains("Ok(()) =>") || text.contains("Some(()) =>"),
+            "{opts}: the host return is not typed as ()"
+        );
+        assert!(!text.contains("Ok(_) =>") && !text.contains("Some(_) =>"), "{opts}: a host value is discarded");
+    }
+}
+
+#[test]
+fn the_fixture_discards_no_host_value_anywhere() {
+    let text = generated();
+    assert!(!text.contains("Ok(_) =>"), "Ok(_) discards the host's payload");
+    assert!(!text.contains("Some(_) =>"), "Some(_) discards the host's payload");
+}

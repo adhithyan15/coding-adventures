@@ -164,3 +164,15 @@ fn a_v0_document_cannot_reach_any_of_it() {
     let e = parse_document(&layout, &doc, ParserLimits::default()).expect_err("v0");
     assert_eq!(e.code(), "W0101");
 }
+
+#[test]
+fn an_ensures_block_with_no_row_over_result_cannot_discriminate_and_is_w0601() {
+    let op = "op f(buf: inout Bytes) -> Bytes";
+    // A function of the pre-state alone: no subject can fail it.
+    bad(&doc(op, &["buf"], "  ensures f:\n    len(buf) == len(buf)\n"), "W0601");
+    bad(&doc(op, &["buf"], "  ensures f:\n    true\n    len(buf) >= 0\n"), "W0601");
+    // One row that mentions `result` is enough (the rule is syntactic).
+    ok(&doc(op, &["buf"], "  ensures f:\n    len(buf) == len(buf)\n    len(result) == len(buf)\n"));
+    // Also for an operation with no inout parameter.
+    bad(&doc("op f(x: U8) -> U8", &["x"], "  ensures f:\n    x == x\n"), "W0601");
+}
