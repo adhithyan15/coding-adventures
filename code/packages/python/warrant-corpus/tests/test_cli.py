@@ -256,3 +256,18 @@ def test_module_entry_point(monkeypatch, capsys) -> None:
         runpy.run_module("coding_adventures_warrant_corpus", run_name="__main__")
     assert exit_info.value.code == 0
     assert "invert:eq" in capsys.readouterr().out
+
+
+def test_label_digest_binds_the_toolchain_name_but_not_its_version(corpus) -> None:
+    """Another lane's manifest (TypeScript: toolchain `node`) must validate too."""
+    from coding_adventures_warrant_corpus.cli import _labels_for
+
+    base = {
+        "package": "typescript/x",
+        "module": "m",
+        "toolchain": {"name": "node", "version": "1"},
+    }
+    same = _labels_for(corpus, {**base, "toolchain": {"name": "node", "version": "2"}})
+    assert _labels_for(corpus, base) == same
+    other = _labels_for(corpus, {**base, "toolchain": {"name": "python", "version": "1"}})
+    assert other["manifest_sha256"] != same["manifest_sha256"]

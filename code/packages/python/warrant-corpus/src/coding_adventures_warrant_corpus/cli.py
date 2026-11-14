@@ -120,7 +120,11 @@ def _labels_for(corpus, manifest: dict[str, object]) -> dict:  # noqa: ANN001
     ``check`` does, so a different CPython patch release is not label drift.
     """
     stable = dict(manifest)
-    stable["toolchain"] = {"name": "python", "version": ""}
+    # The toolchain *name* stays in the digest (a lane that swapped runtimes is
+    # drift); only its version is diagnostic.  Reading the name from the
+    # manifest, not hard-coding "python", lets this validator accept the labels
+    # of another lane's manifest (the TypeScript lane's toolchain is "node").
+    stable["toolchain"] = {"name": manifest["toolchain"]["name"], "version": ""}  # type: ignore[index]
     return derive_labels(
         corpus,
         str(manifest["package"]),
@@ -155,7 +159,7 @@ def _compare(
         old = json.loads(text)
         old_version = old["toolchain"]["version"]
         new = dict(fresh)
-        new["toolchain"] = {"name": "python", "version": old_version}
+        new["toolchain"] = {"name": fresh["toolchain"]["name"], "version": old_version}  # type: ignore[index]
     except (ValueError, KeyError, TypeError):
         print("not ok manifest: the committed manifest is not a lane manifest")
         return 1
