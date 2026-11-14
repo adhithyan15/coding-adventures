@@ -1,7 +1,6 @@
 """Tests for the event_loop package."""
 
 import threading
-import time
 from enum import Enum
 
 import pytest
@@ -30,6 +29,23 @@ class FixedSource:
         batch = self._batches[self._idx]
         self._idx += 1
         return list(batch)
+
+
+class RunningSignalSource:
+    """Sets an Event the first time the loop polls it.
+
+    ``run()`` clears any earlier stop request when it begins, so a thread that wants
+    to stop the loop must wait for this first. Stopping after a fixed sleep instead
+    races the loop thread on a busy machine: a stop that arrives before ``run()``
+    starts is erased and the loop spins forever.
+    """
+
+    def __init__(self, running: threading.Event) -> None:
+        self._running = running
+
+    def poll(self) -> list:
+        self._running.set()
+        return []
 
 
 class InfiniteSource:
@@ -174,8 +190,15 @@ def test_stop_while_idle_terminates_loop():
 
     loop.on_event(handler)
 
-    # Stop after a short delay so that run() has time to start.
-    t = threading.Thread(target=lambda: (time.sleep(0.01), loop.stop()))
+    # Stop only once run() is actually polling, never after a guessed delay.
+    running = threading.Event()
+    loop.add_source(RunningSignalSource(running))
+
+    def stop_when_running() -> None:
+        assert running.wait(30), "the loop never started"
+        loop.stop()
+
+    t = threading.Thread(target=stop_when_running)
     t.start()
     loop.run()
     t.join()
@@ -216,7 +239,16 @@ def test_no_events_no_handlers_called():
 
     loop.on_event(handler)
 
-    t = threading.Thread(target=lambda: (time.sleep(0.01), loop.stop()))
+    # RunningSignalSource.poll() is the signal that run() has started; see its
+    # docstring for why a fixed sleep before stop() is not safe.
+    running = threading.Event()
+    loop.add_source(RunningSignalSource(running))
+
+    def stop_when_running() -> None:
+        assert running.wait(30), "the loop never started"
+        loop.stop()
+
+    t = threading.Thread(target=stop_when_running)
     t.start()
     loop.run()
     t.join()

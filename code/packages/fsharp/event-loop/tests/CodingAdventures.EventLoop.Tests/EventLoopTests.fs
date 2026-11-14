@@ -18,6 +18,17 @@ type FixedSource<'T>(batches: 'T list list) =
                 remaining <- tail
                 batch
 
+/// Signals that `Run()` has started polling. `Run()` clears any earlier stop request
+/// when it begins, so a thread that wants to stop the loop must wait for this first.
+/// Stopping after a fixed sleep instead races the loop thread on a busy machine: a
+/// stop that arrives before `Run()` starts is erased and the loop spins forever (this
+/// hung a CI shard for 150 minutes).
+type RunningSignalSource(running: ManualResetEventSlim) =
+    interface IEventSource<int> with
+        member _.Poll() =
+            running.Set()
+            []
+
 type InfiniteSource() =
     let mutable next = 0
 
@@ -135,6 +146,8 @@ type EventLoopTests() =
     [<Fact>]
     member _.StopWhileIdleTerminatesLoop() =
         let loop = EventLoop<int>()
+        use running = new ManualResetEventSlim(false)
+        loop.AddSource(RunningSignalSource(running))
         let mutable called = false
 
         loop.OnEvent(fun _ ->
@@ -143,7 +156,7 @@ type EventLoopTests() =
 
         let stopTask =
             Task.Run(Action(fun () ->
-                Thread.Sleep(10)
+                Assert.True(running.Wait(30000), "the loop never started")
                 loop.Stop()))
 
         loop.Run()
@@ -154,11 +167,13 @@ type EventLoopTests() =
     [<Fact>]
     member _.StopHandleTerminatesIdleLoop() =
         let loop = EventLoop<int>()
+        use running = new ManualResetEventSlim(false)
+        loop.AddSource(RunningSignalSource(running))
         let handle = loop.GetStopHandle()
 
         let stopTask =
             Task.Run(Action(fun () ->
-                Thread.Sleep(10)
+                Assert.True(running.Wait(30000), "the loop never started")
                 handle.Stop()))
 
         loop.Run()
@@ -178,7 +193,9 @@ type EventLoopTests() =
     [<Fact>]
     member _.NoEventsMeansHandlersAreNotCalled() =
         let loop = EventLoop<int>()
+        use running = new ManualResetEventSlim(false)
         loop.AddSource(FixedSource([ [] ]))
+        loop.AddSource(RunningSignalSource(running))
         let mutable count = 0
 
         loop.OnEvent(fun _ ->
@@ -187,7 +204,7 @@ type EventLoopTests() =
 
         let stopTask =
             Task.Run(Action(fun () ->
-                Thread.Sleep(10)
+                Assert.True(running.Wait(30000), "the loop never started")
                 loop.Stop()))
 
         loop.Run()
