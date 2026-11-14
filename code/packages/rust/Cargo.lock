@@ -7375,6 +7375,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "https-reviewed-server-path-binding"
+version = "0.1.0"
+dependencies = [
+ "https-destination-name-binding",
+ "x509-rsa-constructed-path-signature-routing",
+]
+
+[[package]]
 name = "hue-client"
 version = "0.1.0"
 dependencies = [

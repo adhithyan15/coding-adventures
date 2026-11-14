@@ -1,0 +1,9 @@
+[package]
+name = "https-reviewed-server-path-binding"
+version = "0.1.0"
+edition = "2021"
+description = "Bind one HTTPS DNS destination to the exact target of reviewed RSA server-path policy"
+
+[dependencies]
+https-destination-name-binding = { path = "../https-destination-name-binding" }
+x509-rsa-constructed-path-signature-routing = { path = "../x509-rsa-constructed-path-signature-routing" }
